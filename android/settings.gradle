@@ -1,0 +1,3 @@
+rootProject.name = 'emurgo'
+
+include ':app'
