@@ -3,6 +3,8 @@ import type {State} from '../state'
 
 export type Path = Array<string>
 
+export type SegmentReducer<Segment, Payload> = (state: Segment, payload: Payload) => Segment
+
 export type GenericAction<Segment, Payload> = {
   +type: string,
   +path?: Path,
@@ -11,7 +13,6 @@ export type GenericAction<Segment, Payload> = {
   +doNotLog?: boolean,
 }
 
-export type SegmentReducer<Segment, Payload> = (state: Segment, payload: Payload) => Segment
 export type GetState = () => State
 // eslint-disable-next-line
 export type Dispatch = (action: GenericAction<*, *> | Thunk) => null
