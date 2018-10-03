@@ -8,6 +8,8 @@
 
 import React, {Component} from 'react'
 import {Platform, StyleSheet, Text, View} from 'react-native'
+import {connect} from 'react-redux'
+import {compose} from 'redux'
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\nCmd+D or shake for dev menu',
@@ -35,12 +37,23 @@ const styles = StyleSheet.create({
   },
 })
 
-type Props = {};
-export default class App extends Component<Props> {
+const changeDummy = () => ({
+  path: ['dummy'],
+  reducer: () => 'different text',
+  type: 'Change dummy text',
+})
+
+type Props = {text: string, changeDummy: () => void};
+class App extends Component<Props> {
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!!!</Text>
+      <View
+        style={styles.container}
+      >
+        <Text
+          style={styles.welcome}
+          onPress={this.props.changeDummy}
+        >Welcome to React Nativexxxx!!!{this.props.text}</Text>
         <Text style={styles.instructions}>To get started, edit App.js</Text>
         <Text style={styles.instructions}>{instructions}</Text>
       </View>
@@ -48,3 +61,10 @@ export default class App extends Component<Props> {
   }
 }
 
+export default compose(
+  connect((state) => ({
+    text: state.dummy,
+  }), {
+    changeDummy,
+  }),
+)(App)
