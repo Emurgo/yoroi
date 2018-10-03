@@ -11,6 +11,8 @@ import {Platform, StyleSheet, Text, View} from 'react-native'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 
+import data from './mockData/history.json'
+
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\nCmd+D or shake for dev menu',
   android:
@@ -53,7 +55,7 @@ class App extends Component<Props> {
         <Text
           style={styles.welcome}
           onPress={this.props.changeDummy}
-        >Welcome to React Nativexxxx!!!{this.props.text}</Text>
+        >Welcome to React Nativexxxx!!!{this.props.text}{data.toString()}</Text>
         <Text style={styles.instructions}>To get started, edit App.js</Text>
         <Text style={styles.instructions}>{instructions}</Text>
       </View>
