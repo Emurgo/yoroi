@@ -1,6 +1,6 @@
 // @flow
-import {createStackNavigator, createMaterialTopTabNavigator} from 'react-navigation'
-import TxHistoryNavigator from './components/TxHistory/TxHistoryNavigator'
+import {createStackNavigator} from 'react-navigation'
+import TxHistoryNavigator from './components/TxHistoryScreen/TxHistoryNavigator'
 import SendScreenNavigator from './components/SendScreen/SendScreenNavigator'
 
 const MAIN_ROUTES = {
@@ -8,15 +8,17 @@ const MAIN_ROUTES = {
   SEND: 'send',
 }
 
-const MainNavigator = createMaterialTopTabNavigator(
+const MainNavigator = createStackNavigator(
   {
     [MAIN_ROUTES.TX_HISTORY]: TxHistoryNavigator,
     [MAIN_ROUTES.SEND]: SendScreenNavigator,
   }, {
     // TODO(ppershing): initialRouteName
     // works reversed. Figure out why!
-    initialRouteName: MAIN_ROUTES.SEND,
-    tabBarPosition: 'bottom',
+    initialRouteName: MAIN_ROUTES.TX_HISTORY,
+    navigationOptions: {
+      header: null,
+    },
   }
 )
 
@@ -25,9 +27,9 @@ const AppNavigator = createStackNavigator({
   main: MainNavigator,
 }, {
   initialRouteName: 'main',
-  navigationOptions: ({navigation}) => ({
+  navigationOptions: {
     header: null,
-  }),
+  },
 })
 
 export default AppNavigator
