@@ -1,6 +1,4 @@
-/**
- * @flow
- */
+// @flow
 
 import React, {Component} from 'react'
 import type {Node} from 'react'
@@ -11,7 +9,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: stylesConfig.defaultFont,
     color: '#000',
-  }
+  },
 })
 
 type Props = {children: Node}

@@ -1,4 +1,4 @@
-const styles = {
+const style = {
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -12,4 +12,4 @@ const styles = {
   },
 }
 
-export default styles
+export default style
