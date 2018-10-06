@@ -32,7 +32,7 @@ const styles = {
   },
   section: {
     marginTop: 10,
-  }
+  },
 }
 
 export default styles

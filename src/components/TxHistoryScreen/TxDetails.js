@@ -16,7 +16,7 @@ import styles from './TxDetails.style'
 type Props = {navigation: NavigationScreenProp<NavigationState>};
 class TxDetails extends Component<Props> {
   render() {
-    const transaction = this.props.navigation.state.params.transaction
+    const transaction = this.props.navigation.getParam('transaction', {})
 
     const assuranceLevel = confirmationsToAssuranceLevel(transaction.confirmations)
     const isNegativeAmount = transaction.type === 'SENT'
@@ -34,7 +34,9 @@ class TxDetails extends Component<Props> {
             <AdaIcon
               width={18}
               height={18}
-              color={isNegativeAmount ? stylesConfig.negativeAmountColor : stylesConfig.positiveAmountColor}
+              color={isNegativeAmount ?
+                stylesConfig.negativeAmountColor : stylesConfig.positiveAmountColor
+              }
             />
           </View>
         </View>
