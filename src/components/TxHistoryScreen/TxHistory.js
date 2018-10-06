@@ -1,16 +1,24 @@
+// @flow
+
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View} from 'react-native'
 
 import type {HistoryTransaction} from '../../types/HistoryTransaction'
+import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import TxHistoryList from './TxHistoryList'
 import Screen from '../../components/Screen'
-import TxNavigationButtons from './TxNavigationButtons';
+import TxNavigationButtons from './TxNavigationButtons'
 
 import styles from './TxHistory.style'
 
-type Props = {text: string, transactions: Array<HistoryTransaction>};
+type Props = {
+  text: string,
+  transactions: Array<HistoryTransaction>,
+  navigation: NavigationScreenProp<NavigationState>
+};
+
 class TxHistory extends Component<Props> {
   render() {
     const {transactions, navigation} = this.props

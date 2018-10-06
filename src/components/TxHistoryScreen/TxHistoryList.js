@@ -1,40 +1,23 @@
-/**
- * @flow
- */
+// @flow
 
 import React, {Component} from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 import {groupBy} from 'lodash'
 import moment from 'moment'
 import type {Moment} from 'moment'
 
 import type {HistoryTransaction} from '../../types/HistoryTransaction'
+import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import CustomText from '../../components/CustomText'
 import TxHistoryListItem from './TxHistoryListItem'
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginBottom: 15,
-  },
-  dayContainer: {
-    flex: 0,
-    flexShrink: 1,
-    marginTop: 10,
-    marginBottom: 15,
-  },
-  dateLabelContainer: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-    paddingBottom: 15,
-  },
-  dateLabel: {
-    color: '#000',
-    fontSize: 20,
-  },
-})
+import styles from './TxHistoryList.style'
 
-type Props = {transactions: Array<HistoryTransaction>};
+type Props = {
+  transactions: Array<HistoryTransaction>,
+  navigation: NavigationScreenProp<NavigationState>
+};
+
 class TxHistoryList extends Component<Props> {
   formatDate = (timestamp: Moment) => {
     if (moment().isSame(timestamp, 'day')) {
@@ -49,7 +32,10 @@ class TxHistoryList extends Component<Props> {
   render() {
     const {transactions, navigation} = this.props
     // Fixme: add sorting by time
-    const transactionsByDate = groupBy(transactions, (transaction) => this.formatDate(transaction.timestamp))
+    const transactionsByDate = groupBy(
+      transactions,
+      (transaction) => this.formatDate(transaction.timestamp)
+    )
 
     return (
       <View style={styles.container}>

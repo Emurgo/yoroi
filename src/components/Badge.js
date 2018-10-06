@@ -1,6 +1,4 @@
-/**
- * @flow
- */
+// @flow
 
 import React, {Component} from 'react'
 import {StyleSheet, View, Text} from 'react-native'
@@ -16,7 +14,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: stylesConfig.defaultFont,
-  }
+  },
 })
 
 type Props = {text: string, color?: string, backgroundColor?: string}

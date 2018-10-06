@@ -1,13 +1,15 @@
+// @flow
+
 import React from 'react'
 import {Text, View} from 'react-native'
-import style from './SendScreen.style'
+import styles from './SendScreen.style'
 
 const SendScreen = () => (
   <View
-    style={style.container}
+    style={styles.container}
   >
     <Text
-      style={style.welcome}
+      style={styles.welcome}
     >Send all your ADA here
     </Text>
   </View>

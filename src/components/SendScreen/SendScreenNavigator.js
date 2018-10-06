@@ -1,3 +1,5 @@
+// @flow
+
 import {createStackNavigator} from 'react-navigation'
 import SendScreen from './SendScreen'
 

@@ -1,6 +1,4 @@
-/**
- * @flow
- */
+// @flow
 
 import React, {Component} from 'react'
 import {Text, View, TouchableHighlight} from 'react-native'
@@ -57,7 +55,9 @@ class TxHistoryListItem extends Component<Props> {
                 <AdaIcon
                   width={13}
                   height={13}
-                  color={isNegativeAmount ? stylesConfig.negativeAmountColor : stylesConfig.positiveAmountColor}
+                  color={isNegativeAmount ?
+                    stylesConfig.negativeAmountColor : stylesConfig.positiveAmountColor
+                  }
                 />
               </View>
             </View>
