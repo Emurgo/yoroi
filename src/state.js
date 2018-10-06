@@ -5,13 +5,13 @@ import ownAddresses from './mockData/addresses.json'
 import {processTxHistoryData} from './helpers/utils'
 
 export type InitialState = {
-  dummy: string,
+  languageCode: string,
   transactions: Array<HistoryTransaction>,
   ownAddresses: Array<string>,
 }
 
 export const getInitialState = (): InitialState => ({
-  dummy: 'This is some dummy state',
+  languageCode: 'en-US',
   ownAddresses,
   transactions: historyData.map((data) => processTxHistoryData(data, ownAddresses)),
 })

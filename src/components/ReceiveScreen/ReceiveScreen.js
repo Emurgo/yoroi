@@ -1,16 +1,15 @@
 // @flow
 
 import React from 'react'
-import {Text, View} from 'react-native'
+import {View} from 'react-native'
+import CustomText from '../CustomText'
 import styles from './ReceiveScreen.style'
 
 const ReceiveScreen = () => (
-  <View
-    style={styles.container}
-  >
-    <Text style={styles.welcome}>
-      Generate your addresses here
-    </Text>
+  <View style={styles.container}>
+    <CustomText style={styles.welcome}>
+      i18nGenerate your addresses here
+    </CustomText>
   </View>
 )
 

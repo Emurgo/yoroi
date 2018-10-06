@@ -1,16 +1,15 @@
 // @flow
 
 import React from 'react'
-import {Text, View} from 'react-native'
+import {View} from 'react-native'
+import CustomText from '../CustomText'
 import styles from './SigninScreen.style'
 
 const SigninScreen = () => (
-  <View
-    style={styles.container}
-  >
-    <Text style={styles.welcome}>
-    Sign with PIN / TouchID
-    </Text>
+  <View style={styles.container}>
+    <CustomText style={styles.welcome}>
+    i18nSign with PIN / TouchID
+    </CustomText>
   </View>
 )
 

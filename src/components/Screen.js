@@ -1,31 +1,32 @@
 // @flow
 
-import React, {Component} from 'react'
+import React from 'react'
 import type {Node} from 'react'
 import {StyleSheet, View, ScrollView} from 'react-native'
+import {COLORS} from '../styles/config'
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     padding: 20,
   },
 })
 
-type Props = {children?: Node, scroll: boolean}
+type Props = {children?: Node, scroll?: boolean, bgColor?: string}
 
-class Screen extends Component<Props> {
-  render() {
-    const {children, scroll} = this.props
+const Screen = ({children, scroll, bgColor}: Props) => {
+  const Container = scroll ? ScrollView : View
 
-    const Container = scroll ? ScrollView : View
-
-    return (
-      <Container style={styles.container}>
-        {children}
-      </Container>
-    )
-  }
+  return (
+    <Container
+      style={[
+        styles.container,
+        {backgroundColor: bgColor || COLORS.WHITE},
+      ]}
+    >
+      {children}
+    </Container>
+  )
 }
 
 export default Screen

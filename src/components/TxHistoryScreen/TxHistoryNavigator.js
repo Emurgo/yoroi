@@ -4,7 +4,7 @@ import {createStackNavigator} from 'react-navigation'
 import TxHistory from './TxHistory'
 import TxDetails from './TxDetails'
 
-const TX_HISTORY_ROUTES = {
+export const TX_HISTORY_ROUTES = {
   MAIN: 'main',
   TX_DETAIL: 'tx_details',
 }

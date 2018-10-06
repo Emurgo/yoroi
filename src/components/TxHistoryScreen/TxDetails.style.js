@@ -1,10 +1,11 @@
-import stylesConfig from '../../styles/config'
+// @flow
+import {COLORS} from '../../styles/config'
 
 const styles = {
   container: {
     flexShrink: 1,
     padding: 5,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.WHITE,
   },
   amountContainer: {
     flexDirection: 'row',
@@ -17,11 +18,11 @@ const styles = {
     marginBottom: 15,
   },
   positiveAmount: {
-    color: stylesConfig.positiveAmountColor,
+    color: COLORS.POSITIVE_AMOUNT,
     fontSize: 20,
   },
   negativeAmount: {
-    color: stylesConfig.negativeAmountColor,
+    color: COLORS.NEGATIVE_AMOUNT,
     fontSize: 20,
   },
   adaSignContainer: {
