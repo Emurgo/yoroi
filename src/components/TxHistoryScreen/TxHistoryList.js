@@ -1,8 +1,11 @@
 // @flow
 
 import React from 'react'
+import {compose} from 'redux'
+import {connect} from 'react-redux'
+
 import {Text, View} from 'react-native'
-import {groupBy} from 'lodash'
+import _ from 'lodash'
 import moment from 'moment'
 import type {Moment} from 'moment'
 
@@ -15,37 +18,42 @@ import styles from './TxHistoryList.style'
 
 const formatDate = (timestamp: Moment) => {
   if (moment().isSame(timestamp, 'day')) {
-    return 'Today'
+    return 'I18n today'
   } else if (moment().subtract(1, 'day').isSame(timestamp, 'day')) {
-    return 'Yesterday'
+    return 'I18n yesterday'
   } else {
+    // moment should be set to correct i18n
     return timestamp.format('L')
   }
 }
 
 
+const DayHeader = ({ts}) => (
+  <View style={styles.dateLabelContainer}>
+    <CustomText>
+      <Text style={styles.dateLabel}>{formatDate(ts)}</Text>
+    </CustomText>
+  </View>
+)
+
 type Props = {
   transactions: Array<HistoryTransaction>,
-  navigation: NavigationScreenProp<NavigationState>
+  navigation: NavigationScreenProp<NavigationState>,
 };
 
 const TxHistoryList = ({transactions, navigation}: Props) => {
   // Fixme: add sorting by time
-  const transactionsByDate = groupBy(
-    transactions,
-    (transaction) => formatDate(transaction.timestamp)
-  )
+  const transactionsByDate = _(transactions)
+    .groupBy((transaction) => moment(transaction.timestamp).format('L'))
+    .toPairs()
+    .value()
 
   return (
     <View style={styles.container}>
-      {Object.keys(transactionsByDate).map((date) => (
+      {transactionsByDate.map(([date, transactions]) => (
         <View key={date} style={styles.dayContainer}>
-          <View style={styles.dateLabelContainer}>
-            <CustomText>
-              <Text style={styles.dateLabel}>i18n{date}</Text>
-            </CustomText>
-          </View>
-          {transactionsByDate[date].map((transaction) => (
+          <DayHeader ts={transactions[0].timestamp} />
+          {transactions.map((transaction) => (
             <TxHistoryListItem
               navigation={navigation}
               key={transaction.id}
@@ -58,4 +66,8 @@ const TxHistoryList = ({transactions, navigation}: Props) => {
   )
 }
 
-export default TxHistoryList
+export default compose(
+  connect((state) => ({
+    l10n: state.l10n,
+  })),
+)(TxHistoryList)

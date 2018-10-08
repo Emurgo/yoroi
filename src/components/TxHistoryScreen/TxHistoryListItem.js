@@ -1,6 +1,9 @@
 // @flow
 
 import React, {Component} from 'react'
+import {compose} from 'redux'
+import {connect} from 'react-redux'
+
 import {Text, View, TouchableHighlight} from 'react-native'
 import {COLORS} from '../../styles/config'
 
@@ -8,13 +11,23 @@ import CustomText from '../../components/CustomText'
 import {confirmationsToAssuranceLevel, printAda} from '../../helpers/utils'
 import AdaIcon from '../../assets/AdaIcon'
 
-import type {HistoryTransaction} from '../../types/HistoryTransaction'
+import type {TransactionType, HistoryTransaction} from '../../types/HistoryTransaction'
 import {TX_HISTORY_ROUTES} from './TxHistoryNavigator'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 
 import styles from './TxHistoryListItem.style'
 
-type Props = {transaction: HistoryTransaction, navigation: NavigationScreenProp<NavigationState>};
+type Props = {
+  transaction: HistoryTransaction,
+  navigation: NavigationScreenProp<NavigationState>,
+  text: {
+    transactionType: {[TransactionType]: string},
+    assuranceLevelHeader: string,
+    assuranceLevel: any, // TODO(ppershing): type me
+  },
+}
+
+
 class TxHistoryListItem extends Component<Props> {
   constructor(props: Props) {
     super(props)
@@ -29,7 +42,7 @@ class TxHistoryListItem extends Component<Props> {
   }
 
   render() {
-    const {transaction} = this.props
+    const {transaction, text} = this.props
 
     const assuranceLevel = confirmationsToAssuranceLevel(transaction.confirmations)
     const isNegativeAmount = transaction.type === 'SENT'
@@ -43,7 +56,7 @@ class TxHistoryListItem extends Component<Props> {
         <View style={styles.container}>
           <View style={styles.row}>
             <View>
-              <CustomText>{`i18nADA ${transaction.type}`}</CustomText>
+              <CustomText>{text.transactionType[transaction.type]}</CustomText>
             </View>
             <View style={styles.amountContainer}>
               <CustomText>
@@ -69,7 +82,10 @@ class TxHistoryListItem extends Component<Props> {
               <CustomText>i18n{transaction.timestamp.format('hh:mm:ss A')}</CustomText>
             </View>
             <View>
-              <CustomText>i18nASSURANCE LEVEL: {assuranceLevel}</CustomText>
+              <CustomText>
+                {text.assuranceLevelHeader}
+                {text.assuranceLevel[assuranceLevel]}
+              </CustomText>
             </View>
           </View>
         </View>
@@ -78,4 +94,8 @@ class TxHistoryListItem extends Component<Props> {
   }
 }
 
-export default TxHistoryListItem
+export default compose(
+  connect((state) => ({
+    text: state.l10n.txHistoryScreen,
+  })),
+)(TxHistoryListItem)
