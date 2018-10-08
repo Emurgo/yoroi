@@ -42,6 +42,12 @@ const l10n = {
       },
     },
   },
+  walletInitScreen: {
+    line1: 'Yoroi is Web Light Wallet for Cardano',
+    line2: 'Secure Fast Simple',
+    byEmurgo: 'By',
+
+  }
 }
 
 export default l10n
