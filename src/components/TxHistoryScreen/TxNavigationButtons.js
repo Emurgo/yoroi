@@ -35,7 +35,7 @@ class TxNavigationButtons extends Component<Props> {
           activeOpacity={0.9}
           underlayColor="#fff"
           onPress={() => {
-            navigation.navigate('history')
+            navigation.navigate('receive')
           }}
         >
           <View style={styles.receiveButton}>
