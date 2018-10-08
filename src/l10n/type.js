@@ -39,12 +39,57 @@ export type Translation = {
       transactionHeader: {
         SENT: string,
         RECEIVED: string
-      }
+      },
+      confirmations: string
     }
   },
   walletInitScreen: {
+    createWallet: string,
+    restoreWallet: string
+  },
+  walletDescription: {
     line1: string,
     line2: string,
     byEmurgo: string
+  },
+  createWallet: {
+    title: string,
+    nameLabel: string,
+    passwordLabel: string,
+    passwordConfirmationLabel: string,
+    passwordRequirementsNote: string,
+    createButton: string
+  },
+  recoveryPhraseConfirmationDialog: {
+    title: string,
+    keysStorageCheckbox: string,
+    newDeviceRecoveryCheckbox: string,
+    confirmationButton: string
+  },
+  recoveryPhraseConfirmationScreen: {
+    title: string,
+    instructions: string,
+    inputLabel: string,
+    clearButton: string,
+    confirmButton: string
+  },
+  recoveryPhraseDialog: {
+    title: string,
+    paragraph1: string,
+    paragraph2: string,
+    nextButton: string
+  },
+  recoveryPhraseScreen: {
+    title: string,
+    mnemonicNote: string,
+    confirmationButton: string
+  },
+  restoreWalletScreen: {
+    title: string,
+    restoreButton: string
+  },
+  txHistoryNavigationButtons: {
+    sendButton: string,
+    receiveButton: string
   }
 }

@@ -1,20 +1,19 @@
 // @flow
 
 import React from 'react'
-import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {View} from 'react-native'
+import {View, TouchableHighlight} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
+import {compose} from 'redux'
+import {withHandlers} from 'recompose'
 
-import YoroiWalletIcon from '../../assets/YoroiWalletIcon'
-import EmurgoIcon from '../../assets/EmurgoIcon'
-import Screen from '../Screen'
+import WalletDescription from './WalletDescription'
 import CustomText from '../CustomText'
-import LanguagePicker from './LanguagePicker'
+import Screen from '../Screen'
 import BackgroundVisualArtefacts from './BackgroundVisualArtefacts'
-import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import {COLORS} from '../../styles/config'
 import styles from './WalletInitScreen.style'
+import {WALLET_INIT_ROUTES} from './WalletInitNavigator'
 
 import type {State} from '../../state'
 import type {SubTranslation} from '../../l10n/typeHelpers'
@@ -22,13 +21,12 @@ import type {SubTranslation} from '../../l10n/typeHelpers'
 const getTrans = (state: State) => state.trans.walletInitScreen
 
 type Props = {
-  changeLanguageAction: () => void,
-  navigation: NavigationScreenProp<NavigationState>,
-  languageCode: string,
+  navigateRestoreWallet: () => mixed,
+  navigateCreateWallet: () => mixed,
   trans: SubTranslation<typeof getTrans>,
 }
 
-const WalletInitScreen = ({navigation, trans}: Props) => (
+const WalletInitScreen = ({navigateCreateWallet, navigateRestoreWallet, trans}: Props) => (
   <LinearGradient
     start={{x: 0, y: 0}}
     end={{x: 1, y: 0}}
@@ -38,26 +36,29 @@ const WalletInitScreen = ({navigation, trans}: Props) => (
     <BackgroundVisualArtefacts />
     <Screen bgColor={COLORS.TRANSPARENT}>
       <View style={styles.container}>
-        <View style={styles.descriptionContainer}>
-          <YoroiWalletIcon color={COLORS.WHITE} width={140} height={80} />
+        <WalletDescription />
 
-          <View style={styles.subtitleContainer}>
-            <CustomText style={styles.subtitle}>
-              {trans.line1}
-            </CustomText>
-          </View>
-
-          <CustomText style={styles.subtitle}>
-            {trans.line2}
+        <TouchableHighlight
+          style={styles.button}
+          activeOpacity={0.9}
+          underlayColor={COLORS.WHITE}
+          onPress={navigateCreateWallet}
+        >
+          <CustomText style={styles.buttonText}>
+            {trans.createWallet}
           </CustomText>
+        </TouchableHighlight>
 
-          <View style={styles.emurgoCreditsContainer}>
-            <CustomText style={styles.subtitle}>{trans.byEmurgo}</CustomText>
-            <EmurgoIcon color={COLORS.WHITE} width={100} height={37} />
-          </View>
-        </View>
-
-        <LanguagePicker navigation={navigation} />
+        <TouchableHighlight
+          style={styles.button}
+          activeOpacity={0.1}
+          underlayColor={COLORS.WHITE}
+          onPress={navigateRestoreWallet}
+        >
+          <CustomText style={styles.buttonText}>
+            {trans.restoreWallet}
+          </CustomText>
+        </TouchableHighlight>
       </View>
     </Screen>
   </LinearGradient>
@@ -67,4 +68,10 @@ export default compose(
   connect((state: State) => ({
     trans: getTrans(state),
   })),
+  withHandlers({
+    navigateRestoreWallet:
+      ({navigation}) => (event) => navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET),
+    navigateCreateWallet:
+      ({navigation}) => (event) => navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET),
+  })
 )(WalletInitScreen)

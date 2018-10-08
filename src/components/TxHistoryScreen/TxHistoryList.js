@@ -2,6 +2,7 @@
 
 import React from 'react'
 import {compose} from 'redux'
+import {withHandlers} from 'recompose'
 import {connect} from 'react-redux'
 
 import {Text, View} from 'react-native'
@@ -16,11 +17,11 @@ import TxHistoryListItem from './TxHistoryListItem'
 
 import styles from './TxHistoryList.style'
 
-const formatDate = (timestamp: Moment) => {
+const formatDate = (timestamp: Moment, l10n) => {
   if (moment().isSame(timestamp, 'day')) {
-    return 'I18n today'
+    return l10n.global.datetime.today
   } else if (moment().subtract(1, 'day').isSame(timestamp, 'day')) {
-    return 'I18n yesterday'
+    return l10n.global.datetime.yesterday
   } else {
     // moment should be set to correct i18n
     return timestamp.format('L')
@@ -28,7 +29,7 @@ const formatDate = (timestamp: Moment) => {
 }
 
 
-const DayHeader = ({ts}) => (
+const DayHeader = ({ts, formatDate}) => (
   <View style={styles.dateLabelContainer}>
     <CustomText>
       <Text style={styles.dateLabel}>{formatDate(ts)}</Text>
@@ -39,9 +40,10 @@ const DayHeader = ({ts}) => (
 type Props = {
   transactions: Array<HistoryTransaction>,
   navigation: NavigationScreenProp<NavigationState>,
+  formatDate: (timestamp: Moment, l10n: any) => string,
 };
 
-const TxHistoryList = ({transactions, navigation}: Props) => {
+const TxHistoryList = ({transactions, navigation, formatDate}: Props) => {
   // Fixme: add sorting by time
   const transactionsByDate = _(transactions)
     .groupBy((transaction) => moment(transaction.timestamp).format('L'))
@@ -52,7 +54,7 @@ const TxHistoryList = ({transactions, navigation}: Props) => {
     <View style={styles.container}>
       {transactionsByDate.map(([date, transactions]) => (
         <View key={date} style={styles.dayContainer}>
-          <DayHeader ts={transactions[0].timestamp} />
+          <DayHeader ts={transactions[0].timestamp} formatDate={formatDate} />
           {transactions.map((transaction) => (
             <TxHistoryListItem
               navigation={navigation}
@@ -69,4 +71,8 @@ const TxHistoryList = ({transactions, navigation}: Props) => {
 export default compose(
   connect((state) => ({
   })),
+  withHandlers({
+    formatDate:
+      ({l10n}) => (ts) => formatDate(ts, l10n),
+  })
 )(TxHistoryList)

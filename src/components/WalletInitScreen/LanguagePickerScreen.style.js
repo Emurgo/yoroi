@@ -1,4 +1,3 @@
-// @flow
 import {COLORS} from '../../styles/config'
 
 const style = {
@@ -25,18 +24,6 @@ const style = {
   subtitle: {
     color: COLORS.WHITE,
     textAlign: 'center',
-  },
-  button: {
-    backgroundColor: COLORS.LIGHT_POSITIVE_GREEN,
-    padding: 20,
-    borderRadius: 5,
-    width: '100%',
-    justifyContent: 'center',
-    alignContent: 'center',
-    flexDirection: 'row',
-  },
-  buttonText: {
-    color: COLORS.WHITE,
   },
 }
 
