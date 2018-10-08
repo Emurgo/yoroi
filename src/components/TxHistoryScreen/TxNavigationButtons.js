@@ -14,8 +14,8 @@ import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,
-  navigateToReceive: () => void,
-  navigateToSend: () => void,
+  navigateToReceive: () => mixed,
+  navigateToSend: () => mixed,
 };
 const TxNavigationButtons = ({navigation, navigateToReceive, navigateToSend}: Props) => (
   <View style={styles.navigationButtonsContainer}>
