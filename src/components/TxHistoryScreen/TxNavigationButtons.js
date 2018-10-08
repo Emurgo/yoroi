@@ -49,7 +49,7 @@ const TxNavigationButtons = ({navigation, navigateToReceive, navigateToSend}: Pr
 
 export default compose(
   withHandlers({
-    navigateToReceive: ({navigation}) => (event) => navigation.navigate(MAIN_ROUTES.TX_HISTORY),
+    navigateToReceive: ({navigation}) => (event) => navigation.navigate(MAIN_ROUTES.RECEIVE),
     navigateToSend: ({navigation}) => (event) => navigation.navigate(MAIN_ROUTES.SEND),
   })
 )(TxNavigationButtons)
