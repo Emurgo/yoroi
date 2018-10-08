@@ -15,17 +15,16 @@ import BackgroundVisualArtefacts from './BackgroundVisualArtefacts'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import {COLORS} from '../../styles/config'
 
+import type {State} from '../../state'
 import styles from './WalletInitScreen.style'
+
+const getText = (state) => state.l10n.walletInitScreen
 
 type Props = {
   changeLanguageAction: () => void,
   navigation: NavigationScreenProp<NavigationState>,
   languageCode: string,
-  text: {
-    line1: string,
-    line2: string,
-    byEmurgo: string,
-  },
+  text: $Call<typeof getText, State>,
 }
 
 const WalletInitScreen = ({navigation, text}: Props) => (
@@ -64,7 +63,7 @@ const WalletInitScreen = ({navigation, text}: Props) => (
 )
 
 export default compose(
-  connect((state) => ({
-    text: state.l10n.walletInitScreen,
+  connect((state: State) => ({
+    text: getText(state),
   })),
 )(WalletInitScreen)
