@@ -10,7 +10,7 @@ export type HistoryTransaction = {
   amount: number,
   type: TransactionType,
   confirmations: number,
-  timestamp: Moment,
+  timestamp: Moment, // FIXME(ppershing): should be int
   updatedAt: Moment,
   isIntraWallet: boolean,
 }
