@@ -2,17 +2,12 @@
 import {COLORS} from '../../styles/config'
 
 const styles = {
-  container: {
+  root: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: COLORS.BACKGROUND_GRAY,
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
 }
 
-export default style
+export default styles
