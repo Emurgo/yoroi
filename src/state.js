@@ -1,7 +1,7 @@
 import HistoryTransaction from './types/HistoryTransaction'
 
 import historyData from './mockData/history.json'
-import ownAddresses from './mockData/addresses.json'
+import receiveAddresses from './mockData/addresses.json'
 import {processTxHistoryData} from './helpers/utils'
 
 export type InitialState = {
@@ -12,8 +12,8 @@ export type InitialState = {
 
 export const getInitialState = (): InitialState => ({
   languageCode: 'en-US',
-  ownAddresses,
-  transactions: historyData.map((data) => processTxHistoryData(data, ownAddresses)),
+  receiveAddresses,
+  transactions: historyData.map((data) => processTxHistoryData(data, receiveAddresses)),
 })
 
 export default getInitialState
