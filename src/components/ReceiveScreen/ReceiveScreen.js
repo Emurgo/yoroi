@@ -1,17 +1,36 @@
 // @flow
 
-import React from 'react'
-import {Text, View} from 'react-native'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import {compose} from 'redux'
+import {View} from 'react-native'
+
+import Screen from '../../components/Screen'
+import OwnAddressesList from './OwnAddressesList'
+
 import styles from './ReceiveScreen.style'
 
-const ReceiveScreen = () => (
-  <View
-    style={styles.container}
-  >
-    <Text style={styles.welcome}>
-      Generate your addresses here
-    </Text>
-  </View>
-)
+type Props = {
+  ownAddresses: Array<string>,
+};
 
-export default ReceiveScreen
+
+class ReceiveScreen extends Component<Props> {
+  render() {
+    const {ownAddresses} = this.props
+
+    return (
+      <View style={styles.root}>
+        <Screen scroll>
+          <OwnAddressesList ownAddresses={ownAddresses} />
+        </Screen>
+      </View>
+    )
+  }
+}
+
+export default compose(
+  connect((state) => ({
+    ownAddresses: state.ownAddresses,
+  })),
+)(ReceiveScreen)
