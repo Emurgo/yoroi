@@ -12,7 +12,7 @@ const SendScreenNavigator = createStackNavigator({
 }, {
   initialRouteName: SEND_ROUTES.MAIN,
   navigationOptions: ({navigation}) => ({
-    title: 'Send ADA',
+    title: 'i18nSend ADA',
   }),
 })
 

@@ -1,10 +1,11 @@
 // @flow
 import {createStackNavigator} from 'react-navigation'
+import WalletInitNavigator from './components/WalletInitScreen/WalletInitNavigator'
 import TxHistoryNavigator from './components/TxHistoryScreen/TxHistoryNavigator'
 import SendScreenNavigator from './components/SendScreen/SendScreenNavigator'
 import ReceiveScreenNavigator from './components/ReceiveScreen/ReceiveScreenNavigator';
 
-const MAIN_ROUTES = {
+export const MAIN_ROUTES = {
   TX_HISTORY: 'history',
   SEND: 'send',
   RECEIVE: 'receive',
@@ -28,8 +29,9 @@ const MainNavigator = createStackNavigator(
 const AppNavigator = createStackNavigator({
   // login: LoginNavigator,
   main: MainNavigator,
+  init: WalletInitNavigator,
 }, {
-  initialRouteName: 'main',
+  initialRouteName: 'init',
   navigationOptions: {
     header: null,
   },

@@ -1,27 +1,21 @@
 // @flow
 
-import React, {Component} from 'react'
+import React from 'react'
 import type {Node} from 'react'
 import {StyleSheet, Text} from 'react-native'
-import stylesConfig from '../styles/config'
+import stylesConfig, {COLORS} from '../styles/config'
 
 const styles = StyleSheet.create({
   text: {
     fontFamily: stylesConfig.defaultFont,
-    color: '#000',
+    color: COLORS.BLACK,
   },
 })
 
-type Props = {children: Node}
+type Props = {children: Node, style?: any}
 
-class CustomText extends Component<Props> {
-  render() {
-    const {children} = this.props
-
-    return (
-      <Text style={styles.text}>{children}</Text>
-    )
-  }
-}
+const CustomText = ({children, style}: Props) => (
+  <Text style={[styles.text, style || {}]}>{children}</Text>
+)
 
 export default CustomText

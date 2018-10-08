@@ -1,7 +1,10 @@
+// @flow
+import {COLORS} from '../../styles/config'
+
 const styles = {
   navigationButtonsContainer: {
     flexDirection: 'row',
-    backgroundColor: '#4a4a4a',
+    backgroundColor: COLORS.DARK_GRAY,
     padding: 1,
   },
   button: {
@@ -10,18 +13,18 @@ const styles = {
   },
   sendButton: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.WHITE,
     justifyContent: 'center',
     alignItems: 'center',
   },
   receiveButton: {
     flex: 1,
-    backgroundColor: '#4a4a4a',
+    backgroundColor: COLORS.DARK_GRAY,
     justifyContent: 'center',
     alignItems: 'center',
   },
   receiveButtonText: {
-    color: '#fff',
+    color: COLORS.WHITE,
   },
 }
 
