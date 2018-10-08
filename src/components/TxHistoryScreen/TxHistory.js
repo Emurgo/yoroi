@@ -1,6 +1,6 @@
 // @flow
 
-import React, {Component} from 'react'
+import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View} from 'react-native'
@@ -19,21 +19,15 @@ type Props = {
   navigation: NavigationScreenProp<NavigationState>
 };
 
-class TxHistory extends Component<Props> {
-  render() {
-    const {transactions, navigation} = this.props
+const TxHistory = ({transactions, navigation}: Props) => (
+  <View style={styles.root}>
+    <Screen scroll>
+      <TxHistoryList navigation={navigation} transactions={transactions} />
+    </Screen>
 
-    return (
-      <View style={styles.root}>
-        <Screen scroll>
-          <TxHistoryList navigation={navigation} transactions={transactions} />
-        </Screen>
-
-        <TxNavigationButtons navigation={navigation} />
-      </View>
-    )
-  }
-}
+    <TxNavigationButtons navigation={navigation} />
+  </View>
+)
 
 export default compose(
   connect((state) => ({

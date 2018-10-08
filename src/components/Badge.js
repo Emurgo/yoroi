@@ -1,8 +1,8 @@
 // @flow
 
-import React, {Component} from 'react'
+import React from 'react'
 import {StyleSheet, View, Text} from 'react-native'
-import stylesConfig from '../styles/config'
+import stylesConfig, {COLORS} from '../styles/config'
 
 const styles = StyleSheet.create({
   container: {
@@ -19,26 +19,20 @@ const styles = StyleSheet.create({
 
 type Props = {text: string, color?: string, backgroundColor?: string}
 
-class Badge extends Component<Props> {
-  render() {
-    const {text, color, backgroundColor} = this.props
-
-    return (
-      <View
-        style={{
-          ...styles.container,
-          backgroundColor: backgroundColor || stylesConfig.primaryColor,
-        }}
-      >
-        <Text
-          style={{
-            ...styles.text,
-            color: color || stylesConfig.primaryTextColor,
-          }}
-        >{text}</Text>
-      </View>
-    )
-  }
-}
+const Badge = ({text, color, backgroundColor}: Props) => (
+  <View
+    style={{
+      ...styles.container,
+      backgroundColor: backgroundColor || COLORS.PRIMARY,
+    }}
+  >
+    <Text
+      style={{
+        ...styles.text,
+        color: color || COLORS.PRIMARY_TEXT,
+      }}
+    >{text}</Text>
+  </View>
+)
 
 export default Badge

@@ -2,13 +2,14 @@
 
 import React, {Component} from 'react'
 import {Text, View, TouchableHighlight} from 'react-native'
-import stylesConfig from '../../styles/config'
+import {COLORS} from '../../styles/config'
 
 import CustomText from '../../components/CustomText'
 import {confirmationsToAssuranceLevel, printAda} from '../../helpers/utils'
 import AdaIcon from '../../assets/AdaIcon'
 
 import type {HistoryTransaction} from '../../types/HistoryTransaction'
+import {TX_HISTORY_ROUTES} from './TxHistoryNavigator'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 
 import styles from './TxHistoryListItem.style'
@@ -24,7 +25,7 @@ class TxHistoryListItem extends Component<Props> {
   showDetails = () => {
     const {navigation, transaction} = this.props
 
-    navigation.navigate('tx_details', {transaction})
+    navigation.navigate(TX_HISTORY_ROUTES.TX_DETAIL, {transaction})
   }
 
   render() {
@@ -36,13 +37,13 @@ class TxHistoryListItem extends Component<Props> {
     return (
       <TouchableHighlight
         activeOpacity={0.9}
-        underlayColor="#eee"
+        underlayColor={COLORS.LIGHT_GRAY}
         onPress={this.showDetails}
       >
         <View style={styles.container}>
           <View style={styles.row}>
             <View>
-              <CustomText>{`ADA ${transaction.type}`}</CustomText>
+              <CustomText>{`i18nADA ${transaction.type}`}</CustomText>
             </View>
             <View style={styles.amountContainer}>
               <CustomText>
@@ -56,7 +57,7 @@ class TxHistoryListItem extends Component<Props> {
                   width={13}
                   height={13}
                   color={isNegativeAmount ?
-                    stylesConfig.negativeAmountColor : stylesConfig.positiveAmountColor
+                    COLORS.NEGATIVE_AMOUNT : COLORS.POSITIVE_AMOUNT
                   }
                 />
               </View>
@@ -65,10 +66,10 @@ class TxHistoryListItem extends Component<Props> {
 
           <View style={styles.row}>
             <View>
-              <CustomText>{transaction.timestamp.format('hh:mm:ss A')}</CustomText>
+              <CustomText>i18n{transaction.timestamp.format('hh:mm:ss A')}</CustomText>
             </View>
             <View>
-              <CustomText>ASSURANCE LEVEL: {assuranceLevel}</CustomText>
+              <CustomText>i18nASSURANCE LEVEL: {assuranceLevel}</CustomText>
             </View>
           </View>
         </View>

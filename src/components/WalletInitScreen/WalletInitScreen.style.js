@@ -1,14 +1,29 @@
+import {COLORS} from '../../styles/config'
+
 const style = {
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   },
-  welcome: {
-    fontSize: 20,
+  descriptionContainer: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  gradient: {
+    flex: 1,
+  },
+  emurgoCreditsContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginTop: 10,
+  },
+  subtitleContainer: {
+    width: '60%',
+  },
+  subtitle: {
+    color: COLORS.WHITE,
     textAlign: 'center',
-    margin: 10,
   },
 }
 

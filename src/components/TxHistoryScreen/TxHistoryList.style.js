@@ -1,3 +1,6 @@
+// @flow
+import {COLORS} from '../../styles/config'
+
 const styles = {
   container: {
     flex: 1,
@@ -11,11 +14,11 @@ const styles = {
   },
   dateLabelContainer: {
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: COLORS.LIGHT_GRAY,
     paddingBottom: 15,
   },
   dateLabel: {
-    color: '#000',
+    color: COLORS.BLACK,
     fontSize: 20,
   },
 }

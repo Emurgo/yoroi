@@ -1,16 +1,15 @@
 // @flow
 
 import React from 'react'
-import {Text, View} from 'react-native'
+import {View} from 'react-native'
+import CustomText from '../CustomText'
 import styles from './SettingsScreen.style'
 
 const SettingsScreen = () => (
-  <View
-    style={styles.container}
-  >
-    <Text style={styles.welcome}>
-    Change your settings here
-    </Text>
+  <View style={styles.container}>
+    <CustomText style={styles.welcome}>
+    i18nChange your settings here
+    </CustomText>
   </View>
 )
 
