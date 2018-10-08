@@ -12,11 +12,12 @@ import CustomText from '../CustomText'
 
 const changeLanguageAction = (languageCode) => ({
   path: ['languageCode'],
-  reducer: () => languageCode,
-  type: 'CHANGE_LANGUAGE',
   payload: languageCode,
+  reducer: (state, languageCode) => languageCode,
+  type: 'CHANGE_LANGUAGE',
 })
 
+// TODO: l10n
 const supportedLangauage = [
   {label: '简体中文', name: 'Chinese (Simplified)', code: 'zh-Hans'},
   {label: '繁體中文', name: 'Chinese (Traditional)', code: 'zh-Hant'},
@@ -30,13 +31,17 @@ type Props = {
   changeLanguage: () => void,
   handleContinue: () => void,
   languageCode: string,
+  text: {
+    selectLanguage: string,
+    continue: string,
+  },
 };
 
-const LanguagePicker = ({changeLanguage, languageCode, handleContinue}: Props) => (
+const LanguagePicker = ({changeLanguage, languageCode, handleContinue, text}: Props) => (
   <View style={styles.container}>
     <View style={styles.labelContainer}>
       <CustomText>
-        <Text style={styles.label}>i18nSELECT YOUR LANGAUAGE</Text>
+        <Text style={styles.label}>{text.selectLanguage}</Text>
       </CustomText>
     </View>
 
@@ -63,7 +68,7 @@ const LanguagePicker = ({changeLanguage, languageCode, handleContinue}: Props) =
       onPress={handleContinue}
     >
       <CustomText>
-        <Text style={styles.buttonText}>i18nCONTINUE</Text>
+        <Text style={styles.buttonText}>{text.continue}</Text>
       </CustomText>
     </TouchableHighlight>
   </View>
@@ -72,6 +77,7 @@ const LanguagePicker = ({changeLanguage, languageCode, handleContinue}: Props) =
 export default compose(
   connect((state) => ({
     languageCode: state.languageCode,
+    text: state.l10n.languageSelectScreen,
   }), {
     changeLanguage: changeLanguageAction,
   }),
@@ -79,5 +85,4 @@ export default compose(
     handleContinue: ({navigation}) => (event) => navigation.navigate(MAIN_ROUTES.TX_HISTORY),
   })
 )(LanguagePicker)
-
 

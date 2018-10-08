@@ -1,6 +1,8 @@
 // @flow
 
 import React from 'react'
+import {compose} from 'redux'
+import {connect} from 'react-redux'
 import {View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
@@ -19,9 +21,14 @@ type Props = {
   changeLanguageAction: () => void,
   navigation: NavigationScreenProp<NavigationState>,
   languageCode: string,
-};
+  text: {
+    line1: string,
+    line2: string,
+    byEmurgo: string,
+  },
+}
 
-const WalletInitScreen = ({navigation}: Props) => (
+const WalletInitScreen = ({navigation, text}: Props) => (
   <LinearGradient
     start={{x: 0, y: 0}}
     end={{x: 1, y: 0}}
@@ -36,16 +43,16 @@ const WalletInitScreen = ({navigation}: Props) => (
 
           <View style={styles.subtitleContainer}>
             <CustomText style={styles.subtitle}>
-            i18nYoroi is Web Light Wallet for Cardano
+              {text.line1}
             </CustomText>
           </View>
 
           <CustomText style={styles.subtitle}>
-          i18nSecure Fast Simple
+            {text.line2}
           </CustomText>
 
           <View style={styles.emurgoCreditsContainer}>
-            <CustomText style={styles.subtitle}>i18nBy</CustomText>
+            <CustomText style={styles.subtitle}>{text.byEmurgo}</CustomText>
             <EmurgoIcon color={COLORS.WHITE} width={100} height={37} />
           </View>
         </View>
@@ -56,4 +63,8 @@ const WalletInitScreen = ({navigation}: Props) => (
   </LinearGradient>
 )
 
-export default WalletInitScreen
+export default compose(
+  connect((state) => ({
+    text: state.l10n.walletInitScreen,
+  })),
+)(WalletInitScreen)
