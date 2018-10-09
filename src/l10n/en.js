@@ -1,4 +1,5 @@
 // @flow
+import {pluralizeEn} from './util'
 
 const language = {
   chineseSimplified: '简体中文',
@@ -42,7 +43,8 @@ const l10n = {
         SENT: 'ADA sent',
         RECEIVED: 'ADA received',
       },
-      confirmations: 'CONFIRMATIONS',
+      formatConfirmations: (cnt: number) =>
+        `${cnt} ${pluralizeEn(cnt, 'CONFIRMATION', 'CONFIRMATIONS')}`,
     },
   },
   walletInitScreen: {
