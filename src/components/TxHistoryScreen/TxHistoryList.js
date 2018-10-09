@@ -17,11 +17,11 @@ import TxHistoryListItem from './TxHistoryListItem'
 
 import styles from './TxHistoryList.style'
 
-const formatDate = (timestamp: Moment, l10n) => {
+const formatDate = (timestamp: Moment, trans) => {
   if (moment().isSame(timestamp, 'day')) {
-    return l10n.global.datetime.today
+    return trans.global.datetime.today
   } else if (moment().subtract(1, 'day').isSame(timestamp, 'day')) {
-    return l10n.global.datetime.yesterday
+    return trans.global.datetime.yesterday
   } else {
     // moment should be set to correct i18n
     return timestamp.format('L')
@@ -40,7 +40,7 @@ const DayHeader = ({ts, formatDate}) => (
 type Props = {
   transactions: Array<HistoryTransaction>,
   navigation: NavigationScreenProp<NavigationState>,
-  formatDate: (timestamp: Moment, l10n: any) => string,
+  formatDate: (timestamp: Moment, trans: any) => string,
 };
 
 const TxHistoryList = ({transactions, navigation, formatDate}: Props) => {
@@ -70,9 +70,10 @@ const TxHistoryList = ({transactions, navigation, formatDate}: Props) => {
 
 export default compose(
   connect((state) => ({
+    trans: state.trans,
   })),
   withHandlers({
     formatDate:
-      ({l10n}) => (ts) => formatDate(ts, l10n),
+      ({trans}) => (ts) => formatDate(ts, trans),
   })
 )(TxHistoryList)

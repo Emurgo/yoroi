@@ -9,9 +9,12 @@ import {NavigationActions, StackActions} from 'react-navigation'
 
 import CustomText from '../../CustomText'
 import Screen from '../../Screen'
-import {COLORS} from '../../../styles/config'
 
+import {COLORS} from '../../../styles/config'
 import styles from './RestoreWalletScreen.style'
+
+import type {State} from '../../../state'
+import type {SubTranslation} from '../../../l10n/typeHelpers'
 
 const resetNavigationAction = StackActions.reset({
   index: 0,
@@ -24,18 +27,17 @@ const resetNavigationAction = StackActions.reset({
   key: null,
 })
 
+const getTrans = (state: State) => state.trans.restoreWalletScreen
+
 type Props = {
   navigateToWallet: () => mixed,
-  text: {
-    title: string,
-    restoreButton: string,
-  },
+  trans: SubTranslation<typeof getTrans>,
 };
 
-const RestoreWalletScreen = ({navigateToWallet, text}: Props) => (
+const RestoreWalletScreen = ({navigateToWallet, trans}: Props) => (
   <Screen bgColor={COLORS.TRANSPARENT}>
     <View>
-      <CustomText>{text.title}</CustomText>
+      <CustomText>{trans.title}</CustomText>
 
       <TouchableHighlight
         activeOpacity={0.1}
@@ -43,7 +45,7 @@ const RestoreWalletScreen = ({navigateToWallet, text}: Props) => (
         onPress={navigateToWallet}
         style={styles.button}
       >
-        <CustomText>{text.restoreButton}</CustomText>
+        <CustomText>{trans.restoreButton}</CustomText>
       </TouchableHighlight>
     </View>
   </Screen>
@@ -51,7 +53,7 @@ const RestoreWalletScreen = ({navigateToWallet, text}: Props) => (
 
 export default compose(
   connect((state) => ({
-    text: state.l10n.restoreWalletScreen,
+    trans: getTrans(state),
   })),
   withHandlers({
     navigateToWallet: ({navigation}) => (event) => navigation.dispatch(resetNavigationAction),

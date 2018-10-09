@@ -8,30 +8,31 @@ import {withHandlers} from 'recompose'
 
 import CustomText from '../../CustomText'
 import Screen from '../../Screen'
-import {COLORS} from '../../../styles/config'
+import {WALLET_INIT_ROUTES} from '../WalletInitNavigator'
 
 import styles from './RecoveryPhraseScreen.style'
-import {WALLET_INIT_ROUTES} from '../WalletInitNavigator'
+import {COLORS} from '../../../styles/config'
+
+import type {State} from '../../../state'
+import type {SubTranslation} from '../../../l10n/typeHelpers'
+
+const getTrans = (state: State) => state.trans.recoveryPhraseScreen
 
 type Props = {
   navigateToRecoveryPhraseConfirmation: () => mixed,
-  text: {
-    title: string,
-    mnemonicNote: string,
-    confirmationButton: string,
-  },
+  trans: SubTranslation<typeof getTrans>,
 };
 
-const CreateWalletScreen = ({navigateToRecoveryPhraseConfirmation, text}: Props) => (
+const CreateWalletScreen = ({navigateToRecoveryPhraseConfirmation, trans}: Props) => (
   <Screen bgColor={COLORS.TRANSPARENT}>
     <View>
-      <CustomText>{text.title}</CustomText>
+      <CustomText>{trans.title}</CustomText>
 
       <CustomText>
         YOUR MNEMONIC IS HERE
       </CustomText>
 
-      <CustomText>{text.mnemonicNote}</CustomText>
+      <CustomText>{trans.mnemonicNote}</CustomText>
 
       <TouchableHighlight
         activeOpacity={0.1}
@@ -39,7 +40,7 @@ const CreateWalletScreen = ({navigateToRecoveryPhraseConfirmation, text}: Props)
         onPress={navigateToRecoveryPhraseConfirmation}
         style={styles.button}
       >
-        <CustomText>{text.confirmationButton}</CustomText>
+        <CustomText>{trans.confirmationButton}</CustomText>
       </TouchableHighlight>
     </View>
   </Screen>
@@ -47,7 +48,7 @@ const CreateWalletScreen = ({navigateToRecoveryPhraseConfirmation, text}: Props)
 
 export default compose(
   connect((state) => ({
-    text: state.l10n.recoveryPhraseScreen,
+    trans: getTrans(state),
   })),
   withHandlers({
     navigateToRecoveryPhraseConfirmation: ({navigation}) =>

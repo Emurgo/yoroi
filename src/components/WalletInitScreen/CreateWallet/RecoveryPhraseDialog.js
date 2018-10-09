@@ -8,27 +8,27 @@ import {withHandlers} from 'recompose'
 
 import CustomText from '../../CustomText'
 import Screen from '../../Screen'
-import {COLORS} from '../../../styles/config'
 import {WALLET_INIT_ROUTES} from '../WalletInitNavigator'
 
 import styles from './RecoveryPhraseDialog.style'
+import {COLORS} from '../../../styles/config'
+
+import type {State} from '../../../state'
+import type {SubTranslation} from '../../../l10n/typeHelpers'
+
+const getTrans = (state: State) => state.trans.recoveryPhraseDialog
 
 type Props = {
   navigateToRecoveryPhrase: () => mixed,
-  text: {
-    title: string,
-    paragraph1: string,
-    paragraph2: string,
-    nextButton: string,
-  },
+  trans: SubTranslation<typeof getTrans>,
 };
 
-const RecoveryPhraseDialog = ({navigateToRecoveryPhrase, text}: Props) => (
+const RecoveryPhraseDialog = ({navigateToRecoveryPhrase, trans}: Props) => (
   <Screen bgColor={COLORS.TRANSPARENT_BLACK}>
     <View style={styles.dialogBody}>
-      <CustomText>{text.title}</CustomText>
-      <CustomText>{text.paragraph1}</CustomText>
-      <CustomText>{text.paragraph2}</CustomText>
+      <CustomText>{trans.title}</CustomText>
+      <CustomText>{trans.paragraph1}</CustomText>
+      <CustomText>{trans.paragraph2}</CustomText>
 
       <TouchableHighlight
         activeOpacity={0.1}
@@ -36,7 +36,7 @@ const RecoveryPhraseDialog = ({navigateToRecoveryPhrase, text}: Props) => (
         onPress={navigateToRecoveryPhrase}
         style={styles.button}
       >
-        <CustomText>{text.nextButton}</CustomText>
+        <CustomText>{trans.nextButton}</CustomText>
       </TouchableHighlight>
     </View>
   </Screen>
@@ -44,7 +44,7 @@ const RecoveryPhraseDialog = ({navigateToRecoveryPhrase, text}: Props) => (
 
 export default compose(
   connect((state) => ({
-    text: state.l10n.recoveryPhraseDialog,
+    trans: getTrans(state),
   })),
   withHandlers({
     navigateToRecoveryPhrase:

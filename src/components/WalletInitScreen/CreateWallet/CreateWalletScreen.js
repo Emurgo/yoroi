@@ -8,31 +8,30 @@ import {withHandlers} from 'recompose'
 
 import CustomText from '../../CustomText'
 import Screen from '../../Screen'
-import {COLORS} from '../../../styles/config'
 import {WALLET_INIT_ROUTES} from '../WalletInitNavigator'
 
 import styles from './CreateWalletScreen.style'
+import {COLORS} from '../../../styles/config'
+
+import type {State} from '../../../state'
+import type {SubTranslation} from '../../../l10n/typeHelpers'
+
+
+const getTrans = (state: State) => state.trans.createWallet
 
 type Props = {
   navigateToRecoveryPhrase: () => mixed,
-  text: {
-    title: string,
-    nameLabel: string,
-    passwordLabel: string,
-    passwordConfirmationLabel: string,
-    passwordRequirementsNote: string,
-    createButton: string,
-  }
+  trans: SubTranslation<typeof getTrans>,
 };
 
-const CreateWalletScreen = ({navigateToRecoveryPhrase, text}: Props) => (
+const CreateWalletScreen = ({navigateToRecoveryPhrase, trans}: Props) => (
   <Screen bgColor={COLORS.TRANSPARENT}>
     <View>
-      <CustomText>{text.title}</CustomText>
-      <CustomText>{text.nameLabel}</CustomText>
-      <CustomText>{text.passwordLabel}</CustomText>
-      <CustomText>{text.passwordConfirmationLabel}</CustomText>
-      <CustomText>{text.passwordRequirementsNote}</CustomText>
+      <CustomText>{trans.title}</CustomText>
+      <CustomText>{trans.nameLabel}</CustomText>
+      <CustomText>{trans.passwordLabel}</CustomText>
+      <CustomText>{trans.passwordConfirmationLabel}</CustomText>
+      <CustomText>{trans.passwordRequirementsNote}</CustomText>
 
       <TouchableHighlight
         activeOpacity={0.1}
@@ -40,7 +39,7 @@ const CreateWalletScreen = ({navigateToRecoveryPhrase, text}: Props) => (
         onPress={navigateToRecoveryPhrase}
         style={styles.button}
       >
-        <CustomText>{text.createButton}</CustomText>
+        <CustomText>{trans.createButton}</CustomText>
       </TouchableHighlight>
     </View>
   </Screen>
@@ -48,7 +47,7 @@ const CreateWalletScreen = ({navigateToRecoveryPhrase, text}: Props) => (
 
 export default compose(
   connect((state) => ({
-    text: state.l10n.createWallet,
+    trans: getTrans(state),
   })),
   withHandlers({
     navigateToRecoveryPhrase:

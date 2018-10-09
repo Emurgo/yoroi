@@ -8,28 +8,27 @@ import {withHandlers} from 'recompose'
 
 import CustomText from '../../CustomText'
 import Screen from '../../Screen'
-import {COLORS} from '../../../styles/config'
 import {WALLET_INIT_ROUTES} from '../WalletInitNavigator'
 
 import styles from './RecoveryPhraseConfirmationScreen.style'
+import {COLORS} from '../../../styles/config'
+
+import type {State} from '../../../state'
+import type {SubTranslation} from '../../../l10n/typeHelpers'
+
+const getTrans = (state: State) => state.trans.recoveryPhraseConfirmationScreen
 
 type Props = {
   navigateToConfirmDialog: () => mixed,
-  text: {
-    title: string,
-    instructions: string,
-    inputLabel: string,
-    clearButton: string,
-    confirmButton: string,
-  },
+  trans: SubTranslation<typeof getTrans>,
 };
 
-const RecoveryPhraseConfirmationScreen = ({navigateToConfirmDialog, text}: Props) => (
+const RecoveryPhraseConfirmationScreen = ({navigateToConfirmDialog, trans}: Props) => (
   <Screen bgColor={COLORS.TRANSPARENT}>
     <View>
-      <CustomText>{text.title}</CustomText>
-      <CustomText>{text.instructions}</CustomText>
-      <CustomText>{text.inputLabel}</CustomText>
+      <CustomText>{trans.title}</CustomText>
+      <CustomText>{trans.instructions}</CustomText>
+      <CustomText>{trans.inputLabel}</CustomText>
 
       <TouchableHighlight
         activeOpacity={0.1}
@@ -37,7 +36,7 @@ const RecoveryPhraseConfirmationScreen = ({navigateToConfirmDialog, text}: Props
         onPress={() => {/* Dispatch reset action here*/}}
         style={styles.button}
       >
-        <CustomText>{text.clearButton}</CustomText>
+        <CustomText>{trans.clearButton}</CustomText>
       </TouchableHighlight>
 
       <TouchableHighlight
@@ -46,7 +45,7 @@ const RecoveryPhraseConfirmationScreen = ({navigateToConfirmDialog, text}: Props
         onPress={navigateToConfirmDialog}
         style={styles.button}
       >
-        <CustomText>{text.confirmButton}</CustomText>
+        <CustomText>{trans.confirmButton}</CustomText>
       </TouchableHighlight>
     </View>
   </Screen>
@@ -54,7 +53,7 @@ const RecoveryPhraseConfirmationScreen = ({navigateToConfirmDialog, text}: Props
 
 export default compose(
   connect((state) => ({
-    text: state.l10n.recoveryPhraseConfirmationScreen,
+    trans: getTrans(state),
   })),
   withHandlers({
     navigateToConfirmDialog: ({navigation}) =>

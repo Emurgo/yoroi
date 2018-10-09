@@ -9,9 +9,13 @@ import {NavigationActions, StackActions} from 'react-navigation'
 
 import CustomText from '../../CustomText'
 import Screen from '../../Screen'
-import {COLORS} from '../../../styles/config'
 
 import styles from './RecoveryPhraseConfirmationDialog.style'
+import {COLORS} from '../../../styles/config'
+
+import type {State} from '../../../state'
+import type {SubTranslation} from '../../../l10n/typeHelpers'
+
 
 const resetNavigationAction = StackActions.reset({
   index: 0,
@@ -24,22 +28,19 @@ const resetNavigationAction = StackActions.reset({
   key: null,
 })
 
+const getTrans = (state: State) => state.trans.recoveryPhraseConfirmationDialog
+
 type Props = {
   navigateToWallet: () => mixed,
-  text: {
-    title: string,
-    keysStorageCheckbox: string,
-    newDeviceRecoveryCheckbox: string,
-    confirmationButton: string,
-  },
+  trans: SubTranslation<typeof getTrans>,
 };
 
-const RecoveryPhraseConfirmationDialog = ({navigateToWallet, text}: Props) => (
+const RecoveryPhraseConfirmationDialog = ({navigateToWallet, trans}: Props) => (
   <Screen bgColor={COLORS.TRANSPARENT_BLACK}>
     <View style={styles.dialogBody}>
-      <CustomText>{text.title}</CustomText>
-      <CustomText>{text.keysStorageCheckbox}</CustomText>
-      <CustomText>{text.newDeviceRecoveryCheckbox}</CustomText>
+      <CustomText>{trans.title}</CustomText>
+      <CustomText>{trans.keysStorageCheckbox}</CustomText>
+      <CustomText>{trans.newDeviceRecoveryCheckbox}</CustomText>
 
       <TouchableHighlight
         activeOpacity={0.1}
@@ -47,7 +48,7 @@ const RecoveryPhraseConfirmationDialog = ({navigateToWallet, text}: Props) => (
         onPress={navigateToWallet}
         style={styles.button}
       >
-        <CustomText>{text.confirmationButton}</CustomText>
+        <CustomText>{trans.confirmationButton}</CustomText>
       </TouchableHighlight>
     </View>
   </Screen>
@@ -55,7 +56,7 @@ const RecoveryPhraseConfirmationDialog = ({navigateToWallet, text}: Props) => (
 
 export default compose(
   connect((state) => ({
-    text: state.l10n.recoveryPhraseConfirmationDialog,
+    trans: getTrans(state),
   })),
   withHandlers({
     navigateToWallet:
