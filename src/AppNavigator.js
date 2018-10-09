@@ -1,9 +1,9 @@
 // @flow
 import {createStackNavigator} from 'react-navigation'
-import WalletInitNavigator from './components/WalletInitScreen/WalletInitNavigator'
-import TxHistoryNavigator from './components/TxHistoryScreen/TxHistoryNavigator'
-import SendScreenNavigator from './components/SendScreen/SendScreenNavigator'
-import ReceiveScreenNavigator from './components/ReceiveScreen/ReceiveScreenNavigator'
+import WalletInitNavigator from './components/WalletInit/WalletInitNavigator'
+import TxHistoryNavigator from './components/TxHistory/TxHistoryNavigator'
+import SendScreenNavigator from './components/Send/SendScreenNavigator'
+import ReceiveScreenNavigator from './components/Receive/ReceiveScreenNavigator'
 
 export const MAIN_ROUTES = {
   TX_HISTORY: 'history',
