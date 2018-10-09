@@ -8,6 +8,8 @@ import styles from './LanguagePicker.style'
 import {COLORS} from '../../styles/config'
 import {MAIN_ROUTES} from '../../AppNavigator'
 
+import type {SubTranslation} from '../../l10n/typeHelpers'
+
 import CustomText from '../CustomText'
 
 const changeLanguageAction = (languageCode) => ({
@@ -27,21 +29,21 @@ const supportedLangauage = [
   {label: 'i18n Russian', name: 'Russian', code: 'ru-RU'},
 ]
 
+
+const getTrans = (state) => state.trans.languageSelectScreen
+
 type Props = {
   changeLanguage: () => void,
   handleContinue: () => void,
   languageCode: string,
-  text: {
-    selectLanguage: string,
-    continue: string,
-  },
+  trans: SubTranslation<typeof getTrans>
 };
 
-const LanguagePicker = ({changeLanguage, languageCode, handleContinue, text}: Props) => (
+const LanguagePicker = ({changeLanguage, languageCode, handleContinue, trans}: Props) => (
   <View style={styles.container}>
     <View style={styles.labelContainer}>
       <CustomText>
-        <Text style={styles.label}>{text.selectLanguage}</Text>
+        <Text style={styles.label}>{trans.selectLanguage}</Text>
       </CustomText>
     </View>
 
@@ -68,7 +70,7 @@ const LanguagePicker = ({changeLanguage, languageCode, handleContinue, text}: Pr
       onPress={handleContinue}
     >
       <CustomText>
-        <Text style={styles.buttonText}>{text.continue}</Text>
+        <Text style={styles.buttonText}>{trans.continue}</Text>
       </CustomText>
     </TouchableHighlight>
   </View>
@@ -77,7 +79,7 @@ const LanguagePicker = ({changeLanguage, languageCode, handleContinue, text}: Pr
 export default compose(
   connect((state) => ({
     languageCode: state.languageCode,
-    text: state.l10n.languageSelectScreen,
+    trans: getTrans(state),
   }), {
     changeLanguage: changeLanguageAction,
   }),

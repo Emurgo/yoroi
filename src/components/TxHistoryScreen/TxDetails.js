@@ -6,7 +6,7 @@ import {connect} from 'react-redux'
 
 import {View, Text} from 'react-native'
 
-import {confirmationsToAssuranceLevel, printAda} from '../../helpers/utils'
+import {printAda} from '../../helpers/utils'
 import CustomText from '../../components/CustomText'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import Screen from '../../components/Screen'
@@ -15,8 +15,7 @@ import {COLORS} from '../../styles/config'
 
 import styles from './TxDetails.style'
 
-
-import type {TransactionType} from '../../types/HistoryTransaction'
+import type {SubTranslation} from '../../l10n/typeHelpers'
 
 
 const Label = ({children}) => (
@@ -46,21 +45,15 @@ const AdaAmount = ({amount, type}) => {
   )
 }
 
+const getTrans = (state) => state.trans.txHistoryScreen.transactionDetails
+
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,
-  text: {
-    fromAddresses: string,
-    toAddresses: string,
-    txAssuranceLevel: string,
-    transactionId: string,
-    transactionHeader: {[TransactionType]: string},
-  },
+  trans: SubTranslation<typeof getTrans>,
 };
 
-const TxDetails = ({navigation, text}: Props) => {
+const TxDetails = ({navigation, trans}: Props) => {
   const transaction = navigation.getParam('transaction', {})
-
-  const assuranceLevel = confirmationsToAssuranceLevel(transaction.confirmations)
 
   return (
     <Screen scroll>
@@ -71,7 +64,7 @@ const TxDetails = ({navigation, text}: Props) => {
 
       <View style={styles.timestampContainer}>
         <View>
-          <CustomText>{text.transactionHeader[transaction.type]}</CustomText>
+          <CustomText>{trans.transactionHeader[transaction.type]}</CustomText>
         </View>
         <View>
           <CustomText>i18n {transaction.timestamp.format('YYYY hh:mm:ss A')}</CustomText>
@@ -79,7 +72,7 @@ const TxDetails = ({navigation, text}: Props) => {
       </View>
 
       <View style={styles.section}>
-        <Label>{text.fromAddresses}</Label>
+        <Label>{trans.fromAddresses}</Label>
 
         {transaction.fromAddresses.map((address) =>
           <CustomText key={address}>{address}</CustomText>
@@ -87,7 +80,7 @@ const TxDetails = ({navigation, text}: Props) => {
       </View>
 
       <View style={styles.section}>
-        <Label>{text.toAddresses}</Label>
+        <Label>{trans.toAddresses}</Label>
 
         {transaction.toAddresses.map((address) =>
           <CustomText key={address}>{address}</CustomText>
@@ -95,14 +88,14 @@ const TxDetails = ({navigation, text}: Props) => {
       </View>
 
       <View style={styles.section}>
-        <Label>{text.txAssuranceLevel}</Label>
+        <Label>{trans.txAssuranceLevel}</Label>
         <CustomText>
           i18n {transaction.confirmations} CONFIRMATIONS
         </CustomText>
       </View>
 
       <View style={styles.section}>
-        <Label>{text.transactionId}</Label>
+        <Label>{trans.transactionId}</Label>
         <CustomText>{transaction.id}</CustomText>
       </View>
     </Screen>
@@ -111,6 +104,6 @@ const TxDetails = ({navigation, text}: Props) => {
 
 export default compose(
   connect((state) => ({
-    text: state.l10n.txHistoryScreen.transactionDetails,
+    trans: getTrans(state),
   })),
 )(TxDetails)

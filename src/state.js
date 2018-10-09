@@ -1,21 +1,23 @@
-import HistoryTransaction from './types/HistoryTransaction'
-
+// @flow
+import type {HistoryTransaction} from './types/HistoryTransaction'
 import historyData from './mockData/history.json'
 import receiveAddresses from './mockData/addresses.json'
 import {processTxHistoryData} from './helpers/utils'
-import l10n from './l10n'
+import trans from './l10n'
+import type {Translation} from './l10n/type'
 
-export type InitialState = {
+export type State = {
   languageCode: string,
   transactions: Array<HistoryTransaction>,
-  ownAddresses: Array<string>,
+  receiveAddresses: Array<string>,
+  trans: Translation,
 }
 
-export const getInitialState = (): InitialState => ({
+export const getInitialState = (): State => ({
   languageCode: 'en-US',
   receiveAddresses,
   transactions: historyData.map((data) => processTxHistoryData(data, receiveAddresses)),
-  l10n,
+  trans,
 })
 
 export default getInitialState
