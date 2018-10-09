@@ -3,19 +3,18 @@
 import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-
 import {View, Text} from 'react-native'
 
 import {printAda} from '../../helpers/utils'
 import CustomText from '../../components/CustomText'
-import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import Screen from '../../components/Screen'
 import AdaIcon from '../../assets/AdaIcon'
-import {COLORS} from '../../styles/config'
 
 import styles from './TxDetails.style'
+import {COLORS} from '../../styles/config'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
+import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 
 
 const Label = ({children}) => (
@@ -67,7 +66,7 @@ const TxDetails = ({navigation, trans}: Props) => {
           <CustomText>{trans.transactionHeader[transaction.type]}</CustomText>
         </View>
         <View>
-          <CustomText>i18n {transaction.timestamp.format('YYYY hh:mm:ss A')}</CustomText>
+          <CustomText>{transaction.timestamp.format('YYYY-MM-DD hh:mm:ss A')}</CustomText>
         </View>
       </View>
 
@@ -90,7 +89,7 @@ const TxDetails = ({navigation, trans}: Props) => {
       <View style={styles.section}>
         <Label>{trans.txAssuranceLevel}</Label>
         <CustomText>
-          i18n {transaction.confirmations} CONFIRMATIONS
+          {transaction.confirmations} {trans.confirmations}
         </CustomText>
       </View>
 

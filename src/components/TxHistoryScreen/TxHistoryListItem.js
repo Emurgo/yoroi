@@ -80,7 +80,7 @@ class TxHistoryListItem extends Component<Props> {
 
           <View style={styles.row}>
             <View>
-              <CustomText>i18n{transaction.timestamp.format('hh:mm:ss A')}</CustomText>
+              <CustomText>{transaction.timestamp.format('hh:mm:ss A')}</CustomText>
             </View>
             <View>
               <CustomText>

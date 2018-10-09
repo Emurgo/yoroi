@@ -2,6 +2,7 @@ import _ from 'lodash'
 import localeData from './en'
 
 // shamelessly taken from
+// eslint-disable-next-line max-len
 // https://stackoverflow.com/questions/6921588/is-it-possible-to-reflect-the-arguments-of-a-javascript-function
 const introspectArgs =
   (f) => f.toString ()
@@ -33,8 +34,8 @@ const header = `
 export type Translation =`
 
 const type = transform(localeData)
-//TODO(ppershing): enable this once we have setLanguage support
-//type.setLanguage = '(lang: string) => void'
+// TODO(ppershing): enable this once we have setLanguage support
+// type.setLanguage = '(lang: string) => void'
 
-//eslint-disable-next-line no-console
+// eslint-disable-next-line no-console
 console.log(header, JSON.stringify(type, null, 2))

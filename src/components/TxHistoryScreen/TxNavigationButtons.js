@@ -2,7 +2,8 @@
 
 import React from 'react'
 import {compose} from 'redux'
-import {View, TouchableHighlight, Text} from 'react-native'
+import {connect} from 'react-redux'
+import {View, TouchableHighlight} from 'react-native'
 import {withHandlers} from 'recompose'
 
 import CustomText from '../../components/CustomText'
@@ -11,13 +12,18 @@ import {COLORS} from '../../styles/config'
 import {MAIN_ROUTES} from '../../AppNavigator'
 
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
+import type {SubTranslation} from '../../l10n/typeHelpers'
+
+const getTrans = (state) => state.trans.txHistoryNavigationButtons
 
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,
   navigateToReceive: () => mixed,
   navigateToSend: () => mixed,
+  trans: SubTranslation<typeof getTrans>,
 };
-const TxNavigationButtons = ({navigation, navigateToReceive, navigateToSend}: Props) => (
+
+const TxNavigationButtons = ({navigation, navigateToReceive, navigateToSend, trans}: Props) => (
   <View style={styles.navigationButtonsContainer}>
     <TouchableHighlight
       style={styles.button}
@@ -26,9 +32,7 @@ const TxNavigationButtons = ({navigation, navigateToReceive, navigateToSend}: Pr
       onPress={navigateToSend}
     >
       <View style={styles.sendButton}>
-        <CustomText>
-          <Text>i18nSEND</Text>
-        </CustomText>
+        <CustomText>{trans.sendButton}</CustomText>
       </View>
     </TouchableHighlight>
 
@@ -39,17 +43,18 @@ const TxNavigationButtons = ({navigation, navigateToReceive, navigateToSend}: Pr
       onPress={navigateToReceive}
     >
       <View style={styles.receiveButton}>
-        <CustomText>
-          <Text style={styles.receiveButtonText}>i18nRECEIVE</Text>
-        </CustomText>
+        <CustomText style={styles.receiveButtonText}>{trans.receiveButton}</CustomText>
       </View>
     </TouchableHighlight>
   </View>
 )
 
 export default compose(
+  connect((state) => ({
+    trans: getTrans(state),
+  })),
   withHandlers({
     navigateToReceive: ({navigation}) => (event) => navigation.navigate(MAIN_ROUTES.RECEIVE),
     navigateToSend: ({navigation}) => (event) => navigation.navigate(MAIN_ROUTES.SEND),
-  })
+  }),
 )(TxNavigationButtons)

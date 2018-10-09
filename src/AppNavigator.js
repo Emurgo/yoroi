@@ -26,10 +26,15 @@ const MainNavigator = createStackNavigator(
   }
 )
 
+export const ROOT_ROUTES = {
+  MAIN: 'main',
+  INIT: 'init',
+}
+
 const AppNavigator = createStackNavigator({
   // login: LoginNavigator,
-  main: MainNavigator,
-  init: WalletInitNavigator,
+  [ROOT_ROUTES.MAIN]: MainNavigator,
+  [ROOT_ROUTES.INIT]: WalletInitNavigator,
 }, {
   initialRouteName: 'init',
   navigationOptions: {
