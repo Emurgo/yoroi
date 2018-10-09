@@ -47,7 +47,7 @@ const l10n = {
     line2: 'Secure Fast Simple',
     byEmurgo: 'By',
 
-  }
+  },
 }
 
 export default l10n
