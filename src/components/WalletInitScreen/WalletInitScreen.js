@@ -14,20 +14,21 @@ import LanguagePicker from './LanguagePicker'
 import BackgroundVisualArtefacts from './BackgroundVisualArtefacts'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import {COLORS} from '../../styles/config'
-
-import type {State} from '../../state'
 import styles from './WalletInitScreen.style'
 
-const getText = (state) => state.l10n.walletInitScreen
+import type {State} from '../../state'
+import type {SubTranslation} from '../../l10n/typeHelpers'
+
+const getTrans = (state: State) => state.l10n.walletInitScreen
 
 type Props = {
   changeLanguageAction: () => void,
   navigation: NavigationScreenProp<NavigationState>,
   languageCode: string,
-  text: $Call<typeof getText, State>,
+  trans: SubTranslation<typeof getTrans>,
 }
 
-const WalletInitScreen = ({navigation, text}: Props) => (
+const WalletInitScreen = ({navigation, trans}: Props) => (
   <LinearGradient
     start={{x: 0, y: 0}}
     end={{x: 1, y: 0}}
@@ -42,16 +43,16 @@ const WalletInitScreen = ({navigation, text}: Props) => (
 
           <View style={styles.subtitleContainer}>
             <CustomText style={styles.subtitle}>
-              {text.line1}
+              {trans.line1}
             </CustomText>
           </View>
 
           <CustomText style={styles.subtitle}>
-            {text.line2}
+            {trans.line2}
           </CustomText>
 
           <View style={styles.emurgoCreditsContainer}>
-            <CustomText style={styles.subtitle}>{text.byEmurgo}</CustomText>
+            <CustomText style={styles.subtitle}>{trans.byEmurgo}</CustomText>
             <EmurgoIcon color={COLORS.WHITE} width={100} height={37} />
           </View>
         </View>
@@ -64,6 +65,6 @@ const WalletInitScreen = ({navigation, text}: Props) => (
 
 export default compose(
   connect((state: State) => ({
-    text: getText(state),
+    trans: getTrans(state),
   })),
 )(WalletInitScreen)
