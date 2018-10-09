@@ -40,7 +40,7 @@ export type Translation = {
         SENT: string,
         RECEIVED: string
       },
-      confirmations: string
+      formatConfirmations: (cnt: any) => string
     }
   },
   walletInitScreen: {

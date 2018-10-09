@@ -25,7 +25,10 @@ const getType = (obj) => {
   throw new Error('assert false')
 }
 
-const transform = (obj) => !_.isObject(obj) ? getType(obj) : _.mapValues(obj, (v) => transform(v))
+const transform = (obj) =>
+  _.isPlainObject(obj)
+    ? _.mapValues(obj, (v) => transform(v))
+    : getType(obj)
 
 const header = `
 // @flow
