@@ -11,20 +11,21 @@ import CustomText from '../../components/CustomText'
 import {confirmationsToAssuranceLevel, printAda} from '../../helpers/utils'
 import AdaIcon from '../../assets/AdaIcon'
 
-import type {TransactionType, HistoryTransaction} from '../../types/HistoryTransaction'
+import type {HistoryTransaction} from '../../types/HistoryTransaction'
 import {TX_HISTORY_ROUTES} from './TxHistoryNavigator'
+
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
+import type {SubTranslation} from '../../l10n/typeHelpers'
 
 import styles from './TxHistoryListItem.style'
+
+
+const getTrans = (state) => state.trans.txHistoryScreen
 
 type Props = {
   transaction: HistoryTransaction,
   navigation: NavigationScreenProp<NavigationState>,
-  text: {
-    transactionType: {[TransactionType]: string},
-    assuranceLevelHeader: string,
-    assuranceLevel: any, // TODO(ppershing): type me
-  },
+  trans: SubTranslation<typeof getTrans>
 }
 
 
@@ -42,7 +43,7 @@ class TxHistoryListItem extends Component<Props> {
   }
 
   render() {
-    const {transaction, text} = this.props
+    const {transaction, trans} = this.props
 
     const assuranceLevel = confirmationsToAssuranceLevel(transaction.confirmations)
     const isNegativeAmount = transaction.type === 'SENT'
@@ -56,7 +57,7 @@ class TxHistoryListItem extends Component<Props> {
         <View style={styles.container}>
           <View style={styles.row}>
             <View>
-              <CustomText>{text.transactionType[transaction.type]}</CustomText>
+              <CustomText>{trans.transactionType[transaction.type]}</CustomText>
             </View>
             <View style={styles.amountContainer}>
               <CustomText>
@@ -83,8 +84,8 @@ class TxHistoryListItem extends Component<Props> {
             </View>
             <View>
               <CustomText>
-                {text.assuranceLevelHeader}
-                {text.assuranceLevel[assuranceLevel]}
+                {trans.assuranceLevelHeader}
+                {trans.assuranceLevel[assuranceLevel]}
               </CustomText>
             </View>
           </View>
@@ -96,6 +97,6 @@ class TxHistoryListItem extends Component<Props> {
 
 export default compose(
   connect((state) => ({
-    text: state.l10n.txHistoryScreen,
+    trans: getTrans(state),
   })),
 )(TxHistoryListItem)

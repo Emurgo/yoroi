@@ -68,6 +68,5 @@ const TxHistoryList = ({transactions, navigation}: Props) => {
 
 export default compose(
   connect((state) => ({
-    l10n: state.l10n,
   })),
 )(TxHistoryList)

@@ -19,7 +19,7 @@ import styles from './WalletInitScreen.style'
 import type {State} from '../../state'
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTrans = (state: State) => state.l10n.walletInitScreen
+const getTrans = (state: State) => state.trans.walletInitScreen
 
 type Props = {
   changeLanguageAction: () => void,
