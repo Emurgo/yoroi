@@ -12,15 +12,18 @@ const styles = {
     flex: 1,
     flexDirection: 'row',
   },
-  addressLabel: {
-    color: COLORS.DARK_BLUE,
-  },
   addressContainer: {
     flex: 1,
     marginTop: 10,
     paddingBottom: 10,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.DARK_GRAY,
+  },
+  addressLabel: {
+    color: COLORS.DARK_BLUE,
+  },
+  address: {
+    fontSize: 17,
   },
 }
 

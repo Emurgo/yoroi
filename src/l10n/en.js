@@ -64,6 +64,16 @@ const l10n = {
     passwordRequirementsNote: 'Note: Password must be....',
     createButton: 'CREATE PERSONAL WALLET',
   },
+  receiveScreen: {
+    title: 'Receive',
+    warning: {
+      line1: 'Share this wallet to receive payments.',
+      line2: 'To protect your privacy, new address are',
+      line3: 'generated automatically once you use them.',
+    },
+    address: 'Your wallet address',
+    addresses: 'Your wallet addresses',
+  },
   recoveryPhraseConfirmationDialog: {
     title: 'Recovery phrase',
     keysStorageCheckbox: 'I understand that my secret keys are held securely on this device only,\
