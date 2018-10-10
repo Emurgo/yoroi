@@ -5,7 +5,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {View, Text} from 'react-native'
 
-import {printAda} from '../../helpers/utils'
+import {printAda} from '../../utils/transactions'
 import CustomText from '../../components/CustomText'
 import Screen from '../../components/Screen'
 import AdaIcon from '../../assets/AdaIcon'

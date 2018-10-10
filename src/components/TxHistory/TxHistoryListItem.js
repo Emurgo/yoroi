@@ -8,7 +8,7 @@ import {Text, View, TouchableHighlight} from 'react-native'
 import {COLORS} from '../../styles/config'
 
 import CustomText from '../../components/CustomText'
-import {confirmationsToAssuranceLevel, printAda} from '../../helpers/utils'
+import {confirmationsToAssuranceLevel, printAda} from '../../utils/transactions'
 import AdaIcon from '../../assets/AdaIcon'
 
 import type {HistoryTransaction} from '../../types/HistoryTransaction'
