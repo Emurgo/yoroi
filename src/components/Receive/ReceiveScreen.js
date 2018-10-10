@@ -9,22 +9,24 @@ import Screen from '../../components/Screen'
 import CustomText from '../../components/CustomText'
 import ReceiveAddressDetail from './ReceiveAddressDetail'
 import ReceiveAddressesList from './ReceiveAddressesList'
-import type {Translation} from '../../l10n/type'
+import type {SubTranslation} from '../../l10n/typeHelpers'
 
 import styles from './styles/ReceiveScreen.style'
 
+const getTranslation = (state) => state.trans.receiveScreen
+
 type Props = {
   receiveAddresses: Array<string>,
-  translation: Translation,
+  translation: SubTranslation<typeof getTranslation>,
 };
 
 const ReceiveScreen = ({receiveAddresses, translation}: Props) => (
   <View style={styles.root}>
     <Screen scroll>
       <View style={styles.warningContainer}>
-        <CustomText style={styles.warningText}>{translation.receiveScreen.warning.line1}</CustomText>
-        <CustomText style={styles.warningText}>{translation.receiveScreen.warning.line2}</CustomText>
-        <CustomText style={styles.warningText}>{translation.receiveScreen.warning.line3}</CustomText>
+        <CustomText style={styles.warningText}>{translation.warning.line1}</CustomText>
+        <CustomText style={styles.warningText}>{translation.warning.line2}</CustomText>
+        <CustomText style={styles.warningText}>{translation.warning.line3}</CustomText>
       </View>
       <ReceiveAddressDetail receiveAddress={receiveAddresses[0]} translation={translation} />
       <ReceiveAddressesList receiveAddresses={receiveAddresses} translation={translation} />
@@ -35,6 +37,6 @@ const ReceiveScreen = ({receiveAddresses, translation}: Props) => (
 export default compose(
   connect((state) => ({
     receiveAddresses: state.receiveAddresses,
-    translation: state.trans,
+    translation: getTranslation(state),
   })),
 )(ReceiveScreen)

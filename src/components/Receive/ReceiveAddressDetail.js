@@ -3,13 +3,15 @@ import {View} from 'react-native'
 import QRCode from 'react-native-qrcode'
 
 import CustomText from '../../components/CustomText'
-import type {Translation} from '../../l10n/type'
+import type {SubTranslation} from '../../l10n/typeHelpers'
 
 import styles from './styles/ReceiveAddressDetail.style'
 
+const getTranslation = (state) => state.trans.receiveScreen
+
 type Props = {
   receiveAddress: string,
-  translation: Translation,
+  translation: SubTranslation<typeof getTranslation>,
 };
 
 const ReceiveAddressDetail = ({receiveAddress, translation}: Props) => (
@@ -23,7 +25,7 @@ const ReceiveAddressDetail = ({receiveAddress, translation}: Props) => (
       />
     </View>
 
-    <CustomText style={styles.addressLabel}>{translation.receiveScreen.address}</CustomText>
+    <CustomText style={styles.addressLabel}>{translation.address}</CustomText>
     <CustomText style={styles.address}>{receiveAddress}</CustomText>
   </View>
 )

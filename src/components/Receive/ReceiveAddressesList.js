@@ -4,19 +4,21 @@ import React from 'react'
 import {View} from 'react-native'
 
 import CustomText from '../../components/CustomText'
-import type {Translation} from '../../l10n/type'
+import type {SubTranslation} from '../../l10n/typeHelpers'
 
 import styles from './styles/ReceiveAddressesList.style'
 
+const getTranslation = (state) => state.trans.receiveScreen
+
 type Props = {
   receiveAddresses: Array<string>,
-  translation: Translation,
+  translation: SubTranslation<typeof getTranslation>,
 };
 
 const ReceiveAddressesList = ({receiveAddresses, translation}: Props) => (
   <View style={styles.container}>
     <View style={styles.header}>
-      <CustomText style={styles.addressLabel}>{translation.receiveScreen.addresses}</CustomText>
+      <CustomText style={styles.addressLabel}>{translation.addresses}</CustomText>
     </View>
     {receiveAddresses.map((receiveAddress) => (
       <View key={receiveAddress} style={styles.addressContainer}>
