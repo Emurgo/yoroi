@@ -11,6 +11,8 @@ import CustomText from '../../components/CustomText'
 import {confirmationsToAssuranceLevel, printAda} from '../../utils/transactions'
 import AdaIcon from '../../assets/AdaIcon'
 
+import {transactionsSelector} from '../../selectors'
+
 import type {HistoryTransaction} from '../../types/HistoryTransaction'
 import {TX_HISTORY_ROUTES} from '../../RoutesList'
 
@@ -95,11 +97,9 @@ class TxHistoryListItem extends Component<Props> {
   }
 }
 
-const transactionSelector = (state, id) => state.transactions.find((tx) => tx.id === id)
-
 export default compose(
   connect((state, {id}) => ({
     trans: getTrans(state),
-    transaction: transactionSelector(state, id),
+    transaction: transactionsSelector(state)[id],
   })),
 )(TxHistoryListItem)

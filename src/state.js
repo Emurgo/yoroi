@@ -1,14 +1,17 @@
 // @flow
-import type {HistoryTransaction} from './types/HistoryTransaction'
+import type {RawTransaction} from './types/HistoryTransaction'
 import historyData from './mockData/history.json'
 import receiveAddresses from './mockData/addresses.json'
-import {processTxHistoryData} from './utils/transactions'
 import trans from './l10n'
 import type {Translation} from './l10n/type'
 
+import _ from 'lodash'
+
+export type Dict<T> = {[string]: T}
+
 export type State = {
   languageCode: string,
-  transactions: Array<HistoryTransaction>,
+  rawTransactions: Dict<RawTransaction>,
   receiveAddresses: Array<string>,
   trans: Translation,
 }
@@ -16,7 +19,7 @@ export type State = {
 export const getInitialState = (): State => ({
   languageCode: 'en-US',
   receiveAddresses,
-  transactions: historyData.map((data) => processTxHistoryData(data, receiveAddresses)),
+  rawTransactions: _.keyBy(historyData, (t) => t.hash),
   trans,
 })
 
