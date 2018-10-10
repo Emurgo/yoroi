@@ -13,7 +13,7 @@ import Screen from '../Screen'
 import BackgroundVisualArtefacts from './BackgroundVisualArtefacts'
 import {COLORS} from '../../styles/config'
 import styles from './styles/WalletInitScreen.style'
-import {WALLET_INIT_ROUTES} from './WalletInitNavigator'
+import {WALLET_INIT_ROUTES} from '../../RoutesList'
 
 import type {State} from '../../state'
 import type {SubTranslation} from '../../l10n/typeHelpers'

@@ -9,7 +9,7 @@ import {withHandlers} from 'recompose'
 import CustomText from '../../components/CustomText'
 import styles from './styles/TxNavigationButtons.style'
 import {COLORS} from '../../styles/config'
-import {MAIN_ROUTES} from '../../AppNavigator'
+import {MAIN_ROUTES} from '../../RoutesList'
 
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {SubTranslation} from '../../l10n/typeHelpers'

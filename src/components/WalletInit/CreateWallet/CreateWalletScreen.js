@@ -8,7 +8,7 @@ import {withHandlers} from 'recompose'
 
 import CustomText from '../../CustomText'
 import Screen from '../../Screen'
-import {WALLET_INIT_ROUTES} from '../WalletInitNavigator'
+import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 
 import styles from './styles/CreateWalletScreen.style'
 import {COLORS} from '../../../styles/config'

@@ -9,6 +9,7 @@ import {NavigationActions, StackActions} from 'react-navigation'
 
 import CustomText from '../../CustomText'
 import Screen from '../../Screen'
+import {ROOT_ROUTES} from '../../../RoutesList'
 
 import {COLORS} from '../../../styles/config'
 import styles from './styles/RestoreWalletScreen.style'
@@ -20,8 +21,7 @@ const resetNavigationAction = StackActions.reset({
   index: 0,
   actions: [
     NavigationActions.navigate({
-      // Fixme: why ROOT_ROUTES.MAIN is not working
-      routeName: 'main',
+      routeName: ROOT_ROUTES.MAIN,
     }),
   ],
   key: null,

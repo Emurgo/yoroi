@@ -12,7 +12,7 @@ import {confirmationsToAssuranceLevel, printAda} from '../../helpers/utils'
 import AdaIcon from '../../assets/AdaIcon'
 
 import type {HistoryTransaction} from '../../types/HistoryTransaction'
-import {TX_HISTORY_ROUTES} from './TxHistoryNavigator'
+import {TX_HISTORY_ROUTES} from '../../RoutesList'
 
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {SubTranslation} from '../../l10n/typeHelpers'
