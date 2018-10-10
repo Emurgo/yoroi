@@ -1,8 +1,11 @@
+// @flow
+
 const styles = {
+  container: {
+    flex: 1,
+  },
   address: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+    fontSize: 17,
   },
 }
 

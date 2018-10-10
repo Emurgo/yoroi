@@ -12,7 +12,7 @@ const ReceiveScreenNavigator = createStackNavigator({
 }, {
   initialRouteName: RECEIVE_ROUTES.MAIN,
   navigationOptions: ({navigation}) => ({
-    title: 'i18nReceive ADA',
+    title: 'i18nReceive',
   }),
 })
 

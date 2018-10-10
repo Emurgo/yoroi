@@ -17,6 +17,7 @@ export const COLORS = {
   NEGATIVE_AMOUNT: '#d0021b',
   PRIMARY: '#0f0',
   PRIMARY_TEXT: '#fff',
+  DARK_BLUE: '#1036a0',
 }
 
 const brand = {
