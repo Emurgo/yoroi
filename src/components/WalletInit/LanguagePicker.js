@@ -6,7 +6,7 @@ import {withHandlers} from 'recompose'
 import {Text, View, Picker, TouchableHighlight} from 'react-native'
 import styles from './styles/LanguagePicker.style'
 import {COLORS} from '../../styles/config'
-import {WALLET_INIT_ROUTES} from './WalletInitNavigator'
+import {WALLET_INIT_ROUTES} from '../../RoutesList'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 

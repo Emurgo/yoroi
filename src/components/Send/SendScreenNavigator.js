@@ -2,10 +2,7 @@
 
 import {createStackNavigator} from 'react-navigation'
 import SendScreen from './SendScreen'
-
-const SEND_ROUTES = {
-  MAIN: 'main',
-}
+import {SEND_ROUTES} from '../../RoutesList'
 
 const SendScreenNavigator = createStackNavigator({
   [SEND_ROUTES.MAIN]: SendScreen,
