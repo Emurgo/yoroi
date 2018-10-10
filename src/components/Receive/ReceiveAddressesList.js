@@ -18,7 +18,7 @@ type Props = {
 const ReceiveAddressesList = ({receiveAddresses, translation}: Props) => (
   <View style={styles.container}>
     <View style={styles.header}>
-      <CustomText style={styles.addressLabel}>{translation.addresses}</CustomText>
+      <CustomText style={styles.addressLabel}>{translation.walletAddresses}</CustomText>
     </View>
     {receiveAddresses.map((receiveAddress) => (
       <View key={receiveAddress} style={styles.addressContainer}>

@@ -25,7 +25,7 @@ const ReceiveAddressDetail = ({receiveAddress, translation}: Props) => (
       />
     </View>
 
-    <CustomText style={styles.addressLabel}>{translation.address}</CustomText>
+    <CustomText style={styles.addressLabel}>{translation.walletAddress}</CustomText>
     <CustomText style={styles.address}>{receiveAddress}</CustomText>
   </View>
 )

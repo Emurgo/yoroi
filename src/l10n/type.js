@@ -62,13 +62,13 @@ export type Translation = {
   },
   receiveScreen: {
     title: string,
-    warning: {
+    description: {
       line1: string,
       line2: string,
       line3: string,
     },
-    address: string,
-    addresses: string,
+    walletAddress: string,
+    walletAddresses: string,
   },
   recoveryPhraseConfirmationDialog: {
     title: string,

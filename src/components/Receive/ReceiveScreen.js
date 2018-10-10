@@ -24,9 +24,9 @@ const ReceiveScreen = ({receiveAddresses, translation}: Props) => (
   <View style={styles.root}>
     <Screen scroll>
       <View style={styles.warningContainer}>
-        <CustomText style={styles.warningText}>{translation.warning.line1}</CustomText>
-        <CustomText style={styles.warningText}>{translation.warning.line2}</CustomText>
-        <CustomText style={styles.warningText}>{translation.warning.line3}</CustomText>
+        <CustomText style={styles.warningText}>{translation.description.line1}</CustomText>
+        <CustomText style={styles.warningText}>{translation.description.line2}</CustomText>
+        <CustomText style={styles.warningText}>{translation.description.line3}</CustomText>
       </View>
       <ReceiveAddressDetail receiveAddress={receiveAddresses[0]} translation={translation} />
       <ReceiveAddressesList receiveAddresses={receiveAddresses} translation={translation} />

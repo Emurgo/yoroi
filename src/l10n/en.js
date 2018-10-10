@@ -66,13 +66,13 @@ const l10n = {
   },
   receiveScreen: {
     title: 'Receive',
-    warning: {
+    description: {
       line1: 'Share this wallet to receive payments.',
       line2: 'To protect your privacy, new address are',
       line3: 'generated automatically once you use them.',
     },
-    address: 'Your wallet address',
-    addresses: 'Your wallet addresses',
+    walletAddress: 'Your wallet address',
+    walletAddresses: 'Your wallet addresses',
   },
   recoveryPhraseConfirmationDialog: {
     title: 'Recovery phrase',
