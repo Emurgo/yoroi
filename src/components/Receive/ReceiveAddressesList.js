@@ -1,6 +1,8 @@
 // @flow
 
 import React from 'react'
+import {connect} from 'react-redux'
+import {compose} from 'redux'
 import {View} from 'react-native'
 
 import CustomText from '../../components/CustomText'
@@ -28,4 +30,8 @@ const ReceiveAddressesList = ({receiveAddresses, translation}: Props) => (
   </View>
 )
 
-export default ReceiveAddressesList
+export default compose(
+  connect((state) => ({
+    translation: getTranslation(state),
+  })),
+)(ReceiveAddressesList)

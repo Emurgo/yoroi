@@ -1,4 +1,6 @@
 import React from 'react'
+import {connect} from 'react-redux'
+import {compose} from 'redux'
 import {View} from 'react-native'
 import QRCode from 'react-native-qrcode'
 
@@ -30,4 +32,8 @@ const ReceiveAddressDetail = ({receiveAddress, translation}: Props) => (
   </View>
 )
 
-export default ReceiveAddressDetail
+export default compose(
+  connect((state) => ({
+    translation: getTranslation(state),
+  })),
+)(ReceiveAddressDetail)
