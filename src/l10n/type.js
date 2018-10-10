@@ -60,6 +60,16 @@ export type Translation = {
     passwordRequirementsNote: string,
     createButton: string
   },
+  receiveScreen: {
+    title: string,
+    description: {
+      line1: string,
+      line2: string,
+      line3: string,
+    },
+    walletAddress: string,
+    walletAddresses: string,
+  },
   recoveryPhraseConfirmationDialog: {
     title: string,
     keysStorageCheckbox: string,
