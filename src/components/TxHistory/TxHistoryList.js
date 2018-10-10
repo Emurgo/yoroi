@@ -59,7 +59,7 @@ const TxHistoryList = ({transactions, navigation, formatDate}: Props) => {
             <TxHistoryListItem
               navigation={navigation}
               key={transaction.id}
-              transaction={transaction}
+              id={transaction.id}
             />
           ))}
         </View>
