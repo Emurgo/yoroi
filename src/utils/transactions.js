@@ -1,6 +1,8 @@
-//@flow
+// @flow
 
 import moment from 'moment'
+
+import type {HistoryTransaction, RawTransaction} from '../types/HistoryTransaction'
 
 // Fixme: Get real values and put it into config somewhere
 export const confirmationsToAssuranceLevel = (confirmations: number) => {
@@ -22,7 +24,8 @@ export const printAda = (amount: number) => {
 }
 
 
-export const processTxHistoryData = (data: any, ownAddresses: Array<string>) => {
+export const processTxHistoryData =
+(data: RawTransaction, ownAddresses: Array<string>): HistoryTransaction => {
   const ownInputs = data.inputs_address.map((address, index) => {
     return {
       address,

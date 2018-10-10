@@ -5,6 +5,7 @@ import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View} from 'react-native'
 
+import {transactionsSelector} from '../../selectors'
 import TxHistoryList from './TxHistoryList'
 import Screen from '../../components/Screen'
 import TxNavigationButtons from './TxNavigationButtons'
@@ -32,6 +33,6 @@ const TxHistory = ({transactions, navigation}: Props) => (
 
 export default compose(
   connect((state: State) => ({
-    transactions: state.transactions,
+    transactions: transactionsSelector(state),
   })),
 )(TxHistory)
