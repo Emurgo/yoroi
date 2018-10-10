@@ -95,8 +95,11 @@ class TxHistoryListItem extends Component<Props> {
   }
 }
 
+const transactionSelector = (state, id) => state.transactions.find((tx) => tx.id === id)
+
 export default compose(
-  connect((state) => ({
+  connect((state, {id}) => ({
     trans: getTrans(state),
+    transaction: transactionSelector(state, id),
   })),
 )(TxHistoryListItem)
