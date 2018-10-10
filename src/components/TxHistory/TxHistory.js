@@ -11,6 +11,8 @@ import Screen from '../../components/Screen'
 import TxNavigationButtons from './TxNavigationButtons'
 
 import styles from './styles/TxHistory.style'
+import {updateHistory} from '../../actions'
+import {onDidMount} from '../../utils/renderUtils'
 
 import type {HistoryTransaction} from '../../types/HistoryTransaction'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
@@ -34,5 +36,8 @@ const TxHistory = ({transactions, navigation}: Props) => (
 export default compose(
   connect((state: State) => ({
     transactions: transactionsSelector(state),
-  })),
+  }), {
+    updateHistory,
+  }),
+  onDidMount(({updateHistory}) => updateHistory()),
 )(TxHistory)
