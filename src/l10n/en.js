@@ -27,6 +27,7 @@ const l10n = {
     transactionType: {
       SENT: 'ADA sent',
       RECEIVED: 'ADA received',
+      SELF: 'Intrawallet',
     },
     assuranceLevelHeader: 'Assurance level:',
     assuranceLevel: {

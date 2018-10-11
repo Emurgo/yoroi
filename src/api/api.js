@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {CONFIG} from '../config'
 
 import type {Moment} from 'moment'

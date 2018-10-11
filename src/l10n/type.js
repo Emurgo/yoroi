@@ -23,7 +23,8 @@ export type Translation = {
   txHistoryScreen: {
     transactionType: {
       SENT: string,
-      RECEIVED: string
+      RECEIVED: string,
+      SELF: string
     },
     assuranceLevelHeader: string,
     assuranceLevel: {
@@ -65,10 +66,10 @@ export type Translation = {
     description: {
       line1: string,
       line2: string,
-      line3: string,
+      line3: string
     },
     walletAddress: string,
-    walletAddresses: string,
+    walletAddresses: string
   },
   recoveryPhraseConfirmationDialog: {
     title: string,
