@@ -43,16 +43,20 @@ type Props = {
   formatDate: (timestamp: Moment, trans: any) => string,
 };
 
+
+const getTransactionsByDate = (transactions) => _(transactions)
+  .sortBy((t) => -moment(t.timestamp).unix())
+  .groupBy((t) => moment(t.timestamp).format('L'))
+  .toPairs()
+  .value()
+
 const TxHistoryList = ({transactions, navigation, formatDate}: Props) => {
-  // Fixme: add sorting by time
-  const transactionsByDate = _(transactions)
-    .groupBy((transaction) => moment(transaction.timestamp).format('L'))
-    .toPairs()
-    .value()
+  // TODO(ppershing): add proper memoization here
+  const groupedTransactions = getTransactionsByDate(transactions)
 
   return (
     <View style={styles.container}>
-      {transactionsByDate.map(([date, transactions]) => (
+      {groupedTransactions.map(([date, transactions]) => (
         <View key={date} style={styles.dayContainer}>
           <DayHeader ts={transactions[0].timestamp} formatDate={formatDate} />
           {transactions.map((transaction) => (
