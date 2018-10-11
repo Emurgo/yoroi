@@ -1,10 +1,10 @@
 import _ from 'lodash'
 import moment from 'moment'
+import {Alert} from 'react-native'
 
 import api from './api'
 import ownAddresses from './mockData/addresses.json'
 
-import {Alert} from 'react-native'
 
 const _updateTransactions = (rawTransactions) => ({
   type: 'Update transactions',

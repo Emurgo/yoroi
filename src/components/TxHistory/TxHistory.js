@@ -9,10 +9,10 @@ import {transactionsSelector, isFetchingHistorySelector} from '../../selectors'
 import TxHistoryList from './TxHistoryList'
 import Screen from '../../components/Screen'
 import TxNavigationButtons from './TxNavigationButtons'
-
-import styles from './styles/TxHistory.style'
 import {updateHistory} from '../../actions'
 import {onDidMount} from '../../utils/renderUtils'
+
+import styles from './styles/TxHistory.style'
 
 import type {HistoryTransaction} from '../../types/HistoryTransaction'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
