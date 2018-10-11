@@ -8,7 +8,10 @@ export type Dict<T> = {[string]: T}
 
 export type State = {
   languageCode: string,
-  rawTransactions: Dict<RawTransaction>,
+  transactions: {
+    isFetching: boolean,
+    data: Dict<RawTransaction>,
+  },
   receiveAddresses: Array<string>,
   trans: Translation,
 }
@@ -16,7 +19,10 @@ export type State = {
 export const getInitialState = (): State => ({
   languageCode: 'en-US',
   receiveAddresses,
-  rawTransactions: {},
+  transactions: {
+    data: {},
+    isFetching: false,
+  },
   trans,
 })
 

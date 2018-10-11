@@ -3,9 +3,9 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {View} from 'react-native'
+import {View, Text} from 'react-native'
 
-import {transactionsSelector} from '../../selectors'
+import {transactionsSelector, isFetchingHistorySelector} from '../../selectors'
 import TxHistoryList from './TxHistoryList'
 import Screen from '../../components/Screen'
 import TxNavigationButtons from './TxNavigationButtons'
@@ -20,11 +20,13 @@ import type {State} from '../../state'
 
 type Props = {
   transactions: Array<HistoryTransaction>,
-  navigation: NavigationScreenProp<NavigationState>
-};
+  navigation: NavigationScreenProp<NavigationState>,
+  isFetching: boolean,
+}
 
-const TxHistory = ({transactions, navigation}: Props) => (
+const TxHistory = ({transactions, navigation, isFetching}: Props) => (
   <View style={styles.root}>
+    {isFetching && <Text>'Refreshing...'</Text>}
     <Screen scroll>
       <TxHistoryList navigation={navigation} transactions={transactions} />
     </Screen>
@@ -36,6 +38,7 @@ const TxHistory = ({transactions, navigation}: Props) => (
 export default compose(
   connect((state: State) => ({
     transactions: transactionsSelector(state),
+    isFetching: isFetchingHistorySelector(state),
   }), {
     updateHistory,
   }),

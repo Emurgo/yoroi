@@ -11,7 +11,9 @@ export const transactionsSelector = (state: State): Dict<HistoryTransaction> => 
   // TODO(ppershing): are these all of my receive addresses?
   const ownAddresses = state.receiveAddresses
   return _.mapValues(
-    state.rawTransactions,
+    state.transactions.data,
     (tr) => processTxHistoryData(tr, ownAddresses)
   )
 }
+
+export const isFetchingHistorySelector = (state: State): boolean => state.transactions.isFetching
