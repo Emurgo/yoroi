@@ -31,6 +31,16 @@ type Props = {
 }
 
 
+const AdaSign = ({color, size}) => (
+  <View style={styles.adaSignContainer}>
+    <AdaIcon
+      width={size}
+      height={size}
+      color={color}
+    />
+  </View>
+)
+
 class TxHistoryListItem extends Component<Props> {
   constructor(props: Props) {
     super(props)
@@ -48,7 +58,19 @@ class TxHistoryListItem extends Component<Props> {
     const {transaction, trans} = this.props
 
     const assuranceLevel = confirmationsToAssuranceLevel(transaction.confirmations)
-    const isNegativeAmount = transaction.type === 'SENT'
+    const isNegativeAmount = transaction.direction === 'SENT'
+
+    const formattedAmount = {
+      SENT: (x) => `- ${printAda(x)}`,
+      RECEIVED: (x) => printAda(x),
+      SELF: (x) => '--',
+    }[transaction.direction](transaction.amount)
+
+    const amountStyle = {
+      SENT: styles.negativeAmount,
+      RECEIVED: styles.positiveAmount,
+      SELF: {},
+    }[transaction.direction]
 
     return (
       <TouchableHighlight
@@ -59,24 +81,25 @@ class TxHistoryListItem extends Component<Props> {
         <View style={styles.container}>
           <View style={styles.row}>
             <View>
-              <CustomText>{trans.transactionType[transaction.type]}</CustomText>
+              <CustomText>{trans.transactionType[transaction.direction]}</CustomText>
             </View>
             <View style={styles.amountContainer}>
               <CustomText>
-                <Text style={isNegativeAmount ? styles.negativeAmount : styles.positiveAmount}>
-                  {isNegativeAmount ? '-' : ''}
-                  {printAda(transaction.amount)}
+                <Text style={amountStyle}>
+                  {formattedAmount}
                 </Text>
               </CustomText>
-              <View style={styles.adaSignContainer}>
-                <AdaIcon
-                  width={13}
-                  height={13}
-                  color={isNegativeAmount ?
-                    COLORS.NEGATIVE_AMOUNT : COLORS.POSITIVE_AMOUNT
-                  }
-                />
-              </View>
+              <AdaSign
+                size={13}
+                color={isNegativeAmount ?
+                  COLORS.NEGATIVE_AMOUNT : COLORS.POSITIVE_AMOUNT
+                }
+              />
+            </View>
+            <View>
+              <CustomText>
+                Fee: {printAda(transaction.fee)}
+              </CustomText>
             </View>
           </View>
 
