@@ -27,16 +27,16 @@ const _endFetch = () => ({
   reducer: (state, payload) => false,
 })
 
-export const updateHistory = () => (dispatch) => {
-  const ts = moment('2018-01-01T09:44:39.757Z')
+export const updateHistory = () => async (dispatch) => {
   dispatch(_startFetch())
 
-  api.fetchNewTxHistory(ts, ownAddresses)
-    .then((response) => {
-      dispatch(_updateTransactions(_.keyBy(response, (tx) => tx.hash)))
-    })
-    .catch(() => {
-      Alert.alert('Network error', 'Could not fetch transaction history', [{text: 'OK'}])
-    })
-    .finally(() => dispatch(_endFetch()))
+  const ts = moment('2018-01-01T09:44:39.757Z')
+  try {
+    const response = await api.fetchNewTxHistory(ts, ownAddresses)
+    dispatch(_updateTransactions(_.keyBy(response, (tx) => tx.hash)))
+  } catch {
+    Alert.alert('Network error', 'Could not fetch transaction history', [{text: 'OK'}])
+  } finally {
+    dispatch(_endFetch())
+  }
 }
