@@ -32,6 +32,7 @@
   },
   "globals": {
     "Symbol": false,
-    "$Call": false
+    "$Call": false,
+    "$Values": false,
   }
 }
