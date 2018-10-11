@@ -16,7 +16,7 @@ export const COLORS = {
   PRIMARY_GRADIENT_END: '#164ed5',
   POSITIVE_AMOUNT: '#54ca87',
   NEGATIVE_AMOUNT: '#d0021b',
-  PRIMARY: '#0f0',
+  PRIMARY: '#1036a0',
   PRIMARY_TEXT: '#fff',
   DARK_BLUE: '#1036a0',
 }
