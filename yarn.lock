@@ -5761,6 +5761,11 @@ react-native-linear-gradient@^2.4.2:
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.4.2.tgz#9d3acd0a198b9d4566e8f6253ef1f60fef0ff2be"
   integrity sha512-6+efUAsLIn8jHwb861ftjNmw0QuIhKCeQ3vBgQvPDWDcdL1M7GbPmOUdATQfoPod+m+UGSjLf8Tez2QwYLAG+A==
 
+react-native-local-auth@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-local-auth/-/react-native-local-auth-1.5.0.tgz#66fe93eee91a55a55490f2f6f5c3f8d0138aae42"
+  integrity sha1-Zv6T7ukaVaVUkPL29cP40BOKrkI=
+
 react-native-qrcode@^0.2.7:
   version "0.2.7"
   resolved "https://registry.yarnpkg.com/react-native-qrcode/-/react-native-qrcode-0.2.7.tgz#d103166fb1a5b53643e8bf7b88c0672e689ac4f8"
