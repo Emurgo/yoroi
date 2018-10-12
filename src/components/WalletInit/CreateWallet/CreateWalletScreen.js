@@ -9,6 +9,7 @@ import {withHandlers} from 'recompose'
 import CustomText from '../../CustomText'
 import Screen from '../../Screen'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
+import {generateAdaMnemonic, generateWalletMasterKey} from '../../../crypto/wallet'
 
 import styles from './styles/CreateWalletScreen.style'
 import {COLORS} from '../../../styles/config'
@@ -20,11 +21,17 @@ import type {SubTranslation} from '../../../l10n/typeHelpers'
 const getTrans = (state: State) => state.trans.createWallet
 
 type Props = {
-  navigateToRecoveryPhrase: () => mixed,
+  handleCreate: () => mixed,
   trans: SubTranslation<typeof getTrans>,
 };
 
-const CreateWalletScreen = ({navigateToRecoveryPhrase, trans}: Props) => (
+const handleCreate = ({navigation}) => () => {
+  const mnemonic = generateAdaMnemonic()
+  generateWalletMasterKey(mnemonic, '')
+  navigation.navigate(WALLET_INIT_ROUTES.RECOVERY_PHRASE_DIALOG, {mnemonic})
+}
+
+const CreateWalletScreen = ({handleCreate, trans}: Props) => (
   <Screen bgColor={COLORS.TRANSPARENT}>
     <View>
       <CustomText>{trans.title}</CustomText>
@@ -36,7 +43,7 @@ const CreateWalletScreen = ({navigateToRecoveryPhrase, trans}: Props) => (
       <TouchableHighlight
         activeOpacity={0.1}
         underlayColor={COLORS.WHITE}
-        onPress={navigateToRecoveryPhrase}
+        onPress={handleCreate}
         style={styles.button}
       >
         <CustomText>{trans.createButton}</CustomText>
@@ -50,7 +57,6 @@ export default compose(
     trans: getTrans(state),
   })),
   withHandlers({
-    navigateToRecoveryPhrase:
-      ({navigation}) => (event) => navigation.navigate(WALLET_INIT_ROUTES.RECOVERY_PHRASE_DIALOG),
+    handleCreate,
   })
 )(CreateWalletScreen)

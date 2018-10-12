@@ -1,0 +1,3 @@
+[submodule "vendor/js-cardano-wasm"]
+	path = vendor/js-cardano-wasm
+	url = git@github.com:input-output-hk/js-cardano-wasm.git
