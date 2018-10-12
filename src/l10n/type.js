@@ -30,7 +30,9 @@ export type Translation = {
     assuranceLevel: {
       LOW: string,
       MEDIUM: string,
-      HIGH: string
+      HIGH: string,
+      PENDING: string,
+      FAILED: string
     },
     transactionDetails: {
       fromAddresses: string,

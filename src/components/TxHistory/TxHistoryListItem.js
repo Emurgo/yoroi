@@ -6,7 +6,7 @@ import {connect} from 'react-redux'
 import {View, TouchableHighlight} from 'react-native'
 
 import CustomText from '../../components/CustomText'
-import {confirmationsToAssuranceLevel, printAda} from '../../utils/transactions'
+import {getTransactionAssurance, printAda} from '../../utils/transactions'
 import AdaIcon from '../../assets/AdaIcon'
 import {transactionsSelector} from '../../selectors'
 import {TX_HISTORY_ROUTES} from '../../RoutesList'
@@ -41,7 +41,7 @@ const AdaSign = ({color, size}) => (
 )
 
 const _AssuranceLevel = ({transaction, trans}) => {
-  const assuranceLevel = confirmationsToAssuranceLevel(transaction.confirmations)
+  const assuranceLevel = getTransactionAssurance(transaction)
   const CHECMKARK = '\u2714'
 
 
