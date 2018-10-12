@@ -19,6 +19,9 @@ const style = {
     color: COLORS.WHITE,
     fontWeight: 'bold',
   },
+  disabledButton: {
+    backgroundColor: COLORS.DARK_GRAY,
+  },
   formLabel: {
     color: COLORS.PRIMARY,
   },
@@ -27,11 +30,12 @@ const style = {
     borderRadius: 5,
     borderStyle: 'solid',
     borderWidth: 1,
-    flexDirection: 'row',
     fontSize: 20,
     height: 50,
-    padding: 5,
     width: '100%',
+  },
+  inputRow: {
+    flexDirection: 'row',
   },
   passwordRequirementsRow: {
     flexDirection: 'row',

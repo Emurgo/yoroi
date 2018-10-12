@@ -9,14 +9,18 @@ import {withHandlers, withState} from 'recompose'
 import CheckIcon from '../../../assets/CheckIcon'
 import CustomText from '../../CustomText'
 import Screen from '../../Screen'
+import {validatePassword} from '../../../utils/validators'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {generateAdaMnemonic, generateWalletMasterKey} from '../../../crypto/wallet'
 
 import styles from './styles/CreateWalletScreen.style'
 import {COLORS} from '../../../styles/config'
 
+import type {PasswordValidationErrors} from '../../../utils/validators'
 import type {State} from '../../../state'
 import type {SubTranslation} from '../../../l10n/typeHelpers'
+
+type FormValidationErrors = PasswordValidationErrors & {nameReq?: boolean}
 
 const getTrans = (state: State) => state.trans.createWallet
 
@@ -26,15 +30,23 @@ const handleCreate = ({navigation}) => () => {
   navigation.navigate(WALLET_INIT_ROUTES.RECOVERY_PHRASE_DIALOG, {mnemonic})
 }
 
+const validateForm = ({name, password, passwordConfirmation}): FormValidationErrors | null => {
+  const nameErrors = name !== '' ? null : {nameReq: true}
+  const passwordErrors = validatePassword(password, passwordConfirmation)
+
+  return nameErrors || passwordErrors ? {...nameErrors, ...passwordErrors} : null
+}
+
 type Props = {
   handleCreate: () => mixed,
   trans: SubTranslation<typeof getTrans>,
   name: string,
   password: string,
   passwordConfirmation: string,
-  setName: (string, ?Function) => void,
-  setPassword: (string, ?Function) => void,
-  setPasswordConfirmation: (string, ?Function) => void,
+  setName: (string) => void,
+  setPassword: (string) => void,
+  setPasswordConfirmation: (string) => void,
+  validateForm: () => FormValidationErrors | null,
 }
 
 const CreateWalletScreen = ({
@@ -46,66 +58,90 @@ const CreateWalletScreen = ({
   setName,
   setPassword,
   setPasswordConfirmation,
-}: Props) => (
-  <Screen bgColor={COLORS.TRANSPARENT}>
-    <View style={styles.container}>
-      <View>
-        <CustomText style={styles.formLabel}>{trans.nameLabel}</CustomText>
-        <TextInput style={styles.input} onChangeText={setName} value={name} autoFocus />
-      </View>
-      <View>
-        <CustomText style={styles.formLabel}>{trans.passwordLabel}</CustomText>
-        <TextInput
-          secureTextEntry
-          style={styles.input}
-          onChangeText={setPassword}
-          value={password}
-        />
-      </View>
-      <View>
-        <CustomText style={styles.formLabel}>{trans.passwordConfirmationLabel}</CustomText>
-        <TextInput
-          secureTextEntry
-          style={styles.input}
-          onChangeText={setPasswordConfirmation}
-          value={passwordConfirmation}
-        />
-      </View>
-      <View>
-        <CustomText>{trans.passwordRequirementsNote}</CustomText>
-        <View style={styles.passwordRequirementsRow}>
-          <View style={styles.passwordRequirement}>
-            <CheckIcon width={16} height={16} />
-            <CustomText style={styles.passwordRequirement}>{trans.passwordMinLength}</CustomText>
-          </View>
-          <View style={styles.passwordRequirement}>
-            <CheckIcon width={16} height={16} />
-            <CustomText style={styles.passwordRequirement}>{trans.passwordLowerChar}</CustomText>
-          </View>
-        </View>
-        <View style={styles.passwordRequirementsRow}>
-          <View style={styles.passwordRequirement}>
-            <CheckIcon width={16} height={16} />
-            <CustomText style={styles.passwordRequirement}>{trans.passwordUpperChar}</CustomText>
-          </View>
-          <View style={styles.passwordRequirement}>
-            <CheckIcon width={16} height={16} />
-            <CustomText style={styles.passwordRequirement}>{trans.passwordNumber}</CustomText>
-          </View>
-        </View>
-      </View>
+  validateForm,
+}: Props) => {
+  const errors = validateForm()
 
-      <TouchableHighlight
-        activeOpacity={0.1}
-        underlayColor={COLORS.WHITE}
-        onPress={handleCreate}
-        style={styles.button}
-      >
-        <CustomText style={styles.buttonText}>{trans.createButton}</CustomText>
-      </TouchableHighlight>
-    </View>
-  </Screen>
-)
+  return (
+    <Screen bgColor={COLORS.TRANSPARENT} scroll>
+      <View style={styles.container}>
+        <View>
+          <CustomText style={styles.formLabel}>{trans.nameLabel}</CustomText>
+          <View style={styles.inputRow}>
+            <TextInput style={styles.input} onChangeText={setName} value={name} autoFocus />
+            <CheckIcon
+              width={25}
+              height={25}
+              color={errors && errors.nameReq ? COLORS.TRANSPARENT : COLORS.LIGHT_POSITIVE_GREEN}
+            />
+          </View>
+        </View>
+        <View>
+          <CustomText style={styles.formLabel}>{trans.passwordLabel}</CustomText>
+          <TextInput
+            secureTextEntry
+            style={styles.input}
+            onChangeText={setPassword}
+            value={password}
+          />
+        </View>
+        <View>
+          <CustomText style={styles.formLabel}>{trans.passwordConfirmationLabel}</CustomText>
+          <View style={styles.inputRow}>
+            <TextInput
+              secureTextEntry
+              style={styles.input}
+              onChangeText={setPasswordConfirmation}
+              value={passwordConfirmation}
+            />
+            <CheckIcon
+              width={25}
+              height={25}
+              color={
+                errors && (errors.passwordConfirmationReq || errors.matchesConfirmation)
+                  ? COLORS.TRANSPARENT
+                  : COLORS.LIGHT_POSITIVE_GREEN
+              }
+            />
+          </View>
+        </View>
+        <View>
+          <CustomText>{trans.passwordRequirementsNote}</CustomText>
+          <View style={styles.passwordRequirementsRow}>
+            <View style={styles.passwordRequirement}>
+              <CheckIcon width={16} height={16} />
+              <CustomText style={styles.passwordRequirement}>{trans.passwordMinLength}</CustomText>
+            </View>
+            <View style={styles.passwordRequirement}>
+              <CheckIcon width={16} height={16} />
+              <CustomText style={styles.passwordRequirement}>{trans.passwordLowerChar}</CustomText>
+            </View>
+          </View>
+          <View style={styles.passwordRequirementsRow}>
+            <View style={styles.passwordRequirement}>
+              <CheckIcon width={16} height={16} />
+              <CustomText style={styles.passwordRequirement}>{trans.passwordUpperChar}</CustomText>
+            </View>
+            <View style={styles.passwordRequirement}>
+              <CheckIcon width={16} height={16} />
+              <CustomText style={styles.passwordRequirement}>{trans.passwordNumber}</CustomText>
+            </View>
+          </View>
+        </View>
+
+        <TouchableHighlight
+          activeOpacity={0.1}
+          disabled={!!errors}
+          underlayColor={COLORS.WHITE}
+          onPress={handleCreate}
+          style={[styles.button, errors == null ? {} : styles.disabledButton]}
+        >
+          <CustomText style={styles.buttonText}>{trans.createButton}</CustomText>
+        </TouchableHighlight>
+      </View>
+    </Screen>
+  )
+}
 
 export default compose(
   connect((state) => ({
@@ -116,5 +152,7 @@ export default compose(
   withState('passwordConfirmation', 'setPasswordConfirmation', ''),
   withHandlers({
     handleCreate,
+    validateForm: ({name, password, passwordConfirmation}) => () =>
+      validateForm({name, password, passwordConfirmation}),
   })
 )(CreateWalletScreen)
