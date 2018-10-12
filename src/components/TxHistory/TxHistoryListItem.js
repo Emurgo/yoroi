@@ -3,23 +3,22 @@
 import React, {Component} from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-
-import {Text, View, TouchableHighlight} from 'react-native'
-import {COLORS} from '../../styles/config'
+import {View, TouchableHighlight} from 'react-native'
 
 import CustomText from '../../components/CustomText'
 import {confirmationsToAssuranceLevel, printAda} from '../../utils/transactions'
 import AdaIcon from '../../assets/AdaIcon'
-
 import {transactionsSelector} from '../../selectors'
-
-import type {HistoryTransaction} from '../../types/HistoryTransaction'
 import {TX_HISTORY_ROUTES} from '../../RoutesList'
+import styles from './styles/TxHistoryListItem.style'
+import {COLORS} from '../../styles/config'
+import {withTranslation} from '../../utils/renderUtils'
+
+import {TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
 
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {SubTranslation} from '../../l10n/typeHelpers'
-
-import styles from './styles/TxHistoryListItem.style'
+import type {HistoryTransaction} from '../../types/HistoryTransaction'
 
 
 const getTrans = (state) => state.trans.txHistoryScreen
@@ -41,6 +40,21 @@ const AdaSign = ({color, size}) => (
   </View>
 )
 
+const _AssuranceLevel = ({transaction, trans}) => {
+  const assuranceLevel = confirmationsToAssuranceLevel(transaction.confirmations)
+  const CHECMKARK = '\u2714'
+
+
+  return (
+    <CustomText>
+      {CHECMKARK}{CHECMKARK}
+      {trans.assuranceLevel[assuranceLevel]}
+    </CustomText>
+  )
+}
+
+const AssuranceLevel = withTranslation(getTrans)(_AssuranceLevel)
+
 class TxHistoryListItem extends Component<Props> {
   constructor(props: Props) {
     super(props)
@@ -57,9 +71,6 @@ class TxHistoryListItem extends Component<Props> {
   render() {
     const {transaction, trans} = this.props
 
-    const assuranceLevel = confirmationsToAssuranceLevel(transaction.confirmations)
-    const isNegativeAmount = transaction.direction === 'SENT'
-
     const formattedAmount = {
       SENT: (x) => `- ${printAda(x)}`,
       RECEIVED: (x) => printAda(x),
@@ -69,7 +80,7 @@ class TxHistoryListItem extends Component<Props> {
     const amountStyle = {
       SENT: styles.negativeAmount,
       RECEIVED: styles.positiveAmount,
-      SELF: {},
+      SELF: styles.neutralAmount,
     }[transaction.direction]
 
     return (
@@ -79,39 +90,46 @@ class TxHistoryListItem extends Component<Props> {
         onPress={this.showDetails}
       >
         <View style={styles.container}>
-          <View style={styles.row}>
-            <View>
-              <CustomText>{trans.transactionType[transaction.direction]}</CustomText>
-            </View>
-            <View style={styles.amountContainer}>
-              <CustomText>
-                <Text style={amountStyle}>
-                  {formattedAmount}
-                </Text>
-              </CustomText>
-              <AdaSign
-                size={13}
-                color={isNegativeAmount ?
-                  COLORS.NEGATIVE_AMOUNT : COLORS.POSITIVE_AMOUNT
-                }
-              />
-            </View>
-            <View>
-              <CustomText>
-                Fee: {printAda(transaction.fee)}
-              </CustomText>
-            </View>
-          </View>
-
-          <View style={styles.row}>
+          <View style={styles.metadataPanel}>
             <View>
               <CustomText>{transaction.timestamp.format('hh:mm:ss A')}</CustomText>
             </View>
             <View>
+              <AssuranceLevel transaction={transaction} />
+            </View>
+          </View>
+          <View style={styles.amountPanel}>
+            <View style={styles.amountContainer}>
+              <View style={styles.horizontalSpacer} />
               <CustomText>
-                {trans.assuranceLevelHeader}
-                {trans.assuranceLevel[assuranceLevel]}
+                {trans.transactionType[transaction.direction]}
               </CustomText>
+            </View>
+            <View style={styles.amountContainer}>
+              <View style={styles.horizontalSpacer} />
+              {transaction.direction !== TRANSACTION_DIRECTION.SELF ? (
+               <>
+                 <CustomText style={amountStyle}>
+                   {formattedAmount}
+                 </CustomText>
+                 <AdaSign
+                   size={16}
+                   color={amountStyle.color}
+                 />
+              </>
+              ) : (
+                <CustomText style={amountStyle}>
+                  - -
+                </CustomText>
+              )}
+            </View>
+            <View style={styles.feeContainer}>
+              <View style={styles.horizontalSpacer} />
+              {transaction.direction !== TRANSACTION_DIRECTION.RECEIVED && (
+                <CustomText style={styles.feeAmount}>
+                  {printAda(transaction.fee)} l10n Fee
+                </CustomText>
+              )}
             </View>
           </View>
         </View>

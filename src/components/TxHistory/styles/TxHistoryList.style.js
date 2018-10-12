@@ -16,6 +16,8 @@ const styles = {
     borderBottomWidth: 1,
     borderBottomColor: COLORS.LIGHT_GRAY,
     paddingBottom: 15,
+    flex: 1,
+    alignItems: 'center',
   },
   dateLabel: {
     color: COLORS.BLACK,
