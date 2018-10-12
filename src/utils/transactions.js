@@ -4,23 +4,30 @@
 import moment from 'moment'
 import _ from 'lodash'
 
-import {TRANSACTION_DIRECTION} from '../types/HistoryTransaction'
-
+import {TRANSACTION_DIRECTION, TRANSACTION_STATUS} from '../types/HistoryTransaction'
+import {CONFIG} from '../config'
 
 import type {HistoryTransaction, RawTransaction} from '../types/HistoryTransaction'
 
-// Fixme: Get real values and put it into config somewhere
-export const confirmationsToAssuranceLevel = (confirmations: number) => {
-  if (confirmations < 5) {
-    return 'LOW'
+
+type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
+
+// TODO(ppershing): create Flow type for this
+export const getTransactionAssurance = (transaction: HistoryTransaction): TransactionAssurance => {
+  if (transaction.status === TRANSACTION_STATUS.PENDING) return 'PENDING'
+  if (transaction.status === TRANSACTION_STATUS.FAILED) return 'FAILED'
+  if (transaction.status !== TRANSACTION_STATUS.SUCCESSFUL) {
+    throw new Error('Internal error - unknown transaciton status')
   }
 
-  if (confirmations < 9) {
-    return 'MEDIUM'
-  }
+  // TODO(ppershing): this should be configurable
+  const levels = CONFIG.ASSURANCE_LEVELS
 
+  if (transaction.confirmations < levels.LOW) return 'LOW'
+  if (transaction.confirmations < levels.MEDIUM) return 'MEDIUM'
   return 'HIGH'
 }
+
 
 // TODO(ppershing): probably belongs to utils/localization once we have it
 export const printAda = (amount: number) => {

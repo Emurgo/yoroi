@@ -19,7 +19,7 @@
         ],
         "block_num": "1632967",
         "time": "2018-10-10T09:44:33.000Z",
-        "tx_state": "Successful",
+        "tx_state": "Failed",
         "last_update": "2018-10-10T09:44:39.757Z",
         "best_block_num": "1637709"
     },
@@ -67,7 +67,7 @@
         "time": "2018-10-03T12:18:53.000Z",
         "tx_state": "Successful",
         "last_update": "2018-10-03T12:18:59.407Z",
-        "best_block_num": "1603498"
+        "best_block_num": "1603214"
     },
     {
         "hash": "aea824d51464068f48bf9ae394b2eddce9641bad3130af5ab4d158ed909cac23",
@@ -89,7 +89,7 @@
         "time": "2018-10-03T13:27:13.000Z",
         "tx_state": "Successful",
         "last_update": "2018-10-03T13:27:22.130Z",
-        "best_block_num": "1603498"
+        "best_block_num": "1603425"
     },
     {
         "hash": "1171e15787671586b9e3a588016ce59d33aa82f6c7b7657943a524cf5bbd9514",

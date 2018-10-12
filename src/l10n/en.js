@@ -34,6 +34,8 @@ const l10n = {
       LOW: 'Low',
       MEDIUM: 'Medium',
       HIGH: 'High',
+      PENDING: 'Pending',
+      FAILED: 'Failed',
     },
     transactionDetails: {
       fromAddresses: 'From Addresses',
