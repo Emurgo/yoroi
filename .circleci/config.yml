@@ -25,6 +25,20 @@ jobs:
           paths:
             - node_modules
             - yarn.lock
+
+      # install rustup
+      - run: curl https://sh.rustup.rs -sSf | sh -s -- -y
+      - run: echo 'export PATH=$HOME/.cargo/bin/:$PATH' >> $BASH_ENV
+      # use nightly version. 
+      # // FIXME: This is hardcoded but taken from js-cardano-wasm repo
+      # which is checked out later
+      - run: rustup install nightly-2018-06-05
+      - run: rustup target add wasm32-unknown-unknown --toolchain nightly-2018-06-05
+
+      # Because npm link will write in this path
+      - run: sudo chown -R "$(whoami):$(whoami)" /usr/local/lib/node_modules
+      - run: ./build_cardano_rust.sh
+
       - persist_to_workspace:
           root: .
           paths: .
@@ -41,6 +55,10 @@ jobs:
     steps:
       - attach_workspace:
          at: ~/project
+
+      # Because npm link will write in this path
+      - run: sudo chown -R "$(whoami):$(whoami)" /usr/local/lib/node_modules
+      - run: npm link rust-cardano-crypto
       - run: yarn lint
 
   android:
@@ -74,8 +92,8 @@ workflows:
       - flow:
           requires:
             - install-dependencies
-      - android:
-          requires: 
-            - install-dependencies
-            - lint
-            - flow
+#      - android:
+#          requires: 
+#            - install-dependencies
+#            - lint
+#            - flow

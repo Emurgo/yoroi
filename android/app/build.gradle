@@ -76,6 +76,10 @@ project.ext.react = [
     entryFile: "index.js"
 ]
 
+project.ext.react = [
+  cliPath: "node_modules/haul/bin/cli.js"
+]
+
 apply from: "../../node_modules/react-native/react.gradle"
 
 /**
@@ -137,6 +141,8 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-randombytes')
+    compile project(':react-native-fs')
     compile project(':react-native-linear-gradient')
     compile project(':react-native-svg')
     implementation fileTree(dir: "libs", include: ["*.jar"])

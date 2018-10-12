@@ -31,8 +31,10 @@
     "react-native/no-inline-styles": 2
   },
   "globals": {
+    "Buffer": false,
     "Symbol": false,
+    "TextEncoder": false,
     "$Call": false,
-    "$Values": false,
+    "$Values": false
   }
 }

@@ -58,3 +58,8 @@ buck-out/
 # VIM
 *.swp
 *.swo
+
+# Haul
+#
+haul-debug.log
+.cache-loader
