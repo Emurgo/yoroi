@@ -7,6 +7,7 @@ export const COLORS = {
   BACKGROUND_GRAY: '#f5fcff',
   DARK_GRAY: '#4a4a4a',
   LIGHT_GRAY: '#eee',
+  GRAY: '#777',
   WHITE: '#fff',
   BLACK: '#000',
   TRANSPARENT_BLACK: '#00000077',
@@ -19,6 +20,12 @@ export const COLORS = {
   PRIMARY_TEXT: '#fff',
   DARK_BLUE: '#1036a0',
 }
+
+export const DEBUG_BORDERS = {
+  borderColor: COLORS.GRAY,
+  borderWidth: 1,
+}
+
 
 const brand = {
   defaultFont: Platform.select({
