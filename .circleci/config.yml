@@ -99,6 +99,9 @@ workflows:
       - flow:
           requires:
             - install-dependencies
+      - test:
+          requires:
+            - install-dependencies
 #      - android:
 #          requires: 
 #            - install-dependencies
