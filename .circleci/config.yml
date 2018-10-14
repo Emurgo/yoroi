@@ -50,6 +50,13 @@ jobs:
           at: ~/project
       - run: yarn flow
 
+  test:
+    <<: *rn_defaults
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run: yarn test
+
   lint:
     <<: *rn_defaults
     steps:
@@ -90,6 +97,9 @@ workflows:
           requires:
             - install-dependencies
       - flow:
+          requires:
+            - install-dependencies
+      - test:
           requires:
             - install-dependencies
 #      - android:

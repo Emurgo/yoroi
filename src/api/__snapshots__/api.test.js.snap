@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`API: can fetch history 1`] = `
+Object {
+  "best_block_num": Any<String>,
+  "block_num": "1603213",
+  "hash": "58385cdaaf65bd4cd9946820485aa44646cb254b8c680ecb08ae8b8287fbf847",
+  "inputs_address": Array [
+    "Ae2tdPwUPEZ8tNBZxm8CtauzEi7Zay91A7nwajx4jotysBRLL6BpwzqwKa9",
+    "Ae2tdPwUPEZGiayQx7JRMV9L21Be37E6Aj63Ka75hQ37vkdNnMosEPaAJXF",
+  ],
+  "inputs_amount": Array [
+    "5000000",
+    "815736577",
+  ],
+  "last_update": "2018-10-03T12:18:59.407Z",
+  "outputs_address": Array [
+    "Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7",
+    "Ae2tdPwUPEZA21yabP5eLgTF6UMLUKbihy2GiwW6eDNxdPevTcRp8e4AyLX",
+  ],
+  "outputs_amount": Array [
+    "200000000",
+    "620560541",
+  ],
+  "time": "2018-10-03T12:18:53.000Z",
+  "tx_state": "Successful",
+}
+`;

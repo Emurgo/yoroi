@@ -18,6 +18,7 @@
     "bip39": "^2.5.0",
     "buffer": "^5.2.1",
     "crypto-random-string": "^1.0.0",
+    "es6-error": "^4.1.1",
     "es6-symbol": "^3.1.1",
     "eslint": "^5.6.1",
     "eslint-config-vacuumlabs": "^1.5.0",
@@ -31,6 +32,7 @@
     "immer": "^1.7.2",
     "lodash": "^4.17.11",
     "moment": "^2.22.2",
+    "node-fetch": "^2.2.0",
     "path-browserify": "^1.0.0",
     "react": "16.5.0",
     "react-native": "0.57.1",
@@ -59,6 +61,9 @@
     "react-test-renderer": "16.5.0"
   },
   "jest": {
+    "transform": {
+      "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js"
+    },
     "preset": "react-native"
   }
 }

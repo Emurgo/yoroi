@@ -35,6 +35,8 @@
     "Symbol": false,
     "TextEncoder": false,
     "$Call": false,
-    "$Values": false
+    "$Values": false,
+    "test",
+    "expect"
   }
 }
