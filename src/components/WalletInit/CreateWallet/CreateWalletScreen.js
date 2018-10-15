@@ -4,6 +4,7 @@ import React from 'react'
 import {TextInput, View, TouchableHighlight} from 'react-native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
+import {NavigationEvents} from 'react-navigation'
 import {withHandlers, withState} from 'recompose'
 
 import CheckIcon from '../../../assets/CheckIcon'
@@ -37,15 +38,21 @@ const validateForm = ({name, password, passwordConfirmation}): FormValidationErr
   return nameErrors || passwordErrors ? {...nameErrors, ...passwordErrors} : null
 }
 
+const handleOnWillBlur = ({setPassword, setPasswordConfirmation}) => () => {
+  setPassword('')
+  setPasswordConfirmation('')
+}
+
 type Props = {
   handleCreate: () => mixed,
   trans: SubTranslation<typeof getTrans>,
   name: string,
   password: string,
   passwordConfirmation: string,
-  setName: (string) => void,
-  setPassword: (string) => void,
-  setPasswordConfirmation: (string) => void,
+  setName: (string) => mixed,
+  setPassword: (string) => mixed,
+  setPasswordConfirmation: (string) => mixed,
+  onWillBlur: () => void,
   validateForm: () => FormValidationErrors | null,
 }
 
@@ -59,11 +66,13 @@ const CreateWalletScreen = ({
   setPassword,
   setPasswordConfirmation,
   validateForm,
+  onWillBlur,
 }: Props) => {
   const errors = validateForm()
 
   return (
     <Screen bgColor={COLORS.TRANSPARENT} scroll>
+      <NavigationEvents onWillBlur={onWillBlur} />
       <View style={styles.container}>
         <View>
           <CustomText style={styles.formLabel}>{trans.nameLabel}</CustomText>
@@ -154,5 +163,6 @@ export default compose(
     handleCreate,
     validateForm: ({name, password, passwordConfirmation}) => () =>
       validateForm({name, password, passwordConfirmation}),
+    onWillBlur: handleOnWillBlur,
   })
 )(CreateWalletScreen)
