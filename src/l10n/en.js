@@ -116,6 +116,7 @@ const l10n = {
     instructions:
       'Tap each word in the correct order to verify your recovery phrase',
     inputLabel: 'Recovery phrase',
+    invalidPhrase: 'Recovery phrase does not match',
     clearButton: 'CLEAR',
     confirmButton: 'CONFIRM',
   },

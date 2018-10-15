@@ -19,6 +19,7 @@ export const COLORS = {
   PRIMARY: '#1036a0',
   PRIMARY_TEXT: '#fff',
   DARK_BLUE: '#1036a0',
+  RED: '#ff0000',
 }
 
 export const DEBUG_BORDERS = {
