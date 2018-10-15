@@ -9,7 +9,7 @@ import type {Moment} from 'moment'
 type Addresses = Array<string>
 
 
-const checkResponse = (response) => {
+const _checkResponse = (response) => {
   Logger.debug('Check response', response)
   if (response.status !== 200) {
     throw new ApiError(response)
@@ -38,8 +38,8 @@ const _fetch = (path: string, payload: any) => {
       throw e
     })
     .then((r) => {
-      checkResponse(r)
       Logger.debug(`API call ${path} finished`)
+      _checkResponse(r)
       const response = r.json()
       Logger.debug('Response:', response)
       return response
