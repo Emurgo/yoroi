@@ -14,6 +14,7 @@ export type State = {
   },
   receiveAddresses: Array<string>,
   trans: Translation,
+  isOnline: boolean,
 }
 
 export const getInitialState = (): State => ({
@@ -24,6 +25,7 @@ export const getInitialState = (): State => ({
     isFetching: false,
   },
   trans,
+  isOnline: true, // we are online by default
 })
 
 export default getInitialState

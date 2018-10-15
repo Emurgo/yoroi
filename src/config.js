@@ -16,4 +16,5 @@ export const CONFIG = {
   API_ROOT: 'https://iohk-staging.yoroiwallet.com/api',
   // TODO(ppershing): this should be configurable by user
   ASSURANCE_LEVELS: ASSURANCE_LEVELS.NORMAL,
+  HISTORY_REFRESH_TIME: 10 * 1000,
 }

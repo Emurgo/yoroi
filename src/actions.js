@@ -1,10 +1,9 @@
 import _ from 'lodash'
 import moment from 'moment'
-import {Alert} from 'react-native'
 
 import api from './api'
 import ownAddresses from './mockData/addresses.json'
-
+import {Logger} from './utils/logging'
 
 const _updateTransactions = (rawTransactions) => ({
   type: 'Update transactions',
@@ -27,15 +26,32 @@ const _endFetch = () => ({
   reducer: (state, payload) => false,
 })
 
+const _setOnline = (isOnline: boolean) => (dispatch, getState) => {
+  const state = getState()
+  if (state.isOnline === isOnline) return // avoid useless state updates
+  dispatch({
+    type: 'Set isOnline',
+    path: ['isOnline'],
+    payload: isOnline,
+    reducer: (state, payload) => payload,
+  })
+}
+
+export const setupApiOnlineTracking = () => (dispatch) => {
+  Logger.debug('setting up api isOnline callback')
+  api.setIsOnlineCallback((isOnline) => dispatch(_setOnline(isOnline)))
+}
+
 export const updateHistory = () => async (dispatch) => {
+  // TODO(ppershing): abort previous request if still fetching
   dispatch(_startFetch())
 
   const ts = moment('2018-01-01T09:44:39.757Z')
   try {
     const response = await api.fetchNewTxHistory(ts, ownAddresses)
     dispatch(_updateTransactions(_.keyBy(response, (tx) => tx.hash)))
-  } catch {
-    Alert.alert('Network error', 'Could not fetch transaction history', [{text: 'OK'}])
+  } catch (e) {
+    Logger.error('Update history error', e)
   } finally {
     dispatch(_endFetch())
   }

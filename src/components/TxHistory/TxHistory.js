@@ -4,13 +4,15 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View, Text} from 'react-native'
+import _ from 'lodash'
 
-import {transactionsSelector, isFetchingHistorySelector} from '../../selectors'
+import {transactionsSelector, isFetchingHistorySelector, isOnlineSelector} from '../../selectors'
 import TxHistoryList from './TxHistoryList'
 import Screen from '../../components/Screen'
 import TxNavigationButtons from './TxNavigationButtons'
 import {updateHistory} from '../../actions'
 import {onDidMount} from '../../utils/renderUtils'
+import {CONFIG} from '../../config'
 
 import styles from './styles/TxHistory.style'
 
@@ -19,16 +21,40 @@ import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {State} from '../../state'
 
 type Props = {
-  transactions: Array<HistoryTransaction>,
+  transactions: {[string]: HistoryTransaction},
   navigation: NavigationScreenProp<NavigationState>,
   isFetching: boolean,
+  isOnline: boolean,
 }
 
-const TxHistory = ({transactions, navigation, isFetching}: Props) => (
+const OfflineBanner = () => (
+  <Text>
+    You are offline!
+  </Text>
+)
+
+const RefreshBanner = () => (
+  <Text>
+    Refreshing...
+  </Text>
+)
+
+const NoTxHistory = () => (
+  <Text> You have no transactions yet ... </Text>
+)
+
+const TxHistory = ({transactions, navigation, isFetching, isOnline}: Props) => (
   <View style={styles.root}>
-    {isFetching && <Text>'Refreshing...'</Text>}
+    {!isOnline && <OfflineBanner />}
+    {isFetching && <RefreshBanner />}
     <Screen scroll>
-      <TxHistoryList navigation={navigation} transactions={transactions} />
+      {_.isEmpty(transactions)
+        ? <NoTxHistory />
+        : <TxHistoryList
+          navigation={navigation}
+          transactions={transactions}
+        />
+      }
     </Screen>
 
     <TxNavigationButtons navigation={navigation} />
@@ -39,8 +65,15 @@ export default compose(
   connect((state: State) => ({
     transactions: transactionsSelector(state),
     isFetching: isFetchingHistorySelector(state),
+    isOnline: isOnlineSelector(state),
   }), {
     updateHistory,
   }),
-  onDidMount(({updateHistory}) => updateHistory()),
+  // TODO(ppershing): this should be handled
+  // by some history manager
+  // FIXME(ppershing): we do not clean interval on unmount
+  onDidMount(({updateHistory}) => {
+    updateHistory()
+    setInterval(updateHistory, CONFIG.HISTORY_REFRESH_TIME)
+  }),
 )(TxHistory)
