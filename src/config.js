@@ -5,7 +5,7 @@ export const CARDANO_CONFIG = {
     PROTOCOL_MAGIC: 633343913,
     API_ROOT: 'https://iohk-staging.yoroiwallet.com/api',
   },
-  PROD: {
+  MAINNET: {
     PROTOCOL_MAGIC: 764824073,
     API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
   },
