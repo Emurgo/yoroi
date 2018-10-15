@@ -16,6 +16,9 @@ const _checkResponse = (response) => {
   }
 }
 
+type IsOnlineCallback = (boolean) => any
+
+let _isOnlineCallback: IsOnlineCallback = (isOnline) => null
 
 const _fetch = (path: string, payload: any) => {
   Logger.info(`API call: ${path}`)
@@ -33,17 +36,24 @@ const _fetch = (path: string, payload: any) => {
       // It really is TypeError according to
       // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
       if (e instanceof TypeError) {
+        _isOnlineCallback(false)
         throw new NotConnectedError()
       }
       throw e
     })
     .then((r) => {
+      _isOnlineCallback(true)
       Logger.debug(`API call ${path} finished`)
       _checkResponse(r)
       const response = r.json()
       Logger.debug('Response:', response)
       return response
     })
+}
+
+
+export const setIsOnlineCallback = (cb: IsOnlineCallback) => {
+  _isOnlineCallback = cb
 }
 
 export const fetchNewTxHistory = (dateFrom: Moment, addresses: Addresses) => {
