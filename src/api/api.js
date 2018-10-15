@@ -1,6 +1,6 @@
 // @flow
 /* eslint-disable no-console */
-
+import {Logger} from '../utils/logging'
 import {CONFIG} from '../config'
 import {NotConnectedError, ApiError} from './errors'
 
@@ -10,7 +10,7 @@ type Addresses = Array<string>
 
 
 const checkResponse = (response) => {
-  console.log(response)
+  Logger.debug('Check response', response)
   if (response.status !== 200) {
     throw new ApiError(response)
   }
@@ -18,7 +18,7 @@ const checkResponse = (response) => {
 
 
 const _fetch = (path: string, payload: any) => {
-  console.log(`API call: ${path}`)
+  Logger.info(`API call: ${path}`)
   return fetch(
     `${CONFIG.API_ROOT}/${path}`, {
       method: 'POST',
@@ -29,6 +29,7 @@ const _fetch = (path: string, payload: any) => {
     })
     // Fetch throws only for network/dns/related errors, not http statuses
     .catch((e) => {
+      Logger.info('fetch failed', e)
       // It really is TypeError according to
       // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
       if (e instanceof TypeError) {
@@ -37,10 +38,10 @@ const _fetch = (path: string, payload: any) => {
       throw e
     })
     .then((r) => {
-      console.log(`API call response: ${path}`)
       checkResponse(r)
+      Logger.debug(`API call ${path} finished`)
       const response = r.json()
-      console.log(response)
+      Logger.debug('Response:', response)
       return response
     })
 }
