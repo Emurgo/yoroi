@@ -1,5 +1,16 @@
 // @flow
 
+export const CARDANO_CONFIG = {
+  TESTNET: {
+    PROTOCOL_MAGIC: 633343913,
+    API_ROOT: 'https://iohk-staging.yoroiwallet.com/api',
+  },
+  MAINNET: {
+    PROTOCOL_MAGIC: 764824073,
+    API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
+  },
+}
+
 export const ASSURANCE_LEVELS = {
   NORMAL: {
     LOW: 3,
@@ -11,9 +22,12 @@ export const ASSURANCE_LEVELS = {
   },
 }
 
+const CARDANO = CARDANO_CONFIG.TESTNET
+
 export const CONFIG = {
   USE_MOCK_API: false,
-  API_ROOT: 'https://iohk-staging.yoroiwallet.com/api',
+  API_ROOT: CARDANO.API_ROOT,
+  CARDANO,
   // TODO(ppershing): this should be configurable by user
   ASSURANCE_LEVELS: ASSURANCE_LEVELS.NORMAL,
   HISTORY_REFRESH_TIME: 10 * 1000,
