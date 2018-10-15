@@ -28,6 +28,7 @@ export const CONFIG = {
   USE_MOCK_API: false,
   API_ROOT: CARDANO.API_ROOT,
   CARDANO,
+  MNEMONIC_STRENGTH: 160,
   // TODO(ppershing): this should be configurable by user
   ASSURANCE_LEVELS: ASSURANCE_LEVELS.NORMAL,
   HISTORY_REFRESH_TIME: 10 * 1000,

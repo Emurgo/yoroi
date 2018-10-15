@@ -28,14 +28,20 @@ const resetNavigationAction = StackActions.reset({
   key: null,
 })
 
+const handleWalletConfirmation = ({navigation}) => () => {
+  // Todo: add wallet creation here
+  // navigation.getParam('mnemonic')
+  navigation.dispatch(resetNavigationAction)
+}
+
 const getTrans = (state: State) => state.trans.recoveryPhraseConfirmationDialog
 
 type Props = {
-  navigateToWallet: () => mixed,
+  confirmWalletCreation: () => mixed,
   trans: SubTranslation<typeof getTrans>,
 };
 
-const RecoveryPhraseConfirmationDialog = ({navigateToWallet, trans}: Props) => (
+const RecoveryPhraseConfirmationDialog = ({confirmWalletCreation, trans}: Props) => (
   <Screen bgColor={COLORS.TRANSPARENT_BLACK}>
     <View style={styles.dialogBody}>
       <CustomText>{trans.title}</CustomText>
@@ -45,7 +51,7 @@ const RecoveryPhraseConfirmationDialog = ({navigateToWallet, trans}: Props) => (
       <TouchableHighlight
         activeOpacity={0.1}
         underlayColor={COLORS.WHITE}
-        onPress={navigateToWallet}
+        onPress={confirmWalletCreation}
         style={styles.button}
       >
         <CustomText>{trans.confirmationButton}</CustomText>
@@ -59,7 +65,6 @@ export default compose(
     trans: getTrans(state),
   })),
   withHandlers({
-    navigateToWallet:
-      ({navigation}) => (event) => navigation.dispatch(resetNavigationAction),
+    confirmWalletCreation: handleWalletConfirmation,
   })
 )(RecoveryPhraseConfirmationDialog)
