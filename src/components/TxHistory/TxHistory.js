@@ -12,6 +12,7 @@ import Screen from '../../components/Screen'
 import TxNavigationButtons from './TxNavigationButtons'
 import {updateHistory} from '../../actions'
 import {onDidMount} from '../../utils/renderUtils'
+import {CONFIG} from '../../config'
 
 import styles from './styles/TxHistory.style'
 
@@ -73,6 +74,6 @@ export default compose(
   // FIXME(ppershing): we do not clean interval on unmount
   onDidMount(({updateHistory}) => {
     updateHistory()
-    setInterval(updateHistory, 10000)
+    setInterval(updateHistory, CONFIG.HISTORY_REFRESH_TIME)
   }),
 )(TxHistory)
