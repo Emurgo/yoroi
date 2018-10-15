@@ -18,7 +18,7 @@ const externalAddresses = [
 ]
 
 
-test('Can generate externall addresses', () => {
+test('Can generate external addresses', () => {
   const masterKey = getMasterKeyFromMnemonic(mnemonic)
   const account = getAccountFromMasterKey(masterKey, CARDANO_CONFIG.TESTNET.PROTOCOL_MAGIC)
   const addresses = getExternalAddresses(account, [0, 1, 2])
