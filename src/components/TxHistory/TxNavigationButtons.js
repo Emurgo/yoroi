@@ -10,7 +10,7 @@ import CustomText from '../../components/CustomText'
 import styles from './styles/TxNavigationButtons.style'
 import {COLORS} from '../../styles/config'
 import {MAIN_ROUTES} from '../../RoutesList'
-import {authenticate} from '../LocalAuthentication'
+import {authenticate} from '../../helpers/bioAuthHelper'
 
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {SubTranslation} from '../../l10n/typeHelpers'
