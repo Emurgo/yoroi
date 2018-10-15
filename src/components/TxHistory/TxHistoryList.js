@@ -30,9 +30,9 @@ const formatDate = (timestamp: Moment, trans) => {
 
 
 const DayHeader = ({ts, formatDate}) => (
-  <View style={styles.dateLabelContainer}>
+  <View style={styles.DayHeader}>
     <CustomText>
-      <Text style={styles.dateLabel}>{formatDate(ts)}</Text>
+      <Text style={styles.DayHeader__text}>{formatDate(ts)}</Text>
     </CustomText>
   </View>
 )
@@ -55,9 +55,9 @@ const TxHistoryList = ({transactions, navigation, formatDate}: Props) => {
   const groupedTransactions = getTransactionsByDate(transactions)
 
   return (
-    <View style={styles.container}>
+    <View style={styles.TxHistoryList}>
       {groupedTransactions.map(([date, transactions]) => (
-        <View key={date} style={styles.dayContainer}>
+        <View key={date} style={styles.TxHistoryList__dayContainer}>
           <DayHeader ts={transactions[0].timestamp} formatDate={formatDate} />
           {transactions.map((transaction) => (
             <TxHistoryListItem

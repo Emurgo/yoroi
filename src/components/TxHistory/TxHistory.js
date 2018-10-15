@@ -28,13 +28,13 @@ type Props = {
 }
 
 const OfflineBanner = () => (
-  <Text>
+  <Text style={styles.OfflineBanner}>
     You are offline!
   </Text>
 )
 
 const RefreshBanner = () => (
-  <Text>
+  <Text style={styles.RefreshBanner}>
     Refreshing...
   </Text>
 )
@@ -44,7 +44,7 @@ const NoTxHistory = () => (
 )
 
 const TxHistory = ({transactions, navigation, isFetching, isOnline}: Props) => (
-  <View style={styles.root}>
+  <View style={styles.TxHistory}>
     {!isOnline && <OfflineBanner />}
     {isFetching && <RefreshBanner />}
     <Screen scroll>
