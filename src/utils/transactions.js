@@ -120,6 +120,7 @@ export const processTxHistoryData =
     fromAddresses: data.inputs_address,
     toAddresses: data.outputs_address,
     amount: Math.abs(amount),
+    bruttoAmount: brutto,
     fee,
     confirmations: parseInt(data.best_block_num, 10) - parseInt(data.block_num, 10),
     direction,
