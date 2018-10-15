@@ -1,11 +1,11 @@
 // @flow
-/* eslint-disable no-console */
 
 import moment from 'moment'
 import _ from 'lodash'
 
 import {TRANSACTION_DIRECTION, TRANSACTION_STATUS} from '../types/HistoryTransaction'
 import {CONFIG} from '../config'
+import {Logger} from '../utils/logging'
 
 import type {HistoryTransaction, RawTransaction} from '../types/HistoryTransaction'
 
@@ -61,8 +61,8 @@ export const processTxHistoryData =
 
   if (ownInputs.length > 0 && ownInputs.length !== inputs.length) {
     // this really should not happen
-    console.error('I see a transaction where only some of the inputs are mine')
-    console.error('This probably means broken address discovery!')
+    Logger.warn('I see a transaction where only some of the inputs are mine')
+    Logger.warn('This probably means broken address discovery!')
   }
 
   const totalIn = _sum(inputs)
