@@ -10,6 +10,7 @@ import CustomText from '../../components/CustomText'
 import styles from './styles/TxNavigationButtons.style'
 import {COLORS} from '../../styles/config'
 import {MAIN_ROUTES} from '../../RoutesList'
+import {authenticate} from '../../helpers/bioAuthHelper'
 
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {SubTranslation} from '../../l10n/typeHelpers'
@@ -55,6 +56,7 @@ export default compose(
   })),
   withHandlers({
     navigateToReceive: ({navigation}) => (event) => navigation.navigate(MAIN_ROUTES.RECEIVE),
-    navigateToSend: ({navigation}) => (event) => navigation.navigate(MAIN_ROUTES.SEND),
+    navigateToSend: ({navigation}) => (event) =>
+      (authenticate().then((success) => (success ? navigation.navigate(MAIN_ROUTES.SEND) : null))),
   }),
 )(TxNavigationButtons)
