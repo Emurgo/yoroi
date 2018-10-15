@@ -1,5 +1,4 @@
 // @flow
-/* eslint-disable no-console */
 import {Logger} from '../utils/logging'
 import {CONFIG} from '../config'
 import {NotConnectedError, ApiError} from './errors'
