@@ -61,6 +61,10 @@ export type Translation = {
     passwordLabel: string,
     passwordConfirmationLabel: string,
     passwordRequirementsNote: string,
+    passwordMinLength: string,
+    passwordUpperChar: string,
+    passwordLowerChar: string,
+    passwordNumber: string,
     createButton: string
   },
   receiveScreen: {

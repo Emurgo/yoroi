@@ -62,9 +62,13 @@ const l10n = {
   createWallet: {
     title: 'Create a new wallet',
     nameLabel: 'Wallet name',
-    passwordLabel: 'Password',
-    passwordConfirmationLabel: 'Password confirmation',
-    passwordRequirementsNote: 'Note: Password must be....',
+    passwordLabel: 'Wallet password',
+    passwordConfirmationLabel: 'Repeat password',
+    passwordRequirementsNote: 'The password needs to contain at least:',
+    passwordMinLength: '7 characters',
+    passwordUpperChar: '1 uppercase letter',
+    passwordLowerChar: '1 lowercase letter',
+    passwordNumber: '1 number',
     createButton: 'CREATE PERSONAL WALLET',
   },
   receiveScreen: {
