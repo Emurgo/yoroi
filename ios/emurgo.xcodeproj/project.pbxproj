@@ -43,6 +43,7 @@
 		2AD573394D814085843F36E2 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8306E0AE63AA483DBF7F6BF0 /* libRNFS.a */; };
 		E6AB85BA13E748AB947E1A2A /* libRNRandomBytes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9F4B6BEEFC4DF6A66C1383 /* libRNRandomBytes.a */; };
 		C45895BBF7EF4AF5A55C7F80 /* libRNRandomBytes-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 359687B3464F4A7C89D45AF9 /* libRNRandomBytes-tvOS.a */; };
+		3EECD655BFA443BEB047C400 /* libTouchID.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9554C0BA99A242A38F3A314C /* libTouchID.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -358,6 +359,8 @@
 		E88E56A3C4A142ADB2AC0796 /* RNRandomBytes.xcodeproj */ = {isa = PBXFileReference; name = "RNRandomBytes.xcodeproj"; path = "../node_modules/react-native-randombytes/RNRandomBytes.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		5F9F4B6BEEFC4DF6A66C1383 /* libRNRandomBytes.a */ = {isa = PBXFileReference; name = "libRNRandomBytes.a"; path = "libRNRandomBytes.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		359687B3464F4A7C89D45AF9 /* libRNRandomBytes-tvOS.a */ = {isa = PBXFileReference; name = "libRNRandomBytes-tvOS.a"; path = "libRNRandomBytes-tvOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		27A1A41885A84299A63D21BE /* TouchID.xcodeproj */ = {isa = PBXFileReference; name = "TouchID.xcodeproj"; path = "../node_modules/react-native-touch-id/TouchID.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		9554C0BA99A242A38F3A314C /* libTouchID.a */ = {isa = PBXFileReference; name = "libTouchID.a"; path = "libTouchID.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -389,6 +392,7 @@
 				0E0D401436054E78A0BE88FF /* libBVLinearGradient.a in Frameworks */,
 				2AD573394D814085843F36E2 /* libRNFS.a in Frameworks */,
 				E6AB85BA13E748AB947E1A2A /* libRNRandomBytes.a in Frameworks */,
+				3EECD655BFA443BEB047C400 /* libTouchID.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -581,6 +585,7 @@
 				CDE15259840049359AA0828C /* BVLinearGradient.xcodeproj */,
 				7CED8B32F09C469D87E21C64 /* RNFS.xcodeproj */,
 				E88E56A3C4A142ADB2AC0796 /* RNRandomBytes.xcodeproj */,
+				27A1A41885A84299A63D21BE /* TouchID.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1218,6 +1223,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1225,6 +1231,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-touch-id",
 				);
 			};
 			name = Debug;
@@ -1252,6 +1259,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1259,6 +1267,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-touch-id",
 				);
 			};
 			name = Release;
@@ -1285,6 +1294,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-touch-id",
 				);
 			};
 			name = Debug;
@@ -1310,6 +1320,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-touch-id",
 				);
 			};
 			name = Release;
@@ -1345,6 +1356,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1352,6 +1364,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-touch-id",
 				);
 			};
 			name = Debug;
@@ -1387,6 +1400,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1394,6 +1408,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-touch-id",
 				);
 			};
 			name = Release;
@@ -1428,6 +1443,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1435,6 +1451,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-touch-id",
 				);
 			};
 			name = Debug;
@@ -1469,6 +1486,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1476,6 +1494,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-touch-id",
 				);
 			};
 			name = Release;
