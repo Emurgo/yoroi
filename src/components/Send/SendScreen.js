@@ -3,7 +3,7 @@
 import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {View, TouchableHighlight} from 'react-native'
+import {View, TextInput, TouchableOpacity, TouchableHighlight} from 'react-native'
 import {withHandlers} from 'recompose'
 
 import {SEND_ROUTES} from '../../RoutesList'
@@ -17,15 +17,30 @@ import type {SubTranslation} from '../../l10n/typeHelpers'
 const getTrans = (state) => state.trans.SendScreen
 
 type Props = {
+  navigateToAddressReaderQR: () => mixed,
   navigateToConfirm: () => mixed,
   trans: SubTranslation<typeof getTrans>,
 }
 
-const SendScreen = ({navigateToConfirm, trans}: Props) => (
-  <View style={styles.container}>
-    <CustomText style={styles.welcome}>
-    i18nSend all your ADA here
-    </CustomText>
+const SendScreen = ({
+  navigateToConfirm,
+  navigateToAddressReaderQR,
+  trans,
+}: Props) => (
+  <View style={styles.root}>
+    <View style={styles.header}>
+      <CustomText>Available funds:</CustomText>
+    </View>
+    <View style={styles.containerQR}>
+      <TouchableOpacity onPress={navigateToAddressReaderQR}>
+        <View style={styles.scanIcon} />
+      </TouchableOpacity>
+      <CustomText style={styles.label}>Scan QR code</CustomText>
+    </View>
+    <View style={styles.inputContainer}>
+      <TextInput style={styles.inputText} placeholder={'Address'} />
+      <TextInput style={styles.inputText} placeholder={'Amount'} />
+    </View>
 
     <TouchableHighlight
       style={styles.button}
@@ -46,7 +61,10 @@ export default compose(
     trans: getTrans(state),
   })),
   withHandlers({
-    navigateToConfirm: ({navigation}) => (event) => navigation.navigate(SEND_ROUTES.CONFIRM),
+    navigateToAddressReaderQR: ({navigation}) =>
+      (event) => navigation.navigate(SEND_ROUTES.ADDRESS_READER_QR),
+    navigateToConfirm: ({navigation}) =>
+      (event) => navigation.navigate(SEND_ROUTES.CONFIRM),
   })
 )(SendScreen)
 

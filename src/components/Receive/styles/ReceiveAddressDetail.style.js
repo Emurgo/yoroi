@@ -16,6 +16,7 @@ const styles = {
   qrcode: {
     backgroundColor: COLORS.DARK_BLUE,
     foregroundColor: COLORS.WHITE,
+    size: 100,
   },
   addressLabel: {
     color: COLORS.DARK_BLUE,
