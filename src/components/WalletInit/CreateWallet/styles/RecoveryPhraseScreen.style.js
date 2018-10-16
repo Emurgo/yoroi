@@ -1,15 +1,37 @@
 // @flow
 import {COLORS} from '../../../../styles/config'
+import {screenPadding} from '../../../Screen'
 
 const style = {
   button: {
     backgroundColor: COLORS.LIGHT_POSITIVE_GREEN,
-    padding: 20,
     borderRadius: 5,
+    padding: 10,
     width: '100%',
     justifyContent: 'center',
     alignContent: 'center',
     flexDirection: 'row',
+  },
+  buttonContainer: {
+    padding: screenPadding,
+  },
+  screen: {
+    padding: 0,
+  },
+  mnemonicNoteContainer: {
+    padding: screenPadding,
+  },
+  mnemonicWordsContainer: {
+    backgroundColor: COLORS.GRAY,
+    padding: screenPadding,
+  },
+  titleContainer: {
+    padding: screenPadding,
+  },
+  contentContainer: {
+    flexGrow: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
   },
 }
 

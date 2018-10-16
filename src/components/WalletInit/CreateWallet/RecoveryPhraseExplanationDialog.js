@@ -48,6 +48,6 @@ export default compose(
   })),
   withHandlers({
     navigateToRecoveryPhrase:
-      ({navigation}) => (event) => navigation.navigate(WALLET_INIT_ROUTES.RECOVERY_PHRASE),
+      ({navigation}) => (event) => navigation.replace(WALLET_INIT_ROUTES.RECOVERY_PHRASE),
   })
 )(RecoveryPhraseExplanationDialog)

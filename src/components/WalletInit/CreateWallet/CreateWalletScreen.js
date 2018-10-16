@@ -12,7 +12,6 @@ import CustomText from '../../CustomText'
 import Screen from '../../Screen'
 import {validatePassword} from '../../../utils/validators'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
-import {generateAdaMnemonic, generateWalletMasterKey} from '../../../crypto/wallet'
 
 import styles from './styles/CreateWalletScreen.style'
 import {COLORS} from '../../../styles/config'
@@ -26,9 +25,7 @@ type FormValidationErrors = PasswordValidationErrors & {nameReq?: boolean}
 const getTrans = (state: State) => state.trans.createWallet
 
 const handleCreate = ({navigation}) => () => {
-  const mnemonic = generateAdaMnemonic()
-  generateWalletMasterKey(mnemonic, '')
-  navigation.navigate(WALLET_INIT_ROUTES.RECOVERY_PHRASE_DIALOG, {mnemonic})
+  navigation.navigate(WALLET_INIT_ROUTES.RECOVERY_PHRASE_DIALOG)
 }
 
 const validateForm = ({name, password, passwordConfirmation}): FormValidationErrors | null => {

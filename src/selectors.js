@@ -17,5 +17,4 @@ export const transactionsSelector = (state: State): Dict<HistoryTransaction> => 
 }
 
 export const isOnlineSelector = (state: State) => state.isOnline
-
 export const isFetchingHistorySelector = (state: State): boolean => state.transactions.isFetching
