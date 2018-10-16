@@ -15,10 +15,6 @@ export type Account = {
 }
 
 export class CardanoError extends ExtendableError {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(message: string) {
-    super(message)
-  }
 }
 
 export const _result = <T>(rustResult: {failed: boolean, result: T, msg: string}): T => {
