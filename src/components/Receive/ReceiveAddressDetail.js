@@ -21,7 +21,7 @@ const ReceiveAddressDetail = ({receiveAddress, translation}: Props) => (
     <View style={styles.qrContainer}>
       <QRCode
         value={receiveAddress}
-        size={200}
+        size={styles.qrcode.size}
         bgColor={styles.qrcode.backgroundColor}
         fgColor={styles.qrcode.foregroundColor}
       />

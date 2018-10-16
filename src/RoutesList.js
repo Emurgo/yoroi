@@ -7,6 +7,7 @@ export const TX_HISTORY_ROUTES = {
 
 export const SEND_ROUTES = {
   MAIN: 'send-ada',
+  ADDRESS_READER_QR: 'address-reader-qr',
   CONFIRM: 'send-ada-confirm',
 }
 

@@ -3,6 +3,7 @@ package com.emurgo;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import org.reactnative.camera.RNCameraPackage;
 import com.rnfingerprint.FingerprintAuthPackage;
 import com.bitgo.randombytes.RandomBytesPackage;
 import com.rnfs.RNFSPackage;
@@ -28,6 +29,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNCameraPackage(),
             new FingerprintAuthPackage(),
             new RandomBytesPackage(),
             new RNFSPackage(),
