@@ -47,7 +47,10 @@ export default compose(
     trans: getTrans(state),
   })),
   withHandlers({
-    navigateToRecoveryPhrase: ({navigation}) => (event) =>
-      navigation.replace(WALLET_INIT_ROUTES.RECOVERY_PHRASE),
+    navigateToRecoveryPhrase:
+      ({navigation}) => (event) => navigation.replace(
+        WALLET_INIT_ROUTES.RECOVERY_PHRASE,
+        {password: navigation.getParam('password')}
+      ),
   })
 )(RecoveryPhraseExplanationDialog)

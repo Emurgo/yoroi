@@ -8,6 +8,8 @@ import {
   getAddressInHex,
   isValidAddress,
   discoverAddresses,
+  encryptMasterKey,
+  decryptMasterKey,
 } from './util'
 
 import {CARDANO_CONFIG} from '../config'
@@ -102,4 +104,18 @@ test('Can discover addresses', async () => {
   const result5 = await discover(5, 1)
   // TODO(ppershing): figure out why this results in 13 and not 12
   expect(result5.addresses.length).toBe(13)
+})
+
+
+test('Can encrypt / decrypt masterKey', () => {
+  const masterKey = getMasterKeyFromMnemonic(mnemonic)
+  const encryptedKey = encryptMasterKey('PASSWORD', masterKey)
+  const decryptedKey = decryptMasterKey('PASSWORD', encryptedKey)
+
+  expect(encryptedKey.toString()).toBe(decryptedKey.toString())
+})
+
+test('Make sure that we are using safe buffers', () => {
+  // in response to https://github.com/nodejs/node/issues/4660
+  expect((new Buffer(10)).toString('hex')).toBe('00000000000000000000')
 })

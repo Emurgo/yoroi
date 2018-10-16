@@ -11,7 +11,8 @@ const mnemonic = 'dry balcony arctic what garbage sort cart shine egg lamp manua
 
 test('Can restore wallet', async () => {
   expect.assertions(2)
-  await walletManager.restoreWallet(mnemonic)
+
+  await walletManager.restoreWallet(mnemonic, '')
 
   // Note(ppershing): these are just loose tests because we are testing
   // agains live test-wallet and so the numbers might increase over time
@@ -22,7 +23,7 @@ test('Can restore wallet', async () => {
 
 test('Can sync txs after restoring wallet', async () => {
   expect.assertions(1)
-  await walletManager.restoreWallet(mnemonic)
+  await walletManager.restoreWallet(mnemonic, '')
 
   await walletManager.updateTxHistory()
 

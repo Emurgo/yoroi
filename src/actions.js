@@ -1,10 +1,10 @@
-import _ from 'lodash'
-import moment from 'moment'
+// @flow
 
 import api from './api'
 import walletManager from './crypto/wallet'
-import ownAddresses from './mockData/addresses.json'
 import {Logger} from './utils/logging'
+
+import {type Dispatch} from 'redux'
 
 const _updateTransactions = (rawTransactions) => ({
   type: 'Update transactions',
@@ -38,12 +38,12 @@ const _setOnline = (isOnline: boolean) => (dispatch, getState) => {
   })
 }
 
-export const setupApiOnlineTracking = () => (dispatch) => {
+export const setupApiOnlineTracking = () => (dispatch: Dispatch<any>) => {
   Logger.debug('setting up api isOnline callback')
   api.setIsOnlineCallback((isOnline) => dispatch(_setOnline(isOnline)))
 }
 
-export const updateHistory = () => async (dispatch) => {
+export const updateHistory = () => async (dispatch: Dispatch<any>) => {
   // TODO(ppershing): abort previous request if still fetching
   dispatch(_startFetch())
   try {

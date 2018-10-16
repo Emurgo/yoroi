@@ -1,7 +1,7 @@
 module.exports = {
   resolver: {
     extraNodeModules: {
-      buffer: require.resolve('buffer'),
+      buffer: require.resolve('safe-buffer'),
       crypto: require.resolve('react-native-crypto'),
       event: require.resolve('events'),
       fs: require.resolve('react-native-fs'),

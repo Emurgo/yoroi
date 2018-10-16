@@ -1,2 +1,2 @@
-global.Buffer = require('buffer').Buffer
+global.Buffer = require('safe-buffer').Buffer
 global.process = require('process')

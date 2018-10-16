@@ -50,10 +50,13 @@ class WalletManager {
     )
   }
 
-  async restoreWallet(mnemonic: string) {
+  async restoreWallet(mnemonic: string, newPassword: string) {
     this.masterKey = util.getMasterKeyFromMnemonic(mnemonic)
+    const account = this.getAccount()
+    this.masterKey = util.encryptMasterKey(newPassword, this.masterKey)
+
     const internal = await util.discoverAddresses({
-      account: this.getAccount(),
+      account,
       type: 'Internal',
       highestUsedIndex: -1,
       startIndex: 0,
@@ -65,7 +68,7 @@ class WalletManager {
     this.internalUsed = internal.used
 
     const external = await util.discoverAddresses({
-      account: this.getAccount(),
+      account,
       type: 'External',
       highestUsedIndex: -1,
       startIndex: 0,
