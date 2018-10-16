@@ -32,4 +32,6 @@ export const CONFIG = {
   // TODO(ppershing): this should be configurable by user
   ASSURANCE_LEVELS: ASSURANCE_LEVELS.NORMAL,
   HISTORY_REFRESH_TIME: 10 * 1000,
+  DISCOVERY_GAP_SIZE: 20, // displayed to the user
+  DISCOVERY_SEARCH_SIZE: 50, // should be >= GAP_SIZE*2+1 as we hate extreme corner cases
 }
