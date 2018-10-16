@@ -13,6 +13,14 @@ const styles = {
     textAlign: 'center',
     margin: 10,
   },
+  button: {
+    margin: 10,
+  },
+  continueButton: {
+  },
+  continueButtonText: {
+
+  },
 }
 
 export default styles

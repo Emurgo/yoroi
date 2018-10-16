@@ -46,6 +46,12 @@ export type Translation = {
       formatConfirmations: (cnt: any) => string
     }
   },
+  SendScreen: {
+    continue: string
+  },
+  ConfirmSendScreen: {
+    confirm: string
+  },
   walletInitScreen: {
     createWallet: string,
     restoreWallet: string

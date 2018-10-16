@@ -50,6 +50,12 @@ const l10n = {
         `${cnt} ${pluralizeEn(cnt, 'CONFIRMATION', 'CONFIRMATIONS')}`,
     },
   },
+  SendScreen: {
+    continue: 'Continue',
+  },
+  ConfirmSendScreen: {
+    confirm: 'Confirm',
+  },
   walletInitScreen: {
     createWallet: 'CREATE A NEW WALLET',
     restoreWallet: 'RESTORE WALLET FROM BACKUP',
