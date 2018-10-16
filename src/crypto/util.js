@@ -86,21 +86,20 @@ export const discoverAddresses = async (
   account: CryptoAccount,
   type: AddressType,
   highestUsedIndex: number,
-  filterCallback: FilterAddressesCallback
-): Promise<Array<string>> => {
+  filterUsedAddressesFn: FilterAddressesCallback,
+  gapLimit: number,
+  batchSize: number,
+): Promise<{addresses: Array<string>, used: Array<string>}> => {
+  if (gapLimit >= batchSize) throw new Error('NotImplemented')
+
   let addresses = []
   let used = []
   let shouldScanMore = true
-  const gapLimit = CONFIG.DISCOVERY_GAP_SIZE
-  const batchSize = CONFIG.DISCOVERY_SEARCH_SIZE
-
-  if (batchSize < gapLimit) throw new Error('NotImplemented')
-
   let startIndex = highestUsedIndex + 1
 
   while (shouldScanMore) {
     const newAddresses = _getAddresses(account, type, _.range(startIndex, startIndex + batchSize))
-    const filtered = await filterCallback(newAddresses)
+    const filtered = await filterUsedAddressesFn(newAddresses)
     shouldScanMore = filtered.length > 0
     startIndex += batchSize
     addresses = [...addresses, ...newAddresses]
@@ -108,5 +107,8 @@ export const discoverAddresses = async (
   }
 
   const lastUsed = _.findLastIndex(addresses, (addr) => used.includes(addr))
-  return addresses.slice(0, lastUsed + gapLimit)
+  return {
+    addresses: addresses.slice(0, lastUsed + gapLimit),
+    used,
+  }
 }

@@ -9,7 +9,7 @@ import {
   discoverAddresses,
 } from './util'
 
-import {CONFIG, CARDANO_CONFIG} from '../config'
+import {CARDANO_CONFIG} from '../config'
 
 // eslint-disable-next-line max-len
 const mnemonic = 'dry balcony arctic what garbage sort cart shine egg lamp manual bottom slide assault bus'
@@ -66,24 +66,16 @@ test('Can discover addresses', async () => {
   const used = getExternalAddresses(account, [0, 2, 7, 14, 21, 28, 35, 40, 45, 50, 55, 60])
 
   const filterUsed = (addresses) => Promise.resolve(addresses.filter((addr) => used.includes(addr)))
-
-
   expect.assertions(3)
 
-  CONFIG.DISCOVERY_GAP_SIZE = 1
-  CONFIG.DISCOVERY_SEARCH_SIZE = 2
-  const result1 = await discoverAddresses(account, 'External', -1, filterUsed)
-  await expect(result1.length).toBe(3)
+  const result1 = await discoverAddresses(account, 'External', -1, filterUsed, 1, 2)
+  await expect(result1.addresses.length).toBe(3)
 
-  CONFIG.DISCOVERY_GAP_SIZE = 2
-  CONFIG.DISCOVERY_SEARCH_SIZE = 5
-  const result2 = await discoverAddresses(account, 'External', -1, filterUsed)
   // Note(ppershing): this demonstrates that the gap can be quite
   // big in some cases, 7->14 is gap 7
-  await expect(result2.length).toBe(16)
+  const result2 = await discoverAddresses(account, 'External', -1, filterUsed, 2, 5)
+  await expect(result2.addresses.length).toBe(16)
 
-  CONFIG.DISCOVERY_GAP_SIZE = 2
-  CONFIG.DISCOVERY_SEARCH_SIZE = 10
-  const result3 = await discoverAddresses(account, 'External', -1, filterUsed)
-  await expect(result3.length).toBe(62)
+  const result3 = await discoverAddresses(account, 'External', -1, filterUsed, 2, 10)
+  await expect(result3.addresses.length).toBe(62)
 })
