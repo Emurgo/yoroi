@@ -25,6 +25,7 @@ export type HistoryTransaction = {
   fromAddresses: Array<string>,
   toAddresses: Array<string>,
   amount: number,
+  bruttoAmount: number,
   fee: number,
   direction: TransactionDirection,
   confirmations: number,

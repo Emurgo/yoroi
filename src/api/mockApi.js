@@ -4,6 +4,8 @@ import txHistory from '../mockData/history.json'
 
 type Addresses = Array<string>
 
+export const setIsOnlineCallback = () => null
+
 export const fetchNewTxHistory = (since: number, addresses: Addresses) => Promise.resolve(txHistory)
 
 
