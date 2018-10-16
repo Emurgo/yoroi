@@ -3,6 +3,8 @@
 import {mnemonicToEntropy, generateMnemonic} from 'bip39'
 import {HdWallet, Wallet} from 'rust-cardano-crypto'
 import {randomBytes} from 'react-native-randombytes'
+import ExtendableError from 'es6-error'
+import bs58 from 'bs58'
 
 import {CONFIG} from '../config'
 
@@ -12,8 +14,15 @@ export type Account = {
   derivation_scheme: string
 }
 
-export const _result = <T>(rustResult: {failed: boolean, result: T}): T => {
-  if (rustResult.failed) throw new Error('Crypto error')
+export class CardanoError extends ExtendableError {
+  // eslint-disable-next-line no-useless-constructor
+  constructor(message: string) {
+    super(message)
+  }
+}
+
+export const _result = <T>(rustResult: {failed: boolean, result: T, msg: string}): T => {
+  if (rustResult.failed) throw new CardanoError(rustResult.msg)
   return rustResult.result
 }
 
@@ -37,5 +46,22 @@ export const getExternalAddresses = (account: Account, indexes: Array<number>) =
 
 export const getInternalAddresses = (account: Account, indexes: Array<number>) =>
   _result(Wallet.generateAddresses(account, 'Internal', indexes))
+
+export const getAddressInHex = (address: string): string => {
+  try {
+    return bs58.decode(address).toString('hex')
+  } catch (err) {
+    throw new CardanoError(err.message)
+  }
+}
+
+export const isValidAddress = (address: string): boolean => {
+  try {
+    return _result(Wallet.checkAddress(getAddressInHex(address)))
+  } catch (e) {
+    if (e instanceof CardanoError) return false
+    throw e
+  }
+}
 
 export const generateAdaMnemonic = () => generateMnemonic(CONFIG.MNEMONIC_STRENGTH, randomBytes)
