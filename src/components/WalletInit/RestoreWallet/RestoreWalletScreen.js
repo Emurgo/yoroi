@@ -7,7 +7,7 @@ import {connect} from 'react-redux'
 import {withHandlers} from 'recompose'
 import {NavigationActions, StackActions} from 'react-navigation'
 
-import CustomText from '../../CustomText'
+import {Text} from '../../UiKit'
 import Screen from '../../Screen'
 import {ROOT_ROUTES} from '../../../RoutesList'
 
@@ -32,12 +32,12 @@ const getTrans = (state: State) => state.trans.restoreWalletScreen
 type Props = {
   navigateToWallet: () => mixed,
   trans: SubTranslation<typeof getTrans>,
-};
+}
 
 const RestoreWalletScreen = ({navigateToWallet, trans}: Props) => (
   <Screen bgColor={COLORS.TRANSPARENT}>
     <View>
-      <CustomText>{trans.title}</CustomText>
+      <Text>{trans.title}</Text>
 
       <TouchableHighlight
         activeOpacity={0.1}
@@ -45,7 +45,7 @@ const RestoreWalletScreen = ({navigateToWallet, trans}: Props) => (
         onPress={navigateToWallet}
         style={styles.button}
       >
-        <CustomText>{trans.restoreButton}</CustomText>
+        <Text>{trans.restoreButton}</Text>
       </TouchableHighlight>
     </View>
   </Screen>

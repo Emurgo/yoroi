@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View} from 'react-native'
 
-import CustomText from '../../components/CustomText'
+import {Text} from '../UiKit'
 import CopyButton from './CopyButton'
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
@@ -16,17 +16,17 @@ const getTranslation = (state) => state.trans.receiveScreen
 type Props = {
   receiveAddresses: Array<string>,
   translation: SubTranslation<typeof getTranslation>,
-};
+}
 
 const ReceiveAddressesList = ({receiveAddresses, translation}: Props) => (
   <View style={styles.container}>
     <View style={styles.header}>
-      <CustomText style={styles.addressLabel}>{translation.walletAddresses}</CustomText>
+      <Text style={styles.addressLabel}>{translation.walletAddresses}</Text>
     </View>
     {receiveAddresses.map((receiveAddress) => (
       <View key={receiveAddress} style={styles.addressContainer}>
         <View>
-          <CustomText style={styles.address}>{receiveAddress}</CustomText>
+          <Text style={styles.address}>{receiveAddress}</Text>
         </View>
         <CopyButton value={receiveAddress} />
       </View>
@@ -37,5 +37,5 @@ const ReceiveAddressesList = ({receiveAddresses, translation}: Props) => (
 export default compose(
   connect((state) => ({
     translation: getTranslation(state),
-  })),
+  }))
 )(ReceiveAddressesList)

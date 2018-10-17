@@ -6,7 +6,7 @@ import {connect} from 'react-redux'
 import {View, TouchableHighlight} from 'react-native'
 import {withHandlers} from 'recompose'
 
-import CustomText from '../CustomText'
+import {Text} from '../UiKit'
 import {authenticate} from '../../helpers/bioAuthHelper'
 
 import {COLORS} from '../../styles/config'
@@ -18,14 +18,12 @@ const getTrans = (state) => state.trans.ConfirmSendScreen
 
 type Props = {
   onConfirm: () => mixed,
-  trans: SubTranslation<typeof getTrans>
+  trans: SubTranslation<typeof getTrans>,
 }
 
 const ConfirmScreen = ({onConfirm, trans}: Props) => (
   <View style={styles.container}>
-    <CustomText style={styles.welcome}>
-    Confirm your transaction
-    </CustomText>
+    <Text style={styles.welcome}>Confirm your transaction</Text>
 
     <TouchableHighlight
       style={styles.button}
@@ -34,12 +32,11 @@ const ConfirmScreen = ({onConfirm, trans}: Props) => (
       onPress={onConfirm}
     >
       <View style={styles.continueButton}>
-        <CustomText style={styles.continueButtonText}>{trans.confirm}</CustomText>
+        <Text style={styles.continueButtonText}>{trans.confirm}</Text>
       </View>
     </TouchableHighlight>
   </View>
 )
-
 
 export default compose(
   connect((state) => ({
@@ -48,6 +45,6 @@ export default compose(
   withHandlers({
     // TODO(ppershing): this should validate only on confirm
     onConfirm: ({navigation}) => (event) =>
-      (authenticate().then((success) => (success ? navigation.popToTop() : null))),
+      authenticate().then((success) => (success ? navigation.popToTop() : null)),
   })
 )(ConfirmScreen)

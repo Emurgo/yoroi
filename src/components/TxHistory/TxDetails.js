@@ -3,10 +3,10 @@
 import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {View, Text} from 'react-native'
+import {View} from 'react-native'
 
 import {printAda} from '../../utils/transactions'
-import CustomText from '../../components/CustomText'
+import {Text} from '../UiKit'
 import Screen from '../../components/Screen'
 import AdaIcon from '../../assets/AdaIcon'
 
@@ -16,23 +16,16 @@ import {COLORS} from '../../styles/config'
 import type {SubTranslation} from '../../l10n/typeHelpers'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 
-
-const Label = ({children}) => (
-  <CustomText>
-    <Text style={styles.label}>{children}</Text>
-  </CustomText>
-)
+const Label = ({children}) => <Text style={styles.label}>{children}</Text>
 
 const AdaAmount = ({amount, type}) => {
   const isNegativeAmount = type === 'SENT'
   return (
     <View style={styles.amountContainer}>
-      <CustomText>
-        <Text style={isNegativeAmount ? styles.negativeAmount : styles.positiveAmount}>
-          {isNegativeAmount ? '-' : ''}
-          {printAda(amount)}
-        </Text>
-      </CustomText>
+      <Text style={isNegativeAmount ? styles.negativeAmount : styles.positiveAmount}>
+        {isNegativeAmount ? '-' : ''}
+        {printAda(amount)}
+      </Text>
       <View style={styles.adaSignContainer}>
         <AdaIcon
           width={18}
@@ -49,53 +42,48 @@ const getTrans = (state) => state.trans.txHistoryScreen.transactionDetails
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,
   trans: SubTranslation<typeof getTrans>,
-};
+}
 
 const TxDetails = ({navigation, trans}: Props) => {
   const transaction = navigation.getParam('transaction', {})
 
   return (
     <Screen scroll>
-      <AdaAmount
-        amount={transaction.amount}
-        type={transaction.type}
-      />
+      <AdaAmount amount={transaction.amount} type={transaction.type} />
 
       <View style={styles.timestampContainer}>
         <View>
-          <CustomText>{trans.transactionHeader[transaction.type]}</CustomText>
+          <Text>{trans.transactionHeader[transaction.type]}</Text>
         </View>
         <View>
-          <CustomText>{transaction.timestamp.format('YYYY-MM-DD hh:mm:ss A')}</CustomText>
+          <Text>{transaction.timestamp.format('YYYY-MM-DD hh:mm:ss A')}</Text>
         </View>
       </View>
 
       <View style={styles.section}>
         <Label>{trans.fromAddresses}</Label>
 
-        {transaction.fromAddresses.map((address) =>
-          <CustomText key={address}>{address}</CustomText>
-        )}
+        {transaction.fromAddresses.map((address) => (
+          <Text key={address}>{address}</Text>
+        ))}
       </View>
 
       <View style={styles.section}>
         <Label>{trans.toAddresses}</Label>
 
-        {transaction.toAddresses.map((address) =>
-          <CustomText key={address}>{address}</CustomText>
-        )}
+        {transaction.toAddresses.map((address) => (
+          <Text key={address}>{address}</Text>
+        ))}
       </View>
 
       <View style={styles.section}>
         <Label>{trans.txAssuranceLevel}</Label>
-        <CustomText>
-          {trans.formatConfirmations(transaction.confirmations)}
-        </CustomText>
+        <Text>{trans.formatConfirmations(transaction.confirmations)}</Text>
       </View>
 
       <View style={styles.section}>
         <Label>{trans.transactionId}</Label>
-        <CustomText>{transaction.id}</CustomText>
+        <Text>{transaction.id}</Text>
       </View>
     </Screen>
   )
@@ -104,5 +92,5 @@ const TxDetails = ({navigation, trans}: Props) => {
 export default compose(
   connect((state) => ({
     trans: getTrans(state),
-  })),
+  }))
 )(TxDetails)

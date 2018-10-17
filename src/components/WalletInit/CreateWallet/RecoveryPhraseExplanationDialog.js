@@ -6,7 +6,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers} from 'recompose'
 
-import CustomText from '../../CustomText'
+import {Text} from '../../UiKit'
 import Screen from '../../Screen'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 
@@ -21,14 +21,14 @@ const getTrans = (state: State) => state.trans.recoveryPhraseDialog
 type Props = {
   navigateToRecoveryPhrase: () => mixed,
   trans: SubTranslation<typeof getTrans>,
-};
+}
 
 const RecoveryPhraseExplanationDialog = ({navigateToRecoveryPhrase, trans}: Props) => (
   <Screen bgColor={COLORS.TRANSPARENT_BLACK}>
     <View style={styles.dialogBody}>
-      <CustomText>{trans.title}</CustomText>
-      <CustomText>{trans.paragraph1}</CustomText>
-      <CustomText>{trans.paragraph2}</CustomText>
+      <Text>{trans.title}</Text>
+      <Text>{trans.paragraph1}</Text>
+      <Text>{trans.paragraph2}</Text>
 
       <TouchableHighlight
         activeOpacity={0.1}
@@ -36,7 +36,7 @@ const RecoveryPhraseExplanationDialog = ({navigateToRecoveryPhrase, trans}: Prop
         onPress={navigateToRecoveryPhrase}
         style={styles.button}
       >
-        <CustomText>{trans.nextButton}</CustomText>
+        <Text>{trans.nextButton}</Text>
       </TouchableHighlight>
     </View>
   </Screen>
@@ -47,7 +47,7 @@ export default compose(
     trans: getTrans(state),
   })),
   withHandlers({
-    navigateToRecoveryPhrase:
-      ({navigation}) => (event) => navigation.replace(WALLET_INIT_ROUTES.RECOVERY_PHRASE),
+    navigateToRecoveryPhrase: ({navigation}) => (event) =>
+      navigation.replace(WALLET_INIT_ROUTES.RECOVERY_PHRASE),
   })
 )(RecoveryPhraseExplanationDialog)

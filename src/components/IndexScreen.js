@@ -3,7 +3,7 @@
 import React from 'react'
 import {View, TouchableHighlight} from 'react-native'
 
-import CustomText from './CustomText'
+import {Text} from './UiKit'
 import {COLORS} from '../styles/config'
 import {MAIN_ROUTES, ROOT_ROUTES, WALLET_INIT_ROUTES} from '../RoutesList'
 
@@ -42,7 +42,7 @@ const styles = {
 
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,
-};
+}
 
 const IndexScreen = ({navigation}: Props) => (
   <View style={styles.indexNavigationButtonsContainer}>
@@ -53,7 +53,7 @@ const IndexScreen = ({navigation}: Props) => (
         onPress={() => navigation.navigate(route.path)}
       >
         <View style={styles.sendButton}>
-          <CustomText>{route.label}</CustomText>
+          <Text>{route.label}</Text>
         </View>
       </TouchableHighlight>
     ))}

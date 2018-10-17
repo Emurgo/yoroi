@@ -7,7 +7,7 @@ import {connect} from 'react-redux'
 import {withHandlers} from 'recompose'
 import {NavigationActions, StackActions} from 'react-navigation'
 
-import CustomText from '../../CustomText'
+import {Text} from '../../UiKit'
 import Screen from '../../Screen'
 import {ROOT_ROUTES} from '../../../RoutesList'
 
@@ -16,7 +16,6 @@ import {COLORS} from '../../../styles/config'
 
 import type {State} from '../../../state'
 import type {SubTranslation} from '../../../l10n/typeHelpers'
-
 
 const resetNavigationAction = StackActions.reset({
   index: 0,
@@ -39,14 +38,14 @@ const getTrans = (state: State) => state.trans.recoveryPhraseConfirmationDialog
 type Props = {
   confirmWalletCreation: () => mixed,
   trans: SubTranslation<typeof getTrans>,
-};
+}
 
 const RecoveryPhraseConfirmationDialog = ({confirmWalletCreation, trans}: Props) => (
   <Screen bgColor={COLORS.TRANSPARENT_BLACK}>
     <View style={styles.dialogBody}>
-      <CustomText>{trans.title}</CustomText>
-      <CustomText>{trans.keysStorageCheckbox}</CustomText>
-      <CustomText>{trans.newDeviceRecoveryCheckbox}</CustomText>
+      <Text>{trans.title}</Text>
+      <Text>{trans.keysStorageCheckbox}</Text>
+      <Text>{trans.newDeviceRecoveryCheckbox}</Text>
 
       <TouchableHighlight
         activeOpacity={0.1}
@@ -54,7 +53,7 @@ const RecoveryPhraseConfirmationDialog = ({confirmWalletCreation, trans}: Props)
         onPress={confirmWalletCreation}
         style={styles.button}
       >
-        <CustomText>{trans.confirmationButton}</CustomText>
+        <Text>{trans.confirmationButton}</Text>
       </TouchableHighlight>
     </View>
   </Screen>
