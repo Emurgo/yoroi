@@ -6,6 +6,7 @@ import {compose} from 'redux'
 import {View} from 'react-native'
 
 import CustomText from '../../components/CustomText'
+import CopyButton from './CopyButton'
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
 import styles from './styles/ReceiveAddressesList.style'
@@ -24,7 +25,10 @@ const ReceiveAddressesList = ({receiveAddresses, translation}: Props) => (
     </View>
     {receiveAddresses.map((receiveAddress) => (
       <View key={receiveAddress} style={styles.addressContainer}>
-        <CustomText style={styles.address}>{receiveAddress}</CustomText>
+        <View>
+          <CustomText style={styles.address}>{receiveAddress}</CustomText>
+        </View>
+        <CopyButton value={receiveAddress} />
       </View>
     ))}
   </View>
