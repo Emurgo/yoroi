@@ -12,7 +12,6 @@ let logLevel = LogLevel.Debug
 const logger = console
 
 export const setLogLevel = (level: $Values<typeof LogLevel>) => {
-  logger.info('Setting log level', level)
   logLevel = level
 }
 

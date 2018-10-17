@@ -35,5 +35,5 @@ export const CONFIG = {
   WALLET: {
     DISCOVERY_GAP_SIZE: 20, // displayed to the user
     DISCOVERY_SEARCH_SIZE: 50, // should be >= GAP_SIZE*2+1 as we hate extreme corner cases
-  }
+  },
 }

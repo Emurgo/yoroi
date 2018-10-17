@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`API: can fetch history 1`] = `
+exports[`History API can fetch history 1`] = `
 Object {
   "best_block_num": Any<String>,
   "block_num": "1603213",
