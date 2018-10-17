@@ -59,3 +59,6 @@ export const fetchNewTxHistory = (dateFrom: Moment, addresses: Addresses) => {
   return _fetch('txs/history', {addresses, dateFrom})
 }
 
+export const filterUsedAddresses = (addresses: Addresses) => {
+  return _fetch('addresses/filterUsed', {addresses})
+}

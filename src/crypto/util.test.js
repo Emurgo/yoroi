@@ -6,6 +6,7 @@ import {
   getExternalAddresses,
   getAddressInHex,
   isValidAddress,
+  discoverAddresses,
 } from './util'
 
 import {CARDANO_CONFIG} from '../config'
@@ -58,3 +59,23 @@ test('Can validate invalid addresses', () => {
   addresses.forEach((address) => expect(isValidAddress(address)).toBe(false))
 })
 
+
+test('Can discover addresses', async () => {
+  const masterKey = getMasterKeyFromMnemonic(mnemonic)
+  const account = getAccountFromMasterKey(masterKey, CARDANO_CONFIG.TESTNET.PROTOCOL_MAGIC)
+  const used = getExternalAddresses(account, [0, 2, 7, 14, 21, 28, 35, 40, 45, 50, 55, 60])
+
+  const filterUsed = (addresses) => Promise.resolve(addresses.filter((addr) => used.includes(addr)))
+  expect.assertions(3)
+
+  const result1 = await discoverAddresses(account, 'External', -1, filterUsed, 1, 2)
+  await expect(result1.addresses.length).toBe(3)
+
+  // Note(ppershing): this demonstrates that the gap can be quite
+  // big in some cases, 7->14 is gap 7
+  const result2 = await discoverAddresses(account, 'External', -1, filterUsed, 2, 5)
+  await expect(result2.addresses.length).toBe(16)
+
+  const result3 = await discoverAddresses(account, 'External', -1, filterUsed, 2, 10)
+  await expect(result3.addresses.length).toBe(62)
+})
