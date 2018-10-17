@@ -5,6 +5,7 @@ import {View} from 'react-native'
 import QRCode from 'react-native-qrcode'
 
 import CustomText from '../../components/CustomText'
+import CopyButton from './CopyButton'
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
 import styles from './styles/ReceiveAddressDetail.style'
@@ -29,6 +30,7 @@ const ReceiveAddressDetail = ({receiveAddress, translation}: Props) => (
 
     <CustomText style={styles.addressLabel}>{translation.walletAddress}</CustomText>
     <CustomText style={styles.address}>{receiveAddress}</CustomText>
+    <CopyButton value={receiveAddress} />
   </View>
 )
 
