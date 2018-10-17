@@ -12,10 +12,11 @@ import {COLORS} from '../../styles/config'
 
 type Props = {
   value: string,
-  copyValue: (address: string) => mixed,
-  styles: mixed,
+  copyValue?: () => mixed,
+  styles?: mixed,
 };
 
+// $FlowFixMe Flow badly infers Props with HOC composition
 const CopyButton = ({styles, value, copyValue}: Props) => (
   <View style={styles}>
     <TouchableHighlight
