@@ -5,6 +5,7 @@ import TxHistoryNavigator from './components/TxHistory/TxHistoryNavigator'
 import SendScreenNavigator from './components/Send/SendScreenNavigator'
 import ReceiveScreenNavigator from './components/Receive/ReceiveScreenNavigator'
 import IndexScreen from './components/IndexScreen'
+import LoginScreen from './components/Login/LoginScreen'
 import {MAIN_ROUTES, ROOT_ROUTES} from './RoutesList'
 
 const MainNavigator = createStackNavigator(
@@ -23,7 +24,7 @@ const MainNavigator = createStackNavigator(
 )
 
 const AppNavigator = createStackNavigator({
-  // login: LoginNavigator,
+  [ROOT_ROUTES.LOGIN]: LoginScreen,
   [ROOT_ROUTES.MAIN]: MainNavigator,
   [ROOT_ROUTES.INIT]: WalletInitNavigator,
   [ROOT_ROUTES.INDEX]: IndexScreen,

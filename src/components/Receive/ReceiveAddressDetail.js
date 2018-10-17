@@ -6,9 +6,10 @@ import QRCode from 'react-native-qrcode'
 
 import CopyButton from './CopyButton'
 import {Text} from '../UiKit'
-import type {SubTranslation} from '../../l10n/typeHelpers'
 
 import styles from './styles/ReceiveAddressDetail.style'
+
+import type {SubTranslation} from '../../l10n/typeHelpers'
 
 const getTranslation = (state) => state.trans.receiveScreen
 

@@ -36,4 +36,5 @@ export const ROOT_ROUTES = {
   MAIN: 'app-root',
   INIT: WALLET_INIT_ROUTES.MAIN,
   INDEX: 'screens-index',
+  LOGIN: 'login',
 }
