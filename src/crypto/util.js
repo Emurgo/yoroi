@@ -113,7 +113,7 @@ export const discoverAddresses = async ({
     'discoverAddresses: startIndex is not multiple of batchSize'
   )
 
-  while (highestUsedIndex + gapLimit - 1 >= startIndex) {
+  while (highestUsedIndex + gapLimit >= startIndex) {
     const newAddresses = _getAddresses(account, type, _.range(startIndex, startIndex + batchSize))
     const filtered = await filterUsedAddressesFn(newAddresses)
     if (filtered.length > 0) {

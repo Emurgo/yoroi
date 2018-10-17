@@ -33,7 +33,7 @@ export const CONFIG = {
   ASSURANCE_LEVELS: ASSURANCE_LEVELS.NORMAL,
   HISTORY_REFRESH_TIME: 10 * 1000,
   WALLET: {
-    DISCOVERY_GAP_SIZE: 20, // displayed to the user
-    DISCOVERY_SEARCH_SIZE: 50, // should be >= GAP_SIZE*2+1 as we hate extreme corner cases
+    DISCOVERY_GAP_SIZE: 20,
+    DISCOVERY_BLOCK_SIZE: 50, // should be less than API limitations
   },
 }
