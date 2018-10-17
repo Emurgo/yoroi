@@ -8,6 +8,7 @@ import bs58 from 'bs58'
 import _ from 'lodash'
 
 import {CONFIG} from '../config'
+import {assertTrue} from '../utils/assert'
 
 export type AddressType = 'Internal' | 'External'
 
@@ -77,38 +78,57 @@ type FilterAddressesCallback = (addresses: Array<string>) => Promise<Array<strin
   Note(ppershing): in the future this might need `maxSize` argument to restrict searching
   forever on very big wallets.
 
-  TODO(ppershing): should we also return which values are used?
-
   Implementation note: Current implementation might in certain situations
   find gaps of size >= gapLimit. We do not consider this to be a problem (at least for now)
+
+  Implementation note: Current implementation returns discovered addresses in multiples of batchSize.
+  This might mean that there are more than gapLimit unused addresses at the end. This is consistent with how the
+  walletManager's post-discovery phase works.
 */
-export const discoverAddresses = async (
+
+export type discoverAddressesArg = {
   account: CryptoAccount,
   type: AddressType,
   highestUsedIndex: number,
+  startIndex: number,
   filterUsedAddressesFn: FilterAddressesCallback,
   gapLimit: number,
   batchSize: number,
-): Promise<{addresses: Array<string>, used: Array<string>}> => {
-  if (gapLimit >= batchSize) throw new Error('NotImplemented')
+}
 
+export const discoverAddresses = async ({
+  account,
+  type,
+  highestUsedIndex,
+  startIndex,
+  filterUsedAddressesFn,
+  gapLimit,
+  batchSize,
+}: discoverAddressesArg): Promise<{addresses: Array<string>, used: Array<string>}> => {
   let addresses = []
   let used = []
-  let shouldScanMore = true
-  let startIndex = highestUsedIndex + 1
 
-  while (shouldScanMore) {
+  assertTrue(
+    startIndex % batchSize === 0,
+    'discoverAddresses: startIndex is not multiple of batchSize'
+  )
+
+  while (highestUsedIndex + gapLimit >= startIndex) {
     const newAddresses = _getAddresses(account, type, _.range(startIndex, startIndex + batchSize))
     const filtered = await filterUsedAddressesFn(newAddresses)
-    shouldScanMore = filtered.length > 0
+    if (filtered.length > 0) {
+      const inBatchIndex = _.findLastIndex(newAddresses, (a) => filtered.includes(a))
+      assertTrue(inBatchIndex >= 0, `inBatchIndex ${inBatchIndex}`)
+      highestUsedIndex = startIndex + inBatchIndex
+    }
     startIndex += batchSize
     addresses = [...addresses, ...newAddresses]
     used = [...used, ...filtered]
   }
 
-  const lastUsed = _.findLastIndex(addresses, (addr) => used.includes(addr))
   return {
-    addresses: addresses.slice(0, lastUsed + gapLimit),
+    addresses,
     used,
+    highestUsedIndex,
   }
 }

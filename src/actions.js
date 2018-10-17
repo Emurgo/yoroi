@@ -2,6 +2,7 @@ import _ from 'lodash'
 import moment from 'moment'
 
 import api from './api'
+import walletManager from './crypto/wallet'
 import ownAddresses from './mockData/addresses.json'
 import {Logger} from './utils/logging'
 
@@ -49,7 +50,7 @@ export const updateHistory = () => async (dispatch) => {
   const ts = moment('2018-01-01T09:44:39.757Z')
   try {
     const response = await api.fetchNewTxHistory(ts, ownAddresses)
-    dispatch(_updateTransactions(_.keyBy(response, (tx) => tx.hash)))
+    dispatch(_updateTransactions(walletManager.updateTxHistory()))
   } catch (e) {
     Logger.error('Update history error', e)
   } finally {
