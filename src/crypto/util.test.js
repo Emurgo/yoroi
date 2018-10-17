@@ -1,4 +1,5 @@
 // @flow
+import jestSetup from '../jestSetup'
 
 import {
   getMasterKeyFromMnemonic,
@@ -10,6 +11,8 @@ import {
 } from './util'
 
 import {CARDANO_CONFIG} from '../config'
+
+jestSetup.setup()
 
 // eslint-disable-next-line max-len
 const mnemonic = 'dry balcony arctic what garbage sort cart shine egg lamp manual bottom slide assault bus'
