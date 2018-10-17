@@ -1,5 +1,4 @@
 // @flow
-import walletManager from './wallet'
 import '../jest'
 
 import walletManager from './wallet'
