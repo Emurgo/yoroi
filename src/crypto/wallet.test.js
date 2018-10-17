@@ -1,8 +1,8 @@
 // @flow
 import walletManager from './wallet'
-import fetch from 'node-fetch'
-global.fetch = fetch
+import '../jest'
 
+import walletManager from './wallet'
 
 // eslint-disable-next-line max-len
 const mnemonic = 'dry balcony arctic what garbage sort cart shine egg lamp manual bottom slide assault bus'
