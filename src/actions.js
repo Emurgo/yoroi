@@ -46,11 +46,9 @@ export const setupApiOnlineTracking = () => (dispatch) => {
 export const updateHistory = () => async (dispatch) => {
   // TODO(ppershing): abort previous request if still fetching
   dispatch(_startFetch())
-
-  const ts = moment('2018-01-01T09:44:39.757Z')
   try {
-    const response = await api.fetchNewTxHistory(ts, ownAddresses)
-    dispatch(_updateTransactions(walletManager.updateTxHistory()))
+    const response = await walletManager.updateTxHistory()
+    dispatch(_updateTransactions(response))
   } catch (e) {
     Logger.error('Update history error', e)
   } finally {
