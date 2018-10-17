@@ -20,11 +20,7 @@ import styles from './styles/TxHistoryList.style'
 const formatDate = (timestamp: Moment, trans) => {
   if (moment().isSame(timestamp, 'day')) {
     return trans.global.datetime.today
-  } else if (
-    moment()
-      .subtract(1, 'day')
-      .isSame(timestamp, 'day')
-  ) {
+  } else if (moment().subtract(1, 'day').isSame(timestamp, 'day')) {
     return trans.global.datetime.yesterday
   } else {
     // moment should be set to correct i18n

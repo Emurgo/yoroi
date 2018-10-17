@@ -61,41 +61,40 @@ Example:
 // @flow
 
 // external libraries
-import React from "react";
-import { compose } from "redux";
-import { connect } from "react-redux";
-import { View } from "react-native";
+import React from 'react'
+import {compose} from 'redux'
+import {connect} from 'react-redux'
+import {View} from 'react-native'
 
 // our code
-import Screen from "../../components/Screen";
-import AdaIcon from "../../assets/AdaIcon";
-import { confirmationsToAssuranceLevel, printAda } from "../../helpers/utils";
+import Screen from '../../components/Screen'
+import AdaIcon from '../../assets/AdaIcon'
+import {confirmationsToAssuranceLevel, printAda} from '../../helpers/utils'
 
 // styles
-import styles from "./TxDetails.style";
+import styles from './TxDetails.style'
 
 // types
-import type { NavigationScreenProp, NavigationState } from "react-navigation";
-import type { TransactionType } from "../../types/HistoryTransaction";
+import type {NavigationScreenProp, NavigationState} from 'react-navigation'
+import type {TransactionType} from '../../types/HistoryTransaction'
 ```
 
 ## Styles
 
-- If you use component in multiple screens, it should be in `ui/` folder with other UI components and imported from it.
+- If you use component in multiple screens, it should be in `UiKit` folder with other UI components and imported from it.
 - Each component file has own file with styles.
 - Don't import multiple style files into one component.
-- Style file should be placed on the same level in the file structure as component `.js` file.
 - Keep the style's structure flat.
 - If there is same component in `UiKit` as in `react-native`, use the one from `UiKit`.
 
 ```js
-// src/components/ui/index.js
+// src/components/UiKit/index.js
 // Example of export for a default component that can be imported from UI.
-export { default as Button } from "./Button";
+export {default as Button} from './Button'
 ```
 
 ```js
-import { Text, Button, Input } from "../ui";
+import {Text, Button, Input} from '../UiKit'
 
 // ...
 ```
@@ -103,15 +102,16 @@ import { Text, Button, Input } from "../ui";
 ### Variables
 
 ```js
-import { colors } from "./config";
+import {colors} from './config'
 
 // Wrong
-// ...
-background: colors.GRAY;
+// The background color can change, gray is constant name for specific color.
+background: colors.GRAY
 // ...
 
 // Good
-// ...
-background: colors.background;
+// Changing the background color doesn't require to change the name.
+// We want to change values, not labels most of time.
+background: colors.background
 // ...
 ```

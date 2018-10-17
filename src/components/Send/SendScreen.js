@@ -58,6 +58,7 @@ export default compose(
   withHandlers({
     navigateToAddressReaderQR: ({navigation}) => (event) =>
       navigation.navigate(SEND_ROUTES.ADDRESS_READER_QR),
-    navigateToConfirm: ({navigation}) => (event) => navigation.navigate(SEND_ROUTES.CONFIRM),
+    navigateToConfirm: ({navigation}) => (event) =>
+      navigation.navigate(SEND_ROUTES.CONFIRM),
   })
 )(SendScreen)
