@@ -57,7 +57,7 @@ export const setIsOnlineCallback = (cb: IsOnlineCallback) => {
 }
 
 export const fetchNewTxHistory = (dateFrom: Moment, addresses: Addresses) => {
-  return _fetch('txs/history', {addresses, dateFrom})
+  return _fetch('txs/history', {addresses, dateFrom: dateFrom.toISOString()})
 }
 
 export const filterUsedAddresses = (addresses: Addresses) => {
