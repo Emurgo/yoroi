@@ -132,7 +132,11 @@ const l10n = {
   },
   restoreWalletScreen: {
     title: 'Restore wallet',
+    instructions: 'To restore your wallet please provide the recovery phrase you\
+ received when you created your wallet for the first time.',
+    phrase: 'Recovery phrase',
     restoreButton: 'RESTORE WALLET',
+    unknownWord: 'Contains unknown word',
   },
   txHistoryNavigationButtons: {
     sendButton: 'SEND',
