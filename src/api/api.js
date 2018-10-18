@@ -2,15 +2,15 @@
 import {Logger} from '../utils/logging'
 import {CONFIG} from '../config'
 import {NotConnectedError, ApiError} from './errors'
-
 import type {Moment} from 'moment'
 
 type Addresses = Array<string>
 
 
-const _checkResponse = (response) => {
-  Logger.debug('Check response', response)
+const _checkResponse = (response, requestPayload) => {
   if (response.status !== 200) {
+    Logger.debug('Bad status code from server', response)
+    Logger.debug('Request payload:', requestPayload)
     throw new ApiError(response)
   }
 }
@@ -21,7 +21,6 @@ let _isOnlineCallback: IsOnlineCallback = (isOnline) => null
 
 const _fetch = (path: string, payload: any) => {
   Logger.info(`API call: ${path}`)
-  Logger.debug(payload)
   return fetch(
     `${CONFIG.API_ROOT}/${path}`, {
       method: 'POST',
@@ -32,7 +31,7 @@ const _fetch = (path: string, payload: any) => {
     })
     // Fetch throws only for network/dns/related errors, not http statuses
     .catch((e) => {
-      Logger.info('fetch failed', e)
+      Logger.info(`API call ${path} failed`, e)
       // It really is TypeError according to
       // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
       if (e instanceof TypeError) {
@@ -41,11 +40,11 @@ const _fetch = (path: string, payload: any) => {
       }
       throw e
     })
-    .then((r) => {
+    .then(async (r) => {
       _isOnlineCallback(true)
-      Logger.debug(`API call ${path} finished`)
-      _checkResponse(r)
-      const response = r.json()
+      Logger.info(`API call ${path} finished`)
+      _checkResponse(r, payload)
+      const response = await r.json()
       Logger.debug('Response:', response)
       return response
     })
