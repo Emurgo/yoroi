@@ -3,14 +3,14 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
-import {Text, View, Picker, TouchableHighlight} from 'react-native'
+import {View, Picker, TouchableHighlight} from 'react-native'
 import styles from './styles/LanguagePicker.style'
 import {COLORS} from '../../styles/config'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-import CustomText from '../CustomText'
+import {Text} from '../UiKit'
 
 const changeLanguageAction = (languageCode) => ({
   path: ['languageCode'],
@@ -29,36 +29,25 @@ const supportedLangauage = [
   {label: 'Russian', name: 'Russian', code: 'ru-RU'},
 ]
 
-
 const getTrans = (state) => state.trans.languageSelectScreen
 
 type Props = {
   changeLanguage: () => mixed,
   handleContinue: () => mixed,
   languageCode: string,
-  trans: SubTranslation<typeof getTrans>
-};
+  trans: SubTranslation<typeof getTrans>,
+}
 
 const LanguagePicker = ({changeLanguage, languageCode, handleContinue, trans}: Props) => (
   <View style={styles.container}>
     <View style={styles.labelContainer}>
-      <CustomText>
-        <Text style={styles.label}>{trans.selectLanguage}</Text>
-      </CustomText>
+      <Text style={styles.label}>{trans.selectLanguage}</Text>
     </View>
 
     <View style={styles.pickerContainer}>
-      <Picker
-        style={styles.picker}
-        selectedValue={languageCode}
-        onValueChange={changeLanguage}
-      >
+      <Picker style={styles.picker} selectedValue={languageCode} onValueChange={changeLanguage}>
         {supportedLangauage.map((language) => (
-          <Picker.Item
-            key={language.code}
-            label={language.name}
-            value={language.code}
-          />
+          <Picker.Item key={language.code} label={language.name} value={language.code} />
         ))}
       </Picker>
     </View>
@@ -69,22 +58,22 @@ const LanguagePicker = ({changeLanguage, languageCode, handleContinue, trans}: P
       underlayColor={COLORS.WHITE}
       onPress={handleContinue}
     >
-      <CustomText>
-        <Text style={styles.buttonText}>{trans.continue}</Text>
-      </CustomText>
+      <Text style={styles.buttonText}>{trans.continue}</Text>
     </TouchableHighlight>
   </View>
 )
 
 export default compose(
-  connect((state) => ({
-    languageCode: state.languageCode,
-    trans: getTrans(state),
-  }), {
-    changeLanguage: changeLanguageAction,
-  }),
+  connect(
+    (state) => ({
+      languageCode: state.languageCode,
+      trans: getTrans(state),
+    }),
+    {
+      changeLanguage: changeLanguageAction,
+    }
+  ),
   withHandlers({
     handleContinue: ({navigation}) => (event) => navigation.navigate(WALLET_INIT_ROUTES.INIT),
   })
 )(LanguagePicker)
-

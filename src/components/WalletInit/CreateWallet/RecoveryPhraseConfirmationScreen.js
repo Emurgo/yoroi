@@ -6,7 +6,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers} from 'recompose'
 
-import CustomText from '../../CustomText'
+import {Text} from '../../UiKit'
 import Screen from '../../Screen'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 
@@ -23,23 +23,25 @@ type Props = {
   navigateToConfirmDialog: () => mixed,
   trans: SubTranslation<typeof getTrans>,
   navigation: NavigationScreenProp<NavigationState>,
-};
+}
 
 const RecoveryPhraseConfirmationScreen = ({navigateToConfirmDialog, trans, navigation}: Props) => (
   <Screen bgColor={COLORS.TRANSPARENT}>
     <View>
-      <CustomText>{trans.title}</CustomText>
-      <CustomText>{trans.instructions}</CustomText>
-      <CustomText>{trans.inputLabel}</CustomText>
-      <CustomText>{navigation.getParam('mnemonic')}</CustomText>
+      <Text>{trans.title}</Text>
+      <Text>{trans.instructions}</Text>
+      <Text>{trans.inputLabel}</Text>
+      <Text>{navigation.getParam('mnemonic')}</Text>
 
       <TouchableHighlight
         activeOpacity={0.1}
         underlayColor={COLORS.WHITE}
-        onPress={() => {/* Dispatch reset action here*/}}
+        onPress={() => {
+          /* Dispatch reset action here*/
+        }}
         style={styles.button}
       >
-        <CustomText>{trans.clearButton}</CustomText>
+        <Text>{trans.clearButton}</Text>
       </TouchableHighlight>
 
       <TouchableHighlight
@@ -48,7 +50,7 @@ const RecoveryPhraseConfirmationScreen = ({navigateToConfirmDialog, trans, navig
         onPress={navigateToConfirmDialog}
         style={styles.button}
       >
-        <CustomText>{trans.confirmButton}</CustomText>
+        <Text>{trans.confirmButton}</Text>
       </TouchableHighlight>
     </View>
   </Screen>
@@ -59,10 +61,9 @@ export default compose(
     trans: getTrans(state),
   })),
   withHandlers({
-    navigateToConfirmDialog: ({navigation}) =>
-      () => navigation.navigate(
-        WALLET_INIT_ROUTES.RECOVERY_PHRASE_CONFIRMATION_DIALOG,
-        {mnemonic: navigation.getParam('mnemonic')}
-      ),
+    navigateToConfirmDialog: ({navigation}) => () =>
+      navigation.navigate(WALLET_INIT_ROUTES.RECOVERY_PHRASE_CONFIRMATION_DIALOG, {
+        mnemonic: navigation.getParam('mnemonic'),
+      }),
   })
 )(RecoveryPhraseConfirmationScreen)

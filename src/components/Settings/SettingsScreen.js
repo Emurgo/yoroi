@@ -2,17 +2,13 @@
 
 import React from 'react'
 import {View} from 'react-native'
-import CustomText from '../CustomText'
+import {Text} from '../UiKit'
 import styles from './styles/SettingsScreen.style'
 
 const SettingsScreen = () => (
   <View style={styles.container}>
-    <CustomText style={styles.welcome}>
-    i18nChange your settings here
-    </CustomText>
+    <Text style={styles.welcome}>i18nChange your settings here</Text>
   </View>
 )
 
 export default SettingsScreen
-
-

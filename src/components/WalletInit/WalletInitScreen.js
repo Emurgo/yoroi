@@ -8,7 +8,7 @@ import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 
 import WalletDescription from './WalletDescription'
-import CustomText from '../CustomText'
+import {Text} from '../UiKit'
 import Screen from '../Screen'
 import BackgroundVisualArtefacts from './BackgroundVisualArtefacts'
 import {COLORS} from '../../styles/config'
@@ -44,9 +44,7 @@ const WalletInitScreen = ({navigateCreateWallet, navigateRestoreWallet, trans}: 
           underlayColor={COLORS.WHITE}
           onPress={navigateCreateWallet}
         >
-          <CustomText style={styles.buttonText}>
-            {trans.createWallet}
-          </CustomText>
+          <Text style={styles.buttonText}>{trans.createWallet}</Text>
         </TouchableHighlight>
 
         <TouchableHighlight
@@ -55,9 +53,7 @@ const WalletInitScreen = ({navigateCreateWallet, navigateRestoreWallet, trans}: 
           underlayColor={COLORS.WHITE}
           onPress={navigateRestoreWallet}
         >
-          <CustomText style={styles.buttonText}>
-            {trans.restoreWallet}
-          </CustomText>
+          <Text style={styles.buttonText}>{trans.restoreWallet}</Text>
         </TouchableHighlight>
       </View>
     </Screen>
@@ -69,9 +65,9 @@ export default compose(
     trans: getTrans(state),
   })),
   withHandlers({
-    navigateRestoreWallet:
-      ({navigation}) => (event) => navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET),
-    navigateCreateWallet:
-      ({navigation}) => (event) => navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET),
+    navigateRestoreWallet: ({navigation}) => (event) =>
+      navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET),
+    navigateCreateWallet: ({navigation}) => (event) =>
+      navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET),
   })
 )(WalletInitScreen)

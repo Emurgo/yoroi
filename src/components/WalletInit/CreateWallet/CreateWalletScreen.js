@@ -8,7 +8,7 @@ import {NavigationEvents} from 'react-navigation'
 import {withHandlers, withState} from 'recompose'
 
 import CheckIcon from '../../../assets/CheckIcon'
-import CustomText from '../../CustomText'
+import {Text} from '../../UiKit'
 import Screen from '../../Screen'
 import {validatePassword} from '../../../utils/validators'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
@@ -72,7 +72,7 @@ const CreateWalletScreen = ({
       <NavigationEvents onWillBlur={onWillBlur} />
       <View style={styles.container}>
         <View>
-          <CustomText style={styles.formLabel}>{trans.nameLabel}</CustomText>
+          <Text style={styles.formLabel}>{trans.nameLabel}</Text>
           <View style={styles.inputRow}>
             <TextInput style={styles.input} onChangeText={setName} value={name} autoFocus />
             <CheckIcon
@@ -83,7 +83,7 @@ const CreateWalletScreen = ({
           </View>
         </View>
         <View>
-          <CustomText style={styles.formLabel}>{trans.passwordLabel}</CustomText>
+          <Text style={styles.formLabel}>{trans.passwordLabel}</Text>
           <TextInput
             secureTextEntry
             style={styles.input}
@@ -92,7 +92,7 @@ const CreateWalletScreen = ({
           />
         </View>
         <View>
-          <CustomText style={styles.formLabel}>{trans.passwordConfirmationLabel}</CustomText>
+          <Text style={styles.formLabel}>{trans.passwordConfirmationLabel}</Text>
           <View style={styles.inputRow}>
             <TextInput
               secureTextEntry
@@ -112,25 +112,25 @@ const CreateWalletScreen = ({
           </View>
         </View>
         <View>
-          <CustomText>{trans.passwordRequirementsNote}</CustomText>
+          <Text>{trans.passwordRequirementsNote}</Text>
           <View style={styles.passwordRequirementsRow}>
             <View style={styles.passwordRequirement}>
               <CheckIcon width={16} height={16} />
-              <CustomText style={styles.passwordRequirement}>{trans.passwordMinLength}</CustomText>
+              <Text style={styles.passwordRequirement}>{trans.passwordMinLength}</Text>
             </View>
             <View style={styles.passwordRequirement}>
               <CheckIcon width={16} height={16} />
-              <CustomText style={styles.passwordRequirement}>{trans.passwordLowerChar}</CustomText>
+              <Text style={styles.passwordRequirement}>{trans.passwordLowerChar}</Text>
             </View>
           </View>
           <View style={styles.passwordRequirementsRow}>
             <View style={styles.passwordRequirement}>
               <CheckIcon width={16} height={16} />
-              <CustomText style={styles.passwordRequirement}>{trans.passwordUpperChar}</CustomText>
+              <Text style={styles.passwordRequirement}>{trans.passwordUpperChar}</Text>
             </View>
             <View style={styles.passwordRequirement}>
               <CheckIcon width={16} height={16} />
-              <CustomText style={styles.passwordRequirement}>{trans.passwordNumber}</CustomText>
+              <Text style={styles.passwordRequirement}>{trans.passwordNumber}</Text>
             </View>
           </View>
         </View>
@@ -142,7 +142,7 @@ const CreateWalletScreen = ({
           onPress={handleCreate}
           style={[styles.button, errors == null ? {} : styles.disabledButton]}
         >
-          <CustomText style={styles.buttonText}>{trans.createButton}</CustomText>
+          <Text style={styles.buttonText}>{trans.createButton}</Text>
         </TouchableHighlight>
       </View>
     </Screen>

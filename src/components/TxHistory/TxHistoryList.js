@@ -5,14 +5,14 @@ import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 import {connect} from 'react-redux'
 
-import {Text, View} from 'react-native'
+import {View} from 'react-native'
 import _ from 'lodash'
 import moment from 'moment'
 import type {Moment} from 'moment'
 
 import type {HistoryTransaction} from '../../types/HistoryTransaction'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
-import CustomText from '../../components/CustomText'
+import {Text} from '../UiKit'
 import TxHistoryListItem from './TxHistoryListItem'
 
 import styles from './styles/TxHistoryList.style'
@@ -28,12 +28,9 @@ const formatDate = (timestamp: Moment, trans) => {
   }
 }
 
-
 const DayHeader = ({ts, formatDate}) => (
   <View style={styles.dateLabelContainer}>
-    <CustomText>
-      <Text style={styles.dateLabel}>{formatDate(ts)}</Text>
-    </CustomText>
+    <Text style={styles.dateLabel}>{formatDate(ts)}</Text>
   </View>
 )
 
@@ -41,14 +38,14 @@ type Props = {
   transactions: Array<HistoryTransaction>,
   navigation: NavigationScreenProp<NavigationState>,
   formatDate: (timestamp: Moment, trans: any) => string,
-};
+}
 
-
-const getTransactionsByDate = (transactions) => _(transactions)
-  .sortBy((t) => -moment(t.timestamp).unix())
-  .groupBy((t) => moment(t.timestamp).format('L'))
-  .toPairs()
-  .value()
+const getTransactionsByDate = (transactions) =>
+  _(transactions)
+    .sortBy((t) => -moment(t.timestamp).unix())
+    .groupBy((t) => moment(t.timestamp).format('L'))
+    .toPairs()
+    .value()
 
 const TxHistoryList = ({transactions, navigation, formatDate}: Props) => {
   // TODO(ppershing): add proper memoization here
@@ -60,11 +57,7 @@ const TxHistoryList = ({transactions, navigation, formatDate}: Props) => {
         <View key={date} style={styles.dayContainer}>
           <DayHeader ts={transactions[0].timestamp} formatDate={formatDate} />
           {transactions.map((transaction) => (
-            <TxHistoryListItem
-              navigation={navigation}
-              key={transaction.id}
-              id={transaction.id}
-            />
+            <TxHistoryListItem navigation={navigation} key={transaction.id} id={transaction.id} />
           ))}
         </View>
       ))}
@@ -77,7 +70,6 @@ export default compose(
     trans: state.trans,
   })),
   withHandlers({
-    formatDate:
-      ({trans}) => (ts) => formatDate(ts, trans),
+    formatDate: ({trans}) => (ts) => formatDate(ts, trans),
   })
 )(TxHistoryList)

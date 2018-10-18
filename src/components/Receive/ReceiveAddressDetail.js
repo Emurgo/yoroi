@@ -4,8 +4,8 @@ import {compose} from 'redux'
 import {View} from 'react-native'
 import QRCode from 'react-native-qrcode'
 
-import CustomText from '../../components/CustomText'
 import CopyButton from './CopyButton'
+import {Text} from '../UiKit'
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
 import styles from './styles/ReceiveAddressDetail.style'
@@ -15,7 +15,7 @@ const getTranslation = (state) => state.trans.receiveScreen
 type Props = {
   receiveAddress: string,
   translation: SubTranslation<typeof getTranslation>,
-};
+}
 
 const ReceiveAddressDetail = ({receiveAddress, translation}: Props) => (
   <View style={styles.container}>
@@ -28,8 +28,8 @@ const ReceiveAddressDetail = ({receiveAddress, translation}: Props) => (
       />
     </View>
 
-    <CustomText style={styles.addressLabel}>{translation.walletAddress}</CustomText>
-    <CustomText style={styles.address}>{receiveAddress}</CustomText>
+    <Text style={styles.addressLabel}>{translation.walletAddress}</Text>
+    <Text style={styles.address}>{receiveAddress}</Text>
     <CopyButton value={receiveAddress} />
   </View>
 )
@@ -37,5 +37,5 @@ const ReceiveAddressDetail = ({receiveAddress, translation}: Props) => (
 export default compose(
   connect((state) => ({
     translation: getTranslation(state),
-  })),
+  }))
 )(ReceiveAddressDetail)

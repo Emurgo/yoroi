@@ -6,7 +6,7 @@ import {connect} from 'react-redux'
 
 import YoroiWalletIcon from '../../assets/YoroiWalletIcon'
 import EmurgoIcon from '../../assets/EmurgoIcon'
-import CustomText from '../CustomText'
+import {Text} from '../UiKit'
 
 import {COLORS} from '../../styles/config'
 import styles from './styles/WalletInitScreen.style'
@@ -18,24 +18,20 @@ const getTrans = (state: State) => state.trans.walletDescription
 
 type Props = {
   trans: SubTranslation<typeof getTrans>,
-};
+}
 
 const WalletDescription = ({trans}: Props) => (
   <View style={styles.descriptionContainer}>
     <YoroiWalletIcon color={COLORS.WHITE} width={140} height={80} />
 
     <View style={styles.subtitleContainer}>
-      <CustomText style={styles.subtitle}>
-        {trans.line1}
-      </CustomText>
+      <Text style={styles.subtitle}>{trans.line1}</Text>
     </View>
 
-    <CustomText style={styles.subtitle}>
-      {trans.line2}
-    </CustomText>
+    <Text style={styles.subtitle}>{trans.line2}</Text>
 
     <View style={styles.emurgoCreditsContainer}>
-      <CustomText style={styles.subtitle}>{trans.byEmurgo}</CustomText>
+      <Text style={styles.subtitle}>{trans.byEmurgo}</Text>
       <EmurgoIcon color={COLORS.WHITE} width={100} height={37} />
     </View>
   </View>

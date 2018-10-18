@@ -6,7 +6,7 @@ import {connect} from 'react-redux'
 import {View, TouchableHighlight} from 'react-native'
 import {withHandlers} from 'recompose'
 
-import CustomText from '../../components/CustomText'
+import {Text} from '../UiKit'
 import styles from './styles/TxNavigationButtons.style'
 import {COLORS} from '../../styles/config'
 import {MAIN_ROUTES} from '../../RoutesList'
@@ -21,7 +21,7 @@ type Props = {
   navigateToReceive: () => mixed,
   navigateToSend: () => mixed,
   trans: SubTranslation<typeof getTrans>,
-};
+}
 
 const TxNavigationButtons = ({navigation, navigateToReceive, navigateToSend, trans}: Props) => (
   <View style={styles.navigationButtonsContainer}>
@@ -32,7 +32,7 @@ const TxNavigationButtons = ({navigation, navigateToReceive, navigateToSend, tra
       onPress={navigateToSend}
     >
       <View style={styles.sendButton}>
-        <CustomText>{trans.sendButton}</CustomText>
+        <Text>{trans.sendButton}</Text>
       </View>
     </TouchableHighlight>
 
@@ -43,7 +43,7 @@ const TxNavigationButtons = ({navigation, navigateToReceive, navigateToSend, tra
       onPress={navigateToReceive}
     >
       <View style={styles.receiveButton}>
-        <CustomText style={styles.receiveButtonText}>{trans.receiveButton}</CustomText>
+        <Text style={styles.receiveButtonText}>{trans.receiveButton}</Text>
       </View>
     </TouchableHighlight>
   </View>
@@ -56,5 +56,5 @@ export default compose(
   withHandlers({
     navigateToReceive: ({navigation}) => (event) => navigation.navigate(MAIN_ROUTES.RECEIVE),
     navigateToSend: ({navigation}) => (event) => navigation.navigate(MAIN_ROUTES.SEND),
-  }),
+  })
 )(TxNavigationButtons)

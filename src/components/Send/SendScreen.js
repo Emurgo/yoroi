@@ -7,7 +7,7 @@ import {View, TextInput, TouchableOpacity, TouchableHighlight} from 'react-nativ
 import {withHandlers} from 'recompose'
 
 import {SEND_ROUTES} from '../../RoutesList'
-import CustomText from '../CustomText'
+import {Text} from '../UiKit'
 
 import {COLORS} from '../../styles/config'
 import styles from './styles/SendScreen.style'
@@ -22,20 +22,16 @@ type Props = {
   trans: SubTranslation<typeof getTrans>,
 }
 
-const SendScreen = ({
-  navigateToConfirm,
-  navigateToAddressReaderQR,
-  trans,
-}: Props) => (
+const SendScreen = ({navigateToConfirm, navigateToAddressReaderQR, trans}: Props) => (
   <View style={styles.root}>
     <View style={styles.header}>
-      <CustomText>Available funds:</CustomText>
+      <Text>Available funds:</Text>
     </View>
     <View style={styles.containerQR}>
       <TouchableOpacity onPress={navigateToAddressReaderQR}>
         <View style={styles.scanIcon} />
       </TouchableOpacity>
-      <CustomText style={styles.label}>Scan QR code</CustomText>
+      <Text style={styles.label}>Scan QR code</Text>
     </View>
     <View style={styles.inputContainer}>
       <TextInput style={styles.inputText} placeholder={'Address'} />
@@ -49,23 +45,20 @@ const SendScreen = ({
       onPress={navigateToConfirm}
     >
       <View style={styles.continueButton}>
-        <CustomText style={styles.continueButtonText}>{trans.continue}</CustomText>
+        <Text style={styles.continueButtonText}>{trans.continue}</Text>
       </View>
     </TouchableHighlight>
   </View>
 )
-
 
 export default compose(
   connect((state) => ({
     trans: getTrans(state),
   })),
   withHandlers({
-    navigateToAddressReaderQR: ({navigation}) =>
-      (event) => navigation.navigate(SEND_ROUTES.ADDRESS_READER_QR),
-    navigateToConfirm: ({navigation}) =>
-      (event) => navigation.navigate(SEND_ROUTES.CONFIRM),
+    navigateToAddressReaderQR: ({navigation}) => (event) =>
+      navigation.navigate(SEND_ROUTES.ADDRESS_READER_QR),
+    navigateToConfirm: ({navigation}) => (event) =>
+      navigation.navigate(SEND_ROUTES.CONFIRM),
   })
 )(SendScreen)
-
-
