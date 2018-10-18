@@ -9,6 +9,7 @@ import {NavigationActions, StackActions} from 'react-navigation'
 
 import {Text} from '../../UiKit'
 import Screen from '../../Screen'
+import WalletManager from '../../../crypto/wallet'
 import {ROOT_ROUTES} from '../../../RoutesList'
 
 import styles from './styles/RecoveryPhraseConfirmationDialog.style'
@@ -28,8 +29,10 @@ const resetNavigationAction = StackActions.reset({
 })
 
 const handleWalletConfirmation = ({navigation}) => () => {
-  // Todo: add wallet creation here
-  // navigation.getParam('mnemonic')
+  const mnemonic = navigation.getParam('mnemonic')
+  const password = navigation.getParam('password')
+
+  WalletManager.restoreWallet(mnemonic, password)
   navigation.dispatch(resetNavigationAction)
 }
 

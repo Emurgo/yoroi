@@ -61,9 +61,12 @@ export default compose(
     trans: getTrans(state),
   })),
   withHandlers({
-    navigateToConfirmDialog: ({navigation}) => () =>
-      navigation.navigate(WALLET_INIT_ROUTES.RECOVERY_PHRASE_CONFIRMATION_DIALOG, {
-        mnemonic: navigation.getParam('mnemonic'),
-      }),
+    navigateToConfirmDialog: ({navigation}) =>
+      () => navigation.navigate(
+        WALLET_INIT_ROUTES.RECOVERY_PHRASE_CONFIRMATION_DIALOG, {
+          mnemonic: navigation.getParam('mnemonic'),
+          password: navigation.getParam('password'),
+        }
+      ),
   })
 )(RecoveryPhraseConfirmationScreen)

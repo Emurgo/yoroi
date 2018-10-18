@@ -24,8 +24,11 @@ type FormValidationErrors = PasswordValidationErrors & {nameReq?: boolean}
 
 const getTrans = (state: State) => state.trans.createWallet
 
-const handleCreate = ({navigation}) => () => {
-  navigation.navigate(WALLET_INIT_ROUTES.RECOVERY_PHRASE_DIALOG)
+const handleCreate = ({navigation, password}) => () => {
+  navigation.navigate(
+    WALLET_INIT_ROUTES.RECOVERY_PHRASE_DIALOG,
+    {password}
+  )
 }
 
 const validateForm = ({name, password, passwordConfirmation}): FormValidationErrors | null => {

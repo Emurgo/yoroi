@@ -33,12 +33,13 @@
   "globals": {
     "Buffer": false,
     "Symbol": false,
+    "Uint8Array": false,
     "TextEncoder": false,
     "$Call": false,
     "$Values": false,
-    "test",
-    "expect",
-    "describe",
-    "it",
+    "test": false,
+    "expect": false,
+    "describe": false,
+    "it": false
   }
 }

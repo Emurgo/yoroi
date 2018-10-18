@@ -1,10 +1,11 @@
 // @flow
 
 import {mnemonicToEntropy, generateMnemonic} from 'bip39'
-import {HdWallet, Wallet} from 'rust-cardano-crypto'
+import {HdWallet, Wallet, PasswordProtect} from 'rust-cardano-crypto'
 import {randomBytes} from 'react-native-randombytes'
 import ExtendableError from 'es6-error'
 import bs58 from 'bs58'
+import cryptoRandomString from 'crypto-random-string'
 import _ from 'lodash'
 
 import {CONFIG} from '../config'
@@ -38,6 +39,34 @@ export const getAccountFromMasterKey = (
   const wallet = _result(Wallet.fromMasterKey(masterKey))
   wallet.config.protocol_magic = magic
   return _result(Wallet.newAccount(wallet, 0))
+}
+
+export const encryptMasterKey = (
+  password: string,
+  masterKey: Uint8Array
+): string => {
+  const salt = new Buffer(cryptoRandomString(2 * 32), 'hex')
+  const nonce = new Buffer(cryptoRandomString(2 * 12), 'hex')
+  const formattedPassword: Uint8Array = new TextEncoder().encode(password)
+  const encryptedBytes =
+    PasswordProtect.encryptWithPassword(formattedPassword, salt, nonce, masterKey)
+  const encryptedHex = Buffer.from(encryptedBytes).toString('hex')
+  return encryptedHex
+}
+
+export const decryptMasterKey = (
+  password: string,
+  encryptedHex: string
+): Uint8Array => {
+  const encryptedBytes = new Buffer(encryptedHex, 'hex')
+  const formattedPassword: Uint8Array = new TextEncoder().encode(password)
+  const decryptedBytes: ?Uint8Array | false =
+    PasswordProtect.decryptWithPassword(formattedPassword, encryptedBytes)
+  if (!decryptedBytes) {
+    throw new CardanoError('Wrong password')
+  }
+
+  return decryptedBytes
 }
 
 
@@ -81,8 +110,10 @@ type FilterAddressesCallback = (addresses: Array<string>) => Promise<Array<strin
   Implementation note: Current implementation might in certain situations
   find gaps of size >= gapLimit. We do not consider this to be a problem (at least for now)
 
-  Implementation note: Current implementation returns discovered addresses in multiples of batchSize.
-  This might mean that there are more than gapLimit unused addresses at the end. This is consistent with how the
+  Implementation note: Current implementation returns discovered addresses
+  in multiples of batchSize.
+  This might mean that there are more than gapLimit unused addresses at the end.
+  This is consistent with how the
   walletManager's post-discovery phase works.
 */
 
