@@ -16,7 +16,7 @@
     "lines-between-class-members": [1, "always", {"exceptAfterSingleLine": true}],
     "max-len": [
       1,
-      {"code": 100, "tabWidth": 2, "ignoreStrings": false, "ignoreTemplateLiterals": false}
+      {"code": 80, "tabWidth": 2, "ignoreStrings": false, "ignoreTemplateLiterals": false}
     ],
     "spaced-comment": 1,
     "react/no-access-state-in-setstate": 2,
@@ -28,7 +28,8 @@
     "import/no-duplicates": 1,
     "react-native/no-unused-styles": 2,
     "react-native/split-platform-components": 0,
-    "react-native/no-inline-styles": 2
+    "react-native/no-inline-styles": 2,
+    "no-multiple-empty-lines": ["warn", {"max": 2, "maxEOF": 0}]
   },
   "globals": {
     "Buffer": false,

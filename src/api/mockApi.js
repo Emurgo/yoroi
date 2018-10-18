@@ -13,4 +13,3 @@ export const fetchUtxoSum = (addresses: Array<string>) => Promise.resolve(utxoSu
 
 
 export const fetchUtxo = (addresses: Array<string>) => Promise.resolve(utxoForAddresses)
-

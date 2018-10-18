@@ -129,4 +129,3 @@ export const processTxHistoryData =
     status: data.tx_state,
   }
 }
-

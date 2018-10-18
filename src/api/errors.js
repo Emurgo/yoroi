@@ -11,4 +11,3 @@ export class NotConnectedError extends ExtendableError {
     super('NotConnectedError')
   }
 }
-

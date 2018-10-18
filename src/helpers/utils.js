@@ -45,4 +45,3 @@ export const forwardReducerTo = <S: Object, T>(reducer: SegmentReducer<S, T>, pa
   const newValue = reducer(value, payload)
   return newValue !== value ? immutableSet(state, path, newValue) : state
 }
-
