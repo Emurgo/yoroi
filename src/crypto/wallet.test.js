@@ -1,8 +1,10 @@
 // @flow
-import '../jest'
+import jestSetup from '../jestSetup'
 import _ from 'lodash'
 
 import walletManager from './wallet'
+
+jestSetup.setup()
 
 // eslint-disable-next-line max-len
 const mnemonic = 'dry balcony arctic what garbage sort cart shine egg lamp manual bottom slide assault bus'

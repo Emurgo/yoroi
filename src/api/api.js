@@ -21,6 +21,7 @@ let _isOnlineCallback: IsOnlineCallback = (isOnline) => null
 
 const _fetch = (path: string, payload: any) => {
   Logger.info(`API call: ${path}`)
+  Logger.debug(payload)
   return fetch(
     `${CONFIG.API_ROOT}/${path}`, {
       method: 'POST',

@@ -1,10 +1,12 @@
 // @flow
-import '../jest'
+import jestSetup from '../jestSetup'
 
 import moment from 'moment'
 
 import * as api from './api'
 import {ApiError} from './errors'
+
+jestSetup.setup()
 
 describe('History API', () => {
   it('can fetch history', async () => {
