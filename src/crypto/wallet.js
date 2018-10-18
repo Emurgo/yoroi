@@ -118,7 +118,7 @@ export class WalletManager {
     )
   }
 
-  async restoreWallet(mnemonic: string, newPassword: string) {
+  restoreWallet(mnemonic: string, newPassword: string) {
     Logger.info('restore wallet')
     assertFalse(this.isInitialized)
     this.masterKey = util.getMasterKeyFromMnemonic(mnemonic)

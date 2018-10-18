@@ -3,6 +3,11 @@
 import fetch from 'node-fetch'
 import {Logger, LogLevel} from './utils/logging'
 
+import nodeUtil from 'util'
+// $FlowFixMe
+global.TextEncoder = nodeUtil.TextEncoder
+// $FlowFixMe
+global.TextDecoder = nodeUtil.TextDecoder
 
 export default {
   setup: () => {

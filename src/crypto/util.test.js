@@ -7,7 +7,6 @@ import {
   getExternalAddresses,
   getAddressInHex,
   isValidAddress,
-  discoverAddresses,
   encryptMasterKey,
   decryptMasterKey,
 } from './util'
@@ -64,17 +63,16 @@ test('Can validate invalid addresses', () => {
   addresses.forEach((address) => expect(isValidAddress(address)).toBe(false))
 })
 
-})
-
 
 test('Can encrypt / decrypt masterKey', () => {
   const masterKey = getMasterKeyFromMnemonic(mnemonic)
   const encryptedKey = encryptMasterKey('PASSWORD', masterKey)
   const decryptedKey = decryptMasterKey('PASSWORD', encryptedKey)
 
-  expect(encryptedKey.toString()).toBe(decryptedKey.toString())
+  expect(masterKey).toEqual(decryptedKey)
 })
 
 test('Make sure that we are using safe buffers', () => {
   // in response to https://github.com/nodejs/node/issues/4660
   expect((new Buffer(10)).toString('hex')).toBe('00000000000000000000')
+})

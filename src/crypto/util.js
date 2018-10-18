@@ -6,10 +6,8 @@ import {randomBytes} from 'react-native-randombytes'
 import ExtendableError from 'es6-error'
 import bs58 from 'bs58'
 import cryptoRandomString from 'crypto-random-string'
-import _ from 'lodash'
 
 import {CONFIG} from '../config'
-import {assertTrue} from '../utils/assert'
 
 export type AddressType = 'Internal' | 'External'
 
@@ -98,6 +96,3 @@ export const isValidAddress = (address: string): boolean => {
 }
 
 export const generateAdaMnemonic = () => generateMnemonic(CONFIG.MNEMONIC_STRENGTH, randomBytes)
-
-  This might mean that there are more than gapLimit unused addresses at the end.
-  This is consistent with how the
