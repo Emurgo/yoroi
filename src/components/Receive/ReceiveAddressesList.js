@@ -7,9 +7,10 @@ import {View} from 'react-native'
 
 import {Text} from '../UiKit'
 import CopyButton from './CopyButton'
-import type {SubTranslation} from '../../l10n/typeHelpers'
 
 import styles from './styles/ReceiveAddressesList.style'
+
+import type {SubTranslation} from '../../l10n/typeHelpers'
 
 const getTranslation = (state) => state.trans.receiveScreen
 

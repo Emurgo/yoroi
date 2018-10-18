@@ -21,6 +21,7 @@ const routes = [
   {label: 'Receive', path: MAIN_ROUTES.RECEIVE},
   {label: 'Send', path: MAIN_ROUTES.SEND},
   {label: 'Tx History', path: MAIN_ROUTES.TX_HISTORY},
+  {label: 'Login', path: ROOT_ROUTES.LOGIN},
 ]
 
 const styles = {
