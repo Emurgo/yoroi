@@ -4,6 +4,7 @@ import React from 'react'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 import {View, TouchableHighlight} from 'react-native'
+import {withNavigation} from 'react-navigation'
 
 import {Text} from '../UiKit'
 import CopyIcon from '../../assets/CopyIcon'
@@ -35,6 +36,7 @@ const AddressView = ({address, navigateToModal}: Props) => (
 )
 
 export default compose(
+  withNavigation,
   withHandlers({
     navigateToModal: ({navigation, address}) => () =>
       navigation.navigate(RECEIVE_ROUTES.ADDRESS_MODAL, {address}),
