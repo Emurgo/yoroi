@@ -17,8 +17,8 @@ test('Can restore wallet', async () => {
   await walletManager.doFullSync()
   // Note(ppershing): these are just loose tests because we are testing
   // agains live test-wallet and so the numbers might increase over time
-  expect(walletManager.internalChain.addresses.length).toBeGreaterThanOrEqual(27)
-  expect(walletManager.externalChain.addresses.length).toBeGreaterThanOrEqual(60)
+  expect(walletManager.internalChain._addresses.length).toBeGreaterThanOrEqual(27)
+  expect(walletManager.externalChain._addresses.length).toBeGreaterThanOrEqual(60)
 })
 
 
