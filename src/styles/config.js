@@ -26,6 +26,9 @@ export const DEBUG_BORDERS = {
   borderWidth: 1,
 }
 
+export const colors = {
+  buttonBackground: '#17d1aa',
+}
 
 const brand = {
   defaultFont: Platform.select({

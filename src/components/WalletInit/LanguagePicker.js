@@ -3,14 +3,13 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
-import {View, Picker, TouchableHighlight} from 'react-native'
+import {View, Picker} from 'react-native'
 import styles from './styles/LanguagePicker.style'
-import {COLORS} from '../../styles/config'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-import {Text} from '../UiKit'
+import {Text, Button} from '../UiKit'
 
 const changeLanguageAction = (languageCode) => ({
   path: ['languageCode'],
@@ -52,14 +51,10 @@ const LanguagePicker = ({changeLanguage, languageCode, handleContinue, trans}: P
       </Picker>
     </View>
 
-    <TouchableHighlight
-      style={styles.button}
-      activeOpacity={0.1}
-      underlayColor={COLORS.WHITE}
+    <Button
       onPress={handleContinue}
-    >
-      <Text style={styles.buttonText}>{trans.continue}</Text>
-    </TouchableHighlight>
+      title={trans.continue}
+    />
   </View>
 )
 
