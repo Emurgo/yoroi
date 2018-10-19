@@ -1,4 +1,5 @@
 // @flow
+import {Alert, AsyncStorage} from 'react-native'
 
 import api from './api'
 import walletManager from './crypto/wallet'
@@ -25,6 +26,13 @@ const _endFetch = () => ({
   path: ['transactions', 'isFetching'],
   payload: null,
   reducer: (state, payload) => false,
+})
+
+const _changeLanguage = (languageCode) => ({
+  path: ['languageCode'],
+  payload: languageCode,
+  reducer: (state, languageCode) => languageCode,
+  type: 'CHANGE_LANGUAGE',
 })
 
 const _setOnline = (isOnline: boolean) => (dispatch, getState) => {
@@ -54,5 +62,29 @@ export const updateHistory = () => async (dispatch: Dispatch<any>) => {
     Logger.error('Update history error', e)
   } finally {
     dispatch(_endFetch())
+  }
+}
+
+const LOCAL_STORAGE_KEY_LANG = 'lang'
+
+export const changeLanguage = (languageCode: string) => async (dispatch: Dispatch<any>) => {
+  try {
+    await AsyncStorage.setItem(LOCAL_STORAGE_KEY_LANG, languageCode)
+    dispatch(_changeLanguage(languageCode))
+  } catch (e) {
+    Logger.error('Saving language to AsyncStorage failed.', e)
+    // TODO add missing localization
+    Alert.alert('Error', 'Could not set selected language.')
+  }
+}
+
+export const loadLanguage = () => async (dispatch: Dispatch<any>) => {
+  try {
+    const languageCode = await AsyncStorage.getItem(LOCAL_STORAGE_KEY_LANG)
+    if (languageCode) {
+      dispatch(_changeLanguage(languageCode))
+    }
+  } catch (e) {
+    Logger.error('Loading language from AsyncStorage failed. UI language left intact.', e)
   }
 }
