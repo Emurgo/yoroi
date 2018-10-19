@@ -87,6 +87,10 @@ const l10n = {
     walletAddress: 'Your wallet address',
     walletAddresses: 'Your wallet addresses',
   },
+  receiveScreenModal: {
+    copyLabel: 'COPY ADDRESS',
+    copiedLabel: 'COPIED',
+  },
   recoveryPhraseConfirmationDialog: {
     title: 'Recovery phrase',
     keysStorageCheckbox: 'I understand that my secret keys are held securely on this device only,\

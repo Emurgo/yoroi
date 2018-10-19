@@ -83,6 +83,10 @@ export type Translation = {
     walletAddress: string,
     walletAddresses: string
   },
+  receiveScreenModal: {
+    copyLabel: string,
+    copiedLabel: string,
+  },
   recoveryPhraseConfirmationDialog: {
     title: string,
     keysStorageCheckbox: string,
