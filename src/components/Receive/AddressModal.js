@@ -3,7 +3,6 @@ import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withState, withHandlers} from 'recompose'
 import {Modal, Clipboard, View, TouchableHighlight} from 'react-native'
-import {withNavigation} from 'react-navigation'
 import QRCode from 'react-native-qrcode'
 
 import {Text} from '../UiKit'
@@ -68,7 +67,6 @@ const AddressModal = ({
 )
 
 export default compose(
-  withNavigation,
   connect((state, {navigation}) => ({
     address: navigation.getParam('address'),
     translation: getTranslation(state),
