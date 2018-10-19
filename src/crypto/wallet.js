@@ -24,14 +24,14 @@ const getLastTimestamp = (history: Array<RawTransaction>): ?Moment => {
 
 class AddressChainManager {
   addresses: Array<string>
-  used: Array<string>
+  used: Set<string>
   addressGenerator: (Array<number>) => Array<string>
   lastSyncTimePerBatch: Array<Moment>
 
   constructor(addressGenerator: any) {
     this.addressGenerator = addressGenerator
     this.addresses = []
-    this.used = []
+    this.used = new Set()
     this.lastSyncTimePerBatch = []
 
     this.ensureEnoughGeneratedAddresses()
@@ -43,7 +43,7 @@ class AddressChainManager {
 
   getHighestUsedIndex() {
     return _.findLastIndex(
-      this.addresses, (addr) => this.used.includes(addr)
+      this.addresses, (addr) => this.used.has(addr)
     )
   }
 
@@ -66,9 +66,9 @@ class AddressChainManager {
 
   markAddressAsUsed(address: string) {
     assertTrue(this.isMyAddress(address))
-    if (this.used.includes(address)) return // we already know
+    if (this.used.has(address)) return // we already know
     Logger.debug('marking address as used', address)
-    this.used.push(address)
+    this.used.add(address)
     this.ensureEnoughGeneratedAddresses()
     this.selfCheck()
   }
