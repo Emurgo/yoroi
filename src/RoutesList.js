@@ -13,6 +13,7 @@ export const SEND_ROUTES = {
 
 export const RECEIVE_ROUTES = {
   MAIN: 'receive-ada',
+  ADDRESS_MODAL: 'address-modal',
 }
 
 export const WALLET_INIT_ROUTES = {

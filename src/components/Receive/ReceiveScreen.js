@@ -7,8 +7,8 @@ import {View} from 'react-native'
 
 import Screen from '../../components/Screen'
 import {Text} from '../UiKit'
-import ReceiveAddressDetail from './ReceiveAddressDetail'
-import ReceiveAddressesList from './ReceiveAddressesList'
+import AddressDetail from './AddressDetail'
+import AddressesList from './AddressesList'
 
 import styles from './styles/ReceiveScreen.style'
 
@@ -29,8 +29,8 @@ const ReceiveScreen = ({receiveAddresses, translation}: Props) => (
         <Text style={styles.warningText}>{translation.line2}</Text>
         <Text style={styles.warningText}>{translation.line3}</Text>
       </View>
-      <ReceiveAddressDetail receiveAddress={receiveAddresses[0]} />
-      <ReceiveAddressesList receiveAddresses={receiveAddresses} />
+      <AddressDetail address={receiveAddresses[0]} />
+      <AddressesList addresses={receiveAddresses} />
     </Screen>
   </View>
 )
