@@ -6,6 +6,7 @@ import _ from 'lodash'
 import {WalletManager} from './wallet'
 
 jestSetup.setup()
+jest.setTimeout(10000000)
 
 // eslint-disable-next-line max-len
 const mnemonic = 'dry balcony arctic what garbage sort cart shine egg lamp manual bottom slide assault bus'

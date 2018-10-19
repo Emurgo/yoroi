@@ -2,7 +2,9 @@
 
 import moment from 'moment'
 import _ from 'lodash'
+import pLimit from 'p-limit'
 
+import {AddressChainManager} from './chain'
 import * as util from './util'
 import api from '../api'
 import {CONFIG} from '../config'
@@ -13,90 +15,19 @@ import type {Moment} from 'moment'
 import type {RawTransaction} from '../types/HistoryTransaction'
 
 
-const VERY_OLD_TIME = '2000-01-01T00:00:00.000Z'
-
 const getLastTimestamp = (history: Array<RawTransaction>): ?Moment => {
   // Note(ppershing): ISO8601 dates can be sorted as strings
   // and the result is expected
   const max = _.max(history.map((tx) => tx.last_update))
-  return moment(max || VERY_OLD_TIME)
+  return moment(max || 0)
 }
 
-class AddressChainManager {
-  _addresses: Array<string>
-  _used: Set<string>
-  _addressGenerator: (Array<number>) => Array<string>
-  _lastSyncTimePerBatch: Array<Moment>
-  _blockSize: number
-  _gapSize: number
-
-  constructor(addressGenerator: any) {
-    this._addressGenerator = addressGenerator
-    this._addresses = []
-    this._used = new Set()
-    this._lastSyncTimePerBatch = []
-    this._blockSize = CONFIG.WALLET.DISCOVERY_BLOCK_SIZE
-    this._gapSize = CONFIG.WALLET.DISCOVERY_GAP_SIZE
-    this._ensureEnoughGeneratedAddresses()
-  }
-
-  _selfCheck() {
-    assertTrue(this._addresses.length % this._blockSize === 0)
-    assertTrue(this._lastSyncTimePerBatch.length * this._blockSize === this._addresses.length)
-  }
-
-  getHighestUsedIndex() {
-    return _.findLastIndex(
-      this._addresses, (addr) => this._used.has(addr)
-    )
-  }
-
-  _ensureEnoughGeneratedAddresses() {
-    while (this.getHighestUsedIndex() + this._gapSize >= this._addresses.length) {
-      const start = this._addresses.length
-      const newAddresses = this._addressGenerator(
-        _.range(start, start + this._blockSize)
-      )
-      Logger.debug('discover', newAddresses)
-      this._addresses.push(...newAddresses)
-      this._lastSyncTimePerBatch.push(moment(VERY_OLD_TIME))
-    }
-    this._selfCheck()
-  }
-
-  isMyAddress(address: string) {
-    return this._addresses.includes(address)
-  }
-
-  markAddressAsUsed(address: string) {
-    assertTrue(this.isMyAddress(address))
-    if (this._used.has(address)) return // we already know
-    Logger.debug('marking address as used', address)
-    this._used.add(address)
-    this._ensureEnoughGeneratedAddresses()
-    this._selfCheck()
-  }
-
-  getAddressBlocksWithLastSyncTime() {
-    return _.zip(
-      this._lastSyncTimePerBatch,
-      _.chunk(this._addresses, CONFIG.WALLET.DISCOVERY_BLOCK_SIZE)
-    )
-  }
-
-  updateBlockTime(idx: number, time: Moment) {
-    assertTrue(idx >= 0)
-    assertTrue(idx < this._lastSyncTimePerBatch.length)
-    assertFalse(time.isBefore(this._lastSyncTimePerBatch[idx]))
-    this._lastSyncTimePerBatch[idx] = time
-    this._selfCheck()
-  }
-}
 
 export class WalletManager {
   masterKey: any
   internalChain: AddressChainManager
   externalChain: AddressChainManager
+  userGeneratedAddressCount: number
 
   transactions: any
   isInitialized: boolean
@@ -196,22 +127,35 @@ export class WalletManager {
   }
 
   async doSyncStep(chain: AddressChainManager): Promise<number> {
-    const blocks = chain.getAddressBlocksWithLastSyncTime()
+    let count = 0
+    const errors = []
 
-    const responses = await Promise.all(
-      blocks.map(([ts, addrs]) => api.fetchNewTxHistory(ts, addrs)),
+    const limit = pLimit(CONFIG.MAX_CONCURRENT_REQUESTS)
+
+    const tasks = chain.getBlocks().map(
+      ([idx, ts, addrs]) => limit(
+        () => api.fetchNewTxHistory(ts, addrs).then((response) => [idx, response])
+      )
     )
 
-    let count = 0
+    // Note(ppershing): This serializes the respons order
+    // but still allows for concurrent requests
+    for (const promise of tasks) {
+      try {
+        const [idx, response] = await promise
+        count += this._updateTransactions(response)
+        // Note: this needs to happen *after* updating transactions in case the former fails!
+        chain.updateBlockTime(idx, getLastTimestamp(response))
+      } catch (e) {
+        errors.push(e)
+      }
+    }
 
-    responses.forEach((response, idx) => {
-      count += this._updateTransactions(response)
-      // Note: this needs to happen *after* updating transactions in case the former fails!
-      chain.updateBlockTime(idx, getLastTimestamp(response))
-    })
-
+    if (errors.length) throw errors
     return count
   }
+
+
 }
 
 export default new WalletManager()
