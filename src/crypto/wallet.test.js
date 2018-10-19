@@ -1,8 +1,9 @@
 // @flow
 import jestSetup from '../jestSetup'
+
 import _ from 'lodash'
 
-import walletManager from './wallet'
+import {WalletManager} from './wallet'
 
 jestSetup.setup()
 
@@ -11,21 +12,22 @@ const mnemonic = 'dry balcony arctic what garbage sort cart shine egg lamp manua
 
 test('Can restore wallet', async () => {
   expect.assertions(2)
-
+  const walletManager = new WalletManager()
   await walletManager.restoreWallet(mnemonic, '')
-
+  await walletManager.doFullSync()
   // Note(ppershing): these are just loose tests because we are testing
   // agains live test-wallet and so the numbers might increase over time
-  expect(walletManager.internalAddresses.length).toBeGreaterThanOrEqual(27)
-  expect(walletManager.externalAddresses.length).toBeGreaterThanOrEqual(60)
+  expect(walletManager.internalChain.addresses.length).toBeGreaterThanOrEqual(27)
+  expect(walletManager.externalChain.addresses.length).toBeGreaterThanOrEqual(60)
 })
 
 
 test('Can sync txs after restoring wallet', async () => {
   expect.assertions(1)
+  const walletManager = new WalletManager()
   await walletManager.restoreWallet(mnemonic, '')
 
-  await walletManager.updateTxHistory()
+  await walletManager.doFullSync()
 
   // Note(ppershing): these are just loose tests because we are testing
   // agains live test-wallet and so the numbers might increase over time

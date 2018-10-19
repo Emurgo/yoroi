@@ -47,7 +47,8 @@ export const updateHistory = () => async (dispatch: Dispatch<any>) => {
   // TODO(ppershing): abort previous request if still fetching
   dispatch(_startFetch())
   try {
-    const response = await walletManager.updateTxHistory()
+    walletManager.__initTestWalletIfNeeded()
+    const response = await walletManager.doFullSync()
     dispatch(_updateTransactions(response))
   } catch (e) {
     Logger.error('Update history error', e)

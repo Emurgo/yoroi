@@ -28,7 +28,8 @@ describe('History API', () => {
   it('throws ApiError on bad request', async () => {
 
     const addresses = []
-    const ts = 'not-a-date'
+    // mock moment
+    const ts = {toISOString: () => 'not-a-date'}
 
     // We are async
     expect.assertions(1)
