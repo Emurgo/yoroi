@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {View, TouchableHighlight} from 'react-native'
+import {ScrollView, StyleSheet, SafeAreaView, View, TouchableHighlight} from 'react-native'
 
 import {Text} from './UiKit'
 import {COLORS} from '../styles/config'
@@ -24,41 +24,46 @@ const routes = [
   {label: 'Login', path: ROOT_ROUTES.LOGIN},
 ]
 
-const styles = {
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+  },
+  container: {
+    flex: 1,
+    paddingHorizontal: 16,
+  },
   button: {
-    backgroundColor: COLORS.LIGHT_POSITIVE_GREEN,
     margin: 5,
     flexDirection: 'row',
     justifyContent: 'center',
-  },
-  indexNavigationButtonsContainer: {
-    flex: 1,
-    justifyContent: 'center',
+    backgroundColor: COLORS.LIGHT_POSITIVE_GREEN,
   },
   sendButton: {
-    textAlign: 'center',
     padding: 5,
+    textAlign: 'center',
   },
-}
+})
 
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,
 }
 
 const IndexScreen = ({navigation}: Props) => (
-  <View style={styles.indexNavigationButtonsContainer}>
-    {routes.map((route) => (
-      <TouchableHighlight
-        key={route.path}
-        style={styles.button}
-        onPress={() => navigation.navigate(route.path)}
-      >
-        <View style={styles.sendButton}>
-          <Text>{route.label}</Text>
-        </View>
-      </TouchableHighlight>
-    ))}
-  </View>
+  <SafeAreaView style={styles.safeAreaView}>
+    <ScrollView style={styles.container}>
+      {routes.map((route) => (
+        <TouchableHighlight
+          key={route.path}
+          style={styles.button}
+          onPress={() => navigation.navigate(route.path)}
+        >
+          <View style={styles.sendButton}>
+            <Text>{route.label}</Text>
+          </View>
+        </TouchableHighlight>
+      ))}
+    </ScrollView>
+  </SafeAreaView>
 )
 
 export default IndexScreen
