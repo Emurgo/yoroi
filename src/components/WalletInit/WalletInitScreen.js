@@ -2,13 +2,13 @@
 
 import React from 'react'
 import {connect} from 'react-redux'
-import {View, TouchableHighlight} from 'react-native'
+import {View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 
 import WalletDescription from './WalletDescription'
-import {Text} from '../UiKit'
+import {Button} from '../UiKit'
 import Screen from '../Screen'
 import BackgroundVisualArtefacts from './BackgroundVisualArtefacts'
 import {COLORS} from '../../styles/config'
@@ -38,23 +38,15 @@ const WalletInitScreen = ({navigateCreateWallet, navigateRestoreWallet, trans}: 
       <View style={styles.container}>
         <WalletDescription />
 
-        <TouchableHighlight
-          style={styles.button}
-          activeOpacity={0.9}
-          underlayColor={COLORS.WHITE}
+        <Button
           onPress={navigateCreateWallet}
-        >
-          <Text style={styles.buttonText}>{trans.createWallet}</Text>
-        </TouchableHighlight>
+          title={trans.createWallet}
+        />
 
-        <TouchableHighlight
-          style={styles.button}
-          activeOpacity={0.1}
-          underlayColor={COLORS.WHITE}
+        <Button
           onPress={navigateRestoreWallet}
-        >
-          <Text style={styles.buttonText}>{trans.restoreWallet}</Text>
-        </TouchableHighlight>
+          title={trans.restoreWallet}
+        />
       </View>
     </Screen>
   </LinearGradient>

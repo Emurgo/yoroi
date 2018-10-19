@@ -1,16 +1,15 @@
 // @flow
 
 import React from 'react'
-import {View, TouchableHighlight} from 'react-native'
+import {View} from 'react-native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers} from 'recompose'
 
-import {Text} from '../../UiKit'
+import {Text, Button} from '../../UiKit'
 import Screen from '../../Screen'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 
-import styles from './styles/RecoveryPhraseConfirmationScreen.style'
 import {COLORS} from '../../../styles/config'
 
 import type {State} from '../../../state'
@@ -33,25 +32,15 @@ const RecoveryPhraseConfirmationScreen = ({navigateToConfirmDialog, trans, navig
       <Text>{trans.inputLabel}</Text>
       <Text>{navigation.getParam('mnemonic')}</Text>
 
-      <TouchableHighlight
-        activeOpacity={0.1}
-        underlayColor={COLORS.WHITE}
-        onPress={() => {
-          /* Dispatch reset action here*/
-        }}
-        style={styles.button}
-      >
-        <Text>{trans.clearButton}</Text>
-      </TouchableHighlight>
+      <Button
+        onPress={() => {/* Dispatch reset action here */}}
+        title={trans.clearButton}
+      />
 
-      <TouchableHighlight
-        activeOpacity={0.1}
-        underlayColor={COLORS.WHITE}
+      <Button
         onPress={navigateToConfirmDialog}
-        style={styles.button}
-      >
-        <Text>{trans.confirmButton}</Text>
-      </TouchableHighlight>
+        title={trans.confirmButton}
+      />
     </View>
   </Screen>
 )

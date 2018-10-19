@@ -2,10 +2,10 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withState, withHandlers} from 'recompose'
-import {Modal, Clipboard, View, TouchableHighlight} from 'react-native'
+import {Modal, Clipboard, View} from 'react-native'
 import QRCode from 'react-native-qrcode'
 
-import {Text} from '../UiKit'
+import {Text, Button} from '../UiKit'
 
 import styles from './styles/AddressModal.style'
 
@@ -53,13 +53,10 @@ const AddressModal = ({
       </View>
 
       <View style={styles.container}>
-        <TouchableHighlight onPress={copyAddress} style={styles.button}>
-          <View style={styles.sendButton}>
-            <Text>
-              {isClicked ? translation.copiedLabel : translation.copyLabel}
-            </Text>
-          </View>
-        </TouchableHighlight>
+        <Button
+          onPress={copyAddress}
+          title={isClicked ? translation.copiedLabel : translation.copyLabel}
+        />
       </View>
 
     </View>

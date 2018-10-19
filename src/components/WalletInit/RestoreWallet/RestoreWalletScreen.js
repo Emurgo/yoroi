@@ -1,18 +1,17 @@
 // @flow
 
 import React from 'react'
-import {View, TouchableHighlight} from 'react-native'
+import {View} from 'react-native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers} from 'recompose'
 import {NavigationActions, StackActions} from 'react-navigation'
 
-import {Text} from '../../UiKit'
+import {Text, Button} from '../../UiKit'
 import Screen from '../../Screen'
 import {ROOT_ROUTES} from '../../../RoutesList'
 
 import {COLORS} from '../../../styles/config'
-import styles from './styles/RestoreWalletScreen.style'
 
 import type {State} from '../../../state'
 import type {SubTranslation} from '../../../l10n/typeHelpers'
@@ -39,14 +38,10 @@ const RestoreWalletScreen = ({navigateToWallet, trans}: Props) => (
     <View>
       <Text>{trans.title}</Text>
 
-      <TouchableHighlight
-        activeOpacity={0.1}
-        underlayColor={COLORS.WHITE}
+      <Button
         onPress={navigateToWallet}
-        style={styles.button}
-      >
-        <Text>{trans.restoreButton}</Text>
-      </TouchableHighlight>
+        title={trans.restoreButton}
+      />
     </View>
   </Screen>
 )

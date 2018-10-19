@@ -1,14 +1,14 @@
 // @flow
 
 import React from 'react'
-import {TextInput, View, TouchableHighlight} from 'react-native'
+import {TextInput, View} from 'react-native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {NavigationEvents} from 'react-navigation'
 import {withHandlers, withState} from 'recompose'
 
 import CheckIcon from '../../../assets/CheckIcon'
-import {Text} from '../../UiKit'
+import {Text, Button} from '../../UiKit'
 import Screen from '../../Screen'
 import {validatePassword} from '../../../utils/validators'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
@@ -138,15 +138,11 @@ const CreateWalletScreen = ({
           </View>
         </View>
 
-        <TouchableHighlight
-          activeOpacity={0.1}
-          disabled={!!errors}
-          underlayColor={COLORS.WHITE}
+        <Button
           onPress={handleCreate}
-          style={[styles.button, errors == null ? {} : styles.disabledButton]}
-        >
-          <Text style={styles.buttonText}>{trans.createButton}</Text>
-        </TouchableHighlight>
+          disabled={!!errors}
+          title={trans.createButton}
+        />
       </View>
     </Screen>
   )
