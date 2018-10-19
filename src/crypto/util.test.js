@@ -15,8 +15,11 @@ import {CARDANO_CONFIG} from '../config'
 
 jestSetup.setup()
 
-// eslint-disable-next-line max-len
-const mnemonic = 'dry balcony arctic what garbage sort cart shine egg lamp manual bottom slide assault bus'
+const mnemonic = [
+  'dry balcony arctic what garbage sort',
+  'cart shine egg lamp manual bottom',
+  'slide assault bus',
+].join(' ')
 
 const externalAddresses = [
   'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
