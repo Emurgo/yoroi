@@ -15,10 +15,11 @@ import styles from './styles/AddressView.style'
 
 type Props = {
   address: string,
+  isUsed: boolean,
   navigateToModal: () => void,
 };
 
-const AddressView = ({address, navigateToModal}: Props) => (
+const AddressView = ({address, isUsed, navigateToModal}: Props) => (
   <TouchableHighlight
     activeOpacity={0.9}
     underlayColor={COLORS.WHITE}
@@ -26,7 +27,9 @@ const AddressView = ({address, navigateToModal}: Props) => (
   >
     <View style={styles.container}>
       <View style={styles.addressContainer}>
-        <Text style={styles.address}>{address}</Text>
+        <Text style={isUsed ? styles.addressUsed : styles.addressNotUsed}>
+          {address}
+        </Text>
       </View>
       <View style={styles.iconContainer}>
         <CopyIcon width={styles.icon.size} height={styles.icon.size} />

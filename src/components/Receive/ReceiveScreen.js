@@ -18,10 +18,15 @@ const getTranslations = (state) => state.trans.receiveScreen.description
 
 type Props = {
   receiveAddresses: Array<string>,
-  translations: SubTranslation<typeof getTranslations>,
+  receiveAddressesUsed: Array<string>,
+  translation: SubTranslation<typeof getTranslation>,
 }
 
-const ReceiveScreen = ({receiveAddresses, translations}: Props) => (
+const ReceiveScreen = ({
+  receiveAddresses,
+  receiveAddressesUsed,
+  translation,
+}: Props) => (
   <View style={styles.root}>
     <Screen scroll>
       <View style={styles.warningContainer}>
@@ -30,7 +35,11 @@ const ReceiveScreen = ({receiveAddresses, translations}: Props) => (
         <Text style={styles.warningText}>{translations.line3}</Text>
       </View>
       <AddressDetail address={receiveAddresses[0]} />
-      <AddressesList addresses={receiveAddresses} />
+      <AddressesList
+        addresses={receiveAddresses}
+        addressesUsed={receiveAddressesUsed}
+        showAll
+      />
     </Screen>
   </View>
 )
@@ -38,6 +47,7 @@ const ReceiveScreen = ({receiveAddresses, translations}: Props) => (
 export default compose(
   connect((state) => ({
     receiveAddresses: state.receiveAddresses,
-    translations: getTranslations(state),
-  })),
+    receiveAddressesUsed: state.receiveAddressesUsed,
+    translation: getTranslation(state),
+  }))
 )(ReceiveScreen)

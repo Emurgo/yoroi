@@ -16,17 +16,26 @@ const getTranslations = (state) => state.trans.receiveScreen
 
 type Props = {
   addresses: Array<string>,
-  translations: SubTranslation<typeof getTranslations>,
+  addressesUsed: Array<string>,
+  showAll: boolean,
+  translation: SubTranslation<typeof getTranslation>,
 }
 
-const AddressesList = ({addresses, translations}: Props) => (
+const AddressesList = ({addresses, addressesUsed, showAll, translation}: Props) => (
   <View style={styles.container}>
     <View style={styles.header}>
       <Text style={styles.addressLabel}>{translations.walletAddresses}</Text>
     </View>
-    {addresses.map((address) => (
+
+    {addressesUsed.map((address) => (
       <View key={address} style={styles.addressContainer}>
-        <AddressView address={address} />
+        <AddressView address={address} isUsed />
+      </View>
+    ))}
+
+    { (showAll) && addresses.map((address) => (
+      <View key={address} style={styles.addressContainer}>
+        <AddressView address={address} isUsed={false} />
       </View>
     ))}
   </View>

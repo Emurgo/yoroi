@@ -30,7 +30,7 @@ const AddressDetail = ({address, translations}: Props) => (
     </View>
 
     <Text style={styles.addressLabel}>{translations.walletAddress}</Text>
-    <AddressView address={address} />
+    <AddressView address={address} isUsed />
   </View>
 )
 
