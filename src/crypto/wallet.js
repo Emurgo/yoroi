@@ -134,6 +134,17 @@ export class WalletManager {
     this.isInitialized = true
   }
 
+  // TODO(ppershing): remove this once we can "open" saved wallet from device store
+  __initTestWalletIfNeeded() {
+    if (this.isInitialized) return
+    const mnemonic = [
+      'dry balcony arctic what garbage sort',
+      'cart shine egg lamp manual bottom',
+      'slide assault bus',
+    ].join(' ')
+    this.restoreWallet(mnemonic, '')
+  }
+
   async doFullSync() {
     Logger.info('Do full sync')
     assertTrue(this.isInitialized)
@@ -143,6 +154,8 @@ export class WalletManager {
       const changedExternal = await this.doSyncStep(this.externalChain)
       keepGoing = changedInternal || changedExternal
     }
+
+    return {...this.transactions}
   }
 
 
