@@ -40,6 +40,7 @@
     "test": false,
     "expect": false,
     "describe": false,
-    "it": false
+    "it": false,
+    "beforeEach": false,
   }
 }

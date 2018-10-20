@@ -33,6 +33,7 @@
     "lodash": "^4.17.11",
     "moment": "^2.22.2",
     "node-fetch": "^2.2.0",
+    "p-limit": "^2.0.0",
     "path-browserify": "^1.0.0",
     "react": "16.5.0",
     "react-native": "0.57.1",

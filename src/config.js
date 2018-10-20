@@ -27,6 +27,7 @@ const CARDANO = CARDANO_CONFIG.TESTNET
 export const CONFIG = {
   USE_MOCK_API: false,
   API_ROOT: CARDANO.API_ROOT,
+  MAX_CONCURRENT_REQUESTS: 5,
   CARDANO,
   MNEMONIC_STRENGTH: 160,
   // TODO(ppershing): this should be configurable by user
