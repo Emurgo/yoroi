@@ -47,6 +47,6 @@ const strings = new LocalizedStrings({
   ja: dummyJa,
 })
 
-strings.setLanguage('ja')
+strings.setLanguage('en')
 
 export default (strings: Translation)
