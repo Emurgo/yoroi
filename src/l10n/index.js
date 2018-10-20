@@ -1,6 +1,13 @@
 // @flow
-import l10n from './en'
+import LocalizedStrings from 'localized-strings'
 
-// TODO(ppershing): add support for changing language
+import en from './en'
 
-export default l10n
+import type {Translation} from './type'
+
+const strings = new LocalizedStrings({
+  en,
+})
+
+
+export default (strings: Translation)

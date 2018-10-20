@@ -30,6 +30,7 @@
     "flow-typed": "^2.5.1",
     "haul": "^1.0.0-rc.8",
     "immer": "^1.7.2",
+    "localized-strings": "^0.2.0",
     "lodash": "^4.17.11",
     "moment": "^2.22.2",
     "node-fetch": "^2.2.0",
