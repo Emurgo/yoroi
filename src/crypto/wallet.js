@@ -27,8 +27,6 @@ export class WalletManager {
   masterKey: any
   internalChain: AddressChainManager
   externalChain: AddressChainManager
-  userGeneratedAddressCount: number
-
   transactions: any
   isInitialized: boolean
 

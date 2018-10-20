@@ -1,4 +1,5 @@
 // @flow
+/* eslint-env jest */
 import jestSetup from '../jestSetup'
 
 import _ from 'lodash'
@@ -6,7 +7,8 @@ import _ from 'lodash'
 import {WalletManager} from './wallet'
 
 jestSetup.setup()
-jest.setTimeout(10000000)
+// We do a lot of API calls for sync tests
+jest.setTimeout(15 * 1000)
 
 // eslint-disable-next-line max-len
 const mnemonic = 'dry balcony arctic what garbage sort cart shine egg lamp manual bottom slide assault bus'
