@@ -34,18 +34,19 @@ const getTranslations = (state: State) => state.trans.restoreWalletScreen
 type PhraseErrors = {
   empty: boolean,
   unknownWord: boolean,
-  unknownRemainder: boolean,
 }
 
-const validatePhrase = ({phrase}) => () => {
-  if (phrase) {
-    const words = _(phrase.split(' '))
-    const unknownWord = words.initial().some((word) => !wordlists.EN.includes(word))
-    const unknownRemainder = words.last() && !wordlists.EN.includes(words.last())
+const MNEMONIC_LENGTH = 15
 
-    return (unknownWord || unknownRemainder)
-      ? {unknownWord, unknownRemainder}
-      : null
+const validatePhrase = ({phrase}) => () => {
+  const words = _(phrase.split(' ')).filter((word) => word)
+  if (words.size() > 0) {
+    const notInWordlist = (word) => !wordlists.EN.includes(word)
+    const unknownWord = words.size() < MNEMONIC_LENGTH
+      ? words.initial().some(notInWordlist)
+      : words.some(notInWordlist)
+
+    return unknownWord ? {unknownWord} : null
   } else {
     return {empty: true}
   }
@@ -76,6 +77,7 @@ const RestoreWalletScreen = ({
 
         <View>
           <TextInput
+            autoCorrect={false}
             multiline
             numberOfLines={3}
             style={styles.phrase}
