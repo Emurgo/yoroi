@@ -2,25 +2,9 @@
 import {COLORS} from '../../../../styles/config'
 
 const styles = {
-  button: {
-    backgroundColor: COLORS.LIGHT_POSITIVE_GREEN,
-    padding: 16,
-    borderRadius: 20,
-    width: '100%',
-    justifyContent: 'center',
-    alignContent: 'center',
-    flexDirection: 'row',
-  },
-  buttonText: {
-    color: COLORS.WHITE,
-    fontWeight: 'bold',
-  },
   container: {
     flex: 1,
     justifyContent: 'space-between',
-  },
-  disabledButton: {
-    backgroundColor: COLORS.DARK_GRAY,
   },
   error: {
     color: '#ff0000',

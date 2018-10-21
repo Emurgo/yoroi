@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {View, TextInput, TouchableHighlight} from 'react-native'
+import {View, TextInput} from 'react-native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withState} from 'recompose'
@@ -34,19 +34,18 @@ const getTranslations = (state: State) => state.trans.restoreWalletScreen
 type PhraseErrors = {
   empty: boolean,
   unknownWord: boolean,
+  unknownRemainder: boolean,
 }
 
-const MNEMONIC_LENGTH = 15
-
 const validatePhrase = ({phrase}) => () => {
-  const words = _(phrase.split(' ')).filter((word) => word)
-  if (words.size() > 0) {
-    const notInWordlist = (word) => !wordlists.EN.includes(word)
-    const unknownWord = words.size() < MNEMONIC_LENGTH
-      ? words.initial().some(notInWordlist)
-      : words.some(notInWordlist)
+  if (phrase) {
+    const words = _(phrase.split(' '))
+    const unknownWord = words.initial().some((word) => !wordlists.EN.includes(word))
+    const unknownRemainder = words.last() && !wordlists.EN.includes(words.last())
 
-    return unknownWord ? {unknownWord} : null
+    return (unknownWord || unknownRemainder)
+      ? {unknownWord, unknownRemainder}
+      : null
   } else {
     return {empty: true}
   }
@@ -77,7 +76,6 @@ const RestoreWalletScreen = ({
 
         <View>
           <TextInput
-            autoCorrect={false}
             multiline
             numberOfLines={3}
             style={styles.phrase}
