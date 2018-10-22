@@ -82,6 +82,10 @@ export type Translation = {
     passwordNumber: string,
     createButton: string,
   },
+  changeWalletName: {
+    walletName: string,
+    changeButtonText: string,
+  },
   receiveScreen: {
     title: string,
     description: {
@@ -136,6 +140,11 @@ export type Translation = {
   txHistoryNavigationButtons: {
     sendButton: string,
     receiveButton: string,
+  },
+  settings: {
+    editWalletName: string,
+    termsOfUse: string,
+    support: string,
   },
   supportScreen: {
     faqLabel: string,

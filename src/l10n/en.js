@@ -87,6 +87,10 @@ const l10n = {
     passwordNumber: '1 number',
     createButton: 'CREATE PERSONAL WALLET',
   },
+  changeWalletName: {
+    walletName: 'Wallet name',
+    changeButtonText: 'CHANGE NAME',
+  },
   receiveScreen: {
     title: 'Receive',
     description: {
@@ -160,6 +164,11 @@ const l10n = {
   txHistoryNavigationButtons: {
     sendButton: 'SEND',
     receiveButton: 'RECEIVE',
+  },
+  settings: {
+    editWalletName: 'Edit wallet name',
+    termsOfUse: 'Terms of Use',
+    support: 'Support',
   },
   supportScreen: {
     faqLabel: 'See frequently asked questions',
