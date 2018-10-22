@@ -1,12 +1,12 @@
 // @flow
 
 import React from 'react'
-import {View, TouchableHighlight} from 'react-native'
+import {View} from 'react-native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers} from 'recompose'
 
-import {Text} from '../../UiKit'
+import {Text, Button} from '../../UiKit'
 import Screen from '../../Screen'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 
@@ -30,14 +30,10 @@ const RecoveryPhraseExplanationDialog = ({navigateToRecoveryPhrase, trans}: Prop
       <Text>{trans.paragraph1}</Text>
       <Text>{trans.paragraph2}</Text>
 
-      <TouchableHighlight
-        activeOpacity={0.1}
-        underlayColor={COLORS.WHITE}
+      <Button
         onPress={navigateToRecoveryPhrase}
-        style={styles.button}
-      >
-        <Text>{trans.nextButton}</Text>
-      </TouchableHighlight>
+        title={trans.nextButton}
+      />
     </View>
   </Screen>
 )

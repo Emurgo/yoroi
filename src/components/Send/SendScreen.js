@@ -3,13 +3,12 @@
 import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {View, TextInput, TouchableOpacity, TouchableHighlight} from 'react-native'
+import {View, TextInput, TouchableOpacity} from 'react-native'
 import {withHandlers} from 'recompose'
 
 import {SEND_ROUTES} from '../../RoutesList'
-import {Text} from '../UiKit'
+import {Text, Button} from '../UiKit'
 
-import {COLORS} from '../../styles/config'
 import styles from './styles/SendScreen.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
@@ -38,16 +37,10 @@ const SendScreen = ({navigateToConfirm, navigateToAddressReaderQR, trans}: Props
       <TextInput style={styles.inputText} placeholder={'Amount'} />
     </View>
 
-    <TouchableHighlight
-      style={styles.button}
-      activeOpacity={0.9}
-      underlayColor={COLORS.WHITE}
+    <Button
       onPress={navigateToConfirm}
-    >
-      <View style={styles.continueButton}>
-        <Text style={styles.continueButtonText}>{trans.continue}</Text>
-      </View>
-    </TouchableHighlight>
+      title={trans.continue}
+    />
   </View>
 )
 

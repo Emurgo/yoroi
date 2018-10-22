@@ -1,12 +1,12 @@
 // @flow
 
 import React from 'react'
-import {View, TouchableHighlight} from 'react-native'
+import {View} from 'react-native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withState} from 'recompose'
 
-import {Text} from '../../UiKit'
+import {Text, Button} from '../../UiKit'
 import Screen from '../../Screen'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {generateAdaMnemonic} from '../../../crypto/util'
@@ -43,14 +43,10 @@ const CreateWalletScreen = ({navigateToRecoveryPhraseConfirmation, trans, mnemon
       </View>
 
       <View style={styles.buttonContainer}>
-        <TouchableHighlight
-          activeOpacity={0.1}
-          underlayColor={COLORS.WHITE}
+        <Button
           onPress={navigateToRecoveryPhraseConfirmation}
-          style={styles.button}
-        >
-          <Text>{trans.confirmationButton}</Text>
-        </TouchableHighlight>
+          title={trans.confirmationButton}
+        />
       </View>
     </View>
   </Screen>
