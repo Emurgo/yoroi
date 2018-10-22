@@ -3,7 +3,8 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {View} from 'react-native'
+import {withState, withHandlers} from 'recompose'
+import {View, TouchableHighlight} from 'react-native'
 
 import {Text} from '../UiKit'
 import AddressView from './AddressView'
@@ -16,27 +17,42 @@ const getTranslations = (state) => state.trans.receiveScreen
 
 type Props = {
   addresses: Array<string>,
-  addressesUsed: Array<string>,
+  usedAddresses: Array<string>,
   showAll: boolean,
-  translation: SubTranslation<typeof getTranslation>,
+  setShowAll: (boolean) => void,
+  onShowPress: () => void,
+  translations: SubTranslation<typeof getTranslations>,
 }
 
-const AddressesList = ({addresses, addressesUsed, showAll, translation}: Props) => (
+const AddressesList = ({
+  addresses,
+  usedAddresses,
+  showAll,
+  setShowAll,
+  onShowPress,
+  translations,
+}: Props) => (
   <View style={styles.container}>
     <View style={styles.header}>
-      <Text style={styles.addressLabel}>{translations.walletAddresses}</Text>
+      <Text style={styles.label}>{translations.walletAddresses}</Text>
+      <TouchableHighlight onPress={onShowPress}>
+        <Text style={styles.clickableLabel}>
+          {showAll ? translations.showUsedAddresses : translations.showAllAddresses}
+        </Text>
+      </TouchableHighlight>
     </View>
 
-    {addressesUsed.map((address) => (
-      <View key={address} style={styles.addressContainer}>
-        <AddressView address={address} isUsed />
-      </View>
-    ))}
-
-    { (showAll) && addresses.map((address) => (
-      <View key={address} style={styles.addressContainer}>
-        <AddressView address={address} isUsed={false} />
-      </View>
+    {addresses.map((address) => (
+      (usedAddresses.includes(address)) ? (
+        <View key={address} style={styles.addressContainer}>
+          <AddressView address={address} isUsed />
+        </View>
+      ) : (
+        (showAll) &&
+          <View key={address} style={styles.addressContainer}>
+            <AddressView address={address} isUsed={false} />
+          </View>
+      )
     ))}
   </View>
 )
@@ -45,4 +61,8 @@ export default compose(
   connect((state) => ({
     translations: getTranslations(state),
   })),
+  withState('showAll', 'setShowAll', false),
+  withHandlers({
+    onShowPress: ({showAll, setShowAll}) => () => setShowAll(!showAll),
+  }),
 )(AddressesList)

@@ -11,6 +11,7 @@ const styles = {
   header: {
     flex: 1,
     flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   addressContainer: {
     flex: 1,
@@ -19,8 +20,12 @@ const styles = {
     borderBottomWidth: 1,
     borderBottomColor: COLORS.DARK_GRAY,
   },
-  addressLabel: {
+  label: {
     color: COLORS.DARK_BLUE,
+  },
+  clickableLabel: {
+    color: COLORS.DARK_BLUE,
+    textDecorationLine: 'underline',
   },
   address: {
     fontSize: 17,
