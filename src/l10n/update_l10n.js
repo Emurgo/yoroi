@@ -37,8 +37,7 @@ const header = `
 export type Translation =`
 
 const type = transform(localeData)
-// TODO(ppershing): enable this once we have setLanguage support
-// type.setLanguage = '(lang: string) => void'
+type.setLanguage = '(lang: string) => void'
 
 // eslint-disable-next-line no-console
 console.log(header, JSON.stringify(type, null, 2))

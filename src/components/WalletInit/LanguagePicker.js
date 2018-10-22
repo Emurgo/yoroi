@@ -4,19 +4,14 @@ import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 import {View, Picker} from 'react-native'
+
+import {changeLanguage} from '../../actions'
 import styles from './styles/LanguagePicker.style'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
 import {Text, Button} from '../UiKit'
-
-const changeLanguageAction = (languageCode) => ({
-  path: ['languageCode'],
-  payload: languageCode,
-  reducer: (state, languageCode) => languageCode,
-  type: 'CHANGE_LANGUAGE',
-})
 
 // TODO: l10n
 const supportedLangauage = [
@@ -65,7 +60,7 @@ export default compose(
       trans: getTrans(state),
     }),
     {
-      changeLanguage: changeLanguageAction,
+      changeLanguage,
     }
   ),
   withHandlers({

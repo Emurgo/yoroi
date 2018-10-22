@@ -6,11 +6,13 @@ import App from './App'
 import {name as appName} from './app.json'
 import {Provider} from 'react-redux'
 import getConfiguredStore from './helpers/configureStore'
-import {setupApiOnlineTracking} from './actions'
+import {loadLanguage, setupApiOnlineTracking} from './actions'
 
 const store = getConfiguredStore()
 
 store.dispatch(setupApiOnlineTracking())
+// TODO: this is async action, we should wait for it in future
+store.dispatch(loadLanguage())
 
 const AppWithStore = () => (
   <Provider store={store}>

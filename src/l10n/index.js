@@ -40,10 +40,9 @@ const dummyJa = (
   transform(en, dummyTranslate('インポートしようとしたウ')): Translation
 )
 
-
 const strings = new LocalizedStrings({
   en,
-  cn: dummyCn,
+  zh: dummyCn,
   ja: dummyJa,
 })
 
