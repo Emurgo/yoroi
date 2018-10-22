@@ -124,6 +124,7 @@ export type Translation = {
     phrase: string,
     restoreButton: string,
     unknownWord: string,
+    maxLength: string,
   },
   txHistoryNavigationButtons: {
     sendButton: string,

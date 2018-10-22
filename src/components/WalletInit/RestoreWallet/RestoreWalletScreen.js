@@ -32,22 +32,24 @@ const resetNavigationAction = StackActions.reset({
 const getTranslations = (state: State) => state.trans.restoreWalletScreen
 
 type PhraseErrors = {
-  empty: boolean,
-  unknownWord: boolean,
-  unknownRemainder: boolean,
+  maxLength?: boolean,
+  minLength?: boolean,
+  unknownWord?: boolean,
 }
 
-const validatePhrase = ({phrase}) => () => {
-  if (phrase) {
-    const words = _(phrase.split(' '))
-    const unknownWord = words.initial().some((word) => !wordlists.EN.includes(word))
-    const unknownRemainder = words.last() && !wordlists.EN.includes(words.last())
+const MNEMONIC_LENGTH = 15
 
-    return (unknownWord || unknownRemainder)
-      ? {unknownWord, unknownRemainder}
-      : null
+const validatePhrase = ({phrase}) => () => {
+  const words = _(phrase.split(' ')).filter((word) => !!word)
+
+  if (words.size() > MNEMONIC_LENGTH) {
+    return {maxLength: true}
   } else {
-    return {empty: true}
+    const notInWordlist = (word) => !wordlists.EN.includes(word)
+    const minLength = words.size() < MNEMONIC_LENGTH
+    const unknownWord = minLength ? words.initial().some(notInWordlist) : words.some(notInWordlist)
+
+    return (unknownWord || minLength) ? {unknownWord, minLength} : null
   }
 }
 
@@ -84,8 +86,9 @@ const RestoreWalletScreen = ({
             placeholder={translations.phrase}
           />
           {(errors && errors.unknownWord) &&
-            (<Text style={styles.error}>{translations.unknownWord}</Text>)
-          }
+            (<Text style={styles.error}>{translations.unknownWord}</Text>)}
+          {(errors && errors.maxLength) &&
+            (<Text style={styles.error}>{translations.maxLength}</Text>)}
         </View>
 
         <Button

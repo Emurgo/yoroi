@@ -137,6 +137,7 @@ const l10n = {
     phrase: 'Recovery phrase',
     restoreButton: 'RESTORE WALLET',
     unknownWord: 'Contains unknown word',
+    maxLength: 'Phrase is too long',
   },
   txHistoryNavigationButtons: {
     sendButton: 'SEND',
