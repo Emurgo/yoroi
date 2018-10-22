@@ -43,7 +43,7 @@ const dummyJa = (
 
 const strings = new LocalizedStrings({
   en,
-  cn: dummyCn,
+  zh: dummyCn,
   ja: dummyJa,
 })
 
