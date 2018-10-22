@@ -1,14 +1,34 @@
 // @flow
 
 import React from 'react'
-import {View} from 'react-native'
+import {compose} from 'redux'
+import {withHandlers} from 'recompose'
+import {View, TouchableHighlight} from 'react-native'
+
 import {Text} from '../UiKit'
+import {SETTINGS_ROUTES} from '../../RoutesList'
+
 import styles from './styles/SettingsScreen.style'
 
-const SettingsScreen = () => (
+type Props = {
+  navigateToSupport: () => void,
+};
+
+const SettingsScreen = ({navigateToSupport}: Props) => (
   <View style={styles.container}>
-    <Text style={styles.welcome}>i18nChange your settings here</Text>
+    <TouchableHighlight onPress={navigateToSupport}>
+      <Text style={styles.linkLabel}>Terms of Use</Text>
+    </TouchableHighlight>
+
+    <TouchableHighlight onPress={navigateToSupport}>
+      <Text style={styles.linkLabel}>Support</Text>
+    </TouchableHighlight>
   </View>
 )
 
-export default SettingsScreen
+export default compose(
+  withHandlers({
+    navigateToSupport: ({navigation}) => () =>
+      navigation.navigate(SETTINGS_ROUTES.SUPPORT),
+  })
+)(SettingsScreen)

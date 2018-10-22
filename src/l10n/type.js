@@ -137,5 +137,13 @@ export type Translation = {
     sendButton: string,
     receiveButton: string,
   },
+  supportScreen: {
+    faqLabel: string,
+    faqText: string,
+    faqPage: string,
+    reportLabel: string,
+    reportText: string,
+    reportPage: string,
+  },
   setLanguage: (lang: string) => void,
 }

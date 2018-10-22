@@ -8,10 +8,10 @@ const styles = {
     alignItems: 'center',
     backgroundColor: COLORS.BACKGROUND_GRAY,
   },
-  welcome: {
-    fontSize: 20,
+  linkLabel: {
     textAlign: 'center',
-    margin: 10,
+    color: COLORS.DARK_BLUE,
+    textDecorationLine: 'underline',
   },
 }
 

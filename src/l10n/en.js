@@ -161,6 +161,16 @@ const l10n = {
     sendButton: 'SEND',
     receiveButton: 'RECEIVE',
   },
+  supportScreen: {
+    faqLabel: 'See frequently asked questions',
+    faqText: 'If you are experiencing issues, please see the FAQ on Yoroi website\
+for quidance on known issues.',
+    faqPage: 'https://github.com/Emurgo/yoroi-mobile',
+    reportLabel: 'Report a problem',
+    reportText: 'If the FAQ does not solve the issue you are experiencing, please\
+use our Support request feature.',
+    reportPage: 'https://github.com/Emurgo/yoroi-mobile',
+  },
 }
 
 export default l10n

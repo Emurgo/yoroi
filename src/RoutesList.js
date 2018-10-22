@@ -27,10 +27,16 @@ export const WALLET_INIT_ROUTES = {
   RECOVERY_PHRASE_CONFIRMATION_DIALOG: 'recovery-phrase-confirmation-dialog',
 }
 
+export const SETTINGS_ROUTES = {
+  MAIN: 'settings',
+  SUPPORT: 'support',
+}
+
 export const MAIN_ROUTES = {
   TX_HISTORY: 'history',
   SEND: SEND_ROUTES.MAIN,
   RECEIVE: RECEIVE_ROUTES.MAIN,
+  SETTINGS: SETTINGS_ROUTES.MAIN,
 }
 
 export const ROOT_ROUTES = {
