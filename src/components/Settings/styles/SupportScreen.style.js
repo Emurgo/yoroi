@@ -5,7 +5,7 @@ const styles = {
   root: {
     flex: 1,
     padding: 10,
-  }
+  },
 }
 
 export default styles
