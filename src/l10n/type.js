@@ -118,5 +118,6 @@ export type Translation = {
   txHistoryNavigationButtons: {
     sendButton: string,
     receiveButton: string
-  }
+  },
+  setLanguage: (lang: string) => void
 }

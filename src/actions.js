@@ -2,6 +2,7 @@
 import {Alert, AsyncStorage} from 'react-native'
 
 import api from './api'
+import l10n from './l10n'
 import walletManager from './crypto/wallet'
 import {Logger} from './utils/logging'
 
@@ -28,12 +29,15 @@ const _endFetch = () => ({
   reducer: (state, payload) => false,
 })
 
-const _changeLanguage = (languageCode) => ({
-  path: ['languageCode'],
-  payload: languageCode,
-  reducer: (state, languageCode) => languageCode,
-  type: 'CHANGE_LANGUAGE',
-})
+const _changeLanguage = (languageCode) => (dispatch, getState) => {
+  l10n.setLanguage(languageCode)
+  dispatch({
+    path: ['languageCode'],
+    payload: languageCode,
+    reducer: (state, languageCode) => languageCode,
+    type: 'CHANGE_LANGUAGE',
+  })
+}
 
 const _setOnline = (isOnline: boolean) => (dispatch, getState) => {
   const state = getState()
@@ -72,7 +76,7 @@ export const changeLanguage = (languageCode: string) => async (dispatch: Dispatc
     await AsyncStorage.setItem(LOCAL_STORAGE_KEY_LANG, languageCode)
     dispatch(_changeLanguage(languageCode))
   } catch (e) {
-    Logger.error('Saving language to AsyncStorage failed.', e)
+    Logger.error('Saving language to AsyncStorage failed. UI language left intact', e)
     // TODO add missing localization
     Alert.alert('Error', 'Could not set selected language.')
   }
