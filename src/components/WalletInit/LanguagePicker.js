@@ -23,19 +23,19 @@ const supportedLangauage = [
   {label: 'Russian', name: 'Russian', code: 'ru-RU'},
 ]
 
-const getTrans = (state) => state.trans.languageSelectScreen
+const getTranslations = (state) => state.trans.languageSelectScreen
 
 type Props = {
   changeLanguage: () => mixed,
   handleContinue: () => mixed,
   languageCode: string,
-  trans: SubTranslation<typeof getTrans>,
+  translations: SubTranslation<typeof getTranslations>,
 }
 
-const LanguagePicker = ({changeLanguage, languageCode, handleContinue, trans}: Props) => (
+const LanguagePicker = ({changeLanguage, languageCode, handleContinue, translations}: Props) => (
   <View style={styles.container}>
     <View style={styles.labelContainer}>
-      <Text style={styles.label}>{trans.selectLanguage}</Text>
+      <Text style={styles.label}>{translations.selectLanguage}</Text>
     </View>
 
     <View style={styles.pickerContainer}>
@@ -48,7 +48,7 @@ const LanguagePicker = ({changeLanguage, languageCode, handleContinue, trans}: P
 
     <Button
       onPress={handleContinue}
-      title={trans.continue}
+      title={translations.continue}
     />
   </View>
 )
@@ -57,7 +57,7 @@ export default compose(
   connect(
     (state) => ({
       languageCode: state.languageCode,
-      trans: getTrans(state),
+      translations: getTranslations(state),
     }),
     {
       changeLanguage,

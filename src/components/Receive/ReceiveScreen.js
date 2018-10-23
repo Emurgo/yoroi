@@ -14,20 +14,20 @@ import styles from './styles/ReceiveScreen.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslation = (state) => state.trans.receiveScreen.description
+const getTranslations = (state) => state.trans.receiveScreen.description
 
 type Props = {
   receiveAddresses: Array<string>,
-  translation: SubTranslation<typeof getTranslation>,
+  translations: SubTranslation<typeof getTranslations>,
 }
 
-const ReceiveScreen = ({receiveAddresses, translation}: Props) => (
+const ReceiveScreen = ({receiveAddresses, translations}: Props) => (
   <View style={styles.root}>
     <Screen scroll>
       <View style={styles.warningContainer}>
-        <Text style={styles.warningText}>{translation.line1}</Text>
-        <Text style={styles.warningText}>{translation.line2}</Text>
-        <Text style={styles.warningText}>{translation.line3}</Text>
+        <Text style={styles.warningText}>{translations.line1}</Text>
+        <Text style={styles.warningText}>{translations.line2}</Text>
+        <Text style={styles.warningText}>{translations.line3}</Text>
       </View>
       <AddressDetail address={receiveAddresses[0]} />
       <AddressesList addresses={receiveAddresses} />
@@ -38,6 +38,6 @@ const ReceiveScreen = ({receiveAddresses, translation}: Props) => (
 export default compose(
   connect((state) => ({
     receiveAddresses: state.receiveAddresses,
-    translation: getTranslation(state),
-  }))
+    translations: getTranslations(state),
+  })),
 )(ReceiveScreen)

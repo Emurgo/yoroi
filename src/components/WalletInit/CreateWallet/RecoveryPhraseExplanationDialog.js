@@ -16,23 +16,23 @@ import {COLORS} from '../../../styles/config'
 import type {State} from '../../../state'
 import type {SubTranslation} from '../../../l10n/typeHelpers'
 
-const getTrans = (state: State) => state.trans.recoveryPhraseDialog
+const getTranslations = (state: State) => state.trans.recoveryPhraseDialog
 
 type Props = {
   navigateToRecoveryPhrase: () => mixed,
-  trans: SubTranslation<typeof getTrans>,
+  translations: SubTranslation<typeof getTranslations>,
 }
 
-const RecoveryPhraseExplanationDialog = ({navigateToRecoveryPhrase, trans}: Props) => (
+const RecoveryPhraseExplanationDialog = ({navigateToRecoveryPhrase, translations}: Props) => (
   <Screen bgColor={COLORS.TRANSPARENT_BLACK}>
     <View style={styles.dialogBody}>
-      <Text>{trans.title}</Text>
-      <Text>{trans.paragraph1}</Text>
-      <Text>{trans.paragraph2}</Text>
+      <Text>{translations.title}</Text>
+      <Text>{translations.paragraph1}</Text>
+      <Text>{translations.paragraph2}</Text>
 
       <Button
         onPress={navigateToRecoveryPhrase}
-        title={trans.nextButton}
+        title={translations.nextButton}
       />
     </View>
   </Screen>
@@ -40,7 +40,7 @@ const RecoveryPhraseExplanationDialog = ({navigateToRecoveryPhrase, trans}: Prop
 
 export default compose(
   connect((state) => ({
-    trans: getTrans(state),
+    translations: getTranslations(state),
   })),
   withHandlers({
     navigateToRecoveryPhrase:

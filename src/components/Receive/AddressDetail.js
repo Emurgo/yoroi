@@ -11,14 +11,14 @@ import styles from './styles/AddressDetail.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslation = (state) => state.trans.receiveScreen
+const getTranslations = (state) => state.trans.receiveScreen
 
 type Props = {
   address: string,
-  translation: SubTranslation<typeof getTranslation>,
+  translations: SubTranslation<typeof getTranslations>,
 }
 
-const AddressDetail = ({address, translation}: Props) => (
+const AddressDetail = ({address, translations}: Props) => (
   <View style={styles.container}>
     <View style={styles.qrContainer}>
       <QRCode
@@ -29,13 +29,13 @@ const AddressDetail = ({address, translation}: Props) => (
       />
     </View>
 
-    <Text style={styles.addressLabel}>{translation.walletAddress}</Text>
+    <Text style={styles.addressLabel}>{translations.walletAddress}</Text>
     <AddressView address={address} />
   </View>
 )
 
 export default compose(
   connect((state) => ({
-    translation: getTranslation(state),
-  }))
+    translations: getTranslations(state),
+  })),
 )(AddressDetail)

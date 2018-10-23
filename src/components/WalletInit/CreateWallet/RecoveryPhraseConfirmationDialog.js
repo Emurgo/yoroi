@@ -36,23 +36,23 @@ const handleWalletConfirmation = ({navigation}) => () => {
   navigation.dispatch(resetNavigationAction)
 }
 
-const getTrans = (state: State) => state.trans.recoveryPhraseConfirmationDialog
+const getTranslations = (state: State) => state.trans.recoveryPhraseConfirmationDialog
 
 type Props = {
   confirmWalletCreation: () => mixed,
-  trans: SubTranslation<typeof getTrans>,
+  translations: SubTranslation<typeof getTranslations>,
 }
 
-const RecoveryPhraseConfirmationDialog = ({confirmWalletCreation, trans}: Props) => (
+const RecoveryPhraseConfirmationDialog = ({confirmWalletCreation, translations}: Props) => (
   <Screen bgColor={COLORS.TRANSPARENT_BLACK}>
     <View style={styles.dialogBody}>
-      <Text>{trans.title}</Text>
-      <Text>{trans.keysStorageCheckbox}</Text>
-      <Text>{trans.newDeviceRecoveryCheckbox}</Text>
+      <Text>{translations.title}</Text>
+      <Text>{translations.keysStorageCheckbox}</Text>
+      <Text>{translations.newDeviceRecoveryCheckbox}</Text>
 
       <Button
         onPress={confirmWalletCreation}
-        title={trans.confirmationButton}
+        title={translations.confirmationButton}
       />
     </View>
   </Screen>
@@ -60,7 +60,7 @@ const RecoveryPhraseConfirmationDialog = ({confirmWalletCreation, trans}: Props)
 
 export default compose(
   connect((state) => ({
-    trans: getTrans(state),
+    translations: getTranslations(state),
   })),
   withHandlers({
     confirmWalletCreation: handleWalletConfirmation,

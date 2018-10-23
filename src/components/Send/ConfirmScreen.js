@@ -13,27 +13,27 @@ import styles from './styles/ConfirmScreen.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTrans = (state) => state.trans.ConfirmSendScreen
+const getTranslations = (state) => state.trans.ConfirmSendScreen
 
 type Props = {
   onConfirm: () => mixed,
-  trans: SubTranslation<typeof getTrans>,
+  translations: SubTranslation<typeof getTranslations>,
 }
 
-const ConfirmScreen = ({onConfirm, trans}: Props) => (
+const ConfirmScreen = ({onConfirm, translations}: Props) => (
   <View style={styles.container}>
-    <Text style={styles.welcome}>Confirm your transaction</Text>
+    <Text style={styles.welcome}>i18nConfirm your transaction</Text>
 
     <Button
       onPress={onConfirm}
-      title={trans.confirm}
+      title={translations.confirm}
     />
   </View>
 )
 
 export default compose(
   connect((state) => ({
-    trans: getTrans(state),
+    translations: getTranslations(state),
   })),
   withHandlers({
     // TODO(ppershing): this should validate only on confirm
