@@ -12,23 +12,23 @@ import styles from './styles/ChangeWalletName.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslation = (state) => state.trans.changeWalletName
+const getTranslations = (state) => state.trans.changeWalletName
 
 type Props = {
   acceptAndNavigate: () => void,
-  translation: SubTranslation<typeof getTranslation>,
+  translations: SubTranslation<typeof getTranslations>,
 }
 
-const ChangeWalletName = ({acceptAndNavigate, translation}: Props) => (
+const ChangeWalletName = ({acceptAndNavigate, translations}: Props) => (
   <View style={styles.root}>
-    <TextInput style={styles.inputText} placeholder={translation.walletName} />
-    <Button onPress={acceptAndNavigate} title={translation.changeButtonText} />
+    <TextInput style={styles.inputText} placeholder={translations.walletName} />
+    <Button onPress={acceptAndNavigate} title={translations.changeButtonText} />
   </View>
 )
 
 export default compose(
   connect((state) => ({
-    translation: getTranslation(state),
+    translations: getTranslations(state),
   })),
   withHandlers({
     acceptAndNavigate: ({navigation}) => () => navigation.goBack(),
