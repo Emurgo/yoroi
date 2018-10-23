@@ -132,7 +132,17 @@ const l10n = {
   },
   restoreWalletScreen: {
     title: 'Restore wallet',
+    instructions: 'To restore your wallet please provide the recovery phrase you\
+ received when you created your wallet for the first time.',
+    phrase: 'Recovery phrase',
     restoreButton: 'RESTORE WALLET',
+    errors: {
+      maxLength: 'Phrase is too long',
+      unknownWords: (words: Array<string>) => {
+        const wordlist = words.map((word) => `'${word}'`).join(', ')
+        return `${wordlist} ${pluralizeEn(words.length, 'is', 'are')} invalid.`
+      },
+    },
   },
   txHistoryNavigationButtons: {
     sendButton: 'SEND',

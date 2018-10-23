@@ -120,7 +120,13 @@ export type Translation = {
   },
   restoreWalletScreen: {
     title: string,
-    restoreButton: string
+    instructions: string,
+    phrase: string,
+    restoreButton: string,
+    errors: {
+      maxLength: string,
+      unknownWords: (Array<string>) => string,
+    }
   },
   txHistoryNavigationButtons: {
     sendButton: string,
