@@ -14,13 +14,8 @@ const MainNavigator = createStackNavigator(
     [MAIN_ROUTES.TX_HISTORY]: TxHistoryNavigator,
     [MAIN_ROUTES.SEND]: SendScreenNavigator,
     [MAIN_ROUTES.RECEIVE]: ReceiveScreenNavigator,
-<<<<<<< HEAD
-  },
-  {
-=======
     [MAIN_ROUTES.SETTINGS]: SettingsScreenNavigator,
   }, {
->>>>>>> Added SupportScreen + SettingsScreen link
     // TODO(ppershing): initialRouteName
     // works reversed. Figure out why!
     initialRouteName: MAIN_ROUTES.TX_HISTORY,

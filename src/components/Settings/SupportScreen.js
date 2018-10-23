@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View} from 'react-native'
 
-import SupportScreenItem from './SupportScreenItem'
+import SettingsItemWithNavigation from './SettingsItemWithNavigation'
 
 import styles from './styles/SupportScreen.style'
 
@@ -19,15 +19,15 @@ type Props = {
 
 const SupportScreen = ({translation, navigateToFaq, navigateToReport}: Props) => (
   <View style={styles.root}>
-    <SupportScreenItem
+    <SettingsItemWithNavigation
       label={translation.faqLabel}
       text={translation.faqText}
-      page={translation.faqPage}
+      navigateTo={translation.faqUrl}
     />
-    <SupportScreenItem
+    <SettingsItemWithNavigation
       label={translation.reportLabel}
       text={translation.reportText}
-      page={translation.reportPage}
+      navigateTo={translation.reportUrl}
     />
   </View>
 )

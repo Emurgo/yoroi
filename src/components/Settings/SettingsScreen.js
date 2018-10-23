@@ -3,11 +3,12 @@
 import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {withHandlers} from 'recompose'
-import {View, TouchableHighlight} from 'react-native'
+import {View} from 'react-native'
 
-import {Text} from '../UiKit'
+import Screen from '../../components/Screen'
 import {SETTINGS_ROUTES} from '../../RoutesList'
+import SettingsItemWithNavigation from './SettingsItemWithNavigation'
+import SettingsLabelWithNavigation from './SettingsLabelWithNavigation'
 
 import styles from './styles/SettingsScreen.style'
 
@@ -27,18 +28,53 @@ const SettingsScreen = ({
   navigateToSupport,
   translation,
 }: Props) => (
-  <View style={styles.container}>
-    <TouchableHighlight onPress={navigateToChangeWalletName}>
-      <Text style={styles.linkLabel}>{translation.editWalletName}</Text>
-    </TouchableHighlight>
+  <View style={styles.root}>
+    <Screen scroll>
+      <SettingsItemWithNavigation
+        label={translation.walletName}
+        text={'getWalletName()'}
+        navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
+      />
 
-    <TouchableHighlight>
-      <Text style={styles.linkLabel}>{translation.termsOfUse}</Text>
-    </TouchableHighlight>
+      <SettingsItemWithNavigation
+        label={translation.privacy}
+        text={translation.changePin}
+        navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
+      />
 
-    <TouchableHighlight onPress={navigateToSupport}>
-      <Text style={styles.linkLabel}>{translation.support}</Text>
-    </TouchableHighlight>
+      <SettingsItemWithNavigation
+        label={''}
+        text={translation.changePassword}
+        navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
+      />
+
+      <SettingsItemWithNavigation
+        label={translation.downloadLogs}
+        text={translation.downloadLogsText}
+        navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
+      />
+
+      <SettingsLabelWithNavigation
+        label={translation.removeWallet}
+        navigateTo={SETTINGS_ROUTES.SUPPORT}
+      />
+
+      <SettingsItemWithNavigation
+        label={translation.language}
+        text={'getLanguage()'}
+        navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
+      />
+
+      <SettingsLabelWithNavigation
+        label={translation.termsOfUse}
+        navigateTo={SETTINGS_ROUTES.SUPPORT}
+      />
+
+      <SettingsLabelWithNavigation
+        label={translation.support}
+        navigateTo={SETTINGS_ROUTES.SUPPORT}
+      />
+    </Screen>
   </View>
 )
 
@@ -46,10 +82,4 @@ export default compose(
   connect((state) => ({
     translation: getTranslation(state),
   })),
-  withHandlers({
-    navigateToSupport: ({navigation}) => () =>
-      navigation.navigate(SETTINGS_ROUTES.SUPPORT),
-    navigateToChangeWalletName: ({navigation}) => () =>
-      navigation.navigate(SETTINGS_ROUTES.CHANGE_WALLET_NAME),
-  })
 )(SettingsScreen)

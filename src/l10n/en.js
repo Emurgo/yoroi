@@ -166,7 +166,16 @@ const l10n = {
     receiveButton: 'RECEIVE',
   },
   settings: {
-    editWalletName: 'Edit wallet name',
+    walletName: 'Edit wallet name',
+    privacy: 'Privacy',
+    changePin: 'Change PIN',
+    changePassword: 'Change password',
+    downloadLogs: 'Download logs',
+    downloadLogsText: 'If you want to inspect logs, you can download them here.\
+Logs do not contain sensitive information, and it would be helpful to attach them\
+to problem reports to help the team investigate the issue you are experiencing.',
+    removeWallet: 'Remove wallet',
+    language: 'Your language',
     termsOfUse: 'Terms of Use',
     support: 'Support',
   },
@@ -174,11 +183,11 @@ const l10n = {
     faqLabel: 'See frequently asked questions',
     faqText: 'If you are experiencing issues, please see the FAQ on Yoroi website\
 for quidance on known issues.',
-    faqPage: 'https://github.com/Emurgo/yoroi-mobile',
+    faqUrl: 'https://github.com/Emurgo/yoroi-mobile',
     reportLabel: 'Report a problem',
     reportText: 'If the FAQ does not solve the issue you are experiencing, please\
 use our Support request feature.',
-    reportPage: 'https://github.com/Emurgo/yoroi-mobile',
+    reportUrl: 'https://github.com/Emurgo/yoroi-mobile',
   },
 }
 
