@@ -105,6 +105,7 @@ export type Translation = {
     title: string,
     instructions: string,
     inputLabel: string,
+    invalidPhrase: string,
     clearButton: string,
     confirmButton: string,
   },
