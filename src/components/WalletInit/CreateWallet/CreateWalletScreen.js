@@ -12,6 +12,7 @@ import {Text, Button} from '../../UiKit'
 import Screen from '../../Screen'
 import {validatePassword} from '../../../utils/validators'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
+import {withNavigationTitle} from '../../../utils/renderUtils'
 
 import styles from './styles/CreateWalletScreen.style'
 import {COLORS} from '../../../styles/config'
@@ -175,6 +176,7 @@ export default compose(
   connect((state) => ({
     translations: getTranslations(state),
   })),
+  withNavigationTitle(({translations}) => translations.title),
   withState('name', 'setName', ''),
   withState('password', 'setPassword', ''),
   withState('passwordConfirmation', 'setPasswordConfirmation', ''),
