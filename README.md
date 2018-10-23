@@ -31,18 +31,12 @@ follow https://facebook.github.io/react-native/docs/getting-started.html (tab Bu
 ### First time
 
 1. `yarn install`
-2. `./build_cardano_rust.sh`
 
 ### Every time
 
-1. `yarn haul start --platform android` - this will run RN packager, let it running
+1. `react-native start` - this will run RN packager, let it running
 2. `react-native run-android`
 
-- here it will be possible that app will be crashing, if that is the case, turn js debugging ON
-  and also disable `Use JS Deltas` in RN dev settings on phone
-
-3. After the step 3. is done you should see in terminal how haul is progressing (%) if it will hang
-   for a while on the same percentage do `rm -r node_modules` and `yarn install` and then go to the step 1.
 
 # Code style
 

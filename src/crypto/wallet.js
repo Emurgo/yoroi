@@ -405,7 +405,7 @@ export class WalletManager {
   ) {
     const {inputs, outputs, changeAddress, fee} = transaction
 
-    const decryptedMasterKey = util.decryptMasterKey(
+    const decryptedMasterKey = await util.decryptMasterKey(
       password,
       this.encryptedMasterKey,
     )
@@ -418,7 +418,7 @@ export class WalletManager {
 
     assert.assert(fee.eq(signedTxData.fee), 'Transaction fee does not match')
 
-    const signedTx = Buffer.from(signedTxData.cbor_encoded_tx).toString(
+    const signedTx = Buffer.from(signedTxData.cbor_encoded_tx, 'hex').toString(
       'base64',
     )
     const response = await api.submitTransaction(signedTx)
