@@ -18,16 +18,10 @@ const getTranslation = (state) => state.trans.settings
 
 
 type Props = {
-  navigateToChangeWalletName: () => void,
-  navigateToSupport: () => void,
   translation: SubTranslation<typeof getTranslation>,
 };
 
-const SettingsScreen = ({
-  navigateToChangeWalletName,
-  navigateToSupport,
-  translation,
-}: Props) => (
+const SettingsScreen = ({translation}: Props) => (
   <View style={styles.root}>
     <Screen scroll>
       <SettingsItemWithNavigation
