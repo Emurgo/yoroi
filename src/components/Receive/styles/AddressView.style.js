@@ -9,10 +9,10 @@ const styles = {
   },
   addressUsed: {
     fontSize: 17,
+    color: COLORS.DARK_GRAY,
   },
   addressNotUsed: {
     fontSize: 17,
-    color: COLORS.DARK_GRAY,
   },
   addressContainer: {
     flex: 1,

@@ -37,21 +37,22 @@ const AddressesList = ({
       <Text style={styles.label}>{translations.walletAddresses}</Text>
       <TouchableHighlight onPress={onShowPress}>
         <Text style={styles.clickableLabel}>
-          {showAll ? translations.showUsedAddresses : translations.showAllAddresses}
+          {showAll ? translations.hideUsedAddresses : translations.showUsedAddresses}
         </Text>
       </TouchableHighlight>
     </View>
 
     {addresses.map((address) => (
       (usedAddresses.includes(address)) ? (
-        <View key={address} style={styles.addressContainer}>
-          <AddressView address={address} isUsed />
-        </View>
-      ) : (
-        (showAll) &&
+        (showAll) && (
           <View key={address} style={styles.addressContainer}>
-            <AddressView address={address} isUsed={false} />
+            <AddressView address={address} isUsed />
           </View>
+        )
+      ) : (
+        <View key={address} style={styles.addressContainer}>
+          <AddressView address={address} isUsed={false} />
+        </View>
       )
     ))}
   </View>
@@ -61,7 +62,7 @@ export default compose(
   connect((state) => ({
     translations: getTranslations(state),
   })),
-  withState('showAll', 'setShowAll', false),
+  withState('showAll', 'setShowAll', true),
   withHandlers({
     onShowPress: ({showAll, setShowAll}) => () => setShowAll(!showAll),
   }),

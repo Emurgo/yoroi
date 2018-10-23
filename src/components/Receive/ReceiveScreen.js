@@ -34,7 +34,10 @@ const ReceiveScreen = ({
         <Text style={styles.warningText}>{translations.line2}</Text>
         <Text style={styles.warningText}>{translations.line3}</Text>
       </View>
-      <AddressDetail address={receiveAddresses[0]} />
+      <AddressDetail
+        address={receiveAddresses[0]}
+        isUsed={usedReceiveAddresses.includes(receiveAddresses[0])}
+      />
       <AddressesList
         addresses={receiveAddresses}
         usedAddresses={usedReceiveAddresses}

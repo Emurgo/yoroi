@@ -93,7 +93,7 @@ const l10n = {
     },
     walletAddress: 'Your wallet address',
     walletAddresses: 'Your wallet addresses',
-    showAllAddresses: 'show all',
+    hideUsedAddresses: 'hide used',
     showUsedAddresses: 'show used',
   },
   receiveScreenModal: {

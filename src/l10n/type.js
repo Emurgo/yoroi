@@ -89,7 +89,7 @@ export type Translation = {
     },
     walletAddress: string,
     walletAddresses: string,
-    showAllAddresses: string,
+    hideUsedAddresses: string,
     showUsedAddresses: string,
   },
   receiveScreenModal: {
