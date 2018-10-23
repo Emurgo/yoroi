@@ -7,8 +7,8 @@ import {View} from 'react-native'
 
 import Screen from '../../components/Screen'
 import {SETTINGS_ROUTES} from '../../RoutesList'
-import SettingsItemWithNavigation from './SettingsItemWithNavigation'
-import SettingsLabelWithNavigation from './SettingsLabelWithNavigation'
+import SettingsItem from './SettingsItem'
+import SettingsLink from './SettingsLink'
 
 import styles from './styles/SettingsScreen.style'
 
@@ -24,48 +24,48 @@ type Props = {
 const SettingsScreen = ({translations}: Props) => (
   <View style={styles.root}>
     <Screen scroll>
-      <SettingsItemWithNavigation
-        label={translations.walletName}
+      <SettingsItem
+        title={translations.walletName}
         description={'getWalletName()'}
         dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
       />
 
-      <SettingsItemWithNavigation
-        label={translations.privacy}
+      <SettingsItem
+        title={translations.privacy}
         description={translations.changePin}
         dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
       />
 
-      <SettingsItemWithNavigation
-        label={''}
+      <SettingsItem
+        title={''}
         description={translations.changePassword}
         dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
       />
 
-      <SettingsItemWithNavigation
-        label={translations.downloadLogs}
+      <SettingsItem
+        title={translations.downloadLogs}
         description={translations.downloadLogsText}
         dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
       />
 
-      <SettingsLabelWithNavigation
-        label={translations.removeWallet}
+      <SettingsLink
+        text={translations.removeWallet}
         dstScreen={SETTINGS_ROUTES.SUPPORT}
       />
 
-      <SettingsItemWithNavigation
-        label={translations.language}
+      <SettingsItem
+        title={translations.language}
         description={'getLanguage()'}
         dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
       />
 
-      <SettingsLabelWithNavigation
-        label={translations.termsOfUse}
+      <SettingsLink
+        text={translations.termsOfUse}
         dstScreen={SETTINGS_ROUTES.SUPPORT}
       />
 
-      <SettingsLabelWithNavigation
-        label={translations.support}
+      <SettingsLink
+        text={translations.support}
         dstScreen={SETTINGS_ROUTES.SUPPORT}
       />
     </Screen>

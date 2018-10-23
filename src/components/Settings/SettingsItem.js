@@ -10,18 +10,18 @@ import {Text} from '../UiKit'
 import {COLORS} from '../../styles/config'
 import CopyIcon from '../../assets/CopyIcon'
 
-import styles from './styles/SettingsItemWithNavigation.style'
+import styles from './styles/SettingsItem.style'
 
 type Props = {
-  label: string,
+  title: string,
   description: string,
   dstScreen?: string,
   dstUrl?: string,
   onPress: () => any,
 }
 
-const SettingsItemWithNavigation = ({
-  label,
+const SettingsItem = ({
+  title,
   description,
   dstScreen,
   dstUrl,
@@ -34,7 +34,7 @@ const SettingsItemWithNavigation = ({
   >
     <View style={styles.container}>
       <View style={styles.textContainer}>
-        <Text style={styles.label}>{label}</Text>
+        <Text style={styles.label}>{title}</Text>
         <Text style={styles.text}>{description}</Text>
       </View>
       <View style={styles.iconContainer}>
@@ -55,4 +55,4 @@ export default compose(
       }
     },
   }),
-)(SettingsItemWithNavigation)
+)(SettingsItem)

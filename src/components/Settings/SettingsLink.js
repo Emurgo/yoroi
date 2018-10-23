@@ -9,22 +9,22 @@ import {withNavigation} from 'react-navigation'
 import {Text} from '../UiKit'
 import {COLORS} from '../../styles/config'
 
-import styles from './styles/SettingsLabelWithNavigation.style'
+import styles from './styles/SettingsLink.style'
 
 type Props = {
-  label: string,
+  text: string,
   dstScreen: string,
   onPress: () => void,
 }
 
-const SettingsLabelWithNavigation = ({label, dstScreen, onPress}: Props) => (
+const SettingsLink = ({text, dstScreen, onPress}: Props) => (
   <View style={styles.container}>
     <TouchableHighlight
       activeOpacity={0.9}
       underlayColor={COLORS.WHITE}
       onPress={onPress}
     >
-      <Text style={styles.linkLabel}>{label}</Text>
+      <Text style={styles.linkLabel}>{text}</Text>
     </TouchableHighlight>
   </View>
 )
@@ -34,4 +34,4 @@ export default compose(
   withHandlers({
     onPress: ({navigation, dstScreen}) => () => navigation.navigate(dstScreen),
   }),
-)(SettingsLabelWithNavigation)
+)(SettingsLink)

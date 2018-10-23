@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View} from 'react-native'
 
-import SettingsItemWithNavigation from './SettingsItemWithNavigation'
+import SettingsItem from './SettingsItem'
 
 import styles from './styles/SupportScreen.style'
 
@@ -19,13 +19,13 @@ type Props = {
 
 const SupportScreen = ({translations}: Props) => (
   <View style={styles.root}>
-    <SettingsItemWithNavigation
-      label={translations.faq.label}
+    <SettingsItem
+      title={translations.faq.label}
       description={translations.faq.description}
       dstUrl={translations.faq.url}
     />
-    <SettingsItemWithNavigation
-      label={translations.report.label}
+    <SettingsItem
+      title={translations.report.label}
       description={translations.report.description}
       dstUrl={translations.report.url}
     />
