@@ -180,14 +180,18 @@ to problem reports to help the team investigate the issue you are experiencing.'
     support: 'Support',
   },
   supportScreen: {
-    faqLabel: 'See frequently asked questions',
-    faqText: 'If you are experiencing issues, please see the FAQ on Yoroi website\
+    faq: {
+      label: 'See frequently asked questions',
+      description: 'If you are experiencing issues, please see the FAQ on Yoroi website\
 for quidance on known issues.',
-    faqUrl: 'https://github.com/Emurgo/yoroi-mobile',
-    reportLabel: 'Report a problem',
-    reportText: 'If the FAQ does not solve the issue you are experiencing, please\
+      url: 'https://github.com/Emurgo/yoroi-mobile',
+    },
+    report: {
+      label: 'Report a problem',
+      description: 'If the FAQ does not solve the issue you are experiencing, please\
 use our Support request feature.',
-    reportUrl: 'https://github.com/Emurgo/yoroi-mobile',
+      url: 'https://github.com/Emurgo/yoroi-mobile',
+    },
   },
 }
 

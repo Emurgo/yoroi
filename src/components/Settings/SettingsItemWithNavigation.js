@@ -14,21 +14,28 @@ import styles from './styles/SettingsItemWithNavigation.style'
 
 type Props = {
   label: string,
-  text: string,
-  navigateTo: string,
-  navigate: () => any,
+  description: string,
+  dstScreen?: string,
+  dstUrl?: string,
+  onPress: () => any,
 }
 
-const SettingsItemWithNavigation = ({label, text, navigateTo, navigate}: Props) => (
+const SettingsItemWithNavigation = ({
+  label,
+  description,
+  dstScreen,
+  dstUrl,
+  onPress,
+}: Props) => (
   <TouchableHighlight
     activeOpacity={0.9}
     underlayColor={COLORS.WHITE}
-    onPress={navigate}
+    onPress={onPress}
   >
     <View style={styles.container}>
       <View style={styles.textContainer}>
         <Text style={styles.label}>{label}</Text>
-        <Text style={styles.text}>{text}</Text>
+        <Text style={styles.text}>{description}</Text>
       </View>
       <View style={styles.iconContainer}>
         <CopyIcon width={styles.icon.size} height={styles.icon.size} />
@@ -40,12 +47,12 @@ const SettingsItemWithNavigation = ({label, text, navigateTo, navigate}: Props) 
 export default compose(
   withNavigation,
   withHandlers({
-    navigate: ({navigation, navigateTo}) => () => {
-      if (navigateTo.substring(0, 4) === 'http') {
-        Linking.openURL(navigateTo)
-      } else {
-        navigation.navigate(navigateTo)
+    onPress: ({navigation, dstScreen, dstUrl}) => () => {
+      if (dstScreen) {
+        navigation.navigate(dstScreen)
+      } else if (dstUrl) {
+        Linking.openURL(dstUrl)
       }
     },
-  })
+  }),
 )(SettingsItemWithNavigation)

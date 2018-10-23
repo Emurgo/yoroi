@@ -11,29 +11,29 @@ import styles from './styles/SupportScreen.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslation = (state) => state.trans.supportScreen
+const getTranslations = (state) => state.trans.supportScreen
 
 type Props = {
-  translation: SubTranslation<typeof getTranslation>,
+  translations: SubTranslation<typeof getTranslations>,
 }
 
-const SupportScreen = ({translation}: Props) => (
+const SupportScreen = ({translations}: Props) => (
   <View style={styles.root}>
     <SettingsItemWithNavigation
-      label={translation.faqLabel}
-      text={translation.faqText}
-      navigateTo={translation.faqUrl}
+      label={translations.faq.label}
+      description={translations.faq.description}
+      dstUrl={translations.faq.url}
     />
     <SettingsItemWithNavigation
-      label={translation.reportLabel}
-      text={translation.reportText}
-      navigateTo={translation.reportUrl}
+      label={translations.report.label}
+      description={translations.report.description}
+      dstUrl={translations.report.url}
     />
   </View>
 )
 
 export default compose(
   connect((state) => ({
-    translation: getTranslation(state),
+    translations: getTranslations(state),
   }))
 )(SupportScreen)

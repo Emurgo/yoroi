@@ -13,16 +13,16 @@ import styles from './styles/SettingsLabelWithNavigation.style'
 
 type Props = {
   label: string,
-  navigateTo: string,
-  navigate: () => void,
+  dstScreen: string,
+  onPress: () => void,
 }
 
-const SettingsLabelWithNavigation = ({label, navigateTo, navigate}: Props) => (
+const SettingsLabelWithNavigation = ({label, dstScreen, onPress}: Props) => (
   <View style={styles.container}>
     <TouchableHighlight
       activeOpacity={0.9}
       underlayColor={COLORS.WHITE}
-      onPress={navigate}
+      onPress={onPress}
     >
       <Text style={styles.linkLabel}>{label}</Text>
     </TouchableHighlight>
@@ -32,6 +32,6 @@ const SettingsLabelWithNavigation = ({label, navigateTo, navigate}: Props) => (
 export default compose(
   withNavigation,
   withHandlers({
-    navigate: ({navigation, navigateTo}) => () => navigation.navigate(navigateTo),
-  })
+    onPress: ({navigation, dstScreen}) => () => navigation.navigate(dstScreen),
+  }),
 )(SettingsLabelWithNavigation)

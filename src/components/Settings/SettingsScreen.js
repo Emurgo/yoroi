@@ -14,59 +14,59 @@ import styles from './styles/SettingsScreen.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslation = (state) => state.trans.settings
+const getTranslations = (state) => state.trans.settings
 
 
 type Props = {
-  translation: SubTranslation<typeof getTranslation>,
+  translations: SubTranslation<typeof getTranslations>,
 };
 
-const SettingsScreen = ({translation}: Props) => (
+const SettingsScreen = ({translations}: Props) => (
   <View style={styles.root}>
     <Screen scroll>
       <SettingsItemWithNavigation
-        label={translation.walletName}
-        text={'getWalletName()'}
-        navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
+        label={translations.walletName}
+        description={'getWalletName()'}
+        dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
       />
 
       <SettingsItemWithNavigation
-        label={translation.privacy}
-        text={translation.changePin}
-        navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
+        label={translations.privacy}
+        description={translations.changePin}
+        dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
       />
 
       <SettingsItemWithNavigation
         label={''}
-        text={translation.changePassword}
-        navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
+        description={translations.changePassword}
+        dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
       />
 
       <SettingsItemWithNavigation
-        label={translation.downloadLogs}
-        text={translation.downloadLogsText}
-        navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
+        label={translations.downloadLogs}
+        description={translations.downloadLogsText}
+        dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
       />
 
       <SettingsLabelWithNavigation
-        label={translation.removeWallet}
-        navigateTo={SETTINGS_ROUTES.SUPPORT}
+        label={translations.removeWallet}
+        dstScreen={SETTINGS_ROUTES.SUPPORT}
       />
 
       <SettingsItemWithNavigation
-        label={translation.language}
-        text={'getLanguage()'}
-        navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
+        label={translations.language}
+        description={'getLanguage()'}
+        dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
       />
 
       <SettingsLabelWithNavigation
-        label={translation.termsOfUse}
-        navigateTo={SETTINGS_ROUTES.SUPPORT}
+        label={translations.termsOfUse}
+        dstScreen={SETTINGS_ROUTES.SUPPORT}
       />
 
       <SettingsLabelWithNavigation
-        label={translation.support}
-        navigateTo={SETTINGS_ROUTES.SUPPORT}
+        label={translations.support}
+        dstScreen={SETTINGS_ROUTES.SUPPORT}
       />
     </Screen>
   </View>
@@ -74,6 +74,6 @@ const SettingsScreen = ({translation}: Props) => (
 
 export default compose(
   connect((state) => ({
-    translation: getTranslation(state),
+    translations: getTranslations(state),
   })),
 )(SettingsScreen)
