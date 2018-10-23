@@ -14,29 +14,29 @@ import styles from './styles/WalletInitScreen.style'
 import type {State} from '../../state'
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTrans = (state: State) => state.trans.walletDescription
+const getTranslations = (state: State) => state.trans.walletDescription
 
 type Props = {
-  trans: SubTranslation<typeof getTrans>,
+  translations: SubTranslation<typeof getTranslations>,
 }
 
-const WalletDescription = ({trans}: Props) => (
+const WalletDescription = ({translations}: Props) => (
   <View style={styles.descriptionContainer}>
     <YoroiWalletIcon color={COLORS.WHITE} width={140} height={80} />
 
     <View style={styles.subtitleContainer}>
-      <Text style={styles.subtitle}>{trans.line1}</Text>
+      <Text style={styles.subtitle}>{translations.line1}</Text>
     </View>
 
-    <Text style={styles.subtitle}>{trans.line2}</Text>
+    <Text style={styles.subtitle}>{translations.line2}</Text>
 
     <View style={styles.emurgoCreditsContainer}>
-      <Text style={styles.subtitle}>{trans.byEmurgo}</Text>
+      <Text style={styles.subtitle}>{translations.byEmurgo}</Text>
       <EmurgoIcon color={COLORS.WHITE} width={100} height={37} />
     </View>
   </View>
 )
 
 export default connect((state) => ({
-  trans: getTrans(state),
+  translations: getTranslations(state),
 }))(WalletDescription)

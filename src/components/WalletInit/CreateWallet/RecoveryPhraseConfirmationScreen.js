@@ -16,30 +16,34 @@ import type {State} from '../../../state'
 import type {SubTranslation} from '../../../l10n/typeHelpers'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 
-const getTrans = (state: State) => state.trans.recoveryPhraseConfirmationScreen
+const getTranslations = (state: State) => state.trans.recoveryPhraseConfirmationScreen
 
 type Props = {
   navigateToConfirmDialog: () => mixed,
-  trans: SubTranslation<typeof getTrans>,
+  translations: SubTranslation<typeof getTranslations>,
   navigation: NavigationScreenProp<NavigationState>,
 }
 
-const RecoveryPhraseConfirmationScreen = ({navigateToConfirmDialog, trans, navigation}: Props) => (
+const RecoveryPhraseConfirmationScreen = ({
+  navigateToConfirmDialog,
+  translations,
+  navigation,
+}: Props) => (
   <Screen bgColor={COLORS.TRANSPARENT}>
     <View>
-      <Text>{trans.title}</Text>
-      <Text>{trans.instructions}</Text>
-      <Text>{trans.inputLabel}</Text>
+      <Text>{translations.title}</Text>
+      <Text>{translations.instructions}</Text>
+      <Text>{translations.inputLabel}</Text>
       <Text>{navigation.getParam('mnemonic')}</Text>
 
       <Button
         onPress={() => {/* Dispatch reset action here */}}
-        title={trans.clearButton}
+        title={translations.clearButton}
       />
 
       <Button
         onPress={navigateToConfirmDialog}
-        title={trans.confirmButton}
+        title={translations.confirmButton}
       />
     </View>
   </Screen>
@@ -47,7 +51,7 @@ const RecoveryPhraseConfirmationScreen = ({navigateToConfirmDialog, trans, navig
 
 export default compose(
   connect((state) => ({
-    trans: getTrans(state),
+    translations: getTranslations(state),
   })),
   withHandlers({
     navigateToConfirmDialog: ({navigation}) =>

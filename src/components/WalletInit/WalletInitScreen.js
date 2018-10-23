@@ -18,15 +18,15 @@ import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import type {State} from '../../state'
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTrans = (state: State) => state.trans.walletInitScreen
+const getTranslations = (state: State) => state.trans.walletInitScreen
 
 type Props = {
   navigateRestoreWallet: () => mixed,
   navigateCreateWallet: () => mixed,
-  trans: SubTranslation<typeof getTrans>,
+  translations: SubTranslation<typeof getTranslations>,
 }
 
-const WalletInitScreen = ({navigateCreateWallet, navigateRestoreWallet, trans}: Props) => (
+const WalletInitScreen = ({navigateCreateWallet, navigateRestoreWallet, translations}: Props) => (
   <LinearGradient
     start={{x: 0, y: 0}}
     end={{x: 1, y: 0}}
@@ -40,12 +40,12 @@ const WalletInitScreen = ({navigateCreateWallet, navigateRestoreWallet, trans}: 
 
         <Button
           onPress={navigateCreateWallet}
-          title={trans.createWallet}
+          title={translations.createWallet}
         />
 
         <Button
           onPress={navigateRestoreWallet}
-          title={trans.restoreWallet}
+          title={translations.restoreWallet}
         />
       </View>
     </Screen>
@@ -54,7 +54,7 @@ const WalletInitScreen = ({navigateCreateWallet, navigateRestoreWallet, trans}: 
 
 export default compose(
   connect((state: State) => ({
-    trans: getTrans(state),
+    translations: getTranslations(state),
   })),
   withHandlers({
     navigateRestoreWallet: ({navigation}) => (event) =>

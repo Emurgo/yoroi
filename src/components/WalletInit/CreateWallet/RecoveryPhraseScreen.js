@@ -17,20 +17,24 @@ import {COLORS} from '../../../styles/config'
 import type {State} from '../../../state'
 import type {SubTranslation} from '../../../l10n/typeHelpers'
 
-const getTrans = (state: State) => state.trans.recoveryPhraseScreen
+const getTranslations = (state: State) => state.trans.recoveryPhraseScreen
 
 type Props = {
   navigateToRecoveryPhraseConfirmation: () => mixed,
-  trans: SubTranslation<typeof getTrans>,
+  translations: SubTranslation<typeof getTranslations>,
   mnemonic: string,
 }
 
-const CreateWalletScreen = ({navigateToRecoveryPhraseConfirmation, trans, mnemonic}: Props) => (
+const CreateWalletScreen = ({
+  navigateToRecoveryPhraseConfirmation,
+  translations,
+  mnemonic,
+}: Props) => (
   <Screen bgColor={COLORS.TRANSPARENT} style={styles.screen}>
     <View style={styles.contentContainer}>
       <View>
         <View style={styles.titleContainer}>
-          <Text>{trans.title}</Text>
+          <Text>{translations.title}</Text>
         </View>
 
         <View style={styles.mnemonicWordsContainer}>
@@ -38,14 +42,14 @@ const CreateWalletScreen = ({navigateToRecoveryPhraseConfirmation, trans, mnemon
         </View>
 
         <View style={styles.mnemonicNoteContainer}>
-          <Text>{trans.mnemonicNote}</Text>
+          <Text>{translations.mnemonicNote}</Text>
         </View>
       </View>
 
       <View style={styles.buttonContainer}>
         <Button
           onPress={navigateToRecoveryPhraseConfirmation}
-          title={trans.confirmationButton}
+          title={translations.confirmationButton}
         />
       </View>
     </View>
@@ -54,7 +58,7 @@ const CreateWalletScreen = ({navigateToRecoveryPhraseConfirmation, trans, mnemon
 
 export default compose(
   connect((state) => ({
-    trans: getTrans(state),
+    translations: getTranslations(state),
   })),
   withState('mnemonic', 'setMnemonic', generateAdaMnemonic()),
   withHandlers({

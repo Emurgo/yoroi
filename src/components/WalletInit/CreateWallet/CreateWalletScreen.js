@@ -22,7 +22,7 @@ import type {SubTranslation} from '../../../l10n/typeHelpers'
 
 type FormValidationErrors = PasswordValidationErrors & {nameReq?: boolean}
 
-const getTrans = (state: State) => state.trans.createWallet
+const getTranslations = (state: State) => state.trans.createWallet
 
 const handleCreate = ({navigation, password}) => () => {
   navigation.navigate(
@@ -45,7 +45,7 @@ const handleOnWillBlur = ({setPassword, setPasswordConfirmation}) => () => {
 
 type Props = {
   handleCreate: () => mixed,
-  trans: SubTranslation<typeof getTrans>,
+  translations: SubTranslation<typeof getTranslations>,
   name: string,
   password: string,
   passwordConfirmation: string,
@@ -58,7 +58,7 @@ type Props = {
 
 const CreateWalletScreen = ({
   handleCreate,
-  trans,
+  translations,
   name,
   password,
   passwordConfirmation,
@@ -75,7 +75,7 @@ const CreateWalletScreen = ({
       <NavigationEvents onWillBlur={onWillBlur} />
       <View style={styles.container}>
         <View>
-          <Text style={styles.formLabel}>{trans.nameLabel}</Text>
+          <Text style={styles.formLabel}>{translations.nameLabel}</Text>
           <View style={styles.inputRow}>
             <TextInput style={styles.input} onChangeText={setName} value={name} autoFocus />
             <CheckIcon
@@ -86,7 +86,7 @@ const CreateWalletScreen = ({
           </View>
         </View>
         <View>
-          <Text style={styles.formLabel}>{trans.passwordLabel}</Text>
+          <Text style={styles.formLabel}>{translations.passwordLabel}</Text>
           <TextInput
             secureTextEntry
             style={styles.input}
@@ -95,7 +95,7 @@ const CreateWalletScreen = ({
           />
         </View>
         <View>
-          <Text style={styles.formLabel}>{trans.passwordConfirmationLabel}</Text>
+          <Text style={styles.formLabel}>{translations.passwordConfirmationLabel}</Text>
           <View style={styles.inputRow}>
             <TextInput
               secureTextEntry
@@ -115,25 +115,25 @@ const CreateWalletScreen = ({
           </View>
         </View>
         <View>
-          <Text>{trans.passwordRequirementsNote}</Text>
+          <Text>{translations.passwordRequirementsNote}</Text>
           <View style={styles.passwordRequirementsRow}>
             <View style={styles.passwordRequirement}>
               <CheckIcon width={16} height={16} />
-              <Text style={styles.passwordRequirement}>{trans.passwordMinLength}</Text>
+              <Text style={styles.passwordRequirement}>{translations.passwordMinLength}</Text>
             </View>
             <View style={styles.passwordRequirement}>
               <CheckIcon width={16} height={16} />
-              <Text style={styles.passwordRequirement}>{trans.passwordLowerChar}</Text>
+              <Text style={styles.passwordRequirement}>{translations.passwordLowerChar}</Text>
             </View>
           </View>
           <View style={styles.passwordRequirementsRow}>
             <View style={styles.passwordRequirement}>
               <CheckIcon width={16} height={16} />
-              <Text style={styles.passwordRequirement}>{trans.passwordUpperChar}</Text>
+              <Text style={styles.passwordRequirement}>{translations.passwordUpperChar}</Text>
             </View>
             <View style={styles.passwordRequirement}>
               <CheckIcon width={16} height={16} />
-              <Text style={styles.passwordRequirement}>{trans.passwordNumber}</Text>
+              <Text style={styles.passwordRequirement}>{translations.passwordNumber}</Text>
             </View>
           </View>
         </View>
@@ -141,7 +141,7 @@ const CreateWalletScreen = ({
         <Button
           onPress={handleCreate}
           disabled={!!errors}
-          title={trans.createButton}
+          title={translations.createButton}
         />
       </View>
     </Screen>
@@ -150,7 +150,7 @@ const CreateWalletScreen = ({
 
 export default compose(
   connect((state) => ({
-    trans: getTrans(state),
+    translations: getTranslations(state),
   })),
   withState('name', 'setName', ''),
   withState('password', 'setPassword', ''),

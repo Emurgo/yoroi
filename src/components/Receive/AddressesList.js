@@ -12,17 +12,17 @@ import styles from './styles/AddressesList.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslation = (state) => state.trans.receiveScreen
+const getTranslations = (state) => state.trans.receiveScreen
 
 type Props = {
   addresses: Array<string>,
-  translation: SubTranslation<typeof getTranslation>,
+  translations: SubTranslation<typeof getTranslations>,
 }
 
-const AddressesList = ({addresses, translation}: Props) => (
+const AddressesList = ({addresses, translations}: Props) => (
   <View style={styles.container}>
     <View style={styles.header}>
-      <Text style={styles.addressLabel}>{translation.walletAddresses}</Text>
+      <Text style={styles.addressLabel}>{translations.walletAddresses}</Text>
     </View>
     {addresses.map((address) => (
       <View key={address} style={styles.addressContainer}>
@@ -34,6 +34,6 @@ const AddressesList = ({addresses, translation}: Props) => (
 
 export default compose(
   connect((state) => ({
-    translation: getTranslation(state),
-  }))
+    translations: getTranslations(state),
+  })),
 )(AddressesList)

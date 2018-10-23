@@ -13,40 +13,40 @@ import styles from './styles/SendScreen.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTrans = (state) => state.trans.SendScreen
+const getTranslations = (state) => state.trans.SendScreen
 
 type Props = {
   navigateToAddressReaderQR: () => mixed,
   navigateToConfirm: () => mixed,
-  trans: SubTranslation<typeof getTrans>,
+  translations: SubTranslation<typeof getTranslations>,
 }
 
-const SendScreen = ({navigateToConfirm, navigateToAddressReaderQR, trans}: Props) => (
+const SendScreen = ({navigateToConfirm, navigateToAddressReaderQR, translations}: Props) => (
   <View style={styles.root}>
     <View style={styles.header}>
-      <Text>Available funds:</Text>
+      <Text>{translations.funds}</Text>
     </View>
     <View style={styles.containerQR}>
       <TouchableOpacity onPress={navigateToAddressReaderQR}>
         <View style={styles.scanIcon} />
       </TouchableOpacity>
-      <Text style={styles.label}>Scan QR code</Text>
+      <Text style={styles.label}>{translations.scanCode}</Text>
     </View>
     <View style={styles.inputContainer}>
-      <TextInput style={styles.inputText} placeholder={'Address'} />
-      <TextInput style={styles.inputText} placeholder={'Amount'} />
+      <TextInput style={styles.inputText} placeholder={translations.address} />
+      <TextInput style={styles.inputText} placeholder={translations.amount} />
     </View>
 
     <Button
       onPress={navigateToConfirm}
-      title={trans.continue}
+      title={translations.continue}
     />
   </View>
 )
 
 export default compose(
   connect((state) => ({
-    trans: getTrans(state),
+    translations: getTranslations(state),
   })),
   withHandlers({
     navigateToAddressReaderQR: ({navigation}) => (event) =>

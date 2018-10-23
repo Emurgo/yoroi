@@ -67,9 +67,9 @@ const TxHistoryList = ({transactions, navigation, formatDate}: Props) => {
 
 export default compose(
   connect((state) => ({
-    trans: state.trans,
+    translations: state.trans,
   })),
   withHandlers({
-    formatDate: ({trans}) => (ts) => formatDate(ts, trans),
+    formatDate: ({translations}) => (ts) => formatDate(ts, translations),
   })
 )(TxHistoryList)

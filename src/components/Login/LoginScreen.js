@@ -11,17 +11,17 @@ import styles from './styles/LoginScreen.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslation = (state) => state.trans.login
+const getTranslations = (state) => state.trans.loginScreen
 
 type Props = {
-  translation: SubTranslation<typeof getTranslation>,
+  translations: SubTranslation<typeof getTranslations>,
 };
 
-const ReceiveScreen = ({translation}: Props) => (
+const ReceiveScreen = ({translations}: Props) => (
   <View style={styles.root}>
     <PinInput
       pinMaxLength={6}
-      labels={{title: 'Enter PIN', subtitle: 'Wallet name', subtitle2: ''}}
+      labels={{title: translations.title, subtitle: 'getWalletName()', subtitle2: ''}}
       onPinEnter={(pin) => Alert.alert('PIN', pin)}
     />
   </View>
@@ -29,6 +29,6 @@ const ReceiveScreen = ({translation}: Props) => (
 
 export default compose(
   connect((state) => ({
-    translation: getTranslation(state),
+    translations: getTranslations(state),
   })),
 )(ReceiveScreen)

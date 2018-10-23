@@ -19,6 +19,9 @@ const l10n = {
     language,
     datetime,
   },
+  loginScreen: {
+    title: 'Enter PIN',
+  },
   languageSelectScreen: {
     selectLanguage: 'SELECT YOUR LANGAUAGE',
     continue: 'CONTINUE',
@@ -51,6 +54,10 @@ const l10n = {
     },
   },
   SendScreen: {
+    funds: 'Available funds:',
+    scanCode: 'Scan QR code',
+    address: 'Address',
+    amount: 'Amount',
     continue: 'Continue',
   },
   ConfirmSendScreen: {

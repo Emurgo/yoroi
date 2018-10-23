@@ -40,5 +40,5 @@ export default compose(
   withHandlers({
     navigateToModal: ({navigation, address}) => () =>
       navigation.navigate(RECEIVE_ROUTES.ADDRESS_MODAL, {address}),
-  })
+  }),
 )(AddressView)

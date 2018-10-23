@@ -37,14 +37,14 @@ const AdaAmount = ({amount, type}) => {
   )
 }
 
-const getTrans = (state) => state.trans.txHistoryScreen.transactionDetails
+const getTranslations = (state) => state.trans.txHistoryScreen.transactionDetails
 
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,
-  trans: SubTranslation<typeof getTrans>,
+  translations: SubTranslation<typeof getTranslations>,
 }
 
-const TxDetails = ({navigation, trans}: Props) => {
+const TxDetails = ({navigation, translations}: Props) => {
   const transaction = navigation.getParam('transaction', {})
 
   return (
@@ -53,7 +53,7 @@ const TxDetails = ({navigation, trans}: Props) => {
 
       <View style={styles.timestampContainer}>
         <View>
-          <Text>{trans.transactionHeader[transaction.type]}</Text>
+          <Text>{translations.transactionHeader[transaction.type]}</Text>
         </View>
         <View>
           <Text>{transaction.timestamp.format('YYYY-MM-DD hh:mm:ss A')}</Text>
@@ -61,7 +61,7 @@ const TxDetails = ({navigation, trans}: Props) => {
       </View>
 
       <View style={styles.section}>
-        <Label>{trans.fromAddresses}</Label>
+        <Label>{translations.fromAddresses}</Label>
 
         {transaction.fromAddresses.map((address) => (
           <Text key={address}>{address}</Text>
@@ -69,7 +69,7 @@ const TxDetails = ({navigation, trans}: Props) => {
       </View>
 
       <View style={styles.section}>
-        <Label>{trans.toAddresses}</Label>
+        <Label>{translations.toAddresses}</Label>
 
         {transaction.toAddresses.map((address) => (
           <Text key={address}>{address}</Text>
@@ -77,12 +77,12 @@ const TxDetails = ({navigation, trans}: Props) => {
       </View>
 
       <View style={styles.section}>
-        <Label>{trans.txAssuranceLevel}</Label>
-        <Text>{trans.formatConfirmations(transaction.confirmations)}</Text>
+        <Label>{translations.txAssuranceLevel}</Label>
+        <Text>{translations.formatConfirmations(transaction.confirmations)}</Text>
       </View>
 
       <View style={styles.section}>
-        <Label>{trans.transactionId}</Label>
+        <Label>{translations.transactionId}</Label>
         <Text>{transaction.id}</Text>
       </View>
     </Screen>
@@ -91,6 +91,6 @@ const TxDetails = ({navigation, trans}: Props) => {
 
 export default compose(
   connect((state) => ({
-    trans: getTrans(state),
+    translations: getTranslations(state),
   }))
 )(TxDetails)

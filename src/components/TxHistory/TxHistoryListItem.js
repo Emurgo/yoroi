@@ -20,12 +20,12 @@ import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {SubTranslation} from '../../l10n/typeHelpers'
 import type {HistoryTransaction} from '../../types/HistoryTransaction'
 
-const getTrans = (state) => state.trans.txHistoryScreen
+const getTranslations = (state) => state.trans.txHistoryScreen
 
 type Props = {
   transaction: HistoryTransaction,
   navigation: NavigationScreenProp<NavigationState>,
-  trans: SubTranslation<typeof getTrans>,
+  translations: SubTranslation<typeof getTranslations>,
 }
 
 const AdaSign = ({color, size}) => (
@@ -47,7 +47,7 @@ const _AssuranceLevel = ({transaction, trans}) => {
   )
 }
 
-const AssuranceLevel = withTranslation(getTrans)(_AssuranceLevel)
+const AssuranceLevel = withTranslation(getTranslations)(_AssuranceLevel)
 
 class TxHistoryListItem extends Component<Props> {
   constructor(props: Props) {
@@ -63,7 +63,7 @@ class TxHistoryListItem extends Component<Props> {
   }
 
   render() {
-    const {transaction, trans} = this.props
+    const {transaction, translations} = this.props
 
     const formattedAmount = {
       SENT: (x) => `- ${printAda(x)}`,
@@ -95,7 +95,7 @@ class TxHistoryListItem extends Component<Props> {
           <View style={styles.amountPanel}>
             <View style={styles.amountContainer}>
               <View style={styles.horizontalSpacer} />
-              <Text>{trans.transactionType[transaction.direction]}</Text>
+              <Text>{translations.transactionType[transaction.direction]}</Text>
             </View>
             <View style={styles.amountContainer}>
               <View style={styles.horizontalSpacer} />
@@ -123,7 +123,7 @@ class TxHistoryListItem extends Component<Props> {
 
 export default compose(
   connect((state, {id}) => ({
-    trans: getTrans(state),
+    translations: getTranslations(state),
     transaction: transactionsSelector(state)[id],
   }))
 )(TxHistoryListItem)

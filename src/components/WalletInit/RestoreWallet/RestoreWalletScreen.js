@@ -26,21 +26,21 @@ const resetNavigationAction = StackActions.reset({
   key: null,
 })
 
-const getTrans = (state: State) => state.trans.restoreWalletScreen
+const getTranslations = (state: State) => state.trans.restoreWalletScreen
 
 type Props = {
   navigateToWallet: () => mixed,
-  trans: SubTranslation<typeof getTrans>,
+  translations: SubTranslation<typeof getTranslations>,
 }
 
-const RestoreWalletScreen = ({navigateToWallet, trans}: Props) => (
+const RestoreWalletScreen = ({navigateToWallet, translations}: Props) => (
   <Screen bgColor={COLORS.TRANSPARENT}>
     <View>
-      <Text>{trans.title}</Text>
+      <Text>{translations.title}</Text>
 
       <Button
         onPress={navigateToWallet}
-        title={trans.restoreButton}
+        title={translations.restoreButton}
       />
     </View>
   </Screen>
@@ -48,7 +48,7 @@ const RestoreWalletScreen = ({navigateToWallet, trans}: Props) => (
 
 export default compose(
   connect((state) => ({
-    trans: getTrans(state),
+    translations: getTranslations(state),
   })),
   withHandlers({
     navigateToWallet: ({navigation}) => (event) => navigation.dispatch(resetNavigationAction),

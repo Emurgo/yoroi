@@ -11,7 +11,7 @@ import styles from './styles/AddressModal.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslation = (state) => state.trans.receiveScreenModal
+const getTranslations = (state) => state.trans.receiveScreenModal
 
 type Props = {
   address: string,
@@ -20,7 +20,7 @@ type Props = {
   isClicked: boolean,
   setClicked: (boolean) => void,
   copyAddress: () => void,
-  translation: SubTranslation<typeof getTranslation>,
+  translations: SubTranslation<typeof getTranslations>,
   onClose: () => void,
 }
 
@@ -31,7 +31,7 @@ const AddressModal = ({
   isClicked,
   setClicked,
   copyAddress,
-  translation,
+  translations,
   onClose,
 }: Props) => (
   <Modal
@@ -55,10 +55,9 @@ const AddressModal = ({
       <View style={styles.container}>
         <Button
           onPress={copyAddress}
-          title={isClicked ? translation.copiedLabel : translation.copyLabel}
+          title={isClicked ? translations.copiedLabel : translations.copyLabel}
         />
       </View>
-
     </View>
   </Modal>
 )
@@ -66,7 +65,7 @@ const AddressModal = ({
 export default compose(
   connect((state, {navigation}) => ({
     address: navigation.getParam('address'),
-    translation: getTranslation(state),
+    translations: getTranslations(state),
   })),
   withState('isVisible', 'setVisible', true),
   withState('isClicked', 'setClicked', false),
@@ -76,5 +75,5 @@ export default compose(
       setClicked(true)
     },
     onClose: ({navigation}) => () => navigation.goBack(),
-  })
+  }),
 )(AddressModal)

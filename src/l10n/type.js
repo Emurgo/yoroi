@@ -16,6 +16,9 @@ export type Translation = {
       yesterday: string
     }
   },
+  loginScreen: {
+    title: string,
+  },
   languageSelectScreen: {
     selectLanguage: string,
     continue: string
@@ -47,10 +50,14 @@ export type Translation = {
     }
   },
   SendScreen: {
-    continue: string
+    funds: string,
+    scanCode: string,
+    address: string,
+    amount: string,
+    continue: string,
   },
   ConfirmSendScreen: {
-    confirm: string
+    confirm: string,
   },
   walletInitScreen: {
     createWallet: string,

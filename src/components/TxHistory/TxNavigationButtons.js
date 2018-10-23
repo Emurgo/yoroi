@@ -14,16 +14,21 @@ import {MAIN_ROUTES} from '../../RoutesList'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTrans = (state) => state.trans.txHistoryNavigationButtons
+const getTranslations = (state) => state.trans.txHistoryNavigationButtons
 
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,
   navigateToReceive: () => mixed,
   navigateToSend: () => mixed,
-  trans: SubTranslation<typeof getTrans>,
+  translations: SubTranslation<typeof getTranslations>,
 }
 
-const TxNavigationButtons = ({navigation, navigateToReceive, navigateToSend, trans}: Props) => (
+const TxNavigationButtons = ({
+  navigation,
+  navigateToReceive,
+  navigateToSend,
+  translations,
+}: Props) => (
   <View style={styles.navigationButtonsContainer}>
     <TouchableHighlight
       style={styles.button}
@@ -32,7 +37,7 @@ const TxNavigationButtons = ({navigation, navigateToReceive, navigateToSend, tra
       onPress={navigateToSend}
     >
       <View style={styles.sendButton}>
-        <Text>{trans.sendButton}</Text>
+        <Text>{translations.sendButton}</Text>
       </View>
     </TouchableHighlight>
 
@@ -43,7 +48,9 @@ const TxNavigationButtons = ({navigation, navigateToReceive, navigateToSend, tra
       onPress={navigateToReceive}
     >
       <View style={styles.receiveButton}>
-        <Text style={styles.receiveButtonText}>{trans.receiveButton}</Text>
+        <Text style={styles.receiveButtonText}>
+          {translations.receiveButton}
+        </Text>
       </View>
     </TouchableHighlight>
   </View>
@@ -51,7 +58,7 @@ const TxNavigationButtons = ({navigation, navigateToReceive, navigateToSend, tra
 
 export default compose(
   connect((state) => ({
-    trans: getTrans(state),
+    translations: getTranslations(state),
   })),
   withHandlers({
     navigateToReceive: ({navigation}) => (event) => navigation.navigate(MAIN_ROUTES.RECEIVE),
