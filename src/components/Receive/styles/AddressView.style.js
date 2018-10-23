@@ -1,11 +1,17 @@
 // @flow
 
+import {COLORS} from '../../../styles/config'
+
 const styles = {
   container: {
     flex: 1,
     flexDirection: 'row',
   },
-  address: {
+  addressUsed: {
+    fontSize: 17,
+    color: COLORS.DARK_GRAY,
+  },
+  addressNotUsed: {
     fontSize: 17,
   },
   addressContainer: {

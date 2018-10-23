@@ -15,10 +15,11 @@ const getTranslations = (state) => state.trans.receiveScreen
 
 type Props = {
   address: string,
+  isUsed: boolean,
   translations: SubTranslation<typeof getTranslations>,
 }
 
-const AddressDetail = ({address, translations}: Props) => (
+const AddressDetail = ({address, isUsed, translations}: Props) => (
   <View style={styles.container}>
     <View style={styles.qrContainer}>
       <QRCode
@@ -30,7 +31,7 @@ const AddressDetail = ({address, translations}: Props) => (
     </View>
 
     <Text style={styles.addressLabel}>{translations.walletAddress}</Text>
-    <AddressView address={address} />
+    <AddressView address={address} isUsed={isUsed} />
   </View>
 )
 

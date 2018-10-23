@@ -88,7 +88,9 @@ export type Translation = {
       line3: string
     },
     walletAddress: string,
-    walletAddresses: string
+    walletAddresses: string,
+    hideUsedAddresses: string,
+    showUsedAddresses: string,
   },
   receiveScreenModal: {
     copyLabel: string,

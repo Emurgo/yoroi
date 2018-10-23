@@ -93,6 +93,8 @@ const l10n = {
     },
     walletAddress: 'Your wallet address',
     walletAddresses: 'Your wallet addresses',
+    hideUsedAddresses: 'hide used',
+    showUsedAddresses: 'show used',
   },
   receiveScreenModal: {
     copyLabel: 'COPY ADDRESS',
