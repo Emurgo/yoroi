@@ -84,7 +84,11 @@ const PinInput = ({
       {keyboard.map((row, rowIndex) => (
         <View key={rowIndex} style={styles.keyboardRow}>
           {row.map((value, index) => (
-            <EnhancedKeyboardKey key={index} value={value} onPress={onKeyDown} />
+            <EnhancedKeyboardKey
+              key={index}
+              value={value}
+              onPress={onKeyDown}
+            />
           ))}
         </View>
       ))}
@@ -97,5 +101,5 @@ export default compose(
   withHandlers({
     onKeyDown: ({pin, setPin, pinMaxLength, onPinEnter}) => (value) =>
       processPin(pin, setPin, pinMaxLength, value, onPinEnter),
-  })
+  }),
 )(PinInput)

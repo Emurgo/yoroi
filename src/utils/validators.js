@@ -7,7 +7,7 @@ export type PasswordValidationErrors = {
 
 export const validatePassword = (
   password: string,
-  passwordConfirmation: string
+  passwordConfirmation: string,
 ): PasswordValidationErrors | null => {
   let validations = null
   if (!password) {

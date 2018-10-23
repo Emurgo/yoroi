@@ -6,10 +6,11 @@ type Addresses = Array<string>
 
 export const setIsOnlineCallback = () => null
 
-export const fetchNewTxHistory = (since: number, addresses: Addresses) => Promise.resolve(txHistory)
+export const fetchNewTxHistory = (since: number, addresses: Addresses) =>
+  Promise.resolve(txHistory)
 
+export const fetchUtxoSum = (addresses: Array<string>) =>
+  Promise.resolve(utxoSumForAddresses)
 
-export const fetchUtxoSum = (addresses: Array<string>) => Promise.resolve(utxoSumForAddresses)
-
-
-export const fetchUtxo = (addresses: Array<string>) => Promise.resolve(utxoForAddresses)
+export const fetchUtxo = (addresses: Array<string>) =>
+  Promise.resolve(utxoForAddresses)

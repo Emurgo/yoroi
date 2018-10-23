@@ -20,7 +20,11 @@ import styles from './styles/TxHistoryList.style'
 const formatDate = (timestamp: Moment, trans) => {
   if (moment().isSame(timestamp, 'day')) {
     return trans.global.datetime.today
-  } else if (moment().subtract(1, 'day').isSame(timestamp, 'day')) {
+  } else if (
+    moment()
+      .subtract(1, 'day')
+      .isSame(timestamp, 'day')
+  ) {
     return trans.global.datetime.yesterday
   } else {
     // moment should be set to correct i18n
@@ -57,7 +61,11 @@ const TxHistoryList = ({transactions, navigation, formatDate}: Props) => {
         <View key={date} style={styles.dayContainer}>
           <DayHeader ts={transactions[0].timestamp} formatDate={formatDate} />
           {transactions.map((transaction) => (
-            <TxHistoryListItem navigation={navigation} key={transaction.id} id={transaction.id} />
+            <TxHistoryListItem
+              navigation={navigation}
+              key={transaction.id}
+              id={transaction.id}
+            />
           ))}
         </View>
       ))}
@@ -71,5 +79,5 @@ export default compose(
   })),
   withHandlers({
     formatDate: ({translations}) => (ts) => formatDate(ts, translations),
-  })
+  }),
 )(TxHistoryList)

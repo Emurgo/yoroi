@@ -30,7 +30,10 @@ const externalAddresses = [
 // getExternalAddresses
 test('Can generate external addresses', () => {
   const masterKey = getMasterKeyFromMnemonic(mnemonic)
-  const account = getAccountFromMasterKey(masterKey, CARDANO_CONFIG.TESTNET.PROTOCOL_MAGIC)
+  const account = getAccountFromMasterKey(
+    masterKey,
+    CARDANO_CONFIG.TESTNET.PROTOCOL_MAGIC,
+  )
   const addresses = getExternalAddresses(account, [0, 1, 2])
 
   expect(addresses).toEqual(externalAddresses)
@@ -39,6 +42,7 @@ test('Can generate external addresses', () => {
 // getAddressInHex
 test('Can convert address to hex', () => {
   const address = externalAddresses[0]
+  // prettier-ignore
   // eslint-disable-next-line max-len
   const hex = '82d818582183581ce0256c34965ce528570c22f88073e625020288a1973c1e2d466d39bca0001ab7e3a79a'
   expect(getAddressInHex(address)).toEqual(hex)
@@ -50,12 +54,15 @@ test('Throws error when converting bad address', () => {
 
 // isValidAddress
 test('Can validate valid addresses', () => {
-  externalAddresses.forEach((address) => expect(isValidAddress(address)).toBe(true))
+  externalAddresses.forEach((address) =>
+    expect(isValidAddress(address)).toBe(true),
+  )
 })
 
 test('Can validate invalid addresses', () => {
   const addresses = [
-    'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ6', // should be invalid
+    // should be invalid
+    'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ6',
     'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ', // too short
     'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ77', // too long
     '',
@@ -65,7 +72,6 @@ test('Can validate invalid addresses', () => {
   ]
   addresses.forEach((address) => expect(isValidAddress(address)).toBe(false))
 })
-
 
 test('Can encrypt / decrypt masterKey', () => {
   const masterKey = getMasterKeyFromMnemonic(mnemonic)
@@ -77,5 +83,5 @@ test('Can encrypt / decrypt masterKey', () => {
 
 test('Make sure that we are using safe buffers', () => {
   // in response to https://github.com/nodejs/node/issues/4660
-  expect((new Buffer(10)).toString('hex')).toBe('00000000000000000000')
+  expect(new Buffer(10).toString('hex')).toBe('00000000000000000000')
 })

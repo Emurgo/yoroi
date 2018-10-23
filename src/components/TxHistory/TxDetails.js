@@ -22,7 +22,9 @@ const AdaAmount = ({amount, type}) => {
   const isNegativeAmount = type === 'SENT'
   return (
     <View style={styles.amountContainer}>
-      <Text style={isNegativeAmount ? styles.negativeAmount : styles.positiveAmount}>
+      <Text
+        style={isNegativeAmount ? styles.negativeAmount : styles.positiveAmount}
+      >
         {isNegativeAmount ? '-' : ''}
         {printAda(amount)}
       </Text>
@@ -30,14 +32,17 @@ const AdaAmount = ({amount, type}) => {
         <AdaIcon
           width={18}
           height={18}
-          color={isNegativeAmount ? COLORS.NEGATIVE_AMOUNT : COLORS.POSITIVE_AMOUNT}
+          color={
+            isNegativeAmount ? COLORS.NEGATIVE_AMOUNT : COLORS.POSITIVE_AMOUNT
+          }
         />
       </View>
     </View>
   )
 }
 
-const getTranslations = (state) => state.trans.txHistoryScreen.transactionDetails
+const getTranslations = (state) =>
+  state.trans.txHistoryScreen.transactionDetails
 
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,
@@ -78,7 +83,9 @@ const TxDetails = ({navigation, translations}: Props) => {
 
       <View style={styles.section}>
         <Label>{translations.txAssuranceLevel}</Label>
-        <Text>{translations.formatConfirmations(transaction.confirmations)}</Text>
+        <Text>
+          {translations.formatConfirmations(transaction.confirmations)}
+        </Text>
       </View>
 
       <View style={styles.section}>
@@ -92,5 +99,5 @@ const TxDetails = ({navigation, translations}: Props) => {
 export default compose(
   connect((state) => ({
     translations: getTranslations(state),
-  }))
+  })),
 )(TxDetails)

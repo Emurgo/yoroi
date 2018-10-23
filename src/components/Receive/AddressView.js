@@ -17,7 +17,7 @@ type Props = {
   address: string,
   isUsed: boolean,
   navigateToModal: () => void,
-};
+}
 
 const AddressView = ({address, isUsed, navigateToModal}: Props) => (
   <TouchableHighlight

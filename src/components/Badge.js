@@ -31,7 +31,9 @@ const Badge = ({text, color, backgroundColor}: Props) => (
         ...styles.text,
         color: color || COLORS.PRIMARY_TEXT,
       }}
-    >{text}</Text>
+    >
+      {text}
+    </Text>
   </View>
 )
 

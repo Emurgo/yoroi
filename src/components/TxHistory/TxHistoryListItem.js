@@ -111,7 +111,9 @@ class TxHistoryListItem extends Component<Props> {
             <View style={styles.feeContainer}>
               <View style={styles.horizontalSpacer} />
               {transaction.direction !== TRANSACTION_DIRECTION.RECEIVED && (
-                <Text style={styles.feeAmount}>{printAda(transaction.fee)} l10n Fee</Text>
+                <Text style={styles.feeAmount}>
+                  {printAda(transaction.fee)} l10n Fee
+                </Text>
               )}
             </View>
           </View>
@@ -125,5 +127,5 @@ export default compose(
   connect((state, {id}) => ({
     translations: getTranslations(state),
     transaction: transactionsSelector(state)[id],
-  }))
+  })),
 )(TxHistoryListItem)

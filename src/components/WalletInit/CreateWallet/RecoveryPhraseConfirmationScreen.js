@@ -16,7 +16,8 @@ import type {State} from '../../../state'
 import type {SubTranslation} from '../../../l10n/typeHelpers'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 
-const getTranslations = (state: State) => state.trans.recoveryPhraseConfirmationScreen
+const getTranslations = (state: State) =>
+  state.trans.recoveryPhraseConfirmationScreen
 
 type Props = {
   navigateToConfirmDialog: () => mixed,
@@ -37,7 +38,9 @@ const RecoveryPhraseConfirmationScreen = ({
       <Text>{navigation.getParam('mnemonic')}</Text>
 
       <Button
-        onPress={() => {/* Dispatch reset action here */}}
+        onPress={() => {
+          /* Dispatch reset action here */
+        }}
         title={translations.clearButton}
       />
 
@@ -54,12 +57,13 @@ export default compose(
     translations: getTranslations(state),
   })),
   withHandlers({
-    navigateToConfirmDialog: ({navigation}) =>
-      () => navigation.navigate(
-        WALLET_INIT_ROUTES.RECOVERY_PHRASE_CONFIRMATION_DIALOG, {
+    navigateToConfirmDialog: ({navigation}) => () =>
+      navigation.navigate(
+        WALLET_INIT_ROUTES.RECOVERY_PHRASE_CONFIRMATION_DIALOG,
+        {
           mnemonic: navigation.getParam('mnemonic'),
           password: navigation.getParam('password'),
-        }
+        },
       ),
-  })
+  }),
 )(RecoveryPhraseConfirmationScreen)

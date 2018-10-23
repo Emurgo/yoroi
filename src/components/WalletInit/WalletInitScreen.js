@@ -26,7 +26,11 @@ type Props = {
   translations: SubTranslation<typeof getTranslations>,
 }
 
-const WalletInitScreen = ({navigateCreateWallet, navigateRestoreWallet, translations}: Props) => (
+const WalletInitScreen = ({
+  navigateCreateWallet,
+  navigateRestoreWallet,
+  translations,
+}: Props) => (
   <LinearGradient
     start={{x: 0, y: 0}}
     end={{x: 1, y: 0}}
@@ -61,5 +65,5 @@ export default compose(
       navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET),
     navigateCreateWallet: ({navigation}) => (event) =>
       navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET),
-  })
+  }),
 )(WalletInitScreen)

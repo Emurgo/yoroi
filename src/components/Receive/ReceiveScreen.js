@@ -51,5 +51,5 @@ export default compose(
     receiveAddresses: state.receiveAddresses,
     usedReceiveAddresses: state.usedReceiveAddresses,
     translations: getTranslations(state),
-  }))
+  })),
 )(ReceiveScreen)

@@ -49,8 +49,13 @@ const validatePhrase = (phrase) => {
     ? _.initial(words).filter(notInWordlist)
     : words.filter(notInWordlist)
 
-  return (maxLength || minLength || unknownWords.length > 0)
-    ? {maxLength, minLength, unknownWords: unknownWords.length > 0 ? unknownWords : null}
+  // prettier-ignore
+  return maxLength || minLength || unknownWords.length > 0 ?
+    {
+      maxLength,
+      minLength,
+      unknownWords: unknownWords.length > 0 ? unknownWords : null,
+    }
     : null
 }
 
@@ -86,13 +91,14 @@ const RestoreWalletScreen = ({
             onChangeText={setPhrase}
             placeholder={translations.phrase}
           />
-          {errors && errors.unknownWords &&
-            (<Text style={styles.error}>
+          {/* prettier-ignore */ errors && errors.unknownWords && (
+            <Text style={styles.error}>
               {translations.errors.unknownWords(errors.unknownWords)}
-            </Text>)
-          }
-          {(errors && errors.maxLength) &&
-            (<Text style={styles.error}>{translations.errors.maxLength}</Text>)}
+            </Text>
+          )}
+          {/* prettier-ignore */ errors && errors.maxLength && (
+            <Text style={styles.error}>{translations.errors.maxLength}</Text>
+          )}
         </View>
 
         <Button
@@ -111,7 +117,8 @@ export default compose(
   })),
   withState('phrase', 'setPhrase', ''),
   withHandlers({
-    navigateToWallet: ({navigation}) => (event) => navigation.dispatch(resetNavigationAction),
+    navigateToWallet: ({navigation}) => (event) =>
+      navigation.dispatch(resetNavigationAction),
     validatePhrase: ({phrase}) => () => validatePhrase(phrase),
-  })
+  }),
 )(RestoreWalletScreen)

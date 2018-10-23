@@ -20,7 +20,11 @@ export default () => {
     middlewares.push(loggerMiddleware)
   }
 
-  const store = createStore(rootReducer, getInitialState(), applyMiddleware(...middlewares))
+  const store = createStore(
+    rootReducer,
+    getInitialState(),
+    applyMiddleware(...middlewares),
+  )
 
   if (process.env.NODE_ENV === 'development') {
     logger.log = (message: string, payload: Object) =>

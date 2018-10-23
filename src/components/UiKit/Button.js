@@ -1,7 +1,13 @@
 // @flow
 
 import React from 'react'
-import {Platform, StyleSheet, TouchableNativeFeedback, TouchableOpacity, View} from 'react-native'
+import {
+  Platform,
+  StyleSheet,
+  TouchableNativeFeedback,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import {colors} from '../../styles/config'
 import Text from './Text'
 
@@ -39,7 +45,8 @@ class Button extends React.Component<ButtonProps> {
     const {accessibilityLabel, onPress, title, disabled, style} = this.props
 
     const formattedTitle = title.toUpperCase()
-    const Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity
+    const Touchable =
+      Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity
 
     return (
       <Touchable
@@ -49,7 +56,10 @@ class Button extends React.Component<ButtonProps> {
         onPress={onPress}
       >
         <View style={[styles.button, disabled && styles.buttonDisabled, style]}>
-          <Text style={[styles.text, disabled && styles.textDisabled]} disabled={disabled}>
+          <Text
+            style={[styles.text, disabled && styles.textDisabled]}
+            disabled={disabled}
+          >
             {formattedTitle}
           </Text>
         </View>

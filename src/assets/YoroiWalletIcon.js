@@ -1,13 +1,9 @@
 // @flow
+/* eslint-disable max-len */
 
 import React from 'react'
-import Svg, {
-  Path,
-  G,
-  Polygon,
-} from 'react-native-svg'
+import Svg, {Path, G, Polygon} from 'react-native-svg'
 import {COLORS} from '../styles/config'
-
 
 type Props = {width: number, height: number, color?: string}
 
@@ -18,7 +14,13 @@ const YoroiWalletIcon = ({width, height, color = COLORS.BLACK}: Props) => (
     xmlns="http://www.w3.org/2000/svg"
     {...{width, height}}
   >
-    <G id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <G
+      id="Page-1"
+      stroke="none"
+      stroke-width="1"
+      fill="none"
+      fill-rule="evenodd"
+    >
       <G id="terms@2x" transform="translate(-422.000000, -27.000000)">
         <G id="Group" transform="translate(422.000000, 27.000000)">
           <Path
@@ -185,12 +187,8 @@ const YoroiWalletIcon = ({width, height, color = COLORS.BLACK}: Props) => (
               C8.1517024,5.60808081 8.34388398,6.10909091 8.72824716,6.4969697
               C9.09659521,6.88484848 9.59306431,7.07878788 10.1856242,7.07878788 Z"
             />
-            <Polygon
-              points="14.5257251 7.36969697 14.5257251 0 14.8617251 0 14.8617251 7.36969697"
-            />
-            <Polygon
-              points="17.0240858 7.36969697 17.0240858 0 17.3600858 0 17.3600858 7.36969697"
-            />
+            <Polygon points="14.5257251 7.36969697 14.5257251 0 14.8617251 0 14.8617251 7.36969697" />
+            <Polygon points="17.0240858 7.36969697 17.0240858 0 17.3600858 0 17.3600858 7.36969697" />
             <Path
               d="M23.5262295,4.83232323 C23.5262295,4.94545455 23.5262295,5.01010101
               23.5102144,5.04242424 L19.4904161,5.04242424 C19.5224464,5.62424242

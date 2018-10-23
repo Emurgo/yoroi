@@ -36,14 +36,18 @@ const handleWalletConfirmation = ({navigation}) => () => {
   navigation.dispatch(resetNavigationAction)
 }
 
-const getTranslations = (state: State) => state.trans.recoveryPhraseConfirmationDialog
+const getTranslations = (state: State) =>
+  state.trans.recoveryPhraseConfirmationDialog
 
 type Props = {
   confirmWalletCreation: () => mixed,
   translations: SubTranslation<typeof getTranslations>,
 }
 
-const RecoveryPhraseConfirmationDialog = ({confirmWalletCreation, translations}: Props) => (
+const RecoveryPhraseConfirmationDialog = ({
+  confirmWalletCreation,
+  translations,
+}: Props) => (
   <Screen bgColor={COLORS.TRANSPARENT_BLACK}>
     <View style={styles.dialogBody}>
       <Text>{translations.title}</Text>
@@ -64,5 +68,5 @@ export default compose(
   })),
   withHandlers({
     confirmWalletCreation: handleWalletConfirmation,
-  })
+  }),
 )(RecoveryPhraseConfirmationDialog)

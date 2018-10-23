@@ -9,15 +9,15 @@ import type {HistoryTransaction} from './types/HistoryTransaction'
 import _ from 'lodash'
 
 // TODO(ppershing): memoize/reselect
-export const transactionsSelector = (state: State): Dict<HistoryTransaction> => {
+export const transactionsSelector = (
+  state: State,
+): Dict<HistoryTransaction> => {
   // TODO(ppershing): are these all of my receive addresses?
   const ownAddresses = state.receiveAddresses
-  return _.mapValues(
-    state.transactions.data,
-    (tr) => processTxHistoryData(tr, ownAddresses)
+  return _.mapValues(state.transactions.data, (tr) =>
+    processTxHistoryData(tr, ownAddresses),
   )
 }
-
 
 export const amountPendingSelector = (state: State): ?number => {
   const transactions = transactionsSelector(state)
@@ -31,4 +31,5 @@ export const amountPendingSelector = (state: State): ?number => {
 }
 
 export const isOnlineSelector = (state: State) => state.isOnline
-export const isFetchingHistorySelector = (state: State): boolean => state.transactions.isFetching
+export const isFetchingHistorySelector = (state: State): boolean =>
+  state.transactions.isFetching

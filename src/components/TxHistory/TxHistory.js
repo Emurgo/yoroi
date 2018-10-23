@@ -34,27 +34,23 @@ type Props = {
   amountPending: ?number,
 }
 
-const OfflineBanner = () => (
-  <Text>
-    You are offline!
-  </Text>
-)
+const OfflineBanner = () => <Text>You are offline!</Text>
 
-const RefreshBanner = () => (
-  <Text>
-    Refreshing...
-  </Text>
-)
+const RefreshBanner = () => <Text>Refreshing...</Text>
 
-const NoTxHistory = () => (
-  <Text> You have no transactions yet ... </Text>
-)
+const NoTxHistory = () => <Text> You have no transactions yet ... </Text>
 
 const PendingAmount = ({amount}) => (
   <Text> Pending amount: {printAda(amount)} </Text>
 )
 
-const TxHistory = ({amountPending, transactions, navigation, isFetching, isOnline}: Props) => (
+const TxHistory = ({
+  amountPending,
+  transactions,
+  navigation,
+  isFetching,
+  isOnline,
+}: Props) => (
   <View style={styles.root}>
     {!isOnline && <OfflineBanner />}
     {isFetching && <RefreshBanner />}
@@ -64,13 +60,11 @@ const TxHistory = ({amountPending, transactions, navigation, isFetching, isOnlin
     */}
     {amountPending && <PendingAmount amount={amountPending} />}
     <Screen scroll>
-      {_.isEmpty(transactions)
-        ? <NoTxHistory />
-        : <TxHistoryList
-          navigation={navigation}
-          transactions={transactions}
-        />
-      }
+      {_.isEmpty(transactions) ? (
+        <NoTxHistory />
+      ) : (
+        <TxHistoryList navigation={navigation} transactions={transactions} />
+      )}
     </Screen>
 
     <TxNavigationButtons navigation={navigation} />
@@ -78,14 +72,17 @@ const TxHistory = ({amountPending, transactions, navigation, isFetching, isOnlin
 )
 
 export default compose(
-  connect((state: State) => ({
-    transactions: transactionsSelector(state),
-    amountPending: amountPendingSelector(state),
-    isFetching: isFetchingHistorySelector(state),
-    isOnline: isOnlineSelector(state),
-  }), {
-    updateHistory,
-  }),
+  connect(
+    (state: State) => ({
+      transactions: transactionsSelector(state),
+      amountPending: amountPendingSelector(state),
+      isFetching: isFetchingHistorySelector(state),
+      isOnline: isOnlineSelector(state),
+    }),
+    {
+      updateHistory,
+    },
+  ),
   // TODO(ppershing): this should be handled
   // by some history manager
   // FIXME(ppershing): we do not clean interval on unmount

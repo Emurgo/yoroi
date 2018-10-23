@@ -23,7 +23,10 @@ type Props = {
   translations: SubTranslation<typeof getTranslations>,
 }
 
-const RecoveryPhraseExplanationDialog = ({navigateToRecoveryPhrase, translations}: Props) => (
+const RecoveryPhraseExplanationDialog = ({
+  navigateToRecoveryPhrase,
+  translations,
+}: Props) => (
   <Screen bgColor={COLORS.TRANSPARENT_BLACK}>
     <View style={styles.dialogBody}>
       <Text>{translations.title}</Text>
@@ -43,10 +46,9 @@ export default compose(
     translations: getTranslations(state),
   })),
   withHandlers({
-    navigateToRecoveryPhrase:
-      ({navigation}) => (event) => navigation.replace(
-        WALLET_INIT_ROUTES.RECOVERY_PHRASE,
-        {password: navigation.getParam('password')}
-      ),
-  })
+    navigateToRecoveryPhrase: ({navigation}) => (event) =>
+      navigation.replace(WALLET_INIT_ROUTES.RECOVERY_PHRASE, {
+        password: navigation.getParam('password'),
+      }),
+  }),
 )(RecoveryPhraseExplanationDialog)

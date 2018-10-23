@@ -17,7 +17,7 @@ type Props = {
   changeLanguageAction: () => mixed,
   navigation: NavigationScreenProp<NavigationState>,
   languageCode: string,
-};
+}
 
 const LanguagePickerScreen = ({navigation}: Props) => (
   <LinearGradient

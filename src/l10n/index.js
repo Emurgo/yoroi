@@ -11,7 +11,6 @@ const transform = (obj, transformer) =>
     ? _.mapValues(obj, (v) => transform(v, transformer))
     : transformer(obj)
 
-
 // "Translates" a string or a function returning string
 // into random characters from targetChars
 const dummyTranslate = (targetChars) => (obj: any): any => {
@@ -32,13 +31,15 @@ const dummyTranslate = (targetChars) => (obj: any): any => {
   }
 }
 
-const dummyCn = (
-  transform(en, dummyTranslate('发送支援请求时出现问题')): Translation
-)
+const dummyCn = (transform(
+  en,
+  dummyTranslate('发送支援请求时出现问题'),
+): Translation)
 
-const dummyJa = (
-  transform(en, dummyTranslate('インポートしようとしたウ')): Translation
-)
+const dummyJa = (transform(
+  en,
+  dummyTranslate('インポートしようとしたウ'),
+): Translation)
 
 const strings = new LocalizedStrings({
   en,

@@ -61,7 +61,9 @@ export default compose(
     translations: getTranslations(state),
   })),
   withHandlers({
-    navigateToReceive: ({navigation}) => (event) => navigation.navigate(MAIN_ROUTES.RECEIVE),
-    navigateToSend: ({navigation}) => (event) => navigation.navigate(MAIN_ROUTES.SEND),
-  })
+    navigateToReceive: ({navigation}) => (event) =>
+      navigation.navigate(MAIN_ROUTES.RECEIVE),
+    navigateToSend: ({navigation}) => (event) =>
+      navigation.navigate(MAIN_ROUTES.SEND),
+  }),
 )(TxNavigationButtons)
