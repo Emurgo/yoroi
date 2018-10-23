@@ -123,8 +123,10 @@ export type Translation = {
     instructions: string,
     phrase: string,
     restoreButton: string,
-    unknownWord: string,
-    maxLength: string,
+    errors: {
+      maxLength: string,
+      unknownWords: (Array<string>) => string,
+    }
   },
   txHistoryNavigationButtons: {
     sendButton: string,

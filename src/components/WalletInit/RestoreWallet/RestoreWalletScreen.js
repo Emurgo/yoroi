@@ -34,23 +34,24 @@ const getTranslations = (state: State) => state.trans.restoreWalletScreen
 type PhraseErrors = {
   maxLength?: boolean,
   minLength?: boolean,
-  unknownWord?: boolean,
+  unknownWords?: Array<string>,
 }
 
 const MNEMONIC_LENGTH = 15
 
-const validatePhrase = ({phrase}) => () => {
-  const words = _(phrase.split(' ')).filter((word) => !!word)
+const validatePhrase = (phrase) => {
+  const words = phrase.split(' ').filter((word) => !!word)
+  const maxLength = words.length > MNEMONIC_LENGTH
+  const minLength = words.length < MNEMONIC_LENGTH
 
-  if (words.size() > MNEMONIC_LENGTH) {
-    return {maxLength: true}
-  } else {
-    const notInWordlist = (word) => !wordlists.EN.includes(word)
-    const minLength = words.size() < MNEMONIC_LENGTH
-    const unknownWord = minLength ? words.initial().some(notInWordlist) : words.some(notInWordlist)
+  const notInWordlist = (word) => !wordlists.EN.includes(word)
+  const unknownWords = minLength
+    ? _.initial(words).filter(notInWordlist)
+    : words.filter(notInWordlist)
 
-    return (unknownWord || minLength) ? {unknownWord, minLength} : null
-  }
+  return (maxLength || minLength || unknownWords.length > 0)
+    ? {maxLength, minLength, unknownWords: unknownWords.length > 0 ? unknownWords : null}
+    : null
 }
 
 type Props = {
@@ -85,10 +86,13 @@ const RestoreWalletScreen = ({
             onChangeText={setPhrase}
             placeholder={translations.phrase}
           />
-          {(errors && errors.unknownWord) &&
-            (<Text style={styles.error}>{translations.unknownWord}</Text>)}
+          {errors && errors.unknownWords &&
+            (<Text style={styles.error}>
+              {translations.errors.unknownWords(errors.unknownWords)}
+            </Text>)
+          }
           {(errors && errors.maxLength) &&
-            (<Text style={styles.error}>{translations.maxLength}</Text>)}
+            (<Text style={styles.error}>{translations.errors.maxLength}</Text>)}
         </View>
 
         <Button
@@ -108,6 +112,6 @@ export default compose(
   withState('phrase', 'setPhrase', ''),
   withHandlers({
     navigateToWallet: ({navigation}) => (event) => navigation.dispatch(resetNavigationAction),
-    validatePhrase,
+    validatePhrase: ({phrase}) => () => validatePhrase(phrase),
   })
 )(RestoreWalletScreen)
