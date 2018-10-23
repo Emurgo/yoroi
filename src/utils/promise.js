@@ -4,7 +4,7 @@ import ExtendableError from 'es6-error'
 export class LockError extends ExtendableError {}
 
 export type Mutex = {
-  lock: ?Promise<any>
+  lock: ?Promise<any>,
 }
 
 export const delay = (duration: number): Promise<void> => {
@@ -13,9 +13,11 @@ export const delay = (duration: number): Promise<void> => {
   })
 }
 
-
 // Try locking mutex, waits if cannot be locked
-export const synchronize = <T>(mutex: Mutex, factory: () => Promise<T>): Promise<T> => {
+export const synchronize = <T>(
+  mutex: Mutex,
+  factory: () => Promise<T>,
+): Promise<T> => {
   if (!mutex.lock) {
     // We are first and can grab lock
     const myPromise = factory()
@@ -55,8 +57,10 @@ export const synchronize = <T>(mutex: Mutex, factory: () => Promise<T>): Promise
   }
 }
 
-export const nonblockingSynchronize =
-<T>(mutex: Mutex, factory: () => Promise<T>): Promise<T> => {
+export const nonblockingSynchronize = <T>(
+  mutex: Mutex,
+  factory: () => Promise<T>,
+): Promise<T> => {
   if (mutex.lock) throw new LockError()
   return synchronize(mutex, factory)
 }

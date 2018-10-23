@@ -14,14 +14,12 @@ import {Logger} from '../utils/logging'
 import type {Moment} from 'moment'
 import type {RawTransaction} from '../types/HistoryTransaction'
 
-
 const getLastTimestamp = (history: Array<RawTransaction>): ?Moment => {
   // Note(ppershing): ISO8601 dates can be sorted as strings
   // and the result is expected
   const max = _.max(history.map((tx) => tx.last_update))
   return moment(max || 0)
 }
-
 
 export class WalletManager {
   masterKey: any
@@ -47,7 +45,7 @@ export class WalletManager {
   _getAccount() {
     return util.getAccountFromMasterKey(
       this.masterKey,
-      CONFIG.CARDANO.PROTOCOL_MAGIC
+      CONFIG.CARDANO.PROTOCOL_MAGIC,
     )
   }
 
@@ -57,17 +55,18 @@ export class WalletManager {
     this.masterKey = util.getMasterKeyFromMnemonic(mnemonic)
     const account = this._getAccount()
     this.masterKey = util.encryptMasterKey(newPassword, this.masterKey)
-    this.internalChain = new AddressChainManager(
-      (ids) => util.getInternalAddresses(account, ids)
+    this.internalChain = new AddressChainManager((ids) =>
+      util.getInternalAddresses(account, ids),
     )
-    this.externalChain = new AddressChainManager(
-      (ids) => util.getExternalAddresses(account, ids)
+    this.externalChain = new AddressChainManager((ids) =>
+      util.getExternalAddresses(account, ids),
     )
 
     this.isInitialized = true
   }
 
-  // TODO(ppershing): remove this once we can "open" saved wallet from device store
+  // TODO(ppershing): remove this once we can "open"
+  // saved wallet from device store
   __initTestWalletIfNeeded() {
     if (this.isInitialized) return
     const mnemonic = [
@@ -91,10 +90,11 @@ export class WalletManager {
     return {...this.transactions}
   }
 
-
   _markAddressAsUsed(address: string) {
-    this.internalChain.isMyAddress(address) && this.internalChain.markAddressAsUsed(address)
-    this.externalChain.isMyAddress(address) && this.externalChain.markAddressAsUsed(address)
+    this.internalChain.isMyAddress(address) &&
+      this.internalChain.markAddressAsUsed(address)
+    this.externalChain.isMyAddress(address) &&
+      this.externalChain.markAddressAsUsed(address)
   }
 
   _didProcessTransaction(tx: RawTransaction): boolean {
@@ -121,7 +121,7 @@ export class WalletManager {
   // Returns number of updated transactions
   _updateTransactions(transactions: Array<RawTransaction>): number {
     const updated = transactions.map((t) => this._didProcessTransaction(t))
-    return _.sum(updated, (x) => x ? 1 : 0)
+    return _.sum(updated, (x) => (x ? 1 : 0))
   }
 
   async doSyncStep(chain: AddressChainManager): Promise<number> {
@@ -130,11 +130,13 @@ export class WalletManager {
 
     const limit = pLimit(CONFIG.MAX_CONCURRENT_REQUESTS)
 
-    const tasks = chain.getBlocks().map(
-      ([idx, ts, addrs]) => limit(
-        () => api.fetchNewTxHistory(ts, addrs).then((response) => [idx, response])
+    const tasks = chain
+      .getBlocks()
+      .map(([idx, ts, addrs]) =>
+        limit(() =>
+          api.fetchNewTxHistory(ts, addrs).then((response) => [idx, response]),
+        ),
       )
-    )
 
     // Note(ppershing): This serializes the respons order
     // but still allows for concurrent requests
@@ -142,7 +144,8 @@ export class WalletManager {
       try {
         const [idx, response] = await promise
         count += this._updateTransactions(response)
-        // Note: this needs to happen *after* updating transactions in case the former fails!
+        // Note: this needs to happen *after* updating
+        // transactions in case the former fails!
         chain.updateBlockTime(idx, getLastTimestamp(response))
       } catch (e) {
         errors.push(e)
@@ -152,8 +155,6 @@ export class WalletManager {
     if (errors.length) throw errors
     return count
   }
-
-
 }
 
 export default new WalletManager()

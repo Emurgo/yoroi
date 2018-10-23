@@ -3,15 +3,15 @@ import {Alert} from 'react-native'
 
 const handleNotSupportedError = (error) => {
   if (error.code === 'NOT_SUPPORTED') {
-    Alert.alert('Error', 'Your device does not support biometry!')
+    Alert.alert('Error', 'l10n Your device does not support biometry!')
   } else if (error.code === 'NOT_AVAILABLE') {
     // biometry or PIN are not set
-    Alert.alert('Error', 'Go to system setttings and rise your security')
+    Alert.alert('Error', 'l10n Go to system setttings and rise your security')
   } else if (error.code === 'NOT_ENROLLED') {
     // PIN is set but biometry isn't
-    Alert.alert('Error', 'Go to system setttings and rise your security')
+    Alert.alert('Error', 'l10n Go to system setttings and rise your security')
   } else {
-    Alert.alert('Not supported error', error.code)
+    Alert.alert('l10n Not supported error', error.code)
   }
   return false
 }
@@ -19,29 +19,30 @@ const handleNotSupportedError = (error) => {
 const handleAuthenticateError = (error) => {
   if (error.code === 'USER_CANCELED') {
     // this could be use to authentication using PIN on Android device
-    Alert.alert('Authenticate error', 'User canceled authentication')
+    Alert.alert('l10n Authenticate error', 'l10n User canceled authentication')
   } else if (error.code === 'AUTHENTICATION_FAILED') {
-    Alert.alert('Authenticate error', 'Authentication failed')
+    Alert.alert('l10n Authenticate error', 'l10n Authentication failed')
   } else {
-    Alert.alert('Authenticate error', error.code)
+    Alert.alert('l10n Authenticate error', error.code)
   }
   return false
 }
 
 export const authenticate = () => {
   return TouchID.isSupported()
-    .then(() => TouchID.authenticate(
-      'Authentication required',
-      {
-        title: 'Authentication required', // Android title
+    .then(() =>
+      TouchID.authenticate('l10n Authentication required', {
+        title: 'l10n Authentication required', // Android title
         color: '#00f', // Android fingerprint icon color
-        sensorDescription: 'Touch the sensor', // Android description next to the icon
-        cancelText: 'Authenticate using PIN', // Android cancel button label
+        // Android description next to the icon
+        sensorDescription: 'l10n Touch the sensor',
+        // Android cancel button label
+        cancelText: 'l10n Authenticate using PIN',
         fallbackLabel: '', // iOS PIN code field label
         unifiedErrors: true, // same errors codes for iOS and Android
       })
-      .then(() => true)
-      .catch(handleAuthenticateError)
+        .then(() => true)
+        .catch(handleAuthenticateError),
     )
     .catch(handleNotSupportedError)
 }

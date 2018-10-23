@@ -34,10 +34,7 @@ const AddressModal = ({
   translations,
   onClose,
 }: Props) => (
-  <Modal
-    visible={isVisible}
-    onRequestClose={onClose}
-  >
+  <Modal visible={isVisible} onRequestClose={onClose}>
     <View style={styles.root}>
       <View style={styles.container}>
         <QRCode

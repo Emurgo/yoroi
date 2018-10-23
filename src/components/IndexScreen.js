@@ -1,7 +1,13 @@
 // @flow
 
 import React from 'react'
-import {ScrollView, StyleSheet, SafeAreaView, View, TouchableHighlight} from 'react-native'
+import {
+  ScrollView,
+  StyleSheet,
+  SafeAreaView,
+  View,
+  TouchableHighlight,
+} from 'react-native'
 
 import {Text} from './UiKit'
 import {COLORS} from '../styles/config'
@@ -13,10 +19,22 @@ const routes = [
   {label: 'Language Picker', path: ROOT_ROUTES.INIT},
   {label: 'Create/Restore switch', path: WALLET_INIT_ROUTES.INIT},
   {label: 'Create Wallet Form', path: WALLET_INIT_ROUTES.CREATE_WALLET},
-  {label: 'Recovery Phrase explanation', path: WALLET_INIT_ROUTES.RECOVERY_PHRASE},
-  {label: 'Recovery Phrase write down', path: WALLET_INIT_ROUTES.RECOVERY_PHRASE_DIALOG},
-  {label: 'Recovery Phrase confirmation', path: WALLET_INIT_ROUTES.RECOVERY_PHRASE_CONFIRMATION},
-  {label: 'Recovery Phrase dialog', path: WALLET_INIT_ROUTES.RECOVERY_PHRASE_CONFIRMATION_DIALOG},
+  {
+    label: 'Recovery Phrase explanation',
+    path: WALLET_INIT_ROUTES.RECOVERY_PHRASE,
+  },
+  {
+    label: 'Recovery Phrase write down',
+    path: WALLET_INIT_ROUTES.RECOVERY_PHRASE_DIALOG,
+  },
+  {
+    label: 'Recovery Phrase confirmation',
+    path: WALLET_INIT_ROUTES.RECOVERY_PHRASE_CONFIRMATION,
+  },
+  {
+    label: 'Recovery Phrase dialog',
+    path: WALLET_INIT_ROUTES.RECOVERY_PHRASE_CONFIRMATION_DIALOG,
+  },
   {label: 'Restore Wallet form', path: WALLET_INIT_ROUTES.RESTORE_WALLET},
   {label: 'Receive', path: MAIN_ROUTES.RECEIVE},
   {label: 'Send', path: MAIN_ROUTES.SEND},

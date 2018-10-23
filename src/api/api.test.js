@@ -10,12 +10,10 @@ jestSetup.setup()
 
 describe('History API', () => {
   it('can fetch history', async () => {
-
     const addresses = [
       'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
     ]
     const ts = moment('1970-01-01')
-
 
     // We are async
     expect.assertions(1)
@@ -26,7 +24,6 @@ describe('History API', () => {
   })
 
   it('throws ApiError on bad request', async () => {
-
     const addresses = []
     // mock moment
     const ts = {toISOString: () => 'not-a-date'}
@@ -34,8 +31,6 @@ describe('History API', () => {
     // We are async
     expect.assertions(1)
 
-    await expect(
-      api.fetchNewTxHistory(ts, addresses)
-    ).rejects.toThrow(ApiError)
+    await expect(api.fetchNewTxHistory(ts, addresses)).rejects.toThrow(ApiError)
   })
 })

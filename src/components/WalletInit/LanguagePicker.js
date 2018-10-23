@@ -32,24 +32,34 @@ type Props = {
   translations: SubTranslation<typeof getTranslations>,
 }
 
-const LanguagePicker = ({changeLanguage, languageCode, handleContinue, translations}: Props) => (
+const LanguagePicker = ({
+  changeLanguage,
+  languageCode,
+  handleContinue,
+  translations,
+}: Props) => (
   <View style={styles.container}>
     <View style={styles.labelContainer}>
       <Text style={styles.label}>{translations.selectLanguage}</Text>
     </View>
 
     <View style={styles.pickerContainer}>
-      <Picker style={styles.picker} selectedValue={languageCode} onValueChange={changeLanguage}>
+      <Picker
+        style={styles.picker}
+        selectedValue={languageCode}
+        onValueChange={changeLanguage}
+      >
         {supportedLangauage.map((language) => (
-          <Picker.Item key={language.code} label={language.name} value={language.code} />
+          <Picker.Item
+            key={language.code}
+            label={language.name}
+            value={language.code}
+          />
         ))}
       </Picker>
     </View>
 
-    <Button
-      onPress={handleContinue}
-      title={translations.continue}
-    />
+    <Button onPress={handleContinue} title={translations.continue} />
   </View>
 )
 
@@ -61,9 +71,10 @@ export default compose(
     }),
     {
       changeLanguage,
-    }
+    },
   ),
   withHandlers({
-    handleContinue: ({navigation}) => (event) => navigation.navigate(WALLET_INIT_ROUTES.INIT),
-  })
+    handleContinue: ({navigation}) => (event) =>
+      navigation.navigate(WALLET_INIT_ROUTES.INIT),
+  }),
 )(LanguagePicker)

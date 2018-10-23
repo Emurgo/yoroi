@@ -1,16 +1,13 @@
 // @flow
 import {Moment} from 'moment'
 
-
 export const TRANSACTION_DIRECTION = {
   SENT: 'SENT',
   RECEIVED: 'RECEIVED',
   SELF: 'SELF', // intra-wallet
 }
 
-
 export type TransactionDirection = $Values<typeof TRANSACTION_DIRECTION>
-
 
 export const TRANSACTION_STATUS = {
   SUCCESSFUL: 'Successful',

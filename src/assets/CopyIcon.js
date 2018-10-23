@@ -1,4 +1,5 @@
 // @flow
+/* eslint-disable max-len */
 
 import React from 'react'
 import Svg, {Path, G} from 'react-native-svg'
@@ -17,8 +18,18 @@ const CopyIcon = ({width, height, color}: Props) => (
     viewBox="0 0 21 22"
     {...{width, height}}
   >
-    <G fill="none" fill-rule="evenodd" id="Page-1" stroke="none" stroke-width="1">
-      <G fill={color || COLORS.BLACK} id="Core" transform="translate(-86.000000, -127.000000)">
+    <G
+      fill="none"
+      fill-rule="evenodd"
+      id="Page-1"
+      stroke="none"
+      stroke-width="1"
+    >
+      <G
+        fill={color || COLORS.BLACK}
+        id="Core"
+        transform="translate(-86.000000, -127.000000)"
+      >
         <G id="content-copy" transform="translate(86.500000, 127.000000)">
           <Path
             d="M14,0 L2,0 C0.9,0 0,0.9 0,2 L0,16 L2,16 L2,2 L14,2 L14,0 L14,0 Z M17,4

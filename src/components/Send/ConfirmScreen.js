@@ -24,10 +24,7 @@ const ConfirmScreen = ({onConfirm, translations}: Props) => (
   <View style={styles.container}>
     <Text style={styles.welcome}>i18nConfirm your transaction</Text>
 
-    <Button
-      onPress={onConfirm}
-      title={translations.confirm}
-    />
+    <Button onPress={onConfirm} title={translations.confirm} />
   </View>
 )
 
@@ -38,6 +35,8 @@ export default compose(
   withHandlers({
     // TODO(ppershing): this should validate only on confirm
     onConfirm: ({navigation}) => (event) =>
-      authenticate().then((success) => (success ? navigation.popToTop() : null)),
-  })
+      authenticate().then(
+        (success) => (success ? navigation.popToTop() : null),
+      ),
+  }),
 )(ConfirmScreen)

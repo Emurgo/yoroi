@@ -12,5 +12,3 @@ const BackgroundVisualArtefacts = () => (
 )
 
 export default BackgroundVisualArtefacts
-
-

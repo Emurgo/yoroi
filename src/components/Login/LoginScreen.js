@@ -15,13 +15,17 @@ const getTranslations = (state) => state.trans.loginScreen
 
 type Props = {
   translations: SubTranslation<typeof getTranslations>,
-};
+}
 
 const ReceiveScreen = ({translations}: Props) => (
   <View style={styles.root}>
     <PinInput
       pinMaxLength={6}
-      labels={{title: translations.title, subtitle: 'getWalletName()', subtitle2: ''}}
+      labels={{
+        title: translations.title,
+        subtitle: 'getWalletName()',
+        subtitle2: '',
+      }}
       onPinEnter={(pin) => Alert.alert('PIN', pin)}
     />
   </View>

@@ -5,4 +5,3 @@
 // flow stubbornly thinks the result might be mixed
 export const ObjectValues = <T>(obj: {[string]: T}): Array<T> =>
   ((Object.values(obj): any): Array<T>)
-

@@ -37,24 +37,27 @@ const AddressesList = ({
       <Text style={styles.label}>{translations.walletAddresses}</Text>
       <TouchableHighlight onPress={onShowPress}>
         <Text style={styles.clickableLabel}>
-          {showAll ? translations.hideUsedAddresses : translations.showUsedAddresses}
+          {showAll
+            ? translations.hideUsedAddresses
+            : translations.showUsedAddresses}
         </Text>
       </TouchableHighlight>
     </View>
 
-    {addresses.map((address) => (
-      (usedAddresses.includes(address)) ? (
-        (showAll) && (
+    {addresses.map(
+      (address) =>
+        usedAddresses.includes(address) ? (
+          showAll && (
+            <View key={address} style={styles.addressContainer}>
+              <AddressView address={address} isUsed />
+            </View>
+          )
+        ) : (
           <View key={address} style={styles.addressContainer}>
-            <AddressView address={address} isUsed />
+            <AddressView address={address} isUsed={false} />
           </View>
-        )
-      ) : (
-        <View key={address} style={styles.addressContainer}>
-          <AddressView address={address} isUsed={false} />
-        </View>
-      )
-    ))}
+        ),
+    )}
   </View>
 )
 

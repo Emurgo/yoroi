@@ -1,6 +1,4 @@
 export default {
-  container: {
-  },
-  button: {
-  },
+  container: {},
+  button: {},
 }

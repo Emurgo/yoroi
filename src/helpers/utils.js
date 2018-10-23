@@ -8,13 +8,23 @@ const normalizeObjBeforeMap = (data: Array<Object> | Object): Array<Object> =>
   Array.isArray(data) ? data : [data]
 
 // obj handled as a single element of an array
-export const mappingFn = (data: Array<Object> | Object, mapByProp?: number | string = 'id') =>
-  normalizeObjBeforeMap(data).reduce((obj, current: {[string | number]: string | number}) => {
-    obj[current[mapByProp]] = current
-    return obj
-  }, {})
+export const mappingFn = (
+  data: Array<Object> | Object,
+  mapByProp?: number | string = 'id',
+) =>
+  normalizeObjBeforeMap(data).reduce(
+    (obj, current: {[string | number]: string | number}) => {
+      obj[current[mapByProp]] = current
+      return obj
+    },
+    {},
+  )
 
-export const mapArrayToId = (data: Array<Object>, id: number | string, mapByProp?: string) => ({
+export const mapArrayToId = (
+  data: Array<Object>,
+  id: number | string,
+  mapByProp?: string,
+) => ({
   [id]: mappingFn(data, mapByProp),
 })
 
@@ -23,11 +33,12 @@ export const mapObjToId = (data: Object, id: number | string) => ({
 })
 
 export const immutableSet = (obj: Object, path: ?Path, value: any) =>
+  // prettier-ignore
   path && path.length
     ? produce(
       (obj): void => {
         set(obj, path, value)
-      }
+      },
     )(obj)
     : value
 /*
@@ -37,12 +48,12 @@ export const immutableSet = (obj: Object, path: ?Path, value: any) =>
  *
  * Does not create new state if the value did not change
  */
-export const forwardReducerTo = <S: Object, T>(reducer: SegmentReducer<S, T>, path: ?Path) => (
-  state: S,
-  payload: T
-) => {
-  const value = path ? get(state, path) : state
-  const newValue = reducer(value, payload)
-  return newValue !== value ? immutableSet(state, path, newValue) : state
-}
-
+// prettier-ignore
+export const forwardReducerTo = <S: Object, T>(
+  reducer: SegmentReducer<S, T>,
+  path: ?Path,
+) => (state: S, payload: T) => {
+    const value = path ? get(state, path) : state
+    const newValue = reducer(value, payload)
+    return newValue !== value ? immutableSet(state, path, newValue) : state
+  }

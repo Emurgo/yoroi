@@ -3,5 +3,6 @@ export const pluralize = (number, variants) => {
 }
 
 // english has simple pluralization
-// eslint-disable-next-line
-export const pluralizeEn = (number, one, other) => pluralize(number, {'1': one, default: other})
+export const pluralizeEn = (number, one, other) =>
+  // eslint-disable-next-line
+  pluralize(number, {'1': one, default: other})

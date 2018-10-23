@@ -13,8 +13,8 @@ describe('AddressChainManager', () => {
   beforeEach(() => {
     chain = new AddressChainManager(
       (ids) => ids.map(getAddr),
-      5, /* block size */
-      7, /* gap limit */
+      5 /* block size */,
+      7 /* gap limit */,
     )
   })
 
@@ -44,7 +44,9 @@ describe('AddressChainManager', () => {
   })
 
   it('throws on bad used', () => {
-    expect(() => {chain.markAddressAsUsed('wrong')}).toThrow()
+    expect(() => {
+      chain.markAddressAsUsed('wrong')
+    }).toThrow()
   })
 
   it('provides correct indexOf', () => {
@@ -67,10 +69,13 @@ describe('AddressChainManager', () => {
   })
   it('provides correct blocks', () => {
     expect(chain.getBlocks()[0][0]).toBe(0)
-    expect(chain.getBlocks()[0][2]).toEqual(
-      [getAddr(0), getAddr(1), getAddr(2), getAddr(3), getAddr(4)]
-    )
+    expect(chain.getBlocks()[0][2]).toEqual([
+      getAddr(0),
+      getAddr(1),
+      getAddr(2),
+      getAddr(3),
+      getAddr(4),
+    ])
     expect(chain.getBlocks()[1][0]).toBe(1)
   })
-
 })

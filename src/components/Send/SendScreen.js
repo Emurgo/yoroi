@@ -21,7 +21,11 @@ type Props = {
   translations: SubTranslation<typeof getTranslations>,
 }
 
-const SendScreen = ({navigateToConfirm, navigateToAddressReaderQR, translations}: Props) => (
+const SendScreen = ({
+  navigateToConfirm,
+  navigateToAddressReaderQR,
+  translations,
+}: Props) => (
   <View style={styles.root}>
     <View style={styles.header}>
       <Text>{translations.funds}</Text>
@@ -37,10 +41,7 @@ const SendScreen = ({navigateToConfirm, navigateToAddressReaderQR, translations}
       <TextInput style={styles.inputText} placeholder={translations.amount} />
     </View>
 
-    <Button
-      onPress={navigateToConfirm}
-      title={translations.continue}
-    />
+    <Button onPress={navigateToConfirm} title={translations.continue} />
   </View>
 )
 
@@ -53,5 +54,5 @@ export default compose(
       navigation.navigate(SEND_ROUTES.ADDRESS_READER_QR),
     navigateToConfirm: ({navigation}) => (event) =>
       navigation.navigate(SEND_ROUTES.CONFIRM),
-  })
+  }),
 )(SendScreen)

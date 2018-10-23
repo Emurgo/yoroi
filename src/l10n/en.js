@@ -102,39 +102,46 @@ const l10n = {
   },
   recoveryPhraseConfirmationDialog: {
     title: 'Recovery phrase',
-    keysStorageCheckbox: 'I understand that my secret keys are held securely on this device only,\
+    keysStorageCheckbox:
+      'I understand that my secret keys are held securely on this device only,\
  not on the company`s servers',
-    newDeviceRecoveryCheckbox: 'I understand that if this application is moved to another device\
- or delete, my money can be only recovered with the backup phrase that I have written down\
- and saved in secure place.',
+    newDeviceRecoveryCheckbox:
+      'I understand that if this application is moved to another device\
+ or delete, my money can be only recovered with the backup phrase that\
+ I have written down and saved in secure place.',
     confirmationButton: 'I UNDERSTAND',
   },
   recoveryPhraseConfirmationScreen: {
     title: 'Recovery phrase',
-    instructions: 'Tap each word in the correct order to verify your recovery phrase',
+    instructions:
+      'Tap each word in the correct order to verify your recovery phrase',
     inputLabel: 'Recovery phrase',
     clearButton: 'CLEAR',
     confirmButton: 'CONFIRM',
   },
   recoveryPhraseDialog: {
     title: 'Recovery phrase',
-    paragraph1: 'On the following screen, you will see a set of 15 random words. This\
+    paragraph1:
+      'On the following screen, you will see a set of 15 random words. This\
  is your wallet backup phrase. It can be entered in version of Yoroi in order\
  to back up or restore your wallet`s funds and private key.',
-    paragraph2: 'Make sure nobody looks into your screen unless you want them to have\
+    paragraph2:
+      'Make sure nobody looks into your screen unless you want them to have\
  access to your funds.',
     nextButton: 'NEXT',
   },
   recoveryPhraseScreen: {
     title: 'Recovery phrase',
-    mnemonicNote: 'Please, make sure you have carefully written down your recovery phrase\
- somewhere safe. You will need this phrase to use and restore your wallet. Phrase\
- is case sensitive.',
+    mnemonicNote:
+      'Please, make sure you have carefully written down your recovery phrase\
+ somewhere safe. You will need this phrase to use and restore your wallet.\
+ Phrase is case sensitive.',
     confirmationButton: 'YES, I`VE WRITTEN IT DOWN',
   },
   restoreWalletScreen: {
     title: 'Restore wallet',
-    instructions: 'To restore your wallet please provide the recovery phrase you\
+    instructions:
+      'To restore your wallet please provide the recovery phrase you\
  received when you created your wallet for the first time.',
     phrase: 'Recovery phrase',
     restoreButton: 'RESTORE WALLET',

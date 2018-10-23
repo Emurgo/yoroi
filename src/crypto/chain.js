@@ -21,7 +21,7 @@ export class AddressChainManager {
   constructor(
     addressGenerator: any,
     blockSize: number = CONFIG.WALLET.DISCOVERY_BLOCK_SIZE,
-    gapLimit: number = CONFIG.WALLET.DISCOVERY_GAP_SIZE
+    gapLimit: number = CONFIG.WALLET.DISCOVERY_GAP_SIZE,
   ) {
     this._addressGenerator = addressGenerator
     this._addresses = []
@@ -35,18 +35,22 @@ export class AddressChainManager {
 
   _selfCheck() {
     assertTrue(this._addresses.length % this._blockSize === 0)
-    assertTrue(this._lastSyncTimePerBatch.length * this._blockSize === this._addresses.length)
+    assertTrue(
+      this._lastSyncTimePerBatch.length * this._blockSize ===
+        this._addresses.length,
+    )
     assertTrue(this._addresses.length === this._addressIndex.size)
   }
 
   getHighestUsedIndex() {
-    return _.findLastIndex(
-      this._addresses, (addr) => this._used.has(addr)
-    )
+    return _.findLastIndex(this._addresses, (addr) => this._used.has(addr))
   }
 
   _ensureEnoughGeneratedAddresses() {
-    while (this.getHighestUsedIndex() + this._gapLimit >= this._addresses.length) {
+    while (
+      this.getHighestUsedIndex() + this._gapLimit >=
+      this._addresses.length
+    ) {
       const start = this._addresses.length
       const idxs = _.range(start, start + this._blockSize)
       const newAddresses = this._addressGenerator(idxs)
@@ -108,4 +112,3 @@ export class AddressChainManager {
     this._selfCheck()
   }
 }
-

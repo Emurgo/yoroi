@@ -8,14 +8,14 @@ it('can delay', async () => {
   expect.assertions(1)
 
   const DELAY = 500
-  const t1 = (new Date()).getTime()
+  const t1 = new Date().getTime()
   await delay(DELAY)
-  const t2 = (new Date()).getTime()
+  const t2 = new Date().getTime()
   expect(t2 >= t1 + DELAY).toBe(true)
 })
 
-const metafactory = (id, time, order) => () => Promise.resolve().then(
-  async () => {
+const metafactory = (id, time, order) => () =>
+  Promise.resolve().then(async () => {
     order.push(id)
     await delay(time)
     order.push(-id)
@@ -30,11 +30,7 @@ it('nonsynchronized are not synchronized', async () => {
 
   expect.assertions(2)
 
-  const results = await Promise.all([
-    factory3(),
-    factory2(),
-    factory1(),
-  ])
+  const results = await Promise.all([factory3(), factory2(), factory1()])
 
   expect(results).toEqual([3, 2, 1])
   expect(order).toEqual([3, 2, 1, -3, -2, -1])

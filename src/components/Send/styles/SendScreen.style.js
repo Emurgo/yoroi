@@ -38,11 +38,8 @@ const styles = {
   button: {
     margin: 10,
   },
-  continueButton: {
-  },
-  continueButtonText: {
-
-  },
+  continueButton: {},
+  continueButtonText: {},
 }
 
 export default styles

@@ -71,12 +71,17 @@ export const updateHistory = () => async (dispatch: Dispatch<any>) => {
 
 const LOCAL_STORAGE_KEY_LANG = 'lang'
 
-export const changeLanguage = (languageCode: string) => async (dispatch: Dispatch<any>) => {
+export const changeLanguage = (languageCode: string) => async (
+  dispatch: Dispatch<any>,
+) => {
   try {
     await AsyncStorage.setItem(LOCAL_STORAGE_KEY_LANG, languageCode)
     dispatch(_changeLanguage(languageCode))
   } catch (e) {
-    Logger.error('Saving language to AsyncStorage failed. UI language left intact', e)
+    Logger.error(
+      'Saving language to AsyncStorage failed. UI language left intact',
+      e,
+    )
     // TODO add missing localization
     Alert.alert('Error', 'Could not set selected language.')
   }
@@ -89,6 +94,9 @@ export const loadLanguage = () => async (dispatch: Dispatch<any>) => {
       dispatch(_changeLanguage(languageCode))
     }
   } catch (e) {
-    Logger.error('Loading language from AsyncStorage failed. UI language left intact.', e)
+    Logger.error(
+      'Loading language from AsyncStorage failed. UI language left intact.',
+      e,
+    )
   }
 }

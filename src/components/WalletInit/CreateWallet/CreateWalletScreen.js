@@ -25,17 +25,20 @@ type FormValidationErrors = PasswordValidationErrors & {nameReq?: boolean}
 const getTranslations = (state: State) => state.trans.createWallet
 
 const handleCreate = ({navigation, password}) => () => {
-  navigation.navigate(
-    WALLET_INIT_ROUTES.RECOVERY_PHRASE_DIALOG,
-    {password}
-  )
+  navigation.navigate(WALLET_INIT_ROUTES.RECOVERY_PHRASE_DIALOG, {password})
 }
 
-const validateForm = ({name, password, passwordConfirmation}): FormValidationErrors | null => {
+const validateForm = ({
+  name,
+  password,
+  passwordConfirmation,
+}): FormValidationErrors | null => {
   const nameErrors = name !== '' ? null : {nameReq: true}
   const passwordErrors = validatePassword(password, passwordConfirmation)
 
-  return nameErrors || passwordErrors ? {...nameErrors, ...passwordErrors} : null
+  return nameErrors || passwordErrors
+    ? {...nameErrors, ...passwordErrors}
+    : null
 }
 
 const handleOnWillBlur = ({setPassword, setPasswordConfirmation}) => () => {
@@ -77,11 +80,20 @@ const CreateWalletScreen = ({
         <View>
           <Text style={styles.formLabel}>{translations.nameLabel}</Text>
           <View style={styles.inputRow}>
-            <TextInput style={styles.input} onChangeText={setName} value={name} autoFocus />
+            <TextInput
+              style={styles.input}
+              onChangeText={setName}
+              value={name}
+              autoFocus
+            />
             <CheckIcon
               width={25}
               height={25}
-              color={errors && errors.nameReq ? COLORS.TRANSPARENT : COLORS.LIGHT_POSITIVE_GREEN}
+              color={
+                errors && errors.nameReq
+                  ? COLORS.TRANSPARENT
+                  : COLORS.LIGHT_POSITIVE_GREEN
+              }
             />
           </View>
         </View>
@@ -95,7 +107,9 @@ const CreateWalletScreen = ({
           />
         </View>
         <View>
-          <Text style={styles.formLabel}>{translations.passwordConfirmationLabel}</Text>
+          <Text style={styles.formLabel}>
+            {translations.passwordConfirmationLabel}
+          </Text>
           <View style={styles.inputRow}>
             <TextInput
               secureTextEntry
@@ -107,7 +121,8 @@ const CreateWalletScreen = ({
               width={25}
               height={25}
               color={
-                errors && (errors.passwordConfirmationReq || errors.matchesConfirmation)
+                errors &&
+                (errors.passwordConfirmationReq || errors.matchesConfirmation)
                   ? COLORS.TRANSPARENT
                   : COLORS.LIGHT_POSITIVE_GREEN
               }
@@ -119,21 +134,29 @@ const CreateWalletScreen = ({
           <View style={styles.passwordRequirementsRow}>
             <View style={styles.passwordRequirement}>
               <CheckIcon width={16} height={16} />
-              <Text style={styles.passwordRequirement}>{translations.passwordMinLength}</Text>
+              <Text style={styles.passwordRequirement}>
+                {translations.passwordMinLength}
+              </Text>
             </View>
             <View style={styles.passwordRequirement}>
               <CheckIcon width={16} height={16} />
-              <Text style={styles.passwordRequirement}>{translations.passwordLowerChar}</Text>
+              <Text style={styles.passwordRequirement}>
+                {translations.passwordLowerChar}
+              </Text>
             </View>
           </View>
           <View style={styles.passwordRequirementsRow}>
             <View style={styles.passwordRequirement}>
               <CheckIcon width={16} height={16} />
-              <Text style={styles.passwordRequirement}>{translations.passwordUpperChar}</Text>
+              <Text style={styles.passwordRequirement}>
+                {translations.passwordUpperChar}
+              </Text>
             </View>
             <View style={styles.passwordRequirement}>
               <CheckIcon width={16} height={16} />
-              <Text style={styles.passwordRequirement}>{translations.passwordNumber}</Text>
+              <Text style={styles.passwordRequirement}>
+                {translations.passwordNumber}
+              </Text>
             </View>
           </View>
         </View>
@@ -160,5 +183,5 @@ export default compose(
     validateForm: ({name, password, passwordConfirmation}) => () =>
       validateForm({name, password, passwordConfirmation}),
     onWillBlur: handleOnWillBlur,
-  })
+  }),
 )(CreateWalletScreen)

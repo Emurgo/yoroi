@@ -62,11 +62,10 @@ export default compose(
   })),
   withState('mnemonic', 'setMnemonic', generateAdaMnemonic()),
   withHandlers({
-    navigateToRecoveryPhraseConfirmation: ({navigation, mnemonic}) =>
-      () => navigation.navigate(
-        WALLET_INIT_ROUTES.RECOVERY_PHRASE_CONFIRMATION, {
-          mnemonic,
-          password: navigation.getParam('password'),
-        }),
-  })
+    navigateToRecoveryPhraseConfirmation: ({navigation, mnemonic}) => () =>
+      navigation.navigate(WALLET_INIT_ROUTES.RECOVERY_PHRASE_CONFIRMATION, {
+        mnemonic,
+        password: navigation.getParam('password'),
+      }),
+  }),
 )(CreateWalletScreen)

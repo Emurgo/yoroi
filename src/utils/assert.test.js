@@ -1,6 +1,5 @@
 import {assertTrue} from './assert'
 
-
 function tryAssert() {
   assertTrue(false)
 }
