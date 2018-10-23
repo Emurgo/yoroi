@@ -17,7 +17,7 @@ type Props = {
   translation: SubTranslation<typeof getTranslation>,
 }
 
-const SupportScreen = ({translation, navigateToFaq, navigateToReport}: Props) => (
+const SupportScreen = ({translation}: Props) => (
   <View style={styles.root}>
     <SettingsItemWithNavigation
       label={translation.faqLabel}
