@@ -17,11 +17,7 @@ const styles = {
   textContainer: {
     flex: 1,
   },
-  icon: {
-    size: 20,
-  },
   iconContainer: {
-    width: 30,
     alignItems: 'center',
     justifyContent: 'center',
   },

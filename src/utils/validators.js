@@ -5,6 +5,10 @@ export type PasswordValidationErrors = {
   matchesConfirmation?: boolean,
 }
 
+export const validateWalletName = (walletName: string): boolean => {
+  return (walletName.length > 2) && (walletName.length < 41)
+}
+
 export const validatePassword = (
   password: string,
   passwordConfirmation: string,

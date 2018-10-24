@@ -8,9 +8,10 @@ import {withNavigation} from 'react-navigation'
 
 import {Text} from '../UiKit'
 import {COLORS} from '../../styles/config'
-import CopyIcon from '../../assets/CopyIcon'
 
 import styles from './styles/SettingsItem.style'
+
+import type {Node} from 'react'
 
 type Props = {
   title: string,
@@ -18,6 +19,7 @@ type Props = {
   dstScreen?: string,
   dstUrl?: string,
   onPress: () => any,
+  children: Node,
 }
 
 const SettingsItem = ({
@@ -26,22 +28,23 @@ const SettingsItem = ({
   dstScreen,
   dstUrl,
   onPress,
+  children,
 }: Props) => (
-  <TouchableHighlight
-    activeOpacity={0.9}
-    underlayColor={COLORS.WHITE}
-    onPress={onPress}
-  >
-    <View style={styles.container}>
-      <View style={styles.textContainer}>
-        <Text style={styles.label}>{title}</Text>
-        <Text style={styles.text}>{description}</Text>
-      </View>
-      <View style={styles.iconContainer}>
-        <CopyIcon width={styles.icon.size} height={styles.icon.size} />
-      </View>
+  <View style={styles.container}>
+    <View style={styles.textContainer}>
+      <Text style={styles.label}>{title}</Text>
+      <Text style={styles.text}>{description}</Text>
     </View>
-  </TouchableHighlight>
+    <View style={styles.iconContainer}>
+      <TouchableHighlight
+        activeOpacity={0.9}
+        underlayColor={COLORS.WHITE}
+        onPress={onPress}
+      >
+        {children}
+      </TouchableHighlight>
+    </View>
+  </View>
 )
 
 export default compose(

@@ -85,6 +85,7 @@ export type Translation = {
   changeWalletName: {
     walletName: string,
     changeButtonText: string,
+    walletValidationText: string,
   },
   receiveScreen: {
     title: string,

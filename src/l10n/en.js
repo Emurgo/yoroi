@@ -90,6 +90,7 @@ const l10n = {
   changeWalletName: {
     walletName: 'Wallet name',
     changeButtonText: 'CHANGE NAME',
+    walletValidationText: 'Wallet name requires at least 3 and at most 40 letters.',
   },
   receiveScreen: {
     title: 'Receive',

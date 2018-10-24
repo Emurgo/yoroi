@@ -9,6 +9,7 @@ import Screen from '../../components/Screen'
 import {SETTINGS_ROUTES} from '../../RoutesList'
 import SettingsItem from './SettingsItem'
 import SettingsLink from './SettingsLink'
+import CopyIcon from '../../assets/CopyIcon'
 
 import styles from './styles/SettingsScreen.style'
 
@@ -28,25 +29,35 @@ const SettingsScreen = ({translations}: Props) => (
         title={translations.walletName}
         description={'getWalletName()'}
         dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
-      />
+      >
+        <CopyIcon width={styles.icon.size} height={styles.icon.size} />
+      </SettingsItem>
 
       <SettingsItem
         title={translations.privacy}
         description={translations.changePin}
         dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
-      />
+      >
+        <CopyIcon width={styles.icon.size} height={styles.icon.size} />
+      </SettingsItem>
 
       <SettingsItem
         title={''}
         description={translations.changePassword}
         dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
-      />
+      >
+        <CopyIcon width={styles.icon.size} height={styles.icon.size} />
+      </SettingsItem>
+
 
       <SettingsItem
         title={translations.downloadLogs}
         description={translations.downloadLogsText}
         dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
-      />
+      >
+        <CopyIcon width={styles.icon.size} height={styles.icon.size} />
+      </SettingsItem>
+
 
       <SettingsLink
         text={translations.removeWallet}
@@ -57,7 +68,10 @@ const SettingsScreen = ({translations}: Props) => (
         title={translations.language}
         description={'getLanguage()'}
         dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
-      />
+      >
+        <CopyIcon width={styles.icon.size} height={styles.icon.size} />
+      </SettingsItem>
+
 
       <SettingsLink
         text={translations.termsOfUse}
