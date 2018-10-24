@@ -14,7 +14,7 @@ import styles from './styles/SettingsItem.style'
 import type {Node} from 'react'
 
 type Props = {
-  title: string,
+  title?: string,
   description: string,
   dstScreen?: string,
   dstUrl?: string,

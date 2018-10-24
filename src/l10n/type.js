@@ -51,14 +51,14 @@ export type Translation = {
       formatConfirmations: (cnt: any) => string,
     },
   },
-  SendScreen: {
+  sendScreen: {
     funds: string,
     scanCode: string,
     address: string,
     amount: string,
     continue: string,
   },
-  ConfirmSendScreen: {
+  confirmSendScreen: {
     confirm: string,
   },
   walletInitScreen: {
@@ -142,7 +142,8 @@ export type Translation = {
     sendButton: string,
     receiveButton: string,
   },
-  settings: {
+  settingsScreen: {
+    title: string,
     walletName: string,
     edit: string,
     privacy: string,
@@ -158,6 +159,7 @@ export type Translation = {
     support: string,
   },
   supportScreen: {
+    title: string,
     faq: {
       label: string,
       description: string,

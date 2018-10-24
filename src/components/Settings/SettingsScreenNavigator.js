@@ -14,7 +14,7 @@ const SettingsScreenNavigator = createStackNavigator({
 }, {
   initialRouteName: SETTINGS_ROUTES.MAIN,
   navigationOptions: ({navigation}) => ({
-    title: 'i18nSettings',
+    title: navigation.getParam('title'),
   }),
 })
 

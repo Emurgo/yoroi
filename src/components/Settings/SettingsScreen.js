@@ -12,30 +12,27 @@ import SettingsItem from './SettingsItem'
 import SettingsLink from './SettingsLink'
 import CopyIcon from '../../assets/CopyIcon'
 import {Text} from '../UiKit'
+import {withNavigationTitle} from '../../utils/renderUtils'
 
 import styles from './styles/SettingsScreen.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslations = (state) => state.trans.settings
+const getTranslations = (state) => state.trans.settingsScreen
 
 type Props = {
   isFingerprintSignIn: boolean,
-  setFingerprintSignIn: (boolean) => void,
-  onChangeFingerprintSignIn: () => void,
+  onToggleFingerprintSignIn: () => void,
   isEasyConfirmation: boolean,
-  setEasyConfirmation: (boolean) => void,
-  onChangeEasyConfirmation: () => void,
+  onToggleEasyConfirmation: () => void,
   translations: SubTranslation<typeof getTranslations>,
 };
 
 const SettingsScreen = ({
   isFingerprintSignIn,
-  setFingerprintSignIn,
-  onChangeFingerprintSignIn,
+  onToggleFingerprintSignIn,
   isEasyConfirmation,
-  setEasyConfirmation,
-  onChangeEasyConfirmation,
+  onToggleEasyConfirmation,
   translations,
 }: Props) => (
   <View style={styles.root}>
@@ -58,30 +55,23 @@ const SettingsScreen = ({
         </SettingsItem>
 
         <SettingsItem
-          title={''}
           description={translations.changePassword}
           dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
         >
           <CopyIcon width={styles.icon.size} height={styles.icon.size} />
         </SettingsItem>
 
-        <SettingsItem
-          title={''}
-          description={translations.fingerprintSignIn}
-        >
+        <SettingsItem description={translations.fingerprintSignIn}>
           <Switch
             value={isFingerprintSignIn}
-            onValueChange={onChangeFingerprintSignIn}
+            onValueChange={onToggleFingerprintSignIn}
           />
         </SettingsItem>
 
-        <SettingsItem
-          title={''}
-          description={translations.easyConfirmation}
-        >
+        <SettingsItem description={translations.easyConfirmation}>
           <Switch
             value={isEasyConfirmation}
-            onValueChange={onChangeEasyConfirmation}
+            onValueChange={onToggleEasyConfirmation}
           />
         </SettingsItem>
 
@@ -127,12 +117,13 @@ export default compose(
   connect((state) => ({
     translations: getTranslations(state),
   })),
+  withNavigationTitle(({translations}) => translations.title),
   withState('isFingerprintSignIn', 'setFingerprintSignIn', false),
   withState('isEasyConfirmation', 'setEasyConfirmation', false),
   withHandlers({
-    onChangeFingerprintSignIn: ({isFingerprintSignIn, setFingerprintSignIn}) =>
+    onToggleFingerprintSignIn: ({isFingerprintSignIn, setFingerprintSignIn}) =>
       () => (setFingerprintSignIn(!isFingerprintSignIn)),
-    onChangeEasyConfirmation: ({isEasyConfirmation, setEasyConfirmation}) =>
+    onToggleEasyConfirmation: ({isEasyConfirmation, setEasyConfirmation}) =>
       () => (setEasyConfirmation(!isEasyConfirmation)),
   }),
 )(SettingsScreen)

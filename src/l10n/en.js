@@ -56,14 +56,14 @@ const l10n = {
         `${cnt} ${pluralizeEn(cnt, 'CONFIRMATION', 'CONFIRMATIONS')}`,
     },
   },
-  SendScreen: {
+  sendScreen: {
     funds: 'Available funds:',
     scanCode: 'Scan QR code',
     address: 'Address',
     amount: 'Amount',
     continue: 'Continue',
   },
-  ConfirmSendScreen: {
+  confirmSendScreen: {
     confirm: 'Confirm',
   },
   walletInitScreen: {
@@ -167,7 +167,8 @@ const l10n = {
     sendButton: 'SEND',
     receiveButton: 'RECEIVE',
   },
-  settings: {
+  settingsScreen: {
+    title: 'Settings',
     walletName: 'Wallet name',
     edit: 'Edit',
     privacy: 'Privacy',
@@ -186,6 +187,7 @@ const l10n = {
     support: 'Support',
   },
   supportScreen: {
+    title: 'Support',
     faq: {
       label: 'See frequently asked questions',
       description: 'If you are experiencing issues, please see the FAQ\

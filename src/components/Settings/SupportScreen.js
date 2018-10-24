@@ -7,6 +7,7 @@ import {View} from 'react-native'
 
 import SettingsItem from './SettingsItem'
 import CopyIcon from '../../assets/CopyIcon'
+import {withNavigationTitle} from '../../utils/renderUtils'
 
 import styles from './styles/SupportScreen.style'
 
@@ -42,5 +43,6 @@ const SupportScreen = ({translations}: Props) => (
 export default compose(
   connect((state) => ({
     translations: getTranslations(state),
-  }))
+  })),
+  withNavigationTitle(({translations}) => translations.title),
 )(SupportScreen)
