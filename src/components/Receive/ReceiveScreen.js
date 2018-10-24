@@ -9,6 +9,7 @@ import Screen from '../../components/Screen'
 import {Text} from '../UiKit'
 import AddressDetail from './AddressDetail'
 import AddressesList from './AddressesList'
+import WalletManager from '../../crypto/wallet'
 
 import styles from './styles/ReceiveScreen.style'
 
@@ -48,8 +49,8 @@ const ReceiveScreen = ({
 
 export default compose(
   connect((state) => ({
-    receiveAddresses: state.receiveAddresses,
     usedReceiveAddresses: state.usedReceiveAddresses,
     translations: getTranslations(state),
+    receiveAddresses: WalletManager.getOwnAddresses(),
   })),
 )(ReceiveScreen)

@@ -4,6 +4,7 @@ import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {View} from 'react-native'
+import _ from 'lodash'
 
 import {printAda} from '../../utils/transactions'
 import {Text} from '../UiKit'
@@ -68,7 +69,7 @@ const TxDetails = ({navigation, translations}: Props) => {
       <View style={styles.section}>
         <Label>{translations.fromAddresses}</Label>
 
-        {transaction.fromAddresses.map((address) => (
+        {_.uniq(transaction.fromAddresses).map((address) => (
           <Text key={address}>{address}</Text>
         ))}
       </View>
@@ -76,7 +77,7 @@ const TxDetails = ({navigation, translations}: Props) => {
       <View style={styles.section}>
         <Label>{translations.toAddresses}</Label>
 
-        {transaction.toAddresses.map((address) => (
+        {_.uniq(transaction.toAddresses).map((address) => (
           <Text key={address}>{address}</Text>
         ))}
       </View>
