@@ -1,5 +1,5 @@
 // @flow
-// import {COLORS} from '../../../styles/config'
+import {COLORS} from '../../../styles/config'
 
 const styles = {
   root: {
@@ -8,6 +8,13 @@ const styles = {
   },
   icon: {
     size: 20,
+  },
+  linkLabel: {
+    color: COLORS.DARK_BLUE,
+    textDecorationLine: 'underline',
+  },
+  tab: {
+    flex: 1,
   },
 }
 

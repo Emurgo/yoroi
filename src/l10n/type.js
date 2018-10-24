@@ -144,9 +144,12 @@ export type Translation = {
   },
   settings: {
     walletName: string,
+    edit: string,
     privacy: string,
     changePin: string,
     changePassword: string,
+    fingerprintSignIn: string,
+    easyConfirmation: string,
     downloadLogs: string,
     downloadLogsText: string,
     removeWallet: string,

@@ -53,7 +53,8 @@ export default compose(
     onPress: ({navigation, dstScreen, dstUrl}) => () => {
       if (dstScreen) {
         navigation.navigate(dstScreen)
-      } else if (dstUrl) {
+      }
+      if (dstUrl) {
         Linking.openURL(dstUrl)
       }
     },
