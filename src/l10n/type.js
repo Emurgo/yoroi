@@ -155,14 +155,6 @@ export type Translation = {
     support: string,
   },
   supportScreen: {
-<<<<<<< HEAD
-    faqLabel: string,
-    faqText: string,
-    faqUrl: string,
-    reportLabel: string,
-    reportText: string,
-    reportUrl: string,
-=======
     faq: {
       label: string,
       description: string,
@@ -173,7 +165,6 @@ export type Translation = {
       description: string,
       url: string,
     }
->>>>>>> Refactoring SettingsScreen
   },
   setLanguage: (lang: string) => void,
 }
