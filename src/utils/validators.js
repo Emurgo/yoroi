@@ -5,8 +5,8 @@ export type PasswordValidationErrors = {
   matchesConfirmation?: boolean,
 }
 
-export const validateWalletName = (walletName: string): boolean => {
-  return (walletName.length > 2) && (walletName.length < 41)
+export type WalletNameValidationErrors = {
+  walletNameLength?: boolean,
 }
 
 export const validatePassword = (
@@ -22,6 +22,17 @@ export const validatePassword = (
   }
   if (password !== passwordConfirmation) {
     validations = {...validations, matchesConfirmation: true}
+  }
+
+  return validations
+}
+
+export const validateWalletName = (
+  walletName: string
+): WalletNameValidationErrors | null => {
+  let validations = null
+  if (walletName.length > 2 && walletName.length < 41) {
+    validations = {...validations, walletNameLength: true}
   }
 
   return validations

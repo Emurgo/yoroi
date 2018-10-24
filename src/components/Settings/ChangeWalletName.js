@@ -17,9 +17,6 @@ const getTranslations = (state) => state.trans.changeWalletName
 
 type Props = {
   walletName: string,
-  setWalletName: (string) => void,
-  validateResult: boolean,
-  setValidateResult: (boolean) => void,
   onChangeText: (string) => void,
   changeAndNavigate: () => void,
   translations: SubTranslation<typeof getTranslations>,
@@ -27,25 +24,32 @@ type Props = {
 
 const ChangeWalletName = ({
   walletName,
-  setWalletName,
-  validateResult,
-  setValidateResult,
   onChangeText,
   changeAndNavigate,
   translations,
-}: Props) => (
-  <View style={styles.root}>
-    <View>
-      <Text>{validateResult ? '' : translations.walletValidationText}</Text>
-      <TextInput
-        style={styles.inputText}
-        placeholder={translations.walletName}
-        onChangeText={onChangeText}
+}: Props) => {
+  const validationErrors = validateWalletName(walletName)
+
+  return (
+    <View style={styles.root}>
+      <View>
+        {validationErrors && validationErrors.walletNameLength && <Text>
+          {translations.walletValidationText}
+        </Text>
+        }
+        <TextInput
+          style={styles.inputText}
+          placeholder={translations.walletName}
+          onChangeText={onChangeText}
+        />
+      </View>
+      <Button
+        onPress={changeAndNavigate}
+        title={translations.changeButtonText}
       />
     </View>
-    <Button onPress={changeAndNavigate} title={translations.changeButtonText} />
-  </View>
-)
+  )
+}
 
 export default compose(
   connect((state) => ({
