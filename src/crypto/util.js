@@ -9,6 +9,11 @@ import cryptoRandomString from 'crypto-random-string'
 
 import {CONFIG} from '../config'
 
+import type {
+  TransactionInput,
+  TransactionOutput,
+} from '../types/HistoryTransaction'
+
 export type AddressType = 'Internal' | 'External'
 
 export type CryptoAccount = {
@@ -35,11 +40,12 @@ export const getMasterKeyFromMnemonic = (mnemonic: string) => {
 
 export const getAccountFromMasterKey = (
   masterKey: Buffer,
-  magic: number = CONFIG.CARDANO.PROTOCOL_MAGIC,
+  accountIndex?: number = CONFIG.WALLET.ACCOUNT_INDEX,
+  protocolMagic?: number = CONFIG.CARDANO.PROTOCOL_MAGIC,
 ): CryptoAccount => {
   const wallet = _result(Wallet.fromMasterKey(masterKey))
-  wallet.config.protocol_magic = magic
-  return _result(Wallet.newAccount(wallet, 0))
+  wallet.config.protocol_magic = protocolMagic
+  return _result(Wallet.newAccount(wallet, accountIndex))
 }
 
 export const encryptMasterKey = (
@@ -85,6 +91,13 @@ const _getAddresses = (
   indexes: Array<number>,
 ) => _result(Wallet.generateAddresses(account, type, indexes))
 
+export function getAddressTypeIndex(addressType: AddressType): number {
+  if (addressType === 'External') return 0
+  if (addressType === 'Internal') return 1
+
+  throw new CardanoError(`Unknown address type: ${addressType}`)
+}
+
 export const getExternalAddresses = (
   account: CryptoAccount,
   indexes: Array<number>,
@@ -114,3 +127,26 @@ export const isValidAddress = (address: string): boolean => {
 
 export const generateAdaMnemonic = () =>
   generateMnemonic(CONFIG.MNEMONIC_STRENGTH, randomBytes)
+
+export const generateFakeWallet = () => {
+  const fakeMnemonic = generateAdaMnemonic()
+  const fakeMasterKey = getMasterKeyFromMnemonic(fakeMnemonic)
+  const wallet = _result(Wallet.fromMasterKey(fakeMasterKey))
+  return wallet
+}
+
+export const getWalletFromMasterKey = (
+  masterKey: Uint8Array,
+  protocolMagic?: number = CONFIG.CARDANO.PROTOCOL_MAGIC,
+) => {
+  const wallet = _result(Wallet.fromMasterKey(masterKey))
+  wallet.config.protocol_magic = protocolMagic
+  return wallet
+}
+
+export const signTransaction = (
+  wallet: any,
+  inputs: Array<TransactionInput>,
+  outputs: Array<TransactionOutput>,
+  changeAddress: string,
+) => _result(Wallet.spend(wallet, inputs, outputs, changeAddress))

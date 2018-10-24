@@ -7,7 +7,9 @@ export const onDidMount = (didMount) => (BaseComponent) =>
       return didMount(this.props)
     }
 
-    render = () => <BaseComponent {...this.props} />
+    render = () => {
+      return <BaseComponent {...this.props} />
+    }
   }
 
 export const withTranslation = (getTrans) =>

@@ -46,6 +46,10 @@ export class AddressChainManager {
     return _.findLastIndex(this._addresses, (addr) => this._used.has(addr))
   }
 
+  getFirstUnused() {
+    return _.find(this._addresses, (addr) => !this._used.has(addr))
+  }
+
   _ensureEnoughGeneratedAddresses() {
     while (
       this.getHighestUsedIndex() + this._gapLimit >=

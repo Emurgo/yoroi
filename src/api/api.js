@@ -62,3 +62,11 @@ export const fetchNewTxHistory = (dateFrom: Moment, addresses: Addresses) => {
 export const filterUsedAddresses = (addresses: Addresses) => {
   return _fetch('addresses/filterUsed', {addresses})
 }
+
+export const fetchUTXOsForAddresses = (addresses: Addresses) => {
+  return _fetch('txs/utxoForAddresses', {addresses})
+}
+
+export const submitTransaction = (signedTx: string) => {
+  return _fetch('txs/signed', {signedTx})
+}

@@ -11,7 +11,7 @@ import {
   decryptMasterKey,
 } from './util'
 
-import {CARDANO_CONFIG} from '../config'
+import {CARDANO_CONFIG, CONFIG} from '../config'
 
 jestSetup.setup()
 
@@ -32,6 +32,7 @@ test('Can generate external addresses', () => {
   const masterKey = getMasterKeyFromMnemonic(mnemonic)
   const account = getAccountFromMasterKey(
     masterKey,
+    CONFIG.WALLET.ACCOUNT_INDEX,
     CARDANO_CONFIG.TESTNET.PROTOCOL_MAGIC,
   )
   const addresses = getExternalAddresses(account, [0, 1, 2])

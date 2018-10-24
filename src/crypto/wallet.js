@@ -12,7 +12,12 @@ import {assertTrue, assertFalse} from '../utils/assert'
 import {Logger} from '../utils/logging'
 
 import type {Moment} from 'moment'
-import type {RawTransaction} from '../types/HistoryTransaction'
+import type {
+  RawTransaction,
+  RawUtxo,
+  TransactionInput,
+  PreparedTransactionData,
+} from '../types/HistoryTransaction'
 
 const getLastTimestamp = (history: Array<RawTransaction>): ?Moment => {
   // Note(ppershing): ISO8601 dates can be sorted as strings
@@ -21,8 +26,21 @@ const getLastTimestamp = (history: Array<RawTransaction>): ?Moment => {
   return moment(max || 0)
 }
 
+const fetchAllUtxos = async (
+  addresses: Array<string>,
+): Promise<Array<RawUtxo>> => {
+  // For now we do not support custom sender so we query all addresses
+  const MAX_ADDRESSES_PER_REQUEST = CONFIG.WALLET.UTXO_ADDRESS_FETCH_BLOCK_SIZE
+  const chunks = _.chunk(addresses, MAX_ADDRESSES_PER_REQUEST)
+
+  const responses = await Promise.all(
+    chunks.map((addrs) => api.fetchUTXOsForAddresses(addrs)),
+  )
+  return _.flatten(responses)
+}
+
 export class WalletManager {
-  masterKey: any
+  encryptedMasterKey: any
   internalChain: AddressChainManager
   externalChain: AddressChainManager
   transactions: any
@@ -33,7 +51,7 @@ export class WalletManager {
   }
 
   _clearAllData() {
-    this.masterKey = null
+    this.encryptedMasterKey = null
     // $FlowFixMe
     this.internalChain = null
     // $FlowFixMe
@@ -42,19 +60,16 @@ export class WalletManager {
     this.isInitialized = false
   }
 
-  _getAccount() {
-    return util.getAccountFromMasterKey(
-      this.masterKey,
-      CONFIG.CARDANO.PROTOCOL_MAGIC,
-    )
+  _getAccount(masterKey) {
+    return util.getAccountFromMasterKey(masterKey)
   }
 
   restoreWallet(mnemonic: string, newPassword: string) {
     Logger.info('restore wallet')
     assertFalse(this.isInitialized)
-    this.masterKey = util.getMasterKeyFromMnemonic(mnemonic)
-    const account = this._getAccount()
-    this.masterKey = util.encryptMasterKey(newPassword, this.masterKey)
+    const masterKey = util.getMasterKeyFromMnemonic(mnemonic)
+    const account = this._getAccount(masterKey)
+    this.encryptedMasterKey = util.encryptMasterKey(newPassword, masterKey)
     this.internalChain = new AddressChainManager((ids) =>
       util.getInternalAddresses(account, ids),
     )
@@ -88,6 +103,17 @@ export class WalletManager {
     }
 
     return {...this.transactions}
+  }
+
+  getOwnAddresses() {
+    if (this.isInitialized) {
+      return [
+        ...this.internalChain._addresses,
+        ...this.externalChain._addresses,
+      ]
+    }
+
+    return []
   }
 
   _markAddressAsUsed(address: string) {
@@ -154,6 +180,98 @@ export class WalletManager {
 
     if (errors.length) throw errors
     return count
+  }
+
+  transformUtxoToInput(utxo: RawUtxo): TransactionInput {
+    let addressIndex = null
+    let addressType = ''
+
+    if (this.internalChain.isMyAddress(utxo.receiver)) {
+      addressType = 'Internal'
+      addressIndex = this.internalChain.getIndexOfAddress(utxo.receiver)
+    } else {
+      addressType = 'External'
+      addressIndex = this.externalChain.getIndexOfAddress(utxo.receiver)
+    }
+
+    assertTrue(
+      addressIndex !== -1,
+      `Address not found for utxo: ${utxo.receiver}`,
+    )
+
+    return {
+      ptr: {
+        id: utxo.tx_hash,
+        index: utxo.tx_index,
+      },
+      value: {
+        address: utxo.receiver,
+        value: utxo.amount,
+      },
+      addressing: {
+        account: CONFIG.WALLET.ACCOUNT_INDEX,
+        change: util.getAddressTypeIndex(addressType),
+        index: addressIndex,
+      },
+    }
+  }
+
+  getChangeAddress() {
+    return this.internalChain.getFirstUnused()
+  }
+
+  async prepareTransaction(
+    receiverAddress: string,
+    amount: number,
+  ): Promise<PreparedTransactionData> {
+    const utxos = await fetchAllUtxos(this.getOwnAddresses())
+    const inputs = utxos.map((utxo) => this.transformUtxoToInput(utxo))
+
+    // FIXME: use bignumbers here
+    const outputs = [{address: receiverAddress, value: `${amount}`}]
+    const changeAddress = this.getChangeAddress()
+    Logger.info(this.internalChain._addresses)
+
+    const fakeWallet = util.generateFakeWallet()
+    const fee = util.signTransaction(fakeWallet, inputs, outputs, changeAddress)
+      .fee
+    Logger.info(inputs)
+    Logger.info(outputs)
+    Logger.info(changeAddress)
+
+    return {
+      inputs,
+      outputs,
+      changeAddress,
+      fee,
+    }
+  }
+
+  async submitTransaction(
+    transaction: PreparedTransactionData,
+    password: string,
+  ) {
+    const {inputs, outputs, changeAddress, fee} = transaction
+
+    const decryptedMasterKey = util.decryptMasterKey(
+      password,
+      this.encryptedMasterKey,
+    )
+    const signedTxData = util.signTransaction(
+      util.getWalletFromMasterKey(decryptedMasterKey),
+      inputs,
+      outputs,
+      changeAddress,
+    )
+
+    assertTrue(fee === signedTxData.fee, 'Transaction fee does not match')
+
+    const signedTx = Buffer.from(signedTxData.cbor_encoded_tx).toString(
+      'base64',
+    )
+    const response = await api.submitTransaction(signedTx)
+    Logger.info(response)
+    return response
   }
 }
 

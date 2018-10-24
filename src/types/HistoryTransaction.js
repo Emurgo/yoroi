@@ -43,3 +43,39 @@ export type RawTransaction = {|
   last_update: string,
   best_block_num: string,
 |}
+
+export type RawUtxo = {|
+  amount: string,
+  receiver: string,
+  tx_hash: string,
+  tx_index: number,
+  utxo_id: string,
+|}
+
+export type TransactionOutput = {|
+  address: string,
+  value: string,
+|}
+
+export type TransactionInput = {|
+  ptr: {
+    id: string,
+    index: number,
+  },
+  value: {
+    address: string,
+    value: string,
+  },
+  addressing: {
+    account: number,
+    change: number,
+    index: number,
+  },
+|}
+
+export type PreparedTransactionData = {|
+  changeAddress: string,
+  fee: string,
+  inputs: Array<TransactionInput>,
+  outputs: Array<TransactionOutput>,
+|}

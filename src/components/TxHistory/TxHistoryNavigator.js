@@ -1,5 +1,4 @@
 // @flow
-
 import {createStackNavigator} from 'react-navigation'
 import TxHistory from './TxHistory'
 import TxDetails from './TxDetails'
