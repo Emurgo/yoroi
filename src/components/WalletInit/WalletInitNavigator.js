@@ -15,7 +15,12 @@ import {WALLET_INIT_ROUTES} from '../../RoutesList'
 
 const WalletInitNavigator = createStackNavigator(
   {
-    [WALLET_INIT_ROUTES.MAIN]: LanguagePickerScreen,
+    [WALLET_INIT_ROUTES.MAIN]: {
+      screen: LanguagePickerScreen,
+      navigationOptions: {
+        header: null,
+      },
+    },
     [WALLET_INIT_ROUTES.INIT]: WalletInitScreen,
     [WALLET_INIT_ROUTES.CREATE_WALLET]: CreateWalletScreen,
     [WALLET_INIT_ROUTES.RESTORE_WALLET]: RestoreWalletScreen,
@@ -29,9 +34,9 @@ const WalletInitNavigator = createStackNavigator(
   },
   {
     initialRouteName: WALLET_INIT_ROUTES.MAIN,
-    navigationOptions: {
-      header: null,
-    },
+    navigationOptions: ({navigation}) => ({
+      title: navigation.getParam('title'),
+    }),
     cardStyle: {
       backgroundColor: 'transparent',
     },
