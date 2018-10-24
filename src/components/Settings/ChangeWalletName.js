@@ -51,8 +51,10 @@ export default compose(
   connect((state) => ({
     translations: getTranslations(state),
   })),
-  withState('walletName', 'setWalletName', ''), // getWalletNameFromApp()
-  withState('validateResult', 'setValidateResult', true), // resultFromStatePreviousLine
+  // getWalletNameFromApp()
+  withState('walletName', 'setWalletName', ''),
+  // resultFromStatePreviousLine
+  withState('validateResult', 'setValidateResult', true),
   withHandlers({
     onChangeText: ({setWalletName, setValidateResult}) => (walletName) => {
       setWalletName(walletName)
