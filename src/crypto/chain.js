@@ -1,71 +1,109 @@
-import moment from 'moment'
+// @flow
 import _ from 'lodash'
 
 import {CONFIG} from '../config'
 import {assertTrue, assertFalse} from '../utils/assert'
-import {Logger} from '../utils/logging'
 
 import type {Moment} from 'moment'
 
 export type AddressBlock = [number, Moment, Array<string>]
 
-export class AddressChainManager {
+type AsyncAddressGenerator = (ids: Array<number>) => Promise<Array<string>>
+type AsyncAddressFilter = (addresses: Array<string>) => Promise<Array<string>>
+
+export class AddressChain {
   _addresses: Array<string>
   _addressIndex: Map<string, number>
-  _used: Set<string>
-  _addressGenerator: (Array<number>) => Array<string>
-  _lastSyncTimePerBatch: Array<Moment>
+  _getAddresses: AsyncAddressGenerator
+  _filterUsed: AsyncAddressFilter
   _blockSize: number
   _gapLimit: number
+  _isInitialized: boolean
+  _subscriptions: Array<(Array<string>) => mixed>
 
   constructor(
-    addressGenerator: any,
+    addressGenerator: AsyncAddressGenerator,
+    filterUsed: AsyncAddressFilter,
     blockSize: number = CONFIG.WALLET.DISCOVERY_BLOCK_SIZE,
     gapLimit: number = CONFIG.WALLET.DISCOVERY_GAP_SIZE,
   ) {
-    this._addressGenerator = addressGenerator
-    this._addresses = []
-    this._used = new Set()
-    this._lastSyncTimePerBatch = []
+    assertTrue(blockSize > gapLimit, 'Block size needs to be > gap limit')
+
+    this._getAddresses = addressGenerator
+    this._filterUsed = filterUsed
     this._blockSize = blockSize
     this._gapLimit = gapLimit
+
+    this._addresses = []
     this._addressIndex = new Map()
-    this._ensureEnoughGeneratedAddresses()
+    this._isInitialized = false
+    this._subscriptions = []
+  }
+
+  addSubscriberToNewAddresses(subscriber: (Array<string>) => mixed) {
+    this._subscriptions.push(subscriber)
+  }
+
+  async _discoverNewBlock() {
+    const start = this.size()
+    const idxs = _.range(start, start + this._blockSize)
+
+    const addresses = await this._getAddresses(idxs)
+
+    assertTrue(this.size() === start, 'Concurrent modification')
+    for (const [idx, address] of _.zip(idxs, addresses)) {
+      this._addresses.push(address)
+      this._addressIndex.set(address, idx)
+    }
+    this._subscriptions.map((sub) => sub(addresses))
+  }
+
+  _getLastBlock() {
+    this._selfCheck()
+    const block = _.takeRight(this._addresses, this._blockSize)
+    assertTrue(block.length === this._blockSize)
+    return block
+  }
+
+  async initialize() {
+    assertFalse(this._isInitialized)
+    await this._discoverNewBlock()
+    assertFalse(this._isInitialized, 'Concurrent modification')
+    this._isInitialized = true
   }
 
   _selfCheck() {
+    assertTrue(this._isInitialized)
     assertTrue(this._addresses.length % this._blockSize === 0)
-    assertTrue(
-      this._lastSyncTimePerBatch.length * this._blockSize ===
-        this._addresses.length,
-    )
     assertTrue(this._addresses.length === this._addressIndex.size)
   }
 
-  getHighestUsedIndex() {
-    return _.findLastIndex(this._addresses, (addr) => this._used.has(addr))
-  }
-
-  getFirstUnused() {
-    return _.find(this._addresses, (addr) => !this._used.has(addr))
-  }
-
-  _ensureEnoughGeneratedAddresses() {
-    while (
-      this.getHighestUsedIndex() + this._gapLimit >=
-      this._addresses.length
-    ) {
-      const start = this._addresses.length
-      const idxs = _.range(start, start + this._blockSize)
-      const newAddresses = this._addressGenerator(idxs)
-      Logger.debug('discover', newAddresses)
-      this._addresses.push(...newAddresses)
-      _.zip(idxs, newAddresses).forEach(([i, addr]) => {
-        this._addressIndex.set(addr, i)
-      })
-      this._lastSyncTimePerBatch.push(moment(0))
+  async sync() {
+    let keepSyncing = true
+    while (keepSyncing) {
+      keepSyncing = await this._syncStep()
     }
+  }
+
+  async _syncStep() {
     this._selfCheck()
+    const block = this._getLastBlock()
+    const used = await this._filterUsed(block)
+
+    // Index relative to the start of the block
+    // It is okay to "overshoot" with -1 here
+    let lastUsedIdx = -1
+
+    if (used.length) {
+      lastUsedIdx = block.indexOf(_.last(used))
+    }
+
+    if (lastUsedIdx + this._gapLimit >= this._blockSize) {
+      await this._discoverNewBlock()
+      return true
+    } else {
+      return false
+    }
   }
 
   size() {
@@ -76,43 +114,16 @@ export class AddressChainManager {
     return this._addressIndex.has(address)
   }
 
-  getIndexOfAddress(address: string) {
+  getIndexOfAddress(address: string): number {
     assertTrue(this.isMyAddress(address))
-    return this._addressIndex.get(address)
+    return ((this._addressIndex.get(address): any): number)
   }
 
-  markAddressAsUsed(address: string) {
-    assertTrue(this.isMyAddress(address))
-    if (this._used.has(address)) return // we already know
-    Logger.debug('marking address as used', address)
-    this._used.add(address)
-    this._ensureEnoughGeneratedAddresses()
-    this._selfCheck()
+  getAddresses() {
+    return [...this._addresses]
   }
 
-  getBlockCount() {
-    return this._lastSyncTimePerBatch.length
-  }
-
-  getBlockInfo(idx: number): AddressBlock {
-    assertTrue(idx >= 0)
-    assertTrue(idx < this.getBlockCount())
-    return [
-      idx,
-      this._lastSyncTimePerBatch[idx],
-      this._addresses.slice(idx * this._blockSize, (idx + 1) * this._blockSize),
-    ]
-  }
-
-  getBlocks(): Array<AddressBlock> {
-    return _.range(this.getBlockCount()).map((i) => this.getBlockInfo(i))
-  }
-
-  updateBlockTime(idx: number, time: Moment) {
-    assertTrue(idx >= 0)
-    assertTrue(idx < this.getBlockCount())
-    assertFalse(time.isBefore(this._lastSyncTimePerBatch[idx]))
-    this._lastSyncTimePerBatch[idx] = time
-    this._selfCheck()
+  getBlocks() {
+    return _.chunk(this._addresses, this._blockSize)
   }
 }

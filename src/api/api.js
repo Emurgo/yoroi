@@ -73,7 +73,11 @@ export const fetchNewTxHistory = async (
     addresses,
     dateFrom: dateFrom.toISOString(),
   })
-  return response
+
+  return {
+    transactions: response,
+    isLast: response.length <= CONFIG.API.TX_HISTORY_RESPONSE_LIMIT,
+  }
 }
 
 export const filterUsedAddresses = async (

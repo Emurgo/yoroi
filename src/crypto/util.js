@@ -7,7 +7,7 @@ import {randomBytes} from 'react-native-randombytes'
 import ExtendableError from 'es6-error'
 import bs58 from 'bs58'
 import cryptoRandomString from 'crypto-random-string'
-
+import {assertTrue} from '../utils/assert'
 import {CONFIG} from '../config'
 
 import type {
@@ -28,23 +28,23 @@ export const _result = <T>(rustResult: {
   failed: boolean,
   result: T,
   msg: string,
-}): T => {
-  if (rustResult.failed) throw new CardanoError(rustResult.msg)
-  return rustResult.result
+}): Promise<T> => {
+  if (rustResult.failed) return Promise.reject(new CardanoError(rustResult.msg))
+  return Promise.resolve(rustResult.result)
 }
 
 export const getMasterKeyFromMnemonic = (mnemonic: string) => {
   const entropy = new Buffer(mnemonicToEntropy(mnemonic), 'hex')
   const masterKey = HdWallet.fromEnhancedEntropy(entropy, '')
-  return masterKey
+  return Promise.resolve(masterKey)
 }
 
-export const getAccountFromMasterKey = (
+export const getAccountFromMasterKey = async (
   masterKey: Buffer,
   accountIndex?: number = CONFIG.WALLET.ACCOUNT_INDEX,
   protocolMagic?: number = CONFIG.CARDANO.PROTOCOL_MAGIC,
-): CryptoAccount => {
-  const wallet = _result(Wallet.fromMasterKey(masterKey))
+): Promise<CryptoAccount> => {
+  const wallet = await _result(Wallet.fromMasterKey(masterKey))
   wallet.config.protocol_magic = protocolMagic
   return _result(Wallet.newAccount(wallet, accountIndex))
 }
@@ -53,6 +53,7 @@ export const encryptMasterKey = (
   password: string,
   masterKey: Uint8Array,
 ): string => {
+  assertTrue(password != null)
   const salt = new Buffer(cryptoRandomString(2 * 32), 'hex')
   const nonce = new Buffer(cryptoRandomString(2 * 12), 'hex')
   const formattedPassword: Uint8Array = new TextEncoder().encode(password)
@@ -90,7 +91,8 @@ const _getAddresses = (
   account: CryptoAccount,
   type: AddressType,
   indexes: Array<number>,
-) => _result(Wallet.generateAddresses(account, type, indexes))
+): Promise<Array<string>> =>
+  _result(Wallet.generateAddresses(account, type, indexes))
 
 export function getAddressTypeIndex(addressType: AddressType): number {
   if (addressType === 'External') return 0
@@ -117,9 +119,9 @@ export const getAddressInHex = (address: string): string => {
   }
 }
 
-export const isValidAddress = (address: string): boolean => {
+export const isValidAddress = async (address: string): Promise<boolean> => {
   try {
-    return _result(Wallet.checkAddress(getAddressInHex(address)))
+    return await _result(Wallet.checkAddress(getAddressInHex(address)))
   } catch (e) {
     if (e instanceof CardanoError) return false
     throw e
@@ -129,29 +131,31 @@ export const isValidAddress = (address: string): boolean => {
 export const generateAdaMnemonic = () =>
   generateMnemonic(CONFIG.MNEMONIC_STRENGTH, randomBytes)
 
-export const generateFakeWallet = () => {
+export const generateFakeWallet = async () => {
   const fakeMnemonic = generateAdaMnemonic()
-  const fakeMasterKey = getMasterKeyFromMnemonic(fakeMnemonic)
-  const wallet = _result(Wallet.fromMasterKey(fakeMasterKey))
+  const fakeMasterKey = await getMasterKeyFromMnemonic(fakeMnemonic)
+  const wallet = await _result(Wallet.fromMasterKey(fakeMasterKey))
   return wallet
 }
 
-export const getWalletFromMasterKey = (
+export const getWalletFromMasterKey = async (
   masterKey: Uint8Array,
   protocolMagic?: number = CONFIG.CARDANO.PROTOCOL_MAGIC,
 ) => {
-  const wallet = _result(Wallet.fromMasterKey(masterKey))
+  const wallet = await _result(Wallet.fromMasterKey(masterKey))
   wallet.config.protocol_magic = protocolMagic
   return wallet
 }
 
-export const signTransaction = (
+export const signTransaction = async (
   wallet: any,
   inputs: Array<TransactionInput>,
   outputs: Array<TransactionOutput>,
   changeAddress: string,
 ) => {
-  const result = _result(Wallet.spend(wallet, inputs, outputs, changeAddress))
+  const result = await _result(
+    Wallet.spend(wallet, inputs, outputs, changeAddress),
+  )
 
   return {
     ...result,
