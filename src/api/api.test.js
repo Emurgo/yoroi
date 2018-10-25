@@ -33,4 +33,38 @@ describe('History API', () => {
 
     await expect(api.fetchNewTxHistory(ts, addresses)).rejects.toThrow(ApiError)
   })
+
+  it('filters used addresses', async () => {
+    const addresses = [
+      'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
+      'Ae2tdPwUPEZ8wGxWm9VbZXFJcgLeKQJWKqREVEtHXYdqsqc4bLeGqjSwrtu',
+      'Ae2tdPwUPEZ6T9qZxpao8ciAgg6ahjHRq2jV45ndZ4oPXAwrTYqN9NGUPh4',
+      'Ae2tdPwUPEYzFrD5QSQ8NPHEJ8reecZkch5tT8wFAAYu18CJnkZ9XAm5ySE',
+    ]
+    const used = [
+      'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
+    ]
+
+    expect.assertions(1)
+    const result = await api.filterUsedAddresses(addresses)
+    expect(result).toEqual(used)
+  })
+
+  it('keeps order in filterUsedAddresses', async () => {
+    const addresses = [
+      'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
+      'Ae2tdPwUPEZ8uXdGbucR1mByMcCDqwheTziFH9S3hPXJU741K6NprZ3jKFJ',
+      'Ae2tdPwUPEZAyT9PgRp751Gv8UaEzaeSuNQzDC2nZzvukFBHyLEZ9usP4YR',
+    ]
+
+    expect.assertions(2)
+
+    const result1 = await api.filterUsedAddresses(addresses)
+    expect(result1).toEqual(addresses)
+
+    addresses.reverse()
+
+    const result2 = await api.filterUsedAddresses(addresses)
+    expect(result2).toEqual(addresses)
+  })
 })

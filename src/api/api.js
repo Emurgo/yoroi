@@ -76,8 +76,18 @@ export const fetchNewTxHistory = async (
   return response
 }
 
-export const filterUsedAddresses = (addresses: Addresses) => {
-  return _fetch('addresses/filterUsed', {addresses})
+export const filterUsedAddresses = async (
+  addresses: Addresses,
+): Promise<Addresses> => {
+  assert.preconditionCheck(
+    addresses.length <= CONFIG.API.FILTER_USED_MAX_ADDRESSES,
+    'filterUsedAddresses: too many addresses',
+  )
+  // Take a copy in case underlying data mutates during await
+  const copy = [...addresses]
+  const used = await _fetch('addresses/filterUsed', {addresses: copy})
+  // We need to do this so that we keep original order of addresses
+  return copy.filter((addr) => used.includes(addr))
 }
 
 export const fetchUTXOsForAddresses = (addresses: Addresses) => {
@@ -91,7 +101,6 @@ export const fetchUTXOsForAddresses = (addresses: Addresses) => {
 export const bulkFetchUTXOsForAddresses = async (
   addresses: Array<string>,
 ): Promise<Array<RawUtxo>> => {
-  // For now we do not support custom sender so we query all addresses
   const chunks = _.chunk(addresses, CONFIG.API.FETCH_UTXOS_MAX_ADDRESSES)
 
   const responses = await Promise.all(
