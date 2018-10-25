@@ -30,6 +30,11 @@ const AddressReaderQR = ({address, setAddress, onSuccess}: Props) => (
 export default compose(
   withState('address', 'setAddress', ''),
   withHandlers({
-    onSuccess: ({setAddress}) => (event) => setAddress(event.data),
+    onSuccess: ({navigation}) => (event) => {
+      const onSuccess = navigation.getParam('onSuccess')
+      if (onSuccess) {
+        onSuccess(event.data)
+      }
+    },
   }),
 )(AddressReaderQR)

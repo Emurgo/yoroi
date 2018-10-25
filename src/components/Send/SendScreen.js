@@ -35,10 +35,18 @@ const handleConfirm = ({navigation, amount, address}) => async () => {
   }
 }
 
+const _navigateToQRReader = (navigation, setAddress) =>
+  navigation.navigate(SEND_ROUTES.ADDRESS_READER_QR, {
+    onSuccess: (address) => {
+      setAddress(address)
+      navigation.navigate(SEND_ROUTES.MAIN)
+    },
+  })
+
 const getTranslations = (state) => state.trans.SendScreen
 
 type Props = {
-  navigateToAddressReaderQR: () => mixed,
+  navigateToQRReader: () => mixed,
   handleConfirm: () => mixed,
   translations: SubTranslation<typeof getTranslations>,
   amount: string,
@@ -49,7 +57,7 @@ type Props = {
 }
 
 const SendScreen = ({
-  navigateToAddressReaderQR,
+  navigateToQRReader,
   translations,
   amount,
   address,
@@ -63,7 +71,7 @@ const SendScreen = ({
       <Text>Available funds: {printAda(availableAmount)}</Text>
     </View>
     <View style={styles.containerQR}>
-      <TouchableOpacity onPress={navigateToAddressReaderQR}>
+      <TouchableOpacity onPress={navigateToQRReader}>
         <View style={styles.scanIcon} />
       </TouchableOpacity>
       <Text style={styles.label}>{translations.scanCode}</Text>
@@ -96,8 +104,8 @@ export default compose(
   withState('address', 'setAddress', ''),
   withState('amount', 'setAmount', ''),
   withHandlers({
-    navigateToAddressReaderQR: ({navigation}) => (event) =>
-      navigation.navigate(SEND_ROUTES.ADDRESS_READER_QR),
+    navigateToQRReader: ({navigation, setAddress}) => (event) =>
+      _navigateToQRReader(navigation, setAddress),
     handleConfirm,
   }),
 )(SendScreen)
