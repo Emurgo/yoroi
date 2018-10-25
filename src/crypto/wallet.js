@@ -26,17 +26,6 @@ const getLastTimestamp = (history: Array<RawTransaction>): ?Moment => {
   return moment(max || 0)
 }
 
-const fetchAllUtxos = async (
-  addresses: Array<string>,
-): Promise<Array<RawUtxo>> => {
-  // For now we do not support custom sender so we query all addresses
-  const MAX_ADDRESSES_PER_REQUEST = CONFIG.WALLET.UTXO_ADDRESS_FETCH_BLOCK_SIZE
-  const chunks = _.chunk(addresses, MAX_ADDRESSES_PER_REQUEST)
-
-  const responses = await Promise.all(
-    chunks.map((addrs) => api.fetchUTXOsForAddresses(addrs)),
-  )
-  return _.flatten(responses)
 }
 
 export class WalletManager {
@@ -224,7 +213,7 @@ export class WalletManager {
     receiverAddress: string,
     amount: number,
   ): Promise<PreparedTransactionData> {
-    const utxos = await fetchAllUtxos(this.getOwnAddresses())
+    const utxos = await api.bulkFetchUTXOsForAddresses(this.getOwnAddresses())
     const inputs = utxos.map((utxo) => this.transformUtxoToInput(utxo))
 
     // FIXME: use bignumbers here
