@@ -24,7 +24,6 @@ const getLastTimestamp = (history: Array<RawTransaction>): ?Moment => {
   // and the result is expected
   const max = _.max(history.map((tx) => tx.last_update))
   return moment(max || 0)
-}
 
 }
 
