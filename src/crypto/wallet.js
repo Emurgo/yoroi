@@ -3,6 +3,7 @@
 import moment from 'moment'
 import _ from 'lodash'
 import pLimit from 'p-limit'
+import {BigNumber} from 'bignumber.js'
 
 import {AddressChainManager} from './chain'
 import * as util from './util'
@@ -222,19 +223,19 @@ export class WalletManager {
 
   async prepareTransaction(
     receiverAddress: string,
-    amount: number,
+    amount: BigNumber,
   ): Promise<PreparedTransactionData> {
     const utxos = await fetchAllUtxos(this.getOwnAddresses())
     const inputs = utxos.map((utxo) => this.transformUtxoToInput(utxo))
 
-    // FIXME: use bignumbers here
-    const outputs = [{address: receiverAddress, value: `${amount}`}]
+    const outputs = [{address: receiverAddress, value: amount.toString()}]
     const changeAddress = this.getChangeAddress()
     Logger.info(this.internalChain._addresses)
 
     const fakeWallet = util.generateFakeWallet()
-    const fee = util.signTransaction(fakeWallet, inputs, outputs, changeAddress)
-      .fee
+    const fee = new BigNumber(
+      util.signTransaction(fakeWallet, inputs, outputs, changeAddress).fee,
+    )
     Logger.info(inputs)
     Logger.info(outputs)
     Logger.info(changeAddress)
@@ -264,7 +265,7 @@ export class WalletManager {
       changeAddress,
     )
 
-    assertTrue(fee === signedTxData.fee, 'Transaction fee does not match')
+    assertTrue(fee.eq(signedTxData.fee), 'Transaction fee does not match')
 
     const signedTx = Buffer.from(signedTxData.cbor_encoded_tx).toString(
       'base64',

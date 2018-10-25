@@ -2,6 +2,7 @@
 
 import moment from 'moment'
 import _ from 'lodash'
+import {BigNumber} from 'bignumber.js'
 
 import {
   TRANSACTION_DIRECTION,
@@ -36,14 +37,14 @@ export const getTransactionAssurance = (
 }
 
 // TODO(ppershing): probably belongs to utils/localization once we have it
-export const printAda = (amount: number) => {
+export const printAda = (amount: BigNumber) => {
   // 1 ADA = 1 000 000 micro ada
-  return (amount / 1000000).toFixed(6)
+  return amount.dividedBy(1000000).toFixed(6)
 }
 
 // Note(ppershing): upgrade to bignum once we use it
-const _sum = (a: Array<{amount: number}>) =>
-  a.reduce((acc, x) => acc + x.amount, 0)
+const _sum = (a: Array<{amount: BigNumber}>): BigNumber =>
+  a.reduce((acc: BigNumber, x) => acc.plus(x.amount), new BigNumber(0, 10))
 
 export const processTxHistoryData = (
   data: RawTransaction,
@@ -52,7 +53,7 @@ export const processTxHistoryData = (
   const parse = (addresses, amounts) =>
     _.zip(addresses, amounts).map(([address, amount]) => ({
       address,
-      amount: parseInt(amount, 10),
+      amount: new BigNumber(amount, 10),
     }))
 
   const inputs = parse(data.inputs_address, data.inputs_amount)
@@ -112,32 +113,35 @@ export const processTxHistoryData = (
     We will conservatively mark zero fee and decide on the transaction direction
     by the money flow
   */
-  const brutto = ownOut - ownIn
-  const totalFee = totalOut - totalIn // should be negative
+  const brutto = ownOut.minus(ownIn)
+  const totalFee = totalOut.minus(totalIn) // should be negative
 
   let amount
   let fee
   let direction
   if (isIntraWallet) {
-    amount = 0
+    amount = new BigNumber(0)
     fee = totalFee
     direction = TRANSACTION_DIRECTION.SELF
   } else {
-    fee = hasOnlyOwnInputs ? totalFee : 0
-    amount = brutto - fee
-    direction =
-      amount >= 0 ? TRANSACTION_DIRECTION.RECEIVED : TRANSACTION_DIRECTION.SENT
+    fee = hasOnlyOwnInputs ? totalFee : new BigNumber(0)
+    amount = brutto.minus(fee)
+    direction = amount.gte(0)
+      ? TRANSACTION_DIRECTION.RECEIVED
+      : TRANSACTION_DIRECTION.SENT
   }
+
+  const bestBlock = new BigNumber(data.best_block_num, 10)
+  const currentBlock = new BigNumber(data.block_num, 10)
 
   return {
     id: data.hash,
     fromAddresses: data.inputs_address,
     toAddresses: data.outputs_address,
-    amount: Math.abs(amount),
+    amount: amount.abs(),
     bruttoAmount: brutto,
     fee,
-    confirmations:
-      parseInt(data.best_block_num, 10) - parseInt(data.block_num, 10),
+    confirmations: bestBlock.minus(currentBlock),
     direction,
     timestamp: moment(data.time),
     updatedAt: moment(data.last_update),

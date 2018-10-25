@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react'
+import {BigNumber} from 'bignumber.js'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {View, TextInput, TouchableOpacity} from 'react-native'
@@ -21,7 +22,7 @@ const handleConfirm = ({navigation, amount, address}) => async () => {
   const isValid = true
 
   if (isValid) {
-    const adaAmount = parseInt(amount, 10) * 1000000
+    const adaAmount = new BigNumber(amount, 10).times(1000000)
     const transactionData = await WalletManager.prepareTransaction(
       address,
       adaAmount,

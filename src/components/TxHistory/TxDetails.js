@@ -85,7 +85,9 @@ const TxDetails = ({navigation, translations}: Props) => {
       <View style={styles.section}>
         <Label>{translations.txAssuranceLevel}</Label>
         <Text>
-          {translations.formatConfirmations(transaction.confirmations)}
+          {translations.formatConfirmations(
+            transaction.confirmations.toNumber(),
+          )}
         </Text>
       </View>
 

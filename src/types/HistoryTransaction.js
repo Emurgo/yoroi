@@ -1,5 +1,6 @@
 // @flow
 import {Moment} from 'moment'
+import {BigNumber} from 'bignumber.js'
 
 export const TRANSACTION_DIRECTION = {
   SENT: 'SENT',
@@ -75,7 +76,7 @@ export type TransactionInput = {|
 
 export type PreparedTransactionData = {|
   changeAddress: string,
-  fee: string,
+  fee: BigNumber,
   inputs: Array<TransactionInput>,
   outputs: Array<TransactionOutput>,
 |}
