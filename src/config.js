@@ -26,7 +26,16 @@ const CARDANO = CARDANO_CONFIG.TESTNET
 
 export const CONFIG = {
   USE_MOCK_API: false,
-  API_ROOT: CARDANO.API_ROOT,
+  API: {
+    ROOT: CARDANO.API_ROOT,
+    // backend limitations
+    FETCH_UTXOS_MAX_ADDRESSES: 50,
+    TX_HISTORY_MAX_ADDRESSES: 50,
+    FILTER_USED_MAX_ADDRESSES: 50,
+    // TODO(ppershing): verify this constant
+    TX_HISTORY_RESPONSE_LIMIT: 20,
+  },
+
   MAX_CONCURRENT_REQUESTS: 5,
   CARDANO,
   MNEMONIC_STRENGTH: 160,
@@ -37,6 +46,5 @@ export const CONFIG = {
     ACCOUNT_INDEX: 0,
     DISCOVERY_GAP_SIZE: 20,
     DISCOVERY_BLOCK_SIZE: 50, // should be less than API limitations
-    UTXO_ADDRESS_FETCH_BLOCK_SIZE: 50,
   },
 }

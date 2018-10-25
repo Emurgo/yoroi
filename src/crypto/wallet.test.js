@@ -12,8 +12,9 @@ jest.setTimeout(15 * 1000)
 
 // eslint-disable-next-line max-len
 const mnemonic =
-  'dry balcony arctic what garbage sort cart shine egg\
-lamp manual bottom slide assault bus'
+  'dry balcony arctic what garbage sort' +
+  ' cart shine egg lamp manual bottom' +
+  ' slide assault bus'
 
 test('Can restore wallet', async () => {
   expect.assertions(2)
