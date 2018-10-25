@@ -1,5 +1,6 @@
 // @flow
 
+import {BigNumber} from 'bignumber.js'
 import {mnemonicToEntropy, generateMnemonic} from 'bip39'
 import {HdWallet, Wallet, PasswordProtect} from 'rust-cardano-crypto'
 import {randomBytes} from 'react-native-randombytes'
@@ -149,4 +150,11 @@ export const signTransaction = (
   inputs: Array<TransactionInput>,
   outputs: Array<TransactionOutput>,
   changeAddress: string,
-) => _result(Wallet.spend(wallet, inputs, outputs, changeAddress))
+) => {
+  const result = _result(Wallet.spend(wallet, inputs, outputs, changeAddress))
+
+  return {
+    ...result,
+    fee: new BigNumber(result.fee, 10),
+  }
+}

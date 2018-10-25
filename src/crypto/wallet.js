@@ -233,9 +233,9 @@ export class WalletManager {
     Logger.info(this.internalChain._addresses)
 
     const fakeWallet = util.generateFakeWallet()
-    const fee = new BigNumber(
-      util.signTransaction(fakeWallet, inputs, outputs, changeAddress).fee,
-    )
+    const fee = util.signTransaction(fakeWallet, inputs, outputs, changeAddress)
+      .fee
+
     Logger.info(inputs)
     Logger.info(outputs)
     Logger.info(changeAddress)

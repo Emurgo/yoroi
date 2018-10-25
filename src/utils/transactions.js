@@ -42,9 +42,8 @@ export const printAda = (amount: BigNumber) => {
   return amount.dividedBy(1000000).toFixed(6)
 }
 
-// Note(ppershing): upgrade to bignum once we use it
 const _sum = (a: Array<{amount: BigNumber}>): BigNumber =>
-  a.reduce((acc: BigNumber, x) => acc.plus(x.amount), new BigNumber(0, 10))
+  a.reduce((acc: BigNumber, x) => acc.plus(x.amount), new BigNumber(0))
 
 export const processTxHistoryData = (
   data: RawTransaction,
