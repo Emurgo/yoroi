@@ -1,5 +1,6 @@
 // @flow
 import _ from 'lodash'
+import {BigNumber} from 'bignumber.js'
 
 import {processTxHistoryData} from './utils/transactions'
 import {TRANSACTION_STATUS} from './types/HistoryTransaction'
@@ -29,19 +30,22 @@ export const amountPendingSelector = (state: State): ?number => {
 
   if (!pending.length) return null
 
-  return pending.reduce((x, y) => x + y)
+  return pending.reduce((x: BigNumber, y) => x.plus(y), new BigNumber(0))
 }
 
 // TODO: make this using reselect
-export const availableAmountSelector = (state: State): ?number => {
+export const availableAmountSelector = (state: State): ?BigNumber => {
   const transactions = transactionsSelector(state)
   const processed = ObjectValues(transactions).filter(
     (t) => t.status === TRANSACTION_STATUS.SUCCESSFUL,
   )
 
-  if (!processed.length) return 0
+  if (!processed.length) return new BigNumber(0)
 
-  return processed.reduce((x, y) => x + y.bruttoAmount, 0)
+  return processed.reduce(
+    (x: BigNumber, y) => x.plus(y.bruttoAmount),
+    new BigNumber(0),
+  )
 }
 
 export const isOnlineSelector = (state: State) => state.isOnline

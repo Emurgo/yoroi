@@ -4,6 +4,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View, Text} from 'react-native'
+import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 
 import {
@@ -31,7 +32,7 @@ type Props = {
   navigation: NavigationScreenProp<NavigationState>,
   isFetching: boolean,
   isOnline: boolean,
-  amountPending: ?number,
+  amountPending: ?BigNumber,
 }
 
 const OfflineBanner = () => <Text>You are offline!</Text>
