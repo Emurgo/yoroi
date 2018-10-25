@@ -37,7 +37,7 @@ export const synchronize = <T>(
     Logger.debug('Synchronize lock wait')
     // We need to update lock and at the same time wait for the original
     // function
-    const orig = mutex.lock
+    const orig: Promise<mixed> = (mutex.lock: any)
     let _resolve
     let _reject
 
