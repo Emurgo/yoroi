@@ -1,6 +1,8 @@
 // @flow
 import ExtendableError from 'es6-error'
 
+import {Logger} from './logging'
+
 export class LockError extends ExtendableError {}
 
 export type Mutex = {
@@ -18,17 +20,21 @@ export const synchronize = <T>(
   mutex: Mutex,
   factory: () => Promise<T>,
 ): Promise<T> => {
+  Logger.debug('Synchronize on', mutex)
   if (!mutex.lock) {
+    Logger.debug('Synchronize lock fastpath')
     // We are first and can grab lock
     const myPromise = factory()
     mutex.lock = myPromise
 
     // $FlowFixMe
     return myPromise.finally(() => {
+      Logger.debug('Synchronize unlock fastpath')
       // clean up if we do not have anything waiting on lock
       if (mutex.lock === myPromise) mutex.lock = null
     })
   } else {
+    Logger.debug('Synchronize lock wait')
     // We need to update lock and at the same time wait for the original
     // function
     const orig = mutex.lock
@@ -43,11 +49,13 @@ export const synchronize = <T>(
     mutex.lock = newLock
 
     orig.finally(() => {
+      Logger.debug('Synchronize lock resume')
       // Ok, waiting for the original is done, now let's do our work
       const myPromise = factory()
       myPromise
         .finally(() => {
           // clean up if we do not have anything waiting on lock
+          Logger.debug('Synchronize unlock')
           if (mutex.lock === newLock) mutex.lock = null
         })
         .then(_resolve)
