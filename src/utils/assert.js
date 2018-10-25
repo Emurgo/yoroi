@@ -28,3 +28,12 @@ export const checkIsTrue = (value: any, ...args: any) => {
 export const checkIsFalse = (value: any, ...args: any) => {
   if (!value) Logger.error('Check failed', ...args)
 }
+
+export const preconditionIsTrue = (value: any, message: string) => {
+  _assert(value, `Precondition check failed: ${message}`)
+}
+
+export default {
+  assert: assertTrue,
+  preconditionCheck: preconditionIsTrue,
+}
