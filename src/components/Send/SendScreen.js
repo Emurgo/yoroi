@@ -104,6 +104,7 @@ const handleConfirm = ({
   utxos,
   address,
   amount,
+  availableAmount,
   setAddressErrors,
   setAmountErrors,
 }) => async () => {
@@ -122,10 +123,15 @@ const handleConfirm = ({
     const adaAmount = convertToAda(amount)
     const transactionData = await getTransactionData(utxos, address, amount)
 
+    const balanceAfterTx = availableAmount
+      .minus(adaAmount)
+      .minus(transactionData.fee)
+
     navigation.navigate(SEND_ROUTES.CONFIRM, {
       address,
       amount: adaAmount,
       transactionData,
+      balanceAfterTx,
     })
   } else {
     setAddressErrors(addressErrors)

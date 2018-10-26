@@ -73,6 +73,12 @@ export type Translation = {
   },
   ConfirmScreen: {
     confirm: string,
+    amount: string,
+    availableFunds: string,
+    balanceAfterTx: string,
+    fees: string,
+    password: string,
+    receiver: string,
   },
   WalletInitScreen: {
     createWallet: string,
