@@ -92,13 +92,11 @@ export class AddressChain {
 
     // Index relative to the start of the block
     // It is okay to "overshoot" with -1 here
-    let lastUsedIdx = -1
+    const lastUsedIdx = used.length > 0 ? block.indexOf(_.last(used)) : -1
 
-    if (used.length) {
-      lastUsedIdx = block.indexOf(_.last(used))
-    }
+    const needsNewBlock = lastUsedIdx + this._gapLimit >= this._blockSize
 
-    if (lastUsedIdx + this._gapLimit >= this._blockSize) {
+    if (needsNewBlock) {
       await this._discoverNewBlock()
       return true
     } else {
