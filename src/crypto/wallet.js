@@ -305,7 +305,8 @@ export class WalletManager {
 
         const metadata = this.getBlockMetadata(addrs)
         const newLastUpdated = getLastTimestamp(response.transactions)
-        // Not used right now
+        // Note: we can update best block number only if we are processing
+        // the last page of the history request, see design doc for details
         const newBestBlockNum =
           response.isLast && response.transactions.length
             ? response.transactions[0].best_block_num
