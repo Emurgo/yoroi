@@ -5,12 +5,13 @@ import _ from 'lodash'
 import pLimit from 'p-limit'
 import {BigNumber} from 'bignumber.js'
 
-import {AddressChainManager} from './chain'
+import {AddressChain} from './chain'
 import * as util from './util'
 import api from '../api'
 import {CONFIG} from '../config'
-import {assertTrue, assertFalse} from '../utils/assert'
+import assert from '../utils/assert'
 import {Logger} from '../utils/logging'
+import {synchronize} from '../utils/promise'
 
 import type {Moment} from 'moment'
 import type {
@@ -19,6 +20,7 @@ import type {
   TransactionInput,
   PreparedTransactionData,
 } from '../types/HistoryTransaction'
+import type {Mutex} from '../utils/promise'
 
 const getLastTimestamp = (history: Array<RawTransaction>): ?Moment => {
   // Note(ppershing): ISO8601 dates can be sorted as strings
@@ -26,13 +28,23 @@ const getLastTimestamp = (history: Array<RawTransaction>): ?Moment => {
   const max = _.max(history.map((tx) => tx.last_update))
   return moment(max || 0)
 }
+type SyncMetadata = {
+  lastUpdated: Moment,
+  bestBlockNum: number,
+}
 
 export class WalletManager {
   encryptedMasterKey: any
-  internalChain: AddressChainManager
-  externalChain: AddressChainManager
-  transactions: any
+  internalChain: AddressChain
+  externalChain: AddressChain
+
+  perAddressSyncMetadata: {[string]: SyncMetadata}
+  transactions: {[string]: RawTransaction}
+
+  seenAddresses: Set<string>
   isInitialized: boolean
+  doFullSyncMutex: Mutex
+  restoreMutex: Mutex
 
   constructor() {
     this._clearAllData()
@@ -45,7 +57,11 @@ export class WalletManager {
     // $FlowFixMe
     this.externalChain = null
     this.transactions = {}
+    this.perAddressSyncMetadata = {}
+    this.seenAddresses = new Set()
     this.isInitialized = false
+    this.doFullSyncMutex = {name: 'doFullSyncMutex', lock: null}
+    this.restoreMutex = {name: 'restoreMutex', lock: null}
   }
 
   _getAccount(masterKey) {
@@ -53,40 +69,74 @@ export class WalletManager {
   }
 
   restoreWallet(mnemonic: string, newPassword: string) {
+    return synchronize(this.restoreMutex, () =>
+      this._restoreWallet(mnemonic, newPassword),
+    )
+  }
+
+  async _restoreWallet(mnemonic: string, newPassword: string) {
     Logger.info('restore wallet')
-    assertFalse(this.isInitialized)
-    const masterKey = util.getMasterKeyFromMnemonic(mnemonic)
-    const account = this._getAccount(masterKey)
+    assert.assert(!this.isInitialized, 'restoreWallet: !isInitialized')
+    const masterKey = await util.getMasterKeyFromMnemonic(mnemonic)
+    const account = await this._getAccount(masterKey)
     this.encryptedMasterKey = util.encryptMasterKey(newPassword, masterKey)
-    this.internalChain = new AddressChainManager((ids) =>
-      util.getInternalAddresses(account, ids),
+
+    // initialize address chains
+    this.internalChain = new AddressChain(
+      (ids) => util.getInternalAddresses(account, ids),
+      api.filterUsedAddresses,
     )
-    this.externalChain = new AddressChainManager((ids) =>
-      util.getExternalAddresses(account, ids),
+    this.externalChain = new AddressChain(
+      (ids) => util.getExternalAddresses(account, ids),
+      api.filterUsedAddresses,
     )
+
+    // We want to monitor all new addresses
+    this.internalChain.addSubscriberToNewAddresses(
+      this.createMetadataForAddresses.bind(this),
+    )
+    this.externalChain.addSubscriberToNewAddresses(
+      this.createMetadataForAddresses.bind(this),
+    )
+
+    // Create at least one address in each block
+    await this.internalChain.initialize()
+    await this.externalChain.initialize()
 
     this.isInitialized = true
   }
 
   // TODO(ppershing): remove this once we can "open"
   // saved wallet from device store
-  __initTestWalletIfNeeded() {
+  async __initTestWalletIfNeeded() {
     if (this.isInitialized) return
     const mnemonic = [
       'dry balcony arctic what garbage sort',
       'cart shine egg lamp manual bottom',
       'slide assault bus',
     ].join(' ')
-    this.restoreWallet(mnemonic, '')
+    await this.restoreWallet(mnemonic, '')
   }
 
-  async doFullSync() {
+  doFullSync() {
+    return synchronize(this.doFullSyncMutex, () => this._doFullSync())
+  }
+
+  async _doFullSync() {
+    await this.__initTestWalletIfNeeded()
     Logger.info('Do full sync')
-    assertTrue(this.isInitialized)
+    assert.assert(this.isInitialized, 'doFullSync: isInitialized')
+    await this.internalChain.sync()
+    await this.externalChain.sync()
+    Logger.info('Discovery done, now syncing transactions')
     let keepGoing = true
     while (keepGoing) {
-      const changedInternal = await this.doSyncStep(this.internalChain)
-      const changedExternal = await this.doSyncStep(this.externalChain)
+      const changedInternal = await this.doSyncStep(
+        this.internalChain.getBlocks(),
+      )
+      const changedExternal = await this.doSyncStep(
+        this.externalChain.getBlocks(),
+      )
       keepGoing = changedInternal || changedExternal
     }
 
@@ -96,19 +146,12 @@ export class WalletManager {
   getOwnAddresses() {
     if (this.isInitialized) {
       return [
-        ...this.internalChain._addresses,
-        ...this.externalChain._addresses,
+        ...this.internalChain.getAddresses(),
+        ...this.externalChain.getAddresses(),
       ]
     }
 
     return []
-  }
-
-  _markAddressAsUsed(address: string) {
-    this.internalChain.isMyAddress(address) &&
-      this.internalChain.markAddressAsUsed(address)
-    this.externalChain.isMyAddress(address) &&
-      this.externalChain.markAddressAsUsed(address)
   }
 
   _didProcessTransaction(tx: RawTransaction): boolean {
@@ -123,8 +166,12 @@ export class WalletManager {
     }
 
     // Do all things that needs to be done on transaction
-    tx.inputs_address.forEach((a) => this._markAddressAsUsed(a))
-    tx.outputs_address.forEach((a) => this._markAddressAsUsed(a))
+    tx.inputs_address.forEach((a) => {
+      this.seenAddresses.add(a)
+    })
+    tx.outputs_address.forEach((a) => {
+      this.seenAddresses.add(a)
+    })
 
     // TODO(ppershing): make sure everyting above this line is ok with old
     // content of this.transactions[id] !
@@ -134,40 +181,94 @@ export class WalletManager {
 
   // Returns number of updated transactions
   _updateTransactions(transactions: Array<RawTransaction>): number {
+    Logger.debug('_updateTransactions', transactions)
     const updated = transactions.map((t) => this._didProcessTransaction(t))
     return _.sum(updated, (x) => (x ? 1 : 0))
   }
 
-  async doSyncStep(chain: AddressChainManager): Promise<number> {
+  createMetadataForAddresses(addrs: Array<string>) {
+    addrs.forEach((a) => {
+      assert.assert(
+        _.isUndefined(this.perAddressSyncMetadata[a]),
+        'createMetadataForAddresses: new addresses',
+      )
+      this.perAddressSyncMetadata[a] = {
+        lastUpdated: moment(0),
+        bestBlockNum: 0,
+      }
+    })
+  }
+
+  getBlockMetadata(addrs: Array<string>) {
+    assert.assert(addrs.length, 'getBlockMetadata: addrs not empty')
+    const metadata = addrs.map((a) => this.perAddressSyncMetadata[a])
+    // check consistency
+    assert.assert(
+      metadata,
+      'getBlockMetadata: metadata should not be undefined',
+    )
+    assert.assert(
+      metadata.every((x) => x.lastUpdated.isSame(metadata[0].lastUpdated)),
+      'getBlockMetadata: metadata same',
+    )
+    assert.assert(
+      metadata.every((x) => x.bestBlockNum === metadata[0].bestBlockNum),
+      'getBlockMetadata: metadata same',
+    )
+
+    return metadata[0]
+  }
+
+  async doSyncStep(blocks: Array<Array<string>>): Promise<boolean> {
+    Logger.info('doSyncStep', blocks)
     let count = 0
+    let wasPaginated = false
     const errors = []
+
+    const tasks = blocks.map((addrs) => {
+      const metadata = this.getBlockMetadata(addrs)
+      return () =>
+        api
+          .fetchNewTxHistory(metadata.lastUpdated, addrs)
+          .then((response) => [addrs, response])
+    })
 
     const limit = pLimit(CONFIG.MAX_CONCURRENT_REQUESTS)
 
-    const tasks = chain
-      .getBlocks()
-      .map(([idx, ts, addrs]) =>
-        limit(() =>
-          api.fetchNewTxHistory(ts, addrs).then((response) => [idx, response]),
-        ),
-      )
+    const promises = tasks.map((t) => limit(t))
 
     // Note(ppershing): This serializes the respons order
     // but still allows for concurrent requests
-    for (const promise of tasks) {
+    for (const promise of promises) {
       try {
-        const [idx, response] = await promise
-        count += this._updateTransactions(response)
+        const [addrs, response] = await promise
+        count += this._updateTransactions(response.transactions)
+        wasPaginated = wasPaginated || !response.isLast
         // Note: this needs to happen *after* updating
         // transactions in case the former fails!
-        chain.updateBlockTime(idx, getLastTimestamp(response))
+
+        const metadata = this.getBlockMetadata(addrs)
+        const newLastUpdated = getLastTimestamp(response.transactions)
+        // Not used right now
+        const newBestBlockNum =
+          response.isLast && response.transactions.length
+            ? response.transactions[0].best_block_num
+            : metadata.bestBlockNum
+
+        // TODO(ppershing): assert on concurrent metadata modifications
+        addrs.forEach((a) => {
+          this.perAddressSyncMetadata[a] = {
+            lastUpdated: newLastUpdated,
+            bestBlockNum: newBestBlockNum,
+          }
+        })
       } catch (e) {
         errors.push(e)
       }
     }
 
     if (errors.length) throw errors
-    return count
+    return wasPaginated || count > 0
   }
 
   transformUtxoToInput(utxo: RawUtxo): TransactionInput {
@@ -182,7 +283,7 @@ export class WalletManager {
       addressIndex = this.externalChain.getIndexOfAddress(utxo.receiver)
     }
 
-    assertTrue(
+    assert.assert(
       addressIndex !== -1,
       `Address not found for utxo: ${utxo.receiver}`,
     )
@@ -205,7 +306,12 @@ export class WalletManager {
   }
 
   getChangeAddress() {
-    return this.internalChain.getFirstUnused()
+    const candidateAddresses = this.internalChain.getAddresses()
+    const unseen = candidateAddresses.filter(
+      (addr) => !this.seenAddresses.has(addr),
+    )
+    assert.assert(unseen.length > 0, 'Cannot find change address')
+    return _.first(unseen)
   }
 
   async prepareTransaction(
@@ -218,12 +324,13 @@ export class WalletManager {
 
     const outputs = [{address: receiverAddress, value: amount.toString()}]
     const changeAddress = this.getChangeAddress()
-    Logger.info(this.internalChain._addresses)
-
-    const fakeWallet = util.generateFakeWallet()
-    const fee = util.signTransaction(fakeWallet, inputs, outputs, changeAddress)
-      .fee
-
+    const fakeWallet = await util.generateFakeWallet()
+    const fakeTx = await util.signTransaction(
+      fakeWallet,
+      inputs,
+      outputs,
+      changeAddress,
+    )
     Logger.info(inputs)
     Logger.info(outputs)
     Logger.info(changeAddress)
@@ -232,7 +339,7 @@ export class WalletManager {
       inputs,
       outputs,
       changeAddress,
-      fee,
+      fee: fakeTx.fee,
     }
   }
 
@@ -246,14 +353,14 @@ export class WalletManager {
       password,
       this.encryptedMasterKey,
     )
-    const signedTxData = util.signTransaction(
-      util.getWalletFromMasterKey(decryptedMasterKey),
+    const signedTxData = await util.signTransaction(
+      await util.getWalletFromMasterKey(decryptedMasterKey),
       inputs,
       outputs,
       changeAddress,
     )
 
-    assertTrue(fee.eq(signedTxData.fee), 'Transaction fee does not match')
+    assert.assert(fee.eq(signedTxData.fee), 'Transaction fee does not match')
 
     const signedTx = Buffer.from(signedTxData.cbor_encoded_tx).toString(
       'base64',

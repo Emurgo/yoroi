@@ -20,7 +20,9 @@ describe('History API', () => {
     const result = await api.fetchNewTxHistory(ts, addresses)
 
     // $FlowFixMe it seems like toMatchSnapshot is badly typed
-    expect(result[0]).toMatchSnapshot({best_block_num: expect.any(String)})
+    expect(result.transactions[0]).toMatchSnapshot({
+      best_block_num: expect.any(String),
+    })
   })
 
   it('throws ApiError on bad request', async () => {
