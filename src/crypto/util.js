@@ -82,11 +82,9 @@ const _getAddresses = (
 ): Promise<Array<string>> =>
   _rethrow(Wallet.generateAddresses(account, type, indexes))
 
-export function getAddressTypeIndex(addressType: AddressType): number {
-  if (addressType === 'External') return 0
-  if (addressType === 'Internal') return 1
-
-  throw new CardanoError(`Unknown address type: ${addressType}`)
+export const ADDRESS_TYPE_INDEX = {
+  EXTERNAL: 0,
+  INTERNAL: 1,
 }
 
 export const getExternalAddresses = (

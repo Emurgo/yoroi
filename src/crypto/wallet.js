@@ -328,21 +328,20 @@ export class WalletManager {
   }
 
   transformUtxoToInput(utxo: RawUtxo): TransactionInput {
-    let addressIndex = null
-    let addressType = ''
+    const chains = [
+      [util.ADDRESS_TYPE_INDEX.INTERNAL, this.internalChain],
+      [util.ADDRESS_TYPE_INDEX.EXTERNAL, this.externalChain],
+    ]
 
-    if (this.internalChain.isMyAddress(utxo.receiver)) {
-      addressType = 'Internal'
-      addressIndex = this.internalChain.getIndexOfAddress(utxo.receiver)
-    } else {
-      addressType = 'External'
-      addressIndex = this.externalChain.getIndexOfAddress(utxo.receiver)
-    }
+    let addressInfo = null
+    chains.forEach(([type, chain]) => {
+      if (chain.isMyAddress(utxo.receiver)) {
+        addressInfo = {type, index: chain.getIndexOfAddress(utxo.receiver)}
+      }
+    })
 
-    assert.assert(
-      addressIndex !== -1,
-      `Address not found for utxo: ${utxo.receiver}`,
-    )
+    /* :: if (!addressInfo) throw 'assert' */
+    assert.assert(addressInfo, `Address not found for utxo: ${utxo.receiver}`)
 
     return {
       ptr: {
@@ -355,8 +354,8 @@ export class WalletManager {
       },
       addressing: {
         account: CONFIG.WALLET.ACCOUNT_INDEX,
-        change: util.getAddressTypeIndex(addressType),
-        index: addressIndex,
+        change: addressInfo.type,
+        index: addressInfo.index,
       },
     }
   }
