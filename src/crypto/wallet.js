@@ -2,7 +2,6 @@
 
 import moment from 'moment'
 import _ from 'lodash'
-import pLimit from 'p-limit'
 import {BigNumber} from 'bignumber.js'
 
 import {AddressChain} from './chain'
@@ -15,6 +14,7 @@ import {
   synchronize,
   nonblockingSynchronize,
   IsLockedError,
+  limitConcurrency,
 } from '../utils/promise'
 
 import type {Moment} from 'moment'
@@ -289,7 +289,7 @@ export class WalletManager {
           .then((response) => [addrs, response])
     })
 
-    const limit = pLimit(CONFIG.MAX_CONCURRENT_REQUESTS)
+    const limit = limitConcurrency(CONFIG.MAX_CONCURRENT_REQUESTS)
 
     const promises = tasks.map((t) => limit(t))
 
