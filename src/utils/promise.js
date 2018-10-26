@@ -6,7 +6,6 @@ import {Logger} from './logging'
 
 export class IsLockedError extends ExtendableError {}
 
-
 export type Mutex = {
   lock: ?Promise<any>,
 }
