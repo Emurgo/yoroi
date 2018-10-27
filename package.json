@@ -8,6 +8,7 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
     "prettify": "./node_modules/.bin/prettier --write \"src/**/*.js\" --config src/.prettierrc",
+    "prettify_l10n": "./node_modules/.bin/prettier --write \"src/l10n/type.js\" --config src/.prettierrc",
     "haul": "haul"
   },
   "dependencies": {
