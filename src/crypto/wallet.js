@@ -11,7 +11,11 @@ import api from '../api'
 import {CONFIG} from '../config'
 import assert from '../utils/assert'
 import {Logger} from '../utils/logging'
-import {synchronize} from '../utils/promise'
+import {
+  synchronize,
+  nonblockingSynchronize,
+  IsLockedError,
+} from '../utils/promise'
 
 import type {Moment} from 'moment'
 import type {
@@ -128,8 +132,22 @@ export class WalletManager {
     await this.restoreWallet(mnemonic, '')
   }
 
-  doFullSync() {
-    return synchronize(this.doFullSyncMutex, () => this._doFullSync())
+  async doFullSync() {
+    return await synchronize(this.doFullSyncMutex, () => this._doFullSync())
+  }
+
+  async tryDoFullSync() {
+    try {
+      return await nonblockingSynchronize(this.doFullSyncMutex, () =>
+        this._doFullSync(),
+      )
+    } catch (e) {
+      if (e instanceof IsLockedError) {
+        return null
+      } else {
+        throw e
+      }
+    }
   }
 
   async _doFullSync() {

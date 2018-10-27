@@ -17,7 +17,7 @@ export const transactionsSelector = (
   // TODO(ppershing): store own addresses in redux state (otherwise
   // the transactions might not be re-evaluated if addresses change)
   const ownAddresses = WalletManager.getOwnAddresses()
-  return _.mapValues(state.transactions.data, (tr) =>
+  return _.mapValues(state.wallet.transactions, (tr) =>
     processTxHistoryData(tr, ownAddresses),
   )
 }
@@ -52,5 +52,9 @@ export const receiveAddressesSelector = (state: State) =>
   state.generatedReceiveAddresses
 
 export const isOnlineSelector = (state: State) => state.isOnline
-export const isFetchingHistorySelector = (state: State): boolean =>
-  state.transactions.isFetching
+
+export const isSynchronizingHistorySelector = (state: State): boolean =>
+  state.txHistory.isSynchronizing
+
+export const lastHistorySyncErrorSelector = (state: State): any =>
+  state.txHistory.lastSyncError

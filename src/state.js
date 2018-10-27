@@ -7,9 +7,12 @@ export type Dict<T> = {[string]: T}
 
 export type State = {
   languageCode: string,
-  transactions: {
-    isFetching: boolean,
-    data: Dict<RawTransaction>,
+  wallet: {
+    transactions: Dict<RawTransaction>
+  },
+  txHistory: {
+    isSynchronizing: boolean,
+    lastSyncError: any, // TODO(ppershing): type me
   },
   generatedReceiveAddresses: Array<{address: string, isUsed: boolean}>,
   trans: Translation,
@@ -18,9 +21,12 @@ export type State = {
 
 export const getInitialState = (): State => ({
   languageCode: 'en-US',
-  transactions: {
-    data: {},
-    isFetching: false,
+  wallet: {
+    transactions: {},
+  },
+  txHistory: {
+    isSynchronizing: false,
+    lastSyncError: null,
   },
   generatedReceiveAddresses: [],
   trans,
