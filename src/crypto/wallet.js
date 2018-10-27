@@ -83,7 +83,10 @@ export class WalletManager {
     assert.assert(!this.isInitialized, 'restoreWallet: !isInitialized')
     const masterKey = await util.getMasterKeyFromMnemonic(mnemonic)
     const account = await this._getAccount(masterKey)
-    this.encryptedMasterKey = util.encryptMasterKey(newPassword, masterKey)
+    this.encryptedMasterKey = await util.encryptMasterKey(
+      newPassword,
+      masterKey,
+    )
 
     // initialize address chains
     this.internalChain = new AddressChain(
