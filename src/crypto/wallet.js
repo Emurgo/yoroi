@@ -126,18 +126,14 @@ export class WalletManager {
     await this.__initTestWalletIfNeeded()
     Logger.info('Do full sync')
     assert.assert(this.isInitialized, 'doFullSync: isInitialized')
-    await this.internalChain.sync()
-    await this.externalChain.sync()
+    await Promise.all([this.internalChain.sync(), this.externalChain.sync()])
     Logger.info('Discovery done, now syncing transactions')
     let keepGoing = true
     while (keepGoing) {
-      const changedInternal = await this.doSyncStep(
-        this.internalChain.getBlocks(),
-      )
-      const changedExternal = await this.doSyncStep(
-        this.externalChain.getBlocks(),
-      )
-      keepGoing = changedInternal || changedExternal
+      keepGoing = await this.doSyncStep([
+        ...this.internalChain.getBlocks(),
+        ...this.externalChain.getBlocks(),
+      ])
     }
 
     return {...this.transactions}
