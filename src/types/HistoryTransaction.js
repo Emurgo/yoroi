@@ -6,6 +6,7 @@ export const TRANSACTION_DIRECTION = {
   SENT: 'SENT',
   RECEIVED: 'RECEIVED',
   SELF: 'SELF', // intra-wallet
+  MULTI: 'MULTI', // multi-party
 }
 
 export type TransactionDirection = $Values<typeof TRANSACTION_DIRECTION>
@@ -22,9 +23,9 @@ export type HistoryTransaction = {
   id: string,
   fromAddresses: Array<string>,
   toAddresses: Array<string>,
-  amount: number,
-  bruttoAmount: number,
-  fee: number,
+  amount: BigNumber,
+  bruttoAmount: BigNumber,
+  fee: BigNumber,
   direction: TransactionDirection,
   confirmations: number,
   timestamp: Moment,

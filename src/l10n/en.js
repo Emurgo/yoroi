@@ -31,6 +31,7 @@ const l10n = {
       SENT: 'ADA sent',
       RECEIVED: 'ADA received',
       SELF: 'Intrawallet',
+      MULTI: 'Multiparty',
     },
     assuranceLevelHeader: 'Assurance level:',
     assuranceLevel: {

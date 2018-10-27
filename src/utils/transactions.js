@@ -45,6 +45,8 @@ export const printAda = (amount: BigNumber) => {
 const _sum = (a: Array<{amount: BigNumber}>): BigNumber =>
   a.reduce((acc: BigNumber, x) => acc.plus(x.amount), new BigNumber(0))
 
+const _multiPartyWarningChache = {}
+
 export const processTxHistoryData = (
   data: RawTransaction,
   ownAddresses: Array<string>,
@@ -69,11 +71,15 @@ export const processTxHistoryData = (
   const hasOnlyOwnInputs = ownInputs.length === inputs.length
   const hasOnlyOwnOutputs = ownOutputs.length === outputs.length
   const isIntraWallet = hasOnlyOwnInputs && hasOnlyOwnOutputs
-
-  if (ownInputs.length > 0 && ownInputs.length !== inputs.length) {
-    // this really should not happen
-    Logger.warn('I see a transaction where only some of the inputs are mine')
+  const isMultiParty =
+    ownInputs.length > 0 && ownInputs.length !== inputs.length
+  if (isMultiParty && !_multiPartyWarningChache[data.hash]) {
+    _multiPartyWarningChache[data.hash] = true
+    Logger.warn(
+      'I see a multi-party transaction (only some of the inputs are mine)',
+    )
     Logger.warn('This probably means broken address discovery!')
+    Logger.warn('Transaction:', data)
   }
 
   const totalIn = _sum(inputs)
@@ -106,11 +112,11 @@ export const processTxHistoryData = (
     outgoing transaction. Fee is the difference between total
     inputs and total outputs.
 
-  4) if only some of the inputs are ours we are handling a special transaction.
+  4) if only some of the inputs are ours we are handling a special
+    multi-party transaction.
     Such transactions could be constructed by hand but in reality it is probable
     that our wallet just failed to discover one of its own addresses.
-    We will conservatively mark zero fee and decide on the transaction direction
-    by the money flow
+    We will conservatively mark zero fee.
   */
   const brutto = ownOut.minus(ownIn)
   const totalFee = totalOut.minus(totalIn) // should be negative
@@ -122,6 +128,10 @@ export const processTxHistoryData = (
     amount = new BigNumber(0)
     fee = totalFee
     direction = TRANSACTION_DIRECTION.SELF
+  } else if (isMultiParty) {
+    direction = TRANSACTION_DIRECTION.MULTI
+    amount = brutto
+    fee = new BigNumber(0)
   } else {
     fee = hasOnlyOwnInputs ? totalFee : new BigNumber(0)
     amount = brutto.minus(fee)
@@ -137,7 +147,7 @@ export const processTxHistoryData = (
     id: data.hash,
     fromAddresses: data.inputs_address,
     toAddresses: data.outputs_address,
-    amount: amount.abs(),
+    amount,
     bruttoAmount: brutto,
     fee,
     confirmations: bestBlock.minus(currentBlock),
