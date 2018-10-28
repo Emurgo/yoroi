@@ -17,3 +17,4 @@ npx babel-node src/l10n/update_l10n.js \
   | sed 's/"//g' `# remove quotes from keys and values` \
   | sed -E "s/ ([0-9]+)/'\\1'/" `# unstrip qoutes on numeric-only keys`\
   > src/l10n/type.js
+yarn prettify_l10n
