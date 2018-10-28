@@ -26,7 +26,7 @@ const supportedLangauage = [
 const getTranslations = (state) => state.trans.LanguagePicker
 
 type Props = {
-  changeLanguage: () => mixed,
+  changeLanguage: (string) => any,
   handleContinue: () => mixed,
   languageCode: string,
   translations: SubTranslation<typeof getTranslations>,

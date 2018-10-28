@@ -4,7 +4,6 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View, RefreshControl} from 'react-native'
-import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 
 import {Text} from '../UiKit'
@@ -25,19 +24,9 @@ import {CONFIG} from '../../config'
 
 import styles from './styles/TxHistory.style'
 
-import type {HistoryTransaction} from '../../types/HistoryTransaction'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {State} from '../../state'
-
-type Props = {
-  transactions: {[string]: HistoryTransaction},
-  navigation: NavigationScreenProp<NavigationState>,
-  isSyncing: boolean,
-  isOnline: boolean,
-  amountPending: ?BigNumber,
-  updateHistory: () => mixed,
-  lastSyncError: any,
-}
+import type {ComponentType} from 'react'
 
 const OfflineBanner = () => <Text>You are offline!</Text>
 
@@ -63,7 +52,7 @@ const TxHistory = ({
   isOnline,
   updateHistory,
   lastSyncError,
-}: Props) => (
+}) => (
   <View style={styles.root}>
     {!isOnline && <OfflineBanner />}
     {lastSyncError && (
@@ -91,7 +80,11 @@ const TxHistory = ({
   </View>
 )
 
-export default compose(
+type ExternalProps = {|
+  navigation: NavigationScreenProp<NavigationState>,
+|}
+
+export default (compose(
   connect(
     (state: State) => ({
       transactions: transactionsSelector(state),
@@ -99,6 +92,7 @@ export default compose(
       isSyncing: isSynchronizingHistorySelector(state),
       lastSyncError: lastHistorySyncErrorSelector(state),
       isOnline: isOnlineSelector(state),
+      updateHistory,
     }),
     {
       updateHistory,
@@ -112,4 +106,4 @@ export default compose(
     updateHistory()
     setInterval(updateHistoryInBackground, CONFIG.HISTORY_REFRESH_TIME)
   }),
-)(TxHistory)
+)(TxHistory): ComponentType<ExternalProps>)
