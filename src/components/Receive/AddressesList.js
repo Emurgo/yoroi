@@ -16,8 +16,7 @@ import type {SubTranslation} from '../../l10n/typeHelpers'
 const getTranslations = (state) => state.trans.receiveScreen
 
 type Props = {
-  addresses: Array<string>,
-  usedAddresses: Array<string>,
+  addresses: Array<{address: string, isUsed: boolean}>,
   showAll: boolean,
   setShowAll: (boolean) => void,
   onShowPress: () => void,
@@ -26,40 +25,37 @@ type Props = {
 
 const AddressesList = ({
   addresses,
-  usedAddresses,
   showAll,
   setShowAll,
   onShowPress,
   translations,
-}: Props) => (
-  <View style={styles.container}>
-    <View style={styles.header}>
-      <Text style={styles.label}>{translations.walletAddresses}</Text>
-      <TouchableHighlight onPress={onShowPress}>
-        <Text style={styles.clickableLabel}>
-          {showAll
-            ? translations.hideUsedAddresses
-            : translations.showUsedAddresses}
-        </Text>
-      </TouchableHighlight>
-    </View>
+}: Props) => {
+  const shownAddresses = showAll
+    ? [...addresses] // because reverse below is mutating
+    : addresses.filter((x) => !x.isUsed)
+  // We want newest first
+  shownAddresses.reverse()
 
-    {addresses.map(
-      (address) =>
-        usedAddresses.includes(address) ? (
-          showAll && (
-            <View key={address} style={styles.addressContainer}>
-              <AddressView address={address} isUsed />
-            </View>
-          )
-        ) : (
-          <View key={address} style={styles.addressContainer}>
-            <AddressView address={address} isUsed={false} />
-          </View>
-        ),
-    )}
-  </View>
-)
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.label}>{translations.walletAddresses}</Text>
+        <TouchableHighlight onPress={onShowPress}>
+          <Text style={styles.clickableLabel}>
+            {showAll
+              ? translations.hideUsedAddresses
+              : translations.showUsedAddresses}
+          </Text>
+        </TouchableHighlight>
+      </View>
+      {shownAddresses.map(({address, isUsed}) => (
+        <View key={address} style={styles.addressContainer}>
+          <AddressView address={address} isUsed={isUsed} />
+        </View>
+      ))}
+    </View>
+  )
+}
 
 export default compose(
   connect((state) => ({

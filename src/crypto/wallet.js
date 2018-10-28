@@ -40,8 +40,10 @@ export class WalletManager {
 
   perAddressSyncMetadata: {[string]: SyncMetadata}
   transactions: {[string]: RawTransaction}
-
   seenAddresses: Set<string>
+
+  generatedAddressCount: number
+
   isInitialized: boolean
   doFullSyncMutex: Mutex
   restoreMutex: Mutex
@@ -59,6 +61,8 @@ export class WalletManager {
     this.transactions = {}
     this.perAddressSyncMetadata = {}
     this.seenAddresses = new Set()
+    this.generatedAddressCount = 0
+
     this.isInitialized = false
     this.doFullSyncMutex = {name: 'doFullSyncMutex', lock: null}
     this.restoreMutex = {name: 'restoreMutex', lock: null}
@@ -102,6 +106,9 @@ export class WalletManager {
     // Create at least one address in each block
     await this.internalChain.initialize()
     await this.externalChain.initialize()
+
+    // We should start with 1 generated address
+    this.generatedAddressCount = 1
 
     this.isInitialized = true
   }
@@ -148,6 +155,38 @@ export class WalletManager {
     }
 
     return []
+  }
+
+  getUiReceiveAddresses() {
+    assert.assert(this.isInitialized, 'getUiReceiveAddresses:: isInitialized')
+    assert.assert(
+      this.generatedAddressCount <= this.externalChain.size(),
+      'getUiReceiveAddresses:: count',
+    )
+    const addresses = this.externalChain
+      .getAddresses()
+      .slice(0, this.generatedAddressCount)
+    return addresses.map((address) => ({
+      address,
+      isUsed: this.seenAddresses.has(address),
+    }))
+  }
+
+  generateNewUiReceiveAddress(): boolean {
+    // TODO(ppershing): use "assuredly used" instead of "seen"
+    const usedCount = this.externalChain
+      .getAddresses()
+      .slice(0, this.generatedAddressCount)
+      .filter((address) => this.seenAddresses.has(address)).length
+
+    if (
+      usedCount + CONFIG.WALLET.MAX_GENERATED_UNUSED <=
+      this.generatedAddressCount
+    ) {
+      return false
+    }
+    this.generatedAddressCount += 1
+    return true
   }
 
   _didProcessTransaction(tx: RawTransaction): boolean {

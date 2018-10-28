@@ -46,5 +46,6 @@ export const CONFIG = {
     ACCOUNT_INDEX: 0,
     DISCOVERY_GAP_SIZE: 20,
     DISCOVERY_BLOCK_SIZE: 50, // should be less than API limitations
+    MAX_GENERATED_UNUSED: 20, // must be <= gap size
   },
 }

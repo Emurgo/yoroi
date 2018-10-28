@@ -1,6 +1,5 @@
 // @flow
 import type {RawTransaction} from './types/HistoryTransaction'
-import usedReceiveAddresses from './mockData/usedAddresses.json'
 import trans from './l10n'
 import type {Translation} from './l10n/type'
 
@@ -12,18 +11,18 @@ export type State = {
     isFetching: boolean,
     data: Dict<RawTransaction>,
   },
-  usedReceiveAddresses: Array<string>,
+  generatedReceiveAddresses: Array<{address: string, isUsed: boolean}>,
   trans: Translation,
   isOnline: boolean,
 }
 
 export const getInitialState = (): State => ({
   languageCode: 'en-US',
-  usedReceiveAddresses,
   transactions: {
     data: {},
     isFetching: false,
   },
+  generatedReceiveAddresses: [],
   trans,
   isOnline: true, // we are online by default
 })

@@ -48,6 +48,9 @@ export const availableAmountSelector = (state: State): ?BigNumber => {
   )
 }
 
+export const receiveAddressesSelector = (state: State) =>
+  state.generatedReceiveAddresses
+
 export const isOnlineSelector = (state: State) => state.isOnline
 export const isFetchingHistorySelector = (state: State): boolean =>
   state.transactions.isFetching

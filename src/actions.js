@@ -55,6 +55,25 @@ export const setupApiOnlineTracking = () => (dispatch: Dispatch<any>) => {
   api.setIsOnlineCallback((isOnline) => dispatch(_setOnline(isOnline)))
 }
 
+const _updateGeneratedReceiveAddresses = (addresses) => ({
+  type: 'Update generated receive addresses',
+  payload: addresses,
+  path: ['generatedReceiveAddresses'],
+  reducer: (state, payload) => payload,
+})
+
+export const updateReceiveAddresses = () => (dispatch: Dispatch<any>) => {
+  dispatch(
+    _updateGeneratedReceiveAddresses(walletManager.getUiReceiveAddresses()),
+  )
+}
+
+export const generateNewReceiveAddress = () => (dispatch: Dispatch<any>) => {
+  const result = walletManager.generateNewUiReceiveAddress()
+  dispatch(updateReceiveAddresses())
+  return result
+}
+
 export const updateHistory = () => async (dispatch: Dispatch<any>) => {
   // TODO(ppershing): abort previous request if still fetching
   dispatch(_startFetch())
