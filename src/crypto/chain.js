@@ -11,15 +11,24 @@ export type AddressBlock = [number, Moment, Array<string>]
 type AsyncAddressGenerator = (ids: Array<number>) => Promise<Array<string>>
 type AsyncAddressFilter = (addresses: Array<string>) => Promise<Array<string>>
 
+type ChainState = {
+  addresses: Array<string>,
+  addressIndex: {[string]: number},
+}
 export class AddressChain {
-  _addresses: Array<string>
-  _addressIndex: Map<string, number>
+  _state: ChainState
   _getAddresses: AsyncAddressGenerator
   _filterUsed: AsyncAddressFilter
   _blockSize: number
   _gapLimit: number
   _isInitialized: boolean
   _subscriptions: Array<(Array<string>) => mixed>
+
+  updateState(reducer: (state: ChainState) => ChainState) {
+    const state = this._state
+    this._state = reducer(state)
+    Object.freeze(this._state)
+  }
 
   constructor(
     addressGenerator: AsyncAddressGenerator,
@@ -34,8 +43,10 @@ export class AddressChain {
     this._blockSize = blockSize
     this._gapLimit = gapLimit
 
-    this._addresses = []
-    this._addressIndex = new Map()
+    this._state = {
+      addresses: [],
+      addressIndex: {},
+    }
     this._isInitialized = false
     this._subscriptions = []
   }
@@ -48,19 +59,22 @@ export class AddressChain {
     const start = this.size()
     const idxs = _.range(start, start + this._blockSize)
 
-    const addresses = await this._getAddresses(idxs)
+    const newAddresses = await this._getAddresses(idxs)
+    const newIndex = _.fromPairs(_.zip(newAddresses, idxs))
 
     assertTrue(this.size() === start, 'Concurrent modification')
-    for (const [idx, address] of _.zip(idxs, addresses)) {
-      this._addresses.push(address)
-      this._addressIndex.set(address, idx)
-    }
-    this._subscriptions.map((sub) => sub(addresses))
+
+    this.updateState((state) => ({
+      addresses: [...state.addresses, ...newAddresses],
+      addressIndex: {...state.addressIndex, ...newIndex},
+    }))
+
+    this._subscriptions.map((sub) => sub(newAddresses))
   }
 
   _getLastBlock() {
     this._selfCheck()
-    const block = _.takeRight(this._addresses, this._blockSize)
+    const block = _.takeRight(this._state.addresses, this._blockSize)
     assertTrue(block.length === this._blockSize)
     return block
   }
@@ -74,8 +88,10 @@ export class AddressChain {
 
   _selfCheck() {
     assertTrue(this._isInitialized)
-    assertTrue(this._addresses.length % this._blockSize === 0)
-    assertTrue(this._addresses.length === this._addressIndex.size)
+    assertTrue(this._state.addresses.length % this._blockSize === 0)
+    assertTrue(
+      this._state.addresses.length === _.size(this._state.addressIndex),
+    )
   }
 
   async sync() {
@@ -105,23 +121,23 @@ export class AddressChain {
   }
 
   size() {
-    return this._addresses.length
+    return this._state.addresses.length
   }
 
   isMyAddress(address: string) {
-    return this._addressIndex.has(address)
+    return this._state.addressIndex[address] != null
   }
 
   getIndexOfAddress(address: string): number {
     assertTrue(this.isMyAddress(address))
-    return ((this._addressIndex.get(address): any): number)
+    return this._state.addressIndex[address]
   }
 
   getAddresses() {
-    return [...this._addresses]
+    return [...this._state.addresses]
   }
 
   getBlocks() {
-    return _.chunk(this._addresses, this._blockSize)
+    return _.chunk(this._state.addresses, this._blockSize)
   }
 }
