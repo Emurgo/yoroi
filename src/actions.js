@@ -4,6 +4,7 @@ import {Alert, AsyncStorage} from 'react-native'
 import api from './api'
 import l10n from './l10n'
 import {Logger} from './utils/logging'
+import walletManager from './crypto/wallet'
 
 import {type Dispatch} from 'redux'
 
