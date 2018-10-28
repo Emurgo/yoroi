@@ -27,6 +27,7 @@ export type Translation = {
       SENT: string,
       RECEIVED: string,
       SELF: string,
+      MULTI: string,
     },
     assuranceLevelHeader: string,
     assuranceLevel: {
@@ -127,7 +128,7 @@ export type Translation = {
     restoreButton: string,
     errors: {
       maxLength: string,
-      unknownWords: (Array<string>) => string,
+      unknownWords: (words: any) => string,
     },
   },
   txHistoryNavigationButtons: {
