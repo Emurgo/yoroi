@@ -7,7 +7,6 @@ import {Logger} from './utils/logging'
 
 import {type Dispatch} from 'redux'
 
-
 const _changeLanguage = (languageCode) => (dispatch, getState) => {
   l10n.setLanguage(languageCode)
   dispatch({

@@ -8,7 +8,7 @@ export type Dict<T> = {[string]: T}
 export type State = {
   languageCode: string,
   wallet: {
-    transactions: Dict<RawTransaction>
+    transactions: Dict<RawTransaction>,
   },
   txHistory: {
     isSynchronizing: boolean,
