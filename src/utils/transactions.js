@@ -45,7 +45,7 @@ export const printAda = (amount: BigNumber) => {
 const _sum = (a: Array<{amount: BigNumber}>): BigNumber =>
   a.reduce((acc: BigNumber, x) => acc.plus(x.amount), new BigNumber(0))
 
-const _multiPartyWarningChache = {}
+const _multiPartyWarningCache = {}
 
 export const processTxHistoryData = (
   data: RawTransaction,
@@ -73,8 +73,8 @@ export const processTxHistoryData = (
   const isIntraWallet = hasOnlyOwnInputs && hasOnlyOwnOutputs
   const isMultiParty =
     ownInputs.length > 0 && ownInputs.length !== inputs.length
-  if (isMultiParty && !_multiPartyWarningChache[data.hash]) {
-    _multiPartyWarningChache[data.hash] = true
+  if (isMultiParty && !_multiPartyWarningCache[data.hash]) {
+    _multiPartyWarningCache[data.hash] = true
     Logger.warn(
       'I see a multi-party transaction (only some of the inputs are mine)',
     )
