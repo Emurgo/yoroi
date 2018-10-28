@@ -27,7 +27,8 @@ export type HistoryTransaction = {
   bruttoAmount: BigNumber,
   fee: BigNumber,
   direction: TransactionDirection,
-  confirmations: number,
+  // TODO(ppershing): why this can't be typical number?
+  confirmations: BigNumber,
   timestamp: Moment,
   updatedAt: Moment,
   status: TransactionStatus,

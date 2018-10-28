@@ -25,6 +25,10 @@ const styles = {
     color: COLORS.NEGATIVE_AMOUNT,
     fontSize: 20,
   },
+  noAmount: {
+    color: COLORS.BLACK,
+    fontSize: 20,
+  },
   adaSignContainer: {
     marginLeft: 5,
   },

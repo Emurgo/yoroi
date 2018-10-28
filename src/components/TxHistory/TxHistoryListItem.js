@@ -59,7 +59,7 @@ class TxHistoryListItem extends Component<Props> {
   showDetails = () => {
     const {navigation, transaction} = this.props
 
-    navigation.navigate(TX_HISTORY_ROUTES.TX_DETAIL, {transaction})
+    navigation.navigate(TX_HISTORY_ROUTES.TX_DETAIL, {id: transaction.id})
   }
 
   render() {

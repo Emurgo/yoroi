@@ -45,6 +45,8 @@ export type Translation = {
       transactionHeader: {
         SENT: string,
         RECEIVED: string,
+        SELF: string,
+        MULTI: string,
       },
       formatConfirmations: (cnt: any) => string,
     },

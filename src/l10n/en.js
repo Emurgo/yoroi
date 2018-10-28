@@ -49,6 +49,8 @@ const l10n = {
       transactionHeader: {
         SENT: 'ADA sent',
         RECEIVED: 'ADA received',
+        SELF: 'Intrawallet',
+        MULTI: 'Multi party',
       },
       formatConfirmations: (cnt: number) =>
         `${cnt} ${pluralizeEn(cnt, 'CONFIRMATION', 'CONFIRMATIONS')}`,
