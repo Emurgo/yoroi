@@ -3,20 +3,22 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {View, Text} from 'react-native'
+import {View, RefreshControl} from 'react-native'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 
+import {Text} from '../UiKit'
 import {
   amountPendingSelector,
   transactionsSelector,
-  isFetchingHistorySelector,
+  isSynchronizingHistorySelector,
+  lastHistorySyncErrorSelector,
   isOnlineSelector,
 } from '../../selectors'
 import TxHistoryList from './TxHistoryList'
 import Screen from '../../components/Screen'
 import TxNavigationButtons from './TxNavigationButtons'
-import {updateHistory} from '../../actions'
+import {updateHistory, updateHistoryInBackground} from '../../actions/history'
 import {onDidMount} from '../../utils/renderUtils'
 import {printAda} from '../../utils/transactions'
 import {CONFIG} from '../../config'
@@ -30,16 +32,24 @@ import type {State} from '../../state'
 type Props = {
   transactions: {[string]: HistoryTransaction},
   navigation: NavigationScreenProp<NavigationState>,
-  isFetching: boolean,
+  isSyncing: boolean,
   isOnline: boolean,
   amountPending: ?BigNumber,
+  updateHistory: () => mixed,
+  lastSyncError: any,
 }
 
 const OfflineBanner = () => <Text>You are offline!</Text>
 
-const RefreshBanner = () => <Text>Refreshing...</Text>
-
 const NoTxHistory = () => <Text> You have no transactions yet ... </Text>
+
+const SyncErrorBanner = ({showRefresh, onRefresh}) => (
+  // eslint-disable-next-line
+  <View style={{flexDirection: 'row'}}>
+    <Text>We are experiencing synchronization issues. Try refreshing... </Text>
+    {showRefresh && <Text onPress={onRefresh}>{'\u21BB'}</Text>}
+  </View>
+)
 
 const PendingAmount = ({amount}) => (
   <Text> Pending amount: {printAda(amount)} </Text>
@@ -49,18 +59,27 @@ const TxHistory = ({
   amountPending,
   transactions,
   navigation,
-  isFetching,
+  isSyncing,
   isOnline,
+  updateHistory,
+  lastSyncError,
 }: Props) => (
   <View style={styles.root}>
     {!isOnline && <OfflineBanner />}
-    {isFetching && <RefreshBanner />}
+    {lastSyncError && (
+      <SyncErrorBanner showRefresh={!isSyncing} onRefresh={updateHistory} />
+    )}
     {/* TODO(ppershing): What should we do if amountPending is zero?
       Should we show it? Note that isn't case for intrawallet transactions
       because amountPending is brutto and thus negative due to fee
     */}
     {amountPending && <PendingAmount amount={amountPending} />}
-    <Screen scroll>
+    <Screen
+      scroll
+      refreshControl={
+        <RefreshControl onRefresh={updateHistory} refreshing={isSyncing} />
+      }
+    >
       {_.isEmpty(transactions) ? (
         <NoTxHistory />
       ) : (
@@ -77,18 +96,20 @@ export default compose(
     (state: State) => ({
       transactions: transactionsSelector(state),
       amountPending: amountPendingSelector(state),
-      isFetching: isFetchingHistorySelector(state),
+      isSyncing: isSynchronizingHistorySelector(state),
+      lastSyncError: lastHistorySyncErrorSelector(state),
       isOnline: isOnlineSelector(state),
     }),
     {
       updateHistory,
+      updateHistoryInBackground,
     },
   ),
   // TODO(ppershing): this should be handled
   // by some history manager
   // FIXME(ppershing): we do not clean interval on unmount
-  onDidMount(({updateHistory}) => {
+  onDidMount(({updateHistory, updateHistoryInBackground}) => {
     updateHistory()
-    setInterval(updateHistory, CONFIG.HISTORY_REFRESH_TIME)
+    setInterval(updateHistoryInBackground, CONFIG.HISTORY_REFRESH_TIME)
   }),
 )(TxHistory)

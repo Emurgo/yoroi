@@ -3,7 +3,7 @@ import ExtendableError from 'es6-error'
 
 import {Logger} from './logging'
 
-export class LockError extends ExtendableError {}
+export class IsLockedError extends ExtendableError {}
 
 export type Mutex = {
   lock: ?Promise<any>,
@@ -69,6 +69,6 @@ export const nonblockingSynchronize = <T>(
   mutex: Mutex,
   factory: () => Promise<T>,
 ): Promise<T> => {
-  if (mutex.lock) throw new LockError()
+  if (mutex.lock) throw new IsLockedError()
   return synchronize(mutex, factory)
 }
