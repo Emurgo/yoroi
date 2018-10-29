@@ -33,10 +33,7 @@ const ChangeWalletName = ({
   return (
     <View style={styles.root}>
       <View>
-        {validationErrors &&
-          validationErrors.walletNameLength && (
-          <Text>{translations.walletValidationText}</Text>
-        )}
+        {validationErrors && <Text>{translations.walletValidationText}</Text>}
         <TextInput
           style={styles.inputText}
           placeholder={translations.walletName}
