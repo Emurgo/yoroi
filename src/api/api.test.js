@@ -41,9 +41,13 @@ describe('History API', () => {
       'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
       'Ae2tdPwUPEZ8wGxWm9VbZXFJcgLeKQJWKqREVEtHXYdqsqc4bLeGqjSwrtu',
       'Ae2tdPwUPEZ6T9qZxpao8ciAgg6ahjHRq2jV45ndZ4oPXAwrTYqN9NGUPh4',
-      'Ae2tdPwUPEYzFrD5QSQ8NPHEJ8reecZkch5tT8wFAAYu18CJnkZ9XAm5ySE',
+      'Ae2tdPwUPEZN7jAbQNXXGivhavp4nSsmYtCebTcnuUmXuWDXtM3bgJzugrY',
     ]
-    const used = ['Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7']
+    const used = [
+      'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
+      'Ae2tdPwUPEZ8wGxWm9VbZXFJcgLeKQJWKqREVEtHXYdqsqc4bLeGqjSwrtu',
+      'Ae2tdPwUPEZ6T9qZxpao8ciAgg6ahjHRq2jV45ndZ4oPXAwrTYqN9NGUPh4',
+    ]
 
     expect.assertions(1)
     const result = await api.filterUsedAddresses(addresses)
