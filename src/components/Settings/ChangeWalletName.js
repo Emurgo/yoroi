@@ -65,7 +65,7 @@ export default compose(
       setValidateResult(validateWalletName(walletName))
     },
     changeAndNavigate: ({navigation, walletName}) => () => {
-      if (validateWalletName(walletName)) {
+      if (validateWalletName(walletName) === null) {
         // saveWalletNameToApp()
         navigation.goBack()
       }

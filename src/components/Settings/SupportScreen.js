@@ -5,8 +5,7 @@ import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View} from 'react-native'
 
-import SettingsItem from './SettingsItem'
-import CopyIcon from '../../assets/CopyIcon'
+import {SettingsItem, ItemIcon, UrlWrapper} from './SettingsItems'
 import {withNavigationTitle} from '../../utils/renderUtils'
 
 import styles from './styles/SupportScreen.style'
@@ -24,17 +23,19 @@ const SupportScreen = ({translations}: Props) => (
     <SettingsItem
       title={translations.faq.label}
       description={translations.faq.description}
-      dstUrl={translations.faq.url}
     >
-      <CopyIcon width={styles.icon.size} height={styles.icon.size} />
+      <UrlWrapper dstUrl={translations.faq.url}>
+        <ItemIcon />
+      </UrlWrapper>
     </SettingsItem>
 
     <SettingsItem
       title={translations.report.label}
       description={translations.report.description}
-      dstUrl={translations.report.url}
     >
-      <CopyIcon width={styles.icon.size} height={styles.icon.size} />
+      <UrlWrapper dstUrl={translations.report.url}>
+        <ItemIcon />
+      </UrlWrapper>
     </SettingsItem>
 
   </View>

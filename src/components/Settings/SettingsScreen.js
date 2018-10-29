@@ -4,15 +4,13 @@ import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withState, withHandlers} from 'recompose'
-import {View, Switch} from 'react-native'
+import {View} from 'react-native'
 
 import Screen from '../../components/Screen'
 import {SETTINGS_ROUTES} from '../../RoutesList'
-import SettingsItem from './SettingsItem'
-import SettingsLink from './SettingsLink'
-import CopyIcon from '../../assets/CopyIcon'
-import {Text} from '../UiKit'
 import {withNavigationTitle} from '../../utils/renderUtils'
+// eslint-disable-next-line max-len
+import {NavigationWrapper, ItemLink, ItemIcon, ItemToggle, SettingsItem, SettingsLink} from './SettingsItems'
 
 import styles from './styles/SettingsScreen.style'
 
@@ -41,50 +39,52 @@ const SettingsScreen = ({
         <SettingsItem
           title={translations.walletName}
           description={'getWalletName()'}
-          dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
         >
-          <Text style={styles.linkLabel}>{translations.edit}</Text>
+          <NavigationWrapper dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}>
+            <ItemLink label={translations.edit} />
+          </NavigationWrapper>
         </SettingsItem>
 
         <SettingsItem
           title={translations.privacy}
           description={translations.changePin}
-          dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
         >
-          <CopyIcon width={styles.icon.size} height={styles.icon.size} />
+          <NavigationWrapper dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}>
+            <ItemIcon />
+          </NavigationWrapper>
         </SettingsItem>
 
-        <SettingsItem
-          description={translations.changePassword}
-          dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
-        >
-          <CopyIcon width={styles.icon.size} height={styles.icon.size} />
+        <SettingsItem description={translations.changePassword}>
+          <NavigationWrapper dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}>
+            <ItemIcon />
+          </NavigationWrapper>
         </SettingsItem>
 
         <SettingsItem description={translations.fingerprintSignIn}>
-          <Switch
+          <ItemToggle
             value={isFingerprintSignIn}
-            onValueChange={onToggleFingerprintSignIn}
+            onToggle={onToggleFingerprintSignIn}
           />
         </SettingsItem>
 
         <SettingsItem description={translations.easyConfirmation}>
-          <Switch
+          <ItemToggle
             value={isEasyConfirmation}
-            onValueChange={onToggleEasyConfirmation}
+            onToggle={onToggleEasyConfirmation}
           />
         </SettingsItem>
 
         <SettingsItem
           title={translations.downloadLogs}
           description={translations.downloadLogsText}
-          dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
         >
-          <CopyIcon width={styles.icon.size} height={styles.icon.size} />
+          <NavigationWrapper dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}>
+            <ItemIcon />
+          </NavigationWrapper>
         </SettingsItem>
 
         <SettingsLink
-          text={translations.removeWallet}
+          label={translations.removeWallet}
           dstScreen={SETTINGS_ROUTES.SUPPORT}
         />
       </View>
@@ -93,19 +93,20 @@ const SettingsScreen = ({
         <SettingsItem
           title={translations.language}
           description={'getLanguage()'}
-          dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
         >
-          <CopyIcon width={styles.icon.size} height={styles.icon.size} />
+          <NavigationWrapper dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}>
+            <ItemIcon />
+          </NavigationWrapper>
         </SettingsItem>
 
 
         <SettingsLink
-          text={translations.termsOfUse}
+          label={translations.termsOfUse}
           dstScreen={SETTINGS_ROUTES.SUPPORT}
         />
 
         <SettingsLink
-          text={translations.support}
+          label={translations.support}
           dstScreen={SETTINGS_ROUTES.SUPPORT}
         />
       </View>

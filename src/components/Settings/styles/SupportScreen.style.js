@@ -6,9 +6,6 @@ const styles = {
     flex: 1,
     padding: 10,
   },
-  icon: {
-    size: 20,
-  },
 }
 
 export default styles
