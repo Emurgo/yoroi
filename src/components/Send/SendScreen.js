@@ -18,6 +18,7 @@ import styles from './styles/SendScreen.style'
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
 const getTranslations = (state) => state.trans.sendScreen
+
 const handleConfirm = ({navigation, amount, address}) => async () => {
   // Validate here
   const isValid = true
@@ -44,7 +45,6 @@ const _navigateToQRReader = (navigation, setAddress) =>
       navigation.navigate(SEND_ROUTES.MAIN)
     },
   })
-
 
 type Props = {
   navigateToQRReader: () => mixed,
