@@ -10,7 +10,14 @@ import Screen from '../../components/Screen'
 import {SETTINGS_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
 // eslint-disable-next-line max-len
-import {NavigationWrapper, ItemLink, ItemIcon, ItemToggle, SettingsItem, SettingsLink} from './SettingsItems'
+import {
+  NavigationWrapper,
+  ItemLink,
+  ItemIcon,
+  ItemToggle,
+  SettingsItem,
+  SettingsLink,
+} from './SettingsItems'
 
 import styles from './styles/SettingsScreen.style'
 
@@ -24,7 +31,7 @@ type Props = {
   isEasyConfirmation: boolean,
   onToggleEasyConfirmation: () => void,
   translations: SubTranslation<typeof getTranslations>,
-};
+}
 
 const SettingsScreen = ({
   isFingerprintSignIn,
@@ -99,7 +106,6 @@ const SettingsScreen = ({
           </NavigationWrapper>
         </SettingsItem>
 
-
         <SettingsLink
           label={translations.termsOfUse}
           dstScreen={SETTINGS_ROUTES.SUPPORT}
@@ -122,9 +128,13 @@ export default compose(
   withState('isFingerprintSignIn', 'setFingerprintSignIn', false),
   withState('isEasyConfirmation', 'setEasyConfirmation', false),
   withHandlers({
-    onToggleFingerprintSignIn: ({isFingerprintSignIn, setFingerprintSignIn}) =>
-      () => (setFingerprintSignIn(!isFingerprintSignIn)),
-    onToggleEasyConfirmation: ({isEasyConfirmation, setEasyConfirmation}) =>
-      () => (setEasyConfirmation(!isEasyConfirmation)),
+    onToggleFingerprintSignIn: ({
+      isFingerprintSignIn,
+      setFingerprintSignIn,
+    }) => () => setFingerprintSignIn(!isFingerprintSignIn),
+    onToggleEasyConfirmation: ({
+      isEasyConfirmation,
+      setEasyConfirmation,
+    }) => () => setEasyConfirmation(!isEasyConfirmation),
   }),
 )(SettingsScreen)

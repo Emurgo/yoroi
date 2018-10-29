@@ -37,7 +37,6 @@ const SupportScreen = ({translations}: Props) => (
         <ItemIcon />
       </UrlWrapper>
     </SettingsItem>
-
   </View>
 )
 

@@ -169,7 +169,7 @@ export type Translation = {
       label: string,
       description: string,
       url: string,
-    }
+    },
   },
   setLanguage: (lang: string) => void,
 }

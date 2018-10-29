@@ -28,7 +28,7 @@ export const validatePassword = (
 }
 
 export const validateWalletName = (
-  walletName: string
+  walletName: string,
 ): WalletNameValidationErrors | null => {
   let validations = null
   if (walletName.length < 3 || walletName.length > 40) {

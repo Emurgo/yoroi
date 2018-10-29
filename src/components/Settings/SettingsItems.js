@@ -35,9 +35,7 @@ export const ItemIcon = () => (
   <CopyIcon width={styles.icon.size} height={styles.icon.size} />
 )
 
-export const ItemLink = ({label}) => (
-  <Text style={styles.link}>{label}</Text>
-)
+export const ItemLink = ({label}) => <Text style={styles.link}>{label}</Text>
 
 export const ItemToggle = ({value, onToggle}) => (
   <Switch value={value} onValueChange={onToggle} />
@@ -49,9 +47,7 @@ export const SettingsItem = ({title, description, children}) => (
       <Text style={styles.label}>{title}</Text>
       <Text style={styles.description}>{description}</Text>
     </View>
-    <View style={styles.iconContainer}>
-      {children}
-    </View>
+    <View style={styles.iconContainer}>{children}</View>
   </View>
 )
 

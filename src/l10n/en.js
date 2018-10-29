@@ -90,7 +90,8 @@ const l10n = {
   changeWalletName: {
     walletName: 'Wallet name',
     changeButtonText: 'CHANGE NAME',
-    walletValidationText: 'Wallet name requires at least 3 and at most\
+    walletValidationText:
+      'Wallet name requires at least 3 and at most\
  40 letters.',
   },
   receiveScreen: {
@@ -177,7 +178,8 @@ const l10n = {
     fingerprintSignIn: 'Sign in with your fingerprint',
     easyConfirmation: 'Easy transaction confirmation',
     downloadLogs: 'Download logs',
-    downloadLogsText: 'If you want to inspect logs, you can download\
+    downloadLogsText:
+      'If you want to inspect logs, you can download\
  them here. Logs do not contain sensitive information, and it would be\
  helpful to attach them to problem reports to help the team investigate\
  the issue you are experiencing.',
@@ -190,13 +192,15 @@ const l10n = {
     title: 'Support',
     faq: {
       label: 'See frequently asked questions',
-      description: 'If you are experiencing issues, please see the FAQ\
+      description:
+        'If you are experiencing issues, please see the FAQ\
  on Yoroi website for quidance on known issues.',
       url: 'https://yoroi-wallet.com/faq/',
     },
     report: {
       label: 'Report a problem',
-      description: 'If the FAQ does not solve the issue you are\
+      description:
+        'If the FAQ does not solve the issue you are\
  experiencing, please use our Support request feature.',
       url: 'https://yoroi-wallet.com/support/',
     },
