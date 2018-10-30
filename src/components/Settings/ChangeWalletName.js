@@ -52,9 +52,7 @@ export default compose(
   connect((state) => ({
     translations: getTranslations(state),
   })),
-  // getWalletNameFromApp()
-  withState('walletName', 'setWalletName', ''),
-  // resultFromStatePreviousLine
+  withState('walletName', 'setWalletName', 'getWalletNameFromApp()'),
   withState('validateResult', 'setValidateResult', true),
   withHandlers({
     onChangeText: ({setWalletName, setValidateResult}) => (walletName) => {
