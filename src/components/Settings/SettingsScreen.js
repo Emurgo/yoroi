@@ -40,8 +40,8 @@ const SettingsScreen = ({
   onToggleEasyConfirmation,
   translations,
 }: Props) => (
-  <View style={styles.root}>
-    <Screen scroll>
+  <Screen scroll>
+    <View style={styles.root}>
       <View style={styles.tab}>
         <SettingsItem
           title={translations.walletName}
@@ -108,7 +108,7 @@ const SettingsScreen = ({
 
         <SettingsLink
           label={translations.termsOfUse}
-          dstScreen={SETTINGS_ROUTES.SUPPORT}
+          dstScreen={SETTINGS_ROUTES.TERMS_OF_USE}
         />
 
         <SettingsLink
@@ -116,8 +116,8 @@ const SettingsScreen = ({
           dstScreen={SETTINGS_ROUTES.SUPPORT}
         />
       </View>
-    </Screen>
-  </View>
+    </View>
+  </Screen>
 )
 
 export default compose(

@@ -29,8 +29,9 @@ export const WALLET_INIT_ROUTES = {
 
 export const SETTINGS_ROUTES = {
   MAIN: 'settings',
-  SUPPORT: 'support',
   CHANGE_WALLET_NAME: 'change-wallet-name',
+  TERMS_OF_USE: 'terms-of-use',
+  SUPPORT: 'support',
 }
 
 export const MAIN_ROUTES = {
