@@ -1,5 +1,6 @@
 // @flow
 import ExtendableError from 'es6-error'
+import pLimit from 'p-limit'
 
 import {Logger} from './logging'
 
@@ -8,6 +9,9 @@ export class IsLockedError extends ExtendableError {}
 export type Mutex = {
   lock: ?Promise<any>,
 }
+
+// reexport under better name
+export const limitConcurrency = pLimit
 
 export const delay = (duration: number): Promise<void> => {
   return new Promise((resolve, reject) => {

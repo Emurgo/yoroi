@@ -130,7 +130,9 @@ export class AddressChain {
 
   getIndexOfAddress(address: string): number {
     assertTrue(this.isMyAddress(address))
-    return this._state.addressIndex[address]
+    const idx = this._state.addressIndex[address]
+    /* :: if (!idx) throw null */
+    return idx
   }
 
   getAddresses() {
