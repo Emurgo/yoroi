@@ -9,9 +9,8 @@ import {View} from 'react-native'
 import Screen from '../../components/Screen'
 import {SETTINGS_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
-// eslint-disable-next-line max-len
 import {
-  NavigationWrapper,
+  NavigateTo,
   ItemLink,
   ItemIcon,
   ItemToggle,
@@ -47,24 +46,24 @@ const SettingsScreen = ({
           title={translations.walletName}
           description={'getWalletName()'}
         >
-          <NavigationWrapper dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}>
+          <NavigateTo screen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}>
             <ItemLink label={translations.edit} />
-          </NavigationWrapper>
+          </NavigateTo>
         </SettingsItem>
 
         <SettingsItem
           title={translations.privacy}
           description={translations.changePin}
         >
-          <NavigationWrapper dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}>
+          <NavigateTo screen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}>
             <ItemIcon />
-          </NavigationWrapper>
+          </NavigateTo>
         </SettingsItem>
 
         <SettingsItem description={translations.changePassword}>
-          <NavigationWrapper dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}>
+          <NavigateTo screen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}>
             <ItemIcon />
-          </NavigationWrapper>
+          </NavigateTo>
         </SettingsItem>
 
         <SettingsItem description={translations.fingerprintSignIn}>
@@ -85,9 +84,9 @@ const SettingsScreen = ({
           title={translations.downloadLogs}
           description={translations.downloadLogsText}
         >
-          <NavigationWrapper dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}>
+          <NavigateTo screen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}>
             <ItemIcon />
-          </NavigationWrapper>
+          </NavigateTo>
         </SettingsItem>
 
         <SettingsLink
@@ -101,9 +100,9 @@ const SettingsScreen = ({
           title={translations.language}
           description={'getLanguage()'}
         >
-          <NavigationWrapper dstScreen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}>
+          <NavigateTo screen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}>
             <ItemIcon />
-          </NavigationWrapper>
+          </NavigateTo>
         </SettingsItem>
 
         <SettingsLink

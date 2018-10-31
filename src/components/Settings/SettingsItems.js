@@ -20,15 +20,15 @@ const TouchableComponent = ({onPress, children}) => (
   </TouchableHighlight>
 )
 
-export const NavigationWrapper = compose(
+export const NavigateTo = compose(
   withNavigation,
   withHandlers({
-    onPress: ({navigation, dstScreen}) => () => navigation.navigate(dstScreen),
+    onPress: ({navigation, screen}) => () => navigation.navigate(screen),
   }),
 )(TouchableComponent)
 
-export const UrlWrapper = withHandlers({
-  onPress: ({dstUrl}) => () => Linking.openURL(dstUrl),
+export const LinkTo = withHandlers({
+  onPress: ({url}) => () => Linking.openURL(url),
 })(TouchableComponent)
 
 export const ItemIcon = () => (
@@ -53,8 +53,8 @@ export const SettingsItem = ({title, description, children}) => (
 
 export const SettingsLink = ({label, dstScreen}) => (
   <View style={styles.linkContainer}>
-    <NavigationWrapper dstScreen={dstScreen}>
+    <NavigateTo screen={dstScreen}>
       <ItemLink label={label} />
-    </NavigationWrapper>
+    </NavigateTo>
   </View>
 )

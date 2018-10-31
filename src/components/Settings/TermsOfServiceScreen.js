@@ -47,9 +47,9 @@ const mapping = {
 const TermsOfServiceScreen = ({translations}: Props) => (
   <Screen scroll>
     <View style={styles.root}>
-      {translations.content.map((item) => {
+      {translations.content.map((item, i) => {
         const Element = mapping[item.type]
-        return <Element key={item} {...item} />
+        return <Element key={i} {...item} />
       })}
     </View>
   </Screen>

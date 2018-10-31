@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View} from 'react-native'
 
-import {SettingsItem, ItemIcon, UrlWrapper} from './SettingsItems'
+import {SettingsItem, ItemIcon, LinkTo} from './SettingsItems'
 import {withNavigationTitle} from '../../utils/renderUtils'
 
 import styles from './styles/SupportScreen.style'
@@ -24,18 +24,18 @@ const SupportScreen = ({translations}: Props) => (
       title={translations.faq.label}
       description={translations.faq.description}
     >
-      <UrlWrapper dstUrl={translations.faq.url}>
+      <LinkTo url={translations.faq.url}>
         <ItemIcon />
-      </UrlWrapper>
+      </LinkTo>
     </SettingsItem>
 
     <SettingsItem
       title={translations.report.label}
       description={translations.report.description}
     >
-      <UrlWrapper dstUrl={translations.report.url}>
+      <LinkTo url={translations.report.url}>
         <ItemIcon />
-      </UrlWrapper>
+      </LinkTo>
     </SettingsItem>
   </View>
 )

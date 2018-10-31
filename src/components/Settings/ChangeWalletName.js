@@ -37,6 +37,7 @@ const ChangeWalletName = ({
         <TextInput
           style={styles.inputText}
           placeholder={translations.walletName}
+          value={walletName}
           onChangeText={onChangeText}
         />
       </View>
