@@ -1,5 +1,6 @@
 // @flow
 import {pluralizeEn} from './util'
+import {termsOfService} from './tos.en'
 
 const language = {
   chineseSimplified: '简体中文',
@@ -56,14 +57,14 @@ const l10n = {
         `${cnt} ${pluralizeEn(cnt, 'CONFIRMATION', 'CONFIRMATIONS')}`,
     },
   },
-  SendScreen: {
+  sendScreen: {
     funds: 'Available funds:',
     scanCode: 'Scan QR code',
     address: 'Address',
     amount: 'Amount',
     continue: 'Continue',
   },
-  ConfirmSendScreen: {
+  confirmSendScreen: {
     confirm: 'Confirm',
   },
   walletInitScreen: {
@@ -86,6 +87,13 @@ const l10n = {
     passwordLowerChar: '1 lowercase letter',
     passwordNumber: '1 number',
     createButton: 'CREATE PERSONAL WALLET',
+  },
+  changeWalletName: {
+    walletName: 'Wallet name',
+    changeButtonText: 'CHANGE NAME',
+    walletValidationText:
+      'Wallet name requires at least 3 and at most\
+ 40 letters.',
   },
   receiveScreen: {
     title: 'Receive',
@@ -160,6 +168,47 @@ const l10n = {
   txHistoryNavigationButtons: {
     sendButton: 'SEND',
     receiveButton: 'RECEIVE',
+  },
+  settingsScreen: {
+    title: 'Settings',
+    walletName: 'Wallet name',
+    edit: 'Edit',
+    privacy: 'Privacy',
+    changePin: 'Change PIN',
+    changePassword: 'Change password',
+    fingerprintSignIn: 'Sign in with your fingerprint',
+    easyConfirmation: 'Easy transaction confirmation',
+    downloadLogs: 'Download logs',
+    downloadLogsText:
+      'If you want to inspect logs, you can download\
+ them here. Logs do not contain sensitive information, and it would be\
+ helpful to attach them to problem reports to help the team investigate\
+ the issue you are experiencing.',
+    removeWallet: 'Remove wallet',
+    language: 'Your language',
+    termsOfUse: 'Terms of Use',
+    support: 'Support',
+  },
+  supportScreen: {
+    title: 'Support',
+    faq: {
+      label: 'See frequently asked questions',
+      description:
+        'If you are experiencing issues, please see the FAQ\
+ on Yoroi website for quidance on known issues.',
+      url: 'https://yoroi-wallet.com/faq/',
+    },
+    report: {
+      label: 'Report a problem',
+      description:
+        'If the FAQ does not solve the issue you are\
+ experiencing, please use our Support request feature.',
+      url: 'https://yoroi-wallet.com/support/',
+    },
+  },
+  termsOfServiceScreen: {
+    title: 'Terms of Service Agreement',
+    content: [...termsOfService],
   },
 }
 

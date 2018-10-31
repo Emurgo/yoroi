@@ -9,7 +9,9 @@ import type {Translation} from './type'
 const transform = (obj, transformer) =>
   _.isPlainObject(obj)
     ? _.mapValues(obj, (v) => transform(v, transformer))
-    : transformer(obj)
+    : _.isArray(obj)
+      ? _.map(obj, (v) => transform(v, transformer))
+      : transformer(obj)
 
 // "Translates" a string or a function returning string
 // into random characters from targetChars

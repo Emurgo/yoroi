@@ -4,6 +4,8 @@ import WalletInitNavigator from './components/WalletInit/WalletInitNavigator'
 import TxHistoryNavigator from './components/TxHistory/TxHistoryNavigator'
 import SendScreenNavigator from './components/Send/SendScreenNavigator'
 import ReceiveScreenNavigator from './components/Receive/ReceiveScreenNavigator'
+// eslint-disable-next-line max-len
+import SettingsScreenNavigator from './components/Settings/SettingsScreenNavigator'
 import IndexScreen from './components/IndexScreen'
 import LoginScreen from './components/Login/LoginScreen'
 import {MAIN_ROUTES, ROOT_ROUTES} from './RoutesList'
@@ -13,6 +15,7 @@ const MainNavigator = createStackNavigator(
     [MAIN_ROUTES.TX_HISTORY]: TxHistoryNavigator,
     [MAIN_ROUTES.SEND]: SendScreenNavigator,
     [MAIN_ROUTES.RECEIVE]: ReceiveScreenNavigator,
+    [MAIN_ROUTES.SETTINGS]: SettingsScreenNavigator,
   },
   {
     // TODO(ppershing): initialRouteName

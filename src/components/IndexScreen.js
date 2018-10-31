@@ -40,6 +40,7 @@ const routes = [
   {label: 'Send', path: MAIN_ROUTES.SEND},
   {label: 'Tx History', path: MAIN_ROUTES.TX_HISTORY},
   {label: 'Login', path: ROOT_ROUTES.LOGIN},
+  {label: 'Settings', path: MAIN_ROUTES.SETTINGS},
 ]
 
 const styles = StyleSheet.create({

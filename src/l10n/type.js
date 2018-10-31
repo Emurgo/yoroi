@@ -51,14 +51,14 @@ export type Translation = {
       formatConfirmations: (cnt: any) => string,
     },
   },
-  SendScreen: {
+  sendScreen: {
     funds: string,
     scanCode: string,
     address: string,
     amount: string,
     continue: string,
   },
-  ConfirmSendScreen: {
+  confirmSendScreen: {
     confirm: string,
   },
   walletInitScreen: {
@@ -81,6 +81,11 @@ export type Translation = {
     passwordLowerChar: string,
     passwordNumber: string,
     createButton: string,
+  },
+  changeWalletName: {
+    walletName: string,
+    changeButtonText: string,
+    walletValidationText: string,
   },
   receiveScreen: {
     title: string,
@@ -136,6 +141,39 @@ export type Translation = {
   txHistoryNavigationButtons: {
     sendButton: string,
     receiveButton: string,
+  },
+  settingsScreen: {
+    title: string,
+    walletName: string,
+    edit: string,
+    privacy: string,
+    changePin: string,
+    changePassword: string,
+    fingerprintSignIn: string,
+    easyConfirmation: string,
+    downloadLogs: string,
+    downloadLogsText: string,
+    removeWallet: string,
+    language: string,
+    termsOfUse: string,
+    support: string,
+  },
+  supportScreen: {
+    title: string,
+    faq: {
+      label: string,
+      description: string,
+      url: string,
+    },
+    report: {
+      label: string,
+      description: string,
+      url: string,
+    },
+  },
+  termsOfServiceScreen: {
+    title: string,
+    content: Array<any>,
   },
   setLanguage: (lang: string) => void,
 }
