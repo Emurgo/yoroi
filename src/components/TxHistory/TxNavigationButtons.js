@@ -14,7 +14,7 @@ import {MAIN_ROUTES} from '../../RoutesList'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslations = (state) => state.trans.txHistoryNavigationButtons
+const getTranslations = (state) => state.trans.TxNavigationButtons
 
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,

@@ -17,7 +17,7 @@ import type {State} from '../../../state'
 import type {SubTranslation} from '../../../l10n/typeHelpers'
 
 const getTranslations = (state: State) =>
-  state.trans.recoveryPhraseConfirmationScreen
+  state.trans.RecoveryPhraseConfirmationScreen
 
 const validatePhrase = (mnemonic, words, partialPhrase) => {
   const phrase = partialPhrase.map((wordIdx) => words[wordIdx]).join(' ')

@@ -24,7 +24,7 @@ const handleOnConfirm = async (navigation) => {
   navigation.navigate(MAIN_ROUTES.TX_HISTORY)
 }
 
-const getTranslations = (state) => state.trans.confirmSendScreen
+const getTranslations = (state) => state.trans.ConfirmScreen
 
 type Props = {
   onConfirm: () => mixed,

@@ -11,7 +11,7 @@ import styles from './styles/AddressDetail.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslations = (state) => state.trans.receiveScreen
+const getTranslations = (state) => state.trans.AddressDetail
 
 type Props = {
   address: string,

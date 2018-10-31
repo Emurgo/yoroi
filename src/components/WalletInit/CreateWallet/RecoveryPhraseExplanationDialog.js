@@ -16,7 +16,7 @@ import {COLORS} from '../../../styles/config'
 import type {State} from '../../../state'
 import type {SubTranslation} from '../../../l10n/typeHelpers'
 
-const getTranslations = (state: State) => state.trans.recoveryPhraseDialog
+const getTranslations = (state: State) => state.trans.RecoveryPhraseExplanationDialog
 
 type Props = {
   navigateToRecoveryPhrase: () => mixed,

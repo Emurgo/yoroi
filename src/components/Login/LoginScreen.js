@@ -11,7 +11,7 @@ import styles from './styles/LoginScreen.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslations = (state) => state.trans.loginScreen
+const getTranslations = (state) => state.trans.LoginScreen
 
 type Props = {
   translations: SubTranslation<typeof getTranslations>,

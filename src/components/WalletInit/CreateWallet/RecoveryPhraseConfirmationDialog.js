@@ -37,7 +37,7 @@ const handleWalletConfirmation = ({navigation}) => () => {
 }
 
 const getTranslations = (state: State) =>
-  state.trans.recoveryPhraseConfirmationDialog
+  state.trans.RecoveryPhraseConfirmationDialog
 
 type Props = {
   confirmWalletCreation: () => mixed,

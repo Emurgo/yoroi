@@ -23,7 +23,7 @@ const supportedLangauage = [
   {label: 'Russian', name: 'Russian', code: 'ru-RU'},
 ]
 
-const getTranslations = (state) => state.trans.languageSelectScreen
+const getTranslations = (state) => state.trans.LanguagePicker
 
 type Props = {
   changeLanguage: () => mixed,

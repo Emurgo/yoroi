@@ -11,7 +11,7 @@ import styles from './styles/AddressModal.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslations = (state) => state.trans.receiveScreenModal
+const getTranslations = (state) => state.trans.AddressModal
 
 type Props = {
   address: string,

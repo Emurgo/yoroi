@@ -20,14 +20,14 @@ const l10n = {
     language,
     datetime,
   },
-  loginScreen: {
+  LoginScreen: {
     title: 'Enter PIN',
   },
-  languageSelectScreen: {
+  LanguagePicker: {
     selectLanguage: 'SELECT YOUR LANGAUAGE',
     continue: 'CONTINUE',
   },
-  txHistoryScreen: {
+  TxHistoryListItem: {
     transactionType: {
       SENT: 'ADA sent',
       RECEIVED: 'ADA received',
@@ -42,41 +42,45 @@ const l10n = {
       PENDING: 'Pending',
       FAILED: 'Failed',
     },
-    transactionDetails: {
-      fromAddresses: 'From Addresses',
-      toAddresses: 'To Addresses',
-      transactionId: 'Transaction ID',
-      txAssuranceLevel: 'Transaction assurance level',
-      transactionHeader: {
-        SENT: 'ADA sent',
-        RECEIVED: 'ADA received',
-        SELF: 'Intrawallet',
-        MULTI: 'Multi party',
-      },
-      formatConfirmations: (cnt: number) =>
-        `${cnt} ${pluralizeEn(cnt, 'CONFIRMATION', 'CONFIRMATIONS')}`,
-    },
   },
-  sendScreen: {
+  TxDetails: {
+    fromAddresses: 'From Addresses',
+    toAddresses: 'To Addresses',
+    transactionId: 'Transaction ID',
+    txAssuranceLevel: 'Transaction assurance level',
+    transactionHeader: {
+      SENT: 'ADA sent',
+      RECEIVED: 'ADA received',
+      SELF: 'Intrawallet',
+      MULTI: 'Multi party',
+    },
+    formatConfirmations: (cnt: number) =>
+      `${cnt} ${pluralizeEn(cnt, 'CONFIRMATION', 'CONFIRMATIONS')}`,
+  },
+  TxNavigationButtons: {
+    sendButton: 'SEND',
+    receiveButton: 'RECEIVE',
+  },
+  SendScreen: {
     funds: 'Available funds:',
     scanCode: 'Scan QR code',
     address: 'Address',
     amount: 'Amount',
     continue: 'Continue',
   },
-  confirmSendScreen: {
+  ConfirmScreen: {
     confirm: 'Confirm',
   },
-  walletInitScreen: {
+  WalletInitScreen: {
     createWallet: 'CREATE A NEW WALLET',
     restoreWallet: 'RESTORE WALLET FROM BACKUP',
   },
-  walletDescription: {
+  WalletDescription: {
     line1: 'Yoroi is Web Light Wallet for Cardano',
     line2: 'Secure Fast Simple',
     byEmurgo: 'By',
   },
-  createWallet: {
+  CreateWalletScreen: {
     title: 'Create a new wallet',
     nameLabel: 'Wallet name',
     passwordLabel: 'Wallet password',
@@ -88,30 +92,34 @@ const l10n = {
     passwordNumber: '1 number',
     createButton: 'CREATE PERSONAL WALLET',
   },
-  changeWalletName: {
+  ChangeWalletName: {
     walletName: 'Wallet name',
     changeButtonText: 'CHANGE NAME',
     walletValidationText:
       'Wallet name requires at least 3 and at most\
  40 letters.',
   },
-  receiveScreen: {
+  ReceiveScreen: {
     title: 'Receive',
     description: {
       line1: 'Share this wallet to receive payments.',
       line2: 'To protect your privacy, new address are',
       line3: 'generated automatically once you use them.',
     },
+  },
+  AddressDetail: {
     walletAddress: 'Your wallet address',
+  },
+  AddressesList: {
     walletAddresses: 'Your wallet addresses',
     hideUsedAddresses: 'hide used',
     showUsedAddresses: 'show used',
   },
-  receiveScreenModal: {
+  AddressModal: {
     copyLabel: 'COPY ADDRESS',
     copiedLabel: 'COPIED',
   },
-  recoveryPhraseConfirmationDialog: {
+  RecoveryPhraseConfirmationDialog: {
     title: 'Recovery phrase',
     keysStorageCheckbox:
       'I understand that my secret keys are held securely on this device only,\
@@ -122,7 +130,7 @@ const l10n = {
  I have written down and saved in secure place.',
     confirmationButton: 'I UNDERSTAND',
   },
-  recoveryPhraseConfirmationScreen: {
+  RecoveryPhraseConfirmationScreen: {
     title: 'Recovery phrase',
     instructions:
       'Tap each word in the correct order to verify your recovery phrase',
@@ -131,7 +139,7 @@ const l10n = {
     clearButton: 'CLEAR',
     confirmButton: 'CONFIRM',
   },
-  recoveryPhraseDialog: {
+  RecoveryPhraseExplanationDialog: {
     title: 'Recovery phrase',
     paragraph1:
       'On the following screen, you will see a set of 15 random words. This\
@@ -142,7 +150,7 @@ const l10n = {
  access to your funds.',
     nextButton: 'NEXT',
   },
-  recoveryPhraseScreen: {
+  RecoveryPhraseScreen: {
     title: 'Recovery phrase',
     mnemonicNote:
       'Please, make sure you have carefully written down your recovery phrase\
@@ -150,7 +158,7 @@ const l10n = {
  Phrase is case sensitive.',
     confirmationButton: 'YES, I`VE WRITTEN IT DOWN',
   },
-  restoreWalletScreen: {
+  RestoreWalletScreen: {
     title: 'Restore wallet',
     instructions:
       'To restore your wallet please provide the recovery phrase you\
@@ -165,11 +173,7 @@ const l10n = {
       },
     },
   },
-  txHistoryNavigationButtons: {
-    sendButton: 'SEND',
-    receiveButton: 'RECEIVE',
-  },
-  settingsScreen: {
+  SettingsScreen: {
     title: 'Settings',
     walletName: 'Wallet name',
     edit: 'Edit',
@@ -189,7 +193,7 @@ const l10n = {
     termsOfUse: 'Terms of Use',
     support: 'Support',
   },
-  supportScreen: {
+  SupportScreen: {
     title: 'Support',
     faq: {
       label: 'See frequently asked questions',
@@ -206,7 +210,7 @@ const l10n = {
       url: 'https://yoroi-wallet.com/support/',
     },
   },
-  termsOfServiceScreen: {
+  TermsOfServiceScreen: {
     title: 'Terms of Service Agreement',
     content: [...termsOfService],
   },

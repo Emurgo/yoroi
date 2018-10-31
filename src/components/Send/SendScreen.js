@@ -17,7 +17,7 @@ import styles from './styles/SendScreen.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslations = (state) => state.trans.sendScreen
+const getTranslations = (state) => state.trans.SendScreen
 
 const handleConfirm = ({navigation, amount, address}) => async () => {
   // Validate here

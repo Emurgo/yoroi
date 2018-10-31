@@ -15,14 +15,14 @@ export type Translation = {
       yesterday: string,
     },
   },
-  loginScreen: {
+  LoginScreen: {
     title: string,
   },
-  languageSelectScreen: {
+  LanguagePicker: {
     selectLanguage: string,
     continue: string,
   },
-  txHistoryScreen: {
+  TxHistoryListItem: {
     transactionType: {
       SENT: string,
       RECEIVED: string,
@@ -37,40 +37,44 @@ export type Translation = {
       PENDING: string,
       FAILED: string,
     },
-    transactionDetails: {
-      fromAddresses: string,
-      toAddresses: string,
-      transactionId: string,
-      txAssuranceLevel: string,
-      transactionHeader: {
-        SENT: string,
-        RECEIVED: string,
-        SELF: string,
-        MULTI: string,
-      },
-      formatConfirmations: (cnt: any) => string,
-    },
   },
-  sendScreen: {
+  TxDetails: {
+    fromAddresses: string,
+    toAddresses: string,
+    transactionId: string,
+    txAssuranceLevel: string,
+    transactionHeader: {
+      SENT: string,
+      RECEIVED: string,
+      SELF: string,
+      MULTI: string,
+    },
+    formatConfirmations: (cnt: any) => string,
+  },
+  TxNavigationButtons: {
+    sendButton: string,
+    receiveButton: string,
+  },
+  SendScreen: {
     funds: string,
     scanCode: string,
     address: string,
     amount: string,
     continue: string,
   },
-  confirmSendScreen: {
+  ConfirmScreen: {
     confirm: string,
   },
-  walletInitScreen: {
+  WalletInitScreen: {
     createWallet: string,
     restoreWallet: string,
   },
-  walletDescription: {
+  WalletDescription: {
     line1: string,
     line2: string,
     byEmurgo: string,
   },
-  createWallet: {
+  CreateWalletScreen: {
     title: string,
     nameLabel: string,
     passwordLabel: string,
@@ -82,34 +86,38 @@ export type Translation = {
     passwordNumber: string,
     createButton: string,
   },
-  changeWalletName: {
+  ChangeWalletName: {
     walletName: string,
     changeButtonText: string,
     walletValidationText: string,
   },
-  receiveScreen: {
+  ReceiveScreen: {
     title: string,
     description: {
       line1: string,
       line2: string,
       line3: string,
     },
+  },
+  AddressDetail: {
     walletAddress: string,
+  },
+  AddressesList: {
     walletAddresses: string,
     hideUsedAddresses: string,
     showUsedAddresses: string,
   },
-  receiveScreenModal: {
+  AddressModal: {
     copyLabel: string,
     copiedLabel: string,
   },
-  recoveryPhraseConfirmationDialog: {
+  RecoveryPhraseConfirmationDialog: {
     title: string,
     keysStorageCheckbox: string,
     newDeviceRecoveryCheckbox: string,
     confirmationButton: string,
   },
-  recoveryPhraseConfirmationScreen: {
+  RecoveryPhraseConfirmationScreen: {
     title: string,
     instructions: string,
     inputLabel: string,
@@ -117,18 +125,18 @@ export type Translation = {
     clearButton: string,
     confirmButton: string,
   },
-  recoveryPhraseDialog: {
+  RecoveryPhraseExplanationDialog: {
     title: string,
     paragraph1: string,
     paragraph2: string,
     nextButton: string,
   },
-  recoveryPhraseScreen: {
+  RecoveryPhraseScreen: {
     title: string,
     mnemonicNote: string,
     confirmationButton: string,
   },
-  restoreWalletScreen: {
+  RestoreWalletScreen: {
     title: string,
     instructions: string,
     phrase: string,
@@ -138,11 +146,7 @@ export type Translation = {
       unknownWords: (words: any) => string,
     },
   },
-  txHistoryNavigationButtons: {
-    sendButton: string,
-    receiveButton: string,
-  },
-  settingsScreen: {
+  SettingsScreen: {
     title: string,
     walletName: string,
     edit: string,
@@ -158,7 +162,7 @@ export type Translation = {
     termsOfUse: string,
     support: string,
   },
-  supportScreen: {
+  SupportScreen: {
     title: string,
     faq: {
       label: string,
@@ -171,7 +175,7 @@ export type Translation = {
       url: string,
     },
   },
-  termsOfServiceScreen: {
+  TermsOfServiceScreen: {
     title: string,
     content: Array<any>,
   },

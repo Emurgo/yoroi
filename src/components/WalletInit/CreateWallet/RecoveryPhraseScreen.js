@@ -17,7 +17,7 @@ import {COLORS} from '../../../styles/config'
 import type {State} from '../../../state'
 import type {SubTranslation} from '../../../l10n/typeHelpers'
 
-const getTranslations = (state: State) => state.trans.recoveryPhraseScreen
+const getTranslations = (state: State) => state.trans.RecoveryPhraseScreen
 
 type Props = {
   navigateToRecoveryPhraseConfirmation: () => mixed,
@@ -25,7 +25,7 @@ type Props = {
   mnemonic: string,
 }
 
-const CreateWalletScreen = ({
+const RecoveryPhraseScreen = ({
   navigateToRecoveryPhraseConfirmation,
   translations,
   mnemonic,
@@ -68,4 +68,4 @@ export default compose(
         password: navigation.getParam('password'),
       }),
   }),
-)(CreateWalletScreen)
+)(RecoveryPhraseScreen)

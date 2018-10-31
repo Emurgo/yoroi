@@ -12,7 +12,7 @@ import styles from './styles/SupportScreen.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslations = (state) => state.trans.supportScreen
+const getTranslations = (state) => state.trans.SupportScreen
 
 type Props = {
   translations: SubTranslation<typeof getTranslations>,

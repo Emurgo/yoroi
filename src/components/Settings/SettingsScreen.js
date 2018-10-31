@@ -22,7 +22,7 @@ import styles from './styles/SettingsScreen.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslations = (state) => state.trans.settingsScreen
+const getTranslations = (state) => state.trans.SettingsScreen
 
 type Props = {
   isFingerprintSignIn: boolean,
