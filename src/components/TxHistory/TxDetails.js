@@ -42,8 +42,7 @@ const AdaAmount = ({amount, direction}) => {
   )
 }
 
-const getTranslations = (state) =>
-  state.trans.txHistoryScreen.transactionDetails
+const getTranslations = (state) => state.trans.TxDetails
 
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,

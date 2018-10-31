@@ -29,7 +29,7 @@ const resetNavigationAction = StackActions.reset({
   key: null,
 })
 
-const getTranslations = (state: State) => state.trans.restoreWalletScreen
+const getTranslations = (state: State) => state.trans.RestoreWalletScreen
 
 type PhraseErrors = {
   maxLength?: boolean,

@@ -13,7 +13,7 @@ import styles from './styles/TermsOfServiceScreen.styles'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslations = (state) => state.trans.termsOfServiceScreen
+const getTranslations = (state) => state.trans.TermsOfServiceScreen
 
 type Props = {
   translations: SubTranslation<typeof getTranslations>,

@@ -19,7 +19,7 @@ import styles from './styles/ReceiveScreen.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslations = (state) => state.trans.receiveScreen.description
+const getTranslations = (state) => state.trans.ReceiveScreen.description
 
 type Props = {
   receiveAddresses: Array<{address: string, isUsed: boolean}>,

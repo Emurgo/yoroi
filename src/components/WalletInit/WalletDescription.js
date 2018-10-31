@@ -14,7 +14,7 @@ import styles from './styles/WalletInitScreen.style'
 import type {State} from '../../state'
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslations = (state: State) => state.trans.walletDescription
+const getTranslations = (state: State) => state.trans.WalletDescription
 
 type Props = {
   translations: SubTranslation<typeof getTranslations>,

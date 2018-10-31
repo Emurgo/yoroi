@@ -13,7 +13,7 @@ import styles from './styles/AddressesList.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslations = (state) => state.trans.receiveScreen
+const getTranslations = (state) => state.trans.AddressesList
 
 type Props = {
   addresses: Array<{address: string, isUsed: boolean}>,

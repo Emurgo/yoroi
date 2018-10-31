@@ -18,7 +18,7 @@ import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import type {State} from '../../state'
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslations = (state: State) => state.trans.walletInitScreen
+const getTranslations = (state: State) => state.trans.WalletInitScreen
 
 type Props = {
   navigateRestoreWallet: () => mixed,

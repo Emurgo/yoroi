@@ -23,7 +23,7 @@ import type {SubTranslation} from '../../../l10n/typeHelpers'
 
 type FormValidationErrors = PasswordValidationErrors & {nameReq?: boolean}
 
-const getTranslations = (state: State) => state.trans.createWallet
+const getTranslations = (state: State) => state.trans.CreateWalletScreen
 
 const handleCreate = ({navigation, password}) => () => {
   navigation.navigate(WALLET_INIT_ROUTES.RECOVERY_PHRASE_DIALOG, {password})
