@@ -208,7 +208,7 @@ const l10n = {
   },
   termsOfServiceScreen: {
     title: 'Terms of Service Agreement',
-    content: termsOfService,
+    content: [...termsOfService],
   },
 }
 

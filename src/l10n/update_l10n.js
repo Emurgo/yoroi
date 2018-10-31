@@ -25,7 +25,11 @@ const getType = (obj) => {
 }
 
 const transform = (obj) =>
-  _.isPlainObject(obj) ? _.mapValues(obj, (v) => transform(v)) : getType(obj)
+  _.isPlainObject(obj)
+    ? _.mapValues(obj, (v) => transform(v))
+    : _.isArray(obj)
+      ? obj.map((value) => transform(value))
+      : getType(obj)
 
 const header = `
 // @flow

@@ -31,9 +31,9 @@ const Paragraph = ({text}) => (
   </View>
 )
 
-const ListItem = ({item, text}) => (
+const ListItem = ({heading, text}) => (
   <View style={styles.textContainer}>
-    <Text style={styles.textListItem}>{item}</Text>
+    <Text style={styles.textListItem}>{heading}</Text>
     <Text style={styles.textParagraph}>{text}</Text>
   </View>
 )
@@ -47,9 +47,9 @@ const mapping = {
 const TermsOfServiceScreen = ({translations}: Props) => (
   <Screen scroll>
     <View style={styles.root}>
-      {translations.content.map((item, i) => {
+      {translations.content.map((item) => {
         const Element = mapping[item.type]
-        return <Element key={i} {...item} />
+        return <Element key={item} {...item} />
       })}
     </View>
   </Screen>
