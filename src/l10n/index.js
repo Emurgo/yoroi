@@ -10,7 +10,7 @@ const transform = (obj, transformer) =>
   _.isPlainObject(obj)
     ? _.mapValues(obj, (v) => transform(v, transformer))
     : _.isArray(obj)
-      ? obj.map((value) => transform(value, transformer))
+      ? _.map(obj, (v) => transform(v, transformer))
       : transformer(obj)
 
 // "Translates" a string or a function returning string
