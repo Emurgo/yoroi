@@ -1,17 +1,20 @@
 // @flow
 
 import React from 'react'
-import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {Alert, View} from 'react-native'
 
 import PinInput from '../Security/PinInput'
+import {withTranslations} from '../../utils/renderUtils'
 
 import styles from './styles/LoginScreen.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
+import type {ComponentType} from 'react'
 
 const getTranslations = (state) => state.trans.LoginScreen
+
+type ExportedProps = {}
 
 type Props = {
   translations: SubTranslation<typeof getTranslations>,
@@ -31,8 +34,6 @@ const ReceiveScreen = ({translations}: Props) => (
   </View>
 )
 
-export default compose(
-  connect((state) => ({
-    translations: getTranslations(state),
-  })),
-)(ReceiveScreen)
+export default (compose(withTranslations(getTranslations))(
+  ReceiveScreen,
+): ComponentType<ExportedProps>)

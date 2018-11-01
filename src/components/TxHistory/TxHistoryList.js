@@ -12,6 +12,8 @@ import type {Moment} from 'moment'
 
 import type {HistoryTransaction} from '../../types/HistoryTransaction'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
+import type {Dict} from '../../state'
+
 import {Text} from '../UiKit'
 import TxHistoryListItem from './TxHistoryListItem'
 
@@ -39,7 +41,7 @@ const DayHeader = ({ts, formatDate}) => (
 )
 
 type Props = {
-  transactions: Array<HistoryTransaction>,
+  transactions: Dict<HistoryTransaction>,
   navigation: NavigationScreenProp<NavigationState>,
   formatDate: (timestamp: Moment, trans: any) => string,
 }
