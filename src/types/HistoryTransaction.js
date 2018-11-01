@@ -19,7 +19,7 @@ export const TRANSACTION_STATUS = {
 
 export type TransactionStatus = $Values<typeof TRANSACTION_STATUS>
 
-export type HistoryTransaction = {
+export type TransactionInfo = {
   id: string,
   fromAddresses: Array<string>,
   toAddresses: Array<string>,
@@ -34,7 +34,7 @@ export type HistoryTransaction = {
   status: TransactionStatus,
 }
 
-export type RawTransaction = {|
+export type Transaction = {|
   id: string,
   status: TransactionStatus,
   inputs: Array<{address: string, amount: BigNumber}>,

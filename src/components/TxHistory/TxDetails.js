@@ -18,7 +18,7 @@ import {TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
-import type {HistoryTransaction} from '../../types/HistoryTransaction'
+import type {TransactionInfo} from '../../types/HistoryTransaction'
 
 const Label = ({children}) => <Text style={styles.label}>{children}</Text>
 
@@ -47,7 +47,7 @@ const getTranslations = (state) => state.trans.TxDetails
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,
   translations: SubTranslation<typeof getTranslations>,
-  transaction: HistoryTransaction,
+  transaction: TransactionInfo,
 }
 
 const TxDetails = ({navigation, translations, transaction}: Props) => {

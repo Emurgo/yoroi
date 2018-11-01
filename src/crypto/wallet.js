@@ -22,7 +22,7 @@ import {TRANSACTION_STATUS} from '../types/HistoryTransaction'
 
 import type {Moment} from 'moment'
 import type {
-  RawTransaction,
+  Transaction,
   RawUtxo,
   TransactionInput,
   PreparedTransactionData,
@@ -31,7 +31,7 @@ import type {Dict} from '../state'
 
 import type {Mutex} from '../utils/promise'
 
-const getLastTimestamp = (history: Array<RawTransaction>): ?Moment => {
+const getLastTimestamp = (history: Array<Transaction>): ?Moment => {
   // Note(ppershing): ISO8601 dates can be sorted as strings
   // and the result is expected
   return _.max(history.map((tx) => tx.lastUpdatedAt), moment(0))
@@ -43,7 +43,7 @@ type SyncMetadata = {
 }
 
 type WalletHistoryState = {
-  transactions: Dict<RawTransaction>,
+  transactions: Dict<Transaction>,
   perAddressSyncMetadata: Dict<SyncMetadata>,
   generatedAddressCount: number,
 }
@@ -70,7 +70,7 @@ const perAddressTxsSelector = (state: WalletHistoryState) => {
 
 const txsToConfirmationsSelector = (state: WalletHistoryState) => {
   const {perAddressSyncMetadata, transactions} = state
-  return _.mapValues(transactions, (tx: RawTransaction) => {
+  return _.mapValues(transactions, (tx: Transaction) => {
     if (tx.status !== TRANSACTION_STATUS.SUCCESSFUL) {
       // TODO(ppershing): do failed transactions have assurance?
       return null
@@ -316,7 +316,7 @@ export class WalletManager {
     return true
   }
 
-  _isUpdatedTransaction(tx: RawTransaction): boolean {
+  _isUpdatedTransaction(tx: Transaction): boolean {
     const id = tx.id
     // We have this transaction and it did not change
     if (
@@ -333,7 +333,7 @@ export class WalletManager {
   }
 
   // Returns number of updated transactions
-  _checkUpdatedTransactions(transactions: Array<RawTransaction>): number {
+  _checkUpdatedTransactions(transactions: Array<Transaction>): number {
     Logger.debug('_updateTransactions', transactions)
     // Currently we do not support two updates inside a same batch
     // (and backend shouldn't support it either)

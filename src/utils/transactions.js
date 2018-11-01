@@ -9,10 +9,7 @@ import {
 import {CONFIG} from '../config'
 import {Logger} from '../utils/logging'
 
-import type {
-  HistoryTransaction,
-  RawTransaction,
-} from '../types/HistoryTransaction'
+import type {TransactionInfo, Transaction} from '../types/HistoryTransaction'
 
 type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
 
@@ -46,10 +43,10 @@ const _sum = (a: Array<{address: string, amount: BigNumber}>): BigNumber =>
 const _multiPartyWarningCache = {}
 
 export const processTxHistoryData = (
-  tx: RawTransaction,
+  tx: Transaction,
   ownAddresses: Array<string>,
   confirmations: number,
-): HistoryTransaction => {
+): TransactionInfo => {
   const ownInputs = tx.inputs.filter(({address}) =>
     ownAddresses.includes(address),
   )

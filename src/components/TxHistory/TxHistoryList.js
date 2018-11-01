@@ -10,7 +10,7 @@ import _ from 'lodash'
 import moment from 'moment'
 import type {Moment} from 'moment'
 
-import type {HistoryTransaction} from '../../types/HistoryTransaction'
+import type {TransactionInfo} from '../../types/HistoryTransaction'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {Dict} from '../../state'
 
@@ -41,12 +41,12 @@ const DayHeader = ({ts, formatDate}) => (
 )
 
 type Props = {
-  transactions: Dict<HistoryTransaction>,
+  transactions: Dict<TransactionInfo>,
   navigation: NavigationScreenProp<NavigationState>,
   formatDate: (timestamp: Moment, trans: any) => string,
 }
 
-const getTransactionsByDate = (transactions: Array<HistoryTransaction>) =>
+const getTransactionsByDate = (transactions: Array<TransactionInfo>) =>
   _(transactions)
     .sortBy((t) => -moment(t.submittedAt).unix())
     .groupBy((t) => moment(t.submittedAt).format('L'))

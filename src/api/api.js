@@ -8,7 +8,7 @@ import assert from '../utils/assert'
 import {facadeTransaction} from './facade'
 
 import type {Moment} from 'moment'
-import type {RawTransaction, RawUtxo} from '../types/HistoryTransaction'
+import type {Transaction, RawUtxo} from '../types/HistoryTransaction'
 
 type Addresses = Array<string>
 
@@ -65,7 +65,7 @@ export const setIsOnlineCallback = (cb: IsOnlineCallback) => {
 export const fetchNewTxHistory = async (
   dateFrom: Moment,
   addresses: Addresses,
-): Promise<{isLast: boolean, transactions: Array<RawTransaction>}> => {
+): Promise<{isLast: boolean, transactions: Array<Transaction>}> => {
   assert.preconditionCheck(
     addresses.length <= CONFIG.API.TX_HISTORY_MAX_ADDRESSES,
     'fetchNewTxHistory: too many addresses',

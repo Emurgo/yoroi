@@ -1,5 +1,5 @@
 // @flow
-import type {RawTransaction, RawUtxo} from './types/HistoryTransaction'
+import type {Transaction, RawUtxo} from './types/HistoryTransaction'
 import trans from './l10n'
 import type {Translation} from './l10n/type'
 
@@ -8,7 +8,7 @@ export type Dict<T> = {[string]: T}
 export type State = {
   languageCode: string,
   wallet: {
-    transactions: Dict<RawTransaction>,
+    transactions: Dict<Transaction>,
     ownAddresses: Array<string>,
     txsToConfirmations: Dict<number>,
     generatedReceiveAddresses: Array<{address: string, isUsed: boolean}>,

@@ -18,12 +18,12 @@ import {TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
 
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {SubTranslation} from '../../l10n/typeHelpers'
-import type {HistoryTransaction} from '../../types/HistoryTransaction'
+import type {TransactionInfo} from '../../types/HistoryTransaction'
 
 const getTranslations = (state) => state.trans.TxHistoryListItem
 
 type Props = {
-  transaction: HistoryTransaction,
+  transaction: TransactionInfo,
   navigation: NavigationScreenProp<NavigationState>,
   translations: SubTranslation<typeof getTranslations>,
 }

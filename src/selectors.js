@@ -8,10 +8,10 @@ import {TRANSACTION_STATUS} from './types/HistoryTransaction'
 import {ObjectValues} from './utils/flow'
 
 import type {Dict, State} from './state'
-import type {HistoryTransaction, RawUtxo} from './types/HistoryTransaction'
+import type {TransactionInfo, RawUtxo} from './types/HistoryTransaction'
 
 export const transactionsSelector: (State) => Dict<
-  HistoryTransaction,
+  TransactionInfo,
 > = createSelector(
   (state) => state.wallet,
   (wallet) => {

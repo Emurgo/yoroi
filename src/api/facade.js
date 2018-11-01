@@ -5,10 +5,7 @@ import moment from 'moment'
 import _ from 'lodash'
 import BigNumber from 'bignumber.js'
 
-import type {
-  RawTransaction,
-  TransactionStatus,
-} from '../types/HistoryTransaction'
+import type {Transaction, TransactionStatus} from '../types/HistoryTransaction'
 
 type WireTransaction = {|
   hash: string,
@@ -33,7 +30,7 @@ const facadeStatus = (status: string) => {
   return mapping[status]
 }
 
-export const facadeTransaction = (tx: WireTransaction): RawTransaction => {
+export const facadeTransaction = (tx: WireTransaction): Transaction => {
   assert.assert(
     tx.inputs_address.length === tx.inputs_amount.length,
     'Invalid data from server (inputs mismatch)',
