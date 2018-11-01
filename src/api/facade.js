@@ -7,7 +7,8 @@ import BigNumber from 'bignumber.js'
 
 import type {Transaction, TransactionStatus} from '../types/HistoryTransaction'
 
-type WireTransaction = {|
+// This is what we expect to get from the API
+type RawTransaction = {|
   hash: string,
   inputs_address: Array<string>,
   inputs_amount: Array<string>,
@@ -20,7 +21,7 @@ type WireTransaction = {|
   best_block_num: string,
 |}
 
-const facadeStatus = (status: string) => {
+const facadeStatus = (status: string): TransactionStatus => {
   const mapping = {
     Successful: TRANSACTION_STATUS.SUCCESSFUL,
     Pending: TRANSACTION_STATUS.PENDING,
@@ -30,7 +31,7 @@ const facadeStatus = (status: string) => {
   return mapping[status]
 }
 
-export const facadeTransaction = (tx: WireTransaction): Transaction => {
+export const facadeTransaction = (tx: RawTransaction): Transaction => {
   assert.assert(
     tx.inputs_address.length === tx.inputs_amount.length,
     'Invalid data from server (inputs mismatch)',
