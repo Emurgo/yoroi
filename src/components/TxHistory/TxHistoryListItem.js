@@ -12,7 +12,7 @@ import {transactionsSelector} from '../../selectors'
 import {TX_HISTORY_ROUTES} from '../../RoutesList'
 import styles from './styles/TxHistoryListItem.style'
 import {COLORS} from '../../styles/config'
-import {withTranslation} from '../../utils/renderUtils'
+import {withTranslations} from '../../utils/renderUtils'
 
 import {TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
 
@@ -34,7 +34,7 @@ const AdaSign = ({color, size}) => (
   </View>
 )
 
-const _AssuranceLevel = ({transaction, trans}) => {
+const _AssuranceLevel = ({transaction, translations}) => {
   const assuranceLevel = getTransactionAssurance(transaction)
   const CHECMKARK = '\u2714'
 
@@ -42,12 +42,12 @@ const _AssuranceLevel = ({transaction, trans}) => {
     <Text>
       {CHECMKARK}
       {CHECMKARK}
-      {trans.assuranceLevel[assuranceLevel]}
+      {translations.assuranceLevel[assuranceLevel]}
     </Text>
   )
 }
 
-const AssuranceLevel = withTranslation(getTranslations)(_AssuranceLevel)
+const AssuranceLevel = withTranslations(getTranslations)(_AssuranceLevel)
 
 class TxHistoryListItem extends Component<Props> {
   constructor(props: Props) {

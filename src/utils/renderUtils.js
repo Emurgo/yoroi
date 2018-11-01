@@ -12,8 +12,8 @@ export const onDidMount = (didMount) => (BaseComponent) =>
     }
   }
 
-export const withTranslation = (getTrans) =>
-  connect((state) => ({trans: getTrans(state)}))
+export const withTranslations = (getTrans) =>
+  connect((state) => ({translations: getTrans(state)}))
 
 export const withNavigationTitle = (getTitle) => (BaseComponent) =>
   class WithScreenTitle extends React.Component {
