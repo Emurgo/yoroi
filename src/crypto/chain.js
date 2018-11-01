@@ -124,7 +124,10 @@ export class AddressChain {
   }
 
   getIndexOfAddress(address: string): number {
-    assertTrue(this.isMyAddress(address))
+    assertTrue(
+      this.isMyAddress(address),
+      'getIndexOfAddress:: is not my address',
+    )
     const idx = this.addressToIdxMap[address]
     /* :: if (!idx) throw null */
     return idx
