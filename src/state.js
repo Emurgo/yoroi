@@ -1,5 +1,5 @@
 // @flow
-import type {RawTransaction} from './types/HistoryTransaction'
+import type {RawTransaction, RawUtxo} from './types/HistoryTransaction'
 import trans from './l10n'
 import type {Translation} from './l10n/type'
 
@@ -14,6 +14,11 @@ export type State = {
     isSynchronizing: boolean,
     lastSyncError: any, // TODO(ppershing): type me
   },
+  balance: {
+    isFetching: boolean,
+    lastFetchingError: any,
+    utxos: ?Array<RawUtxo>,
+  },
   generatedReceiveAddresses: Array<{address: string, isUsed: boolean}>,
   trans: Translation,
   isOnline: boolean,
@@ -27,6 +32,11 @@ export const getInitialState = (): State => ({
   txHistory: {
     isSynchronizing: false,
     lastSyncError: null,
+  },
+  balance: {
+    isFetching: false,
+    lastFetchingError: null,
+    utxos: null,
   },
   generatedReceiveAddresses: [],
   trans,
