@@ -21,7 +21,7 @@ describe('History API', () => {
 
     // $FlowFixMe it seems like toMatchSnapshot is badly typed
     expect(result.transactions[0]).toMatchSnapshot({
-      best_block_num: expect.any(String),
+      bestBlockNum: expect.any(Number),
     })
   })
 
