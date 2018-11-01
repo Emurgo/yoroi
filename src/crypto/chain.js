@@ -129,7 +129,6 @@ export class AddressChain {
       'getIndexOfAddress:: is not my address',
     )
     const idx = this.addressToIdxMap[address]
-    /* :: if (!idx) throw null */
     return idx
   }
 
