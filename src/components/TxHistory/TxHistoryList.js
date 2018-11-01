@@ -46,10 +46,10 @@ type Props = {
   formatDate: (timestamp: Moment, trans: any) => string,
 }
 
-const getTransactionsByDate = (transactions) =>
+const getTransactionsByDate = (transactions: Array<HistoryTransaction>) =>
   _(transactions)
-    .sortBy((t) => -moment(t.timestamp).unix())
-    .groupBy((t) => moment(t.timestamp).format('L'))
+    .sortBy((t) => -moment(t.submittedAt).unix())
+    .groupBy((t) => moment(t.submittedAt).format('L'))
     .toPairs()
     .value()
 
@@ -61,7 +61,7 @@ const TxHistoryList = ({transactions, navigation, formatDate}: Props) => {
     <View style={styles.container}>
       {groupedTransactions.map(([date, transactions]) => (
         <View key={date} style={styles.dayContainer}>
-          <DayHeader ts={transactions[0].timestamp} formatDate={formatDate} />
+          <DayHeader ts={transactions[0].submittedAt} formatDate={formatDate} />
           {transactions.map((transaction) => (
             <TxHistoryListItem
               navigation={navigation}

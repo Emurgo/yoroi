@@ -63,7 +63,7 @@ const TxDetails = ({navigation, translations, transaction}: Props) => {
           <Text>{translations.transactionHeader[transaction.direction]}</Text>
         </View>
         <View>
-          <Text>{transaction.timestamp.format('YYYY-MM-DD hh:mm:ss A')}</Text>
+          <Text>{transaction.submittedAt.format('YYYY-MM-DD hh:mm:ss A')}</Text>
         </View>
       </View>
       <View style={styles.section}>
@@ -83,9 +83,7 @@ const TxDetails = ({navigation, translations, transaction}: Props) => {
       <View style={styles.section}>
         <Label>{translations.txAssuranceLevel}</Label>
         <Text>
-          {translations.formatConfirmations(
-            transaction.confirmations.toNumber(),
-          )}
+          {translations.formatConfirmations(transaction.confirmations)}
         </Text>
       </View>
       <View style={styles.section}>
@@ -102,6 +100,6 @@ export default compose(
     transaction: transactionsSelector(state)[navigation.getParam('id')],
   })),
   withNavigationTitle(({transaction}) =>
-    transaction.timestamp.format('YY-MM-DD hh:mm:ss A'),
+    transaction.submittedAt.format('YY-MM-DD hh:mm:ss A'),
   ),
 )(TxDetails)

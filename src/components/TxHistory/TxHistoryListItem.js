@@ -35,7 +35,10 @@ const AdaSign = ({color, size}) => (
 )
 
 const _AssuranceLevel = ({transaction, translations}) => {
-  const assuranceLevel = getTransactionAssurance(transaction)
+  const assuranceLevel = getTransactionAssurance(
+    transaction.status,
+    transaction.confirmations,
+  )
   const CHECMKARK = '\u2714'
 
   return (
@@ -101,7 +104,7 @@ class TxHistoryListItem extends Component<Props> {
         <View style={styles.container}>
           <View style={styles.metadataPanel}>
             <View>
-              <Text>{transaction.timestamp.format('hh:mm:ss A')}</Text>
+              <Text>{transaction.submittedAt.format('hh:mm:ss A')}</Text>
             </View>
             <View>
               <AssuranceLevel transaction={transaction} />

@@ -9,6 +9,9 @@ export type State = {
   languageCode: string,
   wallet: {
     transactions: Dict<RawTransaction>,
+    ownAddresses: Array<string>,
+    txsToConfirmations: Dict<number>,
+    generatedReceiveAddresses: Array<{address: string, isUsed: boolean}>,
   },
   txHistory: {
     isSynchronizing: boolean,
@@ -19,7 +22,6 @@ export type State = {
     lastFetchingError: any,
     utxos: ?Array<RawUtxo>,
   },
-  generatedReceiveAddresses: Array<{address: string, isUsed: boolean}>,
   trans: Translation,
   isOnline: boolean,
 }
@@ -28,6 +30,9 @@ export const getInitialState = (): State => ({
   languageCode: 'en-US',
   wallet: {
     transactions: {},
+    ownAddresses: [],
+    txsToConfirmations: {},
+    generatedReceiveAddresses: [],
   },
   txHistory: {
     isSynchronizing: false,
@@ -38,7 +43,6 @@ export const getInitialState = (): State => ({
     lastFetchingError: null,
     utxos: null,
   },
-  generatedReceiveAddresses: [],
   trans,
   isOnline: true, // we are online by default
 })

@@ -29,9 +29,32 @@ const _setOnline = (isOnline: boolean) => (dispatch, getState) => {
   })
 }
 
-export const setupApiOnlineTracking = () => (dispatch: Dispatch<any>) => {
+export const mirrorTxHistory = () => (dispatch: Dispatch<any>) => {
+  const transactions = walletManager.transactions
+  const ownAddresses = walletManager.getOwnAddresses()
+  const txsToConfirmations = walletManager.txsToConfirmations
+  const generatedReceiveAddresses = walletManager.getUiReceiveAddresses()
+
+  dispatch({
+    type: 'Mirror walletManager TxHistory',
+    path: ['wallet'],
+    payload: {
+      transactions,
+      ownAddresses,
+      txsToConfirmations,
+      generatedReceiveAddresses,
+    },
+    reducer: (state, payload) => payload,
+  })
+}
+
+export const setupHooks = () => (dispatch: Dispatch<any>) => {
   Logger.debug('setting up api isOnline callback')
   api.setIsOnlineCallback((isOnline) => dispatch(_setOnline(isOnline)))
+  Logger.debug('setting wallet manager hook')
+  walletManager.subscribe(() =>
+    Promise.resolve().then(() => dispatch(mirrorTxHistory())),
+  )
 }
 
 const _updateGeneratedReceiveAddresses = (addresses) => ({

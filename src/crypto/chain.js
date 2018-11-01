@@ -1,54 +1,54 @@
 // @flow
 import _ from 'lodash'
+import type {Moment} from 'moment'
 
 import {CONFIG} from '../config'
 import {assertTrue, assertFalse} from '../utils/assert'
+import {defaultMemoize} from 'reselect'
+import {Logger} from '../utils/logging'
 
-import type {Moment} from 'moment'
+import type {Dict} from '../state'
 
 export type AddressBlock = [number, Moment, Array<string>]
 
 type AsyncAddressGenerator = (ids: Array<number>) => Promise<Array<string>>
 type AsyncAddressFilter = (addresses: Array<string>) => Promise<Array<string>>
 
-type ChainState = {
-  addresses: Array<string>,
-  addressIndex: {[string]: number},
-}
 export class AddressChain {
-  _state: ChainState
+  _addresses: Array<string>
   _getAddresses: AsyncAddressGenerator
-  _filterUsed: AsyncAddressFilter
   _blockSize: number
   _gapLimit: number
   _isInitialized: boolean
   _subscriptions: Array<(Array<string>) => mixed>
-
-  updateState(reducer: (state: ChainState) => ChainState) {
-    const state = this._state
-    this._state = reducer(state)
-    Object.freeze(this._state)
-  }
+  _addressToIdxSelector: (Array<string>) => Dict<number>
 
   constructor(
     addressGenerator: AsyncAddressGenerator,
-    filterUsed: AsyncAddressFilter,
     blockSize: number = CONFIG.WALLET.DISCOVERY_BLOCK_SIZE,
     gapLimit: number = CONFIG.WALLET.DISCOVERY_GAP_SIZE,
   ) {
     assertTrue(blockSize > gapLimit, 'Block size needs to be > gap limit')
 
     this._getAddresses = addressGenerator
-    this._filterUsed = filterUsed
     this._blockSize = blockSize
     this._gapLimit = gapLimit
 
-    this._state = {
-      addresses: [],
-      addressIndex: {},
-    }
+    this._addresses = []
     this._isInitialized = false
     this._subscriptions = []
+
+    this._addressToIdxSelector = defaultMemoize((addresses: Array<string>) =>
+      _.fromPairs(addresses.map((addr, i) => [addr, i])),
+    )
+  }
+
+  get addresses() {
+    return this._addresses
+  }
+
+  get addressToIdxMap() {
+    return this._addressToIdxSelector(this._addresses)
   }
 
   addSubscriberToNewAddresses(subscriber: (Array<string>) => mixed) {
@@ -56,25 +56,23 @@ export class AddressChain {
   }
 
   async _discoverNewBlock() {
+    const _addresses = this._addresses
     const start = this.size()
     const idxs = _.range(start, start + this._blockSize)
 
     const newAddresses = await this._getAddresses(idxs)
-    const newIndex = _.fromPairs(_.zip(newAddresses, idxs))
 
-    assertTrue(this.size() === start, 'Concurrent modification')
-
-    this.updateState((state) => ({
-      addresses: [...state.addresses, ...newAddresses],
-      addressIndex: {...state.addressIndex, ...newIndex},
-    }))
-
-    this._subscriptions.map((sub) => sub(newAddresses))
+    if (this._addresses !== _addresses) {
+      Logger.warn('Concurrent modification to addresses')
+    } else {
+      this._addresses = [..._addresses, ...newAddresses]
+      this._subscriptions.map((sub) => sub(newAddresses))
+    }
   }
 
   _getLastBlock() {
     this._selfCheck()
-    const block = _.takeRight(this._state.addresses, this._blockSize)
+    const block = _.takeRight(this._addresses, this._blockSize)
     assertTrue(block.length === this._blockSize)
     return block
   }
@@ -88,23 +86,20 @@ export class AddressChain {
 
   _selfCheck() {
     assertTrue(this._isInitialized)
-    assertTrue(this._state.addresses.length % this._blockSize === 0)
-    assertTrue(
-      this._state.addresses.length === _.size(this._state.addressIndex),
-    )
+    assertTrue(this._addresses.length % this._blockSize === 0)
   }
 
-  async sync() {
+  async sync(filterFn: AsyncAddressFilter) {
     let keepSyncing = true
     while (keepSyncing) {
-      keepSyncing = await this._syncStep()
+      keepSyncing = await this._syncStep(filterFn)
     }
   }
 
-  async _syncStep() {
+  async _syncStep(filterFn: AsyncAddressFilter) {
     this._selfCheck()
     const block = this._getLastBlock()
-    const used = await this._filterUsed(block)
+    const used = await filterFn(block)
 
     // Index relative to the start of the block
     // It is okay to "overshoot" with -1 here
@@ -121,25 +116,21 @@ export class AddressChain {
   }
 
   size() {
-    return this._state.addresses.length
+    return this._addresses.length
   }
 
   isMyAddress(address: string) {
-    return this._state.addressIndex[address] != null
+    return this.addressToIdxMap[address] != null
   }
 
   getIndexOfAddress(address: string): number {
     assertTrue(this.isMyAddress(address))
-    const idx = this._state.addressIndex[address]
+    const idx = this.addressToIdxMap[address]
     /* :: if (!idx) throw null */
     return idx
   }
 
-  getAddresses() {
-    return [...this._state.addresses]
-  }
-
   getBlocks() {
-    return _.chunk(this._state.addresses, this._blockSize)
+    return _.chunk(this.addresses, this._blockSize)
   }
 }

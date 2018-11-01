@@ -5,7 +5,7 @@ import App from './App'
 import {name as appName} from './app.json'
 import {Provider} from 'react-redux'
 import getConfiguredStore from './helpers/configureStore'
-import {loadLanguage, setupApiOnlineTracking} from './actions'
+import {loadLanguage, setupHooks} from './actions'
 
 import bluebird from 'bluebird'
 
@@ -24,7 +24,7 @@ global.Promise = bluebird
 
 const store = getConfiguredStore()
 
-store.dispatch(setupApiOnlineTracking())
+store.dispatch(setupHooks())
 // TODO: this is async action, we should wait for it in future
 store.dispatch(loadLanguage())
 

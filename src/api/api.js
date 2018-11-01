@@ -4,9 +4,10 @@ import _ from 'lodash'
 import {Logger} from '../utils/logging'
 import {CONFIG} from '../config'
 import {NotConnectedError, ApiError} from './errors'
-import type {Moment} from 'moment'
 import assert from '../utils/assert'
+import {facadeTransaction} from './facade'
 
+import type {Moment} from 'moment'
 import type {RawTransaction, RawUtxo} from '../types/HistoryTransaction'
 
 type Addresses = Array<string>
@@ -75,7 +76,7 @@ export const fetchNewTxHistory = async (
   })
 
   return {
-    transactions: response,
+    transactions: response.map(facadeTransaction),
     isLast: response.length <= CONFIG.API.TX_HISTORY_RESPONSE_LIMIT,
   }
 }
