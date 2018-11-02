@@ -338,10 +338,10 @@ export class WalletManager {
     // Currently we do not support two updates inside a same batch
     // (and backend shouldn't support it either)
     assert.assert(
-      transactions.length === _.uniq(transactions.map((t) => t.id)).length,
+      transactions.length === _.uniq(transactions.map((tx) => tx.id)).length,
       'Got the same transaction twice in one batch',
     )
-    const updated = transactions.map((t) => this._isUpdatedTransaction(t))
+    const updated = transactions.map((tx) => this._isUpdatedTransaction(tx))
     return _.sum(updated, (x) => (x ? 1 : 0))
   }
 
@@ -373,7 +373,9 @@ export class WalletManager {
 
   _getBlockMetadata(addrs: Array<string>) {
     assert.assert(addrs.length, 'getBlockMetadata: addrs not empty')
-    const metadata = addrs.map((a) => this._state.perAddressSyncMetadata[a])
+    const metadata = addrs.map(
+      (addr) => this._state.perAddressSyncMetadata[addr],
+    )
     // check consistency
     assert.assert(
       metadata,
@@ -430,7 +432,7 @@ export class WalletManager {
         }
 
         const transactionsUpdate = _.fromPairs(
-          response.transactions.map((t) => [t.id, t]),
+          response.transactions.map((tx) => [tx.id, tx]),
         )
         const metadataUpdate = _.fromPairs(
           addrs.map((addr) => [addr, newMetadata]),
