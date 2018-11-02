@@ -8,7 +8,7 @@ import {ObjectValues} from './utils/flow'
 import WalletManager from './crypto/wallet'
 
 import type {Dict, State} from './state'
-import type {HistoryTransaction} from './types/HistoryTransaction'
+import type {HistoryTransaction, RawUtxo} from './types/HistoryTransaction'
 
 // TODO(ppershing): memoize/reselect
 export const transactionsSelector = (
@@ -58,3 +58,20 @@ export const isSynchronizingHistorySelector = (state: State): boolean =>
 
 export const lastHistorySyncErrorSelector = (state: State): any =>
   state.txHistory.lastSyncError
+
+export const utxoBalanceSelector = (state: State) => {
+  if (state.balance.isFetching || !state.balance.utxos) {
+    return null
+  }
+
+  return state.balance.utxos.reduce(
+    (sum: BigNumber, utxo: RawUtxo) => sum.plus(new BigNumber(utxo.amount)),
+    new BigNumber(0),
+  )
+}
+
+export const isFetchingBalanceSelector = (state: State): boolean =>
+  state.balance.isFetching
+
+export const lastFetchingErrorSelector = (state: State): any =>
+  state.balance.lastFetchingError
