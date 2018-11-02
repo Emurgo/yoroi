@@ -58,7 +58,7 @@ export const fetchUTXOs = () => async (
     dispatch(_setUTXOs(utxos))
     dispatch(_setLastError(null))
   } catch (err) {
-    _setLastError(err)
+    dispatch(_setLastError(err))
   } finally {
     dispatch(_endFetching())
   }
