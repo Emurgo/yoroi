@@ -8,26 +8,26 @@ import {TRANSACTION_STATUS} from './types/HistoryTransaction'
 import {ObjectValues} from './utils/flow'
 
 import type {Dict, State} from './state'
-import type {TransactionInfo, RawUtxo} from './types/HistoryTransaction'
+import type {Transaction, TransactionInfo, RawUtxo} from './types/HistoryTransaction'
 
-export const transactionsSelector: (State) => Dict<
+export const transactionsInfoSelector: (State) => Dict<
   TransactionInfo,
 > = createSelector(
-  (state) => state.wallet,
-  (wallet) => {
-    const {transactions, ownAddresses, txsToConfirmations} = wallet
-    return _.mapValues(transactions, (tr) =>
-      processTxHistoryData(tr, ownAddresses, txsToConfirmations[tr.id] || 0),
-    )
-  },
+  (state) => state.wallet.transactions,
+  (state) => state.wallet.ownAddresses,
+  (state) => state.wallet.txsToConfirmations,
+  (transactions, ownAddresses, txsToConfirmations) =>
+    _.mapValues(transactions, (tx: Transaction) =>
+      processTxHistoryData(tx, ownAddresses, txsToConfirmations[tx.id] || 0),
+    ),
 )
 
 export const amountPendingSelector = createSelector(
-  transactionsSelector,
+  transactionsInfoSelector,
   (transactions) => {
     const pending = ObjectValues(transactions)
-      .filter((t) => t.status === TRANSACTION_STATUS.PENDING)
-      .map((t) => t.bruttoAmount)
+      .filter((tx) => tx.status === TRANSACTION_STATUS.PENDING)
+      .map((tx) => tx.bruttoAmount)
 
     if (!pending.length) return null
 
@@ -35,20 +35,18 @@ export const amountPendingSelector = createSelector(
   },
 )
 
+const BigNumberSum = (data: Array<BigNumber>): BigNumber =>
+  data.reduce((x: BigNumber, y) => x.plus(y), new BigNumber(0))
+
 // TODO: make this using reselect
-export const availableAmountSelector = (state: State): ?BigNumber => {
-  const transactions = transactionsSelector(state)
-  const processed = ObjectValues(transactions).filter(
-    (t) => t.status === TRANSACTION_STATUS.SUCCESSFUL,
-  )
-
-  if (!processed.length) return new BigNumber(0)
-
-  return processed.reduce(
-    (x: BigNumber, y) => x.plus(y.bruttoAmount),
-    new BigNumber(0),
-  )
-}
+export const availableAmountSelector = (state: State): ?BigNumber =>
+  createSelector(transactionsInfoSelector, (transactions) => {
+    const processed = ObjectValues(transactions).filter(
+      (tx) => tx.status === TRANSACTION_STATUS.SUCCESSFUL,
+    )
+    const amounts = processed.map((tx) => tx.bruttoAmount)
+    return BigNumberSum(amounts)
+  })
 
 export const receiveAddressesSelector = (state: State) =>
   state.wallet.generatedReceiveAddresses
