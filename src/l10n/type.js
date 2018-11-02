@@ -61,6 +61,8 @@ export type Translation = {
     address: string,
     amount: string,
     continue: string,
+    checkingBalance: string,
+    availableAmount: string,
   },
   ConfirmScreen: {
     confirm: string,

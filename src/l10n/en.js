@@ -67,6 +67,8 @@ const l10n = {
     address: 'Address',
     amount: 'Amount',
     continue: 'Continue',
+    checkingBalance: 'Checking balance...',
+    availableAmount: 'Available amount',
   },
   ConfirmScreen: {
     confirm: 'Confirm',
