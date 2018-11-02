@@ -346,15 +346,28 @@ export class WalletManager {
   }
 
   createMetadataForAddresses(addrs: Array<string>) {
-    addrs.forEach((a) => {
+    addrs.forEach((addr) => {
       assert.assert(
-        _.isUndefined(this._state.perAddressSyncMetadata[a]),
+        _.isUndefined(this._state.perAddressSyncMetadata[addr]),
         'createMetadataForAddresses: new addresses',
       )
-      this._state.perAddressSyncMetadata[a] = {
-        lastUpdated: moment(0),
-        bestBlockNum: 0,
-      }
+    })
+
+    const newMetadata = _.fromPairs(
+      addrs.map((addr) => [
+        addr,
+        {
+          lastUpdated: moment(0),
+          bestBlockNum: 0,
+        },
+      ]),
+    )
+
+    this.updateState({
+      perAddressSyncMetadata: {
+        ...this._state.perAddressSyncMetadata,
+        ...newMetadata,
+      },
     })
   }
 
