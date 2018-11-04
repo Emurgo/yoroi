@@ -51,3 +51,22 @@ export const updateHistoryInBackground = () => async (
     dispatch(_setSyncError(e))
   }
 }
+
+export const mirrorTxHistory = () => (dispatch: Dispatch<any>) => {
+  const transactions = walletManager.transactions
+  const ownAddresses = walletManager.getOwnAddresses()
+  const confirmationCounts = walletManager.confirmationCounts
+  const generatedReceiveAddresses = walletManager.getUiReceiveAddresses()
+
+  dispatch({
+    type: 'Mirror walletManager TxHistory',
+    path: ['wallet'],
+    payload: {
+      transactions,
+      ownAddresses,
+      confirmationCounts,
+      generatedReceiveAddresses,
+    },
+    reducer: (state, payload) => payload,
+  })
+}

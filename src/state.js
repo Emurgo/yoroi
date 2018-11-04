@@ -10,7 +10,7 @@ export type State = {
   wallet: {
     transactions: Dict<Transaction>,
     ownAddresses: Array<string>,
-    txsToConfirmations: Dict<number>,
+    confirmationCounts: Dict<number>,
     generatedReceiveAddresses: Array<{address: string, isUsed: boolean}>,
   },
   txHistory: {
@@ -31,7 +31,7 @@ export const getInitialState = (): State => ({
   wallet: {
     transactions: {},
     ownAddresses: [],
-    txsToConfirmations: {},
+    confirmationCounts: {},
     generatedReceiveAddresses: [],
   },
   txHistory: {

@@ -15,10 +15,10 @@ export const transactionsInfoSelector: (State) => Dict<
 > = createSelector(
   (state) => state.wallet.transactions,
   (state) => state.wallet.ownAddresses,
-  (state) => state.wallet.txsToConfirmations,
-  (transactions, ownAddresses, txsToConfirmations) =>
+  (state) => state.wallet.confirmationCounts,
+  (transactions, ownAddresses, confirmationCounts) =>
     _.mapValues(transactions, (tx: Transaction) =>
-      processTxHistoryData(tx, ownAddresses, txsToConfirmations[tx.id] || 0),
+      processTxHistoryData(tx, ownAddresses, confirmationCounts[tx.id] || 0),
     ),
 )
 

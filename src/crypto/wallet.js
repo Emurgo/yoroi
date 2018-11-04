@@ -68,7 +68,7 @@ const perAddressTxsSelector = (state: WalletHistoryState) => {
   return addressToTxs
 }
 
-const txsToConfirmationsSelector = (state: WalletHistoryState) => {
+const confirmationCountsSelector = (state: WalletHistoryState) => {
   const {perAddressSyncMetadata, transactions} = state
   return _.mapValues(transactions, (tx: Transaction) => {
     if (tx.status !== TRANSACTION_STATUS.SUCCESSFUL) {
@@ -104,7 +104,7 @@ export class WalletManager {
   _doFullSyncMutex: Mutex
   _restoreMutex: Mutex
   _perAddressTxsSelector: any
-  _txsToConfirmationsSelector: any
+  _confirmationCountsSelector: any
   _subscriptions: Array<() => any>
 
   constructor() {
@@ -123,8 +123,8 @@ export class WalletManager {
     this._doFullSyncMutex = {name: 'doFullSyncMutex', lock: null}
     this._restoreMutex = {name: 'restoreMutex', lock: null}
     this._perAddressTxsSelector = defaultMemoize(perAddressTxsSelector)
-    this._txsToConfirmationsSelector = defaultMemoize(
-      txsToConfirmationsSelector,
+    this._confirmationCountsSelector = defaultMemoize(
+      confirmationCountsSelector,
     )
     this._subscriptions = []
   }
@@ -154,8 +154,8 @@ export class WalletManager {
     return this._state.transactions
   }
 
-  get txsToConfirmations() {
-    return this._txsToConfirmationsSelector(this._state)
+  get confirmationCounts() {
+    return this._confirmationCountsSelector(this._state)
   }
 
   _getAccount(masterKey) {

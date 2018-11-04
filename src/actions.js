@@ -5,6 +5,7 @@ import api from './api'
 import l10n from './l10n'
 import {Logger} from './utils/logging'
 import walletManager from './crypto/wallet'
+import {mirrorTxHistory} from './actions/history'
 
 import {type Dispatch} from 'redux'
 
@@ -25,25 +26,6 @@ const _setOnline = (isOnline: boolean) => (dispatch, getState) => {
     type: 'Set isOnline',
     path: ['isOnline'],
     payload: isOnline,
-    reducer: (state, payload) => payload,
-  })
-}
-
-export const mirrorTxHistory = () => (dispatch: Dispatch<any>) => {
-  const transactions = walletManager.transactions
-  const ownAddresses = walletManager.getOwnAddresses()
-  const txsToConfirmations = walletManager.txsToConfirmations
-  const generatedReceiveAddresses = walletManager.getUiReceiveAddresses()
-
-  dispatch({
-    type: 'Mirror walletManager TxHistory',
-    path: ['wallet'],
-    payload: {
-      transactions,
-      ownAddresses,
-      txsToConfirmations,
-      generatedReceiveAddresses,
-    },
     reducer: (state, payload) => payload,
   })
 }
