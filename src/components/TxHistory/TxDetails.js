@@ -6,7 +6,7 @@ import {connect} from 'react-redux'
 import {View} from 'react-native'
 import _ from 'lodash'
 
-import {transactionsSelector} from '../../selectors'
+import {transactionsInfoSelector} from '../../selectors'
 import {printAda} from '../../utils/transactions'
 import {Text} from '../UiKit'
 import Screen from '../../components/Screen'
@@ -97,7 +97,7 @@ const TxDetails = ({navigation, translations, transaction}: Props) => {
 export default compose(
   connect((state, {navigation}) => ({
     translations: getTranslations(state),
-    transaction: transactionsSelector(state)[navigation.getParam('id')],
+    transaction: transactionsInfoSelector(state)[navigation.getParam('id')],
   })),
   withNavigationTitle(({transaction}) =>
     transaction.submittedAt.format('YY-MM-DD hh:mm:ss A'),

@@ -9,7 +9,7 @@ import _ from 'lodash'
 import {Text} from '../UiKit'
 import {
   amountPendingSelector,
-  transactionsSelector,
+  transactionsInfoSelector,
   isSynchronizingHistorySelector,
   lastHistorySyncErrorSelector,
   isOnlineSelector,
@@ -46,7 +46,7 @@ const PendingAmount = ({amount}) => (
 
 const TxHistory = ({
   amountPending,
-  transactions,
+  transactionsInfo,
   navigation,
   isSyncing,
   isOnline,
@@ -69,10 +69,13 @@ const TxHistory = ({
         <RefreshControl onRefresh={updateHistory} refreshing={isSyncing} />
       }
     >
-      {_.isEmpty(transactions) ? (
+      {_.isEmpty(transactionsInfo) ? (
         <NoTxHistory />
       ) : (
-        <TxHistoryList navigation={navigation} transactions={transactions} />
+        <TxHistoryList
+          navigation={navigation}
+          transactions={transactionsInfo}
+        />
       )}
     </Screen>
 
@@ -87,7 +90,7 @@ type ExternalProps = {|
 export default (compose(
   connect(
     (state: State) => ({
-      transactions: transactionsSelector(state),
+      transactionsInfo: transactionsInfoSelector(state),
       amountPending: amountPendingSelector(state),
       isSyncing: isSynchronizingHistorySelector(state),
       lastSyncError: lastHistorySyncErrorSelector(state),

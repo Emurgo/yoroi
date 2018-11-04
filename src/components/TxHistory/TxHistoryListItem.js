@@ -8,7 +8,7 @@ import {View, TouchableHighlight} from 'react-native'
 import {Text} from '../UiKit'
 import {getTransactionAssurance, printAda} from '../../utils/transactions'
 import AdaIcon from '../../assets/AdaIcon'
-import {transactionsSelector} from '../../selectors'
+import {transactionsInfoSelector} from '../../selectors'
 import {TX_HISTORY_ROUTES} from '../../RoutesList'
 import styles from './styles/TxHistoryListItem.style'
 import {COLORS} from '../../styles/config'
@@ -144,6 +144,6 @@ class TxHistoryListItem extends Component<Props> {
 export default compose(
   connect((state, {id}) => ({
     translations: getTranslations(state),
-    transaction: transactionsSelector(state)[id],
+    transaction: transactionsInfoSelector(state)[id],
   })),
 )(TxHistoryListItem)
