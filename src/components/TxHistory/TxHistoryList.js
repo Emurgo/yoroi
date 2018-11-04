@@ -46,7 +46,7 @@ type Props = {
   formatDate: (timestamp: Moment, trans: any) => string,
 }
 
-const getTransactionsByDate = (transactions: Array<TransactionInfo>) =>
+const getTransactionsByDate = (transactions: Dict<TransactionInfo>) =>
   _(transactions)
     .sortBy((t) => -moment(t.submittedAt).unix())
     .groupBy((t) => moment(t.submittedAt).format('L'))

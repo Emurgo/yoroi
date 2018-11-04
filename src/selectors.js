@@ -8,7 +8,11 @@ import {TRANSACTION_STATUS} from './types/HistoryTransaction'
 import {ObjectValues} from './utils/flow'
 
 import type {Dict, State} from './state'
-import type {Transaction, TransactionInfo, RawUtxo} from './types/HistoryTransaction'
+import type {
+  Transaction,
+  TransactionInfo,
+  RawUtxo,
+} from './types/HistoryTransaction'
 
 export const transactionsInfoSelector: (State) => Dict<
   TransactionInfo,
