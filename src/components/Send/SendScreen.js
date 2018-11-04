@@ -5,13 +5,19 @@ import {BigNumber} from 'bignumber.js'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {View, TextInput, TouchableOpacity} from 'react-native'
+import {NavigationEvents} from 'react-navigation'
 import {withHandlers, withState} from 'recompose'
 
 import {SEND_ROUTES} from '../../RoutesList'
 import {Text, Button} from '../UiKit'
-import {availableAmountSelector} from '../../selectors'
+import {
+  isFetchingBalanceSelector,
+  lastFetchingErrorSelector,
+  utxoBalanceSelector,
+} from '../../selectors'
 import {printAda} from '../../utils/transactions'
 import WalletManager from '../../crypto/wallet'
+import {fetchUTXOs} from '../../actions/utxo'
 
 import styles from './styles/SendScreen.style'
 
@@ -46,6 +52,16 @@ const _navigateToQRReader = (navigation, setAddress) =>
     },
   })
 
+const FetchingErrorBanner = () => (
+  <Text>We are experiencing issue with fetching your current balance.</Text>
+)
+
+const AvailableAmount = ({translations, value}) => (
+  <Text>
+    {translations.availableAmount}: {value ? printAda(value) : ''}
+  </Text>
+)
+
 type Props = {
   navigateToQRReader: () => mixed,
   handleConfirm: () => mixed,
@@ -55,6 +71,9 @@ type Props = {
   availableAmount: number,
   setAmount: () => mixed,
   setAddress: () => mixed,
+  isFetchingBalance: boolean,
+  lastFetchingError: any,
+  fetchUTXOs: () => void,
 }
 
 const SendScreen = ({
@@ -66,10 +85,19 @@ const SendScreen = ({
   setAddress,
   handleConfirm,
   availableAmount,
+  isFetchingBalance,
+  lastFetchingError,
+  fetchUTXOs,
 }: Props) => (
   <View style={styles.root}>
+    <NavigationEvents onWillFocus={fetchUTXOs} />
+    {lastFetchingError && <FetchingErrorBanner />}
     <View style={styles.header}>
-      <Text>Available funds: {printAda(availableAmount)}</Text>
+      {isFetchingBalance ? (
+        <Text>{translations.checkingBalance}</Text>
+      ) : (
+        <AvailableAmount translations={translations} value={availableAmount} />
+      )}
     </View>
     <View style={styles.containerQR}>
       <TouchableOpacity onPress={navigateToQRReader}>
@@ -98,10 +126,15 @@ const SendScreen = ({
 )
 
 export default compose(
+  /* prettier-ignore */
   connect((state) => ({
     translations: getTranslations(state),
-    availableAmount: availableAmountSelector(state),
-  })),
+    availableAmount: utxoBalanceSelector(state),
+    isFetchingBalance: isFetchingBalanceSelector(state),
+    lastFetchingError: lastFetchingErrorSelector(state),
+  }), {
+    fetchUTXOs,
+  }),
   withState('address', 'setAddress', ''),
   withState('amount', 'setAmount', ''),
   withHandlers({
