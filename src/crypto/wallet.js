@@ -373,9 +373,8 @@ export class WalletManager {
   async prepareTransaction(
     receiverAddress: string,
     amount: BigNumber,
+    utxos: Array<RawUtxo>,
   ): Promise<PreparedTransactionData> {
-    // For now we do not support custom sender so we query all addresses
-    const utxos = await api.bulkFetchUTXOsForAddresses(this.getOwnAddresses())
     const inputs = utxos.map((utxo) => this.transformUtxoToInput(utxo))
 
     const outputs = [{address: receiverAddress, value: amount.toString()}]

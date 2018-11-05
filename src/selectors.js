@@ -75,3 +75,6 @@ export const isFetchingBalanceSelector = (state: State): boolean =>
 
 export const lastFetchingErrorSelector = (state: State): any =>
   state.balance.lastFetchingError
+
+export const utxosSelector = (state: State): ?Array<RawUtxo> =>
+  state.balance.utxos
