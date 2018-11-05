@@ -109,6 +109,10 @@ export class AddressChain {
   }
 
   _extendAddresses(newAddresses: Array<string>) {
+    assert.assert(
+      _.intersection(this._addresses, newAddresses).length === 0,
+      'extendAddresses received an existing address',
+    )
     this._addresses = [...this._addresses, ...newAddresses]
     this._subscriptions.map((handler) => handler(newAddresses))
   }
