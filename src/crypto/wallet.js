@@ -371,9 +371,9 @@ export class WalletManager {
   }
 
   async prepareTransaction(
+    utxos: Array<RawUtxo>,
     receiverAddress: string,
     amount: BigNumber,
-    utxos: Array<RawUtxo>,
   ): Promise<PreparedTransactionData> {
     const inputs = utxos.map((utxo) => this.transformUtxoToInput(utxo))
 

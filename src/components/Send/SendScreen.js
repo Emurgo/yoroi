@@ -28,14 +28,14 @@ const getTranslations = (state) => state.trans.SendScreen
 
 const handleConfirm = ({navigation, amount, address, utxos}) => async () => {
   // Validate here
-  const isValid = true
+  const isValid = !!utxos
 
-  if (isValid && utxos) {
+  if (isValid) {
     const adaAmount = new BigNumber(amount, 10).times(1000000)
     const transactionData = await WalletManager.prepareTransaction(
+      utxos,
       address,
       adaAmount,
-      utxos,
     )
 
     navigation.navigate(SEND_ROUTES.CONFIRM, {
