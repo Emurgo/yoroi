@@ -8,7 +8,7 @@ import {View, TouchableHighlight} from 'react-native'
 import {Text} from '../UiKit'
 import {getTransactionAssurance, printAda} from '../../utils/transactions'
 import AdaIcon from '../../assets/AdaIcon'
-import {transactionsSelector} from '../../selectors'
+import {transactionsInfoSelector} from '../../selectors'
 import {TX_HISTORY_ROUTES} from '../../RoutesList'
 import styles from './styles/TxHistoryListItem.style'
 import {COLORS} from '../../styles/config'
@@ -18,12 +18,12 @@ import {TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
 
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {SubTranslation} from '../../l10n/typeHelpers'
-import type {HistoryTransaction} from '../../types/HistoryTransaction'
+import type {TransactionInfo} from '../../types/HistoryTransaction'
 
 const getTranslations = (state) => state.trans.TxHistoryListItem
 
 type Props = {
-  transaction: HistoryTransaction,
+  transaction: TransactionInfo,
   navigation: NavigationScreenProp<NavigationState>,
   translations: SubTranslation<typeof getTranslations>,
 }
@@ -35,7 +35,10 @@ const AdaSign = ({color, size}) => (
 )
 
 const _AssuranceLevel = ({transaction, translations}) => {
-  const assuranceLevel = getTransactionAssurance(transaction)
+  const assuranceLevel = getTransactionAssurance(
+    transaction.status,
+    transaction.confirmations,
+  )
   const CHECMKARK = '\u2714'
 
   return (
@@ -101,7 +104,7 @@ class TxHistoryListItem extends Component<Props> {
         <View style={styles.container}>
           <View style={styles.metadataPanel}>
             <View>
-              <Text>{transaction.timestamp.format('hh:mm:ss A')}</Text>
+              <Text>{transaction.submittedAt.format('hh:mm:ss A')}</Text>
             </View>
             <View>
               <AssuranceLevel transaction={transaction} />
@@ -141,6 +144,6 @@ class TxHistoryListItem extends Component<Props> {
 export default compose(
   connect((state, {id}) => ({
     translations: getTranslations(state),
-    transaction: transactionsSelector(state)[id],
+    transaction: transactionsInfoSelector(state)[id],
   })),
 )(TxHistoryListItem)

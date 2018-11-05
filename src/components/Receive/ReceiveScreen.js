@@ -11,9 +11,8 @@ import Screen from '../../components/Screen'
 import {Text, Button} from '../UiKit'
 import AddressDetail from './AddressDetail'
 import AddressesList from './AddressesList'
-import {generateNewReceiveAddress, updateReceiveAddresses} from '../../actions'
+import {generateNewReceiveAddress} from '../../actions'
 import {receiveAddressesSelector} from '../../selectors'
-import {onDidMount} from '../../utils/renderUtils'
 
 import styles from './styles/ReceiveScreen.style'
 
@@ -72,7 +71,6 @@ export default compose(
     }),
     {
       generateNewReceiveAddress,
-      updateReceiveAddresses,
     },
   ),
   withState('addressLimitReached', 'setAddressLimitReached', false),
@@ -85,6 +83,4 @@ export default compose(
       setAddressLimitReached(!success)
     },
   }),
-  // TODO(ppershing): this should be handled better
-  onDidMount(({updateReceiveAddresses}) => updateReceiveAddresses()),
 )(ReceiveScreen)

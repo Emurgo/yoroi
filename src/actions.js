@@ -5,6 +5,7 @@ import api from './api'
 import l10n from './l10n'
 import {Logger} from './utils/logging'
 import walletManager from './crypto/wallet'
+import {mirrorTxHistory} from './actions/history'
 
 import {type Dispatch} from 'redux'
 
@@ -29,9 +30,13 @@ const _setOnline = (isOnline: boolean) => (dispatch, getState) => {
   })
 }
 
-export const setupApiOnlineTracking = () => (dispatch: Dispatch<any>) => {
+export const setupHooks = () => (dispatch: Dispatch<any>) => {
   Logger.debug('setting up api isOnline callback')
   api.setIsOnlineCallback((isOnline) => dispatch(_setOnline(isOnline)))
+  Logger.debug('setting wallet manager hook')
+  walletManager.subscribe(() =>
+    Promise.resolve().then(() => dispatch(mirrorTxHistory())),
+  )
 }
 
 const _updateGeneratedReceiveAddresses = (addresses) => ({

@@ -1,13 +1,6 @@
 import walletManager from '../crypto/wallet'
 import {type Dispatch} from 'redux'
 
-const _updateTransactions = (rawTransactions) => ({
-  type: 'Update transactions',
-  path: ['wallet', 'transactions'],
-  payload: rawTransactions,
-  reducer: (state, payload) => payload,
-})
-
 const _startFetch = () => ({
   type: 'Fetch transaction history',
   path: ['txHistory', 'isSynchronizing'],
@@ -34,8 +27,7 @@ export const updateHistory = () => async (dispatch: Dispatch<any>) => {
   dispatch(_startFetch())
   try {
     await walletManager.__initTestWalletIfNeeded()
-    const response = await walletManager.doFullSync()
-    dispatch(_updateTransactions(response))
+    await walletManager.doFullSync()
     dispatch(_setSyncError(null))
   } catch (e) {
     // TODO(ppershing): should we set error object or just
@@ -51,12 +43,30 @@ export const updateHistoryInBackground = () => async (
 ) => {
   try {
     await walletManager.__initTestWalletIfNeeded()
-    const response = await walletManager.tryDoFullSync()
-    response && dispatch(_updateTransactions(response))
+    await walletManager.tryDoFullSync()
     dispatch(_setSyncError(null))
   } catch (e) {
     // TODO(ppershing): should we set error object or just
     // some message code?
     dispatch(_setSyncError(e))
   }
+}
+
+export const mirrorTxHistory = () => (dispatch: Dispatch<any>) => {
+  const transactions = walletManager.transactions
+  const ownAddresses = walletManager.getOwnAddresses()
+  const confirmationCounts = walletManager.confirmationCounts
+  const generatedReceiveAddresses = walletManager.getUiReceiveAddresses()
+
+  dispatch({
+    type: 'Mirror walletManager TxHistory',
+    path: ['wallet'],
+    payload: {
+      transactions,
+      ownAddresses,
+      confirmationCounts,
+      generatedReceiveAddresses,
+    },
+    reducer: (state, payload) => payload,
+  })
 }

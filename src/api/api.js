@@ -4,10 +4,11 @@ import _ from 'lodash'
 import {Logger} from '../utils/logging'
 import {CONFIG} from '../config'
 import {NotConnectedError, ApiError} from './errors'
-import type {Moment} from 'moment'
 import assert from '../utils/assert'
+import {facadeTransaction} from './facade'
 
-import type {RawTransaction, RawUtxo} from '../types/HistoryTransaction'
+import type {Moment} from 'moment'
+import type {Transaction, RawUtxo} from '../types/HistoryTransaction'
 
 type Addresses = Array<string>
 
@@ -64,7 +65,7 @@ export const setIsOnlineCallback = (cb: IsOnlineCallback) => {
 export const fetchNewTxHistory = async (
   dateFrom: Moment,
   addresses: Addresses,
-): Promise<{isLast: boolean, transactions: Array<RawTransaction>}> => {
+): Promise<{isLast: boolean, transactions: Array<Transaction>}> => {
   assert.preconditionCheck(
     addresses.length <= CONFIG.API.TX_HISTORY_MAX_ADDRESSES,
     'fetchNewTxHistory: too many addresses',
@@ -75,7 +76,7 @@ export const fetchNewTxHistory = async (
   })
 
   return {
-    transactions: response,
+    transactions: response.map(facadeTransaction),
     isLast: response.length <= CONFIG.API.TX_HISTORY_RESPONSE_LIMIT,
   }
 }

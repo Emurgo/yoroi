@@ -6,7 +6,7 @@ import {connect} from 'react-redux'
 import {View} from 'react-native'
 import _ from 'lodash'
 
-import {transactionsSelector} from '../../selectors'
+import {transactionsInfoSelector} from '../../selectors'
 import {printAda} from '../../utils/transactions'
 import {Text} from '../UiKit'
 import Screen from '../../components/Screen'
@@ -18,7 +18,7 @@ import {TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
-import type {HistoryTransaction} from '../../types/HistoryTransaction'
+import type {TransactionInfo} from '../../types/HistoryTransaction'
 
 const Label = ({children}) => <Text style={styles.label}>{children}</Text>
 
@@ -47,7 +47,7 @@ const getTranslations = (state) => state.trans.TxDetails
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,
   translations: SubTranslation<typeof getTranslations>,
-  transaction: HistoryTransaction,
+  transaction: TransactionInfo,
 }
 
 const TxDetails = ({navigation, translations, transaction}: Props) => {
@@ -63,7 +63,7 @@ const TxDetails = ({navigation, translations, transaction}: Props) => {
           <Text>{translations.transactionHeader[transaction.direction]}</Text>
         </View>
         <View>
-          <Text>{transaction.timestamp.format('YYYY-MM-DD hh:mm:ss A')}</Text>
+          <Text>{transaction.submittedAt.format('YYYY-MM-DD hh:mm:ss A')}</Text>
         </View>
       </View>
       <View style={styles.section}>
@@ -83,9 +83,7 @@ const TxDetails = ({navigation, translations, transaction}: Props) => {
       <View style={styles.section}>
         <Label>{translations.txAssuranceLevel}</Label>
         <Text>
-          {translations.formatConfirmations(
-            transaction.confirmations.toNumber(),
-          )}
+          {translations.formatConfirmations(transaction.confirmations)}
         </Text>
       </View>
       <View style={styles.section}>
@@ -99,9 +97,9 @@ const TxDetails = ({navigation, translations, transaction}: Props) => {
 export default compose(
   connect((state, {navigation}) => ({
     translations: getTranslations(state),
-    transaction: transactionsSelector(state)[navigation.getParam('id')],
+    transaction: transactionsInfoSelector(state)[navigation.getParam('id')],
   })),
   withNavigationTitle(({transaction}) =>
-    transaction.timestamp.format('YY-MM-DD hh:mm:ss A'),
+    transaction.submittedAt.format('YY-MM-DD hh:mm:ss A'),
   ),
 )(TxDetails)

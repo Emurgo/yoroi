@@ -1,5 +1,5 @@
 // @flow
-import type {RawTransaction, RawUtxo} from './types/HistoryTransaction'
+import type {Transaction, RawUtxo} from './types/HistoryTransaction'
 import trans from './l10n'
 import type {Translation} from './l10n/type'
 
@@ -8,7 +8,10 @@ export type Dict<T> = {[string]: T}
 export type State = {
   languageCode: string,
   wallet: {
-    transactions: Dict<RawTransaction>,
+    transactions: Dict<Transaction>,
+    ownAddresses: Array<string>,
+    confirmationCounts: Dict<number>,
+    generatedReceiveAddresses: Array<{address: string, isUsed: boolean}>,
   },
   txHistory: {
     isSynchronizing: boolean,
@@ -19,7 +22,6 @@ export type State = {
     lastFetchingError: any,
     utxos: ?Array<RawUtxo>,
   },
-  generatedReceiveAddresses: Array<{address: string, isUsed: boolean}>,
   trans: Translation,
   isOnline: boolean,
 }
@@ -28,6 +30,9 @@ export const getInitialState = (): State => ({
   languageCode: 'en-US',
   wallet: {
     transactions: {},
+    ownAddresses: [],
+    confirmationCounts: {},
+    generatedReceiveAddresses: [],
   },
   txHistory: {
     isSynchronizing: false,
@@ -38,7 +43,6 @@ export const getInitialState = (): State => ({
     lastFetchingError: null,
     utxos: null,
   },
-  generatedReceiveAddresses: [],
   trans,
   isOnline: true, // we are online by default
 })

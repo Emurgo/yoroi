@@ -10,7 +10,7 @@ import _ from 'lodash'
 import moment from 'moment'
 import type {Moment} from 'moment'
 
-import type {HistoryTransaction} from '../../types/HistoryTransaction'
+import type {TransactionInfo} from '../../types/HistoryTransaction'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {Dict} from '../../state'
 
@@ -41,15 +41,15 @@ const DayHeader = ({ts, formatDate}) => (
 )
 
 type Props = {
-  transactions: Dict<HistoryTransaction>,
+  transactions: Dict<TransactionInfo>,
   navigation: NavigationScreenProp<NavigationState>,
   formatDate: (timestamp: Moment, trans: any) => string,
 }
 
-const getTransactionsByDate = (transactions) =>
+const getTransactionsByDate = (transactions: Dict<TransactionInfo>) =>
   _(transactions)
-    .sortBy((t) => -moment(t.timestamp).unix())
-    .groupBy((t) => moment(t.timestamp).format('L'))
+    .sortBy((t) => -moment(t.submittedAt).unix())
+    .groupBy((t) => moment(t.submittedAt).format('L'))
     .toPairs()
     .value()
 
@@ -61,7 +61,7 @@ const TxHistoryList = ({transactions, navigation, formatDate}: Props) => {
     <View style={styles.container}>
       {groupedTransactions.map(([date, transactions]) => (
         <View key={date} style={styles.dayContainer}>
-          <DayHeader ts={transactions[0].timestamp} formatDate={formatDate} />
+          <DayHeader ts={transactions[0].submittedAt} formatDate={formatDate} />
           {transactions.map((transaction) => (
             <TxHistoryListItem
               navigation={navigation}

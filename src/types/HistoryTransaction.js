@@ -19,7 +19,7 @@ export const TRANSACTION_STATUS = {
 
 export type TransactionStatus = $Values<typeof TRANSACTION_STATUS>
 
-export type HistoryTransaction = {
+export type TransactionInfo = {
   id: string,
   fromAddresses: Array<string>,
   toAddresses: Array<string>,
@@ -29,22 +29,20 @@ export type HistoryTransaction = {
   direction: TransactionDirection,
   // TODO(ppershing): why this can't be typical number?
   confirmations: BigNumber,
-  timestamp: Moment,
-  updatedAt: Moment,
+  submittedAt: Moment,
+  lastUpdatedAt: Moment,
   status: TransactionStatus,
 }
 
-export type RawTransaction = {|
-  hash: string,
-  inputs_address: Array<string>,
-  inputs_amount: Array<string>,
-  outputs_address: Array<string>,
-  outputs_amount: Array<string>,
-  block_num: string,
-  time: string,
-  tx_state: TransactionStatus,
-  last_update: string,
-  best_block_num: string,
+export type Transaction = {|
+  id: string,
+  status: TransactionStatus,
+  inputs: Array<{address: string, amount: BigNumber}>,
+  outputs: Array<{address: string, amount: BigNumber}>,
+  blockNum: ?number,
+  submittedAt: Moment,
+  lastUpdatedAt: Moment,
+  bestBlockNum: number,
 |}
 
 export type RawUtxo = {|

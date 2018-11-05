@@ -1,7 +1,5 @@
 // @flow
 
-import moment from 'moment'
-import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
 
 import {
@@ -11,28 +9,25 @@ import {
 import {CONFIG} from '../config'
 import {Logger} from '../utils/logging'
 
-import type {
-  HistoryTransaction,
-  RawTransaction,
-} from '../types/HistoryTransaction'
+import type {TransactionInfo, Transaction} from '../types/HistoryTransaction'
 
 type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
 
 // TODO(ppershing): create Flow type for this
 export const getTransactionAssurance = (
-  transaction: HistoryTransaction,
+  status: $Values<typeof TRANSACTION_STATUS>,
+  confirmations: number,
 ): TransactionAssurance => {
-  if (transaction.status === TRANSACTION_STATUS.PENDING) return 'PENDING'
-  if (transaction.status === TRANSACTION_STATUS.FAILED) return 'FAILED'
-  if (transaction.status !== TRANSACTION_STATUS.SUCCESSFUL) {
-    throw new Error('Internal error - unknown transaciton status')
+  if (status === TRANSACTION_STATUS.PENDING) return 'PENDING'
+  if (status === TRANSACTION_STATUS.FAILED) return 'FAILED'
+  if (status !== TRANSACTION_STATUS.SUCCESSFUL) {
+    throw new Error('Internal error - unknown transaction status')
   }
 
-  // TODO(ppershing): this should be configurable
-  const levels = CONFIG.ASSURANCE_LEVELS
+  const assuranceLevelCutoffs = CONFIG.ASSURANCE_LEVELS
 
-  if (transaction.confirmations < levels.LOW) return 'LOW'
-  if (transaction.confirmations < levels.MEDIUM) return 'MEDIUM'
+  if (confirmations < assuranceLevelCutoffs.LOW) return 'LOW'
+  if (confirmations < assuranceLevelCutoffs.MEDIUM) return 'MEDIUM'
   return 'HIGH'
 }
 
@@ -42,48 +37,40 @@ export const printAda = (amount: BigNumber) => {
   return amount.dividedBy(1000000).toFixed(6)
 }
 
-const _sum = (a: Array<{amount: BigNumber}>): BigNumber =>
+const _sum = (a: Array<{address: string, amount: BigNumber}>): BigNumber =>
   a.reduce((acc: BigNumber, x) => acc.plus(x.amount), new BigNumber(0))
 
 const _multiPartyWarningCache = {}
 
 export const processTxHistoryData = (
-  data: RawTransaction,
+  tx: Transaction,
   ownAddresses: Array<string>,
-): HistoryTransaction => {
-  const parse = (addresses, amounts) =>
-    _.zip(addresses, amounts).map(([address, amount]) => ({
-      address,
-      amount: new BigNumber(amount, 10),
-    }))
-
-  const inputs = parse(data.inputs_address, data.inputs_amount)
-  const outputs = parse(data.outputs_address, data.outputs_amount)
-
-  const ownInputs = inputs.filter((input) =>
-    ownAddresses.includes(input.address),
+  confirmations: number,
+): TransactionInfo => {
+  const ownInputs = tx.inputs.filter(({address}) =>
+    ownAddresses.includes(address),
   )
 
-  const ownOutputs = outputs.filter((input) =>
-    ownAddresses.includes(input.address),
+  const ownOutputs = tx.outputs.filter(({address}) =>
+    ownAddresses.includes(address),
   )
 
-  const hasOnlyOwnInputs = ownInputs.length === inputs.length
-  const hasOnlyOwnOutputs = ownOutputs.length === outputs.length
+  const hasOnlyOwnInputs = ownInputs.length === tx.inputs.length
+  const hasOnlyOwnOutputs = ownOutputs.length === tx.outputs.length
   const isIntraWallet = hasOnlyOwnInputs && hasOnlyOwnOutputs
   const isMultiParty =
-    ownInputs.length > 0 && ownInputs.length !== inputs.length
-  if (isMultiParty && !_multiPartyWarningCache[data.hash]) {
-    _multiPartyWarningCache[data.hash] = true
+    ownInputs.length > 0 && ownInputs.length !== tx.inputs.length
+  if (isMultiParty && !_multiPartyWarningCache[tx.id]) {
+    _multiPartyWarningCache[tx.id] = true
     Logger.warn(
       'I see a multi-party transaction (only some of the inputs are mine)',
     )
     Logger.warn('This probably means broken address discovery!')
-    Logger.warn('Transaction:', data)
+    Logger.warn('Transaction:', tx)
   }
 
-  const totalIn = _sum(inputs)
-  const totalOut = _sum(outputs)
+  const totalIn = _sum(tx.inputs)
+  const totalOut = _sum(tx.outputs)
   const ownIn = _sum(ownInputs)
   const ownOut = _sum(ownOutputs)
 
@@ -140,20 +127,17 @@ export const processTxHistoryData = (
       : TRANSACTION_DIRECTION.SENT
   }
 
-  const bestBlock = new BigNumber(data.best_block_num, 10)
-  const currentBlock = new BigNumber(data.block_num, 10)
-
   return {
-    id: data.hash,
-    fromAddresses: data.inputs_address,
-    toAddresses: data.outputs_address,
+    id: tx.id,
+    fromAddresses: tx.inputs.map(({address}) => address),
+    toAddresses: tx.outputs.map(({address}) => address),
     amount,
     bruttoAmount: brutto,
     fee,
-    confirmations: bestBlock.minus(currentBlock),
+    confirmations,
     direction,
-    timestamp: moment(data.time),
-    updatedAt: moment(data.last_update),
-    status: data.tx_state,
+    submittedAt: tx.submittedAt,
+    lastUpdatedAt: tx.lastUpdatedAt,
+    status: tx.status,
   }
 }

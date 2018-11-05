@@ -1,55 +1,59 @@
 // @flow
 import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
+import {createSelector} from 'reselect'
 
 import {processTxHistoryData} from './utils/transactions'
 import {TRANSACTION_STATUS} from './types/HistoryTransaction'
 import {ObjectValues} from './utils/flow'
-import WalletManager from './crypto/wallet'
 
 import type {Dict, State} from './state'
-import type {HistoryTransaction, RawUtxo} from './types/HistoryTransaction'
+import type {
+  Transaction,
+  TransactionInfo,
+  RawUtxo,
+} from './types/HistoryTransaction'
 
-// TODO(ppershing): memoize/reselect
-export const transactionsSelector = (
-  state: State,
-): Dict<HistoryTransaction> => {
-  // TODO(ppershing): store own addresses in redux state (otherwise
-  // the transactions might not be re-evaluated if addresses change)
-  const ownAddresses = WalletManager.getOwnAddresses()
-  return _.mapValues(state.wallet.transactions, (tr) =>
-    processTxHistoryData(tr, ownAddresses),
-  )
-}
+export const transactionsInfoSelector: (State) => Dict<
+  TransactionInfo,
+> = createSelector(
+  (state) => state.wallet.transactions,
+  (state) => state.wallet.ownAddresses,
+  (state) => state.wallet.confirmationCounts,
+  (transactions, ownAddresses, confirmationCounts) =>
+    _.mapValues(transactions, (tx: Transaction) =>
+      processTxHistoryData(tx, ownAddresses, confirmationCounts[tx.id] || 0),
+    ),
+)
 
-export const amountPendingSelector = (state: State): ?number => {
-  const transactions = transactionsSelector(state)
-  const pending = ObjectValues(transactions)
-    .filter((t) => t.status === TRANSACTION_STATUS.PENDING)
-    .map((t) => t.bruttoAmount)
+export const amountPendingSelector = createSelector(
+  transactionsInfoSelector,
+  (transactions) => {
+    const pending = ObjectValues(transactions)
+      .filter((tx) => tx.status === TRANSACTION_STATUS.PENDING)
+      .map((tx) => tx.bruttoAmount)
 
-  if (!pending.length) return null
+    if (!pending.length) return null
 
-  return pending.reduce((x: BigNumber, y) => x.plus(y), new BigNumber(0))
-}
+    return pending.reduce((x: BigNumber, y) => x.plus(y), new BigNumber(0))
+  },
+)
+
+const BigNumberSum = (data: Array<BigNumber>): BigNumber =>
+  data.reduce((x: BigNumber, y) => x.plus(y), new BigNumber(0))
 
 // TODO: make this using reselect
-export const availableAmountSelector = (state: State): ?BigNumber => {
-  const transactions = transactionsSelector(state)
-  const processed = ObjectValues(transactions).filter(
-    (t) => t.status === TRANSACTION_STATUS.SUCCESSFUL,
-  )
-
-  if (!processed.length) return new BigNumber(0)
-
-  return processed.reduce(
-    (x: BigNumber, y) => x.plus(y.bruttoAmount),
-    new BigNumber(0),
-  )
-}
+export const availableAmountSelector = (state: State): ?BigNumber =>
+  createSelector(transactionsInfoSelector, (transactions) => {
+    const processed = ObjectValues(transactions).filter(
+      (tx) => tx.status === TRANSACTION_STATUS.SUCCESSFUL,
+    )
+    const amounts = processed.map((tx) => tx.bruttoAmount)
+    return BigNumberSum(amounts)
+  })
 
 export const receiveAddressesSelector = (state: State) =>
-  state.generatedReceiveAddresses
+  state.wallet.generatedReceiveAddresses
 
 export const isOnlineSelector = (state: State): boolean => state.isOnline
 
