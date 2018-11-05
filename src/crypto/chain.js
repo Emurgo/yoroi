@@ -3,7 +3,7 @@ import _ from 'lodash'
 import type {Moment} from 'moment'
 
 import {CONFIG} from '../config'
-import {assertTrue, assertFalse} from '../utils/assert'
+import assert from '../utils/assert'
 import {defaultMemoize} from 'reselect'
 import {Logger} from '../utils/logging'
 import * as util from './util'
@@ -60,7 +60,7 @@ export class AddressChain {
     blockSize: number = CONFIG.WALLET.DISCOVERY_BLOCK_SIZE,
     gapLimit: number = CONFIG.WALLET.DISCOVERY_GAP_SIZE,
   ) {
-    assertTrue(blockSize > gapLimit, 'Block size needs to be > gap limit')
+    assert.assert(blockSize > gapLimit, 'Block size needs to be > gap limit')
 
     this._addressGenerator = addressGenerator
     this._blockSize = blockSize
@@ -130,20 +130,20 @@ export class AddressChain {
   _getLastBlock() {
     this._selfCheck()
     const block = _.takeRight(this.addresses, this._blockSize)
-    assertTrue(block.length === this._blockSize)
+    assert.assert(block.length === this._blockSize)
     return block
   }
 
   async initialize() {
-    assertFalse(this._isInitialized)
+    assert.assert(!this._isInitialized)
     await this._discoverNewBlock()
-    assertFalse(this._isInitialized, 'Concurrent modification')
+    assert.assert(!this._isInitialized, 'Concurrent modification')
     this._isInitialized = true
   }
 
   _selfCheck() {
-    assertTrue(this._isInitialized)
-    assertTrue(this._addresses.length % this._blockSize === 0)
+    assert.assert(this._isInitialized)
+    assert.assert(this._addresses.length % this._blockSize === 0)
   }
 
   async sync(filterFn: AsyncAddressFilter) {
@@ -181,7 +181,7 @@ export class AddressChain {
   }
 
   getIndexOfAddress(address: string): number {
-    assertTrue(
+    assert.assert(
       this.isMyAddress(address),
       'getIndexOfAddress:: is not my address',
     )
