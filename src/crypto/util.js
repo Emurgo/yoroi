@@ -18,8 +18,8 @@ import type {
 export type AddressType = 'Internal' | 'External'
 
 export type CryptoAccount = {
-  root_cached_key: string,
   derivation_scheme: string,
+  root_cached_key: string,
 }
 
 export class CardanoError extends ExtendableError {}
