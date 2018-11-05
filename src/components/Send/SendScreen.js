@@ -14,6 +14,7 @@ import {
   isFetchingBalanceSelector,
   lastFetchingErrorSelector,
   utxoBalanceSelector,
+  utxosSelector,
 } from '../../selectors'
 import {printAda} from '../../utils/transactions'
 import WalletManager from '../../crypto/wallet'
@@ -25,13 +26,14 @@ import type {SubTranslation} from '../../l10n/typeHelpers'
 
 const getTranslations = (state) => state.trans.SendScreen
 
-const handleConfirm = ({navigation, amount, address}) => async () => {
+const handleConfirm = ({navigation, amount, address, utxos}) => async () => {
   // Validate here
-  const isValid = true
+  const isValid = !!utxos
 
   if (isValid) {
     const adaAmount = new BigNumber(amount, 10).times(1000000)
     const transactionData = await WalletManager.prepareTransaction(
+      utxos,
       address,
       adaAmount,
     )
@@ -132,6 +134,7 @@ export default compose(
     availableAmount: utxoBalanceSelector(state),
     isFetchingBalance: isFetchingBalanceSelector(state),
     lastFetchingError: lastFetchingErrorSelector(state),
+    utxos: utxosSelector(state),
   }), {
     fetchUTXOs,
   }),
