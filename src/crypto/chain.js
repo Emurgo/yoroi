@@ -6,31 +6,63 @@ import {CONFIG} from '../config'
 import {assertTrue, assertFalse} from '../utils/assert'
 import {defaultMemoize} from 'reselect'
 import {Logger} from '../utils/logging'
+import * as util from './util'
 
 import type {Dict} from '../state'
+import type {CryptoAccount, AddressType} from './util'
 
 export type AddressBlock = [number, Moment, Array<string>]
 
-type AsyncAddressGenerator = (ids: Array<number>) => Promise<Array<string>>
+export class AddressGenerator {
+  account: CryptoAccount
+  type: AddressType
+
+  constructor(account: CryptoAccount, type: AddressType) {
+    this.account = account
+    this.type = type
+  }
+
+  generate(idxs: Array<number>): Promise<Array<string>> {
+    return util.getAddresses(this.account, this.type, idxs)
+  }
+
+  toJSON() {
+    return {
+      account: this.account,
+      type: this.type,
+    }
+  }
+
+  static fromJSON(data: any) {
+    const {account, type} = data
+    return new AddressGenerator(account, type)
+  }
+}
+
 type AsyncAddressFilter = (addresses: Array<string>) => Promise<Array<string>>
 
+type Addresses = Array<string>
+
+const _addressToIdxSelector = (addresses: Array<string>) =>
+  _.fromPairs(addresses.map((addr, i) => [addr, i]))
+
 export class AddressChain {
-  _addresses: Array<string>
-  _getAddresses: AsyncAddressGenerator
+  _addresses: Addresses
+  _addressGenerator: AddressGenerator
   _blockSize: number
   _gapLimit: number
   _isInitialized: boolean
-  _subscriptions: Array<(Array<string>) => mixed>
-  _addressToIdxSelector: (Array<string>) => Dict<number>
+  _subscriptions: Array<(Addresses) => mixed>
+  _addressToIdxSelector: (Addresses) => Dict<number>
 
   constructor(
-    addressGenerator: AsyncAddressGenerator,
+    addressGenerator: AddressGenerator,
     blockSize: number = CONFIG.WALLET.DISCOVERY_BLOCK_SIZE,
     gapLimit: number = CONFIG.WALLET.DISCOVERY_GAP_SIZE,
   ) {
     assertTrue(blockSize > gapLimit, 'Block size needs to be > gap limit')
 
-    this._getAddresses = addressGenerator
+    this._addressGenerator = addressGenerator
     this._blockSize = blockSize
     this._gapLimit = gapLimit
 
@@ -38,9 +70,30 @@ export class AddressChain {
     this._isInitialized = false
     this._subscriptions = []
 
-    this._addressToIdxSelector = defaultMemoize((addresses: Array<string>) =>
-      _.fromPairs(addresses.map((addr, i) => [addr, i])),
+    this._addressToIdxSelector = defaultMemoize(_addressToIdxSelector)
+  }
+
+  toJSON() {
+    return {
+      gapLimit: this._gapLimit,
+      blockSize: this._blockSize,
+      addresses: this._addresses,
+      addressGenerator: this._addressGenerator.toJSON(),
+    }
+  }
+
+  static fromJSON(data: any) {
+    const {gapLimit, blockSize, addresses, addressGenerator} = data
+    const chain = new AddressChain(
+      AddressGenerator.fromJSON(addressGenerator),
+      blockSize,
+      gapLimit,
     )
+    // is initialized && addresses
+    chain._extendAddresses(addresses)
+    chain._isInitialized = true
+    chain._selfCheck()
+    return chain
   }
 
   get addresses() {
@@ -48,31 +101,35 @@ export class AddressChain {
   }
 
   get addressToIdxMap() {
-    return this._addressToIdxSelector(this._addresses)
+    return this._addressToIdxSelector(this.addresses)
   }
 
-  addSubscriberToNewAddresses(subscriber: (Array<string>) => mixed) {
+  addSubscriberToNewAddresses(subscriber: (Addresses) => mixed) {
     this._subscriptions.push(subscriber)
   }
 
+  _extendAddresses(newAddresses: Array<string>) {
+    this._addresses = [...this._addresses, ...newAddresses]
+    this._subscriptions.map((handler) => handler(newAddresses))
+  }
+
   async _discoverNewBlock() {
-    const _addresses = this._addresses
+    const addresses = this.addresses
     const start = this.size()
     const idxs = _.range(start, start + this._blockSize)
 
-    const newAddresses = await this._getAddresses(idxs)
+    const newAddresses = await this._addressGenerator.generate(idxs)
 
-    if (this._addresses !== _addresses) {
+    if (this.addresses !== addresses) {
       Logger.warn('Concurrent modification to addresses')
     } else {
-      this._addresses = [..._addresses, ...newAddresses]
-      this._subscriptions.map((sub) => sub(newAddresses))
+      this._extendAddresses(newAddresses)
     }
   }
 
   _getLastBlock() {
     this._selfCheck()
-    const block = _.takeRight(this._addresses, this._blockSize)
+    const block = _.takeRight(this.addresses, this._blockSize)
     assertTrue(block.length === this._blockSize)
     return block
   }

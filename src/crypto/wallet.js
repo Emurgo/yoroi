@@ -5,7 +5,7 @@ import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
 import {defaultMemoize} from 'reselect'
 
-import {AddressChain} from './chain'
+import {AddressChain, AddressGenerator} from './chain'
 import * as util from './util'
 import {ObjectValues} from '../utils/flow'
 import api from '../api'
@@ -179,11 +179,11 @@ export class WalletManager {
     )
 
     // initialize address chains
-    this._internalChain = new AddressChain((ids) =>
-      util.getInternalAddresses(account, ids),
+    this._internalChain = new AddressChain(
+      new AddressGenerator(account, 'Internal'),
     )
-    this._externalChain = new AddressChain((ids) =>
-      util.getExternalAddresses(account, ids),
+    this._externalChain = new AddressChain(
+      new AddressGenerator(account, 'External'),
     )
 
     // We want to monitor all new addresses
