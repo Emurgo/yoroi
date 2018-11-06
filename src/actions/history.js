@@ -1,3 +1,4 @@
+// @flow
 import walletManager from '../crypto/wallet'
 import {Logger} from '../utils/logging'
 
@@ -28,7 +29,6 @@ export const updateHistory = () => async (dispatch: Dispatch<any>) => {
   // TODO(ppershing): abort previous request if still fetching
   dispatch(_startFetch())
   try {
-    await walletManager.__initTestWalletIfNeeded()
     await walletManager.doFullSync()
     dispatch(_setSyncError(null))
   } catch (e) {
@@ -45,7 +45,6 @@ export const updateHistoryInBackground = () => async (
   dispatch: Dispatch<any>,
 ) => {
   try {
-    await walletManager.__initTestWalletIfNeeded()
     await walletManager.tryDoFullSync()
     dispatch(_setSyncError(null))
   } catch (e) {
@@ -56,15 +55,17 @@ export const updateHistoryInBackground = () => async (
 }
 
 export const mirrorTxHistory = () => (dispatch: Dispatch<any>) => {
+  const isInitialized = walletManager.isInitialized
   const transactions = walletManager.transactions
-  const ownAddresses = walletManager.getOwnAddresses()
+  const ownAddresses = walletManager.ownAddresses
   const confirmationCounts = walletManager.confirmationCounts
-  const generatedReceiveAddresses = walletManager.getUiReceiveAddresses()
+  const generatedReceiveAddresses = walletManager.receiveAddresses
 
   dispatch({
     type: 'Mirror walletManager TxHistory',
     path: ['wallet'],
     payload: {
+      isInitialized,
       transactions,
       ownAddresses,
       confirmationCounts,
