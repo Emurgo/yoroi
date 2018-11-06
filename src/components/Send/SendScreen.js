@@ -16,33 +16,120 @@ import {
   utxoBalanceSelector,
   utxosSelector,
 } from '../../selectors'
+import {Logger} from '../../utils/logging'
 import {printAda} from '../../utils/transactions'
+import {withTranslations} from '../../utils/renderUtils'
 import WalletManager from '../../crypto/wallet'
 import {fetchUTXOs} from '../../actions/utxo'
+import {CardanoError} from '../../crypto/util'
+import {
+  INVALID_AMOUNT_CODES,
+  validateAmount,
+  validateAddressAsync,
+} from '../../utils/validators'
 
 import styles from './styles/SendScreen.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
+import type {
+  AddressValidationErrors,
+  AmountValidationErrors,
+} from '../../utils/validators'
 
 const getTranslations = (state) => state.trans.SendScreen
 
-const handleConfirm = ({navigation, amount, address, utxos}) => async () => {
-  // Validate here
-  const isValid = !!utxos
+const convertToAda = (amount) => new BigNumber(amount, 10).times(1000000)
+
+const getTransactionData = (utxos, address, amount) => {
+  const adaAmount = convertToAda(amount)
+  return WalletManager.prepareTransaction(utxos, address, adaAmount)
+}
+
+const validateBalanceAsync = async (utxos, address, amount) => {
+  try {
+    await getTransactionData(utxos, address, amount)
+  } catch (err) {
+    // TODO: detect precise error (NotEnoughInput)
+    if (err instanceof CardanoError) {
+      return {invalidAmount: INVALID_AMOUNT_CODES.INSUFFICIENT_BALANCE}
+    } else {
+      // TODO: we should show notification based on error type
+      Logger.error('Failed while preparing transaction', err)
+    }
+  }
+
+  return null
+}
+
+const handleValidateAddress = ({
+  utxos,
+  address,
+  amount,
+  amountErrors,
+  setAddressErrors,
+  setAmountErrors,
+}) => async () => {
+  const addressErrors = await validateAddressAsync(address)
+  setAddressErrors(addressErrors)
+
+  if (
+    utxos &&
+    !addressErrors &&
+    (!amountErrors ||
+      amountErrors.invalidAmount === INVALID_AMOUNT_CODES.INSUFFICIENT_BALANCE)
+  ) {
+    const balanceErrors = await validateBalanceAsync(utxos, address, amount)
+    setAmountErrors(balanceErrors)
+  }
+}
+
+const handleValidateAmount = ({
+  utxos,
+  address,
+  amount,
+  addressErrors,
+  setAmountErrors,
+}) => async () => {
+  const amountErrors = validateAmount(amount)
+  setAmountErrors(amountErrors)
+
+  if (utxos && !addressErrors && !amountErrors) {
+    const balanceErrors = await validateBalanceAsync(utxos, address, amount)
+    setAmountErrors(balanceErrors)
+  }
+}
+
+const handleConfirm = ({
+  navigation,
+  utxos,
+  address,
+  amount,
+  setAddressErrors,
+  setAmountErrors,
+}) => async () => {
+  const addressErrors = await validateAddressAsync(address)
+  const amountErrors = validateAmount(amount)
+  const isFormValid = !addressErrors && !amountErrors
+
+  /* prettier-ignore */
+  const balanceErrors = (isFormValid && !!utxos)
+    ? await validateBalanceAsync(utxos, address, amount)
+    : null
+
+  const isValid = !!utxos && isFormValid && !balanceErrors
 
   if (isValid) {
-    const adaAmount = new BigNumber(amount, 10).times(1000000)
-    const transactionData = await WalletManager.prepareTransaction(
-      utxos,
-      address,
-      adaAmount,
-    )
+    const adaAmount = convertToAda(amount)
+    const transactionData = await getTransactionData(utxos, address, amount)
 
     navigation.navigate(SEND_ROUTES.CONFIRM, {
       address,
       amount: adaAmount,
       transactionData,
     })
+  } else {
+    setAddressErrors(addressErrors)
+    setAmountErrors(amountErrors || balanceErrors)
   }
 }
 
@@ -54,14 +141,22 @@ const _navigateToQRReader = (navigation, setAddress) =>
     },
   })
 
-const FetchingErrorBanner = () => (
-  <Text>We are experiencing issue with fetching your current balance.</Text>
+const handleWillFocus = ({isFetching, fetchUTXOs}) => () => {
+  if (!isFetching) {
+    fetchUTXOs()
+  }
+}
+
+const FetchingErrorBanner = withTranslations(getTranslations)(
+  ({translations}) => <Text>{translations.fetchingError}</Text>,
 )
 
-const AvailableAmount = ({translations, value}) => (
-  <Text>
-    {translations.availableAmount}: {value ? printAda(value) : ''}
-  </Text>
+const AvailableAmount = withTranslations(getTranslations)(
+  ({translations, value}) => (
+    <Text>
+      {translations.availableAmount}: {value ? printAda(value) : ''}
+    </Text>
+  ),
 )
 
 type Props = {
@@ -75,57 +170,93 @@ type Props = {
   setAddress: () => mixed,
   isFetchingBalance: boolean,
   lastFetchingError: any,
-  fetchUTXOs: () => void,
+  handleWillFocus: () => void,
+  handleValidateAddress: () => mixed,
+  handleValidateAmount: () => mixed,
+  addressErrors?: AddressValidationErrors,
+  amountErrors?: AmountValidationErrors,
 }
 
 const SendScreen = ({
   navigateToQRReader,
+  handleConfirm,
   translations,
   amount,
   address,
+  availableAmount,
   setAmount,
   setAddress,
-  handleConfirm,
-  availableAmount,
   isFetchingBalance,
   lastFetchingError,
-  fetchUTXOs,
-}: Props) => (
-  <View style={styles.root}>
-    <NavigationEvents onWillFocus={fetchUTXOs} />
-    {lastFetchingError && <FetchingErrorBanner />}
-    <View style={styles.header}>
-      {isFetchingBalance ? (
-        <Text>{translations.checkingBalance}</Text>
-      ) : (
-        <AvailableAmount translations={translations} value={availableAmount} />
-      )}
-    </View>
-    <View style={styles.containerQR}>
-      <TouchableOpacity onPress={navigateToQRReader}>
-        <View style={styles.scanIcon} />
-      </TouchableOpacity>
-      <Text style={styles.label}>{translations.scanCode}</Text>
-    </View>
-    <View style={styles.inputContainer}>
-      <TextInput
-        style={styles.inputText}
-        value={address}
-        placeholder={translations.address}
-        onChangeText={setAddress}
-      />
-      <TextInput
-        style={styles.inputText}
-        keyboardType={'numeric'}
-        value={amount}
-        placeholder={translations.amount}
-        onChangeText={setAmount}
-      />
-    </View>
+  handleWillFocus,
+  handleValidateAddress,
+  handleValidateAmount,
+  addressErrors,
+  amountErrors,
+}: Props) => {
+  const disabled =
+    isFetchingBalance ||
+    !!lastFetchingError ||
+    !!addressErrors ||
+    !!amountErrors
 
-    <Button onPress={handleConfirm} title={translations.continue} />
-  </View>
-)
+  return (
+    <View style={styles.root}>
+      <NavigationEvents onWillFocus={handleWillFocus} />
+      {lastFetchingError && <FetchingErrorBanner />}
+      <View style={styles.header}>
+        {isFetchingBalance ? (
+          <Text>{translations.checkingBalance}</Text>
+        ) : (
+          <AvailableAmount value={availableAmount} />
+        )}
+      </View>
+      <View style={styles.containerQR}>
+        <TouchableOpacity onPress={navigateToQRReader}>
+          <View style={styles.scanIcon} />
+        </TouchableOpacity>
+        <Text style={styles.label}>{translations.scanCode}</Text>
+      </View>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.inputText}
+          value={address}
+          placeholder={translations.address}
+          onChangeText={setAddress}
+          onEndEditing={handleValidateAddress}
+        />
+        {/* prettier-ignore */ !!addressErrors &&
+          addressErrors.invalidAddress && (
+          <Text style={styles.error}>
+            {translations.validationErrors.invalidAddress}
+          </Text>
+        )}
+        <TextInput
+          style={styles.inputText}
+          keyboardType={'numeric'}
+          value={amount}
+          placeholder={translations.amount}
+          onChangeText={setAmount}
+          onEndEditing={handleValidateAmount}
+        />
+        {/* prettier-ignore */ !!amountErrors &&
+          !!amountErrors.invalidAmount && (
+          <Text style={styles.error}>
+            {translations
+              .validationErrors
+              .amountErrorByErrorCode(amountErrors.invalidAmount)}
+          </Text>
+        )}
+      </View>
+
+      <Button
+        onPress={handleConfirm}
+        title={translations.continue}
+        disabled={disabled}
+      />
+    </View>
+  )
+}
 
 export default compose(
   /* prettier-ignore */
@@ -140,9 +271,14 @@ export default compose(
   }),
   withState('address', 'setAddress', ''),
   withState('amount', 'setAmount', ''),
+  withState('addressErrors', 'setAddressErrors', {addressIsRequired: true}),
+  withState('amountErrors', 'setAmountErrors', {amountIsRequired: true}),
   withHandlers({
     navigateToQRReader: ({navigation, setAddress}) => (event) =>
       _navigateToQRReader(navigation, setAddress),
     handleConfirm,
+    handleValidateAddress,
+    handleValidateAmount,
+    handleWillFocus,
   }),
 )(SendScreen)

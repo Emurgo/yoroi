@@ -1,4 +1,7 @@
 // @flow
+import {BigNumber} from 'bignumber.js'
+import {isValidAddress} from '../crypto/util'
+
 export type PasswordValidationErrors = {
   passwordReq?: boolean,
   passwordConfirmationReq?: boolean,
@@ -7,6 +10,22 @@ export type PasswordValidationErrors = {
 
 export type WalletNameValidationErrors = {
   walletNameLength?: boolean,
+}
+
+export type AddressValidationErrors = {
+  addressIsRequired?: boolean,
+  invalidAddress?: boolean,
+}
+
+export const INVALID_AMOUNT_CODES = {
+  POSITIVE_AMOUNT: 'positiveAmount',
+  INSUFFICIENT_BALANCE: 'insufficientBalance',
+}
+
+export type AmountValidationCode = $Values<typeof INVALID_AMOUNT_CODES>
+export type AmountValidationErrors = {
+  amountIsRequired?: boolean,
+  invalidAmount?: AmountValidationCode,
 }
 
 export const validatePassword = (
@@ -36,4 +55,27 @@ export const validateWalletName = (
   }
 
   return validations
+}
+
+export const validateAddressAsync = async (
+  address: string,
+): Promise<?AddressValidationErrors> => {
+  if (!address) {
+    return {addressIsRequired: true}
+  }
+
+  const isValid = await isValidAddress(address)
+  return isValid ? null : {invalidAddress: true}
+}
+
+export const validateAmount = (amount: string): ?AmountValidationErrors => {
+  if (!amount) {
+    return {amountIsRequired: true}
+  }
+
+  if (new BigNumber(amount).isLessThan(0)) {
+    return {invalidAmount: INVALID_AMOUNT_CODES.POSITIVE_AMOUNT}
+  }
+
+  return null
 }

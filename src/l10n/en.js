@@ -69,6 +69,15 @@ const l10n = {
     continue: 'Continue',
     checkingBalance: 'Checking balance...',
     availableAmount: 'Available amount',
+    validationErrors: {
+      invalidAddress: 'Please enter valid address',
+      positiveAmount: 'Please enter valid amount',
+      insufficientBalance: 'Not enough money to make this transaction',
+      amountErrorByErrorCode: (errorCode: string) =>
+        l10n.SendScreen.validationErrors[errorCode],
+    },
+    fetchingError:
+      'We are experiencing issue with fetching your current balance.',
   },
   ConfirmScreen: {
     confirm: 'Confirm',

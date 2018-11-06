@@ -40,6 +40,11 @@ const styles = {
   },
   continueButton: {},
   continueButtonText: {},
+  error: {
+    color: COLORS.RED,
+    marginLeft: 10,
+    marginRight: 10,
+  },
 }
 
 export default styles
