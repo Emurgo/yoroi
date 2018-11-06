@@ -18,8 +18,8 @@ import type {
 export type AddressType = 'Internal' | 'External'
 
 export type CryptoAccount = {
-  root_cached_key: string,
   derivation_scheme: string,
+  root_cached_key: string,
 }
 
 export class CardanoError extends ExtendableError {}
@@ -75,7 +75,7 @@ export const decryptMasterKey = async (
   return decryptedBytesHex
 }
 
-const _getAddresses = (
+export const getAddresses = (
   account: CryptoAccount,
   type: AddressType,
   indexes: Array<number>,
@@ -90,12 +90,12 @@ export const ADDRESS_TYPE_INDEX = {
 export const getExternalAddresses = (
   account: CryptoAccount,
   indexes: Array<number>,
-) => _getAddresses(account, 'External', indexes)
+) => getAddresses(account, 'External', indexes)
 
 export const getInternalAddresses = (
   account: CryptoAccount,
   indexes: Array<number>,
-) => _getAddresses(account, 'Internal', indexes)
+) => getAddresses(account, 'Internal', indexes)
 
 export const getAddressInHex = (address: string): string => {
   try {

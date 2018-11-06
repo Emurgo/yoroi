@@ -1,7 +1,7 @@
 // @flow
 import jestSetup from '../jestSetup'
 
-import {AddressChain} from './chain'
+import {AddressChain, AddressGenerator} from './chain'
 
 jestSetup.setup()
 
@@ -16,7 +16,10 @@ describe('AddressChain', () => {
   beforeEach(() => {
     used = []
     chain = new AddressChain(
-      (ids) => Promise.resolve(ids.map(getAddr)),
+      // $FlowFixMe (this is a mock)
+      {
+        generate: (ids) => Promise.resolve(ids.map(getAddr)),
+      },
       5 /* block size */,
       2 /* gap limit */,
     )
@@ -74,5 +77,33 @@ describe('AddressChain', () => {
     expect(() => {
       chain.getIndexOfAddress('wrong')
     }).toThrow()
+  })
+
+  it('can continue after rehydrating', async () => {
+    const account = {
+      derivation_scheme: 'V2',
+      root_cached_key:
+        '7f53efa3c08093db3824235769079e96ef96b6680fc254f6c021ec420e4d1555' +
+        'b5bafb0b1fc6c8040cc8f69f7c1948dfb4dcadec4acd09730c0efb39c6159362',
+    }
+    chain = new AddressChain(new AddressGenerator(account, 'Internal'), 5, 2)
+
+    expect.assertions(2)
+
+    await chain.initialize()
+
+    const data = chain.toJSON()
+    const chain2 = AddressChain.fromJSON(data)
+
+    const used = ['Ae2tdPwUPEZFVwV6LJYdEMUAChDW6L6v97WdKjqVb4TzyKmR31otsidBnJx']
+
+    const filter = (addresses) => {
+      return Promise.resolve(addresses.filter((addr) => used.includes(addr)))
+    }
+
+    await chain.sync(filter)
+    await chain2.sync(filter)
+    expect(chain.size()).toBe(10)
+    expect(chain2.addresses).toEqual(chain.addresses)
   })
 })

@@ -1,4 +1,6 @@
 import walletManager from '../crypto/wallet'
+import {Logger} from '../utils/logging'
+
 import {type Dispatch} from 'redux'
 
 const _startFetch = () => ({
@@ -32,6 +34,7 @@ export const updateHistory = () => async (dispatch: Dispatch<any>) => {
   } catch (e) {
     // TODO(ppershing): should we set error object or just
     // some message code?
+    Logger.error(e)
     dispatch(_setSyncError(e))
   } finally {
     dispatch(_endFetch())
