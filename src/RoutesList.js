@@ -32,6 +32,7 @@ export const SETTINGS_ROUTES = {
   CHANGE_WALLET_NAME: 'change-wallet-name',
   TERMS_OF_USE: 'terms-of-use',
   SUPPORT: 'support',
+  FINGERPRINT_LINK: 'fingerprint-link',
 }
 
 export const WALLET_ROUTES = {

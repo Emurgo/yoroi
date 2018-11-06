@@ -36,7 +36,8 @@ public class MainApplication extends Application implements ReactApplication {
             new RandomBytesPackage(),
             new RNFSPackage(),
             new LinearGradientPackage(),
-            new SvgPackage()
+            new SvgPackage(),
+            new KeyStorePackage()
       );
     }
 
