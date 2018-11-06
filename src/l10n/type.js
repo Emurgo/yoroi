@@ -63,6 +63,13 @@ export type Translation = {
     continue: string,
     checkingBalance: string,
     availableAmount: string,
+    validationErrors: {
+      invalidAddress: string,
+      positiveAmount: string,
+      insufficientBalance: string,
+      amountErrorByErrorCode: (code: any) => string,
+    },
+    fetchingError: string,
   },
   ConfirmScreen: {
     confirm: string,
