@@ -18,7 +18,12 @@ rustup target add wasm32-unknown-unknown --toolchain nightly
 
 ```
 node_modules/react-native/scripts/ios-install-third-party.sh
+node_modules/react-native/scripts/ios-configure-glog.sh
+yarn start
+> Update Signing Team in Xcode
+> Compile in Xcode (will error)
 node_modules/react-native/third-party/glog-0.3.5/configure
+> Compile in Xcode (will work now)
 ```
 
 ### android
