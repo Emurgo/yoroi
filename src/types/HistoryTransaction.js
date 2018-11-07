@@ -40,9 +40,9 @@ export type Transaction = {|
   inputs: Array<{address: string, amount: BigNumber}>,
   outputs: Array<{address: string, amount: BigNumber}>,
   blockNum: ?number,
+  bestBlockNum: number,
   submittedAt: Moment,
   lastUpdatedAt: Moment,
-  bestBlockNum: number,
 |}
 
 export type RawUtxo = {|
