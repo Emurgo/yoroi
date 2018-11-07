@@ -68,12 +68,13 @@ export const validateAddressAsync = async (
   return isValid ? null : {invalidAddress: true}
 }
 
-export const validateAmount = (amount: string): ?AmountValidationErrors => {
-  if (!amount) {
+export const validateAmount = (value: string): ?AmountValidationErrors => {
+  if (!value) {
     return {amountIsRequired: true}
   }
 
-  if (new BigNumber(amount).isLessThan(0)) {
+  const amount = new BigNumber(value, 10)
+  if (amount.isNaN() || amount.isLessThan(0)) {
     return {invalidAmount: INVALID_AMOUNT_CODES.POSITIVE_AMOUNT}
   }
 
