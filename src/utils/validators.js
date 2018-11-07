@@ -18,7 +18,7 @@ export type AddressValidationErrors = {
 }
 
 export const INVALID_AMOUNT_CODES = {
-  POSITIVE_AMOUNT: 'positiveAmount',
+  INVALID_AMOUNT: 'invalidAmount',
   INSUFFICIENT_BALANCE: 'insufficientBalance',
 }
 
@@ -75,7 +75,7 @@ export const validateAmount = (value: string): ?AmountValidationErrors => {
 
   const amount = new BigNumber(value, 10)
   if (amount.isNaN() || amount.isLessThan(0)) {
-    return {invalidAmount: INVALID_AMOUNT_CODES.POSITIVE_AMOUNT}
+    return {invalidAmount: INVALID_AMOUNT_CODES.INVALID_AMOUNT}
   }
 
   return null

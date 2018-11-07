@@ -49,7 +49,7 @@ const getTransactionData = (utxos, address, amount) => {
   return walletManager.prepareTransaction(utxos, address, adaAmount)
 }
 
-const validateBalanceAsync = async (utxos, address, amount) => {
+const validateFeeAsync = async (utxos, address, amount) => {
   try {
     await getTransactionData(utxos, address, amount)
   } catch (err) {
@@ -65,13 +65,13 @@ const validateBalanceAsync = async (utxos, address, amount) => {
   return null
 }
 
-const canValidateBalance = (utxos, addressErrors, amountErrors) =>
+const shouldValidateFee = (utxos, addressErrors, amountErrors) =>
   utxos &&
   !addressErrors &&
   (!amountErrors ||
     amountErrors.invalidAmount === INVALID_AMOUNT_CODES.INSUFFICIENT_BALANCE)
 
-const clearBalanceErrors = (amountErrors) => {
+const clearFeeErrors = (amountErrors) => {
   if (
     amountErrors &&
     amountErrors.invalidAmount === INVALID_AMOUNT_CODES.INSUFFICIENT_BALANCE
@@ -91,17 +91,17 @@ const handleChangeAddress = ({
 }) => async (address) => {
   setAddress(address)
 
-  const amountErrors = clearBalanceErrors(validationErrors.amount)
+  const amountErrors = clearFeeErrors(validationErrors.amount)
   const addressErrors = await validateAddressAsync(address)
-  const amountOrBalanceErrors = canValidateBalance(
+  const amountOrFeeErrors = shouldValidateFee(
     utxos,
     addressErrors,
     validationErrors.amount,
   )
-    ? await validateBalanceAsync(utxos, address, amount)
+    ? await validateFeeAsync(utxos, address, amount)
     : amountErrors
 
-  setValidationErrors({address: addressErrors, amount: amountOrBalanceErrors})
+  setValidationErrors({address: addressErrors, amount: amountOrFeeErrors})
 }
 
 const handleChangeAmount = ({
@@ -114,15 +114,15 @@ const handleChangeAmount = ({
   setAmount(amount)
 
   const amountErrors = validateAmount(amount)
-  const amountOrBalanceErrors = canValidateBalance(
+  const amountOrFeeErrors = shouldValidateFee(
     utxos,
     validationErrors.address,
     amountErrors,
   )
-    ? await validateBalanceAsync(utxos, address, amount)
+    ? await validateFeeAsync(utxos, address, amount)
     : amountErrors
 
-  setValidationErrors({...validationErrors, amount: amountOrBalanceErrors})
+  setValidationErrors({...validationErrors, amount: amountOrFeeErrors})
 }
 
 const handleConfirm = ({
@@ -135,14 +135,14 @@ const handleConfirm = ({
 }) => async () => {
   const addressErrors = await validateAddressAsync(address)
   const amountErrors = validateAmount(amount)
-  const isFormValid = !addressErrors && !amountErrors
+  const isFormValid = shouldValidateFee(utxos, addressErrors, amountErrors)
 
   /* prettier-ignore */
-  const balanceErrors = (isFormValid && !!utxos)
-    ? await validateBalanceAsync(utxos, address, amount)
+  const feeErrors = isFormValid
+    ? await validateFeeAsync(utxos, address, amount)
     : null
 
-  const isValid = !!utxos && isFormValid && !balanceErrors
+  const isValid = isFormValid && !feeErrors
 
   if (isValid) {
     const adaAmount = convertToAda(amount)
@@ -161,7 +161,7 @@ const handleConfirm = ({
   } else {
     setValidationErrors({
       address: addressErrors,
-      amount: amountErrors || balanceErrors,
+      amount: amountErrors || feeErrors,
     })
   }
 }

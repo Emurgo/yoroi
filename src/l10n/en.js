@@ -71,7 +71,7 @@ const l10n = {
     availableAmount: 'Available amount',
     validationErrors: {
       invalidAddress: 'Please enter valid address',
-      positiveAmount: 'Please enter valid amount',
+      invalidAmount: 'Please enter valid amount',
       insufficientBalance: 'Not enough money to make this transaction',
       amountErrorByErrorCode: (errorCode: string) =>
         l10n.SendScreen.validationErrors[errorCode],
