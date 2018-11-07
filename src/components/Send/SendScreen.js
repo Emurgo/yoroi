@@ -71,32 +71,48 @@ const canValidateBalance = (utxos, addressErrors, amountErrors) =>
   (!amountErrors ||
     amountErrors.invalidAmount === INVALID_AMOUNT_CODES.INSUFFICIENT_BALANCE)
 
-const handleValidateAddress = ({
+const clearBalanceErrors = (amountErrors) => {
+  if (
+    amountErrors &&
+    amountErrors.invalidAmount === INVALID_AMOUNT_CODES.INSUFFICIENT_BALANCE
+  ) {
+    return null
+  } else {
+    return amountErrors
+  }
+}
+
+const handleChangeAddress = ({
   utxos,
-  address,
   amount,
   validationErrors,
+  setAddress,
   setValidationErrors,
-}) => async () => {
+}) => async (address) => {
+  setAddress(address)
+
+  const amountErrors = clearBalanceErrors(validationErrors.amount)
   const addressErrors = await validateAddressAsync(address)
-  const amountErrors = canValidateBalance(
+  const amountOrBalanceErrors = canValidateBalance(
     utxos,
     addressErrors,
     validationErrors.amount,
   )
     ? await validateBalanceAsync(utxos, address, amount)
-    : validationErrors.amount
+    : amountErrors
 
-  setValidationErrors({address: addressErrors, amount: amountErrors})
+  setValidationErrors({address: addressErrors, amount: amountOrBalanceErrors})
 }
 
-const handleValidateAmount = ({
+const handleChangeAmount = ({
   utxos,
   address,
-  amount,
   validationErrors,
+  setAmount,
   setValidationErrors,
-}) => async () => {
+}) => async (amount) => {
+  setAmount(amount)
+
   const amountErrors = validateAmount(amount)
   const amountOrBalanceErrors = canValidateBalance(
     utxos,
@@ -188,8 +204,8 @@ type Props = {
   isFetchingBalance: boolean,
   lastFetchingError: any,
   handleDidFocus: () => void,
-  handleValidateAddress: () => mixed,
-  handleValidateAmount: () => mixed,
+  handleChangeAddress: (string) => mixed,
+  handleChangeAmount: (string) => mixed,
   validationErrors: FormValidationErrors,
 }
 
@@ -200,13 +216,11 @@ const SendScreen = ({
   amount,
   address,
   availableAmount,
-  setAmount,
-  setAddress,
   isFetchingBalance,
   lastFetchingError,
   handleDidFocus,
-  handleValidateAddress,
-  handleValidateAmount,
+  handleChangeAddress,
+  handleChangeAmount,
   validationErrors,
 }: Props) => {
   const disabled =
@@ -237,8 +251,7 @@ const SendScreen = ({
           style={styles.inputText}
           value={address}
           placeholder={translations.address}
-          onChangeText={setAddress}
-          onEndEditing={handleValidateAddress}
+          onChangeText={handleChangeAddress}
         />
         {/* prettier-ignore */ !!validationErrors.address &&
           !!validationErrors.address.invalidAddress && (
@@ -251,8 +264,7 @@ const SendScreen = ({
           keyboardType={'numeric'}
           value={amount}
           placeholder={translations.amount}
-          onChangeText={setAmount}
-          onEndEditing={handleValidateAmount}
+          onChangeText={handleChangeAmount}
         />
         {/* prettier-ignore */ !!validationErrors.amount &&
           !!validationErrors.amount.invalidAmount && (
@@ -294,8 +306,8 @@ export default compose(
     navigateToQRReader: ({navigation, setAddress}) => (event) =>
       _navigateToQRReader(navigation, setAddress),
     handleConfirm,
-    handleValidateAddress,
-    handleValidateAmount,
     handleDidFocus,
+    handleChangeAddress,
+    handleChangeAmount,
   }),
 )(SendScreen)
