@@ -4,7 +4,7 @@ import jestSetup from '../jestSetup'
 
 import _ from 'lodash'
 
-import {WalletManager} from './wallet'
+import {Wallet} from './wallet'
 
 jestSetup.setup()
 // We do a lot of API calls for sync tests
@@ -18,23 +18,23 @@ const mnemonic =
 
 test('Can restore wallet', async () => {
   expect.assertions(2)
-  const walletManager = new WalletManager()
-  await walletManager.restoreWallet(mnemonic, '')
-  await walletManager.doFullSync()
+  const wallet = new Wallet()
+  await wallet.restoreWallet(mnemonic, '')
+  await wallet.doFullSync()
   // Note(ppershing): these are just loose tests because we are testing
   // agains live test-wallet and so the numbers might increase over time
-  expect(walletManager._internalChain.size()).toBeGreaterThanOrEqual(27)
-  expect(walletManager._externalChain.size()).toBeGreaterThanOrEqual(60)
+  expect(wallet._internalChain.size()).toBeGreaterThanOrEqual(27)
+  expect(wallet._externalChain.size()).toBeGreaterThanOrEqual(60)
 })
 
 test('Can sync txs after restoring wallet', async () => {
   expect.assertions(1)
-  const walletManager = new WalletManager()
-  await walletManager.restoreWallet(mnemonic, '')
+  const wallet = new Wallet()
+  await wallet.restoreWallet(mnemonic, '')
 
-  await walletManager.doFullSync()
+  await wallet.doFullSync()
 
   // Note(ppershing): these are just loose tests because we are testing
   // agains live test-wallet and so the numbers might increase over time
-  expect(_.size(walletManager.transactions)).toBeGreaterThanOrEqual(13)
+  expect(_.size(wallet.transactions)).toBeGreaterThanOrEqual(13)
 })

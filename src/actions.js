@@ -30,32 +30,30 @@ const _setOnline = (isOnline: boolean) => (dispatch, getState) => {
   })
 }
 
+// Temporary
+export const initializeWallet = () => async (
+  dispatch: Dispatch<any>,
+  getState: any,
+) => {
+  const mnemonic = [
+    'dry balcony arctic what garbage sort',
+    'cart shine egg lamp manual bottom',
+    'slide assault bus',
+  ].join(' ')
+  await walletManager.createWallet('uuid', 'My Wallet', mnemonic, '')
+}
+
 export const setupHooks = () => (dispatch: Dispatch<any>) => {
   Logger.debug('setting up api isOnline callback')
   api.setIsOnlineCallback((isOnline) => dispatch(_setOnline(isOnline)))
   Logger.debug('setting wallet manager hook')
-  walletManager.subscribe(() =>
-    Promise.resolve().then(() => dispatch(mirrorTxHistory())),
-  )
-}
+  walletManager.subscribe(() => dispatch(mirrorTxHistory()))
 
-const _updateGeneratedReceiveAddresses = (addresses) => ({
-  type: 'Update generated receive addresses',
-  payload: addresses,
-  path: ['generatedReceiveAddresses'],
-  reducer: (state, payload) => payload,
-})
-
-export const updateReceiveAddresses = () => (dispatch: Dispatch<any>) => {
-  dispatch(
-    _updateGeneratedReceiveAddresses(walletManager.getUiReceiveAddresses()),
-  )
+  dispatch(initializeWallet())
 }
 
 export const generateNewReceiveAddress = () => (dispatch: Dispatch<any>) => {
-  const result = walletManager.generateNewUiReceiveAddress()
-  dispatch(updateReceiveAddresses())
-  return result
+  walletManager.generateNewUiReceiveAddress()
 }
 
 const LOCAL_STORAGE_KEY_LANG = 'lang'
