@@ -26,7 +26,7 @@ export class CardanoError extends ExtendableError {}
 
 export const _rethrow = <T>(x: Promise<T>): Promise<T> =>
   x.catch((e) => {
-    throw new CardanoError(e)
+    throw new CardanoError(e.message)
   })
 
 export const getMasterKeyFromMnemonic = async (mnemonic: string) => {

@@ -33,7 +33,7 @@ const transactionToJSON = (transaction: Transaction) => ({
     address,
     amount: amount.toString(),
   })),
-  outputs: transaction.inputs.map(({address, amount}) => ({
+  outputs: transaction.outputs.map(({address, amount}) => ({
     address,
     amount: amount.toString(),
   })),
@@ -50,7 +50,7 @@ const transactionFromJSON = (transaction: any): Transaction => ({
     address,
     amount: new BigNumber(amount, 10),
   })),
-  outputs: transaction.inputs.map(({address, amount}) => ({
+  outputs: transaction.outputs.map(({address, amount}) => ({
     address,
     amount: new BigNumber(amount, 10),
   })),
