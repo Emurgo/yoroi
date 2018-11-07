@@ -19,7 +19,7 @@ const mnemonic =
 test('Can restore wallet', async () => {
   expect.assertions(2)
   const wallet = new Wallet()
-  await wallet.restoreWallet(mnemonic, 'password')
+  await wallet._create(mnemonic, 'password')
   await wallet.doFullSync()
   // Note(ppershing): these are just loose tests because we are testing
   // agains live test-wallet and so the numbers might increase over time
@@ -30,7 +30,7 @@ test('Can restore wallet', async () => {
 test('Can sync txs after restoring wallet', async () => {
   expect.assertions(1)
   const wallet = new Wallet()
-  await wallet.restoreWallet(mnemonic, 'password')
+  await wallet._create(mnemonic, 'password')
 
   await wallet.doFullSync()
 

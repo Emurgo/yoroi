@@ -3,6 +3,7 @@
 import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
 
+import storage from '../utils/storage'
 import {AddressChain, AddressGenerator} from './chain'
 import * as util from './util'
 import api from '../api'
@@ -41,11 +42,8 @@ export class Wallet {
   _isInitialized: boolean = false
   _doFullSyncMutex: Mutex = {name: 'doFullSyncMutex', lock: null}
   _subscriptions: Array<(Wallet) => any> = []
-  _transactionCache: TransactionCache = new TransactionCache()
-
-  constructor() {
-    this._transactionCache.subscribe(() => this.notify())
-  }
+  // $FlowFixMe null
+  _transactionCache: TransactionCache = null
 
   /* global $Shape */
   updateState(update: $Shape<WalletState>) {
@@ -60,7 +58,8 @@ export class Wallet {
     this.notify()
   }
 
-  notify() {
+  // needs to be bound
+  notify = () => {
     this._subscriptions.forEach((handler) => handler(this))
   }
 
@@ -76,15 +75,23 @@ export class Wallet {
     return this._transactionCache.confirmationCounts
   }
 
-  async restoreWallet(mnemonic: string, newPassword: string) {
-    Logger.info('restore wallet')
-    assert.assert(!this._isInitialized, 'restoreWallet: !isInitialized')
+  _setupSubscriptions() {
+    this._transactionCache.subscribe(this.notify)
+    this._internalChain.addSubscriberToNewAddresses(this.notify)
+    this._externalChain.addSubscriberToNewAddresses(this.notify)
+  }
+
+  async _create(mnemonic: string, newPassword: string) {
+    Logger.info('create wallet')
+    assert.assert(!this._isInitialized, 'createWallet: !isInitialized')
     const masterKey = await util.getMasterKeyFromMnemonic(mnemonic)
     const account = await util.getAccountFromMasterKey(masterKey)
     this._encryptedMasterKey = await util.encryptMasterKey(
       masterKey,
       newPassword,
     )
+
+    this._transactionCache = new TransactionCache()
 
     // initialize address chains
     this._internalChain = new AddressChain(
@@ -94,18 +101,34 @@ export class Wallet {
       new AddressGenerator(account, 'External'),
     )
 
-    // We want to monitor all new addresses
-    this._internalChain.addSubscriberToNewAddresses(() => this.notify())
-    this._externalChain.addSubscriberToNewAddresses(() => this.notify())
-
     // Create at least one address in each block
     await this._internalChain.initialize()
     await this._externalChain.initialize()
 
     // We should start with 1 generated address
-    this.updateState({
+    this._state = {
       generatedAddressCount: 1,
-    })
+    }
+
+    this._setupSubscriptions()
+    this.notify()
+
+    this._isInitialized = true
+  }
+
+  _restore(data) {
+    Logger.info('restore wallet')
+    assert.assert(!this._isInitialized, 'restoreWallet: !isInitialized')
+    this._state = {
+      generatedAddressCount: data.generatedAddressCount,
+    }
+    this._internalChain = AddressChain.fromJSON(data.internalChain)
+    this._externalChain = AddressChain.fromJSON(data.externalChain)
+    this._transactionCache = TransactionCache.fromJSON(data.transactionCache)
+    this._encryptedMasterKey = data.encryptedMasterKey
+
+    // subscriptions
+    this._setupSubscriptions()
 
     this._isInitialized = true
   }
@@ -298,15 +321,26 @@ export class Wallet {
     Logger.info(response)
     return response
   }
+
+  toJSON() {
+    return {
+      generatedAddressCount: this._state.generatedAddressCount,
+      internalChain: this._internalChain.toJSON(),
+      externalChain: this._externalChain.toJSON(),
+      transactionCache: this._transactionCache.toJSON(),
+      // TODO(ppershing): move this to keystore
+      encryptedMasterKey: this._encryptedMasterKey,
+    }
+  }
 }
 
 class WalletManager {
   _wallet: ?Wallet = null
+  _id: string = ''
   _subscribers: Array<() => any> = []
 
   // Note(ppershing): needs 'this' to be bound
-  notify = (wallet: Wallet) => {
-    if (this._wallet !== wallet) return
+  notify = () => {
     // TODO(ppershing): do this in next tick?
     this._subscribers.forEach((handler) => handler())
   }
@@ -342,34 +376,41 @@ class WalletManager {
   generateNewUiReceiveAddress() {
     if (!this._wallet) return
     this._wallet.generateNewUiReceiveAddress()
+    // TODO(ppershing): saveState
   }
 
-  doFullSync() {
+  async doFullSync() {
     // TODO(ppershing): this should "quit" early if we change wallet
-    if (!this._wallet) return Promise.resolve()
-    return this._wallet.doFullSync()
+    if (!this._wallet) return
+    await this._wallet.doFullSync()
+    // TODO(ppershing): should we make save a runaway promise?
+    await this.saveState()
+    return
   }
 
-  tryDoFullSync() {
-    if (!this._wallet) return Promise.resolve()
-    return this._wallet.tryDoFullSync()
+  async tryDoFullSync() {
+    if (!this._wallet) return
+    await this._wallet.tryDoFullSync()
+    // TODO(ppershing): should we make save a runaway promise?
+    await this.saveState()
+    return
   }
 
-  prepareTransaction(
+  async prepareTransaction(
     utxos: Array<RawUtxo>,
     address: string,
     amount: BigNumber,
   ) {
-    if (!this._wallet) return Promise.reject(new Error())
-    return this._wallet.prepareTransaction(utxos, address, amount)
+    if (!this._wallet) throw new Error()
+    return await this._wallet.prepareTransaction(utxos, address, amount)
   }
 
-  submitTransaction(
+  async submitTransaction(
     transactionData: PreparedTransactionData,
     password: string,
   ) {
-    if (!this._wallet) return Promise.reject(new Error())
-    return this._wallet.submitTransaction(transactionData, password)
+    if (!this._wallet) throw new Error()
+    return await this._wallet.submitTransaction(transactionData, password)
   }
 
   async createWallet(
@@ -380,12 +421,42 @@ class WalletManager {
   ): Promise<Wallet> {
     // Ignore id & name for now
     const wallet = new Wallet()
-    await wallet.restoreWallet(mnemonic, password)
+    await wallet._create(mnemonic, password)
 
+    // TODO(ppershing): potential inconsistency between id and _wallet
+    this._id = id
+    await this.saveState()
     this._wallet = wallet
     wallet.subscribe(this.notify)
-    this.notify(wallet)
+    this.notify()
     return wallet
+  }
+
+  async openOrCreateWallet(
+    id: string,
+    name: string,
+    mnemonic: string,
+    password: string,
+  ): Promise<Wallet> {
+    assert.preconditionCheck(!!id, 'openWallet:: !!id')
+    const wallet = new Wallet()
+    const data = await storage.read(`/wallet/${id}`)
+    // TODO(ppershing): for now do auto-bypass
+    if (!data) return this.createWallet(id, name, mnemonic, password)
+    wallet._restore(data)
+    this._wallet = wallet
+    this._id = id
+    wallet.subscribe(this.notify)
+    this.notify()
+    return wallet
+  }
+
+  async saveState() {
+    if (!this._wallet) return
+    assert.assert(this._id, 'saveState:: id')
+    /* :: if (!this._wallet) throw 'assert' */
+    const data = this._wallet.toJSON()
+    await storage.write(`/wallet/${this._id}`, data)
   }
 }
 
