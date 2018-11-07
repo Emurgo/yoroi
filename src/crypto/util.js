@@ -7,7 +7,7 @@ import {randomBytes} from 'react-native-randombytes'
 import ExtendableError from 'es6-error'
 import bs58 from 'bs58'
 import cryptoRandomString from 'crypto-random-string'
-import {assertTrue} from '../utils/assert'
+import assert from '../utils/assert'
 import {CONFIG} from '../config'
 
 import type {
@@ -46,14 +46,16 @@ export const getAccountFromMasterKey = async (
 }
 
 export const encryptMasterKey = async (
-  password: string,
   masterKeyHex: string,
+  password: string,
 ): Promise<string> => {
-  assertTrue(password != null)
+  assert.assert(!!masterKeyHex, 'encryptMasterKey:: !!masterKeyHex')
+  assert.assert(!!password, 'encryptMasterKey:: !!password')
+  const passwordHex = Buffer.from(password, 'utf8').toString('hex')
   const saltHex = cryptoRandomString(2 * 32)
   const nonceHex = cryptoRandomString(2 * 12)
   const encryptedHex = await PasswordProtect.encryptWithPassword(
-    password,
+    passwordHex,
     saltHex,
     nonceHex,
     masterKeyHex,
@@ -62,17 +64,19 @@ export const encryptMasterKey = async (
 }
 
 export const decryptMasterKey = async (
-  password: string,
   encryptedHex: string,
+  password: string,
 ): Promise<string> => {
-  const decryptedBytesHex: string = await _rethrow(
-    PasswordProtect.decryptWithPassword(password, encryptedHex),
-  )
-  if (!decryptedBytesHex) {
+  assert.assert(!!encryptedHex, 'encryptedKey:: !!encryptedHex')
+  assert.assert(!!password, 'decryptMasterKey:: !!password')
+  const passwordHex = Buffer.from(password, 'utf8').toString('hex')
+  try {
+    return await _rethrow(
+      PasswordProtect.decryptWithPassword(passwordHex, encryptedHex),
+    )
+  } catch (e) {
     throw new CardanoError('Wrong password')
   }
-
-  return decryptedBytesHex
 }
 
 export const getAddresses = (

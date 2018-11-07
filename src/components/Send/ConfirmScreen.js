@@ -20,7 +20,7 @@ import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 const handleOnConfirm = async (navigation) => {
   const transactionData = navigation.getParam('transactionData')
   // TODO: add error handling
-  await walletManager.submitTransaction(transactionData, '')
+  await walletManager.submitTransaction(transactionData, 'password')
   navigation.navigate(MAIN_ROUTES.TX_HISTORY)
 }
 
