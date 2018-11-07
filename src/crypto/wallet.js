@@ -260,9 +260,9 @@ export class Wallet {
       outputs,
       changeAddress,
     )
-    Logger.info(inputs)
-    Logger.info(outputs)
-    Logger.info(changeAddress)
+    Logger.debug(inputs)
+    Logger.debug(outputs)
+    Logger.debug(changeAddress)
 
     return {
       inputs,
