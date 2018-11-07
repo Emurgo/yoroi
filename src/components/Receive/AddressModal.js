@@ -21,11 +21,11 @@ type Props = {
 }
 
 type State = {
-  isClicked: boolean,
+  isCopied: boolean,
 }
 
 class AddressModal extends React.Component<Props, State> {
-  state = {isClicked: false}
+  state = {isCopied: false}
 
   _hideModalTimeoutId = null
 
@@ -34,16 +34,17 @@ class AddressModal extends React.Component<Props, State> {
   }
 
   _copyAddress = () => {
-    const {address, navigation} = this.props
+    Clipboard.setString(this.props.address)
+    this.setState({isCopied: true})
 
-    Clipboard.setString(address)
-    this.setState({isClicked: true})
-
-    this._hideModalTimeoutId = setTimeout(navigation.goBack, 1000)
+    this._hideModalTimeoutId = setTimeout(
+      () => this.props.navigation.goBack(),
+      1000,
+    )
   }
 
   render() {
-    const {isClicked} = this.state
+    const {isCopied} = this.state
     const {address, translations, navigation} = this.props
 
     return (
@@ -66,7 +67,7 @@ class AddressModal extends React.Component<Props, State> {
             <Button
               onPress={this._copyAddress}
               title={
-                isClicked ? translations.copiedLabel : translations.copyLabel
+                isCopied ? translations.copiedLabel : translations.copyLabel
               }
             />
           </View>
