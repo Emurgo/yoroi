@@ -35,6 +35,11 @@ import type {
   AmountValidationErrors,
 } from '../../utils/validators'
 
+type FormValidationErrors = {
+  address: AddressValidationErrors | null,
+  amount: AmountValidationErrors | null,
+}
+
 const getTranslations = (state) => state.trans.SendScreen
 
 const convertToAda = (amount) => new BigNumber(amount, 10).times(1000000)
@@ -60,42 +65,48 @@ const validateBalanceAsync = async (utxos, address, amount) => {
   return null
 }
 
+const canValidateBalance = (utxos, addressErrors, amountErrors) =>
+  utxos &&
+  !addressErrors &&
+  (!amountErrors ||
+    amountErrors.invalidAmount === INVALID_AMOUNT_CODES.INSUFFICIENT_BALANCE)
+
 const handleValidateAddress = ({
   utxos,
   address,
   amount,
-  amountErrors,
-  setAddressErrors,
-  setAmountErrors,
+  validationErrors,
+  setValidationErrors,
 }) => async () => {
   const addressErrors = await validateAddressAsync(address)
-  setAddressErrors(addressErrors)
+  const amountErrors = canValidateBalance(
+    utxos,
+    addressErrors,
+    validationErrors.amount,
+  )
+    ? await validateBalanceAsync(utxos, address, amount)
+    : validationErrors.amount
 
-  if (
-    utxos &&
-    !addressErrors &&
-    (!amountErrors ||
-      amountErrors.invalidAmount === INVALID_AMOUNT_CODES.INSUFFICIENT_BALANCE)
-  ) {
-    const balanceErrors = await validateBalanceAsync(utxos, address, amount)
-    setAmountErrors(balanceErrors)
-  }
+  setValidationErrors({address: addressErrors, amount: amountErrors})
 }
 
 const handleValidateAmount = ({
   utxos,
   address,
   amount,
-  addressErrors,
-  setAmountErrors,
+  validationErrors,
+  setValidationErrors,
 }) => async () => {
   const amountErrors = validateAmount(amount)
-  setAmountErrors(amountErrors)
+  const amountOrBalanceErrors = canValidateBalance(
+    utxos,
+    validationErrors.address,
+    amountErrors,
+  )
+    ? await validateBalanceAsync(utxos, address, amount)
+    : amountErrors
 
-  if (utxos && !addressErrors && !amountErrors) {
-    const balanceErrors = await validateBalanceAsync(utxos, address, amount)
-    setAmountErrors(balanceErrors)
-  }
+  setValidationErrors({...validationErrors, amount: amountOrBalanceErrors})
 }
 
 const handleConfirm = ({
@@ -104,8 +115,7 @@ const handleConfirm = ({
   address,
   amount,
   availableAmount,
-  setAddressErrors,
-  setAmountErrors,
+  setValidationErrors,
 }) => async () => {
   const addressErrors = await validateAddressAsync(address)
   const amountErrors = validateAmount(amount)
@@ -133,8 +143,10 @@ const handleConfirm = ({
       balanceAfterTx,
     })
   } else {
-    setAddressErrors(addressErrors)
-    setAmountErrors(amountErrors || balanceErrors)
+    setValidationErrors({
+      address: addressErrors,
+      amount: amountErrors || balanceErrors,
+    })
   }
 }
 
@@ -178,8 +190,7 @@ type Props = {
   handleDidFocus: () => void,
   handleValidateAddress: () => mixed,
   handleValidateAmount: () => mixed,
-  addressErrors?: AddressValidationErrors,
-  amountErrors?: AmountValidationErrors,
+  validationErrors: FormValidationErrors,
 }
 
 const SendScreen = ({
@@ -196,14 +207,13 @@ const SendScreen = ({
   handleDidFocus,
   handleValidateAddress,
   handleValidateAmount,
-  addressErrors,
-  amountErrors,
+  validationErrors,
 }: Props) => {
   const disabled =
     isFetchingBalance ||
     !!lastFetchingError ||
-    !!addressErrors ||
-    !!amountErrors
+    !!validationErrors.address ||
+    !!validationErrors.amount
 
   return (
     <View style={styles.root}>
@@ -230,8 +240,8 @@ const SendScreen = ({
           onChangeText={setAddress}
           onEndEditing={handleValidateAddress}
         />
-        {/* prettier-ignore */ !!addressErrors &&
-          addressErrors.invalidAddress && (
+        {/* prettier-ignore */ !!validationErrors.address &&
+          !!validationErrors.address.invalidAddress && (
           <Text style={styles.error}>
             {translations.validationErrors.invalidAddress}
           </Text>
@@ -244,12 +254,12 @@ const SendScreen = ({
           onChangeText={setAmount}
           onEndEditing={handleValidateAmount}
         />
-        {/* prettier-ignore */ !!amountErrors &&
-          !!amountErrors.invalidAmount && (
+        {/* prettier-ignore */ !!validationErrors.amount &&
+          !!validationErrors.amount.invalidAmount && (
           <Text style={styles.error}>
             {translations
               .validationErrors
-              .amountErrorByErrorCode(amountErrors.invalidAmount)}
+              .amountErrorByErrorCode(validationErrors.amount.invalidAmount)}
           </Text>
         )}
       </View>
@@ -276,8 +286,10 @@ export default compose(
   }),
   withState('address', 'setAddress', ''),
   withState('amount', 'setAmount', ''),
-  withState('addressErrors', 'setAddressErrors', {addressIsRequired: true}),
-  withState('amountErrors', 'setAmountErrors', {amountIsRequired: true}),
+  withState('validationErrors', 'setValidationErrors', {
+    address: {addressIsRequired: true},
+    amount: {amountIsRequired: true},
+  }),
   withHandlers({
     navigateToQRReader: ({navigation, setAddress}) => (event) =>
       _navigateToQRReader(navigation, setAddress),
