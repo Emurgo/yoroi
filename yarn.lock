@@ -5602,7 +5602,7 @@ nice-try@^1.0.4:
 
 "node-cardano-wallet@https://github.com/crossroadlabs/node-cardano-wallet.git":
   version "0.0.1"
-  resolved "https://github.com/crossroadlabs/node-cardano-wallet.git#75e94b33c6a0bee7b7c261eb7a8d86373d250700"
+  resolved "https://github.com/crossroadlabs/node-cardano-wallet.git#e22cee0ccb3cc66b564307fc47b71edc8d2fdb57"
   dependencies:
     neon-cli "^0.2.0"
 
@@ -6418,7 +6418,7 @@ react-native-camera@^1.3.0:
 
 "react-native-cardano@https://github.com/crossroadlabs/react-native-cardano.git":
   version "0.0.1"
-  resolved "https://github.com/crossroadlabs/react-native-cardano.git#d2a43407aa09d87c05e689cd7c03fe54b5caeb8b"
+  resolved "https://github.com/crossroadlabs/react-native-cardano.git#052c7e60dd578701cbb312044e6eed2b0490530e"
 
 react-native-crypto@^2.1.2:
   version "2.1.2"
@@ -7393,9 +7393,9 @@ spdx-expression-parse@^3.0.0:
     spdx-license-ids "^3.0.0"
 
 spdx-license-ids@^3.0.0:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/spdx-license-ids/-/spdx-license-ids-3.0.1.tgz#e2a303236cac54b04031fa7a5a79c7e701df852f"
-  integrity sha512-TfOfPcYGBB5sDuPn3deByxPhmfegAhpDYKSOXZQN81Oyrrif8ZCodOLzK3AesELnCx03kikhyDwh0pfvvQvF8w==
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/spdx-license-ids/-/spdx-license-ids-3.0.2.tgz#a59efc09784c2a5bada13cfeaf5c75dd214044d2"
+  integrity sha512-qky9CVt0lVIECkEsYbNILVnPvycuEBkXoMFLRWsREkomQLevYhtRKC+R91a5TOAQ3bCMjikRwhyaRqj1VYatYg==
 
 split-string@^3.0.1, split-string@^3.0.2:
   version "3.1.0"
