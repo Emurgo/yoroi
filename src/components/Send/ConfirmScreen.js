@@ -8,7 +8,7 @@ import {withHandlers} from 'recompose'
 
 import {Text, Button} from '../UiKit'
 // import {authenticate} from '../../helpers/bioAuthHelper'
-import WalletManager from '../../crypto/wallet'
+import walletManager from '../../crypto/wallet'
 import {MAIN_ROUTES} from '../../RoutesList'
 import {printAda} from '../../utils/transactions'
 
@@ -20,7 +20,7 @@ import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 const handleOnConfirm = async (navigation) => {
   const transactionData = navigation.getParam('transactionData')
   // TODO: add error handling
-  await WalletManager.submitTransaction(transactionData, '')
+  await walletManager.submitTransaction(transactionData, '')
   navigation.navigate(MAIN_ROUTES.TX_HISTORY)
 }
 

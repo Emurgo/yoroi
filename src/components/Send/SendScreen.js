@@ -19,7 +19,7 @@ import {
 import {Logger} from '../../utils/logging'
 import {printAda} from '../../utils/transactions'
 import {withTranslations} from '../../utils/renderUtils'
-import WalletManager from '../../crypto/wallet'
+import walletManager from '../../crypto/wallet'
 import {fetchUTXOs} from '../../actions/utxo'
 import {CardanoError} from '../../crypto/util'
 import {
@@ -42,7 +42,7 @@ const convertToAda = (amount) => new BigNumber(amount, 10).times(1000000)
 
 const getTransactionData = (utxos, address, amount) => {
   const adaAmount = convertToAda(amount)
-  return WalletManager.prepareTransaction(utxos, address, adaAmount)
+  return walletManager.prepareTransaction(utxos, address, adaAmount)
 }
 
 const validateBalanceAsync = async (utxos, address, amount) => {
