@@ -2,6 +2,7 @@
 
 import React from 'react'
 import {connect} from 'react-redux'
+import {Text} from 'react-native'
 
 import type {State} from '../state'
 
@@ -65,3 +66,12 @@ export const withNavigationTitle = <Props: {navigation: any}>(
 
       render = () => <BaseComponent {...this.props} />
     }
+
+export class RenderCount extends React.Component<{}> {
+  count = 0
+
+  render() {
+    this.count += 1
+    return <Text>RenderCount: {this.count} </Text>
+  }
+}

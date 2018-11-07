@@ -18,7 +18,7 @@ import TxHistoryList from './TxHistoryList'
 import Screen from '../../components/Screen'
 import TxNavigationButtons from './TxNavigationButtons'
 import {updateHistory, updateHistoryInBackground} from '../../actions/history'
-import {onDidMount} from '../../utils/renderUtils'
+import {onDidMount, RenderCount} from '../../utils/renderUtils'
 import {printAda} from '../../utils/transactions'
 import {CONFIG} from '../../config'
 
@@ -54,6 +54,7 @@ const TxHistory = ({
   lastSyncError,
 }) => (
   <View style={styles.root}>
+    <RenderCount />
     {!isOnline && <OfflineBanner />}
     {lastSyncError && (
       <SyncErrorBanner showRefresh={!isSyncing} onRefresh={updateHistory} />
