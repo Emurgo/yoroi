@@ -47,13 +47,15 @@ const _addressToIdxSelector = (addresses: Array<string>) =>
   _.fromPairs(addresses.map((addr, i) => [addr, i]))
 
 export class AddressChain {
-  _addresses: Addresses
+  _addresses: Addresses = []
   _addressGenerator: AddressGenerator
   _blockSize: number
   _gapLimit: number
-  _isInitialized: boolean
-  _subscriptions: Array<(Addresses) => mixed>
-  _addressToIdxSelector: (Addresses) => Dict<number>
+  _isInitialized: boolean = false
+  _subscriptions: Array<(Addresses) => mixed> = []
+  _addressToIdxSelector: (Addresses) => Dict<number> = defaultMemoize(
+    _addressToIdxSelector,
+  )
 
   constructor(
     addressGenerator: AddressGenerator,
@@ -65,12 +67,6 @@ export class AddressChain {
     this._addressGenerator = addressGenerator
     this._blockSize = blockSize
     this._gapLimit = gapLimit
-
-    this._addresses = []
-    this._isInitialized = false
-    this._subscriptions = []
-
-    this._addressToIdxSelector = defaultMemoize(_addressToIdxSelector)
   }
 
   toJSON() {

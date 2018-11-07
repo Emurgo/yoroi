@@ -76,22 +76,14 @@ const confirmationCountsSelector = (state: TransactionCacheState) => {
 }
 
 export class TransactionCache {
-  _state: TransactionCacheState
-  _subscriptions: Array<() => any>
-  _perAddressTxsSelector: any
-  _confirmationCountsSelector: any
-
-  constructor() {
-    this._state = {
-      perAddressSyncMetadata: {},
-      transactions: {},
-    }
-    this._subscriptions = []
-    this._perAddressTxsSelector = defaultMemoize(perAddressTxsSelector)
-    this._confirmationCountsSelector = defaultMemoize(
-      confirmationCountsSelector,
-    )
+  _state: TransactionCacheState = {
+    perAddressSyncMetadata: {},
+    transactions: {},
   }
+
+  _subscriptions: Array<() => any> = []
+  _perAddressTxsSelector = defaultMemoize(perAddressTxsSelector)
+  _confirmationCountsSelector = defaultMemoize(confirmationCountsSelector)
 
   subscribe(handler: () => any) {
     this._subscriptions.push(handler)
