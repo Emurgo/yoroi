@@ -82,8 +82,8 @@ export class Wallet {
     const masterKey = await util.getMasterKeyFromMnemonic(mnemonic)
     const account = await util.getAccountFromMasterKey(masterKey)
     this._encryptedMasterKey = await util.encryptMasterKey(
-      newPassword,
       masterKey,
+      newPassword,
     )
 
     // initialize address chains
@@ -279,8 +279,8 @@ export class Wallet {
     const {inputs, outputs, changeAddress, fee} = transaction
 
     const decryptedMasterKey = await util.decryptMasterKey(
-      password,
       this._encryptedMasterKey,
+      password,
     )
     const signedTxData = await util.signTransaction(
       await util.getWalletFromMasterKey(decryptedMasterKey),

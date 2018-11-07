@@ -85,8 +85,8 @@ test('Can validate invalid addresses', async () => {
 test('Can encrypt / decrypt masterKey', async () => {
   expect.assertions(1)
   const masterKey = await getMasterKeyFromMnemonic(mnemonic)
-  const encryptedKey = await encryptMasterKey('PASSWORD', masterKey)
-  const decryptedKey = await decryptMasterKey('PASSWORD', encryptedKey)
+  const encryptedKey = await encryptMasterKey(masterKey, 'password')
+  const decryptedKey = await decryptMasterKey(encryptedKey, 'password')
 
   expect(masterKey).toEqual(decryptedKey)
 })
