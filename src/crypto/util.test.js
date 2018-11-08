@@ -11,6 +11,8 @@ import {
   decryptMasterKey,
 } from './util'
 
+import longAddress from './__fixtures/long_address.json'
+
 import {CARDANO_CONFIG, CONFIG} from '../config'
 
 jestSetup.setup()
@@ -62,6 +64,13 @@ test('Can validate valid addresses', async () => {
     const isValid = await isValidAddress(address)
     expect(isValid).toBe(true)
   }
+})
+
+// isValidAddress
+test('Can validate long address', async () => {
+  expect.assertions(1)
+  const isValid = await isValidAddress(longAddress)
+  expect(isValid).toBe(true)
 })
 
 test('Can validate invalid addresses', async () => {
