@@ -70,10 +70,10 @@ const syncMetadataFromJSON = (meta: any): SyncMetadata => ({
   bestBlockNum: meta.bestBlockNum,
 })
 
-const getLastTimestamp = (history: Array<Transaction>): ?Moment => {
+const getLastTimestamp = (transactions: Array<Transaction>): ?Moment => {
   // Note(ppershing): ISO8601 dates can be sorted as strings
   // and the result is expected
-  return _.max(history.map((tx) => tx.lastUpdatedAt), moment(0))
+  return _.max(transactions.map((tx) => tx.lastUpdatedAt)) || moment(0)
 }
 
 const perAddressTxsSelector = (state: TransactionCacheState) => {
