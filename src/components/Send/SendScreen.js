@@ -4,7 +4,7 @@ import React from 'react'
 import {BigNumber} from 'bignumber.js'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {View, TextInput, TouchableOpacity} from 'react-native'
+import {ScrollView, View, TextInput, TouchableOpacity} from 'react-native'
 import {NavigationEvents} from 'react-navigation'
 import {withHandlers, withState} from 'recompose'
 
@@ -166,10 +166,10 @@ const handleConfirm = ({
   }
 }
 
-const _navigateToQRReader = (navigation, setAddress) =>
+const _navigateToQRReader = (navigation, handleChangeAddress) =>
   navigation.navigate(SEND_ROUTES.ADDRESS_READER_QR, {
     onSuccess: (address) => {
-      setAddress(address)
+      handleChangeAddress(address)
       navigation.navigate(SEND_ROUTES.MAIN)
     },
   })
@@ -231,7 +231,7 @@ const SendScreen = ({
     !!amountErrors
 
   return (
-    <View style={styles.root}>
+    <ScrollView style={styles.root}>
       <NavigationEvents onDidFocus={handleDidFocus} />
       {lastFetchingError && <FetchingErrorBanner />}
       <View style={styles.header}>
@@ -254,7 +254,7 @@ const SendScreen = ({
           placeholder={translations.address}
           onChangeText={handleChangeAddress}
         />
-        {/* prettier-ignore */ !!addressErrors &&
+        {/* prettier-ignore */ addressErrors &&
           !!addressErrors.invalidAddress && (
           <Text style={styles.error}>
             {translations.validationErrors.invalidAddress}
@@ -267,12 +267,12 @@ const SendScreen = ({
           placeholder={translations.amount}
           onChangeText={handleChangeAmount}
         />
-        {/* prettier-ignore */ !!amountErrors &&
+        {/* prettier-ignore */ amountErrors &&
           !!amountErrors.invalidAmount && (
           <Text style={styles.error}>
             {translations
               .validationErrors
-              .amountErrorByErrorCode(amountErrors.invalidAmount)}
+              .amountErrors[amountErrors.invalidAmount]}
           </Text>
         )}
       </View>
@@ -282,7 +282,7 @@ const SendScreen = ({
         title={translations.continue}
         disabled={disabled}
       />
-    </View>
+    </ScrollView>
   )
 }
 
@@ -304,11 +304,13 @@ export default compose(
     amount: {amountIsRequired: true},
   }),
   withHandlers({
-    navigateToQRReader: ({navigation, setAddress}) => (event) =>
-      _navigateToQRReader(navigation, setAddress),
     handleConfirm,
     handleDidFocus,
     handleChangeAddress,
     handleChangeAmount,
+  }),
+  withHandlers({
+    navigateToQRReader: ({navigation, handleChangeAddress}) => (event) =>
+      _navigateToQRReader(navigation, handleChangeAddress),
   }),
 )(SendScreen)
