@@ -343,6 +343,11 @@ class WalletManager {
   _wallet: ?Wallet = null
   _id: string = ''
   _subscribers: Array<() => any> = []
+  _syncErrorSubscribers: Array<(err: any) => any> = []
+
+  constructor() {
+    this._backgroundSync()
+  }
 
   // Note(ppershing): needs 'this' to be bound
   _notify = () => {
@@ -350,8 +355,30 @@ class WalletManager {
     this._subscribers.forEach((handler) => handler())
   }
 
+  _notifySyncError = (error: any) => {
+    this._syncErrorSubscribers.forEach((handler) => handler(error))
+  }
+
+  async _backgroundSync() {
+    try {
+      if (this._wallet) {
+        await this._wallet.tryDoFullSync()
+        await this.saveState()
+      }
+      this._notifySyncError(null)
+    } catch (e) {
+      this._notifySyncError(e)
+    } finally {
+      setTimeout(() => this._backgroundSync(), CONFIG.HISTORY_REFRESH_TIME)
+    }
+  }
+
   subscribe(handler: () => any) {
     this._subscribers.push(handler)
+  }
+
+  subscribeBackgroundSyncError(handler: (err: any) => any) {
+    this._syncErrorSubscribers.push(handler)
   }
 
   get isInitialized() {
@@ -388,14 +415,6 @@ class WalletManager {
     // TODO(ppershing): this should "quit" early if we change wallet
     if (!this._wallet) return
     await this._wallet.doFullSync()
-    // TODO(ppershing): should we make save a runaway promise?
-    await this.saveState()
-    return
-  }
-
-  async tryDoFullSync() {
-    if (!this._wallet) return
-    await this._wallet.tryDoFullSync()
     // TODO(ppershing): should we make save a runaway promise?
     await this.saveState()
     return

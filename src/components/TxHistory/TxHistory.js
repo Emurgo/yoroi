@@ -17,14 +17,13 @@ import {
 import TxHistoryList from './TxHistoryList'
 import Screen from '../../components/Screen'
 import TxNavigationButtons from './TxNavigationButtons'
-import {updateHistory, updateHistoryInBackground} from '../../actions/history'
+import {updateHistory} from '../../actions/history'
 import {
   onDidMount,
   RenderCount,
   measureRenderTime,
 } from '../../utils/renderUtils'
 import {printAda} from '../../utils/transactions'
-import {CONFIG} from '../../config'
 
 import styles from './styles/TxHistory.style'
 
@@ -104,15 +103,13 @@ export default (compose(
     }),
     {
       updateHistory,
-      updateHistoryInBackground,
     },
   ),
   measureRenderTime('TxHistory'),
   // TODO(ppershing): this should be handled
   // by some history manager
   // FIXME(ppershing): we do not clean interval on unmount
-  onDidMount(({updateHistory, updateHistoryInBackground}) => {
+  onDidMount(({updateHistory}) => {
     updateHistory()
-    setInterval(updateHistoryInBackground, CONFIG.HISTORY_REFRESH_TIME)
   }),
 )(TxHistory): ComponentType<ExternalProps>)
