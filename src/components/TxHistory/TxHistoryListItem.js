@@ -6,14 +6,12 @@ import {connect} from 'react-redux'
 import {View, TouchableHighlight} from 'react-native'
 
 import {Text} from '../UiKit'
-import {getTransactionAssurance} from '../../crypto/transactionUtils'
-import {printAda} from '../../utils/renderUtils'
 import AdaIcon from '../../assets/AdaIcon'
 import {transactionsInfoSelector} from '../../selectors'
 import {TX_HISTORY_ROUTES} from '../../RoutesList'
 import styles from './styles/TxHistoryListItem.style'
 import {COLORS} from '../../styles/config'
-import {withTranslations} from '../../utils/renderUtils'
+import {withTranslations, printAda} from '../../utils/renderUtils'
 
 import {TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
 
@@ -36,17 +34,13 @@ const AdaSign = ({color, size}) => (
 )
 
 const _AssuranceLevel = ({transaction, translations}) => {
-  const assuranceLevel = getTransactionAssurance(
-    transaction.status,
-    transaction.confirmations,
-  )
   const CHECMKARK = '\u2714'
 
   return (
     <Text>
       {CHECMKARK}
       {CHECMKARK}
-      {translations.assuranceLevel[assuranceLevel]}
+      {translations.assuranceLevel[transaction.assurance]}
     </Text>
   )
 }

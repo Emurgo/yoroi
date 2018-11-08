@@ -31,7 +31,6 @@ export const getTransactionAssurance = (
   return 'HIGH'
 }
 
-
 const _sum = (a: Array<{address: string, amount: BigNumber}>): BigNumber =>
   a.reduce((acc: BigNumber, x) => acc.plus(x.amount), new BigNumber(0))
 
@@ -122,6 +121,8 @@ export const processTxHistoryData = (
       : TRANSACTION_DIRECTION.SENT
   }
 
+  const assurance = getTransactionAssurance(tx.status, confirmations)
+
   return {
     id: tx.id,
     fromAddresses: tx.inputs.map(({address}) => address),
@@ -134,5 +135,6 @@ export const processTxHistoryData = (
     submittedAt: tx.submittedAt,
     lastUpdatedAt: tx.lastUpdatedAt,
     status: tx.status,
+    assurance,
   }
 }
