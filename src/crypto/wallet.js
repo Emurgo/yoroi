@@ -345,7 +345,7 @@ class WalletManager {
   _subscribers: Array<() => any> = []
 
   // Note(ppershing): needs 'this' to be bound
-  notify = () => {
+  _notify = () => {
     // TODO(ppershing): do this in next tick?
     this._subscribers.forEach((handler) => handler())
   }
@@ -432,8 +432,8 @@ class WalletManager {
     this._id = id
     await this.saveState()
     this._wallet = wallet
-    wallet.subscribe(this.notify)
-    this.notify()
+    wallet.subscribe(this._notify)
+    this._notify()
     return wallet
   }
 
@@ -451,8 +451,8 @@ class WalletManager {
     wallet._restore(data)
     this._wallet = wallet
     this._id = id
-    wallet.subscribe(this.notify)
-    this.notify()
+    wallet.subscribe(this._notify)
+    this._notify()
     return wallet
   }
 
