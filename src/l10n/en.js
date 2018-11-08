@@ -71,9 +71,9 @@ const l10n = {
     availableAmount: 'Available amount',
     validationErrors: {
       invalidAddress: 'Please enter valid address',
-      amountErrors: {
-        invalidAmount: 'Please enter valid amount',
-        insufficientBalance: 'Not enough money to make this transaction',
+      invalidAmountErrors: {
+        INVALID_AMOUNT: 'Please enter valid amount',
+        INSUFFICIENT_BALANCE: 'Not enough money to make this transaction',
       },
     },
     fetchingError:

@@ -18,8 +18,8 @@ export type AddressValidationErrors = {
 }
 
 export const INVALID_AMOUNT_CODES = {
-  INVALID_AMOUNT: 'invalidAmount',
-  INSUFFICIENT_BALANCE: 'insufficientBalance',
+  INVALID_AMOUNT: 'INVALID_AMOUNT',
+  INSUFFICIENT_BALANCE: 'INSUFFICIENT_BALANCE',
 }
 
 export type AmountValidationCode = $Values<typeof INVALID_AMOUNT_CODES>

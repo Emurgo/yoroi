@@ -272,7 +272,7 @@ const SendScreen = ({
           <Text style={styles.error}>
             {translations
               .validationErrors
-              .amountErrors[amountErrors.invalidAmount]}
+              .invalidAmountErrors[amountErrors.invalidAmount]}
           </Text>
         )}
       </View>
