@@ -1,7 +1,10 @@
 // @flow
-
-import React from 'react'
+// $FlowFixMe unstable_Profiler is missing fron react annotation
+import React, {unstable_Profiler as Profiler} from 'react'
 import {connect} from 'react-redux'
+import {Text} from 'react-native'
+
+import {Logger} from './logging'
 
 import type {State} from '../state'
 
@@ -65,3 +68,34 @@ export const withNavigationTitle = <Props: {navigation: any}>(
 
       render = () => <BaseComponent {...this.props} />
     }
+
+export class RenderCount extends React.Component<{}> {
+  count = 0
+
+  render() {
+    this.count += 1
+    return <Text>RenderCount: {this.count} </Text>
+  }
+}
+
+export const measureRenderTime = <Props>(name: string): HOC<Props, Props> => (
+  BaseComponent,
+) =>
+  class MeasureRenderTime extends React.Component<Props> {
+    logProfile = (id, phase, actualTime, baseTime, startTime, commitTime) => {
+      Logger.debug('Render time measurement results')
+      Logger.debug(`${id}'s ${phase} phase:`)
+      Logger.debug(`Actual time: ${actualTime}`)
+      Logger.debug(`Base time: ${baseTime}`)
+      Logger.debug(`Start time: ${startTime}`)
+      Logger.debug(`Commit time: ${commitTime}`)
+    }
+
+    render() {
+      return (
+        <Profiler id={name} onRender={this.logProfile}>
+          <BaseComponent {...this.props} />
+        </Profiler>
+      )
+    }
+  }
