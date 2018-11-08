@@ -37,9 +37,6 @@ const routes = [
     path: WALLET_INIT_ROUTES.RECOVERY_PHRASE_CONFIRMATION_DIALOG,
   },
   {label: 'Restore Wallet form', path: WALLET_INIT_ROUTES.RESTORE_WALLET},
-  {label: 'Receive', path: MAIN_ROUTES.RECEIVE},
-  {label: 'Send', path: MAIN_ROUTES.SEND},
-  {label: 'Tx History', path: MAIN_ROUTES.TX_HISTORY},
   {label: 'Login', path: ROOT_ROUTES.LOGIN},
   {label: 'Settings', path: MAIN_ROUTES.SETTINGS},
 ]

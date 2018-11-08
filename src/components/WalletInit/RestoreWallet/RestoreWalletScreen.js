@@ -12,6 +12,7 @@ import {wordlists} from 'bip39'
 import {Text, Button} from '../../UiKit'
 import Screen from '../../Screen'
 import {ROOT_ROUTES} from '../../../RoutesList'
+import walletManager from '../../../crypto/wallet'
 
 import {COLORS} from '../../../styles/config'
 import styles from './styles/RestoreWalletScreen.style'
@@ -63,9 +64,21 @@ type Props = {
   navigateToWallet: () => mixed,
   translations: SubTranslation<typeof getTranslations>,
   phrase: string,
-  setPhrase: () => mixed,
+  setPhrase: (phrase: string) => mixed,
   validatePhrase: () => PhraseErrors,
 }
+
+const mnemonic1 = [
+  'dry balcony arctic what garbage sort',
+  'cart shine egg lamp manual bottom',
+  'slide assault bus',
+].join(' ')
+
+const mnemonic2 = [
+  'able grunt edge report orange wide',
+  'amount decrease congress flee smile impulse',
+  'parade perfect normal',
+].join(' ')
 
 const RestoreWalletScreen = ({
   navigateToWallet,
@@ -79,9 +92,18 @@ const RestoreWalletScreen = ({
     <Screen bgColor={COLORS.TRANSPARENT} scroll>
       <View style={styles.container}>
         <Text>{translations.title}</Text>
-
         <Text>{translations.instructions}</Text>
-
+        {/* eslint-disable-next-line react-native/no-inline-styles */}
+        <View style={{flexDirection: 'row'}}>
+          <Button
+            onPress={() => setPhrase(mnemonic1)}
+            title="SET DEFAULT MNEMONIC"
+          />
+          <Button
+            onPress={() => setPhrase(mnemonic2)}
+            title="SET ANOTHER MNEMONIC"
+          />
+        </View>
         <View>
           <TextInput
             multiline
@@ -100,7 +122,6 @@ const RestoreWalletScreen = ({
             <Text style={styles.error}>{translations.errors.maxLength}</Text>
           )}
         </View>
-
         <Button
           onPress={navigateToWallet}
           title={translations.restoreButton}
@@ -117,8 +138,10 @@ export default compose(
   })),
   withState('phrase', 'setPhrase', ''),
   withHandlers({
-    navigateToWallet: ({navigation}) => (event) =>
-      navigation.dispatch(resetNavigationAction),
+    navigateToWallet: ({navigation, phrase}) => async (event) => {
+      await walletManager.createWallet('uuid', 'MyWallet', phrase, 'password')
+      navigation.dispatch(resetNavigationAction)
+    },
     validatePhrase: ({phrase}) => () => validatePhrase(phrase),
   }),
 )(RestoreWalletScreen)
