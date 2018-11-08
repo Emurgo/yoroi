@@ -3,8 +3,10 @@
 import React, {unstable_Profiler as Profiler} from 'react'
 import {connect} from 'react-redux'
 import {Text} from 'react-native'
-
+import {compose} from 'redux'
 import {Logger} from './logging'
+
+import {walletIsInitializedSelector} from '../selectors'
 
 import type {State} from '../state'
 
@@ -99,3 +101,28 @@ export const measureRenderTime = <Props>(name: string): HOC<Props, Props> => (
       )
     }
   }
+
+// TODO(ppershing): figure out how to constrain 'any' here.
+// Note that simply replacing 'any' with Props (or Subprops)
+// turns flow into I-ignore-type-errors beast :-(
+// prettier-ignore
+export const requireLoaded = <
+  Props,
+  Callback: (any) => mixed,
+>(
+    isLoaded: Callback,
+    Loading: ComponentType<{}> = () => null
+  ): HOC<Props, Props> => (
+    BaseComponent: ComponentType<Props>,
+  ): ComponentType<Props> =>
+    (props) => isLoaded(props) ? <BaseComponent {...props} /> : <Loading />
+
+export const requireInitializedWallet = compose(
+  connect((state) => ({
+    _walletIsInitialized: walletIsInitializedSelector(state),
+  })),
+  requireLoaded(
+    ({_walletIsInitialized}) => _walletIsInitialized,
+    () => <Text>l10n Please wait while wallet is initialized...</Text>,
+  ),
+)

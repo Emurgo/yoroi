@@ -22,6 +22,7 @@ import {
   onDidMount,
   RenderCount,
   measureRenderTime,
+  requireInitializedWallet,
 } from '../../utils/renderUtils'
 import {printAda} from '../../utils/transactions'
 
@@ -92,6 +93,7 @@ type ExternalProps = {|
 |}
 
 export default (compose(
+  requireInitializedWallet,
   connect(
     (state: State) => ({
       transactionsInfo: transactionsInfoSelector(state),
@@ -99,7 +101,6 @@ export default (compose(
       isSyncing: isSynchronizingHistorySelector(state),
       lastSyncError: lastHistorySyncErrorSelector(state),
       isOnline: isOnlineSelector(state),
-      updateHistory,
     }),
     {
       updateHistory,

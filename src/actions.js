@@ -30,24 +30,6 @@ const _setOnline = (isOnline: boolean) => (dispatch, getState) => {
   })
 }
 
-// Temporary
-export const initializeWallet = () => async (
-  dispatch: Dispatch<any>,
-  getState: any,
-) => {
-  const mnemonic = [
-    'dry balcony arctic what garbage sort',
-    'cart shine egg lamp manual bottom',
-    'slide assault bus',
-  ].join(' ')
-  await walletManager.openOrCreateWallet(
-    'uuid',
-    'My Wallet',
-    mnemonic,
-    'password',
-  )
-}
-
 export const setupHooks = () => (dispatch: Dispatch<any>) => {
   Logger.debug('setting up api isOnline callback')
   api.setIsOnlineCallback((isOnline) => dispatch(_setOnline(isOnline)))
@@ -56,8 +38,6 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
   walletManager.subscribeBackgroundSyncError((err) =>
     dispatch(setBackgroundSyncError(err)),
   )
-
-  dispatch(initializeWallet())
 }
 
 export const generateNewReceiveAddress = () => (dispatch: Dispatch<any>) => {
