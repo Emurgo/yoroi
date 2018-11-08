@@ -12,6 +12,7 @@ import {
 import {Text} from './UiKit'
 import {COLORS} from '../styles/config'
 import {MAIN_ROUTES, ROOT_ROUTES, WALLET_INIT_ROUTES} from '../RoutesList'
+import storage from '../utils/storage'
 
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 
@@ -81,6 +82,11 @@ const IndexScreen = ({navigation}: Props) => (
           </View>
         </TouchableHighlight>
       ))}
+      <TouchableHighlight onPress={() => storage.clearAll()}>
+        <View style={styles.sendButton}>
+          <Text>Clear storage</Text>
+        </View>
+      </TouchableHighlight>
     </ScrollView>
   </SafeAreaView>
 )

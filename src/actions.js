@@ -40,7 +40,12 @@ export const initializeWallet = () => async (
     'cart shine egg lamp manual bottom',
     'slide assault bus',
   ].join(' ')
-  await walletManager.createWallet('uuid', 'My Wallet', mnemonic, 'password')
+  await walletManager.openOrCreateWallet(
+    'uuid',
+    'My Wallet',
+    mnemonic,
+    'password',
+  )
 }
 
 export const setupHooks = () => (dispatch: Dispatch<any>) => {
