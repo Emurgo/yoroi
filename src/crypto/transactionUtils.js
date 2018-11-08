@@ -31,11 +31,6 @@ export const getTransactionAssurance = (
   return 'HIGH'
 }
 
-// TODO(ppershing): probably belongs to utils/localization once we have it
-export const printAda = (amount: BigNumber) => {
-  // 1 ADA = 1 000 000 micro ada
-  return amount.dividedBy(1000000).toFixed(6)
-}
 
 const _sum = (a: Array<{address: string, amount: BigNumber}>): BigNumber =>
   a.reduce((acc: BigNumber, x) => acc.plus(x.amount), new BigNumber(0))

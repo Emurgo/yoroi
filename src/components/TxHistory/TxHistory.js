@@ -24,7 +24,7 @@ import {
   measureRenderTime,
   requireInitializedWallet,
 } from '../../utils/renderUtils'
-import {printAda} from '../../utils/transactions'
+import {printAda} from '../../utils/renderUtils'
 
 import styles from './styles/TxHistory.style'
 

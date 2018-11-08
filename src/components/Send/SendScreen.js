@@ -17,7 +17,7 @@ import {
   utxosSelector,
 } from '../../selectors'
 import {Logger} from '../../utils/logging'
-import {printAda} from '../../utils/transactions'
+import {printAda} from '../../utils/renderUtils'
 import {withTranslations} from '../../utils/renderUtils'
 import walletManager from '../../crypto/wallet'
 import {fetchUTXOs} from '../../actions/utxo'

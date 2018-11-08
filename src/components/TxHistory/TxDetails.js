@@ -7,7 +7,7 @@ import {View} from 'react-native'
 import _ from 'lodash'
 
 import {transactionsInfoSelector} from '../../selectors'
-import {printAda} from '../../utils/transactions'
+import {printAda} from '../../utils/renderUtils'
 import {Text} from '../UiKit'
 import Screen from '../../components/Screen'
 import AdaIcon from '../../assets/AdaIcon'

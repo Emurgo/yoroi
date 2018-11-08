@@ -3,7 +3,7 @@ import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
 import {createSelector} from 'reselect'
 
-import {processTxHistoryData} from './utils/transactions'
+import {processTxHistoryData} from './crypto/transactionUtils'
 import {TRANSACTION_STATUS} from './types/HistoryTransaction'
 import {ObjectValues} from './utils/flow'
 
