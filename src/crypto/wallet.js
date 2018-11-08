@@ -2,6 +2,7 @@
 
 import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
+import {defaultMemoize} from 'reselect'
 
 import storage from '../utils/storage'
 import {AddressChain, AddressGenerator} from './chain'
@@ -28,6 +29,11 @@ type WalletState = {|
   generatedAddressCount: number,
 |}
 
+const ownAddressesSelector = (
+  internal: Array<string>,
+  external: Array<string>,
+) => [...internal, ...external]
+
 export class Wallet {
   _encryptedMasterKey: any = null
   // $FlowFixMe null
@@ -44,6 +50,7 @@ export class Wallet {
   _subscriptions: Array<(Wallet) => any> = []
   // $FlowFixMe null
   _transactionCache: TransactionCache = null
+  _ownAddressesSelector = defaultMemoize(ownAddressesSelector)
 
   /* global $Shape */
   updateState(update: $Shape<WalletState>) {
@@ -172,14 +179,12 @@ export class Wallet {
 
   // TODO(ppershing): memoize
   getOwnAddresses() {
-    if (this._isInitialized) {
-      return [
-        ...this._internalChain.addresses,
-        ...this._externalChain.addresses,
-      ]
-    }
+    if (!this._isInitialized) return []
 
-    return []
+    return this._ownAddressesSelector(
+      this._internalChain.addresses,
+      this._externalChain.addresses,
+    )
   }
 
   getUiReceiveAddresses() {
@@ -340,7 +345,7 @@ class WalletManager {
   _subscribers: Array<() => any> = []
 
   // Note(ppershing): needs 'this' to be bound
-  notify = () => {
+  _notify = () => {
     // TODO(ppershing): do this in next tick?
     this._subscribers.forEach((handler) => handler())
   }
@@ -427,8 +432,8 @@ class WalletManager {
     this._id = id
     await this.saveState()
     this._wallet = wallet
-    wallet.subscribe(this.notify)
-    this.notify()
+    wallet.subscribe(this._notify)
+    this._notify()
     return wallet
   }
 
@@ -446,8 +451,8 @@ class WalletManager {
     wallet._restore(data)
     this._wallet = wallet
     this._id = id
-    wallet.subscribe(this.notify)
-    this.notify()
+    wallet.subscribe(this._notify)
+    this._notify()
     return wallet
   }
 

@@ -27,6 +27,7 @@ type State = {
 class AddressModal extends React.Component<Props, State> {
   state = {isCopied: false}
 
+  /* eslint-disable-next-line react/sort-comp */
   _hideModalTimeoutId = null
 
   componentWillUnmount() {
