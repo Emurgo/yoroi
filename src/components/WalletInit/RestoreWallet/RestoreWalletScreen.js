@@ -5,7 +5,6 @@ import {View, TextInput} from 'react-native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withState} from 'recompose'
-import {NavigationActions, StackActions} from 'react-navigation'
 import _ from 'lodash'
 import {wordlists} from 'bip39'
 
@@ -20,16 +19,6 @@ import styles from './styles/RestoreWalletScreen.style'
 
 import type {State} from '../../../state'
 import type {SubTranslation} from '../../../l10n/typeHelpers'
-
-const resetNavigationAction = StackActions.reset({
-  index: 0,
-  actions: [
-    NavigationActions.navigate({
-      routeName: ROOT_ROUTES.MAIN,
-    }),
-  ],
-  key: null,
-})
 
 const getTranslations = (state: State) => state.trans.RestoreWalletScreen
 
@@ -122,7 +111,7 @@ export default compose(
   withHandlers({
     navigateToWallet: ({navigation, phrase}) => async (event) => {
       await walletManager.createWallet('uuid', 'MyWallet', phrase, 'password')
-      navigation.dispatch(resetNavigationAction)
+      navigation.navigate(ROOT_ROUTES.WALLET)
     },
     validatePhrase: ({phrase}) => () => validatePhrase(phrase),
   }),

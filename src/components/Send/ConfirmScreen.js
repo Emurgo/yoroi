@@ -12,7 +12,7 @@ import {Text, Button} from '../UiKit'
 import {utxoBalanceSelector} from '../../selectors'
 // import {authenticate} from '../../helpers/bioAuthHelper'
 import walletManager from '../../crypto/wallet'
-import {MAIN_ROUTES} from '../../RoutesList'
+import {WALLET_ROUTES} from '../../RoutesList'
 import {printAda} from '../../utils/renderUtils'
 
 import styles from './styles/ConfirmScreen.style'
@@ -24,7 +24,7 @@ const handleOnConfirm = async (navigation) => {
   const transactionData = navigation.getParam('transactionData')
   // TODO: add error handling
   await walletManager.submitTransaction(transactionData, 'password')
-  navigation.navigate(MAIN_ROUTES.TX_HISTORY)
+  navigation.navigate(WALLET_ROUTES.TX_HISTORY)
 }
 
 const getTranslations = (state) => state.trans.ConfirmScreen

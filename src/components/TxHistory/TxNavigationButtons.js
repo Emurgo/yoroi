@@ -9,7 +9,7 @@ import {withHandlers} from 'recompose'
 import {Text} from '../UiKit'
 import styles from './styles/TxNavigationButtons.style'
 import {COLORS} from '../../styles/config'
-import {MAIN_ROUTES} from '../../RoutesList'
+import {WALLET_ROUTES} from '../../RoutesList'
 
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {SubTranslation} from '../../l10n/typeHelpers'
@@ -62,8 +62,8 @@ export default compose(
   })),
   withHandlers({
     navigateToReceive: ({navigation}) => (event) =>
-      navigation.navigate(MAIN_ROUTES.RECEIVE),
+      navigation.navigate(WALLET_ROUTES.RECEIVE),
     navigateToSend: ({navigation}) => (event) =>
-      navigation.navigate(MAIN_ROUTES.SEND),
+      navigation.navigate(WALLET_ROUTES.SEND),
   }),
 )(TxNavigationButtons)
