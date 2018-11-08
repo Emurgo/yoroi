@@ -18,6 +18,12 @@ export const TRANSACTION_STATUS = {
 }
 
 export type TransactionStatus = $Values<typeof TRANSACTION_STATUS>
+export type TransactionAssurance =
+  | 'PENDING'
+  | 'FAILED'
+  | 'LOW'
+  | 'MEDIUM'
+  | 'HIGH'
 
 export type TransactionInfo = {|
   id: string,
@@ -32,6 +38,7 @@ export type TransactionInfo = {|
   submittedAt: Moment,
   lastUpdatedAt: Moment,
   status: TransactionStatus,
+  assurance: TransactionAssurance,
 |}
 
 export type Transaction = {|

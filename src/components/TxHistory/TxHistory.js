@@ -23,8 +23,8 @@ import {
   RenderCount,
   measureRenderTime,
   requireInitializedWallet,
+  printAda,
 } from '../../utils/renderUtils'
-import {printAda} from '../../utils/transactions'
 
 import styles from './styles/TxHistory.style'
 

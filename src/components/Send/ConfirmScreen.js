@@ -10,7 +10,7 @@ import {Text, Button} from '../UiKit'
 // import {authenticate} from '../../helpers/bioAuthHelper'
 import walletManager from '../../crypto/wallet'
 import {MAIN_ROUTES} from '../../RoutesList'
-import {printAda} from '../../utils/transactions'
+import {printAda} from '../../utils/renderUtils'
 
 import styles from './styles/ConfirmScreen.style'
 
