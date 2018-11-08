@@ -36,5 +36,5 @@ test('Can sync txs after restoring wallet', async () => {
 
   // Note(ppershing): these are just loose tests because we are testing
   // agains live test-wallet and so the numbers might increase over time
-  expect(_.size(wallet.transactions)).toBeGreaterThanOrEqual(13)
+  expect(_.size(wallet.transactions)).toBeGreaterThanOrEqual(43)
 })
