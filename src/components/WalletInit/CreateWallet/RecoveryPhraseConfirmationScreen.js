@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react'
+import _ from 'lodash'
 import {View, TouchableHighlight} from 'react-native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
@@ -9,6 +10,7 @@ import {withHandlers, withProps, withState} from 'recompose'
 import {Text, Button} from '../../UiKit'
 import Screen from '../../Screen'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
+import {CONFIG} from '../../../config'
 
 import {COLORS} from '../../../styles/config'
 import styles from './styles/RecoveryPhraseConfirmationScreen.style'
@@ -140,7 +142,20 @@ export default compose(
   connect((state) => ({
     translations: getTranslations(state),
   })),
-  withState('partialPhrase', 'setPartialPhrase', []),
+  withState(
+    'partialPhrase',
+    'setPartialPhrase',
+    /* prettier-ignore */
+    CONFIG.DEBUG.PREFILL_FORMS
+      ? _(CONFIG.DEBUG.MNEMONIC2.split(' '))
+        .map((word, i) => ({word, i}))
+        .sortBy(({word, i}) => word)
+        .map(({word, i}, j) => [i, j])
+        .sortBy(([i, j]) => i)
+        .map(([i, j]) => j)
+        .value()
+      : [],
+  ),
   withProps(({navigation}) => {
     const mnemonic = navigation.getParam('mnemonic')
     return {

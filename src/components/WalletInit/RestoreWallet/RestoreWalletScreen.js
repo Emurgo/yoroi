@@ -13,6 +13,7 @@ import {Text, Button} from '../../UiKit'
 import Screen from '../../Screen'
 import {ROOT_ROUTES} from '../../../RoutesList'
 import walletManager from '../../../crypto/wallet'
+import {CONFIG} from '../../../config'
 
 import {COLORS} from '../../../styles/config'
 import styles from './styles/RestoreWalletScreen.style'
@@ -68,18 +69,6 @@ type Props = {
   validatePhrase: () => PhraseErrors,
 }
 
-const mnemonic1 = [
-  'dry balcony arctic what garbage sort',
-  'cart shine egg lamp manual bottom',
-  'slide assault bus',
-].join(' ')
-
-const mnemonic2 = [
-  'able grunt edge report orange wide',
-  'amount decrease congress flee smile impulse',
-  'parade perfect normal',
-].join(' ')
-
 const RestoreWalletScreen = ({
   navigateToWallet,
   translations,
@@ -93,17 +82,6 @@ const RestoreWalletScreen = ({
       <View style={styles.container}>
         <Text>{translations.title}</Text>
         <Text>{translations.instructions}</Text>
-        {/* eslint-disable-next-line react-native/no-inline-styles */}
-        <View style={{flexDirection: 'row'}}>
-          <Button
-            onPress={() => setPhrase(mnemonic1)}
-            title="SET DEFAULT MNEMONIC"
-          />
-          <Button
-            onPress={() => setPhrase(mnemonic2)}
-            title="SET ANOTHER MNEMONIC"
-          />
-        </View>
         <View>
           <TextInput
             multiline
@@ -136,7 +114,11 @@ export default compose(
   connect((state) => ({
     translations: getTranslations(state),
   })),
-  withState('phrase', 'setPhrase', ''),
+  withState(
+    'phrase',
+    'setPhrase',
+    CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.MNEMONIC1 : '',
+  ),
   withHandlers({
     navigateToWallet: ({navigation, phrase}) => async (event) => {
       await walletManager.createWallet('uuid', 'MyWallet', phrase, 'password')

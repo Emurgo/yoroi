@@ -26,6 +26,21 @@ const CARDANO = CARDANO_CONFIG.TESTNET
 
 export const CONFIG = {
   USE_MOCK_API: false,
+  DEBUG: {
+    PREFILL_FORMS: true,
+    WALLET_NAME: 'My wallet',
+    PASSWORD: 'aeg?eP3M',
+    MNEMONIC1: [
+      'dry balcony arctic what garbage sort',
+      'cart shine egg lamp manual bottom',
+      'slide assault bus',
+    ].join(' '),
+    MNEMONIC2: [
+      'able grunt edge report orange wide',
+      'amount decrease congress flee smile impulse',
+      'parade perfect normal',
+    ].join(' '),
+  },
   API: {
     ROOT: CARDANO.API_ROOT,
     // backend limitations
