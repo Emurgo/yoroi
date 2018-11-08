@@ -18,12 +18,14 @@ const _endFetch = () => ({
   reducer: (state, payload) => false,
 })
 
-const _setSyncError = (error) => ({
+const _setSyncError = (error: any): any => ({
   type: 'Set history sync error',
   path: ['txHistory', 'lastSyncError'],
   payload: error,
   reducer: (state, payload) => payload,
 })
+
+export const setBackgroundSyncError = _setSyncError
 
 export const updateHistory = () => async (dispatch: Dispatch<any>) => {
   // TODO(ppershing): abort previous request if still fetching
@@ -38,19 +40,6 @@ export const updateHistory = () => async (dispatch: Dispatch<any>) => {
     dispatch(_setSyncError(e))
   } finally {
     dispatch(_endFetch())
-  }
-}
-
-export const updateHistoryInBackground = () => async (
-  dispatch: Dispatch<any>,
-) => {
-  try {
-    await walletManager.tryDoFullSync()
-    dispatch(_setSyncError(null))
-  } catch (e) {
-    // TODO(ppershing): should we set error object or just
-    // some message code?
-    dispatch(_setSyncError(e))
   }
 }
 

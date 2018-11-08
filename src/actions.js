@@ -5,7 +5,7 @@ import api from './api'
 import l10n from './l10n'
 import {Logger} from './utils/logging'
 import walletManager from './crypto/wallet'
-import {mirrorTxHistory} from './actions/history'
+import {mirrorTxHistory, setBackgroundSyncError} from './actions/history'
 
 import {type Dispatch} from 'redux'
 
@@ -53,6 +53,9 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
   api.setIsOnlineCallback((isOnline) => dispatch(_setOnline(isOnline)))
   Logger.debug('setting wallet manager hook')
   walletManager.subscribe(() => dispatch(mirrorTxHistory()))
+  walletManager.subscribeBackgroundSyncError((err) =>
+    dispatch(setBackgroundSyncError(err)),
+  )
 
   dispatch(initializeWallet())
 }
