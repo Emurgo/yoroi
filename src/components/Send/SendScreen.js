@@ -223,11 +223,12 @@ const SendScreen = ({
   handleChangeAmount,
   validationErrors,
 }: Props) => {
+  const {address: addressErrors, amount: amountErrors} = validationErrors
   const disabled =
     isFetchingBalance ||
     !!lastFetchingError ||
-    !!validationErrors.address ||
-    !!validationErrors.amount
+    !!addressErrors ||
+    !!amountErrors
 
   return (
     <View style={styles.root}>
@@ -253,8 +254,8 @@ const SendScreen = ({
           placeholder={translations.address}
           onChangeText={handleChangeAddress}
         />
-        {/* prettier-ignore */ !!validationErrors.address &&
-          !!validationErrors.address.invalidAddress && (
+        {/* prettier-ignore */ !!addressErrors &&
+          !!addressErrors.invalidAddress && (
           <Text style={styles.error}>
             {translations.validationErrors.invalidAddress}
           </Text>
@@ -266,12 +267,12 @@ const SendScreen = ({
           placeholder={translations.amount}
           onChangeText={handleChangeAmount}
         />
-        {/* prettier-ignore */ !!validationErrors.amount &&
-          !!validationErrors.amount.invalidAmount && (
+        {/* prettier-ignore */ !!amountErrors &&
+          !!amountErrors.invalidAmount && (
           <Text style={styles.error}>
             {translations
               .validationErrors
-              .amountErrorByErrorCode(validationErrors.amount.invalidAmount)}
+              .amountErrorByErrorCode(amountErrors.invalidAmount)}
           </Text>
         )}
       </View>
