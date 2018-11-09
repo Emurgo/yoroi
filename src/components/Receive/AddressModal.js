@@ -4,7 +4,6 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {Modal, Clipboard, View} from 'react-native'
 import QRCode from 'react-native-qrcode'
-import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 
 import {formatBIP44} from '../../crypto/util'
 
@@ -14,6 +13,7 @@ import styles from './styles/AddressModal.style'
 
 import type {ComponentType} from 'react'
 import type {SubTranslation} from '../../l10n/typeHelpers'
+import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 
 const getTranslations = (state) => state.trans.AddressModal
 
@@ -53,7 +53,9 @@ class AddressModal extends React.Component<Props, State> {
     const {address, index, translations, navigation} = this.props
 
     return (
-      <Modal visible onRequestClose={navigation.goBack}>
+      // cool-user: for some strange reason, navigaton.goBack
+      // does not work here, if it is not wrapped in lambda
+      <Modal visible onRequestClose={() => navigation.goBack()}>
         <View style={styles.root}>
           <View style={styles.container}>
             <QRCode
