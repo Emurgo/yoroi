@@ -82,7 +82,7 @@ const clearFeeErrors = (amountErrors) => {
   }
 }
 
-const handleChangeAddress = ({
+const handleAddressChange = ({
   utxos,
   amount,
   validationErrors,
@@ -104,7 +104,7 @@ const handleChangeAddress = ({
   setValidationErrors({address: addressErrors, amount: amountOrFeeErrors})
 }
 
-const handleChangeAmount = ({
+const handleAmountChange = ({
   utxos,
   address,
   validationErrors,
@@ -166,10 +166,10 @@ const handleConfirm = ({
   }
 }
 
-const _navigateToQRReader = (navigation, handleChangeAddress) =>
+const _navigateToQRReader = (navigation, handleAddressChange) =>
   navigation.navigate(SEND_ROUTES.ADDRESS_READER_QR, {
     onSuccess: (address) => {
-      handleChangeAddress(address)
+      handleAddressChange(address)
       navigation.navigate(SEND_ROUTES.MAIN)
     },
   })
@@ -204,8 +204,8 @@ type Props = {
   isFetchingBalance: boolean,
   lastFetchingError: any,
   handleDidFocus: () => void,
-  handleChangeAddress: (string) => mixed,
-  handleChangeAmount: (string) => mixed,
+  handleAddressChange: (string) => mixed,
+  handleAmountChange: (string) => mixed,
   validationErrors: FormValidationErrors,
 }
 
@@ -219,8 +219,8 @@ const SendScreen = ({
   isFetchingBalance,
   lastFetchingError,
   handleDidFocus,
-  handleChangeAddress,
-  handleChangeAmount,
+  handleAddressChange,
+  handleAmountChange,
   validationErrors,
 }: Props) => {
   const {address: addressErrors, amount: amountErrors} = validationErrors
@@ -252,7 +252,7 @@ const SendScreen = ({
           style={styles.inputText}
           value={address}
           placeholder={translations.address}
-          onChangeText={handleChangeAddress}
+          onChangeText={handleAddressChange}
         />
         {/* prettier-ignore */ addressErrors &&
           !!addressErrors.invalidAddress && (
@@ -265,7 +265,7 @@ const SendScreen = ({
           keyboardType={'numeric'}
           value={amount}
           placeholder={translations.amount}
-          onChangeText={handleChangeAmount}
+          onChangeText={handleAmountChange}
         />
         {/* prettier-ignore */ amountErrors &&
           !!amountErrors.invalidAmount && (
@@ -306,11 +306,11 @@ export default compose(
   withHandlers({
     handleConfirm,
     handleDidFocus,
-    handleChangeAddress,
-    handleChangeAmount,
+    handleAddressChange,
+    handleAmountChange,
   }),
   withHandlers({
-    navigateToQRReader: ({navigation, handleChangeAddress}) => (event) =>
-      _navigateToQRReader(navigation, handleChangeAddress),
+    navigateToQRReader: ({navigation, handleAddressChange}) => (event) =>
+      _navigateToQRReader(navigation, handleAddressChange),
   }),
 )(SendScreen)
