@@ -8,6 +8,8 @@ import ReceiveScreenNavigator from './components/Receive/ReceiveScreenNavigator'
 import SettingsScreenNavigator from './components/Settings/SettingsScreenNavigator'
 import IndexScreen from './components/IndexScreen'
 import LoginScreen from './components/Login/LoginScreen'
+// eslint-disable-next-line max-len
+import WalletSelectionScreen from './components/WalletSelection/WalletSelectionScreen'
 import {WALLET_ROUTES, ROOT_ROUTES} from './RoutesList'
 
 const WalletNavigator = createStackNavigator(
@@ -33,6 +35,7 @@ const AppNavigator = createSwitchNavigator(
     [ROOT_ROUTES.WALLET]: WalletNavigator,
     [ROOT_ROUTES.INIT]: WalletInitNavigator,
     [ROOT_ROUTES.INDEX]: IndexScreen,
+    [ROOT_ROUTES.WALLET_SELECTION]: WalletSelectionScreen,
   },
   {
     initialRouteName: ROOT_ROUTES.INDEX,

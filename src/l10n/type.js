@@ -194,5 +194,9 @@ export type Translation = {
     title: string,
     content: Array<any>,
   },
+  WalletSelectionScreen: {
+    addWallet: string,
+    header: string,
+  },
   setLanguage: (lang: string) => void,
 }

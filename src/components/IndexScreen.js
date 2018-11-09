@@ -23,6 +23,7 @@ const routes = [
   {label: 'Restore Wallet', path: WALLET_INIT_ROUTES.RESTORE_WALLET},
   {label: 'Login', path: ROOT_ROUTES.LOGIN},
   {label: 'Settings', path: WALLET_ROUTES.SETTINGS},
+  {label: 'Wallet Selection', path: ROOT_ROUTES.WALLET_SELECTION},
 ]
 
 const styles = StyleSheet.create({
