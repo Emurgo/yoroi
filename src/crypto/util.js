@@ -164,3 +164,13 @@ export const formatBIP44 = (
     ADDRESS_TYPE_TO_CHANGE[type]
   }/${index}`
 }
+
+export const isValidMnemonic = (mnemonic: string): boolean => {
+  try {
+    mnemonicToEntropy(mnemonic)
+  } catch (err) {
+    return false
+  }
+
+  return true
+}
