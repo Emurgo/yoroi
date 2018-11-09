@@ -147,7 +147,7 @@ const _navigateToQRReader = (navigation, setAddress) =>
     },
   })
 
-const handleWillFocus = ({isFetching, fetchUTXOs}) => () => {
+const handleDidFocus = ({isFetching, fetchUTXOs}) => () => {
   if (!isFetching) {
     fetchUTXOs()
   }
@@ -176,7 +176,7 @@ type Props = {
   setAddress: () => mixed,
   isFetchingBalance: boolean,
   lastFetchingError: any,
-  handleWillFocus: () => void,
+  handleDidFocus: () => void,
   handleValidateAddress: () => mixed,
   handleValidateAmount: () => mixed,
   addressErrors?: AddressValidationErrors,
@@ -194,7 +194,7 @@ const SendScreen = ({
   setAddress,
   isFetchingBalance,
   lastFetchingError,
-  handleWillFocus,
+  handleDidFocus,
   handleValidateAddress,
   handleValidateAmount,
   addressErrors,
@@ -208,7 +208,7 @@ const SendScreen = ({
 
   return (
     <View style={styles.root}>
-      <NavigationEvents onWillFocus={handleWillFocus} />
+      <NavigationEvents onDidFocus={handleDidFocus} />
       {lastFetchingError && <FetchingErrorBanner />}
       <View style={styles.header}>
         {isFetchingBalance ? (
@@ -285,6 +285,6 @@ export default compose(
     handleConfirm,
     handleValidateAddress,
     handleValidateAmount,
-    handleWillFocus,
+    handleDidFocus,
   }),
 )(SendScreen)
