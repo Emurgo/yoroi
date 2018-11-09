@@ -44,12 +44,12 @@ export type TransactionInfo = {|
 export type Transaction = {|
   id: string,
   status: TransactionStatus,
-  inputs: Array<{address: string, amount: BigNumber}>,
-  outputs: Array<{address: string, amount: BigNumber}>,
+  inputs: Array<{address: string, amount: string}>,
+  outputs: Array<{address: string, amount: string}>,
   blockNum: ?number,
   bestBlockNum: number,
-  submittedAt: Moment,
-  lastUpdatedAt: Moment,
+  submittedAt: string,
+  lastUpdatedAt: string,
 |}
 
 export type RawUtxo = {|

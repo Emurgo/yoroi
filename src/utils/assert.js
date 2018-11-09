@@ -5,19 +5,17 @@ import {Logger} from './logging'
 
 export class AssertionFailed extends ExtendableError {}
 
-const _assert = (value: any, message: ?string) => {
+const _assert = (value: any, message: string, ...args: any) => {
   if (value) return
-  // Note(ppershing): Works in V8 (Node/jest)
-  const tmp = new Error()
-  const location = (tmp.stack || '').split('\n')[3] || ''
-  throw new AssertionFailed(message || `Assertion failed ${location}`)
+  Logger.error('Assertion failed', message, ...args)
+  throw new AssertionFailed(message)
 }
 
-export const assertTrue = (value: any, message: ?string) => {
-  _assert(value, message)
+export const assertTrue = (value: any, message: string, ...args: any) => {
+  _assert(value, message, ...args)
 }
 
-export const assertFalse = (value: any, message: ?string) => {
+export const assertFalse = (value: any, message: string) => {
   _assert(!value, message)
 }
 
@@ -29,8 +27,12 @@ export const checkIsFalse = (value: any, ...args: any) => {
   if (!value) Logger.error('Check failed', ...args)
 }
 
-export const preconditionIsTrue = (value: any, message: string) => {
-  _assert(value, `Precondition check failed: ${message}`)
+export const preconditionIsTrue = (
+  value: any,
+  message: string,
+  ...args: any
+) => {
+  _assert(value, `Precondition check failed: ${message}`, ...args)
 }
 
 export default {

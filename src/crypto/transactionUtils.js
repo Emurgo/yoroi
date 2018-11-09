@@ -1,5 +1,5 @@
 // @flow
-
+import moment from 'moment'
 import {BigNumber} from 'bignumber.js'
 
 import {
@@ -13,7 +13,6 @@ import type {TransactionInfo, Transaction} from '../types/HistoryTransaction'
 
 type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
 
-// TODO(ppershing): create Flow type for this
 export const getTransactionAssurance = (
   status: $Values<typeof TRANSACTION_STATUS>,
   confirmations: number,
@@ -31,8 +30,11 @@ export const getTransactionAssurance = (
   return 'HIGH'
 }
 
-const _sum = (a: Array<{address: string, amount: BigNumber}>): BigNumber =>
-  a.reduce((acc: BigNumber, x) => acc.plus(x.amount), new BigNumber(0))
+const _sum = (a: Array<{address: string, amount: string}>): BigNumber =>
+  a.reduce(
+    (acc: BigNumber, x) => acc.plus(new BigNumber(x.amount, 10)),
+    new BigNumber(0),
+  )
 
 const _multiPartyWarningCache = {}
 
@@ -132,8 +134,8 @@ export const processTxHistoryData = (
     fee,
     confirmations,
     direction,
-    submittedAt: tx.submittedAt,
-    lastUpdatedAt: tx.lastUpdatedAt,
+    submittedAt: moment(tx.submittedAt),
+    lastUpdatedAt: moment(tx.lastUpdatedAt),
     status: tx.status,
     assurance,
   }

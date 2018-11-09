@@ -3,7 +3,6 @@ import moment from 'moment'
 import {defaultMemoize} from 'reselect'
 import _ from 'lodash'
 import assert from '../utils/assert'
-import BigNumber from 'bignumber.js'
 
 import {ObjectValues} from '../utils/flow'
 import {limitConcurrency} from '../utils/promise'
@@ -17,7 +16,7 @@ import type {Transaction} from '../types/HistoryTransaction'
 import {TRANSACTION_STATUS} from '../types/HistoryTransaction'
 
 type SyncMetadata = {
-  lastUpdated: Moment,
+  lastUpdated: string,
   bestBlockNum: number,
 }
 
@@ -26,54 +25,12 @@ type TransactionCacheState = {
   perAddressSyncMetadata: Dict<SyncMetadata>,
 }
 
-const transactionToJSON = (transaction: Transaction) => ({
-  id: transaction.id,
-  status: transaction.status,
-  inputs: transaction.inputs.map(({address, amount}) => ({
-    address,
-    amount: amount.toString(),
-  })),
-  outputs: transaction.outputs.map(({address, amount}) => ({
-    address,
-    amount: amount.toString(),
-  })),
-  blockNum: transaction.blockNum,
-  bestBlockNum: transaction.bestBlockNum,
-  submittedAt: transaction.submittedAt.toISOString(),
-  lastUpdatedAt: transaction.lastUpdatedAt.toISOString(),
-})
-
-const transactionFromJSON = (transaction: any): Transaction => ({
-  id: transaction.id,
-  status: transaction.status,
-  inputs: transaction.inputs.map(({address, amount}) => ({
-    address,
-    amount: new BigNumber(amount, 10),
-  })),
-  outputs: transaction.outputs.map(({address, amount}) => ({
-    address,
-    amount: new BigNumber(amount, 10),
-  })),
-  blockNum: transaction.blockNum,
-  bestBlockNum: transaction.bestBlockNum,
-  submittedAt: moment(transaction.submittedAt),
-  lastUpdatedAt: moment(transaction.lastUpdatedAt),
-})
-
-const syncMetadataToJSON = (meta: SyncMetadata) => ({
-  lastUpdated: meta.lastUpdated.toISOString(),
-  bestBlockNum: meta.bestBlockNum,
-})
-
-const syncMetadataFromJSON = (meta: any): SyncMetadata => ({
-  lastUpdated: moment(meta.lastUpdated),
-  bestBlockNum: meta.bestBlockNum,
-})
-
 const getLastTimestamp = (transactions: Array<Transaction>): ?Moment => {
   // Note(ppershing): ISO8601 dates can be sorted as strings
   // and the result is expected
-  return _.max(transactions.map((tx) => tx.lastUpdatedAt)) || moment(0)
+  return (
+    _.max(transactions.map((tx) => tx.lastUpdatedAt)) || moment(0).toISOString()
+  )
 }
 
 const perAddressTxsSelector = (state: TransactionCacheState) => {
@@ -175,13 +132,13 @@ export class TransactionCache {
         'getBlockMetadata: undefined vs defined',
       )
       return {
-        lastUpdated: moment(0),
+        lastUpdated: moment(0).toISOString(),
         bestBlockNum: 0,
       }
     } else {
       // Old addresses
       assert.assert(
-        metadata.every((x) => x.lastUpdated.isSame(first.lastUpdated)),
+        metadata.every((x) => x.lastUpdated === first.lastUpdated),
         'getBlockMetadata: lastUpdated metadata same',
       )
       assert.assert(
@@ -198,7 +155,7 @@ export class TransactionCache {
     // We have this transaction and it did not change
     if (
       this._state.transactions[id] &&
-      this._state.transactions[id].lastUpdatedAt.isSame(tx.lastUpdatedAt)
+      this._state.transactions[id].lastUpdatedAt === tx.lastUpdatedAt
     ) {
       return false
     }
@@ -217,6 +174,7 @@ export class TransactionCache {
     assert.assert(
       transactions.length === _.uniq(transactions.map((tx) => tx.id)).length,
       'Got the same transaction twice in one batch',
+      transactions,
     )
     const updated = transactions.map((tx) => this._isUpdatedTransaction(tx))
     return _.sum(updated, (x) => (x ? 1 : 0))
@@ -232,7 +190,7 @@ export class TransactionCache {
       const metadata = this._getBlockMetadata(addrs)
       return () =>
         api
-          .fetchNewTxHistory(metadata.lastUpdated, addrs)
+          .fetchNewTxHistory(moment(metadata.lastUpdated), addrs)
           .then((response) => [addrs, response])
     })
 
@@ -281,30 +239,20 @@ export class TransactionCache {
       }
     }
 
-    if (errors.length) throw errors
+    if (errors.length) {
+      Logger.error('Sync errors', errors)
+      throw errors
+    }
     return wasPaginated || count > 0
   }
 
   toJSON() {
-    return {
-      transactions: _.mapValues(this._state.transactions, transactionToJSON),
-      perAddressSyncMetadata: _.mapValues(
-        this._state.perAddressSyncMetadata,
-        syncMetadataToJSON,
-      ),
-    }
+    return this._state
   }
 
   static fromJSON(data: any) {
     const cache = new TransactionCache()
-    const parsed = {
-      transactions: _.mapValues(data.transactions, transactionFromJSON),
-      perAddressSyncMetadata: _.mapValues(
-        data.perAddressSyncMetadata,
-        syncMetadataFromJSON,
-      ),
-    }
-    cache.updateState(parsed)
+    cache.updateState(data)
     return cache
   }
 }
