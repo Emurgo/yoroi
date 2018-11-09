@@ -13,6 +13,7 @@ import Screen from '../../Screen'
 import {ROOT_ROUTES} from '../../../RoutesList'
 import walletManager from '../../../crypto/wallet'
 import {CONFIG} from '../../../config'
+import {isValidMnemonic} from '../../../crypto/util'
 
 import {COLORS} from '../../../styles/config'
 import styles from './styles/RestoreWalletScreen.style'
@@ -26,6 +27,7 @@ type PhraseErrors = {
   maxLength?: boolean,
   minLength?: boolean,
   unknownWords?: Array<string>,
+  invalidChecksum?: boolean,
 }
 
 const MNEMONIC_LENGTH = 15
@@ -40,14 +42,20 @@ const validatePhrase = (phrase) => {
     ? _.initial(words).filter(notInWordlist)
     : words.filter(notInWordlist)
 
+  const invalidChecksum = !isValidMnemonic(phrase)
+
   // prettier-ignore
-  return maxLength || minLength || unknownWords.length > 0 ?
-    {
+  if (maxLength || minLength || unknownWords.length > 0) {
+    return {
       maxLength,
       minLength,
       unknownWords: unknownWords.length > 0 ? unknownWords : null,
     }
-    : null
+  } else if (invalidChecksum) {
+    return {invalidChecksum}
+  } else {
+    return null
+  }
 }
 
 type Props = {
@@ -80,6 +88,11 @@ const RestoreWalletScreen = ({
             onChangeText={setPhrase}
             placeholder={translations.phrase}
           />
+          {/* prettier-ignore */ errors && errors.invalidChecksum && (
+            <Text style={styles.error}>
+              {translations.errors.invalidChecksum}
+            </Text>
+          )}
           {/* prettier-ignore */ errors && errors.unknownWords && (
             <Text style={styles.error}>
               {translations.errors.unknownWords(errors.unknownWords)}
