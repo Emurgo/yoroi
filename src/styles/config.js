@@ -4,6 +4,7 @@ import {Platform} from 'react-native'
 
 export const COLORS = {
   TRANSPARENT: 'transparent',
+  BACKGROUND: '#fff',
   BACKGROUND_GRAY: '#f5fcff',
   DARK_GRAY: '#4a4a4a',
   LIGHT_GRAY: '#eee',

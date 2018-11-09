@@ -81,6 +81,12 @@ const l10n = {
   },
   ConfirmScreen: {
     confirm: 'Confirm',
+    amount: 'Amount',
+    availableFunds: 'Available funds',
+    balanceAfterTx: 'Balance after transaction',
+    fees: 'Fees',
+    password: 'Wallet password',
+    receiver: 'Receiver',
   },
   WalletInitScreen: {
     createWallet: 'CREATE A NEW WALLET',
