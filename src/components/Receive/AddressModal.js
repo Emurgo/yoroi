@@ -6,16 +6,20 @@ import {Modal, Clipboard, View} from 'react-native'
 import QRCode from 'react-native-qrcode'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 
+import {formatBIP44} from '../../crypto/util'
+
 import {Text, Button} from '../UiKit'
 
 import styles from './styles/AddressModal.style'
 
+import type {ComponentType} from 'react'
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
 const getTranslations = (state) => state.trans.AddressModal
 
 type Props = {
   address: string,
+  index: number,
   translations: SubTranslation<typeof getTranslations>,
   navigation: NavigationScreenProp<NavigationState>,
 }
@@ -46,7 +50,7 @@ class AddressModal extends React.Component<Props, State> {
 
   render() {
     const {isCopied} = this.state
-    const {address, translations, navigation} = this.props
+    const {address, index, translations, navigation} = this.props
 
     return (
       <Modal visible onRequestClose={navigation.goBack}>
@@ -61,6 +65,9 @@ class AddressModal extends React.Component<Props, State> {
           </View>
 
           <View style={styles.container}>
+            <Text style={styles.address}>
+              {translations.BIP32path} {formatBIP44(0, 'External', index)}
+            </Text>
             <Text style={styles.address}>{address}</Text>
           </View>
 
@@ -78,10 +85,15 @@ class AddressModal extends React.Component<Props, State> {
   }
 }
 
-export default connect(
+type ExternalProps = {
+  navigation: NavigationScreenProp<NavigationState>,
+}
+
+export default (connect(
   (state, {navigation}) => ({
     address: navigation.getParam('address'),
+    index: navigation.getParam('index'),
     translations: getTranslations(state),
   }),
   null,
-)(AddressModal)
+)(AddressModal): ComponentType<ExternalProps>)

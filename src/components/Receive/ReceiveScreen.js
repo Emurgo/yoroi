@@ -27,7 +27,11 @@ type Props = {
   addressLimitReached: boolean,
 }
 
-const NO_ADDRESS = {address: 'IT IS A BUG TO SEE THIS TEXT', isUsed: false}
+const NO_ADDRESS = {
+  address: 'IT IS A BUG TO SEE THIS TEXT',
+  index: -1,
+  isUsed: false,
+}
 
 const ReceiveScreen = ({
   receiveAddresses,
@@ -44,10 +48,7 @@ const ReceiveScreen = ({
           <Text style={styles.warningText}>{translations.line2}</Text>
           <Text style={styles.warningText}>{translations.line3}</Text>
         </View>
-        <AddressDetail
-          address={currentAddress.address}
-          isUsed={currentAddress.isUsed}
-        />
+        <AddressDetail {...currentAddress} />
         <View>
           {addressLimitReached && (
             <Text>

@@ -19,7 +19,7 @@ type Props = {
   translations: SubTranslation<typeof getTranslations>,
 }
 
-const AddressDetail = ({address, isUsed, translations}: Props) => (
+const AddressDetail = ({address, index, isUsed, translations}: Props) => (
   <View style={styles.container}>
     <View style={styles.qrContainer}>
       <QRCode
@@ -31,7 +31,7 @@ const AddressDetail = ({address, isUsed, translations}: Props) => (
     </View>
 
     <Text style={styles.addressLabel}>{translations.walletAddress}</Text>
-    <AddressView address={address} isUsed={isUsed} />
+    <AddressView index={index} address={address} isUsed={isUsed} />
   </View>
 )
 

@@ -123,6 +123,7 @@ export type Translation = {
     showUsedAddresses: string,
   },
   AddressModal: {
+    BIP32path: string,
     copyLabel: string,
     copiedLabel: string,
   },

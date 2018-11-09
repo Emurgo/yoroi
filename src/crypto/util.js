@@ -86,9 +86,9 @@ export const getAddresses = (
 ): Promise<Array<string>> =>
   _rethrow(Wallet.generateAddresses(account, type, indexes))
 
-export const ADDRESS_TYPE_INDEX = {
-  EXTERNAL: 0,
-  INTERNAL: 1,
+export const ADDRESS_TYPE_TO_CHANGE: {[AddressType]: number} = {
+  External: 0,
+  Internal: 1,
 }
 
 export const getExternalAddresses = (
@@ -150,4 +150,17 @@ export const signTransaction = async (
     ...result,
     fee: new BigNumber(result.fee, 10),
   }
+}
+
+export const formatBIP44 = (
+  account: number,
+  type: AddressType,
+  index: number,
+) => {
+  const PURPOSE = 44
+  const COIN = 1815
+
+  return `m/${PURPOSE}'/${COIN}'/${account}'/${
+    ADDRESS_TYPE_TO_CHANGE[type]
+  }/${index}`
 }

@@ -16,7 +16,7 @@ import type {SubTranslation} from '../../l10n/typeHelpers'
 const getTranslations = (state) => state.trans.AddressesList
 
 type Props = {
-  addresses: Array<{address: string, isUsed: boolean}>,
+  addresses: Array<{address: string, index: number, isUsed: boolean}>,
   showAll: boolean,
   setShowAll: (boolean) => void,
   onShowPress: () => void,
@@ -48,9 +48,9 @@ const AddressesList = ({
           </Text>
         </TouchableHighlight>
       </View>
-      {shownAddresses.map(({address, isUsed}) => (
-        <View key={address} style={styles.addressContainer}>
-          <AddressView address={address} isUsed={isUsed} />
+      {shownAddresses.map((data) => (
+        <View key={data.index} style={styles.addressContainer}>
+          <AddressView {...data} />
         </View>
       ))}
     </View>

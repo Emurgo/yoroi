@@ -133,6 +133,7 @@ const l10n = {
     showUsedAddresses: 'show used',
   },
   AddressModal: {
+    BIP32path: 'BIP32 path:',
     copyLabel: 'COPY ADDRESS',
     copiedLabel: 'COPIED',
   },

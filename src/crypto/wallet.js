@@ -198,7 +198,8 @@ export class Wallet {
       0,
       this._state.generatedAddressCount,
     )
-    return addresses.map((address) => ({
+    return addresses.map((address, index) => ({
+      index,
       address,
       isUsed: this.isUsedAddress(address),
     }))
@@ -232,14 +233,17 @@ export class Wallet {
 
   transformUtxoToInput(utxo: RawUtxo): TransactionInput {
     const chains = [
-      [util.ADDRESS_TYPE_INDEX.INTERNAL, this._internalChain],
-      [util.ADDRESS_TYPE_INDEX.EXTERNAL, this._externalChain],
+      ['Internal', this._internalChain],
+      ['External', this._externalChain],
     ]
 
     let addressInfo = null
     chains.forEach(([type, chain]) => {
       if (chain.isMyAddress(utxo.receiver)) {
-        addressInfo = {type, index: chain.getIndexOfAddress(utxo.receiver)}
+        addressInfo = {
+          change: util.ADDRESS_TYPE_TO_CHANGE[type],
+          index: chain.getIndexOfAddress(utxo.receiver),
+        }
       }
     })
 
@@ -257,7 +261,7 @@ export class Wallet {
       },
       addressing: {
         account: CONFIG.WALLET.ACCOUNT_INDEX,
-        change: addressInfo.type,
+        change: addressInfo.change,
         index: addressInfo.index,
       },
     }
