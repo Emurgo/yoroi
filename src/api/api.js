@@ -5,7 +5,7 @@ import {Logger} from '../utils/logging'
 import {CONFIG} from '../config'
 import {NotConnectedError, ApiError} from './errors'
 import assert from '../utils/assert'
-import {facadeTransaction} from './facade'
+import {checkAndFacadeTransactionAsync} from './facade'
 
 import type {Moment} from 'moment'
 import type {Transaction, RawUtxo} from '../types/HistoryTransaction'
@@ -75,8 +75,11 @@ export const fetchNewTxHistory = async (
     dateFrom: dateFrom.toISOString(),
   })
 
+  const transactions = await Promise.all(
+    response.map(checkAndFacadeTransactionAsync),
+  )
   return {
-    transactions: response.map(facadeTransaction),
+    transactions,
     isLast: response.length <= CONFIG.API.TX_HISTORY_RESPONSE_LIMIT,
   }
 }

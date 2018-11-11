@@ -5,6 +5,7 @@ export const LogLevel = {
   Info: 1,
   Warn: 2,
   Error: 3,
+  Nothing: 4,
 }
 
 let logLevel = LogLevel.Debug

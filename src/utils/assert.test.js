@@ -1,10 +1,13 @@
-import {assertTrue} from './assert'
+import assert from './assert'
+import {Logger, LogLevel} from './logging'
+
+Logger.setLogLevel(LogLevel.Nothing)
 
 function tryAssert() {
-  assertTrue(false)
+  assert.assert(false, 'tryAssert')
 }
 
-test('assert shows correct location', () => {
+test('assert shows correct message', () => {
   expect.assertions(1)
   try {
     tryAssert()

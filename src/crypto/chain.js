@@ -130,20 +130,35 @@ export class AddressChain {
   _getLastBlock() {
     this._selfCheck()
     const block = _.takeRight(this.addresses, this._blockSize)
-    assert.assert(block.length === this._blockSize)
+    assert.assert(
+      block.length === this._blockSize,
+      'AddressChain::_getLastBlock(): block length',
+    )
     return block
   }
 
   async initialize() {
-    assert.assert(!this._isInitialized)
+    assert.assert(
+      !this._isInitialized,
+      'AddressChain::initialize(): !isInitialized',
+    )
     await this._discoverNewBlock()
-    assert.assert(!this._isInitialized, 'Concurrent modification')
+    assert.assert(
+      !this._isInitialized,
+      'AddressChain::initialized(): Concurrent modification',
+    )
     this._isInitialized = true
   }
 
   _selfCheck() {
-    assert.assert(this._isInitialized)
-    assert.assert(this._addresses.length % this._blockSize === 0)
+    assert.assert(
+      this._isInitialized,
+      'AddressChain::_selfCheck(): isInitialized',
+    )
+    assert.assert(
+      this._addresses.length % this._blockSize === 0,
+      'AddressChain::_selfCheck(): lengths',
+    )
   }
 
   async sync(filterFn: AsyncAddressFilter) {
