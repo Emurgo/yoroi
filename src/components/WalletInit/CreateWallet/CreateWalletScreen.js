@@ -13,6 +13,7 @@ import Screen from '../../Screen'
 import {validatePassword} from '../../../utils/validators'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {withNavigationTitle} from '../../../utils/renderUtils'
+import {CONFIG} from '../../../config'
 
 import styles from './styles/CreateWalletScreen.style'
 import {COLORS} from '../../../styles/config'
@@ -177,9 +178,21 @@ export default compose(
     translations: getTranslations(state),
   })),
   withNavigationTitle(({translations}) => translations.title),
-  withState('name', 'setName', ''),
-  withState('password', 'setPassword', ''),
-  withState('passwordConfirmation', 'setPasswordConfirmation', ''),
+  withState(
+    'name',
+    'setName',
+    CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.WALLET_NAME : '',
+  ),
+  withState(
+    'password',
+    'setPassword',
+    CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
+  ),
+  withState(
+    'passwordConfirmation',
+    'setPasswordConfirmation',
+    CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
+  ),
   withHandlers({
     handleCreate,
     validateForm: ({name, password, passwordConfirmation}) => () =>

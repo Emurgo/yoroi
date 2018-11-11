@@ -10,6 +10,7 @@ import {Text, Button} from '../../UiKit'
 import Screen from '../../Screen'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {generateAdaMnemonic} from '../../../crypto/util'
+import {CONFIG} from '../../../config'
 
 import styles from './styles/RecoveryPhraseScreen.style'
 import {COLORS} from '../../../styles/config'
@@ -60,7 +61,11 @@ export default compose(
   connect((state) => ({
     translations: getTranslations(state),
   })),
-  withState('mnemonic', 'setMnemonic', generateAdaMnemonic()),
+  withState(
+    'mnemonic',
+    'setMnemonic',
+    CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.MNEMONIC2 : generateAdaMnemonic(),
+  ),
   withHandlers({
     navigateToRecoveryPhraseConfirmation: ({navigation, mnemonic}) => () =>
       navigation.navigate(WALLET_INIT_ROUTES.RECOVERY_PHRASE_CONFIRMATION, {
