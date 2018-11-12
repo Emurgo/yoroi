@@ -18,9 +18,22 @@ import styles from './styles/RestoreWalletScreen.style'
 
 import type {State} from '../../../state'
 import type {SubTranslation} from '../../../l10n/typeHelpers'
-import type {RecoveryPhraseErrors} from '../../../utils/validators'
+import type {
+  RecoveryPhraseErrors,
+  InvalidPhraseError,
+} from '../../../utils/validators'
 
 const getTranslations = (state: State) => state.trans.RestoreWalletScreen
+
+const _translateInvalidPhraseError = (
+  translations: SubTranslation<typeof getTranslations>,
+  error: InvalidPhraseError,
+) => {
+  const translation = translations.errors[error.code]
+  return typeof translation === 'string'
+    ? translation
+    : translation(error.parameter)
+}
 
 type Props = {
   navigateToWallet: () => mixed,
@@ -28,6 +41,7 @@ type Props = {
   phrase: string,
   setPhrase: (phrase: string) => mixed,
   validatePhrase: () => RecoveryPhraseErrors,
+  translateInvalidPhraseError: (InvalidPhraseError) => string,
 }
 
 const RestoreWalletScreen = ({
@@ -36,6 +50,7 @@ const RestoreWalletScreen = ({
   phrase,
   setPhrase,
   validatePhrase,
+  translateInvalidPhraseError,
 }: Props) => {
   const errors = validatePhrase()
   return (
@@ -55,7 +70,7 @@ const RestoreWalletScreen = ({
           {/* prettier-ignore */ errors && errors.invalidPhrase &&
             errors.invalidPhrase.map((error) => (
               <Text key={error.code} style={styles.error}>
-                {translations.errors.translateInvalidPhraseError(error)}
+                {translateInvalidPhraseError(error)}
               </Text>))}
         </View>
         <Button
@@ -83,5 +98,7 @@ export default compose(
       navigation.navigate(ROOT_ROUTES.WALLET)
     },
     validatePhrase: ({phrase}) => () => validateRecoveryPhrase(phrase),
+    translateInvalidPhraseError: ({translations}) => (error) =>
+      _translateInvalidPhraseError(translations, error),
   }),
 )(RestoreWalletScreen)
