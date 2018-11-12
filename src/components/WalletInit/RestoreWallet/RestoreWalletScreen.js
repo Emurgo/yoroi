@@ -18,7 +18,7 @@ import styles from './styles/RestoreWalletScreen.style'
 
 import type {State} from '../../../state'
 import type {SubTranslation} from '../../../l10n/typeHelpers'
-import type {PhraseErrors} from '../../../utils/validators'
+import type {RecoveryPhraseErrors} from '../../../utils/validators'
 
 const getTranslations = (state: State) => state.trans.RestoreWalletScreen
 
@@ -27,7 +27,7 @@ type Props = {
   translations: SubTranslation<typeof getTranslations>,
   phrase: string,
   setPhrase: (phrase: string) => mixed,
-  validatePhrase: () => PhraseErrors,
+  validatePhrase: () => RecoveryPhraseErrors,
 }
 
 const RestoreWalletScreen = ({

@@ -43,7 +43,7 @@ export type InvalidPhraseError = {
   parameter: any,
 }
 
-export type PhraseErrors = {
+export type RecoveryPhraseErrors = {
   invalidPhrase: Array<InvalidPhraseError>,
   minLength?: boolean,
 }
