@@ -24,7 +24,7 @@ type Props = {
   index: number,
   translations: SubTranslation<typeof getTranslations>,
   navigation: NavigationScreenProp<NavigationState>,
-  goBack: () => void,
+  goBack: () => boolean,
 }
 
 type State = {
@@ -93,10 +93,10 @@ type ExternalProps = {
 }
 
 export default (compose(
-connect(
+  connect(
     (state, {navigation}) => ({
       address: navigation.getParam('address'),
-    index: navigation.getParam('index'),
+      index: navigation.getParam('index'),
       translations: getTranslations(state),
     }),
     null,
