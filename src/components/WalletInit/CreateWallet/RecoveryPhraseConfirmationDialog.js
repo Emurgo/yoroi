@@ -22,7 +22,7 @@ const resetNavigationAction = StackActions.reset({
   index: 0,
   actions: [
     NavigationActions.navigate({
-      routeName: ROOT_ROUTES.MAIN,
+      routeName: ROOT_ROUTES.WALLET,
     }),
   ],
   key: null,

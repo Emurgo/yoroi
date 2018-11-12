@@ -1,5 +1,5 @@
 // @flow
-import {createStackNavigator} from 'react-navigation'
+import {createStackNavigator, createSwitchNavigator} from 'react-navigation'
 import WalletInitNavigator from './components/WalletInit/WalletInitNavigator'
 import TxHistoryNavigator from './components/TxHistory/TxHistoryNavigator'
 import SendScreenNavigator from './components/Send/SendScreenNavigator'
@@ -8,29 +8,29 @@ import ReceiveScreenNavigator from './components/Receive/ReceiveScreenNavigator'
 import SettingsScreenNavigator from './components/Settings/SettingsScreenNavigator'
 import IndexScreen from './components/IndexScreen'
 import LoginScreen from './components/Login/LoginScreen'
-import {MAIN_ROUTES, ROOT_ROUTES} from './RoutesList'
+import {WALLET_ROUTES, ROOT_ROUTES} from './RoutesList'
 
-const MainNavigator = createStackNavigator(
+const WalletNavigator = createStackNavigator(
   {
-    [MAIN_ROUTES.TX_HISTORY]: TxHistoryNavigator,
-    [MAIN_ROUTES.SEND]: SendScreenNavigator,
-    [MAIN_ROUTES.RECEIVE]: ReceiveScreenNavigator,
-    [MAIN_ROUTES.SETTINGS]: SettingsScreenNavigator,
+    [WALLET_ROUTES.TX_HISTORY]: TxHistoryNavigator,
+    [WALLET_ROUTES.SEND]: SendScreenNavigator,
+    [WALLET_ROUTES.RECEIVE]: ReceiveScreenNavigator,
+    [WALLET_ROUTES.SETTINGS]: SettingsScreenNavigator,
   },
   {
     // TODO(ppershing): initialRouteName
     // works reversed. Figure out why!
-    initialRouteName: MAIN_ROUTES.TX_HISTORY,
+    initialRouteName: WALLET_ROUTES.TX_HISTORY,
     navigationOptions: {
       header: null,
     },
   },
 )
 
-const AppNavigator = createStackNavigator(
+const AppNavigator = createSwitchNavigator(
   {
     [ROOT_ROUTES.LOGIN]: LoginScreen,
-    [ROOT_ROUTES.MAIN]: MainNavigator,
+    [ROOT_ROUTES.WALLET]: WalletNavigator,
     [ROOT_ROUTES.INIT]: WalletInitNavigator,
     [ROOT_ROUTES.INDEX]: IndexScreen,
   },

@@ -11,7 +11,7 @@ import {
 
 import {Text} from './UiKit'
 import {COLORS} from '../styles/config'
-import {MAIN_ROUTES, ROOT_ROUTES, WALLET_INIT_ROUTES} from '../RoutesList'
+import {WALLET_ROUTES, ROOT_ROUTES, WALLET_INIT_ROUTES} from '../RoutesList'
 import storage from '../utils/storage'
 
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
@@ -22,7 +22,7 @@ const routes = [
   {label: 'Create Wallet', path: WALLET_INIT_ROUTES.CREATE_WALLET},
   {label: 'Restore Wallet', path: WALLET_INIT_ROUTES.RESTORE_WALLET},
   {label: 'Login', path: ROOT_ROUTES.LOGIN},
-  {label: 'Settings', path: MAIN_ROUTES.SETTINGS},
+  {label: 'Settings', path: WALLET_ROUTES.SETTINGS},
 ]
 
 const styles = StyleSheet.create({

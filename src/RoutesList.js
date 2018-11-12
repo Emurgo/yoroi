@@ -34,7 +34,7 @@ export const SETTINGS_ROUTES = {
   SUPPORT: 'support',
 }
 
-export const MAIN_ROUTES = {
+export const WALLET_ROUTES = {
   TX_HISTORY: 'history',
   SEND: SEND_ROUTES.MAIN,
   RECEIVE: RECEIVE_ROUTES.MAIN,
@@ -42,8 +42,8 @@ export const MAIN_ROUTES = {
 }
 
 export const ROOT_ROUTES = {
-  MAIN: 'app-root',
-  INIT: WALLET_INIT_ROUTES.MAIN,
   INDEX: 'screens-index',
   LOGIN: 'login',
+  INIT: WALLET_INIT_ROUTES.MAIN,
+  WALLET: 'app-root',
 }
