@@ -2,6 +2,8 @@
 
 import React from 'react'
 import {connect} from 'react-redux'
+import {compose} from 'redux'
+import {withHandlers} from 'recompose'
 import {Modal, Clipboard, View} from 'react-native'
 import QRCode from 'react-native-qrcode'
 
@@ -22,6 +24,7 @@ type Props = {
   index: number,
   translations: SubTranslation<typeof getTranslations>,
   navigation: NavigationScreenProp<NavigationState>,
+  goBack: () => void,
 }
 
 type State = {
@@ -50,12 +53,10 @@ class AddressModal extends React.Component<Props, State> {
 
   render() {
     const {isCopied} = this.state
-    const {address, index, translations, navigation} = this.props
+    const {address, index, translations, goBack} = this.props
 
     return (
-      // cool-user: for some strange reason, navigaton.goBack
-      // does not work here, if it is not wrapped in lambda
-      <Modal visible onRequestClose={() => navigation.goBack()}>
+      <Modal visible onRequestClose={goBack}>
         <View style={styles.root}>
           <View style={styles.container}>
             <QRCode
@@ -91,11 +92,16 @@ type ExternalProps = {
   navigation: NavigationScreenProp<NavigationState>,
 }
 
-export default (connect(
-  (state, {navigation}) => ({
-    address: navigation.getParam('address'),
+export default (compose(
+connect(
+    (state, {navigation}) => ({
+      address: navigation.getParam('address'),
     index: navigation.getParam('index'),
-    translations: getTranslations(state),
+      translations: getTranslations(state),
+    }),
+    null,
+  ),
+  withHandlers({
+    goBack: ({navigation}) => () => navigation.goBack(),
   }),
-  null,
 )(AddressModal): ComponentType<ExternalProps>)

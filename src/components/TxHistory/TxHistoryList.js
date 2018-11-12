@@ -62,11 +62,7 @@ const TxHistoryList = ({transactions, navigation, formatDate}: Props) => {
     <View style={styles.container}>
       <SectionList
         renderItem={({item}) => (
-          <TxHistoryListItem
-            navigation={navigation}
-            key={item.id}
-            id={item.id}
-          />
+          <TxHistoryListItem navigation={navigation} id={item.id} />
         )}
         renderSectionHeader={({section: {data}}) => (
           <DayHeader ts={data[0].submittedAt} formatDate={formatDate} />
