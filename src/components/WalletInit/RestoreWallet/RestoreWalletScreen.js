@@ -6,14 +6,13 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withState} from 'recompose'
 import _ from 'lodash'
-import {wordlists} from 'bip39'
+import {validateMnemonic, wordlists} from 'bip39'
 
 import {Text, Button} from '../../UiKit'
 import Screen from '../../Screen'
 import {ROOT_ROUTES} from '../../../RoutesList'
 import walletManager from '../../../crypto/wallet'
 import {CONFIG} from '../../../config'
-import {isValidMnemonic} from '../../../crypto/util'
 
 import {COLORS} from '../../../styles/config'
 import styles from './styles/RestoreWalletScreen.style'
@@ -42,7 +41,7 @@ const validatePhrase = (phrase) => {
     ? _.initial(words).filter(notInWordlist)
     : words.filter(notInWordlist)
 
-  const invalidChecksum = !isValidMnemonic(phrase)
+  const invalidChecksum = !validateMnemonic(phrase)
 
   // prettier-ignore
   if (maxLength || minLength || unknownWords.length > 0) {

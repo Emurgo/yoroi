@@ -10,7 +10,6 @@ import {
   encryptMasterKey,
   decryptMasterKey,
   formatBIP44,
-  isValidMnemonic,
 } from './util'
 
 import longAddress from './__fixtures/long_address.json'
@@ -109,34 +108,4 @@ test('Make sure that we are using safe buffers', () => {
 
 test('Can format address', () => {
   expect(formatBIP44(42, 'Internal', 47)).toBe("m/44'/1815'/42'/1/47")
-})
-
-test('Can validate valid mnemonic', () => {
-  const isValid = isValidMnemonic(mnemonic)
-  expect(isValid).toBe(true)
-})
-
-test('Can validate invalid mnemonic', () => {
-  const unknownWordMnemonic = [
-    'dry balcony arctic what garbage xxxtest',
-    'cart shine egg lamp manual bottom',
-    'slide assault bus',
-  ].join(' ')
-  const invalidChecksumMnemonic = [
-    'easily exile that soup jealous canyon',
-    'crisp track silver famous furnace seminar',
-    'above marriage abandon',
-  ].join(' ')
-
-  const mnemonics = [
-    '',
-    'dry balcony', // invalid length
-    unknownWordMnemonic,
-    invalidChecksumMnemonic,
-  ]
-
-  for (const mnemonic of mnemonics) {
-    const isValid = isValidMnemonic(mnemonic)
-    expect(isValid).toBe(false)
-  }
 })
