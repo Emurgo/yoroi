@@ -11,8 +11,12 @@ import Screen from '../../components/Screen'
 import {Text, Button} from '../UiKit'
 import AddressDetail from './AddressDetail'
 import AddressesList from './AddressesList'
-import {generateNewReceiveAddress} from '../../actions'
+import {
+  generateNewReceiveAddress,
+  generateNewReceiveAddressIfNeeded,
+} from '../../actions'
 import {receiveAddressesSelector} from '../../selectors'
+import {onDidMount, onDidUpdate} from '../../utils/renderUtils'
 
 import styles from './styles/ReceiveScreen.style'
 
@@ -72,6 +76,7 @@ export default compose(
     }),
     {
       generateNewReceiveAddress,
+      generateNewReceiveAddressIfNeeded,
     },
   ),
   withState('addressLimitReached', 'setAddressLimitReached', false),
@@ -84,4 +89,10 @@ export default compose(
       setAddressLimitReached(!success)
     },
   }),
+  onDidMount(({generateNewReceiveAddressIfNeeded}) =>
+    generateNewReceiveAddressIfNeeded(),
+  ),
+  onDidUpdate(({generateNewReceiveAddressIfNeeded}, prevProps) =>
+    generateNewReceiveAddressIfNeeded(),
+  ),
 )(ReceiveScreen)
