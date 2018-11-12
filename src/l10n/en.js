@@ -2,6 +2,8 @@
 import {pluralizeEn} from './util'
 import {termsOfService} from './tos.en'
 
+import type {InvalidPhraseError} from '../utils/validators'
+
 const language = {
   chineseSimplified: '简体中文',
   chineseTraditional: '繁體中文',
@@ -184,11 +186,17 @@ const l10n = {
     phrase: 'Recovery phrase',
     restoreButton: 'RESTORE WALLET',
     errors: {
-      maxLength: 'Phrase is too long',
-      invalidChecksum: 'Please enter valid mnemonic',
-      unknownWords: (words: Array<string>) => {
+      MAX_LENGTH: 'Phrase is too long',
+      INVALID_CHECKSUM: 'Please enter valid mnemonic',
+      UNKNOWN_WORDS: (words: Array<string>) => {
         const wordlist = words.map((word) => `'${word}'`).join(', ')
         return `${wordlist} ${pluralizeEn(words.length, 'is', 'are')} invalid.`
+      },
+      translateInvalidPhraseError: (error: InvalidPhraseError) => {
+        const translation = l10n.RestoreWalletScreen.errors[error.code]
+        return typeof translation === 'string'
+          ? translation
+          : translation(error.parameter)
       },
     },
   },
