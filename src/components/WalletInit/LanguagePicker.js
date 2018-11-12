@@ -3,24 +3,39 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
-import {View, Picker} from 'react-native'
+import {View, Image, FlatList} from 'react-native'
 
 import {changeLanguage} from '../../actions'
 import styles from './styles/LanguagePicker.style'
+import KoreanFlagIcon from '../../assets/img/flags/korean.png'
+import JapaneseFlagIcon from '../../assets/img/flags/japanese.png'
+import RussianFlagIcon from '../../assets/img/flags/russian.png'
+import EnglishFlagIcon from '../../assets/img/flags/english.png'
+import ChineseFlagIcon from '../../assets/img/flags/chinese.png'
+import SelectLanguageImage from '../../assets/img/select_language.png'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
+import LanguageListItem from './LanguageListItem'
+import l10n from '../../l10n'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-import {Text, Button} from '../UiKit'
+import {Button} from '../UiKit'
 
-// TODO: l10n
-const supportedLangauage = [
-  {label: '简体中文', name: 'Chinese (Simplified)', code: 'zh-Hans'},
-  {label: '繁體中文', name: 'Chinese (Traditional)', code: 'zh-Hant'},
-  {label: 'English', name: 'English', code: 'en-US'},
-  {label: '日本語', name: 'Japanese', code: 'ja-JP'},
-  {label: '한국어', name: 'Korean', code: 'ko-KR'},
-  {label: 'Russian', name: 'Russian', code: 'ru-RU'},
+const supportedLangauages = () => [
+  {
+    label: l10n.global.language.chineseSimplified,
+    code: 'zh-Hans',
+    icon: ChineseFlagIcon,
+  },
+  {
+    label: l10n.global.language.chineseTraditional,
+    code: 'zh-Hant',
+    icon: ChineseFlagIcon,
+  },
+  {label: l10n.global.language.english, code: 'en-US', icon: EnglishFlagIcon},
+  {label: l10n.global.language.japanese, code: 'ja-JP', icon: JapaneseFlagIcon},
+  {label: l10n.global.language.korean, code: 'ko-KR', icon: KoreanFlagIcon},
+  {label: l10n.global.language.russian, code: 'ru-RU', icon: RussianFlagIcon},
 ]
 
 const getTranslations = (state) => state.trans.LanguagePicker
@@ -39,24 +54,25 @@ const LanguagePicker = ({
   translations,
 }: Props) => (
   <View style={styles.container}>
-    <View style={styles.labelContainer}>
-      <Text style={styles.label}>{translations.selectLanguage}</Text>
+    <View>
+      <FlatList
+        data={supportedLangauages()}
+        keyExtractor={({code}) => code}
+        extraData={languageCode}
+        renderItem={({item: {label, code, icon}}) => (
+          <LanguageListItem
+            label={label}
+            iconSource={icon}
+            selectLanguage={changeLanguage}
+            isSelected={languageCode === code}
+            languageCode={code}
+          />
+        )}
+      />
     </View>
 
-    <View style={styles.pickerContainer}>
-      <Picker
-        style={styles.picker}
-        selectedValue={languageCode}
-        onValueChange={changeLanguage}
-      >
-        {supportedLangauage.map((language) => (
-          <Picker.Item
-            key={language.code}
-            label={language.name}
-            value={language.code}
-          />
-        ))}
-      </Picker>
+    <View style={styles.imageContainer}>
+      <Image source={SelectLanguageImage} />
     </View>
 
     <Button onPress={handleContinue} title={translations.continue} />
