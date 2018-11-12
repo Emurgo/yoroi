@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
@@ -15,6 +16,7 @@ const getTranslations = (state) => state.trans.AddressDetail
 
 type Props = {
   address: string,
+  index: number,
   isUsed: boolean,
   translations: SubTranslation<typeof getTranslations>,
 }
