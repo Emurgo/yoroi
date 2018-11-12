@@ -39,6 +39,22 @@ export const onDidMount = <
     }
 
 // prettier-ignore
+export const onDidUpdate = <Props, Callback: (any, any) => mixed>(
+  didUpdate: Callback,
+): HOC<Props, Props> => (
+    BaseComponent: ComponentType<Props>,
+  ): ComponentType<Props> =>
+    class OnDidMount extends React.Component<Props> {
+      componentDidUpdate = (prevProps: Props) => {
+        didUpdate(this.props, prevProps)
+      }
+
+      render = () => {
+        return <BaseComponent {...this.props} />
+      }
+    }
+
+// prettier-ignore
 export const withTranslations = <GetTrans: (State) => mixed, Props: {}>(
   getTrans: GetTrans,
 ): HOC<{|...$Exact<Props>, translations: $Call<GetTrans, State>|}, Props> =>

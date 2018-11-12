@@ -26,7 +26,7 @@ import type {
 import type {Mutex} from '../utils/promise'
 
 type WalletState = {|
-  generatedAddressCount: number,
+  lastGeneratedAddressIndex: number,
 |}
 
 const ownAddressesSelector = (
@@ -42,7 +42,7 @@ export class Wallet {
   _externalChain: AddressChain = null
 
   _state: WalletState = {
-    generatedAddressCount: 0,
+    lastGeneratedAddressIndex: -1,
   }
 
   _isInitialized: boolean = false
@@ -112,11 +112,6 @@ export class Wallet {
     await this._internalChain.initialize()
     await this._externalChain.initialize()
 
-    // We should start with 1 generated address
-    this._state = {
-      generatedAddressCount: 1,
-    }
-
     this._setupSubscriptions()
     this.notify()
 
@@ -127,7 +122,7 @@ export class Wallet {
     Logger.info('restore wallet')
     assert.assert(!this._isInitialized, 'restoreWallet: !isInitialized')
     this._state = {
-      generatedAddressCount: data.generatedAddressCount,
+      lastGeneratedAddressIndex: data.lastGeneratedAddressIndex,
     }
     this._internalChain = AddressChain.fromJSON(data.internalChain)
     this._externalChain = AddressChain.fromJSON(data.externalChain)
@@ -179,7 +174,7 @@ export class Wallet {
 
   // TODO(ppershing): memoize
   getOwnAddresses() {
-    if (!this._isInitialized) return []
+    assert.assert(this._isInitialized, 'getOwnAddresses:: isInitialized')
 
     return this._ownAddressesSelector(
       this._internalChain.addresses,
@@ -187,16 +182,17 @@ export class Wallet {
     )
   }
 
+  // TODO(ppershing): memoize
   getUiReceiveAddresses() {
-    if (!this._isInitialized) return []
+    assert.assert(this._isInitialized, 'getUiReceiveAddresses:: isInitialized')
 
     assert.assert(
-      this._state.generatedAddressCount <= this._externalChain.size(),
+      this._state.lastGeneratedAddressIndex < this._externalChain.size(),
       'getUiReceiveAddresses:: count',
     )
     const addresses = this._externalChain.addresses.slice(
       0,
-      this._state.generatedAddressCount,
+      this._state.lastGeneratedAddressIndex + 1,
     )
     return addresses.map((address, index) => ({
       index,
@@ -212,20 +208,38 @@ export class Wallet {
     )
   }
 
-  generateNewUiReceiveAddress(): boolean {
+  async generateNewUiReceiveAddress(): Promise<boolean> {
     // TODO(ppershing): use "assuredly used" instead of "seen"
     const usedCount = this._externalChain.addresses
-      .slice(0, this._state.generatedAddressCount)
+      .slice(0, this._state.lastGeneratedAddressIndex + 1)
       .filter((address) => this.isUsedAddress(address)).length
 
     if (
       usedCount + CONFIG.WALLET.MAX_GENERATED_UNUSED <=
-      this._state.generatedAddressCount
+      this._state.lastGeneratedAddressIndex
     ) {
       return false
     }
+
+    let idx = this._state.lastGeneratedAddressIndex + 1
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      // First, discover new addresses if needed.
+      // This can happen if last address sync/discovery failed
+      // but transaction sync went through
+      if (idx >= this._externalChain.addresses.length) {
+        const filterUsed = (addresses) =>
+          Promise.resolve(
+            addresses.filter((address) => this.isUsedAddress(address)),
+          )
+        await this._externalChain.sync(filterUsed)
+      }
+      if (!this.isUsedAddress(this._externalChain.addresses[idx])) break
+      idx += 1
+    }
+
     this.updateState({
-      generatedAddressCount: this._state.generatedAddressCount + 1,
+      lastGeneratedAddressIndex: idx,
     })
 
     return true
@@ -333,7 +347,7 @@ export class Wallet {
 
   toJSON() {
     return {
-      generatedAddressCount: this._state.generatedAddressCount,
+      lastGeneratedAddressIndex: this._state.lastGeneratedAddressIndex,
       internalChain: this._internalChain.toJSON(),
       externalChain: this._externalChain.toJSON(),
       transactionCache: this._transactionCache.toJSON(),
@@ -407,6 +421,18 @@ class WalletManager {
   get receiveAddresses() {
     if (!this._wallet) return []
     return this._wallet.getUiReceiveAddresses()
+  }
+
+  async generateNewUiReceiveAddressIfNeeded() {
+    if (!this._wallet) return
+    if (
+      this._wallet.getUiReceiveAddresses().filter(({isUsed}) => !isUsed)
+        .length > 0
+    ) {
+      return // nothing to do
+    }
+    /* :: if (!this._wallet) throw 'assert' */
+    await this.generateNewUiReceiveAddress()
   }
 
   generateNewUiReceiveAddress() {

@@ -44,6 +44,12 @@ export const generateNewReceiveAddress = () => (dispatch: Dispatch<any>) => {
   walletManager.generateNewUiReceiveAddress()
 }
 
+export const generateNewReceiveAddressIfNeeded = () => (
+  dispatch: Dispatch<any>,
+) => {
+  walletManager.generateNewUiReceiveAddressIfNeeded()
+}
+
 const LOCAL_STORAGE_KEY_LANG = 'lang'
 
 export const changeLanguage = (languageCode: string) => async (
