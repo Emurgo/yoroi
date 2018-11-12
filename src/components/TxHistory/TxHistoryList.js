@@ -5,7 +5,7 @@ import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 import {connect} from 'react-redux'
 
-import {View} from 'react-native'
+import {View, SectionList} from 'react-native'
 import _ from 'lodash'
 import moment from 'moment'
 import type {Moment} from 'moment'
@@ -50,7 +50,8 @@ const getTransactionsByDate = (transactions: Dict<TransactionInfo>) =>
   _(transactions)
     .sortBy((t) => -moment(t.submittedAt).unix())
     .groupBy((t) => moment(t.submittedAt).format('L'))
-    .toPairs()
+    .values()
+    .map((data) => ({data}))
     .value()
 
 const TxHistoryList = ({transactions, navigation, formatDate}: Props) => {
@@ -59,18 +60,16 @@ const TxHistoryList = ({transactions, navigation, formatDate}: Props) => {
 
   return (
     <View style={styles.container}>
-      {groupedTransactions.map(([date, transactions]) => (
-        <View key={date} style={styles.dayContainer}>
-          <DayHeader ts={transactions[0].submittedAt} formatDate={formatDate} />
-          {transactions.map((transaction) => (
-            <TxHistoryListItem
-              navigation={navigation}
-              key={transaction.id}
-              id={transaction.id}
-            />
-          ))}
-        </View>
-      ))}
+      <SectionList
+        renderItem={({item}) => (
+          <TxHistoryListItem navigation={navigation} id={item.id} />
+        )}
+        renderSectionHeader={({section: {data}}) => (
+          <DayHeader ts={data[0].submittedAt} formatDate={formatDate} />
+        )}
+        sections={groupedTransactions}
+        keyExtractor={(item) => item.id}
+      />
     </View>
   )
 }
