@@ -14,12 +14,13 @@ import {COLORS} from '../../styles/config'
 import styles from './styles/AddressView.style'
 
 type Props = {
+  index: number,
   address: string,
   isUsed: boolean,
   navigateToModal: () => void,
 }
 
-const AddressView = ({address, isUsed, navigateToModal}: Props) => (
+const AddressView = ({address, index, isUsed, navigateToModal}: Props) => (
   <TouchableHighlight
     activeOpacity={0.9}
     underlayColor={COLORS.WHITE}
@@ -28,7 +29,7 @@ const AddressView = ({address, isUsed, navigateToModal}: Props) => (
     <View style={styles.container}>
       <View style={styles.addressContainer}>
         <Text style={isUsed ? styles.addressUsed : styles.addressNotUsed}>
-          {address}
+          {`/${index}`} {address}
         </Text>
       </View>
       <View style={styles.iconContainer}>
@@ -41,7 +42,7 @@ const AddressView = ({address, isUsed, navigateToModal}: Props) => (
 export default compose(
   withNavigation,
   withHandlers({
-    navigateToModal: ({navigation, address}) => () =>
-      navigation.navigate(RECEIVE_ROUTES.ADDRESS_MODAL, {address}),
+    navigateToModal: ({navigation, address, index}) => () =>
+      navigation.navigate(RECEIVE_ROUTES.ADDRESS_MODAL, {address, index}),
   }),
 )(AddressView)

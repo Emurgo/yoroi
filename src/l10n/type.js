@@ -67,7 +67,7 @@ export type Translation = {
       invalidAddress: string,
       positiveAmount: string,
       insufficientBalance: string,
-      amountErrorByErrorCode: (code: any) => string,
+      amountErrorByErrorCode: (errorCode: any) => string,
     },
     fetchingError: string,
   },
@@ -123,6 +123,7 @@ export type Translation = {
     showUsedAddresses: string,
   },
   AddressModal: {
+    BIP32path: string,
     copyLabel: string,
     copiedLabel: string,
   },
@@ -192,7 +193,154 @@ export type Translation = {
   },
   TermsOfServiceScreen: {
     title: string,
-    content: Array<any>,
+    content: [
+      {
+        type: string,
+        text: string,
+      },
+      {
+        type: string,
+        text: string,
+      },
+      {
+        type: string,
+        heading: string,
+        text: string,
+      },
+      {
+        type: string,
+        heading: string,
+        text: string,
+      },
+      {
+        type: string,
+        heading: string,
+        text: string,
+      },
+      {
+        type: string,
+        heading: string,
+        text: string,
+      },
+      {
+        type: string,
+        heading: string,
+        text: string,
+      },
+      {
+        type: string,
+        text: string,
+      },
+      {
+        type: string,
+        text: string,
+      },
+      {
+        type: string,
+        text: string,
+      },
+      {
+        type: string,
+        text: string,
+      },
+      {
+        type: string,
+        text: string,
+      },
+      {
+        type: string,
+        text: string,
+      },
+      {
+        type: string,
+        text: string,
+      },
+      {
+        type: string,
+        text: string,
+      },
+      {
+        type: string,
+        text: string,
+      },
+      {
+        type: string,
+        text: string,
+      },
+      {
+        type: string,
+        text: string,
+      },
+      {
+        type: string,
+        text: string,
+      },
+      {
+        type: string,
+        text: string,
+      },
+      {
+        type: string,
+        text: string,
+      },
+      {
+        type: string,
+        text: string,
+      },
+      {
+        type: string,
+        text: string,
+      },
+      {
+        type: string,
+        text: string,
+      },
+      {
+        type: string,
+        text: string,
+      },
+      {
+        type: string,
+        text: string,
+      },
+      {
+        type: string,
+        text: string,
+      },
+      {
+        type: string,
+        text: string,
+      },
+      {
+        type: string,
+        text: string,
+      },
+      {
+        type: string,
+        heading: string,
+        text: string,
+      },
+      {
+        type: string,
+        heading: string,
+        text: string,
+      },
+      {
+        type: string,
+        heading: string,
+        text: string,
+      },
+      {
+        type: string,
+        heading: string,
+        text: string,
+      },
+      {
+        type: string,
+        heading: string,
+        text: string,
+      },
+    ],
   },
   WalletSelectionScreen: {
     addWallet: string,
