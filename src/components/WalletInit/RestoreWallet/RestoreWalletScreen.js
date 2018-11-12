@@ -94,7 +94,7 @@ export default compose(
   ),
   withHandlers({
     navigateToWallet: ({navigation, phrase}) => async (event) => {
-      await walletManager.createWallet('uuid', 'MyWallet', phrase, 'password')
+      await walletManager.createWallet('MyWallet', phrase, 'password')
       navigation.navigate(ROOT_ROUTES.WALLET)
     },
     validatePhrase: ({phrase}) => () => validateRecoveryPhrase(phrase),

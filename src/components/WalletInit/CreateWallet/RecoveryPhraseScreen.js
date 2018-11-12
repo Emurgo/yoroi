@@ -6,6 +6,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withState} from 'recompose'
 
+import assert from '../../../utils/assert'
 import {Text, Button} from '../../UiKit'
 import Screen from '../../Screen'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
@@ -67,10 +68,17 @@ export default compose(
     CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.MNEMONIC2 : generateAdaMnemonic(),
   ),
   withHandlers({
-    navigateToRecoveryPhraseConfirmation: ({navigation, mnemonic}) => () =>
+    navigateToRecoveryPhraseConfirmation: ({navigation, mnemonic}) => () => {
+      const name = navigation.getParam('name')
+      const password = navigation.getParam('password')
+      assert.assert(!!mnemonic, 'handleWalletConfirmation:: mnemonic')
+      assert.assert(!!password, 'handleWalletConfirmation:: password')
+      assert.assert(!!name, 'handleWalletConfirmation:: name')
       navigation.navigate(WALLET_INIT_ROUTES.RECOVERY_PHRASE_CONFIRMATION, {
         mnemonic,
-        password: navigation.getParam('password'),
-      }),
+        password,
+        name,
+      })
+    },
   }),
 )(RecoveryPhraseScreen)

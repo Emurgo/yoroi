@@ -6,6 +6,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers} from 'recompose'
 
+import assert from '../../../utils/assert'
 import {Text, Button} from '../../UiKit'
 import Screen from '../../Screen'
 import walletManager from '../../../crypto/wallet'
@@ -20,8 +21,12 @@ import type {SubTranslation} from '../../../l10n/typeHelpers'
 const handleWalletConfirmation = ({navigation}) => async () => {
   const mnemonic = navigation.getParam('mnemonic')
   const password = navigation.getParam('password')
+  const name = navigation.getParam('name')
+  assert.assert(!!mnemonic, 'handleWalletConfirmation:: mnemonic')
+  assert.assert(!!password, 'handleWalletConfirmation:: password')
+  assert.assert(!!name, 'handleWalletConfirmation:: name')
 
-  await walletManager.createWallet('uuid', 'dummy', mnemonic, password)
+  await walletManager.createWallet(name, mnemonic, password)
   navigation.navigate(ROOT_ROUTES.WALLET)
 }
 

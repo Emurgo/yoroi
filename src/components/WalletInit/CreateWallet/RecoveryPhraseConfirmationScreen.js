@@ -7,6 +7,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withProps, withState} from 'recompose'
 
+import assert from '../../../utils/assert'
 import {Text, Button} from '../../UiKit'
 import Screen from '../../Screen'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
@@ -39,9 +40,15 @@ const handleSelectWord = ({setPartialPhrase, partialPhrase}) => (wordIdx) =>
 
 const handleConfirm = ({mnemonic, navigation}) => () => {
   const password = navigation.getParam('password')
+  const name = navigation.getParam('name')
+  assert.assert(!!mnemonic, 'handleWalletConfirmation:: mnemonic')
+  assert.assert(!!password, 'handleWalletConfirmation:: password')
+  assert.assert(!!name, 'handleWalletConfirmation:: name')
+
   navigation.navigate(WALLET_INIT_ROUTES.RECOVERY_PHRASE_CONFIRMATION_DIALOG, {
     mnemonic,
     password,
+    name,
   })
 }
 

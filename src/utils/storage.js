@@ -52,12 +52,12 @@ export const keys = async (path: string, includeSubdirs?: boolean) => {
   try {
     const all = await AsyncStorage.getAllKeys()
     const filtered = all
-      .filter((key) => key.startswith(path))
-      .map((key) => key.splice(path.length))
+      .filter((key) => key.startsWith(path))
+      .map((key) => key.substring(path.length))
     if (includeSubdirs) {
       return filtered
     } else {
-      return filtered.map((key) => !key.includes('/'))
+      return filtered.filter((key) => !key.includes('/'))
     }
   } catch (error) {
     throw new StorageError(error.message)

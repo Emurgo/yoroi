@@ -476,11 +476,13 @@ class WalletManager {
   }
 
   async createWallet(
-    id: string,
     name: string,
     mnemonic: string,
     password: string,
   ): Promise<Wallet> {
+    // TODO(ppershing): find better way to create unique id
+    const id = `${Math.floor(Math.random() * 1000000000)}`
+
     // Ignore id & name for now
     const wallet = new Wallet()
     await wallet._create(mnemonic, password)
@@ -491,20 +493,17 @@ class WalletManager {
     this._wallet = wallet
     wallet.subscribe(this._notify)
     this._notify()
+    await storage.write(`/wallet/${id}`, {id, name})
     return wallet
   }
 
-  async openOrCreateWallet(
-    id: string,
-    name: string,
-    mnemonic: string,
-    password: string,
-  ): Promise<Wallet> {
+  async openWallet(id: string): Promise<Wallet> {
     assert.preconditionCheck(!!id, 'openWallet:: !!id')
     const wallet = new Wallet()
-    const data = await storage.read(`/wallet/${id}`)
-    // TODO(ppershing): for now do auto-bypass
-    if (!data) return this.createWallet(id, name, mnemonic, password)
+    const data = await storage.read(`/wallet/${id}/data`)
+
+    if (!data) throw new Error()
+
     wallet._restore(data)
     this._wallet = wallet
     this._id = id
@@ -518,7 +517,15 @@ class WalletManager {
     assert.assert(this._id, 'saveState:: id')
     /* :: if (!this._wallet) throw 'assert' */
     const data = this._wallet.toJSON()
-    await storage.write(`/wallet/${this._id}`, data)
+    await storage.write(`/wallet/${this._id}/data`, data)
+  }
+
+  async listWallets() {
+    const keys = await storage.keys('/wallet/')
+    const result = await Promise.all(
+      keys.map((key) => storage.read(`/wallet/${key}`)),
+    )
+    return result
   }
 }
 

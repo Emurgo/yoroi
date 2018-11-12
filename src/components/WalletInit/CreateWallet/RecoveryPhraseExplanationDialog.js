@@ -6,6 +6,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers} from 'recompose'
 
+import assert from '../../../utils/assert'
 import {Text, Button} from '../../UiKit'
 import Screen from '../../Screen'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
@@ -47,9 +48,16 @@ export default compose(
     translations: getTranslations(state),
   })),
   withHandlers({
-    navigateToRecoveryPhrase: ({navigation}) => (event) =>
+    navigateToRecoveryPhrase: ({navigation}) => (event) => {
+      const name = navigation.getParam('name')
+      const password = navigation.getParam('password')
+
+      assert.assert(!!password, 'handleWalletConfirmation:: password')
+      assert.assert(!!name, 'handleWalletConfirmation:: name')
       navigation.replace(WALLET_INIT_ROUTES.RECOVERY_PHRASE, {
-        password: navigation.getParam('password'),
-      }),
+        name,
+        password,
+      })
+    },
   }),
 )(RecoveryPhraseExplanationDialog)

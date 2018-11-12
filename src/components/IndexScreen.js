@@ -19,11 +19,9 @@ import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 const routes = [
   {label: 'Language Picker', path: ROOT_ROUTES.INIT},
   {label: 'Create/Restore switch', path: WALLET_INIT_ROUTES.INIT},
-  {label: 'Create Wallet', path: WALLET_INIT_ROUTES.CREATE_WALLET},
-  {label: 'Restore Wallet', path: WALLET_INIT_ROUTES.RESTORE_WALLET},
+  {label: 'Wallet list', path: ROOT_ROUTES.WALLET_SELECTION},
   {label: 'Login', path: ROOT_ROUTES.LOGIN},
   {label: 'Settings', path: WALLET_ROUTES.SETTINGS},
-  {label: 'Wallet Selection', path: ROOT_ROUTES.WALLET_SELECTION},
 ]
 
 const styles = StyleSheet.create({
