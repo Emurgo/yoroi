@@ -231,6 +231,10 @@ const l10n = {
     title: 'Terms of Service Agreement',
     content: [...termsOfService],
   },
+  WalletSelectionScreen: {
+    addWallet: 'Add wallet',
+    header: 'Your wallets',
+  },
 }
 
 export default l10n

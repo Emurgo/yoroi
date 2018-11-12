@@ -46,4 +46,5 @@ export const ROOT_ROUTES = {
   LOGIN: 'login',
   INIT: WALLET_INIT_ROUTES.MAIN,
   WALLET: 'app-root',
+  WALLET_SELECTION: 'wallet-selection',
 }
