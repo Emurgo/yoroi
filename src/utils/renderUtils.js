@@ -5,7 +5,6 @@ import {connect} from 'react-redux'
 import {Text} from 'react-native'
 import {compose} from 'redux'
 import {Logger} from './logging'
-import {BigNumber} from 'bignumber.js'
 
 import {walletIsInitializedSelector} from '../selectors'
 
@@ -143,9 +142,3 @@ export const requireInitializedWallet = compose(
     () => <Text>l10n Please wait while wallet is initialized...</Text>,
   ),
 )
-
-// TODO(ppershing): probably belongs to utils/localization once we have it
-export const printAda = (amount: BigNumber) => {
-  // 1 ADA = 1 000 000 micro ada
-  return amount.dividedBy(1000000).toFixed(6)
-}

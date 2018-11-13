@@ -34,23 +34,28 @@ const styles = {
     flexDirection: 'row',
   },
   adaSignContainer: {
-    marginLeft: 10,
+    marginTop: 6,
+    marginLeft: 6,
   },
   positiveAmount: {
     color: COLORS.POSITIVE_AMOUNT,
-    fontSize: 20,
   },
   negativeAmount: {
     color: COLORS.NEGATIVE_AMOUNT,
-    fontSize: 20,
   },
   neutralAmount: {
     color: COLORS.BLACK,
-    fontSize: 20,
   },
   feeAmount: {
     color: COLORS.NEGATIVE_AMOUNT,
     fontSize: 14,
+  },
+  integerAmount: {
+    fontSize: 20,
+  },
+  decimalAmount: {
+    paddingTop: 5,
+    fontSize: 15,
   },
 }
 
