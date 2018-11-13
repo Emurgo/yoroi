@@ -17,7 +17,8 @@ import {
   utxosSelector,
 } from '../../selectors'
 import {Logger} from '../../utils/logging'
-import {printAda, withTranslations} from '../../utils/renderUtils'
+import {withTranslations} from '../../utils/renderUtils'
+import {formatAda} from '../../utils/format'
 import walletManager from '../../crypto/wallet'
 import {fetchUTXOs} from '../../actions/utxo'
 import {CardanoError} from '../../crypto/util'
@@ -187,7 +188,7 @@ const FetchingErrorBanner = withTranslations(getTranslations)(
 const AvailableAmount = withTranslations(getTranslations)(
   ({translations, value}) => (
     <Text>
-      {translations.availableAmount}: {value ? printAda(value) : ''}
+      {translations.availableAmount}: {value ? formatAda(value) : ''}
     </Text>
   ),
 )

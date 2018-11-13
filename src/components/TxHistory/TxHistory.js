@@ -23,8 +23,9 @@ import {
   RenderCount,
   measureRenderTime,
   requireInitializedWallet,
-  printAda,
 } from '../../utils/renderUtils'
+
+import {formatAda} from '../../utils/format'
 
 import styles from './styles/TxHistory.style'
 
@@ -45,7 +46,7 @@ const SyncErrorBanner = ({showRefresh, onRefresh}) => (
 )
 
 const PendingAmount = ({amount}) => (
-  <Text> Pending amount: {printAda(amount)} </Text>
+  <Text> Pending amount: {formatAda(amount)} </Text>
 )
 
 const TxHistory = ({

@@ -8,7 +8,7 @@ import AdaIcon from '../../assets/AdaIcon'
 import CardanoIcon from '../../assets/CardanoIcon'
 import {ROOT_ROUTES} from '../../RoutesList'
 import {COLORS} from '../../styles/config'
-import {printAda} from '../../utils/renderUtils'
+import {formatAda} from '../../utils/format'
 
 import styles from './styles/WalletListItem.style'
 
@@ -28,7 +28,7 @@ const WalletListItem = ({wallet, navigateLogin}: Props) => (
       <Text style={styles.nameText}>{wallet.name}</Text>
     </View>
     <View style={styles.balance}>
-      <Text style={styles.balanceText}>{printAda(wallet.balance)}</Text>
+      <Text style={styles.balanceText}>{formatAda(wallet.balance)}</Text>
       <AdaIcon height={14} width={14} color={COLORS.WHITE} />
     </View>
   </TouchableOpacity>

@@ -13,7 +13,7 @@ import {utxoBalanceSelector} from '../../selectors'
 // import {authenticate} from '../../helpers/bioAuthHelper'
 import walletManager from '../../crypto/wallet'
 import {WALLET_ROUTES} from '../../RoutesList'
-import {printAda} from '../../utils/renderUtils'
+import {formatAda} from '../../utils/format'
 
 import styles from './styles/ConfirmScreen.style'
 
@@ -57,17 +57,20 @@ const ConfirmScreen = ({
         <Text style={styles.balanceLabel}>
           {translations.availableFunds.toUpperCase()}:
         </Text>
-        <Amount value={printAda(availableAmount)} style={styles.balanceValue} />
+        <Amount
+          value={formatAda(availableAmount)}
+          style={styles.balanceValue}
+        />
       </View>
 
       <View style={styles.transactionSummary}>
         <View style={styles.fees}>
           <Text style={styles.label}>{translations.fees}</Text>
-          <Amount value={printAda(transactionData.fee)} />
+          <Amount value={formatAda(transactionData.fee)} />
         </View>
         <View style={styles.remainingBalance}>
           <Text style={styles.label}>{translations.balanceAfterTx}</Text>
-          <Amount value={printAda(balanceAfterTx)} />
+          <Amount value={formatAda(balanceAfterTx)} />
         </View>
       </View>
 
@@ -77,7 +80,7 @@ const ConfirmScreen = ({
       </View>
       <View style={styles.item}>
         <Text style={styles.label}>{translations.amount}</Text>
-        <Amount value={printAda(amount)} />
+        <Amount value={formatAda(amount)} />
       </View>
 
       <View style={styles.item}>

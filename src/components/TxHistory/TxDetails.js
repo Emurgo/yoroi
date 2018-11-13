@@ -7,7 +7,8 @@ import {View} from 'react-native'
 import _ from 'lodash'
 
 import {transactionsInfoSelector} from '../../selectors'
-import {printAda, withNavigationTitle} from '../../utils/renderUtils'
+import {withNavigationTitle} from '../../utils/renderUtils'
+import {formatAda} from '../../utils/format'
 import {Text} from '../UiKit'
 import Screen from '../../components/Screen'
 import AdaIcon from '../../assets/AdaIcon'
@@ -30,7 +31,7 @@ const AdaAmount = ({amount, direction}) => {
         : styles.negativeAmount
 
   const amountText =
-    direction === TRANSACTION_DIRECTION.SELF ? '--' : printAda(amount)
+    direction === TRANSACTION_DIRECTION.SELF ? '--' : formatAda(amount)
   return (
     <View style={styles.amountContainer}>
       <Text style={amountStyle}>{amountText}</Text>

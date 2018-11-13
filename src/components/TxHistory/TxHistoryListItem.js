@@ -11,7 +11,14 @@ import {transactionsInfoSelector} from '../../selectors'
 import {TX_HISTORY_ROUTES} from '../../RoutesList'
 import styles from './styles/TxHistoryListItem.style'
 import {COLORS} from '../../styles/config'
-import {withTranslations, printAda} from '../../utils/renderUtils'
+import {withTranslations} from '../../utils/renderUtils'
+
+import {
+  formatAda,
+  formatAdaInteger,
+  formatAdaFractional,
+  formatTimeToSeconds,
+} from '../../utils/format'
 
 import {TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
 
@@ -63,13 +70,6 @@ class TxHistoryListItem extends Component<Props> {
   render() {
     const {transaction, translations} = this.props
 
-    const formattedAmount = {
-      SENT: (x) => printAda(x),
-      RECEIVED: (x) => printAda(x),
-      SELF: (x) => '--',
-      MULTI: (x) => printAda(x),
-    }[transaction.direction](transaction.amount)
-
     const amountStyle = {
       SENT: styles.negativeAmount,
       RECEIVED: styles.positiveAmount,
@@ -99,7 +99,7 @@ class TxHistoryListItem extends Component<Props> {
         <View style={styles.container}>
           <View style={styles.metadataPanel}>
             <View>
-              <Text>{transaction.submittedAt.format('hh:mm:ss A')}</Text>
+              <Text>{formatTimeToSeconds(transaction.submittedAt)}</Text>
             </View>
             <View>
               <AssuranceLevel transaction={transaction} />
@@ -114,7 +114,12 @@ class TxHistoryListItem extends Component<Props> {
               <View style={styles.horizontalSpacer} />
               {hasAmount ? (
                 <>
-                  <Text style={amountStyle}>{formattedAmount}</Text>
+                  <Text style={[amountStyle, styles.integerAmount]}>
+                    {formatAdaInteger(transaction.amount)}
+                  </Text>
+                  <Text style={[amountStyle, styles.decimalAmount]}>
+                    {formatAdaFractional(transaction.amount)}
+                  </Text>
                   <AdaSign size={16} color={amountStyle.color} />
                 </>
               ) : (
@@ -125,7 +130,7 @@ class TxHistoryListItem extends Component<Props> {
               <View style={styles.horizontalSpacer} />
               {hasFee && (
                 <Text style={styles.feeAmount}>
-                  {printAda(transaction.fee)} l10n Fee
+                  {formatAda(transaction.fee)} l10n Fee
                 </Text>
               )}
             </View>
