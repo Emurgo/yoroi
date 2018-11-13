@@ -18,6 +18,7 @@ import {
 } from '../../selectors'
 import {Logger} from '../../utils/logging'
 import {withTranslations} from '../../utils/renderUtils'
+import {withNavigationTitle} from '../../utils/renderUtils'
 import {formatAda} from '../../utils/format'
 import walletManager from '../../crypto/wallet'
 import {fetchUTXOs} from '../../actions/utxo'
@@ -297,6 +298,7 @@ export default compose(
   }), {
     fetchUTXOs,
   }),
+  withNavigationTitle(({translations}) => translations.title),
   withState('address', 'setAddress', ''),
   withState('amount', 'setAmount', ''),
   withState('validationErrors', 'setValidationErrors', {

@@ -19,6 +19,7 @@ import {
   canGenerateNewReceiveAddressSelector,
 } from '../../selectors'
 import {onDidMount, onDidUpdate} from '../../utils/renderUtils'
+import {withNavigationTitle} from '../../utils/renderUtils'
 
 import styles from './styles/ReceiveScreen.style'
 
@@ -75,6 +76,8 @@ export default (compose(
       generateNewReceiveAddressIfNeeded,
     },
   ),
+  withNavigationTitle(({translations}) => translations.title),
+
   onDidMount(({generateNewReceiveAddressIfNeeded}) =>
     generateNewReceiveAddressIfNeeded(),
   ),
