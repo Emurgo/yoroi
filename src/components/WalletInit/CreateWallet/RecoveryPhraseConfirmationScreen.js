@@ -90,7 +90,6 @@ const RecoveryPhraseConfirmationScreen = ({
       <View style={styles.container}>
         <Text>{translations.title}</Text>
         <Text style={styles.instructions}>{translations.instructions}</Text>
-        <Text>{mnemonic}</Text>
 
         <View style={styles.recoveryPhraseContainer}>
           <Text style={styles.inputLabel}>{translations.inputLabel}</Text>
