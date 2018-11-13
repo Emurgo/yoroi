@@ -5,7 +5,6 @@ import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View} from 'react-native'
 import _ from 'lodash'
-import {withState, withHandlers} from 'recompose'
 
 import Screen from '../../components/Screen'
 import {Text, Button} from '../UiKit'
@@ -15,21 +14,17 @@ import {
   generateNewReceiveAddress,
   generateNewReceiveAddressIfNeeded,
 } from '../../actions'
-import {receiveAddressesSelector} from '../../selectors'
+import {
+  receiveAddressesSelector,
+  canGenerateNewReceiveAddressSelector,
+} from '../../selectors'
 import {onDidMount, onDidUpdate} from '../../utils/renderUtils'
 
 import styles from './styles/ReceiveScreen.style'
 
-import type {SubTranslation} from '../../l10n/typeHelpers'
+import type {ComponentType} from 'react'
 
-const getTranslations = (state) => state.trans.ReceiveScreen.description
-
-type Props = {
-  receiveAddresses: Array<{address: string, isUsed: boolean}>,
-  generateNewReceiveAddress: () => mixed,
-  translations: SubTranslation<typeof getTranslations>,
-  addressLimitReached: boolean,
-}
+const getTranslations = (state) => state.trans.ReceiveScreen
 
 const NO_ADDRESS = {
   address: 'IT IS A BUG TO SEE THIS TEXT',
@@ -42,25 +37,25 @@ const ReceiveScreen = ({
   generateNewReceiveAddress,
   translations,
   addressLimitReached,
-}: Props) => {
+}) => {
   const currentAddress = _.last(receiveAddresses) || NO_ADDRESS
   return (
     <View style={styles.root}>
       <Screen scroll>
         <View style={styles.warningContainer}>
-          <Text style={styles.warningText}>{translations.line1}</Text>
-          <Text style={styles.warningText}>{translations.line2}</Text>
-          <Text style={styles.warningText}>{translations.line3}</Text>
+          <Text style={styles.warningText}>{translations.infoText}</Text>
         </View>
         <AddressDetail {...currentAddress} />
         <View>
-          {addressLimitReached && (
-            <Text>
-              l10n You have to use some of your addresses before generating new
-              one
-            </Text>
-          )}
-          <Button onPress={generateNewReceiveAddress} title="l10n GENERATE" />
+          <Button
+            onPress={generateNewReceiveAddress}
+            disabled={addressLimitReached}
+            title={
+              !addressLimitReached
+                ? translations.generate
+                : translations.cannotGenerate
+            }
+          />
         </View>
         <AddressesList addresses={receiveAddresses} />
       </Screen>
@@ -68,31 +63,22 @@ const ReceiveScreen = ({
   )
 }
 
-export default compose(
+export default (compose(
   connect(
     (state) => ({
       translations: getTranslations(state),
       receiveAddresses: receiveAddressesSelector(state),
+      addressLimitReached: !canGenerateNewReceiveAddressSelector(state),
     }),
     {
       generateNewReceiveAddress,
       generateNewReceiveAddressIfNeeded,
     },
   ),
-  withState('addressLimitReached', 'setAddressLimitReached', false),
-  withHandlers({
-    generateNewReceiveAddress: ({
-      generateNewReceiveAddress,
-      setAddressLimitReached,
-    }) => () => {
-      const success = generateNewReceiveAddress()
-      setAddressLimitReached(!success)
-    },
-  }),
   onDidMount(({generateNewReceiveAddressIfNeeded}) =>
     generateNewReceiveAddressIfNeeded(),
   ),
   onDidUpdate(({generateNewReceiveAddressIfNeeded}, prevProps) =>
     generateNewReceiveAddressIfNeeded(),
   ),
-)(ReceiveScreen)
+)(ReceiveScreen): ComponentType<{}>)

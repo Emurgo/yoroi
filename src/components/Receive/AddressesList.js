@@ -61,7 +61,7 @@ export default compose(
   connect((state) => ({
     translations: getTranslations(state),
   })),
-  withState('showAll', 'setShowAll', true),
+  withState('showAll', 'setShowAll', false),
   withHandlers({
     onShowPress: ({showAll, setShowAll}) => () => setShowAll(!showAll),
   }),

@@ -55,6 +55,9 @@ export const availableAmountSelector = (state: State): ?BigNumber =>
 export const receiveAddressesSelector = (state: State) =>
   state.wallet.generatedReceiveAddresses
 
+export const canGenerateNewReceiveAddressSelector = (state: State) =>
+  state.wallet.canGenerateNewReceiveAddress
+
 export const isOnlineSelector = (state: State): boolean => state.isOnline
 
 export const isSynchronizingHistorySelector = (state: State): boolean =>

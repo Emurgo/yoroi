@@ -118,11 +118,13 @@ const l10n = {
   },
   ReceiveScreen: {
     title: 'Receive',
-    description: {
-      line1: 'Share this wallet to receive payments.',
-      line2: 'To protect your privacy, new address are',
-      line3: 'generated automatically once you use them.',
-    },
+    infoText: [
+      'Share this wallet to receive payments.',
+      'To protect your privacy, new address are',
+      'generated automatically once you use them.',
+    ].join(' '),
+    generate: 'GENERATE',
+    cannotGenerate: 'You have to use some of your addresses',
   },
   AddressDetail: {
     walletAddress: 'Your wallet address',

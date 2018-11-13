@@ -14,6 +14,7 @@ export type State = {
     ownAddresses: Array<string>,
     confirmationCounts: Dict<number>,
     generatedReceiveAddresses: Array<{address: string, isUsed: boolean}>,
+    canGenerateNewReceiveAddress: boolean,
   },
   txHistory: {
     isSynchronizing: boolean,
@@ -36,6 +37,7 @@ export const getInitialState = (): State => ({
     ownAddresses: [],
     confirmationCounts: {},
     generatedReceiveAddresses: [],
+    canGenerateNewReceiveAddress: false,
   },
   txHistory: {
     isSynchronizing: false,
