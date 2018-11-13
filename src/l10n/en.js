@@ -184,8 +184,9 @@ const l10n = {
     phrase: 'Recovery phrase',
     restoreButton: 'RESTORE WALLET',
     errors: {
-      maxLength: 'Phrase is too long',
-      unknownWords: (words: Array<string>) => {
+      MAX_LENGTH: 'Phrase is too long',
+      INVALID_CHECKSUM: 'Please enter valid mnemonic',
+      UNKNOWN_WORDS: (words: Array<string>) => {
         const wordlist = words.map((word) => `'${word}'`).join(', ')
         return `${wordlist} ${pluralizeEn(words.length, 'is', 'are')} invalid.`
       },

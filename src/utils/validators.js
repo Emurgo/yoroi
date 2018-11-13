@@ -1,5 +1,8 @@
 // @flow
 import {BigNumber} from 'bignumber.js'
+import {validateMnemonic, wordlists} from 'bip39'
+import _ from 'lodash'
+
 import {isValidAddress} from '../crypto/util'
 
 export type PasswordValidationErrors = {
@@ -26,6 +29,23 @@ export type AmountValidationCode = $Values<typeof INVALID_AMOUNT_CODES>
 export type AmountValidationErrors = {
   amountIsRequired?: boolean,
   invalidAmount?: AmountValidationCode,
+}
+
+export const INVALID_PHRASE_ERROR_CODES = {
+  MAX_LENGTH: 'MAX_LENGTH',
+  UNKNOWN_WORDS: 'UNKNOWN_WORDS',
+  INVALID_CHECKSUM: 'INVALID_CHECKSUM',
+}
+
+export type InvalidPhraseErrorCode = $Values<typeof INVALID_PHRASE_ERROR_CODES>
+export type InvalidPhraseError = {
+  code: InvalidPhraseErrorCode,
+  parameter: any,
+}
+
+export type RecoveryPhraseErrors = {
+  invalidPhrase: Array<InvalidPhraseError>,
+  minLength?: boolean,
 }
 
 export const validatePassword = (
@@ -85,4 +105,42 @@ export const validateAmount = (value: string): ?AmountValidationErrors => {
   }
 
   return null
+}
+
+const MNEMONIC_LENGTH = 15
+
+export const validateRecoveryPhrase = (phrase: string) => {
+  const words = phrase.split(' ').filter((word) => !!word)
+  const minLength = words.length < MNEMONIC_LENGTH
+
+  const invalidPhraseErrors = []
+  const maxLength = words.length > MNEMONIC_LENGTH
+  if (maxLength) {
+    invalidPhraseErrors.push({code: INVALID_PHRASE_ERROR_CODES.MAX_LENGTH})
+  }
+
+  const notInWordlist = (word) => !wordlists.EN.includes(word)
+  const unknownWords: Array<string> = minLength
+    ? _.initial(words).filter(notInWordlist)
+    : words.filter(notInWordlist)
+  if (unknownWords.length > 0) {
+    invalidPhraseErrors.push({
+      code: INVALID_PHRASE_ERROR_CODES.UNKNOWN_WORDS,
+      parameter: unknownWords,
+    })
+  }
+
+  if (minLength || invalidPhraseErrors.length > 0) {
+    return {
+      minLength,
+      invalidPhrase:
+        invalidPhraseErrors.length > 0 ? invalidPhraseErrors : null,
+    }
+  } else if (!validateMnemonic(phrase)) {
+    return {
+      invalidPhrase: [{code: INVALID_PHRASE_ERROR_CODES.INVALID_CHECKSUM}],
+    }
+  } else {
+    return null
+  }
 }
