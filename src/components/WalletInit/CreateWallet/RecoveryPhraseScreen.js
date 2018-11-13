@@ -19,6 +19,10 @@ import {COLORS} from '../../../styles/config'
 import type {State} from '../../../state'
 import type {SubTranslation} from '../../../l10n/typeHelpers'
 
+import {withNavigationTitle, withTranslations} from '../../../utils/renderUtils'
+import type {Navigation} from '../../../types/navigation'
+import type {ComponentType} from 'react'
+
 const getTranslations = (state: State) => state.trans.RecoveryPhraseScreen
 
 type Props = {
@@ -58,10 +62,9 @@ const RecoveryPhraseScreen = ({
   </Screen>
 )
 
-export default compose(
-  connect((state) => ({
-    translations: getTranslations(state),
-  })),
+export default (compose(
+  withTranslations(getTranslations),
+  withNavigationTitle(({translations}) => translations.title),
   withState(
     'mnemonic',
     'setMnemonic',
@@ -81,4 +84,4 @@ export default compose(
       })
     },
   }),
-)(RecoveryPhraseScreen)
+)(RecoveryPhraseScreen): ComponentType<{navigation: Navigation}>)
