@@ -88,3 +88,12 @@ export const lastFetchingErrorSelector = (state: State): any =>
 
 export const utxosSelector = (state: State): ?Array<RawUtxo> =>
   state.balance.utxos
+
+export const fingerprintsHwSupportSelector = (state: State): boolean =>
+  state.auth.isFingerprintsHardwareSupported
+
+export const systemAuthSupportSelector = (state: State): boolean =>
+  state.auth.isSystemAuthEnabled
+
+export const enrolledFingerprintsSelector = (state: State): boolean =>
+  state.auth.hasEnrolledFingerprints

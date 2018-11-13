@@ -6,8 +6,67 @@ import l10n from './l10n'
 import {Logger} from './utils/logging'
 import walletManager from './crypto/wallet'
 import {mirrorTxHistory, setBackgroundSyncError} from './actions/history'
+import {
+  isFingerprintEncryptionHardwareSupported,
+  canFingerprintEncryptionBeEnabled,
+  isSystemAuthSupported,
+} from './helpers/deviceSettings'
 
 import {type Dispatch} from 'redux'
+import {type State} from './state'
+
+export const updateFingerprintsIndicators = (
+  indicator: string,
+  value: boolean,
+) => (dispatch: Dispatch<any>) => {
+  dispatch({
+    path: ['auth', indicator],
+    payload: value,
+    reducer: (state, value) => value,
+    type: 'UPDATE_FINGERPRINT_HW_INDICATORS',
+  })
+}
+
+export const setSystemAuth = (enable: boolean) => ({
+  path: ['auth', 'isSystemAuthEnabled'],
+  payload: enable,
+  reducer: (state: State, value: boolean) => value,
+  type: 'SET_SYSTEM_AUTH',
+})
+
+export const initAppIfNeeded = () => async (
+  dispatch: Dispatch<any>,
+  getState: () => State,
+) => {
+  const state = getState()
+  if (!state.isAppInitialized) {
+    const [
+      isFingerprintHwSupported,
+      canFingerprintAuthBeEnabled,
+      canSystemAuthBeEnabled,
+    ] = await Promise.all([
+      isFingerprintEncryptionHardwareSupported(),
+      canFingerprintEncryptionBeEnabled(),
+      isSystemAuthSupported(),
+    ])
+
+    if (
+      (isFingerprintHwSupported && canFingerprintAuthBeEnabled) ||
+      canSystemAuthBeEnabled
+    ) {
+      dispatch(setSystemAuth(true))
+    } else {
+      // handle setting up of custom pin
+    }
+
+    dispatch({
+      path: ['isAppInitialized'],
+      payload: true,
+      reducer: (state, value) => value,
+      type: 'INITIALIZE_APP',
+    })
+  }
+}
 
 const _changeLanguage = (languageCode) => (dispatch, getState) => {
   l10n.setLanguage(languageCode)

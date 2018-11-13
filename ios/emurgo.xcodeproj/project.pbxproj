@@ -48,6 +48,7 @@
 		A14231F0E26E498293E6DCFA /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C8259C93DE584FDAAFB4E9FF /* libReactNativePermissions.a */; };
 		D26F6DBA9C0242B0A6376183 /* libRNCardano.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05BD8AC5FBE745208C4D208E /* libRNCardano.a */; };
 		D3E68485C4E74648860C9BA7 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF0647A6034452E81BD8DF5 /* libresolv.tbd */; };
+		293DB2C1E209441FA3264DCD /* libRNKeychain.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA9C2C759F984A23843777A9 /* libRNKeychain.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -372,6 +373,8 @@
 		1CFE5765284C4CA4AD4B1E20 /* RNCardano.xcodeproj */ = {isa = PBXFileReference; name = "RNCardano.xcodeproj"; path = "../node_modules/react-native-cardano/ios/RNCardano.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		05BD8AC5FBE745208C4D208E /* libRNCardano.a */ = {isa = PBXFileReference; name = "libRNCardano.a"; path = "libRNCardano.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		2AF0647A6034452E81BD8DF5 /* libresolv.tbd */ = {isa = PBXFileReference; name = "libresolv.tbd"; path = "usr/lib/libresolv.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
+		0B6F14F61C1D49059800C0BE /* RNKeychain.xcodeproj */ = {isa = PBXFileReference; name = "RNKeychain.xcodeproj"; path = "../node_modules/react-native-keychain/RNKeychain.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		DA9C2C759F984A23843777A9 /* libRNKeychain.a */ = {isa = PBXFileReference; name = "libRNKeychain.a"; path = "libRNKeychain.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -408,6 +411,7 @@
 				A14231F0E26E498293E6DCFA /* libReactNativePermissions.a in Frameworks */,
 				D26F6DBA9C0242B0A6376183 /* libRNCardano.a in Frameworks */,
 				D3E68485C4E74648860C9BA7 /* libresolv.tbd in Frameworks */,
+				293DB2C1E209441FA3264DCD /* libRNKeychain.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -605,6 +609,7 @@
 				8DBF02153B8E47798175A31D /* RNCamera.xcodeproj */,
 				7319E7805B9E4393BB725857 /* ReactNativePermissions.xcodeproj */,
 				1CFE5765284C4CA4AD4B1E20 /* RNCardano.xcodeproj */,
+				0B6F14F61C1D49059800C0BE /* RNKeychain.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1246,6 +1251,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1257,6 +1263,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 				);
 			};
 			name = Debug;
@@ -1288,6 +1295,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1299,6 +1307,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 				);
 			};
 			name = Release;
@@ -1329,6 +1338,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 				);
 			};
 			name = Debug;
@@ -1358,6 +1368,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 				);
 			};
 			name = Release;
@@ -1397,6 +1408,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1408,6 +1420,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 				);
 			};
 			name = Debug;
@@ -1447,6 +1460,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1458,6 +1472,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 				);
 			};
 			name = Release;
@@ -1496,6 +1511,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1507,6 +1523,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 				);
 			};
 			name = Debug;
@@ -1545,6 +1562,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1556,6 +1574,7 @@ export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 				);
 			};
 			name = Release;

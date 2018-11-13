@@ -6462,6 +6462,11 @@ react-native-fs@^2.11.18:
     base-64 "^0.1.0"
     utf8 "^2.1.1"
 
+react-native-keychain@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-keychain/-/react-native-keychain-3.0.0.tgz#29da1dfa43c2581f76bf9420914fd38a1558cf18"
+  integrity sha512-0incABt1+aXsZvG34mDV57KKanSB+iMHmxvWv+N6lgpNLaSoqrCxazjbZdeqD4qJ7Z+Etp5CLf/4v1aI+sNLBw==
+
 react-native-linear-gradient@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.4.2.tgz#9d3acd0a198b9d4566e8f6253ef1f60fef0ff2be"

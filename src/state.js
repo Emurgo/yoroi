@@ -27,6 +27,12 @@ export type State = {
   },
   trans: Translation,
   isOnline: boolean,
+  auth: {
+    isFingerprintsHardwareSupported: boolean,
+    isSystemAuthEnabled: boolean,
+    hasEnrolledFingerprints: boolean,
+  },
+  isAppInitialized: boolean,
 }
 
 export const getInitialState = (): State => ({
@@ -50,6 +56,12 @@ export const getInitialState = (): State => ({
   },
   trans,
   isOnline: true, // we are online by default
+  auth: {
+    isFingerprintsHardwareSupported: false,
+    hasEnrolledFingerprints: false,
+    isSystemAuthEnabled: false,
+  },
+  isAppInitialized: false,
 })
 
 export default getInitialState

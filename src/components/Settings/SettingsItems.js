@@ -37,8 +37,8 @@ export const ItemIcon = () => (
 
 export const ItemLink = ({label}) => <Text style={styles.link}>{label}</Text>
 
-export const ItemToggle = ({value, onToggle}) => (
-  <Switch value={value} onValueChange={onToggle} />
+export const ItemToggle = ({value, onToggle, disabled}) => (
+  <Switch value={value} onValueChange={onToggle} disabled={disabled} />
 )
 
 export const SettingsItem = ({title, description, children}) => (
