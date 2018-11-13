@@ -11,16 +11,13 @@ import walletManager from '../../crypto/wallet'
 import WalletListItem from './WalletListItem'
 import Screen from '../Screen'
 import {Button} from '../UiKit'
-import {WALLET_INIT_ROUTES} from '../../RoutesList'
+import {WALLET_INIT_ROUTES, ROOT_ROUTES} from '../../RoutesList'
 import {COLORS} from '../../styles/config'
 import {onDidMount} from '../../utils/renderUtils'
-import {ROOT_ROUTES} from '../../RoutesList'
 import styles from './styles/WalletSelectionScreen.style'
 
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
-import type {SubTranslation} from '../../l10n/typeHelpers'
 import type {State} from '../../state'
-import type {Wallet} from './types'
 import type {ComponentType} from 'react'
 
 const getTranslations = (state: State) => state.trans.WalletSelectionScreen

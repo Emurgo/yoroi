@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "flow": "flow",
-    "lint": "eslint ./src && prettylint \"src/**/*.js\" --config src/.prettierrc",
+    "lint": "eslint --max-warnings=0 ./src && prettylint \"src/**/*.js\" --config src/.prettierrc",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
     "prettify": "prettier --write \"src/**/*.js\" --config src/.prettierrc",
