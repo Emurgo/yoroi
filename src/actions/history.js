@@ -18,11 +18,11 @@ const _endFetch = () => ({
   reducer: (state, payload) => false,
 })
 
-const _setSyncError = (error: any): any => ({
+const _setSyncError = (message: ?string): any => ({
   type: 'Set history sync error',
   path: ['txHistory', 'lastSyncError'],
-  payload: error,
-  reducer: (state, payload) => payload,
+  payload: message,
+  reducer: (state, message) => message,
 })
 
 export const setBackgroundSyncError = _setSyncError
@@ -37,7 +37,7 @@ export const updateHistory = () => async (dispatch: Dispatch<any>) => {
     // TODO(ppershing): should we set error object or just
     // some message code?
     Logger.error(e)
-    dispatch(_setSyncError(e))
+    dispatch(_setSyncError(e.message))
   } finally {
     dispatch(_endFetch())
   }
