@@ -68,13 +68,19 @@ export const validateAddressAsync = async (
   return isValid ? null : {invalidAddress: true}
 }
 
+const MAX_DECIMAL_DIGITS = 6
+
 export const validateAmount = (value: string): ?AmountValidationErrors => {
   if (!value) {
     return {amountIsRequired: true}
   }
 
   const amount = new BigNumber(value, 10)
-  if (amount.isNaN() || amount.isLessThan(0)) {
+  if (
+    amount.isNaN() ||
+    amount.isLessThan(0) ||
+    amount.decimalPlaces() > MAX_DECIMAL_DIGITS
+  ) {
     return {invalidAmount: INVALID_AMOUNT_CODES.INVALID_AMOUNT}
   }
 
