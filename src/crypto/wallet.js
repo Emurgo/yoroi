@@ -4,6 +4,7 @@ import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
 import {defaultMemoize} from 'reselect'
 import uuid from 'uuid'
+import ExtendableError from 'es6-error'
 
 import storage from '../utils/storage'
 import {AddressChain, AddressGenerator} from './chain'
@@ -360,14 +361,24 @@ export class Wallet {
   }
 }
 
+export class WalletClosed extends ExtendableError {}
+
 class WalletManager {
   _wallet: ?Wallet = null
   _id: string = ''
   _subscribers: Array<() => any> = []
   _syncErrorSubscribers: Array<(err: any) => any> = []
+  _closePromise: ?Promise<void> = null
+  _closeReject: ?(Error) => void = null
 
   constructor() {
     this._backgroundSync()
+  }
+
+  abortWhenWalletCloses<T>(promise: Promise<T>) {
+    assert.assert(this._closePromise, 'should have closePromise')
+    /* :: if (!this._closePromise) throw 'assert' */
+    return Promise.race([this._closePromise, promise])
   }
 
   // Note(ppershing): needs 'this' to be bound
@@ -380,11 +391,16 @@ class WalletManager {
     this._syncErrorSubscribers.forEach((handler) => handler(error))
   }
 
+  // Note(ppershing): no need to abortWhenWalletCloses here
   async _backgroundSync() {
     try {
       if (this._wallet) {
+        const _wallet = this._wallet
         await this._wallet.tryDoFullSync()
-        await this.saveState()
+        if (_wallet === this._wallet) {
+          // save only if wallet did not change
+          this._saveState()
+        }
       }
       this._notifySyncError(null)
     } catch (e) {
@@ -440,22 +456,24 @@ class WalletManager {
       return // nothing to do
     }
     /* :: if (!this._wallet) throw 'assert' */
-    await this.generateNewUiReceiveAddress()
+    await this.abortWhenWalletCloses(this.generateNewUiReceiveAddress())
   }
 
   async generateNewUiReceiveAddress() {
     if (!this._wallet) return false
-    const didGenerateNew = await this._wallet.generateNewUiReceiveAddress()
-    // TODO(ppershing): saveState
+    const didGenerateNew = await this.abortWhenWalletCloses(
+      this._wallet.generateNewUiReceiveAddress(),
+    )
+    if (didGenerateNew) this._saveState()
     return didGenerateNew
   }
 
   async doFullSync() {
     // TODO(ppershing): this should "quit" early if we change wallet
     if (!this._wallet) return
-    await this._wallet.doFullSync()
+    await this.abortWhenWalletCloses(this._wallet.doFullSync())
     // TODO(ppershing): should we make save a runaway promise?
-    await this.saveState()
+    await this.abortWhenWalletCloses(this._saveState())
     return
   }
 
@@ -464,16 +482,20 @@ class WalletManager {
     address: string,
     amount: BigNumber,
   ) {
-    if (!this._wallet) throw new Error()
-    return await this._wallet.prepareTransaction(utxos, address, amount)
+    if (!this._wallet) throw new WalletClosed()
+    return await this.abortWhenWalletCloses(
+      this._wallet.prepareTransaction(utxos, address, amount),
+    )
   }
 
   async submitTransaction(
     transactionData: PreparedTransactionData,
     password: string,
   ) {
-    if (!this._wallet) throw new Error()
-    return await this._wallet.submitTransaction(transactionData, password)
+    if (!this._wallet) throw new WalletClosed()
+    return await this.abortWhenWalletCloses(
+      this._wallet.submitTransaction(transactionData, password),
+    )
   }
 
   async createWallet(
@@ -488,11 +510,14 @@ class WalletManager {
 
     // TODO(ppershing): potential inconsistency between id and _wallet
     this._id = id
-    await this.saveState()
+    await this._saveState()
     this._wallet = wallet
     wallet.subscribe(this._notify)
-    this._notify()
     await storage.write(`/wallet/${id}`, {id, name})
+    this._closePromise = new Promise((resolve, reject) => {
+      this._closeReject = reject
+    })
+    this._notify()
     return wallet
   }
 
@@ -507,11 +532,14 @@ class WalletManager {
     this._wallet = wallet
     this._id = id
     wallet.subscribe(this._notify)
+    this._closePromise = new Promise((resolve, reject) => {
+      this._closeReject = reject
+    })
     this._notify()
     return wallet
   }
 
-  async saveState() {
+  async _saveState() {
     if (!this._wallet) return
     assert.assert(this._id, 'saveState:: id')
     /* :: if (!this._wallet) throw 'assert' */
@@ -525,6 +553,17 @@ class WalletManager {
       keys.map((key) => storage.read(`/wallet/${key}`)),
     )
     return result
+  }
+
+  close() {
+    if (!this._wallet) return
+    assert.assert(this._closeReject, 'close: should have _closeReject')
+    /* :: if (!this._closeReject) throw 'assert' */
+    // Abort all async interactions with the wallet
+    this._closeReject(new WalletClosed())
+    this._closePromise = null
+    this._closeReject = null
+    this._wallet = null
   }
 }
 
