@@ -3,7 +3,7 @@
 import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {ScrollView, TextInput, View} from 'react-native'
+import {ScrollView, Alert, TextInput, View} from 'react-native'
 import {withHandlers, withState} from 'recompose'
 import {BigNumber} from 'bignumber.js'
 
@@ -12,22 +12,39 @@ import {Text, Button} from '../UiKit'
 import {utxoBalanceSelector} from '../../selectors'
 // import {authenticate} from '../../helpers/bioAuthHelper'
 import walletManager from '../../crypto/wallet'
-import {WALLET_ROUTES} from '../../RoutesList'
+import {WALLET_ROUTES, SEND_ROUTES} from '../../RoutesList'
 import {formatAda} from '../../utils/format'
+import {CONFIG} from '../../config'
 
 import styles from './styles/ConfirmScreen.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 
-const handleOnConfirm = async (navigation) => {
+const handleOnConfirm = async (navigation, password) => {
   const transactionData = navigation.getParam('transactionData')
-  // TODO: add error handling
-  await walletManager.submitTransaction(transactionData, 'password')
-  navigation.navigate(WALLET_ROUTES.TX_HISTORY)
+  navigation.navigate(SEND_ROUTES.SENDING_MODAL)
+  try {
+    await walletManager.submitTransaction(transactionData, password)
+    navigation.navigate(WALLET_ROUTES.TX_HISTORY)
+  } catch (e) {
+    // Warning(ppershing): setTimeout is necessary here otherwise
+    // if walletManager throws synchronously we end up with
+    // Alert showing up before navigation navigating
+    // and completely blocking the UI
+    setTimeout(() => {
+      // TODO(ppershing): error processing + localization
+      Alert.alert('Error submitting transaction', '', [
+        {
+          text: 'OK',
+          onPress: () => navigation.navigate(SEND_ROUTES.MAIN),
+        },
+      ])
+    })
+  }
 }
 
-const getTranslations = (state) => state.trans.ConfirmScreen
+const getTranslations = (state) => state.trans.Send.Confirmation
 
 type Props = {
   onConfirm: () => mixed,
@@ -54,9 +71,7 @@ const ConfirmScreen = ({
   return (
     <ScrollView style={styles.container}>
       <View style={styles.balance}>
-        <Text style={styles.balanceLabel}>
-          {translations.availableFunds.toUpperCase()}:
-        </Text>
+        <Text style={styles.balanceLabel}>{translations.availableFunds}</Text>
         <Amount
           value={formatAda(availableAmount)}
           style={styles.balanceValue}
@@ -94,7 +109,7 @@ const ConfirmScreen = ({
       </View>
 
       <View style={styles.item}>
-        <Button onPress={onConfirm} title={translations.confirm} />
+        <Button onPress={onConfirm} title={translations.confirmButton} />
       </View>
     </ScrollView>
   )
@@ -105,10 +120,15 @@ export default compose(
     translations: getTranslations(state),
     availableAmount: utxoBalanceSelector(state),
   })),
-  withState('password', 'setPassword', ''),
+  withState(
+    'password',
+    'setPassword',
+    CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
+  ),
   withHandlers({
     // TODO(ppershing): this should validate only on confirm
-    onConfirm: ({navigation}) => (event) => handleOnConfirm(navigation),
+    onConfirm: ({navigation, password}) => (event) =>
+      handleOnConfirm(navigation, password),
     // authenticate().then((success) => (success? navigation.popToTop() : null))
   }),
 )(ConfirmScreen)

@@ -62,33 +62,38 @@ const l10n = {
     sendButton: 'SEND',
     receiveButton: 'RECEIVE',
   },
-  SendScreen: {
-    title: 'Send',
-    funds: 'Available funds:',
-    scanCode: 'Scan QR code',
-    address: 'Address',
-    amount: 'Amount',
-    continue: 'Continue',
-    checkingBalance: 'Checking balance...',
-    availableAmount: 'Available amount',
-    validationErrors: {
-      invalidAddress: 'Please enter valid address',
-      invalidAmountErrors: {
-        INVALID_AMOUNT: 'Please enter valid amount',
-        INSUFFICIENT_BALANCE: 'Not enough money to make this transaction',
+  Send: {
+    Main: {
+      title: 'Send',
+      funds: 'Available funds:',
+      scanCode: 'Scan QR code',
+      address: 'Address',
+      amount: 'Amount',
+      continue: 'Continue',
+      checkingBalance: 'Checking balance...',
+      availableAmount: 'Available amount',
+      validationErrors: {
+        invalidAddress: 'Please enter valid address',
+        invalidAmountErrors: {
+          INVALID_AMOUNT: 'Please enter valid amount',
+          INSUFFICIENT_BALANCE: 'Not enough money to make this transaction',
+        },
       },
+      fetchingError:
+        'We are experiencing issue with fetching your current balance.',
     },
-    fetchingError:
-      'We are experiencing issue with fetching your current balance.',
-  },
-  ConfirmScreen: {
-    confirm: 'Confirm',
-    amount: 'Amount',
-    availableFunds: 'Available funds',
-    balanceAfterTx: 'Balance after transaction',
-    fees: 'Fees',
-    password: 'Wallet password',
-    receiver: 'Receiver',
+    Confirmation: {
+      confirmButton: 'Confirm',
+      amount: 'Amount',
+      availableFunds: 'AVAILABLE FUNDS:',
+      balanceAfterTx: 'Balance after transaction',
+      fees: 'Fees',
+      password: 'Wallet password',
+      receiver: 'Receiver',
+    },
+    SubmitModal: {
+      submitting: 'Please wait while transaction is submited',
+    },
   },
   WalletInitScreen: {
     createWallet: 'CREATE A NEW WALLET',

@@ -8,6 +8,7 @@ import {ScrollView, View, TextInput, TouchableOpacity} from 'react-native'
 import {NavigationEvents} from 'react-navigation'
 import {withHandlers, withState} from 'recompose'
 
+import {CONFIG} from '../../config'
 import {SEND_ROUTES} from '../../RoutesList'
 import {Text, Button} from '../UiKit'
 import {
@@ -17,7 +18,7 @@ import {
   utxosSelector,
 } from '../../selectors'
 import {Logger} from '../../utils/logging'
-import {withTranslations, withNavigationTitle} from '../../utils/renderUtils'
+import {withTranslations, withNavigationTitle, onDidMount} from '../../utils/renderUtils'
 import {formatAda} from '../../utils/format'
 import walletManager from '../../crypto/wallet'
 import {fetchUTXOs} from '../../actions/utxo'
@@ -42,7 +43,7 @@ type FormValidationErrors = {
   amount: AmountValidationErrors | null,
 }
 
-const getTranslations = (state) => state.trans.SendScreen
+const getTranslations = (state) => state.trans.Send.Main
 
 const convertToAda = (amount) => new BigNumber(amount, 10).times(1000000)
 
@@ -313,5 +314,12 @@ export default compose(
   withHandlers({
     navigateToQRReader: ({navigation, handleAddressChange}) => (event) =>
       _navigateToQRReader(navigation, handleAddressChange),
+  }),
+  // For pre-fill
+  onDidMount(({handleAddressChange, handleAmountChange, address, amount}) => {
+    if (CONFIG.DEBUG.PREFILL_FORMS) {
+      handleAddressChange(CONFIG.DEBUG.SEND_ADDRESS)
+      handleAmountChange(CONFIG.DEBUG.SEND_AMOUNT)
+    }
   }),
 )(SendScreen)

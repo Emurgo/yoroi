@@ -9,6 +9,7 @@ export const SEND_ROUTES = {
   MAIN: 'send-ada',
   ADDRESS_READER_QR: 'address-reader-qr',
   CONFIRM: 'send-ada-confirm',
+  SENDING_MODAL: 'send-ada-modal',
 }
 
 export const RECEIVE_ROUTES = {

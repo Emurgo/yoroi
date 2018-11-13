@@ -40,6 +40,8 @@ export const CONFIG = {
       'amount decrease congress flee smile impulse',
       'parade perfect normal',
     ].join(' '),
+    SEND_ADDRESS: 'Ae2tdPwUPEZAghGCdQykbGxc991wdoA8bXmSn7eCGuUKXF4EsRhWj4PJitn',
+    SEND_AMOUNT: '1',
   },
   API: {
     ROOT: CARDANO.API_ROOT,
