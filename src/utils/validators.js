@@ -18,8 +18,8 @@ export type AddressValidationErrors = {
 }
 
 export const INVALID_AMOUNT_CODES = {
-  POSITIVE_AMOUNT: 'positiveAmount',
-  INSUFFICIENT_BALANCE: 'insufficientBalance',
+  INVALID_AMOUNT: 'INVALID_AMOUNT',
+  INSUFFICIENT_BALANCE: 'INSUFFICIENT_BALANCE',
 }
 
 export type AmountValidationCode = $Values<typeof INVALID_AMOUNT_CODES>
@@ -68,13 +68,20 @@ export const validateAddressAsync = async (
   return isValid ? null : {invalidAddress: true}
 }
 
-export const validateAmount = (amount: string): ?AmountValidationErrors => {
-  if (!amount) {
+const MAX_DECIMAL_DIGITS = 6
+
+export const validateAmount = (value: string): ?AmountValidationErrors => {
+  if (!value) {
     return {amountIsRequired: true}
   }
 
-  if (new BigNumber(amount).isLessThan(0)) {
-    return {invalidAmount: INVALID_AMOUNT_CODES.POSITIVE_AMOUNT}
+  const amount = new BigNumber(value, 10)
+  if (
+    amount.isNaN() ||
+    amount.isLessThan(0) ||
+    amount.decimalPlaces() > MAX_DECIMAL_DIGITS
+  ) {
+    return {invalidAmount: INVALID_AMOUNT_CODES.INVALID_AMOUNT}
   }
 
   return null

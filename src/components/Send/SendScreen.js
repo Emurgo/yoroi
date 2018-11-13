@@ -4,7 +4,7 @@ import React from 'react'
 import {BigNumber} from 'bignumber.js'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {View, TextInput, TouchableOpacity} from 'react-native'
+import {ScrollView, View, TextInput, TouchableOpacity} from 'react-native'
 import {NavigationEvents} from 'react-navigation'
 import {withHandlers, withState} from 'recompose'
 
@@ -35,6 +35,11 @@ import type {
   AmountValidationErrors,
 } from '../../utils/validators'
 
+type FormValidationErrors = {
+  address: AddressValidationErrors | null,
+  amount: AmountValidationErrors | null,
+}
+
 const getTranslations = (state) => state.trans.SendScreen
 
 const convertToAda = (amount) => new BigNumber(amount, 10).times(1000000)
@@ -44,7 +49,7 @@ const getTransactionData = (utxos, address, amount) => {
   return walletManager.prepareTransaction(utxos, address, adaAmount)
 }
 
-const validateBalanceAsync = async (utxos, address, amount) => {
+const validateFeeAsync = async (utxos, address, amount) => {
   try {
     await getTransactionData(utxos, address, amount)
   } catch (err) {
@@ -60,42 +65,64 @@ const validateBalanceAsync = async (utxos, address, amount) => {
   return null
 }
 
-const handleValidateAddress = ({
-  utxos,
-  address,
-  amount,
-  amountErrors,
-  setAddressErrors,
-  setAmountErrors,
-}) => async () => {
-  const addressErrors = await validateAddressAsync(address)
-  setAddressErrors(addressErrors)
+const shouldValidateFee = (utxos, addressErrors, amountErrors) =>
+  utxos &&
+  !addressErrors &&
+  (!amountErrors ||
+    amountErrors.invalidAmount === INVALID_AMOUNT_CODES.INSUFFICIENT_BALANCE)
 
+const clearFeeErrors = (amountErrors) => {
   if (
-    utxos &&
-    !addressErrors &&
-    (!amountErrors ||
-      amountErrors.invalidAmount === INVALID_AMOUNT_CODES.INSUFFICIENT_BALANCE)
+    amountErrors &&
+    amountErrors.invalidAmount === INVALID_AMOUNT_CODES.INSUFFICIENT_BALANCE
   ) {
-    const balanceErrors = await validateBalanceAsync(utxos, address, amount)
-    setAmountErrors(balanceErrors)
+    return null
+  } else {
+    return amountErrors
   }
 }
 
-const handleValidateAmount = ({
+const handleAddressChange = ({
+  utxos,
+  amount,
+  validationErrors,
+  setAddress,
+  setValidationErrors,
+}) => async (address) => {
+  setAddress(address)
+
+  const amountErrors = clearFeeErrors(validationErrors.amount)
+  const addressErrors = await validateAddressAsync(address)
+  const amountOrFeeErrors = shouldValidateFee(
+    utxos,
+    addressErrors,
+    validationErrors.amount,
+  )
+    ? await validateFeeAsync(utxos, address, amount)
+    : amountErrors
+
+  setValidationErrors({address: addressErrors, amount: amountOrFeeErrors})
+}
+
+const handleAmountChange = ({
   utxos,
   address,
-  amount,
-  addressErrors,
-  setAmountErrors,
-}) => async () => {
-  const amountErrors = validateAmount(amount)
-  setAmountErrors(amountErrors)
+  validationErrors,
+  setAmount,
+  setValidationErrors,
+}) => async (amount) => {
+  setAmount(amount)
 
-  if (utxos && !addressErrors && !amountErrors) {
-    const balanceErrors = await validateBalanceAsync(utxos, address, amount)
-    setAmountErrors(balanceErrors)
-  }
+  const amountErrors = validateAmount(amount)
+  const amountOrFeeErrors = shouldValidateFee(
+    utxos,
+    validationErrors.address,
+    amountErrors,
+  )
+    ? await validateFeeAsync(utxos, address, amount)
+    : amountErrors
+
+  setValidationErrors({...validationErrors, amount: amountOrFeeErrors})
 }
 
 const handleConfirm = ({
@@ -104,19 +131,18 @@ const handleConfirm = ({
   address,
   amount,
   availableAmount,
-  setAddressErrors,
-  setAmountErrors,
+  setValidationErrors,
 }) => async () => {
   const addressErrors = await validateAddressAsync(address)
   const amountErrors = validateAmount(amount)
-  const isFormValid = !addressErrors && !amountErrors
+  const isFormValid = shouldValidateFee(utxos, addressErrors, amountErrors)
 
   /* prettier-ignore */
-  const balanceErrors = (isFormValid && !!utxos)
-    ? await validateBalanceAsync(utxos, address, amount)
+  const feeErrors = isFormValid
+    ? await validateFeeAsync(utxos, address, amount)
     : null
 
-  const isValid = !!utxos && isFormValid && !balanceErrors
+  const isValid = isFormValid && !feeErrors
 
   if (isValid) {
     const adaAmount = convertToAda(amount)
@@ -133,15 +159,17 @@ const handleConfirm = ({
       balanceAfterTx,
     })
   } else {
-    setAddressErrors(addressErrors)
-    setAmountErrors(amountErrors || balanceErrors)
+    setValidationErrors({
+      address: addressErrors,
+      amount: amountErrors || feeErrors,
+    })
   }
 }
 
-const _navigateToQRReader = (navigation, setAddress) =>
+const _navigateToQRReader = (navigation, handleAddressChange) =>
   navigation.navigate(SEND_ROUTES.ADDRESS_READER_QR, {
     onSuccess: (address) => {
-      setAddress(address)
+      handleAddressChange(address)
       navigation.navigate(SEND_ROUTES.MAIN)
     },
   })
@@ -176,10 +204,9 @@ type Props = {
   isFetchingBalance: boolean,
   lastFetchingError: any,
   handleDidFocus: () => void,
-  handleValidateAddress: () => mixed,
-  handleValidateAmount: () => mixed,
-  addressErrors?: AddressValidationErrors,
-  amountErrors?: AmountValidationErrors,
+  handleAddressChange: (string) => mixed,
+  handleAmountChange: (string) => mixed,
+  validationErrors: FormValidationErrors,
 }
 
 const SendScreen = ({
@@ -189,16 +216,14 @@ const SendScreen = ({
   amount,
   address,
   availableAmount,
-  setAmount,
-  setAddress,
   isFetchingBalance,
   lastFetchingError,
   handleDidFocus,
-  handleValidateAddress,
-  handleValidateAmount,
-  addressErrors,
-  amountErrors,
+  handleAddressChange,
+  handleAmountChange,
+  validationErrors,
 }: Props) => {
+  const {address: addressErrors, amount: amountErrors} = validationErrors
   const disabled =
     isFetchingBalance ||
     !!lastFetchingError ||
@@ -206,7 +231,7 @@ const SendScreen = ({
     !!amountErrors
 
   return (
-    <View style={styles.root}>
+    <ScrollView style={styles.root}>
       <NavigationEvents onDidFocus={handleDidFocus} />
       {lastFetchingError && <FetchingErrorBanner />}
       <View style={styles.header}>
@@ -227,11 +252,10 @@ const SendScreen = ({
           style={styles.inputText}
           value={address}
           placeholder={translations.address}
-          onChangeText={setAddress}
-          onEndEditing={handleValidateAddress}
+          onChangeText={handleAddressChange}
         />
-        {/* prettier-ignore */ !!addressErrors &&
-          addressErrors.invalidAddress && (
+        {/* prettier-ignore */ addressErrors &&
+          !!addressErrors.invalidAddress && (
           <Text style={styles.error}>
             {translations.validationErrors.invalidAddress}
           </Text>
@@ -241,15 +265,14 @@ const SendScreen = ({
           keyboardType={'numeric'}
           value={amount}
           placeholder={translations.amount}
-          onChangeText={setAmount}
-          onEndEditing={handleValidateAmount}
+          onChangeText={handleAmountChange}
         />
-        {/* prettier-ignore */ !!amountErrors &&
+        {/* prettier-ignore */ amountErrors &&
           !!amountErrors.invalidAmount && (
           <Text style={styles.error}>
             {translations
               .validationErrors
-              .amountErrorByErrorCode(amountErrors.invalidAmount)}
+              .invalidAmountErrors[amountErrors.invalidAmount]}
           </Text>
         )}
       </View>
@@ -259,7 +282,7 @@ const SendScreen = ({
         title={translations.continue}
         disabled={disabled}
       />
-    </View>
+    </ScrollView>
   )
 }
 
@@ -276,14 +299,18 @@ export default compose(
   }),
   withState('address', 'setAddress', ''),
   withState('amount', 'setAmount', ''),
-  withState('addressErrors', 'setAddressErrors', {addressIsRequired: true}),
-  withState('amountErrors', 'setAmountErrors', {amountIsRequired: true}),
+  withState('validationErrors', 'setValidationErrors', {
+    address: {addressIsRequired: true},
+    amount: {amountIsRequired: true},
+  }),
   withHandlers({
-    navigateToQRReader: ({navigation, setAddress}) => (event) =>
-      _navigateToQRReader(navigation, setAddress),
     handleConfirm,
-    handleValidateAddress,
-    handleValidateAmount,
     handleDidFocus,
+    handleAddressChange,
+    handleAmountChange,
+  }),
+  withHandlers({
+    navigateToQRReader: ({navigation, handleAddressChange}) => (event) =>
+      _navigateToQRReader(navigation, handleAddressChange),
   }),
 )(SendScreen)

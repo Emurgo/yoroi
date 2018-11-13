@@ -71,10 +71,10 @@ const l10n = {
     availableAmount: 'Available amount',
     validationErrors: {
       invalidAddress: 'Please enter valid address',
-      positiveAmount: 'Please enter valid amount',
-      insufficientBalance: 'Not enough money to make this transaction',
-      amountErrorByErrorCode: (errorCode: string) =>
-        l10n.SendScreen.validationErrors[errorCode],
+      invalidAmountErrors: {
+        INVALID_AMOUNT: 'Please enter valid amount',
+        INSUFFICIENT_BALANCE: 'Not enough money to make this transaction',
+      },
     },
     fetchingError:
       'We are experiencing issue with fetching your current balance.',
