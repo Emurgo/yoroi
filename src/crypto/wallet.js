@@ -208,18 +208,20 @@ export class Wallet {
     )
   }
 
-  async generateNewUiReceiveAddress(): Promise<boolean> {
+  canGenerateNewReceiveAddress() {
     // TODO(ppershing): use "assuredly used" instead of "seen"
     const usedCount = this._externalChain.addresses
       .slice(0, this._state.lastGeneratedAddressIndex + 1)
       .filter((address) => this.isUsedAddress(address)).length
 
-    if (
-      usedCount + CONFIG.WALLET.MAX_GENERATED_UNUSED <=
-      this._state.lastGeneratedAddressIndex
-    ) {
-      return false
-    }
+    return (
+      this._state.lastGeneratedAddressIndex + 1 <
+      usedCount + CONFIG.WALLET.MAX_GENERATED_UNUSED
+    )
+  }
+
+  async generateNewUiReceiveAddress(): Promise<boolean> {
+    if (!this.canGenerateNewReceiveAddress()) return false
 
     let idx = this._state.lastGeneratedAddressIndex + 1
     // eslint-disable-next-line no-constant-condition
