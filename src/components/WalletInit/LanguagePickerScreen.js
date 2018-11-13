@@ -2,9 +2,7 @@
 
 import React from 'react'
 import {View} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 
-import WalletDescription from './WalletDescription'
 import Screen from '../Screen'
 import LanguagePicker from './LanguagePicker'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
