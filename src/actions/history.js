@@ -49,6 +49,8 @@ export const mirrorTxHistory = () => (dispatch: Dispatch<any>) => {
   const ownAddresses = walletManager.ownAddresses
   const confirmationCounts = walletManager.confirmationCounts
   const generatedReceiveAddresses = walletManager.receiveAddresses
+  const canGenerateNewReceiveAddress =
+    walletManager.canGenerateNewReceiveAddress
 
   dispatch({
     type: 'Mirror walletManager TxHistory',
@@ -59,6 +61,7 @@ export const mirrorTxHistory = () => (dispatch: Dispatch<any>) => {
       ownAddresses,
       confirmationCounts,
       generatedReceiveAddresses,
+      canGenerateNewReceiveAddress,
     },
     reducer: (state, payload) => payload,
   })

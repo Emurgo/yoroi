@@ -208,18 +208,20 @@ export class Wallet {
     )
   }
 
-  async generateNewUiReceiveAddress(): Promise<boolean> {
+  canGenerateNewReceiveAddress() {
     // TODO(ppershing): use "assuredly used" instead of "seen"
     const usedCount = this._externalChain.addresses
       .slice(0, this._state.lastGeneratedAddressIndex + 1)
       .filter((address) => this.isUsedAddress(address)).length
 
-    if (
-      usedCount + CONFIG.WALLET.MAX_GENERATED_UNUSED <=
-      this._state.lastGeneratedAddressIndex
-    ) {
-      return false
-    }
+    return (
+      this._state.lastGeneratedAddressIndex + 1 <
+      usedCount + CONFIG.WALLET.MAX_GENERATED_UNUSED
+    )
+  }
+
+  async generateNewUiReceiveAddress(): Promise<boolean> {
+    if (!this.canGenerateNewReceiveAddress()) return false
 
     let idx = this._state.lastGeneratedAddressIndex + 1
     // eslint-disable-next-line no-constant-condition
@@ -423,6 +425,11 @@ class WalletManager {
     return this._wallet.getUiReceiveAddresses()
   }
 
+  get canGenerateNewReceiveAddress() {
+    if (!this._wallet) return false
+    return this._wallet.canGenerateNewReceiveAddress()
+  }
+
   async generateNewUiReceiveAddressIfNeeded() {
     if (!this._wallet) return
     if (
@@ -435,10 +442,11 @@ class WalletManager {
     await this.generateNewUiReceiveAddress()
   }
 
-  generateNewUiReceiveAddress() {
-    if (!this._wallet) return
-    this._wallet.generateNewUiReceiveAddress()
+  async generateNewUiReceiveAddress() {
+    if (!this._wallet) return false
+    const didGenerateNew = await this._wallet.generateNewUiReceiveAddress()
     // TODO(ppershing): saveState
+    return didGenerateNew
   }
 
   async doFullSync() {

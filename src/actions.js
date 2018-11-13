@@ -40,14 +40,16 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
   )
 }
 
-export const generateNewReceiveAddress = () => (dispatch: Dispatch<any>) => {
-  walletManager.generateNewUiReceiveAddress()
-}
-
-export const generateNewReceiveAddressIfNeeded = () => (
+export const generateNewReceiveAddress = () => async (
   dispatch: Dispatch<any>,
 ) => {
-  walletManager.generateNewUiReceiveAddressIfNeeded()
+  return await walletManager.generateNewUiReceiveAddress()
+}
+
+export const generateNewReceiveAddressIfNeeded = () => async (
+  dispatch: Dispatch<any>,
+) => {
+  return await walletManager.generateNewUiReceiveAddressIfNeeded()
 }
 
 const LOCAL_STORAGE_KEY_LANG = 'lang'
