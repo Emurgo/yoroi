@@ -6509,10 +6509,10 @@ react-native-screens@^1.0.0-alpha.11:
   resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-1.0.0-alpha.14.tgz#fe3ccdcec7be8e1ada090c34a7f8951337adf653"
   integrity sha512-SXVl5dnN5ZgV7jF2NdqScp91qW3QOZipBPp8f0CpAtb/ucEQkteiQnTGb4BNS5OvpMVi1UNw4BXWhUsKRPqzPw==
 
-react-native-svg@^7.0.3:
-  version "7.0.3"
-  resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-7.0.3.tgz#1ced56f4f6e96ad95374d66706390f51fa86bea7"
-  integrity sha512-fIMgoum2YWY1mBM93G+vYIj7l0te4v4XmndxAfq7A6GZPYrNNM0rysg+bsGMCFiYQQbjeoqzqQkY3jWqZgY7UQ==
+react-native-svg@^7.2.0:
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-7.2.0.tgz#4a43e843938eb5edcb6a7ec34f0387d301533315"
+  integrity sha512-Z61EdfcwQLrTCIJhUC0L9kG3hkG/jvJRR/O5boh9dk1JcptF4TsfOkIKXgcnFCY7W4Y0xVr/AThhNP3xmY7VNw==
   dependencies:
     color "^2.0.1"
     lodash "^4.16.6"

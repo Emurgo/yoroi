@@ -8,6 +8,7 @@ const language = {
   english: 'English',
   japanese: '日本語',
   korean: '한국어',
+  russian: 'Russian',
 }
 
 const datetime = {
@@ -25,7 +26,7 @@ const l10n = {
   },
   LanguagePicker: {
     selectLanguage: 'SELECT YOUR LANGAUAGE',
-    continue: 'CONTINUE',
+    continue: 'CHOOSE LANGUAGE',
   },
   TxHistoryListItem: {
     transactionType: {
