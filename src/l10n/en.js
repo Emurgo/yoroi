@@ -119,7 +119,7 @@ const l10n = {
   ReceiveScreen: {
     title: 'Receive',
     infoText: [
-      'Share this wallet to receive payments.',
+      'Share this address to receive payments.',
       'To protect your privacy, new address are',
       'generated automatically once you use them.',
     ].join(' '),
