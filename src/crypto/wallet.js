@@ -3,6 +3,7 @@
 import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
 import {defaultMemoize} from 'reselect'
+import uuid from 'uuid'
 
 import storage from '../utils/storage'
 import {AddressChain, AddressGenerator} from './chain'
@@ -480,9 +481,7 @@ class WalletManager {
     mnemonic: string,
     password: string,
   ): Promise<Wallet> {
-    // TODO(ppershing): find better way to create unique id
-    const id = `${Math.floor(Math.random() * 1000000000)}`
-
+    const id = uuid.v4()
     // Ignore id & name for now
     const wallet = new Wallet()
     await wallet._create(mnemonic, password)
