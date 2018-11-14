@@ -63,6 +63,7 @@ const l10n = {
     receiveButton: 'RECEIVE',
   },
   SendScreen: {
+    title: 'Send',
     funds: 'Available funds:',
     scanCode: 'Scan QR code',
     address: 'Address',

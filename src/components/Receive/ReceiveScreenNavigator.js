@@ -14,7 +14,7 @@ const ReceiveScreenNavigator = createStackNavigator(
   {
     initialRouteName: RECEIVE_ROUTES.MAIN,
     navigationOptions: ({navigation}) => ({
-      title: 'i18nReceive',
+      title: navigation.getParam('title'),
       // Nested stack navigators have problems with back button
       // https://github.com/react-navigation/react-navigation/issues/115
       headerLeft: <HeaderBackButton onPress={() => navigation.goBack(null)} />,

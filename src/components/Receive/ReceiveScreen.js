@@ -18,11 +18,16 @@ import {
   receiveAddressesSelector,
   canGenerateNewReceiveAddressSelector,
 } from '../../selectors'
-import {onDidMount, onDidUpdate} from '../../utils/renderUtils'
+import {
+  onDidMount,
+  onDidUpdate,
+  withNavigationTitle,
+} from '../../utils/renderUtils'
 
 import styles from './styles/ReceiveScreen.style'
 
 import type {ComponentType} from 'react'
+import type {Navigation} from '../../types/navigation'
 
 const getTranslations = (state) => state.trans.ReceiveScreen
 
@@ -39,6 +44,7 @@ const ReceiveScreen = ({
   addressLimitReached,
 }) => {
   const currentAddress = _.last(receiveAddresses) || NO_ADDRESS
+
   return (
     <View style={styles.root}>
       <Screen scroll>
@@ -75,10 +81,12 @@ export default (compose(
       generateNewReceiveAddressIfNeeded,
     },
   ),
+  withNavigationTitle(({translations}) => translations.title),
+
   onDidMount(({generateNewReceiveAddressIfNeeded}) =>
     generateNewReceiveAddressIfNeeded(),
   ),
   onDidUpdate(({generateNewReceiveAddressIfNeeded}, prevProps) =>
     generateNewReceiveAddressIfNeeded(),
   ),
-)(ReceiveScreen): ComponentType<{}>)
+)(ReceiveScreen): ComponentType<{navigation: Navigation}>)
