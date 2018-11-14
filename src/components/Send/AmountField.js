@@ -3,7 +3,6 @@
 import React from 'react'
 import {TextInput} from 'react-native'
 import {compose} from 'redux'
-import {connect} from 'react-redux'
 import {withHandlers} from 'recompose'
 
 import {pastedFormatter, editedFormatter} from './amountUtils'
