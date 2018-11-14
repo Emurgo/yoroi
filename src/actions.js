@@ -34,6 +34,13 @@ export const setSystemAuth = (enable: boolean) => ({
   type: 'SET_SYSTEM_AUTH',
 })
 
+export const setEasyConfirmation = (enable: boolean) => ({
+  path: ['wallet', 'isEasyConfirmationEnabled'],
+  payload: enable,
+  reducer: (state: State, value: boolean) => value,
+  type: 'SET_EASY_CONFIRMATION',
+})
+
 const _updateWallets = (wallets) => ({
   path: ['wallets'],
   payload: wallets,

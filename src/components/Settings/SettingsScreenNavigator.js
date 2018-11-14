@@ -12,6 +12,7 @@ import ChangeWalletName from './ChangeWalletName'
 import SupportScreen from './SupportScreen'
 import LanguagePickerScreen from '../WalletInit/LanguagePickerScreen'
 import FingerprintLinkScreen from './FingerprintLinkScreen'
+import ToggleEasyConfirmatioScreen from './ToggleEasyConfirmatioScreen'
 import TermsOfServiceScreen from './TermsOfServiceScreen'
 import RemoveWalletScreen from './RemoveWalletScreen'
 import {SETTINGS_ROUTES} from '../../RoutesList'
@@ -54,6 +55,7 @@ const SettingsScreenNavigator = createStackNavigator(
         header: null,
       },
     },
+    [SETTINGS_ROUTES.EASY_COMFIRMATION]: ToggleEasyConfirmatioScreen,
   },
   {
     initialRouteName: SETTINGS_ROUTES.MAIN,

@@ -6,6 +6,7 @@ import {HdWallet, Wallet, PasswordProtect} from 'react-native-cardano'
 import {randomBytes} from 'react-native-randombytes'
 import bs58 from 'bs58'
 import cryptoRandomString from 'crypto-random-string'
+
 import assert from '../utils/assert'
 import {CONFIG} from '../config'
 import {
@@ -31,6 +32,7 @@ const KNOWN_ERROR_MSG = {
   DECRYPT_FAILED: 'Decryption failed. Check your password.',
   INSUFFICIENT_FUNDS_RE: /NotEnoughInput/,
 }
+export type EncryptionMethod = 'BIOMETRY' | 'SYSTEM_PIN' | 'MASTER_PASSWORD'
 
 export const getMasterKeyFromMnemonic = async (mnemonic: string) => {
   const entropy = mnemonicToEntropy(mnemonic)

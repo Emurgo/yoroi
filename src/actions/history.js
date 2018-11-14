@@ -55,6 +55,7 @@ export const mirrorTxHistory = () => (dispatch: Dispatch<any>) => {
     isUsedAddressIndex,
     numReceiveAddresses,
     canGenerateNewReceiveAddress,
+    isEasyConfirmationEnabled,
   } = walletManager
 
   dispatch({
@@ -62,6 +63,7 @@ export const mirrorTxHistory = () => (dispatch: Dispatch<any>) => {
     path: ['wallet'],
     payload: {
       name,
+      isEasyConfirmationEnabled,
       isInitialized,
       transactions,
       internalAddresses,

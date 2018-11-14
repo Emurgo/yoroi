@@ -1,20 +1,22 @@
 // @flow
 import React from 'react'
 import {compose} from 'redux'
-import {withState, withHandlers} from 'recompose'
-import {ScrollView, StyleSheet, Switch} from 'react-native'
+import {withHandlers} from 'recompose'
 import {connect} from 'react-redux'
+import {ScrollView, StyleSheet, Switch} from 'react-native'
 
-import {walletNameSelector} from '../../selectors'
 import {SETTINGS_ROUTES} from '../../RoutesList'
 import {withNavigationTitle, withTranslations} from '../../utils/renderUtils'
+import {
+  systemAuthSupportSelector,
+  easyConfirmationSelector,
+  walletNameSelector,
+} from '../../selectors'
 import {
   SettingsItem,
   NavigatedSettingsItem,
   SettingsSection,
 } from './SettingsItems'
-
-import type {SubTranslation} from '../../l10n/typeHelpers'
 
 const getTranslations = (state) => state.trans.SettingsScreen
 
@@ -24,19 +26,13 @@ const styles = StyleSheet.create({
   },
 })
 
-type Props = {
-  walletName: string,
-  isEasyConfirmation: boolean,
-  onToggleEasyConfirmation: () => void,
-  translations: SubTranslation<typeof getTranslations>,
-}
-
 const WalletSettingsScreen = ({
-  isEasyConfirmation,
   onToggleEasyConfirmation,
+  isEasyConfirmationEnabled,
+  isSystemAuthEnabled,
   translations,
   walletName,
-}: Props) => (
+}) => (
   <ScrollView style={styles.scrollView}>
     <SettingsSection title={translations.walletName}>
       <NavigatedSettingsItem
@@ -53,8 +49,9 @@ const WalletSettingsScreen = ({
 
       <SettingsItem label={translations.easyConfirmation}>
         <Switch
-          value={isEasyConfirmation}
+          value={isEasyConfirmationEnabled}
           onValueChange={onToggleEasyConfirmation}
+          disabled={!isSystemAuthEnabled}
         />
       </SettingsItem>
     </SettingsSection>
@@ -69,17 +66,17 @@ const WalletSettingsScreen = ({
 )
 
 export default compose(
+  connect((state) => ({
+    isSystemAuthEnabled: systemAuthSupportSelector(state),
+    isEasyConfirmationEnabled: easyConfirmationSelector(state),
+  })),
   withTranslations(getTranslations),
   withNavigationTitle(({translations}) => translations.title),
   connect((state) => ({
     walletName: walletNameSelector(state),
   })),
-
-  withState('isEasyConfirmation', 'setEasyConfirmation', false),
   withHandlers({
-    onToggleEasyConfirmation: ({
-      isEasyConfirmation,
-      setEasyConfirmation,
-    }) => () => setEasyConfirmation(!isEasyConfirmation),
+    onToggleEasyConfirmation: ({isEasyConfirmationEnabled, navigation}) => () =>
+      navigation.navigate(SETTINGS_ROUTES.EASY_COMFIRMATION),
   }),
 )(WalletSettingsScreen)
