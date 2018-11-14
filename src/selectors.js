@@ -4,7 +4,10 @@ import {BigNumber} from 'bignumber.js'
 import {createSelector} from 'reselect'
 
 import {processTxHistoryData} from './crypto/transactionUtils'
-import {TRANSACTION_STATUS} from './types/HistoryTransaction'
+import {
+  TRANSACTION_STATUS,
+  TRANSACTION_DIRECTION,
+} from './types/HistoryTransaction'
 import {ObjectValues} from './utils/flow'
 
 import type {Dict, State} from './state'
@@ -97,3 +100,13 @@ export const systemAuthSupportSelector = (state: State): boolean =>
 
 export const enrolledFingerprintsSelector = (state: State): boolean =>
   state.auth.hasEnrolledFingerprints
+
+export const hasPendingOutgoingTransactionSelector = createSelector(
+  transactionsInfoSelector,
+  (transactions) =>
+    ObjectValues(transactions).some(
+      (tx) =>
+        tx.status === TRANSACTION_STATUS.PENDING &&
+        tx.direction !== TRANSACTION_DIRECTION.RECEIVED,
+    ),
+)

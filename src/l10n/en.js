@@ -75,6 +75,12 @@ const l10n = {
         hasError: 'Error',
       },
       validationErrors: {
+        pendingOutgoingTransaction: [
+          'You cannot send a new transaction while',
+          'an existing one is still pending',
+        ].join(' '),
+        offline: 'You are offline',
+        serverFailed: 'There is a failing transaction',
         invalidAddress: 'Please enter valid address',
         invalidAmountErrors: {
           INVALID_AMOUNT: 'Please enter valid amount',

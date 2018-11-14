@@ -15,6 +15,7 @@ import {
   utxoBalanceSelector,
   utxosSelector,
   isOnlineSelector,
+  hasPendingOutgoingTransactionSelector,
 } from '../../selectors'
 import {Logger} from '../../utils/logging'
 import {withTranslations, withNavigationTitle} from '../../utils/renderUtils'
@@ -28,6 +29,7 @@ import {
 import AmountField from './AmountField'
 import UtxoAutoRefresher from './UtxoAutoRefresher'
 import {InsufficientFunds} from '../../crypto/errors'
+import WarningBanner from './WarningBanner'
 
 import styles from './styles/SendScreen.style'
 
@@ -134,6 +136,8 @@ type Props = {
   lastFetchingError: any,
   utxos: ?Array<RawUtxo>,
   isOnline: boolean,
+  hasPendingOutgoingTransaction: boolean,
+  fetchUTXOs: () => void,
 }
 
 type State = {
@@ -262,12 +266,40 @@ class SendScreen extends Component<Props, State> {
     })
   }
 
+  renderBanners = () => {
+    const {
+      lastFetchingError,
+      hasPendingOutgoingTransaction,
+      translations,
+      fetchUTXOs,
+      isFetchingBalance,
+    } = this.props
+    if (hasPendingOutgoingTransaction) {
+      return (
+        <WarningBanner
+          text={translations.validationErrors.pendingOutgoingTransaction}
+        />
+      )
+    } else if (lastFetchingError && !isFetchingBalance) {
+      return (
+        <WarningBanner
+          text={translations.validationErrors.serverFailed}
+          action={fetchUTXOs}
+        />
+      )
+    }
+
+    return null
+  }
+
   render() {
     const {
       translations,
       availableAmount,
       isFetchingBalance,
       lastFetchingError,
+      isOnline,
+      hasPendingOutgoingTransaction,
     } = this.props
     const {address, amount, validationErrors} = this.state
     const {address: addressErrors, amount: amountErrors} = validationErrors
@@ -276,7 +308,9 @@ class SendScreen extends Component<Props, State> {
       isFetchingBalance ||
       !!lastFetchingError ||
       !!addressErrors ||
-      !!amountErrors
+      !!amountErrors ||
+      !isOnline ||
+      hasPendingOutgoingTransaction
 
     return (
       <ScrollView style={styles.root}>
@@ -323,6 +357,8 @@ class SendScreen extends Component<Props, State> {
           )}
         </View>
 
+        {this.renderBanners()}
+
         <Button
           onPress={this.handleConfirm}
           title={translations.continue}
@@ -341,6 +377,9 @@ export default compose(
       isFetchingBalance: isFetchingUtxosSelector(state),
       lastFetchingError: lastUtxosFetchErrorSelector(state),
       utxos: utxosSelector(state),
+      hasPendingOutgoingTransaction: hasPendingOutgoingTransactionSelector(
+        state,
+      ),
       isOnline: isOnlineSelector(state),
     }),
     null,
