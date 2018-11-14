@@ -1,7 +1,6 @@
 // @flow
 import {Alert, AsyncStorage} from 'react-native'
 
-import api from './api'
 import l10n from './l10n'
 import {Logger} from './utils/logging'
 import walletManager from './crypto/wallet'
@@ -11,6 +10,7 @@ import {
   canFingerprintEncryptionBeEnabled,
   isSystemAuthSupported,
 } from './helpers/deviceSettings'
+import networkInfo from './utils/networkInfo'
 
 import {type Dispatch} from 'redux'
 import {type State} from './state'
@@ -90,8 +90,10 @@ const _setOnline = (isOnline: boolean) => (dispatch, getState) => {
 }
 
 export const setupHooks = () => (dispatch: Dispatch<any>) => {
-  Logger.debug('setting up api isOnline callback')
-  api.setIsOnlineCallback((isOnline) => dispatch(_setOnline(isOnline)))
+  Logger.debug('setting up isOnline callback')
+  networkInfo.subscribe(({isOnline}) => dispatch(_setOnline(isOnline)))
+  dispatch(_setOnline(networkInfo.getConnectionInfo().isOnline))
+
   Logger.debug('setting wallet manager hook')
   walletManager.subscribe(() => dispatch(mirrorTxHistory()))
   walletManager.subscribeBackgroundSyncError((err) =>

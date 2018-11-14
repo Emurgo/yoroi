@@ -3,7 +3,7 @@ import _ from 'lodash'
 
 import {Logger} from '../utils/logging'
 import {CONFIG} from '../config'
-import {NotConnectedError, ApiError} from './errors'
+import {ConnectionError, ApiError} from './errors'
 import assert from '../utils/assert'
 import {checkAndFacadeTransactionAsync} from './facade'
 
@@ -42,7 +42,7 @@ const _fetch = (path: string, payload: any) => {
         */
         if (e instanceof TypeError) {
           _isOnlineCallback(false)
-          throw new NotConnectedError()
+          throw new ConnectionError()
         }
         throw e
       })
