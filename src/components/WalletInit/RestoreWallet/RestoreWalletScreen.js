@@ -3,7 +3,6 @@
 import React from 'react'
 import {View, TextInput} from 'react-native'
 import {compose} from 'redux'
-import {connect} from 'react-redux'
 import {withHandlers, withState} from 'recompose'
 
 import {Text, Button} from '../../UiKit'
@@ -12,6 +11,7 @@ import {ROOT_ROUTES} from '../../../RoutesList'
 import walletManager from '../../../crypto/wallet'
 import {CONFIG} from '../../../config'
 import {validateRecoveryPhrase} from '../../../utils/validators'
+import {withNavigationTitle, withTranslations} from '../../../utils/renderUtils'
 
 import {COLORS} from '../../../styles/config'
 import styles from './styles/RestoreWalletScreen.style'
@@ -22,6 +22,8 @@ import type {
   RecoveryPhraseErrors,
   InvalidPhraseError,
 } from '../../../utils/validators'
+import type {ComponentType} from 'react'
+import type {Navigation} from '../../../types/navigation'
 
 const getTranslations = (state: State) => state.trans.RestoreWalletScreen
 
@@ -35,15 +37,6 @@ const _translateInvalidPhraseError = (
     : translation(error.parameter)
 }
 
-type Props = {
-  navigateToWallet: () => mixed,
-  translations: SubTranslation<typeof getTranslations>,
-  phrase: string,
-  setPhrase: (phrase: string) => mixed,
-  validatePhrase: () => RecoveryPhraseErrors,
-  translateInvalidPhraseError: (InvalidPhraseError) => string,
-}
-
 const RestoreWalletScreen = ({
   navigateToWallet,
   translations,
@@ -51,12 +44,11 @@ const RestoreWalletScreen = ({
   setPhrase,
   validatePhrase,
   translateInvalidPhraseError,
-}: Props) => {
+}) => {
   const errors = validatePhrase()
   return (
     <Screen bgColor={COLORS.TRANSPARENT} scroll>
       <View style={styles.container}>
-        <Text>{translations.title}</Text>
         <Text>{translations.instructions}</Text>
         <View>
           <TextInput
@@ -83,10 +75,9 @@ const RestoreWalletScreen = ({
   )
 }
 
-export default compose(
-  connect((state) => ({
-    translations: getTranslations(state),
-  })),
+export default (compose(
+  withTranslations(getTranslations),
+  withNavigationTitle(({translations}) => translations.title),
   withState(
     'phrase',
     'setPhrase',
@@ -101,4 +92,4 @@ export default compose(
     translateInvalidPhraseError: ({translations}) => (error) =>
       _translateInvalidPhraseError(translations, error),
   }),
-)(RestoreWalletScreen)
+)(RestoreWalletScreen): ComponentType<{navigation: Navigation}>)

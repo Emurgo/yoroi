@@ -29,7 +29,7 @@ import {formatAda} from '../../utils/format'
 
 import styles from './styles/TxHistory.style'
 
-import type {NavigationScreenProp, NavigationState} from 'react-navigation'
+import type {Navigation} from '../../types/navigation'
 import type {State} from '../../state'
 import type {ComponentType} from 'react'
 
@@ -90,7 +90,7 @@ const TxHistory = ({
 )
 
 type ExternalProps = {|
-  navigation: NavigationScreenProp<NavigationState>,
+  navigation: Navigation,
 |}
 
 export default (compose(
