@@ -2,8 +2,6 @@
 /* eslint-env jest */
 import jestSetup from '../jestSetup'
 
-import _ from 'lodash'
-
 import {Wallet} from './wallet'
 
 jestSetup.setup()

@@ -18,10 +18,7 @@ import styles from './styles/RestoreWalletScreen.style'
 
 import type {State} from '../../../state'
 import type {SubTranslation} from '../../../l10n/typeHelpers'
-import type {
-  RecoveryPhraseErrors,
-  InvalidPhraseError,
-} from '../../../utils/validators'
+import type {InvalidPhraseError} from '../../../utils/validators'
 import type {ComponentType} from 'react'
 import type {Navigation} from '../../../types/navigation'
 
