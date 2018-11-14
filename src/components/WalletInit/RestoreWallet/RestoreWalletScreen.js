@@ -84,7 +84,7 @@ export default (compose(
     navigateToWallet: ({navigation, phrase}) => async (event) => {
       // TODO(ppershing): pass wallet name and password here
       const walletName = 'Recovered wallet'
-      const spendingPassword = 'password'
+      const spendingPassword = CONFIG.DEBUG.PASSWORD
       await walletManager.createWallet(walletName, phrase, spendingPassword)
       navigation.navigate(ROOT_ROUTES.WALLET)
     },
