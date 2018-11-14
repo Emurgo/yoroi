@@ -10,7 +10,7 @@ import {withTranslations} from '../../utils/renderUtils'
 
 import type {ComponentType} from 'react'
 
-const getTranslations = (state) => state.trans.SendScreen
+const getTranslations = (state) => state.trans.Send.Main
 
 const handleSetAmount = ({setAmount, amount}) => (text) => {
   const shorterStringLength = Math.min(text.length, amount.length)
