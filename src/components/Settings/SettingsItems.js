@@ -41,7 +41,31 @@ export const ItemToggle = ({value, onToggle, disabled}) => (
   <Switch value={value} onValueChange={onToggle} disabled={disabled} />
 )
 
-export const SettingsItem = ({title, description, children}) => (
+type SettingsSectionProps = {
+  title?: string,
+  children: React.Node,
+}
+
+export const SettingsSection = ({title, children}: SettingsSectionProps) => (
+  <View style={styles.sectionContainer}>
+    <View>
+      <Text style={styles.sectionTitle}>{title}</Text>
+    </View>
+    <View>{children}</View>
+  </View>
+)
+
+type SettingsItemProps = {
+  title?: string,
+  description: string,
+  children: React.Node,
+}
+
+export const SettingsItem = ({
+  title,
+  description,
+  children,
+}: SettingsItemProps) => (
   <View style={styles.itemContainer}>
     <View style={styles.descriptionContainer}>
       <Text style={styles.label}>{title}</Text>
@@ -51,10 +75,18 @@ export const SettingsItem = ({title, description, children}) => (
   </View>
 )
 
-export const SettingsLink = ({label, dstScreen}) => (
-  <View style={styles.linkContainer}>
-    <NavigateTo screen={dstScreen}>
-      <ItemLink label={label} />
+type NavigatedSettingsItemProps = {
+  label: string,
+  navigateTo: string,
+}
+
+export const NavigatedSettingsItem = ({
+  label,
+  navigateTo,
+}: NavigatedSettingsItemProps) => (
+  <SettingsItem description={label}>
+    <NavigateTo screen={navigateTo}>
+      <ItemIcon />
     </NavigateTo>
-  </View>
+  </SettingsItem>
 )
