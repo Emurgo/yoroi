@@ -7,7 +7,7 @@ import {View, RefreshControl, ScrollView, Image} from 'react-native'
 import {SafeAreaView} from 'react-navigation'
 import _ from 'lodash'
 
-import {Text} from '../UiKit'
+import {Text, Banner} from '../UiKit'
 import {
   amountPendingSelector,
   transactionsInfoSelector,
@@ -35,11 +35,11 @@ import type {State} from '../../state'
 import type {ComponentType} from 'react'
 
 const OfflineBanner = () => (
-  <View style={[styles.banner, styles.bannerError]}>
-    <Text light style={styles.bannerText}>
-      You are offline. Please check settings on your device.
-    </Text>
-  </View>
+  <Banner
+    label="Status"
+    error
+    text="You are offline. Please check settings on your device."
+  />
 )
 
 const NoTxHistory = () => (
@@ -50,18 +50,16 @@ const NoTxHistory = () => (
 )
 
 const SyncErrorBanner = ({showRefresh}) => (
-  <View style={[styles.banner, styles.bannerError]}>
-    <Text light style={styles.bannerText}>
-      We are experiencing synchronization issues.{' '}
-      {showRefresh ? 'Refreshing.' : 'Pull to refresh.'}
-    </Text>
-  </View>
+  <Banner
+    error
+    text={`We are experiencing synchronization issues. ${
+      showRefresh ? 'Refreshing.' : 'Pull to refresh.'
+    }`}
+  />
 )
 
 const PendingAmount = ({amount}) => (
-  <View style={styles.banner}>
-    <Text> Pending amount: {formatAda(amount)} </Text>
-  </View>
+  <Banner text={formatAda(amount)} label="Pending amount" />
 )
 
 const TxHistory = ({
