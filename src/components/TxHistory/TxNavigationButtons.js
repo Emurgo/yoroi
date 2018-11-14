@@ -3,12 +3,11 @@
 import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {View, TouchableHighlight} from 'react-native'
+import {View} from 'react-native'
 import {withHandlers} from 'recompose'
 
-import {Text} from '../UiKit'
+import {Button} from '../UiKit'
 import styles from './styles/TxNavigationButtons.style'
-import {COLORS} from '../../styles/config'
 import {WALLET_ROUTES} from '../../RoutesList'
 
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
@@ -29,30 +28,18 @@ const TxNavigationButtons = ({
   navigateToSend,
   translations,
 }: Props) => (
-  <View style={styles.navigationButtonsContainer}>
-    <TouchableHighlight
-      style={styles.button}
-      activeOpacity={0.9}
-      underlayColor={COLORS.BLACK}
+  <View style={styles.container}>
+    <Button
+      block
       onPress={navigateToSend}
-    >
-      <View style={styles.sendButton}>
-        <Text>{translations.sendButton}</Text>
-      </View>
-    </TouchableHighlight>
-
-    <TouchableHighlight
-      style={styles.button}
-      activeOpacity={0.9}
-      underlayColor={COLORS.WHITE}
+      title={translations.sendButton}
+      style={styles.firstButton}
+    />
+    <Button
+      block
       onPress={navigateToReceive}
-    >
-      <View style={styles.receiveButton}>
-        <Text style={styles.receiveButtonText}>
-          {translations.receiveButton}
-        </Text>
-      </View>
-    </TouchableHighlight>
+      title={translations.receiveButton}
+    />
   </View>
 )
 

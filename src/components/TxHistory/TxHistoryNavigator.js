@@ -7,6 +7,13 @@ import TxDetails from './TxDetails'
 import {TX_HISTORY_ROUTES, WALLET_ROUTES} from '../../RoutesList'
 import SettingsScreenNavigator from '../Settings/SettingsScreenNavigator'
 
+const navigationOptions = {
+  headerStyle: {
+    backgroundColor: '#254BC9',
+  },
+  headerTintColor: '#fff',
+}
+
 const TxHistoryNavigator = createStackNavigator(
   {
     [TX_HISTORY_ROUTES.MAIN]: {
@@ -19,12 +26,14 @@ const TxHistoryNavigator = createStackNavigator(
             title={'\u2699'}
           />
         ),
+        ...navigationOptions,
       }),
     },
     [TX_HISTORY_ROUTES.TX_DETAIL]: {
       screen: TxDetails,
       navigationOptions: ({navigation}) => ({
         title: navigation.getParam('title'),
+        ...navigationOptions,
       }),
     },
     [WALLET_ROUTES.SETTINGS]: {

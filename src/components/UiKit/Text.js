@@ -10,12 +10,38 @@ const styles = StyleSheet.create({
     fontFamily: stylesConfig.defaultFont,
     color: COLORS.BLACK,
   },
+  secondary: {
+    color: '#ADAEB6',
+    fontSize: 12,
+  },
+  small: {
+    fontSize: 12,
+  },
+  light: {
+    color: '#fff',
+  },
 })
 
-type Props = {children: Node, style?: any}
+type Props = {
+  children: Node,
+  small?: boolean,
+  secondary?: boolean,
+  light?: boolean,
+  style?: any,
+}
 
-const Text = ({children, style}: Props) => (
-  <RNText style={[styles.text, style || {}]}>{children}</RNText>
+const Text = ({children, style, small, secondary, light}: Props) => (
+  <RNText
+    style={[
+      styles.text,
+      small && styles.small,
+      secondary && styles.secondary,
+      light && styles.light,
+      style,
+    ]}
+  >
+    {children}
+  </RNText>
 )
 
 export default Text

@@ -3,7 +3,8 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {View, RefreshControl} from 'react-native'
+import {View, RefreshControl, ScrollView, Image} from 'react-native'
+import {SafeAreaView} from 'react-navigation'
 import _ from 'lodash'
 
 import {Text} from '../UiKit'
@@ -15,7 +16,6 @@ import {
   isOnlineSelector,
 } from '../../selectors'
 import TxHistoryList from './TxHistoryList'
-import Screen from '../../components/Screen'
 import TxNavigationButtons from './TxNavigationButtons'
 import {updateHistory} from '../../actions/history'
 import {
@@ -26,6 +26,7 @@ import {
 } from '../../utils/renderUtils'
 
 import {formatAda} from '../../utils/format'
+import image from '../../assets/img/no_transactions.png'
 
 import styles from './styles/TxHistory.style'
 
@@ -33,20 +34,34 @@ import type {Navigation} from '../../types/navigation'
 import type {State} from '../../state'
 import type {ComponentType} from 'react'
 
-const OfflineBanner = () => <Text>You are offline!</Text>
+const OfflineBanner = () => (
+  <View style={[styles.banner, styles.bannerError]}>
+    <Text light style={styles.bannerText}>
+      You are offline. Please check settings on your device.
+    </Text>
+  </View>
+)
 
-const NoTxHistory = () => <Text> You have no transactions yet ... </Text>
+const NoTxHistory = () => (
+  <View style={styles.empty}>
+    <Image source={image} />
+    <Text style={styles.emptyText}>No transactions to show yet</Text>
+  </View>
+)
 
-const SyncErrorBanner = ({showRefresh, onRefresh}) => (
-  // eslint-disable-next-line
-  <View style={{flexDirection: 'row'}}>
-    <Text>We are experiencing synchronization issues. Try refreshing... </Text>
-    {showRefresh && <Text onPress={onRefresh}>{'\u21BB'}</Text>}
+const SyncErrorBanner = ({showRefresh}) => (
+  <View style={[styles.banner, styles.bannerError]}>
+    <Text light style={styles.bannerText}>
+      We are experiencing synchronization issues.{' '}
+      {showRefresh ? 'Refreshing.' : 'Pull to refresh.'}
+    </Text>
   </View>
 )
 
 const PendingAmount = ({amount}) => (
-  <Text> Pending amount: {formatAda(amount)} </Text>
+  <View style={styles.banner}>
+    <Text> Pending amount: {formatAda(amount)} </Text>
+  </View>
 )
 
 const TxHistory = ({
@@ -58,35 +73,34 @@ const TxHistory = ({
   updateHistory,
   lastSyncError,
 }) => (
-  <View style={styles.root}>
-    <RenderCount />
-    {!isOnline && <OfflineBanner />}
-    {lastSyncError && (
-      <SyncErrorBanner showRefresh={!isSyncing} onRefresh={updateHistory} />
-    )}
-    {/* TODO(ppershing): What should we do if amountPending is zero?
+  <SafeAreaView style={styles.scrollView}>
+    <View style={styles.container}>
+      <RenderCount />
+      {!isOnline && <OfflineBanner />}
+      {lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
+      {/* TODO(ppershing): What should we do if amountPending is zero?
       Should we show it? Note that isn't case for intrawallet transactions
       because amountPending is brutto and thus negative due to fee
     */}
-    {amountPending && <PendingAmount amount={amountPending} />}
-    <Screen
-      scroll
-      refreshControl={
-        <RefreshControl onRefresh={updateHistory} refreshing={isSyncing} />
-      }
-    >
-      {_.isEmpty(transactionsInfo) ? (
-        <NoTxHistory />
-      ) : (
-        <TxHistoryList
-          navigation={navigation}
-          transactions={transactionsInfo}
-        />
-      )}
-    </Screen>
+      {amountPending && <PendingAmount amount={amountPending} />}
+      <ScrollView
+        refreshControl={
+          <RefreshControl onRefresh={updateHistory} refreshing={isSyncing} />
+        }
+      >
+        {_.isEmpty(transactionsInfo) ? (
+          <NoTxHistory />
+        ) : (
+          <TxHistoryList
+            navigation={navigation}
+            transactions={transactionsInfo}
+          />
+        )}
+      </ScrollView>
 
-    <TxNavigationButtons navigation={navigation} />
-  </View>
+      <TxNavigationButtons navigation={navigation} />
+    </View>
+  </SafeAreaView>
 )
 
 type ExternalProps = {|

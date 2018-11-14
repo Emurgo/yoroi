@@ -35,8 +35,8 @@ const formatDate = (timestamp: Moment, trans) => {
 }
 
 const DayHeader = ({ts, formatDate}) => (
-  <View style={styles.dateLabelContainer}>
-    <Text style={styles.dateLabel}>{formatDate(ts)}</Text>
+  <View style={styles.dayHeader}>
+    <Text>{formatDate(ts)}</Text>
   </View>
 )
 

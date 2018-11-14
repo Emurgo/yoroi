@@ -1,23 +1,14 @@
 // @flow
-import {COLORS} from '../../../styles/config'
+import {StyleSheet} from 'react-native'
 
-const styles = {
+export default StyleSheet.create({
   container: {
     flex: 1,
     marginBottom: 15,
   },
-  dateLabelContainer: {
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.LIGHT_GRAY,
-    paddingTop: 15,
-    paddingBottom: 15,
-    flex: 1,
-    alignItems: 'center',
+  dayHeader: {
+    paddingTop: 16,
+    paddingBottom: 8,
+    paddingHorizontal: 28,
   },
-  dateLabel: {
-    color: COLORS.BLACK,
-    fontSize: 20,
-  },
-}
-
-export default styles
+})

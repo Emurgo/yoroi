@@ -12,6 +12,9 @@ import {colors} from '../../styles/config'
 import Text from './Text'
 
 const styles = StyleSheet.create({
+  block: {
+    flex: 1,
+  },
   button: {
     backgroundColor: colors.buttonBackground,
     height: 56,
@@ -38,11 +41,19 @@ type ButtonProps = {
   accessibilityLabel?: ?string,
   disabled?: ?boolean,
   style?: Object,
+  block?: boolean,
 }
 
 class Button extends React.Component<ButtonProps> {
   render() {
-    const {accessibilityLabel, onPress, title, disabled, style} = this.props
+    const {
+      accessibilityLabel,
+      onPress,
+      title,
+      disabled,
+      block,
+      style,
+    } = this.props
 
     const formattedTitle = title.toUpperCase()
     const Touchable =
@@ -54,6 +65,7 @@ class Button extends React.Component<ButtonProps> {
         accessibilityRole="button"
         disabled={disabled}
         onPress={onPress}
+        style={[block && styles.block]}
       >
         <View style={[styles.button, disabled && styles.buttonDisabled, style]}>
           <Text

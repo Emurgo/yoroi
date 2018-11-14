@@ -3,14 +3,13 @@
 import React, {Component} from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {View, TouchableHighlight} from 'react-native'
+import {View, TouchableOpacity} from 'react-native'
 
 import {Text} from '../UiKit'
 import AdaIcon from '../../assets/AdaIcon'
 import {transactionsInfoSelector} from '../../selectors'
 import {TX_HISTORY_ROUTES} from '../../RoutesList'
 import styles from './styles/TxHistoryListItem.style'
-import {COLORS} from '../../styles/config'
 import {withTranslations} from '../../utils/renderUtils'
 
 import {
@@ -41,14 +40,12 @@ const AdaSign = ({color, size}) => (
 )
 
 const _AssuranceLevel = ({transaction, translations}) => {
-  const CHECMKARK = '\u2714'
-
   return (
-    <Text>
-      {CHECMKARK}
-      {CHECMKARK}
-      {translations.assuranceLevel[transaction.assurance]}
-    </Text>
+    <View style={[styles.assurance, styles[transaction.assurance]]}>
+      <Text style={styles.assuranceText}>
+        {translations.assuranceLevel[transaction.assurance].toLocaleUpperCase()}
+      </Text>
+    </View>
   )
 }
 
@@ -91,52 +88,35 @@ class TxHistoryListItem extends Component<Props> {
     ].includes(transaction.direction)
 
     return (
-      <TouchableHighlight
-        activeOpacity={0.9}
-        underlayColor={COLORS.LIGHT_GRAY}
-        onPress={this.showDetails}
-      >
+      <TouchableOpacity onPress={this.showDetails} activeOpacity={0.5}>
         <View style={styles.container}>
-          <View style={styles.metadataPanel}>
-            <View>
-              <Text>{formatTimeToSeconds(transaction.submittedAt)}</Text>
-            </View>
-            <View>
-              <AssuranceLevel transaction={transaction} />
-            </View>
+          <View style={styles.meta}>
+            <Text small>{formatTimeToSeconds(transaction.submittedAt)}</Text>
+            {hasFee && (
+              <Text secondary>{formatAda(transaction.fee)} l10n Fee</Text>
+            )}
+            <Text secondary>
+              {translations.transactionType[transaction.direction]}
+            </Text>
           </View>
-          <View style={styles.amountPanel}>
-            <View style={styles.amountContainer}>
-              <View style={styles.horizontalSpacer} />
-              <Text>{translations.transactionType[transaction.direction]}</Text>
-            </View>
-            <View style={styles.amountContainer}>
-              <View style={styles.horizontalSpacer} />
-              {hasAmount ? (
-                <>
-                  <Text style={[amountStyle, styles.integerAmount]}>
-                    {formatAdaInteger(transaction.amount)}
-                  </Text>
-                  <Text style={[amountStyle, styles.decimalAmount]}>
-                    {formatAdaFractional(transaction.amount)}
-                  </Text>
-                  <AdaSign size={16} color={amountStyle.color} />
-                </>
-              ) : (
-                <Text style={amountStyle}>- -</Text>
-              )}
-            </View>
-            <View style={styles.feeContainer}>
-              <View style={styles.horizontalSpacer} />
-              {hasFee && (
-                <Text style={styles.feeAmount}>
-                  {formatAda(transaction.fee)} l10n Fee
+          <View style={styles.row}>
+            <AssuranceLevel transaction={transaction} />
+            {hasAmount ? (
+              <View style={styles.amount}>
+                <Text style={amountStyle}>
+                  {formatAdaInteger(transaction.amount)}
                 </Text>
-              )}
-            </View>
+                <Text small style={amountStyle}>
+                  {formatAdaFractional(transaction.amount)}
+                </Text>
+                <AdaSign size={16} color={amountStyle.color} />
+              </View>
+            ) : (
+              <Text style={amountStyle}>- -</Text>
+            )}
           </View>
         </View>
-      </TouchableHighlight>
+      </TouchableOpacity>
     )
   }
 }
