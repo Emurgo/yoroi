@@ -5,22 +5,21 @@ import {BigNumber} from 'bignumber.js'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {ScrollView, View, TextInput, TouchableOpacity} from 'react-native'
-import {NavigationEvents} from 'react-navigation'
 
 import {CONFIG} from '../../config'
 import {SEND_ROUTES} from '../../RoutesList'
 import {Text, Button} from '../UiKit'
 import {
-  isFetchingBalanceSelector,
-  lastFetchingErrorSelector,
+  isFetchingUtxosSelector,
+  lastUtxosFetchErrorSelector,
   utxoBalanceSelector,
   utxosSelector,
+  isOnlineSelector,
 } from '../../selectors'
 import {Logger} from '../../utils/logging'
 import {withTranslations, withNavigationTitle} from '../../utils/renderUtils'
 import {formatAda} from '../../utils/format'
 import walletManager from '../../crypto/wallet'
-import {fetchUTXOs} from '../../actions/utxo'
 import {CardanoError} from '../../crypto/util'
 import {
   INVALID_AMOUNT_CODES,
@@ -28,6 +27,7 @@ import {
   validateAddressAsync,
 } from '../../utils/validators'
 import AmountField from './AmountField'
+import UtxoAutoRefresher from './UtxoAutoRefresher'
 
 import styles from './styles/SendScreen.style'
 
@@ -115,9 +115,14 @@ const FetchingErrorBanner = withTranslations(getTranslations)(
 )
 
 const AvailableAmount = withTranslations(getTranslations)(
-  ({translations, value}) => (
+  ({translations, isFetching, hasError, amount}) => (
     <Text>
-      {translations.availableAmount}: {value ? formatAda(value) : ''}
+      {translations.availableAmount.label}{' '}
+      {isFetching
+        ? translations.availableAmount.isFetching
+        : hasError
+          ? translations.availableAmount.hasError
+          : (amount && formatAda(amount)) || ''}
     </Text>
   ),
 )
@@ -128,8 +133,8 @@ type Props = {
   availableAmount: BigNumber,
   isFetchingBalance: boolean,
   lastFetchingError: any,
-  fetchUTXOs: () => void,
   utxos: ?Array<RawUtxo>,
+  isOnline: boolean,
 }
 
 type State = {
@@ -177,13 +182,6 @@ class SendScreen extends Component<Props, State> {
   setValidationErrors: (?FormValidationErrors) => void
   setValidationErrors = (validationErrors) => {
     this.setState({validationErrors})
-  }
-
-  handleDidFocus: () => void
-  handleDidFocus = () => {
-    if (!this.props.isFetchingBalance) {
-      this.props.fetchUTXOs()
-    }
   }
 
   handleAddressChange: (string) => Promise<void>
@@ -283,14 +281,14 @@ class SendScreen extends Component<Props, State> {
 
     return (
       <ScrollView style={styles.root}>
-        <NavigationEvents onDidFocus={this.handleDidFocus} />
+        <UtxoAutoRefresher />
         {lastFetchingError && <FetchingErrorBanner />}
         <View style={styles.header}>
-          {isFetchingBalance ? (
-            <Text>{translations.checkingBalance}</Text>
-          ) : (
-            <AvailableAmount value={availableAmount} />
-          )}
+          <AvailableAmount
+            isFetching={isFetchingBalance}
+            hasError={lastFetchingError}
+            amount={availableAmount}
+          />
         </View>
         <View style={styles.containerQR}>
           <TouchableOpacity onPress={this.navigateToQRReader}>
@@ -337,15 +335,16 @@ class SendScreen extends Component<Props, State> {
 }
 
 export default compose(
-  /* prettier-ignore */
-  connect((state) => ({
-    translations: getTranslations(state),
-    availableAmount: utxoBalanceSelector(state),
-    isFetchingBalance: isFetchingBalanceSelector(state),
-    lastFetchingError: lastFetchingErrorSelector(state),
-    utxos: utxosSelector(state),
-  }), {
-    fetchUTXOs,
-  }),
+  connect(
+    (state) => ({
+      translations: getTranslations(state),
+      availableAmount: utxoBalanceSelector(state),
+      isFetchingBalance: isFetchingUtxosSelector(state),
+      lastFetchingError: lastUtxosFetchErrorSelector(state),
+      utxos: utxosSelector(state),
+      isOnline: isOnlineSelector(state),
+    }),
+    null,
+  ),
   withNavigationTitle(({translations}) => translations.title),
 )(SendScreen)
