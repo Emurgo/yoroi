@@ -20,6 +20,7 @@ import styles from './styles/ConfirmScreen.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
+import {WrongPassword} from '../../crypto/util'
 
 const handleOnConfirm = async (navigation, password) => {
   const transactionData = navigation.getParam('transactionData')
@@ -28,16 +29,34 @@ const handleOnConfirm = async (navigation, password) => {
     await walletManager.submitTransaction(transactionData, password)
     navigation.navigate(WALLET_ROUTES.TX_HISTORY)
   } catch (e) {
-    // Warning(ppershing): setTimeout is necessary here otherwise
-    // if walletManager throws synchronously we end up with
-    // Alert showing up before navigation navigating
-    // and completely blocking the UI
-    setTimeout(() => {
+    // Warning(ppershing): If we don't show Alert in next microtask
+    // we might end up with Alert showing up before navigation navigating
+    // and UI will be blocked
+    Promise.resolve().then(() => {
+      const config = {
+        password: {
+          title: 'Wrong password',
+          text: 'Password you provided is incorrect',
+          target: SEND_ROUTES.CONFIRM,
+        },
+        default: {
+          title: 'Unknown error submitting transaction',
+          text: `Details: ${e.message}`,
+          target: SEND_ROUTES.MAIN,
+        },
+      }
+
+      let data
+      if (e instanceof WrongPassword) {
+        data = config.password
+      } else {
+        data = config.default
+      }
       // TODO(ppershing): error processing + localization
-      Alert.alert('Error submitting transaction', '', [
+      Alert.alert(data.title, data.text, [
         {
           text: 'OK',
-          onPress: () => navigation.navigate(SEND_ROUTES.MAIN),
+          onPress: () => navigation.navigate(data.target),
         },
       ])
     })
