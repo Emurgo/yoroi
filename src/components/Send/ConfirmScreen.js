@@ -35,13 +35,13 @@ const handleOnConfirm = async (navigation, password) => {
     Promise.resolve().then(() => {
       const config = {
         password: {
-          title: 'Wrong password',
-          text: 'Password you provided is incorrect',
+          title: 'l10n Wrong password',
+          text: 'l10n Password you provided is incorrect',
           target: SEND_ROUTES.CONFIRM,
         },
         default: {
-          title: 'Unknown error submitting transaction',
-          text: `Details: ${e.message}`,
+          title: 'l10n Unknown error submitting transaction',
+          text: `l10n Details: ${e.message}`,
           target: SEND_ROUTES.MAIN,
         },
       }
@@ -55,7 +55,7 @@ const handleOnConfirm = async (navigation, password) => {
       // TODO(ppershing): error processing + localization
       Alert.alert(data.title, data.text, [
         {
-          text: 'OK',
+          text: 'l10n OK',
           onPress: () => navigation.navigate(data.target),
         },
       ])
