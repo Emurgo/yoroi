@@ -3,7 +3,6 @@
 import React from 'react'
 import {View} from 'react-native'
 import {compose} from 'redux'
-import {connect} from 'react-redux'
 import {withHandlers, withState} from 'recompose'
 
 import assert from '../../../utils/assert'
