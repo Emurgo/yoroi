@@ -1,27 +1,6 @@
 import {BigNumber} from 'bignumber.js'
 import moment from 'moment'
-
-const fmt = {
-  prefix: '',
-  decimalSeparator: '.',
-  groupSeparator: ',',
-  groupSize: 3,
-  secondaryGroupSize: 0,
-  fractionGroupSize: 0,
-  fractionGroupSeparator: ' ',
-  suffix: '',
-}
-
-export const initializeLocalization = (language: string) => {
-  BigNumber.config({
-    FORMAT: fmt,
-  })
-  moment.locale('de')
-  // TODO(ppershing): localize moment
-}
-
-// Hardcoded here for now
-initializeLocalization('ignored')
+import l10n from '../l10n'
 
 // 1 ADA = 1 000 000 micro ada
 const MICRO = 1000000
@@ -41,10 +20,22 @@ export const formatAdaFractional = (amount: BigNumber) => {
     .abs()
     .modulo(MICRO)
     .dividedBy(MICRO)
-  // remove leading 0.
+  // remove leading '0'
   return fractional.toFormat(6).substring(1)
 }
 
 export const formatTimeToSeconds = (ts: string | moment) => {
   return moment(ts).format('LT')
+}
+
+export const formatDateRelative = (ts: string | moment) => {
+  const config = {
+    sameDay: `[${l10n.translations.global.datetime.today}]`,
+    lastDay: `[${l10n.translations.global.datetime.yesterday}]`,
+    nextDay: 'L', // we don't really have dates in future
+    lastWeek: 'L',
+    nextWeek: 'L',
+    sameElse: 'L',
+  }
+  return moment(ts).calendar(null, config)
 }

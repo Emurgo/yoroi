@@ -1,5 +1,5 @@
 // @flow
-import trans from './l10n'
+import l10n from './l10n'
 
 import type {Transaction, RawUtxo} from './types/HistoryTransaction'
 import type {Translation} from './l10n/type'
@@ -54,7 +54,7 @@ export const getInitialState = (): State => ({
     lastFetchingError: null,
     utxos: null,
   },
-  trans,
+  trans: l10n.translations,
   isOnline: true, // we are online by default
   auth: {
     isFingerprintsHardwareSupported: false,
