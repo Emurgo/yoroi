@@ -18,7 +18,11 @@ import {
   utxosSelector,
 } from '../../selectors'
 import {Logger} from '../../utils/logging'
-import {withTranslations, withNavigationTitle, onDidMount} from '../../utils/renderUtils'
+import {
+  withTranslations,
+  withNavigationTitle,
+  onDidMount,
+} from '../../utils/renderUtils'
 import {formatAda} from '../../utils/format'
 import walletManager from '../../crypto/wallet'
 import {fetchUTXOs} from '../../actions/utxo'
