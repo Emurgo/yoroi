@@ -368,14 +368,14 @@ class WalletManager {
   _id: string = ''
   _subscribers: Array<() => any> = []
   _syncErrorSubscribers: Array<(err: any) => any> = []
-  _closePromise: ?Promise<void> = null
+  _closePromise: ?Promise<any> = null
   _closeReject: ?(Error) => void = null
 
   constructor() {
     this._backgroundSync()
   }
 
-  abortWhenWalletCloses<T>(promise: Promise<T>) {
+  abortWhenWalletCloses<T>(promise: Promise<T>): Promise<T> {
     assert.assert(this._closePromise, 'should have closePromise')
     /* :: if (!this._closePromise) throw 'assert' */
     return Promise.race([this._closePromise, promise])
