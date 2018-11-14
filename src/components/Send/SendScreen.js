@@ -1,12 +1,11 @@
 // @flow
 
-import React from 'react'
+import React, {Component} from 'react'
 import {BigNumber} from 'bignumber.js'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {ScrollView, View, TextInput, TouchableOpacity} from 'react-native'
 import {NavigationEvents} from 'react-navigation'
-import {withHandlers, withState} from 'recompose'
 
 import {CONFIG} from '../../config'
 import {SEND_ROUTES} from '../../RoutesList'
@@ -18,11 +17,7 @@ import {
   utxosSelector,
 } from '../../selectors'
 import {Logger} from '../../utils/logging'
-import {
-  withTranslations,
-  withNavigationTitle,
-  onDidMount,
-} from '../../utils/renderUtils'
+import {withTranslations, withNavigationTitle} from '../../utils/renderUtils'
 import {formatAda} from '../../utils/format'
 import walletManager from '../../crypto/wallet'
 import {fetchUTXOs} from '../../actions/utxo'
@@ -36,15 +31,17 @@ import AmountField from './AmountField'
 
 import styles from './styles/SendScreen.style'
 
+import type {Navigation} from '../../types/navigation'
 import type {SubTranslation} from '../../l10n/typeHelpers'
+import type {RawUtxo} from '../../types/HistoryTransaction'
 import type {
   AddressValidationErrors,
   AmountValidationErrors,
 } from '../../utils/validators'
 
 type FormValidationErrors = {
-  address: AddressValidationErrors | null,
-  amount: AmountValidationErrors | null,
+  address: ?AddressValidationErrors,
+  amount: ?AmountValidationErrors,
 }
 
 const getTranslations = (state) => state.trans.Send.Main
@@ -57,6 +54,10 @@ const getTransactionData = (utxos, address, amount) => {
 }
 
 const validateFeeAsync = async (utxos, address, amount) => {
+  if (!utxos) {
+    return null
+  }
+
   try {
     await getTransactionData(utxos, address, amount)
   } catch (err) {
@@ -72,7 +73,11 @@ const validateFeeAsync = async (utxos, address, amount) => {
   return null
 }
 
-const shouldValidateFee = (utxos, addressErrors, amountErrors) =>
+const shouldValidateFee = (
+  utxos: ?Array<RawUtxo>,
+  addressErrors: ?AddressValidationErrors,
+  amountErrors: ?AmountValidationErrors,
+) =>
   utxos &&
   !addressErrors &&
   (!amountErrors ||
@@ -89,57 +94,7 @@ const clearFeeErrors = (amountErrors) => {
   }
 }
 
-const handleAddressChange = ({
-  utxos,
-  amount,
-  validationErrors,
-  setAddress,
-  setValidationErrors,
-}) => async (address) => {
-  setAddress(address)
-
-  const amountErrors = clearFeeErrors(validationErrors.amount)
-  const addressErrors = await validateAddressAsync(address)
-  const amountOrFeeErrors = shouldValidateFee(
-    utxos,
-    addressErrors,
-    validationErrors.amount,
-  )
-    ? await validateFeeAsync(utxos, address, amount)
-    : amountErrors
-
-  setValidationErrors({address: addressErrors, amount: amountOrFeeErrors})
-}
-
-const handleAmountChange = ({
-  utxos,
-  address,
-  validationErrors,
-  setAmount,
-  setValidationErrors,
-}) => async (amount) => {
-  setAmount(amount)
-
-  const amountErrors = validateAmount(amount)
-  const amountOrFeeErrors = shouldValidateFee(
-    utxos,
-    validationErrors.address,
-    amountErrors,
-  )
-    ? await validateFeeAsync(utxos, address, amount)
-    : amountErrors
-
-  setValidationErrors({...validationErrors, amount: amountOrFeeErrors})
-}
-
-const handleConfirm = ({
-  navigation,
-  utxos,
-  address,
-  amount,
-  availableAmount,
-  setValidationErrors,
-}) => async () => {
+const validateAsync = async (utxos, address, amount) => {
   const addressErrors = await validateAddressAsync(address)
   const amountErrors = validateAmount(amount)
   const isFormValid = shouldValidateFee(utxos, addressErrors, amountErrors)
@@ -149,41 +104,9 @@ const handleConfirm = ({
     ? await validateFeeAsync(utxos, address, amount)
     : null
 
-  const isValid = isFormValid && !feeErrors
-
-  if (isValid) {
-    const adaAmount = convertToAda(amount)
-    const transactionData = await getTransactionData(utxos, address, amount)
-
-    const balanceAfterTx = availableAmount
-      .minus(adaAmount)
-      .minus(transactionData.fee)
-
-    navigation.navigate(SEND_ROUTES.CONFIRM, {
-      address,
-      amount: adaAmount,
-      transactionData,
-      balanceAfterTx,
-    })
-  } else {
-    setValidationErrors({
-      address: addressErrors,
-      amount: amountErrors || feeErrors,
-    })
-  }
-}
-
-const _navigateToQRReader = (navigation, handleAddressChange) =>
-  navigation.navigate(SEND_ROUTES.ADDRESS_READER_QR, {
-    onSuccess: (address) => {
-      handleAddressChange(address)
-      navigation.navigate(SEND_ROUTES.MAIN)
-    },
-  })
-
-const handleDidFocus = ({isFetching, fetchUTXOs}) => () => {
-  if (!isFetching) {
-    fetchUTXOs()
+  return {
+    address: addressErrors,
+    amount: amountErrors || feeErrors,
   }
 }
 
@@ -200,95 +123,217 @@ const AvailableAmount = withTranslations(getTranslations)(
 )
 
 type Props = {
-  navigateToQRReader: () => mixed,
-  handleConfirm: () => mixed,
+  navigation: Navigation,
   translations: SubTranslation<typeof getTranslations>,
-  amount: string,
-  address: string,
-  availableAmount: number,
-  setAmount: () => mixed,
-  setAddress: () => mixed,
+  availableAmount: BigNumber,
   isFetchingBalance: boolean,
   lastFetchingError: any,
-  handleDidFocus: () => void,
-  handleAddressChange: (string) => mixed,
-  handleAmountChange: (string) => mixed,
+  fetchUTXOs: () => void,
+  utxos: ?Array<RawUtxo>,
+}
+
+type State = {
+  address: string,
+  amount: string,
   validationErrors: FormValidationErrors,
 }
 
-const SendScreen = ({
-  navigateToQRReader,
-  handleConfirm,
-  translations,
-  amount,
-  address,
-  availableAmount,
-  isFetchingBalance,
-  lastFetchingError,
-  handleDidFocus,
-  handleAddressChange,
-  handleAmountChange,
-  validationErrors,
-}: Props) => {
-  const {address: addressErrors, amount: amountErrors} = validationErrors
-  const disabled =
-    isFetchingBalance ||
-    !!lastFetchingError ||
-    !!addressErrors ||
-    !!amountErrors
+class SendScreen extends Component<Props, State> {
+  state = {
+    address: '',
+    amount: '',
+    validationErrors: {
+      address: {addressIsRequired: true},
+      amount: {amountIsRequired: true},
+    },
+  }
 
-  return (
-    <ScrollView style={styles.root}>
-      <NavigationEvents onDidFocus={handleDidFocus} />
-      {lastFetchingError && <FetchingErrorBanner />}
-      <View style={styles.header}>
-        {isFetchingBalance ? (
-          <Text>{translations.checkingBalance}</Text>
-        ) : (
-          <AvailableAmount value={availableAmount} />
-        )}
-      </View>
-      <View style={styles.containerQR}>
-        <TouchableOpacity onPress={navigateToQRReader}>
-          <View style={styles.scanIcon} />
-        </TouchableOpacity>
-        <Text style={styles.label}>{translations.scanCode}</Text>
-      </View>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.inputText}
-          value={address}
-          placeholder={translations.address}
-          onChangeText={handleAddressChange}
-        />
-        {/* prettier-ignore */ addressErrors &&
-          !!addressErrors.invalidAddress && (
-          <Text style={styles.error}>
-            {translations.validationErrors.invalidAddress}
-          </Text>
-        )}
-        <AmountField
-          style={styles.inputText}
-          amount={amount}
-          setAmount={handleAmountChange}
-        />
-        {/* prettier-ignore */ amountErrors &&
-          !!amountErrors.invalidAmount && (
-          <Text style={styles.error}>
-            {translations
-              .validationErrors
-              .invalidAmountErrors[amountErrors.invalidAmount]}
-          </Text>
-        )}
-      </View>
+  componentDidMount() {
+    if (CONFIG.DEBUG.PREFILL_FORMS) {
+      this.handleAddressChange(CONFIG.DEBUG.SEND_ADDRESS)
+      this.handleAmountChange(CONFIG.DEBUG.SEND_AMOUNT)
+    }
+  }
 
-      <Button
-        onPress={handleConfirm}
-        title={translations.continue}
-        disabled={disabled}
-      />
-    </ScrollView>
-  )
+  componentDidUpdate(prevProps) {
+    const utxos = this.props.utxos
+    const {address, amount} = this.state
+
+    if (utxos && address && amount && utxos !== prevProps.utxos) {
+      validateAsync(utxos, address, amount).then(this.setValidationErrors)
+    }
+  }
+
+  setAddress: (string) => void
+  setAddress = (address) => {
+    this.setState({address})
+  }
+
+  setAmount: (string) => void
+  setAmount = (amount) => {
+    this.setState({amount})
+  }
+
+  setValidationErrors: (?FormValidationErrors) => void
+  setValidationErrors = (validationErrors) => {
+    this.setState({validationErrors})
+  }
+
+  handleDidFocus: () => void
+  handleDidFocus = () => {
+    if (!this.props.isFetchingBalance) {
+      this.props.fetchUTXOs()
+    }
+  }
+
+  handleAddressChange: (string) => Promise<void>
+  handleAddressChange = async (address) => {
+    const {amount, validationErrors} = this.state
+    const utxos = this.props.utxos
+
+    this.setAddress(address)
+
+    const amountErrors = clearFeeErrors(validationErrors.amount)
+    const addressErrors = await validateAddressAsync(address)
+    const amountOrFeeErrors = shouldValidateFee(
+      utxos,
+      addressErrors,
+      validationErrors.amount,
+    )
+      ? await validateFeeAsync(utxos, address, amount)
+      : amountErrors
+
+    this.setValidationErrors({
+      address: addressErrors,
+      amount: amountOrFeeErrors,
+    })
+  }
+
+  handleAmountChange: (string) => Promise<void>
+  handleAmountChange = async (amount) => {
+    const {address, validationErrors} = this.state
+    const utxos = this.props.utxos
+
+    this.setAmount(amount)
+
+    const amountErrors = validateAmount(amount)
+    const amountOrFeeErrors = shouldValidateFee(
+      utxos,
+      validationErrors.address,
+      amountErrors,
+    )
+      ? await validateFeeAsync(utxos, address, amount)
+      : amountErrors
+
+    this.setValidationErrors({...validationErrors, amount: amountOrFeeErrors})
+  }
+
+  handleConfirm: () => Promise<void>
+  handleConfirm = async () => {
+    const {navigation, utxos, availableAmount} = this.props
+    const {address, amount} = this.state
+
+    const errors = await validateAsync(utxos, address, amount)
+    const isValid = !!errors
+
+    if (isValid && utxos) {
+      const adaAmount = convertToAda(amount)
+      const transactionData = await getTransactionData(utxos, address, amount)
+
+      const balanceAfterTx = availableAmount
+        .minus(adaAmount)
+        .minus(transactionData.fee)
+
+      navigation.navigate(SEND_ROUTES.CONFIRM, {
+        address,
+        amount: adaAmount,
+        transactionData,
+        balanceAfterTx,
+      })
+    }
+
+    this.setValidationErrors(errors)
+  }
+
+  navigateToQRReader: () => void
+  navigateToQRReader = () => {
+    this.props.navigation.navigate(SEND_ROUTES.ADDRESS_READER_QR, {
+      onSuccess: (address) => {
+        this.handleAddressChange(address)
+        this.props.navigation.navigate(SEND_ROUTES.MAIN)
+      },
+    })
+  }
+
+  render() {
+    const {
+      translations,
+      availableAmount,
+      isFetchingBalance,
+      lastFetchingError,
+    } = this.props
+    const {address, amount, validationErrors} = this.state
+    const {address: addressErrors, amount: amountErrors} = validationErrors
+
+    const disabled =
+      isFetchingBalance ||
+      !!lastFetchingError ||
+      !!addressErrors ||
+      !!amountErrors
+
+    return (
+      <ScrollView style={styles.root}>
+        <NavigationEvents onDidFocus={this.handleDidFocus} />
+        {lastFetchingError && <FetchingErrorBanner />}
+        <View style={styles.header}>
+          {isFetchingBalance ? (
+            <Text>{translations.checkingBalance}</Text>
+          ) : (
+            <AvailableAmount value={availableAmount} />
+          )}
+        </View>
+        <View style={styles.containerQR}>
+          <TouchableOpacity onPress={this.navigateToQRReader}>
+            <View style={styles.scanIcon} />
+          </TouchableOpacity>
+          <Text style={styles.label}>{translations.scanCode}</Text>
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.inputText}
+            value={address}
+            placeholder={translations.address}
+            onChangeText={this.handleAddressChange}
+          />
+          {/* prettier-ignore */ addressErrors &&
+            !!addressErrors.invalidAddress && (
+            <Text style={styles.error}>
+              {translations.validationErrors.invalidAddress}
+            </Text>
+          )}
+          <AmountField
+            style={styles.inputText}
+            amount={amount}
+            setAmount={this.handleAmountChange}
+          />
+          {/* prettier-ignore */ amountErrors &&
+            !!amountErrors.invalidAmount && (
+            <Text style={styles.error}>
+              {translations
+                .validationErrors
+                .invalidAmountErrors[amountErrors.invalidAmount]}
+            </Text>
+          )}
+        </View>
+
+        <Button
+          onPress={this.handleConfirm}
+          title={translations.continue}
+          disabled={disabled}
+        />
+      </ScrollView>
+    )
+  }
 }
 
 export default compose(
@@ -303,27 +348,4 @@ export default compose(
     fetchUTXOs,
   }),
   withNavigationTitle(({translations}) => translations.title),
-  withState('address', 'setAddress', ''),
-  withState('amount', 'setAmount', ''),
-  withState('validationErrors', 'setValidationErrors', {
-    address: {addressIsRequired: true},
-    amount: {amountIsRequired: true},
-  }),
-  withHandlers({
-    handleConfirm,
-    handleDidFocus,
-    handleAddressChange,
-    handleAmountChange,
-  }),
-  withHandlers({
-    navigateToQRReader: ({navigation, handleAddressChange}) => (event) =>
-      _navigateToQRReader(navigation, handleAddressChange),
-  }),
-  // For pre-fill
-  onDidMount(({handleAddressChange, handleAmountChange, address, amount}) => {
-    if (CONFIG.DEBUG.PREFILL_FORMS) {
-      handleAddressChange(CONFIG.DEBUG.SEND_ADDRESS)
-      handleAmountChange(CONFIG.DEBUG.SEND_AMOUNT)
-    }
-  }),
 )(SendScreen)
