@@ -1,9 +1,10 @@
 // @flow
-
+import React from 'react'
 import {createStackNavigator} from 'react-navigation'
 import ReceiveScreen from './ReceiveScreen'
 import AddressModal from './AddressModal'
 import {RECEIVE_ROUTES} from '../../RoutesList'
+import {HeaderBackButton} from 'react-navigation-stack'
 
 const ReceiveScreenNavigator = createStackNavigator(
   {
@@ -14,6 +15,9 @@ const ReceiveScreenNavigator = createStackNavigator(
     initialRouteName: RECEIVE_ROUTES.MAIN,
     navigationOptions: ({navigation}) => ({
       title: 'i18nReceive',
+      // Nested stack navigators have problems with back button
+      // https://github.com/react-navigation/react-navigation/issues/115
+      headerLeft: <HeaderBackButton onPress={() => navigation.goBack(null)} />,
     }),
   },
 )

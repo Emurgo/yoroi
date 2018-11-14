@@ -4,8 +4,6 @@ import WalletInitNavigator from './components/WalletInit/WalletInitNavigator'
 import TxHistoryNavigator from './components/TxHistory/TxHistoryNavigator'
 import SendScreenNavigator from './components/Send/SendScreenNavigator'
 import ReceiveScreenNavigator from './components/Receive/ReceiveScreenNavigator'
-// eslint-disable-next-line max-len
-import SettingsScreenNavigator from './components/Settings/SettingsScreenNavigator'
 import IndexScreen from './components/IndexScreen'
 import LoginScreen from './components/Login/LoginScreen'
 // eslint-disable-next-line max-len
@@ -17,7 +15,6 @@ const WalletNavigator = createStackNavigator(
     [WALLET_ROUTES.TX_HISTORY]: TxHistoryNavigator,
     [WALLET_ROUTES.SEND]: SendScreenNavigator,
     [WALLET_ROUTES.RECEIVE]: ReceiveScreenNavigator,
-    [WALLET_ROUTES.SETTINGS]: SettingsScreenNavigator,
   },
   {
     // TODO(ppershing): initialRouteName
