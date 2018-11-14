@@ -27,6 +27,7 @@ import {
   validateAmount,
   validateAddressAsync,
 } from '../../utils/validators'
+import AmountField from './AmountField'
 
 import styles from './styles/SendScreen.style'
 
@@ -261,12 +262,10 @@ const SendScreen = ({
             {translations.validationErrors.invalidAddress}
           </Text>
         )}
-        <TextInput
+        <AmountField
           style={styles.inputText}
-          keyboardType={'numeric'}
-          value={amount}
-          placeholder={translations.amount}
-          onChangeText={handleAmountChange}
+          amount={amount}
+          setAmount={handleAmountChange}
         />
         {/* prettier-ignore */ amountErrors &&
           !!amountErrors.invalidAmount && (
