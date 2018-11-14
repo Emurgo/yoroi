@@ -34,6 +34,12 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
   },
+  sectionContainer: {
+    marginBottom: 15,
+  },
+  sectionTitle: {
+    color: COLORS.DARK_BLUE,
+  },
 }
 
 export default styles

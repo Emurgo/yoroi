@@ -2,7 +2,7 @@
 import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {withState, withHandlers} from 'recompose'
+import {withHandlers} from 'recompose'
 import {View} from 'react-native'
 import {NavigationEvents} from 'react-navigation'
 
@@ -15,12 +15,10 @@ import {
   canFingerprintEncryptionBeEnabled,
 } from '../../helpers/deviceSettings'
 import {
-  NavigateTo,
-  ItemLink,
-  ItemIcon,
   ItemToggle,
   SettingsItem,
-  SettingsLink,
+  NavigatedSettingsItem,
+  SettingsSection,
 } from './SettingsItems'
 import {
   fingerprintsHwSupportSelector,
@@ -33,10 +31,7 @@ import type {SubTranslation} from '../../l10n/typeHelpers'
 const getTranslations = (state) => state.trans.SettingsScreen
 
 type Props = {
-  isFingerprintSignIn: boolean,
   onToggleFingerprintSignIn: () => void,
-  isEasyConfirmation: boolean,
-  onToggleEasyConfirmation: () => void,
   translations: SubTranslation<typeof getTranslations>,
   updateDeviceSettings: () => void,
   setSystemAuth: () => void,
@@ -74,11 +69,8 @@ const updateDeviceSettings = async ({updateFingerprintsIndicators}) => {
   )
 }
 
-const SettingsScreen = ({
-  isFingerprintSignIn,
+const ApplicationSettingsScreen = ({
   onToggleFingerprintSignIn,
-  isEasyConfirmation,
-  onToggleEasyConfirmation,
   translations,
   updateDeviceSettings,
   isFingerprintsHardwareSupported,
@@ -88,79 +80,46 @@ const SettingsScreen = ({
     <NavigationEvents onWillFocus={updateDeviceSettings} />
     <View style={styles.root}>
       <View style={styles.tab}>
-        <SettingsItem
-          title={translations.walletName}
-          description={'getWalletName()'}
-        >
-          <NavigateTo screen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}>
-            <ItemLink label={translations.edit} />
-          </NavigateTo>
-        </SettingsItem>
-
-        <SettingsItem
-          title={translations.privacy}
-          description={translations.changePin}
-        >
-          <NavigateTo screen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}>
-            <ItemIcon />
-          </NavigateTo>
-        </SettingsItem>
-
-        <SettingsItem description={translations.changePassword}>
-          <NavigateTo screen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}>
-            <ItemIcon />
-          </NavigateTo>
-        </SettingsItem>
-
-        <SettingsItem description={translations.fingerprintSignIn}>
-          <ItemToggle
-            value={isSystemAuthEnabled}
-            onToggle={onToggleFingerprintSignIn}
-            disabled={!isFingerprintsHardwareSupported}
+        <SettingsSection title={translations.language}>
+          <NavigatedSettingsItem
+            label={'getLanguage()'}
+            navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
           />
-        </SettingsItem>
+        </SettingsSection>
 
-        <SettingsItem description={translations.easyConfirmation}>
-          <ItemToggle
-            value={isEasyConfirmation}
-            onToggle={onToggleEasyConfirmation}
+        <SettingsSection title={translations.privacy}>
+          <NavigatedSettingsItem
+            label={translations.changePin}
+            navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
           />
-        </SettingsItem>
 
-        <SettingsItem
-          title={translations.downloadLogs}
-          description={translations.downloadLogsText}
-        >
-          <NavigateTo screen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}>
-            <ItemIcon />
-          </NavigateTo>
-        </SettingsItem>
+          <SettingsItem description={translations.fingerprintSignIn}>
+            <ItemToggle
+              value={isSystemAuthEnabled}
+              onToggle={onToggleFingerprintSignIn}
+              disabled={!isFingerprintsHardwareSupported}
+            />
+          </SettingsItem>
+        </SettingsSection>
 
-        <SettingsLink
-          label={translations.removeWallet}
-          dstScreen={SETTINGS_ROUTES.SUPPORT}
-        />
-      </View>
+        <SettingsSection title={translations.downloadLogs}>
+          <NavigatedSettingsItem
+            label={translations.downloadLogsText}
+            navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
+          />
+        </SettingsSection>
 
-      <View style={styles.tab}>
-        <SettingsItem
-          title={translations.language}
-          description={'getLanguage()'}
-        >
-          <NavigateTo screen={SETTINGS_ROUTES.CHANGE_WALLET_NAME}>
-            <ItemIcon />
-          </NavigateTo>
-        </SettingsItem>
+        <SettingsSection>
+          <NavigatedSettingsItem
+            label={translations.termsOfUse}
+            navigateTo={SETTINGS_ROUTES.TERMS_OF_USE}
+          />
 
-        <SettingsLink
-          label={translations.termsOfUse}
-          dstScreen={SETTINGS_ROUTES.TERMS_OF_USE}
-        />
-
-        <SettingsLink
-          label={translations.support}
-          dstScreen={SETTINGS_ROUTES.SUPPORT}
-        />
+          <NavigatedSettingsItem
+            label={translations.support}
+            navigateTo={SETTINGS_ROUTES.SUPPORT}
+          />
+        </SettingsSection>
       </View>
     </View>
   </Screen>
@@ -176,14 +135,9 @@ export default compose(
     {updateFingerprintsIndicators, setSystemAuth},
   ),
   withNavigationTitle(({translations}) => translations.title),
-  withState('isEasyConfirmation', 'setEasyConfirmation', false),
   withHandlers({
     onToggleFingerprintSignIn,
-    onToggleEasyConfirmation: ({
-      isEasyConfirmation,
-      setEasyConfirmation,
-    }) => () => setEasyConfirmation(!isEasyConfirmation),
     updateDeviceSettings: ({updateFingerprintsIndicators}) => () =>
       updateDeviceSettings({updateFingerprintsIndicators}),
   }),
-)(SettingsScreen)
+)(ApplicationSettingsScreen)
