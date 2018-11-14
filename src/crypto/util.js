@@ -23,6 +23,7 @@ export type CryptoAccount = {
 }
 
 export class CardanoError extends ExtendableError {}
+export class WrongPassword extends ExtendableError {}
 
 export const _rethrow = <T>(x: Promise<T>): Promise<T> =>
   x.catch((e) => {
@@ -75,7 +76,10 @@ export const decryptMasterKey = async (
       PasswordProtect.decryptWithPassword(passwordHex, encryptedHex),
     )
   } catch (e) {
-    throw new CardanoError('Wrong password')
+    if (e.message === 'Decryption failed. Check your password.') {
+      throw new WrongPassword()
+    }
+    throw new CardanoError(e.message)
   }
 }
 
