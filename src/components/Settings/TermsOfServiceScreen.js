@@ -3,11 +3,11 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {View} from 'react-native'
+import {ScrollView} from 'react-native'
+import {SafeAreaView} from 'react-navigation'
 
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {Text} from '../UiKit'
-import Screen from '../Screen'
 
 import styles from './styles/TermsOfServiceScreen.styles'
 
@@ -19,23 +19,15 @@ type Props = {
   translations: SubTranslation<typeof getTranslations>,
 }
 
-const Heading = ({text}) => (
-  <View style={styles.textContainer}>
-    <Text style={styles.textHeading}>{text}</Text>
-  </View>
-)
+const Heading = ({text}) => <Text style={styles.heading}>{text}</Text>
 
-const Paragraph = ({text}) => (
-  <View style={styles.textContainer}>
-    <Text style={styles.textParagraph}>{text}</Text>
-  </View>
-)
+const Paragraph = ({text}) => <Text style={styles.paragraph}>{text}</Text>
 
 const ListItem = ({heading, text}) => (
-  <View style={styles.textContainer}>
-    <Text style={styles.textListItem}>{heading}</Text>
-    <Text style={styles.textParagraph}>{text}</Text>
-  </View>
+  <>
+    <Heading text={heading} />
+    <Paragraph text={text} />
+  </>
 )
 
 const mapping = {
@@ -45,14 +37,14 @@ const mapping = {
 }
 
 const TermsOfServiceScreen = ({translations}: Props) => (
-  <Screen scroll>
-    <View style={styles.root}>
+  <SafeAreaView style={styles.safeAreaView}>
+    <ScrollView style={styles.scrollView}>
       {translations.content.map((item, i) => {
         const Element = mapping[item.type]
         return <Element key={i} {...item} />
       })}
-    </View>
-  </Screen>
+    </ScrollView>
+  </SafeAreaView>
 )
 
 export default compose(

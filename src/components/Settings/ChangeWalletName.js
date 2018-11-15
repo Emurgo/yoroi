@@ -4,7 +4,8 @@ import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withState, withHandlers} from 'recompose'
-import {View, TextInput} from 'react-native'
+import {View, TextInput, KeyboardAvoidingView, Platform} from 'react-native'
+import {SafeAreaView} from 'react-navigation'
 
 import {Button, Text} from '../UiKit'
 import {validateWalletName} from '../../utils/validators'
@@ -31,21 +32,27 @@ const ChangeWalletName = ({
   const validationErrors = validateWalletName(walletName)
 
   return (
-    <View style={styles.root}>
-      <View>
-        {validationErrors && <Text>{translations.walletValidationText}</Text>}
-        <TextInput
-          style={styles.inputText}
-          placeholder={translations.walletName}
-          value={walletName}
-          onChangeText={onChangeText}
+    <KeyboardAvoidingView
+      enabled={Platform.OS === 'ios'}
+      behavior="padding"
+      style={styles.keyboardAvoidingView}
+    >
+      <SafeAreaView style={styles.safeAreaView}>
+        <View style={styles.content}>
+          {validationErrors && <Text>{translations.walletValidationText}</Text>}
+          <TextInput
+            style={styles.inputText}
+            placeholder={translations.walletName}
+            value={walletName}
+            onChangeText={onChangeText}
+          />
+        </View>
+        <Button
+          onPress={changeAndNavigate}
+          title={translations.changeButtonText}
         />
-      </View>
-      <Button
-        onPress={changeAndNavigate}
-        title={translations.changeButtonText}
-      />
-    </View>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 

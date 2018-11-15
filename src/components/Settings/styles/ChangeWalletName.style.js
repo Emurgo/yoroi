@@ -1,19 +1,23 @@
 // @flow
-import {COLORS} from '../../../styles/config'
+import {StyleSheet} from 'react-native'
 
-const styles = {
-  root: {
+export default StyleSheet.create({
+  keyboardAvoidingView: {
     flex: 1,
-    padding: 10,
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  },
+  safeAreaView: {
+    flex: 1,
+    paddingHorizontal: 16,
+    backgroundColor: '#fff',
+  },
+  content: {
+    flex: 1,
   },
   inputText: {
-    borderWidth: 2,
-    borderRadius: 5,
-    borderColor: COLORS.DARK_BLUE,
-    margin: 10,
+    borderWidth: 1,
+    borderColor: '#4A4A4A',
+    borderRadius: 8,
+    padding: 12,
+    marginVertical: 10,
   },
-}
-
-export default styles
+})

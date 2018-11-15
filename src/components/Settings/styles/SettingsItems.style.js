@@ -1,45 +1,31 @@
 // @flow
-import {COLORS} from '../../../styles/config'
+import {StyleSheet} from 'react-native'
 
-const styles = {
-  label: {
-    color: COLORS.DARK_BLUE,
-  },
-  link: {
-    color: COLORS.DARK_BLUE,
-    textAlign: 'center',
-    textDecorationLine: 'underline',
-  },
-  description: {
-    fontSize: 15,
-  },
-  icon: {
-    size: 20,
-  },
-  itemContainer: {
+export default StyleSheet.create({
+  item: {
     flexDirection: 'row',
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderColor: COLORS.DARK_GRAY,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 12,
   },
-  descriptionContainer: {
+  label: {
     flex: 1,
   },
-  iconContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
+  section: {
+    marginTop: 16,
   },
-  linkContainer: {
-    paddingVertical: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  sectionContainer: {
-    marginBottom: 15,
+  sectionContent: {
+    marginHorizontal: 16,
+    elevation: 1,
+    shadowOffset: {width: 0, height: 2},
+    shadowRadius: 12,
+    shadowOpacity: 0.06,
+    shadowColor: 'black',
+    backgroundColor: '#fff',
+    borderRadius: 8,
   },
   sectionTitle: {
-    color: COLORS.DARK_BLUE,
+    marginBottom: 5,
+    paddingHorizontal: 28,
   },
-}
-
-export default styles
+})
