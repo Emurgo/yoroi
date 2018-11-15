@@ -5,6 +5,7 @@ import TxHistoryNavigator from './components/TxHistory/TxHistoryNavigator'
 import SendScreenNavigator from './components/Send/SendScreenNavigator'
 import ReceiveScreenNavigator from './components/Receive/ReceiveScreenNavigator'
 import IndexScreen from './components/IndexScreen'
+import SplashScreen from './components/SplashScreen'
 import LoginScreen from './components/Login/LoginScreen'
 // eslint-disable-next-line max-len
 import WalletSelectionScreen from './components/WalletSelection/WalletSelectionScreen'
@@ -28,6 +29,7 @@ const WalletNavigator = createStackNavigator(
 
 const AppNavigator = createSwitchNavigator(
   {
+    [ROOT_ROUTES.SPLASH]: SplashScreen,
     [ROOT_ROUTES.LOGIN]: LoginScreen,
     [ROOT_ROUTES.WALLET]: WalletNavigator,
     [ROOT_ROUTES.INIT]: WalletInitNavigator,
@@ -35,7 +37,7 @@ const AppNavigator = createSwitchNavigator(
     [ROOT_ROUTES.WALLET_SELECTION]: WalletSelectionScreen,
   },
   {
-    initialRouteName: ROOT_ROUTES.INDEX,
+    initialRouteName: ROOT_ROUTES.SPLASH,
     navigationOptions: {
       header: null,
     },

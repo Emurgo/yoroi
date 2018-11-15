@@ -44,6 +44,7 @@ export const WALLET_ROUTES = {
 }
 
 export const ROOT_ROUTES = {
+  SPLASH: 'splash',
   INDEX: 'screens-index',
   LOGIN: 'login',
   INIT: WALLET_INIT_ROUTES.MAIN,
