@@ -23,7 +23,12 @@ import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import {WrongPassword} from '../../crypto/errors'
 import {NetworkError, ApiError} from '../../api/errors'
 
+import l10n from '../../l10n'
+
+const getTranslations = (state) => state.trans.ConfirmScreen.Confirmation
+
 const handleOnConfirm = async (navigation, password) => {
+  const translations = l10n.translations.ConfirmScreen.ErrorDialogs
   const transactionData = navigation.getParam('transactionData')
   navigation.navigate(SEND_ROUTES.SENDING_MODAL)
   try {
@@ -36,8 +41,8 @@ const handleOnConfirm = async (navigation, password) => {
     Promise.resolve().then(() => {
       const config = {
         password: {
-          title: 'l10n Wrong password',
-          text: 'l10n Password you provided is incorrect',
+          title: translations.WrongPassword.title,
+          text: translations.WrongPassword.text,
           target: SEND_ROUTES.CONFIRM,
         },
         network: {
@@ -53,8 +58,8 @@ const handleOnConfirm = async (navigation, password) => {
           target: SEND_ROUTES.MAIN,
         },
         default: {
-          title: 'l10n Unknown error submitting transaction',
-          text: `l10n Details: ${e.message}`,
+          title: translations.UnknownError.title,
+          text: translations.UnknownError.text(e.message),
           target: SEND_ROUTES.MAIN,
         },
       }
@@ -72,15 +77,13 @@ const handleOnConfirm = async (navigation, password) => {
       // TODO(ppershing): error processing + localization
       Alert.alert(data.title, data.text, [
         {
-          text: 'l10n OK',
+          text: translations.okTextButton,
           onPress: () => navigation.navigate(data.target),
         },
       ])
     })
   }
 }
-
-const getTranslations = (state) => state.trans.Send.Confirmation
 
 type Props = {
   onConfirm: () => mixed,

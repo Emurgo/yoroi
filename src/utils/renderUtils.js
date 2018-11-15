@@ -133,6 +133,7 @@ export const requireLoaded = <
   ): ComponentType<Props> =>
     (props) => isLoaded(props) ? <BaseComponent {...props} /> : <Loading />
 
+// TODO hardcoded string
 export const requireInitializedWallet = compose(
   connect((state) => ({
     _walletIsInitialized: walletIsInitializedSelector(state),

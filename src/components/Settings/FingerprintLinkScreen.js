@@ -35,12 +35,12 @@ const FingerprintLinkScreen = ({
   <Screen scroll>
     <View style={styles.root}>
       {!hasEnrolledFingerprints ? (
-        <Text>l10n enable use of fingerprints in device settings first!</Text>
+        <Text>{translations.enableFingerprintsMessage}</Text>
       ) : null}
 
-      <Button title="l10n Not now" onPress={cancelLinking} />
+      <Button title={translations.notNowButton} onPress={cancelLinking} />
       <Button
-        title="l10n Link"
+        title={translations.linkButton}
         onPress={linkFingerprintSignIn}
         disabled={!hasEnrolledFingerprints}
       />

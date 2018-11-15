@@ -43,6 +43,7 @@ const l10n = {
       PENDING: 'Pending',
       FAILED: 'Failed',
     },
+    fee: (fee: number) => `Fee: ${fee}`,
   },
   TxDetails: {
     fromAddresses: 'From Addresses',
@@ -247,6 +248,57 @@ const l10n = {
   WalletSelectionScreen: {
     addWallet: 'Add wallet',
     header: 'Your wallets',
+  },
+  SigninScreen: {
+    welcomeText: 'Sign with PIN / TouchID',
+  },
+  ConfirmScreen: {
+    ErrorDialogs: {
+      WrongPassword: {
+        title: 'Wrong password',
+        text: 'Password you provided is incorrect',
+      },
+      UnknownError: {
+        title: 'Unknown error submitting transaction',
+        text: (message: string) => `Details: ${message}`,
+      },
+      okTextButton: 'OK',
+    },
+    Confirmation: {
+      confirmButton: 'Confirm',
+      amount: 'Amount',
+      availableFunds: 'AVAILABLE FUNDS:',
+      balanceAfterTx: 'Balance after transaction',
+      fees: 'Fees',
+      password: 'Wallet password',
+      receiver: 'Receiver',
+    },
+  },
+  FingerprintLinkScreen: {
+    enableFingerprintsMessage:
+      'Enable use of fingerprints in device settings first!',
+    notNowButton: 'Not now',
+    linkButton: 'Link',
+  },
+  BiometryAuth: {
+    errorDialogTitle: 'Error',
+    NotSupportedErrors: {
+      deviceNotSupported: 'Your device does not support biometry!',
+      biometryOrPinNotSet: 'Go to system setttings and rise your security',
+      pinSetButBiometryNot: 'Go to system setttings and rise your security',
+      notSupported: 'Not supported error',
+    },
+    AuthenticateErrors: {
+      text: 'Authenticate error',
+      canceled: 'User canceled authentication',
+      failed: 'Authentication failed',
+    },
+    Authentication: {
+      authenticationRequiredTitle: 'Authentication required',
+      touchInstructions: 'Touch the sensor',
+      withPin: 'Authenticate using PIN',
+      pinCodeLabel: ' ',
+    },
   },
 }
 

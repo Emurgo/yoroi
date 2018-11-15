@@ -93,7 +93,9 @@ class TxHistoryListItem extends Component<Props> {
           <View style={styles.meta}>
             <Text small>{formatTimeToSeconds(transaction.submittedAt)}</Text>
             {hasFee && (
-              <Text secondary>{formatAda(transaction.fee)} l10n Fee</Text>
+              <Text secondary>
+                {translations.fee(formatAda(transaction.fee))}
+              </Text>
             )}
             <Text secondary>
               {translations.transactionType[transaction.direction]}

@@ -126,8 +126,7 @@ export const changeLanguage = (languageCode: string) => async (
       'Saving language to AsyncStorage failed. UI language left intact',
       e,
     )
-    // TODO add missing localization
-    Alert.alert('Error', 'Could not set selected language.')
+    Alert.alert('Error', 'Error performing action')
   }
 }
 

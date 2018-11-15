@@ -3,12 +3,16 @@
 import React from 'react'
 import {View} from 'react-native'
 import {Text} from '../UiKit'
+import {withTranslations} from '../../utils/renderUtils'
+
 import styles from './styles/SigninScreen.style'
 
-const SigninScreen = () => (
+const getTranslations = (state) => state.trans.SigninScreen
+
+const SigninScreen = ({translations}) => (
   <View style={styles.container}>
-    <Text style={styles.welcome}>i18nSign with PIN / TouchID</Text>
+    <Text style={styles.welcome}>{translations.welcomeText}</Text>
   </View>
 )
 
-export default SigninScreen
+export default withTranslations(getTranslations)(SigninScreen)
