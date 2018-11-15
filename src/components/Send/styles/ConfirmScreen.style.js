@@ -1,3 +1,7 @@
+// @flow
+
+import {StyleSheet} from 'react-native'
+
 import {COLORS} from '../../../styles/config'
 
 const _item = {
@@ -7,7 +11,10 @@ const _item = {
   padding: 30,
 }
 
-export default {
+export default StyleSheet.create({
+  root: {
+    flex: 1,
+  },
   balance: {
     ..._item,
     backgroundColor: COLORS.BACKGROUND_GRAY,
@@ -51,4 +58,4 @@ export default {
     ..._item,
     flexDirection: 'row',
   },
-}
+})

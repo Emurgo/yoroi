@@ -8,7 +8,7 @@ import {ScrollView, View, TextInput, TouchableOpacity} from 'react-native'
 
 import {CONFIG} from '../../config'
 import {SEND_ROUTES} from '../../RoutesList'
-import {Text, Button} from '../UiKit'
+import {Text, Button, OfflineBanner} from '../UiKit'
 import {
   isFetchingUtxosSelector,
   lastUtxosFetchErrorSelector,
@@ -313,58 +313,61 @@ class SendScreen extends Component<Props, State> {
       hasPendingOutgoingTransaction
 
     return (
-      <ScrollView style={styles.root}>
-        <UtxoAutoRefresher />
-        {lastFetchingError && <FetchingErrorBanner />}
-        <View style={styles.header}>
-          <AvailableAmount
-            isFetching={isFetchingBalance}
-            hasError={lastFetchingError}
-            amount={availableAmount}
-          />
-        </View>
-        <View style={styles.containerQR}>
-          <TouchableOpacity onPress={this.navigateToQRReader}>
-            <View style={styles.scanIcon} />
-          </TouchableOpacity>
-          <Text style={styles.label}>{translations.scanCode}</Text>
-        </View>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.inputText}
-            value={address}
-            placeholder={translations.address}
-            onChangeText={this.handleAddressChange}
-          />
-          {/* prettier-ignore */ addressErrors &&
+      <View style={styles.root}>
+        <OfflineBanner />
+        <ScrollView style={styles.container}>
+          <UtxoAutoRefresher />
+          {lastFetchingError && <FetchingErrorBanner />}
+          <View style={styles.header}>
+            <AvailableAmount
+              isFetching={isFetchingBalance}
+              hasError={lastFetchingError}
+              amount={availableAmount}
+            />
+          </View>
+          <View style={styles.containerQR}>
+            <TouchableOpacity onPress={this.navigateToQRReader}>
+              <View style={styles.scanIcon} />
+            </TouchableOpacity>
+            <Text style={styles.label}>{translations.scanCode}</Text>
+          </View>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.inputText}
+              value={address}
+              placeholder={translations.address}
+              onChangeText={this.handleAddressChange}
+            />
+            {/* prettier-ignore */ addressErrors &&
             !!addressErrors.invalidAddress && (
-            <Text style={styles.error}>
-              {translations.validationErrors.invalidAddress}
-            </Text>
-          )}
-          <AmountField
-            style={styles.inputText}
-            amount={amount}
-            setAmount={this.handleAmountChange}
-          />
-          {/* prettier-ignore */ amountErrors &&
+              <Text style={styles.error}>
+                {translations.validationErrors.invalidAddress}
+              </Text>
+            )}
+            <AmountField
+              style={styles.inputText}
+              amount={amount}
+              setAmount={this.handleAmountChange}
+            />
+            {/* prettier-ignore */ amountErrors &&
             !!amountErrors.invalidAmount && (
-            <Text style={styles.error}>
-              {translations
-                .validationErrors
-                .invalidAmountErrors[amountErrors.invalidAmount]}
-            </Text>
-          )}
-        </View>
+              <Text style={styles.error}>
+                {translations
+                  .validationErrors
+                  .invalidAmountErrors[amountErrors.invalidAmount]}
+              </Text>
+            )}
+          </View>
 
-        {this.renderBanners()}
+          {this.renderBanners()}
 
-        <Button
-          onPress={this.handleConfirm}
-          title={translations.continue}
-          disabled={disabled}
-        />
-      </ScrollView>
+          <Button
+            onPress={this.handleConfirm}
+            title={translations.continue}
+            disabled={disabled}
+          />
+        </ScrollView>
+      </View>
     )
   }
 }

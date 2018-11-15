@@ -9,7 +9,7 @@ import _ from 'lodash'
 import {transactionsInfoSelector} from '../../selectors'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {formatAda} from '../../utils/format'
-import {Text} from '../UiKit'
+import {Text, OfflineBanner} from '../UiKit'
 import Screen from '../../components/Screen'
 import AdaIcon from '../../assets/AdaIcon'
 
@@ -52,45 +52,50 @@ type Props = {
 
 const TxDetails = ({navigation, translations, transaction}: Props) => {
   return (
-    <Screen scroll>
-      <AdaAmount
-        amount={transaction.amount}
-        direction={transaction.direction}
-      />
-      <Text>Fee: TODO</Text>
-      <View style={styles.timestampContainer}>
-        <View>
-          <Text>{translations.transactionHeader[transaction.direction]}</Text>
+    <View style={styles.root}>
+      <OfflineBanner />
+      <Screen scroll>
+        <AdaAmount
+          amount={transaction.amount}
+          direction={transaction.direction}
+        />
+        <Text>Fee: TODO</Text>
+        <View style={styles.timestampContainer}>
+          <View>
+            <Text>{translations.transactionHeader[transaction.direction]}</Text>
+          </View>
+          <View>
+            <Text>
+              {transaction.submittedAt.format('YYYY-MM-DD hh:mm:ss A')}
+            </Text>
+          </View>
         </View>
-        <View>
-          <Text>{transaction.submittedAt.format('YYYY-MM-DD hh:mm:ss A')}</Text>
+        <View style={styles.section}>
+          <Label>{translations.fromAddresses}</Label>
+
+          {_.uniq(transaction.fromAddresses).map((address) => (
+            <Text key={address}>{address}</Text>
+          ))}
         </View>
-      </View>
-      <View style={styles.section}>
-        <Label>{translations.fromAddresses}</Label>
+        <View style={styles.section}>
+          <Label>{translations.toAddresses}</Label>
 
-        {_.uniq(transaction.fromAddresses).map((address) => (
-          <Text key={address}>{address}</Text>
-        ))}
-      </View>
-      <View style={styles.section}>
-        <Label>{translations.toAddresses}</Label>
-
-        {_.uniq(transaction.toAddresses).map((address) => (
-          <Text key={address}>{address}</Text>
-        ))}
-      </View>
-      <View style={styles.section}>
-        <Label>{translations.txAssuranceLevel}</Label>
-        <Text>
-          {translations.formatConfirmations(transaction.confirmations)}
-        </Text>
-      </View>
-      <View style={styles.section}>
-        <Label>{translations.transactionId}</Label>
-        <Text>{transaction.id}</Text>
-      </View>
-    </Screen>
+          {_.uniq(transaction.toAddresses).map((address) => (
+            <Text key={address}>{address}</Text>
+          ))}
+        </View>
+        <View style={styles.section}>
+          <Label>{translations.txAssuranceLevel}</Label>
+          <Text>
+            {translations.formatConfirmations(transaction.confirmations)}
+          </Text>
+        </View>
+        <View style={styles.section}>
+          <Label>{translations.transactionId}</Label>
+          <Text>{transaction.id}</Text>
+        </View>
+      </Screen>
+    </View>
   )
 }
 

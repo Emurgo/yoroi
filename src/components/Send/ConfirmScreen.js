@@ -8,7 +8,7 @@ import {withHandlers, withState} from 'recompose'
 import {BigNumber} from 'bignumber.js'
 
 import Amount from './Amount'
-import {Text, Button} from '../UiKit'
+import {Text, Button, OfflineBanner} from '../UiKit'
 import {utxoBalanceSelector} from '../../selectors'
 // import {authenticate} from '../../helpers/bioAuthHelper'
 import walletManager from '../../crypto/wallet'
@@ -108,49 +108,52 @@ const ConfirmScreen = ({
   const balanceAfterTx = navigation.getParam('balanceAfterTx')
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.balance}>
-        <Text style={styles.balanceLabel}>{translations.availableFunds}</Text>
-        <Amount
-          value={formatAda(availableAmount)}
-          style={styles.balanceValue}
-        />
-      </View>
-
-      <View style={styles.transactionSummary}>
-        <View style={styles.fees}>
-          <Text style={styles.label}>{translations.fees}</Text>
-          <Amount value={formatAda(transactionData.fee)} />
+    <View style={styles.root}>
+      <OfflineBanner />
+      <ScrollView style={styles.container}>
+        <View style={styles.balance}>
+          <Text style={styles.balanceLabel}>{translations.availableFunds}</Text>
+          <Amount
+            value={formatAda(availableAmount)}
+            style={styles.balanceValue}
+          />
         </View>
-        <View style={styles.remainingBalance}>
-          <Text style={styles.label}>{translations.balanceAfterTx}</Text>
-          <Amount value={formatAda(balanceAfterTx)} />
+
+        <View style={styles.transactionSummary}>
+          <View style={styles.fees}>
+            <Text style={styles.label}>{translations.fees}</Text>
+            <Amount value={formatAda(transactionData.fee)} />
+          </View>
+          <View style={styles.remainingBalance}>
+            <Text style={styles.label}>{translations.balanceAfterTx}</Text>
+            <Amount value={formatAda(balanceAfterTx)} />
+          </View>
         </View>
-      </View>
 
-      <View style={styles.item}>
-        <Text style={styles.label}>{translations.receiver}</Text>
-        <Text style={styles.receiver}>{address}</Text>
-      </View>
-      <View style={styles.item}>
-        <Text style={styles.label}>{translations.amount}</Text>
-        <Amount value={formatAda(amount)} />
-      </View>
+        <View style={styles.item}>
+          <Text style={styles.label}>{translations.receiver}</Text>
+          <Text style={styles.receiver}>{address}</Text>
+        </View>
+        <View style={styles.item}>
+          <Text style={styles.label}>{translations.amount}</Text>
+          <Amount value={formatAda(amount)} />
+        </View>
 
-      <View style={styles.item}>
-        <Text style={styles.label}>{translations.password}</Text>
-        <TextInput
-          secureTextEntry
-          value={password}
-          style={styles.password}
-          onChangeText={setPassword}
-        />
-      </View>
+        <View style={styles.item}>
+          <Text style={styles.label}>{translations.password}</Text>
+          <TextInput
+            secureTextEntry
+            value={password}
+            style={styles.password}
+            onChangeText={setPassword}
+          />
+        </View>
 
-      <View style={styles.item}>
-        <Button onPress={onConfirm} title={translations.confirmButton} />
-      </View>
-    </ScrollView>
+        <View style={styles.item}>
+          <Button onPress={onConfirm} title={translations.confirmButton} />
+        </View>
+      </ScrollView>
+    </View>
   )
 }
 

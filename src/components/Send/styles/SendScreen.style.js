@@ -1,8 +1,13 @@
 // @flow
+import {StyleSheet} from 'react-native'
+
 import {COLORS} from '../../../styles/config'
 
-const styles = {
+const styles = StyleSheet.create({
   root: {
+    flex: 1,
+  },
+  container: {
     flex: 1,
     backgroundColor: COLORS.WHITE,
   },
@@ -45,6 +50,6 @@ const styles = {
     marginLeft: 10,
     marginRight: 10,
   },
-}
+})
 
 export default styles

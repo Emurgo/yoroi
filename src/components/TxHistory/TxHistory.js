@@ -7,7 +7,7 @@ import {View, RefreshControl, ScrollView, Image} from 'react-native'
 import {SafeAreaView} from 'react-navigation'
 import _ from 'lodash'
 
-import {Text, Banner} from '../UiKit'
+import {Text, Banner, OfflineBanner} from '../UiKit'
 import {
   amountPendingSelector,
   transactionsInfoSelector,
@@ -37,10 +37,6 @@ import type {State} from '../../state'
 import type {ComponentType} from 'react'
 
 const getTranslations = (state: State) => state.trans.TxHistory
-
-const OfflineBanner = () => (
-  <Banner error text="You are offline. Please check settings on your device." />
-)
 
 const NoTxHistory = () => (
   <View style={styles.empty}>
@@ -84,8 +80,9 @@ const TxHistory = ({
   <SafeAreaView style={styles.scrollView}>
     <View style={styles.container}>
       <RenderCount />
-      {!isOnline && <OfflineBanner />}
-      {lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
+      <OfflineBanner />
+      {isOnline &&
+        lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
       {/* TODO(ppershing): What should we do if amountPending is zero?
       Should we show it? Note that isn't case for intrawallet transactions
       because amountPending is brutto and thus negative due to fee

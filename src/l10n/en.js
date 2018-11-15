@@ -20,6 +20,9 @@ const l10n = {
   global: {
     language,
     datetime,
+    notifications: {
+      offline: 'You are offline. Please check settings on your device.',
+    },
   },
   LoginScreen: {
     title: 'Enter PIN',
