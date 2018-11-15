@@ -35,11 +35,7 @@ import type {State} from '../../state'
 import type {ComponentType} from 'react'
 
 const OfflineBanner = () => (
-  <Banner
-    label="Status"
-    error
-    text="You are offline. Please check settings on your device."
-  />
+  <Banner error text="You are offline. Please check settings on your device." />
 )
 
 const NoTxHistory = () => (

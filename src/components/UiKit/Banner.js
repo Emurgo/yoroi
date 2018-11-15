@@ -32,9 +32,7 @@ const Banner = ({error, text, label}: Props) => (
         {label}
       </Text>
     )}
-    <Text light={error}>
-      You are offline. Please check settings on your device.
-    </Text>
+    <Text light={error}>{text}</Text>
   </View>
 )
 
