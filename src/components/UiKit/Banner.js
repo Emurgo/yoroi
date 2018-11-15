@@ -11,8 +11,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  bannerError: {
-    backgroundColor: '#FF1351dd',
+  textError: {
+    color: '#FF1351',
   },
   label: {
     marginBottom: 6,
@@ -26,13 +26,13 @@ type Props = {
 }
 
 const Banner = ({error, text, label}: Props) => (
-  <View style={[styles.banner, error && styles.bannerError]}>
+  <View style={styles.banner}>
     {!!label && (
       <Text light={error} secondary style={styles.label}>
         {label}
       </Text>
     )}
-    <Text light={error}>{text}</Text>
+    <Text style={[error && styles.textError]}>{text}</Text>
   </View>
 )
 
