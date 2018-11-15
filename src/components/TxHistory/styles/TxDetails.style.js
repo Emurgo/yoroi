@@ -1,7 +1,12 @@
 // @flow
+import {StyleSheet} from 'react-native'
+
 import {COLORS} from '../../../styles/config'
 
-const styles = {
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
   container: {
     flexShrink: 1,
     padding: 5,
@@ -38,6 +43,6 @@ const styles = {
   section: {
     marginTop: 10,
   },
-}
+})
 
 export default styles

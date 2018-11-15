@@ -7,7 +7,7 @@ import {View} from 'react-native'
 import _ from 'lodash'
 
 import Screen from '../../components/Screen'
-import {Text, Button} from '../UiKit'
+import {Text, Button, OfflineBanner} from '../UiKit'
 import AddressDetail from './AddressDetail'
 import AddressesList from './AddressesList'
 import {
@@ -47,6 +47,7 @@ const ReceiveScreen = ({
 
   return (
     <View style={styles.root}>
+      <OfflineBanner />
       <Screen scroll>
         <View style={styles.warningContainer}>
           <Text style={styles.warningText}>{translations.infoText}</Text>
