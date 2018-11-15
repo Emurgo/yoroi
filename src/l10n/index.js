@@ -1,8 +1,17 @@
 // @flow
 import _ from 'lodash'
 import LocalizedStrings from 'localized-strings'
+import moment from 'moment'
+import BigNumber from 'bignumber.js'
+
+import 'moment/locale/ko'
+import 'moment/locale/ja'
+import 'moment/locale/zh-cn'
+import 'moment/locale/ru'
 
 import en from './en'
+
+import assert from '../utils/assert'
 
 import type {Translation} from './type'
 
@@ -43,12 +52,83 @@ const dummyJa = (transform(
   dummyTranslate('インポートしようとしたウ'),
 ): Translation)
 
-const strings = new LocalizedStrings({
+const dummyRu = (transform(
   en,
-  zh: dummyCn,
-  ja: dummyJa,
+  dummyTranslate('абвгдеёжзийклмнопрстуфхцчшщъыьэюя'),
+): Translation)
+
+export const LANGUAGES = {
+  CHINESE_SIMPLIFIED: 'zh-Hans',
+  CHINESE_TRADITIONAL: 'zh-Hant',
+  ENGLISH: 'en-US',
+  JAPANESE: 'ja-JP',
+  KOREAN: 'ko-KR',
+  RUSSIAN: 'ru-RU',
+}
+
+const momentLocales = {
+  [LANGUAGES.ENGLISH]: 'en',
+  [LANGUAGES.CHINESE_SIMPLIFIED]: 'zh-cn',
+  [LANGUAGES.CHINESE_TRADITIONAL]: 'zh-cn',
+  [LANGUAGES.KOREAN]: 'ko',
+  [LANGUAGES.JAPANESE]: 'ja',
+  [LANGUAGES.RUSSIAN]: 'ru',
+}
+
+const defaultNumberFmt = {
+  prefix: '',
+  decimalSeparator: '.',
+  groupSeparator: ',',
+  groupSize: 3,
+  secondaryGroupSize: 0,
+  fractionGroupSize: 0,
+  fractionGroupSeparator: ' ',
+  suffix: '',
+}
+
+// Note(ppershing): this is just temporary
+// and should be replaced with real configs
+const customNumberFmt = {
+  ...defaultNumberFmt,
+  decimalSeparator: '@',
+  groupSeparator: '~',
+}
+
+const numberLocales = {
+  [LANGUAGES.ENGLISH]: defaultNumberFmt,
+  [LANGUAGES.CHINESE_SIMPLIFIED]: customNumberFmt,
+  [LANGUAGES.CHINESE_TRADITIONAL]: customNumberFmt,
+  [LANGUAGES.KOREAN]: customNumberFmt,
+  [LANGUAGES.JAPANESE]: customNumberFmt,
+  [LANGUAGES.RUSSIAN]: customNumberFmt,
+}
+
+const strings = new LocalizedStrings({
+  [LANGUAGES.ENGLISH]: en,
+  [LANGUAGES.CHINESE_SIMPLIFIED]: dummyCn,
+  [LANGUAGES.CHINESE_TRADITIONAL]: dummyCn,
+  [LANGUAGES.KOREAN]: dummyCn,
+  [LANGUAGES.JAPANESE]: dummyJa,
+  [LANGUAGES.RUSSIAN]: dummyRu,
 })
 
-strings.setLanguage('en')
+const setLanguage = (code: string) => {
+  assert.assert(
+    Object.values(LANGUAGES).includes(code),
+    'Unknown language',
+    code,
+  )
+  strings.setLanguage(code)
+  moment.locale(momentLocales[code])
+  BigNumber.config({
+    FORMAT: numberLocales[code],
+  })
+}
 
-export default (strings: Translation)
+setLanguage(LANGUAGES.ENGLISH)
+
+export default {
+  translations: (strings: Translation),
+  setLanguage,
+  LANGUAGES,
+}

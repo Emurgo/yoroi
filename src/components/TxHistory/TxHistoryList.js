@@ -1,49 +1,29 @@
 // @flow
 
 import React from 'react'
-import {compose} from 'redux'
-import {withHandlers} from 'recompose'
-import {connect} from 'react-redux'
-
 import {View, SectionList} from 'react-native'
 import _ from 'lodash'
 import moment from 'moment'
-import type {Moment} from 'moment'
+
+import {Text} from '../UiKit'
+import TxHistoryListItem from './TxHistoryListItem'
+import {formatDateRelative} from '../../utils/format'
 
 import type {TransactionInfo} from '../../types/HistoryTransaction'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {Dict} from '../../state'
 
-import {Text} from '../UiKit'
-import TxHistoryListItem from './TxHistoryListItem'
-
 import styles from './styles/TxHistoryList.style'
 
-const formatDate = (timestamp: Moment, trans) => {
-  if (moment().isSame(timestamp, 'day')) {
-    return trans.global.datetime.today
-  } else if (
-    moment()
-      .subtract(1, 'day')
-      .isSame(timestamp, 'day')
-  ) {
-    return trans.global.datetime.yesterday
-  } else {
-    // moment should be set to correct i18n
-    return timestamp.format('L')
-  }
-}
-
-const DayHeader = ({ts, formatDate}) => (
+const DayHeader = ({ts}) => (
   <View style={styles.dayHeader}>
-    <Text>{formatDate(ts)}</Text>
+    <Text>{formatDateRelative(ts)}</Text>
   </View>
 )
 
 type Props = {
   transactions: Dict<TransactionInfo>,
   navigation: NavigationScreenProp<NavigationState>,
-  formatDate: (timestamp: Moment, trans: any) => string,
 }
 
 const getTransactionsByDate = (transactions: Dict<TransactionInfo>) =>
@@ -54,7 +34,7 @@ const getTransactionsByDate = (transactions: Dict<TransactionInfo>) =>
     .map((data) => ({data}))
     .value()
 
-const TxHistoryList = ({transactions, navigation, formatDate}: Props) => {
+const TxHistoryList = ({transactions, navigation}: Props) => {
   // TODO(ppershing): add proper memoization here
   const groupedTransactions = getTransactionsByDate(transactions)
 
@@ -65,7 +45,7 @@ const TxHistoryList = ({transactions, navigation, formatDate}: Props) => {
           <TxHistoryListItem navigation={navigation} id={item.id} />
         )}
         renderSectionHeader={({section: {data}}) => (
-          <DayHeader ts={data[0].submittedAt} formatDate={formatDate} />
+          <DayHeader ts={data[0].submittedAt} />
         )}
         sections={groupedTransactions}
         keyExtractor={(item) => item.id}
@@ -74,11 +54,4 @@ const TxHistoryList = ({transactions, navigation, formatDate}: Props) => {
   )
 }
 
-export default compose(
-  connect((state) => ({
-    translations: state.trans,
-  })),
-  withHandlers({
-    formatDate: ({translations}) => (ts) => formatDate(ts, translations),
-  }),
-)(TxHistoryList)
+export default TxHistoryList

@@ -15,7 +15,7 @@ import ChineseFlagIcon from '../../assets/img/flags/chinese.png'
 import SelectLanguageImage from '../../assets/img/select_language.png'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import LanguageListItem from './LanguageListItem'
-import l10n from '../../l10n'
+import l10n, {LANGUAGES} from '../../l10n'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
@@ -23,19 +23,35 @@ import {Button} from '../UiKit'
 
 const supportedLangauages = () => [
   {
-    label: l10n.global.language.chineseSimplified,
-    code: 'zh-Hans',
+    label: l10n.translations.global.language.chineseSimplified,
+    code: LANGUAGES.CHINESE_SIMPLIFIED,
     icon: ChineseFlagIcon,
   },
   {
-    label: l10n.global.language.chineseTraditional,
-    code: 'zh-Hant',
+    label: l10n.translations.global.language.chineseTraditional,
+    code: LANGUAGES.CHINESE_TRADITIONAL,
     icon: ChineseFlagIcon,
   },
-  {label: l10n.global.language.english, code: 'en-US', icon: EnglishFlagIcon},
-  {label: l10n.global.language.japanese, code: 'ja-JP', icon: JapaneseFlagIcon},
-  {label: l10n.global.language.korean, code: 'ko-KR', icon: KoreanFlagIcon},
-  {label: l10n.global.language.russian, code: 'ru-RU', icon: RussianFlagIcon},
+  {
+    label: l10n.translations.global.language.english,
+    code: LANGUAGES.ENGLISH,
+    icon: EnglishFlagIcon,
+  },
+  {
+    label: l10n.translations.global.language.japanese,
+    code: LANGUAGES.JAPANESE,
+    icon: JapaneseFlagIcon,
+  },
+  {
+    label: l10n.translations.global.language.korean,
+    code: LANGUAGES.KOREAN,
+    icon: KoreanFlagIcon,
+  },
+  {
+    label: l10n.translations.global.language.russian,
+    code: LANGUAGES.RUSSIAN,
+    icon: RussianFlagIcon,
+  },
 ]
 
 const getTranslations = (state) => state.trans.LanguagePicker
