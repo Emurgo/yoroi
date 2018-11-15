@@ -91,10 +91,8 @@ const l10n = {
         offline: 'You are offline',
         serverFailed: 'There is a failing transaction',
         invalidAddress: 'Please enter valid address',
-        invalidAmountErrors: {
-          INVALID_AMOUNT: 'Please enter valid amount',
-          INSUFFICIENT_BALANCE: 'Not enough money to make this transaction',
-        },
+        invalidAmount: 'Please enter valid amount',
+        insufficientBalance: 'Not enough money to make this transaction',
       },
       fetchingError:
         'We are experiencing issue with fetching your current balance.',
