@@ -1,10 +1,23 @@
 // @flow
+import {StyleSheet} from 'react-native'
 
-const style = {
-  root: {
+export default StyleSheet.create({
+  scrollView: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  container: {
     flexDirection: 'column',
     flex: 1,
   },
-}
-
-export default style
+  empty: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+    paddingTop: '50%',
+  },
+  emptyText: {
+    color: '#9B9B9B',
+    marginTop: 32,
+  },
+})

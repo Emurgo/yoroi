@@ -1,31 +1,21 @@
 // @flow
-import {COLORS} from '../../../styles/config'
+import {StyleSheet} from 'react-native'
 
-const styles = {
-  navigationButtonsContainer: {
+export default StyleSheet.create({
+  container: {
     flexDirection: 'row',
-    backgroundColor: COLORS.DARK_GRAY,
-    padding: 1,
+    backgroundColor: '#fff',
+    padding: 16,
+    height: 88,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    elevation: 1,
+    shadowOpacity: 0.06,
+    shadowColor: 'black',
+    shadowRadius: 6,
+    shadowOffset: {width: 0, height: -8},
   },
-  button: {
-    flex: 1,
-    height: 40,
+  firstButton: {
+    marginRight: 16,
   },
-  sendButton: {
-    flex: 1,
-    backgroundColor: COLORS.WHITE,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  receiveButton: {
-    flex: 1,
-    backgroundColor: COLORS.DARK_GRAY,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  receiveButtonText: {
-    color: COLORS.WHITE,
-  },
-}
-
-export default styles
+})
