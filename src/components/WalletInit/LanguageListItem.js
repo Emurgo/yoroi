@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {withHandlers} from 'recompose'
-import {View, TouchableHighlight, Image} from 'react-native'
+import {View, TouchableOpacity, Image} from 'react-native'
 
 import {Text} from '../UiKit'
 
@@ -16,22 +16,12 @@ const LanguageListItem = ({
   iconSource,
   isSelected,
 }) => (
-  <TouchableHighlight onPress={handleSelectLanguage}>
-    <View style={styles.container}>
-      <Image
-        source={iconSource}
-        style={[styles.icon, isSelected ? styles.active : styles.inactive]}
-      />
-      <Text
-        style={[
-          styles.languageName,
-          isSelected ? styles.active : styles.inactive,
-        ]}
-      >
-        {label}
-      </Text>
+  <TouchableOpacity activeOpacity={0.5} onPress={handleSelectLanguage}>
+    <View style={[styles.container, isSelected && styles.active]}>
+      <Image source={iconSource} style={styles.icon} />
+      <Text>{label}</Text>
     </View>
-  </TouchableHighlight>
+  </TouchableOpacity>
 )
 
 type ExternalProps = {

@@ -7,50 +7,49 @@ import {View, Image, FlatList} from 'react-native'
 
 import languageActions from '../../actions/language'
 import styles from './styles/LanguagePicker.style'
-import KoreanFlagIcon from '../../assets/img/flags/korean.png'
-import JapaneseFlagIcon from '../../assets/img/flags/japanese.png'
-import RussianFlagIcon from '../../assets/img/flags/russian.png'
-import EnglishFlagIcon from '../../assets/img/flags/english.png'
-import ChineseFlagIcon from '../../assets/img/flags/chinese.png'
-import SelectLanguageImage from '../../assets/img/select_language.png'
+import koreanFlagIcon from '../../assets/img/flags/korean.png'
+import japaneseFlagIcon from '../../assets/img/flags/japanese.png'
+import russianFlagIcon from '../../assets/img/flags/russian.png'
+import englishFlagIcon from '../../assets/img/flags/english.png'
+import chineseFlagIcon from '../../assets/img/flags/chinese.png'
+import selectLanguageImage from '../../assets/img/select_language.png'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import LanguageListItem from './LanguageListItem'
 import l10n, {LANGUAGES} from '../../l10n'
+import {Button} from '../UiKit'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
-
-import {Button} from '../UiKit'
 
 const supportedLangauages = () => [
   {
     label: l10n.translations.global.language.chineseSimplified,
     code: LANGUAGES.CHINESE_SIMPLIFIED,
-    icon: ChineseFlagIcon,
+    icon: chineseFlagIcon,
   },
   {
     label: l10n.translations.global.language.chineseTraditional,
     code: LANGUAGES.CHINESE_TRADITIONAL,
-    icon: ChineseFlagIcon,
+    icon: chineseFlagIcon,
   },
   {
     label: l10n.translations.global.language.english,
     code: LANGUAGES.ENGLISH,
-    icon: EnglishFlagIcon,
+    icon: englishFlagIcon,
   },
   {
     label: l10n.translations.global.language.japanese,
     code: LANGUAGES.JAPANESE,
-    icon: JapaneseFlagIcon,
+    icon: japaneseFlagIcon,
   },
   {
     label: l10n.translations.global.language.korean,
     code: LANGUAGES.KOREAN,
-    icon: KoreanFlagIcon,
+    icon: koreanFlagIcon,
   },
   {
     label: l10n.translations.global.language.russian,
     code: LANGUAGES.RUSSIAN,
-    icon: RussianFlagIcon,
+    icon: russianFlagIcon,
   },
 ]
 
@@ -70,27 +69,24 @@ const LanguagePicker = ({
   translations,
 }: Props) => (
   <View style={styles.container}>
-    <View>
-      <FlatList
-        data={supportedLangauages()}
-        keyExtractor={({code}) => code}
-        extraData={languageCode}
-        renderItem={({item: {label, code, icon}}) => (
-          <LanguageListItem
-            label={label}
-            iconSource={icon}
-            selectLanguage={changeLanguage}
-            isSelected={languageCode === code}
-            languageCode={code}
-          />
-        )}
-      />
-    </View>
+    <FlatList
+      style={styles.list}
+      contentContainerStyle={styles.listContainer}
+      data={supportedLangauages()}
+      keyExtractor={({code}) => code}
+      extraData={languageCode}
+      renderItem={({item: {label, code, icon}}) => (
+        <LanguageListItem
+          label={label}
+          iconSource={icon}
+          selectLanguage={changeLanguage}
+          isSelected={languageCode === code}
+          languageCode={code}
+        />
+      )}
+    />
 
-    <View style={styles.imageContainer}>
-      <Image source={SelectLanguageImage} />
-    </View>
-
+    <Image source={selectLanguageImage} style={styles.image} />
     <Button onPress={handleContinue} title={translations.continue} />
   </View>
 )

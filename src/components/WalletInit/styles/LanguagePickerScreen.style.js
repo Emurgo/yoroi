@@ -1,30 +1,10 @@
-import {COLORS} from '../../../styles/config'
+// @flow
+import {StyleSheet} from 'react-native'
 
-const style = {
-  container: {
+export default StyleSheet.create({
+  safeAreaView: {
     flex: 1,
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    backgroundColor: '#fff',
+    padding: 16,
   },
-  descriptionContainer: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  gradient: {
-    flex: 1,
-  },
-  emurgoCreditsContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    marginTop: 10,
-  },
-  subtitleContainer: {
-    width: '60%',
-  },
-  subtitle: {
-    color: COLORS.WHITE,
-    textAlign: 'center',
-  },
-}
-
-export default style
+})

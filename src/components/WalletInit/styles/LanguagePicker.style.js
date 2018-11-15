@@ -1,17 +1,20 @@
 // @flow
+import {StyleSheet} from 'react-native'
 
-const style = {
+export default StyleSheet.create({
   container: {
-    flexDirection: 'column',
-    width: '100%',
     flex: 1,
   },
-  imageContainer: {
+  list: {
+    flex: 1,
+  },
+  listContainer: {
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    overflow: 'hidden',
-    flex: 1,
   },
-}
-
-export default style
+  image: {
+    marginBottom: 80,
+    alignSelf: 'center',
+  },
+})

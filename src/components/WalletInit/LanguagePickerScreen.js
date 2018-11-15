@@ -1,12 +1,10 @@
 // @flow
 
 import React from 'react'
-import {View} from 'react-native'
+import {SafeAreaView} from 'react-navigation'
 
-import Screen from '../Screen'
 import LanguagePicker from './LanguagePicker'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
-import {COLORS} from '../../styles/config'
 
 import styles from './styles/LanguagePickerScreen.style'
 
@@ -17,11 +15,9 @@ type Props = {
 }
 
 const LanguagePickerScreen = ({navigation}: Props) => (
-  <Screen bgColor={COLORS.TRANSPARENT}>
-    <View style={styles.container}>
-      <LanguagePicker navigation={navigation} />
-    </View>
-  </Screen>
+  <SafeAreaView style={styles.safeAreaView}>
+    <LanguagePicker navigation={navigation} />
+  </SafeAreaView>
 )
 
 export default LanguagePickerScreen
