@@ -80,10 +80,10 @@ export const utxoBalanceSelector = (state: State) => {
 export const walletIsInitializedSelector = (state: State): boolean =>
   state.wallet.isInitialized
 
-export const isFetchingBalanceSelector = (state: State): boolean =>
+export const isFetchingUtxosSelector = (state: State): boolean =>
   state.balance.isFetching
 
-export const lastFetchingErrorSelector = (state: State): any =>
+export const lastUtxosFetchErrorSelector = (state: State): any =>
   state.balance.lastFetchingError
 
 export const utxosSelector = (state: State): ?Array<RawUtxo> =>

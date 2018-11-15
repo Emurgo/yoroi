@@ -65,13 +65,15 @@ const l10n = {
   Send: {
     Main: {
       title: 'Send',
-      funds: 'Available funds:',
       scanCode: 'Scan QR code',
       address: 'Address',
       amount: 'Amount',
       continue: 'Continue',
-      checkingBalance: 'Checking balance...',
-      availableAmount: 'Available amount',
+      availableAmount: {
+        label: 'Available amount:',
+        isFetching: 'Checking balance...',
+        hasError: 'Error',
+      },
       validationErrors: {
         invalidAddress: 'Please enter valid address',
         invalidAmountErrors: {
