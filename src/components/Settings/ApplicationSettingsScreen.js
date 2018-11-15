@@ -3,10 +3,9 @@ import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers} from 'recompose'
-import {View} from 'react-native'
+import {ScrollView, StyleSheet, Switch} from 'react-native'
 import {NavigationEvents} from 'react-navigation'
 
-import Screen from '../../components/Screen'
 import {SETTINGS_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {updateFingerprintsIndicators, setSystemAuth} from '../../actions'
@@ -15,7 +14,6 @@ import {
   canFingerprintEncryptionBeEnabled,
 } from '../../helpers/deviceSettings'
 import {
-  ItemToggle,
   SettingsItem,
   NavigatedSettingsItem,
   SettingsSection,
@@ -25,10 +23,15 @@ import {
   systemAuthSupportSelector,
 } from '../../selectors'
 
-import styles from './styles/SettingsScreen.style'
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
 const getTranslations = (state) => state.trans.SettingsScreen
+
+const styles = StyleSheet.create({
+  scrollView: {
+    backgroundColor: '#fff',
+  },
+})
 
 type Props = {
   onToggleFingerprintSignIn: () => void,
@@ -76,53 +79,49 @@ const ApplicationSettingsScreen = ({
   isFingerprintsHardwareSupported,
   isSystemAuthEnabled,
 }: Props) => (
-  <Screen scroll>
+  <ScrollView style={styles.scrollView}>
     <NavigationEvents onWillFocus={updateDeviceSettings} />
-    <View style={styles.root}>
-      <View style={styles.tab}>
-        <SettingsSection title={translations.language}>
-          <NavigatedSettingsItem
-            label={'getLanguage()'}
-            navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
-          />
-        </SettingsSection>
+    <SettingsSection title={translations.language}>
+      <NavigatedSettingsItem
+        label={'getLanguage()'}
+        navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
+      />
+    </SettingsSection>
 
-        <SettingsSection title={translations.privacy}>
-          <NavigatedSettingsItem
-            label={translations.changePin}
-            navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
-          />
+    <SettingsSection title={translations.privacy}>
+      <NavigatedSettingsItem
+        label={translations.changePin}
+        navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
+      />
 
-          <SettingsItem description={translations.fingerprintSignIn}>
-            <ItemToggle
-              value={isSystemAuthEnabled}
-              onToggle={onToggleFingerprintSignIn}
-              disabled={!isFingerprintsHardwareSupported}
-            />
-          </SettingsItem>
-        </SettingsSection>
+      <SettingsItem label={translations.fingerprintSignIn}>
+        <Switch
+          value={isSystemAuthEnabled}
+          onValueChange={onToggleFingerprintSignIn}
+          disabled={!isFingerprintsHardwareSupported}
+        />
+      </SettingsItem>
+    </SettingsSection>
 
-        <SettingsSection title={translations.downloadLogs}>
-          <NavigatedSettingsItem
-            label={translations.downloadLogsText}
-            navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
-          />
-        </SettingsSection>
+    <SettingsSection title={translations.downloadLogs}>
+      <NavigatedSettingsItem
+        label={translations.downloadLogsText}
+        navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
+      />
+    </SettingsSection>
 
-        <SettingsSection>
-          <NavigatedSettingsItem
-            label={translations.termsOfUse}
-            navigateTo={SETTINGS_ROUTES.TERMS_OF_USE}
-          />
+    <SettingsSection>
+      <NavigatedSettingsItem
+        label={translations.termsOfUse}
+        navigateTo={SETTINGS_ROUTES.TERMS_OF_USE}
+      />
 
-          <NavigatedSettingsItem
-            label={translations.support}
-            navigateTo={SETTINGS_ROUTES.SUPPORT}
-          />
-        </SettingsSection>
-      </View>
-    </View>
-  </Screen>
+      <NavigatedSettingsItem
+        label={translations.support}
+        navigateTo={SETTINGS_ROUTES.SUPPORT}
+      />
+    </SettingsSection>
+  </ScrollView>
 )
 
 export default compose(

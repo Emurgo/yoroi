@@ -1,11 +1,29 @@
 // @flow
-// import {COLORS} from '../../../styles/config'
+import {StyleSheet} from 'react-native'
 
-const styles = {
-  root: {
+export default StyleSheet.create({
+  container: {
     flex: 1,
-    padding: 10,
+    backgroundColor: '#fff',
+    padding: 16,
   },
-}
-
-export default styles
+  item: {
+    marginBottom: 25,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  itemWrap: {
+    flex: 1,
+    paddingRight: 8,
+  },
+  title: {
+    marginTop: 2,
+    fontSize: 14,
+    lineHeight: 24,
+  },
+  text: {
+    fontSize: 14,
+    lineHeight: 22,
+  },
+})

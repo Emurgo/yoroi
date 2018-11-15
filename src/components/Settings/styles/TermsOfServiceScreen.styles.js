@@ -1,24 +1,20 @@
 // @flow
-// import {COLORS} from '../../../styles/config'
+import {StyleSheet} from 'react-native'
 
-const styles = {
-  root: {
+export default StyleSheet.create({
+  safeAreaView: {
+    backgroundColor: '#fff',
     flex: 1,
-    padding: 10,
   },
-  textContainer: {
-    paddingVertical: 10,
+  scrollView: {
+    padding: 16,
   },
-  textHeading: {
-    fontSize: 23,
-  },
-  textParagraph: {
-    fontSize: 17,
-  },
-  textListItem: {
-    fontSize: 17,
+  heading: {
+    fontSize: 18,
+    lineHeight: 24,
     fontWeight: 'bold',
   },
-}
-
-export default styles
+  paragraph: {
+    marginBottom: 16,
+  },
+})

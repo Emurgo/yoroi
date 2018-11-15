@@ -2,22 +2,25 @@
 import React from 'react'
 import {compose} from 'redux'
 import {withState, withHandlers} from 'recompose'
-import {View} from 'react-native'
+import {ScrollView, StyleSheet, Switch} from 'react-native'
 
-import Screen from '../../components/Screen'
 import {SETTINGS_ROUTES} from '../../RoutesList'
 import {withNavigationTitle, withTranslations} from '../../utils/renderUtils'
 import {
-  ItemToggle,
   SettingsItem,
   NavigatedSettingsItem,
   SettingsSection,
 } from './SettingsItems'
 
-import styles from './styles/SettingsScreen.style'
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
 const getTranslations = (state) => state.trans.SettingsScreen
+
+const styles = StyleSheet.create({
+  scrollView: {
+    backgroundColor: '#fff',
+  },
+})
 
 type Props = {
   isEasyConfirmation: boolean,
@@ -30,39 +33,35 @@ const WalletSettingsScreen = ({
   onToggleEasyConfirmation,
   translations,
 }: Props) => (
-  <Screen scroll>
-    <View style={styles.root}>
-      <View style={styles.tab}>
-        <SettingsSection title={translations.walletName}>
-          <NavigatedSettingsItem
-            label={'getWalletName()'}
-            navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
-          />
-        </SettingsSection>
+  <ScrollView style={styles.scrollView}>
+    <SettingsSection title={translations.walletName}>
+      <NavigatedSettingsItem
+        label={'getWalletName()'}
+        navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
+      />
+    </SettingsSection>
 
-        <SettingsSection title={translations.privacy}>
-          <NavigatedSettingsItem
-            label={translations.changePassword}
-            navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
-          />
+    <SettingsSection title={translations.privacy}>
+      <NavigatedSettingsItem
+        label={translations.changePassword}
+        navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
+      />
 
-          <SettingsItem description={translations.easyConfirmation}>
-            <ItemToggle
-              value={isEasyConfirmation}
-              onToggle={onToggleEasyConfirmation}
-            />
-          </SettingsItem>
-        </SettingsSection>
+      <SettingsItem label={translations.easyConfirmation}>
+        <Switch
+          value={isEasyConfirmation}
+          onValueChange={onToggleEasyConfirmation}
+        />
+      </SettingsItem>
+    </SettingsSection>
 
-        <SettingsSection>
-          <NavigatedSettingsItem
-            label={translations.removeWallet}
-            navigateTo={SETTINGS_ROUTES.SUPPORT}
-          />
-        </SettingsSection>
-      </View>
-    </View>
-  </Screen>
+    <SettingsSection>
+      <NavigatedSettingsItem
+        label={translations.removeWallet}
+        navigateTo={SETTINGS_ROUTES.SUPPORT}
+      />
+    </SettingsSection>
+  </ScrollView>
 )
 
 export default compose(
