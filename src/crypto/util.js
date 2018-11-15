@@ -4,11 +4,16 @@ import {BigNumber} from 'bignumber.js'
 import {mnemonicToEntropy, generateMnemonic} from 'bip39'
 import {HdWallet, Wallet, PasswordProtect} from 'react-native-cardano'
 import {randomBytes} from 'react-native-randombytes'
-import ExtendableError from 'es6-error'
 import bs58 from 'bs58'
 import cryptoRandomString from 'crypto-random-string'
 import assert from '../utils/assert'
 import {CONFIG} from '../config'
+import {
+  _rethrow,
+  InsufficientFunds,
+  WrongPassword,
+  CardanoError,
+} from './errors'
 
 import type {
   TransactionInput,
@@ -22,13 +27,10 @@ export type CryptoAccount = {
   root_cached_key: string,
 }
 
-export class CardanoError extends ExtendableError {}
-export class WrongPassword extends ExtendableError {}
-
-export const _rethrow = <T>(x: Promise<T>): Promise<T> =>
-  x.catch((e) => {
-    throw new CardanoError(e.message)
-  })
+const KNOWN_ERROR_MSG = {
+  DECRYPT_FAILED: 'Decryption failed. Check your password.',
+  INSUFFICIENT_FUNDS_RE: /NotEnoughInput/,
+}
 
 export const getMasterKeyFromMnemonic = async (mnemonic: string) => {
   const entropy = mnemonicToEntropy(mnemonic)
@@ -72,11 +74,9 @@ export const decryptMasterKey = async (
   assert.assert(!!password, 'decryptMasterKey:: !!password')
   const passwordHex = Buffer.from(password, 'utf8').toString('hex')
   try {
-    return await _rethrow(
-      PasswordProtect.decryptWithPassword(passwordHex, encryptedHex),
-    )
+    return await PasswordProtect.decryptWithPassword(passwordHex, encryptedHex)
   } catch (e) {
-    if (e.message === 'Decryption failed. Check your password.') {
+    if (e.message === KNOWN_ERROR_MSG.DECRYPT_FAILED) {
       throw new WrongPassword()
     }
     throw new CardanoError(e.message)
@@ -135,7 +135,7 @@ export const getWalletFromMasterKey = async (
   masterKeyHex: string,
   protocolMagic?: number = CONFIG.CARDANO.PROTOCOL_MAGIC,
 ) => {
-  const wallet = await Wallet.fromMasterKey(masterKeyHex)
+  const wallet = await _rethrow(Wallet.fromMasterKey(masterKeyHex))
   wallet.config.protocol_magic = protocolMagic
   return wallet
 }
@@ -146,13 +146,18 @@ export const signTransaction = async (
   outputs: Array<TransactionOutput>,
   changeAddress: string,
 ) => {
-  const result = await _rethrow(
-    Wallet.spend(wallet, inputs, outputs, changeAddress),
-  )
+  try {
+    const result = await Wallet.spend(wallet, inputs, outputs, changeAddress)
 
-  return {
-    ...result,
-    fee: new BigNumber(result.fee, 10),
+    return {
+      ...result,
+      fee: new BigNumber(result.fee, 10),
+    }
+  } catch (e) {
+    if (KNOWN_ERROR_MSG.INSUFFICIENT_FUNDS_RE.test(e.message)) {
+      throw new InsufficientFunds()
+    }
+    throw new CardanoError(e.message)
   }
 }
 

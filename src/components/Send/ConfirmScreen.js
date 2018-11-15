@@ -20,7 +20,8 @@ import styles from './styles/ConfirmScreen.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
-import {WrongPassword} from '../../crypto/util'
+import {WrongPassword} from '../../crypto/errors'
+import {NetworkError, ApiError} from '../../api/errors'
 
 const handleOnConfirm = async (navigation, password) => {
   const transactionData = navigation.getParam('transactionData')
@@ -39,6 +40,18 @@ const handleOnConfirm = async (navigation, password) => {
           text: 'l10n Password you provided is incorrect',
           target: SEND_ROUTES.CONFIRM,
         },
+        network: {
+          title: 'l10n Network error',
+          text:
+            'Error connecting to the server. ' +
+            'Please check your internet connection',
+          target: SEND_ROUTES.CONFIRM,
+        },
+        api: {
+          title: 'l10n Backend error',
+          text: 'l10n Backend could not process this transaction',
+          target: SEND_ROUTES.MAIN,
+        },
         default: {
           title: 'l10n Unknown error submitting transaction',
           text: `l10n Details: ${e.message}`,
@@ -49,6 +62,10 @@ const handleOnConfirm = async (navigation, password) => {
       let data
       if (e instanceof WrongPassword) {
         data = config.password
+      } else if (e instanceof NetworkError) {
+        data = config.network
+      } else if (e instanceof ApiError) {
+        data = config.api
       } else {
         data = config.default
       }
