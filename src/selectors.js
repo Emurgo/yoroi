@@ -46,14 +46,16 @@ const BigNumberSum = (data: Array<BigNumber>): BigNumber =>
   data.reduce((x: BigNumber, y) => x.plus(y), new BigNumber(0))
 
 // TODO: make this using reselect
-export const availableAmountSelector = (state: State): ?BigNumber =>
-  createSelector(transactionsInfoSelector, (transactions) => {
+export const availableAmountSelector = createSelector(
+  transactionsInfoSelector,
+  (transactions) => {
     const processed = ObjectValues(transactions).filter(
       (tx) => tx.status === TRANSACTION_STATUS.SUCCESSFUL,
     )
     const amounts = processed.map((tx) => tx.bruttoAmount)
     return BigNumberSum(amounts)
-  })
+  },
+)
 
 export const receiveAddressesSelector = (state: State) =>
   state.wallet.generatedReceiveAddresses

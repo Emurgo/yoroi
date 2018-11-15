@@ -45,6 +45,11 @@ const l10n = {
     },
     fee: (fee: number) => `Fee: ${fee}`,
   },
+  TxHistory: {
+    availableAmount: {
+      label: 'Available funds',
+    },
+  },
   TxDetails: {
     fromAddresses: 'From Addresses',
     toAddresses: 'To Addresses',
