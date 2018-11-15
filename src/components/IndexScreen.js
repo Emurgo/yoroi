@@ -5,12 +5,10 @@ import {
   ScrollView,
   StyleSheet,
   SafeAreaView,
-  View,
-  TouchableHighlight,
+  TouchableOpacity,
 } from 'react-native'
 
-import {Text} from './UiKit'
-import {COLORS} from '../styles/config'
+import {Text, Button} from './UiKit'
 import {WALLET_ROUTES, ROOT_ROUTES, WALLET_INIT_ROUTES} from '../RoutesList'
 import storage from '../utils/storage'
 
@@ -33,14 +31,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   button: {
-    margin: 5,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    backgroundColor: COLORS.LIGHT_POSITIVE_GREEN,
+    marginHorizontal: 16,
+    marginVertical: 8,
   },
-  sendButton: {
-    padding: 5,
+  link: {
+    height: 32,
+    fontSize: 16,
     textAlign: 'center',
+    alignItems: 'center',
+    marginTop: 8,
   },
 })
 
@@ -52,21 +51,16 @@ const IndexScreen = ({navigation}: Props) => (
   <SafeAreaView style={styles.safeAreaView}>
     <ScrollView style={styles.container}>
       {routes.map((route) => (
-        <TouchableHighlight
+        <Button
           key={route.path}
           style={styles.button}
           onPress={() => navigation.navigate(route.path)}
-        >
-          <View style={styles.sendButton}>
-            <Text>{route.label}</Text>
-          </View>
-        </TouchableHighlight>
+          title={route.label}
+        />
       ))}
-      <TouchableHighlight onPress={() => storage.clearAll()}>
-        <View style={styles.sendButton}>
-          <Text>Clear storage</Text>
-        </View>
-      </TouchableHighlight>
+      <TouchableOpacity onPress={() => storage.clearAll()}>
+        <Text style={styles.link}>Clear storage</Text>
+      </TouchableOpacity>
     </ScrollView>
   </SafeAreaView>
 )
