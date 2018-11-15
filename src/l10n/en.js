@@ -44,6 +44,11 @@ const l10n = {
       FAILED: 'Failed',
     },
   },
+  TxHistory: {
+    availableAmount: {
+      label: 'Available funds',
+    },
+  },
   TxDetails: {
     fromAddresses: 'From Addresses',
     toAddresses: 'To Addresses',

@@ -14,6 +14,7 @@ import {
   isSynchronizingHistorySelector,
   lastHistorySyncErrorSelector,
   isOnlineSelector,
+  availableAmountSelector,
 } from '../../selectors'
 import TxHistoryList from './TxHistoryList'
 import TxNavigationButtons from './TxNavigationButtons'
@@ -23,6 +24,7 @@ import {
   RenderCount,
   measureRenderTime,
   requireInitializedWallet,
+  withTranslations,
 } from '../../utils/renderUtils'
 
 import {formatAda} from '../../utils/format'
@@ -33,6 +35,8 @@ import styles from './styles/TxHistory.style'
 import type {Navigation} from '../../types/navigation'
 import type {State} from '../../state'
 import type {ComponentType} from 'react'
+
+const getTranslations = (state: State) => state.trans.TxHistory
 
 const OfflineBanner = () => (
   <Banner error text="You are offline. Please check settings on your device." />
@@ -58,6 +62,15 @@ const PendingAmount = ({amount}) => (
   <Banner text={formatAda(amount)} label="Pending amount" />
 )
 
+const AvailableAmount = withTranslations(getTranslations)(
+  ({translations, amount}) => (
+    <Banner
+      text={`${formatAda(amount)} ADA`}
+      label={translations.availableAmount.label}
+    />
+  ),
+)
+
 const TxHistory = ({
   amountPending,
   transactionsInfo,
@@ -66,6 +79,7 @@ const TxHistory = ({
   isOnline,
   updateHistory,
   lastSyncError,
+  availableAmount,
 }) => (
   <SafeAreaView style={styles.scrollView}>
     <View style={styles.container}>
@@ -77,6 +91,7 @@ const TxHistory = ({
       because amountPending is brutto and thus negative due to fee
     */}
       {amountPending && <PendingAmount amount={amountPending} />}
+      <AvailableAmount amount={availableAmount} />
       <ScrollView
         refreshControl={
           <RefreshControl onRefresh={updateHistory} refreshing={isSyncing} />
@@ -110,6 +125,7 @@ export default (compose(
       isSyncing: isSynchronizingHistorySelector(state),
       lastSyncError: lastHistorySyncErrorSelector(state),
       isOnline: isOnlineSelector(state),
+      availableAmount: availableAmountSelector(state),
     }),
     {
       updateHistory,
