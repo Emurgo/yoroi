@@ -10,8 +10,8 @@ export class ApiError extends ExtendableError {
 }
 
 // thrown when api failed to connect to the server
-export class ConnectionError extends ExtendableError {
+export class NetworkError extends ExtendableError {
   constructor() {
-    super('ConnectionError')
+    super('NetworkError')
   }
 }

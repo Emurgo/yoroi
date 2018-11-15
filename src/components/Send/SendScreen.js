@@ -20,7 +20,6 @@ import {Logger} from '../../utils/logging'
 import {withTranslations, withNavigationTitle} from '../../utils/renderUtils'
 import {formatAda} from '../../utils/format'
 import walletManager from '../../crypto/wallet'
-import {CardanoError} from '../../crypto/util'
 import {
   INVALID_AMOUNT_CODES,
   validateAmount,
@@ -28,6 +27,7 @@ import {
 } from '../../utils/validators'
 import AmountField from './AmountField'
 import UtxoAutoRefresher from './UtxoAutoRefresher'
+import {InsufficientFunds} from '../../crypto/errors'
 
 import styles from './styles/SendScreen.style'
 
@@ -61,8 +61,7 @@ const validateFeeAsync = async (utxos, address, amount) => {
   try {
     await getTransactionData(utxos, address, amount)
   } catch (err) {
-    // TODO: detect precise error (NotEnoughInput)
-    if (err instanceof CardanoError) {
+    if (err instanceof InsufficientFunds) {
       return {invalidAmount: INVALID_AMOUNT_CODES.INSUFFICIENT_BALANCE}
     } else {
       // TODO: we should show notification based on error type
