@@ -5,7 +5,7 @@ import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 import {View, Image, FlatList} from 'react-native'
 
-import {changeLanguage} from '../../actions/language'
+import languageActions from '../../actions/language'
 import styles from './styles/LanguagePicker.style'
 import KoreanFlagIcon from '../../assets/img/flags/korean.png'
 import JapaneseFlagIcon from '../../assets/img/flags/japanese.png'
@@ -101,12 +101,16 @@ export default compose(
       languageCode: state.languageCode || 'en-US',
       translations: getTranslations(state),
     }),
-    {
-      changeLanguage,
-    },
+    languageActions,
   ),
   withHandlers({
-    handleContinue: ({navigation}) => (event) =>
-      navigation.navigate(WALLET_INIT_ROUTES.INIT),
+    handleContinue: ({
+      navigation,
+      changeAndSaveLanguage,
+      languageCode,
+    }) => async (event) => {
+      await changeAndSaveLanguage(languageCode)
+      navigation.navigate(WALLET_INIT_ROUTES.INIT)
+    },
   }),
 )(LanguagePicker)

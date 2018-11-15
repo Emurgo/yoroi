@@ -7,9 +7,8 @@ import {type Dispatch} from 'redux'
 
 const LOCAL_STORAGE_KEY_LANG = '/settings/language'
 
-const _changeLanguage = (languageCode) => async (dispatch, getState) => {
+const changeLanguage = (languageCode) => (dispatch, getState) => {
   l10n.setLanguage(languageCode)
-  await storage.write(LOCAL_STORAGE_KEY_LANG, languageCode)
   dispatch({
     path: ['languageCode'],
     payload: languageCode,
@@ -18,12 +17,12 @@ const _changeLanguage = (languageCode) => async (dispatch, getState) => {
   })
 }
 
-export const changeLanguage = (languageCode: string) => async (
+export const changeAndSaveLanguage = (languageCode: string) => async (
   dispatch: Dispatch<any>,
 ) => {
   try {
     await storage.write(LOCAL_STORAGE_KEY_LANG, languageCode)
-    dispatch(_changeLanguage(languageCode))
+    dispatch(changeLanguage(languageCode))
   } catch (e) {
     Logger.error(
       'Saving language to AsyncStorage failed. UI language left intact',
@@ -38,7 +37,7 @@ export const loadLanguage = () => async (dispatch: Dispatch<any>) => {
   try {
     const languageCode = await storage.read(LOCAL_STORAGE_KEY_LANG)
     if (languageCode) {
-      dispatch(_changeLanguage(languageCode))
+      dispatch(changeLanguage(languageCode))
     }
     return languageCode
   } catch (e) {
@@ -48,4 +47,9 @@ export const loadLanguage = () => async (dispatch: Dispatch<any>) => {
     )
     throw e
   }
+}
+
+export default {
+  changeAndSaveLanguage,
+  changeLanguage,
 }
