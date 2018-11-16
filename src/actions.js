@@ -47,7 +47,28 @@ const updateWallets = () => (dispatch: Dispatch<any>) => {
   dispatch(_updateWallets(wallets))
 }
 
-export const initApp = () => async (dispatch: Dispatch<any>) => {
+export const navigateFromSplash = () => (
+  dispatch: Dispatch<any>,
+  getState: any,
+) => {
+  // TODO(ppershing): here we should switch between
+  // onboarding and normal wallet flow
+  const state = getState()
+  const doOnboarding = !state.languageCode
+
+  if (doOnboarding) {
+    NavigationService.navigate(ROOT_ROUTES.INIT)
+  } else {
+    NavigationService.navigate(ROOT_ROUTES.INDEX)
+  }
+}
+
+export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
+  if (getState().isAppInitialized) {
+    dispatch(navigateFromSplash())
+    return
+  }
+
   const [
     isFingerprintHwSupported,
     canFingerprintAuthBeEnabled,
@@ -67,7 +88,7 @@ export const initApp = () => async (dispatch: Dispatch<any>) => {
     // handle setting up of custom pin
   }
 
-  const language = await dispatch(loadLanguage())
+  await dispatch(loadLanguage())
   await walletManager.initialize()
   await dispatch(updateWallets())
 
@@ -77,14 +98,7 @@ export const initApp = () => async (dispatch: Dispatch<any>) => {
     reducer: (state, value) => value,
     type: 'INITIALIZE_APP',
   })
-  // TODO(ppershing): here we should switch between
-  // onboarding and normal wallet flow
-  const doOnboarding = !language
-  if (doOnboarding) {
-    NavigationService.navigate(ROOT_ROUTES.INIT)
-  } else {
-    NavigationService.navigate(ROOT_ROUTES.INDEX)
-  }
+  dispatch(navigateFromSplash())
 }
 
 const _setOnline = (isOnline: boolean) => (dispatch, getState) => {
