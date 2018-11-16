@@ -2,16 +2,13 @@
 
 import React from 'react'
 import {connect} from 'react-redux'
-import {View} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+import {View, StatusBar} from 'react-native'
+import {SafeAreaView} from 'react-navigation'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 
 import WalletDescription from './WalletDescription'
 import {Button} from '../UiKit'
-import Screen from '../Screen'
-import BackgroundVisualArtefacts from './BackgroundVisualArtefacts'
-import {COLORS} from '../../styles/config'
 import styles from './styles/WalletInitScreen.style'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 
@@ -31,29 +28,26 @@ const WalletInitScreen = ({
   navigateRestoreWallet,
   translations,
 }: Props) => (
-  <LinearGradient
-    start={{x: 0, y: 0}}
-    end={{x: 1, y: 0}}
-    colors={[COLORS.PRIMARY_GRADIENT_START, COLORS.PRIMARY_GRADIENT_END]}
-    style={styles.gradient}
-  >
-    <BackgroundVisualArtefacts />
-    <Screen bgColor={COLORS.TRANSPARENT}>
-      <View style={styles.container}>
+  <SafeAreaView style={styles.safeAreaView}>
+    <StatusBar barStyle="light-content" backgroundColor="#254BC9" />
+    <View style={styles.container}>
+      <View style={styles.content}>
         <WalletDescription />
-
-        <Button
-          onPress={navigateCreateWallet}
-          title={translations.createWallet}
-        />
-
-        <Button
-          onPress={navigateRestoreWallet}
-          title={translations.restoreWallet}
-        />
       </View>
-    </Screen>
-  </LinearGradient>
+
+      <Button
+        onPress={navigateCreateWallet}
+        title={translations.createWallet}
+        style={styles.createButton}
+      />
+
+      <Button
+        outline
+        onPress={navigateRestoreWallet}
+        title={translations.restoreWallet}
+      />
+    </View>
+  </SafeAreaView>
 )
 
 export default compose(

@@ -3,7 +3,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
-import {View, Image, FlatList} from 'react-native'
+import {View, Image, FlatList, StatusBar} from 'react-native'
 
 import languageActions from '../../actions/language'
 import styles from './styles/LanguagePicker.style'
@@ -69,6 +69,7 @@ const LanguagePicker = ({
   translations,
 }: Props) => (
   <View style={styles.container}>
+    <StatusBar barStyle="dark-content" backgroundColor="#fff" />
     <FlatList
       style={styles.list}
       contentContainerStyle={styles.listContainer}

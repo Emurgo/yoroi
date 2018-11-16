@@ -3,7 +3,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {View, RefreshControl, ScrollView, Image} from 'react-native'
+import {View, RefreshControl, ScrollView, Image, StatusBar} from 'react-native'
 import {SafeAreaView} from 'react-navigation'
 import _ from 'lodash'
 
@@ -80,6 +80,7 @@ const TxHistory = ({
   availableAmount,
 }) => (
   <SafeAreaView style={styles.scrollView}>
+    <StatusBar barStyle="light-content" backgroundColor="#254BC9" />
     <View style={styles.container}>
       <RenderCount />
       <OfflineBanner />
