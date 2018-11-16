@@ -1,68 +1,46 @@
 // @flow
 
 import React from 'react'
-import {connect} from 'react-redux'
+import {withTranslations} from '../../utils/renderUtils'
 import {compose} from 'redux'
-import {withState, withHandlers} from 'recompose'
-import {View, TouchableHighlight} from 'react-native'
+import {View, FlatList} from 'react-native'
 
-import {Text} from '../UiKit'
 import AddressView from './AddressView'
 
 import styles from './styles/AddressesList.style'
 
-import type {SubTranslation} from '../../l10n/typeHelpers'
+import type {ComponentType} from 'react'
 
 const getTranslations = (state) => state.trans.AddressesList
 
-type Props = {
-  addresses: Array<{address: string, index: number, isUsed: boolean}>,
-  showAll: boolean,
-  setShowAll: (boolean) => void,
-  onShowPress: () => void,
-  translations: SubTranslation<typeof getTranslations>,
-}
+const _keyExtractor = ({address}) => address
+const _renderItem = ({item}) => (
+  <View style={styles.container}>
+    <AddressView {...item} />
+  </View>
+)
 
-const AddressesList = ({
-  addresses,
-  showAll,
-  setShowAll,
-  onShowPress,
-  translations,
-}: Props) => {
-  const shownAddresses = showAll
-    ? [...addresses] // because reverse below is mutating
-    : addresses.filter((x) => !x.isUsed)
+const AddressesList = ({addresses, showFresh, translations}) => {
+  const shownAddresses = showFresh
+    ? addresses.filter((x) => !x.isUsed)
+    : addresses.filter((x) => x.isUsed)
   // We want newest first
   shownAddresses.reverse()
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.label}>{translations.walletAddresses}</Text>
-        <TouchableHighlight onPress={onShowPress}>
-          <Text style={styles.clickableLabel}>
-            {showAll
-              ? translations.hideUsedAddresses
-              : translations.showUsedAddresses}
-          </Text>
-        </TouchableHighlight>
-      </View>
-      {shownAddresses.map((data) => (
-        <View key={data.index} style={styles.addressContainer}>
-          <AddressView {...data} />
-        </View>
-      ))}
-    </View>
+    <FlatList
+      data={shownAddresses}
+      keyExtractor={_keyExtractor}
+      renderItem={_renderItem}
+    />
   )
 }
 
-export default compose(
-  connect((state) => ({
-    translations: getTranslations(state),
-  })),
-  withState('showAll', 'setShowAll', false),
-  withHandlers({
-    onShowPress: ({showAll, setShowAll}) => () => setShowAll(!showAll),
-  }),
-)(AddressesList)
+type ExternalProps = {
+  addresses: Array<{address: string, index: number, isUsed: boolean}>,
+  showFresh?: boolean,
+}
+
+export default (compose(withTranslations(getTranslations))(
+  AddressesList,
+): ComponentType<ExternalProps>)

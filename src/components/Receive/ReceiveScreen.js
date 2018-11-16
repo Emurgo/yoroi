@@ -64,6 +64,13 @@ const ReceiveScreen = ({
             }
           />
         </View>
+        <View>
+          <Text>Fresh addresses</Text>
+        </View>
+        <AddressesList showFresh addresses={receiveAddresses} />
+        <View>
+          <Text>Used addresses</Text>
+        </View>
         <AddressesList addresses={receiveAddresses} />
       </Screen>
     </View>
