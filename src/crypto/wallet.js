@@ -371,8 +371,27 @@ class WalletManager {
   _closePromise: ?Promise<any> = null
   _closeReject: ?(Error) => void = null
 
+  _wallets = {}
+
   constructor() {
     this._backgroundSync()
+  }
+
+  async _listWallets() {
+    const keys = await storage.keys('/wallet/')
+    const result = await Promise.all(
+      keys.map((key) => storage.read(`/wallet/${key}`)),
+    )
+    return result
+  }
+
+  async initialize() {
+    const wallets = await this._listWallets()
+    this._wallets = _.fromPairs(wallets.map((w) => [w.id, w]))
+  }
+
+  getWallets() {
+    return this._wallets
   }
 
   abortWhenWalletCloses<T>(promise: Promise<T>): Promise<T> {
@@ -508,8 +527,12 @@ class WalletManager {
     const wallet = new Wallet()
     await wallet._create(mnemonic, password)
 
-    // TODO(ppershing): potential inconsistency between id and _wallet
     this._id = id
+    this._wallets = {
+      ...this._wallets,
+      [id]: {id, name},
+    }
+
     await this._saveState()
     this._wallet = wallet
     wallet.subscribe(this._notify)
@@ -564,6 +587,34 @@ class WalletManager {
     this._closePromise = null
     this._closeReject = null
     this._wallet = null
+  }
+
+  get walletName() {
+    if (!this._id) return ''
+    return this._wallets[this._id].name
+  }
+
+  // TODO(ppershing): how should we deal with race conditions?
+  async _updateMetadata(id, newMeta) {
+    assert.assert(this._wallets[id], '_updateWalletInfo id')
+    const merged = {
+      ...this._wallets[id],
+      ...newMeta,
+    }
+    await storage.write(`/wallet/${id}`, merged)
+    this._wallets = {
+      ...this._wallets,
+      [id]: merged,
+    }
+  }
+
+  async rename(newName: string) {
+    if (!this._id) throw new WalletClosed()
+    const id = this._id
+
+    await this._updateMetadata(id, {name: newName})
+
+    this._notify()
   }
 }
 

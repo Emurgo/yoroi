@@ -85,6 +85,8 @@ export const utxoBalanceSelector = (state: State) => {
 export const walletIsInitializedSelector = (state: State): boolean =>
   state.wallet.isInitialized
 
+export const walletNameSelector = (state: State): string => state.wallet.name
+
 export const isFetchingUtxosSelector = (state: State): boolean =>
   state.balance.isFetching
 

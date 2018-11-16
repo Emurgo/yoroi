@@ -7,8 +7,12 @@ import type {Translation} from './l10n/type'
 export type Dict<T> = {[string]: T}
 
 export type State = {
-  languageCode: string,
+  wallets: Dict<{
+    id: string,
+    name: string,
+  }>,
   wallet: {
+    name: string,
     isInitialized: boolean,
     transactions: Dict<Transaction>,
     ownAddresses: Array<string>,
@@ -33,11 +37,15 @@ export type State = {
     hasEnrolledFingerprints: boolean,
   },
   isAppInitialized: boolean,
+  appSettings: {
+    languageCode: string,
+  },
 }
 
 export const getInitialState = (): State => ({
-  languageCode: 'en-US',
+  wallets: {},
   wallet: {
+    name: '',
     isInitialized: false,
     transactions: {},
     ownAddresses: [],
@@ -62,6 +70,9 @@ export const getInitialState = (): State => ({
     isSystemAuthEnabled: false,
   },
   isAppInitialized: false,
+  appSettings: {
+    languageCode: 'en-US',
+  },
 })
 
 export default getInitialState

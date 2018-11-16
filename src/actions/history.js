@@ -51,11 +51,13 @@ export const mirrorTxHistory = () => (dispatch: Dispatch<any>) => {
   const generatedReceiveAddresses = walletManager.receiveAddresses
   const canGenerateNewReceiveAddress =
     walletManager.canGenerateNewReceiveAddress
+  const name = walletManager.walletName
 
   dispatch({
     type: 'Mirror walletManager TxHistory',
     path: ['wallet'],
     payload: {
+      name,
       isInitialized,
       transactions,
       ownAddresses,

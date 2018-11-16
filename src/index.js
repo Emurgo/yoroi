@@ -5,7 +5,7 @@ import App from './App'
 import {name as appName} from './app.json'
 import {Provider} from 'react-redux'
 import getConfiguredStore from './helpers/configureStore'
-import {loadLanguage, setupHooks, initAppIfNeeded} from './actions'
+import {setupHooks} from './actions'
 
 import bluebird from 'bluebird'
 
@@ -26,8 +26,6 @@ const store = getConfiguredStore()
 
 store.dispatch(setupHooks())
 // TODO: this is async action, we should wait for it in future
-store.dispatch(loadLanguage())
-store.dispatch(initAppIfNeeded())
 
 const AppWithStore = () => (
   <Provider store={store}>
