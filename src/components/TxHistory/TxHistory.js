@@ -15,6 +15,7 @@ import {
   lastHistorySyncErrorSelector,
   isOnlineSelector,
   availableAmountSelector,
+  walletNameSelector,
 } from '../../selectors'
 import TxHistoryList from './TxHistoryList'
 import TxNavigationButtons from './TxNavigationButtons'
@@ -25,6 +26,7 @@ import {
   measureRenderTime,
   requireInitializedWallet,
   withTranslations,
+  withNavigationTitle,
 } from '../../utils/renderUtils'
 
 import {formatAda} from '../../utils/format'
@@ -123,6 +125,7 @@ export default (compose(
       lastSyncError: lastHistorySyncErrorSelector(state),
       isOnline: isOnlineSelector(state),
       availableAmount: availableAmountSelector(state),
+      walletName: walletNameSelector(state),
     }),
     {
       updateHistory,
@@ -135,4 +138,5 @@ export default (compose(
   onDidMount(({updateHistory}) => {
     updateHistory()
   }),
+  withNavigationTitle(({walletName}) => walletName),
 )(TxHistory): ComponentType<ExternalProps>)

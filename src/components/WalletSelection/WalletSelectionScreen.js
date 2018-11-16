@@ -4,7 +4,7 @@ import React from 'react'
 import {Text, View, ActivityIndicator} from 'react-native'
 import {connect} from 'react-redux'
 import LinearGradient from 'react-native-linear-gradient'
-import {compose, withHandlers, withState} from 'recompose'
+import {compose, withHandlers} from 'recompose'
 import _ from 'lodash'
 
 import walletManager from '../../crypto/wallet'
@@ -13,7 +13,6 @@ import Screen from '../Screen'
 import {Button} from '../UiKit'
 import {WALLET_INIT_ROUTES, ROOT_ROUTES} from '../../RoutesList'
 import {COLORS} from '../../styles/config'
-import {onDidMount} from '../../utils/renderUtils'
 import styles from './styles/WalletSelectionScreen.style'
 
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
@@ -61,23 +60,21 @@ const WalletListScreen = ({
   </Screen>
 )
 
+const walletsListSelector = (state) => Object.values(state.wallets)
+
 export default (compose(
   connect((state: State) => ({
     translations: getTranslations(state),
+    wallets: walletsListSelector(state),
   })),
-  withState('wallets', 'setWallets', null),
   withHandlers({
     navigateInitWallet: ({navigation}) => (event) =>
       navigation.navigate(WALLET_INIT_ROUTES.INIT),
-    fetchWallets: ({setWallets}) => () => {
-      walletManager.listWallets().then(setWallets)
-    },
     openWallet: ({navigation}) => async (wallet) => {
       await walletManager.openWallet(wallet.id)
       navigation.navigate(ROOT_ROUTES.WALLET)
     },
   }),
-  onDidMount(({fetchWallets}) => fetchWallets()),
 )(WalletListScreen): ComponentType<{
   navigation: NavigationScreenProp<NavigationState>,
 }>)

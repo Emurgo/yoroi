@@ -3,7 +3,9 @@ import React from 'react'
 import {compose} from 'redux'
 import {withState, withHandlers} from 'recompose'
 import {ScrollView, StyleSheet, Switch} from 'react-native'
+import {connect} from 'react-redux'
 
+import {walletNameSelector} from '../../selectors'
 import {SETTINGS_ROUTES} from '../../RoutesList'
 import {withNavigationTitle, withTranslations} from '../../utils/renderUtils'
 import {
@@ -23,6 +25,7 @@ const styles = StyleSheet.create({
 })
 
 type Props = {
+  walletName: string,
   isEasyConfirmation: boolean,
   onToggleEasyConfirmation: () => void,
   translations: SubTranslation<typeof getTranslations>,
@@ -32,11 +35,12 @@ const WalletSettingsScreen = ({
   isEasyConfirmation,
   onToggleEasyConfirmation,
   translations,
+  walletName,
 }: Props) => (
   <ScrollView style={styles.scrollView}>
     <SettingsSection title={translations.walletName}>
       <NavigatedSettingsItem
-        label={'getWalletName()'}
+        label={walletName}
         navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
       />
     </SettingsSection>
@@ -67,6 +71,10 @@ const WalletSettingsScreen = ({
 export default compose(
   withTranslations(getTranslations),
   withNavigationTitle(({translations}) => translations.title),
+  connect((state) => ({
+    walletName: walletNameSelector(state),
+  })),
+
   withState('isEasyConfirmation', 'setEasyConfirmation', false),
   withHandlers({
     onToggleEasyConfirmation: ({

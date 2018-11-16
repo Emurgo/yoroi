@@ -34,6 +34,19 @@ export const setSystemAuth = (enable: boolean) => ({
   type: 'SET_SYSTEM_AUTH',
 })
 
+const _updateWallets = (wallets) => ({
+  path: ['wallets'],
+  payload: wallets,
+  reducer: (state, value) => value,
+  type: 'UPDATE_WALLETS',
+})
+
+const updateWallets = () => (dispatch: Dispatch<any>) => {
+  const wallets = walletManager.getWallets()
+
+  dispatch(_updateWallets(wallets))
+}
+
 export const initApp = () => async (dispatch: Dispatch<any>) => {
   const [
     isFingerprintHwSupported,
@@ -55,6 +68,8 @@ export const initApp = () => async (dispatch: Dispatch<any>) => {
   }
 
   const language = await dispatch(loadLanguage())
+  await walletManager.initialize()
+  await dispatch(updateWallets())
 
   dispatch({
     path: ['isAppInitialized'],
@@ -105,4 +120,10 @@ export const generateNewReceiveAddressIfNeeded = () => async (
   dispatch: Dispatch<any>,
 ) => {
   return await walletManager.generateNewUiReceiveAddressIfNeeded()
+}
+
+export const changeWalletName = (newName: string) => async (
+  dispatch: Dispatch<any>,
+) => {
+  await walletManager.rename(newName)
 }

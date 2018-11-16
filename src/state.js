@@ -7,7 +7,12 @@ import type {Translation} from './l10n/type'
 export type Dict<T> = {[string]: T}
 
 export type State = {
+  wallets: Dict<{
+    id: string,
+    name: string,
+  }>,
   wallet: {
+    name: string,
     isInitialized: boolean,
     transactions: Dict<Transaction>,
     ownAddresses: Array<string>,
@@ -38,7 +43,9 @@ export type State = {
 }
 
 export const getInitialState = (): State => ({
+  wallets: {},
   wallet: {
+    name: '',
     isInitialized: false,
     transactions: {},
     ownAddresses: [],
