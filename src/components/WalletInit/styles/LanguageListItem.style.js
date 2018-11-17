@@ -1,20 +1,20 @@
 // @flow
+import {StyleSheet} from 'react-native'
 
-const style = {
+export default StyleSheet.create({
   container: {
     flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 15,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    opacity: 0.4,
   },
-  languageName: {
-    fontSize: 16,
-    padding: 10,
-    width: 90,
+  icon: {
+    marginRight: 12,
   },
-  active: {opacity: 1},
-  inactive: {opacity: 0.4},
-  icon: {width: 18, height: 18},
-}
-
-export default style
+  active: {
+    opacity: 1,
+  },
+})

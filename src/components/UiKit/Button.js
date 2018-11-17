@@ -1,13 +1,7 @@
 // @flow
 
 import React from 'react'
-import {
-  Platform,
-  StyleSheet,
-  TouchableNativeFeedback,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {colors} from '../../styles/config'
 import Text from './Text'
 
@@ -21,16 +15,19 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: 'center',
   },
+  buttonOutline: {
+    borderWidth: 1,
+    borderColor: '#fff',
+    backgroundColor: 'transparent',
+  },
   text: {
     color: 'white',
     textAlign: 'center',
     padding: 8,
+    fontSize: 14,
   },
   buttonDisabled: {
-    backgroundColor: '#dfdfdf',
-  },
-  textDisabled: {
-    color: '#cdcdcd',
+    opacity: 0.5,
   },
 })
 
@@ -40,6 +37,7 @@ type ButtonProps = {
   color?: ?string,
   accessibilityLabel?: ?string,
   disabled?: ?boolean,
+  outline?: boolean,
   style?: Object,
   block?: boolean,
 }
@@ -53,29 +51,31 @@ class Button extends React.Component<ButtonProps> {
       disabled,
       block,
       style,
+      outline,
     } = this.props
 
     const formattedTitle = title.toUpperCase()
-    const Touchable =
-      Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity
 
     return (
-      <Touchable
+      <TouchableOpacity
         accessibilityLabel={accessibilityLabel}
         accessibilityRole="button"
         disabled={disabled}
         onPress={onPress}
         style={[block && styles.block]}
+        activeOpacity={0.5}
       >
-        <View style={[styles.button, disabled && styles.buttonDisabled, style]}>
-          <Text
-            style={[styles.text, disabled && styles.textDisabled]}
-            disabled={disabled}
-          >
-            {formattedTitle}
-          </Text>
+        <View
+          style={[
+            styles.button,
+            outline && styles.buttonOutline,
+            disabled && styles.buttonDisabled,
+            style,
+          ]}
+        >
+          <Text style={styles.text}>{formattedTitle}</Text>
         </View>
-      </Touchable>
+      </TouchableOpacity>
     )
   }
 }

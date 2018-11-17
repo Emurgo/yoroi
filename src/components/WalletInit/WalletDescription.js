@@ -21,17 +21,10 @@ type Props = {
 }
 
 const WalletDescription = ({translations}: Props) => (
-  <View style={styles.descriptionContainer}>
-    <YoroiWalletIcon color={COLORS.WHITE} width={140} height={80} />
-
-    <View style={styles.subtitleContainer}>
-      <Text style={styles.subtitle}>{translations.line1}</Text>
-    </View>
-
-    <Text style={styles.subtitle}>{translations.line2}</Text>
-
+  <View style={styles.description}>
+    <YoroiWalletIcon color={COLORS.WHITE} width={208} height={60} />
     <View style={styles.emurgoCreditsContainer}>
-      <Text style={styles.subtitle}>{translations.byEmurgo}</Text>
+      <Text light>{translations.byEmurgo}</Text>
       <EmurgoIcon color={COLORS.WHITE} width={100} height={37} />
     </View>
   </View>

@@ -13,6 +13,14 @@ import RecoveryPhraseConfirmationScreen from './CreateWallet/RecoveryPhraseConfi
 import RecoveryPhraseConfirmationDialog from './CreateWallet/RecoveryPhraseConfirmationDialog'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 
+const defaultNavigationOptions = {
+  headerStyle: {
+    backgroundColor: '#254BC9',
+    borderBottomWidth: 0,
+  },
+  headerTintColor: '#fff',
+}
+
 const WalletInitNavigator = createStackNavigator(
   {
     [WALLET_INIT_ROUTES.MAIN]: {
@@ -36,6 +44,8 @@ const WalletInitNavigator = createStackNavigator(
     initialRouteName: WALLET_INIT_ROUTES.MAIN,
     navigationOptions: ({navigation}) => ({
       title: navigation.getParam('title'),
+      header: null,
+      ...defaultNavigationOptions,
     }),
     cardStyle: {
       backgroundColor: 'transparent',
