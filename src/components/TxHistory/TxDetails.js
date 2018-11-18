@@ -8,7 +8,7 @@ import _ from 'lodash'
 
 import {transactionsInfoSelector} from '../../selectors'
 import {withNavigationTitle} from '../../utils/renderUtils'
-import {formatAda} from '../../utils/format'
+import {formatAda, formatDateToSeconds} from '../../utils/format'
 import {Text, OfflineBanner} from '../UiKit'
 import Screen from '../../components/Screen'
 import AdaIcon from '../../assets/AdaIcon'
@@ -105,6 +105,6 @@ export default compose(
     transaction: transactionsInfoSelector(state)[navigation.getParam('id')],
   })),
   withNavigationTitle(({transaction}) =>
-    transaction.submittedAt.format('YY-MM-DD hh:mm:ss A'),
+    formatDateToSeconds(transaction.submittedAt),
   ),
 )(TxDetails)
