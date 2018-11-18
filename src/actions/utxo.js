@@ -1,6 +1,5 @@
 // @flow
 
-import api from '../api'
 import walletManager from '../crypto/wallet'
 
 import type {Dispatch} from 'redux'
@@ -54,9 +53,7 @@ export const fetchUTXOs = () => async (
   dispatch(_startFetching())
   dispatch(_clearUTXOs())
   try {
-    const utxos = await api.bulkFetchUTXOsForAddresses(
-      walletManager.ownAddresses,
-    )
+    const utxos = await walletManager.fetchUTXOs()
     dispatch(_setUTXOs(utxos))
     dispatch(_setLastError(null))
   } catch (err) {

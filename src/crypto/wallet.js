@@ -616,6 +616,13 @@ class WalletManager {
 
     this._notify()
   }
+
+  async fetchUTXOs() {
+    if (!this._wallet) throw new WalletClosed()
+    return await this.abortWhenWalletCloses(
+      api.bulkFetchUTXOsForAddresses(this.ownAddresses),
+    )
+  }
 }
 
 export default new WalletManager()
