@@ -6,6 +6,7 @@ const styles = {
   container: {
     flex: 1,
     flexDirection: 'row',
+    padding: 5,
   },
   addressUsed: {
     fontSize: 17,

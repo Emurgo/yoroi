@@ -153,7 +153,7 @@ const l10n = {
       'To protect your privacy, new address are',
       'generated automatically once you use them.',
     ].join(' '),
-    generate: 'GENERATE',
+    generate: 'Generate another address',
     cannotGenerate: 'You have to use some of your addresses',
   },
   AddressDetail: {
