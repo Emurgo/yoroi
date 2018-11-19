@@ -8,6 +8,7 @@ import {
 } from '../types/HistoryTransaction'
 import {CONFIG} from '../config'
 import {Logger} from '../utils/logging'
+import assert from '../utils/assert'
 
 import type {TransactionInfo, Transaction} from '../types/HistoryTransaction'
 
@@ -108,19 +109,27 @@ export const processTxHistoryData = (
   let fee
   let direction
   if (isIntraWallet) {
-    amount = new BigNumber(0)
-    fee = totalFee
     direction = TRANSACTION_DIRECTION.SELF
+    amount = null
+    fee = totalFee
   } else if (isMultiParty) {
     direction = TRANSACTION_DIRECTION.MULTI
     amount = brutto
-    fee = new BigNumber(0)
+    fee = null
+  } else if (hasOnlyOwnInputs) {
+    assert.assert(brutto.lte(0), 'More funds after sending')
+    direction = TRANSACTION_DIRECTION.SENT
+    amount = brutto.minus(totalFee)
+    fee = totalFee
   } else {
-    fee = hasOnlyOwnInputs ? totalFee : new BigNumber(0)
-    amount = brutto.minus(fee)
-    direction = amount.gte(0)
-      ? TRANSACTION_DIRECTION.RECEIVED
-      : TRANSACTION_DIRECTION.SENT
+    assert.assert(
+      ownInputs.length === 0,
+      'This cannot be receiving transaction',
+    )
+    assert.assert(brutto.gte(0), 'Received negative funds')
+    direction = TRANSACTION_DIRECTION.RECEIVED
+    amount = brutto
+    fee = null
   }
 
   const assurance = getTransactionAssurance(tx.status, confirmations)
@@ -130,8 +139,9 @@ export const processTxHistoryData = (
     fromAddresses: tx.inputs.map(({address}) => address),
     toAddresses: tx.outputs.map(({address}) => address),
     amount,
-    bruttoAmount: brutto,
     fee,
+    bruttoAmount: brutto,
+    bruttoFee: totalFee,
     confirmations,
     direction,
     submittedAt: moment(tx.submittedAt),

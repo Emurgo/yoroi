@@ -29,9 +29,10 @@ export type TransactionInfo = {|
   id: string,
   fromAddresses: Array<string>,
   toAddresses: Array<string>,
-  amount: BigNumber,
+  amount: ?BigNumber,
+  fee: ?BigNumber,
   bruttoAmount: BigNumber,
-  fee: BigNumber,
+  bruttoFee: BigNumber,
   direction: TransactionDirection,
   // TODO(ppershing): why this can't be typical number?
   confirmations: BigNumber,

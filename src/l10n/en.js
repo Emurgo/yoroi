@@ -54,16 +54,17 @@ const l10n = {
     },
   },
   TxDetails: {
+    type: {
+      SENT: 'Sent funds',
+      RECEIVED: 'Received funds',
+      SELF: 'Intrawallet transaction',
+      MULTI: 'Multi-party transaction',
+    },
+    fee: 'Fee: ',
     fromAddresses: 'From Addresses',
     toAddresses: 'To Addresses',
     transactionId: 'Transaction ID',
     txAssuranceLevel: 'Transaction assurance level',
-    transactionHeader: {
-      SENT: 'ADA sent',
-      RECEIVED: 'ADA received',
-      SELF: 'Intrawallet',
-      MULTI: 'Multi party',
-    },
     formatConfirmations: (cnt: number) =>
       `${cnt} ${pluralizeEn(cnt, 'CONFIRMATION', 'CONFIRMATIONS')}`,
   },

@@ -14,7 +14,6 @@ import Screen from '../../components/Screen'
 import AdaIcon from '../../assets/AdaIcon'
 
 import styles from './styles/TxDetails.style'
-import {TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
@@ -23,18 +22,13 @@ import type {TransactionInfo} from '../../types/HistoryTransaction'
 const Label = ({children}) => <Text style={styles.label}>{children}</Text>
 
 const AdaAmount = ({amount, direction}) => {
-  const amountStyle =
-    direction === TRANSACTION_DIRECTION.SELF
-      ? styles.noAmount
-      : amount.gte(0)
-        ? styles.positiveAmount
-        : styles.negativeAmount
+  const amountStyle = amount.gte(0)
+    ? styles.positiveAmount
+    : styles.negativeAmount
 
-  const amountText =
-    direction === TRANSACTION_DIRECTION.SELF ? '--' : formatAda(amount)
   return (
     <View style={styles.amountContainer}>
-      <Text style={amountStyle}>{amountText}</Text>
+      <Text style={amountStyle}>{formatAda(amount)}</Text>
       <View style={styles.adaSignContainer}>
         <AdaIcon width={18} height={18} color={amountStyle.color} />
       </View>
@@ -55,20 +49,19 @@ const TxDetails = ({navigation, translations, transaction}: Props) => {
     <View style={styles.root}>
       <OfflineBanner />
       <Screen scroll>
-        <AdaAmount
-          amount={transaction.amount}
-          direction={transaction.direction}
-        />
-        <Text>Fee: TODO</Text>
         <View style={styles.timestampContainer}>
-          <View>
-            <Text>{translations.transactionHeader[transaction.direction]}</Text>
-          </View>
-          <View>
+          <Text>{translations.type[transaction.direction]}</Text>
+          {transaction.amount && (
+            <AdaAmount
+              amount={transaction.amount}
+              direction={transaction.direction}
+            />
+          )}
+          {transaction.fee && (
             <Text>
-              {transaction.submittedAt.format('YYYY-MM-DD hh:mm:ss A')}
+              {translations.fee} {formatAda(transaction.fee)}
             </Text>
-          </View>
+          )}
         </View>
         <View style={styles.section}>
           <Label>{translations.fromAddresses}</Label>
