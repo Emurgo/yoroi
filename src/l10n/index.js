@@ -66,6 +66,17 @@ export const LANGUAGES = {
   RUSSIAN: 'ru-RU',
 }
 
+moment.updateLocale('en', {
+  calendar: {
+    sameDay: 'Today',
+    lastDay: 'Yesterday',
+    nextDay: 'L', // we don't really have dates in future
+    lastWeek: 'L',
+    nextWeek: 'L',
+    sameElse: 'L',
+  },
+})
+
 const momentLocales = {
   [LANGUAGES.ENGLISH]: 'en',
   [LANGUAGES.CHINESE_SIMPLIFIED]: 'zh-cn',
