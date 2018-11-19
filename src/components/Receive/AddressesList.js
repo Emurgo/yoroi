@@ -1,10 +1,12 @@
 // @flow
 
 import React from 'react'
-import {withTranslations} from '../../utils/renderUtils'
 import {compose} from 'redux'
 import {View, FlatList} from 'react-native'
+import {connect} from 'react-redux'
 
+import {withTranslations} from '../../utils/renderUtils'
+import {isUsedAddressIndexSelector} from '../../selectors'
 import AddressView from './AddressView'
 
 import styles from './styles/AddressesList.style'
@@ -13,17 +15,22 @@ import type {ComponentType} from 'react'
 
 const getTranslations = (state) => state.trans.AddressesList
 
-const _keyExtractor = ({address}) => address
-const _renderItem = ({item}) => (
+const _keyExtractor = (address) => address
+const _renderItem = ({item: address}) => (
   <View style={styles.container}>
-    <AddressView {...item} />
+    <AddressView address={address} />
   </View>
 )
 
-const AddressesList = ({addresses, showFresh, translations}) => {
+const AddressesList = ({
+  addresses,
+  isUsedAddressIndex,
+  showFresh,
+  translations,
+}) => {
   const shownAddresses = showFresh
-    ? addresses.filter((x) => !x.isUsed)
-    : addresses.filter((x) => x.isUsed)
+    ? addresses.filter((addr) => !isUsedAddressIndex[addr])
+    : addresses.filter((addr) => isUsedAddressIndex[addr])
   // We want newest first
   shownAddresses.reverse()
 
@@ -37,10 +44,13 @@ const AddressesList = ({addresses, showFresh, translations}) => {
 }
 
 type ExternalProps = {
-  addresses: Array<{address: string, index: number, isUsed: boolean}>,
+  addresses: Array<string>,
   showFresh?: boolean,
 }
 
-export default (compose(withTranslations(getTranslations))(
-  AddressesList,
-): ComponentType<ExternalProps>)
+export default (compose(
+  withTranslations(getTranslations),
+  connect((state) => ({
+    isUsedAddressIndex: isUsedAddressIndexSelector(state),
+  })),
+)(AddressesList): ComponentType<ExternalProps>)

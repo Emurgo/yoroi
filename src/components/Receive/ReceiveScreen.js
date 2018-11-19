@@ -17,6 +17,7 @@ import {
 import {
   receiveAddressesSelector,
   canGenerateNewReceiveAddressSelector,
+  isUsedAddressIndexSelector,
 } from '../../selectors'
 import {
   onDidMount,
@@ -31,11 +32,7 @@ import type {Navigation} from '../../types/navigation'
 
 const getTranslations = (state) => state.trans.ReceiveScreen
 
-const NO_ADDRESS = {
-  address: 'IT IS A BUG TO SEE THIS TEXT',
-  index: -1,
-  isUsed: false,
-}
+const NO_ADDRESS = 'IT IS A BUG TO SEE THIS TEXT'
 
 const ReceiveScreen = ({
   receiveAddresses,
@@ -52,7 +49,7 @@ const ReceiveScreen = ({
         <View style={styles.warningContainer}>
           <Text style={styles.warningText}>{translations.infoText}</Text>
         </View>
-        <AddressDetail {...currentAddress} />
+        <AddressDetail address={currentAddress} />
         <View>
           <Button
             onPress={generateNewReceiveAddress}
@@ -83,6 +80,9 @@ export default (compose(
       translations: getTranslations(state),
       receiveAddresses: receiveAddressesSelector(state),
       addressLimitReached: !canGenerateNewReceiveAddressSelector(state),
+      // This is here just so that we can properly monitor changes and fire
+      // generateNewReceiveAddressIfNeeded()
+      isUsedAddressIndex: isUsedAddressIndexSelector(state),
     }),
     {
       generateNewReceiveAddress,

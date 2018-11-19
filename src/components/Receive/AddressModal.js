@@ -7,6 +7,7 @@ import {withHandlers} from 'recompose'
 import {Modal, Clipboard, View} from 'react-native'
 import QRCode from 'react-native-qrcode'
 
+import {externalAddressIndexSelector} from '../../selectors'
 import {formatBIP44} from '../../crypto/util'
 
 import {Text, Button} from '../UiKit'
@@ -95,9 +96,11 @@ type ExternalProps = {
 export default (compose(
   connect(
     (state, {navigation}) => ({
-      address: navigation.getParam('address'),
-      index: navigation.getParam('index'),
       translations: getTranslations(state),
+      address: navigation.getParam('address'),
+      index: externalAddressIndexSelector(state)[
+        navigation.getParam('address')
+      ],
     }),
     null,
   ),

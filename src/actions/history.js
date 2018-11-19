@@ -44,14 +44,18 @@ export const updateHistory = () => async (dispatch: Dispatch<any>) => {
 }
 
 export const mirrorTxHistory = () => (dispatch: Dispatch<any>) => {
-  const isInitialized = walletManager.isInitialized
-  const transactions = walletManager.transactions
-  const ownAddresses = walletManager.ownAddresses
-  const confirmationCounts = walletManager.confirmationCounts
-  const generatedReceiveAddresses = walletManager.receiveAddresses
-  const canGenerateNewReceiveAddress =
-    walletManager.canGenerateNewReceiveAddress
-  const name = walletManager.walletName
+  // Note(ppershing): this runs through getters
+  const {
+    walletName: name,
+    isInitialized,
+    transactions,
+    internalAddresses,
+    externalAddresses,
+    confirmationCounts,
+    isUsedAddressIndex,
+    numReceiveAddresses,
+    canGenerateNewReceiveAddress,
+  } = walletManager
 
   dispatch({
     type: 'Mirror walletManager TxHistory',
@@ -60,9 +64,11 @@ export const mirrorTxHistory = () => (dispatch: Dispatch<any>) => {
       name,
       isInitialized,
       transactions,
-      ownAddresses,
+      internalAddresses,
+      externalAddresses,
       confirmationCounts,
-      generatedReceiveAddresses,
+      isUsedAddressIndex,
+      numReceiveAddresses,
       canGenerateNewReceiveAddress,
     },
     reducer: (state, payload) => payload,

@@ -1,10 +1,16 @@
 // @flow
 
 import React from 'react'
+import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 import {View, TouchableHighlight} from 'react-native'
 import {withNavigation} from 'react-navigation'
+
+import {
+  isUsedAddressIndexSelector,
+  externalAddressIndexSelector,
+} from '../../selectors'
 
 import {Text} from '../UiKit'
 import CopyIcon from '../../assets/CopyIcon'
@@ -12,6 +18,8 @@ import {RECEIVE_ROUTES} from '../../RoutesList'
 import {COLORS} from '../../styles/config'
 
 import styles from './styles/AddressView.style'
+
+import type {ComponentType} from 'react'
 
 type Props = {
   index: number,
@@ -39,10 +47,19 @@ const AddressView = ({address, index, isUsed, navigateToModal}: Props) => (
   </TouchableHighlight>
 )
 
-export default compose(
+type ExternalProps = {
+  address: string,
+}
+
+export default (compose(
+  // TODO(ppershing): this makes Flow bail out from checking types
   withNavigation,
+  connect((state, {address}) => ({
+    index: externalAddressIndexSelector(state)[address],
+    isUsed: !!isUsedAddressIndexSelector(state)[address],
+  })),
   withHandlers({
-    navigateToModal: ({navigation, address, index}) => () =>
-      navigation.navigate(RECEIVE_ROUTES.ADDRESS_MODAL, {address, index}),
+    navigateToModal: ({navigation, address}) => () =>
+      navigation.navigate(RECEIVE_ROUTES.ADDRESS_MODAL, {address}),
   }),
-)(AddressView)
+)(AddressView): ComponentType<ExternalProps>)
