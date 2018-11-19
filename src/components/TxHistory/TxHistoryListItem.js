@@ -52,10 +52,26 @@ const _AssuranceLevel = ({transaction, translations}) => {
 const AssuranceLevel = withTranslations(getTranslations)(_AssuranceLevel)
 
 class TxHistoryListItem extends Component<Props> {
-  constructor(props: Props) {
-    super(props)
+  shouldComponentUpdate(nextProps) {
+    // Note: technically we should also verify
+    // submittedAt, fee and amount but
+    // - submittedAt and fee should be invariant if other conditions are met
+    // - amount should be invariant as long as the transaction
+    //   is not multi-party
+    const tx = this.props.transaction
+    const nextTx = nextProps.transaction
 
-    this.showDetails = this.showDetails.bind(this)
+    const sameMaybeBignum = (x, y) => (x && y ? x.eq(y) : x === y)
+    const sameTs = (x, y) => x.isSame(y)
+
+    return (
+      tx.id !== nextTx.id ||
+      tx.assurance !== nextTx.assurance ||
+      tx.direction !== nextTx.direction ||
+      !sameMaybeBignum(tx.amount, nextTx.amount) ||
+      !sameMaybeBignum(tx.fee, nextTx.fee) ||
+      !sameTs(tx.submittedAt, nextTx.submittedAt)
+    )
   }
 
   showDetails = () => {
