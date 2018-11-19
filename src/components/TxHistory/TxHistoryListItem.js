@@ -19,8 +19,6 @@ import {
   formatTimeToSeconds,
 } from '../../utils/format'
 
-import {TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
-
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {SubTranslation} from '../../l10n/typeHelpers'
 import type {TransactionInfo} from '../../types/HistoryTransaction'
@@ -83,32 +81,18 @@ class TxHistoryListItem extends Component<Props> {
   render() {
     const {transaction, translations} = this.props
 
-    const amountStyle = {
-      SENT: styles.negativeAmount,
-      RECEIVED: styles.positiveAmount,
-      SELF: styles.neutralAmount,
-      MULTI: transaction.amount.gte(0)
+    const amountStyle = transaction.amount
+      ? transaction.amount.gte(0)
         ? styles.positiveAmount
-        : styles.negativeAmount,
-    }[transaction.direction]
-
-    const hasAmount = [
-      TRANSACTION_DIRECTION.SENT,
-      TRANSACTION_DIRECTION.RECEIVED,
-      TRANSACTION_DIRECTION.MULTI,
-    ].includes(transaction.direction)
-
-    const hasFee = [
-      TRANSACTION_DIRECTION.SENT,
-      TRANSACTION_DIRECTION.SELF,
-    ].includes(transaction.direction)
+        : styles.negativeAmount
+      : styles.neutralAmount
 
     return (
       <TouchableOpacity onPress={this.showDetails} activeOpacity={0.5}>
         <View style={styles.container}>
           <View style={styles.meta}>
             <Text small>{formatTimeToSeconds(transaction.submittedAt)}</Text>
-            {hasFee && (
+            {transaction.fee && (
               <Text secondary>
                 {translations.fee(formatAda(transaction.fee))}
               </Text>
@@ -119,7 +103,7 @@ class TxHistoryListItem extends Component<Props> {
           </View>
           <View style={styles.row}>
             <AssuranceLevel transaction={transaction} />
-            {hasAmount ? (
+            {transaction.amount ? (
               <View style={styles.amount}>
                 <Text style={amountStyle}>
                   {formatAdaInteger(transaction.amount)}
