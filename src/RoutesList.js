@@ -35,6 +35,7 @@ export const SETTINGS_ROUTES = {
   SUPPORT: 'support',
   FINGERPRINT_LINK: 'fingerprint-link',
   REMOVE_WALLET: 'remove-wallet',
+  CHANGE_LANGUAGE: 'change-language',
 }
 
 export const WALLET_ROUTES = {

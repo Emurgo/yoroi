@@ -40,6 +40,7 @@ type Props = {
   setSystemAuth: () => void,
   isFingerprintsHardwareSupported: boolean,
   isSystemAuthEnabled: boolean,
+  language: string,
 }
 
 const onToggleFingerprintSignIn = ({
@@ -78,13 +79,14 @@ const ApplicationSettingsScreen = ({
   updateDeviceSettings,
   isFingerprintsHardwareSupported,
   isSystemAuthEnabled,
+  language,
 }: Props) => (
   <ScrollView style={styles.scrollView}>
     <NavigationEvents onWillFocus={updateDeviceSettings} />
     <SettingsSection title={translations.language}>
       <NavigatedSettingsItem
-        label={'getLanguage()'}
-        navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
+        label={language}
+        navigateTo={SETTINGS_ROUTES.CHANGE_LANGUAGE}
       />
     </SettingsSection>
 
@@ -130,6 +132,7 @@ export default compose(
       translations: getTranslations(state),
       isFingerprintsHardwareSupported: fingerprintsHwSupportSelector(state),
       isSystemAuthEnabled: systemAuthSupportSelector(state),
+      language: state.trans.global.currentLanguageName,
     }),
     {updateFingerprintsIndicators, setSystemAuth},
   ),

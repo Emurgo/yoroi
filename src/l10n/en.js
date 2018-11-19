@@ -23,6 +23,7 @@ const l10n = {
     notifications: {
       offline: 'You are offline. Please check settings on your device.',
     },
+    currentLanguageName: 'English',
   },
   LoginScreen: {
     title: 'Enter PIN',

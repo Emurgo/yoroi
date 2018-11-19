@@ -2,6 +2,13 @@
 import {COLORS} from '../../../styles/config'
 
 const styles = {
+  header: {
+    alignItems: 'flex-end',
+  },
+  close: {
+    fontSize: 25,
+    padding: 10,
+  },
   root: {
     flex: 1,
     alignItems: 'center',

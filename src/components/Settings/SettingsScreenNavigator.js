@@ -4,24 +4,18 @@ import {
   createStackNavigator,
   createMaterialTopTabNavigator,
 } from 'react-navigation'
-import {HeaderBackButton} from 'react-navigation-stack'
+import HeaderBackButton from '../UiKit/HeaderBackButton'
 
 import WalletSettingsScreen from './WalletSettingsScreen'
 import ApplicationSettingsScreen from './ApplicationSettingsScreen'
 import ChangeWalletName from './ChangeWalletName'
 import SupportScreen from './SupportScreen'
+import LanguagePickerScreen from '../WalletInit/LanguagePickerScreen'
 import FingerprintLinkScreen from './FingerprintLinkScreen'
 import TermsOfServiceScreen from './TermsOfServiceScreen'
 import RemoveWalletScreen from './RemoveWalletScreen'
 import {SETTINGS_ROUTES} from '../../RoutesList'
-
-const defaultNavigationOptions = {
-  headerStyle: {
-    backgroundColor: '#254BC9',
-    borderBottomWidth: 0,
-  },
-  headerTintColor: '#fff',
-}
+import {defaultNavigationOptions} from '../../navigationOptions'
 
 const SettingsScreenNavigator = createStackNavigator(
   {
@@ -54,6 +48,12 @@ const SettingsScreenNavigator = createStackNavigator(
     [SETTINGS_ROUTES.SUPPORT]: SupportScreen,
     [SETTINGS_ROUTES.FINGERPRINT_LINK]: FingerprintLinkScreen,
     [SETTINGS_ROUTES.REMOVE_WALLET]: RemoveWalletScreen,
+    [SETTINGS_ROUTES.CHANGE_LANGUAGE]: {
+      screen: LanguagePickerScreen,
+      navigationOptions: {
+        header: null,
+      },
+    },
   },
   {
     initialRouteName: SETTINGS_ROUTES.MAIN,
@@ -65,7 +65,9 @@ const SettingsScreenNavigator = createStackNavigator(
           : navigation.getParam('title'),
       // Nested stack navigators have problems with back button
       // https://github.com/react-navigation/react-navigation/issues/115
-      headerLeft: <HeaderBackButton onPress={() => navigation.goBack(null)} />,
+      headerLeft: (
+        <HeaderBackButton shouldPopOutOfLastNavigator navigation={navigation} />
+      ),
       ...defaultNavigationOptions,
     }),
   },

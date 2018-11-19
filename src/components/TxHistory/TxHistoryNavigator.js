@@ -7,12 +7,7 @@ import TxDetails from './TxDetails'
 import {TX_HISTORY_ROUTES, WALLET_ROUTES} from '../../RoutesList'
 import SettingsScreenNavigator from '../Settings/SettingsScreenNavigator'
 
-const defaultNavigationOptions = {
-  headerStyle: {
-    backgroundColor: '#254BC9',
-  },
-  headerTintColor: '#fff',
-}
+import {defaultNavigationOptions} from '../../navigationOptions'
 
 const TxHistoryNavigator = createStackNavigator(
   {
