@@ -13,12 +13,10 @@ const getTranslations = (state) => state.trans.AddressDetail
 
 type Props = {
   address: string,
-  index: number,
-  isUsed: boolean,
   translations: SubTranslation<typeof getTranslations>,
 }
 
-const AddressDetail = ({address, index, isUsed, translations}: Props) => (
+const AddressDetail = ({address, translations}: Props) => (
   <View style={styles.container}>
     <View style={styles.qrContainer}>
       <QRCode

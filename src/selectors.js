@@ -21,13 +21,31 @@ export const transactionsInfoSelector: (State) => Dict<
   TransactionInfo,
 > = createSelector(
   (state) => state.wallet.transactions,
-  (state) => state.wallet.ownAddresses,
+  (state) => state.wallet.internalAddresses,
+  (state) => state.wallet.externalAddresses,
   (state) => state.wallet.confirmationCounts,
-  (transactions, ownAddresses, confirmationCounts) =>
+  (transactions, internalAddresses, externalAddresses, confirmationCounts) =>
     _.mapValues(transactions, (tx: Transaction) =>
-      processTxHistoryData(tx, ownAddresses, confirmationCounts[tx.id] || 0),
+      processTxHistoryData(
+        tx,
+        [...internalAddresses, ...externalAddresses],
+        confirmationCounts[tx.id] || 0,
+      ),
     ),
 )
+
+export const internalAddressIndexSelector = createSelector(
+  (state) => state.wallet.internalAddresses,
+  (addresses) => _.fromPairs(addresses.map((addr, i) => [addr, i])),
+)
+
+export const externalAddressIndexSelector = createSelector(
+  (state) => state.wallet.externalAddresses,
+  (addresses) => _.fromPairs(addresses.map((addr, i) => [addr, i])),
+)
+
+export const isUsedAddressIndexSelector = (state: State) =>
+  state.wallet.isUsedAddressIndex
 
 export const amountPendingSelector = createSelector(
   transactionsInfoSelector,
@@ -45,7 +63,6 @@ export const amountPendingSelector = createSelector(
 const BigNumberSum = (data: Array<BigNumber>): BigNumber =>
   data.reduce((x: BigNumber, y) => x.plus(y), new BigNumber(0))
 
-// TODO: make this using reselect
 export const availableAmountSelector = createSelector(
   transactionsInfoSelector,
   (transactions) => {
@@ -57,8 +74,11 @@ export const availableAmountSelector = createSelector(
   },
 )
 
-export const receiveAddressesSelector = (state: State) =>
-  state.wallet.generatedReceiveAddresses
+export const receiveAddressesSelector = createSelector(
+  (state) => state.wallet.externalAddresses,
+  (state) => state.wallet.numReceiveAddresses,
+  (addresses, count) => addresses.slice(0, count),
+)
 
 export const canGenerateNewReceiveAddressSelector = (state: State) =>
   state.wallet.canGenerateNewReceiveAddress

@@ -31,11 +31,6 @@ type WalletState = {|
   lastGeneratedAddressIndex: number,
 |}
 
-const ownAddressesSelector = (
-  internal: Array<string>,
-  external: Array<string>,
-) => [...internal, ...external]
-
 export class Wallet {
   _encryptedMasterKey: any = null
   // $FlowFixMe null
@@ -52,7 +47,12 @@ export class Wallet {
   _subscriptions: Array<(Wallet) => any> = []
   // $FlowFixMe null
   _transactionCache: TransactionCache = null
-  _ownAddressesSelector = defaultMemoize(ownAddressesSelector)
+  _isUsedAddressIndexSelector = defaultMemoize((perAddressTxs) =>
+    _.mapValues(perAddressTxs, (txs) => {
+      assert.assert(!!txs, 'perAddressTxs cointains false-ish value')
+      return txs.length > 0
+    }),
+  )
 
   /* global $Shape */
   updateState(update: $Shape<WalletState>) {
@@ -174,33 +174,12 @@ export class Wallet {
     return this._transactionCache.transactions
   }
 
-  // TODO(ppershing): memoize
-  getOwnAddresses() {
-    assert.assert(this._isInitialized, 'getOwnAddresses:: isInitialized')
-
-    return this._ownAddressesSelector(
-      this._internalChain.addresses,
-      this._externalChain.addresses,
-    )
+  get internalAddresses() {
+    return this._internalChain.addresses
   }
 
-  // TODO(ppershing): memoize
-  getUiReceiveAddresses() {
-    assert.assert(this._isInitialized, 'getUiReceiveAddresses:: isInitialized')
-
-    assert.assert(
-      this._state.lastGeneratedAddressIndex < this._externalChain.size(),
-      'getUiReceiveAddresses:: count',
-    )
-    const addresses = this._externalChain.addresses.slice(
-      0,
-      this._state.lastGeneratedAddressIndex + 1,
-    )
-    return addresses.map((address, index) => ({
-      index,
-      address,
-      isUsed: this.isUsedAddress(address),
-    }))
+  get externalAddresses() {
+    return this._externalChain.addresses
   }
 
   isUsedAddress(address: string) {
@@ -210,22 +189,42 @@ export class Wallet {
     )
   }
 
+  get isUsedAddressIndex() {
+    return this._isUsedAddressIndexSelector(
+      this._transactionCache.perAddressTxs,
+    )
+  }
+
+  get numReceiveAddresses() {
+    return this._state.lastGeneratedAddressIndex + 1
+  }
+
   canGenerateNewReceiveAddress() {
     // TODO(ppershing): use "assuredly used" instead of "seen"
-    const usedCount = this._externalChain.addresses
-      .slice(0, this._state.lastGeneratedAddressIndex + 1)
+    const usedCount = this.externalAddresses
+      .slice(0, this.numReceiveAddresses)
       .filter((address) => this.isUsedAddress(address)).length
 
     return (
-      this._state.lastGeneratedAddressIndex + 1 <
-      usedCount + CONFIG.WALLET.MAX_GENERATED_UNUSED
+      this.numReceiveAddresses < usedCount + CONFIG.WALLET.MAX_GENERATED_UNUSED
     )
+  }
+
+  async generateNewUiReceiveAddressIfNeeded() {
+    if (
+      this.externalAddresses
+        .slice(0, this.numReceiveAddresses)
+        .some((addr) => !this.isUsedAddress(addr))
+    ) {
+      return false // still have some unused
+    }
+    return await this.generateNewUiReceiveAddress()
   }
 
   async generateNewUiReceiveAddress(): Promise<boolean> {
     if (!this.canGenerateNewReceiveAddress()) return false
 
-    let idx = this._state.lastGeneratedAddressIndex + 1
+    let idx = this.numReceiveAddresses
     // eslint-disable-next-line no-constant-condition
     while (true) {
       // First, discover new addresses if needed.
@@ -446,9 +445,14 @@ class WalletManager {
     return this._wallet.transactions
   }
 
-  get ownAddresses() {
+  get internalAddresses() {
     if (!this._wallet) return []
-    return this._wallet.getOwnAddresses()
+    return this._wallet.internalAddresses
+  }
+
+  get externalAddresses() {
+    if (!this._wallet) return []
+    return this._wallet.externalAddresses
   }
 
   get confirmationCounts() {
@@ -456,9 +460,9 @@ class WalletManager {
     return this._wallet.confirmationCounts
   }
 
-  get receiveAddresses() {
-    if (!this._wallet) return []
-    return this._wallet.getUiReceiveAddresses()
+  get numReceiveAddresses() {
+    if (!this._wallet) return 0
+    return this._wallet.numReceiveAddresses
   }
 
   get canGenerateNewReceiveAddress() {
@@ -466,16 +470,16 @@ class WalletManager {
     return this._wallet.canGenerateNewReceiveAddress()
   }
 
+  get isUsedAddressIndex() {
+    if (!this._wallet) return {}
+    return this._wallet.isUsedAddressIndex
+  }
+
   async generateNewUiReceiveAddressIfNeeded() {
     if (!this._wallet) return
-    if (
-      this._wallet.getUiReceiveAddresses().filter(({isUsed}) => !isUsed)
-        .length > 0
-    ) {
-      return // nothing to do
-    }
-    /* :: if (!this._wallet) throw 'assert' */
-    await this.abortWhenWalletCloses(this.generateNewUiReceiveAddress())
+    await this.abortWhenWalletCloses(
+      this._wallet.generateNewUiReceiveAddressIfNeeded(),
+    )
   }
 
   async generateNewUiReceiveAddress() {
@@ -620,7 +624,10 @@ class WalletManager {
   async fetchUTXOs() {
     if (!this._wallet) throw new WalletClosed()
     return await this.abortWhenWalletCloses(
-      api.bulkFetchUTXOsForAddresses(this.ownAddresses),
+      api.bulkFetchUTXOsForAddresses([
+        ...this.internalAddresses,
+        ...this.externalAddresses,
+      ]),
     )
   }
 }
