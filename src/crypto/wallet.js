@@ -596,6 +596,8 @@ class WalletManager {
     this.closeWallet()
     await storage.remove(`/wallet/${id}/data`)
     await storage.remove(`/wallet/${id}`)
+
+    this._wallets = _.omit(this._wallets, id)
   }
 
   get walletName() {

@@ -6,11 +6,11 @@ import {Alert, View, TextInput} from 'react-native'
 import {withHandlers, withState} from 'recompose'
 import {NavigationEvents} from 'react-navigation'
 
-import walletManager from '../../crypto/wallet'
 import {Button, Text} from '../UiKit'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {ROOT_ROUTES} from '../../RoutesList'
 import {walletNameSelector} from '../../selectors'
+import {removeCurrentWallet} from '../../actions'
 
 import styles from './styles/RemoveWalletScreen.style'
 
@@ -28,6 +28,7 @@ const handleRemoveWallet = ({
   password,
   isRemovingWallet,
   setIsRemovingWallet,
+  removeCurrentWallet,
 }) => async (event) => {
   if (isRemovingWallet) {
     return
@@ -48,7 +49,7 @@ const handleRemoveWallet = ({
   }
 
   try {
-    await walletManager.removeCurrentWallet()
+    await removeCurrentWallet()
     navigation.navigate(ROOT_ROUTES.WALLET_SELECTION)
   } catch (err) {
     setIsRemovingWallet(false)
@@ -111,10 +112,15 @@ const RemoveWalletScreen = ({
 }
 
 export default compose(
-  connect((state: State) => ({
-    translations: getTranslations(state),
-    walletName: walletNameSelector(state),
-  })),
+  connect(
+    (state: State) => ({
+      translations: getTranslations(state),
+      walletName: walletNameSelector(state),
+    }),
+    {
+      removeCurrentWallet,
+    },
+  ),
   withNavigationTitle(({translations}) => translations.title),
   withState('password', 'setPassword', ''),
   withState('isRemovingWallet', 'setIsRemovingWallet', false),
