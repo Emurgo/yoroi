@@ -21,15 +21,12 @@ import {Logger} from '../../utils/logging'
 import {withTranslations, withNavigationTitle} from '../../utils/renderUtils'
 import {formatAda} from '../../utils/format'
 import walletManager from '../../crypto/wallet'
-import {
-  INVALID_AMOUNT_CODES,
-  validateAmount,
-  validateAddressAsync,
-} from '../../utils/validators'
+import {validateAmount, validateAddressAsync} from '../../utils/validators'
 import AmountField from './AmountField'
 import UtxoAutoRefresher from './UtxoAutoRefresher'
 import {InsufficientFunds} from '../../crypto/errors'
 import WarningBanner from './WarningBanner'
+import assert from '../../utils/assert'
 
 import styles from './styles/SendScreen.style'
 
@@ -39,12 +36,8 @@ import type {RawUtxo} from '../../types/HistoryTransaction'
 import type {
   AddressValidationErrors,
   AmountValidationErrors,
+  BalanceValidationErrors,
 } from '../../utils/validators'
-
-type FormValidationErrors = {
-  address: ?AddressValidationErrors,
-  amount: ?AmountValidationErrors,
-}
 
 const getTranslations = (state) => state.trans.Send.Main
 
@@ -60,11 +53,18 @@ const validateFeeAsync = async (utxos, address, amount) => {
     return null
   }
 
+  const addressError = await validateAddressAsync(address)
+  const amountError = validateAmount(amount)
+
+  if (addressError || amountError) {
+    return null
+  }
+
   try {
     await getTransactionData(utxos, address, amount)
   } catch (err) {
     if (err instanceof InsufficientFunds) {
-      return {invalidAmount: INVALID_AMOUNT_CODES.INSUFFICIENT_BALANCE}
+      return {insufficientBalance: true}
     } else {
       // TODO: we should show notification based on error type
       Logger.error('Failed while preparing transaction', err)
@@ -74,41 +74,14 @@ const validateFeeAsync = async (utxos, address, amount) => {
   return null
 }
 
-const shouldValidateFee = (
-  utxos: ?Array<RawUtxo>,
-  addressErrors: ?AddressValidationErrors,
-  amountErrors: ?AmountValidationErrors,
-) =>
-  utxos &&
-  !addressErrors &&
-  (!amountErrors ||
-    amountErrors.invalidAmount === INVALID_AMOUNT_CODES.INSUFFICIENT_BALANCE)
+const hasValidationErrorsAsync = async ({amount, address, utxos}) => {
+  const errors = await Promise.all([
+    validateAmount(amount),
+    validateAddressAsync(address),
+    validateFeeAsync(utxos, address, amount),
+  ])
 
-const clearFeeErrors = (amountErrors) => {
-  if (
-    amountErrors &&
-    amountErrors.invalidAmount === INVALID_AMOUNT_CODES.INSUFFICIENT_BALANCE
-  ) {
-    return null
-  } else {
-    return amountErrors
-  }
-}
-
-const validateAsync = async (utxos, address, amount) => {
-  const addressErrors = await validateAddressAsync(address)
-  const amountErrors = validateAmount(amount)
-  const isFormValid = shouldValidateFee(utxos, addressErrors, amountErrors)
-
-  /* prettier-ignore */
-  const feeErrors = isFormValid
-    ? await validateFeeAsync(utxos, address, amount)
-    : null
-
-  return {
-    address: addressErrors,
-    amount: amountErrors || feeErrors,
-  }
+  return errors.some((e) => !!e)
 }
 
 const FetchingErrorBanner = withTranslations(getTranslations)(
@@ -143,17 +116,18 @@ type Props = {
 type State = {
   address: string,
   amount: string,
-  validationErrors: FormValidationErrors,
+  addressErrors: ?AddressValidationErrors,
+  amountErrors: ?AmountValidationErrors,
+  balanceErrors: ?BalanceValidationErrors,
 }
 
 class SendScreen extends Component<Props, State> {
   state = {
     address: '',
     amount: '',
-    validationErrors: {
-      address: {addressIsRequired: true},
-      amount: {amountIsRequired: true},
-    },
+    addressErrors: {addressIsRequired: true},
+    amountErrors: {amountIsRequired: true},
+    balanceErrors: null,
   }
 
   componentDidMount() {
@@ -163,79 +137,84 @@ class SendScreen extends Component<Props, State> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     const utxos = this.props.utxos
     const {address, amount} = this.state
 
-    if (utxos && address && amount && utxos !== prevProps.utxos) {
-      validateAsync(utxos, address, amount).then(this.setValidationErrors)
+    const prevUtxos = prevProps.utxos
+    const {address: prevAddress, amount: prevAmount} = prevState
+
+    if (amount !== prevAmount) {
+      this.handleValidateAmount(amount)
+    }
+    if (address !== prevAddress) {
+      this.handleValidateAddressAsync(address)
+    }
+    if (
+      amount !== prevAmount ||
+      address !== prevAddress ||
+      utxos !== prevUtxos
+    ) {
+      this.handleValidateFeeAsync({address, amount, utxos})
     }
   }
 
-  setAddress: (string) => void
-  setAddress = (address) => {
-    this.setState({address})
-  }
-
-  setAmount: (string) => void
-  setAmount = (amount) => {
-    this.setState({amount})
-  }
-
-  setValidationErrors: (?FormValidationErrors) => void
-  setValidationErrors = (validationErrors) => {
-    this.setState({validationErrors})
-  }
-
-  handleAddressChange: (string) => Promise<void>
-  handleAddressChange = async (address) => {
-    const {amount, validationErrors} = this.state
-    const utxos = this.props.utxos
-
-    this.setAddress(address)
-
-    const amountErrors = clearFeeErrors(validationErrors.amount)
-    const addressErrors = await validateAddressAsync(address)
-    const amountOrFeeErrors = shouldValidateFee(
-      utxos,
-      addressErrors,
-      validationErrors.amount,
-    )
-      ? await validateFeeAsync(utxos, address, amount)
-      : amountErrors
-
-    this.setValidationErrors({
-      address: addressErrors,
-      amount: amountOrFeeErrors,
-    })
-  }
-
-  handleAmountChange: (string) => Promise<void>
-  handleAmountChange = async (amount) => {
-    const {address, validationErrors} = this.state
-    const utxos = this.props.utxos
-
-    this.setAmount(amount)
-
+  handleValidateAmount = (amount) => {
     const amountErrors = validateAmount(amount)
-    const amountOrFeeErrors = shouldValidateFee(
-      utxos,
-      validationErrors.address,
-      amountErrors,
-    )
-      ? await validateFeeAsync(utxos, address, amount)
-      : amountErrors
 
-    this.setValidationErrors({...validationErrors, amount: amountOrFeeErrors})
+    assert.assert(
+      this.state.amount === amount,
+      'Amount should not have changed synchronously',
+    )
+    this.setState({amountErrors})
   }
+
+  handleValidateAddressAsync = async (address) => {
+    const addressErrors = await validateAddressAsync(address)
+
+    if (this.state.address !== address) {
+      return
+    }
+
+    this.setState({addressErrors})
+  }
+
+  handleValidateFeeAsync = async ({address, amount, utxos}) => {
+    const balanceErrors = await validateFeeAsync(utxos, address, amount)
+
+    if (
+      this.state.address !== address ||
+      this.state.amount !== amount ||
+      this.props.utxos !== utxos
+    ) {
+      return
+    }
+
+    this.setState({balanceErrors})
+  }
+
+  handleAddressChange: (string) => void
+  handleAddressChange = (address) => this.setState({address})
+
+  handleAmountChange: (string) => void
+  handleAmountChange = (amount) => this.setState({amount})
 
   handleConfirm: () => Promise<void>
   handleConfirm = async () => {
     const {navigation, utxos, availableAmount} = this.props
     const {address, amount} = this.state
 
-    const errors = await validateAsync(utxos, address, amount)
-    const isValid = !!errors
+    const hasValidationErrors = await hasValidationErrorsAsync({
+      amount,
+      address,
+      utxos,
+    })
+
+    const isValid =
+      !hasValidationErrors &&
+      this.state.amount === amount &&
+      this.state.address === address &&
+      this.props.utxos === utxos
 
     if (isValid && utxos) {
       const adaAmount = convertToAda(amount)
@@ -252,8 +231,6 @@ class SendScreen extends Component<Props, State> {
         balanceAfterTx,
       })
     }
-
-    this.setValidationErrors(errors)
   }
 
   navigateToQRReader: () => void
@@ -301,14 +278,20 @@ class SendScreen extends Component<Props, State> {
       isOnline,
       hasPendingOutgoingTransaction,
     } = this.props
-    const {address, amount, validationErrors} = this.state
-    const {address: addressErrors, amount: amountErrors} = validationErrors
+    const {
+      address,
+      amount,
+      amountErrors,
+      addressErrors,
+      balanceErrors,
+    } = this.state
 
     const disabled =
       isFetchingBalance ||
       !!lastFetchingError ||
       !!addressErrors ||
       !!amountErrors ||
+      !!balanceErrors ||
       !isOnline ||
       hasPendingOutgoingTransaction
 
@@ -350,11 +333,19 @@ class SendScreen extends Component<Props, State> {
               setAmount={this.handleAmountChange}
             />
             {/* prettier-ignore */ amountErrors &&
-            !!amountErrors.invalidAmount && (
+            amountErrors.invalidAmount && (
               <Text style={styles.error}>
                 {translations
                   .validationErrors
-                  .invalidAmountErrors[amountErrors.invalidAmount]}
+                  .invalidAmount}
+              </Text>
+            )}
+            {/* prettier-ignore */ balanceErrors &&
+            balanceErrors.insufficientBalance && (
+              <Text style={styles.error}>
+                {translations
+                  .validationErrors
+                  .insufficientBalance}
               </Text>
             )}
           </View>

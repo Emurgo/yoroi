@@ -20,15 +20,13 @@ export type AddressValidationErrors = {
   invalidAddress?: boolean,
 }
 
-export const INVALID_AMOUNT_CODES = {
-  INVALID_AMOUNT: 'INVALID_AMOUNT',
-  INSUFFICIENT_BALANCE: 'INSUFFICIENT_BALANCE',
-}
-
-export type AmountValidationCode = $Values<typeof INVALID_AMOUNT_CODES>
 export type AmountValidationErrors = {
   amountIsRequired?: boolean,
-  invalidAmount?: AmountValidationCode,
+  invalidAmount?: boolean,
+}
+
+export type BalanceValidationErrors = {
+  insufficientBalance?: boolean,
 }
 
 export const INVALID_PHRASE_ERROR_CODES = {
@@ -101,7 +99,7 @@ export const validateAmount = (value: string): ?AmountValidationErrors => {
     amount.isLessThan(0) ||
     amount.decimalPlaces() > MAX_DECIMAL_DIGITS
   ) {
-    return {invalidAmount: INVALID_AMOUNT_CODES.INVALID_AMOUNT}
+    return {invalidAmount: true}
   }
 
   return null
