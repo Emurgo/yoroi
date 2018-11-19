@@ -22,7 +22,6 @@ import TxNavigationButtons from './TxNavigationButtons'
 import {updateHistory} from '../../actions/history'
 import {
   onDidMount,
-  RenderCount,
   measureRenderTime,
   requireInitializedWallet,
   withTranslations,
@@ -82,7 +81,6 @@ const TxHistory = ({
   <SafeAreaView style={styles.scrollView}>
     <StatusBar barStyle="light-content" backgroundColor="#254BC9" />
     <View style={styles.container}>
-      <RenderCount />
       <OfflineBanner />
       {isOnline &&
         lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
