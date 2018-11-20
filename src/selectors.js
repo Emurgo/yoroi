@@ -47,19 +47,6 @@ export const externalAddressIndexSelector = createSelector(
 export const isUsedAddressIndexSelector = (state: State) =>
   state.wallet.isUsedAddressIndex
 
-export const amountPendingSelector = createSelector(
-  transactionsInfoSelector,
-  (transactions) => {
-    const pending = ObjectValues(transactions)
-      .filter((tx) => tx.status === TRANSACTION_STATUS.PENDING)
-      .map((tx) => tx.bruttoAmount)
-
-    if (!pending.length) return null
-
-    return pending.reduce((x: BigNumber, y) => x.plus(y), new BigNumber(0))
-  },
-)
-
 const BigNumberSum = (data: Array<BigNumber>): BigNumber =>
   data.reduce((x: BigNumber, y) => x.plus(y), new BigNumber(0))
 

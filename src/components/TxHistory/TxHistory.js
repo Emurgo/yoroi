@@ -9,7 +9,6 @@ import _ from 'lodash'
 
 import {Text, Banner, OfflineBanner} from '../UiKit'
 import {
-  amountPendingSelector,
   transactionsInfoSelector,
   isSynchronizingHistorySelector,
   lastHistorySyncErrorSelector,
@@ -55,10 +54,6 @@ const SyncErrorBanner = ({showRefresh}) => (
   />
 )
 
-const PendingAmount = ({amount}) => (
-  <Banner text={formatAda(amount)} label="Pending amount" />
-)
-
 const AvailableAmount = withTranslations(getTranslations)(
   ({translations, amount}) => (
     <Banner
@@ -84,11 +79,6 @@ const TxHistory = ({
       <OfflineBanner />
       {isOnline &&
         lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
-      {/* TODO(ppershing): What should we do if amountPending is zero?
-      Should we show it? Note that isn't case for intrawallet transactions
-      because amountPending is brutto and thus negative due to fee
-    */}
-      {amountPending && <PendingAmount amount={amountPending} />}
       <AvailableAmount amount={availableAmount} />
       <ScrollView
         refreshControl={
@@ -119,7 +109,6 @@ export default (compose(
   connect(
     (state: State) => ({
       transactionsInfo: transactionsInfoSelector(state),
-      amountPending: amountPendingSelector(state),
       isSyncing: isSynchronizingHistorySelector(state),
       lastSyncError: lastHistorySyncErrorSelector(state),
       isOnline: isOnlineSelector(state),

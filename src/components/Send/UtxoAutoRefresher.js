@@ -1,11 +1,10 @@
 import React from 'react'
 import {NavigationEvents} from 'react-navigation'
-import {BigNumber} from 'bignumber.js'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 
 import {
-  amountPendingSelector,
+  hasPendingOutgoingTransactionSelector,
   isFetchingUtxosSelector,
   isOnlineSelector,
 } from '../../selectors'
@@ -15,7 +14,7 @@ class _UtxoAutoRefresher extends React.Component<{
   isFetching: boolean,
   isOnline: boolean,
   fetchUTXOs: () => any,
-  pendingAmount: ?BigNumber,
+  hasPendingTx: boolean,
 }> {
   componentDidMount = () => {
     this.refetch()
@@ -23,10 +22,11 @@ class _UtxoAutoRefresher extends React.Component<{
 
   componentDidUpdate = (prevProps) => {
     const wentOnline = this.props.isOnline && !prevProps.isOnline
-    const wentFromPending =
-      this.props.pendingAmount == null && prevProps.pendingAmount != null
+    const wentFromPending = prevProps.hasPendingTx && !this.props.hasPendingTx
 
     if (wentOnline || wentFromPending) {
+      // Todo(ppershing): there is a race condition when we do not refetch
+      // because fetching is already in progress for some reason
       this.refetch()
     }
   }
@@ -47,7 +47,7 @@ export default compose(
     (state) => ({
       isFetching: isFetchingUtxosSelector(state),
       isOnline: isOnlineSelector(state),
-      pendingAmount: amountPendingSelector(state),
+      hasPendingTx: hasPendingOutgoingTransactionSelector(state),
     }),
     {
       fetchUTXOs,
