@@ -4,10 +4,12 @@ export const CARDANO_CONFIG = {
   TESTNET: {
     PROTOCOL_MAGIC: 633343913,
     API_ROOT: 'https://iohk-staging.yoroiwallet.com/api',
+    EXPLORER_URL_FOR_TX: (tx: string) => `https://explorer.iohkdev.io/tx/${tx}`,
   },
   MAINNET: {
     PROTOCOL_MAGIC: 764824073,
     API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
+    EXPLORER_URL_FOR_TX: (tx: string) => `https://cardanoexplorer.com/tx/${tx}`,
   },
 }
 

@@ -3,21 +3,22 @@
 import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {View} from 'react-native'
+import {View, Linking} from 'react-native'
 import _ from 'lodash'
+import {withHandlers} from 'recompose'
 
 import {transactionsInfoSelector} from '../../selectors'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {formatAda, formatDateToSeconds} from '../../utils/format'
-import {Text, OfflineBanner} from '../UiKit'
+import {Text, Button, OfflineBanner} from '../UiKit'
 import Screen from '../../components/Screen'
 import AdaIcon from '../../assets/AdaIcon'
+import {CONFIG} from '../../config'
 
 import styles from './styles/TxDetails.style'
 
-import type {SubTranslation} from '../../l10n/typeHelpers'
-import type {NavigationScreenProp, NavigationState} from 'react-navigation'
-import type {TransactionInfo} from '../../types/HistoryTransaction'
+import type {Navigation} from '../../types/navigation'
+import type {ComponentType} from 'react'
 
 const Label = ({children}) => <Text style={styles.label}>{children}</Text>
 
@@ -38,13 +39,14 @@ const AdaAmount = ({amount, direction}) => {
 
 const getTranslations = (state) => state.trans.TxDetails
 
-type Props = {
-  navigation: NavigationScreenProp<NavigationState>,
-  translations: SubTranslation<typeof getTranslations>,
-  transaction: TransactionInfo,
-}
+const Section = ({label, children}) => (
+  <View style={styles.section}>
+    <Label>{label}</Label>
+    {children}
+  </View>
+)
 
-const TxDetails = ({navigation, translations, transaction}: Props) => {
+const TxDetails = ({navigation, translations, transaction, openInExplorer}) => {
   return (
     <View style={styles.root}>
       <OfflineBanner />
@@ -63,36 +65,31 @@ const TxDetails = ({navigation, translations, transaction}: Props) => {
             </Text>
           )}
         </View>
-        <View style={styles.section}>
-          <Label>{translations.fromAddresses}</Label>
 
+        <Section label={translations.transactionId}>
+          <Button onPress={openInExplorer} title={transaction.id} />
+        </Section>
+        <Section label={translations.fromAddresses}>
           {_.uniq(transaction.fromAddresses).map((address) => (
             <Text key={address}>{address}</Text>
           ))}
-        </View>
-        <View style={styles.section}>
-          <Label>{translations.toAddresses}</Label>
-
+        </Section>
+        <Section label={translations.toAddresses}>
           {_.uniq(transaction.toAddresses).map((address) => (
             <Text key={address}>{address}</Text>
           ))}
-        </View>
-        <View style={styles.section}>
-          <Label>{translations.txAssuranceLevel}</Label>
+        </Section>
+        <Section label={translations.txAssuranceLevel}>
           <Text>
             {translations.formatConfirmations(transaction.confirmations)}
           </Text>
-        </View>
-        <View style={styles.section}>
-          <Label>{translations.transactionId}</Label>
-          <Text>{transaction.id}</Text>
-        </View>
+        </Section>
       </Screen>
     </View>
   )
 }
 
-export default compose(
+export default (compose(
   connect((state, {navigation}) => ({
     translations: getTranslations(state),
     transaction: transactionsInfoSelector(state)[navigation.getParam('id')],
@@ -100,4 +97,9 @@ export default compose(
   withNavigationTitle(({transaction}) =>
     formatDateToSeconds(transaction.submittedAt),
   ),
-)(TxDetails)
+  withHandlers({
+    openInExplorer: ({transaction}) => () => {
+      Linking.openURL(CONFIG.CARDANO.EXPLORER_URL_FOR_TX(transaction.id))
+    },
+  }),
+)(TxDetails): ComponentType<{navigation: Navigation}>)
