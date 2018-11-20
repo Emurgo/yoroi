@@ -3,6 +3,7 @@
 export const TX_HISTORY_ROUTES = {
   MAIN: 'tx-history-list',
   TX_DETAIL: 'tx-details',
+  ADDRESS_DETAIL: 'tx-details-address',
 }
 
 export const SEND_ROUTES = {
