@@ -7,10 +7,10 @@ import {View} from 'react-native'
 import {withHandlers} from 'recompose'
 
 import {hasAnyTransaction} from '../../selectors'
-
-import {Button} from '../UiKit'
-import styles from './styles/TxNavigationButtons.style'
 import {WALLET_ROUTES} from '../../RoutesList'
+import {Button} from '../UiKit'
+
+import styles from './styles/TxNavigationButtons.style'
 
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {SubTranslation} from '../../l10n/typeHelpers'
