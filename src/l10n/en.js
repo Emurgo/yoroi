@@ -136,6 +136,9 @@ const l10n = {
     passwordNumber: '1 number',
     continueButton: 'Continue',
   },
+  WalletCredentialsScreen: {
+    title: 'Wallet credentials',
+  },
   ChangeWalletName: {
     title: 'Change wallet name',
     walletName: 'Wallet name',

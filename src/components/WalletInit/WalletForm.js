@@ -1,7 +1,6 @@
 // @flow
 import React from 'react'
 import {View, TextInput} from 'react-native'
-import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withState, withHandlers} from 'recompose'
 import {NavigationEvents} from 'react-navigation'
@@ -11,6 +10,7 @@ import CheckIcon from '../../assets/CheckIcon'
 import {COLORS} from '../../styles/config'
 import {validatePassword} from '../../utils/validators'
 import {CONFIG} from '../../config'
+import {withTranslations} from '../../utils/renderUtils'
 
 import styles from './styles/WalletForm.style'
 
@@ -162,9 +162,7 @@ type ExternalProps = {
 }
 
 export default (compose(
-  connect((state: State) => ({
-    translations: getTranslations(state),
-  })),
+  withTranslations(getTranslations),
   withState(
     'name',
     'setName',
