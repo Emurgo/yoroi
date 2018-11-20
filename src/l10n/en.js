@@ -264,6 +264,8 @@ const l10n = {
   },
   TermsOfServiceScreen: {
     title: 'Terms of Service Agreement',
+    aggreeClause: 'I agree with terms of service',
+    continue: 'ACCEPT',
     content: [...termsOfService],
   },
   WalletSelectionScreen: {

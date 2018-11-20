@@ -4,13 +4,12 @@ import React from 'react'
 import {View} from 'react-native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {withHandlers} from 'recompose'
+import {withHandlers, withProps, withState} from 'recompose'
 
 import assert from '../../../utils/assert'
-import {Text, Button} from '../../UiKit'
+import {Text, Button, Checkbox} from '../../UiKit'
 import Screen from '../../Screen'
-import walletManager from '../../../crypto/wallet'
-import {ROOT_ROUTES} from '../../../RoutesList'
+import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 
 import styles from './styles/RecoveryPhraseConfirmationDialog.style'
 import {COLORS} from '../../../styles/config'
@@ -18,38 +17,60 @@ import {COLORS} from '../../../styles/config'
 import type {State} from '../../../state'
 import type {SubTranslation} from '../../../l10n/typeHelpers'
 
-const handleWalletConfirmation = ({navigation}) => async () => {
-  const mnemonic = navigation.getParam('mnemonic')
+const handleConfirm = ({mnemonic, navigation}) => () => {
   const password = navigation.getParam('password')
   const name = navigation.getParam('name')
+
   assert.assert(!!mnemonic, 'handleWalletConfirmation:: mnemonic')
   assert.assert(!!password, 'handleWalletConfirmation:: password')
   assert.assert(!!name, 'handleWalletConfirmation:: name')
 
-  await walletManager.createWallet(name, mnemonic, password)
-  navigation.navigate(ROOT_ROUTES.WALLET)
+  navigation.navigate(WALLET_INIT_ROUTES.RECOVERY_PHRASE_CONFIRMATION, {
+    mnemonic,
+    password,
+    name,
+  })
 }
 
 const getTranslations = (state: State) =>
   state.trans.RecoveryPhraseConfirmationDialog
 
 type Props = {
-  confirmWalletCreation: () => mixed,
+  handleConfirm: () => mixed,
   translations: SubTranslation<typeof getTranslations>,
+  acceptedKeyStorage: boolean,
+  acceptedNewDeviceRecovery: boolean,
+  setAcceptedKeyStorage: (accepted: boolean) => mixed,
+  setAcceptedNewDeviceRecovery: (accepted: boolean) => mixed,
 }
 
 const RecoveryPhraseConfirmationDialog = ({
-  confirmWalletCreation,
+  handleConfirm,
   translations,
+  acceptedKeyStorage,
+  setAcceptedKeyStorage,
+  acceptedNewDeviceRecovery,
+  setAcceptedNewDeviceRecovery,
 }: Props) => (
   <Screen bgColor={COLORS.TRANSPARENT_BLACK}>
     <View style={styles.dialogBody}>
       <Text>{translations.title}</Text>
-      <Text>{translations.keysStorageCheckbox}</Text>
-      <Text>{translations.newDeviceRecoveryCheckbox}</Text>
+
+      <Checkbox
+        onChange={setAcceptedKeyStorage}
+        checked={acceptedKeyStorage}
+        text={translations.keysStorageCheckbox}
+      />
+
+      <Checkbox
+        onChange={setAcceptedNewDeviceRecovery}
+        checked={acceptedNewDeviceRecovery}
+        text={translations.newDeviceRecoveryCheckbox}
+      />
 
       <Button
-        onPress={confirmWalletCreation}
+        disabled={!acceptedKeyStorage || !acceptedNewDeviceRecovery}
+        onPress={handleConfirm}
         title={translations.confirmationButton}
       />
     </View>
@@ -60,7 +81,16 @@ export default compose(
   connect((state) => ({
     translations: getTranslations(state),
   })),
+  withProps(({navigation}) => {
+    const mnemonic = navigation.getParam('mnemonic')
+    return {
+      mnemonic,
+      words: mnemonic.split(' ').sort(),
+    }
+  }),
+  withState('acceptedKeyStorage', 'setAcceptedKeyStorage', false),
+  withState('acceptedNewDeviceRecovery', 'setAcceptedNewDeviceRecovery', false),
   withHandlers({
-    confirmWalletCreation: handleWalletConfirmation,
+    handleConfirm,
   }),
 )(RecoveryPhraseConfirmationDialog)

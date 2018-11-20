@@ -7,4 +7,7 @@ export default StyleSheet.create({
     flex: 1,
     padding: 16,
   },
+  checkbox: {
+    marginVertical: 15,
+  },
 })
