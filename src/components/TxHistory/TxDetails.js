@@ -48,11 +48,11 @@ const getTranslations = (state) => state.trans.TxDetails
 const AddressEntry = withHandlers({
   onPress: ({address, showModalForAddress}) => () =>
     showModalForAddress(address),
-})(({address, onPress, path, isImportant}) => {
+})(({address, onPress, path, isHighlighted}) => {
   return (
     <TouchableHighlight activeOpacity={0.9} onPress={onPress}>
       {/* eslint-disable-next-line react-native/no-inline-styles */}
-      <Text style={isImportant ? {fontWeight: 'bold'} : {}}>
+      <Text style={isHighlighted ? {fontWeight: 'bold'} : {}}>
         ({path}){address}
       </Text>
     </TouchableHighlight>
@@ -83,29 +83,29 @@ const getShownAddresses = (
     return 'not mine'
   }
 
-  const {isImportantFrom, filterFrom, isImportantTo, filterTo} = {
+  const {isHighlightedFrom, filterFrom, isHighlightedTo, filterTo} = {
     [TRANSACTION_DIRECTION.SENT]: {
-      isImportantFrom: (address) => false,
+      isHighlightedFrom: (address) => false,
       filterFrom: null,
-      isImportantTo: (address) => !isMyAddress(address),
+      isHighlightedTo: (address) => !isMyAddress(address),
       filterTo: null,
     },
     [TRANSACTION_DIRECTION.RECEIVED]: {
-      isImportantFrom: (address) => false,
+      isHighlightedFrom: (address) => false,
       filterFrom: null,
-      isImportantTo: (address) => isMyAddress(address),
+      isHighlightedTo: (address) => isMyAddress(address),
       filterTo: (address) => isMyAddress(address),
     },
     [TRANSACTION_DIRECTION.SELF]: {
-      isImportantFrom: (address) => false,
+      isHighlightedFrom: (address) => false,
       filterFrom: null,
-      isImportantTo: (address) => !isMyChange(address),
+      isHighlightedTo: (address) => !isMyChange(address),
       filterTo: null,
     },
     [TRANSACTION_DIRECTION.MULTI]: {
-      isImportantFrom: (address) => isMyAddress(address),
+      isHighlightedFrom: (address) => isMyAddress(address),
       filterFrom: null,
-      isImportantTo: (address) => isMyAddress(address),
+      isHighlightedTo: (address) => isMyAddress(address),
       filterTo: null,
     },
   }[transaction.direction]
@@ -114,7 +114,7 @@ const getShownAddresses = (
   const fromAddresses = _.uniq(transaction.fromAddresses).map((address) => ({
     address,
     path: getPath(address),
-    isImportant: isImportantFrom(address),
+    isHighlighted: isHighlightedFrom(address),
   }))
   const fromFiltered = fromAddresses.filter(
     ({address}) => (filterFrom ? filterFrom(address) : true),
@@ -124,7 +124,7 @@ const getShownAddresses = (
   const toAddresses = _.uniq(transaction.toAddresses).map((address) => ({
     address,
     path: getPath(address),
-    isImportant: isImportantTo(address),
+    isHighlighted: isHighlightedTo(address),
   }))
   const toFiltered = toAddresses.filter(
     ({address}) => (filterTo ? filterTo(address) : true),
