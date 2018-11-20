@@ -124,6 +124,8 @@ const l10n = {
   },
   CreateWalletScreen: {
     title: 'Create a new wallet',
+  },
+  WalletForm: {
     nameLabel: 'Wallet name',
     passwordLabel: 'Wallet password',
     passwordConfirmationLabel: 'Repeat password',
@@ -132,7 +134,7 @@ const l10n = {
     passwordUpperChar: '1 uppercase letter',
     passwordLowerChar: '1 lowercase letter',
     passwordNumber: '1 number',
-    createButton: 'CREATE PERSONAL WALLET',
+    continueButton: 'Continue',
   },
   ChangeWalletName: {
     title: 'Change wallet name',
