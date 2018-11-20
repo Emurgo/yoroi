@@ -25,11 +25,11 @@ export const formatAdaFractional = (amount: BigNumber) => {
 }
 
 export const formatTimeToSeconds = (ts: string | moment) => {
-  return moment(ts).format('LTS')
+  return moment(ts).format(moment(0)._locale._format.timeToSeconds)
 }
 
 export const formatDateToSeconds = (ts: string | moment) => {
-  return moment(ts).format('Do MMMM YYYY HH:mm:ss')
+  return moment(ts).format(moment(0)._locale._format.dateToSeconds)
 }
 
 export const formatDateRelative = (ts: string | moment) => {
