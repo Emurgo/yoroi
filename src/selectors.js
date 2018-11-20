@@ -34,6 +34,9 @@ export const transactionsInfoSelector: (State) => Dict<
     ),
 )
 
+export const hasAnyTransaction = (state: State): boolean =>
+  !_.isEmpty(state.wallet.transactions)
+
 export const internalAddressIndexSelector = createSelector(
   (state) => state.wallet.internalAddresses,
   (addresses) => _.fromPairs(addresses.map((addr, i) => [addr, i])),

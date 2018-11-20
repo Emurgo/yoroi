@@ -6,9 +6,11 @@ import {connect} from 'react-redux'
 import {View} from 'react-native'
 import {withHandlers} from 'recompose'
 
-import {Button} from '../UiKit'
-import styles from './styles/TxNavigationButtons.style'
+import {hasAnyTransaction} from '../../selectors'
 import {WALLET_ROUTES} from '../../RoutesList'
+import {Button} from '../UiKit'
+
+import styles from './styles/TxNavigationButtons.style'
 
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {SubTranslation} from '../../l10n/typeHelpers'
@@ -20,6 +22,7 @@ type Props = {
   navigateToReceive: () => mixed,
   navigateToSend: () => mixed,
   translations: SubTranslation<typeof getTranslations>,
+  sendDisabled: boolean,
 }
 
 const TxNavigationButtons = ({
@@ -27,10 +30,12 @@ const TxNavigationButtons = ({
   navigateToReceive,
   navigateToSend,
   translations,
+  sendDisabled,
 }: Props) => (
   <View style={styles.container}>
     <Button
       block
+      disabled={sendDisabled}
       onPress={navigateToSend}
       title={translations.sendButton}
       style={styles.firstButton}
@@ -46,6 +51,7 @@ const TxNavigationButtons = ({
 export default compose(
   connect((state) => ({
     translations: getTranslations(state),
+    sendDisabled: !hasAnyTransaction(state),
   })),
   withHandlers({
     navigateToReceive: ({navigation}) => (event) =>
