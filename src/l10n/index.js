@@ -66,17 +66,6 @@ export const LANGUAGES = {
   RUSSIAN: 'ru-RU',
 }
 
-moment.updateLocale('en', {
-  calendar: {
-    sameDay: 'Today',
-    lastDay: 'Yesterday',
-    nextDay: 'L', // we don't really have dates in future
-    lastWeek: 'L',
-    nextWeek: 'L',
-    sameElse: 'L',
-  },
-})
-
 const momentLocales = {
   [LANGUAGES.ENGLISH]: 'en',
   [LANGUAGES.CHINESE_SIMPLIFIED]: 'zh-cn',
@@ -85,6 +74,27 @@ const momentLocales = {
   [LANGUAGES.JAPANESE]: 'ja',
   [LANGUAGES.RUSSIAN]: 'ru',
 }
+
+// Add default custom formatting functions
+Object.values(momentLocales).forEach((name) => {
+  moment.updateLocale(name, {
+    format: {
+      dateToSeconds: 'Do MMM YYYY HH:mm:ss',
+      timeToSeconds: 'LTS',
+    },
+  })
+})
+
+moment.updateLocale('en', {
+  calendar: {
+    sameDay: '[Today]',
+    lastDay: '[Yesterday]',
+    nextDay: '[Tomorrow]',
+    lastWeek: 'L',
+    nextWeek: 'L',
+    sameElse: 'L',
+  },
+})
 
 const defaultNumberFmt = {
   prefix: '',
