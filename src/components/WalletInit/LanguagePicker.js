@@ -111,7 +111,7 @@ export default compose(
       await changeAndSaveLanguage(languageCode)
 
       if (isWalletInitFlow) {
-        navigation.navigate(WALLET_INIT_ROUTES.INIT)
+        navigation.navigate(WALLET_INIT_ROUTES.ACCEPT_TERMS_OF_SERVICE)
       } else {
         navigation.goBack(null)
       }

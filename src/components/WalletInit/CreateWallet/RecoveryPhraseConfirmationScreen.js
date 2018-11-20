@@ -10,7 +10,8 @@ import {withHandlers, withProps, withState} from 'recompose'
 import assert from '../../../utils/assert'
 import {Text, Button} from '../../UiKit'
 import Screen from '../../Screen'
-import {WALLET_INIT_ROUTES} from '../../../RoutesList'
+import {ROOT_ROUTES} from '../../../RoutesList'
+import walletManager from '../../../crypto/wallet'
 import {CONFIG} from '../../../config'
 
 import {COLORS} from '../../../styles/config'
@@ -38,18 +39,16 @@ const handleDeselectWord = ({setPartialPhrase, partialPhrase}) => (wordIdx) => {
 const handleSelectWord = ({setPartialPhrase, partialPhrase}) => (wordIdx) =>
   setPartialPhrase([...partialPhrase, wordIdx])
 
-const handleConfirm = ({mnemonic, navigation}) => () => {
+const handleWalletConfirmation = ({navigation}) => async () => {
+  const mnemonic = navigation.getParam('mnemonic')
   const password = navigation.getParam('password')
   const name = navigation.getParam('name')
   assert.assert(!!mnemonic, 'handleWalletConfirmation:: mnemonic')
   assert.assert(!!password, 'handleWalletConfirmation:: password')
   assert.assert(!!name, 'handleWalletConfirmation:: name')
 
-  navigation.navigate(WALLET_INIT_ROUTES.RECOVERY_PHRASE_CONFIRMATION_DIALOG, {
-    mnemonic,
-    password,
-    name,
-  })
+  await walletManager.createWallet(name, mnemonic, password)
+  navigation.navigate(ROOT_ROUTES.WALLET)
 }
 
 const Word = ({styles, word, handleOnPress, selected}) => (
@@ -73,7 +72,7 @@ type Props = {
   partialPhrase: Array<number>,
   translations: SubTranslation<typeof getTranslations>,
   words: Array<string>,
-  handleConfirm: () => mixed,
+  confirmWalletCreation: () => mixed,
   handleClear: () => mixed,
   selectWord: (number) => mixed,
   deselectWord: (number) => mixed,
@@ -84,7 +83,7 @@ const RecoveryPhraseConfirmationScreen = ({
   partialPhrase,
   translations,
   words,
-  handleConfirm,
+  confirmWalletCreation,
   handleClear,
   selectWord,
   deselectWord,
@@ -134,7 +133,7 @@ const RecoveryPhraseConfirmationScreen = ({
           <Button onPress={handleClear} title={translations.clearButton} />
 
           <Button
-            onPress={handleConfirm}
+            onPress={confirmWalletCreation}
             disabled={!isPhraseComplete || !isPhraseValid}
             title={translations.confirmButton}
           />
@@ -166,13 +165,13 @@ export default compose(
     const mnemonic = navigation.getParam('mnemonic')
     return {
       mnemonic,
-      words: (mnemonic || '').split(' ').sort(),
+      words: mnemonic.split(' ').sort(),
     }
   }),
   withHandlers({
-    handleConfirm,
     handleClear: ({setPartialPhrase}) => () => setPartialPhrase([]),
     selectWord: handleSelectWord,
     deselectWord: handleDeselectWord,
+    confirmWalletCreation: handleWalletConfirmation,
   }),
 )(RecoveryPhraseConfirmationScreen)

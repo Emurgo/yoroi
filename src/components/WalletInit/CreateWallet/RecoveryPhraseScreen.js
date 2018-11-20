@@ -76,11 +76,14 @@ export default (compose(
       assert.assert(!!mnemonic, 'handleWalletConfirmation:: mnemonic')
       assert.assert(!!password, 'handleWalletConfirmation:: password')
       assert.assert(!!name, 'handleWalletConfirmation:: name')
-      navigation.navigate(WALLET_INIT_ROUTES.RECOVERY_PHRASE_CONFIRMATION, {
-        mnemonic,
-        password,
-        name,
-      })
+      navigation.navigate(
+        WALLET_INIT_ROUTES.RECOVERY_PHRASE_CONFIRMATION_DIALOG,
+        {
+          mnemonic,
+          password,
+          name,
+        },
+      )
     },
   }),
 )(RecoveryPhraseScreen): ComponentType<{navigation: Navigation}>)

@@ -21,6 +21,7 @@ export const RECEIVE_ROUTES = {
 export const WALLET_INIT_ROUTES = {
   MAIN: 'language-pick',
   INIT: 'wallet-init-mode',
+  ACCEPT_TERMS_OF_SERVICE: 'accept-terms-of-service',
   CREATE_WALLET: 'create-wallet-form',
   RESTORE_WALLET: 'restore-wallet-form',
   RECOVERY_PHRASE: 'recovery-phrase',
