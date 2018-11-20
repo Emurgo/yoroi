@@ -319,6 +319,26 @@ const l10n = {
       pinCodeLabel: ' ',
     },
   },
+  RemoveWalletScreen: {
+    title: 'Remove wallet',
+    description:
+      'Enter your wallet password if you wish to remove it\
+ from this YOROI application',
+    walletName: 'Wallet name',
+    password: 'Wallet password',
+    remove: 'Remove wallet',
+    ErrorDialogs: {
+      okButton: 'OK',
+      VerificationError: {
+        title: 'Wrong password',
+        text: 'Password you provided is incorrect.',
+      },
+      WalletRemovalError: {
+        title: 'Unknown error',
+        text: 'There was error while removing your wallet.',
+      },
+    },
+  },
 }
 
 export default l10n

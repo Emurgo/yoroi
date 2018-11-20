@@ -582,7 +582,7 @@ class WalletManager {
     return result
   }
 
-  close() {
+  closeWallet() {
     if (!this._wallet) return
     assert.assert(this._closeReject, 'close: should have _closeReject')
     /* :: if (!this._closeReject) throw 'assert' */
@@ -591,6 +591,17 @@ class WalletManager {
     this._closePromise = null
     this._closeReject = null
     this._wallet = null
+    this._id = ''
+  }
+
+  async removeCurrentWallet() {
+    if (!this._wallet) return
+    const id = this._id
+    this.closeWallet()
+    await storage.remove(`/wallet/${id}/data`)
+    await storage.remove(`/wallet/${id}`)
+
+    this._wallets = _.omit(this._wallets, id)
   }
 
   get walletName() {

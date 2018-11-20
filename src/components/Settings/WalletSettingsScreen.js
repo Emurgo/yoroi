@@ -62,7 +62,7 @@ const WalletSettingsScreen = ({
     <SettingsSection>
       <NavigatedSettingsItem
         label={translations.removeWallet}
-        navigateTo={SETTINGS_ROUTES.SUPPORT}
+        navigateTo={SETTINGS_ROUTES.REMOVE_WALLET}
       />
     </SettingsSection>
   </ScrollView>

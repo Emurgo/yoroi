@@ -12,6 +12,7 @@ import ChangeWalletName from './ChangeWalletName'
 import SupportScreen from './SupportScreen'
 import FingerprintLinkScreen from './FingerprintLinkScreen'
 import TermsOfServiceScreen from './TermsOfServiceScreen'
+import RemoveWalletScreen from './RemoveWalletScreen'
 import {SETTINGS_ROUTES} from '../../RoutesList'
 
 const defaultNavigationOptions = {
@@ -52,6 +53,7 @@ const SettingsScreenNavigator = createStackNavigator(
     [SETTINGS_ROUTES.TERMS_OF_USE]: TermsOfServiceScreen,
     [SETTINGS_ROUTES.SUPPORT]: SupportScreen,
     [SETTINGS_ROUTES.FINGERPRINT_LINK]: FingerprintLinkScreen,
+    [SETTINGS_ROUTES.REMOVE_WALLET]: RemoveWalletScreen,
   },
   {
     initialRouteName: SETTINGS_ROUTES.MAIN,

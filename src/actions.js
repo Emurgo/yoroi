@@ -43,7 +43,6 @@ const _updateWallets = (wallets) => ({
 
 const updateWallets = () => (dispatch: Dispatch<any>) => {
   const wallets = walletManager.getWallets()
-
   dispatch(_updateWallets(wallets))
 }
 
@@ -140,4 +139,9 @@ export const changeWalletName = (newName: string) => async (
   dispatch: Dispatch<any>,
 ) => {
   await walletManager.rename(newName)
+}
+
+export const removeCurrentWallet = () => async (dispatch: Dispatch<any>) => {
+  await walletManager.removeCurrentWallet()
+  dispatch(updateWallets())
 }
