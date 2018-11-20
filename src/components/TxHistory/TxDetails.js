@@ -3,19 +3,25 @@
 import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {View, Linking} from 'react-native'
+import {View, Linking, TouchableHighlight} from 'react-native'
 import _ from 'lodash'
 import {withHandlers} from 'recompose'
 
-import {transactionsInfoSelector} from '../../selectors'
+import {
+  transactionsInfoSelector,
+  internalAddressIndexSelector,
+  externalAddressIndexSelector,
+} from '../../selectors'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {formatAda, formatDateToSeconds} from '../../utils/format'
 import {Text, Button, OfflineBanner} from '../UiKit'
 import Screen from '../../components/Screen'
 import AdaIcon from '../../assets/AdaIcon'
 import {CONFIG} from '../../config'
+import {TX_HISTORY_ROUTES} from '../../RoutesList'
 
 import styles from './styles/TxDetails.style'
+import {TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
 
 import type {Navigation} from '../../types/navigation'
 import type {ComponentType} from 'react'
@@ -39,6 +45,20 @@ const AdaAmount = ({amount, direction}) => {
 
 const getTranslations = (state) => state.trans.TxDetails
 
+const AddressEntry = withHandlers({
+  onPress: ({address, showModalForAddress}) => () =>
+    showModalForAddress(address),
+})(({address, onPress, path, isImportant}) => {
+  return (
+    <TouchableHighlight activeOpacity={0.9} onPress={onPress}>
+      {/* eslint-disable-next-line react-native/no-inline-styles */}
+      <Text style={isImportant ? {fontWeight: 'bold'} : {}}>
+        ({path}){address}
+      </Text>
+    </TouchableHighlight>
+  )
+})
+
 const Section = ({label, children}) => (
   <View style={styles.section}>
     <Label>{label}</Label>
@@ -46,7 +66,95 @@ const Section = ({label, children}) => (
   </View>
 )
 
-const TxDetails = ({navigation, translations, transaction, openInExplorer}) => {
+const getShownAddresses = (
+  transaction,
+  internalAddressIndex,
+  externalAddressIndex,
+) => {
+  const isMyReceive = (address) => externalAddressIndex[address] != null
+  const isMyChange = (address) => internalAddressIndex[address] != null
+  const isMyAddress = (address) => isMyReceive(address) || isMyChange(address)
+
+  const getPath = (address) => {
+    if (isMyChange(address)) return '/change'
+    if (isMyReceive(address)) {
+      return `/${externalAddressIndex[address]}`
+    }
+    return 'not mine'
+  }
+
+  const {isImportantFrom, filterFrom, isImportantTo, filterTo} = {
+    [TRANSACTION_DIRECTION.SENT]: {
+      isImportantFrom: (address) => false,
+      filterFrom: null,
+      isImportantTo: (address) => !isMyAddress(address),
+      filterTo: null,
+    },
+    [TRANSACTION_DIRECTION.RECEIVED]: {
+      isImportantFrom: (address) => false,
+      filterFrom: null,
+      isImportantTo: (address) => isMyAddress(address),
+      filterTo: (address) => isMyAddress(address),
+    },
+    [TRANSACTION_DIRECTION.SELF]: {
+      isImportantFrom: (address) => false,
+      filterFrom: null,
+      isImportantTo: (address) => !isMyChange(address),
+      filterTo: null,
+    },
+    [TRANSACTION_DIRECTION.MULTI]: {
+      isImportantFrom: (address) => isMyAddress(address),
+      filterFrom: null,
+      isImportantTo: (address) => isMyAddress(address),
+      filterTo: null,
+    },
+  }[transaction.direction]
+
+  // TODO(ppershing): decide on importance based on Tx direction
+  const fromAddresses = _.uniq(transaction.fromAddresses).map((address) => ({
+    address,
+    path: getPath(address),
+    isImportant: isImportantFrom(address),
+  }))
+  const fromFiltered = fromAddresses.filter(
+    ({address}) => (filterFrom ? filterFrom(address) : true),
+  )
+  const cntOmittedFrom = fromAddresses.length - fromFiltered.length
+
+  const toAddresses = _.uniq(transaction.toAddresses).map((address) => ({
+    address,
+    path: getPath(address),
+    isImportant: isImportantTo(address),
+  }))
+  const toFiltered = toAddresses.filter(
+    ({address}) => (filterTo ? filterTo(address) : true),
+  )
+  const cntOmittedTo = toAddresses.length - toFiltered.length
+
+  return {
+    fromFiltered,
+    cntOmittedFrom,
+    toFiltered,
+    cntOmittedTo,
+  }
+}
+
+const TxDetails = ({
+  navigation,
+  translations,
+  transaction,
+  internalAddressIndex,
+  externalAddressIndex,
+  openInExplorer,
+  showModalForAddress,
+}) => {
+  const {
+    fromFiltered,
+    cntOmittedFrom,
+    toFiltered,
+    cntOmittedTo,
+  } = getShownAddresses(transaction, internalAddressIndex, externalAddressIndex)
+
   return (
     <View style={styles.root}>
       <OfflineBanner />
@@ -65,19 +173,32 @@ const TxDetails = ({navigation, translations, transaction, openInExplorer}) => {
             </Text>
           )}
         </View>
-
         <Section label={translations.transactionId}>
           <Button onPress={openInExplorer} title={transaction.id} />
         </Section>
         <Section label={translations.fromAddresses}>
-          {_.uniq(transaction.fromAddresses).map((address) => (
-            <Text key={address}>{address}</Text>
+          {fromFiltered.map((item, i) => (
+            <AddressEntry
+              key={i}
+              {...item}
+              showModalForAddress={showModalForAddress}
+            />
           ))}
+          {cntOmittedFrom > 0 ? (
+            <Text>{translations.formatOmittedCount(cntOmittedFrom)}</Text>
+          ) : null}
         </Section>
         <Section label={translations.toAddresses}>
-          {_.uniq(transaction.toAddresses).map((address) => (
-            <Text key={address}>{address}</Text>
+          {toFiltered.map((item, i) => (
+            <AddressEntry
+              key={i}
+              {...item}
+              showModalForAddress={showModalForAddress}
+            />
           ))}
+          {cntOmittedTo > 0 ? (
+            <Text>{translations.formatOmittedCount(cntOmittedTo)}</Text>
+          ) : null}
         </Section>
         <Section label={translations.txAssuranceLevel}>
           <Text>
@@ -93,6 +214,8 @@ export default (compose(
   connect((state, {navigation}) => ({
     translations: getTranslations(state),
     transaction: transactionsInfoSelector(state)[navigation.getParam('id')],
+    internalAddressIndex: internalAddressIndexSelector(state),
+    externalAddressIndex: externalAddressIndexSelector(state),
   })),
   withNavigationTitle(({transaction}) =>
     formatDateToSeconds(transaction.submittedAt),
@@ -101,5 +224,7 @@ export default (compose(
     openInExplorer: ({transaction}) => () => {
       Linking.openURL(CONFIG.CARDANO.EXPLORER_URL_FOR_TX(transaction.id))
     },
+    showModalForAddress: ({navigation}) => (address) =>
+      navigation.navigate(TX_HISTORY_ROUTES.ADDRESS_DETAIL, {address}),
   }),
 )(TxDetails): ComponentType<{navigation: Navigation}>)

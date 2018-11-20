@@ -67,6 +67,7 @@ const l10n = {
     txAssuranceLevel: 'Transaction assurance level',
     formatConfirmations: (cnt: number) =>
       `${cnt} ${pluralizeEn(cnt, 'CONFIRMATION', 'CONFIRMATIONS')}`,
+    formatOmittedCount: (cnt: number) => `+ ${cnt} omitted`,
   },
   TxNavigationButtons: {
     sendButton: 'SEND',
