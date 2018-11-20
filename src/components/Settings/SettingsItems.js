@@ -9,12 +9,14 @@ import {Text} from '../UiKit'
 
 import styles from './styles/SettingsItems.style'
 
+const Touchable = (props) => <TouchableOpacity activeOpacity={0.5} {...props} />
+
 const NavigateTo = compose(
   withNavigation,
   withHandlers({
     onPress: ({navigation, to}) => () => navigation.navigate(to),
   }),
-)((props) => <TouchableOpacity activeOpacity={0.5} {...props} />)
+)((props) => <Touchable {...props} />)
 
 type SettingsSectionProps = {
   title?: string,
@@ -54,4 +56,20 @@ export const NavigatedSettingsItem = ({
       <Image source={chevronRight} />
     </SettingsItem>
   </NavigateTo>
+)
+
+type PressableSettingsItemProps = {
+  label: string,
+  onPress: () => any,
+}
+
+export const PressableSettingsItem = ({
+  label,
+  onPress,
+}: PressableSettingsItemProps) => (
+  <Touchable onPress={onPress}>
+    <SettingsItem label={label}>
+      <Image source={chevronRight} />
+    </SettingsItem>
+  </Touchable>
 )

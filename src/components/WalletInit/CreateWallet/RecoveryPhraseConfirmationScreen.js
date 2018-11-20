@@ -8,10 +8,11 @@ import {connect} from 'react-redux'
 import {withHandlers, withProps, withState} from 'recompose'
 
 import assert from '../../../utils/assert'
+import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
 import {Text, Button} from '../../UiKit'
 import Screen from '../../Screen'
 import {ROOT_ROUTES} from '../../../RoutesList'
-import walletManager from '../../../crypto/wallet'
+import {createWallet} from '../../../actions'
 import {CONFIG} from '../../../config'
 
 import {COLORS} from '../../../styles/config'
@@ -39,7 +40,7 @@ const handleDeselectWord = ({setPartialPhrase, partialPhrase}) => (wordIdx) => {
 const handleSelectWord = ({setPartialPhrase, partialPhrase}) => (wordIdx) =>
   setPartialPhrase([...partialPhrase, wordIdx])
 
-const handleWalletConfirmation = ({navigation}) => async () => {
+const handleWalletConfirmation = ({navigation, createWallet}) => async () => {
   const mnemonic = navigation.getParam('mnemonic')
   const password = navigation.getParam('password')
   const name = navigation.getParam('name')
@@ -47,7 +48,7 @@ const handleWalletConfirmation = ({navigation}) => async () => {
   assert.assert(!!password, 'handleWalletConfirmation:: password')
   assert.assert(!!name, 'handleWalletConfirmation:: name')
 
-  await walletManager.createWallet(name, mnemonic, password)
+  await createWallet(name, mnemonic, password)
   navigation.navigate(ROOT_ROUTES.WALLET)
 }
 
@@ -144,9 +145,14 @@ const RecoveryPhraseConfirmationScreen = ({
 }
 
 export default compose(
-  connect((state) => ({
-    translations: getTranslations(state),
-  })),
+  connect(
+    (state) => ({
+      translations: getTranslations(state),
+    }),
+    {
+      createWallet,
+    },
+  ),
   withState(
     'partialPhrase',
     'setPartialPhrase',
@@ -172,6 +178,9 @@ export default compose(
     handleClear: ({setPartialPhrase}) => () => setPartialPhrase([]),
     selectWord: handleSelectWord,
     deselectWord: handleDeselectWord,
-    confirmWalletCreation: handleWalletConfirmation,
+    confirmWalletCreation: ignoreConcurrentAsyncHandler(
+      handleWalletConfirmation,
+      1000,
+    ),
   }),
 )(RecoveryPhraseConfirmationScreen)

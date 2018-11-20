@@ -3,12 +3,14 @@ import React from 'react'
 import {View} from 'react-native'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
+import {connect} from 'react-redux'
 
-import walletManager from '../../../crypto/wallet'
+import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
 import Screen from '../../Screen'
 import {ROOT_ROUTES} from '../../../RoutesList'
 import {withNavigationTitle, withTranslations} from '../../../utils/renderUtils'
 import WalletForm from '../WalletForm'
+import {createWallet} from '../../../actions'
 
 import styles from './styles/WalletCredentialsScreen.style'
 import {COLORS} from '../../../styles/config'
@@ -41,13 +43,20 @@ const WalletCredentialsScreen = ({
 )
 
 export default compose(
+  connect(
+    () => ({}),
+    {createWallet},
+  ),
   withTranslations(getTranslations),
   withNavigationTitle(({translations}) => translations.title),
   withHandlers({
-    navigateToWallet: ({navigation}) => async ({name, password}) => {
-      const phrase = navigation.getParam('phrase')
-      await walletManager.createWallet(name, phrase, password)
-      navigation.navigate(ROOT_ROUTES.WALLET)
-    },
+    navigateToWallet: ignoreConcurrentAsyncHandler(
+      ({navigation, createWallet}) => async ({name, password}) => {
+        const phrase = navigation.getParam('phrase')
+        await createWallet(name, phrase, password)
+        navigation.navigate(ROOT_ROUTES.WALLET)
+      },
+      1000,
+    ),
   }),
 )(WalletCredentialsScreen)

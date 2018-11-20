@@ -1,5 +1,5 @@
 // @flow
-import walletManager from '../crypto/wallet'
+import walletManager, {WalletClosed} from '../crypto/wallet'
 import {Logger} from '../utils/logging'
 
 import {type Dispatch} from 'redux'
@@ -34,10 +34,14 @@ export const updateHistory = () => async (dispatch: Dispatch<any>) => {
     await walletManager.doFullSync()
     dispatch(_setSyncError(null))
   } catch (e) {
-    // TODO(ppershing): should we set error object or just
-    // some message code?
-    Logger.error(e)
-    dispatch(_setSyncError(e.message))
+    if (e instanceof WalletClosed) {
+      // do nothing
+    } else {
+      // TODO(ppershing): should we set error object or just
+      // some message code?
+      Logger.error(e)
+      dispatch(_setSyncError(e.message))
+    }
   } finally {
     dispatch(_endFetch())
   }

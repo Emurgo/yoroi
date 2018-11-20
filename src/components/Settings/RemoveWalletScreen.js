@@ -11,6 +11,7 @@ import {withNavigationTitle} from '../../utils/renderUtils'
 import {ROOT_ROUTES} from '../../RoutesList'
 import {walletNameSelector} from '../../selectors'
 import {removeCurrentWallet} from '../../actions'
+import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 
 import styles from './styles/RemoveWalletScreen.style'
 
@@ -26,20 +27,11 @@ const handleRemoveWallet = ({
   translations,
   navigation,
   password,
-  isRemovingWallet,
-  setIsRemovingWallet,
   removeCurrentWallet,
 }) => async (event) => {
-  if (isRemovingWallet) {
-    return
-  }
-
   const dialogTranslations = translations.ErrorDialogs
 
-  setIsRemovingWallet(true)
-
   if (!verifyPassword(password)) {
-    setIsRemovingWallet(false)
     Alert.alert(
       dialogTranslations.VerificationError.title,
       dialogTranslations.VerificationError.text,
@@ -52,7 +44,6 @@ const handleRemoveWallet = ({
     await removeCurrentWallet()
     navigation.navigate(ROOT_ROUTES.WALLET_SELECTION)
   } catch (err) {
-    setIsRemovingWallet(false)
     Alert.alert(
       dialogTranslations.WalletRemovalError.title,
       dialogTranslations.WalletRemovalError.text,
@@ -61,9 +52,8 @@ const handleRemoveWallet = ({
   }
 }
 
-const handleOnDidBlur = ({setPassword, setIsRemovingWallet}) => () => {
+const handleOnDidBlur = ({setPassword}) => () => {
   setPassword('')
-  setIsRemovingWallet(false)
 }
 
 type Prop = {
@@ -123,9 +113,8 @@ export default compose(
   ),
   withNavigationTitle(({translations}) => translations.title),
   withState('password', 'setPassword', ''),
-  withState('isRemovingWallet', 'setIsRemovingWallet', false),
   withHandlers({
     handleOnDidBlur,
-    handleRemoveWallet,
+    handleRemoveWallet: ignoreConcurrentAsyncHandler(handleRemoveWallet, 1000),
   }),
 )(RemoveWalletScreen)

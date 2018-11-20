@@ -148,6 +148,19 @@ export const changeWalletName = (newName: string) => async (
   await walletManager.rename(newName)
 }
 
+export const createWallet = (
+  name: string,
+  mnemonic: string,
+  password: string,
+) => async (dispatch: Dispatch<any>) => {
+  await walletManager.createWallet(name, mnemonic, password)
+  dispatch(updateWallets())
+}
+
+export const closeWallet = () => async (dispatch: Dispatch<any>) => {
+  await walletManager.closeWallet()
+}
+
 export const removeCurrentWallet = () => async (dispatch: Dispatch<any>) => {
   await walletManager.removeCurrentWallet()
   dispatch(updateWallets())
