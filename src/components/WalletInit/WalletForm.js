@@ -1,91 +1,115 @@
 // @flow
-import React from 'react'
-import {View, TextInput} from 'react-native'
-import {compose} from 'redux'
-import {withState, withHandlers} from 'recompose'
+import React, {PureComponent} from 'react'
+import {View} from 'react-native'
 import {NavigationEvents} from 'react-navigation'
+import _ from 'lodash'
 
-import {Button, Text} from '../UiKit'
+import {Button, ValidatedTextInput} from '../UiKit'
 import CheckIcon from '../../assets/CheckIcon'
 import {COLORS} from '../../styles/config'
 import {validatePassword} from '../../utils/validators'
 import {CONFIG} from '../../config'
 import {withTranslations} from '../../utils/renderUtils'
-
-import styles from './styles/WalletForm.style'
-
-import type {ComponentType} from 'react'
+import PasswordStrengthIndicator from './PasswordStrengthIndicator'
 
 import type {State} from '../../state'
 import type {PasswordValidationErrors} from '../../utils/validators'
+import type {SubTranslation} from '../../l10n/typeHelpers'
 
 type FormValidationErrors = PasswordValidationErrors & {nameReq?: boolean}
 
 const getTranslations = (state: State) => state.trans.WalletForm
 
-const _validateForm = ({
+const validateForm = ({
   name,
   password,
   passwordConfirmation,
-}): FormValidationErrors | null => {
-  const nameErrors = name !== '' ? null : {nameReq: true}
+}): FormValidationErrors => {
+  const nameErrors = name !== '' ? {} : {nameReq: true}
   const passwordErrors = validatePassword(password, passwordConfirmation)
 
-  return nameErrors || passwordErrors
-    ? {...nameErrors, ...passwordErrors}
-    : null
+  return {...nameErrors, ...passwordErrors}
 }
 
-const handleOnWillBlur = ({setPassword, setPasswordConfirmation}) => () => {
-  setPassword('')
-  setPasswordConfirmation('')
+type ComponentState = {
+  name: string,
+  password: string,
+  passwordConfirmation: string,
+  showPasswordsDoNotMatchError: boolean,
 }
 
-type ValidationCheckIconProps = {
-  isSatisfied: boolean,
-  label: string,
-}
+type Props = {|
+  translations: SubTranslation<typeof getTranslations>,
+  onSubmit: ({name: string, password: string}) => mixed,
+|}
 
-const ValidationCheckIcon = ({
-  isSatisfied,
-  label,
-}: ValidationCheckIconProps) => {
-  const iconColor = isSatisfied ? COLORS.LIGHT_POSITIVE_GREEN : COLORS.BLACK
-  return (
-    <View style={styles.passwordRequirement}>
-      <CheckIcon width={16} height={16} color={iconColor} />
-      <Text style={styles.passwordRequirement}>{label}</Text>
-    </View>
-  )
-}
+class WalletForm extends PureComponent<Props, ComponentState> {
+  /* prettier-ignore */
+  state = CONFIG.DEBUG.PREFILL_FORMS
+    ? {
+      name: CONFIG.DEBUG.WALLET_NAME,
+      password: CONFIG.DEBUG.PASSWORD,
+      passwordConfirmation: CONFIG.DEBUG.PASSWORD,
+      showPasswordsDoNotMatchError: false,
+    }
+    : {
+      name: '',
+      password: '',
+      passwordConfirmation: '',
+      showPasswordsDoNotMatchError: false,
+    }
 
-const WalletForm = ({
-  translations,
-  name,
-  password,
-  passwordConfirmation,
-  setName,
-  setPassword,
-  setPasswordConfirmation,
-  handleSubmit,
-  validateForm,
-  handleOnWillBlur,
-}) => {
-  const errors = validateForm()
+  debouncedHandlePasswordMatchValidation = _.debounce(() => {
+    this.setState(({password, passwordConfirmation}) => ({
+      showPasswordsDoNotMatchError:
+        !!passwordConfirmation && password !== passwordConfirmation,
+    }))
+  }, 300)
 
-  return (
-    <View>
-      <NavigationEvents onWillBlur={handleOnWillBlur} />
+  handleOnWillBlur = () =>
+    this.setState({password: '', passwordConfirmation: ''})
+
+  handleSubmit = () => {
+    const {name, password} = this.state
+
+    this.props.onSubmit({name, password})
+  }
+
+  handleSetName = (name) => this.setState({name})
+
+  handleSetPassword = (password) => {
+    this.debouncedHandlePasswordMatchValidation()
+    this.setState({password})
+  }
+
+  handleSetPasswordConfirmation = (passwordConfirmation) => {
+    this.debouncedHandlePasswordMatchValidation()
+    this.setState({passwordConfirmation})
+  }
+
+  render() {
+    const {translations} = this.props
+    const {
+      name,
+      password,
+      passwordConfirmation,
+      showPasswordsDoNotMatchError,
+    } = this.state
+
+    const errors = validateForm({name, password, passwordConfirmation})
+
+    return (
       <View>
-        <Text style={styles.formLabel}>{translations.nameLabel}</Text>
-        <View style={styles.inputRow}>
-          <TextInput
-            style={styles.input}
-            onChangeText={setName}
+        <NavigationEvents onWillBlur={this.handleOnWillBlur} />
+
+        <View>
+          <ValidatedTextInput
+            label={translations.nameLabel}
             value={name}
-            autoFocus
+            onChange={this.handleSetName}
           />
-          {(!errors || !errors.nameReq) && (
+
+          {!errors.nameReq && (
             <CheckIcon
               width={25}
               height={25}
@@ -93,96 +117,46 @@ const WalletForm = ({
             />
           )}
         </View>
-      </View>
-      <View>
-        <Text style={styles.formLabel}>{translations.passwordLabel}</Text>
-        <TextInput
-          secureTextEntry
-          style={styles.input}
-          onChangeText={setPassword}
-          value={password}
+
+        <View>
+          <ValidatedTextInput
+            secureTextEntry
+            label={translations.passwordLabel}
+            value={password}
+            onChange={this.handleSetPassword}
+          />
+        </View>
+
+        <View>
+          <ValidatedTextInput
+            secureTextEntry
+            label={translations.passwordConfirmationLabel}
+            value={passwordConfirmation}
+            onChange={this.handleSetPasswordConfirmation}
+            error={
+              showPasswordsDoNotMatchError && translations.passwordsDoNotMatch
+            }
+          />
+
+          {/* prettier-ignore */ (!errors.passwordConfirmationReq && !errors.matchesConfirmation) && ( // eslint-disable-line
+            <CheckIcon
+              width={25}
+              height={25}
+              color={COLORS.LIGHT_POSITIVE_GREEN}
+            />
+          )}
+        </View>
+
+        <PasswordStrengthIndicator password={password} />
+
+        <Button
+          onPress={this.handleSubmit}
+          disabled={!_.isEmpty(errors)}
+          title={translations.continueButton}
         />
       </View>
-      <View>
-        <Text style={styles.formLabel}>
-          {translations.passwordConfirmationLabel}
-        </Text>
-        <View style={styles.inputRow}>
-          <TextInput
-            secureTextEntry
-            style={styles.input}
-            onChangeText={setPasswordConfirmation}
-            value={passwordConfirmation}
-          />
-          {/* prettier-ignore */ (!errors ||
-          (!errors.passwordConfirmationReq && !errors.matchesConfirmation)) && (
-            <CheckIcon
-              width={25}
-              height={25}
-              color={COLORS.LIGHT_POSITIVE_GREEN}
-            />
-          )}
-        </View>
-      </View>
-      <View>
-        <Text>{translations.passwordRequirementsNote}</Text>
-        <View style={styles.passwordRequirementsRow}>
-          <ValidationCheckIcon
-            isSatisfied={!errors}
-            label={translations.passwordMinLength}
-          />
-          <ValidationCheckIcon
-            isSatisfied={!errors}
-            label={translations.passwordLowerChar}
-          />
-        </View>
-        <View style={styles.passwordRequirementsRow}>
-          <ValidationCheckIcon
-            isSatisfied={!errors}
-            label={translations.passwordUpperChar}
-          />
-          <ValidationCheckIcon
-            isSatisfied={!errors}
-            label={translations.passwordNumber}
-          />
-        </View>
-      </View>
-
-      <Button
-        onPress={handleSubmit}
-        disabled={!!errors}
-        title={translations.continueButton}
-      />
-    </View>
-  )
+    )
+  }
 }
 
-type ExternalProps = {
-  onSubmit: ({name: string, password: string}) => mixed,
-}
-
-export default (compose(
-  withTranslations(getTranslations),
-  withState(
-    'name',
-    'setName',
-    CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.WALLET_NAME : '',
-  ),
-  withState(
-    'password',
-    'setPassword',
-    CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
-  ),
-  withState(
-    'passwordConfirmation',
-    'setPasswordConfirmation',
-    CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
-  ),
-  withHandlers({
-    handleOnWillBlur,
-    handleSubmit: ({onSubmit, name, password}) => () =>
-      onSubmit({name, password}),
-    validateForm: ({name, password, passwordConfirmation}) => () =>
-      _validateForm({name, password, passwordConfirmation}),
-  }),
-)(WalletForm): ComponentType<ExternalProps>)
+export default withTranslations(getTranslations)(WalletForm)

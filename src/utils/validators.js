@@ -2,6 +2,7 @@
 import {BigNumber} from 'bignumber.js'
 import {validateMnemonic, wordlists} from 'bip39'
 import _ from 'lodash'
+import {containsUpperCase, containsLowerCase, isNumeric} from '../utils/string'
 
 import {isValidAddress} from '../crypto/util'
 
@@ -9,6 +10,7 @@ export type PasswordValidationErrors = {
   passwordReq?: boolean,
   passwordConfirmationReq?: boolean,
   matchesConfirmation?: boolean,
+  passwordIsWeak?: boolean,
 }
 
 export type WalletNameValidationErrors = {
@@ -46,11 +48,39 @@ export type RecoveryPhraseErrors = {
   minLength?: boolean,
 }
 
+export type PasswordStrength = {
+  isStrong: boolean,
+  hasSevenCharacters?: boolean,
+  hasUppercase?: boolean,
+  hasLowercase?: boolean,
+  hasDigit?: boolean,
+  hasTwelveCharacters?: boolean,
+}
+
+export const getPasswordStrength = (password: string): PasswordStrength => {
+  if (!password) {
+    return {isStrong: false}
+  }
+
+  if (password.length >= 12) {
+    return {isStrong: true, hasTwelveCharacters: true}
+  }
+
+  const validation = {
+    hasSevenCharacters: password.length >= 7,
+    hasUppercase: containsUpperCase(password),
+    hasLowercase: containsLowerCase(password),
+    hasDigit: password.split('').some(isNumeric),
+  }
+
+  return {...validation, isStrong: Object.values(validation).every((x) => x)}
+}
+
 export const validatePassword = (
   password: string,
   passwordConfirmation: string,
-): PasswordValidationErrors | null => {
-  let validations = null
+): PasswordValidationErrors => {
+  let validations = {}
   if (!password) {
     validations = {...validations, passwordReq: true}
   }
@@ -59,6 +89,9 @@ export const validatePassword = (
   }
   if (password !== passwordConfirmation) {
     validations = {...validations, matchesConfirmation: true}
+  }
+  if (!getPasswordStrength(password).isStrong) {
+    validations = {...validations, passwordIsWeak: true}
   }
 
   return validations
