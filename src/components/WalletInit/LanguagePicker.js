@@ -94,9 +94,10 @@ const LanguagePicker = ({
 
 export default compose(
   connect(
-    (state) => ({
+    (state, {navigation}) => ({
       languageCode: state.languageCode || 'en-US',
       translations: getTranslations(state),
+      isWalletInitFlow: navigation.state.routeName === WALLET_INIT_ROUTES.MAIN,
     }),
     languageActions,
   ),
@@ -105,9 +106,15 @@ export default compose(
       navigation,
       changeAndSaveLanguage,
       languageCode,
+      isWalletInitFlow,
     }) => async (event) => {
       await changeAndSaveLanguage(languageCode)
-      navigation.navigate(WALLET_INIT_ROUTES.INIT)
+
+      if (isWalletInitFlow) {
+        navigation.navigate(WALLET_INIT_ROUTES.INIT)
+      } else {
+        navigation.goBack(null)
+      }
     },
   }),
 )(LanguagePicker)

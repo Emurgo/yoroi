@@ -1,10 +1,14 @@
 // @flow
 
+import React from 'react'
 import {createStackNavigator} from 'react-navigation'
 import SendScreen from './SendScreen'
 import ConfirmScreen from './ConfirmScreen'
 import AddressReaderQR from './AddressReaderQR'
 import SendingModal from './SendingModal'
+
+import HeaderBackButton from '../UiKit/HeaderBackButton'
+import {defaultNavigationOptions} from '../../navigationOptions'
 
 import {SEND_ROUTES} from '../../RoutesList'
 
@@ -24,6 +28,8 @@ const SendScreenNavigator = createStackNavigator(
     initialRouteName: SEND_ROUTES.MAIN,
     navigationOptions: ({navigation}) => ({
       title: navigation.getParam('title'),
+      headerLeft: <HeaderBackButton navigation={navigation} />,
+      ...defaultNavigationOptions,
     }),
   },
 )

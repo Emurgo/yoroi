@@ -4,7 +4,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
-import {Modal, Clipboard, View} from 'react-native'
+import {Modal, Clipboard, View, TouchableOpacity} from 'react-native'
 import QRCode from 'react-native-qrcode'
 
 import {externalAddressIndexSelector} from '../../selectors'
@@ -58,6 +58,12 @@ class AddressModal extends React.Component<Props, State> {
 
     return (
       <Modal visible onRequestClose={goBack}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={goBack}>
+            <Text style={styles.close}>x</Text>
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.root}>
           <View style={styles.container}>
             <QRCode
