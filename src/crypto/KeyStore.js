@@ -29,10 +29,26 @@ class KeyStore {
     const data = await storage.read(`/keyStore/${dataKey}`)
     switch (encryptionMethod) {
       case 'BIOMETRY': {
-        const decryptedKey = await KeyStoreBridge.decryptDataWithFingerprint(
-          data,
-          dataKey,
-        )
+        let decryptedKey = ''
+        // prettier-ignore
+        const isBiometricPromptSupported =
+          await KeyStoreBridge.isBiometricPromptSupported()
+
+        if (isBiometricPromptSupported) {
+          decryptedKey = await KeyStoreBridge.decryptDataWithBiometricPrompt(
+            data,
+            dataKey,
+            'l10n Approve signing tx',
+            'l10n Subtitle',
+            'l10n Description',
+            'l10n Cancel',
+          )
+        } else {
+          decryptedKey = await KeyStoreBridge.decryptDataWithFingerprint(
+            data,
+            dataKey,
+          )
+        }
 
         return decryptedKey
       }
