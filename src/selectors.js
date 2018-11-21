@@ -124,3 +124,6 @@ export const hasPendingOutgoingTransactionSelector = createSelector(
         tx.direction !== TRANSACTION_DIRECTION.RECEIVED,
     ),
 )
+
+export const easyConfirmationSelector = (state: State): boolean =>
+  state.wallet.isEasyConfirmationEnabled

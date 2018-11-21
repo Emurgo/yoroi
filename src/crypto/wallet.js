@@ -7,6 +7,7 @@ import uuid from 'uuid'
 import ExtendableError from 'es6-error'
 
 import storage from '../utils/storage'
+import KeyStore from './KeyStore'
 import {AddressChain, AddressGenerator} from './chain'
 import * as util from './util'
 import api from '../api'
@@ -27,12 +28,18 @@ import type {
 } from '../types/HistoryTransaction'
 import type {Mutex} from '../utils/promise'
 
+export type EncryptionMethod = 'BIOMETRY' | 'SYSTEM_PIN' | 'MASTER_PASSWORD'
+
 type WalletState = {|
   lastGeneratedAddressIndex: number,
 |}
 
 export class Wallet {
-  _encryptedMasterKey: any = null
+  // $FlowFixMe null
+  _id: string = null
+
+  _isEasyConfirmationEnabled: boolean = false
+
   // $FlowFixMe null
   _internalChain: AddressChain = null
   // $FlowFixMe null
@@ -67,6 +74,29 @@ export class Wallet {
     this.notify()
   }
 
+  async encryptAndSaveMasterKey(
+    encryptionMethod: EncryptionMethod,
+    masterKey: string,
+    password?: string,
+  ) {
+    await KeyStore.storeData(this._id, encryptionMethod, masterKey, password)
+  }
+
+  async enableEasyConfirmation(masterPassword: string) {
+    const decryptedMasterKey = await KeyStore.getData(
+      this._id,
+      'MASTER_PASSWORD',
+      '',
+      masterPassword,
+    )
+
+    await this.encryptAndSaveMasterKey('BIOMETRY', decryptedMasterKey)
+    await this.encryptAndSaveMasterKey('SYSTEM_PIN', decryptedMasterKey)
+
+    // $FlowFixMe
+    this._isEasyConfirmationEnabled = true
+  }
+
   // needs to be bound
   notify = () => {
     this._subscriptions.forEach((handler) => handler(this))
@@ -92,10 +122,12 @@ export class Wallet {
 
   async _create(mnemonic: string, newPassword: string) {
     Logger.info('create wallet')
+    this._id = uuid.v4()
     assert.assert(!this._isInitialized, 'createWallet: !isInitialized')
     const masterKey = await util.getMasterKeyFromMnemonic(mnemonic)
     const account = await util.getAccountFromMasterKey(masterKey)
-    this._encryptedMasterKey = await util.encryptMasterKey(
+    await this.encryptAndSaveMasterKey(
+      'MASTER_PASSWORD',
       masterKey,
       newPassword,
     )
@@ -118,6 +150,7 @@ export class Wallet {
     this.notify()
 
     this._isInitialized = true
+    return this._id
   }
 
   _restore(data) {
@@ -129,7 +162,7 @@ export class Wallet {
     this._internalChain = AddressChain.fromJSON(data.internalChain)
     this._externalChain = AddressChain.fromJSON(data.externalChain)
     this._transactionCache = TransactionCache.fromJSON(data.transactionCache)
-    this._encryptedMasterKey = data.encryptedMasterKey
+    this._isEasyConfirmationEnabled = data.isEasyConfirmationEnabled
 
     // subscriptions
     this._setupSubscriptions()
@@ -321,16 +354,20 @@ export class Wallet {
     }
   }
 
-  async submitTransaction(
+  async signTx(
     transaction: PreparedTransactionData,
-    password: string,
+    encryptionMethod: util.EncryptionMethod,
+    password?: string,
   ) {
     const {inputs, outputs, changeAddress, fee} = transaction
 
-    const decryptedMasterKey = await util.decryptMasterKey(
-      this._encryptedMasterKey,
+    const decryptedMasterKey = await KeyStore.getData(
+      this._id,
+      encryptionMethod,
+      'l10n Authorize Tx sign',
       password,
     )
+
     const signedTxData = await util.signTransaction(
       await util.getWalletFromMasterKey(decryptedMasterKey),
       inputs,
@@ -340,9 +377,10 @@ export class Wallet {
 
     assert.assert(fee.eq(signedTxData.fee), 'Transaction fee does not match')
 
-    const signedTx = Buffer.from(signedTxData.cbor_encoded_tx, 'hex').toString(
-      'base64',
-    )
+    return Buffer.from(signedTxData.cbor_encoded_tx, 'hex').toString('base64')
+  }
+
+  async submitTransaction(signedTx: string) {
     const response = await api.submitTransaction(signedTx)
     Logger.info(response)
     return response
@@ -354,8 +392,7 @@ export class Wallet {
       internalChain: this._internalChain.toJSON(),
       externalChain: this._externalChain.toJSON(),
       transactionCache: this._transactionCache.toJSON(),
-      // TODO(ppershing): move this to keystore
-      encryptedMasterKey: this._encryptedMasterKey,
+      isEasyConfirmationEnabled: this._isEasyConfirmationEnabled,
     }
   }
 }
@@ -455,6 +492,11 @@ class WalletManager {
     return this._wallet.externalAddresses
   }
 
+  get isEasyConfirmationEnabled() {
+    if (!this._wallet) return {}
+    return this._wallet._isEasyConfirmationEnabled
+  }
+
   get confirmationCounts() {
     if (!this._wallet) return {}
     return this._wallet.confirmationCounts
@@ -511,13 +553,21 @@ class WalletManager {
     )
   }
 
-  async submitTransaction(
+  async signTx(
     transactionData: PreparedTransactionData,
+    encryptionMethod: util.EncryptionMethod,
     password: string,
   ) {
     if (!this._wallet) throw new WalletClosed()
     return await this.abortWhenWalletCloses(
-      this._wallet.submitTransaction(transactionData, password),
+      this._wallet.signTx(transactionData, encryptionMethod, password),
+    )
+  }
+
+  async submitTransaction(signedTx: string) {
+    if (!this._wallet) throw new WalletClosed()
+    return await this.abortWhenWalletCloses(
+      this._wallet.submitTransaction(signedTx),
     )
   }
 
@@ -526,10 +576,9 @@ class WalletManager {
     mnemonic: string,
     password: string,
   ): Promise<Wallet> {
-    const id = uuid.v4()
     // Ignore id & name for now
     const wallet = new Wallet()
-    await wallet._create(mnemonic, password)
+    const id = await wallet._create(mnemonic, password)
 
     this._id = id
     this._wallets = {
@@ -556,6 +605,7 @@ class WalletManager {
     if (!data) throw new Error()
 
     wallet._restore(data)
+    wallet._id = id
     this._wallet = wallet
     this._id = id
     wallet.subscribe(this._notify)
@@ -580,6 +630,37 @@ class WalletManager {
       keys.map((key) => storage.read(`/wallet/${key}`)),
     )
     return result
+  }
+
+  async deleteEncryptedKey(encryptionMethod: EncryptionMethod) {
+    if (!this._wallet) {
+      throw new Error('Empty wallet')
+    }
+
+    await KeyStore.deleteKey(this._id, encryptionMethod)
+  }
+
+  async disableEasyConfirmation() {
+    if (!this._wallet) {
+      throw new Error('Empty wallet')
+    }
+
+    // $FlowFixMe
+    await this.deleteEncryptedKey('BIOMETRY')
+    // $FlowFixMe
+    await this.deleteEncryptedKey('SYSTEM_PIN')
+
+    // $FlowFixMe
+    this._wallet._isEasyConfirmationEnabled = false
+  }
+
+  async enableEasyConfirmation(masterPassword: string) {
+    if (!this._wallet) {
+      throw new Error('Empty wallet')
+    }
+
+    // $FlowFixMe
+    await this._wallet.enableEasyConfirmation(masterPassword)
   }
 
   closeWallet() {
