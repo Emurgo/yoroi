@@ -67,4 +67,5 @@ export const CONFIG = {
     DISCOVERY_BLOCK_SIZE: 50, // should be less than API limitations
     MAX_GENERATED_UNUSED: 20, // must be <= gap size
   },
+  PIN_LENGTH: 6,
 }

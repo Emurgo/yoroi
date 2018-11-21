@@ -22,6 +22,7 @@ export const RECEIVE_ROUTES = {
 export const FIRST_RUN_ROUTES = {
   LANGUAGE: 'language-pick',
   ACCEPT_TERMS_OF_SERVICE: 'accept-terms-of-service',
+  CUSTOM_PIN: 'custom-pin',
 }
 
 export const WALLET_INIT_ROUTES = {
