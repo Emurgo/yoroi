@@ -19,10 +19,13 @@ export const RECEIVE_ROUTES = {
   ADDRESS_MODAL: 'address-modal',
 }
 
-export const WALLET_INIT_ROUTES = {
-  MAIN: 'language-pick',
-  INIT: 'wallet-init-mode',
+export const FIRST_RUN_ROUTES = {
+  LANGUAGE: 'language-pick',
   ACCEPT_TERMS_OF_SERVICE: 'accept-terms-of-service',
+}
+
+export const WALLET_INIT_ROUTES = {
+  MAIN: 'choose-create-restore',
   CREATE_WALLET: 'create-wallet-form',
   RESTORE_WALLET: 'restore-wallet-form',
   RECOVERY_PHRASE: 'recovery-phrase',
@@ -54,7 +57,8 @@ export const ROOT_ROUTES = {
   SPLASH: 'splash',
   INDEX: 'screens-index',
   LOGIN: 'login',
-  INIT: WALLET_INIT_ROUTES.MAIN,
-  WALLET: 'app-root',
+  FIRST_RUN: 'first-run',
+  NEW_WALLET: 'new-wallet',
   WALLET_SELECTION: 'wallet-selection',
+  WALLET: 'app-root',
 }

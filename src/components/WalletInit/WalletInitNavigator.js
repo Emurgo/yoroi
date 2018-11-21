@@ -2,7 +2,6 @@
 import React from 'react'
 import {createStackNavigator} from 'react-navigation'
 
-import LanguagePickerScreen from './LanguagePickerScreen'
 import WalletInitScreen from './WalletInitScreen'
 import CreateWalletScreen from './CreateWallet/CreateWalletScreen'
 import RestoreWalletScreen from './RestoreWallet/RestoreWalletScreen'
@@ -17,23 +16,15 @@ import RecoveryPhraseConfirmationScreen from './CreateWallet/RecoveryPhraseConfi
 import RecoveryPhraseConfirmationDialog from './CreateWallet/RecoveryPhraseConfirmationDialog'
 import WalletCredentialsScreen from './RestoreWallet/WalletCredentialsScreen'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
-import AcceptTermsOfServiceScreen from './AcceptTermsOfServiceScreen'
 
 const WalletInitNavigator = createStackNavigator(
   {
     [WALLET_INIT_ROUTES.MAIN]: {
-      screen: LanguagePickerScreen,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    [WALLET_INIT_ROUTES.INIT]: {
       screen: WalletInitScreen,
       navigationOptions: {
         header: null,
       },
     },
-    [WALLET_INIT_ROUTES.ACCEPT_TERMS_OF_SERVICE]: AcceptTermsOfServiceScreen,
     [WALLET_INIT_ROUTES.CREATE_WALLET]: CreateWalletScreen,
     [WALLET_INIT_ROUTES.RESTORE_WALLET]: RestoreWalletScreen,
     [WALLET_INIT_ROUTES.RECOVERY_PHRASE]: RecoveryPhraseScreen,

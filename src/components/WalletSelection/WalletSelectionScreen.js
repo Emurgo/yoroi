@@ -11,7 +11,7 @@ import walletManager from '../../crypto/wallet'
 import WalletListItem from './WalletListItem'
 import Screen from '../Screen'
 import {Button} from '../UiKit'
-import {WALLET_INIT_ROUTES, ROOT_ROUTES} from '../../RoutesList'
+import {ROOT_ROUTES} from '../../RoutesList'
 import {COLORS} from '../../styles/config'
 import styles from './styles/WalletSelectionScreen.style'
 
@@ -69,7 +69,7 @@ export default (compose(
   })),
   withHandlers({
     navigateInitWallet: ({navigation}) => (event) =>
-      navigation.navigate(WALLET_INIT_ROUTES.INIT),
+      navigation.navigate(ROOT_ROUTES.NEW_WALLET),
     openWallet: ({navigation}) => async (wallet) => {
       await walletManager.openWallet(wallet.id)
       navigation.navigate(ROOT_ROUTES.WALLET)

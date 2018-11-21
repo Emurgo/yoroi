@@ -4,10 +4,10 @@ import React from 'react'
 import {compose} from 'redux'
 import {Alert, View} from 'react-native'
 
-import PinInput from '../Security/PinInput'
+import PinInput from '../Common/PinInput'
 import {withTranslations} from '../../utils/renderUtils'
 
-import styles from './styles/LoginScreen.style'
+import styles from './styles/PinInputScreen.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 import type {ComponentType} from 'react'
@@ -20,7 +20,7 @@ type Props = {
   translations: SubTranslation<typeof getTranslations>,
 }
 
-const ReceiveScreen = ({translations}: Props) => (
+const PinInputScreen = ({translations}: Props) => (
   <View style={styles.root}>
     <PinInput
       pinMaxLength={6}
@@ -35,5 +35,5 @@ const ReceiveScreen = ({translations}: Props) => (
 )
 
 export default (compose(withTranslations(getTranslations))(
-  ReceiveScreen,
+  PinInputScreen,
 ): ComponentType<ExportedProps>)

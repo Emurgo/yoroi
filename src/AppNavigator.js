@@ -4,9 +4,11 @@ import WalletInitNavigator from './components/WalletInit/WalletInitNavigator'
 import TxHistoryNavigator from './components/TxHistory/TxHistoryNavigator'
 import SendScreenNavigator from './components/Send/SendScreenNavigator'
 import ReceiveScreenNavigator from './components/Receive/ReceiveScreenNavigator'
+import FirstRunNavigator from './components/FirstRun/FirstRunNavigator'
+
 import IndexScreen from './components/IndexScreen'
 import SplashScreen from './components/SplashScreen'
-import LoginScreen from './components/Login/LoginScreen'
+import AppStartScreen from './components/Login/AppStartScreen'
 // eslint-disable-next-line max-len
 import WalletSelectionScreen from './components/WalletSelection/WalletSelectionScreen'
 import {WALLET_ROUTES, ROOT_ROUTES} from './RoutesList'
@@ -30,11 +32,12 @@ const WalletNavigator = createStackNavigator(
 const AppNavigator = createSwitchNavigator(
   {
     [ROOT_ROUTES.SPLASH]: SplashScreen,
-    [ROOT_ROUTES.LOGIN]: LoginScreen,
-    [ROOT_ROUTES.WALLET]: WalletNavigator,
-    [ROOT_ROUTES.INIT]: WalletInitNavigator,
     [ROOT_ROUTES.INDEX]: IndexScreen,
+    [ROOT_ROUTES.FIRST_RUN]: FirstRunNavigator,
+    [ROOT_ROUTES.NEW_WALLET]: WalletInitNavigator,
+    [ROOT_ROUTES.LOGIN]: AppStartScreen,
     [ROOT_ROUTES.WALLET_SELECTION]: WalletSelectionScreen,
+    [ROOT_ROUTES.WALLET]: WalletNavigator,
   },
   {
     initialRouteName: ROOT_ROUTES.SPLASH,
