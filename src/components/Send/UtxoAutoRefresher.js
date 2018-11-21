@@ -16,12 +16,14 @@ class _UtxoAutoRefresher extends React.Component<{
   fetchUTXOs: () => any,
   hasPendingTx: boolean,
 }> {
+  _firstFocus = true
+
   componentDidMount = () => {
     this.refetch()
   }
 
   componentDidUpdate = (prevProps) => {
-    const wentOnline = this.props.isOnline && !prevProps.isOnline
+    const wentOnline = !prevProps.isOnline && this.props.isOnline
     const wentFromPending = prevProps.hasPendingTx && !this.props.hasPendingTx
 
     if (wentOnline || wentFromPending) {
@@ -36,6 +38,13 @@ class _UtxoAutoRefresher extends React.Component<{
   }
 
   handleDidFocus = () => {
+    if (this._firstFocus) {
+      this._firstFocus = true
+      // skip first focus to avoid
+      // didMount -> refetch -> done -> didFocus -> refetch
+      // blinking
+      return
+    }
     this.refetch()
   }
 
