@@ -63,7 +63,7 @@ export const navigateFromSplash = () => (
   const doOnboarding = !state.languageCode
 
   if (doOnboarding) {
-    NavigationService.navigate(ROOT_ROUTES.INIT)
+    NavigationService.navigate(ROOT_ROUTES.FIRST_RUN)
   } else {
     NavigationService.navigate(ROOT_ROUTES.INDEX)
   }

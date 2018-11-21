@@ -25,6 +25,9 @@ const l10n = {
     },
     currentLanguageName: 'English',
   },
+  AppStartScreen: {
+    loginButton: 'Login',
+  },
   LoginScreen: {
     title: 'Enter PIN',
   },

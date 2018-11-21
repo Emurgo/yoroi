@@ -6,7 +6,7 @@ import {compose} from 'redux'
 import {SafeAreaView} from 'react-navigation'
 import {ScrollView} from 'react-native'
 
-import TermsOfService from '../WalletInit/TermsOfService'
+import TermsOfService from '../Common/TermsOfService'
 import {withNavigationTitle} from '../../utils/renderUtils'
 
 import styles from './styles/TermsOfServiceScreen.styles'

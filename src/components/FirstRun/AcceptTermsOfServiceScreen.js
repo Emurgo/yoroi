@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-navigation'
 import {withState, withHandlers} from 'recompose'
 import {ScrollView} from 'react-native'
 
-import TermsOfService from './TermsOfService'
+import TermsOfService from '../Common/TermsOfService'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {Checkbox, Button} from '../UiKit'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
@@ -57,7 +57,7 @@ export default compose(
   withState('acceptedTos', 'setAcceptedTos', false),
   withHandlers({
     handleAccepted: ({navigation}) => () =>
-      navigation.navigate(WALLET_INIT_ROUTES.INIT),
+      navigation.navigate(WALLET_INIT_ROUTES.MAIN),
   }),
   withNavigationTitle(({translations}) => translations.title),
 )(AcceptTermsOfServiceScreen)

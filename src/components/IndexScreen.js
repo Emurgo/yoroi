@@ -9,17 +9,14 @@ import {
 } from 'react-native'
 
 import {Text, Button} from './UiKit'
-import {WALLET_ROUTES, ROOT_ROUTES, WALLET_INIT_ROUTES} from '../RoutesList'
+import {ROOT_ROUTES} from '../RoutesList'
 import storage from '../utils/storage'
 
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 
 const routes = [
-  {label: 'Language Picker', path: ROOT_ROUTES.INIT},
-  {label: 'Create/Restore switch', path: WALLET_INIT_ROUTES.INIT},
-  {label: 'Wallet list', path: ROOT_ROUTES.WALLET_SELECTION},
-  {label: 'Login', path: ROOT_ROUTES.LOGIN},
-  {label: 'Settings', path: WALLET_ROUTES.SETTINGS},
+  {label: 'Skip to wallet list', path: ROOT_ROUTES.WALLET_SELECTION},
+  {label: 'Default', path: ROOT_ROUTES.LOGIN},
 ]
 
 const styles = StyleSheet.create({
