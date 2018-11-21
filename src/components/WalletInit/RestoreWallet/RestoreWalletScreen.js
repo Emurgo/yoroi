@@ -7,8 +7,7 @@ import {withHandlers, withState} from 'recompose'
 
 import {Text, Button} from '../../UiKit'
 import Screen from '../../Screen'
-import {ROOT_ROUTES} from '../../../RoutesList'
-import walletManager from '../../../crypto/wallet'
+import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {CONFIG} from '../../../config'
 import {validateRecoveryPhrase} from '../../../utils/validators'
 import {withNavigationTitle, withTranslations} from '../../../utils/renderUtils'
@@ -35,7 +34,7 @@ const _translateInvalidPhraseError = (
 }
 
 const RestoreWalletScreen = ({
-  navigateToWallet,
+  navigateToWalletCredentials,
   translations,
   phrase,
   setPhrase,
@@ -63,7 +62,7 @@ const RestoreWalletScreen = ({
               </Text>))}
         </View>
         <Button
-          onPress={navigateToWallet}
+          onPress={navigateToWalletCredentials}
           title={translations.restoreButton}
           disabled={!!errors}
         />
@@ -81,12 +80,8 @@ export default (compose(
     CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.MNEMONIC1 : '',
   ),
   withHandlers({
-    navigateToWallet: ({navigation, phrase}) => async (event) => {
-      // TODO(ppershing): pass wallet name and password here
-      const walletName = 'Recovered wallet'
-      const spendingPassword = CONFIG.DEBUG.PASSWORD
-      await walletManager.createWallet(walletName, phrase, spendingPassword)
-      navigation.navigate(ROOT_ROUTES.WALLET)
+    navigateToWalletCredentials: ({navigation, phrase}) => (event) => {
+      navigation.navigate(WALLET_INIT_ROUTES.WALLET_CREDENTIALS, {phrase})
     },
     validatePhrase: ({phrase}) => () => validateRecoveryPhrase(phrase),
     translateInvalidPhraseError: ({translations}) => (error) =>

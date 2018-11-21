@@ -15,6 +15,7 @@ import RecoveryPhraseExplanationDialog from './CreateWallet/RecoveryPhraseExplan
 import RecoveryPhraseConfirmationScreen from './CreateWallet/RecoveryPhraseConfirmationScreen'
 // eslint-disable-next-line max-len
 import RecoveryPhraseConfirmationDialog from './CreateWallet/RecoveryPhraseConfirmationDialog'
+import WalletCredentialsScreen from './RestoreWallet/WalletCredentialsScreen'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import AcceptTermsOfServiceScreen from './AcceptTermsOfServiceScreen'
 
@@ -42,6 +43,7 @@ const WalletInitNavigator = createStackNavigator(
     [WALLET_INIT_ROUTES.RECOVERY_PHRASE_CONFIRMATION_DIALOG]: RecoveryPhraseConfirmationDialog,
     // eslint-disable-next-line max-len
     [WALLET_INIT_ROUTES.RECOVERY_PHRASE_CONFIRMATION]: RecoveryPhraseConfirmationScreen,
+    [WALLET_INIT_ROUTES.WALLET_CREDENTIALS]: WalletCredentialsScreen,
   },
   {
     initialRouteName: WALLET_INIT_ROUTES.MAIN,
