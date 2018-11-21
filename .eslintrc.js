@@ -35,6 +35,11 @@ module.exports = {
     'react-native/split-platform-components': 0,
     'react-native/no-inline-styles': 2,
     'no-multiple-empty-lines': ['warn', {max: 2, maxEOF: 0}],
+    'react/sort-comp': [
+      2,
+      {
+        order: ['instance-variables', 'lifecycle', 'everything-else', 'render'],
+      },
     ],
   },
   globals: {
