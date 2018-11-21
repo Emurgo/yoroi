@@ -139,7 +139,6 @@ android {
 dependencies {
     implementation project(':react-native-cardano')
     implementation project(':react-native-camera')
-    implementation project(':react-native-touch-id')
     implementation project(':react-native-randombytes')
     implementation project(':react-native-fs')
     implementation project(':react-native-linear-gradient')

@@ -13,23 +13,23 @@ import {setSystemAuth} from '../../actions'
 import {SETTINGS_ROUTES} from '../../RoutesList'
 import {enrolledFingerprintsSelector} from '../../selectors'
 
-import styles from './styles/FingerprintLinkScreen.style'
+import styles from './styles/BiometricsLinkScreen.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslations = (state) => state.trans.FingerprintLinkScreen
+const getTranslations = (state) => state.trans.BiometricsLinkScreen
 
 type Props = {
   translations: SubTranslation<typeof getTranslations>,
   hasEnrolledFingerprints: boolean,
-  linkFingerprintSignIn: () => mixed,
+  linkBiometricsSignIn: () => mixed,
   cancelLinking: () => mixed,
 }
 
-const FingerprintLinkScreen = ({
+const BiometricsLinkScreen = ({
   translations,
   hasEnrolledFingerprints,
-  linkFingerprintSignIn,
+  linkBiometricsSignIn,
   cancelLinking,
 }: Props) => (
   <Screen scroll>
@@ -41,7 +41,7 @@ const FingerprintLinkScreen = ({
       <Button title={translations.notNowButton} onPress={cancelLinking} />
       <Button
         title={translations.linkButton}
-        onPress={linkFingerprintSignIn}
+        onPress={linkBiometricsSignIn}
         disabled={!hasEnrolledFingerprints}
       />
     </View>
@@ -57,11 +57,11 @@ export default compose(
     {setSystemAuth},
   ),
   withHandlers({
-    linkFingerprintSignIn: ({navigation, setSystemAuth}) => () => {
+    linkBiometricsSignIn: ({navigation, setSystemAuth}) => () => {
       setSystemAuth(true)
       navigation.navigate(SETTINGS_ROUTES.MAIN)
     },
     cancelLinking: ({navigation}) => () =>
       navigation.navigate(SETTINGS_ROUTES.MAIN),
   }),
-)(FingerprintLinkScreen)
+)(BiometricsLinkScreen)

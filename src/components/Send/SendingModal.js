@@ -32,8 +32,10 @@ class SendingModal extends React.Component<*> {
   }
 
   async submitTransaction(navigation, translations) {
-    const signedTx = navigation.getParam('signedTx')
+    const decryptedKey = navigation.getParam('decryptedKey')
+    const transactionData = navigation.getParam('transactionData')
     try {
+      const signedTx = await walletManager.signTx(transactionData, decryptedKey)
       await walletManager.submitTransaction(signedTx)
       navigation.navigate(WALLET_ROUTES.TX_HISTORY)
     } catch (e) {

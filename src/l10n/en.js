@@ -258,7 +258,7 @@ const l10n = {
     privacy: 'Privacy',
     changePin: 'Change PIN',
     changePassword: 'Change password',
-    fingerprintSignIn: 'Sign in with your fingerprint',
+    biometricsSignIn: 'Sign in with your biometrics',
     easyConfirmation: 'Easy transaction confirmation',
     downloadLogs: 'Download logs',
     downloadLogsText:
@@ -330,18 +330,18 @@ your wallets first',
       receiver: 'Receiver',
     },
   },
-  FingerprintLinkScreen: {
+  BiometricsLinkScreen: {
     enableFingerprintsMessage:
       'Enable use of fingerprints in device settings first!',
     notNowButton: 'Not now',
     linkButton: 'Link',
   },
-  BiometryAuth: {
+  BiometricsAuth: {
     errorDialogTitle: 'Error',
     NotSupportedErrors: {
-      deviceNotSupported: 'Your device does not support biometry!',
-      biometryOrPinNotSet: 'Go to system setttings and rise your security',
-      pinSetButBiometryNot: 'Go to system setttings and rise your security',
+      deviceNotSupported: 'Your device does not support biometrics!',
+      biometricsOrPinNotSet: 'Go to system setttings and rise your security',
+      pinSetButBiometricsNot: 'Go to system setttings and rise your security',
       notSupported: 'Not supported error',
     },
     AuthenticateErrors: {

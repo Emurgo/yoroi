@@ -8,6 +8,7 @@ import {connect} from 'react-redux'
 
 import languageActions from '../../actions/language'
 import LanguagePicker from '../Common/LanguagePicker'
+import {languageSelector} from '../../selectors'
 
 import styles from './styles/ChangeLanguageScreen.style'
 
@@ -27,7 +28,7 @@ const LanguagePickerScreen = ({
 export default compose(
   connect(
     (state, {navigation}) => ({
-      languageCode: state.languageCode,
+      languageCode: languageSelector(state),
     }),
     languageActions,
   ),

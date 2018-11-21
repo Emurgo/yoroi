@@ -11,7 +11,7 @@ export const SEND_ROUTES = {
   ADDRESS_READER_QR: 'address-reader-qr',
   CONFIRM: 'send-ada-confirm',
   SENDING_MODAL: 'send-ada-modal',
-  ANDROID_FINGERPRINT_SIGNING: 'android-fingerprint-signing',
+  BIOMETRICS_SIGNING: 'biometrics-signing',
 }
 
 export const RECEIVE_ROUTES = {
@@ -58,6 +58,8 @@ export const ROOT_ROUTES = {
   SPLASH: 'splash',
   INDEX: 'screens-index',
   LOGIN: 'login',
+  BIO_AUTH: 'bio-auth',
+  CUSTOM_PIN_AUTH: 'custom-pin-auth',
   FIRST_RUN: 'first-run',
   NEW_WALLET: 'new-wallet',
   WALLET_SELECTION: 'wallet-selection',

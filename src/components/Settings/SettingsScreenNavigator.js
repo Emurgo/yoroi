@@ -11,7 +11,7 @@ import ApplicationSettingsScreen from './ApplicationSettingsScreen'
 import ChangeWalletName from './ChangeWalletName'
 import SupportScreen from './SupportScreen'
 import LanguagePickerScreen from './ChangeLanguageScreen'
-import FingerprintLinkScreen from './FingerprintLinkScreen'
+import BiometricsLinkScreen from './BiometricsLinkScreen'
 import ToggleEasyConfirmatioScreen from './ToggleEasyConfirmatioScreen'
 import TermsOfServiceScreen from './TermsOfServiceScreen'
 import RemoveWalletScreen from './RemoveWalletScreen'
@@ -47,7 +47,7 @@ const SettingsScreenNavigator = createStackNavigator(
     [SETTINGS_ROUTES.CHANGE_WALLET_NAME]: ChangeWalletName,
     [SETTINGS_ROUTES.TERMS_OF_USE]: TermsOfServiceScreen,
     [SETTINGS_ROUTES.SUPPORT]: SupportScreen,
-    [SETTINGS_ROUTES.FINGERPRINT_LINK]: FingerprintLinkScreen,
+    [SETTINGS_ROUTES.FINGERPRINT_LINK]: BiometricsLinkScreen,
     [SETTINGS_ROUTES.REMOVE_WALLET]: RemoveWalletScreen,
     [SETTINGS_ROUTES.CHANGE_LANGUAGE]: {
       screen: LanguagePickerScreen,

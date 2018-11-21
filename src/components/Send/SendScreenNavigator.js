@@ -6,7 +6,7 @@ import SendScreen from './SendScreen'
 import ConfirmScreen from './ConfirmScreen'
 import AddressReaderQR from './AddressReaderQR'
 import SendingModal from './SendingModal'
-import FingerprintSignScreen from './FingerprintSignScreen'
+import BiometricAuthScreen from './BiometricAuthScreen'
 
 import HeaderBackButton from '../UiKit/HeaderBackButton'
 import {defaultNavigationOptions} from '../../navigationOptions'
@@ -24,8 +24,8 @@ const SendScreenNavigator = createStackNavigator(
         header: null,
       },
     },
-    [SEND_ROUTES.ANDROID_FINGERPRINT_SIGNING]: {
-      screen: FingerprintSignScreen,
+    [SEND_ROUTES.BIOMETRICS_SIGNING]: {
+      screen: BiometricAuthScreen,
       navigationOptions: {
         header: null,
       },

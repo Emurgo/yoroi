@@ -17,7 +17,7 @@ import {WrongPassword} from '../../crypto/errors'
 
 import styles from './styles/ToggleEasyConfirmationScreen.style'
 
-const getTranslations = (state) => state.trans.FingerprintLinkScreen
+const getTranslations = (state) => state.trans.BiometricsLinkScreen
 
 const enableEasyConfirmation = ({
   navigation,

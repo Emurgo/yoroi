@@ -105,13 +105,13 @@ export const utxosSelector = (state: State): ?Array<RawUtxo> =>
   state.balance.utxos
 
 export const fingerprintsHwSupportSelector = (state: State): boolean =>
-  state.auth.isFingerprintsHardwareSupported
+  state.appSettings.isFingerprintsHardwareSupported
 
 export const systemAuthSupportSelector = (state: State): boolean =>
-  state.auth.isSystemAuthEnabled
+  state.appSettings.isSystemAuthEnabled
 
 export const enrolledFingerprintsSelector = (state: State): boolean =>
-  state.auth.hasEnrolledFingerprints
+  state.appSettings.hasEnrolledFingerprints
 
 export const hasPendingOutgoingTransactionSelector = createSelector(
   transactionsInfoSelector,
@@ -127,4 +127,12 @@ export const easyConfirmationSelector = (state: State): boolean =>
   state.wallet.isEasyConfirmationEnabled
 
 export const customPinHashSelector = (state: State): ?string =>
-  state.auth.customPinHash
+  state.appSettings.customPinHash
+
+export const appIdSelector = (state: State): ?string => state.appSettings.appId
+
+export const tosSelector = (state: State): boolean =>
+  state.appSettings.acceptedTos
+
+export const languageSelector = (state: State): ?string =>
+  state.appSettings.languageCode
