@@ -44,3 +44,13 @@ export const isSystemAuthSupported = async () => {
 
   throw new Error('Unsupported platform')
 }
+
+export const isBiometricPromptSupported = async () => {
+  if (Platform.OS === 'android') {
+    return await KeyStoreBridge.isBiometricPromptSupported()
+  } else if (Platform.OS === 'ios') {
+    return false
+  }
+
+  throw new Error('Unsupported platform')
+}

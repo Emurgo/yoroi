@@ -37,6 +37,22 @@ const handleOnConfirm = async (
     return
   }
 
+  if (isEasyConfirmationEnabled) {
+    // this needs to be tested on ios how it looks
+    // on android it will launch biometric prompt
+    // and all errors are handled there (UI)
+    try {
+      const signedTx = await walletManager.signTx(
+        transactionData,
+        'BIOMETRY',
+        '',
+      )
+      navigation.navigate(SEND_ROUTES.SENDING_MODAL, {signedTx})
+    } catch (e) {
+      return
+    }
+  }
+
   try {
     const signedTx = await walletManager.signTx(
       transactionData,
@@ -142,7 +158,12 @@ export default compose(
   ),
   withHandlers({
     // TODO(ppershing): this should validate only on confirm
-    onConfirm: ({navigation, isEasyConfirmationEnabled, password}) => (event) =>
+    onConfirm: ({
+      navigation,
+      isEasyConfirmationEnabled,
+      password,
+      canBiometricPromptBeUsed,
+    }) => (event) =>
       handleOnConfirm(navigation, isEasyConfirmationEnabled, password),
     // authenticate().then((success) => (success? navigation.popToTop() : null))
   }),

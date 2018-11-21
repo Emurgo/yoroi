@@ -33,6 +33,11 @@ const handleOnConfirm = async (navigation, setError, useFallback = false) => {
       return
     }
 
+    if (error.code === 'BIOMETRIC_PROMPT_CANCELED') {
+      handleOnConfirm(navigation, setError, true)
+      return
+    }
+
     if (error.code !== 'DECRYPTION_FAILED' && error.code !== 'SENSOR_LOCKOUT') {
       handleOnConfirm(navigation, setError, false)
     } else {

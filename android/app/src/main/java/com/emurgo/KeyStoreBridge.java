@@ -4,12 +4,13 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.fingerprint.FingerprintManager;
+import android.hardware.biometrics.BiometricPrompt;
 import android.os.CancellationSignal;
 
 import com.facebook.react.bridge.ActivityEventListener;
-import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.BaseActivityEventListener;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -51,6 +52,8 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
     private String REJECTION_FAILED_UNKNOWN_ERROR = "FAILED_UNKNOWN_ERROR";
     private String REJECTION_CANCELED = "CANCELED";
     private String REJECTION_FAILED = "FAILED";
+
+    private String REJECTION_BIOMETRIC_PROMPT_CANCELED = "BIOMETRIC_PROMPT_CANCELED";
 
     // deleteAndroidKeyStoreAsymmetricKeyPair
     private String REJECTION_KEY_NOT_DELETED = "KEY_NOT_DELETED";
@@ -108,6 +111,11 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
     @ReactMethod
     public void canFingerprintEncryptionBeEnabled(Promise promise) {
         promise.resolve(this.crypto.canEnableFingerprintEncryption());
+    }
+
+    @ReactMethod
+    public void isBiometricPromptSupported(Promise promise) {
+        promise.resolve(this.crypto.isBiometricPromptSupported());
     }
 
     @ReactMethod
@@ -217,11 +225,6 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
         }
     }
 
-    /*
-        This call can be rejected with this messages:
-        CANCELED
-        FAILED
-    */
     @ReactMethod
     public void decryptDataWithSystemPin(final String data, String keyAlias, String message, final Promise promise) {
         if (!this.crypto.isSystemAuthSupported()) {
@@ -276,4 +279,77 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
             }
         }
     };
+
+    @TargetApi(28)
+    @ReactMethod
+    public void decryptDataWithBiometricPrompt(
+        final String data,
+        String keyAlias,
+        String title,
+        String description,
+        String subtitle,
+        String negativeButtonText,
+        final Promise promise
+    ) throws Exception {
+        if (fingerprintConfirmationPromise != null) {
+            promise.reject(REJECTION_ALREADY_DECRYPTING_DATA, REJECTION_ALREADY_DECRYPTING_DATA);
+            return;
+        }
+        fingerprintConfirmationPromise = promise;
+        this.fingerprintCancellation = new CancellationSignal();
+
+        Cipher cipher = this.crypto.getDecryptCipher(keyAlias);
+
+        final BiometricPrompt.AuthenticationCallback biometricCallback = new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
+                if (!fingerprintCancellation.isCanceled()) {
+                    BiometricPrompt.CryptoObject cipher = result.getCryptoObject();
+                    try {
+                        String decodedText = crypto.decryptData(data, cipher.getCipher());
+                        promise.resolve(decodedText);
+                    } catch (Exception e) {
+                        promise.reject(REJECTION_DECRYPTION_FAILED, REJECTION_DECRYPTION_FAILED, e);
+                    } finally {
+                        fingerprintCancellation.cancel();
+                        fingerprintConfirmationPromise = null;
+                    }
+                }
+            }
+
+
+            @Override
+            public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
+                // this is recoverable
+            }
+
+
+            @Override
+            public void onAuthenticationError(int errorCode, CharSequence errString) {
+                if (!fingerprintCancellation.isCanceled()) {
+                    fingerprintCancellation.cancel();
+                }
+
+
+                fingerprintCancellation.cancel();
+                promise.reject(REJECTION_NOT_RECOGNIZED, REJECTION_NOT_RECOGNIZED);
+                fingerprintConfirmationPromise = null;
+            }
+        };
+
+        new BiometricPrompt.Builder(context)
+                .setTitle(title)
+                .setSubtitle(subtitle)
+                .setDescription(description)
+                .setNegativeButton(negativeButtonText, context.getMainExecutor(), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        fingerprintCancellation.cancel();
+                        promise.reject(REJECTION_BIOMETRIC_PROMPT_CANCELED, REJECTION_BIOMETRIC_PROMPT_CANCELED);
+                        fingerprintConfirmationPromise = null;
+                    }
+                })
+                .build()
+                .authenticate(new BiometricPrompt.CryptoObject(cipher), fingerprintCancellation, context.getMainExecutor(), biometricCallback);
+    }
 }

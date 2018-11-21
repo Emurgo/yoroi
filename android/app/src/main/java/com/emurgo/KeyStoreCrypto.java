@@ -3,6 +3,7 @@ package com.emurgo;
 import android.annotation.TargetApi;
 import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.security.KeyPairGeneratorSpec;
@@ -48,6 +49,9 @@ public class KeyStoreCrypto {
 
     String TRANSFORMATION_ASYMMETRIC = cipherAlgo + "/" + cipherBlockMode + "/" + cipherPadding;
     public int AUTHENTIFICATION_VALIDITY_DURATION = 4;
+
+    private static final String FEATURE_IRIS = "android.hardware.iris";
+    private static final String FEATURE_FACE = "android.hardware.face";
 
     KeyguardManager keyguard;
     ReactApplicationContext context;
@@ -166,6 +170,13 @@ public class KeyStoreCrypto {
         }
 
         return false;
+    }
+
+    public boolean isBiometricPromptSupported() {
+        boolean fingerprintSupport = this.context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_FINGERPRINT);
+        boolean irisSupport = this.context.getPackageManager().hasSystemFeature(FEATURE_IRIS);
+        boolean faceSupport = this.context.getPackageManager().hasSystemFeature(FEATURE_FACE);
+        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && (irisSupport || faceSupport || fingerprintSupport));
     }
 
     public boolean isSystemAuthSupported() {
