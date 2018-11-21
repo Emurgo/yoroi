@@ -23,7 +23,7 @@ class _UtxoAutoRefresher extends React.Component<{
   }
 
   componentDidUpdate = (prevProps) => {
-    const wentOnline = this.props.isOnline && !prevProps.isOnline
+    const wentOnline = !prevProps.isOnline && this.props.isOnline
     const wentFromPending = prevProps.hasPendingTx && !this.props.hasPendingTx
 
     if (wentOnline || wentFromPending) {
