@@ -586,8 +586,8 @@ class WalletManager {
       [id]: {id, name},
     }
 
-    await this._saveState()
     this._wallet = wallet
+    await this._saveState()
     wallet.subscribe(this._notify)
     await storage.write(`/wallet/${id}`, {id, name})
     this._closePromise = new Promise((resolve, reject) => {
@@ -602,7 +602,7 @@ class WalletManager {
     const wallet = new Wallet()
     const data = await storage.read(`/wallet/${id}/data`)
 
-    if (!data) throw new Error()
+    if (!data) throw new Error('Cannot read saved data')
 
     wallet._restore(data)
     wallet._id = id
