@@ -31,5 +31,17 @@
   [self.window makeKeyAndVisible];
   return YES;
 }
+// Implemented from: http://pinkstone.co.uk/how-to-control-the-preview-screenshot-in-the-ios-multitasking-switcher/
+- (void)applicationWillResignActive:(UIApplication *)application {
+
+    // hide main window
+    self.window.hidden = YES;
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+
+    // bring main window back
+    self.window.hidden = NO;
+}
 
 @end
