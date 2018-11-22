@@ -1,5 +1,5 @@
 // @flow
-import {AppState} from 'react-native'
+import {AppState, Alert} from 'react-native'
 
 import {Logger} from './utils/logging'
 import walletManager from './crypto/wallet'
@@ -9,13 +9,17 @@ import {
   canFingerprintEncryptionBeEnabled,
   isSystemAuthSupported,
 } from './helpers/deviceSettings'
+import l10n from './l10n'
 import {backgroundLockListener} from './helpers/backgroundLockHelper'
 import networkInfo from './utils/networkInfo'
 import {loadLanguage} from './actions/language'
+import storage from './utils/storage'
 import {type Dispatch} from 'redux'
 import {type State} from './state'
 import NavigationService from './NavigationService'
-import {ROOT_ROUTES} from './RoutesList'
+import {ROOT_ROUTES, FIRST_RUN_ROUTES} from './RoutesList'
+
+const LOCAL_STORAGE_ACCEPTED_TOS = '/settings/acceptedTos'
 
 export const updateFingerprintsIndicators = (
   indicator: string,
@@ -62,12 +66,48 @@ export const navigateFromSplash = () => (
   // TODO(ppershing): here we should switch between
   // onboarding and normal wallet flow
   const state = getState()
-  const doOnboarding = !state.languageCode
 
-  if (doOnboarding) {
+  if (!state.languageCode) {
     NavigationService.navigate(ROOT_ROUTES.FIRST_RUN)
+  } else if (!state.appSettings.acceptedTos) {
+    NavigationService.navigate(FIRST_RUN_ROUTES.ACCEPT_TERMS_OF_SERVICE)
   } else {
     NavigationService.navigate(ROOT_ROUTES.INDEX)
+  }
+}
+
+const acceptTos = () => (dispatch: Dispatch<any>) =>
+  dispatch({
+    type: 'Accept tos',
+    path: ['appSettings', 'acceptedTos'],
+    payload: true,
+    reducer: (state, payload) => payload,
+  })
+
+export const notifyOfGeneralError = (errorToLog: string, exception: Object) => {
+  Logger.error(errorToLog, exception)
+
+  Alert.alert(
+    l10n.translations.global.alerts.errorHeading,
+    l10n.translations.global.alerts.generalErrorText,
+  )
+}
+
+export const acceptAndSaveTos = () => async (dispatch: Dispatch<any>) => {
+  await storage.write(LOCAL_STORAGE_ACCEPTED_TOS, true)
+
+  dispatch(acceptTos())
+}
+
+export const loadAcceptedTos = () => async (dispatch: Dispatch<any>) => {
+  try {
+    const acceptedTos = await storage.read(LOCAL_STORAGE_ACCEPTED_TOS)
+    if (acceptedTos) {
+      dispatch(acceptTos())
+    }
+  } catch (e) {
+    Logger.error('Loading tos consent failed. UI language left intact.', e)
+    throw e
   }
 }
 
@@ -101,6 +141,7 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   }
 
   await dispatch(loadLanguage())
+  await dispatch(loadAcceptedTos())
   await walletManager.initialize()
   await dispatch(updateWallets())
 

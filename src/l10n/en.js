@@ -23,6 +23,13 @@ const l10n = {
     notifications: {
       offline: 'You are offline. Please check settings on your device.',
     },
+    alerts: {
+      errorHeading: 'Error',
+      generalErrorText: [
+        'Something wrong happened.',
+        'Please try repeating your action or contact us.',
+      ].join(' '),
+    },
     currentLanguageName: 'English',
   },
   AppStartScreen: {

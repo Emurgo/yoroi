@@ -41,6 +41,7 @@ export type State = {
   },
   isAppInitialized: boolean,
   appSettings: {
+    acceptedTos: boolean,
     languageCode: string,
   },
 }
@@ -77,6 +78,7 @@ export const getInitialState = (): State => ({
   },
   isAppInitialized: false,
   appSettings: {
+    acceptedTos: false,
     languageCode: 'en-US',
   },
 })

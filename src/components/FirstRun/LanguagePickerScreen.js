@@ -9,6 +9,7 @@ import {connect} from 'react-redux'
 import {FIRST_RUN_ROUTES} from '../../RoutesList'
 import languageActions from '../../actions/language'
 import LanguagePicker from '../Common/LanguagePicker'
+import {notifyOfGeneralError} from '../../actions'
 
 import styles from './styles/LanguagePickerScreen.style'
 
@@ -38,7 +39,16 @@ export default compose(
       changeAndSaveLanguage,
       languageCode,
     }) => async (event) => {
-      await changeAndSaveLanguage(languageCode)
+      try {
+        await changeAndSaveLanguage(languageCode)
+      } catch (ex) {
+        notifyOfGeneralError(
+          'Saving language to AsyncStorage failed. UI language left intact.',
+          ex,
+        )
+
+        return
+      }
 
       navigation.navigate(FIRST_RUN_ROUTES.ACCEPT_TERMS_OF_SERVICE)
     },
