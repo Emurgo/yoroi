@@ -77,18 +77,18 @@ export const validateWalletName = (
 
 export const validateAddressAsync = async (
   address: string,
-): Promise<?AddressValidationErrors> => {
+): Promise<AddressValidationErrors> => {
   if (!address) {
     return {addressIsRequired: true}
   }
 
   const isValid = await isValidAddress(address)
-  return isValid ? null : {invalidAddress: true}
+  return isValid ? {} : {invalidAddress: true}
 }
 
 const MAX_DECIMAL_DIGITS = 6
 
-export const validateAmount = (value: string): ?AmountValidationErrors => {
+export const validateAmount = (value: string): AmountValidationErrors => {
   if (!value) {
     return {amountIsRequired: true}
   }
@@ -102,7 +102,7 @@ export const validateAmount = (value: string): ?AmountValidationErrors => {
     return {invalidAmount: true}
   }
 
-  return null
+  return {}
 }
 
 const MNEMONIC_LENGTH = 15

@@ -84,6 +84,9 @@ const l10n = {
       address: 'Address',
       amount: 'Amount',
       continue: 'Continue',
+      calculatingFee: 'calculating...',
+      feeLabel: 'Fee',
+      balanceAfterLabel: 'Balance after',
       availableAmount: {
         label: 'Available amount:',
         isFetching: 'Checking balance...',

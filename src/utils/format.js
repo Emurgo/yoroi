@@ -10,6 +10,9 @@ export const formatAda = (amount: BigNumber) => {
   return num.toFormat(6)
 }
 
+export const parseAdaDecimal = (amount) =>
+  new BigNumber(amount, 10).times(1000000)
+
 export const formatAdaInteger = (amount: BigNumber) => {
   const num = amount.dividedToIntegerBy(MICRO)
   return num.toFormat(0)
