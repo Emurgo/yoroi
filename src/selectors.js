@@ -59,8 +59,12 @@ export const availableAmountSelector = createSelector(
     const processed = ObjectValues(transactions).filter(
       (tx) => tx.status === TRANSACTION_STATUS.SUCCESSFUL,
     )
-    const amounts = processed.map((tx) => tx.bruttoAmount)
-    return BigNumberSum(amounts)
+
+    const zero = new BigNumber(0)
+
+    const result = BigNumberSum(processed.map((tx) => tx.bruttoAmount))
+
+    return result.lt(zero) ? zero : result
   },
 )
 
@@ -81,16 +85,10 @@ export const isSynchronizingHistorySelector = (state: State): boolean =>
 export const lastHistorySyncErrorSelector = (state: State): any =>
   state.txHistory.lastSyncError
 
-export const utxoBalanceSelector = (state: State) => {
-  if (state.balance.isFetching || !state.balance.utxos) {
-    return null
-  }
-
-  return state.balance.utxos.reduce(
-    (sum: BigNumber, utxo: RawUtxo) => sum.plus(new BigNumber(utxo.amount)),
-    new BigNumber(0),
-  )
-}
+export const utxoBalanceSelector = (state: State) =>
+  state.balance.isFetching || !state.balance.utxos
+    ? null
+    : BigNumberSum(state.balance.utxos.map(({amount}) => amount))
 
 export const walletIsInitializedSelector = (state: State): boolean =>
   state.wallet.isInitialized
