@@ -31,6 +31,7 @@ export type CryptoAccount = {
 const KNOWN_ERROR_MSG = {
   DECRYPT_FAILED: 'Decryption failed. Check your password.',
   INSUFFICIENT_FUNDS_RE: /NotEnoughInput/,
+  SIGN_TX_BUG: /TxBuildError\(CoinError\(Negative\)\)/,
 }
 export type EncryptionMethod = 'BIOMETRY' | 'SYSTEM_PIN' | 'MASTER_PASSWORD'
 
@@ -157,6 +158,9 @@ export const signTransaction = async (
     }
   } catch (e) {
     if (KNOWN_ERROR_MSG.INSUFFICIENT_FUNDS_RE.test(e.message)) {
+      throw new InsufficientFunds()
+    }
+    if (KNOWN_ERROR_MSG.SIGN_TX_BUG.test(e.message)) {
       throw new InsufficientFunds()
     }
     throw new CardanoError(e.message)
