@@ -22,10 +22,13 @@ export const ignoreConcurrentAsync = <T, R>(
   }
 }
 
-// fn(x)(y) => fn'(x,y)
+// Turns handler working like this: handler = (props) => (...args) => result
+// Into  handler working like this: handler = (props, ...args) => result
 // $FlowFixMe
 const curry = (fn) => (arg, ...rest) => fn(arg)(...rest)
-// fn(x,y) => fn(x)(y)
+
+// Turns handler working like this: handler = (props, ...args) => result
+// Into  handler working like this: handler = (props) => (...args) => result
 // $FlowFixMe
 const uncurry = (fn) => (arg) => (...rest) => fn(arg, ...rest)
 
