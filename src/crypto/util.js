@@ -51,33 +51,33 @@ export const getAccountFromMasterKey = async (
   return _rethrow(Wallet.newAccount(wallet, accountIndex))
 }
 
-export const encryptMasterKey = async (
-  masterKeyHex: string,
+export const encryptData = async (
+  plaintextHex: string,
   password: string,
 ): Promise<string> => {
-  assert.assert(!!masterKeyHex, 'encryptMasterKey:: !!masterKeyHex')
-  assert.assert(!!password, 'encryptMasterKey:: !!password')
+  assert.assert(!!plaintextHex, 'encrypt:: !!plaintextHex')
+  assert.assert(!!password, 'encrypt:: !!password')
   const passwordHex = Buffer.from(password, 'utf8').toString('hex')
   const saltHex = cryptoRandomString(2 * 32)
   const nonceHex = cryptoRandomString(2 * 12)
-  const encryptedHex = await PasswordProtect.encryptWithPassword(
+  const cyphertext = await PasswordProtect.encryptWithPassword(
     passwordHex,
     saltHex,
     nonceHex,
-    masterKeyHex,
+    plaintextHex,
   )
-  return encryptedHex
+  return cyphertext
 }
 
-export const decryptMasterKey = async (
-  encryptedHex: string,
+export const decryptData = async (
+  cyphertext: string,
   password: string,
 ): Promise<string> => {
-  assert.assert(!!encryptedHex, 'encryptedKey:: !!encryptedHex')
-  assert.assert(!!password, 'decryptMasterKey:: !!password')
+  assert.assert(!!cyphertext, 'decrypt:: !!cyphertext')
+  assert.assert(!!password, 'decrypt:: !!password')
   const passwordHex = Buffer.from(password, 'utf8').toString('hex')
   try {
-    return await PasswordProtect.decryptWithPassword(passwordHex, encryptedHex)
+    return await PasswordProtect.decryptWithPassword(passwordHex, cyphertext)
   } catch (e) {
     if (e.message === KNOWN_ERROR_MSG.DECRYPT_FAILED) {
       throw new WrongPassword()
