@@ -235,6 +235,7 @@ const l10n = {
   },
   SettingsScreen: {
     title: 'Settings',
+    switchWallet: 'Switch wallet',
     walletName: 'Wallet name',
     edit: 'Edit',
     privacy: 'Privacy',

@@ -668,11 +668,18 @@ class WalletManager {
     assert.assert(this._closeReject, 'close: should have _closeReject')
     /* :: if (!this._closeReject) throw 'assert' */
     // Abort all async interactions with the wallet
-    this._closeReject(new WalletClosed())
+    const reject = this._closeReject
     this._closePromise = null
     this._closeReject = null
     this._wallet = null
     this._id = ''
+    this._notify()
+    // need to reject in next microtask otherwise
+    // closeWallet would throw if some rejection
+    // handler does not catch
+    Promise.resolve().then(() => {
+      reject(new WalletClosed())
+    })
   }
 
   async removeCurrentWallet() {

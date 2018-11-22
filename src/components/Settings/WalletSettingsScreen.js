@@ -5,7 +5,10 @@ import {withHandlers} from 'recompose'
 import {connect} from 'react-redux'
 import {ScrollView, StyleSheet, Switch} from 'react-native'
 
-import {SETTINGS_ROUTES} from '../../RoutesList'
+import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
+
+import {closeWallet} from '../../actions'
+import {ROOT_ROUTES, SETTINGS_ROUTES} from '../../RoutesList'
 import {withNavigationTitle, withTranslations} from '../../utils/renderUtils'
 import {
   systemAuthSupportSelector,
@@ -16,6 +19,7 @@ import {
   SettingsItem,
   NavigatedSettingsItem,
   SettingsSection,
+  PressableSettingsItem,
 } from './SettingsItems'
 
 const getTranslations = (state) => state.trans.SettingsScreen
@@ -32,8 +36,17 @@ const WalletSettingsScreen = ({
   isSystemAuthEnabled,
   translations,
   walletName,
+  onSwitchWallet,
 }) => (
   <ScrollView style={styles.scrollView}>
+    <SettingsSection title={translations.switchWallet}>
+      <PressableSettingsItem
+        label={translations.switchWallet}
+        onPress={onSwitchWallet}
+        navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
+      />
+    </SettingsSection>
+
     <SettingsSection title={translations.walletName}>
       <NavigatedSettingsItem
         label={walletName}
@@ -72,11 +85,25 @@ export default compose(
   })),
   withTranslations(getTranslations),
   withNavigationTitle(({translations}) => translations.title),
-  connect((state) => ({
-    walletName: walletNameSelector(state),
-  })),
+  connect(
+    (state) => ({
+      walletName: walletNameSelector(state),
+    }),
+    {
+      closeWallet,
+    },
+  ),
   withHandlers({
     onToggleEasyConfirmation: ({isEasyConfirmationEnabled, navigation}) => () =>
       navigation.navigate(SETTINGS_ROUTES.EASY_COMFIRMATION),
+  }),
+  withHandlers({
+    onSwitchWallet: ignoreConcurrentAsyncHandler(
+      ({navigation, closeWallet}) => async () => {
+        await closeWallet()
+        navigation.navigate(ROOT_ROUTES.WALLET_SELECTION)
+      },
+      1000,
+    ),
   }),
 )(WalletSettingsScreen)
