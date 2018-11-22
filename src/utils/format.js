@@ -11,7 +11,7 @@ export const formatAda = (amount: BigNumber) => {
 }
 
 export const formatAdaInteger = (amount: BigNumber) => {
-  const num = amount.dividedBy(MICRO)
+  const num = amount.dividedToIntegerBy(MICRO)
   return num.toFormat(0)
 }
 
