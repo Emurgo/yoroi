@@ -1,4 +1,6 @@
 // @flow
+import {AppState} from 'react-native'
+
 import {Logger} from './utils/logging'
 import walletManager from './crypto/wallet'
 import {mirrorTxHistory, setBackgroundSyncError} from './actions/history'
@@ -7,9 +9,9 @@ import {
   canFingerprintEncryptionBeEnabled,
   isSystemAuthSupported,
 } from './helpers/deviceSettings'
+import {backgroundLockListener} from './helpers/backgroundLockHelper'
 import networkInfo from './utils/networkInfo'
 import {loadLanguage} from './actions/language'
-
 import {type Dispatch} from 'redux'
 import {type State} from './state'
 import NavigationService from './NavigationService'
@@ -70,6 +72,10 @@ export const navigateFromSplash = () => (
 }
 
 export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
+  AppState.addEventListener('change', () => {
+    backgroundLockListener()
+  })
+
   if (getState().isAppInitialized) {
     dispatch(navigateFromSplash())
     return

@@ -68,4 +68,5 @@ export const CONFIG = {
     MAX_GENERATED_UNUSED: 20, // must be <= gap size
   },
   PIN_LENGTH: 6,
+  APP_LOCK_TIMEOUT: 3000,
 }

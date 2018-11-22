@@ -3,6 +3,7 @@ package com.emurgo;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.ocetnik.timer.BackgroundTimerPackage;
 import io.crossroad.rncardano.CardanoPackage;
 import org.reactnative.camera.RNCameraPackage;
 import com.rnfingerprint.FingerprintAuthPackage;
@@ -28,17 +29,9 @@ public class MainApplication extends Application implements ReactApplication {
 
     @Override
     protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
-            new CardanoPackage(),
-            new RNCameraPackage(),
-            new FingerprintAuthPackage(),
-            new RandomBytesPackage(),
-            new RNFSPackage(),
-            new LinearGradientPackage(),
-            new SvgPackage(),
-            new KeyStorePackage()
-      );
+      return Arrays.<ReactPackage>asList(new MainReactPackage(), new CardanoPackage(), new RNCameraPackage(),
+          new FingerprintAuthPackage(), new RandomBytesPackage(), new RNFSPackage(), new LinearGradientPackage(),
+          new SvgPackage(), new KeyStorePackage(), new BackgroundTimerPackage());
     }
 
     @Override
