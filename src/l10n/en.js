@@ -381,6 +381,10 @@ const l10n = {
       title: 'Invalid PIN',
       text: 'PIN does not match.',
     },
+    UnknownError: {
+      title: 'Unknown error',
+      text: 'There was error while storing your PIN.',
+    },
     okButton: 'OK',
   },
 }

@@ -6,9 +6,7 @@ import storage from '../utils/storage'
 
 const CUSTOM_PIN_HASH = '/customPinHash'
 
-export const encryptAndStoreCustomPin = async (
-  pin: string,
-): Promise<void> => {
+export const encryptAndStoreCustomPin = async (pin: string): Promise<void> => {
   const appId = await getAppId()
   const appIdHex = Buffer.from(appId, 'utf-8').toString('hex')
   const pinHash = await encryptData(appIdHex, pin)
