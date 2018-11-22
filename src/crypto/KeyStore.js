@@ -20,10 +20,11 @@ class KeyStore {
     const dataKey = KeyStore.getDataKey(keyId, encryptionMethod)
 
     if (Platform.OS === 'ios' && encryptionMethod !== 'MASTER_PASSWORD') {
-      return await Keychain.getGenericPassword({
-        service: keyId,
+      const credentials = await Keychain.getGenericPassword({
+        service: dataKey,
         authenticationPrompt: message,
-      }).password
+      })
+      return credentials.password
     }
 
     const data = await storage.read(`/keyStore/${dataKey}`)
