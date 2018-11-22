@@ -53,5 +53,7 @@
 	<false/>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Enabling Face ID allows you quick and secure access to your account.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Enabling camera allows you to scan QR codes.</string>
 </dict>
 </plist>
