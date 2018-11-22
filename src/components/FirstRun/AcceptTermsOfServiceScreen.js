@@ -10,7 +10,8 @@ import {ScrollView} from 'react-native'
 import TermsOfService from '../Common/TermsOfService'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {Checkbox, Button} from '../UiKit'
-import {WALLET_INIT_ROUTES} from '../../RoutesList'
+import {FIRST_RUN_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
+import {systemAuthSupportSelector} from '../../selectors'
 
 import styles from './styles/AcceptTermsOfServiceScreen.styles'
 
@@ -53,11 +54,17 @@ const AcceptTermsOfServiceScreen = ({
 export default compose(
   connect((state) => ({
     translations: getTranslations(state),
+    isSystemAuthEnabled: systemAuthSupportSelector(state),
   })),
   withState('acceptedTos', 'setAcceptedTos', false),
   withHandlers({
-    handleAccepted: ({navigation}) => () =>
-      navigation.navigate(WALLET_INIT_ROUTES.MAIN),
+    handleAccepted: ({navigation, isSystemAuthEnabled}) => () => {
+      if (isSystemAuthEnabled) {
+        navigation.navigate(WALLET_INIT_ROUTES.MAIN)
+      } else {
+        navigation.navigate(FIRST_RUN_ROUTES.CUSTOM_PIN)
+      }
+    },
   }),
   withNavigationTitle(({translations}) => translations.title),
 )(AcceptTermsOfServiceScreen)

@@ -24,6 +24,7 @@ const processPin = (pin, setPin, pinMaxLength, keyDown, onPinEnter) => {
     setPin(newPin)
 
     if (newPin.length === pinMaxLength) {
+      setPin('')
       onPinEnter(newPin)
     }
   }
