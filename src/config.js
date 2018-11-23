@@ -27,7 +27,6 @@ export const ASSURANCE_LEVELS = {
 const CARDANO = CARDANO_CONFIG.TESTNET
 
 export const CONFIG = {
-  USE_MOCK_API: false,
   DEBUG: {
     PREFILL_FORMS: true,
     WALLET_NAME: 'My wallet',
