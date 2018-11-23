@@ -41,12 +41,28 @@ export const updateFingerprintsIndicators = (
   })
 }
 
-export const setSystemAuth = (enable: boolean) => ({
-  path: ['auth', 'isSystemAuthEnabled'],
-  payload: enable,
-  reducer: (state: State, value: boolean) => value,
-  type: 'SET_SYSTEM_AUTH',
-})
+export const setSystemAuth = (enable: boolean) => (dispatch: Dispatch<any>) => {
+  const canBeDisabled = walletManager.canBiometricsSignInBeDisabled()
+  if (!enable && !canBeDisabled) {
+    Alert.alert(
+      l10n.translations.SettingsScreen.systemAuthDisable.title,
+      l10n.translations.SettingsScreen.systemAuthDisable.text,
+      [
+        {
+          text: l10n.translations.SettingsScreen.systemAuthDisable.okButton,
+        },
+      ],
+    )
+    return
+  }
+
+  dispatch({
+    path: ['auth', 'isSystemAuthEnabled'],
+    payload: enable,
+    reducer: (state: State, value: boolean) => value,
+    type: 'SET_SYSTEM_AUTH',
+  })
+}
 
 export const setEasyConfirmation = (enable: boolean) => ({
   path: ['wallet', 'isEasyConfirmationEnabled'],

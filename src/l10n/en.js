@@ -270,6 +270,13 @@ const l10n = {
     language: 'Your language',
     termsOfUse: 'Terms of Use',
     support: 'Support',
+    systemAuthDisable: {
+      title: 'Action failed',
+      text:
+        'Please disable easy confirmation function in all \
+your wallets first',
+      okButton: 'Ok',
+    },
   },
   SupportScreen: {
     title: 'Support',

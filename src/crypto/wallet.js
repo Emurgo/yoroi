@@ -13,6 +13,7 @@ import * as util from './util'
 import api from '../api'
 import {CONFIG} from '../config'
 import assert from '../utils/assert'
+import {ObjectValues} from '../utils/flow'
 import {Logger} from '../utils/logging'
 import {
   synchronize,
@@ -418,6 +419,7 @@ class WalletManager {
     const result = await Promise.all(
       keys.map((key) => storage.read(`/wallet/${key}`)),
     )
+
     return result
   }
 
@@ -583,13 +585,13 @@ class WalletManager {
     this._id = id
     this._wallets = {
       ...this._wallets,
-      [id]: {id, name},
+      [id]: {id, name, isEasyConfirmationEnabled: false},
     }
 
     this._wallet = wallet
     await this._saveState()
     wallet.subscribe(this._notify)
-    await storage.write(`/wallet/${id}`, {id, name})
+    await storage.write(`/wallet/${id}`, this._wallets[id])
     this._closePromise = new Promise((resolve, reject) => {
       this._closeReject = reject
     })
@@ -645,6 +647,10 @@ class WalletManager {
       throw new Error('Empty wallet')
     }
 
+    await this._updateMetadata(this._wallet._id, {
+      isEasyConfirmationEnabled: false,
+    })
+
     // $FlowFixMe
     await this.deleteEncryptedKey('BIOMETRY')
     // $FlowFixMe
@@ -655,12 +661,25 @@ class WalletManager {
   }
 
   async enableEasyConfirmation(masterPassword: string) {
-    if (!this._wallet) {
-      throw new Error('Empty wallet')
-    }
+    if (!this._id) throw new WalletClosed()
+    const id = this._id
+
+    await this._updateMetadata(id, {
+      isEasyConfirmationEnabled: true,
+    })
 
     // $FlowFixMe
     await this._wallet.enableEasyConfirmation(masterPassword)
+  }
+
+  canBiometricsSignInBeDisabled() {
+    if (!this._wallets) {
+      throw new Error('Wallet list no initialized')
+    }
+
+    return ObjectValues(this._wallets).every(
+      (wallet) => !wallet.isEasyConfirmationEnabled,
+    )
   }
 
   closeWallet() {

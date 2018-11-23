@@ -47,6 +47,7 @@ const onToggleFingerprintSignIn = ({
   isSystemAuthEnabled,
   navigation,
   setSystemAuth,
+  translations,
 }) => () => {
   if (isSystemAuthEnabled) {
     setSystemAuth(false)
