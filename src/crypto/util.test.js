@@ -114,73 +114,22 @@ test('Can format address', () => {
 })
 
 describe('signTransaction', () => {
-  const wallet = {
-    derivation_scheme: 'V2',
-    selection_policy: 'FirstMatchFirst',
-    config: {protocol_magic: 764824073},
-    root_cached_key:
-      '10be4df444be48af3ea3310e45e38a4d53c82400db7a3b91e1a868994db7354d' +
-      'e05b7bdfda74bee59f69319aa0b7dd361ddd2e99a6749c123f6872de79bb50bd' +
-      '0cb6c81ecc17963e2e8eb81abf86ca3e7921d44c1992a32493b1a25e6f55e5dd',
-  }
-  const inputs = [
-    {
-      ptr: {
-        id: 'db0306050897ce24c69c8995930b685af8babcd4397e69c19fd2557d5bbe1b61',
-        index: 1,
-      },
-      value: {
-        address: 'Ae2tdPwUPEZMLUshHiXxqkFfnWxEyZ3fbvfdSd5rRyUpPnib2VnT7VTq7T7',
-        value: '13088618',
-      },
-      addressing: {account: 0, change: 1, index: 9},
-    },
-    {
-      ptr: {
-        id: '03d108eb14ce04e6fac604e527daf47880823d7786239783ff0f3d8169e194d7',
-        index: 0,
-      },
-      value: {
-        address: 'Ae2tdPwUPEZAghGCdQykbGxc991wdoA8bXmSn7eCGuUKXF4EsRhWj4PJitn',
-        value: '200000',
-      },
-      addressing: {account: 0, change: 0, index: 0},
-    },
-    {
-      ptr: {
-        id: '6ef8bcb181fad5eb18da415dc176c89156cf6d65604fc11121362af49e029113',
-        index: 0,
-      },
-      value: {
-        address: 'Ae2tdPwUPEZAghGCdQykbGxc991wdoA8bXmSn7eCGuUKXF4EsRhWj4PJitn',
-        value: '1000000',
-      },
-      addressing: {account: 0, change: 0, index: 0},
-    },
-    {
-      ptr: {
-        id: 'db0306050897ce24c69c8995930b685af8babcd4397e69c19fd2557d5bbe1b61',
-        index: 0,
-      },
-      value: {
-        address: 'Ae2tdPwUPEZAghGCdQykbGxc991wdoA8bXmSn7eCGuUKXF4EsRhWj4PJitn',
-        value: '1000000',
-      },
-      addressing: {account: 0, change: 0, index: 0},
-    },
-  ]
+  const wallet = require('./__fixtures/fake_wallet.json')
+  const inputs = require('./__fixtures/transaction_inputs.json')
+  const outputAddress =
+    'Ae2tdPwUPEZAghGCdQykbGxc991wdoA8bXmSn7eCGuUKXF4EsRhWj4PJitn'
+  const change = 'Ae2tdPwUPEZJcamJUVWxJEwR8rj5x74t3FkUFDzKEdoL8YSyeRdwmJCW9c3'
 
   it('can sign small amount', async () => {
     expect.assertions(1)
 
     const outputs = [
       {
-        address: 'Ae2tdPwUPEZAghGCdQykbGxc991wdoA8bXmSn7eCGuUKXF4EsRhWj4PJitn',
+        address: outputAddress,
         value: '100',
       },
     ]
 
-    const change = 'Ae2tdPwUPEZJcamJUVWxJEwR8rj5x74t3FkUFDzKEdoL8YSyeRdwmJCW9c3'
     const tx = await signTransaction(wallet, inputs, outputs, change)
     expect(tx).not.toBeNull()
   })
@@ -190,12 +139,11 @@ describe('signTransaction', () => {
 
     const outputs = [
       {
-        address: 'Ae2tdPwUPEZAghGCdQykbGxc991wdoA8bXmSn7eCGuUKXF4EsRhWj4PJitn',
+        address: outputAddress,
         value: '15097900',
       },
     ]
 
-    const change = 'Ae2tdPwUPEZJcamJUVWxJEwR8rj5x74t3FkUFDzKEdoL8YSyeRdwmJCW9c3'
     const tx = await signTransaction(wallet, inputs, outputs, change)
     expect(tx).not.toBeNull()
   })
@@ -204,12 +152,11 @@ describe('signTransaction', () => {
     expect.assertions(1)
     const outputs = [
       {
-        address: 'Ae2tdPwUPEZAghGCdQykbGxc991wdoA8bXmSn7eCGuUKXF4EsRhWj4PJitn',
+        address: outputAddress,
         value: '15098915',
       },
     ]
 
-    const change = 'Ae2tdPwUPEZJcamJUVWxJEwR8rj5x74t3FkUFDzKEdoL8YSyeRdwmJCW9c3'
     const tx = await signTransaction(wallet, inputs, outputs, change)
     expect(tx).not.toBeNull()
   })
@@ -218,12 +165,11 @@ describe('signTransaction', () => {
     expect.assertions(1)
     const outputs = [
       {
-        address: 'Ae2tdPwUPEZAghGCdQykbGxc991wdoA8bXmSn7eCGuUKXF4EsRhWj4PJitn',
+        address: outputAddress,
         value: '25000000',
       },
     ]
 
-    const change = 'Ae2tdPwUPEZJcamJUVWxJEwR8rj5x74t3FkUFDzKEdoL8YSyeRdwmJCW9c3'
     const promise = signTransaction(wallet, inputs, outputs, change)
     await expect(promise).rejects.toBeInstanceOf(InsufficientFunds)
   })
@@ -235,14 +181,12 @@ describe('signTransaction', () => {
     expect.assertions(1)
     const outputs = [
       {
-        address: 'Ae2tdPwUPEZAghGCdQykbGxc991wdoA8bXmSn7eCGuUKXF4EsRhWj4PJitn',
+        address: outputAddress,
         value: '15096900',
       },
     ]
 
-    const change = 'Ae2tdPwUPEZJcamJUVWxJEwR8rj5x74t3FkUFDzKEdoL8YSyeRdwmJCW9c3'
     const promise = signTransaction(wallet, inputs, outputs, change)
-
     // expect(await promise).not.toBeNull()
     await expect(promise).rejects.toBeInstanceOf(InsufficientFunds)
   })
