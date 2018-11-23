@@ -45,6 +45,7 @@ export const SETTINGS_ROUTES = {
   REMOVE_WALLET: 'remove-wallet',
   CHANGE_LANGUAGE: 'change-language',
   EASY_COMFIRMATION: 'easy-confirmation',
+  CHANGE_PASSWORD: 'change-password',
 }
 
 export const WALLET_ROUTES = {

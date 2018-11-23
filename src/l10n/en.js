@@ -32,6 +32,13 @@ const l10n = {
     },
     currentLanguageName: 'English',
   },
+  errors: {
+    invalidWalletPassword: {
+      title: 'Invalid password',
+      text: 'You entered an invalid password',
+      ok: 'OK',
+    },
+  },
   AppStartScreen: {
     loginButton: 'Login',
   },
@@ -406,6 +413,14 @@ your wallets first',
       title: 'Unknown error',
       text: 'There was error while verifying PIN.',
     },
+  },
+  ChangePasswordScreen: {
+    oldPassword: 'Current password',
+    newPassword: 'New password',
+    repeatPassword: 'Repeat new password',
+    continue: 'Change password',
+    title: 'Change wallet password',
+    passwordsDoNotMatch: 'Passwords do not match',
   },
 }
 
