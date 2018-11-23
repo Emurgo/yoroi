@@ -133,7 +133,7 @@ export const navigateFromSplash = () => (
   ) {
     NavigationService.navigate(FIRST_RUN_ROUTES.CUSTOM_PIN)
   } else {
-    NavigationService.navigate(ROOT_ROUTES.INDEX)
+    NavigationService.navigate(ROOT_ROUTES.INIT)
   }
 }
 

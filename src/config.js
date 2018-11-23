@@ -1,5 +1,10 @@
 // @flow
 
+const IS_DEBUG = __DEV__
+// debugging flags
+const SHOW_INIT_DEBUG_SCREEN = true
+const PREFILL_WALLET_INFO = true
+
 export const CARDANO_CONFIG = {
   TESTNET: {
     PROTOCOL_MAGIC: 633343913,
@@ -24,11 +29,11 @@ export const ASSURANCE_LEVELS = {
   },
 }
 
-const CARDANO = CARDANO_CONFIG.TESTNET
+const CARDANO = IS_DEBUG ? CARDANO_CONFIG.TESTNET : CARDANO_CONFIG.MAINNET
 
 export const CONFIG = {
   DEBUG: {
-    PREFILL_FORMS: true,
+    PREFILL_FORMS: PREFILL_WALLET_INFO,
     WALLET_NAME: 'My wallet',
     PASSWORD: 'aeg?eP3M',
     MNEMONIC1: [
@@ -68,4 +73,5 @@ export const CONFIG = {
   },
   PIN_LENGTH: 6,
   APP_LOCK_TIMEOUT: 3000,
+  START_WITH_INDEX_SCREEN: SHOW_INIT_DEBUG_SCREEN,
 }
