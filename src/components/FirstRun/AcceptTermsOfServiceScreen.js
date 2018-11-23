@@ -12,6 +12,7 @@ import {withNavigationTitle} from '../../utils/renderUtils'
 import {Checkbox, Button} from '../UiKit'
 import {FIRST_RUN_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import {systemAuthSupportSelector} from '../../selectors'
+import {acceptAndSaveTos, notifyOfGeneralError} from '../../actions'
 
 import styles from './styles/AcceptTermsOfServiceScreen.styles'
 
@@ -52,13 +53,28 @@ const AcceptTermsOfServiceScreen = ({
 )
 
 export default compose(
-  connect((state) => ({
-    translations: getTranslations(state),
-    isSystemAuthEnabled: systemAuthSupportSelector(state),
-  })),
+  connect(
+    (state) => ({
+      translations: getTranslations(state),
+      isSystemAuthEnabled: systemAuthSupportSelector(state),
+    }),
+    {acceptAndSaveTos},
+  ),
   withState('acceptedTos', 'setAcceptedTos', false),
   withHandlers({
-    handleAccepted: ({navigation, isSystemAuthEnabled}) => () => {
+    handleAccepted: ({
+      navigation,
+      isSystemAuthEnabled,
+      acceptAndSaveTos,
+    }) => async () => {
+      try {
+        await acceptAndSaveTos()
+      } catch (e) {
+        notifyOfGeneralError('Saving accepted tos to AsyncStorage failed.', e)
+
+        return
+      }
+
       if (isSystemAuthEnabled) {
         navigation.navigate(WALLET_INIT_ROUTES.MAIN)
       } else {

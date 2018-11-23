@@ -1,4 +1,3 @@
-import {Alert} from 'react-native'
 import l10n from '../l10n'
 import storage from '../utils/storage'
 import {Logger} from '../utils/logging'
@@ -20,17 +19,9 @@ const changeLanguage = (languageCode) => (dispatch, getState) => {
 export const changeAndSaveLanguage = (languageCode: string) => async (
   dispatch: Dispatch<any>,
 ) => {
-  try {
-    await storage.write(LOCAL_STORAGE_KEY_LANG, languageCode)
-    dispatch(changeLanguage(languageCode))
-  } catch (e) {
-    Logger.error(
-      'Saving language to AsyncStorage failed. UI language left intact',
-      e,
-    )
-    // TODO add missing localization
-    Alert.alert('Error', 'Could not set selected language.')
-  }
+  await storage.write(LOCAL_STORAGE_KEY_LANG, languageCode)
+
+  dispatch(changeLanguage(languageCode))
 }
 
 export const loadLanguage = () => async (dispatch: Dispatch<any>) => {
