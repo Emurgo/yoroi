@@ -15,7 +15,12 @@ export const parseAdaDecimal = (amount) =>
 
 export const formatAdaInteger = (amount: BigNumber) => {
   const num = amount.dividedToIntegerBy(MICRO)
-  return num.toFormat(0)
+  if (amount.lt(0) && amount.gt(-MICRO)) {
+    // -0 needs special handling
+    return '-0'
+  } else {
+    return num.toFormat(0)
+  }
 }
 
 export const formatAdaFractional = (amount: BigNumber) => {
