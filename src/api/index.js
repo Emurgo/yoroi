@@ -1,9 +1,5 @@
 // @flow
 /* eslint-disable no-unused-vars */
-import * as realApi from './api'
-import * as mockApi from './mockApi'
-import {CONFIG} from '../config'
-
-const api = CONFIG.USE_MOCK_API ? mockApi : realApi
+import * as api from './api'
 
 export default api
