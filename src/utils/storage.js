@@ -3,17 +3,38 @@ import assert from './assert'
 
 import ExtendableError from 'es6-error'
 import {AsyncStorage} from 'react-native'
+import _ from 'lodash'
 
 export class StorageError extends ExtendableError {}
 
+const parseJson = (json) => {
+  // Caller is responsible for checking for undefined keys
+  if (typeof json === 'undefined') return json
+  return JSON.parse(json)
+}
+
+const checkPathFormat = (path: string) =>
+  path.startsWith('/') && !path.endsWith('/')
+
 export const read = async (path: string) => {
-  assert.preconditionCheck(path.startsWith('/'), 'Wrong storage key path')
-  assert.preconditionCheck(!path.endsWith('/'), 'Wrong storage key path')
+  assert.preconditionCheck(checkPathFormat(path), 'Wrong storage key path')
   try {
     const json = await AsyncStorage.getItem(path)
     // Caller is responsible for checking for undefined keys
-    if (typeof json === 'undefined') return json
-    return JSON.parse(json)
+    return parseJson(json)
+  } catch (error) {
+    throw new StorageError(error.message)
+  }
+}
+
+export const readMany = async (paths: Array<string>) => {
+  assert.preconditionCheck(
+    _.every(paths, checkPathFormat),
+    'Wrong storage key path',
+  )
+  try {
+    const items = await AsyncStorage.multiGet(paths)
+    return items.map(([key, value]) => [key, parseJson(value)])
   } catch (error) {
     throw new StorageError(error.message)
   }
@@ -65,6 +86,7 @@ export const keys = async (path: string, includeSubdirs?: boolean) => {
 
 export default {
   read,
+  readMany,
   write,
   remove,
   clearAll,

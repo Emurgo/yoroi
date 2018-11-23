@@ -387,6 +387,19 @@ const l10n = {
     },
     okButton: 'OK',
   },
+  LoginPinScreen: {
+    PinInput: {
+      title: 'Enter PIN',
+    },
+    WrongPinError: {
+      title: 'Invalid PIN',
+      text: 'PIN you provided is incorrect',
+    },
+    UnknownError: {
+      title: 'Unknown error',
+      text: 'There was error while verifying PIN.',
+    },
+  },
 }
 
 export default l10n

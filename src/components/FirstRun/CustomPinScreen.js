@@ -2,14 +2,14 @@
 import React from 'react'
 import {Alert, View} from 'react-native'
 import {compose} from 'redux'
+import {connect} from 'react-redux'
 import {withHandlers, withState} from 'recompose'
 import {NavigationEvents} from 'react-navigation'
 
 import PinInput from '../Common/PinInput'
-import {withTranslations} from '../../utils/renderUtils'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {CONFIG} from '../../config'
-import {encryptAndStoreCustomPin} from '../../crypto/customPin'
+import {encryptAndStoreCustomPin} from '../../actions'
 
 import styles from './styles/CustomPinScreen.style'
 
@@ -18,9 +18,13 @@ import type {State} from '../../state'
 
 const getTranslations = (state: State) => state.trans.CustomPinScreen
 
-const handlePinEnter = ({pin, setPin, navigation, translations}) => async (
-  pinConfirmation,
-) => {
+const handlePinEnter = ({
+  pin,
+  setPin,
+  navigation,
+  translations,
+  encryptAndStoreCustomPin,
+}) => async (pinConfirmation) => {
   if (pin !== pinConfirmation) {
     setPin('')
     Alert.alert(
@@ -76,7 +80,14 @@ const CustomPinScreen = ({
 }
 
 export default compose(
-  withTranslations(getTranslations),
+  connect(
+    (state: State) => ({
+      translations: getTranslations(state),
+    }),
+    {
+      encryptAndStoreCustomPin,
+    },
+  ),
   withState('pin', 'setPin', ''),
   withHandlers({
     handlePinEnter,
