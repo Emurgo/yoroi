@@ -193,6 +193,7 @@ export const changeWalletName = (newName: string) => async (
   dispatch: Dispatch<any>,
 ) => {
   await walletManager.rename(newName)
+  dispatch(updateWallets())
 }
 
 export const createWallet = (
