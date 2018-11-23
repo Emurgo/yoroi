@@ -38,10 +38,12 @@ export type State = {
     isFingerprintsHardwareSupported: boolean,
     isSystemAuthEnabled: boolean,
     hasEnrolledFingerprints: boolean,
+    customPinHash: ?string,
   },
   isAppInitialized: boolean,
   appSettings: {
     acceptedTos: boolean,
+    appId: ?string,
     languageCode: string,
   },
 }
@@ -75,11 +77,13 @@ export const getInitialState = (): State => ({
     isFingerprintsHardwareSupported: false,
     hasEnrolledFingerprints: false,
     isSystemAuthEnabled: false,
+    customPinHash: null,
   },
   isAppInitialized: false,
   appSettings: {
     acceptedTos: false,
     languageCode: 'en-US',
+    appId: null,
   },
 })
 

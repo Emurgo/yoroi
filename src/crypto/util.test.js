@@ -7,8 +7,8 @@ import {
   getExternalAddresses,
   getAddressInHex,
   isValidAddress,
-  encryptMasterKey,
-  decryptMasterKey,
+  encryptData,
+  decryptData,
   formatBIP44,
   signTransaction,
 } from './util'
@@ -98,8 +98,8 @@ test('Can validate invalid addresses', async () => {
 test('Can encrypt / decrypt masterKey', async () => {
   expect.assertions(1)
   const masterKey = await getMasterKeyFromMnemonic(mnemonic)
-  const encryptedKey = await encryptMasterKey(masterKey, 'password')
-  const decryptedKey = await decryptMasterKey(encryptedKey, 'password')
+  const encryptedKey = await encryptData(masterKey, 'password')
+  const decryptedKey = await decryptData(encryptedKey, 'password')
 
   expect(masterKey).toEqual(decryptedKey)
 })

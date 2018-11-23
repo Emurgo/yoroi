@@ -125,3 +125,6 @@ export const hasPendingOutgoingTransactionSelector = createSelector(
 
 export const easyConfirmationSelector = (state: State): boolean =>
   state.wallet.isEasyConfirmationEnabled
+
+export const customPinHashSelector = (state: State): ?string =>
+  state.auth.customPinHash

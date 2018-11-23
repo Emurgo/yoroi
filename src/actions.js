@@ -1,5 +1,6 @@
 // @flow
 import {AppState, Alert} from 'react-native'
+import uuid from 'uuid'
 
 import {Logger} from './utils/logging'
 import walletManager from './crypto/wallet'
@@ -11,6 +12,13 @@ import {
 } from './helpers/deviceSettings'
 import l10n from './l10n'
 import {backgroundLockListener} from './helpers/backgroundLockHelper'
+import {encryptCustomPin} from './crypto/customPin'
+import {
+  readAppSettings,
+  writeAppSettings,
+  AppSettingsError,
+  APP_SETTINGS_KEYS,
+} from './helpers/appSettings'
 import networkInfo from './utils/networkInfo'
 import {loadLanguage} from './actions/language'
 import storage from './utils/storage'
@@ -57,6 +65,56 @@ const _updateWallets = (wallets) => ({
 const updateWallets = () => (dispatch: Dispatch<any>) => {
   const wallets = walletManager.getWallets()
   dispatch(_updateWallets(wallets))
+}
+
+const _setAppSettings = (appSettings) => ({
+  path: null,
+  payload: appSettings,
+  type: 'SET_APP_ID',
+  reducer: (state, appSettings) => ({
+    ...state,
+    appSettings: {
+      ...state.appSettings,
+      appId: appSettings.appId,
+    },
+    auth: {
+      ...state.auth,
+      customPinHash: appSettings.customPinHash,
+    },
+  }),
+})
+
+const reloadAppSettings = () => async (dispatch: Dispatch<any>) => {
+  const appSettings = await readAppSettings()
+  dispatch(_setAppSettings(appSettings))
+}
+
+const _setAppId = (appId) => ({
+  path: ['appSettings', 'appId'],
+  payload: appId,
+  type: 'SET_APP_ID',
+  reducer: (state, appId) => appId,
+})
+
+const _setCustomPinHash = (customPinHash) => ({
+  path: ['auth', 'customPinHash'],
+  payload: customPinHash,
+  type: 'SET_CUSTOM_PIN_HASH',
+  reducer: (state, customPinHash) => customPinHash,
+})
+
+export const encryptAndStoreCustomPin = (pin: string) => async (
+  dispatch: Dispatch<any>,
+  getState: () => State,
+) => {
+  const state = getState()
+  const appId = state.appSettings.appId
+  if (!appId) {
+    throw new AppSettingsError(APP_SETTINGS_KEYS.APP_ID)
+  }
+  const customPinHash = await encryptCustomPin(appId, pin)
+  await writeAppSettings(APP_SETTINGS_KEYS.CUSTOM_PIN_HASH, customPinHash)
+  dispatch(_setCustomPinHash(customPinHash))
 }
 
 export const navigateFromSplash = () => (
@@ -116,9 +174,18 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
     backgroundLockListener()
   })
 
-  if (getState().isAppInitialized) {
+  const state = getState()
+  if (state.isAppInitialized) {
     dispatch(navigateFromSplash())
     return
+  }
+
+  await dispatch(reloadAppSettings())
+
+  if (!state.appSettings.appId) {
+    const appId = uuid.v4()
+    await writeAppSettings(APP_SETTINGS_KEYS.APP_ID, appId)
+    dispatch(_setAppId(appId))
   }
 
   const [

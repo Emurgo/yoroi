@@ -6,7 +6,7 @@ import {Platform} from 'react-native'
 
 import storage from '../utils/storage'
 import assert from '../utils/assert'
-import {decryptMasterKey, encryptMasterKey} from '../crypto/util'
+import {decryptData, encryptData} from '../crypto/util'
 
 export type EncryptionMethod = 'BIOMETRY' | 'SYSTEM_PIN' | 'MASTER_PASSWORD'
 
@@ -67,7 +67,7 @@ class KeyStore {
         assert.assert(password, 'Password is provided')
 
         // $FlowFixMe
-        return await decryptMasterKey(data, password)
+        return await decryptData(data, password)
       }
 
       default:
@@ -169,7 +169,7 @@ class KeyStore {
   ) {
     assert.assert(masterPassword, 'Password is provided')
 
-    const encryptedMasterKey = await encryptMasterKey(masterKey, masterPassword)
+    const encryptedMasterKey = await encryptData(masterKey, masterPassword)
 
     return encryptedMasterKey
   }

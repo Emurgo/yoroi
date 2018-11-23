@@ -2,13 +2,14 @@
 import React from 'react'
 import {Alert, View} from 'react-native'
 import {compose} from 'redux'
+import {connect} from 'react-redux'
 import {withHandlers, withState} from 'recompose'
 import {NavigationEvents} from 'react-navigation'
 
 import PinInput from '../Common/PinInput'
-import {withTranslations} from '../../utils/renderUtils'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {CONFIG} from '../../config'
+import {encryptAndStoreCustomPin} from '../../actions'
 
 import styles from './styles/CustomPinScreen.style'
 
@@ -17,9 +18,13 @@ import type {State} from '../../state'
 
 const getTranslations = (state: State) => state.trans.CustomPinScreen
 
-const handlePinEnter = ({pin, setPin, navigation, translations}) => (
-  pinConfirmation,
-) => {
+const handlePinEnter = ({
+  pin,
+  setPin,
+  navigation,
+  translations,
+  encryptAndStoreCustomPin,
+}) => async (pinConfirmation) => {
   if (pin !== pinConfirmation) {
     setPin('')
     Alert.alert(
@@ -30,9 +35,17 @@ const handlePinEnter = ({pin, setPin, navigation, translations}) => (
     return
   }
 
-  // TODO store pin
-
-  navigation.navigate(WALLET_INIT_ROUTES.MAIN)
+  try {
+    await encryptAndStoreCustomPin(pin)
+    navigation.navigate(WALLET_INIT_ROUTES.MAIN)
+  } catch (err) {
+    setPin('')
+    Alert.alert(
+      translations.UnknownError.title,
+      translations.UnknownError.text,
+      [{text: translations.okButton}],
+    )
+  }
 }
 
 type Props = {
@@ -67,7 +80,14 @@ const CustomPinScreen = ({
 }
 
 export default compose(
-  withTranslations(getTranslations),
+  connect(
+    (state: State) => ({
+      translations: getTranslations(state),
+    }),
+    {
+      encryptAndStoreCustomPin,
+    },
+  ),
   withState('pin', 'setPin', ''),
   withHandlers({
     handlePinEnter,
