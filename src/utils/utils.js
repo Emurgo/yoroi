@@ -43,3 +43,9 @@ export const ignoreConcurrentAsyncHandler = <Props, T, R>(
   // $FlowFixMe
   return uncurry(ignoreConcurrentAsync(curry(handler), additionalDelay))
 }
+
+// Extracted from
+// eslint-disable-next-line
+// https://stackoverflow.com/questions/44700904/how-to-get-a-functions-return-type-in-flow
+type _ExtractFunctionReturnType<B, F: (...args: any[]) => B> = B // eslint-disable-line
+export type ExtractFunctionReturnType<F> = _ExtractFunctionReturnType<*, F>
