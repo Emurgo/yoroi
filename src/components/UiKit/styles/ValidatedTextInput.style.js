@@ -1,24 +1,40 @@
 // @flow
-
 import {StyleSheet} from 'react-native'
 
-import {COLORS} from '../../../styles/config'
-
 export default StyleSheet.create({
-  container: {},
+  container: {
+    paddingTop: 16,
+    marginBottom: 8,
+  },
   input: {
-    borderColor: COLORS.PRIMARY,
-    borderRadius: 5,
-    borderStyle: 'solid',
+    borderColor: '#4A4A4A',
+    backgroundColor: '#fff',
+    borderRadius: 8,
     borderWidth: 1,
-    fontSize: 20,
-    height: 50,
-    width: '100%',
+    height: 48,
+    fontSize: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  inputError: {
+    borderColor: '#FF1351',
+  },
+  labelWrap: {
+    backgroundColor: '#fff',
+    marginLeft: 12,
+    top: 8,
+    paddingHorizontal: 4,
+    position: 'absolute',
   },
   label: {
-    color: COLORS.PRIMARY,
+    color: '#4A4A4A',
+  },
+  labelError: {
+    color: '#FF1351',
   },
   error: {
-    color: COLORS.RED,
+    color: '#FF1351',
+    paddingHorizontal: 16,
+    lineHeight: 24,
   },
 })

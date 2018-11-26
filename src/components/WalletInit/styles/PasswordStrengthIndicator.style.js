@@ -5,13 +5,15 @@ import {StyleSheet} from 'react-native'
 import {COLORS} from '../../../styles/config'
 
 export default StyleSheet.create({
-  passwordRequirementsRow: {
-    flexDirection: 'row',
-    marginTop: 10,
+  container: {
+    marginTop: 16,
   },
-  passwordRequirement: {
+  row: {
+    marginTop: 8,
     flexDirection: 'row',
-    width: '50%',
+  },
+  label: {
+    marginLeft: 4,
   },
   validationPasses: {
     color: COLORS.LIGHT_POSITIVE_GREEN,

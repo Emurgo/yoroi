@@ -1,16 +1,15 @@
 // @flow
 import React, {PureComponent} from 'react'
 import {View} from 'react-native'
-import {NavigationEvents} from 'react-navigation'
+import {NavigationEvents, SafeAreaView} from 'react-navigation'
 import _ from 'lodash'
 
 import {Button, ValidatedTextInput} from '../UiKit'
-import CheckIcon from '../../assets/CheckIcon'
-import {COLORS} from '../../styles/config'
 import {validatePassword} from '../../utils/validators'
 import {CONFIG} from '../../config'
 import {withTranslations} from '../../utils/renderUtils'
 import PasswordStrengthIndicator from './PasswordStrengthIndicator'
+import styles from './styles/WalletForm.style'
 
 import type {State} from '../../state'
 import type {PasswordValidationErrors} from '../../utils/validators'
@@ -99,62 +98,45 @@ class WalletForm extends PureComponent<Props, ComponentState> {
     const errors = validateForm({name, password, passwordConfirmation})
 
     return (
-      <View>
-        <NavigationEvents onWillBlur={this.handleOnWillBlur} />
-
-        <View>
-          <ValidatedTextInput
-            label={translations.nameLabel}
-            value={name}
-            onChange={this.handleSetName}
-          />
-
-          {!errors.nameReq && (
-            <CheckIcon
-              width={25}
-              height={25}
-              color={COLORS.LIGHT_POSITIVE_GREEN}
+      <SafeAreaView style={styles.safeAreaView}>
+        <View style={styles.container}>
+          <NavigationEvents onWillBlur={this.handleOnWillBlur} />
+          <View style={styles.content}>
+            <ValidatedTextInput
+              label={translations.nameLabel}
+              value={name}
+              onChange={this.handleSetName}
             />
-          )}
-        </View>
 
-        <View>
-          <ValidatedTextInput
-            secureTextEntry
-            label={translations.passwordLabel}
-            value={password}
-            onChange={this.handleSetPassword}
-          />
-        </View>
-
-        <View>
-          <ValidatedTextInput
-            secureTextEntry
-            label={translations.passwordConfirmationLabel}
-            value={passwordConfirmation}
-            onChange={this.handleSetPasswordConfirmation}
-            error={
-              showPasswordsDoNotMatchError && translations.passwordsDoNotMatch
-            }
-          />
-
-          {/* prettier-ignore */ (!errors.passwordConfirmationReq && !errors.matchesConfirmation) && ( // eslint-disable-line
-            <CheckIcon
-              width={25}
-              height={25}
-              color={COLORS.LIGHT_POSITIVE_GREEN}
+            <ValidatedTextInput
+              secureTextEntry
+              label={translations.passwordLabel}
+              value={password}
+              onChange={this.handleSetPassword}
             />
-          )}
+
+            <ValidatedTextInput
+              secureTextEntry
+              label={translations.passwordConfirmationLabel}
+              value={passwordConfirmation}
+              onChange={this.handleSetPasswordConfirmation}
+              error={
+                showPasswordsDoNotMatchError && translations.passwordsDoNotMatch
+              }
+            />
+
+            <PasswordStrengthIndicator password={password} />
+          </View>
+
+          <View style={styles.action}>
+            <Button
+              onPress={this.handleSubmit}
+              disabled={!_.isEmpty(errors)}
+              title={translations.continueButton}
+            />
+          </View>
         </View>
-
-        <PasswordStrengthIndicator password={password} />
-
-        <Button
-          onPress={this.handleSubmit}
-          disabled={!_.isEmpty(errors)}
-          title={translations.continueButton}
-        />
-      </View>
+      </SafeAreaView>
     )
   }
 }
