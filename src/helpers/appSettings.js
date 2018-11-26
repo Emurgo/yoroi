@@ -7,9 +7,14 @@ import storage from '../utils/storage'
 export const APP_SETTINGS_KEYS = {
   APP_ID: 'appId',
   CUSTOM_PIN_HASH: 'customPinHash',
+  ACCEPTED_TOS: 'acceptedTos',
+  LANG: 'languageCode',
+  SYSTEM_AUTH_ENABLED: 'isSystemAuthEnabled',
+  FINGERPRINT_HW_SUPPORT: 'isFingerprintsHardwareSupported',
+  HAS_FINGERPRINTS_ENROLLED: 'hasEnrolledFingerprints',
 }
 
-type AppSettingsKey = $Values<typeof APP_SETTINGS_KEYS>
+export type AppSettingsKey = $Values<typeof APP_SETTINGS_KEYS>
 
 // thrown when app settings is missing
 export class AppSettingsError extends ExtendableError {

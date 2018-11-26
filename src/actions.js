@@ -6,9 +6,8 @@ import {Logger} from './utils/logging'
 import walletManager from './crypto/wallet'
 import {mirrorTxHistory, setBackgroundSyncError} from './actions/history'
 import {
-  isFingerprintEncryptionHardwareSupported,
   canFingerprintEncryptionBeEnabled,
-  isSystemAuthSupported,
+  recreateAppSignInKeys,
 } from './helpers/deviceSettings'
 import l10n from './l10n'
 import {backgroundLockListener} from './helpers/backgroundLockHelper'
@@ -18,30 +17,38 @@ import {
   writeAppSettings,
   AppSettingsError,
   APP_SETTINGS_KEYS,
+  type AppSettingsKey,
 } from './helpers/appSettings'
 import networkInfo from './utils/networkInfo'
-import {loadLanguage} from './actions/language'
-import storage from './utils/storage'
+import {
+  appIdSelector,
+  systemAuthSupportSelector,
+  customPinHashSelector,
+  languageSelector,
+  tosSelector,
+} from './selectors'
+
 import {type Dispatch} from 'redux'
 import {type State} from './state'
 import NavigationService from './NavigationService'
 import {ROOT_ROUTES, FIRST_RUN_ROUTES} from './RoutesList'
 
-const LOCAL_STORAGE_ACCEPTED_TOS = '/settings/acceptedTos'
-
-export const updateFingerprintsIndicators = (
-  indicator: string,
-  value: boolean,
-) => (dispatch: Dispatch<any>) => {
+export const setAppSettingField = (fieldName: AppSettingsKey, value: any) => (
+  dispatch: Dispatch<any>,
+) => {
+  writeAppSettings(fieldName, value)
   dispatch({
-    path: ['auth', indicator],
+    path: ['appSettings', fieldName],
     payload: value,
-    reducer: (state, value) => value,
-    type: 'UPDATE_FINGERPRINT_HW_INDICATORS',
+    type: 'SET_APP_SETTING_FIELD',
+    reducer: (state, payload) => payload,
   })
 }
 
-export const setSystemAuth = (enable: boolean) => (dispatch: Dispatch<any>) => {
+export const setSystemAuth = (enable: boolean) => (
+  dispatch: Dispatch<any>,
+  getState: any,
+) => {
   const canBeDisabled = walletManager.canBiometricsSignInBeDisabled()
   if (!enable && !canBeDisabled) {
     Alert.alert(
@@ -56,12 +63,12 @@ export const setSystemAuth = (enable: boolean) => (dispatch: Dispatch<any>) => {
     return
   }
 
-  dispatch({
-    path: ['auth', 'isSystemAuthEnabled'],
-    payload: enable,
-    reducer: (state: State, value: boolean) => value,
-    type: 'SET_SYSTEM_AUTH',
-  })
+  dispatch(setAppSettingField(APP_SETTINGS_KEYS.SYSTEM_AUTH_ENABLED, enable))
+
+  const appId = appIdSelector(getState())
+  if (appId) {
+    recreateAppSignInKeys(appId)
+  }
 }
 
 export const setEasyConfirmation = (enable: boolean) => ({
@@ -84,40 +91,16 @@ const updateWallets = () => (dispatch: Dispatch<any>) => {
 }
 
 const _setAppSettings = (appSettings) => ({
-  path: null,
+  path: ['appSettings'],
   payload: appSettings,
-  type: 'SET_APP_ID',
-  reducer: (state, appSettings) => ({
-    ...state,
-    appSettings: {
-      ...state.appSettings,
-      appId: appSettings.appId,
-    },
-    auth: {
-      ...state.auth,
-      customPinHash: appSettings.customPinHash,
-    },
-  }),
+  type: 'SET_APP_SETTINGS',
+  reducer: (state, payload) => payload,
 })
 
 const reloadAppSettings = () => async (dispatch: Dispatch<any>) => {
   const appSettings = await readAppSettings()
   dispatch(_setAppSettings(appSettings))
 }
-
-const _setAppId = (appId) => ({
-  path: ['appSettings', 'appId'],
-  payload: appId,
-  type: 'SET_APP_ID',
-  reducer: (state, appId) => appId,
-})
-
-const _setCustomPinHash = (customPinHash) => ({
-  path: ['auth', 'customPinHash'],
-  payload: customPinHash,
-  type: 'SET_CUSTOM_PIN_HASH',
-  reducer: (state, customPinHash) => customPinHash,
-})
 
 export const encryptAndStoreCustomPin = (pin: string) => async (
   dispatch: Dispatch<any>,
@@ -129,8 +112,7 @@ export const encryptAndStoreCustomPin = (pin: string) => async (
     throw new AppSettingsError(APP_SETTINGS_KEYS.APP_ID)
   }
   const customPinHash = await encryptCustomPin(appId, pin)
-  await writeAppSettings(APP_SETTINGS_KEYS.CUSTOM_PIN_HASH, customPinHash)
-  dispatch(_setCustomPinHash(customPinHash))
+  dispatch(setAppSettingField(APP_SETTINGS_KEYS.CUSTOM_PIN_HASH, customPinHash))
 }
 
 export const navigateFromSplash = () => (
@@ -141,22 +123,19 @@ export const navigateFromSplash = () => (
   // onboarding and normal wallet flow
   const state = getState()
 
-  if (!state.languageCode) {
+  if (!languageSelector(state)) {
     NavigationService.navigate(ROOT_ROUTES.FIRST_RUN)
-  } else if (!state.appSettings.acceptedTos) {
+  } else if (!tosSelector(state)) {
     NavigationService.navigate(FIRST_RUN_ROUTES.ACCEPT_TERMS_OF_SERVICE)
+  } else if (
+    !systemAuthSupportSelector(state) &&
+    !customPinHashSelector(state)
+  ) {
+    NavigationService.navigate(FIRST_RUN_ROUTES.CUSTOM_PIN)
   } else {
     NavigationService.navigate(ROOT_ROUTES.INDEX)
   }
 }
-
-const acceptTos = () => (dispatch: Dispatch<any>) =>
-  dispatch({
-    type: 'Accept tos',
-    path: ['appSettings', 'acceptedTos'],
-    payload: true,
-    reducer: (state, payload) => payload,
-  })
 
 export const notifyOfGeneralError = (errorToLog: string, exception: Object) => {
   Logger.error(errorToLog, exception)
@@ -167,64 +146,47 @@ export const notifyOfGeneralError = (errorToLog: string, exception: Object) => {
   )
 }
 
-export const acceptAndSaveTos = () => async (dispatch: Dispatch<any>) => {
-  await storage.write(LOCAL_STORAGE_ACCEPTED_TOS, true)
-
-  dispatch(acceptTos())
+export const acceptAndSaveTos = () => (dispatch: Dispatch<any>) => {
+  dispatch(setAppSettingField(APP_SETTINGS_KEYS.ACCEPTED_TOS, true))
 }
 
-export const loadAcceptedTos = () => async (dispatch: Dispatch<any>) => {
-  try {
-    const acceptedTos = await storage.read(LOCAL_STORAGE_ACCEPTED_TOS)
-    if (acceptedTos) {
-      dispatch(acceptTos())
-    }
-  } catch (e) {
-    Logger.error('Loading tos consent failed. UI language left intact.', e)
-    throw e
-  }
+const firstRunSetup = () => (dispatch: Dispatch<any>, getState: any) => {
+  const appId = uuid.v4()
+  dispatch(setAppSettingField(APP_SETTINGS_KEYS.APP_ID, appId))
+}
+
+export const closeWallet = () => async (dispatch: Dispatch<any>) => {
+  await walletManager.closeWallet()
 }
 
 export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
+  await dispatch(reloadAppSettings())
+
+  const onTimeoutAction = () => {
+    closeWallet()
+    dispatch(navigateFromSplash())
+  }
+
   AppState.addEventListener('change', () => {
-    backgroundLockListener()
+    backgroundLockListener(onTimeoutAction)
   })
 
   const state = getState()
-  if (state.isAppInitialized) {
-    dispatch(navigateFromSplash())
-    return
+  if (!appIdSelector(state)) {
+    dispatch(firstRunSetup())
   }
 
-  await dispatch(reloadAppSettings())
+  // prettier-ignore
+  const hasEnrolledFingerprints =
+    await canFingerprintEncryptionBeEnabled()
 
-  if (!state.appSettings.appId) {
-    const appId = uuid.v4()
-    await writeAppSettings(APP_SETTINGS_KEYS.APP_ID, appId)
-    dispatch(_setAppId(appId))
-  }
+  dispatch(
+    setAppSettingField(
+      APP_SETTINGS_KEYS.HAS_FINGERPRINTS_ENROLLED,
+      hasEnrolledFingerprints,
+    ),
+  )
 
-  const [
-    isFingerprintHwSupported,
-    canFingerprintAuthBeEnabled,
-    canSystemAuthBeEnabled,
-  ] = await Promise.all([
-    isFingerprintEncryptionHardwareSupported(),
-    canFingerprintEncryptionBeEnabled(),
-    isSystemAuthSupported(),
-  ])
-
-  if (
-    (isFingerprintHwSupported && canFingerprintAuthBeEnabled) ||
-    canSystemAuthBeEnabled
-  ) {
-    dispatch(setSystemAuth(true))
-  } else {
-    // handle setting up of custom pin
-  }
-
-  await dispatch(loadLanguage())
-  await dispatch(loadAcceptedTos())
   await walletManager.initialize()
   await dispatch(updateWallets())
 
@@ -286,10 +248,6 @@ export const createWallet = (
 ) => async (dispatch: Dispatch<any>) => {
   await walletManager.createWallet(name, mnemonic, password)
   dispatch(updateWallets())
-}
-
-export const closeWallet = () => async (dispatch: Dispatch<any>) => {
-  await walletManager.closeWallet()
 }
 
 export const removeCurrentWallet = () => async (dispatch: Dispatch<any>) => {

@@ -3,13 +3,14 @@
 import {KeyStoreBridge} from 'NativeModules'
 import {Platform} from 'react-native'
 import * as Keychain from 'react-native-keychain'
+import KeyStore from '../crypto/KeyStore'
 
 export const isFingerprintEncryptionHardwareSupported = async () => {
   if (Platform.OS === 'android') {
     return await KeyStoreBridge.isFingerprintEncryptionHardwareSupported()
   } else if (Platform.OS === 'ios') {
-    const supportedBiometry = await Keychain.getSupportedBiometryType()
-    return supportedBiometry === Keychain.BIOMETRY_TYPE.TOUCH_ID
+    const supportedBiometrics = await Keychain.getSupportedBiometryType()
+    return supportedBiometrics === Keychain.BIOMETRY_TYPE.TOUCH_ID
   }
 
   throw new Error('Unsupported platform')
@@ -22,10 +23,10 @@ export const canFingerprintEncryptionBeEnabled = async () => {
     // prettier-ignore
     const hasFingerprintHardware =
       await isFingerprintEncryptionHardwareSupported()
-    const supportedBiometry = await Keychain.canImplyAuthentication({
+    const supportedBiometrics = await Keychain.canImplyAuthentication({
       authenticationType: Keychain.AUTHENTICATION_TYPE.BIOMETRICS,
     })
-    return supportedBiometry && hasFingerprintHardware
+    return supportedBiometrics && hasFingerprintHardware
   }
 
   throw new Error('Unsupported platform')
@@ -53,4 +54,9 @@ export const isBiometricPromptSupported = async () => {
   }
 
   throw new Error('Unsupported platform')
+}
+
+export const recreateAppSignInKeys = async (appId: string) => {
+  await KeyStore.storeData(appId, 'BIOMETRICS', appId, '')
+  await KeyStore.storeData(appId, 'SYSTEM_PIN', appId, '')
 }

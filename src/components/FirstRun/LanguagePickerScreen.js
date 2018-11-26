@@ -10,6 +10,7 @@ import {FIRST_RUN_ROUTES} from '../../RoutesList'
 import languageActions from '../../actions/language'
 import LanguagePicker from '../Common/LanguagePicker'
 import {notifyOfGeneralError} from '../../actions'
+import {languageSelector} from '../../selectors'
 
 import styles from './styles/LanguagePickerScreen.style'
 
@@ -29,7 +30,7 @@ const LanguagePickerScreen = ({
 export default compose(
   connect(
     (state, {navigation}) => ({
-      languageCode: state.languageCode || 'en-US',
+      languageCode: languageSelector(state) || 'en-US',
     }),
     languageActions,
   ),

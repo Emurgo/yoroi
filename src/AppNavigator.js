@@ -12,6 +12,8 @@ import AppStartScreen from './components/Login/AppStartScreen'
 // eslint-disable-next-line max-len
 import WalletSelectionScreen from './components/WalletSelection/WalletSelectionScreen'
 import {WALLET_ROUTES, ROOT_ROUTES} from './RoutesList'
+import BiometricAuthScreen from './components/Send/BiometricAuthScreen'
+import CustomPinLogin from './components/Login/CustomPinLogin'
 
 const WalletNavigator = createStackNavigator(
   {
@@ -36,8 +38,10 @@ const AppNavigator = createSwitchNavigator(
     [ROOT_ROUTES.FIRST_RUN]: FirstRunNavigator,
     [ROOT_ROUTES.NEW_WALLET]: WalletInitNavigator,
     [ROOT_ROUTES.LOGIN]: AppStartScreen,
+    [ROOT_ROUTES.BIO_AUTH]: BiometricAuthScreen,
     [ROOT_ROUTES.WALLET_SELECTION]: WalletSelectionScreen,
     [ROOT_ROUTES.WALLET]: WalletNavigator,
+    [ROOT_ROUTES.CUSTOM_PIN_AUTH]: CustomPinLogin,
   },
   {
     initialRouteName: ROOT_ROUTES.SPLASH,

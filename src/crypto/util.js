@@ -33,7 +33,7 @@ const KNOWN_ERROR_MSG = {
   INSUFFICIENT_FUNDS_RE: /NotEnoughInput/,
   SIGN_TX_BUG: /TxBuildError\(CoinError\(Negative\)\)/,
 }
-export type EncryptionMethod = 'BIOMETRY' | 'SYSTEM_PIN' | 'MASTER_PASSWORD'
+export type EncryptionMethod = 'BIOMETRICS' | 'SYSTEM_PIN' | 'MASTER_PASSWORD'
 
 export const getMasterKeyFromMnemonic = async (mnemonic: string) => {
   const entropy = mnemonicToEntropy(mnemonic)

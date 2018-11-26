@@ -27,7 +27,7 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
     KeyguardManager keyguard;
     ReactApplicationContext context;
 
-    int REQUEST_CODE_CONFIRM_DEVICE_CREDENTIALS = 44;
+    int REQUEST_CODE_CONFIRM_DEVICE_CREDENTIALS_FOR_DECRYPTION = 44;
 
     Promise systemPinConfirmationPromise;
     Promise fingerprintConfirmationPromise;
@@ -54,6 +54,7 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
     private String REJECTION_FAILED = "FAILED";
 
     private String REJECTION_BIOMETRIC_PROMPT_CANCELED = "BIOMETRIC_PROMPT_CANCELED";
+    private String REJECTION_INVALID_KEY = "INVALID_KEY";
 
     // deleteAndroidKeyStoreAsymmetricKeyPair
     private String REJECTION_KEY_NOT_DELETED = "KEY_NOT_DELETED";
@@ -164,11 +165,18 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
             promise.reject(REJECTION_ALREADY_DECRYPTING_DATA, REJECTION_ALREADY_DECRYPTING_DATA);
             return;
         }
+
+        Cipher cipher;
+        try {
+            cipher = this.crypto.getDecryptCipher(keyAlias);
+        } catch (Exception e) {
+            promise.reject(REJECTION_INVALID_KEY, REJECTION_INVALID_KEY);
+            return;
+        }
+
         fingerprintConfirmationPromise = promise;
 
         try {
-            Cipher cipher = this.crypto.getDecryptCipher(keyAlias);
-
             this.fingerprintCancellation = new CancellationSignal();
             FingerprintManager.CryptoObject cryptoObject = new FingerprintManager.CryptoObject(cipher);
             FingerprintManager fingerprintManager = (FingerprintManager) this.context.getSystemService(Context.FINGERPRINT_SERVICE);
@@ -237,7 +245,7 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
             this.systemPinConfirmationPromise = promise;
             this.systemPinKeyAlias = keyAlias;
             this.systemPinEncryptedData = data;
-            this.context.startActivityForResult(intent, REQUEST_CODE_CONFIRM_DEVICE_CREDENTIALS, null);
+            this.context.startActivityForResult(intent, REQUEST_CODE_CONFIRM_DEVICE_CREDENTIALS_FOR_DECRYPTION, null);
         } else {
             promise.reject(REJECTION_FAILED_UNKNOWN_ERROR, REJECTION_FAILED_UNKNOWN_ERROR);
         }
@@ -256,7 +264,7 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
     private final ActivityEventListener activityEventListener = new BaseActivityEventListener() {
         @Override
         public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent intent) {
-            if (requestCode == REQUEST_CODE_CONFIRM_DEVICE_CREDENTIALS) {
+            if (requestCode == REQUEST_CODE_CONFIRM_DEVICE_CREDENTIALS_FOR_DECRYPTION) {
                 if (systemPinConfirmationPromise != null) {
                     if (resultCode == Activity.RESULT_CANCELED) {
                         systemPinConfirmationPromise.reject(REJECTION_CANCELED, REJECTION_CANCELED);

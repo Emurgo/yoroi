@@ -8,7 +8,7 @@ import storage from '../utils/storage'
 import assert from '../utils/assert'
 import {decryptData, encryptData} from '../crypto/util'
 
-export type EncryptionMethod = 'BIOMETRY' | 'SYSTEM_PIN' | 'MASTER_PASSWORD'
+export type EncryptionMethod = 'BIOMETRICS' | 'SYSTEM_PIN' | 'MASTER_PASSWORD'
 
 class KeyStore {
   static async getData(
@@ -29,7 +29,7 @@ class KeyStore {
 
     const data = await storage.read(`/keyStore/${dataKey}`)
     switch (encryptionMethod) {
-      case 'BIOMETRY': {
+      case 'BIOMETRICS': {
         let decryptedKey = ''
         // prettier-ignore
         const isBiometricPromptSupported =
@@ -85,7 +85,7 @@ class KeyStore {
 
     let encryptedData = ''
     switch (encryptionMethod) {
-      case 'BIOMETRY': {
+      case 'BIOMETRICS': {
         encryptedData = await KeyStore.encryptByFingerprint(dataKey, data)
         break
       }

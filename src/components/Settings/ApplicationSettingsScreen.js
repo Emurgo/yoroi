@@ -8,7 +8,8 @@ import {NavigationEvents} from 'react-navigation'
 
 import {SETTINGS_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
-import {updateFingerprintsIndicators, setSystemAuth} from '../../actions'
+import {setAppSettingField, setSystemAuth} from '../../actions'
+import {APP_SETTINGS_KEYS} from '../../helpers/appSettings'
 import {
   isFingerprintEncryptionHardwareSupported,
   canFingerprintEncryptionBeEnabled,
@@ -34,7 +35,7 @@ const styles = StyleSheet.create({
 })
 
 type Props = {
-  onToggleFingerprintSignIn: () => void,
+  onToggleBiometricsAuthIn: () => void,
   translations: SubTranslation<typeof getTranslations>,
   updateDeviceSettings: () => void,
   setSystemAuth: () => void,
@@ -43,7 +44,7 @@ type Props = {
   language: string,
 }
 
-const onToggleFingerprintSignIn = ({
+const onToggleBiometricsAuthIn = ({
   isSystemAuthEnabled,
   navigation,
   setSystemAuth,
@@ -56,7 +57,7 @@ const onToggleFingerprintSignIn = ({
   }
 }
 
-const updateDeviceSettings = async ({updateFingerprintsIndicators}) => {
+const updateDeviceSettings = async ({setAppSettingField}) => {
   // prettier-ignore
   const isHardwareSupported =
     await isFingerprintEncryptionHardwareSupported()
@@ -64,18 +65,18 @@ const updateDeviceSettings = async ({updateFingerprintsIndicators}) => {
   const hasEnrolledFingerprints =
     await canFingerprintEncryptionBeEnabled()
 
-  updateFingerprintsIndicators(
-    'isFingerprintsHardwareSupported',
+  setAppSettingField(
+    APP_SETTINGS_KEYS.FINGERPRINT_HW_SUPPORT,
     isHardwareSupported,
   )
-  updateFingerprintsIndicators(
-    'hasEnrolledFingerprints',
+  setAppSettingField(
+    APP_SETTINGS_KEYS.HAS_FINGERPRINTS_ENROLLED,
     hasEnrolledFingerprints,
   )
 }
 
 const ApplicationSettingsScreen = ({
-  onToggleFingerprintSignIn,
+  onToggleBiometricsAuthIn,
   translations,
   updateDeviceSettings,
   isFingerprintsHardwareSupported,
@@ -97,10 +98,10 @@ const ApplicationSettingsScreen = ({
         navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
       />
 
-      <SettingsItem label={translations.fingerprintSignIn}>
+      <SettingsItem label={translations.biometricsSignIn}>
         <Switch
           value={isSystemAuthEnabled}
-          onValueChange={onToggleFingerprintSignIn}
+          onValueChange={onToggleBiometricsAuthIn}
           disabled={!isFingerprintsHardwareSupported}
         />
       </SettingsItem>
@@ -135,12 +136,12 @@ export default compose(
       isSystemAuthEnabled: systemAuthSupportSelector(state),
       language: state.trans.global.currentLanguageName,
     }),
-    {updateFingerprintsIndicators, setSystemAuth},
+    {setAppSettingField, setSystemAuth},
   ),
   withNavigationTitle(({translations}) => translations.title),
   withHandlers({
-    onToggleFingerprintSignIn,
-    updateDeviceSettings: ({updateFingerprintsIndicators}) => () =>
-      updateDeviceSettings({updateFingerprintsIndicators}),
+    onToggleBiometricsAuthIn,
+    updateDeviceSettings: ({setAppSettingField}) => () =>
+      updateDeviceSettings({setAppSettingField}),
   }),
 )(ApplicationSettingsScreen)

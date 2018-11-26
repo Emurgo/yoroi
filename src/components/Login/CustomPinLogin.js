@@ -1,0 +1,81 @@
+// @flow
+
+import React from 'react'
+import {compose} from 'redux'
+import {connect} from 'react-redux'
+import {View} from 'react-native'
+
+import {CONFIG} from '../../config'
+import PinInput from '../Common/PinInput'
+import {withTranslations} from '../../utils/renderUtils'
+import {withHandlers, withState} from 'recompose'
+import {ROOT_ROUTES} from '../../RoutesList'
+import {authenticateByCustomPin} from '../../crypto/customPin'
+import {customPinHashSelector} from '../../selectors'
+
+import styles from './styles/CustomPinLogin.style'
+
+import type {SubTranslation} from '../../l10n/typeHelpers'
+import type {Navigation} from '../../types/navigation'
+import type {ComponentType} from 'react'
+
+const getTranslations = (state) => state.trans.LoginScreen
+
+type Props = {
+  translations: SubTranslation<typeof getTranslations>,
+  onPinEnter: (pin: string) => mixed,
+}
+
+const CustomPinLogin = ({translations, onPinEnter}: Props) => (
+  <View style={styles.root}>
+    <PinInput
+      pinMaxLength={CONFIG.PIN_LENGTH}
+      labels={{
+        title: translations.title,
+        subtitle: '',
+        subtitle2: '',
+      }}
+      onPinEnter={onPinEnter}
+    />
+  </View>
+)
+
+type ExternalProps = {|
+  navigation: Navigation,
+  customPinHash: ?string,
+  translations: SubTranslation<typeof getTranslations>,
+  toggleLogin: (inProgress: boolean) => mixed,
+  isLoginInProgress: boolean,
+|}
+
+export default (compose(
+  connect((state) => ({
+    customPinHash: customPinHashSelector(state),
+  })),
+  withTranslations(getTranslations),
+  withState('isLoginInProgress', 'toggleLogin', false),
+  withHandlers({
+    onPinEnter: ({
+      navigation,
+      toggleLogin,
+      isLoginInProgress,
+      customPinHash,
+    }: ExternalProps) => async (pin) => {
+      if (isLoginInProgress) return
+      if (!customPinHash) {
+        throw new Error('Custom pin is not setup')
+      }
+
+      toggleLogin(true)
+
+      const isPinValid = await authenticateByCustomPin(customPinHash, pin)
+      if (isPinValid) {
+        navigation.navigate(ROOT_ROUTES.WALLET_SELECTION)
+      } else {
+        navigation.goBack()
+      }
+
+      toggleLogin(false)
+    },
+  }),
+)(CustomPinLogin): ComponentType<ExternalProps>)

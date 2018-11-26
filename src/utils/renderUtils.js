@@ -38,6 +38,25 @@ export const onDidMount = <
     }
 
 // prettier-ignore
+export const onWillUnmount = <
+  Props,
+  Callback: (any) => mixed,
+>(
+    willUnmount: Callback,
+  ): HOC<Props, Props> => (
+    BaseComponent: ComponentType<Props>,
+  ): ComponentType<Props> =>
+    class OnWillUnmount extends React.Component<Props> {
+      componentWillUnmount = () => {
+        willUnmount(this.props)
+      }
+
+      render = () => {
+        return <BaseComponent {...this.props} />
+      }
+    }
+
+// prettier-ignore
 export const onDidUpdate = <Props, Callback: (any, any) => mixed>(
   didUpdate: Callback,
 ): HOC<Props, Props> => (

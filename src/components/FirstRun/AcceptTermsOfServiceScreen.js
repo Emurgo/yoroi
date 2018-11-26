@@ -12,7 +12,12 @@ import {withNavigationTitle} from '../../utils/renderUtils'
 import {Checkbox, Button} from '../UiKit'
 import {FIRST_RUN_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import {systemAuthSupportSelector} from '../../selectors'
-import {acceptAndSaveTos, notifyOfGeneralError} from '../../actions'
+import {
+  acceptAndSaveTos,
+  notifyOfGeneralError,
+  setSystemAuth,
+} from '../../actions'
+import {canFingerprintEncryptionBeEnabled} from '../../helpers/deviceSettings'
 
 import styles from './styles/AcceptTermsOfServiceScreen.styles'
 
@@ -58,7 +63,7 @@ export default compose(
       translations: getTranslations(state),
       isSystemAuthEnabled: systemAuthSupportSelector(state),
     }),
-    {acceptAndSaveTos},
+    {acceptAndSaveTos, setSystemAuth},
   ),
   withState('acceptedTos', 'setAcceptedTos', false),
   withHandlers({
@@ -75,7 +80,9 @@ export default compose(
         return
       }
 
-      if (isSystemAuthEnabled) {
+      const canSystemAuthBeEnabled = await canFingerprintEncryptionBeEnabled()
+      if (canSystemAuthBeEnabled) {
+        setSystemAuth(true)
         navigation.navigate(WALLET_INIT_ROUTES.MAIN)
       } else {
         navigation.navigate(FIRST_RUN_ROUTES.CUSTOM_PIN)

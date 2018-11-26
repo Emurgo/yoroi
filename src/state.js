@@ -34,17 +34,15 @@ export type State = {
   },
   trans: Translation,
   isOnline: boolean,
-  auth: {
-    isFingerprintsHardwareSupported: boolean,
-    isSystemAuthEnabled: boolean,
-    hasEnrolledFingerprints: boolean,
-    customPinHash: ?string,
-  },
   isAppInitialized: boolean,
   appSettings: {
     acceptedTos: boolean,
     appId: ?string,
     languageCode: string,
+    customPinHash: ?string,
+    isSystemAuthEnabled: boolean,
+    isFingerprintsHardwareSupported: boolean,
+    hasEnrolledFingerprints: boolean,
   },
 }
 
@@ -73,17 +71,15 @@ export const getInitialState = (): State => ({
   },
   trans: l10n.translations,
   isOnline: true, // we are online by default
-  auth: {
-    isFingerprintsHardwareSupported: false,
-    hasEnrolledFingerprints: false,
-    isSystemAuthEnabled: false,
-    customPinHash: null,
-  },
   isAppInitialized: false,
   appSettings: {
     acceptedTos: false,
     languageCode: 'en-US',
     appId: null,
+    customPinHash: null,
+    isSystemAuthEnabled: false,
+    isFingerprintsHardwareSupported: false,
+    hasEnrolledFingerprints: false,
   },
 })
 

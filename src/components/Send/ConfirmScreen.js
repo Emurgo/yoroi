@@ -3,7 +3,7 @@
 import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {ScrollView, Alert, TextInput, View, Platform} from 'react-native'
+import {ScrollView, Alert, TextInput, View} from 'react-native'
 import {withHandlers, withState} from 'recompose'
 
 import Amount from './Amount'
@@ -13,6 +13,7 @@ import walletManager from '../../crypto/wallet'
 import {SEND_ROUTES} from '../../RoutesList'
 import {formatAda} from '../../utils/format'
 import {CONFIG} from '../../config'
+import KeyStore from '../../crypto/KeyStore'
 
 import styles from './styles/ConfirmScreen.style'
 
@@ -31,37 +32,29 @@ const handleOnConfirm = async (
   const translations = l10n.translations.ConfirmScreen.ErrorDialogs
   const transactionData = navigation.getParam('transactionData')
 
-  if (isEasyConfirmationEnabled && Platform.OS === 'android') {
-    navigation.navigate(SEND_ROUTES.ANDROID_FINGERPRINT_SIGNING, {
+  const submitTx = (decryptedKey) =>
+    navigation.navigate(SEND_ROUTES.SENDING_MODAL, {
+      decryptedKey,
       transactionData,
+    })
+
+  if (isEasyConfirmationEnabled) {
+    navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
+      keyId: walletManager._id,
+      onSuccess: submitTx,
     })
     return
   }
 
-  if (isEasyConfirmationEnabled) {
-    // this needs to be tested on ios how it looks
-    // on android it will launch biometric prompt
-    // and all errors are handled there (UI)
-    try {
-      const signedTx = await walletManager.signTx(
-        transactionData,
-        'BIOMETRY',
-        '',
-      )
-      navigation.navigate(SEND_ROUTES.SENDING_MODAL, {signedTx})
-    } catch (e) {
-      return
-    }
-  }
-
   try {
-    const signedTx = await walletManager.signTx(
-      transactionData,
+    const decryptedData = await KeyStore.getData(
+      walletManager._id,
       'MASTER_PASSWORD',
+      '',
       password,
     )
 
-    navigation.navigate(SEND_ROUTES.SENDING_MODAL, {signedTx})
+    submitTx(decryptedData)
   } catch (e) {
     if (e instanceof WrongPassword) {
       Alert.alert(

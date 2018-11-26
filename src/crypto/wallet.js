@@ -29,7 +29,7 @@ import type {
 } from '../types/HistoryTransaction'
 import type {Mutex} from '../utils/promise'
 
-export type EncryptionMethod = 'BIOMETRY' | 'SYSTEM_PIN' | 'MASTER_PASSWORD'
+export type EncryptionMethod = 'BIOMETRICS' | 'SYSTEM_PIN' | 'MASTER_PASSWORD'
 
 type WalletState = {|
   lastGeneratedAddressIndex: number,
@@ -91,7 +91,7 @@ export class Wallet {
       masterPassword,
     )
 
-    await this.encryptAndSaveMasterKey('BIOMETRY', decryptedMasterKey)
+    await this.encryptAndSaveMasterKey('BIOMETRICS', decryptedMasterKey)
     await this.encryptAndSaveMasterKey('SYSTEM_PIN', decryptedMasterKey)
 
     // $FlowFixMe
@@ -357,17 +357,9 @@ export class Wallet {
 
   async signTx(
     transaction: PreparedTransactionData,
-    encryptionMethod: util.EncryptionMethod,
-    password?: string,
+    decryptedMasterKey: string,
   ) {
     const {inputs, outputs, changeAddress, fee} = transaction
-
-    const decryptedMasterKey = await KeyStore.getData(
-      this._id,
-      encryptionMethod,
-      'l10n Authorize Tx sign',
-      password,
-    )
 
     const signedTxData = await util.signTransaction(
       await util.getWalletFromMasterKey(decryptedMasterKey),
@@ -555,14 +547,10 @@ class WalletManager {
     )
   }
 
-  async signTx(
-    transactionData: PreparedTransactionData,
-    encryptionMethod: util.EncryptionMethod,
-    password: string,
-  ) {
+  async signTx(transactionData: PreparedTransactionData, decryptedKey: string) {
     if (!this._wallet) throw new WalletClosed()
     return await this.abortWhenWalletCloses(
-      this._wallet.signTx(transactionData, encryptionMethod, password),
+      this._wallet.signTx(transactionData, decryptedKey),
     )
   }
 
@@ -652,7 +640,7 @@ class WalletManager {
     })
 
     // $FlowFixMe
-    await this.deleteEncryptedKey('BIOMETRY')
+    await this.deleteEncryptedKey('BIOMETRICS')
     // $FlowFixMe
     await this.deleteEncryptedKey('SYSTEM_PIN')
 
