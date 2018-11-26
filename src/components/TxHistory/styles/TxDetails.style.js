@@ -3,14 +3,12 @@ import {StyleSheet} from 'react-native'
 
 import {COLORS} from '../../../styles/config'
 
-const styles = StyleSheet.create({
-  root: {
+export default StyleSheet.create({
+  container: {
     flex: 1,
   },
-  container: {
-    flexShrink: 1,
-    padding: 5,
-    backgroundColor: COLORS.WHITE,
+  content: {
+    paddingHorizontal: 16,
   },
   amountContainer: {
     flexDirection: 'row',
@@ -24,25 +22,21 @@ const styles = StyleSheet.create({
   },
   positiveAmount: {
     color: COLORS.POSITIVE_AMOUNT,
-    fontSize: 20,
   },
   negativeAmount: {
     color: COLORS.NEGATIVE_AMOUNT,
-    fontSize: 20,
   },
   noAmount: {
     color: COLORS.BLACK,
-    fontSize: 20,
   },
   adaSignContainer: {
     marginLeft: 5,
   },
-  label: {
-    fontSize: 17,
-  },
   section: {
     marginTop: 10,
   },
+  label: {
+    marginTop: 16,
+    marginBottom: 8,
+  },
 })
-
-export default styles
