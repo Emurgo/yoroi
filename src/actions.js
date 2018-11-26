@@ -1,4 +1,5 @@
 // @flow
+
 import {AppState, Alert} from 'react-native'
 import uuid from 'uuid'
 
@@ -28,10 +29,11 @@ import {
   tosSelector,
 } from './selectors'
 
-import {type Dispatch} from 'redux'
-import {type State} from './state'
 import NavigationService from './NavigationService'
 import {ROOT_ROUTES, FIRST_RUN_ROUTES} from './RoutesList'
+
+import {type Dispatch} from 'redux'
+import {type State} from './state'
 
 export const setAppSettingField = (fieldName: AppSettingsKey, value: any) => (
   dispatch: Dispatch<any>,
@@ -43,32 +45,6 @@ export const setAppSettingField = (fieldName: AppSettingsKey, value: any) => (
     type: 'SET_APP_SETTING_FIELD',
     reducer: (state, payload) => payload,
   })
-}
-
-export const setSystemAuth = (enable: boolean) => (
-  dispatch: Dispatch<any>,
-  getState: any,
-) => {
-  const canBeDisabled = walletManager.canBiometricsSignInBeDisabled()
-  if (!enable && !canBeDisabled) {
-    Alert.alert(
-      l10n.translations.SettingsScreen.systemAuthDisable.title,
-      l10n.translations.SettingsScreen.systemAuthDisable.text,
-      [
-        {
-          text: l10n.translations.SettingsScreen.systemAuthDisable.okButton,
-        },
-      ],
-    )
-    return
-  }
-
-  dispatch(setAppSettingField(APP_SETTINGS_KEYS.SYSTEM_AUTH_ENABLED, enable))
-
-  const appId = appIdSelector(getState())
-  if (appId) {
-    recreateAppSignInKeys(appId)
-  }
 }
 
 export const setEasyConfirmation = (enable: boolean) => ({
@@ -135,15 +111,6 @@ export const navigateFromSplash = () => (
   } else {
     NavigationService.navigate(ROOT_ROUTES.INIT)
   }
-}
-
-export const notifyOfGeneralError = (errorToLog: string, exception: Object) => {
-  Logger.error(errorToLog, exception)
-
-  Alert.alert(
-    l10n.translations.global.alerts.errorHeading,
-    l10n.translations.global.alerts.generalErrorText,
-  )
 }
 
 export const acceptAndSaveTos = () => (dispatch: Dispatch<any>) => {
@@ -253,4 +220,59 @@ export const createWallet = (
 export const removeCurrentWallet = () => async (dispatch: Dispatch<any>) => {
   await walletManager.removeCurrentWallet()
   dispatch(updateWallets())
+}
+
+type ErrorDialog = {|
+  title: string,
+  message: string,
+  yesButton: string,
+|}
+
+export const DIALOG_BUTTONS = Object.freeze({
+  YES: 'Yes',
+})
+
+type DialogButton = $Values<typeof DIALOG_BUTTONS>
+
+export const showErrorDialog = (
+  getDialog: (
+    translations: typeof l10n.translations.errorDialogs,
+  ) => ErrorDialog,
+): Promise<DialogButton> =>
+  new Promise((resolve, reject) => {
+    const {title, message, yesButton} = getDialog(
+      l10n.translations.errorDialogs,
+    )
+
+    const buttons = [
+      {text: yesButton, onPress: () => resolve(DIALOG_BUTTONS.YES)},
+    ]
+
+    Alert.alert(title, message, buttons, {cancelable: false})
+  })
+
+export const setSystemAuth = (enable: boolean) => async (
+  dispatch: Dispatch<any>,
+  getState: any,
+) => {
+  const canBeDisabled = walletManager.canBiometricsSignInBeDisabled()
+
+  if (!enable && !canBeDisabled) {
+    throw new Error(
+      'Can not disable system auth without disabling easy confirmation.',
+    )
+  }
+
+  dispatch(setAppSettingField(APP_SETTINGS_KEYS.SYSTEM_AUTH_ENABLED, enable))
+
+  const appId = appIdSelector(getState())
+  if (appId) {
+    await recreateAppSignInKeys(appId)
+  }
+}
+
+export const handleGeneralError = async (message: string, e: Error) => {
+  Logger.error(message, e)
+
+  await showErrorDialog((dialogs) => dialogs.general)
 }

@@ -3,7 +3,7 @@
 import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {ScrollView, Alert, TextInput, View} from 'react-native'
+import {ScrollView, TextInput, View} from 'react-native'
 import {withHandlers, withState} from 'recompose'
 
 import Amount from './Amount'
@@ -14,13 +14,17 @@ import {SEND_ROUTES} from '../../RoutesList'
 import {formatAda} from '../../utils/format'
 import {CONFIG} from '../../config'
 import KeyStore from '../../crypto/KeyStore'
+import {
+  showErrorDialog,
+  handleGeneralError,
+  DIALOG_BUTTONS,
+} from '../../actions'
+import assert from '../../utils/assert'
 
 import styles from './styles/ConfirmScreen.style'
 
 import {WrongPassword} from '../../crypto/errors'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
-
-import l10n from '../../l10n'
 
 const getTranslations = (state) => state.trans.ConfirmScreen.Confirmation
 
@@ -29,7 +33,6 @@ const handleOnConfirm = async (
   isEasyConfirmationEnabled,
   password,
 ) => {
-  const translations = l10n.translations.ConfirmScreen.ErrorDialogs
   const transactionData = navigation.getParam('transactionData')
 
   const submitTx = (decryptedKey) =>
@@ -57,18 +60,17 @@ const handleOnConfirm = async (
     submitTx(decryptedData)
   } catch (e) {
     if (e instanceof WrongPassword) {
-      Alert.alert(
-        translations.WrongPassword.title,
-        translations.WrongPassword.text,
-        [
-          {
-            text: translations.okTextButton,
-            onPress: () => navigation.navigate(SEND_ROUTES.CONFIRM),
-          },
-        ],
+      const result = await showErrorDialog(
+        (dialogs) => dialogs.incorrectPassword,
       )
+      assert.assert(
+        result === DIALOG_BUTTONS.YES,
+        'User should have tapped yes',
+      )
+
+      navigation.navigate(SEND_ROUTES.CONFIRM)
     } else {
-      throw e
+      handleGeneralError('Could not submit transaction', e)
     }
   }
 }

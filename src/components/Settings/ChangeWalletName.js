@@ -4,19 +4,13 @@ import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withState, withHandlers} from 'recompose'
-import {
-  Alert,
-  View,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native'
+import {View, TextInput, KeyboardAvoidingView, Platform} from 'react-native'
 import {SafeAreaView} from 'react-navigation'
 
 import {Button, Text} from '../UiKit'
 import {validateWalletName} from '../../utils/validators'
 import {walletNameSelector} from '../../selectors'
-import {changeWalletName} from '../../actions'
+import {changeWalletName, showErrorDialog} from '../../actions'
 import {withNavigationTitle} from '../../utils/renderUtils'
 
 import styles from './styles/ChangeWalletName.style'
@@ -87,13 +81,10 @@ export default compose(
 
       try {
         await changeWalletName(newName)
+
         navigation.goBack()
       } catch (e) {
-        Alert.alert(
-          translations.errorDialog.title,
-          translations.errorDialog.text,
-          [{text: translations.errorDialog.ok}],
-        )
+        await showErrorDialog((dialogs) => dialogs.general)
       }
     },
   }),

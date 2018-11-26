@@ -8,7 +8,7 @@ import {NavigationEvents} from 'react-navigation'
 
 import {SETTINGS_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
-import {setAppSettingField, setSystemAuth} from '../../actions'
+import {setAppSettingField, setSystemAuth, showErrorDialog} from '../../actions'
 import {APP_SETTINGS_KEYS} from '../../helpers/appSettings'
 import {
   isFingerprintEncryptionHardwareSupported,
@@ -51,7 +51,9 @@ const onToggleBiometricsAuthIn = ({
   translations,
 }) => () => {
   if (isSystemAuthEnabled) {
-    setSystemAuth(false)
+    setSystemAuth(false).catch(() =>
+      showErrorDialog((dialogs) => dialogs.disableEasyConfirmationFirst),
+    )
   } else {
     navigation.navigate(SETTINGS_ROUTES.FINGERPRINT_LINK)
   }
