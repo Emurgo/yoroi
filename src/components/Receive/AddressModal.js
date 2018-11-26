@@ -3,7 +3,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {Clipboard, View, Modal} from 'react-native'
+import {Clipboard, View, Modal, TouchableOpacity} from 'react-native'
 import QRCode from 'react-native-qrcode'
 
 import {externalAddressIndexSelector} from '../../selectors'
@@ -55,28 +55,33 @@ class AddressModal extends React.Component<Props, State> {
     const {address, index, translations, onRequestClose, visible} = this.props
 
     return (
-      <Modal visible={visible} onRequestClose={onRequestClose}>
-        <View style={styles.root}>
-          <Button onPress={onRequestClose} title={'\u00d7'} />
+      <Modal
+        transparent
+        animationType="fade"
+        visible={visible}
+        onRequestClose={onRequestClose}
+      >
+        <View style={styles.backdrop}>
           <View style={styles.container}>
-            <QRCode
-              value={address}
-              size={styles.qrcode.size}
-              bgColor={styles.qrcode.backgroundColor}
-              fgColor={styles.qrcode.foregroundColor}
-            />
-          </View>
+            <TouchableOpacity style={styles.close} onPress={onRequestClose}>
+              <Text style={styles.closeText}>{'\u00d7'}</Text>
+            </TouchableOpacity>
+            <View style={styles.content}>
+              <QRCode
+                value={address}
+                size={140}
+                bgColor="#000"
+                fgColor="#fff"
+              />
 
-          <View style={styles.container}>
-            {index != null && (
-              <Text style={styles.address}>
-                {translations.BIP32path} {formatBIP44(0, 'External', index)}
-              </Text>
-            )}
-            <Text style={styles.address}>{address}</Text>
-          </View>
+              {index != null && (
+                <Text style={styles.address}>
+                  {translations.BIP32path} {formatBIP44(0, 'External', index)}
+                </Text>
+              )}
+              <Text style={styles.address}>{address}</Text>
+            </View>
 
-          <View style={styles.container}>
             <Button
               onPress={this._copyAddress}
               title={
