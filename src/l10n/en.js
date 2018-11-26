@@ -371,13 +371,17 @@ your wallets first',
     password: 'Wallet password',
     remove: 'Remove wallet',
   },
-  CustomPinScreen: {
+  PinRegistrationForm: {
     PinInput: {
       title: 'Enter the PIN',
       subtitle: 'Choose a PIN for quick access to wallet.',
     },
     PinConfirmationInput: {
       title: 'Repeat PIN',
+    },
+    PinMismatchError: {
+      title: 'Invalid PIN',
+      text: 'PIN does not match.',
     },
     okButton: 'OK',
   },

@@ -3,89 +3,40 @@ import React from 'react'
 import {View} from 'react-native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {withHandlers, withState} from 'recompose'
-import {NavigationEvents} from 'react-navigation'
+import {withHandlers} from 'recompose'
 
-import PinInput from '../Common/PinInput'
+import PinRegistrationForm from '../Common/PinRegistrationForm'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
-import {CONFIG} from '../../config'
-import {encryptAndStoreCustomPin, showErrorDialog} from '../../actions'
+import {encryptAndStoreCustomPin} from '../../actions'
 
 import styles from './styles/CustomPinScreen.style'
 
-import type {SubTranslation} from '../../l10n/typeHelpers'
-import type {State} from '../../state'
-
-const getTranslations = (state: State) => state.trans.CustomPinScreen
-
-const handlePinEnter = ({
+const handleValidPinEnter = ({navigation, encryptAndStoreCustomPin}) => async (
   pin,
-  setPin,
-  navigation,
-  translations,
-  encryptAndStoreCustomPin,
-}) => async (pinConfirmation) => {
-  if (pin !== pinConfirmation) {
-    setPin('')
-
-    await showErrorDialog((dialogs) => dialogs.pinMismatch)
-    return
-  }
-
-  try {
-    await encryptAndStoreCustomPin(pin)
-
-    navigation.navigate(WALLET_INIT_ROUTES.MAIN)
-  } catch (err) {
-    setPin('')
-
-    await showErrorDialog((dialogs) => dialogs.general)
-  }
+) => {
+  await encryptAndStoreCustomPin(pin)
+  navigation.navigate(WALLET_INIT_ROUTES.MAIN)
 }
 
 type Props = {
-  pin: string,
-  setPin: (string) => void,
-  translations: SubTranslation<typeof getTranslations>,
-  handlePinEnter: (string) => void,
-  clearPin: () => void,
+  handleValidPinEnter: (string) => void,
 }
 
-const CustomPinScreen = ({
-  pin,
-  setPin,
-  translations,
-  handlePinEnter,
-  clearPin,
-}: Props) => {
-  const labels = !pin
-    ? translations.PinInput
-    : translations.PinConfirmationInput
-
-  return (
-    <View style={styles.container}>
-      <NavigationEvents onDidBlur={clearPin} />
-      <PinInput
-        labels={labels}
-        onPinEnter={pin ? handlePinEnter : setPin}
-        pinMaxLength={CONFIG.PIN_LENGTH}
-      />
-    </View>
-  )
-}
+const CustomPinScreen = ({handleValidPinEnter}: Props) => (
+  <View style={styles.container}>
+    <PinRegistrationForm onValidPinEnter={handleValidPinEnter} />
+  </View>
+)
 
 export default compose(
   connect(
-    (state: State) => ({
-      translations: getTranslations(state),
-    }),
+    // $FlowFixMe
+    null,
     {
       encryptAndStoreCustomPin,
     },
   ),
-  withState('pin', 'setPin', ''),
   withHandlers({
-    handlePinEnter,
-    clearPin: ({setPin}) => () => setPin(''),
+    handleValidPinEnter,
   }),
 )(CustomPinScreen)
