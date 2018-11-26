@@ -72,10 +72,8 @@ export default (compose(
       if (isPinValid) {
         navigation.navigate(ROOT_ROUTES.WALLET_SELECTION)
       } else {
-        navigation.goBack()
+        toggleLogin(false)
       }
-
-      toggleLogin(false)
     },
   }),
 )(CustomPinLogin): ComponentType<ExternalProps>)
