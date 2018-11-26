@@ -18,11 +18,11 @@ type ExternalProps = {
 }
 
 const WalletListItem = ({wallet, onPress}) => (
-  <TouchableOpacity onPress={onPress} style={styles.item}>
-    <View style={styles.name}>
+  <TouchableOpacity activeOpacity={0.5} onPress={onPress} style={styles.item}>
+    <View style={styles.icon}>
       <CardanoIcon height={28} width={28} color={COLORS.WHITE} />
-      <Text style={styles.nameText}>{wallet.name}</Text>
     </View>
+    <Text style={styles.nameText}>{wallet.name}</Text>
   </TouchableOpacity>
 )
 

@@ -1,30 +1,33 @@
 // @flow
+import {StyleSheet} from 'react-native'
+
 import {COLORS} from '../../../styles/config'
 
-const styles = {
+export default StyleSheet.create({
   item: {
-    borderBottomColor: COLORS.PRIMARY_GRADIENT_END,
-    borderBottomWidth: 1,
-    borderStyle: 'solid',
     padding: 10,
-    margin: 5,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: 60,
+    borderRadius: 6,
+    marginBottom: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
   },
   balance: {
     flexDirection: 'row',
+  },
+  icon: {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    padding: 4,
+    borderRadius: 8,
   },
   balanceText: {
     color: COLORS.WHITE,
     fontSize: 12,
   },
-  name: {
-    flexDirection: 'row',
-  },
   nameText: {
     color: COLORS.WHITE,
+    marginLeft: 10,
     fontSize: 18,
   },
-}
-
-export default styles
+})

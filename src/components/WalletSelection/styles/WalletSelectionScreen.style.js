@@ -1,26 +1,26 @@
 // @flow
-import {COLORS} from '../../../styles/config'
+import {StyleSheet} from 'react-native'
 
-const styles = {
+export default StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    backgroundColor: '#254BC9',
+  },
   container: {
     flex: 1,
-    padding: 0,
-    height: '100%',
+    backgroundColor: '#254BC9',
   },
-  gradient: {
-    flex: 1,
-  },
-  header: {
+  title: {
     textAlign: 'center',
-    color: COLORS.WHITE,
-    fontSize: 26,
+    fontSize: 24,
+    color: '#fff',
+    paddingVertical: 16,
   },
   wallets: {
-    margin: 20,
+    margin: 16,
+    flex: 1,
   },
   addWalletButton: {
-    margin: 20,
+    margin: 16,
   },
-}
-
-export default styles
+})
