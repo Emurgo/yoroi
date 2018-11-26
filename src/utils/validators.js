@@ -101,7 +101,7 @@ export const validateWalletName = (
   walletName: string,
 ): WalletNameValidationErrors | null => {
   let validations = null
-  if (walletName.length < 3 || walletName.length > 40) {
+  if (walletName.length < 1 || walletName.length > 40) {
     validations = {walletNameLength: true}
   }
 

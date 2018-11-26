@@ -171,7 +171,7 @@ const l10n = {
     walletName: 'Wallet name',
     changeButtonText: 'CHANGE NAME',
     walletValidationText:
-      'Wallet name requires at least 3 and at most\
+      'Wallet name requires at least 1 and at most\
  40 letters.',
     errorDialog: {
       title: 'Error',
