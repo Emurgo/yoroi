@@ -406,6 +406,16 @@ your wallets first',
     title: 'Change wallet password',
     passwordsDoNotMatch: 'Passwords do not match',
   },
+  ChangeCustomPinScreen: {
+    PinVerification: {
+      title: 'Enter your current PIN',
+    },
+    WrongPinError: {
+      title: 'Invalid PIN',
+      text: 'PIN is incorrect.',
+    },
+    okButton: 'OK',
+  },
 }
 
 export default l10n

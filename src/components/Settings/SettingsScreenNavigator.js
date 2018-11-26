@@ -16,6 +16,7 @@ import ToggleEasyConfirmatioScreen from './ToggleEasyConfirmatioScreen'
 import TermsOfServiceScreen from './TermsOfServiceScreen'
 import RemoveWalletScreen from './RemoveWalletScreen'
 import ChangePasswordScreen from './ChangePasswordScreen'
+import ChangeCustomPinScreen from './ChangeCustomPinScreen'
 import {SETTINGS_ROUTES} from '../../RoutesList'
 import {defaultNavigationOptions} from '../../navigationOptions'
 
@@ -58,6 +59,7 @@ const SettingsScreenNavigator = createStackNavigator(
     },
     [SETTINGS_ROUTES.EASY_COMFIRMATION]: ToggleEasyConfirmatioScreen,
     [SETTINGS_ROUTES.CHANGE_PASSWORD]: ChangePasswordScreen,
+    [SETTINGS_ROUTES.CHANGE_CUSTOM_PIN]: ChangeCustomPinScreen,
   },
   {
     initialRouteName: SETTINGS_ROUTES.MAIN,

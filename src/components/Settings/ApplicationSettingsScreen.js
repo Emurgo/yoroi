@@ -97,7 +97,8 @@ const ApplicationSettingsScreen = ({
     <SettingsSection title={translations.privacy}>
       <NavigatedSettingsItem
         label={translations.changePin}
-        navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
+        navigateTo={SETTINGS_ROUTES.CHANGE_CUSTOM_PIN}
+        disabled={isSystemAuthEnabled}
       />
 
       <SettingsItem label={translations.biometricsSignIn}>
