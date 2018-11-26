@@ -4,7 +4,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers, withState} from 'recompose'
-import {View, TouchableHighlight} from 'react-native'
+import {View, TouchableOpacity} from 'react-native'
 import {withNavigation} from 'react-navigation'
 
 import {
@@ -14,7 +14,6 @@ import {
 
 import {Text} from '../UiKit'
 import CopyIcon from '../../assets/CopyIcon'
-import {COLORS} from '../../styles/config'
 import AddressModal from './AddressModal'
 
 import styles from './styles/AddressView.style'
@@ -38,19 +37,15 @@ const AddressView = ({
   openDetails,
   closeDetails,
 }: Props) => (
-  <TouchableHighlight
-    activeOpacity={0.9}
-    underlayColor={COLORS.WHITE}
-    onPress={openDetails}
-  >
+  <TouchableOpacity activeOpacity={0.5} onPress={openDetails}>
     <View style={styles.container}>
       <View style={styles.addressContainer}>
-        <Text style={isUsed ? styles.addressUsed : styles.addressNotUsed}>
+        <Text secondary={isUsed} small>
           {`/${index}`} {address}
         </Text>
       </View>
       <View style={styles.iconContainer}>
-        <CopyIcon width={styles.icon.size} height={styles.icon.size} />
+        <CopyIcon width={24} height={24} />
       </View>
       <AddressModal
         visible={showDetails}
@@ -58,7 +53,7 @@ const AddressView = ({
         onRequestClose={closeDetails}
       />
     </View>
-  </TouchableHighlight>
+  </TouchableOpacity>
 )
 
 type ExternalProps = {
