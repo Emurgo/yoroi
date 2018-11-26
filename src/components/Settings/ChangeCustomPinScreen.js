@@ -65,10 +65,13 @@ const ChangeCustomPinScreen = ({
 }: Props) => (
   <View style={styles.container}>
     {isCurrentPinVerified ? (
-      <PinRegistrationForm onValidPinEnter={handleNewPinEnter} />
+      <PinRegistrationForm
+        onValidPinEnter={handleNewPinEnter}
+        labels={translations.PinRegistrationForm}
+      />
     ) : (
       <PinInput
-        labels={translations.PinVerification}
+        labels={translations.CurrentPinInput}
         onPinEnter={handleVerifyPin}
         pinMaxLength={CONFIG.PIN_LENGTH}
       />

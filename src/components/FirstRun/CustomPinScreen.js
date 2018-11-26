@@ -11,6 +11,11 @@ import {encryptAndStoreCustomPin} from '../../actions'
 
 import styles from './styles/CustomPinScreen.style'
 
+import type {State} from '../../state'
+import type {SubTranslation} from '../../l10n/typeHelpers'
+
+const getTranslations = (state: State) => state.trans.CustomPinScreen
+
 const handleValidPinEnter = ({navigation, encryptAndStoreCustomPin}) => async (
   pin,
 ) => {
@@ -20,18 +25,23 @@ const handleValidPinEnter = ({navigation, encryptAndStoreCustomPin}) => async (
 
 type Props = {
   handleValidPinEnter: (string) => void,
+  translations: SubTranslation<typeof getTranslations>,
 }
 
-const CustomPinScreen = ({handleValidPinEnter}: Props) => (
+const CustomPinScreen = ({handleValidPinEnter, translations}: Props) => (
   <View style={styles.container}>
-    <PinRegistrationForm onValidPinEnter={handleValidPinEnter} />
+    <PinRegistrationForm
+      onValidPinEnter={handleValidPinEnter}
+      labels={translations.PinRegistrationForm}
+    />
   </View>
 )
 
 export default compose(
   connect(
-    // $FlowFixMe
-    null,
+    (state: State) => ({
+      translations: getTranslations(state),
+    }),
     {
       encryptAndStoreCustomPin,
     },

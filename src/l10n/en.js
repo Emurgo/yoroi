@@ -371,14 +371,18 @@ your wallets first',
     password: 'Wallet password',
     remove: 'Remove wallet',
   },
+  CustomPinScreen: {
+    PinRegistrationForm: {
+      PinInput: {
+        title: 'Enter the PIN',
+        subtitle: 'Choose a PIN for quick access to wallet.',
+      },
+      PinConfirmationInput: {
+        title: 'Repeat PIN',
+      },
+    },
+  },
   PinRegistrationForm: {
-    PinInput: {
-      title: 'Enter the PIN',
-      subtitle: 'Choose a PIN for quick access to wallet.',
-    },
-    PinConfirmationInput: {
-      title: 'Repeat PIN',
-    },
     PinMismatchError: {
       title: 'Invalid PIN',
       text: 'PIN does not match.',
@@ -407,12 +411,22 @@ your wallets first',
     passwordsDoNotMatch: 'Passwords do not match',
   },
   ChangeCustomPinScreen: {
-    PinVerification: {
-      title: 'Enter your current PIN',
+    CurrentPinInput: {
+      title: 'Enter the PIN',
+      subtitle: 'Enter your current PIN',
     },
     WrongPinError: {
       title: 'Invalid PIN',
       text: 'PIN is incorrect.',
+    },
+    PinRegistrationForm: {
+      PinInput: {
+        title: 'Enter the PIN',
+        subtitle: 'Choose new PIN for quick access to wallet.',
+      },
+      PinConfirmationInput: {
+        title: 'Repeat PIN',
+      },
     },
     okButton: 'OK',
   },
