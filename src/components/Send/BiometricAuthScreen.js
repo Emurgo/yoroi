@@ -8,18 +8,17 @@ import {withHandlers, withState} from 'recompose'
 
 import {Text, Button} from '../UiKit'
 import KeyStore from '../../crypto/KeyStore'
-import {onDidMount} from '../../utils/renderUtils'
+import {onDidMount, onWillUnmount} from '../../utils/renderUtils'
 // import styles from './styles/BiometricAuthScreen.style'
 
 const handleOnConfirm = async (navigation, setError, useFallback = false) => {
-  const encryptedDataId = navigation.getParam('encryptedDataId')
+  const keyId = navigation.getParam('keyId')
   const onSuccess = navigation.getParam('onSuccess')
   const onFail = navigation.getParam('onFail')
 
-  let decryptedData = ''
   try {
-    decryptedData = await KeyStore.getData(
-      encryptedDataId,
+    const decryptedData = await KeyStore.getData(
+      keyId,
       useFallback ? 'SYSTEM_PIN' : 'BIOMETRICS',
       'l10n Authorize operation',
       '',
@@ -89,6 +88,9 @@ export default compose(
       await KeyStoreBridge.cancelFingerprintScanning('CANCELED')
       handleOnConfirm(navigation, setError, true)
     },
+  }),
+  onWillUnmount(async () => {
+    await KeyStoreBridge.cancelFingerprintScanning('CANCELED')
   }),
   onDidMount(({navigation, setError}) => handleOnConfirm(navigation, setError)),
 )(BiometricAuthScreen)

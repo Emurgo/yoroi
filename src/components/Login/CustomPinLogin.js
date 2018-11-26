@@ -8,7 +8,7 @@ import {View} from 'react-native'
 import {CONFIG} from '../../config'
 import PinInput from '../Common/PinInput'
 import {withTranslations} from '../../utils/renderUtils'
-import {withHandlers} from 'recompose'
+import {withHandlers, withState} from 'recompose'
 import {ROOT_ROUTES} from '../../RoutesList'
 import {authenticateByCustomPin} from '../../crypto/customPin'
 import {customPinHashSelector} from '../../selectors'
@@ -44,6 +44,8 @@ type ExternalProps = {|
   navigation: Navigation,
   customPinHash: ?string,
   translations: SubTranslation<typeof getTranslations>,
+  toggleLogin: (inProgress: boolean) => mixed,
+  isLoginInProgress: boolean,
 |}
 
 export default (compose(
@@ -51,11 +53,20 @@ export default (compose(
     customPinHash: customPinHashSelector(state),
   })),
   withTranslations(getTranslations),
+  withState('isLoginInProgress', 'toggleLogin', false),
   withHandlers({
-    onPinEnter: ({navigation, customPinHash}: ExternalProps) => async (pin) => {
+    onPinEnter: ({
+      navigation,
+      toggleLogin,
+      isLoginInProgress,
+      customPinHash,
+    }: ExternalProps) => async (pin) => {
+      if (isLoginInProgress) return
       if (!customPinHash) {
         throw new Error('Custom pin is not setup')
       }
+
+      toggleLogin(true)
 
       const isPinValid = await authenticateByCustomPin(customPinHash, pin)
       if (isPinValid) {
@@ -63,6 +74,8 @@ export default (compose(
       } else {
         navigation.goBack()
       }
+
+      toggleLogin(false)
     },
   }),
 )(CustomPinLogin): ComponentType<ExternalProps>)

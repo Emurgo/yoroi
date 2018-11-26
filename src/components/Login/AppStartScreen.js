@@ -68,7 +68,7 @@ export default compose(
 
       if (hasEnrolledFingerprints && isSystemAuthEnabled) {
         navigation.navigate(ROOT_ROUTES.BIO_AUTH, {
-          encryptedDataId: appId,
+          keyId: appId,
           onSuccess: () => navigation.navigate(ROOT_ROUTES.WALLET_SELECTION),
           onFail: onFail(navigation, appId),
         })

@@ -40,7 +40,7 @@ const handleOnConfirm = async (
 
   if (isEasyConfirmationEnabled) {
     navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
-      encryptedDataId: walletManager._id,
+      keyId: walletManager._id,
       onSuccess: submitTx,
     })
     return
