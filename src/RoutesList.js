@@ -1,5 +1,7 @@
 // @flow
 
+import {CONFIG} from './config.js'
+
 export const TX_HISTORY_ROUTES = {
   MAIN: 'tx-history-list',
   TX_DETAIL: 'tx-details',
@@ -55,14 +57,19 @@ export const WALLET_ROUTES = {
   SETTINGS: SETTINGS_ROUTES.MAIN,
 }
 
+const INDEX_SCREEN = 'screens-index'
+const LOGIN_SCREEN = 'login'
+const INIT_SCREEN = CONFIG.START_WITH_INDEX_SCREEN ? INDEX_SCREEN : LOGIN_SCREEN
+
 export const ROOT_ROUTES = {
   SPLASH: 'splash',
-  INDEX: 'screens-index',
-  LOGIN: 'login',
+  INDEX: INDEX_SCREEN,
+  LOGIN: LOGIN_SCREEN,
   BIO_AUTH: 'bio-auth',
   CUSTOM_PIN_AUTH: 'custom-pin-auth',
   FIRST_RUN: 'first-run',
   NEW_WALLET: 'new-wallet',
   WALLET_SELECTION: 'wallet-selection',
   WALLET: 'app-root',
+  INIT: INIT_SCREEN,
 }
