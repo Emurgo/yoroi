@@ -37,6 +37,7 @@ export const onDidMount = <
       }
     }
 
+// prettier-ignore
 export const onWillUnmount = <
   Props,
   Callback: (any) => mixed,
