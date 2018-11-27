@@ -5,7 +5,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withState} from 'recompose'
 
-import RecoveryPhraseExplanationDialog from './RecoveryPhraseExplanationDialog'
+import MnemonicExplanationDialog from './MnemonicExplanationModal'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import WalletForm from '../WalletForm'
@@ -23,7 +23,7 @@ const CreateWalletScreen = ({
 }) => (
   <>
     <WalletForm onSubmit={formSubmit} />
-    <RecoveryPhraseExplanationDialog
+    <MnemonicExplanationDialog
       visible={visibleMnemonicExplanation}
       onRequestClose={hideMnemonicExplanation}
       onConfirm={navigateToMnemonicScreen}
