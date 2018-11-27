@@ -2,11 +2,11 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {View, TextInput} from 'react-native'
+import {View} from 'react-native'
 import {withHandlers, withState} from 'recompose'
 import {NavigationEvents} from 'react-navigation'
 
-import {Button, Text} from '../UiKit'
+import {Button, Text, ValidatedTextInput} from '../UiKit'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {ROOT_ROUTES} from '../../RoutesList'
 import {walletNameSelector} from '../../selectors'
@@ -75,12 +75,11 @@ const RemoveWalletScreen = ({
       <View style={styles.wallet}>
         <Text>{translations.walletName}</Text>
         <Text>{walletName}</Text>
-        <Text>{translations.password}</Text>
-        <TextInput
+        <ValidatedTextInput
           secureTextEntry
+          label={translations.password}
           value={password}
-          onChangeText={setPassword}
-          style={styles.password}
+          onChange={setPassword}
         />
       </View>
       <Button

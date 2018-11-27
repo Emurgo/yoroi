@@ -4,12 +4,12 @@ import React, {Component} from 'react'
 import {BigNumber} from 'bignumber.js'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {ScrollView, View, TextInput, TouchableOpacity} from 'react-native'
+import {ScrollView, View, TouchableOpacity} from 'react-native'
 import _ from 'lodash'
 
 import {CONFIG} from '../../config'
 import {SEND_ROUTES} from '../../RoutesList'
-import {Text, Button, OfflineBanner} from '../UiKit'
+import {Text, Button, OfflineBanner, ValidatedTextInput} from '../UiKit'
 import {
   isFetchingUtxosSelector,
   lastUtxosFetchErrorSelector,
@@ -381,39 +381,26 @@ class SendScreen extends Component<Props, State> {
           </View>
 
           <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.inputText}
+            <ValidatedTextInput
               value={address}
-              placeholder={translations.address}
-              onChangeText={this.handleAddressChange}
+              label={translations.address}
+              onChange={this.handleAddressChange}
+              error={
+                addressErrors.invalidAddress &&
+                translations.validationErrors.invalidAddress
+              }
             />
-            {/* prettier-ignore */ addressErrors &&
-            !!addressErrors.invalidAddress && (
-              <Text style={styles.error}>
-                {translations.validationErrors.invalidAddress}
-              </Text>
-            )}
             <AmountField
-              style={styles.inputText}
               amount={amount}
               setAmount={this.handleAmountChange}
+              error={
+                amountErrors.invalidAmount
+                  ? translations.validationErrors.invalidAmount
+                  : balanceErrors.insufficientBalance
+                    ? translations.validationErrors.insufficientBalance
+                    : null
+              }
             />
-            {/* prettier-ignore */ amountErrors &&
-            amountErrors.invalidAmount && (
-              <Text style={styles.error}>
-                {translations
-                  .validationErrors
-                  .invalidAmount}
-              </Text>
-            )}
-            {/* prettier-ignore */ balanceErrors &&
-            balanceErrors.insufficientBalance && (
-              <Text style={styles.error}>
-                {translations
-                  .validationErrors
-                  .insufficientBalance}
-              </Text>
-            )}
           </View>
 
           {this.renderBanners()}

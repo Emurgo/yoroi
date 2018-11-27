@@ -34,12 +34,6 @@ const styles = StyleSheet.create({
   inputContainer: {
     flex: 1,
   },
-  inputText: {
-    borderWidth: 2,
-    borderRadius: 5,
-    borderColor: COLORS.DARK_BLUE,
-    margin: 10,
-  },
   button: {
     margin: 10,
   },

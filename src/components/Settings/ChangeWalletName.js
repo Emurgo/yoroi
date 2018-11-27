@@ -4,10 +4,10 @@ import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withState, withHandlers} from 'recompose'
-import {View, TextInput, KeyboardAvoidingView, Platform} from 'react-native'
+import {View, KeyboardAvoidingView, Platform} from 'react-native'
 import {SafeAreaView} from 'react-navigation'
 
-import {Button, Text} from '../UiKit'
+import {Button, ValidatedTextInput} from '../UiKit'
 import {validateWalletName} from '../../utils/validators'
 import {walletNameSelector} from '../../selectors'
 import {changeWalletName, showErrorDialog} from '../../actions'
@@ -42,12 +42,11 @@ const ChangeWalletName = ({
     >
       <SafeAreaView style={styles.safeAreaView}>
         <View style={styles.content}>
-          {validationErrors && <Text>{translations.walletValidationText}</Text>}
-          <TextInput
-            style={styles.inputText}
-            placeholder={translations.walletName}
+          <ValidatedTextInput
+            label={translations.walletName}
             value={newName}
-            onChangeText={onChangeText}
+            onChange={onChangeText}
+            error={validationErrors && translations.walletValidationText}
           />
         </View>
         <Button

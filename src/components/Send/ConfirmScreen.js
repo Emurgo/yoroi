@@ -3,11 +3,11 @@
 import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {ScrollView, TextInput, View} from 'react-native'
+import {ScrollView, View} from 'react-native'
 import {withHandlers, withState} from 'recompose'
 
 import Amount from './Amount'
-import {Text, Button, OfflineBanner} from '../UiKit'
+import {Text, Button, OfflineBanner, ValidatedTextInput} from '../UiKit'
 import {utxoBalanceSelector, easyConfirmationSelector} from '../../selectors'
 import walletManager from '../../crypto/wallet'
 import {SEND_ROUTES} from '../../RoutesList'
@@ -123,12 +123,11 @@ const ConfirmScreen = ({
 
         {!isEasyConfirmationEnabled ? (
           <View style={styles.item}>
-            <Text style={styles.label}>{translations.password}</Text>
-            <TextInput
+            <ValidatedTextInput
               secureTextEntry
               value={password}
-              style={styles.password}
-              onChangeText={setPassword}
+              label={translations.password}
+              onChange={setPassword}
             />
           </View>
         ) : null}
