@@ -32,4 +32,33 @@
   return YES;
 }
 
+// Implemented from: http://pinkstone.co.uk/how-to-control-the-preview-screenshot-in-the-ios-multitasking-switcher/
+- (void)applicationWillResignActive:(UIApplication *)application
+{
+  UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"SwitchScreen.png"]];
+  imageView.contentMode = UIViewContentModeScaleAspectFit;
+  imageView.backgroundColor = [UIColor whiteColor];
+  imageView.tag = 1234;
+  imageView.alpha = 1;
+  imageView.bounds = self.window.bounds;
+  imageView.center = self.window.center;
+
+  [self.window addSubview:imageView];
+  [self.window bringSubviewToFront:imageView];
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+  // grab a reference to our coloured view
+  UIView *imageView = [self.window viewWithTag:1234];
+
+  // fade away colour view from main view
+  [UIView animateWithDuration:0.5 animations:^{
+      imageView.alpha = 0;
+  } completion:^(BOOL finished) {
+      // remove when finished fading
+      [imageView removeFromSuperview];
+  }];
+}
+
 @end
