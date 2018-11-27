@@ -2,8 +2,9 @@
 import {BigNumber} from 'bignumber.js'
 import {validateMnemonic, wordlists} from 'bip39'
 import _ from 'lodash'
-import {containsUpperCase, containsLowerCase, isNumeric} from '../utils/string'
 
+import {containsUpperCase, containsLowerCase, isNumeric} from '../utils/string'
+import {CONFIG} from '../config'
 import {isValidAddress} from '../crypto/util'
 
 export type PasswordValidationErrors = {
@@ -64,6 +65,8 @@ export const getPasswordStrength = (password: string): PasswordStrength => {
 
   if (password.length >= 12) {
     return {isStrong: true, hasTwelveCharacters: true}
+  } else if (!CONFIG.ALLOW_SHORT_PASSWORD) {
+    return {isStrong: false}
   }
 
   const validation = {
