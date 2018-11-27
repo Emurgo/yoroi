@@ -5,7 +5,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {View, Linking, TouchableHighlight} from 'react-native'
 import _ from 'lodash'
-import {withHandlers} from 'recompose'
+import {withHandlers, withState} from 'recompose'
 
 import {
   transactionsInfoSelector,
@@ -18,7 +18,7 @@ import {Text, Button, OfflineBanner} from '../UiKit'
 import Screen from '../../components/Screen'
 import AdaIcon from '../../assets/AdaIcon'
 import {CONFIG} from '../../config'
-import {TX_HISTORY_ROUTES} from '../../RoutesList'
+import AddressModal from '../Receive/AddressModal'
 
 import styles from './styles/TxDetails.style'
 import {TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
@@ -147,6 +147,8 @@ const TxDetails = ({
   externalAddressIndex,
   openInExplorer,
   showModalForAddress,
+  addressDetail,
+  hideAddressModal,
 }) => {
   const {
     fromFiltered,
@@ -206,6 +208,12 @@ const TxDetails = ({
           </Text>
         </Section>
       </Screen>
+      <AddressModal
+        visible={!!addressDetail}
+        onRequestClose={hideAddressModal}
+        address={addressDetail}
+        index={null}
+      />
     </View>
   )
 }
@@ -220,11 +228,16 @@ export default (compose(
   withNavigationTitle(({transaction}) =>
     formatDateToSeconds(transaction.submittedAt),
   ),
+  withState('addressDetail', 'setAddressDetail', null),
   withHandlers({
     openInExplorer: ({transaction}) => () => {
       Linking.openURL(CONFIG.CARDANO.EXPLORER_URL_FOR_TX(transaction.id))
     },
-    showModalForAddress: ({navigation}) => (address) =>
-      navigation.navigate(TX_HISTORY_ROUTES.ADDRESS_DETAIL, {address}),
+    showModalForAddress: ({setAddressDetail}) => (address) => {
+      setAddressDetail(address)
+    },
+    hideAddressModal: ({setAddressDetail}) => () => {
+      setAddressDetail(null)
+    },
   }),
 )(TxDetails): ComponentType<{navigation: Navigation}>)

@@ -5,7 +5,6 @@ import {CONFIG} from './config.js'
 export const TX_HISTORY_ROUTES = {
   MAIN: 'tx-history-list',
   TX_DETAIL: 'tx-details',
-  ADDRESS_DETAIL: 'tx-details-address',
 }
 
 export const SEND_ROUTES = {
@@ -31,7 +30,6 @@ export const WALLET_INIT_ROUTES = {
   CREATE_WALLET: 'create-wallet-form',
   RESTORE_WALLET: 'restore-wallet-form',
   RECOVERY_PHRASE: 'recovery-phrase',
-  RECOVERY_PHRASE_DIALOG: 'recovery-phrase-dialog',
   RECOVERY_PHRASE_CONFIRMATION: 'recovery-phrase-confirmation',
   RECOVERY_PHRASE_CONFIRMATION_DIALOG: 'recovery-phrase-confirmation-dialog',
   WALLET_CREDENTIALS: 'wallet-credentials',
