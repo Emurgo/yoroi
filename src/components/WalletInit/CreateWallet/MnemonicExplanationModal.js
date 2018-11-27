@@ -14,8 +14,7 @@ import type {State} from '../../../state'
 import {withTranslations} from '../../../utils/renderUtils'
 import type {ComponentType} from 'react'
 
-const getTranslations = (state: State) =>
-  state.trans.RecoveryPhraseExplanationDialog
+const getTranslations = (state: State) => state.trans.MnemonicExplanationModal
 
 type ExternalProps = {
   onConfirm: () => any,
@@ -32,7 +31,6 @@ const MnemonicExplanationModal = ({
   <Modal onRequestClose={onRequestClose} visible={visible}>
     <Screen bgColor={COLORS.TRANSPARENT_BLACK}>
       <View style={styles.dialogBody}>
-        <Text>{translations.title}</Text>
         <Text>{translations.paragraph1}</Text>
         <Text>{translations.paragraph2}</Text>
 
