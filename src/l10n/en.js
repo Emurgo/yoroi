@@ -60,6 +60,11 @@ const l10n = {
 your wallets first',
       yesButton: 'OK',
     },
+    wrongPinError: {
+      title: 'Invalid PIN',
+      message: 'PIN is incorrect.',
+      yesButton: 'OK',
+    },
   },
   AppStartScreen: {
     loginButton: 'Login',
@@ -372,26 +377,14 @@ your wallets first',
     remove: 'Remove wallet',
   },
   CustomPinScreen: {
-    PinInput: {
-      title: 'Enter the PIN',
-      subtitle: 'Choose a PIN for quick access to wallet.',
-    },
-    PinConfirmationInput: {
-      title: 'Repeat PIN',
-    },
-    okButton: 'OK',
-  },
-  LoginPinScreen: {
-    PinInput: {
-      title: 'Enter PIN',
-    },
-    WrongPinError: {
-      title: 'Invalid PIN',
-      text: 'PIN you provided is incorrect',
-    },
-    UnknownError: {
-      title: 'Unknown error',
-      text: 'There was error while verifying PIN.',
+    PinRegistrationForm: {
+      PinInput: {
+        title: 'Enter the PIN',
+        subtitle: 'Choose a PIN for quick access to wallet.',
+      },
+      PinConfirmationInput: {
+        title: 'Repeat PIN',
+      },
     },
   },
   ChangePasswordScreen: {
@@ -401,6 +394,21 @@ your wallets first',
     continue: 'Change password',
     title: 'Change wallet password',
     passwordsDoNotMatch: 'Passwords do not match',
+  },
+  ChangeCustomPinScreen: {
+    CurrentPinInput: {
+      title: 'Enter the PIN',
+      subtitle: 'Enter your current PIN',
+    },
+    PinRegistrationForm: {
+      PinInput: {
+        title: 'Enter the PIN',
+        subtitle: 'Choose new PIN for quick access to wallet.',
+      },
+      PinConfirmationInput: {
+        title: 'Repeat PIN',
+      },
+    },
   },
 }
 

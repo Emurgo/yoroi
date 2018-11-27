@@ -45,13 +45,15 @@ export const SettingsItem = ({label, children}: SettingsItemProps) => (
 type NavigatedSettingsItemProps = {
   label: string,
   navigateTo: string,
+  disabled?: boolean,
 }
 
 export const NavigatedSettingsItem = ({
   label,
   navigateTo,
+  disabled,
 }: NavigatedSettingsItemProps) => (
-  <NavigateTo to={navigateTo}>
+  <NavigateTo to={navigateTo} disabled={disabled}>
     <SettingsItem label={label}>
       <Image source={chevronRight} />
     </SettingsItem>

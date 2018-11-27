@@ -48,11 +48,17 @@ const EnhancedKeyboardKey = withHandlers({
   onKeyDown: ({value, onPress}) => () => onPress(value),
 })(KeyboardKey)
 
+export type PinInputLabels = {
+  title: string,
+  subtitle?: string,
+  subtitle2?: string,
+}
+
 type Props = {
   pin: string,
   setPin: (string) => void,
   pinMaxLength: number,
-  labels: {title: string, subtitle: string, subtitle2: string},
+  labels: PinInputLabels,
   onKeyDown: (string) => void,
   onPinEnter: (string) => void,
 }
