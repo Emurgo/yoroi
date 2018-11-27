@@ -16,13 +16,12 @@ import {createWallet} from '../../../actions'
 import {CONFIG} from '../../../config'
 
 import {COLORS} from '../../../styles/config'
-import styles from './styles/RecoveryPhraseConfirmationScreen.style'
+import styles from './styles/MnemonicCheckScreen.style'
 
 import type {State} from '../../../state'
 import type {SubTranslation} from '../../../l10n/typeHelpers'
 
-const getTranslations = (state: State) =>
-  state.trans.RecoveryPhraseConfirmationScreen
+const getTranslations = (state: State) => state.trans.MnemonicCheckScreen
 
 const validatePhrase = (mnemonic, words, partialPhrase) => {
   const phrase = partialPhrase.map((wordIdx) => words[wordIdx]).join(' ')
@@ -79,7 +78,7 @@ type Props = {
   deselectWord: (number) => mixed,
 }
 
-const RecoveryPhraseConfirmationScreen = ({
+const MnemonicCheckScreen = ({
   mnemonic,
   partialPhrase,
   translations,
@@ -183,4 +182,4 @@ export default compose(
       1000,
     ),
   }),
-)(RecoveryPhraseConfirmationScreen)
+)(MnemonicCheckScreen)

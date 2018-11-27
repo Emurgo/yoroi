@@ -5,13 +5,11 @@ import {createStackNavigator} from 'react-navigation'
 import WalletInitScreen from './WalletInitScreen'
 import CreateWalletScreen from './CreateWallet/CreateWalletScreen'
 import RestoreWalletScreen from './RestoreWallet/RestoreWalletScreen'
-import RecoveryPhraseScreen from './CreateWallet/RecoveryPhraseScreen'
+import MnemonicShowScreen from './CreateWallet/MnemonicShowScreen'
 import HeaderBackButton from '../UiKit/HeaderBackButton'
 import {defaultNavigationOptions} from '../../navigationOptions'
 // eslint-disable-next-line max-len
-import RecoveryPhraseConfirmationScreen from './CreateWallet/RecoveryPhraseConfirmationScreen'
-// eslint-disable-next-line max-len
-import RecoveryPhraseConfirmationDialog from './CreateWallet/RecoveryPhraseConfirmationDialog'
+import MnemonicCheckScreen from './CreateWallet/MnemonicCheckScreen'
 import WalletCredentialsScreen from './RestoreWallet/WalletCredentialsScreen'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 
@@ -25,11 +23,8 @@ const WalletInitNavigator = createStackNavigator(
     },
     [WALLET_INIT_ROUTES.CREATE_WALLET]: CreateWalletScreen,
     [WALLET_INIT_ROUTES.RESTORE_WALLET]: RestoreWalletScreen,
-    [WALLET_INIT_ROUTES.RECOVERY_PHRASE]: RecoveryPhraseScreen,
-    // eslint-disable-next-line max-len
-    [WALLET_INIT_ROUTES.RECOVERY_PHRASE_CONFIRMATION_DIALOG]: RecoveryPhraseConfirmationDialog,
-    // eslint-disable-next-line max-len
-    [WALLET_INIT_ROUTES.RECOVERY_PHRASE_CONFIRMATION]: RecoveryPhraseConfirmationScreen,
+    [WALLET_INIT_ROUTES.MNEMONIC_SHOW]: MnemonicShowScreen,
+    [WALLET_INIT_ROUTES.MNEMONIC_CHECK]: MnemonicCheckScreen,
     [WALLET_INIT_ROUTES.WALLET_CREDENTIALS]: WalletCredentialsScreen,
   },
   {

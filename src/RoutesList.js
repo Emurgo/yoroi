@@ -29,9 +29,8 @@ export const WALLET_INIT_ROUTES = {
   MAIN: 'choose-create-restore',
   CREATE_WALLET: 'create-wallet-form',
   RESTORE_WALLET: 'restore-wallet-form',
-  RECOVERY_PHRASE: 'recovery-phrase',
-  RECOVERY_PHRASE_CONFIRMATION: 'recovery-phrase-confirmation',
-  RECOVERY_PHRASE_CONFIRMATION_DIALOG: 'recovery-phrase-confirmation-dialog',
+  MNEMONIC_SHOW: 'mnemoinc-show',
+  MNEMONIC_CHECK: 'mnemonic-check',
   WALLET_CREDENTIALS: 'wallet-credentials',
 }
 

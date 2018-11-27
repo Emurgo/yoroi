@@ -245,7 +245,7 @@ your wallets first',
     copyLabel: 'COPY ADDRESS',
     copiedLabel: 'COPIED',
   },
-  RecoveryPhraseConfirmationDialog: {
+  MnemonicBackupImportanceModal: {
     title: 'Recovery phrase',
     keysStorageCheckbox:
       'I understand that my secret keys are held securely ' +
@@ -256,7 +256,7 @@ your wallets first',
       'I have written down and saved in secure place.',
     confirmationButton: 'I UNDERSTAND',
   },
-  RecoveryPhraseConfirmationScreen: {
+  MnemonicCheckScreen: {
     title: 'Recovery phrase',
     instructions:
       'Tap each word in the correct order to verify your recovery phrase',
@@ -265,7 +265,7 @@ your wallets first',
     clearButton: 'CLEAR',
     confirmButton: 'CONFIRM',
   },
-  RecoveryPhraseScreen: {
+  MnemonicShowScreen: {
     title: 'Recovery phrase',
     mnemonicNote:
       'Please, make sure you have carefully written down your ' +
