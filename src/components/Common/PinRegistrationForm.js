@@ -8,17 +8,12 @@ import {NavigationEvents} from 'react-navigation'
 
 import PinInput from './PinInput'
 import {CONFIG} from '../../config'
-import {withTranslations} from '../../utils/renderUtils'
 import {showErrorDialog} from '../../actions'
 
 import styles from './styles/PinRegistrationForm.style'
 
-import type {SubTranslation} from '../../l10n/typeHelpers'
-import type {State} from '../../state'
 import type {ComponentType} from 'react'
 import type {PinInputLabels} from './PinInput'
-
-const getTranslations = (state: State) => state.trans.PinRegistrationForm
 
 const handlePinEnter = ({
   pin,
@@ -55,7 +50,6 @@ type ExternalProps = {
 type Props = ExternalProps & {
   pin: string,
   setPin: (string) => void,
-  translations: SubTranslation<typeof getTranslations>,
   handlePinEnter: (string) => void,
   clearPin: () => void,
 }
@@ -82,7 +76,6 @@ const PinRegistrationForm = ({
 }
 
 export default (compose(
-  withTranslations(getTranslations),
   withState('pin', 'setPin', ''),
   withHandlers({
     handlePinEnter,

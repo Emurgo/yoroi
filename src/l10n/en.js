@@ -60,6 +60,11 @@ const l10n = {
 your wallets first',
       yesButton: 'OK',
     },
+    wrongPinError: {
+      title: 'Invalid PIN',
+      message: 'PIN is incorrect.',
+      yesButton: 'OK',
+    },
   },
   AppStartScreen: {
     loginButton: 'Login',
@@ -382,26 +387,6 @@ your wallets first',
       },
     },
   },
-  PinRegistrationForm: {
-    PinMismatchError: {
-      title: 'Invalid PIN',
-      text: 'PIN does not match.',
-    },
-    okButton: 'OK',
-  },
-  LoginPinScreen: {
-    PinInput: {
-      title: 'Enter PIN',
-    },
-    WrongPinError: {
-      title: 'Invalid PIN',
-      text: 'PIN you provided is incorrect',
-    },
-    UnknownError: {
-      title: 'Unknown error',
-      text: 'There was error while verifying PIN.',
-    },
-  },
   ChangePasswordScreen: {
     oldPassword: 'Current password',
     newPassword: 'New password',
@@ -415,10 +400,6 @@ your wallets first',
       title: 'Enter the PIN',
       subtitle: 'Enter your current PIN',
     },
-    WrongPinError: {
-      title: 'Invalid PIN',
-      text: 'PIN is incorrect.',
-    },
     PinRegistrationForm: {
       PinInput: {
         title: 'Enter the PIN',
@@ -428,7 +409,6 @@ your wallets first',
         title: 'Repeat PIN',
       },
     },
-    okButton: 'OK',
   },
 }
 

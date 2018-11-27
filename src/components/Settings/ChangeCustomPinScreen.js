@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import {Alert, View} from 'react-native'
+import {View} from 'react-native'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers, withState} from 'recompose'
@@ -8,7 +8,7 @@ import {withHandlers, withState} from 'recompose'
 import PinInput from '../Common/PinInput'
 import PinRegistrationForm from '../Common/PinRegistrationForm'
 import {authenticateByCustomPin} from '../../crypto/customPin'
-import {encryptAndStoreCustomPin, notifyOfGeneralError} from '../../actions'
+import {encryptAndStoreCustomPin, showErrorDialog} from '../../actions'
 import {customPinHashSelector} from '../../selectors'
 import {CONFIG} from '../../config'
 
@@ -28,16 +28,12 @@ const handleVerifyPin = ({
   try {
     const isPinValid = await authenticateByCustomPin(currentPinHash, pin)
     if (!isPinValid) {
-      Alert.alert(
-        translations.WrongPinError.title,
-        translations.WrongPinError.text,
-        [{text: translations.okButton}],
-      )
+      showErrorDialog((dialogs) => dialogs.wrongPinError)
     }
     setIsCurrentPinVerified(isPinValid)
   } catch (err) {
     setIsCurrentPinVerified(false)
-    notifyOfGeneralError('Error while verifying current custom PIN', err)
+    showErrorDialog((dialogs) => dialogs.general)
   }
 }
 
