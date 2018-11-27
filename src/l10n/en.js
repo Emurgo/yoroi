@@ -85,6 +85,9 @@ your wallets first',
   AppStartScreen: {
     loginButton: 'Login',
   },
+  WithPinLoginScreen: {
+    title: 'Enter PIN',
+  },
   CreateOrRestoreWalletScreen: {
     createWallet: 'CREATE A NEW WALLET',
     restoreWallet: 'RESTORE WALLET FROM BACKUP',
@@ -335,7 +338,8 @@ your wallets first',
 
   // TODO(ppershing): why the heck is this different from ConfirmAdaScreen?
   // I guess this should be moved there
-  // TODO(dpribula): It's the same for now but different screens, should I merge it together?
+  // TODO(dpribula): It's the same for now but different screens
+  //  should I merge it together?
   ConfirmScreen: {
     Confirmation: {
       confirmButton: 'Confirm',
@@ -354,7 +358,8 @@ your wallets first',
     linkButton: 'Link',
   },
   // TODO(ppershing): Not sure what would be good name for this
-  // TODO(dpribula): Not used as it was moved to different file, rework on the new screen
+  // TODO(dpribula): Not used as it was moved to different file
+  // rework on the new screen
   BiometricsAuth: {
     errorDialogTitle: 'Error',
     NotSupportedErrors: {
@@ -383,11 +388,8 @@ your wallets first',
     password: 'Wallet password',
     remove: 'Remove wallet',
   },
+
   ChoosePinScreen: {
-    CurrentPinInput: {
-      title: 'Enter the PIN',
-      subtitle: 'Enter your current PIN',
-    },
     PinRegistrationForm: {
       PinInput: {
         title: 'Enter the PIN',

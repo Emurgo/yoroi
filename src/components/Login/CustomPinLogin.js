@@ -19,7 +19,7 @@ import type {SubTranslation} from '../../l10n/typeHelpers'
 import type {Navigation} from '../../types/navigation'
 import type {ComponentType} from 'react'
 
-const getTranslations = (state) => state.trans.LoginScreen
+const getTranslations = (state) => state.trans.WithPinLoginScreen
 
 type Props = {
   translations: SubTranslation<typeof getTranslations>,
