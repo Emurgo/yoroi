@@ -7,6 +7,9 @@ import {containsUpperCase, containsLowerCase, isNumeric} from '../utils/string'
 import {CONFIG} from '../config'
 import {isValidAddress} from '../crypto/util'
 
+import type {SubTranslation} from '../l10n/typeHelpers'
+import type {State} from '../state'
+
 export type PasswordValidationErrors = {
   passwordReq?: boolean,
   passwordConfirmationReq?: boolean,
@@ -16,6 +19,7 @@ export type PasswordValidationErrors = {
 
 export type WalletNameValidationErrors = {
   walletNameLength?: boolean,
+  nameIsAlreadyTaken?: boolean,
 }
 
 export type AddressValidationErrors = {
@@ -101,14 +105,41 @@ export const validatePassword = (
 }
 
 export const validateWalletName = (
-  walletName: string,
-): WalletNameValidationErrors | null => {
-  let validations = null
-  if (walletName.length < 1 || walletName.length > 40) {
-    validations = {walletNameLength: true}
+  newWalletName: string,
+  oldWalletName: ?string,
+  walletNames: Array<string>,
+): WalletNameValidationErrors => {
+  let validations = {}
+
+  if (newWalletName.length < 1 || newWalletName.length > 40) {
+    validations = {...validations, walletNameLength: true}
+  }
+  if (
+    newWalletName !== oldWalletName &&
+    walletNames.some((x) => newWalletName === x)
+  ) {
+    validations = {...validations, nameIsAlreadyTaken: true}
   }
 
   return validations
+}
+
+const getWalletNameErrorTranslations = (state: State) =>
+  state.trans.WalletNameAndPasswordForm
+
+export const getWalletNameError = (
+  translations: SubTranslation<typeof getWalletNameErrorTranslations>,
+  validationErrors: WalletNameValidationErrors,
+) => {
+  const {incorrectNumberOfCharacters, nameAlreadyTaken} = translations
+
+  if (validationErrors.walletNameLength) {
+    return incorrectNumberOfCharacters
+  } else if (validationErrors.nameIsAlreadyTaken) {
+    return nameAlreadyTaken
+  } else {
+    return null
+  }
 }
 
 export const validateAddressAsync = async (

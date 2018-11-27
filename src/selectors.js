@@ -95,6 +95,9 @@ export const walletIsInitializedSelector = (state: State): boolean =>
 
 export const walletNameSelector = (state: State): string => state.wallet.name
 
+export const walletNamesSelector = (state: State): Array<string> =>
+  ObjectValues(state.wallets).map((w) => w.name)
+
 export const isFetchingUtxosSelector = (state: State): boolean =>
   state.balance.isFetching
 
