@@ -52,7 +52,7 @@ const LongPasswordStrengthIndicator = ({
   <View>
     <Text>{translations.passwordRequirementsNote}</Text>
 
-    <View style={styles.passwordRequirementsRow}>
+    <View style={styles.container}>
       <ValidationCheckIcon
         isSatisfied={hasTwelveCharacters}
         label={translations.passwordBigLength}
