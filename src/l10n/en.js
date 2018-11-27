@@ -88,12 +88,12 @@ your wallets first',
   WithPinLoginScreen: {
     title: 'Enter PIN',
   },
+  CreateWalletScreen: {
+    title: 'Create a new wallet',
+  },
   CreateOrRestoreWalletScreen: {
     createWallet: 'CREATE A NEW WALLET',
     restoreWallet: 'RESTORE WALLET FROM BACKUP',
-    createWalletScreen: {
-      title: 'Create a new wallet',
-    },
   },
   // On CreateWalletScreen
   MnemonicExplanationModal: {
