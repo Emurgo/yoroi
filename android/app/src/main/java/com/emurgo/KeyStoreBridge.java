@@ -36,29 +36,6 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
     CancellationSignal fingerprintCancellation;
     private KeyStoreCrypto crypto;
 
-
-    // encryptData
-    private String REJECTION_ENCRYPTION_FAILED = "ENCRYPTION_FAILED";
-
-    // decryptDataWithFingerprint
-    private String REJECTION_ALREADY_DECRYPTING_DATA = "ALREADY_DECRYPTING_DATA";
-    private String REJECTION_SENSOR_LOCKOUT = "SENSOR_LOCKOUT";
-    private String REJECTION_NOT_RECOGNIZED = "NOT_RECOGNIZED";
-    private String REJECTION_DECRYPTION_FAILED = "DECRYPTION_FAILED";
-    // any custom code, message sent from JS
-
-    // decryptDataWithSystemPin
-    private String REJECTION_SYSTEM_AUTH_NOT_SUPPORTED = "SYSTEM_AUTH_NOT_SUPPORTED";
-    private String REJECTION_FAILED_UNKNOWN_ERROR = "FAILED_UNKNOWN_ERROR";
-    private String REJECTION_CANCELED = "CANCELED";
-    private String REJECTION_FAILED = "FAILED";
-
-    private String REJECTION_BIOMETRIC_PROMPT_CANCELED = "BIOMETRIC_PROMPT_CANCELED";
-    private String REJECTION_INVALID_KEY = "INVALID_KEY";
-
-    // deleteAndroidKeyStoreAsymmetricKeyPair
-    private String REJECTION_KEY_NOT_DELETED = "KEY_NOT_DELETED";
-
     @Override
     public String getName() {
         return "KeyStoreBridge";
@@ -77,6 +54,9 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
     public Map<String, Object> getConstants() {
         final Map<String, Object> constants = new HashMap<>();
         constants.put("AUTHENTIFICATION_VALIDITY_DURATION", this.crypto.AUTHENTIFICATION_VALIDITY_DURATION);
+
+        constants.put("REJECTION_MESSAGES", Rejections.getAsMap());
+
         return constants;
     }
 
@@ -135,7 +115,7 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
             String cipherText = this.crypto.encryptData(data, keyAlias);
             promise.resolve(cipherText);
         } catch (Exception e) {
-            promise.reject(REJECTION_ENCRYPTION_FAILED, REJECTION_ENCRYPTION_FAILED, e);
+            promise.reject(Rejections.ENCRYPTION_FAILED, Rejections.ENCRYPTION_FAILED, e);
         }
     }
 
@@ -162,7 +142,7 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
     @TargetApi(23)
     public void decryptDataWithFingerprint(final String data, String keyAlias, final Promise promise) {
         if (fingerprintConfirmationPromise != null) {
-            promise.reject(REJECTION_ALREADY_DECRYPTING_DATA, REJECTION_ALREADY_DECRYPTING_DATA);
+            promise.reject(Rejections.ALREADY_DECRYPTING_DATA, Rejections.ALREADY_DECRYPTING_DATA);
             return;
         }
 
@@ -170,7 +150,7 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
         try {
             cipher = this.crypto.getDecryptCipher(keyAlias);
         } catch (Exception e) {
-            promise.reject(REJECTION_INVALID_KEY, REJECTION_INVALID_KEY);
+            promise.reject(Rejections.INVALID_KEY, Rejections.INVALID_KEY);
             return;
         }
 
@@ -187,9 +167,9 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
                         fingerprintCancellation.cancel();
 
                         if (errorCode == FingerprintManager.FINGERPRINT_ERROR_LOCKOUT || errorCode == FingerprintManager.FINGERPRINT_ERROR_LOCKOUT_PERMANENT) {
-                            promise.reject(REJECTION_SENSOR_LOCKOUT, REJECTION_SENSOR_LOCKOUT);
+                            promise.reject(Rejections.SENSOR_LOCKOUT, Rejections.SENSOR_LOCKOUT);
                         } else {
-                            promise.reject(REJECTION_NOT_RECOGNIZED, REJECTION_NOT_RECOGNIZED);
+                            promise.reject(Rejections.NOT_RECOGNIZED, Rejections.NOT_RECOGNIZED);
                         }
                         fingerprintConfirmationPromise = null;
                     }
@@ -208,7 +188,7 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
                             String decodedText = crypto.decryptData(data, cipher.getCipher());
                             promise.resolve(decodedText);
                         } catch (Exception e) {
-                            promise.reject(REJECTION_DECRYPTION_FAILED, REJECTION_DECRYPTION_FAILED, e);
+                            promise.reject(Rejections.DECRYPTION_FAILED, Rejections.DECRYPTION_FAILED, e);
                         } finally {
                             fingerprintCancellation.cancel();
                             fingerprintConfirmationPromise = null;
@@ -223,12 +203,12 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
                     }
 
                     fingerprintCancellation.cancel();
-                    promise.reject(REJECTION_NOT_RECOGNIZED, REJECTION_NOT_RECOGNIZED);
+                    promise.reject(Rejections.NOT_RECOGNIZED, Rejections.NOT_RECOGNIZED);
                     fingerprintConfirmationPromise = null;
                 }
             }, null);
         } catch (Exception e) {
-            promise.reject(REJECTION_DECRYPTION_FAILED, REJECTION_DECRYPTION_FAILED, e);
+            promise.reject(Rejections.DECRYPTION_FAILED, Rejections.DECRYPTION_FAILED, e);
             fingerprintConfirmationPromise = null;
         }
     }
@@ -236,7 +216,7 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
     @ReactMethod
     public void decryptDataWithSystemPin(final String data, String keyAlias, String message, final Promise promise) {
         if (!this.crypto.isSystemAuthSupported()) {
-            promise.reject(REJECTION_SYSTEM_AUTH_NOT_SUPPORTED, REJECTION_SYSTEM_AUTH_NOT_SUPPORTED);
+            promise.reject(Rejections.SYSTEM_AUTH_NOT_SUPPORTED, Rejections.SYSTEM_AUTH_NOT_SUPPORTED);
             return;
         }
         
@@ -247,7 +227,7 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
             this.systemPinEncryptedData = data;
             this.context.startActivityForResult(intent, REQUEST_CODE_CONFIRM_DEVICE_CREDENTIALS_FOR_DECRYPTION, null);
         } else {
-            promise.reject(REJECTION_FAILED_UNKNOWN_ERROR, REJECTION_FAILED_UNKNOWN_ERROR);
+            promise.reject(Rejections.FAILED_UNKNOWN_ERROR, Rejections.FAILED_UNKNOWN_ERROR);
         }
     }
 
@@ -257,7 +237,7 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
             this.crypto.deleteAndroidKeyStoreAsymmetricKeyPair(keyAlias);
             promise.resolve(true);
         } catch (Exception e) {
-            promise.reject(REJECTION_KEY_NOT_DELETED, REJECTION_KEY_NOT_DELETED, e);
+            promise.reject(Rejections.KEY_NOT_DELETED, Rejections.KEY_NOT_DELETED, e);
         }
     }
 
@@ -267,17 +247,17 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
             if (requestCode == REQUEST_CODE_CONFIRM_DEVICE_CREDENTIALS_FOR_DECRYPTION) {
                 if (systemPinConfirmationPromise != null) {
                     if (resultCode == Activity.RESULT_CANCELED) {
-                        systemPinConfirmationPromise.reject(REJECTION_CANCELED, REJECTION_CANCELED);
+                        systemPinConfirmationPromise.reject(Rejections.CANCELED, Rejections.CANCELED);
                     } else if (resultCode == Activity.RESULT_OK) {
                         try {
                             String decodedText = crypto.decryptData(systemPinEncryptedData, systemPinKeyAlias);
                             systemPinConfirmationPromise.resolve(decodedText);
 
                         } catch (Exception e) {
-                            systemPinConfirmationPromise.reject(REJECTION_FAILED, REJECTION_FAILED, e);
+                            systemPinConfirmationPromise.reject(Rejections.FAILED, Rejections.FAILED, e);
                         }
                     } else {
-                        systemPinConfirmationPromise.reject(REJECTION_FAILED_UNKNOWN_ERROR, REJECTION_FAILED_UNKNOWN_ERROR);
+                        systemPinConfirmationPromise.reject(Rejections.FAILED_UNKNOWN_ERROR, Rejections.FAILED_UNKNOWN_ERROR);
                     }
 
                     systemPinConfirmationPromise = null;
@@ -300,7 +280,7 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
         final Promise promise
     ) throws Exception {
         if (fingerprintConfirmationPromise != null) {
-            promise.reject(REJECTION_ALREADY_DECRYPTING_DATA, REJECTION_ALREADY_DECRYPTING_DATA);
+            promise.reject(Rejections.ALREADY_DECRYPTING_DATA, Rejections.ALREADY_DECRYPTING_DATA);
             return;
         }
         fingerprintConfirmationPromise = promise;
@@ -317,7 +297,7 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
                         String decodedText = crypto.decryptData(data, cipher.getCipher());
                         promise.resolve(decodedText);
                     } catch (Exception e) {
-                        promise.reject(REJECTION_DECRYPTION_FAILED, REJECTION_DECRYPTION_FAILED, e);
+                        promise.reject(Rejections.DECRYPTION_FAILED, Rejections.DECRYPTION_FAILED, e);
                     } finally {
                         fingerprintCancellation.cancel();
                         fingerprintConfirmationPromise = null;
@@ -340,7 +320,7 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
 
 
                 fingerprintCancellation.cancel();
-                promise.reject(REJECTION_NOT_RECOGNIZED, REJECTION_NOT_RECOGNIZED);
+                promise.reject(Rejections.NOT_RECOGNIZED, Rejections.NOT_RECOGNIZED);
                 fingerprintConfirmationPromise = null;
             }
         };
@@ -353,7 +333,7 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         fingerprintCancellation.cancel();
-                        promise.reject(REJECTION_BIOMETRIC_PROMPT_CANCELED, REJECTION_BIOMETRIC_PROMPT_CANCELED);
+                        promise.reject(Rejections.BIOMETRIC_PROMPT_CANCELED, Rejections.BIOMETRIC_PROMPT_CANCELED);
                         fingerprintConfirmationPromise = null;
                     }
                 })
