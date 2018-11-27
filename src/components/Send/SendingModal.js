@@ -2,12 +2,14 @@
 
 import React from 'react'
 import {compose} from 'redux'
-import {Alert, Modal, BackHandler, Text, ActivityIndicator} from 'react-native'
+import {Modal, BackHandler, Text, ActivityIndicator} from 'react-native'
 
 import {withTranslations} from '../../utils/renderUtils'
 import walletManager from '../../crypto/wallet'
 import {WALLET_ROUTES, SEND_ROUTES} from '../../RoutesList'
-import {NetworkError, ApiError} from '../../api/errors'
+import {NetworkError} from '../../api/errors'
+import {showErrorDialog, DIALOG_BUTTONS} from '../../actions'
+import assert from '../../utils/assert'
 
 import type {ComponentType} from 'react'
 
@@ -39,41 +41,23 @@ class SendingModal extends React.Component<*> {
       await walletManager.submitTransaction(signedTx)
       navigation.navigate(WALLET_ROUTES.TX_HISTORY)
     } catch (e) {
-      const config = {
-        network: {
-          title: 'l10n Network error',
-          text:
-            'Error connecting to the server. ' +
-            'Please check your internet connection',
-          target: SEND_ROUTES.CONFIRM,
-        },
-        api: {
-          title: 'l10n Backend error',
-          text: 'l10n Backend could not process this transaction',
-          target: SEND_ROUTES.MAIN,
-        },
-        default: {
-          title: 'l10n Unknown error',
-          text: 'l10n Unknown error',
-          target: SEND_ROUTES.MAIN,
-        },
-      }
-
-      let data
       if (e instanceof NetworkError) {
-        data = config.network
-      } else if (e instanceof ApiError) {
-        data = config.api
+        const result = await showErrorDialog((dialogs) => dialogs.networkError)
+        assert.assert(
+          result === DIALOG_BUTTONS.YES,
+          'User should have tapped yes',
+        )
+
+        navigation.navigate(SEND_ROUTES.CONFIRM)
       } else {
-        data = config.default
+        const result = await showErrorDialog((dialogs) => dialogs.general)
+        assert.assert(
+          result === DIALOG_BUTTONS.YES,
+          'User should have tapped yes',
+        )
+
+        navigation.navigate(SEND_ROUTES.MAIN)
       }
-      // TODO(ppershing): error processing + localization
-      Alert.alert(data.title, data.text, [
-        {
-          text: 'l10n ok',
-          onPress: () => navigation.navigate(data.target),
-        },
-      ])
     }
   }
 
@@ -83,6 +67,7 @@ class SendingModal extends React.Component<*> {
 
   render() {
     const {translations} = this.props
+
     return (
       <Modal visible onRequestClose={() => null}>
         <ActivityIndicator size="large" />

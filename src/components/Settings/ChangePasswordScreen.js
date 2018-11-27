@@ -2,23 +2,19 @@
 
 import React, {PureComponent} from 'react'
 import {compose} from 'redux'
-import {View, Alert} from 'react-native'
+import {View} from 'react-native'
 import _ from 'lodash'
 import {withHandlers} from 'recompose'
 
 import {Button, ValidatedTextInput} from '../UiKit'
 import {validatePassword} from '../../utils/validators'
-import {
-  withTranslations,
-  withErrorTranslations,
-  withNavigationTitle,
-} from '../../utils/renderUtils'
+import {withTranslations, withNavigationTitle} from '../../utils/renderUtils'
 import PasswordStrengthIndicator from '../WalletInit/PasswordStrengthIndicator'
+import {showErrorDialog} from '../../actions'
 
 import type {State} from '../../state'
 import type {PasswordValidationErrors} from '../../utils/validators'
 import type {SubTranslation} from '../../l10n/typeHelpers'
-import type {ErrorTranslations} from '../../utils/renderUtils'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 
 type FormValidationErrors = PasswordValidationErrors & {
@@ -49,7 +45,6 @@ type ComponentState = {
 
 type Props = {
   translations: SubTranslation<typeof getTranslations>,
-  errorTranslations: ErrorTranslations,
   handleSubmit: () => mixed,
   navigation: NavigationScreenProp<NavigationState>,
 }
@@ -142,19 +137,13 @@ class ChangePasswordScreen extends PureComponent<Props, ComponentState> {
 
 export default compose(
   withTranslations(getTranslations),
-  withErrorTranslations(),
   withNavigationTitle(({translations}) => translations.title),
   withHandlers({
-    handleSubmit: ({
-      errorTranslations: {invalidWalletPassword: invalidPasswordError},
-      navigation,
-    }) => () => {
+    handleSubmit: ({navigation}) => () => {
       const todoValidatePassword = true
 
       if (todoValidatePassword) {
-        Alert.alert(invalidPasswordError.title, invalidPasswordError.text, [
-          {text: invalidPasswordError.ok},
-        ])
+        showErrorDialog((dialogs) => dialogs.incorrectPassword)
       } else {
         navigation.goBack(null)
       }

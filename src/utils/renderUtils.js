@@ -9,7 +9,6 @@ import {Logger} from './logging'
 import {walletIsInitializedSelector} from '../selectors'
 
 import type {State} from '../state'
-import type {ExtractFunctionReturnType} from './utils'
 
 import type {ComponentType} from 'react'
 import type {HOC} from 'recompose'
@@ -78,17 +77,6 @@ export const withTranslations = <GetTrans: (State) => mixed, Props: {}>(
   getTrans: GetTrans,
 ): HOC<{|...$Exact<Props>, translations: $Call<GetTrans, State>|}, Props> =>
     connect((state) => ({translations: getTrans(state)}))
-
-const getErrorTranslations = (state: State) => state.trans.errors
-
-export type ErrorTranslations = ExtractFunctionReturnType<
-  typeof getErrorTranslations,
->
-
-export const withErrorTranslations = <Props: {}>(): HOC<
-  {|...$Exact<Props>, errorTranslations: ErrorTranslations|},
-  Props,
-> => connect((state) => ({errorTranslations: getErrorTranslations(state)}))
 
 // prettier-ignore
 export const withNavigationTitle = <Props: {navigation: any}>(

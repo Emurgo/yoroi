@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {connect} from 'react-redux'
-import {Alert, View, StatusBar} from 'react-native'
+import {View, StatusBar} from 'react-native'
 import {SafeAreaView} from 'react-navigation'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
@@ -21,6 +21,7 @@ import {
   recreateAppSignInKeys,
   canFingerprintEncryptionBeEnabled,
 } from '../../helpers/deviceSettings'
+import {showErrorDialog} from '../../actions'
 
 import type {State} from '../../state'
 
@@ -76,11 +77,7 @@ export default compose(
         if (customPinHash) {
           navigation.navigate(ROOT_ROUTES.CUSTOM_PIN_AUTH)
         } else {
-          Alert.alert(
-            'l10n Biometrics was turned off',
-            'l10n It seems that you turned off biometrics, please turn it on',
-            [{text: 'l10n OK'}],
-          )
+          await showErrorDialog((dialogs) => dialogs.biometricsIsTurnedOff)
         }
       }
     },

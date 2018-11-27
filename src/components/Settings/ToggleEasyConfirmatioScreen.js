@@ -4,14 +4,14 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers, withState} from 'recompose'
-import {View, TextInput, Alert} from 'react-native'
+import {View, TextInput} from 'react-native'
 import {NavigationEvents} from 'react-navigation'
 
 import Screen from '../Screen'
 import walletManager from '../../crypto/wallet'
 import Text from '../UiKit/Text'
 import Button from '../UiKit/Button'
-import {setEasyConfirmation} from '../../actions'
+import {setEasyConfirmation, showErrorDialog} from '../../actions'
 import {easyConfirmationSelector} from '../../selectors'
 import {WrongPassword} from '../../crypto/errors'
 
@@ -24,31 +24,17 @@ const enableEasyConfirmation = ({
   masterPassword,
   setEasyConfirmation,
 }) => async () => {
-  const config = {
-    wrongPassword: {
-      title: 'l10n Wrong password',
-      text: 'l10n Password you provided is incorrect',
-    },
-    default: {
-      title: 'l10n Unknown error',
-      text: '',
-    },
-  }
-  let data = config.default
   try {
     await walletManager.enableEasyConfirmation(masterPassword)
     setEasyConfirmation(true)
+
     navigation.goBack()
   } catch (error) {
     if (error instanceof WrongPassword) {
-      data = config.wrongPassword
+      await showErrorDialog((dialogs) => dialogs.incorrectPassword)
+    } else {
+      await showErrorDialog((dialogs) => dialogs.general)
     }
-
-    Alert.alert(data.title, error.message, [
-      {
-        text: 'l10n OK',
-      },
-    ])
   }
 }
 
@@ -58,11 +44,7 @@ const disableEasyConfirmation = ({navigation}) => async () => {
     setEasyConfirmation(false)
     navigation.goBack()
   } catch (error) {
-    Alert.alert('l10n Unknown error', '', [
-      {
-        text: 'l10n OK',
-      },
-    ])
+    await showErrorDialog((dialogs) => dialogs.general)
   }
 }
 

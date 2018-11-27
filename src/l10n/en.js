@@ -23,20 +23,42 @@ const l10n = {
     notifications: {
       offline: 'You are offline. Please check settings on your device.',
     },
-    alerts: {
-      errorHeading: 'Error',
-      generalErrorText: [
-        'Something wrong happened.',
-        'Please try repeating your action or contact us.',
-      ].join(' '),
-    },
     currentLanguageName: 'English',
   },
-  errors: {
-    invalidWalletPassword: {
-      title: 'Invalid password',
-      text: 'You entered an invalid password',
-      ok: 'OK',
+  errorDialogs: {
+    general: {
+      title: 'Unexpected error',
+      message: 'Your operation did not complete',
+      yesButton: 'OK',
+    },
+    pinMismatch: {
+      title: 'Invalid PIN',
+      message: 'PINs do not match.',
+      yesButton: 'OK',
+    },
+    incorrectPassword: {
+      title: 'Wrong password',
+      message: 'Password you provided is incorrect.',
+      yesButton: 'OK',
+    },
+    biometricsIsTurnedOff: {
+      title: 'Biometrics was turned off',
+      message: 'It seems that you turned off biometrics, please turn it on',
+      yesButton: 'OK',
+    },
+    networkError: {
+      title: 'Network error',
+      message:
+        'Error connecting to the server. ' +
+        'Please check your internet connection',
+      yesButton: 'OK',
+    },
+    disableEasyConfirmationFirst: {
+      title: 'Action failed',
+      message:
+        'Please disable easy confirmation function in all \
+your wallets first',
+      yesButton: 'OK',
     },
   },
   AppStartScreen: {
@@ -173,11 +195,6 @@ const l10n = {
     walletValidationText:
       'Wallet name requires at least 1 and at most\
  40 letters.',
-    errorDialog: {
-      title: 'Error',
-      text: 'Failed to update wallet name',
-      ok: 'OK',
-    },
   },
   ReceiveScreen: {
     title: 'Receive',
@@ -277,13 +294,6 @@ const l10n = {
     language: 'Your language',
     termsOfUse: 'Terms of Use',
     support: 'Support',
-    systemAuthDisable: {
-      title: 'Action failed',
-      text:
-        'Please disable easy confirmation function in all \
-your wallets first',
-      okButton: 'Ok',
-    },
   },
   SupportScreen: {
     title: 'Support',
@@ -316,17 +326,6 @@ your wallets first',
     welcomeText: 'Sign with PIN / TouchID',
   },
   ConfirmScreen: {
-    ErrorDialogs: {
-      WrongPassword: {
-        title: 'Wrong password',
-        text: 'Password you provided is incorrect',
-      },
-      UnknownError: {
-        title: 'Unknown error submitting transaction',
-        text: (message: string) => `Details: ${message}`,
-      },
-      okTextButton: 'OK',
-    },
     Confirmation: {
       confirmButton: 'Confirm',
       amount: 'Amount',
@@ -371,17 +370,6 @@ your wallets first',
     walletName: 'Wallet name',
     password: 'Wallet password',
     remove: 'Remove wallet',
-    ErrorDialogs: {
-      okButton: 'OK',
-      VerificationError: {
-        title: 'Wrong password',
-        text: 'Password you provided is incorrect.',
-      },
-      WalletRemovalError: {
-        title: 'Unknown error',
-        text: 'There was error while removing your wallet.',
-      },
-    },
   },
   CustomPinScreen: {
     PinInput: {
@@ -390,14 +378,6 @@ your wallets first',
     },
     PinConfirmationInput: {
       title: 'Repeat PIN',
-    },
-    PinMismatchError: {
-      title: 'Invalid PIN',
-      text: 'PIN does not match.',
-    },
-    UnknownError: {
-      title: 'Unknown error',
-      text: 'There was error while storing your PIN.',
     },
     okButton: 'OK',
   },

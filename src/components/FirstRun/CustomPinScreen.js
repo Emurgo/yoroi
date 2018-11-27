@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import {Alert, View} from 'react-native'
+import {View} from 'react-native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withState} from 'recompose'
@@ -9,7 +9,7 @@ import {NavigationEvents} from 'react-navigation'
 import PinInput from '../Common/PinInput'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {CONFIG} from '../../config'
-import {encryptAndStoreCustomPin} from '../../actions'
+import {encryptAndStoreCustomPin, showErrorDialog} from '../../actions'
 
 import styles from './styles/CustomPinScreen.style'
 
@@ -27,24 +27,19 @@ const handlePinEnter = ({
 }) => async (pinConfirmation) => {
   if (pin !== pinConfirmation) {
     setPin('')
-    Alert.alert(
-      translations.PinMismatchError.title,
-      translations.PinMismatchError.text,
-      [{text: translations.okButton}],
-    )
+
+    await showErrorDialog((dialogs) => dialogs.pinMismatch)
     return
   }
 
   try {
     await encryptAndStoreCustomPin(pin)
+
     navigation.navigate(WALLET_INIT_ROUTES.MAIN)
   } catch (err) {
     setPin('')
-    Alert.alert(
-      translations.UnknownError.title,
-      translations.UnknownError.text,
-      [{text: translations.okButton}],
-    )
+
+    await showErrorDialog((dialogs) => dialogs.general)
   }
 }
 

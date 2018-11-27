@@ -14,8 +14,9 @@ import {FIRST_RUN_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import {systemAuthSupportSelector} from '../../selectors'
 import {
   acceptAndSaveTos,
-  notifyOfGeneralError,
+  showErrorDialog,
   setSystemAuth,
+  handleGeneralError,
 } from '../../actions'
 import {canFingerprintEncryptionBeEnabled} from '../../helpers/deviceSettings'
 
@@ -71,19 +72,28 @@ export default compose(
       navigation,
       isSystemAuthEnabled,
       acceptAndSaveTos,
+      setSystemAuth,
     }) => async () => {
       try {
         await acceptAndSaveTos()
       } catch (e) {
-        notifyOfGeneralError('Saving accepted tos to AsyncStorage failed.', e)
+        await handleGeneralError(
+          'Saving consent with TOS to AsyncStorage failed.',
+          e,
+        )
 
         return
       }
 
       const canSystemAuthBeEnabled = await canFingerprintEncryptionBeEnabled()
       if (canSystemAuthBeEnabled) {
-        setSystemAuth(true)
-        navigation.navigate(WALLET_INIT_ROUTES.MAIN)
+        try {
+          await setSystemAuth(true)
+
+          navigation.navigate(WALLET_INIT_ROUTES.MAIN)
+        } catch (e) {
+          showErrorDialog((dialogs) => dialogs.disableEasyConfirmationFirst)
+        }
       } else {
         navigation.navigate(FIRST_RUN_ROUTES.CUSTOM_PIN)
       }

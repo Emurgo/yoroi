@@ -9,7 +9,7 @@ import {View} from 'react-native'
 import Screen from '../Screen'
 import Text from '../UiKit/Text'
 import Button from '../UiKit/Button'
-import {setSystemAuth} from '../../actions'
+import {setSystemAuth, showErrorDialog} from '../../actions'
 import {SETTINGS_ROUTES} from '../../RoutesList'
 import {enrolledFingerprintsSelector} from '../../selectors'
 
@@ -59,7 +59,10 @@ export default compose(
   withHandlers({
     linkBiometricsSignIn: ({navigation, setSystemAuth}) => () => {
       setSystemAuth(true)
-      navigation.navigate(SETTINGS_ROUTES.MAIN)
+        .then(() => navigation.navigate(SETTINGS_ROUTES.MAIN))
+        .catch(() =>
+          showErrorDialog((dialogs) => dialogs.disableEasyConfirmationFirst),
+        )
     },
     cancelLinking: ({navigation}) => () =>
       navigation.navigate(SETTINGS_ROUTES.MAIN),
