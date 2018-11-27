@@ -5,14 +5,14 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {View, Linking, TouchableHighlight} from 'react-native'
 import _ from 'lodash'
-import {withHandlers, withState} from 'recompose'
+import {withHandlers, withStateHandlers} from 'recompose'
 
 import {
   transactionsInfoSelector,
   internalAddressIndexSelector,
   externalAddressIndexSelector,
 } from '../../selectors'
-import {withNavigationTitle} from '../../utils/renderUtils'
+import {withNavigationTitle, withTranslations} from '../../utils/renderUtils'
 import {formatAda, formatDateToSeconds} from '../../utils/format'
 import {Text, Button, OfflineBanner} from '../UiKit'
 import Screen from '../../components/Screen'
@@ -23,6 +23,7 @@ import AddressModal from '../Receive/AddressModal'
 import styles from './styles/TxDetails.style'
 import {TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
 
+import type {State} from '../../state'
 import type {Navigation} from '../../types/navigation'
 import type {ComponentType} from 'react'
 
@@ -43,7 +44,7 @@ const AdaAmount = ({amount, direction}) => {
   )
 }
 
-const getTranslations = (state) => state.trans.TransactionDetailScreen
+const getTranslations = (state) => state.trans.TransactionDetailsScreen
 
 const AddressEntry = withHandlers({
   onPress: ({address, showModalForAddress}) => () =>
@@ -162,7 +163,7 @@ const TxDetails = ({
       <OfflineBanner />
       <Screen scroll>
         <View style={styles.timestampContainer}>
-          <Text>{translations.type[transaction.direction]}</Text>
+          <Text>{translations.transactionType[transaction.direction]}</Text>
           {transaction.amount && (
             <AdaAmount
               amount={transaction.amount}
@@ -219,8 +220,8 @@ const TxDetails = ({
 }
 
 export default (compose(
-  connect((state, {navigation}) => ({
-    translations: getTranslations(state),
+  withTranslations(getTranslations),
+  connect((state: State, {navigation}) => ({
     transaction: transactionsInfoSelector(state)[navigation.getParam('id')],
     internalAddressIndex: internalAddressIndexSelector(state),
     externalAddressIndex: externalAddressIndexSelector(state),
@@ -228,7 +229,14 @@ export default (compose(
   withNavigationTitle(({transaction}) =>
     formatDateToSeconds(transaction.submittedAt),
   ),
-  withState('addressDetail', 'setAddressDetail', null),
+  withStateHandlers(
+    {addressDetail: null},
+    {
+      setAddressDetail: (state, props) => (address) => ({
+        addressDetail: address,
+      }),
+    },
+  ),
   withHandlers({
     openInExplorer: ({transaction}) => () => {
       Linking.openURL(CONFIG.CARDANO.EXPLORER_URL_FOR_TX(transaction.id))
@@ -240,4 +248,4 @@ export default (compose(
       setAddressDetail(null)
     },
   }),
-)(TxDetails): ComponentType<{navigation: Navigation}>)
+)(TxDetails): ComponentType<{|navigation: Navigation|}>)

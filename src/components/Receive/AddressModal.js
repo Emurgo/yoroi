@@ -19,8 +19,8 @@ import type {SubTranslation} from '../../l10n/typeHelpers'
 const getTranslations = (state) => state.trans.AddressDetailsModal
 
 type Props = {
-  address: string,
-  index: number,
+  address: ?string,
+  index?: number,
   translations: SubTranslation<typeof getTranslations>,
   onRequestClose: () => any,
   visible: boolean,
@@ -41,6 +41,7 @@ class AddressModal extends React.Component<Props, State> {
   }
 
   _copyAddress = () => {
+    if (!this.props.address) return
     Clipboard.setString(this.props.address)
     this.setState({isCopied: true})
 
@@ -82,7 +83,7 @@ class AddressModal extends React.Component<Props, State> {
 }
 
 type ExternalProps = {
-  address: string,
+  address: ?string,
   onRequestClose: () => any,
   visible: boolean,
 }
