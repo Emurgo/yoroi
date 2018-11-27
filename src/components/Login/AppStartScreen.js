@@ -11,6 +11,7 @@ import WalletDescription from '../WalletInit/WalletDescription'
 import {Button} from '../UiKit'
 import styles from './styles/AppStartScreen.style'
 import {ROOT_ROUTES} from '../../RoutesList'
+import KeyStore from '../../crypto/KeyStore'
 import {withTranslations} from '../../utils/renderUtils'
 import {
   installationIdSelector,
@@ -45,7 +46,7 @@ const AppStartScreen = ({navigateLogin, translations}) => (
 )
 
 const onFail = (navigation, installationId) => (reason) => {
-  if (reason === 'INVALID_KEY') {
+  if (reason === KeyStore.REJECTIONS.INVALID_KEY) {
     recreateAppSignInKeys(installationId)
   }
   navigation.navigate(ROOT_ROUTES.LOGIN)
