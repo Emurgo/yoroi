@@ -27,11 +27,11 @@ const ValidationCheckIcon = ({
   isSatisfied,
   label,
 }: ValidationCheckIconProps) => {
-  const iconColor = isSatisfied ? COLORS.LIGHT_POSITIVE_GREEN : COLORS.BLACK
+  const iconColor = isSatisfied ? COLORS.LIGHT_POSITIVE_GREEN : '#ADAEB6'
   return (
-    <View style={styles.passwordRequirement}>
+    <View style={styles.row}>
       <CheckIcon width={16} height={16} color={iconColor} />
-      <Text style={styles.passwordRequirement}>{label}</Text>
+      <Text style={[styles.label, {color: iconColor}]}>{label}</Text>
     </View>
   )
 }
@@ -69,39 +69,32 @@ const CombinedPasswordStrengthIndicator = ({
   hasDigit,
   hasTwelveCharacters,
 }: Props) => (
-  <View>
-    <Text>{translations.passwordRequirementsNote}</Text>
+  <View style={styles.container}>
+    <Text secondary>{translations.passwordRequirementsNote}</Text>
 
-    <View style={styles.passwordRequirementsRow}>
-      <ValidationCheckIcon
-        isSatisfied={hasSevenCharacters}
-        label={translations.passwordMinLength}
-      />
-      <ValidationCheckIcon
-        isSatisfied={hasLowercase}
-        label={translations.passwordLowerChar}
-      />
-    </View>
+    <ValidationCheckIcon
+      isSatisfied={hasSevenCharacters}
+      label={translations.passwordMinLength}
+    />
+    <ValidationCheckIcon
+      isSatisfied={hasLowercase}
+      label={translations.passwordLowerChar}
+    />
+    <ValidationCheckIcon
+      isSatisfied={hasUppercase}
+      label={translations.passwordUpperChar}
+    />
+    <ValidationCheckIcon
+      isSatisfied={hasDigit}
+      label={translations.passwordNumber}
+    />
 
-    <View style={styles.passwordRequirementsRow}>
-      <ValidationCheckIcon
-        isSatisfied={hasUppercase}
-        label={translations.passwordUpperChar}
-      />
-      <ValidationCheckIcon
-        isSatisfied={hasDigit}
-        label={translations.passwordNumber}
-      />
-    </View>
+    <Text secondary>{translations.or}</Text>
 
-    <Text>{translations.or}</Text>
-
-    <View style={styles.passwordRequirementsRow}>
-      <ValidationCheckIcon
-        isSatisfied={hasTwelveCharacters}
-        label={translations.passwordBigLength}
-      />
-    </View>
+    <ValidationCheckIcon
+      isSatisfied={hasTwelveCharacters}
+      label={translations.passwordBigLength}
+    />
   </View>
 )
 

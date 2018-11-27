@@ -18,14 +18,15 @@ const ValidatedTextInput = ({
   error,
 }) => (
   <View style={styles.container}>
-    <Text style={styles.label}>{label}</Text>
-
     <TextInput
       secureTextEntry={secureTextEntry}
-      style={styles.input}
+      style={[styles.input, error && styles.inputError]}
       onChangeText={handleChange}
       value={value}
     />
+    <View style={styles.labelWrap}>
+      <Text style={[styles.label, error && styles.labelError]}>{label}</Text>
+    </View>
 
     {error && <Text style={styles.error}>{error}</Text>}
   </View>
