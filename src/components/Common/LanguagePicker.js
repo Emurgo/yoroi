@@ -73,7 +73,7 @@ export const LanguagePicker = ({
     <FlatList
       style={styles.list}
       contentContainerStyle={styles.listContainer}
-      data={supportedLangauages()}
+      data={supportedLanguages()}
       keyExtractor={({code}) => code}
       extraData={languageCode}
       renderItem={({item: {label, code, icon}}) => (

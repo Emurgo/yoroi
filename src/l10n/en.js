@@ -85,10 +85,6 @@ your wallets first',
   AppStartScreen: {
     loginButton: 'Login',
   },
-  // TODO(ppershing): Is this used? What about LoginByPinScreen?
-  AppLoginScreen: {
-    title: 'Enter PIN',
-  },
   CreateOrRestoreWalletScreen: {
     createWallet: 'CREATE A NEW WALLET',
     restoreWallet: 'RESTORE WALLET FROM BACKUP',
@@ -336,12 +332,10 @@ your wallets first',
     addWallet: 'Add wallet',
     header: 'Your wallets',
   },
-  // TODO(ppershing): Where is this screen used?
-  SigninScreen: {
-    welcomeText: 'Sign with PIN / TouchID',
-  },
+
   // TODO(ppershing): why the heck is this different from ConfirmAdaScreen?
   // I guess this should be moved there
+  // TODO(dpribula): It's the same for now but different screens, should I merge it together?
   ConfirmScreen: {
     Confirmation: {
       confirmButton: 'Confirm',
@@ -360,6 +354,7 @@ your wallets first',
     linkButton: 'Link',
   },
   // TODO(ppershing): Not sure what would be good name for this
+  // TODO(dpribula): Not used as it was moved to different file, rework on the new screen
   BiometricsAuth: {
     errorDialogTitle: 'Error',
     NotSupportedErrors: {
@@ -377,7 +372,6 @@ your wallets first',
       authenticationRequiredTitle: 'Authentication required',
       touchInstructions: 'Touch the sensor',
       withPin: 'Authenticate using PIN',
-      pinCodeLabel: ' ', // TODO(ppershing): why is this empty?
     },
   },
   RemoveWalletScreen: {
@@ -390,22 +384,18 @@ your wallets first',
     remove: 'Remove wallet',
   },
   ChoosePinScreen: {
-    PinInput: {
+    CurrentPinInput: {
       title: 'Enter the PIN',
-      subtitle: 'Choose a PIN for quick access to wallet.',
+      subtitle: 'Enter your current PIN',
     },
-  },
-  LoginByPinScreen: {
-    PinInput: {
-      title: 'Enter PIN',
-    },
-    WrongPinError: {
-      title: 'Invalid PIN',
-      text: 'PIN you provided is incorrect',
-    },
-    UnknownError: {
-      title: 'Unknown error',
-      text: 'There was error while verifying PIN.',
+    PinRegistrationForm: {
+      PinInput: {
+        title: 'Enter the PIN',
+        subtitle: 'Choose new PIN for quick access to wallet.',
+      },
+      PinConfirmationInput: {
+        title: 'Repeat PIN',
+      },
     },
   },
   ChangePasswordScreen: {
