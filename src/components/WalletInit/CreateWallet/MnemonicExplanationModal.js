@@ -6,7 +6,7 @@ import {compose} from 'redux'
 import {Text, Button, Modal} from '../../UiKit'
 import Screen from '../../Screen'
 
-import styles from './styles/RecoveryPhraseExplanationDialog.style'
+import styles from './styles/MnemonicExplanationModal.style'
 import {COLORS} from '../../../styles/config'
 
 import type {State} from '../../../state'
@@ -23,7 +23,7 @@ type ExternalProps = {
   onRequestClose: () => any,
 }
 
-const RecoveryPhraseExplanationDialog = ({
+const MnemonicExplanationModal = ({
   onConfirm,
   translations,
   onRequestClose,
@@ -43,5 +43,5 @@ const RecoveryPhraseExplanationDialog = ({
 )
 
 export default (compose(withTranslations(getTranslations))(
-  RecoveryPhraseExplanationDialog,
+  MnemonicExplanationModal,
 ): ComponentType<ExternalProps>)
