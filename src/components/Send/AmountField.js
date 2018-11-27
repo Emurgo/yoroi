@@ -1,12 +1,12 @@
 // @flow
 
 import React from 'react'
-import {TextInput} from 'react-native'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 
 import {pastedFormatter, editedFormatter} from './amountUtils'
 import {withTranslations} from '../../utils/renderUtils'
+import {ValidatedTextInput} from '../UiKit'
 
 import type {ComponentType} from 'react'
 
@@ -24,20 +24,20 @@ const handleSetAmount = ({setAmount, amount}) => (text) => {
   setAmount(formatter(text))
 }
 
-const AmountField = ({style, amount, handleSetAmount, translations}) => (
-  <TextInput
+const AmountField = ({amount, handleSetAmount, translations, error}) => (
+  <ValidatedTextInput
     keyboardType="numeric"
-    placeholder={translations.amount}
-    style={style}
+    label={translations.amount}
     value={amount}
-    onChangeText={handleSetAmount}
+    onChange={handleSetAmount}
+    error={error}
   />
 )
 
 type ExternalProps = {
-  style: mixed,
   amount: string,
   setAmount: (amount: string) => mixed,
+  error: ?string,
 }
 
 export default (compose(

@@ -16,6 +16,7 @@ const ValidatedTextInput = ({
   handleChange,
   secureTextEntry,
   error,
+  keyboardType,
 }) => (
   <View style={styles.container}>
     <TextInput
@@ -23,6 +24,7 @@ const ValidatedTextInput = ({
       style={[styles.input, error && styles.inputError]}
       onChangeText={handleChange}
       value={value}
+      keyboardType={keyboardType}
     />
     <View style={styles.labelWrap}>
       <Text style={[styles.label, error && styles.labelError]}>{label}</Text>
@@ -38,6 +40,7 @@ type ExternalProps = {|
   value: string,
   secureTextEntry?: boolean,
   error?: boolean,
+  keyboardType?: 'default' | 'numeric',
 |}
 
 export default (withHandlers({

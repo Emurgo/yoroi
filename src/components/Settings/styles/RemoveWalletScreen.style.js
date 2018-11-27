@@ -8,11 +8,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.BACKGROUND,
   },
-  password: {
-    borderRadius: 5,
-    borderStyle: 'solid',
-    borderWidth: 1,
-  },
   removeButton: {
     backgroundColor: COLORS.RED,
     margin: 10,

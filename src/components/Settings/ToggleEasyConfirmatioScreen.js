@@ -4,13 +4,12 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers, withState} from 'recompose'
-import {View, TextInput} from 'react-native'
+import {View} from 'react-native'
 import {NavigationEvents} from 'react-navigation'
 
 import Screen from '../Screen'
 import walletManager from '../../crypto/wallet'
-import Text from '../UiKit/Text'
-import Button from '../UiKit/Button'
+import {Text, Button, ValidatedTextInput} from '../UiKit'
 import {setEasyConfirmation, showErrorDialog} from '../../actions'
 import {easyConfirmationSelector} from '../../selectors'
 import {WrongPassword} from '../../crypto/errors'
@@ -70,10 +69,9 @@ const ToggleEasyConfirmationScreen = ({
 
           <Text>l10n Enter master password</Text>
 
-          <TextInput
+          <ValidatedTextInput
             secureTextEntry
-            style={styles.input}
-            onChangeText={setMasterPassword}
+            onChange={setMasterPassword}
             value={masterPassword}
           />
         </>

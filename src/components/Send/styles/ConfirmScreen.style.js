@@ -39,15 +39,6 @@ export default StyleSheet.create({
   label: {
     color: COLORS.PRIMARY,
   },
-  password: {
-    borderColor: COLORS.PRIMARY,
-    borderRadius: 5,
-    borderStyle: 'solid',
-    borderWidth: 1,
-    fontSize: 20,
-    height: 50,
-    width: '100%',
-  },
   receiver: {
     flexWrap: 'wrap',
   },

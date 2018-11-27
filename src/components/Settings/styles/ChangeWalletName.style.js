@@ -13,11 +13,4 @@ export default StyleSheet.create({
   content: {
     flex: 1,
   },
-  inputText: {
-    borderWidth: 1,
-    borderColor: '#4A4A4A',
-    borderRadius: 8,
-    padding: 12,
-    marginVertical: 10,
-  },
 })
