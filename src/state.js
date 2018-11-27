@@ -37,7 +37,7 @@ export type State = {
   isAppInitialized: boolean,
   appSettings: {
     acceptedTos: boolean,
-    appId: ?string,
+    installationId: ?string,
     languageCode: string,
     customPinHash: ?string,
     isSystemAuthEnabled: boolean,
@@ -75,7 +75,7 @@ export const getInitialState = (): State => ({
   appSettings: {
     acceptedTos: false,
     languageCode: 'en-US',
-    appId: null,
+    installationId: null,
     customPinHash: null,
     isSystemAuthEnabled: false,
     isFingerprintsHardwareSupported: false,

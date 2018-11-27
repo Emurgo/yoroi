@@ -3,11 +3,11 @@ import {encryptData, decryptData} from './util'
 import {WrongPassword} from './errors'
 
 export const encryptCustomPin = async (
-  appId: string,
+  installationId: string,
   pin: string,
 ): Promise<void> => {
-  const appIdHex = Buffer.from(appId, 'utf-8').toString('hex')
-  const pinHash = await encryptData(appIdHex, pin)
+  const installationIdHex = Buffer.from(installationId, 'utf-8').toString('hex')
+  const pinHash = await encryptData(installationIdHex, pin)
   return pinHash
 }
 

@@ -5,7 +5,7 @@ import _ from 'lodash'
 import storage from '../utils/storage'
 
 export const APP_SETTINGS_KEYS = {
-  APP_ID: 'appId',
+  INSTALLATION_ID: 'installationId',
   CUSTOM_PIN_HASH: 'customPinHash',
   ACCEPTED_TOS: 'acceptedTos',
   LANG: 'languageCode',

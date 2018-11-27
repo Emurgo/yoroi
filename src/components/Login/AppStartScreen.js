@@ -13,7 +13,7 @@ import styles from './styles/AppStartScreen.style'
 import {ROOT_ROUTES} from '../../RoutesList'
 import {withTranslations} from '../../utils/renderUtils'
 import {
-  appIdSelector,
+  installationIdSelector,
   customPinHashSelector,
   systemAuthSupportSelector,
 } from '../../selectors'
@@ -44,16 +44,16 @@ const AppStartScreen = ({navigateLogin, translations}) => (
   </SafeAreaView>
 )
 
-const onFail = (navigation, appId) => (reason) => {
+const onFail = (navigation, installationId) => (reason) => {
   if (reason === 'INVALID_KEY') {
-    recreateAppSignInKeys(appId)
+    recreateAppSignInKeys(installationId)
   }
   navigation.navigate(ROOT_ROUTES.LOGIN)
 }
 
 export default compose(
   connect((state) => ({
-    appId: appIdSelector(state),
+    installationId: installationIdSelector(state),
     customPinHash: customPinHashSelector(state),
     isSystemAuthEnabled: systemAuthSupportSelector(state),
   })),
@@ -63,15 +63,15 @@ export default compose(
       isSystemAuthEnabled,
       customPinHash,
       navigation,
-      appId,
+      installationId,
     }) => async () => {
       const hasEnrolledFingerprints = await canFingerprintEncryptionBeEnabled()
 
       if (hasEnrolledFingerprints && isSystemAuthEnabled) {
         navigation.navigate(ROOT_ROUTES.BIO_AUTH, {
-          keyId: appId,
+          keyId: installationId,
           onSuccess: () => navigation.navigate(ROOT_ROUTES.WALLET_SELECTION),
-          onFail: onFail(navigation, appId),
+          onFail: onFail(navigation, installationId),
         })
       } else {
         if (customPinHash) {
