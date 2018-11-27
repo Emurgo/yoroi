@@ -35,7 +35,7 @@ export const CONFIG = {
   DEBUG: {
     PREFILL_FORMS: PREFILL_WALLET_INFO,
     WALLET_NAME: 'My wallet',
-    PASSWORD: 'aeg?eP3M',
+    PASSWORD: 'aeg?eP3M:)(:',
     MNEMONIC1: [
       'dry balcony arctic what garbage sort',
       'cart shine egg lamp manual bottom',
@@ -74,4 +74,5 @@ export const CONFIG = {
   PIN_LENGTH: 6,
   APP_LOCK_TIMEOUT: 3000,
   START_WITH_INDEX_SCREEN: SHOW_INIT_DEBUG_SCREEN,
+  ALLOW_SHORT_PASSWORD: false,
 }

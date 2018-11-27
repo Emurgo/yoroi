@@ -9,6 +9,7 @@ import {getPasswordStrength} from '../../utils/validators'
 import {Text} from '../UiKit'
 import CheckIcon from '../../assets/CheckIcon'
 import {withTranslations} from '../../utils/renderUtils'
+import {CONFIG} from '../../config'
 
 import styles from './styles/PasswordStrengthIndicator.style'
 import {COLORS} from '../../styles/config'
@@ -44,7 +45,23 @@ type Props = {
   hasTwelveCharacters?: boolean,
 }
 
-const PasswordStrengthIndicator = ({
+const LongPasswordStrengthIndicator = ({
+  hasTwelveCharacters,
+  translations,
+}: Props) => (
+  <View>
+    <Text>{translations.passwordRequirementsNote}</Text>
+
+    <View style={styles.passwordRequirementsRow}>
+      <ValidationCheckIcon
+        isSatisfied={hasTwelveCharacters}
+        label={translations.passwordBigLength}
+      />
+    </View>
+  </View>
+)
+
+const CombinedPasswordStrengthIndicator = ({
   translations,
   hasSevenCharacters,
   hasUppercase,
@@ -88,7 +105,11 @@ const PasswordStrengthIndicator = ({
   </View>
 )
 
+const indicator = CONFIG.ALLOW_SHORT_PASSWORD
+  ? CombinedPasswordStrengthIndicator
+  : LongPasswordStrengthIndicator
+
 export default compose(
   withTranslations(getTranslations),
   withProps(({password}) => getPasswordStrength(password)),
-)(PasswordStrengthIndicator)
+)(indicator)
