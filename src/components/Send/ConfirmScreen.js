@@ -26,7 +26,7 @@ import styles from './styles/ConfirmScreen.style'
 import {WrongPassword} from '../../crypto/errors'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 
-const getTranslations = (state) => state.trans.ConfirmScreen.Confirmation
+const getTranslations = (state) => state.trans.ConfirmSendAdaScreen
 
 const handleOnConfirm = async (
   navigation,

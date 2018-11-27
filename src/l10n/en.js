@@ -335,22 +335,6 @@ your wallets first',
     addWallet: 'Add wallet',
     header: 'Your wallets',
   },
-
-  // TODO(ppershing): why the heck is this different from ConfirmAdaScreen?
-  // I guess this should be moved there
-  // TODO(dpribula): It's the same for now but different screens
-  //  should I merge it together?
-  ConfirmScreen: {
-    Confirmation: {
-      confirmButton: 'Confirm',
-      amount: 'Amount',
-      availableFunds: 'AVAILABLE FUNDS:',
-      balanceAfterTx: 'Balance after transaction',
-      fees: 'Fees',
-      password: 'Wallet password',
-      receiver: 'Receiver',
-    },
-  },
   BiometricsLinkScreen: {
     enableFingerprintsMessage:
       'Enable use of fingerprints in device settings first!',
