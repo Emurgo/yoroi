@@ -17,40 +17,43 @@ import {Button} from '../UiKit'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const supportedLangauages = () => [
-  {
-    label: l10n.translations.global.language.chineseSimplified,
-    code: LANGUAGES.CHINESE_SIMPLIFIED,
-    icon: chineseFlagIcon,
-  },
-  {
-    label: l10n.translations.global.language.chineseTraditional,
-    code: LANGUAGES.CHINESE_TRADITIONAL,
-    icon: chineseFlagIcon,
-  },
-  {
-    label: l10n.translations.global.language.english,
-    code: LANGUAGES.ENGLISH,
-    icon: englishFlagIcon,
-  },
-  {
-    label: l10n.translations.global.language.japanese,
-    code: LANGUAGES.JAPANESE,
-    icon: japaneseFlagIcon,
-  },
-  {
-    label: l10n.translations.global.language.korean,
-    code: LANGUAGES.KOREAN,
-    icon: koreanFlagIcon,
-  },
-  {
-    label: l10n.translations.global.language.russian,
-    code: LANGUAGES.RUSSIAN,
-    icon: russianFlagIcon,
-  },
-]
+const supportedLanguages = () => {
+  const languages = l10n.translations.global.languages
+  return [
+    {
+      label: languages.chineseSimplified,
+      code: LANGUAGES.CHINESE_SIMPLIFIED,
+      icon: chineseFlagIcon,
+    },
+    {
+      label: languages.chineseTraditional,
+      code: LANGUAGES.CHINESE_TRADITIONAL,
+      icon: chineseFlagIcon,
+    },
+    {
+      label: languages.english,
+      code: LANGUAGES.ENGLISH,
+      icon: englishFlagIcon,
+    },
+    {
+      label: languages.japanese,
+      code: LANGUAGES.JAPANESE,
+      icon: japaneseFlagIcon,
+    },
+    {
+      label: languages.korean,
+      code: LANGUAGES.KOREAN,
+      icon: koreanFlagIcon,
+    },
+    {
+      label: languages.russian,
+      code: LANGUAGES.RUSSIAN,
+      icon: russianFlagIcon,
+    },
+  ]
+}
 
-const getTranslations = (state) => state.trans.LanguagePicker
+const getTranslations = (state) => state.trans.LanguageSelectionScreen
 
 type Props = {
   changeLanguage: (string) => any,
@@ -70,7 +73,7 @@ export const LanguagePicker = ({
     <FlatList
       style={styles.list}
       contentContainerStyle={styles.listContainer}
-      data={supportedLangauages()}
+      data={supportedLanguages()}
       keyExtractor={({code}) => code}
       extraData={languageCode}
       renderItem={({item: {label, code, icon}}) => (
@@ -85,7 +88,7 @@ export const LanguagePicker = ({
     />
 
     <Image source={selectLanguageImage} style={styles.image} />
-    <Button onPress={handleContinue} title={translations.continue} />
+    <Button onPress={handleContinue} title={translations.continueButton} />
   </View>
 )
 

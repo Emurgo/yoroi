@@ -10,7 +10,7 @@ import {ValidatedTextInput} from '../UiKit'
 
 import type {ComponentType} from 'react'
 
-const getTranslations = (state) => state.trans.Send.Main
+const getTranslations = (state) => state.trans.SendAdaScreen
 
 const handleSetAmount = ({setAmount, amount}) => (text) => {
   const shorterStringLength = Math.min(text.length, amount.length)

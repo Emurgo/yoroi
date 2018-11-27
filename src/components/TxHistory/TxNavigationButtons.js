@@ -15,7 +15,7 @@ import styles from './styles/TxNavigationButtons.style'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslations = (state) => state.trans.TxNavigationButtons
+const getTranslations = (state) => state.trans.TransactionHistoryScreeen
 
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,

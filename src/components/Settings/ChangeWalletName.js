@@ -17,7 +17,7 @@ import styles from './styles/ChangeWalletName.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslations = (state) => state.trans.ChangeWalletName
+const getTranslations = (state) => state.trans.ChangeWalletNameScreen
 
 type Props = {
   newName: string,

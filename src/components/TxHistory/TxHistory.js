@@ -36,7 +36,7 @@ import type {Navigation} from '../../types/navigation'
 import type {State} from '../../state'
 import type {ComponentType} from 'react'
 
-const getTranslations = (state: State) => state.trans.TxHistory
+const getTranslations = (state: State) => state.trans.TransactionHistoryScreeen
 
 const NoTxHistory = () => (
   <View style={styles.empty}>

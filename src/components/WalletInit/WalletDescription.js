@@ -14,7 +14,7 @@ import styles from './styles/WalletInitScreen.style'
 import type {State} from '../../state'
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslations = (state: State) => state.trans.WalletDescription
+const getTranslations = (state: State) => state.trans.YoroiDescription
 
 type Props = {
   translations: SubTranslation<typeof getTranslations>,

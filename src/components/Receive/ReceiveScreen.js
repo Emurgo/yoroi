@@ -56,17 +56,17 @@ const ReceiveScreen = ({
             disabled={addressLimitReached}
             title={
               !addressLimitReached
-                ? translations.generate
+                ? translations.generateButton
                 : translations.cannotGenerate
             }
           />
         </View>
         <View>
-          <Text>Fresh addresses</Text>
+          <Text>l10n Fresh addresses</Text>
         </View>
         <AddressesList showFresh addresses={receiveAddresses} />
         <View>
-          <Text>Used addresses</Text>
+          <Text>l10n Used addresses</Text>
         </View>
         <AddressesList addresses={receiveAddresses} />
       </Screen>
