@@ -14,7 +14,7 @@ import styles from './styles/CustomPinScreen.style'
 import type {State} from '../../state'
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslations = (state: State) => state.trans.CustomPinScreen
+const getTranslations = (state: State) => state.trans.ChoosePinScreen
 
 const handleValidPinEnter = ({navigation, encryptAndStoreCustomPin}) => async (
   pin,

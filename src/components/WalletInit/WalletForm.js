@@ -17,7 +17,7 @@ import type {SubTranslation} from '../../l10n/typeHelpers'
 
 type FormValidationErrors = PasswordValidationErrors & {nameReq?: boolean}
 
-const getTranslations = (state: State) => state.trans.WalletForm
+const getTranslations = (state: State) => state.trans.WalletNameAndPasswordForm
 
 const validateForm = ({
   name,

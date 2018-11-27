@@ -13,7 +13,7 @@ import styles from './styles/AddressesList.style'
 
 import type {ComponentType} from 'react'
 
-const getTranslations = (state) => state.trans.AddressesList
+const getTranslations = (state) => state.trans.ReceiveScreen.addressesList
 
 const _keyExtractor = (address) => address
 const _renderItem = ({item: address}) => (

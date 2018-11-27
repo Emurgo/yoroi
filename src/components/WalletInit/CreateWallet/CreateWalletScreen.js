@@ -12,7 +12,8 @@ import WalletForm from '../WalletForm'
 import type {State} from '../../../state'
 import type {SubTranslation} from '../../../l10n/typeHelpers'
 
-const getTranslations = (state: State) => state.trans.CreateWalletScreen
+const getTranslations = (state: State) =>
+  state.trans.CreateOrRestoreWalletScreen
 
 const handleCreate = ({navigation}) => ({name, password}) => {
   navigation.navigate(WALLET_INIT_ROUTES.RECOVERY_PHRASE_DIALOG, {

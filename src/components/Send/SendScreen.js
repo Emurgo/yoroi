@@ -40,7 +40,7 @@ import type {
   BalanceValidationErrors,
 } from '../../utils/validators'
 
-const getTranslations = (state) => state.trans.Send.Main
+const getTranslations = (state) => state.trans.SendAdaScreen
 
 const getTransactionData = (utxos, address, amount) => {
   const adaAmount = parseAdaDecimal(amount)
@@ -420,7 +420,7 @@ class SendScreen extends Component<Props, State> {
 
           <Button
             onPress={this.handleConfirm}
-            title={translations.continue}
+            title={translations.continueButton}
             disabled={disabled}
           />
         </ScrollView>

@@ -13,7 +13,7 @@ import assert from '../../utils/assert'
 
 import type {ComponentType} from 'react'
 
-const getTranslations = (state) => state.trans.Send.SubmitModal
+const getTranslations = (state) => state.trans.WaitSendTransactionModal
 
 class SendingModal extends React.Component<*> {
   componentDidMount() {

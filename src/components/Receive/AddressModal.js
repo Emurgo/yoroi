@@ -16,7 +16,7 @@ import styles from './styles/AddressModal.style'
 import type {ComponentType} from 'react'
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslations = (state) => state.trans.AddressModal
+const getTranslations = (state) => state.trans.AddressDetailsModal
 
 type Props = {
   address: string,

@@ -43,7 +43,7 @@ const AdaAmount = ({amount, direction}) => {
   )
 }
 
-const getTranslations = (state) => state.trans.TxDetails
+const getTranslations = (state) => state.trans.TransactionDetailScreen
 
 const AddressEntry = withHandlers({
   onPress: ({address, showModalForAddress}) => () =>

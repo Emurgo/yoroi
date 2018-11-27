@@ -23,7 +23,8 @@ import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {SubTranslation} from '../../l10n/typeHelpers'
 import type {TransactionInfo} from '../../types/HistoryTransaction'
 
-const getTranslations = (state) => state.trans.TxHistoryListItem
+const getTranslations = (state) =>
+  state.trans.TransactionHistoryScreeen.transaction
 
 type Props = {
   transaction: TransactionInfo,
