@@ -3,63 +3,45 @@
 import React from 'react'
 import {View} from 'react-native'
 import {compose} from 'redux'
-import {withHandlers} from 'recompose'
-
-import assert from '../../../utils/assert'
-import {Text, Button} from '../../UiKit'
+import {Text, Button, Modal} from '../../UiKit'
 import Screen from '../../Screen'
-import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 
 import styles from './styles/RecoveryPhraseExplanationDialog.style'
 import {COLORS} from '../../../styles/config'
 
 import type {State} from '../../../state'
-import type {SubTranslation} from '../../../l10n/typeHelpers'
 
-import {withNavigationTitle, withTranslations} from '../../../utils/renderUtils'
-import type {Navigation} from '../../../types/navigation'
+import {withTranslations} from '../../../utils/renderUtils'
 import type {ComponentType} from 'react'
 
 const getTranslations = (state: State) =>
   state.trans.RecoveryPhraseExplanationDialog
 
-type Props = {
-  navigateToRecoveryPhrase: () => mixed,
-  translations: SubTranslation<typeof getTranslations>,
+type ExternalProps = {
+  onConfirm: () => any,
+  visible: boolean,
+  onRequestClose: () => any,
 }
 
 const RecoveryPhraseExplanationDialog = ({
-  navigateToRecoveryPhrase,
+  onConfirm,
   translations,
-}: Props) => (
-  <Screen bgColor={COLORS.TRANSPARENT_BLACK}>
-    <View style={styles.dialogBody}>
-      <Text>{translations.title}</Text>
-      <Text>{translations.paragraph1}</Text>
-      <Text>{translations.paragraph2}</Text>
+  onRequestClose,
+  visible,
+}) => (
+  <Modal onRequestClose={onRequestClose} visible={visible}>
+    <Screen bgColor={COLORS.TRANSPARENT_BLACK}>
+      <View style={styles.dialogBody}>
+        <Text>{translations.title}</Text>
+        <Text>{translations.paragraph1}</Text>
+        <Text>{translations.paragraph2}</Text>
 
-      <Button
-        onPress={navigateToRecoveryPhrase}
-        title={translations.nextButton}
-      />
-    </View>
-  </Screen>
+        <Button onPress={onConfirm} title={translations.nextButton} />
+      </View>
+    </Screen>
+  </Modal>
 )
 
-export default (compose(
-  withTranslations(getTranslations),
-  withNavigationTitle(({translations}) => translations.title),
-  withHandlers({
-    navigateToRecoveryPhrase: ({navigation}) => (event) => {
-      const name = navigation.getParam('name')
-      const password = navigation.getParam('password')
-
-      assert.assert(!!password, 'handleWalletConfirmation:: password')
-      assert.assert(!!name, 'handleWalletConfirmation:: name')
-      navigation.replace(WALLET_INIT_ROUTES.RECOVERY_PHRASE, {
-        name,
-        password,
-      })
-    },
-  }),
-)(RecoveryPhraseExplanationDialog): ComponentType<{navigation: Navigation}>)
+export default (compose(withTranslations(getTranslations))(
+  RecoveryPhraseExplanationDialog,
+): ComponentType<ExternalProps>)

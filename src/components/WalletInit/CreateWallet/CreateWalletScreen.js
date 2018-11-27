@@ -3,32 +3,32 @@
 import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {withHandlers} from 'recompose'
+import {withHandlers, withState} from 'recompose'
 
+import RecoveryPhraseExplanationDialog from './RecoveryPhraseExplanationDialog'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import WalletForm from '../WalletForm'
 
 import type {State} from '../../../state'
-import type {SubTranslation} from '../../../l10n/typeHelpers'
 
 const getTranslations = (state: State) =>
   state.trans.CreateOrRestoreWalletScreen
 
-const handleCreate = ({navigation}) => ({name, password}) => {
-  navigation.navigate(WALLET_INIT_ROUTES.RECOVERY_PHRASE_DIALOG, {
-    name,
-    password,
-  })
-}
-
-type Props = {
-  handleCreate: ({name: string, password: string}) => mixed,
-  translations: SubTranslation<typeof getTranslations>,
-}
-
-const CreateWalletScreen = ({handleCreate}: Props) => (
-  <WalletForm onSubmit={handleCreate} />
+const CreateWalletScreen = ({
+  formSubmit,
+  hideMnemonicExplanation,
+  visibleMnemonicExplanation,
+  navigateToMnemonicScreen,
+}) => (
+  <>
+    <WalletForm onSubmit={formSubmit} />
+    <RecoveryPhraseExplanationDialog
+      visible={visibleMnemonicExplanation}
+      onRequestClose={hideMnemonicExplanation}
+      onConfirm={navigateToMnemonicScreen}
+    />
+  </>
 )
 
 export default compose(
@@ -36,7 +36,18 @@ export default compose(
     translations: getTranslations(state),
   })),
   withNavigationTitle(({translations}) => translations.title),
+  withState('visibleMnemonicExplanation', 'setMnemonicExplanation', false),
+  withState('formData', 'setFormData', null),
   withHandlers({
-    handleCreate,
+    formSubmit: ({setFormData, setMnemonicExplanation}) => (data) => {
+      setFormData(data)
+      setMnemonicExplanation(true)
+    },
+    hideMnemonicExplanation: ({setMnemonicExplanation}) => () => {
+      setMnemonicExplanation(false)
+    },
+    navigateToMnemonicScreen: ({formData, navigation}) => () => {
+      navigation.navigate(WALLET_INIT_ROUTES.RECOVERY_PHRASE, formData)
+    },
   }),
 )(CreateWalletScreen)
