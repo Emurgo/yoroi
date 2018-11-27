@@ -16,16 +16,15 @@ import {withNavigationTitle, withTranslations} from '../../utils/renderUtils'
 import {formatAda, formatDateToSeconds} from '../../utils/format'
 import {Text, Button, OfflineBanner, Banner} from '../UiKit'
 import Screen from '../../components/Screen'
-import AdaIcon from '../../assets/AdaIcon'
 import {CONFIG} from '../../config'
 import AddressModal from '../Receive/AddressModal'
 
 import styles from './styles/TxDetails.style'
-import {TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
 
 import type {State} from '../../state'
 import type {Navigation} from '../../types/navigation'
 import type {ComponentType} from 'react'
+import {TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
 
 const Label = ({children}) => <Text style={styles.label}>{children}</Text>
 
@@ -34,12 +33,7 @@ const AdaAmount = ({amount, direction}) => {
     ? styles.positiveAmount
     : styles.negativeAmount
 
-  return (
-    <Text>
-      <Text style={amountStyle}>{formatAda(amount)}</Text>
-      <AdaIcon width={12} height={12} color={amountStyle.color} />
-    </Text>
-  )
+  return <Text style={amountStyle}>{formatAda(amount)} ₳</Text>
 }
 
 const getTranslations = (state) => state.trans.TransactionDetailsScreen
@@ -57,13 +51,6 @@ const AddressEntry = withHandlers({
     </TouchableHighlight>
   )
 })
-
-// const Section = ({label, children}) => (
-//   <View style={styles.section}>
-//     <Label>{label}</Label>
-//     {children}
-//   </View>
-// )
 
 const getShownAddresses = (
   transaction,
@@ -161,7 +148,7 @@ const TxDetails = ({
       <OfflineBanner />
       <Screen scroll>
         <Banner
-          label={translations.type[transaction.direction]}
+          label={translations.transactionType[transaction.direction]}
           text={
             transaction.amount && (
               <AdaAmount
