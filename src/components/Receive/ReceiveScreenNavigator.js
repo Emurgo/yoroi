@@ -3,7 +3,6 @@ import React from 'react'
 import {createStackNavigator} from 'react-navigation'
 
 import ReceiveScreen from './ReceiveScreen'
-import AddressModal from './AddressModal'
 import {RECEIVE_ROUTES} from '../../RoutesList'
 import HeaderBackButton from '../UiKit/HeaderBackButton'
 import {defaultNavigationOptions} from '../../navigationOptions'
@@ -11,7 +10,6 @@ import {defaultNavigationOptions} from '../../navigationOptions'
 const ReceiveScreenNavigator = createStackNavigator(
   {
     [RECEIVE_ROUTES.MAIN]: ReceiveScreen,
-    [RECEIVE_ROUTES.ADDRESS_MODAL]: AddressModal,
   },
   {
     initialRouteName: RECEIVE_ROUTES.MAIN,

@@ -1,43 +1,34 @@
 // @flow
-import {COLORS} from '../../../styles/config'
+import {StyleSheet} from 'react-native'
 
-const styles = {
-  header: {
-    alignItems: 'flex-end',
-  },
-  close: {
-    fontSize: 25,
-    padding: 10,
-  },
-  root: {
+export default StyleSheet.create({
+  backdrop: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: COLORS.WHITE,
-    borderRadius: 10,
-    padding: 10,
+    padding: 24,
+    backgroundColor: 'rgba(74,74,74,.9)',
   },
   container: {
-    padding: 10,
+    backgroundColor: '#fff',
+    borderRadius: 4,
+    paddingHorizontal: 24,
+    paddingVertical: 32,
   },
-  qrcode: {
-    backgroundColor: COLORS.DARK_BLUE,
-    foregroundColor: COLORS.WHITE,
-    size: 200,
+  content: {
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  close: {
+    position: 'absolute',
+    top: 8,
+    right: 16,
+  },
+  closeText: {
+    fontSize: 32,
   },
   address: {
-    fontSize: 17,
-  },
-  button: {
-    backgroundColor: COLORS.LIGHT_POSITIVE_GREEN,
-    margin: 5,
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  sendButton: {
+    marginTop: 24,
     textAlign: 'center',
-    padding: 5,
   },
-}
-
-export default styles
+})
