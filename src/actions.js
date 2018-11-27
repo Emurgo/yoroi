@@ -22,7 +22,7 @@ import {
 } from './helpers/appSettings'
 import networkInfo from './utils/networkInfo'
 import {
-  appIdSelector,
+  installationIdSelector,
   systemAuthSupportSelector,
   customPinHashSelector,
   languageSelector,
@@ -30,7 +30,7 @@ import {
 } from './selectors'
 
 import NavigationService from './NavigationService'
-import {ROOT_ROUTES, FIRST_RUN_ROUTES} from './RoutesList'
+import {ROOT_ROUTES} from './RoutesList'
 
 import {type Dispatch} from 'redux'
 import {type State} from './state'
@@ -83,11 +83,11 @@ export const encryptAndStoreCustomPin = (pin: string) => async (
   getState: () => State,
 ) => {
   const state = getState()
-  const appId = state.appSettings.appId
-  if (!appId) {
-    throw new AppSettingsError(APP_SETTINGS_KEYS.APP_ID)
+  const installationId = state.appSettings.installationId
+  if (!installationId) {
+    throw new AppSettingsError(APP_SETTINGS_KEYS.INSTALLATION_ID)
   }
-  const customPinHash = await encryptCustomPin(appId, pin)
+  const customPinHash = await encryptCustomPin(installationId, pin)
   dispatch(setAppSettingField(APP_SETTINGS_KEYS.CUSTOM_PIN_HASH, customPinHash))
 }
 
@@ -99,16 +99,14 @@ export const navigateFromSplash = () => (
   // onboarding and normal wallet flow
   const state = getState()
 
-  if (!languageSelector(state)) {
-    NavigationService.navigate(ROOT_ROUTES.FIRST_RUN)
-  } else if (!tosSelector(state)) {
-    NavigationService.navigate(FIRST_RUN_ROUTES.ACCEPT_TERMS_OF_SERVICE)
-  } else if (
-    !systemAuthSupportSelector(state) &&
-    !customPinHashSelector(state)
+  if (
+    !languageSelector(state) ||
+    !tosSelector(state) ||
+    (!systemAuthSupportSelector(state) && !customPinHashSelector(state))
   ) {
-    NavigationService.navigate(FIRST_RUN_ROUTES.CUSTOM_PIN)
+    NavigationService.navigate(ROOT_ROUTES.FIRST_RUN)
   } else {
+    // TODO: change to login in prod
     NavigationService.navigate(ROOT_ROUTES.INIT)
   }
 }
@@ -118,8 +116,10 @@ export const acceptAndSaveTos = () => (dispatch: Dispatch<any>) => {
 }
 
 const firstRunSetup = () => (dispatch: Dispatch<any>, getState: any) => {
-  const appId = uuid.v4()
-  dispatch(setAppSettingField(APP_SETTINGS_KEYS.APP_ID, appId))
+  const installationId = uuid.v4()
+  dispatch(
+    setAppSettingField(APP_SETTINGS_KEYS.INSTALLATION_ID, installationId),
+  )
 }
 
 export const closeWallet = () => async (dispatch: Dispatch<any>) => {
@@ -139,7 +139,7 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   })
 
   const state = getState()
-  if (!appIdSelector(state)) {
+  if (!installationIdSelector(state)) {
     dispatch(firstRunSetup())
   }
 
@@ -251,23 +251,23 @@ export const showErrorDialog = (
     Alert.alert(title, message, buttons, {cancelable: false})
   })
 
-export const setSystemAuth = (enable: boolean) => async (
+export const setSystemAuth = (isEnabled: boolean) => async (
   dispatch: Dispatch<any>,
   getState: any,
 ) => {
   const canBeDisabled = walletManager.canBiometricsSignInBeDisabled()
 
-  if (!enable && !canBeDisabled) {
+  if (!isEnabled && !canBeDisabled) {
     throw new Error(
       'Can not disable system auth without disabling easy confirmation.',
     )
   }
 
-  dispatch(setAppSettingField(APP_SETTINGS_KEYS.SYSTEM_AUTH_ENABLED, enable))
+  dispatch(setAppSettingField(APP_SETTINGS_KEYS.SYSTEM_AUTH_ENABLED, isEnabled))
 
-  const appId = appIdSelector(getState())
-  if (appId) {
-    await recreateAppSignInKeys(appId)
+  const installationId = installationIdSelector(getState())
+  if (installationId) {
+    await recreateAppSignInKeys(installationId)
   }
 }
 

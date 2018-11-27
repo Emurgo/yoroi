@@ -56,7 +56,7 @@ export const isBiometricPromptSupported = async () => {
   throw new Error('Unsupported platform')
 }
 
-export const recreateAppSignInKeys = async (appId: string) => {
-  await KeyStore.storeData(appId, 'BIOMETRICS', appId, '')
-  await KeyStore.storeData(appId, 'SYSTEM_PIN', appId, '')
+export const recreateAppSignInKeys = async (installationId: string) => {
+  await KeyStore.storeData(installationId, 'BIOMETRICS', installationId, '')
+  await KeyStore.storeData(installationId, 'SYSTEM_PIN', installationId, '')
 }
