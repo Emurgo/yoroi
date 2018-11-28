@@ -64,9 +64,9 @@ const ReceiveScreen = ({
       </View>
       <SafeAreaView style={styles.safeAreaView}>
         <Screen scroll>
-          <Text style={styles.heading}>l10n Fresh addresses</Text>
+          <Text style={styles.heading}>{translations.freshAddresses}</Text>
           <AddressesList showFresh addresses={receiveAddresses} />
-          <Text style={styles.heading}>l10n Used addresses</Text>
+          <Text style={styles.heading}>{translations.usedAddresses}</Text>
           <AddressesList addresses={receiveAddresses} />
         </Screen>
       </SafeAreaView>

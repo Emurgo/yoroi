@@ -16,7 +16,7 @@ import {WrongPassword} from '../../crypto/errors'
 
 import styles from './styles/ToggleEasyConfirmationScreen.style'
 
-const getTranslations = (state) => state.trans.BiometricsLinkScreen
+const getTranslations = (state) => state.trans.EasyConfirmationScreen
 
 const enableEasyConfirmation = ({
   navigation,
@@ -62,12 +62,9 @@ const ToggleEasyConfirmationScreen = ({
     <View style={styles.root}>
       {!isEasyConfirmationEnabled ? (
         <>
-          <Text>
-            l10n Enabling this option can made app less secure. This is
-            compromise between UX and security!
-          </Text>
+          <Text>{translations.enableLessSecureOption}</Text>
 
-          <Text>l10n Enter master password</Text>
+          <Text>{translations.enterMasterPassword}</Text>
 
           <ValidatedTextInput
             secureTextEntry
@@ -76,15 +73,16 @@ const ToggleEasyConfirmationScreen = ({
           />
         </>
       ) : (
-        <Text>
-          l10n By disabling this option you will be able to spend your ADA only
-          with master password.
-        </Text>
+        <Text>{translations.disableThisOption}</Text>
       )}
 
-      <Button title="l10n Cancel" onPress={cancelOperation} />
+      <Button title={translations.cancelButton} onPress={cancelOperation} />
       <Button
-        title={`l10n ${isEasyConfirmationEnabled ? 'Disable' : 'Enable'}`}
+        title={
+          isEasyConfirmationEnabled
+            ? translations.disableButton
+            : translations.enableButton
+        }
         onPress={
           isEasyConfirmationEnabled
             ? disableEasyConfirmation

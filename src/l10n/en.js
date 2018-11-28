@@ -238,6 +238,8 @@ your wallets first',
     addressesList: {
       walletAddresses: 'Your wallet addresses',
     },
+    freshAddresses: 'Fresh addresses',
+    usedAddresses: 'Used addresses',
   },
   AddressDetailsModal: {
     walletAddress: 'Your wallet address',
@@ -351,16 +353,15 @@ your wallets first',
     notNowButton: 'Not now',
     linkButton: 'Link',
   },
-  // TODO(ppershing): Not sure what would be good name for this
-  // TODO(dpribula): Not used as it was moved to different file
-  // rework on the new screen
-  BiometricsAuth: {
-    errorDialogTitle: 'Error',
-    NotSupportedErrors: {
-      deviceNotSupported: 'Your device does not support biometrics!',
-      biometricsOrPinNotSet: 'Go to system setttings and rise your security',
-      pinSetButBiometricsNot: 'Go to system setttings and rise your security',
-      notSupported: 'Not supported error',
+  BiometricsAuthScreen: {
+    authorizeOperation: 'Authorize operation',
+    putFingerOnSensorMessage: 'Put you finger on sensor to auth operation',
+    useFallbackButton: 'Use fallback',
+    cancelButton: 'Cancel',
+    Errors: {
+      notRecognized: 'Fingerprint was not recognized try again',
+      tooManyTries: 'You used too many fingers sensor is disabled',
+      sensorFailed: 'Fingerprint sensor failed please use fallback',
     },
     AuthenticateErrors: {
       text: 'Authenticate error',
@@ -416,6 +417,24 @@ your wallets first',
         title: 'Repeat PIN',
       },
     },
+  },
+  EasyConfirmationScreen: {
+    enableLessSecureOption:
+      'Enabling this option can made app less secure. \
+      This is compromise between UX and security!',
+    disableThisOption:
+      'By disabling this option you will be able to spend your ADA only\
+    with master password.',
+    enterMasterPassword: 'Enter Master Password',
+    cancelButton: 'Cancel',
+    enableButton: 'Enable',
+    disableButton: 'Disable',
+  },
+  Biometry: {
+    approveTransaction: 'Approve signing tx',
+    subtitle: 'Subtitle',
+    description: 'Description',
+    cancelButton: 'Cancel',
   },
 }
 
