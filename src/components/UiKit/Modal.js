@@ -1,18 +1,38 @@
 // @flow
 
 import React from 'react'
-import {StyleSheet, View, Modal as RNModal} from 'react-native'
+import {
+  StyleSheet,
+  View,
+  Modal as RNModal,
+  TouchableOpacity,
+} from 'react-native'
 import {NavigationEvents} from 'react-navigation'
+
+import Text from './Text'
 
 import type {Node} from 'react'
 
 const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: 'stretch',
     justifyContent: 'center',
     padding: 24,
     backgroundColor: 'rgba(74,74,74,.9)',
+  },
+  container: {
+    backgroundColor: '#fff',
+    borderRadius: 4,
+    padding: 24,
+  },
+  close: {
+    position: 'absolute',
+    top: 0,
+    right: 8,
+  },
+  closeText: {
+    fontSize: 32,
   },
 })
 
@@ -20,6 +40,7 @@ type Props = {
   onRequestClose: () => any,
   visible: boolean,
   children: Node,
+  showCloseIcon: boolean,
 }
 
 type State = {
@@ -45,7 +66,7 @@ class Modal extends React.Component<Props, State> {
   }
 
   render() {
-    const {visible, onRequestClose, children} = this.props
+    const {visible, showCloseIcon, onRequestClose, children} = this.props
     const {isFocused} = this.state
     return (
       <>
@@ -59,7 +80,16 @@ class Modal extends React.Component<Props, State> {
           visible={visible && isFocused}
           onRequestClose={onRequestClose}
         >
-          <View style={styles.backdrop}>{children}</View>
+          <View style={styles.backdrop}>
+            <View style={styles.container}>
+              {showCloseIcon && (
+                <TouchableOpacity style={styles.close} onPress={onRequestClose}>
+                  <Text style={styles.closeText}>{'\u00d7'}</Text>
+                </TouchableOpacity>
+              )}
+              {children}
+            </View>
+          </View>
         </RNModal>
       </>
     )

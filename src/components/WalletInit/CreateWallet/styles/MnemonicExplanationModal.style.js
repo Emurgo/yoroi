@@ -1,19 +1,14 @@
 // @flow
-import {COLORS} from '../../../../styles/config'
+import {spacing} from '../../../../styles/config'
 
 const style = {
-  button: {
-    backgroundColor: COLORS.LIGHT_POSITIVE_GREEN,
-    padding: 20,
-    borderRadius: 5,
-    width: '100%',
-    justifyContent: 'center',
-    alignContent: 'center',
-    flexDirection: 'row',
+  paragraph: {
+    marginBottom: spacing.paragraphBottomMargin,
   },
-  dialogBody: {
-    backgroundColor: COLORS.WHITE,
-    borderRadius: 10,
+  imageContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: spacing.paragraphBottomMargin,
   },
 }
 

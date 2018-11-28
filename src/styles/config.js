@@ -35,6 +35,10 @@ export const colors = {
   buttonBackground: '#17d1aa',
 }
 
+export const spacing = {
+  paragraphBottomMargin: 15,
+}
+
 const brand = {
   defaultFont: Platform.select({
     ios: 'Arial',

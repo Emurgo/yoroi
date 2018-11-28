@@ -1,13 +1,11 @@
 // @flow
 
 import React from 'react'
-import {View} from 'react-native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withState} from 'recompose'
 
 import {Text, Button, Checkbox, Modal} from '../../UiKit'
-
 import styles from './styles/MnemonicBackupImportanceModal.style'
 
 import type {State} from '../../../state'
@@ -38,27 +36,24 @@ const MnemonicBackupImportanceModal = ({
   onRequestClose,
 }: Props) => (
   <Modal visible={visible} onRequestClose={onRequestClose}>
-    <View style={styles.dialogBody}>
-      <Text>{translations.title}</Text>
-
-      <Checkbox
-        onChange={setAcceptedKeyStorage}
-        checked={acceptedKeyStorage}
-        text={translations.keysStorageCheckbox}
-      />
-
-      <Checkbox
-        onChange={setAcceptedNewDeviceRecovery}
-        checked={acceptedNewDeviceRecovery}
-        text={translations.newDeviceRecoveryCheckbox}
-      />
-
-      <Button
-        disabled={!acceptedKeyStorage || !acceptedNewDeviceRecovery}
-        onPress={onConfirm}
-        title={translations.confirmationButton}
-      />
-    </View>
+    <Text style={styles.title}>{translations.title}</Text>
+    <Checkbox
+      style={styles.checkbox}
+      onChange={setAcceptedKeyStorage}
+      checked={acceptedKeyStorage}
+      text={translations.keysStorageCheckbox}
+    />
+    <Checkbox
+      style={styles.checkbox}
+      onChange={setAcceptedNewDeviceRecovery}
+      checked={acceptedNewDeviceRecovery}
+      text={translations.newDeviceRecoveryCheckbox}
+    />
+    <Button
+      disabled={!acceptedKeyStorage || !acceptedNewDeviceRecovery}
+      onPress={onConfirm}
+      title={translations.confirmationButton}
+    />
   </Modal>
 )
 

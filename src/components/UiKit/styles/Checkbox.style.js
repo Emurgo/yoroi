@@ -4,16 +4,15 @@ export default StyleSheet.create({
   container: {
     flexDirection: 'row',
   },
-  checkboxContainer: {
-    marginRight: 10,
-  },
   checkbox: {
     fontSize: 23,
+    lineHeight: 25,
+    marginRight: 10,
   },
   textContainer: {
     flex: 1,
   },
   text: {
-    fontSize: 15,
+    flex: 1,
   },
 })
