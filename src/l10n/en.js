@@ -42,6 +42,11 @@ const l10n = {
       message: 'PINs do not match.',
       yesButton: 'OK',
     },
+    incorrectPin: {
+      title: 'Invalid PIN',
+      message: 'The PIN you entered is incorrect.',
+      yesButton: 'OK',
+    },
     incorrectPassword: {
       title: 'Wrong password',
       message: 'Password you provided is incorrect.',
@@ -211,6 +216,7 @@ your wallets first',
     fees: 'Fees',
     password: 'Wallet password',
     receiver: 'Receiver',
+    title: 'Send',
   },
   WaitSendTransactionModal: {
     submitting: 'Please wait while transaction is submited',

@@ -20,6 +20,7 @@ import {
   DIALOG_BUTTONS,
 } from '../../actions'
 import assert from '../../utils/assert'
+import {withNavigationTitle} from '../../utils/renderUtils'
 
 import styles from './styles/ConfirmScreen.style'
 
@@ -151,6 +152,7 @@ export default compose(
     'setPassword',
     CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
   ),
+  withNavigationTitle(({translations}) => translations.title),
   withHandlers({
     onConfirm: ignoreConcurrentAsyncHandler(
       ({

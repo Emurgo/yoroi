@@ -8,10 +8,11 @@ import {View} from 'react-native'
 import {CONFIG} from '../../config'
 import PinInput from '../Common/PinInput'
 import {withTranslations} from '../../utils/renderUtils'
-import {withHandlers, withState} from 'recompose'
+import {withHandlers} from 'recompose'
 import {ROOT_ROUTES} from '../../RoutesList'
 import {authenticateByCustomPin} from '../../crypto/customPin'
 import {customPinHashSelector} from '../../selectors'
+import {showErrorDialog} from '../../actions'
 
 import styles from './styles/CustomPinLogin.style'
 
@@ -53,7 +54,6 @@ export default (compose(
     customPinHash: customPinHashSelector(state),
   })),
   withTranslations(getTranslations),
-  withState('isLoginInProgress', 'toggleLogin', false),
   withHandlers({
     onPinEnter: ({
       navigation,
@@ -61,19 +61,18 @@ export default (compose(
       isLoginInProgress,
       customPinHash,
     }: ExternalProps) => async (pin) => {
-      if (isLoginInProgress) return
       if (!customPinHash) {
         throw new Error('Custom pin is not setup')
       }
-
-      toggleLogin(true)
 
       const isPinValid = await authenticateByCustomPin(customPinHash, pin)
       if (isPinValid) {
         navigation.navigate(ROOT_ROUTES.WALLET_SELECTION)
       } else {
-        toggleLogin(false)
+        await showErrorDialog((dialogs) => dialogs.incorrectPin)
       }
+
+      return isPinValid
     },
   }),
 )(CustomPinLogin): ComponentType<ExternalProps>)
