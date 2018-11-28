@@ -9,7 +9,6 @@ import {Logger} from './logging'
 import {walletIsInitializedSelector} from '../selectors'
 
 import type {State} from '../state'
-
 import type {ComponentType} from 'react'
 import type {HOC} from 'recompose'
 
