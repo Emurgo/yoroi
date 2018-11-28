@@ -75,6 +75,12 @@ class KeyStore {
     }
   }
 
+  static async cancelFingerprintScanning(reason: string) {
+    if (Platform.OS === 'android') {
+      await KeyStoreBridge.cancelFingerprintScanning(reason)
+    }
+  }
+
   static async storeData(
     keyId: string,
     encryptionMethod: EncryptionMethod,
