@@ -19,6 +19,9 @@ const styles = StyleSheet.create({
   light: {
     color: '#fff',
   },
+  bold: {
+    fontWeight: '700',
+  },
 })
 
 type Props = {
@@ -27,15 +30,17 @@ type Props = {
   secondary?: boolean,
   light?: boolean,
   style?: any,
+  bold?: boolean,
 }
 
-const Text = ({children, style, small, secondary, light}: Props) => (
+const Text = ({children, style, small, secondary, light, bold}: Props) => (
   <RNText
     style={[
       styles.text,
       small && styles.small,
       secondary && styles.secondary,
       light && styles.light,
+      bold && styles.bold,
       style,
     ]}
   >

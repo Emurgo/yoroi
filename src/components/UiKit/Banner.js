@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import {View, StyleSheet} from 'react-native'
 
 import Text from './Text'
@@ -23,16 +23,18 @@ type Props = {
   text: string,
   label?: string,
   error?: boolean,
+  children?: React.Node,
 }
 
-const Banner = ({error, text, label}: Props) => (
+const Banner = ({error, text, label, children}: Props) => (
   <View style={styles.banner}>
     {!!label && (
-      <Text light={error} secondary style={styles.label}>
+      <Text light={error} secondary small style={styles.label}>
         {label}
       </Text>
     )}
     <Text style={[error && styles.textError]}>{text}</Text>
+    {children}
   </View>
 )
 

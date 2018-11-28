@@ -14,18 +14,17 @@ import {
 } from '../../selectors'
 import {withNavigationTitle, withTranslations} from '../../utils/renderUtils'
 import {formatAda, formatDateToSeconds} from '../../utils/format'
-import {Text, Button, OfflineBanner} from '../UiKit'
+import {Text, Button, OfflineBanner, Banner} from '../UiKit'
 import Screen from '../../components/Screen'
-import AdaIcon from '../../assets/AdaIcon'
 import {CONFIG} from '../../config'
 import AddressModal from '../Receive/AddressModal'
 
 import styles from './styles/TxDetails.style'
-import {TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
 
 import type {State} from '../../state'
 import type {Navigation} from '../../types/navigation'
 import type {ComponentType} from 'react'
+import {TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
 
 const Label = ({children}) => <Text style={styles.label}>{children}</Text>
 
@@ -34,14 +33,7 @@ const AdaAmount = ({amount, direction}) => {
     ? styles.positiveAmount
     : styles.negativeAmount
 
-  return (
-    <View style={styles.amountContainer}>
-      <Text style={amountStyle}>{formatAda(amount)}</Text>
-      <View style={styles.adaSignContainer}>
-        <AdaIcon width={18} height={18} color={amountStyle.color} />
-      </View>
-    </View>
-  )
+  return <Text style={amountStyle}>{formatAda(amount)} ₳</Text>
 }
 
 const getTranslations = (state) => state.trans.TransactionDetailsScreen
@@ -53,19 +45,12 @@ const AddressEntry = withHandlers({
   return (
     <TouchableHighlight activeOpacity={0.9} onPress={onPress}>
       {/* eslint-disable-next-line react-native/no-inline-styles */}
-      <Text style={isHighlighted ? {fontWeight: 'bold'} : {}}>
-        ({path}){address}
+      <Text secondary bold={isHighlighted}>
+        ({path}) {address}
       </Text>
     </TouchableHighlight>
   )
 })
-
-const Section = ({label, children}) => (
-  <View style={styles.section}>
-    <Label>{label}</Label>
-    {children}
-  </View>
-)
 
 const getShownAddresses = (
   transaction,
@@ -159,27 +144,28 @@ const TxDetails = ({
   } = getShownAddresses(transaction, internalAddressIndex, externalAddressIndex)
 
   return (
-    <View style={styles.root}>
+    <View style={styles.container}>
       <OfflineBanner />
       <Screen scroll>
-        <View style={styles.timestampContainer}>
-          <Text>{translations.transactionType[transaction.direction]}</Text>
-          {transaction.amount && (
-            <AdaAmount
-              amount={transaction.amount}
-              direction={transaction.direction}
-            />
-          )}
+        <Banner
+          label={translations.transactionType[transaction.direction]}
+          text={
+            transaction.amount && (
+              <AdaAmount
+                amount={transaction.amount}
+                direction={transaction.direction}
+              />
+            )
+          }
+        >
           {transaction.fee && (
-            <Text>
+            <Text small secondary>
               {translations.fee} {formatAda(transaction.fee)}
             </Text>
           )}
-        </View>
-        <Section label={translations.transactionId}>
-          <Button onPress={openInExplorer} title={transaction.id} />
-        </Section>
-        <Section label={translations.fromAddresses}>
+        </Banner>
+        <View style={styles.content}>
+          <Label>{translations.fromAddresses}</Label>
           {fromFiltered.map((item, i) => (
             <AddressEntry
               key={i}
@@ -187,11 +173,10 @@ const TxDetails = ({
               showModalForAddress={showModalForAddress}
             />
           ))}
-          {cntOmittedFrom > 0 ? (
+          {cntOmittedFrom > 0 && (
             <Text>{translations.formatOmittedCount(cntOmittedFrom)}</Text>
-          ) : null}
-        </Section>
-        <Section label={translations.toAddresses}>
+          )}
+          <Label>{translations.toAddresses}</Label>
           {toFiltered.map((item, i) => (
             <AddressEntry
               key={i}
@@ -199,15 +184,16 @@ const TxDetails = ({
               showModalForAddress={showModalForAddress}
             />
           ))}
-          {cntOmittedTo > 0 ? (
+          {cntOmittedTo > 0 && (
             <Text>{translations.formatOmittedCount(cntOmittedTo)}</Text>
-          ) : null}
-        </Section>
-        <Section label={translations.txAssuranceLevel}>
-          <Text>
+          )}
+          <Label>{translations.txAssuranceLevel}</Label>
+          <Text secondary>
             {translations.formatConfirmations(transaction.confirmations)}
           </Text>
-        </Section>
+          <Label>{translations.transactionId}</Label>
+          <Button onPress={openInExplorer} title={transaction.id} />
+        </View>
       </Screen>
       <AddressModal
         visible={!!addressDetail}
