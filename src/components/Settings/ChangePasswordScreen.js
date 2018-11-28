@@ -3,6 +3,8 @@
 import React, {PureComponent} from 'react'
 import {compose} from 'redux'
 import {View} from 'react-native'
+import {SafeAreaView, NavigationEvents} from 'react-navigation'
+
 import _ from 'lodash'
 import {withHandlers} from 'recompose'
 
@@ -11,6 +13,8 @@ import {validatePassword} from '../../utils/validators'
 import {withTranslations, withNavigationTitle} from '../../utils/renderUtils'
 import PasswordStrengthIndicator from '../WalletInit/PasswordStrengthIndicator'
 import {showErrorDialog} from '../../actions'
+
+import styles from './styles/ChangePasswordScreen.style'
 
 import type {State} from '../../state'
 import type {PasswordValidationErrors} from '../../utils/validators'
@@ -76,6 +80,9 @@ class ChangePasswordScreen extends PureComponent<Props, ComponentState> {
     this.setState({passwordConfirmation})
   }
 
+  handleOnWillBlur = () =>
+    this.setState({password: '', passwordConfirmation: ''})
+
   render() {
     const {translations, handleSubmit} = this.props
     const {
@@ -92,45 +99,47 @@ class ChangePasswordScreen extends PureComponent<Props, ComponentState> {
     })
 
     return (
-      <View>
-        <View>
-          <ValidatedTextInput
-            secureTextEntry
-            label={translations.oldPassword}
-            value={oldPassword}
-            onChange={this.handleSetOldPassword}
-          />
+      <SafeAreaView style={styles.safeAreaView}>
+        <View style={styles.container}>
+          <NavigationEvents onWillBlur={this.handleOnWillBlur} />
+
+          <View style={styles.content}>
+            <ValidatedTextInput
+              secureTextEntry
+              label={translations.oldPassword}
+              value={oldPassword}
+              onChange={this.handleSetOldPassword}
+            />
+
+            <ValidatedTextInput
+              secureTextEntry
+              label={translations.newPassword}
+              value={password}
+              onChange={this.handleSetPassword}
+            />
+
+            <ValidatedTextInput
+              secureTextEntry
+              label={translations.repeatPassword}
+              value={passwordConfirmation}
+              onChange={this.handleSetPasswordConfirmation}
+              error={
+                showPasswordsDoNotMatchError && translations.passwordsDoNotMatch
+              }
+            />
+
+            <PasswordStrengthIndicator password={password} />
+          </View>
+
+          <View style={styles.action}>
+            <Button
+              onPress={handleSubmit}
+              disabled={!_.isEmpty(errors)}
+              title={translations.continue}
+            />
+          </View>
         </View>
-
-        <View>
-          <ValidatedTextInput
-            secureTextEntry
-            label={translations.newPassword}
-            value={password}
-            onChange={this.handleSetPassword}
-          />
-        </View>
-
-        <View>
-          <ValidatedTextInput
-            secureTextEntry
-            label={translations.repeatPassword}
-            value={passwordConfirmation}
-            onChange={this.handleSetPasswordConfirmation}
-            error={
-              showPasswordsDoNotMatchError && translations.passwordsDoNotMatch
-            }
-          />
-        </View>
-
-        <PasswordStrengthIndicator password={password} />
-
-        <Button
-          onPress={handleSubmit}
-          disabled={!_.isEmpty(errors)}
-          title={translations.continue}
-        />
-      </View>
+      </SafeAreaView>
     )
   }
 }

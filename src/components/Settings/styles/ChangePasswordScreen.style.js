@@ -3,19 +3,19 @@ import {StyleSheet} from 'react-native'
 import {COLORS} from '../../../styles/config'
 
 export default StyleSheet.create({
-  keyboardAvoidingView: {
+  safeAreaView: {
+    backgroundColor: COLORS.BACKGROUND,
     flex: 1,
   },
-  safeAreaView: {
+  container: {
     flex: 1,
-    paddingHorizontal: 16,
-    backgroundColor: COLORS.BACKGROUND,
+  },
+  content: {
+    padding: 16,
+    flex: 1,
   },
   action: {
     padding: 16,
     backgroundColor: COLORS.BACKGROUND,
-  },
-  content: {
-    flex: 1,
   },
 })
