@@ -3,11 +3,12 @@
 import React from 'react'
 import {View} from 'react-native'
 import {compose} from 'redux'
-import {Text, Button, Modal} from '../../UiKit'
+import {Button, Modal} from '../../UiKit'
 import Screen from '../../Screen'
 
 import styles from './styles/MnemonicExplanationModal.style'
 import {COLORS} from '../../../styles/config'
+import {renderFormattedText} from '../../../utils/textRendering'
 
 import type {State} from '../../../state'
 
@@ -31,8 +32,8 @@ const MnemonicExplanationModal = ({
   <Modal onRequestClose={onRequestClose} visible={visible}>
     <Screen bgColor={COLORS.TRANSPARENT_BLACK}>
       <View style={styles.dialogBody}>
-        <Text>{translations.paragraph1}</Text>
-        <Text>{translations.paragraph2}</Text>
+        {renderFormattedText(translations.paragraph1)}
+        {renderFormattedText(translations.paragraph2)}
 
         <Button onPress={onConfirm} title={translations.nextButton} />
       </View>

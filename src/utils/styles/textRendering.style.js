@@ -1,6 +1,8 @@
 // @flow
 import {StyleSheet} from 'react-native'
 
+import {COLORS} from '../../styles/config'
+
 export default StyleSheet.create({
   heading: {
     fontSize: 18,
@@ -10,4 +12,8 @@ export default StyleSheet.create({
   paragraph: {
     marginBottom: 16,
   },
+  bold: {
+    fontWeight: 'bold',
+  },
+  common: {color: COLORS.BLACK},
 })

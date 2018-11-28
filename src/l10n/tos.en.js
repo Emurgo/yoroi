@@ -1,6 +1,4 @@
-const heading = (text) => ({type: 'heading', text})
-const paragraph = (text) => ({type: 'paragraph', text})
-const listItem = (heading, text) => ({type: 'listItem', heading, text})
+import {heading, paragraph, listItem} from './util'
 
 export const termsOfService = [
   paragraph(

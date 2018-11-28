@@ -1,5 +1,5 @@
 // @flow
-import {pluralizeEn} from './util'
+import {pluralizeEn, bold, normal, inline} from './util'
 import {termsOfService} from './tos.en'
 
 const languages = {
@@ -97,15 +97,25 @@ your wallets first',
   },
   // On CreateWalletScreen
   MnemonicExplanationModal: {
-    paragraph1:
-      'On the following screen, you will see a set of 15 random words. ' +
-      'This is your wallet backup phrase. ' +
-      'It can be entered in any version ' +
-      'of Yoroi in order to back up or restore ' +
-      'your wallet`s funds and private key.',
-    paragraph2:
-      'Make sure nobody looks into your screen unless you want them ' +
-      'to have access to your funds.',
+    paragraph1: [
+      inline([
+        normal(
+          'On the following screen, you will see a set of 15 random words. ',
+        ),
+        normal('This is your '),
+        bold('wallet recovery phrase. '),
+        normal('It can be entered in any version '),
+        normal('of Yoroi in order to back up or restore '),
+        normal('your wallet`s funds and private key.'),
+      ]),
+    ],
+    paragraph2: [
+      inline([
+        normal('Make sure '),
+        bold('nobody looks into your screen '),
+        normal('unless you want them to have access to your funds.'),
+      ]),
+    ],
     nextButton: 'NEXT',
   },
   WalletNameAndPasswordForm: {
