@@ -50,7 +50,7 @@ export default compose(
     }) => () => {
       setFormData(null)
       setMnemonicExplanation(false)
-      navigation.navigate(WALLET_INIT_ROUTES.RECOVERY_PHRASE, formData)
+      navigation.navigate(WALLET_INIT_ROUTES.MNEMONIC_SHOW, formData)
     },
   }),
 )(CreateWalletScreen)
