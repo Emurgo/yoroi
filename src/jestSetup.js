@@ -5,12 +5,6 @@ import {Logger, LogLevel} from './utils/logging'
 
 import nodeUtil from 'util'
 
-import {NativeModules} from 'react-native'
-
-NativeModules.KeyStoreBridge = {
-  REJECTION_MESSAGES: {},
-}
-
 // $FlowFixMe
 global.TextEncoder = nodeUtil.TextEncoder
 // $FlowFixMe

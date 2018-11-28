@@ -191,23 +191,34 @@ class KeyStore {
     return `${keyId}-${encryptionMethod}`
   }
 
+  static _getRejectionMessage(key: string): string {
+    if (Platform.OS === 'android') {
+      return KeyStoreBridge.REJECTION_MESSAGES[key]
+    } else {
+      return key
+    }
+  }
+
+  // Android rejections
   static REJECTIONS = {
-    ENCRYPTION_FAILED: KeyStoreBridge.REJECTION_MESSAGES.ENCRYPTION_FAILED,
-    ALREADY_DECRYPTING_DATA:
-      KeyStoreBridge.REJECTION_MESSAGES.ALREADY_DECRYPTING_DATA,
-    SENSOR_LOCKOUT: KeyStoreBridge.REJECTION_MESSAGES.SENSOR_LOCKOUT,
-    NOT_RECOGNIZED: KeyStoreBridge.REJECTION_MESSAGES.NOT_RECOGNIZED,
-    DECRYPTION_FAILED: KeyStoreBridge.REJECTION_MESSAGES.DECRYPTION_FAILED,
-    SYSTEM_AUTH_NOT_SUPPORTED:
-      KeyStoreBridge.REJECTION_MESSAGES.SYSTEM_AUTH_NOT_SUPPORTED,
-    FAILED_UNKNOWN_ERROR:
-      KeyStoreBridge.REJECTION_MESSAGES.FAILED_UNKNOWN_ERROR,
-    CANCELED: KeyStoreBridge.REJECTION_MESSAGES.CANCELED,
-    FAILED: KeyStoreBridge.REJECTION_MESSAGES.FAILED,
-    BIOMETRIC_PROMPT_CANCELED:
-      KeyStoreBridge.REJECTION_MESSAGES.BIOMETRIC_PROMPT_CANCELED,
-    INVALID_KEY: KeyStoreBridge.REJECTION_MESSAGES.INVALID_KEY,
-    KEY_NOT_DELETED: KeyStoreBridge.REJECTION_MESSAGES.KEY_NOT_DELETED,
+    ENCRYPTION_FAILED: KeyStore._getRejectionMessage('ENCRYPTION_FAILED'),
+    ALREADY_DECRYPTING_DATA: KeyStore._getRejectionMessage(
+      'ALREADY_DECRYPTING_DATA',
+    ),
+    SENSOR_LOCKOUT: KeyStore._getRejectionMessage('SENSOR_LOCKOUT'),
+    NOT_RECOGNIZED: KeyStore._getRejectionMessage('NOT_RECOGNIZED'),
+    DECRYPTION_FAILED: KeyStore._getRejectionMessage('DECRYPTION_FAILED'),
+    SYSTEM_AUTH_NOT_SUPPORTED: KeyStore._getRejectionMessage(
+      'SYSTEM_AUTH_NOT_SUPPORTED',
+    ),
+    FAILED_UNKNOWN_ERROR: KeyStore._getRejectionMessage('FAILED_UNKNOWN_ERROR'),
+    CANCELED: KeyStore._getRejectionMessage('CANCELED'),
+    FAILED: KeyStore._getRejectionMessage('FAILED'),
+    BIOMETRIC_PROMPT_CANCELED: KeyStore._getRejectionMessage(
+      'BIOMETRIC_PROMPT_CANCELED',
+    ),
+    INVALID_KEY: KeyStore._getRejectionMessage('INVALID_KEY'),
+    KEY_NOT_DELETED: KeyStore._getRejectionMessage('KEY_NOT_DELETED'),
   }
 }
 
