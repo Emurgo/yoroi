@@ -2,15 +2,22 @@
 
 import React from 'react'
 import {compose} from 'redux'
+import {connect} from 'react-redux'
 import {View} from 'react-native'
 import {withHandlers, withState} from 'recompose'
 
 import {Text, Button} from '../UiKit'
 import KeyStore from '../../crypto/KeyStore'
 import {onDidMount, onWillUnmount} from '../../utils/renderUtils'
-// import styles from './styles/BiometricAuthScreen.style'
 
-const handleOnConfirm = async (navigation, setError, useFallback = false) => {
+const getTranslations = (state) => state.trans.BiometricsAuthScreen
+
+const handleOnConfirm = async (
+  navigation,
+  setError,
+  useFallback = false,
+  translations,
+) => {
   const keyId = navigation.getParam('keyId')
   const onSuccess = navigation.getParam('onSuccess')
   const onFail = navigation.getParam('onFail')
@@ -19,7 +26,7 @@ const handleOnConfirm = async (navigation, setError, useFallback = false) => {
     const decryptedData = await KeyStore.getData(
       keyId,
       useFallback ? 'SYSTEM_PIN' : 'BIOMETRICS',
-      'l10n Authorize operation',
+      translations.authorizeOperation,
       '',
     )
     onSuccess(decryptedData)
@@ -33,7 +40,7 @@ const handleOnConfirm = async (navigation, setError, useFallback = false) => {
 
     // biometrics canceled by user, switch to system pin
     if (error.code === KeyStore.REJECTIONS.BIOMETRIC_PROMPT_CANCELED) {
-      handleOnConfirm(navigation, setError, true)
+      handleOnConfirm(navigation, setError, true, translations)
       return
     }
 
@@ -42,7 +49,7 @@ const handleOnConfirm = async (navigation, setError, useFallback = false) => {
       error.code !== KeyStore.REJECTIONS.SENSOR_LOCKOUT &&
       error.code !== KeyStore.REJECTIONS.INVALID_KEY
     ) {
-      handleOnConfirm(navigation, setError, false)
+      handleOnConfirm(navigation, setError, false, translations)
     } else if (error.code === KeyStore.REJECTIONS.INVALID_KEY) {
       onFail(KeyStore.REJECTIONS.INVALID_KEY)
       return
@@ -53,43 +60,51 @@ const handleOnConfirm = async (navigation, setError, useFallback = false) => {
   }
 }
 
-const BiometricAuthScreen = ({cancelScanning, useFallback, error}) => (
+const BiometricAuthScreen = ({
+  cancelScanning,
+  useFallback,
+  error,
+  translations,
+}) => (
   <View>
-    {!error ? (
-      <Text>l10n Put you finger on sensor to auth operation</Text>
-    ) : null}
+    {!error ? <Text>{translations.putFingerOnSensorMessage}</Text> : null}
 
     {error && error === KeyStore.REJECTIONS.NOT_RECOGNIZED ? (
-      <Text>l10n Fingerprint was not recognized try again</Text>
+      <Text>{translations.Errors.notRecognized}</Text>
     ) : null}
 
     {error && error === KeyStore.REJECTIONS.SENSOR_LOCKOUT ? (
-      <Text>l10n You used too many fingers sensor is disabled</Text>
+      <Text>{translations.Errors.tooManyTries}</Text>
     ) : null}
 
     {error && error === KeyStore.REJECTIONS.DECRYPTION_FAILED ? (
-      <Text>l10n Fingerprint sensor failed please use fallback</Text>
+      <Text>{translations.Errors.sensorFailed}</Text>
     ) : null}
 
-    <Button title="l10 Use fallback" onPress={useFallback} />
-    <Button title="l10 Cancel" onPress={cancelScanning} />
+    <Button title={translations.useFallbackButton} onPress={useFallback} />
+    <Button title={translations.cancelButton} onPress={cancelScanning} />
   </View>
 )
 
 export default compose(
+  connect((state) => ({
+    translations: getTranslations(state),
+  })),
   withState('error', 'setError', ''),
   withHandlers({
     cancelScanning: ({navigation}) => async () => {
       await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
       navigation.getParam('onFail')()
     },
-    useFallback: ({navigation, setError}) => async () => {
+    useFallback: ({navigation, setError, translations}) => async () => {
       await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
-      handleOnConfirm(navigation, setError, true)
+      handleOnConfirm(navigation, setError, true, translations)
     },
   }),
   onWillUnmount(async () => {
     await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
   }),
-  onDidMount(({navigation, setError}) => handleOnConfirm(navigation, setError)),
+  onDidMount(({navigation, setError, translations}) =>
+    handleOnConfirm(navigation, setError, false, translations),
+  ),
 )(BiometricAuthScreen)

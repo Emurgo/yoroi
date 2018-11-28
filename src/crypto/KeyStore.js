@@ -7,6 +7,7 @@ import {Platform} from 'react-native'
 import storage from '../utils/storage'
 import assert from '../utils/assert'
 import {decryptData, encryptData} from '../crypto/util'
+import l10n from '../l10n'
 
 export type EncryptionMethod = 'BIOMETRICS' | 'SYSTEM_PIN' | 'MASTER_PASSWORD'
 
@@ -17,6 +18,7 @@ class KeyStore {
     message: string,
     password?: string,
   ) {
+    const translations = l10n.translations.Biometry
     const dataKey = KeyStore.getDataKey(keyId, encryptionMethod)
 
     if (Platform.OS === 'ios' && encryptionMethod !== 'MASTER_PASSWORD') {
@@ -39,10 +41,10 @@ class KeyStore {
           decryptedKey = await KeyStoreBridge.decryptDataWithBiometricPrompt(
             data,
             dataKey,
-            'l10n Approve signing tx',
-            'l10n Subtitle',
-            'l10n Description',
-            'l10n Cancel',
+            translations.approveTransaction,
+            translations.subtitle,
+            translations.description,
+            translations.cancelButton,
           )
         } else {
           decryptedKey = await KeyStoreBridge.decryptDataWithFingerprint(
