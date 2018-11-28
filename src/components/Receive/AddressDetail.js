@@ -2,10 +2,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {View} from 'react-native'
 import QRCode from 'react-native-qrcode'
-
-import styles from './styles/AddressDetail.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
@@ -17,16 +14,7 @@ type Props = {
 }
 
 const AddressDetail = ({address, translations}: Props) => (
-  <View style={styles.container}>
-    <View style={styles.qrContainer}>
-      <QRCode
-        value={address}
-        size={styles.qrcode.size}
-        bgColor={styles.qrcode.backgroundColor}
-        fgColor={styles.qrcode.foregroundColor}
-      />
-    </View>
-  </View>
+  <QRCode value={address} size={140} bgColor="#000" fgColor="#fff" />
 )
 
 export default compose(

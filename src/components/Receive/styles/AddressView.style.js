@@ -1,31 +1,27 @@
 // @flow
+import {StyleSheet} from 'react-native'
 
-import {COLORS} from '../../../styles/config'
-
-const styles = {
+export default StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
-    padding: 5,
-  },
-  addressUsed: {
-    fontSize: 17,
-    color: COLORS.DARK_GRAY,
-  },
-  addressNotUsed: {
-    fontSize: 17,
+    marginHorizontal: 16,
+    elevation: 1,
+    shadowOffset: {width: 0, height: 2},
+    shadowRadius: 12,
+    shadowOpacity: 0.06,
+    shadowColor: 'black',
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    marginBottom: 10,
+    padding: 12,
   },
   addressContainer: {
     flex: 1,
-  },
-  icon: {
-    size: 20,
   },
   iconContainer: {
     width: 30,
     alignItems: 'center',
     justifyContent: 'center',
   },
-}
-
-export default styles
+})

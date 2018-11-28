@@ -2,25 +2,19 @@
 
 import React from 'react'
 import {compose} from 'redux'
-import {View, FlatList} from 'react-native'
+import {FlatList} from 'react-native'
 import {connect} from 'react-redux'
 
 import {withTranslations} from '../../utils/renderUtils'
 import {isUsedAddressIndexSelector} from '../../selectors'
 import AddressView from './AddressView'
 
-import styles from './styles/AddressesList.style'
-
 import type {ComponentType} from 'react'
 
 const getTranslations = (state) => state.trans.ReceiveScreen.addressesList
 
 const _keyExtractor = (address) => address
-const _renderItem = ({item: address}) => (
-  <View style={styles.container}>
-    <AddressView address={address} />
-  </View>
-)
+const _renderItem = ({item: address}) => <AddressView address={address} />
 
 const AddressesList = ({
   addresses,

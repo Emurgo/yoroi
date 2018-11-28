@@ -5,9 +5,10 @@ import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View} from 'react-native'
 import _ from 'lodash'
+import {SafeAreaView} from 'react-navigation'
 
 import Screen from '../../components/Screen'
-import {Text, Button, OfflineBanner} from '../UiKit'
+import {Text, Button, OfflineBanner, Banner} from '../UiKit'
 import AddressDetail from './AddressDetail'
 import AddressesList from './AddressesList'
 import {
@@ -43,33 +44,32 @@ const ReceiveScreen = ({
   const currentAddress = _.last(receiveAddresses) || NO_ADDRESS
 
   return (
-    <View style={styles.root}>
+    <View style={styles.container}>
       <OfflineBanner />
-      <Screen scroll>
-        <View style={styles.warningContainer}>
-          <Text style={styles.warningText}>{translations.infoText}</Text>
+      <Banner text={translations.infoText} />
+      <View style={styles.content}>
+        <View style={styles.address}>
+          <AddressDetail address={currentAddress} />
         </View>
-        <AddressDetail address={currentAddress} />
-        <View>
-          <Button
-            onPress={generateNewReceiveAddress}
-            disabled={addressLimitReached}
-            title={
-              !addressLimitReached
-                ? translations.generateButton
-                : translations.cannotGenerate
-            }
-          />
-        </View>
-        <View>
-          <Text>l10n Fresh addresses</Text>
-        </View>
-        <AddressesList showFresh addresses={receiveAddresses} />
-        <View>
-          <Text>l10n Used addresses</Text>
-        </View>
-        <AddressesList addresses={receiveAddresses} />
-      </Screen>
+        <Button
+          style={styles.button}
+          onPress={generateNewReceiveAddress}
+          disabled={addressLimitReached}
+          title={
+            !addressLimitReached
+              ? translations.generate
+              : translations.cannotGenerate
+          }
+        />
+      </View>
+      <SafeAreaView style={styles.safeAreaView}>
+        <Screen scroll>
+          <Text style={styles.heading}>l10n Fresh addresses</Text>
+          <AddressesList showFresh addresses={receiveAddresses} />
+          <Text style={styles.heading}>l10n Used addresses</Text>
+          <AddressesList addresses={receiveAddresses} />
+        </Screen>
+      </SafeAreaView>
     </View>
   )
 }
