@@ -1,18 +1,17 @@
 // @flow
 
 import React from 'react'
-import {View, TextInput} from 'react-native'
+import {View} from 'react-native'
 import {compose} from 'redux'
 import {withHandlers, withState} from 'recompose'
+import {SafeAreaView} from 'react-navigation'
 
-import {Text, Button} from '../../UiKit'
-import Screen from '../../Screen'
+import {Text, Button, ValidatedTextInput} from '../../UiKit'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {CONFIG} from '../../../config'
 import {validateRecoveryPhrase} from '../../../utils/validators'
 import {withNavigationTitle, withTranslations} from '../../../utils/renderUtils'
 
-import {COLORS} from '../../../styles/config'
 import styles from './styles/RestoreWalletScreen.style'
 
 import type {State} from '../../../state'
@@ -43,23 +42,26 @@ const RestoreWalletScreen = ({
 }) => {
   const errors = validatePhrase()
   return (
-    <Screen bgColor={COLORS.BACKGROUND_GRAY} scroll>
+    <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.container}>
-        <Text>{translations.instructions}</Text>
         <View>
-          <TextInput
+          <Text>{translations.instructions}</Text>
+          <ValidatedTextInput
             multiline
             numberOfLines={3}
             style={styles.phrase}
             value={phrase}
             onChangeText={setPhrase}
             placeholder={translations.phrase}
+            blurOnSubmit
+            error={
+              errors &&
+              errors.invalidPhrase &&
+              errors.invalidPhrase.map((error) =>
+                translateInvalidPhraseError(error),
+              )
+            }
           />
-          {/* prettier-ignore */ errors && errors.invalidPhrase &&
-            errors.invalidPhrase.map((error) => (
-              <Text key={error.code} style={styles.error}>
-                {translateInvalidPhraseError(error)}
-              </Text>))}
         </View>
         <Button
           onPress={navigateToWalletCredentials}
@@ -67,7 +69,7 @@ const RestoreWalletScreen = ({
           disabled={!!errors}
         />
       </View>
-    </Screen>
+    </SafeAreaView>
   )
 }
 

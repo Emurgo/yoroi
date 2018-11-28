@@ -1,25 +1,21 @@
 // @flow
-import {COLORS} from '../../../../styles/config'
+import {StyleSheet} from 'react-native'
 
-const styles = {
+export default StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   container: {
     flex: 1,
     justifyContent: 'space-between',
-  },
-  error: {
-    color: '#ff0000',
+    backgroundColor: '#fff',
+    padding: 16,
   },
   phrase: {
-    borderColor: COLORS.PRIMARY,
-    borderRadius: 5,
-    borderStyle: 'solid',
-    borderWidth: 1,
-    fontSize: 20,
-    marginTop: 10,
-    marginBottom: 10,
-    textAlignVertical: 'top',
-    width: '100%',
+    lineHeight: 24,
+    height: 'auto',
+    marginTop: 32,
+    borderColor: '#9b9b9b',
   },
-}
-
-export default styles
+})
