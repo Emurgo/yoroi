@@ -32,7 +32,7 @@ const MnemonicShowScreen = ({
   showModal,
   hideModal,
 }) => (
-  <Screen bgColor={COLORS.TRANSPARENT} style={styles.screen}>
+  <Screen bgColor={COLORS.BACKGROUND_GRAY} style={styles.screen}>
     <View style={styles.contentContainer}>
       <View>
         <View style={styles.titleContainer}>
