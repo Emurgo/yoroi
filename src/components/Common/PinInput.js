@@ -30,7 +30,7 @@ const processPin = async (pin, setPin, pinMaxLength, keyDown, onPinEnter) => {
     if (newPin.length === pinMaxLength) {
       const shouldResetInput = await onPinEnter(newPin)
 
-      if (!shouldResetInput) {
+      if (shouldResetInput) {
         setPin('')
       }
     }

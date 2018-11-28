@@ -45,7 +45,6 @@ type ExternalProps = {|
   navigation: Navigation,
   customPinHash: ?string,
   translations: SubTranslation<typeof getTranslations>,
-  toggleLogin: (inProgress: boolean) => mixed,
   isLoginInProgress: boolean,
 |}
 
@@ -57,7 +56,6 @@ export default (compose(
   withHandlers({
     onPinEnter: ({
       navigation,
-      toggleLogin,
       isLoginInProgress,
       customPinHash,
     }: ExternalProps) => async (pin) => {
@@ -72,7 +70,7 @@ export default (compose(
         await showErrorDialog((dialogs) => dialogs.incorrectPin)
       }
 
-      return isPinValid
+      return !isPinValid
     },
   }),
 )(CustomPinLogin): ComponentType<ExternalProps>)

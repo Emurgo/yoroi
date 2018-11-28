@@ -31,12 +31,12 @@ const handlePinEnter = ({
   try {
     await onValidPinEnter(pin)
 
-    return true
+    return false
   } catch (err) {
     setPin('')
     await showErrorDialog((dialogs) => dialogs.general)
 
-    return false
+    return true
   }
 }
 
@@ -71,7 +71,6 @@ const PinRegistrationForm = ({
     <View style={styles.container}>
       <NavigationEvents onDidBlur={clearPin} />
       <PinInput
-        key={pin ? 'repeat' : 'set'}
         labels={inputLabels}
         onPinEnter={pin ? handlePinEnter : handleSetPin}
         pinMaxLength={CONFIG.PIN_LENGTH}

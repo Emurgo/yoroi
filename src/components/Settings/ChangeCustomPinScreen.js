@@ -30,17 +30,17 @@ const handleVerifyPin = ({
     if (!isPinValid) {
       await showErrorDialog((dialogs) => dialogs.wrongPinError)
 
-      return false
+      return true
     }
 
     setIsCurrentPinVerified(isPinValid)
 
-    return true
+    return false
   } catch (err) {
     setIsCurrentPinVerified(false)
     await showErrorDialog((dialogs) => dialogs.general)
 
-    return false
+    return true
   }
 }
 
