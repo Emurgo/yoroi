@@ -1,6 +1,5 @@
 // @flow
-/* eslint-disable-next-line */ // $FlowFixMe
-import {KeyStoreBridge} from 'NativeModules'
+
 import React from 'react'
 import {compose} from 'redux'
 import {View} from 'react-native'
@@ -81,20 +80,16 @@ export default compose(
   withState('error', 'setError', ''),
   withHandlers({
     cancelScanning: ({navigation}) => async () => {
-      await KeyStoreBridge.cancelFingerprintScanning(
-        KeyStore.REJECTIONS.CANCELED,
-      )
+      await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
       navigation.getParam('onFail')()
     },
     useFallback: ({navigation, setError}) => async () => {
-      await KeyStoreBridge.cancelFingerprintScanning(
-        KeyStore.REJECTIONS.CANCELED,
-      )
+      await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
       handleOnConfirm(navigation, setError, true)
     },
   }),
   onWillUnmount(async () => {
-    await KeyStoreBridge.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
+    await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
   }),
   onDidMount(({navigation, setError}) => handleOnConfirm(navigation, setError)),
 )(BiometricAuthScreen)
