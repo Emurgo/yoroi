@@ -232,7 +232,7 @@ your wallets first',
       'Share this address to receive payments. ' +
       'To protect your privacy, new address are ' +
       'generated automatically once you use them.',
-    generateButton: 'Generate another address',
+    generate: 'Generate another address',
     cannotGenerate: 'You have to use some of your addresses',
 
     addressesList: {
