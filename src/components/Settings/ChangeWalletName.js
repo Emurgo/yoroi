@@ -49,10 +49,12 @@ const ChangeWalletName = ({
             error={validationErrors && translations.walletValidationText}
           />
         </View>
-        <Button
-          onPress={changeAndNavigate}
-          title={translations.changeButtonText}
-        />
+        <View style={styles.action}>
+          <Button
+            onPress={changeAndNavigate}
+            title={translations.changeButtonText}
+          />
+        </View>
       </SafeAreaView>
     </KeyboardAvoidingView>
   )
