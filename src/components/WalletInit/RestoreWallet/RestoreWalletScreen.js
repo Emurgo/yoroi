@@ -43,7 +43,7 @@ const RestoreWalletScreen = ({
 }) => {
   const errors = validatePhrase()
   return (
-    <Screen bgColor={COLORS.TRANSPARENT} scroll>
+    <Screen bgColor={COLORS.BACKGROUND_GRAY} scroll>
       <View style={styles.container}>
         <Text>{translations.instructions}</Text>
         <View>
