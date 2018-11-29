@@ -23,17 +23,20 @@ const handlePinEnter = ({
 }) => async (pinConfirmation) => {
   if (pin !== pinConfirmation) {
     setPin('')
-
     await showErrorDialog((dialogs) => dialogs.pinMismatch)
-    return
+
+    return true
   }
 
   try {
     await onValidPinEnter(pin)
+
+    return false
   } catch (err) {
     setPin('')
-
     await showErrorDialog((dialogs) => dialogs.general)
+
+    return true
   }
 }
 
@@ -50,13 +53,14 @@ type ExternalProps = {
 type Props = ExternalProps & {
   pin: string,
   setPin: (string) => void,
+  handleSetPin: (string) => boolean,
   handlePinEnter: (string) => void,
   clearPin: () => void,
 }
 
 const PinRegistrationForm = ({
   pin,
-  setPin,
+  handleSetPin,
   labels,
   handlePinEnter,
   clearPin,
@@ -68,7 +72,7 @@ const PinRegistrationForm = ({
       <NavigationEvents onDidBlur={clearPin} />
       <PinInput
         labels={inputLabels}
-        onPinEnter={pin ? handlePinEnter : setPin}
+        onPinEnter={pin ? handlePinEnter : handleSetPin}
         pinMaxLength={CONFIG.PIN_LENGTH}
       />
     </View>
@@ -80,5 +84,10 @@ export default (compose(
   withHandlers({
     handlePinEnter,
     clearPin: ({setPin}) => () => setPin(''),
+    handleSetPin: ({setPin}) => (pin) => {
+      setPin(pin)
+
+      return true
+    },
   }),
 )(PinRegistrationForm): ComponentType<ExternalProps>)

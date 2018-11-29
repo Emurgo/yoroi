@@ -16,7 +16,11 @@ const keyboard = [
   ['', '0', BACKSPACE],
 ]
 
-const processPin = (pin, setPin, pinMaxLength, keyDown, onPinEnter) => {
+const processPin = async (pin, setPin, pinMaxLength, keyDown, onPinEnter) => {
+  if (pin.length === pinMaxLength) {
+    return
+  }
+
   if (keyDown === BACKSPACE) {
     setPin(pin.substring(0, pin.length - 1))
   } else {
@@ -24,8 +28,11 @@ const processPin = (pin, setPin, pinMaxLength, keyDown, onPinEnter) => {
     setPin(newPin)
 
     if (newPin.length === pinMaxLength) {
-      setPin('')
-      onPinEnter(newPin)
+      const shouldResetInput = await onPinEnter(newPin)
+
+      if (shouldResetInput) {
+        setPin('')
+      }
     }
   }
 }
@@ -60,7 +67,7 @@ type Props = {
   pinMaxLength: number,
   labels: PinInputLabels,
   onKeyDown: (string) => void,
-  onPinEnter: (string) => void,
+  onPinEnter: (string) => Promise<boolean>,
 }
 
 const PinInput = ({

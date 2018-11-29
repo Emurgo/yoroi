@@ -28,12 +28,19 @@ const handleVerifyPin = ({
   try {
     const isPinValid = await authenticateByCustomPin(currentPinHash, pin)
     if (!isPinValid) {
-      showErrorDialog((dialogs) => dialogs.wrongPinError)
+      await showErrorDialog((dialogs) => dialogs.wrongPinError)
+
+      return true
     }
+
     setIsCurrentPinVerified(isPinValid)
+
+    return false
   } catch (err) {
     setIsCurrentPinVerified(false)
-    showErrorDialog((dialogs) => dialogs.general)
+    await showErrorDialog((dialogs) => dialogs.general)
+
+    return true
   }
 }
 
