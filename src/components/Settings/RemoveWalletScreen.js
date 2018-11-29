@@ -62,7 +62,7 @@ const RemoveWalletScreen = ({
           <ValidatedTextInput
             label={translations.walletNameInput}
             value={typedWalletName}
-            onChange={setTypedWalletName}
+            onChangeText={setTypedWalletName}
           />
         </View>
 

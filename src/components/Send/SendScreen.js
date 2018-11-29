@@ -384,7 +384,7 @@ class SendScreen extends Component<Props, State> {
             <ValidatedTextInput
               value={address}
               label={translations.address}
-              onChange={this.handleAddressChange}
+              onChangeText={this.handleAddressChange}
               error={
                 addressErrors.invalidAddress &&
                 translations.validationErrors.invalidAddress

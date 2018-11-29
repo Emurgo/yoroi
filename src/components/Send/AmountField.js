@@ -29,7 +29,7 @@ const AmountField = ({amount, handleSetAmount, translations, error}) => (
     keyboardType="numeric"
     label={translations.amount}
     value={amount}
-    onChange={handleSetAmount}
+    onChangeText={handleSetAmount}
     error={error}
   />
 )

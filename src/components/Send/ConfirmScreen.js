@@ -128,7 +128,7 @@ const ConfirmScreen = ({
               secureTextEntry
               value={password}
               label={translations.password}
-              onChange={setPassword}
+              onChangeText={setPassword}
             />
           </View>
         ) : null}

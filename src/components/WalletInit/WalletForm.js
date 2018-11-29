@@ -119,7 +119,7 @@ class WalletForm extends PureComponent<Props, ComponentState> {
             <ValidatedTextInput
               label={translations.nameLabel}
               value={name}
-              onChange={this.handleSetName}
+              onChangeText={this.handleSetName}
               error={getWalletNameError(errorTranslations, validationErrors)}
             />
 
@@ -127,14 +127,14 @@ class WalletForm extends PureComponent<Props, ComponentState> {
               secureTextEntry
               label={translations.passwordLabel}
               value={password}
-              onChange={this.handleSetPassword}
+              onChangeText={this.handleSetPassword}
             />
 
             <ValidatedTextInput
               secureTextEntry
               label={translations.passwordConfirmationLabel}
               value={passwordConfirmation}
-              onChange={this.handleSetPasswordConfirmation}
+              onChangeText={this.handleSetPasswordConfirmation}
               error={
                 showPasswordsDoNotMatchError && translations.passwordsDoNotMatch
               }

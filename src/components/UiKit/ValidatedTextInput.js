@@ -2,30 +2,29 @@
 
 import React from 'react'
 import {View, TextInput} from 'react-native'
-import {withHandlers} from 'recompose'
 
 import {Text} from '../UiKit'
 
 import styles from './styles/ValidatedTextInput.style'
 
-import type {ComponentType} from 'react'
+type ExternalProps = {
+  label: string,
+  onChangeText: (text: string) => mixed,
+  value: string,
+  secureTextEntry?: boolean,
+  error?: boolean,
+  keyboardType?: 'default' | 'numeric',
+  style?: Object,
+}
 
 const ValidatedTextInput = ({
   label,
-  value,
-  handleChange,
-  secureTextEntry,
   error,
-  keyboardType,
   style,
   ...restProps
-}) => (
+}: ExternalProps) => (
   <View style={styles.container}>
     <TextInput
-      secureTextEntry={secureTextEntry}
-      onChangeText={handleChange}
-      value={value}
-      keyboardType={keyboardType}
       style={[styles.input, error && styles.inputError, style]}
       {...restProps}
     />
@@ -39,16 +38,4 @@ const ValidatedTextInput = ({
   </View>
 )
 
-type ExternalProps = {|
-  label: string,
-  onChange: (text: string) => mixed,
-  value: string,
-  secureTextEntry?: boolean,
-  error?: boolean,
-  keyboardType?: 'default' | 'numeric',
-  style?: Object,
-|}
-
-export default (withHandlers({
-  handleChange: ({onChange}) => (text) => onChange(text),
-})(ValidatedTextInput): ComponentType<ExternalProps>)
+export default ValidatedTextInput
