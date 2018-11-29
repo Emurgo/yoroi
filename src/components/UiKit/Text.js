@@ -9,8 +9,8 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: stylesConfig.defaultFont,
     color: COLORS.BLACK,
-    lineHeight: 20,
-    fontSize: 16,
+    lineHeight: 18,
+    fontSize: 14,
   },
   secondary: {
     color: '#ADAEB6',
