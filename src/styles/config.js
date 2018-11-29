@@ -21,6 +21,9 @@ export const COLORS = {
   PRIMARY_TEXT: '#fff',
   DARK_BLUE: '#1036a0',
   RED: '#ff0000',
+  WARNING: '#FFD303',
+  WARNING_TEXT_COLOR: '#9E5B0A',
+  DISABLED: '#999',
 }
 
 export const DEBUG_BORDERS = {

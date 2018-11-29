@@ -384,11 +384,15 @@ your wallets first',
   RemoveWalletScreen: {
     title: 'Remove wallet',
     description:
-      'Enter your wallet password if you wish to ' +
-      'remove it from this YOROI application',
+      'If you really wish to permanently delete the wallet ' +
+      'from your device, make sure you have written down the mnemonic. ' +
+      'To confirm this operation, type the wallet name below.',
     walletName: 'Wallet name',
-    password: 'Wallet password',
+    walletNameInput: 'Wallet name',
     remove: 'Remove wallet',
+    hasWrittenDownMnemonic:
+      'I have written down mnemonic of this wallet and understand ' +
+      'that I can not recover the wallet without it.',
   },
 
   ChoosePinScreen: {

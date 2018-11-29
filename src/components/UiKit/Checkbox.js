@@ -15,7 +15,7 @@ const Checkbox = ({checked, text, handleChange, style}) => (
       <Text style={styles.checkbox}>{checked ? '☑' : '☐'}</Text>
     </View>
 
-    <View>
+    <View style={styles.textContainer}>
       <Text style={styles.text}>{text}</Text>
     </View>
   </TouchableOpacity>
