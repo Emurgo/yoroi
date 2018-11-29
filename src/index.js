@@ -5,7 +5,7 @@ import App from './App'
 import {name as appName} from './app.json'
 import {Provider} from 'react-redux'
 import getConfiguredStore from './helpers/configureStore'
-import {setupHooks} from './actions'
+import {setupHooks, handleGeneralError} from './actions'
 
 import bluebird from 'bluebird'
 
@@ -21,6 +21,9 @@ bluebird.config({
   https://github.com/facebook/react-native/issues/17972
 */
 global.Promise = bluebird
+
+global.onunhandledrejection = (e) =>
+  handleGeneralError('Not caught unexpected error', e)
 
 const store = getConfiguredStore()
 

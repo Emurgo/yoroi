@@ -12,12 +12,7 @@ import {withNavigationTitle} from '../../utils/renderUtils'
 import {Checkbox, Button} from '../UiKit'
 import {FIRST_RUN_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import {systemAuthSupportSelector} from '../../selectors'
-import {
-  acceptAndSaveTos,
-  showErrorDialog,
-  setSystemAuth,
-  handleGeneralError,
-} from '../../actions'
+import {acceptAndSaveTos, showErrorDialog, setSystemAuth} from '../../actions'
 import {canFingerprintEncryptionBeEnabled} from '../../helpers/deviceSettings'
 
 import styles from './styles/AcceptTermsOfServiceScreen.styles'
@@ -74,16 +69,7 @@ export default compose(
       acceptAndSaveTos,
       setSystemAuth,
     }) => async () => {
-      try {
-        await acceptAndSaveTos()
-      } catch (e) {
-        await handleGeneralError(
-          'Saving consent with TOS to AsyncStorage failed.',
-          e,
-        )
-
-        return
-      }
+      await acceptAndSaveTos()
 
       const canSystemAuthBeEnabled = await canFingerprintEncryptionBeEnabled()
       if (canSystemAuthBeEnabled) {
