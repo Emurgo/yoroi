@@ -10,6 +10,9 @@ export default StyleSheet.create({
   checkbox: {
     fontSize: 23,
   },
+  textContainer: {
+    flex: 1,
+  },
   text: {
     fontSize: 15,
   },

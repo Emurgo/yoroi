@@ -14,6 +14,7 @@ const style = {
   dialogBody: {
     backgroundColor: COLORS.WHITE,
     borderRadius: 10,
+    width: '100%',
   },
 }
 

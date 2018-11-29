@@ -2,15 +2,14 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {View} from 'react-native'
+import {View, ScrollView} from 'react-native'
 import {withHandlers, withState} from 'recompose'
-import {NavigationEvents} from 'react-navigation'
 
-import {Button, Text, ValidatedTextInput} from '../UiKit'
+import {Button, Text, Checkbox, ValidatedTextInput} from '../UiKit'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {ROOT_ROUTES} from '../../RoutesList'
 import {walletNameSelector} from '../../selectors'
-import {removeCurrentWallet, showErrorDialog} from '../../actions'
+import {removeCurrentWallet} from '../../actions'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 
 import styles from './styles/RemoveWalletScreen.style'
@@ -20,74 +19,68 @@ import type {SubTranslation} from '../../l10n/typeHelpers'
 
 const getTranslations = (state: State) => state.trans.RemoveWalletScreen
 
-// TODO actually implement password verification
-const verifyPassword = ({password}) => true
-
-const handleRemoveWallet = ({
-  translations,
-  navigation,
-  password,
-  removeCurrentWallet,
-}) => async (event) => {
-  if (!verifyPassword(password)) {
-    await showErrorDialog((dialogs) => dialogs.incorrectPassword)
-
-    return
-  }
-
-  try {
-    await removeCurrentWallet()
-
-    navigation.navigate(ROOT_ROUTES.WALLET_SELECTION)
-  } catch (err) {
-    await showErrorDialog((dialogs) => dialogs.general)
-  }
-}
-
-const handleOnDidBlur = ({setPassword}) => () => {
-  setPassword('')
+const handleRemoveWallet = ({navigation, removeCurrentWallet}) => async () => {
+  await removeCurrentWallet()
+  navigation.navigate(ROOT_ROUTES.WALLET_SELECTION)
 }
 
 type Prop = {
   translations: SubTranslation<typeof getTranslations>,
   walletName: string,
-  password: string,
+  typedWalletName: string,
+  setTypedWalletName: (string) => mixed,
   isRemovingWallet: boolean,
-  setPassword: (string) => mixed,
-  handleOnDidBlur: () => void,
   handleRemoveWallet: () => void,
+  setHasMnemonicWrittenDown: (boolean) => mixed,
+  hasMnemonicWrittenDown: boolean,
 }
 
 const RemoveWalletScreen = ({
   translations,
   walletName,
-  password,
   isRemovingWallet,
-  setPassword,
-  handleOnDidBlur,
   handleRemoveWallet,
+  hasMnemonicWrittenDown,
+  setHasMnemonicWrittenDown,
+  typedWalletName,
+  setTypedWalletName,
 }: Prop) => {
-  const disabled = isRemovingWallet || !password
+  const disabled =
+    isRemovingWallet ||
+    !hasMnemonicWrittenDown ||
+    walletName !== typedWalletName
+
   return (
     <View style={styles.container}>
-      <NavigationEvents onDidBlur={handleOnDidBlur} />
       <Text style={styles.description}>{translations.description}</Text>
-      <View style={styles.wallet}>
-        <Text>{translations.walletName}</Text>
-        <Text>{walletName}</Text>
-        <ValidatedTextInput
-          secureTextEntry
-          label={translations.password}
-          value={password}
-          onChange={setPassword}
-        />
-      </View>
-      <Button
-        onPress={handleRemoveWallet}
-        title={translations.remove}
-        style={styles.removeButton}
-        disabled={disabled}
-      />
+
+      <ScrollView contentContainerStyle={styles.screenContainer}>
+        <View style={styles.walletInfo}>
+          <Text style={styles.walletNameLabel}>{translations.walletName}</Text>
+          <Text style={styles.walletName}>{walletName}</Text>
+
+          <ValidatedTextInput
+            label={translations.walletNameInput}
+            value={typedWalletName}
+            onChange={setTypedWalletName}
+          />
+        </View>
+
+        <View>
+          <Checkbox
+            checked={hasMnemonicWrittenDown}
+            text={translations.hasWrittenDownMnemonic}
+            onChange={setHasMnemonicWrittenDown}
+          />
+
+          <Button
+            onPress={handleRemoveWallet}
+            title={translations.remove}
+            style={styles.removeButton}
+            disabled={disabled}
+          />
+        </View>
+      </ScrollView>
     </View>
   )
 }
@@ -103,9 +96,9 @@ export default compose(
     },
   ),
   withNavigationTitle(({translations}) => translations.title),
-  withState('password', 'setPassword', ''),
+  withState('hasMnemonicWrittenDown', 'setHasMnemonicWrittenDown', false),
+  withState('typedWalletName', 'setTypedWalletName', ''),
   withHandlers({
-    handleOnDidBlur,
     handleRemoveWallet: ignoreConcurrentAsyncHandler(handleRemoveWallet, 1000),
   }),
 )(RemoveWalletScreen)

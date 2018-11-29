@@ -10,18 +10,34 @@ const styles = StyleSheet.create({
   },
   removeButton: {
     backgroundColor: COLORS.RED,
-    margin: 10,
+    marginTop: 10,
   },
   description: {
-    fontSize: 16,
+    fontSize: 14,
     textAlign: 'center',
-    margin: 10,
-  },
-  wallet: {
-    margin: 10,
+    backgroundColor: COLORS.WARNING,
+    color: COLORS.WARNING_TEXT_COLOR,
+    paddingVertical: 15,
+    paddingHorizontal: 10,
   },
   error: {
     color: COLORS.RED,
+  },
+  walletName: {
+    color: COLORS.DISABLED,
+    fontSize: 16,
+    marginBottom: 7,
+  },
+  walletNameLabel: {
+    fontSize: 13,
+    marginBottom: 2,
+  },
+  walletInfo: {
+    flex: 1,
+  },
+  screenContainer: {
+    padding: 16,
+    flexGrow: 1,
   },
 })
 
