@@ -12,6 +12,8 @@ import l10n from '../l10n'
 export type EncryptionMethod = 'BIOMETRICS' | 'SYSTEM_PIN' | 'MASTER_PASSWORD'
 
 class KeyStore {
+  static storagePrefix = '/keystore'
+
   static async getData(
     keyId: string,
     encryptionMethod: EncryptionMethod,
@@ -29,7 +31,7 @@ class KeyStore {
       return credentials.password
     }
 
-    const data = await storage.read(`/keyStore/${dataKey}`)
+    const data = await storage.read(`${KeyStore.storagePrefix}/${dataKey}`)
     switch (encryptionMethod) {
       case 'BIOMETRICS': {
         let decryptedKey = ''
@@ -119,7 +121,7 @@ class KeyStore {
       }
     }
 
-    await storage.write(`/keyStore/${dataKey}`, encryptedData)
+    await storage.write(`${KeyStore.storagePrefix}/${dataKey}`, encryptedData)
   }
 
   static async encryptByFingerprint(dataKey: string, masterKey: string) {
@@ -182,12 +184,12 @@ class KeyStore {
     return encryptedMasterKey
   }
 
-  static async deleteKey(keyId: string, encryptionMethod: EncryptionMethod) {
+  static async deleteData(keyId: string, encryptionMethod: EncryptionMethod) {
     const dataKey = KeyStore.getDataKey(keyId, encryptionMethod)
 
     if (Platform.OS === 'android') {
       await KeyStoreBridge.deleteAndroidKeyStoreAsymmetricKeyPair(dataKey)
-      await storage.remove(`/keystore/${dataKey}`)
+      await storage.remove(`${KeyStore.storagePrefix}/${dataKey}`)
     } else if (Platform.OS === 'ios') {
       await Keychain.resetGenericPassword({service: dataKey})
     } else {
