@@ -54,7 +54,7 @@ const ChangeWalletName = ({
           <ValidatedTextInput
             label={translations.walletName}
             value={newName}
-            onChange={onChangeText}
+            onChangeText={onChangeText}
             error={getWalletNameError(errorTranslations, validationErrors)}
           />
         </View>

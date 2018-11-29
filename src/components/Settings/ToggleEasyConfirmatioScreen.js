@@ -68,7 +68,7 @@ const ToggleEasyConfirmationScreen = ({
 
           <ValidatedTextInput
             secureTextEntry
-            onChange={setMasterPassword}
+            onChangeText={setMasterPassword}
             value={masterPassword}
           />
         </>
