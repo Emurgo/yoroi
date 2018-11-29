@@ -298,6 +298,8 @@ class SendScreen extends Component<Props, State> {
       text = translations.calculatingFee
     } else if (!availableAmount) {
       text = formatAda(new BigNumber(0))
+    } else if (!amount) {
+      text = formatAda(availableAmount)
     } else {
       text = formatAda(
         availableAmount.minus(formatAda(new BigNumber(amount))).minus(fee),
