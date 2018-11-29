@@ -130,6 +130,10 @@ your wallets first',
     createButton: 'CREATE PERSONAL WALLET',
     continueButton: 'Continue',
     passwordsDoNotMatch: 'Passwords do not match',
+    incorrectNumberOfCharacters:
+      'Wallet name requires at least 1 and at most\
+    40 letters.',
+    nameAlreadyTaken: 'This name is already taken',
   },
   PasswordStrengthIndicator: {
     passwordRequirementsNote: 'The password needs to contain at least:',
@@ -228,9 +232,6 @@ your wallets first',
     title: 'Change wallet name',
     walletName: 'Wallet name',
     changeButtonText: 'CHANGE NAME',
-    walletValidationText:
-      'Wallet name requires at least 1 and at most\
- 40 letters.',
   },
   ReceiveScreen: {
     title: 'Receive',

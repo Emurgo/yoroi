@@ -1,34 +1,35 @@
 // @flow
 import React, {PureComponent} from 'react'
+import {connect} from 'react-redux'
+import {compose} from 'redux'
 import {View} from 'react-native'
 import {NavigationEvents, SafeAreaView} from 'react-navigation'
 import _ from 'lodash'
+import {withHandlers} from 'recompose'
 
 import {Button, ValidatedTextInput} from '../UiKit'
-import {validatePassword} from '../../utils/validators'
+import {
+  validatePassword,
+  getWalletNameError,
+  validateWalletName,
+} from '../../utils/validators'
 import {CONFIG} from '../../config'
-import {withTranslations} from '../../utils/renderUtils'
 import PasswordStrengthIndicator from './PasswordStrengthIndicator'
 import styles from './styles/WalletForm.style'
+import {walletNamesSelector} from '../../selectors'
 
 import type {State} from '../../state'
-import type {PasswordValidationErrors} from '../../utils/validators'
+import type {
+  PasswordValidationErrors,
+  WalletNameValidationErrors,
+} from '../../utils/validators'
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-type FormValidationErrors = PasswordValidationErrors & {nameReq?: boolean}
+type FormValidationErrors = PasswordValidationErrors &
+  WalletNameValidationErrors
 
 const getTranslations = (state: State) => state.trans.WalletNameAndPasswordForm
-
-const validateForm = ({
-  name,
-  password,
-  passwordConfirmation,
-}): FormValidationErrors => {
-  const nameErrors = name !== '' ? {} : {nameReq: true}
-  const passwordErrors = validatePassword(password, passwordConfirmation)
-
-  return {...nameErrors, ...passwordErrors}
-}
+const getErrorTranslations = (state) => state.trans.WalletNameAndPasswordForm
 
 type ComponentState = {
   name: string,
@@ -37,10 +38,14 @@ type ComponentState = {
   showPasswordsDoNotMatchError: boolean,
 }
 
-type Props = {|
+type Props = {
   translations: SubTranslation<typeof getTranslations>,
+  errorTranslations: SubTranslation<typeof getErrorTranslations>,
+  walletNames: Array<string>,
   onSubmit: ({name: string, password: string}) => mixed,
-|}
+  // $FlowFixMe
+  validateWalletName: (walletName: string) => WalletNameValidationErrors,
+}
 
 class WalletForm extends PureComponent<Props, ComponentState> {
   /* prettier-ignore */
@@ -86,8 +91,17 @@ class WalletForm extends PureComponent<Props, ComponentState> {
     this.setState({passwordConfirmation})
   }
 
+  validateForm = (): FormValidationErrors => {
+    const {name, password, passwordConfirmation} = this.state
+
+    const nameErrors = this.props.validateWalletName(name)
+    const passwordErrors = validatePassword(password, passwordConfirmation)
+
+    return {...nameErrors, ...passwordErrors}
+  }
+
   render() {
-    const {translations} = this.props
+    const {translations, errorTranslations} = this.props
     const {
       name,
       password,
@@ -95,7 +109,7 @@ class WalletForm extends PureComponent<Props, ComponentState> {
       showPasswordsDoNotMatchError,
     } = this.state
 
-    const errors = validateForm({name, password, passwordConfirmation})
+    const validationErrors = this.validateForm()
 
     return (
       <SafeAreaView style={styles.safeAreaView}>
@@ -106,6 +120,7 @@ class WalletForm extends PureComponent<Props, ComponentState> {
               label={translations.nameLabel}
               value={name}
               onChange={this.handleSetName}
+              error={getWalletNameError(errorTranslations, validationErrors)}
             />
 
             <ValidatedTextInput
@@ -131,7 +146,7 @@ class WalletForm extends PureComponent<Props, ComponentState> {
           <View style={styles.action}>
             <Button
               onPress={this.handleSubmit}
-              disabled={!_.isEmpty(errors)}
+              disabled={!_.isEmpty(validationErrors)}
               title={translations.continueButton}
             />
           </View>
@@ -141,4 +156,17 @@ class WalletForm extends PureComponent<Props, ComponentState> {
   }
 }
 
-export default withTranslations(getTranslations)(WalletForm)
+export default compose(
+  connect(
+    (state) => ({
+      translations: getTranslations(state),
+      errorTranslations: getErrorTranslations(state),
+      walletNames: walletNamesSelector(state),
+    }),
+    {validateWalletName},
+  ),
+  withHandlers({
+    validateWalletName: ({walletNames}) => (walletName) =>
+      validateWalletName(walletName, null, walletNames),
+  }),
+)(WalletForm)
