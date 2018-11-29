@@ -1,5 +1,4 @@
 // @flow
-import moment from 'moment'
 import {BigNumber} from 'bignumber.js'
 
 import {
@@ -144,8 +143,8 @@ export const processTxHistoryData = (
     bruttoFee: totalFee,
     confirmations,
     direction,
-    submittedAt: moment(tx.submittedAt),
-    lastUpdatedAt: moment(tx.lastUpdatedAt),
+    submittedAt: tx.submittedAt,
+    lastUpdatedAt: tx.lastUpdatedAt,
     status: tx.status,
     assurance,
   }

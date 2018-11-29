@@ -1,5 +1,4 @@
 // @flow
-import {Moment} from 'moment'
 import {BigNumber} from 'bignumber.js'
 
 export const TRANSACTION_DIRECTION = {
@@ -36,8 +35,8 @@ export type TransactionInfo = {|
   direction: TransactionDirection,
   // TODO(ppershing): why this can't be typical number?
   confirmations: BigNumber,
-  submittedAt: Moment,
-  lastUpdatedAt: Moment,
+  submittedAt: string,
+  lastUpdatedAt: string,
   status: TransactionStatus,
   assurance: TransactionAssurance,
 |}
