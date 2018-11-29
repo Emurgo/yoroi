@@ -1,8 +1,9 @@
 import React from 'react'
 import {compose} from 'redux'
 import _ from 'lodash'
-import {View, TouchableOpacity} from 'react-native'
+import {View, TouchableHighlight} from 'react-native'
 import {withState, withHandlers} from 'recompose'
+import {SafeAreaView} from 'react-navigation'
 
 import Text from '../../components/UiKit/Text'
 
@@ -41,15 +42,20 @@ const PinPlaceholder = ({isActive}) => (
   <View style={isActive ? styles.pinActive : styles.pinInactive} />
 )
 
-const KeyboardKey = ({value, onKeyDown}) => (
-  <TouchableOpacity
-    style={styles.keyboardKey}
-    onPress={onKeyDown}
-    disabled={value === ''}
-  >
-    <Text style={styles.keyboardKeyText}>{value}</Text>
-  </TouchableOpacity>
-)
+const KeyboardKey = ({value, onKeyDown}) => {
+  const isDisabled = value === ''
+
+  return (
+    <TouchableHighlight
+      style={[styles.keyboardKey, isDisabled && styles.keyboardKeyDisabled]}
+      onPress={onKeyDown}
+      underlayColor="#e8e8e8"
+      disabled={isDisabled}
+    >
+      <Text style={styles.keyboardKeyText}>{value}</Text>
+    </TouchableHighlight>
+  )
+}
 
 const EnhancedKeyboardKey = withHandlers({
   onKeyDown: ({value, onPress}) => () => onPress(value),
@@ -93,20 +99,21 @@ const PinInput = ({
       <Text style={styles.subtitle}>{labels.subtitle}</Text>
       <Text style={styles.subtitle}>{labels.subtitle2}</Text>
     </View>
-
-    <View style={styles.keyboard}>
-      {keyboard.map((row, rowIndex) => (
-        <View key={rowIndex} style={styles.keyboardRow}>
-          {row.map((value, index) => (
-            <EnhancedKeyboardKey
-              key={index}
-              value={value}
-              onPress={onKeyDown}
-            />
-          ))}
-        </View>
-      ))}
-    </View>
+    <SafeAreaView style={styles.keyboardSafeAreaView}>
+      <View style={styles.keyboard}>
+        {keyboard.map((row, rowIndex) => (
+          <View key={rowIndex} style={styles.keyboardRow}>
+            {row.map((value, index) => (
+              <EnhancedKeyboardKey
+                key={index}
+                value={value}
+                onPress={onKeyDown}
+              />
+            ))}
+          </View>
+        ))}
+      </View>
+    </SafeAreaView>
   </View>
 )
 

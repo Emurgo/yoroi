@@ -1,7 +1,8 @@
 // @flow
+import {StyleSheet} from 'react-native'
 import {COLORS} from '../../../styles/config'
 
-const styles = {
+export default StyleSheet.create({
   root: {
     flex: 1,
   },
@@ -14,6 +15,7 @@ const styles = {
   title: {
     color: COLORS.WHITE,
     fontSize: 23,
+    lineHeight: 25,
   },
   subtitle: {
     color: COLORS.WHITE,
@@ -46,8 +48,13 @@ const styles = {
     opacity: 0.5,
     backgroundColor: COLORS.WHITE,
   },
+  keyboardSafeAreaView: {
+    backgroundColor: '#D8D8D8',
+    flex: 1,
+  },
   keyboard: {
     flex: 1,
+    backgroundColor: '#fff',
   },
   keyboardRow: {
     flex: 1,
@@ -56,13 +63,18 @@ const styles = {
   keyboardKey: {
     flex: 1,
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: COLORS.DARK_BLUE,
+    justifyContent: 'center',
+    borderTopWidth: 2 * StyleSheet.hairlineWidth,
+    borderLeftWidth: StyleSheet.hairlineWidth,
+    borderRightWidth: StyleSheet.hairlineWidth,
+    borderColor: '#8C8C8C',
+  },
+  keyboardKeyDisabled: {
+    backgroundColor: '#D8D8D8',
   },
   keyboardKeyText: {
     fontSize: 30,
+    lineHeight: 35,
     textAlign: 'center',
   },
-}
-
-export default styles
+})
