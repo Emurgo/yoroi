@@ -10,17 +10,44 @@ import 'moment/locale/zh-cn'
 import 'moment/locale/ru'
 
 import en from './en'
+import {TEXT_TYPE} from './util'
 
 import assert from '../utils/assert'
 
 import type {Translation} from './type'
 
-const transform = (obj, transformer) =>
-  _.isPlainObject(obj)
-    ? _.mapValues(obj, (v) => transform(v, transformer))
-    : _.isArray(obj)
-      ? _.map(obj, (v) => transform(v, transformer))
-      : transformer(obj)
+const transform = (obj: any, transformer) => {
+  if (
+    _.isPlainObject(obj) &&
+    (!obj.type || !Object.keys(TEXT_TYPE).includes(obj.type))
+  ) {
+    return _.mapValues(obj, (v) => transform(v, transformer))
+  }
+
+  if (_.isArray(obj)) {
+    return _.map(obj, (v) => transform(v, transformer))
+  }
+
+  return transformer(obj)
+}
+
+const transformFormattingFunction = (obj, replace) => {
+  if (obj.type === TEXT_TYPE.INLINE) {
+    return {
+      ...obj,
+      block: obj.block.map((item) =>
+        transformFormattingFunction(item, replace),
+      ),
+    }
+  } else if (obj.text) {
+    return {
+      ...obj,
+      text: replace(obj.text),
+    }
+  } else {
+    throw new Error('Dummy translation not supported')
+  }
+}
 
 // "Translates" a string or a function returning string
 // into random characters from targetChars
@@ -37,6 +64,8 @@ const dummyTranslate = (targetChars) => (obj: any): any => {
   }
   if (_.isFunction(obj)) {
     return (...args) => replace(obj(...args))
+  } else if (_.isPlainObject(obj)) {
+    return transformFormattingFunction(obj, replace)
   } else {
     return replace(obj)
   }
