@@ -9,8 +9,6 @@ import FirstRunNavigator from './components/FirstRun/FirstRunNavigator'
 import IndexScreen from './components/IndexScreen'
 import SplashScreen from './components/SplashScreen'
 import AppStartScreen from './components/Login/AppStartScreen'
-// eslint-disable-next-line max-len
-import WalletSelectionScreen from './components/WalletSelection/WalletSelectionScreen'
 import {WALLET_ROUTES, ROOT_ROUTES} from './RoutesList'
 import BiometricAuthScreen from './components/Send/BiometricAuthScreen'
 import CustomPinLogin from './components/Login/CustomPinLogin'

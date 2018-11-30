@@ -9,7 +9,7 @@ import {CONFIG} from '../../config'
 import PinInput from '../Common/PinInput'
 import {withTranslations} from '../../utils/renderUtils'
 import {withHandlers} from 'recompose'
-import {ROOT_ROUTES} from '../../RoutesList'
+import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {authenticateByCustomPin} from '../../crypto/customPin'
 import {customPinHashSelector} from '../../selectors'
 import {showErrorDialog} from '../../actions'
@@ -65,7 +65,7 @@ export default (compose(
 
       const isPinValid = await authenticateByCustomPin(customPinHash, pin)
       if (isPinValid) {
-        navigation.navigate(ROOT_ROUTES.WALLET_SELECTION)
+        navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
       } else {
         await showErrorDialog((dialogs) => dialogs.incorrectPin)
       }

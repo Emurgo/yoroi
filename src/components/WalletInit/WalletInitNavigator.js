@@ -8,15 +8,15 @@ import RestoreWalletScreen from './RestoreWallet/RestoreWalletScreen'
 import MnemonicShowScreen from './CreateWallet/MnemonicShowScreen'
 import HeaderBackButton from '../UiKit/HeaderBackButton'
 import {defaultNavigationOptions} from '../../navigationOptions'
-// eslint-disable-next-line max-len
 import MnemonicCheckScreen from './CreateWallet/MnemonicCheckScreen'
 import WalletCredentialsScreen from './RestoreWallet/WalletCredentialsScreen'
-import {WALLET_INIT_ROUTES, ROOT_ROUTES} from '../../RoutesList'
+import {WALLET_INIT_ROUTES} from '../../RoutesList'
+// eslint-disable-next-line max-len
 import WalletSelectionScreen from '../../components/WalletSelection/WalletSelectionScreen'
 
 const WalletInitNavigator = createStackNavigator(
   {
-    [ROOT_ROUTES.WALLET_SELECTION]: {
+    [WALLET_INIT_ROUTES.WALLET_SELECTION]: {
       screen: WalletSelectionScreen,
       navigationOptions: {
         header: null,
@@ -37,7 +37,7 @@ const WalletInitNavigator = createStackNavigator(
     [WALLET_INIT_ROUTES.WALLET_CREDENTIALS]: WalletCredentialsScreen,
   },
   {
-    initialRouteName: ROOT_ROUTES.WALLET_SELECTION,
+    initialRouteName: WALLET_INIT_ROUTES.WALLET_SELECTION,
     navigationOptions: ({navigation}) => ({
       title: navigation.getParam('title'),
       headerLeft: <HeaderBackButton navigation={navigation} />,
