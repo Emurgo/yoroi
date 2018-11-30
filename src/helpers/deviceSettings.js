@@ -60,3 +60,8 @@ export const recreateAppSignInKeys = async (installationId: string) => {
   await KeyStore.storeData(installationId, 'BIOMETRICS', installationId, '')
   await KeyStore.storeData(installationId, 'SYSTEM_PIN', installationId, '')
 }
+
+export const removeAppSignInKeys = async (installationId: string) => {
+  await KeyStore.deleteData(installationId, 'BIOMETRICS')
+  await KeyStore.deleteData(installationId, 'SYSTEM_PIN')
+}

@@ -6,8 +6,9 @@ import {connect} from 'react-redux'
 import {withHandlers} from 'recompose'
 
 import PinRegistrationForm from '../Common/PinRegistrationForm'
-import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {encryptAndStoreCustomPin} from '../../actions'
+import {withNavigationTitle} from '../../utils/renderUtils'
+import {WALLET_INIT_ROUTES} from '../../RoutesList'
 
 import styles from './styles/CustomPinScreen.style'
 
@@ -19,8 +20,11 @@ const getTranslations = (state: State) => state.trans.ChoosePinScreen
 const handleValidPinEnter = ({navigation, encryptAndStoreCustomPin}) => async (
   pin,
 ) => {
+  const onSuccess = navigation.getParam('onSuccess')
+
   await encryptAndStoreCustomPin(pin)
   navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH)
+  onSuccess()
 }
 
 type Props = {
@@ -46,6 +50,7 @@ export default compose(
       encryptAndStoreCustomPin,
     },
   ),
+  withNavigationTitle(({translations}) => translations.title),
   withHandlers({
     handleValidPinEnter,
   }),

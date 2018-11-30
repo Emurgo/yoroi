@@ -22,7 +22,10 @@ import {
 import {
   fingerprintsHwSupportSelector,
   systemAuthSupportSelector,
+  installationIdSelector,
 } from '../../selectors'
+import walletManager from '../../crypto/wallet'
+import KeyStore from '../../crypto/KeyStore'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
@@ -42,6 +45,13 @@ type Props = {
   isFingerprintsHardwareSupported: boolean,
   isSystemAuthEnabled: boolean,
   language: string,
+  installationId: string,
+}
+
+const disableBiometrics = ({navigation, setSystemAuth}) => async () => {
+  await setSystemAuth(false)
+
+  navigation.navigate(SETTINGS_ROUTES.MAIN)
 }
 
 const onToggleBiometricsAuthIn = ({
@@ -49,11 +59,30 @@ const onToggleBiometricsAuthIn = ({
   navigation,
   setSystemAuth,
   translations,
-}) => () => {
+  installationId,
+  disableBiometrics,
+}) => async () => {
   if (isSystemAuthEnabled) {
-    setSystemAuth(false).catch(() =>
-      showErrorDialog((dialogs) => dialogs.disableEasyConfirmationFirst),
-    )
+    if (!walletManager.canBiometricsSignInBeDisabled()) {
+      await showErrorDialog((dialogs) => dialogs.disableEasyConfirmationFirst)
+
+      return
+    }
+
+    navigation.navigate(SETTINGS_ROUTES.BIO_AUTHENTICATE, {
+      keyId: installationId,
+      onSuccess: () =>
+        navigation.navigate(SETTINGS_ROUTES.SETUP_CUSTOM_PIN, {
+          onSuccess: disableBiometrics,
+        }),
+      onFail: (reason) => {
+        if (reason === KeyStore.REJECTIONS.CANCELED) {
+          navigation.navigate(SETTINGS_ROUTES.MAIN)
+        } else {
+          throw new Error(`Could not authenticate user because ${reason}`)
+        }
+      },
+    })
   } else {
     navigation.navigate(SETTINGS_ROUTES.FINGERPRINT_LINK)
   }
@@ -138,10 +167,14 @@ export default compose(
       isFingerprintsHardwareSupported: fingerprintsHwSupportSelector(state),
       isSystemAuthEnabled: systemAuthSupportSelector(state),
       language: state.trans.global.currentLanguageName,
+      installationId: installationIdSelector(state),
     }),
     {setAppSettingField, setSystemAuth},
   ),
   withNavigationTitle(({translations}) => translations.title),
+  withHandlers({
+    disableBiometrics,
+  }),
   withHandlers({
     onToggleBiometricsAuthIn,
     updateDeviceSettings: ({setAppSettingField}) => () =>
