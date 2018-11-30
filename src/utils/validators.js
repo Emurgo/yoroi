@@ -1,7 +1,6 @@
 // @flow
 import {BigNumber} from 'bignumber.js'
 import {validateMnemonic, wordlists} from 'bip39'
-import _ from 'lodash'
 
 import {containsUpperCase, containsLowerCase, isNumeric} from '../utils/string'
 import {CONFIG} from '../config'
@@ -38,6 +37,7 @@ export type BalanceValidationErrors = {
 
 export const INVALID_PHRASE_ERROR_CODES = {
   MAX_LENGTH: 'MAX_LENGTH',
+  MIN_LENGTH: 'MIN_LENGTH',
   UNKNOWN_WORDS: 'UNKNOWN_WORDS',
   INVALID_CHECKSUM: 'INVALID_CHECKSUM',
 }
@@ -183,11 +183,12 @@ export const validateRecoveryPhrase = (phrase: string) => {
   if (maxLength) {
     invalidPhraseErrors.push({code: INVALID_PHRASE_ERROR_CODES.MAX_LENGTH})
   }
+  if (minLength) {
+    invalidPhraseErrors.push({code: INVALID_PHRASE_ERROR_CODES.MIN_LENGTH})
+  }
 
   const notInWordlist = (word) => !wordlists.EN.includes(word)
-  const unknownWords: Array<string> = minLength
-    ? _.initial(words).filter(notInWordlist)
-    : words.filter(notInWordlist)
+  const unknownWords: Array<string> = words.filter(notInWordlist)
   if (unknownWords.length > 0) {
     invalidPhraseErrors.push({
       code: INVALID_PHRASE_ERROR_CODES.UNKNOWN_WORDS,
@@ -195,11 +196,9 @@ export const validateRecoveryPhrase = (phrase: string) => {
     })
   }
 
-  if (minLength || invalidPhraseErrors.length > 0) {
+  if (invalidPhraseErrors.length > 0) {
     return {
-      minLength,
-      invalidPhrase:
-        invalidPhraseErrors.length > 0 ? invalidPhraseErrors : null,
+      invalidPhrase: invalidPhraseErrors,
     }
   } else if (!validateMnemonic(phrase)) {
     return {
