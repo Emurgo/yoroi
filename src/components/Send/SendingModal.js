@@ -1,10 +1,10 @@
 // @flow
 
 import React from 'react'
-import {compose} from 'redux'
+import {connect} from 'react-redux'
 import {Modal, BackHandler, Text, ActivityIndicator} from 'react-native'
 
-import {withTranslations} from '../../utils/renderUtils'
+import {updateHistory} from '../../actions/history'
 import walletManager from '../../crypto/wallet'
 import {WALLET_ROUTES, SEND_ROUTES} from '../../RoutesList'
 import {NetworkError} from '../../api/errors'
@@ -17,13 +17,12 @@ const getTranslations = (state) => state.trans.WaitSendTransactionModal
 
 class SendingModal extends React.Component<*> {
   componentDidMount() {
-    const {navigation, translations} = this.props
     BackHandler.addEventListener(
       'hardwareBackPress',
       this.onBackButtonPressAndroid,
     )
 
-    this.submitTransaction(navigation, translations)
+    this.submitTransaction()
   }
 
   componentWillUnmount() {
@@ -33,12 +32,16 @@ class SendingModal extends React.Component<*> {
     )
   }
 
-  async submitTransaction(navigation, translations) {
+  async submitTransaction() {
+    const {navigation, updateHistory} = this.props
+
     const decryptedKey = navigation.getParam('decryptedKey')
     const transactionData = navigation.getParam('transactionData')
     try {
       const signedTx = await walletManager.signTx(transactionData, decryptedKey)
       await walletManager.submitTransaction(signedTx)
+      updateHistory()
+
       navigation.navigate(WALLET_ROUTES.TX_HISTORY)
     } catch (e) {
       if (e instanceof NetworkError) {
@@ -77,6 +80,11 @@ class SendingModal extends React.Component<*> {
   }
 }
 
-export default (compose(withTranslations(getTranslations))(
-  SendingModal,
-): ComponentType<{}>)
+export default connect(
+  (state) => ({
+    translations: getTranslations(state),
+  }),
+  {
+    updateHistory,
+  },
+)((SendingModal: ComponentType<{}>))
