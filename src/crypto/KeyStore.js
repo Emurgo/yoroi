@@ -204,9 +204,35 @@ class KeyStore {
   static _getRejectionMessage(key: string): string {
     if (Platform.OS === 'android') {
       return KeyStoreBridge.REJECTION_MESSAGES[key]
-    } else {
-      return key
     }
+
+    // eslint-disable-next-line
+    // from https://opensource.apple.com/source/Security/Security-55471/sec/Security/SecBase.h.auto.html
+    if (Platform.OS === 'ios') {
+      switch (key) {
+        case 'NOT_RECOGNIZED': {
+          return '-25293'
+        }
+
+        case 'DECRYPTION_FAILED': {
+          return '-26275'
+        }
+
+        case 'SYSTEM_AUTH_NOT_SUPPORTED': {
+          return '-4'
+        }
+
+        case 'CANCELED': {
+          return '-128'
+        }
+
+        default: {
+          return 'FAILED_UNKNOWN_ERROR'
+        }
+      }
+    }
+
+    throw new Error('Unsupported platform')
   }
 
   // Android rejections
