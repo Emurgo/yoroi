@@ -36,8 +36,8 @@ export type BalanceValidationErrors = {
 }
 
 export const INVALID_PHRASE_ERROR_CODES = {
-  MAX_LENGTH: 'MAX_LENGTH',
-  MIN_LENGTH: 'MIN_LENGTH',
+  TOO_LONG: 'TOO_LONG',
+  TOO_SHORT: 'TOO_SHORT',
   UNKNOWN_WORDS: 'UNKNOWN_WORDS',
   INVALID_CHECKSUM: 'INVALID_CHECKSUM',
 }
@@ -176,15 +176,15 @@ const MNEMONIC_LENGTH = 15
 
 export const validateRecoveryPhrase = (phrase: string) => {
   const words = phrase.split(' ').filter((word) => !!word)
-  const minLength = words.length < MNEMONIC_LENGTH
+  const tooShort = words.length < MNEMONIC_LENGTH
 
   const invalidPhraseErrors = []
-  const maxLength = words.length > MNEMONIC_LENGTH
-  if (maxLength) {
-    invalidPhraseErrors.push({code: INVALID_PHRASE_ERROR_CODES.MAX_LENGTH})
+  const tooLong = words.length > MNEMONIC_LENGTH
+  if (tooLong) {
+    invalidPhraseErrors.push({code: INVALID_PHRASE_ERROR_CODES.TOO_LONG})
   }
-  if (minLength) {
-    invalidPhraseErrors.push({code: INVALID_PHRASE_ERROR_CODES.MIN_LENGTH})
+  if (tooShort) {
+    invalidPhraseErrors.push({code: INVALID_PHRASE_ERROR_CODES.TOO_SHORT})
   }
 
   const notInWordlist = (word) => !wordlists.EN.includes(word)
@@ -205,6 +205,6 @@ export const validateRecoveryPhrase = (phrase: string) => {
       invalidPhrase: [{code: INVALID_PHRASE_ERROR_CODES.INVALID_CHECKSUM}],
     }
   } else {
-    return null
+    return {}
   }
 }
