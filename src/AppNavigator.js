@@ -39,7 +39,6 @@ const AppNavigator = createSwitchNavigator(
     [ROOT_ROUTES.NEW_WALLET]: WalletInitNavigator,
     [ROOT_ROUTES.LOGIN]: AppStartScreen,
     [ROOT_ROUTES.BIO_AUTH]: BiometricAuthScreen,
-    [ROOT_ROUTES.WALLET_SELECTION]: WalletSelectionScreen,
     [ROOT_ROUTES.WALLET]: WalletNavigator,
     [ROOT_ROUTES.CUSTOM_PIN_AUTH]: CustomPinLogin,
   },

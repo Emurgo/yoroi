@@ -11,7 +11,7 @@ import walletManager from '../../crypto/wallet'
 import WalletListItem from './WalletListItem'
 import Screen from '../Screen'
 import {Button} from '../UiKit'
-import {ROOT_ROUTES} from '../../RoutesList'
+import {ROOT_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import styles from './styles/WalletSelectionScreen.style'
 
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
@@ -63,7 +63,7 @@ export default (compose(
   })),
   withHandlers({
     navigateInitWallet: ({navigation}) => (event) =>
-      navigation.navigate(ROOT_ROUTES.NEW_WALLET),
+      navigation.navigate(WALLET_INIT_ROUTES.MAIN),
     openWallet: ({navigation}) => async (wallet) => {
       await walletManager.openWallet(wallet.id)
       navigation.navigate(ROOT_ROUTES.WALLET)
