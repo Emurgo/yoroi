@@ -29,7 +29,7 @@ const MnemonicExplanationModal = ({
   onRequestClose,
   visible,
 }) => (
-  <Modal onRequestClose={onRequestClose} visible={visible}>
+  <Modal onRequestClose={onRequestClose} visible={visible} showCloseIcon>
     <View style={styles.imageContainer}>
       <Image source={image} />
     </View>

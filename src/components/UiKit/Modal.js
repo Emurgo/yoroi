@@ -1,40 +1,14 @@
 // @flow
 
 import React from 'react'
-import {
-  StyleSheet,
-  View,
-  Modal as RNModal,
-  TouchableOpacity,
-} from 'react-native'
+import {View, Modal as RNModal, TouchableOpacity} from 'react-native'
 import {NavigationEvents} from 'react-navigation'
 
 import Text from './Text'
 
-import type {Node} from 'react'
+import styles from './styles/Modal.style'
 
-const styles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
-    alignItems: 'stretch',
-    justifyContent: 'center',
-    padding: 24,
-    backgroundColor: 'rgba(74,74,74,.9)',
-  },
-  container: {
-    backgroundColor: '#fff',
-    borderRadius: 4,
-    padding: 24,
-  },
-  close: {
-    position: 'absolute',
-    top: 0,
-    right: 8,
-  },
-  closeText: {
-    fontSize: 32,
-  },
-})
+import type {Node} from 'react'
 
 type Props = {
   onRequestClose: () => any,
@@ -57,17 +31,13 @@ class Modal extends React.Component<Props, State> {
     isFocused: true,
   }
 
-  handleWillBlur = () => {
-    this.setState({isFocused: false})
-  }
-
-  handleWillFocus = () => {
-    this.setState({isFocused: true})
-  }
+  handleWillBlur = () => this.setState({isFocused: false})
+  handleWillFocus = () => this.setState({isFocused: true})
 
   render() {
     const {visible, showCloseIcon, onRequestClose, children} = this.props
     const {isFocused} = this.state
+
     return (
       <>
         <NavigationEvents
@@ -87,7 +57,7 @@ class Modal extends React.Component<Props, State> {
                   <Text style={styles.closeText}>{'\u00d7'}</Text>
                 </TouchableOpacity>
               )}
-              {children}
+              <View style={styles.content}>{children}</View>
             </View>
           </View>
         </RNModal>
