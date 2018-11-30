@@ -1,7 +1,6 @@
 // @flow
 import {BigNumber} from 'bignumber.js'
 import {validateMnemonic, wordlists} from 'bip39'
-import _ from 'lodash'
 
 import {containsUpperCase, containsLowerCase, isNumeric} from '../utils/string'
 import {CONFIG} from '../config'
@@ -37,7 +36,8 @@ export type BalanceValidationErrors = {
 }
 
 export const INVALID_PHRASE_ERROR_CODES = {
-  MAX_LENGTH: 'MAX_LENGTH',
+  TOO_LONG: 'TOO_LONG',
+  TOO_SHORT: 'TOO_SHORT',
   UNKNOWN_WORDS: 'UNKNOWN_WORDS',
   INVALID_CHECKSUM: 'INVALID_CHECKSUM',
 }
@@ -176,18 +176,19 @@ const MNEMONIC_LENGTH = 15
 
 export const validateRecoveryPhrase = (phrase: string) => {
   const words = phrase.split(' ').filter((word) => !!word)
-  const minLength = words.length < MNEMONIC_LENGTH
+  const tooShort = words.length < MNEMONIC_LENGTH
 
   const invalidPhraseErrors = []
-  const maxLength = words.length > MNEMONIC_LENGTH
-  if (maxLength) {
-    invalidPhraseErrors.push({code: INVALID_PHRASE_ERROR_CODES.MAX_LENGTH})
+  const tooLong = words.length > MNEMONIC_LENGTH
+  if (tooLong) {
+    invalidPhraseErrors.push({code: INVALID_PHRASE_ERROR_CODES.TOO_LONG})
+  }
+  if (tooShort) {
+    invalidPhraseErrors.push({code: INVALID_PHRASE_ERROR_CODES.TOO_SHORT})
   }
 
   const notInWordlist = (word) => !wordlists.EN.includes(word)
-  const unknownWords: Array<string> = minLength
-    ? _.initial(words).filter(notInWordlist)
-    : words.filter(notInWordlist)
+  const unknownWords: Array<string> = words.filter(notInWordlist)
   if (unknownWords.length > 0) {
     invalidPhraseErrors.push({
       code: INVALID_PHRASE_ERROR_CODES.UNKNOWN_WORDS,
@@ -195,17 +196,15 @@ export const validateRecoveryPhrase = (phrase: string) => {
     })
   }
 
-  if (minLength || invalidPhraseErrors.length > 0) {
+  if (invalidPhraseErrors.length > 0) {
     return {
-      minLength,
-      invalidPhrase:
-        invalidPhraseErrors.length > 0 ? invalidPhraseErrors : null,
+      invalidPhrase: invalidPhraseErrors,
     }
   } else if (!validateMnemonic(phrase)) {
     return {
       invalidPhrase: [{code: INVALID_PHRASE_ERROR_CODES.INVALID_CHECKSUM}],
     }
   } else {
-    return null
+    return {}
   }
 }

@@ -5,6 +5,7 @@ import {View} from 'react-native'
 import {compose} from 'redux'
 import {withHandlers, withState} from 'recompose'
 import {SafeAreaView} from 'react-navigation'
+import {isEmpty} from 'lodash'
 
 import {Text, Button, ValidatedTextInput} from '../../UiKit'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
@@ -55,7 +56,6 @@ const RestoreWalletScreen = ({
             placeholder={translations.phrase}
             blurOnSubmit
             error={
-              errors &&
               errors.invalidPhrase &&
               errors.invalidPhrase.map((error) =>
                 translateInvalidPhraseError(error),
@@ -66,7 +66,7 @@ const RestoreWalletScreen = ({
         <Button
           onPress={navigateToWalletCredentials}
           title={translations.restoreButton}
-          disabled={!!errors}
+          disabled={!isEmpty(errors)}
         />
       </View>
     </SafeAreaView>

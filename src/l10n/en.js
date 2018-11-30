@@ -291,8 +291,9 @@ your wallets first',
     phrase: 'Recovery phrase',
     restoreButton: 'RESTORE WALLET',
     errors: {
-      MAX_LENGTH: 'Phrase is too long',
-      INVALID_CHECKSUM: 'Please enter valid mnemonic',
+      TOO_LONG: 'Phrase is too long. ',
+      TOO_SHORT: 'Phrase is too short. ',
+      INVALID_CHECKSUM: 'Please enter valid mnemonic.',
       UNKNOWN_WORDS: (words: Array<string>) => {
         const wordlist = words.map((word) => `'${word}'`).join(', ')
         return `${wordlist} ${pluralizeEn(words.length, 'is', 'are')} invalid.`
