@@ -37,7 +37,9 @@
 }
 
 // Implemented from: http://pinkstone.co.uk/how-to-control-the-preview-screenshot-in-the-ios-multitasking-switcher/
-- (void)applicationWillResignActive:(UIApplication *)application
+// Use applicationDidEnterBackground, instead of applicationWillResignActive, so
+// we don't show switch screen when modal prompts, e.g. biometrics prompt, are in foreground
+- (void)applicationDidEnterBackground:(UIApplication *)application
 {
   UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"SwitchScreen.png"]];
   imageView.contentMode = UIViewContentModeScaleAspectFit;
@@ -49,6 +51,8 @@
 
   [self.window addSubview:imageView];
   [self.window bringSubviewToFront:imageView];
+  
+  [self.window snapshotViewAfterScreenUpdates:YES];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
