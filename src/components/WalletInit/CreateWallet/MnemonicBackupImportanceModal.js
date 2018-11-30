@@ -35,7 +35,7 @@ const MnemonicBackupImportanceModal = ({
   visible,
   onRequestClose,
 }: Props) => (
-  <Modal visible={visible} onRequestClose={onRequestClose}>
+  <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
     <Text style={styles.title}>{translations.title}</Text>
     <Checkbox
       style={styles.checkbox}
