@@ -121,7 +121,7 @@ your wallets first',
         normal('unless you want them to have access to your funds.'),
       ]),
     ],
-    nextButton: 'NEXT',
+    nextButton: 'I UNDERSTAND',
   },
   WalletNameAndPasswordForm: {
     nameLabel: 'Wallet name',

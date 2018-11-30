@@ -1,19 +1,19 @@
 // @flow
 
 import React from 'react'
-import {View} from 'react-native'
 import {compose} from 'redux'
-import {Button, Modal} from '../../UiKit'
-import Screen from '../../Screen'
-
-import styles from './styles/MnemonicExplanationModal.style'
-import {COLORS} from '../../../styles/config'
-import {renderFormattedText} from '../../../utils/textRendering'
-
-import type {State} from '../../../state'
+import {View, Image} from 'react-native'
 
 import {withTranslations} from '../../../utils/renderUtils'
+import {renderFormattedText} from '../../../utils/textRendering'
+import {Button, Modal} from '../../UiKit'
+
+import styles from './styles/MnemonicExplanationModal.style'
+
+import type {State} from '../../../state'
 import type {ComponentType} from 'react'
+
+import image from '../../../assets/img/mnemonic_explanation.png'
 
 const getTranslations = (state: State) => state.trans.MnemonicExplanationModal
 
@@ -30,14 +30,19 @@ const MnemonicExplanationModal = ({
   visible,
 }) => (
   <Modal onRequestClose={onRequestClose} visible={visible}>
-    <Screen bgColor={COLORS.TRANSPARENT_BLACK}>
-      <View style={styles.dialogBody}>
-        {renderFormattedText(translations.paragraph1)}
-        {renderFormattedText(translations.paragraph2)}
+    <View style={styles.imageContainer}>
+      <Image source={image} />
+    </View>
 
-        <Button onPress={onConfirm} title={translations.nextButton} />
-      </View>
-    </Screen>
+    <View style={styles.paragraph}>
+      {renderFormattedText(translations.paragraph1)}
+    </View>
+
+    <View style={styles.paragraph}>
+      {renderFormattedText(translations.paragraph2)}
+    </View>
+
+    <Button onPress={onConfirm} title={translations.nextButton} />
   </Modal>
 )
 

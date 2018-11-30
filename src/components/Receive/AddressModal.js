@@ -3,7 +3,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {Clipboard, View, TouchableOpacity} from 'react-native'
+import {Clipboard, View} from 'react-native'
 import QRCode from 'react-native-qrcode'
 
 import {externalAddressIndexSelector} from '../../selectors'
@@ -56,27 +56,22 @@ class AddressModal extends React.Component<Props, State> {
     const {address, index, translations, onRequestClose, visible} = this.props
 
     return (
-      <Modal visible={visible} onRequestClose={onRequestClose}>
-        <View style={styles.container}>
-          <TouchableOpacity style={styles.close} onPress={onRequestClose}>
-            <Text style={styles.closeText}>{'\u00d7'}</Text>
-          </TouchableOpacity>
-          <View style={styles.content}>
-            <QRCode value={address} size={140} bgColor="#000" fgColor="#fff" />
+      <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
+        <View style={styles.content}>
+          <QRCode value={address} size={140} bgColor="#000" fgColor="#fff" />
 
-            {index != null && (
-              <Text style={styles.address}>
-                {translations.BIP32path} {formatBIP44(0, 'External', index)}
-              </Text>
-            )}
-            <Text style={styles.address}>{address}</Text>
-          </View>
-
-          <Button
-            onPress={this._copyAddress}
-            title={isCopied ? translations.copiedLabel : translations.copyLabel}
-          />
+          {index != null && (
+            <Text style={styles.address}>
+              {translations.BIP32path} {formatBIP44(0, 'External', index)}
+            </Text>
+          )}
+          <Text style={styles.address}>{address}</Text>
         </View>
+
+        <Button
+          onPress={this._copyAddress}
+          title={isCopied ? translations.copiedLabel : translations.copyLabel}
+        />
       </Modal>
     )
   }

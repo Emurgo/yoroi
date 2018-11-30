@@ -54,7 +54,7 @@ class Button extends React.Component<ButtonProps> {
       outline,
     } = this.props
 
-    const formattedTitle = title.toUpperCase()
+    const formattedTitle = title && title.toUpperCase()
 
     return (
       <TouchableOpacity
