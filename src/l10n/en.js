@@ -212,6 +212,9 @@ your wallets first',
     fetchingError:
       'We are experiencing issue with fetching your current balance.',
   },
+  ReadQRCodeAddressScreen: {
+    title: 'Scan QR code address',
+  },
   ConfirmSendAdaScreen: {
     confirmButton: 'Confirm',
     amount: 'Amount',
