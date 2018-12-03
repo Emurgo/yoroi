@@ -4,7 +4,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {SafeAreaView} from 'react-navigation'
-import {withState, withHandlers} from 'recompose'
+import {withStateHandlers, withHandlers} from 'recompose'
 import {ScrollView} from 'react-native'
 
 import TermsOfService from '../Common/TermsOfService'
@@ -61,7 +61,14 @@ export default compose(
     }),
     {acceptAndSaveTos, setSystemAuth},
   ),
-  withState('acceptedTos', 'setAcceptedTos', false),
+  withStateHandlers(
+    {
+      acceptedTos: false,
+    },
+    {
+      setAcceptedTos: (state) => (value) => ({acceptedTos: value}),
+    },
+  ),
   withHandlers({
     handleAccepted: ({
       navigation,

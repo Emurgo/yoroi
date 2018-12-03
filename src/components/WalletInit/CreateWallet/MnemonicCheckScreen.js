@@ -5,7 +5,7 @@ import _ from 'lodash'
 import {View, TouchableHighlight} from 'react-native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {withHandlers, withProps, withState} from 'recompose'
+import {withHandlers, withProps, withStateHandlers} from 'recompose'
 
 import assert from '../../../utils/assert'
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
@@ -29,15 +29,6 @@ const validatePhrase = (mnemonic, words, partialPhrase) => {
 
   return isPhraseCorrect
 }
-
-const handleDeselectWord = ({setPartialPhrase, partialPhrase}) => (wordIdx) => {
-  const newPhrase = partialPhrase.filter((idx) => idx !== wordIdx)
-
-  setPartialPhrase(newPhrase)
-}
-
-const handleSelectWord = ({setPartialPhrase, partialPhrase}) => (wordIdx) =>
-  setPartialPhrase([...partialPhrase, wordIdx])
 
 const handleWalletConfirmation = ({navigation, createWallet}) => async () => {
   const mnemonic = navigation.getParam('mnemonic')
@@ -143,6 +134,17 @@ const MnemonicCheckScreen = ({
   )
 }
 
+// For debugging purposes
+// it turns mnemonic into partialPhrase array
+const _mnemonicToPartialPhrase = (mnemonic: string) =>
+  _(mnemonic.split(' ')) // ['c', 'a', 'b']
+    .map((word, i) => ({word, i})) // (c,0) (a,1) (b,2)
+    .sortBy(({word, i}) => word) // (a,1) (b,2) (c,0)
+    .map(({word, i}, j) => [i, j]) // [1,0], [2,1], [0,2]
+    .sortBy(([i, j]) => i) // [1,0], [2,1], [0,2]
+    .map(([i, j]) => j) // [1,2,0]
+    .value()
+
 export default compose(
   connect(
     (state) => ({
@@ -152,19 +154,23 @@ export default compose(
       createWallet,
     },
   ),
-  withState(
-    'partialPhrase',
-    'setPartialPhrase',
-    /* prettier-ignore */
-    CONFIG.DEBUG.PREFILL_FORMS
-      ? _(CONFIG.DEBUG.MNEMONIC2.split(' '))
-        .map((word, i) => ({word, i}))
-        .sortBy(({word, i}) => word)
-        .map(({word, i}, j) => [i, j])
-        .sortBy(([i, j]) => i)
-        .map(([i, j]) => j)
-        .value()
-      : [],
+  withStateHandlers(
+    {
+      partialPhrase: CONFIG.DEBUG.PREFILL_FORMS
+        ? _mnemonicToPartialPhrase(CONFIG.DEBUG.MNEMONIC2)
+        : [],
+    },
+    {
+      handleDeselectWord: ({partialPhrase}) => (wordIdx) => ({
+        partialPhrase: partialPhrase.filter((idx) => idx !== wordIdx),
+      }),
+      handleSelectWord: ({partialPhrase}) => (wordIdx) => ({
+        partialPhrase: [...partialPhrase, wordIdx],
+      }),
+      handleClear: (state) => () => ({
+        partialPhrase: [],
+      }),
+    },
   ),
   withProps(({navigation}) => {
     const mnemonic = navigation.getParam('mnemonic')
@@ -174,9 +180,6 @@ export default compose(
     }
   }),
   withHandlers({
-    handleClear: ({setPartialPhrase}) => () => setPartialPhrase([]),
-    selectWord: handleSelectWord,
-    deselectWord: handleDeselectWord,
     confirmWalletCreation: ignoreConcurrentAsyncHandler(
       handleWalletConfirmation,
       1000,

@@ -3,7 +3,7 @@
 import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {withState} from 'recompose'
+import {withStateHandlers} from 'recompose'
 
 import {Text, Button, Checkbox, Modal} from '../../UiKit'
 import styles from './styles/MnemonicBackupImportanceModal.style'
@@ -61,6 +61,18 @@ export default compose(
   connect((state) => ({
     translations: getTranslations(state),
   })),
-  withState('acceptedKeyStorage', 'setAcceptedKeyStorage', false),
-  withState('acceptedNewDeviceRecovery', 'setAcceptedNewDeviceRecovery', false),
+  withStateHandlers(
+    {
+      acceptedKeyStorage: false,
+      acceptedNewDeviceRecovery: false,
+    },
+    {
+      setAcceptedKeyStorage: (state) => (value) => ({
+        acceptedKeyStorage: value,
+      }),
+      setAcceptedNewDeviceRecovery: (state) => (value) => ({
+        acceptedNewDeviceRecovery: value,
+      }),
+    },
+  ),
 )(MnemonicBackupImportanceModal)

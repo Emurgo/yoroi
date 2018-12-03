@@ -3,14 +3,17 @@
 import React from 'react'
 import {View} from 'react-native'
 import {compose} from 'redux'
-import {withHandlers, withState} from 'recompose'
+import {withHandlers, withStateHandlers} from 'recompose'
 import {SafeAreaView} from 'react-navigation'
 import {isEmpty} from 'lodash'
 
 import {Text, Button, ValidatedTextInput} from '../../UiKit'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {CONFIG} from '../../../config'
-import {validateRecoveryPhrase} from '../../../utils/validators'
+import {
+  validateRecoveryPhrase,
+  INVALID_PHRASE_ERROR_CODES,
+} from '../../../utils/validators'
 import {withNavigationTitle, withTranslations} from '../../../utils/renderUtils'
 
 import styles from './styles/RestoreWalletScreen.style'
@@ -27,10 +30,11 @@ const _translateInvalidPhraseError = (
   translations: SubTranslation<typeof getTranslations>,
   error: InvalidPhraseError,
 ) => {
-  const translation = translations.errors[error.code]
-  return typeof translation === 'string'
-    ? translation
-    : translation(error.parameter)
+  if (error.code === INVALID_PHRASE_ERROR_CODES.UNKNOWN_WORDS) {
+    return translations.errors.UNKNOWN_WORDS(error.parameter)
+  } else {
+    return translations.errors[error.code]
+  }
 }
 
 const RestoreWalletScreen = ({
@@ -76,10 +80,13 @@ const RestoreWalletScreen = ({
 export default (compose(
   withTranslations(getTranslations),
   withNavigationTitle(({translations}) => translations.title),
-  withState(
-    'phrase',
-    'setPhrase',
-    CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.MNEMONIC1 : '',
+  withStateHandlers(
+    {
+      phrase: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.MNEMONIC1 : '',
+    },
+    {
+      setPhrase: (state) => (value) => ({phrase: value}),
+    },
   ),
   withHandlers({
     navigateToWalletCredentials: ({navigation, phrase}) => (event) => {

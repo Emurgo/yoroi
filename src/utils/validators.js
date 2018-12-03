@@ -43,10 +43,14 @@ export const INVALID_PHRASE_ERROR_CODES = {
 }
 
 export type InvalidPhraseErrorCode = $Values<typeof INVALID_PHRASE_ERROR_CODES>
-export type InvalidPhraseError = {
-  code: InvalidPhraseErrorCode,
-  parameter: any,
-}
+export type InvalidPhraseError =
+  | {
+      code: 'TOO_LONG' | 'TOO_SHORT' | 'INVALID_CHECKSUM',
+    }
+  | {
+      code: 'UNKNOWN_WORDS',
+      parameter: Array<string>,
+    }
 
 export type RecoveryPhraseErrors = {
   invalidPhrase: Array<InvalidPhraseError>,
