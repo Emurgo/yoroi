@@ -3,7 +3,6 @@
 import React from 'react'
 import {View, SectionList} from 'react-native'
 import _ from 'lodash'
-import moment from 'moment'
 
 import {Text} from '../UiKit'
 import TxHistoryListItem from './TxHistoryListItem'
@@ -28,8 +27,9 @@ type Props = {
 
 const getTransactionsByDate = (transactions: Dict<TransactionInfo>) =>
   _(transactions)
-    .sortBy((t) => -moment(t.submittedAt).unix())
-    .groupBy((t) => moment(t.submittedAt).format('L'))
+    .sortBy((t) => t.submittedAt)
+    .reverse()
+    .groupBy((t) => t.submittedAt.substring(0, '2001-01-01'.length))
     .values()
     .map((data) => ({data}))
     .value()

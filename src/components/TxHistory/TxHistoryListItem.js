@@ -61,7 +61,7 @@ class TxHistoryListItem extends Component<Props> {
     const nextTx = nextProps.transaction
 
     const sameMaybeBignum = (x, y) => (x && y ? x.eq(y) : x === y)
-    const sameTs = (x, y) => x.isSame(y)
+    const sameTs = (x, y) => x === y
 
     return (
       tx.id !== nextTx.id ||
