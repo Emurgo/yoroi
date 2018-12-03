@@ -1,6 +1,6 @@
 // @flow
 
-import {AppState, Alert} from 'react-native'
+import {AppState, Alert, Keyboard} from 'react-native'
 import uuid from 'uuid'
 
 import {Logger} from './utils/logging'
@@ -172,6 +172,13 @@ const _setOnline = (isOnline: boolean) => (dispatch, getState) => {
   })
 }
 
+const setIsKeyboardOpen = (isOpen) => ({
+  type: 'Set isKeyboardOpen',
+  path: ['isKeyboardOpen'],
+  payload: isOpen,
+  reducer: (state, payload) => payload,
+})
+
 export const setupHooks = () => (dispatch: Dispatch<any>) => {
   Logger.debug('setting up isOnline callback')
   networkInfo.subscribe(({isOnline}) => dispatch(_setOnline(isOnline)))
@@ -192,6 +199,14 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
   AppState.addEventListener('change', () => {
     backgroundLockListener(onTimeoutAction)
   })
+
+  Logger.debug('setting up keyboard manager')
+  Keyboard.addListener('keyboardDidShow', () =>
+    dispatch(setIsKeyboardOpen(true)),
+  )
+  Keyboard.addListener('keyboardDidHide', () =>
+    dispatch(setIsKeyboardOpen(false)),
+  )
 }
 
 export const generateNewReceiveAddress = () => async (

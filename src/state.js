@@ -35,6 +35,7 @@ export type State = {
   trans: Translation,
   isOnline: boolean,
   isAppInitialized: boolean,
+  isKeyboardOpen: boolean,
   appSettings: {
     acceptedTos: boolean,
     installationId: ?string,
@@ -72,6 +73,7 @@ export const getInitialState = (): State => ({
   trans: l10n.translations,
   isOnline: true, // we are online by default
   isAppInitialized: false,
+  isKeyboardOpen: false,
   appSettings: {
     acceptedTos: false,
     languageCode: 'en-US',

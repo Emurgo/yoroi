@@ -140,3 +140,6 @@ export const tosSelector = (state: State): boolean =>
 
 export const languageSelector = (state: State): ?string =>
   state.appSettings.languageCode
+
+export const isKeyboardOpenSelector = (state: State): boolean =>
+  state.isKeyboardOpen
