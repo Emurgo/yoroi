@@ -6,6 +6,7 @@ import uuid from 'uuid'
 import {Logger} from './utils/logging'
 import walletManager from './crypto/wallet'
 import {mirrorTxHistory, setBackgroundSyncError} from './actions/history'
+import {changeLanguage} from './actions/language'
 import {
   canFingerprintEncryptionBeEnabled,
   recreateAppSignInKeys,
@@ -76,6 +77,9 @@ const _setAppSettings = (appSettings) => ({
 const reloadAppSettings = () => async (dispatch: Dispatch<any>) => {
   const appSettings = await readAppSettings()
   dispatch(_setAppSettings(appSettings))
+  if (appSettings.languageCode) {
+    dispatch(changeLanguage(appSettings.languageCode))
+  }
 }
 
 export const encryptAndStoreCustomPin = (pin: string) => async (

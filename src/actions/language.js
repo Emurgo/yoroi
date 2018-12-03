@@ -3,7 +3,7 @@ import {writeAppSettings, APP_SETTINGS_KEYS} from '../helpers/appSettings'
 
 import {type Dispatch} from 'redux'
 
-const changeLanguage = (languageCode) => (dispatch, getState) => {
+export const changeLanguage = (languageCode) => (dispatch, getState) => {
   l10n.setLanguage(languageCode)
   dispatch({
     path: ['appSettings', 'languageCode'],
