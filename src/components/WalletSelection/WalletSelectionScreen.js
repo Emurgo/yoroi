@@ -63,7 +63,7 @@ export default (compose(
   })),
   withHandlers({
     navigateInitWallet: ({navigation}) => (event) =>
-      navigation.navigate(WALLET_INIT_ROUTES.MAIN),
+      navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH),
     openWallet: ({navigation}) => async (wallet) => {
       await walletManager.openWallet(wallet.id)
       navigation.navigate(ROOT_ROUTES.WALLET)

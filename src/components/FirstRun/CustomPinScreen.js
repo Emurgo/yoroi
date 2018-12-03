@@ -20,7 +20,7 @@ const handleValidPinEnter = ({navigation, encryptAndStoreCustomPin}) => async (
   pin,
 ) => {
   await encryptAndStoreCustomPin(pin)
-  navigation.navigate(WALLET_INIT_ROUTES.MAIN)
+  navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH)
 }
 
 type Props = {

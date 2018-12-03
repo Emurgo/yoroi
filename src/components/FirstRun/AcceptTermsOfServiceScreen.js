@@ -76,7 +76,7 @@ export default compose(
         try {
           await setSystemAuth(true)
 
-          navigation.navigate(WALLET_INIT_ROUTES.MAIN)
+          navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH)
         } catch (e) {
           showErrorDialog((dialogs) => dialogs.disableEasyConfirmationFirst)
         }

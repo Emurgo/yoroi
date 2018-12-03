@@ -23,7 +23,7 @@ const WalletInitNavigator = createStackNavigator(
       },
     },
 
-    [WALLET_INIT_ROUTES.MAIN]: {
+    [WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH]: {
       screen: WalletInitScreen,
       navigationOptions: {
         header: null,
