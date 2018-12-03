@@ -1,6 +1,7 @@
 // @flow
 import {BigNumber} from 'bignumber.js'
 import {validateMnemonic, wordlists} from 'bip39'
+import _ from 'lodash'
 
 import {containsUpperCase, containsLowerCase, isNumeric} from '../utils/string'
 import {CONFIG} from '../config'
@@ -50,7 +51,8 @@ export type InvalidPhraseError =
     }
   | {
       code: 'UNKNOWN_WORDS',
-      parameter: Array<string>,
+      words: Array<string>,
+      lastMightBeUnfinished: boolean,
     }
 
 export type RecoveryPhraseErrors = {
@@ -186,25 +188,43 @@ wordlists.EN.forEach((word) => {
 
 const MNEMONIC_LENGTH = 15
 
-export const validateRecoveryPhrase = (phrase: string) => {
-  const words = phrase.split(' ').filter((word) => !!word)
-  const tooShort = words.length < MNEMONIC_LENGTH
+export const cleanMnemonic = (mnemonic: string) => {
+  // get rid of common punctuation
+  mnemonic = mnemonic.replace(/[.,?]/g, ' ')
+  // normalize whitespace
+  mnemonic = mnemonic.replace(/\s+/g, ' ')
+  // dictionary does not contain uppercase characters
+  mnemonic = mnemonic.toLowerCase()
+  // remove leading/trailing whitespace
+  return mnemonic.trim()
+}
 
-  const invalidPhraseErrors = []
+export const validateRecoveryPhrase = (mnemonic: string) => {
+  const cleaned = cleanMnemonic(mnemonic)
+  const words = cleaned.split(' ')
+
+  const tooShort = words.length < MNEMONIC_LENGTH
   const tooLong = words.length > MNEMONIC_LENGTH
+  const invalidPhraseErrors = []
+
   if (tooLong) {
     invalidPhraseErrors.push({code: INVALID_PHRASE_ERROR_CODES.TOO_LONG})
   }
+
   if (tooShort) {
     invalidPhraseErrors.push({code: INVALID_PHRASE_ERROR_CODES.TOO_SHORT})
   }
 
-  const notInWordlist = (word) => !wordlists.EN.includes(word)
-  const unknownWords: Array<string> = words.filter(notInWordlist)
+  const isUnknown = (word) => !wordlists.EN.includes(word)
+
+  const unknownWords: Array<string> = words.filter(isUnknown)
+
   if (unknownWords.length > 0) {
     invalidPhraseErrors.push({
       code: INVALID_PHRASE_ERROR_CODES.UNKNOWN_WORDS,
-      parameter: unknownWords,
+      words: unknownWords,
+      lastMightBeUnfinished:
+        isUnknown(_.last(words)) && !mnemonic.endsWith(' '),
     })
   }
 
@@ -212,7 +232,7 @@ export const validateRecoveryPhrase = (phrase: string) => {
     return {
       invalidPhrase: invalidPhraseErrors,
     }
-  } else if (!validateMnemonic(phrase)) {
+  } else if (!validateMnemonic(cleaned)) {
     return {
       invalidPhrase: [{code: INVALID_PHRASE_ERROR_CODES.INVALID_CHECKSUM}],
     }

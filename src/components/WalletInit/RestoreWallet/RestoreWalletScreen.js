@@ -3,9 +3,10 @@
 import React from 'react'
 import {View} from 'react-native'
 import {compose} from 'redux'
+import {connect} from 'react-redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {SafeAreaView} from 'react-navigation'
-import {isEmpty} from 'lodash'
+import _ from 'lodash'
 
 import {Text, Button, ValidatedTextInput} from '../../UiKit'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
@@ -13,8 +14,10 @@ import {CONFIG} from '../../../config'
 import {
   validateRecoveryPhrase,
   INVALID_PHRASE_ERROR_CODES,
+  cleanMnemonic,
 } from '../../../utils/validators'
 import {withNavigationTitle, withTranslations} from '../../../utils/renderUtils'
+import {isKeyboardOpenSelector} from '../../../selectors'
 
 import styles from './styles/RestoreWalletScreen.style'
 
@@ -31,10 +34,26 @@ const _translateInvalidPhraseError = (
   error: InvalidPhraseError,
 ) => {
   if (error.code === INVALID_PHRASE_ERROR_CODES.UNKNOWN_WORDS) {
-    return translations.errors.UNKNOWN_WORDS(error.parameter)
+    return translations.errors.UNKNOWN_WORDS(error.words)
   } else {
     return translations.errors[error.code]
   }
+}
+
+const errorsVisibleWhileWriting = (errors) => {
+  return errors
+    .map((error) => {
+      if (error.code !== INVALID_PHRASE_ERROR_CODES.UNKNOWN_WORDS) return error
+      if (!error.lastMightBeUnfinished) return error
+      // $FlowFixMe flow does not like null here
+      if (error.words.length <= 1) return null
+      return {
+        code: error.code,
+        words: _.initial(error.words),
+        lastMightBeUnfinished: error.lastMightBeUnfinished,
+      }
+    })
+    .filter((error) => !!error)
 }
 
 const RestoreWalletScreen = ({
@@ -42,10 +61,18 @@ const RestoreWalletScreen = ({
   translations,
   phrase,
   setPhrase,
-  validatePhrase,
   translateInvalidPhraseError,
+  isKeyboardOpen,
 }) => {
-  const errors = validatePhrase()
+  const errors = validateRecoveryPhrase(phrase)
+  const visibleErrors = isKeyboardOpen
+    ? errorsVisibleWhileWriting(errors.invalidPhrase || [])
+    : errors.invalidPhrase || []
+
+  const errorText =
+    errors.invalidPhrase &&
+    visibleErrors.map((error) => translateInvalidPhraseError(error))
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.container}>
@@ -59,18 +86,13 @@ const RestoreWalletScreen = ({
             onChangeText={setPhrase}
             placeholder={translations.phrase}
             blurOnSubmit
-            error={
-              errors.invalidPhrase &&
-              errors.invalidPhrase.map((error) =>
-                translateInvalidPhraseError(error),
-              )
-            }
+            error={errorText}
           />
         </View>
         <Button
           onPress={navigateToWalletCredentials}
           title={translations.restoreButton}
-          disabled={!isEmpty(errors)}
+          disabled={!_.isEmpty(errors)}
         />
       </View>
     </SafeAreaView>
@@ -78,6 +100,9 @@ const RestoreWalletScreen = ({
 }
 
 export default (compose(
+  connect((state) => ({
+    isKeyboardOpen: isKeyboardOpenSelector(state),
+  })),
   withTranslations(getTranslations),
   withNavigationTitle(({translations}) => translations.title),
   withStateHandlers(
@@ -91,11 +116,9 @@ export default (compose(
   withHandlers({
     navigateToWalletCredentials: ({navigation, phrase}) => (event) => {
       navigation.navigate(WALLET_INIT_ROUTES.WALLET_CREDENTIALS, {
-        phrase: phrase.toLowerCase(),
+        phrase: cleanMnemonic(phrase),
       })
     },
-    validatePhrase: ({phrase}) => () =>
-      validateRecoveryPhrase(phrase.toLowerCase()),
     translateInvalidPhraseError: ({translations}) => (error) =>
       _translateInvalidPhraseError(translations, error),
   }),
