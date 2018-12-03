@@ -133,15 +133,6 @@ export const closeWallet = () => async (dispatch: Dispatch<any>) => {
 export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   await dispatch(reloadAppSettings())
 
-  const onTimeoutAction = () => {
-    closeWallet()
-    dispatch(navigateFromSplash())
-  }
-
-  AppState.addEventListener('change', () => {
-    backgroundLockListener(onTimeoutAction)
-  })
-
   const state = getState()
   if (!installationIdSelector(state)) {
     dispatch(firstRunSetup())
@@ -191,6 +182,16 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
   walletManager.subscribeBackgroundSyncError((err) =>
     dispatch(setBackgroundSyncError(err)),
   )
+
+  Logger.debug('setting up app lock')
+  const onTimeoutAction = () => {
+    closeWallet()
+    dispatch(navigateFromSplash())
+  }
+
+  AppState.addEventListener('change', () => {
+    backgroundLockListener(onTimeoutAction)
+  })
 }
 
 export const generateNewReceiveAddress = () => async (
