@@ -26,7 +26,8 @@ export const FIRST_RUN_ROUTES = {
 }
 
 export const WALLET_INIT_ROUTES = {
-  MAIN: 'choose-create-restore',
+  WALLET_SELECTION: 'wallet-selection',
+  CREATE_RESTORE_SWITCH: 'choose-create-restore',
   CREATE_WALLET: 'create-wallet-form',
   RESTORE_WALLET: 'restore-wallet-form',
   MNEMONIC_SHOW: 'mnemoinc-show',
@@ -66,7 +67,6 @@ export const ROOT_ROUTES = {
   CUSTOM_PIN_AUTH: 'custom-pin-auth',
   FIRST_RUN: 'first-run',
   NEW_WALLET: 'new-wallet',
-  WALLET_SELECTION: 'wallet-selection',
   WALLET: 'app-root',
   INIT: INIT_SCREEN,
 }

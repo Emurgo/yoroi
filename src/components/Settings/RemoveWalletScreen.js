@@ -7,7 +7,7 @@ import {withHandlers, withStateHandlers} from 'recompose'
 
 import {Button, Text, Checkbox, ValidatedTextInput} from '../UiKit'
 import {withNavigationTitle} from '../../utils/renderUtils'
-import {ROOT_ROUTES} from '../../RoutesList'
+import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {walletNameSelector} from '../../selectors'
 import {removeCurrentWallet} from '../../actions'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
@@ -21,7 +21,7 @@ const getTranslations = (state: State) => state.trans.RemoveWalletScreen
 
 const handleRemoveWallet = ({navigation, removeCurrentWallet}) => async () => {
   await removeCurrentWallet()
-  navigation.navigate(ROOT_ROUTES.WALLET_SELECTION)
+  navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
 }
 
 type Prop = {

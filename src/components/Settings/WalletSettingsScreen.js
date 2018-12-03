@@ -8,7 +8,7 @@ import {ScrollView, StyleSheet, Switch} from 'react-native'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 
 import {closeWallet} from '../../actions'
-import {ROOT_ROUTES, SETTINGS_ROUTES} from '../../RoutesList'
+import {WALLET_INIT_ROUTES, SETTINGS_ROUTES} from '../../RoutesList'
 import {withNavigationTitle, withTranslations} from '../../utils/renderUtils'
 import {
   systemAuthSupportSelector,
@@ -101,7 +101,7 @@ export default compose(
     onSwitchWallet: ignoreConcurrentAsyncHandler(
       ({navigation, closeWallet}) => async () => {
         await closeWallet()
-        navigation.navigate(ROOT_ROUTES.WALLET_SELECTION)
+        navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
       },
       1000,
     ),
