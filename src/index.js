@@ -6,8 +6,12 @@ import {name as appName} from './app.json'
 import {Provider} from 'react-redux'
 import getConfiguredStore from './helpers/configureStore'
 import {setupHooks, handleGeneralError} from './actions'
+import {setLogLevel} from './utils/logging'
+import {CONFIG} from './config'
 
 import bluebird from 'bluebird'
+
+setLogLevel(CONFIG.LOG_LEVEL)
 
 bluebird.config({
   longStackTraces: true,
