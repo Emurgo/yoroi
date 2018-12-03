@@ -3,7 +3,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View, ScrollView} from 'react-native'
-import {withHandlers, withState} from 'recompose'
+import {withHandlers, withStateHandlers} from 'recompose'
 
 import {Button, Text, Checkbox, ValidatedTextInput} from '../UiKit'
 import {withNavigationTitle} from '../../utils/renderUtils'
@@ -96,8 +96,18 @@ export default compose(
     },
   ),
   withNavigationTitle(({translations}) => translations.title),
-  withState('hasMnemonicWrittenDown', 'setHasMnemonicWrittenDown', false),
-  withState('typedWalletName', 'setTypedWalletName', ''),
+  withStateHandlers(
+    {
+      hasMnemonicWrittenDown: false,
+      typedWalletName: '',
+    },
+    {
+      setHasMnemonicWrittenDown: (state) => (value) => ({
+        hasMnemonicWrittenDown: value,
+      }),
+      setTypedWalletName: (state) => (value) => ({typedWalletName: value}),
+    },
+  ),
   withHandlers({
     handleRemoveWallet: ignoreConcurrentAsyncHandler(handleRemoveWallet, 1000),
   }),
