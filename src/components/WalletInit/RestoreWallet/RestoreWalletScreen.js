@@ -90,9 +90,12 @@ export default (compose(
   ),
   withHandlers({
     navigateToWalletCredentials: ({navigation, phrase}) => (event) => {
-      navigation.navigate(WALLET_INIT_ROUTES.WALLET_CREDENTIALS, {phrase})
+      navigation.navigate(WALLET_INIT_ROUTES.WALLET_CREDENTIALS, {
+        phrase: phrase.toLowerCase(),
+      })
     },
-    validatePhrase: ({phrase}) => () => validateRecoveryPhrase(phrase),
+    validatePhrase: ({phrase}) => () =>
+      validateRecoveryPhrase(phrase.toLowerCase()),
     translateInvalidPhraseError: ({translations}) => (error) =>
       _translateInvalidPhraseError(translations, error),
   }),
