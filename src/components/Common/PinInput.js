@@ -2,7 +2,7 @@ import React from 'react'
 import {compose} from 'redux'
 import _ from 'lodash'
 import {View, TouchableHighlight} from 'react-native'
-import {withState, withHandlers} from 'recompose'
+import {withStateHandlers, withHandlers} from 'recompose'
 import {SafeAreaView} from 'react-navigation'
 
 import Text from '../../components/UiKit/Text'
@@ -118,7 +118,14 @@ const PinInput = ({
 )
 
 export default compose(
-  withState('pin', 'setPin', ''),
+  withStateHandlers(
+    {
+      pin: '',
+    },
+    {
+      setPin: (state) => (value) => ({pin: value}),
+    },
+  ),
   withHandlers({
     onKeyDown: ({pin, setPin, pinMaxLength, onPinEnter}) => (value) =>
       processPin(pin, setPin, pinMaxLength, value, onPinEnter),
