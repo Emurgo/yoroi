@@ -64,6 +64,7 @@ class TxHistoryListItem extends Component<Props> {
     const sameTs = (x, y) => x === y
 
     return (
+      this.props.translations !== nextProps.translations ||
       tx.id !== nextTx.id ||
       tx.assurance !== nextTx.assurance ||
       tx.direction !== nextTx.direction ||
