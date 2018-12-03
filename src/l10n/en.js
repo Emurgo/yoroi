@@ -147,9 +147,16 @@ const l10n = {
     or: 'Or',
   },
   TransactionHistoryScreeen: {
-    availableAmount: {
-      label: 'Available funds',
+    syncErrorBanner: {
+      textWithoutRefresh: 'We are experiencing synchronization issues.',
+      textWithRefresh:
+        'We are experiencing synchronization issues. Pull to refresh',
     },
+    availableAmountBanner: {
+      label: 'Available funds',
+      ADASymbol: 'ADA',
+    },
+    noTransactions: 'No transactions to show yet',
     transaction: {
       transactionType: {
         SENT: 'ADA sent',

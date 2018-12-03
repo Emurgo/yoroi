@@ -21,7 +21,6 @@ import TxNavigationButtons from './TxNavigationButtons'
 import {updateHistory} from '../../actions/history'
 import {
   onDidMount,
-  measureRenderTime,
   requireInitializedWallet,
   withTranslations,
   withNavigationTitle,
@@ -38,27 +37,33 @@ import type {ComponentType} from 'react'
 
 const getTranslations = (state: State) => state.trans.TransactionHistoryScreeen
 
-const NoTxHistory = () => (
+const NoTxHistory = withTranslations(getTranslations)(({translations}) => (
   <View style={styles.empty}>
     <Image source={image} />
-    <Text style={styles.emptyText}>No transactions to show yet</Text>
+    <Text style={styles.emptyText}>translations.noTransactions</Text>
   </View>
+))
+
+const SyncErrorBanner = withTranslations(getTranslations)(
+  ({translations, showRefresh}) => (
+    <Banner
+      error
+      text={
+        showRefresh
+          ? translations.syncErrorBanner.textWithRefresh
+          : translations.syncErrorBanner.textWithoutRefresh
+      }
+    />
+  ),
 )
 
-const SyncErrorBanner = ({showRefresh}) => (
-  <Banner
-    error
-    text={`We are experiencing synchronization issues. ${
-      showRefresh ? 'Refreshing.' : 'Pull to refresh.'
-    }`}
-  />
-)
-
-const AvailableAmount = withTranslations(getTranslations)(
+const AvailableAmountBanner = withTranslations(getTranslations)(
   ({translations, amount}) => (
     <Banner
-      text={`${formatAda(amount)} ADA`}
-      label={translations.availableAmount.label}
+      label={translations.availableAmountBanner.label}
+      text={`${formatAda(amount)} ${
+        translations.availableAmountBanner.ADASymbol
+      }`}
     />
   ),
 )
@@ -80,7 +85,7 @@ const TxHistory = ({
       {isOnline &&
         lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
 
-      <AvailableAmount amount={availableAmount} />
+      <AvailableAmountBanner amount={availableAmount} />
 
       {_.isEmpty(transactionsInfo) ? (
         <ScrollView
@@ -123,10 +128,6 @@ export default (compose(
       updateHistory,
     },
   ),
-  measureRenderTime('TxHistory'),
-  // TODO(ppershing): this should be handled
-  // by some history manager
-  // FIXME(ppershing): we do not clean interval on unmount
   onDidMount(({updateHistory}) => {
     updateHistory()
   }),
