@@ -22,7 +22,10 @@ import {
   PressableSettingsItem,
 } from './SettingsItems'
 
-const getTranslations = (state) => state.trans.SettingsScreen
+import type {Navigation} from '../../types/navigation'
+import type {ComponentType} from 'react'
+
+const getTranslations = (state) => state.trans.SettingsScreen.WalletTab
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -78,13 +81,17 @@ const WalletSettingsScreen = ({
   </ScrollView>
 )
 
-export default compose(
+export default (compose(
   connect((state) => ({
     isSystemAuthEnabled: systemAuthSupportSelector(state),
     isEasyConfirmationEnabled: easyConfirmationSelector(state),
   })),
   withTranslations(getTranslations),
   withNavigationTitle(({translations}) => translations.title),
+  withNavigationTitle(
+    ({translations}) => translations.tabTitle,
+    'walletTabTitle',
+  ),
   connect(
     (state) => ({
       walletName: walletNameSelector(state),
@@ -106,4 +113,4 @@ export default compose(
       1000,
     ),
   }),
-)(WalletSettingsScreen)
+)(WalletSettingsScreen): ComponentType<{|navigation: Navigation|}>)

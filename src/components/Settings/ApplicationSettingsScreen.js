@@ -29,7 +29,7 @@ import KeyStore from '../../crypto/KeyStore'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslations = (state) => state.trans.SettingsScreen
+const getTranslations = (state) => state.trans.SettingsScreen.ApplicationTab
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -172,6 +172,10 @@ export default compose(
     {setAppSettingField, setSystemAuth},
   ),
   withNavigationTitle(({translations}) => translations.title),
+  withNavigationTitle(
+    ({translations}) => translations.tabTitle,
+    'applicationTabTitle',
+  ),
   withHandlers({
     disableBiometrics,
   }),
