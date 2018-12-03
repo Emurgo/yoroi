@@ -14,7 +14,7 @@ import Screen from '../../Screen'
 import {ROOT_ROUTES} from '../../../RoutesList'
 import {createWallet} from '../../../actions'
 import {CONFIG} from '../../../config'
-import {withNavigationTitle} from '../../../utils/renderUtils'
+import {withNavigationTitle, withTranslations} from '../../../utils/renderUtils'
 
 import {COLORS} from '../../../styles/config'
 import styles from './styles/MnemonicCheckScreen.style'
@@ -136,10 +136,9 @@ const _mnemonicToPartialPhrase = (mnemonic: string) =>
     .value()
 
 export default (compose(
+  withTranslations(getTranslations),
   connect(
-    (state) => ({
-      translations: getTranslations(state),
-    }),
+    () => ({}),
     {
       createWallet,
     },
