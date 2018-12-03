@@ -79,21 +79,25 @@ const TxHistory = ({
       <OfflineBanner />
       {isOnline &&
         lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
+
       <AvailableAmount amount={availableAmount} />
-      <ScrollView
-        refreshControl={
-          <RefreshControl onRefresh={updateHistory} refreshing={isSyncing} />
-        }
-      >
-        {_.isEmpty(transactionsInfo) ? (
+
+      {_.isEmpty(transactionsInfo) ? (
+        <ScrollView
+          refreshControl={
+            <RefreshControl onRefresh={updateHistory} refreshing={isSyncing} />
+          }
+        >
           <NoTxHistory />
-        ) : (
-          <TxHistoryList
-            navigation={navigation}
-            transactions={transactionsInfo}
-          />
-        )}
-      </ScrollView>
+        </ScrollView>
+      ) : (
+        <TxHistoryList
+          refreshing={isSyncing}
+          onRefresh={updateHistory}
+          navigation={navigation}
+          transactions={transactionsInfo}
+        />
+      )}
 
       <TxNavigationButtons navigation={navigation} />
     </View>

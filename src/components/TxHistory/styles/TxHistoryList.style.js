@@ -1,6 +1,8 @@
 // @flow
 import {StyleSheet} from 'react-native'
 
+import {COLORS} from '../../../styles/config'
+
 export default StyleSheet.create({
   container: {
     flex: 1,
@@ -10,5 +12,6 @@ export default StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 8,
     paddingHorizontal: 28,
+    backgroundColor: COLORS.BACKGROUND_GRAY,
   },
 })

@@ -8,22 +8,18 @@ import {Text} from '../UiKit'
 import TxHistoryListItem from './TxHistoryListItem'
 import {formatDateRelative} from '../../utils/format'
 
-import type {TransactionInfo} from '../../types/HistoryTransaction'
-import type {NavigationScreenProp, NavigationState} from 'react-navigation'
-import type {Dict} from '../../state'
-
 import styles from './styles/TxHistoryList.style'
+
+import type {TransactionInfo} from '../../types/HistoryTransaction'
+import type {Navigation} from '../../types/navigation'
+import type {Dict} from '../../state'
+import type {ComponentType} from 'react'
 
 const DayHeader = ({ts}) => (
   <View style={styles.dayHeader}>
     <Text>{formatDateRelative(ts)}</Text>
   </View>
 )
-
-type Props = {
-  transactions: Dict<TransactionInfo>,
-  navigation: NavigationScreenProp<NavigationState>,
-}
 
 const getTransactionsByDate = (transactions: Dict<TransactionInfo>) =>
   _(transactions)
@@ -34,13 +30,16 @@ const getTransactionsByDate = (transactions: Dict<TransactionInfo>) =>
     .map((data) => ({data}))
     .value()
 
-const TxHistoryList = ({transactions, navigation}: Props) => {
+const TxHistoryList = ({transactions, navigation, refreshing, onRefresh}) => {
   // TODO(ppershing): add proper memoization here
   const groupedTransactions = getTransactionsByDate(transactions)
 
   return (
     <View style={styles.container}>
       <SectionList
+        stickySectionHeadersEnabled
+        onRefresh={onRefresh}
+        refreshing={refreshing}
         renderItem={({item}) => (
           <TxHistoryListItem navigation={navigation} id={item.id} />
         )}
@@ -54,4 +53,11 @@ const TxHistoryList = ({transactions, navigation}: Props) => {
   )
 }
 
-export default TxHistoryList
+type ExternalProps = {
+  transactions: Dict<TransactionInfo>,
+  navigation: Navigation,
+  refreshing: boolean,
+  onRefresh: () => any,
+}
+
+export default (TxHistoryList: ComponentType<ExternalProps>)
