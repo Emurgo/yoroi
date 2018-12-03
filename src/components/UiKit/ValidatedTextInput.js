@@ -28,7 +28,7 @@ const ValidatedTextInput = ({
   style,
   secureTextEntry,
   showPassword,
-  setShowPassword,
+  toggleShowPassword,
   ...restProps
 }) => (
   <View style={styles.container}>
@@ -47,7 +47,7 @@ const ValidatedTextInput = ({
     {secureTextEntry && (
       <TouchableOpacity
         style={styles.showPasswordContainer}
-        onPress={setShowPassword}
+        onPress={toggleShowPassword}
       >
         <Image
           style={styles.showPassword}
@@ -63,7 +63,7 @@ const ValidatedTextInput = ({
 export default (withStateHandlers(
   {showPassword: false},
   {
-    setShowPassword: (state, props) => () => ({
+    toggleShowPassword: (state, props) => () => ({
       showPassword: !state.showPassword,
     }),
   },
