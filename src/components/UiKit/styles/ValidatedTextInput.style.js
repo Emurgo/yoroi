@@ -37,4 +37,15 @@ export default StyleSheet.create({
     paddingHorizontal: 16,
     lineHeight: 24,
   },
+  showPasswordContainer: {
+    height: 40,
+    position: 'absolute',
+    top: 20,
+    right: 10,
+    justifyContent: 'center',
+  },
+  showPassword: {
+    height: 32,
+    width: 32,
+  },
 })
