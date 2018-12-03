@@ -246,7 +246,7 @@ your wallets first',
       walletAddresses: 'Your wallet addresses',
     },
     freshAddresses: 'Fresh addresses',
-    usedAddresses: 'Assuredly used addresses',
+    usedAddresses: 'Used addresses',
   },
   AddressDetailsModal: {
     walletAddress: 'Your wallet address',
