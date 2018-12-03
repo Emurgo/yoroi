@@ -1,4 +1,5 @@
 // @flow
+import {LogLevel} from './utils/logging'
 
 const IS_DEBUG = __DEV__
 // debugging flags
@@ -30,6 +31,8 @@ export const ASSURANCE_LEVELS = {
 }
 
 const CARDANO = IS_DEBUG ? CARDANO_CONFIG.TESTNET : CARDANO_CONFIG.MAINNET
+
+const LOG_LEVEL = IS_DEBUG ? LogLevel.Debug : LogLevel.Warn
 
 export const CONFIG = {
   DEBUG: {
@@ -75,4 +78,5 @@ export const CONFIG = {
   APP_LOCK_TIMEOUT: 3000,
   START_WITH_INDEX_SCREEN: SHOW_INIT_DEBUG_SCREEN,
   ALLOW_SHORT_PASSWORD: false,
+  LOG_LEVEL,
 }
