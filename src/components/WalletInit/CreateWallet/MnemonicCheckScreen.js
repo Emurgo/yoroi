@@ -14,6 +14,7 @@ import Screen from '../../Screen'
 import {ROOT_ROUTES} from '../../../RoutesList'
 import {createWallet} from '../../../actions'
 import {CONFIG} from '../../../config'
+import {withNavigationTitle} from '../../../utils/renderUtils'
 
 import {COLORS} from '../../../styles/config'
 import styles from './styles/MnemonicCheckScreen.style'
@@ -75,7 +76,6 @@ const MnemonicCheckScreen = ({
   return (
     <Screen bgColor={COLORS.WHITE}>
       <View style={styles.container}>
-        <Text>{translations.title}</Text>
         <Text style={styles.instructions}>{translations.instructions}</Text>
 
         <View style={styles.recoveryPhraseContainer}>
@@ -144,6 +144,7 @@ export default (compose(
       createWallet,
     },
   ),
+  withNavigationTitle(({translations}) => translations.title),
   withStateHandlers(
     {
       partialPhrase: CONFIG.DEBUG.PREFILL_FORMS
