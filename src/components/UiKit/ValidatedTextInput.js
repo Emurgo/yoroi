@@ -20,6 +20,7 @@ type ExternalProps = {
   error?: boolean,
   keyboardType?: 'default' | 'numeric',
   style?: Object,
+  returnKeyType?: 'none' | 'done',
 }
 
 const ValidatedTextInput = ({

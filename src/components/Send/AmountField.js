@@ -26,6 +26,7 @@ const handleSetAmount = ({setAmount, amount}) => (text) => {
 
 const AmountField = ({amount, handleSetAmount, translations, error}) => (
   <ValidatedTextInput
+    returnKeyType="done"
     keyboardType="numeric"
     label={translations.amount}
     value={amount}
