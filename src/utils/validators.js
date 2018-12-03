@@ -5,6 +5,7 @@ import {validateMnemonic, wordlists} from 'bip39'
 import {containsUpperCase, containsLowerCase, isNumeric} from '../utils/string'
 import {CONFIG} from '../config'
 import {isValidAddress} from '../crypto/util'
+import assert from '../utils/assert'
 
 import type {SubTranslation} from '../l10n/typeHelpers'
 import type {State} from '../state'
@@ -175,6 +176,13 @@ export const validateAmount = (value: string): AmountValidationErrors => {
 
   return {}
 }
+
+wordlists.EN.forEach((word) => {
+  assert.assert(
+    word === word.toLowerCase(),
+    'we expect wordlist to contain only lowercase words',
+  )
+})
 
 const MNEMONIC_LENGTH = 15
 
