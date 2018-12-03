@@ -47,7 +47,7 @@ const WalletListScreen = ({
 
       <Button
         onPress={navigateInitWallet}
-        title={translations.addWallet}
+        title={translations.addWalletButton}
         style={styles.addWalletButton}
       />
     </Screen>

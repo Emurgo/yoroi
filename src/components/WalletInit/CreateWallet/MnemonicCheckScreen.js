@@ -79,7 +79,9 @@ const MnemonicCheckScreen = ({
         <Text style={styles.instructions}>{translations.instructions}</Text>
 
         <View style={styles.recoveryPhraseContainer}>
-          <Text style={styles.inputLabel}>{translations.inputLabel}</Text>
+          <Text style={styles.inputLabel}>
+            {translations.mnemonicWordsInput.label}
+          </Text>
           <View style={styles.recoveryPhrase}>
             {partialPhrase.map((index) => (
               <EnhancedWord
@@ -92,9 +94,11 @@ const MnemonicCheckScreen = ({
               />
             ))}
           </View>
-          {/* prettier-ignore */ !isPhraseValid && isPhraseComplete && (
-            <Text style={styles.error}>{translations.invalidPhrase}</Text>
-          )}
+          {!isPhraseValid && isPhraseComplete ? (
+            <Text style={styles.error}>
+              {translations.mnemonicWordsInput.errors.invalidPhrase}
+            </Text>
+          ) : null}
         </View>
 
         <View style={styles.words}>

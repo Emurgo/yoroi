@@ -34,9 +34,9 @@ const _translateInvalidPhraseError = (
   error: InvalidPhraseError,
 ) => {
   if (error.code === INVALID_PHRASE_ERROR_CODES.UNKNOWN_WORDS) {
-    return translations.errors.UNKNOWN_WORDS(error.words)
+    return translations.mnemonicInput.errors.UNKNOWN_WORDS(error.words)
   } else {
-    return translations.errors[error.code]
+    return translations.mnemonicInput.errors[error.code]
   }
 }
 
@@ -84,7 +84,7 @@ const RestoreWalletScreen = ({
             style={styles.phrase}
             value={phrase}
             onChangeText={setPhrase}
-            placeholder={translations.phrase}
+            placeholder={translations.mnemonicInput.label}
             blurOnSubmit
             error={errorText}
           />

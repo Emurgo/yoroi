@@ -10,7 +10,7 @@ import {ValidatedTextInput} from '../UiKit'
 
 import type {ComponentType} from 'react'
 
-const getTranslations = (state) => state.trans.SendAdaScreen
+const getTranslations = (state) => state.trans.SendAdaScreen.amountInput
 
 const handleSetAmount = ({setAmount, amount}) => (text) => {
   const shorterStringLength = Math.min(text.length, amount.length)
@@ -28,7 +28,7 @@ const AmountField = ({amount, handleSetAmount, translations, error}) => (
   <ValidatedTextInput
     returnKeyType="done"
     keyboardType="numeric"
-    label={translations.amount}
+    label={translations.label}
     value={amount}
     onChangeText={handleSetAmount}
     error={error}

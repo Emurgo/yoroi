@@ -23,18 +23,12 @@ const l10n = {
     notifications: {
       offline: 'You are offline. Please check settings on your device.',
     },
-    alerts: {
-      errorHeading: 'Error',
-      generalErrorText:
-        'Something wrong happened.' +
-        'Please try repeating your action or contact us.',
-    },
     currentLanguageName: 'English',
   },
   errorDialogs: {
     general: {
       title: 'Unexpected error',
-      message: 'Your operation did not complete',
+      message: 'Requested operation failed',
       yesButton: 'OK',
     },
     pinMismatch: {
@@ -67,8 +61,8 @@ const l10n = {
     disableEasyConfirmationFirst: {
       title: 'Action failed',
       message:
-        'Please disable easy confirmation function in all \
-your wallets first',
+        'Please disable easy confirmation function in all ' +
+        'your wallets first',
       yesButton: 'OK',
     },
     wrongPinError: {
@@ -79,8 +73,7 @@ your wallets first',
   },
   LanguageSelectionScreen: {
     languages,
-    selectLanguage: 'SELECT YOUR LANGAUAGE',
-    continueButton: 'CHOOSE LANGUAGE',
+    continueButton: 'Choose language',
   },
   YoroiDescription: {
     line1: 'Yoroi is Web Light Wallet for Cardano',
@@ -97,8 +90,8 @@ your wallets first',
     title: 'Create a new wallet',
   },
   CreateOrRestoreWalletScreen: {
-    createWallet: 'CREATE A NEW WALLET',
-    restoreWallet: 'RESTORE WALLET FROM BACKUP',
+    createWalletButton: 'Create new wallet',
+    restoreWalletButton: 'Restore wallet from backup',
   },
   // On CreateWalletScreen
   MnemonicExplanationModal: {
@@ -121,19 +114,27 @@ your wallets first',
         normal('unless you want them to have access to your funds.'),
       ]),
     ],
-    nextButton: 'I UNDERSTAND',
+    nextButton: 'I understand',
   },
   WalletNameAndPasswordForm: {
-    nameLabel: 'Wallet name',
-    passwordLabel: 'Wallet password',
-    passwordConfirmationLabel: 'Repeat password',
-    createButton: 'CREATE PERSONAL WALLET',
+    walletNameInput: {
+      label: 'Wallet name',
+      errors: {
+        incorrectNumberOfCharacters:
+          'Wallet name requires at least 1 and at most 40 letters.',
+        nameAlreadyTaken: 'This name is already taken',
+      },
+    },
+    newPasswordInput: {
+      label: 'Wallet password',
+    },
+    repeatPasswordInput: {
+      label: 'Repeat password',
+      errors: {
+        passwordsDoNotMatch: 'Passwords do not match',
+      },
+    },
     continueButton: 'Continue',
-    passwordsDoNotMatch: 'Passwords do not match',
-    incorrectNumberOfCharacters:
-      'Wallet name requires at least 1 and at most\
-    40 letters.',
-    nameAlreadyTaken: 'This name is already taken',
   },
   PasswordStrengthIndicator: {
     passwordRequirementsNote: 'The password needs to contain at least:',
@@ -164,10 +165,10 @@ your wallets first',
         PENDING: 'Pending',
         FAILED: 'Failed',
       },
-      fee: (fee: number) => `Fee: ${fee}`,
+      fee: 'Fee:',
     },
-    sendButton: 'SEND',
-    receiveButton: 'RECEIVE',
+    sendButton: 'Send',
+    receiveButton: 'Receive',
   },
   TransactionDetailsScreen: {
     transactionType: {
@@ -188,50 +189,70 @@ your wallets first',
   SendAdaScreen: {
     title: 'Send',
     scanCode: 'Scan QR code',
-    address: 'Address',
-    amount: 'Amount',
-    continueButton: 'Continue',
-    calculatingFee: 'calculating...',
-    feeLabel: 'Fee',
-    balanceAfterLabel: 'Balance after',
+    fee: {
+      label: 'Fee',
+      isCalculating: 'calculating...',
+    },
+    balanceAfter: {
+      label: 'Balance after',
+      isCalculating: 'calculating...',
+    },
     availableAmount: {
       label: 'Available amount:',
       isFetching: 'Checking balance...',
       hasError: 'Error',
     },
-    validationErrors: {
+    addressInput: {
+      label: 'Address',
+      errors: {
+        invalidAddress: 'Please enter valid address',
+      },
+    },
+    amountInput: {
+      label: 'Amount',
+      errors: {
+        invalidAmount: 'Please enter valid amount',
+        insufficientBalance: 'Not enough money to make this transaction',
+      },
+    },
+    continueButton: 'Continue',
+    errorBanners: {
+      // note: offline banner is shared with TransactionHistory
+      networkError:
+        'We are experiencing issues with fetching your current balance.',
       pendingOutgoingTransaction:
         'You cannot send a new transaction while ' +
         'an existing one is still pending',
-      offline: 'You are offline',
-      serverFailed: 'There is a failing transaction',
-      invalidAddress: 'Please enter valid address',
-      invalidAmount: 'Please enter valid amount',
-      insufficientBalance: 'Not enough money to make this transaction',
     },
-    fetchingError:
-      'We are experiencing issue with fetching your current balance.',
   },
   ConfirmSendAdaScreen: {
-    confirmButton: 'Confirm',
+    title: 'Send',
     amount: 'Amount',
-    availableFunds: 'AVAILABLE FUNDS:',
+    availableFunds: 'Available funds:',
     balanceAfterTx: 'Balance after transaction',
     fees: 'Fees',
     password: 'Wallet password',
     receiver: 'Receiver',
-    title: 'Send',
+    confirmButton: 'Confirm',
   },
   WaitSendTransactionModal: {
-    submitting: 'Please wait while transaction is submited',
+    submitting: 'Please wait while the transaction is being submited',
   },
   WalletCredentialsScreen: {
     title: 'Wallet credentials',
   },
   ChangeWalletNameScreen: {
     title: 'Change wallet name',
-    walletName: 'Wallet name',
-    changeButtonText: 'CHANGE NAME',
+    walletNameInput: {
+      label: 'Wallet name',
+      // same as WalletNameAndPasswordForm
+      errors: {
+        nameAlreadyTaken: 'This name is already taken',
+        incorrectNumberOfCharacters:
+          'Wallet name requires at least 1 and at most 40 letters.',
+      },
+    },
+    changeButton: 'Change name',
   },
   ReceiveScreen: {
     title: 'Receive',
@@ -239,20 +260,25 @@ your wallets first',
       'Share this address to receive payments. ' +
       'To protect your privacy, new address are ' +
       'generated automatically once you use them.',
-    generate: 'Generate another address',
+    generateButton: 'Generate another address',
     cannotGenerate: 'You have to use some of your addresses',
-
-    addressesList: {
-      walletAddresses: 'Your wallet addresses',
-    },
     freshAddresses: 'Fresh addresses',
     usedAddresses: 'Used addresses',
   },
   AddressDetailsModal: {
     walletAddress: 'Your wallet address',
     BIP32path: 'BIP32 path:',
-    copyLabel: 'COPY ADDRESS',
-    copiedLabel: 'COPIED',
+    copyLabel: 'Copy address',
+    copiedLabel: 'Copied',
+  },
+  MnemonicShowScreen: {
+    title: 'Recovery phrase',
+    mnemonicNote:
+      'Please, make sure you have carefully written down your ' +
+      'recovery phrase somewhere safe. ' +
+      'You will need this phrase to use and restore your wallet. ' +
+      'Phrase is case sensitive.',
+    confirmationButton: 'Yes, I have written it down',
   },
   MnemonicBackupImportanceModal: {
     title: 'Recovery phrase',
@@ -263,42 +289,40 @@ your wallets first',
       'I understand that if this application is moved to another device ' +
       'or delete, my money can be only recovered with the backup phrase that ' +
       'I have written down and saved in secure place.',
-    confirmationButton: 'I UNDERSTAND',
+    confirmationButton: 'I understand',
   },
   MnemonicCheckScreen: {
     title: 'Recovery phrase',
     instructions:
       'Tap each word in the correct order to verify your recovery phrase',
-    inputLabel: 'Recovery phrase',
-    invalidPhrase: 'Recovery phrase does not match',
-    clearButton: 'CLEAR',
-    confirmButton: 'CONFIRM',
-  },
-  MnemonicShowScreen: {
-    title: 'Recovery phrase',
-    mnemonicNote:
-      'Please, make sure you have carefully written down your ' +
-      'recovery phrase somewhere safe. ' +
-      'You will need this phrase to use and restore your wallet. ' +
-      'Phrase is case sensitive.',
-    confirmationButton: 'YES, I`VE WRITTEN IT DOWN',
+    mnemonicWordsInput: {
+      label: 'Recovery phrase',
+      errors: {
+        invalidPhrase: 'Recovery phrase does not match',
+      },
+    },
+    clearButton: 'Clear',
+    confirmButton: 'Confirm',
   },
   RestoreWalletScreen: {
     title: 'Restore wallet',
     instructions:
       'To restore your wallet please provide the recovery phrase you ' +
       'received when you created your wallet for the first time.',
-    phrase: 'Recovery phrase',
-    restoreButton: 'RESTORE WALLET',
-    errors: {
-      TOO_LONG: 'Phrase is too long. ',
-      TOO_SHORT: 'Phrase is too short. ',
-      INVALID_CHECKSUM: 'Please enter valid mnemonic.',
-      UNKNOWN_WORDS: (words: Array<string>) => {
-        const wordlist = words.map((word) => `'${word}'`).join(', ')
-        return `${wordlist} ${pluralizeEn(words.length, 'is', 'are')} invalid.`
+    mnemonicInput: {
+      label: 'Recovery phrase',
+      errors: {
+        TOO_LONG: 'Phrase is too long. ',
+        TOO_SHORT: 'Phrase is too short. ',
+        INVALID_CHECKSUM: 'Please enter valid mnemonic.',
+        UNKNOWN_WORDS: (words: Array<string>) => {
+          const wordlist = words.map((word) => `'${word}'`).join(', ')
+          const areInvalid = `${pluralizeEn(words.length, 'is', 'are')} invalid`
+          return `${wordlist} ${areInvalid}`
+        },
       },
     },
+    restoreButton: 'Restore wallet',
   },
   SettingsScreen: {
     title: 'Settings',
@@ -333,27 +357,27 @@ your wallets first',
     faq: {
       label: 'See frequently asked questions',
       description:
-        'If you are experiencing issues, please see the FAQ\
- on Yoroi website for quidance on known issues.',
+        'If you are experiencing issues, please see the FAQ ' +
+        'on Yoroi website for quidance on known issues.',
       url: 'https://yoroi-wallet.com/faq/',
     },
     report: {
       label: 'Report a problem',
       description:
-        'If the FAQ does not solve the issue you are\
- experiencing, please use our Support request feature.',
+        'If the FAQ does not solve the issue you are ' +
+        'experiencing, please use our Support request feature.',
       url: 'https://yoroi-wallet.com/support/',
     },
   },
   TermsOfServiceScreen: {
     title: 'Terms of Service Agreement',
+    content: termsOfService,
     aggreeClause: 'I agree with terms of service',
-    continue: 'ACCEPT',
-    content: [...termsOfService],
+    continueButton: 'Accept',
   },
   WalletSelectionScreen: {
-    addWallet: 'Add wallet',
     header: 'Your wallets',
+    addWalletButton: 'Add wallet',
   },
   BiometricsLinkScreen: {
     enableFingerprintsMessage:
@@ -362,6 +386,7 @@ your wallets first',
     linkButton: 'Link',
     title: 'Enable biometrics',
   },
+  // TODO(ppershing): this localization is a mess
   BiometricsAuthScreen: {
     authorizeOperation: 'Authorize operation',
     putFingerOnSensorMessage: 'Put you finger on sensor to auth operation',
@@ -410,12 +435,20 @@ your wallets first',
     },
   },
   ChangePasswordScreen: {
-    oldPassword: 'Current password',
-    newPassword: 'New password',
-    repeatPassword: 'Repeat new password',
-    continue: 'Change password',
     title: 'Change wallet password',
-    passwordsDoNotMatch: 'Passwords do not match',
+    oldPasswordInput: {
+      label: 'Current password',
+    },
+    newPasswordInput: {
+      label: 'New password',
+    },
+    repeatPasswordInput: {
+      label: 'Repeat new password',
+      errors: {
+        passwordsDoNotMatch: 'Passwords do not match',
+      },
+    },
+    continueButton: 'Change password',
   },
   ChangeCustomPinScreen: {
     CurrentPinInput: {
@@ -434,11 +467,11 @@ your wallets first',
   },
   EasyConfirmationScreen: {
     enableLessSecureOption:
-      'Enabling this option can made app less secure. \
-      This is compromise between UX and security!',
+      'Enabling this option can made app less secure. ' +
+      'This is a compromise between UX and security!',
     disableThisOption:
-      'By disabling this option you will be able to spend your ADA only\
-    with master password.',
+      'By disabling this option you will be able to spend your ADA ' +
+      'only with master password.',
     enterMasterPassword: 'Enter Master Password',
     cancelButton: 'Cancel',
     enableButton: 'Enable',
