@@ -19,7 +19,8 @@ import {COLORS} from '../../../styles/config'
 import styles from './styles/MnemonicCheckScreen.style'
 
 import type {State} from '../../../state'
-import type {SubTranslation} from '../../../l10n/typeHelpers'
+import type {ComponentType} from 'react'
+import type {Navigation} from '../../../types/navigation'
 
 const getTranslations = (state: State) => state.trans.MnemonicCheckScreen
 
@@ -58,17 +59,6 @@ const EnhancedWord = withHandlers({
   handleOnPress: ({onPress, value}) => () => onPress(value),
 })(Word)
 
-type Props = {
-  mnemonic: string,
-  partialPhrase: Array<number>,
-  translations: SubTranslation<typeof getTranslations>,
-  words: Array<string>,
-  confirmWalletCreation: () => mixed,
-  handleClear: () => mixed,
-  selectWord: (number) => mixed,
-  deselectWord: (number) => mixed,
-}
-
 const MnemonicCheckScreen = ({
   mnemonic,
   partialPhrase,
@@ -78,7 +68,7 @@ const MnemonicCheckScreen = ({
   handleClear,
   selectWord,
   deselectWord,
-}: Props) => {
+}) => {
   const isPhraseComplete = partialPhrase.length === words.length
   const isPhraseValid = validatePhrase(mnemonic, words, partialPhrase)
 
@@ -145,7 +135,7 @@ const _mnemonicToPartialPhrase = (mnemonic: string) =>
     .map(([i, j]) => j) // [1,2,0]
     .value()
 
-export default compose(
+export default (compose(
   connect(
     (state) => ({
       translations: getTranslations(state),
@@ -161,10 +151,10 @@ export default compose(
         : [],
     },
     {
-      handleDeselectWord: ({partialPhrase}) => (wordIdx) => ({
+      deselectWord: ({partialPhrase}) => (wordIdx) => ({
         partialPhrase: partialPhrase.filter((idx) => idx !== wordIdx),
       }),
-      handleSelectWord: ({partialPhrase}) => (wordIdx) => ({
+      selectWord: ({partialPhrase}) => (wordIdx) => ({
         partialPhrase: [...partialPhrase, wordIdx],
       }),
       handleClear: (state) => () => ({
@@ -185,4 +175,4 @@ export default compose(
       1000,
     ),
   }),
-)(MnemonicCheckScreen)
+)(MnemonicCheckScreen): ComponentType<{|navigation: Navigation|}>)
