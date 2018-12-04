@@ -80,10 +80,11 @@ export const withTranslations = <GetTrans: (State) => mixed, Props: {}>(
 // prettier-ignore
 export const withNavigationTitle = <Props: {navigation: any}>(
   getTitle: (Props) => string,
+  paramName?: string
 ):HOC<Props, Props> => (BaseComponent) =>
     class WithScreenTitle extends React.Component<Props> {
       componentDidMount = () => {
-        this.props.navigation.setParams({title: getTitle(this.props)})
+        this.setTitle(getTitle(this.props))
       }
 
       componentDidUpdate = () => {
@@ -94,13 +95,21 @@ export const withNavigationTitle = <Props: {navigation: any}>(
         // and so we get into an infinity loop.
         // The solution is to *assume* getTitle to be deterministic
         // and diff on title instead
-        const current = this.props.navigation.getParam('title')
+        const current = this.getCurrentTitle()
         const updated = getTitle(this.props)
 
         if (current !== updated) {
-          this.props.navigation.setParams({title: updated})
+          this.setTitle(updated)
         }
       }
+
+      getCurrentTitle = () => this.props.navigation.getParam(
+        paramName || 'title'
+      )
+
+      setTitle = (value) => this.props.navigation.setParams({
+        [paramName || 'title']: value,
+      })
 
       render = () => <BaseComponent {...this.props} />
     }

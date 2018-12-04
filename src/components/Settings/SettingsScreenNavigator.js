@@ -26,8 +26,18 @@ const SettingsScreenNavigator = createStackNavigator(
   {
     [SETTINGS_ROUTES.MAIN]: createMaterialTopTabNavigator(
       {
-        Wallet: WalletSettingsScreen,
-        Application: ApplicationSettingsScreen,
+        Wallet: {
+          screen: WalletSettingsScreen,
+          navigationOptions: ({navigation}) => ({
+            title: navigation.getParam('walletTabTitle'),
+          }),
+        },
+        Application: {
+          screen: ApplicationSettingsScreen,
+          navigationOptions: ({navigation}) => ({
+            title: navigation.getParam('applicationTabTitle'),
+          }),
+        },
       },
       {
         tabBarOptions: {
