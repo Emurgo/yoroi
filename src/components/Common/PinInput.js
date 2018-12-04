@@ -5,12 +5,14 @@ import {Image, View, TouchableHighlight} from 'react-native'
 import {withStateHandlers, withHandlers} from 'recompose'
 import {SafeAreaView} from 'react-navigation'
 
-import Text from '../../components/UiKit/Text'
+import utfSymbols from '../../utils/utfSymbols'
+import Text from '../UiKit/Text'
 import backspaceIcon from '../../assets/img/backspace.png'
 
 import styles from './styles/PinInput.style'
 
-const BACKSPACE = '⌫'
+const BACKSPACE = utfSymbols.ERASE_TO_LEFT
+
 const keyboard = [
   ['1', '2', '3'],
   ['4', '5', '6'],

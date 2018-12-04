@@ -6,6 +6,7 @@ import TxHistory from './TxHistory'
 import TxDetails from './TxDetails'
 import {TX_HISTORY_ROUTES, WALLET_ROUTES} from '../../RoutesList'
 import SettingsScreenNavigator from '../Settings/SettingsScreenNavigator'
+import utfSymbols from '../../utils/utfSymbols'
 
 import {defaultNavigationOptions} from '../../navigationOptions'
 
@@ -18,7 +19,7 @@ const TxHistoryNavigator = createStackNavigator(
         headerRight: (
           <Button
             onPress={() => navigation.navigate(WALLET_ROUTES.SETTINGS)}
-            title={'\u2699'}
+            title={utfSymbols.GEAR}
           />
         ),
         ...defaultNavigationOptions,

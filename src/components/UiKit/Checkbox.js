@@ -4,6 +4,7 @@ import React from 'react'
 import {withHandlers} from 'recompose'
 import {TouchableOpacity} from 'react-native'
 
+import utfSymbols from '../../utils/utfSymbols'
 import styles from './styles/Checkbox.style'
 import Text from './Text'
 
@@ -11,7 +12,9 @@ import type {ComponentType} from 'react'
 
 const Checkbox = ({checked, text, handleChange, style}) => (
   <TouchableOpacity style={[styles.container, style]} onPress={handleChange}>
-    <Text style={styles.checkbox}>{checked ? '☑' : '☐'}</Text>
+    <Text style={styles.checkbox}>
+      {checked ? utfSymbols.BOX_CHECKED : utfSymbols.BOX_UNCHECKED}
+    </Text>
     <Text style={styles.text}>{text}</Text>
   </TouchableOpacity>
 )
