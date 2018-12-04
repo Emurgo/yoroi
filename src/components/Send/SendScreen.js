@@ -17,10 +17,12 @@ import {
   utxosSelector,
   isOnlineSelector,
   hasPendingOutgoingTransactionSelector,
+  getUtxoBalance,
 } from '../../selectors'
 import {Logger} from '../../utils/logging'
 import {withTranslations, withNavigationTitle} from '../../utils/renderUtils'
-import {formatAda, parseAdaDecimal} from '../../utils/format'
+import {formatAda} from '../../utils/format'
+import {parseAdaDecimal} from '../../utils/parsing'
 import walletManager from '../../crypto/wallet'
 import {validateAmount, validateAddressAsync} from '../../utils/validators'
 import AmountField from './AmountField'
@@ -51,7 +53,11 @@ const tryCalculateFeeAsync = async ({
   utxos,
   address,
   amount,
-}): Promise<{fee?: BigNumber, errors: BalanceValidationErrors}> => {
+}): Promise<{
+  fee?: BigNumber,
+  balanceAfter?: BigNumber,
+  errors: BalanceValidationErrors,
+}> => {
   const wrongInputResult = {errors: {}}
 
   if (!utxos) {
@@ -66,8 +72,12 @@ const tryCalculateFeeAsync = async ({
   }
 
   try {
+    const parsedAmount = parseAdaDecimal(amount)
     const {fee} = await getTransactionData(utxos, address, amount)
-    return {errors: {}, fee}
+    const balanceAfter = getUtxoBalance(utxos)
+      .minus(parsedAmount)
+      .minus(fee)
+    return {errors: {}, fee, balanceAfter}
   } catch (err) {
     if (err instanceof InsufficientFunds) {
       return {errors: {insufficientBalance: true}}
@@ -103,6 +113,18 @@ const AvailableAmount = withTranslations(getTranslations)(
   ),
 )
 
+const getAmountErrorText = (translations, amountErrors, balanceErrors) => {
+  if (amountErrors.invalidAmount != null) {
+    return translations.amountInput.errors.invalidAmount[
+      amountErrors.invalidAmount
+    ]
+  }
+  if (balanceErrors.insufficientBalance) {
+    return translations.amountInput.errors.insufficientBalance
+  }
+  return null
+}
+
 type Props = {
   navigation: Navigation,
   translations: SubTranslation<typeof getTranslations>,
@@ -117,12 +139,13 @@ type Props = {
 
 type State = {
   address: string,
-  amount: string,
   addressErrors: AddressValidationErrors,
+  amount: string,
   amountErrors: AmountValidationErrors,
   balanceErrors: BalanceValidationErrors,
   isCalculatingFee: boolean,
   fee: ?BigNumber,
+  balanceAfter: ?BigNumber,
 }
 
 class SendScreen extends Component<Props, State> {
@@ -132,6 +155,7 @@ class SendScreen extends Component<Props, State> {
     amount: '',
     amountErrors: {amountIsRequired: true},
     fee: null,
+    balanceAfter: null,
     balanceErrors: {},
     isCalculatingFee: false,
   }
@@ -186,9 +210,13 @@ class SendScreen extends Component<Props, State> {
   }
 
   handleValidateFeeAsync = async ({address, amount, utxos}) => {
-    this.setState({isCalculatingFee: true})
+    this.setState({fee: null, balanceAfter: null, isCalculatingFee: true})
 
-    const {errors: balanceErrors, fee} = await tryCalculateFeeAsync({
+    const {
+      errors: balanceErrors,
+      fee,
+      balanceAfter,
+    } = await tryCalculateFeeAsync({
       utxos,
       address,
       amount,
@@ -206,6 +234,7 @@ class SendScreen extends Component<Props, State> {
       balanceErrors,
       isCalculatingFee: false,
       fee,
+      balanceAfter,
     }))
   }
 
@@ -260,21 +289,15 @@ class SendScreen extends Component<Props, State> {
   }
 
   renderBalanceAfterTransaction = () => {
-    const {fee, isCalculatingFee, amount} = this.state
-    const {availableAmount, translations} = this.props
+    const {balanceAfter, isCalculatingFee} = this.state
+    const {translations} = this.props
 
     let value = ''
     if (isCalculatingFee) {
       value = translations.balanceAfter.isCalculating
-    } else if (!fee) {
+    } else if (!balanceAfter) {
       value = translations.balanceAfter.notAvailable
     } else {
-      const balanceAfter = availableAmount
-        .minus(
-          // TODO(ppershing): fixme parsing
-          formatAda(new BigNumber(amount)),
-        )
-        .minus(fee)
       value = formatAda(balanceAfter)
     }
 
@@ -405,13 +428,11 @@ class SendScreen extends Component<Props, State> {
             <AmountField
               amount={amount}
               setAmount={this.handleAmountChange}
-              error={
-                amountErrors.invalidAmount
-                  ? translations.amountInput.errors.invalidAmount
-                  : balanceErrors.insufficientBalance
-                    ? translations.amountInput.errors.insufficientBalance
-                    : null
-              }
+              error={getAmountErrorText(
+                translations,
+                amountErrors,
+                balanceErrors,
+              )}
             />
           </View>
 
