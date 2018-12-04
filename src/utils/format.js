@@ -1,6 +1,7 @@
 import {BigNumber} from 'bignumber.js'
 import moment from 'moment'
 import l10n from '../l10n'
+import ExtendableError from 'es6-error'
 
 // 1 ADA = 1 000 000 micro ada
 const MICRO = 1000000
@@ -10,8 +11,32 @@ export const formatAda = (amount: BigNumber) => {
   return num.toFormat(6)
 }
 
-export const parseAdaDecimal = (amount) =>
-  new BigNumber(amount, 10).times(1000000)
+export class InvalidAdaAmount extends ExtendableError {}
+
+const MAX_ADA = new BigNumber('45 000 000 000 000000'.replace(/ /g, ''), 10)
+
+export const parseAdaDecimal = (amount) => {
+  const parsed = new BigNumber(amount, 10)
+  if (parsed.isNaN()) {
+    throw new InvalidAdaAmount('Invalid amount')
+  }
+
+  if (parsed.decimalPlaces() > 6) {
+    throw new InvalidAdaAmount('Too many decimal places')
+  }
+
+  const value = parsed.times(MICRO)
+
+  if (value.gte(MAX_ADA)) {
+    throw new InvalidAdaAmount('Too large amount')
+  }
+
+  if (value.lt(0)) {
+    throw new InvalidAdaAmount('Amount must be positive')
+  }
+
+  return value
+}
 
 export const formatAdaInteger = (amount: BigNumber) => {
   const num = amount.dividedToIntegerBy(MICRO)

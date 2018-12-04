@@ -1,5 +1,4 @@
 // @flow
-import {BigNumber} from 'bignumber.js'
 import {validateMnemonic, wordlists} from 'bip39'
 import _ from 'lodash'
 
@@ -7,6 +6,7 @@ import {containsUpperCase, containsLowerCase, isNumeric} from '../utils/string'
 import {CONFIG} from '../config'
 import {isValidAddress} from '../crypto/util'
 import assert from '../utils/assert'
+import {parseAdaDecimal, InvalidAdaAmount} from '../utils/format'
 
 export type PasswordValidationErrors = {
   passwordReq?: boolean,
@@ -157,23 +157,20 @@ export const validateAddressAsync = async (
   return isValid ? {} : {invalidAddress: true}
 }
 
-const MAX_DECIMAL_DIGITS = 6
-
 export const validateAmount = (value: string): AmountValidationErrors => {
   if (!value) {
     return {amountIsRequired: true}
   }
 
-  const amount = new BigNumber(value, 10)
-  if (
-    amount.isNaN() ||
-    amount.isLessThan(0) ||
-    amount.decimalPlaces() > MAX_DECIMAL_DIGITS
-  ) {
-    return {invalidAmount: true}
+  try {
+    parseAdaDecimal(value)
+    return {}
+  } catch (e) {
+    if (e instanceof InvalidAdaAmount) {
+      return {invalidAmount: true}
+    }
+    throw e
   }
-
-  return {}
 }
 
 wordlists.EN.forEach((word) => {
