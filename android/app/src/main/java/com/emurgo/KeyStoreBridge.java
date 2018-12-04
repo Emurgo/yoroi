@@ -123,19 +123,19 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
     @TargetApi(23)
     public void cancelFingerprintScanning(String reason, final Promise promise) {
         if (fingerprintConfirmationPromise == null) {
-            promise.resolve(null);
+            promise.resolve(false);
             return;
         }
 
         fingerprintConfirmationPromise.reject(reason, reason);
         fingerprintConfirmationPromise = null;
         if (fingerprintCancellation.isCanceled()) {
-            promise.resolve(null);
+            promise.resolve(true);
             return;
         }
 
         fingerprintCancellation.cancel();
-        promise.resolve(null);
+        promise.resolve(true);
     }
 
     @ReactMethod
@@ -268,6 +268,16 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
         }
     };
 
+    @ReactMethod
+    public void isKeyValid(String keyAlias, final Promise promise) {
+        try {
+            this.crypto.getDecryptCipher(keyAlias);
+            promise.resolve(true);
+        } catch (Exception e) {
+            promise.resolve(false);
+        }
+    }
+
     @TargetApi(28)
     @ReactMethod
     public void decryptDataWithBiometricPrompt(
@@ -283,10 +293,17 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
             promise.reject(Rejections.ALREADY_DECRYPTING_DATA, Rejections.ALREADY_DECRYPTING_DATA);
             return;
         }
+
+        Cipher cipher;
+        try {
+            cipher = this.crypto.getDecryptCipher(keyAlias);
+        } catch (Exception e) {
+            promise.reject(Rejections.INVALID_KEY, Rejections.INVALID_KEY);
+            return;
+        }
+
         fingerprintConfirmationPromise = promise;
         this.fingerprintCancellation = new CancellationSignal();
-
-        Cipher cipher = this.crypto.getDecryptCipher(keyAlias);
 
         final BiometricPrompt.AuthenticationCallback biometricCallback = new BiometricPrompt.AuthenticationCallback() {
             @Override

@@ -6,6 +6,7 @@ import {defaultMemoize} from 'reselect'
 import uuid from 'uuid'
 import ExtendableError from 'es6-error'
 
+import {showErrorDialog} from '../actions'
 import storage from '../utils/storage'
 import KeyStore from './KeyStore'
 import {AddressChain, AddressGenerator} from './chain'
@@ -210,6 +211,17 @@ export class Wallet {
         throw e
       }
     }
+  }
+
+  async checkKeysValidity() {
+    if (!KeyStore.isKeyValid(this._id, 'BIOMETRICS')) {
+      await KeyStore.deleteData(this._id, 'BIOMETRICS')
+      await KeyStore.deleteData(this._id, 'SYSTEM_PIN')
+
+      return false
+    }
+
+    return true
   }
 
   async _doFullSync() {
@@ -630,6 +642,18 @@ class WalletManager {
       this._closeReject = reject
     })
     this._notify()
+
+    if (wallet._isEasyConfirmationEnabled) {
+      const areKeysValid = await wallet.checkKeysValidity()
+      if (!areKeysValid) {
+        await this._updateMetadata(this._id, {
+          isEasyConfirmationEnabled: false,
+        })
+
+        await showErrorDialog((dialogs) => dialogs.walletKeysInvalidated)
+      }
+    }
+
     return wallet
   }
 
@@ -699,7 +723,7 @@ class WalletManager {
 
   canBiometricsSignInBeDisabled() {
     if (!this._wallets) {
-      throw new Error('Wallet list no initialized')
+      throw new Error('Wallet list is not initialized')
     }
 
     return ObjectValues(this._wallets).every(

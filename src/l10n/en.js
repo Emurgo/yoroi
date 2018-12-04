@@ -71,6 +71,15 @@ const l10n = {
       message: 'It seems that you turned off biometrics, please turn it on',
       yesButton: common.ok,
     },
+    walletKeysInvalidated: {
+      title: 'Biometrics changed',
+      message:
+        'We detected that your biometrics in phone changed. ' +
+        'As a result the easy transaction confirmation was disabled ' +
+        'and transaction submitting is allowed only with master password. ' +
+        'You can re-enable easy transactions confirmation in settings',
+      yesButton: 'OK',
+    },
     networkError: {
       title: 'Network error',
       message:

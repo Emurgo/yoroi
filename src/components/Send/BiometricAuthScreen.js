@@ -53,12 +53,6 @@ const handleOnConfirm = async (
       return
     }
 
-    // biometrics canceled by user, switch to system pin
-    if (error.code === KeyStore.REJECTIONS.BIOMETRIC_PROMPT_CANCELED) {
-      handleOnConfirm(navigation, setError, clearError, true, translations)
-      return
-    }
-
     if (
       error.code !== KeyStore.REJECTIONS.DECRYPTION_FAILED &&
       error.code !== KeyStore.REJECTIONS.SENSOR_LOCKOUT &&
@@ -124,8 +118,15 @@ export default (compose(
     },
   ),
   withHandlers({
-    cancelScanning: () => async () => {
-      await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
+    cancelScanning: ({setError, clearError, navigation}) => async () => {
+      const wasAlreadyCanceled = !(await KeyStore.cancelFingerprintScanning(
+        KeyStore.REJECTIONS.CANCELED,
+      ))
+
+      if (wasAlreadyCanceled) {
+        clearError()
+        navigation.getParam('onFail')(KeyStore.REJECTIONS.CANCELED)
+      }
     },
     useFallback: ({
       navigation,

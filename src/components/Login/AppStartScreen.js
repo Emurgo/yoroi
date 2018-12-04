@@ -48,9 +48,14 @@ const AppStartScreen = ({navigateLogin, translations}) => (
   </SafeAreaView>
 )
 
-const onFail = (navigation, installationId) => (reason) => {
+const onFail = (navigation, installationId) => async (reason) => {
   if (reason === KeyStore.REJECTIONS.INVALID_KEY) {
-    recreateAppSignInKeys(installationId)
+    const hasEnrolledFingerprints = await canFingerprintEncryptionBeEnabled()
+    if (hasEnrolledFingerprints) {
+      recreateAppSignInKeys(installationId)
+    } else {
+      await showErrorDialog((dialogs) => dialogs.biometricsIsTurnedOff)
+    }
   }
   navigation.navigate(ROOT_ROUTES.LOGIN)
 }
@@ -68,10 +73,8 @@ export default compose(
       customPinHash,
       navigation,
       installationId,
-    }) => async () => {
-      const hasEnrolledFingerprints = await canFingerprintEncryptionBeEnabled()
-
-      if (hasEnrolledFingerprints && isSystemAuthEnabled) {
+    }) => () => {
+      if (isSystemAuthEnabled) {
         navigation.navigate(ROOT_ROUTES.BIO_AUTH, {
           keyId: installationId,
           onSuccess: () =>
@@ -79,11 +82,7 @@ export default compose(
           onFail: onFail(navigation, installationId),
         })
       } else {
-        if (customPinHash) {
-          navigation.navigate(ROOT_ROUTES.CUSTOM_PIN_AUTH)
-        } else {
-          await showErrorDialog((dialogs) => dialogs.biometricsIsTurnedOff)
-        }
+        navigation.navigate(ROOT_ROUTES.CUSTOM_PIN_AUTH)
       }
     },
   }),
