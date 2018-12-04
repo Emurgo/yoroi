@@ -101,7 +101,7 @@ class WalletForm extends PureComponent<Props, ComponentState> {
   }
 
   render() {
-    const {translations, errorTranslations} = this.props
+    const {translations} = this.props
     const {
       name,
       password,
@@ -117,26 +117,30 @@ class WalletForm extends PureComponent<Props, ComponentState> {
           <NavigationEvents onWillBlur={this.handleOnWillBlur} />
           <View style={styles.content}>
             <ValidatedTextInput
-              label={translations.nameLabel}
+              label={translations.walletNameInput.label}
               value={name}
               onChangeText={this.handleSetName}
-              error={getWalletNameError(errorTranslations, validationErrors)}
+              error={getWalletNameError(
+                translations.walletNameInput.errors,
+                validationErrors,
+              )}
             />
 
             <ValidatedTextInput
               secureTextEntry
-              label={translations.passwordLabel}
+              label={translations.newPasswordInput.label}
               value={password}
               onChangeText={this.handleSetPassword}
             />
 
             <ValidatedTextInput
               secureTextEntry
-              label={translations.passwordConfirmationLabel}
+              label={translations.repeatPasswordInput.label}
               value={passwordConfirmation}
               onChangeText={this.handleSetPasswordConfirmation}
               error={
-                showPasswordsDoNotMatchError && translations.passwordsDoNotMatch
+                showPasswordsDoNotMatchError &&
+                translations.repeatPasswordInput.errors.passwordsDoNotMatch
               }
             />
 

@@ -90,10 +90,6 @@ const hasValidationErrorsAsync = async ({amount, address, utxos}) => {
   return errors.some((e) => !_.isEmpty(e))
 }
 
-const FetchingErrorBanner = withTranslations(getTranslations)(
-  ({translations}) => <Text>{translations.fetchingError}</Text>,
-)
-
 const AvailableAmount = withTranslations(getTranslations)(
   ({translations, isFetching, hasError, amount}) => (
     <Text>
@@ -263,39 +259,13 @@ class SendScreen extends Component<Props, State> {
     })
   }
 
-  renderBanners = () => {
-    const {
-      lastFetchingError,
-      hasPendingOutgoingTransaction,
-      translations,
-      fetchUTXOs,
-      isFetchingBalance,
-    } = this.props
-    if (hasPendingOutgoingTransaction) {
-      return (
-        <WarningBanner
-          text={translations.validationErrors.pendingOutgoingTransaction}
-        />
-      )
-    } else if (lastFetchingError && !isFetchingBalance) {
-      return (
-        <WarningBanner
-          text={translations.validationErrors.serverFailed}
-          action={fetchUTXOs}
-        />
-      )
-    }
-
-    return null
-  }
-
   renderBalanceAfterTransaction = () => {
     const {fee, isCalculatingFee, amount} = this.state
     const {availableAmount, translations} = this.props
 
     let text = ''
     if (isCalculatingFee) {
-      text = translations.calculatingFee
+      text = translations.balanceAfter.isCalculating
     } else if (!availableAmount) {
       text = formatAda(new BigNumber(0))
     } else if (!amount) {
@@ -308,7 +278,7 @@ class SendScreen extends Component<Props, State> {
 
     return (
       <Text>
-        {translations.balanceAfterLabel}:{text}
+        {translations.balanceAfter.label}:{text}
       </Text>
     )
   }
@@ -319,9 +289,9 @@ class SendScreen extends Component<Props, State> {
 
     return (
       <Text>
-        {translations.feeLabel}:
+        {translations.fee.label}:
         {isCalculatingFee
-          ? translations.calculatingFee
+          ? translations.fee.isCalculating
           : formatAda(fee || new BigNumber(0)).toString()}
       </Text>
     )
@@ -333,6 +303,7 @@ class SendScreen extends Component<Props, State> {
       availableAmount,
       isFetchingBalance,
       lastFetchingError,
+      fetchUTXOs,
       isOnline,
       hasPendingOutgoingTransaction,
     } = this.props
@@ -362,8 +333,12 @@ class SendScreen extends Component<Props, State> {
         <UtxoAutoRefresher />
 
         <ScrollView style={styles.container}>
-          {lastFetchingError && <FetchingErrorBanner />}
-
+          {lastFetchingError && !isFetchingBalance ? (
+            <WarningBanner
+              text={translations.errorBanners.networkError}
+              action={fetchUTXOs}
+            />
+          ) : null}
           <View style={styles.header}>
             <AvailableAmount
               isFetching={isFetchingBalance}
@@ -385,11 +360,11 @@ class SendScreen extends Component<Props, State> {
           <View style={styles.inputContainer}>
             <ValidatedTextInput
               value={address}
-              label={translations.address}
+              label={translations.addressInput.label}
               onChangeText={this.handleAddressChange}
               error={
                 addressErrors.invalidAddress &&
-                translations.validationErrors.invalidAddress
+                translations.addressInput.errors.invalidAddress
               }
             />
             <AmountField
@@ -397,15 +372,19 @@ class SendScreen extends Component<Props, State> {
               setAmount={this.handleAmountChange}
               error={
                 amountErrors.invalidAmount
-                  ? translations.validationErrors.invalidAmount
+                  ? translations.amountInput.errors.invalidAmount
                   : balanceErrors.insufficientBalance
-                    ? translations.validationErrors.insufficientBalance
+                    ? translations.amountInput.errors.insufficientBalance
                     : null
               }
             />
           </View>
 
-          {this.renderBanners()}
+          {hasPendingOutgoingTransaction && (
+            <WarningBanner
+              text={translations.errorBanners.pendingOutgoingTransaction}
+            />
+          )}
 
           <Button
             onPress={this.handleConfirm}

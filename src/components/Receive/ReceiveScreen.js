@@ -57,7 +57,7 @@ const ReceiveScreen = ({
           disabled={addressLimitReached}
           title={
             !addressLimitReached
-              ? translations.generate
+              ? translations.generateButton
               : translations.cannotGenerate
           }
         />

@@ -106,25 +106,26 @@ class ChangePasswordScreen extends PureComponent<Props, ComponentState> {
           <View style={styles.content}>
             <ValidatedTextInput
               secureTextEntry
-              label={translations.oldPassword}
+              label={translations.oldPasswordInput.label}
               value={oldPassword}
               onChangeText={this.handleSetOldPassword}
             />
 
             <ValidatedTextInput
               secureTextEntry
-              label={translations.newPassword}
+              label={translations.newPasswordInput.label}
               value={password}
               onChangeText={this.handleSetPassword}
             />
 
             <ValidatedTextInput
               secureTextEntry
-              label={translations.repeatPassword}
+              label={translations.repeatPasswordInput.label}
               value={passwordConfirmation}
               onChangeText={this.handleSetPasswordConfirmation}
               error={
-                showPasswordsDoNotMatchError && translations.passwordsDoNotMatch
+                showPasswordsDoNotMatchError &&
+                translations.repeatPasswordInput.errors.passwordsDoNotMatch
               }
             />
 
@@ -135,7 +136,7 @@ class ChangePasswordScreen extends PureComponent<Props, ComponentState> {
             <Button
               onPress={handleSubmit}
               disabled={!_.isEmpty(errors)}
-              title={translations.continue}
+              title={translations.continueButton}
             />
           </View>
         </View>

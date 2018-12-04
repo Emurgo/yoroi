@@ -8,9 +8,6 @@ import {CONFIG} from '../config'
 import {isValidAddress} from '../crypto/util'
 import assert from '../utils/assert'
 
-import type {SubTranslation} from '../l10n/typeHelpers'
-import type {State} from '../state'
-
 export type PasswordValidationErrors = {
   passwordReq?: boolean,
   passwordConfirmationReq?: boolean,
@@ -131,11 +128,11 @@ export const validateWalletName = (
   return validations
 }
 
-const getWalletNameErrorTranslations = (state: State) =>
-  state.trans.WalletNameAndPasswordForm
-
 export const getWalletNameError = (
-  translations: SubTranslation<typeof getWalletNameErrorTranslations>,
+  translations: {
+    incorrectNumberOfCharacters: string,
+    nameAlreadyTaken: string,
+  },
   validationErrors: WalletNameValidationErrors,
 ) => {
   const {incorrectNumberOfCharacters, nameAlreadyTaken} = translations

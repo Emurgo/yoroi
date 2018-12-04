@@ -20,7 +20,6 @@ import type {SubTranslation} from '../../l10n/typeHelpers'
 import type {WalletNameValidationErrors} from '../../utils/validators'
 
 const getTranslations = (state) => state.trans.ChangeWalletNameScreen
-const getErrorTranslations = (state) => state.trans.WalletNameAndPasswordForm
 
 type Props = {
   newName: string,
@@ -29,7 +28,6 @@ type Props = {
   onChangeText: (string) => void,
   changeAndNavigate: () => void,
   translations: SubTranslation<typeof getTranslations>,
-  errorTranslations: SubTranslation<typeof getErrorTranslations>,
   validateWalletName: () => WalletNameValidationErrors,
 }
 
@@ -38,7 +36,6 @@ const ChangeWalletName = ({
   onChangeText,
   changeAndNavigate,
   translations,
-  errorTranslations,
   validateWalletName,
 }: Props) => {
   const validationErrors = validateWalletName()
@@ -52,16 +49,19 @@ const ChangeWalletName = ({
       <SafeAreaView style={styles.safeAreaView}>
         <View style={styles.content}>
           <ValidatedTextInput
-            label={translations.walletName}
+            label={translations.walletNameInput.label}
             value={newName}
             onChangeText={onChangeText}
-            error={getWalletNameError(errorTranslations, validationErrors)}
+            error={getWalletNameError(
+              translations.walletNameInput.errors,
+              validationErrors,
+            )}
           />
         </View>
         <View style={styles.action}>
           <Button
             onPress={changeAndNavigate}
-            title={translations.changeButtonText}
+            title={translations.changeButton}
             disabled={!_.isEmpty(validationErrors)}
           />
         </View>
@@ -74,7 +74,6 @@ export default compose(
   connect(
     (state) => ({
       translations: getTranslations(state),
-      errorTranslations: getErrorTranslations(state),
       oldName: walletNameSelector(state),
       walletNames: walletNamesSelector(state),
     }),

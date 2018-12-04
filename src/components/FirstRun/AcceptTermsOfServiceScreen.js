@@ -48,7 +48,7 @@ const AcceptTermsOfServiceScreen = ({
     <Button
       onPress={handleAccepted}
       disabled={!acceptedTos}
-      title={translations.continue}
+      title={translations.continueButton}
     />
   </SafeAreaView>
 )

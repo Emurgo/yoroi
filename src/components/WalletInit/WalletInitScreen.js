@@ -38,14 +38,14 @@ const WalletInitScreen = ({
 
       <Button
         onPress={navigateCreateWallet}
-        title={translations.createWallet}
+        title={translations.createWalletButton}
         style={styles.createButton}
       />
 
       <Button
         outline
         onPress={navigateRestoreWallet}
-        title={translations.restoreWallet}
+        title={translations.restoreWalletButton}
       />
     </View>
   </SafeAreaView>
