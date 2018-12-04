@@ -199,10 +199,12 @@ const l10n = {
     fee: {
       label: 'Fee',
       isCalculating: 'calculating...',
+      notAvailable: '-',
     },
     balanceAfter: {
       label: 'Balance after',
       isCalculating: 'calculating...',
+      notAvailable: '-',
     },
     availableAmount: {
       label: 'Available amount:',

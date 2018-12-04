@@ -122,17 +122,17 @@ type State = {
   amountErrors: AmountValidationErrors,
   balanceErrors: BalanceValidationErrors,
   isCalculatingFee: boolean,
-  fee: BigNumber,
+  fee: ?BigNumber,
 }
 
 class SendScreen extends Component<Props, State> {
   state = {
     address: '',
-    amount: '',
     addressErrors: {addressIsRequired: true},
+    amount: '',
     amountErrors: {amountIsRequired: true},
+    fee: null,
     balanceErrors: {},
-    fee: new BigNumber(0),
     isCalculatingFee: false,
   }
 
@@ -263,22 +263,26 @@ class SendScreen extends Component<Props, State> {
     const {fee, isCalculatingFee, amount} = this.state
     const {availableAmount, translations} = this.props
 
-    let text = ''
+    let value = ''
     if (isCalculatingFee) {
-      text = translations.balanceAfter.isCalculating
-    } else if (!availableAmount) {
-      text = formatAda(new BigNumber(0))
-    } else if (!amount) {
-      text = formatAda(availableAmount)
+      value = translations.balanceAfter.isCalculating
+    } else if (!fee) {
+      value = translations.balanceAfter.notAvailable
     } else {
-      text = formatAda(
-        availableAmount.minus(formatAda(new BigNumber(amount))).minus(fee),
-      )
+      const balanceAfter = availableAmount
+        .minus(
+          // TODO(ppershing): fixme parsing
+          formatAda(new BigNumber(amount)),
+        )
+        .minus(fee)
+      value = formatAda(balanceAfter)
     }
 
     return (
       <Text>
-        {translations.balanceAfter.label}:{text}
+        {translations.balanceAfter.label}
+        {': '}
+        {value}
       </Text>
     )
   }
@@ -287,12 +291,20 @@ class SendScreen extends Component<Props, State> {
     const {isCalculatingFee, fee} = this.state
     const {translations} = this.props
 
+    let value = ''
+    if (isCalculatingFee) {
+      value = translations.fee.isCalculating
+    } else if (!fee) {
+      value = translations.fee.notAvailable
+    } else {
+      value = formatAda(fee)
+    }
+
     return (
       <Text>
-        {translations.fee.label}:
-        {isCalculatingFee
-          ? translations.fee.isCalculating
-          : formatAda(fee || new BigNumber(0)).toString()}
+        {translations.fee.label}
+        {': '}
+        {value}
       </Text>
     )
   }

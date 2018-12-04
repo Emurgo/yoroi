@@ -33,8 +33,7 @@ export type TransactionInfo = {|
   bruttoAmount: BigNumber,
   bruttoFee: BigNumber,
   direction: TransactionDirection,
-  // TODO(ppershing): why this can't be typical number?
-  confirmations: BigNumber,
+  confirmations: number,
   submittedAt: string,
   lastUpdatedAt: string,
   status: TransactionStatus,
