@@ -1,6 +1,6 @@
 // @flow
 
-import {AppState, Alert} from 'react-native'
+import {AppState, Alert, Keyboard} from 'react-native'
 import uuid from 'uuid'
 
 import {Logger} from './utils/logging'
@@ -155,15 +155,6 @@ export const closeWallet = () => async (dispatch: Dispatch<any>) => {
 export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   await dispatch(reloadAppSettings())
 
-  const onTimeoutAction = () => {
-    closeWallet()
-    dispatch(navigateFromSplash())
-  }
-
-  AppState.addEventListener('change', () => {
-    backgroundLockListener(onTimeoutAction)
-  })
-
   const state = getState()
   if (!installationIdSelector(state)) {
     dispatch(firstRunSetup())
@@ -203,6 +194,13 @@ const _setOnline = (isOnline: boolean) => (dispatch, getState) => {
   })
 }
 
+const setIsKeyboardOpen = (isOpen) => ({
+  type: 'Set isKeyboardOpen',
+  path: ['isKeyboardOpen'],
+  payload: isOpen,
+  reducer: (state, payload) => payload,
+})
+
 export const setupHooks = () => (dispatch: Dispatch<any>) => {
   Logger.debug('setting up isOnline callback')
   networkInfo.subscribe(({isOnline}) => dispatch(_setOnline(isOnline)))
@@ -212,6 +210,24 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
   walletManager.subscribe(() => dispatch(mirrorTxHistory()))
   walletManager.subscribeBackgroundSyncError((err) =>
     dispatch(setBackgroundSyncError(err)),
+  )
+
+  Logger.debug('setting up app lock')
+  const onTimeoutAction = () => {
+    closeWallet()
+    dispatch(navigateFromSplash())
+  }
+
+  AppState.addEventListener('change', () => {
+    backgroundLockListener(onTimeoutAction)
+  })
+
+  Logger.debug('setting up keyboard manager')
+  Keyboard.addListener('keyboardDidShow', () =>
+    dispatch(setIsKeyboardOpen(true)),
+  )
+  Keyboard.addListener('keyboardDidHide', () =>
+    dispatch(setIsKeyboardOpen(false)),
   )
 }
 
