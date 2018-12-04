@@ -4,16 +4,12 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
-import {View} from 'react-native'
 
-import Screen from '../Screen'
-import Text from '../UiKit/Text'
-import Button from '../UiKit/Button'
+import {Button} from '../UiKit'
+import FingerprintScreenBase from '../Common/FingerprintScreenBase'
 import {setSystemAuth, showErrorDialog} from '../../actions'
 import {SETTINGS_ROUTES} from '../../RoutesList'
 import {enrolledFingerprintsSelector} from '../../selectors'
-import {withNavigationTitle} from '../../utils/renderUtils'
-
 import styles from './styles/BiometricsLinkScreen.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
@@ -33,20 +29,27 @@ const BiometricsLinkScreen = ({
   linkBiometricsSignIn,
   cancelLinking,
 }: Props) => (
-  <Screen scroll>
-    <View style={styles.root}>
-      {!hasEnrolledFingerprints ? (
-        <Text>{translations.enableFingerprintsMessage}</Text>
-      ) : null}
-
-      <Button title={translations.notNowButton} onPress={cancelLinking} />
+  <FingerprintScreenBase
+    headings={translations.headings}
+    subHeadings={translations.subHeadings}
+    buttons={[
       <Button
+        key={'cancel'}
+        outline
+        title={translations.notNowButton}
+        onPress={cancelLinking}
+        containerStyle={styles.cancel}
+      />,
+      <Button
+        key={'link'}
         title={translations.linkButton}
         onPress={linkBiometricsSignIn}
         disabled={!hasEnrolledFingerprints}
-      />
-    </View>
-  </Screen>
+        containerStyle={styles.link}
+      />,
+    ]}
+    error={!hasEnrolledFingerprints && translations.enableFingerprintsMessage}
+  />
 )
 
 export default compose(
@@ -57,7 +60,6 @@ export default compose(
     }),
     {setSystemAuth},
   ),
-  withNavigationTitle(({translations}) => translations.title),
   withHandlers({
     linkBiometricsSignIn: ({navigation, setSystemAuth}) => () => {
       setSystemAuth(true)

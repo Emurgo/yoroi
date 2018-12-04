@@ -61,7 +61,12 @@ const SettingsScreenNavigator = createStackNavigator(
     [SETTINGS_ROUTES.CHANGE_WALLET_NAME]: ChangeWalletName,
     [SETTINGS_ROUTES.TERMS_OF_USE]: TermsOfServiceScreen,
     [SETTINGS_ROUTES.SUPPORT]: SupportScreen,
-    [SETTINGS_ROUTES.FINGERPRINT_LINK]: BiometricsLinkScreen,
+    [SETTINGS_ROUTES.FINGERPRINT_LINK]: {
+      screen: BiometricsLinkScreen,
+      navigationOptions: {
+        header: null,
+      },
+    },
     [SETTINGS_ROUTES.REMOVE_WALLET]: RemoveWalletScreen,
     [SETTINGS_ROUTES.CHANGE_LANGUAGE]: {
       screen: LanguagePickerScreen,
