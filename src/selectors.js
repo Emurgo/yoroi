@@ -85,10 +85,13 @@ export const isSynchronizingHistorySelector = (state: State): boolean =>
 export const lastHistorySyncErrorSelector = (state: State): any =>
   state.txHistory.lastSyncError
 
+export const getUtxoBalance = (utxos: Array<RawUtxo>) =>
+  BigNumberSum(utxos.map(({amount}) => amount))
+
 export const utxoBalanceSelector = (state: State) =>
   state.balance.isFetching || !state.balance.utxos
     ? null
-    : BigNumberSum(state.balance.utxos.map(({amount}) => amount))
+    : getUtxoBalance(state.balance.utxos)
 
 export const walletIsInitializedSelector = (state: State): boolean =>
   state.wallet.isInitialized

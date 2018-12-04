@@ -220,7 +220,15 @@ const l10n = {
     amountInput: {
       label: 'Amount',
       errors: {
-        invalidAmount: 'Please enter valid amount',
+        invalidAmount: {
+          // Note(ppershing): first two should be auto-corrected
+          // by the input control
+          INVALID_AMOUNT: 'Please enter valid amount',
+          TOO_MANY_DECIMAL_PLACES: 'Please enter valid amount',
+
+          TOO_LARGE: 'Amount too large',
+          NEGATIVE: 'Amount must be positive',
+        },
         insufficientBalance: 'Not enough money to make this transaction',
       },
     },

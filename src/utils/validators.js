@@ -6,7 +6,7 @@ import {containsUpperCase, containsLowerCase, isNumeric} from '../utils/string'
 import {CONFIG} from '../config'
 import {isValidAddress} from '../crypto/util'
 import assert from '../utils/assert'
-import {parseAdaDecimal, InvalidAdaAmount} from '../utils/format'
+import {parseAdaDecimal, InvalidAdaAmount} from '../utils/parsing'
 
 export type PasswordValidationErrors = {
   passwordReq?: boolean,
@@ -27,7 +27,7 @@ export type AddressValidationErrors = {
 
 export type AmountValidationErrors = {
   amountIsRequired?: boolean,
-  invalidAmount?: boolean,
+  invalidAmount?: $Values<typeof InvalidAdaAmount.ERROR_CODES>,
 }
 
 export type BalanceValidationErrors = {
@@ -167,7 +167,7 @@ export const validateAmount = (value: string): AmountValidationErrors => {
     return {}
   } catch (e) {
     if (e instanceof InvalidAdaAmount) {
-      return {invalidAmount: true}
+      return {invalidAmount: e.errorCode}
     }
     throw e
   }
