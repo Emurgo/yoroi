@@ -5,12 +5,12 @@ import {COLORS} from '../../../styles/config'
 export default StyleSheet.create({
   root: {
     flex: 1,
+    backgroundColor: COLORS.BACKGROUND_BLUE,
   },
-  titleContainer: {
-    flex: 1,
-    backgroundColor: COLORS.DARK_BLUE,
+  infoContainer: {
+    flex: 3,
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
   },
   title: {
     color: COLORS.WHITE,
@@ -19,38 +19,31 @@ export default StyleSheet.create({
   },
   subtitle: {
     color: COLORS.WHITE,
-    fontSize: 17,
-  },
-  subtitleContainer: {
-    backgroundColor: COLORS.DARK_BLUE,
-    alignItems: 'center',
-    paddingBottom: 30,
+    fontSize: 14,
+    marginVertical: 5,
+    maxWidth: '60%',
+    minHeight: 30,
+    flexWrap: 'wrap',
+    textAlign: 'center',
   },
   pinContainer: {
-    flex: 0,
-    backgroundColor: COLORS.DARK_BLUE,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  pinActive: {
-    width: 20,
-    height: 20,
+  pin: {
+    width: 12,
+    height: 12,
     borderRadius: 10,
-    margin: 15,
+    marginHorizontal: 15,
     backgroundColor: COLORS.WHITE,
   },
   pinInactive: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    margin: 15,
     opacity: 0.5,
-    backgroundColor: COLORS.WHITE,
   },
   keyboardSafeAreaView: {
     backgroundColor: '#D8D8D8',
-    flex: 1,
+    flex: 2,
   },
   keyboard: {
     flex: 1,
@@ -67,7 +60,7 @@ export default StyleSheet.create({
     borderTopWidth: 2 * StyleSheet.hairlineWidth,
     borderLeftWidth: StyleSheet.hairlineWidth,
     borderRightWidth: StyleSheet.hairlineWidth,
-    borderColor: '#8C8C8C',
+    borderColor: '#B7B7B7',
   },
   keyboardKeyDisabled: {
     backgroundColor: '#D8D8D8',

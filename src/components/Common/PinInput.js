@@ -1,11 +1,12 @@
 import React from 'react'
 import {compose} from 'redux'
 import _ from 'lodash'
-import {View, TouchableHighlight} from 'react-native'
+import {Image, View, TouchableHighlight} from 'react-native'
 import {withStateHandlers, withHandlers} from 'recompose'
 import {SafeAreaView} from 'react-navigation'
 
 import Text from '../../components/UiKit/Text'
+import backspaceIcon from '../../assets/img/backspace.png'
 
 import styles from './styles/PinInput.style'
 
@@ -39,20 +40,26 @@ const processPin = async (pin, setPin, pinMaxLength, keyDown, onPinEnter) => {
 }
 
 const PinPlaceholder = ({isActive}) => (
-  <View style={isActive ? styles.pinActive : styles.pinInactive} />
+  <View style={[styles.pin, !isActive && styles.pinInactive]} />
 )
 
 const KeyboardKey = ({value, onKeyDown}) => {
-  const isDisabled = value === ''
+  const isEmpty = value === ''
+  const isBackspace = value === BACKSPACE
+  const isDigit = !isEmpty && !isBackspace
 
   return (
     <TouchableHighlight
-      style={[styles.keyboardKey, isDisabled && styles.keyboardKeyDisabled]}
+      style={[styles.keyboardKey, !isDigit && styles.keyboardKeyDisabled]}
       onPress={onKeyDown}
-      underlayColor="#e8e8e8"
-      disabled={isDisabled}
+      underlayColor="#bbbbbb"
+      disabled={isEmpty}
     >
-      <Text style={styles.keyboardKeyText}>{value}</Text>
+      {isBackspace ? (
+        <Image source={backspaceIcon} />
+      ) : (
+        <Text style={styles.keyboardKeyText}>{value}</Text>
+      )}
     </TouchableHighlight>
   )
 }
@@ -85,20 +92,19 @@ const PinInput = ({
   onPinEnter,
 }: Props) => (
   <View style={styles.root}>
-    <View style={styles.titleContainer}>
+    <View style={styles.infoContainer}>
       <Text style={styles.title}>{labels.title}</Text>
-    </View>
 
-    <View style={styles.pinContainer}>
-      {_.range(0, pinMaxLength).map((index) => (
-        <PinPlaceholder key={index} isActive={index < pin.length} />
-      ))}
-    </View>
-
-    <View style={styles.subtitleContainer}>
       <Text style={styles.subtitle}>{labels.subtitle}</Text>
       <Text style={styles.subtitle}>{labels.subtitle2}</Text>
+
+      <View style={styles.pinContainer}>
+        {_.range(0, pinMaxLength).map((index) => (
+          <PinPlaceholder key={index} isActive={index < pin.length} />
+        ))}
+      </View>
     </View>
+
     <SafeAreaView style={styles.keyboardSafeAreaView}>
       <View style={styles.keyboard}>
         {keyboard.map((row, rowIndex) => (
