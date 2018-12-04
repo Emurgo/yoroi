@@ -20,7 +20,11 @@ import {
   getUtxoBalance,
 } from '../../selectors'
 import {Logger} from '../../utils/logging'
-import {withTranslations, withNavigationTitle} from '../../utils/renderUtils'
+import {
+  withTranslations,
+  withNavigationTitle,
+  throttleProps,
+} from '../../utils/renderUtils'
 import {formatAda} from '../../utils/format'
 import {parseAdaDecimal} from '../../utils/parsing'
 import walletManager from '../../crypto/wallet'
@@ -112,6 +116,8 @@ const AvailableAmount = withTranslations(getTranslations)(
     </Text>
   ),
 )
+
+const ThrottledText = throttleProps(300, {trailing: true})(Text)
 
 const getAmountErrorText = (translations, amountErrors, balanceErrors) => {
   if (amountErrors.invalidAmount != null) {
@@ -302,11 +308,11 @@ class SendScreen extends Component<Props, State> {
     }
 
     return (
-      <Text>
+      <ThrottledText>
         {translations.balanceAfter.label}
         {': '}
         {value}
-      </Text>
+      </ThrottledText>
     )
   }
 
@@ -324,11 +330,11 @@ class SendScreen extends Component<Props, State> {
     }
 
     return (
-      <Text>
+      <ThrottledText>
         {translations.fee.label}
         {': '}
         {value}
-      </Text>
+      </ThrottledText>
     )
   }
 

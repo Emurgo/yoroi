@@ -4,8 +4,9 @@ import React, {unstable_Profiler as Profiler} from 'react'
 import {connect} from 'react-redux'
 import {Text} from 'react-native'
 import {compose} from 'redux'
-import {Logger} from './logging'
+import _ from 'lodash'
 
+import {Logger} from './logging'
 import {walletIsInitializedSelector} from '../selectors'
 
 import type {State} from '../state'
@@ -170,3 +171,42 @@ export const requireInitializedWallet = compose(
     () => <Text>l10n Please wait while wallet is initialized...</Text>,
   ),
 )
+
+// inspired by
+// https://gitlab.com/ryo33/react-throttle-render/blob/master/src/index.js
+// We keep it here for safety as the npm package does not seem to be
+// have too many users and there is not much activity in the repo either
+export const throttleProps = <Props: {}>(wait: number, options: any) => (
+  BaseComponent: ComponentType<Props>,
+): ComponentType<Props> =>
+  class Throttle extends React.Component<any, any> {
+    state = {}
+
+    throttledSetState = _.throttle(
+      (nextState) => this.setState(nextState),
+      wait,
+      options,
+    )
+
+    // eslint-disable-next-line react/no-deprecated
+    componentWillMount() {
+      this.throttledSetState({props: this.props})
+    }
+
+    // eslint-disable-next-line react/no-deprecated
+    componentWillReceiveProps(nextProps) {
+      this.throttledSetState({props: nextProps})
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+      return this.state !== nextState
+    }
+
+    componentWillUnmount() {
+      this.throttledSetState.cancel()
+    }
+
+    render() {
+      return React.createElement(BaseComponent, this.state.props)
+    }
+  }
