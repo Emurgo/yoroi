@@ -190,4 +190,47 @@ describe('signTransaction', () => {
     // expect(await promise).not.toBeNull()
     await expect(promise).rejects.toBeInstanceOf(InsufficientFunds)
   })
+
+  it('can handle big amounts', async () => {
+    expect.assertions(1)
+    const outputs = [
+      {
+        address: outputAddress,
+        value: '11111111111111000000',
+      },
+    ]
+
+    const promise = signTransaction(wallet, inputs, outputs, change)
+    await expect(promise).rejects.toBeInstanceOf(InsufficientFunds)
+  })
+
+  it('can handle insanely huge amounts', async () => {
+    expect.assertions(1)
+    const outputs = [
+      {
+        address: outputAddress,
+        value: '1234567891234567890123456789000000',
+      },
+    ]
+
+    const promise = signTransaction(wallet, inputs, outputs, change)
+    await expect(promise).rejects.toBeInstanceOf(InsufficientFunds)
+  })
+
+  it('can handle multiple big amounts', async () => {
+    expect.assertions(1)
+    const outputs = [
+      {
+        address: outputAddress,
+        value: '44000000000000000',
+      },
+      {
+        address: outputAddress,
+        value: '44000000000000000',
+      },
+    ]
+
+    const promise = signTransaction(wallet, inputs, outputs, change)
+    await expect(promise).rejects.toBeInstanceOf(InsufficientFunds)
+  })
 })
