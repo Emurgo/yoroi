@@ -198,12 +198,10 @@ const l10n = {
     scanCode: 'Scan QR code',
     fee: {
       label: 'Fee',
-      isCalculating: 'calculating...',
       notAvailable: '-',
     },
     balanceAfter: {
       label: 'Balance after',
-      isCalculating: 'calculating...',
       notAvailable: '-',
     },
     availableAmount: {
