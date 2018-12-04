@@ -3,7 +3,7 @@
 import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {withState, withHandlers} from 'recompose'
+import {withStateHandlers, withHandlers} from 'recompose'
 import {View, KeyboardAvoidingView, Platform} from 'react-native'
 import {SafeAreaView} from 'react-navigation'
 import _ from 'lodash'
@@ -18,22 +18,22 @@ import styles from './styles/ChangeWalletName.style'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 import type {WalletNameValidationErrors} from '../../utils/validators'
+import type {ComponentType} from 'react'
+import type {Navigation} from '../../types/navigation'
 
 const getTranslations = (state) => state.trans.ChangeWalletNameScreen
 
 type Props = {
-  newName: string,
-  oldName: string,
-  walletNames: Array<string>,
-  onChangeText: (string) => void,
-  changeAndNavigate: () => void,
+  walletName: string,
+  setWalletName: (string) => any,
+  changeAndNavigate: () => any,
   translations: SubTranslation<typeof getTranslations>,
   validateWalletName: () => WalletNameValidationErrors,
 }
 
 const ChangeWalletName = ({
-  newName,
-  onChangeText,
+  walletName,
+  setWalletName,
   changeAndNavigate,
   translations,
   validateWalletName,
@@ -50,8 +50,8 @@ const ChangeWalletName = ({
         <View style={styles.content}>
           <ValidatedTextInput
             label={translations.walletNameInput.label}
-            value={newName}
-            onChangeText={onChangeText}
+            value={walletName}
+            onChangeText={setWalletName}
             error={getWalletNameError(
               translations.walletNameInput.errors,
               validationErrors,
@@ -70,7 +70,7 @@ const ChangeWalletName = ({
   )
 }
 
-export default compose(
+export default (compose(
   connect(
     (state) => ({
       translations: getTranslations(state),
@@ -80,28 +80,34 @@ export default compose(
     {changeWalletName},
   ),
   withNavigationTitle(({translations}) => translations.title),
-  withState('newName', 'setNewName', ({oldName}) => oldName),
+  withStateHandlers(
+    ({oldName}) => ({
+      walletName: oldName,
+    }),
+    {
+      setWalletName: (state) => (value) => ({walletName: value}),
+    },
+  ),
   withHandlers({
-    validateWalletName: ({newName, oldName, walletNames}) => () =>
-      validateWalletName(newName, oldName, walletNames),
+    validateWalletName: ({walletName, oldName, walletNames}) => () =>
+      validateWalletName(walletName, oldName, walletNames),
   }),
   withHandlers({
-    onChangeText: ({setNewName}) => (value) => setNewName(value),
     changeAndNavigate: ({
       navigation,
-      newName,
+      walletName,
       changeWalletName,
       translations,
       validateWalletName,
     }) => async () => {
-      if (!_.isEmpty(validateWalletName(newName))) return
+      if (!_.isEmpty(validateWalletName())) return
 
       try {
-        await changeWalletName(newName)
+        await changeWalletName(walletName)
         navigation.goBack()
       } catch (e) {
         await showErrorDialog((dialogs) => dialogs.general)
       }
     },
   }),
-)(ChangeWalletName)
+)(ChangeWalletName): ComponentType<{|navigation: Navigation|}>)
