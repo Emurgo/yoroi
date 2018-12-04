@@ -192,6 +192,11 @@ const l10n = {
     formatConfirmations: (cnt: number) =>
       `${cnt} ${pluralizeEn(cnt, 'CONFIRMATION', 'CONFIRMATIONS')}`,
     formatOmittedCount: (cnt: number) => `+ ${cnt} omitted`,
+    addressPrefix: {
+      receive: (idx: number) => `/${idx}`,
+      change: (idx: number) => '/change',
+      notMine: 'not mine',
+    },
   },
   SendAdaScreen: {
     title: 'Send',

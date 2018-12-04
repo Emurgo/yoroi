@@ -53,6 +53,7 @@ const AddressEntry = withHandlers({
 })
 
 const getShownAddresses = (
+  translations,
   transaction,
   internalAddressIndex,
   externalAddressIndex,
@@ -62,11 +63,13 @@ const getShownAddresses = (
   const isMyAddress = (address) => isMyReceive(address) || isMyChange(address)
 
   const getPath = (address) => {
-    if (isMyChange(address)) return '/change'
     if (isMyReceive(address)) {
-      return `/${externalAddressIndex[address]}`
+      return translations.addressPrefix.receive(externalAddressIndex[address])
+    } else if (isMyChange(address)) {
+      return translations.addressPrefix.change(internalAddressIndex[address])
+    } else {
+      return translations.addressPrefix.notMine
     }
-    return 'not mine'
   }
 
   const {isHighlightedFrom, filterFrom, isHighlightedTo, filterTo} = {
@@ -141,7 +144,12 @@ const TxDetails = ({
     cntOmittedFrom,
     toFiltered,
     cntOmittedTo,
-  } = getShownAddresses(transaction, internalAddressIndex, externalAddressIndex)
+  } = getShownAddresses(
+    translations,
+    transaction,
+    internalAddressIndex,
+    externalAddressIndex,
+  )
 
   return (
     <View style={styles.container}>
