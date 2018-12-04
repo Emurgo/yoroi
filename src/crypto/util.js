@@ -32,7 +32,14 @@ const KNOWN_ERROR_MSG = {
   DECRYPT_FAILED: 'Decryption failed. Check your password.',
   INSUFFICIENT_FUNDS_RE: /NotEnoughInput/,
   SIGN_TX_BUG: /TxBuildError\(CoinError\(Negative\)\)/,
+  // over 45000000000000000
+  AMOUNT_OVERFLOW1: /Coin of value [0-9]+ is out of bound./,
+  // way over 45000000000000000
+  AMOUNT_OVERFLOW2: /ParseIntError { kind: Overflow }"/,
+  // output sum over 45000000000000000
+  AMOUNT_SUM_OVERFLOW: /CoinError\(OutOfBound/,
 }
+
 export type EncryptionMethod = 'BIOMETRICS' | 'SYSTEM_PIN' | 'MASTER_PASSWORD'
 
 export const getMasterKeyFromMnemonic = async (mnemonic: string) => {
@@ -161,6 +168,15 @@ export const signTransaction = async (
       throw new InsufficientFunds()
     }
     if (KNOWN_ERROR_MSG.SIGN_TX_BUG.test(e.message)) {
+      throw new InsufficientFunds()
+    }
+    // TODO(ppershing): these should be probably tested as a precondition
+    // before calling Wallet.spend but I expect some additional corner cases
+    if (
+      KNOWN_ERROR_MSG.AMOUNT_OVERFLOW1.test(e.message) ||
+      KNOWN_ERROR_MSG.AMOUNT_OVERFLOW2.test(e.message) ||
+      KNOWN_ERROR_MSG.AMOUNT_SUM_OVERFLOW.test(e.message)
+    ) {
       throw new InsufficientFunds()
     }
     throw new CardanoError(e.message)

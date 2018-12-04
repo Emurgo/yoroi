@@ -334,7 +334,7 @@ export class Wallet {
   ): Promise<PreparedTransactionData> {
     const inputs = utxos.map((utxo) => this.transformUtxoToInput(utxo))
 
-    const outputs = [{address: receiverAddress, value: amount.toString()}]
+    const outputs = [{address: receiverAddress, value: amount.toFixed(0)}]
     const changeAddress = this.getChangeAddress()
     const fakeWallet = await util.generateFakeWallet()
     const fakeTx = await util.signTransaction(
