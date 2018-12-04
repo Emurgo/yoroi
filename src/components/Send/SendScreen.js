@@ -19,7 +19,6 @@ import {
   hasPendingOutgoingTransactionSelector,
   getUtxoBalance,
 } from '../../selectors'
-import {Logger} from '../../utils/logging'
 import {withTranslations, withNavigationTitle} from '../../utils/renderUtils'
 import {formatAda} from '../../utils/format'
 import {parseAdaDecimal} from '../../utils/parsing'
@@ -29,7 +28,6 @@ import AmountField from './AmountField'
 import UtxoAutoRefresher from './UtxoAutoRefresher'
 import {InsufficientFunds} from '../../crypto/errors'
 import WarningBanner from './WarningBanner'
-import assert from '../../utils/assert'
 
 import styles from './styles/SendScreen.style'
 
@@ -49,55 +47,30 @@ const getTransactionData = (utxos, address, amount) => {
   return walletManager.prepareTransaction(utxos, address, adaAmount)
 }
 
-const tryCalculateFeeAsync = async ({
-  utxos,
-  address,
-  amount,
-}): Promise<{
-  fee?: BigNumber,
-  balanceAfter?: BigNumber,
-  errors: BalanceValidationErrors,
-}> => {
-  const wrongInputResult = {errors: {}}
+const recomupteAll = async ({amount, address, utxos}) => {
+  const amountErrors = validateAmount(amount)
+  const addressErrors = await validateAddressAsync(address)
+  let balanceErrors = {}
+  let fee = null
+  let balanceAfter = null
 
-  if (!utxos) {
-    return wrongInputResult
-  }
+  if (_.isEmpty(addressErrors) && _.isEmpty(amountErrors) && utxos) {
+    try {
+      const parsedAmount = parseAdaDecimal(amount)
+      const {fee: _fee} = await getTransactionData(utxos, address, amount)
+      balanceAfter = getUtxoBalance(utxos)
+        .minus(parsedAmount)
+        .minus(_fee)
 
-  const addressError = await validateAddressAsync(address)
-  const amountError = validateAmount(amount)
-
-  if (!_.isEmpty({...addressError, ...amountError})) {
-    return wrongInputResult
-  }
-
-  try {
-    const parsedAmount = parseAdaDecimal(amount)
-    const {fee} = await getTransactionData(utxos, address, amount)
-    const balanceAfter = getUtxoBalance(utxos)
-      .minus(parsedAmount)
-      .minus(fee)
-    return {errors: {}, fee, balanceAfter}
-  } catch (err) {
-    if (err instanceof InsufficientFunds) {
-      return {errors: {insufficientBalance: true}}
-    } else {
-      // TODO: we should show notification based on error type
-      Logger.error('Failed while preparing transaction', err)
+      // now we can update fee as well
+      fee = _fee
+    } catch (err) {
+      if (err instanceof InsufficientFunds) {
+        balanceErrors = {insufficientBalance: true}
+      }
     }
   }
-
-  return wrongInputResult
-}
-
-const hasValidationErrorsAsync = async ({amount, address, utxos}) => {
-  const errors = await Promise.all([
-    validateAmount(amount),
-    validateAddressAsync(address),
-    tryCalculateFeeAsync({utxos, address, amount}).then(({errors}) => errors),
-  ])
-
-  return errors.some((e) => !_.isEmpty(e))
+  return {amountErrors, addressErrors, balanceErrors, fee, balanceAfter}
 }
 
 const AvailableAmount = withTranslations(getTranslations)(
@@ -143,7 +116,6 @@ type State = {
   amount: string,
   amountErrors: AmountValidationErrors,
   balanceErrors: BalanceValidationErrors,
-  isCalculatingFee: boolean,
   fee: ?BigNumber,
   balanceAfter: ?BigNumber,
 }
@@ -157,7 +129,6 @@ class SendScreen extends Component<Props, State> {
     fee: null,
     balanceAfter: null,
     balanceErrors: {},
-    isCalculatingFee: false,
   }
 
   componentDidMount() {
@@ -174,53 +145,17 @@ class SendScreen extends Component<Props, State> {
     const prevUtxos = prevProps.utxos
     const {address: prevAddress, amount: prevAmount} = prevState
 
-    if (amount !== prevAmount) {
-      this.handleValidateAmount(amount)
-    }
-    if (address !== prevAddress) {
-      this.handleValidateAddressAsync(address)
-    }
     if (
-      amount !== prevAmount ||
-      address !== prevAddress ||
-      utxos !== prevUtxos
+      prevUtxos !== utxos ||
+      prevAddress !== address ||
+      prevAmount !== amount
     ) {
-      this.handleValidateFeeAsync({address, amount, utxos})
+      this.revalidate({utxos, address, amount})
     }
   }
 
-  handleValidateAmount = (amount) => {
-    const amountErrors = validateAmount(amount)
-
-    assert.assert(
-      this.state.amount === amount,
-      'Amount should not have changed synchronously',
-    )
-    this.setState({amountErrors})
-  }
-
-  handleValidateAddressAsync = async (address) => {
-    const addressErrors = await validateAddressAsync(address)
-
-    if (this.state.address !== address) {
-      return
-    }
-
-    this.setState({addressErrors})
-  }
-
-  handleValidateFeeAsync = async ({address, amount, utxos}) => {
-    this.setState({fee: null, balanceAfter: null, isCalculatingFee: true})
-
-    const {
-      errors: balanceErrors,
-      fee,
-      balanceAfter,
-    } = await tryCalculateFeeAsync({
-      utxos,
-      address,
-      amount,
-    })
+  async revalidate({utxos, address, amount}) {
+    const newState = await recomupteAll({utxos, address, amount})
 
     if (
       this.state.address !== address ||
@@ -230,12 +165,7 @@ class SendScreen extends Component<Props, State> {
       return
     }
 
-    this.setState((prevState) => ({
-      balanceErrors,
-      isCalculatingFee: false,
-      fee,
-      balanceAfter,
-    }))
+    this.setState(newState)
   }
 
   handleAddressChange: (string) => void
@@ -246,34 +176,43 @@ class SendScreen extends Component<Props, State> {
 
   handleConfirm: () => Promise<void>
   handleConfirm = async () => {
-    const {navigation, utxos, availableAmount} = this.props
+    const {navigation, utxos} = this.props
     const {address, amount} = this.state
 
-    const hasValidationErrors = await hasValidationErrorsAsync({
+    const {
+      addressErrors,
+      amountErrors,
+      balanceErrors,
+      balanceAfter,
+    } = await recomupteAll({
       amount,
       address,
       utxos,
     })
 
+    // Note(ppershing): use this.props as they might have
+    // changed during await
     const isValid =
-      !hasValidationErrors &&
+      this.props.isOnline &&
+      !this.props.hasPendingOutgoingTransaction &&
+      !this.props.isFetchingBalance &&
+      utxos &&
+      _.isEmpty(addressErrors) &&
+      _.isEmpty(amountErrors) &&
+      _.isEmpty(balanceErrors) &&
       this.state.amount === amount &&
       this.state.address === address &&
       this.props.utxos === utxos
 
-    if (isValid && utxos) {
-      const adaAmount = parseAdaDecimal(amount)
+    if (isValid) {
+      /* :: if (!utxos) throw 'assert' */
       const transactionData = await getTransactionData(utxos, address, amount)
-
-      const balanceAfterTx = availableAmount
-        .minus(adaAmount)
-        .minus(transactionData.fee)
 
       navigation.navigate(SEND_ROUTES.CONFIRM, {
         address,
-        amount: adaAmount,
+        amount: parseAdaDecimal(amount),
         transactionData,
-        balanceAfterTx,
+        balanceAfterTx: balanceAfter,
       })
     }
   }
@@ -289,17 +228,12 @@ class SendScreen extends Component<Props, State> {
   }
 
   renderBalanceAfterTransaction = () => {
-    const {balanceAfter, isCalculatingFee} = this.state
+    const {balanceAfter} = this.state
     const {translations} = this.props
 
-    let value = ''
-    if (isCalculatingFee) {
-      value = translations.balanceAfter.isCalculating
-    } else if (!balanceAfter) {
-      value = translations.balanceAfter.notAvailable
-    } else {
-      value = formatAda(balanceAfter)
-    }
+    const value = balanceAfter
+      ? formatAda(balanceAfter)
+      : translations.balanceAfter.notAvailable
 
     return (
       <Text>
@@ -311,17 +245,10 @@ class SendScreen extends Component<Props, State> {
   }
 
   renderFee = () => {
-    const {isCalculatingFee, fee} = this.state
+    const {fee} = this.state
     const {translations} = this.props
 
-    let value = ''
-    if (isCalculatingFee) {
-      value = translations.fee.isCalculating
-    } else if (!fee) {
-      value = translations.fee.notAvailable
-    } else {
-      value = formatAda(fee)
-    }
+    const value = fee ? formatAda(fee) : translations.fee.notAvailable
 
     return (
       <Text>
@@ -368,6 +295,7 @@ class SendScreen extends Component<Props, State> {
       availableAmount,
       isFetchingBalance,
       lastFetchingError,
+      utxos,
       isOnline,
       hasPendingOutgoingTransaction,
     } = this.props
@@ -380,16 +308,17 @@ class SendScreen extends Component<Props, State> {
       balanceErrors,
     } = this.state
 
-    const disabled =
-      isFetchingBalance ||
-      lastFetchingError ||
-      !_.isEmpty({
+    const isValid =
+      isOnline &&
+      !hasPendingOutgoingTransaction &&
+      !isFetchingBalance &&
+      !lastFetchingError &&
+      utxos &&
+      _.isEmpty({
         ...addressErrors,
         ...amountErrors,
         ...balanceErrors,
-      }) ||
-      !isOnline ||
-      hasPendingOutgoingTransaction
+      })
 
     return (
       <View style={styles.root}>
@@ -439,7 +368,7 @@ class SendScreen extends Component<Props, State> {
           <Button
             onPress={this.handleConfirm}
             title={translations.continueButton}
-            disabled={disabled}
+            disabled={!isValid}
           />
         </ScrollView>
       </View>
