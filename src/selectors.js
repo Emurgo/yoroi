@@ -50,7 +50,7 @@ export const externalAddressIndexSelector = createSelector(
 export const isUsedAddressIndexSelector = (state: State) =>
   state.wallet.isUsedAddressIndex
 
-const BigNumberSum = (data: Array<BigNumber>): BigNumber =>
+const BigNumberSum = (data: Array<BigNumber | string>): BigNumber =>
   data.reduce((x: BigNumber, y) => x.plus(y), new BigNumber(0))
 
 export const availableAmountSelector = createSelector(

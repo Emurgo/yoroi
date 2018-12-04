@@ -170,6 +170,7 @@ const setLanguage = (code: string) => {
   )
   strings.setLanguage(code)
   moment.locale(momentLocales[code])
+  // $FlowFixMe
   BigNumber.config({
     FORMAT: numberLocales[code],
   })
