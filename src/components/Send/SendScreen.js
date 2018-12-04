@@ -297,13 +297,42 @@ class SendScreen extends Component<Props, State> {
     )
   }
 
+  renderErrorBanners = () => {
+    const {
+      translations,
+      isOnline,
+      lastFetchingError,
+      isFetchingBalance,
+      hasPendingOutgoingTransaction,
+      fetchUTXOs,
+    } = this.props
+
+    if (!isOnline) {
+      return <OfflineBanner />
+    } else if (lastFetchingError && !isFetchingBalance) {
+      return (
+        <WarningBanner
+          text={translations.errorBanners.networkError}
+          action={fetchUTXOs}
+        />
+      )
+    } else if (hasPendingOutgoingTransaction) {
+      return (
+        <WarningBanner
+          text={translations.errorBanners.pendingOutgoingTransaction}
+        />
+      )
+    } else {
+      return null
+    }
+  }
+
   render() {
     const {
       translations,
       availableAmount,
       isFetchingBalance,
       lastFetchingError,
-      fetchUTXOs,
       isOnline,
       hasPendingOutgoingTransaction,
     } = this.props
@@ -329,16 +358,10 @@ class SendScreen extends Component<Props, State> {
 
     return (
       <View style={styles.root}>
-        <OfflineBanner />
         <UtxoAutoRefresher />
+        {this.renderErrorBanners()}
 
         <ScrollView style={styles.container}>
-          {lastFetchingError && !isFetchingBalance ? (
-            <WarningBanner
-              text={translations.errorBanners.networkError}
-              action={fetchUTXOs}
-            />
-          ) : null}
           <View style={styles.header}>
             <AvailableAmount
               isFetching={isFetchingBalance}
@@ -379,12 +402,6 @@ class SendScreen extends Component<Props, State> {
               }
             />
           </View>
-
-          {hasPendingOutgoingTransaction && (
-            <WarningBanner
-              text={translations.errorBanners.pendingOutgoingTransaction}
-            />
-          )}
 
           <Button
             onPress={this.handleConfirm}
