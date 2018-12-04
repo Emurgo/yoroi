@@ -10,6 +10,7 @@ import {changeLanguage} from './actions/language'
 import {
   canFingerprintEncryptionBeEnabled,
   recreateAppSignInKeys,
+  removeAppSignInKeys,
 } from './helpers/deviceSettings'
 import l10n from './l10n'
 import {backgroundLockListener} from './helpers/backgroundLockHelper'
@@ -17,6 +18,7 @@ import {encryptCustomPin} from './crypto/customPin'
 import {
   readAppSettings,
   writeAppSettings,
+  removeAppSettings,
   AppSettingsError,
   APP_SETTINGS_KEYS,
   type AppSettingsKey,
@@ -44,6 +46,19 @@ export const setAppSettingField = (fieldName: AppSettingsKey, value: any) => (
     path: ['appSettings', fieldName],
     payload: value,
     type: 'SET_APP_SETTING_FIELD',
+    reducer: (state, payload) => payload,
+  })
+}
+
+export const clearAppSettingField = (fieldName: AppSettingsKey) => async (
+  dispatch: Dispatch<any>,
+) => {
+  await removeAppSettings(fieldName)
+
+  dispatch({
+    path: ['appSettings', fieldName],
+    payload: null,
+    type: 'REMOVE_APP_SETTING_FIELD',
     reducer: (state, payload) => payload,
   })
 }
@@ -93,6 +108,13 @@ export const encryptAndStoreCustomPin = (pin: string) => async (
   }
   const customPinHash = await encryptCustomPin(installationId, pin)
   dispatch(setAppSettingField(APP_SETTINGS_KEYS.CUSTOM_PIN_HASH, customPinHash))
+}
+
+export const removeCustomPin = () => async (
+  dispatch: Dispatch<any>,
+  getState: () => State,
+) => {
+  await dispatch(clearAppSettingField(APP_SETTINGS_KEYS.CUSTOM_PIN_HASH))
 }
 
 export const navigateFromSplash = () => (
@@ -255,23 +277,31 @@ export const showErrorDialog = (
     Alert.alert(title, message, buttons, {cancelable: false})
   })
 
-export const setSystemAuth = (isEnabled: boolean) => async (
+export const setSystemAuth = (enable: boolean) => async (
   dispatch: Dispatch<any>,
   getState: any,
 ) => {
   const canBeDisabled = walletManager.canBiometricsSignInBeDisabled()
 
-  if (!isEnabled && !canBeDisabled) {
+  if (!enable && !canBeDisabled) {
     throw new Error(
       'Can not disable system auth without disabling easy confirmation.',
     )
   }
 
-  dispatch(setAppSettingField(APP_SETTINGS_KEYS.SYSTEM_AUTH_ENABLED, isEnabled))
+  dispatch(setAppSettingField(APP_SETTINGS_KEYS.SYSTEM_AUTH_ENABLED, enable))
 
   const installationId = installationIdSelector(getState())
-  if (installationId) {
+  if (!installationId) {
+    throw new Error('Installation id is not defined')
+  }
+
+  if (enable) {
     await recreateAppSignInKeys(installationId)
+
+    await dispatch(removeCustomPin())
+  } else {
+    await removeAppSignInKeys(installationId)
   }
 }
 

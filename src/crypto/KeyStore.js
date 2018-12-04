@@ -250,6 +250,7 @@ class KeyStore {
     FAILED_UNKNOWN_ERROR: KeyStore._getRejectionMessage('FAILED_UNKNOWN_ERROR'),
     CANCELED: KeyStore._getRejectionMessage('CANCELED'),
     FAILED: KeyStore._getRejectionMessage('FAILED'),
+    SWAPPED_TO_FALLBACK: KeyStore._getRejectionMessage('SWAPPED_TO_FALLBACK'),
     BIOMETRIC_PROMPT_CANCELED: KeyStore._getRejectionMessage(
       'BIOMETRIC_PROMPT_CANCELED',
     ),

@@ -360,6 +360,7 @@ your wallets first',
       'Enable use of fingerprints in device settings first!',
     notNowButton: 'Not now',
     linkButton: 'Link',
+    title: 'Enable biometrics',
   },
   BiometricsAuthScreen: {
     authorizeOperation: 'Authorize operation',
@@ -397,6 +398,7 @@ your wallets first',
   },
 
   ChoosePinScreen: {
+    title: 'Set PIN',
     PinRegistrationForm: {
       PinInput: {
         title: 'Enter the PIN',

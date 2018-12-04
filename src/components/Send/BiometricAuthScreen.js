@@ -32,6 +32,11 @@ const handleOnConfirm = async (
     onSuccess(decryptedData)
     return
   } catch (error) {
+    if (error.code === KeyStore.REJECTIONS.SWAPPED_TO_FALLBACK) {
+      setError('')
+      return
+    }
+
     if (error.code === KeyStore.REJECTIONS.CANCELED) {
       setError('')
       onFail(KeyStore.REJECTIONS.CANCELED)
@@ -92,12 +97,13 @@ export default compose(
   })),
   withState('error', 'setError', ''),
   withHandlers({
-    cancelScanning: ({navigation}) => async () => {
+    cancelScanning: () => async () => {
       await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
-      navigation.getParam('onFail')()
     },
     useFallback: ({navigation, setError, translations}) => async () => {
-      await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
+      await KeyStore.cancelFingerprintScanning(
+        KeyStore.REJECTIONS.SWAPPED_TO_FALLBACK,
+      )
       handleOnConfirm(navigation, setError, true, translations)
     },
   }),

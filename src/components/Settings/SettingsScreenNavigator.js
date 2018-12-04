@@ -17,6 +17,8 @@ import TermsOfServiceScreen from './TermsOfServiceScreen'
 import RemoveWalletScreen from './RemoveWalletScreen'
 import ChangePasswordScreen from './ChangePasswordScreen'
 import ChangeCustomPinScreen from './ChangeCustomPinScreen'
+import CustomPinScreen from '../FirstRun/CustomPinScreen'
+import BiometricAuthScreen from '../Send/BiometricAuthScreen'
 import {SETTINGS_ROUTES} from '../../RoutesList'
 import {defaultNavigationOptions} from '../../navigationOptions'
 
@@ -60,6 +62,11 @@ const SettingsScreenNavigator = createStackNavigator(
     [SETTINGS_ROUTES.EASY_COMFIRMATION]: ToggleEasyConfirmatioScreen,
     [SETTINGS_ROUTES.CHANGE_PASSWORD]: ChangePasswordScreen,
     [SETTINGS_ROUTES.CHANGE_CUSTOM_PIN]: ChangeCustomPinScreen,
+    [SETTINGS_ROUTES.BIO_AUTHENTICATE]: {
+      screen: BiometricAuthScreen,
+      navigationOptions: {header: null},
+    },
+    [SETTINGS_ROUTES.SETUP_CUSTOM_PIN]: CustomPinScreen,
   },
   {
     initialRouteName: SETTINGS_ROUTES.MAIN,

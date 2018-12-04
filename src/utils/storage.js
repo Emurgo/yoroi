@@ -7,21 +7,17 @@ import _ from 'lodash'
 
 export class StorageError extends ExtendableError {}
 
-const parseJson = (json) => {
-  // Caller is responsible for checking for undefined keys
-  if (typeof json === 'undefined') return json
-  return JSON.parse(json)
-}
-
 const checkPathFormat = (path: string) =>
   path.startsWith('/') && !path.endsWith('/')
 
+const parseJson = (json: string) =>
+  json !== null ? JSON.parse(json) : undefined
+
 export const read = async (path: string) => {
   assert.preconditionCheck(checkPathFormat(path), 'Wrong storage key path')
+
   try {
-    const json = await AsyncStorage.getItem(path)
-    // Caller is responsible for checking for undefined keys
-    return parseJson(json)
+    return parseJson(await AsyncStorage.getItem(path))
   } catch (error) {
     throw new StorageError(error.message)
   }
@@ -32,8 +28,10 @@ export const readMany = async (paths: Array<string>) => {
     _.every(paths, checkPathFormat),
     'Wrong storage key path',
   )
+
   try {
     const items = await AsyncStorage.multiGet(paths)
+
     return items.map(([key, value]) => [key, parseJson(value)])
   } catch (error) {
     throw new StorageError(error.message)
@@ -43,9 +41,10 @@ export const readMany = async (paths: Array<string>) => {
 export const write = async (path: string, data: any) => {
   assert.preconditionCheck(path.startsWith('/'), 'Wrong storage key path')
   assert.preconditionCheck(!path.endsWith('/'), 'Wrong storage key path')
+  assert.preconditionCheck(data !== undefined, 'Can not store undefined')
+
   try {
-    const json = JSON.stringify(data)
-    await AsyncStorage.setItem(path, json)
+    await AsyncStorage.setItem(path, JSON.stringify(data))
   } catch (error) {
     throw new StorageError(error.message)
   }
@@ -54,6 +53,7 @@ export const write = async (path: string, data: any) => {
 export const remove = async (path: string) => {
   assert.preconditionCheck(path.startsWith('/'), 'Wrong storage key path')
   assert.preconditionCheck(!path.endsWith('/'), 'Wrong storage key path')
+
   try {
     await AsyncStorage.removeItem(path)
   } catch (error) {

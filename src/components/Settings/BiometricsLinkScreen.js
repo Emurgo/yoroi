@@ -12,6 +12,7 @@ import Button from '../UiKit/Button'
 import {setSystemAuth, showErrorDialog} from '../../actions'
 import {SETTINGS_ROUTES} from '../../RoutesList'
 import {enrolledFingerprintsSelector} from '../../selectors'
+import {withNavigationTitle} from '../../utils/renderUtils'
 
 import styles from './styles/BiometricsLinkScreen.style'
 
@@ -56,6 +57,7 @@ export default compose(
     }),
     {setSystemAuth},
   ),
+  withNavigationTitle(({translations}) => translations.title),
   withHandlers({
     linkBiometricsSignIn: ({navigation, setSystemAuth}) => () => {
       setSystemAuth(true)

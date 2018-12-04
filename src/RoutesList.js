@@ -46,6 +46,8 @@ export const SETTINGS_ROUTES = {
   EASY_COMFIRMATION: 'easy-confirmation',
   CHANGE_PASSWORD: 'change-password',
   CHANGE_CUSTOM_PIN: 'change-custom-pin',
+  BIO_AUTHENTICATE: 'bio-authenticate',
+  SETUP_CUSTOM_PIN: 'setup-custom-pin',
 }
 
 export const WALLET_ROUTES = {
