@@ -1,34 +1,27 @@
 // @flow
-
 import React from 'react'
 import {compose} from 'redux'
-import {View} from 'react-native'
-import {withHandlers, withState} from 'recompose'
+import {withHandlers} from 'recompose'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 
-import {Text} from '../UiKit'
+import {withTranslations, withNavigationTitle} from '../../utils/renderUtils'
 
-import styles from './styles/AddressReaderQR.style'
+import type {Navigation} from '../../types/navigation'
+import type {ComponentType} from 'react'
 
-type Props = {
-  address: string,
-  setAddress: (string) => void,
-  onSuccess: (any) => void,
-}
+const getTranslations = (state) => state.trans.ReadQRCodeAddressScreen
 
-const AddressReaderQR = ({address, setAddress, onSuccess}: Props) => (
-  <QRCodeScanner
-    onRead={onSuccess}
-    bottomContent={
-      <View style={styles.container}>
-        <Text style={styles.qrContent}>{address}</Text>
-      </View>
-    }
-  />
+type ExternalProps = {|
+  navigation: Navigation,
+|}
+
+const AddressReaderQR = ({address, setAddress, onSuccess}) => (
+  <QRCodeScanner onRead={onSuccess} />
 )
 
-export default compose(
-  withState('address', 'setAddress', ''),
+export default (compose(
+  withTranslations(getTranslations),
+  withNavigationTitle(({translations}) => translations.title),
   withHandlers({
     onSuccess: ({navigation}) => (event) => {
       const onSuccess = navigation.getParam('onSuccess')
@@ -37,4 +30,4 @@ export default compose(
       }
     },
   }),
-)(AddressReaderQR)
+)(AddressReaderQR): ComponentType<ExternalProps>)

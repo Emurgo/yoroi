@@ -225,6 +225,9 @@ const l10n = {
         'an existing one is still pending',
     },
   },
+  ReadQRCodeAddressScreen: {
+    title: 'Scan QR code address',
+  },
   ConfirmSendAdaScreen: {
     title: 'Send',
     amount: 'Amount',
