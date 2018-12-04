@@ -92,6 +92,7 @@ export const validatePassword = (
   passwordConfirmation: string,
 ): PasswordValidationErrors => {
   let validations = {}
+
   if (!password) {
     validations = {...validations, passwordReq: true}
   }

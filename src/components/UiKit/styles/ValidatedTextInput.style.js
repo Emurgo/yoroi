@@ -13,7 +13,8 @@ export default StyleSheet.create({
     borderWidth: 1,
     height: 48,
     fontSize: 16,
-    paddingHorizontal: 16,
+    paddingLeft: 16,
+    paddingRight: 50,
     paddingVertical: 12,
   },
   inputError: {
