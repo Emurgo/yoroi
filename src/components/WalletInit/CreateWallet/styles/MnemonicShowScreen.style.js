@@ -25,9 +25,6 @@ const style = {
     backgroundColor: COLORS.GRAY,
     padding: screenPadding,
   },
-  titleContainer: {
-    padding: screenPadding,
-  },
   contentContainer: {
     flexGrow: 1,
     flexDirection: 'column',

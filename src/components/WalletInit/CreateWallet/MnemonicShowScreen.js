@@ -35,16 +35,11 @@ const MnemonicShowScreen = ({
   <Screen bgColor={COLORS.BACKGROUND_GRAY} style={styles.screen}>
     <View style={styles.contentContainer}>
       <View>
-        <View style={styles.titleContainer}>
-          <Text>{translations.title}</Text>
-        </View>
-
-        <View style={styles.mnemonicWordsContainer}>
-          <Text>{mnemonic}</Text>
-        </View>
-
         <View style={styles.mnemonicNoteContainer}>
           <Text>{translations.mnemonicNote}</Text>
+        </View>
+        <View style={styles.mnemonicWordsContainer}>
+          <Text>{mnemonic}</Text>
         </View>
       </View>
 
