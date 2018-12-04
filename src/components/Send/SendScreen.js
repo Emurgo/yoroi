@@ -259,19 +259,6 @@ class SendScreen extends Component<Props, State> {
     })
   }
 
-  renderBanners = () => {
-    const {hasPendingOutgoingTransaction, translations} = this.props
-    if (hasPendingOutgoingTransaction) {
-      return (
-        <WarningBanner
-          text={translations.errorBanners.pendingOutgoingTransaction}
-        />
-      )
-    }
-
-    return null
-  }
-
   renderBalanceAfterTransaction = () => {
     const {fee, isCalculatingFee, amount} = this.state
     const {availableAmount, translations} = this.props
@@ -393,7 +380,11 @@ class SendScreen extends Component<Props, State> {
             />
           </View>
 
-          {this.renderBanners()}
+          {hasPendingOutgoingTransaction && (
+            <WarningBanner
+              text={translations.errorBanners.pendingOutgoingTransaction}
+            />
+          )}
 
           <Button
             onPress={this.handleConfirm}
