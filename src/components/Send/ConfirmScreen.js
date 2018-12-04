@@ -4,7 +4,7 @@ import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {ScrollView, View} from 'react-native'
-import {withHandlers, withState} from 'recompose'
+import {withHandlers, withStateHandlers} from 'recompose'
 
 import Amount from './Amount'
 import {Text, Button, OfflineBanner, ValidatedTextInput} from '../UiKit'
@@ -147,10 +147,13 @@ export default compose(
     availableAmount: utxoBalanceSelector(state),
     isEasyConfirmationEnabled: easyConfirmationSelector(state),
   })),
-  withState(
-    'password',
-    'setPassword',
-    CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
+  withStateHandlers(
+    {
+      password: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
+    },
+    {
+      setPassword: (state) => (value) => ({password: value}),
+    },
   ),
   withNavigationTitle(({translations}) => translations.title),
   withHandlers({

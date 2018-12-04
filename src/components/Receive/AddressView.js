@@ -3,7 +3,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {withHandlers, withState} from 'recompose'
+import {withStateHandlers} from 'recompose'
 import {View, TouchableOpacity} from 'react-native'
 import {withNavigation} from 'react-navigation'
 
@@ -67,9 +67,13 @@ export default (compose(
     index: externalAddressIndexSelector(state)[address],
     isUsed: !!isUsedAddressIndexSelector(state)[address],
   })),
-  withState('showDetails', 'setShowDetails', false),
-  withHandlers({
-    closeDetails: ({setShowDetails}) => () => setShowDetails(false),
-    openDetails: ({setShowDetails}) => () => setShowDetails(true),
-  }),
+  withStateHandlers(
+    {
+      showDetails: false,
+    },
+    {
+      openDetails: (state) => () => ({showDetails: true}),
+      closeDetails: (state) => () => ({showDetails: false}),
+    },
+  ),
 )(AddressView): ComponentType<ExternalProps>)
