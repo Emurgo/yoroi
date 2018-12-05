@@ -39,6 +39,7 @@ type ButtonProps = {
   disabled?: ?boolean,
   outline?: boolean,
   style?: Object,
+  containerStyle?: Object,
   block?: boolean,
 }
 
@@ -51,6 +52,7 @@ class Button extends React.Component<ButtonProps> {
       disabled,
       block,
       style,
+      containerStyle,
       outline,
     } = this.props
 
@@ -62,7 +64,7 @@ class Button extends React.Component<ButtonProps> {
         accessibilityRole="button"
         disabled={disabled}
         onPress={onPress}
-        style={[block && styles.block]}
+        style={[block && styles.block, containerStyle]}
         activeOpacity={0.5}
       >
         <View

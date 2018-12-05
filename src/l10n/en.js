@@ -407,18 +407,19 @@ const l10n = {
       'Enable use of fingerprints in device settings first!',
     notNowButton: 'Not now',
     linkButton: 'Link',
-    title: 'Enable biometrics',
+    headings: ['Use your fingerprint'],
+    subHeadings: ['for faster, easier access', 'to your Yoroi wallet'],
   },
   // TODO(ppershing): this localization is a mess
   BiometricsAuthScreen: {
     authorizeOperation: 'Authorize operation',
-    putFingerOnSensorMessage: 'Put you finger on sensor to auth operation',
     useFallbackButton: 'Use fallback',
+    headings: ['Authorize with your', 'fingerprint'],
     cancelButton: 'Cancel',
     Errors: {
-      notRecognized: 'Fingerprint was not recognized try again',
-      tooManyTries: 'You used too many fingers sensor is disabled',
-      sensorFailed: 'Fingerprint sensor failed please use fallback',
+      NOT_RECOGNIZED: 'Fingerprint was not recognized try again',
+      SENSOR_LOCKOUT: 'You used too many fingers sensor is disabled',
+      DECRYPTION_FAILED: 'Fingerprint sensor failed please use fallback',
     },
     AuthenticateErrors: {
       text: 'Authenticate error',

@@ -3,12 +3,14 @@
 import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {View} from 'react-native'
 import {withHandlers, withState} from 'recompose'
 
-import {Text, Button} from '../UiKit'
+import {Button} from '../UiKit'
+import FingerprintScreenBase from '../Common/FingerprintScreenBase'
 import KeyStore from '../../crypto/KeyStore'
 import {onDidMount, onWillUnmount} from '../../utils/renderUtils'
+
+import styles from './styles/BiometricAuthScreen.style'
 
 const getTranslations = (state) => state.trans.BiometricsAuthScreen
 
@@ -71,24 +73,20 @@ const BiometricAuthScreen = ({
   error,
   translations,
 }) => (
-  <View>
-    {!error ? <Text>{translations.putFingerOnSensorMessage}</Text> : null}
-
-    {error && error === KeyStore.REJECTIONS.NOT_RECOGNIZED ? (
-      <Text>{translations.Errors.notRecognized}</Text>
-    ) : null}
-
-    {error && error === KeyStore.REJECTIONS.SENSOR_LOCKOUT ? (
-      <Text>{translations.Errors.tooManyTries}</Text>
-    ) : null}
-
-    {error && error === KeyStore.REJECTIONS.DECRYPTION_FAILED ? (
-      <Text>{translations.Errors.sensorFailed}</Text>
-    ) : null}
-
-    <Button title={translations.useFallbackButton} onPress={useFallback} />
-    <Button title={translations.cancelButton} onPress={cancelScanning} />
-  </View>
+  <FingerprintScreenBase
+    onGoBack={cancelScanning}
+    headings={translations.headings}
+    buttons={[
+      <Button
+        key={'use-fallback'}
+        outline
+        title={translations.useFallbackButton}
+        onPress={useFallback}
+        containerStyle={styles.useFallback}
+      />,
+    ]}
+    error={error && translations.Errors[error]}
+  />
 )
 
 export default compose(
