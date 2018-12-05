@@ -10,7 +10,6 @@ export const screenPadding = 20
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
 })
 
@@ -28,20 +27,31 @@ const Screen = ({
   style = {},
   ...restProps
 }: Props) => {
-  const Container = scroll ? ScrollView : View
-
-  return (
-    <Container
-      style={[
-        styles.container,
-        {backgroundColor: bgColor || COLORS.WHITE},
-        style,
-      ]}
-      {...restProps}
-    >
-      {children}
-    </Container>
-  )
+  if (scroll) {
+    return (
+      <ScrollView
+        keyboardDismissMode="on-drag"
+        contentContainerStyle={[styles.container]}
+        style={[{backgroundColor: bgColor || COLORS.WHITE}, style]}
+        {...restProps}
+      >
+        {children}
+      </ScrollView>
+    )
+  } else {
+    return (
+      <View
+        style={[
+          styles.container,
+          {backgroundColor: bgColor || COLORS.WHITE},
+          style,
+        ]}
+        {...restProps}
+      >
+        {children}
+      </View>
+    )
+  }
 }
 
 export default Screen

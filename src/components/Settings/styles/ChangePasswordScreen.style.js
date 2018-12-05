@@ -1,21 +1,17 @@
 // @flow
 import {StyleSheet} from 'react-native'
+
 import {COLORS} from '../../../styles/config'
 
 export default StyleSheet.create({
-  safeAreaView: {
-    backgroundColor: COLORS.BACKGROUND,
-    flex: 1,
-  },
   container: {
-    flex: 1,
+    padding: 16,
   },
   content: {
-    padding: 16,
     flex: 1,
   },
   action: {
-    padding: 16,
+    marginTop: 16,
     backgroundColor: COLORS.BACKGROUND,
   },
 })

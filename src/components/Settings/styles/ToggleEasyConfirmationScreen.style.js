@@ -5,10 +5,8 @@ import {StyleSheet} from 'react-native'
 import {COLORS} from '../../../styles/config'
 
 const styles = StyleSheet.create({
-  root: {
-    flex: 1,
+  container: {
     padding: 16,
-    backgroundColor: '#fff',
   },
   main: {
     flex: 1,

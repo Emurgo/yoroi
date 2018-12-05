@@ -10,6 +10,7 @@ import {NavigationEvents} from 'react-navigation'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import walletManager from '../../crypto/wallet'
 import {Text, Button, ValidatedTextInput, StatusBar} from '../UiKit'
+import Screen from '../Screen'
 import {setEasyConfirmation, showErrorDialog} from '../../actions'
 import {easyConfirmationSelector} from '../../selectors'
 import {WrongPassword} from '../../crypto/errors'
@@ -56,7 +57,7 @@ const ToggleEasyConfirmationScreen = ({
   setMasterPassword,
   masterPassword,
 }) => (
-  <View style={styles.root}>
+  <Screen scroll style={styles.container}>
     <StatusBar type="dark" />
 
     <NavigationEvents onDidBlur={clearPassword} />
@@ -92,7 +93,7 @@ const ToggleEasyConfirmationScreen = ({
       }
       disabled={!masterPassword && !isEasyConfirmationEnabled}
     />
-  </View>
+  </Screen>
 )
 
 export default compose(

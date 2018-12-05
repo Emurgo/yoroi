@@ -6,6 +6,7 @@ import {View, ScrollView} from 'react-native'
 import {withHandlers, withStateHandlers} from 'recompose'
 
 import {Button, Text, Checkbox, ValidatedTextInput, StatusBar} from '../UiKit'
+import Screen from '../Screen'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {walletNameSelector} from '../../selectors'
@@ -51,7 +52,7 @@ const RemoveWalletScreen = ({
     walletName !== typedWalletName
 
   return (
-    <View style={styles.container}>
+    <Screen scroll>
       <StatusBar type="dark" />
 
       <Text style={styles.description}>{translations.description}</Text>
@@ -83,7 +84,7 @@ const RemoveWalletScreen = ({
           />
         </View>
       </ScrollView>
-    </View>
+    </Screen>
   )
 }
 

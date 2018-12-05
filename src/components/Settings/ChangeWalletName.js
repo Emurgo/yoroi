@@ -4,11 +4,12 @@ import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withStateHandlers, withHandlers} from 'recompose'
-import {View, KeyboardAvoidingView, Platform} from 'react-native'
+import {View} from 'react-native'
 import {SafeAreaView} from 'react-navigation'
 import _ from 'lodash'
 
 import {Button, ValidatedTextInput, StatusBar} from '../UiKit'
+import Screen from '../Screen'
 import {walletNameSelector, walletNamesSelector} from '../../selectors'
 import {changeWalletName, showErrorDialog} from '../../actions'
 import {withNavigationTitle} from '../../utils/renderUtils'
@@ -41,11 +42,7 @@ const ChangeWalletName = ({
   const validationErrors = validateWalletName()
 
   return (
-    <KeyboardAvoidingView
-      enabled={Platform.OS === 'ios'}
-      behavior="padding"
-      style={styles.keyboardAvoidingView}
-    >
+    <Screen scroll>
       <StatusBar type="dark" />
 
       <SafeAreaView style={styles.safeAreaView}>
@@ -60,7 +57,8 @@ const ChangeWalletName = ({
             )}
           />
         </View>
-        <View style={styles.action}>
+
+        <View>
           <Button
             onPress={changeAndNavigate}
             title={translations.changeButton}
@@ -68,7 +66,7 @@ const ChangeWalletName = ({
           />
         </View>
       </SafeAreaView>
-    </KeyboardAvoidingView>
+    </Screen>
   )
 }
 

@@ -16,6 +16,7 @@ import {
   ValidatedTextInput,
   StatusBar,
 } from '../UiKit'
+import Screen from '../Screen'
 import {
   isFetchingUtxosSelector,
   lastUtxosFetchErrorSelector,
@@ -327,7 +328,7 @@ class SendScreen extends Component<Props, State> {
       })
 
     return (
-      <View style={styles.root}>
+      <Screen scroll>
         <StatusBar type="dark" />
 
         <UtxoAutoRefresher />
@@ -379,7 +380,7 @@ class SendScreen extends Component<Props, State> {
             disabled={!isValid}
           />
         </ScrollView>
-      </View>
+      </Screen>
     )
   }
 }

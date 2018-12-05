@@ -8,6 +8,7 @@ import MnemonicExplanationModal from './MnemonicExplanationModal'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {withNavigationTitle, withTranslations} from '../../../utils/renderUtils'
 import WalletForm from '../WalletForm'
+import Screen from '../../Screen'
 
 import type {State} from '../../../state'
 
@@ -19,14 +20,14 @@ const CreateWalletScreen = ({
   visibleMnemonicExplanation,
   navigateToMnemonicScreen,
 }) => (
-  <>
+  <Screen scroll>
     <WalletForm onSubmit={setFormData} />
     <MnemonicExplanationModal
       visible={visibleMnemonicExplanation}
       onRequestClose={hideMnemonicExplanation}
       onConfirm={navigateToMnemonicScreen}
     />
-  </>
+  </Screen>
 )
 
 export default compose(

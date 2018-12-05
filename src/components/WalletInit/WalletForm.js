@@ -3,11 +3,12 @@ import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View} from 'react-native'
-import {NavigationEvents, SafeAreaView} from 'react-navigation'
+import {NavigationEvents} from 'react-navigation'
 import _ from 'lodash'
 import {withHandlers} from 'recompose'
 
 import {Button, ValidatedTextInput, StatusBar} from '../UiKit'
+import Screen from '../Screen'
 import {
   validatePassword,
   getWalletNameError,
@@ -112,52 +113,51 @@ class WalletForm extends PureComponent<Props, ComponentState> {
     const validationErrors = this.validateForm()
 
     return (
-      <SafeAreaView style={styles.safeAreaView}>
+      <Screen scroll>
         <StatusBar type="dark" />
 
-        <View style={styles.container}>
-          <NavigationEvents onWillBlur={this.handleOnWillBlur} />
-          <View style={styles.content}>
-            <ValidatedTextInput
-              label={translations.walletNameInput.label}
-              value={name}
-              onChangeText={this.handleSetName}
-              error={getWalletNameError(
-                translations.walletNameInput.errors,
-                validationErrors,
-              )}
-            />
+        <NavigationEvents onWillBlur={this.handleOnWillBlur} />
 
-            <ValidatedTextInput
-              secureTextEntry
-              label={translations.newPasswordInput.label}
-              value={password}
-              onChangeText={this.handleSetPassword}
-            />
+        <View style={styles.content}>
+          <ValidatedTextInput
+            label={translations.walletNameInput.label}
+            value={name}
+            onChangeText={this.handleSetName}
+            error={getWalletNameError(
+              translations.walletNameInput.errors,
+              validationErrors,
+            )}
+          />
 
-            <ValidatedTextInput
-              secureTextEntry
-              label={translations.repeatPasswordInput.label}
-              value={passwordConfirmation}
-              onChangeText={this.handleSetPasswordConfirmation}
-              error={
-                showPasswordsDoNotMatchError &&
-                translations.repeatPasswordInput.errors.passwordsDoNotMatch
-              }
-            />
+          <ValidatedTextInput
+            secureTextEntry
+            label={translations.newPasswordInput.label}
+            value={password}
+            onChangeText={this.handleSetPassword}
+          />
 
-            <PasswordStrengthIndicator password={password} />
-          </View>
+          <ValidatedTextInput
+            secureTextEntry
+            label={translations.repeatPasswordInput.label}
+            value={passwordConfirmation}
+            onChangeText={this.handleSetPasswordConfirmation}
+            error={
+              showPasswordsDoNotMatchError &&
+              translations.repeatPasswordInput.errors.passwordsDoNotMatch
+            }
+          />
 
-          <View style={styles.action}>
-            <Button
-              onPress={this.handleSubmit}
-              disabled={!_.isEmpty(validationErrors)}
-              title={translations.continueButton}
-            />
-          </View>
+          <PasswordStrengthIndicator password={password} />
         </View>
-      </SafeAreaView>
+
+        <View style={styles.action}>
+          <Button
+            onPress={this.handleSubmit}
+            disabled={!_.isEmpty(validationErrors)}
+            title={translations.continueButton}
+          />
+        </View>
+      </Screen>
     )
   }
 }

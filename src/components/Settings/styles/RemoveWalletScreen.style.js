@@ -4,10 +4,6 @@ import {StyleSheet} from 'react-native'
 import {COLORS} from '../../../styles/config'
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.BACKGROUND,
-  },
   removeButton: {
     backgroundColor: COLORS.RED,
     marginTop: 10,
@@ -34,6 +30,7 @@ const styles = StyleSheet.create({
   },
   walletInfo: {
     flex: 1,
+    marginBottom: 15,
   },
   screenContainer: {
     padding: 16,
