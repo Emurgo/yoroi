@@ -40,7 +40,7 @@ const getTranslations = (state: State) => state.trans.TransactionHistoryScreeen
 const NoTxHistory = withTranslations(getTranslations)(({translations}) => (
   <View style={styles.empty}>
     <Image source={image} />
-    <Text style={styles.emptyText}>translations.noTransactions</Text>
+    <Text style={styles.emptyText}>{translations.noTransactions}</Text>
   </View>
 ))
 
