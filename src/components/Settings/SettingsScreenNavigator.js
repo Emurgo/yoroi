@@ -71,7 +71,15 @@ const SettingsScreenNavigator = createStackNavigator(
     },
     [SETTINGS_ROUTES.EASY_COMFIRMATION]: ToggleEasyConfirmatioScreen,
     [SETTINGS_ROUTES.CHANGE_PASSWORD]: ChangePasswordScreen,
-    [SETTINGS_ROUTES.CHANGE_CUSTOM_PIN]: ChangeCustomPinScreen,
+    [SETTINGS_ROUTES.CHANGE_CUSTOM_PIN]: {
+      screen: ChangeCustomPinScreen,
+      navigationOptions: ({navigationOptions}) => ({
+        headerStyle: {
+          ...navigationOptions.headerStyle,
+          elevation: 0, // turn off header shadows on Android
+        },
+      }),
+    },
     [SETTINGS_ROUTES.BIO_AUTHENTICATE]: {
       screen: BiometricAuthScreen,
       navigationOptions: {header: null},
