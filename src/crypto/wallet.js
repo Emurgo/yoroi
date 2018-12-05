@@ -215,7 +215,8 @@ export class Wallet {
   }
 
   async checkKeysValidity() {
-    if (!KeyStore.isKeyValid(this._id, 'BIOMETRICS')) {
+    const isKeyValid = await KeyStore.isKeyValid(this._id, 'BIOMETRICS')
+    if (!isKeyValid) {
       await KeyStore.deleteData(this._id, 'BIOMETRICS')
       await KeyStore.deleteData(this._id, 'SYSTEM_PIN')
 

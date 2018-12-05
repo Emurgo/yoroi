@@ -39,9 +39,9 @@ import {
   sendCrashReportsSelector,
 } from './selectors'
 import assert from './utils/assert'
-
 import NavigationService from './NavigationService'
 import {ROOT_ROUTES} from './RoutesList'
+import KeyStore from './crypto/KeyStore'
 
 import {type Dispatch} from 'redux'
 import {type State} from './state'
@@ -202,7 +202,9 @@ export const logout = () => async (dispatch: Dispatch<any>) => {
 export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   await dispatch(reloadAppSettings())
 
-  if (!installationIdSelector(getState())) {
+  const state = getState()
+  const installationId = installationIdSelector(state)
+  if (!installationId) {
     dispatch(firstRunSetup())
   }
 
@@ -227,6 +229,17 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
 
   await walletManager.initialize()
   await dispatch(updateWallets())
+
+  if (canFingerprintEncryptionBeEnabled() && systemAuthSupportSelector(state)) {
+    // On android 6 signin keys can get invalidated,
+    // if that happen we want to regenerate them
+    if (installationId) {
+      const isKeyValid = await KeyStore.isKeyValid(installationId, 'BIOMETRICS')
+      if (!isKeyValid) {
+        recreateAppSignInKeys(installationId)
+      }
+    }
+  }
 
   dispatch({
     path: ['isAppInitialized'],
