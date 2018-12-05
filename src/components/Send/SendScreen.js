@@ -20,7 +20,7 @@ import {
   getUtxoBalance,
 } from '../../selectors'
 import {withTranslations, withNavigationTitle} from '../../utils/renderUtils'
-import {formatAda} from '../../utils/format'
+import {formatAdaWithSymbol} from '../../utils/format'
 import {parseAdaDecimal} from '../../utils/parsing'
 import walletManager from '../../crypto/wallet'
 import {validateAmount, validateAddressAsync} from '../../utils/validators'
@@ -81,7 +81,7 @@ const AvailableAmount = withTranslations(getTranslations)(
         ? translations.availableAmount.isFetching
         : hasError
           ? translations.availableAmount.hasError
-          : (amount && formatAda(amount)) || ''}
+          : (amount && formatAdaWithSymbol(amount)) || ''}
     </Text>
   ),
 )
@@ -232,7 +232,7 @@ class SendScreen extends Component<Props, State> {
     const {translations} = this.props
 
     const value = balanceAfter
-      ? formatAda(balanceAfter)
+      ? formatAdaWithSymbol(balanceAfter)
       : translations.balanceAfter.notAvailable
 
     return (
@@ -248,7 +248,7 @@ class SendScreen extends Component<Props, State> {
     const {fee} = this.state
     const {translations} = this.props
 
-    const value = fee ? formatAda(fee) : translations.fee.notAvailable
+    const value = fee ? formatAdaWithSymbol(fee) : translations.fee.notAvailable
 
     return (
       <Text>

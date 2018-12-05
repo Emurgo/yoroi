@@ -6,7 +6,7 @@ import {connect} from 'react-redux'
 import {View, TouchableOpacity} from 'react-native'
 
 import {Text} from '../UiKit'
-import AdaIcon from '../../assets/AdaIcon'
+import utfSymbols from '../../utils/utfSymbols'
 import {transactionsInfoSelector} from '../../selectors'
 import {TX_HISTORY_ROUTES} from '../../RoutesList'
 import styles from './styles/TxHistoryListItem.style'
@@ -31,12 +31,6 @@ type Props = {
   navigation: NavigationScreenProp<NavigationState>,
   translations: SubTranslation<typeof getTranslations>,
 }
-
-const AdaSign = ({color, size}) => (
-  <View style={styles.adaSignContainer}>
-    <AdaIcon width={size} height={size} color={color} />
-  </View>
-)
 
 const _AssuranceLevel = ({transaction, translations}) => {
   return (
@@ -113,7 +107,9 @@ class TxHistoryListItem extends Component<Props> {
                 <Text small style={amountStyle}>
                   {formatAdaFractional(transaction.amount)}
                 </Text>
-                <AdaSign size={16} color={amountStyle.color} />
+                <Text style={amountStyle}>{`${utfSymbols.NBSP}${
+                  utfSymbols.ADA
+                }`}</Text>
               </View>
             ) : (
               <Text style={amountStyle}>- -</Text>

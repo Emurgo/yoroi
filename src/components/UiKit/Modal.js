@@ -5,6 +5,7 @@ import {View, Modal as RNModal, TouchableOpacity} from 'react-native'
 import {NavigationEvents} from 'react-navigation'
 
 import Text from './Text'
+import utfSymbols from '../../utils/utfSymbols'
 
 import styles from './styles/Modal.style'
 
@@ -54,7 +55,7 @@ class Modal extends React.Component<Props, State> {
             <View style={styles.container}>
               {showCloseIcon && (
                 <TouchableOpacity style={styles.close} onPress={onRequestClose}>
-                  <Text style={styles.closeText}>{'\u00d7'}</Text>
+                  <Text style={styles.closeText}>{utfSymbols.X_CROSS}</Text>
                 </TouchableOpacity>
               )}
               <View style={styles.content}>{children}</View>

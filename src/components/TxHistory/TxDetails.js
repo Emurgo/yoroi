@@ -13,7 +13,7 @@ import {
   externalAddressIndexSelector,
 } from '../../selectors'
 import {withNavigationTitle, withTranslations} from '../../utils/renderUtils'
-import {formatAda, formatDateToSeconds} from '../../utils/format'
+import {formatAdaWithSymbol, formatDateToSeconds} from '../../utils/format'
 import {Text, Button, OfflineBanner, Banner} from '../UiKit'
 import Screen from '../../components/Screen'
 import {CONFIG} from '../../config'
@@ -33,7 +33,7 @@ const AdaAmount = ({amount, direction}) => {
     ? styles.positiveAmount
     : styles.negativeAmount
 
-  return <Text style={amountStyle}>{formatAda(amount)} ₳</Text>
+  return <Text style={amountStyle}>{formatAdaWithSymbol(amount)}</Text>
 }
 
 const getTranslations = (state) => state.trans.TransactionDetailsScreen
@@ -168,7 +168,7 @@ const TxDetails = ({
         >
           {transaction.fee && (
             <Text small secondary>
-              {translations.fee} {formatAda(transaction.fee)}
+              {translations.fee} {formatAdaWithSymbol(transaction.fee)}
             </Text>
           )}
         </Banner>

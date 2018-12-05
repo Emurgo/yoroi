@@ -6,12 +6,10 @@ import {connect} from 'react-redux'
 import {ScrollView, View} from 'react-native'
 import {withHandlers, withStateHandlers} from 'recompose'
 
-import Amount from './Amount'
 import {Text, Button, OfflineBanner, ValidatedTextInput} from '../UiKit'
 import {utxoBalanceSelector, easyConfirmationSelector} from '../../selectors'
 import walletManager from '../../crypto/wallet'
 import {SEND_ROUTES} from '../../RoutesList'
-import {formatAda} from '../../utils/format'
 import {CONFIG} from '../../config'
 import KeyStore from '../../crypto/KeyStore'
 import {
@@ -21,6 +19,7 @@ import {
 } from '../../actions'
 import assert from '../../utils/assert'
 import {withNavigationTitle} from '../../utils/renderUtils'
+import {formatAdaWithSymbol} from '../../utils/format'
 
 import styles from './styles/ConfirmScreen.style'
 
@@ -96,20 +95,19 @@ const ConfirmScreen = ({
       <ScrollView style={styles.container}>
         <View style={styles.balance}>
           <Text style={styles.balanceLabel}>{translations.availableFunds}</Text>
-          <Amount
-            value={formatAda(availableAmount)}
-            style={styles.balanceValue}
-          />
+          <Text style={styles.balanceValue}>
+            {formatAdaWithSymbol(availableAmount)}
+          </Text>
         </View>
 
         <View style={styles.transactionSummary}>
           <View style={styles.fees}>
             <Text style={styles.label}>{translations.fees}</Text>
-            <Amount value={formatAda(transactionData.fee)} />
+            <Text>{formatAdaWithSymbol(transactionData.fee)}</Text>
           </View>
           <View style={styles.remainingBalance}>
             <Text style={styles.label}>{translations.balanceAfterTx}</Text>
-            <Amount value={formatAda(balanceAfterTx)} />
+            <Text>{formatAdaWithSymbol(balanceAfterTx)}</Text>
           </View>
         </View>
 
@@ -119,7 +117,7 @@ const ConfirmScreen = ({
         </View>
         <View style={styles.item}>
           <Text style={styles.label}>{translations.amount}</Text>
-          <Amount value={formatAda(amount)} />
+          <Text>{formatAdaWithSymbol(amount)}</Text>
         </View>
 
         {!isEasyConfirmationEnabled ? (

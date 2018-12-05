@@ -1,5 +1,7 @@
 import {BigNumber} from 'bignumber.js'
 import moment from 'moment'
+import utfSymbols from './utfSymbols'
+
 import l10n from '../l10n'
 
 // 1 ADA = 1 000 000 micro ada
@@ -9,6 +11,9 @@ export const formatAda = (amount: BigNumber) => {
   const num = amount.dividedBy(MICRO)
   return num.toFormat(6)
 }
+
+export const formatAdaWithSymbol = (amount: BigNumber) =>
+  `${formatAda(amount)}${utfSymbols.NBSP}${utfSymbols.ADA}`
 
 export const formatAdaInteger = (amount: BigNumber) => {
   const num = amount.dividedToIntegerBy(MICRO)
