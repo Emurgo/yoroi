@@ -17,6 +17,7 @@ import {
   installationIdSelector,
   customPinHashSelector,
   systemAuthSupportSelector,
+  enrolledFingerprintsSelector,
 } from '../../selectors'
 import {
   recreateAppSignInKeys,
@@ -65,6 +66,7 @@ export default compose(
     installationId: installationIdSelector(state),
     customPinHash: customPinHashSelector(state),
     isSystemAuthEnabled: systemAuthSupportSelector(state),
+    hasEnrolledFingerprints: enrolledFingerprintsSelector(state),
   })),
   withTranslations(getTranslations),
   withHandlers({
@@ -73,14 +75,19 @@ export default compose(
       customPinHash,
       navigation,
       installationId,
+      hasEnrolledFingerprints,
     }) => () => {
       if (isSystemAuthEnabled) {
-        navigation.navigate(ROOT_ROUTES.BIO_AUTH, {
-          keyId: installationId,
-          onSuccess: () =>
-            navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION),
-          onFail: onFail(navigation, installationId),
-        })
+        if (hasEnrolledFingerprints) {
+          navigation.navigate(ROOT_ROUTES.BIO_AUTH, {
+            keyId: installationId,
+            onSuccess: () =>
+              navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION),
+            onFail: onFail(navigation, installationId),
+          })
+        } else {
+          onFail(navigation, installationId)(KeyStore.REJECTIONS.INVALID_KEY)
+        }
       } else {
         navigation.navigate(ROOT_ROUTES.CUSTOM_PIN_AUTH)
       }
