@@ -20,7 +20,10 @@ import ChangeCustomPinScreen from './ChangeCustomPinScreen'
 import CustomPinScreen from '../FirstRun/CustomPinScreen'
 import BiometricAuthScreen from '../Send/BiometricAuthScreen'
 import {SETTINGS_ROUTES} from '../../RoutesList'
-import {defaultNavigationOptions} from '../../navigationOptions'
+import {
+  defaultNavigationOptions,
+  defaultStackNavigatorOptions,
+} from '../../navigationOptions'
 
 const SettingsScreenNavigator = createStackNavigator(
   {
@@ -101,6 +104,7 @@ const SettingsScreenNavigator = createStackNavigator(
       ),
       ...defaultNavigationOptions,
     }),
+    ...defaultStackNavigatorOptions,
   },
 )
 

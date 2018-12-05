@@ -8,7 +8,10 @@ import {TX_HISTORY_ROUTES, WALLET_ROUTES} from '../../RoutesList'
 import SettingsScreenNavigator from '../Settings/SettingsScreenNavigator'
 import utfSymbols from '../../utils/utfSymbols'
 
-import {defaultNavigationOptions} from '../../navigationOptions'
+import {
+  defaultNavigationOptions,
+  defaultStackNavigatorOptions,
+} from '../../navigationOptions'
 
 const TxHistoryNavigator = createStackNavigator(
   {
@@ -42,6 +45,7 @@ const TxHistoryNavigator = createStackNavigator(
   },
   {
     initialRouteName: TX_HISTORY_ROUTES.MAIN,
+    ...defaultStackNavigatorOptions,
   },
 )
 
