@@ -23,6 +23,7 @@ import {
 } from '../utils/promise'
 import {TransactionCache} from './transactionCache'
 import {validatePassword} from '../utils/validators'
+import {canFingerprintEncryptionBeEnabled} from '../helpers/deviceSettings'
 
 import type {
   RawUtxo,
@@ -645,10 +646,12 @@ class WalletManager {
 
     if (wallet._isEasyConfirmationEnabled) {
       const areKeysValid = await wallet.checkKeysValidity()
-      if (!areKeysValid) {
+      const canBiometricsBeUsed = await canFingerprintEncryptionBeEnabled()
+      if (!areKeysValid || !canBiometricsBeUsed) {
         await this._updateMetadata(this._id, {
           isEasyConfirmationEnabled: false,
         })
+        wallet._isEasyConfirmationEnabled = false
 
         await showErrorDialog((dialogs) => dialogs.walletKeysInvalidated)
       }
