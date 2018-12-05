@@ -490,15 +490,15 @@ const l10n = {
   },
   EasyConfirmationScreen: {
     enableLessSecureOption:
-      'Enabling this option can made app less secure. ' +
+      'Enabling this option can make app less secure. ' +
       'This is a compromise between UX and security!',
     disableThisOption:
       'By disabling this option you will be able to spend your ADA ' +
       'only with master password.',
-    enterMasterPassword: 'Enter Master Password',
-    cancelButton: 'Cancel',
+    masterPassword: 'Master password',
     enableButton: 'Enable',
     disableButton: 'Disable',
+    title: 'Easy transaction confirmation',
   },
   Biometry: {
     approveTransaction: 'Approve signing tx',

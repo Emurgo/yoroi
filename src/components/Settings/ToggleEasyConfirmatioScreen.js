@@ -3,11 +3,11 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {withHandlers, withState} from 'recompose'
+import {withHandlers, withStateHandlers} from 'recompose'
 import {View} from 'react-native'
 import {NavigationEvents} from 'react-navigation'
 
-import Screen from '../Screen'
+import {withNavigationTitle} from '../../utils/renderUtils'
 import walletManager from '../../crypto/wallet'
 import {Text, Button, ValidatedTextInput} from '../UiKit'
 import {setEasyConfirmation, showErrorDialog} from '../../actions'
@@ -52,46 +52,46 @@ const ToggleEasyConfirmationScreen = ({
   isEasyConfirmationEnabled,
   enableEasyConfirmation,
   disableEasyConfirmation,
-  cancelOperation,
   clearPassword,
   setMasterPassword,
   masterPassword,
 }) => (
-  <Screen scroll>
+  <View style={styles.root}>
     <NavigationEvents onDidBlur={clearPassword} />
-    <View style={styles.root}>
-      {!isEasyConfirmationEnabled ? (
-        <>
-          <Text>{translations.enableLessSecureOption}</Text>
 
-          <Text>{translations.enterMasterPassword}</Text>
+    {!isEasyConfirmationEnabled ? (
+      <View style={styles.main}>
+        <Text style={styles.heading}>
+          {translations.enableLessSecureOption}
+        </Text>
 
-          <ValidatedTextInput
-            secureTextEntry
-            onChangeText={setMasterPassword}
-            value={masterPassword}
-          />
-        </>
-      ) : (
-        <Text>{translations.disableThisOption}</Text>
-      )}
+        <ValidatedTextInput
+          secureTextEntry
+          label={translations.masterPassword}
+          onChangeText={setMasterPassword}
+          value={masterPassword}
+        />
+      </View>
+    ) : (
+      <View style={[styles.main, styles.mainCentered]}>
+        <Text style={styles.heading}>{translations.disableThisOption}</Text>
+      </View>
+    )}
 
-      <Button title={translations.cancelButton} onPress={cancelOperation} />
-      <Button
-        title={
-          isEasyConfirmationEnabled
-            ? translations.disableButton
-            : translations.enableButton
-        }
-        onPress={
-          isEasyConfirmationEnabled
-            ? disableEasyConfirmation
-            : enableEasyConfirmation
-        }
-        disabled={!masterPassword && !isEasyConfirmationEnabled}
-      />
-    </View>
-  </Screen>
+    <Button
+      title={
+        isEasyConfirmationEnabled
+          ? translations.disableButton
+          : translations.enableButton
+      }
+      onPress={
+        isEasyConfirmationEnabled
+          ? disableEasyConfirmation
+          : enableEasyConfirmation
+      }
+      disabled={!masterPassword && !isEasyConfirmationEnabled}
+    />
+  </View>
 )
 
 export default compose(
@@ -102,11 +102,16 @@ export default compose(
     }),
     {setEasyConfirmation},
   ),
-  withState('masterPassword', 'setMasterPassword', ''),
+  withStateHandlers(
+    {masterPassword: ''},
+    {
+      setMasterPassword: () => (masterPassword) => ({masterPassword}),
+      clearPassword: () => () => ({masterPassword: ''}),
+    },
+  ),
   withHandlers({
     enableEasyConfirmation,
     disableEasyConfirmation,
-    clearPassword: ({setMasterPassword}) => () => setMasterPassword(''),
-    cancelOperation: ({navigation}) => () => navigation.goBack(),
   }),
+  withNavigationTitle(({translations}) => translations.title),
 )(ToggleEasyConfirmationScreen)
