@@ -21,6 +21,7 @@ import {
   IsLockedError,
 } from '../utils/promise'
 import {TransactionCache} from './transactionCache'
+import {validatePassword} from '../utils/validators'
 
 import type {
   RawUtxo,
@@ -83,19 +84,41 @@ export class Wallet {
     await KeyStore.storeData(this._id, encryptionMethod, masterKey, password)
   }
 
-  async enableEasyConfirmation(masterPassword: string) {
-    const decryptedMasterKey = await KeyStore.getData(
+  async getDecryptedMasterKey(masterPassword: string) {
+    return await KeyStore.getData(
       this._id,
       'MASTER_PASSWORD',
       '',
       masterPassword,
     )
+  }
+
+  async enableEasyConfirmation(masterPassword: string) {
+    const decryptedMasterKey = await this.getDecryptedMasterKey(masterPassword)
 
     await this.encryptAndSaveMasterKey('BIOMETRICS', decryptedMasterKey)
     await this.encryptAndSaveMasterKey('SYSTEM_PIN', decryptedMasterKey)
 
     // $FlowFixMe
     this._isEasyConfirmationEnabled = true
+  }
+
+  async changePassword(masterPassword: string, newPassword: string) {
+    const isNewPasswordValid = _.isEmpty(
+      validatePassword(newPassword, newPassword),
+    )
+
+    if (!isNewPasswordValid) {
+      throw new Error('New password is not valid')
+    }
+
+    const masterKey = await this.getDecryptedMasterKey(masterPassword)
+
+    await this.encryptAndSaveMasterKey(
+      'MASTER_PASSWORD',
+      masterKey,
+      newPassword,
+    )
   }
 
   // needs to be bound
@@ -658,6 +681,12 @@ class WalletManager {
 
     // $FlowFixMe
     await this._wallet.enableEasyConfirmation(masterPassword)
+  }
+
+  async changePassword(masterPassword: string, newPassword: string) {
+    if (!this._wallet) throw new WalletClosed()
+
+    await this._wallet.changePassword(masterPassword, newPassword)
   }
 
   canBiometricsSignInBeDisabled() {

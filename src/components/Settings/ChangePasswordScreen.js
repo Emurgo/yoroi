@@ -4,7 +4,6 @@ import React, {PureComponent} from 'react'
 import {compose} from 'redux'
 import {View} from 'react-native'
 import {SafeAreaView, NavigationEvents} from 'react-navigation'
-
 import _ from 'lodash'
 import {withHandlers} from 'recompose'
 
@@ -13,13 +12,15 @@ import {validatePassword} from '../../utils/validators'
 import {withTranslations, withNavigationTitle} from '../../utils/renderUtils'
 import PasswordStrengthIndicator from '../WalletInit/PasswordStrengthIndicator'
 import {showErrorDialog} from '../../actions'
+import walletManager from '../../crypto/wallet'
+import {WrongPassword} from '../../crypto/errors'
 
 import styles from './styles/ChangePasswordScreen.style'
 
 import type {State} from '../../state'
 import type {PasswordValidationErrors} from '../../utils/validators'
 import type {SubTranslation} from '../../l10n/typeHelpers'
-import type {NavigationScreenProp, NavigationState} from 'react-navigation'
+import type {Navigation} from '../../types/navigation'
 
 type FormValidationErrors = PasswordValidationErrors & {
   oldPasswordRequired?: boolean,
@@ -49,8 +50,8 @@ type ComponentState = {
 
 type Props = {
   translations: SubTranslation<typeof getTranslations>,
-  handleSubmit: () => mixed,
-  navigation: NavigationScreenProp<NavigationState>,
+  onSubmit: (string, string) => any,
+  navigation: Navigation,
 }
 
 class ChangePasswordScreen extends PureComponent<Props, ComponentState> {
@@ -83,8 +84,14 @@ class ChangePasswordScreen extends PureComponent<Props, ComponentState> {
   handleOnWillBlur = () =>
     this.setState({password: '', passwordConfirmation: ''})
 
+  handleSubmit = () => {
+    const {oldPassword, password} = this.state
+
+    this.props.onSubmit(oldPassword, password)
+  }
+
   render() {
-    const {translations, handleSubmit} = this.props
+    const {translations} = this.props
     const {
       oldPassword,
       password,
@@ -134,7 +141,7 @@ class ChangePasswordScreen extends PureComponent<Props, ComponentState> {
 
           <View style={styles.action}>
             <Button
-              onPress={handleSubmit}
+              onPress={this.handleSubmit}
               disabled={!_.isEmpty(errors)}
               title={translations.continueButton}
             />
@@ -149,13 +156,16 @@ export default compose(
   withTranslations(getTranslations),
   withNavigationTitle(({translations}) => translations.title),
   withHandlers({
-    handleSubmit: ({navigation}) => () => {
-      const todoValidatePassword = true
-
-      if (todoValidatePassword) {
-        showErrorDialog((dialogs) => dialogs.incorrectPassword)
-      } else {
+    onSubmit: ({navigation}) => async (oldPassword, newPassword) => {
+      try {
+        await walletManager.changePassword(oldPassword, newPassword)
         navigation.goBack(null)
+      } catch (e) {
+        if (e instanceof WrongPassword) {
+          await showErrorDialog((dialogs) => dialogs.incorrectPassword)
+        } else {
+          throw e
+        }
       }
     },
   }),
