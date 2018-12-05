@@ -17,7 +17,6 @@ import {
   installationIdSelector,
   customPinHashSelector,
   systemAuthSupportSelector,
-  enrolledFingerprintsSelector,
 } from '../../selectors'
 import {
   recreateAppSignInKeys,
@@ -66,7 +65,6 @@ export default compose(
     installationId: installationIdSelector(state),
     customPinHash: customPinHashSelector(state),
     isSystemAuthEnabled: systemAuthSupportSelector(state),
-    hasEnrolledFingerprints: enrolledFingerprintsSelector(state),
   })),
   withTranslations(getTranslations),
   withHandlers({
@@ -75,9 +73,10 @@ export default compose(
       customPinHash,
       navigation,
       installationId,
-      hasEnrolledFingerprints,
-    }) => () => {
+    }) => async () => {
       if (isSystemAuthEnabled) {
+        const hasEnrolledFingerprints =
+          await canFingerprintEncryptionBeEnabled()
         if (hasEnrolledFingerprints) {
           navigation.navigate(ROOT_ROUTES.BIO_AUTH, {
             keyId: installationId,

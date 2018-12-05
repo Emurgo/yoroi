@@ -270,6 +270,7 @@ class KeyStore {
     ),
     INVALID_KEY: KeyStore._getRejectionMessage('INVALID_KEY'),
     KEY_NOT_DELETED: KeyStore._getRejectionMessage('KEY_NOT_DELETED'),
+    KEY_NOT_CREATED: KeyStore._getRejectionMessage('KEY_NOT_CREATED'),
   }
 }
 

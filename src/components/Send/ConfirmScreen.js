@@ -37,14 +37,6 @@ import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 
 const getTranslations = (state) => state.trans.ConfirmSendAdaScreen
 
-const onFail = (navigation) => (reason) => {
-  if (reason === KeyStore.REJECTIONS.CANCELED) {
-    navigation.navigate(SEND_ROUTES.CONFIRM)
-  } else {
-    throw new Error(`Failed confirming transaction because: ${reason}`)
-  }
-}
-
 const handleOnConfirm = async (
   navigation,
   isEasyConfirmationEnabled,
@@ -79,7 +71,7 @@ const handleOnConfirm = async (
 
         submitTx(decryptedKey)
       },
-      onFail: onFail(navigation),
+      onFail: () => navigation.goBack(),
     })
 
     return

@@ -65,7 +65,7 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
         try {
             this.crypto.createAndroidKeyStoreAsymmetricKey(keyAlias, true, false);
         } catch (Exception e) {
-            promise.resolve(false);
+            promise.reject(Rejections.KEY_NOT_CREATED, Rejections.KEY_NOT_CREATED);
             return;
         }
 
@@ -77,7 +77,7 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
         try {
             this.crypto.createAndroidKeyStoreAsymmetricKey(keyAlias, false, true);
         } catch (Exception e) {
-            promise.resolve(false);
+            promise.reject(Rejections.KEY_NOT_CREATED, Rejections.KEY_NOT_CREATED);
             return;
         }
 

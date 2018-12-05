@@ -116,9 +116,6 @@ export const fingerprintsHwSupportSelector = (state: State): boolean =>
 export const systemAuthSupportSelector = (state: State): boolean =>
   state.appSettings.isSystemAuthEnabled
 
-export const enrolledFingerprintsSelector = (state: State): boolean =>
-  state.appSettings.hasEnrolledFingerprints
-
 export const sendCrashReportsSelector = (state: State): boolean =>
   state.appSettings.sendCrashReports
 

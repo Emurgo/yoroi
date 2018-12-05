@@ -230,13 +230,13 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   await walletManager.initialize()
   await dispatch(updateWallets())
 
-  if (canFingerprintEncryptionBeEnabled() && systemAuthSupportSelector(state)) {
+  if (hasEnrolledFingerprints && systemAuthSupportSelector(state)) {
     // On android 6 signin keys can get invalidated,
     // if that happen we want to regenerate them
     if (installationId) {
       const isKeyValid = await KeyStore.isKeyValid(installationId, 'BIOMETRICS')
       if (!isKeyValid) {
-        recreateAppSignInKeys(installationId)
+        await recreateAppSignInKeys(installationId)
       }
     }
   }

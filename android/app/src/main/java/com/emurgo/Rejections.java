@@ -30,6 +30,8 @@ public final class Rejections {
     // deleteAndroidKeyStoreAsymmetricKeyPair
     public static final String KEY_NOT_DELETED = "KEY_NOT_DELETED";
 
+    public static final String KEY_NOT_CREATED = "KEY_NOT_CREATED";
+
     private Rejections() { }
 
     public static final Map<String, Object> getAsMap() {
@@ -47,6 +49,7 @@ public final class Rejections {
         map.put(INVALID_KEY, INVALID_KEY);
         map.put(KEY_NOT_DELETED, KEY_NOT_DELETED);
         map.put(SWAPPED_TO_FALLBACK, SWAPPED_TO_FALLBACK);
+        map.put(KEY_NOT_CREATED, KEY_NOT_CREATED);
 
         return map;
     }

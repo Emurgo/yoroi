@@ -144,12 +144,17 @@ public class KeyStoreCrypto {
         return generator;
     }
 
-    public void deleteAndroidKeyStoreAsymmetricKeyPair(String keyAlias) throws Exception {
+    public boolean deleteAndroidKeyStoreAsymmetricKeyPair(String keyAlias) throws Exception {
         KeyStore keyStore;
         keyStore = KeyStore.getInstance("AndroidKeyStore");
         keyStore.load(null);
 
-        keyStore.deleteEntry(keyAlias);
+        if (keyStore.isKeyEntry(keyAlias)) {
+            keyStore.deleteEntry(keyAlias);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public Cipher getDecryptCipher(String keyAlias) throws Exception {
