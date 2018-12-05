@@ -1,12 +1,25 @@
 // @flow
 
-const styles = {
+import {StyleSheet} from 'react-native'
+
+const styles = StyleSheet.create({
   root: {
     flex: 1,
-    padding: 10,
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#fff',
   },
-}
+  main: {
+    flex: 1,
+  },
+  mainCentered: {
+    justifyContent: 'center',
+  },
+  heading: {
+    fontSize: 17,
+    lineHeight: 25,
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+})
 
 export default styles
