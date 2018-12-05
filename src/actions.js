@@ -125,15 +125,27 @@ export const navigateFromSplash = () => (
   // onboarding and normal wallet flow
   const state = getState()
 
+  let route
+
   if (
     !languageSelector(state) ||
     !tosSelector(state) ||
     (!systemAuthSupportSelector(state) && !customPinHashSelector(state))
   ) {
-    NavigationService.navigate(ROOT_ROUTES.FIRST_RUN)
+    route = ROOT_ROUTES.FIRST_RUN
   } else {
     // TODO: change to login in prod
-    NavigationService.navigate(ROOT_ROUTES.INIT)
+    route = ROOT_ROUTES.INIT
+  }
+
+  // cool-user: Fixes app crashing, as Android back
+  // button remounts the App component other solution is:
+  // eslint-disable-next-line
+  // https://github.com/facebook/react-native/issues/13775#issuecomment-319673305
+  try {
+    NavigationService.navigate(route)
+  } catch (e) {
+    Logger.warn('Could not navigate from splash screen')
   }
 }
 
