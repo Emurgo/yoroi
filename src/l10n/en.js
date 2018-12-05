@@ -474,13 +474,14 @@ const l10n = {
     continueButton: 'Change password',
   },
   ChangeCustomPinScreen: {
+    title: 'Change PIN',
     CurrentPinInput: {
-      title: 'Enter the PIN',
+      title: 'Enter PIN',
       subtitle: 'Enter your current PIN',
     },
     PinRegistrationForm: {
       PinInput: {
-        title: 'Enter the PIN',
+        title: 'Enter PIN',
         subtitle: 'Choose new PIN for quick access to wallet.',
       },
       PinConfirmationInput: {

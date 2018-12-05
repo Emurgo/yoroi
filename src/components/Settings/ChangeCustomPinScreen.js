@@ -11,6 +11,7 @@ import {authenticateByCustomPin} from '../../crypto/customPin'
 import {encryptAndStoreCustomPin, showErrorDialog} from '../../actions'
 import {customPinHashSelector} from '../../selectors'
 import {CONFIG} from '../../config'
+import {withNavigationTitle} from '../../utils/renderUtils'
 
 import styles from './styles/ChangeCustomPinScreen.style'
 
@@ -92,6 +93,7 @@ export default compose(
       encryptAndStoreCustomPin,
     },
   ),
+  withNavigationTitle(({translations}) => translations.title),
   withState('isCurrentPinVerified', 'setIsCurrentPinVerified', false),
   withHandlers({
     handleVerifyPin,
