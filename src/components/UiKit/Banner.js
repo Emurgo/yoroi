@@ -19,12 +19,12 @@ const styles = StyleSheet.create({
   },
 })
 
-type Props = {
+type Props = {|
   text: string,
   label?: string,
   error?: boolean,
   children?: React.Node,
-}
+|}
 
 const Banner = ({error, text, label, children}: Props) => (
   <View style={styles.banner}>
