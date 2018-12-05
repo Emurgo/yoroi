@@ -61,28 +61,26 @@ const ToggleEasyConfirmationScreen = ({
 
     {!isEasyConfirmationEnabled ? (
       <View style={styles.main}>
-        <Text style={styles.heading}>
-          {translations.enableLessSecureOption}
-        </Text>
+        <Text style={styles.heading}>{translations.enable.heading}</Text>
 
         <ValidatedTextInput
           secureTextEntry
-          label={translations.masterPassword}
+          label={translations.enable.masterPassword}
           onChangeText={setMasterPassword}
           value={masterPassword}
         />
       </View>
     ) : (
       <View style={[styles.main, styles.mainCentered]}>
-        <Text style={styles.heading}>{translations.disableThisOption}</Text>
+        <Text style={styles.heading}>{translations.disable.heading}</Text>
       </View>
     )}
 
     <Button
       title={
         isEasyConfirmationEnabled
-          ? translations.disableButton
-          : translations.enableButton
+          ? translations.disable.disableButton
+          : translations.enable.enableButton
       }
       onPress={
         isEasyConfirmationEnabled
