@@ -1,9 +1,10 @@
+// @flow
 import ExtendableError from 'es6-error'
 
 // thrown when the request did go through but
 // backend returned an unexpected result
 export class ApiError extends ExtendableError {
-  constructor(request) {
+  constructor(request: any) {
     super('ApiError')
     this.request = request
   }

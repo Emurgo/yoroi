@@ -53,8 +53,8 @@ type ExternalProps = {
 type Props = ExternalProps & {
   pin: string,
   setPin: (string) => void,
-  handleSetPin: (string) => boolean,
-  handlePinEnter: (string) => void,
+  handleSetPin: (string) => Promise<boolean>,
+  handlePinEnter: (string) => Promise<boolean>,
   clearPin: () => void,
 }
 

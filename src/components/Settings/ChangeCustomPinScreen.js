@@ -17,8 +17,8 @@ import {StatusBar} from '../UiKit'
 import styles from './styles/ChangeCustomPinScreen.style'
 
 import type {Navigation} from '../../types/navigation'
-import type {SubTranslation} from '../../l10n/typeHelpers'
 import type {State} from '../../state'
+import type {ComponentType} from 'react'
 
 const getTranslations = (state: State) => state.trans.ChangeCustomPinScreen
 
@@ -26,7 +26,7 @@ const handleVerifyPin = ({
   currentPinHash,
   setIsCurrentPinVerified,
   translations,
-}) => async (pin) => {
+}) => async (pin): Promise<boolean> => {
   let isPinValid
   try {
     isPinValid = await authenticateByCustomPin(currentPinHash, pin)
@@ -52,21 +52,13 @@ const handleNewPinEnter = ({navigation, encryptAndStoreCustomPin}) => async (
   navigation.goBack()
 }
 
-type Props = {
-  navigation: Navigation,
-  translations: SubTranslation<typeof getTranslations>,
-  isCurrentPinVerified: boolean,
-  handleNewPinEnter: (string) => void,
-  handleVerifyPin: (string) => void,
-}
-
 const ChangeCustomPinScreen = ({
   translations,
   navigation,
   isCurrentPinVerified,
   handleNewPinEnter,
   handleVerifyPin,
-}: Props) => (
+}) => (
   <View style={styles.container}>
     <StatusBar type="dark" />
 
@@ -85,7 +77,7 @@ const ChangeCustomPinScreen = ({
   </View>
 )
 
-export default compose(
+export default (compose(
   connect(
     (state: State) => ({
       translations: getTranslations(state),
@@ -101,4 +93,4 @@ export default compose(
     handleVerifyPin,
     handleNewPinEnter,
   }),
-)(ChangeCustomPinScreen)
+)(ChangeCustomPinScreen): ComponentType<{|navigation: Navigation|}>)

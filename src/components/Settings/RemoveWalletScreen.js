@@ -28,10 +28,10 @@ type Prop = {
   translations: SubTranslation<typeof getTranslations>,
   walletName: string,
   typedWalletName: string,
-  setTypedWalletName: (string) => mixed,
+  setTypedWalletName: (string) => any,
   isRemovingWallet: boolean,
-  handleRemoveWallet: () => void,
-  setHasMnemonicWrittenDown: (boolean) => mixed,
+  handleRemoveWallet: () => any,
+  setHasMnemonicWrittenDown: (boolean) => any,
   hasMnemonicWrittenDown: boolean,
 }
 

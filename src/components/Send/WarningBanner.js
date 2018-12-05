@@ -1,12 +1,13 @@
+// @flow
 import React from 'react'
 import {TouchableOpacity} from 'react-native'
 
 import {Text, Banner} from '../UiKit'
 
-type Props = {
+type Props = {|
   text: string,
-  action: () => void,
-}
+  action?: () => any,
+|}
 
 const WarningBanner = ({text, action}: Props) => (
   <Banner error text={text}>

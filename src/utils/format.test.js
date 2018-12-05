@@ -1,6 +1,7 @@
+// @flow
 import jestSetup from '../jestSetup'
 
-import BigNumber from 'bignumber.js'
+import {BigNumber} from 'bignumber.js'
 import {formatAda, formatAdaInteger, formatAdaFractional} from './format'
 
 jestSetup.setup()

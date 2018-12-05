@@ -157,18 +157,14 @@ const TxDetails = ({
 
       <OfflineBanner />
       <Screen scroll>
-        <Banner
-          label={translations.transactionType[transaction.direction]}
-          text={
-            transaction.amount && (
-              <AdaAmount
-                amount={transaction.amount}
-                direction={transaction.direction}
-              />
-            )
-          }
+        <Banner label={translations.transactionType[transaction.direction]}>
+          {transaction.amount && (
+            <AdaAmount
+              amount={transaction.amount}
+              direction={transaction.direction}
+            />
+          )}
           boldText
-        >
           {transaction.fee && (
             <Text small>
               {translations.fee} {formatAdaWithSymbol(transaction.fee)}

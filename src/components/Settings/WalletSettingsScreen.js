@@ -115,8 +115,12 @@ export default (compose(
     },
   ),
   withHandlers({
-    onToggleEasyConfirmation: ({isEasyConfirmationEnabled, navigation}) => () =>
-      navigation.navigate(SETTINGS_ROUTES.EASY_COMFIRMATION),
+    onToggleEasyConfirmation: ({
+      isEasyConfirmationEnabled,
+      navigation,
+    }) => () => {
+      navigation.navigate(SETTINGS_ROUTES.EASY_COMFIRMATION)
+    },
   }),
   withHandlers({
     onSwitchWallet: ignoreConcurrentAsyncHandler(
