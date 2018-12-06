@@ -82,11 +82,13 @@ export default compose(
       if (canSystemAuthBeEnabled) {
         await setSystemAuth(true)
 
-        navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH)
+        navigation.navigate(WALLET_INIT_ROUTES.INITIAL_CREATE_RESTORE_SWITCH)
       } else {
         navigation.navigate(FIRST_RUN_ROUTES.CUSTOM_PIN, {
           onSuccess: () =>
-            navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH),
+            navigation.navigate(
+              WALLET_INIT_ROUTES.INITIAL_CREATE_RESTORE_SWITCH,
+            ),
         })
       }
     },

@@ -25,14 +25,15 @@ const WalletInitNavigator = createStackNavigator(
         header: null,
       },
     },
-
-    [WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH]: {
+    [WALLET_INIT_ROUTES.INITIAL_CREATE_RESTORE_SWITCH]: {
       screen: WalletInitScreen,
       navigationOptions: {
         header: null,
       },
     },
-
+    [WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH]: {
+      screen: WalletInitScreen,
+    },
     [WALLET_INIT_ROUTES.CREATE_WALLET]: CreateWalletScreen,
     [WALLET_INIT_ROUTES.RESTORE_WALLET]: RestoreWalletScreen,
     [WALLET_INIT_ROUTES.MNEMONIC_SHOW]: MnemonicShowScreen,

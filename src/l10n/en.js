@@ -95,6 +95,7 @@ const l10n = {
     title: 'Create a new wallet',
   },
   CreateOrRestoreWalletScreen: {
+    title: 'Add wallet',
     createWalletButton: 'Create new wallet',
     restoreWalletButton: 'Restore wallet from backup',
   },

@@ -28,6 +28,7 @@ export const FIRST_RUN_ROUTES = {
 export const WALLET_INIT_ROUTES = {
   WALLET_SELECTION: 'wallet-selection',
   CREATE_RESTORE_SWITCH: 'choose-create-restore',
+  INITIAL_CREATE_RESTORE_SWITCH: 'initial-choose-create-restore',
   CREATE_WALLET: 'create-wallet-form',
   RESTORE_WALLET: 'restore-wallet-form',
   MNEMONIC_SHOW: 'mnemoinc-show',
