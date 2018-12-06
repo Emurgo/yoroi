@@ -34,6 +34,14 @@ import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 
 const getTranslations = (state) => state.trans.ConfirmSendAdaScreen
 
+const onFail = (navigation) => (reason) => {
+  if (reason === KeyStore.REJECTIONS.CANCELED) {
+    navigation.navigate(SEND_ROUTES.CONFIRM)
+  } else {
+    throw new Error(`Failed confirming transaction because: ${reason}`)
+  }
+}
+
 const handleOnConfirm = async (
   navigation,
   isEasyConfirmationEnabled,
@@ -51,6 +59,7 @@ const handleOnConfirm = async (
     navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
       keyId: walletManager._id,
       onSuccess: submitTx,
+      onFail: onFail(navigation),
     })
     return
   }
