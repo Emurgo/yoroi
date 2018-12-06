@@ -16,6 +16,16 @@ rustup target add wasm32-unknown-unknown --toolchain nightly
 
 ### ios
 
+Install cocoapods and download ios dependencies:
+
+```
+gem install cocoapods
+cd ios && pod install
+```
+
+*Optional*: Copy your `GoogleService-Info.plist` to `ios/emurgo/` to enable Crashlytics.
+
+Setup React Native third-party libraries:
 ```
 node_modules/react-native/scripts/ios-install-third-party.sh
 node_modules/react-native/third-party/glog-0.3.5/configure

@@ -65,3 +65,6 @@ haul-debug.log
 .cache-loader
 config.log
 third-party
+
+# CocoaPods
+Pods/

@@ -58,6 +58,6 @@
 	<key>UIStatusBarStyle</key>
 	<string>UIStatusBarStyleLightContent</string>
 	<key>firebase_crashlytics_collection_enabled</key>
-	<boolean>false</boolean>
+	<false/>
 </dict>
 </plist>
