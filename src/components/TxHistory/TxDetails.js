@@ -14,7 +14,7 @@ import {
 } from '../../selectors'
 import {withNavigationTitle, withTranslations} from '../../utils/renderUtils'
 import {formatAdaWithSymbol, formatDateToSeconds} from '../../utils/format'
-import {Text, Button, OfflineBanner, Banner} from '../UiKit'
+import {Text, Button, OfflineBanner, Banner, StatusBar} from '../UiKit'
 import Screen from '../../components/Screen'
 import {CONFIG} from '../../config'
 import AddressModal from '../Receive/AddressModal'
@@ -153,6 +153,8 @@ const TxDetails = ({
 
   return (
     <View style={styles.container}>
+      <StatusBar type="dark" />
+
       <OfflineBanner />
       <Screen scroll>
         <Banner

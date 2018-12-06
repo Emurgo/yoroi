@@ -7,7 +7,7 @@ import {withHandlers} from 'recompose'
 import {View, TouchableOpacity, Linking, Image} from 'react-native'
 
 import {withNavigationTitle} from '../../utils/renderUtils'
-import {Text} from '../UiKit'
+import {Text, StatusBar} from '../UiKit'
 import chevronRight from '../../assets/img/chevron_right.png'
 
 import styles from './styles/SupportScreen.style'
@@ -38,6 +38,8 @@ type Props = {
 
 const SupportScreen = ({translations}: Props) => (
   <View style={styles.container}>
+    <StatusBar type="dark" />
+
     <LinkingItem
       url={translations.faq.url}
       title={translations.faq.label}

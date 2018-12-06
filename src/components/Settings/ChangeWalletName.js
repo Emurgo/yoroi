@@ -8,7 +8,7 @@ import {View, KeyboardAvoidingView, Platform} from 'react-native'
 import {SafeAreaView} from 'react-navigation'
 import _ from 'lodash'
 
-import {Button, ValidatedTextInput} from '../UiKit'
+import {Button, ValidatedTextInput, StatusBar} from '../UiKit'
 import {walletNameSelector, walletNamesSelector} from '../../selectors'
 import {changeWalletName, showErrorDialog} from '../../actions'
 import {withNavigationTitle} from '../../utils/renderUtils'
@@ -46,6 +46,8 @@ const ChangeWalletName = ({
       behavior="padding"
       style={styles.keyboardAvoidingView}
     >
+      <StatusBar type="dark" />
+
       <SafeAreaView style={styles.safeAreaView}>
         <View style={styles.content}>
           <ValidatedTextInput

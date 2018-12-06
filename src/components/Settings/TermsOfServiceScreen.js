@@ -6,6 +6,7 @@ import {compose} from 'redux'
 import {SafeAreaView} from 'react-navigation'
 import {ScrollView} from 'react-native'
 
+import {StatusBar} from '../UiKit'
 import TermsOfService from '../Common/TermsOfService'
 import {withNavigationTitle} from '../../utils/renderUtils'
 
@@ -21,6 +22,8 @@ type Props = {
 
 const TermsOfServiceScreen = ({translations}: Props) => (
   <SafeAreaView style={styles.safeAreaView}>
+    <StatusBar type="dark" />
+
     <ScrollView>
       <TermsOfService />
     </ScrollView>

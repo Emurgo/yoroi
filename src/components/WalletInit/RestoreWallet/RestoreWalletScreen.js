@@ -8,7 +8,7 @@ import {withHandlers, withStateHandlers} from 'recompose'
 import {SafeAreaView} from 'react-navigation'
 import _ from 'lodash'
 
-import {Text, Button, ValidatedTextInput} from '../../UiKit'
+import {Text, Button, ValidatedTextInput, StatusBar} from '../../UiKit'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {CONFIG} from '../../../config'
 import {
@@ -75,6 +75,8 @@ const RestoreWalletScreen = ({
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
+      <StatusBar type="dark" />
+
       <View style={styles.container}>
         <View>
           <Text>{translations.instructions}</Text>

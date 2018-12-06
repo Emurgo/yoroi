@@ -2,13 +2,13 @@
 
 import React from 'react'
 import {connect} from 'react-redux'
-import {View, StatusBar} from 'react-native'
+import {View} from 'react-native'
 import {SafeAreaView} from 'react-navigation'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 
 import WalletDescription from './WalletDescription'
-import {Button} from '../UiKit'
+import {Button, StatusBar} from '../UiKit'
 import styles from './styles/WalletInitScreen.style'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 
@@ -30,7 +30,8 @@ const WalletInitScreen = ({
   translations,
 }: Props) => (
   <SafeAreaView style={styles.safeAreaView}>
-    <StatusBar barStyle="light-content" backgroundColor="#254BC9" />
+    <StatusBar type="dark" />
+
     <View style={styles.container}>
       <View style={styles.content}>
         <WalletDescription />

@@ -9,7 +9,7 @@ import {withHandlers, withProps, withStateHandlers} from 'recompose'
 
 import assert from '../../../utils/assert'
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
-import {Text, Button} from '../../UiKit'
+import {Text, Button, StatusBar} from '../../UiKit'
 import Screen from '../../Screen'
 import {ROOT_ROUTES} from '../../../RoutesList'
 import {createWallet} from '../../../actions'
@@ -46,6 +46,8 @@ const handleWalletConfirmation = ({navigation, createWallet}) => async () => {
 
 const Word = ({styles, word, handleOnPress, selected}) => (
   <View style={[styles.word, selected ? styles.selected : {}]}>
+    <StatusBar type="dark" />
+
     <TouchableHighlight
       activeOpacity={0.1}
       underlayColor={COLORS.WHITE}

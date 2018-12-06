@@ -10,7 +10,7 @@ import {SafeAreaView} from 'react-navigation'
 import walletManager from '../../crypto/wallet'
 import WalletListItem from './WalletListItem'
 import Screen from '../Screen'
-import {Button} from '../UiKit'
+import {Button, StatusBar} from '../UiKit'
 import {ROOT_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import styles from './styles/WalletSelectionScreen.style'
 
@@ -28,6 +28,8 @@ const WalletListScreen = ({
   openWallet,
 }) => (
   <SafeAreaView style={styles.safeAreaView}>
+    <StatusBar type="dark" />
+
     <Screen style={styles.container}>
       <Text style={styles.title}>{translations.header}</Text>
 

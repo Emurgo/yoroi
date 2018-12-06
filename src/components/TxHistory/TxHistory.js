@@ -3,11 +3,11 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {View, RefreshControl, ScrollView, Image, StatusBar} from 'react-native'
+import {View, RefreshControl, ScrollView, Image} from 'react-native'
 import {SafeAreaView} from 'react-navigation'
 import _ from 'lodash'
 
-import {Text, Banner, OfflineBanner} from '../UiKit'
+import {Text, Banner, OfflineBanner, StatusBar} from '../UiKit'
 import {
   transactionsInfoSelector,
   isSynchronizingHistorySelector,
@@ -79,7 +79,7 @@ const TxHistory = ({
   availableAmount,
 }) => (
   <SafeAreaView style={styles.scrollView}>
-    <StatusBar barStyle="light-content" backgroundColor="#254BC9" />
+    <StatusBar type="dark" />
     <View style={styles.container}>
       <OfflineBanner />
       {isOnline &&

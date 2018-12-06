@@ -9,6 +9,7 @@ import PinRegistrationForm from '../Common/PinRegistrationForm'
 import {encryptAndStoreCustomPin} from '../../actions'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
+import {StatusBar} from '../UiKit'
 
 import styles from './styles/CustomPinScreen.style'
 
@@ -34,6 +35,8 @@ type Props = {
 
 const CustomPinScreen = ({handleValidPinEnter, translations}: Props) => (
   <View style={styles.container}>
+    <StatusBar type="dark" />
+
     <PinRegistrationForm
       onValidPinEnter={handleValidPinEnter}
       labels={translations.PinRegistrationForm}

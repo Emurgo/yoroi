@@ -6,7 +6,13 @@ import {connect} from 'react-redux'
 import {ScrollView, View} from 'react-native'
 import {withHandlers, withStateHandlers} from 'recompose'
 
-import {Text, Button, OfflineBanner, ValidatedTextInput} from '../UiKit'
+import {
+  Text,
+  Button,
+  OfflineBanner,
+  ValidatedTextInput,
+  StatusBar,
+} from '../UiKit'
 import {utxoBalanceSelector, easyConfirmationSelector} from '../../selectors'
 import walletManager from '../../crypto/wallet'
 import {SEND_ROUTES} from '../../RoutesList'
@@ -91,7 +97,10 @@ const ConfirmScreen = ({
 
   return (
     <View style={styles.root}>
+      <StatusBar type="dark" />
+
       <OfflineBanner />
+
       <ScrollView style={styles.container}>
         <View style={styles.balance}>
           <Text style={styles.balanceLabel}>{translations.availableFunds}</Text>

@@ -8,7 +8,7 @@ import _ from 'lodash'
 import {SafeAreaView} from 'react-navigation'
 
 import Screen from '../../components/Screen'
-import {Text, Button, OfflineBanner, Banner} from '../UiKit'
+import {Text, Button, OfflineBanner, Banner, StatusBar} from '../UiKit'
 import AddressDetail from './AddressDetail'
 import AddressesList from './AddressesList'
 import {
@@ -45,6 +45,8 @@ const ReceiveScreen = ({
 
   return (
     <View style={styles.container}>
+      <StatusBar type="dark" />
+
       <OfflineBanner />
       <Banner text={translations.infoText} />
       <View style={styles.content}>

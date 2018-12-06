@@ -26,6 +26,7 @@ import {
 } from '../../selectors'
 import walletManager from '../../crypto/wallet'
 import KeyStore from '../../crypto/KeyStore'
+import {StatusBar} from '../UiKit'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
@@ -115,6 +116,8 @@ const ApplicationSettingsScreen = ({
   language,
 }: Props) => (
   <ScrollView style={styles.scrollView}>
+    <StatusBar type="dark" />
+
     <NavigationEvents onWillFocus={updateDeviceSettings} />
     <SettingsSection title={translations.language}>
       <NavigatedSettingsItem

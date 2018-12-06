@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native'
 
-import {Text, Button} from './UiKit'
+import {Text, Button, StatusBar} from './UiKit'
 import {ROOT_ROUTES, WALLET_INIT_ROUTES} from '../RoutesList'
 import storage from '../utils/storage'
 
@@ -46,6 +46,8 @@ type Props = {
 
 const IndexScreen = ({navigation}: Props) => (
   <SafeAreaView style={styles.safeAreaView}>
+    <StatusBar type="light" />
+
     <ScrollView style={styles.container}>
       {routes.map((route) => (
         <Button
