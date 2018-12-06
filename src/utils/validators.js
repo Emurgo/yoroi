@@ -16,9 +16,9 @@ export type PasswordValidationErrors = {
 }
 
 export type WalletNameValidationErrors = {
-  walletNameTooLong?: boolean,
-  nameIsAlreadyTaken?: boolean,
-  notProvided?: boolean,
+  tooLong?: boolean,
+  nameAlreadyTaken?: boolean,
+  mustBeFilled?: boolean,
 }
 
 export type AddressValidationErrors = {
@@ -107,9 +107,9 @@ export const validateWalletName = (
   walletNames: Array<string>,
 ): WalletNameValidationErrors =>
   pickOnlyFailingValidations({
-    notProvided: !newWalletName,
-    walletNameTooLong: newWalletName.length > 40,
-    nameIsAlreadyTaken:
+    mustBeFilled: !newWalletName,
+    tooLong: newWalletName.length > 40,
+    nameAlreadyTaken:
       newWalletName !== oldWalletName &&
       walletNames.some((x) => newWalletName === x),
   })
@@ -123,9 +123,9 @@ export const getWalletNameError = (
 ) => {
   const {tooLong, nameAlreadyTaken} = translations
 
-  if (validationErrors.walletNameTooLong) {
+  if (validationErrors.tooLong) {
     return tooLong
-  } else if (validationErrors.nameIsAlreadyTaken) {
+  } else if (validationErrors.nameAlreadyTaken) {
     return nameAlreadyTaken
   } else {
     return null

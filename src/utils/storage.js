@@ -41,7 +41,7 @@ export const readMany = async (paths: Array<string>) => {
 export const write = async (path: string, data: any) => {
   assert.preconditionCheck(path.startsWith('/'), 'Wrong storage key path')
   assert.preconditionCheck(!path.endsWith('/'), 'Wrong storage key path')
-  assert.preconditionCheck(data !== undefined, 'Can not store undefined')
+  assert.preconditionCheck(data !== undefined, 'Cannot store undefined')
 
   try {
     await AsyncStorage.setItem(path, JSON.stringify(data))
