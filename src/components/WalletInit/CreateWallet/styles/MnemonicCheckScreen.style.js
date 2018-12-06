@@ -31,7 +31,16 @@ export default StyleSheet.create({
     // flexShrink: 1,
     // flexGrow: 0,
   },
-  word: {
+  wordText: {
+    borderRadius: 8,
+    height: 26,
+    marginBottom: 12,
+    marginRight: 10,
+    paddingHorizontal: 16,
+    justifyContent: 'center',
+    // paddingVertical: 8,
+  },
+  wordBadge: {
     backgroundColor: COLORS.LIGHT_GRAY,
     borderRadius: 8,
     height: 26,

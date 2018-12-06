@@ -44,19 +44,32 @@ const handleWalletConfirmation = ({navigation, createWallet}) => async () => {
   navigation.navigate(ROOT_ROUTES.WALLET)
 }
 
-const Word = ({word, handleOnPress, selected, hidden}) => (
+type WordProps = {
+  word: string,
+  selected: boolean,
+  hidden?: boolean,
+  onPress: (number) => any,
+  value: number,
+}
+
+const _WordBadge = ({word, handleOnPress, selected, hidden}) => (
   <TouchableOpacity
     activeOpacity={0.5}
     onPress={handleOnPress}
     disabled={selected}
-    style={[styles.word, selected && styles.selected, hidden && styles.hidden]}
+    style={[
+      styles.wordBadge,
+      selected && styles.selected,
+      hidden && styles.hidden,
+    ]}
   >
     <Text style={[selected && styles.selectedText]}>{word}</Text>
   </TouchableOpacity>
 )
-const EnhancedWord = withHandlers({
+
+const WordBadge: ComponentType<WordProps> = withHandlers({
   handleOnPress: ({onPress, value}) => () => onPress(value),
-})(Word)
+})(_WordBadge)
 
 const MnemonicCheckScreen = ({
   mnemonic,
@@ -71,6 +84,9 @@ const MnemonicCheckScreen = ({
   const isPhraseComplete = partialPhrase.length === words.length
   const isPhraseValid = validatePhrase(mnemonic, words, partialPhrase)
 
+  const initial = _.initial(partialPhrase)
+  const last = _.last(partialPhrase)
+
   return (
     <SafeAreaView style={{backgroundColor: COLORS.WHITE, flex: 1}}>
       <View style={styles.container}>
@@ -79,37 +95,29 @@ const MnemonicCheckScreen = ({
           <Text>{translations.instructions}</Text>
           <View style={{flex: 1}}>
             <View style={styles.recoveryPhrase}>
-              {partialPhrase.map((index) => (
-                <EnhancedWord
-                  value={index}
-                  key={index}
-                  selected={false}
-                  onPress={deselectWord}
-                  word={words[index]}
-                />
+              {initial.map((id) => (
+                <Text style={styles.wordText} key={id}>
+                  {words[id]}
+                </Text>
               ))}
-              {words
-                .filter((_, index) => partialPhrase.indexOf(index) === -1)
-                .map((word, index) => (
-                  <EnhancedWord
-                    key={index}
-                    value={index}
-                    selected={false}
-                    onPress={deselectWord}
-                    word={word + partialPhrase.indexOf(word)}
-                    hidden
-                  />
-                ))}
+              {last != null && (
+                <WordBadge
+                  value={last}
+                  selected={false}
+                  word={words[last]}
+                  onPress={deselectWord}
+                />
+              )}
             </View>
             {!isPhraseValid &&
               isPhraseComplete && (
-              <Text style={styles.error}>
-                {translations.mnemonicWordsInput.errors.invalidPhrase}
-              </Text>
-            )}
+                <Text style={styles.error}>
+                  {translations.mnemonicWordsInput.errors.invalidPhrase}
+                </Text>
+              )}
             <View style={styles.words}>
               {words.map((word, index) => (
-                <EnhancedWord
+                <WordBadge
                   key={index}
                   value={index}
                   selected={partialPhrase.includes(index)}
