@@ -62,6 +62,7 @@ const ToggleEasyConfirmationScreen = ({
     {!isEasyConfirmationEnabled ? (
       <View style={styles.main}>
         <Text style={styles.heading}>{translations.enable.heading}</Text>
+        <Text style={styles.warning}>{translations.enable.warning}</Text>
 
         <ValidatedTextInput
           secureTextEntry

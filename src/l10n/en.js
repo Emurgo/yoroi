@@ -491,11 +491,17 @@ const l10n = {
     },
   },
   EasyConfirmationScreen: {
-    title: 'Easy transaction confirmation',
+    title: 'Easy confirmation',
     enable: {
       heading:
-        'Enabling this option can make app less secure. ' +
-        'This is a compromise between UX and security!',
+        'This option will allow you to send ADA transactions ' +
+        'from your wallet just by confirming with fingerprint or ' +
+        'face recognition with standard system fallback option. ' +
+        'This makes your wallet less secure. This is a compromise ' +
+        'between UX and security!',
+      warning:
+        'Please remember your master password, as you may need it ' +
+        'in case your biometrics data are removed from the device.',
       masterPassword: 'Master password',
       enableButton: 'Enable',
     },
