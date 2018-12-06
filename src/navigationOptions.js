@@ -7,3 +7,7 @@ export const defaultNavigationOptions = {
   },
   headerTintColor: '#fff',
 }
+
+export const defaultStackNavigatorOptions = {
+  headerLayoutPreset: 'center',
+}

@@ -7,7 +7,10 @@ import CreateWalletScreen from './CreateWallet/CreateWalletScreen'
 import RestoreWalletScreen from './RestoreWallet/RestoreWalletScreen'
 import MnemonicShowScreen from './CreateWallet/MnemonicShowScreen'
 import HeaderBackButton from '../UiKit/HeaderBackButton'
-import {defaultNavigationOptions} from '../../navigationOptions'
+import {
+  defaultNavigationOptions,
+  defaultStackNavigatorOptions,
+} from '../../navigationOptions'
 import MnemonicCheckScreen from './CreateWallet/MnemonicCheckScreen'
 import WalletCredentialsScreen from './RestoreWallet/WalletCredentialsScreen'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
@@ -46,6 +49,7 @@ const WalletInitNavigator = createStackNavigator(
     cardStyle: {
       backgroundColor: 'transparent',
     },
+    ...defaultStackNavigatorOptions,
   },
 )
 

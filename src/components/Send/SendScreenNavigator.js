@@ -9,7 +9,10 @@ import SendingModal from './SendingModal'
 import BiometricAuthScreen from './BiometricAuthScreen'
 
 import HeaderBackButton from '../UiKit/HeaderBackButton'
-import {defaultNavigationOptions} from '../../navigationOptions'
+import {
+  defaultNavigationOptions,
+  defaultStackNavigatorOptions,
+} from '../../navigationOptions'
 
 import {SEND_ROUTES} from '../../RoutesList'
 
@@ -38,6 +41,7 @@ const SendScreenNavigator = createStackNavigator(
       headerLeft: <HeaderBackButton navigation={navigation} />,
       ...defaultNavigationOptions,
     }),
+    ...defaultStackNavigatorOptions,
   },
 )
 

@@ -5,7 +5,10 @@ import {createStackNavigator} from 'react-navigation'
 import ReceiveScreen from './ReceiveScreen'
 import {RECEIVE_ROUTES} from '../../RoutesList'
 import HeaderBackButton from '../UiKit/HeaderBackButton'
-import {defaultNavigationOptions} from '../../navigationOptions'
+import {
+  defaultNavigationOptions,
+  defaultStackNavigatorOptions,
+} from '../../navigationOptions'
 
 const ReceiveScreenNavigator = createStackNavigator(
   {
@@ -20,6 +23,7 @@ const ReceiveScreenNavigator = createStackNavigator(
       headerLeft: <HeaderBackButton navigation={navigation} />,
       ...defaultNavigationOptions,
     }),
+    ...defaultStackNavigatorOptions,
   },
 )
 

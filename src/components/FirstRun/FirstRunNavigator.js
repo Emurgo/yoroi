@@ -4,7 +4,10 @@ import {createStackNavigator} from 'react-navigation'
 
 import LanguagePickerScreen from './LanguagePickerScreen'
 import HeaderBackButton from '../UiKit/HeaderBackButton'
-import {defaultNavigationOptions} from '../../navigationOptions'
+import {
+  defaultNavigationOptions,
+  defaultStackNavigatorOptions,
+} from '../../navigationOptions'
 import {FIRST_RUN_ROUTES} from '../../RoutesList'
 import AcceptTermsOfServiceScreen from './AcceptTermsOfServiceScreen'
 import CustomPinScreen from './CustomPinScreen'
@@ -35,6 +38,7 @@ const WalletInitNavigator = createStackNavigator(
     cardStyle: {
       backgroundColor: 'transparent',
     },
+    ...defaultStackNavigatorOptions,
   },
 )
 
