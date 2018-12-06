@@ -16,6 +16,11 @@ const datetime = {
   yesterday: 'Yesterday',
 }
 
+const walletNameErrors = {
+  tooLong: 'Wallet name cannot exceed 40 letters',
+  nameAlreadyTaken: 'This name is already taken',
+}
+
 const l10n = {
   global: {
     languages,
@@ -119,11 +124,7 @@ const l10n = {
   WalletNameAndPasswordForm: {
     walletNameInput: {
       label: 'Wallet name',
-      errors: {
-        incorrectNumberOfCharacters:
-          'Wallet name requires at least 1 and at most 40 letters.',
-        nameAlreadyTaken: 'This name is already taken',
-      },
+      errors: walletNameErrors,
     },
     newPasswordInput: {
       label: 'Wallet password',
@@ -268,12 +269,7 @@ const l10n = {
     title: 'Change wallet name',
     walletNameInput: {
       label: 'Wallet name',
-      // same as WalletNameAndPasswordForm
-      errors: {
-        nameAlreadyTaken: 'This name is already taken',
-        incorrectNumberOfCharacters:
-          'Wallet name requires at least 1 and at most 40 letters.',
-      },
+      errors: walletNameErrors,
     },
     changeButton: 'Change name',
   },
@@ -452,7 +448,7 @@ const l10n = {
     remove: 'Remove wallet',
     hasWrittenDownMnemonic:
       'I have written down mnemonic of this wallet and understand ' +
-      'that I can not recover the wallet without it.',
+      'that I cannot recover the wallet without it.',
   },
 
   ChoosePinScreen: {

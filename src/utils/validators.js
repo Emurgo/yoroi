@@ -16,8 +16,9 @@ export type PasswordValidationErrors = {
 }
 
 export type WalletNameValidationErrors = {
-  walletNameLength?: boolean,
-  nameIsAlreadyTaken?: boolean,
+  tooLong?: boolean,
+  nameAlreadyTaken?: boolean,
+  mustBeFilled?: boolean,
 }
 
 export type AddressValidationErrors = {
@@ -66,6 +67,8 @@ export type PasswordStrength = {
   hasTwelveCharacters?: boolean,
 }
 
+const pickOnlyFailingValidations = (validation: Object) => _.pickBy(validation)
+
 export const getPasswordStrength = (password: string): PasswordStrength => {
   if (!password) {
     return {isStrong: false}
@@ -90,57 +93,39 @@ export const getPasswordStrength = (password: string): PasswordStrength => {
 export const validatePassword = (
   password: string,
   passwordConfirmation: string,
-): PasswordValidationErrors => {
-  let validations = {}
-
-  if (!password) {
-    validations = {...validations, passwordReq: true}
-  }
-  if (!passwordConfirmation) {
-    validations = {...validations, passwordConfirmationReq: true}
-  }
-  if (password !== passwordConfirmation) {
-    validations = {...validations, matchesConfirmation: true}
-  }
-  if (!getPasswordStrength(password).isStrong) {
-    validations = {...validations, passwordIsWeak: true}
-  }
-
-  return validations
-}
+): PasswordValidationErrors =>
+  pickOnlyFailingValidations({
+    passwordReq: !password,
+    passwordConfirmationReq: !passwordConfirmation,
+    matchesConfirmation: password !== passwordConfirmation,
+    passwordIsWeak: !getPasswordStrength(password).isStrong,
+  })
 
 export const validateWalletName = (
   newWalletName: string,
   oldWalletName: ?string,
   walletNames: Array<string>,
-): WalletNameValidationErrors => {
-  let validations = {}
-
-  if (newWalletName.length < 1 || newWalletName.length > 40) {
-    validations = {...validations, walletNameLength: true}
-  }
-  if (
-    newWalletName !== oldWalletName &&
-    walletNames.some((x) => newWalletName === x)
-  ) {
-    validations = {...validations, nameIsAlreadyTaken: true}
-  }
-
-  return validations
-}
+): WalletNameValidationErrors =>
+  pickOnlyFailingValidations({
+    mustBeFilled: !newWalletName,
+    tooLong: newWalletName.length > 40,
+    nameAlreadyTaken:
+      newWalletName !== oldWalletName &&
+      walletNames.some((x) => newWalletName === x),
+  })
 
 export const getWalletNameError = (
   translations: {
-    incorrectNumberOfCharacters: string,
+    tooLong: string,
     nameAlreadyTaken: string,
   },
   validationErrors: WalletNameValidationErrors,
 ) => {
-  const {incorrectNumberOfCharacters, nameAlreadyTaken} = translations
+  const {tooLong, nameAlreadyTaken} = translations
 
-  if (validationErrors.walletNameLength) {
-    return incorrectNumberOfCharacters
-  } else if (validationErrors.nameIsAlreadyTaken) {
+  if (validationErrors.tooLong) {
+    return tooLong
+  } else if (validationErrors.nameAlreadyTaken) {
     return nameAlreadyTaken
   } else {
     return null
