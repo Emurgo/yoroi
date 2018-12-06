@@ -1,6 +1,8 @@
 // @flow
 import {StyleSheet} from 'react-native'
 
+import {COLORS} from '../../../styles/config'
+
 export default StyleSheet.create({
   item: {
     flexDirection: 'row',
@@ -10,6 +12,9 @@ export default StyleSheet.create({
   },
   label: {
     flex: 1,
+  },
+  disabled: {
+    color: COLORS.DISABLED,
   },
   section: {
     marginTop: 16,

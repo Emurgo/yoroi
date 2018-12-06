@@ -130,7 +130,10 @@ const ApplicationSettingsScreen = ({
         disabled={isSystemAuthEnabled}
       />
 
-      <SettingsItem label={translations.biometricsSignIn}>
+      <SettingsItem
+        label={translations.biometricsSignIn}
+        disabled={!isFingerprintEncryptionHardwareSupported}
+      >
         <Switch
           value={isSystemAuthEnabled}
           onValueChange={onToggleBiometricsAuthIn}
