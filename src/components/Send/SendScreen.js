@@ -9,7 +9,13 @@ import _ from 'lodash'
 
 import {CONFIG} from '../../config'
 import {SEND_ROUTES} from '../../RoutesList'
-import {Text, Button, OfflineBanner, ValidatedTextInput} from '../UiKit'
+import {
+  Text,
+  Button,
+  OfflineBanner,
+  ValidatedTextInput,
+  StatusBar,
+} from '../UiKit'
 import {
   isFetchingUtxosSelector,
   lastUtxosFetchErrorSelector,
@@ -322,6 +328,8 @@ class SendScreen extends Component<Props, State> {
 
     return (
       <View style={styles.root}>
+        <StatusBar type="dark" />
+
         <UtxoAutoRefresher />
         {this.renderErrorBanners()}
 

@@ -4,7 +4,7 @@ import React from 'react'
 import {View, Image, TouchableOpacity} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Text} from '../UiKit'
+import {Text, StatusBar} from '../UiKit'
 import fingerprintImage from '../../assets/img/fingerprint.png'
 import chevronLeft from '../../assets/img/chevron_left.png'
 
@@ -27,6 +27,8 @@ const FingerprintScreenBase = ({
     start={{x: 0, y: 0}}
     end={{x: 1, y: 1}}
   >
+    <StatusBar type="dark" />
+
     <View style={[styles.main, onGoBack ? null : styles.mainPadded]}>
       {onGoBack && (
         <TouchableOpacity onPress={onGoBack} style={styles.goBack}>

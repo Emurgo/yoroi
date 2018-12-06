@@ -13,6 +13,7 @@ import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {authenticateByCustomPin} from '../../crypto/customPin'
 import {customPinHashSelector} from '../../selectors'
 import {showErrorDialog} from '../../actions'
+import {StatusBar} from '../UiKit'
 
 import styles from './styles/CustomPinLogin.style'
 
@@ -29,6 +30,8 @@ type Props = {
 
 const CustomPinLogin = ({translations, onPinEnter}: Props) => (
   <View style={styles.root}>
+    <StatusBar type="dark" />
+
     <PinInput
       pinMaxLength={CONFIG.PIN_LENGTH}
       labels={{

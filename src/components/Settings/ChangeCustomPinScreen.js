@@ -12,6 +12,7 @@ import {encryptAndStoreCustomPin, showErrorDialog} from '../../actions'
 import {customPinHashSelector} from '../../selectors'
 import {CONFIG} from '../../config'
 import {withNavigationTitle} from '../../utils/renderUtils'
+import {StatusBar} from '../UiKit'
 
 import styles from './styles/ChangeCustomPinScreen.style'
 
@@ -68,6 +69,8 @@ const ChangeCustomPinScreen = ({
   handleVerifyPin,
 }: Props) => (
   <View style={styles.container}>
+    <StatusBar type="dark" />
+
     {isCurrentPinVerified ? (
       <PinRegistrationForm
         onValidPinEnter={handleNewPinEnter}

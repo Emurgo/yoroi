@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import {compose} from 'redux'
-import {View, Image, FlatList, StatusBar} from 'react-native'
+import {View, Image, FlatList} from 'react-native'
 import {withTranslations} from '../../utils/renderUtils'
 
 import styles from './styles/LanguagePicker.style'
@@ -13,7 +13,7 @@ import chineseFlagIcon from '../../assets/img/flags/chinese.png'
 import selectLanguageImage from '../../assets/img/select_language.png'
 import LanguageListItem from './LanguageListItem'
 import l10n, {LANGUAGES} from '../../l10n'
-import {Button} from '../UiKit'
+import {Button, StatusBar} from '../UiKit'
 
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
@@ -69,7 +69,8 @@ export const LanguagePicker = ({
   translations,
 }: Props) => (
   <View style={styles.container}>
-    <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+    <StatusBar type="light" />
+
     <FlatList
       style={styles.list}
       contentContainerStyle={styles.listContainer}

@@ -5,7 +5,7 @@ import {compose} from 'redux'
 import {View, ScrollView} from 'react-native'
 import {withHandlers, withStateHandlers} from 'recompose'
 
-import {Button, Text, Checkbox, ValidatedTextInput} from '../UiKit'
+import {Button, Text, Checkbox, ValidatedTextInput, StatusBar} from '../UiKit'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {walletNameSelector} from '../../selectors'
@@ -52,6 +52,8 @@ const RemoveWalletScreen = ({
 
   return (
     <View style={styles.container}>
+      <StatusBar type="dark" />
+
       <Text style={styles.description}>{translations.description}</Text>
 
       <ScrollView contentContainerStyle={styles.screenContainer}>

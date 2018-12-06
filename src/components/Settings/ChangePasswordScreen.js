@@ -7,7 +7,7 @@ import {SafeAreaView, NavigationEvents} from 'react-navigation'
 import _ from 'lodash'
 import {withHandlers} from 'recompose'
 
-import {Button, ValidatedTextInput} from '../UiKit'
+import {Button, ValidatedTextInput, StatusBar} from '../UiKit'
 import {validatePassword} from '../../utils/validators'
 import {withTranslations, withNavigationTitle} from '../../utils/renderUtils'
 import PasswordStrengthIndicator from '../WalletInit/PasswordStrengthIndicator'
@@ -107,6 +107,8 @@ class ChangePasswordScreen extends PureComponent<Props, ComponentState> {
 
     return (
       <SafeAreaView style={styles.safeAreaView}>
+        <StatusBar type="dark" />
+
         <View style={styles.container}>
           <NavigationEvents onWillBlur={this.handleOnWillBlur} />
 

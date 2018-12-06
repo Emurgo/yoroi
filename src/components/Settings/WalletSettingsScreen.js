@@ -21,6 +21,7 @@ import {
   SettingsSection,
   PressableSettingsItem,
 } from './SettingsItems'
+import {StatusBar} from '../UiKit'
 
 import type {Navigation} from '../../types/navigation'
 import type {ComponentType} from 'react'
@@ -42,6 +43,8 @@ const WalletSettingsScreen = ({
   onSwitchWallet,
 }) => (
   <ScrollView style={styles.scrollView}>
+    <StatusBar type="dark" />
+
     <SettingsSection title={translations.switchWallet}>
       <PressableSettingsItem
         label={translations.switchWallet}

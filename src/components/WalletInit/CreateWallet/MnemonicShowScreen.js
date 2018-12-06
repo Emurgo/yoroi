@@ -6,7 +6,7 @@ import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 
 import assert from '../../../utils/assert'
-import {Text, Button} from '../../UiKit'
+import {Text, Button, StatusBar} from '../../UiKit'
 import Screen from '../../Screen'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {generateAdaMnemonic} from '../../../crypto/util'
@@ -33,6 +33,8 @@ const MnemonicShowScreen = ({
   hideModal,
 }) => (
   <Screen bgColor={COLORS.BACKGROUND_GRAY} style={styles.screen}>
+    <StatusBar type="dark" />
+
     <View style={styles.contentContainer}>
       <View>
         <View style={styles.mnemonicNoteContainer}>

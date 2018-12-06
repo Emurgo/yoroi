@@ -7,7 +7,7 @@ import {NavigationEvents, SafeAreaView} from 'react-navigation'
 import _ from 'lodash'
 import {withHandlers} from 'recompose'
 
-import {Button, ValidatedTextInput} from '../UiKit'
+import {Button, ValidatedTextInput, StatusBar} from '../UiKit'
 import {
   validatePassword,
   getWalletNameError,
@@ -113,6 +113,8 @@ class WalletForm extends PureComponent<Props, ComponentState> {
 
     return (
       <SafeAreaView style={styles.safeAreaView}>
+        <StatusBar type="dark" />
+
         <View style={styles.container}>
           <NavigationEvents onWillBlur={this.handleOnWillBlur} />
           <View style={styles.content}>
