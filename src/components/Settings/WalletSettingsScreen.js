@@ -7,7 +7,7 @@ import {ScrollView, StyleSheet, Switch} from 'react-native'
 
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 
-import {closeWallet} from '../../actions'
+import {closeWallet, logout} from '../../actions'
 import {WALLET_INIT_ROUTES, SETTINGS_ROUTES} from '../../RoutesList'
 import {withNavigationTitle, withTranslations} from '../../utils/renderUtils'
 import {
@@ -41,16 +41,18 @@ const WalletSettingsScreen = ({
   translations,
   walletName,
   onSwitchWallet,
+  onLogout,
 }) => (
   <ScrollView style={styles.scrollView}>
     <StatusBar type="dark" />
 
-    <SettingsSection title={translations.switchWallet}>
+    <SettingsSection>
       <PressableSettingsItem
         label={translations.switchWallet}
         onPress={onSwitchWallet}
-        navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
       />
+
+      <PressableSettingsItem label={translations.logout} onPress={onLogout} />
     </SettingsSection>
 
     <SettingsSection title={translations.walletName}>
@@ -104,6 +106,7 @@ export default (compose(
     }),
     {
       closeWallet,
+      logout,
     },
   ),
   withHandlers({
@@ -115,6 +118,12 @@ export default (compose(
       ({navigation, closeWallet}) => async () => {
         await closeWallet()
         navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+      },
+      1000,
+    ),
+    onLogout: ignoreConcurrentAsyncHandler(
+      ({logout}) => async () => {
+        await logout()
       },
       1000,
     ),

@@ -352,6 +352,7 @@ const l10n = {
       title: 'Settings',
       tabTitle: 'Wallet',
       switchWallet: 'Switch wallet',
+      logout: 'Logout',
       removeWallet: 'Remove wallet',
       privacy: 'Privacy',
       walletName: 'Wallet name',
