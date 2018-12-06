@@ -1,87 +1,59 @@
 // @flow
+import {StyleSheet} from 'react-native'
+
 import {COLORS} from '../../../../styles/config'
 
-const style = {
-  button: {
-    padding: 20,
-    borderRadius: 40,
-    width: '45%',
-    justifyContent: 'center',
-    alignContent: 'center',
-    flexDirection: 'row',
-  },
+export default StyleSheet.create({
   buttons: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  clearButton: {
-    backgroundColor: COLORS.WHITE,
-    borderColor: COLORS.PRIMARY,
-    borderWidth: 2,
-    borderStyle: 'solid',
-  },
-  clearText: {
-    color: COLORS.PRIMARY,
-    fontWeight: 'bold',
-  },
-  confirmButton: {
-    backgroundColor: COLORS.LIGHT_POSITIVE_GREEN,
-  },
-  confirmText: {
-    color: COLORS.WHITE,
-    fontWeight: 'bold',
   },
   container: {
     flex: 1,
-    justifyContent: 'space-between',
-    alignContent: 'center',
-  },
-  disabledButton: {
-    backgroundColor: COLORS.DARK_GRAY,
+    padding: 16,
   },
   error: {
     color: COLORS.RED,
+    paddingLeft: 16,
   },
   inputLabel: {
     color: COLORS.PRIMARY,
   },
-  instructions: {
-    textAlign: 'center',
-    fontSize: 18,
-    padding: 10,
-  },
-  recoveryPhraseContainer: {
-    height: '30%',
-  },
   recoveryPhrase: {
-    borderRadius: 5,
+    borderRadius: 8,
     borderColor: COLORS.PRIMARY,
-    borderStyle: 'solid',
-    borderWidth: 2,
-    height: '90%',
+    borderWidth: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 10,
-  },
-  selected: {
-    backgroundColor: COLORS.WHITE,
-  },
-  selectedText: {
-    color: COLORS.GRAY,
+    padding: 12,
+    paddingBottom: 0,
+    marginTop: 16,
+    // minHeight: 26 * 3 + 12 * 2,
+    // flexShrink: 1,
+    // flexGrow: 0,
   },
   word: {
     backgroundColor: COLORS.LIGHT_GRAY,
-    borderRadius: 5,
-    color: COLORS.DARK_GRAY,
-    height: 30,
-    margin: 5,
-    padding: 5,
+    borderRadius: 8,
+    height: 26,
+    marginBottom: 12,
+    marginRight: 10,
+    paddingHorizontal: 16,
+    justifyContent: 'center',
+    // paddingVertical: 8,
   },
   words: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 10,
+    padding: 8,
+    flex: 1,
   },
-}
-
-export default style
+  selected: {
+    opacity: 0,
+  },
+  selectedText: {
+    opacity: 0.4,
+  },
+  hidden: {
+    opacity: 0,
+  },
+})
