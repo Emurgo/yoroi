@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.hardware.fingerprint.FingerprintManager;
 import android.hardware.biometrics.BiometricPrompt;
 import android.os.CancellationSignal;
+import android.util.Log;
 
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.BaseActivityEventListener;
@@ -237,6 +238,7 @@ public class KeyStoreBridge extends ReactContextBaseJavaModule {
             this.crypto.deleteAndroidKeyStoreAsymmetricKeyPair(keyAlias);
             promise.resolve(true);
         } catch (Exception e) {
+            Log.d("haha", e.getMessage(), e);
             promise.reject(Rejections.KEY_NOT_DELETED, Rejections.KEY_NOT_DELETED, e);
         }
     }

@@ -23,7 +23,10 @@ import {
 } from '../utils/promise'
 import {TransactionCache} from './transactionCache'
 import {validatePassword} from '../utils/validators'
-import {canFingerprintEncryptionBeEnabled} from '../helpers/deviceSettings'
+import {
+  canFingerprintEncryptionBeEnabled,
+  isSystemAuthSupported,
+} from '../helpers/deviceSettings'
 
 import type {
   RawUtxo,
@@ -212,18 +215,6 @@ export class Wallet {
         throw e
       }
     }
-  }
-
-  async checkKeysValidity() {
-    const isKeyValid = await KeyStore.isKeyValid(this._id, 'BIOMETRICS')
-    if (!isKeyValid) {
-      await KeyStore.deleteData(this._id, 'BIOMETRICS')
-      await KeyStore.deleteData(this._id, 'SYSTEM_PIN')
-
-      return false
-    }
-
-    return true
   }
 
   async _doFullSync() {
@@ -566,6 +557,47 @@ class WalletManager {
     return didGenerateNew
   }
 
+  async checkKeysValidity() {
+    const wallet = this._wallet
+    if (!wallet) throw new WalletClosed()
+
+    const canBiometricsBeUsed = await canFingerprintEncryptionBeEnabled()
+    const isKeyValid = await KeyStore.isKeyValid(wallet._id, 'BIOMETRICS')
+    if (!isKeyValid || !canBiometricsBeUsed) {
+      try {
+        await KeyStore.deleteData(wallet._id, 'BIOMETRICS')
+        await KeyStore.deleteData(wallet._id, 'SYSTEM_PIN')
+      } catch (error) {
+        const isDeviceSecure = await isSystemAuthSupported()
+        // On android 8.0 we are able to delete keys
+        // after re-enabling Lock screen
+        if (
+          error.code === KeyStore.REJECTIONS.KEY_NOT_DELETED &&
+          !isDeviceSecure
+        ) {
+          await showErrorDialog((dialogs) => dialogs.enableSystemAuthFirst)
+          await this.closeWallet()
+          throw new WalletClosed()
+        } else {
+          // We cannot delete keys directly on android 8.1, but it is possible
+          // after we replace them
+          await KeyStore.storeData(wallet._id, 'BIOMETRICS', 'CLEAR_KEY')
+          await KeyStore.storeData(wallet._id, 'SYSTEM_PIN', 'CLEAR_KEY')
+
+          await KeyStore.deleteData(wallet._id, 'BIOMETRICS')
+          await KeyStore.deleteData(wallet._id, 'SYSTEM_PIN')
+        }
+      }
+
+      await this._updateMetadata(wallet._id, {
+        isEasyConfirmationEnabled: false,
+      })
+      wallet._isEasyConfirmationEnabled = false
+
+      await showErrorDialog((dialogs) => dialogs.walletKeysInvalidated)
+    }
+  }
+
   async doFullSync() {
     // TODO(ppershing): this should "quit" early if we change wallet
     if (!this._wallet) return
@@ -646,16 +678,7 @@ class WalletManager {
     this._notify()
 
     if (wallet._isEasyConfirmationEnabled) {
-      const areKeysValid = await wallet.checkKeysValidity()
-      const canBiometricsBeUsed = await canFingerprintEncryptionBeEnabled()
-      if (!areKeysValid || !canBiometricsBeUsed) {
-        await this._updateMetadata(this._id, {
-          isEasyConfirmationEnabled: false,
-        })
-        wallet._isEasyConfirmationEnabled = false
-
-        await showErrorDialog((dialogs) => dialogs.walletKeysInvalidated)
-      }
+      await this.checkKeysValidity()
     }
 
     return wallet

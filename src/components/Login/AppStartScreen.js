@@ -75,6 +75,7 @@ export default compose(
       installationId,
     }) => async () => {
       if (isSystemAuthEnabled) {
+        // prettier-ignore
         const hasEnrolledFingerprints =
           await canFingerprintEncryptionBeEnabled()
         if (hasEnrolledFingerprints) {

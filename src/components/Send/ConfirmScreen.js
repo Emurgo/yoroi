@@ -64,6 +64,7 @@ const handleOnConfirm = async (
   }
 
   if (isEasyConfirmationEnabled) {
+    await walletManager.checkKeysValidity()
     navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
       keyId: walletManager._id,
       onSuccess: (decryptedKey) => {

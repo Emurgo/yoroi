@@ -101,6 +101,17 @@ const l10n = {
         'to be able link it with this app',
       yesButton: 'OK',
     },
+    enableSystemAuthFirst: {
+      title: 'Lock screen disabled',
+      message:
+        'You probably disabled lock screen in your phone. You need to ' +
+        'disable easy transaction confirmation first. Please set up ' +
+        'you lock screen (PIN / Password / Pattern) on your phone ' +
+        'and then restart application. After this action you should be ' +
+        'able to disable lock screen ' +
+        'on your phone and use this application',
+      yesButton: 'OK',
+    },
     wrongPinError: {
       title: 'Invalid PIN',
       message: 'PIN is incorrect.',
