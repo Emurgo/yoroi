@@ -239,4 +239,54 @@ describe('signTransaction', () => {
     const promise = signTransaction(wallet, inputs, outputs, change)
     await expect(promise).rejects.toBeInstanceOf(InsufficientFunds)
   })
+
+  // Note(ppershing): This is a known bug in rust-cardano implementation
+  // and we can do nothing with it
+  // Let's hope this test fails (with correct behavior) in the future
+  it('can compute correct fee', async () => {
+    expect.assertions(2)
+    // Upstream should have been fixed by now
+    expect(moment().isBefore('2019-06-01')).toBeTruthy()
+
+    const inputs = [
+      {
+        ptr: {
+          id:
+            '0cd1ec4dce33c7872c3e090c88e9af2fc56c4d7fba6745d15d4fce5e1d4620ba',
+          index: 0,
+        },
+        value: {
+          address:
+            'Ae2tdPwUPEYxoQwHKy1BEiuFLBtHEAtertUUijFeZMFg9NeaW6N1nWbb7T9',
+          value: '5000000',
+        },
+        addressing: {account: 0, change: 0, index: 0},
+      },
+    ]
+
+    const outputs = [
+      {
+        address: outputAddress,
+        value: '4832139',
+      },
+    ]
+
+    const result = await signTransaction(wallet, inputs, outputs, change)
+    const fee = result.fee.toNumber()
+    // Note(ppershing): When building the transaction
+    // the best solution is to have 2 outputs:
+    // 1) output address with 4832139 uADA (micro ADA)
+    // 2) change address with 23 uADA
+    // This leads to tx with 283 bytes requiring *minimum* fee of 167818.
+    // Note that such Tx will have bigger fee because we failed to include
+    // additional 20 uADA. This is a consequence of fact that CBOR encoding of
+    // value >=24 is one byte longer than 23. Thus we would require additional
+    // 43 uADA in fees
+    const BAD_FEE = 167818
+    expect(fee).toEqual(BAD_FEE)
+
+    // This is minimum feasible fee for the transaction
+    // const GOOD_FEE = 167838
+    // expect(fee).toBeGreaterThanOrEqual(GOOD_FEE)
+  })
 })
