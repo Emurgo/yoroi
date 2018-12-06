@@ -351,29 +351,37 @@ const l10n = {
     WalletTab: {
       title: 'Settings',
       tabTitle: 'Wallet',
+
       switchWallet: 'Switch wallet',
       logout: 'Logout',
-      removeWallet: 'Remove wallet',
-      privacy: 'Privacy',
+
       walletName: 'Wallet name',
+
+      security: 'Security',
       changePassword: 'Change password',
       easyConfirmation: 'Easy transaction confirmation',
+
+      removeWallet: 'Remove wallet',
     },
     ApplicationTab: {
       title: 'Settings',
       tabTitle: 'Application',
-      privacy: 'Privacy',
+
+      language: 'Your language',
+
+      security: 'Security',
+      changePin: 'Change PIN',
+      biometricsSignIn: 'Sign in with your biometrics',
+
       downloadLogs: 'Download logs',
       downloadLogsText:
         'If you want to inspect logs, you can download them here. ' +
         'Logs do not contain sensitive information, and it would be ' +
         'helpful to attach them to problem reports to help the team ' +
         'investigate the issue you are experiencing.',
+
       termsOfUse: 'Terms of Use',
       support: 'Support',
-      biometricsSignIn: 'Sign in with your biometrics',
-      changePin: 'Change PIN',
-      language: 'Your language',
     },
   },
   SupportScreen: {
