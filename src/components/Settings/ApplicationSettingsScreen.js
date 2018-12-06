@@ -126,7 +126,7 @@ const ApplicationSettingsScreen = ({
       />
     </SettingsSection>
 
-    <SettingsSection title={translations.privacy}>
+    <SettingsSection title={translations.security}>
       <NavigatedSettingsItem
         label={translations.changePin}
         navigateTo={SETTINGS_ROUTES.CHANGE_CUSTOM_PIN}

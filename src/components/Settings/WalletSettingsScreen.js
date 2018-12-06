@@ -62,7 +62,7 @@ const WalletSettingsScreen = ({
       />
     </SettingsSection>
 
-    <SettingsSection title={translations.privacy}>
+    <SettingsSection title={translations.security}>
       <NavigatedSettingsItem
         label={translations.changePassword}
         navigateTo={SETTINGS_ROUTES.CHANGE_PASSWORD}
