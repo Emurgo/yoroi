@@ -13,6 +13,8 @@ import {
   defaultStackNavigatorOptions,
 } from '../../navigationOptions'
 
+import styles from './styles/SettingsButton.style'
+
 const TxHistoryNavigator = createStackNavigator(
   {
     [TX_HISTORY_ROUTES.MAIN]: {
@@ -21,6 +23,7 @@ const TxHistoryNavigator = createStackNavigator(
         title: navigation.getParam('title'),
         headerRight: (
           <Button
+            style={styles.settingsButton}
             onPress={() => navigation.navigate(WALLET_ROUTES.SETTINGS)}
             title={utfSymbols.GEAR}
           />
