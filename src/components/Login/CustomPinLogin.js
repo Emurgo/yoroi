@@ -7,7 +7,7 @@ import {View} from 'react-native'
 
 import {CONFIG} from '../../config'
 import PinInput from '../Common/PinInput'
-import {withTranslations} from '../../utils/renderUtils'
+import {withTranslations, withNavigationTitle} from '../../utils/renderUtils'
 import {withHandlers} from 'recompose'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {authenticateByCustomPin} from '../../crypto/customPin'
@@ -56,6 +56,7 @@ export default (compose(
     customPinHash: customPinHashSelector(state),
   })),
   withTranslations(getTranslations),
+  withNavigationTitle(({translations}) => translations.title),
   withHandlers({
     onPinEnter: ({
       navigation,
