@@ -1,6 +1,8 @@
 // @flow
 import jestSetup from '../jestSetup'
 
+import moment from 'moment'
+
 import {
   getMasterKeyFromMnemonic,
   getAccountFromMasterKey,
@@ -178,7 +180,10 @@ describe('signTransaction', () => {
   // and we can do nothing with it
   // Let's hope this test fails (with correct behavior) in the future
   it('can handle rust bug', async () => {
-    expect.assertions(1)
+    expect.assertions(2)
+    // Upstream should have been fixed by now
+    expect(moment().isBefore('2019-06-01')).toBeTruthy()
+
     const outputs = [
       {
         address: outputAddress,
@@ -187,6 +192,7 @@ describe('signTransaction', () => {
     ]
 
     const promise = signTransaction(wallet, inputs, outputs, change)
+    // Correct behavior:
     // expect(await promise).not.toBeNull()
     await expect(promise).rejects.toBeInstanceOf(InsufficientFunds)
   })
