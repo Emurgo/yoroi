@@ -66,7 +66,10 @@ const WalletSettingsScreen = ({
         navigateTo={SETTINGS_ROUTES.CHANGE_PASSWORD}
       />
 
-      <SettingsItem label={translations.easyConfirmation}>
+      <SettingsItem
+        label={translations.easyConfirmation}
+        disabled={!isSystemAuthEnabled}
+      >
         <Switch
           value={isEasyConfirmationEnabled}
           onValueChange={onToggleEasyConfirmation}

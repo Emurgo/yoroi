@@ -33,28 +33,27 @@ export const SettingsSection = ({title, children}: SettingsSectionProps) => (
 type SettingsItemProps = {
   label: string,
   children: React.Node,
+  disabled?: boolean,
 }
 
-export const SettingsItem = ({label, children}: SettingsItemProps) => (
+export const SettingsItem = ({
+  label,
+  children,
+  disabled,
+}: SettingsItemProps) => (
   <View style={styles.item}>
-    <Text style={styles.label}>{label}</Text>
+    <Text style={[styles.label, disabled && styles.disabled]}>{label}</Text>
     <View style={styles.iconContainer}>{children}</View>
   </View>
 )
-
-type NavigatedSettingsItemProps = {
-  label: string,
-  navigateTo: string,
-  disabled?: boolean,
-}
 
 export const NavigatedSettingsItem = ({
   label,
   navigateTo,
   disabled,
-}: NavigatedSettingsItemProps) => (
+}: SettingsItemProps) => (
   <NavigateTo to={navigateTo} disabled={disabled}>
-    <SettingsItem label={label}>
+    <SettingsItem label={label} disabled={disabled}>
       <Image source={chevronRight} />
     </SettingsItem>
   </NavigateTo>
