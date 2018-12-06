@@ -120,8 +120,7 @@ const l10n = {
     walletNameInput: {
       label: 'Wallet name',
       errors: {
-        incorrectNumberOfCharacters:
-          'Wallet name requires at least 1 and at most 40 letters.',
+        tooLong: 'Wallet name can not exceed 40 letters',
         nameAlreadyTaken: 'This name is already taken',
       },
     },
@@ -271,8 +270,7 @@ const l10n = {
       // same as WalletNameAndPasswordForm
       errors: {
         nameAlreadyTaken: 'This name is already taken',
-        incorrectNumberOfCharacters:
-          'Wallet name requires at least 1 and at most 40 letters.',
+        tooLong: 'Wallet name can not exceed 40 letters',
       },
     },
     changeButton: 'Change name',
