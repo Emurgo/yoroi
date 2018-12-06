@@ -164,6 +164,12 @@ export const closeWallet = () => async (dispatch: Dispatch<any>) => {
   await walletManager.closeWallet()
 }
 
+export const logout = () => async (dispatch: Dispatch<any>) => {
+  await closeWallet()
+
+  await dispatch(navigateFromSplash())
+}
+
 export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   await dispatch(reloadAppSettings())
 
@@ -226,8 +232,7 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
 
   Logger.debug('setting up app lock')
   const onTimeoutAction = () => {
-    closeWallet()
-    dispatch(navigateFromSplash())
+    dispatch(logout())
   }
 
   AppState.addEventListener('change', () => {
