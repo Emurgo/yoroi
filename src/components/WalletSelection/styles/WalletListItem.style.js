@@ -11,7 +11,7 @@ export default StyleSheet.create({
     height: 60,
     borderRadius: 6,
     marginBottom: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'rgba(150, 150, 255, 0.2)',
   },
   balance: {
     flexDirection: 'row',

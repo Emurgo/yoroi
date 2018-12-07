@@ -25,6 +25,8 @@ import {
   defaultStackNavigatorOptions,
 } from '../../navigationOptions'
 
+import {COLORS} from '../../styles/config'
+
 const SettingsScreenNavigator = createStackNavigator(
   {
     [SETTINGS_ROUTES.MAIN]: createMaterialTopTabNavigator(
@@ -46,7 +48,7 @@ const SettingsScreenNavigator = createStackNavigator(
         tabBarOptions: {
           upperCaseLabel: false,
           style: {
-            backgroundColor: '#254BC9',
+            backgroundColor: COLORS.BACKGROUND_BLUE_GRADIENT_START,
             elevation: 0,
             shadowOpacity: 0,
           },

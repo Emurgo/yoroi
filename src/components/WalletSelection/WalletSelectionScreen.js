@@ -10,7 +10,7 @@ import {SafeAreaView} from 'react-navigation'
 import walletManager from '../../crypto/wallet'
 import WalletListItem from './WalletListItem'
 import Screen from '../Screen'
-import {Button, StatusBar} from '../UiKit'
+import {Button, StatusBar, ScreenBackground} from '../UiKit'
 import {ROOT_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import styles from './styles/WalletSelectionScreen.style'
 
@@ -31,27 +31,29 @@ const WalletListScreen = ({
     <StatusBar type="dark" />
 
     <Screen style={styles.container}>
-      <Text style={styles.title}>{translations.header}</Text>
+      <ScreenBackground>
+        <Text style={styles.title}>{translations.header}</Text>
 
-      <ScrollView style={styles.wallets}>
-        {wallets ? (
-          _.sortBy(wallets, ({name}) => name).map((wallet) => (
-            <WalletListItem
-              key={wallet.id}
-              wallet={wallet}
-              onPress={openWallet}
-            />
-          ))
-        ) : (
-          <ActivityIndicator />
-        )}
-      </ScrollView>
+        <ScrollView style={styles.wallets}>
+          {wallets ? (
+            _.sortBy(wallets, ({name}) => name).map((wallet) => (
+              <WalletListItem
+                key={wallet.id}
+                wallet={wallet}
+                onPress={openWallet}
+              />
+            ))
+          ) : (
+            <ActivityIndicator />
+          )}
+        </ScrollView>
 
-      <Button
-        onPress={navigateInitWallet}
-        title={translations.addWalletButton}
-        style={styles.addWalletButton}
-      />
+        <Button
+          onPress={navigateInitWallet}
+          title={translations.addWalletButton}
+          style={styles.addWalletButton}
+        />
+      </ScreenBackground>
     </Screen>
   </SafeAreaView>
 )

@@ -6,7 +6,7 @@ import {withStateHandlers, withHandlers} from 'recompose'
 import {SafeAreaView} from 'react-navigation'
 
 import utfSymbols from '../../utils/utfSymbols'
-import Text from '../UiKit/Text'
+import {Text, ScreenBackground} from '../UiKit'
 import backspaceIcon from '../../assets/img/backspace.png'
 
 import styles from './styles/PinInput.style'
@@ -93,7 +93,7 @@ const PinInput = ({
   onKeyDown,
   onPinEnter,
 }: Props) => (
-  <View style={styles.root}>
+  <ScreenBackground style={styles.root}>
     <View style={styles.infoContainer}>
       <Text style={styles.title}>{labels.title}</Text>
 
@@ -122,7 +122,7 @@ const PinInput = ({
         ))}
       </View>
     </SafeAreaView>
-  </View>
+  </ScreenBackground>
 )
 
 export default compose(

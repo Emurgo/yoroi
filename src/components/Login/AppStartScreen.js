@@ -8,7 +8,7 @@ import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 
 import WalletDescription from '../WalletInit/WalletDescription'
-import {Button, StatusBar} from '../UiKit'
+import {Button, StatusBar, ScreenBackground} from '../UiKit'
 import styles from './styles/AppStartScreen.style'
 import {ROOT_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import KeyStore from '../../crypto/KeyStore'
@@ -32,17 +32,19 @@ const AppStartScreen = ({navigateLogin, translations}) => (
   <SafeAreaView style={styles.safeAreaView}>
     <StatusBar type="dark" />
 
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <WalletDescription />
-      </View>
+    <ScreenBackground>
+      <View style={styles.container}>
+        <View style={styles.content}>
+          <WalletDescription />
+        </View>
 
-      <Button
-        outline
-        onPress={navigateLogin}
-        title={translations.loginButton}
-      />
-    </View>
+        <Button
+          outline
+          onPress={navigateLogin}
+          title={translations.loginButton}
+        />
+      </View>
+    </ScreenBackground>
   </SafeAreaView>
 )
 
