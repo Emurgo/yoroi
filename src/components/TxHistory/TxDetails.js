@@ -167,9 +167,10 @@ const TxDetails = ({
               />
             )
           }
+          boldText
         >
           {transaction.fee && (
-            <Text small secondary>
+            <Text small>
               {translations.fee} {formatAdaWithSymbol(transaction.fee)}
             </Text>
           )}

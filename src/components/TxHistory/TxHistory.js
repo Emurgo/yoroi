@@ -64,6 +64,7 @@ const AvailableAmountBanner = withTranslations(getTranslations)(
       text={`${formatAda(amount)} ${
         translations.availableAmountBanner.ADASymbol
       }`}
+      boldText
     />
   ),
 )

@@ -22,7 +22,6 @@ export default StyleSheet.create({
     flexDirection: 'row',
   },
   balanceLabel: {
-    color: COLORS.GRAY,
     margin: 5,
   },
   balanceValue: {
