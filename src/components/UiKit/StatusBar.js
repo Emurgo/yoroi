@@ -9,7 +9,7 @@ import type {ComponentType} from 'react'
 
 const StatusBar = ({type}) => {
   const backgroundColor =
-    type === 'dark' ? COLORS.BACKGROUND_BLUE : COLORS.WHITE
+    type === 'dark' ? COLORS.BACKGROUND_BLUE_GRADIENT_START : COLORS.WHITE
   const barStyle = type === 'dark' ? 'light-content' : 'dark-content'
 
   return (

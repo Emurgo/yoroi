@@ -3,17 +3,19 @@
 import React from 'react'
 import {SafeAreaView} from 'react-native'
 
-import {StatusBar} from './UiKit'
+import {StatusBar, ScreenBackground} from './UiKit'
 import WalletDescription from './WalletInit/WalletDescription'
 
 import styles from './styles/SplashScreen.styles'
 
 const SplashScreen = () => (
-  <SafeAreaView style={styles.safeAreaView}>
-    <StatusBar type="dark" />
+  <ScreenBackground>
+    <SafeAreaView style={styles.safeAreaView}>
+      <StatusBar type="dark" />
 
-    <WalletDescription />
-  </SafeAreaView>
+      <WalletDescription />
+    </SafeAreaView>
+  </ScreenBackground>
 )
 
 export default SplashScreen

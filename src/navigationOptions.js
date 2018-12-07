@@ -1,8 +1,10 @@
 // @flow
 
+import {COLORS} from './styles/config'
+
 export const defaultNavigationOptions = {
   headerStyle: {
-    backgroundColor: '#254BC9',
+    backgroundColor: COLORS.BACKGROUND_BLUE_GRADIENT_START,
     borderBottomWidth: 0,
   },
   headerTintColor: '#fff',

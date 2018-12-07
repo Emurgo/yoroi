@@ -5,7 +5,6 @@ import {COLORS} from '../../../styles/config'
 export default StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: COLORS.BACKGROUND_BLUE,
   },
   infoContainer: {
     flex: 3,
