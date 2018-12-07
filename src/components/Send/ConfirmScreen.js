@@ -5,6 +5,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {ScrollView, View} from 'react-native'
 import {withHandlers, withStateHandlers} from 'recompose'
+import {SafeAreaView} from 'react-navigation'
 
 import {
   Text,
@@ -12,6 +13,7 @@ import {
   OfflineBanner,
   ValidatedTextInput,
   StatusBar,
+  Banner,
 } from '../UiKit'
 import {utxoBalanceSelector, easyConfirmationSelector} from '../../selectors'
 import walletManager from '../../crypto/wallet'
@@ -107,59 +109,53 @@ const ConfirmScreen = ({
   const isConfirmationDisabled = !isEasyConfirmationEnabled && !password
 
   return (
-    <View style={styles.root}>
-      <StatusBar type="dark" />
+    <SafeAreaView style={styles.safeAreaView}>
+      <View style={styles.root}>
+        <StatusBar type="dark" />
 
-      <OfflineBanner />
+        <OfflineBanner />
+        <Banner
+          text={formatAdaWithSymbol(availableAmount)}
+          label={translations.availableFunds}
+        />
 
-      <ScrollView style={styles.container}>
-        <View style={styles.balance}>
-          <Text style={styles.balanceLabel}>{translations.availableFunds}</Text>
-          <Text style={styles.balanceValue}>
-            {formatAdaWithSymbol(availableAmount)}
+        <ScrollView style={styles.container}>
+          <Text small>
+            {translations.fees}: {formatAdaWithSymbol(transactionData.fee)}
           </Text>
-        </View>
+          <Text small>
+            {translations.balanceAfterTx}: {formatAdaWithSymbol(balanceAfterTx)}
+          </Text>
 
-        <View style={styles.transactionSummary}>
-          <View style={styles.fees}>
-            <Text style={styles.label}>{translations.fees}</Text>
-            <Text>{formatAdaWithSymbol(transactionData.fee)}</Text>
-          </View>
-          <View style={styles.remainingBalance}>
-            <Text style={styles.label}>{translations.balanceAfterTx}</Text>
-            <Text>{formatAdaWithSymbol(balanceAfterTx)}</Text>
-          </View>
-        </View>
-
-        <View style={styles.item}>
-          <Text style={styles.label}>{translations.receiver}</Text>
-          <Text style={styles.receiver}>{address}</Text>
-        </View>
-        <View style={styles.item}>
-          <Text style={styles.label}>{translations.amount}</Text>
+          <Text style={styles.heading} small>
+            {translations.receiver}
+          </Text>
+          <Text>{address}</Text>
+          <Text style={styles.heading} small>
+            {translations.amount}
+          </Text>
           <Text>{formatAdaWithSymbol(amount)}</Text>
-        </View>
 
-        {!isEasyConfirmationEnabled ? (
-          <View style={styles.item}>
-            <ValidatedTextInput
-              secureTextEntry
-              value={password}
-              label={translations.password}
-              onChangeText={setPassword}
-            />
-          </View>
-        ) : null}
-
-        <View style={styles.item}>
+          {!isEasyConfirmationEnabled && (
+            <View style={styles.input}>
+              <ValidatedTextInput
+                secureTextEntry
+                value={password}
+                label={translations.password}
+                onChangeText={setPassword}
+              />
+            </View>
+          )}
+        </ScrollView>
+        <View style={styles.actions}>
           <Button
             onPress={onConfirm}
             title={translations.confirmButton}
             disabled={isConfirmationDisabled}
           />
         </View>
-      </ScrollView>
-    </View>
+      </View>
+    </SafeAreaView>
   )
 }
 

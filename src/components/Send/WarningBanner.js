@@ -1,8 +1,7 @@
 import React from 'react'
-import {View, TouchableHighlight} from 'react-native'
-import Text from '../UiKit/Text'
+import {TouchableOpacity} from 'react-native'
 
-import style from './styles/WarningBanner.style'
+import {Text, Banner} from '../UiKit'
 
 type Props = {
   text: string,
@@ -10,19 +9,16 @@ type Props = {
 }
 
 const WarningBanner = ({text, action}: Props) => (
-  <View style={style.container}>
-    <View style={style.iconContainer}>
-      <Text>!</Text>
-    </View>
-    <Text style={style.text}>{text}</Text>
-    <View style={style.actionContainer}>
-      {action && (
-        <TouchableHighlight onPress={action}>
-          <Text>RI</Text>
-        </TouchableHighlight>
-      )}
-    </View>
-  </View>
+  <Banner error text={text}>
+    {action && (
+      <TouchableOpacity
+        onPress={action}
+        hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}
+      >
+        <Text small>Reload</Text>
+      </TouchableOpacity>
+    )}
+  </Banner>
 )
 
 export default WarningBanner

@@ -1,12 +1,10 @@
 // @flow
 import {StyleSheet} from 'react-native'
 
-import {COLORS} from '../../../styles/config'
-
 export default StyleSheet.create({
   scrollView: {
     flex: 1,
-    backgroundColor: COLORS.BACKGROUND_GRAY,
+    backgroundColor: '#fff',
   },
   container: {
     flexDirection: 'column',
