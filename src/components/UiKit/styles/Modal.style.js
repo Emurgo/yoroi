@@ -9,6 +9,10 @@ const styles = StyleSheet.create({
     padding: 24,
     backgroundColor: 'rgba(74,74,74,.9)',
   },
+  noPadding: {
+    padding: 0,
+    marginTop: 0,
+  },
   container: {
     backgroundColor: '#fff',
     borderRadius: 4,

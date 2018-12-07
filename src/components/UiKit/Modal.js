@@ -16,6 +16,7 @@ type Props = {
   visible: boolean,
   children: Node,
   showCloseIcon: boolean,
+  noPadding?: boolean,
 }
 
 type State = {
@@ -36,7 +37,13 @@ class Modal extends React.Component<Props, State> {
   handleWillFocus = () => this.setState({isFocused: true})
 
   render() {
-    const {visible, showCloseIcon, onRequestClose, children} = this.props
+    const {
+      visible,
+      showCloseIcon,
+      onRequestClose,
+      noPadding,
+      children,
+    } = this.props
     const {isFocused} = this.state
 
     return (
@@ -52,13 +59,15 @@ class Modal extends React.Component<Props, State> {
           onRequestClose={onRequestClose}
         >
           <View style={styles.backdrop}>
-            <View style={styles.container}>
+            <View style={[styles.container, noPadding && styles.noPadding]}>
               {showCloseIcon && (
                 <TouchableOpacity style={styles.close} onPress={onRequestClose}>
                   <Text style={styles.closeText}>{utfSymbols.X_CROSS}</Text>
                 </TouchableOpacity>
               )}
-              <View style={styles.content}>{children}</View>
+              <View style={[styles.content, noPadding && styles.noPadding]}>
+                {children}
+              </View>
             </View>
           </View>
         </RNModal>

@@ -15,19 +15,20 @@ import {
   StatusBar,
   Banner,
 } from '../UiKit'
-import {utxoBalanceSelector, easyConfirmationSelector} from '../../selectors'
+import {easyConfirmationSelector} from '../../selectors'
 import walletManager from '../../crypto/wallet'
-import {SEND_ROUTES} from '../../RoutesList'
+import {SEND_ROUTES, WALLET_ROUTES} from '../../RoutesList'
 import {CONFIG} from '../../config'
 import KeyStore from '../../crypto/KeyStore'
 import {
   showErrorDialog,
   handleGeneralError,
-  DIALOG_BUTTONS,
+  submitTransaction,
 } from '../../actions'
-import assert from '../../utils/assert'
-import {withNavigationTitle} from '../../utils/renderUtils'
+import {withNavigationTitle, withTranslations} from '../../utils/renderUtils'
 import {formatAdaWithSymbol} from '../../utils/format'
+import SendingModal from './SendingModal'
+import {NetworkError} from '../../api/errors'
 
 import styles from './styles/ConfirmScreen.style'
 
@@ -48,21 +49,39 @@ const handleOnConfirm = async (
   navigation,
   isEasyConfirmationEnabled,
   password,
+  submitTransaction,
+  setSendingTransaction,
 ) => {
   const transactionData = navigation.getParam('transactionData')
 
-  const submitTx = (decryptedKey) =>
-    navigation.navigate(SEND_ROUTES.SENDING_MODAL, {
-      decryptedKey,
-      transactionData,
-    })
+  const submitTx = async (decryptedKey) => {
+    try {
+      setSendingTransaction(true)
+      await submitTransaction(decryptedKey, transactionData)
+
+      navigation.navigate(WALLET_ROUTES.TX_HISTORY)
+    } catch (e) {
+      if (e instanceof NetworkError) {
+        await showErrorDialog((dialogs) => dialogs.networkError)
+      } else {
+        throw e
+      }
+    } finally {
+      setSendingTransaction(false)
+    }
+  }
 
   if (isEasyConfirmationEnabled) {
     navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
       keyId: walletManager._id,
-      onSuccess: submitTx,
+      onSuccess: (decryptedKey) => {
+        navigation.navigate(SEND_ROUTES.CONFIRM)
+
+        submitTx(decryptedKey)
+      },
       onFail: onFail(navigation),
     })
+
     return
   }
 
@@ -77,15 +96,7 @@ const handleOnConfirm = async (
     submitTx(decryptedData)
   } catch (e) {
     if (e instanceof WrongPassword) {
-      const result = await showErrorDialog(
-        (dialogs) => dialogs.incorrectPassword,
-      )
-      assert.assert(
-        result === DIALOG_BUTTONS.YES,
-        'User should have tapped yes',
-      )
-
-      navigation.navigate(SEND_ROUTES.CONFIRM)
+      await showErrorDialog((dialogs) => dialogs.incorrectPassword)
     } else {
       handleGeneralError('Could not submit transaction', e)
     }
@@ -94,17 +105,18 @@ const handleOnConfirm = async (
 
 const ConfirmScreen = ({
   onConfirm,
-  availableAmount,
   translations,
   navigation,
   password,
   setPassword,
   isEasyConfirmationEnabled,
+  sendingTransaction,
 }) => {
   const amount = navigation.getParam('amount')
   const address = navigation.getParam('address')
   const transactionData = navigation.getParam('transactionData')
   const balanceAfterTx = navigation.getParam('balanceAfterTx')
+  const availableAmount = navigation.getParam('availableAmount')
 
   const isConfirmationDisabled = !isEasyConfirmationEnabled && !password
 
@@ -155,22 +167,32 @@ const ConfirmScreen = ({
           />
         </View>
       </View>
+
+      <SendingModal visible={sendingTransaction} />
     </SafeAreaView>
   )
 }
 
 export default compose(
-  connect((state) => ({
-    translations: getTranslations(state),
-    availableAmount: utxoBalanceSelector(state),
-    isEasyConfirmationEnabled: easyConfirmationSelector(state),
-  })),
+  connect(
+    (state) => ({
+      isEasyConfirmationEnabled: easyConfirmationSelector(state),
+    }),
+    {
+      submitTransaction,
+    },
+  ),
+  withTranslations(getTranslations),
   withStateHandlers(
     {
       password: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
+      sendingTransaction: false,
     },
     {
       setPassword: (state) => (value) => ({password: value}),
+      setSendingTransaction: () => (sendingTransaction) => ({
+        sendingTransaction,
+      }),
     },
   ),
   withNavigationTitle(({translations}) => translations.title),
@@ -180,9 +202,16 @@ export default compose(
         navigation,
         isEasyConfirmationEnabled,
         password,
-        canBiometricPromptBeUsed,
+        submitTransaction,
+        setSendingTransaction,
       }) => async (event) => {
-        await handleOnConfirm(navigation, isEasyConfirmationEnabled, password)
+        await handleOnConfirm(
+          navigation,
+          isEasyConfirmationEnabled,
+          password,
+          submitTransaction,
+          setSendingTransaction,
+        )
       },
       1000,
     ),

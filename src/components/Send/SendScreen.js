@@ -186,7 +186,7 @@ class SendScreen extends Component<Props, State> {
 
   handleConfirm: () => Promise<void>
   handleConfirm = async () => {
-    const {navigation, utxos} = this.props
+    const {navigation, utxos, availableAmount} = this.props
     const {address, amount} = this.state
 
     const {
@@ -219,6 +219,7 @@ class SendScreen extends Component<Props, State> {
       const transactionData = await getTransactionData(utxos, address, amount)
 
       navigation.navigate(SEND_ROUTES.CONFIRM, {
+        availableAmount,
         address,
         amount: parseAdaDecimal(amount),
         transactionData,
