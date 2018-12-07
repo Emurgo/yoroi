@@ -68,6 +68,6 @@ export default StyleSheet.create({
     backgroundColor: '#757476',
   },
   FAILED: {
-    backgroundColor: '#232423',
+    backgroundColor: '#FF9999',
   },
 })
