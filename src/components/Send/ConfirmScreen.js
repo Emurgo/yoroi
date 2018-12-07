@@ -104,6 +104,8 @@ const ConfirmScreen = ({
   const transactionData = navigation.getParam('transactionData')
   const balanceAfterTx = navigation.getParam('balanceAfterTx')
 
+  const isConfirmationDisabled = !isEasyConfirmationEnabled && !password
+
   return (
     <View style={styles.root}>
       <StatusBar type="dark" />
@@ -150,7 +152,11 @@ const ConfirmScreen = ({
         ) : null}
 
         <View style={styles.item}>
-          <Button onPress={onConfirm} title={translations.confirmButton} />
+          <Button
+            onPress={onConfirm}
+            title={translations.confirmButton}
+            disabled={isConfirmationDisabled}
+          />
         </View>
       </ScrollView>
     </View>
