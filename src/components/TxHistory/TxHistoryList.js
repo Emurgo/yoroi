@@ -37,7 +37,6 @@ const TxHistoryList = ({transactions, navigation, refreshing, onRefresh}) => {
   return (
     <View style={styles.container}>
       <SectionList
-        stickySectionHeadersEnabled
         onRefresh={onRefresh}
         refreshing={refreshing}
         renderItem={({item}) => (
