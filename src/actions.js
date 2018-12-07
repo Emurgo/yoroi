@@ -31,6 +31,7 @@ import {
   languageSelector,
   tosSelector,
 } from './selectors'
+import assert from './utils/assert'
 
 import NavigationService from './NavigationService'
 import {ROOT_ROUTES} from './RoutesList'
@@ -281,34 +282,52 @@ export const removeCurrentWallet = () => async (dispatch: Dispatch<any>) => {
   dispatch(updateWallets())
 }
 
-type ErrorDialog = {|
+type DialogOptions = {|
   title: string,
   message: string,
   yesButton: string,
+  noButton?: string,
 |}
 
 export const DIALOG_BUTTONS = Object.freeze({
   YES: 'Yes',
+  NO: 'No',
 })
 
 type DialogButton = $Values<typeof DIALOG_BUTTONS>
 
-export const showErrorDialog = (
-  getDialog: (
-    translations: typeof l10n.translations.errorDialogs,
-  ) => ErrorDialog,
-): Promise<DialogButton> =>
+const showDialog = (translations: DialogOptions): Promise<DialogButton> =>
   new Promise((resolve, reject) => {
-    const {title, message, yesButton} = getDialog(
-      l10n.translations.errorDialogs,
-    )
+    const {title, message, yesButton, noButton} = translations
+    const buttons = []
 
-    const buttons = [
-      {text: yesButton, onPress: () => resolve(DIALOG_BUTTONS.YES)},
-    ]
+    assert.assert(yesButton, 'Yes button should be provided')
+
+    if (noButton) {
+      buttons.push({
+        text: noButton,
+        onPress: () => resolve(DIALOG_BUTTONS.NO),
+      })
+    }
+
+    buttons.push({text: yesButton, onPress: () => resolve(DIALOG_BUTTONS.YES)})
 
     Alert.alert(title, message, buttons, {cancelable: false})
   })
+
+export const showErrorDialog = (
+  getDialog: (
+    translations: typeof l10n.translations.errorDialogs,
+  ) => DialogOptions,
+): Promise<DialogButton> =>
+  showDialog(getDialog(l10n.translations.errorDialogs))
+
+export const showConfirmationDialog = (
+  getDialog: (
+    translations: typeof l10n.translations.confirmationDialogs,
+  ) => DialogOptions,
+): Promise<DialogButton> =>
+  showDialog(getDialog(l10n.translations.confirmationDialogs))
 
 export const setSystemAuth = (enable: boolean) => async (
   dispatch: Dispatch<any>,
