@@ -2,21 +2,29 @@
 
 import React from 'react'
 import {compose} from 'redux'
-import {connect} from 'react-redux'
-import {withHandlers, withState} from 'recompose'
+import {withHandlers, withStateHandlers} from 'recompose'
 
+import {Logger} from '../../utils/logging'
 import {Button} from '../UiKit'
 import FingerprintScreenBase from '../Common/FingerprintScreenBase'
 import KeyStore from '../../crypto/KeyStore'
-import {onDidMount, onWillUnmount} from '../../utils/renderUtils'
+import {
+  onDidMount,
+  onWillUnmount,
+  withTranslations,
+} from '../../utils/renderUtils'
 
 import styles from './styles/BiometricAuthScreen.style'
+
+import type {ComponentType} from 'react'
+import type {Navigation} from '../../types/navigation'
 
 const getTranslations = (state) => state.trans.BiometricsAuthScreen
 
 const handleOnConfirm = async (
   navigation,
   setError,
+  clearError,
   useFallback = false,
   translations,
 ) => {
@@ -35,19 +43,19 @@ const handleOnConfirm = async (
     return
   } catch (error) {
     if (error.code === KeyStore.REJECTIONS.SWAPPED_TO_FALLBACK) {
-      setError('')
+      clearError()
       return
     }
 
     if (error.code === KeyStore.REJECTIONS.CANCELED) {
-      setError('')
+      clearError()
       onFail(KeyStore.REJECTIONS.CANCELED)
       return
     }
 
     // biometrics canceled by user, switch to system pin
     if (error.code === KeyStore.REJECTIONS.BIOMETRIC_PROMPT_CANCELED) {
-      handleOnConfirm(navigation, setError, true, translations)
+      handleOnConfirm(navigation, setError, clearError, true, translations)
       return
     }
 
@@ -56,12 +64,13 @@ const handleOnConfirm = async (
       error.code !== KeyStore.REJECTIONS.SENSOR_LOCKOUT &&
       error.code !== KeyStore.REJECTIONS.INVALID_KEY
     ) {
-      handleOnConfirm(navigation, setError, false, translations)
+      handleOnConfirm(navigation, setError, clearError, false, translations)
     } else if (error.code === KeyStore.REJECTIONS.INVALID_KEY) {
       onFail(KeyStore.REJECTIONS.INVALID_KEY)
       return
     } else {
-      setError(error.code || 'UNKNOWN_ERROR')
+      Logger.error('BiometricAuthScreen', error)
+      setError('UNKNOWN_ERROR')
     }
     return
   }
@@ -85,30 +94,55 @@ const BiometricAuthScreen = ({
         containerStyle={styles.useFallback}
       />,
     ]}
-    error={error && translations.Errors[error]}
+    error={error && translations.errors[error]}
   />
 )
 
-export default compose(
-  connect((state) => ({
-    translations: getTranslations(state),
-  })),
-  withState('error', 'setError', ''),
+type ExternalProps = {|
+  navigation: Navigation,
+|}
+
+type ErrorCode =
+  | 'NOT_RECOGNIZED'
+  | 'SENSOR_LOCKOUT'
+  | 'DECRYPTION_FAILED'
+  | 'UNKNOWN_ERROR'
+
+type State = {
+  error: null | ErrorCode,
+}
+
+export default (compose(
+  withTranslations(getTranslations),
+  withStateHandlers<State, *, *>(
+    {
+      error: null,
+    },
+    {
+      setError: (state) => (error: ErrorCode) => ({error}),
+      clearError: (state) => () => ({error: null}),
+    },
+  ),
   withHandlers({
     cancelScanning: () => async () => {
       await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
     },
-    useFallback: ({navigation, setError, translations}) => async () => {
+    useFallback: ({
+      navigation,
+      setError,
+      clearError,
+      translations,
+    }) => async () => {
       await KeyStore.cancelFingerprintScanning(
         KeyStore.REJECTIONS.SWAPPED_TO_FALLBACK,
       )
-      handleOnConfirm(navigation, setError, true, translations)
+      handleOnConfirm(navigation, setError, clearError, true, translations)
     },
   }),
   onWillUnmount(async () => {
     await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
   }),
-  onDidMount(({navigation, setError, translations}) =>
-    handleOnConfirm(navigation, setError, false, translations),
+  onDidMount(({navigation, setError, clearError, translations}) =>
+    handleOnConfirm(navigation, setError, clearError, false, translations),
   ),
-)(BiometricAuthScreen)
+)(BiometricAuthScreen): ComponentType<ExternalProps>)
