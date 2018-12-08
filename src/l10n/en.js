@@ -421,20 +421,11 @@ const l10n = {
     useFallbackButton: 'Use fallback',
     headings: ['Authorize with your', 'fingerprint'],
     cancelButton: 'Cancel',
-    Errors: {
+    errors: {
       NOT_RECOGNIZED: 'Fingerprint was not recognized try again',
       SENSOR_LOCKOUT: 'You used too many fingers sensor is disabled',
       DECRYPTION_FAILED: 'Fingerprint sensor failed please use fallback',
-    },
-    AuthenticateErrors: {
-      text: 'Authenticate error',
-      canceled: 'User canceled authentication',
-      failed: 'Authentication failed',
-    },
-    Authentication: {
-      authenticationRequiredTitle: 'Authentication required',
-      touchInstructions: 'Touch the sensor',
-      withPin: 'Authenticate using PIN',
+      UNKNOWN_ERROR: 'Unknown error',
     },
   },
   RemoveWalletScreen: {
