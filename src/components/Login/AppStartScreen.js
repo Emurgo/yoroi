@@ -16,7 +16,7 @@ import {withTranslations} from '../../utils/renderUtils'
 import {
   installationIdSelector,
   customPinHashSelector,
-  systemAuthSupportSelector,
+  isSystemAuthEnabledSelector,
 } from '../../selectors'
 import {
   recreateAppSignInKeys,
@@ -48,23 +48,11 @@ const AppStartScreen = ({navigateLogin, translations}) => (
   </SafeAreaView>
 )
 
-const onFail = (navigation, installationId) => async (reason) => {
-  if (reason === KeyStore.REJECTIONS.INVALID_KEY) {
-    const hasEnrolledFingerprints = await canFingerprintEncryptionBeEnabled()
-    if (hasEnrolledFingerprints) {
-      recreateAppSignInKeys(installationId)
-    } else {
-      await showErrorDialog((dialogs) => dialogs.biometricsIsTurnedOff)
-    }
-  }
-  navigation.navigate(ROOT_ROUTES.LOGIN)
-}
-
 export default compose(
   connect((state) => ({
     installationId: installationIdSelector(state),
     customPinHash: customPinHashSelector(state),
-    isSystemAuthEnabled: systemAuthSupportSelector(state),
+    isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
   })),
   withTranslations(getTranslations),
   withHandlers({
@@ -74,22 +62,32 @@ export default compose(
       navigation,
       installationId,
     }) => async () => {
-      if (isSystemAuthEnabled) {
-        // prettier-ignore
-        const hasEnrolledFingerprints =
-          await canFingerprintEncryptionBeEnabled()
-        if (hasEnrolledFingerprints) {
-          navigation.navigate(ROOT_ROUTES.BIO_AUTH, {
-            keyId: installationId,
-            onSuccess: () =>
-              navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION),
-            onFail: onFail(navigation, installationId),
-          })
-        } else {
-          onFail(navigation, installationId)(KeyStore.REJECTIONS.INVALID_KEY)
-        }
-      } else {
+      if (!isSystemAuthEnabled) {
         navigation.navigate(ROOT_ROUTES.CUSTOM_PIN_AUTH)
+
+        return
+      }
+
+      if (await canFingerprintEncryptionBeEnabled()) {
+        navigation.navigate(ROOT_ROUTES.BIO_AUTH, {
+          keyId: installationId,
+          onSuccess: () =>
+            navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION),
+          onFail: async (reason) => {
+            if (reason === KeyStore.REJECTIONS.INVALID_KEY) {
+              if (await canFingerprintEncryptionBeEnabled()) {
+                recreateAppSignInKeys(installationId)
+              } else {
+                await showErrorDialog(
+                  (dialogs) => dialogs.biometricsIsTurnedOff,
+                )
+              }
+            }
+            navigation.navigate(ROOT_ROUTES.LOGIN)
+          },
+        })
+      } else {
+        await showErrorDialog((dialogs) => dialogs.biometricsIsTurnedOff)
       }
     },
   }),

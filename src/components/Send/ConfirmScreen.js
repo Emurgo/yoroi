@@ -16,8 +16,8 @@ import {
   Banner,
 } from '../UiKit'
 import {easyConfirmationSelector} from '../../selectors'
-import walletManager from '../../crypto/wallet'
-import {SEND_ROUTES, WALLET_ROUTES} from '../../RoutesList'
+import walletManager, {SystemAuthDisabled} from '../../crypto/wallet'
+import {SEND_ROUTES, WALLET_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import {CONFIG} from '../../config'
 import KeyStore from '../../crypto/KeyStore'
 import {
@@ -64,16 +64,28 @@ const handleOnConfirm = async (
   }
 
   if (isEasyConfirmationEnabled) {
-    await walletManager.checkKeysValidity()
-    navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
-      keyId: walletManager._id,
-      onSuccess: (decryptedKey) => {
-        navigation.navigate(SEND_ROUTES.CONFIRM)
+    try {
+      await walletManager.ensureKeysValidity()
+      navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
+        keyId: walletManager._id,
+        onSuccess: (decryptedKey) => {
+          navigation.navigate(SEND_ROUTES.CONFIRM)
 
-        submitTx(decryptedKey)
-      },
-      onFail: () => navigation.goBack(),
-    })
+          submitTx(decryptedKey)
+        },
+        onFail: () => navigation.goBack(),
+      })
+    } catch (e) {
+      if (e instanceof SystemAuthDisabled) {
+        await walletManager.closeWallet()
+        await showErrorDialog((dialogs) => dialogs.enableSystemAuthFirst)
+        navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+
+        return
+      } else {
+        throw e
+      }
+    }
 
     return
   }

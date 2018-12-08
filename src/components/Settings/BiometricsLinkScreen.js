@@ -58,8 +58,7 @@ export default compose(
   ),
   withHandlers({
     linkBiometricsSignIn: ({navigation, setSystemAuth}) => async () => {
-      const hasEnrolledFingerprints = await canFingerprintEncryptionBeEnabled()
-      if (hasEnrolledFingerprints) {
+      if (await canFingerprintEncryptionBeEnabled()) {
         setSystemAuth(true)
           .then(() => navigation.navigate(SETTINGS_ROUTES.MAIN))
           .catch(() =>

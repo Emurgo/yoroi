@@ -6,7 +6,6 @@ import {defaultMemoize} from 'reselect'
 import uuid from 'uuid'
 import ExtendableError from 'es6-error'
 
-import {showErrorDialog} from '../actions'
 import storage from '../utils/storage'
 import KeyStore from './KeyStore'
 import {AddressChain, AddressGenerator} from './chain'
@@ -419,6 +418,8 @@ export class Wallet {
 }
 
 export class WalletClosed extends ExtendableError {}
+export class SystemAuthDisabled extends ExtendableError {}
+export class KeysAreInvalid extends ExtendableError {}
 
 class WalletManager {
   _wallet: ?Wallet = null
@@ -557,44 +558,48 @@ class WalletManager {
     return didGenerateNew
   }
 
-  async checkKeysValidity() {
+  async cleanupInvalidKeys() {
+    if (!this._wallet) throw new WalletClosed()
     const wallet = this._wallet
-    if (!wallet) throw new WalletClosed()
+
+    try {
+      await KeyStore.deleteData(wallet._id, 'BIOMETRICS')
+      await KeyStore.deleteData(wallet._id, 'SYSTEM_PIN')
+    } catch (error) {
+      const isDeviceSecure = await isSystemAuthSupported()
+      // On android 8.0 we are able to delete keys
+      // after re-enabling Lock screen
+      if (
+        error.code === KeyStore.REJECTIONS.KEY_NOT_DELETED &&
+        !isDeviceSecure
+      ) {
+        throw new SystemAuthDisabled()
+      } else {
+        // We cannot delete keys directly on android 8.1, but it is possible
+        // after we replace them
+        await KeyStore.storeData(wallet._id, 'BIOMETRICS', 'DUMMY_VALUE')
+        await KeyStore.storeData(wallet._id, 'SYSTEM_PIN', 'DUMMY_VALUE')
+
+        await KeyStore.deleteData(wallet._id, 'BIOMETRICS')
+        await KeyStore.deleteData(wallet._id, 'SYSTEM_PIN')
+      }
+    }
+
+    await this._updateMetadata(wallet._id, {
+      isEasyConfirmationEnabled: false,
+    })
+    wallet._isEasyConfirmationEnabled = false
+  }
+
+  async ensureKeysValidity() {
+    if (!this._wallet) throw new WalletClosed()
+    const wallet = this._wallet
 
     const canBiometricsBeUsed = await canFingerprintEncryptionBeEnabled()
     const isKeyValid = await KeyStore.isKeyValid(wallet._id, 'BIOMETRICS')
+
     if (!isKeyValid || !canBiometricsBeUsed) {
-      try {
-        await KeyStore.deleteData(wallet._id, 'BIOMETRICS')
-        await KeyStore.deleteData(wallet._id, 'SYSTEM_PIN')
-      } catch (error) {
-        const isDeviceSecure = await isSystemAuthSupported()
-        // On android 8.0 we are able to delete keys
-        // after re-enabling Lock screen
-        if (
-          error.code === KeyStore.REJECTIONS.KEY_NOT_DELETED &&
-          !isDeviceSecure
-        ) {
-          await showErrorDialog((dialogs) => dialogs.enableSystemAuthFirst)
-          await this.closeWallet()
-          throw new WalletClosed()
-        } else {
-          // We cannot delete keys directly on android 8.1, but it is possible
-          // after we replace them
-          await KeyStore.storeData(wallet._id, 'BIOMETRICS', 'CLEAR_KEY')
-          await KeyStore.storeData(wallet._id, 'SYSTEM_PIN', 'CLEAR_KEY')
-
-          await KeyStore.deleteData(wallet._id, 'BIOMETRICS')
-          await KeyStore.deleteData(wallet._id, 'SYSTEM_PIN')
-        }
-      }
-
-      await this._updateMetadata(wallet._id, {
-        isEasyConfirmationEnabled: false,
-      })
-      wallet._isEasyConfirmationEnabled = false
-
-      await showErrorDialog((dialogs) => dialogs.walletKeysInvalidated)
+      throw new KeysAreInvalid()
     }
   }
 
@@ -678,7 +683,7 @@ class WalletManager {
     this._notify()
 
     if (wallet._isEasyConfirmationEnabled) {
-      await this.checkKeysValidity()
+      await this.ensureKeysValidity()
     }
 
     return wallet
@@ -731,16 +736,15 @@ class WalletManager {
   }
 
   async enableEasyConfirmation(masterPassword: string) {
-    if (!this._id) throw new WalletClosed()
-    const id = this._id
+    if (!this._wallet) throw new WalletClosed()
+    const wallet = this._wallet
 
-    await this._updateMetadata(id, {
+    await wallet.enableEasyConfirmation(masterPassword)
+
+    await this._updateMetadata(wallet._id, {
       isEasyConfirmationEnabled: true,
     })
-
-    // $FlowFixMe
-    await this._wallet.enableEasyConfirmation(masterPassword)
-    await this._saveState()
+    await this._saveState(wallet)
   }
 
   async changePassword(masterPassword: string, newPassword: string) {

@@ -13,8 +13,8 @@ export const APP_SETTINGS_KEYS = {
   LANG: 'languageCode',
   SYSTEM_AUTH_ENABLED: 'isSystemAuthEnabled',
   FINGERPRINT_HW_SUPPORT: 'isFingerprintsHardwareSupported',
-  HAS_FINGERPRINTS_ENROLLED: 'hasEnrolledFingerprints',
   SEND_CRASH_REPORTS: 'sendCrashReports',
+  CAN_ENABLE_FINGERPRINT_ENCRYPTION: 'canEnableFingerprintEncryption',
 }
 
 export type AppSettingsKey = $Values<typeof APP_SETTINGS_KEYS>

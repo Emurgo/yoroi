@@ -43,8 +43,8 @@ export type State = {
     customPinHash: ?string,
     isSystemAuthEnabled: boolean,
     isFingerprintsHardwareSupported: boolean,
-    hasEnrolledFingerprints: boolean,
     sendCrashReports: boolean,
+    canEnableFingerprintEncryption: boolean,
   },
 }
 
@@ -82,8 +82,8 @@ export const getInitialState = (): State => ({
     customPinHash: null,
     isSystemAuthEnabled: false,
     isFingerprintsHardwareSupported: false,
-    hasEnrolledFingerprints: false,
     sendCrashReports: false,
+    canEnableFingerprintEncryption: false,
   },
 })
 

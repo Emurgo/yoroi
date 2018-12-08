@@ -469,6 +469,8 @@ const l10n = {
     errors: {
       NOT_RECOGNIZED: 'Fingerprint was not recognized try again',
       SENSOR_LOCKOUT: 'You used too many fingers sensor is disabled',
+      SENSOR_LOCKOUT_PERMANENT:
+        'You permanently locked out your fingerprint sensor. Use fallback.',
       DECRYPTION_FAILED: 'Fingerprint sensor failed please use fallback',
       UNKNOWN_ERROR: 'Unknown error',
     },

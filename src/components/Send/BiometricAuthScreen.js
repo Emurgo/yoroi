@@ -44,29 +44,21 @@ const handleOnConfirm = async (
   } catch (error) {
     if (error.code === KeyStore.REJECTIONS.SWAPPED_TO_FALLBACK) {
       clearError()
-      return
-    }
-
-    if (error.code === KeyStore.REJECTIONS.CANCELED) {
+    } else if (error.code === KeyStore.REJECTIONS.CANCELED) {
       clearError()
       onFail(KeyStore.REJECTIONS.CANCELED)
-      return
-    }
-
-    if (
-      error.code !== KeyStore.REJECTIONS.DECRYPTION_FAILED &&
-      error.code !== KeyStore.REJECTIONS.SENSOR_LOCKOUT &&
-      error.code !== KeyStore.REJECTIONS.INVALID_KEY
-    ) {
-      handleOnConfirm(navigation, setError, clearError, false, translations)
     } else if (error.code === KeyStore.REJECTIONS.INVALID_KEY) {
       onFail(KeyStore.REJECTIONS.INVALID_KEY)
-      return
+    } else if (error.code === KeyStore.REJECTIONS.SENSOR_LOCKOUT) {
+      setError('SENSOR_LOCKOUT')
+    } else if (error.code === KeyStore.REJECTIONS.SENSOR_LOCKOUT_PERMANENT) {
+      setError('SENSOR_LOCKOUT_PERMANENT')
+    } else if (error.code !== KeyStore.REJECTIONS.DECRYPTION_FAILED) {
+      handleOnConfirm(navigation, setError, clearError, false, translations)
     } else {
       Logger.error('BiometricAuthScreen', error)
       setError('UNKNOWN_ERROR')
     }
-    return
   }
 }
 
@@ -99,6 +91,7 @@ type ExternalProps = {|
 type ErrorCode =
   | 'NOT_RECOGNIZED'
   | 'SENSOR_LOCKOUT'
+  | 'SENSOR_LOCKOUT_PERMANENT'
   | 'DECRYPTION_FAILED'
   | 'UNKNOWN_ERROR'
 
@@ -118,12 +111,15 @@ export default (compose(
     },
   ),
   withHandlers({
+    // we have this handler because we need to let JAVA side know user
+    // cancelled the scanning by either navigating out of this window
+    // or using fallback
     cancelScanning: ({setError, clearError, navigation}) => async () => {
-      const wasAlreadyCanceled = !(await KeyStore.cancelFingerprintScanning(
+      const wasScanningStarted = await KeyStore.cancelFingerprintScanning(
         KeyStore.REJECTIONS.CANCELED,
-      ))
+      )
 
-      if (wasAlreadyCanceled) {
+      if (!wasScanningStarted) {
         clearError()
         navigation.getParam('onFail')(KeyStore.REJECTIONS.CANCELED)
       }
