@@ -70,11 +70,6 @@ const l10n = {
         'your wallets first',
       yesButton: 'OK',
     },
-    wrongPinError: {
-      title: 'Invalid PIN',
-      message: 'PIN is incorrect.',
-      yesButton: 'OK',
-    },
   },
   LanguageSelectionScreen: {
     languages,

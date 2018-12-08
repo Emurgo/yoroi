@@ -27,21 +27,20 @@ const handleVerifyPin = ({
   setIsCurrentPinVerified,
   translations,
 }) => async (pin) => {
+  let isPinValid
   try {
-    const isPinValid = await authenticateByCustomPin(currentPinHash, pin)
-    if (!isPinValid) {
-      await showErrorDialog((dialogs) => dialogs.wrongPinError)
-
-      return true
-    }
-
-    setIsCurrentPinVerified(isPinValid)
-
-    return false
+    isPinValid = await authenticateByCustomPin(currentPinHash, pin)
   } catch (err) {
     setIsCurrentPinVerified(false)
     await showErrorDialog((dialogs) => dialogs.general)
+    return true
+  }
 
+  if (isPinValid) {
+    setIsCurrentPinVerified(true)
+    return false
+  } else {
+    await showErrorDialog((dialogs) => dialogs.incorrectPin)
     return true
   }
 }
