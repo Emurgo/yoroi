@@ -467,12 +467,9 @@ class WalletManager {
   async _backgroundSync() {
     try {
       if (this._wallet) {
-        const _wallet = this._wallet
-        await this._wallet.tryDoFullSync()
-        if (_wallet === this._wallet) {
-          // save only if wallet did not change
-          this._saveState()
-        }
+        const wallet = this._wallet
+        await wallet.tryDoFullSync()
+        await this._saveState(wallet)
       }
       this._notifySyncError(null)
     } catch (e) {
@@ -543,19 +540,26 @@ class WalletManager {
 
   async generateNewUiReceiveAddress() {
     if (!this._wallet) return false
+    const wallet = this._wallet
+
     const didGenerateNew = await this.abortWhenWalletCloses(
-      this._wallet.generateNewUiReceiveAddress(),
+      wallet.generateNewUiReceiveAddress(),
     )
-    if (didGenerateNew) this._saveState()
+    if (didGenerateNew) {
+      // Note: save is runaway
+      this._saveState(wallet)
+    }
     return didGenerateNew
   }
 
   async doFullSync() {
     // TODO(ppershing): this should "quit" early if we change wallet
     if (!this._wallet) return
-    await this.abortWhenWalletCloses(this._wallet.doFullSync())
-    // TODO(ppershing): should we make save a runaway promise?
-    await this.abortWhenWalletCloses(this._saveState())
+    const wallet = this._wallet
+    await this.abortWhenWalletCloses(wallet.doFullSync())
+    // Note: save is runaway
+    // TODO(ppershing): should we save in case wallet is closed mid-sync?
+    this._saveState(wallet)
     return
   }
 
@@ -600,7 +604,7 @@ class WalletManager {
     }
 
     this._wallet = wallet
-    await this._saveState()
+    await this._saveState(wallet)
     wallet.subscribe(this._notify)
     await storage.write(`/wallet/${id}`, this._wallets[id])
     this._closePromise = new Promise((resolve, reject) => {
@@ -629,12 +633,16 @@ class WalletManager {
     return wallet
   }
 
-  async _saveState() {
+  async save() {
     if (!this._wallet) return
-    assert.assert(this._id, 'saveState:: id')
+    await this._saveState(this._wallet)
+  }
+
+  async _saveState(wallet: Wallet) {
+    assert.assert(wallet._id, 'saveState:: wallet._id')
     /* :: if (!this._wallet) throw 'assert' */
-    const data = this._wallet.toJSON()
-    await storage.write(`/wallet/${this._id}/data`, data)
+    const data = wallet.toJSON()
+    await storage.write(`/wallet/${wallet._id}/data`, data)
   }
 
   async listWallets() {
