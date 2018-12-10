@@ -112,8 +112,7 @@ const MnemonicCheckScreen = ({
               />
             )}
           </View>
-          {!isPhraseValid &&
-            isPhraseComplete && (
+          {!(isPhraseValid || !isPhraseComplete) && (
             <Text style={styles.error}>
               {translations.mnemonicWordsInput.errors.invalidPhrase}
             </Text>
