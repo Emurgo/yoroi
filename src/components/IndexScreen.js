@@ -64,7 +64,7 @@ const IndexScreen = ({navigation}: Props) => (
       <TouchableOpacity onPress={() => storage.clearAll()}>
         <Text style={styles.link}>Clear storage</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => crash()}>
+      <TouchableOpacity onPress={crash}>
         <Text style={styles.link}>Crash</Text>
       </TouchableOpacity>
     </ScrollView>

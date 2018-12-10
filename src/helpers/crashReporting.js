@@ -2,6 +2,7 @@
 
 // $FlowFixMe we have turned off this module in .flowconfig
 import firebase from 'react-native-firebase'
+
 import {Logger} from '../utils/logging'
 
 let _enabled = false
