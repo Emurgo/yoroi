@@ -12,13 +12,15 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.RED,
     marginTop: 10,
   },
+  descriptionContainer: {
+    backgroundColor: COLORS.LIGHT_GRAY,
+    paddingVertical: 17,
+    paddingHorizontal: 15,
+  },
   description: {
-    fontSize: 14,
+    fontSize: 15,
+    lineHeight: 22,
     textAlign: 'center',
-    backgroundColor: COLORS.WARNING,
-    color: COLORS.WARNING_TEXT_COLOR,
-    paddingVertical: 15,
-    paddingHorizontal: 10,
   },
   error: {
     color: COLORS.RED,
@@ -36,8 +38,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   screenContainer: {
+    marginTop: 5,
     padding: 16,
     flexGrow: 1,
+  },
+  actions: {
+    padding: 16,
   },
 })
 
