@@ -4,8 +4,21 @@ import {StyleSheet} from 'react-native'
 import {COLORS} from '../../../../styles/config'
 
 export default StyleSheet.create({
+  safeAreaView: {
+    backgroundColor: COLORS.WHITE,
+    flex: 1,
+  },
+  content: {
+    flexGrow: 1,
+  },
   buttons: {
     flexDirection: 'row',
+  },
+  clearButton: {
+    marginRight: 12,
+  },
+  confirmButton: {
+    marginLeft: 12,
   },
   container: {
     flex: 1,
@@ -20,41 +33,39 @@ export default StyleSheet.create({
   },
   recoveryPhrase: {
     borderRadius: 8,
-    borderColor: COLORS.PRIMARY,
+    borderColor: '#4A4A4A',
     borderWidth: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 12,
     paddingBottom: 0,
     marginTop: 16,
-    // minHeight: 26 * 3 + 12 * 2,
-    // flexShrink: 1,
-    // flexGrow: 0,
+    height: '30%',
+    minHeight: 26 * 6,
+    paddingHorizontal: 6,
+  },
+  recoveryPhraseError: {
+    borderColor: COLORS.RED,
   },
   wordText: {
     borderRadius: 8,
     height: 26,
-    marginBottom: 12,
-    marginRight: 10,
-    paddingHorizontal: 16,
-    justifyContent: 'center',
-    // paddingVertical: 8,
+    lineHeight: 26,
+    marginVertical: 6,
+    marginHorizontal: 6,
   },
   wordBadge: {
     backgroundColor: COLORS.LIGHT_GRAY,
     borderRadius: 8,
     height: 26,
-    marginBottom: 12,
-    marginRight: 10,
+    marginVertical: 6,
+    marginHorizontal: 6,
     paddingHorizontal: 16,
     justifyContent: 'center',
-    // paddingVertical: 8,
   },
   words: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 8,
-    flex: 1,
+    marginTop: 12,
   },
   selected: {
     opacity: 0,

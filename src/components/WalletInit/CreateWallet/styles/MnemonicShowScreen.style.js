@@ -1,8 +1,9 @@
 // @flow
-import {COLORS} from '../../../../styles/config'
+import {StyleSheet} from 'react-native'
+
 import {screenPadding} from '../../../Screen'
 
-const style = {
+export default StyleSheet.create({
   screen: {
     padding: 0,
   },
@@ -37,6 +38,4 @@ const style = {
     alignItems: 'center',
     marginBottom: 24,
   },
-}
-
-export default style
+})

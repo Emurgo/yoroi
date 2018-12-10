@@ -16,7 +16,6 @@ import {createWallet} from '../../../actions'
 import {CONFIG} from '../../../config'
 import {withNavigationTitle, withTranslations} from '../../../utils/renderUtils'
 
-import {COLORS} from '../../../styles/config'
 import styles from './styles/MnemonicCheckScreen.style'
 
 import type {State} from '../../../state'
@@ -88,44 +87,47 @@ const MnemonicCheckScreen = ({
   const last = _.last(partialPhrase)
 
   return (
-    <SafeAreaView style={{backgroundColor: COLORS.WHITE, flex: 1}}>
+    <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.container}>
-        <StatusBar type="light" />
-        <View style={{flexGrow: 1}}>
+        <StatusBar type="dark" />
+        <View style={styles.content}>
           <Text>{translations.instructions}</Text>
-          <View style={{flex: 1}}>
-            <View style={styles.recoveryPhrase}>
-              {initial.map((id) => (
-                <Text style={styles.wordText} key={id}>
-                  {words[id]}
-                </Text>
-              ))}
-              {last != null && (
-                <WordBadge
-                  value={last}
-                  selected={false}
-                  word={words[last]}
-                  onPress={deselectWord}
-                />
-              )}
-            </View>
-            {!isPhraseValid &&
-              isPhraseComplete && (
-                <Text style={styles.error}>
-                  {translations.mnemonicWordsInput.errors.invalidPhrase}
-                </Text>
-              )}
-            <View style={styles.words}>
-              {words.map((word, index) => (
-                <WordBadge
-                  key={index}
-                  value={index}
-                  selected={partialPhrase.includes(index)}
-                  onPress={selectWord}
-                  word={word}
-                />
-              ))}
-            </View>
+          <View
+            style={[
+              styles.recoveryPhrase,
+              !isPhraseValid && isPhraseComplete && styles.recoveryPhraseError,
+            ]}
+          >
+            {initial.map((id) => (
+              <Text style={styles.wordText} key={id}>
+                {words[id]}
+              </Text>
+            ))}
+            {last != null && (
+              <WordBadge
+                value={last}
+                selected={false}
+                word={words[last]}
+                onPress={deselectWord}
+              />
+            )}
+          </View>
+          {!isPhraseValid &&
+            isPhraseComplete && (
+            <Text style={styles.error}>
+              {translations.mnemonicWordsInput.errors.invalidPhrase}
+            </Text>
+          )}
+          <View style={styles.words}>
+            {words.map((word, index) => (
+              <WordBadge
+                key={index}
+                value={index}
+                selected={partialPhrase.includes(index)}
+                onPress={selectWord}
+                word={word}
+              />
+            ))}
           </View>
         </View>
         <View style={styles.buttons}>
@@ -134,7 +136,7 @@ const MnemonicCheckScreen = ({
             outlineOnLight
             onPress={handleClear}
             title={translations.clearButton}
-            style={{marginRight: 12}}
+            style={styles.clearButton}
           />
 
           <Button
@@ -142,7 +144,7 @@ const MnemonicCheckScreen = ({
             onPress={confirmWalletCreation}
             disabled={!isPhraseComplete || !isPhraseValid}
             title={translations.confirmButton}
-            style={{marginLeft: 12}}
+            style={styles.confirmButton}
           />
         </View>
       </View>
@@ -189,9 +191,7 @@ export default (compose(
     },
   ),
   withProps(({navigation}) => {
-    const mnemonic =
-      navigation.getParam('mnemonic') ||
-      'wisdom raccoon scorpion kitchen glance bonus glimpse envelope seminar virtual curtain bracket abandon situate already'
+    const mnemonic = navigation.getParam('mnemonic')
     return {
       mnemonic,
       words: mnemonic.split(' ').sort(),
