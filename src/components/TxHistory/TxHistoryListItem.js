@@ -108,6 +108,8 @@ class TxHistoryListItem extends Component<Props> {
                   {formatAdaInteger(transaction.amount)}
                 </Text>
                 <Text small style={amountStyle}>
+                  {/* $FlowFixMe not sure why flow thinks
+                      amount could be null*/}
                   {formatAdaFractional(transaction.amount)}
                 </Text>
                 <Text style={amountStyle}>{`${utfSymbols.NBSP}${

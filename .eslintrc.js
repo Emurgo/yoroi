@@ -1,6 +1,6 @@
 module.exports = {
   extends: ['vacuumlabs'],
-  plugins: ['react-native'],
+  plugins: ['react-native', 'flowtype'],
   env: {
     'react-native/react-native': true,
   },
@@ -41,6 +41,7 @@ module.exports = {
         order: ['instance-variables', 'lifecycle', 'everything-else', 'render'],
       },
     ],
+    'flowtype/require-valid-file-annotation': [2, 'always'],
   },
   globals: {
     Buffer: false,
@@ -54,5 +55,6 @@ module.exports = {
     describe: false,
     it: false,
     beforeEach: false,
+    React$Node: false,
   },
 };

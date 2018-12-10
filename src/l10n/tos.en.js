@@ -1,3 +1,4 @@
+// @flow
 import {heading, paragraph, listItem} from './util'
 
 export const termsOfService = [

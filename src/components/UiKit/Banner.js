@@ -7,7 +7,7 @@ import Text from './Text'
 import styles from './styles/Banner.style'
 
 type Props = {|
-  text: string,
+  text?: string,
   boldText?: boolean,
   label?: string,
   error?: boolean,
@@ -21,9 +21,11 @@ const Banner = ({error, text, boldText, label, children}: Props) => (
         {label}
       </Text>
     )}
-    <Text small={error} bold={boldText} style={[error && styles.textError]}>
-      {text}
-    </Text>
+    {text && (
+      <Text small={error} bold={boldText} style={[error && styles.textError]}>
+        {text}
+      </Text>
+    )}
     {children}
   </View>
 )

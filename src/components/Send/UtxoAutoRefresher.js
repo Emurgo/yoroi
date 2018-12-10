@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 import {NavigationEvents} from 'react-navigation'
 import {compose} from 'redux'

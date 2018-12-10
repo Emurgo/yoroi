@@ -13,11 +13,11 @@ import closedEyeIcon from '../../assets/img/eye-closed.png'
 import type {ComponentType} from 'react'
 
 type ExternalProps = {
-  label: string,
+  label?: string,
   onChangeText: (text: string) => mixed,
   value: string,
   secureTextEntry?: boolean,
-  error?: boolean,
+  error?: null | false | string,
   keyboardType?: 'default' | 'numeric',
   style?: Object,
   returnKeyType?: 'none' | 'done',

@@ -33,6 +33,7 @@ describe('History API', () => {
     // We are async
     expect.assertions(1)
 
+    // $FlowFixMe not sure why Flow does not like ApiError instead of Error
     await expect(api.fetchNewTxHistory(ts, addresses)).rejects.toThrow(ApiError)
   })
 

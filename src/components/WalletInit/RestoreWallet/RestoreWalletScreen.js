@@ -71,7 +71,7 @@ const RestoreWalletScreen = ({
 
   const errorText =
     errors.invalidPhrase &&
-    visibleErrors.map((error) => translateInvalidPhraseError(error))
+    visibleErrors.map((error) => translateInvalidPhraseError(error)).join(' ')
 
   return (
     <SafeAreaView style={styles.safeAreaView}>

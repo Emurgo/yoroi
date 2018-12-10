@@ -1,3 +1,4 @@
+// @flow
 import jestSetup from '../jestSetup'
 
 import {delay, synchronize} from './promise'

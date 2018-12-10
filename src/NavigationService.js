@@ -1,12 +1,13 @@
+// @flow
 import {NavigationActions} from 'react-navigation'
 
 let _navigator
 
-const setTopLevelNavigator = (navigatorRef) => {
+const setTopLevelNavigator = (navigatorRef: any) => {
   _navigator = navigatorRef
 }
 
-const navigate = (routeName, params) => {
+const navigate = (routeName: string, params: any) => {
   _navigator.dispatch(
     NavigationActions.navigate({
       routeName,

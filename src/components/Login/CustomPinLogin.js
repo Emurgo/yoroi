@@ -25,7 +25,7 @@ const getTranslations = (state) => state.trans.WithPinLoginScreen
 
 type Props = {
   translations: SubTranslation<typeof getTranslations>,
-  onPinEnter: (pin: string) => mixed,
+  onPinEnter: (pin: string) => Promise<boolean>,
 }
 
 const CustomPinLogin = ({translations, onPinEnter}: Props) => (

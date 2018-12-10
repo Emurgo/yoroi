@@ -1,3 +1,4 @@
+// @flow
 import {BigNumber} from 'bignumber.js'
 import moment from 'moment'
 import utfSymbols from './utfSymbols'

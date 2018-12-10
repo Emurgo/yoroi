@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
@@ -20,7 +21,7 @@ const NavigateTo = compose(
 
 type SettingsSectionProps = {
   title?: string,
-  children: React.Node,
+  children: React$Node,
 }
 
 export const SettingsSection = ({title, children}: SettingsSectionProps) => (
@@ -30,11 +31,11 @@ export const SettingsSection = ({title, children}: SettingsSectionProps) => (
   </View>
 )
 
-type SettingsItemProps = {
+type SettingsItemProps = {|
   label: string,
-  children: React.Node,
+  children: React$Node,
   disabled?: boolean,
-}
+|}
 
 export const SettingsItem = ({
   label,
@@ -43,15 +44,21 @@ export const SettingsItem = ({
 }: SettingsItemProps) => (
   <View style={styles.item}>
     <Text style={[styles.label, disabled && styles.disabled]}>{label}</Text>
-    <View style={styles.iconContainer}>{children}</View>
+    <View>{children}</View>
   </View>
 )
+
+type NavigatedSettingsItemProps = {|
+  label: string,
+  navigateTo: string,
+  disabled?: boolean,
+|}
 
 export const NavigatedSettingsItem = ({
   label,
   navigateTo,
   disabled,
-}: SettingsItemProps) => (
+}: NavigatedSettingsItemProps) => (
   <NavigateTo to={navigateTo} disabled={disabled}>
     <SettingsItem label={label} disabled={disabled}>
       <Image source={chevronRight} />
@@ -59,10 +66,10 @@ export const NavigatedSettingsItem = ({
   </NavigateTo>
 )
 
-type PressableSettingsItemProps = {
+type PressableSettingsItemProps = {|
   label: string,
   onPress: () => any,
-}
+|}
 
 export const PressableSettingsItem = ({
   label,

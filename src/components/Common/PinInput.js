@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 import {compose} from 'redux'
 import _ from 'lodash'
@@ -10,6 +11,8 @@ import {Text, ScreenBackground} from '../UiKit'
 import backspaceIcon from '../../assets/img/backspace.png'
 
 import styles from './styles/PinInput.style'
+
+import type {ComponentType} from 'react'
 
 const BACKSPACE = utfSymbols.ERASE_TO_LEFT
 
@@ -76,13 +79,10 @@ export type PinInputLabels = {
   subtitle2?: string,
 }
 
-type Props = {
-  pin: string,
-  setPin: (string) => void,
-  pinMaxLength: number,
+type ExternalProps = {
   labels: PinInputLabels,
-  onKeyDown: (string) => void,
   onPinEnter: (string) => Promise<boolean>,
+  pinMaxLength: number,
 }
 
 const PinInput = ({
@@ -92,7 +92,7 @@ const PinInput = ({
   labels,
   onKeyDown,
   onPinEnter,
-}: Props) => (
+}) => (
   <ScreenBackground style={styles.root}>
     <View style={styles.infoContainer}>
       <Text style={styles.title}>{labels.title}</Text>
@@ -125,7 +125,7 @@ const PinInput = ({
   </ScreenBackground>
 )
 
-export default compose(
+export default (compose(
   withStateHandlers(
     {
       pin: '',
@@ -138,4 +138,4 @@ export default compose(
     onKeyDown: ({pin, setPin, pinMaxLength, onPinEnter}) => (value) =>
       processPin(pin, setPin, pinMaxLength, value, onPinEnter),
   }),
-)(PinInput)
+)(PinInput): ComponentType<ExternalProps>)

@@ -24,8 +24,8 @@ const getTranslations = (state) => state.trans.TermsOfServiceScreen
 type Props = {
   translations: SubTranslation<typeof getTranslations>,
   acceptedTos: boolean,
-  setAcceptedTos: (accepted: boolean) => mixed,
-  handleAccepted: () => mixed,
+  setAcceptedTos: (accepted: boolean) => any,
+  handleAccepted: () => any,
 }
 
 const AcceptTermsOfServiceScreen = ({

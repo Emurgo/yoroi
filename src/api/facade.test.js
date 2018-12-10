@@ -1,3 +1,4 @@
+// @flow
 import jestSetup from '../jestSetup'
 
 import {checkNonNegativeInt, checkISO8601Date} from './facade'
