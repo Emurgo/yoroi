@@ -54,9 +54,19 @@ const RemoveWalletScreen = ({
     <View style={styles.container}>
       <StatusBar type="dark" />
 
-      <Text style={styles.description}>{translations.description}</Text>
+      <View style={styles.descriptionContainer}>
+        <Text style={styles.description}>
+          {translations.description.paragraph1}
+        </Text>
+        <Text style={styles.description}>
+          {translations.description.paragraph2}
+        </Text>
+      </View>
 
-      <ScrollView contentContainerStyle={styles.screenContainer}>
+      <ScrollView
+        contentContainerStyle={styles.screenContainer}
+        keyboardDismissMode="on-drag"
+      >
         <View style={styles.walletInfo}>
           <Text style={styles.walletNameLabel}>{translations.walletName}</Text>
           <Text style={styles.walletName}>{walletName}</Text>
@@ -67,22 +77,22 @@ const RemoveWalletScreen = ({
             onChangeText={setTypedWalletName}
           />
         </View>
-
-        <View>
-          <Checkbox
-            checked={hasMnemonicWrittenDown}
-            text={translations.hasWrittenDownMnemonic}
-            onChange={setHasMnemonicWrittenDown}
-          />
-
-          <Button
-            onPress={handleRemoveWallet}
-            title={translations.remove}
-            style={styles.removeButton}
-            disabled={disabled}
-          />
-        </View>
       </ScrollView>
+
+      <View style={styles.actions}>
+        <Checkbox
+          checked={hasMnemonicWrittenDown}
+          text={translations.hasWrittenDownMnemonic}
+          onChange={setHasMnemonicWrittenDown}
+        />
+
+        <Button
+          onPress={handleRemoveWallet}
+          title={translations.remove}
+          style={styles.removeButton}
+          disabled={disabled}
+        />
+      </View>
     </View>
   )
 }

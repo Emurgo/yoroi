@@ -434,10 +434,12 @@ const l10n = {
   },
   RemoveWalletScreen: {
     title: 'Remove wallet',
-    description:
-      'If you really wish to permanently delete the wallet ' +
-      'from your device, make sure you have written down the mnemonic. ' +
-      'To confirm this operation, type the wallet name below.',
+    description: {
+      paragraph1:
+        'If you really wish to permanently delete the wallet ' +
+        'make sure you have written down the mnemonic.',
+      paragraph2: 'To confirm this operation type the wallet name below.',
+    },
     walletName: 'Wallet name',
     walletNameInput: 'Wallet name',
     remove: 'Remove wallet',
