@@ -2,21 +2,20 @@
 
 import React from 'react'
 import _ from 'lodash'
-import {View, TouchableHighlight} from 'react-native'
+import {View, TouchableOpacity} from 'react-native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withProps, withStateHandlers} from 'recompose'
+import {SafeAreaView} from 'react-navigation'
 
 import assert from '../../../utils/assert'
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
 import {Text, Button, StatusBar} from '../../UiKit'
-import Screen from '../../Screen'
 import {ROOT_ROUTES} from '../../../RoutesList'
 import {createWallet} from '../../../actions'
 import {CONFIG} from '../../../config'
 import {withNavigationTitle, withTranslations} from '../../../utils/renderUtils'
 
-import {COLORS} from '../../../styles/config'
 import styles from './styles/MnemonicCheckScreen.style'
 
 import type {State} from '../../../state'
@@ -44,23 +43,32 @@ const handleWalletConfirmation = ({navigation, createWallet}) => async () => {
   navigation.navigate(ROOT_ROUTES.WALLET)
 }
 
-const Word = ({styles, word, handleOnPress, selected}) => (
-  <View style={[styles.word, selected ? styles.selected : {}]}>
-    <StatusBar type="dark" />
+type WordProps = {
+  word: string,
+  selected: boolean,
+  hidden?: boolean,
+  onPress: (number) => any,
+  value: number,
+}
 
-    <TouchableHighlight
-      activeOpacity={0.1}
-      underlayColor={COLORS.WHITE}
-      onPress={handleOnPress}
-      disabled={selected}
-    >
-      <Text style={selected ? styles.selectedText : {}}>{word}</Text>
-    </TouchableHighlight>
-  </View>
+const _WordBadge = ({word, handleOnPress, selected, hidden}) => (
+  <TouchableOpacity
+    activeOpacity={0.5}
+    onPress={handleOnPress}
+    disabled={selected}
+    style={[
+      styles.wordBadge,
+      selected && styles.selected,
+      hidden && styles.hidden,
+    ]}
+  >
+    <Text style={[selected && styles.selectedText]}>{word}</Text>
+  </TouchableOpacity>
 )
-const EnhancedWord = withHandlers({
+
+const WordBadge: ComponentType<WordProps> = withHandlers({
   handleOnPress: ({onPress, value}) => () => onPress(value),
-})(Word)
+})(_WordBadge)
 
 const MnemonicCheckScreen = ({
   mnemonic,
@@ -75,58 +83,71 @@ const MnemonicCheckScreen = ({
   const isPhraseComplete = partialPhrase.length === words.length
   const isPhraseValid = validatePhrase(mnemonic, words, partialPhrase)
 
-  return (
-    <Screen bgColor={COLORS.WHITE}>
-      <View style={styles.container}>
-        <Text style={styles.instructions}>{translations.instructions}</Text>
+  const initial = _.initial(partialPhrase)
+  const last = _.last(partialPhrase)
 
-        <View style={styles.recoveryPhraseContainer}>
-          <Text style={styles.inputLabel}>
-            {translations.mnemonicWordsInput.label}
-          </Text>
-          <View style={styles.recoveryPhrase}>
-            {partialPhrase.map((index) => (
-              <EnhancedWord
-                value={index}
-                key={index}
-                selected={false}
-                onPress={deselectWord}
-                word={words[index]}
-                styles={styles}
-              />
+  return (
+    <SafeAreaView style={styles.safeAreaView}>
+      <View style={styles.container}>
+        <StatusBar type="dark" />
+        <View style={styles.content}>
+          <Text>{translations.instructions}</Text>
+          <View
+            style={[
+              styles.recoveryPhrase,
+              !isPhraseValid && isPhraseComplete && styles.recoveryPhraseError,
+            ]}
+          >
+            {initial.map((id) => (
+              <Text style={styles.wordText} key={id}>
+                {words[id]}
+              </Text>
             ))}
+            {last != null && (
+              <WordBadge
+                value={last}
+                selected={false}
+                word={words[last]}
+                onPress={deselectWord}
+              />
+            )}
           </View>
-          {!isPhraseValid && isPhraseComplete ? (
+          {!(isPhraseValid || !isPhraseComplete) && (
             <Text style={styles.error}>
               {translations.mnemonicWordsInput.errors.invalidPhrase}
             </Text>
-          ) : null}
+          )}
+          <View style={styles.words}>
+            {words.map((word, index) => (
+              <WordBadge
+                key={index}
+                value={index}
+                selected={partialPhrase.includes(index)}
+                onPress={selectWord}
+                word={word}
+              />
+            ))}
+          </View>
         </View>
-
-        <View style={styles.words}>
-          {words.map((word, index) => (
-            <EnhancedWord
-              key={index}
-              value={index}
-              selected={partialPhrase.includes(index)}
-              onPress={selectWord}
-              word={word}
-              styles={styles}
-            />
-          ))}
-        </View>
-
         <View style={styles.buttons}>
-          <Button onPress={handleClear} title={translations.clearButton} />
+          <Button
+            block
+            outlineOnLight
+            onPress={handleClear}
+            title={translations.clearButton}
+            style={styles.clearButton}
+          />
 
           <Button
+            block
             onPress={confirmWalletCreation}
             disabled={!isPhraseComplete || !isPhraseValid}
             title={translations.confirmButton}
+            style={styles.confirmButton}
           />
         </View>
       </View>
-    </Screen>
+    </SafeAreaView>
   )
 }
 

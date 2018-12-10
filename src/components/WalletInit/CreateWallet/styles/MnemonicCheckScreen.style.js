@@ -1,87 +1,79 @@
 // @flow
+import {StyleSheet} from 'react-native'
+
 import {COLORS} from '../../../../styles/config'
 
-const style = {
-  button: {
-    padding: 20,
-    borderRadius: 40,
-    width: '45%',
-    justifyContent: 'center',
-    alignContent: 'center',
-    flexDirection: 'row',
+export default StyleSheet.create({
+  safeAreaView: {
+    backgroundColor: COLORS.WHITE,
+    flex: 1,
+  },
+  content: {
+    flexGrow: 1,
   },
   buttons: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
   },
   clearButton: {
-    backgroundColor: COLORS.WHITE,
-    borderColor: COLORS.PRIMARY,
-    borderWidth: 2,
-    borderStyle: 'solid',
-  },
-  clearText: {
-    color: COLORS.PRIMARY,
-    fontWeight: 'bold',
+    marginRight: 12,
   },
   confirmButton: {
-    backgroundColor: COLORS.LIGHT_POSITIVE_GREEN,
-  },
-  confirmText: {
-    color: COLORS.WHITE,
-    fontWeight: 'bold',
+    marginLeft: 12,
   },
   container: {
     flex: 1,
-    justifyContent: 'space-between',
-    alignContent: 'center',
-  },
-  disabledButton: {
-    backgroundColor: COLORS.DARK_GRAY,
+    padding: 16,
   },
   error: {
     color: COLORS.RED,
+    paddingLeft: 16,
   },
   inputLabel: {
     color: COLORS.PRIMARY,
   },
-  instructions: {
-    textAlign: 'center',
-    fontSize: 18,
-    padding: 10,
-  },
-  recoveryPhraseContainer: {
-    height: '30%',
-  },
   recoveryPhrase: {
-    borderRadius: 5,
-    borderColor: COLORS.PRIMARY,
-    borderStyle: 'solid',
-    borderWidth: 2,
-    height: '90%',
+    borderRadius: 8,
+    borderColor: '#4A4A4A',
+    borderWidth: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 10,
+    paddingBottom: 0,
+    marginTop: 16,
+    height: '30%',
+    minHeight: 26 * 6,
+    paddingHorizontal: 6,
   },
-  selected: {
-    backgroundColor: COLORS.WHITE,
+  recoveryPhraseError: {
+    borderColor: COLORS.RED,
   },
-  selectedText: {
-    color: COLORS.GRAY,
+  wordText: {
+    borderRadius: 8,
+    height: 26,
+    lineHeight: 26,
+    marginVertical: 6,
+    marginHorizontal: 6,
   },
-  word: {
+  wordBadge: {
     backgroundColor: COLORS.LIGHT_GRAY,
-    borderRadius: 5,
-    color: COLORS.DARK_GRAY,
-    height: 30,
-    margin: 5,
-    padding: 5,
+    borderRadius: 8,
+    height: 26,
+    marginVertical: 6,
+    marginHorizontal: 6,
+    paddingHorizontal: 16,
+    justifyContent: 'center',
   },
   words: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 10,
+    marginTop: 12,
   },
-}
-
-export default style
+  selected: {
+    opacity: 0,
+  },
+  selectedText: {
+    opacity: 0.4,
+  },
+  hidden: {
+    opacity: 0,
+  },
+})

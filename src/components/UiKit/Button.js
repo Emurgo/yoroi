@@ -20,11 +20,19 @@ const styles = StyleSheet.create({
     borderColor: '#fff',
     backgroundColor: 'transparent',
   },
+  buttonOutlineOnLight: {
+    borderWidth: 1,
+    borderColor: colors.buttonBackground,
+    backgroundColor: 'transparent',
+  },
   text: {
     color: 'white',
     textAlign: 'center',
     padding: 8,
     fontSize: 14,
+  },
+  textOutlineOnLight: {
+    color: colors.buttonBackground,
   },
   buttonDisabled: {
     opacity: 0.5,
@@ -38,6 +46,7 @@ type ButtonProps = {
   accessibilityLabel?: ?string,
   disabled?: ?boolean,
   outline?: boolean,
+  outlineOnLight?: boolean,
   style?: Object,
   containerStyle?: Object,
   block?: boolean,
@@ -54,6 +63,7 @@ class Button extends React.Component<ButtonProps> {
       style,
       containerStyle,
       outline,
+      outlineOnLight,
     } = this.props
 
     const formattedTitle = title && title.toUpperCase()
@@ -71,11 +81,16 @@ class Button extends React.Component<ButtonProps> {
           style={[
             styles.button,
             outline && styles.buttonOutline,
+            outlineOnLight && styles.buttonOutlineOnLight,
             disabled && styles.buttonDisabled,
             style,
           ]}
         >
-          <Text style={styles.text}>{formattedTitle}</Text>
+          <Text
+            style={[styles.text, outlineOnLight && styles.textOutlineOnLight]}
+          >
+            {formattedTitle}
+          </Text>
         </View>
       </TouchableOpacity>
     )

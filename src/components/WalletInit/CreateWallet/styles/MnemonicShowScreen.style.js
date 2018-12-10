@@ -1,35 +1,41 @@
 // @flow
-import {COLORS} from '../../../../styles/config'
+import {StyleSheet} from 'react-native'
+
 import {screenPadding} from '../../../Screen'
 
-const style = {
-  button: {
-    backgroundColor: COLORS.LIGHT_POSITIVE_GREEN,
-    borderRadius: 5,
-    padding: 10,
-    width: '100%',
-    justifyContent: 'center',
-    alignContent: 'center',
-    flexDirection: 'row',
-  },
-  buttonContainer: {
-    padding: screenPadding,
-  },
+export default StyleSheet.create({
   screen: {
     padding: 0,
+  },
+  safeAreaView: {
+    backgroundColor: '#fff',
+    flex: 1,
   },
   mnemonicNoteContainer: {
     padding: screenPadding,
   },
   mnemonicWordsContainer: {
-    backgroundColor: COLORS.GRAY,
-    padding: screenPadding,
+    backgroundColor: '#fff',
+    borderColor: '#9B9B9B',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    marginTop: 30,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  mnemonicText: {
+    lineHeight: 30,
+    marginRight: 24,
   },
   contentContainer: {
     flexGrow: 1,
-    flexDirection: 'column',
+    padding: 16,
     justifyContent: 'space-between',
   },
-}
-
-export default style
+  image: {
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+})

@@ -1,20 +1,20 @@
 // @flow
 
 import React from 'react'
-import {View} from 'react-native'
+import {View, Image} from 'react-native'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
+import {SafeAreaView} from 'react-navigation'
 
 import assert from '../../../utils/assert'
 import {Text, Button, StatusBar} from '../../UiKit'
-import Screen from '../../Screen'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {generateAdaMnemonic} from '../../../crypto/util'
 import {CONFIG} from '../../../config'
 
 import styles from './styles/MnemonicShowScreen.style'
-import {COLORS} from '../../../styles/config'
 import MnemonicBackupImportanceModal from './MnemonicBackupImportanceModal'
+import recoveryPhrase from '../../../assets/img/recovery_phrase.png'
 
 import type {State} from '../../../state'
 
@@ -32,32 +32,35 @@ const MnemonicShowScreen = ({
   showModal,
   hideModal,
 }) => (
-  <Screen bgColor={COLORS.BACKGROUND_GRAY} style={styles.screen}>
+  <SafeAreaView style={styles.safeAreaView}>
     <StatusBar type="dark" />
-
     <View style={styles.contentContainer}>
       <View>
-        <View style={styles.mnemonicNoteContainer}>
-          <Text>{translations.mnemonicNote}</Text>
-        </View>
+        <Text>{translations.mnemonicNote}</Text>
         <View style={styles.mnemonicWordsContainer}>
-          <Text>{mnemonic}</Text>
+          {mnemonic.split(' ').map((word, index) => (
+            <Text key={index} style={styles.mnemonicText}>
+              {word}
+            </Text>
+          ))}
         </View>
       </View>
-
-      <View style={styles.buttonContainer}>
+      <View style={styles.image}>
+        <Image source={recoveryPhrase} />
+      </View>
+      <View>
         <Button onPress={showModal} title={translations.confirmationButton} />
       </View>
     </View>
 
-    {modal ? (
+    {modal && (
       <MnemonicBackupImportanceModal
         visible={modal}
         onConfirm={navigateToMnemonicCheck}
         onRequestClose={hideModal}
       />
-    ) : null}
-  </Screen>
+    )}
+  </SafeAreaView>
 )
 
 export default (compose(
