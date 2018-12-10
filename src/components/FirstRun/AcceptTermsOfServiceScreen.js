@@ -9,7 +9,7 @@ import {ScrollView} from 'react-native'
 
 import TermsOfService from '../Common/TermsOfService'
 import {withNavigationTitle} from '../../utils/renderUtils'
-import {Checkbox, Button} from '../UiKit'
+import {Checkbox, Button, StatusBar} from '../UiKit'
 import {FIRST_RUN_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import {systemAuthSupportSelector} from '../../selectors'
 import {acceptAndSaveTos, setSystemAuth} from '../../actions'
@@ -35,6 +35,8 @@ const AcceptTermsOfServiceScreen = ({
   handleAccepted,
 }: Props) => (
   <SafeAreaView style={styles.safeAreaView}>
+    <StatusBar type="dark" />
+
     <ScrollView>
       <TermsOfService />
     </ScrollView>
