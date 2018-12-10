@@ -39,7 +39,7 @@ export const updateHistory = () => async (dispatch: Dispatch<any>) => {
     } else {
       // TODO(ppershing): should we set error object or just
       // some message code?
-      Logger.error(e)
+      Logger.error('Sync error', e)
       dispatch(_setSyncError(e.message))
     }
   } finally {

@@ -80,7 +80,7 @@ const onToggleBiometricsAuthIn = ({
         if (reason === KeyStore.REJECTIONS.CANCELED) {
           navigation.navigate(SETTINGS_ROUTES.MAIN)
         } else {
-          throw new Error(`Could not authenticate user because ${reason}`)
+          throw new Error(`Could not authenticate user: ${reason}`)
         }
       },
     })

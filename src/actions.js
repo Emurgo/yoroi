@@ -365,8 +365,7 @@ export const setSystemAuth = (enable: boolean) => async (
 }
 
 export const handleGeneralError = async (message: string, e: Error) => {
-  Logger.error(message, e)
-
+  Logger.error(`${message}: ${e.message}`, e)
   await showErrorDialog((dialogs) => dialogs.generalError(message))
 }
 

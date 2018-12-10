@@ -62,7 +62,7 @@ export const processTxHistoryData = (
       'I see a multi-party transaction (only some of the inputs are mine)',
     )
     Logger.warn('This probably means broken address discovery!')
-    Logger.warn('Transaction:', tx)
+    Logger.warn(`Transaction: ${tx.id}`)
   }
 
   const totalIn = _sum(tx.inputs)
