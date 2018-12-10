@@ -5,7 +5,11 @@ import uuid from 'uuid'
 
 import {Logger} from './utils/logging'
 import walletManager from './crypto/wallet'
-import {mirrorTxHistory, setBackgroundSyncError} from './actions/history'
+import {
+  mirrorTxHistory,
+  setBackgroundSyncError,
+  updateHistory,
+} from './actions/history'
 import {changeLanguage} from './actions/language'
 import {
   canFingerprintEncryptionBeEnabled,
@@ -38,6 +42,7 @@ import {ROOT_ROUTES} from './RoutesList'
 
 import {type Dispatch} from 'redux'
 import {type State} from './state'
+import type {PreparedTransactionData} from './types/HistoryTransaction'
 
 export const setAppSettingField = (fieldName: AppSettingsKey, value: any) => (
   dispatch: Dispatch<any>,
@@ -361,4 +366,14 @@ export const handleGeneralError = async (message: string, e: Error) => {
   Logger.error(message, e)
 
   await showErrorDialog((dialogs) => dialogs.general)
+}
+
+export const submitTransaction = (
+  decryptedKey: string,
+  transactionData: PreparedTransactionData,
+) => async (dispatch: Dispatch<any>) => {
+  const signedTx = await walletManager.signTx(transactionData, decryptedKey)
+  await walletManager.submitTransaction(signedTx)
+
+  dispatch(updateHistory())
 }

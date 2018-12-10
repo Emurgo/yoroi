@@ -264,7 +264,8 @@ const l10n = {
     confirmButton: 'Confirm',
   },
   WaitSendTransactionModal: {
-    submitting: 'Please wait while the transaction is being submited',
+    heading: 'Submitting transaction',
+    pleaseWait: 'please wait ...',
   },
   WalletCredentialsScreen: {
     title: 'Wallet credentials',
