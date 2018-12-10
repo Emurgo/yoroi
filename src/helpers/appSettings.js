@@ -4,6 +4,8 @@ import _ from 'lodash'
 
 import storage from '../utils/storage'
 
+// Note(ppershing): following values have to be in sync with
+// keys in redux state
 export const APP_SETTINGS_KEYS = {
   INSTALLATION_ID: 'installationId',
   CUSTOM_PIN_HASH: 'customPinHash',
@@ -12,6 +14,7 @@ export const APP_SETTINGS_KEYS = {
   SYSTEM_AUTH_ENABLED: 'isSystemAuthEnabled',
   FINGERPRINT_HW_SUPPORT: 'isFingerprintsHardwareSupported',
   HAS_FINGERPRINTS_ENROLLED: 'hasEnrolledFingerprints',
+  SEND_CRASH_REPORTS: 'sendCrashReports',
 }
 
 export type AppSettingsKey = $Values<typeof APP_SETTINGS_KEYS>

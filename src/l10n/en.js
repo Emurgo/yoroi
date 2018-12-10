@@ -380,12 +380,11 @@ const l10n = {
       changePin: 'Change PIN',
       biometricsSignIn: 'Sign in with your biometrics',
 
-      downloadLogs: 'Download logs',
-      downloadLogsText:
-        'If you want to inspect logs, you can download them here. ' +
-        'Logs do not contain sensitive information, and it would be ' +
-        'helpful to attach them to problem reports to help the team ' +
-        'investigate the issue you are experiencing.',
+      crashReporting: 'Crash reporting',
+      crashReportingText:
+        'Send crash reports to Emurgo. ' +
+        'Changes to this option will be reflected ' +
+        ' after restarting the application.',
 
       termsOfUse: 'Terms of Use',
       support: 'Support',

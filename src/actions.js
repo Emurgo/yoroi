@@ -4,6 +4,7 @@ import {AppState, Alert, Keyboard} from 'react-native'
 import uuid from 'uuid'
 import SplashScreen from 'react-native-splash-screen'
 
+import crashReporting from './helpers/crashReporting'
 import {Logger} from './utils/logging'
 import walletManager from './crypto/wallet'
 import {
@@ -35,6 +36,7 @@ import {
   customPinHashSelector,
   languageSelector,
   tosSelector,
+  sendCrashReportsSelector,
 } from './selectors'
 import assert from './utils/assert'
 
@@ -44,6 +46,21 @@ import {ROOT_ROUTES} from './RoutesList'
 import {type Dispatch} from 'redux'
 import {type State} from './state'
 import type {PreparedTransactionData} from './types/HistoryTransaction'
+
+const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
+  const handlers = {
+    [APP_SETTINGS_KEYS.LANG]: () =>
+      crashReporting.setStringValue('language_code', value),
+    [APP_SETTINGS_KEYS.FINGERPRINT_HW_SUPPORT]: () =>
+      crashReporting.setBoolValue('fingerprint_hw_support', value),
+    [APP_SETTINGS_KEYS.HAS_FINGERPRINTS_ENROLLED]: () =>
+      crashReporting.setBoolValue('has_fingerprints_enrolled', value),
+  }
+
+  // $FlowFixMe flow does not like undefined access but we are dealing with it
+  const handler = handlers[fieldName] || null
+  handler && handler()
+}
 
 export const setAppSettingField = (fieldName: AppSettingsKey, value: any) => (
   dispatch: Dispatch<any>,
@@ -55,13 +72,14 @@ export const setAppSettingField = (fieldName: AppSettingsKey, value: any) => (
     type: 'SET_APP_SETTING_FIELD',
     reducer: (state, payload) => payload,
   })
+  updateCrashlytics(fieldName, value)
 }
 
 export const clearAppSettingField = (fieldName: AppSettingsKey) => async (
   dispatch: Dispatch<any>,
 ) => {
   await removeAppSettings(fieldName)
-
+  updateCrashlytics(fieldName, null)
   dispatch({
     path: ['appSettings', fieldName],
     payload: null,
@@ -98,6 +116,10 @@ const _setAppSettings = (appSettings) => ({
 
 const reloadAppSettings = () => async (dispatch: Dispatch<any>) => {
   const appSettings = await readAppSettings()
+  Object.entries(appSettings).forEach(([key, value]) => {
+    updateCrashlytics(key, value)
+  })
+
   dispatch(_setAppSettings(appSettings))
   if (appSettings.languageCode) {
     dispatch(changeLanguage(appSettings.languageCode))
@@ -180,10 +202,17 @@ export const logout = () => async (dispatch: Dispatch<any>) => {
 export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   await dispatch(reloadAppSettings())
 
-  const state = getState()
-  if (!installationIdSelector(state)) {
+  if (!installationIdSelector(getState())) {
     dispatch(firstRunSetup())
   }
+
+  if (sendCrashReportsSelector(getState())) {
+    crashReporting.enable()
+    // TODO(ppershing): just update crashlytic variables here
+    await dispatch(reloadAppSettings())
+  }
+
+  crashReporting.setUserId(installationIdSelector(getState()))
 
   // prettier-ignore
   const hasEnrolledFingerprints =
@@ -367,6 +396,7 @@ export const setSystemAuth = (enable: boolean) => async (
 export const handleGeneralError = async (message: string, e: Error) => {
   Logger.error(`${message}: ${e.message}`, e)
   await showErrorDialog((dialogs) => dialogs.generalError(message))
+  crashReporting.crash()
 }
 
 export const submitTransaction = (

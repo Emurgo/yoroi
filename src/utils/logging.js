@@ -1,5 +1,4 @@
 // @flow
-
 export const LogLevel = {
   Debug: 0,
   Info: 1,
@@ -31,4 +30,5 @@ export const Logger = {
   error: (message: string, ...args: any) =>
     LogLevel.Error >= logLevel && logger.error(message, ...args),
   setLogLevel,
+  setLogger,
 }

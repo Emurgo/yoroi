@@ -44,6 +44,7 @@ export type State = {
     isSystemAuthEnabled: boolean,
     isFingerprintsHardwareSupported: boolean,
     hasEnrolledFingerprints: boolean,
+    sendCrashReports: boolean,
   },
 }
 
@@ -82,6 +83,7 @@ export const getInitialState = (): State => ({
     isSystemAuthEnabled: false,
     isFingerprintsHardwareSupported: false,
     hasEnrolledFingerprints: false,
+    sendCrashReports: false,
   },
 })
 
