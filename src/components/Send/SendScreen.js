@@ -6,6 +6,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {ScrollView, View, TouchableOpacity} from 'react-native'
 import _ from 'lodash'
+import {SafeAreaView} from 'react-navigation'
 
 import {CONFIG} from '../../config'
 import {SEND_ROUTES} from '../../RoutesList'
@@ -15,6 +16,7 @@ import {
   OfflineBanner,
   ValidatedTextInput,
   StatusBar,
+  Banner,
 } from '../UiKit'
 import {
   isFetchingUtxosSelector,
@@ -81,14 +83,16 @@ const recomupteAll = async ({amount, address, utxos}) => {
 
 const AvailableAmount = withTranslations(getTranslations)(
   ({translations, isFetching, hasError, amount}) => (
-    <Text>
-      {translations.availableAmount.label}{' '}
-      {isFetching
-        ? translations.availableAmount.isFetching
-        : hasError
-          ? translations.availableAmount.hasError
-          : (amount && formatAdaWithSymbol(amount)) || ''}
-    </Text>
+    <Banner
+      text={
+        isFetching
+          ? translations.availableAmount.isFetching
+          : hasError
+            ? translations.availableAmount.hasError
+            : (amount && formatAdaWithSymbol(amount)) || ''
+      }
+      label={translations.availableAmount.label}
+    />
   ),
 )
 
@@ -242,7 +246,7 @@ class SendScreen extends Component<Props, State> {
       : translations.balanceAfter.notAvailable
 
     return (
-      <Text>
+      <Text small>
         {translations.balanceAfter.label}
         {': '}
         {value}
@@ -257,7 +261,7 @@ class SendScreen extends Component<Props, State> {
     const value = fee ? formatAdaWithSymbol(fee) : translations.fee.notAvailable
 
     return (
-      <Text>
+      <Text small>
         {translations.fee.label}
         {': '}
         {value}
@@ -327,59 +331,57 @@ class SendScreen extends Component<Props, State> {
       })
 
     return (
-      <View style={styles.root}>
+      <SafeAreaView style={styles.container}>
         <StatusBar type="dark" />
 
         <UtxoAutoRefresher />
         {this.renderErrorBanners()}
 
-        <ScrollView style={styles.container}>
-          <View style={styles.header}>
-            <AvailableAmount
-              isFetching={isFetchingBalance}
-              hasError={lastFetchingError}
-              amount={availableAmount}
-            />
-          </View>
-
+        <AvailableAmount
+          isFetching={isFetchingBalance}
+          hasError={lastFetchingError}
+          amount={availableAmount}
+        />
+        <ScrollView style={styles.content} keyboardDismissMode="on-drag">
           {this.renderBalanceAfterTransaction()}
           {this.renderFee()}
 
-          <View style={styles.containerQR}>
-            <TouchableOpacity onPress={this.navigateToQRReader}>
-              <View style={styles.scanIcon} />
-            </TouchableOpacity>
-            <Text style={styles.label}>{translations.scanCode}</Text>
-          </View>
+          <TouchableOpacity
+            style={styles.containerQR}
+            onPress={this.navigateToQRReader}
+          >
+            <Text>{translations.scanCode}</Text>
+          </TouchableOpacity>
 
-          <View style={styles.inputContainer}>
-            <ValidatedTextInput
-              value={address}
-              label={translations.addressInput.label}
-              onChangeText={this.handleAddressChange}
-              error={
-                addressErrors.invalidAddress &&
-                translations.addressInput.errors.invalidAddress
-              }
-            />
-            <AmountField
-              amount={amount}
-              setAmount={this.handleAmountChange}
-              error={getAmountErrorText(
-                translations,
-                amountErrors,
-                balanceErrors,
-              )}
-            />
-          </View>
-
+          <ValidatedTextInput
+            multiline
+            style={styles.address}
+            value={address}
+            label={translations.addressInput.label}
+            onChangeText={this.handleAddressChange}
+            error={
+              addressErrors.invalidAddress &&
+              translations.addressInput.errors.invalidAddress
+            }
+          />
+          <AmountField
+            amount={amount}
+            setAmount={this.handleAmountChange}
+            error={getAmountErrorText(
+              translations,
+              amountErrors,
+              balanceErrors,
+            )}
+          />
+        </ScrollView>
+        <View style={styles.actions}>
           <Button
             onPress={this.handleConfirm}
             title={translations.continueButton}
             disabled={!isValid}
           />
-        </ScrollView>
-      </View>
+        </View>
+      </SafeAreaView>
     )
   }
 }

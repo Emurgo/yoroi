@@ -12,11 +12,12 @@ const styles = StyleSheet.create({
   textError: {
     color: '#FF1351',
   },
+  bannerError: {
+    backgroundColor: '#fff',
+    paddingVertical: 8,
+  },
   label: {
     marginBottom: 6,
-  },
-  bold: {
-    fontWeight: 'bold',
   },
 })
 
