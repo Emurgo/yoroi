@@ -59,7 +59,7 @@ export default StyleSheet.create({
     backgroundColor: 'rgba(21, 209, 170, 0.8)',
   },
   MEDIUM: {
-    backgroundColor: '#232423',
+    backgroundColor: '#FED8B1',
   },
   LOW: {
     backgroundColor: '#F2C2D1',
@@ -68,6 +68,12 @@ export default StyleSheet.create({
     backgroundColor: '#757476',
   },
   FAILED: {
-    backgroundColor: '#FF9999',
+    backgroundColor: '#DA6464',
+  },
+  FAILED_CONTAINER: {
+    backgroundColor: '#F8D7DA',
+  },
+  PENDING_CONTAINER: {
+    backgroundColor: 'rgba(207, 217, 224, 0.6)',
   },
 })
