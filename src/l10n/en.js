@@ -30,6 +30,14 @@ const l10n = {
     },
     currentLanguageName: 'English',
   },
+  confirmationDialogs: {
+    logout: {
+      title: 'Logout',
+      message: 'Do you really want to logout?',
+      yesButton: 'Yes',
+      noButton: 'No',
+    },
+  },
   errorDialogs: {
     general: {
       title: 'Unexpected error',

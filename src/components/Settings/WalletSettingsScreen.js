@@ -7,7 +7,12 @@ import {ScrollView, StyleSheet, Switch} from 'react-native'
 
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 
-import {closeWallet, logout} from '../../actions'
+import {
+  closeWallet,
+  logout,
+  showConfirmationDialog,
+  DIALOG_BUTTONS,
+} from '../../actions'
 import {WALLET_INIT_ROUTES, SETTINGS_ROUTES} from '../../RoutesList'
 import {withNavigationTitle, withTranslations} from '../../utils/renderUtils'
 import {
@@ -123,9 +128,15 @@ export default (compose(
     ),
     onLogout: ignoreConcurrentAsyncHandler(
       ({logout}) => async () => {
-        await logout()
+        const selection = await showConfirmationDialog(
+          (dialogs) => dialogs.logout,
+        )
+
+        if (selection === DIALOG_BUTTONS.YES) {
+          await logout()
+        }
       },
-      1000,
+      500,
     ),
   }),
 )(WalletSettingsScreen): ComponentType<{|navigation: Navigation|}>)
