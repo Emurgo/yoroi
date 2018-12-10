@@ -83,17 +83,20 @@ class TxHistoryListItem extends Component<Props> {
         : styles.negativeAmount
       : styles.neutralAmount
 
+    const isPending = transaction.assurance === 'PENDING'
+    const assuranceContainerStyle = styles[`${transaction.assurance}_CONTAINER`]
+
     return (
       <TouchableOpacity onPress={this.showDetails} activeOpacity={0.5}>
-        <View style={styles.container}>
+        <View style={[styles.container, assuranceContainerStyle]}>
           <View style={styles.meta}>
             <Text small>{formatTimeToSeconds(transaction.submittedAt)}</Text>
             {transaction.fee && (
-              <Text secondary>
+              <Text secondary={!isPending}>
                 {`${translations.fee} ${formatAda(transaction.fee)}`}
               </Text>
             )}
-            <Text secondary>
+            <Text secondary={!isPending}>
               {translations.transactionType[transaction.direction]}
             </Text>
           </View>
