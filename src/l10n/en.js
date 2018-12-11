@@ -45,11 +45,11 @@ const l10n = {
     },
   },
   errorDialogs: {
-    general: {
+    generalError: (message: string) => ({
       title: 'Unexpected error',
-      message: 'Requested operation failed',
+      message: `Requested operation failed. This is all we know: ${message}`,
       yesButton: common.ok,
-    },
+    }),
     pinMismatch: {
       title: 'Invalid PIN',
       message: 'PINs do not match.',

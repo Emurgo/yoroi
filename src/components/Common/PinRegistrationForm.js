@@ -34,7 +34,7 @@ const handlePinEnter = ({
     return false
   } catch (err) {
     setPin('')
-    await showErrorDialog((dialogs) => dialogs.general)
+    await showErrorDialog((dialogs) => dialogs.generalError(err.message))
 
     return true
   }

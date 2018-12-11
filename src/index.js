@@ -27,8 +27,7 @@ bluebird.config({
 */
 global.Promise = bluebird
 
-global.onunhandledrejection = (e) =>
-  handleGeneralError('Not caught unexpected error', e)
+global.onunhandledrejection = (e) => handleGeneralError(e.message, e)
 
 const store = getConfiguredStore()
 
