@@ -164,7 +164,6 @@ const TxDetails = ({
               direction={transaction.direction}
             />
           )}
-          boldText
           {transaction.fee && (
             <Text small>
               {translations.fee} {formatAdaWithSymbol(transaction.fee)}

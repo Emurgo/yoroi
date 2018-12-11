@@ -22,9 +22,11 @@ export default StyleSheet.create({
   },
   positiveAmount: {
     color: COLORS.POSITIVE_AMOUNT,
+    fontWeight: '500',
   },
   negativeAmount: {
     color: COLORS.NEGATIVE_AMOUNT,
+    fontWeight: '500',
   },
   noAmount: {
     color: COLORS.BLACK,
