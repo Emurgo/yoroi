@@ -2,6 +2,7 @@
 
 import {AppState, Alert, Keyboard} from 'react-native'
 import uuid from 'uuid'
+import SplashScreen from 'react-native-splash-screen'
 
 import {Logger} from './utils/logging'
 import walletManager from './crypto/wallet'
@@ -205,6 +206,7 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
     type: 'INITIALIZE_APP',
   })
   dispatch(navigateFromSplash())
+  SplashScreen.hide()
 }
 
 const _setOnline = (isOnline: boolean) => (dispatch, getState) => {

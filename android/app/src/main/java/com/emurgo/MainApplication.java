@@ -3,6 +3,7 @@ package com.emurgo;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
 import io.crossroad.rncardano.CardanoPackage;
 import org.reactnative.camera.RNCameraPackage;
@@ -30,6 +31,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+        new SplashScreenReactPackage(),
         new CardanoPackage(),
         new RNCameraPackage(),
         new RandomBytesPackage(),
