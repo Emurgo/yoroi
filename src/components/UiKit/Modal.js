@@ -15,7 +15,7 @@ type Props = {
   onRequestClose: () => any,
   visible: boolean,
   children: Node,
-  showCloseIcon: boolean,
+  showCloseIcon?: boolean,
   noPadding?: boolean,
 }
 
