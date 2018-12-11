@@ -10,15 +10,21 @@ export const LogLevel = {
 
 let logLevel = LogLevel.Debug
 
-const logger = console
+/* eslint-disable no-console */
+const logger = {
+  debug: console.log, // console.debug is hidden by default in chrome
+  info: console.info,
+  warn: console.warn,
+  error: console.error,
+}
+/* eslint-enable no-console */
 
 export const setLogLevel = (level: $Values<typeof LogLevel>) => {
   logLevel = level
 }
 
 export const Logger = {
-  // console.debug is hidden by default in chrome
-  debug: (...args: any) => LogLevel.Debug >= logLevel && logger.log(...args),
+  debug: (...args: any) => LogLevel.Debug >= logLevel && logger.debug(...args),
   info: (...args: any) => LogLevel.Info >= logLevel && logger.info(...args),
   warn: (...args: any) => LogLevel.Warn >= logLevel && logger.warn(...args),
   error: (...args: any) => LogLevel.Error >= logLevel && logger.error(...args),
