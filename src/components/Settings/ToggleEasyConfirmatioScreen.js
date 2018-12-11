@@ -32,19 +32,15 @@ const enableEasyConfirmation = ({
     if (error instanceof WrongPassword) {
       await showErrorDialog((dialogs) => dialogs.incorrectPassword)
     } else {
-      await showErrorDialog((dialogs) => dialogs.general)
+      throw error
     }
   }
 }
 
 const disableEasyConfirmation = ({navigation}) => async () => {
-  try {
-    await walletManager.disableEasyConfirmation()
-    setEasyConfirmation(false)
-    navigation.goBack()
-  } catch (error) {
-    await showErrorDialog((dialogs) => dialogs.general)
-  }
+  await walletManager.disableEasyConfirmation()
+  setEasyConfirmation(false)
+  navigation.goBack()
 }
 
 const ToggleEasyConfirmationScreen = ({
