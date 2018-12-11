@@ -13,7 +13,12 @@ import type {ComponentType} from 'react'
 const getTranslations = (state) => state.trans.WaitSendTransactionModal
 
 const SendingModal = ({translations, visible}) => (
-  <Modal noPadding visible={visible} onRequestClose={() => null}>
+  <Modal
+    noPadding
+    visible={visible}
+    onRequestClose={() => null}
+    showCloseIcon={true}
+  >
     <View style={styles.container}>
       <Text style={styles.heading}>{translations.heading}</Text>
 
