@@ -81,16 +81,17 @@ export default compose(
       await acceptAndSaveTos()
 
       const canSystemAuthBeEnabled = await canFingerprintEncryptionBeEnabled()
+
+      const navigateToWalletCreateRestore = () =>
+        navigation.navigate(WALLET_INIT_ROUTES.INITIAL_CREATE_RESTORE_SWITCH)
+
       if (canSystemAuthBeEnabled) {
         await setSystemAuth(true)
 
-        navigation.navigate(WALLET_INIT_ROUTES.INITIAL_CREATE_RESTORE_SWITCH)
+        navigateToWalletCreateRestore()
       } else {
         navigation.navigate(FIRST_RUN_ROUTES.CUSTOM_PIN, {
-          onSuccess: () =>
-            navigation.navigate(
-              WALLET_INIT_ROUTES.INITIAL_CREATE_RESTORE_SWITCH,
-            ),
+          onSuccess: navigateToWalletCreateRestore,
         })
       }
     },

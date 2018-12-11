@@ -64,7 +64,7 @@ const ChangeCustomPinScreen = ({
 
     {isCurrentPinVerified ? (
       <PinRegistrationForm
-        onValidPinEnter={handleNewPinEnter}
+        onPinEntered={handleNewPinEnter}
         labels={translations.PinRegistrationForm}
       />
     ) : (

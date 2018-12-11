@@ -3,7 +3,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {compose} from 'redux'
-import {withHandlers, withState} from 'recompose'
+import {withHandlers, withStateHandlers} from 'recompose'
 import {NavigationEvents} from 'react-navigation'
 
 import PinInput from './PinInput'
@@ -19,7 +19,7 @@ const handlePinEnter = ({
   pin,
   setPin,
   encryptAndStoreCustomPin,
-  onValidPinEnter,
+  onPinEntered,
 }) => async (pinConfirmation) => {
   if (pin !== pinConfirmation) {
     setPin('')
@@ -29,7 +29,7 @@ const handlePinEnter = ({
   }
 
   try {
-    await onValidPinEnter(pin)
+    await onPinEntered(pin)
 
     return false
   } catch (err) {
@@ -47,7 +47,7 @@ type PinRegistrationFormLabels = {
 
 type ExternalProps = {
   labels: PinRegistrationFormLabels,
-  onValidPinEnter: (string) => void,
+  onPinEntered: (string) => any,
 }
 
 type Props = ExternalProps & {
@@ -80,14 +80,21 @@ const PinRegistrationForm = ({
 }
 
 export default (compose(
-  withState('pin', 'setPin', ''),
+  withStateHandlers(
+    {
+      pin: '',
+    },
+    {
+      setPin: (state) => (pin: string) => ({pin}),
+      clearPin: (state) => () => ({pin: ''}),
+    },
+  ),
   withHandlers({
     handlePinEnter,
-    clearPin: ({setPin}) => () => setPin(''),
     handleSetPin: ({setPin}) => (pin) => {
       setPin(pin)
 
-      return true
+      return Promise.resolve(true)
     },
   }),
 )(PinRegistrationForm): ComponentType<ExternalProps>)

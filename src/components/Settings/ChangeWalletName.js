@@ -10,7 +10,7 @@ import _ from 'lodash'
 
 import {Button, ValidatedTextInput, StatusBar} from '../UiKit'
 import {walletNameSelector, walletNamesSelector} from '../../selectors'
-import {changeWalletName, showErrorDialog} from '../../actions'
+import {changeWalletName} from '../../actions'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {getWalletNameError, validateWalletName} from '../../utils/validators'
 
@@ -104,12 +104,8 @@ export default (compose(
     }) => async () => {
       if (!_.isEmpty(validateWalletName())) return
 
-      try {
-        await changeWalletName(walletName)
-        navigation.goBack()
-      } catch (e) {
-        await showErrorDialog((dialogs) => dialogs.general)
-      }
+      await changeWalletName(walletName)
+      navigation.goBack()
     },
   }),
 )(ChangeWalletName): ComponentType<{|navigation: Navigation|}>)
