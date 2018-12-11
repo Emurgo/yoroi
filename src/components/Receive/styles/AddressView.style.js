@@ -5,6 +5,7 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
+    alignItems: 'center',
     marginHorizontal: 16,
     elevation: 1,
     shadowOffset: {width: 0, height: 2},
@@ -17,11 +18,13 @@ export default StyleSheet.create({
     padding: 12,
   },
   addressContainer: {
+    flexDirection: 'row',
     flex: 1,
   },
-  iconContainer: {
-    width: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
+  index: {
+    paddingRight: 8,
+  },
+  text: {
+    paddingRight: 36,
   },
 })

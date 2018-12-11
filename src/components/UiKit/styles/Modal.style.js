@@ -20,12 +20,8 @@ const styles = StyleSheet.create({
   },
   close: {
     position: 'absolute',
-    top: 0,
-    right: 8,
-  },
-  closeText: {
-    lineHeight: 38,
-    fontSize: 32,
+    top: 16,
+    right: 16,
   },
   content: {
     marginTop: 15,

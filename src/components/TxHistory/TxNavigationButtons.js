@@ -12,6 +12,9 @@ import {Button} from '../UiKit'
 
 import styles from './styles/TxNavigationButtons.style'
 
+import iconSend from '../../assets/img/icon/send.png'
+import iconReceive from '../../assets/img/icon/receive.png'
+
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {SubTranslation} from '../../l10n/typeHelpers'
 
@@ -39,11 +42,13 @@ const TxNavigationButtons = ({
       onPress={navigateToSend}
       title={translations.sendButton}
       style={styles.firstButton}
+      iconImage={iconSend}
     />
     <Button
       block
       onPress={navigateToReceive}
       title={translations.receiveButton}
+      iconImage={iconReceive}
     />
   </View>
 )

@@ -6,7 +6,7 @@ import TxHistory from './TxHistory'
 import TxDetails from './TxDetails'
 import {TX_HISTORY_ROUTES, WALLET_ROUTES} from '../../RoutesList'
 import SettingsScreenNavigator from '../Settings/SettingsScreenNavigator'
-import utfSymbols from '../../utils/utfSymbols'
+import iconGear from '../../assets/img/gear.png'
 
 import {
   defaultNavigationOptions,
@@ -25,7 +25,9 @@ const TxHistoryNavigator = createStackNavigator(
           <Button
             style={styles.settingsButton}
             onPress={() => navigation.navigate(WALLET_ROUTES.SETTINGS)}
-            title={utfSymbols.GEAR}
+            iconImage={iconGear}
+            title=""
+            withoutBackground
           />
         ),
         ...defaultNavigationOptions,
