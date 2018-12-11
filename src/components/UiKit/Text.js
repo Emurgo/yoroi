@@ -22,6 +22,9 @@ const styles = StyleSheet.create({
   light: {
     color: '#fff',
   },
+  error: {
+    color: '#FF1351',
+  },
   bold: {
     fontWeight: '700',
   },
@@ -41,6 +44,7 @@ type Props = {
   style?: any,
   bold?: boolean,
   monospace?: boolean,
+  error?: boolean,
 }
 
 const Text = ({
@@ -51,6 +55,7 @@ const Text = ({
   light,
   bold,
   monospace,
+  error,
   ...restProps
 }: Props) => (
   <RNText
@@ -61,6 +66,7 @@ const Text = ({
       light && styles.light,
       bold && styles.bold,
       monospace && styles.monospace,
+      error && styles.error,
       style,
     ]}
     {...restProps}

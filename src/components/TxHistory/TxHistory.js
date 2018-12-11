@@ -26,7 +26,7 @@ import {
   withNavigationTitle,
 } from '../../utils/renderUtils'
 
-import {formatAda} from '../../utils/format'
+import {formatAdaWithText} from '../../utils/format'
 import image from '../../assets/img/no_transactions.png'
 
 import styles from './styles/TxHistory.style'
@@ -60,10 +60,8 @@ const SyncErrorBanner = withTranslations(getTranslations)(
 const AvailableAmountBanner = withTranslations(getTranslations)(
   ({translations, amount}) => (
     <Banner
-      label={translations.availableAmountBanner.label}
-      text={`${formatAda(amount)} ${
-        translations.availableAmountBanner.ADASymbol
-      }`}
+      label={translations.availableFundsBanner.label}
+      text={formatAdaWithText(amount)}
       boldText
     />
   ),

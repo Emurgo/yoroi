@@ -27,15 +27,15 @@ import {
   hasPendingOutgoingTransactionSelector,
   getUtxoBalance,
 } from '../../selectors'
-import {withTranslations, withNavigationTitle} from '../../utils/renderUtils'
-import {formatAdaWithSymbol} from '../../utils/format'
+import {fetchUTXOs} from '../../actions/utxo'
+import {withNavigationTitle} from '../../utils/renderUtils'
+import {formatAdaWithText, formatAdaWithSymbol} from '../../utils/format'
 import {parseAdaDecimal} from '../../utils/parsing'
 import walletManager from '../../crypto/wallet'
 import {validateAmount, validateAddressAsync} from '../../utils/validators'
 import AmountField from './AmountField'
 import UtxoAutoRefresher from './UtxoAutoRefresher'
 import {InsufficientFunds} from '../../crypto/errors'
-import WarningBanner from './WarningBanner'
 
 import styles from './styles/SendScreen.style'
 
@@ -47,6 +47,7 @@ import type {
   AmountValidationErrors,
   BalanceValidationErrors,
 } from '../../utils/validators'
+import type {ComponentType} from 'react'
 
 const getTranslations = (state) => state.trans.SendAdaScreen
 
@@ -80,21 +81,6 @@ const recomupteAll = async ({amount, address, utxos}) => {
   }
   return {amountErrors, addressErrors, balanceErrors, fee, balanceAfter}
 }
-
-const AvailableAmount = withTranslations(getTranslations)(
-  ({translations, isFetching, hasError, amount}) => (
-    <Banner
-      text={
-        isFetching
-          ? translations.availableAmount.isFetching
-          : hasError
-            ? translations.availableAmount.hasError
-            : (amount && formatAdaWithSymbol(amount)) || ''
-      }
-      label={translations.availableAmount.label}
-    />
-  ),
-)
 
 const getAmountErrorText = (translations, amountErrors, balanceErrors) => {
   if (amountErrors.invalidAmount != null) {
@@ -270,6 +256,25 @@ class SendScreen extends Component<Props, State> {
     )
   }
 
+  renderAvailableAmountBanner = () => {
+    const {isFetchingBalance, availableAmount} = this.props
+
+    const translations = this.props.translations.availableFundsBanner
+    return (
+      <Banner
+        label={translations.label}
+        text={
+          isFetchingBalance
+            ? translations.isFetching
+            : availableAmount
+              ? formatAdaWithText(availableAmount)
+              : translations.notAvailable
+        }
+        boldText
+      />
+    )
+  }
+
   renderErrorBanners = () => {
     const {
       translations,
@@ -284,14 +289,16 @@ class SendScreen extends Component<Props, State> {
       return <OfflineBanner />
     } else if (lastFetchingError && !isFetchingBalance) {
       return (
-        <WarningBanner
+        <Banner
+          error
+          onPress={fetchUTXOs}
           text={translations.errorBanners.networkError}
-          action={fetchUTXOs}
         />
       )
     } else if (hasPendingOutgoingTransaction) {
       return (
-        <WarningBanner
+        <Banner
+          error
           text={translations.errorBanners.pendingOutgoingTransaction}
         />
       )
@@ -303,7 +310,6 @@ class SendScreen extends Component<Props, State> {
   render() {
     const {
       translations,
-      availableAmount,
       isFetchingBalance,
       lastFetchingError,
       utxos,
@@ -337,12 +343,8 @@ class SendScreen extends Component<Props, State> {
 
         <UtxoAutoRefresher />
         {this.renderErrorBanners()}
+        {this.renderAvailableAmountBanner()}
 
-        <AvailableAmount
-          isFetching={isFetchingBalance}
-          hasError={lastFetchingError}
-          amount={availableAmount}
-        />
         <ScrollView style={styles.content} keyboardDismissMode="on-drag">
           {this.renderBalanceAfterTransaction()}
           {this.renderFee()}
@@ -387,7 +389,11 @@ class SendScreen extends Component<Props, State> {
   }
 }
 
-export default compose(
+type ExternalProps = {|
+  navigation: Navigation,
+|}
+
+export default (compose(
   connect(
     (state) => ({
       translations: getTranslations(state),
@@ -400,7 +406,9 @@ export default compose(
       ),
       isOnline: isOnlineSelector(state),
     }),
-    null,
+    {
+      fetchUTXOs,
+    },
   ),
   withNavigationTitle(({translations}) => translations.title),
-)(SendScreen)
+)(SendScreen): ComponentType<ExternalProps>)
