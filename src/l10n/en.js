@@ -2,6 +2,7 @@
 import {pluralizeEn, bold, normal, inline} from './util'
 import {termsOfService} from './tos.en'
 
+// Do not translate
 const languages = {
   chineseSimplified: '简体中文',
   chineseTraditional: '繁體中文',
@@ -19,6 +20,11 @@ const datetime = {
 const walletNameErrors = {
   tooLong: 'Wallet name cannot exceed 40 letters',
   nameAlreadyTaken: 'This name is already taken',
+}
+
+// common translations shared across multiple places
+const common = {
+  ok: 'OK',
 }
 
 const l10n = {
@@ -42,41 +48,41 @@ const l10n = {
     general: {
       title: 'Unexpected error',
       message: 'Requested operation failed',
-      yesButton: 'OK',
+      yesButton: common.ok,
     },
     pinMismatch: {
       title: 'Invalid PIN',
       message: 'PINs do not match.',
-      yesButton: 'OK',
+      yesButton: common.ok,
     },
     incorrectPin: {
       title: 'Invalid PIN',
       message: 'The PIN you entered is incorrect.',
-      yesButton: 'OK',
+      yesButton: common.ok,
     },
     incorrectPassword: {
       title: 'Wrong password',
       message: 'Password you provided is incorrect.',
-      yesButton: 'OK',
+      yesButton: common.ok,
     },
     biometricsIsTurnedOff: {
       title: 'Biometrics was turned off',
       message: 'It seems that you turned off biometrics, please turn it on',
-      yesButton: 'OK',
+      yesButton: common.ok,
     },
     networkError: {
       title: 'Network error',
       message:
         'Error connecting to the server. ' +
         'Please check your internet connection',
-      yesButton: 'OK',
+      yesButton: common.ok,
     },
     disableEasyConfirmationFirst: {
       title: 'Action failed',
       message:
         'Please disable easy confirmation function in all ' +
         'your wallets first',
-      yesButton: 'OK',
+      yesButton: common.ok,
     },
   },
   LanguageSelectionScreen: {
