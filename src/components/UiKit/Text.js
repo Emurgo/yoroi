@@ -2,7 +2,7 @@
 
 import React from 'react'
 import type {Node} from 'react'
-import {StyleSheet, Text as RNText} from 'react-native'
+import {StyleSheet, Text as RNText, Platform} from 'react-native'
 import stylesConfig, {COLORS} from '../../styles/config'
 
 const styles = StyleSheet.create({
@@ -25,6 +25,12 @@ const styles = StyleSheet.create({
   bold: {
     fontWeight: '700',
   },
+  monospace: {
+    ...Platform.select({
+      ios: {fontFamily: 'Menlo'},
+      android: {fontFamily: 'monospace'},
+    }),
+  },
 })
 
 type Props = {
@@ -34,9 +40,19 @@ type Props = {
   light?: boolean,
   style?: any,
   bold?: boolean,
+  monospace?: boolean,
 }
 
-const Text = ({children, style, small, secondary, light, bold}: Props) => (
+const Text = ({
+  children,
+  style,
+  small,
+  secondary,
+  light,
+  bold,
+  monospace,
+  ...restProps
+}: Props) => (
   <RNText
     style={[
       styles.text,
@@ -44,8 +60,10 @@ const Text = ({children, style, small, secondary, light, bold}: Props) => (
       secondary && styles.secondary,
       light && styles.light,
       bold && styles.bold,
+      monospace && styles.monospace,
       style,
     ]}
+    {...restProps}
   >
     {children}
   </RNText>

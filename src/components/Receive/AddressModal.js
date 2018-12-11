@@ -65,7 +65,9 @@ class AddressModal extends React.Component<Props, State> {
               {translations.BIP32path} {formatBIP44(0, 'External', index)}
             </Text>
           )}
-          <Text style={styles.address}>{address}</Text>
+          <Text monospace style={styles.address}>
+            {address}
+          </Text>
         </View>
 
         <Button

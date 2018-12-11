@@ -2,19 +2,18 @@
 
 import React from 'react'
 import {withHandlers} from 'recompose'
-import {TouchableOpacity} from 'react-native'
+import {TouchableOpacity, Image} from 'react-native'
 
-import utfSymbols from '../../utils/utfSymbols'
 import styles from './styles/Checkbox.style'
 import Text from './Text'
+import checkIcon from '../../assets/img/check.png'
+import checkEmptyIcon from '../../assets/img/check-empty.png'
 
 import type {ComponentType} from 'react'
 
 const Checkbox = ({checked, text, handleChange, style}) => (
   <TouchableOpacity style={[styles.container, style]} onPress={handleChange}>
-    <Text style={styles.checkbox}>
-      {checked ? utfSymbols.BOX_CHECKED : utfSymbols.BOX_UNCHECKED}
-    </Text>
+    <Image source={checked ? checkIcon : checkEmptyIcon} />
     <Text style={styles.text}>{text}</Text>
   </TouchableOpacity>
 )

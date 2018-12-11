@@ -1,13 +1,11 @@
 // @flow
 
 import React from 'react'
-import {View, Modal as RNModal, TouchableOpacity} from 'react-native'
+import {View, Modal as RNModal, TouchableOpacity, Image} from 'react-native'
 import {NavigationEvents} from 'react-navigation'
 
-import Text from './Text'
-import utfSymbols from '../../utils/utfSymbols'
-
 import styles from './styles/Modal.style'
+import closeIcon from '../../assets/img/close.png'
 
 import type {Node} from 'react'
 
@@ -62,7 +60,7 @@ class Modal extends React.Component<Props, State> {
             <View style={[styles.container, noPadding && styles.noPadding]}>
               {showCloseIcon && (
                 <TouchableOpacity style={styles.close} onPress={onRequestClose}>
-                  <Text style={styles.closeText}>{utfSymbols.X_CROSS}</Text>
+                  <Image source={closeIcon} />
                 </TouchableOpacity>
               )}
               <View style={[styles.content, noPadding && styles.noPadding]}>

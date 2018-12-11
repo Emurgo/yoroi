@@ -4,7 +4,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withStateHandlers} from 'recompose'
-import {View, TouchableOpacity} from 'react-native'
+import {View, TouchableOpacity, Image} from 'react-native'
 import {withNavigation} from 'react-navigation'
 
 import {
@@ -13,10 +13,10 @@ import {
 } from '../../selectors'
 
 import {Text} from '../UiKit'
-import CopyIcon from '../../assets/CopyIcon'
 import AddressModal from './AddressModal'
 
 import styles from './styles/AddressView.style'
+import copyIcon from '../../assets/img/icon/copy.png'
 
 import type {ComponentType} from 'react'
 
@@ -37,23 +37,31 @@ const AddressView = ({
   openDetails,
   closeDetails,
 }: Props) => (
-  <TouchableOpacity activeOpacity={0.5} onPress={openDetails}>
-    <View style={styles.container}>
-      <View style={styles.addressContainer}>
-        <Text secondary={isUsed} small>
-          {`/${index}`} {address}
-        </Text>
+  <>
+    <TouchableOpacity activeOpacity={0.5} onPress={openDetails}>
+      <View style={styles.container}>
+        <View style={styles.addressContainer}>
+          <Text secondary={isUsed} small bold style={index}>{`/${index}`}</Text>
+          <Text
+            secondary={isUsed}
+            small
+            numberOfLines={1}
+            ellipsizeMode="middle"
+            monospace
+            style={styles.text}
+          >
+            {address}
+          </Text>
+        </View>
+        <Image source={copyIcon} width={24} />
       </View>
-      <View style={styles.iconContainer}>
-        <CopyIcon width={24} height={24} />
-      </View>
-      <AddressModal
-        visible={showDetails}
-        address={address}
-        onRequestClose={closeDetails}
-      />
-    </View>
-  </TouchableOpacity>
+    </TouchableOpacity>
+    <AddressModal
+      visible={showDetails}
+      address={address}
+      onRequestClose={closeDetails}
+    />
+  </>
 )
 
 type ExternalProps = {
