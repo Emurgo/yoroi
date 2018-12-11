@@ -32,7 +32,7 @@ const handleVerifyPin = ({
     isPinValid = await authenticateByCustomPin(currentPinHash, pin)
   } catch (err) {
     setIsCurrentPinVerified(false)
-    await showErrorDialog((dialogs) => dialogs.general)
+    await showErrorDialog((dialogs) => dialogs.generalError(err.message))
     return true
   }
 
