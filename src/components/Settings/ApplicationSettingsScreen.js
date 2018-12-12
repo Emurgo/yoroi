@@ -181,7 +181,8 @@ export default (compose(
   withHandlers({
     onToggleBiometricsAuthIn,
     updateDeviceSettings: ({setAppSettingField}) => () => {
-      // Runaway promise
+      // Runaway promise. This is neaded because
+      // onWillFocus accepts only ()=>void
       updateDeviceSettings({setAppSettingField})
     },
     setCrashReporting: ({setAppSettingField}) => (value: boolean) => {
