@@ -20,8 +20,9 @@ const styles = StyleSheet.create({
   },
   close: {
     position: 'absolute',
-    top: 16,
-    right: 16,
+    top: 0,
+    right: 0,
+    padding: 16,
   },
   content: {
     marginTop: 15,
