@@ -4,7 +4,7 @@ import {COLORS} from './styles/config'
 
 export const defaultNavigationOptions = {
   headerStyle: {
-    backgroundColor: COLORS.BACKGROUND_BLUE_GRADIENT_START,
+    backgroundColor: COLORS.BACKGROUND_BLUE,
     borderBottomWidth: 0,
   },
   headerTintColor: '#fff',
