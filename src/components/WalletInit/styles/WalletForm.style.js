@@ -6,9 +6,6 @@ export default StyleSheet.create({
     backgroundColor: '#fff',
     flex: 1,
   },
-  container: {
-    flex: 1,
-  },
   content: {
     padding: 16,
     flex: 1,

@@ -4,7 +4,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
-import {View} from 'react-native'
+import {View, ScrollView} from 'react-native'
 import {NavigationEvents} from 'react-navigation'
 
 import {withNavigationTitle} from '../../utils/renderUtils'
@@ -58,7 +58,7 @@ const ToggleEasyConfirmationScreen = ({
     <NavigationEvents onDidBlur={clearPassword} />
 
     {!isEasyConfirmationEnabled ? (
-      <View style={styles.main}>
+      <ScrollView keyboardDismissMode="on-drag">
         <Text style={styles.heading}>{translations.enable.heading}</Text>
         <Text style={styles.warning}>{translations.enable.warning}</Text>
 
@@ -68,7 +68,7 @@ const ToggleEasyConfirmationScreen = ({
           onChangeText={setMasterPassword}
           value={masterPassword}
         />
-      </View>
+      </ScrollView>
     ) : (
       <View style={[styles.main, styles.mainCentered]}>
         <Text style={styles.heading}>{translations.disable.heading}</Text>

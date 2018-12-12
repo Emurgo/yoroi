@@ -2,7 +2,7 @@
 import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {View} from 'react-native'
+import {View, ScrollView} from 'react-native'
 import {NavigationEvents, SafeAreaView} from 'react-navigation'
 import _ from 'lodash'
 import {withHandlers} from 'recompose'
@@ -114,9 +114,9 @@ class WalletForm extends PureComponent<Props, ComponentState> {
     return (
       <SafeAreaView style={styles.safeAreaView}>
         <StatusBar type="dark" />
+        <NavigationEvents onWillBlur={this.handleOnWillBlur} />
 
-        <View style={styles.container}>
-          <NavigationEvents onWillBlur={this.handleOnWillBlur} />
+        <ScrollView keyboardDismissMode="on-drag">
           <View style={styles.content}>
             <ValidatedTextInput
               label={translations.walletNameInput.label}
@@ -148,14 +148,14 @@ class WalletForm extends PureComponent<Props, ComponentState> {
 
             <PasswordStrengthIndicator password={password} />
           </View>
+        </ScrollView>
 
-          <View style={styles.action}>
-            <Button
-              onPress={this.handleSubmit}
-              disabled={!_.isEmpty(validationErrors)}
-              title={translations.continueButton}
-            />
-          </View>
+        <View style={styles.action}>
+          <Button
+            onPress={this.handleSubmit}
+            disabled={!_.isEmpty(validationErrors)}
+            title={translations.continueButton}
+          />
         </View>
       </SafeAreaView>
     )

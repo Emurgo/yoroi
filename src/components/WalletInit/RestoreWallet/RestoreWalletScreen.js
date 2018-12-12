@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {View} from 'react-native'
+import {View, ScrollView} from 'react-native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withStateHandlers} from 'recompose'
@@ -77,8 +77,8 @@ const RestoreWalletScreen = ({
     <SafeAreaView style={styles.safeAreaView}>
       <StatusBar type="dark" />
 
-      <View style={styles.container}>
-        <View>
+      <ScrollView keyboardDismissMode="on-drag">
+        <View style={styles.container}>
           <Text>{translations.instructions}</Text>
           <ValidatedTextInput
             multiline
@@ -94,12 +94,13 @@ const RestoreWalletScreen = ({
             keyboardType="visible-password"
           />
         </View>
-        <Button
-          onPress={navigateToWalletCredentials}
-          title={translations.restoreButton}
-          disabled={!_.isEmpty(errors)}
-        />
-      </View>
+      </ScrollView>
+
+      <Button
+        onPress={navigateToWalletCredentials}
+        title={translations.restoreButton}
+        disabled={!_.isEmpty(errors)}
+      />
     </SafeAreaView>
   )
 }

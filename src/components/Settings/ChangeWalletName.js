@@ -4,7 +4,7 @@ import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withStateHandlers, withHandlers} from 'recompose'
-import {View, KeyboardAvoidingView, Platform} from 'react-native'
+import {View, ScrollView, KeyboardAvoidingView, Platform} from 'react-native'
 import {SafeAreaView} from 'react-navigation'
 import _ from 'lodash'
 
@@ -49,7 +49,7 @@ const ChangeWalletName = ({
       <StatusBar type="dark" />
 
       <SafeAreaView style={styles.safeAreaView}>
-        <View style={styles.content}>
+        <ScrollView keyboardDismissMode="on-drag">
           <ValidatedTextInput
             label={translations.walletNameInput.label}
             value={walletName}
@@ -59,7 +59,7 @@ const ChangeWalletName = ({
               validationErrors,
             )}
           />
-        </View>
+        </ScrollView>
         <View style={styles.action}>
           <Button
             onPress={changeAndNavigate}
