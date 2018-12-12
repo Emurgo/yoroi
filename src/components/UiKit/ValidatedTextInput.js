@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {View, TextInput, TouchableOpacity, Image} from 'react-native'
+import {View, TextInput, TouchableOpacity, Image, Platform} from 'react-native'
 import {withStateHandlers} from 'recompose'
 
 import {Text} from '../UiKit'
@@ -18,7 +18,7 @@ type ExternalProps = {
   value: string,
   secureTextEntry?: boolean,
   error?: null | false | string,
-  keyboardType?: 'default' | 'numeric',
+  keyboardType?: 'default' | 'numeric' | 'visible-password',
   style?: Object,
   returnKeyType?: 'none' | 'done',
 }
@@ -30,14 +30,24 @@ const ValidatedTextInput = ({
   secureTextEntry,
   showPassword,
   toggleShowPassword,
+  keyboardType,
   ...restProps
 }) => (
   <View style={styles.container}>
     <TextInput
       style={[styles.input, error && styles.inputError, style]}
-      {...restProps}
       secureTextEntry={secureTextEntry && !showPassword}
       autoCorrect={!secureTextEntry}
+      keyboardType={
+        keyboardType
+          ? keyboardType !== 'visible-password'
+            ? keyboardType
+            : Platform.OS === 'android'
+              ? 'visible-password'
+              : 'default' // visible-password is Android-only
+          : 'default'
+      }
+      {...restProps}
     />
     {!!label && (
       <View style={styles.labelWrap}>
