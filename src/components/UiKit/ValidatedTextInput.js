@@ -35,9 +35,9 @@ const ValidatedTextInput = ({
   <View style={styles.container}>
     <TextInput
       style={[styles.input, error && styles.inputError, style]}
-      {...restProps}
       secureTextEntry={secureTextEntry && !showPassword}
       autoCorrect={!secureTextEntry}
+      {...restProps}
     />
     {!!label && (
       <View style={styles.labelWrap}>

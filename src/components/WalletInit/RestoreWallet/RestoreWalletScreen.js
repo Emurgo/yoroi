@@ -89,6 +89,8 @@ const RestoreWalletScreen = ({
             placeholder={translations.mnemonicInput.label}
             blurOnSubmit
             error={errorText}
+            // hopefully this prevents keyboard from learning the mnemonic
+            autoCorrect={false}
           />
         </View>
         <Button
