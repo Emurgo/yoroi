@@ -26,7 +26,7 @@ import {
   submitTransaction,
 } from '../../actions'
 import {withNavigationTitle, withTranslations} from '../../utils/renderUtils'
-import {formatAdaWithSymbol} from '../../utils/format'
+import {formatAdaWithSymbol, formatAdaWithText} from '../../utils/format'
 import SendingModal from './SendingModal'
 import {NetworkError} from '../../api/errors'
 
@@ -127,8 +127,9 @@ const ConfirmScreen = ({
 
         <OfflineBanner />
         <Banner
-          text={formatAdaWithSymbol(availableAmount)}
-          label={translations.availableFunds}
+          label={translations.availableFundsBanner.label}
+          text={formatAdaWithText(availableAmount)}
+          boldText
         />
 
         <ScrollView style={styles.container}>

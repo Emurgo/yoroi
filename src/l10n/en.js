@@ -25,6 +25,7 @@ const walletNameErrors = {
 // common translations shared across multiple places
 const common = {
   ok: 'OK',
+  availableFunds: 'Available funds',
 }
 
 const l10n = {
@@ -163,9 +164,8 @@ const l10n = {
       textWithRefresh:
         'We are experiencing synchronization issues. Pull to refresh',
     },
-    availableAmountBanner: {
-      label: 'Available funds',
-      ADASymbol: 'ADA',
+    availableFundsBanner: {
+      label: common.availableFunds,
     },
     noTransactions: 'No transactions to show yet',
     transaction: {
@@ -220,10 +220,10 @@ const l10n = {
       label: 'Balance after',
       notAvailable: '-',
     },
-    availableAmount: {
-      label: 'Available amount:',
+    availableFundsBanner: {
+      label: common.availableFunds,
       isFetching: 'Checking balance...',
-      hasError: 'Error',
+      notAvailable: '-',
     },
     addressInput: {
       label: 'Address',
@@ -250,7 +250,8 @@ const l10n = {
     errorBanners: {
       // note: offline banner is shared with TransactionHistory
       networkError:
-        'We are experiencing issues with fetching your current balance.',
+        'We are experiencing issues with fetching your current balance. ' +
+        'Click to retry.',
       pendingOutgoingTransaction:
         'You cannot send a new transaction while ' +
         'an existing one is still pending',
@@ -262,7 +263,9 @@ const l10n = {
   ConfirmSendAdaScreen: {
     title: 'Send',
     amount: 'Amount',
-    availableFunds: 'Available funds:',
+    availableFundsBanner: {
+      label: common.availableFunds,
+    },
     balanceAfterTx: 'Balance after transaction',
     fees: 'Fees',
     password: 'Wallet password',

@@ -16,6 +16,10 @@ export const formatAda = (amount: BigNumber) => {
 export const formatAdaWithSymbol = (amount: BigNumber) =>
   `${formatAda(amount)}${utfSymbols.NBSP}${utfSymbols.ADA}`
 
+// We assume that "ADA" is non-localized
+export const formatAdaWithText = (amount: BigNumber) =>
+  `${formatAda(amount)}${utfSymbols.NBSP}ADA`
+
 export const formatAdaInteger = (amount: BigNumber) => {
   const num = amount.dividedToIntegerBy(MICRO)
   if (amount.lt(0) && amount.gt(-MICRO)) {
