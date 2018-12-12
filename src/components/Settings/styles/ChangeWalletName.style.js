@@ -12,10 +12,7 @@ export default StyleSheet.create({
     backgroundColor: COLORS.BACKGROUND,
   },
   action: {
-    padding: 16,
     backgroundColor: COLORS.BACKGROUND,
-  },
-  content: {
-    flex: 1,
+    marginBottom: 16,
   },
 })

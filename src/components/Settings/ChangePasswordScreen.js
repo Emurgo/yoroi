@@ -2,7 +2,7 @@
 
 import React, {PureComponent} from 'react'
 import {compose} from 'redux'
-import {View} from 'react-native'
+import {View, ScrollView} from 'react-native'
 import {SafeAreaView, NavigationEvents} from 'react-navigation'
 import _ from 'lodash'
 import {withHandlers} from 'recompose'
@@ -112,7 +112,10 @@ class ChangePasswordScreen extends PureComponent<Props, ComponentState> {
         <View style={styles.container}>
           <NavigationEvents onWillBlur={this.handleOnWillBlur} />
 
-          <View style={styles.content}>
+          <ScrollView
+            keyboardDismissMode="on-drag"
+            contentContainerStyle={styles.content}
+          >
             <ValidatedTextInput
               secureTextEntry
               label={translations.oldPasswordInput.label}
@@ -139,7 +142,7 @@ class ChangePasswordScreen extends PureComponent<Props, ComponentState> {
             />
 
             <PasswordStrengthIndicator password={password} />
-          </View>
+          </ScrollView>
 
           <View style={styles.action}>
             <Button

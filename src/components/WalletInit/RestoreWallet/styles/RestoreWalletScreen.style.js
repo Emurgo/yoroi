@@ -5,12 +5,12 @@ export default StyleSheet.create({
   safeAreaView: {
     flex: 1,
     backgroundColor: '#fff',
+    padding: 16,
   },
   container: {
     flex: 1,
     justifyContent: 'space-between',
     backgroundColor: '#fff',
-    padding: 16,
   },
   phrase: {
     lineHeight: 24,
