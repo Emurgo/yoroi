@@ -26,5 +26,6 @@ export default StyleSheet.create({
   },
   text: {
     paddingRight: 36,
+    paddingLeft: 5,
   },
 })
