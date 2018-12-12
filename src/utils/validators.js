@@ -181,7 +181,8 @@ export const cleanMnemonic = (mnemonic: string) => {
 
 export const validateRecoveryPhrase = (mnemonic: string) => {
   const cleaned = cleanMnemonic(mnemonic)
-  const words = cleaned.split(' ')
+  // Deal with edge case ''.split(' ') -> ['']
+  const words = cleaned ? cleaned.split(' ') : []
 
   const tooShort = words.length < MNEMONIC_LENGTH
   const tooLong = words.length > MNEMONIC_LENGTH
