@@ -113,11 +113,8 @@ export const utxosSelector = (state: State): ?Array<RawUtxo> =>
 export const fingerprintsHwSupportSelector = (state: State): boolean =>
   state.appSettings.isFingerprintsHardwareSupported
 
-export const systemAuthSupportSelector = (state: State): boolean =>
+export const isSystemAuthEnabledSelector = (state: State): boolean =>
   state.appSettings.isSystemAuthEnabled
-
-export const enrolledFingerprintsSelector = (state: State): boolean =>
-  state.appSettings.hasEnrolledFingerprints
 
 export const sendCrashReportsSelector = (state: State): boolean =>
   state.appSettings.sendCrashReports

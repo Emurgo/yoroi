@@ -16,7 +16,7 @@ import {
 import {WALLET_INIT_ROUTES, SETTINGS_ROUTES} from '../../RoutesList'
 import {withNavigationTitle, withTranslations} from '../../utils/renderUtils'
 import {
-  systemAuthSupportSelector,
+  isSystemAuthEnabledSelector,
   easyConfirmationSelector,
   walletNameSelector,
 } from '../../selectors'
@@ -96,7 +96,7 @@ const WalletSettingsScreen = ({
 
 export default (compose(
   connect((state) => ({
-    isSystemAuthEnabled: systemAuthSupportSelector(state),
+    isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
     isEasyConfirmationEnabled: easyConfirmationSelector(state),
   })),
   withTranslations(getTranslations),

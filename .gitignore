@@ -68,3 +68,5 @@ third-party
 
 # CocoaPods
 Pods/
+android/gradle.properties.local
+android/app/google-services.json

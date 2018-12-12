@@ -7,11 +7,16 @@ import {compose, withHandlers} from 'recompose'
 import _ from 'lodash'
 import {SafeAreaView} from 'react-navigation'
 
-import walletManager from '../../crypto/wallet'
+import walletManager, {
+  SystemAuthDisabled,
+  KeysAreInvalid,
+} from '../../crypto/wallet'
 import WalletListItem from './WalletListItem'
 import Screen from '../Screen'
 import {Button, StatusBar, ScreenBackground} from '../UiKit'
 import {ROOT_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
+import {showErrorDialog} from '../../actions'
+
 import styles from './styles/WalletSelectionScreen.style'
 
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
@@ -69,8 +74,21 @@ export default (compose(
     navigateInitWallet: ({navigation}) => (event) =>
       navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH),
     openWallet: ({navigation}) => async (wallet) => {
-      await walletManager.openWallet(wallet.id)
-      navigation.navigate(ROOT_ROUTES.WALLET)
+      try {
+        await walletManager.openWallet(wallet.id)
+        navigation.navigate(ROOT_ROUTES.WALLET)
+      } catch (e) {
+        if (e instanceof SystemAuthDisabled) {
+          await walletManager.closeWallet()
+          await showErrorDialog((dialogs) => dialogs.enableSystemAuthFirst)
+          navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+        } else if (e instanceof KeysAreInvalid) {
+          await walletManager.cleanupInvalidKeys()
+          await showErrorDialog((dialogs) => dialogs.walletKeysInvalidated)
+        } else {
+          throw e
+        }
+      }
     },
   }),
 )(WalletListScreen): ComponentType<{

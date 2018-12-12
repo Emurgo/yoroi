@@ -16,7 +16,7 @@ import {withTranslations} from '../../utils/renderUtils'
 import {
   installationIdSelector,
   customPinHashSelector,
-  systemAuthSupportSelector,
+  isSystemAuthEnabledSelector,
 } from '../../selectors'
 import {
   recreateAppSignInKeys,
@@ -48,18 +48,11 @@ const AppStartScreen = ({navigateLogin, translations}) => (
   </SafeAreaView>
 )
 
-const onFail = (navigation, installationId) => (reason) => {
-  if (reason === KeyStore.REJECTIONS.INVALID_KEY) {
-    recreateAppSignInKeys(installationId)
-  }
-  navigation.navigate(ROOT_ROUTES.LOGIN)
-}
-
 export default compose(
   connect((state) => ({
     installationId: installationIdSelector(state),
     customPinHash: customPinHashSelector(state),
-    isSystemAuthEnabled: systemAuthSupportSelector(state),
+    isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
   })),
   withTranslations(getTranslations),
   withHandlers({
@@ -69,21 +62,32 @@ export default compose(
       navigation,
       installationId,
     }) => async () => {
-      const hasEnrolledFingerprints = await canFingerprintEncryptionBeEnabled()
+      if (!isSystemAuthEnabled) {
+        navigation.navigate(ROOT_ROUTES.CUSTOM_PIN_AUTH)
 
-      if (hasEnrolledFingerprints && isSystemAuthEnabled) {
+        return
+      }
+
+      if (await canFingerprintEncryptionBeEnabled()) {
         navigation.navigate(ROOT_ROUTES.BIO_AUTH, {
           keyId: installationId,
           onSuccess: () =>
             navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION),
-          onFail: onFail(navigation, installationId),
+          onFail: async (reason) => {
+            if (reason === KeyStore.REJECTIONS.INVALID_KEY) {
+              if (await canFingerprintEncryptionBeEnabled()) {
+                recreateAppSignInKeys(installationId)
+              } else {
+                await showErrorDialog(
+                  (dialogs) => dialogs.biometricsIsTurnedOff,
+                )
+              }
+            }
+            navigation.navigate(ROOT_ROUTES.LOGIN)
+          },
         })
       } else {
-        if (customPinHash) {
-          navigation.navigate(ROOT_ROUTES.CUSTOM_PIN_AUTH)
-        } else {
-          await showErrorDialog((dialogs) => dialogs.biometricsIsTurnedOff)
-        }
+        await showErrorDialog((dialogs) => dialogs.biometricsIsTurnedOff)
       }
     },
   }),

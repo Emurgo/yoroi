@@ -11,31 +11,21 @@ import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.util.Base64;
 
-import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.ReactMethod;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidKeyException;
-import java.security.Key;
+import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.UnrecoverableEntryException;
-import java.security.cert.CertificateException;
+import java.security.spec.X509EncodedKeySpec;
 import java.text.MessageFormat;
 import java.util.Calendar;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.security.auth.x500.X500Principal;
 
 public class KeyStoreCrypto {
@@ -89,7 +79,9 @@ public class KeyStoreCrypto {
     public String encryptData(String data, String keyAlias) throws Exception {
         Cipher cipher = Cipher.getInstance(this.TRANSFORMATION_ASYMMETRIC);
         KeyPair keyPair = this.getAndroidKeyStoreAsymmetricKeyPair(keyAlias);
-        cipher.init(Cipher.ENCRYPT_MODE, keyPair.getPublic());
+        // https://stackoverflow.com/a/47941645/2599892
+        PublicKey pk = KeyFactory.getInstance(this.cipherAlgo).generatePublic(new X509EncodedKeySpec(keyPair.getPublic().getEncoded()));
+        cipher.init(Cipher.ENCRYPT_MODE, pk);
         byte[] bytes  = cipher.doFinal(data.getBytes());
         return Base64.encodeToString(bytes, Base64.DEFAULT);
     }
@@ -132,13 +124,16 @@ public class KeyStoreCrypto {
                 .setBlockModes(cipherBlockMode)
                 .setEncryptionPaddings(cipherPadding);
 
-        if (fingerPrintProtect || systemPinProtect) {
-            builder.setUserAuthenticationRequired(true);
-        }
+        builder.setUserAuthenticationRequired(true);
 
         if (fingerPrintProtect) {
             // -1 means we have to use fingerprints every time
             builder.setUserAuthenticationValidityDurationSeconds(-1);
+
+            // From the api 24 we can disable fingerprint invalidation on new fingerprint enrollment
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                builder.setInvalidatedByBiometricEnrollment(false);
+            }
         }
 
         if (systemPinProtect) {
@@ -149,12 +144,17 @@ public class KeyStoreCrypto {
         return generator;
     }
 
-    public void deleteAndroidKeyStoreAsymmetricKeyPair(String keyAlias) throws Exception {
+    public boolean deleteAndroidKeyStoreAsymmetricKeyPair(String keyAlias) throws Exception {
         KeyStore keyStore;
         keyStore = KeyStore.getInstance("AndroidKeyStore");
         keyStore.load(null);
 
-        keyStore.deleteEntry(keyAlias);
+        if (keyStore.isKeyEntry(keyAlias)) {
+            keyStore.deleteEntry(keyAlias);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public Cipher getDecryptCipher(String keyAlias) throws Exception {

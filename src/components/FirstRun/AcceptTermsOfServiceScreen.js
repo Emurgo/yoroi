@@ -11,7 +11,7 @@ import TermsOfService from '../Common/TermsOfService'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {Checkbox, Button, StatusBar} from '../UiKit'
 import {FIRST_RUN_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
-import {systemAuthSupportSelector} from '../../selectors'
+import {isSystemAuthEnabledSelector} from '../../selectors'
 import {acceptAndSaveTos, setSystemAuth} from '../../actions'
 import {canFingerprintEncryptionBeEnabled} from '../../helpers/deviceSettings'
 
@@ -59,7 +59,7 @@ export default compose(
   connect(
     (state) => ({
       translations: getTranslations(state),
-      isSystemAuthEnabled: systemAuthSupportSelector(state),
+      isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
     }),
     {acceptAndSaveTos, setSystemAuth},
   ),

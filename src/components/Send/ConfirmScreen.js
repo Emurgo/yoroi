@@ -16,8 +16,8 @@ import {
   Banner,
 } from '../UiKit'
 import {easyConfirmationSelector} from '../../selectors'
-import walletManager from '../../crypto/wallet'
-import {SEND_ROUTES, WALLET_ROUTES} from '../../RoutesList'
+import walletManager, {SystemAuthDisabled} from '../../crypto/wallet'
+import {SEND_ROUTES, WALLET_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import {CONFIG} from '../../config'
 import KeyStore from '../../crypto/KeyStore'
 import {
@@ -36,14 +36,6 @@ import {WrongPassword} from '../../crypto/errors'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 
 const getTranslations = (state) => state.trans.ConfirmSendAdaScreen
-
-const onFail = (navigation) => (reason) => {
-  if (reason === KeyStore.REJECTIONS.CANCELED) {
-    navigation.navigate(SEND_ROUTES.CONFIRM)
-  } else {
-    throw new Error(`Failed confirming transaction because: ${reason}`)
-  }
-}
 
 const handleOnConfirm = async (
   navigation,
@@ -72,15 +64,28 @@ const handleOnConfirm = async (
   }
 
   if (isEasyConfirmationEnabled) {
-    navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
-      keyId: walletManager._id,
-      onSuccess: (decryptedKey) => {
-        navigation.navigate(SEND_ROUTES.CONFIRM)
+    try {
+      await walletManager.ensureKeysValidity()
+      navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
+        keyId: walletManager._id,
+        onSuccess: (decryptedKey) => {
+          navigation.navigate(SEND_ROUTES.CONFIRM)
 
-        submitTx(decryptedKey)
-      },
-      onFail: onFail(navigation),
-    })
+          submitTx(decryptedKey)
+        },
+        onFail: () => navigation.goBack(),
+      })
+    } catch (e) {
+      if (e instanceof SystemAuthDisabled) {
+        await walletManager.closeWallet()
+        await showErrorDialog((dialogs) => dialogs.enableSystemAuthFirst)
+        navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+
+        return
+      } else {
+        throw e
+      }
+    }
 
     return
   }

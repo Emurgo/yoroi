@@ -79,10 +79,11 @@ class KeyStore {
     }
   }
 
-  static async cancelFingerprintScanning(reason: string) {
+  static async cancelFingerprintScanning(reason: string): Promise<boolean> {
     if (Platform.OS === 'android') {
-      await KeyStoreBridge.cancelFingerprintScanning(reason)
+      return await KeyStoreBridge.cancelFingerprintScanning(reason)
     }
+    return false
   }
 
   static async storeData(
@@ -201,6 +202,19 @@ class KeyStore {
     return `${keyId}-${encryptionMethod}`
   }
 
+  static async isKeyValid(keyId: string, encryptionMethod: EncryptionMethod) {
+    const dataKey = KeyStore.getDataKey(keyId, encryptionMethod)
+
+    if (Platform.OS === 'android') {
+      return await KeyStoreBridge.isKeyValid(dataKey)
+    } else if (Platform.OS === 'ios') {
+      // on ios we set that key cannot be invalidated
+      return true
+    }
+
+    throw new Error('Unsupported platform')
+  }
+
   static _getRejectionMessage(key: string): string {
     if (Platform.OS === 'android') {
       return KeyStoreBridge.REJECTION_MESSAGES[key]
@@ -242,6 +256,9 @@ class KeyStore {
       'ALREADY_DECRYPTING_DATA',
     ),
     SENSOR_LOCKOUT: KeyStore._getRejectionMessage('SENSOR_LOCKOUT'),
+    SENSOR_LOCKOUT_PERMANENT: KeyStore._getRejectionMessage(
+      'SENSOR_LOCKOUT_PERMANENT',
+    ),
     NOT_RECOGNIZED: KeyStore._getRejectionMessage('NOT_RECOGNIZED'),
     DECRYPTION_FAILED: KeyStore._getRejectionMessage('DECRYPTION_FAILED'),
     SYSTEM_AUTH_NOT_SUPPORTED: KeyStore._getRejectionMessage(
@@ -251,11 +268,9 @@ class KeyStore {
     CANCELED: KeyStore._getRejectionMessage('CANCELED'),
     FAILED: KeyStore._getRejectionMessage('FAILED'),
     SWAPPED_TO_FALLBACK: KeyStore._getRejectionMessage('SWAPPED_TO_FALLBACK'),
-    BIOMETRIC_PROMPT_CANCELED: KeyStore._getRejectionMessage(
-      'BIOMETRIC_PROMPT_CANCELED',
-    ),
     INVALID_KEY: KeyStore._getRejectionMessage('INVALID_KEY'),
     KEY_NOT_DELETED: KeyStore._getRejectionMessage('KEY_NOT_DELETED'),
+    KEY_NOT_CREATED: KeyStore._getRejectionMessage('KEY_NOT_CREATED'),
   }
 }
 

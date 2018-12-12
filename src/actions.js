@@ -32,16 +32,16 @@ import {
 import networkInfo from './utils/networkInfo'
 import {
   installationIdSelector,
-  systemAuthSupportSelector,
+  isSystemAuthEnabledSelector,
   customPinHashSelector,
   languageSelector,
   tosSelector,
   sendCrashReportsSelector,
 } from './selectors'
 import assert from './utils/assert'
-
 import NavigationService from './NavigationService'
 import {ROOT_ROUTES} from './RoutesList'
+import KeyStore from './crypto/KeyStore'
 
 import {type Dispatch} from 'redux'
 import {type State} from './state'
@@ -53,8 +53,8 @@ const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
       crashReporting.setStringValue('language_code', value),
     [APP_SETTINGS_KEYS.FINGERPRINT_HW_SUPPORT]: () =>
       crashReporting.setBoolValue('fingerprint_hw_support', value),
-    [APP_SETTINGS_KEYS.HAS_FINGERPRINTS_ENROLLED]: () =>
-      crashReporting.setBoolValue('has_fingerprints_enrolled', value),
+    [APP_SETTINGS_KEYS.CAN_ENABLE_FINGERPRINT_ENCRYPTION]: () =>
+      crashReporting.setBoolValue('can_enable_fingerprint_encryption', value),
   }
 
   // $FlowFixMe flow does not like undefined access but we are dealing with it
@@ -62,10 +62,12 @@ const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
   handler && handler()
 }
 
-export const setAppSettingField = (fieldName: AppSettingsKey, value: any) => (
-  dispatch: Dispatch<any>,
-) => {
-  writeAppSettings(fieldName, value)
+export const setAppSettingField = (
+  fieldName: AppSettingsKey,
+  value: any,
+) => async (dispatch: Dispatch<any>) => {
+  await writeAppSettings(fieldName, value)
+
   dispatch({
     path: ['appSettings', fieldName],
     payload: value,
@@ -135,8 +137,11 @@ export const encryptAndStoreCustomPin = (pin: string) => async (
   if (!installationId) {
     throw new AppSettingsError(APP_SETTINGS_KEYS.INSTALLATION_ID)
   }
+
   const customPinHash = await encryptCustomPin(installationId, pin)
-  dispatch(setAppSettingField(APP_SETTINGS_KEYS.CUSTOM_PIN_HASH, customPinHash))
+  await dispatch(
+    setAppSettingField(APP_SETTINGS_KEYS.CUSTOM_PIN_HASH, customPinHash),
+  )
 }
 
 export const removeCustomPin = () => async (
@@ -159,7 +164,7 @@ export const navigateFromSplash = () => (
   if (
     !languageSelector(state) ||
     !tosSelector(state) ||
-    (!systemAuthSupportSelector(state) && !customPinHashSelector(state))
+    (!isSystemAuthEnabledSelector(state) && !customPinHashSelector(state))
   ) {
     route = ROOT_ROUTES.FIRST_RUN
   } else {
@@ -178,15 +183,26 @@ export const navigateFromSplash = () => (
   }
 }
 
-export const acceptAndSaveTos = () => (dispatch: Dispatch<any>) => {
-  dispatch(setAppSettingField(APP_SETTINGS_KEYS.ACCEPTED_TOS, true))
+export const acceptAndSaveTos = () => async (dispatch: Dispatch<any>) => {
+  await dispatch(setAppSettingField(APP_SETTINGS_KEYS.ACCEPTED_TOS, true))
 }
 
-const firstRunSetup = () => (dispatch: Dispatch<any>, getState: any) => {
-  const installationId = uuid.v4()
-  dispatch(
+const initInstallationId = () => async (
+  dispatch: Dispatch<any>,
+  getState: any,
+): Promise<string> => {
+  let installationId = installationIdSelector(getState())
+  if (installationId) {
+    return installationId
+  }
+
+  installationId = uuid.v4()
+
+  await dispatch(
     setAppSettingField(APP_SETTINGS_KEYS.INSTALLATION_ID, installationId),
   )
+
+  return installationId
 }
 
 export const closeWallet = () => async (dispatch: Dispatch<any>) => {
@@ -202,9 +218,8 @@ export const logout = () => async (dispatch: Dispatch<any>) => {
 export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   await dispatch(reloadAppSettings())
 
-  if (!installationIdSelector(getState())) {
-    dispatch(firstRunSetup())
-  }
+  const installationId = await dispatch(initInstallationId())
+  const state = getState()
 
   if (sendCrashReportsSelector(getState())) {
     crashReporting.enable()
@@ -215,18 +230,34 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   crashReporting.setUserId(installationIdSelector(getState()))
 
   // prettier-ignore
-  const hasEnrolledFingerprints =
+  const canEnableFingerprintEncryption =
     await canFingerprintEncryptionBeEnabled()
 
-  dispatch(
+  await dispatch(
     setAppSettingField(
-      APP_SETTINGS_KEYS.HAS_FINGERPRINTS_ENROLLED,
-      hasEnrolledFingerprints,
+      APP_SETTINGS_KEYS.CAN_ENABLE_FINGERPRINT_ENCRYPTION,
+      canEnableFingerprintEncryption,
     ),
   )
 
   await walletManager.initialize()
   await dispatch(updateWallets())
+  if (canEnableFingerprintEncryption && isSystemAuthEnabledSelector(state)) {
+    // On android 6 signin keys can get invalidated
+    // (e. g. when you change fingerprint),
+    // if that happens we want to regenerate them.
+    // As for the invalidate PIN case -> that should only
+    // happen when user removes PIN and re-creates it, but that should
+    // not be possible without first removing biometrics?
+    // So the biometrics key would be invalidated first.
+    // Also there is no way we know of to check if the key is valid
+    // in SYSTEM_PIN case without user typing the correct PIN.
+    const isKeyValid = await KeyStore.isKeyValid(installationId, 'BIOMETRICS')
+
+    if (!isKeyValid) {
+      await recreateAppSignInKeys(installationId)
+    }
+  }
 
   dispatch({
     path: ['isAppInitialized'],
@@ -377,7 +408,9 @@ export const setSystemAuth = (enable: boolean) => async (
     )
   }
 
-  dispatch(setAppSettingField(APP_SETTINGS_KEYS.SYSTEM_AUTH_ENABLED, enable))
+  await dispatch(
+    setAppSettingField(APP_SETTINGS_KEYS.SYSTEM_AUTH_ENABLED, enable),
+  )
 
   const installationId = installationIdSelector(getState())
   if (!installationId) {

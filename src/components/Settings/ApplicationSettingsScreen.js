@@ -21,7 +21,7 @@ import {
 } from './SettingsItems'
 import {
   fingerprintsHwSupportSelector,
-  systemAuthSupportSelector,
+  isSystemAuthEnabledSelector,
   installationIdSelector,
   sendCrashReportsSelector,
 } from '../../selectors'
@@ -85,16 +85,16 @@ const updateDeviceSettings = async ({setAppSettingField}) => {
   const isHardwareSupported =
     await isFingerprintEncryptionHardwareSupported()
   // prettier-ignore
-  const hasEnrolledFingerprints =
+  const canEnableFingerprintEncryption =
     await canFingerprintEncryptionBeEnabled()
 
-  setAppSettingField(
+  await setAppSettingField(
     APP_SETTINGS_KEYS.FINGERPRINT_HW_SUPPORT,
     isHardwareSupported,
   )
-  setAppSettingField(
-    APP_SETTINGS_KEYS.HAS_FINGERPRINTS_ENROLLED,
-    hasEnrolledFingerprints,
+  await setAppSettingField(
+    APP_SETTINGS_KEYS.CAN_ENABLE_FINGERPRINT_ENCRYPTION,
+    canEnableFingerprintEncryption,
   )
 }
 
@@ -163,8 +163,8 @@ export default (compose(
     (state) => ({
       translations: getTranslations(state),
       isFingerprintsHardwareSupported: fingerprintsHwSupportSelector(state),
-      isSystemAuthEnabled: systemAuthSupportSelector(state),
       sendCrashReports: sendCrashReportsSelector(state),
+      isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
       language: state.trans.global.currentLanguageName,
       installationId: installationIdSelector(state),
     }),

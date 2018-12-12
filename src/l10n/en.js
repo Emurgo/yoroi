@@ -71,6 +71,15 @@ const l10n = {
       message: 'It seems that you turned off biometrics, please turn it on',
       yesButton: common.ok,
     },
+    walletKeysInvalidated: {
+      title: 'Biometrics changed',
+      message:
+        'We detected that your biometrics in phone changed. ' +
+        'As a result the easy transaction confirmation was disabled ' +
+        'and transaction submitting is allowed only with master password. ' +
+        'You can re-enable easy transactions confirmation in settings',
+      yesButton: 'OK',
+    },
     networkError: {
       title: 'Network error',
       message:
@@ -84,6 +93,29 @@ const l10n = {
         'Please disable easy confirmation function in all ' +
         'your wallets first',
       yesButton: common.ok,
+    },
+    enableFingerprintsFirst: {
+      title: 'Action failed',
+      message:
+        'You need to enable biometrics in your device first in order ' +
+        'to be able link it with this app',
+      yesButton: 'OK',
+    },
+    enableSystemAuthFirst: {
+      title: 'Lock screen disabled',
+      message:
+        'You probably disabled lock screen in your phone. You need to ' +
+        'disable easy transaction confirmation first. Please set up ' +
+        'you lock screen (PIN / Password / Pattern) on your phone ' +
+        'and then restart application. After this action you should be ' +
+        'able to disable lock screen ' +
+        'on your phone and use this application',
+      yesButton: 'OK',
+    },
+    wrongPinError: {
+      title: 'Invalid PIN',
+      message: 'PIN is incorrect.',
+      yesButton: 'OK',
     },
   },
   LanguageSelectionScreen: {
@@ -437,6 +469,8 @@ const l10n = {
     errors: {
       NOT_RECOGNIZED: 'Fingerprint was not recognized try again',
       SENSOR_LOCKOUT: 'You used too many fingers sensor is disabled',
+      SENSOR_LOCKOUT_PERMANENT:
+        'You permanently locked out your fingerprint sensor. Use fallback.',
       DECRYPTION_FAILED: 'Fingerprint sensor failed please use fallback',
       UNKNOWN_ERROR: 'Unknown error',
     },
