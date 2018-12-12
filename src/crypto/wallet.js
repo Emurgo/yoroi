@@ -366,9 +366,9 @@ export class Wallet {
       outputs,
       changeAddress,
     )
-    Logger.debug(inputs)
-    Logger.debug(outputs)
-    Logger.debug(changeAddress)
+    Logger.debug('Inputs', inputs)
+    Logger.debug('Outputs', outputs)
+    Logger.debug('Change address', changeAddress)
 
     return {
       inputs,
