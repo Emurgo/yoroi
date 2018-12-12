@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#000',
     marginBottom: 35,
+    textAlign: 'center',
   },
   wait: {
     marginTop: 7,
