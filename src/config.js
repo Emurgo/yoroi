@@ -3,8 +3,11 @@ import {LogLevel} from './utils/logging'
 
 const IS_DEBUG = __DEV__
 // debugging flags
-const SHOW_INIT_DEBUG_SCREEN = true
-const PREFILL_WALLET_INFO = true
+const _SHOW_INIT_DEBUG_SCREEN = true
+const _PREFILL_WALLET_INFO = true
+const _USE_TESTNET = true
+const _LOG_LEVEL = IS_DEBUG ? LogLevel.Debug : LogLevel.Warn
+const _ASSURANCE_STRICT = false
 
 export const CARDANO_CONFIG = {
   TESTNET: {
@@ -30,13 +33,10 @@ export const ASSURANCE_LEVELS = {
   },
 }
 
-const CARDANO = IS_DEBUG ? CARDANO_CONFIG.TESTNET : CARDANO_CONFIG.MAINNET
-
-const LOG_LEVEL = IS_DEBUG ? LogLevel.Debug : LogLevel.Warn
-
 export const CONFIG = {
   DEBUG: {
-    PREFILL_FORMS: PREFILL_WALLET_INFO,
+    START_WITH_INDEX_SCREEN: _SHOW_INIT_DEBUG_SCREEN,
+    PREFILL_FORMS: _PREFILL_WALLET_INFO,
     WALLET_NAME: 'My wallet',
     PASSWORD: 'aeg?eP3M:)(:',
     MNEMONIC1: [
@@ -53,7 +53,9 @@ export const CONFIG = {
     SEND_AMOUNT: '1',
   },
   API: {
-    ROOT: CARDANO.API_ROOT,
+    ROOT: _USE_TESTNET
+      ? CARDANO_CONFIG.TESTNET.API_ROOT
+      : CARDANO_CONFIG.MAINNET.API_ROOT,
     // backend limitations
     FETCH_UTXOS_MAX_ADDRESSES: 50,
     TX_HISTORY_MAX_ADDRESSES: 50,
@@ -63,10 +65,11 @@ export const CONFIG = {
   },
 
   MAX_CONCURRENT_REQUESTS: 5,
-  CARDANO,
+  CARDANO: _USE_TESTNET ? CARDANO_CONFIG.TESTNET : CARDANO_CONFIG.MAINNET,
   MNEMONIC_STRENGTH: 160,
-  // TODO(ppershing): this should be configurable by user
-  ASSURANCE_LEVELS: ASSURANCE_LEVELS.NORMAL,
+  ASSURANCE_LEVELS: _ASSURANCE_STRICT
+    ? ASSURANCE_LEVELS.STRICT
+    : ASSURANCE_LEVELS.NORMAL,
   HISTORY_REFRESH_TIME: 10 * 1000,
   WALLET: {
     ACCOUNT_INDEX: 0,
@@ -76,7 +79,6 @@ export const CONFIG = {
   },
   PIN_LENGTH: 6,
   APP_LOCK_TIMEOUT: 30 * 1000,
-  START_WITH_INDEX_SCREEN: SHOW_INIT_DEBUG_SCREEN,
   ALLOW_SHORT_PASSWORD: false,
-  LOG_LEVEL,
+  LOG_LEVEL: _LOG_LEVEL,
 }
