@@ -733,6 +733,7 @@ class WalletManager {
 
     // $FlowFixMe
     this._wallet._isEasyConfirmationEnabled = false
+    this._notify()
   }
 
   async enableEasyConfirmation(masterPassword: string) {
@@ -745,6 +746,7 @@ class WalletManager {
       isEasyConfirmationEnabled: true,
     })
     await this._saveState(wallet)
+    this._notify()
   }
 
   async changePassword(masterPassword: string, newPassword: string) {
