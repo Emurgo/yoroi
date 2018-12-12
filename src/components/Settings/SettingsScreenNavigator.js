@@ -48,7 +48,7 @@ const SettingsScreenNavigator = createStackNavigator(
         tabBarOptions: {
           upperCaseLabel: false,
           style: {
-            backgroundColor: COLORS.BACKGROUND_BLUE_GRADIENT_START,
+            backgroundColor: COLORS.BACKGROUND_BLUE,
             elevation: 0,
             shadowOpacity: 0,
           },
