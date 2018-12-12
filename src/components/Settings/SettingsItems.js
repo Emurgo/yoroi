@@ -26,7 +26,11 @@ type SettingsSectionProps = {
 
 export const SettingsSection = ({title, children}: SettingsSectionProps) => (
   <View style={styles.section}>
-    {!!title && <Text style={styles.sectionTitle}>{title}</Text>}
+    {!!title && (
+      <Text small secondary style={styles.sectionTitle}>
+        {title}
+      </Text>
+    )}
     <View style={styles.sectionContent}>{children}</View>
   </View>
 )
