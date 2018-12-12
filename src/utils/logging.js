@@ -1,5 +1,4 @@
 // @flow
-
 export const LogLevel = {
   Debug: 0,
   Info: 1,
@@ -8,10 +7,10 @@ export const LogLevel = {
   Nothing: 4,
 }
 
-let logLevel = LogLevel.Debug
+let _logLevel = LogLevel.Debug
 
 /* eslint-disable no-console */
-const logger = {
+const consoleLogger = {
   debug: console.log, // console.debug is hidden by default in chrome
   info: console.info,
   warn: console.warn,
@@ -19,14 +18,25 @@ const logger = {
 }
 /* eslint-enable no-console */
 
+let _logger = consoleLogger
+
+export const setLogger = (logger: any) => {
+  _logger = logger
+}
+
 export const setLogLevel = (level: $Values<typeof LogLevel>) => {
-  logLevel = level
+  _logLevel = level
 }
 
 export const Logger = {
-  debug: (...args: any) => LogLevel.Debug >= logLevel && logger.debug(...args),
-  info: (...args: any) => LogLevel.Info >= logLevel && logger.info(...args),
-  warn: (...args: any) => LogLevel.Warn >= logLevel && logger.warn(...args),
-  error: (...args: any) => LogLevel.Error >= logLevel && logger.error(...args),
+  debug: (message: string, ...args: any) =>
+    LogLevel.Debug >= _logLevel && _logger.debug(message, ...args),
+  info: (message: string, ...args: any) =>
+    LogLevel.Info >= _logLevel && _logger.info(message, ...args),
+  warn: (message: string, ...args: any) =>
+    LogLevel.Warn >= _logLevel && _logger.warn(message, ...args),
+  error: (message: string, ...args: any) =>
+    LogLevel.Error >= _logLevel && _logger.error(message, ...args),
   setLogLevel,
+  setLogger,
 }

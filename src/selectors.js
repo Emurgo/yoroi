@@ -119,6 +119,9 @@ export const systemAuthSupportSelector = (state: State): boolean =>
 export const enrolledFingerprintsSelector = (state: State): boolean =>
   state.appSettings.hasEnrolledFingerprints
 
+export const sendCrashReportsSelector = (state: State): boolean =>
+  state.appSettings.sendCrashReports
+
 export const hasPendingOutgoingTransactionSelector = createSelector(
   transactionsInfoSelector,
   (transactions) =>

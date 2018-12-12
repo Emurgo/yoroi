@@ -23,12 +23,14 @@ import {
   fingerprintsHwSupportSelector,
   systemAuthSupportSelector,
   installationIdSelector,
+  sendCrashReportsSelector,
 } from '../../selectors'
 import walletManager from '../../crypto/wallet'
 import KeyStore from '../../crypto/KeyStore'
 import {StatusBar} from '../UiKit'
 
-import type {SubTranslation} from '../../l10n/typeHelpers'
+import type {ComponentType} from 'react'
+import type {Navigation} from '../../types/navigation'
 
 const getTranslations = (state) => state.trans.SettingsScreen.ApplicationTab
 
@@ -37,17 +39,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 })
-
-type Props = {
-  onToggleBiometricsAuthIn: () => void,
-  translations: SubTranslation<typeof getTranslations>,
-  updateDeviceSettings: () => void,
-  setSystemAuth: () => void,
-  isFingerprintsHardwareSupported: boolean,
-  isSystemAuthEnabled: boolean,
-  language: string,
-  installationId: string,
-}
 
 const disableBiometrics = ({navigation, setSystemAuth}) => async () => {
   await setSystemAuth(false)
@@ -80,7 +71,7 @@ const onToggleBiometricsAuthIn = ({
         if (reason === KeyStore.REJECTIONS.CANCELED) {
           navigation.navigate(SETTINGS_ROUTES.MAIN)
         } else {
-          throw new Error(`Could not authenticate user because ${reason}`)
+          throw new Error(`Could not authenticate user: ${reason}`)
         }
       },
     })
@@ -114,7 +105,9 @@ const ApplicationSettingsScreen = ({
   isFingerprintsHardwareSupported,
   isSystemAuthEnabled,
   language,
-}: Props) => (
+  sendCrashReports,
+  setCrashReporting,
+}) => (
   <ScrollView style={styles.scrollView}>
     <StatusBar type="dark" />
 
@@ -145,11 +138,10 @@ const ApplicationSettingsScreen = ({
       </SettingsItem>
     </SettingsSection>
 
-    <SettingsSection title={translations.downloadLogs}>
-      <NavigatedSettingsItem
-        label={translations.downloadLogsText}
-        navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
-      />
+    <SettingsSection title={translations.crashReporting}>
+      <SettingsItem label={translations.crashReportingText}>
+        <Switch value={sendCrashReports} onValueChange={setCrashReporting} />
+      </SettingsItem>
     </SettingsSection>
 
     <SettingsSection>
@@ -166,12 +158,13 @@ const ApplicationSettingsScreen = ({
   </ScrollView>
 )
 
-export default compose(
+export default (compose(
   connect(
     (state) => ({
       translations: getTranslations(state),
       isFingerprintsHardwareSupported: fingerprintsHwSupportSelector(state),
       isSystemAuthEnabled: systemAuthSupportSelector(state),
+      sendCrashReports: sendCrashReportsSelector(state),
       language: state.trans.global.currentLanguageName,
       installationId: installationIdSelector(state),
     }),
@@ -187,7 +180,13 @@ export default compose(
   }),
   withHandlers({
     onToggleBiometricsAuthIn,
-    updateDeviceSettings: ({setAppSettingField}) => () =>
-      updateDeviceSettings({setAppSettingField}),
+    updateDeviceSettings: ({setAppSettingField}) => () => {
+      // Runaway promise. This is neaded because
+      // onWillFocus accepts only ()=>void
+      updateDeviceSettings({setAppSettingField})
+    },
+    setCrashReporting: ({setAppSettingField}) => (value: boolean) => {
+      setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value)
+    },
   }),
-)(ApplicationSettingsScreen)
+)(ApplicationSettingsScreen): ComponentType<{navigation: Navigation}>)

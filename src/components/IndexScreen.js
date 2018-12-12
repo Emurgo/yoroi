@@ -44,6 +44,10 @@ type Props = {
   navigation: NavigationScreenProp<NavigationState>,
 }
 
+const crash = () => {
+  Promise.reject(new Error('Forced crash'))
+}
+
 const IndexScreen = ({navigation}: Props) => (
   <SafeAreaView style={styles.safeAreaView}>
     <StatusBar type="light" />
@@ -59,6 +63,9 @@ const IndexScreen = ({navigation}: Props) => (
       ))}
       <TouchableOpacity onPress={() => storage.clearAll()}>
         <Text style={styles.link}>Clear storage</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={crash}>
+        <Text style={styles.link}>Crash</Text>
       </TouchableOpacity>
     </ScrollView>
   </SafeAreaView>
