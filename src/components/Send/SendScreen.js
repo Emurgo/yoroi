@@ -4,7 +4,7 @@ import React, {Component} from 'react'
 import {BigNumber} from 'bignumber.js'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {ScrollView, View, TouchableOpacity} from 'react-native'
+import {ScrollView, View} from 'react-native'
 import _ from 'lodash'
 import {SafeAreaView} from 'react-navigation'
 
@@ -215,16 +215,6 @@ class SendScreen extends Component<Props, State> {
     }
   }
 
-  navigateToQRReader: () => void
-  navigateToQRReader = () => {
-    this.props.navigation.navigate(SEND_ROUTES.ADDRESS_READER_QR, {
-      onSuccess: (address) => {
-        this.handleAddressChange(address)
-        this.props.navigation.navigate(SEND_ROUTES.MAIN)
-      },
-    })
-  }
-
   renderBalanceAfterTransaction = () => {
     const {balanceAfter} = this.state
     const {translations} = this.props
@@ -349,13 +339,6 @@ class SendScreen extends Component<Props, State> {
         <ScrollView style={styles.content} keyboardDismissMode="on-drag">
           {this.renderBalanceAfterTransaction()}
           {this.renderFee()}
-
-          <TouchableOpacity
-            style={styles.containerQR}
-            onPress={this.navigateToQRReader}
-          >
-            <Text>{translations.scanCode}</Text>
-          </TouchableOpacity>
 
           <ValidatedTextInput
             multiline
