@@ -37,26 +37,38 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Enable apple music usage</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Enable bluetooth usage</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Enable calendars usage</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Enabling camera allows you to scan QR codes.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Enabling Face ID allows you quick and secure access to your account.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Enable location usage</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Enable motion usage</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Enable photo library</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Enable speech recognition</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleLightContent</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSFaceIDUsageDescription</key>
-	<string>Enabling Face ID allows you quick and secure access to your account.</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Enabling camera allows you to scan QR codes.</string>
-	<key>UIStatusBarStyle</key>
-	<string>UIStatusBarStyleLightContent</string>
 	<key>firebase_crashlytics_collection_enabled</key>
 	<false/>
 </dict>
