@@ -243,7 +243,6 @@ const l10n = {
   },
   SendAdaScreen: {
     title: 'Send',
-    scanCode: 'Scan QR code',
     fee: {
       label: 'Fee',
       notAvailable: '-',
