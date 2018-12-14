@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react'
+import {AppState} from 'react-native'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 
@@ -59,6 +60,12 @@ const handleOnConfirm = async (
       Logger.error('BiometricAuthScreen', error)
       setError('UNKNOWN_ERROR')
     }
+  }
+}
+
+const handleAppBackgroundChange = (nextAppState) => {
+  if (nextAppState === 'background') {
+    KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
   }
 }
 
@@ -136,10 +143,12 @@ export default (compose(
       handleOnConfirm(navigation, setError, clearError, true, translations)
     },
   }),
+
   onWillUnmount(async () => {
     await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
   }),
-  onDidMount(({navigation, setError, clearError, translations}) =>
-    handleOnConfirm(navigation, setError, clearError, false, translations),
-  ),
+  onDidMount(({navigation, setError, clearError, translations}) => {
+    AppState.addEventListener('change', handleAppBackgroundChange)
+    handleOnConfirm(navigation, setError, clearError, false, translations)
+  }),
 )(BiometricAuthScreen): ComponentType<ExternalProps>)
