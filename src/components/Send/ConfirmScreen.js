@@ -14,6 +14,7 @@ import {
   ValidatedTextInput,
   StatusBar,
   Banner,
+  PleaseWaitModal,
 } from '../UiKit'
 import {easyConfirmationSelector} from '../../selectors'
 import walletManager, {SystemAuthDisabled} from '../../crypto/wallet'
@@ -27,7 +28,6 @@ import {
 } from '../../actions'
 import {withNavigationTitle, withTranslations} from '../../utils/renderUtils'
 import {formatAdaWithSymbol, formatAdaWithText} from '../../utils/format'
-import SendingModal from './SendingModal'
 import {NetworkError} from '../../api/errors'
 
 import styles from './styles/ConfirmScreen.style'
@@ -174,7 +174,11 @@ const ConfirmScreen = ({
         </View>
       </View>
 
-      <SendingModal visible={sendingTransaction} />
+      <PleaseWaitModal
+        title={translations.sendingModalTitle}
+        spinnerText={translations.pleaseWait}
+        visible={sendingTransaction}
+      />
     </SafeAreaView>
   )
 }

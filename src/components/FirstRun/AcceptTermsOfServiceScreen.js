@@ -9,7 +9,7 @@ import {ScrollView} from 'react-native'
 
 import TermsOfService from '../Common/TermsOfService'
 import {withNavigationTitle} from '../../utils/renderUtils'
-import {Checkbox, Button, StatusBar} from '../UiKit'
+import {Checkbox, Button, StatusBar, PleaseWaitModal} from '../UiKit'
 import {FIRST_RUN_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import {isSystemAuthEnabledSelector} from '../../selectors'
 import {acceptAndSaveTos, setSystemAuth} from '../../actions'
@@ -26,6 +26,7 @@ type Props = {
   acceptedTos: boolean,
   setAcceptedTos: (accepted: boolean) => any,
   handleAccepted: () => any,
+  savingConsent: boolean,
 }
 
 const AcceptTermsOfServiceScreen = ({
@@ -33,6 +34,7 @@ const AcceptTermsOfServiceScreen = ({
   acceptedTos,
   setAcceptedTos,
   handleAccepted,
+  savingConsent,
 }: Props) => (
   <SafeAreaView style={styles.safeAreaView}>
     <StatusBar type="dark" />
@@ -52,6 +54,12 @@ const AcceptTermsOfServiceScreen = ({
       disabled={!acceptedTos}
       title={translations.continueButton}
     />
+
+    <PleaseWaitModal
+      title={translations.savingConsentModalTitle}
+      spinnerText={translations.pleaseWait}
+      visible={savingConsent}
+    />
   </SafeAreaView>
 )
 
@@ -66,9 +74,11 @@ export default compose(
   withStateHandlers(
     {
       acceptedTos: false,
+      savingConsent: false,
     },
     {
-      setAcceptedTos: (state) => (value) => ({acceptedTos: value}),
+      setAcceptedTos: () => (acceptedTos) => ({acceptedTos}),
+      setSavingConsent: () => (savingConsent) => ({savingConsent}),
     },
   ),
   withHandlers({
@@ -77,7 +87,9 @@ export default compose(
       isSystemAuthEnabled,
       acceptAndSaveTos,
       setSystemAuth,
+      setSavingConsent,
     }) => async () => {
+      setSavingConsent(true)
       await acceptAndSaveTos()
 
       const canSystemAuthBeEnabled = await canFingerprintEncryptionBeEnabled()
@@ -88,8 +100,10 @@ export default compose(
       if (canSystemAuthBeEnabled) {
         await setSystemAuth(true)
 
+        setSavingConsent(false)
         navigateToWalletCreateRestore()
       } else {
+        setSavingConsent(false)
         navigation.navigate(FIRST_RUN_ROUTES.CUSTOM_PIN, {
           onSuccess: navigateToWalletCreateRestore,
         })
