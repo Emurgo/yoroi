@@ -26,6 +26,7 @@ const walletNameErrors = {
 const common = {
   ok: 'OK',
   availableFunds: 'Available funds',
+  pleaseWait: 'please wait ...',
 }
 
 const l10n = {
@@ -302,10 +303,8 @@ const l10n = {
     password: 'Wallet password',
     receiver: 'Receiver',
     confirmButton: 'Confirm',
-  },
-  WaitSendTransactionModal: {
-    heading: 'Submitting transaction',
-    pleaseWait: 'please wait ...',
+    sendingModalTitle: 'Submitting transaction',
+    pleaseWait: common.pleaseWait,
   },
   WalletCredentialsScreen: {
     title: 'Wallet credentials',
@@ -446,6 +445,8 @@ const l10n = {
     content: termsOfService,
     aggreeClause: 'I agree with terms of service',
     continueButton: 'Accept',
+    savingConsentModalTitle: 'Initializing',
+    pleaseWait: common.pleaseWait,
   },
   WalletSelectionScreen: {
     header: 'Your wallets',
