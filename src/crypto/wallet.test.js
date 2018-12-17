@@ -6,7 +6,7 @@ import {Wallet} from './wallet'
 
 jestSetup.setup()
 // We do a lot of API calls for sync tests
-jest.setTimeout(15 * 1000)
+jest.setTimeout(30 * 1000)
 
 // eslint-disable-next-line max-len
 const mnemonic =
