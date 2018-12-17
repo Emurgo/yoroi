@@ -3,7 +3,7 @@
 import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {View, Linking, TouchableHighlight} from 'react-native'
+import {View, Linking, TouchableOpacity} from 'react-native'
 import _ from 'lodash'
 import {withHandlers, withStateHandlers} from 'recompose'
 
@@ -43,12 +43,12 @@ const AddressEntry = withHandlers({
     showModalForAddress(address),
 })(({address, onPress, path, isHighlighted}) => {
   return (
-    <TouchableHighlight activeOpacity={0.9} onPress={onPress}>
+    <TouchableOpacity activeOpacity={0.5} onPress={onPress}>
       {/* eslint-disable-next-line react-native/no-inline-styles */}
       <Text secondary bold={isHighlighted}>
         ({path}) {address}
       </Text>
-    </TouchableHighlight>
+    </TouchableOpacity>
   )
 })
 
