@@ -558,9 +558,9 @@ const l10n = {
     },
   },
   Biometry: {
-    approveTransaction: 'Approve signing tx',
-    subtitle: 'Subtitle',
-    description: 'Description',
+    approveTransaction: 'Authorize with your fingerprint',
+    subtitle: '', // subtitle for the biometry dialog Andoid 9
+    description: '', // description of the biometry dialog Android 9
     cancelButton: 'Cancel',
   },
 }
