@@ -321,7 +321,7 @@ const l10n = {
     title: 'Receive',
     infoText:
       'Share this address to receive payments. ' +
-      'To protect your privacy, new address are ' +
+      'To protect your privacy, new addresses are ' +
       'generated automatically once you use them.',
     generateButton: 'Generate another address',
     cannotGenerate: 'You have to use some of your addresses',
