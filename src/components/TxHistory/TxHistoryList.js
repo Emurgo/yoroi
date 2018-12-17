@@ -47,6 +47,7 @@ const TxHistoryList = ({transactions, navigation, refreshing, onRefresh}) => {
         )}
         sections={groupedTransactions}
         keyExtractor={(item) => item.id}
+        stickySectionHeadersEnabled={false}
       />
     </View>
   )
