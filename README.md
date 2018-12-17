@@ -45,8 +45,13 @@ follow https://facebook.github.io/react-native/docs/getting-started.html (tab Bu
 ### Every time
 
 1. `react-native start` - this will run RN packager, let it running
-2. `react-native run-android`
+2. `react-native run-android --variant=devDebug` - for version with testnet
+3. `react-native run-android --variant=mainDebug` - for version with mainnet
 
+### Release
+
+1. `cd android`
+2. `./gradlew assemblemainRelease`
 
 # Code style
 
