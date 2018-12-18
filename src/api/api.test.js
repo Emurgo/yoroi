@@ -4,12 +4,17 @@ import jestSetup from '../jestSetup'
 
 import moment from 'moment'
 
-import * as api from './api'
 import {ApiError} from './errors'
 
 jestSetup.setup()
 jest.setTimeout(30 * 1000)
+
+let apiWithTestnet
+
 describe('History API', () => {
+  // We have to mock config before importing api so it propagates in it
+  jest.setMock('react-native-config', {USE_TESTNET: true})
+  apiWithTestnet = require('./api')
   it('can fetch history', async () => {
     const addresses = [
       'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
@@ -18,7 +23,7 @@ describe('History API', () => {
 
     // We are async
     expect.assertions(1)
-    const result = await api.fetchNewTxHistory(ts, addresses)
+    const result = await apiWithTestnet.fetchNewTxHistory(ts, addresses)
 
     // $FlowFixMe it seems like toMatchSnapshot is badly typed
     expect(result.transactions[0]).toMatchSnapshot({
@@ -34,8 +39,10 @@ describe('History API', () => {
     // We are async
     expect.assertions(1)
 
-    // $FlowFixMe not sure why Flow does not like ApiError instead of Error
-    await expect(api.fetchNewTxHistory(ts, addresses)).rejects.toThrow(ApiError)
+    await expect(
+      apiWithTestnet.fetchNewTxHistory(ts, addresses),
+      // $FlowFixMe not sure why Flow does not like ApiError instead of Error
+    ).rejects.toThrow(ApiError)
   })
 
   it('filters used addresses', async () => {
@@ -52,7 +59,7 @@ describe('History API', () => {
     ]
 
     expect.assertions(1)
-    const result = await api.filterUsedAddresses(addresses)
+    const result = await apiWithTestnet.filterUsedAddresses(addresses)
     expect(result).toEqual(used)
   })
 
@@ -65,12 +72,12 @@ describe('History API', () => {
 
     expect.assertions(2)
 
-    const result1 = await api.filterUsedAddresses(addresses)
+    const result1 = await apiWithTestnet.filterUsedAddresses(addresses)
     expect(result1).toEqual(addresses)
 
     addresses.reverse()
 
-    const result2 = await api.filterUsedAddresses(addresses)
+    const result2 = await apiWithTestnet.filterUsedAddresses(addresses)
     expect(result2).toEqual(addresses)
   })
 })
