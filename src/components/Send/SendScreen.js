@@ -56,7 +56,7 @@ const getTransactionData = (utxos, address, amount) => {
   return walletManager.prepareTransaction(utxos, address, adaAmount)
 }
 
-const recomupteAll = async ({amount, address, utxos}) => {
+const recomputeAll = async ({amount, address, utxos}) => {
   const amountErrors = validateAmount(amount)
   const addressErrors = await validateAddressAsync(address)
   let balanceErrors = {}
@@ -152,7 +152,7 @@ class SendScreen extends Component<Props, State> {
   }
 
   async revalidate({utxos, address, amount}) {
-    const newState = await recomupteAll({utxos, address, amount})
+    const newState = await recomputeAll({utxos, address, amount})
 
     if (
       this.state.address !== address ||
@@ -181,7 +181,7 @@ class SendScreen extends Component<Props, State> {
       amountErrors,
       balanceErrors,
       balanceAfter,
-    } = await recomupteAll({
+    } = await recomputeAll({
       amount,
       address,
       utxos,
@@ -346,6 +346,7 @@ class SendScreen extends Component<Props, State> {
             value={address}
             label={translations.addressInput.label}
             onChangeText={this.handleAddressChange}
+            blurOnSubmit
             error={
               addressErrors.invalidAddress &&
               translations.addressInput.errors.invalidAddress
