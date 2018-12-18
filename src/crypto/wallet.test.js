@@ -2,11 +2,13 @@
 /* eslint-env jest */
 import jestSetup from '../jestSetup'
 
-import {Wallet} from './wallet'
-
 jestSetup.setup()
 // We do a lot of API calls for sync tests
-jest.setTimeout(15 * 1000)
+jest.setTimeout(30 * 1000)
+
+// We have to mock config before importing wallet so it propagates in it
+jest.setMock('react-native-config', {USE_TESTNET: true})
+const walletWithTestnet = require('./wallet')
 
 // eslint-disable-next-line max-len
 const mnemonic =
@@ -16,7 +18,7 @@ const mnemonic =
 
 test('Can restore wallet', async () => {
   expect.assertions(2)
-  const wallet = new Wallet()
+  const wallet = new walletWithTestnet.Wallet()
   await wallet._create(mnemonic, 'password')
   await wallet.doFullSync()
   // Note(ppershing): these are just loose tests because we are testing
@@ -75,7 +77,7 @@ const expectedTxs = [
 
 test('Can sync txs after restoring wallet', async () => {
   expect.assertions(expectedTxs.length)
-  const wallet = new Wallet()
+  const wallet = new walletWithTestnet.Wallet()
   await wallet._create(mnemonic, 'password')
 
   await wallet.doFullSync()

@@ -136,6 +136,29 @@ android {
             signingConfig signingConfigs.release
         }
     }
+    // Specifies one flavor dimension.
+    flavorDimensions "version"
+    productFlavors {
+        main {
+            dimension "version"
+            applicationId 'com.emurgo'
+            minSdkVersion 21
+            compileSdkVersion = 28
+            targetSdkVersion 26
+            resValue "string", "build_config_package", "com.emurgo"
+            buildConfigField "Boolean", "USE_TESTNET", "false"
+        }
+        dev {
+            dimension "version"
+            applicationIdSuffix ".testnet"
+            applicationId 'com.emurgo'
+            minSdkVersion 21
+            compileSdkVersion = 28
+            targetSdkVersion 26
+            resValue "string", "build_config_package", "com.emurgo"
+            buildConfigField "Boolean", "USE_TESTNET", "true"
+        }
+    }
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
@@ -152,6 +175,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-config')
     compile project(':react-native-splash-screen')
     compile project(':react-native-firebase')
     implementation project(':react-native-cardano')
@@ -181,5 +205,6 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 apply plugin: 'com.google.gms.google-services'
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 // https://github.com/invertase/react-native-firebase-starter/issues/58
 com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true 
