@@ -10,7 +10,10 @@ export const isFingerprintEncryptionHardwareSupported = async () => {
     return await KeyStoreBridge.isFingerprintEncryptionHardwareSupported()
   } else if (Platform.OS === 'ios') {
     const supportedBiometrics = await Keychain.getSupportedBiometryType()
-    return supportedBiometrics === Keychain.BIOMETRY_TYPE.TOUCH_ID
+    return (
+      supportedBiometrics === Keychain.BIOMETRY_TYPE.TOUCH_ID ||
+      supportedBiometrics === Keychain.BIOMETRY_TYPE.FACE_ID
+    )
   }
 
   throw new Error('Unsupported platform')
