@@ -14,7 +14,7 @@ import {
 } from './actions/history'
 import {changeLanguage} from './actions/language'
 import {
-  canFingerprintEncryptionBeEnabled,
+  canBiometricEncryptionBeEnabled,
   recreateAppSignInKeys,
   removeAppSignInKeys,
 } from './helpers/deviceSettings'
@@ -230,19 +230,19 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   crashReporting.setUserId(installationIdSelector(getState()))
 
   // prettier-ignore
-  const canEnableFingerprintEncryption =
-    await canFingerprintEncryptionBeEnabled()
+  const canEnableBiometricEncryption =
+    await canBiometricEncryptionBeEnabled()
 
   await dispatch(
     setAppSettingField(
       APP_SETTINGS_KEYS.CAN_ENABLE_FINGERPRINT_ENCRYPTION,
-      canEnableFingerprintEncryption,
+      canEnableBiometricEncryption,
     ),
   )
 
   await walletManager.initialize()
   await dispatch(updateWallets())
-  if (canEnableFingerprintEncryption && isSystemAuthEnabledSelector(state)) {
+  if (canEnableBiometricEncryption && isSystemAuthEnabledSelector(state)) {
     // On android 6 signin keys can get invalidated
     // (e. g. when you change fingerprint),
     // if that happens we want to regenerate them.

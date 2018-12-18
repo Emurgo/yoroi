@@ -11,8 +11,8 @@ import {withNavigationTitle} from '../../utils/renderUtils'
 import {setAppSettingField, setSystemAuth, showErrorDialog} from '../../actions'
 import {APP_SETTINGS_KEYS} from '../../helpers/appSettings'
 import {
-  isFingerprintEncryptionHardwareSupported,
-  canFingerprintEncryptionBeEnabled,
+  isBiometricEncryptionHardwareSupported,
+  canBiometricEncryptionBeEnabled,
 } from '../../helpers/deviceSettings'
 import {
   SettingsItem,
@@ -83,10 +83,10 @@ const onToggleBiometricsAuthIn = ({
 const updateDeviceSettings = async ({setAppSettingField}) => {
   // prettier-ignore
   const isHardwareSupported =
-    await isFingerprintEncryptionHardwareSupported()
+    await isBiometricEncryptionHardwareSupported()
   // prettier-ignore
-  const canEnableFingerprintEncryption =
-    await canFingerprintEncryptionBeEnabled()
+  const canEnableBiometricEncryption =
+    await canBiometricEncryptionBeEnabled()
 
   await setAppSettingField(
     APP_SETTINGS_KEYS.FINGERPRINT_HW_SUPPORT,
@@ -94,7 +94,7 @@ const updateDeviceSettings = async ({setAppSettingField}) => {
   )
   await setAppSettingField(
     APP_SETTINGS_KEYS.CAN_ENABLE_FINGERPRINT_ENCRYPTION,
-    canEnableFingerprintEncryption,
+    canEnableBiometricEncryption,
   )
 }
 
@@ -128,7 +128,7 @@ const ApplicationSettingsScreen = ({
 
       <SettingsItem
         label={translations.biometricsSignIn}
-        disabled={!isFingerprintEncryptionHardwareSupported}
+        disabled={!isBiometricEncryptionHardwareSupported}
       >
         <Switch
           value={isSystemAuthEnabled}

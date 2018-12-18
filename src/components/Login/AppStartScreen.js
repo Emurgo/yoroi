@@ -20,7 +20,7 @@ import {
 } from '../../selectors'
 import {
   recreateAppSignInKeys,
-  canFingerprintEncryptionBeEnabled,
+  canBiometricEncryptionBeEnabled,
 } from '../../helpers/deviceSettings'
 import {showErrorDialog} from '../../actions'
 
@@ -68,14 +68,14 @@ export default compose(
         return
       }
 
-      if (await canFingerprintEncryptionBeEnabled()) {
+      if (await canBiometricEncryptionBeEnabled()) {
         navigation.navigate(ROOT_ROUTES.BIO_AUTH, {
           keyId: installationId,
           onSuccess: () =>
             navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION),
           onFail: async (reason) => {
             if (reason === KeyStore.REJECTIONS.INVALID_KEY) {
-              if (await canFingerprintEncryptionBeEnabled()) {
+              if (await canBiometricEncryptionBeEnabled()) {
                 recreateAppSignInKeys(installationId)
               } else {
                 await showErrorDialog(

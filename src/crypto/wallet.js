@@ -23,7 +23,7 @@ import {
 import {TransactionCache} from './transactionCache'
 import {validatePassword} from '../utils/validators'
 import {
-  canFingerprintEncryptionBeEnabled,
+  canBiometricEncryptionBeEnabled,
   isSystemAuthSupported,
 } from '../helpers/deviceSettings'
 
@@ -595,7 +595,7 @@ class WalletManager {
     if (!this._wallet) throw new WalletClosed()
     const wallet = this._wallet
 
-    const canBiometricsBeUsed = await canFingerprintEncryptionBeEnabled()
+    const canBiometricsBeUsed = await canBiometricEncryptionBeEnabled()
     const isKeyValid = await KeyStore.isKeyValid(wallet._id, 'BIOMETRICS')
 
     if (!isKeyValid || !canBiometricsBeUsed) {

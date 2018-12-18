@@ -9,7 +9,7 @@ import {Button} from '../UiKit'
 import FingerprintScreenBase from '../Common/FingerprintScreenBase'
 import {setSystemAuth, showErrorDialog} from '../../actions'
 import {SETTINGS_ROUTES} from '../../RoutesList'
-import {canFingerprintEncryptionBeEnabled} from '../../helpers/deviceSettings'
+import {canBiometricEncryptionBeEnabled} from '../../helpers/deviceSettings'
 
 import styles from './styles/BiometricsLinkScreen.style'
 
@@ -58,7 +58,7 @@ export default compose(
   ),
   withHandlers({
     linkBiometricsSignIn: ({navigation, setSystemAuth}) => async () => {
-      if (await canFingerprintEncryptionBeEnabled()) {
+      if (await canBiometricEncryptionBeEnabled()) {
         setSystemAuth(true)
           .then(() => navigation.navigate(SETTINGS_ROUTES.MAIN))
           .catch(() =>
