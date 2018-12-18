@@ -51,10 +51,10 @@ const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
   const handlers = {
     [APP_SETTINGS_KEYS.LANG]: () =>
       crashReporting.setStringValue('language_code', value),
-    [APP_SETTINGS_KEYS.FINGERPRINT_HW_SUPPORT]: () =>
-      crashReporting.setBoolValue('fingerprint_hw_support', value),
-    [APP_SETTINGS_KEYS.CAN_ENABLE_FINGERPRINT_ENCRYPTION]: () =>
-      crashReporting.setBoolValue('can_enable_fingerprint_encryption', value),
+    [APP_SETTINGS_KEYS.BIOMETRIC_HW_SUPPORT]: () =>
+      crashReporting.setBoolValue('biometric_hw_support', value),
+    [APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION]: () =>
+      crashReporting.setBoolValue('can_enable_biometric_encryption', value),
   }
 
   // $FlowFixMe flow does not like undefined access but we are dealing with it
@@ -235,7 +235,7 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
 
   await dispatch(
     setAppSettingField(
-      APP_SETTINGS_KEYS.CAN_ENABLE_FINGERPRINT_ENCRYPTION,
+      APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION,
       canEnableBiometricEncryption,
     ),
   )
