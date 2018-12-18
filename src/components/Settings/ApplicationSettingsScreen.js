@@ -11,8 +11,8 @@ import {withNavigationTitle} from '../../utils/renderUtils'
 import {setAppSettingField, setSystemAuth, showErrorDialog} from '../../actions'
 import {APP_SETTINGS_KEYS} from '../../helpers/appSettings'
 import {
-  isFingerprintEncryptionHardwareSupported,
-  canFingerprintEncryptionBeEnabled,
+  isBiometricEncryptionHardwareSupported,
+  canBiometricEncryptionBeEnabled,
 } from '../../helpers/deviceSettings'
 import {
   SettingsItem,
@@ -20,7 +20,7 @@ import {
   SettingsSection,
 } from './SettingsItems'
 import {
-  fingerprintsHwSupportSelector,
+  biometricHwSupportSelector,
   isSystemAuthEnabledSelector,
   installationIdSelector,
   sendCrashReportsSelector,
@@ -83,18 +83,18 @@ const onToggleBiometricsAuthIn = ({
 const updateDeviceSettings = async ({setAppSettingField}) => {
   // prettier-ignore
   const isHardwareSupported =
-    await isFingerprintEncryptionHardwareSupported()
+    await isBiometricEncryptionHardwareSupported()
   // prettier-ignore
-  const canEnableFingerprintEncryption =
-    await canFingerprintEncryptionBeEnabled()
+  const canEnableBiometricEncryption =
+    await canBiometricEncryptionBeEnabled()
 
   await setAppSettingField(
-    APP_SETTINGS_KEYS.FINGERPRINT_HW_SUPPORT,
+    APP_SETTINGS_KEYS.BIOMETRIC_HW_SUPPORT,
     isHardwareSupported,
   )
   await setAppSettingField(
-    APP_SETTINGS_KEYS.CAN_ENABLE_FINGERPRINT_ENCRYPTION,
-    canEnableFingerprintEncryption,
+    APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION,
+    canEnableBiometricEncryption,
   )
 }
 
@@ -102,7 +102,7 @@ const ApplicationSettingsScreen = ({
   onToggleBiometricsAuthIn,
   translations,
   updateDeviceSettings,
-  isFingerprintsHardwareSupported,
+  isBiometricHardwareSupported,
   isSystemAuthEnabled,
   language,
   sendCrashReports,
@@ -128,12 +128,12 @@ const ApplicationSettingsScreen = ({
 
       <SettingsItem
         label={translations.biometricsSignIn}
-        disabled={!isFingerprintEncryptionHardwareSupported}
+        disabled={!isBiometricEncryptionHardwareSupported}
       >
         <Switch
           value={isSystemAuthEnabled}
           onValueChange={onToggleBiometricsAuthIn}
-          disabled={!isFingerprintsHardwareSupported}
+          disabled={!isBiometricHardwareSupported}
         />
       </SettingsItem>
     </SettingsSection>
@@ -162,7 +162,7 @@ export default (compose(
   connect(
     (state) => ({
       translations: getTranslations(state),
-      isFingerprintsHardwareSupported: fingerprintsHwSupportSelector(state),
+      isBiometricHardwareSupported: biometricHwSupportSelector(state),
       sendCrashReports: sendCrashReportsSelector(state),
       isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
       language: state.trans.global.currentLanguageName,

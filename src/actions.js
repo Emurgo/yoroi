@@ -14,7 +14,7 @@ import {
 } from './actions/history'
 import {changeLanguage} from './actions/language'
 import {
-  canFingerprintEncryptionBeEnabled,
+  canBiometricEncryptionBeEnabled,
   recreateAppSignInKeys,
   removeAppSignInKeys,
 } from './helpers/deviceSettings'
@@ -51,10 +51,10 @@ const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
   const handlers = {
     [APP_SETTINGS_KEYS.LANG]: () =>
       crashReporting.setStringValue('language_code', value),
-    [APP_SETTINGS_KEYS.FINGERPRINT_HW_SUPPORT]: () =>
-      crashReporting.setBoolValue('fingerprint_hw_support', value),
-    [APP_SETTINGS_KEYS.CAN_ENABLE_FINGERPRINT_ENCRYPTION]: () =>
-      crashReporting.setBoolValue('can_enable_fingerprint_encryption', value),
+    [APP_SETTINGS_KEYS.BIOMETRIC_HW_SUPPORT]: () =>
+      crashReporting.setBoolValue('biometric_hw_support', value),
+    [APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION]: () =>
+      crashReporting.setBoolValue('can_enable_biometric_encryption', value),
   }
 
   // $FlowFixMe flow does not like undefined access but we are dealing with it
@@ -230,19 +230,19 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   crashReporting.setUserId(installationIdSelector(getState()))
 
   // prettier-ignore
-  const canEnableFingerprintEncryption =
-    await canFingerprintEncryptionBeEnabled()
+  const canEnableBiometricEncryption =
+    await canBiometricEncryptionBeEnabled()
 
   await dispatch(
     setAppSettingField(
-      APP_SETTINGS_KEYS.CAN_ENABLE_FINGERPRINT_ENCRYPTION,
-      canEnableFingerprintEncryption,
+      APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION,
+      canEnableBiometricEncryption,
     ),
   )
 
   await walletManager.initialize()
   await dispatch(updateWallets())
-  if (canEnableFingerprintEncryption && isSystemAuthEnabledSelector(state)) {
+  if (canEnableBiometricEncryption && isSystemAuthEnabledSelector(state)) {
     // On android 6 signin keys can get invalidated
     // (e. g. when you change fingerprint),
     // if that happens we want to regenerate them.

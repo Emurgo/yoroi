@@ -12,9 +12,9 @@ export const APP_SETTINGS_KEYS = {
   ACCEPTED_TOS: 'acceptedTos',
   LANG: 'languageCode',
   SYSTEM_AUTH_ENABLED: 'isSystemAuthEnabled',
-  FINGERPRINT_HW_SUPPORT: 'isFingerprintsHardwareSupported',
+  BIOMETRIC_HW_SUPPORT: 'isBiometricHardwareSupported',
   SEND_CRASH_REPORTS: 'sendCrashReports',
-  CAN_ENABLE_FINGERPRINT_ENCRYPTION: 'canEnableFingerprintEncryption',
+  CAN_ENABLE_BIOMETRIC_ENCRYPTION: 'canEnableBiometricEncryption',
 }
 
 export type AppSettingsKey = $Values<typeof APP_SETTINGS_KEYS>

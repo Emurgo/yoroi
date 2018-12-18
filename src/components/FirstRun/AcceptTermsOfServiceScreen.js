@@ -13,7 +13,7 @@ import {Checkbox, Button, StatusBar, PleaseWaitModal} from '../UiKit'
 import {FIRST_RUN_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import {isSystemAuthEnabledSelector} from '../../selectors'
 import {acceptAndSaveTos, setSystemAuth} from '../../actions'
-import {canFingerprintEncryptionBeEnabled} from '../../helpers/deviceSettings'
+import {canBiometricEncryptionBeEnabled} from '../../helpers/deviceSettings'
 
 import styles from './styles/AcceptTermsOfServiceScreen.styles'
 
@@ -92,7 +92,7 @@ export default compose(
       setSavingConsent(true)
       await acceptAndSaveTos()
 
-      const canSystemAuthBeEnabled = await canFingerprintEncryptionBeEnabled()
+      const canSystemAuthBeEnabled = await canBiometricEncryptionBeEnabled()
 
       const navigateToWalletCreateRestore = () =>
         navigation.navigate(WALLET_INIT_ROUTES.INITIAL_CREATE_RESTORE_SWITCH)

@@ -42,9 +42,9 @@ export type State = {
     languageCode: string,
     customPinHash: ?string,
     isSystemAuthEnabled: boolean,
-    isFingerprintsHardwareSupported: boolean,
+    isBiometricHardwareSupported: boolean,
     sendCrashReports: boolean,
-    canEnableFingerprintEncryption: boolean,
+    canEnableBiometricEncryption: boolean,
   },
 }
 
@@ -81,9 +81,9 @@ export const getInitialState = (): State => ({
     installationId: null,
     customPinHash: null,
     isSystemAuthEnabled: false,
-    isFingerprintsHardwareSupported: false,
+    isBiometricHardwareSupported: false,
     sendCrashReports: false,
-    canEnableFingerprintEncryption: false,
+    canEnableBiometricEncryption: false,
   },
 })
 
