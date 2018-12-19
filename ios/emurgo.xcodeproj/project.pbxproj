@@ -43,8 +43,8 @@
 		4129CAD9C4C34ACF9E00AA5E /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9443C3481304C079FB7BE23 /* libRNSVG.a */; };
 		4C623EB4CCE24A6EA5889C23 /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 29CDBB4B7FB64C0086FF65C6 /* libRNCamera.a */; };
 		55F46080C7484EE1B3249EE3 /* libRNBackgroundTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 09D460C9C03E41CB9D785437 /* libRNBackgroundTimer.a */; };
-		5E2B7734605B4E0CBC60D312 /* libSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DBE1771E1614BCAB6A3665D /* libSplashScreen.a */; };
 		5CFD142B4A5EEFBD46859066 /* libPods-emurgo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4492A3C818B4FB1C2344B6A4 /* libPods-emurgo.a */; };
+		5E2B7734605B4E0CBC60D312 /* libSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DBE1771E1614BCAB6A3665D /* libSplashScreen.a */; };
 		60DBD4E362FA44DAA5B64588 /* libRNSVG-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 746923B3D658412D94D241BD /* libRNSVG-tvOS.a */; };
 		68CF549E912ECFE9F10845FC /* libPods-emurgo-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 492DFE0B47FACAFC309573B3 /* libPods-emurgo-tvOSTests.a */; };
 		7D42F5BDC26B7A4D1BA73B78 /* libPods-emurgoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EF05E688AF3169F4FAC3D93 /* libPods-emurgoTests.a */; };
@@ -55,6 +55,7 @@
 		C45895BBF7EF4AF5A55C7F80 /* libRNRandomBytes-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 359687B3464F4A7C89D45AF9 /* libRNRandomBytes-tvOS.a */; };
 		D26F6DBA9C0242B0A6376183 /* libRNCardano.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05BD8AC5FBE745208C4D208E /* libRNCardano.a */; };
 		D3E68485C4E74648860C9BA7 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF0647A6034452E81BD8DF5 /* libresolv.tbd */; };
+		E2373C8321CA44B20003317D /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E2373C8021CA447C0003317D /* libReactNativeConfig.a */; };
 		E278991521B9DBE500E9304E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E27898DF21B9DBE500E9304E /* GoogleService-Info.plist */; };
 		E6AB85BA13E748AB947E1A2A /* libRNRandomBytes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9F4B6BEEFC4DF6A66C1383 /* libRNRandomBytes.a */; };
 /* End PBXBuildFile section */
@@ -333,12 +334,19 @@
 			remoteGlobalIDString = 358F4ED71D1E81A9004DF814;
 			remoteInfo = RCTBlob;
 		};
-		E2AED54821C00BB700E5D934 /* PBXContainerItemProxy */ = {
+		E2373C7F21CA447C0003317D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = D1DF1D4086B844C89143FC0B /* SplashScreen.xcodeproj */;
+			containerPortal = E2373C7A21CA447C0003317D /* ReactNativeConfig.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 3D7682761D8E76B80014119E;
-			remoteInfo = SplashScreen;
+			remoteGlobalIDString = EB2648DF1C7BE17A00B8F155;
+			remoteInfo = ReactNativeConfig;
+		};
+		E2373C8121CA447C0003317D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E2373C7A21CA447C0003317D /* ReactNativeConfig.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3DF7F6AC203AA09B00D0EAB7;
+			remoteInfo = "ReactNativeConfig-tvOS";
 		};
 		E27898C721B9DB0000E9304E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -346,6 +354,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNFirebase;
+		};
+		E2AED54821C00BB700E5D934 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D1DF1D4086B844C89143FC0B /* SplashScreen.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3D7682761D8E76B80014119E;
+			remoteInfo = SplashScreen;
 		};
 		E2C46F5821AD2396009E186F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -360,13 +375,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 641926921ECB4257009CF731;
 			remoteInfo = "RNBackgroundTimer-tvOS";
-		};
-		F79454FD21BFF7EA00030483 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D1DF1D4086B844C89143FC0B /* SplashScreen.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 3D7682761D8E76B80014119E;
-			remoteInfo = SplashScreen;
 		};
 		F7FBD9A1219C5A71003FE9E2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -494,9 +502,9 @@
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		359687B3464F4A7C89D45AF9 /* libRNRandomBytes-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNRandomBytes-tvOS.a"; sourceTree = "<group>"; };
 		3F3CAD29F11A422EBD119E74 /* RNBackgroundTimer.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundTimer.xcodeproj; path = "../node_modules/react-native-background-timer/ios/RNBackgroundTimer.xcodeproj"; sourceTree = "<group>"; };
-		5DBE1771E1614BCAB6A3665D /* libSplashScreen.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libSplashScreen.a; sourceTree = "<group>"; };
 		4492A3C818B4FB1C2344B6A4 /* libPods-emurgo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-emurgo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		492DFE0B47FACAFC309573B3 /* libPods-emurgo-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-emurgo-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DBE1771E1614BCAB6A3665D /* libSplashScreen.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libSplashScreen.a; sourceTree = "<group>"; };
 		5DBF6642BF3B4B119153FD14 /* libRNFirebase.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFirebase.a; sourceTree = "<group>"; };
 		5DD5929CCB1559BC3022C92D /* Pods-emurgo-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-tvOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo-tvOS/Pods-emurgo-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
@@ -519,10 +527,11 @@
 		C8259C93DE584FDAAFB4E9FF /* libReactNativePermissions.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativePermissions.a; sourceTree = "<group>"; };
 		C9443C3481304C079FB7BE23 /* libRNSVG.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSVG.a; sourceTree = "<group>"; };
 		CDE15259840049359AA0828C /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
-		D1DF1D4086B844C89143FC0B /* SplashScreen.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = SplashScreen.xcodeproj; path = "../node_modules/react-native-splash-screen/ios/SplashScreen.xcodeproj"; sourceTree = "<group>"; };
 		CF270C6730734D328B88B48C /* Pods-emurgo-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-tvOSTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo-tvOSTests/Pods-emurgo-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		D1DF1D4086B844C89143FC0B /* SplashScreen.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = SplashScreen.xcodeproj; path = "../node_modules/react-native-splash-screen/ios/SplashScreen.xcodeproj"; sourceTree = "<group>"; };
 		D6A5AD77A9DD488D729598DB /* Pods-emurgo-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-tvOSTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo-tvOSTests/Pods-emurgo-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		DA9C2C759F984A23843777A9 /* libRNKeychain.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNKeychain.a; sourceTree = "<group>"; };
+		E2373C7A21CA447C0003317D /* ReactNativeConfig.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeConfig.xcodeproj; path = "../node_modules/react-native-config/ios/ReactNativeConfig.xcodeproj"; sourceTree = "<group>"; };
 		E27898DF21B9DBE500E9304E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "emurgo/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E88E56A3C4A142ADB2AC0796 /* RNRandomBytes.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNRandomBytes.xcodeproj; path = "../node_modules/react-native-randombytes/RNRandomBytes.xcodeproj"; sourceTree = "<group>"; };
 		FE18F76D31F73A2E405ABDEE /* libPods-emurgo-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-emurgo-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -542,6 +551,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2373C8321CA44B20003317D /* libReactNativeConfig.a in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				11D1A2F320CAFA9E000508D9 /* libRCTAnimation.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
@@ -766,6 +776,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				E2373C7A21CA447C0003317D /* ReactNativeConfig.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -838,10 +849,11 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		E2AED54521C00BB700E5D934 /* Products */ = {
+		E2373C7B21CA447C0003317D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E2AED54921C00BB700E5D934 /* libSplashScreen.a */,
+				E2373C8021CA447C0003317D /* libReactNativeConfig.a */,
+				E2373C8221CA447C0003317D /* libReactNativeConfig-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -854,19 +866,19 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		E2AED54521C00BB700E5D934 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E2AED54921C00BB700E5D934 /* libSplashScreen.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		E2C46F5421AD2396009E186F /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				E2C46F5921AD2396009E186F /* libRNBackgroundTimer.a */,
 				E2C46F5B21AD2396009E186F /* libRNBackgroundTimer.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		F79454FA21BFF7E900030483 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				F79454FE21BFF7EA00030483 /* libSplashScreen.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1131,6 +1143,10 @@
 				{
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+				},
+				{
+					ProductGroup = E2373C7B21CA447C0003317D /* Products */;
+					ProjectRef = E2373C7A21CA447C0003317D /* ReactNativeConfig.xcodeproj */;
 				},
 				{
 					ProductGroup = F7FBD99D219C5A71003FE9E2 /* Products */;
@@ -1443,11 +1459,18 @@
 			remoteRef = ADBDB9261DFEBF0700ED6528 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		E2AED54921C00BB700E5D934 /* libSplashScreen.a */ = {
+		E2373C8021CA447C0003317D /* libReactNativeConfig.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = libSplashScreen.a;
-			remoteRef = E2AED54821C00BB700E5D934 /* PBXContainerItemProxy */;
+			path = libReactNativeConfig.a;
+			remoteRef = E2373C7F21CA447C0003317D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		E2373C8221CA447C0003317D /* libReactNativeConfig-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libReactNativeConfig-tvOS.a";
+			remoteRef = E2373C8121CA447C0003317D /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		E27898C821B9DB0000E9304E /* libRNFirebase.a */ = {
@@ -1455,6 +1478,13 @@
 			fileType = archive.ar;
 			path = libRNFirebase.a;
 			remoteRef = E27898C721B9DB0000E9304E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		E2AED54921C00BB700E5D934 /* libSplashScreen.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSplashScreen.a;
+			remoteRef = E2AED54821C00BB700E5D934 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		E2C46F5921AD2396009E186F /* libRNBackgroundTimer.a */ = {
@@ -1469,13 +1499,6 @@
 			fileType = archive.ar;
 			path = libRNBackgroundTimer.a;
 			remoteRef = E2C46F5A21AD2396009E186F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F79454FE21BFF7EA00030483 /* libSplashScreen.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libSplashScreen.a;
-			remoteRef = F79454FD21BFF7EA00030483 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		F7FBD9A2219C5A71003FE9E2 /* libBVLinearGradient.a */ = {
@@ -1908,6 +1931,7 @@
 					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
 				);
 				INFOPLIST_FILE = emurgo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1943,6 +1967,7 @@
 					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
 				);
 				INFOPLIST_FILE = emurgo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

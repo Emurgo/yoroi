@@ -10,8 +10,6 @@ target 'emurgo' do
   pod 'Fabric', '~> 1.7.13'
   pod 'Crashlytics', '~> 3.10.7'
 
-  pod 'react-native-config', :path => '../node_modules/react-native-config'
-
   target 'emurgoTests' do
     inherit! :search_paths
     # Pods for testing
