@@ -8,7 +8,8 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
     "prettify": "prettier --write \"src/**/*.js\" --config src/.prettierrc",
-    "prettify_l10n": "prettier --write \"src/l10n/type.js\" --config src/.prettierrc"
+    "prettify_l10n": "prettier --write \"src/l10n/type.js\" --config src/.prettierrc",
+    "setup_configs": "react-native-schemes-manager all"
   },
   "dependencies": {
     "@babel/cli": "^7.1.2",
@@ -76,6 +77,7 @@
     "metro-react-native-babel-preset": "^0.48.0",
     "prettier": "^1.14.3",
     "prettylint": "^1.0.0",
+    "react-native-schemes-manager": "^1.0.5",
     "react-test-renderer": "16.5.0"
   },
   "jest": {
@@ -83,5 +85,9 @@
       "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js"
     },
     "preset": "react-native"
+  },
+  "xcodeSchemes": {
+    "Debug": ["Staging.Debug"],
+    "Release": ["Staging.Release"]
   }
 }

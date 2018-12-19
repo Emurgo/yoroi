@@ -41,6 +41,7 @@ follow https://facebook.github.io/react-native/docs/getting-started.html (tab Bu
 ### First time
 
 1. `yarn install`
+2. `yarn setup_configs` - links libraries to ios testnet build configurations
 
 ### Every time
 
