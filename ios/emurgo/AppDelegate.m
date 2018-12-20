@@ -48,31 +48,30 @@
 // we don't show switch screen when modal prompts, e.g. biometrics prompt, are in foreground
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-  UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"SwitchScreen.png"]];
-  imageView.contentMode = UIViewContentModeScaleAspectFit;
-  imageView.backgroundColor = [UIColor whiteColor];
-  imageView.tag = 1234;
-  imageView.alpha = 1;
-  imageView.bounds = self.window.bounds;
-  imageView.center = self.window.center;
+  // get splash screen view
+  NSArray *objects = [[NSBundle mainBundle] loadNibNamed:@"LaunchScreen" owner:self options:nil];
+  UIView *switcherView = [objects objectAtIndex:0];
 
-  [self.window addSubview:imageView];
-  [self.window bringSubviewToFront:imageView];
+  switcherView.alpha = 1.0;
+  switcherView.tag = 1234;
+  switcherView.frame = self.window.frame;
+
+  [self.window addSubview:switcherView];
+  [self.window bringSubviewToFront:switcherView];
   
   [self.window snapshotViewAfterScreenUpdates:YES];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-  // grab a reference to our coloured view
-  UIView *imageView = [self.window viewWithTag:1234];
+  UIView *switcherView = [self.window viewWithTag:1234];
 
   // fade away colour view from main view
   [UIView animateWithDuration:0.5 animations:^{
-      imageView.alpha = 0;
+      switcherView.alpha = 0;
   } completion:^(BOOL finished) {
       // remove when finished fading
-      [imageView removeFromSuperview];
+      [switcherView removeFromSuperview];
   }];
 }
 
