@@ -49,6 +49,9 @@ follow https://facebook.github.io/react-native/docs/getting-started.html (tab Bu
 2. `react-native run-android --variant=devDebug` - for version with testnet
 3. `react-native run-android --variant=mainDebug` - for version with mainnet
 
+4. `react-native run-ios --scheme=emurgo-staging --configuration=Staging.Debug` - staging (testnet) configuration
+5. `react-native run-ios --scheme=emurgo --configuration=Debug` - production configuration
+
 ### Release
 
 1. `cd android`

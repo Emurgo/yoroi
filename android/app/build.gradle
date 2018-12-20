@@ -77,6 +77,11 @@ project.ext.react = [
     entryFile: "index.js"
 ]
 
+project.ext.envConfigFiles = [
+  dev: '.env.staging',
+  main: '.env.production'
+]
+
 apply from: "../../node_modules/react-native/react.gradle"
 
 /**
@@ -146,7 +151,6 @@ android {
             compileSdkVersion = 28
             targetSdkVersion 26
             resValue "string", "build_config_package", "com.emurgo"
-            buildConfigField "Boolean", "USE_TESTNET", "false"
         }
         dev {
             dimension "version"
@@ -156,7 +160,6 @@ android {
             compileSdkVersion = 28
             targetSdkVersion 26
             resValue "string", "build_config_package", "com.emurgo"
-            buildConfigField "Boolean", "USE_TESTNET", "true"
         }
     }
     // applicationVariants are e.g. debug, release
