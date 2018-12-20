@@ -29,10 +29,18 @@ const common = {
   pleaseWait: 'please wait ...',
 }
 
+// ios system translations
+const ios = {
+  NSFaceIDUsageDescription:
+    'Enabling Face ID allows you quick and secure access to your account.',
+  NSCameraUsageDescription: 'Enabling camera allows you to scan QR codes.',
+}
+
 const l10n = {
   global: {
     languages,
     datetime,
+    ios,
     notifications: {
       offline: 'You are offline. Please check settings on your device.',
     },

@@ -1,0 +1,9 @@
+/*
+  InfoPlist.strings
+  emurgo
+
+  Created by Jan Ferko on 17/12/2018.
+  Copyright © 2018 Facebook. All rights reserved.
+*/
+"NSFaceIDUsageDescription" = "[ru] Enabling Face ID allows you quick and secure access to your account.";
+"NSCameraUsageDescription" = "[ru] Enabling camera allows you to scan QR codes.";
