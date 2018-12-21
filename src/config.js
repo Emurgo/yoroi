@@ -1,12 +1,12 @@
 // @flow
 import {LogLevel} from './utils/logging'
-import BuildConfig from 'react-native-config'
+import env from './env'
 
 const IS_DEBUG = __DEV__
 // debugging flags
 const _SHOW_INIT_DEBUG_SCREEN = true
 const _PREFILL_WALLET_INFO = true
-const _USE_TESTNET = BuildConfig.USE_TESTNET
+const _USE_TESTNET = env.getBoolean('USE_TESTNET', true)
 const _LOG_LEVEL = IS_DEBUG ? LogLevel.Debug : LogLevel.Warn
 const _ASSURANCE_STRICT = false
 

@@ -41,12 +41,16 @@ follow https://facebook.github.io/react-native/docs/getting-started.html (tab Bu
 ### First time
 
 1. `yarn install`
+2. `yarn setup_configs` - links libraries to ios testnet build configurations
 
 ### Every time
 
 1. `react-native start` - this will run RN packager, let it running
 2. `react-native run-android --variant=devDebug` - for version with testnet
 3. `react-native run-android --variant=mainDebug` - for version with mainnet
+
+4. `react-native run-ios --scheme=emurgo-staging --configuration=Staging.Debug` - staging (testnet) configuration
+5. `react-native run-ios --scheme=emurgo --configuration=Debug` - production configuration
 
 ### Release
 
