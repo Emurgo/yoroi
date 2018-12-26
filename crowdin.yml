@@ -1,0 +1,19 @@
+files:
+  - source: /src/l10n/en.js
+    translation: /src/l10n/%language%.js
+    languages_mapping:
+      language:
+        zh-CN: zh-Hans
+        zh-TW: zh-Hant
+        ja: jp-JP
+        ko: ko-KR
+        ru: ru-RU
+  - source: /src/l10n/tos.en.js
+    translation: /src/l10n/tos.%language%.js
+    languages_mapping:
+      language:
+        zh-CN: zh-Hans
+        zh-TW: zh-Hant
+        ja: ja-JP
+        ko: ko-KR
+        ru: ru-RU
