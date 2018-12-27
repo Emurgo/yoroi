@@ -1,2 +1,9 @@
-"NSFaceIDUsageDescription" = "出题支求援送问题 援现请支 发送 发请时现时现 发发时 题送求题求 援援求 请援发发发请 求现求出送送 时时 送问现援 现问送现援请请.";
-"NSCameraUsageDescription" = "题题时送问问请支 时送援出请送 请援请请送时 求援援 现支 现问支现 现支 请援请发发.";
+/*
+  InfoPlist.strings
+  emurgo
+
+  Created by Jan Ferko on 17/12/2018.
+  Copyright © 2018 Facebook. All rights reserved.
+*/
+"NSFaceIDUsageDescription" = "[zh-Hant] Enabling Face ID allows you quick and secure access to your account.";
+"NSCameraUsageDescription" = "[zh-Hant] Enabling camera allows you to scan QR codes.";
