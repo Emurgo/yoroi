@@ -87,7 +87,16 @@
     "preset": "react-native"
   },
   "xcodeSchemes": {
-    "Debug": ["Staging.Debug"],
-    "Release": ["Staging.Release"]
+    "Debug": [
+      "Staging.Debug"
+    ],
+    "Release": [
+      "Staging.Release"
+    ]
+  },
+  "engineStrict": true,
+  "engine": {
+    "node": "~10.14.2",
+    "npm": "~6.4.1"
   }
 }

@@ -71,3 +71,6 @@ Pods/
 android/gradle.properties.local
 android/app/google-services.json
 ios/emurgo/GoogleService-Info.plist
+HPC5*
+ios/AppStore_com.emurgo.yoroi.mobileprovision
+ios/emurgo.app.dSYM.zip
