@@ -23,7 +23,7 @@ gem install cocoapods
 cd ios && pod install
 ```
 
-*Optional*: Copy your `GoogleService-Info.plist` to `ios/emurgo/` to enable Crashlytics.
+Copy your `GoogleService-Info.plist` to `ios/emurgo/` to enable Crashlytics.
 
 Setup React Native third-party libraries:
 ```
