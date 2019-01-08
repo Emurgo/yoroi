@@ -55,7 +55,7 @@ follow https://facebook.github.io/react-native/docs/getting-started.html (tab Bu
 ### Release
 
 1. `cd android`
-2. `./gradlew assemblemainRelease`
+2. `./gradlew assembleMainRelease`
 
 # Code style
 
