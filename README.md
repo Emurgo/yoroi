@@ -25,7 +25,7 @@ cd ios && pod install
 
 Copy your `GoogleService-Info.plist` to `ios/emurgo/` to enable Crashlytics.
 
-Setup React Native third-party libraries:
+Setup React Native third-party libraries (Run these after `yarn install`):
 ```
 node_modules/react-native/scripts/ios-install-third-party.sh
 node_modules/react-native/third-party/glog-0.3.5/configure
@@ -55,7 +55,7 @@ follow https://facebook.github.io/react-native/docs/getting-started.html (tab Bu
 ### Release
 
 1. `cd android`
-2. `./gradlew assemblemainRelease`
+2. `./gradlew assembleMainRelease`
 
 # Code style
 
