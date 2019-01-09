@@ -23,7 +23,7 @@ gem install cocoapods
 cd ios && pod install
 ```
 
-Copy your `GoogleService-Info.plist` to `ios/emurgo/` to enable Crashlytics.
+Copy your `GoogleService-Info.plist` to `ios/emurgo`.
 
 Setup React Native third-party libraries (Run these after `yarn install`):
 ```
@@ -32,6 +32,8 @@ node_modules/react-native/third-party/glog-0.3.5/configure
 ```
 
 ### android
+
+Copy `google-services.json` to `android/app`.
 
 ```
 # install android
@@ -54,8 +56,17 @@ follow https://facebook.github.io/react-native/docs/getting-started.html (tab Bu
 
 ### Release
 
-1. `cd android`
-2. `./gradlew assembleMainRelease`
+1. Follow [Signed Android APK](https://facebook.github.io/react-native/docs/signed-apk-android) to generate and setup signing certificate for Android
+   (required only before first release).
+2. `cd android`
+3. `./gradlew assembleMainRelease`
+
+*Important*: You may run into `Could not follow symbolic link third-party/glog-0.3.5/test-driver` error 
+if you try to build Android release on Mac. This is caused by incorrect linking in react-native/npm.
+To fix the issue, locate path where `automake` is installed (default `/usr/local/share`) and re-link
+file by running command: 
+
+```ln -sf /usr/local/share/automake-<version>/test-driver <path_to_repo>/third-party/glog-0.3.5/test-driver```
 
 # Code style
 
