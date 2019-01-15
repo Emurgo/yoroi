@@ -389,7 +389,7 @@ const l10n = {
         UNKNOWN_WORDS: (words: Array<string>) => {
           const wordlist = words.map((word) => `'${word}'`).join(', ')
           const areInvalid = `недействительны`
-          return `${неверный} ${список слов}`
+          return `${wordList} ${areInvalid}`
         },
       },
     },
