@@ -74,3 +74,7 @@ ios/emurgo/GoogleService-Info.plist
 HPC5*
 ios/AppStore_com.emurgo.yoroi.mobileprovision
 ios/emurgo.app.dSYM.zip
+android/app/api*
+android/app/dev
+android/app/main
+GoogleService-Info.plist

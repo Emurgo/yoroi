@@ -154,7 +154,7 @@ android {
         }
         dev {
             dimension "version"
-            applicationIdSuffix ".testnet"
+            applicationIdSuffix ".staging"
             applicationId 'com.emurgo'
             minSdkVersion 21
             compileSdkVersion = 28

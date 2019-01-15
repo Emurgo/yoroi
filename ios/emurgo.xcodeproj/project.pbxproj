@@ -40,6 +40,7 @@
 		2D16E6881FA4F8E400B85C8A /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6891FA4F8E400B85C8A /* libReact.a */; };
 		2DCD954D1E0B4F2C00145EB5 /* emurgoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* emurgoTests.m */; };
 		2DF0FFEE2056DD460020B375 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
+		2ECF077B21E637D100356A42 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2ECF074221E637D100356A42 /* GoogleService-Info.plist */; };
 		4129CAD9C4C34ACF9E00AA5E /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9443C3481304C079FB7BE23 /* libRNSVG.a */; };
 		4C623EB4CCE24A6EA5889C23 /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 29CDBB4B7FB64C0086FF65C6 /* libRNCamera.a */; };
 		55F46080C7484EE1B3249EE3 /* libRNBackgroundTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 09D460C9C03E41CB9D785437 /* libRNBackgroundTimer.a */; };
@@ -56,7 +57,6 @@
 		D26F6DBA9C0242B0A6376183 /* libRNCardano.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05BD8AC5FBE745208C4D208E /* libRNCardano.a */; };
 		D3E68485C4E74648860C9BA7 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF0647A6034452E81BD8DF5 /* libresolv.tbd */; };
 		E2373C8321CA44B20003317D /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E2373C8021CA447C0003317D /* libReactNativeConfig.a */; };
-		E278991521B9DBE500E9304E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E27898DF21B9DBE500E9304E /* GoogleService-Info.plist */; };
 		E2FC0BF821C7F02200DA195B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E2FC0BFA21C7F02200DA195B /* InfoPlist.strings */; };
 		E6AB85BA13E748AB947E1A2A /* libRNRandomBytes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9F4B6BEEFC4DF6A66C1383 /* libRNRandomBytes.a */; };
 /* End PBXBuildFile section */
@@ -504,6 +504,7 @@
 		2D02E47B1E0B4A5D006451C7 /* emurgo-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "emurgo-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* emurgo-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "emurgo-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2ECF074221E637D100356A42 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		359687B3464F4A7C89D45AF9 /* libRNRandomBytes-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNRandomBytes-tvOS.a"; sourceTree = "<group>"; };
 		3F3CAD29F11A422EBD119E74 /* RNBackgroundTimer.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundTimer.xcodeproj; path = "../node_modules/react-native-background-timer/ios/RNBackgroundTimer.xcodeproj"; sourceTree = "<group>"; };
 		4447F097A41617FBCC553C4F /* Pods-emurgoTests.staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgoTests.staging.debug.xcconfig"; path = "Pods/Target Support Files/Pods-emurgoTests/Pods-emurgoTests.staging.debug.xcconfig"; sourceTree = "<group>"; };
@@ -546,7 +547,6 @@
 		DA9C2C759F984A23843777A9 /* libRNKeychain.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNKeychain.a; sourceTree = "<group>"; };
 		DC9A58871A78A4E93B3FA163 /* Pods-emurgo-tvOS.testnet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-tvOS.testnet.debug.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo-tvOS/Pods-emurgo-tvOS.testnet.debug.xcconfig"; sourceTree = "<group>"; };
 		E2373C7A21CA447C0003317D /* ReactNativeConfig.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeConfig.xcodeproj; path = "../node_modules/react-native-config/ios/ReactNativeConfig.xcodeproj"; sourceTree = "<group>"; };
-		E27898DF21B9DBE500E9304E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "emurgo/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E2FC0BF921C7F02200DA195B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E2FC0C3421C7F26C00DA195B /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E2FC0C3621C7F29200DA195B /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -715,7 +715,7 @@
 		13B07FAE1A68108700A75B9A /* emurgo */ = {
 			isa = PBXGroup;
 			children = (
-				E27898DF21B9DBE500E9304E /* GoogleService-Info.plist */,
+				2ECF074221E637D100356A42 /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -1038,8 +1038,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "emurgo" */;
 			buildPhases = (
-				E252B94121C963110062A5C2 /* Run Script */,
 				F90484421D44E955B0727931 /* [CP] Check Pods Manifest.lock */,
+				E252B94121C963110062A5C2 /* Run Script */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
@@ -1659,8 +1659,8 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				E2FC0BF821C7F02200DA195B /* InfoPlist.strings in Resources */,
+				2ECF077B21E637D100356A42 /* GoogleService-Info.plist in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
-				E278991521B9DBE500E9304E /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
