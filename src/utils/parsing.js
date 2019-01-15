@@ -7,7 +7,7 @@ const MICRO = 1000000
 
 export class InvalidAdaAmount extends ExtendableError {
   static ERROR_CODES = {
-    INVALID_AMOUNT: 'INVALID_AMOUNT', // general parsing problem
+    INVALID_AMOUNT: 'INVALID_AMOUNT', // general parsing problem or amount is equal to 0
     TOO_MANY_DECIMAL_PLACES: 'TOO_MANY_DECIMAL_PLACES',
     TOO_LARGE: 'TOO_LARGE',
     NEGATIVE: 'NEGATIVE',
@@ -42,6 +42,10 @@ export const parseAdaDecimal = (amount: string) => {
 
   if (value.lt(0)) {
     throw new InvalidAdaAmount(InvalidAdaAmount.ERROR_CODES.NEGATIVE)
+  }
+
+  if (value.eq(0)) {
+    throw new InvalidAdaAmount(InvalidAdaAmount.ERROR_CODES.INVALID_AMOUNT)
   }
 
   return value
