@@ -3,122 +3,122 @@ import {heading, paragraph, listItem} from './util'
 
 export const termsOfService = [
   paragraph(
-    'THIS TERMS OF SERVICE AGREEMENT ("Agreement") is made between EMURGO \
-Co., Ltd. ("Company") and any person or entity ("User") who completes the \
-process to download, utilize, or operate the software known as the Yoroi \
-cryptocurrency Wallet application, and data processing service, application, \
-communication service or other content or offered or provided with the \
-software by the Company ("Software"). The Company and User are collectively \
-referred to as the "Parties." BY CLICKING THE ACCEPTANCE BUTTON OR ACCESSING, \
-USING OR INSTALLING ANY PART OF THE SOFTWARE, USER EXPRESSLY AGREES TO AND \
-CONSENTS TO BE LEGALLY BOUND BY ALL OF THE TERMS OF THIS AGREEMENT. IF USER \
-DOES NOT AGREE TO ALL OF THE TERMS OF THIS AGREEMENT, THE USER SHALL NOT BE \
-AUTHORIZED TO ACCESS, USE OR INSTALL ANY PART OF THE SOFTWARE.',
+    'このサービス規約（以下「本規約」といいます。）は、株式会社EMURGO \
+（以下「当社」といいます。）と、 ヨロイクリプトカレンシーウォレットと称するアプリケーションとしての \
+ソフトウェアおよび上記ソフトウェアとともに当社により提供または作成される \
+データプロセシングサービス、アプリケーション、通信サービスその他コンテンツ\
+（以下「本ソフトウェア」といいます。）をダウンロードし、利用し、または操作するための手続を完了した者 \
+（個人又は法人）（以下「ユーザー」といいます。）との間で締結されるものです。 当社およびユーザーを \
+「両当事者」と総称します。 承認ボタンをクリックする、あるいは本ソフトウェアのいずれかの部分にアクセスし、\
+本ソフトウェアのいずれかの部分を利用し、または本ソフトウェアのいずれかの部分をインストールすることにより、ユーザーは、\
+本規約のすべての条項に法的に拘束されることについて明示的に同意したこととなります。 本規約のすべての条項に \
+同意しない場合には、ユーザーは、\
+本ソフトウェアのいずれの部分もアクセスし、利用し、またはインストールすることができないものとします。',
   ),
-  heading('1. Rights and Obligations'),
+  heading('1. 権利および義務'),
   listItem(
-    'a. Description. ',
-    "The Software functions as a free, open source, digital cryptocurrency \
-wallet. The Software does not constitute an account by which the Company or \
-any other third parties serve as financial intermediaries or custodians of \
-User's ADA or any other cryptocurrency. While the Software has undergone beta \
-testing and continues to be improved by feedback from the developers \
-community, open-source contributors and beta-testers, the Company cannot \
-guarantee that there will be no bugs in the Software. User acknowledges that \
-User's use of the Software is at User's risk, discretion and in compliance \
-with all applicable laws. User is responsible for safekeeping User's \
-passwords, PINs, private keys, redemption keys, shielded vending keys, backup \
-recovery mnemonic passphrases, ADA passcodes and any other codes User uses to \
-access the Software or any information, ADA, voucher, or other cryptocurrency \
-unit. IF USER LOSES ACCESS TO USER'S CRYPTOCURRENCY WALLET OR PRIVATE KEYS AND \
-HAS NOT SEPARATELY STORED A BACKUP OF USER'S CRYPTOCURRENCY WALLET OR BACKUP \
-RECOVERY MNEMONIC PHRASE(S) AND CORRESPONDING PASSWORD(S), USER ACKNOWLEDGES \
-AND AGREES THAT ANY ADA OR ANY OTHER CRYPTOCURRENCIES USER HAS ASSOCIATED WITH \
-THAT CRYPTOCURRENCY WALLET WILL BECOME INACCESSIBLE. All transaction requests \
-are irreversible. The Company and its shareholders, directors, officers, \
-employees, affiliates and agents cannot guarantee transaction confirmation or \
-retrieve User's private keys or passwords if User loses or forgets them.",
-  ),
-  listItem(
-    'b. Accessibility. ',
-    'User agrees that from time to time the Software may be inaccessible or \
-inoperable for any reason, including, without limitation: (i) equipment \
-malfunctions; (ii) periodic maintenance procedures or repairs which the \
-Company may undertake from time to time; or (iii) causes beyond the control of \
-the Company or which are not reasonably foreseeable by the Company.',
+    'a. 種類 ',
+    "本ソフトウェアは、無償のオープンソースの仮想通貨ウォレットとして機能します。\
+　 本ソフトウェアは、当社またはその他の第三者がユーザーのADAその他の仮想通貨に関する\
+金融仲介業者または管理業者となるアカウントを\
+構成するものではありません。 本ソフトウェアはベータ・テストを受けており、\
+デベロッパーコミュニティ、オープンソースコントリビューターおよびベータテスターからの\
+フィードバックにより引き続き改良されますが、\
+当社は、本ソフトウェアにバグがないことを保証するものではありません。 ユーザーは、ユーザー \
+による本ソフトウェアの利用はユーザーの責任、裁量によるものであり、かつ、\
+適用されるすべての法律に従うことを承知しています。 ユーザーは、本ソフトウェアまたは何らかの情報、\
+ADA、バウチャーその他の仮想通貨ユニットにアクセスするために \
+ユーザーが利用するユーザーのパスワード、個人識別番号（PIN）、プライベートキー、\
+還元キー、保護されたベンディングキー（shielded Vending Key）、バックアップリカバリー・ニーモニックパスフレーズ（backup recovery mnemonic passphrases）、ADAパスコードおよびその他のコードを保管する責任を負い \
+ます。 ユーザーがユーザーの仮想通貨ウォレットまたはプライベートキーへのアクセスを失ったものの、\
+ユーザーの仮想通貨ウォレットまたはバックアップリカバリー・ニーモニックフレーズおよび対応する \
+パスワードのバックアップを別途保存していなかった場合には、ユーザーは、\、
+ユーザーが当該仮想通貨ウォレットに関連づけていたADAその他の仮想通貨に\
+アクセスできなくなることを承知しており、これに同意します。 なお、いずれの取引要求も \
+撤回できません。 当社ならびにその株主、取締役、役員、従業員、\
+関連会社および代理人は、取引確認を保証することができず、\
+ユーザーがユーザーのプライベートキーまたはパスワードを紛失または失念した場合であってもそれらを取り戻すことができません。",
   ),
   listItem(
-    'c. Equipment. ',
-    "User shall be solely responsible for providing, maintaining and \
-ensuring compatibility with the Software, all hardware, software, electrical \
-and other physical requirements for User's use of the Software, including, \
-without limitation, telecommunications and internet access connections and \
-links, web browsers or other equipment, programs and services required to \
-access and use the Software.",
+    'b. アクセシビリティ ',
+    'ユーザーは、本ソフトウェアが何らかの理由（(i) 機器の故障、(ii) 当社が\
+随時実施することのある定期メンテナンス手続または定期修理、\
+または(iii) 当社が制御できないまたは当社が合理的に予見できない原因を含みますが、\
+これらに限られません。）により随時アクセス不能または \
+操作不能となる可能性があることに同意します。',
   ),
   listItem(
-    'd. Security. ',
-    "User shall be solely responsible for the security, confidentiality \
-and integrity of all information and content that User receives, transmits \
-through or stores on the Software. User shall be solely responsible for any \
-authorized or unauthorized access to any account of User by any person. User \
-agrees to bear all responsibility for the confidentiality of User's security \
-devices, information, keys, and passwords.",
+    'c. 機器 ',
+    "ユーザーは、ユーザーが本ソフトウェアを利用するためのすべてのハードウェア、ソフトウェア、\
+電気に関する要件その他の物理的要件（本ソフトウェアにアクセスし、本ソフトウェアを利用するために \
+必要な電気通信ならびにインターネットアクセス接続およびリンク、\
+ウェブブラウザその他の機器、プログラムおよびサービスを含みますが\
+これらに限られません。）を提供し、維持し、本ソフトウェアとの互換性を確保することについて\
+単独で責任を負うものとします。",
   ),
   listItem(
-    'e. Privacy. ',
-    "When reasonably practicable, the Company will attempt to respect \
-User's privacy. The Company will not monitor, edit, or disclose any personal \
-information about User or User's account, including its contents or User's use \
-of the Software, without User's prior consent unless the Company believes in \
-good faith that such action is necessary to: (i) comply with legal process or \
-other legal requirements of any governmental authority; (ii) protect and \
-defend the rights or property of the Company; (iii) enforce this Agreement; \
-(iv) protect the interests of users of the Software other than User or any \
-other person; or (v) operate or conduct maintenance and repair of the \
-Company's services or equipment, including the Software as authorized by law. \
-User has no expectation of privacy with respect to the Internet generally. \
-User's IP address is transmitted and recorded with each message or other \
-information User sends from the Software.",
+    'd. セキュリティ ',
+    "ユーザーが本ソフトウェアを通じて送受信し、または本ソフトウェア上で保存する\
+すべての情報およびコンテンツのセキュリティ、機密性および完全性について\
+単独で責任を負うものとします。 ユーザーは、いずれかの者によるユーザーのアカウントへの \
+正規のアクセスまたは不正なアクセスについて単独で責任を負うものとします。 ユーザーは、\
+ユーザーのセキュリティデバイス、情報、キーおよびパスワードの機密性について \
+一切の責任を負うことに同意します。",
   ),
-  heading('2. Taxes and Fees'),
+  listItem(
+    'e. プライバシー ',
+    "合理的に実施可能な場合には、当社は、ユーザーのプライバシーを\
+尊重するよう努めます。 当社は、ユーザーの事前の同意なくユーザーまたはユーザーのアカウント（その内容またはユーザーによる本ソフトウェアの利用を含みます。）\
+に関する個人情報を監視し、編集し、または開示しません\
+（但し、(i) 政府当局の法的手続またはその他の法的要件に従うために、\
+(ii) 当社の権利または財産を守るために、(iii) 本規約を履行するために、\
+(iv) ユーザー以外の本ソフトウェアの利用者またはその他の者の権利を保護するために、\
+(iv) ユーザー以外の本ソフトウェアの利用者またはその他の者の権利を保護するために、\
+(iv) ユーザー以外の本ソフトウェアの利用者またはその他の者の権利を保護するために、または\
+(v) 当社のサービスまたは機器（法律により認められる場合には本ソフトウェアを含みます。）を運用し、\
+またはそれらのメンテナンスおよび修理を行うためにかかる行為が必要であると \
+当社が誠実に判断した場合については、この限りでありません。） \
+ユーザーのIPアドレスは、ユーザーが本ソフトウェアから送信する各メッセージ\
+またはその他の情報とともに送信され、記録されます。",
+  ),
+  heading('2. 税金および手数料'),
   paragraph(
-    "All currency conversion charges, third party fees, sales, use, \
-value-added, personal property or other tax, duty or levy of any kind, \
-including interest and penalties thereon, whether imposed now or hereinafter \
-by any governmental entity, and fees incurred by User by reason of User's \
-access, use or installation of the Software shall be the sole responsibility \
-of User.",
+    "通貨両替手数料、第三者の手数料、売上税、使用税、付加価値税、動産税その他のあらゆる種類の税金、\
+関税および賦課金（これらに係る利息および罰金を含みます。）\
+（政府機関により現在課せられているものか、または将来課せられるものかを問いません。）、\
+ならびにユーザーによる本ソフトウェアへのアクセス、本ソフトウェアの利用\
+または本ソフトウェアのインストールによりユーザーに生じる手数料は、\
+すべてユーザーが単独で負担するものとします。",
   ),
-  heading('3. User Representations'),
+  heading('3. ユーザーの表明'),
   paragraph(
-    "User represents and warrants to the Company that: (a) if User is a \
-natural person, User is over the age of eighteen (18); (b) User has the power \
-and authority to enter into and perform User's obligations under this \
-Agreement; (c) all information provided by User to the Company is truthful, \
-accurate and complete; (d) User will comply with all laws and regulations of \
-any applicable jurisdiction with regard to User's access, use or installation \
-of the Software; (e) User shall comply with all terms and conditions of this \
-Agreement, including, without limitation, the provisions set forth at Section \
-4; and (f) User has provided and will provide accurate and complete \
-information as required for access, use or installation of the Software.",
+    "ユーザーは、当社に対し、(a) ユーザーが自然人である場合には、 \
+ユーザーが18歳を超えていること【Amt：18歳は含まれないことを念のためご確認ください。】、\
+(b) ユーザーは本規約を締結し、本規約に基づくユーザーの義務を履行する権限および権能を有していること、\
+(c) ユーザーが当社に提供する情報はすべて真実、正確かつ完全であること、\
+(d) ユーザーはユーザーによる本ソフトウェアへのアクセス、\
+、本ソフトウェアの利用または本ソフトウェアのインストールに関して関係法域のすべての法令を遵守すること、\
+(e) ユーザーは本規約のすべての条項（第４条に定める規定を含みますが、\
+これに限られません。）を遵守すること、\
+ならびに(f) ユーザーは本ソフトウェアへのアクセス、本ソフトウェアの利用または本ソフトウェアの\
+インストールに必要な正確かつ完全な情報を提供しており、今後も提供することを表明し、保証します。",
   ),
-  heading('4. Prohibited Uses'),
+  heading('4. 禁止される利用'),
   paragraph(
-    "User is solely responsible for any and all acts and omissions that \
-occur under User's account, security information, keys or password, and User \
-agrees not to engage in unacceptable use of the Software, which includes, \
-without limitation, use of the Software to: (a) disseminate, store or transmit \
-unsolicited messages, chain letters or unsolicited commercial email; (b) \
-disseminate or transmit material that, to a reasonable person may be abusive, \
-obscene, pornographic, defamatory, harassing, grossly offensive, vulgar, \
-threatening or malicious; (c) disseminate, store or transmit files, graphics, \
-software or other material that actually or potentially infringes the \
-copyright, trademark, patent, trade secret or other intellectual property \
-right of any person; (d) create a false identity or to otherwise attempt to \
-mislead any person as to the identity or origin of any communication; (e) \
-export, re-export or permit downloading of any message or content in \
-violation of any export or import law, regulation or restriction of any \
+    "ユーザーは、ユーザーのアカウント、セキュリティ情報、キーまたはパスワードにより生じる\
+すべての作為および不作為について単独で責任を負います。\
+また、ユーザーは、容認できない本ソフトウェアの利用（(a) 一方的なメッセージ、チェーンレター\
+または一方的な商業電子メールを拡散し、保存し、または送信すること、\
+(b) 一般に侮辱的である、卑猥である、猥褻である、中傷的である、\
+嫌がらせである、著しく不快である、淫らである、脅迫的であるまたは悪意のある可能性のある資料等を拡散し、\
+または送信すること、\
+(c) いずれかの者の著作権、商標、特許、営業秘密またはその他の知的財産権を\
+実際に侵害しているかまたは侵害する可能性のあるファイル、\
+画像、ソフトウェアまたはその他の資料等を拡散し、保存し、または送信すること、\
+(d) 通信の同一性もしくは出所について、別人になりすます、\
+またはその他の形でいずれかの者を誤解させようと試みること、\
+(e) 関係法域の輸出入関係法令もしくは規則に違反して、\
+または必要なすべての許認可もしくは免除を受けずにメッセージまたはコンテンツを輸出し、\
 applicable jurisdiction, or without all required approvals, licenses or \
 exemptions; (f) interfere, disrupt or attempt to gain unauthorized access \
 to other accounts on the Software or any other computer network; or (g) \

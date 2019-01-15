@@ -19,7 +19,7 @@ const datetime = {
 
 const walletNameErrors = {
   tooLong: 'Wallet name cannot exceed 40 letters',
-  nameAlreadyTaken: 'This name is already taken',
+  nameAlreadyTaken: 'You already have a wallet with this name',
 }
 
 // common translations shared across multiple places

@@ -19,7 +19,8 @@ const datetime = {
 
 const walletNameErrors = {
   tooLong: '지갑명은 40자를 초과할 수 없습니다',
-  nameAlreadyTaken: '이 지갑명은 이미 사용중입니다.',
+  nameAlreadyTaken: '이미 사용하고 있는 지갑명입니다.',
+ 
 }
 
 // common translations shared across multiple places
@@ -536,7 +537,7 @@ const l10n = {
     PinRegistrationForm: {
       PinInput: {
         title: 'PIN 입력',
-        subtitle: 'Choose new PIN for quick access to wallet.',
+        subtitle: '새로운 PIN을 선택하여 지갑에 접속하기.',
       },
       PinConfirmationInput: {
         title: 'PIN 재입력',
@@ -547,29 +548,29 @@ const l10n = {
     title: '간편 승인',
     enable: {
       heading:
-        'This option will allow you to send ADA transactions ' +
-        'from your wallet just by confirming with fingerprint or ' +
-        'face recognition with standard system fallback option. ' +
-        'This makes your wallet less secure. This is a compromise ' +
-        'between UX and security!',
+        '간편 승인은 지문인식이나 얼굴인식을 ' +
+        '사용하여 지갑에서의 ADA거래를 ' +
+        '승인합니다. ' +
+        '이 기능은 지갑의 안전성을 약화시킵니다. UX와 안전성 ' +
+        '어느쪽을 중요시 하는지에 대한 선택입니다!',
       warning:
-        'Please remember your master password, as you may need it ' +
-        'in case your biometrics data are removed from the device.',
-      masterPassword: 'Master password',
-      enableButton: 'Enable',
+        '장치의 생체인식 기능이 불가능하게 되는 경우에 대비하여 ' +
+        '마스터 비밀번호를 반드시 기억해두시길 바랍니다.',
+      masterPassword: '마스터 비밀번호',
+      enableButton: '활성화',
     },
     disable: {
       heading:
-        'By disabling this option you will be able to spend your ADA ' +
-        'only with master password.',
-      disableButton: 'Disable',
+        '이 옵션을 비활성화 시키면 오직 마스터 패스워드를 이용해서만 ' +
+        'ADA를 거래할 수 있게 됩니다.',
+      disableButton: '비활성화',
     },
   },
   Biometry: {
-    approveTransaction: 'Authorize with your fingerprint',
+    approveTransaction: '지문인식으로 승인',
     subtitle: '', // subtitle for the biometry dialog Andoid 9
     description: '', // description of the biometry dialog Android 9
-    cancelButton: 'Cancel',
+    cancelButton: '취소',
   },
 }
 
