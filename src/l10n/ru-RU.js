@@ -388,8 +388,8 @@ const l10n = {
         INVALID_CHECKSUM: 'Пожалуйста, введите верную мнемоническую фразу.',
         UNKNOWN_WORDS: (words: Array<string>) => {
           const wordlist = words.map((word) => `'${word}'`).join(', ')
-          const areInvalid = `недействительны`
-          return `${wordList} ${areInvalid}`
+          const areInvalid = 'недействительны'
+          return `${wordlist} ${areInvalid}`
         },
       },
     },
@@ -525,7 +525,7 @@ const l10n = {
         passwordsDoNotMatch: 'Пароли не совпадают',
       },
     },
-    continueButton: 'Изменить пароль,
+    continueButton: 'Изменить пароль',
   },
   ChangeCustomPinScreen: {
     title: 'Изменить PIN',
