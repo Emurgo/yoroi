@@ -16,20 +16,36 @@
 default_platform(:ios)
 
 platform :ios do
-  desc "Push a new beta build to TestFlight"
-  lane :beta do
-    get_certificates           # invokes cert
-    get_provisioning_profile   # invokes sigh
-    build_app(workspace: "emurgo.xcworkspace", scheme: "emurgo")
+  desc "Push a new staging build to TestFlight"
+  lane :staging do
+    # get_certificates           # invokes cert
+    # get_provisioning_profile   # invokes sigh
+    match(type: "appstore",
+          app_identifier: "com.emurgo.yoroi-stag",
+          verbose: true,
+          git_url: "https://github.com/Emurgo/yoroi-certs.git")
+
+    increment_build_number(xcodeproj: "emurgo.xcodeproj")
+    build_app(workspace: "emurgo.xcworkspace", scheme: "emurgo-staging")
+    upload_to_testflight(skip_submission: true, skip_waiting_for_build_processing: true)
+  end
+
+  desc "Push a new mainnet build to TestFlight"
+  lane :mainnet do
+    # get_certificates           # invokes cert
+    # get_provisioning_profile   # invokes sigh
+    match(type: "appstore",
+          app_identifier: "com.emurgo.yoroi",
+          verbose: true,
+          git_url: "https://github.com/Emurgo/yoroi-certs.git")
+
     increment_build_number(xcodeproj: "emurgo.xcodeproj")
     build_app(workspace: "emurgo.xcworkspace", scheme: "emurgo")
-    upload_to_testflight(skip_submission: true)
+    upload_to_testflight(skip_submission: true, skip_waiting_for_build_processing: true)
   end
 
   desc "Builds the project. Useful to verify a succesful compilation."
   lane :build do
-    get_certificates           # invokes cert
-    get_provisioning_profile   # invokes sigh
     build_app(workspace: "emurgo.xcworkspace", scheme: "emurgo")
   end
 end
