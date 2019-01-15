@@ -100,7 +100,7 @@ const l10n = {
       title: '조치 실패',
       message:
         '우선 지갑내의 모든 간편 승인 기능을 비활성화 ' +
-        해주십시오
+        '해주십시오',
       yesButton: common.ok,
     },
     enableFingerprintsFirst: {
@@ -117,8 +117,8 @@ const l10n = {
         '비활성화 해야 합니다. 사용하고 있는 스마트폰에 ' +
         '화면 잠금 기능 (PIN / 비밀번호 / 패턴) 을 설정하고 ' +
         '어플케이션을 다시 시작해 주십시오. 그 후 스마트폰의 ' +
-        화면 잠금을 해제하고 ' +
-        어플리케이션을 이용할 수 있습니다.
+        '화면 잠금을 해제하고 ' +
+        '어플리케이션을 이용할 수 있습니다.',
       yesButton: 'OK',
     },
     wrongPinError: {
@@ -413,7 +413,7 @@ const l10n = {
     },
     ApplicationTab: {
       title: '설정',
-      tabTitle: '어플리케이션'
+      tabTitle: '어플리케이션',
 
       language: '언어',
 

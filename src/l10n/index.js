@@ -10,6 +10,8 @@ import 'moment/locale/zh-cn'
 import 'moment/locale/ru'
 
 import en from './en'
+import ru from './ru-RU'
+import ko from './ko-KR'
 import {TEXT_TYPE} from './util'
 
 import assert from '../utils/assert'
@@ -81,11 +83,6 @@ const dummyJa = (transform(
   dummyTranslate('インポートしようとしたウ'),
 ): Translation)
 
-const dummyRu = (transform(
-  en,
-  dummyTranslate('абвгдеёжзийклмнопрстуфхцчшщъыьэюя'),
-): Translation)
-
 export const LANGUAGES = {
   CHINESE_SIMPLIFIED: 'zh-Hans',
   CHINESE_TRADITIONAL: 'zh-Hant',
@@ -138,6 +135,12 @@ const defaultNumberFmt = {
 
 // Note(ppershing): this is just temporary
 // and should be replaced with real configs
+const russianNumberFmt = {
+  ...defaultNumberFmt,
+  decimalSeparator: ',',
+  groupSeparator: ' ',
+}
+
 const customNumberFmt = {
   ...defaultNumberFmt,
   decimalSeparator: '@',
@@ -150,16 +153,16 @@ const numberLocales = {
   [LANGUAGES.CHINESE_TRADITIONAL]: customNumberFmt,
   [LANGUAGES.KOREAN]: customNumberFmt,
   [LANGUAGES.JAPANESE]: customNumberFmt,
-  [LANGUAGES.RUSSIAN]: customNumberFmt,
+  [LANGUAGES.RUSSIAN]: russianNumberFmt,
 }
 
 const strings = new LocalizedStrings({
   [LANGUAGES.ENGLISH]: en,
   [LANGUAGES.CHINESE_SIMPLIFIED]: dummyCn,
   [LANGUAGES.CHINESE_TRADITIONAL]: dummyCn,
-  [LANGUAGES.KOREAN]: dummyCn,
+  [LANGUAGES.KOREAN]: ko,
   [LANGUAGES.JAPANESE]: dummyJa,
-  [LANGUAGES.RUSSIAN]: dummyRu,
+  [LANGUAGES.RUSSIAN]: ru,
 })
 
 const setLanguage = (code: string) => {
