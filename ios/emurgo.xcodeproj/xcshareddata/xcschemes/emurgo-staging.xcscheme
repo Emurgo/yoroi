@@ -79,9 +79,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "emurgo.app"
-            BlueprintName = "emurgo"
+            BlueprintIdentifier = "2EA33F9521EEF00A0075DFFE"
+            BuildableName = "emurgo-staging.app"
+            BlueprintName = "emurgo-staging"
             ReferencedContainer = "container:emurgo.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -102,9 +102,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "emurgo.app"
-            BlueprintName = "emurgo"
+            BlueprintIdentifier = "2EA33F9521EEF00A0075DFFE"
+            BuildableName = "emurgo-staging.app"
+            BlueprintName = "emurgo-staging"
             ReferencedContainer = "container:emurgo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

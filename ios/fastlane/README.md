@@ -16,11 +16,16 @@ or alternatively using `brew cask install fastlane`
 
 # Available Actions
 ## iOS
-### ios beta
+### ios staging
 ```
-fastlane ios beta
+fastlane ios staging
 ```
-Push a new beta build to TestFlight
+Push a new staging build to TestFlight
+### ios mainnet
+```
+fastlane ios mainnet
+```
+Push a new mainnet build to TestFlight
 ### ios build
 ```
 fastlane ios build
