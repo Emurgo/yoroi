@@ -212,7 +212,7 @@ const l10n = {
       transactionType: {
         SENT: 'ADAが送信されました。',
         RECEIVED: 'ADAを受信しました。',
-        SELF: ウォレット内'',
+        SELF: 'ウォレット内',
         MULTI: '複数人',
       },
       assuranceLevelHeader: '確信度',
