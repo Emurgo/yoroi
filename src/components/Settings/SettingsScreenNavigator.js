@@ -19,7 +19,8 @@ import ChangePasswordScreen from './ChangePasswordScreen'
 import ChangeCustomPinScreen from './ChangeCustomPinScreen'
 import CustomPinScreen from '../FirstRun/CustomPinScreen'
 import BiometricAuthScreen from '../Send/BiometricAuthScreen'
-import {SETTINGS_ROUTES} from '../../RoutesList'
+import WalletSelectionScreen from '../WalletSelection/WalletSelectionScreen'
+import {SETTINGS_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import {
   defaultNavigationOptions,
   defaultStackNavigatorOptions,
@@ -29,6 +30,14 @@ import {COLORS} from '../../styles/config'
 
 const SettingsScreenNavigator = createStackNavigator(
   {
+    [WALLET_INIT_ROUTES.WALLET_SELECTION]: {
+      screen: WalletSelectionScreen,
+      navigationOptions: {
+        header: null,
+      },
+      ...defaultNavigationOptions
+    },
+  
     [SETTINGS_ROUTES.MAIN]: createMaterialTopTabNavigator(
       {
         Wallet: {
