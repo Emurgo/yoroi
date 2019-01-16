@@ -40,6 +40,13 @@ class AddressModal extends React.Component<Props, State> {
     if (this._hideModalTimeoutId) clearTimeout(this._hideModalTimeoutId)
   }
 
+  async componentDidUpdate() {
+    const cbData = await Clipboard.getString()
+    if (this.state.isCopied && cbData !== this.props.address) {
+      this.setState({isCopied: false})
+    }
+  }
+
   _copyAddress = () => {
     if (!this.props.address) return
     Clipboard.setString(this.props.address)
