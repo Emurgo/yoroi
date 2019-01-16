@@ -10,6 +10,7 @@ import 'moment/locale/zh-cn'
 import 'moment/locale/ru'
 
 import en from './en'
+import ja from './jp-JP'
 import ru from './ru-RU'
 import ko from './ko-KR'
 import {TEXT_TYPE} from './util'
@@ -76,11 +77,6 @@ const dummyTranslate = (targetChars) => (obj: any): any => {
 const dummyCn = (transform(
   en,
   dummyTranslate('发送支援请求时出现问题'),
-): Translation)
-
-const dummyJa = (transform(
-  en,
-  dummyTranslate('インポートしようとしたウ'),
 ): Translation)
 
 export const LANGUAGES = {
@@ -161,7 +157,7 @@ const strings = new LocalizedStrings({
   [LANGUAGES.CHINESE_SIMPLIFIED]: dummyCn,
   [LANGUAGES.CHINESE_TRADITIONAL]: dummyCn,
   [LANGUAGES.KOREAN]: ko,
-  [LANGUAGES.JAPANESE]: dummyJa,
+  [LANGUAGES.JAPANESE]: ja,
   [LANGUAGES.RUSSIAN]: ru,
 })
 

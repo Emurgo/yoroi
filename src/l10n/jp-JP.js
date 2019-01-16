@@ -15,8 +15,7 @@ const languages = {
 const datetime = {
   today: '今日',
   yesterday: '昨日',
-} 
-
+}
 
 const walletNameErrors = {
   tooLong: 'ウォレット名が40文字を超えています。',
@@ -87,7 +86,7 @@ const l10n = {
         ' 端末で生体認証の変更が検出されました。 ' +
         'これにより簡易トランザクション承認が無効になりました。' +
         'トランザクションはマスターパスワードによってのみ承認されます。 ' +
-        '設定で'簡易トランザクション承認を有効にできます。',
+        '設定で簡易トランザクション承認を有効にできます。',
       yesButton: 'OK',
     },
     networkError: {
@@ -115,11 +114,10 @@ const l10n = {
       title: 'ロック画面が無効です。',
       message:
         'スマートフォンのロック画面を無効に設定していませんか？ あらかじめ' +
-        '簡易トランザクション承認を無効に設定する必要があります。 　
+        '簡易トランザクション承認を無効に設定する必要があります。' +
         'スマートフォンのロック画面を設定し（PIN、パスワード、パターン）、' +
         'デバイスを再起動してください。 その後にロック画面を無効に設定し ' +
-        '本アプリをご利用いただけます。 ' +
-        　
+        '本アプリをご利用いただけます。 ',
       yesButton: 'OK',
     },
     wrongPinError: {
@@ -279,7 +277,7 @@ const l10n = {
           // Note(ppershing): first two should be auto-corrected
           // by the input control
           INVALID_AMOUNT: '有効な数を入れてください。',
-          TOO_MANY_DECIMAL_PLACES: '有効な数を入力してください。,
+          TOO_MANY_DECIMAL_PLACES: '有効な数を入力してください。',
 
           TOO_LARGE: '数が大きすぎます。',
           NEGATIVE: '正の数を入力してください。',
@@ -382,8 +380,7 @@ const l10n = {
     instructions:
       'ウォレットの復元には、復元フレーズが必要です。' +
       '復元フレーズは、一回目に使用したときに作成されたものです。',
- 
-     mnemonicInput: {
+    mnemonicInput: {
       label: '復元フレーズ',
       errors: {
         TOO_LONG: 'フレーズが長すぎます。 ',
@@ -495,7 +492,7 @@ const l10n = {
       paragraph2: '操作を承認するために、ウォレット名を下にタイプしてください。',
     },
     walletName: 'ウォレット名',
-    walletNameInput: 'ウォレット名'
+    walletNameInput: 'ウォレット名',
     removeWallet: 'ウォレットを消去',
     hasWrittenDownMnemonic:
       '復元フレーズを書き留め、これがないとウォレットを復元 ' +
@@ -552,9 +549,7 @@ const l10n = {
       heading:
         '簡易トランザクション承認とは、指紋認証や顔認証 ' +
         'を用いて、ADAのトランザクションを行うものです。 ' +
-        　 ' +
         'これによってセキュリティが弱くなります。 セキュリティと使いやすさ' +
-
         'どっちを重要視するかという選択になります。',
       注意:
         'あなたのマスターパスワードは、 ' +
