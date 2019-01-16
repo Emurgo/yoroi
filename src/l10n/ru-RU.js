@@ -19,7 +19,7 @@ const datetime = {
 
 const walletNameErrors = {
   tooLong: 'Имя кошелька не должно быть длиннее 40 символов',
-  nameAlreadyTaken: 'Это имя уже занято',
+  nameAlreadyTaken: 'You already have a wallet with this name',
 }
 
 // common translations shared across multiple places
@@ -134,7 +134,7 @@ const l10n = {
   YoroiDescription: {
     line1: 'Yoroi - это легкий веб-кошелек для Cardano',
     line2: 'Безопасно Быстро Просто',
-    byEmurgo: 'От',
+    byEmurgo: 'By',
   },
   AppStartScreen: {
     loginButton: 'Вход',
@@ -148,7 +148,7 @@ const l10n = {
   CreateOrRestoreWalletScreen: {
     title: 'Добавить кошелек',
     createWalletButton: 'Создать новый кошелек',
-    restoreWalletButton: 'Восстановить кошелек из резервной копии',
+    restoreWalletButton: 'Восстановить кошелек',
   },
   // On CreateWalletScreen
   MnemonicExplanationModal: {
@@ -167,11 +167,11 @@ const l10n = {
     paragraph2: [
       inline([
         normal('Убедитесь, что '),
-        bold('никто не смотрит на экран Вашего устройства '),
+        bold('никто не смотрит на экран Вашего устройства, '),
         normal('если только Вы не собираетесь предоставить им доступ к Вашим средствам.'),
       ]),
     ],
-    nextButton: 'Я понимаю',
+    nextButton: 'Мне понятно',
   },
   WalletNameAndPasswordForm: {
     walletNameInput: {
@@ -190,7 +190,7 @@ const l10n = {
     continueButton: 'Продолжить',
   },
   PasswordStrengthIndicator: {
-    passwordRequirementsNote: 'Пароль должен иметь не менее:',
+    passwordRequirementsNote: 'Пароль должен содержать не менее:',
     passwordMinLength: '7 символов',
     passwordUpperChar: '1 заглавную букву',
     passwordLowerChar: '1 строчную букву',
@@ -208,7 +208,7 @@ const l10n = {
     availableFundsBanner: {
       label: common.availableFunds,
     },
-    noTransactions: 'Еще нет транзакций для показа',
+    noTransactions: 'Нет транзакций для показа',
     transaction: {
       transactionType: {
         SENT: 'отправить ADA',
@@ -315,7 +315,7 @@ const l10n = {
     pleaseWait: common.pleaseWait,
   },
   WalletCredentialsScreen: {
-    title: 'Учетные данные кошелька',
+    title: 'Учетные данные',
   },
   ChangeWalletNameScreen: {
     title: 'Изменить имя кошелька',
@@ -331,7 +331,7 @@ const l10n = {
       'Поделитесь этим адресом для получения платежей. ' +
       'Для защиты Вашей конфиденциальности, новые адреса ' +
       'генерируются автоматически после того, как Вы ими воспользовались.',
-    generateButton: 'Сгенерировать другой адрес',
+    generateButton: 'Сгенерировать новый адрес',
     cannotGenerate: 'Вы должны использовать некоторые из ваших адресов',
     freshAddresses: 'Новые адреса',
     usedAddresses: 'Использованные адреса',
@@ -376,9 +376,9 @@ const l10n = {
     confirmButton: 'Подтвердить',
   },
   RestoreWalletScreen: {
-    title: 'Восстановить кошелек',
+    title: 'Восстановить',
     instructions:
-      'Чтобы восстановить Ваш кошелек, пожалуйста, предоставьте восстановительную фразу, которую ' +
+      'Чтобы восстановить Ваш кошелек, пожалуйста, введите восстановительную фразу, которую ' +
       'Вы получили, когда создали свой кошелек в первый раз.',
     mnemonicInput: {
       label: 'Восстановительная фраза',
@@ -419,7 +419,7 @@ const l10n = {
 
       security: 'Безопасность',
       changePin: 'Изменить PIN',
-      biometricsSignIn: 'Войти, используя мои биометрические данные',
+      biometricsSignIn: 'Войти, используя биометрические данные',
 
       crashReporting: 'Сбой в предоставлении отчета',
       crashReportingText:
@@ -472,11 +472,11 @@ const l10n = {
   BiometricsAuthScreen: {
     authorizeOperation: 'Авторизовать операцию',
     useFallbackButton: 'Использовать запасной вариант',
-    headings: ['Авторизовать со своим', 'отпечатком пальца'],
+    headings: ['Авторизовать ', 'отпечатком пальца'],
     cancelButton: 'Отменить',
     errors: {
       NOT_RECOGNIZED: 'Отпечаток пальца не был распознан, попробуйте еще раз',
-      SENSOR_LOCKOUT: 'Вы использовали слишком много пальцев, датчик отключен',
+      SENSOR_LOCKOUT: 'Вы использовали слишком много отпечатков, датчик отключен',
       SENSOR_LOCKOUT_PERMANENT:
         'Вы навсегда заблокировали свой датчик отпечатков пальцев. Используйте запасной вариант.',
       DECRYPTION_FAILED: 'Сбой датчика отпечатков пальцев, используйте запасной вариант',
@@ -495,8 +495,8 @@ const l10n = {
     walletNameInput: 'Имя кошелька',
     remove: 'Удалить кошелек',
     hasWrittenDownMnemonic:
-      'Я записал мнемоническую фразу и я понимаю, ' +
-      'что я не могу восстановить свой кошелек без нее.',
+      'Я записал мнемоническую фразу и понимаю, ' +
+      'что не могу восстановить свой кошелек без нее.',
   },
 
   ChoosePinScreen: {

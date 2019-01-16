@@ -19,7 +19,7 @@ const datetime = {
 
 const walletNameErrors = {
   tooLong: 'ウォレット名が40文字を超えています。',
-  nameAlreadyTaken: 'この名前は使用できません。',
+  nameAlreadyTaken: '同じ名前のウォレットが存在します。',
 }
 
 // common translations shared across multiple places
@@ -32,7 +32,7 @@ const common = {
 // ios system translations
 const ios = {
   NSFaceIDUsageDescription:
-    'FaceIDを使って、口座に安全・簡単にアクセスすることができます。',
+    'FaceIDを使えば、より安全・簡単にアカウントにアクセスすることができます。',
   NSCameraUsageDescription: 'カメラを使って、QRコードを読み取ることができます。',
 }
 
@@ -44,25 +44,25 @@ const l10n = {
     notifications: {
       offline: 'オフラインになっています。 デバイスの設定を確認してください。',
     },
-    currentLanguageName: '英語',
+    currentLanguageName: '日本語',
   },
   confirmationDialogs: {
     logout: {
       title: 'ログアウト',
-      message: '本当にログアウトしてもいいですか?',
+      message: 'ログアウトしますか?',
       yesButton: 'はい',
       noButton: 'いいえ',
     },
   },
   errorDialogs: {
     generalError: (message: string) => ({
-      title: '予期せぬエラーが起こりました。',
+      title: '予期せぬエラーが発生しました。',
       message: `要求された操作を行うことができません。 エラー内容: ${message}`,
       yesButton: common.ok,
     }),
     pinMismatch: {
       title: 'PINが無効です',
-      message: 'PINが間違っています。',
+      message: '入力したPINが間違っています。',
       yesButton: common.ok,
     },
     incorrectPin: {
@@ -113,16 +113,16 @@ const l10n = {
     enableSystemAuthFirst: {
       title: 'ロック画面が無効です。',
       message:
-        'スマートフォンのロック画面を無効に設定していませんか？ あらかじめ' +
+        '端末のロック画面を無効に設定していませんか？ あらかじめ' +
         '簡易トランザクション承認を無効に設定する必要があります。' +
-        'スマートフォンのロック画面を設定し（PIN、パスワード、パターン）、' +
-        'デバイスを再起動してください。 その後にロック画面を無効に設定し ' +
-        '本アプリをご利用いただけます。 ',
+        '端末のロック画面を設定し（PIN、パスワード、パターン）、' +
+        'デバイスを再起動してください。 その後ロック画面を無効に設定し ' +
+        '本アプリをご利用いただけます。',
       yesButton: 'OK',
     },
     wrongPinError: {
       title: 'PINが無効です。',
-      メッセージ: 'PIN が正しくありません 。',
+      メッセージ: '入力したPIN が間違っています 。',
       yesButton: 'OK',
     },
   },
@@ -158,15 +158,15 @@ const l10n = {
         ),
         normal('これはあなたの '),
         bold('ウォレットの復元フレーズです。 '),
-        normal('これは、ヨロイのどのバージョンでも'),
-        normal('入力してあなたのウォレットとプライベートキーを'),
+        normal('これは、ヨロイのどのバージョンでも、'),
+        normal('入力して、ウォレットとプライベートキーを'),
         normal('バックアップ、復元できます。'),
       ]),
     ],
     paragraph2: [
       inline([
-        normal('他の人に '),
-        bold('アクセス権が渡らないように、 '),
+        normal('不正アクセスを '),
+        bold('防止するために、 '),
         normal('誰も画面をのぞいていないことを確認してください。'),
       ]),
     ],
@@ -202,7 +202,7 @@ const l10n = {
     syncErrorBanner: {
       textWithoutRefresh: '同期エラーが発生しています。',
       textWithRefresh:
-        '同期エラーが発生しています。 再読み込みしてください',
+        '同期エラーが発生しています。 再読み込みをしてください',
     },
     availableFundsBanner: {
       label: common.availableFunds,
@@ -212,8 +212,8 @@ const l10n = {
       transactionType: {
         SENT: 'ADAが送信されました。',
         RECEIVED: 'ADAを受信しました。',
-        SELF: 'Intrawallet',
-        MULTI: 'Multiparty',
+        SELF: ウォレット内'',
+        MULTI: '複数人',
       },
       assuranceLevelHeader: '確信度',
       assuranceLevel: {
@@ -232,14 +232,14 @@ const l10n = {
     transactionType: {
       SENT: '資金を送信しました。',
       RECEIVED: '資金を受信しました。',
-      SELF: 'Intrawallet transaction',
-      MULTI: 'Multi-party transaction',
+      SELF: 'ウォレット内トランザクション',
+      MULTI: '複数人とのトランザクション',
     },
     fee: '手数料: ',
-    fromAddresses: 'From Addresses',
-    toAddresses: 'To Addresses',
-    transactionId: 'Transaction ID',
-    txAssuranceLevel: 'Transaction assurance level',
+    fromAddresses: 'アドレスから',
+    toAddresses: 'アドレスへ',
+    transactionId: 'トランザクションID',
+    txAssuranceLevel: 'トランザクション確信度',
     formatConfirmations: (cnt: number) =>
       `${cnt} ${pluralizeEn(cnt, 'CONFIRMATION', 'CONFIRMATIONS')}`,
     formatOmittedCount: (cnt: number) => `+ ${cnt} omitted`,
@@ -261,7 +261,7 @@ const l10n = {
     },
     availableFundsBanner: {
       label: common.availableFunds,
-      sFetching: '残高を確認しています...',
+      isFetching: '残高を確認しています...',
       notAvailable: '-',
     },
     addressInput: {
@@ -357,7 +357,7 @@ const l10n = {
       'このデバイス上にのみ保存されることを理解しました。',
     newDeviceRecoveryCheckbox:
       'アプリを別のデバイスに移動させたり、消去した場合、 ' +
-      '自分が控えた復元フレーズを使用してのみ、資金が復元されることを ' +
+      '自分が控えた復元フレーズがないと、資金が復元されないことを ' +
       '理解しました。',
     confirmationButton: 'はい',
   },
@@ -466,7 +466,7 @@ const l10n = {
     notNowButton: '後で行う',
     linkButton: 'リンク',
     headings: ['指紋認証を使用して、'],
-    subHeadings: ['安全に手早く', 'ウォレットにアクセス'],
+    subHeadings: ['より安全に早く', 'ウォレットにアクセス'],
   },
   // TODO(ppershing): this localization is a mess
   BiometricsAuthScreen: {
@@ -476,11 +476,11 @@ const l10n = {
     cancelButton: 'キャンセル',
     errors: {
       NOT_RECOGNIZED: '指紋認証を認識できません。再試行してください。',
-      SENSOR_LOCKOUT: 'You used too many fingers sensor is disabled',
+      SENSOR_LOCKOUT: '同時に認識できる指は１本までです。センサーが無効になりました。',
       SENSOR_LOCKOUT_PERMANENT:
-        'You permanently locked out your fingerprint sensor. Use fallback.',
+        '指紋認証が無効のようです。. 従来の方法を使ってください。.',
       DECRYPTION_FAILED: '指紋認証に失敗しました。一度戻ってください。',
-      UNKNOWN_ERROR: '不明のエラーr',
+      UNKNOWN_ERROR: '不明のエラー',
     },
   },
   RemoveWalletScreen: {
