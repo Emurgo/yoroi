@@ -89,6 +89,7 @@ const RestoreWalletScreen = ({
             placeholder={translations.mnemonicInput.label}
             blurOnSubmit
             error={errorText}
+            autoCapitalize = 'none'
             // hopefully this prevents keyboard from learning the mnemonic
             autoCorrect={false}
           />
