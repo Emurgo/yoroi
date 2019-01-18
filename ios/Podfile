@@ -1,5 +1,5 @@
 # Uncomment the next line to define a global platform for your project
-platform :ios, '9.0'
+platform :ios, '10.0'
 
 target 'emurgo' do
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
@@ -14,18 +14,4 @@ target 'emurgo' do
     inherit! :search_paths
     # Pods for testing
   end
-
-end
-
-target 'emurgo-tvOS' do
-  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
-  # use_frameworks!
-
-  # Pods for emurgo-tvOS
-
-  target 'emurgo-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-
 end
