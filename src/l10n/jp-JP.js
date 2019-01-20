@@ -15,8 +15,7 @@ const languages = {
 const datetime = {
   today: '今日',
   yesterday: '昨日',
-} 
-
+}
 
 const walletNameErrors = {
   tooLong: 'ウォレット名が40文字を超えています。',
