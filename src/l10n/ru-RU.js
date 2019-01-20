@@ -19,7 +19,7 @@ const datetime = {
 
 const walletNameErrors = {
   tooLong: 'Имя кошелька не должно быть длиннее 40 символов',
-  nameAlreadyTaken: 'You already have a wallet with this name',
+  nameAlreadyTaken: 'У Вас уже есть кошелек с таким именем',
 }
 
 // common translations shared across multiple places
@@ -32,7 +32,7 @@ const common = {
 // ios system translations
 const ios = {
   NSFaceIDUsageDescription:
-    'Активация Face ID позволяет Вам быстро и безопасно получить доступ к Вашему аккаунту.',
+    'Активация Face ID позволяет Вам быстро и безопасно получить доступ к своему аккаунту.',
   NSCameraUsageDescription: 'Включение камеры позволяет Вам сканировать QR коды.',
 }
 
@@ -107,7 +107,7 @@ const l10n = {
       title: 'Действие не удалось',
       message:
         'Вам сначала необходимо включить биометрию на своем устройстве, чтобы ' +
-        'чтобы иметь возможность связать её с этим приложением',
+        'иметь возможность связать её с этим приложением',
       yesButton: 'ОК',
     },
     enableSystemAuthFirst: {
@@ -134,7 +134,7 @@ const l10n = {
   YoroiDescription: {
     line1: 'Yoroi - это легкий веб-кошелек для Cardano',
     line2: 'Безопасно Быстро Просто',
-    byEmurgo: 'By',
+    byEmurgo: 'by',
   },
   AppStartScreen: {
     loginButton: 'Вход',
@@ -143,12 +143,12 @@ const l10n = {
     title: 'Ввести PIN',
   },
   CreateWalletScreen: {
-    title: 'Создать новый кошелек',
+    title: 'Новый кошелек',
   },
   CreateOrRestoreWalletScreen: {
     title: 'Добавить кошелек',
     createWalletButton: 'Создать новый кошелек',
-    restoreWalletButton: 'Восстановить кошелек',
+    restoreWalletButton: 'Восстановить',
   },
   // On CreateWalletScreen
   MnemonicExplanationModal: {
@@ -201,9 +201,9 @@ const l10n = {
   },
   TransactionHistoryScreeen: {
     syncErrorBanner: {
-      textWithoutRefresh: 'У нас проблемы с синхронизацией.',
+      textWithoutRefresh: 'Проблемы с синхронизацией.',
       textWithRefresh:
-        'У нас проблемы с синхронизацией. Потяните, чтобы обновить',
+        'Проблемы с синхронизацией. Потяните, чтобы обновить',
     },
     availableFundsBanner: {
       label: common.availableFunds,
@@ -242,12 +242,12 @@ const l10n = {
     transactionId: 'ID транзакции',
     txAssuranceLevel: 'Уровень гарантии транзакции',
     formatConfirmations: (cnt: number) =>
-      `${cnt} ${pluralizeEn(cnt, 'ПОДТВЕРЖДЕНИЕ', 'ПОДТВЕРЖДЕНИЯ')}`,
-    formatOmittedCount: (cnt: number) => `+ ${cnt} omitted`,
+      `${cnt} ${pluralizeEn(cnt, 'ПОДТВЕРЖДЕНИЕ', 'ПОДТВЕРЖДЕНИЙ')}`,
+    formatOmittedCount: (cnt: number) => `+ ${cnt} опущен`,
     addressPrefix: {
       receive: (idx: number) => `/${idx}`,
       change: (idx: number) => '/изменить',
-      notMine: 'не мое',
+      notMine: 'не моего',
     },
   },
   SendAdaScreen: {
@@ -298,7 +298,7 @@ const l10n = {
     },
   },
   ReadQRCodeAddressScreen: {
-    title: 'Сканировать QR-код адреса',
+    title: 'Сканировать',
   },
   ConfirmSendAdaScreen: {
     title: 'Отправить',
@@ -318,7 +318,7 @@ const l10n = {
     title: 'Учетные данные',
   },
   ChangeWalletNameScreen: {
-    title: 'Изменить имя кошелька',
+    title: 'Изменить имя',
     walletNameInput: {
       label: 'Имя кошелька',
       errors: walletNameErrors,
@@ -332,7 +332,7 @@ const l10n = {
       'Для защиты Вашей конфиденциальности, новые адреса ' +
       'генерируются автоматически после того, как Вы ими воспользовались.',
     generateButton: 'Сгенерировать новый адрес',
-    cannotGenerate: 'Вы должны использовать некоторые из ваших адресов',
+    cannotGenerate: 'Сперва используйте эти',
     freshAddresses: 'Новые адреса',
     usedAddresses: 'Использованные адреса',
   },
@@ -360,7 +360,7 @@ const l10n = {
       'Я понимаю, что если данное приложение будет перемещено на другое устройство ' +
       'или удалено, мои средства могут быть восстановлены только с помощью фразы восстановления, которую ' +
       'я записал и сохранил в безопасном месте.',
-    confirmationButton: 'Я понимаю',
+    confirmationButton: 'Мне понятно',
   },
   MnemonicCheckScreen: {
     title: 'Восстановительная фраза',
@@ -379,7 +379,7 @@ const l10n = {
     title: 'Восстановить',
     instructions:
       'Чтобы восстановить Ваш кошелек, пожалуйста, введите восстановительную фразу, которую ' +
-      'Вы получили, когда создали свой кошелек в первый раз.',
+      'Вы получили при создании кошелька.',
     mnemonicInput: {
       label: 'Восстановительная фраза',
       errors: {
@@ -388,7 +388,7 @@ const l10n = {
         INVALID_CHECKSUM: 'Пожалуйста, введите верную мнемоническую фразу.',
         UNKNOWN_WORDS: (words: Array<string>) => {
           const wordlist = words.map((word) => `'${word}'`).join(', ')
-          const areInvalid = 'недействительны'
+          const areInvalid = `недействительно`
           return `${wordlist} ${areInvalid}`
         },
       },
@@ -415,15 +415,15 @@ const l10n = {
       title: 'Настройки',
       tabTitle: 'Приложение',
 
-      language: 'Ваш язык',
+      language: 'Язык',
 
       security: 'Безопасность',
       changePin: 'Изменить PIN',
       biometricsSignIn: 'Войти, используя биометрические данные',
 
-      crashReporting: 'Сбой в предоставлении отчета',
+      crashReporting: 'Отчет о сбое',
       crashReportingText:
-        'Отправить отчеты о сбоях в Emurgo. ' +
+        'Отправлять отчеты о сбоях в Emurgo. ' +
         'Изменения в этой опции будут отражены ' +
         ' после перезагрузки приложения.',
 
@@ -444,12 +444,12 @@ const l10n = {
       label: 'Сообщить о проблеме',
       description:
         'Если раздел FAQ не решил возникший у Вас вопрос ' +
-        'пожалуйста, воспользуйтесь нашей опцией запроса в Поддержку.',
+        'пожалуйста, воспользуйтесь нашей опцией запроса в Техническую Поддержку.',
       url: 'https://yoroi-wallet.com/support/',
     },
   },
   TermsOfServiceScreen: {
-    title: 'Соглашение о предоставлении услуг',
+    title: 'Соглашение',
     content: termsOfService,
     aggreeClause: 'Я согласен с условиями предоставления услуг',
     continueButton: 'Принять',
@@ -472,7 +472,7 @@ const l10n = {
   BiometricsAuthScreen: {
     authorizeOperation: 'Авторизовать операцию',
     useFallbackButton: 'Использовать запасной вариант',
-    headings: ['Авторизовать ', 'отпечатком пальца'],
+    headings: ['Авторизация с помощью', 'отпечатка пальца'],
     cancelButton: 'Отменить',
     errors: {
       NOT_RECOGNIZED: 'Отпечаток пальца не был распознан, попробуйте еще раз',
@@ -512,7 +512,7 @@ const l10n = {
     },
   },
   ChangePasswordScreen: {
-    title: 'Изменить пароль кошелька',
+    title: 'Изменить пароль',
     oldPasswordInput: {
       label: 'Текущий пароль',
     },
@@ -550,7 +550,7 @@ const l10n = {
         'Эта опция позволит Вам отправлять ADA транзакции со своего кошелька, ' +
         'просто подтверждая их с помощью отпечатка пальца или ' +
         'с запасным вариантом стандартной системы распознавания лица. ' +
-        'Это делает Ваш кошелек менее безопасным. Это копромисс ' +
+        'Что делает Ваш кошелек менее безопасным. Это копромисс ' +
         'между UX и безопасностью!',
       warning:
         'Пожалуйста, помните свой мастер-пароль, так как он может Вам понадобиться ' +
@@ -566,7 +566,7 @@ const l10n = {
     },
   },
   Biometry: {
-    approveTransaction: 'Авторизовать со своим отпечатком пальца',
+    approveTransaction: 'Авторизовать с помощью отпечатка пальца',
     subtitle: '', // subtitle for the biometry dialog Andoid 9
     description: '', // description of the biometry dialog Android 9
     cancelButton: 'Отменить',

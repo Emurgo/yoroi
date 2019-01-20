@@ -101,7 +101,7 @@ const l10n = {
       title: '조치 실패',
       message:
         '우선 지갑내의 모든 간편 승인 기능을 비활성화 ' +
-        '해주십시오',
+        해주십시오
       yesButton: common.ok,
     },
     enableFingerprintsFirst: {
@@ -118,8 +118,8 @@ const l10n = {
         '비활성화 해야 합니다. 사용하고 있는 스마트폰에 ' +
         '화면 잠금 기능 (PIN / 비밀번호 / 패턴) 을 설정하고 ' +
         '어플케이션을 다시 시작해 주십시오. 그 후 스마트폰의 ' +
-        '화면 잠금을 해제하고 ' +
-        '어플리케이션을 이용할 수 있습니다.',
+        '화면 잠금을 해제하고' +
+        '어플리케이션을 이용할 수 있습니다.'
       yesButton: 'OK',
     },
     wrongPinError: {
@@ -156,19 +156,19 @@ const l10n = {
     paragraph1: [
       inline([
         normal(
-          '다음 화면에서 무작위로 선정된 15개의 단어가 나타납니다. ',
+          '다음 화면에 무작위로 선정된 15개의 단어가 나타납니다. ',
         ),
         normal('이것은 당신의 '),
-        bold('지갑 복구구절 입니다. '),
+        bold('지갑을 복구할 때 사용되는 구절 입니다. '),
         normal('이 구절은 요로의 지갑의 모든 버전에서 '),
         normal('사용자의 자금이나 개인키를 '),
-        normal('복구하는데 사용할 수 있습니다.'),
+        normal('복구하는데 사용됩니다.'),
       ]),
     ],
     paragraph2: [
       inline([
-        normal('다른 사람이'),
-        bold('지갑의 자금에 대한 접근이 허용되지 않도록 '),
+        normal('다른 사람에게 '),
+        bold('노출 되지 않도록 '),
         normal('화면을 잘 가려서 사용해 주십시오.'),
       ]),
     ],
@@ -191,11 +191,11 @@ const l10n = {
     continueButton: '계속',
   },
   PasswordStrengthIndicator: {
-    passwordRequirementsNote: '비밀번호는 적어도:',
+    passwordRequirementsNote: '비밀번호는 다음 요건을 충족하여야 합니다:',
     passwordMinLength: '7개의 문자',
     passwordUpperChar: '1개의 대문자',
     passwordLowerChar: '1개의 소문자',
-    passwordNumber: '1개의 숫자를 포함해야 합니다',
+    passwordNumber: '1개의 숫자',
     continueButton: '계속',
     passwordBigLength: '12개의 문자',
     or: '또는',
@@ -204,7 +204,7 @@ const l10n = {
     syncErrorBanner: {
       textWithoutRefresh: '동기화 문제가 발생하였습니다.',
       textWithRefresh:
-        'We are experiencing synchronization issues. 새로고침 해주십시오',
+        '동기화 문제가 발생하였습니다. 새로고침 해주십시오',
     },
     availableFundsBanner: {
       label: common.availableFunds,
@@ -346,27 +346,27 @@ const l10n = {
   MnemonicShowScreen: {
     title: '복구 구절',
     mnemonicNote:
-      '지갑의 복구구절은 반드시 어딘가에 안전하게 ' +
+      '지갑의 복구구절은 반드시 다른곳에 안전하게 ' +
       '기록해 두십시오. ' +
-      '복구 구절은 지갑을 사용하고 복구하는데 필요합니다. ' +
+      '복구 구절은 지갑을 사용하고 복구하는데 필요하며 ' +
       '대소문자를 구분해야 합니다.',
-    confirmationButton: '위 내용을 확인했습니다',
+    confirmationButton: '확인',
   },
   MnemonicBackupImportanceModal: {
     title: '복구 구절',
     keysStorageCheckbox:
-      '본인은, 사용자의 비밀키가 회사 서버가 아닌 개인 장치에 ' +
-      '안전하게 보관된다는 것을 이해하였습니다',
+      '본인은 사용자의 비밀키가 회사 서버가 아닌 개인 장치에 ' +
+      '안전하게 보관되는 것을 이해하였습니다',
     newDeviceRecoveryCheckbox:
-      '본인은, 해당 어플리케이션이 다른 장치로 이동되거나 ' +
-      '삭제되었을 경우, 계좌의 복원은 본인이 안전한 곳에 적어둔 복구 구절을 ' +
+      '본인은 해당 어플리케이션이 다른 장치로 이동되거나 ' +
+      '삭제되었을 경우, 계좌의 복원은 복구 구절을 ' +
       '이용해서만 복원이 가능하다는 것을 이해하였습니다.',
-    confirmationButton: '위 내용을 확인하였습니다',
+    confirmationButton: '확인',
   },
   MnemonicCheckScreen: {
     title: '복구 구절',
     instructions:
-      '복구 구절을 인증하려면 각 단어를 정확한 순서대로 나열하십시오',
+      '복구 구절을 인증하려면 각 단어를 정확한 순서대로 나열해 주십시오',
     mnemonicWordsInput: {
       label: '복구 구절',
       errors: {
@@ -379,7 +379,7 @@ const l10n = {
   RestoreWalletScreen: {
     title: '지갑 복구',
     instructions:
-      '지갑을 복구하기 위해서 최초 지갑 생성시 받은 복구 구절을 ' +
+      '지갑을 복구하기 위하여 최초 지갑 생성시 받은 복구 구절을 ' +
       '입력하여 주십시오.',
     mnemonicInput: {
       label: '복구 구절',
@@ -408,23 +408,23 @@ const l10n = {
 
       security: '안전',
       changePassword: '비밀번호 변경',
-      easyConfirmation: '간편 거래 확인',
+      easyConfirmation: '간편거래 승인',
 
       removeWallet: '지갑 삭제',
     },
     ApplicationTab: {
       title: '설정',
-      tabTitle: '어플리케이션',
+      tabTitle: '어플리케이션'
 
       language: '언어',
 
       security: '안전',
       changePin: 'PIN 변경',
-      biometricsSignIn: '생체인식을 이용하여 가입',
+      biometricsSignIn: '생체인식을 이용하여 로그인',
 
-      crashReporting: '크래쉬 보고',
+      crashReporting: '크래쉬 레포트',
       crashReportingText:
-        'EMURGO로 크래쉬 보고 보내기. ' +
+        'EMURGO로 크래쉬 레포트 보내기. ' +
         '어플리캐이션 재작동 후 ' +
         ' 옵션 변경이 반영됩니다.',
 
@@ -445,7 +445,7 @@ const l10n = {
       label: '문제 보고하기',
       description:
         'FAQ에서 문제가 해결되지 않은 경우에는, ' +
-        '저희 지원 요청 기능을 이용해 주십시오.',
+        '지원 요청 기능을 이용해 주십시오.',
       url: 'https://yoroi-wallet.com/support/',
     },
   },
@@ -471,9 +471,9 @@ const l10n = {
   },
   // TODO(ppershing): this localization is a mess
   BiometricsAuthScreen: {
-    authorizeOperation: '운영 허가',
+    authorizeOperation: '허가',
     useFallbackButton: 'Use fallback',
-    headings: ['지문인식을 사용하여', '허가하기'],
+    headings: ['지문인식을 사용하여', '승인하기'],
     cancelButton: '취소',
     errors: {
       NOT_RECOGNIZED: '지문이 인식되지 않았습니다. 다시 시도해 주십시오',

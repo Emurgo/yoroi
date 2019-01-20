@@ -7,7 +7,8 @@ const MICRO = 1000000
 
 export class InvalidAdaAmount extends ExtendableError {
   static ERROR_CODES = {
-    INVALID_AMOUNT: 'INVALID_AMOUNT', // general parsing problem or amount is equal to 0
+    // general parsing problem or amount is equal to 0
+    INVALID_AMOUNT: 'INVALID_AMOUNT',
     TOO_MANY_DECIMAL_PLACES: 'TOO_MANY_DECIMAL_PLACES',
     TOO_LARGE: 'TOO_LARGE',
     NEGATIVE: 'NEGATIVE',
