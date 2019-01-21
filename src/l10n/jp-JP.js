@@ -132,7 +132,7 @@ const l10n = {
   },
   LanguageSelectionScreen: {
     languages,
-    continueButton: '言語を選んでください。',
+    continueButton: '言語を選んでください',
   },
   YoroiDescription: {
     line1: 'ヨロイは、Cardanoのためのライトウォレットです。',
@@ -143,7 +143,7 @@ const l10n = {
     loginButton: 'ログイン',
   },
   WithPinLoginScreen: {
-    title: 'PINを入れてください。',
+    title: 'PINを入れてください',
   },
   CreateWalletScreen: {
     title: '新しいウォレットを作成してください。',
@@ -151,7 +151,7 @@ const l10n = {
   CreateOrRestoreWalletScreen: {
     title: 'ウォレットを追加してください。',
     createWalletButton: '新しいウォレットを作成',
-    restoreWalletButton: 'バックアップからウォレットを復元する',
+    restoreWalletButton: 'ウォレットの復元',
   },
   // On CreateWalletScreen
   MnemonicExplanationModal: {
@@ -160,9 +160,9 @@ const l10n = {
         normal('次の画面で、任意の15個の言葉が表示されます。 '),
         normal('これはあなたの '),
         bold('ウォレットの復元フレーズです。 '),
-        normal('これは、ヨロイのどのバージョンでも、'),
-        normal('入力して、ウォレットとプライベートキーを'),
-        normal('バックアップ、復元できます。'),
+        normal('ヨロイのどのバージョンでも、'),
+        normal('入力して、ウォレットと秘密鍵を'),
+        normal('復元できます。'),
       ]),
     ],
     paragraph2: [
@@ -313,7 +313,7 @@ const l10n = {
     pleaseWait: common.pleaseWait,
   },
   WalletCredentialsScreen: {
-    title: 'Wallet credentials',
+    title: 'ウォレット情報',
   },
   ChangeWalletNameScreen: {
     title: 'ウォレット名を変更する',
@@ -326,10 +326,10 @@ const l10n = {
   ReceiveScreen: {
     title: '受信',
     infoText:
-      'このアドレスを共有して支払いを受ける. ' +
+      'このアドレスを共有して、支払いを受けることができます。 ' +
       'プライバシー保護のため、 ' +
       '新しいアドレスが毎回自動生成されます。',
-    generateButton: '他のアドレスを生成する。',
+    generateButton: '他のアドレスを生成する',
     cannotGenerate: 'アドレスをいくつか使用する必要があります。',
     freshAddresses: '新しいアドレス',
     usedAddresses: '使用されたアドレス',
@@ -347,7 +347,7 @@ const l10n = {
       '必ず書き留めてください。 ' +
       'ウォレットの使用及び復元には、復元フレーズが必要です。 ' +
       ' フレーズの大文字小文字を区別してください。',
-    confirmationButton: '復元フレーズを書き留めました。',
+    confirmationButton: '復元フレーズを書き留めました',
   },
   MnemonicBackupImportanceModal: {
     title: '復元フレーズ',
@@ -356,7 +356,7 @@ const l10n = {
       'このデバイス上にのみ保存されることを理解しました。',
     newDeviceRecoveryCheckbox:
       'アプリを別のデバイスに移動させたり、消去した場合、 ' +
-      '自分が控えた復元フレーズがないと、資金が復元されないことを ' +
+      '復元フレーズがないと資金が復元されないことを ' +
       '理解しました。',
     confirmationButton: 'はい',
   },
@@ -371,7 +371,7 @@ const l10n = {
         invalidPhrase: '復元フレーズが間違っています。',
       },
     },
-    clearButton: '消去',
+    clearButton: '全消去',
     confirmButton: '承認',
   },
   RestoreWalletScreen: {
@@ -503,7 +503,7 @@ const l10n = {
     PinRegistrationForm: {
       PinInput: {
         title: 'PINを入力する',
-        subtitle: '新しいPINを選んで、クイックアクセスを有効にする.',
+        subtitle: '新しいPINを選んで、クイックアクセスを有効にします',
       },
       PinConfirmationInput: {
         title: 'PINもう一度入力してください。',
