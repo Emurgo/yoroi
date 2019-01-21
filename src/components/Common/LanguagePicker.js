@@ -9,7 +9,7 @@ import koreanFlagIcon from '../../assets/img/flags/korean.png'
 import japaneseFlagIcon from '../../assets/img/flags/japanese.png'
 import russianFlagIcon from '../../assets/img/flags/russian.png'
 import englishFlagIcon from '../../assets/img/flags/english.png'
-import chineseFlagIcon from '../../assets/img/flags/chinese.png'
+// import chineseFlagIcon from '../../assets/img/flags/chinese.png'
 import selectLanguageImage from '../../assets/img/select_language.png'
 import LanguageListItem from './LanguageListItem'
 import l10n, {LANGUAGES} from '../../l10n'
@@ -20,16 +20,17 @@ import type {SubTranslation} from '../../l10n/typeHelpers'
 const supportedLanguages = () => {
   const languages = l10n.translations.global.languages
   return [
-    {
-      label: languages.chineseSimplified,
-      code: LANGUAGES.CHINESE_SIMPLIFIED,
-      icon: chineseFlagIcon,
-    },
-    {
-      label: languages.chineseTraditional,
-      code: LANGUAGES.CHINESE_TRADITIONAL,
-      icon: chineseFlagIcon,
-    },
+    // TODO: Add back when chinese is available
+    // {
+    //   label: languages.chineseSimplified,
+    //   code: LANGUAGES.CHINESE_SIMPLIFIED,
+    //   icon: chineseFlagIcon,
+    // },
+    // {
+    //   label: languages.chineseTraditional,
+    //   code: LANGUAGES.CHINESE_TRADITIONAL,
+    //   icon: chineseFlagIcon,
+    // },
     {
       label: languages.english,
       code: LANGUAGES.ENGLISH,

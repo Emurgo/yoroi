@@ -1,9 +1,2 @@
-/*
-  InfoPlist.strings
-  emurgo
-
-  Created by Jan Ferko on 17/12/2018.
-  Copyright © 2018 Facebook. All rights reserved.
-*/
-"NSFaceIDUsageDescription" = "[ko] Enabling Face ID allows you quick and secure access to your account.";
-"NSCameraUsageDescription" = "[ko] Enabling camera allows you to scan QR codes.";
+"NSFaceIDUsageDescription" = "Face ID를 사용하여 보다 안전하고 간편하게 계좌에 엑세스 하는게 가능합니다.";
+"NSCameraUsageDescription" = "카메라를 사용하여 QR코드를 스캔할 수 있습니다.";
