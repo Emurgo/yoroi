@@ -18,273 +18,273 @@ Co., Ltd. (далее "Компания") и любым физическим и�
   heading('1. Права и Обязанности'),
   listItem(
     'a. Описание. ',
-    "The Software functions as a free, open source, digital cryptocurrency \
-wallet. The Software does not constitute an account by which the Company or \
-any other third parties serve as financial intermediaries or custodians of \
-User's ADA or any other cryptocurrency. While the Software has undergone beta \
-testing and continues to be improved by feedback from the developers \
-community, open-source contributors and beta-testers, the Company cannot \
-guarantee that there will be no bugs in the Software. User acknowledges that \
-User's use of the Software is at User's risk, discretion and in compliance \
-with all applicable laws. User is responsible for safekeeping User's \
-passwords, PINs, private keys, redemption keys, shielded vending keys, backup \
-recovery mnemonic passphrases, ADA passcodes and any other codes User uses to \
-access the Software or any information, ADA, voucher, or other cryptocurrency \
-unit. IF USER LOSES ACCESS TO USER'S CRYPTOCURRENCY WALLET OR PRIVATE KEYS AND \
-HAS NOT SEPARATELY STORED A BACKUP OF USER'S CRYPTOCURRENCY WALLET OR BACKUP \
-RECOVERY MNEMONIC PHRASE(S) AND CORRESPONDING PASSWORD(S), USER ACKNOWLEDGES \
-AND AGREES THAT ANY ADA OR ANY OTHER CRYPTOCURRENCIES USER HAS ASSOCIATED WITH \
-THAT CRYPTOCURRENCY WALLET WILL BECOME INACCESSIBLE. All transaction requests \
-are irreversible. The Company and its shareholders, directors, officers, \
-employees, affiliates and agents cannot guarantee transaction confirmation or \
-retrieve User's private keys or passwords if User loses or forgets them.",
+    'Программа функционирует как бесплатный, открытый исходный код, электронный криптовалютный \
+кошелек. Программа не является аккаунтом, с помощью которого Компания или \
+другие третьи стороны выступают в качестве финансовых посредников или хранителей \
+ADA пользователя или любой другой криптовалюты. Пока Программа проходит бета-тестирование \
+и продолжает совершенствоваться путем обратной связи с разработчиками \
+общества, вкладчиками и бета-тестировщиками, Компания не может \
+гарантировать, что не возникнет никаких ошибок в Программе. Пользователь понимает, что \
+использует Программу на свой страх и риск, осмотрительно и соблюдая все \
+применимые законы. Пользователь несет ответственность за сохранность своих \
+паролей, PIN-кодов, личных ключей, ключей выкупа, ICO-ключей (shielded vending keys), синхронизации \
+восстановительной мнемонической фразы, паролей ADA и любых других кодов, которые Пользователь использует для \
+доступа к Программе или любой другой информации, к ADA, ваучеру или другим криптовалютным \
+единицам. ЕСЛИ ПОЛЬЗОВАТЕЛЬ ТЕРЯЕТ ДОСТУП К СВОЕМУ КОШЕЛЬКУ ИЛИ ЛИЧНЫМ КЛЮЧАМ И \
+И НЕ ИМЕЕТ ОТДЕЛЬНО СОХРАНЕННОЙ РЕЗЕРВНОЙ КОПИИ СВОЕГО КРИПТОКОШЕЛЬКА ИЛИ РЕЗЕРВНОЙ КОПИИ \
+ВОССТАНОВИТЕЛЬНОЙ МНЕМОНИЧЕСКОЙ ФРАЗЫ И СООТВЕТСТВУЮЩЕГО ПАРОЛЯ(ЛЕЙ), ПОЛЬЗОВАТЕЛЬ ПРИЗНАЕТ \
+И СОГЛАШАЕТСЯ С ТЕМ, ЧТО ЛЮБАЯ ADA ИЛИ ЛЮБЫЕ ДРУГИЕ КРИПТОВАЛЮТЫ ПОЛЬЗОВАТЕЛЯ, СВЯЗАННЫЕ С \
+ТЕМ КРИПТОКОШЕЛЬКОМ СТАНУТ НЕДОСТУПНЫ. Все запросы о проведении транзакций \
+являются необратимыми. Компания и её акционеры, директора, должностные лица, \
+сотрудники, партнеры и агенты не могут гарантировать подтверждение транзакции или \
+или восстановление личных ключей Пользователя или паролей, если он их потеряет или забудет.',
   ),
   listItem(
-    'b. Accessibility. ',
-    'User agrees that from time to time the Software may be inaccessible or \
-inoperable for any reason, including, without limitation: (i) equipment \
-malfunctions; (ii) periodic maintenance procedures or repairs which the \
-Company may undertake from time to time; or (iii) causes beyond the control of \
-the Company or which are not reasonably foreseeable by the Company.',
+    'b. Доступность. ',
+    'Пользователь согласен с тем, что время от времени Программа может быть недоступной или \
+не функционировать по какой-либо причине, включая, но не ограничиваясь: (i) неисправность \
+оборудования; (ii) периодические процедуры технического обслуживания или ремонтные работы, которые \
+Компания может проводить время от времени; или (iii) случаи, которые не зависят от \
+Компании или которые не в состоянии быть предвидены Компанией.',
   ),
   listItem(
-    'c. Equipment. ',
-    "User shall be solely responsible for providing, maintaining and \
-ensuring compatibility with the Software, all hardware, software, electrical \
-and other physical requirements for User's use of the Software, including, \
-without limitation, telecommunications and internet access connections and \
-links, web browsers or other equipment, programs and services required to \
-access and use the Software.",
+    'c. Оборудование. ',
+    'Пользователь несет полную ответственность за предоставление, поддержание и \
+обеспечение совместимости с Программой, всем оборудованием, программным обеспечением, электрическими \
+и другими физическими требованиями для использования Пользователем Программы, включая, \
+без ограничений, телекоммуникации и соединения с доступом в Интернет и \
+ссылки, веб браузеры или другое оборудование, программы и сервисы, необходимые \
+для доступа и использования Программы.',
   ),
   listItem(
-    'd. Security. ',
-    "User shall be solely responsible for the security, confidentiality \
-and integrity of all information and content that User receives, transmits \
-through or stores on the Software. User shall be solely responsible for any \
-authorized or unauthorized access to any account of User by any person. User \
-agrees to bear all responsibility for the confidentiality of User's security \
-devices, information, keys, and passwords.",
+    'd. Безопасность. ',
+    'Пользователь несет полную ответственность за безопасность, конфиденциальность \
+и целостность всей информации и содержания, которые Пользователь получает, передает \
+или сохраняет в Программе. Пользователь несет полную ответственность за любой \
+разрешенный или несанкционированный доступ к любому аккаунту Пользователя любым лицом. Пользователь \
+подтверждает свое согласие нести полную ответственность за конфиденциальность устройств безопасности, \
+информации, ключей и паролей Пользователя.',
   ),
   listItem(
-    'e. Privacy. ',
-    "When reasonably practicable, the Company will attempt to respect \
-User's privacy. The Company will not monitor, edit, or disclose any personal \
-information about User or User's account, including its contents or User's use \
-of the Software, without User's prior consent unless the Company believes in \
-good faith that such action is necessary to: (i) comply with legal process or \
-other legal requirements of any governmental authority; (ii) protect and \
-defend the rights or property of the Company; (iii) enforce this Agreement; \
-(iv) protect the interests of users of the Software other than User or any \
-other person; or (v) operate or conduct maintenance and repair of the \
-Company's services or equipment, including the Software as authorized by law. \
-User has no expectation of privacy with respect to the Internet generally. \
-User's IP address is transmitted and recorded with each message or other \
-information User sends from the Software.",
+    'e. Конфиденциальность. ',
+    'Когда это практически осуществимо, Компания будет стремится соблюдать \
+конфиденциальность Пользователя. Компания не будет отслеживать, редактировать или разглашать какую-либо личную \
+информацию о Пользователе и его аккаунте, включая его содержимое или использование Пользователем \
+Программы без предварительного согласия Пользователя за исключением случаев, когда Компания искренне полагает, что \
+данные действия необходимы для: (i) соблюдения юридического (судебного) процесса или \
+другого правового требования любого правительственного органа; (ii) охраны и \
+защиты прав и имущества Компании (iii) обеспечения соблюдения данного Соглашения; \
+(iv) защиты интересов пользователей Программы помимо Пользователя или любого \
+другого лица; или (v) для функционирования или проведения технического обслуживания и ремонта \
+услуг Компании или оборудования, включая Программу в соответствии с законодательством. \
+Пользователь не рассчитывает на конфиденциальность в отношении Интернета в целом. \
+Пользовательский IP адрес передается и записывается с каждым сообщением или другой \
+информацией, которую Пользователь отправляет из Программы.',
   ),
-  heading('2. Taxes and Fees'),
+  heading('2. Налоги и сборы'),
   paragraph(
-    "All currency conversion charges, third party fees, sales, use, \
-value-added, personal property or other tax, duty or levy of any kind, \
-including interest and penalties thereon, whether imposed now or hereinafter \
-by any governmental entity, and fees incurred by User by reason of User's \
-access, use or installation of the Software shall be the sole responsibility \
-of User.",
+    'Все комиссии за конвертацию валюты, сборы третьих сторон, продажи, использование, \
+добавленную стоимость, личную собственность или другие налоги, пошлины или сборы какого-либо вида, \
+включая проценты и штрафы по ним, будь то введенные в настоящее время или в дальнейшем \
+любым правительственным органом, а также сборы, понесенные Пользователем по причине доступа \
+Пользователя, использования или установки Программы является исключительно ответственностью \
+Пользователя.',
   ),
-  heading('3. User Representations'),
+  heading('3. Пользовательские заявления'),
   paragraph(
-    "User represents and warrants to the Company that: (a) if User is a \
-natural person, User is over the age of eighteen (18); (b) User has the power \
-and authority to enter into and perform User's obligations under this \
-Agreement; (c) all information provided by User to the Company is truthful, \
-accurate and complete; (d) User will comply with all laws and regulations of \
-any applicable jurisdiction with regard to User's access, use or installation \
-of the Software; (e) User shall comply with all terms and conditions of this \
-Agreement, including, without limitation, the provisions set forth at Section \
-4; and (f) User has provided and will provide accurate and complete \
-information as required for access, use or installation of the Software.",
+    'Пользователь заявляет и гарантирует Компании, что: (a) Пользователь является \
+физическим лицом и что Пользователь в возрасте от восемнадцати лет(18); (b) Пользователь имеет права \
+и полномочия для заключения и выполнения обязательств Пользователя в соответствии с данным \
+Соглашением; (с) вся информация, предоставленная для Компании Пользователем, является достоверной, \
+очной и полной; (d) Пользователь обязуется соблюдать все законы и правила \
+любой применимой юрисдикции в отношении доступа Пользователя, использования или установки \
+Программы; (e) Пользователь должен соблюдать все условия и правила настоящего \
+Соглашения, включая, без ограничений, положения, изложенные в Разделе \
+4; и (f) Пользователь предоставил и будет предоставлять точную и полную \
+информацию, необходимую для доступа, использования или установки Программы.',
   ),
-  heading('4. Prohibited Uses'),
+  heading('4. Запрещенные виды использования'),
   paragraph(
-    "User is solely responsible for any and all acts and omissions that \
-occur under User's account, security information, keys or password, and User \
-agrees not to engage in unacceptable use of the Software, which includes, \
-without limitation, use of the Software to: (a) disseminate, store or transmit \
-unsolicited messages, chain letters or unsolicited commercial email; (b) \
-disseminate or transmit material that, to a reasonable person may be abusive, \
-obscene, pornographic, defamatory, harassing, grossly offensive, vulgar, \
-threatening or malicious; (c) disseminate, store or transmit files, graphics, \
-software or other material that actually or potentially infringes the \
-copyright, trademark, patent, trade secret or other intellectual property \
-right of any person; (d) create a false identity or to otherwise attempt to \
-mislead any person as to the identity or origin of any communication; (e) \
-export, re-export or permit downloading of any message or content in \
-violation of any export or import law, regulation or restriction of any \
-applicable jurisdiction, or without all required approvals, licenses or \
-exemptions; (f) interfere, disrupt or attempt to gain unauthorized access \
-to other accounts on the Software or any other computer network; or (g) \
-disseminate, store or transmit viruses, Trojan horses or any other \
-malicious code or program.",
+    'Пользователь несет всю ответственность за любые действия и упущения, \
+происходящие в аккаунте Пользователя, информации в области безопасности, ключей или паролей, а также, Пользователь \
+соглашается не участвовать в неприемлемом использовании Программы, включая, \
+но не ограничиваясь, использованием Программы для: (a) распространения, хранения и передачи \
+незапрашиваемых сообщений, цепочки писем или нежелательных коммерческих сообщений; (b) \
+распространения или передачи материалов, которые разумному человеку могут быть оскорбительными, \
+непристойными, порнографическими, порочащими, притесняющими, глубоко оскорбительными, вульгарными, \
+угрожающими или злонамеренными; (c) распространения, хранения или передачи файлов, графических объектов, \
+программного обеспечения или других материалов, которые фактически или потенциально нарушают \
+авторское право, товарный знак, патент, коммерческую тайну или другое право интеллектуальной \
+собственности любого лица; (d) создания ложной личности или иной попытки \
+введения в заблуждение любого лица в отношении личности или происхождения какого-либо сообщения; (e) \
+экспорта, реэкспорта или разрешения загрузки любых сообщений или контента, \
+нарушающих любой закон об экспорте и импорте, регулировании или ограничении любой \
+применимой юрисдикции или без всех необходимых разрешений, лицензий или \
+изъятий; (f) вмешательства, нарушения или попытки получения несанкционированного доступа \
+к другим аккаунтам в Программе или любой другой компьютерной сети; или (g) \
+распространения, хранения или передачи вирусов, “Троянских коней” и любых других \
+вредоносных кодов или программ.',
   ),
-  heading('5. Termination'),
+  heading('5. Расторжение'),
   paragraph(
-    "This Agreement is effective upon User's acceptance as set forth \
-herein and shall continue in full force so long as User engages in any access, \
-use or installation of the Software. The Company reserves the right, in its \
-sole discretion and without notice, at any time and for any reason, to: (a) \
-remove or disable access to all or any portion of the Software; (b) suspend \
-User's access to or use of all or any portion of the Software; and (c) \
-terminate this Agreement.",
+    'Настоящее Соглашение вступает в силу с момента его принятия Пользователем как указано в \
+настоящем документе, и будет продолжать действовать в полную силу до тех пор, пока Пользователь осуществляет доступ, \
+использование или установку Программы. Компания оставляет за собой право, по собственному \
+усмотрению и без предварительного уведомления в любое время и по любой причине: (a) \
+удалить или отключить доступ ко всем или любой части Программы; (b) приостановить \
+Доступ Пользователя или использование ко всем или любой части Программы; и (с) \
+расторгнуть (аннулировать) данное Соглашение.',
   ),
-  heading('6. Disclaimer of Warranties'),
+  heading('6. Освобождение от гарантий'),
   paragraph(
-    'THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS \
-OR IMPLIED. USE OF THE SOFTWARE IS AT USER\'S SOLE RISK. THE COMPANY DOES NOT \
-WARRANT THAT THE SOFTWARE WILL BE UNINTERRUPTED OR ERROR FREE, NOR DOES THE \
-COMPANY MAKE ANY WARRANTY AS TO ANY RESULTS THAT MAY BE OBTAINED BY USE OF THE \
-SOFTWARE. THE COMPANY MAKES NO OTHER WARRANTIES, EXPRESS OR IMPLIED. THE \
-COMPANY EXPRESSLY DISCLAIMS ANY WARRANTY OF MERCHANTABILITY, WARRANTY OF \
-SUITABILITY FOR A PARTICULAR PURPOSE, WARRANTY OF TITLE OR INTEREST, OR \
-WARRANTY OF NONINFRINGEMENT.',
+    'ПРОГРАММА ПРЕДОСТАВЛЯЕТСЯ “КАК ЕСТЬ”, БЕЗ КАКИХ-ЛИБО ГАРАНТИЙ, ЯВНО ВЫРАЖЕННЫХ \
+ИЛИ ПОДРАЗУМЕВАЕМЫХ. ПОЛЬЗОВАТЕЛЬ ИСПОЛЬЗУЕТ ПРОГРАММУ НА СВОЙСТРАХ И РИСК. КОМПАНИЯ НЕ \
+ГАРАНТИРУЕТ, ЧТО ПРОГРАММА БУДЕТ РАБОТАТЬ БЕСПЕРЕБОЙНО И БЕЗ ОШИБОК, ТАКЖЕ \
+КОМПАНИЯ НЕ ДАЕТ НИКАКИХ ГАРАНТИЙ В ОТНОШЕНИИ ЛЮБЫХ РЕЗУЛЬТАТОВ, КОТОРЫЕ МОГУТ БЫТЬ ПОЛУЧЕНЫ ПРИ ИСПОЛЬЗОВАНИИ \
+ПРОГРАММЫ. КОМПАНИЯ НЕ ДАЕТ НИКАКИХ ДРУГИХ ГАРАНТИЙ, ЯВНО ВЫРАЖЕННЫХ ИЛИ ПОДРАЗУМЕВАЕМЫХ. КОМПАНИЯ \
+ОТКРЫТО ОТКАЗЫВАЕТСЯ ОТ КАКОЙ-ЛИБО ГАРАНТИИ ПРИГОДНОСТИ ТОВАРА, ГАРАНТИИ \
+ПРИГОДНОСТИ ДЛЯ КОНКРЕТНОЙ ЦЕЛИ, ГАРАНТИИ ПРАВА СОБСТВЕННОСТИ ИЛИ ИНТЕРЕСА, ИЛИ \
+ГАРАНТИИ НЕНАРУШЕНИЯ (НЕВМЕШАТЕЛЬСТВА).',
   ),
-  heading('7. Limitation of Liability'),
+  heading('7. Ограничение ответственности'),
   paragraph(
-    "IN NO EVENT SHALL THE COMPANY OR ITS SHAREHOLDERS, DIRECTORS, OFFICERS, \
-EMPLOYEES, AFFILIATES OR AGENTS, OR ANY OF ITS OR THEIR RESPECTIVE SERVICE \
-PROVIDERS, BE LIABLE TO USER OR ANY THIRD PARTY FOR ANY USE, INTERRUPTION, \
-DELAY OR INABILITY TO USE THE SOFTWARE, LOST REVENUES OR PROFITS, DELAYS, \
-INTERRUPTION OR LOSS OF SERVICES, BUSINESS OR GOODWILL, LOSS OR CORRUPTION OF \
-DATA, LOSS RESULTING FROM SYSTEM OR SYSTEM SERVICE FAILURE, MALFUNCTION OR \
-SHUTDOWN, FAILURE TO ACCURATELY TRANSFER, READ OR TRANSMIT INFORMATION, \
-FAILURE TO UPDATE OR PROVIDE CORRECT INFORMATION, SYSTEM INCOMPATIBILITY OR \
-PROVISION OF INCORRECT COMPATIBILITY INFORMATION OR BREACHES IN SYSTEM \
-SECURITY, OR FOR ANY CONSEQUENTIAL, INCIDENTAL, INDIRECT, EXEMPLARY, SPECIAL \
-OR PUNITIVE DAMAGES, WHETHER ARISING OUT OF OR IN CONNECTION WITH THIS \
-AGREEMENT, BREACH OF CONTRACT, TORT (INCLUDING NEGLIGENCE) OR OTHERWISE, \
-REGARDLESS OF WHETHER SUCH DAMAGES WERE FORESEEABLE AND WHETHER OR NOT WE \
-WERE ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. IN NO EVENT SHALL THE COMPANY \
-OR ITS SHAREHOLDERS, DIRECTORS, OFFICERS, EMPLOYEES, AFFILIATES OR AGENTS, OR \
-ANY OF ITS OR THEIR RESPECTIVE SERVICE PROVIDERS, BE LIABLE FOR ANY CLAIM, \
-DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR \
-OTHERWISE, ARISING FROM OR IN ANY WAY RELATED TO USER'S ACCESS, USE OR \
-INSTALLATION OF THE SOFTWARE. SOME JURISDICTIONS PROHIBIT THE EXCLUSION OR \
-LIMITATION OF INCIDENTAL OR CONSEQUENTIAL DAMAGES, THUS THIS LIMITATION OF \
-LIABILITY MAY NOT APPLY TO USER. IF USER IS DISSATISFIED WITH THE SOFTWARE, \
-USER'S SOLE AND EXCLUSIVE REMEDY SHALL BE FOR USER TO DISCONTINUE USE OF THE \
-SOFTWARE.",
+    'КОМПАНИЯ ИЛИ ЕЕ АКЦИОНЕРЫ, ДИРЕКТОРА, ДОЛЖНОСТНЫЕ ЛИЦА, \
+СОТРУДНИКИ, ПАРТНЕРЫ ЛИБО АГЕНТЫ, КТО-ТО ИЗ ЕЕ ИЛИ ИХ СООТВЕТСТВУЮЩИХ ПОСТАВЩИКОВ \
+УСЛУГ НИ ПРИ КАКИХ ОБСТОЯТЕЛЬСТВАХ НЕ МОГУТ НЕСТИ ОТВЕТСТВЕННОСТЬ ПЕРЕД ПОЛЬЗОВАТЕЛЕМ ИЛИ ЛЮБОЙ ТРЕТЬЕЙ СТОРОНОЙ ЗА ИСПОЛЬЗОВАНИЕ, ПРЕРЫВАНИЕ, \
+ЗАДЕРЖКУ ИЛИ НЕВОЗМОЖНОСТЬ ИСПОЛЬЗОВАНИЯ ПРОГРАММЫ, ПОТЕРИ ДОХОДОВ ИЛИ ПРИБЫЛИ, ЗАДЕРЖКУ, \
+ПРЕРЫВАНИЕ ИЛИ ПОТЕРЮ ПРЕДОСТАВЛЯЕМЫХ УСЛУГ, БИЗНЕС ИЛИ ГУДВИЛЛ (GOODWILL), ПОТЕРЮ ИЛИ ПОВРЕЖДЕНИЕ \
+ДАННЫХ, ПОТЕРЮ В РЕЗУЛЬТАТЕ РАБОТЫ СИСТЕМЫ ИЛИ \
+СБОЙ ПРИ ОБСЛУЖИВАНИИ СИСТЕМЫ, НЕИСПРАВНОСТЬ ИЛИ ВЫКЛЮЧЕНИЕ, СБОЙ ТОЧНОЙ ПЕРЕДАЧИ, ЧТЕНИЯ ИЛИ ОТПРАВКУ ИНФОРМАЦИИ, \
+СБОЙ ПРИ ОБНОВЛЕНИИ ИЛИ ПРЕДОСТАВЛЕНИИ КОРРЕКТНОЙ ИНФОРМАЦИИ, НЕСОВМЕСТИМОСТЬ СИСТЕМЫ ИЛИ \
+ПРЕДОСТАВЛЕНИЕ НЕПРАВИЛЬНОЙ ИНФОРМАЦИИ СОВМЕСТИМОСТИ ИЛИ НАРУШЕНИЯ В СИСТЕМЕ \
+БЕЗОПАСНОСТИ, ИЛИ ЗА ЛЮБЫЕ КОСВЕННЫЕ, СЛУЧАЙНЫЕ, НЕПРЯМЫЕ, ТИПИЧНЫЕ, ОСОБЫЕ \
+ИЛИ ШТРАФНЫЕ УБЫТКИ, ВОЗНИКАЮЩИЕ ИЛИ СВЯЗАННЫЕ С НАСТОЯЩИМ \
+СОГЛАШЕНИЕМ, НАРУШЕНИЕ СОГЛАШЕНИЯ, ПРАВОНАРУШЕНИЕ (ВКЛЮЧАЯ НЕБРЕЖНОСТЬ) ИЛИ ИНОЕ, \
+ЕЗАВИСИМО ОТ ТАКИХ УБЫТКОВ, КОТОРЫЕ БЫЛИ ПРЕДСКАЗУЕМЫ И БЫЛИ ЛИ МЫ \
+УВЕДОМЛЕНЫ О ВОЗМОЖНОСТИ ТАКИХ УБЫТКОВ. КОМПАНИЯ ИЛИ ЕЕ \
+АКЦИОНЕРЫ, ДИРЕКТОРА, ДОЛЖНОСТНЫЕ ЛИЦА, СОТРУДНИКИ, ПАРТНЕРЫ ЛИБО АГЕНТЫ, КТО-ТО \
+ИЗ ЕЁ ИЛИ ИХ СООТВЕТСТВУЮЩИХ ПОСТАВЩИКОВ УСЛУГ НИ ПРИ КАКИХ ОБСТОЯТЕЛЬСТВАХ \
+НЕ МОГУТ НЕСТИ ОТВЕТСТВЕННОСТЬ ЗА ЛЮБОЕ ТРЕБОВАНИЕ, ПОВРЕЖДЕНИЯ ИЛИ \
+ДРУГУЮ ОТВЕТСТВЕННОСТЬ, БУДЬ ТО В ДЕЙСТВИИ СОГЛАШЕНИЯ, ПРАВОНАРУШЕНИИ ИЛИ ИНОМ, ОБРАЗОВАННЫМ ИЛИ КАКИМ-ЛИБО ОБРАЗОМ СВЯЗАННЫМ С ДОСТУПОМ ПОЛЬЗОВАТЕЛЯ, \
+ИСПОЛЬЗОВАНИЕМ ИЛИ УСТАНОВКОЙ ПРОГРАММЫ. НЕКОТОРЫЕ ЗАКОНЫ ЗАПРЕЩАЮТ ИСКЛЮЧЕНИЕ ИЛИ \
+ОГРАНИЧЕНИЕ СЛУЧАЙНЫХ ИЛИ ПОСЛЕДУЮЩИХ УБЫТКОВ, ТАКИМ ОБРАЗОМ ДАННОЕ ОГРАНИЧЕНИЕ \
+ОТВЕТСТВЕННОСТИ МОЖЕТ БЫТЬ НЕ ПРИМЕНИМО К ПОЛЬЗОВАТЕЛЮ. ЕСЛИ ПОЛЬЗОВАТЕЛЬ НЕ УДОВЛЕТВОРЕН ПРОГРАММОЙ, \
+ЕДИНСТВЕННЫМ И ИСКЛЮЧИТЕЛЬНЫМ СРЕДСТВОМ В РАСПОРЯЖЕНИИ ПОЛЬЗОВАТЕЛЯ ЯВЛЯЕТСЯ ОТКАЗ ОТ ИСПОЛЬЗОВАНИЯ \
+ПРОГРАММЫ.',
   ),
-  heading('8. Indemnification'),
+  heading('8. Возмещение ущерба'),
   paragraph(
-    'User agrees to indemnify, hold harmless and defend the Company, its \
-shareholders, directors, officers, employees, affiliates and agents \
-("Indemnified Parties") from and against any action, cause, claim, damage, \
-debt, demand or liability, including reasonable costs and attorney\'s fees, \
-asserted by any person, arising out of or relating to: (a) this Agreement; \
-(b) User\'s access, use or installation of the Software, including any data \
-or work transmitted or received by User; and (c) any unacceptable use of the \
-Software by any person, including, without limitation, any statement, data or \
-content made, transmitted or republished by User or any person which is \
-prohibited as unacceptable under Section 4. THIS INDEMNIFICATION INCLUDES THE \
-EXPRESS INDEMNIFICATION OF THE COMPANY AND ALL INDEMNIFIED PARTIES FOR ANY \
-ALLEGED NEGLIGENCE (INCLUDING ANY ALLEGED GROSS NEGLIGENCE). OR OTHER ALLEGED \
-MISCONDUCT OF THE COMPANY OR ANY INDEMNIFIED PARTIES.',
+    'Пользователь согласен возместить ущерб, освободить и защитить Компанию, её \
+акционеров, директоров, должностных лиц, сотрудников, партнеров и агентов \
+(“Стороны, которым возмещают ущерб”) от и против любого действия, приводящего к претензиям, ущербу, \
+задолженности, требованиям и ответственности, включая разумные расходы и расходы на услуги адвоката, \
+заявленные любым лицом, возникающие из или связанные с: (a) настоящим Соглашением; \
+(b) доступом Пользователя, использования или установки Программы, включая любые данные \
+или работу, переданные или полученные Пользователем; и (c) любое неприемлемое использование \
+Программы любым лицом, включая, но не ограничиваясь, любое заявление, данные или \
+контент, сделанные, переданные или переизданные Пользователем или любым лицом, которые \
+запрещены как неприемлемые в соответствии с разделом 4. ДАННОЕ ВОЗМЕЩЕНИЕ УЩЕРБА ВКЛЮЧАЕТ \
+ЧЕТКО ВЫРАЖЕННУЮ КОМПЕНСАЦИЮ КОМПАНИИ И ВСЕХ СТОРОН, КОТОРЫМ ВОЗМЕЩАЮТ УЩЕРБ ЗА ЛЮБУЮ, \
+ПРЕДПОЛАГАЕМУЮ НЕБРЕЖНОСТЬ (ВКЛЮЧАЯ ЛЮБУЮ, ПРЕДПОЛАГАЕМУЮ ГРУБУЮ ХАЛАТНОСТЬ). ИЛИ ДРУГИЕ ПРЕДПОЛАГАЕМЫЕ \
+ПРОСТУПКИ КОМПАНИИ ИЛИ ЛЮБОЙ СТОРОНЫ, КОТОРОЙ ВОЗМЕЩАЮТ УЩЕРБ.',
   ),
-  heading('9. Intellectual Property'),
+  heading('9. Интеллектуальная собственность'),
   paragraph(
-    "The Company retains all right, title, and interest in and to all of the \
-Company's brands, logos, and trademarks, including, but not limited to, EMURGO \
-Co., Ltd., EMURGO, Yoroi, Yoroi Cryptocurrency Wallet, Yoroi Wallet, Yoroi \
-App, and variations of the wording of the aforementioned brands, logos, and \
-trademarks.",
+    'Компания сохраняет за собой все права, названия и интересы в и на всех \
+брендах Компании, логотипах и товарных знаках, включая, но не ограничиваясь, EMURGO \
+Co., Ltd., EMURGO, Yoroi, Криптовалютный кошелек Yoroi (Yoroi Cryptocurrency Wallet), кошелек Yoroi (Yoroi Wallet), Приложение Yoroi \
+(Yoroi App) и все вариации формулировок вышеупомянутых брендов, логотипов и \
+торговых знаков.',
   ),
-  heading('10. Warnings'),
+  heading('10. Предупреждения'),
   paragraph(
-    "User acknowledges that the Company shall not be responsible for \
-transferring, safeguarding, or maintaining private keys and/or User's ADA or \
-any other cryptocurrency. If User and/or any co-signing authorities lose, \
-mishandle, or have stolen associated private keys, or if User's cosigners \
-refuse to provide requisite authority, User acknowledges that User may not be \
-able to recover User's ADA or any other cryptocurrency, and that the Company \
-shall not be responsible for such loss.",
-  ),
-  paragraph(
-    'User acknowledges and agrees that ADA or any other cryptocurrency \
-transactions facilitated by the Software and/or the Company may be delayed, \
-and that the Company shall not be responsible for any associated loss. User \
-acknowledges and agrees that the Company shall not be responsible for any \
-aspect of the information, content, or services contained in any third-party \
-materials or on any third party sites accessible or linked to the Software \
-and/or the Company.',
+    'Пользователь понимает, что Компания не несет ответственности за \
+передачу, сохранность или хранение личных ключей и/или ADA Пользователя или \
+любой другой криптовалюты. Если Пользователь и/или кто-либо, обладающий полномочиями, потеряет, \
+допустит неправильное действие или украдет соответствующие частные ключи или если поручители Пользователя \
+откажутся предоставить необходимые полномочия, Пользователь понимает, что не сможет \
+восстановить ADA или любую другую криптовалюту и что Компания \
+не несет ответственности за такой ущерб.',
   ),
   paragraph(
-    "User agrees that User should never share User's certificate with any \
-natural or legal person, including the Company, Cardano Foundation, Input \
-Output HK Limited, or any other entity. Further, User acknowledges that \
-sharing User's certificate may result in loss of User's ADA or any other \
-cryptocurrency, and User agrees that the Company shall not be responsible for \
-such loss. User acknowledges and agrees that by redeeming ADA in the testnet, \
-User redeems test-ADA only, and that in order to redeem actual ADA, User must \
-repeat the procedure in the mainnet, once released.",
+    'Пользователь признает и соглашается с тем, что ADA или любые другие криптовалютные \
+транзакции при содействии Программы и/или Компании могут быть отложены или задерживаться, \
+и что Компания не несет ответственности за любые, связанные с этим потери. Пользователь \
+признает и соглашается с тем, что Компания не несет ответственности за любой \
+аспект информации, контента или услуг, содержащиеся в любых материалах \
+третьих сторон или на каких-либо сайтах третьих сторон, доступных или связанных с Программой \
+и/или Компанией.',
   ),
   paragraph(
-    'By using the Software, User acknowledges and agrees: (i) that the \
-Company is not responsible for the operation of the underlying protocols and \
-that the Company makes no guarantee of their functionality, security, or \
-availability; and (ii) that the underlying protocols are subject to sudden \
-main-chain changes in operating rules ("forks"), and that such forks may \
-materially affect the value, and/or function of the ADA or any other \
-cryptocurrency that User stores on the Software. In the event of a fork, \
-User agrees that the Company may temporarily suspend the Software operations \
-(with or without notice to User) and that the Company may, in its sole \
-discretion, (a) configure or reconfigure its systems or (b) decide not to \
-support (or cease supporting) the forked protocol entirely, provided, however, \
-that User will have an opportunity to withdraw funds from the Software. User \
-acknowledges and agrees that the Company assumes absolutely no responsibility \
-whatsoever in respect of an unsupported branch of a forked protocol.',
+    'Пользователь соглашается с тем, что Пользователь никогда не должен делиться своими сертификатами ни с одним \
+физическим или юридическим лицом, включая Компанию, Cardano Foundation, Input \
+Output HK Limited и любую другую организацию. Кроме того, Пользователь понимает, что \
+общий доступ к сертификатам может привести к потере ADA Пользователя или любой другой \
+криптовалюты, и Пользователь соглашается с тем, что Компания не несет ответственности за \
+такие потери. Пользователь признает и соглашается с тем, что, выкупив ADA в тестнете, \
+Пользователь выкупит только тестовую ADA и для того, чтобы выкупить реальную ADA, Пользователь должен \
+повторить процедуру на мейннете после её выпуска.',
   ),
-  heading('11. Miscellaneous'),
+  paragraph(
+    'При использовании Программы, Пользователь признает и соглашается: (i) что \
+Компания не несет ответственности за функционирование базовых протоколов и \
+что Компания не гарантирует их функциональность, безопасность или \
+доступность; и (ii) что основные протоколы подвержены внезапным \
+изменениям мейнчейна в правилах эксплуатации (“форки”), и что эти форки могут \
+существенно повлиять на стоимость и/или функционирование ADA или любой другой \
+криптовалюты, которую Пользователь хранит в Программе. В случае форка (fork), \
+Пользователь согласен с тем, что Компания может временно приостановить деятельность Программы \
+(с или без уведомления об этом Пользователя) и что Компания может по своему \
+усмотрению, (a) настроить или перенастроить (переконфигурировать) свои системы или (b) принять решение не \
+поддерживать (или прекратить поддержку) форкового протокола полностью, однако, \
+при условии, что Пользователь будет иметь возможность выводить средства с Программы. Пользователь \
+признает и соглашается с тем, что Компания не несет абсолютно никакой ответственности \
+в отношении неподдерживаемого бранча форкового протокола.',
+  ),
+  heading('11. Разное'),
   listItem(
-    'a. Amendment. ',
-    "The Company shall have the right, at any time and without notice, to \
-add to or modify the terms of this Agreement, simply by delivering such \
-amended terms to User by electronic message through any medium to any address \
-provided to the Company by User. User's access to or use of the Software after \
-the date such amended terms are delivered to User shall be deemed to \
-constitute acceptance of such amended terms.",
-  ),
-  listItem(
-    'b. Severance. ',
-    'If any provision or part-provision of this Agreement is, or becomes \
-invalid, illegal or unenforceable, it shall be deemed modified to the minimum \
-extent necessary to make it valid, legal and enforceable. If such modification \
-is not possible, the relevant provision or part-provision shall be deemed \
-deleted. Any modification to or deletion of a provision or part-provision \
-under this Article shall not affect the validity and enforceability of the \
-rest of this Agreement.',
+    'a. Внесение поправок. ',
+    'Компания имеет право в любое время и без предупреждения, \
+добавлять или изменять условия данного Соглашения, просто доставляя данные \
+измененные условия Пользователю в виде электронного сообщения с помощью любого средства информации на любой адрес, \
+предоставленные Компании Пользователем. Доступ Пользователя к Программе или Её использование после \
+даты, когда измененные условия доставлены Пользователю, считаются \
+принятием данных измененных условий.',
   ),
   listItem(
-    'c. Entire Agreement – Disclaimer of Reliance. ',
-    'This Agreement constitutes the entire agreement between the Parties \
-with respect to the subject matter hereof and supersedes all prior agreements \
-or understandings between the Parties. User expressly represents and warrants \
-that it is not relying upon any statements, understandings, representations, \
-expectations or agreements other than those expressly set forth in this \
-Agreement.',
+    'b. Разрыв соглашения. ',
+    'Если какое-либо положение или часть положений настоящего Соглашения есть или становится \
+недействительными, нелегальными или неосуществимыми, они считаются модифицированными в той мере, в которой это минимально \
+необходимо, чтобы сделать его действительным, легальным и осуществимым. Если такая модификация \
+невозможна, соответствующее положение или части положения считаются \
+удаленными. Любая модификация или удаление положения или части положений согласно \
+настоящей Статьи не затрагивает законность и правомочность остальных \
+частей положений настоящего Соглашения.',
   ),
   listItem(
-    'd. THIS AGREEMENT IS SUBJECT TO BINDING ARBITRATION. ',
-    'User agrees that any and all disputes or claims against any person \
-arising out of or in any way related to this Agreement or the access, use or \
-installation of the Software by User or any other person shall be subject to \
-binding arbitration under the Rules of Arbitration of the International \
-Chamber of Commerce by one or more arbitrators appointed in accordance with \
-the said Rules. The location of the arbitration shall be Japan. The language \
-of the arbitration shall be English.',
+    'c. Полное Соглашение – Отказ от доверия. ',
+    'Настоящее Соглашение представляет собой полное соглашение между Сторонами \
+в отношении предмета настоящего Соглашения и заменяет все предыдущие соглашения \
+или договоренности между сторонами. Пользователь четко заявляет и подтверждает, \
+что он не полагается ни на какие заявления, договоренности, представления, \
+ожидания или соглашения, отличные от тех, которые четко указаны в настоящем \
+Соглашении.',
   ),
   listItem(
-    'e. LANGUAGE. ',
-    'Any translation of this Agreement is made for purposes of local \
-reference only and in the event of any inconsistency between the English \
-and any non-English versions, the English version of this Agreement shall \
-prevail and govern in all respects.',
+    'd. НАСТОЯЩЕЕ СОГЛАШЕНИЕ ПОДЛЕЖИТ ОБЯЗАТЕЛЬНОМУ АРБИТРАЖУ. ',
+    'Пользователь согласен, что любые и все споры и претензии в отношении любого лица, \
+возникшие или каким-либо образом связанные с настоящим Соглашением или доступом, использованием или \
+установкой Программы Пользователем или любым другим лицом подлежат \
+обязательному арбитражному разбирательству в соответствии с Правилами Арбитражного регламента Международной \
+Торговой палаты одним или несколькими судьями, назначенными в соответствии с \
+этими Правилами. Местом проведения арбитража является Япония. Язык \
+арбитража - английский.',
+  ),
+  listItem(
+    'e. Язык. ',
+    'Любой перевод настоящего Соглашения предназначен только в целях местных \
+ссылок, и в случае возникновения каких-либо несоответствий между английской \
+любыми не английскими версиями, английская версия настоящего Соглашения имеет \
+преимущественную силу во всех отношениях.',
   ),
 ]

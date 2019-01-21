@@ -18,8 +18,8 @@ export const termsOfService = [
   heading('1. 権利および義務'),
   listItem(
     'a. 種類 ',
-    "本ソフトウェアは、無償のオープンソースの仮想通貨ウォレットとして機能します。\
-　 本ソフトウェアは、当社またはその他の第三者がユーザーのADAその他の仮想通貨に関する\
+    '本ソフトウェアは、無償のオープンソースの仮想通貨ウォレットとして機能します。\
+本ソフトウェアは、当社またはその他の第三者がユーザーのADAその他の仮想通貨に関する\
 金融仲介業者または管理業者となるアカウントを\
 構成するものではありません。 本ソフトウェアはベータ・テストを受けており、\
 デベロッパーコミュニティ、オープンソースコントリビューターおよびベータテスターからの\
@@ -29,15 +29,16 @@ export const termsOfService = [
 適用されるすべての法律に従うことを承知しています。 ユーザーは、本ソフトウェアまたは何らかの情報、\
 ADA、バウチャーその他の仮想通貨ユニットにアクセスするために \
 ユーザーが利用するユーザーのパスワード、個人識別番号（PIN）、プライベートキー、\
-還元キー、保護されたベンディングキー（shielded Vending Key）、バックアップリカバリー・ニーモニックパスフレーズ（backup recovery mnemonic passphrases）、ADAパスコードおよびその他のコードを保管する責任を負い \
+還元キー、保護されたベンディングキー（shielded Vending Key）、バックアップリカバリー・ニーモニック \
+パスフレーズ（backup recovery mnemonic passphrases）、ADAパスコードおよびその他のコードを保管する責任を負い \
 ます。 ユーザーがユーザーの仮想通貨ウォレットまたはプライベートキーへのアクセスを失ったものの、\
 ユーザーの仮想通貨ウォレットまたはバックアップリカバリー・ニーモニックフレーズおよび対応する \
-パスワードのバックアップを別途保存していなかった場合には、ユーザーは、\、
+パスワードのバックアップを別途保存していなかった場合には、ユーザーは、\
 ユーザーが当該仮想通貨ウォレットに関連づけていたADAその他の仮想通貨に\
 アクセスできなくなることを承知しており、これに同意します。 なお、いずれの取引要求も \
 撤回できません。 当社ならびにその株主、取締役、役員、従業員、\
 関連会社および代理人は、取引確認を保証することができず、\
-ユーザーがユーザーのプライベートキーまたはパスワードを紛失または失念した場合であってもそれらを取り戻すことができません。",
+ユーザーがユーザーのプライベートキーまたはパスワードを紛失または失念した場合であってもそれらを取り戻すことができません。',
   ),
   listItem(
     'b. アクセシビリティ ',
@@ -49,25 +50,25 @@ ADA、バウチャーその他の仮想通貨ユニットにアクセスする�
   ),
   listItem(
     'c. 機器 ',
-    "ユーザーは、ユーザーが本ソフトウェアを利用するためのすべてのハードウェア、ソフトウェア、\
+    'ユーザーは、ユーザーが本ソフトウェアを利用するためのすべてのハードウェア、ソフトウェア、\
 電気に関する要件その他の物理的要件（本ソフトウェアにアクセスし、本ソフトウェアを利用するために \
 必要な電気通信ならびにインターネットアクセス接続およびリンク、\
 ウェブブラウザその他の機器、プログラムおよびサービスを含みますが\
 これらに限られません。）を提供し、維持し、本ソフトウェアとの互換性を確保することについて\
-単独で責任を負うものとします。",
+単独で責任を負うものとします。',
   ),
   listItem(
     'd. セキュリティ ',
-    "ユーザーが本ソフトウェアを通じて送受信し、または本ソフトウェア上で保存する\
+    'ユーザーが本ソフトウェアを通じて送受信し、または本ソフトウェア上で保存する\
 すべての情報およびコンテンツのセキュリティ、機密性および完全性について\
 単独で責任を負うものとします。 ユーザーは、いずれかの者によるユーザーのアカウントへの \
 正規のアクセスまたは不正なアクセスについて単独で責任を負うものとします。 ユーザーは、\
 ユーザーのセキュリティデバイス、情報、キーおよびパスワードの機密性について \
-一切の責任を負うことに同意します。",
+一切の責任を負うことに同意します。',
   ),
   listItem(
     'e. プライバシー ',
-    "合理的に実施可能な場合には、当社は、ユーザーのプライバシーを\
+    '合理的に実施可能な場合には、当社は、ユーザーのプライバシーを\
 尊重するよう努めます。 当社は、ユーザーの事前の同意なくユーザーまたはユーザーのアカウント（その内容またはユーザーによる本ソフトウェアの利用を含みます。）\
 に関する個人情報を監視し、編集し、または開示しません\
 （但し、(i) 政府当局の法的手続またはその他の法的要件に従うために、\
@@ -79,21 +80,21 @@ ADA、バウチャーその他の仮想通貨ユニットにアクセスする�
 またはそれらのメンテナンスおよび修理を行うためにかかる行為が必要であると \
 当社が誠実に判断した場合については、この限りでありません。） \
 ユーザーのIPアドレスは、ユーザーが本ソフトウェアから送信する各メッセージ\
-またはその他の情報とともに送信され、記録されます。",
+またはその他の情報とともに送信され、記録されます。',
   ),
   heading('2. 税金および手数料'),
   paragraph(
-    "通貨両替手数料、第三者の手数料、売上税、使用税、付加価値税、動産税その他のあらゆる種類の税金、\
+    '通貨両替手数料、第三者の手数料、売上税、使用税、付加価値税、動産税その他のあらゆる種類の税金、\
 関税および賦課金（これらに係る利息および罰金を含みます。）\
 （政府機関により現在課せられているものか、または将来課せられるものかを問いません。）、\
 ならびにユーザーによる本ソフトウェアへのアクセス、本ソフトウェアの利用\
 または本ソフトウェアのインストールによりユーザーに生じる手数料は、\
-すべてユーザーが単独で負担するものとします。",
+すべてユーザーが単独で負担するものとします。',
   ),
   heading('3. ユーザーの表明'),
   paragraph(
-    "ユーザーは、当社に対し、(a) ユーザーが自然人である場合には、 \
-ユーザーが18歳を超えていること【Amt：18歳は含まれないことを念のためご確認ください。】、\
+    'ユーザーは、当社に対し、(a) ユーザーが自然人である場合には、 \
+ユーザーが18歳を超えていること、\
 (b) ユーザーは本規約を締結し、本規約に基づくユーザーの義務を履行する権限および権能を有していること、\
 (c) ユーザーが当社に提供する情報はすべて真実、正確かつ完全であること、\
 (d) ユーザーはユーザーによる本ソフトウェアへのアクセス、\
@@ -101,11 +102,11 @@ ADA、バウチャーその他の仮想通貨ユニットにアクセスする�
 (e) ユーザーは本規約のすべての条項（第４条に定める規定を含みますが、\
 これに限られません。）を遵守すること、\
 ならびに(f) ユーザーは本ソフトウェアへのアクセス、本ソフトウェアの利用または本ソフトウェアの\
-インストールに必要な正確かつ完全な情報を提供しており、今後も提供することを表明し、保証します。",
+インストールに必要な正確かつ完全な情報を提供しており、今後も提供することを表明し、保証します。',
   ),
   heading('4. 禁止される利用'),
   paragraph(
-    "ユーザーは、ユーザーのアカウント、セキュリティ情報、キーまたはパスワードにより生じる\
+    'ユーザーは、ユーザーのアカウント、セキュリティ情報、キーまたはパスワードにより生じる\
 すべての作為および不作為について単独で責任を負います。\
 また、ユーザーは、容認できない本ソフトウェアの利用（(a) 一方的なメッセージ、チェーンレター\
 または一方的な商業電子メールを拡散し、保存し、または送信すること、\
@@ -119,172 +120,176 @@ ADA、バウチャーその他の仮想通貨ユニットにアクセスする�
 またはその他の形でいずれかの者を誤解させようと試みること、\
 (e) 関係法域の輸出入関係法令もしくは規則に違反して、\
 または必要なすべての許認可もしくは免除を受けずにメッセージまたはコンテンツを輸出し、\
-applicable jurisdiction, or without all required approvals, licenses or \
-exemptions; (f) interfere, disrupt or attempt to gain unauthorized access \
-to other accounts on the Software or any other computer network; or (g) \
-disseminate, store or transmit viruses, Trojan horses or any other \
-malicious code or program.",
+再輸出し、またはそれらのダウンロードを許可すること、(f) 本ソフトウェアまたは\
+その他のコンピュータネットワーク上のその他のアカウントを妨害し、中断し、\
+またはかかるアカウントに不正にアクセスしようと試みること、または(g)\
+ウイルス、トロイの木馬その他の悪意のあるコードまたはプログラムを拡散し、保存し、または送信することを目的\
+とした本ソフトウェアの利用を含みますが、これらに限られません。）を行わないことに同意します。',
   ),
-  heading('5. Termination'),
+  heading('5. 解除'),
   paragraph(
-    "This Agreement is effective upon User's acceptance as set forth \
-herein and shall continue in full force so long as User engages in any access, \
-use or installation of the Software. The Company reserves the right, in its \
-sole discretion and without notice, at any time and for any reason, to: (a) \
-remove or disable access to all or any portion of the Software; (b) suspend \
-User's access to or use of all or any portion of the Software; and (c) \
-terminate this Agreement.",
+    '本規約は、本規約に規定するユーザーによる承認をもって発効し、\
+ユーザーが本ソフトウェアへのアクセス、本ソフトウェアの利用または\
+本ソフトウェアのインストールを行う間有効に存続するものとします。 当社は、自己の裁量で、通知なく、\
+いつでも理由の如何を問わず(a) 本ソフトウェアの全部\
+または一部へのアクセスを除外し、または無効とし、(b) ユーザーによる\
+本ソフトウェアの全部または一部へのアクセスまたはその利用を停止し、\
+(c) 本規約を解除する権利を有します。 ',
   ),
-  heading('6. Disclaimer of Warranties'),
+  heading('6. 保証の放棄'),
   paragraph(
-    'THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS \
-OR IMPLIED. USE OF THE SOFTWARE IS AT USER\'S SOLE RISK. THE COMPANY DOES NOT \
-WARRANT THAT THE SOFTWARE WILL BE UNINTERRUPTED OR ERROR FREE, NOR DOES THE \
-COMPANY MAKE ANY WARRANTY AS TO ANY RESULTS THAT MAY BE OBTAINED BY USE OF THE \
-SOFTWARE. THE COMPANY MAKES NO OTHER WARRANTIES, EXPRESS OR IMPLIED. THE \
-COMPANY EXPRESSLY DISCLAIMS ANY WARRANTY OF MERCHANTABILITY, WARRANTY OF \
-SUITABILITY FOR A PARTICULAR PURPOSE, WARRANTY OF TITLE OR INTEREST, OR \
-WARRANTY OF NONINFRINGEMENT.',
+    '本ソフトウェアは、明示または黙示を問わずいかなる種類の保証もない \
+「現状有姿」で提供されます。 本ソフトウェアの利用は、ユーザーの単独の責任によります。 当社は、\
+本ソフトウェアが中断されずエラーフリーであることを保証せず、\
+本ソフトウェアを利用することにより得られる可能性のある結果についても\
+何ら保証しません。 当社は、明示または黙示を問わずその他の保証を行いません。 当社は、\
+商品性の保証、特定目的適合性の保証、\
+所有権または権利の保証および不侵害の保証を\
+明確に放棄します',
   ),
-  heading('7. Limitation of Liability'),
+  heading('7. 責任の限定'),
   paragraph(
-    "IN NO EVENT SHALL THE COMPANY OR ITS SHAREHOLDERS, DIRECTORS, OFFICERS, \
-EMPLOYEES, AFFILIATES OR AGENTS, OR ANY OF ITS OR THEIR RESPECTIVE SERVICE \
-PROVIDERS, BE LIABLE TO USER OR ANY THIRD PARTY FOR ANY USE, INTERRUPTION, \
-DELAY OR INABILITY TO USE THE SOFTWARE, LOST REVENUES OR PROFITS, DELAYS, \
-INTERRUPTION OR LOSS OF SERVICES, BUSINESS OR GOODWILL, LOSS OR CORRUPTION OF \
-DATA, LOSS RESULTING FROM SYSTEM OR SYSTEM SERVICE FAILURE, MALFUNCTION OR \
-SHUTDOWN, FAILURE TO ACCURATELY TRANSFER, READ OR TRANSMIT INFORMATION, \
-FAILURE TO UPDATE OR PROVIDE CORRECT INFORMATION, SYSTEM INCOMPATIBILITY OR \
-PROVISION OF INCORRECT COMPATIBILITY INFORMATION OR BREACHES IN SYSTEM \
-SECURITY, OR FOR ANY CONSEQUENTIAL, INCIDENTAL, INDIRECT, EXEMPLARY, SPECIAL \
-OR PUNITIVE DAMAGES, WHETHER ARISING OUT OF OR IN CONNECTION WITH THIS \
-AGREEMENT, BREACH OF CONTRACT, TORT (INCLUDING NEGLIGENCE) OR OTHERWISE, \
-REGARDLESS OF WHETHER SUCH DAMAGES WERE FORESEEABLE AND WHETHER OR NOT WE \
-WERE ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. IN NO EVENT SHALL THE COMPANY \
-OR ITS SHAREHOLDERS, DIRECTORS, OFFICERS, EMPLOYEES, AFFILIATES OR AGENTS, OR \
-ANY OF ITS OR THEIR RESPECTIVE SERVICE PROVIDERS, BE LIABLE FOR ANY CLAIM, \
-DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR \
-OTHERWISE, ARISING FROM OR IN ANY WAY RELATED TO USER'S ACCESS, USE OR \
-INSTALLATION OF THE SOFTWARE. SOME JURISDICTIONS PROHIBIT THE EXCLUSION OR \
-LIMITATION OF INCIDENTAL OR CONSEQUENTIAL DAMAGES, THUS THIS LIMITATION OF \
-LIABILITY MAY NOT APPLY TO USER. IF USER IS DISSATISFIED WITH THE SOFTWARE, \
-USER'S SOLE AND EXCLUSIVE REMEDY SHALL BE FOR USER TO DISCONTINUE USE OF THE \
-SOFTWARE.",
+    'いかなる場合であっても、当社ならびにその株主、取締役、役員、\
+従業員、関連会社および代理人ならびに当社およびこれらのサービスプロバイダは、\
+利用、中断、遅延または本ソフトウェアの利用不能、収益減または逸失利益、サービス、\
+事業または信用の遅延、中断または喪失、データの喪失または破損、\
+システムまたはシステムサービスの障害に起因する損失、誤作動\
+またはシャットダウン、情報の正確な転送、読み取りまたは送信ができないこと、\
+正確な情報を更新しまたは提供できないこと、システムの非互換性、不正確な互換性情報の提供\
+また、間接損害賠償金、付随的損害賠償金、懲罰的損害賠償金または特別損害賠償金\
+（本規約、契約違反、不法行為（過失を含みます。）\
+またはその他に起因または関連するか否かを問いません。）\
+について、ユーザーまたは第三者に対し責任を負わないものとします。\
+いかなる場合であっても、\
+当社ならびにその株主、取締役、役員、従業員、関連会社または代理人ならびに\
+当社およびこれらのサービスプロバイダは、\
+ユーザーによる本ソフトウェアへのアクセス、\
+本ソフトウェアの利用または本ソフトウェアのインストールに起因し、\
+または何らかの形で関連するいかなる請求、損害その他の債務\
+（訴訟上、契約上、不法行為上またはその他の別を問いません。）についても\
+責任を負わないものとします。\
+一部の法域では付随的損害賠償金または間接損害賠償金の除外\
+または制限を禁止しているため、\
+この責任の限定がユーザーに適用されない可能性があります。\
+ユーザーが本ソフトウェアに満足していない場合における ユーザーの\
+唯一かつ排他的な救済手段は、ユーザーによる本ソフトウェアの利用の\
+中止とします。',
   ),
-  heading('8. Indemnification'),
+  heading('8. 補償'),
   paragraph(
-    'User agrees to indemnify, hold harmless and defend the Company, its \
-shareholders, directors, officers, employees, affiliates and agents \
-("Indemnified Parties") from and against any action, cause, claim, damage, \
-debt, demand or liability, including reasonable costs and attorney\'s fees, \
-asserted by any person, arising out of or relating to: (a) this Agreement; \
-(b) User\'s access, use or installation of the Software, including any data \
-or work transmitted or received by User; and (c) any unacceptable use of the \
-Software by any person, including, without limitation, any statement, data or \
-content made, transmitted or republished by User or any person which is \
-prohibited as unacceptable under Section 4. THIS INDEMNIFICATION INCLUDES THE \
-EXPRESS INDEMNIFICATION OF THE COMPANY AND ALL INDEMNIFIED PARTIES FOR ANY \
-ALLEGED NEGLIGENCE (INCLUDING ANY ALLEGED GROSS NEGLIGENCE). OR OTHER ALLEGED \
-MISCONDUCT OF THE COMPANY OR ANY INDEMNIFIED PARTIES.',
+    'ユーザーは、(a) 本規約、(b) ユーザーによる本ソフトウェア\
+（ユーザーが送受信するデータまたは著作物を含みます。）\
+へのアクセス、本ソフトウェア（ユーザーが送受信するデータまたは著作物を含みます。）\
+の利用または本ソフトウェア（ユーザーが送送受信するデータまたは著作物を含みます。）\
+のインストール、および(c) いずれかの者による本ソフトウェアの容認されない利用\
+（第４条により容認されないものとして禁止されている、\
+ユーザーまたはいずれかの者により行われ、送信され、または再公表される陳述、\
+データまたはコンテンツを含みますが、これらに限られません。）\
+に起因または関連していずれかの者が主張するいかなる訴え、訴訟、請求、損害、負債、\
+要求または債務（合理的な費用および弁護士報酬を含みます。）についても当社、その株主、\
+取締役、役員、従業員、関連会社および代理人\
+（以下「被補償当事者」といいます。）を補償し、被補償当事者を免責し、\
+被補償当事者を防御することに同意します。この補償には、当社または被補償当事者の過失とされるもの\
+（重過失とされるものを含みます。）\
+またはその他の違法行為とされるものに対する当社およびすべての被補償当事者の明示の補償を含みます。',
   ),
-  heading('9. Intellectual Property'),
+  heading('9. 知的財産'),
   paragraph(
-    "The Company retains all right, title, and interest in and to all of the \
-Company's brands, logos, and trademarks, including, but not limited to, EMURGO \
-Co., Ltd., EMURGO, Yoroi, Yoroi Cryptocurrency Wallet, Yoroi Wallet, Yoroi \
-App, and variations of the wording of the aforementioned brands, logos, and \
-trademarks.",
+    '当社は、当社のすべてのブランド、ロゴおよび商標\
+（株式会社EMURGO、EMURGO、ヨロイ、ヨロイクリプトカレンシーウォレット、\
+ヨロイウォレット、ヨロイアプリならびに上記のブランド、ロゴ\
+および商標の表現が変化したものを含みますが、これらに限られません。）\
+に関するすべての権利、権限および利益を有します。',
   ),
-  heading('10. Warnings'),
+  heading('10. 警告'),
   paragraph(
-    "User acknowledges that the Company shall not be responsible for \
-transferring, safeguarding, or maintaining private keys and/or User's ADA or \
-any other cryptocurrency. If User and/or any co-signing authorities lose, \
-mishandle, or have stolen associated private keys, or if User's cosigners \
-refuse to provide requisite authority, User acknowledges that User may not be \
-able to recover User's ADA or any other cryptocurrency, and that the Company \
-shall not be responsible for such loss.",
-  ),
-  paragraph(
-    'User acknowledges and agrees that ADA or any other cryptocurrency \
-transactions facilitated by the Software and/or the Company may be delayed, \
-and that the Company shall not be responsible for any associated loss. User \
-acknowledges and agrees that the Company shall not be responsible for any \
-aspect of the information, content, or services contained in any third-party \
-materials or on any third party sites accessible or linked to the Software \
-and/or the Company.',
+    'ユーザーは、当社がプライベートキーおよび／または\
+ユーザーのADAその他の仮想通貨を移動させ、保管し、または維持する責任を\
+負わないものとすることを承知しています。 ユーザーおよび／または共同署名権者が関連するプライベートキーを紛失し、\
+その取扱いを誤り、もしくは窃取された場合またはユーザーの共同署名者が必要な権限を\
+提供することを拒否した場合には、\
+ユーザーは、ユーザーがユーザーのADAその他の仮想通貨を回収できなくなる可能性があること、\
+また、かかる損失について当社は責任を負わないものとすることを承知しています。 ',
   ),
   paragraph(
-    "User agrees that User should never share User's certificate with any \
-natural or legal person, including the Company, Cardano Foundation, Input \
-Output HK Limited, or any other entity. Further, User acknowledges that \
-sharing User's certificate may result in loss of User's ADA or any other \
-cryptocurrency, and User agrees that the Company shall not be responsible for \
-such loss. User acknowledges and agrees that by redeeming ADA in the testnet, \
-User redeems test-ADA only, and that in order to redeem actual ADA, User must \
-repeat the procedure in the mainnet, once released.",
+    'ユーザーは、本ソフトウェアおよび／または当社により促進されるADA\
+その他の仮想通貨の取引が遅延する可能性があること、\
+また、遅延に伴ういかなる損失についても当社は責任を負わないものとすることを承知しており、 これに同意します。 \
+ユーザーは、本ソフトウェアおよび／または当社にアクセス可能なまたはリンクする第三者の資料等\
+または第三者のサイトに含まれる情報、コンテンツまたはサービスのいずれの側面についても\
+当社は責任を負わないものとすることを承知しており、 \
+これに同意します。',
   ),
   paragraph(
-    'By using the Software, User acknowledges and agrees: (i) that the \
-Company is not responsible for the operation of the underlying protocols and \
-that the Company makes no guarantee of their functionality, security, or \
-availability; and (ii) that the underlying protocols are subject to sudden \
-main-chain changes in operating rules ("forks"), and that such forks may \
-materially affect the value, and/or function of the ADA or any other \
-cryptocurrency that User stores on the Software. In the event of a fork, \
-User agrees that the Company may temporarily suspend the Software operations \
-(with or without notice to User) and that the Company may, in its sole \
-discretion, (a) configure or reconfigure its systems or (b) decide not to \
-support (or cease supporting) the forked protocol entirely, provided, however, \
-that User will have an opportunity to withdraw funds from the Software. User \
-acknowledges and agrees that the Company assumes absolutely no responsibility \
-whatsoever in respect of an unsupported branch of a forked protocol.',
+    'ユーザーは、ユーザーがユーザーの証明書を\
+いかなる自然人または法人（当社、カルダノ財団、インプット・アウトプット・エイチケイ・リミテッドまたはその他の組織を含みます。）\
+とも共有しないことに同意します。 また、ユーザーは、\
+ユーザーの証明書を共有することによりユーザーのADAその他の仮想通貨が\
+失われる可能性があることを承知しており、かかる損失について\
+当社は責任を負わないものとすることに同意します。 ユーザーは、テストネット上でADAを還元することによりユーザーはテストADAのみを還元すること、\
+また、実際のADAを還元するためには、ユーザーはリリース後にメインネット上で手続きを繰り返さなければならないことを承知しており、\
+これに同意します。',
   ),
-  heading('11. Miscellaneous'),
+  paragraph(
+    '本ソフトウェアを利用することにより、ユーザーは、\
+(i) 当社が下層プロトコルの運用について責任を負わないこと、\
+また、当社がその機能性、セキュリティおよび可用性について何ら保証しないこと、\
+(ii) 規則の運用上、下層プロトコルはメインチェーンの突然の変更\
+（以下「フォーク」といいます。）による影響を受ける可能性があること、\
+また、かかるフォークはユーザーが本ソフトウェア上で保管するADAその他の仮想通貨の価値\
+および／または機能に重大な影響を及ぼす可能性があることを承知しており、これらに同意します。 フォークした場合、\
+ユーザーは、当社が（ユーザーに通知した上で、またはユーザーに通知することなく）\
+本ソフトウェアの運用を一時的に停止することができること、\
+また、当社が自己の裁量で(a) 自社システムの設定または再設定を行うことができること、\
+または(b) フォークしたプロトコルを一切サポートしない\
+（またはサポートを停止する）旨決定することができることに同意します。 （但し、\
+ユーザーは、本ソフトウェアから資金を引き出す機会を\
+有するものとします。）',
+  ),
+  heading('11. その他'),
   listItem(
-    'a. Amendment. ',
-    "The Company shall have the right, at any time and without notice, to \
-add to or modify the terms of this Agreement, simply by delivering such \
-amended terms to User by electronic message through any medium to any address \
-provided to the Company by User. User's access to or use of the Software after \
-the date such amended terms are delivered to User shall be deemed to \
-constitute acceptance of such amended terms.",
-  ),
-  listItem(
-    'b. Severance. ',
-    'If any provision or part-provision of this Agreement is, or becomes \
-invalid, illegal or unenforceable, it shall be deemed modified to the minimum \
-extent necessary to make it valid, legal and enforceable. If such modification \
-is not possible, the relevant provision or part-provision shall be deemed \
-deleted. Any modification to or deletion of a provision or part-provision \
-under this Article shall not affect the validity and enforceability of the \
-rest of this Agreement.',
+    'a. 変更 ',
+    '当社は、ユーザーから当社に届け出のあったアドレス宛ての\
+いずれかの媒体を通じた電子メッセージにより、変更後の条項をユーザーに提示することにより、\
+いつでも通知なく本規約の条項を追加し、または変更することができるものとします。\
+かかる変更後の条項がユーザーに提示された日の後に ユーザーが本ソフトウェアにアクセスし、\
+または本ソフトウェアを利用した場合には、\
+かかる変更後の条項が承諾されたものとみなします。',
   ),
   listItem(
-    'c. Entire Agreement – Disclaimer of Reliance. ',
-    'This Agreement constitutes the entire agreement between the Parties \
-with respect to the subject matter hereof and supersedes all prior agreements \
-or understandings between the Parties. User expressly represents and warrants \
-that it is not relying upon any statements, understandings, representations, \
-expectations or agreements other than those expressly set forth in this \
-Agreement.',
+    'b. 分離解釈 ',
+    '本規約のいずれかの規定またはいずれかの規定の一部が無効、違法または強制執行不能であるか、\
+無効、違法または強制執行不能となる場合には、当該規定または当該規定の一部は、\
+有効、適法かつ強制執行可能とするために必要な最小限度で変更されたものとみなします。 かかる変更を行えない場合には、\
+当該規定または当該規定の一部は\
+削除されたものとみなします。 本条に基づくいずれかの規定またはいずれかの規定の一部の変更\
+または削除は、本規約の残りの規定の有効性および強制執行可能性に\
+影響を及ぼさないものとします。',
   ),
   listItem(
-    'd. THIS AGREEMENT IS SUBJECT TO BINDING ARBITRATION. ',
-    'User agrees that any and all disputes or claims against any person \
-arising out of or in any way related to this Agreement or the access, use or \
-installation of the Software by User or any other person shall be subject to \
-binding arbitration under the Rules of Arbitration of the International \
-Chamber of Commerce by one or more arbitrators appointed in accordance with \
-the said Rules. The location of the arbitration shall be Japan. The language \
-of the arbitration shall be English.',
+    'c. 完全合意 – 依拠の放棄 ',
+    '本規約は、本規約の内容に関する両当事者間の完全な合意を構成し、\
+両当事者間における従前のすべての合意事項\
+および了解事項に優先します。 ユーザーは、本規約に明記されるもの以外の陳述、\
+了解事項、表明事項、期待事項または\
+合意事項に依拠していないことを明示的に表明し、\
+保証します。',
+  ),
+  listItem(
+    'd. 本規約は、拘束力のある仲裁に服します。',
+    'ユーザーは、本規約またはユーザーもしくはその他の者による\
+本ソフトウェアへのアクセス、本ソフトウェアの利用\
+もしくは本ソフトウェアのインストールに起因し、\
+または何らかの点で関連する紛争またはいずれかの者に対する請求は\
+すべて国際商業会議所の仲裁規則に基づき選任される１名ないし複数名の仲裁人による\
+同規則に基づく拘束力のある仲裁に服するものとすることに同意します。 また、仲裁地は日本とし、 仲裁言語は\
+英語とします。',
   ),
   listItem(
     'e. LANGUAGE. ',
-    'Any translation of this Agreement is made for purposes of local \
-reference only and in the event of any inconsistency between the English \
-and any non-English versions, the English version of this Agreement shall \
-prevail and govern in all respects.',
+    '本規約の翻訳は、現地における\
+参照の便宜のためにのみ作成されるものであり、\
+英語版と英語以外の言語版との間に齟齬がある場合には本規約の英語版が\
+すべての点において優先するものとします',
   ),
 ]
