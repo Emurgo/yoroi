@@ -31,6 +31,12 @@ node_modules/react-native/scripts/ios-install-third-party.sh
 node_modules/react-native/third-party/glog-0.3.5/configure
 ```
 
+If you get an error of the style:
+
+`Could not list contents of '/Users/myself/yoroi-mobile/third-party/glog-0.3.5/test-driver'. Couldn't follow symbolic link.`
+
+Command for updating link `ln -sf /usr/local/share/automake-<version>/test-driver  <path_to_repo>/third-party/glog-0.3.5/test-driver`
+
 ### android
 
 Copy `google-services.json` to `android/app`.

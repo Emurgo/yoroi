@@ -36,15 +36,16 @@ class AddressModal extends React.Component<Props, State> {
   /* eslint-disable-next-line react/sort-comp */
   _hideModalTimeoutId = null
 
-  componentWillUnmount() {
-    if (this._hideModalTimeoutId) clearTimeout(this._hideModalTimeoutId)
-  }
-
   async componentDidUpdate() {
     const cbData = await Clipboard.getString()
     if (this.state.isCopied && cbData !== this.props.address) {
+      /* eslint-disable */
       this.setState({isCopied: false})
     }
+  }
+
+  componentWillUnmount() {
+    if (this._hideModalTimeoutId) clearTimeout(this._hideModalTimeoutId)
   }
 
   _copyAddress = () => {

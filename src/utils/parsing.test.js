@@ -1,7 +1,7 @@
 // @flow
 import jestSetup from '../jestSetup'
 
-import {parseAdaDecimal, InvalidAdaAmount} from './parsing'
+import {parseAdaDecimal} from './parsing'
 
 jestSetup.setup()
 
