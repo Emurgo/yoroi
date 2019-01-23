@@ -39,7 +39,7 @@ class AddressModal extends React.Component<Props, State> {
   async componentDidUpdate() {
     const cbData = await Clipboard.getString()
     if (this.state.isCopied && cbData !== this.props.address) {
-      /* eslint-disable */
+      // eslint-disable-next-line
       this.setState({isCopied: false})
     }
   }
