@@ -14,7 +14,6 @@ import type {State} from '../../../state'
 
 import MnemonicExplanationModal from './MnemonicExplanationModal'
 
-
 const getTranslations = (state: State) => state.trans.CreateWalletScreen
 
 const CreateWalletScreen = ({
