@@ -9,8 +9,9 @@ import {Logger} from '../utils/logging'
 
 const IOS_LANGUAGE_CODE = {
   [l10n.LANGUAGES.ENGLISH]: 'en',
-  [l10n.LANGUAGES.CHINESE_SIMPLIFIED]: 'zh-Hans',
-  [l10n.LANGUAGES.CHINESE_TRADITIONAL]: 'zh-Hant',
+  // TODO: Add when chinese is available
+  // [l10n.LANGUAGES.CHINESE_SIMPLIFIED]: 'zh-Hans',
+  // [l10n.LANGUAGES.CHINESE_TRADITIONAL]: 'zh-Hant',
   [l10n.LANGUAGES.KOREAN]: 'ko',
   [l10n.LANGUAGES.JAPANESE]: 'ja',
   [l10n.LANGUAGES.RUSSIAN]: 'ru',

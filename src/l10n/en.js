@@ -4,8 +4,9 @@ import {termsOfService} from './tos.en'
 
 // Do not translate
 const languages = {
-  chineseSimplified: '简体中文',
-  chineseTraditional: '繁體中文',
+  // TODO: Add back when chinese is available
+  // chineseSimplified: '简体中文',
+  // chineseTraditional: '繁體中文',
   english: 'English',
   japanese: '日本語',
   korean: '한국어',

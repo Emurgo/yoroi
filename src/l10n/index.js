@@ -52,36 +52,10 @@ const transformFormattingFunction = (obj, replace) => {
   }
 }
 
-// "Translates" a string or a function returning string
-// into random characters from targetChars
-const dummyTranslate = (targetChars) => (obj: any): any => {
-  const replace = (str: string) => {
-    let oldStr = ''
-    while (str !== oldStr) {
-      oldStr = str
-      const target = targetChars[Math.floor(targetChars.length * Math.random())]
-
-      str = str.replace(/[a-zA-Z]/, target)
-    }
-    return str
-  }
-  if (_.isFunction(obj)) {
-    return (...args) => replace(obj(...args))
-  } else if (_.isPlainObject(obj)) {
-    return transformFormattingFunction(obj, replace)
-  } else {
-    return replace(obj)
-  }
-}
-
-const dummyCn = (transform(
-  en,
-  dummyTranslate('发送支援请求时出现问题'),
-): Translation)
-
 export const LANGUAGES = {
-  CHINESE_SIMPLIFIED: 'zh-Hans',
-  CHINESE_TRADITIONAL: 'zh-Hant',
+  // TODO: Add when chinese is available
+  // CHINESE_SIMPLIFIED: 'zh-Hans',
+  // CHINESE_TRADITIONAL: 'zh-Hant',
   ENGLISH: 'en-US',
   JAPANESE: 'ja-JP',
   KOREAN: 'ko-KR',
@@ -90,8 +64,9 @@ export const LANGUAGES = {
 
 const momentLocales = {
   [LANGUAGES.ENGLISH]: 'en',
-  [LANGUAGES.CHINESE_SIMPLIFIED]: 'zh-cn',
-  [LANGUAGES.CHINESE_TRADITIONAL]: 'zh-cn',
+  // TODO: Add when chinese is available
+  // [LANGUAGES.CHINESE_SIMPLIFIED]: 'zh-cn',
+  // [LANGUAGES.CHINESE_TRADITIONAL]: 'zh-cn',
   [LANGUAGES.KOREAN]: 'ko',
   [LANGUAGES.JAPANESE]: 'ja',
   [LANGUAGES.RUSSIAN]: 'ru',
@@ -137,25 +112,21 @@ const russianNumberFmt = {
   groupSeparator: ' ',
 }
 
-const customNumberFmt = {
-  ...defaultNumberFmt,
-  decimalSeparator: '@',
-  groupSeparator: '~',
-}
-
 const numberLocales = {
   [LANGUAGES.ENGLISH]: defaultNumberFmt,
-  [LANGUAGES.CHINESE_SIMPLIFIED]: customNumberFmt,
-  [LANGUAGES.CHINESE_TRADITIONAL]: customNumberFmt,
-  [LANGUAGES.KOREAN]: customNumberFmt,
-  [LANGUAGES.JAPANESE]: customNumberFmt,
+  // TODO: Add when chinese is available
+  // [LANGUAGES.CHINESE_SIMPLIFIED]: customNumberFmt,
+  // [LANGUAGES.CHINESE_TRADITIONAL]: customNumberFmt,
+  [LANGUAGES.KOREAN]: defaultNumberFmt,
+  [LANGUAGES.JAPANESE]: defaultNumberFmt,
   [LANGUAGES.RUSSIAN]: russianNumberFmt,
 }
 
 const strings = new LocalizedStrings({
   [LANGUAGES.ENGLISH]: en,
-  [LANGUAGES.CHINESE_SIMPLIFIED]: dummyCn,
-  [LANGUAGES.CHINESE_TRADITIONAL]: dummyCn,
+  // TODO: Add when chinese is available
+  // [LANGUAGES.CHINESE_SIMPLIFIED]: dummyCn,
+  // [LANGUAGES.CHINESE_TRADITIONAL]: dummyCn,
   [LANGUAGES.KOREAN]: ko,
   [LANGUAGES.JAPANESE]: ja,
   [LANGUAGES.RUSSIAN]: ru,
