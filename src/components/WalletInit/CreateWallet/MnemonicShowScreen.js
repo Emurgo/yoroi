@@ -64,7 +64,7 @@ const MnemonicShowScreen = ({
 export default (compose(
   withTranslations(getTranslations),
   withNavigationTitle(({translations}) => translations.title),
-  withProps(props => ({mnemonic: props.navigation.getParam('mnemonic')})),
+  withProps((props) => ({mnemonic: props.navigation.getParam('mnemonic')})),
   withStateHandlers(
     {
       modal: false,
