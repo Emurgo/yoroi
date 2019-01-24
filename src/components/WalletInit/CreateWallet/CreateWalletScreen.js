@@ -57,8 +57,13 @@ export default compose(
   withHandlers({
     navigateToMnemonicScreen: ({formData, clear, navigation}) => () => {
       clear()
-      const mnemonic = CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.MNEMONIC2: generateAdaMnemonic()
-      navigation.navigate(WALLET_INIT_ROUTES.MNEMONIC_SHOW, {mnemonic, ...formData})
+      const mnemonic = CONFIG.DEBUG.PREFILL_FORMS
+        ? CONFIG.DEBUG.MNEMONIC2
+        : generateAdaMnemonic()
+      navigation.navigate(WALLET_INIT_ROUTES.MNEMONIC_SHOW, {
+        mnemonic,
+        ...formData,
+      })
     },
   }),
 )(CreateWalletScreen)
