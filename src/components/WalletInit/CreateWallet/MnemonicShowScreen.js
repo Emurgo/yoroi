@@ -3,14 +3,12 @@
 import React from 'react'
 import {View, Image} from 'react-native'
 import {compose} from 'redux'
-import {withHandlers, withStateHandlers} from 'recompose'
+import {withHandlers, withStateHandlers, withProps} from 'recompose'
 import {SafeAreaView} from 'react-navigation'
 
 import assert from '../../../utils/assert'
 import {Text, Button, StatusBar} from '../../UiKit'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
-import {generateAdaMnemonic} from '../../../crypto/util'
-import {CONFIG} from '../../../config'
 
 import styles from './styles/MnemonicShowScreen.style'
 import MnemonicBackupImportanceModal from './MnemonicBackupImportanceModal'
@@ -66,11 +64,9 @@ const MnemonicShowScreen = ({
 export default (compose(
   withTranslations(getTranslations),
   withNavigationTitle(({translations}) => translations.title),
+  withProps((props) => ({mnemonic: props.navigation.getParam('mnemonic')})),
   withStateHandlers(
     {
-      mnemonic: CONFIG.DEBUG.PREFILL_FORMS
-        ? CONFIG.DEBUG.MNEMONIC2
-        : generateAdaMnemonic(),
       modal: false,
     },
     {
@@ -82,6 +78,7 @@ export default (compose(
     navigateToMnemonicCheck: ({navigation, hideModal, mnemonic}) => () => {
       const name = navigation.getParam('name')
       const password = navigation.getParam('password')
+      const mnemonic = navigation.getParam('mnemonic')
       assert.assert(!!mnemonic, 'handleWalletConfirmation:: mnemonic')
       assert.assert(!!password, 'handleWalletConfirmation:: password')
       assert.assert(!!name, 'handleWalletConfirmation:: name')
