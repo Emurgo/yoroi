@@ -68,22 +68,22 @@ const l10n = {
       yesButton: common.ok,
     },
     incorrectPin: {
-      title: 'PINが無効です。',
+      title: 'PINが無効です',
       message: '入力したPINが間違っています。',
       yesButton: common.ok,
     },
     incorrectPassword: {
-      title: 'パスワードが間違っています。',
+      title: 'パスワードエラー',
       message: '入力したパスワードが間違っています。',
       yesButton: common.ok,
     },
     biometricsIsTurnedOff: {
-      title: ' 生体認証機能が無効になっています。',
+      title: ' 生体認証機能エラー',
       message: '生体認証機能が無効になっています。生体認証を有効に設定してください。',
       yesButton: common.ok,
     },
     walletKeysInvalidated: {
-      title: '生体認証が変更されました。',
+      title: '生体認証が変更されました',
       message:
         ' 端末で生体認証の変更が検出されました。 ' +
         'これにより簡易トランザクション承認が無効になりました。' +
