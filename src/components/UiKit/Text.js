@@ -4,7 +4,6 @@ import React from 'react'
 import type {Node} from 'react'
 import {StyleSheet, Text as RNText, Platform} from 'react-native'
 import stylesConfig, {COLORS} from '../../styles/config'
-import TxDetailsStyle from '../TxHistory/styles/TxDetails.style';
 
 const styles = StyleSheet.create({
   text: {
