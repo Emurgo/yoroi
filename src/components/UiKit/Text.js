@@ -4,6 +4,7 @@ import React from 'react'
 import type {Node} from 'react'
 import {StyleSheet, Text as RNText, Platform} from 'react-native'
 import stylesConfig, {COLORS} from '../../styles/config'
+import TxDetailsStyle from '../TxHistory/styles/TxDetails.style';
 
 const styles = StyleSheet.create({
   text: {
@@ -45,21 +46,36 @@ type Props = {
   bold?: boolean,
   monospace?: boolean,
   error?: boolean,
+  adjustsFontSizeToFit?: boolean
 }
 
-const Text = ({
-  children,
-  style,
-  small,
-  secondary,
-  light,
-  bold,
-  monospace,
-  error,
-  ...restProps
-}: Props) => (
-  <RNText
-    style={[
+type State = {
+  fontSize: number
+}
+
+
+const androidAdjustsFontSizeToFitFix = (width, childrenLength) => {
+  return Math.floor(1.4 * (width / childrenLength))
+}
+
+class Text extends React.Component<Props, State> {
+  state = {
+    fontSize: 0
+  }
+
+  render() {
+    const {small,
+           secondary,
+           light,
+           bold,
+           monospace,
+           error,
+           style,
+           children,
+           adjustsFontSizeToFit,
+           ...restProps} = this.props
+    
+    const textStyle = [
       styles.text,
       small && styles.small,
       secondary && styles.secondary,
@@ -68,11 +84,37 @@ const Text = ({
       monospace && styles.monospace,
       error && styles.error,
       style,
-    ]}
-    {...restProps}
-  >
-    {children}
-  </RNText>
-)
+    ]
+    if (this.state.fontSize) {
+      textStyle.push({fontSize: this.state.fontSize})
+    }
+  
+    // workaround which fixes adjustsFontSizeToFit at android
+    // based on https://github.com/facebook/react-native/issues/20906#issuecomment-436655758
+    if (adjustsFontSizeToFit && Platform.OS === 'ios') {
+      return (
+        <RNText
+          style={textStyle}
+          {...restProps}
+        >
+          {children}
+        </RNText>
+      )
+    }
+    return (
+      <RNText
+        onLayout={(event) => {
+          if (!adjustsFontSizeToFit || typeof children !== 'string') return
+          let {width} = event.nativeEvent.layout
+          this.setState({fontSize: androidAdjustsFontSizeToFitFix(width, children.length)})
+        }}
+        style={textStyle}
+        {...restProps}
+      >
+        {children}
+      </RNText>
+  )
+  }
+}
 
 export default Text
