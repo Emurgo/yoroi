@@ -4,7 +4,7 @@ import {termsOfService} from './tos.en'
 
 // Do not translate
 const languages = {
-  // TODO: Add when chinese is available
+  // TODO: Add back when chinese is available
   // chineseSimplified: '简体中文',
   // chineseTraditional: '繁體中文',
   english: 'English',
@@ -16,7 +16,8 @@ const languages = {
 const datetime = {
   today: '今日',
   yesterday: '昨日',
-}
+} 
+
 
 const walletNameErrors = {
   tooLong: 'ウォレット名が40文字を超えています。',
@@ -34,8 +35,7 @@ const common = {
 const ios = {
   NSFaceIDUsageDescription:
     'FaceIDを使えば、より安全・簡単にアカウントにアクセスすることができます。',
-  NSCameraUsageDescription:
-    'カメラを使って、QRコードを読み取ることができます。',
+  NSCameraUsageDescription: 'カメラを使って、QRコードを読み取ることができます。',
 }
 
 const l10n = {
@@ -74,13 +74,12 @@ const l10n = {
     },
     incorrectPassword: {
       title: 'パスワードが間違っています。',
-      message: 'パスワードが間違っています。',
+      message: '入力したパスワードが間違っています。',
       yesButton: common.ok,
     },
     biometricsIsTurnedOff: {
       title: ' 生体認証機能が無効になっています。',
-      message:
-        '生体認証機能が無効になっています。生体認証を有効に設定してください。',
+      message: '生体認証機能が無効になっています。生体認証を有効に設定してください。',
       yesButton: common.ok,
     },
     walletKeysInvalidated: {
@@ -157,7 +156,9 @@ const l10n = {
   MnemonicExplanationModal: {
     paragraph1: [
       inline([
-        normal('次の画面で、任意の15個の言葉が表示されます。 '),
+        normal(
+          '次の画面で、任意の15個の言葉が表示されます。 ',
+        ),
         normal('これはあなたの '),
         bold('ウォレットの復元フレーズです。 '),
         normal('ヨロイのどのバージョンでも、'),
@@ -185,7 +186,7 @@ const l10n = {
     repeatPasswordInput: {
       label: 'パスワードをもう一度入力してください。',
       errors: {
-        passwordsDoNotMatch: 'パスワードが間違っています。',
+        passwordsDoNotMatch: '入力したパスワードが違います。',
       },
     },
     continueButton: '続行',
@@ -203,7 +204,8 @@ const l10n = {
   TransactionHistoryScreeen: {
     syncErrorBanner: {
       textWithoutRefresh: '同期エラーが発生しています。',
-      textWithRefresh: '同期エラーが発生しています。 再読み込みをしてください',
+      textWithRefresh:
+        '同期エラーが発生しています。 再読み込みをしてください',
     },
     availableFundsBanner: {
       label: common.availableFunds,
@@ -289,7 +291,9 @@ const l10n = {
     continueButton: '続行',
     errorBanners: {
       // note: offline banner is shared with TransactionHistory
-      networkError: '残高を表示できません。クリックして再試行',
+      networkError:
+        '残高を表示できません。 ' +
+        'クリックして再試行',
       pendingOutgoingTransaction:
         '既存のトランザクションが進行中の時は、 ' +
         '新しいトランザクションを行えません。',
@@ -379,7 +383,8 @@ const l10n = {
     instructions:
       'ウォレットの復元には、復元フレーズが必要です。' +
       '復元フレーズは、一回目に使用したときに作成されたものです。',
-    mnemonicInput: {
+ 
+     mnemonicInput: {
       label: '復元フレーズ',
       errors: {
         TOO_LONG: 'フレーズが長すぎます。 ',
@@ -435,7 +440,8 @@ const l10n = {
     faq: {
       label: 'よくある質問を見る',
       description:
-        '問題が起こりましたら、ヨロイウェブサイトのFAQ をご参照ください。',
+        '問題が起こりましたら、ヨロイウェブサイトのFAQ ' +
+        'をご参照ください。',
       url: 'https://yoroi-wallet.com/faq/',
     },
     report: {
@@ -459,7 +465,8 @@ const l10n = {
     addWalletButton: 'ウォレットを追加する',
   },
   BiometricsLinkScreen: {
-    enableFingerprintsMessage: '設定で指紋認証を有効にしてください。',
+    enableFingerprintsMessage:
+      '設定で指紋認証を有効にしてください。',
     notNowButton: '後で行う',
     linkButton: 'リンク',
     headings: ['指紋認証を使用して、'],
@@ -473,8 +480,7 @@ const l10n = {
     cancelButton: 'キャンセル',
     errors: {
       NOT_RECOGNIZED: '指紋認証を認識できません。再試行してください。',
-      SENSOR_LOCKOUT:
-        '同時に認識できる指は１本までです。センサーが無効になりました。',
+      SENSOR_LOCKOUT: '同時に認識できる指は１本までです。センサーが無効になりました。',
       SENSOR_LOCKOUT_PERMANENT:
         '指紋認証が無効のようです。. 従来の方法を使ってください。.',
       DECRYPTION_FAILED: '指紋認証に失敗しました。一度戻ってください。',
@@ -487,11 +493,10 @@ const l10n = {
       paragraph1:
         'ウォレットを完全に消去したい場合は、' +
         '復元フレーズを保持していることを確認してください。',
-      paragraph2:
-        '操作を承認するために、ウォレット名を下にタイプしてください。',
+      paragraph2: '操作を承認するために、ウォレット名を下にタイプしてください。',
     },
     walletName: 'ウォレット名',
-    walletNameInput: 'ウォレット名',
+    walletNameInput: 'ウォレット名'
     removeWallet: 'ウォレットを消去',
     hasWrittenDownMnemonic:
       '復元フレーズを書き留め、これがないとウォレットを復元 ' +
@@ -548,7 +553,9 @@ const l10n = {
       heading:
         '簡易トランザクション承認とは、指紋認証や顔認証 ' +
         'を用いて、ADAのトランザクションを行うものです。 ' +
+        ' ' +
         'これによってセキュリティが弱くなります。 セキュリティと使いやすさ' +
+
         'どっちを重要視するかという選択になります。',
       warning:
         'あなたのマスターパスワードは、 ' +
