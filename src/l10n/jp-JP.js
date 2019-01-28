@@ -64,7 +64,7 @@ const l10n = {
     }),
     pinMismatch: {
       title: 'PINが無効です',
-      message: '入力したPINが間違っています。',
+      message: '２つのPINが違います。',
       yesButton: common.ok,
     },
     incorrectPin: {
@@ -124,7 +124,7 @@ const l10n = {
       yesButton: 'OK',
     },
     wrongPinError: {
-      title: 'PINが無効です。',
+      title: 'PINが無効です',
       メッセージ: '入力したPIN が間違っています 。',
       yesButton: 'OK',
     },
@@ -186,7 +186,7 @@ const l10n = {
     repeatPasswordInput: {
       label: 'パスワードをもう一度入力してください。',
       errors: {
-        passwordsDoNotMatch: '入力したパスワードが違います。',
+        passwordsDoNotMatch: '2つのパスワードが違います。',
       },
     },
     continueButton: '続行',
@@ -526,7 +526,7 @@ const l10n = {
     repeatPasswordInput: {
       label: '新しいパスワードをもう一度入力してください。',
       errors: {
-        passwordsDoNotMatch: 'パスワードが間違っています。',
+        passwordsDoNotMatch: '２つのパスワードが違います',
       },
     },
     continueButton: 'パスワードを変更する',
