@@ -169,7 +169,7 @@ const l10n = {
     paragraph2: [
       inline([
         normal('不正アクセスを '),
-        bold('防止するために、 '),
+        bold('防止するために、'),
         normal('誰も画面をのぞいていないことを確認してください。'),
       ]),
     ],
@@ -496,7 +496,7 @@ const l10n = {
       paragraph2: '操作を承認するために、ウォレット名を下にタイプしてください。',
     },
     walletName: 'ウォレット名',
-    walletNameInput: 'ウォレット名'
+    walletNameInput: 'ウォレット名',
     removeWallet: 'ウォレットを消去',
     hasWrittenDownMnemonic:
       '復元フレーズを書き留め、これがないとウォレットを復元 ' +
