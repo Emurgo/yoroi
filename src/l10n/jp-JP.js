@@ -168,7 +168,7 @@ const l10n = {
     ],
     paragraph2: [
       inline([
-        normal('不正アクセスを '),
+        normal('不正アクセスを'),
         bold('防止するために、'),
         normal('誰も画面をのぞいていないことを確認してください。'),
       ]),
