@@ -3,6 +3,9 @@
 import React from 'react'
 import type {Node} from 'react'
 import {StyleSheet, Text as RNText, Platform} from 'react-native'
+import type {TextStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
+
+
 import stylesConfig, {COLORS} from '../../styles/config'
 
 const styles = StyleSheet.create({
@@ -41,7 +44,7 @@ type Props = {
   small?: boolean,
   secondary?: boolean,
   light?: boolean,
-  style?: any,
+  style?: TextStyleProp,
   bold?: boolean,
   monospace?: boolean,
   error?: boolean,
@@ -107,8 +110,12 @@ class Text extends React.Component<Props, State> {
           onLayout={(event) => {
             if (!adjustsFontSizeToFit || typeof children !== 'string') return
             const {width} = event.nativeEvent.layout
-            this.setState({
-              fontSize: androidAdjustsFontSizeToFitFix(width, children.length)})
+            const fixedFontSize = androidAdjustsFontSizeToFitFix(
+              width, children.length)
+            const styleFontSize: any = style && style.fontSize && style.fontSize
+            const fontSize = styleFontSize ?
+              Math.min(styleFontSize, fixedFontSize) : fixedFontSize
+            this.setState({fontSize})
           }}
           style={textStyle}
           {...restProps}
