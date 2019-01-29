@@ -58,7 +58,7 @@ const l10n = {
   },
   errorDialogs: {
     generalError: (message: string) => ({
-      title: '予期せぬエラーが発生しました。',
+      title: '予期せぬエラーが発生しました',
       message: `要求された操作を行うことができません。 エラー内容: ${message}`,
       yesButton: common.ok,
     }),
@@ -79,53 +79,53 @@ const l10n = {
     },
     biometricsIsTurnedOff: {
       title: ' 生体認証機能エラー',
-      message: '生体認証機能が無効になっています。生体認証を有効に設定してください。',
+      message: '生体認証機能が無効になっています。生体認証を有効に設定してください',
       yesButton: common.ok,
     },
     walletKeysInvalidated: {
       title: '生体認証が変更されました',
       message:
         ' 端末で生体認証の変更が検出されました。 ' +
-        'これにより簡易トランザクション承認が無効になりました。' +
+        'これにより簡易トランザクション承認が無効になりました' +
         'トランザクションはマスターパスワードによってのみ承認されます。 ' +
-        '設定で簡易トランザクション承認を有効にできます。',
+        '設定で簡易トランザクション承認を有効にできます',
       yesButton: 'OK',
     },
     networkError: {
       title: 'ネットワークエラー',
       message:
         'サーバーに接続できません。 ' +
-        'インターネットの接続を確認してください。',
+        'インターネットの接続を確認してください',
       yesButton: common.ok,
     },
     disableEasyConfirmationFirst: {
       title: 'アクションが失敗しました。',
       message:
         'すべてのウォレットの簡易トランザクション承認を ' +
-        '無効にしてください。',
+        '無効にしてください',
       yesButton: common.ok,
     },
     enableFingerprintsFirst: {
-      title: 'アクションが失敗しました。',
+      title: 'アクションが失敗しました',
       message:
         ' このアプリとリンクさせるために ' +
-        'デバイスの生体認証を有効にしてください。',
+        'デバイスの生体認証を有効にしてください',
       yesButton: 'OK',
     },
     enableSystemAuthFirst: {
-      title: 'ロック画面が無効です。',
+      title: 'ロック画面が無効です',
       message:
         '端末のロック画面を無効に設定していませんか？ あらかじめ' +
         '簡易トランザクション承認を無効に設定する必要があります。 ' +
-        '端末のロック画面を設定し（PIN、パスワード、パターン）、' +
+        '端末のロック画面を設定し（PIN、パスワード、パターン)、' +
         'デバイスを再起動してください。 その後ロック画面を無効に設定し ' +
-        '本アプリをご利用いただけます。' +
+        '本アプリをご利用いただけます' +
         '',
       yesButton: 'OK',
     },
     wrongPinError: {
       title: 'PINが無効です',
-      メッセージ: '入力したPIN が間違っています 。',
+      メッセージ: '入力したPIN が間違っています ',
       yesButton: 'OK',
     },
   },
@@ -134,7 +134,7 @@ const l10n = {
     continueButton: '言語を選んでください',
   },
   YoroiDescription: {
-    line1: 'ヨロイは、Cardanoのためのライトウォレットです。',
+    line1: 'ヨロイは、Cardanoのためのライトウォレットです',
     line2: '安全で、はやくて、シンプル',
     byEmurgo: 'By',
   },
@@ -455,7 +455,7 @@ const l10n = {
   TermsOfServiceScreen: {
     title: '契約条件',
     content: termsOfService,
-    aggreeClause: '契約に同意します。',
+    aggreeClause: '契約に同意します',
     continueButton: '同意',
     savingConsentModalTitle: '初期化',
     pleaseWait: common.pleaseWait,
@@ -479,11 +479,11 @@ const l10n = {
     headings: ['指紋認証を', '承認する'],
     cancelButton: 'キャンセル',
     errors: {
-      NOT_RECOGNIZED: '指紋認証を認識できません。再試行してください。',
-      SENSOR_LOCKOUT: '同時に認識できる指は１本までです。センサーが無効になりました。',
+      NOT_RECOGNIZED: '指紋認証を認識できません。再試行してください',
+      SENSOR_LOCKOUT: '同時に認識できる指は１本までです。センサーが無効になりました',
       SENSOR_LOCKOUT_PERMANENT:
         '指紋認証が無効のようです。. 従来の方法を使ってください。.',
-      DECRYPTION_FAILED: '指紋認証に失敗しました。一度戻ってください。',
+      DECRYPTION_FAILED: '指紋認証に失敗しました。一度戻ってください',
       UNKNOWN_ERROR: '不明のエラー',
     },
   },
@@ -511,7 +511,7 @@ const l10n = {
         subtitle: '新しいPINを選んで、クイックアクセスを有効にします',
       },
       PinConfirmationInput: {
-        title: 'PINもう一度入力してください。',
+        title: 'PINもう一度入力してください',
       },
     },
   },
@@ -524,7 +524,7 @@ const l10n = {
       label: '新しいパスワード',
     },
     repeatPasswordInput: {
-      label: '新しいパスワードをもう一度入力してください。',
+      label: '新しいパスワードをもう一度入力してください',
       errors: {
         passwordsDoNotMatch: 'パスワードが一致していません',
       },
@@ -534,16 +534,16 @@ const l10n = {
   ChangeCustomPinScreen: {
     title: 'PINを変更する',
     CurrentPinInput: {
-      title: 'PINを入れてください。',
+      title: 'PINを入れてください',
       subtitle: '現在のPINを入れてください',
     },
     PinRegistrationForm: {
       PinInput: {
-        title: 'PINを入れてください。',
-        subtitle: '新しいPINを選んで、クイックアクセスを有効にする.',
+        title: 'PINを入れてください',
+        subtitle: '新しいPINを選んで、クイックアクセスを有効にする。',
       },
       PinConfirmationInput: {
-        title: 'PINをもう一度入れてください。',
+        title: 'PINをもう一度入れてください',
       },
     },
   },
@@ -552,7 +552,7 @@ const l10n = {
     enable: {
       heading:
         '簡易トランザクション承認とは、指紋認証や顔認証 ' +
-        'を用いて、ADAのトランザクションを行うものです。 ' +
+        'を用いて、ADAのトランザクションを行うものです。' +
         ' ' +
         'これによってセキュリティが弱くなります。 セキュリティと使いやすさ' +
 
