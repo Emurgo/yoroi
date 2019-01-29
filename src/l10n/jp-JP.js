@@ -20,7 +20,7 @@ const datetime = {
 
 
 const walletNameErrors = {
-  tooLong: 'ウォレット名が40文字を超えています。',
+  tooLong: 'ウォレット名が40文字を超えています',
   nameAlreadyTaken: '同じ名前のウォレットが存在します。',
 }
 
