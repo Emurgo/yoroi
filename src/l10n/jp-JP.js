@@ -213,8 +213,8 @@ const l10n = {
     noTransactions: 'トランザクションがありません',
     transaction: {
       transactionType: {
-        SENT: 'ADAが送信されました。',
-        RECEIVED: 'ADAを受信しました。',
+        SENT: 'ADAが送信されました',
+        RECEIVED: 'ADAを受信しました',
         SELF: 'ウォレット内',
         MULTI: '複数人',
       },
@@ -233,8 +233,8 @@ const l10n = {
   },
   TransactionDetailsScreen: {
     transactionType: {
-      SENT: '資金を送信しました。',
-      RECEIVED: '資金を受信しました。',
+      SENT: '資金を送信しました',
+      RECEIVED: '資金を受信しました',
       SELF: 'ウォレット内トランザクション',
       MULTI: '複数人とのトランザクション',
     },
@@ -270,7 +270,7 @@ const l10n = {
     addressInput: {
       label: 'アドレス',
       errors: {
-        invalidAddress: '有効なアドレスを入力してください。',
+        invalidAddress: '有効なアドレスを入力してください',
       },
     },
     amountInput: {
@@ -280,12 +280,12 @@ const l10n = {
           // Note(ppershing): first two should be auto-corrected
           // by the input control
           INVALID_AMOUNT: '有効な数を入れてください。',
-          TOO_MANY_DECIMAL_PLACES: '有効な数を入力してください。',
+          TOO_MANY_DECIMAL_PLACES: '有効な数を入力してください',
 
-          TOO_LARGE: '数が大きすぎます。',
-          NEGATIVE: '正の数を入力してください。',
+          TOO_LARGE: '数が大きすぎます',
+          NEGATIVE: '正の数を入力してください',
         },
-        insufficientBalance: '残高が不十分です。',
+        insufficientBalance: '残高が不足しています',
       },
     },
     continueButton: '続行',
@@ -296,11 +296,11 @@ const l10n = {
         'クリックして再試行',
       pendingOutgoingTransaction:
         '既存のトランザクションが進行中の時は、 ' +
-        '新しいトランザクションを行えません。',
+        '新しいトランザクションを行えません',
     },
   },
   ReadQRCodeAddressScreen: {
-    title: 'QRコードアドレスをスキャンしてください。',
+    title: 'QRコードアドレスをスキャンしてください',
   },
   ConfirmSendAdaScreen: {
     title: '送信',
@@ -334,7 +334,7 @@ const l10n = {
       'プライバシー保護のため、 ' +
       '新しいアドレスが毎回自動生成されます。',
     generateButton: '他のアドレスを生成する',
-    cannotGenerate: 'アドレスをいくつか使用する必要があります。',
+    cannotGenerate: 'アドレスをいくつか使用する必要があります',
     freshAddresses: '新しいアドレス',
     usedAddresses: '使用されたアドレス',
   },
@@ -357,7 +357,7 @@ const l10n = {
     title: '復元フレーズ',
     keysStorageCheckbox:
       '秘密鍵は、会社のサーバーではなく、' +
-      'このデバイス上にのみ保存されることを理解しました。',
+      'このデバイス上にのみ保存されることを理解しました',
     newDeviceRecoveryCheckbox:
       'アプリを別のデバイスに移動させたり、消去した場合、 ' +
       '復元フレーズがないと資金が復元されないことを ' +
@@ -367,12 +367,12 @@ const l10n = {
   MnemonicCheckScreen: {
     title: '復元フレーズ',
     instructions:
-      '正しい順序でワードをタップして、復元フレーズを有効化してください。',
+      '正しい順序でワードをタップして、復元フレーズを有効化してください',
 
     mnemonicWordsInput: {
       label: '復元フレーズ',
       errors: {
-        invalidPhrase: '復元フレーズが間違っています。',
+        invalidPhrase: '復元フレーズが間違っています',
       },
     },
     clearButton: '全消去',
