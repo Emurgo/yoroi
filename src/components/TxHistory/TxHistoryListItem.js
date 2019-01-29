@@ -35,7 +35,7 @@ type Props = {
 const _AssuranceLevel = ({transaction, translations}) => {
   return (
     <View style={[styles.assurance, styles[transaction.assurance]]}>
-      <Text adjustsFontSizeToFit style={styles.assuranceText}>
+      <Text style={styles.assuranceText}>
         {translations.assuranceLevel[transaction.assurance].toLocaleUpperCase()}
       </Text>
     </View>
