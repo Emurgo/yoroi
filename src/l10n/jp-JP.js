@@ -244,8 +244,8 @@ const l10n = {
     transactionId: 'トランザクションID',
     txAssuranceLevel: 'トランザクション確信度',
     formatConfirmations: (cnt: number) =>
-      `${cnt} ${pluralizeEn(cnt, 'CONFIRMATION', 'CONFIRMATIONS')}`,
-    formatOmittedCount: (cnt: number) => `+ ${cnt} omitted`,
+      `${cnt} ${pluralizeEn(cnt, '承認', '承認')}`,
+    formatOmittedCount: (cnt: number) => `+ ${cnt} 省略`,
     addressPrefix: {
       receive: (idx: number) => `/${idx}`,
       change: (idx: number) => '/change',
