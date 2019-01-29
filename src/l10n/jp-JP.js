@@ -21,7 +21,7 @@ const datetime = {
 
 const walletNameErrors = {
   tooLong: 'ウォレット名が40文字を超えています',
-  nameAlreadyTaken: '同じ名前のウォレットが存在します。',
+  nameAlreadyTaken: '同じ名前のウォレットが存在します',
 }
 
 // common translations shared across multiple places
@@ -64,7 +64,7 @@ const l10n = {
     }),
     pinMismatch: {
       title: 'PINが無効です',
-      message: '２つのPINが違います。',
+      message: 'PINが一致していません',
       yesButton: common.ok,
     },
     incorrectPin: {
@@ -145,10 +145,10 @@ const l10n = {
     title: 'PINを入れてください',
   },
   CreateWalletScreen: {
-    title: '新しいウォレットを作成してください。',
+    title: '新しいウォレットを作成',
   },
   CreateOrRestoreWalletScreen: {
-    title: 'ウォレットを追加してください。',
+    title: 'ウォレットを追加',
     createWalletButton: '新しいウォレットを作成',
     restoreWalletButton: 'ウォレットの復元',
   },
@@ -177,16 +177,16 @@ const l10n = {
   },
   WalletNameAndPasswordForm: {
     walletNameInput: {
-      label: 'Wallet名',
+      label: 'ウォレット名',
       errors: walletNameErrors,
     },
     newPasswordInput: {
       label: 'ウォレットのパスワード',
     },
     repeatPasswordInput: {
-      label: 'パスワードをもう一度入力してください。',
+      label: 'パスワードをもう一度入力してください',
       errors: {
-        passwordsDoNotMatch: '2つのパスワードが違います。',
+        passwordsDoNotMatch: 'パスワードが一致していません',
       },
     },
     continueButton: '続行',
@@ -210,7 +210,7 @@ const l10n = {
     availableFundsBanner: {
       label: common.availableFunds,
     },
-    noTransactions: 'トランザクションがありません。',
+    noTransactions: 'トランザクションがありません',
     transaction: {
       transactionType: {
         SENT: 'ADAが送信されました。',
@@ -308,7 +308,7 @@ const l10n = {
     availableFundsBanner: {
       label: common.availableFunds,
     },
-    balanceAfterTx: 'Balance after transaction',
+    balanceAfterTx: 'トランザクション後の残高'
     fees: '手数料',
     password: 'ウォレットのパスワード',
     receiver: '受信者',
@@ -392,7 +392,7 @@ const l10n = {
         INVALID_CHECKSUM: '有効な復元フレーズを入力してください。',
         UNKNOWN_WORDS: (words: Array<string>) => {
           const wordlist = words.map((word) => `'${word}'`).join(', ')
-          const areInvalid = `${pluralizeEn(words.length, 'is', 'are')} invalid`
+          const areInvalid = `${pluralizeEn(words.length, 'は', 'は')} 無効です`
           return `${wordlist} ${areInvalid}`
         },
       },
@@ -413,7 +413,7 @@ const l10n = {
       changePassword: 'パスワードを変更する ',
       easyConfirmation: '簡易トランザクション承認',
 
-      removeWallet: 'ウォレットを消去する',
+      removeWallet: 'ウォレットを消去',
     },
     ApplicationTab: {
       title: '設定',
@@ -526,7 +526,7 @@ const l10n = {
     repeatPasswordInput: {
       label: '新しいパスワードをもう一度入力してください。',
       errors: {
-        passwordsDoNotMatch: '２つのパスワードが違います',
+        passwordsDoNotMatch: 'パスワードが一致していません',
       },
     },
     continueButton: 'パスワードを変更する',
