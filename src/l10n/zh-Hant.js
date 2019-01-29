@@ -14,8 +14,8 @@ const languages = {
 }
 
 const datetime = {
-  today: 'Today',
-  yesterday: 'Yesterday',
+  today: '今天',
+  yesterday: '昨天',
 }
 
 const walletNameErrors = {
