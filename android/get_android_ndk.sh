@@ -2,8 +2,8 @@
 ANDROID_HOME="/opt/android/sdk"
 ANDROID_NDK="$ANDROID_HOME/ndk-bundle"
 ANDROID_NDK_HOME="$ANDROID_HOME/ndk-bundle"
-echo 'export ANDROID_NDK=$ANDROID_HOME/ndk-bundle/' >> $BASH_ENV
-echo 'export ANDROID_NDK_HOME=$ANDROID_HOME/ndk-bundle/' >> $BASH_ENV
+echo 'export ANDROID_NDK=$ANDROID_HOME/ndk-bundle/' >> "$BASH_ENV"
+echo 'export ANDROID_NDK_HOME=$ANDROID_HOME/ndk-bundle/' >> "$BASH_ENV"
 
 if [ ! -e ANDROID_NDK ]; then
   cd $ANDROID_HOME

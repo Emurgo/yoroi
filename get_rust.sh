@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo 'export PATH=$HOME/.cargo/bin/:$PATH' >> $BASH_ENV
+echo 'export PATH=$HOME/.cargo/bin/:$PATH' >> "$BASH_ENV"
 
 if rustup --version; then
   echo "Rustup is already installed"
@@ -12,7 +12,7 @@ else
   # use nightly version. 
   rustup install nightly-2018-06-05
   rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
-  cargo install cargo-lipo
+  # cargo install cargo-lipo
   export
   cargo
 fi
