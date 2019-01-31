@@ -5,7 +5,6 @@ import type {Node} from 'react'
 import {StyleSheet, Text as RNText, Platform} from 'react-native'
 import type {TextStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
-
 import stylesConfig, {COLORS} from '../../styles/config'
 
 const styles = StyleSheet.create({
@@ -48,13 +47,12 @@ type Props = {
   bold?: boolean,
   monospace?: boolean,
   error?: boolean,
-  adjustsFontSizeToFit?: boolean
+  adjustsFontSizeToFit?: boolean,
 }
 
 type State = {
-  fontSize: number
+  fontSize: number,
 }
-
 
 const androidAdjustsFontSizeToFitFix = (width, childrenLength) => {
   return Math.floor(1.4 * (width / childrenLength))
@@ -66,7 +64,8 @@ class Text extends React.Component<Props, State> {
   }
 
   render() {
-    const {small,
+    const {
+      small,
       secondary,
       light,
       bold,
@@ -75,7 +74,8 @@ class Text extends React.Component<Props, State> {
       style,
       children,
       adjustsFontSizeToFit,
-      ...restProps} = this.props
+      ...restProps
+    } = this.props
 
     const textStyle = [
       styles.text,
@@ -91,13 +91,9 @@ class Text extends React.Component<Props, State> {
       textStyle.push({fontSize: this.state.fontSize})
     }
 
-
     if (adjustsFontSizeToFit && Platform.OS === 'ios') {
       return (
-        <RNText
-          style={textStyle}
-          {...restProps}
-        >
+        <RNText style={textStyle} {...restProps}>
           {children}
         </RNText>
       )
@@ -111,10 +107,14 @@ class Text extends React.Component<Props, State> {
             if (!adjustsFontSizeToFit || typeof children !== 'string') return
             const {width} = event.nativeEvent.layout
             const fixedFontSize = androidAdjustsFontSizeToFitFix(
-              width, children.length)
+              width,
+              children.length,
+            )
             const styleFontSize: any = style && style.fontSize && style.fontSize
-            const fontSize = styleFontSize ?
-              Math.min(styleFontSize, fixedFontSize) : fixedFontSize
+            const fontSize = styleFontSize
+              ? Math.min(styleFontSize, fixedFontSize)
+              : fixedFontSize
+
             this.setState({fontSize})
           }}
           style={textStyle}
