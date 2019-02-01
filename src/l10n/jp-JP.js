@@ -248,8 +248,8 @@ const l10n = {
     formatOmittedCount: (cnt: number) => `+ ${cnt} 省略`,
     addressPrefix: {
       receive: (idx: number) => `/${idx}`,
-      change: (idx: number) => '/change',
-      notMine: '私のではありません。',
+      change: (idx: number) => '/お釣り',
+      notMine: '他人',
     },
   },
   SendAdaScreen: {
