@@ -8,10 +8,10 @@
 # install rustup
 curl https://sh.rustup.rs -sSf | sh
 
-# use nightly version
-rustup toolchain install nightly
-rustup install nightly-2018-06-05
-rustup target add wasm32-unknown-unknown --toolchain nightly
+# use 1.32.0 version
+rustup toolchain install 1.32.0
+rustup install 1.32.0
+rustup target add wasm32-unknown-unknown --toolchain 1.32.0
 ```
 
 ### ios
