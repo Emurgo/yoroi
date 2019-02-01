@@ -248,7 +248,7 @@ const l10n = {
     formatOmittedCount: (cnt: number) => `+ ${cnt} 省略`,
     addressPrefix: {
       receive: (idx: number) => `/${idx}`,
-      change: (idx: number) => '/お釣り',
+      change: (idx: number) => '/おつり',
       notMine: '他人',
     },
   },
