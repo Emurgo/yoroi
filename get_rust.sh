@@ -12,6 +12,12 @@ else
   # use nightly version. 
   rustup install nightly-2018-06-05
   rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
+
+  if [ $1 != "--skip-cargo-lipo" ]
+  then
+    cargo install cargo-lipo
+  fi
+
   export
   cargo
 fi
