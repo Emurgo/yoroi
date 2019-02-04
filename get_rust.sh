@@ -1,6 +1,7 @@
 #!/bin/bash
 
-if [ -f $HOME/.cargo/env ] 
+if [ -f $HOME/.cargo/env ]
+then
   source $HOME/.cargo/env
   echo "Rustup is already installed"
 else
