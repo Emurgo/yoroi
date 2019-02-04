@@ -6503,9 +6503,9 @@ react-native-drawer-layout@1.3.2:
   dependencies:
     react-native-dismiss-keyboard "1.0.0"
 
-"react-native-firebase@https://github.com/invertase/react-native-firebase.git":
-  version "5.1.1"
-  resolved "https://github.com/invertase/react-native-firebase.git#fa7b98895e4bff2e2867787e197966e37ca64fd6"
+"react-native-firebase@https://github.com/SebastienGllmt/react-native-firebase.git":
+  version "5.2.1"
+  resolved "https://github.com/SebastienGllmt/react-native-firebase.git#976c465a1a34937620beecdf7243885a43b6af26"
   dependencies:
     opencollective-postinstall "^2.0.0"
     prop-types "^15.6.2"
