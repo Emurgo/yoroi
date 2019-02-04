@@ -8,10 +8,10 @@
 # install rustup
 curl https://sh.rustup.rs -sSf | sh
 
-# use nightly version
-rustup toolchain install nightly
-rustup install nightly-2018-06-05
-rustup target add wasm32-unknown-unknown --toolchain nightly
+# use 1.32.0 version
+rustup toolchain install 1.32.0
+rustup install 1.32.0
+rustup target add wasm32-unknown-unknown --toolchain 1.32.0
 ```
 
 ### ios
@@ -39,17 +39,34 @@ Command for updating link `ln -sf /usr/local/share/automake-<version>/test-drive
 
 ### android
 
-Copy `google-services.json` to `android/app`.
+#### Windows Extra Steps
+
+This requires a physical Android phone & USB cable
+
+1. Download [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
+1. Expose the USB to VirtualBox [guide here](https://www.wikihow.tech/Connect-a-USB-to-Virtualbox)
+    **Note**: You MUST expose USB 2.0 for Android devices. Exposing 3.0 will not work
+1. If your devices still doesn't appear, follow [these steps](https://android.stackexchange.com/a/144967)
+    **Note**: The format for these steps have changed over the years so be careful if you need this.
+
+#### Android Setup
 
 ```
-# install android
+# install & stup android studio
 follow https://facebook.github.io/react-native/docs/getting-started.html (tab Building Projects with Native Code)
 ```
+
+1. Ask for a copy of (or creta a blank version of) `android/gradle.properties.local`, `android/app/google-services.json` and `android/app/api-XXXX.json`
+1. Make sure your Anddroid build tools match the version in [android/build.gradle](android/build.gradle) (you will get an error otherwise)
+1. Download the NDK form Android Studio
+1. Install Rust for Android `rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android`
 
 ### First time
 
 1. `yarn install`
-2. `yarn setup_configs` - links libraries to ios testnet build configurations
+1. `yarn setup_configs` - links libraries to ios testnet build configurations
+
+If these steps fail, try looking at the [android CLI](https://github.com/Emurgo/yoroi-mobile/blob/develop/.circleci/config.yml#L68)
 
 ### Every time
 
