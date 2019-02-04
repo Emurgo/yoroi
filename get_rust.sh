@@ -1,7 +1,7 @@
 #!/bin/bash
 
-source $HOME/.cargo/env
-if rustup --version; then
+if [ -f $HOME/.cargo/env ] 
+  source $HOME/.cargo/env
   echo "Rustup is already installed"
 else
   # install rustup
@@ -13,7 +13,7 @@ else
   rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
 
   # cargo-lipo required only for ios build
-  if [ "$1" != "--skip-cargo-lipo" ] || [[ -z "$YOROI_ANDROID_BUILD" ]]
+  if [ -z "$YOROI_ANDROID_BUILD" ]
   then
     cargo install cargo-lipo
   fi
