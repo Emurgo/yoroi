@@ -6,7 +6,7 @@ target 'emurgo' do
   # use_frameworks!
 
   # Pods for emurgo
-  pod 'Firebase/Core', '~> 5.14.0'
+  pod 'Firebase/Core', '~> 5.2'
   pod 'Fabric', '~> 1.7.13'
   pod 'Crashlytics', '~> 3.10.7'
 
