@@ -20,8 +20,6 @@ export default () => {
     middlewares.push(loggerMiddleware)
   }
 
-  console.log('NODE_ENV ', process.env.NODE_ENV)
-
   // When not running devtools, use regular compose
   const composeEnhancers =
     (
