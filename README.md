@@ -39,7 +39,7 @@ Command for updating link `ln -sf /usr/local/share/automake-<version>/test-drive
 
 ### android
 
-#### Windows Extra Steps
+#### Windows (Physical device)
 
 This requires a physical Android phone & USB cable
 
@@ -48,6 +48,21 @@ This requires a physical Android phone & USB cable
     **Note**: You MUST expose USB 2.0 for Android devices. Exposing 3.0 will not work
 1. If your devices still doesn't appear, follow [these steps](https://android.stackexchange.com/a/144967)
     **Note**: The format for these steps have changed over the years so be careful if you need this.
+
+#### Windows (Virtual Device)
+
+On Host (Setup Android device)
+1. Run Virtual Device from Android Studio
+
+On VM (Detect VirtualDevice from VirtualBox)
+1. `adb tcpip 5555`
+1. `adb kill-server`
+1. `adb connect 10.0.2.2:5555`
+
+On Host (allow app to connect to packaged bundle after build)
+1. Open VirtualBox
+1. VM Settings > Network >> Advanced > Port Forwarding
+1. Enter `8081` as Host Port and Guest Port (leave everything else blank)
 
 #### Android Setup
 
