@@ -68,7 +68,7 @@ follow https://facebook.github.io/react-native/docs/getting-started.html (tab Bu
 
 If these steps fail, try looking at the [android CLI](https://github.com/Emurgo/yoroi-mobile/blob/develop/.circleci/config.yml#L68)
 
-### Every time
+# Launching
 
 1. `react-native start` - this will run RN packager, let it running
 2. `react-native run-android --variant=devDebug` - for version with testnet
@@ -77,7 +77,20 @@ If these steps fail, try looking at the [android CLI](https://github.com/Emurgo/
 4. `react-native run-ios --scheme=emurgo-staging --configuration=Staging.Debug` - staging (testnet) configuration
 5. `react-native run-ios --scheme=emurgo --configuration=Debug` - production configuration
 
-### Release
+# Debugging
+
+Read through [this page](https://facebook.github.io/react-native/docs/debugging) to understand debugging for React-Native
+
+#### React-Native Debugger
+
+This will allow you to put breakpoints and everything else you would ever need.
+
+1. Download & run https://github.com/jhen0409/react-native-debugger/releases
+1. While app is running, open debug menu
+1. Select `Debug JS remotely`
+
+
+# Releasing
 
 1. Follow [Signed Android APK](https://facebook.github.io/react-native/docs/signed-apk-android) to generate and setup signing certificate for Android
    (required only before first release).
