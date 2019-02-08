@@ -100,7 +100,7 @@ const l10n = {
     disableEasyConfirmationFirst: {
       title: `L'action a échoué`,
       message:
-        `Veuillez d'abord désactiver la confirmation facile sur tous vos portefeuille`
+        `Veuillez d'abord désactiver la confirmation facile sur tous vos portefeuille`,
       yesButton: common.ok,
     },
     enableFingerprintsFirst: {
