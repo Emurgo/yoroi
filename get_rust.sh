@@ -11,12 +11,14 @@ else
 
   # use 1.32.0 version. 
   rustup install 1.32.0
-  rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
 
   # cargo-lipo required only for ios build
   if [ -z "$YOROI_ANDROID_BUILD" ]
   then
+    rustup target add aarch64-apple-ios armv7-apple-ios armv7s-apple-ios x86_64-apple-ios i386-apple-ios
     cargo install cargo-lipo
+  else
+    rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
   fi
 
   if [[ -z "$BASH_ENV" ]]
