@@ -41,7 +41,7 @@ const AddressView = ({
     <TouchableOpacity activeOpacity={0.5} onPress={openDetails}>
       <View style={styles.container}>
         <View style={styles.addressContainer}>
-          <Text secondary={isUsed} small bold style={index}>{`/${index}`}</Text>
+          <Text secondary={isUsed} small bold>{`/${index}`}</Text>
           <Text
             secondary={isUsed}
             small
