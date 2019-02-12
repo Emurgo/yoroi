@@ -1,6 +1,6 @@
 // @flow
 import thunk from 'redux-thunk'
-import {createStore, applyMiddleware, compose } from 'redux'
+import {createStore, applyMiddleware, compose} from 'redux'
 import {createLogger} from 'redux-logger'
 import rootReducer from './rootReducer'
 import getInitialState from '../state'
@@ -22,19 +22,12 @@ export default () => {
 
   // When not running devtools, use regular compose
   const composeEnhancers =
-    (
-      window.__DEV__
-      &&
-      window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-    )
-    || compose
+    (window.__DEV__ && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
 
   const store = createStore(
     rootReducer,
     getInitialState(),
-    composeEnhancers(
-      applyMiddleware(...middlewares)
-    )
+    composeEnhancers(applyMiddleware(...middlewares)),
   )
 
   if (process.env.NODE_ENV === 'development') {
