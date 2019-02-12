@@ -66,7 +66,7 @@ class AddressModal extends React.Component<Props, State> {
     return (
       <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
         <View style={styles.content}>
-          <QRCode value={address} size={140} />
+          <QRCode value={address} size={140} bgColor="white" fgColor="black" />
 
           {index != null && (
             <Text style={styles.address}>
