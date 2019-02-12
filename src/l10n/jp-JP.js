@@ -1,6 +1,6 @@
 // @flow
 import {pluralizeEn, bold, normal, inline} from './util'
-import {termsOfService} from './tos.en'
+import {termsOfService} from './tos.ja-JP'
 
 // Do not translate
 const languages = {
