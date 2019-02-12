@@ -14,7 +14,7 @@ type Props = {
 }
 
 const AddressDetail = ({address, translations}: Props) => (
-  <QRCode value={address} size={140} bgColor="white" fgColor="#fff" />
+  <QRCode value={address} size={140} bgColor="white" fgColor="black"/>
 )
 
 export default compose(
