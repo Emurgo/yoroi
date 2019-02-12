@@ -8,10 +8,10 @@
 # install rustup
 curl https://sh.rustup.rs -sSf | sh
 
-# use nightly version
-rustup toolchain install nightly
-rustup install nightly-2018-06-05
-rustup target add wasm32-unknown-unknown --toolchain nightly
+# use 1.32.0 version
+rustup toolchain install 1.32.0
+rustup install 1.32.0
+rustup target add wasm32-unknown-unknown --toolchain 1.32.0
 ```
 
 ### ios
@@ -39,19 +39,51 @@ Command for updating link `ln -sf /usr/local/share/automake-<version>/test-drive
 
 ### android
 
-Copy `google-services.json` to `android/app`.
+#### Windows (Physical device)
+
+This requires a physical Android phone & USB cable
+
+1. Download [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
+1. Expose the USB to VirtualBox [guide here](https://www.wikihow.tech/Connect-a-USB-to-Virtualbox)
+    **Note**: You MUST expose USB 2.0 for Android devices. Exposing 3.0 will not work
+1. If your devices still doesn't appear, follow [these steps](https://android.stackexchange.com/a/144967)
+    **Note**: The format for these steps have changed over the years so be careful if you need this.
+
+#### Windows (Virtual Device)
+
+On Host (Setup Android device)
+1. Run Virtual Device from Android Studio
+
+On VM (Detect VirtualDevice from VirtualBox)
+1. `adb tcpip 5555`
+1. `adb kill-server`
+1. `adb connect 10.0.2.2:5555`
+
+On Host (allow app to connect to packaged bundle after build)
+1. Open VirtualBox
+1. VM Settings > Network >> Advanced > Port Forwarding
+1. Enter `8081` as Host Port and Guest Port (leave everything else blank)
+
+#### Android Setup
 
 ```
-# install android
+# install & stup android studio
 follow https://facebook.github.io/react-native/docs/getting-started.html (tab Building Projects with Native Code)
 ```
+
+1. Ask for a copy of (or creta a blank version of) `android/gradle.properties.local`, `android/app/google-services.json` and `android/app/api-XXXX.json`
+1. Make sure your Anddroid build tools match the version in [android/build.gradle](android/build.gradle) (you will get an error otherwise)
+1. Download the NDK form Android Studio
+1. Install Rust for Android `rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android`
 
 ### First time
 
 1. `yarn install`
-2. `yarn setup_configs` - links libraries to ios testnet build configurations
+1. `yarn setup_configs` - links libraries to ios testnet build configurations
 
-### Every time
+If these steps fail, try looking at the [android CLI](https://github.com/Emurgo/yoroi-mobile/blob/develop/.circleci/config.yml#L68)
+
+# Launching
 
 1. `react-native start` - this will run RN packager, let it running
 2. `react-native run-android --variant=devDebug` - for version with testnet
@@ -60,7 +92,20 @@ follow https://facebook.github.io/react-native/docs/getting-started.html (tab Bu
 4. `react-native run-ios --scheme=emurgo-staging --configuration=Staging.Debug` - staging (testnet) configuration
 5. `react-native run-ios --scheme=emurgo --configuration=Debug` - production configuration
 
-### Release
+# Debugging
+
+Read through [this page](https://facebook.github.io/react-native/docs/debugging) to understand debugging for React-Native
+
+#### React-Native Debugger
+
+This will allow you to put breakpoints and everything else you would ever need.
+
+1. Download & run https://github.com/jhen0409/react-native-debugger/releases
+1. While app is running, open debug menu
+1. Select `Debug JS remotely`
+
+
+# Releasing
 
 1. Follow [Signed Android APK](https://facebook.github.io/react-native/docs/signed-apk-android) to generate and setup signing certificate for Android
    (required only before first release).
