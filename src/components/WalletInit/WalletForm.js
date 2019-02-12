@@ -48,7 +48,6 @@ type Props = {
 }
 
 class WalletForm extends PureComponent<Props, ComponentState> {
-  /* prettier-ignore */
   state = CONFIG.DEBUG.PREFILL_FORMS
     ? {
       name: CONFIG.DEBUG.WALLET_NAME,

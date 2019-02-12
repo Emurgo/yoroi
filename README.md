@@ -1,4 +1,8 @@
-# Development
+# Yoroi Mobile
+
+## Architecture
+
+We use [React-Native](https://facebook.github.io/react-native/)
 
 ## Installation
 

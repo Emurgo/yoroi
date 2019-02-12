@@ -2,8 +2,6 @@
 import {validateMnemonic, wordlists} from 'bip39'
 import _ from 'lodash'
 
-import {containsUpperCase, containsLowerCase, isNumeric} from '../utils/string'
-import {CONFIG} from '../config'
 import {isValidAddress} from '../crypto/util'
 import assert from '../utils/assert'
 import {parseAdaDecimal, InvalidAdaAmount} from '../utils/parsing'
@@ -42,28 +40,21 @@ export const INVALID_PHRASE_ERROR_CODES = {
   INVALID_CHECKSUM: 'INVALID_CHECKSUM',
 }
 
-export type InvalidPhraseErrorCode = $Values<typeof INVALID_PHRASE_ERROR_CODES>
-export type InvalidPhraseError =
-  | {
-      code: 'TOO_LONG' | 'TOO_SHORT' | 'INVALID_CHECKSUM',
-    }
-  | {
-      code: 'UNKNOWN_WORDS',
-      words: Array<string>,
-      lastMightBeUnfinished: boolean,
-    }
+export type UnknownWordsError = {|
+  code: 'UNKNOWN_WORDS',
+  words: Array<string>,
+  lastMightBeUnfinished: boolean,
+|}
 
-export type RecoveryPhraseErrors = {
-  invalidPhrase: Array<InvalidPhraseError>,
-  minLength?: boolean,
-}
+export type InvalidPhraseErrorCode = $Values<typeof INVALID_PHRASE_ERROR_CODES>
+export type InvalidPhraseError = |
+  {|
+      code: 'TOO_LONG' | 'TOO_SHORT' | 'INVALID_CHECKSUM',
+  |}
+  | UnknownWordsError
 
 export type PasswordStrength = {
   isStrong: boolean,
-  hasSevenCharacters?: boolean,
-  hasUppercase?: boolean,
-  hasLowercase?: boolean,
-  hasDigit?: boolean,
   hasTwelveCharacters?: boolean,
 }
 
@@ -76,18 +67,8 @@ export const getPasswordStrength = (password: string): PasswordStrength => {
 
   if (password.length >= 12) {
     return {isStrong: true, hasTwelveCharacters: true}
-  } else if (!CONFIG.ALLOW_SHORT_PASSWORD) {
-    return {isStrong: false}
   }
-
-  const validation = {
-    hasSevenCharacters: password.length >= 7,
-    hasUppercase: containsUpperCase(password),
-    hasLowercase: containsLowerCase(password),
-    hasDigit: password.split('').some(isNumeric),
-  }
-
-  return {...validation, isStrong: Object.values(validation).every((x) => x)}
+  return {isStrong: false}
 }
 
 export const validatePassword = (
@@ -120,7 +101,7 @@ export const getWalletNameError = (
     nameAlreadyTaken: string,
   },
   validationErrors: WalletNameValidationErrors,
-) => {
+): null | string => {
   const {tooLong, nameAlreadyTaken} = translations
 
   if (validationErrors.tooLong) {
@@ -143,7 +124,9 @@ export const validateAddressAsync = async (
   return isValid ? {} : {invalidAddress: true}
 }
 
-export const validateAmount = (value: string): AmountValidationErrors => {
+export const validateAmount = (
+  value: string
+): AmountValidationErrors => {
   if (!value) {
     return {amountIsRequired: true}
   }
@@ -168,7 +151,7 @@ wordlists.EN.forEach((word) => {
 
 const MNEMONIC_LENGTH = 15
 
-export const cleanMnemonic = (mnemonic: string) => {
+export const cleanMnemonic = (mnemonic: string): string => {
   // get rid of common punctuation
   mnemonic = mnemonic.replace(/[.,?]/g, ' ')
   // normalize whitespace
@@ -179,45 +162,50 @@ export const cleanMnemonic = (mnemonic: string) => {
   return mnemonic.trim()
 }
 
-export const validateRecoveryPhrase = (mnemonic: string) => {
+export const validateRecoveryPhrase = (
+  mnemonic: string
+): Array<InvalidPhraseError> => {
   const cleaned = cleanMnemonic(mnemonic)
   // Deal with edge case ''.split(' ') -> ['']
   const words = cleaned ? cleaned.split(' ') : []
 
-  const tooShort = words.length < MNEMONIC_LENGTH
-  const tooLong = words.length > MNEMONIC_LENGTH
   const invalidPhraseErrors = []
 
-  if (tooLong) {
-    invalidPhraseErrors.push({code: INVALID_PHRASE_ERROR_CODES.TOO_LONG})
+  // length check
+  {
+    const tooShort = words.length < MNEMONIC_LENGTH
+    const tooLong = words.length > MNEMONIC_LENGTH
+
+    if (tooLong) {
+      invalidPhraseErrors.push({code: INVALID_PHRASE_ERROR_CODES.TOO_LONG})
+    }
+
+    if (tooShort) {
+      invalidPhraseErrors.push({code: INVALID_PHRASE_ERROR_CODES.TOO_SHORT})
+    }
   }
 
-  if (tooShort) {
-    invalidPhraseErrors.push({code: INVALID_PHRASE_ERROR_CODES.TOO_SHORT})
-  }
+  // word check
+  {
+    const isUnknown = (word) => !wordlists.EN.includes(word)
 
-  const isUnknown = (word) => !wordlists.EN.includes(word)
+    const unknownWords: Array<string> = words.filter(isUnknown)
 
-  const unknownWords: Array<string> = words.filter(isUnknown)
-
-  if (unknownWords.length > 0) {
-    invalidPhraseErrors.push({
-      code: INVALID_PHRASE_ERROR_CODES.UNKNOWN_WORDS,
-      words: unknownWords,
-      lastMightBeUnfinished:
-        isUnknown(_.last(words)) && !mnemonic.endsWith(' '),
-    })
+    if (unknownWords.length > 0) {
+      invalidPhraseErrors.push({
+        code: INVALID_PHRASE_ERROR_CODES.UNKNOWN_WORDS,
+        words: unknownWords,
+        lastMightBeUnfinished:
+          isUnknown(_.last(words)) && !mnemonic.endsWith(' '),
+      })
+    }
   }
 
   if (invalidPhraseErrors.length > 0) {
-    return {
-      invalidPhrase: invalidPhraseErrors,
-    }
+    return invalidPhraseErrors
   } else if (!validateMnemonic(cleaned)) {
-    return {
-      invalidPhrase: [{code: INVALID_PHRASE_ERROR_CODES.INVALID_CHECKSUM}],
-    }
+    return [{code: INVALID_PHRASE_ERROR_CODES.INVALID_CHECKSUM}]
   } else {
-    return {}
+    return []
   }
 }

@@ -9,11 +9,11 @@ import AddressReaderQR from './AddressReaderQR'
 import BiometricAuthScreen from './BiometricAuthScreen'
 import iconQR from '../../assets/img/qr_code.png'
 
-import HeaderBackButton from '../UiKit/HeaderBackButton'
 import {
   defaultNavigationOptions,
   defaultStackNavigatorOptions,
-} from '../../navigationOptions'
+  backButtonNavigatorOptions,
+} from '../../utils/navigation'
 
 import {SEND_ROUTES} from '../../RoutesList'
 
@@ -56,11 +56,7 @@ const SendScreenNavigator = createStackNavigator(
   },
   {
     initialRouteName: SEND_ROUTES.MAIN,
-    navigationOptions: ({navigation}) => ({
-      title: navigation.getParam('title'),
-      headerLeft: <HeaderBackButton navigation={navigation} />,
-      ...defaultNavigationOptions,
-    }),
+    navigationOptions: backButtonNavigatorOptions,
     ...defaultStackNavigatorOptions,
   },
 )

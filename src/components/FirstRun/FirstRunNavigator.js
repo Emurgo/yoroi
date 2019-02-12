@@ -1,13 +1,11 @@
 // @flow
-import React from 'react'
 import {createStackNavigator} from 'react-navigation'
 
 import LanguagePickerScreen from './LanguagePickerScreen'
-import HeaderBackButton from '../UiKit/HeaderBackButton'
 import {
-  defaultNavigationOptions,
   defaultStackNavigatorOptions,
-} from '../../navigationOptions'
+  backButtonNavigatorOptions,
+} from '../../utils/navigation'
 import {FIRST_RUN_ROUTES} from '../../RoutesList'
 import AcceptTermsOfServiceScreen from './AcceptTermsOfServiceScreen'
 import CustomPinScreen from './CustomPinScreen'
@@ -30,11 +28,7 @@ const WalletInitNavigator = createStackNavigator(
   },
   {
     initialRouteName: FIRST_RUN_ROUTES.LANGUAGE,
-    navigationOptions: ({navigation}) => ({
-      title: navigation.getParam('title'),
-      headerLeft: <HeaderBackButton navigation={navigation} />,
-      ...defaultNavigationOptions,
-    }),
+    navigationOptions: backButtonNavigatorOptions,
     cardStyle: {
       backgroundColor: 'transparent',
     },

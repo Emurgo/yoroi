@@ -17,7 +17,6 @@ import type {HOC} from 'recompose'
 // TODO(ppershing): figure out how to constrain 'any' here.
 // Note that simply replacing 'any' with Props (or Subprops)
 // turns flow into I-ignore-type-errors beast :-(
-// prettier-ignore
 export const onDidMount = <
   Props,
   Callback: (any) => mixed,
@@ -36,7 +35,6 @@ export const onDidMount = <
       }
     }
 
-// prettier-ignore
 export const onWillUnmount = <
   Props,
   Callback: (any) => mixed,
@@ -55,7 +53,6 @@ export const onWillUnmount = <
       }
     }
 
-// prettier-ignore
 export const onDidUpdate = <Props, Callback: (any, any) => mixed>(
   didUpdate: Callback,
 ): HOC<Props, Props> => (
@@ -71,13 +68,11 @@ export const onDidUpdate = <Props, Callback: (any, any) => mixed>(
       }
     }
 
-// prettier-ignore
 export const withTranslations = <GetTrans: (State) => mixed, Props: {}>(
   getTrans: GetTrans,
 ): HOC<{|...$Exact<Props>, translations: $Call<GetTrans, State>|}, Props> =>
     connect((state) => ({translations: getTrans(state)}))
 
-// prettier-ignore
 export const withNavigationTitle = <Props: {navigation: any}>(
   getTitle: (Props) => string,
   paramName?: string
@@ -148,7 +143,6 @@ export const measureRenderTime = <Props>(name: string): HOC<Props, Props> => (
 // TODO(ppershing): figure out how to constrain 'any' here.
 // Note that simply replacing 'any' with Props (or Subprops)
 // turns flow into I-ignore-type-errors beast :-(
-// prettier-ignore
 export const requireLoaded = <
   Props,
   Callback: (any) => mixed,

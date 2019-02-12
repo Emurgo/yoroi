@@ -1,8 +1,6 @@
 // @flow
-import React from 'react'
 import {createStackNavigator, createSwitchNavigator} from 'react-navigation'
 
-import HeaderBackButton from './components/UiKit/HeaderBackButton'
 import WalletInitNavigator from './components/WalletInit/WalletInitNavigator'
 import TxHistoryNavigator from './components/TxHistory/TxHistoryNavigator'
 import SendScreenNavigator from './components/Send/SendScreenNavigator'
@@ -15,9 +13,9 @@ import {WALLET_ROUTES, ROOT_ROUTES} from './RoutesList'
 import BiometricAuthScreen from './components/Send/BiometricAuthScreen'
 import CustomPinLogin from './components/Login/CustomPinLogin'
 import {
-  defaultNavigationOptions,
   defaultStackNavigatorOptions,
-} from './navigationOptions'
+  backButtonNavigatorOptions,
+} from './utils/navigation'
 
 const WalletNavigator = createStackNavigator(
   {
@@ -35,6 +33,22 @@ const WalletNavigator = createStackNavigator(
   },
 )
 
+const LoginNavigator = createStackNavigator(
+  {
+    [ROOT_ROUTES.LOGIN]: {
+      screen: AppStartScreen,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    [ROOT_ROUTES.CUSTOM_PIN_AUTH]: CustomPinLogin,
+  },
+  {
+    navigationOptions: backButtonNavigatorOptions,
+    ...defaultStackNavigatorOptions,
+  },
+)
+
 const AppNavigator = createSwitchNavigator(
   {
     [ROOT_ROUTES.SPLASH]: SplashScreen,
@@ -43,25 +57,7 @@ const AppNavigator = createSwitchNavigator(
     [ROOT_ROUTES.NEW_WALLET]: WalletInitNavigator,
     [ROOT_ROUTES.BIO_AUTH]: BiometricAuthScreen,
     [ROOT_ROUTES.WALLET]: WalletNavigator,
-    [ROOT_ROUTES.LOGIN]: createStackNavigator(
-      {
-        [ROOT_ROUTES.LOGIN]: {
-          screen: AppStartScreen,
-          navigationOptions: {
-            header: null,
-          },
-        },
-        [ROOT_ROUTES.CUSTOM_PIN_AUTH]: CustomPinLogin,
-      },
-      {
-        navigationOptions: ({navigation}) => ({
-          title: navigation.getParam('title'),
-          headerLeft: <HeaderBackButton navigation={navigation} />,
-          ...defaultNavigationOptions,
-        }),
-        ...defaultStackNavigatorOptions,
-      },
-    ),
+    [ROOT_ROUTES.LOGIN]: LoginNavigator,
   },
   {
     initialRouteName: ROOT_ROUTES.SPLASH,

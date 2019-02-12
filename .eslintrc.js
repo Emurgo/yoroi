@@ -26,6 +26,7 @@ module.exports = {
     'spaced-comment': 1,
     'react/no-access-state-in-setstate': 2,
     'react/no-multi-comp': 0,
+    "no-lone-blocks": 0,
     'no-multi-str': 0,
     'react/no-typos': 2,
     'react/sort-comp': 1,

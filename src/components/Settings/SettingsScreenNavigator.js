@@ -23,7 +23,7 @@ import {SETTINGS_ROUTES} from '../../RoutesList'
 import {
   defaultNavigationOptions,
   defaultStackNavigatorOptions,
-} from '../../navigationOptions'
+} from '../../utils/navigation'
 
 import {COLORS} from '../../styles/config'
 
@@ -98,6 +98,7 @@ const SettingsScreenNavigator = createStackNavigator(
   },
   {
     initialRouteName: SETTINGS_ROUTES.MAIN,
+    // TODO: can we merge this with backButtonNavigatorOptions?
     navigationOptions: ({navigation}) => ({
       title:
         navigation.state.routes &&

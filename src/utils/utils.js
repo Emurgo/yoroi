@@ -1,8 +1,10 @@
 // @flow
 import {delay} from './promise'
 
-// Ignores any concurrent calls to this function
-// and instead instantly resolves with null
+/*
+ * Ignores any concurrent calls to this function
+ * and instead instantly resolves with null
+*/
 export const ignoreConcurrentAsync = <T, R>(
   handler: (T) => Promise<R>,
   additionalDelay?: number,
@@ -22,20 +24,24 @@ export const ignoreConcurrentAsync = <T, R>(
   }
 }
 
-// Turns handler working like this: handler = (props) => (...args) => result
-// Into  handler working like this: handler = (props, ...args) => result
-// $FlowFixMe
-const curry = (fn) => (arg, ...rest) => fn(arg)(...rest)
+/*
+ * Turns handler working like this: handler = (props) => (...args) => result
+ * Into  handler working like this: handler = (props, ...args) => result
+*/
+const curry = (fn: Function) => (arg, ...rest) => fn(arg)(...rest)
 
-// Turns handler working like this: handler = (props, ...args) => result
-// Into  handler working like this: handler = (props) => (...args) => result
-// $FlowFixMe
-const uncurry = (fn) => (arg) => (...rest) => fn(arg, ...rest)
+/*
+ * Turns handler working like this: handler = (props, ...args) => result
+ * Into  handler working like this: handler = (props) => (...args) => result
+*/
+const uncurry = (fn: Function) => (arg) => (...rest) => fn(arg, ...rest)
 
-// For use in withHandlers.
-// Warning: This keeps one concurrent instance
-// *per component declaration* (e.g. multiple
-// component instances share the limit)
+/*
+ * For use in withHandlers.
+ * Warning: This keeps one concurrent instance
+ * per component declaration* (e.g. multiple
+ * component instances share the limit)
+*/
 export const ignoreConcurrentAsyncHandler = <Props, T, R>(
   handler: (Props) => (T) => Promise<R>,
   additionalDelay?: number,

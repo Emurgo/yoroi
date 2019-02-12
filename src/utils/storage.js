@@ -7,13 +7,13 @@ import _ from 'lodash'
 
 export class StorageError extends ExtendableError {}
 
-const checkPathFormat = (path: string) =>
+const checkPathFormat = (path: string): boolean =>
   path.startsWith('/') && !path.endsWith('/')
 
-const parseJson = (json: string) =>
+const parseJson = (json: string | null) =>
   json !== null ? JSON.parse(json) : undefined
 
-export const read = async (path: string) => {
+export const read = async (path: string): Promise<any> => {
   assert.preconditionCheck(checkPathFormat(path), 'Wrong storage key path')
 
   try {
@@ -23,7 +23,9 @@ export const read = async (path: string) => {
   }
 }
 
-export const readMany = async (paths: Array<string>) => {
+export const readMany = async (
+  paths: Array<string>
+): Promise<[string, string][]> => {
   assert.preconditionCheck(
     _.every(paths, checkPathFormat),
     'Wrong storage key path',
@@ -38,7 +40,7 @@ export const readMany = async (paths: Array<string>) => {
   }
 }
 
-export const write = async (path: string, data: any) => {
+export const write = async (path: string, data: any): Promise<void> => {
   assert.preconditionCheck(path.startsWith('/'), 'Wrong storage key path')
   assert.preconditionCheck(!path.endsWith('/'), 'Wrong storage key path')
   assert.preconditionCheck(data !== undefined, 'Cannot store undefined')
@@ -50,7 +52,7 @@ export const write = async (path: string, data: any) => {
   }
 }
 
-export const remove = async (path: string) => {
+export const remove = async (path: string): Promise<void> => {
   assert.preconditionCheck(path.startsWith('/'), 'Wrong storage key path')
   assert.preconditionCheck(!path.endsWith('/'), 'Wrong storage key path')
 
@@ -61,7 +63,7 @@ export const remove = async (path: string) => {
   }
 }
 
-export const clearAll = async () => {
+export const clearAll = async (): Promise<void> => {
   try {
     await AsyncStorage.clear()
   } catch (error) {
@@ -69,7 +71,10 @@ export const clearAll = async () => {
   }
 }
 
-export const keys = async (path: string, includeSubdirs?: boolean) => {
+export const keys = async (
+  path: string,
+  includeSubdirs?: boolean
+): Promise<string[]> => {
   try {
     const all = await AsyncStorage.getAllKeys()
     const matched = all

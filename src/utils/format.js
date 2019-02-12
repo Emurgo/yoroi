@@ -2,15 +2,15 @@
 import {BigNumber} from 'bignumber.js'
 import moment from 'moment'
 import utfSymbols from './utfSymbols'
-
+import {
+  LOVELACES_PER_ADA,
+  DECIMAL_PLACES_IN_ADA,
+} from '../config'
 import l10n from '../l10n'
 
-// 1 ADA = 1 000 000 micro ada
-const MICRO = 1000000
-
 export const formatAda = (amount: BigNumber) => {
-  const num = amount.dividedBy(MICRO)
-  return num.toFormat(6)
+  const num = amount.dividedBy(LOVELACES_PER_ADA)
+  return num.toFormat(DECIMAL_PLACES_IN_ADA)
 }
 
 export const formatAdaWithSymbol = (amount: BigNumber) =>
@@ -21,8 +21,8 @@ export const formatAdaWithText = (amount: BigNumber) =>
   `${formatAda(amount)}${utfSymbols.NBSP}ADA`
 
 export const formatAdaInteger = (amount: BigNumber) => {
-  const num = amount.dividedToIntegerBy(MICRO)
-  if (amount.lt(0) && amount.gt(-MICRO)) {
+  const num = amount.dividedToIntegerBy(LOVELACES_PER_ADA)
+  if (amount.lt(0) && amount.gt(LOVELACES_PER_ADA.negated())) {
     // -0 needs special handling
     return '-0'
   } else {
@@ -33,10 +33,10 @@ export const formatAdaInteger = (amount: BigNumber) => {
 export const formatAdaFractional = (amount: BigNumber) => {
   const fractional = amount
     .abs()
-    .modulo(MICRO)
-    .dividedBy(MICRO)
+    .modulo(LOVELACES_PER_ADA)
+    .dividedBy(LOVELACES_PER_ADA)
   // remove leading '0'
-  return fractional.toFormat(6).substring(1)
+  return fractional.toFormat(DECIMAL_PLACES_IN_ADA).substring(1)
 }
 
 export const formatTimeToSeconds = (ts: string | moment) => {

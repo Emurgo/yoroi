@@ -11,7 +11,7 @@ import iconGear from '../../assets/img/gear.png'
 import {
   defaultNavigationOptions,
   defaultStackNavigatorOptions,
-} from '../../navigationOptions'
+} from '../../utils/navigation'
 
 import styles from './styles/SettingsButton.style'
 

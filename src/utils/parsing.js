@@ -1,9 +1,11 @@
 // @flow
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
-
-// 1 ADA = 1 000 000 micro ada
-const MICRO = 1000000
+import {
+  LOVELACES_PER_ADA,
+  TOTAL_SUPPLY,
+  DECIMAL_PLACES_IN_ADA,
+} from '../config'
 
 export class InvalidAdaAmount extends ExtendableError {
   static ERROR_CODES = {
@@ -20,24 +22,21 @@ export class InvalidAdaAmount extends ExtendableError {
   }
 }
 
-// Maximum ADA supply in microADA
-const MAX_ADA = new BigNumber('45 000 000 000 000000'.replace(/ /g, ''), 10)
-
 export const parseAdaDecimal = (amount: string) => {
   const parsed = new BigNumber(amount, 10)
   if (parsed.isNaN()) {
     throw new InvalidAdaAmount(InvalidAdaAmount.ERROR_CODES.INVALID_AMOUNT)
   }
 
-  if (parsed.decimalPlaces() > 6) {
+  if (parsed.decimalPlaces() > DECIMAL_PLACES_IN_ADA) {
     throw new InvalidAdaAmount(
       InvalidAdaAmount.ERROR_CODES.TOO_MANY_DECIMAL_PLACES,
     )
   }
 
-  const value = parsed.times(MICRO)
+  const value = parsed.times(LOVELACES_PER_ADA)
 
-  if (value.gte(MAX_ADA)) {
+  if (value.gte(TOTAL_SUPPLY)) {
     throw new InvalidAdaAmount(InvalidAdaAmount.ERROR_CODES.TOO_LARGE)
   }
 

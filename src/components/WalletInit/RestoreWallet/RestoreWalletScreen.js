@@ -40,20 +40,26 @@ const _translateInvalidPhraseError = (
   }
 }
 
-const errorsVisibleWhileWriting = (errors) => {
+const errorsVisibleWhileWriting = (
+  errors: Array<InvalidPhraseError>,
+): Array<InvalidPhraseError> => {
   return errors
+    .filter((error) => {
+      // refine type
+      if (!error.words) {
+        return true
+      }
+      return error.words.length > 1
+    })
     .map((error) => {
       if (error.code !== INVALID_PHRASE_ERROR_CODES.UNKNOWN_WORDS) return error
       if (!error.lastMightBeUnfinished) return error
-      // $FlowFixMe flow does not like null here
-      if (error.words.length <= 1) return null
       return {
         code: error.code,
         words: _.initial(error.words),
         lastMightBeUnfinished: error.lastMightBeUnfinished,
       }
     })
-    .filter((error) => !!error)
 }
 
 const RestoreWalletScreen = ({
@@ -66,8 +72,8 @@ const RestoreWalletScreen = ({
 }) => {
   const errors = validateRecoveryPhrase(phrase)
   const visibleErrors = isKeyboardOpen
-    ? errorsVisibleWhileWriting(errors.invalidPhrase || [])
-    : errors.invalidPhrase || []
+    ? errorsVisibleWhileWriting(errors)
+    : errors
 
   const errorText = visibleErrors
     .map((error) => translateInvalidPhraseError(error))

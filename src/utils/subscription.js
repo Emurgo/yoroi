@@ -1,10 +1,12 @@
 // @flow
 import assert from './assert'
-// simple subscription implementation
-// Note(ppershing): RxJS overvables are probably too much overkill
-// for our use-cases and EventEmitter emits untyped events so it is hard
-// to statically check. We also auto-bind methods
 
+/*
+ * simple subscription implementation
+ * RxJS overvables are probably too much overkill
+ * for our use-cases and EventEmitter emits untyped events so it is hard
+ * to statically check. We also auto-bind methods
+*/
 export class SubscriptionManager<T> {
   _subscriptions: Array<(T) => any> = []
 

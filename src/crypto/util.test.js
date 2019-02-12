@@ -53,7 +53,6 @@ test('Can generate external addresses', async () => {
 // getAddressInHex
 test('Can convert address to hex', () => {
   const address = externalAddresses[0]
-  // prettier-ignore
   // eslint-disable-next-line max-len
   const hex = '82d818582183581ce0256c34965ce528570c22f88073e625020288a1973c1e2d466d39bca0001ab7e3a79a'
   expect(getAddressInHex(address)).toEqual(hex)
@@ -275,13 +274,14 @@ describe('signTransaction', () => {
     const fee = result.fee.toNumber()
     // Note(ppershing): When building the transaction
     // the best solution is to have 2 outputs:
-    // 1) output address with 4832139 uADA (micro ADA)
-    // 2) change address with 23 uADA
+    // 1) output address with 4832139 lovelace
+    // 2) change address with 23 lovelace
     // This leads to tx with 283 bytes requiring *minimum* fee of 167818.
     // Note that such Tx will have bigger fee because we failed to include
-    // additional 20 uADA. This is a consequence of fact that CBOR encoding of
+    // additional 20 lovelace.
+    // This is a consequence of fact that CBOR encoding of
     // value >=24 is one byte longer than 23. Thus we would require additional
-    // 43 uADA in fees
+    // 43 lovelace in fees
     const BAD_FEE = 167818
     expect(fee).toEqual(BAD_FEE)
 

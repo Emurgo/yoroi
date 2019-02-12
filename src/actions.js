@@ -47,6 +47,13 @@ import {type Dispatch} from 'redux'
 import {type State} from './state'
 import type {PreparedTransactionData} from './types/HistoryTransaction'
 
+// ==============
+//  App Settings
+// ==============
+
+/**
+ * Need to update crashlytics info occasionaly to stay in sync with settings
+ */
 const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
   const handlers = {
     [APP_SETTINGS_KEYS.LANG]: () =>
@@ -90,43 +97,37 @@ export const clearAppSettingField = (fieldName: AppSettingsKey) => async (
   })
 }
 
-export const setEasyConfirmation = (enable: boolean) => ({
-  path: ['wallet', 'isEasyConfirmationEnabled'],
-  payload: enable,
-  reducer: (state: State, value: boolean) => value,
-  type: 'SET_EASY_CONFIRMATION',
-})
-
-const _updateWallets = (wallets) => ({
-  path: ['wallets'],
-  payload: wallets,
-  reducer: (state, value) => value,
-  type: 'UPDATE_WALLETS',
-})
-
-const updateWallets = () => (dispatch: Dispatch<any>) => {
-  const wallets = walletManager.getWallets()
-  dispatch(_updateWallets(wallets))
-}
-
-const _setAppSettings = (appSettings) => ({
-  path: ['appSettings'],
-  payload: appSettings,
-  type: 'SET_APP_SETTINGS',
-  reducer: (state, payload) => payload,
-})
-
 const reloadAppSettings = () => async (dispatch: Dispatch<any>) => {
   const appSettings = await readAppSettings()
   Object.entries(appSettings).forEach(([key, value]) => {
     updateCrashlytics(key, value)
   })
 
-  dispatch(_setAppSettings(appSettings))
+  dispatch({
+    path: ['appSettings'],
+    payload: appSettings,
+    type: 'SET_APP_SETTINGS',
+    reducer: (state, payload) => payload,
+  })
   if (appSettings.languageCode) {
     dispatch(changeLanguage(appSettings.languageCode))
   }
 }
+
+export const acceptAndSaveTos = () => async (dispatch: Dispatch<any>) => {
+  await dispatch(setAppSettingField(APP_SETTINGS_KEYS.ACCEPTED_TOS, true))
+}
+
+// ============
+//  Biometrics
+// ============
+
+export const setEasyConfirmation = (enable: boolean) => ({
+  path: ['wallet', 'isEasyConfirmationEnabled'],
+  payload: enable,
+  reducer: (state: State, value: boolean) => value,
+  type: 'SET_EASY_CONFIRMATION',
+})
 
 export const encryptAndStoreCustomPin = (pin: string) => async (
   dispatch: Dispatch<any>,
@@ -151,6 +152,82 @@ export const removeCustomPin = () => async (
   await dispatch(clearAppSettingField(APP_SETTINGS_KEYS.CUSTOM_PIN_HASH))
 }
 
+export const setSystemAuth = (enable: boolean) => async (
+  dispatch: Dispatch<any>,
+  getState: any,
+) => {
+  const canBeDisabled = walletManager.canBiometricsSignInBeDisabled()
+
+  if (!enable && !canBeDisabled) {
+    throw new Error(
+      'Can not disable system auth without disabling easy confirmation.',
+    )
+  }
+
+  await dispatch(
+    setAppSettingField(APP_SETTINGS_KEYS.SYSTEM_AUTH_ENABLED, enable),
+  )
+
+  const installationId = installationIdSelector(getState())
+  if (!installationId) {
+    throw new Error('Installation id is not defined')
+  }
+
+  if (enable) {
+    await recreateAppSignInKeys(installationId)
+
+    await dispatch(removeCustomPin())
+  } else {
+    await removeAppSignInKeys(installationId)
+  }
+}
+
+// ===================
+//  Wallet Management
+// ===================
+
+const _updateWallets = (wallets) => ({
+  path: ['wallets'],
+  payload: wallets,
+  reducer: (state, value) => value,
+  type: 'UPDATE_WALLETS',
+})
+
+const updateWallets = () => (dispatch: Dispatch<any>) => {
+  const wallets = walletManager.getWallets()
+  dispatch(_updateWallets(wallets))
+}
+
+export const closeWallet = () => async (dispatch: Dispatch<any>) => {
+  await walletManager.closeWallet()
+}
+
+export const changeWalletName = (newName: string) => async (
+  dispatch: Dispatch<any>,
+) => {
+  await walletManager.rename(newName)
+  dispatch(updateWallets())
+}
+
+export const createWallet = (
+  name: string,
+  mnemonic: string,
+  password: string,
+) => async (dispatch: Dispatch<any>) => {
+  await walletManager.createWallet(name, mnemonic, password)
+  dispatch(updateWallets())
+}
+
+export const removeCurrentWallet = () => async (dispatch: Dispatch<any>) => {
+  await walletManager.removeCurrentWallet()
+  dispatch(updateWallets())
+}
+
+// ==================
+//  App Open / Close
+// ==================
+
+/** Once app is done loading, we need to pick which page to navigate to */
 export const navigateFromSplash = () => (
   dispatch: Dispatch<any>,
   getState: any,
@@ -183,10 +260,6 @@ export const navigateFromSplash = () => (
   }
 }
 
-export const acceptAndSaveTos = () => async (dispatch: Dispatch<any>) => {
-  await dispatch(setAppSettingField(APP_SETTINGS_KEYS.ACCEPTED_TOS, true))
-}
-
 const initInstallationId = () => async (
   dispatch: Dispatch<any>,
   getState: any,
@@ -205,8 +278,69 @@ const initInstallationId = () => async (
   return installationId
 }
 
-export const closeWallet = () => async (dispatch: Dispatch<any>) => {
-  await walletManager.closeWallet()
+export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
+  await dispatch(reloadAppSettings())
+
+  const installationId = await dispatch(initInstallationId())
+  const state = getState()
+
+  // Crashlytics
+  {
+    if (sendCrashReportsSelector(getState())) {
+      crashReporting.enable()
+      // TODO(ppershing): just update crashlytic variables here
+      await dispatch(reloadAppSettings())
+    }
+    crashReporting.setUserId(installationIdSelector(getState()))
+  }
+
+  // Biometrics
+  {
+    const canEnableBiometricEncryption =
+      await canBiometricEncryptionBeEnabled()
+
+    await dispatch(
+      setAppSettingField(
+        APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION,
+        canEnableBiometricEncryption,
+      ),
+    )
+
+    if (canEnableBiometricEncryption && isSystemAuthEnabledSelector(state)) {
+      // On android 6 signin keys can get invalidated
+      // (e. g. when you change fingerprint),
+      // if that happens we want to regenerate them.
+      // As for the invalidate PIN case -> that should only
+      // happen when user removes PIN and re-creates it, but that should
+      // not be possible without first removing biometrics?
+      // So the biometrics key would be invalidated first.
+      // Also there is no way we know of to check if the key is valid
+      // in SYSTEM_PIN case without user typing the correct PIN.
+      const isKeyValid = await KeyStore.isKeyValid(installationId, 'BIOMETRICS')
+
+      if (!isKeyValid) {
+        await recreateAppSignInKeys(installationId)
+      }
+    }
+  }
+
+  // Wallet
+  {
+    await walletManager.initialize()
+    await dispatch(updateWallets())
+  }
+
+  // Remove splash
+  {
+    dispatch({
+      path: ['isAppInitialized'],
+      payload: true,
+      reducer: (state, value) => value,
+      type: 'INITIALIZE_APP',
+    })
+    dispatch(navigateFromSplash())
+    SplashScreen.hide()
+  }
 }
 
 export const logout = () => async (dispatch: Dispatch<any>) => {
@@ -215,59 +349,9 @@ export const logout = () => async (dispatch: Dispatch<any>) => {
   await dispatch(navigateFromSplash())
 }
 
-export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
-  await dispatch(reloadAppSettings())
-
-  const installationId = await dispatch(initInstallationId())
-  const state = getState()
-
-  if (sendCrashReportsSelector(getState())) {
-    crashReporting.enable()
-    // TODO(ppershing): just update crashlytic variables here
-    await dispatch(reloadAppSettings())
-  }
-
-  crashReporting.setUserId(installationIdSelector(getState()))
-
-  // prettier-ignore
-  const canEnableBiometricEncryption =
-    await canBiometricEncryptionBeEnabled()
-
-  await dispatch(
-    setAppSettingField(
-      APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION,
-      canEnableBiometricEncryption,
-    ),
-  )
-
-  await walletManager.initialize()
-  await dispatch(updateWallets())
-  if (canEnableBiometricEncryption && isSystemAuthEnabledSelector(state)) {
-    // On android 6 signin keys can get invalidated
-    // (e. g. when you change fingerprint),
-    // if that happens we want to regenerate them.
-    // As for the invalidate PIN case -> that should only
-    // happen when user removes PIN and re-creates it, but that should
-    // not be possible without first removing biometrics?
-    // So the biometrics key would be invalidated first.
-    // Also there is no way we know of to check if the key is valid
-    // in SYSTEM_PIN case without user typing the correct PIN.
-    const isKeyValid = await KeyStore.isKeyValid(installationId, 'BIOMETRICS')
-
-    if (!isKeyValid) {
-      await recreateAppSignInKeys(installationId)
-    }
-  }
-
-  dispatch({
-    path: ['isAppInitialized'],
-    payload: true,
-    reducer: (state, value) => value,
-    type: 'INITIALIZE_APP',
-  })
-  dispatch(navigateFromSplash())
-  SplashScreen.hide()
-}
+// ====================
+//  Listener-triggered
+// ====================
 
 const _setOnline = (isOnline: boolean) => (dispatch, getState) => {
   const state = getState()
@@ -316,6 +400,10 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
   )
 }
 
+// ==============
+//  Transactions
+// ==============
+
 export const generateNewReceiveAddress = () => async (
   dispatch: Dispatch<any>,
 ) => {
@@ -328,26 +416,19 @@ export const generateNewReceiveAddressIfNeeded = () => async (
   return await walletManager.generateNewUiReceiveAddressIfNeeded()
 }
 
-export const changeWalletName = (newName: string) => async (
-  dispatch: Dispatch<any>,
-) => {
-  await walletManager.rename(newName)
-  dispatch(updateWallets())
-}
-
-export const createWallet = (
-  name: string,
-  mnemonic: string,
-  password: string,
+export const submitTransaction = (
+  decryptedKey: string,
+  transactionData: PreparedTransactionData,
 ) => async (dispatch: Dispatch<any>) => {
-  await walletManager.createWallet(name, mnemonic, password)
-  dispatch(updateWallets())
+  const signedTx = await walletManager.signTx(transactionData, decryptedKey)
+  await walletManager.submitTransaction(signedTx)
+
+  dispatch(updateHistory())
 }
 
-export const removeCurrentWallet = () => async (dispatch: Dispatch<any>) => {
-  await walletManager.removeCurrentWallet()
-  dispatch(updateWallets())
-}
+// ========
+//  Dialog
+// =========
 
 type DialogOptions = {|
   title: string,
@@ -396,48 +477,8 @@ export const showConfirmationDialog = (
 ): Promise<DialogButton> =>
   showDialog(getDialog(l10n.translations.confirmationDialogs))
 
-export const setSystemAuth = (enable: boolean) => async (
-  dispatch: Dispatch<any>,
-  getState: any,
-) => {
-  const canBeDisabled = walletManager.canBiometricsSignInBeDisabled()
-
-  if (!enable && !canBeDisabled) {
-    throw new Error(
-      'Can not disable system auth without disabling easy confirmation.',
-    )
-  }
-
-  await dispatch(
-    setAppSettingField(APP_SETTINGS_KEYS.SYSTEM_AUTH_ENABLED, enable),
-  )
-
-  const installationId = installationIdSelector(getState())
-  if (!installationId) {
-    throw new Error('Installation id is not defined')
-  }
-
-  if (enable) {
-    await recreateAppSignInKeys(installationId)
-
-    await dispatch(removeCustomPin())
-  } else {
-    await removeAppSignInKeys(installationId)
-  }
-}
-
 export const handleGeneralError = async (message: string, e: Error) => {
   Logger.error(`${message}: ${e.message}`, e)
   await showErrorDialog((dialogs) => dialogs.generalError(message))
   crashReporting.crash()
-}
-
-export const submitTransaction = (
-  decryptedKey: string,
-  transactionData: PreparedTransactionData,
-) => async (dispatch: Dispatch<any>) => {
-  const signedTx = await walletManager.signTx(transactionData, decryptedKey)
-  await walletManager.submitTransaction(signedTx)
-
-  dispatch(updateHistory())
 }

@@ -1,16 +1,14 @@
 // @flow
-import React from 'react'
 import {createStackNavigator} from 'react-navigation'
 
 import WalletInitScreen from './WalletInitScreen'
 import CreateWalletScreen from './CreateWallet/CreateWalletScreen'
 import RestoreWalletScreen from './RestoreWallet/RestoreWalletScreen'
 import MnemonicShowScreen from './CreateWallet/MnemonicShowScreen'
-import HeaderBackButton from '../UiKit/HeaderBackButton'
 import {
-  defaultNavigationOptions,
   defaultStackNavigatorOptions,
-} from '../../navigationOptions'
+  backButtonNavigatorOptions,
+} from '../../utils/navigation'
 import MnemonicCheckScreen from './CreateWallet/MnemonicCheckScreen'
 import WalletCredentialsScreen from './RestoreWallet/WalletCredentialsScreen'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
@@ -42,11 +40,7 @@ const WalletInitNavigator = createStackNavigator(
   },
   {
     initialRouteName: WALLET_INIT_ROUTES.WALLET_SELECTION,
-    navigationOptions: ({navigation}) => ({
-      title: navigation.getParam('title'),
-      headerLeft: <HeaderBackButton navigation={navigation} />,
-      ...defaultNavigationOptions,
-    }),
+    navigationOptions: ({navigation}) => backButtonNavigatorOptions,
     cardStyle: {
       backgroundColor: 'transparent',
     },

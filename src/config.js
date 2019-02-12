@@ -1,6 +1,7 @@
 // @flow
 import {LogLevel} from './utils/logging'
 import env from './env'
+import {BigNumber} from 'bignumber.js'
 
 const IS_DEBUG = __DEV__
 // debugging flags
@@ -33,6 +34,15 @@ export const ASSURANCE_LEVELS = {
     MEDIUM: 15,
   },
 }
+
+export const LOVELACES_PER_ADA = new BigNumber(
+  '1 000 000'.replace(/ /g, ''), 10
+)
+export const TOTAL_SUPPLY = new BigNumber(
+  '45 000 000 000'.replace(/ /g, ''), 10
+).times(LOVELACES_PER_ADA)
+export const MAX_INTEGER_PLACES_IN_ADA = 11
+export const DECIMAL_PLACES_IN_ADA = 6
 
 export const CONFIG = {
   DEBUG: {
@@ -80,6 +90,5 @@ export const CONFIG = {
   },
   PIN_LENGTH: 6,
   APP_LOCK_TIMEOUT: 30 * 1000,
-  ALLOW_SHORT_PASSWORD: false,
   LOG_LEVEL: _LOG_LEVEL,
 }

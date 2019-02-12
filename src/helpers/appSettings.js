@@ -37,7 +37,7 @@ export const removeAppSettings = async (setting: AppSettingsKey) => {
   await storage.remove(getAppSettingsStoragePath(setting))
 }
 
-export const readAppSettings = async () => {
+export const readAppSettings = async (): Promise<any> => {
   const appSettingsKeys = Object.keys(APP_SETTINGS_KEYS).map((key) =>
     getAppSettingsStoragePath(APP_SETTINGS_KEYS[key]),
   )

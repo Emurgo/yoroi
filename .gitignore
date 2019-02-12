@@ -36,6 +36,9 @@ node_modules/
 npm-debug.log
 yarn-error.log
 
+# vscode
+.vscode/
+
 # BUCK
 buck-out/
 \.buckd/
