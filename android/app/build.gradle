@@ -178,9 +178,9 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-config')
-    compile project(':react-native-splash-screen')
-    compile project(':react-native-firebase')
+    implementation project(':react-native-config')
+    implementation project(':react-native-splash-screen')
+    implementation project(':react-native-firebase')
     implementation project(':react-native-cardano')
     implementation project(':react-native-camera')
     implementation project(':react-native-randombytes')
