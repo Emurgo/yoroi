@@ -212,9 +212,9 @@ const l10n = {
     noTransactions: 'Нет транзакций для показа',
     transaction: {
       transactionType: {
-        SENT: 'отправить ADA',
-        RECEIVED: 'получить ADA',
-        SELF: 'Внутренний кошелек',
+        SENT: 'отправлено ADA',
+        RECEIVED: 'получено ADA',
+        SELF: 'Свой кошелек',
         MULTI: 'Смешанный',
       },
       assuranceLevelHeader: 'Уровень гарантии:',
