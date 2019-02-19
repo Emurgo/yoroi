@@ -1,0 +1,10 @@
+{
+  "components.login.appstartscreen.loginButton": "Login",
+  "components.settings.changecustompinscreen.CurrentPinInput.subtitle": "Enter your current PIN",
+  "components.settings.changecustompinscreen.CurrentPinInput.title": "Enter PIN",
+  "components.settings.changecustompinscreen.PinRegistrationForm.PinConfirmationInput.title": "Repeat PIN",
+  "components.settings.changecustompinscreen.PinRegistrationForm.PinInput.subtitle": "Choose new PIN for quick access to wallet.",
+  "components.settings.changecustompinscreen.PinRegistrationForm.PinInput.title": "Enter PIN",
+  "components.settings.changecustompinscreen.title": "Change PIN",
+  "components.walletselection.walletselectionscreen.header": "Your wallets"
+}

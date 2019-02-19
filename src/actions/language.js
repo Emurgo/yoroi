@@ -9,6 +9,7 @@ export const changeLanguage = (languageCode: string) => (
   getState: any,
 ) => {
   l10n.setLanguage(languageCode)
+  console.log('language changed....', languageCode)
   dispatch({
     path: ['appSettings', 'languageCode'],
     payload: languageCode,

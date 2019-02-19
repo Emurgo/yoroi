@@ -6,6 +6,8 @@ import {View} from 'react-native'
 import {SafeAreaView} from 'react-navigation'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
+import {injectIntl, defineMessages} from 'react-intl'
+
 
 import WalletDescription from '../WalletInit/WalletDescription'
 import {Button, StatusBar, ScreenBackground} from '../UiKit'
@@ -26,9 +28,18 @@ import {showErrorDialog} from '../../actions'
 
 import type {State} from '../../state'
 
+const messages = defineMessages({
+  loginButton: {
+    id: 'components.login.appstartscreen.loginButton',
+    defaultMessage: 'Logiddn',
+    description: "some desc",
+  },
+})
+
 const getTranslations = (state: State) => state.trans.AppStartScreen
 
-const AppStartScreen = ({navigateLogin, translations}) => (
+const AppStartScreen = ({navigateLogin, translations, intl, locale}) => {
+  return (
   <SafeAreaView style={styles.safeAreaView}>
     <StatusBar type="dark" />
 
@@ -41,18 +52,19 @@ const AppStartScreen = ({navigateLogin, translations}) => (
         <Button
           outline
           onPress={navigateLogin}
-          title={translations.loginButton}
+          title={intl.formatMessage(messages.loginButton)}
         />
       </View>
     </ScreenBackground>
   </SafeAreaView>
-)
+)}
 
 export default compose(
   connect((state) => ({
     installationId: installationIdSelector(state),
     customPinHash: customPinHashSelector(state),
     isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
+    locale: state.appSettings.languageCode
   })),
   withTranslations(getTranslations),
   withHandlers({
@@ -91,4 +103,4 @@ export default compose(
       }
     },
   }),
-)(AppStartScreen)
+)(injectIntl(AppStartScreen))

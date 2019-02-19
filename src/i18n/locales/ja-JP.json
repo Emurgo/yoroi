@@ -1,0 +1,10 @@
+{
+  "components.login.appstartscreen.loginButton": "あなたのウォレット",
+  "components.settings.changecustompinscreen.CurrentPinInput.subtitle": "Logiddn",
+  "components.settings.changecustompinscreen.CurrentPinInput.title": "Logiddn",
+  "components.settings.changecustompinscreen.PinRegistrationForm.PinConfirmationInput.title": "Logiddn",
+  "components.settings.changecustompinscreen.PinRegistrationForm.PinInput.subtitle": "Logiddn",
+  "components.settings.changecustompinscreen.PinRegistrationForm.PinInput.title": "Logiddn",
+  "components.settings.changecustompinscreen.title": "Logiddn",
+  "components.walletselection.walletselectionscreen.header": "あなたのウォレットи"
+}

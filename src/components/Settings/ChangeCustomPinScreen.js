@@ -4,6 +4,7 @@ import {View} from 'react-native'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers, withState} from 'recompose'
+import {injectIntl, defineMessages} from 'react-intl'
 
 import PinInput from '../Common/PinInput'
 import PinRegistrationForm from '../Common/PinRegistrationForm'
@@ -20,12 +21,43 @@ import type {Navigation} from '../../types/navigation'
 import type {State} from '../../state'
 import type {ComponentType} from 'react'
 
-const getTranslations = (state: State) => state.trans.ChangeCustomPinScreen
+
+const messages = defineMessages({
+  currentPinInputTitle: {
+    id: 'components.settings.changecustompinscreen.CurrentPinInput.title',
+    defaultMessage: 'Logiddn',
+    description: "some desc",
+  },
+  currentPinInputSubtitle: {
+    id: 'components.settings.changecustompinscreen.CurrentPinInput.subtitle',
+    defaultMessage: 'Logiddn',
+    description: "some desc",
+  },
+  pinInputTitle: {
+    id: 'components.settings.changecustompinscreen.PinRegistrationForm.PinInput.title',
+    defaultMessage: 'Logiddn',
+    description: "some desc",
+  },
+  pinInputSubtitle: {
+    id: 'components.settings.changecustompinscreen.PinRegistrationForm.PinInput.subtitle',
+    defaultMessage: 'Logiddn',
+    description: "some desc",
+  },
+  pinConfirmationTitle: {
+    id: 'components.settings.changecustompinscreen.PinRegistrationForm.PinConfirmationInput.title',
+    defaultMessage: 'Logiddn',
+    description: "some desc",
+  },
+  title: {
+    id: 'components.settings.changecustompinscreen.title',
+    defaultMessage: 'Logiddn',
+    description: "some desc",
+  },
+})
 
 const handleVerifyPin = ({
   currentPinHash,
   setIsCurrentPinVerified,
-  translations,
 }) => async (pin): Promise<boolean> => {
   let isPinValid
   try {
@@ -53,7 +85,7 @@ const handleNewPinEnter = ({navigation, encryptAndStoreCustomPin}) => async (
 }
 
 const ChangeCustomPinScreen = ({
-  translations,
+  intl,
   navigation,
   isCurrentPinVerified,
   handleNewPinEnter,
@@ -65,11 +97,22 @@ const ChangeCustomPinScreen = ({
     {isCurrentPinVerified ? (
       <PinRegistrationForm
         onPinEntered={handleNewPinEnter}
-        labels={translations.PinRegistrationForm}
+        labels={{
+          PinInput: {
+            title: intl.formatMessage(messages.pinInputTitle),
+            subtitle: intl.formatMessage(messages.pinInputSubtitle),
+          },
+          PinConfirmationInput: {
+            title: intl.formatMessage(messages.pinConfirmationTitle),
+          },
+        }}
       />
     ) : (
       <PinInput
-        labels={translations.CurrentPinInput}
+        labels={{
+          title: intl.formatMessage(messages.currentPinInputTitle),
+          subtitle: intl.formatMessage(messages.currentPinInputSubtitle),
+        }}
         onPinEnter={handleVerifyPin}
         pinMaxLength={CONFIG.PIN_LENGTH}
       />
@@ -77,17 +120,16 @@ const ChangeCustomPinScreen = ({
   </View>
 )
 
-export default (compose(
+export default injectIntl(compose(
   connect(
     (state: State) => ({
-      translations: getTranslations(state),
       currentPinHash: customPinHashSelector(state),
     }),
     {
       encryptAndStoreCustomPin,
     },
   ),
-  withNavigationTitle(({translations}) => translations.title),
+  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
   withState('isCurrentPinVerified', 'setIsCurrentPinVerified', false),
   withHandlers({
     handleVerifyPin,

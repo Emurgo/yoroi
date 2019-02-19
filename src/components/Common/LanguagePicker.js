@@ -68,7 +68,9 @@ export const LanguagePicker = ({
   languageCode,
   handleContinue,
   translations,
-}: Props) => (
+}: Props) => {
+  console.log('cl, lc, hc, tr', changeLanguage, languageCode, handleContinue, translations)
+  return (
   <View style={styles.container}>
     <StatusBar type="light" />
 
@@ -92,6 +94,6 @@ export const LanguagePicker = ({
     <Image source={selectLanguageImage} style={styles.image} />
     <Button onPress={handleContinue} title={translations.continueButton} />
   </View>
-)
+)}
 
 export default compose(withTranslations(getTranslations))(LanguagePicker)

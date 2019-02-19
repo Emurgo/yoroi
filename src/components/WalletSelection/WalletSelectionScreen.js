@@ -6,6 +6,7 @@ import {connect} from 'react-redux'
 import {compose, withHandlers} from 'recompose'
 import _ from 'lodash'
 import {SafeAreaView} from 'react-navigation'
+import {injectIntl, defineMessages} from 'react-intl'
 
 import walletManager, {
   SystemAuthDisabled,
@@ -25,19 +26,28 @@ import type {ComponentType} from 'react'
 
 const getTranslations = (state: State) => state.trans.WalletSelectionScreen
 
+const messages = defineMessages({
+  header: {
+    id: 'components.walletselection.walletselectionscreen.header',
+    defaultMessage: 'WWWWWW',
+    description: "some ddesc",
+  },
+})
+
 const WalletListScreen = ({
   navigation,
   translations,
   wallets,
   navigateInitWallet,
   openWallet,
+  intl
 }) => (
   <SafeAreaView style={styles.safeAreaView}>
     <StatusBar type="dark" />
 
     <Screen style={styles.container}>
       <ScreenBackground>
-        <Text style={styles.title}>{translations.header}</Text>
+        <Text style={styles.title}>{intl.formatMessage(messages.header)}</Text>
 
         <ScrollView style={styles.wallets}>
           {wallets ? (
@@ -91,6 +101,6 @@ export default (compose(
       }
     },
   }),
-)(WalletListScreen): ComponentType<{
+)(injectIntl(WalletListScreen)): ComponentType<{
   navigation: NavigationScreenProp<NavigationState>,
 }>)
