@@ -5,6 +5,7 @@ import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {SafeAreaView} from 'react-navigation'
 import {ScrollView} from 'react-native'
+import {injectIntl, defineMessages} from 'react-intl'
 
 import {StatusBar} from '../UiKit'
 import TermsOfService from '../Common/TermsOfService'
@@ -12,15 +13,19 @@ import {withNavigationTitle} from '../../utils/renderUtils'
 
 import styles from './styles/TermsOfServiceScreen.styles'
 
-import type {SubTranslation} from '../../l10n/typeHelpers'
-
-const getTranslations = (state) => state.trans.TermsOfServiceScreen
+const messages = defineMessages({
+  title: {
+    id: 'components.settings.termsofservicescreen.title',
+    defaultMessage: '!!!Terms of Service Agreement',
+    description: "some desc",
+  },
+})
 
 type Props = {
-  translations: SubTranslation<typeof getTranslations>,
+  intl: any,
 }
 
-const TermsOfServiceScreen = ({translations}: Props) => (
+const TermsOfServiceScreen = ({intl}: Props) => (
   <SafeAreaView style={styles.safeAreaView}>
     <StatusBar type="dark" />
 
@@ -30,9 +35,6 @@ const TermsOfServiceScreen = ({translations}: Props) => (
   </SafeAreaView>
 )
 
-export default compose(
-  connect((state) => ({
-    translations: getTranslations(state),
-  })),
-  withNavigationTitle(({translations}) => translations.title),
-)(TermsOfServiceScreen)
+export default injectIntl(compose(
+  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+)(TermsOfServiceScreen))

@@ -5,6 +5,7 @@ import {connect} from 'react-redux'
 import {withHandlers} from 'recompose'
 import {ScrollView, StyleSheet, Switch} from 'react-native'
 import {NavigationEvents} from 'react-navigation'
+import {injectIntl, defineMessages} from 'react-intl'
 
 import {SETTINGS_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
@@ -32,7 +33,62 @@ import {StatusBar} from '../UiKit'
 import type {ComponentType} from 'react'
 import type {Navigation} from '../../types/navigation'
 
-const getTranslations = (state) => state.trans.SettingsScreen.ApplicationTab
+const messages = defineMessages({
+  title: {
+    id: 'components.settings.applicationsettingsscreen.title',
+    defaultMessage: 'Settings',
+    description: "some desc",
+  },
+  tabTitle: {
+    id: 'components.settings.applicationsettingsscreen.tabTitle',
+    defaultMessage: 'Application',
+    description: "some desc",
+  },
+  language: {
+    id: 'components.settings.applicationsettingsscreen.language',
+    defaultMessage: 'Your language',
+    description: "some desc",
+  },
+  security: {
+    id: 'components.settings.applicationsettingsscreen.security',
+    defaultMessage: 'Security',
+    description: "some desc",
+  },
+  changePin: {
+    id: 'components.settings.applicationsettingsscreen.changePin',
+    defaultMessage: 'Change PIN',
+    description: "some desc",
+  },
+  biometricsSignIn: {
+    id: 'components.settings.applicationsettingsscreen.biometricsSignIn',
+    defaultMessage: '!!!Sign in with your biometrics',
+    description: "some desc",
+  },
+  crashReporting: {
+    id: 'components.settings.applicationsettingsscreen.crashReporting',
+    defaultMessage: '!!!Crash reporting',
+    description: "some desc",
+  },
+  crashReportingText: {
+    id: 'components.settings.applicationsettingsscreen.crashReportingText',
+    defaultMessage:
+      'Send crash reports to Emurgo. ' +
+      'Changes to this option will be reflected ' +
+      ' after restarting the application.',
+    description: "some desc",
+  },
+  termsOfUse: {
+    id: 'components.settings.applicationsettingsscreen.termsOfUse',
+    defaultMessage: 'Terms of Use',
+    description: "some desc",
+  },
+  support: {
+    id: 'components.settings.applicationsettingsscreen.support',
+    defaultMessage: '!!!Support',
+    description: "some desc",
+  },
+
+})
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -50,7 +106,7 @@ const onToggleBiometricsAuthIn = ({
   isSystemAuthEnabled,
   navigation,
   setSystemAuth,
-  translations,
+  intl,
   installationId,
   disableBiometrics,
 }) => async () => {
@@ -100,7 +156,7 @@ const updateDeviceSettings = async ({setAppSettingField}) => {
 
 const ApplicationSettingsScreen = ({
   onToggleBiometricsAuthIn,
-  translations,
+  intl,
   updateDeviceSettings,
   isBiometricHardwareSupported,
   isSystemAuthEnabled,
@@ -112,22 +168,22 @@ const ApplicationSettingsScreen = ({
     <StatusBar type="dark" />
 
     <NavigationEvents onWillFocus={updateDeviceSettings} />
-    <SettingsSection title={translations.language}>
+    <SettingsSection title={intl.formatMessage(messages.language)}>
       <NavigatedSettingsItem
         label={language}
         navigateTo={SETTINGS_ROUTES.CHANGE_LANGUAGE}
       />
     </SettingsSection>
 
-    <SettingsSection title={translations.security}>
+    <SettingsSection title={intl.formatMessage(messages.security)}>
       <NavigatedSettingsItem
-        label={translations.changePin}
+        label={intl.formatMessage(messages.changePin)}
         navigateTo={SETTINGS_ROUTES.CHANGE_CUSTOM_PIN}
         disabled={isSystemAuthEnabled}
       />
 
       <SettingsItem
-        label={translations.biometricsSignIn}
+        label={intl.formatMessage(messages.biometricsSignIn)}
         disabled={!isBiometricEncryptionHardwareSupported}
       >
         <Switch
@@ -138,30 +194,29 @@ const ApplicationSettingsScreen = ({
       </SettingsItem>
     </SettingsSection>
 
-    <SettingsSection title={translations.crashReporting}>
-      <SettingsItem label={translations.crashReportingText}>
+    <SettingsSection title={intl.formatMessage(messages.crashReporting)}>
+      <SettingsItem label={intl.formatMessage(messages.crashReportingText)}>
         <Switch value={sendCrashReports} onValueChange={setCrashReporting} />
       </SettingsItem>
     </SettingsSection>
 
     <SettingsSection>
       <NavigatedSettingsItem
-        label={translations.termsOfUse}
+        label={intl.formatMessage(messages.termsOfUse)}
         navigateTo={SETTINGS_ROUTES.TERMS_OF_USE}
       />
 
       <NavigatedSettingsItem
-        label={translations.support}
+        label={intl.formatMessage(messages.support)}
         navigateTo={SETTINGS_ROUTES.SUPPORT}
       />
     </SettingsSection>
   </ScrollView>
 )
 
-export default (compose(
+export default injectIntl(compose(
   connect(
     (state) => ({
-      translations: getTranslations(state),
       isBiometricHardwareSupported: biometricHwSupportSelector(state),
       sendCrashReports: sendCrashReportsSelector(state),
       isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
@@ -170,9 +225,9 @@ export default (compose(
     }),
     {setAppSettingField, setSystemAuth},
   ),
-  withNavigationTitle(({translations}) => translations.title),
+  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
   withNavigationTitle(
-    ({translations}) => translations.tabTitle,
+    ({intl}) => intl.formatMessage(messages.tabTitle),
     'applicationTabTitle',
   ),
   withHandlers({

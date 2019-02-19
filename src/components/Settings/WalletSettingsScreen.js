@@ -4,6 +4,7 @@ import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 import {connect} from 'react-redux'
 import {ScrollView, StyleSheet, Switch} from 'react-native'
+import {injectIntl, defineMessages} from 'react-intl'
 
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 
@@ -14,7 +15,7 @@ import {
   DIALOG_BUTTONS,
 } from '../../actions'
 import {WALLET_INIT_ROUTES, SETTINGS_ROUTES} from '../../RoutesList'
-import {withNavigationTitle, withTranslations} from '../../utils/renderUtils'
+import {withNavigationTitle} from '../../utils/renderUtils'
 import {
   isSystemAuthEnabledSelector,
   easyConfirmationSelector,
@@ -31,7 +32,53 @@ import {StatusBar} from '../UiKit'
 import type {Navigation} from '../../types/navigation'
 import type {ComponentType} from 'react'
 
-const getTranslations = (state) => state.trans.SettingsScreen.WalletTab
+const messages = defineMessages({
+  title: {
+    id: 'components.settings.walletsettingscreen.title',
+    defaultMessage: 'Settings',
+    description: "some desc",
+  },
+  tabTitle: {
+    id: 'components.settings.walletsettingscreen.tabTitle',
+    defaultMessage: 'Wallet',
+    description: "some desc",
+  },
+  switchWallet: {
+    id: 'components.settings.walletsettingscreen.switchWallet',
+    defaultMessage: 'Switch wallet',
+    description: "some desc",
+  },
+  logout: {
+    id: 'components.settings.walletsettingscreen.logout',
+    defaultMessage: 'Logout',
+    description: "some desc",
+  },
+  walletName: {
+    id: 'components.settings.walletsettingscreen.walletName',
+    defaultMessage: 'Wallet name',
+    description: "some desc",
+  },
+  security: {
+    id: 'components.settings.walletsettingscreen.security',
+    defaultMessage: 'Security',
+    description: "some desc",
+  },
+  changePassword: {
+    id: 'components.settings.walletsettingscreen.changePassword',
+    defaultMessage: 'Change password',
+    description: "some desc",
+  },
+  easyConfirmation: {
+    id: 'components.settings.walletsettingscreen.easyConfirmation',
+    defaultMessage: '!!!Easy transaction confirmation',
+    description: "some desc",
+  },
+  removeWallet: {
+    id: 'components.settings.walletsettingscreen.removeWallet',
+    defaultMessage: '!!!Remove wallet',
+    description: "!!!Remove wallet",
+  },
+})
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -43,7 +90,7 @@ const WalletSettingsScreen = ({
   onToggleEasyConfirmation,
   isEasyConfirmationEnabled,
   isSystemAuthEnabled,
-  translations,
+  intl,
   walletName,
   onSwitchWallet,
   onLogout,
@@ -53,28 +100,28 @@ const WalletSettingsScreen = ({
 
     <SettingsSection>
       <PressableSettingsItem
-        label={translations.switchWallet}
+        label={intl.formatMessage(messages.switchWallet)}
         onPress={onSwitchWallet}
       />
 
-      <PressableSettingsItem label={translations.logout} onPress={onLogout} />
+      <PressableSettingsItem label={intl.formatMessage(messages.logout)} onPress={onLogout} />
     </SettingsSection>
 
-    <SettingsSection title={translations.walletName}>
+    <SettingsSection title={intl.formatMessage(messages.walletName)}>
       <NavigatedSettingsItem
         label={walletName}
         navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
       />
     </SettingsSection>
 
-    <SettingsSection title={translations.security}>
+    <SettingsSection title={intl.formatMessage(messages.security)}>
       <NavigatedSettingsItem
-        label={translations.changePassword}
+        label={intl.formatMessage(messages.changePassword)}
         navigateTo={SETTINGS_ROUTES.CHANGE_PASSWORD}
       />
 
       <SettingsItem
-        label={translations.easyConfirmation}
+        label={intl.formatMessage(messages.easyConfirmation)}
         disabled={!isSystemAuthEnabled}
       >
         <Switch
@@ -87,22 +134,21 @@ const WalletSettingsScreen = ({
 
     <SettingsSection>
       <NavigatedSettingsItem
-        label={translations.removeWallet}
+        label={intl.formatMessage(messages.removeWallet)}
         navigateTo={SETTINGS_ROUTES.REMOVE_WALLET}
       />
     </SettingsSection>
   </ScrollView>
 )
 
-export default (compose(
+export default injectIntl(compose(
   connect((state) => ({
     isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
     isEasyConfirmationEnabled: easyConfirmationSelector(state),
   })),
-  withTranslations(getTranslations),
-  withNavigationTitle(({translations}) => translations.title),
+  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
   withNavigationTitle(
-    ({translations}) => translations.tabTitle,
+    ({intl}) => intl.formatMessage(messages.tabTitle),
     'walletTabTitle',
   ),
   connect(

@@ -25,32 +25,32 @@ import type {ComponentType} from 'react'
 const messages = defineMessages({
   currentPinInputTitle: {
     id: 'components.settings.changecustompinscreen.CurrentPinInput.title',
-    defaultMessage: 'Logiddn',
+    defaultMessage: 'Login',
     description: "some desc",
   },
   currentPinInputSubtitle: {
     id: 'components.settings.changecustompinscreen.CurrentPinInput.subtitle',
-    defaultMessage: 'Logiddn',
+    defaultMessage: 'Enter your current PIN',
     description: "some desc",
   },
   pinInputTitle: {
     id: 'components.settings.changecustompinscreen.PinRegistrationForm.PinInput.title',
-    defaultMessage: 'Logiddn',
+    defaultMessage: 'Enter PIN',
     description: "some desc",
   },
   pinInputSubtitle: {
     id: 'components.settings.changecustompinscreen.PinRegistrationForm.PinInput.subtitle',
-    defaultMessage: 'Logiddn',
+    defaultMessage: 'Choose new PIN for quick access to wallet.',
     description: "some desc",
   },
   pinConfirmationTitle: {
     id: 'components.settings.changecustompinscreen.PinRegistrationForm.PinConfirmationInput.title',
-    defaultMessage: 'Logiddn',
+    defaultMessage: 'Repeat PIN',
     description: "some desc",
   },
   title: {
     id: 'components.settings.changecustompinscreen.title',
-    defaultMessage: 'Logiddn',
+    defaultMessage: 'Change PIN',
     description: "some desc",
   },
 })

@@ -6,10 +6,11 @@ import {View, ScrollView} from 'react-native'
 import {SafeAreaView, NavigationEvents} from 'react-navigation'
 import _ from 'lodash'
 import {withHandlers} from 'recompose'
+import {injectIntl, defineMessages} from 'react-intl'
 
 import {Button, ValidatedTextInput, StatusBar} from '../UiKit'
 import {validatePassword} from '../../utils/validators'
-import {withTranslations, withNavigationTitle} from '../../utils/renderUtils'
+import {withNavigationTitle} from '../../utils/renderUtils'
 import PasswordStrengthIndicator from '../WalletInit/PasswordStrengthIndicator'
 import {showErrorDialog} from '../../actions'
 import walletManager from '../../crypto/wallet'
@@ -19,14 +20,44 @@ import styles from './styles/ChangePasswordScreen.style'
 
 import type {State} from '../../state'
 import type {PasswordValidationErrors} from '../../utils/validators'
-import type {SubTranslation} from '../../l10n/typeHelpers'
 import type {Navigation} from '../../types/navigation'
+
+const messages = defineMessages({
+  title: {
+    id: 'components.settings.changepasswordscreen.title',
+    defaultMessage: 'Change wallet password',
+    description: "some desc",
+  },
+  oldPasswordInputLabel: {
+    id: 'components.settings.changepasswordscreen.oldPasswordInputLabel',
+    defaultMessage: 'Current password',
+    description: "some desc",
+  },
+  newPasswordInputLabel: {
+    id: 'components.settings.changepasswordscreen.newPasswordInputLabel',
+    defaultMessage: 'New password',
+    description: "some desc",
+  },
+  repeatPasswordInputLabel: {
+    id: 'components.settings.changepasswordscreen.repeatPasswordInputLabel',
+    defaultMessage: 'Repeat new password',
+    description: "some desc",
+  },
+  repeatPasswordInputNotMatchError: {
+    id: 'components.settings.changepasswordscreen.repeatPasswordInputNotMatchError',
+    defaultMessage: 'Passwords do not match',
+    description: "some desc",
+  },
+  continueButton: {
+    id: 'components.settings.changepasswordscreen.continueButton',
+    defaultMessage: 'Change password',
+    description: "some desc",
+  },
+})
 
 type FormValidationErrors = PasswordValidationErrors & {
   oldPasswordRequired?: boolean,
 }
-
-const getTranslations = (state: State) => state.trans.ChangePasswordScreen
 
 const validateForm = ({
   oldPassword,
@@ -49,7 +80,6 @@ type ComponentState = {
 }
 
 type Props = {
-  translations: SubTranslation<typeof getTranslations>,
   onSubmit: (string, string) => any,
   navigation: Navigation,
 }
@@ -91,7 +121,7 @@ class ChangePasswordScreen extends PureComponent<Props, ComponentState> {
   }
 
   render() {
-    const {translations} = this.props
+    const {intl} = this.props
     const {
       oldPassword,
       password,
@@ -118,26 +148,26 @@ class ChangePasswordScreen extends PureComponent<Props, ComponentState> {
           >
             <ValidatedTextInput
               secureTextEntry
-              label={translations.oldPasswordInput.label}
+              label={intl.formatMessage(messages.oldPasswordInputLabel)}
               value={oldPassword}
               onChangeText={this.handleSetOldPassword}
             />
 
             <ValidatedTextInput
               secureTextEntry
-              label={translations.newPasswordInput.label}
+              label={intl.formatMessage(messages.newPasswordInputLabel)}
               value={password}
               onChangeText={this.handleSetPassword}
             />
 
             <ValidatedTextInput
               secureTextEntry
-              label={translations.repeatPasswordInput.label}
+              label={intl.formatMessage(messages.repeatPasswordInputLabel)}
               value={passwordConfirmation}
               onChangeText={this.handleSetPasswordConfirmation}
               error={
                 showPasswordsDoNotMatchError &&
-                translations.repeatPasswordInput.errors.passwordsDoNotMatch
+                intl.formatMessage(messages.repeatPasswordInputNotMatchError)
               }
             />
 
@@ -148,7 +178,7 @@ class ChangePasswordScreen extends PureComponent<Props, ComponentState> {
             <Button
               onPress={this.handleSubmit}
               disabled={!_.isEmpty(errors)}
-              title={translations.continueButton}
+              title={intl.formatMessage(messages.continueButton)}
             />
           </View>
         </View>
@@ -157,9 +187,8 @@ class ChangePasswordScreen extends PureComponent<Props, ComponentState> {
   }
 }
 
-export default compose(
-  withTranslations(getTranslations),
-  withNavigationTitle(({translations}) => translations.title),
+export default injectIntl(compose(
+  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
   withHandlers({
     onSubmit: ({navigation}) => async (oldPassword, newPassword) => {
       try {
@@ -174,4 +203,4 @@ export default compose(
       }
     },
   }),
-)(ChangePasswordScreen)
+)(ChangePasswordScreen))
