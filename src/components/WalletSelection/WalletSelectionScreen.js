@@ -24,19 +24,22 @@ import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {State} from '../../state'
 import type {ComponentType} from 'react'
 
-const getTranslations = (state: State) => state.trans.WalletSelectionScreen
 
 const messages = defineMessages({
   header: {
     id: 'components.walletselection.walletselectionscreen.header',
-    defaultMessage: 'WWWWWW',
+    defaultMessage: '!!!Your wallets',
+    description: "some ddesc",
+  },
+  addWalletButton: {
+    id: 'components.walletselection.walletselectionscreen.addWalletButton',
+    defaultMessage: '!!!Add wallet',
     description: "some ddesc",
   },
 })
 
 const WalletListScreen = ({
   navigation,
-  translations,
   wallets,
   navigateInitWallet,
   openWallet,
@@ -65,7 +68,7 @@ const WalletListScreen = ({
 
         <Button
           onPress={navigateInitWallet}
-          title={translations.addWalletButton}
+          title={intl.formatMessage(messages.addWalletButton)}
           style={styles.addWalletButton}
         />
       </ScreenBackground>
@@ -75,9 +78,8 @@ const WalletListScreen = ({
 
 const walletsListSelector = (state) => Object.values(state.wallets)
 
-export default (compose(
+export default injectIntl(compose(
   connect((state: State) => ({
-    translations: getTranslations(state),
     wallets: walletsListSelector(state),
   })),
   withHandlers({
@@ -101,6 +103,6 @@ export default (compose(
       }
     },
   }),
-)(injectIntl(WalletListScreen)): ComponentType<{
+)(WalletListScreen): ComponentType<{
   navigation: NavigationScreenProp<NavigationState>,
 }>)

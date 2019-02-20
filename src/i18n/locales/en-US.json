@@ -62,6 +62,10 @@
   "components.settings.walletsettingscreen.tabTitle": "Wallet",
   "components.settings.walletsettingscreen.title": "Settings",
   "components.settings.walletsettingscreen.walletName": "Wallet name",
+  "components.walletinit.walletinitscreen.createWalletButton": "!!!Create new wallet",
+  "components.walletinit.walletinitscreen.restoreWalletButton": "!!!Restore wallet from backup",
+  "components.walletinit.walletinitscreen.title": "!!!Add wallet",
+  "components.walletselection.walletselectionscreen.addWalletButton": "!!!Add wallet",
   "components.walletselection.walletselectionscreen.header": "Your wallets",
   "global.error.walletNameAlreadyTaken": "You already have a wallet with this name",
   "global.error.walletNameTooLong": "Wallet name cannot exceed 40 letters"

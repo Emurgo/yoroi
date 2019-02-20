@@ -6,6 +6,7 @@ import {View} from 'react-native'
 import {SafeAreaView} from 'react-navigation'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
+import {injectIntl, defineMessages} from 'react-intl'
 
 import WalletDescription from './WalletDescription'
 import {Button, StatusBar, ScreenBackground} from '../UiKit'
@@ -14,21 +15,35 @@ import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
 
 import type {State} from '../../state'
-import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslations = (state: State) =>
-  state.trans.CreateOrRestoreWalletScreen
+const messages = defineMessages({
+  title: {
+    id: 'components.walletinit.walletinitscreen.title',
+    defaultMessage: '!!!Add wallet',
+    description: "some ddesc",
+  },
+  createWalletButton: {
+    id: 'components.walletinit.walletinitscreen.createWalletButton',
+    defaultMessage: '!!!Create new wallet',
+    description: "some ddesc",
+  },
+  restoreWalletButton: {
+    id: 'components.walletinit.walletinitscreen.restoreWalletButton',
+    defaultMessage: '!!!Restore wallet from backup',
+    description: "some ddesc",
+  },
+})
 
 type Props = {
   navigateRestoreWallet: () => mixed,
   navigateCreateWallet: () => mixed,
-  translations: SubTranslation<typeof getTranslations>,
+  intl: any
 }
 
 const WalletInitScreen = ({
   navigateCreateWallet,
   navigateRestoreWallet,
-  translations,
+  intl,
 }: Props) => (
   <SafeAreaView style={styles.safeAreaView}>
     <StatusBar type="dark" />
@@ -41,29 +56,28 @@ const WalletInitScreen = ({
 
         <Button
           onPress={navigateCreateWallet}
-          title={translations.createWalletButton}
+          title={intl.formatMessage(messages.createWalletButton)}
           style={styles.createButton}
         />
 
         <Button
           outline
           onPress={navigateRestoreWallet}
-          title={translations.restoreWalletButton}
+          title={intl.formatMessage(messages.restoreWalletButton)}
         />
       </View>
     </ScreenBackground>
   </SafeAreaView>
 )
 
-export default compose(
+export default injectIntl(compose(
   connect((state: State) => ({
-    translations: getTranslations(state),
   })),
-  withNavigationTitle(({translations}) => translations.title),
+  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
   withHandlers({
     navigateRestoreWallet: ({navigation}) => (event) =>
       navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET),
     navigateCreateWallet: ({navigation}) => (event) =>
       navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET),
   }),
-)(WalletInitScreen)
+)(WalletInitScreen))
