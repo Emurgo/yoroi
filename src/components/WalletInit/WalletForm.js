@@ -6,6 +6,7 @@ import {View, ScrollView} from 'react-native'
 import {NavigationEvents, SafeAreaView} from 'react-navigation'
 import _ from 'lodash'
 import {withHandlers} from 'recompose'
+import {injectIntl, defineMessages} from 'react-intl'
 
 import {Button, ValidatedTextInput, StatusBar} from '../UiKit'
 import {
@@ -17,19 +18,46 @@ import {CONFIG} from '../../config'
 import PasswordStrengthIndicator from './PasswordStrengthIndicator'
 import styles from './styles/WalletForm.style'
 import {walletNamesSelector} from '../../selectors'
+import globalMessages from '../../i18n/global-messages';
 
 import type {State} from '../../state'
 import type {
   PasswordValidationErrors,
   WalletNameValidationErrors,
 } from '../../utils/validators'
-import type {SubTranslation} from '../../l10n/typeHelpers'
+
+
+const messages = defineMessages({
+  walletNameInputLabel: {
+    id: 'components.walletinit.walletform.walletNameInputLabel',
+    defaultMessage: '!!!Wallet name',
+    description: "some desc",
+  },
+  newPasswordInput: {
+    id: 'components.walletinit.walletform.newPasswordInput',
+    defaultMessage: '!!!Wallet password',
+    description: "some desc",
+  },
+  continueButton: {
+    id: 'components.walletinit.walletform.continueButton',
+    defaultMessage: '!!!Continue',
+    description: "some desc",
+  },
+  repeatPasswordInputLabel: {
+    id: 'components.walletinit.walletform.repeatPasswordInputLabel',
+    defaultMessage: '!!!Repeat password',
+    description: "some desc",
+  },
+  repeatPasswordInputError: {
+    id: 'components.walletinit.walletform.repeatPasswordInputError',
+    defaultMessage: '!!!Passwords do not match',
+    description: "some desc",
+  },
+})
 
 type FormValidationErrors = PasswordValidationErrors &
   WalletNameValidationErrors
 
-const getTranslations = (state: State) => state.trans.WalletNameAndPasswordForm
-const getErrorTranslations = (state) => state.trans.WalletNameAndPasswordForm
 
 type ComponentState = {
   name: string,
@@ -39,8 +67,7 @@ type ComponentState = {
 }
 
 type Props = {
-  translations: SubTranslation<typeof getTranslations>,
-  errorTranslations: SubTranslation<typeof getErrorTranslations>,
+  intl: any,
   walletNames: Array<string>,
   onSubmit: ({name: string, password: string}) => mixed,
   // $FlowFixMe
@@ -101,7 +128,7 @@ class WalletForm extends PureComponent<Props, ComponentState> {
   }
 
   render() {
-    const {translations} = this.props
+    const {intl} = this.props
     const {
       name,
       password,
@@ -119,30 +146,31 @@ class WalletForm extends PureComponent<Props, ComponentState> {
         <ScrollView keyboardDismissMode="on-drag">
           <View style={styles.content}>
             <ValidatedTextInput
-              label={translations.walletNameInput.label}
+              label={intl.formatMessage(messages.walletNameInputLabel)}
               value={name}
               onChangeText={this.handleSetName}
               error={getWalletNameError(
-                translations.walletNameInput.errors,
+                [intl.formatMessage(globalMessages.walletNameErrorTooLong),
+                 intl.formatMessage(globalMessages.walletNameErrorNameAlreadyTaken)],
                 validationErrors,
               )}
             />
 
             <ValidatedTextInput
               secureTextEntry
-              label={translations.newPasswordInput.label}
+              label={intl.formatMessage(messages.newPasswordInput)}
               value={password}
               onChangeText={this.handleSetPassword}
             />
 
             <ValidatedTextInput
               secureTextEntry
-              label={translations.repeatPasswordInput.label}
+              label={intl.formatMessage(messages.repeatPasswordInputLabel)}
               value={passwordConfirmation}
               onChangeText={this.handleSetPasswordConfirmation}
               error={
                 showPasswordsDoNotMatchError &&
-                translations.repeatPasswordInput.errors.passwordsDoNotMatch
+                intl.formatMessage(messages.repeatPasswordInputError)
               }
             />
 
@@ -154,7 +182,7 @@ class WalletForm extends PureComponent<Props, ComponentState> {
           <Button
             onPress={this.handleSubmit}
             disabled={!_.isEmpty(validationErrors)}
-            title={translations.continueButton}
+            title={intl.formatMessage(messages.continueButton)}
           />
         </View>
       </SafeAreaView>
@@ -162,11 +190,9 @@ class WalletForm extends PureComponent<Props, ComponentState> {
   }
 }
 
-export default compose(
+export default injectIntl(compose(
   connect(
     (state) => ({
-      translations: getTranslations(state),
-      errorTranslations: getErrorTranslations(state),
       walletNames: walletNamesSelector(state),
     }),
     {validateWalletName},
@@ -175,4 +201,4 @@ export default compose(
     validateWalletName: ({walletNames}) => (walletName) =>
       validateWalletName(walletName, null, walletNames),
   }),
-)(WalletForm)
+)(WalletForm))

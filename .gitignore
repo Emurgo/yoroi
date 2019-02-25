@@ -78,3 +78,6 @@ android/app/api*
 android/app/dev
 android/app/main
 GoogleService-Info.plist
+
+# react-intl
+translations/messages

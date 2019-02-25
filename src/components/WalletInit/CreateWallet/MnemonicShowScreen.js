@@ -5,6 +5,8 @@ import {View, Image} from 'react-native'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers, withProps} from 'recompose'
 import {SafeAreaView} from 'react-navigation'
+import {injectIntl, defineMessages} from 'react-intl'
+import Markdown from 'react-native-easy-markdown'
 
 import assert from '../../../utils/assert'
 import {Text, Button, StatusBar} from '../../UiKit'
@@ -20,11 +22,31 @@ import {withNavigationTitle, withTranslations} from '../../../utils/renderUtils'
 import type {Navigation} from '../../../types/navigation'
 import type {ComponentType} from 'react'
 
-const getTranslations = (state: State) => state.trans.MnemonicShowScreen
+const messages = defineMessages({
+  title: {
+    id: 'components.walletinit.createwallet.mnemonicshowscreen.title',
+    defaultMessage: '!!!Recovery phrase',
+    description: "some desc",
+  },
+  mnemonicNote: {
+    id: 'components.walletinit.createwallet.mnemonicshowscreen.mnemonicNote',
+    defaultMessage:
+      '!!!Please, make sure you have carefully written down your ' +
+      'recovery phrase somewhere safe. ' +
+      'You will need this phrase to use and restore your wallet. ' +
+      'Phrase is case sensitive.',
+    description: "some desc",
+  },
+  confirmationButton: {
+    id: 'components.walletinit.createwallet.mnemonicshowscreen.confirmationButton',
+    defaultMessage: '!!!Yes, I have written it down',
+    description: "some desc",
+  },
+})
 
 const MnemonicShowScreen = ({
   navigateToMnemonicCheck,
-  translations,
+  intl,
   mnemonic,
   modal,
   showModal,
@@ -34,7 +56,7 @@ const MnemonicShowScreen = ({
     <StatusBar type="dark" />
     <View style={styles.contentContainer}>
       <View>
-        <Text>{translations.mnemonicNote}</Text>
+        <Text>{intl.formatMessage(messages.mnemonicNote)}</Text>
         <View style={styles.mnemonicWordsContainer}>
           {mnemonic.split(' ').map((word, index) => (
             <Text key={index} style={styles.mnemonicText}>
@@ -47,7 +69,7 @@ const MnemonicShowScreen = ({
         <Image source={recoveryPhrase} />
       </View>
       <View>
-        <Button onPress={showModal} title={translations.confirmationButton} />
+        <Button onPress={showModal} title={intl.formatMessage(messages.confirmationButton)} />
       </View>
     </View>
 
@@ -61,9 +83,8 @@ const MnemonicShowScreen = ({
   </SafeAreaView>
 )
 
-export default (compose(
-  withTranslations(getTranslations),
-  withNavigationTitle(({translations}) => translations.title),
+export default injectIntl(compose(
+  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
   withProps((props) => ({mnemonic: props.navigation.getParam('mnemonic')})),
   withStateHandlers(
     {

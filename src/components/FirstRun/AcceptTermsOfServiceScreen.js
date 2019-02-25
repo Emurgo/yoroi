@@ -6,6 +6,8 @@ import {compose} from 'redux'
 import {SafeAreaView} from 'react-navigation'
 import {withStateHandlers, withHandlers} from 'recompose'
 import {ScrollView} from 'react-native'
+import {injectIntl, defineMessages} from 'react-intl'
+
 
 import TermsOfService from '../Common/TermsOfService'
 import {withNavigationTitle} from '../../utils/renderUtils'
@@ -16,13 +18,34 @@ import {acceptAndSaveTos, setSystemAuth} from '../../actions'
 import {canBiometricEncryptionBeEnabled} from '../../helpers/deviceSettings'
 
 import styles from './styles/AcceptTermsOfServiceScreen.styles'
+import globalMessages from '../../i18n/global-messages';
 
-import type {SubTranslation} from '../../l10n/typeHelpers'
+const messages = defineMessages({
+  title: {
+    id: 'components.firstrun.acepttermsofservicescreen.title',
+    defaultMessage: '!!!Terms of Service Agreement',
+    description: "some desc",
+  },
+  aggreeClause: {
+    id: 'components.firstrun.acepttermsofservicescreen.aggreeClause',
+    defaultMessage: '!!!I agree with terms of service',
+    description: "some desc",
+  },
+  continueButton: {
+    id: 'components.firstrun.acepttermsofservicescreen.continueButton',
+    defaultMessage: '!!!Accept',
+    description: "some desc",
+  },
+  savingConsentModalTitle: {
+    id: 'components.firstrun.acepttermsofservicescreen.savingConsentModalTitle',
+    defaultMessage: '!!!Initializing',
+    description: "some desc",
+  },
 
-const getTranslations = (state) => state.trans.TermsOfServiceScreen
+})
 
 type Props = {
-  translations: SubTranslation<typeof getTranslations>,
+  intl: any,
   acceptedTos: boolean,
   setAcceptedTos: (accepted: boolean) => any,
   handleAccepted: () => any,
@@ -30,7 +53,7 @@ type Props = {
 }
 
 const AcceptTermsOfServiceScreen = ({
-  translations,
+  intl,
   acceptedTos,
   setAcceptedTos,
   handleAccepted,
@@ -46,27 +69,26 @@ const AcceptTermsOfServiceScreen = ({
     <Checkbox
       style={styles.checkbox}
       checked={acceptedTos}
-      text={translations.aggreeClause}
+      text={intl.formatMessage(messages.aggreeClause)}
       onChange={setAcceptedTos}
     />
     <Button
       onPress={handleAccepted}
       disabled={!acceptedTos}
-      title={translations.continueButton}
+      title={intl.formatMessage(messages.continueButton)}
     />
 
     <PleaseWaitModal
-      title={translations.savingConsentModalTitle}
-      spinnerText={translations.pleaseWait}
+      title={intl.formatMessage(messages.savingConsentModalTitle)}
+      spinnerText={intl.formatMessage(globalMessages.pleaseWait)}
       visible={savingConsent}
     />
   </SafeAreaView>
 )
 
-export default compose(
+export default injectIntl(compose(
   connect(
     (state) => ({
-      translations: getTranslations(state),
       isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
     }),
     {acceptAndSaveTos, setSystemAuth},
@@ -110,5 +132,5 @@ export default compose(
       }
     },
   }),
-  withNavigationTitle(({translations}) => translations.title),
-)(AcceptTermsOfServiceScreen)
+  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+)(AcceptTermsOfServiceScreen))

@@ -3,10 +3,8 @@
 import React from 'react'
 import 'intl';
 
-import {injectIntl, addLocaleData, IntlProvider } from 'react-intl';
-import en from 'react-intl/locale-data/en';
+import {injectIntl} from 'react-intl';
 
-import translations from './i18n/translations';
 import AppNavigator from './AppNavigator'
 import NavigationService from './NavigationService'
 import {onDidMount} from './utils/renderUtils'
@@ -20,7 +18,7 @@ const App = (props, context) => {
 
 export default injectIntl(compose(
   connect(
-    (state) => ({}),
+    null,
     {
       initApp,
     },

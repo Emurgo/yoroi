@@ -17,6 +17,16 @@ export default defineMessages({
     defaultMessage: 'You already have a wallet with this name',
     description: "some desc",
   },
+  pleaseWait: {
+    id: 'global.pleaseWait',
+    defaultMessage: '!!!please wait ...',
+    description: 'Common messages for time consuming actions'
+  },
+  tos: {
+    id: 'global.termsOfUse',
+    defaultMessage: '!!!Terms of use',
+    description: 'Terms of use'
+  }
 });
 
 export const environmentSpecificMessages = {

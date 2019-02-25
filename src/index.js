@@ -1,9 +1,12 @@
 // @flow
 import React from 'react'
-import {AppRegistry} from 'react-native'
-import {injectIntl, addLocaleData, IntlProvider } from 'react-intl';
-import en from 'react-intl/locale-data/en';
-import ru from 'react-intl/locale-data/ru';
+import {AppRegistry, Text} from 'react-native'
+import {injectIntl, addLocaleData, IntlProvider } from 'react-intl'
+import en from 'react-intl/locale-data/en'
+import ja from 'react-intl/locale-data/ja';
+import ko from 'react-intl/locale-data/ko'
+import ru from 'react-intl/locale-data/ru'
+
 import {connect} from 'react-redux'
 
 
@@ -17,7 +20,7 @@ import {setLogLevel} from './utils/logging'
 import {CONFIG} from './config'
 import translations from './i18n/translations';
 import bluebird from 'bluebird'
-//import { connect } from 'net';
+
 import { map } from 'rsvp';
 
 setLogLevel(CONFIG.LOG_LEVEL)
@@ -38,8 +41,7 @@ global.Promise = bluebird
 global.onunhandledrejection = (e) => handleGeneralError(e.message, e)
 
 // https://github.com/yahoo/react-intl/wiki#loading-locale-data
-addLocaleData([...en, ...ru]);
-
+addLocaleData([...en, ...ja, ...ko, ...ru]);
 
 
 const store = getConfiguredStore()
@@ -47,10 +49,13 @@ const store = getConfiguredStore()
 store.dispatch(setupHooks())
 // TODO: this is async action, we should wait for it in future
 
-const IntlProviderWrapper = connect((state) => ({
-  locale: state.appSettings.languageCode,
-  messages: translations[state.appSettings.languageCode]
-}))(IntlProvider)
+const IntlProviderWrapper = connect((state) => {
+  const locale = state.appSettings.languageCode || 'en-US'
+  return {
+    locale,
+    messages: translations[locale],
+    textComponent: Text
+}})(IntlProvider)
 
 
 const AppWithProviders = () => {

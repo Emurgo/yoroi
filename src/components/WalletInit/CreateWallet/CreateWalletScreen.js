@@ -3,18 +3,26 @@
 import React from 'react'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
+import {injectIntl, defineMessages} from 'react-intl'
+import Markdown from 'react-native-easy-markdown'
 
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {generateAdaMnemonic} from '../../../crypto/util'
 import {CONFIG} from '../../../config'
-import {withNavigationTitle, withTranslations} from '../../../utils/renderUtils'
+import {withNavigationTitle} from '../../../utils/renderUtils'
 import WalletForm from '../WalletForm'
 
 import type {State} from '../../../state'
 
 import MnemonicExplanationModal from './MnemonicExplanationModal'
 
-const getTranslations = (state: State) => state.trans.CreateWalletScreen
+const messages = defineMessages({
+  title: {
+    id: 'components.walletinit.createwallet.createwalletscreen.title',
+    defaultMessage: '!!!Create a new wallet',
+    description: "some desc",
+  },
+})
 
 const CreateWalletScreen = ({
   setFormData,
@@ -32,9 +40,8 @@ const CreateWalletScreen = ({
   </>
 )
 
-export default compose(
-  withTranslations(getTranslations),
-  withNavigationTitle(({translations}) => translations.title),
+export default injectIntl(compose(
+  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
   withStateHandlers(
     {
       visibleMnemonicExplanation: false,
@@ -66,4 +73,4 @@ export default compose(
       })
     },
   }),
-)(CreateWalletScreen)
+)(CreateWalletScreen))

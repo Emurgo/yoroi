@@ -200,7 +200,7 @@ const l10n = {
     passwordBigLength: '12 characters',
     or: 'Or',
   },
-  TransactionHistoryScreeen: {
+  TransactionHistoryScreeen: { 
     syncErrorBanner: {
       textWithoutRefresh: 'We are experiencing synchronization issues.',
       textWithRefresh:

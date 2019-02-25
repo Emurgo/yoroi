@@ -7,6 +7,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withProps, withStateHandlers} from 'recompose'
 import {SafeAreaView} from 'react-navigation'
+import {injectIntl, defineMessages} from 'react-intl'
 
 import assert from '../../../utils/assert'
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
@@ -14,7 +15,7 @@ import {Text, Button, StatusBar} from '../../UiKit'
 import {ROOT_ROUTES} from '../../../RoutesList'
 import {createWallet} from '../../../actions'
 import {CONFIG} from '../../../config'
-import {withNavigationTitle, withTranslations} from '../../../utils/renderUtils'
+import {withNavigationTitle} from '../../../utils/renderUtils'
 
 import styles from './styles/MnemonicCheckScreen.style'
 
@@ -22,7 +23,39 @@ import type {State} from '../../../state'
 import type {ComponentType} from 'react'
 import type {Navigation} from '../../../types/navigation'
 
-const getTranslations = (state: State) => state.trans.MnemonicCheckScreen
+const messages = defineMessages({
+  title: {
+    id: 'components.walletinit.createwallet.mnemoniccheckscreen.title',
+    defaultMessage: '!!!Recovery phrase',
+    description: "some desc",
+  },
+  instructions: {
+    id: 'components.walletinit.createwallet.mnemoniccheckscreen.instructions',
+    defaultMessage:
+    '!!!Tap each word in the correct order to verify your recovery phrase',
+    description: "some desc",
+  },
+  clearButton: {
+    id: 'components.walletinit.createwallet.mnemoniccheckscreen.clearButton',
+    defaultMessage: '!!!Clear',
+    description: "some desc",
+  },
+  confirmButton: {
+    id: 'components.walletinit.createwallet.mnemoniccheckscreen.confirmButton',
+    defaultMessage: '!!!Confirm',
+    description: "some desc",
+  },
+  mnemonicWordsInputLabel: {
+    id: 'components.walletinit.createwallet.mnemoniccheckscreen.mnemonicWordsInputLabel',
+    defaultMessage: '!!!Recovery phrase',
+    description: "some desc",
+  },
+  mnemonicWordsInputInvalidPhrase: {
+    id: 'components.walletinit.createwallet.mnemoniccheckscreen.mnemonicWordsInputInvalidPhrase',
+    defaultMessage: '!!!Recovery phrase does not match',
+    description: "some desc",
+  },
+})
 
 const validatePhrase = (mnemonic, words, partialPhrase) => {
   const phrase = partialPhrase.map((wordIdx) => words[wordIdx]).join(' ')
@@ -73,7 +106,7 @@ const WordBadge: ComponentType<WordProps> = withHandlers({
 const MnemonicCheckScreen = ({
   mnemonic,
   partialPhrase,
-  translations,
+  intl,
   words,
   confirmWalletCreation,
   handleClear,
@@ -91,7 +124,7 @@ const MnemonicCheckScreen = ({
       <View style={styles.container}>
         <StatusBar type="dark" />
         <View style={styles.content}>
-          <Text>{translations.instructions}</Text>
+          <Text>{intl.formatMessage(messages.instructions)}</Text>
           <View
             style={[
               styles.recoveryPhrase,
@@ -114,7 +147,7 @@ const MnemonicCheckScreen = ({
           </View>
           {!(isPhraseValid || !isPhraseComplete) && (
             <Text style={styles.error}>
-              {translations.mnemonicWordsInput.errors.invalidPhrase}
+              {intl.formatMessage(messages.mnemonicWordsInputInvalidPhrase)}
             </Text>
           )}
           <View style={styles.words}>
@@ -134,7 +167,7 @@ const MnemonicCheckScreen = ({
             block
             outlineOnLight
             onPress={handleClear}
-            title={translations.clearButton}
+            title={intl.formatMessage(messages.clearButton)}
             style={styles.clearButton}
           />
 
@@ -142,7 +175,7 @@ const MnemonicCheckScreen = ({
             block
             onPress={confirmWalletCreation}
             disabled={!isPhraseComplete || !isPhraseValid}
-            title={translations.confirmButton}
+            title={intl.formatMessage(messages.confirmButton)}
             style={styles.confirmButton}
           />
         </View>
@@ -162,15 +195,14 @@ const _mnemonicToPartialPhrase = (mnemonic: string) =>
     .map(([i, j]) => j) // [1,2,0]
     .value()
 
-export default (compose(
-  withTranslations(getTranslations),
+export default injectIntl(compose(
   connect(
     () => ({}),
     {
       createWallet,
     },
   ),
-  withNavigationTitle(({translations}) => translations.title),
+  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
   withStateHandlers(
     {
       partialPhrase: CONFIG.DEBUG.PREFILL_FORMS
