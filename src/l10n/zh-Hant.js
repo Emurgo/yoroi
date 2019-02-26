@@ -63,29 +63,29 @@ const l10n = {
     }),
     pinMismatch: {
       title: '不正確 pin 碼',
-      message: 'PINs do not match.',
+      message: 'PIN不正確',
       yesButton: common.ok,
     },
     incorrectPin: {
-      title: 'Invalid PIN',
-      message: 'The PIN you entered is incorrect.',
+      title: '不正確 pin 碼',
+      message: '您輸入的 pin 碼不正確',
       yesButton: common.ok,
     },
     incorrectPassword: {
-      title: 'Wrong password',
-      message: 'Password you provided is incorrect.',
+      title: '密碼錯誤',
+      message: '您輸入的 pin 碼不正確',
       yesButton: common.ok,
     },
     biometricsIsTurnedOff: {
-      title: 'Biometrics was turned off',
-      message: 'It seems that you turned off biometrics, please turn it on',
+      title: ' 生物識別技術已關閉',
+      message: '你似乎關閉了生物識別技術, 請把它打開',
       yesButton: common.ok,
     },
     walletKeysInvalidated: {
-      title: 'Biometrics changed',
+      title: '生物識別技術已變更',
       message:
-        'We detected that your biometrics in phone changed. ' +
-        'As a result the easy transaction confirmation was disabled ' +
+        '我們檢測到你手機裡的生物識別技術已更改。' ' +
+        '因此簡單的交易確認被停用'+
         'and transaction submitting is allowed only with master password. ' +
         'You can re-enable easy transactions confirmation in settings',
       yesButton: 'OK',
