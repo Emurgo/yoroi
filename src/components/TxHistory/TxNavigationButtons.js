@@ -5,6 +5,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {View} from 'react-native'
 import {withHandlers} from 'recompose'
+import {injectIntl, defineMessages} from 'react-intl'
 
 import {hasAnyTransaction} from '../../selectors'
 import {WALLET_ROUTES} from '../../RoutesList'
@@ -16,15 +17,25 @@ import iconSend from '../../assets/img/icon/send.png'
 import iconReceive from '../../assets/img/icon/receive.png'
 
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
-import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslations = (state) => state.trans.TransactionHistoryScreeen
+const messages = defineMessages({
+  sendButton: {
+    id: 'components.txhistory.txnavigationbuttons.sendButton',
+    defaultMessage: '!!!Send',
+    description: "some desc",
+  },
+  receiveButton: {
+    id: 'components.txhistory.txnavigationbuttons.receiveButton',
+    defaultMessage: '!!!Receive',
+    description: "some desc",
+  },
+})
 
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,
   navigateToReceive: () => mixed,
   navigateToSend: () => mixed,
-  translations: SubTranslation<typeof getTranslations>,
+  intl: any,
   sendDisabled: boolean,
 }
 
@@ -32,7 +43,7 @@ const TxNavigationButtons = ({
   navigation,
   navigateToReceive,
   navigateToSend,
-  translations,
+  intl,
   sendDisabled,
 }: Props) => (
   <View style={styles.container}>
@@ -40,22 +51,21 @@ const TxNavigationButtons = ({
       block
       disabled={sendDisabled}
       onPress={navigateToSend}
-      title={translations.sendButton}
+      title={intl.formatMessage(messages.sendButton)}
       style={styles.firstButton}
       iconImage={iconSend}
     />
     <Button
       block
       onPress={navigateToReceive}
-      title={translations.receiveButton}
+      title={intl.formatMessage(messages.receiveButton)}
       iconImage={iconReceive}
     />
   </View>
 )
 
-export default compose(
+export default injectIntl(compose(
   connect((state) => ({
-    translations: getTranslations(state),
     sendDisabled: !hasAnyTransaction(state),
   })),
   withHandlers({
@@ -64,4 +74,4 @@ export default compose(
     navigateToSend: ({navigation}) => (event) =>
       navigation.navigate(WALLET_ROUTES.SEND),
   }),
-)(TxNavigationButtons)
+)(TxNavigationButtons))

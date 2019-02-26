@@ -26,7 +26,12 @@ export default defineMessages({
     id: 'global.termsOfUse',
     defaultMessage: '!!!Terms of use',
     description: 'Terms of use'
-  }
+  },
+  availableFunds: {
+    id: 'global.availableFunds',
+    defaultMessage: '!!!Available funds',
+    description: 'Terms of use'
+  },
 });
 
 export const environmentSpecificMessages = {

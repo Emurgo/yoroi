@@ -23,7 +23,7 @@ translations[LANGUAGES.KOREAN] = Object.assign({}, defaultLocale, ko_KR);
 translations[LANGUAGES.RUSSIAN] = Object.assign({}, defaultLocale, ru_RU);
 
 
-translations[LANGUAGES.ENGLISH]['global.tos'] = termsOfUse(LANGUAGES.ENGLISH)
+//translations[LANGUAGES.ENGLISH]['global.tos'] = termsOfUse(LANGUAGES.ENGLISH)
 //translations[LANGUAGES.JAPANESE]['global.tos'] = require('./locales/terms-of-use/ada/ja-JP.md')
 //translations[LANGUAGES.KOREAN]['global.tos'] = require('./locales/terms-of-use/ada/ko-KR.md')
 //translations[LANGUAGES.RUSSIAN]['global.tos'] = require('./locales/terms-of-use/ada/ru-RU.md')

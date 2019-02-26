@@ -4,13 +4,13 @@ import React, {Component} from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {View, TouchableOpacity} from 'react-native'
+import {injectIntl, defineMessages} from 'react-intl'
 
 import {Text} from '../UiKit'
 import utfSymbols from '../../utils/utfSymbols'
 import {transactionsInfoSelector} from '../../selectors'
 import {TX_HISTORY_ROUTES} from '../../RoutesList'
 import styles from './styles/TxHistoryListItem.style'
-import {withTranslations} from '../../utils/renderUtils'
 
 import {
   formatAda,
@@ -20,29 +20,90 @@ import {
 } from '../../utils/format'
 
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
-import type {SubTranslation} from '../../l10n/typeHelpers'
 import type {TransactionInfo} from '../../types/HistoryTransaction'
 
-const getTranslations = (state) =>
-  state.trans.TransactionHistoryScreeen.transaction
+const messages = defineMessages({
+  fee: {
+    id: 'components.txhistory.txhistorylistitem.fee',
+    defaultMessage: '!!!Fee',
+    description: "some desc",
+  },
+  transactionTypeSent: {
+    id: 'components.txhistory.txhistorylistitem.transactionTypeSent',
+    defaultMessage: '!!!ADA sent',
+    description: "some desc",
+  },
+  transactionTypeReceived: {
+    id: 'components.txhistory.txhistorylistitem.transactionTypeReceived',
+    defaultMessage: '!!!ADA received',
+    description: "some desc",
+  },
+  transactionTypeSelf: {
+    id: 'components.txhistory.txhistorylistitem.transactionTypeSelf',
+    defaultMessage: '!!!Intrawallet',
+    description: "some desc",
+  },
+  transactionTypeMulti: {
+    id: 'components.txhistory.txhistorylistitem.transactionTypeMulti',
+    defaultMessage: '!!!Multiparty',
+    description: "some desc",
+  },
+  assuranceLevelHeader: {
+    id: 'components.txhistory.txhistorylistitem.assuranceLevelHeader',
+    defaultMessage: '!!!Assurance level:',
+    description: "some desc",
+  },
+  assuranceLevelLow: {
+    id: 'components.txhistory.txhistorylistitem.assuranceLevelLow',
+    defaultMessage: '!!!Low',
+    description: "some desc",
+  },
+  assuranceLevelMedium: {
+    id: 'components.txhistory.txhistorylistitem.assuranceLevelMedium',
+    defaultMessage: '!!!Medium',
+    description: "some desc",
+  },
+  assuranceLevelHigh: {
+    id: 'components.txhistory.txhistorylistitem.assuranceLevelHigh',
+    defaultMessage: '!!!High',
+    description: "some desc",
+  },
+  assuranceLevelPending: {
+    id: 'components.txhistory.txhistorylistitem.assuranceLevelPending',
+    defaultMessage: '!!!Pending',
+    description: "some desc",
+  },
+  assuranceLevelFailed: {
+    id: 'components.txhistory.txhistorylistitem.assuranceLevelFailed',
+    defaultMessage: '!!!Failed',
+    description: "some desc",
+  },
+})
 
 type Props = {
   transaction: TransactionInfo,
   navigation: NavigationScreenProp<NavigationState>,
-  translations: SubTranslation<typeof getTranslations>,
+  intl: any,
 }
 
-const _AssuranceLevel = ({transaction, translations}) => {
+const _AssuranceLevel = ({transaction, intl}) => {
+  const assuranceLevelMsgMap = {
+    'LOW': messages.assuranceLevelLow,
+    'MEDIUM': messages.assuranceLevelMedium,
+    'HIGH': messages.assuranceLevelHigh,
+    'PENDING': messages.assuranceLevelPending,
+    'FAILED': messages.assuranceLevelFailed,
+  }
   return (
     <View style={[styles.assurance, styles[transaction.assurance]]}>
       <Text adjustsFontSizeToFit style={styles.assuranceText}>
-        {translations.assuranceLevel[transaction.assurance].toLocaleUpperCase()}
+        {intl.formatMessage(assuranceLevelMsgMap[transaction.assurance]).toLocaleUpperCase()}
       </Text>
     </View>
   )
 }
 
-const AssuranceLevel = withTranslations(getTranslations)(_AssuranceLevel)
+const AssuranceLevel = injectIntl(_AssuranceLevel)
 
 class TxHistoryListItem extends Component<Props> {
   shouldComponentUpdate(nextProps) {
@@ -58,7 +119,7 @@ class TxHistoryListItem extends Component<Props> {
     const sameTs = (x, y) => x === y
 
     return (
-      this.props.translations !== nextProps.translations ||
+      this.props.intl !== nextProps.intl ||
       tx.id !== nextTx.id ||
       tx.assurance !== nextTx.assurance ||
       tx.direction !== nextTx.direction ||
@@ -75,7 +136,7 @@ class TxHistoryListItem extends Component<Props> {
   }
 
   render() {
-    const {transaction, translations} = this.props
+    const {transaction, intl} = this.props
 
     const amountStyle = transaction.amount
       ? transaction.amount.gte(0)
@@ -85,6 +146,12 @@ class TxHistoryListItem extends Component<Props> {
 
     const isPending = transaction.assurance === 'PENDING'
     const assuranceContainerStyle = styles[`${transaction.assurance}_CONTAINER`]
+    const txDirectionMsgMap = {
+      'SENT': messages.transactionTypeSent,
+      'RECEIVED': messages.transactionTypeReceived,
+      'SELF': messages.transactionTypeSelf,
+      'MULTI': messages.transactionTypeMulti,
+    }
 
     return (
       <TouchableOpacity onPress={this.showDetails} activeOpacity={0.5}>
@@ -93,11 +160,11 @@ class TxHistoryListItem extends Component<Props> {
             <Text small>{formatTimeToSeconds(transaction.submittedAt)}</Text>
             {transaction.fee && (
               <Text secondary={!isPending}>
-                {`${translations.fee} ${formatAda(transaction.fee)}`}
+                {`${intl.formatMessage(messages.fee)} ${formatAda(transaction.fee)}`}
               </Text>
             )}
             <Text secondary={!isPending}>
-              {translations.transactionType[transaction.direction]}
+              {intl.formatMessage(txDirectionMsgMap[transaction.direction])}
             </Text>
           </View>
           <View style={styles.row}>
@@ -126,9 +193,8 @@ class TxHistoryListItem extends Component<Props> {
   }
 }
 
-export default compose(
+export default injectIntl(compose(
   connect((state, {id}) => ({
-    translations: getTranslations(state),
     transaction: transactionsInfoSelector(state)[id],
   })),
-)(TxHistoryListItem)
+)(TxHistoryListItem))
