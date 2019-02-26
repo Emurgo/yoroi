@@ -70,7 +70,7 @@ export const availableAmountSelector = createSelector(
 
 export const receiveAddressesSelector = createSelector(
   (state) => state.wallet.externalAddresses,
-  (state) => state.wallet.numReceiveAddresses,
+  (state) => state.wallet.numGeneratedAddresses,
   (addresses, count) => addresses.slice(0, count),
 )
 

@@ -74,9 +74,25 @@ export const CONFIG = {
   HISTORY_REFRESH_TIME: 10 * 1000,
   WALLET: {
     ACCOUNT_INDEX: 0,
+    /**
+     * BIP-44 requires that we actively monitor the next N unused addresses in case they are used
+     * This is our value for N
+     */
     DISCOVERY_GAP_SIZE: 20,
-    DISCOVERY_BLOCK_SIZE: 50, // should be less than API limitations
-    MAX_GENERATED_UNUSED: 20, // must be <= gap size
+    /**
+     * We always generate addresses from Rust in chunks
+     * This is the size of the chunk
+     *
+     * Note: Should be less than API limitations
+     * Otherwise we will generate a batch of addresses and the next API call will fail
+     */
+    ADDRESS_REQUEST_SIZE: 50,
+    /**
+     * BIP-44 optimizes by only scanning N unused addresses
+     * So we need to limit the # of unused addresses the user can generate
+     * Must be <= gap size
+     */
+    MAX_GENERATED_UNUSED: 20,
   },
   PIN_LENGTH: 6,
   APP_LOCK_TIMEOUT: 30 * 1000,

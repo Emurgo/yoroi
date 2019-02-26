@@ -227,8 +227,8 @@ export class Wallet {
     let keepGoing = true
     while (keepGoing) {
       keepGoing = await this._transactionCache.doSyncStep([
-        ...this._internalChain.getBlocks(),
-        ...this._externalChain.getBlocks(),
+        ...this._internalChain.getAddressChunks(),
+        ...this._externalChain.getAddressChunks(),
       ])
     }
 
@@ -256,25 +256,25 @@ export class Wallet {
     )
   }
 
-  get numReceiveAddresses() {
+  get numGeneratedAddresses() {
     return this._state.lastGeneratedAddressIndex + 1
   }
 
   canGenerateNewReceiveAddress() {
     // TODO(ppershing): use "assuredly used" instead of "seen"
     const usedCount = this.externalAddresses
-      .slice(0, this.numReceiveAddresses)
+      .slice(0, this.numGeneratedAddresses)
       .filter((address) => this.isUsedAddress(address)).length
 
     return (
-      this.numReceiveAddresses < usedCount + CONFIG.WALLET.MAX_GENERATED_UNUSED
+      this.numGeneratedAddresses < usedCount + CONFIG.WALLET.MAX_GENERATED_UNUSED
     )
   }
 
   async generateNewUiReceiveAddressIfNeeded() {
     if (
       this.externalAddresses
-        .slice(0, this.numReceiveAddresses)
+        .slice(0, this.numGeneratedAddresses)
         .some((addr) => !this.isUsedAddress(addr))
     ) {
       return false // still have some unused
@@ -285,7 +285,7 @@ export class Wallet {
   async generateNewUiReceiveAddress(): Promise<boolean> {
     if (!this.canGenerateNewReceiveAddress()) return false
 
-    let idx = this.numReceiveAddresses
+    let idx = this.numGeneratedAddresses
     // eslint-disable-next-line no-constant-condition
     while (true) {
       // First, discover new addresses if needed.
@@ -522,9 +522,9 @@ class WalletManager {
     return this._wallet.confirmationCounts
   }
 
-  get numReceiveAddresses() {
+  get numGeneratedAddresses() {
     if (!this._wallet) return 0
-    return this._wallet.numReceiveAddresses
+    return this._wallet.numGeneratedAddresses
   }
 
   get canGenerateNewReceiveAddress() {

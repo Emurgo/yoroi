@@ -11,8 +11,6 @@ import * as util from './util'
 import type {Dict} from '../state'
 import type {CryptoAccount, AddressType} from './util'
 
-export type AddressBlock = [number, Moment, Array<string>]
-
 export class AddressGenerator {
   account: CryptoAccount
   type: AddressType
@@ -49,7 +47,7 @@ const _addressToIdxSelector = (addresses: Array<string>) =>
 export class AddressChain {
   _addresses: Addresses = []
   _addressGenerator: AddressGenerator
-  _blockSize: number
+  _addressRequestSize: number
   _gapLimit: number
   _isInitialized: boolean = false
   _subscriptions: Array<(Addresses) => mixed> = []
@@ -59,30 +57,30 @@ export class AddressChain {
 
   constructor(
     addressGenerator: AddressGenerator,
-    blockSize: number = CONFIG.WALLET.DISCOVERY_BLOCK_SIZE,
+    addressRequestSize: number = CONFIG.WALLET.ADDRESS_REQUEST_SIZE,
     gapLimit: number = CONFIG.WALLET.DISCOVERY_GAP_SIZE,
   ) {
-    assert.assert(blockSize > gapLimit, 'Block size needs to be > gap limit')
+    assert.assert(addressRequestSize > gapLimit, 'addressRequestSize needs to be > gap limit')
 
     this._addressGenerator = addressGenerator
-    this._blockSize = blockSize
+    this._addressRequestSize = addressRequestSize
     this._gapLimit = gapLimit
   }
 
   toJSON() {
     return {
       gapLimit: this._gapLimit,
-      blockSize: this._blockSize,
+      addressRequestSize: this._addressRequestSize,
       addresses: this._addresses,
       addressGenerator: this._addressGenerator.toJSON(),
     }
   }
 
   static fromJSON(data: any) {
-    const {gapLimit, blockSize, addresses, addressGenerator} = data
+    const {gapLimit, addressRequestSize, addresses, addressGenerator} = data
     const chain = new AddressChain(
       AddressGenerator.fromJSON(addressGenerator),
-      blockSize,
+      addressRequestSize,
       gapLimit,
     )
     // is initialized && addresses
@@ -113,10 +111,10 @@ export class AddressChain {
     this._subscriptions.map((handler) => handler(newAddresses))
   }
 
-  async _discoverNewBlock() {
+  async _generateNewAddressChunk() {
     const addresses = this.addresses
     const start = this.size()
-    const idxs = _.range(start, start + this._blockSize)
+    const idxs = _.range(start, start + this._addressRequestSize)
 
     const newAddresses = await this._addressGenerator.generate(idxs)
 
@@ -127,14 +125,14 @@ export class AddressChain {
     }
   }
 
-  _getLastBlock() {
+  _getLastestAddreessChunk() {
     this._selfCheck()
-    const block = _.takeRight(this.addresses, this._blockSize)
+    const chunk = _.takeRight(this.addresses, this._addressRequestSize)
     assert.assert(
-      block.length === this._blockSize,
-      'AddressChain::_getLastBlock(): block length',
+      chunk.length === this._addressRequestSize,
+      'AddressChain::_getLastestAddreessChunk(): chunk length',
     )
-    return block
+    return chunk
   }
 
   async initialize() {
@@ -142,7 +140,7 @@ export class AddressChain {
       !this._isInitialized,
       'AddressChain::initialize(): !isInitialized',
     )
-    await this._discoverNewBlock()
+    await this._generateNewAddressChunk()
     assert.assert(
       !this._isInitialized,
       'AddressChain::initialized(): Concurrent modification',
@@ -156,7 +154,7 @@ export class AddressChain {
       'AddressChain::_selfCheck(): isInitialized',
     )
     assert.assert(
-      this._addresses.length % this._blockSize === 0,
+      this._addresses.length % this._addressRequestSize === 0,
       'AddressChain::_selfCheck(): lengths',
     )
   }
@@ -170,17 +168,17 @@ export class AddressChain {
 
   async _syncStep(filterFn: AsyncAddressFilter) {
     this._selfCheck()
-    const block = this._getLastBlock()
-    const used = await filterFn(block)
+    const chunk = this._getLastestAddreessChunk()
+    const used = await filterFn(chunk)
 
-    // Index relative to the start of the block
+    // Index relative to the start of the chunk
     // It is okay to "overshoot" with -1 here
-    const lastUsedIdx = used.length > 0 ? block.indexOf(_.last(used)) : -1
+    const lastUsedIdx = used.length > 0 ? chunk.indexOf(_.last(used)) : -1
 
-    const needsNewBlock = lastUsedIdx + this._gapLimit >= this._blockSize
+    const needsNewAddresses = lastUsedIdx + this._gapLimit >= this._addressRequestSize
 
-    if (needsNewBlock) {
-      await this._discoverNewBlock()
+    if (needsNewAddresses) {
+      await this._generateNewAddressChunk()
       return true
     } else {
       return false
@@ -204,7 +202,7 @@ export class AddressChain {
     return idx
   }
 
-  getBlocks() {
-    return _.chunk(this.addresses, this._blockSize)
+  getAddressChunks() {
+    return _.chunk(this.addresses, this._addressRequestSize)
   }
 }
