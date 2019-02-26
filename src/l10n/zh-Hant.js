@@ -114,69 +114,69 @@ const l10n = {
     enableSystemAuthFirst: {
       title: '鎖定屏幕無効',
       message:
-        '您可能禁用了手機中的鎖定屏幕。 You need to ' +
-        'disable easy transaction confirmation first. Please set up ' +
-        'you lock screen (PIN / Password / Pattern) on your phone ' +
-        'and then restart application. After this action you should be ' +
-        'able to disable lock screen ' +
-        'on your phone and use this application',
+        '您可能禁用了手機中的鎖定屏幕。 你需要'+
+        首先停用簡單交易確認 再設定' +
+        '您在手機上鎖定屏幕 (PIN /密碼)' +
+        '然後重啟應用程序 在這操作後你應該 ' +
+        '能夠關閉鎖屏 ' +
+        '',
       yesButton: 'OK',
     },
     wrongPinError: {
-      title: 'Invalid PIN',
-      message: 'PIN is incorrect.',
+      title: '不正確 pin 碼',
+      message: 'PIN碼不正確.',
       yesButton: 'OK',
     },
   },
   LanguageSelectionScreen: {
     languages,
-    continueButton: 'Choose language',
+    continueButton: '選擇語言',
   },
   YoroiDescription: {
-    line1: 'Yoroi is Web Light Wallet for Cardano',
-    line2: 'Secure Fast Simple',
+    line1: 'Yoroi是CARDANO的輕錢包',
+    簡便、快捷且安全
     byEmurgo: 'By',
   },
   AppStartScreen: {
-    loginButton: 'Login',
+    loginButton: '登入',
   },
   WithPinLoginScreen: {
-    title: 'Enter PIN',
+    title: '輸入PIN碼',
   },
   CreateWalletScreen: {
-    title: 'Create a new wallet',
+    title: '建立新錢包',
   },
   CreateOrRestoreWalletScreen: {
-    title: 'Add wallet',
-    createWalletButton: 'Create new wallet',
-    restoreWalletButton: 'Restore wallet from backup',
+    title: '增添錢包',
+    createWalletButton: '創建新錢包',
+    restoreWalletButton: '從備份恢復錢包',
   },
   // On CreateWalletScreen
   MnemonicExplanationModal: {
     paragraph1: [
       inline([
         normal(
-          'On the following screen, you will see a set of 15 random words. ',
+          '在之後的屏幕上，您將看到一組15個隨機單詞。 ',
         ),
-        normal('This is your '),
-        bold('wallet recovery phrase. '),
-        normal('It can be entered in any version '),
-        normal('of Yoroi in order to back up or restore '),
-        normal('your wallet`s funds and private key.'),
+        normal('這是你的 '),
+        bold('錢包恢復短語。 '),
+        normal('可以在任何版本的Yoroi輸入
+        normal('來備份或恢復'),
+        normal('你的Yoroi錢包的資金和私鑰。'),
       ]),
     ],
     paragraph2: [
       inline([
-        normal('Make sure '),
-        bold('nobody looks into your screen '),
-        normal('unless you want them to have access to your funds.'),
+        normal('請確保'),
+        bold('沒人看著你的屏幕 '),
+        normal('除非你希望他們能夠獲得你的資金。'),
       ]),
     ],
-    nextButton: 'I understand',
+    nextButton: '我了解',
   },
   WalletNameAndPasswordForm: {
     walletNameInput: {
-      label: 'Wallet name',
+      label: '錢包名稱',
       errors: walletNameErrors,
     },
     newPasswordInput: {
