@@ -9,7 +9,7 @@ import styles from './styles/PleaseWaitModal.style'
 
 import type {ComponentType} from 'react'
 
-const SendingModal = ({translations, visible, title, spinnerText}) => (
+const SendingModal = ({visible, title, spinnerText}) => (
   <Modal noPadding visible={visible} onRequestClose={() => null}>
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>

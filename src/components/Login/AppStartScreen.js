@@ -14,7 +14,6 @@ import {Button, StatusBar, ScreenBackground} from '../UiKit'
 import styles from './styles/AppStartScreen.style'
 import {ROOT_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import KeyStore from '../../crypto/KeyStore'
-import {withTranslations} from '../../utils/renderUtils'
 import {
   installationIdSelector,
   customPinHashSelector,
@@ -31,14 +30,12 @@ import type {State} from '../../state'
 const messages = defineMessages({
   loginButton: {
     id: 'components.login.appstartscreen.loginButton',
-    defaultMessage: 'Logiddn',
+    defaultMessage: '!!!Login',
     description: "some desc",
   },
 })
 
-const getTranslations = (state: State) => state.trans.AppStartScreen
-
-const AppStartScreen = ({navigateLogin, translations, intl, locale}) => {
+const AppStartScreen = ({navigateLogin, intl, locale}) => {
   return (
   <SafeAreaView style={styles.safeAreaView}>
     <StatusBar type="dark" />
@@ -59,14 +56,13 @@ const AppStartScreen = ({navigateLogin, translations, intl, locale}) => {
   </SafeAreaView>
 )}
 
-export default compose(
+export default injectIntl(compose(
   connect((state) => ({
     installationId: installationIdSelector(state),
     customPinHash: customPinHashSelector(state),
     isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
     locale: state.appSettings.languageCode
   })),
-  withTranslations(getTranslations),
   withHandlers({
     navigateLogin: ({
       isSystemAuthEnabled,
@@ -103,4 +99,4 @@ export default compose(
       }
     },
   }),
-)(injectIntl(AppStartScreen))
+)(AppStartScreen))

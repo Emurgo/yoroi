@@ -6,6 +6,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {SafeAreaView} from 'react-navigation'
+import {injectIntl, defineMessages} from 'react-intl'
 import _ from 'lodash'
 
 import {Text, Button, ValidatedTextInput, StatusBar} from '../../UiKit'
@@ -16,27 +17,75 @@ import {
   INVALID_PHRASE_ERROR_CODES,
   cleanMnemonic,
 } from '../../../utils/validators'
-import {withNavigationTitle, withTranslations} from '../../../utils/renderUtils'
+import {withNavigationTitle} from '../../../utils/renderUtils'
 import {isKeyboardOpenSelector} from '../../../selectors'
 
 import styles from './styles/RestoreWalletScreen.style'
 
 import type {State} from '../../../state'
-import type {SubTranslation} from '../../../l10n/typeHelpers'
 import type {InvalidPhraseError} from '../../../utils/validators'
 import type {ComponentType} from 'react'
 import type {Navigation} from '../../../types/navigation'
 
-const getTranslations = (state: State) => state.trans.RestoreWalletScreen
+const mnemonicInputErrorsMessages = defineMessages({
+  TOO_LONG: {
+    id: 'components.walletinit.restorewallet.restorewalletscreen.toolong',
+    defaultMessage: '!!!Phrase is too long. ',
+    description: "some desc",
+  },
+  TOO_SHORT: {
+    id: 'components.walletinit.restorewallet.restorewalletscreen.tooshort',
+    defaultMessage: '!!!Phrase is too short. ',
+    description: "some desc",
+  },
+  INVALID_CHECKSUM: {
+    id: 'components.walletinit.restorewallet.restorewalletscreen.invalidchecksum',
+    defaultMessage: '!!!Please enter valid mnemonic.',
+    description: "some desc",
+  },
+  UNKNOWN_WORDS: {
+    id: 'components.walletinit.restorewallet.restorewalletscreen.unknowwords',
+    defaultMessage: '!!!{wordlist} {cnt, plural, one {is} other {are}} invalid',
+    description: "some desc",
+  },
+})
+
+const messages = defineMessages({
+  title: {
+    id: 'components.walletinit.restorewallet.restorewalletscreen.title',
+    defaultMessage: '!!!Restore wallet',
+    description: "some desc",
+  },
+  mnemonicInputLabel: {
+    id: 'components.walletinit.restorewallet.restorewalletscreen.mnemonicInputLabel',
+    defaultMessage: '!!!Recovery phrase',
+    description: "some desc",
+  },
+  restoreButton: {
+    id: 'components.walletinit.restorewallet.restorewalletscreen.restoreButton',
+    defaultMessage: '!!!Restore wallet',
+    description: "some desc",
+  },
+  instructions: {
+    id: 'components.walletinit.restorewallet.restorewalletscreen.instructions',
+    defaultMessage:
+      '!!!To restore your wallet please provide the recovery phrase you ' +
+      'received when you created your wallet for the first time.',
+    description: "some desc",
+  },
+})
 
 const _translateInvalidPhraseError = (
-  translations: SubTranslation<typeof getTranslations>,
+  intl: any,
   error: InvalidPhraseError,
 ) => {
   if (error.code === INVALID_PHRASE_ERROR_CODES.UNKNOWN_WORDS) {
-    return translations.mnemonicInput.errors.UNKNOWN_WORDS(error.words)
+    return intl.formatMessage(mnemonicInputErrorsMessages.UNKNOWN_WORDS, {
+      cnt: error.words.length,
+      wordlist: error.words.map((word) => `'${word}'`).join(', ')
+    })
   } else {
-    return translations.mnemonicInput.errors[error.code]
+    return intl.formatMessage(mnemonicInputErrorsMessages[error.code])
   }
 }
 
@@ -58,7 +107,7 @@ const errorsVisibleWhileWriting = (errors) => {
 
 const RestoreWalletScreen = ({
   navigateToWalletCredentials,
-  translations,
+  intl,
   phrase,
   setPhrase,
   translateInvalidPhraseError,
@@ -79,14 +128,14 @@ const RestoreWalletScreen = ({
 
       <ScrollView keyboardDismissMode="on-drag">
         <View style={styles.container}>
-          <Text>{translations.instructions}</Text>
+          <Text>{intl.formatMessage(messages.instructions)}</Text>
           <ValidatedTextInput
             multiline
             numberOfLines={3}
             style={styles.phrase}
             value={phrase}
             onChangeText={setPhrase}
-            placeholder={translations.mnemonicInput.label}
+            placeholder={intl.formatMessage(messages.mnemonicInputLabel)}
             blurOnSubmit
             error={errorText}
             autoCapitalize="none"
@@ -98,19 +147,18 @@ const RestoreWalletScreen = ({
 
       <Button
         onPress={navigateToWalletCredentials}
-        title={translations.restoreButton}
+        title={intl.formatMessage(messages.restoreButton)}
         disabled={!_.isEmpty(errors)}
       />
     </SafeAreaView>
   )
 }
 
-export default (compose(
+export default injectIntl(compose(
   connect((state) => ({
     isKeyboardOpen: isKeyboardOpenSelector(state),
   })),
-  withTranslations(getTranslations),
-  withNavigationTitle(({translations}) => translations.title),
+  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
   withStateHandlers(
     {
       phrase: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.MNEMONIC1 : '',
@@ -125,7 +173,7 @@ export default (compose(
         phrase: cleanMnemonic(phrase),
       })
     },
-    translateInvalidPhraseError: ({translations}) => (error) =>
-      _translateInvalidPhraseError(translations, error),
+    translateInvalidPhraseError: ({intl}) => (error) =>
+      _translateInvalidPhraseError(intl, error),
   }),
 )(RestoreWalletScreen): ComponentType<{navigation: Navigation}>)
