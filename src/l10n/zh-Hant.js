@@ -180,25 +180,25 @@ const l10n = {
       errors: walletNameErrors,
     },
     newPasswordInput: {
-      label: 'Wallet password',
+      label: '錢包密碼',
     },
     repeatPasswordInput: {
-      label: 'Repeat password',
+      label: '重複輸入密碼',
       errors: {
-        passwordsDoNotMatch: 'Passwords do not match',
+        passwordsDoNotMatch: '密碼不配',
       },
     },
-    continueButton: 'Continue',
+    continueButton: '繼續',
   },
   PasswordStrengthIndicator: {
-    passwordRequirementsNote: 'The password needs to contain at least:',
-    passwordMinLength: '7 characters',
-    passwordUpperChar: '1 uppercase letter',
-    passwordLowerChar: '1 lowercase letter',
-    passwordNumber: '1 number',
-    continueButton: 'Continue',
-    passwordBigLength: '12 characters',
-    or: 'Or',
+    passwordRequirementsNote: '密碼至少需要包含:',
+    passwordMinLength: '7個字',
+    passwordUpperChar: '1個大寫字母',
+    passwordLowerChar: '1個小寫字母',
+    passwordNumber: '1個數字',
+    continueButton: '繼續',
+    passwordBigLength: '12個字符',
+    or: '或',
   },
   TransactionHistoryScreeen: {
     syncErrorBanner: {
