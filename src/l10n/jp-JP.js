@@ -184,7 +184,7 @@ const l10n = {
       label: 'ウォレットのパスワード',
     },
     repeatPasswordInput: {
-      label: 'パスワードをもう一度入力してください',
+      label: 'パスワードをもう一度入力',
       errors: {
         passwordsDoNotMatch: 'パスワードが一致していません',
       },
@@ -192,7 +192,7 @@ const l10n = {
     continueButton: '続行',
   },
   PasswordStrengthIndicator: {
-    passwordRequirementsNote: 'パスワードは、:',
+    passwordRequirementsNote: 'パスワードの必須条件:',
     passwordMinLength: '7文字',
     passwordUpperChar: '大文字',
     passwordLowerChar: '小文字',
