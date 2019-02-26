@@ -3,23 +3,23 @@ import {heading, paragraph, listItem} from './util'
 
 export const termsOfService = [
   paragraph(
-    'THIS TERMS OF SERVICE AGREEMENT ("Agreement") is made between EMURGO \
-Co., Ltd. ("Company") and any person or entity ("User") who completes the \
-process to download, utilize, or operate the software known as the Yoroi \
-cryptocurrency Wallet application, and data processing service, application, \
-communication service or other content or offered or provided with the \
-software by the Company ("Software"). The Company and User are collectively \
-referred to as the "Parties." BY CLICKING THE ACCEPTANCE BUTTON OR ACCESSING, \
-USING OR INSTALLING ANY PART OF THE SOFTWARE, USER EXPRESSLY AGREES TO AND \
-CONSENTS TO BE LEGALLY BOUND BY ALL OF THE TERMS OF THIS AGREEMENT. IF USER \
-DOES NOT AGREE TO ALL OF THE TERMS OF THIS AGREEMENT, THE USER SHALL NOT BE \
-AUTHORIZED TO ACCESS, USE OR INSTALL ANY PART OF THE SOFTWARE.',
+    本服務條款（下稱「本條款」）由EMURGO \
+Co., Ltd. 下稱「本公司」）與 \
+完成下載、使用或操作「Yoroi數位加密貨幣錢包」 \
+此一應用軟體以及本公司與該軟體一併提供之資訊處理服務、\
+應用、通信服務或其他內容（下稱「本軟體」）
+（下稱「本軟體」）之任何個人或實體（下稱「用戶」）所訂立。 本公司與用戶合稱為 \
+「雙方當事人」。 透過點擊「我接受」按鈕或訪問、 \
+使用或安裝本軟體的任何部分，用戶明確同意且 \
+承諾受本條款中的所有規定合法約束。 若用戶 \
+不同意接受本條款之所有規定，用戶將不被 \
+授權訪問、使用或安裝本軟體的任何部分。',
   ),
-  heading('1. Rights and Obligations'),
+  heading('1. 權利與義務'),
   listItem(
-    'a. Description. ',
-    "The Software functions as a free, open source, digital cryptocurrency \
-wallet. The Software does not constitute an account by which the Company or \
+    'a. 說明 ',
+     本軟體作為一個免費、開源之數位加密貨幣錢包運行。 \
+  The Software does not constitute an account by which the Company or \
 any other third parties serve as financial intermediaries or custodians of \
 User's ADA or any other cryptocurrency. While the Software has undergone beta \
 testing and continues to be improved by feedback from the developers \
