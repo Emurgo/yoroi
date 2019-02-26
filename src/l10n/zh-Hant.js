@@ -202,40 +202,40 @@ const l10n = {
   },
   TransactionHistoryScreeen: {
     syncErrorBanner: {
-      textWithoutRefresh: 'We are experiencing synchronization issues.',
+      textWithoutRefresh: '我們遇到了同步問題。',
       textWithRefresh:
-        'We are experiencing synchronization issues. Pull to refresh',
+        '我們遇到了同步問題。 再刷新'，
     },
     availableFundsBanner: {
       label: common.availableFunds,
     },
-    noTransactions: 'No transactions to show yet',
-    transaction: {
+    noTransactions: '暫無任何交易',
+    交易: {
       transactionType: {
-        SENT: 'ADA sent',
-        RECEIVED: 'ADA received',
-        SELF: 'Intrawallet',
-        MULTI: 'Multiparty',
+        SENT: 'ADA發送',
+        RECEIVED: '已收ADA',
+        SELF: '錢包內',
+        MULTI: '多方',
       },
-      assuranceLevelHeader: 'Assurance level:',
+      assuranceLevelHeader: '保證等級',
       assuranceLevel: {
-        LOW: 'Low',
-        MEDIUM: 'Medium',
-        HIGH: 'High',
-        PENDING: 'Pending',
-        FAILED: 'Failed',
+        LOW: '低',
+        MEDIUM: '中',
+        HIGH: '高',
+        PENDING: '等候',
+        FAILED: '失敗',
       },
-      fee: 'Fee:',
+      fee: '費用:',
     },
-    sendButton: 'Send',
-    receiveButton: 'Receive',
+    sendButton: '發送',
+    receiveButton: '接收',
   },
   TransactionDetailsScreen: {
     transactionType: {
-      SENT: 'Sent funds',
-      RECEIVED: 'Received funds',
-      SELF: 'Intrawallet transaction',
-      MULTI: 'Multi-party transaction',
+      SENT: '已發送資金',
+      RECEIVED: '收到的資金',
+      SELF: '錢包內交易',
+      MULTI: '多方交易',
     },
     fee: 'Fee: ',
     fromAddresses: 'From Addresses',
