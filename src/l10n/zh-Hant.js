@@ -16,18 +16,18 @@ const languages = {
 const datetime = {
   today: '今天',
   yesterday: '昨天',
-}
+} 
 
 const walletNameErrors = {
-  tooLong: 'Wallet name cannot exceed 40 letters',
-  nameAlreadyTaken: 'You already have a wallet with this name',
+  tooLong: '錢包名稱不能超過40個字母',
+  nameAlreadyTaken: '"已有這名字的錢包",',
 }
 
 // common translations shared across multiple places
 const common = {
   ok: 'OK',
-  availableFunds: 'Available funds',
-  pleaseWait: 'please wait ...',
+  availableFunds: '可用資金',
+  pleaseWait: '請稍候....',
 }
 
 // ios system translations
