@@ -86,35 +86,35 @@ const l10n = {
       message:
         '我們檢測到你手機裡的生物識別技術已更改。' ' +
         '因此簡單的交易確認被停用'+
-        'and transaction submitting is allowed only with master password. ' +
-        'You can re-enable easy transactions confirmation in settings',
+        ʻ使用主密碼來允許交易提交。 ' +
+        '您可以在設置中重新啟用輕鬆的交易確認',
       yesButton: 'OK',
     },
     networkError: {
-      title: 'Network error',
+      title: '網絡錯誤',
       message:
-        'Error connecting to the server. ' +
-        'Please check your internet connection',
+        '連接到服務器時出錯。 ' +
+        '請檢查你的網絡連接',
       yesButton: common.ok,
     },
     disableEasyConfirmationFirst: {
-      title: 'Action failed',
+      title: '操作失敗',
       message:
-        'Please disable easy confirmation function in all ' +
-        'your wallets first',
+        '請關閉所有的簡易確認功能 ' +
+        '於你的錢包',
       yesButton: common.ok,
     },
     enableFingerprintsFirst: {
-      title: 'Action failed',
+      title: '操作失敗',
       message:
-        'You need to enable biometrics in your device first in order ' +
-        'to be able link it with this app',
+        ' 您需要先在設備中啟用生物識別 ' +
+        '才能夠將它與這個應用程序鏈接',
       yesButton: 'OK',
     },
     enableSystemAuthFirst: {
-      title: 'Lock screen disabled',
+      title: '鎖定屏幕無効',
       message:
-        'You probably disabled lock screen in your phone. You need to ' +
+        '您可能禁用了手機中的鎖定屏幕。 You need to ' +
         'disable easy transaction confirmation first. Please set up ' +
         'you lock screen (PIN / Password / Pattern) on your phone ' +
         'and then restart application. After this action you should be ' +
