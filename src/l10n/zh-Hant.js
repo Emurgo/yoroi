@@ -33,8 +33,8 @@ const common = {
 // ios system translations
 const ios = {
   NSFaceIDUsageDescription:
-    'Enabling Face ID allows you quick and secure access to your account.',
-  NSCameraUsageDescription: 'Enabling camera allows you to scan QR codes.',
+    '啟用Face ID 可讓您快速、安全地存取您的帳戶。',
+  NSCameraUsageDescription: '允許相機掃描QR碼',
 }
 
 const l10n = {
@@ -43,26 +43,26 @@ const l10n = {
     datetime,
     ios,
     notifications: {
-      offline: 'You are offline. Please check settings on your device.',
+      offline: '你現在是離線. 請檢查設備上的設置',
     },
-    currentLanguageName: 'English',
+    currentLanguageName: '繁體中文',
   },
   confirmationDialogs: {
     logout: {
-      title: 'Logout',
-      message: 'Do you really want to logout?',
-      yesButton: 'Yes',
-      noButton: 'No',
+      title: '登出',
+      message: '你要登出嗎？',
+      yesButton: '是',
+      noButton: '不是',
     },
   },
   errorDialogs: {
     generalError: (message: string) => ({
-      title: 'Unexpected error',
-      message: `Requested operation failed. This is all we know: ${message}`,
+      title: '發生錯誤',
+      message: `請求操作失敗。 我們所知道: ${message} `,
       yesButton: common.ok,
     }),
     pinMismatch: {
-      title: 'Invalid PIN',
+      title: '不正確 pin 碼',
       message: 'PINs do not match.',
       yesButton: common.ok,
     },
