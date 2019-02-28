@@ -44,7 +44,7 @@ const MnemonicShowScreen = ({
         </View>
       </View>
       {/* If screen is small hide image */}
-      { (Dimensions.get('window').height > 480) && (
+      {Dimensions.get('window').height > 480 && (
         <View style={styles.image}>
           <Image source={recoveryPhrase} />
         </View>

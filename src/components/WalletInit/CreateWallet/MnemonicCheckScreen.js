@@ -70,9 +70,7 @@ const WordBadge: ComponentType<WordProps> = withHandlers({
   handleOnPress: ({onPress, value}) => () => onPress(value),
 })(_WordBadge)
 
-const shouldScreenScroll = () => (
-  (Dimensions.get('window').height <= 480)
-)
+const shouldScreenScroll = () => Dimensions.get('window').height <= 480
 
 const MnemonicCheckScreen = ({
   mnemonic,
@@ -94,13 +92,18 @@ const MnemonicCheckScreen = ({
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.container}>
         <StatusBar type="dark" />
-        <ScrollView automaticallyAdjustContentInsets={shouldScreenScroll()} bounces={shouldScreenScroll()}>
+        <ScrollView
+          automaticallyAdjustContentInsets={shouldScreenScroll()}
+          bounces={shouldScreenScroll()}
+        >
           <View style={styles.content}>
             <Text>{translations.instructions}</Text>
             <View
               style={[
                 styles.recoveryPhrase,
-                !isPhraseValid && isPhraseComplete && styles.recoveryPhraseError,
+                !isPhraseValid &&
+                  isPhraseComplete &&
+                  styles.recoveryPhraseError,
               ]}
             >
               {initial.map((id) => (
