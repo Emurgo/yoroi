@@ -12,7 +12,7 @@
   "components.firstrun.custompinscreen.pinInputSubtitle": "!!!Choose new PIN for quick access to wallet.",
   "components.firstrun.custompinscreen.pinInputTitle": "!!!Enter the PIN",
   "components.firstrun.custompinscreen.title": "!!!Set PIN",
-  "components.login.appstartscreen.loginButton": "Logiddn",
+  "components.login.appstartscreen.loginButton": "!!!Login",
   "components.login.custompinlogin.title": "!!!Enter PIN",
   "components.settings.applicationsettingsscreen.biometricsSignIn": "!!!Sign in with your biometrics",
   "components.settings.applicationsettingsscreen.changePin": "Change PIN",
