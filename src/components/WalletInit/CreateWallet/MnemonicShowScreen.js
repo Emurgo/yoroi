@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {View, Image} from 'react-native'
+import {View, Image, Dimensions} from 'react-native'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers, withProps} from 'recompose'
 import {SafeAreaView} from 'react-navigation'
@@ -43,9 +43,12 @@ const MnemonicShowScreen = ({
           ))}
         </View>
       </View>
-      <View style={styles.image}>
-        <Image source={recoveryPhrase} />
-      </View>
+      {/* If screen is small hide image */}
+      { (Dimensions.get('window').height > 480) && (
+        <View style={styles.image}>
+          <Image source={recoveryPhrase} />
+        </View>
+      )}
       <View>
         <Button onPress={showModal} title={translations.confirmationButton} />
       </View>
