@@ -90,7 +90,6 @@ const RestoreWalletScreen = ({
             blurOnSubmit
             error={errorText}
             autoCapitalize="none"
-            // keyboardType="visible-password"
             // hopefully this prevents keyboard from learning the mnemonic
             autoCorrect={false}
           />
