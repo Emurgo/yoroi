@@ -13,6 +13,7 @@ export default StyleSheet.create({
   },
   buttons: {
     flexDirection: 'row',
+    marginTop: 12,
   },
   clearButton: {
     marginRight: 12,
@@ -39,8 +40,7 @@ export default StyleSheet.create({
     flexWrap: 'wrap',
     paddingBottom: 0,
     marginTop: 16,
-    height: '30%',
-    minHeight: 26 * 6,
+    height: 26 * 6,
     paddingHorizontal: 6,
   },
   recoveryPhraseError: {
@@ -66,6 +66,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginTop: 12,
+    height: 26 * 6,
   },
   selected: {
     opacity: 0,
