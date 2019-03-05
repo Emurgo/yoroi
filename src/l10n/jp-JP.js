@@ -511,7 +511,7 @@ const l10n = {
         subtitle: '新しいPINを選んで、クイックアクセスを有効にします',
       },
       PinConfirmationInput: {
-        title: 'PINもう一度入力してください',
+        title: 'PINをもう一度入力',
       },
     },
   },
@@ -524,7 +524,7 @@ const l10n = {
       label: '新しいパスワード',
     },
     repeatPasswordInput: {
-      label: '新しいパスワードをもう一度入力してください',
+      label: '新パスワードをもう一度入力',
       errors: {
         passwordsDoNotMatch: 'パスワードが一致していません',
       },
@@ -543,7 +543,7 @@ const l10n = {
         subtitle: '新しいPINを選んで、クイックアクセスを有効にする。',
       },
       PinConfirmationInput: {
-        title: 'PINをもう一度入れてください',
+        title: 'PINもう一度入力',
       },
     },
   },
