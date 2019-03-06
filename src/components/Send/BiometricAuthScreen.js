@@ -3,6 +3,7 @@
 import React from 'react'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
+import {injectIntl, defineMessages} from 'react-intl'
 
 import {Logger} from '../../utils/logging'
 import {Button} from '../UiKit'
@@ -11,7 +12,6 @@ import KeyStore from '../../crypto/KeyStore'
 import {
   onDidMount,
   onWillUnmount,
-  withTranslations,
 } from '../../utils/renderUtils'
 
 import styles from './styles/BiometricAuthScreen.style'
@@ -19,14 +19,68 @@ import styles from './styles/BiometricAuthScreen.style'
 import type {ComponentType} from 'react'
 import type {Navigation} from '../../types/navigation'
 
-const getTranslations = (state) => state.trans.BiometricsAuthScreen
+const errorMessages = defineMessages({
+  NOT_RECOGNIZED: {
+    id: 'components.send.biometricauthscreen.NOT_RECOGNIZED',
+    defaultMessage: '!!!Fingerprint was not recognized try again',
+    description: 'some desc',
+  },
+  SENSOR_LOCKOUT: {
+    id: 'components.send.biometricauthscreen.SENSOR_LOCKOUT',
+    defaultMessage: '!!!You used too many fingers sensor is disabled',
+    description: 'some desc',
+  },
+  SENSOR_LOCKOUT_PERMANENT: {
+    id: 'components.send.biometricauthscreen.SENSOR_LOCKOUT_PERMANENT',
+    defaultMessage: '!!!You permanently locked out your fingerprint sensor. Use fallback.',
+    description: 'some desc',
+  },
+  DECRYPTION_FAILED: {
+    id: 'components.send.biometricauthscreen.DECRYPTION_FAILED',
+    defaultMessage: '!!!Fingerprint sensor failed please use fallback',
+    description: 'some desc',
+  },
+  UNKNOWN_ERROR: {
+    id: 'components.send.biometricauthscreen.UNKNOWN_ERROR',
+    defaultMessage: '!!!Unknown error',
+    description: 'some desc',
+  },
+})
+
+const messages = defineMessages({
+  authorizeOperation: {
+    id: 'components.send.biometricauthscreen.authorizeOperation',
+    defaultMessage: '!!!Authorize operation',
+    description: 'some desc',
+  },
+  useFallbackButton: {
+    id: 'components.send.biometricauthscreen.useFallbackButton',
+    defaultMessage: '!!!Use fallback',
+    description: 'some desc',
+  },
+  headings1: {
+    id: 'components.send.biometricauthscreen.headings1',
+    defaultMessage: '!!!Authorize with your',
+    description: 'some desc',
+  },
+  headings2: {
+    id: 'components.send.biometricauthscreen.headings2',
+    defaultMessage: '!!!fingerprint',
+    description: 'some desc',
+  },
+  cancelButton: {
+    id: 'components.send.biometricauthscreen.cancelButton',
+    defaultMessage: '!!!Cancel',
+    description: 'some desc',
+  },
+})
 
 const handleOnConfirm = async (
   navigation,
   setError,
   clearError,
   useFallback = false,
-  translations,
+  intl,
 ) => {
   const keyId = navigation.getParam('keyId')
   const onSuccess = navigation.getParam('onSuccess')
@@ -36,7 +90,7 @@ const handleOnConfirm = async (
     const decryptedData = await KeyStore.getData(
       keyId,
       useFallback ? 'SYSTEM_PIN' : 'BIOMETRICS',
-      translations.authorizeOperation,
+      intl.formatMessage(messages.authorizeOperation),
       '',
     )
     onSuccess(decryptedData)
@@ -54,7 +108,7 @@ const handleOnConfirm = async (
     } else if (error.code === KeyStore.REJECTIONS.SENSOR_LOCKOUT_PERMANENT) {
       setError('SENSOR_LOCKOUT_PERMANENT')
     } else if (error.code !== KeyStore.REJECTIONS.DECRYPTION_FAILED) {
-      handleOnConfirm(navigation, setError, clearError, false, translations)
+      handleOnConfirm(navigation, setError, clearError, false, intl)
     } else {
       Logger.error('BiometricAuthScreen', error)
       setError('UNKNOWN_ERROR')
@@ -66,26 +120,27 @@ const BiometricAuthScreen = ({
   cancelScanning,
   useFallback,
   error,
-  translations,
+  intl,
 }) => (
   <FingerprintScreenBase
     onGoBack={cancelScanning}
-    headings={translations.headings}
+    headings={[intl.formatMessage(messages.headings1), intl.formatMessage(messages.headings2)]}
     buttons={[
       <Button
         key={'use-fallback'}
         outline
-        title={translations.useFallbackButton}
+        title={intl.formatMessage(messages.useFallbackButton)}
         onPress={useFallback}
         containerStyle={styles.useFallback}
       />,
     ]}
-    error={error && translations.errors[error]}
+    error={error && intl.formatMessage(errorMessages[error])}
   />
 )
 
 type ExternalProps = {|
   navigation: Navigation,
+  intl: any
 |}
 
 type ErrorCode =
@@ -99,8 +154,7 @@ type State = {
   error: null | ErrorCode,
 }
 
-export default (compose(
-  withTranslations(getTranslations),
+export default injectIntl((compose(
   withStateHandlers<State, *, *>(
     {
       error: null,
@@ -128,18 +182,18 @@ export default (compose(
       navigation,
       setError,
       clearError,
-      translations,
+      intl,
     }) => async () => {
       await KeyStore.cancelFingerprintScanning(
         KeyStore.REJECTIONS.SWAPPED_TO_FALLBACK,
       )
-      handleOnConfirm(navigation, setError, clearError, true, translations)
+      handleOnConfirm(navigation, setError, clearError, true, intl)
     },
   }),
   onWillUnmount(async () => {
     await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
   }),
-  onDidMount(({navigation, setError, clearError, translations}) =>
-    handleOnConfirm(navigation, setError, clearError, false, translations),
+  onDidMount(({navigation, setError, clearError, intl}) =>
+    handleOnConfirm(navigation, setError, clearError, false, intl),
   ),
-)(BiometricAuthScreen): ComponentType<ExternalProps>)
+)(BiometricAuthScreen): ComponentType<ExternalProps>))

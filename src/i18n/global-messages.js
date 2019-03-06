@@ -1,4 +1,6 @@
-import { defineMessages } from 'react-intl';
+// @flow
+
+import {defineMessages} from 'react-intl'
 
 /*
  * Some messages need to be used in multiple components
@@ -25,12 +27,12 @@ export default defineMessages({
   tos: {
     id: 'global.termsOfUse',
     defaultMessage: '!!!Terms of use',
-    description: 'Terms of use'
+    description: 'Terms of use',
   },
   availableFunds: {
     id: 'global.availableFunds',
     defaultMessage: '!!!Available funds',
-    description: 'Terms of use'
+    description: 'Terms of use',
   },
 });
 
