@@ -1,9 +1,19 @@
 // @flow
 import {BigNumber} from 'bignumber.js'
+import {defineMessages} from 'react-intl'
 import moment from 'moment'
 import utfSymbols from './utfSymbols'
 
-import l10n from '../l10n'
+const messages = defineMessages({
+  today: {
+    id: 'utils.format.today',
+    defaultMessage: '!!!Today'
+  },
+  yesterday: {
+    id: 'utils.format.yesterday',
+    defaultMessage: '!!!Yesterday',
+  }
+})
 
 // 1 ADA = 1 000 000 micro ada
 const MICRO = 1000000
@@ -47,10 +57,10 @@ export const formatDateToSeconds = (ts: string | moment) => {
   return moment(ts).format(moment(0)._locale._format.dateToSeconds)
 }
 
-export const formatDateRelative = (ts: string | moment) => {
+export const formatDateRelative = (ts: string | moment, intl) => {
   const config = {
-    sameDay: `[${l10n.translations.global.datetime.today}]`,
-    lastDay: `[${l10n.translations.global.datetime.yesterday}]`,
+    sameDay: `[${intl.formatMessage(messages.today)}]`,
+    lastDay: `[${intl.formatMessage(messages.yesterday)}]`,
     nextDay: 'L', // we don't really have dates in future
     lastWeek: 'L',
     nextWeek: 'L',

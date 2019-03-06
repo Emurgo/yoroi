@@ -71,11 +71,6 @@ export const onDidUpdate = <Props, Callback: (any, any) => mixed>(
       }
     }
 
-// prettier-ignore
-export const withTranslations = <GetTrans: (State) => mixed, Props: {}>(
-  getTrans: GetTrans,
-): HOC<{|...$Exact<Props>, translations: $Call<GetTrans, State>|}, Props> =>
-    connect((state) => ({translations: getTrans(state)}))
 
 // prettier-ignore
 export const withNavigationTitle = <Props: {navigation: any}>(

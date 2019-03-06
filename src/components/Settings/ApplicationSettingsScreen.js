@@ -37,17 +37,18 @@ const messages = defineMessages({
   title: {
     id: 'components.settings.applicationsettingsscreen.title',
     defaultMessage: 'Settings',
-    description: "some desc",
   },
   tabTitle: {
     id: 'components.settings.applicationsettingsscreen.tabTitle',
     defaultMessage: 'Application',
-    description: "some desc",
   },
   language: {
     id: 'components.settings.applicationsettingsscreen.language',
     defaultMessage: 'Your language',
-    description: "some desc",
+  },
+  currentLanguage: {
+    id: 'components.settings.applicationsettingsscreen.currentLanguage',
+    defaultMessage: '!!!English',
   },
   security: {
     id: 'components.settings.applicationsettingsscreen.security',
@@ -160,7 +161,6 @@ const ApplicationSettingsScreen = ({
   updateDeviceSettings,
   isBiometricHardwareSupported,
   isSystemAuthEnabled,
-  language,
   sendCrashReports,
   setCrashReporting,
 }) => (
@@ -170,7 +170,7 @@ const ApplicationSettingsScreen = ({
     <NavigationEvents onWillFocus={updateDeviceSettings} />
     <SettingsSection title={intl.formatMessage(messages.language)}>
       <NavigatedSettingsItem
-        label={language}
+        label={intl.formatMessage(messages.currentLanguage)}
         navigateTo={SETTINGS_ROUTES.CHANGE_LANGUAGE}
       />
     </SettingsSection>
@@ -220,7 +220,6 @@ export default injectIntl(compose(
       isBiometricHardwareSupported: biometricHwSupportSelector(state),
       sendCrashReports: sendCrashReportsSelector(state),
       isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
-      language: state.trans.global.currentLanguageName,
       installationId: installationIdSelector(state),
     }),
     {setAppSettingField, setSystemAuth},

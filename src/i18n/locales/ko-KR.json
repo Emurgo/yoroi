@@ -65,6 +65,7 @@
   "components.settings.applicationsettingsscreen.changePin": "Change PIN",
   "components.settings.applicationsettingsscreen.crashReporting": "!!!Crash reporting",
   "components.settings.applicationsettingsscreen.crashReportingText": "Send crash reports to Emurgo. Changes to this option will be reflected  after restarting the application.",
+  "components.settings.applicationsettingsscreen.currentLanguage": "!!!English",
   "components.settings.applicationsettingsscreen.language": "Your language",
   "components.settings.applicationsettingsscreen.security": "Security",
   "components.settings.applicationsettingsscreen.support": "!!!Support",
@@ -153,6 +154,7 @@
   "components.txhistory.txhistorylistitem.transactionTypeSent": "!!!ADA sent",
   "components.txhistory.txnavigationbuttons.receiveButton": "!!!Receive",
   "components.txhistory.txnavigationbuttons.sendButton": "!!!Send",
+  "components.uikit.offlinebanner.offline": "!!!You are offline. Please check settings on your device.",
   "components.walletinit.createwallet.createwalletscreen.title": "!!!Create a new wallet",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.confirmationButton": "!!!I understand",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.keysStorageCheckbox": "!!!I understand that my secret keys are held securely on this device only, not on the company`s servers",
@@ -198,9 +200,15 @@
   "components.walletinit.walletinitscreen.title": "!!!Add wallet",
   "components.walletselection.walletselectionscreen.addWalletButton": "!!!Add wallet",
   "components.walletselection.walletselectionscreen.header": "!!!Your wallets",
+  "crypto.keystore.approveTransaction": "Authorize with your fingerprint",
+  "crypto.keystore.cancelButton": "Cancel",
+  "crypto.keystore.description": "!!!",
+  "crypto.keystore.subtitle": "!!!",
   "global.availableFunds": "!!!Available funds",
   "global.error.walletNameAlreadyTaken": "You already have a wallet with this name",
   "global.error.walletNameTooLong": "Wallet name cannot exceed 40 letters",
   "global.pleaseWait": "!!!please wait ...",
-  "global.termsOfUse": "!!!Terms of use"
+  "global.termsOfUse": "!!!Terms of use",
+  "utils.format.today": "!!!Today",
+  "utils.format.yesterday": "!!!Yesterday"
 }

@@ -1,8 +1,5 @@
 // @flow
-import l10n from './l10n'
-
 import type {Transaction, RawUtxo} from './types/HistoryTransaction'
-import type {Translation} from './l10n/type'
 
 export type Dict<T> = {[string]: T}
 
@@ -32,7 +29,6 @@ export type State = {
     lastFetchingError: any,
     utxos: ?Array<RawUtxo>,
   },
-  trans: Translation,
   isOnline: boolean,
   isAppInitialized: boolean,
   isKeyboardOpen: boolean,
@@ -71,7 +67,6 @@ export const getInitialState = (): State => ({
     lastFetchingError: null,
     utxos: null,
   },
-  trans: l10n.translations,
   isOnline: true, // we are online by default
   isAppInitialized: false,
   isKeyboardOpen: false,

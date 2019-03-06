@@ -87,6 +87,7 @@ const handleOnConfirm = async (
   password,
   submitTransaction,
   setSendingTransaction,
+  intl
 ) => {
   const transactionData = navigation.getParam('transactionData')
 
@@ -140,6 +141,7 @@ const handleOnConfirm = async (
       'MASTER_PASSWORD',
       '',
       password,
+      intl,
     )
 
     submitTx(decryptedData)
@@ -257,6 +259,7 @@ export default injectIntl(compose(
         password,
         submitTransaction,
         setSendingTransaction,
+        intl,
       }) => async (event) => {
         await handleOnConfirm(
           navigation,
@@ -264,6 +267,7 @@ export default injectIntl(compose(
           password,
           submitTransaction,
           setSendingTransaction,
+          intl,
         )
       },
       1000,

@@ -2,17 +2,24 @@
 
 import React from 'react'
 import {connect} from 'react-redux'
+import {injectIntl, defineMessages} from 'react-intl'
 
 import {isOnlineSelector} from '../../selectors'
 import Banner from './Banner'
 
-const OfflineBanner = ({isOnline, offlineTranslation}) =>
-  isOnline ? null : <Banner error text={offlineTranslation} />
+const messages = defineMessages({
+  offline: {
+    id: 'components.uikit.offlinebanner.offline',
+    defaultMessage: '!!!You are offline. Please check settings on your device.',
+  }
+})
 
-export default connect(
+const OfflineBanner = ({isOnline, offlineTranslation, intl}) =>
+  isOnline ? null : <Banner error text={intl.formatMessage(messages.offline)} />
+
+export default injectIntl(connect(
   (state) => ({
-    offlineTranslation: state.trans.global.notifications.offline,
     isOnline: isOnlineSelector(state),
   }),
   null,
-)(OfflineBanner)
+)(OfflineBanner))

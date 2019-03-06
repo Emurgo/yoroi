@@ -190,9 +190,9 @@ class ChangePasswordScreen extends PureComponent<Props, ComponentState> {
 export default injectIntl(compose(
   withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
   withHandlers({
-    onSubmit: ({navigation}) => async (oldPassword, newPassword) => {
+    onSubmit: ({navigation, intl}) => async (oldPassword, newPassword) => {
       try {
-        await walletManager.changePassword(oldPassword, newPassword)
+        await walletManager.changePassword(oldPassword, newPassword, intl)
         navigation.goBack(null)
       } catch (e) {
         if (e instanceof WrongPassword) {

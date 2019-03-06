@@ -18,7 +18,7 @@ import recoveryPhrase from '../../../assets/img/recovery_phrase.png'
 
 import type {State} from '../../../state'
 
-import {withNavigationTitle, withTranslations} from '../../../utils/renderUtils'
+import {withNavigationTitle} from '../../../utils/renderUtils'
 import type {Navigation} from '../../../types/navigation'
 import type {ComponentType} from 'react'
 

@@ -55,12 +55,10 @@ const messages = defineMessages({
     defaultMessage:
       'By disabling this option you will be able to spend your ADA ' +
       'only with master password.',
-    description: "some desc",
   },
   disableButton: {
     id: 'components.settings.toggleeasyconfirmationscreen.disableButton',
     defaultMessage: 'Disable',
-    description: "some desc",
   },
 })
 
@@ -68,9 +66,10 @@ const enableEasyConfirmation = ({
   navigation,
   masterPassword,
   setEasyConfirmation,
+  intl,
 }) => async () => {
   try {
-    await walletManager.enableEasyConfirmation(masterPassword)
+    await walletManager.enableEasyConfirmation(masterPassword, intl)
     setEasyConfirmation(true)
 
     navigation.goBack()

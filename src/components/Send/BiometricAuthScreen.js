@@ -92,6 +92,7 @@ const handleOnConfirm = async (
       useFallback ? 'SYSTEM_PIN' : 'BIOMETRICS',
       intl.formatMessage(messages.authorizeOperation),
       '',
+      intl
     )
     onSuccess(decryptedData)
     return
