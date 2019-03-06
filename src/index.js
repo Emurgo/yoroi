@@ -41,7 +41,7 @@ global.Promise = bluebird
 global.onunhandledrejection = (e) => handleGeneralError(e.message, e)
 
 // https://github.com/yahoo/react-intl/wiki#loading-locale-data
-addLocaleData([...en, ...ja, ...ko, ...ru]);
+addLocaleData([...en, ...ja, ...ko, ...ru])
 
 
 const store = getConfiguredStore()
@@ -54,17 +54,18 @@ const IntlProviderWrapper = connect((state) => {
   return {
     locale,
     messages: translations[locale],
-    textComponent: Text
-}})(IntlProvider)
+    textComponent: Text,
+  }
+})(IntlProvider)
 
 
 const AppWithProviders = () => {
   return (
-  <Provider store={store}>
-    <IntlProviderWrapper>
+    <Provider store={store}>
+      <IntlProviderWrapper>
         <App />
-    </IntlProviderWrapper>
-  </Provider>
+      </IntlProviderWrapper>
+    </Provider>
   )
 }
 

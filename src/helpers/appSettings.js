@@ -1,8 +1,21 @@
 // @flow
 import ExtendableError from 'es6-error'
+import loadLocalResource from 'react-native-local-resource'
 import _ from 'lodash'
 
 import storage from '../utils/storage'
+
+import EN_US_TOS from '../i18n/locales/terms-of-use/ada/en-US.md'
+import JA_JP_TOS from '../i18n/locales/terms-of-use/ada/ja-JP.md'
+import KO_KR_TOS from '../i18n/locales/terms-of-use/ada/ko-KR.md'
+import RU_RU_TOS from '../i18n/locales/terms-of-use/ada/ru-RU.md'
+
+const tosByCode = {
+  'en-US': EN_US_TOS,
+  'ja-JP': JA_JP_TOS,
+  'ko-KR': KO_KR_TOS,
+  'ru-RU': RU_RU_TOS,
+}
 
 // Note(ppershing): following values have to be in sync with
 // keys in redux state
@@ -47,4 +60,10 @@ export const readAppSettings = async () => {
     const setting = _.last(key.split('/'))
     return {...acc, [setting]: value}
   }, {})
+}
+
+export const loadTOS = async (languageCode: string) => {
+  const tosFile = tosByCode[languageCode]
+  const tos = await loadLocalResource(tosFile)
+  return tos
 }
