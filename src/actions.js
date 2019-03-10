@@ -1,8 +1,9 @@
 // @flow
 
-import {AppState, Alert, Keyboard} from 'react-native'
+import {AppState, Alert, Keyboard, ActionSheetIOS} from 'react-native'
 import uuid from 'uuid'
 import SplashScreen from 'react-native-splash-screen'
+import {defineMessages, intlShape} from 'react-intl'
 
 import crashReporting from './helpers/crashReporting'
 import {Logger} from './utils/logging'
@@ -18,7 +19,7 @@ import {
   recreateAppSignInKeys,
   removeAppSignInKeys,
 } from './helpers/deviceSettings'
-import l10n from './l10n'
+
 import {backgroundLockListener} from './helpers/backgroundLockHelper'
 import {encryptCustomPin} from './crypto/customPin'
 import {
@@ -384,17 +385,20 @@ const showDialog = (translations: DialogOptions): Promise<DialogButton> =>
 
 export const showErrorDialog = (
   getDialog: (
-    translations: typeof l10n.translations.errorDialogs,
-  ) => DialogOptions,
+    translations: any,
+  ) => DialogOptions
 ): Promise<DialogButton> =>
-  showDialog(getDialog(l10n.translations.errorDialogs))
+  showDialog(getDialog('l10n.translations.errorDialogs'))
 
 export const showConfirmationDialog = (
-  getDialog: (
-    translations: typeof l10n.translations.confirmationDialogs,
-  ) => DialogOptions,
+  dialog: DialogOptions, intl: intlShape
 ): Promise<DialogButton> =>
-  showDialog(getDialog(l10n.translations.confirmationDialogs))
+  showDialog({
+    title: intl.formatMessage(dialog.title),
+    message: intl.formatMessage(dialog.message),
+    yesButton: intl.formatMessage(dialog.yesButton),
+    noButton: intl.formatMessage(dialog.noButton),
+  })
 
 export const setSystemAuth = (enable: boolean) => async (
   dispatch: Dispatch<any>,

@@ -7,6 +7,7 @@ import {ScrollView, StyleSheet, Switch} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
+import {confirmationMessages} from '../../i18n/global-messages'
 
 import {
   closeWallet,
@@ -141,7 +142,7 @@ const WalletSettingsScreen = ({
   </ScrollView>
 )
 
-export default injectIntl(compose(
+export default injectIntl((compose(
   connect((state) => ({
     isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
     isEasyConfirmationEnabled: easyConfirmationSelector(state),
@@ -177,10 +178,9 @@ export default injectIntl(compose(
       1000,
     ),
     onLogout: ignoreConcurrentAsyncHandler(
-      ({logout}) => async () => {
+      ({logout, intl}) => async () => {
         const selection = await showConfirmationDialog(
-          (dialogs) => dialogs.logout,
-        )
+          confirmationMessages.logout, intl)
 
         if (selection === DIALOG_BUTTONS.YES) {
           await logout()
@@ -189,4 +189,4 @@ export default injectIntl(compose(
       500,
     ),
   }),
-)(WalletSettingsScreen): ComponentType<{|navigation: Navigation|}>)
+)(WalletSettingsScreen): ComponentType<{|navigation: Navigation|}>))

@@ -26,7 +26,6 @@ const messages = defineMessages({
   title: {
     id: 'components.walletinit.createwallet.mnemonicshowscreen.title',
     defaultMessage: '!!!Recovery phrase',
-    description: "some desc",
   },
   mnemonicNote: {
     id: 'components.walletinit.createwallet.mnemonicshowscreen.mnemonicNote',

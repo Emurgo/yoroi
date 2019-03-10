@@ -43,7 +43,7 @@ const TxHistoryList = ({transactions, navigation, refreshing, onRefresh, intl}) 
           <TxHistoryListItem navigation={navigation} id={item.id} />
         )}
         renderSectionHeader={({section: {data}}) => (
-          <DayHeader ts={data[0].submittedAt}  intl={intl} />
+          <DayHeader ts={data[0].submittedAt} intl={intl} />
         )}
         sections={groupedTransactions}
         keyExtractor={(item) => item.id}

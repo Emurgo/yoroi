@@ -3,10 +3,13 @@ import {writeAppSettings, APP_SETTINGS_KEYS, loadTOS} from '../helpers/appSettin
 
 import {type Dispatch} from 'redux'
 
+import {setLanguage} from '../i18n'
+
 export const changeLanguage = (languageCode: string) => (
   dispatch: Dispatch<any>,
   getState: any,
 ) => {
+  setLanguage(languageCode)
   dispatch({
     path: ['appSettings', 'languageCode'],
     payload: languageCode,

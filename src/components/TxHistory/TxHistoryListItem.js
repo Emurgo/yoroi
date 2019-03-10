@@ -152,6 +152,7 @@ class TxHistoryListItem extends Component<Props> {
       'SELF': messages.transactionTypeSelf,
       'MULTI': messages.transactionTypeMulti,
     }
+    console.log('tx submittt', transaction)
 
     return (
       <TouchableOpacity onPress={this.showDetails} activeOpacity={0.5}>

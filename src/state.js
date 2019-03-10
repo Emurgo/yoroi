@@ -70,7 +70,7 @@ export const getInitialState = (): State => ({
   isOnline: true, // we are online by default
   isAppInitialized: false,
   isKeyboardOpen: false,
-  tos: 'Terms Of Use',
+  tos: '',
   appSettings: {
     acceptedTos: false,
     languageCode: 'en-US',

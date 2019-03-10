@@ -50,6 +50,7 @@ export const formatAdaFractional = (amount: BigNumber) => {
 }
 
 export const formatTimeToSeconds = (ts: string | moment) => {
+  console.log('ftosecond', moment(0))
   return moment(ts).format(moment(0)._locale._format.timeToSeconds)
 }
 
