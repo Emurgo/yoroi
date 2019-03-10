@@ -18,7 +18,7 @@ import {
   PleaseWaitModal,
 } from '../UiKit'
 import {easyConfirmationSelector} from '../../selectors'
-import globalMessages from '../../i18n/global-messages'
+import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import walletManager, {SystemAuthDisabled} from '../../crypto/wallet'
 import {SEND_ROUTES, WALLET_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import {CONFIG} from '../../config'
@@ -99,7 +99,7 @@ const handleOnConfirm = async (
       navigation.navigate(WALLET_ROUTES.TX_HISTORY)
     } catch (e) {
       if (e instanceof NetworkError) {
-        await showErrorDialog((dialogs) => dialogs.networkError)
+        await showErrorDialog(errorMessages.networkError, intl)
       } else {
         throw e
       }
@@ -123,7 +123,7 @@ const handleOnConfirm = async (
     } catch (e) {
       if (e instanceof SystemAuthDisabled) {
         await walletManager.closeWallet()
-        await showErrorDialog((dialogs) => dialogs.enableSystemAuthFirst)
+        await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
         navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
 
         return
@@ -147,7 +147,7 @@ const handleOnConfirm = async (
     submitTx(decryptedData)
   } catch (e) {
     if (e instanceof WrongPassword) {
-      await showErrorDialog((dialogs) => dialogs.incorrectPassword)
+      await showErrorDialog(errorMessages.incorrectPassword, intl)
     } else {
       handleGeneralError('Could not submit transaction', e)
     }

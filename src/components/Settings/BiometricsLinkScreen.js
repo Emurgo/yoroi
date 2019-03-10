@@ -11,6 +11,7 @@ import FingerprintScreenBase from '../Common/FingerprintScreenBase'
 import {setSystemAuth, showErrorDialog} from '../../actions'
 import {SETTINGS_ROUTES} from '../../RoutesList'
 import {canBiometricEncryptionBeEnabled} from '../../helpers/deviceSettings'
+import {errorMessages} from '../../i18n/global-messages'
 
 import styles from './styles/BiometricsLinkScreen.style'
 
@@ -18,7 +19,6 @@ const messages = defineMessages({
   enableFingerprintsMessage: {
     id: 'components.settings.biometricslinkscreen.enableFingerprintsMessage',
     defaultMessage: 'Enable use of fingerprints in device settings first!',
-    description: "some desc",
   },
   notNowButton: {
     id: 'components.settings.biometricslinkscreen.notNowButton',
@@ -86,15 +86,15 @@ export default injectIntl(compose(
     {setSystemAuth},
   ),
   withHandlers({
-    linkBiometricsSignIn: ({navigation, setSystemAuth}) => async () => {
+    linkBiometricsSignIn: ({navigation, setSystemAuth, intl}) => async () => {
       if (await canBiometricEncryptionBeEnabled()) {
         setSystemAuth(true)
           .then(() => navigation.navigate(SETTINGS_ROUTES.MAIN))
           .catch(() =>
-            showErrorDialog((dialogs) => dialogs.disableEasyConfirmationFirst),
+            showErrorDialog(errorMessages.disableEasyConfirmationFirst, intl),
           )
       } else {
-        showErrorDialog((dialogs) => dialogs.enableFingerprintsFirst)
+        showErrorDialog(errorMessages.enableFingerprintsFirst, intl)
       }
     },
     cancelLinking: ({navigation}) => () =>

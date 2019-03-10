@@ -11,6 +11,7 @@ import {injectIntl, defineMessages} from 'react-intl'
 import {Button, ValidatedTextInput, StatusBar} from '../UiKit'
 import {validatePassword} from '../../utils/validators'
 import {withNavigationTitle} from '../../utils/renderUtils'
+import {errorMessages} from '../../i18n/global-messages'
 import PasswordStrengthIndicator from '../WalletInit/PasswordStrengthIndicator'
 import {showErrorDialog} from '../../actions'
 import walletManager from '../../crypto/wallet'
@@ -196,7 +197,7 @@ export default injectIntl(compose(
         navigation.goBack(null)
       } catch (e) {
         if (e instanceof WrongPassword) {
-          await showErrorDialog((dialogs) => dialogs.incorrectPassword)
+          await showErrorDialog(errorMessages.incorrectPassword, intl)
         } else {
           throw e
         }

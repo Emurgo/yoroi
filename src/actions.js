@@ -1,11 +1,12 @@
 // @flow
 
-import {AppState, Alert, Keyboard, ActionSheetIOS} from 'react-native'
+import {AppState, Alert, Keyboard} from 'react-native'
 import uuid from 'uuid'
 import SplashScreen from 'react-native-splash-screen'
-import {defineMessages, intlShape} from 'react-intl'
+import {intlShape} from 'react-intl'
 
 import crashReporting from './helpers/crashReporting'
+import globalMessages from './i18n/global-messages'
 import {Logger} from './utils/logging'
 import walletManager from './crypto/wallet'
 import {
@@ -384,11 +385,14 @@ const showDialog = (translations: DialogOptions): Promise<DialogButton> =>
   })
 
 export const showErrorDialog = (
-  getDialog: (
-    translations: any,
-  ) => DialogOptions
+  dialog: DialogOptions, intl: intlShape,
+  msgOptions?: any
 ): Promise<DialogButton> =>
-  showDialog(getDialog('l10n.translations.errorDialogs'))
+  showDialog({
+    title: intl.formatMessage(dialog.title),
+    message: intl.formatMessage(dialog.message, msgOptions),
+    yesButton: intl.formatMessage(globalMessages.ok),
+  })
 
 export const showConfirmationDialog = (
   dialog: DialogOptions, intl: intlShape

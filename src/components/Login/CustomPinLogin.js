@@ -14,6 +14,8 @@ import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {authenticateByCustomPin} from '../../crypto/customPin'
 import {customPinHashSelector} from '../../selectors'
 import {showErrorDialog} from '../../actions'
+import {errorMessages} from '../../i18n/global-messages'
+
 import {StatusBar} from '../UiKit'
 
 import styles from './styles/CustomPinLogin.style'
@@ -25,7 +27,6 @@ const messages = defineMessages({
   title: {
     id: 'components.login.custompinlogin.title',
     defaultMessage: '!!!Enter PIN',
-    description: "some desc",
   },
 })
 
@@ -67,6 +68,7 @@ export default injectIntl(compose(
       navigation,
       isLoginInProgress,
       customPinHash,
+      intl,
     }: ExternalProps) => async (pin) => {
       if (!customPinHash) {
         throw new Error('Custom pin is not setup')
@@ -76,7 +78,7 @@ export default injectIntl(compose(
       if (isPinValid) {
         navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
       } else {
-        await showErrorDialog((dialogs) => dialogs.incorrectPin)
+        await showErrorDialog(errorMessages.incorrectPin, intl)
       }
 
       return !isPinValid

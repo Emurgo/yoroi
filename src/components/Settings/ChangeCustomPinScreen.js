@@ -14,6 +14,7 @@ import {customPinHashSelector} from '../../selectors'
 import {CONFIG} from '../../config'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {StatusBar} from '../UiKit'
+import {errorMessages} from '../../i18n/global-messages'
 
 import styles from './styles/ChangeCustomPinScreen.style'
 
@@ -58,13 +59,14 @@ const messages = defineMessages({
 const handleVerifyPin = ({
   currentPinHash,
   setIsCurrentPinVerified,
+  intl,
 }) => async (pin): Promise<boolean> => {
   let isPinValid
   try {
     isPinValid = await authenticateByCustomPin(currentPinHash, pin)
   } catch (err) {
     setIsCurrentPinVerified(false)
-    await showErrorDialog((dialogs) => dialogs.generalError(err.message))
+    await showErrorDialog(errorMessages.generalError, intl, {message: err.message})
     return true
   }
 
@@ -72,7 +74,7 @@ const handleVerifyPin = ({
     setIsCurrentPinVerified(true)
     return false
   } else {
-    await showErrorDialog((dialogs) => dialogs.incorrectPin)
+    await showErrorDialog(errorMessages.incorrectPin, intl)
     return true
   }
 }
@@ -120,7 +122,7 @@ const ChangeCustomPinScreen = ({
   </View>
 )
 
-export default injectIntl(compose(
+export default injectIntl((compose(
   connect(
     (state: State) => ({
       currentPinHash: customPinHashSelector(state),
@@ -135,4 +137,4 @@ export default injectIntl(compose(
     handleVerifyPin,
     handleNewPinEnter,
   }),
-)(ChangeCustomPinScreen): ComponentType<{|navigation: Navigation|}>)
+)(ChangeCustomPinScreen): ComponentType<{|navigation: Navigation|}>))

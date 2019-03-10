@@ -9,6 +9,7 @@ import {NavigationEvents} from 'react-navigation'
 import PinInput from './PinInput'
 import {CONFIG} from '../../config'
 import {showErrorDialog} from '../../actions'
+import {errorMessages} from '../../i18n/global-messages'
 
 import styles from './styles/PinRegistrationForm.style'
 
@@ -20,10 +21,11 @@ const handlePinEnter = ({
   setPin,
   encryptAndStoreCustomPin,
   onPinEntered,
+  intl,
 }) => async (pinConfirmation) => {
   if (pin !== pinConfirmation) {
     setPin('')
-    await showErrorDialog((dialogs) => dialogs.pinMismatch)
+    await showErrorDialog(errorMessages.pinMismatch)
 
     return true
   }
@@ -34,7 +36,7 @@ const handlePinEnter = ({
     return false
   } catch (err) {
     setPin('')
-    await showErrorDialog((dialogs) => dialogs.generalError(err.message))
+    await showErrorDialog(errorMessages.generalError, intl, {message: err.message})
 
     return true
   }
@@ -64,6 +66,7 @@ const PinRegistrationForm = ({
   labels,
   handlePinEnter,
   clearPin,
+  intl,
 }: Props) => {
   const inputLabels = !pin ? labels.PinInput : labels.PinConfirmationInput
 

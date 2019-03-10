@@ -22,12 +22,10 @@ const messages = defineMessages({
   sendButton: {
     id: 'components.txhistory.txnavigationbuttons.sendButton',
     defaultMessage: '!!!Send',
-    description: "some desc",
   },
   receiveButton: {
     id: 'components.txhistory.txnavigationbuttons.receiveButton',
     defaultMessage: '!!!Receive',
-    description: "some desc",
   },
 })
 

@@ -9,6 +9,7 @@ import {injectIntl, defineMessages} from 'react-intl'
 
 import {SETTINGS_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
+import {errorMessages} from '../../i18n/global-messages'
 import {setAppSettingField, setSystemAuth, showErrorDialog} from '../../actions'
 import {APP_SETTINGS_KEYS} from '../../helpers/appSettings'
 import {
@@ -113,7 +114,7 @@ const onToggleBiometricsAuthIn = ({
 }) => async () => {
   if (isSystemAuthEnabled) {
     if (!walletManager.canBiometricsSignInBeDisabled()) {
-      await showErrorDialog((dialogs) => dialogs.disableEasyConfirmationFirst)
+      await showErrorDialog(errorMessages.disableEasyConfirmationFirst, intl)
 
       return
     }

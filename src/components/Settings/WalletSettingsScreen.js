@@ -37,17 +37,14 @@ const messages = defineMessages({
   title: {
     id: 'components.settings.walletsettingscreen.title',
     defaultMessage: 'Settings',
-    description: "some desc",
   },
   tabTitle: {
     id: 'components.settings.walletsettingscreen.tabTitle',
     defaultMessage: 'Wallet',
-    description: "some desc",
   },
   switchWallet: {
     id: 'components.settings.walletsettingscreen.switchWallet',
     defaultMessage: 'Switch wallet',
-    description: "some desc",
   },
   logout: {
     id: 'components.settings.walletsettingscreen.logout',

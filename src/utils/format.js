@@ -58,7 +58,7 @@ export const formatDateToSeconds = (ts: string | moment) => {
   return moment(ts).format(moment(0)._locale._format.dateToSeconds)
 }
 
-export const formatDateRelative = (ts: string | moment, intl) => {
+export const formatDateRelative = (ts: string | moment, intl:any) => {
   const config = {
     sameDay: `[${intl.formatMessage(messages.today)}]`,
     lastDay: `[${intl.formatMessage(messages.yesterday)}]`,

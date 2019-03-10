@@ -17,6 +17,7 @@ import Screen from '../Screen'
 import {Button, StatusBar, ScreenBackground} from '../UiKit'
 import {ROOT_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import {showErrorDialog} from '../../actions'
+import {errorMessages} from '../../i18n/global-messages'
 
 import styles from './styles/WalletSelectionScreen.style'
 
@@ -85,18 +86,18 @@ export default injectIntl(compose(
   withHandlers({
     navigateInitWallet: ({navigation}) => (event) =>
       navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH),
-    openWallet: ({navigation}) => async (wallet) => {
+    openWallet: ({navigation, intl}) => async (wallet) => {
       try {
         await walletManager.openWallet(wallet.id)
         navigation.navigate(ROOT_ROUTES.WALLET)
       } catch (e) {
         if (e instanceof SystemAuthDisabled) {
           await walletManager.closeWallet()
-          await showErrorDialog((dialogs) => dialogs.enableSystemAuthFirst)
+          await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
           navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
         } else if (e instanceof KeysAreInvalid) {
           await walletManager.cleanupInvalidKeys()
-          await showErrorDialog((dialogs) => dialogs.walletKeysInvalidated)
+          await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
         } else {
           throw e
         }

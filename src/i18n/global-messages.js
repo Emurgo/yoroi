@@ -26,7 +26,136 @@ export const confirmationMessages = {
       id: 'global.actions.dialogs.logout.noButton',
       defaultMessage: '!!!No',
     },
-  })
+  }),
+}
+
+export const errorMessages = {
+  pinMismatch: defineMessages({
+    title: {
+      id: 'global.actions.dialogs.pinMismatch.title',
+      defaultMessage: '!!!Invalid PIN',
+    },
+    message: {
+      id: 'global.actions.dialogs.pinMismatch.message',
+      defaultMessage: '!!!PINs do not match.',
+    },
+  }),
+  incorrectPin: defineMessages({
+    title: {
+      id: 'global.actions.dialogs.incorrectPin.title',
+      defaultMessage: '!!!Invalid PIN',
+    },
+    message: {
+      id: 'global.actions.dialogs.incorrectPin.message',
+      defaultMessage: '!!!The PIN you entered is incorrect.',
+    },
+  }),
+  incorrectPassword: defineMessages({
+    title: {
+      id: 'global.actions.dialogs.incorrectPassword.title',
+      defaultMessage: '!!!Wrong password',
+    },
+    message: {
+      id: 'global.actions.dialogs.incorrectPassword.message',
+      defaultMessage: '!!!Password you provided is incorrect.',
+    },
+  }),
+  biometricsIsTurnedOff: defineMessages({
+    title: {
+      id: 'global.actions.dialogs.biometricsIsTurnedOff.title',
+      defaultMessage: '!!!Biometrics was turned off',
+    },
+    message: {
+      id: 'global.actions.dialogs.biometricsIsTurnedOff.message',
+      defaultMessage: '!!!It seems that you turned off biometrics, please turn it on',
+    },
+  }),
+  walletKeysInvalidated: defineMessages({
+    title: {
+      id: 'global.actions.dialogs.walletKeysInvalidated.title',
+      defaultMessage: '!!!Biometrics changed',
+    },
+    message: {
+      id: 'global.actions.dialogs.walletKeysInvalidated.message',
+      defaultMessage:
+        '!!!We detected that your biometrics in phone changed. ' +
+        'As a result the easy transaction confirmation was disabled ' +
+        'and transaction submitting is allowed only with master password. ' +
+        'You can re-enable easy transactions confirmation in settings',
+    },
+  }),
+  networkError: defineMessages({
+    title: {
+      id: 'global.actions.dialogs.networkError.title',
+      defaultMessage: '!!!Network error',
+    },
+    message: {
+      id: 'global.actions.dialogs.networkError.message',
+      defaultMessage:
+        '!!!Error connecting to the server. ' +
+        'Please check your internet connection',
+    },
+  }),
+  disableEasyConfirmationFirst: defineMessages({
+    title: {
+      id: 'global.actions.dialogs.disableEasyConfirmationFirst.title',
+      defaultMessage: '!!!Action failed',
+    },
+    message: {
+      id: 'global.actions.dialogs.disableEasyConfirmationFirst.message',
+      defaultMessage:
+        '!!Please disable easy confirmation function in all ' +
+        'your wallets first',
+    },
+  }),
+  enableFingerprintsFirst: defineMessages({
+    title: {
+      id: 'global.actions.dialogs.enableFingerprintsFirst.title',
+      defaultMessage: '!!!Action failed',
+    },
+    message: {
+      id: 'global.actions.dialogs.enableFingerprintsFirst.message',
+      defaultMessage:
+        '!!!You need to enable biometrics in your device first in order ' +
+        'to be able link it with this app',
+    },
+  }),
+  enableSystemAuthFirst: defineMessages({
+    title: {
+      id: 'global.actions.dialogs.enableSystemAuthFirst.title',
+      defaultMessage: '!!!Lock screen disabled',
+    },
+    message: {
+      id: 'global.actions.dialogs.enableSystemAuthFirst.message',
+      defaultMessage:
+        '!!!You probably disabled lock screen in your phone. You need to ' +
+        'disable easy transaction confirmation first. Please set up ' +
+        'you lock screen (PIN / Password / Pattern) on your phone ' +
+        'and then restart application. After this action you should be ' +
+        'able to disable lock screen ' +
+        'on your phone and use this application',
+    },
+  }),
+  wrongPinError: defineMessages({
+    title: {
+      id: 'global.actions.dialogs.wrongPinError.title',
+      defaultMessage: '!!!Invalid PIN',
+    },
+    message: {
+      id: 'global.actions.dialogs.wrongPinError.message',
+      defaultMessage: '!!!PIN is incorrect.',
+    },
+  }),
+  generalError: defineMessages({
+    title: {
+      id: 'global.actions.dialogs.generalError.title',
+      defaultMessage: '!!!Unexpected error',
+    },
+    message: {
+      id: 'global.actions.dialogs.generalError.message',
+      defaultMessage: '!!!Requested operation failed. This is all we know: {message}',
+    },
+  }),
 }
 
 export default defineMessages({
@@ -47,13 +176,12 @@ export default defineMessages({
     id: 'global.termsOfUse',
     defaultMessage: '!!!Terms of use',
   },
+  ok: {
+    id: 'global.ok',
+    defaultMessage: '!!!OK',
+  },
   availableFunds: {
     id: 'global.availableFunds',
     defaultMessage: '!!!Available funds',
   },
-});
-
-export const environmentSpecificMessages = {
-  ada: defineMessages({
-  }),
-};
+})

@@ -16,6 +16,7 @@ import {easyConfirmationSelector} from '../../selectors'
 import {WrongPassword} from '../../crypto/errors'
 
 import styles from './styles/ToggleEasyConfirmationScreen.style'
+import {errorMessages} from '../../i18n/global-messages'
 
 const messages = defineMessages({
   title: {
@@ -75,7 +76,7 @@ const enableEasyConfirmation = ({
     navigation.goBack()
   } catch (error) {
     if (error instanceof WrongPassword) {
-      await showErrorDialog((dialogs) => dialogs.incorrectPassword)
+      await showErrorDialog(errorMessages.incorrectPassword, intl)
     } else {
       throw error
     }

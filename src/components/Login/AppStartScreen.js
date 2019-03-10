@@ -24,6 +24,8 @@ import {
   canBiometricEncryptionBeEnabled,
 } from '../../helpers/deviceSettings'
 import {showErrorDialog} from '../../actions'
+import {errorMessages} from '../../i18n/global-messages'
+
 
 import type {State} from '../../state'
 
@@ -69,6 +71,7 @@ export default injectIntl(compose(
       customPinHash,
       navigation,
       installationId,
+      intl,
     }) => async () => {
       if (!isSystemAuthEnabled) {
         navigation.navigate(ROOT_ROUTES.CUSTOM_PIN_AUTH)
@@ -87,7 +90,7 @@ export default injectIntl(compose(
                 recreateAppSignInKeys(installationId)
               } else {
                 await showErrorDialog(
-                  (dialogs) => dialogs.biometricsIsTurnedOff,
+                  errorMessages.biometricsIsTurnedOff, intl,
                 )
               }
             }
@@ -95,7 +98,7 @@ export default injectIntl(compose(
           },
         })
       } else {
-        await showErrorDialog((dialogs) => dialogs.biometricsIsTurnedOff)
+        await showErrorDialog(errorMessages.biometricsIsTurnedOff, intl)
       }
     },
   }),
