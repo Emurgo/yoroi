@@ -21,6 +21,7 @@ import {
   isSystemAuthEnabledSelector,
   easyConfirmationSelector,
   walletNameSelector,
+  languageSelector,
 } from '../../selectors'
 import {
   SettingsItem,
@@ -74,7 +75,6 @@ const messages = defineMessages({
   removeWallet: {
     id: 'components.settings.walletsettingscreen.removeWallet',
     defaultMessage: '!!!Remove wallet',
-    description: "!!!Remove wallet",
   },
 })
 
@@ -143,6 +143,7 @@ export default injectIntl((compose(
   connect((state) => ({
     isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
     isEasyConfirmationEnabled: easyConfirmationSelector(state),
+    key: languageSelector(state),
   })),
   withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
   withNavigationTitle(

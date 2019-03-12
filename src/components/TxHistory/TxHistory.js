@@ -17,6 +17,7 @@ import {
   isOnlineSelector,
   availableAmountSelector,
   walletNameSelector,
+  languageSelector,
 } from '../../selectors'
 import TxHistoryList from './TxHistoryList'
 import TxNavigationButtons from './TxNavigationButtons'
@@ -41,17 +42,14 @@ const messages = defineMessages({
   noTransactions: {
     id: 'components.txhistory.txhistory.noTransactions',
     defaultMessage: '!!!No transactions to show yet',
-    description: "some desc",
   },
   syncErrorBannerTextWithoutRefresh: {
     id: 'components.txhistory.txhistory.syncErrorBannerTextWithoutRefresh',
     defaultMessage: '!!!We are experiencing synchronization issues.',
-    description: "some desc",
   },
   syncErrorBannerTextWithRefresh: {
     id: 'components.txhistory.txhistory.syncErrorBannerTextWithRefresh',
     defaultMessage: '!!!We are experiencing synchronization issues. Pull to refresh',
-    description: "some desc",
   },
 })
 
@@ -130,7 +128,7 @@ type ExternalProps = {|
   navigation: Navigation,
 |}
 
-export default injectIntl(compose(
+export default injectIntl((compose(
   requireInitializedWallet,
   connect(
     (state: State) => ({
@@ -140,6 +138,7 @@ export default injectIntl(compose(
       isOnline: isOnlineSelector(state),
       availableAmount: availableAmountSelector(state),
       walletName: walletNameSelector(state),
+      key: languageSelector(state),
     }),
     {
       updateHistory,
@@ -149,4 +148,4 @@ export default injectIntl(compose(
     updateHistory()
   }),
   withNavigationTitle(({walletName}) => walletName),
-)(TxHistory): ComponentType<ExternalProps>)
+)(TxHistory): ComponentType<ExternalProps>))

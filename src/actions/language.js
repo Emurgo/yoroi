@@ -37,7 +37,6 @@ export const changeAndSaveLanguage = (languageCode: string) => async (
 ) => {
   await writeAppSettings(APP_SETTINGS_KEYS.LANG, languageCode)
   const tos = await loadTOS(languageCode)
-  console.log('TOS', tos)
 
   dispatch(changeTOSLanguage(tos))
   dispatch(changeLanguage(languageCode))

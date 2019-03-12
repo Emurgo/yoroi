@@ -26,6 +26,7 @@ import {
   isSystemAuthEnabledSelector,
   installationIdSelector,
   sendCrashReportsSelector,
+  languageSelector,
 } from '../../selectors'
 import walletManager from '../../crypto/wallet'
 import KeyStore from '../../crypto/KeyStore'
@@ -54,7 +55,6 @@ const messages = defineMessages({
   security: {
     id: 'components.settings.applicationsettingsscreen.security',
     defaultMessage: 'Security',
-    description: "some desc",
   },
   changePin: {
     id: 'components.settings.applicationsettingsscreen.changePin',
@@ -77,17 +77,14 @@ const messages = defineMessages({
       'Send crash reports to Emurgo. ' +
       'Changes to this option will be reflected ' +
       ' after restarting the application.',
-    description: "some desc",
   },
   termsOfUse: {
     id: 'components.settings.applicationsettingsscreen.termsOfUse',
     defaultMessage: 'Terms of Use',
-    description: "some desc",
   },
   support: {
     id: 'components.settings.applicationsettingsscreen.support',
     defaultMessage: '!!!Support',
-    description: "some desc",
   },
 
 })
@@ -164,6 +161,7 @@ const ApplicationSettingsScreen = ({
   isSystemAuthEnabled,
   sendCrashReports,
   setCrashReporting,
+  locale,
 }) => (
   <ScrollView style={styles.scrollView}>
     <StatusBar type="dark" />
@@ -215,13 +213,14 @@ const ApplicationSettingsScreen = ({
   </ScrollView>
 )
 
-export default injectIntl(compose(
+export default injectIntl((compose(
   connect(
     (state) => ({
       isBiometricHardwareSupported: biometricHwSupportSelector(state),
       sendCrashReports: sendCrashReportsSelector(state),
       isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
       installationId: installationIdSelector(state),
+      key: languageSelector(state),
     }),
     {setAppSettingField, setSystemAuth},
   ),
@@ -244,4 +243,4 @@ export default injectIntl(compose(
       setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value)
     },
   }),
-)(ApplicationSettingsScreen): ComponentType<{navigation: Navigation}>)
+)(ApplicationSettingsScreen): ComponentType<{navigation: Navigation}>))

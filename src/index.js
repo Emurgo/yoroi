@@ -16,6 +16,7 @@ import {name as appName} from './app.json'
 import {Provider} from 'react-redux'
 import getConfiguredStore from './helpers/configureStore'
 import {setupHooks, handleGeneralError} from './actions'
+import {languageSelector} from './selectors'
 import {setLogLevel} from './utils/logging'
 import {CONFIG} from './config'
 import translations from './i18n/translations';
@@ -50,7 +51,7 @@ store.dispatch(setupHooks())
 // TODO: this is async action, we should wait for it in future
 
 const IntlProviderWrapper = connect((state) => {
-  const locale = state.appSettings.languageCode || 'en-US'
+  const locale = languageSelector(state) || 'en-US'
   return {
     locale,
     messages: translations[locale],
