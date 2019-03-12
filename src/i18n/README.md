@@ -44,9 +44,8 @@ The text we want to add is `I am testing i18n`
 2. Next you have to register the definitions using `defineMessages` method of `react-intl` module. If this text is going to be used in multiple components then you have to define it in [global-messages.js](https://github.com/Emurgo/yoroi-mobile/blob/develop/src/i18n/global-messages.js) otherwise define it in the target component. Let's assume that our target component is `TestText.js`. We have to modify `TestText.js` like below.
 ```
 // @flow
-import React, { Component } from 'react';
-import { observer } from 'mobx-react';
-import { defineMessages, intlShape } from 'react-intl';
+import React, {Component} from 'react';
+import {defineMessages, intlShape, injectIntl} from 'react-intl';
 
 const messages = defineMessages({
   testText: {
@@ -56,18 +55,15 @@ const messages = defineMessages({
   }
 });
 
-@observer
-export default class TestText extends Component {
-
-  static contextTypes = {
-    intl: intlShape.isRequired,
-  };
+class TestText extends Component {
 
   render() {
-    const { intl } = this.context;
+    const { intl } = this.props;
     return (<div>{intl.formatMessage(messages.testText)}</div>);
   }
 }
+
+export default injectIntl(TestText)
 ```
 
 **WARNING:** If you did not register the definition using `defineMessages` method and try to [Rebuilding language cache](https://github.com/Emurgo/yoroi-mobile/tree/develop/src/i18n#rebuilding-language-cache) then your newly added keys will be deleted.
@@ -117,6 +113,6 @@ export default class TestText extends Component {
 
 After making changes that affect the languages files, please do the following **AFTER** backing up your work (these actions may edit your files in a way you would like to reverse).
 
-1) `npm run purge-translations` (delete translation cache)
-2) `npm run dev` (rebuild translation cache. Note: you **need** to do this but it doesn't have to be `dev`. Any task that causes a rebuild is fine.)
-3) `npm run manage-translations` (check language config for mistakes. Note: auto-fix is dangerous)
+1) `yarn run purge-translations` (delete translation cache)
+2) `yarn run babel` (rebuild translation cache. Note: you **need** to do this but it doesn't have to be `babel`. Any task that causes a rebuild is fine.)
+3) `yarn run manage-translations` (check language config for mistakes. Note: auto-fix is dangerous)

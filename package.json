@@ -7,6 +7,7 @@
     "lint": "eslint --max-warnings=0 ./src && prettylint \"src/**/*.js\" --config src/.prettierrc",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
+    "babel": "babel src",
     "prettify": "prettier --write \"src/**/*.js\" --config src/.prettierrc",
     "prettify_l10n": "prettier --write \"src/l10n/type.js\" --config src/.prettierrc",
     "setup_configs": "react-native-schemes-manager all",
