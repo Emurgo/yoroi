@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {Clipboard, View} from 'react-native'
 import QRCode from 'react-native-qrcode'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import {externalAddressIndexSelector} from '../../selectors'
 import {formatBIP44} from '../../crypto/util'
@@ -114,13 +114,14 @@ type ExternalProps = {
   address: ?string,
   onRequestClose: () => any,
   visible: boolean,
+  intl: intlShape,
 }
 
-export default injectIntl(compose(
+export default injectIntl((compose(
   connect(
     (state, {address}) => ({
       index: externalAddressIndexSelector(state)[address],
     }),
     null,
   ),
-)(AddressModal): ComponentType<ExternalProps>)
+)(AddressModal): ComponentType<ExternalProps>))

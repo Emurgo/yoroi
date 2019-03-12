@@ -6,7 +6,7 @@ import {compose} from 'redux'
 import {View} from 'react-native'
 import _ from 'lodash'
 import {SafeAreaView} from 'react-navigation'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import Screen from '../../components/Screen'
 import {Text, Button, OfflineBanner, Banner, StatusBar} from '../UiKit'
@@ -110,7 +110,7 @@ const ReceiveScreen = ({
   )
 }
 
-export default injectIntl(compose(
+export default injectIntl((compose(
   connect(
     (state) => ({
       receiveAddresses: receiveAddressesSelector(state),
@@ -132,4 +132,4 @@ export default injectIntl(compose(
   onDidUpdate(({generateNewReceiveAddressIfNeeded}, prevProps) =>
     generateNewReceiveAddressIfNeeded(),
   ),
-)(ReceiveScreen): ComponentType<{navigation: Navigation}>)
+)(ReceiveScreen): ComponentType<{navigation: Navigation, intl: intlShape}>))

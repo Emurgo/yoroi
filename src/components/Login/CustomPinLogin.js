@@ -4,7 +4,7 @@ import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {View} from 'react-native'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import {CONFIG} from '../../config'
 import PinInput from '../Common/PinInput'
@@ -54,11 +54,11 @@ const CustomPinLogin = injectIntl(({intl, onPinEnter}: Props) => (
 type ExternalProps = {|
   navigation: Navigation,
   customPinHash: ?string,
-  intl: any,
+  intl: intlShape,
   isLoginInProgress: boolean,
 |}
 
-export default injectIntl(compose(
+export default injectIntl((compose(
   connect((state) => ({
     customPinHash: customPinHashSelector(state),
   })),
@@ -84,4 +84,4 @@ export default injectIntl(compose(
       return !isPinValid
     },
   }),
-)(CustomPinLogin): ComponentType<ExternalProps>)
+)(CustomPinLogin): ComponentType<ExternalProps>))

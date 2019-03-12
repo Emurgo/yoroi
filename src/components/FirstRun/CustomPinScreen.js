@@ -4,7 +4,7 @@ import {View} from 'react-native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withProps} from 'recompose'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import PinRegistrationForm from '../Common/PinRegistrationForm'
 import {encryptAndStoreCustomPin} from '../../actions'
@@ -60,9 +60,10 @@ const CustomPinScreen = ({handlePinEntered, intl}) => (
 
 type ExternalProps = {|
   navigation: Navigation,
+  intl: intlShape,
 |}
 
-export default injectIntl(compose(
+export default injectIntl((compose(
   withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
   connect(
     () => ({}),
@@ -81,4 +82,4 @@ export default injectIntl(compose(
       onSuccess()
     },
   }),
-)(CustomPinScreen): ComponentType<ExternalProps>)
+)(CustomPinScreen): ComponentType<ExternalProps>))

@@ -3,7 +3,7 @@
 import React from 'react'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import {pastedFormatter, editedFormatter} from './amountUtils'
 import {ValidatedTextInput} from '../UiKit'
@@ -45,10 +45,11 @@ type ExternalProps = {
   amount: string,
   setAmount: (amount: string) => mixed,
   error: ?string,
+  intl: intlShape,
 }
 
-export default injectIntl(compose(
+export default injectIntl((compose(
   withHandlers({
     handleSetAmount,
   }),
-)(AmountField): ComponentType<ExternalProps>)
+)(AmountField): ComponentType<ExternalProps>))

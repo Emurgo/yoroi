@@ -3,6 +3,7 @@
 import React from 'react'
 import {View, SectionList} from 'react-native'
 import {injectIntl} from 'react-intl'
+import type {intlShape} from 'react-intl'
 import _ from 'lodash'
 import {Text} from '../UiKit'
 import TxHistoryListItem from './TxHistoryListItem'
@@ -58,6 +59,7 @@ type ExternalProps = {
   navigation: Navigation,
   refreshing: boolean,
   onRefresh: () => any,
+  intl: intlShape,
 }
 
 export default injectIntl((TxHistoryList: ComponentType<ExternalProps>))

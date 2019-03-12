@@ -80,6 +80,7 @@ const ValidationCheckIcon = ({
 type Props = {
   intl: any,
   hasUppercase?: boolean,
+  hasSevenCharacters?: boolean,
   hasLowercase?: boolean,
   hasDigit?: boolean,
   hasTwelveCharacters?: boolean,

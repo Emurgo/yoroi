@@ -3,7 +3,7 @@ import React from 'react'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 import QRCodeScanner from 'react-native-qrcode-scanner'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import {withNavigationTitle} from '../../utils/renderUtils'
 
@@ -20,13 +20,14 @@ const messages = defineMessages({
 
 type ExternalProps = {|
   navigation: Navigation,
+  intl: intlShape,
 |}
 
 const AddressReaderQR = ({address, setAddress, onSuccess}) => (
   <QRCodeScanner onRead={onSuccess} />
 )
 
-export default injectIntl(compose(
+export default injectIntl((compose(
   withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
   withHandlers({
     onSuccess: ({navigation}) => (event) => {
@@ -36,4 +37,4 @@ export default injectIntl(compose(
       }
     },
   }),
-)(AddressReaderQR): ComponentType<ExternalProps>)
+)(AddressReaderQR): ComponentType<ExternalProps>))

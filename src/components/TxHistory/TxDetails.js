@@ -6,7 +6,7 @@ import {connect} from 'react-redux'
 import {View, Linking, TouchableOpacity} from 'react-native'
 import _ from 'lodash'
 import {withHandlers, withStateHandlers} from 'recompose'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import {
   transactionsInfoSelector,
@@ -222,6 +222,7 @@ const TxDetails = ({
     internalAddressIndex,
     externalAddressIndex,
   )
+  const txFee = transaction.fee
 
   return (
     <View style={styles.container}>
@@ -236,9 +237,9 @@ const TxDetails = ({
               direction={transaction.direction}
             />
           )}
-          {transaction.fee && (
+          {txFee && (
             <Text small>
-              {intl.formatMessage(messages.fee)} {formatAdaWithSymbol(transaction.fee)}
+              {intl.formatMessage(messages.fee)} {formatAdaWithSymbol(txFee)}
             </Text>
           )}
         </Banner>
@@ -285,17 +286,13 @@ const TxDetails = ({
 
 export default injectIntl((compose(
   connect((state: State, {navigation}) => {
-    const txId = navigation.getParam('id')
-    const txInfo = txId ? transactionsInfoSelector(state)[txId] : undefined
     return ({
-      transaction: txInfo,
+      transaction: transactionsInfoSelector(state)[navigation.getParam('id')],
       internalAddressIndex: internalAddressIndexSelector(state),
       externalAddressIndex: externalAddressIndexSelector(state),
     })
   }),
-  withNavigationTitle(({transaction}) => {
-    return transaction ? formatDateToSeconds(transaction.submittedAt) : ''
-  },
+  withNavigationTitle(({transaction}) => formatDateToSeconds(transaction.submittedAt),
   ),
   withStateHandlers(
     {addressDetail: null},
@@ -318,4 +315,4 @@ export default injectIntl((compose(
       setAddressDetail(null)
     },
   }),
-)(TxDetails): ComponentType<{|navigation: Navigation|}>))
+)(TxDetails): ComponentType<{|navigation: Navigation, intl: intlShape|}>))

@@ -6,7 +6,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {SafeAreaView} from 'react-navigation'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import _ from 'lodash'
 
 import {Text, Button, ValidatedTextInput, StatusBar} from '../../UiKit'
@@ -154,7 +154,7 @@ const RestoreWalletScreen = ({
   )
 }
 
-export default injectIntl(compose(
+export default injectIntl((compose(
   connect((state) => ({
     isKeyboardOpen: isKeyboardOpenSelector(state),
   })),
@@ -176,4 +176,4 @@ export default injectIntl(compose(
     translateInvalidPhraseError: ({intl}) => (error) =>
       _translateInvalidPhraseError(intl, error),
   }),
-)(RestoreWalletScreen): ComponentType<{navigation: Navigation}>)
+)(RestoreWalletScreen): ComponentType<{navigation: Navigation, intl: intlShape}>))

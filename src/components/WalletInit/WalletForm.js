@@ -149,8 +149,11 @@ class WalletForm extends PureComponent<Props, ComponentState> {
               value={name}
               onChangeText={this.handleSetName}
               error={getWalletNameError(
-                [intl.formatMessage(globalMessages.walletNameErrorTooLong),
-                  intl.formatMessage(globalMessages.walletNameErrorNameAlreadyTaken)],
+                {
+                  tooLong: intl.formatMessage(globalMessages.walletNameErrorTooLong),
+                  nameAlreadyTaken: intl.formatMessage(
+                    globalMessages.walletNameErrorNameAlreadyTaken),
+                },
                 validationErrors,
               )}
             />

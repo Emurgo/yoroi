@@ -5,7 +5,7 @@ import {View, Image, Dimensions} from 'react-native'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers, withProps} from 'recompose'
 import {SafeAreaView} from 'react-navigation'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import assert from '../../../utils/assert'
 import {Text, Button, StatusBar} from '../../UiKit'
@@ -82,7 +82,7 @@ const MnemonicShowScreen = ({
   </SafeAreaView>
 )
 
-export default injectIntl(compose(
+export default injectIntl((compose(
   withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
   withProps((props) => ({mnemonic: props.navigation.getParam('mnemonic')})),
   withStateHandlers(
@@ -110,4 +110,4 @@ export default injectIntl(compose(
       hideModal()
     },
   }),
-)(MnemonicShowScreen): ComponentType<{navigation: Navigation}>)
+)(MnemonicShowScreen): ComponentType<{navigation: Navigation, intl: intlShape}>))

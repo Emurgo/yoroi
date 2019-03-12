@@ -5,6 +5,7 @@ import {View} from 'react-native'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {NavigationEvents} from 'react-navigation'
+import {injectIntl, intlShape} from 'react-intl'
 
 import PinInput from './PinInput'
 import {CONFIG} from '../../config'
@@ -50,6 +51,7 @@ type PinRegistrationFormLabels = {
 type ExternalProps = {
   labels: PinRegistrationFormLabels,
   onPinEntered: (string) => any,
+  intl: intlShape,
 }
 
 type Props = ExternalProps & {
@@ -82,7 +84,7 @@ const PinRegistrationForm = ({
   )
 }
 
-export default (compose(
+export default injectIntl((compose(
   withStateHandlers(
     {
       pin: '',
@@ -100,4 +102,4 @@ export default (compose(
       return Promise.resolve(true)
     },
   }),
-)(PinRegistrationForm): ComponentType<ExternalProps>)
+)(PinRegistrationForm): ComponentType<ExternalProps>))

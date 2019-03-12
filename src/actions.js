@@ -6,7 +6,7 @@ import SplashScreen from 'react-native-splash-screen'
 import {intlShape} from 'react-intl'
 
 import crashReporting from './helpers/crashReporting'
-import globalMessages from './i18n/global-messages'
+import globalMessages, {errorMessages} from './i18n/global-messages'
 import {Logger} from './utils/logging'
 import walletManager from './crypto/wallet'
 import {
@@ -436,7 +436,7 @@ export const setSystemAuth = (enable: boolean) => async (
 
 export const handleGeneralError = async (message: string, e: Error) => {
   Logger.error(`${message}: ${e.message}`, e)
-  await showErrorDialog((dialogs) => dialogs.generalError(message))
+  await showErrorDialog(errorMessages.generalError, {message})
   crashReporting.crash()
 }
 
