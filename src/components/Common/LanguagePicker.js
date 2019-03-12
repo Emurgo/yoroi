@@ -113,7 +113,10 @@ export const LanguagePicker = ({
       />
 
       <Image source={selectLanguageImage} style={styles.image} />
-      <Button onPress={handleContinue} title={intl.formatMessage(messages.continueButton)} />
+      <Button
+        onPress={handleContinue}
+        title={intl.formatMessage(messages.continueButton)}
+      />
     </View>
   )
 }

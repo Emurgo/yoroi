@@ -9,10 +9,7 @@ import {Logger} from '../../utils/logging'
 import {Button} from '../UiKit'
 import FingerprintScreenBase from '../Common/FingerprintScreenBase'
 import KeyStore from '../../crypto/KeyStore'
-import {
-  onDidMount,
-  onWillUnmount,
-} from '../../utils/renderUtils'
+import {onDidMount, onWillUnmount} from '../../utils/renderUtils'
 
 import styles from './styles/BiometricAuthScreen.style'
 
@@ -32,7 +29,8 @@ const errorMessages = defineMessages({
   },
   SENSOR_LOCKOUT_PERMANENT: {
     id: 'components.send.biometricauthscreen.SENSOR_LOCKOUT_PERMANENT',
-    defaultMessage: '!!!You permanently locked out your fingerprint sensor. Use fallback.',
+    defaultMessage:
+      '!!!You permanently locked out your fingerprint sensor. Use fallback.',
     description: 'some desc',
   },
   DECRYPTION_FAILED: {
@@ -92,7 +90,7 @@ const handleOnConfirm = async (
       useFallback ? 'SYSTEM_PIN' : 'BIOMETRICS',
       intl.formatMessage(messages.authorizeOperation),
       '',
-      intl
+      intl,
     )
     onSuccess(decryptedData)
     return
@@ -117,15 +115,13 @@ const handleOnConfirm = async (
   }
 }
 
-const BiometricAuthScreen = ({
-  cancelScanning,
-  useFallback,
-  error,
-  intl,
-}) => (
+const BiometricAuthScreen = ({cancelScanning, useFallback, error, intl}) => (
   <FingerprintScreenBase
     onGoBack={cancelScanning}
-    headings={[intl.formatMessage(messages.headings1), intl.formatMessage(messages.headings2)]}
+    headings={[
+      intl.formatMessage(messages.headings1),
+      intl.formatMessage(messages.headings2),
+    ]}
     buttons={[
       <Button
         key={'use-fallback'}
@@ -141,7 +137,7 @@ const BiometricAuthScreen = ({
 
 type ExternalProps = {|
   navigation: Navigation,
-  intl: any
+  intl: any,
 |}
 
 type ErrorCode =
@@ -155,46 +151,43 @@ type State = {
   error: null | ErrorCode,
 }
 
-export default injectIntl((compose(
-  withStateHandlers<State, *, *>(
-    {
-      error: null,
-    },
-    {
-      setError: (state) => (error: ErrorCode) => ({error}),
-      clearError: (state) => () => ({error: null}),
-    },
-  ),
-  withHandlers({
-    // we have this handler because we need to let JAVA side know user
-    // cancelled the scanning by either navigating out of this window
-    // or using fallback
-    cancelScanning: ({setError, clearError, navigation}) => async () => {
-      const wasScanningStarted = await KeyStore.cancelFingerprintScanning(
-        KeyStore.REJECTIONS.CANCELED,
-      )
+export default injectIntl(
+  (compose(
+    withStateHandlers<State, *, *>(
+      {
+        error: null,
+      },
+      {
+        setError: (state) => (error: ErrorCode) => ({error}),
+        clearError: (state) => () => ({error: null}),
+      },
+    ),
+    withHandlers({
+      // we have this handler because we need to let JAVA side know user
+      // cancelled the scanning by either navigating out of this window
+      // or using fallback
+      cancelScanning: ({setError, clearError, navigation}) => async () => {
+        const wasScanningStarted = await KeyStore.cancelFingerprintScanning(
+          KeyStore.REJECTIONS.CANCELED,
+        )
 
-      if (!wasScanningStarted) {
-        clearError()
-        navigation.getParam('onFail')(KeyStore.REJECTIONS.CANCELED)
-      }
-    },
-    useFallback: ({
-      navigation,
-      setError,
-      clearError,
-      intl,
-    }) => async () => {
-      await KeyStore.cancelFingerprintScanning(
-        KeyStore.REJECTIONS.SWAPPED_TO_FALLBACK,
-      )
-      handleOnConfirm(navigation, setError, clearError, true, intl)
-    },
-  }),
-  onWillUnmount(async () => {
-    await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
-  }),
-  onDidMount(({navigation, setError, clearError, intl}) =>
-    handleOnConfirm(navigation, setError, clearError, false, intl),
-  ),
-)(BiometricAuthScreen): ComponentType<ExternalProps>))
+        if (!wasScanningStarted) {
+          clearError()
+          navigation.getParam('onFail')(KeyStore.REJECTIONS.CANCELED)
+        }
+      },
+      useFallback: ({navigation, setError, clearError, intl}) => async () => {
+        await KeyStore.cancelFingerprintScanning(
+          KeyStore.REJECTIONS.SWAPPED_TO_FALLBACK,
+        )
+        handleOnConfirm(navigation, setError, clearError, true, intl)
+      },
+    }),
+    onWillUnmount(async () => {
+      await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
+    }),
+    onDidMount(({navigation, setError, clearError, intl}) =>
+      handleOnConfirm(navigation, setError, clearError, false, intl),
+    ),
+  )(BiometricAuthScreen): ComponentType<ExternalProps>),
+)

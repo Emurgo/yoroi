@@ -85,7 +85,6 @@ const messages = defineMessages({
     id: 'components.settings.applicationsettingsscreen.support',
     defaultMessage: '!!!Support',
   },
-
 })
 
 const styles = StyleSheet.create({
@@ -212,34 +211,39 @@ const ApplicationSettingsScreen = ({
   </ScrollView>
 )
 
-export default injectIntl((compose(
-  connect(
-    (state) => ({
-      isBiometricHardwareSupported: biometricHwSupportSelector(state),
-      sendCrashReports: sendCrashReportsSelector(state),
-      isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
-      installationId: installationIdSelector(state),
-      key: languageSelector(state),
+export default injectIntl(
+  (compose(
+    connect(
+      (state) => ({
+        isBiometricHardwareSupported: biometricHwSupportSelector(state),
+        sendCrashReports: sendCrashReportsSelector(state),
+        isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
+        installationId: installationIdSelector(state),
+        key: languageSelector(state),
+      }),
+      {setAppSettingField, setSystemAuth},
+    ),
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(
+      ({intl}) => intl.formatMessage(messages.tabTitle),
+      'applicationTabTitle',
+    ),
+    withHandlers({
+      disableBiometrics,
     }),
-    {setAppSettingField, setSystemAuth},
-  ),
-  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
-  withNavigationTitle(
-    ({intl}) => intl.formatMessage(messages.tabTitle),
-    'applicationTabTitle',
-  ),
-  withHandlers({
-    disableBiometrics,
-  }),
-  withHandlers({
-    onToggleBiometricsAuthIn,
-    updateDeviceSettings: ({setAppSettingField}) => () => {
-      // Runaway promise. This is neaded because
-      // onWillFocus accepts only ()=>void
-      updateDeviceSettings({setAppSettingField})
-    },
-    setCrashReporting: ({setAppSettingField}) => (value: boolean) => {
-      setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value)
-    },
-  }),
-)(ApplicationSettingsScreen): ComponentType<{navigation: Navigation, intl: intlShape}>))
+    withHandlers({
+      onToggleBiometricsAuthIn,
+      updateDeviceSettings: ({setAppSettingField}) => () => {
+        // Runaway promise. This is neaded because
+        // onWillFocus accepts only ()=>void
+        updateDeviceSettings({setAppSettingField})
+      },
+      setCrashReporting: ({setAppSettingField}) => (value: boolean) => {
+        setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value)
+      },
+    }),
+  )(ApplicationSettingsScreen): ComponentType<{
+    navigation: Navigation,
+    intl: intlShape,
+  }>),
+)

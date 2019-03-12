@@ -17,9 +17,11 @@ const messages = defineMessages({
 const OfflineBanner = ({isOnline, offlineTranslation, intl}) =>
   isOnline ? null : <Banner error text={intl.formatMessage(messages.offline)} />
 
-export default injectIntl(connect(
-  (state) => ({
-    isOnline: isOnlineSelector(state),
-  }),
-  null,
-)(OfflineBanner))
+export default injectIntl(
+  connect(
+    (state) => ({
+      isOnline: isOnlineSelector(state),
+    }),
+    null,
+  )(OfflineBanner),
+)

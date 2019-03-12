@@ -47,5 +47,5 @@ export default (compose(
     },
   }),
 )(LanguagePickerScreen): ComponentType<{
-  navigation: NavigationScreenProp<NavigationState>
+  navigation: NavigationScreenProp<NavigationState>,
 }>)

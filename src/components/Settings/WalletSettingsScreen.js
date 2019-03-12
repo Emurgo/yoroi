@@ -102,7 +102,10 @@ const WalletSettingsScreen = ({
         onPress={onSwitchWallet}
       />
 
-      <PressableSettingsItem label={intl.formatMessage(messages.logout)} onPress={onLogout} />
+      <PressableSettingsItem
+        label={intl.formatMessage(messages.logout)}
+        onPress={onLogout}
+      />
     </SettingsSection>
 
     <SettingsSection title={intl.formatMessage(messages.walletName)}>
@@ -139,52 +142,59 @@ const WalletSettingsScreen = ({
   </ScrollView>
 )
 
-export default injectIntl((compose(
-  connect((state) => ({
-    isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
-    isEasyConfirmationEnabled: easyConfirmationSelector(state),
-    key: languageSelector(state),
-  })),
-  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
-  withNavigationTitle(
-    ({intl}) => intl.formatMessage(messages.tabTitle),
-    'walletTabTitle',
-  ),
-  connect(
-    (state) => ({
-      walletName: walletNameSelector(state),
+export default injectIntl(
+  (compose(
+    connect((state) => ({
+      isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
+      isEasyConfirmationEnabled: easyConfirmationSelector(state),
+      key: languageSelector(state),
+    })),
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(
+      ({intl}) => intl.formatMessage(messages.tabTitle),
+      'walletTabTitle',
+    ),
+    connect(
+      (state) => ({
+        walletName: walletNameSelector(state),
+      }),
+      {
+        closeWallet,
+        logout,
+      },
+    ),
+    withHandlers({
+      onToggleEasyConfirmation: ({
+        isEasyConfirmationEnabled,
+        navigation,
+      }) => () => {
+        navigation.navigate(SETTINGS_ROUTES.EASY_COMFIRMATION)
+      },
     }),
-    {
-      closeWallet,
-      logout,
-    },
-  ),
-  withHandlers({
-    onToggleEasyConfirmation: ({
-      isEasyConfirmationEnabled,
-      navigation,
-    }) => () => {
-      navigation.navigate(SETTINGS_ROUTES.EASY_COMFIRMATION)
-    },
-  }),
-  withHandlers({
-    onSwitchWallet: ignoreConcurrentAsyncHandler(
-      ({navigation, closeWallet}) => async () => {
-        await closeWallet()
-        navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
-      },
-      1000,
-    ),
-    onLogout: ignoreConcurrentAsyncHandler(
-      ({logout, intl}) => async () => {
-        const selection = await showConfirmationDialog(
-          confirmationMessages.logout, intl)
+    withHandlers({
+      onSwitchWallet: ignoreConcurrentAsyncHandler(
+        ({navigation, closeWallet}) => async () => {
+          await closeWallet()
+          navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+        },
+        1000,
+      ),
+      onLogout: ignoreConcurrentAsyncHandler(
+        ({logout, intl}) => async () => {
+          const selection = await showConfirmationDialog(
+            confirmationMessages.logout,
+            intl,
+          )
 
-        if (selection === DIALOG_BUTTONS.YES) {
-          await logout()
-        }
-      },
-      500,
-    ),
-  }),
-)(WalletSettingsScreen): ComponentType<{|navigation: Navigation, intl: intlShape|}>))
+          if (selection === DIALOG_BUTTONS.YES) {
+            await logout()
+          }
+        },
+        500,
+      ),
+    }),
+  )(WalletSettingsScreen): ComponentType<{|
+    navigation: Navigation,
+    intl: intlShape,
+  |}>),
+)

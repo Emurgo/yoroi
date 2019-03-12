@@ -37,37 +37,39 @@ const CreateWalletScreen = ({
   </>
 )
 
-export default injectIntl(compose(
-  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
-  withStateHandlers(
-    {
-      visibleMnemonicExplanation: false,
-      formData: null,
-    },
-    {
-      setFormData: (state) => (formData: any) => ({
-        formData,
-        visibleMnemonicExplanation: true,
-      }),
-      hideMnemonicExplanation: (state) => () => ({
-        visibleMnemonicExplanation: false,
-      }),
-      clear: (state) => () => ({
+export default injectIntl(
+  compose(
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withStateHandlers(
+      {
         visibleMnemonicExplanation: false,
         formData: null,
-      }),
-    },
-  ),
-  withHandlers({
-    navigateToMnemonicScreen: ({formData, clear, navigation}) => () => {
-      clear()
-      const mnemonic = CONFIG.DEBUG.PREFILL_FORMS
-        ? CONFIG.DEBUG.MNEMONIC2
-        : generateAdaMnemonic()
-      navigation.navigate(WALLET_INIT_ROUTES.MNEMONIC_SHOW, {
-        mnemonic,
-        ...formData,
-      })
-    },
-  }),
-)(CreateWalletScreen))
+      },
+      {
+        setFormData: (state) => (formData: any) => ({
+          formData,
+          visibleMnemonicExplanation: true,
+        }),
+        hideMnemonicExplanation: (state) => () => ({
+          visibleMnemonicExplanation: false,
+        }),
+        clear: (state) => () => ({
+          visibleMnemonicExplanation: false,
+          formData: null,
+        }),
+      },
+    ),
+    withHandlers({
+      navigateToMnemonicScreen: ({formData, clear, navigation}) => () => {
+        clear()
+        const mnemonic = CONFIG.DEBUG.PREFILL_FORMS
+          ? CONFIG.DEBUG.MNEMONIC2
+          : generateAdaMnemonic()
+        navigation.navigate(WALLET_INIT_ROUTES.MNEMONIC_SHOW, {
+          mnemonic,
+          ...formData,
+        })
+      },
+    }),
+  )(CreateWalletScreen),
+)

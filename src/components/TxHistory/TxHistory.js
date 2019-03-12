@@ -37,7 +37,6 @@ import type {Navigation} from '../../types/navigation'
 import type {State} from '../../state'
 import globalMessages from '../../i18n/global-messages'
 
-
 const messages = defineMessages({
   noTransactions: {
     id: 'components.txhistory.txhistory.noTransactions',
@@ -49,39 +48,38 @@ const messages = defineMessages({
   },
   syncErrorBannerTextWithRefresh: {
     id: 'components.txhistory.txhistory.syncErrorBannerTextWithRefresh',
-    defaultMessage: '!!!We are experiencing synchronization issues. Pull to refresh',
+    defaultMessage:
+      '!!!We are experiencing synchronization issues. Pull to refresh',
   },
 })
 
 const NoTxHistory = injectIntl(({intl}) => (
   <View style={styles.empty}>
     <Image source={image} />
-    <Text style={styles.emptyText}>{intl.formatMessage(messages.noTransactions)}</Text>
+    <Text style={styles.emptyText}>
+      {intl.formatMessage(messages.noTransactions)}
+    </Text>
   </View>
 ))
 
-const SyncErrorBanner = injectIntl(
-  ({intl, showRefresh}) => (
-    <Banner
-      error
-      text={
-        showRefresh
-          ? intl.formatMessage(messages.syncErrorBannerTextWithRefresh)
-          : intl.formatMessage(messages.syncErrorBannerTextWithoutRefresh)
-      }
-    />
-  ),
-)
+const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
+  <Banner
+    error
+    text={
+      showRefresh
+        ? intl.formatMessage(messages.syncErrorBannerTextWithRefresh)
+        : intl.formatMessage(messages.syncErrorBannerTextWithoutRefresh)
+    }
+  />
+))
 
-const AvailableAmountBanner = injectIntl(
-  ({intl, amount}) => (
-    <Banner
-      label={intl.formatMessage(globalMessages.availableFunds)}
-      text={formatAdaWithText(amount)}
-      boldText
-    />
-  ),
-)
+const AvailableAmountBanner = injectIntl(({intl, amount}) => (
+  <Banner
+    label={intl.formatMessage(globalMessages.availableFunds)}
+    text={formatAdaWithText(amount)}
+    boldText
+  />
+))
 
 const TxHistory = ({
   amountPending,
@@ -128,24 +126,26 @@ type ExternalProps = {|
   navigation: Navigation,
 |}
 
-export default injectIntl((compose(
-  requireInitializedWallet,
-  connect(
-    (state: State) => ({
-      transactionsInfo: transactionsInfoSelector(state),
-      isSyncing: isSynchronizingHistorySelector(state),
-      lastSyncError: lastHistorySyncErrorSelector(state),
-      isOnline: isOnlineSelector(state),
-      availableAmount: availableAmountSelector(state),
-      walletName: walletNameSelector(state),
-      key: languageSelector(state),
+export default injectIntl(
+  (compose(
+    requireInitializedWallet,
+    connect(
+      (state: State) => ({
+        transactionsInfo: transactionsInfoSelector(state),
+        isSyncing: isSynchronizingHistorySelector(state),
+        lastSyncError: lastHistorySyncErrorSelector(state),
+        isOnline: isOnlineSelector(state),
+        availableAmount: availableAmountSelector(state),
+        walletName: walletNameSelector(state),
+        key: languageSelector(state),
+      }),
+      {
+        updateHistory,
+      },
+    ),
+    onDidMount(({updateHistory}) => {
+      updateHistory()
     }),
-    {
-      updateHistory,
-    },
-  ),
-  onDidMount(({updateHistory}) => {
-    updateHistory()
-  }),
-  withNavigationTitle(({walletName}) => walletName),
-)(TxHistory): ComponentType<ExternalProps>))
+    withNavigationTitle(({walletName}) => walletName),
+  )(TxHistory): ComponentType<ExternalProps>),
+)

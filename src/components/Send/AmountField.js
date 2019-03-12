@@ -48,8 +48,10 @@ type ExternalProps = {
   intl: intlShape,
 }
 
-export default injectIntl((compose(
-  withHandlers({
-    handleSetAmount,
-  }),
-)(AmountField): ComponentType<ExternalProps>))
+export default injectIntl(
+  (compose(
+    withHandlers({
+      handleSetAmount,
+    }),
+  )(AmountField): ComponentType<ExternalProps>),
+)

@@ -68,10 +68,13 @@ const ChangeWalletName = ({
             label={intl.formatMessage(messages.walletNameInputLabel)}
             value={walletName}
             onChangeText={setWalletName}
-            error={getWalletNameError({
-              tooLong: globalMessages.walletNameErrorTooLong,
-              nameAlreadyTaken: globalMessages.walletNameErrorNameAlreadyTaken,
-            }, validationErrors,
+            error={getWalletNameError(
+              {
+                tooLong: globalMessages.walletNameErrorTooLong,
+                nameAlreadyTaken:
+                  globalMessages.walletNameErrorNameAlreadyTaken,
+              },
+              validationErrors,
             )}
           />
         </ScrollView>
@@ -87,38 +90,43 @@ const ChangeWalletName = ({
   )
 }
 
-export default injectIntl((compose(
-  connect(
-    (state) => ({
-      oldName: walletNameSelector(state),
-      walletNames: walletNamesSelector(state),
+export default injectIntl(
+  (compose(
+    connect(
+      (state) => ({
+        oldName: walletNameSelector(state),
+        walletNames: walletNamesSelector(state),
+      }),
+      {changeWalletName},
+    ),
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withStateHandlers(
+      ({oldName}) => ({
+        walletName: oldName,
+      }),
+      {
+        setWalletName: (state) => (value) => ({walletName: value}),
+      },
+    ),
+    withHandlers({
+      validateWalletName: ({walletName, oldName, walletNames}) => () =>
+        validateWalletName(walletName, oldName, walletNames),
     }),
-    {changeWalletName},
-  ),
-  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
-  withStateHandlers(
-    ({oldName}) => ({
-      walletName: oldName,
-    }),
-    {
-      setWalletName: (state) => (value) => ({walletName: value}),
-    },
-  ),
-  withHandlers({
-    validateWalletName: ({walletName, oldName, walletNames}) => () =>
-      validateWalletName(walletName, oldName, walletNames),
-  }),
-  withHandlers({
-    changeAndNavigate: ({
-      navigation,
-      walletName,
-      changeWalletName,
-      validateWalletName,
-    }) => async () => {
-      if (!_.isEmpty(validateWalletName())) return
+    withHandlers({
+      changeAndNavigate: ({
+        navigation,
+        walletName,
+        changeWalletName,
+        validateWalletName,
+      }) => async () => {
+        if (!_.isEmpty(validateWalletName())) return
 
-      await changeWalletName(walletName)
-      navigation.goBack()
-    },
-  }),
-)(ChangeWalletName): ComponentType<{|navigation: Navigation, intl: intlShape|}>))
+        await changeWalletName(walletName)
+        navigation.goBack()
+      },
+    }),
+  )(ChangeWalletName): ComponentType<{|
+    navigation: Navigation,
+    intl: intlShape,
+  |}>),
+)

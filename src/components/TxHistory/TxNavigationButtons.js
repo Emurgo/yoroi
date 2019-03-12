@@ -62,14 +62,16 @@ const TxNavigationButtons = ({
   </View>
 )
 
-export default injectIntl(compose(
-  connect((state) => ({
-    sendDisabled: !hasAnyTransaction(state),
-  })),
-  withHandlers({
-    navigateToReceive: ({navigation}) => (event) =>
-      navigation.navigate(WALLET_ROUTES.RECEIVE),
-    navigateToSend: ({navigation}) => (event) =>
-      navigation.navigate(WALLET_ROUTES.SEND),
-  }),
-)(TxNavigationButtons))
+export default injectIntl(
+  compose(
+    connect((state) => ({
+      sendDisabled: !hasAnyTransaction(state),
+    })),
+    withHandlers({
+      navigateToReceive: ({navigation}) => (event) =>
+        navigation.navigate(WALLET_ROUTES.RECEIVE),
+      navigateToSend: ({navigation}) => (event) =>
+        navigation.navigate(WALLET_ROUTES.SEND),
+    }),
+  )(TxNavigationButtons),
+)

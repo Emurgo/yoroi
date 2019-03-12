@@ -58,30 +58,32 @@ type ExternalProps = {|
   isLoginInProgress: boolean,
 |}
 
-export default injectIntl((compose(
-  connect((state) => ({
-    customPinHash: customPinHashSelector(state),
-  })),
-  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
-  withHandlers({
-    onPinEnter: ({
-      navigation,
-      isLoginInProgress,
-      customPinHash,
-      intl,
-    }: ExternalProps) => async (pin) => {
-      if (!customPinHash) {
-        throw new Error('Custom pin is not setup')
-      }
+export default injectIntl(
+  (compose(
+    connect((state) => ({
+      customPinHash: customPinHashSelector(state),
+    })),
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withHandlers({
+      onPinEnter: ({
+        navigation,
+        isLoginInProgress,
+        customPinHash,
+        intl,
+      }: ExternalProps) => async (pin) => {
+        if (!customPinHash) {
+          throw new Error('Custom pin is not setup')
+        }
 
-      const isPinValid = await authenticateByCustomPin(customPinHash, pin)
-      if (isPinValid) {
-        navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
-      } else {
-        await showErrorDialog(errorMessages.incorrectPin, intl)
-      }
+        const isPinValid = await authenticateByCustomPin(customPinHash, pin)
+        if (isPinValid) {
+          navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+        } else {
+          await showErrorDialog(errorMessages.incorrectPin, intl)
+        }
 
-      return !isPinValid
-    },
-  }),
-)(CustomPinLogin): ComponentType<ExternalProps>))
+        return !isPinValid
+      },
+    }),
+  )(CustomPinLogin): ComponentType<ExternalProps>),
+)

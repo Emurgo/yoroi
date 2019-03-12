@@ -27,14 +27,16 @@ const AddressReaderQR = ({address, setAddress, onSuccess}) => (
   <QRCodeScanner onRead={onSuccess} />
 )
 
-export default injectIntl((compose(
-  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
-  withHandlers({
-    onSuccess: ({navigation}) => (event) => {
-      const onSuccess = navigation.getParam('onSuccess')
-      if (onSuccess) {
-        onSuccess(event.data)
-      }
-    },
-  }),
-)(AddressReaderQR): ComponentType<ExternalProps>))
+export default injectIntl(
+  (compose(
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withHandlers({
+      onSuccess: ({navigation}) => (event) => {
+        const onSuccess = navigation.getParam('onSuccess')
+        if (onSuccess) {
+          onSuccess(event.data)
+        }
+      },
+    }),
+  )(AddressReaderQR): ComponentType<ExternalProps>),
+)

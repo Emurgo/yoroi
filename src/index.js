@@ -10,7 +10,6 @@ import ru from 'react-intl/locale-data/ru'
 // $FlowFixMe flow does not have this import
 import {connect, Provider} from 'react-redux'
 
-
 import App from './App'
 import {name as appName} from './app.json'
 
@@ -42,7 +41,6 @@ global.onunhandledrejection = (e) => handleGeneralError(e.message, e)
 // https://github.com/yahoo/react-intl/wiki#loading-locale-data
 addLocaleData([...en, ...ja, ...ko, ...ru])
 
-
 const store = getConfiguredStore()
 
 store.dispatch(setupHooks())
@@ -56,7 +54,6 @@ const IntlProviderWrapper = connect((state) => {
     textComponent: Text,
   }
 })(IntlProvider)
-
 
 const AppWithProviders = () => {
   return (

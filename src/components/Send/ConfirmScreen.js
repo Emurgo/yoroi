@@ -78,7 +78,6 @@ const messages = defineMessages({
     defaultMessage: '!!!Submitting transaction',
     description: 'some desc',
   },
-
 })
 
 const handleOnConfirm = async (
@@ -87,7 +86,7 @@ const handleOnConfirm = async (
   password,
   submitTransaction,
   setSendingTransaction,
-  intl
+  intl,
 ) => {
   const transactionData = navigation.getParam('transactionData')
 
@@ -185,10 +184,12 @@ const ConfirmScreen = ({
 
         <ScrollView style={styles.container}>
           <Text small>
-            {intl.formatMessage(messages.fees)}: {formatAdaWithSymbol(transactionData.fee)}
+            {intl.formatMessage(messages.fees)}:{' '}
+            {formatAdaWithSymbol(transactionData.fee)}
           </Text>
           <Text small>
-            {intl.formatMessage(messages.balanceAfterTx)}: {formatAdaWithSymbol(balanceAfterTx)}
+            {intl.formatMessage(messages.balanceAfterTx)}:{' '}
+            {formatAdaWithSymbol(balanceAfterTx)}
           </Text>
 
           <Text style={styles.heading} small>
@@ -229,48 +230,50 @@ const ConfirmScreen = ({
   )
 }
 
-export default injectIntl(compose(
-  connect(
-    (state) => ({
-      isEasyConfirmationEnabled: easyConfirmationSelector(state),
-    }),
-    {
-      submitTransaction,
-    },
-  ),
-  withStateHandlers(
-    {
-      password: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
-      sendingTransaction: false,
-    },
-    {
-      setPassword: (state) => (value) => ({password: value}),
-      setSendingTransaction: () => (sendingTransaction) => ({
-        sendingTransaction,
+export default injectIntl(
+  compose(
+    connect(
+      (state) => ({
+        isEasyConfirmationEnabled: easyConfirmationSelector(state),
       }),
-    },
-  ),
-  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
-  withHandlers({
-    onConfirm: ignoreConcurrentAsyncHandler(
-      ({
-        navigation,
-        isEasyConfirmationEnabled,
-        password,
+      {
         submitTransaction,
-        setSendingTransaction,
-        intl,
-      }) => async (event) => {
-        await handleOnConfirm(
+      },
+    ),
+    withStateHandlers(
+      {
+        password: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
+        sendingTransaction: false,
+      },
+      {
+        setPassword: (state) => (value) => ({password: value}),
+        setSendingTransaction: () => (sendingTransaction) => ({
+          sendingTransaction,
+        }),
+      },
+    ),
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withHandlers({
+      onConfirm: ignoreConcurrentAsyncHandler(
+        ({
           navigation,
           isEasyConfirmationEnabled,
           password,
           submitTransaction,
           setSendingTransaction,
           intl,
-        )
-      },
-      1000,
-    ),
-  }),
-)(ConfirmScreen))
+        }) => async (event) => {
+          await handleOnConfirm(
+            navigation,
+            isEasyConfirmationEnabled,
+            password,
+            submitTransaction,
+            setSendingTransaction,
+            intl,
+          )
+        },
+        1000,
+      ),
+    }),
+  )(ConfirmScreen),
+)

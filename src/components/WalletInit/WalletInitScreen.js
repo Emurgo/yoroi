@@ -37,7 +37,7 @@ const messages = defineMessages({
 type Props = {
   navigateRestoreWallet: () => mixed,
   navigateCreateWallet: () => mixed,
-  intl: any
+  intl: any,
 }
 
 const WalletInitScreen = ({
@@ -70,14 +70,15 @@ const WalletInitScreen = ({
   </SafeAreaView>
 )
 
-export default injectIntl(compose(
-  connect((state: State) => ({
-  })),
-  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
-  withHandlers({
-    navigateRestoreWallet: ({navigation}) => (event) =>
-      navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET),
-    navigateCreateWallet: ({navigation}) => (event) =>
-      navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET),
-  }),
-)(WalletInitScreen))
+export default injectIntl(
+  compose(
+    connect((state: State) => ({})),
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withHandlers({
+      navigateRestoreWallet: ({navigation}) => (event) =>
+        navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET),
+      navigateCreateWallet: ({navigation}) => (event) =>
+        navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET),
+    }),
+  )(WalletInitScreen),
+)

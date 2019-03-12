@@ -16,12 +16,14 @@ const App = (props, context) => {
   return <AppNavigator ref={NavigationService.setTopLevelNavigator} />
 }
 
-export default injectIntl(compose(
-  connect(
-    null,
-    {
-      initApp,
-    },
-  ),
-  onDidMount(({initApp}) => initApp()),
-)(App))
+export default injectIntl(
+  compose(
+    connect(
+      null,
+      {
+        initApp,
+      },
+    ),
+    onDidMount(({initApp}) => initApp()),
+  )(App),
+)

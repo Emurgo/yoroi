@@ -26,7 +26,6 @@ import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {State} from '../../state'
 import type {ComponentType} from 'react'
 
-
 const messages = defineMessages({
   header: {
     id: 'components.walletselection.walletselectionscreen.header',
@@ -78,32 +77,34 @@ const WalletListScreen = ({
 
 const walletsListSelector = (state) => Object.values(state.wallets)
 
-export default injectIntl((compose(
-  connect((state: State) => ({
-    wallets: walletsListSelector(state),
-  })),
-  withHandlers({
-    navigateInitWallet: ({navigation}) => (event) =>
-      navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH),
-    openWallet: ({navigation, intl}) => async (wallet) => {
-      try {
-        await walletManager.openWallet(wallet.id)
-        navigation.navigate(ROOT_ROUTES.WALLET)
-      } catch (e) {
-        if (e instanceof SystemAuthDisabled) {
-          await walletManager.closeWallet()
-          await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-          navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
-        } else if (e instanceof KeysAreInvalid) {
-          await walletManager.cleanupInvalidKeys()
-          await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
-        } else {
-          throw e
+export default injectIntl(
+  (compose(
+    connect((state: State) => ({
+      wallets: walletsListSelector(state),
+    })),
+    withHandlers({
+      navigateInitWallet: ({navigation}) => (event) =>
+        navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH),
+      openWallet: ({navigation, intl}) => async (wallet) => {
+        try {
+          await walletManager.openWallet(wallet.id)
+          navigation.navigate(ROOT_ROUTES.WALLET)
+        } catch (e) {
+          if (e instanceof SystemAuthDisabled) {
+            await walletManager.closeWallet()
+            await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
+            navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+          } else if (e instanceof KeysAreInvalid) {
+            await walletManager.cleanupInvalidKeys()
+            await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
+          } else {
+            throw e
+          }
         }
-      }
-    },
-  }),
-)(WalletListScreen): ComponentType<{
-  intl: IntlShape,
-  navigation: NavigationScreenProp<NavigationState>,
-}>))
+      },
+    }),
+  )(WalletListScreen): ComponentType<{
+    intl: IntlShape,
+    navigation: NavigationScreenProp<NavigationState>,
+  }>),
+)

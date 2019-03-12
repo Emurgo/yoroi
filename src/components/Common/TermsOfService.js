@@ -11,11 +11,7 @@ type Props = {
 }
 
 const TermsOfService = ({tos}: Props) => {
-  return (
-    <Markdown>
-      {tos}
-    </Markdown>
-  )
+  return <Markdown>{tos}</Markdown>
 }
 
 export default (compose(
@@ -23,4 +19,5 @@ export default (compose(
     return {
       tos: state.tos,
     }
-  }))(TermsOfService): ComponentType<any>)
+  }),
+)(TermsOfService): ComponentType<any>)

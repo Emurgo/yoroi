@@ -385,8 +385,9 @@ const showDialog = (translations: DialogOptions): Promise<DialogButton> =>
   })
 
 export const showErrorDialog = (
-  dialog: DialogOptions, intl: intlShape,
-  msgOptions?: any
+  dialog: DialogOptions,
+  intl: intlShape,
+  msgOptions?: any,
 ): Promise<DialogButton> =>
   showDialog({
     title: intl.formatMessage(dialog.title),
@@ -395,7 +396,8 @@ export const showErrorDialog = (
   })
 
 export const showConfirmationDialog = (
-  dialog: DialogOptions, intl: intlShape
+  dialog: DialogOptions,
+  intl: intlShape,
 ): Promise<DialogButton> =>
   showDialog({
     title: intl.formatMessage(dialog.title),

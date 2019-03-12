@@ -12,7 +12,6 @@ import chevronRight from '../../assets/img/chevron_right.png'
 
 import styles from './styles/SupportScreen.style'
 
-
 const messages = defineMessages({
   title: {
     id: 'components.settings.settingsscreen.title',
@@ -53,7 +52,6 @@ const messages = defineMessages({
     defaultMessage: 'https://yoroi-wallet.com/support/',
     description: 'some desc',
   },
-
 })
 
 const Item = ({title, text, url, onPress}) => (
@@ -73,7 +71,7 @@ const LinkingItem = withHandlers({
 })(Item)
 
 type Props = {
-  intl: any
+  intl: any,
 }
 
 const SupportScreen = ({intl}: Props) => (
@@ -93,6 +91,8 @@ const SupportScreen = ({intl}: Props) => (
   </View>
 )
 
-export default injectIntl(compose(
-  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
-)(SupportScreen))
+export default injectIntl(
+  compose(withNavigationTitle(({intl}) => intl.formatMessage(messages.title)))(
+    SupportScreen,
+  ),
+)

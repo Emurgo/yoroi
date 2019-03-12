@@ -10,25 +10,29 @@ import styles from './styles/MnemonicBackupImportanceModal.style'
 
 const messages = defineMessages({
   title: {
-    id: 'components.walletinit.createwallet.mnemonicbackupimportancemodal.title',
+    id:
+      'components.walletinit.createwallet.mnemonicbackupimportancemodal.title',
     defaultMessage: '!!!Recovery phrase',
   },
   keysStorageCheckbox: {
-    id: 'components.walletinit.createwallet.mnemonicbackupimportancemodal.keysStorageCheckbox',
+    id:
+      'components.walletinit.createwallet.mnemonicbackupimportancemodal.keysStorageCheckbox',
     defaultMessage:
       '!!!I understand that my secret keys are held securely ' +
       'on this device only, not on the company`s servers',
   },
   newDeviceRecoveryCheckbox: {
     /* eslint-disable max-len */
-    id: 'components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox',
+    id:
+      'components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox',
     defaultMessage:
       '!!!I understand that if this application is moved to another device ' +
       'or delete, my money can be only recovered with the backup phrase that ' +
       'I have written down and saved in secure place.',
   },
   confirmationButton: {
-    id: 'components.walletinit.createwallet.mnemonicbackupimportancemodal.confirmationButton',
+    id:
+      'components.walletinit.createwallet.mnemonicbackupimportancemodal.confirmationButton',
     defaultMessage: '!!!I understand',
   },
 })
@@ -76,19 +80,21 @@ const MnemonicBackupImportanceModal = ({
   </Modal>
 )
 
-export default injectIntl(compose(
-  withStateHandlers(
-    {
-      acceptedKeyStorage: false,
-      acceptedNewDeviceRecovery: false,
-    },
-    {
-      setAcceptedKeyStorage: (state) => (value) => ({
-        acceptedKeyStorage: value,
-      }),
-      setAcceptedNewDeviceRecovery: (state) => (value) => ({
-        acceptedNewDeviceRecovery: value,
-      }),
-    },
-  ),
-)(MnemonicBackupImportanceModal))
+export default injectIntl(
+  compose(
+    withStateHandlers(
+      {
+        acceptedKeyStorage: false,
+        acceptedNewDeviceRecovery: false,
+      },
+      {
+        setAcceptedKeyStorage: (state) => (value) => ({
+          acceptedKeyStorage: value,
+        }),
+        setAcceptedNewDeviceRecovery: (state) => (value) => ({
+          acceptedNewDeviceRecovery: value,
+        }),
+      },
+    ),
+  )(MnemonicBackupImportanceModal),
+)

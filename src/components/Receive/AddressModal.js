@@ -91,7 +91,8 @@ class AddressModal extends React.Component<Props, State> {
 
           {index != null && (
             <Text style={styles.address}>
-              {intl.formatMessage(messages.BIP32path)} {formatBIP44(0, 'External', index)}
+              {intl.formatMessage(messages.BIP32path)}{' '}
+              {formatBIP44(0, 'External', index)}
             </Text>
           )}
           <Text monospace style={styles.address}>
@@ -101,9 +102,11 @@ class AddressModal extends React.Component<Props, State> {
 
         <Button
           onPress={this._copyAddress}
-          title={isCopied ?
-            intl.formatMessage(messages.copiedLabel) :
-            intl.formatMessage(messages.copyLabel)}
+          title={
+            isCopied
+              ? intl.formatMessage(messages.copiedLabel)
+              : intl.formatMessage(messages.copyLabel)
+          }
         />
       </Modal>
     )
@@ -117,11 +120,13 @@ type ExternalProps = {
   intl: intlShape,
 }
 
-export default injectIntl((compose(
-  connect(
-    (state, {address}) => ({
-      index: externalAddressIndexSelector(state)[address],
-    }),
-    null,
-  ),
-)(AddressModal): ComponentType<ExternalProps>))
+export default injectIntl(
+  (compose(
+    connect(
+      (state, {address}) => ({
+        index: externalAddressIndexSelector(state)[address],
+      }),
+      null,
+    ),
+  )(AddressModal): ComponentType<ExternalProps>),
+)

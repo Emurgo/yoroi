@@ -105,8 +105,12 @@ const ToggleEasyConfirmationScreen = ({
 
     {!isEasyConfirmationEnabled ? (
       <ScrollView keyboardDismissMode="on-drag">
-        <Text style={styles.heading}>{intl.formatMessage(messages.enableHeading)}</Text>
-        <Text style={styles.warning}>{intl.formatMessage(messages.enableWarning)}</Text>
+        <Text style={styles.heading}>
+          {intl.formatMessage(messages.enableHeading)}
+        </Text>
+        <Text style={styles.warning}>
+          {intl.formatMessage(messages.enableWarning)}
+        </Text>
 
         <ValidatedTextInput
           secureTextEntry
@@ -117,7 +121,9 @@ const ToggleEasyConfirmationScreen = ({
       </ScrollView>
     ) : (
       <View style={[styles.main, styles.mainCentered]}>
-        <Text style={styles.heading}>{intl.formatMessage(messages.disableHeading)}</Text>
+        <Text style={styles.heading}>
+          {intl.formatMessage(messages.disableHeading)}
+        </Text>
       </View>
     )}
 
@@ -137,23 +143,25 @@ const ToggleEasyConfirmationScreen = ({
   </View>
 )
 
-export default injectIntl(compose(
-  connect(
-    (state) => ({
-      isEasyConfirmationEnabled: easyConfirmationSelector(state),
+export default injectIntl(
+  compose(
+    connect(
+      (state) => ({
+        isEasyConfirmationEnabled: easyConfirmationSelector(state),
+      }),
+      {setEasyConfirmation},
+    ),
+    withStateHandlers(
+      {masterPassword: ''},
+      {
+        setMasterPassword: () => (masterPassword) => ({masterPassword}),
+        clearPassword: () => () => ({masterPassword: ''}),
+      },
+    ),
+    withHandlers({
+      enableEasyConfirmation,
+      disableEasyConfirmation,
     }),
-    {setEasyConfirmation},
-  ),
-  withStateHandlers(
-    {masterPassword: ''},
-    {
-      setMasterPassword: () => (masterPassword) => ({masterPassword}),
-      clearPassword: () => () => ({masterPassword: ''}),
-    },
-  ),
-  withHandlers({
-    enableEasyConfirmation,
-    disableEasyConfirmation,
-  }),
-  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
-)(ToggleEasyConfirmationScreen))
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+  )(ToggleEasyConfirmationScreen),
+)

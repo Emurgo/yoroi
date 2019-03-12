@@ -16,7 +16,8 @@ import {COLORS} from '../../styles/config'
 
 const messages = defineMessages({
   passwordRequirementsNote: {
-    id: 'components.walletinit.passwordstrengthindicator.passwordRequirementsNote',
+    id:
+      'components.walletinit.passwordstrengthindicator.passwordRequirementsNote',
     defaultMessage: '!!!The password needs to contain at least:',
     description: 'some desc',
   },
@@ -57,7 +58,6 @@ const messages = defineMessages({
   },
 })
 
-
 type ValidationCheckIconProps = {
   isSatisfied?: boolean,
   hasSevenCharacters?: boolean,
@@ -86,21 +86,20 @@ type Props = {
   hasTwelveCharacters?: boolean,
 }
 
-const LongPasswordStrengthIndicator = injectIntl(({
-  hasTwelveCharacters,
-  intl,
-}: Props) => (
-  <View>
-    <Text>{intl.formatMessage(messages.passwordRequirementsNote)}</Text>
+const LongPasswordStrengthIndicator = injectIntl(
+  ({hasTwelveCharacters, intl}: Props) => (
+    <View>
+      <Text>{intl.formatMessage(messages.passwordRequirementsNote)}</Text>
 
-    <View style={styles.container}>
-      <ValidationCheckIcon
-        isSatisfied={hasTwelveCharacters}
-        label={intl.formatMessage(messages.passwordBigLength)}
-      />
+      <View style={styles.container}>
+        <ValidationCheckIcon
+          isSatisfied={hasTwelveCharacters}
+          label={intl.formatMessage(messages.passwordBigLength)}
+        />
+      </View>
     </View>
-  </View>
-))
+  ),
+)
 
 const CombinedPasswordStrengthIndicator = ({
   intl,
@@ -111,7 +110,9 @@ const CombinedPasswordStrengthIndicator = ({
   hasTwelveCharacters,
 }: Props) => (
   <View style={styles.container}>
-    <Text secondary>{intl.formatMessage(messages.passwordRequirementsNote)}</Text>
+    <Text secondary>
+      {intl.formatMessage(messages.passwordRequirementsNote)}
+    </Text>
 
     <ValidationCheckIcon
       isSatisfied={hasSevenCharacters}
@@ -143,6 +144,6 @@ const indicator = CONFIG.ALLOW_SHORT_PASSWORD
   ? CombinedPasswordStrengthIndicator
   : LongPasswordStrengthIndicator
 
-export default injectIntl(compose(
-  withProps(({password}) => getPasswordStrength(password)),
-)(indicator))
+export default injectIntl(
+  compose(withProps(({password}) => getPasswordStrength(password)))(indicator),
+)

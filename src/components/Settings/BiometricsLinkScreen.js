@@ -59,8 +59,10 @@ const BiometricsLinkScreen = ({
 }: Props) => (
   <FingerprintScreenBase
     headings={[intl.formatMessage(messages.heading)]}
-    subHeadings={[intl.formatMessage(messages.subHeading1),
-      intl.formatMessage(messages.subHeading2)]}
+    subHeadings={[
+      intl.formatMessage(messages.subHeading1),
+      intl.formatMessage(messages.subHeading2),
+    ]}
     buttons={[
       <Button
         key={'cancel'}
@@ -79,25 +81,26 @@ const BiometricsLinkScreen = ({
   />
 )
 
-export default injectIntl(compose(
-  connect(
-    (state) => ({
+export default injectIntl(
+  compose(
+    connect(
+      (state) => ({}),
+      {setSystemAuth},
+    ),
+    withHandlers({
+      linkBiometricsSignIn: ({navigation, setSystemAuth, intl}) => async () => {
+        if (await canBiometricEncryptionBeEnabled()) {
+          setSystemAuth(true)
+            .then(() => navigation.navigate(SETTINGS_ROUTES.MAIN))
+            .catch(() =>
+              showErrorDialog(errorMessages.disableEasyConfirmationFirst, intl),
+            )
+        } else {
+          showErrorDialog(errorMessages.enableFingerprintsFirst, intl)
+        }
+      },
+      cancelLinking: ({navigation}) => () =>
+        navigation.navigate(SETTINGS_ROUTES.MAIN),
     }),
-    {setSystemAuth},
-  ),
-  withHandlers({
-    linkBiometricsSignIn: ({navigation, setSystemAuth, intl}) => async () => {
-      if (await canBiometricEncryptionBeEnabled()) {
-        setSystemAuth(true)
-          .then(() => navigation.navigate(SETTINGS_ROUTES.MAIN))
-          .catch(() =>
-            showErrorDialog(errorMessages.disableEasyConfirmationFirst, intl),
-          )
-      } else {
-        showErrorDialog(errorMessages.enableFingerprintsFirst, intl)
-      }
-    },
-    cancelLinking: ({navigation}) => () =>
-      navigation.navigate(SETTINGS_ROUTES.MAIN),
-  }),
-)(BiometricsLinkScreen))
+  )(BiometricsLinkScreen),
+)

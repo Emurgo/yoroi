@@ -63,23 +63,25 @@ type ExternalProps = {|
   intl: intlShape,
 |}
 
-export default injectIntl((compose(
-  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
-  connect(
-    () => ({}),
-    {
-      encryptAndStoreCustomPin,
-    },
-  ),
-  withProps(({navigation}) => ({
-    onSuccess: navigation.getParam('onSuccess'),
-  })),
-  withHandlers({
-    handlePinEntered: ({onSuccess, encryptAndStoreCustomPin}) => async (
-      pin,
-    ) => {
-      await encryptAndStoreCustomPin(pin)
-      onSuccess()
-    },
-  }),
-)(CustomPinScreen): ComponentType<ExternalProps>))
+export default injectIntl(
+  (compose(
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    connect(
+      () => ({}),
+      {
+        encryptAndStoreCustomPin,
+      },
+    ),
+    withProps(({navigation}) => ({
+      onSuccess: navigation.getParam('onSuccess'),
+    })),
+    withHandlers({
+      handlePinEntered: ({onSuccess, encryptAndStoreCustomPin}) => async (
+        pin,
+      ) => {
+        await encryptAndStoreCustomPin(pin)
+        onSuccess()
+      },
+    }),
+  )(CustomPinScreen): ComponentType<ExternalProps>),
+)

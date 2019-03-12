@@ -100,9 +100,13 @@ const ReceiveScreen = ({
       </View>
       <SafeAreaView style={styles.safeAreaView}>
         <Screen scroll>
-          <Text style={styles.heading}>{intl.formatMessage(messages.freshAddresses)}</Text>
+          <Text style={styles.heading}>
+            {intl.formatMessage(messages.freshAddresses)}
+          </Text>
           <AddressesList showFresh addresses={receiveAddresses} />
-          <Text style={styles.heading}>{intl.formatMessage(messages.usedAddresses)}</Text>
+          <Text style={styles.heading}>
+            {intl.formatMessage(messages.usedAddresses)}
+          </Text>
           <AddressesList addresses={receiveAddresses} />
         </Screen>
       </SafeAreaView>
@@ -110,26 +114,28 @@ const ReceiveScreen = ({
   )
 }
 
-export default injectIntl((compose(
-  connect(
-    (state) => ({
-      receiveAddresses: receiveAddressesSelector(state),
-      addressLimitReached: !canGenerateNewReceiveAddressSelector(state),
-      // This is here just so that we can properly monitor changes and fire
-      // generateNewReceiveAddressIfNeeded()
-      isUsedAddressIndex: isUsedAddressIndexSelector(state),
-    }),
-    {
-      generateNewReceiveAddress,
-      generateNewReceiveAddressIfNeeded,
-    },
-  ),
-  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+export default injectIntl(
+  (compose(
+    connect(
+      (state) => ({
+        receiveAddresses: receiveAddressesSelector(state),
+        addressLimitReached: !canGenerateNewReceiveAddressSelector(state),
+        // This is here just so that we can properly monitor changes and fire
+        // generateNewReceiveAddressIfNeeded()
+        isUsedAddressIndex: isUsedAddressIndexSelector(state),
+      }),
+      {
+        generateNewReceiveAddress,
+        generateNewReceiveAddressIfNeeded,
+      },
+    ),
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
 
-  onDidMount(({generateNewReceiveAddressIfNeeded}) =>
-    generateNewReceiveAddressIfNeeded(),
-  ),
-  onDidUpdate(({generateNewReceiveAddressIfNeeded}, prevProps) =>
-    generateNewReceiveAddressIfNeeded(),
-  ),
-)(ReceiveScreen): ComponentType<{navigation: Navigation, intl: intlShape}>))
+    onDidMount(({generateNewReceiveAddressIfNeeded}) =>
+      generateNewReceiveAddressIfNeeded(),
+    ),
+    onDidUpdate(({generateNewReceiveAddressIfNeeded}, prevProps) =>
+      generateNewReceiveAddressIfNeeded(),
+    ),
+  )(ReceiveScreen): ComponentType<{navigation: Navigation, intl: intlShape}>),
+)

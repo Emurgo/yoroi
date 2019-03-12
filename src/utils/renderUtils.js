@@ -68,7 +68,6 @@ export const onDidUpdate = <Props, Callback: (any, any) => mixed>(
       }
     }
 
-
 // prettier-ignore
 export const withNavigationTitle = <Props: {navigation: any}>(
   getTitle: (Props) => string,

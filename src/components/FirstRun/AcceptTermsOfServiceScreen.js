@@ -8,7 +8,6 @@ import {withStateHandlers, withHandlers} from 'recompose'
 import {ScrollView} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 
-
 import TermsOfService from '../Common/TermsOfService'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {Checkbox, Button, StatusBar, PleaseWaitModal} from '../UiKit'
@@ -41,7 +40,6 @@ const messages = defineMessages({
     defaultMessage: '!!!Initializing',
     description: 'some desc',
   },
-
 })
 
 type Props = {
@@ -86,51 +84,53 @@ const AcceptTermsOfServiceScreen = ({
   </SafeAreaView>
 )
 
-export default injectIntl(compose(
-  connect(
-    (state) => ({
-      isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
+export default injectIntl(
+  compose(
+    connect(
+      (state) => ({
+        isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
+      }),
+      {acceptAndSaveTos, setSystemAuth},
+    ),
+    withStateHandlers(
+      {
+        acceptedTos: false,
+        savingConsent: false,
+      },
+      {
+        setAcceptedTos: () => (acceptedTos) => ({acceptedTos}),
+        setSavingConsent: () => (savingConsent) => ({savingConsent}),
+      },
+    ),
+    withHandlers({
+      handleAccepted: ({
+        navigation,
+        isSystemAuthEnabled,
+        acceptAndSaveTos,
+        setSystemAuth,
+        setSavingConsent,
+      }) => async () => {
+        setSavingConsent(true)
+        await acceptAndSaveTos()
+
+        const canSystemAuthBeEnabled = await canBiometricEncryptionBeEnabled()
+
+        const navigateToWalletCreateRestore = () =>
+          navigation.navigate(WALLET_INIT_ROUTES.INITIAL_CREATE_RESTORE_SWITCH)
+
+        if (canSystemAuthBeEnabled) {
+          await setSystemAuth(true)
+
+          setSavingConsent(false)
+          navigateToWalletCreateRestore()
+        } else {
+          setSavingConsent(false)
+          navigation.navigate(FIRST_RUN_ROUTES.CUSTOM_PIN, {
+            onSuccess: navigateToWalletCreateRestore,
+          })
+        }
+      },
     }),
-    {acceptAndSaveTos, setSystemAuth},
-  ),
-  withStateHandlers(
-    {
-      acceptedTos: false,
-      savingConsent: false,
-    },
-    {
-      setAcceptedTos: () => (acceptedTos) => ({acceptedTos}),
-      setSavingConsent: () => (savingConsent) => ({savingConsent}),
-    },
-  ),
-  withHandlers({
-    handleAccepted: ({
-      navigation,
-      isSystemAuthEnabled,
-      acceptAndSaveTos,
-      setSystemAuth,
-      setSavingConsent,
-    }) => async () => {
-      setSavingConsent(true)
-      await acceptAndSaveTos()
-
-      const canSystemAuthBeEnabled = await canBiometricEncryptionBeEnabled()
-
-      const navigateToWalletCreateRestore = () =>
-        navigation.navigate(WALLET_INIT_ROUTES.INITIAL_CREATE_RESTORE_SWITCH)
-
-      if (canSystemAuthBeEnabled) {
-        await setSystemAuth(true)
-
-        setSavingConsent(false)
-        navigateToWalletCreateRestore()
-      } else {
-        setSavingConsent(false)
-        navigation.navigate(FIRST_RUN_ROUTES.CUSTOM_PIN, {
-          onSuccess: navigateToWalletCreateRestore,
-        })
-      }
-    },
-  }),
-  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
-)(AcceptTermsOfServiceScreen))
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+  )(AcceptTermsOfServiceScreen),
+)

@@ -59,7 +59,6 @@ const messages = defineMessages({
   },
 })
 
-
 const handleRemoveWallet = ({navigation, removeCurrentWallet}) => async () => {
   await removeCurrentWallet()
   navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
@@ -109,7 +108,9 @@ const RemoveWalletScreen = ({
         keyboardDismissMode="on-drag"
       >
         <View style={styles.walletInfo}>
-          <Text style={styles.walletNameLabel}>{intl.formatMessage(messages.walletName)}</Text>
+          <Text style={styles.walletNameLabel}>
+            {intl.formatMessage(messages.walletName)}
+          </Text>
           <Text style={styles.walletName}>{walletName}</Text>
 
           <ValidatedTextInput
@@ -138,29 +139,34 @@ const RemoveWalletScreen = ({
   )
 }
 
-export default injectIntl(compose(
-  connect(
-    (state: State) => ({
-      walletName: walletNameSelector(state),
-    }),
-    {
-      removeCurrentWallet,
-    },
-  ),
-  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
-  withStateHandlers(
-    {
-      hasMnemonicWrittenDown: false,
-      typedWalletName: '',
-    },
-    {
-      setHasMnemonicWrittenDown: (state) => (value) => ({
-        hasMnemonicWrittenDown: value,
+export default injectIntl(
+  compose(
+    connect(
+      (state: State) => ({
+        walletName: walletNameSelector(state),
       }),
-      setTypedWalletName: (state) => (value) => ({typedWalletName: value}),
-    },
-  ),
-  withHandlers({
-    handleRemoveWallet: ignoreConcurrentAsyncHandler(handleRemoveWallet, 1000),
-  }),
-)(RemoveWalletScreen))
+      {
+        removeCurrentWallet,
+      },
+    ),
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withStateHandlers(
+      {
+        hasMnemonicWrittenDown: false,
+        typedWalletName: '',
+      },
+      {
+        setHasMnemonicWrittenDown: (state) => (value) => ({
+          hasMnemonicWrittenDown: value,
+        }),
+        setTypedWalletName: (state) => (value) => ({typedWalletName: value}),
+      },
+    ),
+    withHandlers({
+      handleRemoveWallet: ignoreConcurrentAsyncHandler(
+        handleRemoveWallet,
+        1000,
+      ),
+    }),
+  )(RemoveWalletScreen),
+)

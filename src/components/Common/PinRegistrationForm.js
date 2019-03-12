@@ -37,7 +37,9 @@ const handlePinEnter = ({
     return false
   } catch (err) {
     setPin('')
-    await showErrorDialog(errorMessages.generalError, intl, {message: err.message})
+    await showErrorDialog(errorMessages.generalError, intl, {
+      message: err.message,
+    })
 
     return true
   }
@@ -84,22 +86,24 @@ const PinRegistrationForm = ({
   )
 }
 
-export default injectIntl((compose(
-  withStateHandlers(
-    {
-      pin: '',
-    },
-    {
-      setPin: (state) => (pin: string) => ({pin}),
-      clearPin: (state) => () => ({pin: ''}),
-    },
-  ),
-  withHandlers({
-    handlePinEnter,
-    handleSetPin: ({setPin}) => (pin) => {
-      setPin(pin)
+export default injectIntl(
+  (compose(
+    withStateHandlers(
+      {
+        pin: '',
+      },
+      {
+        setPin: (state) => (pin: string) => ({pin}),
+        clearPin: (state) => () => ({pin: ''}),
+      },
+    ),
+    withHandlers({
+      handlePinEnter,
+      handleSetPin: ({setPin}) => (pin) => {
+        setPin(pin)
 
-      return Promise.resolve(true)
-    },
-  }),
-)(PinRegistrationForm): ComponentType<ExternalProps>))
+        return Promise.resolve(true)
+      },
+    }),
+  )(PinRegistrationForm): ComponentType<ExternalProps>),
+)

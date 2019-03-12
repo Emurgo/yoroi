@@ -31,7 +31,13 @@ const getTransactionsByDate = (transactions: Dict<TransactionInfo>) =>
     .map((data) => ({data}))
     .value()
 
-const TxHistoryList = ({transactions, navigation, refreshing, onRefresh, intl}) => {
+const TxHistoryList = ({
+  transactions,
+  navigation,
+  refreshing,
+  onRefresh,
+  intl,
+}) => {
   // TODO(ppershing): add proper memoization here
   const groupedTransactions = getTransactionsByDate(transactions)
 

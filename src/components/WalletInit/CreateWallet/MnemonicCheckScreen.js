@@ -30,7 +30,7 @@ const messages = defineMessages({
   instructions: {
     id: 'components.walletinit.createwallet.mnemoniccheckscreen.instructions',
     defaultMessage:
-    '!!!Tap each word in the correct order to verify your recovery phrase',
+      '!!!Tap each word in the correct order to verify your recovery phrase',
   },
   clearButton: {
     id: 'components.walletinit.createwallet.mnemoniccheckscreen.clearButton',
@@ -43,12 +43,14 @@ const messages = defineMessages({
     description: 'some desc',
   },
   mnemonicWordsInputLabel: {
-    id: 'components.walletinit.createwallet.mnemoniccheckscreen.mnemonicWordsInputLabel',
+    id:
+      'components.walletinit.createwallet.mnemoniccheckscreen.mnemonicWordsInputLabel',
     defaultMessage: '!!!Recovery phrase',
     description: 'some desc',
   },
   mnemonicWordsInputInvalidPhrase: {
-    id: 'components.walletinit.createwallet.mnemoniccheckscreen.mnemonicWordsInputInvalidPhrase',
+    id:
+      'components.walletinit.createwallet.mnemoniccheckscreen.mnemonicWordsInputInvalidPhrase',
     defaultMessage: '!!!Recovery phrase does not match',
     description: 'some desc',
   },
@@ -201,43 +203,48 @@ const _mnemonicToPartialPhrase = (mnemonic: string) =>
     .map(([i, j]) => j) // [1,2,0]
     .value()
 
-export default injectIntl((compose(
-  connect(
-    () => ({}),
-    {
-      createWallet,
-    },
-  ),
-  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
-  withStateHandlers(
-    {
-      partialPhrase: CONFIG.DEBUG.PREFILL_FORMS
-        ? _mnemonicToPartialPhrase(CONFIG.DEBUG.MNEMONIC2)
-        : [],
-    },
-    {
-      deselectWord: ({partialPhrase}) => (wordIdx) => ({
-        partialPhrase: partialPhrase.filter((idx) => idx !== wordIdx),
-      }),
-      selectWord: ({partialPhrase}) => (wordIdx) => ({
-        partialPhrase: [...partialPhrase, wordIdx],
-      }),
-      handleClear: (state) => () => ({
-        partialPhrase: [],
-      }),
-    },
-  ),
-  withProps(({navigation}) => {
-    const mnemonic = navigation.getParam('mnemonic')
-    return {
-      mnemonic,
-      words: mnemonic.split(' ').sort(),
-    }
-  }),
-  withHandlers({
-    confirmWalletCreation: ignoreConcurrentAsyncHandler(
-      handleWalletConfirmation,
-      1000,
+export default injectIntl(
+  (compose(
+    connect(
+      () => ({}),
+      {
+        createWallet,
+      },
     ),
-  }),
-)(MnemonicCheckScreen): ComponentType<{|navigation: Navigation, intl: intlShape|}>))
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withStateHandlers(
+      {
+        partialPhrase: CONFIG.DEBUG.PREFILL_FORMS
+          ? _mnemonicToPartialPhrase(CONFIG.DEBUG.MNEMONIC2)
+          : [],
+      },
+      {
+        deselectWord: ({partialPhrase}) => (wordIdx) => ({
+          partialPhrase: partialPhrase.filter((idx) => idx !== wordIdx),
+        }),
+        selectWord: ({partialPhrase}) => (wordIdx) => ({
+          partialPhrase: [...partialPhrase, wordIdx],
+        }),
+        handleClear: (state) => () => ({
+          partialPhrase: [],
+        }),
+      },
+    ),
+    withProps(({navigation}) => {
+      const mnemonic = navigation.getParam('mnemonic')
+      return {
+        mnemonic,
+        words: mnemonic.split(' ').sort(),
+      }
+    }),
+    withHandlers({
+      confirmWalletCreation: ignoreConcurrentAsyncHandler(
+        handleWalletConfirmation,
+        1000,
+      ),
+    }),
+  )(MnemonicCheckScreen): ComponentType<{|
+    navigation: Navigation,
+    intl: intlShape,
+  |}>),
+)

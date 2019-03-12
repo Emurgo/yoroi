@@ -10,7 +10,9 @@ import {Text} from '../UiKit'
 
 import styles from './styles/SettingsItems.style'
 
-const Touchable = (props: {}) => <TouchableOpacity activeOpacity={0.5} {...props} />
+const Touchable = (props: {}) => (
+  <TouchableOpacity activeOpacity={0.5} {...props} />
+)
 
 const NavigateTo = compose(
   withNavigation,

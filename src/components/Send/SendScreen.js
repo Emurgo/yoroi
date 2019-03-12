@@ -143,7 +143,6 @@ const messages = defineMessages({
       'an existing one is still pending',
     description: 'some desc',
   },
-
 })
 
 const getTransactionData = (utxos, address, amount) => {
@@ -179,9 +178,9 @@ const recomputeAll = async ({amount, address, utxos}) => {
 
 const getAmountErrorText = (intl, amountErrors, balanceErrors) => {
   if (amountErrors.invalidAmount != null) {
-    return intl.formatMessage(amountInputErrorMessages[
-      amountErrors.invalidAmount
-    ])
+    return intl.formatMessage(
+      amountInputErrorMessages[amountErrors.invalidAmount],
+    )
   }
   if (balanceErrors.insufficientBalance) {
     return intl.formatMessage(amountInputErrorMessages.insufficientBalance)
@@ -331,7 +330,9 @@ class SendScreen extends Component<Props, State> {
     const {fee} = this.state
     const {intl} = this.props
 
-    const value = fee ? formatAdaWithSymbol(fee) : intl.formatMessage(messages.feeNotAvailable)
+    const value = fee
+      ? formatAdaWithSymbol(fee)
+      : intl.formatMessage(messages.feeNotAvailable)
 
     return (
       <Text small>
@@ -384,7 +385,9 @@ class SendScreen extends Component<Props, State> {
       return (
         <Banner
           error
-          text={intl.formatMessage(messages.errorBannerPendingOutgoingTransaction)}
+          text={intl.formatMessage(
+            messages.errorBannerPendingOutgoingTransaction,
+          )}
         />
       )
     } else {
@@ -449,11 +452,7 @@ class SendScreen extends Component<Props, State> {
           <AmountField
             amount={amount}
             setAmount={this.handleAmountChange}
-            error={getAmountErrorText(
-              intl,
-              amountErrors,
-              balanceErrors,
-            )}
+            error={getAmountErrorText(intl, amountErrors, balanceErrors)}
           />
         </ScrollView>
         <View style={styles.actions}>
@@ -473,21 +472,23 @@ type ExternalProps = {|
   intl: any,
 |}
 
-export default injectIntl((compose(
-  connect(
-    (state) => ({
-      availableAmount: utxoBalanceSelector(state),
-      isFetchingBalance: isFetchingUtxosSelector(state),
-      lastFetchingError: lastUtxosFetchErrorSelector(state),
-      utxos: utxosSelector(state),
-      hasPendingOutgoingTransaction: hasPendingOutgoingTransactionSelector(
-        state,
-      ),
-      isOnline: isOnlineSelector(state),
-    }),
-    {
-      fetchUTXOs,
-    },
-  ),
-  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
-)(SendScreen): ComponentType<ExternalProps>))
+export default injectIntl(
+  (compose(
+    connect(
+      (state) => ({
+        availableAmount: utxoBalanceSelector(state),
+        isFetchingBalance: isFetchingUtxosSelector(state),
+        lastFetchingError: lastUtxosFetchErrorSelector(state),
+        utxos: utxosSelector(state),
+        hasPendingOutgoingTransaction: hasPendingOutgoingTransactionSelector(
+          state,
+        ),
+        isOnline: isOnlineSelector(state),
+      }),
+      {
+        fetchUTXOs,
+      },
+    ),
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+  )(SendScreen): ComponentType<ExternalProps>),
+)

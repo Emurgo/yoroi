@@ -38,7 +38,8 @@ const mnemonicInputErrorsMessages = defineMessages({
     description: 'some desc',
   },
   INVALID_CHECKSUM: {
-    id: 'components.walletinit.restorewallet.restorewalletscreen.invalidchecksum',
+    id:
+      'components.walletinit.restorewallet.restorewalletscreen.invalidchecksum',
     defaultMessage: '!!!Please enter valid mnemonic.',
     description: 'some desc',
   },
@@ -56,7 +57,8 @@ const messages = defineMessages({
     description: 'some desc',
   },
   mnemonicInputLabel: {
-    id: 'components.walletinit.restorewallet.restorewalletscreen.mnemonicInputLabel',
+    id:
+      'components.walletinit.restorewallet.restorewalletscreen.mnemonicInputLabel',
     defaultMessage: '!!!Recovery phrase',
     description: 'some desc',
   },
@@ -74,10 +76,7 @@ const messages = defineMessages({
   },
 })
 
-const _translateInvalidPhraseError = (
-  intl: any,
-  error: InvalidPhraseError,
-) => {
+const _translateInvalidPhraseError = (intl: any, error: InvalidPhraseError) => {
   if (error.code === INVALID_PHRASE_ERROR_CODES.UNKNOWN_WORDS) {
     return intl.formatMessage(mnemonicInputErrorsMessages.UNKNOWN_WORDS, {
       cnt: error.words.length,
@@ -154,26 +153,31 @@ const RestoreWalletScreen = ({
   )
 }
 
-export default injectIntl((compose(
-  connect((state) => ({
-    isKeyboardOpen: isKeyboardOpenSelector(state),
-  })),
-  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
-  withStateHandlers(
-    {
-      phrase: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.MNEMONIC1 : '',
-    },
-    {
-      setPhrase: (state) => (value) => ({phrase: value}),
-    },
-  ),
-  withHandlers({
-    navigateToWalletCredentials: ({navigation, phrase}) => (event) => {
-      navigation.navigate(WALLET_INIT_ROUTES.WALLET_CREDENTIALS, {
-        phrase: cleanMnemonic(phrase),
-      })
-    },
-    translateInvalidPhraseError: ({intl}) => (error) =>
-      _translateInvalidPhraseError(intl, error),
-  }),
-)(RestoreWalletScreen): ComponentType<{navigation: Navigation, intl: intlShape}>))
+export default injectIntl(
+  (compose(
+    connect((state) => ({
+      isKeyboardOpen: isKeyboardOpenSelector(state),
+    })),
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withStateHandlers(
+      {
+        phrase: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.MNEMONIC1 : '',
+      },
+      {
+        setPhrase: (state) => (value) => ({phrase: value}),
+      },
+    ),
+    withHandlers({
+      navigateToWalletCredentials: ({navigation, phrase}) => (event) => {
+        navigation.navigate(WALLET_INIT_ROUTES.WALLET_CREDENTIALS, {
+          phrase: cleanMnemonic(phrase),
+        })
+      },
+      translateInvalidPhraseError: ({intl}) => (error) =>
+        _translateInvalidPhraseError(intl, error),
+    }),
+  )(RestoreWalletScreen): ComponentType<{
+    navigation: Navigation,
+    intl: intlShape,
+  }>),
+)

@@ -22,7 +22,6 @@ import type {Navigation} from '../../types/navigation'
 import type {State} from '../../state'
 import type {ComponentType} from 'react'
 
-
 const messages = defineMessages({
   currentPinInputTitle: {
     id: 'components.settings.changecustompinscreen.CurrentPinInput.title',
@@ -34,17 +33,20 @@ const messages = defineMessages({
     description: 'some desc',
   },
   pinInputTitle: {
-    id: 'components.settings.changecustompinscreen.PinRegistrationForm.PinInput.title',
+    id:
+      'components.settings.changecustompinscreen.PinRegistrationForm.PinInput.title',
     defaultMessage: 'Enter PIN',
     description: 'some desc',
   },
   pinInputSubtitle: {
-    id: 'components.settings.changecustompinscreen.PinRegistrationForm.PinInput.subtitle',
+    id:
+      'components.settings.changecustompinscreen.PinRegistrationForm.PinInput.subtitle',
     defaultMessage: 'Choose new PIN for quick access to wallet.',
     description: 'some desc',
   },
   pinConfirmationTitle: {
-    id: 'components.settings.changecustompinscreen.PinRegistrationForm.PinConfirmationInput.title',
+    id:
+      'components.settings.changecustompinscreen.PinRegistrationForm.PinConfirmationInput.title',
     defaultMessage: 'Repeat PIN',
     description: 'some desc',
   },
@@ -65,7 +67,9 @@ const handleVerifyPin = ({
     isPinValid = await authenticateByCustomPin(currentPinHash, pin)
   } catch (err) {
     setIsCurrentPinVerified(false)
-    await showErrorDialog(errorMessages.generalError, intl, {message: err.message})
+    await showErrorDialog(errorMessages.generalError, intl, {
+      message: err.message,
+    })
     return true
   }
 
@@ -121,19 +125,24 @@ const ChangeCustomPinScreen = ({
   </View>
 )
 
-export default injectIntl((compose(
-  connect(
-    (state: State) => ({
-      currentPinHash: customPinHashSelector(state),
+export default injectIntl(
+  (compose(
+    connect(
+      (state: State) => ({
+        currentPinHash: customPinHashSelector(state),
+      }),
+      {
+        encryptAndStoreCustomPin,
+      },
+    ),
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withState('isCurrentPinVerified', 'setIsCurrentPinVerified', false),
+    withHandlers({
+      handleVerifyPin,
+      handleNewPinEnter,
     }),
-    {
-      encryptAndStoreCustomPin,
-    },
-  ),
-  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
-  withState('isCurrentPinVerified', 'setIsCurrentPinVerified', false),
-  withHandlers({
-    handleVerifyPin,
-    handleNewPinEnter,
-  }),
-)(ChangeCustomPinScreen): ComponentType<{|navigation: Navigation, intl: intlShape|}>))
+  )(ChangeCustomPinScreen): ComponentType<{|
+    navigation: Navigation,
+    intl: intlShape,
+  |}>),
+)

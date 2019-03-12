@@ -95,7 +95,9 @@ const _AssuranceLevel = ({transaction, intl}) => {
   return (
     <View style={[styles.assurance, styles[transaction.assurance]]}>
       <Text adjustsFontSizeToFit style={styles.assuranceText}>
-        {intl.formatMessage(assuranceLevelMsgMap[transaction.assurance]).toLocaleUpperCase()}
+        {intl
+          .formatMessage(assuranceLevelMsgMap[transaction.assurance])
+          .toLocaleUpperCase()}
       </Text>
     </View>
   )
@@ -193,8 +195,10 @@ class TxHistoryListItem extends Component<Props> {
   }
 }
 
-export default injectIntl(compose(
-  connect((state, {id}) => ({
-    transaction: transactionsInfoSelector(state)[id],
-  })),
-)(TxHistoryListItem))
+export default injectIntl(
+  compose(
+    connect((state, {id}) => ({
+      transaction: transactionsInfoSelector(state)[id],
+    })),
+  )(TxHistoryListItem),
+)

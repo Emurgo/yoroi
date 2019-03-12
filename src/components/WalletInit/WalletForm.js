@@ -25,7 +25,6 @@ import type {
   WalletNameValidationErrors,
 } from '../../utils/validators'
 
-
 const messages = defineMessages({
   walletNameInputLabel: {
     id: 'components.walletinit.walletform.walletNameInputLabel',
@@ -56,7 +55,6 @@ const messages = defineMessages({
 
 type FormValidationErrors = PasswordValidationErrors &
   WalletNameValidationErrors
-
 
 type ComponentState = {
   name: string,
@@ -150,9 +148,12 @@ class WalletForm extends PureComponent<Props, ComponentState> {
               onChangeText={this.handleSetName}
               error={getWalletNameError(
                 {
-                  tooLong: intl.formatMessage(globalMessages.walletNameErrorTooLong),
+                  tooLong: intl.formatMessage(
+                    globalMessages.walletNameErrorTooLong,
+                  ),
                   nameAlreadyTaken: intl.formatMessage(
-                    globalMessages.walletNameErrorNameAlreadyTaken),
+                    globalMessages.walletNameErrorNameAlreadyTaken,
+                  ),
                 },
                 validationErrors,
               )}
@@ -192,15 +193,17 @@ class WalletForm extends PureComponent<Props, ComponentState> {
   }
 }
 
-export default injectIntl(compose(
-  connect(
-    (state) => ({
-      walletNames: walletNamesSelector(state),
+export default injectIntl(
+  compose(
+    connect(
+      (state) => ({
+        walletNames: walletNamesSelector(state),
+      }),
+      {validateWalletName},
+    ),
+    withHandlers({
+      validateWalletName: ({walletNames}) => (walletName) =>
+        validateWalletName(walletName, null, walletNames),
     }),
-    {validateWalletName},
-  ),
-  withHandlers({
-    validateWalletName: ({walletNames}) => (walletName) =>
-      validateWalletName(walletName, null, walletNames),
-  }),
-)(WalletForm))
+  )(WalletForm),
+)

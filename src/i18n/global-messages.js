@@ -67,7 +67,8 @@ export const errorMessages = {
     },
     message: {
       id: 'global.actions.dialogs.biometricsIsTurnedOff.message',
-      defaultMessage: '!!!It seems that you turned off biometrics, please turn it on',
+      defaultMessage:
+        '!!!It seems that you turned off biometrics, please turn it on',
     },
   }),
   walletKeysInvalidated: defineMessages({
@@ -153,7 +154,8 @@ export const errorMessages = {
     },
     message: {
       id: 'global.actions.dialogs.generalError.message',
-      defaultMessage: '!!!Requested operation failed. This is all we know: {message}',
+      defaultMessage:
+        '!!!Requested operation failed. This is all we know: {message}',
     },
   }),
 }

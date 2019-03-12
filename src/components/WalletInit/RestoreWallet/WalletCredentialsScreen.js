@@ -36,20 +36,22 @@ const WalletCredentialsScreen = ({
   navigateToWallet,
 }: Props) => <WalletForm onSubmit={navigateToWallet} />
 
-export default injectIntl(compose(
-  connect(
-    () => ({}),
-    {createWallet},
-  ),
-  withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
-  withHandlers({
-    navigateToWallet: ignoreConcurrentAsyncHandler(
-      ({navigation, createWallet}) => async ({name, password}) => {
-        const phrase = navigation.getParam('phrase')
-        await createWallet(name, phrase, password)
-        navigation.navigate(ROOT_ROUTES.WALLET)
-      },
-      1000,
+export default injectIntl(
+  compose(
+    connect(
+      () => ({}),
+      {createWallet},
     ),
-  }),
-)(WalletCredentialsScreen))
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withHandlers({
+      navigateToWallet: ignoreConcurrentAsyncHandler(
+        ({navigation, createWallet}) => async ({name, password}) => {
+          const phrase = navigation.getParam('phrase')
+          await createWallet(name, phrase, password)
+          navigation.navigate(ROOT_ROUTES.WALLET)
+        },
+        1000,
+      ),
+    }),
+  )(WalletCredentialsScreen),
+)

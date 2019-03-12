@@ -99,7 +99,10 @@ export class Wallet {
   }
 
   async enableEasyConfirmation(masterPassword: string, intl: any) {
-    const decryptedMasterKey = await this.getDecryptedMasterKey(masterPassword, intl)
+    const decryptedMasterKey = await this.getDecryptedMasterKey(
+      masterPassword,
+      intl,
+    )
 
     await this.encryptAndSaveMasterKey('BIOMETRICS', decryptedMasterKey)
     await this.encryptAndSaveMasterKey('SYSTEM_PIN', decryptedMasterKey)
