@@ -13,7 +13,6 @@ import {StatusBar} from '../UiKit'
 
 import styles from './styles/CustomPinScreen.style'
 
-import type {State} from '../../state'
 import type {ComponentType} from 'react'
 import type {Navigation} from '../../types/navigation'
 
@@ -21,22 +20,22 @@ const messages = defineMessages({
   title: {
     id: 'components.firstrun.custompinscreen.title',
     defaultMessage: '!!!Set PIN',
-    description: "some desc",
+    description: 'some desc',
   },
   pinInputTitle: {
     id: 'components.firstrun.custompinscreen.pinInputTitle',
     defaultMessage: '!!!Enter the PIN',
-    description: "some desc",
+    description: 'some desc',
   },
   pinInputSubtitle: {
     id: 'components.firstrun.custompinscreen.pinInputSubtitle',
     defaultMessage: '!!!Choose new PIN for quick access to wallet.',
-    description: "some desc",
+    description: 'some desc',
   },
   pinConfirmationTitle: {
     id: 'components.firstrun.custompinscreen.pinConfirmationTitle',
     defaultMessage: '!!!Repeat PIN',
-    description: "some desc",
+    description: 'some desc',
   },
 })
 

@@ -28,78 +28,75 @@ import type {ComponentType} from 'react'
 import {TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
 
 const txTypeMessages = defineMessages({
-    SENT: {
-      id: 'components.txhistory.txdetails.txTypeSent',
-      defaultMessage: '!!!Sent funds',
-      description: "some desc",
-    },
-    RECEIVED: {
-      id: 'components.txhistory.txdetails.txTypeReceived',
-      defaultMessage: '!!!Received funds',
-      description: "some desc",
-    },
-    SELF: {
-      id: 'components.txhistory.txdetails.txTypeSelf',
-      defaultMessage: '!!!Intrawallet transaction',
-      description: "some desc",
-    },
-    MULTI: {
-      id: 'components.txhistory.txdetails.txTypeMulti',
-      defaultMessage: '!!!Multi-party transaction',
-      description: "some desc",
-    },
+  SENT: {
+    id: 'components.txhistory.txdetails.txTypeSent',
+    defaultMessage: '!!!Sent funds',
+  },
+  RECEIVED: {
+    id: 'components.txhistory.txdetails.txTypeReceived',
+    defaultMessage: '!!!Received funds',
+  },
+  SELF: {
+    id: 'components.txhistory.txdetails.txTypeSelf',
+    defaultMessage: '!!!Intrawallet transaction',
+    description: 'some desc',
+  },
+  MULTI: {
+    id: 'components.txhistory.txdetails.txTypeMulti',
+    defaultMessage: '!!!Multi-party transaction',
+    description: 'some desc',
+  },
 })
 
 const messages = defineMessages({
   addressPrefixReceive: {
     id: 'components.txhistory.txdetails.addressPrefixReceive',
     defaultMessage: '!!!/{idx}',
-    description: "some desc",
+    description: 'some desc',
   },
   addressPrefixChange: {
     id: 'components.txhistory.txdetails.addressPrefixChange',
     defaultMessage: '!!!/change',
-    description: "some desc",
+    description: 'some desc',
   },
   addressPrefixNotMine: {
     id: 'components.txhistory.txdetails.addressPrefixNotMine',
     defaultMessage: '!!!not mine',
-    description: "some desc",
+    description: 'some desc',
   },
   fee: {
     id: 'components.txhistory.txdetails.fee',
     defaultMessage: '!!!Fee: ',
-    description: "some desc",
+    description: 'some desc',
   },
   fromAddresses: {
     id: 'components.txhistory.txdetails.fromAddresses',
     defaultMessage: '!!!From Addresses',
-    description: "some desc",
+    description: 'some desc',
   },
   toAddresses: {
     id: 'components.txhistory.txdetails.toAddresses',
     defaultMessage: '!!!To Addresses',
-    description: "some desc",
+    description: 'some desc',
   },
   transactionId: {
     id: 'components.txhistory.txdetails.transactionId',
     defaultMessage: '!!!Transaction ID',
-    description: "some desc",
+    description: 'some desc',
   },
   txAssuranceLevel: {
     id: 'components.txhistory.txdetails.txAssuranceLevel',
     defaultMessage: '!!!Transaction assurance level',
-    description: "some desc",
+    description: 'some desc',
   },
   confirmations: {
     id: 'components.txhistory.txdetails.confirmations',
     defaultMessage: '!!!{cnt} {cnt, plural, one {CONFIRMATION} other {CONFIRMATIONS}}',
-    description: "some desc",
+    description: 'some desc',
   },
   omittedCount: {
     id: 'components.txhistory.txdetails.omittedCount',
     defaultMessage: '!!!+ {cnt} omitted',
-    description: "some desc",
   },
 })
 
@@ -225,7 +222,6 @@ const TxDetails = ({
     internalAddressIndex,
     externalAddressIndex,
   )
-  console.log('ddddir', txTypeMessages[transaction.direction], transaction.direction)
 
   return (
     <View style={styles.container}>
@@ -287,14 +283,19 @@ const TxDetails = ({
   )
 }
 
-export default injectIntl(compose(
-  connect((state: State, {navigation}) => ({
-    transaction: transactionsInfoSelector(state)[navigation.getParam('id')],
-    internalAddressIndex: internalAddressIndexSelector(state),
-    externalAddressIndex: externalAddressIndexSelector(state),
-  })),
-  withNavigationTitle(({transaction}) =>
-    formatDateToSeconds(transaction.submittedAt),
+export default injectIntl((compose(
+  connect((state: State, {navigation}) => {
+    const txId = navigation.getParam('id')
+    const txInfo = txId ? transactionsInfoSelector(state)[txId] : undefined
+    return ({
+      transaction: txInfo,
+      internalAddressIndex: internalAddressIndexSelector(state),
+      externalAddressIndex: externalAddressIndexSelector(state),
+    })
+  }),
+  withNavigationTitle(({transaction}) => {
+    return transaction ? formatDateToSeconds(transaction.submittedAt) : ''
+  },
   ),
   withStateHandlers(
     {addressDetail: null},
@@ -306,7 +307,9 @@ export default injectIntl(compose(
   ),
   withHandlers({
     openInExplorer: ({transaction}) => () => {
-      Linking.openURL(CONFIG.CARDANO.EXPLORER_URL_FOR_TX(transaction.id))
+      if (transaction) {
+        Linking.openURL(CONFIG.CARDANO.EXPLORER_URL_FOR_TX(transaction.id))
+      }
     },
     showModalForAddress: ({setAddressDetail}) => (address) => {
       setAddressDetail(address)
@@ -315,4 +318,4 @@ export default injectIntl(compose(
       setAddressDetail(null)
     },
   }),
-)(TxDetails): ComponentType<{|navigation: Navigation|}>)
+)(TxDetails): ComponentType<{|navigation: Navigation|}>))

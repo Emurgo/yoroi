@@ -34,7 +34,7 @@ import {formatAdaWithText, formatAdaWithSymbol} from '../../utils/format'
 import {parseAdaDecimal} from '../../utils/parsing'
 import walletManager from '../../crypto/wallet'
 import {validateAmount, validateAddressAsync} from '../../utils/validators'
-import AmountField, {messages as amountFieldMessages} from './AmountField'
+import AmountField from './AmountField'
 import UtxoAutoRefresher from './UtxoAutoRefresher'
 import {InsufficientFunds} from '../../crypto/errors'
 
@@ -49,34 +49,33 @@ import type {
   BalanceValidationErrors,
 } from '../../utils/validators'
 import type {ComponentType} from 'react'
-import {any} from 'prop-types'
 
 const amountInputErrorMessages = defineMessages({
-    INVALID_AMOUNT: {
-      id: 'components.send.sendscreen.amountInput.error.INVALID_AMOUNT',
-      defaultMessage: '!!!Please enter valid amount',
-      description: 'some desc',
-    },
-    TOO_MANY_DECIMAL_PLACES: {
-      id: 'components.send.sendscreen.amountInput.error.TOO_MANY_DECIMAL_PLACES',
-      defaultMessage: '!!!Please enter valid amount',
-      description: 'some desc',
-    },
-    TOO_LARGE: {
-      id: 'components.send.sendscreen.amountInput.error.TOO_LARGE',
-      defaultMessage: '!!!Amount too large',
-      description: 'some desc',
-    },
-    NEGATIVE: {
-      id: 'components.send.sendscreen.amountInput.error.NEGATIVE',
-      defaultMessage: '!!!Amount must be positive',
-      description: 'some desc',
+  INVALID_AMOUNT: {
+    id: 'components.send.sendscreen.amountInput.error.INVALID_AMOUNT',
+    defaultMessage: '!!!Please enter valid amount',
+    description: 'some desc',
+  },
+  TOO_MANY_DECIMAL_PLACES: {
+    id: 'components.send.sendscreen.amountInput.error.TOO_MANY_DECIMAL_PLACES',
+    defaultMessage: '!!!Please enter valid amount',
+    description: 'some desc',
+  },
+  TOO_LARGE: {
+    id: 'components.send.sendscreen.amountInput.error.TOO_LARGE',
+    defaultMessage: '!!!Amount too large',
+    description: 'some desc',
+  },
+  NEGATIVE: {
+    id: 'components.send.sendscreen.amountInput.error.NEGATIVE',
+    defaultMessage: '!!!Amount must be positive',
+    description: 'some desc',
   },
   insufficientBalance: {
     id: 'components.send.sendscreen.amountInput.error.insufficientBalance',
     defaultMessage: '!!!Not enough money to make this transaction',
     description: 'some desc',
-  }
+  },
 })
 
 const messages = defineMessages({

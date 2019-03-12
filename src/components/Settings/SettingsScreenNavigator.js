@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react'
 import {
   createStackNavigator,
@@ -74,6 +75,7 @@ const SettingsScreenNavigator = createStackNavigator(
     },
     [SETTINGS_ROUTES.REMOVE_WALLET]: RemoveWalletScreen,
     [SETTINGS_ROUTES.CHANGE_LANGUAGE]: {
+      // $FlowFixMe
       screen: LanguagePickerScreen,
       navigationOptions: {
         header: null,

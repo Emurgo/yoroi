@@ -18,28 +18,28 @@ import {acceptAndSaveTos, setSystemAuth} from '../../actions'
 import {canBiometricEncryptionBeEnabled} from '../../helpers/deviceSettings'
 
 import styles from './styles/AcceptTermsOfServiceScreen.styles'
-import globalMessages from '../../i18n/global-messages';
+import globalMessages from '../../i18n/global-messages'
 
 const messages = defineMessages({
   title: {
     id: 'components.firstrun.acepttermsofservicescreen.title',
     defaultMessage: '!!!Terms of Service Agreement',
-    description: "some desc",
+    description: 'some desc',
   },
   aggreeClause: {
     id: 'components.firstrun.acepttermsofservicescreen.aggreeClause',
     defaultMessage: '!!!I agree with terms of service',
-    description: "some desc",
+    description: 'some desc',
   },
   continueButton: {
     id: 'components.firstrun.acepttermsofservicescreen.continueButton',
     defaultMessage: '!!!Accept',
-    description: "some desc",
+    description: 'some desc',
   },
   savingConsentModalTitle: {
     id: 'components.firstrun.acepttermsofservicescreen.savingConsentModalTitle',
     defaultMessage: '!!!Initializing',
-    description: "some desc",
+    description: 'some desc',
   },
 
 })

@@ -141,8 +141,8 @@ export const installationIdSelector = (state: State): ?string =>
 export const tosSelector = (state: State): boolean =>
   state.appSettings.acceptedTos
 
-export const languageSelector = (state: State): ?string =>
-  state.appSettings.languageCode
+export const languageSelector = (state: State): string =>
+  state.appSettings.languageCode || ''
 
 export const isKeyboardOpenSelector = (state: State): boolean =>
   state.isKeyboardOpen

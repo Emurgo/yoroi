@@ -26,57 +26,55 @@ const messages = defineMessages({
   fee: {
     id: 'components.txhistory.txhistorylistitem.fee',
     defaultMessage: '!!!Fee',
-    description: "some desc",
   },
   transactionTypeSent: {
     id: 'components.txhistory.txhistorylistitem.transactionTypeSent',
     defaultMessage: '!!!ADA sent',
-    description: "some desc",
+    description: 'some desc',
   },
   transactionTypeReceived: {
     id: 'components.txhistory.txhistorylistitem.transactionTypeReceived',
     defaultMessage: '!!!ADA received',
-    description: "some desc",
   },
   transactionTypeSelf: {
     id: 'components.txhistory.txhistorylistitem.transactionTypeSelf',
     defaultMessage: '!!!Intrawallet',
-    description: "some desc",
+    description: 'some desc',
   },
   transactionTypeMulti: {
     id: 'components.txhistory.txhistorylistitem.transactionTypeMulti',
     defaultMessage: '!!!Multiparty',
-    description: "some desc",
+    description: 'some desc',
   },
   assuranceLevelHeader: {
     id: 'components.txhistory.txhistorylistitem.assuranceLevelHeader',
     defaultMessage: '!!!Assurance level:',
-    description: "some desc",
+    description: 'some desc',
   },
   assuranceLevelLow: {
     id: 'components.txhistory.txhistorylistitem.assuranceLevelLow',
     defaultMessage: '!!!Low',
-    description: "some desc",
+    description: 'some desc',
   },
   assuranceLevelMedium: {
     id: 'components.txhistory.txhistorylistitem.assuranceLevelMedium',
     defaultMessage: '!!!Medium',
-    description: "some desc",
+    description: 'some desc',
   },
   assuranceLevelHigh: {
     id: 'components.txhistory.txhistorylistitem.assuranceLevelHigh',
     defaultMessage: '!!!High',
-    description: "some desc",
+    description: 'some desc',
   },
   assuranceLevelPending: {
     id: 'components.txhistory.txhistorylistitem.assuranceLevelPending',
     defaultMessage: '!!!Pending',
-    description: "some desc",
+    description: 'some desc',
   },
   assuranceLevelFailed: {
     id: 'components.txhistory.txhistorylistitem.assuranceLevelFailed',
     defaultMessage: '!!!Failed',
-    description: "some desc",
+    description: 'some desc',
   },
 })
 
@@ -88,11 +86,11 @@ type Props = {
 
 const _AssuranceLevel = ({transaction, intl}) => {
   const assuranceLevelMsgMap = {
-    'LOW': messages.assuranceLevelLow,
-    'MEDIUM': messages.assuranceLevelMedium,
-    'HIGH': messages.assuranceLevelHigh,
-    'PENDING': messages.assuranceLevelPending,
-    'FAILED': messages.assuranceLevelFailed,
+    LOW: messages.assuranceLevelLow,
+    MEDIUM: messages.assuranceLevelMedium,
+    HIGH: messages.assuranceLevelHigh,
+    PENDING: messages.assuranceLevelPending,
+    FAILED: messages.assuranceLevelFailed,
   }
   return (
     <View style={[styles.assurance, styles[transaction.assurance]]}>
@@ -147,12 +145,13 @@ class TxHistoryListItem extends Component<Props> {
     const isPending = transaction.assurance === 'PENDING'
     const assuranceContainerStyle = styles[`${transaction.assurance}_CONTAINER`]
     const txDirectionMsgMap = {
-      'SENT': messages.transactionTypeSent,
-      'RECEIVED': messages.transactionTypeReceived,
-      'SELF': messages.transactionTypeSelf,
-      'MULTI': messages.transactionTypeMulti,
+      SENT: messages.transactionTypeSent,
+      RECEIVED: messages.transactionTypeReceived,
+      SELF: messages.transactionTypeSelf,
+      MULTI: messages.transactionTypeMulti,
     }
-    console.log('tx submittt', transaction)
+    const txFee = transaction.fee
+    const feeInAda = txFee ? formatAda(txFee) : '-'
 
     return (
       <TouchableOpacity onPress={this.showDetails} activeOpacity={0.5}>
@@ -161,7 +160,7 @@ class TxHistoryListItem extends Component<Props> {
             <Text small>{formatTimeToSeconds(transaction.submittedAt)}</Text>
             {transaction.fee && (
               <Text secondary={!isPending}>
-                {`${intl.formatMessage(messages.fee)} ${formatAda(transaction.fee)}`}
+                {`${intl.formatMessage(messages.fee)} ${feeInAda}`}
               </Text>
             )}
             <Text secondary={!isPending}>

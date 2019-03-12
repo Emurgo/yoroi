@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import {withHandlers} from 'recompose'
 import {ScrollView, StyleSheet, Switch} from 'react-native'
 import {NavigationEvents} from 'react-navigation'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import {SETTINGS_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
@@ -59,17 +59,16 @@ const messages = defineMessages({
   changePin: {
     id: 'components.settings.applicationsettingsscreen.changePin',
     defaultMessage: 'Change PIN',
-    description: "some desc",
   },
   biometricsSignIn: {
     id: 'components.settings.applicationsettingsscreen.biometricsSignIn',
     defaultMessage: '!!!Sign in with your biometrics',
-    description: "some desc",
+    description: 'some desc',
   },
   crashReporting: {
     id: 'components.settings.applicationsettingsscreen.crashReporting',
     defaultMessage: '!!!Crash reporting',
-    description: "some desc",
+    description: 'some desc',
   },
   crashReportingText: {
     id: 'components.settings.applicationsettingsscreen.crashReportingText',
@@ -243,4 +242,4 @@ export default injectIntl((compose(
       setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value)
     },
   }),
-)(ApplicationSettingsScreen): ComponentType<{navigation: Navigation}>))
+)(ApplicationSettingsScreen): ComponentType<{navigation: Navigation, intl: intlShape}>))

@@ -7,7 +7,7 @@ module.exports = {
   settings: {
     'import/resolver': {
       node: {
-        extensions: ['.js', '.android.js', '.ios.js'],
+        extensions: ['.js', '.android.js', '.ios.js', '.json'],
       },
     },
   },
@@ -17,7 +17,7 @@ module.exports = {
     'max-len': [
       1,
       {
-        code: 80,
+        code: 100,
         tabWidth: 2,
         ignoreStrings: false,
         ignoreTemplateLiterals: false,
@@ -27,6 +27,7 @@ module.exports = {
     'react/no-access-state-in-setstate': 2,
     'react/no-multi-comp': 0,
     'no-multi-str': 0,
+    'no-lone-blocks': 0,
     'react/no-typos': 2,
     'react/sort-comp': 1,
     'no-duplicate-imports': 0,

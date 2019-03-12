@@ -11,7 +11,7 @@ const messages = defineMessages({
   offline: {
     id: 'components.uikit.offlinebanner.offline',
     defaultMessage: '!!!You are offline. Please check settings on your device.',
-  }
+  },
 })
 
 const OfflineBanner = ({isOnline, offlineTranslation, intl}) =>

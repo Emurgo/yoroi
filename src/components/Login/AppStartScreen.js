@@ -27,43 +27,42 @@ import {showErrorDialog} from '../../actions'
 import {errorMessages} from '../../i18n/global-messages'
 
 
-import type {State} from '../../state'
-
 const messages = defineMessages({
   loginButton: {
     id: 'components.login.appstartscreen.loginButton',
     defaultMessage: '!!!Login',
-    description: "some desc",
+    description: 'some desc',
   },
 })
 
 const AppStartScreen = ({navigateLogin, intl, locale}) => {
   return (
-  <SafeAreaView style={styles.safeAreaView}>
-    <StatusBar type="dark" />
+    <SafeAreaView style={styles.safeAreaView}>
+      <StatusBar type="dark" />
 
-    <ScreenBackground>
-      <View style={styles.container}>
-        <View style={styles.content}>
-          <WalletDescription />
+      <ScreenBackground>
+        <View style={styles.container}>
+          <View style={styles.content}>
+            <WalletDescription />
+          </View>
+
+          <Button
+            outline
+            onPress={navigateLogin}
+            title={intl.formatMessage(messages.loginButton)}
+          />
         </View>
-
-        <Button
-          outline
-          onPress={navigateLogin}
-          title={intl.formatMessage(messages.loginButton)}
-        />
-      </View>
-    </ScreenBackground>
-  </SafeAreaView>
-)}
+      </ScreenBackground>
+    </SafeAreaView>
+  )
+}
 
 export default injectIntl(compose(
   connect((state) => ({
     installationId: installationIdSelector(state),
     customPinHash: customPinHashSelector(state),
     isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
-    locale: state.appSettings.languageCode
+    locale: state.appSettings.languageCode,
   })),
   withHandlers({
     navigateLogin: ({

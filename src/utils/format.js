@@ -7,12 +7,12 @@ import utfSymbols from './utfSymbols'
 const messages = defineMessages({
   today: {
     id: 'utils.format.today',
-    defaultMessage: '!!!Today'
+    defaultMessage: '!!!Today',
   },
   yesterday: {
     id: 'utils.format.yesterday',
     defaultMessage: '!!!Yesterday',
-  }
+  },
 })
 
 // 1 ADA = 1 000 000 micro ada
@@ -50,7 +50,6 @@ export const formatAdaFractional = (amount: BigNumber) => {
 }
 
 export const formatTimeToSeconds = (ts: string | moment) => {
-  console.log('ftosecond', moment(0))
   return moment(ts).format(moment(0)._locale._format.timeToSeconds)
 }
 

@@ -6,6 +6,9 @@ import {withHandlers} from 'recompose'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 
+import type {ComponentType} from 'react'
+import type {NavigationScreenProp, NavigationState} from 'react-navigation'
+
 import languageActions from '../../actions/language'
 import LanguagePicker from '../Common/LanguagePicker'
 import {languageSelector} from '../../selectors'
@@ -25,7 +28,7 @@ const LanguagePickerScreen = ({
   </SafeAreaView>
 )
 
-export default compose(
+export default (compose(
   connect(
     (state, {navigation}) => ({
       languageCode: languageSelector(state),
@@ -43,4 +46,6 @@ export default compose(
       navigation.goBack(null)
     },
   }),
-)(LanguagePickerScreen)
+)(LanguagePickerScreen): ComponentType<{
+  navigation: NavigationScreenProp<NavigationState>
+}>)

@@ -1,6 +1,5 @@
 // @flow
 import React from 'react'
-import {compose} from 'redux'
 import {View, Image, FlatList} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 
@@ -19,27 +18,27 @@ const messages = defineMessages({
   english: {
     id: 'components.common.languagepicker.english',
     defaultMessage: 'English',
-    description: "some desc",
+    description: 'some desc',
   },
   japanese: {
     id: 'components.common.languagepicker.japanese',
     defaultMessage: '日本語',
-    description: "some desc",
+    description: 'some desc',
   },
   korean: {
     id: 'components.common.languagepicker.korean',
     defaultMessage: '한국어',
-    description: "some desc",
+    description: 'some desc',
   },
   russian: {
     id: 'components.common.languagepicker.russian',
     defaultMessage: 'Russian',
-    description: "some desc",
+    description: 'some desc',
   },
   continueButton: {
     id: 'components.common.languagepicker.continueButton',
     defaultMessage: '!!!Choose language',
-    description: "some desc",
+    description: 'some desc',
   },
 })
 
@@ -93,29 +92,30 @@ export const LanguagePicker = ({
   intl,
 }: Props) => {
   return (
-  <View style={styles.container}>
-    <StatusBar type="light" />
+    <View style={styles.container}>
+      <StatusBar type="light" />
 
-    <FlatList
-      style={styles.list}
-      contentContainerStyle={styles.listContainer}
-      data={supportedLanguages(intl)}
-      keyExtractor={({code}) => code}
-      extraData={languageCode}
-      renderItem={({item: {label, code, icon}}) => (
-        <LanguageListItem
-          label={label}
-          iconSource={icon}
-          selectLanguage={changeLanguage}
-          isSelected={languageCode === code}
-          languageCode={code}
-        />
-      )}
-    />
+      <FlatList
+        style={styles.list}
+        contentContainerStyle={styles.listContainer}
+        data={supportedLanguages(intl)}
+        keyExtractor={({code}) => code}
+        extraData={languageCode}
+        renderItem={({item: {label, code, icon}}) => (
+          <LanguageListItem
+            label={label}
+            iconSource={icon}
+            selectLanguage={changeLanguage}
+            isSelected={languageCode === code}
+            languageCode={code}
+          />
+        )}
+      />
 
-    <Image source={selectLanguageImage} style={styles.image} />
-    <Button onPress={handleContinue} title={intl.formatMessage(messages.continueButton)} />
-  </View>
-)}
+      <Image source={selectLanguageImage} style={styles.image} />
+      <Button onPress={handleContinue} title={intl.formatMessage(messages.continueButton)} />
+    </View>
+  )
+}
 
 export default injectIntl(LanguagePicker)

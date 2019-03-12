@@ -354,7 +354,7 @@ export const removeCurrentWallet = () => async (dispatch: Dispatch<any>) => {
 type DialogOptions = {|
   title: string,
   message: string,
-  yesButton: string,
+  yesButton?: string,
   noButton?: string,
 |}
 

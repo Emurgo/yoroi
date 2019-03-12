@@ -6,7 +6,7 @@ import {View, ScrollView} from 'react-native'
 import {SafeAreaView, NavigationEvents} from 'react-navigation'
 import _ from 'lodash'
 import {withHandlers} from 'recompose'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import {Button, ValidatedTextInput, StatusBar} from '../UiKit'
 import {validatePassword} from '../../utils/validators'
@@ -19,7 +19,6 @@ import {WrongPassword} from '../../crypto/errors'
 
 import styles from './styles/ChangePasswordScreen.style'
 
-import type {State} from '../../state'
 import type {PasswordValidationErrors} from '../../utils/validators'
 import type {Navigation} from '../../types/navigation'
 
@@ -27,32 +26,31 @@ const messages = defineMessages({
   title: {
     id: 'components.settings.changepasswordscreen.title',
     defaultMessage: 'Change wallet password',
-    description: "some desc",
   },
   oldPasswordInputLabel: {
     id: 'components.settings.changepasswordscreen.oldPasswordInputLabel',
     defaultMessage: 'Current password',
-    description: "some desc",
+    description: 'some desc',
   },
   newPasswordInputLabel: {
     id: 'components.settings.changepasswordscreen.newPasswordInputLabel',
     defaultMessage: 'New password',
-    description: "some desc",
+    description: 'some desc',
   },
   repeatPasswordInputLabel: {
     id: 'components.settings.changepasswordscreen.repeatPasswordInputLabel',
     defaultMessage: 'Repeat new password',
-    description: "some desc",
+    description: 'some desc',
   },
   repeatPasswordInputNotMatchError: {
     id: 'components.settings.changepasswordscreen.repeatPasswordInputNotMatchError',
     defaultMessage: 'Passwords do not match',
-    description: "some desc",
+    description: 'some desc',
   },
   continueButton: {
     id: 'components.settings.changepasswordscreen.continueButton',
     defaultMessage: 'Change password',
-    description: "some desc",
+    description: 'some desc',
   },
 })
 
@@ -83,6 +81,7 @@ type ComponentState = {
 type Props = {
   onSubmit: (string, string) => any,
   navigation: Navigation,
+  intl: intlShape,
 }
 
 class ChangePasswordScreen extends PureComponent<Props, ComponentState> {

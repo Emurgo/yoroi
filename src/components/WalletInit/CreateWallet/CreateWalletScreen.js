@@ -4,7 +4,6 @@ import React from 'react'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
-import Markdown from 'react-native-easy-markdown'
 
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {generateAdaMnemonic} from '../../../crypto/util'
@@ -12,15 +11,13 @@ import {CONFIG} from '../../../config'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import WalletForm from '../WalletForm'
 
-import type {State} from '../../../state'
-
 import MnemonicExplanationModal from './MnemonicExplanationModal'
 
 const messages = defineMessages({
   title: {
     id: 'components.walletinit.createwallet.createwalletscreen.title',
     defaultMessage: '!!!Create a new wallet',
-    description: "some desc",
+    description: 'some desc',
   },
 })
 

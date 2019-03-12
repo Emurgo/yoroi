@@ -22,7 +22,6 @@ import {isKeyboardOpenSelector} from '../../../selectors'
 
 import styles from './styles/RestoreWalletScreen.style'
 
-import type {State} from '../../../state'
 import type {InvalidPhraseError} from '../../../utils/validators'
 import type {ComponentType} from 'react'
 import type {Navigation} from '../../../types/navigation'
@@ -31,22 +30,22 @@ const mnemonicInputErrorsMessages = defineMessages({
   TOO_LONG: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.toolong',
     defaultMessage: '!!!Phrase is too long. ',
-    description: "some desc",
+    description: 'some desc',
   },
   TOO_SHORT: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.tooshort',
     defaultMessage: '!!!Phrase is too short. ',
-    description: "some desc",
+    description: 'some desc',
   },
   INVALID_CHECKSUM: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.invalidchecksum',
     defaultMessage: '!!!Please enter valid mnemonic.',
-    description: "some desc",
+    description: 'some desc',
   },
   UNKNOWN_WORDS: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.unknowwords',
     defaultMessage: '!!!{wordlist} {cnt, plural, one {is} other {are}} invalid',
-    description: "some desc",
+    description: 'some desc',
   },
 })
 
@@ -54,24 +53,24 @@ const messages = defineMessages({
   title: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.title',
     defaultMessage: '!!!Restore wallet',
-    description: "some desc",
+    description: 'some desc',
   },
   mnemonicInputLabel: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.mnemonicInputLabel',
     defaultMessage: '!!!Recovery phrase',
-    description: "some desc",
+    description: 'some desc',
   },
   restoreButton: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.restoreButton',
     defaultMessage: '!!!Restore wallet',
-    description: "some desc",
+    description: 'some desc',
   },
   instructions: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.instructions',
     defaultMessage:
       '!!!To restore your wallet please provide the recovery phrase you ' +
       'received when you created your wallet for the first time.',
-    description: "some desc",
+    description: 'some desc',
   },
 })
 
@@ -82,7 +81,7 @@ const _translateInvalidPhraseError = (
   if (error.code === INVALID_PHRASE_ERROR_CODES.UNKNOWN_WORDS) {
     return intl.formatMessage(mnemonicInputErrorsMessages.UNKNOWN_WORDS, {
       cnt: error.words.length,
-      wordlist: error.words.map((word) => `'${word}'`).join(', ')
+      wordlist: error.words.map((word) => `'${word}'`).join(', '),
     })
   } else {
     return intl.formatMessage(mnemonicInputErrorsMessages[error.code])

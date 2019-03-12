@@ -23,27 +23,26 @@ const messages = defineMessages({
   notNowButton: {
     id: 'components.settings.biometricslinkscreen.notNowButton',
     defaultMessage: '!!!Not now',
-    description: "some desc",
   },
   linkButton: {
     id: 'components.settings.biometricslinkscreen.linkButton',
     defaultMessage: '!!!Link',
-    description: "some desc",
+    description: 'some desc',
   },
   heading: {
     id: 'components.settings.biometricslinkscreen.heading',
     defaultMessage: '!!!Use your fingerprint',
-    description: "some desc",
+    description: 'some desc',
   },
   subHeading1: {
     id: 'components.settings.biometricslinkscreen.subHeading1',
     defaultMessage: '!!!for faster, easier access',
-    description: "some desc",
+    description: 'some desc',
   },
   subHeading2: {
     id: 'components.settings.biometricslinkscreen.subHeading2',
     defaultMessage: '!!!to your Yoroi wallet',
-    description: "some desc",
+    description: 'some desc',
   },
 })
 
@@ -60,7 +59,8 @@ const BiometricsLinkScreen = ({
 }: Props) => (
   <FingerprintScreenBase
     headings={[intl.formatMessage(messages.heading)]}
-    subHeadings={[intl.formatMessage(messages.subHeading1), intl.formatMessage(messages.subHeading2)]}
+    subHeadings={[intl.formatMessage(messages.subHeading1),
+      intl.formatMessage(messages.subHeading2)]}
     buttons={[
       <Button
         key={'cancel'}

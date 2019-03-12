@@ -1,7 +1,6 @@
 // @flow
 
 import React from 'react'
-import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {SafeAreaView} from 'react-navigation'
 import {ScrollView} from 'react-native'
@@ -17,7 +16,7 @@ const messages = defineMessages({
   title: {
     id: 'components.settings.termsofservicescreen.title',
     defaultMessage: '!!!Terms of Service Agreement',
-    description: "some desc",
+    description: 'some desc',
   },
 })
 

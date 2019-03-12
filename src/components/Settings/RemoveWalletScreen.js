@@ -21,41 +21,41 @@ const messages = defineMessages({
   title: {
     id: 'components.settings.removewalletscreen.title',
     defaultMessage: 'Remove wallet',
-    description: "some desc",
+    description: 'some desc',
   },
   descriptionParagraph1: {
     id: 'components.settings.removewalletscreen.descriptionParagraph1',
     defaultMessage:
       'If you really wish to permanently delete the wallet ' +
       'make sure you have written down the mnemonic.',
-    description: "some desc",
+    description: 'some desc',
   },
   descriptionParagraph2: {
     id: 'components.settings.removewalletscreen.descriptionParagraph2',
     defaultMessage: '!!!To confirm this operation type the wallet name below.',
-    description: "some desc",
+    description: 'some desc',
   },
   walletName: {
     id: 'components.settings.removewalletscreen.walletName',
     defaultMessage: 'Wallet name',
-    description: "some desc",
+    description: 'some desc',
   },
   walletNameInput: {
     id: 'components.settings.removewalletscreen.walletNameInput',
     defaultMessage: 'Wallet name',
-    description: "some desc",
+    description: 'some desc',
   },
   remove: {
     id: 'components.settings.removewalletscreen.remove',
     defaultMessage: 'Remove wallet',
-    description: "some desc",
+    description: 'some desc',
   },
   hasWrittenDownMnemonic: {
     id: 'components.settings.removewalletscreen.hasWrittenDownMnemonic',
     defaultMessage:
       'I have written down mnemonic of this wallet and understand ' +
       'that I cannot recover the wallet without it.',
-    description: "some desc",
+    description: 'some desc',
   },
 })
 

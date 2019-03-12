@@ -2,40 +2,34 @@
 
 import React from 'react'
 import {compose} from 'redux'
-import {connect} from 'react-redux'
 import {withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
 
 import {Text, Button, Checkbox, Modal} from '../../UiKit'
 import styles from './styles/MnemonicBackupImportanceModal.style'
 
-import type {State} from '../../../state'
-
 const messages = defineMessages({
   title: {
     id: 'components.walletinit.createwallet.mnemonicbackupimportancemodal.title',
     defaultMessage: '!!!Recovery phrase',
-    description: "some desc",
   },
   keysStorageCheckbox: {
     id: 'components.walletinit.createwallet.mnemonicbackupimportancemodal.keysStorageCheckbox',
     defaultMessage:
       '!!!I understand that my secret keys are held securely ' +
       'on this device only, not on the company`s servers',
-    description: "some desc",
   },
   newDeviceRecoveryCheckbox: {
+    /* eslint-disable max-len */
     id: 'components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox',
     defaultMessage:
       '!!!I understand that if this application is moved to another device ' +
       'or delete, my money can be only recovered with the backup phrase that ' +
       'I have written down and saved in secure place.',
-    description: "some desc",
   },
   confirmationButton: {
     id: 'components.walletinit.createwallet.mnemonicbackupimportancemodal.confirmationButton',
     defaultMessage: '!!!I understand',
-    description: "some desc",
   },
 })
 

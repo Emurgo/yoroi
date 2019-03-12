@@ -3,9 +3,8 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import Markdown from 'react-native-easy-markdown'
-import loadLocalResource from 'react-native-local-resource'
 
-import EN_TOS from '../../i18n/locales/terms-of-use/ada/en-US.md'
+import type {ComponentType} from 'react'
 
 type Props = {
   tos: any,
@@ -19,9 +18,9 @@ const TermsOfService = ({tos}: Props) => {
   )
 }
 
-export default compose(
+export default (compose(
   connect((state) => {
     return {
       tos: state.tos,
     }
-  }))(TermsOfService)
+  }))(TermsOfService): ComponentType<any>)

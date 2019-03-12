@@ -1,6 +1,5 @@
 // @flow
-import _ from 'lodash'
-import LocalizedStrings from 'localized-strings'
+
 import moment from 'moment'
 import BigNumber from 'bignumber.js'
 

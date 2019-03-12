@@ -22,7 +22,7 @@ const messages = defineMessages({
   title: {
     id: 'components.settings.toggleeasyconfirmationscreen.title',
     defaultMessage: 'Easy confirmation',
-    description: "some desc",
+    description: 'some desc',
   },
   enableHeading: {
     id: 'components.settings.toggleeasyconfirmationscreen.enableHeading',
@@ -32,24 +32,24 @@ const messages = defineMessages({
       'face recognition with standard system fallback option. ' +
       'This makes your wallet less secure. This is a compromise ' +
       'between UX and security!',
-    description: "some desc",
+    description: 'some desc',
   },
   enableWarning: {
     id: 'components.settings.toggleeasyconfirmationscreen.enableWarning',
     defaultMessage:
       'Please remember your master password, as you may need it ' +
       'in case your biometrics data are removed from the device.',
-    description: "some desc",
+    description: 'some desc',
   },
   enableMasterPassword: {
     id: 'components.settings.toggleeasyconfirmationscreen.enableMasterPassword',
     defaultMessage: 'Master password',
-    description: "Enable",
+    description: 'Enable',
   },
   enableButton: {
     id: 'components.settings.toggleeasyconfirmationscreen.enableButton',
     defaultMessage: 'Master password',
-    description: "some desc",
+    description: 'some desc',
   },
   disableHeading: {
     id: 'components.settings.toggleeasyconfirmationscreen.disableHeading',

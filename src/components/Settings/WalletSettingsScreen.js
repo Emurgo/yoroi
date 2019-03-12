@@ -4,7 +4,7 @@ import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 import {connect} from 'react-redux'
 import {ScrollView, StyleSheet, Switch} from 'react-native'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 import {confirmationMessages} from '../../i18n/global-messages'
@@ -50,27 +50,27 @@ const messages = defineMessages({
   logout: {
     id: 'components.settings.walletsettingscreen.logout',
     defaultMessage: 'Logout',
-    description: "some desc",
+    description: 'some desc',
   },
   walletName: {
     id: 'components.settings.walletsettingscreen.walletName',
     defaultMessage: 'Wallet name',
-    description: "some desc",
+    description: 'some desc',
   },
   security: {
     id: 'components.settings.walletsettingscreen.security',
     defaultMessage: 'Security',
-    description: "some desc",
+    description: 'some desc',
   },
   changePassword: {
     id: 'components.settings.walletsettingscreen.changePassword',
     defaultMessage: 'Change password',
-    description: "some desc",
+    description: 'some desc',
   },
   easyConfirmation: {
     id: 'components.settings.walletsettingscreen.easyConfirmation',
     defaultMessage: '!!!Easy transaction confirmation',
-    description: "some desc",
+    description: 'some desc',
   },
   removeWallet: {
     id: 'components.settings.walletsettingscreen.removeWallet',
@@ -187,4 +187,4 @@ export default injectIntl((compose(
       500,
     ),
   }),
-)(WalletSettingsScreen): ComponentType<{|navigation: Navigation|}>))
+)(WalletSettingsScreen): ComponentType<{|navigation: Navigation, intl: intlShape|}>))

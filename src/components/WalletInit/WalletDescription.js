@@ -15,7 +15,7 @@ const messages = defineMessages({
   byEmurgo: {
     id: 'components.walletinit.walletdescription.byEmurgo',
     defaultMessage: '!!!By',
-    description: "some desc",
+    description: 'some desc',
   },
 })
 

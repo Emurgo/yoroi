@@ -20,17 +20,17 @@ const messages = defineMessages({
   title: {
     id: 'components.walletinit.walletinitscreen.title',
     defaultMessage: '!!!Add wallet',
-    description: "some ddesc",
+    description: 'some ddesc',
   },
   createWalletButton: {
     id: 'components.walletinit.walletinitscreen.createWalletButton',
     defaultMessage: '!!!Create new wallet',
-    description: "some ddesc",
+    description: 'some ddesc',
   },
   restoreWalletButton: {
     id: 'components.walletinit.walletinitscreen.restoreWalletButton',
     defaultMessage: '!!!Restore wallet from backup',
-    description: "some ddesc",
+    description: 'some ddesc',
   },
 })
 

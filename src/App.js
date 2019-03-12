@@ -1,9 +1,9 @@
 // @flow
 
 import React from 'react'
-import 'intl';
+import 'intl'
 
-import {injectIntl} from 'react-intl';
+import {injectIntl} from 'react-intl'
 
 import AppNavigator from './AppNavigator'
 import NavigationService from './NavigationService'

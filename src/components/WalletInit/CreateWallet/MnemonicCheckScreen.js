@@ -6,7 +6,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withProps, withStateHandlers} from 'recompose'
 import {SafeAreaView} from 'react-navigation'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import {View, ScrollView, TouchableOpacity, Dimensions} from 'react-native'
 
 import assert from '../../../utils/assert'
@@ -26,33 +26,31 @@ const messages = defineMessages({
   title: {
     id: 'components.walletinit.createwallet.mnemoniccheckscreen.title',
     defaultMessage: '!!!Recovery phrase',
-    description: "some desc",
   },
   instructions: {
     id: 'components.walletinit.createwallet.mnemoniccheckscreen.instructions',
     defaultMessage:
     '!!!Tap each word in the correct order to verify your recovery phrase',
-    description: "some desc",
   },
   clearButton: {
     id: 'components.walletinit.createwallet.mnemoniccheckscreen.clearButton',
     defaultMessage: '!!!Clear',
-    description: "some desc",
+    description: 'some desc',
   },
   confirmButton: {
     id: 'components.walletinit.createwallet.mnemoniccheckscreen.confirmButton',
     defaultMessage: '!!!Confirm',
-    description: "some desc",
+    description: 'some desc',
   },
   mnemonicWordsInputLabel: {
     id: 'components.walletinit.createwallet.mnemoniccheckscreen.mnemonicWordsInputLabel',
     defaultMessage: '!!!Recovery phrase',
-    description: "some desc",
+    description: 'some desc',
   },
   mnemonicWordsInputInvalidPhrase: {
     id: 'components.walletinit.createwallet.mnemoniccheckscreen.mnemonicWordsInputInvalidPhrase',
     defaultMessage: '!!!Recovery phrase does not match',
-    description: "some desc",
+    description: 'some desc',
   },
 })
 
@@ -203,7 +201,7 @@ const _mnemonicToPartialPhrase = (mnemonic: string) =>
     .map(([i, j]) => j) // [1,2,0]
     .value()
 
-export default injectIntl(compose(
+export default injectIntl((compose(
   connect(
     () => ({}),
     {
@@ -242,4 +240,4 @@ export default injectIntl(compose(
       1000,
     ),
   }),
-)(MnemonicCheckScreen): ComponentType<{|navigation: Navigation|}>)
+)(MnemonicCheckScreen): ComponentType<{|navigation: Navigation, intl: intlShape|}>))

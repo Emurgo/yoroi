@@ -18,9 +18,8 @@ import {CONFIG} from '../../config'
 import PasswordStrengthIndicator from './PasswordStrengthIndicator'
 import styles from './styles/WalletForm.style'
 import {walletNamesSelector} from '../../selectors'
-import globalMessages from '../../i18n/global-messages';
+import globalMessages from '../../i18n/global-messages'
 
-import type {State} from '../../state'
 import type {
   PasswordValidationErrors,
   WalletNameValidationErrors,
@@ -31,27 +30,27 @@ const messages = defineMessages({
   walletNameInputLabel: {
     id: 'components.walletinit.walletform.walletNameInputLabel',
     defaultMessage: '!!!Wallet name',
-    description: "some desc",
+    description: 'some desc',
   },
   newPasswordInput: {
     id: 'components.walletinit.walletform.newPasswordInput',
     defaultMessage: '!!!Wallet password',
-    description: "some desc",
+    description: 'some desc',
   },
   continueButton: {
     id: 'components.walletinit.walletform.continueButton',
     defaultMessage: '!!!Continue',
-    description: "some desc",
+    description: 'some desc',
   },
   repeatPasswordInputLabel: {
     id: 'components.walletinit.walletform.repeatPasswordInputLabel',
     defaultMessage: '!!!Repeat password',
-    description: "some desc",
+    description: 'some desc',
   },
   repeatPasswordInputError: {
     id: 'components.walletinit.walletform.repeatPasswordInputError',
     defaultMessage: '!!!Passwords do not match',
-    description: "some desc",
+    description: 'some desc',
   },
 })
 
@@ -151,7 +150,7 @@ class WalletForm extends PureComponent<Props, ComponentState> {
               onChangeText={this.handleSetName}
               error={getWalletNameError(
                 [intl.formatMessage(globalMessages.walletNameErrorTooLong),
-                 intl.formatMessage(globalMessages.walletNameErrorNameAlreadyTaken)],
+                  intl.formatMessage(globalMessages.walletNameErrorNameAlreadyTaken)],
                 validationErrors,
               )}
             />

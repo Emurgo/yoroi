@@ -6,7 +6,6 @@ import {compose} from 'redux'
 import {withHandlers, withStateHandlers, withProps} from 'recompose'
 import {SafeAreaView} from 'react-navigation'
 import {injectIntl, defineMessages} from 'react-intl'
-import Markdown from 'react-native-easy-markdown'
 
 import assert from '../../../utils/assert'
 import {Text, Button, StatusBar} from '../../UiKit'
@@ -15,8 +14,6 @@ import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import styles from './styles/MnemonicShowScreen.style'
 import MnemonicBackupImportanceModal from './MnemonicBackupImportanceModal'
 import recoveryPhrase from '../../../assets/img/recovery_phrase.png'
-
-import type {State} from '../../../state'
 
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import type {Navigation} from '../../../types/navigation'
@@ -34,12 +31,12 @@ const messages = defineMessages({
       'recovery phrase somewhere safe. ' +
       'You will need this phrase to use and restore your wallet. ' +
       'Phrase is case sensitive.',
-    description: "some desc",
+    description: 'some desc',
   },
   confirmationButton: {
     id: 'components.walletinit.createwallet.mnemonicshowscreen.confirmationButton',
     defaultMessage: '!!!Yes, I have written it down',
-    description: "some desc",
+    description: 'some desc',
   },
 })
 

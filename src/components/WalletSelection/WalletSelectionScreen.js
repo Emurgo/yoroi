@@ -7,6 +7,7 @@ import {compose, withHandlers} from 'recompose'
 import _ from 'lodash'
 import {SafeAreaView} from 'react-navigation'
 import {injectIntl, defineMessages} from 'react-intl'
+import type {IntlShape} from 'react-intl'
 
 import walletManager, {
   SystemAuthDisabled,
@@ -30,12 +31,10 @@ const messages = defineMessages({
   header: {
     id: 'components.walletselection.walletselectionscreen.header',
     defaultMessage: '!!!Your wallets',
-    description: "some ddesc",
   },
   addWalletButton: {
     id: 'components.walletselection.walletselectionscreen.addWalletButton',
     defaultMessage: '!!!Add wallet',
-    description: "some ddesc",
   },
 })
 
@@ -44,7 +43,7 @@ const WalletListScreen = ({
   wallets,
   navigateInitWallet,
   openWallet,
-  intl
+  intl,
 }) => (
   <SafeAreaView style={styles.safeAreaView}>
     <StatusBar type="dark" />
@@ -79,7 +78,7 @@ const WalletListScreen = ({
 
 const walletsListSelector = (state) => Object.values(state.wallets)
 
-export default injectIntl(compose(
+export default injectIntl((compose(
   connect((state: State) => ({
     wallets: walletsListSelector(state),
   })),
@@ -105,5 +104,6 @@ export default injectIntl(compose(
     },
   }),
 )(WalletListScreen): ComponentType<{
+  intl: IntlShape,
   navigation: NavigationScreenProp<NavigationState>,
-}>)
+}>))

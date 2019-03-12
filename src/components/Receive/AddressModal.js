@@ -101,7 +101,9 @@ class AddressModal extends React.Component<Props, State> {
 
         <Button
           onPress={this._copyAddress}
-          title={isCopied ? intl.formatMessage(messages.copiedLabel) : intl.formatMessage(messages.copyLabel)}
+          title={isCopied ?
+            intl.formatMessage(messages.copiedLabel) :
+            intl.formatMessage(messages.copyLabel)}
         />
       </Modal>
     )

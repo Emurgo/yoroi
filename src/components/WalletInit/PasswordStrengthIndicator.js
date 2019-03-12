@@ -18,48 +18,49 @@ const messages = defineMessages({
   passwordRequirementsNote: {
     id: 'components.walletinit.passwordstrengthindicator.passwordRequirementsNote',
     defaultMessage: '!!!The password needs to contain at least:',
-    description: "some desc",
+    description: 'some desc',
   },
   passwordMinLength: {
     id: 'components.walletinit.passwordstrengthindicator.passwordMinLength',
     defaultMessage: '!!!7 characters',
-    description: "some desc",
+    description: 'some desc',
   },
   passwordUpperChar: {
     id: 'components.walletinit.passwordstrengthindicator.passwordUpperChar',
     defaultMessage: '!!!1 uppercase letter',
-    description: "some desc",
+    description: 'some desc',
   },
   passwordLowerChar: {
     id: 'components.walletinit.passwordstrengthindicator.passwordLowerChar',
     defaultMessage: '!!!1 lowercase letter',
-    description: "some desc",
+    description: 'some desc',
   },
   passwordNumber: {
     id: 'components.walletinit.passwordstrengthindicator.passwordNumber',
     defaultMessage: '!!!1 number',
-    description: "some desc",
+    description: 'some desc',
   },
   continueButton: {
     id: 'components.walletinit.passwordstrengthindicator.continueButton',
     defaultMessage: '!!!Continue',
-    description: "some desc",
+    description: 'some desc',
   },
   passwordBigLength: {
     id: 'components.walletinit.passwordstrengthindicator.passwordBigLength',
     defaultMessage: '!!!12 characters',
-    description: "some desc",
+    description: 'some desc',
   },
   or: {
     id: 'components.walletinit.passwordstrengthindicator.or',
     defaultMessage: '!!!Or',
-    description: "some desc",
+    description: 'some desc',
   },
 })
 
 
 type ValidationCheckIconProps = {
   isSatisfied?: boolean,
+  hasSevenCharacters?: boolean,
   label: string,
 }
 
@@ -113,7 +114,7 @@ const CombinedPasswordStrengthIndicator = ({
 
     <ValidationCheckIcon
       isSatisfied={hasSevenCharacters}
-      label={tintl.formatMessage(messages.passwordMinLength)}
+      label={intl.formatMessage(messages.passwordMinLength)}
     />
     <ValidationCheckIcon
       isSatisfied={hasLowercase}

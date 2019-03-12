@@ -11,14 +11,13 @@ import {withNavigationTitle} from '../../../utils/renderUtils'
 import WalletForm from '../WalletForm'
 import {createWallet} from '../../../actions'
 
-import type {State} from '../../../state'
 import type {Navigation} from '../../../types/navigation'
 
 const messages = defineMessages({
   title: {
     id: 'components.walletinit.restorewallet.walletcredentialsscreen.title',
     defaultMessage: '!!!Wallet credentials',
-    description: "some desc",
+    description: 'some desc',
   },
 })
 

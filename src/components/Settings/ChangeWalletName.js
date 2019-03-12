@@ -6,7 +6,7 @@ import {connect} from 'react-redux'
 import {withStateHandlers, withHandlers} from 'recompose'
 import {View, ScrollView, KeyboardAvoidingView, Platform} from 'react-native'
 import {SafeAreaView} from 'react-navigation'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import _ from 'lodash'
 
 import {Button, ValidatedTextInput, StatusBar} from '../UiKit'
@@ -26,17 +26,14 @@ const messages = defineMessages({
   title: {
     id: 'components.settings.changewalletname.title',
     defaultMessage: 'Change wallet name',
-    description: "some desc",
   },
   changeButton: {
     id: 'components.settings.changewalletname.changeButton',
     defaultMessage: 'Change name',
-    description: "some desc",
   },
   walletNameInputLabel: {
     id: 'components.settings.changewalletname.walletNameInputLabel',
     defaultMessage: 'Wallet name',
-    description: "some desc",
   },
 })
 
@@ -72,9 +69,9 @@ const ChangeWalletName = ({
             value={walletName}
             onChangeText={setWalletName}
             error={getWalletNameError({
-                     tooLong: globalMessages.walletNameErrorTooLong,
-                     nameAlreadyTaken: globalMessages.walletNameErrorNameAlreadyTaken
-                   }, validationErrors,
+              tooLong: globalMessages.walletNameErrorTooLong,
+              nameAlreadyTaken: globalMessages.walletNameErrorNameAlreadyTaken,
+            }, validationErrors,
             )}
           />
         </ScrollView>
@@ -90,7 +87,7 @@ const ChangeWalletName = ({
   )
 }
 
-export default injectIntl(compose(
+export default injectIntl((compose(
   connect(
     (state) => ({
       oldName: walletNameSelector(state),
@@ -124,4 +121,4 @@ export default injectIntl(compose(
       navigation.goBack()
     },
   }),
-)(ChangeWalletName): ComponentType<{|navigation: Navigation|}>)
+)(ChangeWalletName): ComponentType<{|navigation: Navigation, intl: intlShape|}>))
