@@ -39,10 +39,10 @@ export const mapObjToId = (data: Object, id: number | string) => ({
 export const immutableSet = (obj: Object, path: ?Path, value: any) =>
   path && path.length
     ? produce(
-      (obj): void => {
-        set(obj, path, value)
-      },
-    )(obj)
+        (obj): void => {
+          set(obj, path, value)
+        },
+      )(obj)
     : value
 
 /*
@@ -58,11 +58,7 @@ export const forwardReducerTo = <S: Object, T>(
   reducer: SegmentReducer<S, T>,
   path: ?Path,
 ) => (state: S, payload: T) => {
-    const value = path
-      ? get(state, path)
-      : state // get root
-    const newValue = reducer(value, payload)
-    return newValue !== value
-      ? immutableSet(state, path, newValue)
-      : state
-  }
+  const value = path ? get(state, path) : state // get root
+  const newValue = reducer(value, payload)
+  return newValue !== value ? immutableSet(state, path, newValue) : state
+}

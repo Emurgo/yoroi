@@ -81,10 +81,8 @@ const onToggleBiometricsAuthIn = ({
 }
 
 const updateDeviceSettings = async ({setAppSettingField}) => {
-  const isHardwareSupported =
-    await isBiometricEncryptionHardwareSupported()
-  const canEnableBiometricEncryption =
-    await canBiometricEncryptionBeEnabled()
+  const isHardwareSupported = await isBiometricEncryptionHardwareSupported()
+  const canEnableBiometricEncryption = await canBiometricEncryptionBeEnabled()
 
   await setAppSettingField(
     APP_SETTINGS_KEYS.BIOMETRIC_HW_SUPPORT,

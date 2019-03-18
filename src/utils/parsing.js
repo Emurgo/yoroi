@@ -1,11 +1,7 @@
 // @flow
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
-import {
-  LOVELACES_PER_ADA,
-  TOTAL_SUPPLY,
-  DECIMAL_PLACES_IN_ADA,
-} from '../config'
+import {LOVELACES_PER_ADA, TOTAL_SUPPLY, DECIMAL_PLACES_IN_ADA} from '../config'
 
 export class InvalidAdaAmount extends ExtendableError {
   static ERROR_CODES = {

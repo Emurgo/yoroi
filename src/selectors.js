@@ -40,8 +40,7 @@ export const isUsedAddressIndexSelector = (state: State) =>
 export const canGenerateNewReceiveAddressSelector = (state: State) =>
   state.wallet.canGenerateNewReceiveAddress
 
-export const isOnlineSelector = (state: State): boolean =>
-  state.isOnline
+export const isOnlineSelector = (state: State): boolean => state.isOnline
 
 export const isSynchronizingHistorySelector = (state: State): boolean =>
   state.txHistory.isSynchronizing
@@ -57,8 +56,7 @@ export const utxoBalanceSelector = (state: State) =>
 export const walletIsInitializedSelector = (state: State): boolean =>
   state.wallet.isInitialized
 
-export const walletNameSelector = (state: State): string =>
-  state.wallet.name
+export const walletNameSelector = (state: State): string => state.wallet.name
 
 export const walletNamesSelector = (state: State): Array<string> =>
   ObjectValues(state.wallets).map((w) => w.name)

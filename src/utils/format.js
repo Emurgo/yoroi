@@ -2,10 +2,7 @@
 import {BigNumber} from 'bignumber.js'
 import moment from 'moment'
 import utfSymbols from './utfSymbols'
-import {
-  LOVELACES_PER_ADA,
-  DECIMAL_PLACES_IN_ADA,
-} from '../config'
+import {LOVELACES_PER_ADA, DECIMAL_PLACES_IN_ADA} from '../config'
 import l10n from '../l10n'
 
 export const formatAda = (amount: BigNumber) => {

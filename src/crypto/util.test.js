@@ -54,7 +54,8 @@ test('Can generate external addresses', async () => {
 test('Can convert address to hex', () => {
   const address = externalAddresses[0]
   // eslint-disable-next-line max-len
-  const hex = '82d818582183581ce0256c34965ce528570c22f88073e625020288a1973c1e2d466d39bca0001ab7e3a79a'
+  const hex =
+    '82d818582183581ce0256c34965ce528570c22f88073e625020288a1973c1e2d466d39bca0001ab7e3a79a'
   expect(getAddressInHex(address)).toEqual(hex)
 })
 

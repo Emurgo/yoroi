@@ -47,10 +47,10 @@ export type UnknownWordsError = {|
 |}
 
 export type InvalidPhraseErrorCode = $Values<typeof INVALID_PHRASE_ERROR_CODES>
-export type InvalidPhraseError = |
-  {|
+export type InvalidPhraseError =
+  | {|
       code: 'TOO_LONG' | 'TOO_SHORT' | 'INVALID_CHECKSUM',
-  |}
+    |}
   | UnknownWordsError
 
 export type PasswordStrength = {
@@ -124,9 +124,7 @@ export const validateAddressAsync = async (
   return isValid ? {} : {invalidAddress: true}
 }
 
-export const validateAmount = (
-  value: string
-): AmountValidationErrors => {
+export const validateAmount = (value: string): AmountValidationErrors => {
   if (!value) {
     return {amountIsRequired: true}
   }
@@ -163,7 +161,7 @@ export const cleanMnemonic = (mnemonic: string): string => {
 }
 
 export const validateRecoveryPhrase = (
-  mnemonic: string
+  mnemonic: string,
 ): Array<InvalidPhraseError> => {
   const cleaned = cleanMnemonic(mnemonic)
   // Deal with edge case ''.split(' ') -> ['']

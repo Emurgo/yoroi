@@ -24,7 +24,7 @@ export const read = async (path: string): Promise<any> => {
 }
 
 export const readMany = async (
-  paths: Array<string>
+  paths: Array<string>,
 ): Promise<[string, string][]> => {
   assert.preconditionCheck(
     _.every(paths, checkPathFormat),
@@ -73,7 +73,7 @@ export const clearAll = async (): Promise<void> => {
 
 export const keys = async (
   path: string,
-  includeSubdirs?: boolean
+  includeSubdirs?: boolean,
 ): Promise<string[]> => {
   try {
     const all = await AsyncStorage.getAllKeys()

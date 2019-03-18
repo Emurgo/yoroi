@@ -296,8 +296,7 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
 
   // Biometrics
   {
-    const canEnableBiometricEncryption =
-      await canBiometricEncryptionBeEnabled()
+    const canEnableBiometricEncryption = await canBiometricEncryptionBeEnabled()
 
     await dispatch(
       setAppSettingField(

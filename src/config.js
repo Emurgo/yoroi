@@ -36,10 +36,12 @@ export const ASSURANCE_LEVELS = {
 }
 
 export const LOVELACES_PER_ADA = new BigNumber(
-  '1 000 000'.replace(/ /g, ''), 10
+  '1 000 000'.replace(/ /g, ''),
+  10,
 )
 export const TOTAL_SUPPLY = new BigNumber(
-  '45 000 000 000'.replace(/ /g, ''), 10
+  '45 000 000 000'.replace(/ /g, ''),
+  10,
 ).times(LOVELACES_PER_ADA)
 export const MAX_INTEGER_PLACES_IN_ADA = 11
 export const DECIMAL_PLACES_IN_ADA = 6

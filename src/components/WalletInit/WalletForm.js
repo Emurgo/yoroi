@@ -50,17 +50,17 @@ type Props = {
 class WalletForm extends PureComponent<Props, ComponentState> {
   state = CONFIG.DEBUG.PREFILL_FORMS
     ? {
-      name: CONFIG.DEBUG.WALLET_NAME,
-      password: CONFIG.DEBUG.PASSWORD,
-      passwordConfirmation: CONFIG.DEBUG.PASSWORD,
-      showPasswordsDoNotMatchError: false,
-    }
+        name: CONFIG.DEBUG.WALLET_NAME,
+        password: CONFIG.DEBUG.PASSWORD,
+        passwordConfirmation: CONFIG.DEBUG.PASSWORD,
+        showPasswordsDoNotMatchError: false,
+      }
     : {
-      name: '',
-      password: '',
-      passwordConfirmation: '',
-      showPasswordsDoNotMatchError: false,
-    }
+        name: '',
+        password: '',
+        passwordConfirmation: '',
+        showPasswordsDoNotMatchError: false,
+      }
 
   debouncedHandlePasswordMatchValidation = _.debounce(() => {
     this.setState(({password, passwordConfirmation}) => ({
