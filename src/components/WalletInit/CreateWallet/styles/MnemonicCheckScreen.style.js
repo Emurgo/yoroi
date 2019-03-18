@@ -66,7 +66,8 @@ export default StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginTop: 12,
-    height: 26 * 6,
+    marginBottom: 12,
+    height: 26 * 7,
   },
   selected: {
     opacity: 0,
