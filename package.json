@@ -9,7 +9,8 @@
     "test": "jest",
     "prettify": "prettier --write \"src/**/*.js\" --config src/.prettierrc",
     "prettify_l10n": "prettier --write \"src/l10n/type.js\" --config src/.prettierrc",
-    "setup_configs": "react-native-schemes-manager all"
+    "setup_configs": "react-native-schemes-manager all",
+    "android-bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res" 
   },
   "dependencies": {
     "@babel/cli": "^7.1.2",
