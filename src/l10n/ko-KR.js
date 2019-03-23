@@ -10,7 +10,7 @@ const languages = {
   english: 'English',
   japanese: '日本語',
   korean: '한국어',
-  russian: 'Russian',
+  russian: 'Русский',
 }
 
 const datetime = {
