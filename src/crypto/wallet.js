@@ -216,6 +216,15 @@ export class Wallet {
     }
   }
 
+  getLastUsedIndex(chain: AddressChain): number {
+    for (let i = chain.size() - 1; i >= 0; i--) {
+      if (this.isUsedAddress(chain.addresses[i])) {
+        return i
+      }
+    }
+    return -1
+  }
+
   async _doFullSync() {
     Logger.info('Do full sync')
     assert.assert(this._isInitialized, 'doFullSync: isInitialized')
@@ -232,6 +241,11 @@ export class Wallet {
       ])
     }
 
+    // update receive screen to include any new addresses found
+    const lastUsedIndex = this.getLastUsedIndex(this._externalChain)
+    if (lastUsedIndex > this._state.lastGeneratedAddressIndex) {
+      this._state.lastGeneratedAddressIndex = lastUsedIndex
+    }
     return this._transactionCache.transactions
   }
 
@@ -261,49 +275,36 @@ export class Wallet {
   }
 
   canGenerateNewReceiveAddress() {
-    // TODO(ppershing): use "assuredly used" instead of "seen"
-    const usedCount = this.externalAddresses
-      .slice(0, this.numReceiveAddresses)
-      .filter((address) => this.isUsedAddress(address)).length
-
+    const lastUsedIndex = this.getLastUsedIndex(this._externalChain)
+    const maxIndex = lastUsedIndex + CONFIG.WALLET.MAX_GENERATED_UNUSED
+    if (this._state.lastGeneratedAddressIndex >= maxIndex) {
+      return false
+    }
     return (
-      this.numReceiveAddresses < usedCount + CONFIG.WALLET.MAX_GENERATED_UNUSED
+      this.numReceiveAddresses < this.externalAddresses.length
     )
   }
 
-  async generateNewUiReceiveAddressIfNeeded() {
-    if (
-      this.externalAddresses
-        .slice(0, this.numReceiveAddresses)
-        .some((addr) => !this.isUsedAddress(addr))
-    ) {
-      return false // still have some unused
+  generateNewUiReceiveAddressIfNeeded() {
+    // generate one address when creating a new wallet
+    if (this._state.lastGeneratedAddressIndex === -1) {
+      return this.generateNewUiReceiveAddress()
     }
-    return await this.generateNewUiReceiveAddress()
+
+    /* new addresse is automatically generated when you use the latest unused */
+    const lastGeneratedAddress
+      = this._externalChain.addresses[this._state.lastGeneratedAddressIndex]
+    if (!this.isUsedAddress(lastGeneratedAddress)) {
+      return false
+    }
+    return this.generateNewUiReceiveAddress()
   }
 
-  async generateNewUiReceiveAddress(): Promise<boolean> {
+  generateNewUiReceiveAddress(): boolean {
     if (!this.canGenerateNewReceiveAddress()) return false
 
-    let idx = this.numReceiveAddresses
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
-      // First, discover new addresses if needed.
-      // This can happen if last address sync/discovery failed
-      // but transaction sync went through
-      if (idx >= this._externalChain.addresses.length) {
-        const filterUsed = (addresses) =>
-          Promise.resolve(
-            addresses.filter((address) => this.isUsedAddress(address)),
-          )
-        await this._externalChain.sync(filterUsed)
-      }
-      if (!this.isUsedAddress(this._externalChain.addresses[idx])) break
-      idx += 1
-    }
-
     this.updateState({
-      lastGeneratedAddressIndex: idx,
+      lastGeneratedAddressIndex: this._state.lastGeneratedAddressIndex + 1,
     })
 
     return true
@@ -544,13 +545,11 @@ class WalletManager {
     )
   }
 
-  async generateNewUiReceiveAddress() {
+  generateNewUiReceiveAddress() {
     if (!this._wallet) return false
     const wallet = this._wallet
 
-    const didGenerateNew = await this.abortWhenWalletCloses(
-      wallet.generateNewUiReceiveAddress(),
-    )
+    const didGenerateNew = wallet.generateNewUiReceiveAddress()
     if (didGenerateNew) {
       // Note: save is runaway
       this._saveState(wallet)
