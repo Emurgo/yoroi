@@ -280,9 +280,7 @@ export class Wallet {
     if (this._state.lastGeneratedAddressIndex >= maxIndex) {
       return false
     }
-    return (
-      this.numReceiveAddresses < this.externalAddresses.length
-    )
+    return this.numReceiveAddresses < this.externalAddresses.length
   }
 
   generateNewUiReceiveAddressIfNeeded() {
@@ -292,8 +290,9 @@ export class Wallet {
     }
 
     /* new addresse is automatically generated when you use the latest unused */
-    const lastGeneratedAddress
-      = this._externalChain.addresses[this._state.lastGeneratedAddressIndex]
+    const lastGeneratedAddress = this._externalChain.addresses[
+      this._state.lastGeneratedAddressIndex
+    ]
     if (!this.isUsedAddress(lastGeneratedAddress)) {
       return false
     }
