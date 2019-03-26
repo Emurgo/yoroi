@@ -52,7 +52,7 @@ export class Wallet {
   _externalChain: AddressChain = null
 
   _state: WalletState = {
-    lastGeneratedAddressIndex: -1,
+    lastGeneratedAddressIndex: 0,
   }
 
   _isInitialized: boolean = false
@@ -284,11 +284,6 @@ export class Wallet {
   }
 
   generateNewUiReceiveAddressIfNeeded() {
-    // generate one address when creating a new wallet
-    if (this._state.lastGeneratedAddressIndex === -1) {
-      return this.generateNewUiReceiveAddress()
-    }
-
     /* new addresse is automatically generated when you use the latest unused */
     const lastGeneratedAddress = this._externalChain.addresses[
       this._state.lastGeneratedAddressIndex
