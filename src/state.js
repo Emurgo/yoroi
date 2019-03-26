@@ -20,7 +20,7 @@ export type State = {
     externalAddresses: Array<string>,
     isUsedAddressIndex: Dict<boolean>,
     confirmationCounts: Dict<number>,
-    numGeneratedAddresses: number,
+    numReceiveAddresses: number,
     canGenerateNewReceiveAddress: boolean,
   },
   txHistory: {
@@ -59,7 +59,7 @@ export const getInitialState = (): State => ({
     externalAddresses: [],
     confirmationCounts: {},
     isUsedAddressIndex: {},
-    numGeneratedAddresses: 0,
+    numReceiveAddresses: 0,
     canGenerateNewReceiveAddress: false,
   },
   txHistory: {

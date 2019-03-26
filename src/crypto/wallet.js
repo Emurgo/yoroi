@@ -256,25 +256,25 @@ export class Wallet {
     )
   }
 
-  get numGeneratedAddresses() {
+  get numReceiveAddresses() {
     return this._state.lastGeneratedAddressIndex + 1
   }
 
   canGenerateNewReceiveAddress() {
     // TODO(ppershing): use "assuredly used" instead of "seen"
     const usedCount = this.externalAddresses
-      .slice(0, this.numGeneratedAddresses)
+      .slice(0, this.numReceiveAddresses)
       .filter((address) => this.isUsedAddress(address)).length
 
     return (
-      this.numGeneratedAddresses < usedCount + CONFIG.WALLET.MAX_GENERATED_UNUSED
+      this.numReceiveAddresses < usedCount + CONFIG.WALLET.MAX_GENERATED_UNUSED
     )
   }
 
   async generateNewUiReceiveAddressIfNeeded() {
     if (
       this.externalAddresses
-        .slice(0, this.numGeneratedAddresses)
+        .slice(0, this.numReceiveAddresses)
         .some((addr) => !this.isUsedAddress(addr))
     ) {
       return false // still have some unused
@@ -285,7 +285,7 @@ export class Wallet {
   async generateNewUiReceiveAddress(): Promise<boolean> {
     if (!this.canGenerateNewReceiveAddress()) return false
 
-    let idx = this.numGeneratedAddresses
+    let idx = this.numReceiveAddresses
     // eslint-disable-next-line no-constant-condition
     while (true) {
       // First, discover new addresses if needed.
@@ -522,9 +522,9 @@ class WalletManager {
     return this._wallet.confirmationCounts
   }
 
-  get numGeneratedAddresses() {
+  get numReceiveAddresses() {
     if (!this._wallet) return 0
-    return this._wallet.numGeneratedAddresses
+    return this._wallet.numReceiveAddresses
   }
 
   get canGenerateNewReceiveAddress() {
