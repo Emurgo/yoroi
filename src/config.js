@@ -75,7 +75,7 @@ export const CONFIG = {
   WALLET: {
     ACCOUNT_INDEX: 0,
     /**
-     * BIP-44 requires that we actively monitor the next N unused addresses in case they are used
+     * BIP-44 requires that we actively monitor the next N unused addresses
      * This is our value for N
      */
     DISCOVERY_GAP_SIZE: 20,
@@ -84,7 +84,7 @@ export const CONFIG = {
      * This is the size of the chunk
      *
      * Note: Should be less than API limitations
-     * Otherwise we will generate a batch of addresses and the next API call will fail
+     * Otherwise API call will fail
      */
     ADDRESS_REQUEST_SIZE: 50,
     /**

@@ -1,6 +1,5 @@
 // @flow
 import _ from 'lodash'
-import type {Moment} from 'moment'
 
 import {CONFIG} from '../config'
 import assert from '../utils/assert'
