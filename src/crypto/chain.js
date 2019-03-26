@@ -60,7 +60,10 @@ export class AddressChain {
     addressRequestSize: number = CONFIG.WALLET.ADDRESS_REQUEST_SIZE,
     gapLimit: number = CONFIG.WALLET.DISCOVERY_GAP_SIZE,
   ) {
-    assert.assert(addressRequestSize > gapLimit, 'addressRequestSize needs to be > gap limit')
+    assert.assert(
+      addressRequestSize > gapLimit,
+      'addressRequestSize needs to be > gap limit',
+    )
 
     this._addressGenerator = addressGenerator
     this._addressRequestSize = addressRequestSize
@@ -175,7 +178,8 @@ export class AddressChain {
     // It is okay to "overshoot" with -1 here
     const lastUsedIdx = used.length > 0 ? chunk.indexOf(_.last(used)) : -1
 
-    const needsNewAddresses = lastUsedIdx + this._gapLimit >= this._addressRequestSize
+    const needsNewAddresses =
+      lastUsedIdx + this._gapLimit >= this._addressRequestSize
 
     if (needsNewAddresses) {
       await this._generateNewAddressChunk()
