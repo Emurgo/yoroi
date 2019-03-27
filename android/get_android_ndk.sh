@@ -1,5 +1,6 @@
 #!/bin/bash
-ANDROID_HOME="/opt/android/sdk"
+test -z "${ANDROID_HOME}" && ANDROID_HOME="/opt/android/sdk"
+test -z "${BASH_ENV}" && BASH_ENV="$HOME/.bashrc"
 ANDROID_NDK="$ANDROID_HOME/ndk-bundle"
 ANDROID_NDK_HOME="$ANDROID_HOME/ndk-bundle"
 echo 'export ANDROID_NDK=$ANDROID_HOME/ndk-bundle/' >> $BASH_ENV
