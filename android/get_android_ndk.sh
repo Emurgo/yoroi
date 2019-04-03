@@ -6,7 +6,8 @@ ANDROID_NDK_HOME="$ANDROID_HOME/ndk-bundle"
 echo 'export ANDROID_NDK=$ANDROID_HOME/ndk-bundle/' >> $BASH_ENV
 echo 'export ANDROID_NDK_HOME=$ANDROID_HOME/ndk-bundle/' >> $BASH_ENV
 
-if [ ! -e ANDROID_NDK ]; then
+if [ ! -e $ANDROID_NDK ]; then
+  test -e ${ANDROID_HOME} || mkdir -p ${ANDROID_HOME}
   cd $ANDROID_HOME
   echo "Downloading NDK..."
   sudo curl -L -o ndk.zip https://dl.google.com/android/repository/android-ndk-r17b-linux-x86_64.zip
