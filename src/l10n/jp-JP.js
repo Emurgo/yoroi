@@ -308,7 +308,7 @@ const l10n = {
     availableFundsBanner: {
       label: common.availableFunds,
     },
-    balanceAfterTx: 'トランザクション後の残高'
+    balanceAfterTx: 'トランザクション後の残高',
     fees: '手数料',
     password: 'ウォレットのパスワード',
     receiver: '受信者',
