@@ -1,5 +1,5 @@
 #!/bin/bash
-test -z "${ANDROID_HOME}" && ANDROID_HOME="/opt/android/sdk"
+test -z "${ANDROID_HOME}" && ANDROID_HOME="/opt/android-sdk-linux"
 test -z "${BASH_ENV}" && BASH_ENV="$HOME/.bashrc"
 ANDROID_NDK="$ANDROID_HOME/ndk-bundle"
 ANDROID_NDK_HOME="$ANDROID_HOME/ndk-bundle"
