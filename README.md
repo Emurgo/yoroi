@@ -71,7 +71,7 @@ On Host (allow app to connect to packaged bundle after build)
 follow https://facebook.github.io/react-native/docs/getting-started.html (tab Building Projects with Native Code)
 ```
 
-1. Ask for a copy of (or creta a blank version of) `android/gradle.properties.local`, `android/app/google-services.json` and `android/app/api-XXXX.json`
+1. Ask for a copy of (or create a blank version of) `android/gradle.properties.local`, `android/app/google-services.json` and `android/app/api-XXXX.json`
 1. Make sure your Anddroid build tools match the version in [android/build.gradle](android/build.gradle) (you will get an error otherwise)
 1. Download the NDK form Android Studio
 1. Install Rust for Android `rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android`
