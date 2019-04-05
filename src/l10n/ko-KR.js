@@ -102,7 +102,7 @@ const l10n = {
       title: '조치 실패',
       message:
         '우선 지갑내의 모든 간편 승인 기능을 비활성화 ' +
-        해주십시오
+        '해주십시오',
       yesButton: common.ok,
     },
     enableFingerprintsFirst: {
