@@ -415,7 +415,7 @@ const l10n = {
     },
     ApplicationTab: {
       title: '설정',
-      tabTitle: '어플리케이션'
+      tabTitle: '어플리케이션',
 
       language: '언어',
 
