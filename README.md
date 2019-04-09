@@ -31,6 +31,11 @@ node_modules/react-native/scripts/ios-install-third-party.sh
 node_modules/react-native/third-party/glog-0.3.5/configure
 ```
 
+In case of problems generating the compiled targets for iOS. You can use the precompiled targets
+```
+sh install_precompiled_targets.sh
+```
+
 If you get an error of the style:
 
 `Could not list contents of '/Users/myself/yoroi-mobile/third-party/glog-0.3.5/test-driver'. Couldn't follow symbolic link.`
