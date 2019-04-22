@@ -472,15 +472,15 @@ const l10n = {
   // TODO(ppershing): this localization is a mess
   BiometricsAuthScreen: {
     authorizeOperation: 'Authorize operation',
-    useFallbackButton: 'Use fallback',
+    useFallbackButton: 'Use other login method',
     headings: ['Authorize with your', 'fingerprint'],
     cancelButton: 'Cancel',
     errors: {
-      NOT_RECOGNIZED: 'Fingerprint was not recognized try again',
-      SENSOR_LOCKOUT: 'You used too many fingers sensor is disabled',
+      NOT_RECOGNIZED: 'Fingerprint was not recognized. Try again',
+      SENSOR_LOCKOUT: 'You used too many fingers. Sensor is disabled',
       SENSOR_LOCKOUT_PERMANENT:
-        'You permanently locked out your fingerprint sensor. Use fallback.',
-      DECRYPTION_FAILED: 'Fingerprint sensor failed please use fallback',
+        'Your fingerprint sensor has been permanently locked. Use an alternate login method.',
+      DECRYPTION_FAILED: 'Fingerprint login failed. Please use an alternate login method.',
       UNKNOWN_ERROR: 'Unknown error',
     },
   },
@@ -489,7 +489,7 @@ const l10n = {
     description: {
       paragraph1:
         'If you really wish to permanently delete the wallet ' +
-        'make sure you have written down the mnemonic.',
+        'make sure you have written down your 15-word recovery phrase.',
       paragraph2: 'To confirm this operation type the wallet name below.',
     },
     walletName: 'Wallet name',
