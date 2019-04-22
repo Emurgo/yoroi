@@ -479,8 +479,8 @@ const l10n = {
       NOT_RECOGNIZED: 'Fingerprint was not recognized. Try again',
       SENSOR_LOCKOUT: 'You used too many fingers. Sensor is disabled',
       SENSOR_LOCKOUT_PERMANENT:
-        'Fingerprint sensor is permanently locked. Use an alternate login method.',
-      DECRYPTION_FAILED: 'Fingerprint login failed. Use an alternate login method.',
+        'Fingerprint sensor permanently locked. Use alternate login method.',
+      DECRYPTION_FAILED: 'Fingerprint failed. Use alternate login method.',
       UNKNOWN_ERROR: 'Unknown error',
     },
   },
