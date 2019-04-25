@@ -49,6 +49,9 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/project
+      - run:
+          name: Match bitrise's yarn version
+          command: sudo npm install -g yarn@${BITRISE_YARN_VER}
       - run: yarn flow
 
   test:
@@ -56,6 +59,9 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/project
+      - run:
+          name: Match bitrise's yarn version
+          command: sudo npm install -g yarn@${BITRISE_YARN_VER}
       - run: yarn test
 
   lint:
@@ -64,6 +70,9 @@ jobs:
       - attach_workspace:
          at: ~/project
 
+      - run:
+          name: Match bitrise's yarn version
+          command: sudo npm install -g yarn@${BITRISE_YARN_VER}
       # Because npm link will write in this path
       - run: sudo chown -R "$(whoami):$(whoami)" /usr/local/lib/node_modules
       - run: npm link rust-cardano-crypto
