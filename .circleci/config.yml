@@ -16,7 +16,7 @@ jobs:
           keys:
           - v1-0-dependencies-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
           # fallback to using the latest cache if no exact match is found
-          - v1-0-dependencies-
+          #- v1-0-dependencies-
 
       # install rustup
       - run: curl https://sh.rustup.rs -sSf | sh -s -- -y
