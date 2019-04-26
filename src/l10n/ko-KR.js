@@ -4,13 +4,13 @@ import {termsOfService} from './tos.ko-KR'
 
 // Do not translate
 const languages = {
-  // TODO: Add when chinese is available
+  // TODO: Add back when chinese is available
   // chineseSimplified: '简体中文',
   // chineseTraditional: '繁體中文',
   english: 'English',
   japanese: '日本語',
   korean: '한국어',
-  russian: 'Russian',
+  russian: 'Русский',
 }
 
 const datetime = {
@@ -460,12 +460,12 @@ const l10n = {
     notNowButton: '나중에 하기',
     linkButton: '링크',
     headings: ['지문인식을 사용하여'],
-    subHeadings: ['더 빠르고 간편하게 요로이 지갑에 엑세스 하세요'],
+    subHeadings: ['더 빠르고 간편하게', '요로이 지갑에 엑세스 하세요'],
   },
   // TODO(ppershing): this localization is a mess
   BiometricsAuthScreen: {
-    authorizeOperation: '허가',
-    useFallbackButton: 'Use fallback',
+    authorizeOperation: '승인',
+    useFallbackButton: '사용 대체',
     headings: ['지문인식을 사용하여', '승인하기'],
     cancelButton: '취소',
     errors: {

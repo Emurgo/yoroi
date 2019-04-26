@@ -4,13 +4,13 @@ import {termsOfService} from './tos.ja-JP'
 
 // Do not translate
 const languages = {
-  // TODO: Add when chinese is available
+  // TODO: Add back when chinese is available
   // chineseSimplified: '简体中文',
   // chineseTraditional: '繁體中文',
   english: 'English',
   japanese: '日本語',
   korean: '한국어',
-  russian: 'Russian',
+  russian: 'Русский',
 }
 
 const datetime = {
@@ -19,8 +19,8 @@ const datetime = {
 }
 
 const walletNameErrors = {
-  tooLong: 'ウォレット名が40文字を超えています。',
-  nameAlreadyTaken: '同じ名前のウォレットが存在します。',
+  tooLong: 'ウォレット名が40文字を超えています',
+  nameAlreadyTaken: '同じ名前のウォレットが存在します',
 }
 
 // common translations shared across multiple places
@@ -58,75 +58,75 @@ const l10n = {
   },
   errorDialogs: {
     generalError: (message: string) => ({
-      title: '予期せぬエラーが発生しました。',
+      title: '予期せぬエラーが発生しました',
       message: `要求された操作を行うことができません。 エラー内容: ${message}`,
       yesButton: common.ok,
     }),
     pinMismatch: {
       title: 'PINが無効です',
-      message: '入力したPINが間違っています。',
+      message: 'PINが一致していません',
       yesButton: common.ok,
     },
     incorrectPin: {
-      title: 'PINが無効です。',
+      title: 'PINが無効です',
       message: '入力したPINが間違っています。',
       yesButton: common.ok,
     },
     incorrectPassword: {
-      title: 'パスワードが間違っています。',
-      message: 'パスワードが間違っています。',
+      title: 'パスワードエラー',
+      message: '入力したパスワードが間違っています。',
       yesButton: common.ok,
     },
     biometricsIsTurnedOff: {
-      title: ' 生体認証機能が無効になっています。',
+      title: ' 生体認証機能エラー',
       message:
-        '生体認証機能が無効になっています。生体認証を有効に設定してください。',
+        '生体認証機能が無効になっています。生体認証を有効に設定してください',
       yesButton: common.ok,
     },
     walletKeysInvalidated: {
-      title: '生体認証が変更されました。',
+      title: '生体認証が変更されました',
       message:
         ' 端末で生体認証の変更が検出されました。 ' +
-        'これにより簡易トランザクション承認が無効になりました。' +
+        'これにより簡易トランザクション承認が無効になりました' +
         'トランザクションはマスターパスワードによってのみ承認されます。 ' +
-        '設定で簡易トランザクション承認を有効にできます。',
+        '設定で簡易トランザクション承認を有効にできます',
       yesButton: 'OK',
     },
     networkError: {
       title: 'ネットワークエラー',
       message:
         'サーバーに接続できません。 ' +
-        'インターネットの接続を確認してください。',
+        'インターネットの接続を確認してください',
       yesButton: common.ok,
     },
     disableEasyConfirmationFirst: {
       title: 'アクションが失敗しました。',
       message:
         'すべてのウォレットの簡易トランザクション承認を ' +
-        '無効にしてください。',
+        '無効にしてください',
       yesButton: common.ok,
     },
     enableFingerprintsFirst: {
-      title: 'アクションが失敗しました。',
+      title: 'アクションが失敗しました',
       message:
         ' このアプリとリンクさせるために ' +
-        'デバイスの生体認証を有効にしてください。',
+        'デバイスの生体認証を有効にしてください',
       yesButton: 'OK',
     },
     enableSystemAuthFirst: {
-      title: 'ロック画面が無効です。',
+      title: 'ロック画面が無効です',
       message:
         '端末のロック画面を無効に設定していませんか？ あらかじめ' +
         '簡易トランザクション承認を無効に設定する必要があります。 ' +
-        '端末のロック画面を設定し（PIN、パスワード、パターン）、' +
+        '端末のロック画面を設定し（PIN、パスワード、パターン)、' +
         'デバイスを再起動してください。 その後ロック画面を無効に設定し ' +
-        '本アプリをご利用いただけます。' +
+        '本アプリをご利用いただけます' +
         '',
       yesButton: 'OK',
     },
     wrongPinError: {
-      title: 'PINが無効です。',
-      メッセージ: '入力したPIN が間違っています 。',
+      title: 'PINが無効です',
+      メッセージ: '入力したPIN が間違っています ',
       yesButton: 'OK',
     },
   },
@@ -135,7 +135,7 @@ const l10n = {
     continueButton: '言語を選んでください',
   },
   YoroiDescription: {
-    line1: 'ヨロイは、Cardanoのためのライトウォレットです。',
+    line1: 'ヨロイは、Cardanoのためのライトウォレットです',
     line2: '安全で、はやくて、シンプル',
     byEmurgo: 'By',
   },
@@ -146,10 +146,10 @@ const l10n = {
     title: 'PINを入れてください',
   },
   CreateWalletScreen: {
-    title: '新しいウォレットを作成してください。',
+    title: '新しいウォレットを作成',
   },
   CreateOrRestoreWalletScreen: {
-    title: 'ウォレットを追加してください。',
+    title: 'ウォレットを追加',
     createWalletButton: '新しいウォレットを作成',
     restoreWalletButton: 'ウォレットの復元',
   },
@@ -167,8 +167,8 @@ const l10n = {
     ],
     paragraph2: [
       inline([
-        normal('不正アクセスを '),
-        bold('防止するために、 '),
+        normal('不正アクセスを'),
+        bold('防止するために、'),
         normal('誰も画面をのぞいていないことを確認してください。'),
       ]),
     ],
@@ -176,22 +176,22 @@ const l10n = {
   },
   WalletNameAndPasswordForm: {
     walletNameInput: {
-      label: 'Wallet名',
+      label: 'ウォレット名',
       errors: walletNameErrors,
     },
     newPasswordInput: {
       label: 'ウォレットのパスワード',
     },
     repeatPasswordInput: {
-      label: 'パスワードをもう一度入力してください。',
+      label: 'パスワードをもう一度入力',
       errors: {
-        passwordsDoNotMatch: 'パスワードが間違っています。',
+        passwordsDoNotMatch: 'パスワードが一致していません',
       },
     },
     continueButton: '続行',
   },
   PasswordStrengthIndicator: {
-    passwordRequirementsNote: 'パスワードは、:',
+    passwordRequirementsNote: 'パスワードの必須条件:',
     passwordMinLength: '7文字',
     passwordUpperChar: '大文字',
     passwordLowerChar: '小文字',
@@ -208,11 +208,11 @@ const l10n = {
     availableFundsBanner: {
       label: common.availableFunds,
     },
-    noTransactions: 'トランザクションがありません。',
+    noTransactions: 'トランザクションがありません',
     transaction: {
       transactionType: {
-        SENT: 'ADAが送信されました。',
-        RECEIVED: 'ADAを受信しました。',
+        SENT: 'ADAが送信されました',
+        RECEIVED: 'ADAを受信しました',
         SELF: 'ウォレット内',
         MULTI: '複数人',
       },
@@ -231,8 +231,8 @@ const l10n = {
   },
   TransactionDetailsScreen: {
     transactionType: {
-      SENT: '資金を送信しました。',
-      RECEIVED: '資金を受信しました。',
+      SENT: '資金を送信しました',
+      RECEIVED: '資金を受信しました',
       SELF: 'ウォレット内トランザクション',
       MULTI: '複数人とのトランザクション',
     },
@@ -242,12 +242,12 @@ const l10n = {
     transactionId: 'トランザクションID',
     txAssuranceLevel: 'トランザクション確信度',
     formatConfirmations: (cnt: number) =>
-      `${cnt} ${pluralizeEn(cnt, 'CONFIRMATION', 'CONFIRMATIONS')}`,
-    formatOmittedCount: (cnt: number) => `+ ${cnt} omitted`,
+      `${cnt} ${pluralizeEn(cnt, '承認', '承認')}`,
+    formatOmittedCount: (cnt: number) => `+ ${cnt} 省略`,
     addressPrefix: {
       receive: (idx: number) => `/${idx}`,
-      change: (idx: number) => '/change',
-      notMine: '私のではありません。',
+      change: (idx: number) => '/おつり',
+      notMine: '他人',
     },
   },
   SendAdaScreen: {
@@ -268,7 +268,7 @@ const l10n = {
     addressInput: {
       label: 'アドレス',
       errors: {
-        invalidAddress: '有効なアドレスを入力してください。',
+        invalidAddress: '有効なアドレスを入力してください',
       },
     },
     amountInput: {
@@ -278,25 +278,25 @@ const l10n = {
           // Note(ppershing): first two should be auto-corrected
           // by the input control
           INVALID_AMOUNT: '有効な数を入れてください。',
-          TOO_MANY_DECIMAL_PLACES: '有効な数を入力してください。',
+          TOO_MANY_DECIMAL_PLACES: '有効な数を入力してください',
 
-          TOO_LARGE: '数が大きすぎます。',
-          NEGATIVE: '正の数を入力してください。',
+          TOO_LARGE: '数が大きすぎます',
+          NEGATIVE: '正の数を入力してください',
         },
-        insufficientBalance: '残高が不十分です。',
+        insufficientBalance: '残高が不足しています',
       },
     },
     continueButton: '続行',
     errorBanners: {
       // note: offline banner is shared with TransactionHistory
-      networkError: '残高を表示できません。クリックして再試行',
+      networkError: '残高を表示できません。 クリックして再試行',
       pendingOutgoingTransaction:
         '既存のトランザクションが進行中の時は、 ' +
-        '新しいトランザクションを行えません。',
+        '新しいトランザクションを行えません',
     },
   },
   ReadQRCodeAddressScreen: {
-    title: 'QRコードアドレスをスキャンしてください。',
+    title: 'QRコードアドレスをスキャンしてください',
   },
   ConfirmSendAdaScreen: {
     title: '送信',
@@ -304,7 +304,7 @@ const l10n = {
     availableFundsBanner: {
       label: common.availableFunds,
     },
-    balanceAfterTx: 'Balance after transaction',
+    balanceAfterTx: 'トランザクション後の残高',
     fees: '手数料',
     password: 'ウォレットのパスワード',
     receiver: '受信者',
@@ -330,7 +330,7 @@ const l10n = {
       'プライバシー保護のため、 ' +
       '新しいアドレスが毎回自動生成されます。',
     generateButton: '他のアドレスを生成する',
-    cannotGenerate: 'アドレスをいくつか使用する必要があります。',
+    cannotGenerate: 'アドレスをいくつか使用する必要があります',
     freshAddresses: '新しいアドレス',
     usedAddresses: '使用されたアドレス',
   },
@@ -353,7 +353,7 @@ const l10n = {
     title: '復元フレーズ',
     keysStorageCheckbox:
       '秘密鍵は、会社のサーバーではなく、' +
-      'このデバイス上にのみ保存されることを理解しました。',
+      'このデバイス上にのみ保存されることを理解しました',
     newDeviceRecoveryCheckbox:
       'アプリを別のデバイスに移動させたり、消去した場合、 ' +
       '復元フレーズがないと資金が復元されないことを ' +
@@ -363,12 +363,12 @@ const l10n = {
   MnemonicCheckScreen: {
     title: '復元フレーズ',
     instructions:
-      '正しい順序でワードをタップして、復元フレーズを有効化してください。',
+      '正しい順序でワードをタップして、復元フレーズを有効化してください',
 
     mnemonicWordsInput: {
       label: '復元フレーズ',
       errors: {
-        invalidPhrase: '復元フレーズが間違っています。',
+        invalidPhrase: '復元フレーズが間違っています',
       },
     },
     clearButton: '全消去',
@@ -378,7 +378,7 @@ const l10n = {
     title: 'ウォレットの復元',
     instructions:
       'ウォレットの復元には、復元フレーズが必要です。' +
-      '復元フレーズは、一回目に使用したときに作成されたものです。',
+      '復元フレーズは、最初にウォレットを作成した時に表示されたものです。',
     mnemonicInput: {
       label: '復元フレーズ',
       errors: {
@@ -387,7 +387,7 @@ const l10n = {
         INVALID_CHECKSUM: '有効な復元フレーズを入力してください。',
         UNKNOWN_WORDS: (words: Array<string>) => {
           const wordlist = words.map((word) => `'${word}'`).join(', ')
-          const areInvalid = `${pluralizeEn(words.length, 'is', 'are')} invalid`
+          const areInvalid = `${pluralizeEn(words.length, 'は', 'は')} 無効です`
           return `${wordlist} ${areInvalid}`
         },
       },
@@ -408,7 +408,7 @@ const l10n = {
       changePassword: 'パスワードを変更する ',
       easyConfirmation: '簡易トランザクション承認',
 
-      removeWallet: 'ウォレットを消去する',
+      removeWallet: 'ウォレットを消去',
     },
     ApplicationTab: {
       title: '設定',
@@ -449,7 +449,7 @@ const l10n = {
   TermsOfServiceScreen: {
     title: '契約条件',
     content: termsOfService,
-    aggreeClause: '契約に同意します。',
+    aggreeClause: '契約に同意します',
     continueButton: '同意',
     savingConsentModalTitle: '初期化',
     pleaseWait: common.pleaseWait,
@@ -472,12 +472,12 @@ const l10n = {
     headings: ['指紋認証を', '承認する'],
     cancelButton: 'キャンセル',
     errors: {
-      NOT_RECOGNIZED: '指紋認証を認識できません。再試行してください。',
+      NOT_RECOGNIZED: '指紋認証を認識できません。再試行してください',
       SENSOR_LOCKOUT:
-        '同時に認識できる指は１本までです。センサーが無効になりました。',
+        '同時に認識できる指は１本までです。センサーが無効になりました',
       SENSOR_LOCKOUT_PERMANENT:
         '指紋認証が無効のようです。. 従来の方法を使ってください。.',
-      DECRYPTION_FAILED: '指紋認証に失敗しました。一度戻ってください。',
+      DECRYPTION_FAILED: '指紋認証に失敗しました。一度戻ってください',
       UNKNOWN_ERROR: '不明のエラー',
     },
   },
@@ -506,7 +506,7 @@ const l10n = {
         subtitle: '新しいPINを選んで、クイックアクセスを有効にします',
       },
       PinConfirmationInput: {
-        title: 'PINもう一度入力してください。',
+        title: 'PINをもう一度入力',
       },
     },
   },
@@ -519,9 +519,9 @@ const l10n = {
       label: '新しいパスワード',
     },
     repeatPasswordInput: {
-      label: '新しいパスワードをもう一度入力してください。',
+      label: '新パスワードをもう一度入力',
       errors: {
-        passwordsDoNotMatch: 'パスワードが間違っています。',
+        passwordsDoNotMatch: 'パスワードが一致していません',
       },
     },
     continueButton: 'パスワードを変更する',
@@ -529,16 +529,16 @@ const l10n = {
   ChangeCustomPinScreen: {
     title: 'PINを変更する',
     CurrentPinInput: {
-      title: 'PINを入れてください。',
+      title: 'PINを入れてください',
       subtitle: '現在のPINを入れてください',
     },
     PinRegistrationForm: {
       PinInput: {
-        title: 'PINを入れてください。',
-        subtitle: '新しいPINを選んで、クイックアクセスを有効にする.',
+        title: 'PINを入れてください',
+        subtitle: '新しいPINを選んで、クイックアクセスを有効にする。',
       },
       PinConfirmationInput: {
-        title: 'PINをもう一度入れてください。',
+        title: 'PINもう一度入力',
       },
     },
   },
@@ -547,7 +547,8 @@ const l10n = {
     enable: {
       heading:
         '簡易トランザクション承認とは、指紋認証や顔認証 ' +
-        'を用いて、ADAのトランザクションを行うものです。 ' +
+        'を用いて、ADAのトランザクションを行うものです。' +
+        ' ' +
         'これによってセキュリティが弱くなります。 セキュリティと使いやすさ' +
         'どっちを重要視するかという選択になります。',
       warning:

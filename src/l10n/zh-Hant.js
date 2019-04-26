@@ -10,31 +10,30 @@ const languages = {
   english: 'English',
   japanese: '日本語',
   korean: '한국어',
-  russian: 'Russian',
+  russian: 'Русский',
 }
 
 const datetime = {
-  today: 'Today',
-  yesterday: 'Yesterday',
+  today: '今天',
+  yesterday: '昨天',
 }
 
 const walletNameErrors = {
-  tooLong: 'Wallet name cannot exceed 40 letters',
-  nameAlreadyTaken: 'You already have a wallet with this name',
+  tooLong: '錢包名稱不能超過40個字母',
+  nameAlreadyTaken: '"已有這名字的錢包",',
 }
 
 // common translations shared across multiple places
 const common = {
   ok: 'OK',
-  availableFunds: 'Available funds',
-  pleaseWait: 'please wait ...',
+  availableFunds: '可用資金',
+  pleaseWait: '請稍候....',
 }
 
 // ios system translations
 const ios = {
-  NSFaceIDUsageDescription:
-    'Enabling Face ID allows you quick and secure access to your account.',
-  NSCameraUsageDescription: 'Enabling camera allows you to scan QR codes.',
+  NSFaceIDUsageDescription: '啟用Face ID 可讓您快速、安全地存取您的帳戶。',
+  NSCameraUsageDescription: '允許相機掃描QR碼',
 }
 
 const l10n = {
@@ -43,199 +42,190 @@ const l10n = {
     datetime,
     ios,
     notifications: {
-      offline: 'You are offline. Please check settings on your device.',
+      offline: '你現在是離線. 請檢查設備上的設置',
     },
-    currentLanguageName: 'English',
+    currentLanguageName: '繁體中文',
   },
   confirmationDialogs: {
     logout: {
-      title: 'Logout',
-      message: 'Do you really want to logout?',
-      yesButton: 'Yes',
-      noButton: 'No',
+      title: '登出',
+      message: '你要登出嗎？',
+      yesButton: '是',
+      noButton: '不是',
     },
   },
   errorDialogs: {
     generalError: (message: string) => ({
-      title: 'Unexpected error',
-      message: `Requested operation failed. This is all we know: ${message}`,
+      title: '發生錯誤',
+      message: `請求操作失敗。 我們所知道: ${message} `,
       yesButton: common.ok,
     }),
     pinMismatch: {
-      title: 'Invalid PIN',
-      message: 'PINs do not match.',
+      title: '不正確 pin 碼',
+      message: 'PIN不正確',
       yesButton: common.ok,
     },
     incorrectPin: {
-      title: 'Invalid PIN',
-      message: 'The PIN you entered is incorrect.',
+      title: '不正確 pin 碼',
+      message: '您輸入的 pin 碼不正確',
       yesButton: common.ok,
     },
     incorrectPassword: {
-      title: 'Wrong password',
-      message: 'Password you provided is incorrect.',
+      title: '密碼錯誤',
+      message: '您輸入的 pin 碼不正確',
       yesButton: common.ok,
     },
     biometricsIsTurnedOff: {
-      title: 'Biometrics was turned off',
-      message: 'It seems that you turned off biometrics, please turn it on',
+      title: ' 生物識別技術已關閉',
+      message: '你似乎關閉了生物識別技術, 請把它打開',
       yesButton: common.ok,
     },
     walletKeysInvalidated: {
-      title: 'Biometrics changed',
+      title: '生物識別技術已變更',
       message:
-        'We detected that your biometrics in phone changed. ' +
-        'As a result the easy transaction confirmation was disabled ' +
-        'and transaction submitting is allowed only with master password. ' +
-        'You can re-enable easy transactions confirmation in settings',
+        '我們檢測到你手機裡的生物識別技術已更改。' +
+        '因此簡單的交易確認被停用' +
+        '使用主密碼來允許交易提交。 ' +
+        '您可以在設置中重新啟用輕鬆的交易確認',
       yesButton: 'OK',
     },
     networkError: {
-      title: 'Network error',
-      message:
-        'Error connecting to the server. ' +
-        'Please check your internet connection',
+      title: '網絡錯誤',
+      message: '連接到服務器時出錯。 請檢查你的網絡連接',
       yesButton: common.ok,
     },
     disableEasyConfirmationFirst: {
-      title: 'Action failed',
-      message:
-        'Please disable easy confirmation function in all ' +
-        'your wallets first',
+      title: '操作失敗',
+      message: '請關閉所有的簡易確認功能 於你的錢包',
       yesButton: common.ok,
     },
     enableFingerprintsFirst: {
-      title: 'Action failed',
-      message:
-        'You need to enable biometrics in your device first in order ' +
-        'to be able link it with this app',
+      title: '操作失敗',
+      message: ' 您需要先在設備中啟用生物識別 才能夠將它與這個應用程序鏈接',
       yesButton: 'OK',
     },
     enableSystemAuthFirst: {
-      title: 'Lock screen disabled',
+      title: '鎖定屏幕無効',
       message:
-        'You probably disabled lock screen in your phone. You need to ' +
-        'disable easy transaction confirmation first. Please set up ' +
-        'you lock screen (PIN / Password / Pattern) on your phone ' +
-        'and then restart application. After this action you should be ' +
-        'able to disable lock screen ' +
-        'on your phone and use this application',
+        '您可能禁用了手機中的鎖定屏幕。 你需要' +
+        '首先停用簡單交易確認 再設定' +
+        '您在手機上鎖定屏幕 (PIN /密碼)' +
+        '然後重啟應用程序 在這操作後你應該 ' +
+        '能夠關閉鎖屏 ' +
+        '',
       yesButton: 'OK',
     },
     wrongPinError: {
-      title: 'Invalid PIN',
-      message: 'PIN is incorrect.',
+      title: '不正確 pin 碼',
+      message: 'PIN碼不正確.',
       yesButton: 'OK',
     },
   },
   LanguageSelectionScreen: {
     languages,
-    continueButton: 'Choose language',
+    continueButton: '選擇語言',
   },
   YoroiDescription: {
-    line1: 'Yoroi is Web Light Wallet for Cardano',
-    line2: 'Secure Fast Simple',
+    line1: 'Yoroi是CARDANO的輕錢包',
+    line2: '簡便、快捷且安全',
     byEmurgo: 'By',
   },
   AppStartScreen: {
-    loginButton: 'Login',
+    loginButton: '登入',
   },
   WithPinLoginScreen: {
-    title: 'Enter PIN',
+    title: '輸入PIN碼',
   },
   CreateWalletScreen: {
-    title: 'Create a new wallet',
+    title: '建立新錢包',
   },
   CreateOrRestoreWalletScreen: {
-    title: 'Add wallet',
-    createWalletButton: 'Create new wallet',
-    restoreWalletButton: 'Restore wallet from backup',
+    title: '增添錢包',
+    createWalletButton: '創建新錢包',
+    restoreWalletButton: '從備份恢復錢包',
   },
   // On CreateWalletScreen
   MnemonicExplanationModal: {
     paragraph1: [
       inline([
-        normal(
-          'On the following screen, you will see a set of 15 random words. ',
-        ),
-        normal('This is your '),
-        bold('wallet recovery phrase. '),
-        normal('It can be entered in any version '),
-        normal('of Yoroi in order to back up or restore '),
-        normal('your wallet`s funds and private key.'),
+        normal('在之後的屏幕上，您將看到一組15個隨機單詞。 '),
+        normal('這是你的 '),
+        bold('錢包恢復短語。 '),
+        normal('可以在任何版本的Yoroi輸入'),
+        normal('來備份或恢復'),
+        normal('你的Yoroi錢包的資金和私鑰。'),
       ]),
     ],
     paragraph2: [
       inline([
-        normal('Make sure '),
-        bold('nobody looks into your screen '),
-        normal('unless you want them to have access to your funds.'),
+        normal('請確保'),
+        bold('沒人看著你的屏幕 '),
+        normal('除非你希望他們能夠獲得你的資金。'),
       ]),
     ],
-    nextButton: 'I understand',
+    nextButton: '我了解',
   },
   WalletNameAndPasswordForm: {
     walletNameInput: {
-      label: 'Wallet name',
+      label: '錢包名稱',
       errors: walletNameErrors,
     },
     newPasswordInput: {
-      label: 'Wallet password',
+      label: '錢包密碼',
     },
     repeatPasswordInput: {
-      label: 'Repeat password',
+      label: '重複輸入密碼',
       errors: {
-        passwordsDoNotMatch: 'Passwords do not match',
+        passwordsDoNotMatch: '密碼不配',
       },
     },
-    continueButton: 'Continue',
+    continueButton: '繼續',
   },
   PasswordStrengthIndicator: {
-    passwordRequirementsNote: 'The password needs to contain at least:',
-    passwordMinLength: '7 characters',
-    passwordUpperChar: '1 uppercase letter',
-    passwordLowerChar: '1 lowercase letter',
-    passwordNumber: '1 number',
-    continueButton: 'Continue',
-    passwordBigLength: '12 characters',
-    or: 'Or',
+    passwordRequirementsNote: '密碼至少需要包含:',
+    passwordMinLength: '7個字',
+    passwordUpperChar: '1個大寫字母',
+    passwordLowerChar: '1個小寫字母',
+    passwordNumber: '1個數字',
+    continueButton: '繼續',
+    passwordBigLength: '12個字符',
+    or: '或',
   },
   TransactionHistoryScreeen: {
     syncErrorBanner: {
-      textWithoutRefresh: 'We are experiencing synchronization issues.',
-      textWithRefresh:
-        'We are experiencing synchronization issues. Pull to refresh',
+      textWithoutRefresh: '我們遇到了同步問題。',
+      textWithRefresh: '我們遇到了同步問題。 再刷新',
     },
     availableFundsBanner: {
       label: common.availableFunds,
     },
-    noTransactions: 'No transactions to show yet',
-    transaction: {
+    noTransactions: '暫無任何交易',
+    交易: {
       transactionType: {
-        SENT: 'ADA sent',
-        RECEIVED: 'ADA received',
-        SELF: 'Intrawallet',
-        MULTI: 'Multiparty',
+        SENT: 'ADA發送',
+        RECEIVED: '已收ADA',
+        SELF: '錢包內',
+        MULTI: '多方',
       },
-      assuranceLevelHeader: 'Assurance level:',
+      assuranceLevelHeader: '保證等級',
       assuranceLevel: {
-        LOW: 'Low',
-        MEDIUM: 'Medium',
-        HIGH: 'High',
-        PENDING: 'Pending',
-        FAILED: 'Failed',
+        LOW: '低',
+        MEDIUM: '中',
+        HIGH: '高',
+        PENDING: '等候',
+        FAILED: '失敗',
       },
-      fee: 'Fee:',
+      fee: '費用:',
     },
-    sendButton: 'Send',
-    receiveButton: 'Receive',
+    sendButton: '發送',
+    receiveButton: '接收',
   },
   TransactionDetailsScreen: {
     transactionType: {
-      SENT: 'Sent funds',
-      RECEIVED: 'Received funds',
-      SELF: 'Intrawallet transaction',
-      MULTI: 'Multi-party transaction',
+      SENT: '已發送資金',
+      RECEIVED: '收到的資金',
+      SELF: '錢包內交易',
+      MULTI: '多方交易',
     },
     fee: 'Fee: ',
     fromAddresses: 'From Addresses',
