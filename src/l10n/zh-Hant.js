@@ -16,7 +16,7 @@ const languages = {
 const datetime = {
   today: '今天',
   yesterday: '昨天',
-}
+} 
 
 const walletNameErrors = {
   tooLong: '錢包名稱不能超過40個字母',
@@ -32,7 +32,8 @@ const common = {
 
 // ios system translations
 const ios = {
-  NSFaceIDUsageDescription: '啟用Face ID 可讓您快速、安全地存取您的帳戶。',
+  NSFaceIDUsageDescription:
+    '啟用Face ID 可讓您快速、安全地存取您的帳戶。',
   NSCameraUsageDescription: '允許相機掃描QR碼',
 }
 
@@ -83,32 +84,38 @@ const l10n = {
     walletKeysInvalidated: {
       title: '生物識別技術已變更',
       message:
-        '我們檢測到你手機裡的生物識別技術已更改。' +
-        '因此簡單的交易確認被停用' +
-        '使用主密碼來允許交易提交。 ' +
+        '我們檢測到你手機裡的生物識別技術已更改。' ' +
+        '因此簡單的交易確認被停用'+
+        ʻ使用主密碼來允許交易提交。 ' +
         '您可以在設置中重新啟用輕鬆的交易確認',
       yesButton: 'OK',
     },
     networkError: {
       title: '網絡錯誤',
-      message: '連接到服務器時出錯。 請檢查你的網絡連接',
+      message:
+        '連接到服務器時出錯。 ' +
+        '請檢查你的網絡連接',
       yesButton: common.ok,
     },
     disableEasyConfirmationFirst: {
       title: '操作失敗',
-      message: '請關閉所有的簡易確認功能 於你的錢包',
+      message:
+        '請關閉所有的簡易確認功能 ' +
+        '於你的錢包',
       yesButton: common.ok,
     },
     enableFingerprintsFirst: {
       title: '操作失敗',
-      message: ' 您需要先在設備中啟用生物識別 才能夠將它與這個應用程序鏈接',
+      message:
+        ' 您需要先在設備中啟用生物識別 ' +
+        '才能夠將它與這個應用程序鏈接',
       yesButton: 'OK',
     },
     enableSystemAuthFirst: {
       title: '鎖定屏幕無効',
       message:
-        '您可能禁用了手機中的鎖定屏幕。 你需要' +
-        '首先停用簡單交易確認 再設定' +
+        '您可能禁用了手機中的鎖定屏幕。 你需要'+
+        首先停用簡單交易確認 再設定' +
         '您在手機上鎖定屏幕 (PIN /密碼)' +
         '然後重啟應用程序 在這操作後你應該 ' +
         '能夠關閉鎖屏 ' +
@@ -127,7 +134,7 @@ const l10n = {
   },
   YoroiDescription: {
     line1: 'Yoroi是CARDANO的輕錢包',
-    line2: '簡便、快捷且安全',
+    簡便、快捷且安全
     byEmurgo: 'By',
   },
   AppStartScreen: {
@@ -148,10 +155,12 @@ const l10n = {
   MnemonicExplanationModal: {
     paragraph1: [
       inline([
-        normal('在之後的屏幕上，您將看到一組15個隨機單詞。 '),
+        normal(
+          '在之後的屏幕上，您將看到一組15個隨機單詞。 ',
+        ),
         normal('這是你的 '),
         bold('錢包恢復短語。 '),
-        normal('可以在任何版本的Yoroi輸入'),
+        normal('可以在任何版本的Yoroi輸入
         normal('來備份或恢復'),
         normal('你的Yoroi錢包的資金和私鑰。'),
       ]),
@@ -194,7 +203,8 @@ const l10n = {
   TransactionHistoryScreeen: {
     syncErrorBanner: {
       textWithoutRefresh: '我們遇到了同步問題。',
-      textWithRefresh: '我們遇到了同步問題。 再刷新',
+      textWithRefresh:
+        '我們遇到了同步問題。 再刷新'，
     },
     availableFundsBanner: {
       label: common.availableFunds,
