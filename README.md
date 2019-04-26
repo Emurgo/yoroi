@@ -31,6 +31,11 @@ node_modules/react-native/scripts/ios-install-third-party.sh
 node_modules/react-native/third-party/glog-0.3.5/configure
 ```
 
+In case of problems generating the compiled targets for iOS. You can use the precompiled targets
+```
+sh install_precompiled_targets.sh
+```
+
 If you get an error of the style:
 
 `Could not list contents of '/Users/myself/yoroi-mobile/third-party/glog-0.3.5/test-driver'. Couldn't follow symbolic link.`
@@ -71,7 +76,7 @@ On Host (allow app to connect to packaged bundle after build)
 follow https://facebook.github.io/react-native/docs/getting-started.html (tab Building Projects with Native Code)
 ```
 
-1. Ask for a copy of (or creta a blank version of) `android/gradle.properties.local`, `android/app/google-services.json` and `android/app/api-XXXX.json`
+1. Ask for a copy of (or create a blank version of) `android/gradle.properties.local`, `android/app/google-services.json` and `android/app/api-XXXX.json`
 1. Make sure your Anddroid build tools match the version in [android/build.gradle](android/build.gradle) (you will get an error otherwise)
 1. Download the NDK form Android Studio
 1. Install Rust for Android `rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android`

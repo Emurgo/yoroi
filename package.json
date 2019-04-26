@@ -12,11 +12,12 @@
     "prettify_l10n": "prettier --write \"src/l10n/type.js\" --config src/.prettierrc",
     "setup_configs": "react-native-schemes-manager all",
     "manage-translations": "node ./translations/translation-runner.js",
-    "purge-translations": "rimraf ./translations/messages"
+    "purge-translations": "rimraf ./translations/messages",
+    "android-bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res"
   },
   "dependencies": {
-    "@babel/cli": "^7.1.2",
-    "@babel/core": "^7.1.2",
+    "@babel/cli": "7.2.3",
+    "@babel/core": "7.4.0",
     "@babel/node": "^7.0.0",
     "@babel/runtime": "^7.1.2",
     "babel-eslint": "^10.0.1",
@@ -28,7 +29,7 @@
     "es6-error": "^4.1.1",
     "es6-symbol": "^3.1.1",
     "eslint": "^5.6.1",
-    "eslint-config-vacuumlabs": "^1.5.0",
+    "eslint-config-vacuumlabs": "1.5.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-react": "^7.11.1",
     "eslint-plugin-react-native": "^3.3.0",
@@ -88,9 +89,9 @@
     "flow-bin": "0.78",
     "jest": "23.6.0",
     "metro-react-native-babel-preset": "^0.51.1",
-    "prettier": "^1.14.3",
-    "prettylint": "^1.0.0",
     "react-intl-translations-manager": "^5.0.3",
+    "prettier": "1.14.3",
+    "prettylint": "1.0.0",
     "react-native-schemes-manager": "^1.0.5",
     "react-test-renderer": "16.5.0"
   },
