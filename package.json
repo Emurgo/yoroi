@@ -21,6 +21,7 @@
     "@babel/node": "^7.0.0",
     "@babel/runtime": "^7.1.2",
     "babel-eslint": "^10.0.1",
+    "base-x": "3.0.4",
     "bignumber.js": "^7.2.1",
     "bip39": "^2.5.0",
     "bluebird": "^3.5.2",
@@ -89,11 +90,14 @@
     "flow-bin": "0.78",
     "jest": "23.6.0",
     "metro-react-native-babel-preset": "^0.51.1",
-    "react-intl-translations-manager": "^5.0.3",
     "prettier": "1.14.3",
     "prettylint": "1.0.0",
+    "react-intl-translations-manager": "^5.0.3",
     "react-native-schemes-manager": "^1.0.5",
     "react-test-renderer": "16.5.0"
+  },
+  "resolutions": {
+      "base-x": "3.0.4"
   },
   "jest": {
     "transform": {
