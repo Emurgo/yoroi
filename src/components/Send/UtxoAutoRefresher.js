@@ -3,6 +3,7 @@ import React from 'react'
 import {NavigationEvents} from 'react-navigation'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
+import type {ComponentType} from 'react'
 
 import {
   hasPendingOutgoingTransactionSelector,
@@ -52,7 +53,7 @@ class _UtxoAutoRefresher extends React.Component<{
   render = () => <NavigationEvents onDidFocus={this.handleDidFocus} />
 }
 
-export default compose(
+export default (compose(
   connect(
     (state) => ({
       isFetching: isFetchingUtxosSelector(state),
@@ -63,4 +64,4 @@ export default compose(
       fetchUTXOs,
     },
   ),
-)(_UtxoAutoRefresher)
+)(_UtxoAutoRefresher): ComponentType<{}>)

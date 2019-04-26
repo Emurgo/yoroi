@@ -8,11 +8,8 @@ import {Logger} from './logging'
 
 import {walletIsInitializedSelector} from '../selectors'
 
-import type {State} from '../state'
 import type {ComponentType} from 'react'
 import type {HOC} from 'recompose'
-
-/* global $Exact */
 
 // TODO(ppershing): figure out how to constrain 'any' here.
 // Note that simply replacing 'any' with Props (or Subprops)
@@ -70,12 +67,6 @@ export const onDidUpdate = <Props, Callback: (any, any) => mixed>(
         return <BaseComponent {...this.props} />
       }
     }
-
-// prettier-ignore
-export const withTranslations = <GetTrans: (State) => mixed, Props: {}>(
-  getTrans: GetTrans,
-): HOC<{|...$Exact<Props>, translations: $Call<GetTrans, State>|}, Props> =>
-    connect((state) => ({translations: getTrans(state)}))
 
 // prettier-ignore
 export const withNavigationTitle = <Props: {navigation: any}>(

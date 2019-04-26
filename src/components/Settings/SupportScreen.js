@@ -1,10 +1,10 @@
 // @flow
 
 import React from 'react'
-import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 import {View, TouchableOpacity, Linking, Image} from 'react-native'
+import {injectIntl, defineMessages} from 'react-intl'
 
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {Text, StatusBar} from '../UiKit'
@@ -12,9 +12,47 @@ import chevronRight from '../../assets/img/chevron_right.png'
 
 import styles from './styles/SupportScreen.style'
 
-import type {SubTranslation} from '../../l10n/typeHelpers'
-
-const getTranslations = (state) => state.trans.SupportScreen
+const messages = defineMessages({
+  title: {
+    id: 'components.settings.settingsscreen.title',
+    defaultMessage: 'Support',
+    description: 'some desc',
+  },
+  faqLabel: {
+    id: 'components.settings.settingsscreen.faqLabel',
+    defaultMessage: 'See frequently asked questions',
+    description: 'some desc',
+  },
+  faqDescription: {
+    id: 'components.settings.settingsscreen.faqDescription',
+    defaultMessage:
+      'If you are experiencing issues, please see the FAQ ' +
+      'on Yoroi website for quidance on known issues.',
+    description: 'some desc',
+  },
+  faqUrl: {
+    id: 'components.settings.settingsscreen.faqUrl',
+    defaultMessage: 'https://yoroi-wallet.com/faq/',
+    description: 'some desc',
+  },
+  reportLabel: {
+    id: 'components.settings.settingsscreen.reportLabel',
+    defaultMessage: 'Report a problem',
+    description: 'some desc',
+  },
+  reportDescription: {
+    id: 'components.settings.settingsscreen.reportDescription',
+    defaultMessage:
+      'If the FAQ does not solve the issue you are ' +
+      'experiencing, please use our Support request feature.',
+    description: 'some desc',
+  },
+  reportUrl: {
+    id: 'components.settings.settingsscreen.reportUrl',
+    defaultMessage: 'https://yoroi-wallet.com/support/',
+    description: 'some desc',
+  },
+})
 
 const Item = ({title, text, url, onPress}) => (
   <TouchableOpacity onPress={onPress} style={styles.item}>
@@ -33,29 +71,28 @@ const LinkingItem = withHandlers({
 })(Item)
 
 type Props = {
-  translations: SubTranslation<typeof getTranslations>,
+  intl: any,
 }
 
-const SupportScreen = ({translations}: Props) => (
+const SupportScreen = ({intl}: Props) => (
   <View style={styles.container}>
     <StatusBar type="dark" />
 
     <LinkingItem
-      url={translations.faq.url}
-      title={translations.faq.label}
-      text={translations.faq.description}
+      url={intl.formatMessage(messages.faqUrl)}
+      title={intl.formatMessage(messages.faqLabel)}
+      text={intl.formatMessage(messages.faqDescription)}
     />
     <LinkingItem
-      url={translations.report.url}
-      title={translations.report.label}
-      text={translations.report.description}
+      url={intl.formatMessage(messages.reportUrl)}
+      title={intl.formatMessage(messages.reportLabel)}
+      text={intl.formatMessage(messages.reportDescription)}
     />
   </View>
 )
 
-export default compose(
-  connect((state) => ({
-    translations: getTranslations(state),
-  })),
-  withNavigationTitle(({translations}) => translations.title),
-)(SupportScreen)
+export default injectIntl(
+  compose(withNavigationTitle(({intl}) => intl.formatMessage(messages.title)))(
+    SupportScreen,
+  ),
+)

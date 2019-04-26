@@ -3,14 +3,20 @@
 import React from 'react'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
+import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import {pastedFormatter, editedFormatter} from './amountUtils'
-import {withTranslations} from '../../utils/renderUtils'
 import {ValidatedTextInput} from '../UiKit'
 
 import type {ComponentType} from 'react'
 
-const getTranslations = (state) => state.trans.SendAdaScreen.amountInput
+export const messages = defineMessages({
+  label: {
+    id: 'components.send.amountfield.label',
+    defaultMessage: '!!!Amount',
+    description: 'some desc',
+  },
+})
 
 const handleSetAmount = ({setAmount, amount}) => (text) => {
   const shorterStringLength = Math.min(text.length, amount.length)
@@ -24,11 +30,11 @@ const handleSetAmount = ({setAmount, amount}) => (text) => {
   setAmount(formatter(text))
 }
 
-const AmountField = ({amount, handleSetAmount, translations, error}) => (
+const AmountField = ({amount, handleSetAmount, intl, error}) => (
   <ValidatedTextInput
     returnKeyType="done"
     keyboardType="numeric"
-    label={translations.label}
+    label={intl.formatMessage(messages.label)}
     value={amount}
     onChangeText={handleSetAmount}
     error={error}
@@ -39,11 +45,13 @@ type ExternalProps = {
   amount: string,
   setAmount: (amount: string) => mixed,
   error: ?string,
+  intl: intlShape,
 }
 
-export default (compose(
-  withTranslations(getTranslations),
-  withHandlers({
-    handleSetAmount,
-  }),
-)(AmountField): ComponentType<ExternalProps>)
+export default injectIntl(
+  (compose(
+    withHandlers({
+      handleSetAmount,
+    }),
+  )(AmountField): ComponentType<ExternalProps>),
+)

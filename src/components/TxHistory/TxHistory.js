@@ -1,11 +1,13 @@
 // @flow
 
 import React from 'react'
+import type {ComponentType} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View, RefreshControl, ScrollView, Image} from 'react-native'
 import {SafeAreaView} from 'react-navigation'
 import _ from 'lodash'
+import {injectIntl, defineMessages} from 'react-intl'
 
 import {Text, Banner, OfflineBanner, StatusBar} from '../UiKit'
 import {
@@ -15,6 +17,7 @@ import {
   isOnlineSelector,
   availableAmountSelector,
   walletNameSelector,
+  languageSelector,
 } from '../../selectors'
 import TxHistoryList from './TxHistoryList'
 import TxNavigationButtons from './TxNavigationButtons'
@@ -22,7 +25,6 @@ import {updateHistory} from '../../actions/history'
 import {
   onDidMount,
   requireInitializedWallet,
-  withTranslations,
   withNavigationTitle,
 } from '../../utils/renderUtils'
 
@@ -33,39 +35,51 @@ import styles from './styles/TxHistory.style'
 
 import type {Navigation} from '../../types/navigation'
 import type {State} from '../../state'
-import type {ComponentType} from 'react'
+import globalMessages from '../../i18n/global-messages'
 
-const getTranslations = (state: State) => state.trans.TransactionHistoryScreeen
+const messages = defineMessages({
+  noTransactions: {
+    id: 'components.txhistory.txhistory.noTransactions',
+    defaultMessage: '!!!No transactions to show yet',
+  },
+  syncErrorBannerTextWithoutRefresh: {
+    id: 'components.txhistory.txhistory.syncErrorBannerTextWithoutRefresh',
+    defaultMessage: '!!!We are experiencing synchronization issues.',
+  },
+  syncErrorBannerTextWithRefresh: {
+    id: 'components.txhistory.txhistory.syncErrorBannerTextWithRefresh',
+    defaultMessage:
+      '!!!We are experiencing synchronization issues. Pull to refresh',
+  },
+})
 
-const NoTxHistory = withTranslations(getTranslations)(({translations}) => (
+const NoTxHistory = injectIntl(({intl}) => (
   <View style={styles.empty}>
     <Image source={image} />
-    <Text style={styles.emptyText}>{translations.noTransactions}</Text>
+    <Text style={styles.emptyText}>
+      {intl.formatMessage(messages.noTransactions)}
+    </Text>
   </View>
 ))
 
-const SyncErrorBanner = withTranslations(getTranslations)(
-  ({translations, showRefresh}) => (
-    <Banner
-      error
-      text={
-        showRefresh
-          ? translations.syncErrorBanner.textWithRefresh
-          : translations.syncErrorBanner.textWithoutRefresh
-      }
-    />
-  ),
-)
+const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
+  <Banner
+    error
+    text={
+      showRefresh
+        ? intl.formatMessage(messages.syncErrorBannerTextWithRefresh)
+        : intl.formatMessage(messages.syncErrorBannerTextWithoutRefresh)
+    }
+  />
+))
 
-const AvailableAmountBanner = withTranslations(getTranslations)(
-  ({translations, amount}) => (
-    <Banner
-      label={translations.availableFundsBanner.label}
-      text={formatAdaWithText(amount)}
-      boldText
-    />
-  ),
-)
+const AvailableAmountBanner = injectIntl(({intl, amount}) => (
+  <Banner
+    label={intl.formatMessage(globalMessages.availableFunds)}
+    text={formatAdaWithText(amount)}
+    boldText
+  />
+))
 
 const TxHistory = ({
   amountPending,
@@ -112,23 +126,26 @@ type ExternalProps = {|
   navigation: Navigation,
 |}
 
-export default (compose(
-  requireInitializedWallet,
-  connect(
-    (state: State) => ({
-      transactionsInfo: transactionsInfoSelector(state),
-      isSyncing: isSynchronizingHistorySelector(state),
-      lastSyncError: lastHistorySyncErrorSelector(state),
-      isOnline: isOnlineSelector(state),
-      availableAmount: availableAmountSelector(state),
-      walletName: walletNameSelector(state),
+export default injectIntl(
+  (compose(
+    requireInitializedWallet,
+    connect(
+      (state: State) => ({
+        transactionsInfo: transactionsInfoSelector(state),
+        isSyncing: isSynchronizingHistorySelector(state),
+        lastSyncError: lastHistorySyncErrorSelector(state),
+        isOnline: isOnlineSelector(state),
+        availableAmount: availableAmountSelector(state),
+        walletName: walletNameSelector(state),
+        key: languageSelector(state),
+      }),
+      {
+        updateHistory,
+      },
+    ),
+    onDidMount(({updateHistory}) => {
+      updateHistory()
     }),
-    {
-      updateHistory,
-    },
-  ),
-  onDidMount(({updateHistory}) => {
-    updateHistory()
-  }),
-  withNavigationTitle(({walletName}) => walletName),
-)(TxHistory): ComponentType<ExternalProps>)
+    withNavigationTitle(({walletName}) => walletName),
+  )(TxHistory): ComponentType<ExternalProps>),
+)

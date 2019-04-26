@@ -2,8 +2,9 @@
 
 import React from 'react'
 import {View, SectionList} from 'react-native'
+import {injectIntl} from 'react-intl'
+import type {intlShape} from 'react-intl'
 import _ from 'lodash'
-
 import {Text} from '../UiKit'
 import TxHistoryListItem from './TxHistoryListItem'
 import {formatDateRelative} from '../../utils/format'
@@ -15,9 +16,9 @@ import type {Navigation} from '../../types/navigation'
 import type {Dict} from '../../state'
 import type {ComponentType} from 'react'
 
-const DayHeader = ({ts}) => (
+const DayHeader = ({ts, intl}) => (
   <View style={styles.dayHeader}>
-    <Text>{formatDateRelative(ts)}</Text>
+    <Text>{formatDateRelative(ts, intl)}</Text>
   </View>
 )
 
@@ -30,7 +31,13 @@ const getTransactionsByDate = (transactions: Dict<TransactionInfo>) =>
     .map((data) => ({data}))
     .value()
 
-const TxHistoryList = ({transactions, navigation, refreshing, onRefresh}) => {
+const TxHistoryList = ({
+  transactions,
+  navigation,
+  refreshing,
+  onRefresh,
+  intl,
+}) => {
   // TODO(ppershing): add proper memoization here
   const groupedTransactions = getTransactionsByDate(transactions)
 
@@ -43,7 +50,7 @@ const TxHistoryList = ({transactions, navigation, refreshing, onRefresh}) => {
           <TxHistoryListItem navigation={navigation} id={item.id} />
         )}
         renderSectionHeader={({section: {data}}) => (
-          <DayHeader ts={data[0].submittedAt} />
+          <DayHeader ts={data[0].submittedAt} intl={intl} />
         )}
         sections={groupedTransactions}
         keyExtractor={(item) => item.id}
@@ -58,6 +65,7 @@ type ExternalProps = {
   navigation: Navigation,
   refreshing: boolean,
   onRefresh: () => any,
+  intl: intlShape,
 }
 
-export default (TxHistoryList: ComponentType<ExternalProps>)
+export default injectIntl((TxHistoryList: ComponentType<ExternalProps>))

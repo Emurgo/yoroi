@@ -3,13 +3,32 @@
 import {KeyStoreBridge} from 'NativeModules'
 import * as Keychain from 'react-native-keychain'
 import {Platform} from 'react-native'
+import {defineMessages} from 'react-intl'
 
 import storage from '../utils/storage'
 import assert from '../utils/assert'
 import {decryptData, encryptData} from '../crypto/util'
-import l10n from '../l10n'
 
 export type EncryptionMethod = 'BIOMETRICS' | 'SYSTEM_PIN' | 'MASTER_PASSWORD'
+
+const messages = defineMessages({
+  approveTransaction: {
+    id: 'crypto.keystore.approveTransaction',
+    defaultMessage: 'Authorize with your fingerprint',
+  },
+  subtitle: {
+    id: 'crypto.keystore.subtitle',
+    defaultMessage: '!!!', // subtitle for the biometry dialog Andoid 9
+  },
+  description: {
+    id: 'crypto.keystore.description',
+    defaultMessage: '!!!', // description for the biometry dialog Andoid 9
+  },
+  cancelButton: {
+    id: 'crypto.keystore.cancelButton',
+    defaultMessage: 'Cancel',
+  },
+})
 
 class KeyStore {
   static storagePrefix = '/keystore'
@@ -19,8 +38,8 @@ class KeyStore {
     encryptionMethod: EncryptionMethod,
     message: string,
     password?: string,
+    intl: any,
   ) {
-    const translations = l10n.translations.Biometry
     const dataKey = KeyStore.getDataKey(keyId, encryptionMethod)
 
     if (Platform.OS === 'ios' && encryptionMethod !== 'MASTER_PASSWORD') {
@@ -43,10 +62,10 @@ class KeyStore {
           decryptedKey = await KeyStoreBridge.decryptDataWithBiometricPrompt(
             data,
             dataKey,
-            translations.approveTransaction,
-            translations.subtitle,
-            translations.description,
-            translations.cancelButton,
+            intl.formatMessage(messages.approveTransaction),
+            intl.formatMessage(messages.subtitle),
+            intl.formatMessage(messages.description),
+            intl.formatMessage(messages.cancelButton),
           )
         } else {
           decryptedKey = await KeyStoreBridge.decryptDataWithFingerprint(

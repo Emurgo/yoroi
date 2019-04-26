@@ -3,21 +3,26 @@ import React from 'react'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 import {connect} from 'react-redux'
+import {injectIntl, defineMessages} from 'react-intl'
 
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
 import {ROOT_ROUTES} from '../../../RoutesList'
-import {withNavigationTitle, withTranslations} from '../../../utils/renderUtils'
+import {withNavigationTitle} from '../../../utils/renderUtils'
 import WalletForm from '../WalletForm'
 import {createWallet} from '../../../actions'
 
-import type {State} from '../../../state'
-import type {SubTranslation} from '../../../l10n/typeHelpers'
 import type {Navigation} from '../../../types/navigation'
 
-const getTranslations = (state: State) => state.trans.WalletCredentialsScreen
+const messages = defineMessages({
+  title: {
+    id: 'components.walletinit.restorewallet.walletcredentialsscreen.title',
+    defaultMessage: '!!!Wallet credentials',
+    description: 'some desc',
+  },
+})
 
 type Props = {
-  translations: SubTranslation<typeof getTranslations>,
+  intl: any,
   navigation: Navigation,
   navigateToWallet: ({
     name: string,
@@ -26,26 +31,27 @@ type Props = {
 }
 
 const WalletCredentialsScreen = ({
-  translations,
+  intl,
   navigation,
   navigateToWallet,
 }: Props) => <WalletForm onSubmit={navigateToWallet} />
 
-export default compose(
-  connect(
-    () => ({}),
-    {createWallet},
-  ),
-  withTranslations(getTranslations),
-  withNavigationTitle(({translations}) => translations.title),
-  withHandlers({
-    navigateToWallet: ignoreConcurrentAsyncHandler(
-      ({navigation, createWallet}) => async ({name, password}) => {
-        const phrase = navigation.getParam('phrase')
-        await createWallet(name, phrase, password)
-        navigation.navigate(ROOT_ROUTES.WALLET)
-      },
-      1000,
+export default injectIntl(
+  compose(
+    connect(
+      () => ({}),
+      {createWallet},
     ),
-  }),
-)(WalletCredentialsScreen)
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withHandlers({
+      navigateToWallet: ignoreConcurrentAsyncHandler(
+        ({navigation, createWallet}) => async ({name, password}) => {
+          const phrase = navigation.getParam('phrase')
+          await createWallet(name, phrase, password)
+          navigation.navigate(ROOT_ROUTES.WALLET)
+        },
+        1000,
+      ),
+    }),
+  )(WalletCredentialsScreen),
+)

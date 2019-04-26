@@ -1,15 +1,24 @@
 // @flow
 import React from 'react'
-import {AppRegistry} from 'react-native'
+import {AppRegistry, Text} from 'react-native'
+import {addLocaleData, IntlProvider} from 'react-intl'
+import en from 'react-intl/locale-data/en'
+import ja from 'react-intl/locale-data/ja'
+import ko from 'react-intl/locale-data/ko'
+import ru from 'react-intl/locale-data/ru'
+
+// $FlowFixMe flow does not have this import
+import {connect, Provider} from 'react-redux'
+
 import App from './App'
 import {name as appName} from './app.json'
-// $FlowFixMe flow does not have this import
-import {Provider} from 'react-redux'
+
 import getConfiguredStore from './helpers/configureStore'
 import {setupHooks, handleGeneralError} from './actions'
+import {languageSelector} from './selectors'
 import {setLogLevel} from './utils/logging'
 import {CONFIG} from './config'
-
+import translations from './i18n/translations'
 import bluebird from 'bluebird'
 
 setLogLevel(CONFIG.LOG_LEVEL)
@@ -29,15 +38,31 @@ global.Promise = bluebird
 
 global.onunhandledrejection = (e) => handleGeneralError(e.message, e)
 
+// https://github.com/yahoo/react-intl/wiki#loading-locale-data
+addLocaleData([...en, ...ja, ...ko, ...ru])
+
 const store = getConfiguredStore()
 
 store.dispatch(setupHooks())
 // TODO: this is async action, we should wait for it in future
 
-const AppWithStore = () => (
-  <Provider store={store}>
-    <App />
-  </Provider>
-)
+const IntlProviderWrapper = connect((state) => {
+  const locale = languageSelector(state) || 'en-US'
+  return {
+    locale,
+    messages: translations[locale],
+    textComponent: Text,
+  }
+})(IntlProvider)
 
-AppRegistry.registerComponent(appName, () => AppWithStore)
+const AppWithProviders = () => {
+  return (
+    <Provider store={store}>
+      <IntlProviderWrapper>
+        <App />
+      </IntlProviderWrapper>
+    </Provider>
+  )
+}
+
+AppRegistry.registerComponent(appName, () => AppWithProviders)

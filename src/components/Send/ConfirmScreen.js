@@ -6,6 +6,7 @@ import {connect} from 'react-redux'
 import {ScrollView, View} from 'react-native'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {SafeAreaView} from 'react-navigation'
+import {injectIntl, defineMessages} from 'react-intl'
 
 import {
   Text,
@@ -17,6 +18,7 @@ import {
   PleaseWaitModal,
 } from '../UiKit'
 import {easyConfirmationSelector} from '../../selectors'
+import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import walletManager, {SystemAuthDisabled} from '../../crypto/wallet'
 import {SEND_ROUTES, WALLET_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import {CONFIG} from '../../config'
@@ -26,7 +28,7 @@ import {
   handleGeneralError,
   submitTransaction,
 } from '../../actions'
-import {withNavigationTitle, withTranslations} from '../../utils/renderUtils'
+import {withNavigationTitle} from '../../utils/renderUtils'
 import {formatAdaWithSymbol, formatAdaWithText} from '../../utils/format'
 import {NetworkError} from '../../api/errors'
 
@@ -35,7 +37,48 @@ import styles from './styles/ConfirmScreen.style'
 import {WrongPassword} from '../../crypto/errors'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 
-const getTranslations = (state) => state.trans.ConfirmSendAdaScreen
+const messages = defineMessages({
+  title: {
+    id: 'components.send.confirmscreen.title',
+    defaultMessage: '!!!Send',
+    description: 'some desc',
+  },
+  amount: {
+    id: 'components.send.confirmscreen.amount',
+    defaultMessage: '!!!Amount',
+    description: 'some desc',
+  },
+  balanceAfterTx: {
+    id: 'components.send.confirmscreen.balanceAfterTx',
+    defaultMessage: '!!!Balance after transaction',
+    description: 'some desc',
+  },
+  fees: {
+    id: 'components.send.confirmscreen.fees',
+    defaultMessage: '!!!Fees',
+    description: 'some desc',
+  },
+  password: {
+    id: 'components.send.confirmscreen.password',
+    defaultMessage: '!!!Wallet password',
+    description: 'some desc',
+  },
+  receiver: {
+    id: 'components.send.confirmscreen.receiver',
+    defaultMessage: '!!!Receiver',
+    description: 'some desc',
+  },
+  confirmButton: {
+    id: 'components.send.confirmscreen.confirmButton',
+    defaultMessage: '!!!Confirm',
+    description: 'some desc',
+  },
+  sendingModalTitle: {
+    id: 'components.send.confirmscreen.sendingModalTitle',
+    defaultMessage: '!!!Submitting transaction',
+    description: 'some desc',
+  },
+})
 
 const handleOnConfirm = async (
   navigation,
@@ -43,6 +86,7 @@ const handleOnConfirm = async (
   password,
   submitTransaction,
   setSendingTransaction,
+  intl,
 ) => {
   const transactionData = navigation.getParam('transactionData')
 
@@ -54,7 +98,7 @@ const handleOnConfirm = async (
       navigation.navigate(WALLET_ROUTES.TX_HISTORY)
     } catch (e) {
       if (e instanceof NetworkError) {
-        await showErrorDialog((dialogs) => dialogs.networkError)
+        await showErrorDialog(errorMessages.networkError, intl)
       } else {
         throw e
       }
@@ -78,7 +122,7 @@ const handleOnConfirm = async (
     } catch (e) {
       if (e instanceof SystemAuthDisabled) {
         await walletManager.closeWallet()
-        await showErrorDialog((dialogs) => dialogs.enableSystemAuthFirst)
+        await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
         navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
 
         return
@@ -96,12 +140,13 @@ const handleOnConfirm = async (
       'MASTER_PASSWORD',
       '',
       password,
+      intl,
     )
 
     submitTx(decryptedData)
   } catch (e) {
     if (e instanceof WrongPassword) {
-      await showErrorDialog((dialogs) => dialogs.incorrectPassword)
+      await showErrorDialog(errorMessages.incorrectPassword, intl)
     } else {
       handleGeneralError('Could not submit transaction', e)
     }
@@ -110,7 +155,7 @@ const handleOnConfirm = async (
 
 const ConfirmScreen = ({
   onConfirm,
-  translations,
+  intl,
   navigation,
   password,
   setPassword,
@@ -132,25 +177,27 @@ const ConfirmScreen = ({
 
         <OfflineBanner />
         <Banner
-          label={translations.availableFundsBanner.label}
+          label={intl.formatMessage(globalMessages.availableFunds)}
           text={formatAdaWithText(availableAmount)}
           boldText
         />
 
         <ScrollView style={styles.container}>
           <Text small>
-            {translations.fees}: {formatAdaWithSymbol(transactionData.fee)}
+            {intl.formatMessage(messages.fees)}:{' '}
+            {formatAdaWithSymbol(transactionData.fee)}
           </Text>
           <Text small>
-            {translations.balanceAfterTx}: {formatAdaWithSymbol(balanceAfterTx)}
+            {intl.formatMessage(messages.balanceAfterTx)}:{' '}
+            {formatAdaWithSymbol(balanceAfterTx)}
           </Text>
 
           <Text style={styles.heading} small>
-            {translations.receiver}
+            {intl.formatMessage(messages.receiver)}
           </Text>
           <Text>{address}</Text>
           <Text style={styles.heading} small>
-            {translations.amount}
+            {intl.formatMessage(messages.amount)}
           </Text>
           <Text>{formatAdaWithSymbol(amount)}</Text>
 
@@ -159,7 +206,7 @@ const ConfirmScreen = ({
               <ValidatedTextInput
                 secureTextEntry
                 value={password}
-                label={translations.password}
+                label={intl.formatMessage(messages.password)}
                 onChangeText={setPassword}
               />
             </View>
@@ -168,62 +215,65 @@ const ConfirmScreen = ({
         <View style={styles.actions}>
           <Button
             onPress={onConfirm}
-            title={translations.confirmButton}
+            title={intl.formatMessage(messages.confirmButton)}
             disabled={isConfirmationDisabled}
           />
         </View>
       </View>
 
       <PleaseWaitModal
-        title={translations.sendingModalTitle}
-        spinnerText={translations.pleaseWait}
+        title={intl.formatMessage(messages.sendingModalTitle)}
+        spinnerText={intl.formatMessage(globalMessages.pleaseWait)}
         visible={sendingTransaction}
       />
     </SafeAreaView>
   )
 }
 
-export default compose(
-  connect(
-    (state) => ({
-      isEasyConfirmationEnabled: easyConfirmationSelector(state),
-    }),
-    {
-      submitTransaction,
-    },
-  ),
-  withTranslations(getTranslations),
-  withStateHandlers(
-    {
-      password: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
-      sendingTransaction: false,
-    },
-    {
-      setPassword: (state) => (value) => ({password: value}),
-      setSendingTransaction: () => (sendingTransaction) => ({
-        sendingTransaction,
+export default injectIntl(
+  compose(
+    connect(
+      (state) => ({
+        isEasyConfirmationEnabled: easyConfirmationSelector(state),
       }),
-    },
-  ),
-  withNavigationTitle(({translations}) => translations.title),
-  withHandlers({
-    onConfirm: ignoreConcurrentAsyncHandler(
-      ({
-        navigation,
-        isEasyConfirmationEnabled,
-        password,
+      {
         submitTransaction,
-        setSendingTransaction,
-      }) => async (event) => {
-        await handleOnConfirm(
+      },
+    ),
+    withStateHandlers(
+      {
+        password: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
+        sendingTransaction: false,
+      },
+      {
+        setPassword: (state) => (value) => ({password: value}),
+        setSendingTransaction: () => (sendingTransaction) => ({
+          sendingTransaction,
+        }),
+      },
+    ),
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withHandlers({
+      onConfirm: ignoreConcurrentAsyncHandler(
+        ({
           navigation,
           isEasyConfirmationEnabled,
           password,
           submitTransaction,
           setSendingTransaction,
-        )
-      },
-      1000,
-    ),
-  }),
-)(ConfirmScreen)
+          intl,
+        }) => async (event) => {
+          await handleOnConfirm(
+            navigation,
+            isEasyConfirmationEnabled,
+            password,
+            submitTransaction,
+            setSendingTransaction,
+            intl,
+          )
+        },
+        1000,
+      ),
+    }),
+  )(ConfirmScreen),
+)

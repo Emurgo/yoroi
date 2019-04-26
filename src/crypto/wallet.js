@@ -88,17 +88,21 @@ export class Wallet {
     await KeyStore.storeData(this._id, encryptionMethod, masterKey, password)
   }
 
-  async getDecryptedMasterKey(masterPassword: string) {
+  async getDecryptedMasterKey(masterPassword: string, intl: any) {
     return await KeyStore.getData(
       this._id,
       'MASTER_PASSWORD',
       '',
       masterPassword,
+      intl,
     )
   }
 
-  async enableEasyConfirmation(masterPassword: string) {
-    const decryptedMasterKey = await this.getDecryptedMasterKey(masterPassword)
+  async enableEasyConfirmation(masterPassword: string, intl: any) {
+    const decryptedMasterKey = await this.getDecryptedMasterKey(
+      masterPassword,
+      intl,
+    )
 
     await this.encryptAndSaveMasterKey('BIOMETRICS', decryptedMasterKey)
     await this.encryptAndSaveMasterKey('SYSTEM_PIN', decryptedMasterKey)
@@ -107,7 +111,7 @@ export class Wallet {
     this._isEasyConfirmationEnabled = true
   }
 
-  async changePassword(masterPassword: string, newPassword: string) {
+  async changePassword(masterPassword: string, newPassword: string, intl: any) {
     const isNewPasswordValid = _.isEmpty(
       validatePassword(newPassword, newPassword),
     )
@@ -116,7 +120,7 @@ export class Wallet {
       throw new Error('New password is not valid')
     }
 
-    const masterKey = await this.getDecryptedMasterKey(masterPassword)
+    const masterKey = await this.getDecryptedMasterKey(masterPassword, intl)
 
     await this.encryptAndSaveMasterKey(
       'MASTER_PASSWORD',
@@ -729,11 +733,11 @@ class WalletManager {
     this._notify()
   }
 
-  async enableEasyConfirmation(masterPassword: string) {
+  async enableEasyConfirmation(masterPassword: string, intl: any) {
     if (!this._wallet) throw new WalletClosed()
     const wallet = this._wallet
 
-    await wallet.enableEasyConfirmation(masterPassword)
+    await wallet.enableEasyConfirmation(masterPassword, intl)
 
     await this._updateMetadata(wallet._id, {
       isEasyConfirmationEnabled: true,
@@ -742,10 +746,10 @@ class WalletManager {
     this._notify()
   }
 
-  async changePassword(masterPassword: string, newPassword: string) {
+  async changePassword(masterPassword: string, newPassword: string, intl: any) {
     if (!this._wallet) throw new WalletClosed()
 
-    await this._wallet.changePassword(masterPassword, newPassword)
+    await this._wallet.changePassword(masterPassword, newPassword, intl)
   }
 
   canBiometricsSignInBeDisabled() {
