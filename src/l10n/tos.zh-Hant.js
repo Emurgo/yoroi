@@ -1,43 +1,15 @@
 // @flow
+/* eslint-disable max-len */
 import {heading, paragraph, listItem} from './util'
 
 export const termsOfService = [
   paragraph(
-    本服務條款（下稱「本條款」）由EMURGO \
-Co., Ltd. 下稱「本公司」）與 \
-完成下載、使用或操作「Yoroi數位加密貨幣錢包」 \
-此一應用軟體以及本公司與該軟體一併提供之資訊處理服務、\
-應用、通信服務或其他內容（下稱「本軟體」）
-（下稱「本軟體」）之任何個人或實體（下稱「用戶」）所訂立。 本公司與用戶合稱為 \
-「雙方當事人」。 透過點擊「我接受」按鈕或訪問、 \
-使用或安裝本軟體的任何部分，用戶明確同意且 \
-承諾受本條款中的所有規定合法約束。 若用戶 \
-不同意接受本條款之所有規定，用戶將不被 \
-授權訪問、使用或安裝本軟體的任何部分。',
+    '本服務條款（下稱「本條款」）由EMURGO Co., Ltd. 下稱「本公司」）與 完成下載、使用或操作「Yoroi數位加密貨幣錢包」此一應用軟體以及本公司與該軟體一併提供之資訊處理服務、應用、通信服務或其他內容（下稱「本軟體」）（下稱「本軟體」）之任何個人或實體（下稱「用戶」）所訂立。 本公司與用戶合稱為 「雙方當事人」。 透過點擊「我接受」按鈕或訪問、 使用或安裝本軟體的任何部分，用戶明確同意且 承諾受本條款中的所有規定合法約束。 若用戶 不同意接受本條款之所有規定，用戶將不被 授權訪問、使用或安裝本軟體的任何部分。',
   ),
   heading('1. 權利與義務'),
   listItem(
     'a. 說明 ',
-     本軟體作為一個免費、開源之數位加密貨幣錢包運行。 \
-  The Software does not constitute an account by which the Company or \
-any other third parties serve as financial intermediaries or custodians of \
-User's ADA or any other cryptocurrency. While the Software has undergone beta \
-testing and continues to be improved by feedback from the developers \
-community, open-source contributors and beta-testers, the Company cannot \
-guarantee that there will be no bugs in the Software. User acknowledges that \
-User's use of the Software is at User's risk, discretion and in compliance \
-with all applicable laws. User is responsible for safekeeping User's \
-passwords, PINs, private keys, redemption keys, shielded vending keys, backup \
-recovery mnemonic passphrases, ADA passcodes and any other codes User uses to \
-access the Software or any information, ADA, voucher, or other cryptocurrency \
-unit. IF USER LOSES ACCESS TO USER'S CRYPTOCURRENCY WALLET OR PRIVATE KEYS AND \
-HAS NOT SEPARATELY STORED A BACKUP OF USER'S CRYPTOCURRENCY WALLET OR BACKUP \
-RECOVERY MNEMONIC PHRASE(S) AND CORRESPONDING PASSWORD(S), USER ACKNOWLEDGES \
-AND AGREES THAT ANY ADA OR ANY OTHER CRYPTOCURRENCIES USER HAS ASSOCIATED WITH \
-THAT CRYPTOCURRENCY WALLET WILL BECOME INACCESSIBLE. All transaction requests \
-are irreversible. The Company and its shareholders, directors, officers, \
-employees, affiliates and agents cannot guarantee transaction confirmation or \
-retrieve User's private keys or passwords if User loses or forgets them.",
+    "本軟體作為一個免費、開源之數位加密貨幣錢包運行。   The Software does not constitute an account by which the Company or any other third parties serve as financial intermediaries or custodians of User's ADA or any other cryptocurrency. While the Software has undergone beta testing and continues to be improved by feedback from the developers community, open-source contributors and beta-testers, the Company cannot guarantee that there will be no bugs in the Software. User acknowledges that User's use of the Software is at User's risk, discretion and in compliance with all applicable laws. User is responsible for safekeeping User's passwords, PINs, private keys, redemption keys, shielded vending keys, backup recovery mnemonic passphrases, ADA passcodes and any other codes User uses to access the Software or any information, ADA, voucher, or other cryptocurrency unit. IF USER LOSES ACCESS TO USER'S CRYPTOCURRENCY WALLET OR PRIVATE KEYS AND HAS NOT SEPARATELY STORED A BACKUP OF USER'S CRYPTOCURRENCY WALLET OR BACKUP RECOVERY MNEMONIC PHRASE(S) AND CORRESPONDING PASSWORD(S), USER ACKNOWLEDGES AND AGREES THAT ANY ADA OR ANY OTHER CRYPTOCURRENCIES USER HAS ASSOCIATED WITH THAT CRYPTOCURRENCY WALLET WILL BECOME INACCESSIBLE. All transaction requests are irreversible. The Company and its shareholders, directors, officers, employees, affiliates and agents cannot guarantee transaction confirmation or retrieve User's private keys or passwords if User loses or forgets them.",
   ),
   listItem(
     'b. Accessibility. ',

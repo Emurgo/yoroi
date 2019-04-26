@@ -1,6 +1,6 @@
 // @flow
 import {pluralizeEn, bold, normal, inline} from './util'
-import {termsOfService} from './tos.en'
+import {termsOfService} from './tos.ko-KR'
 
 // Do not translate
 const languages = {
@@ -21,7 +21,6 @@ const datetime = {
 const walletNameErrors = {
   tooLong: '지갑명은 40자를 초과할 수 없습니다',
   nameAlreadyTaken: '이미 사용하고 있는 지갑명입니다.',
- 
 }
 
 // common translations shared across multiple places
@@ -79,7 +78,8 @@ const l10n = {
     },
     biometricsIsTurnedOff: {
       title: '생체인식이 비활성화 되어 있습니다',
-      message: '생체인식 기능이 현재 비활성화 되어 있으므로 활성화 시켜 주십시오.',
+      message:
+        '생체인식 기능이 현재 비활성화 되어 있으므로 활성화 시켜 주십시오.',
       yesButton: common.ok,
     },
     walletKeysInvalidated: {
@@ -100,9 +100,7 @@ const l10n = {
     },
     disableEasyConfirmationFirst: {
       title: '조치 실패',
-      message:
-        '우선 지갑내의 모든 간편 승인 기능을 비활성화 ' +
-        '해주십시오',
+      message: '우선 지갑내의 모든 간편 승인 기능을 비활성화 해주십시오',
       yesButton: common.ok,
     },
     enableFingerprintsFirst: {
@@ -156,9 +154,7 @@ const l10n = {
   MnemonicExplanationModal: {
     paragraph1: [
       inline([
-        normal(
-          '다음 화면에 무작위로 선정된 15개의 단어가 나타납니다. ',
-        ),
+        normal('다음 화면에 무작위로 선정된 15개의 단어가 나타납니다. '),
         normal('이것은 당신의 '),
         bold('지갑을 복구할 때 사용되는 구절 입니다. '),
         normal('이 구절은 요로의 지갑의 모든 버전에서 '),
@@ -204,8 +200,7 @@ const l10n = {
   TransactionHistoryScreeen: {
     syncErrorBanner: {
       textWithoutRefresh: '동기화 문제가 발생하였습니다.',
-      textWithRefresh:
-        '동기화 문제가 발생하였습니다. 새로고침 해주십시오',
+      textWithRefresh: '동기화 문제가 발생하였습니다. 새로고침 해주십시오',
     },
     availableFundsBanner: {
       label: common.availableFunds,
@@ -292,11 +287,9 @@ const l10n = {
     errorBanners: {
       // note: offline banner is shared with TransactionHistory
       networkError:
-        '잔액을 가져오는데 문제가 발생했습니다. ' +
-        '다시 시도해 주십시오.',
+        '잔액을 가져오는데 문제가 발생했습니다. 다시 시도해 주십시오.',
       pendingOutgoingTransaction:
-        '현재 보류중인 거래가 있을 경우 ' +
-        '새로운 거래를 진행할 수 없습니다',
+        '현재 보류중인 거래가 있을 경우 새로운 거래를 진행할 수 없습니다',
     },
   },
   ReadQRCodeAddressScreen: {
@@ -438,8 +431,7 @@ const l10n = {
     faq: {
       label: '자주 묻는 질문 보기',
       description:
-        '문제가 발생할 경우 요로이 웹사이트에서 ' +
-        'FAQ를 확인해 주십시오.',
+        '문제가 발생할 경우 요로이 웹사이트에서 FAQ를 확인해 주십시오.',
       url: 'https://yoroi-wallet.com/faq/',
     },
     report: {

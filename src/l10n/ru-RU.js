@@ -1,6 +1,7 @@
 // @flow
+/* eslint-disable max-len */
 import {pluralizeEn, bold, normal, inline} from './util'
-import {termsOfService} from './tos.en'
+import {termsOfService} from './tos.ru-RU'
 
 // Do not translate
 const languages = {
@@ -34,7 +35,8 @@ const common = {
 const ios = {
   NSFaceIDUsageDescription:
     'Активация Face ID позволяет Вам быстро и безопасно получить доступ к своему аккаунту.',
-  NSCameraUsageDescription: 'Включение камеры позволяет Вам сканировать QR коды.',
+  NSCameraUsageDescription:
+    'Включение камеры позволяет Вам сканировать QR коды.',
 }
 
 const l10n = {
@@ -43,7 +45,8 @@ const l10n = {
     datetime,
     ios,
     notifications: {
-      offline: 'Вы не подключены к сети. Пожалуйста, проверьте настройки на Вашем устройстве.',
+      offline:
+        'Вы не подключены к сети. Пожалуйста, проверьте настройки на Вашем устройстве.',
     },
     currentLanguageName: 'Русский',
   },
@@ -155,9 +158,7 @@ const l10n = {
   MnemonicExplanationModal: {
     paragraph1: [
       inline([
-        normal(
-          'В следующем окне Вы увидите набор 15 случайных слов. ',
-        ),
+        normal('В следующем окне Вы увидите набор 15 случайных слов. '),
         normal('Это восстановительная '),
         bold('фраза Вашего кошелька. '),
         normal('Она может быть введена в любой версии '),
@@ -169,7 +170,9 @@ const l10n = {
       inline([
         normal('Убедитесь, что '),
         bold('никто не смотрит на экран Вашего устройства, '),
-        normal('если только Вы не собираетесь предоставить им доступ к Вашим средствам.'),
+        normal(
+          'если только Вы не собираетесь предоставить им доступ к Вашим средствам.',
+        ),
       ]),
     ],
     nextButton: 'Мне понятно',
@@ -203,8 +206,7 @@ const l10n = {
   TransactionHistoryScreeen: {
     syncErrorBanner: {
       textWithoutRefresh: 'Проблемы с синхронизацией.',
-      textWithRefresh:
-        'Проблемы с синхронизацией. Потяните, чтобы обновить',
+      textWithRefresh: 'Проблемы с синхронизацией. Потяните, чтобы обновить',
     },
     availableFundsBanner: {
       label: common.availableFunds,
@@ -284,7 +286,8 @@ const l10n = {
           TOO_LARGE: 'Слишком большая сумма',
           NEGATIVE: 'Сумма должна быть положительной',
         },
-        insufficientBalance: 'Недостаточно средств для проведения этой транзакции',
+        insufficientBalance:
+          'Недостаточно средств для проведения этой транзакции',
       },
     },
     continueButton: 'Продолжить',
@@ -389,7 +392,7 @@ const l10n = {
         INVALID_CHECKSUM: 'Пожалуйста, введите верную мнемоническую фразу.',
         UNKNOWN_WORDS: (words: Array<string>) => {
           const wordlist = words.map((word) => `'${word}'`).join(', ')
-          const areInvalid = `недействительно`
+          const areInvalid = 'недействительно'
           return `${wordlist} ${areInvalid}`
         },
       },
@@ -467,7 +470,10 @@ const l10n = {
     notNowButton: 'Не сейчас',
     linkButton: 'Ссылка',
     headings: ['Используйте свой отпечаток пальца'],
-    subHeadings: ['для более быстрого, легкого доступа', 'к своему Yoroi кошельку'],
+    subHeadings: [
+      'для более быстрого, легкого доступа',
+      'к своему Yoroi кошельку',
+    ],
   },
   // TODO(ppershing): this localization is a mess
   BiometricsAuthScreen: {
@@ -477,10 +483,12 @@ const l10n = {
     cancelButton: 'Отменить',
     errors: {
       NOT_RECOGNIZED: 'Отпечаток пальца не был распознан, попробуйте еще раз',
-      SENSOR_LOCKOUT: 'Вы использовали слишком много отпечатков, датчик отключен',
+      SENSOR_LOCKOUT:
+        'Вы использовали слишком много отпечатков, датчик отключен',
       SENSOR_LOCKOUT_PERMANENT:
         'Вы навсегда заблокировали свой датчик отпечатков пальцев. Используйте запасной вариант.',
-      DECRYPTION_FAILED: 'Сбой датчика отпечатков пальцев, используйте запасной вариант',
+      DECRYPTION_FAILED:
+        'Сбой датчика отпечатков пальцев, используйте запасной вариант',
       UNKNOWN_ERROR: 'Неизвестная ошибка',
     },
   },
