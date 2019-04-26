@@ -13,7 +13,9 @@
     "setup_configs": "react-native-schemes-manager all",
     "manage-translations": "node ./translations/translation-runner.js",
     "purge-translations": "rimraf ./translations/messages",
-    "android-bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res"
+    "android-bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
+    "inhibit-warnings": "react-native-inhibit-warnings",
+    "postinstall": "react-native-inhibit-warnings"
   },
   "dependencies": {
     "@babel/cli": "7.2.3",
@@ -93,11 +95,12 @@
     "prettier": "1.14.3",
     "prettylint": "1.0.0",
     "react-intl-translations-manager": "^5.0.3",
+    "react-native-inhibit-warnings": "https://github.com/Emurgo/react-native-inhibit-warnings.git",
     "react-native-schemes-manager": "^1.0.5",
     "react-test-renderer": "16.5.0"
   },
   "resolutions": {
-      "base-x": "3.0.4"
+    "base-x": "3.0.4"
   },
   "jest": {
     "transform": {
