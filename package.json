@@ -9,7 +9,6 @@
     "test": "jest",
     "babel": "babel src",
     "prettify": "prettier --write \"src/**/*.js\" --config src/.prettierrc",
-    "prettify_l10n": "prettier --write \"src/l10n/type.js\" --config src/.prettierrc",
     "setup_configs": "react-native-schemes-manager all",
     "manage-translations": "node ./translations/translation-runner.js",
     "purge-translations": "rimraf ./translations/messages",
