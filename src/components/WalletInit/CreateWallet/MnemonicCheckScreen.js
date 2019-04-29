@@ -102,7 +102,7 @@ const WordBadge: ComponentType<WordProps> = withHandlers({
   handleOnPress: ({onPress, value}) => () => onPress(value),
 })(_WordBadge)
 
-const shouldScreenScroll = () => Dimensions.get('window').height <= 480
+const shouldScreenScroll = () => Dimensions.get('window').height <= 520
 
 const MnemonicCheckScreen = ({
   mnemonic,
