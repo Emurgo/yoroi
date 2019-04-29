@@ -1,19 +1,19 @@
+preserve_hierarchy: true
 files:
-  - source: /src/l10n/en.js
-    translation: /src/l10n/%language%.js
+  - source: /src/i18n/locales/**/en-US.json
+    translation: /src/i18n/locales/**/%locale%.json
     languages_mapping:
-      language:
+      locale:
         zh-CN: zh-Hans
         zh-TW: zh-Hant
         ja: jp-JP
         ko: ko-KR
         ru: ru-RU
-  - source: /src/l10n/tos.en.js
-    translation: /src/l10n/tos.%language%.js
-    languages_mapping:
-      language:
-        zh-CN: zh-Hans
-        zh-TW: zh-Hant
-        ja: ja-JP
-        ko: ko-KR
-        ru: ru-RU
+        de: de-DE
+        fr: fr-FR
+        id: id-ID
+  - &ref_languages_mapping
+    source: /src/i18n/locales/**/en-US.md
+    translation: /src/i18n/locales/**/%locale%.md
+    content_segmentation: 0
+    languages_mapping: []
