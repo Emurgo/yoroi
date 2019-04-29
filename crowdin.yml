@@ -2,7 +2,7 @@ preserve_hierarchy: true
 files:
   - source: /src/i18n/locales/**/en-US.json
     translation: /src/i18n/locales/**/%locale%.json
-    languages_mapping: &ref_languages_mapping
+    languages_mapping:
       locale:
         zh-CN: zh-Hans
         zh-TW: zh-Hant
@@ -12,7 +12,8 @@ files:
         de: de-DE
         fr: fr-FR
         id: id-ID
-  - languages_mapping: *ref_languages_mapping
+  - &ref_languages_mapping
+    languages_mapping: []
     source: /src/i18n/locales/**/en-US.md
     translation: /src/i18n/locales/**/%locale%.md
     content_segmentation: 0
