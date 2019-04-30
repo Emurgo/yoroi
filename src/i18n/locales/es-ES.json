@@ -38,7 +38,7 @@
   "components.send.biometricauthscreen.useFallbackButton": "Usar método alternativo",
   "components.send.confirmscreen.amount": "Cantidad",
   "components.send.confirmscreen.balanceAfterTx": "Balance posterior a transacción",
-  "components.send.confirmscreen.confirmButton": "Confirm",
+  "components.send.confirmscreen.confirmButton": "Confirmar",
   "components.send.confirmscreen.fees": "Fees",
   "components.send.confirmscreen.password": "Wallet password",
   "components.send.confirmscreen.receiver": "Receiver",
