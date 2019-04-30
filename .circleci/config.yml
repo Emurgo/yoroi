@@ -14,9 +14,7 @@ jobs:
           at: ~/project 
       - restore_cache:
           keys:
-          - v1-0-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-0-dependencies-
+          - v1-0-dependencies-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
 
       # install rustup
       - run: curl https://sh.rustup.rs -sSf | sh -s -- -y
@@ -34,7 +32,7 @@ jobs:
           name: Install Dependencies
           command: yarn install --network-concurrency 1
       - save_cache:
-          key: v1-0-dependencies-{{ checksum "package.json" }}
+          key: v1-0-dependencies-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
           paths:
             - node_modules
             - yarn.lock
@@ -49,6 +47,9 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/project
+      - run:
+          name: Match bitrise's yarn version
+          command: sudo npm install -g yarn@${BITRISE_YARN_VER}
       - run: yarn flow
 
   test:
@@ -56,6 +57,9 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/project
+      - run:
+          name: Match bitrise's yarn version
+          command: sudo npm install -g yarn@${BITRISE_YARN_VER}
       - run: yarn test
 
   lint:
@@ -64,6 +68,9 @@ jobs:
       - attach_workspace:
          at: ~/project
 
+      - run:
+          name: Match bitrise's yarn version
+          command: sudo npm install -g yarn@${BITRISE_YARN_VER}
       # Because npm link will write in this path
       - run: sudo chown -R "$(whoami):$(whoami)" /usr/local/lib/node_modules
       - run: npm link rust-cardano-crypto
