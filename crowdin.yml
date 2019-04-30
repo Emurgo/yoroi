@@ -6,12 +6,13 @@ files:
       locale:
         zh-CN: zh-Hans
         zh-TW: zh-Hant
-        ja: jp-JP
+        ja: ja-JP
         ko: ko-KR
         ru: ru-RU
         de: de-DE
         fr: fr-FR
         id: id-ID
+        es: es-ES
   - &ref_languages_mapping
     languages_mapping: []
     source: /src/i18n/locales/**/en-US.md
