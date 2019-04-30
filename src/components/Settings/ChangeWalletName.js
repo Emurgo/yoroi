@@ -6,6 +6,7 @@ import {connect} from 'react-redux'
 import {withStateHandlers, withHandlers} from 'recompose'
 import {View, ScrollView, KeyboardAvoidingView, Platform} from 'react-native'
 import {SafeAreaView} from 'react-navigation'
+import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import _ from 'lodash'
 
 import {Button, ValidatedTextInput, StatusBar} from '../UiKit'
@@ -13,21 +14,34 @@ import {walletNameSelector, walletNamesSelector} from '../../selectors'
 import {changeWalletName} from '../../actions'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {getWalletNameError, validateWalletName} from '../../utils/validators'
+import globalMessages from '../../i18n/global-messages'
 
 import styles from './styles/ChangeWalletName.style'
 
-import type {SubTranslation} from '../../l10n/typeHelpers'
 import type {WalletNameValidationErrors} from '../../utils/validators'
 import type {ComponentType} from 'react'
 import type {Navigation} from '../../types/navigation'
 
-const getTranslations = (state) => state.trans.ChangeWalletNameScreen
+const messages = defineMessages({
+  title: {
+    id: 'components.settings.changewalletname.title',
+    defaultMessage: 'Change wallet name',
+  },
+  changeButton: {
+    id: 'components.settings.changewalletname.changeButton',
+    defaultMessage: 'Change name',
+  },
+  walletNameInputLabel: {
+    id: 'components.settings.changewalletname.walletNameInputLabel',
+    defaultMessage: 'Wallet name',
+  },
+})
 
 type Props = {
   walletName: string,
   setWalletName: (string) => any,
   changeAndNavigate: () => any,
-  translations: SubTranslation<typeof getTranslations>,
+  intl: any,
   validateWalletName: () => WalletNameValidationErrors,
 }
 
@@ -35,7 +49,7 @@ const ChangeWalletName = ({
   walletName,
   setWalletName,
   changeAndNavigate,
-  translations,
+  intl,
   validateWalletName,
 }: Props) => {
   const validationErrors = validateWalletName()
@@ -51,11 +65,15 @@ const ChangeWalletName = ({
       <SafeAreaView style={styles.safeAreaView}>
         <ScrollView keyboardDismissMode="on-drag">
           <ValidatedTextInput
-            label={translations.walletNameInput.label}
+            label={intl.formatMessage(messages.walletNameInputLabel)}
             value={walletName}
             onChangeText={setWalletName}
             error={getWalletNameError(
-              translations.walletNameInput.errors,
+              {
+                tooLong: globalMessages.walletNameErrorTooLong,
+                nameAlreadyTaken:
+                  globalMessages.walletNameErrorNameAlreadyTaken,
+              },
               validationErrors,
             )}
           />
@@ -63,7 +81,7 @@ const ChangeWalletName = ({
         <View style={styles.action}>
           <Button
             onPress={changeAndNavigate}
-            title={translations.changeButton}
+            title={intl.formatMessage(messages.changeButton)}
             disabled={!_.isEmpty(validationErrors)}
           />
         </View>
@@ -72,40 +90,43 @@ const ChangeWalletName = ({
   )
 }
 
-export default (compose(
-  connect(
-    (state) => ({
-      translations: getTranslations(state),
-      oldName: walletNameSelector(state),
-      walletNames: walletNamesSelector(state),
+export default injectIntl(
+  (compose(
+    connect(
+      (state) => ({
+        oldName: walletNameSelector(state),
+        walletNames: walletNamesSelector(state),
+      }),
+      {changeWalletName},
+    ),
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withStateHandlers(
+      ({oldName}) => ({
+        walletName: oldName,
+      }),
+      {
+        setWalletName: (state) => (value) => ({walletName: value}),
+      },
+    ),
+    withHandlers({
+      validateWalletName: ({walletName, oldName, walletNames}) => () =>
+        validateWalletName(walletName, oldName, walletNames),
     }),
-    {changeWalletName},
-  ),
-  withNavigationTitle(({translations}) => translations.title),
-  withStateHandlers(
-    ({oldName}) => ({
-      walletName: oldName,
-    }),
-    {
-      setWalletName: (state) => (value) => ({walletName: value}),
-    },
-  ),
-  withHandlers({
-    validateWalletName: ({walletName, oldName, walletNames}) => () =>
-      validateWalletName(walletName, oldName, walletNames),
-  }),
-  withHandlers({
-    changeAndNavigate: ({
-      navigation,
-      walletName,
-      changeWalletName,
-      translations,
-      validateWalletName,
-    }) => async () => {
-      if (!_.isEmpty(validateWalletName())) return
+    withHandlers({
+      changeAndNavigate: ({
+        navigation,
+        walletName,
+        changeWalletName,
+        validateWalletName,
+      }) => async () => {
+        if (!_.isEmpty(validateWalletName())) return
 
-      await changeWalletName(walletName)
-      navigation.goBack()
-    },
-  }),
-)(ChangeWalletName): ComponentType<{|navigation: Navigation|}>)
+        await changeWalletName(walletName)
+        navigation.goBack()
+      },
+    }),
+  )(ChangeWalletName): ComponentType<{|
+    navigation: Navigation,
+    intl: intlShape,
+  |}>),
+)

@@ -6,13 +6,14 @@ import {connect} from 'react-redux'
 import {View, Linking, TouchableOpacity} from 'react-native'
 import _ from 'lodash'
 import {withHandlers, withStateHandlers} from 'recompose'
+import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import {
   transactionsInfoSelector,
   internalAddressIndexSelector,
   externalAddressIndexSelector,
 } from '../../selectors'
-import {withNavigationTitle, withTranslations} from '../../utils/renderUtils'
+import {withNavigationTitle} from '../../utils/renderUtils'
 import {formatAdaWithSymbol, formatDateToSeconds} from '../../utils/format'
 import {Text, Button, OfflineBanner, Banner, StatusBar} from '../UiKit'
 import Screen from '../../components/Screen'
@@ -26,6 +27,80 @@ import type {Navigation} from '../../types/navigation'
 import type {ComponentType} from 'react'
 import {TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
 
+const txTypeMessages = defineMessages({
+  SENT: {
+    id: 'components.txhistory.txdetails.txTypeSent',
+    defaultMessage: '!!!Sent funds',
+  },
+  RECEIVED: {
+    id: 'components.txhistory.txdetails.txTypeReceived',
+    defaultMessage: '!!!Received funds',
+  },
+  SELF: {
+    id: 'components.txhistory.txdetails.txTypeSelf',
+    defaultMessage: '!!!Intrawallet transaction',
+    description: 'some desc',
+  },
+  MULTI: {
+    id: 'components.txhistory.txdetails.txTypeMulti',
+    defaultMessage: '!!!Multi-party transaction',
+    description: 'some desc',
+  },
+})
+
+const messages = defineMessages({
+  addressPrefixReceive: {
+    id: 'components.txhistory.txdetails.addressPrefixReceive',
+    defaultMessage: '!!!/{idx}',
+    description: 'some desc',
+  },
+  addressPrefixChange: {
+    id: 'components.txhistory.txdetails.addressPrefixChange',
+    defaultMessage: '!!!/change',
+    description: 'some desc',
+  },
+  addressPrefixNotMine: {
+    id: 'components.txhistory.txdetails.addressPrefixNotMine',
+    defaultMessage: '!!!not mine',
+    description: 'some desc',
+  },
+  fee: {
+    id: 'components.txhistory.txdetails.fee',
+    defaultMessage: '!!!Fee: ',
+    description: 'some desc',
+  },
+  fromAddresses: {
+    id: 'components.txhistory.txdetails.fromAddresses',
+    defaultMessage: '!!!From Addresses',
+    description: 'some desc',
+  },
+  toAddresses: {
+    id: 'components.txhistory.txdetails.toAddresses',
+    defaultMessage: '!!!To Addresses',
+    description: 'some desc',
+  },
+  transactionId: {
+    id: 'components.txhistory.txdetails.transactionId',
+    defaultMessage: '!!!Transaction ID',
+    description: 'some desc',
+  },
+  txAssuranceLevel: {
+    id: 'components.txhistory.txdetails.txAssuranceLevel',
+    defaultMessage: '!!!Transaction assurance level',
+    description: 'some desc',
+  },
+  confirmations: {
+    id: 'components.txhistory.txdetails.confirmations',
+    defaultMessage:
+      '!!!{cnt} {cnt, plural, one {CONFIRMATION} other {CONFIRMATIONS}}',
+    description: 'some desc',
+  },
+  omittedCount: {
+    id: 'components.txhistory.txdetails.omittedCount',
+    defaultMessage: '!!!+ {cnt} omitted',
+  },
+})
+
 const Label = ({children}) => <Text style={styles.label}>{children}</Text>
 
 const AdaAmount = ({amount, direction}) => {
@@ -35,8 +110,6 @@ const AdaAmount = ({amount, direction}) => {
 
   return <Text style={amountStyle}>{formatAdaWithSymbol(amount)}</Text>
 }
-
-const getTranslations = (state) => state.trans.TransactionDetailsScreen
 
 const AddressEntry = withHandlers({
   onPress: ({address, showModalForAddress}) => () =>
@@ -53,7 +126,7 @@ const AddressEntry = withHandlers({
 })
 
 const getShownAddresses = (
-  translations,
+  intl,
   transaction,
   internalAddressIndex,
   externalAddressIndex,
@@ -64,11 +137,15 @@ const getShownAddresses = (
 
   const getPath = (address) => {
     if (isMyReceive(address)) {
-      return translations.addressPrefix.receive(externalAddressIndex[address])
+      return intl.formatMessage(messages.addressPrefixReceive, {
+        idx: externalAddressIndex[address],
+      })
     } else if (isMyChange(address)) {
-      return translations.addressPrefix.change(internalAddressIndex[address])
+      return intl.formatMessage(messages.addressPrefixChange, {
+        idx: internalAddressIndex[address],
+      })
     } else {
-      return translations.addressPrefix.notMine
+      return intl.formatMessage(messages.addressPrefixNotMine)
     }
   }
 
@@ -130,7 +207,7 @@ const getShownAddresses = (
 
 const TxDetails = ({
   navigation,
-  translations,
+  intl,
   transaction,
   internalAddressIndex,
   externalAddressIndex,
@@ -145,11 +222,12 @@ const TxDetails = ({
     toFiltered,
     cntOmittedTo,
   } = getShownAddresses(
-    translations,
+    intl,
     transaction,
     internalAddressIndex,
     externalAddressIndex,
   )
+  const txFee = transaction.fee
 
   return (
     <View style={styles.container}>
@@ -157,21 +235,23 @@ const TxDetails = ({
 
       <OfflineBanner />
       <Screen scroll>
-        <Banner label={translations.transactionType[transaction.direction]}>
+        <Banner
+          label={intl.formatMessage(txTypeMessages[transaction.direction])}
+        >
           {transaction.amount && (
             <AdaAmount
               amount={transaction.amount}
               direction={transaction.direction}
             />
           )}
-          {transaction.fee && (
+          {txFee && (
             <Text small>
-              {translations.fee} {formatAdaWithSymbol(transaction.fee)}
+              {intl.formatMessage(messages.fee)} {formatAdaWithSymbol(txFee)}
             </Text>
           )}
         </Banner>
         <View style={styles.content}>
-          <Label>{translations.fromAddresses}</Label>
+          <Label>{intl.formatMessage(messages.fromAddresses)}</Label>
           {fromFiltered.map((item, i) => (
             <AddressEntry
               key={i}
@@ -180,9 +260,11 @@ const TxDetails = ({
             />
           ))}
           {cntOmittedFrom > 0 && (
-            <Text>{translations.formatOmittedCount(cntOmittedFrom)}</Text>
+            <Text>
+              {intl.formatMessage(messages.omittedCount, {cnt: cntOmittedFrom})}
+            </Text>
           )}
-          <Label>{translations.toAddresses}</Label>
+          <Label>{intl.formatMessage(messages.toAddresses)}</Label>
           {toFiltered.map((item, i) => (
             <AddressEntry
               key={i}
@@ -191,13 +273,17 @@ const TxDetails = ({
             />
           ))}
           {cntOmittedTo > 0 && (
-            <Text>{translations.formatOmittedCount(cntOmittedTo)}</Text>
+            <Text>
+              {intl.formatMessage(messages.omittedCount, {cnt: cntOmittedTo})}
+            </Text>
           )}
-          <Label>{translations.txAssuranceLevel}</Label>
+          <Label>{intl.formatMessage(messages.txAssuranceLevel)}</Label>
           <Text secondary>
-            {translations.formatConfirmations(transaction.confirmations)}
+            {intl.formatMessage(messages.confirmations, {
+              cnt: transaction.confirmations,
+            })}
           </Text>
-          <Label>{translations.transactionId}</Label>
+          <Label>{intl.formatMessage(messages.transactionId)}</Label>
           <Button onPress={openInExplorer} title={transaction.id} />
         </View>
       </Screen>
@@ -211,33 +297,38 @@ const TxDetails = ({
   )
 }
 
-export default (compose(
-  withTranslations(getTranslations),
-  connect((state: State, {navigation}) => ({
-    transaction: transactionsInfoSelector(state)[navigation.getParam('id')],
-    internalAddressIndex: internalAddressIndexSelector(state),
-    externalAddressIndex: externalAddressIndexSelector(state),
-  })),
-  withNavigationTitle(({transaction}) =>
-    formatDateToSeconds(transaction.submittedAt),
-  ),
-  withStateHandlers(
-    {addressDetail: null},
-    {
-      setAddressDetail: (state, props) => (address) => ({
-        addressDetail: address,
-      }),
-    },
-  ),
-  withHandlers({
-    openInExplorer: ({transaction}) => () => {
-      Linking.openURL(CONFIG.CARDANO.EXPLORER_URL_FOR_TX(transaction.id))
-    },
-    showModalForAddress: ({setAddressDetail}) => (address) => {
-      setAddressDetail(address)
-    },
-    hideAddressModal: ({setAddressDetail}) => () => {
-      setAddressDetail(null)
-    },
-  }),
-)(TxDetails): ComponentType<{|navigation: Navigation|}>)
+export default injectIntl(
+  (compose(
+    connect((state: State, {navigation}) => {
+      return {
+        transaction: transactionsInfoSelector(state)[navigation.getParam('id')],
+        internalAddressIndex: internalAddressIndexSelector(state),
+        externalAddressIndex: externalAddressIndexSelector(state),
+      }
+    }),
+    withNavigationTitle(({transaction}) =>
+      formatDateToSeconds(transaction.submittedAt),
+    ),
+    withStateHandlers(
+      {addressDetail: null},
+      {
+        setAddressDetail: (state, props) => (address) => ({
+          addressDetail: address,
+        }),
+      },
+    ),
+    withHandlers({
+      openInExplorer: ({transaction}) => () => {
+        if (transaction) {
+          Linking.openURL(CONFIG.CARDANO.EXPLORER_URL_FOR_TX(transaction.id))
+        }
+      },
+      showModalForAddress: ({setAddressDetail}) => (address) => {
+        setAddressDetail(address)
+      },
+      hideAddressModal: ({setAddressDetail}) => () => {
+        setAddressDetail(null)
+      },
+    }),
+  )(TxDetails): ComponentType<{|navigation: Navigation, intl: intlShape|}>),
+)

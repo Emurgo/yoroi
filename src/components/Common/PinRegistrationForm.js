@@ -5,10 +5,12 @@ import {View} from 'react-native'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {NavigationEvents} from 'react-navigation'
+import {injectIntl, intlShape} from 'react-intl'
 
 import PinInput from './PinInput'
 import {CONFIG} from '../../config'
 import {showErrorDialog} from '../../actions'
+import {errorMessages} from '../../i18n/global-messages'
 
 import styles from './styles/PinRegistrationForm.style'
 
@@ -20,10 +22,11 @@ const handlePinEnter = ({
   setPin,
   encryptAndStoreCustomPin,
   onPinEntered,
+  intl,
 }) => async (pinConfirmation) => {
   if (pin !== pinConfirmation) {
     setPin('')
-    await showErrorDialog((dialogs) => dialogs.pinMismatch)
+    await showErrorDialog(errorMessages.pinMismatch)
 
     return true
   }
@@ -34,7 +37,9 @@ const handlePinEnter = ({
     return false
   } catch (err) {
     setPin('')
-    await showErrorDialog((dialogs) => dialogs.generalError(err.message))
+    await showErrorDialog(errorMessages.generalError, intl, {
+      message: err.message,
+    })
 
     return true
   }
@@ -48,6 +53,7 @@ type PinRegistrationFormLabels = {
 type ExternalProps = {
   labels: PinRegistrationFormLabels,
   onPinEntered: (string) => any,
+  intl: intlShape,
 }
 
 type Props = ExternalProps & {
@@ -64,6 +70,7 @@ const PinRegistrationForm = ({
   labels,
   handlePinEnter,
   clearPin,
+  intl,
 }: Props) => {
   const inputLabels = !pin ? labels.PinInput : labels.PinConfirmationInput
 
@@ -79,22 +86,24 @@ const PinRegistrationForm = ({
   )
 }
 
-export default (compose(
-  withStateHandlers(
-    {
-      pin: '',
-    },
-    {
-      setPin: (state) => (pin: string) => ({pin}),
-      clearPin: (state) => () => ({pin: ''}),
-    },
-  ),
-  withHandlers({
-    handlePinEnter,
-    handleSetPin: ({setPin}) => (pin) => {
-      setPin(pin)
+export default injectIntl(
+  (compose(
+    withStateHandlers(
+      {
+        pin: '',
+      },
+      {
+        setPin: (state) => (pin: string) => ({pin}),
+        clearPin: (state) => () => ({pin: ''}),
+      },
+    ),
+    withHandlers({
+      handlePinEnter,
+      handleSetPin: ({setPin}) => (pin) => {
+        setPin(pin)
 
-      return Promise.resolve(true)
-    },
-  }),
-)(PinRegistrationForm): ComponentType<ExternalProps>)
+        return Promise.resolve(true)
+      },
+    }),
+  )(PinRegistrationForm): ComponentType<ExternalProps>),
+)

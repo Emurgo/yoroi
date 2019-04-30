@@ -1,6 +1,5 @@
 // @flow
-import _ from 'lodash'
-import LocalizedStrings from 'localized-strings'
+
 import moment from 'moment'
 import BigNumber from 'bignumber.js'
 
@@ -9,58 +8,8 @@ import 'moment/locale/ja'
 import 'moment/locale/zh-cn'
 import 'moment/locale/ru'
 
-import en from './en'
-import ja from './jp-JP'
-import ru from './ru-RU'
-import ko from './ko-KR'
-import {TEXT_TYPE} from './util'
-
 import assert from '../utils/assert'
-
-import type {Translation} from './type'
-
-const transform = (obj: any, transformer) => {
-  if (
-    _.isPlainObject(obj) &&
-    (!obj.type || !Object.keys(TEXT_TYPE).includes(obj.type))
-  ) {
-    return _.mapValues(obj, (v) => transform(v, transformer))
-  }
-
-  if (_.isArray(obj)) {
-    return _.map(obj, (v) => transform(v, transformer))
-  }
-
-  return transformer(obj)
-}
-
-const transformFormattingFunction = (obj, replace) => {
-  if (obj.type === TEXT_TYPE.INLINE) {
-    return {
-      ...obj,
-      block: obj.block.map((item) =>
-        transformFormattingFunction(item, replace),
-      ),
-    }
-  } else if (obj.text) {
-    return {
-      ...obj,
-      text: replace(obj.text),
-    }
-  } else {
-    throw new Error('Dummy translation not supported')
-  }
-}
-
-export const LANGUAGES = {
-  // TODO: Add when chinese is available
-  // CHINESE_SIMPLIFIED: 'zh-Hans',
-  // CHINESE_TRADITIONAL: 'zh-Hant',
-  ENGLISH: 'en-US',
-  JAPANESE: 'ja-JP',
-  KOREAN: 'ko-KR',
-  RUSSIAN: 'ru-RU',
-}
+import {LANGUAGES} from './languages'
 
 const momentLocales = {
   [LANGUAGES.ENGLISH]: 'en',
@@ -122,23 +71,12 @@ const numberLocales = {
   [LANGUAGES.RUSSIAN]: russianNumberFmt,
 }
 
-const strings = new LocalizedStrings({
-  [LANGUAGES.ENGLISH]: en,
-  // TODO: Add when chinese is available
-  // [LANGUAGES.CHINESE_SIMPLIFIED]: dummyCn,
-  // [LANGUAGES.CHINESE_TRADITIONAL]: dummyCn,
-  [LANGUAGES.KOREAN]: ko,
-  [LANGUAGES.JAPANESE]: ja,
-  [LANGUAGES.RUSSIAN]: ru,
-})
-
-const setLanguage = (code: string) => {
+export const setLanguage = (code: string) => {
   assert.assert(
     Object.values(LANGUAGES).includes(code),
     'Unknown language',
     code,
   )
-  strings.setLanguage(code)
   moment.locale(momentLocales[code])
   // $FlowFixMe
   BigNumber.config({
@@ -147,9 +85,3 @@ const setLanguage = (code: string) => {
 }
 
 setLanguage(LANGUAGES.ENGLISH)
-
-export default {
-  translations: (strings: Translation),
-  setLanguage,
-  LANGUAGES,
-}

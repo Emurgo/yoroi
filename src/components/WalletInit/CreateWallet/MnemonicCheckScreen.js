@@ -6,6 +6,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withProps, withStateHandlers} from 'recompose'
 import {SafeAreaView} from 'react-navigation'
+import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import {View, ScrollView, TouchableOpacity, Dimensions} from 'react-native'
 
 import assert from '../../../utils/assert'
@@ -14,15 +15,46 @@ import {Text, Button, StatusBar} from '../../UiKit'
 import {ROOT_ROUTES} from '../../../RoutesList'
 import {createWallet} from '../../../actions'
 import {CONFIG} from '../../../config'
-import {withNavigationTitle, withTranslations} from '../../../utils/renderUtils'
+import {withNavigationTitle} from '../../../utils/renderUtils'
 
 import styles from './styles/MnemonicCheckScreen.style'
 
-import type {State} from '../../../state'
 import type {ComponentType} from 'react'
 import type {Navigation} from '../../../types/navigation'
 
-const getTranslations = (state: State) => state.trans.MnemonicCheckScreen
+const messages = defineMessages({
+  title: {
+    id: 'components.walletinit.createwallet.mnemoniccheckscreen.title',
+    defaultMessage: '!!!Recovery phrase',
+  },
+  instructions: {
+    id: 'components.walletinit.createwallet.mnemoniccheckscreen.instructions',
+    defaultMessage:
+      '!!!Tap each word in the correct order to verify your recovery phrase',
+  },
+  clearButton: {
+    id: 'components.walletinit.createwallet.mnemoniccheckscreen.clearButton',
+    defaultMessage: '!!!Clear',
+    description: 'some desc',
+  },
+  confirmButton: {
+    id: 'components.walletinit.createwallet.mnemoniccheckscreen.confirmButton',
+    defaultMessage: '!!!Confirm',
+    description: 'some desc',
+  },
+  mnemonicWordsInputLabel: {
+    id:
+      'components.walletinit.createwallet.mnemoniccheckscreen.mnemonicWordsInputLabel',
+    defaultMessage: '!!!Recovery phrase',
+    description: 'some desc',
+  },
+  mnemonicWordsInputInvalidPhrase: {
+    id:
+      'components.walletinit.createwallet.mnemoniccheckscreen.mnemonicWordsInputInvalidPhrase',
+    defaultMessage: '!!!Recovery phrase does not match',
+    description: 'some desc',
+  },
+})
 
 const validatePhrase = (mnemonic, words, partialPhrase) => {
   const phrase = partialPhrase.map((wordIdx) => words[wordIdx]).join(' ')
@@ -70,12 +102,12 @@ const WordBadge: ComponentType<WordProps> = withHandlers({
   handleOnPress: ({onPress, value}) => () => onPress(value),
 })(_WordBadge)
 
-const shouldScreenScroll = () => Dimensions.get('window').height <= 480
+const shouldScreenScroll = () => Dimensions.get('window').height <= 520
 
 const MnemonicCheckScreen = ({
   mnemonic,
   partialPhrase,
-  translations,
+  intl,
   words,
   confirmWalletCreation,
   handleClear,
@@ -97,7 +129,7 @@ const MnemonicCheckScreen = ({
           bounces={shouldScreenScroll()}
         >
           <View style={styles.content}>
-            <Text>{translations.instructions}</Text>
+            <Text>{intl.formatMessage(messages.instructions)}</Text>
             <View
               style={[
                 styles.recoveryPhrase,
@@ -122,7 +154,7 @@ const MnemonicCheckScreen = ({
             </View>
             {!(isPhraseValid || !isPhraseComplete) && (
               <Text style={styles.error}>
-                {translations.mnemonicWordsInput.errors.invalidPhrase}
+                {intl.formatMessage(messages.mnemonicWordsInputInvalidPhrase)}
               </Text>
             )}
             <View style={styles.words}>
@@ -143,7 +175,7 @@ const MnemonicCheckScreen = ({
             block
             outlineOnLight
             onPress={handleClear}
-            title={translations.clearButton}
+            title={intl.formatMessage(messages.clearButton)}
             style={styles.clearButton}
           />
 
@@ -151,7 +183,7 @@ const MnemonicCheckScreen = ({
             block
             onPress={confirmWalletCreation}
             disabled={!isPhraseComplete || !isPhraseValid}
-            title={translations.confirmButton}
+            title={intl.formatMessage(messages.confirmButton)}
             style={styles.confirmButton}
           />
         </View>
@@ -171,44 +203,48 @@ const _mnemonicToPartialPhrase = (mnemonic: string) =>
     .map(([i, j]) => j) // [1,2,0]
     .value()
 
-export default (compose(
-  withTranslations(getTranslations),
-  connect(
-    () => ({}),
-    {
-      createWallet,
-    },
-  ),
-  withNavigationTitle(({translations}) => translations.title),
-  withStateHandlers(
-    {
-      partialPhrase: CONFIG.DEBUG.PREFILL_FORMS
-        ? _mnemonicToPartialPhrase(CONFIG.DEBUG.MNEMONIC2)
-        : [],
-    },
-    {
-      deselectWord: ({partialPhrase}) => (wordIdx) => ({
-        partialPhrase: partialPhrase.filter((idx) => idx !== wordIdx),
-      }),
-      selectWord: ({partialPhrase}) => (wordIdx) => ({
-        partialPhrase: [...partialPhrase, wordIdx],
-      }),
-      handleClear: (state) => () => ({
-        partialPhrase: [],
-      }),
-    },
-  ),
-  withProps(({navigation}) => {
-    const mnemonic = navigation.getParam('mnemonic')
-    return {
-      mnemonic,
-      words: mnemonic.split(' ').sort(),
-    }
-  }),
-  withHandlers({
-    confirmWalletCreation: ignoreConcurrentAsyncHandler(
-      handleWalletConfirmation,
-      1000,
+export default injectIntl(
+  (compose(
+    connect(
+      () => ({}),
+      {
+        createWallet,
+      },
     ),
-  }),
-)(MnemonicCheckScreen): ComponentType<{|navigation: Navigation|}>)
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withStateHandlers(
+      {
+        partialPhrase: CONFIG.DEBUG.PREFILL_FORMS
+          ? _mnemonicToPartialPhrase(CONFIG.DEBUG.MNEMONIC2)
+          : [],
+      },
+      {
+        deselectWord: ({partialPhrase}) => (wordIdx) => ({
+          partialPhrase: partialPhrase.filter((idx) => idx !== wordIdx),
+        }),
+        selectWord: ({partialPhrase}) => (wordIdx) => ({
+          partialPhrase: [...partialPhrase, wordIdx],
+        }),
+        handleClear: (state) => () => ({
+          partialPhrase: [],
+        }),
+      },
+    ),
+    withProps(({navigation}) => {
+      const mnemonic = navigation.getParam('mnemonic')
+      return {
+        mnemonic,
+        words: mnemonic.split(' ').sort(),
+      }
+    }),
+    withHandlers({
+      confirmWalletCreation: ignoreConcurrentAsyncHandler(
+        handleWalletConfirmation,
+        1000,
+      ),
+    }),
+  )(MnemonicCheckScreen): ComponentType<{|
+    navigation: Navigation,
+    intl: intlShape,
+  |}>),
+)

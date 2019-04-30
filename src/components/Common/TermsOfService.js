@@ -1,23 +1,23 @@
 // @flow
-
+import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
+import Markdown from 'react-native-easy-markdown'
 
-import {renderFormattedText} from '../../utils/textRendering'
-
-import type {SubTranslation} from '../../l10n/typeHelpers'
-
-const getTranslations = (state) => state.trans.TermsOfServiceScreen
+import type {ComponentType} from 'react'
 
 type Props = {
-  translations: SubTranslation<typeof getTranslations>,
+  tos: any,
 }
 
-const TermsOfService = ({translations}: Props) =>
-  renderFormattedText(translations.content)
+const TermsOfService = ({tos}: Props) => {
+  return <Markdown>{tos}</Markdown>
+}
 
-export default compose(
-  connect((state) => ({
-    translations: getTranslations(state),
-  })),
-)(TermsOfService)
+export default (compose(
+  connect((state) => {
+    return {
+      tos: state.tos,
+    }
+  }),
+)(TermsOfService): ComponentType<any>)

@@ -1,5 +1,6 @@
 module.exports = {
   resolver: {
+    assetExts: ['png', 'md', 'json'],
     extraNodeModules: {
       buffer: require.resolve('safe-buffer'),
       crypto: require.resolve('react-native-crypto'),

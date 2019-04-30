@@ -79,6 +79,9 @@ android/app/dev
 android/app/main
 GoogleService-Info.plist
 
+# react-intl
+translations/messages
+
 # Android bundle
 android/app/src/main/assets/index.android.bundle
 android/app/src/main/res/drawable*

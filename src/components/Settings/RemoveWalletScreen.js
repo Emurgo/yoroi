@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View, ScrollView} from 'react-native'
 import {withHandlers, withStateHandlers} from 'recompose'
+import {injectIntl, defineMessages} from 'react-intl'
 
 import {Button, Text, Checkbox, ValidatedTextInput, StatusBar} from '../UiKit'
 import {withNavigationTitle} from '../../utils/renderUtils'
@@ -15,9 +16,48 @@ import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 import styles from './styles/RemoveWalletScreen.style'
 
 import type {State} from '../../state'
-import type {SubTranslation} from '../../l10n/typeHelpers'
 
-const getTranslations = (state: State) => state.trans.RemoveWalletScreen
+const messages = defineMessages({
+  title: {
+    id: 'components.settings.removewalletscreen.title',
+    defaultMessage: 'Remove wallet',
+    description: 'some desc',
+  },
+  descriptionParagraph1: {
+    id: 'components.settings.removewalletscreen.descriptionParagraph1',
+    defaultMessage:
+      'If you really wish to permanently delete the wallet ' +
+      'make sure you have written down the mnemonic.',
+    description: 'some desc',
+  },
+  descriptionParagraph2: {
+    id: 'components.settings.removewalletscreen.descriptionParagraph2',
+    defaultMessage: '!!!To confirm this operation type the wallet name below.',
+    description: 'some desc',
+  },
+  walletName: {
+    id: 'components.settings.removewalletscreen.walletName',
+    defaultMessage: 'Wallet name',
+    description: 'some desc',
+  },
+  walletNameInput: {
+    id: 'components.settings.removewalletscreen.walletNameInput',
+    defaultMessage: 'Wallet name',
+    description: 'some desc',
+  },
+  remove: {
+    id: 'components.settings.removewalletscreen.remove',
+    defaultMessage: 'Remove wallet',
+    description: 'some desc',
+  },
+  hasWrittenDownMnemonic: {
+    id: 'components.settings.removewalletscreen.hasWrittenDownMnemonic',
+    defaultMessage:
+      'I have written down mnemonic of this wallet and understand ' +
+      'that I cannot recover the wallet without it.',
+    description: 'some desc',
+  },
+})
 
 const handleRemoveWallet = ({navigation, removeCurrentWallet}) => async () => {
   await removeCurrentWallet()
@@ -25,7 +65,7 @@ const handleRemoveWallet = ({navigation, removeCurrentWallet}) => async () => {
 }
 
 type Prop = {
-  translations: SubTranslation<typeof getTranslations>,
+  intl: any,
   walletName: string,
   typedWalletName: string,
   setTypedWalletName: (string) => any,
@@ -36,7 +76,7 @@ type Prop = {
 }
 
 const RemoveWalletScreen = ({
-  translations,
+  intl,
   walletName,
   isRemovingWallet,
   handleRemoveWallet,
@@ -56,10 +96,10 @@ const RemoveWalletScreen = ({
 
       <View style={styles.descriptionContainer}>
         <Text style={styles.description}>
-          {translations.description.paragraph1}
+          {intl.formatMessage(messages.descriptionParagraph1)}
         </Text>
         <Text style={styles.description}>
-          {translations.description.paragraph2}
+          {intl.formatMessage(messages.descriptionParagraph2)}
         </Text>
       </View>
 
@@ -68,11 +108,13 @@ const RemoveWalletScreen = ({
         keyboardDismissMode="on-drag"
       >
         <View style={styles.walletInfo}>
-          <Text style={styles.walletNameLabel}>{translations.walletName}</Text>
+          <Text style={styles.walletNameLabel}>
+            {intl.formatMessage(messages.walletName)}
+          </Text>
           <Text style={styles.walletName}>{walletName}</Text>
 
           <ValidatedTextInput
-            label={translations.walletNameInput}
+            label={intl.formatMessage(messages.walletNameInput)}
             value={typedWalletName}
             onChangeText={setTypedWalletName}
           />
@@ -82,13 +124,13 @@ const RemoveWalletScreen = ({
       <View style={styles.actions}>
         <Checkbox
           checked={hasMnemonicWrittenDown}
-          text={translations.hasWrittenDownMnemonic}
+          text={intl.formatMessage(messages.hasWrittenDownMnemonic)}
           onChange={setHasMnemonicWrittenDown}
         />
 
         <Button
           onPress={handleRemoveWallet}
-          title={translations.remove}
+          title={intl.formatMessage(messages.remove)}
           style={styles.removeButton}
           disabled={disabled}
         />
@@ -97,30 +139,34 @@ const RemoveWalletScreen = ({
   )
 }
 
-export default compose(
-  connect(
-    (state: State) => ({
-      translations: getTranslations(state),
-      walletName: walletNameSelector(state),
-    }),
-    {
-      removeCurrentWallet,
-    },
-  ),
-  withNavigationTitle(({translations}) => translations.title),
-  withStateHandlers(
-    {
-      hasMnemonicWrittenDown: false,
-      typedWalletName: '',
-    },
-    {
-      setHasMnemonicWrittenDown: (state) => (value) => ({
-        hasMnemonicWrittenDown: value,
+export default injectIntl(
+  compose(
+    connect(
+      (state: State) => ({
+        walletName: walletNameSelector(state),
       }),
-      setTypedWalletName: (state) => (value) => ({typedWalletName: value}),
-    },
-  ),
-  withHandlers({
-    handleRemoveWallet: ignoreConcurrentAsyncHandler(handleRemoveWallet, 1000),
-  }),
-)(RemoveWalletScreen)
+      {
+        removeCurrentWallet,
+      },
+    ),
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withStateHandlers(
+      {
+        hasMnemonicWrittenDown: false,
+        typedWalletName: '',
+      },
+      {
+        setHasMnemonicWrittenDown: (state) => (value) => ({
+          hasMnemonicWrittenDown: value,
+        }),
+        setTypedWalletName: (state) => (value) => ({typedWalletName: value}),
+      },
+    ),
+    withHandlers({
+      handleRemoveWallet: ignoreConcurrentAsyncHandler(
+        handleRemoveWallet,
+        1000,
+      ),
+    }),
+  )(RemoveWalletScreen),
+)

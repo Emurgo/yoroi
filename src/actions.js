@@ -3,8 +3,10 @@
 import {AppState, Alert, Keyboard} from 'react-native'
 import uuid from 'uuid'
 import SplashScreen from 'react-native-splash-screen'
+import {intlShape} from 'react-intl'
 
 import crashReporting from './helpers/crashReporting'
+import globalMessages, {errorMessages} from './i18n/global-messages'
 import {Logger} from './utils/logging'
 import walletManager from './crypto/wallet'
 import {
@@ -18,7 +20,7 @@ import {
   recreateAppSignInKeys,
   removeAppSignInKeys,
 } from './helpers/deviceSettings'
-import l10n from './l10n'
+
 import {backgroundLockListener} from './helpers/backgroundLockHelper'
 import {encryptCustomPin} from './crypto/customPin'
 import {
@@ -352,7 +354,7 @@ export const removeCurrentWallet = () => async (dispatch: Dispatch<any>) => {
 type DialogOptions = {|
   title: string,
   message: string,
-  yesButton: string,
+  yesButton?: string,
   noButton?: string,
 |}
 
@@ -383,18 +385,26 @@ const showDialog = (translations: DialogOptions): Promise<DialogButton> =>
   })
 
 export const showErrorDialog = (
-  getDialog: (
-    translations: typeof l10n.translations.errorDialogs,
-  ) => DialogOptions,
+  dialog: DialogOptions,
+  intl: intlShape,
+  msgOptions?: any,
 ): Promise<DialogButton> =>
-  showDialog(getDialog(l10n.translations.errorDialogs))
+  showDialog({
+    title: intl.formatMessage(dialog.title),
+    message: intl.formatMessage(dialog.message, msgOptions),
+    yesButton: intl.formatMessage(globalMessages.ok),
+  })
 
 export const showConfirmationDialog = (
-  getDialog: (
-    translations: typeof l10n.translations.confirmationDialogs,
-  ) => DialogOptions,
+  dialog: DialogOptions,
+  intl: intlShape,
 ): Promise<DialogButton> =>
-  showDialog(getDialog(l10n.translations.confirmationDialogs))
+  showDialog({
+    title: intl.formatMessage(dialog.title),
+    message: intl.formatMessage(dialog.message),
+    yesButton: intl.formatMessage(dialog.yesButton),
+    noButton: intl.formatMessage(dialog.noButton),
+  })
 
 export const setSystemAuth = (enable: boolean) => async (
   dispatch: Dispatch<any>,
@@ -428,7 +438,7 @@ export const setSystemAuth = (enable: boolean) => async (
 
 export const handleGeneralError = async (message: string, e: Error) => {
   Logger.error(`${message}: ${e.message}`, e)
-  await showErrorDialog((dialogs) => dialogs.generalError(message))
+  await showErrorDialog(errorMessages.generalError, {message})
   crashReporting.crash()
 }
 

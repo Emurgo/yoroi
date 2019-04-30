@@ -1053,7 +1053,6 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "emurgo" */;
 			buildPhases = (
 				F90484421D44E955B0727931 /* [CP] Check Pods Manifest.lock */,
-				E252B94121C963110062A5C2 /* Run Script */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
@@ -1729,24 +1728,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/Fabric/run\"\n";
-		};
-		E252B94121C963110062A5C2 /* Run Script */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Run Script";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/bash;
-			shellScript = "cd ${PROJECT_DIR}/.. && sh src/l10n/updateIOSSystemTranslations.sh\n";
 		};
 		E278992C21B9DC3D00E9304E /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;

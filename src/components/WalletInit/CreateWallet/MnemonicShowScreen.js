@@ -5,6 +5,7 @@ import {View, Image, Dimensions} from 'react-native'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers, withProps} from 'recompose'
 import {SafeAreaView} from 'react-navigation'
+import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import assert from '../../../utils/assert'
 import {Text, Button, StatusBar} from '../../UiKit'
@@ -14,17 +15,35 @@ import styles from './styles/MnemonicShowScreen.style'
 import MnemonicBackupImportanceModal from './MnemonicBackupImportanceModal'
 import recoveryPhrase from '../../../assets/img/recovery_phrase.png'
 
-import type {State} from '../../../state'
-
-import {withNavigationTitle, withTranslations} from '../../../utils/renderUtils'
+import {withNavigationTitle} from '../../../utils/renderUtils'
 import type {Navigation} from '../../../types/navigation'
 import type {ComponentType} from 'react'
 
-const getTranslations = (state: State) => state.trans.MnemonicShowScreen
+const messages = defineMessages({
+  title: {
+    id: 'components.walletinit.createwallet.mnemonicshowscreen.title',
+    defaultMessage: '!!!Recovery phrase',
+  },
+  mnemonicNote: {
+    id: 'components.walletinit.createwallet.mnemonicshowscreen.mnemonicNote',
+    defaultMessage:
+      '!!!Please, make sure you have carefully written down your ' +
+      'recovery phrase somewhere safe. ' +
+      'You will need this phrase to use and restore your wallet. ' +
+      'Phrase is case sensitive.',
+    description: 'some desc',
+  },
+  confirmationButton: {
+    id:
+      'components.walletinit.createwallet.mnemonicshowscreen.confirmationButton',
+    defaultMessage: '!!!Yes, I have written it down',
+    description: 'some desc',
+  },
+})
 
 const MnemonicShowScreen = ({
   navigateToMnemonicCheck,
-  translations,
+  intl,
   mnemonic,
   modal,
   showModal,
@@ -34,7 +53,7 @@ const MnemonicShowScreen = ({
     <StatusBar type="dark" />
     <View style={styles.contentContainer}>
       <View>
-        <Text>{translations.mnemonicNote}</Text>
+        <Text>{intl.formatMessage(messages.mnemonicNote)}</Text>
         <View style={styles.mnemonicWordsContainer}>
           {mnemonic.split(' ').map((word, index) => (
             <Text key={index} style={styles.mnemonicText}>
@@ -50,7 +69,10 @@ const MnemonicShowScreen = ({
         </View>
       )}
       <View>
-        <Button onPress={showModal} title={translations.confirmationButton} />
+        <Button
+          onPress={showModal}
+          title={intl.formatMessage(messages.confirmationButton)}
+        />
       </View>
     </View>
 
@@ -64,33 +86,37 @@ const MnemonicShowScreen = ({
   </SafeAreaView>
 )
 
-export default (compose(
-  withTranslations(getTranslations),
-  withNavigationTitle(({translations}) => translations.title),
-  withProps((props) => ({mnemonic: props.navigation.getParam('mnemonic')})),
-  withStateHandlers(
-    {
-      modal: false,
-    },
-    {
-      showModal: (state) => () => ({modal: true}),
-      hideModal: (state) => () => ({modal: false}),
-    },
-  ),
-  withHandlers({
-    navigateToMnemonicCheck: ({navigation, hideModal, mnemonic}) => () => {
-      const name = navigation.getParam('name')
-      const password = navigation.getParam('password')
-      const mnemonic = navigation.getParam('mnemonic')
-      assert.assert(!!mnemonic, 'handleWalletConfirmation:: mnemonic')
-      assert.assert(!!password, 'handleWalletConfirmation:: password')
-      assert.assert(!!name, 'handleWalletConfirmation:: name')
-      navigation.navigate(WALLET_INIT_ROUTES.MNEMONIC_CHECK, {
-        mnemonic,
-        password,
-        name,
-      })
-      hideModal()
-    },
-  }),
-)(MnemonicShowScreen): ComponentType<{navigation: Navigation}>)
+export default injectIntl(
+  (compose(
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withProps((props) => ({mnemonic: props.navigation.getParam('mnemonic')})),
+    withStateHandlers(
+      {
+        modal: false,
+      },
+      {
+        showModal: (state) => () => ({modal: true}),
+        hideModal: (state) => () => ({modal: false}),
+      },
+    ),
+    withHandlers({
+      navigateToMnemonicCheck: ({navigation, hideModal, mnemonic}) => () => {
+        const name = navigation.getParam('name')
+        const password = navigation.getParam('password')
+        const mnemonic = navigation.getParam('mnemonic')
+        assert.assert(!!mnemonic, 'handleWalletConfirmation:: mnemonic')
+        assert.assert(!!password, 'handleWalletConfirmation:: password')
+        assert.assert(!!name, 'handleWalletConfirmation:: name')
+        navigation.navigate(WALLET_INIT_ROUTES.MNEMONIC_CHECK, {
+          mnemonic,
+          password,
+          name,
+        })
+        hideModal()
+      },
+    }),
+  )(MnemonicShowScreen): ComponentType<{
+    navigation: Navigation,
+    intl: intlShape,
+  }>),
+)
