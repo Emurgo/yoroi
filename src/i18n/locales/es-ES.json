@@ -10,7 +10,7 @@
   "components.firstrun.acepttermsofservicescreen.title": "Condiciones de Servicio",
   "components.firstrun.custompinscreen.pinConfirmationTitle": "Repite tu PIN",
   "components.firstrun.custompinscreen.pinInputSubtitle": "Elige un nuevo PIN para acceder rápido a tu billetera.",
-  "components.firstrun.custompinscreen.pinInputTitle": "Ingresa el PIN",
+  "components.firstrun.custompinscreen.pinInputTitle": "Ingresa tu PIN",
   "components.firstrun.custompinscreen.title": "Asigna tu PIN",
   "components.login.appstartscreen.loginButton": "Acceder",
   "components.login.custompinlogin.title": "Ingresar PIN",
