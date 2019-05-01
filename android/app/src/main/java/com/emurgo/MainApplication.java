@@ -3,6 +3,7 @@ package com.emurgo;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import io.sentry.RNSentryPackage;
 import com.igorbelyayev.rnlocalresource.RNLocalResourcePackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
@@ -35,6 +36,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+            new RNSentryPackage(),
             new RNLocalResourcePackage(),
         new ReactNativeConfigPackage(),
         new SplashScreenReactPackage(),
