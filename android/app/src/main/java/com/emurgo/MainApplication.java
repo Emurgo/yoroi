@@ -34,8 +34,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
-              new RNSentryPackage(),
-              new RNLocalResourcePackage(),
+        new RNSentryPackage(),
+        new RNLocalResourcePackage(),
         new ReactNativeConfigPackage(),
         new SplashScreenReactPackage(),
         new CardanoPackage(),
