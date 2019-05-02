@@ -187,7 +187,7 @@
   "components.walletinit.restorewallet.restorewalletscreen.title": "Restaurar billetera",
   "components.walletinit.restorewallet.restorewalletscreen.toolong": "La frase es muy larga.",
   "components.walletinit.restorewallet.restorewalletscreen.tooshort": "La frase es muy corta.",
-  "components.walletinit.restorewallet.restorewalletscreen.unknowwords": "{wordlist} {cnt, plural, one {is} other {are}} invalid",
+  "components.walletinit.restorewallet.restorewalletscreen.unknowwords": "{wordlist} {cnt, plural, one {es inválida} other {son inválidas}}",
   "components.walletinit.restorewallet.walletcredentialsscreen.title": "Credenciales de la billetera",
   "components.walletinit.walletdescription.byEmurgo": "Por",
   "components.walletinit.walletform.continueButton": "Continuar",
