@@ -186,7 +186,7 @@
   "components.walletinit.restorewallet.restorewalletscreen.restoreButton": "Restore wallet",
   "components.walletinit.restorewallet.restorewalletscreen.title": "Restore wallet",
   "components.walletinit.restorewallet.restorewalletscreen.toolong": "Phrase is too long.",
-  "components.walletinit.restorewallet.restorewalletscreen.tooshort": "hrase is too short.",
+  "components.walletinit.restorewallet.restorewalletscreen.tooshort": "Phrase is too short.",
   "components.walletinit.restorewallet.restorewalletscreen.unknowwords": "{wordlist} {cnt, plural, one {is} other {are}} invalid",
   "components.walletinit.restorewallet.walletcredentialsscreen.title": "Wallet credentials",
   "components.walletinit.walletdescription.byEmurgo": "By",
