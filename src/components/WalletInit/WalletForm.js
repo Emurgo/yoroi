@@ -33,7 +33,7 @@ const messages = defineMessages({
   },
   newPasswordInput: {
     id: 'components.walletinit.walletform.newPasswordInput',
-    defaultMessage: '!!!Wallet password',
+    defaultMessage: '!!!Spending password',
     description: 'some desc',
   },
   continueButton: {

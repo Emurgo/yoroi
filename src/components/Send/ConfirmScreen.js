@@ -60,7 +60,7 @@ const messages = defineMessages({
   },
   password: {
     id: 'components.send.confirmscreen.password',
-    defaultMessage: '!!!Wallet password',
+    defaultMessage: '!!!Spending password',
     description: 'some desc',
   },
   receiver: {
