@@ -7,4 +7,5 @@ export const LANGUAGES = {
   JAPANESE: 'ja-JP',
   KOREAN: 'ko-KR',
   RUSSIAN: 'ru-RU',
+  SPANISH: 'es-ES',
 }

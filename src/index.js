@@ -6,6 +6,7 @@ import en from 'react-intl/locale-data/en'
 import ja from 'react-intl/locale-data/ja'
 import ko from 'react-intl/locale-data/ko'
 import ru from 'react-intl/locale-data/ru'
+import es from 'react-intl/locale-data/es'
 
 // $FlowFixMe flow does not have this import
 import {connect, Provider} from 'react-redux'
@@ -39,7 +40,7 @@ global.Promise = bluebird
 global.onunhandledrejection = (e) => handleGeneralError(e.message, e)
 
 // https://github.com/yahoo/react-intl/wiki#loading-locale-data
-addLocaleData([...en, ...ja, ...ko, ...ru])
+addLocaleData([...en, ...ja, ...ko, ...ru, ...es])
 
 const store = getConfiguredStore()
 
