@@ -7,7 +7,6 @@
 
 #import "AppDelegate.h"
 
-#import <Firebase.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 #import "RNSplashScreen.h"
@@ -16,8 +15,6 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [FIRApp configure];
-  
   NSURL *jsCodeLocation;
 
   #ifdef DEBUG

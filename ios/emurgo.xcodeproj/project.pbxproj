@@ -24,7 +24,6 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
-		1B93946753C844318E5505B7 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DBF6642BF3B4B119153FD14 /* libRNFirebase.a */; };
 		293DB2C1E209441FA3264DCD /* libRNKeychain.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA9C2C759F984A23843777A9 /* libRNKeychain.a */; };
 		2AD573394D814085843F36E2 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8306E0AE63AA483DBF7F6BF0 /* libRNFS.a */; };
 		2EA33F9921EEF00A0075DFFE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
@@ -53,12 +52,9 @@
 		2EA33FB121EEF00A0075DFFE /* libRNKeychain.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA9C2C759F984A23843777A9 /* libRNKeychain.a */; };
 		2EA33FB221EEF00A0075DFFE /* libRNBackgroundTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 09D460C9C03E41CB9D785437 /* libRNBackgroundTimer.a */; };
 		2EA33FB321EEF00A0075DFFE /* libSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DBE1771E1614BCAB6A3665D /* libSplashScreen.a */; };
-		2EA33FB421EEF00A0075DFFE /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DBF6642BF3B4B119153FD14 /* libRNFirebase.a */; };
 		2EA33FB721EEF00A0075DFFE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2EA33FB821EEF00A0075DFFE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E2FC0BFA21C7F02200DA195B /* InfoPlist.strings */; };
-		2EA33FB921EEF00A0075DFFE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2ECF074221E637D100356A42 /* GoogleService-Info.plist */; };
 		2EA33FBA21EEF00A0075DFFE /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
-		2ECF077B21E637D100356A42 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2ECF074221E637D100356A42 /* GoogleService-Info.plist */; };
 		4129CAD9C4C34ACF9E00AA5E /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9443C3481304C079FB7BE23 /* libRNSVG.a */; };
 		4C623EB4CCE24A6EA5889C23 /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 29CDBB4B7FB64C0086FF65C6 /* libRNCamera.a */; };
 		55F46080C7484EE1B3249EE3 /* libRNBackgroundTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 09D460C9C03E41CB9D785437 /* libRNBackgroundTimer.a */; };
@@ -524,7 +520,6 @@
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EA33FC221EEF00A0075DFFE /* emurgo-staging.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "emurgo-staging.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EA33FC321EEF00A0075DFFE /* Staging-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Staging-Info.plist"; path = "/Users/narqueros/emurgo/yoroi-icarus/yoroi-mobile-classic/yoroi-mobile/ios/Staging-Info.plist"; sourceTree = "<absolute>"; };
-		2ECF074221E637D100356A42 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2EF1204722795CAD007BE6F5 /* libSentry.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSentry.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EF1204922795CAD007BE6F5 /* libSentryReactNative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSentryReactNative.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EF1208322795DE3007BE6F5 /* libSentryReactNative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSentryReactNative.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -621,7 +616,6 @@
 				293DB2C1E209441FA3264DCD /* libRNKeychain.a in Frameworks */,
 				55F46080C7484EE1B3249EE3 /* libRNBackgroundTimer.a in Frameworks */,
 				5E2B7734605B4E0CBC60D312 /* libSplashScreen.a in Frameworks */,
-				1B93946753C844318E5505B7 /* libRNFirebase.a in Frameworks */,
 				5CFD142B4A5EEFBD46859066 /* libPods-emurgo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -654,7 +648,6 @@
 				2EA33FB121EEF00A0075DFFE /* libRNKeychain.a in Frameworks */,
 				2EA33FB221EEF00A0075DFFE /* libRNBackgroundTimer.a in Frameworks */,
 				2EA33FB321EEF00A0075DFFE /* libSplashScreen.a in Frameworks */,
-				2EA33FB421EEF00A0075DFFE /* libRNFirebase.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -743,7 +736,6 @@
 		13B07FAE1A68108700A75B9A /* emurgo */ = {
 			isa = PBXGroup;
 			children = (
-				2ECF074221E637D100356A42 /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -1084,7 +1076,6 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				E278992C21B9DC3D00E9304E /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1099,12 +1090,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2EA33FBD21EEF00A0075DFFE /* Build configuration list for PBXNativeTarget "emurgo-staging" */;
 			buildPhases = (
-				2EA33F9721EEF00A0075DFFE /* Run Script */,
 				2EA33F9821EEF00A0075DFFE /* Sources */,
 				2EA33F9B21EEF00A0075DFFE /* Frameworks */,
 				2EA33FB621EEF00A0075DFFE /* Resources */,
 				2EA33FBB21EEF00A0075DFFE /* Bundle React Native code and images */,
-				2EA33FBC21EEF00A0075DFFE /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1147,6 +1136,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 				ja,
@@ -1692,7 +1682,6 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				E2FC0BF821C7F02200DA195B /* InfoPlist.strings in Resources */,
-				2ECF077B21E637D100356A42 /* GoogleService-Info.plist in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1703,7 +1692,6 @@
 			files = (
 				2EA33FB721EEF00A0075DFFE /* Images.xcassets in Resources */,
 				2EA33FB821EEF00A0075DFFE /* InfoPlist.strings in Resources */,
-				2EA33FB921EEF00A0075DFFE /* GoogleService-Info.plist in Resources */,
 				2EA33FBA21EEF00A0075DFFE /* LaunchScreen.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1723,25 +1711,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(Staging.Debug|Debug)\"\nexport NODE_BINARY=node\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh";
-		};
-		2EA33F9721EEF00A0075DFFE /* Run Script */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Run Script";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/bash;
-			shellScript = "cd ${PROJECT_DIR}/.. && sh src/l10n/updateIOSSystemTranslations.sh\n";
+			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(Staging.Debug|Debug)\"\nexport NODE_BINARY=node\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh\n";
 		};
 		2EA33FBB21EEF00A0075DFFE /* Bundle React Native code and images */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1756,40 +1726,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(Staging.Debug|Debug)\"\nexport NODE_BINARY=node\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh\n";
-		};
-		2EA33FBC21EEF00A0075DFFE /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/Fabric/run\"\n";
-		};
-		E278992C21B9DC3D00E9304E /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/Fabric/run\"\n";
 		};
 		F7DB15954E94922466B0837E /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
