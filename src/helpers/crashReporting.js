@@ -17,9 +17,7 @@ const addLog = (message: string, level: SentrySeverity = SentrySeverity.Error) =
 
 /* eslint-disable no-console */
 const enable = () => {
-  console.log("CONFIG SENTRY: ", CONFIG.SENTRY);
-  Sentry.config("https://37d9a929474749bcb74d99c6f2d60dfd@sentry.io/1450563").install({deactivateStacktraceMerging: false})
-      .then(() => _enabled = true)
+  Sentry.config(CONFIG.SENTRY).install({deactivateStacktraceMerging: false}).then(_enabled = true)
 
   Logger.setLogger({
     debug: console.debug,
