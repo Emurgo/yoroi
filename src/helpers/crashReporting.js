@@ -17,7 +17,10 @@ const addLog = (message: string, level: SentrySeverity = SentrySeverity.Error) =
 
 /* eslint-disable no-console */
 const enable = () => {
-  Sentry.config(CONFIG.SENTRY).install({deactivateStacktraceMerging: false})
+  console.log("CONFIG SENTRY: ", CONFIG.SENTRY);
+  Sentry.config("https://37d9a929474749bcb74d99c6f2d60dfd@sentry.io/1450563").install({deactivateStacktraceMerging: false})
+      .then(() => _enabled = true)
+
   Logger.setLogger({
     debug: console.debug,
     info: console.info,
@@ -30,7 +33,7 @@ const enable = () => {
       addLog(`ERROR: ${message}`, SentrySeverity.Error)
     },
   })
-  _enabled = true
+
 }
 
 // Warning(ppershing): ALWAYS use _enabled in the next methods
@@ -53,7 +56,7 @@ const setBoolValue = (key: string, value: ?boolean) => {
 
 // Note(ppershing): crashing here is fine :-)
 const crash = () => {
-  Sentry.nativeCrash()
+  Sentry.crash()
 }
 
 export default {
