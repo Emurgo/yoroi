@@ -25,7 +25,7 @@ import type {Navigation} from '../../types/navigation'
 const messages = defineMessages({
   title: {
     id: 'components.settings.changepasswordscreen.title',
-    defaultMessage: 'Change wallet password',
+    defaultMessage: 'Change spending password',
   },
   oldPasswordInputLabel: {
     id: 'components.settings.changepasswordscreen.oldPasswordInputLabel',

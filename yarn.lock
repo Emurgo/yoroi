@@ -7153,6 +7153,16 @@ react-native-fs@^2.11.18:
     base-64 "^0.1.0"
     utf8 "^2.1.1"
 
+"react-native-inhibit-warnings@https://github.com/Emurgo/react-native-inhibit-warnings.git":
+  version "1.0.1"
+  resolved "https://github.com/Emurgo/react-native-inhibit-warnings.git#e80b42e3c8f8ae99dcb138e69572a47750ae5ea6"
+  dependencies:
+    chalk "^1.1.3"
+    glob "^7.1.1"
+    path "^0.12.7"
+    plist "^2.0.1"
+    xcode "^0.9.1"
+
 react-native-keychain@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/react-native-keychain/-/react-native-keychain-3.0.0.tgz#29da1dfa43c2581f76bf9420914fd38a1558cf18"
