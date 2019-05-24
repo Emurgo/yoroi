@@ -57,10 +57,15 @@ const defaultNumberFmt = {
 
 // Note(ppershing): this is just temporary
 // and should be replaced with real configs
-const decimalCommaNumberFmt = {
+const russianNumberFmt = {
   ...defaultNumberFmt,
   decimalSeparator: ',',
   groupSeparator: ' ',
+}
+const spanishNumberFmt = {
+  ...defaultNumberFmt,
+  decimalSeparator: ',',
+  groupSeparator: '.',
 }
 
 const numberLocales = {
@@ -70,8 +75,8 @@ const numberLocales = {
   // [LANGUAGES.CHINESE_TRADITIONAL]: customNumberFmt,
   [LANGUAGES.KOREAN]: defaultNumberFmt,
   [LANGUAGES.JAPANESE]: defaultNumberFmt,
-  [LANGUAGES.RUSSIAN]: decimalCommaNumberFmt,
-  [LANGUAGES.SPANISH]: decimalCommaNumberFmt,
+  [LANGUAGES.RUSSIAN]: russianNumberFmt,
+  [LANGUAGES.SPANISH]: spanishNumberFmt,
 }
 
 export const setLanguage = (code: string) => {
