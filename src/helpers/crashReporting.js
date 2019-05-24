@@ -1,23 +1,25 @@
 // @flow
 
 // $FlowFixMe we have turned off this module in .flowconfig
-import {
-  Sentry,
-  SentrySeverity,
-} from 'react-native-sentry'
+import {Sentry, SentrySeverity} from 'react-native-sentry'
 
 import {CONFIG} from '../config'
 import {Logger} from '../utils/logging'
 
 let _enabled = false
 
-const addLog = (message: string, level: SentrySeverity = SentrySeverity.Error) => {
+const addLog = (
+  message: string,
+  level: SentrySeverity = SentrySeverity.Error,
+) => {
   _enabled && Sentry.captureMessage(message, {level})
 }
 
 /* eslint-disable no-console */
 const enable = () => {
-  Sentry.config(CONFIG.SENTRY).install({deactivateStacktraceMerging: false}).then(_enabled = true)
+  Sentry.config(CONFIG.SENTRY)
+    .install({deactivateStacktraceMerging: false})
+    .then((_enabled = true))
 
   Logger.setLogger({
     debug: console.debug,
@@ -31,7 +33,6 @@ const enable = () => {
       addLog(`ERROR: ${message}`, SentrySeverity.Error)
     },
   })
-
 }
 
 // Warning(ppershing): ALWAYS use _enabled in the next methods
@@ -39,9 +40,10 @@ const enable = () => {
 // firebase.crashlytics() calls would crash the app :-(
 
 const setUserId = (userId: ?string) => {
-  _enabled && Sentry.setUserContext({
-    id: userId || '',
-  })
+  _enabled &&
+    Sentry.setUserContext({
+      id: userId || '',
+    })
 }
 
 const setStringValue = (key: string, value: ?string) => {
