@@ -183,7 +183,6 @@ dependencies {
     compile project(':react-native-local-resource')
     compile project(':react-native-config')
     compile project(':react-native-splash-screen')
-    compile project(':react-native-firebase')
     implementation project(':react-native-cardano')
     implementation project(':react-native-camera')
     implementation project(':react-native-randombytes')
@@ -212,5 +211,3 @@ task copyDownloadableDepsToLibs(type: Copy) {
 
 apply plugin: 'com.google.gms.google-services'
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
-// https://github.com/invertase/react-native-firebase-starter/issues/58
-com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true 
