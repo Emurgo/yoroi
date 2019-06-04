@@ -14,7 +14,7 @@ const _ASSURANCE_STRICT = false
 export const CARDANO_CONFIG = {
   TESTNET: {
     PROTOCOL_MAGIC: 633343913,
-    API_ROOT: 'https://iohk-staging.yoroiwallet.com/api',
+    API_ROOT: 'https://stg-yoroi-backend.yoroiwallet.com/api',
     EXPLORER_URL_FOR_TX: (tx: string) => `https://explorer.iohkdev.io/tx/${tx}`,
   },
   MAINNET: {
