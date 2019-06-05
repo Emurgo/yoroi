@@ -1,33 +1,38 @@
 // @flow
 
 // $FlowFixMe we have turned off this module in .flowconfig
-import firebase from 'react-native-firebase'
+import {Sentry, SentrySeverity} from 'react-native-sentry'
 
+import {CONFIG} from '../config'
 import {Logger} from '../utils/logging'
 
 let _enabled = false
 
-const addLog = (message: string) => {
-  _enabled && firebase.crashlytics().log(message)
+const addLog = (
+  message: string,
+  level: SentrySeverity = SentrySeverity.Error,
+) => {
+  _enabled && Sentry.captureMessage(message, {level})
 }
 
 /* eslint-disable no-console */
 const enable = () => {
-  firebase.crashlytics().enableCrashlyticsCollection()
+  Sentry.config(CONFIG.SENTRY)
+    .install({deactivateStacktraceMerging: false})
+    .then((_enabled = true))
+
   Logger.setLogger({
     debug: console.debug,
     info: console.info,
     warn: (message: string, ...args) => {
       console.warn(message, ...args)
-      addLog(`WARN: ${message}`)
+      addLog(`WARN: ${message}`, SentrySeverity.Warning)
     },
     error: (message: string, ...args: any) => {
       console.error(message, ...args)
-      addLog(`ERROR: ${message}`)
+      addLog(`ERROR: ${message}`, SentrySeverity.Error)
     },
   })
-
-  _enabled = true
 }
 
 // Warning(ppershing): ALWAYS use _enabled in the next methods
@@ -35,20 +40,23 @@ const enable = () => {
 // firebase.crashlytics() calls would crash the app :-(
 
 const setUserId = (userId: ?string) => {
-  _enabled && firebase.crashlytics().setUserIdentifier(userId || '')
+  _enabled &&
+    Sentry.setUserContext({
+      id: userId || '',
+    })
 }
 
 const setStringValue = (key: string, value: ?string) => {
-  _enabled && firebase.crashlytics().setStringValue(key, value || '')
+  _enabled && Sentry.setExtraContext({key: value || ''})
 }
 
 const setBoolValue = (key: string, value: ?boolean) => {
-  _enabled && firebase.crashlytics().setBoolValue(key, value || false)
+  _enabled && Sentry.setExtraContext({key: value || false})
 }
 
 // Note(ppershing): crashing here is fine :-)
 const crash = () => {
-  firebase.crashlytics().crash()
+  Sentry.crash()
 }
 
 export default {

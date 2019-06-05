@@ -7,13 +7,14 @@ const IS_DEBUG = __DEV__
 const _SHOW_INIT_DEBUG_SCREEN = false
 const _PREFILL_WALLET_INFO = false
 const _USE_TESTNET = env.getBoolean('USE_TESTNET', true)
+const _SENTRY = env.getString('SENTRY')
 const _LOG_LEVEL = IS_DEBUG ? LogLevel.Debug : LogLevel.Warn
 const _ASSURANCE_STRICT = false
 
 export const CARDANO_CONFIG = {
   TESTNET: {
     PROTOCOL_MAGIC: 633343913,
-    API_ROOT: 'https://iohk-staging.yoroiwallet.com/api',
+    API_ROOT: 'https://stg-yoroi-backend.yoroiwallet.com/api',
     EXPLORER_URL_FOR_TX: (tx: string) => `https://explorer.iohkdev.io/tx/${tx}`,
   },
   MAINNET: {
@@ -67,6 +68,7 @@ export const CONFIG = {
 
   MAX_CONCURRENT_REQUESTS: 5,
   CARDANO: _USE_TESTNET ? CARDANO_CONFIG.TESTNET : CARDANO_CONFIG.MAINNET,
+  SENTRY: _SENTRY,
   MNEMONIC_STRENGTH: 160,
   ASSURANCE_LEVELS: _ASSURANCE_STRICT
     ? ASSURANCE_LEVELS.STRICT

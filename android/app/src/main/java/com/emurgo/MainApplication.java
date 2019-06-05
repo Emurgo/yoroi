@@ -3,11 +3,10 @@ package com.emurgo;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import io.sentry.RNSentryPackage;
 import com.igorbelyayev.rnlocalresource.RNLocalResourcePackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
-import io.invertase.firebase.RNFirebasePackage;
-import io.invertase.firebase.fabric.crashlytics.RNFirebaseCrashlyticsPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
 import io.crossroad.rncardano.CardanoPackage;
 import org.reactnative.camera.RNCameraPackage;
@@ -35,11 +34,10 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
-            new RNLocalResourcePackage(),
+              new RNSentryPackage(),
+              new RNLocalResourcePackage(),
         new ReactNativeConfigPackage(),
         new SplashScreenReactPackage(),
-        new RNFirebasePackage(),
-        new RNFirebaseCrashlyticsPackage(),
         new CardanoPackage(),
         new RNCameraPackage(),
         new RandomBytesPackage(),

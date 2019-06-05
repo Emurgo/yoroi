@@ -181,8 +181,9 @@ describe('signTransaction', () => {
   // Let's hope this test fails (with correct behavior) in the future
   it('can handle rust bug', async () => {
     expect.assertions(2)
-    // Upstream should have been fixed by now
-    expect(moment().isBefore('2019-06-01')).toBeTruthy()
+    // If this fails, it means we let this bug open for too long time.
+    // Try updating rust library and seeing if it disappears
+    expect(moment().isBefore('2019-08-01')).toBeTruthy()
 
     const outputs = [
       {
@@ -245,8 +246,9 @@ describe('signTransaction', () => {
   // Let's hope this test fails (with correct behavior) in the future
   it('can compute correct fee', async () => {
     expect.assertions(2)
-    // Upstream should have been fixed by now
-    expect(moment().isBefore('2019-06-01')).toBeTruthy()
+    // If this fails, it means we let this bug open for too long time.
+    // Try updating rust library and seeing if it disappears
+    expect(moment().isBefore('2019-08-01')).toBeTruthy()
 
     const inputs = [
       {
