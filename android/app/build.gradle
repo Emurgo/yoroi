@@ -179,10 +179,10 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-sentry')
-    compile project(':react-native-local-resource')
-    compile project(':react-native-config')
-    compile project(':react-native-splash-screen')
+    implementation project(':react-native-sentry')
+    implementation project(':react-native-local-resource')
+    implementation project(':react-native-config')
+    implementation project(':react-native-splash-screen')
     implementation project(':react-native-cardano')
     implementation project(':react-native-camera')
     implementation project(':react-native-randombytes')
