@@ -3,6 +3,7 @@ import enUS from './locales/en-US'
 import jaJP from './locales/ja-JP'
 import koKR from './locales/ko-KR'
 import ruRU from './locales/ru-RU'
+import esES from './locales/es-ES'
 
 import {LANGUAGES} from './languages'
 
@@ -17,5 +18,6 @@ translations[LANGUAGES.ENGLISH] = enUS
 translations[LANGUAGES.JAPANESE] = Object.assign({}, defaultLocale, jaJP)
 translations[LANGUAGES.KOREAN] = Object.assign({}, defaultLocale, koKR)
 translations[LANGUAGES.RUSSIAN] = Object.assign({}, defaultLocale, ruRU)
+translations[LANGUAGES.SPANISH] = Object.assign({}, defaultLocale, esES)
 
 export default translations

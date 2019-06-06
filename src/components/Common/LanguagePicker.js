@@ -9,6 +9,7 @@ import japaneseFlagIcon from '../../assets/img/flags/japanese.png'
 import russianFlagIcon from '../../assets/img/flags/russian.png'
 import englishFlagIcon from '../../assets/img/flags/english.png'
 // import chineseFlagIcon from '../../assets/img/flags/chinese.png'
+import spanishFlagIcon from '../../assets/img/flags/spanish.png'
 import selectLanguageImage from '../../assets/img/select_language.png'
 import LanguageListItem from './LanguageListItem'
 import {LANGUAGES} from '../../i18n/languages'
@@ -33,6 +34,11 @@ const messages = defineMessages({
   russian: {
     id: 'components.common.languagepicker.russian',
     defaultMessage: 'Russian',
+    description: 'some desc',
+  },
+  spanish: {
+    id: 'components.common.languagepicker.spanish',
+    defaultMessage: 'Spanish',
     description: 'some desc',
   },
   continueButton: {
@@ -74,6 +80,11 @@ const supportedLanguages = (intl) => {
       label: intl.formatMessage(messages.russian),
       code: LANGUAGES.RUSSIAN,
       icon: russianFlagIcon,
+    },
+    {
+      label: intl.formatMessage(messages.spanish),
+      code: LANGUAGES.SPANISH,
+      icon: spanishFlagIcon,
     },
   ]
 }

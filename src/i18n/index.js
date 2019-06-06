@@ -7,6 +7,7 @@ import 'moment/locale/ko'
 import 'moment/locale/ja'
 import 'moment/locale/zh-cn'
 import 'moment/locale/ru'
+import 'moment/locale/es'
 
 import assert from '../utils/assert'
 import {LANGUAGES} from './languages'
@@ -19,6 +20,7 @@ const momentLocales = {
   [LANGUAGES.KOREAN]: 'ko',
   [LANGUAGES.JAPANESE]: 'ja',
   [LANGUAGES.RUSSIAN]: 'ru',
+  [LANGUAGES.SPANISH]: 'es',
 }
 
 // Add default custom formatting functions
@@ -60,6 +62,11 @@ const russianNumberFmt = {
   decimalSeparator: ',',
   groupSeparator: ' ',
 }
+const spanishNumberFmt = {
+  ...defaultNumberFmt,
+  decimalSeparator: ',',
+  groupSeparator: '.',
+}
 
 const numberLocales = {
   [LANGUAGES.ENGLISH]: defaultNumberFmt,
@@ -69,6 +76,7 @@ const numberLocales = {
   [LANGUAGES.KOREAN]: defaultNumberFmt,
   [LANGUAGES.JAPANESE]: defaultNumberFmt,
   [LANGUAGES.RUSSIAN]: russianNumberFmt,
+  [LANGUAGES.SPANISH]: spanishNumberFmt,
 }
 
 export const setLanguage = (code: string) => {
