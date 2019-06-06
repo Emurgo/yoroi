@@ -231,20 +231,6 @@
 			remoteGlobalIDString = 274692C321B4414400BF91A8;
 			remoteInfo = "RNSentry-tvOS";
 		};
-		2EF1208B22795E47007BE6F5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2EF1208522795E47007BE6F5 /* RNSentry.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 134814201AA4EA6300B7C361;
-			remoteInfo = RNSentry;
-		};
-		2EF1208D22795E47007BE6F5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2EF1208522795E47007BE6F5 /* RNSentry.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 274692C321B4414400BF91A8;
-			remoteInfo = "RNSentry-tvOS";
-		};
 		3DAD3E831DF850E9000B6D8A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 00C302BB1ABCB91800DB3ED1 /* RCTImage.xcodeproj */;
@@ -531,8 +517,7 @@
 		2AF0647A6034452E81BD8DF5 /* libresolv.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E3E7D012298ACEA00D5C487 /* emurgo-staging.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "emurgo-staging.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2E3E7D022298ACEB00D5C487 /* emurgo copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "emurgo copy-Info.plist"; path = "/Users/narqueros/emurgo/yoroi-icarus/yoroi-mobile/ios/emurgo copy-Info.plist"; sourceTree = "<absolute>"; };
-		2EA33FC321EEF00A0075DFFE /* Staging-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Staging-Info.plist"; path = "/Users/narqueros/emurgo/yoroi-icarus/yoroi-mobile-classic/yoroi-mobile/ios/Staging-Info.plist"; sourceTree = "<absolute>"; };
+		2E5B414122A8B26500BE1FC1 /* Staging-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Staging-Info.plist"; sourceTree = "<group>"; };
 		2EF1204722795CAD007BE6F5 /* libSentry.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSentry.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EF1204922795CAD007BE6F5 /* libSentryReactNative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSentryReactNative.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EF1208322795DE3007BE6F5 /* libSentryReactNative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSentryReactNative.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -756,12 +741,12 @@
 		13B07FAE1A68108700A75B9A /* emurgo */ = {
 			isa = PBXGroup;
 			children = (
+				2E5B414122A8B26500BE1FC1 /* Staging-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				2EA33FC321EEF00A0075DFFE /* Staging-Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				E2FC0BFA21C7F02200DA195B /* InfoPlist.strings */,
@@ -807,15 +792,6 @@
 				F410A0AB183D4990BCAF936B /* libz.tbd */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		2EF1208622795E47007BE6F5 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				2EF1208C22795E47007BE6F5 /* libRNSentry.a */,
-				2EF1208E22795E47007BE6F5 /* libRNSentry-tvOS.a */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		2EF1208622795E47007BE6F5 /* Products */ = {
@@ -926,7 +902,6 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				F7FBD967219C5A6D003FE9E2 /* Recovered References */,
 				661CFB1B626FF527BA54DEF4 /* Pods */,
-				2E3E7D022298ACEB00D5C487 /* emurgo copy-Info.plist */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -1118,7 +1093,6 @@
 				2E3E7CDA2298ACEA00D5C487 /* Frameworks */,
 				2E3E7CF62298ACEA00D5C487 /* Resources */,
 				2E3E7CFA2298ACEA00D5C487 /* Bundle React Native code and images */,
-				2E3E7CFB2298ACEA00D5C487 /* Upload Debug Symbols to Sentry */,
 			);
 			buildRules = (
 			);
@@ -1412,20 +1386,6 @@
 			fileType = archive.ar;
 			path = "libprivatedata-tvOS.a";
 			remoteRef = 2DF0FFEC2056DD460020B375 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		2EF1208C22795E47007BE6F5 /* libRNSentry.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNSentry.a;
-			remoteRef = 2EF1208B22795E47007BE6F5 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		2EF1208E22795E47007BE6F5 /* libRNSentry-tvOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libRNSentry-tvOS.a";
-			remoteRef = 2EF1208D22795E47007BE6F5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		2EF1208C22795E47007BE6F5 /* libRNSentry.a */ = {
