@@ -1,0 +1,12 @@
+A simple, secure and fast Cardano ADA wallet.
+English / 日本語 / 한국어 / Pусский
+
+Yoroi allows users to manage ADA on their phone. It is a lightweight wallet that launches quickly, allowing users to start sending or receiving ADA in minutes.
+
+The Yoroi Android App is small and can be downloaded without using much bandwidth. Additionally, Yoroi is a light wallet, which means it does not require a full copy of the blockchain to be stored on the user's device. This means the bandwidth requirements for using the wallet are also low.
+
+Private keys associated with user wallets are only stored locally on the user's device, and this data is encrypted with a wallet password. Private keys are never stored on any centrally-hosted servers.
+
+With support in four languages, Yoroi makes it easier than ever to manage your ADA.
+
+For more information, please visit the Yoroi website. https://yoroi-wallet.com

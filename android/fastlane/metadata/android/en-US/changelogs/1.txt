@@ -1,0 +1,1 @@
+First version of the Yoroi Wallet for Android!. A simple, secure and fast Cardano ADA wallet. Yoroi allows users to manage ADA on their phone. It is a lightweight wallet that launches quickly, allowing users to start sending or receiving ADA in minutes.
