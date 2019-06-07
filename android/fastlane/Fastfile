@@ -16,16 +16,20 @@
 default_platform(:android)
 
 platform :android do
+  desc "Builds a release version"
+  lane :build do
+    gradle(task: "clean assembleMainRelease")
+  end
+
+
   desc "Deploy a new staging version to Google Play"
   lane :deploy_staging do
-    # Dotenv.overload '../.env.staging'
     gradle(task: "clean assembleDevRelease")
     upload_to_play_store
   end
 
   desc "Deploy a new version to Google Play"
   lane :deploy_mainnet do
-    # Dotenv.overload '../.env.production'
     gradle(task: "clean assembleMainRelease")
     upload_to_play_store
   end
