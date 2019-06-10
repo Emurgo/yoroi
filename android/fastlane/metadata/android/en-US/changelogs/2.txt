@@ -1,0 +1,3 @@
+- Update TOS to be displayed in multiple languages.
+- Fix font size to display full sentences in some languages.
+- Fix issue with QR.
