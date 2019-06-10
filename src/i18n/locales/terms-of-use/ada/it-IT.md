@@ -18,7 +18,7 @@ Le presenti condizioni dell'accordo di servizio ("accordo") è stipulato tra EMU
 
 Tutte le spese per la conversione di valuta, le spese di terzi, le vendite, l'uso, l'uso, il valore aggiunto, la proprietà personale o altre tasse, dazi o imposte di qualsiasi tipo, compresi gli interessi e le relative sanzioni, imposte ora o in seguito da qualsiasi ente governativo, e le spese sostenute dall'Utente in ragione dell'accesso, uso o installazione del Software da parte dell'Utente sono di esclusiva responsabilità dell'Utente.
 
-## 3. User Representations
+## 3. Rappresentazioni degli utenti
 
 L'utente dichiara e garantisce alla Società che: (a) se l'Utente è una persona fisica, l'Utente ha più di diciotto (18) anni; (b) l'Utente ha il potere e l'autorità di stipulare ed eseguire gli obblighi dell'Utente ai sensi del presente Contratto; (c) tutte le informazioni fornite dall'Utente alla Società sono veritiere, accurate e complete; (d) l'Utente rispetterà tutte le leggi e i regolamenti di qualsiasi giurisdizione applicabile in materia di accesso, uso o installazione del Software da parte dell'Utente; (e) L'Utente dovrà rispettare tutti i termini e le condizioni del presente Contratto, incluse, senza limitazioni, le disposizioni di cui alla Sezione 4; e (f) L'Utente ha fornito e fornirà informazioni accurate e complete come richiesto per l'accesso, l'uso o l'installazione del Software.
 
