@@ -43,7 +43,7 @@
   "components.send.confirmscreen.fees": "手数料",
   "components.send.confirmscreen.password": "送金パスワード",
   "components.send.confirmscreen.receiver": "受信者",
-  "components.send.confirmscreen.sendingModalTitle": "トランザクションの承認",
+  "components.send.confirmscreen.sendingModalTitle": "トランザクションを送信中",
   "components.send.confirmscreen.title": "送信",
   "components.send.sendscreen.addressInputErrorInvalidAddress": "有効なアドレスを入力してください。",
   "components.send.sendscreen.addressInputLabel": "アドレス",
