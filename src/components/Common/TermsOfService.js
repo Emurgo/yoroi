@@ -16,7 +16,6 @@ type State = {
 }
 
 class TermsOfService extends React.Component<Props, State> {
-
   constructor(props) {
     super(props)
     this.state = {tos: ''}
@@ -31,13 +30,10 @@ class TermsOfService extends React.Component<Props, State> {
   render() {
     return <Markdown>{this.state.tos}</Markdown>
   }
-
 }
 
 export default (compose(
-  connect(
-    (state) => ({
-      languageCode: state.appSettings.languageCode,
-    }),
-  )
+  connect((state) => ({
+    languageCode: state.appSettings.languageCode,
+  })),
 )(TermsOfService): ComponentType<any>)
