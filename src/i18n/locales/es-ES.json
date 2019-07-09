@@ -200,7 +200,7 @@
   "components.walletinit.walletinitscreen.restoreWalletButton": "Restaurar billetera desde respaldo",
   "components.walletinit.walletinitscreen.title": "Añadir billetera",
   "components.walletselection.walletselectionscreen.addWalletButton": "Añadir billetera",
-  "components.walletselection.walletselectionscreen.header": "Tus billetera",
+  "components.walletselection.walletselectionscreen.header": "Tus billeteras",
   "crypto.keystore.approveTransaction": "Autorizar con tu huella digital",
   "crypto.keystore.cancelButton": "Cancelar",
   "crypto.keystore.description": "!!!",
