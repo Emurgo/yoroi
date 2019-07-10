@@ -18,9 +18,9 @@
   },
   "dependencies": {
     "@babel/cli": "7.2.3",
-    "@babel/core": "7.4.0",
+    "@babel/core": "^7.4.3",
     "@babel/node": "^7.0.0",
-    "@babel/runtime": "^7.1.2",
+    "@babel/runtime": "^7.4.3",
     "babel-eslint": "^10.0.1",
     "base-x": "3.0.4",
     "bignumber.js": "^7.2.1",
@@ -47,10 +47,10 @@
     "node-fetch": "^2.2.0",
     "p-limit": "^2.0.0",
     "path-browserify": "^1.0.0",
-    "react": "16.5.0",
+    "react": "16.8.3",
     "react-intl": "^2.8.0",
     "react-markdown": "^4.0.6",
-    "react-native": "0.57.1",
+    "react-native": "0.59.0",
     "react-native-background-timer": "^2.1.1",
     "react-native-camera": "^1.3.0",
     "react-native-cardano": "https://github.com/crossroadlabs/react-native-cardano.git",
@@ -83,20 +83,20 @@
     "vm-browserify": "^1.1.0"
   },
   "devDependencies": {
-    "babel-jest": "23.6.0",
+    "babel-jest": "24.7.1",
     "babel-plugin-react-intl": "^3.0.1",
     "babel-plugin-require-context-hook": "^1.0.0",
     "eslint-plugin-flowtype": "^3.2.0",
     "extract-react-intl-messages": "^0.14.0",
     "flow-bin": "0.78",
-    "jest": "23.6.0",
-    "metro-react-native-babel-preset": "^0.51.1",
+    "jest": "^24.7.1",
+    "metro-react-native-babel-preset": "^0.53.1",
     "prettier": "1.14.3",
     "prettylint": "1.0.0",
     "react-intl-translations-manager": "^5.0.3",
     "react-native-inhibit-warnings": "https://github.com/Emurgo/react-native-inhibit-warnings.git",
     "react-native-schemes-manager": "^1.0.5",
-    "react-test-renderer": "16.5.0"
+    "react-test-renderer": "16.8.3"
   },
   "resolutions": {
     "base-x": "3.0.4"
