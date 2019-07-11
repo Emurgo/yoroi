@@ -148,12 +148,12 @@ android {
     // Specifies one flavor dimension.
     flavorDimensions "version"
     productFlavors {
-        main {
+        main2 {
             dimension "version"
             applicationId 'com.emurgo'
             minSdkVersion 21
             compileSdkVersion = 28
-            targetSdkVersion 26
+            targetSdkVersion 27
             resValue "string", "build_config_package", "com.emurgo"
         }
         dev {
@@ -162,7 +162,7 @@ android {
             applicationId 'com.emurgo'
             minSdkVersion 21
             compileSdkVersion = 28
-            targetSdkVersion 26
+            targetSdkVersion 27
             resValue "string", "build_config_package", "com.emurgo"
         }
     }
@@ -182,11 +182,11 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-cardano')
     implementation project(':react-native-sentry')
     implementation project(':react-native-local-resource')
     implementation project(':react-native-config')
     implementation project(':react-native-splash-screen')
-    implementation project(':react-native-cardano')
     implementation project(':react-native-camera')
     implementation project(':react-native-randombytes')
     implementation project(':react-native-fs')
