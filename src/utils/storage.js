@@ -2,7 +2,7 @@
 import assert from './assert'
 
 import ExtendableError from 'es6-error'
-import {AsyncStorage} from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 import _ from 'lodash'
 
 export class StorageError extends ExtendableError {}
