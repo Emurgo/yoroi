@@ -1,6 +1,6 @@
 // @flow
 import walletManager, {WalletClosed} from '../crypto/wallet'
-import {Logger} from '../utils/logging'
+// import {Logger} from '../utils/logging'
 
 import {type Dispatch} from 'redux'
 
@@ -39,7 +39,7 @@ export const updateHistory = () => async (dispatch: Dispatch<any>) => {
     } else {
       // TODO(ppershing): should we set error object or just
       // some message code?
-      Logger.error('Sync error', e)
+      // Logger.error('Sync error', e)  // commented out as presumably causing crashes
       dispatch(_setSyncError(e.message))
     }
   } finally {
