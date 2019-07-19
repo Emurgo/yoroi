@@ -148,7 +148,7 @@ android {
     // Specifies one flavor dimension.
     flavorDimensions "version"
     productFlavors {
-        main2 {
+        mainnet {
             dimension "version"
             applicationId 'com.emurgo'
             minSdkVersion 21
