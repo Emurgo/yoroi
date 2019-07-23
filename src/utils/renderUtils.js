@@ -6,6 +6,7 @@ import {Text} from 'react-native'
 import {compose} from 'redux'
 import {Logger} from './logging'
 
+import type {State} from '../state'
 import {walletIsInitializedSelector} from '../selectors'
 
 import type {ComponentType} from 'react'
@@ -153,7 +154,7 @@ export const requireLoaded = <
 
 // TODO hardcoded string
 export const requireInitializedWallet = compose(
-  connect((state) => ({
+  connect<{}, State, _, _ >((state: State) => ({
     _walletIsInitialized: walletIsInitializedSelector(state),
   })),
   requireLoaded(

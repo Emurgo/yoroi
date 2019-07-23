@@ -11,6 +11,8 @@ import languageActions from '../../actions/language'
 import LanguagePicker from '../Common/LanguagePicker'
 import {languageSelector} from '../../selectors'
 
+import type {State} from '../../state'
+
 import styles from './styles/LanguagePickerScreen.style'
 
 const LanguagePickerScreen = ({
@@ -27,8 +29,8 @@ const LanguagePickerScreen = ({
 )
 
 export default compose(
-  connect(
-    (state, {navigation}) => ({
+  connect<{}, State, _, _ >(
+    (state: State, {navigation}) => ({
       languageCode: languageSelector(state) || 'en-US',
     }),
     languageActions,
