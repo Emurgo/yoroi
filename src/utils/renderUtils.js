@@ -118,28 +118,28 @@ export class RenderCount extends React.Component<{}> {
 }
 
 export const measureRenderTime = <Props: {}>(
-  name: string
+  name: string,
 ): HOC<Props, Props> => (
-    BaseComponent: ComponentType<Props>,
-  ): ComponentType<{ ...Props }> =>
-    class MeasureRenderTime extends React.Component<Props> {
-      logProfile = (id, phase, actualTime, baseTime, startTime, commitTime) => {
-        Logger.debug('Render time measurement results')
-        Logger.debug(`${id}'s ${phase} phase:`)
-        Logger.debug(`Actual time: ${actualTime}`)
-        Logger.debug(`Base time: ${baseTime}`)
-        Logger.debug(`Start time: ${startTime}`)
-        Logger.debug(`Commit time: ${commitTime}`)
-      }
-
-      render() {
-        return (
-          <Profiler id={name} onRender={this.logProfile}>
-            <BaseComponent {...this.props} />
-          </Profiler>
-        )
-      }
+  BaseComponent: ComponentType<Props>,
+): ComponentType<{...Props}> =>
+  class MeasureRenderTime extends React.Component<Props> {
+    logProfile = (id, phase, actualTime, baseTime, startTime, commitTime) => {
+      Logger.debug('Render time measurement results')
+      Logger.debug(`${id}'s ${phase} phase:`)
+      Logger.debug(`Actual time: ${actualTime}`)
+      Logger.debug(`Base time: ${baseTime}`)
+      Logger.debug(`Start time: ${startTime}`)
+      Logger.debug(`Commit time: ${commitTime}`)
     }
+
+    render() {
+      return (
+        <Profiler id={name} onRender={this.logProfile}>
+          <BaseComponent {...this.props} />
+        </Profiler>
+      )
+    }
+  }
 
 // prettier-ignore
 export const requireLoaded = <
@@ -163,9 +163,9 @@ export const requireLoaded = <
     }
 
 export const requireInitializedWallet: <Props>(
-  Component: ComponentType<Props>
+  Component: ComponentType<Props>,
 ) => ComponentType<Props> = compose(
-  connect<{}, {_walletIsInitialized: boolean}, _, _, _, _ >((state: State) => ({
+  connect<{}, {_walletIsInitialized: boolean}, _, _, _, _>((state: State) => ({
     _walletIsInitialized: walletIsInitializedSelector(state),
   })),
   requireLoaded<_, {_walletIsInitialized: boolean}, _>(

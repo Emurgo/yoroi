@@ -37,14 +37,16 @@ export const transactionsInfoSelector: (State) => Dict<
 export const hasAnyTransaction = (state: State): boolean =>
   !_.isEmpty(state.wallet.transactions)
 
-export const internalAddressIndexSelector: (state: State) => Object =
-createSelector(
+export const internalAddressIndexSelector: (
+  state: State,
+) => Object = createSelector(
   (state) => state.wallet.internalAddresses,
   (addresses) => _.fromPairs(addresses.map((addr, i) => [addr, i])),
 )
 
-export const externalAddressIndexSelector : (state: State) => Object =
-createSelector(
+export const externalAddressIndexSelector: (
+  state: State,
+) => Object = createSelector(
   (state) => state.wallet.externalAddresses,
   (addresses) => _.fromPairs(addresses.map((addr, i) => [addr, i])),
 )
@@ -55,23 +57,23 @@ export const isUsedAddressIndexSelector = (state: State) =>
 const BigNumberSum = (data: Array<BigNumber | string>): BigNumber =>
   data.reduce((x: BigNumber, y) => x.plus(y), new BigNumber(0))
 
-export const availableAmountSelector: (state: State) => BigNumber =
-createSelector(
-  transactionsInfoSelector,
-  (transactions) => {
-    const processed = ObjectValues(transactions).filter(
-      (tx) => tx.status === TRANSACTION_STATUS.SUCCESSFUL,
-    )
+export const availableAmountSelector: (
+  state: State,
+) => BigNumber = createSelector(transactionsInfoSelector, (transactions) => {
+  const processed = ObjectValues(transactions).filter(
+    (tx) => tx.status === TRANSACTION_STATUS.SUCCESSFUL,
+  )
 
-    const zero = new BigNumber(0)
+  const zero = new BigNumber(0)
 
-    const result = BigNumberSum(processed.map((tx) => tx.bruttoAmount))
+  const result = BigNumberSum(processed.map((tx) => tx.bruttoAmount))
 
-    return result.lt(zero) ? zero : result
-  },
-)
+  return result.lt(zero) ? zero : result
+})
 
-export const receiveAddressesSelector: (state: State) => Array<string> = createSelector(
+export const receiveAddressesSelector: (
+  state: State,
+) => Array<string> = createSelector(
   (state) => state.wallet.externalAddresses,
   (state) => state.wallet.numReceiveAddresses,
   // $FlowFixMe function should accept only 1 argument
@@ -123,15 +125,14 @@ export const isSystemAuthEnabledSelector = (state: State): boolean =>
 export const sendCrashReportsSelector = (state: State): boolean =>
   state.appSettings.sendCrashReports
 
-export const hasPendingOutgoingTransactionSelector: (state: State) => boolean =
-createSelector(
-  transactionsInfoSelector,
-  (transactions) =>
-    ObjectValues(transactions).some(
-      (tx) =>
-        tx.status === TRANSACTION_STATUS.PENDING &&
-        tx.direction !== TRANSACTION_DIRECTION.RECEIVED,
-    ),
+export const hasPendingOutgoingTransactionSelector: (
+  state: State,
+) => boolean = createSelector(transactionsInfoSelector, (transactions) =>
+  ObjectValues(transactions).some(
+    (tx) =>
+      tx.status === TRANSACTION_STATUS.PENDING &&
+      tx.direction !== TRANSACTION_DIRECTION.RECEIVED,
+  ),
 )
 
 export const easyConfirmationSelector = (state: State): boolean =>
