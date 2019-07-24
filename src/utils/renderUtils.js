@@ -154,7 +154,7 @@ export const requireLoaded = <
 
 // TODO hardcoded string
 export const requireInitializedWallet = compose(
-  connect((state: State) => ({
+  connect<{}, {_walletIsInitialized: boolean}, _, _, _, _ >((state: State) => ({
     _walletIsInitialized: walletIsInitializedSelector(state),
   })),
   requireLoaded(
