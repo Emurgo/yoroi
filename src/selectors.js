@@ -37,12 +37,14 @@ export const transactionsInfoSelector: (State) => Dict<
 export const hasAnyTransaction = (state: State): boolean =>
   !_.isEmpty(state.wallet.transactions)
 
-export const internalAddressIndexSelector = createSelector<State, _, _, _>(
+export const internalAddressIndexSelector: (state: State) => Object =
+createSelector(
   (state) => state.wallet.internalAddresses,
   (addresses) => _.fromPairs(addresses.map((addr, i) => [addr, i])),
 )
 
-export const externalAddressIndexSelector = createSelector<State, _, Array<string>, _>(
+export const externalAddressIndexSelector : (state: State) => Object =
+createSelector(
   (state) => state.wallet.externalAddresses,
   (addresses) => _.fromPairs(addresses.map((addr, i) => [addr, i])),
 )
@@ -53,7 +55,8 @@ export const isUsedAddressIndexSelector = (state: State) =>
 const BigNumberSum = (data: Array<BigNumber | string>): BigNumber =>
   data.reduce((x: BigNumber, y) => x.plus(y), new BigNumber(0))
 
-export const availableAmountSelector = createSelector<State, _, _, _>(
+export const availableAmountSelector: (state: State) => BigNumber =
+createSelector(
   transactionsInfoSelector,
   (transactions) => {
     const processed = ObjectValues(transactions).filter(
@@ -68,7 +71,7 @@ export const availableAmountSelector = createSelector<State, _, _, _>(
   },
 )
 
-export const receiveAddressesSelector = createSelector<State, _, Array<string>, _>(
+export const receiveAddressesSelector: (state: State) => Array<string> = createSelector(
   (state) => state.wallet.externalAddresses,
   (state) => state.wallet.numReceiveAddresses,
   // $FlowFixMe function should accept only 1 argument
@@ -120,7 +123,8 @@ export const isSystemAuthEnabledSelector = (state: State): boolean =>
 export const sendCrashReportsSelector = (state: State): boolean =>
   state.appSettings.sendCrashReports
 
-export const hasPendingOutgoingTransactionSelector = createSelector<State, _, _, _>(
+export const hasPendingOutgoingTransactionSelector: (state: State) => boolean =
+createSelector(
   transactionsInfoSelector,
   (transactions) =>
     ObjectValues(transactions).some(
