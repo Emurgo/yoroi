@@ -96,7 +96,7 @@ class AddressModal extends React.Component<Props, State> {
             </Text>
           )}
           <Text monospace style={styles.address}>
-            {address}
+            {address !== undefined ? address : null }
           </Text>
         </View>
 
