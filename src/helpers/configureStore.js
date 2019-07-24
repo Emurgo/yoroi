@@ -26,7 +26,7 @@ export default () => {
   const composeEnhancers =
     (window.__DEV__ && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
 
-  const store = createStore<State, GenericAction<*, *>, Dispatch>(
+  const store = createStore<State, GenericAction<State, any>, Dispatch>(
     rootReducer,
     getInitialState(),
     composeEnhancers(applyMiddleware(...middlewares)),

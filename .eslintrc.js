@@ -43,6 +43,8 @@ module.exports = {
       },
     ],
     'flowtype/require-valid-file-annotation': [2, 'always'],
+    "flowtype/define-flow-type": 1,
+    "flowtype/use-flow-type": 1,
   },
   globals: {
     Buffer: false,

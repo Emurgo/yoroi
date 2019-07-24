@@ -32,14 +32,14 @@ export const mapObjToId = (data: Object, id: number | string) => ({
   [id]: data,
 })
 
-export const immutableSet = (obj: Object, path: ?Path, value: any) =>
+export const immutableSet = <S>(obj: S, path: ?Path, value: S): S =>
   // prettier-ignore
-  path && path.length
+  (path && path.length)
     ? produce(
       (obj): void => {
         set(obj, path, value)
       },
-    )(obj)
+    )(obj) || value
     : value
 /*
  * Forward reducer transform to a particular state path.
@@ -49,11 +49,21 @@ export const immutableSet = (obj: Object, path: ?Path, value: any) =>
  * Does not create new state if the value did not change
  */
 // prettier-ignore
-export const forwardReducerTo = <S: Object, T>(
-  reducer: SegmentReducer<S, T>,
+export function forwardReducerTo<S, T>(
+  reducer: SegmentReducer<S, T | void>,
   path: ?Path,
-) => (state: S, payload: T) => {
-    const value = path ? get(state, path) : state
+): (
+  (
+    state: S,
+    payload: T | void
+  ) => S
+ ) {
+  return (
+    state: S,
+    payload: T | void
+  ) => {
+    const value: S = path ? get(state, path) : state
     const newValue = reducer(value, payload)
     return newValue !== value ? immutableSet(state, path, newValue) : state
   }
+}
