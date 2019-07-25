@@ -4,6 +4,8 @@ import {createStore, applyMiddleware, compose} from 'redux'
 import {createLogger} from 'redux-logger'
 import rootReducer from './rootReducer'
 import getInitialState from '../state'
+import type {State} from '../state'
+import type {GenericAction, Dispatch} from '../types/reduxTypes'
 
 export default () => {
   const logger = {
@@ -24,7 +26,7 @@ export default () => {
   const composeEnhancers =
     (window.__DEV__ && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
 
-  const store = createStore(
+  const store = createStore<State, GenericAction<State, any>, Dispatch>(
     rootReducer,
     getInitialState(),
     composeEnhancers(applyMiddleware(...middlewares)),

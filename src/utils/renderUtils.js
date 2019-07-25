@@ -6,23 +6,21 @@ import {Text} from 'react-native'
 import {compose} from 'redux'
 import {Logger} from './logging'
 
+import type {State} from '../state'
 import {walletIsInitializedSelector} from '../selectors'
 
 import type {ComponentType} from 'react'
 import type {HOC} from 'recompose'
 
-// TODO(ppershing): figure out how to constrain 'any' here.
-// Note that simply replacing 'any' with Props (or Subprops)
-// turns flow into I-ignore-type-errors beast :-(
 // prettier-ignore
 export const onDidMount = <
-  Props,
-  Callback: (any) => mixed,
+  Props: {},
+  Callback: $Shape<Props> => mixed,
 >(
     didMount: Callback,
   ): HOC<Props, Props> => (
     BaseComponent: ComponentType<Props>,
-  ): ComponentType<Props> =>
+  ): ComponentType<{ ...Props }> =>
     class OnDidMount extends React.Component<Props> {
       componentDidMount = () => {
         didMount(this.props)
@@ -35,13 +33,13 @@ export const onDidMount = <
 
 // prettier-ignore
 export const onWillUnmount = <
-  Props,
-  Callback: (any) => mixed,
+  Props: {},
+  Callback: $Shape<Props> => mixed,
 >(
     willUnmount: Callback,
   ): HOC<Props, Props> => (
     BaseComponent: ComponentType<Props>,
-  ): ComponentType<Props> =>
+  ): ComponentType<{ ...Props }> =>
     class OnWillUnmount extends React.Component<Props> {
       componentWillUnmount = () => {
         willUnmount(this.props)
@@ -53,11 +51,14 @@ export const onWillUnmount = <
     }
 
 // prettier-ignore
-export const onDidUpdate = <Props, Callback: (any, any) => mixed>(
-  didUpdate: Callback,
-): HOC<Props, Props> => (
+export const onDidUpdate = <
+  Props: {},
+  Callback: ($Shape<Props>, $Shape<Props>) => mixed,
+>(
+    didUpdate: Callback,
+  ): HOC<Props, Props> => (
     BaseComponent: ComponentType<Props>,
-  ): ComponentType<Props> =>
+  ): ComponentType<{ ...Props }> =>
     class OnDidMount extends React.Component<Props> {
       componentDidUpdate = (prevProps: Props) => {
         didUpdate(this.props, prevProps)
@@ -72,7 +73,9 @@ export const onDidUpdate = <Props, Callback: (any, any) => mixed>(
 export const withNavigationTitle = <Props: {navigation: any}>(
   getTitle: (Props) => string,
   paramName?: string
-):HOC<Props, Props> => (BaseComponent) =>
+): HOC<Props, Props> => (
+    BaseComponent: ComponentType<Props>,
+  ): ComponentType<{ ...Props }> =>
     class WithScreenTitle extends React.Component<Props> {
       componentDidMount = () => {
         this.setTitle(getTitle(this.props))
@@ -114,9 +117,11 @@ export class RenderCount extends React.Component<{}> {
   }
 }
 
-export const measureRenderTime = <Props>(name: string): HOC<Props, Props> => (
-  BaseComponent,
-) =>
+export const measureRenderTime = <Props: {}>(
+  name: string,
+): HOC<Props, Props> => (
+  BaseComponent: ComponentType<Props>,
+): ComponentType<{...Props}> =>
   class MeasureRenderTime extends React.Component<Props> {
     logProfile = (id, phase, actualTime, baseTime, startTime, commitTime) => {
       Logger.debug('Render time measurement results')
@@ -136,28 +141,36 @@ export const measureRenderTime = <Props>(name: string): HOC<Props, Props> => (
     }
   }
 
-// TODO(ppershing): figure out how to constrain 'any' here.
-// Note that simply replacing 'any' with Props (or Subprops)
-// turns flow into I-ignore-type-errors beast :-(
 // prettier-ignore
 export const requireLoaded = <
-  Props,
-  Callback: (any) => mixed,
+  BaseProps: {},
+  HoCProps: {},
+  Callback: { ...BaseProps, ...HoCProps } => mixed,
 >(
     isLoaded: Callback,
     Loading: ComponentType<{}> = () => null
-  ): HOC<Props, Props> => (
-    BaseComponent: ComponentType<Props>,
-  ): ComponentType<Props> =>
-    (props) => isLoaded(props) ? <BaseComponent {...props} /> : <Loading />
+  ): HOC<BaseProps, { ...BaseProps, ...HoCProps }> => (
+    BaseComponent: ComponentType<{ ...BaseProps }>,
+  ): ComponentType<{ ...BaseProps }> =>
+    class BaseOrLoading extends React.Component<{ ...BaseProps, ...HoCProps }> {
+      render() {
+        return (
+          isLoaded(this.props)
+            ? <BaseComponent {...this.props} />
+            : <Loading />
+        )
+      }
+    }
 
-// TODO hardcoded string
-export const requireInitializedWallet = compose(
-  connect((state) => ({
+export const requireInitializedWallet: <Props>(
+  Component: ComponentType<Props>,
+) => ComponentType<Props> = compose(
+  connect<{}, {_walletIsInitialized: boolean}, _, _, _, _>((state: State) => ({
     _walletIsInitialized: walletIsInitializedSelector(state),
   })),
-  requireLoaded(
+  requireLoaded<_, {_walletIsInitialized: boolean}, _>(
     ({_walletIsInitialized}) => _walletIsInitialized,
+    // TODO hardcoded string
     () => <Text>l10n Please wait while wallet is initialized...</Text>,
   ),
 )

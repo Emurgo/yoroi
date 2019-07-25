@@ -19,7 +19,7 @@ const App = (props, context) => {
 export default injectIntl(
   compose(
     connect(
-      null,
+      () => ({}),
       {
         initApp,
       },
