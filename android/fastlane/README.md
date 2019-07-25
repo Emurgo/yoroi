@@ -25,17 +25,17 @@ Builds a release version
 ```
 fastlane android deploy_staging
 ```
-Deploy a new staging version to Google Play
+Deploy a new staging (devRelease) version to Google Play
 ### android deploy_mainnet
 ```
 fastlane android deploy_mainnet
 ```
-Deploy a new mainet version to Google Play
+Deploy an internal mainnet (mainRelease) version to Google Play
 ### android release_mainnet
 ```
 fastlane android release_mainnet
 ```
-Deploy a new version to Google Play
+Deploy and make available to everyone a new version (mainRelease) in Google Play
 
 ----
 
