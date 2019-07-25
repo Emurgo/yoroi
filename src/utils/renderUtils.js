@@ -117,29 +117,30 @@ export class RenderCount extends React.Component<{}> {
   }
 }
 
+// prettier-ignore
 export const measureRenderTime = <Props: {}>(
   name: string,
 ): HOC<Props, Props> => (
-  BaseComponent: ComponentType<Props>,
-): ComponentType<{...Props}> =>
-  class MeasureRenderTime extends React.Component<Props> {
-    logProfile = (id, phase, actualTime, baseTime, startTime, commitTime) => {
-      Logger.debug('Render time measurement results')
-      Logger.debug(`${id}'s ${phase} phase:`)
-      Logger.debug(`Actual time: ${actualTime}`)
-      Logger.debug(`Base time: ${baseTime}`)
-      Logger.debug(`Start time: ${startTime}`)
-      Logger.debug(`Commit time: ${commitTime}`)
-    }
+    BaseComponent: ComponentType<Props>,
+  ): ComponentType<{...Props}> =>
+    class MeasureRenderTime extends React.Component<Props> {
+      logProfile = (id, phase, actualTime, baseTime, startTime, commitTime) => {
+        Logger.debug('Render time measurement results')
+        Logger.debug(`${id}'s ${phase} phase:`)
+        Logger.debug(`Actual time: ${actualTime}`)
+        Logger.debug(`Base time: ${baseTime}`)
+        Logger.debug(`Start time: ${startTime}`)
+        Logger.debug(`Commit time: ${commitTime}`)
+      }
 
-    render() {
-      return (
-        <Profiler id={name} onRender={this.logProfile}>
-          <BaseComponent {...this.props} />
-        </Profiler>
-      )
+      render() {
+        return (
+          <Profiler id={name} onRender={this.logProfile}>
+            <BaseComponent {...this.props} />
+          </Profiler>
+        )
+      }
     }
-  }
 
 // prettier-ignore
 export const requireLoaded = <
