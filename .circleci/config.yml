@@ -50,7 +50,7 @@ jobs:
       - run:
           name: Match bitrise's yarn version
           command: sudo npm install -g yarn@${BITRISE_YARN_VER}
-      - run: yarn flow || (cat /tmp/*log && exit 1 )
+      - run: yarn flow || (cat /tmp/flow/*log && exit 1 )
 
   test:
     <<: *rn_defaults
