@@ -30,6 +30,11 @@ Deploy a new staging version to Google Play
 ```
 fastlane android deploy_mainnet
 ```
+Deploy a new mainet version to Google Play
+### android release_mainnet
+```
+fastlane android release_mainnet
+```
 Deploy a new version to Google Play
 
 ----

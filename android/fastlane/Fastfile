@@ -25,12 +25,18 @@ platform :android do
   desc "Deploy a new staging version to Google Play"
   lane :deploy_staging do
     gradle(task: "clean assembleDevRelease")
-    upload_to_play_store(track: internal)
+    upload_to_play_store(track: 'internal')
+  end
+
+  desc "Deploy a new mainet version to Google Play"
+  lane :deploy_mainnet do
+    gradle(task: "clean assembleMainRelease")
+    upload_to_play_store(track: 'internal')
   end
 
   desc "Deploy a new version to Google Play"
-  lane :deploy_mainnet do
+  lane :release_mainnet do
     gradle(task: "clean assembleMainRelease")
-    upload_to_play_store(track: rollout)
+    upload_to_play_store(track: 'production')
   end
 end
