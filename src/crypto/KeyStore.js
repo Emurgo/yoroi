@@ -18,11 +18,11 @@ const messages = defineMessages({
   },
   subtitle: {
     id: 'crypto.keystore.subtitle',
-    defaultMessage: '!!!', // subtitle for the biometry dialog Andoid 9
+    defaultMessage: 'Remember that you can disable this feature at any time in the settings',
   },
   description: {
     id: 'crypto.keystore.description',
-    defaultMessage: '!!!', // description for the biometry dialog Andoid 9
+    defaultMessage: 'In order to authorize this operation, please use your fingerprint.',
   },
   cancelButton: {
     id: 'crypto.keystore.cancelButton',
