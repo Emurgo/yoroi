@@ -22,15 +22,21 @@ platform :android do
   end
 
 
-  desc "Deploy a new staging version to Google Play"
+  desc "Deploy a new staging (devRelease) version to Google Play"
   lane :deploy_staging do
     gradle(task: "clean assembleDevRelease")
-    upload_to_play_store
+    upload_to_play_store(track: 'internal')
   end
 
-  desc "Deploy a new version to Google Play"
+  desc "Deploy an internal mainnet (mainRelease) version to Google Play"
   lane :deploy_mainnet do
     gradle(task: "clean assembleMainRelease")
-    upload_to_play_store
+    upload_to_play_store(track: 'internal')
+  end
+
+  desc "Deploy and make available to everyone a new version (mainRelease) in Google Play"
+  lane :release_mainnet do
+    gradle(task: "clean assembleMainRelease")
+    upload_to_play_store(track: 'production')
   end
 end
