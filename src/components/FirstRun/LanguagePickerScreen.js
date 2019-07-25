@@ -11,7 +11,15 @@ import languageActions from '../../actions/language'
 import LanguagePicker from '../Common/LanguagePicker'
 import {languageSelector} from '../../selectors'
 
+import type {State} from '../../state'
+import type {Navigation} from '../../types/navigation'
+import type {ComponentType} from 'react'
+
 import styles from './styles/LanguagePickerScreen.style'
+
+type ExternalProps = {|
+  navigation: Navigation,
+|}
 
 const LanguagePickerScreen = ({
   navigation,
@@ -26,9 +34,9 @@ const LanguagePickerScreen = ({
   </SafeAreaView>
 )
 
-export default compose(
+export default (compose(
   connect(
-    (state, {navigation}) => ({
+    (state: State, {navigation}) => ({
       languageCode: languageSelector(state) || 'en-US',
     }),
     languageActions,
@@ -44,4 +52,4 @@ export default compose(
       navigation.navigate(FIRST_RUN_ROUTES.ACCEPT_TERMS_OF_SERVICE)
     },
   }),
-)(LanguagePickerScreen)
+)(LanguagePickerScreen): ComponentType<ExternalProps>)

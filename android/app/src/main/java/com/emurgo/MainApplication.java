@@ -3,6 +3,7 @@ package com.emurgo;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import io.sentry.RNSentryPackage;
 import com.igorbelyayev.rnlocalresource.RNLocalResourcePackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
@@ -34,6 +35,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+        new AsyncStoragePackage(),
         new RNSentryPackage(),
         new RNLocalResourcePackage(),
         new ReactNativeConfigPackage(),
