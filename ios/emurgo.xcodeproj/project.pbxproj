@@ -26,6 +26,7 @@
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		293DB2C1E209441FA3264DCD /* libRNKeychain.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA9C2C759F984A23843777A9 /* libRNKeychain.a */; };
 		2AD573394D814085843F36E2 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8306E0AE63AA483DBF7F6BF0 /* libRNFS.a */; };
+		2CB56B544D0B4507B07F751B /* libRNCardano.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1103DA1A18D54C3EA133F4DC /* libRNCardano.a */; };
 		2E3E7CD322987AC100D5C487 /* libRNSentry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EF1208C22795E47007BE6F5 /* libRNSentry.a */; };
 		2E3E7CD42298A85F00D5C487 /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E2373C8021CA447C0003317D /* libReactNativeConfig.a */; };
 		2E3E7CD82298ACEA00D5C487 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
@@ -50,8 +51,6 @@
 		2E3E7CEC2298ACEA00D5C487 /* libRNRandomBytes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9F4B6BEEFC4DF6A66C1383 /* libRNRandomBytes.a */; };
 		2E3E7CED2298ACEA00D5C487 /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 29CDBB4B7FB64C0086FF65C6 /* libRNCamera.a */; };
 		2E3E7CEE2298ACEA00D5C487 /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C8259C93DE584FDAAFB4E9FF /* libReactNativePermissions.a */; };
-		2E3E7CEF2298ACEA00D5C487 /* libRNCardano.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05BD8AC5FBE745208C4D208E /* libRNCardano.a */; };
-		2E3E7CF02298ACEA00D5C487 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF0647A6034452E81BD8DF5 /* libresolv.tbd */; };
 		2E3E7CF12298ACEA00D5C487 /* libRNKeychain.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA9C2C759F984A23843777A9 /* libRNKeychain.a */; };
 		2E3E7CF22298ACEA00D5C487 /* libRNBackgroundTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 09D460C9C03E41CB9D785437 /* libRNBackgroundTimer.a */; };
 		2E3E7CF32298ACEA00D5C487 /* libSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DBE1771E1614BCAB6A3665D /* libSplashScreen.a */; };
@@ -59,6 +58,9 @@
 		2E3E7CF72298ACEA00D5C487 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2E3E7CF82298ACEA00D5C487 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E2FC0BFA21C7F02200DA195B /* InfoPlist.strings */; };
 		2E3E7CF92298ACEA00D5C487 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
+		2EBA2AD022EA877F00BF8A5B /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
+		2EBAA9D822EE742100EA8AAF /* libRNCAsyncStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E3AA4C322EAB99F0066F8A1 /* libRNCAsyncStorage.a */; };
+		2EBAAA1222EE743000EA8AAF /* libRNCAsyncStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E3AA4C322EAB99F0066F8A1 /* libRNCAsyncStorage.a */; };
 		4129CAD9C4C34ACF9E00AA5E /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9443C3481304C079FB7BE23 /* libRNSVG.a */; };
 		469514AC7443466390FF834A /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F410A0AB183D4990BCAF936B /* libz.tbd */; };
 		4C623EB4CCE24A6EA5889C23 /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 29CDBB4B7FB64C0086FF65C6 /* libRNCamera.a */; };
@@ -70,10 +72,11 @@
 		8630E80F4B5F05562A5F1955 /* libPods-emurgo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4492A3C818B4FB1C2344B6A4 /* libPods-emurgo.a */; };
 		A14231F0E26E498293E6DCFA /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C8259C93DE584FDAAFB4E9FF /* libReactNativePermissions.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
-		D26F6DBA9C0242B0A6376183 /* libRNCardano.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05BD8AC5FBE745208C4D208E /* libRNCardano.a */; };
-		D3E68485C4E74648860C9BA7 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF0647A6034452E81BD8DF5 /* libresolv.tbd */; };
+		BA3D0647FB29475CA53128CF /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 16BAD3D7933540D184340C1B /* libresolv.tbd */; };
 		E2FC0BF821C7F02200DA195B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E2FC0BFA21C7F02200DA195B /* InfoPlist.strings */; };
 		E6AB85BA13E748AB947E1A2A /* libRNRandomBytes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9F4B6BEEFC4DF6A66C1383 /* libRNRandomBytes.a */; };
+		ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
+		ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -203,19 +206,47 @@
 			remoteGlobalIDString = 3D383D621EBD27B9005632C8;
 			remoteInfo = "double-conversion-tvOS";
 		};
-		2DF0FFEA2056DD460020B375 /* PBXContainerItemProxy */ = {
+		2E3AA4C222EAB99F0066F8A1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+			containerPortal = 2E3AA48E22EAB99F0066F8A1 /* RNCAsyncStorage.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 9936F3131F5F2E4B0010BF04;
-			remoteInfo = privatedata;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNCAsyncStorage;
 		};
-		2DF0FFEC2056DD460020B375 /* PBXContainerItemProxy */ = {
+		2EBA2AF822EA877F00BF8A5B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 9936F32F1F5F2E5B0010BF04;
-			remoteInfo = "privatedata-tvOS";
+			remoteGlobalIDString = EDEBC6D6214B3E7000DD5AC8;
+			remoteInfo = jsi;
+		};
+		2EBA2AFA22EA877F00BF8A5B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EDEBC73B214B45A300DD5AC8;
+			remoteInfo = jsiexecutor;
+		};
+		2EBA2AFC22EA877F00BF8A5B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = ED296FB6214C9A0900B7C4FE;
+			remoteInfo = "jsi-tvOS";
+		};
+		2EBA2AFE22EA877F00BF8A5B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = ED296FEE214C9CF800B7C4FE;
+			remoteInfo = "jsiexecutor-tvOS";
+		};
+		2EBA2B1422EA877F00BF8A5B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 36ED7BB7AA874C7A8590BAEB /* RNCardano.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNCardano;
 		};
 		2EF1208B22795E47007BE6F5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -307,20 +338,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 3D3CD9321DE5FBEE00167DC4;
 			remoteInfo = "cxxreact-tvOS";
-		};
-		3DAD3EAC1DF850E9000B6D8A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 3D3CD90B1DE5FBD600167DC4;
-			remoteInfo = jschelpers;
-		};
-		3DAD3EAE1DF850E9000B6D8A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 3D3CD9181DE5FBD800167DC4;
-			remoteInfo = "jschelpers-tvOS";
 		};
 		5E9157321DD0AC6500FF2AA8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -420,13 +437,6 @@
 			remoteGlobalIDString = 4107012F1ACB723B00C6AA39;
 			remoteInfo = RNCamera;
 		};
-		F7FBD9AC219C5A71003FE9E2 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1CFE5765284C4CA4AD4B1E20 /* RNCardano.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 134814201AA4EA6300B7C361;
-			remoteInfo = RNCardano;
-		};
 		F7FBD9B0219C5A71003FE9E2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 7CED8B32F09C469D87E21C64 /* RNFS.xcodeproj */;
@@ -496,9 +506,9 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* emurgoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = emurgoTests.m; sourceTree = "<group>"; };
 		03AB0D3F154D12A71A713207 /* Pods-emurgoTests.testnet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgoTests.testnet.release.xcconfig"; path = "Pods/Target Support Files/Pods-emurgoTests/Pods-emurgoTests.testnet.release.xcconfig"; sourceTree = "<group>"; };
-		05BD8AC5FBE745208C4D208E /* libRNCardano.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCardano.a; sourceTree = "<group>"; };
 		09D460C9C03E41CB9D785437 /* libRNBackgroundTimer.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNBackgroundTimer.a; sourceTree = "<group>"; };
 		0B6F14F61C1D49059800C0BE /* RNKeychain.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNKeychain.xcodeproj; path = "../node_modules/react-native-keychain/RNKeychain.xcodeproj"; sourceTree = "<group>"; };
+		1103DA1A18D54C3EA133F4DC /* libRNCardano.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCardano.a; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* emurgo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = emurgo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -509,13 +519,13 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = emurgo/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = emurgo/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
+		16BAD3D7933540D184340C1B /* libresolv.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		1B4492487DEB8AF14CFA180F /* Pods-emurgo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo/Pods-emurgo.debug.xcconfig"; sourceTree = "<group>"; };
 		1BEE7BD7C7A1239035DAE21F /* Pods-emurgo.testnet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo.testnet.debug.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo/Pods-emurgo.testnet.debug.xcconfig"; sourceTree = "<group>"; };
-		1CFE5765284C4CA4AD4B1E20 /* RNCardano.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNCardano.xcodeproj; path = "../node_modules/react-native-cardano/ios/RNCardano.xcodeproj"; sourceTree = "<group>"; };
 		1E77717D3AF6027DF768FCCF /* Pods-emurgo-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-tvOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo-tvOS/Pods-emurgo-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		29CDBB4B7FB64C0086FF65C6 /* libRNCamera.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCamera.a; sourceTree = "<group>"; };
-		2AF0647A6034452E81BD8DF5 /* libresolv.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E3AA48E22EAB99F0066F8A1 /* RNCAsyncStorage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCAsyncStorage.xcodeproj; path = "../node_modules/@react-native-community/async-storage/ios/RNCAsyncStorage.xcodeproj"; sourceTree = "<group>"; };
 		2E3E7D012298ACEA00D5C487 /* emurgo-staging.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "emurgo-staging.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E5B414122A8B26500BE1FC1 /* Staging-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Staging-Info.plist"; sourceTree = "<group>"; };
 		2EF1204722795CAD007BE6F5 /* libSentry.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSentry.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -523,6 +533,7 @@
 		2EF1208322795DE3007BE6F5 /* libSentryReactNative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSentryReactNative.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EF1208522795E47007BE6F5 /* RNSentry.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNSentry.xcodeproj; path = "../node_modules/react-native-sentry/ios/RNSentry.xcodeproj"; sourceTree = "<group>"; };
 		359687B3464F4A7C89D45AF9 /* libRNRandomBytes-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNRandomBytes-tvOS.a"; sourceTree = "<group>"; };
+		36ED7BB7AA874C7A8590BAEB /* RNCardano.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNCardano.xcodeproj; path = "../node_modules/react-native-cardano/ios/RNCardano.xcodeproj"; sourceTree = "<group>"; };
 		3F3CAD29F11A422EBD119E74 /* RNBackgroundTimer.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundTimer.xcodeproj; path = "../node_modules/react-native-background-timer/ios/RNBackgroundTimer.xcodeproj"; sourceTree = "<group>"; };
 		4447F097A41617FBCC553C4F /* Pods-emurgoTests.staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgoTests.staging.debug.xcconfig"; path = "Pods/Target Support Files/Pods-emurgoTests/Pods-emurgoTests.staging.debug.xcconfig"; sourceTree = "<group>"; };
 		4492A3C818B4FB1C2344B6A4 /* libPods-emurgo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-emurgo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -572,6 +583,8 @@
 		E2FC0C3C21C7F32300DA195B /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		E88E56A3C4A142ADB2AC0796 /* RNRandomBytes.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNRandomBytes.xcodeproj; path = "../node_modules/react-native-randombytes/RNRandomBytes.xcodeproj"; sourceTree = "<group>"; };
 		EAFCACBCB7663E88BDEEA360 /* Pods-emurgo-tvOSTests.testnet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-tvOSTests.testnet.debug.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo-tvOSTests/Pods-emurgo-tvOSTests.testnet.debug.xcconfig"; sourceTree = "<group>"; };
+		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		EE30DF0851B7D6B16C0E4FBD /* Pods-emurgo-tvOSTests.staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-tvOSTests.staging.debug.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo-tvOSTests/Pods-emurgo-tvOSTests.staging.debug.xcconfig"; sourceTree = "<group>"; };
 		F410A0AB183D4990BCAF936B /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		F9424693AF9CA5ED7EBA9C95 /* Pods-emurgo-tvOSTests.testnet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-tvOSTests.testnet.release.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo-tvOSTests/Pods-emurgo-tvOSTests.testnet.release.xcconfig"; sourceTree = "<group>"; };
@@ -583,6 +596,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */,
 				140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */,
 				7D42F5BDC26B7A4D1BA73B78 /* libPods-emurgoTests.a in Frameworks */,
 			);
@@ -592,6 +606,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2EBAA9D822EE742100EA8AAF /* libRNCAsyncStorage.a in Frameworks */,
+				ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */,
 				2E3E7CD42298A85F00D5C487 /* libReactNativeConfig.a in Frameworks */,
 				2E3E7CD322987AC100D5C487 /* libRNSentry.a in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
@@ -612,14 +628,13 @@
 				E6AB85BA13E748AB947E1A2A /* libRNRandomBytes.a in Frameworks */,
 				4C623EB4CCE24A6EA5889C23 /* libRNCamera.a in Frameworks */,
 				A14231F0E26E498293E6DCFA /* libReactNativePermissions.a in Frameworks */,
-				D26F6DBA9C0242B0A6376183 /* libRNCardano.a in Frameworks */,
-				D3E68485C4E74648860C9BA7 /* libresolv.tbd in Frameworks */,
 				293DB2C1E209441FA3264DCD /* libRNKeychain.a in Frameworks */,
 				55F46080C7484EE1B3249EE3 /* libRNBackgroundTimer.a in Frameworks */,
 				5E2B7734605B4E0CBC60D312 /* libSplashScreen.a in Frameworks */,
 				5CFD142B4A5EEFBD46859066 /* libPods-emurgo.a in Frameworks */,
 				469514AC7443466390FF834A /* libz.tbd in Frameworks */,
-				8630E80F4B5F05562A5F1955 /* libPods-emurgo.a in Frameworks */,
+				2CB56B544D0B4507B07F751B /* libRNCardano.a in Frameworks */,
+				BA3D0647FB29475CA53128CF /* libresolv.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -627,6 +642,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2EBAAA1222EE743000EA8AAF /* libRNCAsyncStorage.a in Frameworks */,
+				2EBA2AD022EA877F00BF8A5B /* JavaScriptCore.framework in Frameworks */,
 				2E3E7CDB2298ACEA00D5C487 /* libReactNativeConfig.a in Frameworks */,
 				2E3E7CDC2298ACEA00D5C487 /* libRNSentry.a in Frameworks */,
 				2E3E7CDD2298ACEA00D5C487 /* libRCTBlob.a in Frameworks */,
@@ -647,8 +664,6 @@
 				2E3E7CEC2298ACEA00D5C487 /* libRNRandomBytes.a in Frameworks */,
 				2E3E7CED2298ACEA00D5C487 /* libRNCamera.a in Frameworks */,
 				2E3E7CEE2298ACEA00D5C487 /* libReactNativePermissions.a in Frameworks */,
-				2E3E7CEF2298ACEA00D5C487 /* libRNCardano.a in Frameworks */,
-				2E3E7CF02298ACEA00D5C487 /* libresolv.tbd in Frameworks */,
 				2E3E7CF12298ACEA00D5C487 /* libRNKeychain.a in Frameworks */,
 				2E3E7CF22298ACEA00D5C487 /* libRNBackgroundTimer.a in Frameworks */,
 				2E3E7CF32298ACEA00D5C487 /* libSplashScreen.a in Frameworks */,
@@ -763,16 +778,16 @@
 				3DAD3EA71DF850E9000B6D8A /* libyoga.a */,
 				3DAD3EA91DF850E9000B6D8A /* libcxxreact.a */,
 				3DAD3EAB1DF850E9000B6D8A /* libcxxreact.a */,
-				3DAD3EAD1DF850E9000B6D8A /* libjschelpers.a */,
-				3DAD3EAF1DF850E9000B6D8A /* libjschelpers.a */,
 				2DF0FFDF2056DD460020B375 /* libjsinspector.a */,
 				2DF0FFE12056DD460020B375 /* libjsinspector-tvOS.a */,
 				2DF0FFE32056DD460020B375 /* libthird-party.a */,
 				2DF0FFE52056DD460020B375 /* libthird-party.a */,
 				2DF0FFE72056DD460020B375 /* libdouble-conversion.a */,
 				2DF0FFE92056DD460020B375 /* libdouble-conversion.a */,
-				2DF0FFEB2056DD460020B375 /* libprivatedata.a */,
-				2DF0FFED2056DD460020B375 /* libprivatedata-tvOS.a */,
+				2EBA2AF922EA877F00BF8A5B /* libjsi.a */,
+				2EBA2AFB22EA877F00BF8A5B /* libjsiexecutor.a */,
+				2EBA2AFD22EA877F00BF8A5B /* libjsi-tvOS.a */,
+				2EBA2AFF22EA877F00BF8A5B /* libjsiexecutor-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -780,18 +795,36 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
+				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				2EF1208322795DE3007BE6F5 /* libSentryReactNative.a */,
 				2EF1204722795CAD007BE6F5 /* libSentry.a */,
 				2EF1204922795CAD007BE6F5 /* libSentryReactNative.a */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
-				2AF0647A6034452E81BD8DF5 /* libresolv.tbd */,
 				4492A3C818B4FB1C2344B6A4 /* libPods-emurgo.a */,
 				FE18F76D31F73A2E405ABDEE /* libPods-emurgo-tvOS.a */,
 				492DFE0B47FACAFC309573B3 /* libPods-emurgo-tvOSTests.a */,
 				7EF05E688AF3169F4FAC3D93 /* libPods-emurgoTests.a */,
 				F410A0AB183D4990BCAF936B /* libz.tbd */,
+				16BAD3D7933540D184340C1B /* libresolv.tbd */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2E3AA48F22EAB99F0066F8A1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2E3AA4C322EAB99F0066F8A1 /* libRNCAsyncStorage.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2EBA2B1122EA877F00BF8A5B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2EBA2B1522EA877F00BF8A5B /* libRNCardano.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		2EF1208622795E47007BE6F5 /* Products */ = {
@@ -855,6 +888,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				2E3AA48E22EAB99F0066F8A1 /* RNCAsyncStorage.xcodeproj */,
 				2EF1208522795E47007BE6F5 /* RNSentry.xcodeproj */,
 				E2373C7A21CA447C0003317D /* ReactNativeConfig.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
@@ -875,10 +909,10 @@
 				E88E56A3C4A142ADB2AC0796 /* RNRandomBytes.xcodeproj */,
 				8DBF02153B8E47798175A31D /* RNCamera.xcodeproj */,
 				7319E7805B9E4393BB725857 /* ReactNativePermissions.xcodeproj */,
-				1CFE5765284C4CA4AD4B1E20 /* RNCardano.xcodeproj */,
 				0B6F14F61C1D49059800C0BE /* RNKeychain.xcodeproj */,
 				3F3CAD29F11A422EBD119E74 /* RNBackgroundTimer.xcodeproj */,
 				D1DF1D4086B844C89143FC0B /* SplashScreen.xcodeproj */,
+				36ED7BB7AA874C7A8590BAEB /* RNCardano.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -962,13 +996,13 @@
 				5F9F4B6BEEFC4DF6A66C1383 /* libRNRandomBytes.a */,
 				29CDBB4B7FB64C0086FF65C6 /* libRNCamera.a */,
 				C8259C93DE584FDAAFB4E9FF /* libReactNativePermissions.a */,
-				05BD8AC5FBE745208C4D208E /* libRNCardano.a */,
 				DA9C2C759F984A23843777A9 /* libRNKeychain.a */,
 				746923B3D658412D94D241BD /* libRNSVG-tvOS.a */,
 				359687B3464F4A7C89D45AF9 /* libRNRandomBytes-tvOS.a */,
 				09D460C9C03E41CB9D785437 /* libRNBackgroundTimer.a */,
 				5DBE1771E1614BCAB6A3665D /* libSplashScreen.a */,
 				5DBF6642BF3B4B119153FD14 /* libRNFirebase.a */,
+				1103DA1A18D54C3EA133F4DC /* libRNCardano.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -995,14 +1029,6 @@
 			isa = PBXGroup;
 			children = (
 				F7FBD9AA219C5A71003FE9E2 /* libRNCamera.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		F7FBD993219C5A71003FE9E2 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				F7FBD9AD219C5A71003FE9E2 /* libRNCardano.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1216,8 +1242,12 @@
 					ProjectRef = 8DBF02153B8E47798175A31D /* RNCamera.xcodeproj */;
 				},
 				{
-					ProductGroup = F7FBD993219C5A71003FE9E2 /* Products */;
-					ProjectRef = 1CFE5765284C4CA4AD4B1E20 /* RNCardano.xcodeproj */;
+					ProductGroup = 2EBA2B1122EA877F00BF8A5B /* Products */;
+					ProjectRef = 36ED7BB7AA874C7A8590BAEB /* RNCardano.xcodeproj */;
+				},
+				{
+					ProductGroup = 2E3AA48F22EAB99F0066F8A1 /* Products */;
+					ProjectRef = 2E3AA48E22EAB99F0066F8A1 /* RNCAsyncStorage.xcodeproj */;
 				},
 				{
 					ProductGroup = F7FBD995219C5A71003FE9E2 /* Products */;
@@ -1373,18 +1403,46 @@
 			remoteRef = 2DF0FFE82056DD460020B375 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		2DF0FFEB2056DD460020B375 /* libprivatedata.a */ = {
+		2E3AA4C322EAB99F0066F8A1 /* libRNCAsyncStorage.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = libprivatedata.a;
-			remoteRef = 2DF0FFEA2056DD460020B375 /* PBXContainerItemProxy */;
+			path = libRNCAsyncStorage.a;
+			remoteRef = 2E3AA4C222EAB99F0066F8A1 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		2DF0FFED2056DD460020B375 /* libprivatedata-tvOS.a */ = {
+		2EBA2AF922EA877F00BF8A5B /* libjsi.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = "libprivatedata-tvOS.a";
-			remoteRef = 2DF0FFEC2056DD460020B375 /* PBXContainerItemProxy */;
+			path = libjsi.a;
+			remoteRef = 2EBA2AF822EA877F00BF8A5B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2EBA2AFB22EA877F00BF8A5B /* libjsiexecutor.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libjsiexecutor.a;
+			remoteRef = 2EBA2AFA22EA877F00BF8A5B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2EBA2AFD22EA877F00BF8A5B /* libjsi-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libjsi-tvOS.a";
+			remoteRef = 2EBA2AFC22EA877F00BF8A5B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2EBA2AFF22EA877F00BF8A5B /* libjsiexecutor-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libjsiexecutor-tvOS.a";
+			remoteRef = 2EBA2AFE22EA877F00BF8A5B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2EBA2B1522EA877F00BF8A5B /* libRNCardano.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNCardano.a;
+			remoteRef = 2EBA2B1422EA877F00BF8A5B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		2EF1208C22795E47007BE6F5 /* libRNSentry.a */ = {
@@ -1476,20 +1534,6 @@
 			fileType = archive.ar;
 			path = libcxxreact.a;
 			remoteRef = 3DAD3EAA1DF850E9000B6D8A /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		3DAD3EAD1DF850E9000B6D8A /* libjschelpers.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libjschelpers.a;
-			remoteRef = 3DAD3EAC1DF850E9000B6D8A /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		3DAD3EAF1DF850E9000B6D8A /* libjschelpers.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libjschelpers.a;
-			remoteRef = 3DAD3EAE1DF850E9000B6D8A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */ = {
@@ -1588,13 +1632,6 @@
 			fileType = archive.ar;
 			path = libRNCamera.a;
 			remoteRef = F7FBD9A9219C5A71003FE9E2 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F7FBD9AD219C5A71003FE9E2 /* libRNCardano.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNCardano.a;
-			remoteRef = F7FBD9AC219C5A71003FE9E2 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		F7FBD9B1219C5A71003FE9E2 /* libRNFS.a */ = {
@@ -1854,10 +1891,10 @@
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
 				);
 				INFOPLIST_FILE = emurgoTests/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
@@ -1867,7 +1904,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1895,10 +1931,10 @@
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
 				);
 				INFOPLIST_FILE = emurgoTests/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
@@ -1908,7 +1944,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1940,11 +1975,11 @@
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
 				);
 				INFOPLIST_FILE = emurgo/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
@@ -1981,11 +2016,11 @@
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
 				);
 				INFOPLIST_FILE = emurgo/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
@@ -2022,11 +2057,11 @@
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
 				);
 				INFOPLIST_FILE = "Staging-Info.plist";
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
@@ -2034,6 +2069,10 @@
 				INFOPLIST_PREPROCESS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2063,11 +2102,11 @@
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
 				);
 				INFOPLIST_FILE = "Staging-Info.plist";
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
@@ -2075,6 +2114,10 @@
 				INFOPLIST_PREPROCESS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2103,11 +2146,11 @@
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
 				);
 				INFOPLIST_FILE = "Staging-Info.plist";
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
@@ -2115,6 +2158,10 @@
 				INFOPLIST_PREPROCESS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2143,11 +2190,11 @@
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
 				);
 				INFOPLIST_FILE = "Staging-Info.plist";
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
@@ -2155,6 +2202,10 @@
 				INFOPLIST_PREPROCESS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2349,11 +2400,11 @@
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
 				);
 				INFOPLIST_FILE = emurgo/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
@@ -2390,10 +2441,10 @@
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
 				);
 				INFOPLIST_FILE = emurgoTests/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
@@ -2403,7 +2454,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -2484,11 +2534,11 @@
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
 				);
 				INFOPLIST_FILE = emurgo/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
@@ -2522,10 +2572,10 @@
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
 				);
 				INFOPLIST_FILE = emurgoTests/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
@@ -2535,7 +2585,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (

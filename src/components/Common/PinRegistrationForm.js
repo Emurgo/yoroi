@@ -26,7 +26,7 @@ const handlePinEnter = ({
 }) => async (pinConfirmation) => {
   if (pin !== pinConfirmation) {
     setPin('')
-    await showErrorDialog(errorMessages.pinMismatch)
+    await showErrorDialog(errorMessages.pinMismatch, intl)
 
     return true
   }

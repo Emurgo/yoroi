@@ -1,0 +1,42 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+  desc "Builds a release version"
+  lane :build do
+    gradle(task: "clean assembleMainRelease")
+  end
+
+
+  desc "Deploy a new staging (devRelease) version to Google Play"
+  lane :deploy_staging do
+    gradle(task: "clean assembleDevRelease")
+    upload_to_play_store(track: 'internal')
+  end
+
+  desc "Deploy an internal mainnet (mainRelease) version to Google Play"
+  lane :deploy_mainnet do
+    gradle(task: "clean assembleMainRelease")
+    upload_to_play_store(track: 'internal')
+  end
+
+  desc "Deploy and make available to everyone a new version (mainRelease) in Google Play"
+  lane :release_mainnet do
+    gradle(task: "clean assembleMainRelease")
+    upload_to_play_store(track: 'production')
+  end
+end
