@@ -216,7 +216,7 @@ export default injectIntl(
       {
         partialPhrase: CONFIG.DEBUG.PREFILL_FORMS
           ? _mnemonicToPartialPhrase(CONFIG.DEBUG.MNEMONIC2)
-          : [''],
+          : [],
       },
       {
         deselectWord: ({partialPhrase}) => (wordIdx) => ({
@@ -226,7 +226,8 @@ export default injectIntl(
           partialPhrase: [...partialPhrase, wordIdx],
         }),
         handleClear: (state) => () => ({
-          partialPhrase: [''],
+          // $FlowFixMe null
+          partialPhrase: [],
         }),
       },
     ),
