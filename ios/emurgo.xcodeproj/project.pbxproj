@@ -59,6 +59,8 @@
 		2E3E7CF82298ACEA00D5C487 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E2FC0BFA21C7F02200DA195B /* InfoPlist.strings */; };
 		2E3E7CF92298ACEA00D5C487 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		2EBA2AD022EA877F00BF8A5B /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
+		2EBAA9D822EE742100EA8AAF /* libRNCAsyncStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E3AA4C322EAB99F0066F8A1 /* libRNCAsyncStorage.a */; };
+		2EBAAA1222EE743000EA8AAF /* libRNCAsyncStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E3AA4C322EAB99F0066F8A1 /* libRNCAsyncStorage.a */; };
 		4129CAD9C4C34ACF9E00AA5E /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9443C3481304C079FB7BE23 /* libRNSVG.a */; };
 		469514AC7443466390FF834A /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F410A0AB183D4990BCAF936B /* libz.tbd */; };
 		4C623EB4CCE24A6EA5889C23 /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 29CDBB4B7FB64C0086FF65C6 /* libRNCamera.a */; };
@@ -603,6 +605,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2EBAA9D822EE742100EA8AAF /* libRNCAsyncStorage.a in Frameworks */,
 				ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */,
 				2E3E7CD42298A85F00D5C487 /* libReactNativeConfig.a in Frameworks */,
 				2E3E7CD322987AC100D5C487 /* libRNSentry.a in Frameworks */,
@@ -638,6 +641,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2EBAAA1222EE743000EA8AAF /* libRNCAsyncStorage.a in Frameworks */,
 				2EBA2AD022EA877F00BF8A5B /* JavaScriptCore.framework in Frameworks */,
 				2E3E7CDB2298ACEA00D5C487 /* libReactNativeConfig.a in Frameworks */,
 				2E3E7CDC2298ACEA00D5C487 /* libRNSentry.a in Frameworks */,
