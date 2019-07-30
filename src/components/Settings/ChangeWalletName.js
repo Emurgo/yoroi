@@ -70,9 +70,9 @@ const ChangeWalletName = ({
             onChangeText={setWalletName}
             error={getWalletNameError(
               {
-                tooLong: globalMessages.walletNameErrorTooLong,
+                tooLong: intl.formatMessage(globalMessages.walletNameErrorTooLong),
                 nameAlreadyTaken:
-                  globalMessages.walletNameErrorNameAlreadyTaken,
+                  intl.formatMessage(globalMessages.walletNameErrorNameAlreadyTaken),
               },
               validationErrors,
             )}
