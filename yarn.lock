@@ -7293,12 +7293,11 @@ react-native-drawer-layout@1.3.2:
   dependencies:
     react-native-dismiss-keyboard "1.0.0"
 
-react-native-easy-markdown@^1.3.0:
+"react-native-easy-markdown@https://github.com/Emurgo/react-native-easy-markdown.git":
   version "1.3.0"
-  resolved "https://registry.yarnpkg.com/react-native-easy-markdown/-/react-native-easy-markdown-1.3.0.tgz#7694657e74eaf3ebf4a782f45a040f0334f3e338"
-  integrity sha512-hUNOdIG2M7CGifKgV9LvfKJaeq/PJZwbGNniAArosrp9pzfdD8UKF+rePUiOofu5SlD6vV9BgO7UVAYQfklk6g==
+  resolved "https://github.com/Emurgo/react-native-easy-markdown.git#5583825d104d10358de3bc5d813ef37fb2669f00"
   dependencies:
-    simple-markdown "^0.1.1"
+    simple-markdown "^0.4.4"
 
 react-native-fit-image@^1.5.2:
   version "1.5.4"
@@ -8254,10 +8253,10 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
   integrity sha1-tf3AjxKH6hF4Yo5BXiUTK3NkbG0=
 
-simple-markdown@^0.1.1:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/simple-markdown/-/simple-markdown-0.1.2.tgz#3c1510fe40bd9ea067717b8a533c9cf36325b413"
-  integrity sha1-PBUQ/kC9nqBncXuKUzyc82MltBM=
+simple-markdown@^0.4.4:
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/simple-markdown/-/simple-markdown-0.4.4.tgz#9bd597bdd5c2f5a789e56a4dbf06427d76c3834f"
+  integrity sha512-ZmlNUGR1KI12sPHeQ7dQY1qM5KfOgFqClNNVO8zQ9Pg6u7gHLCPFGD+VC7MCwpGDMd1uw3Bb2TfFfR8d6bB34A==
 
 simple-plist@^0.2.1:
   version "0.2.1"
