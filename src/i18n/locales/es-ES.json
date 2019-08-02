@@ -159,7 +159,7 @@
   "components.walletinit.createwallet.createwalletscreen.title": "Crear nueva billetera",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.confirmationButton": "Entiendo",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.keysStorageCheckbox": "Entiendo que mis llaves secretas están almacenadas en forma segura solamente en este dispositivo y no en los servidores de la empresa",
-  "components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox": "Entiendo que si esta aplicación es trasladada a otro dispositivo o removida, mis fondos sólo pueden ser recuperados con la frase de recuperación que he anotado y guardado en un lugar seguro.",
+  "components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox": "I understand that if this application is moved to another device or deleted, my money can be only recovered with the backup phrase that I have written down and saved in a secure place.",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.title": "Frase de recuperación",
   "components.walletinit.createwallet.mnemoniccheckscreen.clearButton": "Borrar",
   "components.walletinit.createwallet.mnemoniccheckscreen.confirmButton": "Confirmar",
