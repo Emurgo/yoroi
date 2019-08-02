@@ -159,7 +159,7 @@
   "components.walletinit.createwallet.createwalletscreen.title": "Новый кошелек",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.confirmationButton": "Мне понятно",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.keysStorageCheckbox": "Я понимаю, что мои секретные ключи безопасным образом хранятся только на данном устройстве, а не на серверах компании",
-  "components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox": "Я понимаю, что если данное приложение будет перемещено на другое устройство или удалено, мои средства могут быть восстановлены только с помощью фразы восстановления, которую я записал и сохранил в безопасном месте.",
+  "components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox": "I understand that if this application is moved to another device or deleted, my money can be only recovered with the backup phrase that I have written down and saved in a secure place.",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.title": "Восстановительная фраза",
   "components.walletinit.createwallet.mnemoniccheckscreen.clearButton": "Очистить",
   "components.walletinit.createwallet.mnemoniccheckscreen.confirmButton": "Подтвердить",
