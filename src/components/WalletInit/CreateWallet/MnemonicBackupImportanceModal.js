@@ -27,8 +27,8 @@ const messages = defineMessages({
       'components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox',
     defaultMessage:
       '!!!I understand that if this application is moved to another device ' +
-      'or delete, my money can be only recovered with the backup phrase that ' +
-      'I have written down and saved in secure place.',
+      'or deleted, my money can be only recovered with the backup phrase that ' +
+      'I have written down and saved in a secure place.',
   },
   confirmationButton: {
     id:
