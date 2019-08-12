@@ -159,7 +159,7 @@
   "components.walletinit.createwallet.createwalletscreen.title": "새로운 지갑 만들기",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.confirmationButton": "확인",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.keysStorageCheckbox": "본인은 사용자의 비밀키가 회사 서버가 아닌 개인 장치에 안전하게 보관되는 것을 이해하였습니다",
-  "components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox": "본인은 해당 어플리케이션이 다른 장치로 이동되거나 삭제되었을 경우, 계좌의 복원은 복구 구절을 이용해서만 복원이 가능하다는 것을 이해하였습니다.",
+  "components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox": "I understand that if this application is moved to another device or deleted, my money can be only recovered with the backup phrase that I have written down and saved in a secure place.",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.title": "복구 구절",
   "components.walletinit.createwallet.mnemoniccheckscreen.clearButton": "지우기",
   "components.walletinit.createwallet.mnemoniccheckscreen.confirmButton": "확인",

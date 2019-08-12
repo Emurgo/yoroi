@@ -159,7 +159,7 @@
   "components.walletinit.createwallet.createwalletscreen.title": "新しいウォレットを作成してください。",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.confirmationButton": "はい",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.keysStorageCheckbox": "秘密鍵は、会社のサーバーではなく、このデバイス上にのみ保存されることを理解しました。",
-  "components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox": "アプリを別のデバイスに移動させたり、消去した場合、 復元フレーズがないと資金が復元されないことを 理解しました。",
+  "components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox": "I understand that if this application is moved to another device or deleted, my money can be only recovered with the backup phrase that I have written down and saved in a secure place.",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.title": "復元フレーズ",
   "components.walletinit.createwallet.mnemoniccheckscreen.clearButton": "全消去",
   "components.walletinit.createwallet.mnemoniccheckscreen.confirmButton": "承認",

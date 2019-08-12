@@ -159,7 +159,7 @@
   "components.walletinit.createwallet.createwalletscreen.title": "Crea un nuovo portafoglio",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.confirmationButton": "Capisco",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.keysStorageCheckbox": "Capisco che le mie chiavi segrete sono conservate in modo sicuro solo su questo dispositivo, non sui server dell'azienda",
-  "components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox": "Capisco che se questa applicazione viene spostata su un altro dispositivo o eliminata, il mio denaro può essere recuperato solo con la frase di backup che ho scritto e salvato in un luogo sicuro.",
+  "components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox": "Sono consapevole che se questa applicazione verrà spostata su un altro dispositivo o cancellata, i miei fondi potranno essere recuperati solo con la frase di recupero che ho precedentemente scritto e salvato in un luogo sicuro.",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.title": "Frase di recupero",
   "components.walletinit.createwallet.mnemoniccheckscreen.clearButton": "Pulisci",
   "components.walletinit.createwallet.mnemoniccheckscreen.confirmButton": "Conferma",
