@@ -199,6 +199,8 @@ dependencies {
 
     implementation project(':react-native-background-timer')
     implementation "com.google.android.gms:play-services-base:15.0.1"
+    implementation project(':react-native-flag-secure-android')
+
 }
 
 // Run this once to be able to run the application with BUCK

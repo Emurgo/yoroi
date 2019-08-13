@@ -50,6 +50,8 @@ import type {
 } from '../../utils/validators'
 import type {ComponentType} from 'react'
 
+import FlagSecure from 'react-native-flag-secure-android';
+
 const amountInputErrorMessages = defineMessages({
   INVALID_AMOUNT: {
     id: 'components.send.sendscreen.amountInput.error.INVALID_AMOUNT',
@@ -227,6 +229,7 @@ class SendScreen extends Component<Props, State> {
       this.handleAmountChange(CONFIG.DEBUG.SEND_AMOUNT)
     }
     this.props.navigation.setParams({onScanAddress: this.handleAddressChange})
+    FlagSecure.activate()
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -244,6 +247,11 @@ class SendScreen extends Component<Props, State> {
       this.revalidate({utxos, address, amount})
     }
   }
+
+  componentWillUnmount() {
+    FlagSecure.deactivate()
+  }
+
 
   async revalidate({utxos, address, amount}) {
     const newState = await recomputeAll({utxos, address, amount})
