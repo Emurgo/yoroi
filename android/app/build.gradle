@@ -182,6 +182,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-device-info')
     implementation project(':@react-native-community_async-storage')
     implementation project(':react-native-cardano')
     implementation project(':react-native-sentry')

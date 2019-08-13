@@ -12,6 +12,7 @@ import {withNavigationTitle} from '../../utils/renderUtils'
 import {errorMessages} from '../../i18n/global-messages'
 import {setAppSettingField, setSystemAuth, showErrorDialog} from '../../actions'
 import {APP_SETTINGS_KEYS} from '../../helpers/appSettings'
+import env from '../../env'
 import {
   isBiometricEncryptionHardwareSupported,
   canBiometricEncryptionBeEnabled,
@@ -34,6 +35,8 @@ import {StatusBar} from '../UiKit'
 
 import type {ComponentType} from 'react'
 import type {Navigation} from '../../types/navigation'
+
+import DeviceInfo from 'react-native-device-info';
 
 const messages = defineMessages({
   title: {
@@ -151,6 +154,12 @@ const updateDeviceSettings = async ({setAppSettingField}) => {
   )
 }
 
+const versionLabel = "Current version: " + DeviceInfo.getVersion()
+
+const network = env.getBoolean('USE_TESTNET', true) ? 'Testnet' : 'Mainnet'
+
+const networkLabel = "Network: " + network
+
 const ApplicationSettingsScreen = ({
   onToggleBiometricsAuthIn,
   intl,
@@ -206,6 +215,16 @@ const ApplicationSettingsScreen = ({
       <NavigatedSettingsItem
         label={intl.formatMessage(messages.support)}
         navigateTo={SETTINGS_ROUTES.SUPPORT}
+      />
+    </SettingsSection>
+
+    <SettingsSection title="About">
+      <SettingsItem
+        label={versionLabel}
+      />
+
+      <SettingsItem
+        label={networkLabel}
       />
     </SettingsSection>
   </ScrollView>
