@@ -12,7 +12,7 @@ import {withNavigationTitle} from '../../utils/renderUtils'
 import {errorMessages} from '../../i18n/global-messages'
 import {setAppSettingField, setSystemAuth, showErrorDialog} from '../../actions'
 import {APP_SETTINGS_KEYS} from '../../helpers/appSettings'
-import env from '../../env'
+import {CONFIG} from '../../config'
 import {
   isBiometricEncryptionHardwareSupported,
   canBiometricEncryptionBeEnabled,
@@ -97,6 +97,10 @@ const messages = defineMessages({
     id: 'components.settings.applicationsettingsscreen.network',
     defaultMessage: '!!!Network:',
   },
+  commit: {
+    id: 'components.settings.applicationsettingsscreen.commit',
+    defaultMessage: '!!!Commit:',
+  },
 })
 
 const styles = StyleSheet.create({
@@ -165,8 +169,6 @@ const updateDeviceSettings = async ({setAppSettingField}) => {
 
 const version = DeviceInfo.getVersion()
 
-const network = env.getBoolean('USE_TESTNET', true) ? 'Testnet' : 'Mainnet'
-
 const ApplicationSettingsScreen = ({
   onToggleBiometricsAuthIn,
   intl,
@@ -233,7 +235,12 @@ const ApplicationSettingsScreen = ({
 
       <SettingsBuildItem
         label={intl.formatMessage(messages.network)}
-        value={network}
+        value={CONFIG.NETWORK}
+      />
+
+      <SettingsBuildItem
+        label={intl.formatMessage(messages.commit)}
+        value={CONFIG.COMMIT}
       />
     </SettingsSection>
   </ScrollView>

@@ -3,6 +3,12 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "android-mainnet-debug": "yarn run pre-packager && react-native run-android --variant=mainDebug",
+    "android-testnet-debug": "yarn run pre-packager && react-native run-android --variant=devDebug",
+    "android-release": "yarn run pre-packager && cd android && ./gradlew assembleMainRelease",
+    "ios-mainnet-debug": "yarn run pre-packager && react-native run-ios --scheme=emurgo-staging --configuration=Staging.Debug",
+    "ios-testnet-debug": "yarn run pre-packager && run-ios --scheme=emurgo --configuration=Debug",
+    "pre-packager": "./get_commit.sh",
     "flow": "flow",
     "lint": "eslint --max-warnings=0 ./src && prettylint \"src/**/*.js\" --config src/.prettierrc",
     "start": "node node_modules/react-native/local-cli/cli.js start",

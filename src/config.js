@@ -11,6 +11,8 @@ const _SENTRY = env.getString('SENTRY')
 const _LOG_LEVEL = IS_DEBUG ? LogLevel.Debug : LogLevel.Warn
 const _ASSURANCE_STRICT = false
 
+const _COMMIT = env.getString('COMMIT')
+
 export const CARDANO_CONFIG = {
   TESTNET: {
     PROTOCOL_MAGIC: 633343913,
@@ -84,4 +86,6 @@ export const CONFIG = {
   APP_LOCK_TIMEOUT: 30 * 1000,
   ALLOW_SHORT_PASSWORD: false,
   LOG_LEVEL: _LOG_LEVEL,
+  NETWORK: _USE_TESTNET ? 'Testnet' : 'Mainnet',
+  COMMIT: _COMMIT,
 }

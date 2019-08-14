@@ -64,6 +64,7 @@
   "components.send.sendscreen.title": "Send",
   "components.settings.applicationsettingsscreen.biometricsSignIn": "Sign in with your biometrics",
   "components.settings.applicationsettingsscreen.changePin": "Change PIN",
+  "components.settings.applicationsettingsscreen.commit": "Commit:",
   "components.settings.applicationsettingsscreen.crashReporting": "Crash reporting",
   "components.settings.applicationsettingsscreen.crashReportingText": "Send crash reports to Emurgo. Changes to this option will be reflected  after restarting the application.",
   "components.settings.applicationsettingsscreen.currentLanguage": "English",
