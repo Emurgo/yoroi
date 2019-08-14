@@ -54,7 +54,7 @@
     "react-native": "0.59.10",
     "react-native-background-timer": "^2.1.1",
     "react-native-camera": "^1.3.0",
-    "react-native-cardano": "https://github.com/Emurgo/react-native-cardano.git",
+    "react-native-cardano": "Emurgo/react-native-cardano#testnet-addr-gen",
     "react-native-config": "^0.11.7",
     "react-native-crypto": "^2.1.2",
     "react-native-easy-markdown": "https://github.com/Emurgo/react-native-easy-markdown.git",

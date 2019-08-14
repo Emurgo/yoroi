@@ -45,7 +45,7 @@ test('Can generate external addresses', async () => {
     CONFIG.WALLET.ACCOUNT_INDEX,
     CARDANO_CONFIG.TESTNET.PROTOCOL_MAGIC,
   )
-  const addresses = await getExternalAddresses(account, [0, 1, 2])
+  const addresses = await getExternalAddresses(account, [0, 1, 2], CARDANO_CONFIG.MAINNET.PROTOCOL_MAGIC)
 
   expect(addresses).toEqual(externalAddresses)
 })
