@@ -19,6 +19,7 @@ import {
 } from '../../helpers/deviceSettings'
 import {
   SettingsItem,
+  SettingsBuildItem,
   NavigatedSettingsItem,
   SettingsSection,
 } from './SettingsItems'
@@ -36,7 +37,7 @@ import {StatusBar} from '../UiKit'
 import type {ComponentType} from 'react'
 import type {Navigation} from '../../types/navigation'
 
-import DeviceInfo from 'react-native-device-info';
+import DeviceInfo from 'react-native-device-info'
 
 const messages = defineMessages({
   title: {
@@ -87,6 +88,14 @@ const messages = defineMessages({
   support: {
     id: 'components.settings.applicationsettingsscreen.support',
     defaultMessage: '!!!Support',
+  },
+  version: {
+    id: 'components.settings.applicationsettingsscreen.version',
+    defaultMessage: '!!!Current version:',
+  },
+  network: {
+    id: 'components.settings.applicationsettingsscreen.network',
+    defaultMessage: '!!!Network:',
   },
 })
 
@@ -154,11 +163,9 @@ const updateDeviceSettings = async ({setAppSettingField}) => {
   )
 }
 
-const versionLabel = "Current version: " + DeviceInfo.getVersion()
+const version = DeviceInfo.getVersion()
 
 const network = env.getBoolean('USE_TESTNET', true) ? 'Testnet' : 'Mainnet'
-
-const networkLabel = "Network: " + network
 
 const ApplicationSettingsScreen = ({
   onToggleBiometricsAuthIn,
@@ -219,12 +226,14 @@ const ApplicationSettingsScreen = ({
     </SettingsSection>
 
     <SettingsSection title="About">
-      <SettingsItem
-        label={versionLabel}
+      <SettingsBuildItem
+        label={intl.formatMessage(messages.version)}
+        value={version}
       />
 
-      <SettingsItem
-        label={networkLabel}
+      <SettingsBuildItem
+        label={intl.formatMessage(messages.network)}
+        value={network}
       />
     </SettingsSection>
   </ScrollView>
