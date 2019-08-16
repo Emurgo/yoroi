@@ -18,11 +18,7 @@ const messages = defineMessages({
   },
   subtitle: {
     id: 'crypto.keystore.subtitle',
-    defaultMessage: '!!!', // subtitle for the biometry dialog Andoid 9
-  },
-  description: {
-    id: 'crypto.keystore.description',
-    defaultMessage: '!!!', // description for the biometry dialog Andoid 9
+    defaultMessage: 'You can disable this feature at any time in the settings',
   },
   cancelButton: {
     id: 'crypto.keystore.cancelButton',
@@ -64,7 +60,7 @@ class KeyStore {
             dataKey,
             intl.formatMessage(messages.approveTransaction),
             intl.formatMessage(messages.subtitle),
-            intl.formatMessage(messages.description),
+            '', // adding a description seems redudant
             intl.formatMessage(messages.cancelButton),
           )
         } else {
