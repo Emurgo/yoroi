@@ -13,6 +13,7 @@ rustup toolchain install 1.32.0
 rustup install 1.32.0
 rustup target add wasm32-unknown-unknown --toolchain 1.32.0
 ```
+Additionally, make sure to correctly install the corresponding rust targets as detailed [here](https://github.com/Emurgo/react-native-cardano/#installing-rust). Verify that all the targets are included in your system with `rustup show`.
 
 ### ios
 
@@ -117,10 +118,10 @@ This will allow you to put breakpoints and everything else you would ever need.
 2. `cd android`
 3. `./gradlew assembleMainRelease`
 
-*Important*: You may run into `Could not follow symbolic link third-party/glog-0.3.5/test-driver` error 
+*Important*: You may run into `Could not follow symbolic link third-party/glog-0.3.5/test-driver` error
 if you try to build Android release on Mac. This is caused by incorrect linking in react-native/npm.
 To fix the issue, locate path where `automake` is installed (default `/usr/local/share`) and re-link
-file by running command: 
+file by running command:
 
 ```ln -sf /usr/local/share/automake-<version>/test-driver <path_to_repo>/third-party/glog-0.3.5/test-driver```
 
