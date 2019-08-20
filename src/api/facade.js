@@ -95,29 +95,25 @@ export const checkAndFacadeTransactionAsync = async (
     assert.assert(checkNonNegativeInt(amount), 'Invalid output amount', amount)
   })
 
-  // TODO: remove if
-  // isValidAddress is currently not compatible with testnet addresses
-  if (CONFIG.CARDANO.PROTOCOL_MAGIC === CARDANO_CONFIG.MAINNET.PROTOCOL_MAGIC) {
-    await Promise.all(
-      tx.inputs_address.map(async (address) => {
-        assert.assert(
-          await isValidAddress(address),
-          'Invalid input address',
-          address,
-        )
-      }),
-    )
+  await Promise.all(
+    tx.inputs_address.map(async (address) => {
+      assert.assert(
+        await isValidAddress(address),
+        'Invalid input address',
+        address,
+      )
+    }),
+  )
 
-    await Promise.all(
-      tx.outputs_address.map(async (address) => {
-        assert.assert(
-          await isValidAddress(address),
-          'Invalid output address',
-          address,
-        )
-      }),
-    )
-  }
+  await Promise.all(
+    tx.outputs_address.map(async (address) => {
+      assert.assert(
+        await isValidAddress(address),
+        'Invalid output address',
+        address,
+      )
+    }),
+  )
 
   assert.assert(checkISO8601Date(tx.time), 'Invalid time', tx.time)
 

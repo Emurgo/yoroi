@@ -6227,9 +6227,9 @@ nice-try@^1.0.4:
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
   integrity sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
 
-"node-cardano-wallet@https://github.com/Emurgo/node-cardano-wallet.git":
+"node-cardano-wallet@https://github.com/Emurgo/node-cardano-wallet.git#testnet-addr-checking":
   version "0.0.1"
-  resolved "https://github.com/Emurgo/node-cardano-wallet.git#db971d4055912dc1b8a70dc9b890da2c5d35bf52"
+  resolved "https://github.com/Emurgo/node-cardano-wallet.git#e213d3aa4f5878d1b09c089cc352fbcba272b363"
   dependencies:
     neon-cli "^0.2.0"
 
