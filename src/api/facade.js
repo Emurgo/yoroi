@@ -5,7 +5,6 @@ import _ from 'lodash'
 import assert from '../utils/assert'
 import {TRANSACTION_STATUS} from '../types/HistoryTransaction'
 import {isValidAddress} from '../crypto/util'
-import {CONFIG, CARDANO_CONFIG} from '../config'
 
 import type {Transaction, TransactionStatus} from '../types/HistoryTransaction'
 
