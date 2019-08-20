@@ -49,11 +49,11 @@ describe('History API', () => {
     const addresses = [
       '2cWKMJemoBakWtKxxsZpnEhs3ZWRf9tG3R9ReJX6UsAGiZP7PBpmutxYPRAakqEgMsK1g',
       '2cWKMJemoBahkhQS5QofBQxmsQMQDTxv1xzzqU9eHXBx6aDxaswBEksqurrfwhMNTYVFK',
-      '2cWKMJemoBahVMF121P6j54LjjKua29QGK6RpXZkxfaBLHExkGDuJ25wcC8vc2ExfuzLp'
+      '2cWKMJemoBahVMF121P6j54LjjKua29QGK6RpXZkxfaBLHExkGDuJ25wcC8vc2ExfuzLp',
     ]
     const used = [
       '2cWKMJemoBakWtKxxsZpnEhs3ZWRf9tG3R9ReJX6UsAGiZP7PBpmutxYPRAakqEgMsK1g',
-      '2cWKMJemoBahkhQS5QofBQxmsQMQDTxv1xzzqU9eHXBx6aDxaswBEksqurrfwhMNTYVFK'
+      '2cWKMJemoBahkhQS5QofBQxmsQMQDTxv1xzzqU9eHXBx6aDxaswBEksqurrfwhMNTYVFK',
     ]
 
     expect.assertions(1)
