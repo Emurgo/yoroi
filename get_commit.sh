@@ -1,11 +1,5 @@
 #!/bin/bash
-# if [ -z "$1" ]; then
-#   XCODE_PROJECT_DIR=$1
-#   BASE_DIR="$XCODE_PROJECT_DIR/.."
-# else
-#   # assume script being called from android/app/
-#   BASE_DIR="../.."
-# fi
+
 BASE_DIR="$(dirname ${BASH_SOURCE[0]})"
 cd $BASE_DIR
 PROD_ENV_FILE=".env.production"
