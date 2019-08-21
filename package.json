@@ -58,7 +58,7 @@
     "react-native-config": "^0.11.7",
     "react-native-crypto": "^2.1.2",
     "react-native-device-info": "2.3.2",
-    "react-native-easy-markdown": "https://github.com/Emurgo/react-native-easy-markdown.git",
+    "react-native-easy-markdown": "1.4.1",
     "react-native-fs": "^2.11.18",
     "react-native-keychain": "3.0.0",
     "react-native-linear-gradient": "^2.4.2",

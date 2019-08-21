@@ -159,7 +159,7 @@
   "components.walletinit.createwallet.createwalletscreen.title": "Eine neue Wallet erstellen",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.confirmationButton": "Ich habe verstanden",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.keysStorageCheckbox": "Ich verstehe, dass meine geheimen Schlüssel nur auf diesem Gerät und niemals auf den Servern des Unternehmens gespeichert werden",
-  "components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox": "Ich verstehe, dass wenn diese Anwendung auf ein anderes Gerät verschoben oder gelöscht wird, mein Kontostand nur mittels dieser Wortgruppe wiederhergestellt werden kann, die ich mir notiert und sicher aufbewahrt habe.",
+  "components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox": "I understand that if this application is moved to another device or deleted, my money can be only recovered with the backup phrase that I have written down and saved in a secure place.",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.title": "Wiederherstellungs-Phrase",
   "components.walletinit.createwallet.mnemoniccheckscreen.clearButton": "Löschen",
   "components.walletinit.createwallet.mnemoniccheckscreen.confirmButton": "Bestätigen",

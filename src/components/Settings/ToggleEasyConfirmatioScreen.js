@@ -44,18 +44,18 @@ const messages = defineMessages({
   enableMasterPassword: {
     id: 'components.settings.toggleeasyconfirmationscreen.enableMasterPassword',
     defaultMessage: 'Master password',
-    description: 'Enable',
+    description: 'some desc',
   },
   enableButton: {
     id: 'components.settings.toggleeasyconfirmationscreen.enableButton',
-    defaultMessage: 'Master password',
+    defaultMessage: 'Enable',
     description: 'some desc',
   },
   disableHeading: {
     id: 'components.settings.toggleeasyconfirmationscreen.disableHeading',
     defaultMessage:
       'By disabling this option you will be able to spend your ADA ' +
-      'only with master password.',
+      'only with your master password.',
   },
   disableButton: {
     id: 'components.settings.toggleeasyconfirmationscreen.disableButton',
