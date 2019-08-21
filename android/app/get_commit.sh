@@ -1,8 +1,21 @@
 #!/bin/bash
-PROD_ENV_FILE=../../.env.production
-STAGING_ENV_FILE=../../.env.staging
+if [ $1 != "" ]; then
+  XCODE_PROJECT_DIR=$1
+  BASE_DIR="$XCODE_PROJECT_DIR/.."
+else
+  # assume script being called from android/app/
+  BASE_DIR="../.."
+fi
+pwd
+PROD_ENV_FILE="$BASE_DIR/.env.production"
+STAGING_ENV_FILE="$BASE_DIR/.env.staging"
+
 declare -a FILES=($PROD_ENV_FILE $STAGING_ENV_FILE)
 LAST_COMMIT=$(git rev-parse --short HEAD)
+if [ -z "$LAST_COMMIT" ]; then
+  echo "ERROR: Couldn't get last commit hash"
+  LAST_COMMIT="-"
+fi
 echo "Building app on commit $LAST_COMMIT"
 
 # update commit hash value in env files
@@ -12,17 +25,20 @@ do
     COMMIT=`grep "COMMIT" "$ENV_FILE" | awk -F= '{print $2}'`
     if [ -z "$COMMIT" ]; then
       echo "COMMIT key not detected in $ENV_FILE file. Inserting last commit hash..."
-      echo "COMMIT=$LAST_COMMIT" >> $ENV_FILE
+      if [ -z "$(tail -c 1 "$ENV_FILE")" ]; then
+        echo "COMMIT=$LAST_COMMIT" >> $ENV_FILE
+      else
+        echo -e "\nCOMMIT=$LAST_COMMIT" >> $ENV_FILE
+      fi
     else
       echo "COMMIT key detected in $ENV_FILE: $COMMIT."
       if [ $LAST_COMMIT != $COMMIT ]; then
         echo "updating commit hash..."
+        sed -i.bak "/^COMMIT/s/=.*$/=$LAST_COMMIT/" $ENV_FILE
+        find $BASE_DIR -name "*.bak" -type f -delete
       fi
-      sed -i.bak "/^COMMIT/s/=.*$/=$LAST_COMMIT/" $ENV_FILE
     fi
   else
     echo "$ENV_FILE file not found"
   fi
 done
-
-find ../../ -name "*.bak" -type f -delete
