@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
    LastUpgradeVersion = "1020"
-   version = "1.3">
+   version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES">
@@ -10,7 +10,16 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "echo &quot;.env.staging&quot; &gt; /tmp/envfile&#10;&#10;">
+               scriptText = "echo &quot;.env.staging&quot; &gt; /tmp/envfile&#10;&#10;${PROJECT_DIR}/../get_commit.sh&#10;">
+               <EnvironmentBuildable>
+                  <BuildableReference
+                     BuildableIdentifier = "primary"
+                     BlueprintIdentifier = "2E3E7CD52298ACEA00D5C487"
+                     BuildableName = "emurgo-staging.app"
+                     BlueprintName = "emurgo-staging"
+                     ReferencedContainer = "container:emurgo.xcodeproj">
+                  </BuildableReference>
+               </EnvironmentBuildable>
             </ActionContent>
          </ExecutionAction>
       </PreActions>

@@ -1,14 +1,15 @@
 #!/bin/bash
-if [ $1 != "" ]; then
-  XCODE_PROJECT_DIR=$1
-  BASE_DIR="$XCODE_PROJECT_DIR/.."
-else
-  # assume script being called from android/app/
-  BASE_DIR="../.."
-fi
-pwd
-PROD_ENV_FILE="$BASE_DIR/.env.production"
-STAGING_ENV_FILE="$BASE_DIR/.env.staging"
+# if [ -z "$1" ]; then
+#   XCODE_PROJECT_DIR=$1
+#   BASE_DIR="$XCODE_PROJECT_DIR/.."
+# else
+#   # assume script being called from android/app/
+#   BASE_DIR="../.."
+# fi
+BASE_DIR="$(dirname ${BASH_SOURCE[0]})"
+cd $BASE_DIR
+PROD_ENV_FILE=".env.production"
+STAGING_ENV_FILE=".env.staging"
 
 declare -a FILES=($PROD_ENV_FILE $STAGING_ENV_FILE)
 LAST_COMMIT=$(git rev-parse --short HEAD)
@@ -35,7 +36,7 @@ do
       if [ $LAST_COMMIT != $COMMIT ]; then
         echo "updating commit hash..."
         sed -i.bak "/^COMMIT/s/=.*$/=$LAST_COMMIT/" $ENV_FILE
-        find $BASE_DIR -name "*.bak" -type f -delete
+        find . -name "*.bak" -type f -delete
       fi
     fi
   else
