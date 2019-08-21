@@ -13,7 +13,7 @@ rustup toolchain install 1.32.0
 rustup install 1.32.0
 rustup target add wasm32-unknown-unknown --toolchain 1.32.0
 ```
-Additionally, make sure to correctly install the corresponding rust targets as detailed [here](https://github.com/Emurgo/react-native-cardano/#installing-rust). Verify that all the targets are included in your system with `rustup show`.
+Make sure `rustc --version` outputs `1.32.0`, which is the stable version (and not nightly).
 
 ### ios
 
@@ -24,7 +24,9 @@ gem install cocoapods
 cd ios && pod install
 ```
 
-Copy your `GoogleService-Info.plist` to `ios/emurgo`.
+Install rust build targets: `rustup target add aarch64-apple-ios armv7-apple-ios armv7s-apple-ios x86_64-apple-ios i386-apple-ios`
+
+Install cargo-lipo for building: `cargo install cargo-lipo`
 
 Setup React Native third-party libraries (Run these after `yarn install`):
 ```
@@ -73,7 +75,7 @@ On Host (allow app to connect to packaged bundle after build)
 #### Android Setup
 
 ```
-# install & stup android studio
+# install & setup android studio
 follow https://facebook.github.io/react-native/docs/getting-started.html (tab Building Projects with Native Code)
 ```
 
@@ -83,6 +85,7 @@ follow https://facebook.github.io/react-native/docs/getting-started.html (tab Bu
 1. Install Rust for Android `rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android`
 
 ### First time
+Make sure the rust targets for the platform you will work on (android/iOS) have been correctly installed with `rustup show`. Then:
 
 1. `yarn install`
 1. `yarn setup_configs` - links libraries to ios testnet build configurations
