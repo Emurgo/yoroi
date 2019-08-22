@@ -54,6 +54,19 @@ export const SettingsItem = ({
   </View>
 )
 
+type SettingsBuildItemProps = {|
+  label: string,
+  value: string,
+|}
+
+export const SettingsBuildItem = ({label, value}: SettingsBuildItemProps) => (
+  <SettingsItem label={label}>
+    <Text small secondary>
+      {value}
+    </Text>
+  </SettingsItem>
+)
+
 type NavigatedSettingsItemProps = {|
   label: string,
   navigateTo: string,

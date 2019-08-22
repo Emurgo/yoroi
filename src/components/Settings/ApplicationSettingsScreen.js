@@ -12,12 +12,14 @@ import {withNavigationTitle} from '../../utils/renderUtils'
 import {errorMessages} from '../../i18n/global-messages'
 import {setAppSettingField, setSystemAuth, showErrorDialog} from '../../actions'
 import {APP_SETTINGS_KEYS} from '../../helpers/appSettings'
+import {CONFIG} from '../../config'
 import {
   isBiometricEncryptionHardwareSupported,
   canBiometricEncryptionBeEnabled,
 } from '../../helpers/deviceSettings'
 import {
   SettingsItem,
+  SettingsBuildItem,
   NavigatedSettingsItem,
   SettingsSection,
 } from './SettingsItems'
@@ -34,6 +36,8 @@ import {StatusBar} from '../UiKit'
 
 import type {ComponentType} from 'react'
 import type {Navigation} from '../../types/navigation'
+
+import DeviceInfo from 'react-native-device-info'
 
 const messages = defineMessages({
   title: {
@@ -84,6 +88,18 @@ const messages = defineMessages({
   support: {
     id: 'components.settings.applicationsettingsscreen.support',
     defaultMessage: '!!!Support',
+  },
+  version: {
+    id: 'components.settings.applicationsettingsscreen.version',
+    defaultMessage: '!!!Current version:',
+  },
+  network: {
+    id: 'components.settings.applicationsettingsscreen.network',
+    defaultMessage: '!!!Network:',
+  },
+  commit: {
+    id: 'components.settings.applicationsettingsscreen.commit',
+    defaultMessage: '!!!Commit:',
   },
 })
 
@@ -151,6 +167,8 @@ const updateDeviceSettings = async ({setAppSettingField}) => {
   )
 }
 
+const version = DeviceInfo.getVersion()
+
 const ApplicationSettingsScreen = ({
   onToggleBiometricsAuthIn,
   intl,
@@ -206,6 +224,23 @@ const ApplicationSettingsScreen = ({
       <NavigatedSettingsItem
         label={intl.formatMessage(messages.support)}
         navigateTo={SETTINGS_ROUTES.SUPPORT}
+      />
+    </SettingsSection>
+
+    <SettingsSection title="About">
+      <SettingsBuildItem
+        label={intl.formatMessage(messages.version)}
+        value={version}
+      />
+
+      <SettingsBuildItem
+        label={intl.formatMessage(messages.network)}
+        value={CONFIG.NETWORK}
+      />
+
+      <SettingsBuildItem
+        label={intl.formatMessage(messages.commit)}
+        value={CONFIG.COMMIT}
       />
     </SettingsSection>
   </ScrollView>

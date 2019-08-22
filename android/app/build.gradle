@@ -182,6 +182,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-device-info')
     implementation project(':@react-native-community_async-storage')
     implementation project(':react-native-cardano')
     implementation project(':react-native-sentry')
@@ -206,6 +207,20 @@ dependencies {
 task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
+}
+
+tasks.create('getCurrentCommitHash') {
+    doFirst {
+        exec {
+            executable "../../get_commit.sh"
+        }
+    }
+}
+
+tasks.whenTaskAdded { task ->
+    if (task.name.startsWith('install') || task.name.startsWith('assemble')) {
+        task.dependsOn getCurrentCommitHash
+    }
 }
 
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
