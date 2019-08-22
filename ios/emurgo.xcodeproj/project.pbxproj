@@ -27,6 +27,7 @@
 		293DB2C1E209441FA3264DCD /* libRNKeychain.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA9C2C759F984A23843777A9 /* libRNKeychain.a */; };
 		2AD573394D814085843F36E2 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8306E0AE63AA483DBF7F6BF0 /* libRNFS.a */; };
 		2CB56B544D0B4507B07F751B /* libRNCardano.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1103DA1A18D54C3EA133F4DC /* libRNCardano.a */; };
+		2E1E7A27230E996A00D35F69 /* libRNCardano.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EBA2B1522EA877F00BF8A5B /* libRNCardano.a */; };
 		2E3E7CD322987AC100D5C487 /* libRNSentry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EF1208C22795E47007BE6F5 /* libRNSentry.a */; };
 		2E3E7CD42298A85F00D5C487 /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E2373C8021CA447C0003317D /* libReactNativeConfig.a */; };
 		2E3E7CD82298ACEA00D5C487 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
@@ -686,6 +687,7 @@
 				2E3E7CF22298ACEA00D5C487 /* libRNBackgroundTimer.a in Frameworks */,
 				2E3E7CF32298ACEA00D5C487 /* libSplashScreen.a in Frameworks */,
 				2E3E7CF52298ACEA00D5C487 /* libz.tbd in Frameworks */,
+				2E1E7A27230E996A00D35F69 /* libRNCardano.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
