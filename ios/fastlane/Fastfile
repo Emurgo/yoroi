@@ -23,7 +23,7 @@ platform :ios do
     match(type: "appstore",
           app_identifier: "com.emurgo.yoroi-stag",
           verbose: true,
-          git_url: "https://github.com/Emurgo/yoroi-certs.git")
+          git_url: "git@github.com:Emurgo/yoroi-certs.git")
 
     increment_build_number(xcodeproj: "emurgo.xcodeproj")
     build_app(workspace: "emurgo.xcworkspace", scheme: "emurgo-staging")
@@ -37,7 +37,7 @@ platform :ios do
     match(type: "appstore",
           app_identifier: "com.emurgo.yoroi",
           verbose: true,
-          git_url: "https://github.com/Emurgo/yoroi-certs.git")
+          git_url: "git@github.com:Emurgo/yoroi-certs.git")
 
     increment_build_number(xcodeproj: "emurgo.xcodeproj")
     build_app(workspace: "emurgo.xcworkspace", scheme: "emurgo")
