@@ -225,6 +225,8 @@
   "global.actions.dialogs.logout.noButton": "No",
   "global.actions.dialogs.logout.title": "Esci",
   "global.actions.dialogs.logout.yesButton": "Si",
+  "global.actions.dialogs.apiError.title": "API error",
+  "global.actions.dialogs.apiError.message": "Error received from api method call while sending transaction. Please try again later or check our Twitter account (https://twitter.com/YoroiWallet)",
   "global.actions.dialogs.networkError.message": "Errore di connessione al server. Controllare la connessione a Internet",
   "global.actions.dialogs.networkError.title": "Errore di rete",
   "global.actions.dialogs.pinMismatch.message": "I PIN non corrispondono.",
