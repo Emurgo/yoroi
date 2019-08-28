@@ -225,6 +225,8 @@
   "global.actions.dialogs.logout.noButton": "No",
   "global.actions.dialogs.logout.title": "Salir",
   "global.actions.dialogs.logout.yesButton": "Sí",
+  "global.actions.dialogs.apiError.title": "API error",
+  "global.actions.dialogs.apiError.message": "Error received from api method call while sending transaction. Please try again later or check our Twitter account (https://twitter.com/YoroiWallet)",
   "global.actions.dialogs.networkError.message": "Error conectando con el servidor. Por favor comprueba tu conexión a Internet",
   "global.actions.dialogs.networkError.title": "Error de red",
   "global.actions.dialogs.pinMismatch.message": "Los PINs no calzan.",
