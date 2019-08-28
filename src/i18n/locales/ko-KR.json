@@ -225,6 +225,8 @@
   "global.actions.dialogs.logout.noButton": "아니오",
   "global.actions.dialogs.logout.title": "로그아웃",
   "global.actions.dialogs.logout.yesButton": "네",
+  "global.actions.dialogs.apiError.title": "API error",
+  "global.actions.dialogs.apiError.message": "Error received from api method call while sending transaction. Please try again later or check our Twitter account (https://twitter.com/YoroiWallet)",
   "global.actions.dialogs.networkError.message": "서버에 접속하는데 문제가 발생했습니다. 인터넷이 연결되어 있는지 확인해 주십시오.",
   "global.actions.dialogs.networkError.title": "네트워크 오류",
   "global.actions.dialogs.pinMismatch.message": "PIN가 일치하지 않습니다.",
