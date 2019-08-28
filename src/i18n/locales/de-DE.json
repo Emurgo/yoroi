@@ -225,6 +225,8 @@
   "global.actions.dialogs.logout.noButton": "Nein",
   "global.actions.dialogs.logout.title": "Abmelden",
   "global.actions.dialogs.logout.yesButton": "Ja",
+  "global.actions.dialogs.apiError.title": "API error",
+  "global.actions.dialogs.apiError.message": "Error received from api method call while sending transaction. Please try again later or check our Twitter account (https://twitter.com/YoroiWallet)",
   "global.actions.dialogs.networkError.message": "Fehler bei der Verbindung zum Server. Bitte überprüfe die Internetverbindung",
   "global.actions.dialogs.networkError.title": "Netzwerkfehler",
   "global.actions.dialogs.pinMismatch.message": "Die PINs stimmen nicht überein.",
