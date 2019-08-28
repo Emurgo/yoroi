@@ -30,7 +30,7 @@ import {
 } from '../../actions'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {formatAdaWithSymbol, formatAdaWithText} from '../../utils/format'
-import {NetworkError} from '../../api/errors'
+import {NetworkError, ApiError} from '../../api/errors'
 
 import styles from './styles/ConfirmScreen.style'
 
@@ -99,6 +99,8 @@ const handleOnConfirm = async (
     } catch (e) {
       if (e instanceof NetworkError) {
         await showErrorDialog(errorMessages.networkError, intl)
+      } else if (e instanceof ApiError) {
+        await showErrorDialog(errorMessages.apiError, intl)
       } else {
         throw e
       }

@@ -97,6 +97,18 @@ export const errorMessages = {
         'Please check your internet connection',
     },
   }),
+  apiError: defineMessages({
+    title: {
+      id: 'global.actions.dialogs.apiError.title',
+      defaultMessage: '!!!API error',
+    },
+    message: {
+      id: 'global.actions.dialogs.apiError.message',
+      defaultMessage:
+        '!!!Error received from api method call while sending transaction. ' +
+        'Please try again later or check our Twitter account (https://twitter.com/YoroiWallet)',
+    },
+  }),
   disableEasyConfirmationFirst: defineMessages({
     title: {
       id: 'global.actions.dialogs.disableEasyConfirmationFirst.title',
