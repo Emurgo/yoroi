@@ -75,6 +75,7 @@ describe('AddressChain', () => {
 
     await chain.initialize()
     expect(() => {
+      // note: throws and logs error "Assertion failed: getIndexOfAddress:: is not my address"
       chain.getIndexOfAddress('wrong')
     }).toThrow()
   })
@@ -95,7 +96,9 @@ describe('AddressChain', () => {
     const data = chain.toJSON()
     const chain2 = AddressChain.fromJSON(data)
 
-    const used = ['Ae2tdPwUPEZFVwV6LJYdEMUAChDW6L6v97WdKjqVb4TzyKmR31otsidBnJx']
+    const used = [
+      '2cWKMJemoBaiAKW7iBFgK3prZAK3gAEgkndCUTkGpUAoRofmXJcbmie2qe6JTN44dQ2Ag',
+    ]
 
     const filter = (addresses) => {
       return Promise.resolve(addresses.filter((addr) => used.includes(addr)))

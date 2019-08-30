@@ -97,8 +97,9 @@ export const getAddresses = (
   account: CryptoAccount,
   type: AddressType,
   indexes: Array<number>,
+  protocolMagic?: number = CONFIG.CARDANO.PROTOCOL_MAGIC,
 ): Promise<Array<string>> =>
-  _rethrow(Wallet.generateAddresses(account, type, indexes))
+  _rethrow(Wallet.generateAddresses(account, type, indexes, protocolMagic))
 
 export const ADDRESS_TYPE_TO_CHANGE: {[AddressType]: number} = {
   External: 0,
@@ -108,12 +109,14 @@ export const ADDRESS_TYPE_TO_CHANGE: {[AddressType]: number} = {
 export const getExternalAddresses = (
   account: CryptoAccount,
   indexes: Array<number>,
-) => getAddresses(account, 'External', indexes)
+  protocolMagic?: number = CONFIG.CARDANO.PROTOCOL_MAGIC,
+) => getAddresses(account, 'External', indexes, protocolMagic)
 
 export const getInternalAddresses = (
   account: CryptoAccount,
   indexes: Array<number>,
-) => getAddresses(account, 'Internal', indexes)
+  protocolMagic?: number = CONFIG.CARDANO.PROTOCOL_MAGIC,
+) => getAddresses(account, 'Internal', indexes, protocolMagic)
 
 export const getAddressInHex = (address: string): string => {
   try {

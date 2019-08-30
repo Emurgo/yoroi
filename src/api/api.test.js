@@ -17,7 +17,7 @@ describe('History API', () => {
   apiWithTestnet = require('./api')
   it('can fetch history', async () => {
     const addresses = [
-      'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
+      '2cWKMJemoBakWtKxxsZpnEhs3ZWRf9tG3R9ReJX6UsAGiZP7PBpmutxYPRAakqEgMsK1g',
     ]
     const ts = moment('1970-01-01')
 
@@ -28,6 +28,7 @@ describe('History API', () => {
     // $FlowFixMe it seems like toMatchSnapshot is badly typed
     expect(result.transactions[0]).toMatchSnapshot({
       bestBlockNum: expect.any(Number),
+      lastUpdatedAt: expect.any(String), // this field may change (e.g. after restarting a node)
     })
   })
 
@@ -47,15 +48,13 @@ describe('History API', () => {
 
   it('filters used addresses', async () => {
     const addresses = [
-      'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
-      'Ae2tdPwUPEZ8wGxWm9VbZXFJcgLeKQJWKqREVEtHXYdqsqc4bLeGqjSwrtu',
-      'Ae2tdPwUPEZ6T9qZxpao8ciAgg6ahjHRq2jV45ndZ4oPXAwrTYqN9NGUPh4',
-      'Ae2tdPwUPEZN7jAbQNXXGivhavp4nSsmYtCebTcnuUmXuWDXtM3bgJzugrY',
+      '2cWKMJemoBakWtKxxsZpnEhs3ZWRf9tG3R9ReJX6UsAGiZP7PBpmutxYPRAakqEgMsK1g',
+      '2cWKMJemoBahkhQS5QofBQxmsQMQDTxv1xzzqU9eHXBx6aDxaswBEksqurrfwhMNTYVFK',
+      '2cWKMJemoBahVMF121P6j54LjjKua29QGK6RpXZkxfaBLHExkGDuJ25wcC8vc2ExfuzLp',
     ]
     const used = [
-      'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
-      'Ae2tdPwUPEZ8wGxWm9VbZXFJcgLeKQJWKqREVEtHXYdqsqc4bLeGqjSwrtu',
-      'Ae2tdPwUPEZ6T9qZxpao8ciAgg6ahjHRq2jV45ndZ4oPXAwrTYqN9NGUPh4',
+      '2cWKMJemoBakWtKxxsZpnEhs3ZWRf9tG3R9ReJX6UsAGiZP7PBpmutxYPRAakqEgMsK1g',
+      '2cWKMJemoBahkhQS5QofBQxmsQMQDTxv1xzzqU9eHXBx6aDxaswBEksqurrfwhMNTYVFK',
     ]
 
     expect.assertions(1)
@@ -65,9 +64,8 @@ describe('History API', () => {
 
   it('keeps order in filterUsedAddresses', async () => {
     const addresses = [
-      'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
-      'Ae2tdPwUPEZ8uXdGbucR1mByMcCDqwheTziFH9S3hPXJU741K6NprZ3jKFJ',
-      'Ae2tdPwUPEZAyT9PgRp751Gv8UaEzaeSuNQzDC2nZzvukFBHyLEZ9usP4YR',
+      '2cWKMJemoBakWtKxxsZpnEhs3ZWRf9tG3R9ReJX6UsAGiZP7PBpmutxYPRAakqEgMsK1g',
+      '2cWKMJemoBahkhQS5QofBQxmsQMQDTxv1xzzqU9eHXBx6aDxaswBEksqurrfwhMNTYVFK',
     ]
 
     expect.assertions(2)

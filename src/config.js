@@ -15,9 +15,10 @@ const _COMMIT = env.getString('COMMIT')
 
 export const CARDANO_CONFIG = {
   TESTNET: {
-    PROTOCOL_MAGIC: 633343913,
-    API_ROOT: 'https://stg-yoroi-backend.yoroiwallet.com/api',
-    EXPLORER_URL_FOR_TX: (tx: string) => `https://explorer.iohkdev.io/tx/${tx}`,
+    PROTOCOL_MAGIC: 1097911063,
+    API_ROOT: 'https://testnet-yoroi-backend.yoroiwallet.com/api',
+    EXPLORER_URL_FOR_TX: (tx: string) =>
+      `https://cardano-explorer.cardano-testnet.iohkdev.io/tx/${tx}`,
   },
   MAINNET: {
     PROTOCOL_MAGIC: 764824073,

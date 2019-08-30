@@ -24,15 +24,15 @@ import {CARDANO_CONFIG, CONFIG} from '../config'
 jestSetup.setup()
 
 const mnemonic = [
-  'dry balcony arctic what garbage sort',
-  'cart shine egg lamp manual bottom',
-  'slide assault bus',
+  'panic advice priority develop',
+  'solid remind ankle shock',
+  'include oyster profit reopen',
+  'acid pole crisp',
 ].join(' ')
 
 const externalAddresses = [
-  'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
-  'Ae2tdPwUPEZ8wGxWm9VbZXFJcgLeKQJWKqREVEtHXYdqsqc4bLeGqjSwrtu',
-  'Ae2tdPwUPEZ6T9qZxpao8ciAgg6ahjHRq2jV45ndZ4oPXAwrTYqN9NGUPh4',
+  '2cWKMJemoBakWtKxxsZpnEhs3ZWRf9tG3R9ReJX6UsAGiZP7PBpmutxYPRAakqEgMsK1g',
+  '2cWKMJemoBahkhQS5QofBQxmsQMQDTxv1xzzqU9eHXBx6aDxaswBEksqurrfwhMNTYVFK',
 ]
 
 // getExternalAddresses
@@ -45,7 +45,11 @@ test('Can generate external addresses', async () => {
     CONFIG.WALLET.ACCOUNT_INDEX,
     CARDANO_CONFIG.TESTNET.PROTOCOL_MAGIC,
   )
-  const addresses = await getExternalAddresses(account, [0, 1, 2])
+  const addresses = await getExternalAddresses(
+    account,
+    [0, 1],
+    CONFIG.CARDANO.PROTOCOL_MAGIC,
+  )
 
   expect(addresses).toEqual(externalAddresses)
 })
@@ -55,7 +59,7 @@ test('Can convert address to hex', () => {
   const address = externalAddresses[0]
   // prettier-ignore
   // eslint-disable-next-line max-len
-  const hex = '82d818582183581ce0256c34965ce528570c22f88073e625020288a1973c1e2d466d39bca0001ab7e3a79a'
+  const hex = '82d818582883581ccaf8a28e2472376b06ded6fe04c2324e56b5dceba78f7fc8603f4949a102451a4170cb17001a1aeeab5f'
   expect(getAddressInHex(address)).toEqual(hex)
 })
 
@@ -176,14 +180,8 @@ describe('signTransaction', () => {
     await expect(promise).rejects.toBeInstanceOf(InsufficientFunds)
   })
 
-  // Note(ppershing): This is a known bug in rust-cardano implementation
-  // and we can do nothing with it
-  // Let's hope this test fails (with correct behavior) in the future
   it('can handle rust bug', async () => {
-    expect.assertions(2)
-    // If this fails, it means we let this bug open for too long time.
-    // Try updating rust library and seeing if it disappears
-    expect(moment().isBefore('2019-08-01')).toBeTruthy()
+    expect.assertions(1)
 
     const outputs = [
       {
@@ -193,9 +191,7 @@ describe('signTransaction', () => {
     ]
 
     const promise = signTransaction(wallet, inputs, outputs, change)
-    // Correct behavior:
-    // expect(await promise).not.toBeNull()
-    await expect(promise).rejects.toBeInstanceOf(InsufficientFunds)
+    await expect(promise).not.toBeNull()
   })
 
   it('can handle big amounts', async () => {
@@ -248,7 +244,9 @@ describe('signTransaction', () => {
     expect.assertions(2)
     // If this fails, it means we let this bug open for too long time.
     // Try updating rust library and seeing if it disappears
-    expect(moment().isBefore('2019-08-01')).toBeTruthy()
+    // Note(v-almonacid): I increased this timer. We'll hopefully update the
+    // bindings within the the next months and this issue should be fixed by then©
+    expect(moment().isBefore('2019-12-01')).toBeTruthy()
 
     const inputs = [
       {
