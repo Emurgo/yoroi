@@ -1,5 +1,5 @@
 {
-  "components.common.languagepicker.continueButton": "Choisir votre langue",
+  "components.common.languagepicker.continueButton": "Choisissez votre langue",
   "components.common.languagepicker.english": "English",
   "components.common.languagepicker.japanese": "日本語",
   "components.common.languagepicker.korean": "한국어",
@@ -226,7 +226,7 @@
   "global.actions.dialogs.logout.title": "Déconnexion",
   "global.actions.dialogs.logout.yesButton": "Oui",
   "global.actions.dialogs.apiError.title": "Erreur API",
-  "global.actions.dialogs.apiError.message": "Error received from api method call while sending transaction. Please try again later or check our Twitter account (https://twitter.com/YoroiWallet)",
+  "global.actions.dialogs.apiError.message": "Erreur lors de l'appel de méthode API pendant l'envoi de la transaction. Veuillez ré-essayer plus tard ou alors vérifiez notre compte Twitter (https://twitter.com/YoroiWallet)",
   "global.actions.dialogs.networkError.message": "Erreur de connexion au serveur. Veuillez vérifier votre connexion Internet",
   "global.actions.dialogs.networkError.title": "Erreur réseau",
   "global.actions.dialogs.pinMismatch.message": "Les codes PIN ne correspondent pas.",
