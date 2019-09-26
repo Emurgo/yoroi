@@ -8,7 +8,6 @@ import ko from 'react-intl/locale-data/ko'
 import ru from 'react-intl/locale-data/ru'
 import es from 'react-intl/locale-data/es'
 
-// $FlowFixMe flow does not have this import
 import {connect, Provider} from 'react-redux'
 
 import App from './App'

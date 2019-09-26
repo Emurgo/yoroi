@@ -79,19 +79,19 @@ class Text extends React.Component<Props, State> {
 
     const textStyle = [
       styles.text,
-      small && styles.small,
-      secondary && styles.secondary,
-      light && styles.light,
-      bold && styles.bold,
-      monospace && styles.monospace,
-      error && styles.error,
+      small === true && styles.small,
+      secondary === true && styles.secondary,
+      light === true && styles.light,
+      bold === true && styles.bold,
+      monospace === true && styles.monospace,
+      error === true && styles.error,
       style,
     ]
     if (this.state.fontSize) {
       textStyle.push({fontSize: this.state.fontSize})
     }
 
-    if (adjustsFontSizeToFit && Platform.OS === 'ios') {
+    if (adjustsFontSizeToFit != null && Platform.OS === 'ios') {
       return (
         <RNText style={textStyle} {...restProps}>
           {children}
@@ -104,13 +104,13 @@ class Text extends React.Component<Props, State> {
       return (
         <RNText
           onLayout={(event) => {
-            if (!adjustsFontSizeToFit || typeof children !== 'string') return
+            if (adjustsFontSizeToFit == null || typeof children !== 'string') return
             const {width} = event.nativeEvent.layout
             const fixedFontSize = androidAdjustsFontSizeToFitFix(
               width,
               children.length,
             )
-            const styleFontSize: any = style && style.fontSize && style.fontSize
+            const styleFontSize: any = style != null && style.fontSize != null && style.fontSize
             const fontSize = styleFontSize
               ? Math.min(styleFontSize, fixedFontSize)
               : fixedFontSize

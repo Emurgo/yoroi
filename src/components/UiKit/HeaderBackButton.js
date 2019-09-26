@@ -13,8 +13,7 @@ export default ({navigation, shouldPopOutOfLastNavigator}: Props) => (
   <HeaderBackButton
     tintColor="white"
     onPress={() => {
-      if (shouldPopOutOfLastNavigator) {
-        // $FlowFixMe
+      if (shouldPopOutOfLastNavigator === true) {
         navigation.popToTop()
       } else {
         navigation.goBack(null)

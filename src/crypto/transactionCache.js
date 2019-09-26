@@ -73,7 +73,7 @@ const confirmationCountsSelector = (state: TransactionCacheState) => {
     ])
 
     assert.assert(tx.blockNum, 'Successfull tx should have blockNum')
-    /* :: if (!tx.blockNum) throw 'assert' */
+    /* :: if (tx.blockNum == null) throw 'assert' */
     return bestBlockNum - tx.blockNum
   })
 }

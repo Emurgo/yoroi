@@ -98,11 +98,11 @@ export const withNavigationTitle = <Props: {navigation: any}>(
       }
 
       getCurrentTitle = () => this.props.navigation.getParam(
-        paramName || 'title'
+        paramName != null ? paramName : 'title'
       )
 
       setTitle = (value) => this.props.navigation.setParams({
-        [paramName || 'title']: value,
+        [paramName != null ? paramName : 'title']: value,
       })
 
       render = () => <BaseComponent {...this.props} />

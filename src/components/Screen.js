@@ -28,13 +28,13 @@ const Screen = ({
   style = {},
   ...restProps
 }: Props) => {
-  const Container = scroll ? ScrollView : View
+  const Container = scroll === true ? ScrollView : View
 
   return (
     <Container
       style={[
         styles.container,
-        {backgroundColor: bgColor || COLORS.WHITE},
+        {backgroundColor: bgColor != null ? bgColor : COLORS.WHITE},
         style,
       ]}
       {...restProps}

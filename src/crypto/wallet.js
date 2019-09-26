@@ -107,7 +107,6 @@ export class Wallet {
     await this.encryptAndSaveMasterKey('BIOMETRICS', decryptedMasterKey)
     await this.encryptAndSaveMasterKey('SYSTEM_PIN', decryptedMasterKey)
 
-    // $FlowFixMe
     this._isEasyConfirmationEnabled = true
   }
 
@@ -723,9 +722,7 @@ class WalletManager {
       isEasyConfirmationEnabled: false,
     })
 
-    // $FlowFixMe
     await this.deleteEncryptedKey('BIOMETRICS')
-    // $FlowFixMe
     await this.deleteEncryptedKey('SYSTEM_PIN')
 
     // $FlowFixMe

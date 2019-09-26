@@ -76,7 +76,6 @@ export const receiveAddressesSelector: (
 ) => Array<string> = createSelector(
   (state) => state.wallet.externalAddresses,
   (state) => state.wallet.numReceiveAddresses,
-  // $FlowFixMe function should accept only 1 argument
   (addresses, count) => addresses.slice(0, count),
 )
 

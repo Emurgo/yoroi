@@ -71,7 +71,7 @@ export default injectIntl(
         customPinHash,
         intl,
       }: ExternalProps) => async (pin) => {
-        if (!customPinHash) {
+        if (customPinHash == null) {
           throw new Error('Custom pin is not setup')
         }
 

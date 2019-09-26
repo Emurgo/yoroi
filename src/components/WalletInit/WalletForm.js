@@ -67,7 +67,6 @@ type Props = {
   intl: any,
   walletNames: Array<string>,
   onSubmit: ({name: string, password: string}) => mixed,
-  // $FlowFixMe
   validateWalletName: (walletName: string) => WalletNameValidationErrors,
 }
 

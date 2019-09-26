@@ -136,7 +136,7 @@ export const encryptAndStoreCustomPin = (pin: string) => async (
 ) => {
   const state = getState()
   const installationId = state.appSettings.installationId
-  if (!installationId) {
+  if (installationId == null) {
     throw new AppSettingsError(APP_SETTINGS_KEYS.INSTALLATION_ID)
   }
 
@@ -194,7 +194,7 @@ const initInstallationId = () => async (
   getState: any,
 ): Promise<string> => {
   let installationId = installationIdSelector(getState())
-  if (installationId) {
+  if (installationId != null) {
     return installationId
   }
 
@@ -372,7 +372,7 @@ const showDialog = (translations: DialogOptions): Promise<DialogButton> =>
 
     assert.assert(yesButton, 'Yes button should be provided')
 
-    if (noButton) {
+    if (noButton != null) {
       buttons.push({
         text: noButton,
         onPress: () => resolve(DIALOG_BUTTONS.NO),
@@ -423,7 +423,7 @@ export const setSystemAuth = (enable: boolean) => async (
   )
 
   const installationId = installationIdSelector(getState())
-  if (!installationId) {
+  if (installationId == null) {
     throw new Error('Installation id is not defined')
   }
 

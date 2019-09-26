@@ -123,9 +123,11 @@ export const getWalletNameError = (
 ) => {
   const {tooLong, nameAlreadyTaken} = translations
 
-  if (validationErrors.tooLong) {
+  // TODO: check if this is the right way
+  if (validationErrors.tooLong != null && validationErrors.tooLong !== undefined) {
     return tooLong
-  } else if (validationErrors.nameAlreadyTaken) {
+  } else if (validationErrors.nameAlreadyTaken != null
+      && validationErrors.nameAlreadyTaken !== undefined) {
     return nameAlreadyTaken
   } else {
     return null

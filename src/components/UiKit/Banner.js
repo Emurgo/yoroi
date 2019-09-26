@@ -15,14 +15,14 @@ type Props = {|
 |}
 
 const Banner = ({error, text, boldText, label, children}: Props) => (
-  <View style={[styles.banner, error && styles.bannerError]}>
-    {!!label && (
+  <View style={[styles.banner, error === true && styles.bannerError]}>
+    {label != null && (
       <Text error={error} small style={styles.label}>
         {label}
       </Text>
     )}
-    {!!text && (
-      <Text small={error} bold={boldText} style={[error && styles.textError]}>
+    {text != null && (
+      <Text small={error} bold={boldText} style={[error != null && styles.textError]}>
         {text}
       </Text>
     )}
