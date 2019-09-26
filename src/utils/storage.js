@@ -69,7 +69,6 @@ export const clearAll = async () => {
   }
 }
 
-// TODO: includeSubdirs defined as input parameter, but returned (?)
 export const keys = async (path: string, includeSubdirs?: boolean) => {
   try {
     const all = await AsyncStorage.getAllKeys()
