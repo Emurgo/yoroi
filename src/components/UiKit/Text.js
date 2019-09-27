@@ -104,13 +104,16 @@ class Text extends React.Component<Props, State> {
       return (
         <RNText
           onLayout={(event) => {
-            if (adjustsFontSizeToFit == null || typeof children !== 'string') return
+            if (adjustsFontSizeToFit == null || typeof children !== 'string') {
+              return
+            }
             const {width} = event.nativeEvent.layout
             const fixedFontSize = androidAdjustsFontSizeToFitFix(
               width,
               children.length,
             )
-            const styleFontSize: any = style != null && style.fontSize != null && style.fontSize
+            const styleFontSize: any =
+              style != null && style.fontSize != null && style.fontSize
             const fontSize = styleFontSize
               ? Math.min(styleFontSize, fixedFontSize)
               : fixedFontSize

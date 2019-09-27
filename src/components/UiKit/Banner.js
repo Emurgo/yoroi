@@ -22,7 +22,11 @@ const Banner = ({error, text, boldText, label, children}: Props) => (
       </Text>
     )}
     {text != null && (
-      <Text small={error} bold={boldText} style={[error != null && styles.textError]}>
+      <Text
+        small={error}
+        bold={boldText}
+        style={[error != null && styles.textError]}
+      >
         {text}
       </Text>
     )}

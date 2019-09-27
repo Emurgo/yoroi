@@ -68,7 +68,8 @@ const ValidationCheckIcon = ({
   isSatisfied,
   label,
 }: ValidationCheckIconProps) => {
-  const iconColor = isSatisfied === true ? COLORS.LIGHT_POSITIVE_GREEN : '#ADAEB6'
+  const iconColor =
+    isSatisfied === true ? COLORS.LIGHT_POSITIVE_GREEN : '#ADAEB6'
   return (
     <View style={styles.row}>
       <CheckIcon width={16} height={16} color={iconColor} />

@@ -49,7 +49,9 @@ export const SettingsItem = ({
   disabled,
 }: SettingsItemProps) => (
   <View style={styles.item}>
-    <Text style={[styles.label, disabled === true && styles.disabled]}>{label}</Text>
+    <Text style={[styles.label, disabled === true && styles.disabled]}>
+      {label}
+    </Text>
     <View>{children}</View>
   </View>
 )

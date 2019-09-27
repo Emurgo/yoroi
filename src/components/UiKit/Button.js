@@ -98,7 +98,10 @@ class Button extends React.Component<ButtonProps> {
         >
           {iconImage != null && <Image source={iconImage} />}
           <Text
-            style={[styles.text, outlineOnLight === true && styles.textOutlineOnLight]}
+            style={[
+              styles.text,
+              outlineOnLight === true && styles.textOutlineOnLight,
+            ]}
           >
             {formattedTitle}
           </Text>
