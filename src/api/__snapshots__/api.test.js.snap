@@ -23,6 +23,6 @@ Object {
     },
   ],
   "status": "Successful",
-  "submittedAt": "2019-08-19T23:00:16.000Z",
+  "submittedAt": Any<String>,
 }
 `;
