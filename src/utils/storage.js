@@ -76,7 +76,7 @@ export const keys = async (path: string, includeSubdirs?: boolean) => {
       .filter((key) => key.startsWith(path))
       .map((key) => key.substring(path.length))
 
-    return includeSubdirs
+    return includeSubdirs === true
       ? matched
       : matched.filter((key) => !key.includes('/'))
   } catch (error) {

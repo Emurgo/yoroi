@@ -182,7 +182,7 @@ const getAmountErrorText = (intl, amountErrors, balanceErrors) => {
       amountInputErrorMessages[amountErrors.invalidAmount],
     )
   }
-  if (balanceErrors.insufficientBalance) {
+  if (balanceErrors.insufficientBalance === true) {
     return intl.formatMessage(amountInputErrorMessages.insufficientBalance)
   }
   return null
@@ -295,7 +295,7 @@ class SendScreen extends Component<Props, State> {
       this.state.address === address &&
       this.props.utxos === utxos
 
-    if (isValid) {
+    if (isValid === true) {
       /* :: if (!utxos) throw 'assert' */
       const transactionData = await getTransactionData(utxos, address, amount)
 
@@ -445,7 +445,7 @@ class SendScreen extends Component<Props, State> {
             onChangeText={this.handleAddressChange}
             blurOnSubmit
             error={
-              addressErrors.invalidAddress &&
+              addressErrors.invalidAddress === true &&
               intl.formatMessage(messages.addressInputErrorInvalidAddress)
             }
           />

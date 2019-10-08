@@ -25,7 +25,6 @@ describe('History API', () => {
     expect.assertions(1)
     const result = await apiWithTestnet.fetchNewTxHistory(ts, addresses)
 
-    // $FlowFixMe it seems like toMatchSnapshot is badly typed
     expect(result.transactions[0]).toMatchSnapshot({
       bestBlockNum: expect.any(Number),
       lastUpdatedAt: expect.any(String), // these fields may change (e.g. after restarting a node)
@@ -43,7 +42,6 @@ describe('History API', () => {
 
     await expect(
       apiWithTestnet.fetchNewTxHistory(ts, addresses),
-      // $FlowFixMe not sure why Flow does not like ApiError instead of Error
     ).rejects.toThrow(ApiError)
   })
 

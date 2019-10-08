@@ -70,7 +70,7 @@ class AddressModal extends React.Component<Props, State> {
   }
 
   _copyAddress = () => {
-    if (!this.props.address) return
+    if (this.props.address == null) return
     Clipboard.setString(this.props.address)
     this.setState({isCopied: true})
 

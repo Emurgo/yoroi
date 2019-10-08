@@ -23,13 +23,14 @@ const Badge = ({text, color, backgroundColor}: Props) => (
   <View
     style={{
       ...styles.container,
-      backgroundColor: backgroundColor || COLORS.PRIMARY,
+      backgroundColor:
+        backgroundColor != null ? backgroundColor : COLORS.PRIMARY,
     }}
   >
     <Text
       style={{
         ...styles.text,
-        color: color || COLORS.PRIMARY_TEXT,
+        color: color != null ? color : COLORS.PRIMARY_TEXT,
       }}
     >
       {text}

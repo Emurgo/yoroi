@@ -83,22 +83,25 @@ class Button extends React.Component<ButtonProps> {
         accessibilityRole="button"
         disabled={disabled}
         onPress={onPress}
-        style={[block && styles.block, containerStyle]}
+        style={[block === true && styles.block, containerStyle]}
         activeOpacity={0.5}
       >
         <View
           style={[
             styles.button,
-            outline && styles.buttonOutline,
-            outlineOnLight && styles.buttonOutlineOnLight,
-            disabled && styles.buttonDisabled,
-            withoutBackground && styles.buttonTransparent,
+            outline === true && styles.buttonOutline,
+            outlineOnLight === true && styles.buttonOutlineOnLight,
+            disabled === true && styles.buttonDisabled,
+            withoutBackground === true && styles.buttonTransparent,
             style,
           ]}
         >
-          {iconImage && <Image source={iconImage} />}
+          {iconImage != null && <Image source={iconImage} />}
           <Text
-            style={[styles.text, outlineOnLight && styles.textOutlineOnLight]}
+            style={[
+              styles.text,
+              outlineOnLight === true && styles.textOutlineOnLight,
+            ]}
           >
             {formattedTitle}
           </Text>

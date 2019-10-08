@@ -1,6 +1,5 @@
 // @flow
 
-// $FlowFixMe we have turned off this module in .flowconfig
 import {Sentry, SentrySeverity} from 'react-native-sentry'
 
 import {CONFIG} from '../config'
