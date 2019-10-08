@@ -27,7 +27,8 @@ describe('History API', () => {
 
     expect(result.transactions[0]).toMatchSnapshot({
       bestBlockNum: expect.any(Number),
-      lastUpdatedAt: expect.any(String), // this field may change (e.g. after restarting a node)
+      lastUpdatedAt: expect.any(String), // these fields may change (e.g. after restarting a node)
+      submittedAt: expect.any(String),
     })
   })
 
