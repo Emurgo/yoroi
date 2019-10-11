@@ -213,7 +213,7 @@
   "global.actions.dialogs.disableEasyConfirmationFirst.title": "Aksi gagal",
   "global.actions.dialogs.enableFingerprintsFirst.message": "Anda harus mengaktifkan biometric pada perangkat anda terlebih dahulu agar bisa menautkannya dengan aplikasi ini",
   "global.actions.dialogs.enableFingerprintsFirst.title": "Aksi gagal",
-  "global.actions.dialogs.enableSystemAuthFirst.message": "You probably disabled lock screen in your phone. You need to disable easy transaction confirmation first. Please set up you lock screen (PIN / Password / Pattern) on your phone and then restart application. After this action you should be able to disable lock screen on your phone and use this application",
+  "global.actions.dialogs.enableSystemAuthFirst.message": "Anda mungkin menonaktifkan layar kunci di telepon Anda. Anda harus menonaktifkan konfirmasi transaksi mudah terlebih dahulu. Silakan atur layar kunci Anda (PIN / Kata Sandi / Pola) pada ponsel Anda dan kemudian restart aplikasi. Setelah itu, Anda dapat menonaktifkan layar kunci di ponsel Anda dan menggunakan aplikasi ini",
   "global.actions.dialogs.enableSystemAuthFirst.title": "Kunci layar dinonaktifkan",
   "global.actions.dialogs.generalError.message": "Operasi yang diminta gagal. Ini yang kami ketahui: {message}",
   "global.actions.dialogs.generalError.title": "Error tidak terduga",
