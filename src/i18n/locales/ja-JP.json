@@ -225,7 +225,7 @@
   "global.actions.dialogs.logout.noButton": "いいえ",
   "global.actions.dialogs.logout.title": "ログアウト",
   "global.actions.dialogs.logout.yesButton": "はい",
-  "global.actions.dialogs.apiError.title": "API error",
+  "global.actions.dialogs.apiError.title": "APIエラー",
   "global.actions.dialogs.apiError.message": "Error received from api method call while sending transaction. Please try again later or check our Twitter account (https://twitter.com/YoroiWallet)",
   "global.actions.dialogs.networkError.message": "サーバーに接続できません。 インターネットの接続を確認してください。",
   "global.actions.dialogs.networkError.title": "ネットワークエラー",
