@@ -231,7 +231,7 @@
   "global.actions.dialogs.networkError.title": "Error jaringan",
   "global.actions.dialogs.pinMismatch.message": "PIN tidak cocok.",
   "global.actions.dialogs.pinMismatch.title": "PIN tidak valid",
-  "global.actions.dialogs.walletKeysInvalidated.message": "We detected that your biometrics in phone changed. As a result the easy transaction confirmation was disabled and transaction submitting is allowed only with master password. You can re-enable easy transactions confirmation in settings",
+  "global.actions.dialogs.walletKeysInvalidated.message": "Kami menemukan bahwa biometik anda di dalam telepon seluler berubah. Sebagai hasilnya, konfirmasi atas transaksi yang mudah menjadi cacat dan transaksi hanya bisa disubmit oleh master password. Anda dapat mengaktifkan kembali konfirmasi atas transaksi yang mudah di settings",
   "global.actions.dialogs.walletKeysInvalidated.title": "Biometric diubah",
   "global.actions.dialogs.wrongPinError.message": "PIN salah.",
   "global.actions.dialogs.wrongPinError.title": "PIN tidak valid",
