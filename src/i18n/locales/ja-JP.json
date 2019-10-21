@@ -226,7 +226,7 @@
   "global.actions.dialogs.logout.title": "ログアウト",
   "global.actions.dialogs.logout.yesButton": "はい",
   "global.actions.dialogs.apiError.title": "APIエラー",
-  "global.actions.dialogs.apiError.message": "Error received from api method call while sending transaction. Please try again later or check our Twitter account (https://twitter.com/YoroiWallet)",
+  "global.actions.dialogs.apiError.message": "トランザクション送信中にAPIメソッドコールからエラーを受け取りました。もういちどトランザクションを行ってください。公式Twitterのご確認もお願いします。(https://twitter.com/YoroiWallet)",
   "global.actions.dialogs.networkError.message": "サーバーに接続できません。 インターネットの接続を確認してください。",
   "global.actions.dialogs.networkError.title": "ネットワークエラー",
   "global.actions.dialogs.pinMismatch.message": "入力したPINが間違っています。",
