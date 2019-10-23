@@ -30,9 +30,19 @@ const SendScreenNavigator = createStackNavigator(
             style={styles.qrButton}
             onPress={() =>
               navigation.navigate(SEND_ROUTES.ADDRESS_READER_QR, {
-                onSuccess: (address) => {
-                  const handler = navigation.getParam('onScanAddress')
-                  handler && handler(address)
+                onSuccess: (param) => {
+                  if (param.substr(0, (param.indexOf(":") + 1)) == "cardano:" && param.indexOf("?") != -1 && param.indexOf("=" != -1)) {
+                    const address = param.substr(param.indexOf(":") + 1, param.indexOf("?") - param.indexOf(":") - 1)
+                    const amount = param.substr(param.indexOf("=") + 1)
+                    const handlerAddress = navigation.getParam('onScanAddress')
+                    const handlerAmount = navigation.getParam('onScanAmount')
+                    handlerAddress && handlerAddress(address)
+                    handlerAmount && handlerAmount(amount)
+                  }
+                  else {
+                    const handler = navigation.getParam('onScanAddress')
+                    handler && handler(param)
+                  }
                   navigation.navigate(SEND_ROUTES.MAIN)
                 },
               })

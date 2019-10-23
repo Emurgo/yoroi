@@ -227,6 +227,7 @@ class SendScreen extends Component<Props, State> {
       this.handleAmountChange(CONFIG.DEBUG.SEND_AMOUNT)
     }
     this.props.navigation.setParams({onScanAddress: this.handleAddressChange})
+    this.props.navigation.setParams({onScanAmount: this.handleAmountChange})
   }
 
   componentDidUpdate(prevProps, prevState) {
