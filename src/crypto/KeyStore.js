@@ -86,7 +86,7 @@ class KeyStore {
         assert.assert(password, 'Password is provided')
 
         // $FlowFixMe
-        return decryptData(data, password)
+        return await decryptData(data, password)
       }
 
       default:
@@ -188,14 +188,14 @@ class KeyStore {
     throw new Error('Unsupported platform')
   }
 
-  static encryptByMasterPassword(
+  static async encryptByMasterPassword(
     dataKey: string,
     masterKey: string,
     masterPassword: string,
   ) {
     assert.assert(masterPassword, 'Password is provided')
 
-    const encryptedMasterKey = encryptData(masterKey, masterPassword)
+    const encryptedMasterKey = await encryptData(masterKey, masterPassword)
 
     return encryptedMasterKey
   }
