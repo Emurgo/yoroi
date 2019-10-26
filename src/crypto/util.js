@@ -2,7 +2,8 @@
 
 import {BigNumber} from 'bignumber.js'
 import {mnemonicToEntropy, generateMnemonic} from 'bip39'
-import {HdWallet, Wallet, PasswordProtect} from 'react-native-cardano'
+import {HdWallet, Wallet} from 'react-native-cardano'
+import {encryptWithPassword, decryptWithPassword} from 'emip3js'
 import {randomBytes} from 'react-native-randombytes'
 import bs58 from 'bs58'
 import cryptoRandomString from 'crypto-random-string'
@@ -58,16 +59,16 @@ export const getAccountFromMasterKey = async (
   return _rethrow(Wallet.newAccount(wallet, accountIndex))
 }
 
-export const encryptData = async (
+export const encryptData = (
   plaintextHex: string,
   secretKey: string,
-): Promise<string> => {
+): string => {
   assert.assert(!!plaintextHex, 'encrypt:: !!plaintextHex')
   assert.assert(!!secretKey, 'encrypt:: !!secretKey')
   const secretKeyHex = Buffer.from(secretKey, 'utf8').toString('hex')
   const saltHex = cryptoRandomString(2 * 32)
   const nonceHex = cryptoRandomString(2 * 12)
-  const ciphertext = await PasswordProtect.encryptWithPassword(
+  const ciphertext = encryptWithPassword(
     secretKeyHex,
     saltHex,
     nonceHex,
@@ -76,7 +77,7 @@ export const encryptData = async (
   return ciphertext
 }
 
-export const decryptData = async (
+export const decryptData = (
   ciphertext: string,
   secretKey: string,
 ): Promise<string> => {
@@ -84,7 +85,7 @@ export const decryptData = async (
   assert.assert(!!secretKey, 'decrypt:: !!secretKey')
   const secretKeyHex = Buffer.from(secretKey, 'utf8').toString('hex')
   try {
-    return await PasswordProtect.decryptWithPassword(secretKeyHex, ciphertext)
+    return decryptWithPassword(secretKeyHex, ciphertext)
   } catch (e) {
     if (e.message === KNOWN_ERROR_MSG.DECRYPT_FAILED) {
       throw new WrongPassword()

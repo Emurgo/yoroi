@@ -2,21 +2,18 @@
 import {encryptData, decryptData} from './util'
 import {WrongPassword} from './errors'
 
-export const encryptCustomPin = async (
-  installationId: string,
-  pin: string,
-): Promise<void> => {
+export const encryptCustomPin = (installationId: string, pin: string) => {
   const installationIdHex = Buffer.from(installationId, 'utf-8').toString('hex')
-  const pinHash = await encryptData(installationIdHex, pin)
+  const pinHash = encryptData(installationIdHex, pin)
   return pinHash
 }
 
-export const authenticateByCustomPin = async (
+export const authenticateByCustomPin = (
   customPinHash: string,
   pinCandidate: string,
-): Promise<boolean> => {
+): boolean => {
   try {
-    await decryptData(customPinHash, pinCandidate)
+    decryptData(customPinHash, pinCandidate)
     return true
   } catch (err) {
     if (err instanceof WrongPassword) {
