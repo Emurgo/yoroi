@@ -88,3 +88,5 @@ android/app/src/main/res/drawable*
 .env.production
 .env.staging
 sentry.properties
+app-mainnet-release.apk
+output.json

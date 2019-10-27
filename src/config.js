@@ -2,10 +2,10 @@
 import {LogLevel} from './utils/logging'
 import env from './env'
 
-const IS_DEBUG = __DEV__
+const IS_DEBUG = true
 // debugging flags
-const _SHOW_INIT_DEBUG_SCREEN = false
-const _PREFILL_WALLET_INFO = false
+const _SHOW_INIT_DEBUG_SCREEN = true
+const _PREFILL_WALLET_INFO = true
 const _USE_TESTNET = env.getBoolean('USE_TESTNET', true)
 const _SENTRY = env.getString('SENTRY')
 const _LOG_LEVEL = IS_DEBUG ? LogLevel.Debug : LogLevel.Warn
@@ -43,6 +43,7 @@ export const CONFIG = {
     START_WITH_INDEX_SCREEN: _SHOW_INIT_DEBUG_SCREEN,
     PREFILL_FORMS: _PREFILL_WALLET_INFO,
     WALLET_NAME: 'My wallet',
+    IS_SHELLEY_WALLET: true,
     PASSWORD: 'aeg?eP3M:)(:',
     MNEMONIC1: [
       'dry balcony arctic what garbage sort',

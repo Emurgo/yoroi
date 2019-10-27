@@ -5,13 +5,15 @@ import {createStackNavigator, createSwitchNavigator} from 'react-navigation'
 import HeaderBackButton from './components/UiKit/HeaderBackButton'
 import WalletInitNavigator from './components/WalletInit/WalletInitNavigator'
 import TxHistoryNavigator from './components/TxHistory/TxHistoryNavigator'
+import DelegationNavigator from './components/Delegation/DelegationNavigator'
+import DelegationCenter from './components/Delegation/DelegationCenter'
 import SendScreenNavigator from './components/Send/SendScreenNavigator'
 import ReceiveScreenNavigator from './components/Receive/ReceiveScreenNavigator'
 import FirstRunNavigator from './components/FirstRun/FirstRunNavigator'
 import IndexScreen from './components/IndexScreen'
 import SplashScreen from './components/SplashScreen'
 import AppStartScreen from './components/Login/AppStartScreen'
-import {WALLET_ROUTES, ROOT_ROUTES} from './RoutesList'
+import {WALLET_ROUTES, SHELLEY_WALLET_ROUTES, ROOT_ROUTES} from './RoutesList'
 import BiometricAuthScreen from './components/Send/BiometricAuthScreen'
 import CustomPinLogin from './components/Login/CustomPinLogin'
 import {
@@ -35,6 +37,21 @@ const WalletNavigator = createStackNavigator(
   },
 )
 
+const ShelleyWalletNavigator = createStackNavigator(
+  {
+    [SHELLEY_WALLET_ROUTES.DELEGATION_SUMMARY]: DelegationNavigator,
+    [SHELLEY_WALLET_ROUTES.STAKING_CENTER]: DelegationCenter,
+  },
+  {
+    // TODO(ppershing): initialRouteName
+    // works reversed. Figure out why!
+    initialRouteName: SHELLEY_WALLET_ROUTES.DELEGATION_SUMMARY,
+    navigationOptions: {
+      header: null,
+    },
+  },
+)
+
 const AppNavigator = createSwitchNavigator(
   {
     [ROOT_ROUTES.SPLASH]: SplashScreen,
@@ -43,6 +60,7 @@ const AppNavigator = createSwitchNavigator(
     [ROOT_ROUTES.NEW_WALLET]: WalletInitNavigator,
     [ROOT_ROUTES.BIO_AUTH]: BiometricAuthScreen,
     [ROOT_ROUTES.WALLET]: WalletNavigator,
+    [ROOT_ROUTES.SHELLEY_WALLET]: ShelleyWalletNavigator,
     [ROOT_ROUTES.LOGIN]: createStackNavigator(
       {
         [ROOT_ROUTES.LOGIN]: {
