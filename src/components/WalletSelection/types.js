@@ -6,4 +6,5 @@ export type Wallet = {
   id: string,
   name: string,
   balance: BigNumber,
+  isShelleyWallet: boolean,
 }

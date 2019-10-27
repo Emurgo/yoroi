@@ -67,11 +67,14 @@ const handleWalletConfirmation = ({navigation, createWallet}) => async () => {
   const mnemonic = navigation.getParam('mnemonic')
   const password = navigation.getParam('password')
   const name = navigation.getParam('name')
+  const isShelleyWallet = navigation.getParam('isShelleyWallet')
   assert.assert(!!mnemonic, 'handleWalletConfirmation:: mnemonic')
   assert.assert(!!password, 'handleWalletConfirmation:: password')
   assert.assert(!!name, 'handleWalletConfirmation:: name')
+  assert.assert(!!isShelleyWallet, 'handleWalletConfirmation:: shelley wallet')
 
-  await createWallet(name, mnemonic, password)
+  await createWallet(name, mnemonic, password, isShelleyWallet)
+  // TODO: Update this to consider Shelley wallet
   navigation.navigate(ROOT_ROUTES.WALLET)
 }
 

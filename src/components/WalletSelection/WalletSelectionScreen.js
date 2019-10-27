@@ -88,7 +88,8 @@ export default injectIntl(
       openWallet: ({navigation, intl}) => async (wallet) => {
         try {
           await walletManager.openWallet(wallet.id)
-          navigation.navigate(ROOT_ROUTES.WALLET)
+          const route = wallet.isShelleyWallet ? ROOT_ROUTES.SHELLEY_WALLET : ROOT_ROUTES.WALLET
+          navigation.navigate(route)
         } catch (e) {
           if (e instanceof SystemAuthDisabled) {
             await walletManager.closeWallet()

@@ -57,6 +57,11 @@ export const WALLET_ROUTES = {
   SETTINGS: SETTINGS_ROUTES.MAIN,
 }
 
+export const SHELLEY_WALLET_ROUTES = {
+  STAKING_CENTER: 'staking-center',
+  DELEGATION_SUMMARY: 'delegation-summary',
+}
+
 const INDEX_SCREEN = 'screens-index'
 const LOGIN_SCREEN = 'login'
 const INIT_SCREEN = CONFIG.DEBUG.START_WITH_INDEX_SCREEN
@@ -72,5 +77,6 @@ export const ROOT_ROUTES = {
   FIRST_RUN: 'first-run',
   NEW_WALLET: 'new-wallet',
   WALLET: 'app-root',
+  SHELLEY_WALLET: 'app-root-shelley',
   INIT: INIT_SCREEN,
 }

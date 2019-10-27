@@ -44,6 +44,8 @@ export class Wallet {
   // $FlowFixMe null
   _id: string = null
 
+  _isShelleyWallet: boolean = false
+
   _isEasyConfirmationEnabled: boolean = false
 
   // $FlowFixMe null
@@ -151,7 +153,7 @@ export class Wallet {
     this._externalChain.addSubscriberToNewAddresses(this.notify)
   }
 
-  async _create(mnemonic: string, newPassword: string) {
+  async _create(mnemonic: string, newPassword: string, isShelleyWallet: boolean) {
     Logger.info('create wallet')
     this._id = uuid.v4()
     assert.assert(!this._isInitialized, 'createWallet: !isInitialized')
@@ -162,6 +164,8 @@ export class Wallet {
       masterKey,
       newPassword,
     )
+
+    this._isShelleyWallet = isShelleyWallet
 
     this._transactionCache = new TransactionCache()
 
@@ -410,6 +414,7 @@ export class Wallet {
       internalChain: this._internalChain.toJSON(),
       externalChain: this._externalChain.toJSON(),
       transactionCache: this._transactionCache.toJSON(),
+      isShelleyWallet: this._isShelleyWallet,
       isEasyConfirmationEnabled: this._isEasyConfirmationEnabled,
     }
   }
@@ -438,6 +443,8 @@ class WalletManager {
     const result = await Promise.all(
       keys.map((key) => storage.read(`/wallet/${key}`)),
     )
+
+    Logger.debug('result::_listWallets', result)
 
     return result
   }
@@ -535,6 +542,11 @@ class WalletManager {
     return this._wallet.isUsedAddressIndex
   }
 
+  get isShelleyWallet() {
+    if (!this._wallet) return false
+    return this._wallet._isShelleyWallet
+  }
+
   async generateNewUiReceiveAddressIfNeeded() {
     if (!this._wallet) return
     await this.abortWhenWalletCloses(
@@ -545,6 +557,7 @@ class WalletManager {
   generateNewUiReceiveAddress() {
     if (!this._wallet) return false
     const wallet = this._wallet
+    Logger.debug('generateNewUIReceiveAddress', wallet._isShelleyWallet)
 
     const didGenerateNew = wallet.generateNewUiReceiveAddress()
     if (didGenerateNew) {
@@ -639,15 +652,16 @@ class WalletManager {
     name: string,
     mnemonic: string,
     password: string,
+    isShelleyWallet: boolean,
   ): Promise<Wallet> {
     // Ignore id & name for now
     const wallet = new Wallet()
-    const id = await wallet._create(mnemonic, password)
+    const id = await wallet._create(mnemonic, password, isShelleyWallet)
 
     this._id = id
     this._wallets = {
       ...this._wallets,
-      [id]: {id, name, isEasyConfirmationEnabled: false},
+      [id]: {id, name, isShelleyWallet, isEasyConfirmationEnabled: false},
     }
 
     this._wallet = wallet
@@ -658,6 +672,9 @@ class WalletManager {
       this._closeReject = reject
     })
     this._notify()
+
+    Logger.debug('Wallet Data::createWallet', wallet)
+
     return wallet
   }
 
@@ -672,6 +689,7 @@ class WalletManager {
     wallet._id = id
     this._wallet = wallet
     this._id = id
+
     wallet.subscribe(this._notify)
     this._closePromise = new Promise((resolve, reject) => {
       this._closeReject = reject
@@ -681,6 +699,9 @@ class WalletManager {
     if (wallet._isEasyConfirmationEnabled) {
       await this.ensureKeysValidity()
     }
+
+    // Logger.debug('Wallet Data::openWallet', data)
+    Logger.debug('openWallet::wallet::isShelleyWallet', wallet._isShelleyWallet)
 
     return wallet
   }
@@ -694,6 +715,9 @@ class WalletManager {
     assert.assert(wallet._id, 'saveState:: wallet._id')
     /* :: if (!this._wallet) throw 'assert' */
     const data = wallet.toJSON()
+
+    Logger.debug('saveState::isShelleyWallet', data.isShelleyWallet)
+
     await storage.write(`/wallet/${wallet._id}/data`, data)
   }
 
