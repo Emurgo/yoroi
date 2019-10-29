@@ -3,6 +3,7 @@ package com.emurgo;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import io.emurgo.chainlibs.ChainLibsPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import io.sentry.RNSentryPackage;
@@ -36,6 +37,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+            new ChainLibsPackage(),
         new RNDeviceInfo(),
         new AsyncStoragePackage(),
         new RNSentryPackage(),
