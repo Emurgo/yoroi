@@ -19,6 +19,8 @@ import {SEND_ROUTES} from '../../RoutesList'
 
 import styles from './styles/QrButton.style'
 
+import { pastedFormatter } from './amountUtils'
+
 const SendScreenNavigator = createStackNavigator(
   {
     [SEND_ROUTES.MAIN]: {
@@ -30,19 +32,25 @@ const SendScreenNavigator = createStackNavigator(
             style={styles.qrButton}
             onPress={() =>
               navigation.navigate(SEND_ROUTES.ADDRESS_READER_QR, {
-                onSuccess: (param) => {
-                  if (param.substr(0, (param.indexOf(":") + 1)) == "cardano:" && param.indexOf("?") != -1 && param.indexOf("=" != -1)) {
-                    const address = param.substr(param.indexOf(":") + 1, param.indexOf("?") - param.indexOf(":") - 1)
-                    const amount = param.substr(param.indexOf("=") + 1)
-                    const handlerAddress = navigation.getParam('onScanAddress')
-                    const handlerAmount = navigation.getParam('onScanAmount')
-                    handlerAddress && handlerAddress(address)
-                    handlerAmount && handlerAmount(amount)
+                onSuccess: (stringQR) => {
+                  let regex = /(cardano):([a-zA-Z1-9]\w+)\?/;
+
+                  if (regex.test(stringQR)) {
+                    let address = stringQR.match(regex)[2];
+                    let params = getParams(stringQR.substr(stringQR.indexOf("?")))
+
+                    if ('amount' in params) {
+                      setAddress(address, navigation);
+                      setAmount(params.amount, navigation);
+                    }
+                    else {
+                      setAddress(address, navigation);
+                    }
                   }
                   else {
-                    const handler = navigation.getParam('onScanAddress')
-                    handler && handler(param)
+                    setAddress(stringQR, navigation);
                   }
+
                   navigation.navigate(SEND_ROUTES.MAIN)
                 },
               })
@@ -74,5 +82,25 @@ const SendScreenNavigator = createStackNavigator(
     ...defaultStackNavigatorOptions,
   },
 )
+
+function getParams(params) {
+  let query = params.substr(1);
+  let result = {};
+  query.split("&").forEach(function (part) {
+    let item = part.split("=");
+    result[item[0]] = decodeURIComponent(item[1]);
+  });
+  return result;
+}
+
+function setAddress(address, navigation) {
+  const handlerAddress = navigation.getParam('onScanAddress');
+  handlerAddress && handlerAddress(address)
+}
+
+function setAmount(amount, navigation) {
+  const handlerAmount = navigation.getParam('onScanAmount')
+  handlerAmount && handlerAmount(pastedFormatter(amount))
+}
 
 export default SendScreenNavigator
