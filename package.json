@@ -14,7 +14,7 @@
     "purge-translations": "rimraf ./translations/messages",
     "android-bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "inhibit-warnings": "react-native-inhibit-warnings",
-    "postinstall": "react-native-inhibit-warnings"
+    "postinstall": "react-native-inhibit-warnings && npx jetify"
   },
   "dependencies": {
     "@babel/cli": "7.2.3",
