@@ -5,12 +5,9 @@ target 'emurgo' do
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
   # use_frameworks!
 
-  pod 'react-native-chain-libs', :path => '../node_modules/react-native-chain-libs'
-
   target 'emurgoTests' do
     inherit! :search_paths
     # Pods for testing
   end
 
 end
-
