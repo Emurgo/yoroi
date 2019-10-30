@@ -19,7 +19,7 @@ import {SEND_ROUTES} from '../../RoutesList'
 
 import styles from './styles/QrButton.style'
 
-import { pastedFormatter } from './amountUtils'
+import {pastedFormatter} from './amountUtils'
 
 const SendScreenNavigator = createStackNavigator(
   {
@@ -33,22 +33,26 @@ const SendScreenNavigator = createStackNavigator(
             onPress={() =>
               navigation.navigate(SEND_ROUTES.ADDRESS_READER_QR, {
                 onSuccess: (stringQR) => {
-                  let regex = /(cardano):([a-zA-Z1-9]\w+)\?/;
+                  const regex = /(cardano):([a-zA-Z1-9]\w+)\?/
 
-                  if (regex.test(stringQR)) {
-                    let address = stringQR.match(regex)[2];
-                    let params = getParams(stringQR.substr(stringQR.indexOf("?")))
+                  if (regex.test(stringQR)) 
+                  {
+                    const address = stringQR.match(regex)[2]
+                    const params = getParams(stringQR.substr(stringQR.indexOf('?')))
 
-                    if ('amount' in params) {
-                      setAddress(address, navigation);
-                      setAmount(params.amount, navigation);
+                    if ('amount' in params) 
+                    {
+                      setAddress(address, navigation)
+                      setAmount(params.amount, navigation)
+                    } 
+                    else 
+                    {
+                      setAddress(address, navigation)
                     }
-                    else {
-                      setAddress(address, navigation);
-                    }
-                  }
-                  else {
-                    setAddress(stringQR, navigation);
+                  } 
+                  else 
+                  {
+                    setAddress(stringQR, navigation)
                   }
 
                   navigation.navigate(SEND_ROUTES.MAIN)
@@ -84,17 +88,17 @@ const SendScreenNavigator = createStackNavigator(
 )
 
 function getParams(params) {
-  let query = params.substr(1);
-  let result = {};
-  query.split("&").forEach(function (part) {
-    let item = part.split("=");
-    result[item[0]] = decodeURIComponent(item[1]);
-  });
+  const query = params.substr(1)
+  const result = {}
+  query.split('&').forEach(part => {
+    const item = part.split('=')
+    result[item[0]] = decodeURIComponent(item[1])
+  })
   return result;
 }
 
 function setAddress(address, navigation) {
-  const handlerAddress = navigation.getParam('onScanAddress');
+  const handlerAddress = navigation.getParam('onScanAddress')
   handlerAddress && handlerAddress(address)
 }
 
