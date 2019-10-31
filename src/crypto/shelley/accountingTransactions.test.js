@@ -3,18 +3,13 @@ import jestSetup from '../../jestSetup'
 
 import {BigNumber} from 'bignumber.js'
 import {Address, PrivateKey} from 'react-native-chain-libs'
-import {
-  buildTransaction,
-  signTransaction,
-} from './accountingTransactions'
-import {
-  getTxInputTotal,
-  getTxOutputTotal,
-} from './utils'
+import {buildTransaction, signTransaction} from './accountingTransactions'
+import {getTxInputTotal, getTxOutputTotal} from './utils'
 
 jestSetup.setup()
 
-const addressStr = 'ca1qw8mq0p65pf028qgd32t6szeatfd9epx4jyl5jeuuswtlkyqpdguqeh83d4'
+const addressStr =
+  'ca1qw8mq0p65pf028qgd32t6szeatfd9epx4jyl5jeuuswtlkyqpdguqeh83d4'
 
 // just a simple test to check if chain-libs has been correctly loaded
 test('can create an address object from an address string', async () => {
@@ -27,7 +22,7 @@ test('can create an address object from an address string', async () => {
 describe('Create unsigned TX for account', () => {
   it('Should create a valid transaction', async () => {
     const senderKey = PrivateKey.from_bech32(
-      'ed25519_sk1ahfetf02qwwg4dkq7mgp4a25lx5vh9920cr5wnxmpzz9906qvm8qwvlts0'
+      'ed25519_sk1ahfetf02qwwg4dkq7mgp4a25lx5vh9920cr5wnxmpzz9906qvm8qwvlts0',
     )
 
     const unsignedTxResponse = await buildTransaction(
@@ -43,11 +38,7 @@ describe('Create unsigned TX for account', () => {
     expect(outputSum.toString()).toEqual('2000000')
     expect(inputSum.minus(outputSum).toString()).toEqual('155383')
 
-    const signedTx = await signTransaction(
-      unsignedTxResponse,
-      0,
-      senderKey,
-    )
+    const signedTx = await signTransaction(unsignedTxResponse, 0, senderKey)
 
     // AuthenticatedTransaction.witnesses() API is not yet available
     // const witnesses = signedTx.witnesses()

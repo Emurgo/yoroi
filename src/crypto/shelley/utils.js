@@ -1,11 +1,12 @@
 // @flow
 
+// TODO
 // import {Transaction} from 'react-native-chain-libs'
 import {BigNumber} from 'bignumber.js'
 
 export function getTxInputTotal(
   // tx: Transaction,
-  tx
+  tx: any,
 ): BigNumber {
   let sum = new BigNumber(0)
 
@@ -20,7 +21,7 @@ export function getTxInputTotal(
 
 export function getTxOutputTotal(
   // tx: Transaction,
-  tx
+  tx: any,
 ): BigNumber {
   let sum = new BigNumber(0)
 

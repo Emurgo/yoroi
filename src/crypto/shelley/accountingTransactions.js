@@ -120,7 +120,7 @@ export const buildTransaction = async (
 
 export const signTransaction = async (
   // unsignedTx: Transaction, // TODO
-  unsignedTx: Any,
+  unsignedTx: any,
   accountCounter: number,
   accountPrivateKey: PrivateKey,
 ): AuthenticatedTransaction => {
