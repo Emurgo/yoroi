@@ -40,7 +40,9 @@ export const buildTransaction = async (
   if (amount.gt(accountBalance)) {
     throw new InsufficientFunds()
   }
-  const sourceAccount = await Account.single_from_public_key(sender)
+
+  const sourceAddress = await Address.single_from_public_key(sender)
+  const sourceAccount = await Account.from_address(sourceAddress)
 
   // TODO: add config parameters
   const feeAlgorithm = await Fee.linear_fee(
@@ -102,7 +104,8 @@ export const buildTransaction = async (
 }
 
 export const signTransaction = async (
-  unsignedTx: Transaction,
+  // unsignedTx: Transaction, // TODO
+  unsignedTx: Any,
   accountCounter: number,
   accountPrivateKey: PrivateKey,
 ): AuthenticatedTransaction => {
