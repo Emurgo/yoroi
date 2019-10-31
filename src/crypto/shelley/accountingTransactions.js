@@ -45,13 +45,14 @@ export const buildTransaction = async (
     throw new InsufficientFunds()
   }
 
-  const sourceAddress = await Address.single_from_public_key(
+  // Account.from_public_key API is not yet available, so we create an
+  // account address first
+  const sourceAddress = await Address.account_from_public_key(
     sender,
     parseInt(CONFIG.addressDiscrimination.production, 10),
   )
   const sourceAccount = await Account.from_address(sourceAddress)
 
-  // TODO: add config parameters
   const feeAlgorithm = await Fee.linear_fee(
     await Value.from_str(CONFIG.linearFee.constant),
     await Value.from_str(CONFIG.linearFee.coefficient),
@@ -74,16 +75,21 @@ export const buildTransaction = async (
       await Value.from_str('1'),
     )
 
+    // Fee.calculate() is not implemented yet, we compute from txBuilder
+    const calculatedFee = await fakeTxBuilder.estimate_fee(feeAlgorithm)
+
     const tx = await fakeTxBuilder.seal_with_output_policy(
       feeAlgorithm,
       await OutputPolicy.forget(),
     )
-    // TODO: calculate is not implemented yet
-    const calculatedFee = await feeAlgorithm.calculate(tx)
+
+    // const calculatedFee = await feeAlgorithm.calculate(tx)
     if (calculatedFee == null) {
       throw new InsufficientFunds()
     }
     fee = new BigNumber(calculatedFee.to_str())
+
+    tx.free()
   }
 
   const newAmount = amount.plus(fee)
@@ -107,6 +113,8 @@ export const buildTransaction = async (
     feeAlgorithm,
     await OutputPolicy.forget(),
   )
+
+  sourceAccount.free()
   return tx
 }
 
