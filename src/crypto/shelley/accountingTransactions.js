@@ -26,6 +26,10 @@ const CONFIG = {
     coefficient: '1',
     certificate: '4',
   },
+  addressDiscrimination: {
+    production: '0',
+    test: '1',
+  },
   genesisHash:
     'adbdd5ede31637f6c9bad5c271eec0bc3d0cb9efb86a5b913bb55cba549d0770',
 }
@@ -41,7 +45,10 @@ export const buildTransaction = async (
     throw new InsufficientFunds()
   }
 
-  const sourceAddress = await Address.single_from_public_key(sender)
+  const sourceAddress = await Address.single_from_public_key(
+    sender,
+    parseInt(CONFIG.addressDiscrimination.production, 10),
+  )
   const sourceAccount = await Account.from_address(sourceAddress)
 
   // TODO: add config parameters
