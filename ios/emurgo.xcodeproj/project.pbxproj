@@ -250,6 +250,13 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNCardano;
 		};
+		2ECF0579236B7EE800444881 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2ECF0575236B7EE800444881 /* ChainLibs.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = ChainLibs;
+		};
 		2EF1208B22795E47007BE6F5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2EF1208522795E47007BE6F5 /* RNSentry.xcodeproj */;
@@ -544,6 +551,7 @@
 		2E3AA48E22EAB99F0066F8A1 /* RNCAsyncStorage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCAsyncStorage.xcodeproj; path = "../node_modules/@react-native-community/async-storage/ios/RNCAsyncStorage.xcodeproj"; sourceTree = "<group>"; };
 		2E3E7D012298ACEA00D5C487 /* emurgo-staging.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "emurgo-staging.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E5B414122A8B26500BE1FC1 /* Staging-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Staging-Info.plist"; sourceTree = "<group>"; };
+		2ECF0575236B7EE800444881 /* ChainLibs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ChainLibs.xcodeproj; path = "../node_modules/react-native-chain-libs/ios/ChainLibs.xcodeproj"; sourceTree = "<group>"; };
 		2EF1204722795CAD007BE6F5 /* libSentry.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSentry.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EF1204922795CAD007BE6F5 /* libSentryReactNative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSentryReactNative.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EF1208322795DE3007BE6F5 /* libSentryReactNative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSentryReactNative.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -847,6 +855,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		2ECF0576236B7EE800444881 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2ECF057A236B7EE800444881 /* libChainLibs.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		2EF1208622795E47007BE6F5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -917,6 +933,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				2ECF0575236B7EE800444881 /* ChainLibs.xcodeproj */,
 				2EFC8FEF2305E12E00430A87 /* RNDeviceInfo.xcodeproj */,
 				2E3AA48E22EAB99F0066F8A1 /* RNCAsyncStorage.xcodeproj */,
 				2EF1208522795E47007BE6F5 /* RNSentry.xcodeproj */,
@@ -1208,6 +1225,10 @@
 					ProjectRef = CDE15259840049359AA0828C /* BVLinearGradient.xcodeproj */;
 				},
 				{
+					ProductGroup = 2ECF0576236B7EE800444881 /* Products */;
+					ProjectRef = 2ECF0575236B7EE800444881 /* ChainLibs.xcodeproj */;
+				},
+				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
 					ProjectRef = 00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */;
 				},
@@ -1477,6 +1498,13 @@
 			fileType = archive.ar;
 			path = libRNCardano.a;
 			remoteRef = 2EBA2B1422EA877F00BF8A5B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2ECF057A236B7EE800444881 /* libChainLibs.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libChainLibs.a;
+			remoteRef = 2ECF0579236B7EE800444881 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		2EF1208C22795E47007BE6F5 /* libRNSentry.a */ = {
