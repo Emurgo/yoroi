@@ -132,6 +132,7 @@
   "components.settings.walletsettingscreen.tabTitle": "Кошелек",
   "components.settings.walletsettingscreen.title": "Настройки",
   "components.settings.walletsettingscreen.walletName": "Имя кошелька",
+  "components.stakingcenter.title": "!!!Staking Center",
   "components.txhistory.txdetails.addressPrefixChange": "/изменить",
   "components.txhistory.txdetails.addressPrefixNotMine": "не моего",
   "components.txhistory.txdetails.addressPrefixReceive": "/{idx}",

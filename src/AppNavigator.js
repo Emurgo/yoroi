@@ -5,8 +5,8 @@ import {createStackNavigator, createSwitchNavigator} from 'react-navigation'
 import HeaderBackButton from './components/UiKit/HeaderBackButton'
 import WalletInitNavigator from './components/WalletInit/WalletInitNavigator'
 import TxHistoryNavigator from './components/TxHistory/TxHistoryNavigator'
-import DelegationNavigator from './components/Delegation/DelegationNavigator'
-import DelegationCenter from './components/Delegation/DelegationCenter'
+import DelegationNavigatorSummary from './components/Delegation/DelegationNavigatorSummary'
+import DelegationNavigatorCenter from './components/Delegation/DelegationNavigatorCenter'
 import SendScreenNavigator from './components/Send/SendScreenNavigator'
 import ReceiveScreenNavigator from './components/Receive/ReceiveScreenNavigator'
 import FirstRunNavigator from './components/FirstRun/FirstRunNavigator'
@@ -39,8 +39,8 @@ const WalletNavigator = createStackNavigator(
 
 const ShelleyWalletNavigator = createStackNavigator(
   {
-    [SHELLEY_WALLET_ROUTES.DELEGATION_SUMMARY]: DelegationNavigator,
-    [SHELLEY_WALLET_ROUTES.STAKING_CENTER]: DelegationCenter,
+    [SHELLEY_WALLET_ROUTES.DELEGATION_SUMMARY]: DelegationNavigatorSummary,
+    [SHELLEY_WALLET_ROUTES.STAKING_CENTER]: DelegationNavigatorCenter,
   },
   {
     // TODO(ppershing): initialRouteName

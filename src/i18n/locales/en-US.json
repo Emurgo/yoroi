@@ -132,6 +132,7 @@
   "components.settings.walletsettingscreen.tabTitle": "Wallet",
   "components.settings.walletsettingscreen.title": "Settings",
   "components.settings.walletsettingscreen.walletName": "Wallet name",
+  "components.stakingcenter.title": "!!!Staking Center",
   "components.txhistory.txdetails.addressPrefixChange": "/change",
   "components.txhistory.txdetails.addressPrefixNotMine": "not mine",
   "components.txhistory.txdetails.addressPrefixReceive": "/{idx}",
