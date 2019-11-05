@@ -1,43 +1,41 @@
 // @flow
 import React from 'react'
+import {CONFIG} from '../../config'
 import {View, WebView} from 'react-native'
 import {compose, withHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
-import type {IntlShape} from "react-intl";
-import type {NavigationScreenProp, NavigationState} from "react-navigation";
+import type {IntlShape} from 'react-intl';
+import type {NavigationScreenProp, NavigationState} from 'react-navigation';
 
 import type {ComponentType} from 'react'
+import {withNavigationTitle} from "../../utils/renderUtils";
 
 const messages = defineMessages({
-  header: {
-    id: 'components.walletselection.walletselectionscreen.header',
-    defaultMessage: '!!!Your wallets',
+  title: {
+    id: 'components.stakingcenter.title',
+    defaultMessage: '!!!Staking Center',
+    description: 'some desc',
   },
-  addWalletButton: {
-    id: 'components.walletselection.walletselectionscreen.addWalletButton',
-    defaultMessage: '!!!Add wallet',
-  },
+  // header: {
+  //   id: 'components.walletselection.walletselectionscreen.header',
+  //   defaultMessage: '!!!Your wallets',
+  // },
+//   addWalletButton: {
+//     id: 'components.walletselection.walletselectionscreen.addWalletButton',
+//     defaultMessage: '!!!Add wallet',
+//   },
 })
-
-
-// export default class Maps extends Component {
-//   render() {
-//     return (
-//       <View style={{ flex: 1, backgroundColor: "red" }}>
-//         <WebView source={{ uri: "https://twitter.com" }} />
-//       </View>
-//     );
-//   }
-// }
 
 const DelegationCenter = ({navigation, intl}) => (
       <View style={{ flex: 1 }}>
-        <WebView source={{ uri: "https://seiza-website.emurgo.io/staking/list?sortBy=REVENUE&searchText=&performance[]=0&performance[]=100&userAda=1000" }} />
+        <WebView source={{uri: 'http://localhost:3000/staking-simple/list?sortBy=REVENUE&searchText=&performance[]=0&performance[]=100'}} />
       </View>
 )
 
 export default injectIntl(
-  (compose()(DelegationCenter): ComponentType<{
+  (compose(
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+  )(DelegationCenter): ComponentType<{
     intl: IntlShape,
     navigation: NavigationScreenProp<NavigationState>,
   }>),

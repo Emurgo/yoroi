@@ -14,7 +14,7 @@ import {
 
 import styles from '../TxHistory/styles/SettingsButton.style'
 
-const DelegationNavigator = createStackNavigator(
+const DelegationNavigatorSummary = createStackNavigator(
   {
     [SHELLEY_WALLET_ROUTES.DELEGATION_SUMMARY]: {
       screen: DelegationSummary,
@@ -46,4 +46,4 @@ const DelegationNavigator = createStackNavigator(
   },
 )
 
-export default DelegationNavigator
+export default DelegationNavigatorSummary
