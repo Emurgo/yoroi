@@ -21,19 +21,19 @@ test('can create an address object from an address string', async () => {
 
 describe('Create unsigned TX for account', () => {
   it('Should create a valid transaction', async () => {
-    const senderKey = PrivateKey.from_bech32(
+    const senderKey = await PrivateKey.from_bech32(
       'ed25519_sk1ahfetf02qwwg4dkq7mgp4a25lx5vh9920cr5wnxmpzz9906qvm8qwvlts0',
     )
 
     const unsignedTxResponse = await buildTransaction(
-      senderKey.to_public(),
+      await senderKey.to_public(),
       'ca1qw8mq0p65pf028qgd32t6szeatfd9epx4jyl5jeuuswtlkyqpdguqeh83d4',
       new BigNumber(2000000),
       new BigNumber(5000000),
     )
 
-    const inputSum = getTxInputTotal(unsignedTxResponse)
-    const outputSum = getTxOutputTotal(unsignedTxResponse)
+    const inputSum = await getTxInputTotal(unsignedTxResponse)
+    const outputSum = await getTxOutputTotal(unsignedTxResponse)
     expect(inputSum.toString()).toEqual('2155383')
     expect(outputSum.toString()).toEqual('2000000')
     expect(inputSum.minus(outputSum).toString()).toEqual('155383')

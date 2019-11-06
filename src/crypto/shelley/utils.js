@@ -1,33 +1,32 @@
 // @flow
 
-// TODO
-// import {Transaction} from 'react-native-chain-libs'
+import {Transaction} from 'react-native-chain-libs'
 import {BigNumber} from 'bignumber.js'
 
-export function getTxInputTotal(
-  // tx: Transaction,
-  tx: any,
-): BigNumber {
+export async function getTxInputTotal(
+  tx: Transaction,
+): Promise<BigNumber> {
   let sum = new BigNumber(0)
 
-  const inputs = tx.inputs()
-  for (let i = 0; i < inputs.size(); i++) {
-    const input = inputs.get(i)
+  const inputs = await tx.inputs()
+  for (let i = 0; i < await inputs.size(); i++) {
+    const input = await inputs.get(i)
+    // todo: input.value() not yet implemented
     const value = new BigNumber(input.value().to_str())
     sum = sum.plus(value)
   }
   return sum
 }
 
-export function getTxOutputTotal(
-  // tx: Transaction,
-  tx: any,
-): BigNumber {
+export async function getTxOutputTotal(
+  tx: Transaction,
+): Promise<BigNumber> {
   let sum = new BigNumber(0)
 
-  const outputs = tx.outputs()
-  for (let i = 0; i < outputs.size(); i++) {
+  const outputs = await tx.outputs()
+  for (let i = 0; i < await outputs.size(); i++) {
     const output = outputs.get(i)
+    // todo: input.value() not yet implemented
     const value = new BigNumber(output.value().to_str())
     sum = sum.plus(value)
   }

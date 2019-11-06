@@ -9,6 +9,7 @@ import {
   Input,
   Value,
   Fee,
+  Transaction,
   TransactionFinalizer,
   PrivateKey,
   PublicKey,
@@ -19,44 +20,30 @@ import {
   AuthenticatedTransaction,
 } from 'react-native-chain-libs'
 
-// TODO: move to external config file
-const CONFIG = {
-  linearFee: {
-    constant: '155381',
-    coefficient: '1',
-    certificate: '4',
-  },
-  addressDiscrimination: {
-    production: '0',
-    test: '1',
-  },
-  genesisHash:
-    'adbdd5ede31637f6c9bad5c271eec0bc3d0cb9efb86a5b913bb55cba549d0770',
-}
+import {CARDANO_CONFIG} from '../../config'
 
-// TODO: define a transaction type
+const CONFIG = CARDANO_CONFIG.SHELLEY
+
 export const buildTransaction = async (
   sender: PublicKey,
   receiver: string,
   amount: BigNumber,
   accountBalance: BigNumber,
-) => {
+): Transaction => {
   if (amount.gt(accountBalance)) {
     throw new InsufficientFunds()
   }
 
-  // Account.from_public_key API is not yet available, so we create an
-  // account address first
   const sourceAddress = await Address.account_from_public_key(
     sender,
-    parseInt(CONFIG.addressDiscrimination.production, 10),
+    parseInt(CONFIG.ADDRESS_DISCRIMINATION.PRODUCTION, 10),
   )
   const sourceAccount = await Account.from_address(sourceAddress)
 
   const feeAlgorithm = await Fee.linear_fee(
-    await Value.from_str(CONFIG.linearFee.constant),
-    await Value.from_str(CONFIG.linearFee.coefficient),
-    await Value.from_str(CONFIG.linearFee.certificate),
+    await Value.from_str(CONFIG.LINEAR_FEE.CONSTANT),
+    await Value.from_str(CONFIG.LINEAR_FEE.COEFFICIENT),
+    await Value.from_str(CONFIG.LINEAR_FEE.CERTIFICATE),
   )
 
   let fee
@@ -75,19 +62,16 @@ export const buildTransaction = async (
       await Value.from_str('1'),
     )
 
-    // Fee.calculate() is not implemented yet, we compute from txBuilder
-    const calculatedFee = await fakeTxBuilder.estimate_fee(feeAlgorithm)
-
     const tx = await fakeTxBuilder.seal_with_output_policy(
       feeAlgorithm,
       await OutputPolicy.forget(),
     )
 
-    // const calculatedFee = await feeAlgorithm.calculate(tx)
+    const calculatedFee = await feeAlgorithm.calculate(tx)
     if (calculatedFee == null) {
       throw new InsufficientFunds()
     }
-    fee = new BigNumber(calculatedFee.to_str())
+    fee = new BigNumber(await calculatedFee.to_str())
 
     tx.free()
   }
@@ -119,14 +103,13 @@ export const buildTransaction = async (
 }
 
 export const signTransaction = async (
-  // unsignedTx: Transaction, // TODO
-  unsignedTx: any,
+  unsignedTx: Transaction,
   accountCounter: number,
   accountPrivateKey: PrivateKey,
 ): AuthenticatedTransaction => {
   const txFinalizer = await new TransactionFinalizer(unsignedTx)
   const witness = await Witness.for_account(
-    await Hash.from_hex(CONFIG.genesisHash),
+    await Hash.from_hex(CONFIG.GENESISHASH),
     await txFinalizer.get_tx_sign_data_hash(),
     accountPrivateKey,
     SpendingCounter.from_u32(accountCounter), // TODO: missing implementation

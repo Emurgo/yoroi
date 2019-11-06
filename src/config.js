@@ -4,7 +4,7 @@ import env from './env'
 
 const IS_DEBUG = __DEV__
 // debugging flags
-const _SHOW_INIT_DEBUG_SCREEN = false
+const _SHOW_INIT_DEBUG_SCREEN = true
 const _PREFILL_WALLET_INFO = false
 const _USE_TESTNET = env.getBoolean('USE_TESTNET', true)
 const _SENTRY = env.getString('SENTRY')
@@ -24,6 +24,19 @@ export const CARDANO_CONFIG = {
     PROTOCOL_MAGIC: 764824073,
     API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
     EXPLORER_URL_FOR_TX: (tx: string) => `https://cardanoexplorer.com/tx/${tx}`,
+  },
+  SHELLEY: {
+    LINEAR_FEE: {
+      CONSTANT: '155381',
+      COEFFICIENT: '1',
+      CERTIFICATE: '4',
+    },
+    ADDRESS_DISCRIMINATION: {
+      PRODUCTION: '0',
+      TEST: '1',
+    },
+    GENESISHASH:
+      'adbdd5ede31637f6c9bad5c271eec0bc3d0cb9efb86a5b913bb55cba549d0770',
   },
 }
 
