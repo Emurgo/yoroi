@@ -72,8 +72,6 @@ export const buildTransaction = async (
       throw new InsufficientFunds()
     }
     fee = new BigNumber(await calculatedFee.to_str())
-
-    tx.free()
   }
 
   const newAmount = amount.plus(fee)
