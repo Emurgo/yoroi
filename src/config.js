@@ -4,7 +4,7 @@ import env from './env'
 
 const IS_DEBUG = __DEV__
 // debugging flags
-const _SHOW_INIT_DEBUG_SCREEN = true
+const _SHOW_INIT_DEBUG_SCREEN = false
 const _PREFILL_WALLET_INFO = false
 const _USE_TESTNET = env.getBoolean('USE_TESTNET', true)
 const _SENTRY = env.getString('SENTRY')
