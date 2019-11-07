@@ -110,7 +110,7 @@ export const signTransaction = async (
     await Hash.from_hex(CONFIG.GENESISHASH),
     await txFinalizer.get_tx_sign_data_hash(),
     accountPrivateKey,
-    SpendingCounter.from_u32(accountCounter), // TODO: missing implementation
+    SpendingCounter.from_u32(accountCounter),
   )
   await txFinalizer.set_witness(0, witness)
   return txFinalizer.build() // TODO: this might be changed to .finalize()
