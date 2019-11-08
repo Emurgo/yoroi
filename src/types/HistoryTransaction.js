@@ -52,6 +52,14 @@ export type Transaction = {|
   lastUpdatedAt: string,
 |}
 
+export type Addressing = {|
+  addressing: {
+    account: number,
+    change: number,
+    index: number,
+    },
+    |}
+
 export type RawUtxo = {|
   amount: string,
   receiver: string,
@@ -60,12 +68,9 @@ export type RawUtxo = {|
   utxo_id: string,
 |}
 
-export type Addressing = {|
-  addressing: {
-    account: number,
-    change: number,
-    index: number,
-  },
+export type AddressedUtxo = {|
+  ...RawUtxo,
+  ...Addressing,
 |}
 
 export type TransactionOutput = {|
@@ -92,7 +97,7 @@ export type PreparedTransactionData = {|
   outputs: Array<TransactionOutput>,
 |}
 
-export type V3UnsignedTransactionData = {|
+export type V3UnsignedTxData = {|
   senderUtxos: Array<RawUtxo>,
   unsignedTx: V3Transaction,
   changeAddr: Array<{|
@@ -100,4 +105,10 @@ export type V3UnsignedTransactionData = {|
     value: string,
     ...Addressing
   |}>,
+|}
+
+export type V3UnsignedTxAddressedUtxoData = {|
+  senderUtxos: Array<AddressedUtxo>,
+  unsignedTx: V3Transaction,
+  changeAddr: Array<{| address: string, value: string, ...Addressing |}>,
 |}

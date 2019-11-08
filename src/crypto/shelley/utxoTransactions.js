@@ -4,6 +4,10 @@
   * note: the functions in this module have been borrowed from yoroi-frontend:
   * https://github.com/Emurgo/yoroi-frontend/blob/shelley/app/api/ada/
   * transactions/shelley/utxoTransactions.js
+  *
+  * Keep in mind that the types are not exactly the same wrt to yoroi-frontend
+  * and other things might have changed in order to integrate the code in the
+  * existing structure
  */
 
 import {InsufficientFunds} from '../errors'
@@ -21,11 +25,14 @@ import {
   Value,
   Witness,
 } from 'react-native-chain-libs'
-
+import {HdWallet, Wallet} from 'react-native-cardano'
 import type {
   V3UnsignedTransactionData,
+  V3UnsignedTxAddressedUtxoData,
+  RawUtxo,
   Addressing,
 } from '../../types/HistoryTransaction'
+import {v2SkKeyToV3Key} from './utils'
 import {CARDANO_CONFIG} from '../../config'
 
 const CONFIG = CARDANO_CONFIG.SHELLEY
@@ -53,7 +60,8 @@ export const newAdaUnsignedTxFromUtxo = async (
     await Address.from_string(receiver),
     await Value.from_str(amount)
   )
-  const selectedUtxos = firstMatchFirstInputSelection(
+
+  const selectedUtxos = await firstMatchFirstInputSelection(
     txBuilder,
     allUtxos,
     feeAlgorithm
@@ -76,22 +84,64 @@ export const newAdaUnsignedTxFromUtxo = async (
       )
     )
     // given the change address, compute how much coin will be sent to it
-    change.push(...filterToUsedChange(
+    change.push(...(await filterToUsedChange(
       changeAddress,
       await transaction.outputs(),
       selectedUtxos
-    ))
-  } else {
+    )))
+  } else if (changeAddresses.length === 0) {
     transaction = await txBuilder.seal_with_output_policy(
       feeAlgorithm,
       await OutputPolicy.forget()
     )
+  } else {
+    throw new Error('only support single change address')
   }
 
   return {
     senderUtxos: selectedUtxos,
     unsignedTx: transaction,
     changeAddr: change,
+  }
+}
+
+export const newAdaUnsignedTx = async (
+  receiver: string,
+  amount: string,
+  changeAdaAddr: Array<{| address: string, ...Addressing |}>,
+  allUtxos: Array<AddressedUtxo>,
+): V3UnsignedTxAddressedUtxoData => {
+  const addressingMap = new Map<RawUtxo, AddressedUtxo>()
+  for (const utxo of allUtxos) {
+    addressingMap.set({
+      amount: utxo.amount,
+      receiver: utxo.receiver,
+      tx_hash: utxo.tx_hash,
+      tx_index: utxo.tx_index,
+      utxo_id: utxo.utxo_id,
+    }, utxo)
+  }
+  const unsignedTxResponse = await newAdaUnsignedTxFromUtxo(
+    receiver,
+    amount,
+    changeAdaAddr,
+    Array.from(addressingMap.keys())
+  )
+
+  const addressedUtxos = unsignedTxResponse.senderUtxos.map(
+    (utxo) => {
+      const addressedUtxo = addressingMap.get(utxo)
+      if (addressedUtxo == null) {
+        throw new Error('newAdaUnsignedTx utxo reference was changed. Should not happen')
+      }
+      return addressedUtxo
+    }
+  )
+
+  return {
+    senderUtxos: addressedUtxos,
+    unsignedTx: unsignedTxResponse.unsignedTx,
+    changeAddr: unsignedTxResponse.changeAddr,
   }
 }
 
@@ -107,8 +157,7 @@ async function firstMatchFirstInputSelection(
   // add UTXOs in whatever order they're sorted until we have enough for amount+fee
   for (let i = 0; i < allUtxos.length; i++) {
     selectedOutputs.push(allUtxos[i])
-    await txBuilder.add_input(utxoToTxInput(allUtxos[i]))
-    // TODO: TransactionBuilder.get_balance() is not yet implemented
+    await txBuilder.add_input(await utxoToTxInput(allUtxos[i]))
     const txBalance = await txBuilder.get_balance(feeAlgorithm)
     if (!await txBalance.is_negative()) {
       break
@@ -159,19 +208,17 @@ async function filterToUsedChange(
   return change
 }
 
-// TODO
+
 export const signTransaction = async (
-  signRequest: V3UnsignedTxAddressedUtxoResponse, // TODO
-  keyLevel: number,
-  signingKey: RustModule.WalletV2.PrivateKey // TODO
+  signRequest: V3UnsignedTxAddressedUtxoData,
+  wallet: Wallet.WalletObj,
 ): AuthenticatedTransaction => {
   const {senderUtxos, unsignedTx} = signRequest
   const txFinalizer = await new TransactionFinalizer(unsignedTx)
   addWitnesses(
     txFinalizer,
     senderUtxos,
-    keyLevel,
-    signingKey
+    wallet,
   )
   const signedTx = await txFinalizer.finalize()
   return signedTx
@@ -187,41 +234,40 @@ async function utxoToTxInput(
     utxo.tx_index,
     await Value.from_str(utxo.amount),
   )
-  return Input.from_utxo(txoPointer)
+  return await Input.from_utxo(txoPointer)
 }
 
-// TODO
+/**
+ * this function still uses the old addressing format only compatible with
+ * with Bip44 paths
+ */
 async function addWitnesses(
   txFinalizer: TransactionFinalizer,
   senderUtxos: Array<AddressedUtxo>,
-  keyLevel: number,
-  signingKey: RustModule.WalletV2.PrivateKey // TODO
+  wallet: Wallet.WalletObj,
 ): Promise<void> {
   // get private keys
+  const rootKey = wallet.root_cached_key // TODO: confirm this is a level 2 Xprv
+
   const privateKeys = senderUtxos.map((utxo) => {
-    const lastLevelSpecified = utxo.addressing.startLevel + utxo.addressing.path.length - 1
-    if (lastLevelSpecified !== Bip44DerivationLevels.ADDRESS.level) {
-      throw new Error('addWitnesses incorrect addressing size')
-    }
-    if (keyLevel + 1 < utxo.addressing.startLevel) {
-      throw new Error('addWitnesses keyLevel < startLevel')
-    }
-    let key = signingKey
-    for (let i = keyLevel - utxo.addressing.startLevel + 1; i < utxo.addressing.path.length; i++) {
-      key = key.derive(
-        RustModule.WalletV2.DerivationScheme.v2(), // TODO
-        utxo.addressing.path[i]
+    let key = rootKey
+    // this loops 3 times to generate a private key from root level up to the
+    // address level
+    for (let i = 0; i < utxo.addressing.length; i++) {
+      key = HdWallet.derivePrivate(
+        key,
+        utxo.addressing[i]
       )
     }
     return key
   })
 
   for (let i = 0; i < senderUtxos.length; i++) {
-    const witness = Witness.for_utxo(
+    const witness = await Witness.for_utxo(
       await Hash.from_hex(CONFIG.GENESISHASH),
-      txFinalizer.get_txid(),
-      v2SkKeyToV3Key(privateKeys[i]), // TODO
+      await txFinalizer.get_txid(),
+      v2SkKeyToV3Key(privateKeys[i]),
     )
-    txFinalizer.set_witness(i, witness)
+    await txFinalizer.set_witness(i, witness)
   }
 }
