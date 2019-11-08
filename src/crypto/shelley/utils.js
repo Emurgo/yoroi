@@ -29,19 +29,15 @@ export async function getTxOutputTotal(tx: Transaction): Promise<BigNumber> {
 }
 
 // TODO: test
-export const v2SkKeyToV3Key = async (
-  v2Key: HdWallet.XPrv
-): PrivateKey => {
+export const v2SkKeyToV3Key = async (v2Key: HdWallet.XPrv): PrivateKey => {
   return await PrivateKey.from_extended_bytes(
     // need to slice out the chain code from the private key
-    Buffer.from(v2Key.slice(0, 128), 'hex')
+    Buffer.from(v2Key.slice(0, 128), 'hex'),
   )
 }
-export const v2PkKeyToV3Key = async (
-  v2Key: HdWallet.XPub,
-): PublicKey => {
+export const v2PkKeyToV3Key = async (v2Key: HdWallet.XPub): PublicKey => {
   return await PublicKey.from_bytes(
     // need to slice out the chain code from the public key
-    Buffer.from(v2Key.slice(0, 64), 'hex')
+    Buffer.from(v2Key.slice(0, 64), 'hex'),
   )
 }

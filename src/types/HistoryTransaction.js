@@ -57,8 +57,8 @@ export type Addressing = {|
     account: number,
     change: number,
     index: number,
-    },
-    |}
+  },
+|}
 
 export type RawUtxo = {|
   amount: string,
@@ -102,13 +102,17 @@ export type V3UnsignedTxData = {|
   unsignedTx: V3Transaction,
   changeAddr: Array<{|
     address: string,
-    value: string,
-    ...Addressing
+    value: void | BigNumber,
+    ...Addressing,
   |}>,
 |}
 
 export type V3UnsignedTxAddressedUtxoData = {|
   senderUtxos: Array<AddressedUtxo>,
   unsignedTx: V3Transaction,
-  changeAddr: Array<{| address: string, value: string, ...Addressing |}>,
+  changeAddr: Array<{|
+    address: string,
+    value: void | BigNumber,
+    ...Addressing,
+  |}>,
 |}

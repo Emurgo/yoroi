@@ -1,24 +1,26 @@
 // @flow
 
 /**
-  * note: the functions in this module have been borrowed from yoroi-frontend:
-  * https://github.com/Emurgo/yoroi-frontend/blob/shelley/app/api/ada/
-  * transactions/shelley/utxoTransactions.js
-  *
-  * Keep in mind that the types are not exactly the same wrt to yoroi-frontend
-  * and other things might have changed in order to integrate the code in the
-  * existing structure
+ * note: the functions in this module have been borrowed from yoroi-frontend:
+ * https://github.com/Emurgo/yoroi-frontend/blob/shelley/app/api/ada/
+ * transactions/shelley/utxoTransactions.js
+ *
+ * Keep in mind that the types are not exactly the same wrt to yoroi-frontend
+ * and other things might have changed in order to integrate the code in the
+ * existing structure
  */
 
 import {InsufficientFunds} from '../errors'
 import {BigNumber} from 'bignumber.js'
 import {
   Address,
+  AuthenticatedTransaction,
   Fee,
   FragmentId,
   Hash,
   Input,
   OutputPolicy,
+  Outputs,
   TransactionBuilder,
   TransactionFinalizer,
   UtxoPointer,
@@ -27,9 +29,10 @@ import {
 } from 'react-native-chain-libs'
 import {HdWallet, Wallet} from 'react-native-cardano'
 import type {
-  V3UnsignedTransactionData,
+  V3UnsignedTxData,
   V3UnsignedTxAddressedUtxoData,
   RawUtxo,
+  AddressedUtxo,
   Addressing,
 } from '../../types/HistoryTransaction'
 import {v2SkKeyToV3Key} from './utils'
@@ -46,9 +49,9 @@ const CONFIG = CARDANO_CONFIG.SHELLEY
 export const newAdaUnsignedTxFromUtxo = async (
   receiver: string,
   amount: string,
-  changeAddresses: Array<{| address: string, ...Addressing |}>,
+  changeAddresses: Array<{|address: string, ...Addressing|}>,
   allUtxos: Array<RawUtxo>,
-): Promise<V3UnsignedTransactionData> => {
+): Promise<V3UnsignedTxData> => {
   const feeAlgorithm = await Fee.linear_fee(
     await Value.from_str(CONFIG.LINEAR_FEE.CONSTANT),
     await Value.from_str(CONFIG.LINEAR_FEE.COEFFICIENT),
@@ -58,13 +61,13 @@ export const newAdaUnsignedTxFromUtxo = async (
   const txBuilder = await TransactionBuilder.new_no_payload()
   await txBuilder.add_output(
     await Address.from_string(receiver),
-    await Value.from_str(amount)
+    await Value.from_str(amount),
   )
 
   const selectedUtxos = await firstMatchFirstInputSelection(
     txBuilder,
     allUtxos,
-    feeAlgorithm
+    feeAlgorithm,
   )
   let transaction
   const change = []
@@ -79,20 +82,20 @@ export const newAdaUnsignedTxFromUtxo = async (
      */
     transaction = await txBuilder.seal_with_output_policy(
       feeAlgorithm,
-      await OutputPolicy.one(
-        await Address.from_string(changeAddress.address)
-      )
+      await OutputPolicy.one(await Address.from_string(changeAddress.address)),
     )
     // given the change address, compute how much coin will be sent to it
-    change.push(...(await filterToUsedChange(
-      changeAddress,
-      await transaction.outputs(),
-      selectedUtxos
-    )))
+    change.push(
+      ...(await filterToUsedChange(
+        changeAddress,
+        await transaction.outputs(),
+        selectedUtxos,
+      )),
+    )
   } else if (changeAddresses.length === 0) {
     transaction = await txBuilder.seal_with_output_policy(
       feeAlgorithm,
-      await OutputPolicy.forget()
+      await OutputPolicy.forget(),
     )
   } else {
     throw new Error('only support single change address')
@@ -108,35 +111,38 @@ export const newAdaUnsignedTxFromUtxo = async (
 export const newAdaUnsignedTx = async (
   receiver: string,
   amount: string,
-  changeAdaAddr: Array<{| address: string, ...Addressing |}>,
+  changeAdaAddr: Array<{|address: string, ...Addressing|}>,
   allUtxos: Array<AddressedUtxo>,
-): V3UnsignedTxAddressedUtxoData => {
+): Promise<V3UnsignedTxAddressedUtxoData> => {
   const addressingMap = new Map<RawUtxo, AddressedUtxo>()
   for (const utxo of allUtxos) {
-    addressingMap.set({
-      amount: utxo.amount,
-      receiver: utxo.receiver,
-      tx_hash: utxo.tx_hash,
-      tx_index: utxo.tx_index,
-      utxo_id: utxo.utxo_id,
-    }, utxo)
+    addressingMap.set(
+      {
+        amount: utxo.amount,
+        receiver: utxo.receiver,
+        tx_hash: utxo.tx_hash,
+        tx_index: utxo.tx_index,
+        utxo_id: utxo.utxo_id,
+      },
+      utxo,
+    )
   }
   const unsignedTxResponse = await newAdaUnsignedTxFromUtxo(
     receiver,
     amount,
     changeAdaAddr,
-    Array.from(addressingMap.keys())
+    Array.from(addressingMap.keys()),
   )
 
-  const addressedUtxos = unsignedTxResponse.senderUtxos.map(
-    (utxo) => {
-      const addressedUtxo = addressingMap.get(utxo)
-      if (addressedUtxo == null) {
-        throw new Error('newAdaUnsignedTx utxo reference was changed. Should not happen')
-      }
-      return addressedUtxo
+  const addressedUtxos = unsignedTxResponse.senderUtxos.map((utxo) => {
+    const addressedUtxo = addressingMap.get(utxo)
+    if (addressedUtxo == null) {
+      throw new Error(
+        'newAdaUnsignedTx utxo reference was changed. Should not happen',
+      )
     }
-  )
+    return addressedUtxo
+  })
 
   return {
     senderUtxos: addressedUtxos,
@@ -159,7 +165,7 @@ async function firstMatchFirstInputSelection(
     selectedOutputs.push(allUtxos[i])
     await txBuilder.add_input(await utxoToTxInput(allUtxos[i]))
     const txBalance = await txBuilder.get_balance(feeAlgorithm)
-    if (!await txBalance.is_negative()) {
+    if (!(await txBalance.is_negative())) {
       break
     }
     if (i === allUtxos.length - 1) {
@@ -175,24 +181,28 @@ async function firstMatchFirstInputSelection(
  * and figure out which one was not added by us (therefore must have been added as change)
  */
 async function filterToUsedChange(
-  changeAddr: {| address: string, ...Addressing |},
+  changeAddr: {|address: string, ...Addressing|},
   outputs: Outputs,
   selectedUtxos: Array<RawUtxo>,
-): Promise<Array<{| address: string, value: void | BigNumber, ...Addressing |}>> {
+): Promise<Array<{|address: string, value: void | BigNumber, ...Addressing|}>> {
   // we should never have the change address also be an input
   // but we handle this edge case just in case
-  const possibleDuplicates = selectedUtxos.filter((utxo) => utxo.receiver === changeAddr.address)
+  const possibleDuplicates = selectedUtxos.filter(
+    (utxo) => utxo.receiver === changeAddr.address,
+  )
 
   const change = []
-  for (let i = 0; i < await outputs.size(); i++) {
+  for (let i = 0; i < (await outputs.size()); i++) {
     const output = await outputs.get(i)
     // we can't know which bech32 prefix was used
     // so we instead assume the suffix must match
-    const suffix = (await (await output.address()).to_string('dummy')).slice('dummy'.length)
-    const val = (await (await output.value())).to_str()
+    const suffix = (await (await output.address()).to_string('dummy')).slice(
+      'dummy'.length,
+    )
+    const val = (await await output.value()).to_str()
     if (changeAddr.address.endsWith(suffix)) {
       const indexInInput = possibleDuplicates.findIndex(
-        (utxo) => utxo.amount === val
+        (utxo) => utxo.amount === val,
       )
       if (indexInInput === -1) {
         change.push({
@@ -208,29 +218,20 @@ async function filterToUsedChange(
   return change
 }
 
-
 export const signTransaction = async (
   signRequest: V3UnsignedTxAddressedUtxoData,
   wallet: Wallet.WalletObj,
 ): AuthenticatedTransaction => {
   const {senderUtxos, unsignedTx} = signRequest
   const txFinalizer = await new TransactionFinalizer(unsignedTx)
-  addWitnesses(
-    txFinalizer,
-    senderUtxos,
-    wallet,
-  )
+  addWitnesses(txFinalizer, senderUtxos, wallet)
   const signedTx = await txFinalizer.finalize()
   return signedTx
 }
 
-async function utxoToTxInput(
-  utxo: RawUtxo,
-): Input {
+async function utxoToTxInput(utxo: RawUtxo): Input {
   const txoPointer = await UtxoPointer.new(
-    await FragmentId.from_bytes(
-      Buffer.from(utxo.tx_hash, 'hex')
-    ),
+    await FragmentId.from_bytes(Buffer.from(utxo.tx_hash, 'hex')),
     utxo.tx_index,
     await Value.from_str(utxo.amount),
   )
@@ -253,11 +254,8 @@ async function addWitnesses(
     let key = rootKey
     // this loops 3 times to generate a private key from root level up to the
     // address level
-    for (let i = 0; i < utxo.addressing.length; i++) {
-      key = HdWallet.derivePrivate(
-        key,
-        utxo.addressing[i]
-      )
+    for (let i = 0; i < Object.keys(utxo.addressing).length; i++) {
+      key = HdWallet.derivePrivate(key, utxo.addressing[i])
     }
     return key
   })

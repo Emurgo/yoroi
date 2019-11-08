@@ -14,28 +14,34 @@ import {
   // signTransaction,
 } from './utxoTransactions'
 import {InsufficientFunds} from '../errors'
-import {
-  getTxInputTotal,
-  getTxOutputTotal,
-} from './utils'
+import {getTxInputTotal, getTxOutputTotal} from './utils'
 
 jestSetup.setup()
 
 const keys = [
   {
-    legacyAddress: 'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-    bechAddress: 'ca1qw8mq0p65pf028qgd32t6szeatfd9epx4jyl5jeuuswtlkyqpdguqeh83d4',
-    pubKey: '8fb03c3aa052f51c086c54bd4059ead2d2e426ac89fa4b3ce41cbfd8800b51c02623fceb96b07408531a5cb259f53845a38d6b68928e7c0c7e390f07545d0e62',
+    legacyAddress:
+      'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
+    bechAddress:
+      'ca1qw8mq0p65pf028qgd32t6szeatfd9epx4jyl5jeuuswtlkyqpdguqeh83d4',
+    pubKey:
+      '8fb03c3aa052f51c086c54bd4059ead2d2e426ac89fa4b3ce41cbfd8800b51c02623fceb96b07408531a5cb259f53845a38d6b68928e7c0c7e390f07545d0e62',
   },
   {
-    legacyAddress: 'Ae2tdPwUPEZ4xAL3nxLq4Py7BfS1D2tJ3u2rxZGnrAXC8TNkWhTaz41J3FN',
-    bechAddress: 'ca1q0j6cetm7zqsagm5zz5fmav9jg37n4cferj23h370kptrpfj095fxcy43lj',
-    pubKey: 'e5ac657bf0810ea37410a89df5859223e9d709c8e4a8de3e7d82b185327968939a254def91bb75e94bda9c605f7f87481082742e1e51d8858965c9a40491fc94',
+    legacyAddress:
+      'Ae2tdPwUPEZ4xAL3nxLq4Py7BfS1D2tJ3u2rxZGnrAXC8TNkWhTaz41J3FN',
+    bechAddress:
+      'ca1q0j6cetm7zqsagm5zz5fmav9jg37n4cferj23h370kptrpfj095fxcy43lj',
+    pubKey:
+      'e5ac657bf0810ea37410a89df5859223e9d709c8e4a8de3e7d82b185327968939a254def91bb75e94bda9c605f7f87481082742e1e51d8858965c9a40491fc94',
   },
   {
-    legacyAddress: 'Ae2tdPwUPEZEtwz7LKtJn9ub8y7ireuj3sq2yUCZ57ccj6ZkJKn7xEiApV9',
-    bechAddress: 'ca1q0ewtxsk489t9g7vs64prkm0hfvz6aemtvtv57rkfwmxyp3yhtxtwhtm3gd',
-    pubKey: 'f2e59a16a9cab2a3cc86aa11db6fba582d773b5b16ca78764bb6620624baccb7c03adf6448459f2b8d5c32033a160de8b5412d1952794190c4fc6b4716a8b8eb',
+    legacyAddress:
+      'Ae2tdPwUPEZEtwz7LKtJn9ub8y7ireuj3sq2yUCZ57ccj6ZkJKn7xEiApV9',
+    bechAddress:
+      'ca1q0ewtxsk489t9g7vs64prkm0hfvz6aemtvtv57rkfwmxyp3yhtxtwhtm3gd',
+    pubKey:
+      'f2e59a16a9cab2a3cc86aa11db6fba582d773b5b16ca78764bb6620624baccb7c03adf6448459f2b8d5c32033a160de8b5412d1952794190c4fc6b4716a8b8eb',
   },
 ]
 
@@ -45,25 +51,28 @@ const sampleUtxos: Array<RawUtxo> = [
     receiver: 'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
     tx_hash: '05ec4a4a7f4645fa66886cef2e34706907a3a7f9d88e0d48b313ad2cdf76fb5f',
     tx_index: 0,
-    utxo_id: '05ec4a4a7f4645fa66886cef2e34706907a3a7f9d88e0d48b313ad2cdf76fb5f0',
+    utxo_id:
+      '05ec4a4a7f4645fa66886cef2e34706907a3a7f9d88e0d48b313ad2cdf76fb5f0',
   },
   {
     amount: '1000001',
     receiver: 'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
     tx_hash: '6930f123df83e4178b0324ae617b2028c0b38c6ff4660583a2abf1f7b08195fe',
     tx_index: 0,
-    utxo_id: '6930f123df83e4178b0324ae617b2028c0b38c6ff4660583a2abf1f7b08195fe0',
+    utxo_id:
+      '6930f123df83e4178b0324ae617b2028c0b38c6ff4660583a2abf1f7b08195fe0',
   },
   {
     amount: '10000001',
     receiver: 'Ae2tdPwUPEZ4xAL3nxLq4Py7BfS1D2tJ3u2rxZGnrAXC8TNkWhTaz41J3FN',
     tx_hash: '0df0273e382739f8b4ae3783d81168093e78e0b48ec2c5430ff03d444806a173',
     tx_index: 0,
-    utxo_id: '0df0273e382739f8b4ae3783d81168093e78e0b48ec2c5430ff03d444806a1730',
+    utxo_id:
+      '0df0273e382739f8b4ae3783d81168093e78e0b48ec2c5430ff03d444806a1730',
   },
 ]
 
-const sampleAdaAddresses: Array<{| address: string, ...Addressing |}> = [
+const sampleAdaAddresses: Array<{|address: string, ...Addressing|}> = [
   {
     address: 'ca1q0ewtxsk489t9g7vs64prkm0hfvz6aemtvtv57rkfwmxyp3yhtxtwhtm3gd',
     addressing: {
@@ -109,7 +118,7 @@ describe('Create unsigned TX from UTXO', () => {
       keys[0].bechAddress,
       '5001', // smaller than input
       [],
-      utxos
+      utxos,
     )
     expect(unsignedTxResponse.senderUtxos).toEqual(utxos)
     const inputSum = await getTxInputTotal(unsignedTxResponse.unsignedTx)
@@ -125,9 +134,9 @@ describe('Create unsigned TX from UTXO', () => {
       keys[0].bechAddress,
       '1900001', // bigger than input including fees
       [],
-      utxos
+      utxos,
     )
-    await expect (promise).rejects.toThrow(InsufficientFunds)
+    await expect(promise).rejects.toThrow(InsufficientFunds)
   })
 
   it('Should fail due to insufficient funds (no inputs)', async () => {
@@ -137,7 +146,7 @@ describe('Create unsigned TX from UTXO', () => {
       [],
       [],
     )
-    await expect (promise).rejects.toThrow(InsufficientFunds)
+    await expect(promise).rejects.toThrow(InsufficientFunds)
   })
 
   it('Should fail due to insufficient funds (not enough to cover fees)', async () => {
@@ -148,9 +157,8 @@ describe('Create unsigned TX from UTXO', () => {
       [],
       utxos,
     )
-    await expect (promise).rejects.toThrow(InsufficientFunds)
+    await expect(promise).rejects.toThrow(InsufficientFunds)
   })
-
 
   it('Should pick inputs when using input selection', async () => {
     const utxos: Array<RawUtxo> = sampleUtxos
@@ -158,7 +166,7 @@ describe('Create unsigned TX from UTXO', () => {
       keys[0].bechAddress,
       '1001', // smaller than input
       [sampleAdaAddresses[0]],
-      utxos
+      utxos,
     )
     // input selection will only take 2 of the 3 inputs
     // it takes 2 inputs because input selection algorithm
@@ -179,7 +187,10 @@ describe('Create unsigned TX from addresses', () => {
       [],
       [addressedUtxos[0], addressedUtxos[1]],
     )
-    expect(unsignedTxResponse.senderUtxos).toEqual([addressedUtxos[0], addressedUtxos[1]])
+    expect(unsignedTxResponse.senderUtxos).toEqual([
+      addressedUtxos[0],
+      addressedUtxos[1],
+    ])
     const inputSum = await getTxInputTotal(unsignedTxResponse.unsignedTx)
     const outputSum = await getTxOutputTotal(unsignedTxResponse.unsignedTx)
     expect(inputSum.toString()).toEqual('1007002')
@@ -189,7 +200,6 @@ describe('Create unsigned TX from addresses', () => {
 })
 
 // TODO
-
 
 // describe('Create signed transactions', () => {
 //   it('Witness should match on valid private key', () => {
