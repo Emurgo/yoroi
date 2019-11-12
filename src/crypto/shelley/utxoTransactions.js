@@ -224,7 +224,7 @@ export const signTransaction = async (
 ): AuthenticatedTransaction => {
   const {senderUtxos, unsignedTx} = signRequest
   const txFinalizer = await new TransactionFinalizer(unsignedTx)
-  addWitnesses(txFinalizer, senderUtxos, wallet)
+  await addWitnesses(txFinalizer, senderUtxos, wallet)
   const signedTx = await txFinalizer.finalize()
   return signedTx
 }
@@ -248,23 +248,29 @@ async function addWitnesses(
   wallet: Wallet.WalletObj,
 ): Promise<void> {
   // get private keys
-  const rootKey = wallet.root_cached_key // TODO: confirm this is a level 2 Xprv
-
-  const privateKeys = senderUtxos.map((utxo) => {
-    let key = rootKey
-    // this loops 3 times to generate a private key from root level up to the
-    // address level
-    for (let i = 0; i < Object.keys(utxo.addressing).length; i++) {
-      key = HdWallet.derivePrivate(key, utxo.addressing[i])
-    }
-    return key
-  })
+  const rootKey = wallet.root_cached_key
+  const privateKeys = await Promise.all(
+    senderUtxos.map(
+      async (utxo): Promise<HdWallet.XPrv> => {
+        let key = rootKey
+        // this loops 3 times to generate a private key from root level up to the
+        // address level
+        for (let i = 0; i < Object.keys(utxo.addressing).length; i++) {
+          key = await HdWallet.derivePrivate(
+            key,
+            utxo.addressing[Object.keys(utxo.addressing)[i]],
+          )
+        }
+        return key
+      },
+    ),
+  )
 
   for (let i = 0; i < senderUtxos.length; i++) {
     const witness = await Witness.for_utxo(
       await Hash.from_hex(CONFIG.GENESISHASH),
       await txFinalizer.get_txid(),
-      v2SkKeyToV3Key(privateKeys[i]),
+      await v2SkKeyToV3Key(privateKeys[i]),
     )
     await txFinalizer.set_witness(i, witness)
   }
