@@ -57,6 +57,17 @@ export const WALLET_ROUTES = {
   SETTINGS: SETTINGS_ROUTES.MAIN,
 }
 
+export const STAKING_CENTER_ROUTES = {
+  MAIN: 'staking-center-main',
+}
+
+// temporary add a 'transfer-summary' route for showing
+// balance check
+export const DELEGATION_SUMMARY_ROUTES = {
+  MAIN: 'delegation-summary-main',
+  TRANSFER_SUMMARY: 'transfer-summary',
+}
+
 export const SHELLEY_WALLET_ROUTES = {
   STAKING_CENTER: 'staking-center',
   DELEGATION_SUMMARY: 'delegation-summary',

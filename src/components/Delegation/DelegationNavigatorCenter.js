@@ -2,7 +2,7 @@
 import React from 'react'
 import {createStackNavigator} from 'react-navigation'
 import DelegationCenter from './DelegationCenter'
-import {SHELLEY_WALLET_ROUTES} from '../../RoutesList'
+import {STAKING_CENTER_ROUTES} from '../../RoutesList'
 
 import {
   defaultNavigationOptions,
@@ -13,7 +13,7 @@ import HeaderBackButton from '../UiKit/HeaderBackButton'
 
 const DelegationNavigatorCenter = createStackNavigator(
   {
-    [SHELLEY_WALLET_ROUTES.STAKING_CENTER]: {
+    [STAKING_CENTER_ROUTES.MAIN]: {
       screen: DelegationCenter,
       navigationOptions: ({navigation}) => ({
         title: navigation.getParam('title'),
@@ -22,7 +22,7 @@ const DelegationNavigatorCenter = createStackNavigator(
     },
   },
   {
-    initialRouteName: SHELLEY_WALLET_ROUTES.STAKING_CENTER,
+    initialRouteName: STAKING_CENTER_ROUTES.MAIN,
     navigationOptions: ({navigation}) => ({
       title: navigation.getParam('title'),
       headerLeft: <HeaderBackButton navigation={navigation} />,

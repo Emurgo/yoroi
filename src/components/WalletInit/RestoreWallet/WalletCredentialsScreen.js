@@ -48,8 +48,7 @@ export default injectIntl(
         ({navigation, createWallet}) => async ({name, password}) => {
           const phrase = navigation.getParam('phrase')
           await createWallet(name, phrase, password)
-          // TODO: Update this to consider SHelley wallet
-          navigation.navigate(ROOT_ROUTES.WALLET)
+          navigation.navigate(ROOT_ROUTES.SHELLEY_WALLET)
         },
         1000,
       ),

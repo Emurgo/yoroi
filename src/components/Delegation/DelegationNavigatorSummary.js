@@ -3,20 +3,30 @@ import React from 'react'
 import {Button} from '../UiKit'
 import {createStackNavigator} from 'react-navigation'
 import DelegationSummary from './DelegationSummary'
-import {SHELLEY_WALLET_ROUTES, WALLET_ROUTES} from '../../RoutesList'
+import TransferSummaryScreen from './TransferSummaryScreen'
+import {DELEGATION_SUMMARY_ROUTES, WALLET_ROUTES} from '../../RoutesList'
 import SettingsScreenNavigator from '../Settings/SettingsScreenNavigator'
 import iconGear from '../../assets/img/gear.png'
 
 import {
   defaultNavigationOptions,
   defaultStackNavigatorOptions,
+  shelleyNavigationOptions,
 } from '../../navigationOptions'
 
 import styles from '../TxHistory/styles/SettingsButton.style'
 
 const DelegationNavigatorSummary = createStackNavigator(
   {
-    [SHELLEY_WALLET_ROUTES.DELEGATION_SUMMARY]: {
+    [DELEGATION_SUMMARY_ROUTES.TRANSFER_SUMMARY]: {
+      screen: TransferSummaryScreen,
+      navigationOptions: ({navigation}) => ({
+        title: navigation.getParam('title'),
+        ...defaultNavigationOptions,
+        ...shelleyNavigationOptions,
+      }),
+    },
+    [DELEGATION_SUMMARY_ROUTES.MAIN]: {
       screen: DelegationSummary,
       navigationOptions: ({navigation}) => ({
         title: navigation.getParam('title'),
@@ -30,6 +40,7 @@ const DelegationNavigatorSummary = createStackNavigator(
           />
         ),
         ...defaultNavigationOptions,
+        ...shelleyNavigationOptions,
       }),
     },
     [WALLET_ROUTES.SETTINGS]: {
@@ -37,11 +48,12 @@ const DelegationNavigatorSummary = createStackNavigator(
       navigationOptions: {
         header: null,
         ...defaultNavigationOptions,
+        ...shelleyNavigationOptions,
       },
     },
   },
   {
-    initialRouteName: SHELLEY_WALLET_ROUTES.DELEGATION_SUMMARY,
+    initialRouteName: DELEGATION_SUMMARY_ROUTES.TRANSFER_SUMMARY,
     ...defaultStackNavigatorOptions,
   },
 )
