@@ -214,6 +214,7 @@
   "components.walletinit.walletinitscreen.restoreWalletButton": "Restore wallet from backup",
   "components.walletinit.walletinitscreen.title": "Add wallet",
   "components.walletselection.walletselectionscreen.addWalletButton": "Add wallet",
+  "components.walletselection.walletselectionscreen.balanceCheckButton": "Balance check (Shelley Testnet)",
   "components.walletselection.walletselectionscreen.header": "Your wallets",
   "crypto.keystore.approveTransaction": "Authorize with your fingerprint",
   "crypto.keystore.cancelButton": "Cancel",
