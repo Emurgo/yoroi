@@ -6,7 +6,7 @@ import {Header} from 'react-navigation'
 import LinearGradient from 'react-native-linear-gradient'
 import {COLORS} from './styles/config'
 
-const GradientHeader = (props) => (
+const GradientHeader = (props: any) => (
   <View style={{backgroundColor: COLORS.LIGHT_GRAY}}>
     <LinearGradient
       start={{x: 0, y: 0}}
@@ -30,8 +30,10 @@ export const defaultStackNavigatorOptions = {
   headerLayoutPreset: 'center',
 }
 
+// note: the header option takes a HeaderProps object but it seems like this
+// type is not exposed by the react-navigation library
 export const shelleyNavigationOptions = {
-  header: (props) => <GradientHeader {...props} />,
+  header: (props: any) => <GradientHeader {...props} />,
   headerStyle: {
     backgroundColor: 'transparent',
   },

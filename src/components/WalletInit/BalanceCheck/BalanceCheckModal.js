@@ -16,7 +16,8 @@ import type {ComponentType} from 'react'
 
 const messages = defineMessages({
   recoveredBalanceLabel: {
-    id: 'components.walletinit.balancecheck.balancecheckmodal.recoveredBalanceLabel',
+    id:
+      'components.walletinit.balancecheck.balancecheckmodal.recoveredBalanceLabel',
     defaultMessage: '!!!Recovered balance',
   },
   recoveryTitle: {
@@ -28,39 +29,35 @@ const messages = defineMessages({
     defaultMessage: '!!!Attention',
   },
   attentionDescription: {
-    id: 'components.walletinit.balancecheck.balancecheckmodal.attentionDescription',
-    defaultMessage: '!!!The balance check executed successfully, and we were ' +
-    'able to match your wallet with the balance displayed below. Remember that ' +
-    'the balance displayed should only match the one that you <strong>had on ' +
-    'November 12th</strong>.',
+    id:
+      'components.walletinit.balancecheck.balancecheckmodal.attentionDescription',
+    defaultMessage:
+      '!!!The balance check executed successfully, and we were ' +
+      'able to match your wallet with the balance displayed below. Remember that ' +
+      'the balance displayed should only match the one that you <strong>had on ' +
+      'November 12th</strong>.',
   },
 })
 
 type Props = {
   intl: any,
   visible: boolean,
+  onRequestClose: () => any,
   navigateWalletInit: () => mixed,
   navigation: Navigation,
 }
 
 class BalanceCheckModal extends React.Component<Props> {
-
-
   render() {
-    const {intl, visible, navigateWalletInit} = this.props
+    const {intl, visible, navigateWalletInit, onRequestClose} = this.props
 
     return (
-      <Modal visible={visible} onRequestClose={() => {}} showCloseIcon>
+      <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
         <View>
-          <Text>
-            {intl.formatMessage(messages.attentionDescription)}
-          </Text>
+          <Text>{intl.formatMessage(messages.attentionDescription)}</Text>
         </View>
 
-        <Button
-          onPress={navigateWalletInit}
-          title="close"
-        />
+        <Button onPress={navigateWalletInit} title="close" />
       </Modal>
     )
   }
@@ -78,6 +75,6 @@ export default injectIntl(
     withHandlers({
       navigateWalletInit: ({navigation}) => (event) =>
         navigation.navigate(ROOT_ROUTES.WALLET),
-    })
+    }),
   )(BalanceCheckModal): ComponentType<ExternalProps>),
 )

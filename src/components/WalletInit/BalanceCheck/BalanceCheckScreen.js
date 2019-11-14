@@ -11,7 +11,6 @@ import _ from 'lodash'
 
 import {Text, Button, ValidatedTextInput, StatusBar, Banner} from '../../UiKit'
 import BalanceCheckModal from './BalanceCheckModal'
-import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {CONFIG} from '../../../config'
 import {
   validateRecoveryPhrase,
@@ -58,7 +57,8 @@ const messages = defineMessages({
     description: 'some desc',
   },
   mnemonicInputLabel: {
-    id: 'components.walletinit.balancecheck.balancecheckscreen.mnemonicInputLabel',
+    id:
+      'components.walletinit.balancecheck.balancecheckscreen.mnemonicInputLabel',
     defaultMessage: '!!!Recovery phrase',
     description: 'some desc',
   },
@@ -175,16 +175,11 @@ export default injectIntl(
       },
       {
         openSuccessModal: (state) => () => ({showSuccessModal: true}),
-        closeSucessModal: (state) => () => ({showSucessModal: false}),
+        closeSucessModal: (state) => () => ({showSuccessModal: false}),
         setPhrase: (state) => (value) => ({phrase: value}),
       },
     ),
     withHandlers({
-      // navigateToWalletCredentials: ({navigation, phrase}) => (event) => {
-      //   navigation.navigate(WALLET_INIT_ROUTES.WALLET_CREDENTIALS, {
-      //     phrase: cleanMnemonic(phrase),
-      //   })
-      // },
       translateInvalidPhraseError: ({intl}) => (error) =>
         _translateInvalidPhraseError(intl, error),
     }),
