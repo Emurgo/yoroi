@@ -5,21 +5,17 @@ import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 import {View} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import Markdown from 'react-native-easy-markdown'
 
 import type {Navigation} from '../../../types/navigation'
 import {Text, Button, Modal} from '../../UiKit'
 import {ROOT_ROUTES} from '../../../RoutesList'
 
-// import styles from './styles/AddressModal.style'
+import styles from './styles/BalanceCheckModal.style'
 
 import type {ComponentType} from 'react'
 
 const messages = defineMessages({
-  recoveredBalanceLabel: {
-    id:
-      'components.walletinit.balancecheck.balancecheckmodal.recoveredBalanceLabel',
-    defaultMessage: '!!!Recovered balance',
-  },
   recoveryTitle: {
     id: 'components.walletinit.balancecheck.balancecheckmodal.recoveryTitle',
     defaultMessage: '!!!Recovery Successful',
@@ -34,8 +30,22 @@ const messages = defineMessages({
     defaultMessage:
       '!!!The balance check executed successfully, and we were ' +
       'able to match your wallet with the balance displayed below. Remember that ' +
-      'the balance displayed should only match the one that you <strong>had on ' +
-      'November 12th</strong>.',
+      'the balance displayed should only match the one that you **had on ' +
+      'November 12th**.',
+  },
+  walletAddressesLabel: {
+    id:
+      'components.walletinit.balancecheck.balancecheckmodal.walletAddressesLabel',
+    defaultMessage: '!!!Wallet addresses',
+  },
+  recoveredBalanceLabel: {
+    id:
+      'components.walletinit.balancecheck.balancecheckmodal.recoveredBalanceLabel',
+    defaultMessage: '!!!Recovered balance',
+  },
+  buttonText: {
+    id: 'components.walletinit.balancecheck.balancecheckmodal.buttonText',
+    defaultMessage: '!!!Done',
   },
 })
 
@@ -53,11 +63,35 @@ class BalanceCheckModal extends React.Component<Props> {
 
     return (
       <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
-        <View>
-          <Text>{intl.formatMessage(messages.attentionDescription)}</Text>
+        <View style={styles.content}>
+          <View style={styles.item}>
+            <Text style={styles.heading} small>
+              {intl.formatMessage(messages.attention)}
+            </Text>
+            <Markdown>
+              {intl.formatMessage(messages.attentionDescription)}
+            </Markdown>
+          </View>
+
+          <View style={styles.item}>
+            <Text style={styles.heading} small>
+              {intl.formatMessage(messages.walletAddressesLabel)}
+            </Text>
+          </View>
+
+          <View style={styles.item}>
+            <Text style={styles.heading} small>
+              {intl.formatMessage(messages.recoveredBalanceLabel)}
+            </Text>
+            <Text style={styles.balanceAmount}>12354.23 ADA</Text>
+          </View>
         </View>
 
-        <Button onPress={navigateWalletInit} title="close" />
+        <Button
+          onPress={navigateWalletInit}
+          title={intl.formatMessage(messages.buttonText)}
+          shelleyTheme
+        />
       </Modal>
     )
   }

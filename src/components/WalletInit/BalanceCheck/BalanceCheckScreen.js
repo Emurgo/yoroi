@@ -62,9 +62,9 @@ const messages = defineMessages({
     defaultMessage: '!!!Recovery phrase',
     description: 'some desc',
   },
-  checkButton: {
-    id: 'components.walletinit.balancecheck.balancecheckscreen.checkButton',
-    defaultMessage: '!!!Check',
+  confirmButton: {
+    id: 'components.walletinit.balancecheck.balancecheckscreen.confirmButton',
+    defaultMessage: '!!!Confirm',
     description: 'some desc',
   },
   instructions: {
@@ -150,8 +150,9 @@ const BalanceCheckScreen = ({
 
         <Button
           onPress={openSuccessModal}
-          title={intl.formatMessage(messages.checkButton)}
+          title={intl.formatMessage(messages.confirmButton)}
           disabled={!_.isEmpty(errors)}
+          shelleyTheme
         />
       </SafeAreaView>
       <BalanceCheckModal
