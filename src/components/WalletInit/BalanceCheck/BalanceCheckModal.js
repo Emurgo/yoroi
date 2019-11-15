@@ -7,9 +7,11 @@ import {View, TouchableOpacity} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import Markdown from 'react-native-easy-markdown'
 import {withNavigation} from 'react-navigation'
+import {BigNumber} from 'bignumber.js'
 
 import type {Navigation} from '../../../types/navigation'
 import {Text, Button, Modal} from '../../UiKit'
+import {formatAdaWithText} from '../../../utils/format'
 
 import styles from './styles/BalanceCheckModal.style'
 
@@ -61,7 +63,7 @@ type Props = {
   intl: any,
   visible: boolean,
   addresses: Array<string>,
-  balance: number,
+  balance: BigNumber,
   onRequestClose: () => any,
   buttonHandler: () => any,
 }
@@ -106,7 +108,9 @@ class BalanceCheckModal extends React.Component<Props> {
             <Text style={styles.heading} small>
               {intl.formatMessage(messages.recoveredBalanceLabel)}
             </Text>
-            <Text style={styles.balanceAmount}>{balance} ADA</Text>
+            <Text style={styles.balanceAmount}>
+              {balance && formatAdaWithText(balance)}
+            </Text>
           </View>
         </View>
 
@@ -123,7 +127,7 @@ class BalanceCheckModal extends React.Component<Props> {
 type ExternalProps = {
   visible: boolean,
   addresses: Array<string>,
-  balance: number,
+  balance: BigNumber,
   onRequestClose: () => any,
   intl: intlShape,
   navigation: Navigation,

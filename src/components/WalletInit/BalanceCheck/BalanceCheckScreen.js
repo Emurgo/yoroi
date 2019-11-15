@@ -1,13 +1,13 @@
 // @flow
 
-import React from 'react'
+import React, {Component} from 'react'
 import {View, ScrollView} from 'react-native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {withHandlers, withStateHandlers} from 'recompose'
 import {SafeAreaView} from 'react-navigation'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import _ from 'lodash'
+import {BigNumber} from 'bignumber.js'
 
 import {Text, Button, ValidatedTextInput, StatusBar, Banner} from '../../UiKit'
 import BalanceCheckModal from './BalanceCheckModal'
@@ -15,16 +15,16 @@ import {CONFIG} from '../../../config'
 import {
   validateRecoveryPhrase,
   INVALID_PHRASE_ERROR_CODES,
-  // cleanMnemonic,
+  cleanMnemonic,
 } from '../../../utils/validators'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import {isKeyboardOpenSelector} from '../../../selectors'
+import {mnemonicsToAddresses, balanceForAddresses} from '../../../crypto/util'
 
 import styles from './styles/BalanceCheckScreen.style'
 
 import type {InvalidPhraseError} from '../../../utils/validators'
 import type {ComponentType} from 'react'
-import type {Navigation} from '../../../types/navigation'
 
 const mnemonicInputErrorsMessages = defineMessages({
   TOO_LONG: {
@@ -76,14 +76,6 @@ const messages = defineMessages({
   },
 })
 
-// TODO: these are just placeholders for UI render testing
-const testAddresses = [
-  '2cWKMJemoBakWtKxxsZpnEhs3ZWRf9tG3R9ReJX6UsAGiZP7PBpmutxYPRAakqEgMsK1g',
-  '2cWKMJemoBahkhQS5QofBQxmsQMQDTxv1xzzqU9eHXBx6aDxaswBEksqurrfwhMNTYVFK',
-  '2cWKMJemoBahVMF121P6j54LjjKua29QGK6RpXZkxfaBLHExkGDuJ25wcC8vc2ExfuzLp',
-]
-const testBalance = 1233464.123
-
 const _translateInvalidPhraseError = (intl: any, error: InvalidPhraseError) => {
   if (error.code === INVALID_PHRASE_ERROR_CODES.UNKNOWN_WORDS) {
     return intl.formatMessage(mnemonicInputErrorsMessages.UNKNOWN_WORDS, {
@@ -93,6 +85,13 @@ const _translateInvalidPhraseError = (intl: any, error: InvalidPhraseError) => {
   } else {
     return intl.formatMessage(mnemonicInputErrorsMessages[error.code])
   }
+}
+
+// TODO: flow
+const _handleConfirm = async (phrase: string): Promise<any> => {
+  const addresses = await mnemonicsToAddresses(cleanMnemonic(phrase))
+  const balance = await balanceForAddresses(addresses)
+  return {addresses, balance}
 }
 
 const errorsVisibleWhileWriting = (errors) => {
@@ -111,69 +110,116 @@ const errorsVisibleWhileWriting = (errors) => {
     .filter((error) => !!error)
 }
 
-const BalanceCheckScreen = ({
-  intl,
-  phrase,
-  setPhrase,
-  translateInvalidPhraseError,
-  isKeyboardOpen,
-  showSuccessModal,
-  openSuccessModal,
-  closeSucessModal,
-  addresses,
-  balance,
-}) => {
-  const errors = validateRecoveryPhrase(phrase)
-  const visibleErrors = isKeyboardOpen
-    ? errorsVisibleWhileWriting(errors.invalidPhrase || [])
-    : errors.invalidPhrase || []
+type Props = {
+  intl: any,
+}
 
-  const errorText = visibleErrors
-    .map((error) => translateInvalidPhraseError(error))
-    .join(' ')
+type State = {
+  phrase: string,
+  showSuccessModal: boolean,
+  isKeyboardOpen: boolean,
+  addresses: Array<string>,
+  balance: ?BigNumber,
+  isSubmitting: boolean,
+}
 
-  return (
-    <>
-      <SafeAreaView style={styles.safeAreaView}>
-        <StatusBar type="dark" />
-        <Banner error text="You are on the Shelley Balance Check Testnet" />
+class BalanceCheckScreen extends Component<Props, State> {
 
-        <ScrollView keyboardDismissMode="on-drag">
-          <View style={styles.container}>
-            <Text>{intl.formatMessage(messages.instructions)}</Text>
-            <ValidatedTextInput
-              multiline
-              numberOfLines={3}
-              style={styles.phrase}
-              value={phrase}
-              onChangeText={setPhrase}
-              placeholder={intl.formatMessage(messages.mnemonicInputLabel)}
-              blurOnSubmit
-              error={errorText}
-              autoCapitalize="none"
-              keyboardType="visible-password"
-              // hopefully this prevents keyboard from learning the mnemonic
-              autoCorrect={false}
-            />
-          </View>
-        </ScrollView>
+  state = {
+    phrase: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.MNEMONIC1 : '',
+    showSuccessModal: false,
+    isKeyboardOpen: false,
+    addresses: [],
+    balance: null,
+    isSubmitting: false,
+  }
 
-        <Button
-          // TODO: replace by a handler that actually checks the balance
-          onPress={openSuccessModal}
-          title={intl.formatMessage(messages.confirmButton)}
-          disabled={!_.isEmpty(errors)}
-          shelleyTheme
+  translateInvalidPhraseError = (error) => {
+    const {intl} = this.props
+    _translateInvalidPhraseError(intl, error)
+  }
+
+  setPhrase = (value: string) => {
+    this.setState({phrase: value})
+  }
+
+  handleConfirm = async () => {
+    const {phrase} = this.state
+    this.setState({isSubmitting: true})
+    const {addresses, balance} = await _handleConfirm(phrase)
+    this.setState({
+      addresses,
+      balance,
+      showSuccessModal: true,
+      isSubmitting: false,
+    })
+  }
+
+  closeSucessModal = () => this.setState({showSuccessModal: false})
+
+  render() {
+    const {
+      phrase,
+      showSuccessModal,
+      isKeyboardOpen,
+      addresses,
+      balance,
+      isSubmitting,
+    } = this.state
+
+    const {intl} = this.props
+
+    const errors = validateRecoveryPhrase(phrase)
+    const visibleErrors = isKeyboardOpen
+      ? errorsVisibleWhileWriting(errors.invalidPhrase || [])
+      : errors.invalidPhrase || []
+
+    const errorText = visibleErrors
+      .map((error) => this.translateInvalidPhraseError(error))
+      .join(' ')
+
+    return (
+      <>
+        <SafeAreaView style={styles.safeAreaView}>
+          <StatusBar type="dark" />
+          <Banner error text="You are on the Shelley Balance Check Testnet" />
+
+          <ScrollView keyboardDismissMode="on-drag">
+            <View style={styles.container}>
+              <Text>{intl.formatMessage(messages.instructions)}</Text>
+              <ValidatedTextInput
+                multiline
+                numberOfLines={3}
+                style={styles.phrase}
+                value={phrase}
+                onChangeText={this.setPhrase}
+                placeholder={intl.formatMessage(messages.mnemonicInputLabel)}
+                blurOnSubmit
+                error={errorText}
+                autoCapitalize="none"
+                keyboardType="visible-password"
+                // hopefully this prevents keyboard from learning the mnemonic
+                autoCorrect={false}
+              />
+            </View>
+          </ScrollView>
+
+          <Button
+            onPress={this.handleConfirm}
+            title={intl.formatMessage(messages.confirmButton)}
+            disabled={!_.isEmpty(errors)}
+            shelleyTheme
+          />
+        </SafeAreaView>
+        <BalanceCheckModal
+          visible={showSuccessModal}
+          onRequestClose={this.closeSucessModal}
+          addresses={addresses}
+          balance={balance}
         />
-      </SafeAreaView>
-      <BalanceCheckModal
-        visible={showSuccessModal}
-        onRequestClose={closeSucessModal}
-        addresses={addresses}
-        balance={balance}
-      />
-    </>
-  )
+      </>
+    )
+  }
 }
 
 export default injectIntl(
@@ -182,26 +228,7 @@ export default injectIntl(
       isKeyboardOpen: isKeyboardOpenSelector(state),
     })),
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
-    withStateHandlers(
-      {
-        showSuccessModal: false,
-        // TODO
-        addresses: testAddresses,
-        balance: testBalance,
-        phrase: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.MNEMONIC1 : '',
-      },
-      {
-        openSuccessModal: (state) => () => ({showSuccessModal: true}),
-        closeSucessModal: (state) => () => ({showSuccessModal: false}),
-        setPhrase: (state) => (value) => ({phrase: value}),
-      },
-    ),
-    withHandlers({
-      translateInvalidPhraseError: ({intl}) => (error) =>
-        _translateInvalidPhraseError(intl, error),
-    }),
   )(BalanceCheckScreen): ComponentType<{
-    navigation: Navigation,
     intl: intlShape,
   }>),
 )

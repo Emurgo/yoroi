@@ -1,5 +1,6 @@
 // @flow
 import _ from 'lodash'
+import {BigNumber} from 'bignumber.js'
 
 import {Logger} from '../utils/logging'
 import {CONFIG} from '../config'
@@ -109,4 +110,28 @@ export const bulkFetchUTXOsForAddresses = async (
 
 export const submitTransaction = (signedTx: string) => {
   return _fetch('txs/signed', {signedTx})
+}
+
+export const fetchUTXOSumForAddresses = (
+  addresses: Array<string>,
+): Promise<{sum: string}> => {
+  assert.preconditionCheck(
+    addresses.length <= CONFIG.API.FETCH_UTXOS_MAX_ADDRESSES,
+    'fetchUTXOSumForAddresses: too many addresses',
+  )
+  return _fetch('txs/utxoSumForAddresses', {addresses})
+}
+
+export const bulkFetchUTXOSumForAddresses = async (
+  addresses: Array<string>,
+): Promise<{sum: string}> => {
+  const chunks = _.chunk(addresses, CONFIG.API.FETCH_UTXOS_MAX_ADDRESSES)
+
+  const responses = await Promise.all(
+    chunks.map((addrs) => fetchUTXOSumForAddresses(addrs)),
+  )
+  return {sum: responses.reduce(
+    (x: BigNumber, y) => x.plus(new BigNumber(y.sum)),
+    new BigNumber(0),
+  ).toString()}
 }
