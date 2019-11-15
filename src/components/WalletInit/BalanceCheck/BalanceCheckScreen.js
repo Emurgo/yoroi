@@ -76,6 +76,14 @@ const messages = defineMessages({
   },
 })
 
+// TODO: these are just placeholders for UI render testing
+const testAddresses = [
+  '2cWKMJemoBakWtKxxsZpnEhs3ZWRf9tG3R9ReJX6UsAGiZP7PBpmutxYPRAakqEgMsK1g',
+  '2cWKMJemoBahkhQS5QofBQxmsQMQDTxv1xzzqU9eHXBx6aDxaswBEksqurrfwhMNTYVFK',
+  '2cWKMJemoBahVMF121P6j54LjjKua29QGK6RpXZkxfaBLHExkGDuJ25wcC8vc2ExfuzLp',
+]
+const testBalance = 1233464.123
+
 const _translateInvalidPhraseError = (intl: any, error: InvalidPhraseError) => {
   if (error.code === INVALID_PHRASE_ERROR_CODES.UNKNOWN_WORDS) {
     return intl.formatMessage(mnemonicInputErrorsMessages.UNKNOWN_WORDS, {
@@ -112,6 +120,8 @@ const BalanceCheckScreen = ({
   showSuccessModal,
   openSuccessModal,
   closeSucessModal,
+  addresses,
+  balance,
 }) => {
   const errors = validateRecoveryPhrase(phrase)
   const visibleErrors = isKeyboardOpen
@@ -149,6 +159,7 @@ const BalanceCheckScreen = ({
         </ScrollView>
 
         <Button
+          // TODO: replace by a handler that actually checks the balance
           onPress={openSuccessModal}
           title={intl.formatMessage(messages.confirmButton)}
           disabled={!_.isEmpty(errors)}
@@ -158,6 +169,8 @@ const BalanceCheckScreen = ({
       <BalanceCheckModal
         visible={showSuccessModal}
         onRequestClose={closeSucessModal}
+        addresses={addresses}
+        balance={balance}
       />
     </>
   )
@@ -172,6 +185,9 @@ export default injectIntl(
     withStateHandlers(
       {
         showSuccessModal: false,
+        // TODO
+        addresses: testAddresses,
+        balance: testBalance,
         phrase: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.MNEMONIC1 : '',
       },
       {

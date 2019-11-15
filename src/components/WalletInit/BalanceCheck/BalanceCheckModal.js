@@ -3,13 +3,13 @@
 import React from 'react'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
-import {View} from 'react-native'
+import {View, TouchableOpacity} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import Markdown from 'react-native-easy-markdown'
+import {withNavigation} from 'react-navigation'
 
 import type {Navigation} from '../../../types/navigation'
 import {Text, Button, Modal} from '../../UiKit'
-import {ROOT_ROUTES} from '../../../RoutesList'
 
 import styles from './styles/BalanceCheckModal.style'
 
@@ -49,21 +49,41 @@ const messages = defineMessages({
   },
 })
 
+const AddressEntry = ({address}) => {
+  return (
+    <TouchableOpacity activeOpacity={0.5}>
+      <Text secondary>{address}</Text>
+    </TouchableOpacity>
+  )
+}
+
 type Props = {
   intl: any,
   visible: boolean,
+  addresses: Array<string>,
+  balance: number,
   onRequestClose: () => any,
-  navigateWalletInit: () => mixed,
-  navigation: Navigation,
+  buttonHandler: () => any,
 }
 
 class BalanceCheckModal extends React.Component<Props> {
   render() {
-    const {intl, visible, navigateWalletInit, onRequestClose} = this.props
+    const {
+      intl,
+      visible,
+      addresses,
+      balance,
+      buttonHandler,
+      onRequestClose,
+    } = this.props
 
     return (
       <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
         <View style={styles.content}>
+          <Text style={styles.title} small>
+            {intl.formatMessage(messages.recoveryTitle)}
+          </Text>
+
           <View style={styles.item}>
             <Text style={styles.heading} small>
               {intl.formatMessage(messages.attention)}
@@ -77,18 +97,21 @@ class BalanceCheckModal extends React.Component<Props> {
             <Text style={styles.heading} small>
               {intl.formatMessage(messages.walletAddressesLabel)}
             </Text>
+            {addresses.map((address, i) => (
+              <AddressEntry key={i} address={address} />
+            ))}
           </View>
 
           <View style={styles.item}>
             <Text style={styles.heading} small>
               {intl.formatMessage(messages.recoveredBalanceLabel)}
             </Text>
-            <Text style={styles.balanceAmount}>12354.23 ADA</Text>
+            <Text style={styles.balanceAmount}>{balance} ADA</Text>
           </View>
         </View>
 
         <Button
-          onPress={navigateWalletInit}
+          onPress={buttonHandler}
           title={intl.formatMessage(messages.buttonText)}
           shelleyTheme
         />
@@ -99,6 +122,8 @@ class BalanceCheckModal extends React.Component<Props> {
 
 type ExternalProps = {
   visible: boolean,
+  addresses: Array<string>,
+  balance: number,
   onRequestClose: () => any,
   intl: intlShape,
   navigation: Navigation,
@@ -106,9 +131,9 @@ type ExternalProps = {
 
 export default injectIntl(
   (compose(
+    withNavigation,
     withHandlers({
-      navigateWalletInit: ({navigation}) => (event) =>
-        navigation.navigate(ROOT_ROUTES.WALLET),
+      buttonHandler: ({navigation}) => (event) => navigation.popToTop(),
     }),
   )(BalanceCheckModal): ComponentType<ExternalProps>),
 )
