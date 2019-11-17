@@ -3,7 +3,7 @@
 import React from 'react'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
-import {View, TouchableOpacity} from 'react-native'
+import {View, TouchableOpacity, ScrollView} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import Markdown from 'react-native-easy-markdown'
 import {withNavigation} from 'react-navigation'
@@ -81,44 +81,46 @@ class BalanceCheckModal extends React.Component<Props> {
 
     return (
       <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
-        <View style={styles.content}>
-          <Text style={styles.title} small>
-            {intl.formatMessage(messages.recoveryTitle)}
-          </Text>
-
-          <View style={styles.item}>
-            <Text style={styles.heading} small>
-              {intl.formatMessage(messages.attention)}
+        <ScrollView>
+          <View style={styles.content}>
+            <Text style={styles.title} small>
+              {intl.formatMessage(messages.recoveryTitle)}
             </Text>
-            <Markdown>
-              {intl.formatMessage(messages.attentionDescription)}
-            </Markdown>
+
+            <View style={styles.item}>
+              <Text style={styles.heading} small>
+                {intl.formatMessage(messages.attention)}
+              </Text>
+              <Markdown>
+                {intl.formatMessage(messages.attentionDescription)}
+              </Markdown>
+            </View>
+
+            <View style={styles.item}>
+              <Text style={styles.heading} small>
+                {intl.formatMessage(messages.walletAddressesLabel)}
+              </Text>
+              {addresses.map((address, i) => (
+                <AddressEntry key={i} address={address} />
+              ))}
+            </View>
+
+            <View style={styles.item}>
+              <Text style={styles.heading} small>
+                {intl.formatMessage(messages.recoveredBalanceLabel)}
+              </Text>
+              <Text style={styles.balanceAmount}>
+                {balance && formatAdaWithText(balance)}
+              </Text>
+            </View>
           </View>
 
-          <View style={styles.item}>
-            <Text style={styles.heading} small>
-              {intl.formatMessage(messages.walletAddressesLabel)}
-            </Text>
-            {addresses.map((address, i) => (
-              <AddressEntry key={i} address={address} />
-            ))}
-          </View>
-
-          <View style={styles.item}>
-            <Text style={styles.heading} small>
-              {intl.formatMessage(messages.recoveredBalanceLabel)}
-            </Text>
-            <Text style={styles.balanceAmount}>
-              {balance && formatAdaWithText(balance)}
-            </Text>
-          </View>
-        </View>
-
-        <Button
-          onPress={buttonHandler}
-          title={intl.formatMessage(messages.buttonText)}
-          shelleyTheme
-        />
+          <Button
+            onPress={buttonHandler}
+            title={intl.formatMessage(messages.buttonText)}
+            shelleyTheme
+          />
+        </ScrollView>
       </Modal>
     )
   }
