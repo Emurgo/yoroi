@@ -207,7 +207,7 @@ class BalanceCheckScreen extends Component<Props, State> {
           <Button
             onPress={this.handleConfirm}
             title={intl.formatMessage(messages.confirmButton)}
-            disabled={!_.isEmpty(errors)}
+            disabled={!_.isEmpty(errors) || isSubmitting}
             shelleyTheme
           />
         </SafeAreaView>
