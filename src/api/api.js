@@ -139,8 +139,9 @@ export const bulkFetchUTXOSumForAddresses = async (
     chunks.map((addrs) => fetchUTXOsForAddresses(addrs)),
   )
 
-  const fundedAddresses = _.flatten(responseUTXOAddresses)
-    .map((address: any) => address.receiver)
+  const fundedAddresses = _.flatten(responseUTXOAddresses).map(
+    (address: any) => address.receiver,
+  )
 
   return {
     fundedAddresses: _.uniq(fundedAddresses),

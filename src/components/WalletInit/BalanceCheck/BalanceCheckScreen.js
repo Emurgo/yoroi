@@ -17,6 +17,9 @@ import {
   INVALID_PHRASE_ERROR_CODES,
   cleanMnemonic,
 } from '../../../utils/validators'
+import {errorMessages} from '../../../i18n/global-messages'
+import {showErrorDialog} from '../../../actions'
+import {NetworkError, ApiError} from '../../../api/errors'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import {isKeyboardOpenSelector} from '../../../selectors'
 import {mnemonicsToAddresses, balanceForAddresses} from '../../../crypto/util'
@@ -88,7 +91,9 @@ const _translateInvalidPhraseError = (intl: any, error: InvalidPhraseError) => {
 }
 
 // TODO: flow
-const _handleConfirm = async (phrase: string): Promise<{addresses: Array<string>, balance: BigNumber}> => {
+const _handleConfirm = async (
+  phrase: string,
+): Promise<{addresses: Array<string>, balance: BigNumber}> => {
   const addresses = await mnemonicsToAddresses(cleanMnemonic(phrase))
   const {fundedAddresses, sum} = await balanceForAddresses(addresses)
   return {addresses: fundedAddresses, balance: sum}
@@ -124,7 +129,6 @@ type State = {
 }
 
 class BalanceCheckScreen extends Component<Props, State> {
-
   state = {
     phrase: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.MNEMONIC1 : '',
     showSuccessModal: false,
@@ -145,14 +149,27 @@ class BalanceCheckScreen extends Component<Props, State> {
 
   handleConfirm = async () => {
     const {phrase} = this.state
+    const {intl} = this.props
     this.setState({isSubmitting: true})
-    const {addresses, balance} = await _handleConfirm(phrase)
-    this.setState({
-      addresses,
-      balance,
-      showSuccessModal: true,
-      isSubmitting: false,
-    })
+    try {
+      const {addresses, balance} = await _handleConfirm(phrase)
+      this.setState({
+        addresses,
+        balance,
+        showSuccessModal: true,
+        isSubmitting: false,
+      })
+    } catch (e) {
+      if (e instanceof NetworkError) {
+        await showErrorDialog(errorMessages.networkError, intl)
+      } else if (e instanceof ApiError) {
+        await showErrorDialog(errorMessages.apiError, intl)
+      } else {
+        throw e
+      }
+    } finally {
+      this.setState({isSubmitting: false})
+    }
   }
 
   closeSuccessModal = () => this.setState({showSuccessModal: false})

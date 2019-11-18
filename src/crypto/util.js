@@ -204,7 +204,9 @@ export const formatBIP44 = (
 /**
  * returns all used addresses (external and change addresses concatenated)
  */
-export const mnemonicsToAddresses = async (mnemonic: string): Promise<Array<string>> => {
+export const mnemonicsToAddresses = async (
+  mnemonic: string,
+): Promise<Array<string>> => {
   const masterKey = await getMasterKeyFromMnemonic(mnemonic)
   const account = await getAccountFromMasterKey(masterKey)
   const internalChain = new AddressChain(
@@ -226,7 +228,7 @@ export const mnemonicsToAddresses = async (mnemonic: string): Promise<Array<stri
   ]
   const filteredAddresses = []
   for (let i = 0; i < allAddresses.length; i++) {
-    filteredAddresses.push(...await filterUsedAddresses(allAddresses[i]))
+    filteredAddresses.push(...(await filterUsedAddresses(allAddresses[i])))
   }
   return filteredAddresses
 }
