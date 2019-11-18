@@ -70,8 +70,8 @@ const messages = defineMessages({
   instructions: {
     id: 'components.walletinit.balancecheck.balancecheckscreen.instructions',
     defaultMessage:
-      '!!!Enter the 15-word recovery phrase used to back up your other wallet ' +
-      'to restore the balance and transfer all the funds to current wallet. ',
+      '!!!Enter the 15-word recovery phrase used to back up your wallet to ' +
+      'validate the balance. It will take about 1 minute to verify your balance.',
     description: 'some desc',
   },
 })
@@ -88,10 +88,10 @@ const _translateInvalidPhraseError = (intl: any, error: InvalidPhraseError) => {
 }
 
 // TODO: flow
-const _handleConfirm = async (phrase: string): Promise<any> => {
+const _handleConfirm = async (phrase: string): Promise<{addresses: Array<string>, balance: BigNumber}> => {
   const addresses = await mnemonicsToAddresses(cleanMnemonic(phrase))
-  const balance = await balanceForAddresses(addresses)
-  return {addresses, balance}
+  const {fundedAddresses, sum} = await balanceForAddresses(addresses)
+  return {addresses: fundedAddresses, balance: sum}
 }
 
 const errorsVisibleWhileWriting = (errors) => {
@@ -155,7 +155,7 @@ class BalanceCheckScreen extends Component<Props, State> {
     })
   }
 
-  closeSucessModal = () => this.setState({showSuccessModal: false})
+  closeSuccessModal = () => this.setState({showSuccessModal: false})
 
   render() {
     const {
@@ -213,7 +213,7 @@ class BalanceCheckScreen extends Component<Props, State> {
         </SafeAreaView>
         <BalanceCheckModal
           visible={showSuccessModal}
-          onRequestClose={this.closeSucessModal}
+          onRequestClose={this.closeSuccessModal}
           addresses={addresses}
           balance={balance}
         />

@@ -204,7 +204,7 @@ export const formatBIP44 = (
 /**
  * returns all used addresses (external and change addresses concatenated)
  */
-export const mnemonicsToAddresses = async (mnemonic: string): Array<string> => {
+export const mnemonicsToAddresses = async (mnemonic: string): Promise<Array<string>> => {
   const masterKey = await getMasterKeyFromMnemonic(mnemonic)
   const account = await getAccountFromMasterKey(masterKey)
   const internalChain = new AddressChain(
@@ -233,7 +233,10 @@ export const mnemonicsToAddresses = async (mnemonic: string): Array<string> => {
 
 export const balanceForAddresses = async (
   addresses: Array<string>,
-): BigNumber => {
-  const response = await bulkFetchUTXOSumForAddresses(addresses)
-  return new BigNumber(response.sum)
+): Promise<{fundedAddresses: Array<string>, sum: BigNumber}> => {
+  const {fundedAddresses, sum} = await bulkFetchUTXOSumForAddresses(addresses)
+  return {
+    fundedAddresses,
+    sum,
+  }
 }

@@ -124,14 +124,26 @@ export const fetchUTXOSumForAddresses = (
 
 export const bulkFetchUTXOSumForAddresses = async (
   addresses: Array<string>,
-): Promise<{sum: string}> => {
+): Promise<{fundedAddresses: Array<string>, sum: BigNumber}> => {
   const chunks = _.chunk(addresses, CONFIG.API.FETCH_UTXOS_MAX_ADDRESSES)
 
   const responses = await Promise.all(
     chunks.map((addrs) => fetchUTXOSumForAddresses(addrs)),
   )
-  return {sum: responses.reduce(
-    (x: BigNumber, y) => x.plus(new BigNumber(y.sum)),
+  const sum = responses.reduce(
+    (x: BigNumber, y) => x.plus(new BigNumber(y.sum || 0)),
     new BigNumber(0),
-  ).toString()}
+  )
+
+  const responseUTXOAddresses = await Promise.all(
+    chunks.map((addrs) => fetchUTXOsForAddresses(addrs)),
+  )
+
+  const fundedAddresses = _.flatten(responseUTXOAddresses)
+    .map((address: any) => address.receiver)
+
+  return {
+    fundedAddresses: _.uniq(fundedAddresses),
+    sum,
+  }
 }
