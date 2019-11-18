@@ -3,7 +3,7 @@
 import React from 'react'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
-import {View, TouchableOpacity, ScrollView, Image} from 'react-native'
+import {View, TouchableOpacity, ScrollView, Image, Linking} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import Markdown from 'react-native-easy-markdown'
 import {withNavigation} from 'react-navigation'
@@ -12,6 +12,7 @@ import {BigNumber} from 'bignumber.js'
 import type {Navigation} from '../../../types/navigation'
 import {Text, Button, Modal} from '../../UiKit'
 import {formatAdaWithText} from '../../../utils/format'
+import {CARDANO_CONFIG} from '../../../config'
 
 import styles from './styles/BalanceCheckModal.style'
 import image from '../../../assets/img/no_transactions_yet.inline.png'
@@ -64,13 +65,17 @@ const messages = defineMessages({
   },
 })
 
-const AddressEntry = ({address}) => {
+const AddressEntry = withHandlers({
+  onPress: ({address}) => () => {
+    Linking.openURL(CARDANO_CONFIG.SHELLEY.EXPLORER_URL_FOR_ADDRESS(address))
+  },
+})(({address, onPress}) => {
   return (
-    <TouchableOpacity activeOpacity={0.5}>
+    <TouchableOpacity activeOpacity={0.5} onPress={onPress}>
       <Text secondary>{address}</Text>
     </TouchableOpacity>
   )
-}
+})
 
 type Props = {
   intl: any,

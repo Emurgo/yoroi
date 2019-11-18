@@ -168,6 +168,7 @@
   "components.walletinit.balancecheck.balancecheckmodal.recoveryTitle": "Recovery Successful",
   "components.walletinit.balancecheck.balancecheckmodal.walletAddressesLabel": "Wallet Addresses",
   "components.walletinit.balancecheck.balancecheckscreen.confirmButton": "Confirm",
+  "components.walletinit.balancecheck.balancecheckscreen.headsUp": "You are on the Shelley Balance Check Testnet",
   "components.walletinit.balancecheck.balancecheckscreen.instructions": "Enter the 15-word recovery phrase used to back up your wallet to validate the balance. It will take about 1 minute to verify your balance.",
   "components.walletinit.balancecheck.balancecheckscreen.mnemonicInputLabel": "Recovery phrase",
   "components.walletinit.balancecheck.balancecheckscreen.title" : "Balance Check",
