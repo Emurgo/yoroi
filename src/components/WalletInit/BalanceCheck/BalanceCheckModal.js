@@ -3,19 +3,34 @@
 import React from 'react'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
-import {View, TouchableOpacity} from 'react-native'
+import {View, TouchableOpacity, ScrollView, Image} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import Markdown from 'react-native-easy-markdown'
 import {withNavigation} from 'react-navigation'
+import {BigNumber} from 'bignumber.js'
 
 import type {Navigation} from '../../../types/navigation'
 import {Text, Button, Modal} from '../../UiKit'
+import {formatAdaWithText} from '../../../utils/format'
 
 import styles from './styles/BalanceCheckModal.style'
+import image from '../../../assets/img/no_transactions_yet.inline.png'
 
 import type {ComponentType} from 'react'
 
 const messages = defineMessages({
+  recoveryEmptyMessage: {
+    id:
+      'components.walletinit.balancecheck.balancecheckmodal.recoveryEmptyMessage',
+    defaultMessage:
+      '!!!The wallet restored from your recovery phrase is ' +
+      'empty. Please check your recovery phrase and attempt restoration again.',
+  },
+  recoveryEmptyButtonText: {
+    id:
+      'components.walletinit.balancecheck.balancecheckmodal.recoveryEmptyButtonText',
+    defaultMessage: '!!!Check again',
+  },
   recoveryTitle: {
     id: 'components.walletinit.balancecheck.balancecheckmodal.recoveryTitle',
     defaultMessage: '!!!Recovery Successful',
@@ -61,7 +76,7 @@ type Props = {
   intl: any,
   visible: boolean,
   addresses: Array<string>,
-  balance: number,
+  balance: BigNumber,
   onRequestClose: () => any,
   buttonHandler: () => any,
 }
@@ -77,53 +92,71 @@ class BalanceCheckModal extends React.Component<Props> {
       onRequestClose,
     } = this.props
 
-    return (
-      <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
-        <View style={styles.content}>
-          <Text style={styles.title} small>
-            {intl.formatMessage(messages.recoveryTitle)}
-          </Text>
-
-          <View style={styles.item}>
-            <Text style={styles.heading} small>
-              {intl.formatMessage(messages.attention)}
-            </Text>
-            <Markdown>
-              {intl.formatMessage(messages.attentionDescription)}
-            </Markdown>
-          </View>
-
-          <View style={styles.item}>
-            <Text style={styles.heading} small>
-              {intl.formatMessage(messages.walletAddressesLabel)}
-            </Text>
-            {addresses.map((address, i) => (
-              <AddressEntry key={i} address={address} />
-            ))}
-          </View>
-
-          <View style={styles.item}>
-            <Text style={styles.heading} small>
-              {intl.formatMessage(messages.recoveredBalanceLabel)}
-            </Text>
-            <Text style={styles.balanceAmount}>{balance} ADA</Text>
-          </View>
-        </View>
-
-        <Button
-          onPress={buttonHandler}
-          title={intl.formatMessage(messages.buttonText)}
-          shelleyTheme
-        />
-      </Modal>
-    )
+    if (addresses.length > 0) {
+      return (
+        <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
+          <ScrollView>
+            <View style={styles.content}>
+              <Text style={styles.title} small>
+                {intl.formatMessage(messages.recoveryTitle)}
+              </Text>
+              <View style={styles.item}>
+                <Text style={styles.heading} small>
+                  {intl.formatMessage(messages.attention)}
+                </Text>
+                <Markdown>
+                  {intl.formatMessage(messages.attentionDescription)}
+                </Markdown>
+              </View>
+              <View style={styles.item}>
+                <Text style={styles.heading} small>
+                  {intl.formatMessage(messages.walletAddressesLabel)}
+                </Text>
+                {addresses.map((address, i) => (
+                  <AddressEntry key={i} address={address} />
+                ))}
+              </View>
+              <View style={styles.item}>
+                <Text style={styles.heading} small>
+                  {intl.formatMessage(messages.recoveredBalanceLabel)}
+                </Text>
+                <Text style={styles.balanceAmount}>
+                  {balance && formatAdaWithText(balance)}
+                </Text>
+              </View>
+            </View>
+            <Button
+              onPress={buttonHandler}
+              title={intl.formatMessage(messages.buttonText)}
+              shelleyTheme
+            />
+          </ScrollView>
+        </Modal>
+      )
+    } else {
+      return (
+        <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
+          <ScrollView>
+            <View style={styles.empty}>
+              <Image source={image} />
+              <Text>{intl.formatMessage(messages.recoveryEmptyMessage)}</Text>
+            </View>
+            <Button
+              onPress={onRequestClose}
+              title={intl.formatMessage(messages.recoveryEmptyButtonText)}
+              shelleyTheme
+            />
+          </ScrollView>
+        </Modal>
+      )
+    }
   }
 }
 
 type ExternalProps = {
   visible: boolean,
   addresses: Array<string>,
-  balance: number,
+  balance: BigNumber,
   onRequestClose: () => any,
   intl: intlShape,
   navigation: Navigation,

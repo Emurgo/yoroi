@@ -26,4 +26,10 @@ export default StyleSheet.create({
   balanceAmount: {
     color: COLORS.POSITIVE_AMOUNT,
   },
+  empty: {
+    lineHeight: 20,
+    alignItems: 'center',
+    flex: 1,
+    marginBottom: 24,
+  },
 })

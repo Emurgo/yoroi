@@ -15,6 +15,8 @@ import {
   WrongPassword,
   CardanoError,
 } from './errors'
+import {AddressChain, AddressGenerator} from './chain'
+import {filterUsedAddresses, bulkFetchUTXOSumForAddresses} from '../api/api'
 
 import type {
   TransactionInput,
@@ -197,4 +199,46 @@ export const formatBIP44 = (
   return `m/${PURPOSE}'/${COIN}'/${account}'/${
     ADDRESS_TYPE_TO_CHANGE[type]
   }/${index}`
+}
+
+/**
+ * returns all used addresses (external and change addresses concatenated)
+ */
+export const mnemonicsToAddresses = async (
+  mnemonic: string,
+): Promise<Array<string>> => {
+  const masterKey = await getMasterKeyFromMnemonic(mnemonic)
+  const account = await getAccountFromMasterKey(masterKey)
+  const internalChain = new AddressChain(
+    new AddressGenerator(account, 'Internal'),
+  )
+  const externalChain = new AddressChain(
+    new AddressGenerator(account, 'External'),
+  )
+  await internalChain.initialize()
+  await externalChain.initialize()
+  await Promise.all([
+    internalChain.sync(filterUsedAddresses),
+    externalChain.sync(filterUsedAddresses),
+  ])
+  // get addresses in chunks
+  const allAddresses = [
+    ...internalChain.getBlocks(),
+    ...externalChain.getBlocks(),
+  ]
+  const filteredAddresses = []
+  for (let i = 0; i < allAddresses.length; i++) {
+    filteredAddresses.push(...(await filterUsedAddresses(allAddresses[i])))
+  }
+  return filteredAddresses
+}
+
+export const balanceForAddresses = async (
+  addresses: Array<string>,
+): Promise<{fundedAddresses: Array<string>, sum: BigNumber}> => {
+  const {fundedAddresses, sum} = await bulkFetchUTXOSumForAddresses(addresses)
+  return {
+    fundedAddresses,
+    sum,
+  }
 }
