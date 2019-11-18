@@ -22,11 +22,6 @@ const messages = defineMessages({
     defaultMessage: '!!!Add wallet',
     description: 'some ddesc',
   },
-  balanceCheckButton: {
-    id: 'components.walletinit.walletinitscreen.balanceCheckButton',
-    defaultMessage: '!!!Balance check (Shelley Testnet)',
-    description: 'some ddesc',
-  },
   createWalletButton: {
     id: 'components.walletinit.walletinitscreen.createWalletButton',
     defaultMessage: '!!!Create new wallet',
@@ -60,12 +55,6 @@ const WalletInitScreen = ({
         <View style={styles.content}>
           <WalletDescription />
         </View>
-
-        <Button
-          onPress={navigateBalanceCheck}
-          title={intl.formatMessage(messages.balanceCheckButton)}
-          style={styles.createButton}
-        />
 
         <Button
           onPress={navigateCreateWallet}
