@@ -59,6 +59,11 @@ const messages = defineMessages({
     defaultMessage: '!!!Balance Check',
     description: 'some desc',
   },
+  headsUp: {
+    id: 'components.walletinit.balancecheck.balancecheckscreen.headsUp',
+    defaultMessage: '!!!You are on the Shelley Balance Check Testnet',
+    description: 'some desc',
+  },
   mnemonicInputLabel: {
     id:
       'components.walletinit.balancecheck.balancecheckscreen.mnemonicInputLabel',
@@ -90,7 +95,6 @@ const _translateInvalidPhraseError = (intl: any, error: InvalidPhraseError) => {
   }
 }
 
-// TODO: flow
 const _handleConfirm = async (
   phrase: string,
 ): Promise<{addresses: Array<string>, balance: BigNumber}> => {
@@ -199,7 +203,7 @@ class BalanceCheckScreen extends Component<Props, State> {
       <>
         <SafeAreaView style={styles.safeAreaView}>
           <StatusBar type="dark" />
-          <Banner error text="You are on the Shelley Balance Check Testnet" />
+          <Banner error text={intl.formatMessage(messages.headsUp)} />
 
           <ScrollView keyboardDismissMode="on-drag">
             <View style={styles.container}>

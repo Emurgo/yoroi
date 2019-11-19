@@ -3,7 +3,7 @@
 import React from 'react'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
-import {View, TouchableOpacity, ScrollView, Image} from 'react-native'
+import {View, TouchableOpacity, ScrollView, Image, Linking} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import Markdown from 'react-native-easy-markdown'
 import {withNavigation} from 'react-navigation'
@@ -12,9 +12,11 @@ import {BigNumber} from 'bignumber.js'
 import type {Navigation} from '../../../types/navigation'
 import {Text, Button, Modal} from '../../UiKit'
 import {formatAdaWithText} from '../../../utils/format'
+import {CARDANO_CONFIG} from '../../../config'
 
 import styles from './styles/BalanceCheckModal.style'
-import image from '../../../assets/img/no_transactions_yet.inline.png'
+import imageEmpty from '../../../assets/img/no_transactions_yet.inline.png'
+import imageSucess from '../../../assets/img/transfer-success.inline.png'
 
 import type {ComponentType} from 'react'
 
@@ -33,11 +35,7 @@ const messages = defineMessages({
   },
   recoveryTitle: {
     id: 'components.walletinit.balancecheck.balancecheckmodal.recoveryTitle',
-    defaultMessage: '!!!Recovery Successful',
-  },
-  attention: {
-    id: 'components.walletinit.balancecheck.balancecheckmodal.attention',
-    defaultMessage: '!!!Attention',
+    defaultMessage: '!!!Successfully checked',
   },
   attentionDescription: {
     id:
@@ -64,13 +62,17 @@ const messages = defineMessages({
   },
 })
 
-const AddressEntry = ({address}) => {
+const AddressEntry = withHandlers({
+  onPress: ({address}) => () => {
+    Linking.openURL(CARDANO_CONFIG.SHELLEY.EXPLORER_URL_FOR_ADDRESS(address))
+  },
+})(({address, onPress}) => {
   return (
-    <TouchableOpacity activeOpacity={0.5}>
+    <TouchableOpacity activeOpacity={0.5} onPress={onPress}>
       <Text secondary>{address}</Text>
     </TouchableOpacity>
   )
-}
+})
 
 type Props = {
   intl: any,
@@ -97,32 +99,32 @@ class BalanceCheckModal extends React.Component<Props> {
         <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
           <ScrollView>
             <View style={styles.content}>
-              <Text style={styles.title} small>
-                {intl.formatMessage(messages.recoveryTitle)}
-              </Text>
-              <View style={styles.item}>
-                <Text style={styles.heading} small>
-                  {intl.formatMessage(messages.attention)}
+              <View style={styles.heading}>
+                <Image source={imageSucess} />
+                <Text style={styles.title} small>
+                  {intl.formatMessage(messages.recoveryTitle)}
                 </Text>
+              </View>
+              <View style={styles.item}>
                 <Markdown>
                   {intl.formatMessage(messages.attentionDescription)}
                 </Markdown>
               </View>
               <View style={styles.item}>
-                <Text style={styles.heading} small>
-                  {intl.formatMessage(messages.walletAddressesLabel)}
-                </Text>
-                {addresses.map((address, i) => (
-                  <AddressEntry key={i} address={address} />
-                ))}
-              </View>
-              <View style={styles.item}>
-                <Text style={styles.heading} small>
+                <Text style={styles.label} small>
                   {intl.formatMessage(messages.recoveredBalanceLabel)}
                 </Text>
                 <Text style={styles.balanceAmount}>
                   {balance && formatAdaWithText(balance)}
                 </Text>
+              </View>
+              <View style={styles.item}>
+                <Text style={styles.label} small>
+                  {intl.formatMessage(messages.walletAddressesLabel)}
+                </Text>
+                {addresses.map((address, i) => (
+                  <AddressEntry key={i} address={address} />
+                ))}
               </View>
             </View>
             <Button
@@ -137,8 +139,8 @@ class BalanceCheckModal extends React.Component<Props> {
       return (
         <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
           <ScrollView>
-            <View style={styles.empty}>
-              <Image source={image} />
+            <View style={[styles.content, styles.empty]}>
+              <Image source={imageEmpty} />
               <Text>{intl.formatMessage(messages.recoveryEmptyMessage)}</Text>
             </View>
             <Button

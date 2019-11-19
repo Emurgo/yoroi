@@ -17,13 +17,16 @@ export const CARDANO_CONFIG = {
   TESTNET: {
     PROTOCOL_MAGIC: 764824073,
     API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
-    EXPLORER_URL_FOR_TX: (tx: string) =>
-      `https://cardanoexplorer.com/tx/${tx}`,
+    EXPLORER_URL_FOR_TX: (tx: string) => `https://cardanoexplorer.com/tx/${tx}`,
   },
   MAINNET: {
     PROTOCOL_MAGIC: 764824073,
     API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
     EXPLORER_URL_FOR_TX: (tx: string) => `https://cardanoexplorer.com/tx/${tx}`,
+  },
+  SHELLEY: {
+    EXPLORER_URL_FOR_ADDRESS: (address: string) =>
+      `https://shelleyexplorer.cardano.org/address/?id=${address}`,
   },
 }
 

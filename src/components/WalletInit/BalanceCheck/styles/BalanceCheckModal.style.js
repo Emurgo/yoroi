@@ -5,6 +5,14 @@ import {StyleSheet} from 'react-native'
 import {COLORS} from '../../../../styles/config'
 
 export default StyleSheet.create({
+  content: {
+    flex: 1,
+    marginBottom: 24,
+  },
+  heading: {
+    marginBottom: 20,
+    alignItems: 'center',
+  },
   title: {
     textAlign: 'center',
     color: COLORS.POSITIVE_AMOUNT,
@@ -12,13 +20,10 @@ export default StyleSheet.create({
     lineHeight: 22,
     fontWeight: 'bold',
   },
-  heading: {
+  label: {
     marginTop: 5,
     fontSize: 14,
     lineHeight: 24,
-  },
-  content: {
-    marginBottom: 24,
   },
   item: {
     marginBottom: 5,
@@ -29,7 +34,5 @@ export default StyleSheet.create({
   empty: {
     lineHeight: 20,
     alignItems: 'center',
-    flex: 1,
-    marginBottom: 24,
   },
 })
