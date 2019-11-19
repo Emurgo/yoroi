@@ -5,7 +5,7 @@ import env from './env'
 const IS_DEBUG = __DEV__
 // debugging flags
 const _SHOW_INIT_DEBUG_SCREEN = false
-const _PREFILL_WALLET_INFO = true
+const _PREFILL_WALLET_INFO = false
 const _USE_TESTNET = env.getBoolean('USE_TESTNET', true)
 const _SENTRY = env.getString('SENTRY')
 const _LOG_LEVEL = IS_DEBUG ? LogLevel.Debug : LogLevel.Warn
@@ -16,12 +16,12 @@ const _COMMIT = env.getString('COMMIT')
 export const CARDANO_CONFIG = {
   TESTNET: {
     PROTOCOL_MAGIC: 764824073,
-    API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
+    API_ROOT: 'https://shelley-testnet-yoroi-backend.yoroiwallet.com/api',
     EXPLORER_URL_FOR_TX: (tx: string) => `https://cardanoexplorer.com/tx/${tx}`,
   },
   MAINNET: {
     PROTOCOL_MAGIC: 764824073,
-    API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
+    API_ROOT: 'https://shelley-testnet-yoroi-backend.yoroiwallet.com/api',
     EXPLORER_URL_FOR_TX: (tx: string) => `https://cardanoexplorer.com/tx/${tx}`,
   },
   SHELLEY: {
