@@ -144,7 +144,7 @@ class BalanceCheckScreen extends Component<Props, State> {
 
   translateInvalidPhraseError = (error) => {
     const {intl} = this.props
-    _translateInvalidPhraseError(intl, error)
+    return _translateInvalidPhraseError(intl, error)
   }
 
   setPhrase = (value: string) => {
