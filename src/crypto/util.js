@@ -206,6 +206,7 @@ export const formatBIP44 = (
  */
 export const mnemonicsToAddresses = async (
   mnemonic: string,
+  networkConfig?: Object = CONFIG.CARDANO,
 ): Promise<Array<string>> => {
   const masterKey = await getMasterKeyFromMnemonic(mnemonic)
   const account = await getAccountFromMasterKey(masterKey)
@@ -218,8 +219,8 @@ export const mnemonicsToAddresses = async (
   await internalChain.initialize()
   await externalChain.initialize()
   await Promise.all([
-    internalChain.sync(filterUsedAddresses),
-    externalChain.sync(filterUsedAddresses),
+    internalChain.sync(filterUsedAddresses, networkConfig),
+    externalChain.sync(filterUsedAddresses, networkConfig),
   ])
   // get addresses in chunks
   const allAddresses = [
@@ -228,15 +229,21 @@ export const mnemonicsToAddresses = async (
   ]
   const filteredAddresses = []
   for (let i = 0; i < allAddresses.length; i++) {
-    filteredAddresses.push(...(await filterUsedAddresses(allAddresses[i])))
+    filteredAddresses.push(
+      ...(await filterUsedAddresses(allAddresses[i], networkConfig)),
+    )
   }
   return filteredAddresses
 }
 
 export const balanceForAddresses = async (
   addresses: Array<string>,
+  networkConfig?: any = CONFIG.CARDANO,
 ): Promise<{fundedAddresses: Array<string>, sum: BigNumber}> => {
-  const {fundedAddresses, sum} = await bulkFetchUTXOSumForAddresses(addresses)
+  const {fundedAddresses, sum} = await bulkFetchUTXOSumForAddresses(
+    addresses,
+    networkConfig,
+  )
   return {
     fundedAddresses,
     sum,

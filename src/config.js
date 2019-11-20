@@ -16,15 +16,17 @@ const _COMMIT = env.getString('COMMIT')
 export const CARDANO_CONFIG = {
   TESTNET: {
     PROTOCOL_MAGIC: 764824073,
-    API_ROOT: 'https://shelley-testnet-yoroi-backend.yoroiwallet.com/api',
+    API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
     EXPLORER_URL_FOR_TX: (tx: string) => `https://cardanoexplorer.com/tx/${tx}`,
   },
   MAINNET: {
     PROTOCOL_MAGIC: 764824073,
-    API_ROOT: 'https://shelley-testnet-yoroi-backend.yoroiwallet.com/api',
+    API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
     EXPLORER_URL_FOR_TX: (tx: string) => `https://cardanoexplorer.com/tx/${tx}`,
   },
   SHELLEY: {
+    PROTOCOL_MAGIC: 764824073,
+    API_ROOT: 'https://shelley-testnet-yoroi-backend.yoroiwallet.com/api',
     EXPLORER_URL_FOR_ADDRESS: (address: string) =>
       `https://shelleyexplorer.cardano.org/address/?id=${address}`,
   },

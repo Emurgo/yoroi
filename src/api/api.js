@@ -21,10 +21,15 @@ const _checkResponse = (response, requestPayload) => {
   }
 }
 
-const _fetch = (path: string, payload: any) => {
+const _fetch = (
+  path: string,
+  payload: any,
+  networkConfig: any = CONFIG.CARDANO,
+) => {
   Logger.info(`API call: ${path}`)
+  const fullPath = `${networkConfig.API_ROOT}/${path}`
   return (
-    fetch(`${CONFIG.API.ROOT}/${path}`, {
+    fetch(fullPath, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
@@ -56,15 +61,20 @@ const _fetch = (path: string, payload: any) => {
 export const fetchNewTxHistory = async (
   dateFrom: Moment,
   addresses: Addresses,
+  networkConfig: any = CONFIG.CARDANO,
 ): Promise<{isLast: boolean, transactions: Array<Transaction>}> => {
   assert.preconditionCheck(
     addresses.length <= CONFIG.API.TX_HISTORY_MAX_ADDRESSES,
     'fetchNewTxHistory: too many addresses',
   )
-  const response = await _fetch('txs/history', {
-    addresses,
-    dateFrom: dateFrom.toISOString(),
-  })
+  const response = await _fetch(
+    'txs/history',
+    {
+      addresses,
+      dateFrom: dateFrom.toISOString(),
+    },
+    networkConfig,
+  )
 
   const transactions = await Promise.all(
     response.map(checkAndFacadeTransactionAsync),
@@ -77,6 +87,7 @@ export const fetchNewTxHistory = async (
 
 export const filterUsedAddresses = async (
   addresses: Addresses,
+  networkConfig: any = CONFIG.CARDANO,
 ): Promise<Addresses> => {
   assert.preconditionCheck(
     addresses.length <= CONFIG.API.FILTER_USED_MAX_ADDRESSES,
@@ -84,26 +95,34 @@ export const filterUsedAddresses = async (
   )
   // Take a copy in case underlying data mutates during await
   const copy = [...addresses]
-  const used = await _fetch('addresses/filterUsed', {addresses: copy})
+  const used = await _fetch(
+    'addresses/filterUsed',
+    {addresses: copy},
+    networkConfig,
+  )
   // We need to do this so that we keep original order of addresses
   return copy.filter((addr) => used.includes(addr))
 }
 
-export const fetchUTXOsForAddresses = (addresses: Addresses) => {
+export const fetchUTXOsForAddresses = (
+  addresses: Addresses,
+  networkConfig: any = CONFIG.CARDANO,
+) => {
   assert.preconditionCheck(
     addresses.length <= CONFIG.API.FETCH_UTXOS_MAX_ADDRESSES,
     'fetchNewTxHistory: too many addresses',
   )
-  return _fetch('txs/utxoForAddresses', {addresses})
+  return _fetch('txs/utxoForAddresses', {addresses}, networkConfig)
 }
 
 export const bulkFetchUTXOsForAddresses = async (
   addresses: Array<string>,
+  networkConfig: any = CONFIG.CARDANO,
 ): Promise<Array<RawUtxo>> => {
   const chunks = _.chunk(addresses, CONFIG.API.FETCH_UTXOS_MAX_ADDRESSES)
 
   const responses = await Promise.all(
-    chunks.map((addrs) => fetchUTXOsForAddresses(addrs)),
+    chunks.map((addrs) => fetchUTXOsForAddresses(addrs, networkConfig)),
   )
   return _.flatten(responses)
 }
@@ -114,21 +133,23 @@ export const submitTransaction = (signedTx: string) => {
 
 export const fetchUTXOSumForAddresses = (
   addresses: Array<string>,
+  networkConfig: any = CONFIG.CARDANO,
 ): Promise<{sum: string}> => {
   assert.preconditionCheck(
     addresses.length <= CONFIG.API.FETCH_UTXOS_MAX_ADDRESSES,
     'fetchUTXOSumForAddresses: too many addresses',
   )
-  return _fetch('txs/utxoSumForAddresses', {addresses})
+  return _fetch('txs/utxoSumForAddresses', {addresses}, networkConfig)
 }
 
 export const bulkFetchUTXOSumForAddresses = async (
   addresses: Array<string>,
+  networkConfig: any = CONFIG.CARDANO,
 ): Promise<{fundedAddresses: Array<string>, sum: BigNumber}> => {
   const chunks = _.chunk(addresses, CONFIG.API.FETCH_UTXOS_MAX_ADDRESSES)
 
   const responses = await Promise.all(
-    chunks.map((addrs) => fetchUTXOSumForAddresses(addrs)),
+    chunks.map((addrs) => fetchUTXOSumForAddresses(addrs, networkConfig)),
   )
   const sum = responses.reduce(
     (x: BigNumber, y) => x.plus(new BigNumber(y.sum || 0)),
@@ -136,7 +157,7 @@ export const bulkFetchUTXOSumForAddresses = async (
   )
 
   const responseUTXOAddresses = await Promise.all(
-    chunks.map((addrs) => fetchUTXOsForAddresses(addrs)),
+    chunks.map((addrs) => fetchUTXOsForAddresses(addrs, networkConfig)),
   )
 
   const fundedAddresses = _.flatten(responseUTXOAddresses).map(

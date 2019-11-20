@@ -125,7 +125,6 @@ const reloadAppSettings = () => async (dispatch: Dispatch<any>) => {
   })
 
   dispatch(_setAppSettings(appSettings))
-  console.log(appSettings)
   if (appSettings.languageCode) {
     dispatch(changeAndSaveLanguage(appSettings.languageCode))
   }

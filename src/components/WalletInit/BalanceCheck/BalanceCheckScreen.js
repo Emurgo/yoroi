@@ -11,7 +11,7 @@ import {BigNumber} from 'bignumber.js'
 
 import {Text, Button, ValidatedTextInput, StatusBar, Banner} from '../../UiKit'
 import BalanceCheckModal from './BalanceCheckModal'
-import {CONFIG} from '../../../config'
+import {CONFIG, CARDANO_CONFIG} from '../../../config'
 import {
   validateRecoveryPhrase,
   INVALID_PHRASE_ERROR_CODES,
@@ -98,8 +98,14 @@ const _translateInvalidPhraseError = (intl: any, error: InvalidPhraseError) => {
 const _handleConfirm = async (
   phrase: string,
 ): Promise<{addresses: Array<string>, balance: BigNumber}> => {
-  const addresses = await mnemonicsToAddresses(cleanMnemonic(phrase))
-  const {fundedAddresses, sum} = await balanceForAddresses(addresses)
+  const addresses = await mnemonicsToAddresses(
+    cleanMnemonic(phrase),
+    CARDANO_CONFIG.SHELLEY,
+  )
+  const {fundedAddresses, sum} = await balanceForAddresses(
+    addresses,
+    CARDANO_CONFIG.SHELLEY,
+  )
   return {addresses: fundedAddresses, balance: sum}
 }
 
