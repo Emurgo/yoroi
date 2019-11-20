@@ -15,8 +15,6 @@ export default StyleSheet.create({
   },
   phrase: {
     lineHeight: 24,
-    height: 'auto',
-    marginTop: 32,
     borderColor: '#9b9b9b',
   },
 })
