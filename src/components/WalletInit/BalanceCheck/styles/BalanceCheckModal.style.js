@@ -5,6 +5,9 @@ import {StyleSheet} from 'react-native'
 import {COLORS} from '../../../../styles/config'
 
 export default StyleSheet.create({
+  scrollView: {
+    paddingRight: 10,
+  },
   content: {
     flex: 1,
     marginBottom: 24,

@@ -97,7 +97,7 @@ class BalanceCheckModal extends React.Component<Props> {
     if (addresses.length > 0) {
       return (
         <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
-          <ScrollView>
+          <ScrollView style={styles.scrollView}>
             <View style={styles.content}>
               <View style={styles.heading}>
                 <Image source={imageSucess} />
@@ -138,7 +138,7 @@ class BalanceCheckModal extends React.Component<Props> {
     } else {
       return (
         <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
-          <ScrollView>
+          <ScrollView style={styles.scrollView}>
             <View style={[styles.content, styles.empty]}>
               <Image source={imageEmpty} />
               <Text>{intl.formatMessage(messages.recoveryEmptyMessage)}</Text>
