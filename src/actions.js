@@ -14,7 +14,7 @@ import {
   setBackgroundSyncError,
   updateHistory,
 } from './actions/history'
-import {changeLanguage} from './actions/language'
+import {changeAndSaveLanguage} from './actions/language'
 import {
   canBiometricEncryptionBeEnabled,
   recreateAppSignInKeys,
@@ -125,8 +125,9 @@ const reloadAppSettings = () => async (dispatch: Dispatch<any>) => {
   })
 
   dispatch(_setAppSettings(appSettings))
+  console.log(appSettings)
   if (appSettings.languageCode) {
-    dispatch(changeLanguage(appSettings.languageCode))
+    dispatch(changeAndSaveLanguage(appSettings.languageCode))
   }
 }
 
