@@ -1,5 +1,5 @@
 // @flow
-import {Transaction as V3Transaction} from 'react-native-chain-libs'
+import {InputOutput} from 'react-native-chain-libs'
 import {BigNumber} from 'bignumber.js'
 
 export const TRANSACTION_DIRECTION = {
@@ -99,7 +99,7 @@ export type PreparedTransactionData = {|
 
 export type V3UnsignedTxData = {|
   senderUtxos: Array<RawUtxo>,
-  unsignedTx: V3Transaction,
+  IOs: InputOutput,
   changeAddr: Array<{|
     address: string,
     value: void | BigNumber,
@@ -109,7 +109,7 @@ export type V3UnsignedTxData = {|
 
 export type V3UnsignedTxAddressedUtxoData = {|
   senderUtxos: Array<AddressedUtxo>,
-  unsignedTx: V3Transaction,
+  IOs: InputOutput,
   changeAddr: Array<{|
     address: string,
     value: void | BigNumber,

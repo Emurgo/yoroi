@@ -122,8 +122,8 @@ describe('Create unsigned TX from UTXO', () => {
       utxos,
     )
     expect(unsignedTxResponse.senderUtxos).toEqual(utxos)
-    const inputSum = await getTxInputTotal(unsignedTxResponse.unsignedTx)
-    const outputSum = await getTxOutputTotal(unsignedTxResponse.unsignedTx)
+    const inputSum = await getTxInputTotal(unsignedTxResponse.IOs)
+    const outputSum = await getTxOutputTotal(unsignedTxResponse.IOs)
     expect(inputSum.toString()).toEqual('1000001')
     expect(outputSum.toString()).toEqual('5001')
     expect(inputSum.minus(outputSum).toString()).toEqual('995000')
@@ -172,8 +172,8 @@ describe('Create unsigned TX from UTXO', () => {
     // input selection will only take 2 of the 3 inputs
     // it takes 2 inputs because input selection algorithm
     expect(unsignedTxResponse.senderUtxos).toEqual([utxos[0], utxos[1]])
-    const inputSum = await getTxInputTotal(unsignedTxResponse.unsignedTx)
-    const outputSum = await getTxOutputTotal(unsignedTxResponse.unsignedTx)
+    const inputSum = await getTxInputTotal(unsignedTxResponse.IOs)
+    const outputSum = await getTxOutputTotal(unsignedTxResponse.IOs)
     expect(inputSum.toString()).toEqual('1007002')
     expect(outputSum.toString()).toEqual('851617')
     expect(inputSum.minus(outputSum).toString()).toEqual('155385')
@@ -192,8 +192,8 @@ describe('Create unsigned TX from addresses', () => {
       addressedUtxos[0],
       addressedUtxos[1],
     ])
-    const inputSum = await getTxInputTotal(unsignedTxResponse.unsignedTx)
-    const outputSum = await getTxOutputTotal(unsignedTxResponse.unsignedTx)
+    const inputSum = await getTxInputTotal(unsignedTxResponse.IOs)
+    const outputSum = await getTxOutputTotal(unsignedTxResponse.IOs)
     expect(inputSum.toString()).toEqual('1007002')
     expect(outputSum.toString()).toEqual('5001')
     expect(inputSum.minus(outputSum).toString()).toEqual('1002001')

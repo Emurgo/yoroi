@@ -14,18 +14,23 @@ import {InsufficientFunds} from '../errors'
 import {BigNumber} from 'bignumber.js'
 import {
   Address,
-  AuthenticatedTransaction,
   Fee,
   FragmentId,
   Hash,
   Input,
+  InputOutputBuilder,
   OutputPolicy,
   Outputs,
+  Payload,
+  PayloadAuthData,
+  Transaction,
   TransactionBuilder,
-  TransactionFinalizer,
+  TransactionBuilderSetAuthData,
+  TransactionBuilderSetWitness,
   UtxoPointer,
   Value,
   Witness,
+  Witnesses,
 } from 'react-native-chain-libs'
 import {HdWallet, Wallet} from 'react-native-cardano'
 import type {
@@ -58,18 +63,22 @@ export const newAdaUnsignedTxFromUtxo = async (
     await Value.from_str(CONFIG.LINEAR_FEE.CERTIFICATE),
   )
 
-  const txBuilder = await TransactionBuilder.new_no_payload()
-  await txBuilder.add_output(
+  const ioBuilder = await InputOutputBuilder.empty()
+  await ioBuilder.add_output(
     await Address.from_string(receiver),
     await Value.from_str(amount),
   )
 
+  // can't add a certificate to a UTXO transaction
+  const payload = await Payload.no_payload()
+
   const selectedUtxos = await firstMatchFirstInputSelection(
-    txBuilder,
+    ioBuilder,
     allUtxos,
     feeAlgorithm,
+    payload,
   )
-  let transaction
+  let IOs
   const change = []
   if (changeAddresses.length === 1) {
     const changeAddress = changeAddresses[0]
@@ -80,7 +89,9 @@ export const newAdaUnsignedTxFromUtxo = async (
      * may be more expensive than the amount leftover
      * In this case we don't add a change address
      */
-    transaction = await txBuilder.seal_with_output_policy(
+    // transaction = await txBuilder.seal_with_output_policy(
+    IOs = await ioBuilder.seal_with_output_policy(
+      payload,
       feeAlgorithm,
       await OutputPolicy.one(await Address.from_string(changeAddress.address)),
     )
@@ -88,12 +99,12 @@ export const newAdaUnsignedTxFromUtxo = async (
     change.push(
       ...(await filterToUsedChange(
         changeAddress,
-        await transaction.outputs(),
+        await IOs.outputs(),
         selectedUtxos,
       )),
     )
   } else if (changeAddresses.length === 0) {
-    transaction = await txBuilder.seal_with_output_policy(
+    IOs = await ioBuilder.seal_with_output_policy(
       feeAlgorithm,
       await OutputPolicy.forget(),
     )
@@ -103,7 +114,7 @@ export const newAdaUnsignedTxFromUtxo = async (
 
   return {
     senderUtxos: selectedUtxos,
-    unsignedTx: transaction,
+    IOs,
     changeAddr: change,
   }
 }
@@ -146,15 +157,16 @@ export const newAdaUnsignedTx = async (
 
   return {
     senderUtxos: addressedUtxos,
-    unsignedTx: unsignedTxResponse.unsignedTx,
+    IOs: unsignedTxResponse.IOs,
     changeAddr: unsignedTxResponse.changeAddr,
   }
 }
 
 async function firstMatchFirstInputSelection(
-  txBuilder: TransactionBuilder,
+  txBuilder: InputOutputBuilder,
   allUtxos: Array<RawUtxo>,
   feeAlgorithm: Fee,
+  payload: Payload,
 ): Promise<Array<RawUtxo>> {
   const selectedOutputs = []
   if (allUtxos.length === 0) {
@@ -164,7 +176,7 @@ async function firstMatchFirstInputSelection(
   for (let i = 0; i < allUtxos.length; i++) {
     selectedOutputs.push(allUtxos[i])
     await txBuilder.add_input(await utxoToTxInput(allUtxos[i]))
-    const txBalance = await txBuilder.get_balance(feeAlgorithm)
+    const txBalance = await txBuilder.get_balance(payload, feeAlgorithm)
     if (!(await txBalance.is_negative())) {
       break
     }
@@ -221,11 +233,25 @@ async function filterToUsedChange(
 export const signTransaction = async (
   signRequest: V3UnsignedTxAddressedUtxoData,
   wallet: Wallet.WalletObj,
-): AuthenticatedTransaction => {
-  const {senderUtxos, unsignedTx} = signRequest
-  const txFinalizer = await new TransactionFinalizer(unsignedTx)
-  await addWitnesses(txFinalizer, senderUtxos, wallet)
-  const signedTx = await txFinalizer.finalize()
+): Promise<Transaction> => {
+  const {senderUtxos, IOs} = signRequest
+
+  const txBuilder = await new TransactionBuilder()
+  const builderSetIOs = await txBuilder.no_payload()
+  const builderSetWitness = await builderSetIOs.set_ios(
+    await IOs.inputs(),
+    await IOs.outputs(),
+  )
+  const builderSetAuthData = await addWitnesses(
+    builderSetWitness,
+    senderUtxos,
+    wallet,
+  )
+
+  const signedTx = await builderSetAuthData.set_payload_auth(
+    // can't add a certificate to a UTXO transaction
+    await PayloadAuthData.for_no_payload(),
+  )
   return signedTx
 }
 
@@ -239,14 +265,14 @@ async function utxoToTxInput(utxo: RawUtxo): Input {
 }
 
 /**
- * this function still uses the old addressing format only compatible with
- * with Bip44 paths
+ * In contrast to yoroi-frontend, this function still uses the old addressing
+ * format only compatible with with Bip44 paths.
  */
 async function addWitnesses(
-  txFinalizer: TransactionFinalizer,
+  builderSetWitnesses: TransactionBuilderSetWitness,
   senderUtxos: Array<AddressedUtxo>,
   wallet: Wallet.WalletObj,
-): Promise<void> {
+): Promise<TransactionBuilderSetAuthData> {
   // get private keys
   const rootKey = wallet.root_cached_key
   const privateKeys = await Promise.all(
@@ -266,12 +292,14 @@ async function addWitnesses(
     ),
   )
 
+  const witnesses = await Witnesses.new()
   for (let i = 0; i < senderUtxos.length; i++) {
     const witness = await Witness.for_utxo(
       await Hash.from_hex(CONFIG.GENESISHASH),
-      await txFinalizer.get_txid(),
+      // await txFinalizer.get_txid(),
+      await builderSetWitnesses.get_auth_data_for_witness(),
       await v2SkKeyToV3Key(privateKeys[i]),
     )
-    await txFinalizer.set_witness(i, witness)
+    witnesses.add(witness)
   }
 }
