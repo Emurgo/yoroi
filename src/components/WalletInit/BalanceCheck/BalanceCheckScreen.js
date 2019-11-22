@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react'
-import {View, ScrollView} from 'react-native'
+import {View, ScrollView, Platform} from 'react-native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {SafeAreaView} from 'react-navigation'
@@ -217,7 +217,7 @@ class BalanceCheckScreen extends Component<Props, State> {
               <ValidatedTextInput
                 multiline
                 numberOfLines={3}
-                style={styles.phrase}
+                style={Platform.OS === 'ios' ? styles.iosPhrase : styles.phrase}
                 value={phrase}
                 onChangeText={this.setPhrase}
                 placeholder={intl.formatMessage(messages.mnemonicInputLabel)}
