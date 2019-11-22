@@ -25,6 +25,19 @@ export const CARDANO_CONFIG = {
     API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
     EXPLORER_URL_FOR_TX: (tx: string) => `https://cardanoexplorer.com/tx/${tx}`,
   },
+  SHELLEY: {
+    LINEAR_FEE: {
+      CONSTANT: '155381',
+      COEFFICIENT: '1',
+      CERTIFICATE: '4',
+    },
+    ADDRESS_DISCRIMINATION: {
+      PRODUCTION: '0',
+      TEST: '1',
+    },
+    GENESISHASH:
+      'adbdd5ede31637f6c9bad5c271eec0bc3d0cb9efb86a5b913bb55cba549d0770',
+  },
 }
 
 export const ASSURANCE_LEVELS = {
