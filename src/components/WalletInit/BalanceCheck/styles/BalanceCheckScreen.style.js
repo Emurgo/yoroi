@@ -1,6 +1,11 @@
 // @flow
 import {StyleSheet} from 'react-native'
 
+const phrase = {
+  lineHeight: 24,
+  borderColor: '#9b9b9b',
+}
+
 export default StyleSheet.create({
   safeAreaView: {
     flex: 1,
@@ -14,7 +19,11 @@ export default StyleSheet.create({
     backgroundColor: '#fff',
   },
   phrase: {
-    lineHeight: 24,
-    borderColor: '#9b9b9b',
+    ...phrase,
+  },
+  iosPhrase: {
+    ...phrase,
+    height: 'auto',
+    marginTop: 24,
   },
 })
