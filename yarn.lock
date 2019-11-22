@@ -7310,7 +7310,7 @@ react-native-camera@^1.3.0:
 
 react-native-chain-libs@crossroadlabs/react-native-chain-libs:
   version "1.0.0"
-  resolved "https://codeload.github.com/crossroadlabs/react-native-chain-libs/tar.gz/774f43552635741a7bfad2174ceb60fb999d14f6"
+  resolved "https://codeload.github.com/crossroadlabs/react-native-chain-libs/tar.gz/3e8c01b3effe58616ce182dbebc25d919a4129ef"
   dependencies:
     base-64 "0.1.0"
 

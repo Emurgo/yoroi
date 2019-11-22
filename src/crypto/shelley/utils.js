@@ -1,13 +1,13 @@
 // @flow
 
-import {Transaction, PublicKey, PrivateKey} from 'react-native-chain-libs'
+import {InputOutput, PublicKey, PrivateKey} from 'react-native-chain-libs'
 import {HdWallet} from 'react-native-cardano'
 import {BigNumber} from 'bignumber.js'
 
-export async function getTxInputTotal(tx: Transaction): Promise<BigNumber> {
+export const getTxInputTotal = async (IOs: InputOutput): Promise<BigNumber> => {
   let sum = new BigNumber(0)
 
-  const inputs = await tx.inputs()
+  const inputs = await IOs.inputs()
   for (let i = 0; i < (await inputs.size()); i++) {
     const input = await inputs.get(i)
     const value = new BigNumber(await (await input.value()).to_str())
@@ -16,10 +16,12 @@ export async function getTxInputTotal(tx: Transaction): Promise<BigNumber> {
   return sum
 }
 
-export async function getTxOutputTotal(tx: Transaction): Promise<BigNumber> {
+export const getTxOutputTotal = async (
+  IOs: InputOutput,
+): Promise<BigNumber> => {
   let sum = new BigNumber(0)
 
-  const outputs = await tx.outputs()
+  const outputs = await IOs.outputs()
   for (let i = 0; i < (await outputs.size()); i++) {
     const output = await outputs.get(i)
     const value = new BigNumber(await (await output.value()).to_str())
