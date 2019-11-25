@@ -114,8 +114,8 @@ android {
         applicationId "com.emurgo"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 17
-        versionName "1.4.1"
+        versionCode 21
+        versionName "1.5.0"
         ndk {
           abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
         }

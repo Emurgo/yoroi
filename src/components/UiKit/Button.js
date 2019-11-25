@@ -42,6 +42,9 @@ const styles = StyleSheet.create({
   buttonDisabled: {
     opacity: 0.5,
   },
+  shelleyTheme: {
+    backgroundColor: colors.buttonBackgroundBlue,
+  },
 })
 
 type ButtonProps = {
@@ -57,6 +60,7 @@ type ButtonProps = {
   block?: boolean,
   iconImage?: number,
   withoutBackground?: boolean,
+  shelleyTheme?: boolean,
 }
 
 class Button extends React.Component<ButtonProps> {
@@ -73,6 +77,7 @@ class Button extends React.Component<ButtonProps> {
       outlineOnLight,
       iconImage,
       withoutBackground,
+      shelleyTheme,
     } = this.props
 
     const formattedTitle = title && title.toUpperCase()
@@ -93,6 +98,7 @@ class Button extends React.Component<ButtonProps> {
             outlineOnLight === true && styles.buttonOutlineOnLight,
             disabled === true && styles.buttonDisabled,
             withoutBackground === true && styles.buttonTransparent,
+            shelleyTheme === true && styles.shelleyTheme,
             style,
           ]}
         >
