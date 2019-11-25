@@ -114,8 +114,8 @@ android {
         applicationId "com.emurgo"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 17
-        versionName "1.4.1"
+        versionCode 21
+        versionName "1.5.0"
         ndk {
           abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
         }
@@ -153,7 +153,7 @@ android {
             applicationId 'com.emurgo'
             minSdkVersion 21
             compileSdkVersion = 28
-            targetSdkVersion 27
+            targetSdkVersion 28
             resValue "string", "build_config_package", "com.emurgo"
         }
         dev {
@@ -162,7 +162,7 @@ android {
             applicationId 'com.emurgo'
             minSdkVersion 21
             compileSdkVersion = 28
-            targetSdkVersion 27
+            targetSdkVersion 28
             resValue "string", "build_config_package", "com.emurgo"
         }
     }
