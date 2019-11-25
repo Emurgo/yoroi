@@ -1,6 +1,7 @@
 // @flow
 
-import {InputOutput} from 'react-native-chain-libs'
+import {InputOutput, PublicKey, PrivateKey} from 'react-native-chain-libs'
+import {HdWallet} from 'react-native-cardano'
 import {BigNumber} from 'bignumber.js'
 
 export const getTxInputTotal = async (IOs: InputOutput): Promise<BigNumber> => {
@@ -9,8 +10,7 @@ export const getTxInputTotal = async (IOs: InputOutput): Promise<BigNumber> => {
   const inputs = await IOs.inputs()
   for (let i = 0; i < (await inputs.size()); i++) {
     const input = await inputs.get(i)
-    // todo: input.value() not yet implemented
-    const value = new BigNumber(input.value().to_str())
+    const value = new BigNumber(await (await input.value()).to_str())
     sum = sum.plus(value)
   }
   return sum
@@ -23,10 +23,23 @@ export const getTxOutputTotal = async (
 
   const outputs = await IOs.outputs()
   for (let i = 0; i < (await outputs.size()); i++) {
-    const output = outputs.get(i)
-    // todo: input.value() not yet implemented
-    const value = new BigNumber(output.value().to_str())
+    const output = await outputs.get(i)
+    const value = new BigNumber(await (await output.value()).to_str())
     sum = sum.plus(value)
   }
   return sum
+}
+
+// TODO: test
+export const v2SkKeyToV3Key = async (v2Key: HdWallet.XPrv): PrivateKey => {
+  return await PrivateKey.from_extended_bytes(
+    // need to slice out the chain code from the private key
+    Buffer.from(v2Key.slice(0, 128), 'hex'),
+  )
+}
+export const v2PkKeyToV3Key = async (v2Key: HdWallet.XPub): PublicKey => {
+  return await PublicKey.from_bytes(
+    // need to slice out the chain code from the public key
+    Buffer.from(v2Key.slice(0, 64), 'hex'),
+  )
 }
