@@ -4,11 +4,11 @@ import {CONFIG} from '../../config'
 import {View, WebView} from 'react-native'
 import {compose, withHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
-import type {IntlShape} from 'react-intl';
-import type {NavigationScreenProp, NavigationState} from 'react-navigation';
+import type {IntlShape} from 'react-intl'
+import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 
 import type {ComponentType} from 'react'
-import {withNavigationTitle} from "../../utils/renderUtils";
+import {withNavigationTitle} from '../../utils/renderUtils'
 
 const messages = defineMessages({
   title: {
@@ -27,9 +27,21 @@ const messages = defineMessages({
 })
 
 const DelegationCenter = ({navigation, intl}) => (
-      <View style={{ flex: 1 }}>
-        <WebView source={{uri: 'http://localhost:3000/staking-simple/list?sortBy=REVENUE&searchText=&performance[]=0&performance[]=100'}} />
-      </View>
+  <View style={{flex: 1}}>
+    <WebView
+      useWebKit
+      source={{uri: 'http://localhost:3000/staking-simple/list?sortBy=REVENUE&searchText=&performance[]=0&performance[]=100'}}
+      onLoadStart={() => {console.log('LOAD START')}}
+      onLoadEnd={() => {console.log('LOAD END ')}}
+      onMessage={
+        (event) => {
+          const getData = decodeURI(event.nativeEvent.data)
+          console.log('handle message : ', getData)
+          alert(getData)
+        }
+      }
+    />
+  </View>
 )
 
 export default injectIntl(
@@ -40,4 +52,3 @@ export default injectIntl(
     navigation: NavigationScreenProp<NavigationState>,
   }>),
 )
-
