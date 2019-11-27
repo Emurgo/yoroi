@@ -89,6 +89,7 @@ export const newAdaUnsignedTxFromUtxo = async (
      * may be more expensive than the amount leftover
      * In this case we don't add a change address
      */
+    // transaction = await txBuilder.seal_with_output_policy(
     IOs = await ioBuilder.seal_with_output_policy(
       payload,
       feeAlgorithm,
@@ -104,7 +105,6 @@ export const newAdaUnsignedTxFromUtxo = async (
     )
   } else if (changeAddresses.length === 0) {
     IOs = await ioBuilder.seal_with_output_policy(
-      payload,
       feeAlgorithm,
       await OutputPolicy.forget(),
     )
@@ -302,5 +302,4 @@ async function addWitnesses(
     )
     witnesses.add(witness)
   }
-  return await builderSetWitnesses.set_witnesses(witnesses)
 }
