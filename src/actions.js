@@ -386,14 +386,26 @@ const showDialog = (translations: DialogOptions): Promise<DialogButton> =>
 
 export const showErrorDialog = (
   dialog: DialogOptions,
-  intl: intlShape,
+  intl: ?intlShape,
   msgOptions?: any,
-): Promise<DialogButton> =>
-  showDialog({
-    title: intl.formatMessage(dialog.title),
-    message: intl.formatMessage(dialog.message, msgOptions),
-    yesButton: intl.formatMessage(globalMessages.ok),
-  })
+): Promise<DialogButton> => {
+  let title, message, yesButton
+  if (intl != null) {
+    title = intl.formatMessage(dialog.title)
+    message = intl.formatMessage(dialog.message, msgOptions)
+    yesButton = intl.formatMessage(globalMessages.ok)
+  } else {
+    // in this case the function was called without providing the intlShape
+    // object, so only an english dialog will be displayed
+    title = dialog.title.defaultMessage
+    message = msgOptions.message != null ?
+      dialog.message.defaultMessage
+        .replace(new RegExp('{message}', 'gi'), msgOptions.message)
+      : 'unknown error'
+    yesButton = globalMessages.ok.defaultMessage
+  }
+  showDialog({title, message, yesButton})
+}
 
 export const showConfirmationDialog = (
   dialog: DialogOptions,
@@ -438,7 +450,7 @@ export const setSystemAuth = (enable: boolean) => async (
 
 export const handleGeneralError = async (message: string, e: Error) => {
   Logger.error(`${message}: ${e.message}`, e)
-  await showErrorDialog(errorMessages.generalError, {message})
+  await showErrorDialog(errorMessages.generalError, null, {message})
   crashReporting.crash()
 }
 
