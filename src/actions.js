@@ -385,9 +385,10 @@ const showDialog = (translations: DialogOptions): Promise<DialogButton> =>
   })
 
 export const showErrorDialog = (
-  dialog: DialogOptions,
+  dialog: Object,
   intl: ?intlShape,
-  msgOptions?: any,
+  msgOptions?: Object,
+  // $FlowFixMe
 ): Promise<DialogButton> => {
   let title, message, yesButton
   if (intl != null) {
@@ -398,10 +399,15 @@ export const showErrorDialog = (
     // in this case the function was called without providing the intlShape
     // object, so only an english dialog will be displayed
     title = dialog.title.defaultMessage
-    message = msgOptions.message != null ?
-      dialog.message.defaultMessage
-        .replace(new RegExp('{message}', 'gi'), msgOptions.message)
-      : 'unknown error'
+    // seems impossible to pass eslint check using a ternary operator here
+    if (msgOptions != null && 'message' in msgOptions) {
+      message = dialog.message.defaultMessage.replace(
+        new RegExp('{message}', 'gi'),
+        msgOptions.message,
+      )
+    } else {
+      message = 'unknown error'
+    }
     yesButton = globalMessages.ok.defaultMessage
   }
   showDialog({title, message, yesButton})
