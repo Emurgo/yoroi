@@ -4,7 +4,7 @@
  * Based on `accountingTransactions.js` from yoroi-frontend
  */
 
-import {InsufficientFunds} from '../errors'
+import {InsufficientFunds} from '../../errors'
 import {BigNumber} from 'bignumber.js'
 import {
   Account,
@@ -31,7 +31,7 @@ import {
   Witnesses,
 } from 'react-native-chain-libs'
 
-import {CARDANO_CONFIG} from '../../config'
+import {CARDANO_CONFIG} from '../../../config'
 
 const CONFIG = CARDANO_CONFIG.SHELLEY
 

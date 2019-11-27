@@ -1,20 +1,20 @@
 // @flow
 /* eslint-disable max-len */
 
-import jestSetup from '../../jestSetup'
+import jestSetup from '../../../jestSetup'
 
 import type {
   RawUtxo,
   AddressedUtxo,
   Addressing,
-} from '../../types/HistoryTransaction'
+} from '../../../types/HistoryTransaction'
 import {
   newAdaUnsignedTx,
   newAdaUnsignedTxFromUtxo,
   signTransaction,
 } from './utxoTransactions'
-import {getWalletFromMasterKey} from '../util'
-import {InsufficientFunds} from '../errors'
+import {getWalletFromMasterKey} from '../../byron/util'
+import {InsufficientFunds} from '../../errors'
 import {getTxInputTotal, getTxOutputTotal} from './utils'
 
 jestSetup.setup()

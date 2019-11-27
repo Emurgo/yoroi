@@ -10,7 +10,7 @@
  * existing structure
  */
 
-import {InsufficientFunds} from '../errors'
+import {InsufficientFunds} from '../../errors'
 import {BigNumber} from 'bignumber.js'
 import {
   Address,
@@ -39,9 +39,9 @@ import type {
   RawUtxo,
   AddressedUtxo,
   Addressing,
-} from '../../types/HistoryTransaction'
+} from '../../../types/HistoryTransaction'
 import {v2SkKeyToV3Key} from './utils'
-import {CARDANO_CONFIG} from '../../config'
+import {CARDANO_CONFIG} from '../../../config'
 
 const CONFIG = CARDANO_CONFIG.SHELLEY
 

@@ -1,12 +1,12 @@
 // @flow
 
-import jestSetup from '../../jestSetup'
+import jestSetup from '../../../jestSetup'
 
 import {BigNumber} from 'bignumber.js'
 import {Address, PrivateKey} from 'react-native-chain-libs'
 import {buildUnsignedAccountTx, signTransaction} from './accountingTransactions'
 import {getTxInputTotal, getTxOutputTotal} from './utils'
-import {InsufficientFunds} from '../errors'
+import {InsufficientFunds} from '../../errors'
 
 jestSetup.setup()
 

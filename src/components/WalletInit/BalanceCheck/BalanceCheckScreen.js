@@ -22,7 +22,10 @@ import {showErrorDialog} from '../../../actions'
 import {NetworkError, ApiError} from '../../../api/errors'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import {isKeyboardOpenSelector} from '../../../selectors'
-import {mnemonicsToAddresses, balanceForAddresses} from '../../../crypto/util'
+import {
+  mnemonicsToAddresses,
+  balanceForAddresses,
+} from '../../../crypto/byron/util'
 
 import styles from './styles/BalanceCheckScreen.style'
 

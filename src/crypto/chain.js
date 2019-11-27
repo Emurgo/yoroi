@@ -6,10 +6,10 @@ import {CONFIG} from '../config'
 import assert from '../utils/assert'
 import {defaultMemoize} from 'reselect'
 import {Logger} from '../utils/logging'
-import * as util from './util'
+import * as util from './byron/util'
 
 import type {Dict} from '../state'
-import type {CryptoAccount, AddressType} from './util'
+import type {CryptoAccount, AddressType} from './byron/util'
 
 export type AddressBlock = [number, Moment, Array<string>]
 

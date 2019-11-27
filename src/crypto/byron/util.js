@@ -8,21 +8,21 @@ import {randomBytes} from 'react-native-randombytes'
 import bs58 from 'bs58'
 import cryptoRandomString from 'crypto-random-string'
 
-import assert from '../utils/assert'
-import {CONFIG} from '../config'
+import assert from '../../utils/assert'
+import {CONFIG} from '../../config'
 import {
   _rethrow,
   InsufficientFunds,
   WrongPassword,
   CardanoError,
-} from './errors'
-import {AddressChain, AddressGenerator} from './chain'
-import {filterUsedAddresses, bulkFetchUTXOSumForAddresses} from '../api/api'
+} from '../errors'
+import {AddressChain, AddressGenerator} from '../chain'
+import {filterUsedAddresses, bulkFetchUTXOSumForAddresses} from '../../api/api'
 
 import type {
   TransactionInput,
   TransactionOutput,
-} from '../types/HistoryTransaction'
+} from '../../types/HistoryTransaction'
 
 export type AddressType = 'Internal' | 'External'
 
