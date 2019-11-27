@@ -5137,10 +5137,9 @@ jetifier@^1.6.4:
   resolved "https://registry.yarnpkg.com/jetifier/-/jetifier-1.6.4.tgz#6159db8e275d97980d26162897a0648b6d4a3222"
   integrity sha512-+f/4OLeqY8RAmXnonI1ffeY1DR8kMNJPhv5WMFehchf7U71cjMQVKkOz1n6asz6kfVoAqKNWJz1A/18i18AcXA==
 
-js-chain-libs-node@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/js-chain-libs-node/-/js-chain-libs-node-0.1.2.tgz#9e18128ed43c542ef969b095d4def16988224665"
-  integrity sha512-AYwAL0oxl+/jGsT+lRrjFIofwGYEcifKwTcJFTDklOIud47HCxy351EU7l8A6PPNkaIOo9sPui8PRzqwYZGl/g==
+"js-chain-libs-node@git+https://github.com/SebastienGllmt/js-chain-libs-node-pkg.git":
+  version "0.1.6"
+  resolved "git+https://github.com/SebastienGllmt/js-chain-libs-node-pkg.git#4476b64be74ebbbad2a18c6dd26d9e7d0b28af8b"
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
@@ -7315,7 +7314,7 @@ react-native-camera@^1.3.0:
 
 react-native-chain-libs@crossroadlabs/react-native-chain-libs:
   version "1.0.0"
-  resolved "https://codeload.github.com/crossroadlabs/react-native-chain-libs/tar.gz/3e8c01b3effe58616ce182dbebc25d919a4129ef"
+  resolved "https://codeload.github.com/crossroadlabs/react-native-chain-libs/tar.gz/6e0cf770079d7a2b528888daa7f9391de32db035"
   dependencies:
     base-64 "0.1.0"
 
