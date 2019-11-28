@@ -13,7 +13,6 @@ import {
   newAdaUnsignedTxFromUtxo,
   signTransaction,
 } from './utxoTransactions'
-import {getWalletFromMasterKey} from '../../byron/util'
 import {InsufficientFunds} from '../../errors'
 import {getTxInputTotal, getTxOutputTotal} from './utils'
 
@@ -200,8 +199,6 @@ describe('Create unsigned TX from addresses', () => {
   })
 })
 
-// TODO
-
 describe('Create signed transactions', () => {
   it('Witness should match on valid private key', async () => {
     const unsignedTxResponse = await newAdaUnsignedTx(
@@ -211,77 +208,81 @@ describe('Create signed transactions', () => {
       [addressedUtxos[0], addressedUtxos[1]],
     )
 
-    const wallet = await getWalletFromMasterKey(
-      '70afd5ff1f7f551c481b7e3f3541f7c63f5f6bcb293af92565af3deea0bcd6481a6e7b8acbe38f3906c63ccbe8b2d9b876572651ac5d2afc0aca284d9412bb1b4839bf02e1d990056d0f06af22ce4bcca52ac00f1074324aab96bbaaaccf290d',
+    const wallet = {
+      root_cached_key:
+        '70afd5ff1f7f551c481b7e3f3541f7c63f5f6bcb293af92565af3deea0bcd6481a6e7b8acbe38f3906c63ccbe8b2d9b876572651ac5d2afc0aca284d9412bb1b4839bf02e1d990056d0f06af22ce4bcca52ac00f1074324aab96bbaaaccf290d',
+      config: {protocol_magic: 764824073},
+      selection_policy: 'FirstMatchFirst',
+      derivation_scheme: 'V2',
+    }
+
+    const signedTx = await signTransaction(unsignedTxResponse, wallet)
+
+    const witnesses = await signedTx.witnesses()
+
+    expect(await witnesses.size()).toEqual(2)
+    expect(await (await witnesses.get(0)).to_bech32()).toEqual(
+      'witness1q8n7j65qjf5jraj3uqy0praq77fszhuxdsdxlagp706sh9jsz7x07gddztlx25s66lusjkjh7hlqct3d8xk6aujrhzq4rd54jnzn94ggppm0c7',
     )
-
-    // const signedTx = await signTransaction(
-    //   unsignedTxResponse,
-    //   wallet,
-    // )
-    await signTransaction(unsignedTxResponse, wallet)
-
-    // const witnesses = signedTx.witnesses();
-    //
-    //     expect(witnesses.size()).toEqual(2);
-    //     expect(witnesses.get(0).to_bech32()).toEqual(
-    //       'witness1q8n7j65qjf5jraj3uqy0praq77fszhuxdsdxlagp706sh9jsz7x07gddztlx25s66lusjkjh7hlqct3d8xk6aujrhzq4rd54jnzn94ggppm0c7'
-    //     );
-    //     expect(witnesses.get(1).to_bech32()).toEqual(
-    //       'witness1q8n7j65qjf5jraj3uqy0praq77fszhuxdsdxlagp706sh9jsz7x07gddztlx25s66lusjkjh7hlqct3d8xk6aujrhzq4rd54jnzn94ggppm0c7'
-    //     );
+    expect(await (await witnesses.get(1)).to_bech32()).toEqual(
+      'witness1q8n7j65qjf5jraj3uqy0praq77fszhuxdsdxlagp706sh9jsz7x07gddztlx25s66lusjkjh7hlqct3d8xk6aujrhzq4rd54jnzn94ggppm0c7',
+    )
   })
-  //
-  //   it('Witness should with addressing from root', () => {
-  //     const unsignedTxResponse = newAdaUnsignedTx(
-  //       keys[0].bechAddress,
-  //       '5001', // smaller than input
-  //       [],
-  //       [
-  //         {
-  //           amount: '7001',
-  //           receiver: 'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-  //           tx_hash: '05ec4a4a7f4645fa66886cef2e34706907a3a7f9d88e0d48b313ad2cdf76fb5f',
-  //           tx_index: 0,
-  //           utxo_id: '05ec4a4a7f4645fa66886cef2e34706907a3a7f9d88e0d48b313ad2cdf76fb5f0',
-  //           addressing: {
-  //             path: [BIP44_PURPOSE, CARDANO_COINTYPE, HARD_DERIVATION_START + 0, 0, 135],
-  //             startLevel: 1
-  //           }
+
+  // TODO if variable addressing path are implemented
+
+  // it('Witness should match with addressing from root', async () => {
+  //   const unsignedTxResponse = await newAdaUnsignedTx(
+  //     keys[0].bechAddress,
+  //     '5001', // smaller than input
+  //     [],
+  //     [
+  //       {
+  //         amount: '7001',
+  //         receiver: 'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
+  //         tx_hash: '05ec4a4a7f4645fa66886cef2e34706907a3a7f9d88e0d48b313ad2cdf76fb5f',
+  //         tx_index: 0,
+  //         utxo_id: '05ec4a4a7f4645fa66886cef2e34706907a3a7f9d88e0d48b313ad2cdf76fb5f0',
+  //         addressing: {
+  //           account: 0,
+  //           change: 0,
+  //           index: 135,
   //         },
-  //         {
-  //           amount: '1000001',
-  //           receiver: 'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-  //           tx_hash: '6930f123df83e4178b0324ae617b2028c0b38c6ff4660583a2abf1f7b08195fe',
-  //           tx_index: 0,
-  //           utxo_id: '6930f123df83e4178b0324ae617b2028c0b38c6ff4660583a2abf1f7b08195fe0',
-  //           addressing: {
-  //             path: [BIP44_PURPOSE, CARDANO_COINTYPE, HARD_DERIVATION_START + 0, 0, 135],
-  //             startLevel: 1
-  //           }
-  //         }
-  //       ],
-  //     );
+  //       },
+  //       {
+  //         amount: '1000001',
+  //         receiver: 'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
+  //         tx_hash: '6930f123df83e4178b0324ae617b2028c0b38c6ff4660583a2abf1f7b08195fe',
+  //         tx_index: 0,
+  //         utxo_id: '6930f123df83e4178b0324ae617b2028c0b38c6ff4660583a2abf1f7b08195fe0',
+  //         addressing: {
+  //           account: 0,
+  //           change: 0,
+  //           index: 135,
+  //         },
+  //       },
+  //     ],
+  //   )
   //
-  //     const accountPrivateKey = RustModule.WalletV2.Bip44AccountPrivate.new(
-  //       RustModule.WalletV2.PrivateKey.from_hex(
-  //         '70afd5ff1f7f551c481b7e3f3541f7c63f5f6bcb293af92565af3deea0bcd6481a6e7b8acbe38f3906c63ccbe8b2d9b876572651ac5d2afc0aca284d9412bb1b4839bf02e1d990056d0f06af22ce4bcca52ac00f1074324aab96bbaaaccf290d'
-  //       ),
-  //       RustModule.WalletV2.DerivationScheme.v2()
-  //     );
-  //     const signedTx = signTransaction(
-  //       unsignedTxResponse,
-  //       Bip44DerivationLevels.ACCOUNT.level,
-  //       accountPrivateKey.key(),
-  //     );
-  //     const witnesses = signedTx.witnesses();
+  // const wallet = {
+  //   root_cached_key:
+  //     '70afd5ff1f7f551c481b7e3f3541f7c63f5f6bcb293af92565af3deea0bcd6481a6e7b8acbe38f3906c63ccbe8b2d9b876572651ac5d2afc0aca284d9412bb1b4839bf02e1d990056d0f06af22ce4bcca52ac00f1074324aab96bbaaaccf290d',
+  //   config: {protocol_magic: 764824073},
+  //   selection_policy: 'FirstMatchFirst',
+  //   derivation_scheme: 'V2',
+  // }
+  //   const signedTx = await signTransaction(
+  //     unsignedTxResponse,
+  //     wallet,
+  //   )
+  //   const witnesses = await signedTx.witnesses()
   //
-  //     expect(witnesses.size()).toEqual(2);
-  //     expect(witnesses.get(0).to_bech32()).toEqual(
-  //       'witness1q8n7j65qjf5jraj3uqy0praq77fszhuxdsdxlagp706sh9jsz7x07gddztlx25s66lusjkjh7hlqct3d8xk6aujrhzq4rd54jnzn94ggppm0c7'
-  //     );
-  //     expect(witnesses.get(1).to_bech32()).toEqual(
-  //       'witness1q8n7j65qjf5jraj3uqy0praq77fszhuxdsdxlagp706sh9jsz7x07gddztlx25s66lusjkjh7hlqct3d8xk6aujrhzq4rd54jnzn94ggppm0c7'
-  //     );
-  //   });
+  //   expect(await witnesses.size()).toEqual(2)
+  //   expect(await (await witnesses.get(0)).to_bech32()).toEqual(
+  //     'witness1q8n7j65qjf5jraj3uqy0praq77fszhuxdsdxlagp706sh9jsz7x07gddztlx25s66lusjkjh7hlqct3d8xk6aujrhzq4rd54jnzn94ggppm0c7'
+  //   )
+  //   expect(witnesses.get(1).to_bech32()).toEqual(
+  //     'witness1q8n7j65qjf5jraj3uqy0praq77fszhuxdsdxlagp706sh9jsz7x07gddztlx25s66lusjkjh7hlqct3d8xk6aujrhzq4rd54jnzn94ggppm0c7'
+  //   )
+  // })
 })
