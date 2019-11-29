@@ -1,7 +1,11 @@
 // @flow
 
-import {InputOutput, PublicKey, PrivateKey} from 'react-native-chain-libs'
-import {HdWallet} from 'react-native-cardano'
+import {
+  InputOutput,
+  StakeDelegation,
+  StakeDelegationAuthData,
+} from 'react-native-chain-libs'
+
 import {BigNumber} from 'bignumber.js'
 
 export const getTxInputTotal = async (IOs: InputOutput): Promise<BigNumber> => {
@@ -30,16 +34,24 @@ export const getTxOutputTotal = async (
   return sum
 }
 
-// TODO: test
-export const v2SkKeyToV3Key = async (v2Key: HdWallet.XPrv): PrivateKey => {
-  return await PrivateKey.from_extended_bytes(
-    // need to slice out the chain code from the private key
-    Buffer.from(v2Key.slice(0, 128), 'hex'),
-  )
-}
-export const v2PkKeyToV3Key = async (v2Key: HdWallet.XPub): PublicKey => {
-  return await PublicKey.from_bytes(
-    // need to slice out the chain code from the public key
-    Buffer.from(v2Key.slice(0, 64), 'hex'),
-  )
+export const generateAuthData = async (
+  bindingSignature: AccountBindingSignature,
+  certificate: Certificate,
+): Promise<PayloadAuthData> => {
+  if (certificate == null) {
+    return await PayloadAuthData.for_no_payload()
+  }
+
+  switch (await certificate.get_type()) {
+    // TODO: maybe should be `await CertificateKind.StakeDelegation`
+    case StakeDelegation: {
+      return await PayloadAuthData.for_stake_delegation(
+        await StakeDelegationAuthData.new(bindingSignature),
+      )
+    }
+    default:
+      throw new Error(
+        `generateAuthData unexptected cert type ${await certificate.get_type()}`,
+      )
+  }
 }

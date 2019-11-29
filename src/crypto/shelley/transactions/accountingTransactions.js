@@ -18,18 +18,16 @@ import {
   InputOutputBuilder,
   OutputPolicy,
   Payload,
-  PayloadAuthData,
   PrivateKey,
   PublicKey,
   SpendingCounter,
-  StakeDelegation,
-  StakeDelegationAuthData,
   Transaction,
   TransactionBuilder,
   Value,
   Witness,
   Witnesses,
 } from 'react-native-chain-libs'
+import {generateAuthData} from './utils'
 
 import {CARDANO_CONFIG} from '../../../config'
 
@@ -120,27 +118,6 @@ export const buildUnsignedAccountTx = async (
   feeAlgorithm.free()
 
   return IOs
-}
-
-async function generateAuthData(
-  bindingSignature: AccountBindingSignature,
-  certificate: Certificate,
-): Promise<PayloadAuthData> {
-  if (certificate == null) {
-    return await PayloadAuthData.for_no_payload()
-  }
-
-  switch (await certificate.get_type()) {
-    case StakeDelegation: {
-      return await PayloadAuthData.for_stake_delegation(
-        await StakeDelegationAuthData.new(bindingSignature),
-      )
-    }
-    default:
-      throw new Error(
-        `generateAuthData unexptected cert type ${await certificate.get_type()}`,
-      )
-  }
 }
 
 export const signTransaction = async (
