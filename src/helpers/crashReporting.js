@@ -55,7 +55,7 @@ const setBoolValue = (key: string, value: ?boolean) => {
 
 // Note(ppershing): crashing here is fine :-)
 const crash = () => {
-  Sentry.crash()
+  _enabled && Sentry.crash()
 }
 
 export default {
