@@ -296,7 +296,7 @@ async function addWitnesses(
         privateKeys[i],
       )
     } else {
-      await Witness.for_utxo(
+      witness = await Witness.for_utxo(
         await Hash.from_hex(CONFIG.GENESISHASH),
         await builderSetWitnesses.get_auth_data_for_witness(),
         await privateKeys[i].to_raw_key(),

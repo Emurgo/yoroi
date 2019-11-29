@@ -180,8 +180,28 @@ describe('Create unsigned TX from UTXO', () => {
   })
 })
 
-describe('Create legacy witness TX from UTXO', () => {
-  it('Should create a valid transaction withhout selection', async () => {
+describe('Create unsigned TX from addresses', () => {
+  it('Should create a valid transaction without selection', async () => {
+    const unsignedTxResponse = await newAdaUnsignedTx(
+      keys[0].bechAddress,
+      '5001', // smaller than input
+      [],
+      [addressedUtxos[0], addressedUtxos[1]],
+    )
+    expect(unsignedTxResponse.senderUtxos).toEqual([
+      addressedUtxos[0],
+      addressedUtxos[1],
+    ])
+    const inputSum = await getTxInputTotal(unsignedTxResponse.IOs)
+    const outputSum = await getTxOutputTotal(unsignedTxResponse.IOs)
+    expect(inputSum.toString()).toEqual('1007002')
+    expect(outputSum.toString()).toEqual('5001')
+    expect(inputSum.minus(outputSum).toString()).toEqual('1002001')
+  })
+})
+
+describe('Create signed transactions with legacy witness', () => {
+  it('Witness should match on valid private key', async () => {
     const unsignedTxResponse = await newAdaUnsignedTx(
       keys[0].bechAddress,
       '5001', // smaller than input
@@ -208,26 +228,6 @@ describe('Create legacy witness TX from UTXO', () => {
     expect(await (await witnesses.get(1)).to_bech32()).toEqual(
       'witness1qz8mq0p65pf028qgd32t6szeatfd9epx4jyl5jeuuswtlkyqpdguqf3rln4edvr5ppf35h9jt86ns3dr344k3y5w0sx8uwg0qa296rnzul5k4qyjdyslv50qprcglg8hjvq4lpnvrfhl2q0n759ev5qh3nljrtgjlej4yxkhlyy454l4lcxzutfe4kh0ysacs9gmd9v5c5ed2zql6kkea',
     )
-  })
-})
-
-describe('Create unsigned TX from addresses', () => {
-  it('Should create a valid transaction withhout selection', async () => {
-    const unsignedTxResponse = await newAdaUnsignedTx(
-      keys[0].bechAddress,
-      '5001', // smaller than input
-      [],
-      [addressedUtxos[0], addressedUtxos[1]],
-    )
-    expect(unsignedTxResponse.senderUtxos).toEqual([
-      addressedUtxos[0],
-      addressedUtxos[1],
-    ])
-    const inputSum = await getTxInputTotal(unsignedTxResponse.IOs)
-    const outputSum = await getTxOutputTotal(unsignedTxResponse.IOs)
-    expect(inputSum.toString()).toEqual('1007002')
-    expect(outputSum.toString()).toEqual('5001')
-    expect(inputSum.minus(outputSum).toString()).toEqual('1002001')
   })
 })
 
@@ -262,61 +262,4 @@ describe('Create signed transactions', () => {
       'witness1q8n7j65qjf5jraj3uqy0praq77fszhuxdsdxlagp706sh9jsz7x07gddztlx25s66lusjkjh7hlqct3d8xk6aujrhzq4rd54jnzn94ggppm0c7',
     )
   })
-
-  // TODO if variable addressing path are implemented
-
-  // it('Witness should match with addressing from root', async () => {
-  //   const unsignedTxResponse = await newAdaUnsignedTx(
-  //     keys[0].bechAddress,
-  //     '5001', // smaller than input
-  //     [],
-  //     [
-  //       {
-  //         amount: '7001',
-  //         receiver: 'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-  //         tx_hash: '05ec4a4a7f4645fa66886cef2e34706907a3a7f9d88e0d48b313ad2cdf76fb5f',
-  //         tx_index: 0,
-  //         utxo_id: '05ec4a4a7f4645fa66886cef2e34706907a3a7f9d88e0d48b313ad2cdf76fb5f0',
-  //         addressing: {
-  //           account: 0,
-  //           change: 0,
-  //           index: 135,
-  //         },
-  //       },
-  //       {
-  //         amount: '1000001',
-  //         receiver: 'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-  //         tx_hash: '6930f123df83e4178b0324ae617b2028c0b38c6ff4660583a2abf1f7b08195fe',
-  //         tx_index: 0,
-  //         utxo_id: '6930f123df83e4178b0324ae617b2028c0b38c6ff4660583a2abf1f7b08195fe0',
-  //         addressing: {
-  //           account: 0,
-  //           change: 0,
-  //           index: 135,
-  //         },
-  //       },
-  //     ],
-  //   )
-  //
-  // const wallet = {
-  //   root_cached_key:
-  //     '70afd5ff1f7f551c481b7e3f3541f7c63f5f6bcb293af92565af3deea0bcd6481a6e7b8acbe38f3906c63ccbe8b2d9b876572651ac5d2afc0aca284d9412bb1b4839bf02e1d990056d0f06af22ce4bcca52ac00f1074324aab96bbaaaccf290d',
-  //   config: {protocol_magic: 764824073},
-  //   selection_policy: 'FirstMatchFirst',
-  //   derivation_scheme: 'V2',
-  // }
-  //   const signedTx = await signTransaction(
-  //     unsignedTxResponse,
-  //     wallet,
-  //   )
-  //   const witnesses = await signedTx.witnesses()
-  //
-  //   expect(await witnesses.size()).toEqual(2)
-  //   expect(await (await witnesses.get(0)).to_bech32()).toEqual(
-  //     'witness1q8n7j65qjf5jraj3uqy0praq77fszhuxdsdxlagp706sh9jsz7x07gddztlx25s66lusjkjh7hlqct3d8xk6aujrhzq4rd54jnzn94ggppm0c7'
-  //   )
-  //   expect(witnesses.get(1).to_bech32()).toEqual(
-  //     'witness1q8n7j65qjf5jraj3uqy0praq77fszhuxdsdxlagp706sh9jsz7x07gddztlx25s66lusjkjh7hlqct3d8xk6aujrhzq4rd54jnzn94ggppm0c7'
-  //   )
-  // })
 })
