@@ -14,6 +14,7 @@ import {InsufficientFunds} from '../../errors'
 import {BigNumber} from 'bignumber.js'
 import {
   Address,
+  Bip32PrivateKey,
   Fee,
   FragmentId,
   Hash,
@@ -32,7 +33,6 @@ import {
   Witness,
   Witnesses,
 } from 'react-native-chain-libs'
-import {HdWallet, Wallet} from 'react-native-cardano'
 import type {
   V3UnsignedTxData,
   V3UnsignedTxAddressedUtxoData,
@@ -40,7 +40,6 @@ import type {
   AddressedUtxo,
   Addressing,
 } from '../../../types/HistoryTransaction'
-import {v2SkKeyToV3Key} from './utils'
 import {CARDANO_CONFIG} from '../../../config'
 
 const CONFIG = CARDANO_CONFIG.SHELLEY
@@ -232,20 +231,22 @@ async function filterToUsedChange(
 
 export const signTransaction = async (
   signRequest: V3UnsignedTxAddressedUtxoData,
-  wallet: Wallet.WalletObj,
+  signingKey: Bip32PrivateKey,
+  useLegacy: boolean,
 ): Promise<Transaction> => {
   const {senderUtxos, IOs} = signRequest
 
   const txBuilder = await new TransactionBuilder()
   const builderSetIOs = await txBuilder.no_payload()
-  const builderSetWitness = await builderSetIOs.set_ios(
+  const builderSetWitnesses = await builderSetIOs.set_ios(
     await IOs.inputs(),
     await IOs.outputs(),
   )
   const builderSetAuthData = await addWitnesses(
-    builderSetWitness,
+    builderSetWitnesses,
     senderUtxos,
-    wallet,
+    signingKey,
+    useLegacy,
   )
 
   const signedTx = await builderSetAuthData.set_payload_auth(
@@ -271,21 +272,15 @@ async function utxoToTxInput(utxo: RawUtxo): Input {
 async function addWitnesses(
   builderSetWitnesses: TransactionBuilderSetWitness,
   senderUtxos: Array<AddressedUtxo>,
-  wallet: Wallet.WalletObj,
+  signingKey: Bip32PrivateKey,
+  useLegacy: boolean,
 ): Promise<TransactionBuilderSetAuthData> {
   // get private keys
-  const rootKey = wallet.root_cached_key // account-level key
   const privateKeys = await Promise.all(
     senderUtxos.map(
-      async (utxo): Promise<HdWallet.XPrv> => {
-        const chainKey = await HdWallet.derivePrivate(
-          rootKey,
-          utxo.addressing.change,
-        )
-        const addressKey = await HdWallet.derivePrivate(
-          chainKey,
-          utxo.addressing.index,
-        )
+      async (utxo): Promise<Bip32PrivateKey> => {
+        const chainKey = await signingKey.derive(utxo.addressing.chain)
+        const addressKey = await chainKey.derive(utxo.addressing.index)
         return addressKey
       },
     ),
@@ -293,12 +288,20 @@ async function addWitnesses(
 
   const witnesses = await Witnesses.new()
   for (let i = 0; i < senderUtxos.length; i++) {
-    const witness = await Witness.for_utxo(
-      await Hash.from_hex(CONFIG.GENESISHASH),
-      // await txFinalizer.get_txid(),
-      await builderSetWitnesses.get_auth_data_for_witness(),
-      await v2SkKeyToV3Key(privateKeys[i]),
-    )
+    let witness
+    if (useLegacy) {
+      witness = await Witness.for_legacy_icarus_utxo(
+        await Hash.from_hex(CONFIG.GENESISHASH),
+        await builderSetWitnesses.get_auth_data_for_witness(),
+        privateKeys[i],
+      )
+    } else {
+      await Witness.for_utxo(
+        await Hash.from_hex(CONFIG.GENESISHASH),
+        await builderSetWitnesses.get_auth_data_for_witness(),
+        await privateKeys[i].to_raw_key(),
+      )
+    }
     witnesses.add(witness)
   }
   return await builderSetWitnesses.set_witnesses(witnesses)

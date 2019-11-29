@@ -3,6 +3,7 @@
 
 import jestSetup from '../../../jestSetup'
 
+import {Bip32PrivateKey} from 'react-native-chain-libs'
 import type {
   RawUtxo,
   AddressedUtxo,
@@ -179,6 +180,37 @@ describe('Create unsigned TX from UTXO', () => {
   })
 })
 
+describe('Create legacy witness TX from UTXO', () => {
+  it('Should create a valid transaction withhout selection', async () => {
+    const unsignedTxResponse = await newAdaUnsignedTx(
+      keys[0].bechAddress,
+      '5001', // smaller than input
+      [],
+      [addressedUtxos[0], addressedUtxos[1]],
+    )
+    const accountPrivateKey = await Bip32PrivateKey.from_bytes(
+      Buffer.from(
+        '70afd5ff1f7f551c481b7e3f3541f7c63f5f6bcb293af92565af3deea0bcd6481a6e7b8acbe38f3906c63ccbe8b2d9b876572651ac5d2afc0aca284d9412bb1b4839bf02e1d990056d0f06af22ce4bcca52ac00f1074324aab96bbaaaccf290d',
+        'hex',
+      ),
+    )
+    const signedTx = await signTransaction(
+      unsignedTxResponse,
+      accountPrivateKey,
+      true,
+    )
+    const witnesses = await signedTx.witnesses()
+
+    expect(await witnesses.size()).toEqual(2)
+    expect(await (await witnesses.get(0)).to_bech32()).toEqual(
+      'witness1qz8mq0p65pf028qgd32t6szeatfd9epx4jyl5jeuuswtlkyqpdguqf3rln4edvr5ppf35h9jt86ns3dr344k3y5w0sx8uwg0qa296rnzul5k4qyjdyslv50qprcglg8hjvq4lpnvrfhl2q0n759ev5qh3nljrtgjlej4yxkhlyy454l4lcxzutfe4kh0ysacs9gmd9v5c5ed2zql6kkea',
+    )
+    expect(await (await witnesses.get(1)).to_bech32()).toEqual(
+      'witness1qz8mq0p65pf028qgd32t6szeatfd9epx4jyl5jeuuswtlkyqpdguqf3rln4edvr5ppf35h9jt86ns3dr344k3y5w0sx8uwg0qa296rnzul5k4qyjdyslv50qprcglg8hjvq4lpnvrfhl2q0n759ev5qh3nljrtgjlej4yxkhlyy454l4lcxzutfe4kh0ysacs9gmd9v5c5ed2zql6kkea',
+    )
+  })
+})
+
 describe('Create unsigned TX from addresses', () => {
   it('Should create a valid transaction withhout selection', async () => {
     const unsignedTxResponse = await newAdaUnsignedTx(
@@ -208,15 +240,17 @@ describe('Create signed transactions', () => {
       [addressedUtxos[0], addressedUtxos[1]],
     )
 
-    const wallet = {
-      root_cached_key:
+    const accountPrivateKey = await Bip32PrivateKey.from_bytes(
+      Buffer.from(
         '70afd5ff1f7f551c481b7e3f3541f7c63f5f6bcb293af92565af3deea0bcd6481a6e7b8acbe38f3906c63ccbe8b2d9b876572651ac5d2afc0aca284d9412bb1b4839bf02e1d990056d0f06af22ce4bcca52ac00f1074324aab96bbaaaccf290d',
-      config: {protocol_magic: 764824073},
-      selection_policy: 'FirstMatchFirst',
-      derivation_scheme: 'V2',
-    }
-
-    const signedTx = await signTransaction(unsignedTxResponse, wallet)
+        'hex',
+      ),
+    )
+    const signedTx = await signTransaction(
+      unsignedTxResponse,
+      accountPrivateKey,
+      false,
+    )
 
     const witnesses = await signedTx.witnesses()
 
