@@ -7,7 +7,7 @@ import {defineMessages} from 'react-intl'
 
 import storage from '../utils/storage'
 import assert from '../utils/assert'
-import {decryptData, encryptData} from '../crypto/util'
+import {decryptData, encryptData} from '../crypto/byron/util'
 
 export type EncryptionMethod = 'BIOMETRICS' | 'SYSTEM_PIN' | 'MASTER_PASSWORD'
 

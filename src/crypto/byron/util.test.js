@@ -1,5 +1,5 @@
 // @flow
-import jestSetup from '../jestSetup'
+import jestSetup from '../../jestSetup'
 
 import moment from 'moment'
 
@@ -15,11 +15,11 @@ import {
   signTransaction,
 } from './util'
 
-import {InsufficientFunds} from './errors'
+import {InsufficientFunds} from '../errors'
 
 import longAddress from './__fixtures/long_address.json'
 
-import {CARDANO_CONFIG, CONFIG} from '../config'
+import {CARDANO_CONFIG, CONFIG} from '../../config'
 
 jestSetup.setup()
 

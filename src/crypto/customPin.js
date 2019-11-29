@@ -1,5 +1,5 @@
 // @flow
-import {encryptData, decryptData} from './util'
+import {encryptData, decryptData} from './byron/util'
 import {WrongPassword} from './errors'
 
 export const encryptCustomPin = async (installationId: string, pin: string) => {
