@@ -783,8 +783,8 @@ class WalletManager {
     )
   }
 
-  closeWallet() {
-    if (!this._wallet) return
+  closeWallet(): Promise<void> {
+    if (!this._wallet) return Promise.resolve()
     assert.assert(this._closeReject, 'close: should have _closeReject')
     /* :: if (!this._closeReject) throw 'assert' */
     // Abort all async interactions with the wallet
@@ -797,8 +797,10 @@ class WalletManager {
     // need to reject in next microtask otherwise
     // closeWallet would throw if some rejection
     // handler does not catch
-    Promise.resolve().then(() => {
-      reject(new WalletClosed())
+    return Promise.resolve().then(() => {
+      // TODO: Check why Shelley path crash when this is active
+      //  and figure out why this is actually necessary
+      // reject(new WalletClosed())
     })
   }
 

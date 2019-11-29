@@ -90,3 +90,4 @@ android/app/src/main/res/drawable*
 sentry.properties
 app-mainnet-release.apk
 output.json
+java_pid*
