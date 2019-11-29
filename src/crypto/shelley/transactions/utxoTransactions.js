@@ -279,7 +279,7 @@ async function addWitnesses(
   const privateKeys = await Promise.all(
     senderUtxos.map(
       async (utxo): Promise<Bip32PrivateKey> => {
-        const chainKey = await signingKey.derive(utxo.addressing.chain)
+        const chainKey = await signingKey.derive(utxo.addressing.change)
         const addressKey = await chainKey.derive(utxo.addressing.index)
         return addressKey
       },
