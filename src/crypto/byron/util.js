@@ -2,24 +2,27 @@
 
 import {BigNumber} from 'bignumber.js'
 import {mnemonicToEntropy, generateMnemonic} from 'bip39'
-import {HdWallet, Wallet, PasswordProtect} from 'react-native-cardano'
+import {HdWallet, Wallet} from 'react-native-cardano'
+import {encryptWithPassword, decryptWithPassword} from 'emip3js'
 import {randomBytes} from 'react-native-randombytes'
 import bs58 from 'bs58'
 import cryptoRandomString from 'crypto-random-string'
 
-import assert from '../utils/assert'
-import {CONFIG} from '../config'
+import assert from '../../utils/assert'
+import {CONFIG} from '../../config'
 import {
   _rethrow,
   InsufficientFunds,
   WrongPassword,
   CardanoError,
-} from './errors'
+} from '../errors'
+import {AddressChain, AddressGenerator} from '../chain'
+import {filterUsedAddresses, bulkFetchUTXOSumForAddresses} from '../../api/api'
 
 import type {
   TransactionInput,
   TransactionOutput,
-} from '../types/HistoryTransaction'
+} from '../../types/HistoryTransaction'
 
 export type AddressType = 'Internal' | 'External'
 
@@ -67,7 +70,7 @@ export const encryptData = async (
   const secretKeyHex = Buffer.from(secretKey, 'utf8').toString('hex')
   const saltHex = cryptoRandomString(2 * 32)
   const nonceHex = cryptoRandomString(2 * 12)
-  const ciphertext = await PasswordProtect.encryptWithPassword(
+  const ciphertext = await encryptWithPassword(
     secretKeyHex,
     saltHex,
     nonceHex,
@@ -84,7 +87,7 @@ export const decryptData = async (
   assert.assert(!!secretKey, 'decrypt:: !!secretKey')
   const secretKeyHex = Buffer.from(secretKey, 'utf8').toString('hex')
   try {
-    return await PasswordProtect.decryptWithPassword(secretKeyHex, ciphertext)
+    return await decryptWithPassword(secretKeyHex, ciphertext)
   } catch (e) {
     if (e.message === KNOWN_ERROR_MSG.DECRYPT_FAILED) {
       throw new WrongPassword()
@@ -197,4 +200,53 @@ export const formatBIP44 = (
   return `m/${PURPOSE}'/${COIN}'/${account}'/${
     ADDRESS_TYPE_TO_CHANGE[type]
   }/${index}`
+}
+
+/**
+ * returns all used addresses (external and change addresses concatenated)
+ */
+export const mnemonicsToAddresses = async (
+  mnemonic: string,
+  networkConfig?: Object = CONFIG.CARDANO,
+): Promise<Array<string>> => {
+  const masterKey = await getMasterKeyFromMnemonic(mnemonic)
+  const account = await getAccountFromMasterKey(masterKey)
+  const internalChain = new AddressChain(
+    new AddressGenerator(account, 'Internal'),
+  )
+  const externalChain = new AddressChain(
+    new AddressGenerator(account, 'External'),
+  )
+  await internalChain.initialize()
+  await externalChain.initialize()
+  await Promise.all([
+    internalChain.sync(filterUsedAddresses, networkConfig),
+    externalChain.sync(filterUsedAddresses, networkConfig),
+  ])
+  // get addresses in chunks
+  const allAddresses = [
+    ...internalChain.getBlocks(),
+    ...externalChain.getBlocks(),
+  ]
+  const filteredAddresses = []
+  for (let i = 0; i < allAddresses.length; i++) {
+    filteredAddresses.push(
+      ...(await filterUsedAddresses(allAddresses[i], networkConfig)),
+    )
+  }
+  return filteredAddresses
+}
+
+export const balanceForAddresses = async (
+  addresses: Array<string>,
+  networkConfig?: any = CONFIG.CARDANO,
+): Promise<{fundedAddresses: Array<string>, sum: BigNumber}> => {
+  const {fundedAddresses, sum} = await bulkFetchUTXOSumForAddresses(
+    addresses,
+    networkConfig,
+  )
+  return {
+    fundedAddresses,
+    sum,
+  }
 }

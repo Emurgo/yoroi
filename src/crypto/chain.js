@@ -6,10 +6,10 @@ import {CONFIG} from '../config'
 import assert from '../utils/assert'
 import {defaultMemoize} from 'reselect'
 import {Logger} from '../utils/logging'
-import * as util from './util'
+import * as util from './byron/util'
 
 import type {Dict} from '../state'
-import type {CryptoAccount, AddressType} from './util'
+import type {CryptoAccount, AddressType} from './byron/util'
 
 export type AddressBlock = [number, Moment, Array<string>]
 
@@ -39,7 +39,10 @@ export class AddressGenerator {
   }
 }
 
-type AsyncAddressFilter = (addresses: Array<string>) => Promise<Array<string>>
+type AsyncAddressFilter = (
+  addresses: Array<string>,
+  networkConfig?: any,
+) => Promise<Array<string>>
 
 type Addresses = Array<string>
 
@@ -161,17 +164,23 @@ export class AddressChain {
     )
   }
 
-  async sync(filterFn: AsyncAddressFilter) {
+  async sync(
+    filterFn: AsyncAddressFilter,
+    networkConfig: any = CONFIG.CARDANO,
+  ) {
     let keepSyncing = true
     while (keepSyncing) {
-      keepSyncing = await this._syncStep(filterFn)
+      keepSyncing = await this._syncStep(filterFn, networkConfig)
     }
   }
 
-  async _syncStep(filterFn: AsyncAddressFilter) {
+  async _syncStep(
+    filterFn: AsyncAddressFilter,
+    networkConfig: any = CONFIG.CARDANO,
+  ) {
     this._selfCheck()
     const block = this._getLastBlock()
-    const used = await filterFn(block)
+    const used = await filterFn(block, networkConfig)
 
     // Index relative to the start of the block
     // It is okay to "overshoot" with -1 here

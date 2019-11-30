@@ -14,7 +14,7 @@
     "purge-translations": "rimraf ./translations/messages",
     "android-bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "inhibit-warnings": "react-native-inhibit-warnings",
-    "postinstall": "react-native-inhibit-warnings"
+    "postinstall": "react-native-inhibit-warnings && npx jetify"
   },
   "dependencies": {
     "@babel/cli": "7.2.3",
@@ -29,6 +29,7 @@
     "bluebird": "^3.5.2",
     "bs58": "^4.0.1",
     "crypto-random-string": "^1.0.0",
+    "emip3js": "Emurgo/emip3js",
     "es6-error": "^4.1.1",
     "es6-symbol": "^3.1.1",
     "eslint": "^5.6.1",
@@ -55,6 +56,7 @@
     "react-native-background-timer": "^2.1.1",
     "react-native-camera": "^1.3.0",
     "react-native-cardano": "https://github.com/Emurgo/react-native-cardano.git",
+    "react-native-chain-libs": "crossroadlabs/react-native-chain-libs",
     "react-native-config": "^0.11.7",
     "react-native-crypto": "^2.1.2",
     "react-native-device-info": "2.3.2",
@@ -92,6 +94,8 @@
     "extract-react-intl-messages": "^0.14.0",
     "flow-bin": "0.92",
     "jest": "24.8.0",
+    "jetifier": "^1.6.4",
+    "js-chain-libs-node": "^0.1.2",
     "metro-react-native-babel-preset": "0.54.1",
     "prettier": "1.14.3",
     "prettylint": "1.0.0",

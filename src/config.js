@@ -16,7 +16,7 @@ const _COMMIT = env.getString('COMMIT')
 export const CARDANO_CONFIG = {
   TESTNET: {
     PROTOCOL_MAGIC: 1097911063,
-    API_ROOT: 'https://testnet-yoroi-backend.yoroiwallet.com/api',
+    API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
     SEIZA_STAKING_SIMPLE: (ADA: string) =>
       `http://localhost:3000/staking-simple/list?sortBy=REVENUE&searchText=&performance[]=0&performance[]=100&userAda=${ADA}`,
     EXPLORER_URL_FOR_TX: (tx: string) =>
@@ -28,6 +28,25 @@ export const CARDANO_CONFIG = {
     SEIZA_STAKING_SIMPLE: (ADA: string) =>
       `http://localhost:3000/staking-simple/list?sortBy=REVENUE&searchText=&performance[]=0&performance[]=100&userAda=${ADA}`,
     EXPLORER_URL_FOR_TX: (tx: string) => `https://cardanoexplorer.com/tx/${tx}`,
+  },
+  SHELLEY: {
+    PROTOCOL_MAGIC: 764824073,
+    API_ROOT: 'https://shelley-testnet-yoroi-backend.yoroiwallet.com/api',
+    SEIZA_STAKING_SIMPLE: (ADA: string) =>
+      `http://localhost:3000/staking-simple/list?sortBy=REVENUE&searchText=&performance[]=0&performance[]=100&userAda=${ADA}`,
+    EXPLORER_URL_FOR_ADDRESS: (address: string) =>
+      `https://shelleyexplorer.cardano.org/address/?id=${address}`,
+    LINEAR_FEE: {
+      CONSTANT: '155381',
+      COEFFICIENT: '1',
+      CERTIFICATE: '4',
+    },
+    ADDRESS_DISCRIMINATION: {
+      PRODUCTION: '0',
+      TEST: '1',
+    },
+    GENESISHASH:
+      'adbdd5ede31637f6c9bad5c271eec0bc3d0cb9efb86a5b913bb55cba549d0770',
   },
 }
 
