@@ -274,20 +274,19 @@ async function addWitnesses(
   wallet: Wallet.WalletObj,
 ): Promise<TransactionBuilderSetAuthData> {
   // get private keys
-  const rootKey = wallet.root_cached_key
+  const rootKey = wallet.root_cached_key // account-level key
   const privateKeys = await Promise.all(
     senderUtxos.map(
       async (utxo): Promise<HdWallet.XPrv> => {
-        let key = rootKey
-        // this loops 3 times to generate a private key from root level up to the
-        // address level
-        for (let i = 0; i < Object.keys(utxo.addressing).length; i++) {
-          key = await HdWallet.derivePrivate(
-            key,
-            utxo.addressing[Object.keys(utxo.addressing)[i]],
-          )
-        }
-        return key
+        const chainKey = await HdWallet.derivePrivate(
+          rootKey,
+          utxo.addressing.change,
+        )
+        const addressKey = await HdWallet.derivePrivate(
+          chainKey,
+          utxo.addressing.index,
+        )
+        return addressKey
       },
     ),
   )
