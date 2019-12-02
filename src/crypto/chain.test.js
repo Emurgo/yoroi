@@ -106,8 +106,6 @@ describe('AddressChain', () => {
     }
     await chain.sync(filter)
     await chain2.sync(filter)
-    console.log(chain.addresses)
-    console.log(chain2.addresses)
     expect(chain.size()).toBe(10)
     expect(chain2.addresses).toEqual(chain.addresses)
   })
