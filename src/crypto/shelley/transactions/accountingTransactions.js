@@ -12,16 +12,17 @@ import {
   Address,
   Certificate,
   Fee,
+  Fragment,
   Hash,
   Input,
   InputOutput,
   InputOutputBuilder,
   OutputPolicy,
   Payload,
+  PayloadAuthData,
   PrivateKey,
   PublicKey,
   SpendingCounter,
-  Transaction,
   TransactionBuilder,
   Value,
   Witness,
@@ -53,7 +54,6 @@ export const buildUnsignedAccountTx = async (
       ? await Payload.certificate(typeSpecific.certificate)
       : await Payload.no_payload()
 
-  // TODO: single_from_public_key not implemented yet
   const sourceAccount = await Account.single_from_public_key(sender)
 
   const feeAlgorithm = await Fee.linear_fee(
@@ -125,7 +125,7 @@ export const signTransaction = async (
   accountCounter: number,
   certificate: ?Certificate,
   accountPrivateKey: PrivateKey,
-): Promise<Transaction> => {
+): Fragment => {
   const txbuilder = await new TransactionBuilder()
 
   // builderSetIOs: TransactionBuilderSetIOs
@@ -147,26 +147,29 @@ export const signTransaction = async (
     accountPrivateKey,
     await SpendingCounter.from_u32(accountCounter),
   )
-  // await txFinalizer.set_witness(0, witness)
-  // return txFinalizer.build() // TODO: this might be changed to .finalize()
 
   const witnesses = await Witnesses.new()
   await witnesses.add(witness)
 
-  // builderSignCertificate: TransactionBuilderSetAuthData
+  // Type(builderSignCertificate): TransactionBuilderSetAuthData
   const builderSignCertificate = await builderSetWitness.set_witnesses(
     witnesses,
   )
   witnesses.free()
-  const payloadAuthData = await generateAuthData(
-    await AccountBindingSignature.new_single(
-      accountPrivateKey,
-      await builderSignCertificate.get_auth_data(),
-    ),
-    certificate,
-  )
+  // prettier-ignore
+  const payloadAuthData =
+    certificate == null ?
+      await PayloadAuthData.for_no_payload()
+      : await generateAuthData(
+        await AccountBindingSignature.new_single(
+          accountPrivateKey,
+          await builderSignCertificate.get_auth_data(),
+        ),
+        certificate,
+      )
   const signedTx = await builderSignCertificate.set_payload_auth(
     payloadAuthData,
   )
-  return signedTx
+  const fragment = await Fragment.from_transaction(signedTx)
+  return fragment
 }
