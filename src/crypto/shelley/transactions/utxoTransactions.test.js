@@ -13,6 +13,7 @@ import {
   newAdaUnsignedTx,
   newAdaUnsignedTxFromUtxo,
   signTransaction,
+  sendAllUnsignedTxFromUtxo,
 } from './utxoTransactions'
 import {InsufficientFunds} from '../../errors'
 import {getTxInputTotal, getTxOutputTotal} from './utils'
@@ -261,5 +262,33 @@ describe('Create signed transactions', () => {
     expect(await (await witnesses.get(1)).to_bech32()).toEqual(
       'witness1q8n7j65qjf5jraj3uqy0praq77fszhuxdsdxlagp706sh9jsz7x07gddztlx25s66lusjkjh7hlqct3d8xk6aujrhzq4rd54jnzn94ggppm0c7',
     )
+  })
+})
+
+describe('Create sendAll unsigned TX from UTXO', () => {
+  it('Create a transaction involving all input with no change', async () => {
+    const utxos: Array<RawUtxo> = [sampleUtxos[1], sampleUtxos[2]]
+    const sendAllResponse = await sendAllUnsignedTxFromUtxo(
+      keys[0].bechAddress,
+      utxos,
+    )
+
+    expect(sendAllResponse.senderUtxos).toEqual([utxos[0], utxos[1]])
+    const inputSum = await getTxInputTotal(sendAllResponse.IOs)
+    const outputSum = await getTxOutputTotal(sendAllResponse.IOs)
+    expect(inputSum.toString()).toEqual('11000002')
+    expect(outputSum.toString()).toEqual('10844618')
+    expect(inputSum.minus(outputSum).toString()).toEqual('155384')
+  })
+
+  it('Should fail due to insufficient funds (no inputs)', async () => {
+    const promise = sendAllUnsignedTxFromUtxo(keys[0].bechAddress, [])
+    await expect(promise).rejects.toThrow(InsufficientFunds)
+  })
+
+  it('Should fail due to insufficient funds (not enough to cover fees)', async () => {
+    const utxos: Array<RawUtxo> = [sampleUtxos[0]]
+    const promise = sendAllUnsignedTxFromUtxo(keys[0].bechAddress, utxos)
+    await expect(promise).rejects.toThrow(InsufficientFunds)
   })
 })

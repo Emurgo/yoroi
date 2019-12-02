@@ -60,6 +60,7 @@ export type Addressing = {|
   },
 |}
 
+// this is equivalent to yoroi-frontend's `RemoteUnspentOutput`
 export type RawUtxo = {|
   amount: string,
   receiver: string,
@@ -97,6 +98,7 @@ export type PreparedTransactionData = {|
   outputs: Array<TransactionOutput>,
 |}
 
+// similar to yoroi-frontend's V3UnsignedTxUtxoResponse
 export type V3UnsignedTxData = {|
   senderUtxos: Array<RawUtxo>,
   IOs: InputOutput,
@@ -107,6 +109,7 @@ export type V3UnsignedTxData = {|
   |}>,
 |}
 
+// similar to yoroi-frontend's V3UnsignedTxAddressedUtxoResponse
 export type V3UnsignedTxAddressedUtxoData = {|
   senderUtxos: Array<AddressedUtxo>,
   IOs: InputOutput,

@@ -305,3 +305,92 @@ async function addWitnesses(
     witnesses.add(witness)
   }
 }
+
+export const sendAllUnsignedTxFromUtxo = async (
+  receiver: string,
+  allUtxos: Array<RawUtxo>,
+): Promise<V3UnsignedTxData> => {
+  const totalBalance = allUtxos
+    .map((utxo) => new BigNumber(utxo.amount))
+    .reduce((acc, amount) => acc.plus(amount), new BigNumber(0))
+  if (totalBalance.isZero()) {
+    throw new InsufficientFunds()
+  }
+
+  const feeAlgorithm = await Fee.linear_fee(
+    await Value.from_str(CONFIG.LINEAR_FEE.CONSTANT),
+    await Value.from_str(CONFIG.LINEAR_FEE.COEFFICIENT),
+    await Value.from_str(CONFIG.LINEAR_FEE.CERTIFICATE),
+  )
+  let fee
+  {
+    // firts build a transaction to see what the cost would be
+    const fakeIOBuilder = await InputOutputBuilder.empty()
+    for (const utxo of allUtxos) {
+      const input = await utxoToTxInput(utxo)
+      await fakeIOBuilder.add_input(input)
+    }
+    await fakeIOBuilder.add_output(
+      await Address.from_string(receiver),
+      await Value.from_str(totalBalance.toString()),
+    )
+    const feeValue = await (await fakeIOBuilder.estimate_fee(
+      feeAlgorithm,
+      // can't add a certificate to a UTXO transaction
+      await Payload.no_payload(),
+    )).to_str()
+    fee = new BigNumber(feeValue)
+  }
+
+  // create a new transaction subtracing the fee from your total UTXO
+  if (totalBalance.isLessThan(fee)) {
+    throw new InsufficientFunds()
+  }
+  const newAmount = totalBalance.minus(fee).toString()
+  const unsignedTxResponse = await newAdaUnsignedTxFromUtxo(
+    receiver,
+    newAmount,
+    [],
+    allUtxos,
+  )
+  return unsignedTxResponse
+}
+
+export const sendAllUnsignedTx = async (
+  receiver: string,
+  allUtxos: Array<AddressedUtxo>,
+): Promise<V3UnsignedTxAddressedUtxoData> => {
+  const addressingMap = new Map<RawUtxo, AddressedUtxo>()
+  for (const utxo of allUtxos) {
+    addressingMap.set(
+      {
+        amount: utxo.amount,
+        receiver: utxo.receiver,
+        tx_hash: utxo.tx_hash,
+        tx_index: utxo.tx_index,
+        utxo_id: utxo.utxo_id,
+      },
+      utxo,
+    )
+  }
+  const unsignedTxResponse = await sendAllUnsignedTxFromUtxo(
+    receiver,
+    Array.from(addressingMap.keys()),
+  )
+
+  const addressedUtxos = unsignedTxResponse.senderUtxos.map((utxo) => {
+    const addressedUtxo = addressingMap.get(utxo)
+    if (addressedUtxo == null) {
+      throw new Error(
+        'sendAllUnsignedTx utxo refernece was changed. Should not happen',
+      )
+    }
+    return addressedUtxo
+  })
+
+  return {
+    senderUtxos: addressedUtxos,
+    IOs: unsignedTxResponse.IOs,
+    changeAddr: unsignedTxResponse.changeAddr,
+  }
+}
