@@ -97,15 +97,17 @@ describe('AddressChain', () => {
     const chain2 = AddressChain.fromJSON(data)
 
     const used = [
-      '2cWKMJemoBaiAKW7iBFgK3prZAK3gAEgkndCUTkGpUAoRofmXJcbmie2qe6JTN44dQ2Ag',
+      // '2cWKMJemoBaiAKW7iBFgK3prZAK3gAEgkndCUTkGpUAoRofmXJcbmie2qe6JTN44dQ2Ag', // byron testnet
+      'Ae2tdPwUPEZ6ipzynAWN6atmb9LNqEogput2NrMD3Z8UL7phtQLDhrKt1bf', // byron mainnet
     ]
 
     const filter = (addresses) => {
       return Promise.resolve(addresses.filter((addr) => used.includes(addr)))
     }
-
     await chain.sync(filter)
     await chain2.sync(filter)
+    console.log(chain.addresses)
+    console.log(chain2.addresses)
     expect(chain.size()).toBe(10)
     expect(chain2.addresses).toEqual(chain.addresses)
   })
