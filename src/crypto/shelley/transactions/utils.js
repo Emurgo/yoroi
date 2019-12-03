@@ -5,11 +5,12 @@ import {
   Certificate,
   InputOutput,
   PayloadAuthData,
-  StakeDelegation,
+  // CertificateKind
   StakeDelegationAuthData,
 } from 'react-native-chain-libs'
 import type {BaseSignRequest} from '../../../types/HistoryTransaction'
 import {CONFIG} from '../../../config'
+import {CertificateKind} from '../certificateUtils'
 
 import {BigNumber} from 'bignumber.js'
 
@@ -147,8 +148,8 @@ export const generateAuthData = async (
   }
 
   switch (await certificate.get_type()) {
-    // TODO: maybe should be `await CertificateKind.StakeDelegation`
-    case StakeDelegation: {
+    // TODO: update to CertificateKind.StakeDelegation from react-native-chain-libs
+    case CertificateKind.StakeDelegation: {
       return await PayloadAuthData.for_stake_delegation(
         await StakeDelegationAuthData.new(bindingSignature),
       )
