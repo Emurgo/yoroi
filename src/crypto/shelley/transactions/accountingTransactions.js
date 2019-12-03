@@ -45,6 +45,7 @@ export const buildUnsignedAccountTx = async (
   typeSpecific: SendType,
   accountBalance: BigNumber,
 ): Promise<InputOutput> => {
+  const wasmReceiver = await Address.from_bytes(Buffer.from(receiver, 'hex'))
   if (typeSpecific.amount != null && typeSpecific.amount.gt(accountBalance)) {
     throw new InsufficientFunds()
   }
@@ -74,7 +75,7 @@ export const buildUnsignedAccountTx = async (
     )
     if (typeSpecific.amount != null) {
       await fakeTxBuilder.add_output(
-        await Address.from_string(receiver),
+        wasmReceiver,
         // the value we put in here is irrelevant. Just need some value to be able to calculate fee
         await Value.from_str('1'),
       )
@@ -103,7 +104,7 @@ export const buildUnsignedAccountTx = async (
     // typeSpecific.amount.toString()
     const outputAmount = typeSpecific.amount
     await ioBuilder.add_output(
-      await Address.from_string(receiver),
+      wasmReceiver,
       await Value.from_str(outputAmount.toString()),
     )
   }
