@@ -9,7 +9,7 @@ import {
   StakeDelegationAuthData,
 } from 'react-native-chain-libs'
 import type {BaseSignRequest} from '../../../types/HistoryTransaction'
-import {CONFIG} from '../../../config'
+import {NUMBERS} from '../../../config'
 import {CertificateKind} from '../certificateUtils'
 
 import {BigNumber} from 'bignumber.js'
@@ -27,7 +27,7 @@ export const getTxInputTotal = async (
     sum = sum.plus(value)
   }
   if (shift) {
-    return sum.shiftedBy(-CONFIG.DECIMAL_PLACES_IN_ADA)
+    return sum.shiftedBy(-NUMBERS.DECIMAL_PLACES_IN_ADA)
   }
   return sum
 }
@@ -45,7 +45,7 @@ export const getTxOutputTotal = async (
     sum = sum.plus(value)
   }
   if (shift) {
-    return sum.shiftedBy(-CONFIG.DECIMAL_PLACES_IN_ADA)
+    return sum.shiftedBy(-NUMBERS.DECIMAL_PLACES_IN_ADA)
   }
   return sum
 }
@@ -58,7 +58,7 @@ export const getShelleyTxFee = async (
   const ins = await getTxInputTotal(IOs, false)
   const result = ins.minus(out)
   if (shift) {
-    return result.shiftedBy(-CONFIG.DECIMAL_PLACES_IN_ADA)
+    return result.shiftedBy(-NUMBERS.DECIMAL_PLACES_IN_ADA)
   }
   return result
 }

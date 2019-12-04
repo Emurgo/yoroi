@@ -1,4 +1,6 @@
 // @flow
+import {BigNumber} from 'bignumber.js'
+
 import {LogLevel} from './utils/logging'
 import env from './env'
 
@@ -54,6 +56,11 @@ export const ASSURANCE_LEVELS = {
   },
 }
 
+export const NUMBERS = {
+  DECIMAL_PLACES_IN_ADA: 6,
+  LOVELACES_PER_ADA: new BigNumber('1 000 000'.replace(/ /g, ''), 10),
+}
+
 export const CONFIG = {
   DEBUG: {
     START_WITH_INDEX_SCREEN: _SHOW_INIT_DEBUG_SCREEN,
@@ -105,7 +112,6 @@ export const CONFIG = {
   LOG_LEVEL: _LOG_LEVEL,
   NETWORK: _USE_TESTNET ? 'Testnet' : 'Mainnet',
   COMMIT: _COMMIT,
-  DECIMAL_PLACES_IN_ADA: 6,
   STAKING_KEY_INDEX: 0,
   BECH32_PREFIX: {
     ADDRESS: 'addr',
