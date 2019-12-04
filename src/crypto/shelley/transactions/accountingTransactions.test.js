@@ -36,8 +36,8 @@ describe('Create unsigned TX for account', () => {
       new BigNumber(5000000),
     )
 
-    const inputSum = await getTxInputTotal(unsignedTxResponse, false)
-    const outputSum = await getTxOutputTotal(unsignedTxResponse, false)
+    const inputSum = await getTxInputTotal(unsignedTxResponse)
+    const outputSum = await getTxOutputTotal(unsignedTxResponse)
     expect(inputSum.toString()).toEqual('2155383')
     expect(outputSum.toString()).toEqual('2000000')
     expect(inputSum.minus(outputSum).toString()).toEqual('155383')

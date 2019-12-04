@@ -8,14 +8,18 @@ import {
   StakeDelegation,
   StakeDelegationAuthData,
 } from 'react-native-chain-libs'
-import type {BaseSignRequest} from '../../../types/HistoryTransaction'
+import type {
+  BaseSignRequest,
+  AmountFormat,
+} from '../../../types/HistoryTransaction'
 import {CONFIG} from '../../../config'
+import {AMOUNT_FORMAT} from '../../../types/HistoryTransaction'
 
 import {BigNumber} from 'bignumber.js'
 
 export const getTxInputTotal = async (
   IOs: InputOutput,
-  shift: boolean,
+  format?: AmountFormat = AMOUNT_FORMAT.LOVELACE,
 ): Promise<BigNumber> => {
   let sum = new BigNumber(0)
 
@@ -25,7 +29,7 @@ export const getTxInputTotal = async (
     const value = new BigNumber(await (await input.value()).to_str())
     sum = sum.plus(value)
   }
-  if (shift) {
+  if (format === AMOUNT_FORMAT.ADA) {
     return sum.shiftedBy(-CONFIG.DECIMAL_PLACES_IN_ADA)
   }
   return sum
@@ -33,7 +37,7 @@ export const getTxInputTotal = async (
 
 export const getTxOutputTotal = async (
   IOs: InputOutput,
-  shift: boolean,
+  format?: AmountFormat = AMOUNT_FORMAT.LOVELACE,
 ): Promise<BigNumber> => {
   let sum = new BigNumber(0)
 
@@ -43,7 +47,7 @@ export const getTxOutputTotal = async (
     const value = new BigNumber(await (await output.value()).to_str())
     sum = sum.plus(value)
   }
-  if (shift) {
+  if (format === AMOUNT_FORMAT.ADA) {
     return sum.shiftedBy(-CONFIG.DECIMAL_PLACES_IN_ADA)
   }
   return sum
@@ -51,12 +55,12 @@ export const getTxOutputTotal = async (
 
 export const getShelleyTxFee = async (
   IOs: InputOutput,
-  shift: boolean,
+  format?: AmountFormat = AMOUNT_FORMAT.LOVELACE,
 ): Promise<BigNumber> => {
-  const out = await getTxOutputTotal(IOs, false)
-  const ins = await getTxInputTotal(IOs, false)
+  const out = await getTxOutputTotal(IOs)
+  const ins = await getTxInputTotal(IOs)
   const result = ins.minus(out)
-  if (shift) {
+  if (format === AMOUNT_FORMAT.ADA) {
     return result.shiftedBy(-CONFIG.DECIMAL_PLACES_IN_ADA)
   }
   return result
