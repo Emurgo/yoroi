@@ -70,7 +70,7 @@ export const newAdaUnsignedTxFromUtxo = async (
 
   const ioBuilder = await InputOutputBuilder.empty()
   await ioBuilder.add_output(
-    await Address.from_string(receiver),
+    await Address.from_bytes(Buffer.from(receiver, 'hex')),
     await Value.from_str(amount),
   )
 
@@ -100,7 +100,9 @@ export const newAdaUnsignedTxFromUtxo = async (
     IOs = await ioBuilder.seal_with_output_policy(
       payload,
       feeAlgorithm,
-      await OutputPolicy.one(await Address.from_string(changeAddress.address)),
+      await OutputPolicy.one(
+        await Address.from_bytes(Buffer.from(changeAddress.address, 'hex')),
+      ),
     )
     // given the change address, compute how much coin will be sent to it
     const addedChange = await filterToUsedChange(
@@ -211,7 +213,9 @@ async function filterToUsedChange(
   )
 
   const change = []
-  const changeAddrWasm = await Address.from_string(changeAddr.address)
+  const changeAddrWasm = await Address.from_bytes(
+    Buffer.from(changeAddr.address, 'hex'),
+  )
   const changeAddrPayload = Buffer.from(
     await changeAddrWasm.as_bytes(),
   ).toString('hex')
@@ -359,7 +363,7 @@ export const sendAllUnsignedTxFromUtxo = async (
       await fakeIOBuilder.add_input(input)
     }
     await fakeIOBuilder.add_output(
-      await Address.from_string(receiver),
+      await Address.from_bytes(Buffer.from(receiver, 'hex')),
       await Value.from_str(totalBalance.toString()),
     )
     const feeValue = await (await fakeIOBuilder.estimate_fee(

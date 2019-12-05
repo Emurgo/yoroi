@@ -3,7 +3,14 @@
 
 import jestSetup from '../../../jestSetup'
 
-import {Bip32PrivateKey} from 'react-native-chain-libs'
+import {
+  Address,
+  Bip32PrivateKey,
+  Certificate,
+  DelegationType,
+  StakeDelegation,
+  PoolId,
+} from 'react-native-chain-libs'
 import type {
   RawUtxo,
   AddressedUtxo,
@@ -17,6 +24,7 @@ import {
 } from './utxoTransactions'
 import {InsufficientFunds} from '../../errors'
 import {getTxInputTotal, getTxOutputTotal} from './utils'
+import {CONFIG} from '../../../config'
 
 jestSetup.setup()
 
@@ -24,24 +32,27 @@ const keys = [
   {
     legacyAddress:
       'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
+    // ca1qw8mq0p65pf028qgd32t6szeatfd9epx4jyl5jeuuswtlkyqpdguqeh83d4
     bechAddress:
-      'ca1qw8mq0p65pf028qgd32t6szeatfd9epx4jyl5jeuuswtlkyqpdguqeh83d4',
+      '038fb03c3aa052f51c086c54bd4059ead2d2e426ac89fa4b3ce41cbfd8800b51c0',
     pubKey:
       '8fb03c3aa052f51c086c54bd4059ead2d2e426ac89fa4b3ce41cbfd8800b51c02623fceb96b07408531a5cb259f53845a38d6b68928e7c0c7e390f07545d0e62',
   },
   {
     legacyAddress:
       'Ae2tdPwUPEZ4xAL3nxLq4Py7BfS1D2tJ3u2rxZGnrAXC8TNkWhTaz41J3FN',
+    // ca1q0j6cetm7zqsagm5zz5fmav9jg37n4cferj23h370kptrpfj095fxcy43lj
     bechAddress:
-      'ca1q0j6cetm7zqsagm5zz5fmav9jg37n4cferj23h370kptrpfj095fxcy43lj',
+      '03e5ac657bf0810ea37410a89df5859223e9d709c8e4a8de3e7d82b18532796893',
     pubKey:
       'e5ac657bf0810ea37410a89df5859223e9d709c8e4a8de3e7d82b185327968939a254def91bb75e94bda9c605f7f87481082742e1e51d8858965c9a40491fc94',
   },
   {
     legacyAddress:
       'Ae2tdPwUPEZEtwz7LKtJn9ub8y7ireuj3sq2yUCZ57ccj6ZkJKn7xEiApV9',
+    // ca1q0ewtxsk489t9g7vs64prkm0hfvz6aemtvtv57rkfwmxyp3yhtxtwhtm3gd
     bechAddress:
-      'ca1q0ewtxsk489t9g7vs64prkm0hfvz6aemtvtv57rkfwmxyp3yhtxtwhtm3gd',
+      '03f2e59a16a9cab2a3cc86aa11db6fba582d773b5b16ca78764bb6620624baccb7',
     pubKey:
       'f2e59a16a9cab2a3cc86aa11db6fba582d773b5b16ca78764bb6620624baccb7c03adf6448459f2b8d5c32033a160de8b5412d1952794190c4fc6b4716a8b8eb',
   },
@@ -76,7 +87,9 @@ const sampleUtxos: Array<RawUtxo> = [
 
 const sampleAdaAddresses: Array<{|address: string, ...Addressing|}> = [
   {
-    address: 'ca1q0ewtxsk489t9g7vs64prkm0hfvz6aemtvtv57rkfwmxyp3yhtxtwhtm3gd',
+    // ca1q0ewtxsk489t9g7vs64prkm0hfvz6aemtvtv57rkfwmxyp3yhtxtwhtm3gd
+    address:
+      '03f2e59a16a9cab2a3cc86aa11db6fba582d773b5b16ca78764bb6620624baccb7',
     addressing: {
       account: 0,
       change: 1,
@@ -263,6 +276,125 @@ describe('Create signed transactions', () => {
     )
     expect(await (await witnesses.get(1)).to_bech32()).toEqual(
       'witness1qxn2lhu9sfj24lpzr8sglzsc6h8qpsuvurylzc9zuhn37s9uerc6xwt0zjtfv7rtsa3r0d7cydd76s9fcsw5u576vy226ux9frnpqssf9gqfz6',
+    )
+  })
+
+  it('Transaction with a certificate is also valid', async () => {
+    const unsignedTxResponse = await newAdaUnsignedTx(
+      Buffer.from(
+        await (await Address.from_string(
+          'ca1sw8mq0p65pf028qgd32t6szeatfd9epx4jyl5jeuuswtlkyqpdguq9rance',
+        )).as_bytes(),
+      ).toString('hex'),
+      '5000', // smaller than input
+      [
+        {
+          address: Buffer.from(
+            await (await Address.from_string(
+              'addr1s5quq8utjkrfntnkngjxa9u9mdd8pcprjal2fwzkm7k0y0prx3k276qm0j8',
+            )).as_bytes(),
+          ).toString('hex'),
+          addressing: {
+            account: 0,
+            change: 1,
+            index: 0,
+          },
+        },
+      ],
+      [
+        {
+          amount: '2000000',
+          receiver: Buffer.from(
+            await (await Address.from_string(
+              'ca1ssuvzjs82mshgvyp4r4lmwgknvgjswnm7mpcq3wycjj7v2nk393e6qwqr79etp5e4emf5frwj7zakknsuq3ewl4yhptdlt8j8s3ngm906x2vwl',
+            )).as_bytes(),
+          ).toString('hex'),
+          tx_hash:
+            '86e36b6a65d82c9dcc0370b0ee3953aee579db0b837753306405c28a74de5550',
+          tx_index: 0,
+          utxo_id:
+            '86e36b6a65d82c9dcc0370b0ee3953aee579db0b837753306405c28a74de55500',
+          addressing: {
+            account: 0,
+            change: 0,
+            index: 0,
+          },
+        },
+      ],
+    )
+
+    const accountPrivateKey = await Bip32PrivateKey.from_bytes(
+      Buffer.from(
+        '408a1cb637d615c49e8696c30dd54883302a20a7b9b8a9d1c307d2ed3cd50758c9402acd000461a8fc0f25728666e6d3b86d031b8eea8d2f69b21e8aa6ba2b153e3ec212cc8a36ed9860579dfe1e3ef4d6de778c5dbdd981623b48727cd96247',
+        'hex',
+      ),
+    )
+    const stakingKey = await (await (await accountPrivateKey.derive(2)).derive(
+      CONFIG.STAKING_KEY_INDEX,
+    )).to_raw_key()
+    const certificate = await Certificate.stake_delegation(
+      await StakeDelegation.new(
+        await DelegationType.full(
+          await PoolId.from_hex(
+            '312e3d449038372ba2fc3300cfedf1b152ae739201b3e5da47ab3f933a421b62',
+          ),
+        ),
+        await stakingKey.to_public(),
+      ),
+    )
+    const fragment = await signTransaction(
+      unsignedTxResponse,
+      accountPrivateKey,
+      false,
+      {
+        stakingKey,
+        certificate,
+      },
+    )
+    const signedTx = await fragment.get_transaction()
+
+    const inputs = await signedTx.inputs()
+    expect(await inputs.size()).toEqual(1)
+    expect(await (await (await inputs.get(0)).value()).to_str()).toEqual(
+      '2000000',
+    )
+    const pointer = await (await inputs.get(0)).get_utxo_pointer()
+    expect(
+      Buffer.from(await (await pointer.fragment_id()).as_bytes()).toString(
+        'hex',
+      ),
+    ).toEqual(
+      '86e36b6a65d82c9dcc0370b0ee3953aee579db0b837753306405c28a74de5550',
+    )
+    expect(pointer.output_index()).toEqual(0)
+
+    const outputs = await signedTx.outputs()
+    expect(await outputs.size()).toEqual(2)
+    const change = await outputs.get(1)
+    expect(
+      await (await change.address()).to_string(CONFIG.BECH32_PREFIX.ADDRESS),
+    ).toEqual(
+      'addr1s5quq8utjkrfntnkngjxa9u9mdd8pcprjal2fwzkm7k0y0prx3k276qm0j8',
+    )
+    expect(await (await change.value()).to_str()).toEqual('1839616')
+
+    expect(
+      Buffer.from(await (await fragment.id()).as_bytes()).toString('hex'),
+    ).toEqual(
+      'c3ef21699ee8937527b83942980b0739353ddd133f627d40832b98d3ef416a6d',
+    )
+    expect(
+      Buffer.from(
+        await (await (await fragment.get_transaction()).id()).as_bytes(),
+      ).toString('hex'),
+    ).toEqual(
+      '314ea630977b20d21cc2dc8f861dc9bcfa2013dcbc32c75288d7a5067274662d',
+    )
+
+    const witnesses = await signedTx.witnesses()
+    expect(await witnesses.size()).toEqual(1)
+    expect(await (await witnesses.get(0)).to_bech32()).toEqual(
+      'witness1q89jcq78wt4u773vrrjjwuqg8908wpyuv5j3sdj0mcs4dpe667f97yfc0k48dae9u29r07nkms764js84tgwxr09ah6e948s2u6ye8cgyzhd4j',
     )
   })
 })
