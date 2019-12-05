@@ -36,7 +36,7 @@ const externalAddresses = [
 ]
 
 // TODO: delete if/else and restore test
-if (moment().isAfter('2019-12-12')) {
+if (moment().isAfter('2019-12-20')) {
   test('heads up: this should already be fixed!', () => {
     throw new Error()
   })
@@ -274,7 +274,7 @@ describe('signTransaction', () => {
     // Try updating rust library and seeing if it disappears
     // Note(v-almonacid): I increased this timer. We'll hopefully update the
     // bindings within the the next months and this issue should be fixed by then
-    expect(moment().isBefore('2019-12-12')).toBeTruthy()
+    expect(moment().isBefore('2019-12-20')).toBeTruthy()
 
     const inputs = [
       {

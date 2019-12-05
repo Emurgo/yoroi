@@ -12,7 +12,7 @@ jest.setTimeout(30 * 1000)
 let apiWithTestnet
 
 // TODO: delete if/else and restore tests
-if (moment().isAfter('2019-12-12')) {
+if (moment().isAfter('2019-12-20')) {
   test('heads up: this should already be fixed!', () => {
     throw new Error()
   })
@@ -87,6 +87,6 @@ if (moment().isAfter('2019-12-12')) {
 } else {
   // TODO: delete
   test('dummy test', () => {
-    expect(moment().isBefore('2019-12-12')).toBeTruthy()
+    expect(moment().isBefore('2019-12-20')).toBeTruthy()
   })
 }
