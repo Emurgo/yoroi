@@ -215,19 +215,20 @@ describe('Create signed transactions with legacy witness', () => {
         'hex',
       ),
     )
-    const signedTx = await signTransaction(
+    const fragment = await signTransaction(
       unsignedTxResponse,
       accountPrivateKey,
       true,
     )
+    const signedTx = await fragment.get_transaction()
     const witnesses = await signedTx.witnesses()
 
     expect(await witnesses.size()).toEqual(2)
     expect(await (await witnesses.get(0)).to_bech32()).toEqual(
-      'witness1qz8mq0p65pf028qgd32t6szeatfd9epx4jyl5jeuuswtlkyqpdguqf3rln4edvr5ppf35h9jt86ns3dr344k3y5w0sx8uwg0qa296rnzul5k4qyjdyslv50qprcglg8hjvq4lpnvrfhl2q0n759ev5qh3nljrtgjlej4yxkhlyy454l4lcxzutfe4kh0ysacs9gmd9v5c5ed2zql6kkea',
+      'witness1qz8mq0p65pf028qgd32t6szeatfd9epx4jyl5jeuuswtlkyqpdguqf3rln4edvr5ppf35h9jt86ns3dr344k3y5w0sx8uwg0qa296rnzxm3ev8glwecyunua4ufueka7485gqrum54q4tqsdx2yjj6hahzaz9wrjpz7gxq2nm6pftxvgf39g60t5hdfxc8jecqx3m5te0yl8jrg0jtvc2',
     )
     expect(await (await witnesses.get(1)).to_bech32()).toEqual(
-      'witness1qz8mq0p65pf028qgd32t6szeatfd9epx4jyl5jeuuswtlkyqpdguqf3rln4edvr5ppf35h9jt86ns3dr344k3y5w0sx8uwg0qa296rnzul5k4qyjdyslv50qprcglg8hjvq4lpnvrfhl2q0n759ev5qh3nljrtgjlej4yxkhlyy454l4lcxzutfe4kh0ysacs9gmd9v5c5ed2zql6kkea',
+      'witness1qz8mq0p65pf028qgd32t6szeatfd9epx4jyl5jeuuswtlkyqpdguqf3rln4edvr5ppf35h9jt86ns3dr344k3y5w0sx8uwg0qa296rnzxm3ev8glwecyunua4ufueka7485gqrum54q4tqsdx2yjj6hahzaz9wrjpz7gxq2nm6pftxvgf39g60t5hdfxc8jecqx3m5te0yl8jrg0jtvc2',
     )
   })
 })
@@ -247,20 +248,21 @@ describe('Create signed transactions', () => {
         'hex',
       ),
     )
-    const signedTx = await signTransaction(
+    const fragment = await signTransaction(
       unsignedTxResponse,
       accountPrivateKey,
       false,
     )
+    const signedTx = await fragment.get_transaction()
 
     const witnesses = await signedTx.witnesses()
 
     expect(await witnesses.size()).toEqual(2)
     expect(await (await witnesses.get(0)).to_bech32()).toEqual(
-      'witness1q8n7j65qjf5jraj3uqy0praq77fszhuxdsdxlagp706sh9jsz7x07gddztlx25s66lusjkjh7hlqct3d8xk6aujrhzq4rd54jnzn94ggppm0c7',
+      'witness1qxn2lhu9sfj24lpzr8sglzsc6h8qpsuvurylzc9zuhn37s9uerc6xwt0zjtfv7rtsa3r0d7cydd76s9fcsw5u576vy226ux9frnpqssf9gqfz6',
     )
     expect(await (await witnesses.get(1)).to_bech32()).toEqual(
-      'witness1q8n7j65qjf5jraj3uqy0praq77fszhuxdsdxlagp706sh9jsz7x07gddztlx25s66lusjkjh7hlqct3d8xk6aujrhzq4rd54jnzn94ggppm0c7',
+      'witness1qxn2lhu9sfj24lpzr8sglzsc6h8qpsuvurylzc9zuhn37s9uerc6xwt0zjtfv7rtsa3r0d7cydd76s9fcsw5u576vy226ux9frnpqssf9gqfz6',
     )
   })
 })

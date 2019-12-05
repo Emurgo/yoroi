@@ -1,10 +1,26 @@
 // @flow
 
-import {InputOutput, PublicKey, PrivateKey} from 'react-native-chain-libs'
-import {HdWallet} from 'react-native-cardano'
+import {
+  AccountBindingSignature,
+  Certificate,
+  InputOutput,
+  PayloadAuthData,
+  StakeDelegation,
+  StakeDelegationAuthData,
+} from 'react-native-chain-libs'
+import type {
+  BaseSignRequest,
+  AmountFormat,
+} from '../../../types/HistoryTransaction'
+import {CONFIG} from '../../../config'
+import {AMOUNT_FORMAT} from '../../../types/HistoryTransaction'
+
 import {BigNumber} from 'bignumber.js'
 
-export const getTxInputTotal = async (IOs: InputOutput): Promise<BigNumber> => {
+export const getTxInputTotal = async (
+  IOs: InputOutput,
+  format?: AmountFormat = AMOUNT_FORMAT.LOVELACE,
+): Promise<BigNumber> => {
   let sum = new BigNumber(0)
 
   const inputs = await IOs.inputs()
@@ -13,11 +29,15 @@ export const getTxInputTotal = async (IOs: InputOutput): Promise<BigNumber> => {
     const value = new BigNumber(await (await input.value()).to_str())
     sum = sum.plus(value)
   }
+  if (format === AMOUNT_FORMAT.ADA) {
+    return sum.shiftedBy(-CONFIG.DECIMAL_PLACES_IN_ADA)
+  }
   return sum
 }
 
 export const getTxOutputTotal = async (
   IOs: InputOutput,
+  format?: AmountFormat = AMOUNT_FORMAT.LOVELACE,
 ): Promise<BigNumber> => {
   let sum = new BigNumber(0)
 
@@ -27,19 +47,68 @@ export const getTxOutputTotal = async (
     const value = new BigNumber(await (await output.value()).to_str())
     sum = sum.plus(value)
   }
+  if (format === AMOUNT_FORMAT.ADA) {
+    return sum.shiftedBy(-CONFIG.DECIMAL_PLACES_IN_ADA)
+  }
   return sum
 }
 
-// TODO: test
-export const v2SkKeyToV3Key = async (v2Key: HdWallet.XPrv): PrivateKey => {
-  return await PrivateKey.from_extended_bytes(
-    // need to slice out the chain code from the private key
-    Buffer.from(v2Key.slice(0, 128), 'hex'),
-  )
+export const getShelleyTxFee = async (
+  IOs: InputOutput,
+  format?: AmountFormat = AMOUNT_FORMAT.LOVELACE,
+): Promise<BigNumber> => {
+  const out = await getTxOutputTotal(IOs)
+  const ins = await getTxInputTotal(IOs)
+  const result = ins.minus(out)
+  if (format === AMOUNT_FORMAT.ADA) {
+    return result.shiftedBy(-CONFIG.DECIMAL_PLACES_IN_ADA)
+  }
+  return result
 }
-export const v2PkKeyToV3Key = async (v2Key: HdWallet.XPub): PublicKey => {
-  return await PublicKey.from_bytes(
-    // need to slice out the chain code from the public key
-    Buffer.from(v2Key.slice(0, 64), 'hex'),
+
+export const getShelleyTxReceivers = async (
+  signRequest: BaseSignRequest<InputOutput>,
+  includeChange: boolean,
+): Promise<Array<string>> => {
+  const receivers: Array<string> = []
+
+  const changeAddrs = new Set(
+    signRequest.changeAddr.map((change) => change.address),
   )
+  const outputs = await signRequest.unsignedTx.outputs()
+  for (let i = 0; i < (await outputs.size()); i++) {
+    const output = await outputs.get(i)
+    const addr = Buffer.from(
+      await (await output.address()).as_bytes(),
+    ).toString('hex')
+    if (!includeChange) {
+      if (changeAddrs.has(addr)) {
+        continue
+      }
+    }
+    receivers.push(addr)
+  }
+  return receivers
+}
+
+export const generateAuthData = async (
+  bindingSignature: AccountBindingSignature,
+  certificate: Certificate,
+): Promise<PayloadAuthData> => {
+  if (certificate == null) {
+    return await PayloadAuthData.for_no_payload()
+  }
+
+  switch (await certificate.get_type()) {
+    // TODO: maybe should be `await CertificateKind.StakeDelegation`
+    case StakeDelegation: {
+      return await PayloadAuthData.for_stake_delegation(
+        await StakeDelegationAuthData.new(bindingSignature),
+      )
+    }
+    default:
+      throw new Error(
+        `generateAuthData unexpected cert type ${await certificate.get_type()}`,
+      )
+  }
 }

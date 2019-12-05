@@ -10,12 +10,16 @@
  * existing structure
  */
 
-import {InsufficientFunds} from '../../errors'
 import {BigNumber} from 'bignumber.js'
+
+import {InsufficientFunds} from '../../errors'
 import {
+  AccountBindingSignature,
   Address,
   Bip32PrivateKey,
+  Certificate,
   Fee,
+  Fragment,
   FragmentId,
   Hash,
   Input,
@@ -24,7 +28,7 @@ import {
   Outputs,
   Payload,
   PayloadAuthData,
-  Transaction,
+  PrivateKey,
   TransactionBuilder,
   TransactionBuilderSetAuthData,
   TransactionBuilderSetWitness,
@@ -40,6 +44,7 @@ import type {
   AddressedUtxo,
   Addressing,
 } from '../../../types/HistoryTransaction'
+import {generateAuthData} from './utils'
 import {CARDANO_CONFIG} from '../../../config'
 
 const CONFIG = CARDANO_CONFIG.SHELLEY
@@ -55,6 +60,7 @@ export const newAdaUnsignedTxFromUtxo = async (
   amount: string,
   changeAddresses: Array<{|address: string, ...Addressing|}>,
   allUtxos: Array<RawUtxo>,
+  certificate: void | Certificate,
 ): Promise<V3UnsignedTxData> => {
   const feeAlgorithm = await Fee.linear_fee(
     await Value.from_str(CONFIG.LINEAR_FEE.CONSTANT),
@@ -68,8 +74,10 @@ export const newAdaUnsignedTxFromUtxo = async (
     await Value.from_str(amount),
   )
 
-  // can't add a certificate to a UTXO transaction
-  const payload = await Payload.no_payload()
+  const payload =
+    certificate != null
+      ? await Payload.certificate(certificate)
+      : await Payload.no_payload()
 
   const selectedUtxos = await firstMatchFirstInputSelection(
     ioBuilder,
@@ -95,15 +103,15 @@ export const newAdaUnsignedTxFromUtxo = async (
       await OutputPolicy.one(await Address.from_string(changeAddress.address)),
     )
     // given the change address, compute how much coin will be sent to it
-    change.push(
-      ...(await filterToUsedChange(
-        changeAddress,
-        await IOs.outputs(),
-        selectedUtxos,
-      )),
+    const addedChange = await filterToUsedChange(
+      changeAddress,
+      await IOs.outputs(),
+      selectedUtxos,
     )
+    change.push(...addedChange)
   } else if (changeAddresses.length === 0) {
     IOs = await ioBuilder.seal_with_output_policy(
+      payload,
       feeAlgorithm,
       await OutputPolicy.forget(),
     )
@@ -203,15 +211,18 @@ async function filterToUsedChange(
   )
 
   const change = []
+  const changeAddrWasm = await Address.from_string(changeAddr.address)
+  const changeAddrPayload = Buffer.from(
+    await changeAddrWasm.as_bytes(),
+  ).toString('hex')
   for (let i = 0; i < (await outputs.size()); i++) {
     const output = await outputs.get(i)
-    // we can't know which bech32 prefix was used
-    // so we instead assume the suffix must match
-    const suffix = (await (await output.address()).to_string('dummy')).slice(
-      'dummy'.length,
-    )
     const val = (await await output.value()).to_str()
-    if (changeAddr.address.endsWith(suffix)) {
+    // not: both change & outputs all cannot be legacy addresses
+    const outputPayload = Buffer.from(
+      await (await output.address()).as_bytes(),
+    ).toString('hex')
+    if (changeAddrPayload === outputPayload) {
       const indexInInput = possibleDuplicates.findIndex(
         (utxo) => utxo.amount === val,
       )
@@ -233,11 +244,18 @@ export const signTransaction = async (
   signRequest: V3UnsignedTxAddressedUtxoData,
   signingKey: Bip32PrivateKey,
   useLegacy: boolean,
-): Promise<Transaction> => {
+  payload: void | {|
+    stakingKey: PrivateKey,
+    certificate: Certificate,
+  |},
+): Promise<Fragment> => {
   const {senderUtxos, IOs} = signRequest
 
-  const txBuilder = await new TransactionBuilder()
-  const builderSetIOs = await txBuilder.no_payload()
+  const txbuilder = await new TransactionBuilder()
+  const builderSetIOs =
+    payload != null
+      ? await txbuilder.payload(payload.certificate)
+      : await txbuilder.no_payload()
   const builderSetWitnesses = await builderSetIOs.set_ios(
     await IOs.inputs(),
     await IOs.outputs(),
@@ -249,11 +267,20 @@ export const signTransaction = async (
     useLegacy,
   )
 
-  const signedTx = await builderSetAuthData.set_payload_auth(
-    // can't add a certificate to a UTXO transaction
-    await PayloadAuthData.for_no_payload(),
-  )
-  return signedTx
+  // prettier-ignore
+  const payloadAuthData =
+    payload == null
+      ? await PayloadAuthData.for_no_payload()
+      : await generateAuthData(
+        await AccountBindingSignature.new_single(
+          payload.stakingKey,
+          await builderSetAuthData.get_auth_data(),
+        ),
+        payload.certificate,
+      )
+  const signedTx = await builderSetAuthData.set_payload_auth(payloadAuthData)
+  const fragment = await Fragment.from_transaction(signedTx)
+  return fragment
 }
 
 async function utxoToTxInput(utxo: RawUtxo): Input {
@@ -304,6 +331,7 @@ async function addWitnesses(
     }
     witnesses.add(witness)
   }
+  return await builderSetWitnesses.set_witnesses(witnesses)
 }
 
 export const sendAllUnsignedTxFromUtxo = async (
