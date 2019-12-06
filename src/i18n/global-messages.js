@@ -27,6 +27,20 @@ export const confirmationMessages = {
       defaultMessage: '!!!No',
     },
   }),
+  commonButtons: defineMessages({
+    confirmButton: {
+      id: 'global.actions.dialogs.commonbuttons.confirmButton',
+      defaultMessage: '!!!Confirm',
+    },
+    cancelButton: {
+      id: 'global.actions.dialogs.commonbuttons.cancelButton',
+      defaultMessage: '!!!Cancel',
+    },
+    backButton: {
+      id: 'global.actions.dialogs.commonbuttons.cancelButton',
+      defaultMessage: '!!!Cancel',
+    },
+  }),
 }
 
 export const errorMessages = {
