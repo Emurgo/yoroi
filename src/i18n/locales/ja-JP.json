@@ -92,7 +92,7 @@
   "components.settings.changepasswordscreen.newPasswordInputLabel": "新しいパスワード",
   "components.settings.changepasswordscreen.oldPasswordInputLabel": "現在のパスワード",
   "components.settings.changepasswordscreen.repeatPasswordInputLabel": "新しいパスワードをもう一度入力してください。",
-  "components.settings.changepasswordscreen.repeatPasswordInputNotMatchError": "パスワードが間違っています。",
+  "components.settings.changepasswordscreen.repeatPasswordInputNotMatchError": "パスワードが一致していません",
   "components.settings.changepasswordscreen.title": "送金パスワードを変更する",
   "components.settings.changewalletname.changeButton": "名前を変更する",
   "components.settings.changewalletname.title": "ウォレット名を変更する",
