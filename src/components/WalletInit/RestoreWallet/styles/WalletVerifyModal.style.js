@@ -1,12 +1,12 @@
 // @flow
 import {StyleSheet} from 'react-native'
 
-import {spacing} from '../../../../styles/config'
+import {spacing, COLORS} from '../../../../styles/config'
 
 export default StyleSheet.create({
   title: {
     textAlign: 'center',
-    color: '#163fa0',
+    color: COLORS.POSITIVE_AMOUNT,
     fontSize: 20,
     lineHeight: 22,
     fontWeight: 'bold',
@@ -19,9 +19,16 @@ export default StyleSheet.create({
     flex: 1,
     marginBottom: 24,
   },
-  imageContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: spacing.paragraphBottomMargin,
+  label: {
+    marginTop: 5,
+    fontSize: 14,
+    lineHeight: 24,
+  },
+  buttons: {
+    flexDirection: 'row',
+    marginTop: 12,
+  },
+  leftButton: {
+    marginRight: 16,
   },
 })

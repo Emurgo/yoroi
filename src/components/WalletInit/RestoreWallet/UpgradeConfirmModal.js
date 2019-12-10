@@ -3,19 +3,18 @@
 import React from 'react'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
-import {View, TouchableOpacity, ScrollView, Image, Linking} from 'react-native'
+import {View, ScrollView, Image} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import {withNavigation} from 'react-navigation'
 import {BigNumber} from 'bignumber.js'
 
+import AddressEntry from '../../Common/AddressEntry'
 import type {Navigation} from '../../../types/navigation'
 import {Text, Button, Modal} from '../../UiKit'
 import {formatAdaWithText} from '../../../utils/format'
 import {confirmationMessages} from '../../../i18n/global-messages'
-import {CARDANO_CONFIG} from '../../../config'
 
-import styles from './styles/UpgradeCheckModal.style'
-import imageEmpty from '../../../assets/img/no_transactions_yet.inline.png'
+import styles from './styles/UpgradeConfirmModal.style'
 import imageSucess from '../../../assets/img/transfer-success.inline.png'
 
 import type {ComponentType} from 'react'
@@ -55,18 +54,6 @@ const messages = defineMessages({
   },
 })
 
-const AddressEntry = withHandlers({
-  onPress: ({address}) => () => {
-    Linking.openURL(CARDANO_CONFIG.SHELLEY.EXPLORER_URL_FOR_ADDRESS(address))
-  },
-})(({address, onPress}) => {
-  return (
-    <TouchableOpacity activeOpacity={0.5} onPress={onPress}>
-      <Text secondary>{address}</Text>
-    </TouchableOpacity>
-  )
-})
-
 type Props = {
   intl: any,
   visible: boolean,
@@ -94,12 +81,11 @@ class UpgradeConfirmModal extends React.Component<Props> {
       onCancel,
       onConfirm,
       onContinue,
-      onRequestClose,
     } = this.props
 
     if (byronAddresses.length > 0) {
       return (
-        <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
+        <Modal visible={visible}>
           <ScrollView style={styles.scrollView}>
             <View style={styles.content}>
               <View style={styles.heading}>
@@ -113,7 +99,7 @@ class UpgradeConfirmModal extends React.Component<Props> {
                   {intl.formatMessage(messages.balanceLabel)}
                 </Text>
                 <Text style={styles.balanceAmount}>
-                  {balance && formatAdaWithText(balance)}
+                  {formatAdaWithText(balance)}
                 </Text>
               </View>
               <View style={styles.item}>
@@ -121,7 +107,7 @@ class UpgradeConfirmModal extends React.Component<Props> {
                   {intl.formatMessage(messages.feesLabel)}
                 </Text>
                 <Text style={styles.balanceAmount}>
-                  {balance && formatAdaWithText(fees)}
+                  {formatAdaWithText(fees)}
                 </Text>
               </View>
               <View style={styles.item}>
@@ -129,7 +115,7 @@ class UpgradeConfirmModal extends React.Component<Props> {
                   {intl.formatMessage(messages.finalBalanceLabel)}
                 </Text>
                 <Text style={styles.balanceAmount}>
-                  {balance && formatAdaWithText(finalBalance)}
+                  {formatAdaWithText(finalBalance)}
                 </Text>
               </View>
               <View style={styles.item}>
@@ -150,19 +136,17 @@ class UpgradeConfirmModal extends React.Component<Props> {
             <View style={styles.buttons}>
               <Button
                 block
-                outlineOnLight
+                outlineShelley
                 onPress={onCancel}
-                // title={intl.formatMessage(confirmationMessages.commonButtons.cancelButton.defaultMessage)}
-                title={confirmationMessages.commonButtons.cancelButton.defaultMessage}
-                style={styles.skipButton}
+                title={intl.formatMessage(confirmationMessages.commonButtons.cancelButton)}
+                style={styles.leftButton}
               />
 
               <Button
                 block
                 onPress={onConfirm}
-                // title={intl.formatMessage(confirmationMessages.commonButtons.confirmButton)}
-                title={confirmationMessages.commonButtons.confirmButton.defaultMessage}
-                style={styles.checkButton}
+                title={intl.formatMessage(confirmationMessages.commonButtons.confirmButton)}
+                shelleyTheme
               />
             </View>
           </ScrollView>
@@ -170,15 +154,20 @@ class UpgradeConfirmModal extends React.Component<Props> {
       )
     } else {
       return (
-        <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
+        <Modal visible={visible}>
           <ScrollView style={styles.scrollView}>
-            <View style={[styles.content, styles.empty]}>
-              <Image source={imageEmpty} />
-              <Text>{intl.formatMessage(messages.recoveryEmptyMessage)}</Text>
+            <View style={styles.content}>
+              <View style={styles.heading}>
+                <Image source={imageSucess} />
+                <Text style={styles.title}>
+                  {intl.formatMessage(messages.noUpgradeLabel)}
+                </Text>
+              </View>
+              <Text>{intl.formatMessage(messages.noUpgradeMessage)}</Text>
             </View>
             <Button
               onPress={onContinue}
-              title={intl.formatMessage(messages.recoveryEmptyButtonText)}
+              title={intl.formatMessage(confirmationMessages.commonButtons.continueButton)}
               shelleyTheme
             />
           </ScrollView>

@@ -32,5 +32,18 @@ export default StyleSheet.create({
   },
   balanceAmount: {
     color: COLORS.POSITIVE_AMOUNT,
+    lineHeight: 24,
+    fontSize: 16,
+  },
+  buttons: {
+    flexDirection: 'row',
+    marginTop: 12,
+  },
+  leftButton: {
+    marginRight: 16,
+  },
+  centeredContent: {
+    lineHeight: 20,
+    alignItems: 'center',
   },
 })

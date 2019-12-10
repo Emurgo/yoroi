@@ -24,7 +24,7 @@ const messages = defineMessages({
     id: 'components.walletinit.restorewallet.upgradecheckmodal.explanation',
     defaultMessage:
       '!!!If you had any ADA in your wallet on November 29th, 2019, you will' +
-      'have to upgrade your wallet to a Shelley "reward wallet"',
+      'have to upgrade your wallet to a Shelley "reward wallet".',
   },
   checkText: {
     id: 'components.walletinit.restorewallet.upgradecheckmodal.checkText',
@@ -32,7 +32,7 @@ const messages = defineMessages({
   },
   checkButton: {
     id: 'components.walletinit.restorewallet.upgradecheckmodal.checkButton',
-    defaultMessage: '!!!Confirm',
+    defaultMessage: '!!!Check',
   },
   skipButton: {
     id: 'components.walletinit.restorewallet.upgradecheckmodal.skipButton',
@@ -55,50 +55,39 @@ class UpgradeCheckModal extends React.Component<Props> {
       visible,
       onCheck,
       onSkip,
-      onRequestClose,
     } = this.props
 
     return (
-      <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
+      <Modal visible={visible}>
         <ScrollView style={styles.scrollView}>
-          <View style={styles.imageContainer}>
-            <Image source={image} />
-          </View>
           <View style={styles.content}>
             <View style={styles.heading}>
-              { /* <Image source={imageSucess} /> */}
-              <Text style={styles.title} small>
-                {/* intl.formatMessage(messages.title) */}
-                {messages.title.defaultMessage}
+              <Image source={image} />
+              <Text style={styles.title}>
+                {intl.formatMessage(messages.title)}
               </Text>
             </View>
             <View>
-              <Text>
-                {/* intl.formatMessage(messages.explanation) */}
-                {messages.explanation.defaultMessage}
+              <Text style={styles.paragraph}>
+                {intl.formatMessage(messages.explanation)}
               </Text>
-              <Text>
-            {/* intl.formatMessage(messages.checkText) */}
-                {messages.checkText.defaultMessage}
-              </Text>
+              <Text>{intl.formatMessage(messages.checkText)}</Text>
             </View>
           </View>
           <View style={styles.buttons}>
             <Button
               block
-              outlineOnLight
+              outlineShelley
               onPress={onSkip}
-              // title={intl.formatMessage(messages.skipButton)}
-              title={messages.skipButton.defaultMessage}
-              style={styles.skipButton}
+              title={intl.formatMessage(messages.skipButton)}
+              style={styles.leftButton}
             />
 
             <Button
               block
               onPress={onCheck}
-              // title={intl.formatMessage(messages.checkButton)}
-              title={messages.checkButton.defaultMessage}
-              style={styles.checkButton}
+              title={intl.formatMessage(messages.checkButton)}
+              shelleyTheme
             />
           </View>
         </ScrollView>

@@ -7,6 +7,7 @@ import {View} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import {withNavigation} from 'react-navigation'
 
+import AddressEntry from '../../Common/AddressEntry'
 import type {Navigation} from '../../../types/navigation'
 import {Text, Button, Modal} from '../../UiKit'
 import {confirmationMessages} from '../../../i18n/global-messages'
@@ -15,10 +16,15 @@ import styles from './styles/WalletVerifyModal.style'
 
 import type {ComponentType} from 'react'
 
+
+const renderBulletPointItem = (textRow) => {
+  return (<Text>{'\u2022'} {textRow}</Text>)
+}
+
 const messages = defineMessages({
   title: {
     id: 'components.walletinit.restorewallet.walletverifyscreen.title',
-    defaultMessage: '!!!Verify Restored Wallet',
+    defaultMessage: '!!!Verify restored wallet',
   },
   verifyLabel: {
     id:
@@ -27,41 +33,31 @@ const messages = defineMessages({
       '!!!Be careful about wallet restoration:',
   },
   verifyInstructions1: {
-    id:
-      'components.walletinit.restorewallet.walletverifyscreen.verifyInstructions1',
+    id: 'components.walletinit.restorewallet.walletverifyscreen.verifyInstructions1',
     defaultMessage: '!!!Make sure Byron addresses match what you remember.',
   },
   verifyInstructions2: {
-    id:
-      'components.walletinit.restorewallet.walletverifyscreen.verifyInstructions2',
-    defaultMessage: "!!!If you've entered wrong mnemonics you will just open" +
-    'another empty wallet with wrong addresses',
+    id: 'components.walletinit.restorewallet.walletverifyscreen.verifyInstructions2',
+    defaultMessage: "!!!If you've entered wrong mnemonics you will just open " +
+    'another empty wallet with wrong addresses.',
   },
   byronAddressesLabel: {
-    id:
-      'components.walletinit.restorewallet.walletverifyscreen.byronAddressesLabel',
-    defaultMessage: '!!!Byron wallet address[es]',
+    id: 'components.walletinit.restorewallet.walletverifyscreen.byronAddressLabel',
+    defaultMessage: '!!!Byron wallet address:',
   },
-  shelleyAddresses: {
-    id: 'components.walletinit.restorewallet.walletverifyscreen.shelleyAddresses',
-    defaultMessage: '!!!Shelley wallet address[es]',
-  },
-  confirmButton: {
-    id: 'components.walletinit.restorewallet.walletverifyscreen.confirmButton',
-    defaultMessage: '!!!Confirm',
-    description: 'some desc',
-  },
-  backButton: {
-    id: 'components.walletinit.restorewallet.walletverifyscreen.backButton',
-    defaultMessage: '!!!Back',
-    description: 'some desc',
+  shelleyAddressesLabel: {
+    id: 'components.walletinit.restorewallet.walletverifyscreen.shelleyAddressLabel',
+    defaultMessage: '!!!Shelley wallet address:',
   },
 })
 
 type Props = {
   intl: any,
-  byronAddresses: Array<string>,
-  shelleyAddress: Array<string>,
+  visible: boolean,
+  onConfirm: () => mixed,
+  onBack: () => void,
+  byronAddress: string,
+  shelleyAddress: string,
 }
 
 class WalletVerifyModal extends React.Component<Props, State> {
@@ -69,45 +65,53 @@ class WalletVerifyModal extends React.Component<Props, State> {
     const {
       intl,
       visible,
-      onRequestClose,
-      onConfirmVerify,
+      onConfirm,
       onBack,
+      byronAddress,
+      shelleyAddress,
     } = this.props
 
 
     return (
-      <Modal visible={visible} onRequestClose={onRequestClose}>
+      <Modal visible={visible}>
         <View style={styles.safeAreaView}>
           <View style={styles.container}>
 
-            <Text style={styles.title}>
-              {/* {intl.formatMessage(messages.verifyLabel) */}
-              {messages.title.defaultMessage}
+            <Text style={styles.title}>{intl.formatMessage(messages.title)}</Text>
+
+            <Text style={styles.label}>
+              {intl.formatMessage(messages.verifyLabel)}
             </Text>
+            {renderBulletPointItem(intl.formatMessage(messages.verifyInstructions1))}
+            {renderBulletPointItem(intl.formatMessage(messages.verifyInstructions2))}
 
-            {/* <Text>{intl.formatMessage(messages.verifyInstructions1)}</Text> */}
-            <Text>{messages.verifyInstructions1.defaultMessage}</Text>
-            {/* <Text>{intl.formatMessage(messages.verifyInstructions2)}</Text> */}
-            <Text>{messages.verifyInstructions2.defaultMessage}</Text>
+            <Text style={styles.label}>
+              {intl.formatMessage(messages.byronAddressesLabel)}
+            </Text>
+            <AddressEntry address={byronAddress} />
+            <Text style={styles.label}>
+              {intl.formatMessage(messages.shelleyAddressesLabel)}
+            </Text>
+            <AddressEntry address={shelleyAddress} />
 
-          </View>
-
-          <View style={styles.buttons}>
-            <Button
-              block
-              outlineOnLight
-              onPress={onBack}
-              // title={intl.formatMessage(messages.skipButton)}
-              title={messages.skipButton.defaultMessage}
-              style={styles.backButton}
-            />
-
-            <Button
-              onPress={onConfirmVerify}
-              // title={intl.formatMessage(confirmationMessages.commonButtons.confirmButton)}
-              title={confirmationMessages.commonButtons.confirmButton.defaultMessage}
-              shelleyTheme
-            />
+            <View style={styles.buttons}>
+              <Button
+                block
+                outlineShelley
+                onPress={onBack}
+                title={intl.formatMessage(
+                  confirmationMessages.commonButtons.backButton)}
+                style={styles.leftButton}
+              />
+              <Button
+                block
+                onPress={onConfirm}
+                title={intl.formatMessage(
+                  confirmationMessages.commonButtons.confirmButton)}
+                shelleyTheme
+                style={styles.rightButton}
+              />
+            </View>
           </View>
         </View>
       </Modal>
@@ -123,8 +127,8 @@ type ExternalProps = {
 export default injectIntl(
   (compose(
     withNavigation,
-    withHandlers({
-      onSkip: ({navigation}) => (event) => navigation.popToTop(),
-    }),
+    // withHandlers({
+    //   onSkip: ({navigation}) => (event) => navigation.popToTop(),
+    // }),
   )(WalletVerifyModal): ComponentType<ExternalProps>),
 )

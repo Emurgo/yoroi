@@ -32,13 +32,17 @@ export const confirmationMessages = {
       id: 'global.actions.dialogs.commonbuttons.confirmButton',
       defaultMessage: '!!!Confirm',
     },
+    continueButton: {
+      id: 'global.actions.dialogs.commonbuttons.continueButton',
+      defaultMessage: '!!!Continue',
+    },
     cancelButton: {
       id: 'global.actions.dialogs.commonbuttons.cancelButton',
       defaultMessage: '!!!Cancel',
     },
     backButton: {
-      id: 'global.actions.dialogs.commonbuttons.cancelButton',
-      defaultMessage: '!!!Cancel',
+      id: 'global.actions.dialogs.commonbuttons.backButton',
+      defaultMessage: '!!!Back',
     },
   }),
 }
