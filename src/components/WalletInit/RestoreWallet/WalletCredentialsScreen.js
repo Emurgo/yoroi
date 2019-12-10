@@ -31,11 +31,11 @@ const byronAddresses = [
   '2cWKMJemoBakWtKxxsZpnEhs3ZWRf9tG3R9ReJX6UsAGiZP7PBpmutxYPRAakqEgMsK1g',
   '2cWKMJemoBahkhQS5QofBQxmsQMQDTxv1xzzqU9eHXBx6aDxaswBEksqurrfwhMNTYVFK',
 ]
-const shelleyAddress = 'addr1qw8mq0p65pf028qgd32t6szeatfd9epx4jyl5jeuuswtlkyqpdguqd6r42j'
+const shelleyAddress =
+  'addr1qw8mq0p65pf028qgd32t6szeatfd9epx4jyl5jeuuswtlkyqpdguqd6r42j'
 const balance = new BigNumber('1234235.234')
 const finalBalance = new BigNumber('1234235.0')
-const fees = new BigNumber('0.234')
-
+const fees = new BigNumber('234123')
 
 const messages = defineMessages({
   title: {
@@ -86,11 +86,13 @@ const WalletCredentialsScreen = ({
       onBack={onBack}
       byronAddress={byronAddresses[0]}
       shelleyAddress={shelleyAddress}
+      onRequestClose={onBack}
     />
     <UpgradeCheckModal
       visible={currentDialogStep === RESTORATION_DIALOG_STEPS.CHECK_UPGRADE}
       onCheck={onCheck}
       onSkip={navigateToWallet}
+      onRequestClose={onBack}
     />
     <UpgradeConfirmModal
       visible={currentDialogStep === RESTORATION_DIALOG_STEPS.CONFIRM_UPGRADE}
@@ -102,6 +104,7 @@ const WalletCredentialsScreen = ({
       onCancel={onCancelUpgrade}
       onConfirm={onConfirmUpgrade}
       onContinue={navigateToWallet}
+      onRequestClose={onBack}
     />
   </>
 )
@@ -139,10 +142,6 @@ export default injectIntl(
         }),
         onCheck: (state) => () => ({
           currentDialogStep: RESTORATION_DIALOG_STEPS.CONFIRM_UPGRADE,
-        }),
-        onSkip: (state) => ({
-          // TODO: navigate to wallet
-          currentDialogStep: RESTORATION_DIALOG_STEPS.CLOSED,
         }),
         navigateToWallet: (state, props) => async () => {
           const {name, password} = state

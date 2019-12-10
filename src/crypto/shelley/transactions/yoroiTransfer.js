@@ -19,7 +19,7 @@ type TransferTx = {
 
 /**
  * Generate transaction including all addresses with no change.
-*/
+ */
 export const buildYoroiTransferTx = async (payload: {|
   senderUtxos: Array<AddressedUtxo>,
   outputAddr: string,
@@ -30,16 +30,10 @@ export const buildYoroiTransferTx = async (payload: {|
 
     const totalBalance = senderUtxos
       .map((utxo) => new BigNumber(utxo.amount))
-      .reduce(
-        (acc, amount) => acc.plus(amount),
-        new BigNumber(0)
-      )
+      .reduce((acc, amount) => acc.plus(amount), new BigNumber(0))
 
     // first build a transaction to see what the fee will be
-    const unsignedTxResponse = await sendAllUnsignedTx(
-      outputAddr,
-      senderUtxos
-    )
+    const unsignedTxResponse = await sendAllUnsignedTx(outputAddr, senderUtxos)
     const fee = await getShelleyTxFee(unsignedTxResponse.IOs, false)
 
     // sign inputs
@@ -49,7 +43,9 @@ export const buildYoroiTransferTx = async (payload: {|
       true,
     )
 
-    const uniqueSenders = Array.from(new Set(senderUtxos.map((utxo) => utxo.receiver)))
+    const uniqueSenders = Array.from(
+      new Set(senderUtxos.map((utxo) => utxo.receiver)),
+    )
 
     // return summary of transaction
     return {
@@ -59,7 +55,8 @@ export const buildYoroiTransferTx = async (payload: {|
       encodedTx: await fragment.as_bytes(),
       // recall: some addresses may be legacy, some may be Shelley
       senders: await Promise.all(
-        uniqueSenders.map(async (addr) => await addressToDisplayString(addr))),
+        uniqueSenders.map(async (addr) => await addressToDisplayString(addr)),
+      ),
       receiver: await (await Address.from_bytes(
         Buffer.from(outputAddr, 'hex'),
       )).to_string(CONFIG.BECH32_PREFIX.ADDRESS),

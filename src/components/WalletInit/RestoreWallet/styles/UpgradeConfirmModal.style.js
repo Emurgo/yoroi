@@ -10,6 +10,8 @@ export default StyleSheet.create({
   content: {
     flex: 1,
     marginBottom: 24,
+    fontSize: 14,
+    lineHeight: 22,
   },
   heading: {
     marginBottom: 20,
@@ -17,15 +19,9 @@ export default StyleSheet.create({
   },
   title: {
     textAlign: 'center',
-    color: COLORS.POSITIVE_AMOUNT,
     fontSize: 20,
     lineHeight: 22,
     fontWeight: 'bold',
-  },
-  label: {
-    marginTop: 5,
-    fontSize: 14,
-    lineHeight: 24,
   },
   item: {
     marginBottom: 5,
@@ -40,10 +36,9 @@ export default StyleSheet.create({
     marginTop: 12,
   },
   leftButton: {
-    marginRight: 16,
+    marginRight: 6,
   },
-  centeredContent: {
-    lineHeight: 20,
-    alignItems: 'center',
+  rightButton: {
+    marginLeft: 6,
   },
 })

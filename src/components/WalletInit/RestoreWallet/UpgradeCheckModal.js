@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {compose} from 'redux'
-import {withHandlers} from 'recompose'
+// import {withHandlers} from 'recompose'
 import {View, ScrollView, Image} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import {withNavigation} from 'react-navigation'
@@ -23,12 +23,13 @@ const messages = defineMessages({
   explanation: {
     id: 'components.walletinit.restorewallet.upgradecheckmodal.explanation',
     defaultMessage:
-      '!!!If you had any ADA in your wallet on November 29th, 2019, you will' +
+      '!!!If you had any ADA in your wallet on December 5th, 2019, you will' +
       'have to upgrade your wallet to a Shelley "reward wallet".',
   },
   checkText: {
     id: 'components.walletinit.restorewallet.upgradecheckmodal.checkText',
-    defaultMessage: '!!!Do you want to check if your wallet needs to be upgraded?',
+    defaultMessage:
+      '!!!Do you want to check if your wallet needs to be upgraded?',
   },
   checkButton: {
     id: 'components.walletinit.restorewallet.upgradecheckmodal.checkButton',
@@ -48,53 +49,50 @@ type Props = {
   onRequestClose: () => any,
 }
 
-class UpgradeCheckModal extends React.Component<Props> {
-  render() {
-    const {
-      intl,
-      visible,
-      onCheck,
-      onSkip,
-    } = this.props
+const UpgradeCheckModal = ({
+  intl,
+  visible,
+  onCheck,
+  onSkip,
+  onRequestClose,
+}: Props) => {
 
-    return (
-      <Modal visible={visible}>
-        <ScrollView style={styles.scrollView}>
-          <View style={styles.content}>
-            <View style={styles.heading}>
-              <Image source={image} />
-              <Text style={styles.title}>
-                {intl.formatMessage(messages.title)}
-              </Text>
-            </View>
-            <View>
-              <Text style={styles.paragraph}>
-                {intl.formatMessage(messages.explanation)}
-              </Text>
-              <Text>{intl.formatMessage(messages.checkText)}</Text>
-            </View>
+  return (
+    <Modal visible={visible} onRequestClose={onRequestClose}>
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.content}>
+          <View style={styles.heading}>
+            <Text style={styles.title}>
+              {intl.formatMessage(messages.title)}
+            </Text>
+            <Image source={image} />
           </View>
-          <View style={styles.buttons}>
-            <Button
-              block
-              outlineShelley
-              onPress={onSkip}
-              title={intl.formatMessage(messages.skipButton)}
-              style={styles.leftButton}
-            />
-
-            <Button
-              block
-              onPress={onCheck}
-              title={intl.formatMessage(messages.checkButton)}
-              shelleyTheme
-            />
-          </View>
-        </ScrollView>
-      </Modal>
-    )
-  }
+          <Text style={styles.paragraph}>
+            {intl.formatMessage(messages.explanation)}
+          </Text>
+          <Text>{intl.formatMessage(messages.checkText)}</Text>
+        </View>
+        <View style={styles.buttons}>
+          <Button
+            block
+            outlineShelley
+            onPress={onSkip}
+            title={intl.formatMessage(messages.skipButton)}
+            style={styles.leftButton}
+          />
+          <Button
+            block
+            onPress={onCheck}
+            title={intl.formatMessage(messages.checkButton)}
+            shelleyTheme
+            style={styles.rightButton}
+          />
+        </View>
+      </ScrollView>
+    </Modal>
+  )
 }
+
 
 type ExternalProps = {
   intl: intlShape,
@@ -102,7 +100,5 @@ type ExternalProps = {
 }
 
 export default injectIntl(
-  (compose(
-    withNavigation,
-  )(UpgradeCheckModal): ComponentType<ExternalProps>),
+  (compose(withNavigation)(UpgradeCheckModal): ComponentType<ExternalProps>),
 )

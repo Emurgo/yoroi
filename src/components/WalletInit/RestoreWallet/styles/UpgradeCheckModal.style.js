@@ -1,7 +1,7 @@
 // @flow
 import {StyleSheet} from 'react-native'
 
-import {spacing, COLORS} from '../../../../styles/config'
+import {spacing} from '../../../../styles/config'
 
 export default StyleSheet.create({
   scrollView: {
@@ -9,6 +9,8 @@ export default StyleSheet.create({
   },
   paragraph: {
     marginBottom: spacing.paragraphBottomMargin,
+    fontSize: 14,
+    lineHeight: 22,
   },
   content: {
     flex: 1,
@@ -20,16 +22,19 @@ export default StyleSheet.create({
     marginBottom: spacing.paragraphBottomMargin,
   },
   title: {
-    color: COLORS.POSITIVE_AMOUNT,
     fontSize: 20,
     lineHeight: 22,
     fontWeight: 'bold',
+    marginBottom: spacing.paragraphBottomMargin,
   },
   buttons: {
     flexDirection: 'row',
     marginTop: 12,
   },
   leftButton: {
-    marginRight: 12,
+    marginRight: 6,
+  },
+  rightButton: {
+    marginLeft: 6,
   },
 })

@@ -25,11 +25,13 @@ const messages = defineMessages({
     defaultMessage: '!!!Wallet upgrade',
   },
   noUpgradeLabel: {
-    id: 'components.walletinit.restorewallet.upgradeconfirmmodal.noUpgradeLabel',
+    id:
+      'components.walletinit.restorewallet.upgradeconfirmmodal.noUpgradeLabel',
     defaultMessage: '!!!All done!',
   },
   noUpgradeMessage: {
-    id: 'components.walletinit.restorewallet.upgradeconfirmmodal.noUpgradeMessage',
+    id:
+      'components.walletinit.restorewallet.upgradeconfirmmodal.noUpgradeMessage',
     defaultMessage: '!!!Your wallet did not need to be upgraded',
   },
   fromLabel: {
@@ -45,7 +47,8 @@ const messages = defineMessages({
     defaultMessage: '!!!Recovered balance',
   },
   finalBalanceLabel: {
-    id: 'components.walletinit.restorewallet.upgradeconfirmmodal.finalBalanceLabel',
+    id:
+      'components.walletinit.restorewallet.upgradeconfirmmodal.finalBalanceLabel',
     defaultMessage: '!!!Final balance',
   },
   feesLabel: {
@@ -81,55 +84,46 @@ class UpgradeConfirmModal extends React.Component<Props> {
       onCancel,
       onConfirm,
       onContinue,
+      onRequestClose,
     } = this.props
 
     if (byronAddresses.length > 0) {
       return (
-        <Modal visible={visible}>
+        <Modal visible={visible} onRequestClose={onRequestClose}>
           <ScrollView style={styles.scrollView}>
             <View style={styles.content}>
               <View style={styles.heading}>
-                <Image source={imageSucess} />
-                <Text style={styles.title} small>
+                <Text style={styles.title}>
                   {intl.formatMessage(messages.title)}
                 </Text>
+                <Image source={imageSucess} />
               </View>
               <View style={styles.item}>
-                <Text style={styles.label} small>
-                  {intl.formatMessage(messages.balanceLabel)}
-                </Text>
+                <Text>{intl.formatMessage(messages.balanceLabel)}</Text>
                 <Text style={styles.balanceAmount}>
                   {formatAdaWithText(balance)}
                 </Text>
               </View>
               <View style={styles.item}>
-                <Text style={styles.label} small>
-                  {intl.formatMessage(messages.feesLabel)}
-                </Text>
+                <Text>{intl.formatMessage(messages.feesLabel)}</Text>
                 <Text style={styles.balanceAmount}>
                   {formatAdaWithText(fees)}
                 </Text>
               </View>
               <View style={styles.item}>
-                <Text style={styles.label} small>
-                  {intl.formatMessage(messages.finalBalanceLabel)}
-                </Text>
+                <Text>{intl.formatMessage(messages.finalBalanceLabel)}</Text>
                 <Text style={styles.balanceAmount}>
                   {formatAdaWithText(finalBalance)}
                 </Text>
               </View>
               <View style={styles.item}>
-                <Text style={styles.label} small>
-                  {intl.formatMessage(messages.fromLabel)}
-                </Text>
+                <Text>{intl.formatMessage(messages.fromLabel)}</Text>
                 {byronAddresses.map((address, i) => (
                   <AddressEntry key={i} address={address} />
                 ))}
               </View>
               <View style={styles.item}>
-                <Text style={styles.label} small>
-                  {intl.formatMessage(messages.toLabel)}
-                </Text>
+                <Text>{intl.formatMessage(messages.toLabel)}</Text>
                 <AddressEntry address={shelleyAddress} />
               </View>
             </View>
@@ -138,15 +132,19 @@ class UpgradeConfirmModal extends React.Component<Props> {
                 block
                 outlineShelley
                 onPress={onCancel}
-                title={intl.formatMessage(confirmationMessages.commonButtons.cancelButton)}
+                title={intl.formatMessage(
+                  confirmationMessages.commonButtons.cancelButton,
+                )}
                 style={styles.leftButton}
               />
-
               <Button
                 block
                 onPress={onConfirm}
-                title={intl.formatMessage(confirmationMessages.commonButtons.confirmButton)}
+                title={intl.formatMessage(
+                  confirmationMessages.commonButtons.confirmButton,
+                )}
                 shelleyTheme
+                style={styles.rightButton}
               />
             </View>
           </ScrollView>
@@ -154,7 +152,7 @@ class UpgradeConfirmModal extends React.Component<Props> {
       )
     } else {
       return (
-        <Modal visible={visible}>
+        <Modal visible={visible} onRequestClose={onRequestClose}>
           <ScrollView style={styles.scrollView}>
             <View style={styles.content}>
               <View style={styles.heading}>
@@ -167,7 +165,9 @@ class UpgradeConfirmModal extends React.Component<Props> {
             </View>
             <Button
               onPress={onContinue}
-              title={intl.formatMessage(confirmationMessages.commonButtons.continueButton)}
+              title={intl.formatMessage(
+                confirmationMessages.commonButtons.continueButton,
+              )}
               shelleyTheme
             />
           </ScrollView>
