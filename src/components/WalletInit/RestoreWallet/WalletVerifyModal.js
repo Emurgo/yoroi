@@ -34,14 +34,14 @@ const messages = defineMessages({
   verifyInstructions1: {
     id:
       'components.walletinit.restorewallet.walletverifyscreen.verifyInstructions1',
-    defaultMessage: '!!!Make sure Byron addresses match what you remember.',
+    defaultMessage: '!!!Make sure the Byron wallet address matches your old wallet.',
   },
   verifyInstructions2: {
     id:
       'components.walletinit.restorewallet.walletverifyscreen.verifyInstructions2',
     defaultMessage:
-      "!!!If you've entered wrong mnemonics you will just open " +
-      'another empty wallet with wrong addresses.',
+      '!!!If you entered the wrong recovery phrase, you will get an empty ' +
+      'wallet with different addresses from your old one.',
   },
   byronAddressesLabel: {
     id:
