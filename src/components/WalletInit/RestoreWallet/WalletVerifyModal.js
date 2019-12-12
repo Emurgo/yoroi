@@ -1,8 +1,6 @@
 // @flow
 
 import React from 'react'
-import {compose} from 'redux'
-// import {withHandlers} from 'recompose'
 import {View} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
@@ -11,8 +9,6 @@ import {Text, Button, Modal} from '../../UiKit'
 import {confirmationMessages} from '../../../i18n/global-messages'
 
 import styles from './styles/WalletVerifyModal.style'
-
-import type {ComponentType} from 'react'
 
 const renderBulletPointItem = (textRow) => {
   return (
@@ -34,7 +30,8 @@ const messages = defineMessages({
   verifyInstructions1: {
     id:
       'components.walletinit.restorewallet.walletverifyscreen.verifyInstructions1',
-    defaultMessage: '!!!Make sure the Byron wallet address matches your old wallet.',
+    defaultMessage:
+      '!!!Make sure the Byron wallet address matches your old wallet.',
   },
   verifyInstructions2: {
     id:

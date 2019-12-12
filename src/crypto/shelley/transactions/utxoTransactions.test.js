@@ -24,7 +24,7 @@ import {
 } from './utxoTransactions'
 import {InsufficientFunds} from '../../errors'
 import {getTxInputTotal, getTxOutputTotal} from './utils'
-import {CONFIG} from '../../../config'
+import {CONFIG, NUMBERS} from '../../../config'
 
 jestSetup.setup()
 
@@ -330,7 +330,7 @@ describe('Create signed transactions', () => {
       ),
     )
     const stakingKey = await (await (await accountPrivateKey.derive(2)).derive(
-      CONFIG.STAKING_KEY_INDEX,
+      NUMBERS.STAKING_KEY_INDEX,
     )).to_raw_key()
     const certificate = await Certificate.stake_delegation(
       await StakeDelegation.new(

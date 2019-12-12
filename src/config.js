@@ -6,8 +6,8 @@ import env from './env'
 
 const IS_DEBUG = __DEV__
 // debugging flags
-const _SHOW_INIT_DEBUG_SCREEN = false
-const _PREFILL_WALLET_INFO = false
+const _SHOW_INIT_DEBUG_SCREEN = true
+const _PREFILL_WALLET_INFO = true
 const _USE_TESTNET = env.getBoolean('USE_TESTNET', true)
 const _SENTRY = env.getString('SENTRY')
 const _LOG_LEVEL = IS_DEBUG ? LogLevel.Debug : LogLevel.Warn
@@ -59,6 +59,8 @@ export const ASSURANCE_LEVELS = {
 export const NUMBERS = {
   DECIMAL_PLACES_IN_ADA: 6,
   LOVELACES_PER_ADA: new BigNumber('1 000 000'.replace(/ /g, ''), 10),
+  HARD_DERIVATION_START: 2147483648,
+  STAKING_KEY_INDEX: 0,
 }
 
 export const CONFIG = {
@@ -112,7 +114,6 @@ export const CONFIG = {
   LOG_LEVEL: _LOG_LEVEL,
   NETWORK: _USE_TESTNET ? 'Testnet' : 'Mainnet',
   COMMIT: _COMMIT,
-  STAKING_KEY_INDEX: 0,
   BECH32_PREFIX: {
     ADDRESS: 'addr',
   },

@@ -1,13 +1,9 @@
 // @flow
 
 import React from 'react'
-import {compose} from 'redux'
-// import {withHandlers} from 'recompose'
 import {View, ScrollView, Image} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
-import {withNavigation} from 'react-navigation'
 
-import type {Navigation} from '../../../types/navigation'
 import {Text, Button, Modal} from '../../UiKit'
 
 import styles from './styles/UpgradeCheckModal.style'
@@ -43,7 +39,7 @@ const messages = defineMessages({
 })
 
 type Props = {
-  intl: any,
+  intl: intlShape,
   visible: boolean,
   onCheck: () => any,
   onSkip: () => any,
@@ -57,7 +53,6 @@ const UpgradeCheckModal = ({
   onSkip,
   onRequestClose,
 }: Props) => {
-
   return (
     <Modal visible={visible} onRequestClose={onRequestClose}>
       <ScrollView style={styles.scrollView}>
@@ -94,12 +89,4 @@ const UpgradeCheckModal = ({
   )
 }
 
-
-type ExternalProps = {
-  intl: intlShape,
-  navigation: Navigation,
-}
-
-export default injectIntl(
-  (compose(withNavigation)(UpgradeCheckModal): ComponentType<ExternalProps>),
-)
+export default injectIntl((UpgradeCheckModal: ComponentType<Props>))
