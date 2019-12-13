@@ -13,20 +13,6 @@ import {
 
 import {CONFIG, NUMBERS} from '../../config'
 
-// TODO: move these to a separate config file
-const WalletTypePurpose = Object.freeze({
-  BIP44: 2147483692, // HARD_DERIVATION_START + 44;
-  CIP1852: 2147485500, // HARD_DERIVATION_START + 1852;
-})
-const CoinTypes = Object.freeze({
-  CARDANO: 2147485463, // HARD_DERIVATION_START + 1812;
-})
-export const ChainDerivations = Object.freeze({
-  EXTERNAL: 0,
-  INTERNAL: 1,
-  CHIMERIC_ACCOUNT: 2,
-})
-
 export const generateWalletRootKey = async (
   mnemonic: string,
 ): Promise<Bip32PrivateKey> => {
@@ -47,19 +33,19 @@ export const generateWalletRootKey = async (
 
 export const getFirstInternalAddr = async (
   recoveryPhrase: string,
-): Promise<string> => {
+): Promise<{bech32: string, hex: string}> => {
   const accountKey = await (await (await (await generateWalletRootKey(
     recoveryPhrase,
-  )).derive(WalletTypePurpose.CIP1852)).derive(CoinTypes.CARDANO)).derive(
-    0 + NUMBERS.HARD_DERIVATION_START,
-  )
+  )).derive(NUMBERS.WALLET_TYPE_PURPOSE.CIP1852)).derive(
+    NUMBERS.COIN_TYPES.CARDANO,
+  )).derive(0 + NUMBERS.HARD_DERIVATION_START)
 
   const internalKey = await (await (await (await accountKey.derive(
-    ChainDerivations.INTERNAL,
+    NUMBERS.CHAIN_DERIVATIONS.INTERNAL,
   )).derive(0)).to_public()).to_raw_key()
 
   const stakingKey = await (await (await (await accountKey.derive(
-    ChainDerivations.CHIMERIC_ACCOUNT,
+    NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
   )).derive(NUMBERS.STAKING_KEY_INDEX)).to_public()).to_raw_key()
 
   const internalAddr = await Address.delegation_from_public_key(
@@ -72,5 +58,8 @@ export const getFirstInternalAddr = async (
   const internalAddrHash = Buffer.from(await internalAddr.as_bytes()).toString(
     'hex',
   )
-  return internalAddrHash
+  return {
+    hex: internalAddrHash,
+    bech32: await internalAddr.to_string(CONFIG.BECH32_PREFIX.ADDRESS),
+  }
 }

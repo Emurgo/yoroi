@@ -44,11 +44,13 @@ type Props = {
   onCheck: () => any,
   onSkip: () => any,
   onRequestClose: () => any,
+  disableButtons: boolean,
 }
 
 const UpgradeCheckModal = ({
   intl,
   visible,
+  disableButtons,
   onCheck,
   onSkip,
   onRequestClose,
@@ -75,6 +77,7 @@ const UpgradeCheckModal = ({
             onPress={onSkip}
             title={intl.formatMessage(messages.skipButton)}
             style={styles.leftButton}
+            disabled={disableButtons}
           />
           <Button
             block
@@ -82,6 +85,7 @@ const UpgradeCheckModal = ({
             title={intl.formatMessage(messages.checkButton)}
             shelleyTheme
             style={styles.rightButton}
+            disabled={disableButtons}
           />
         </View>
       </ScrollView>

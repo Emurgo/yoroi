@@ -56,6 +56,7 @@ const messages = defineMessages({
 type Props = {
   intl: any,
   visible: boolean,
+  disableButtons: boolean,
   byronAddresses: Array<string>,
   shelleyAddress: string,
   balance: BigNumber,
@@ -70,6 +71,7 @@ type Props = {
 const UpgradeConfirmModal = ({
   intl,
   visible,
+  disableButtons,
   byronAddresses,
   shelleyAddress,
   balance,
@@ -129,6 +131,7 @@ const UpgradeConfirmModal = ({
                 confirmationMessages.commonButtons.cancelButton,
               )}
               style={styles.leftButton}
+              disabled={disableButtons}
             />
             <Button
               block
@@ -138,6 +141,7 @@ const UpgradeConfirmModal = ({
               )}
               shelleyTheme
               style={styles.rightButton}
+              disabled={disableButtons}
             />
           </View>
         </ScrollView>

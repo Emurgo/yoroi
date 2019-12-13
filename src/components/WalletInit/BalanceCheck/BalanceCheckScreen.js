@@ -106,10 +106,13 @@ const _handleConfirm = async (
     CARDANO_CONFIG.SHELLEY,
   )
   const {fundedAddresses, sum} = await balanceForAddresses(
-    addresses,
+    addresses.map((addr) => addr.address),
     CARDANO_CONFIG.SHELLEY,
   )
-  return {addresses: fundedAddresses, balance: sum}
+  return {
+    addresses: fundedAddresses,
+    balance: sum,
+  }
 }
 
 const errorsVisibleWhileWriting = (errors) => {

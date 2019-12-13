@@ -9,7 +9,7 @@ import bs58 from 'bs58'
 import cryptoRandomString from 'crypto-random-string'
 
 import assert from '../../utils/assert'
-import {CONFIG} from '../../config'
+import {CONFIG, NUMBERS} from '../../config'
 import {
   _rethrow,
   InsufficientFunds,
@@ -17,11 +17,13 @@ import {
   CardanoError,
 } from '../errors'
 import {AddressChain, AddressGenerator} from '../chain'
+// TODO: refactor to remove these imports here as they are causing a cycle
 import {filterUsedAddresses, bulkFetchUTXOSumForAddresses} from '../../api/api'
 
 import type {
   TransactionInput,
   TransactionOutput,
+  Addressing,
 } from '../../types/HistoryTransaction'
 
 export type AddressType = 'Internal' | 'External'
@@ -107,6 +109,17 @@ export const getAddresses = (
 export const ADDRESS_TYPE_TO_CHANGE: {[AddressType]: number} = {
   External: 0,
   Internal: 1,
+}
+
+export const getAddressesFromMnemonics = async (
+  mnemonic: string,
+  type: AddressType,
+  indexes: Array<number>,
+  networkConfig?: Object = CONFIG.CARDANO,
+): Promise<Array<string>> => {
+  const masterKey = await getMasterKeyFromMnemonic(mnemonic)
+  const account = await getAccountFromMasterKey(masterKey)
+  return getAddresses(account, type, indexes)
 }
 
 export const getExternalAddresses = (
@@ -204,11 +217,12 @@ export const formatBIP44 = (
 
 /**
  * returns all used addresses (external and change addresses concatenated)
+ * including addressing info
  */
 export const mnemonicsToAddresses = async (
   mnemonic: string,
   networkConfig?: Object = CONFIG.CARDANO,
-): Promise<Array<string>> => {
+): Promise<Array<{|address: string, ...Addressing|}>> => {
   const masterKey = await getMasterKeyFromMnemonic(mnemonic)
   const account = await getAccountFromMasterKey(masterKey)
   const internalChain = new AddressChain(
@@ -217,24 +231,45 @@ export const mnemonicsToAddresses = async (
   const externalChain = new AddressChain(
     new AddressGenerator(account, 'External'),
   )
-  await internalChain.initialize()
-  await externalChain.initialize()
-  await Promise.all([
-    internalChain.sync(filterUsedAddresses, networkConfig),
-    externalChain.sync(filterUsedAddresses, networkConfig),
-  ])
+  const chains = [['Internal', internalChain], ['External', externalChain]]
+  for (const chain of chains) {
+    await chain[1].initialize()
+    await chain[1].sync(filterUsedAddresses, networkConfig)
+  }
   // get addresses in chunks
-  const allAddresses = [
+  const addrChunks = [
     ...internalChain.getBlocks(),
     ...externalChain.getBlocks(),
   ]
   const filteredAddresses = []
-  for (let i = 0; i < allAddresses.length; i++) {
+  for (let i = 0; i < addrChunks.length; i++) {
     filteredAddresses.push(
-      ...(await filterUsedAddresses(allAddresses[i], networkConfig)),
+      ...(await filterUsedAddresses(addrChunks[i], networkConfig)),
     )
   }
-  return filteredAddresses
+  // return addresses with addressing info
+  return filteredAddresses.map((addr) => {
+    let change
+    let index
+    if (internalChain.isMyAddress(addr)) {
+      change = NUMBERS.CHAIN_DERIVATIONS.INTERNAL
+      index = internalChain.getIndexOfAddress(addr)
+    } else if (externalChain.isMyAddress(addr)) {
+      change = NUMBERS.CHAIN_DERIVATIONS.EXTERNAL
+      index = externalChain.getIndexOfAddress(addr)
+    } else {
+      // should not happen
+      throw new Error('mnemonicsToAddresses: couldn not find address index')
+    }
+    return {
+      address: addr,
+      addressing: {
+        account: CONFIG.WALLET.ACCOUNT_INDEX,
+        change,
+        index,
+      },
+    }
+  })
 }
 
 export const balanceForAddresses = async (

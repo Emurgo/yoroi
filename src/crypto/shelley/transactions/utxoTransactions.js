@@ -363,6 +363,7 @@ export const sendAllUnsignedTxFromUtxo = async (
       await fakeIOBuilder.add_input(input)
     }
     await fakeIOBuilder.add_output(
+      // note: currently failing
       await Address.from_bytes(Buffer.from(receiver, 'hex')),
       await Value.from_str(totalBalance.toString()),
     )
