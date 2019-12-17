@@ -130,8 +130,12 @@ describe('Create unsigned TX from UTXO', () => {
   it('Should create a valid transaction withhout selection', async () => {
     const utxos: Array<RawUtxo> = [sampleUtxos[1]]
     const unsignedTxResponse = await newAdaUnsignedTxFromUtxo(
-      keys[0].bechAddress,
-      '5001', // smaller than input
+      [
+        {
+          address: keys[0].bechAddress,
+          amount: '5001', // smaller than input
+        },
+      ],
       [],
       utxos,
     )
@@ -146,8 +150,12 @@ describe('Create unsigned TX from UTXO', () => {
   it('Should fail due to insufficient funds (bigger than all inputs)', async () => {
     const utxos: Array<RawUtxo> = [sampleUtxos[1]]
     const promise = newAdaUnsignedTxFromUtxo(
-      keys[0].bechAddress,
-      '1900001', // bigger than input including fees
+      [
+        {
+          address: keys[0].bechAddress,
+          amount: '1900001', // smaller than input
+        },
+      ],
       [],
       utxos,
     )
@@ -156,8 +164,12 @@ describe('Create unsigned TX from UTXO', () => {
 
   it('Should fail due to insufficient funds (no inputs)', async () => {
     const promise = newAdaUnsignedTxFromUtxo(
-      keys[0].bechAddress,
-      '1', // bigger than input including fees
+      [
+        {
+          address: keys[0].bechAddress,
+          amount: '1', // smaller than input
+        },
+      ],
       [],
       [],
     )
@@ -167,8 +179,12 @@ describe('Create unsigned TX from UTXO', () => {
   it('Should fail due to insufficient funds (not enough to cover fees)', async () => {
     const utxos: Array<RawUtxo> = [sampleUtxos[0]]
     const promise = newAdaUnsignedTxFromUtxo(
-      keys[0].bechAddress,
-      '1', // bigger than input including fees
+      [
+        {
+          address: keys[0].bechAddress,
+          amount: '1', // smaller than input
+        },
+      ],
       [],
       utxos,
     )
@@ -178,8 +194,12 @@ describe('Create unsigned TX from UTXO', () => {
   it('Should pick inputs when using input selection', async () => {
     const utxos: Array<RawUtxo> = sampleUtxos
     const unsignedTxResponse = await newAdaUnsignedTxFromUtxo(
-      keys[0].bechAddress,
-      '1001', // smaller than input
+      [
+        {
+          address: keys[0].bechAddress,
+          amount: '1001', // smaller than input
+        },
+      ],
       [sampleAdaAddresses[0]],
       utxos,
     )
@@ -197,8 +217,12 @@ describe('Create unsigned TX from UTXO', () => {
 describe('Create unsigned TX from addresses', () => {
   it('Should create a valid transaction without selection', async () => {
     const unsignedTxResponse = await newAdaUnsignedTx(
-      keys[0].bechAddress,
-      '5001', // smaller than input
+      [
+        {
+          address: keys[0].bechAddress,
+          amount: '5001', // smaller than input
+        },
+      ],
       [],
       [addressedUtxos[0], addressedUtxos[1]],
     )
@@ -217,8 +241,12 @@ describe('Create unsigned TX from addresses', () => {
 describe('Create signed transactions with legacy witness', () => {
   it('Witness should match on valid private key', async () => {
     const unsignedTxResponse = await newAdaUnsignedTx(
-      keys[0].bechAddress,
-      '5001', // smaller than input
+      [
+        {
+          address: keys[0].bechAddress,
+          amount: '5001', // smaller than input
+        },
+      ],
       [],
       [addressedUtxos[0], addressedUtxos[1]],
     )
@@ -249,8 +277,12 @@ describe('Create signed transactions with legacy witness', () => {
 describe('Create signed transactions', () => {
   it('Witness should match on valid private key', async () => {
     const unsignedTxResponse = await newAdaUnsignedTx(
-      keys[0].bechAddress,
-      '5001', // smaller than input
+      [
+        {
+          address: keys[0].bechAddress,
+          amount: '5001', // smaller than input
+        },
+      ],
       [],
       [addressedUtxos[0], addressedUtxos[1]],
     )
@@ -279,14 +311,18 @@ describe('Create signed transactions', () => {
     )
   })
 
-  it('Transaction with a certificate is also valid', async () => {
+  it('Transaction with a certificate and output is also valid', async () => {
     const unsignedTxResponse = await newAdaUnsignedTx(
-      Buffer.from(
-        await (await Address.from_string(
-          'ca1sw8mq0p65pf028qgd32t6szeatfd9epx4jyl5jeuuswtlkyqpdguq9rance',
-        )).as_bytes(),
-      ).toString('hex'),
-      '5000', // smaller than input
+      [
+        {
+          address: Buffer.from(
+            await (await Address.from_string(
+              'ca1sw8mq0p65pf028qgd32t6szeatfd9epx4jyl5jeuuswtlkyqpdguq9rance',
+            )).as_bytes(),
+          ).toString('hex'),
+          amount: '5000', // smaller than input
+        },
+      ],
       [
         {
           address: Buffer.from(
@@ -395,6 +431,120 @@ describe('Create signed transactions', () => {
     expect(await witnesses.size()).toEqual(1)
     expect(await (await witnesses.get(0)).to_bech32()).toEqual(
       'witness1q89jcq78wt4u773vrrjjwuqg8908wpyuv5j3sdj0mcs4dpe667f97yfc0k48dae9u29r07nkms764js84tgwxr09ah6e948s2u6ye8cgyzhd4j',
+    )
+  })
+
+  it('Transaction with a certificate without output is also valid', async () => {
+    const unsignedTxResponse = await newAdaUnsignedTx(
+      [],
+      [
+        {
+          address: Buffer.from(
+            await (await Address.from_string(
+              'addr1s5quq8utjkrfntnkngjxa9u9mdd8pcprjal2fwzkm7k0y0prx3k276qm0j8',
+            )).as_bytes(),
+          ).toString('hex'),
+          addressing: {
+            account: 0,
+            change: 1,
+            index: 0,
+          },
+        },
+      ],
+      [
+        {
+          amount: '2000000',
+          receiver: Buffer.from(
+            await (await Address.from_string(
+              'ca1ssuvzjs82mshgvyp4r4lmwgknvgjswnm7mpcq3wycjj7v2nk393e6qwqr79etp5e4emf5frwj7zakknsuq3ewl4yhptdlt8j8s3ngm906x2vwl',
+            )).as_bytes(),
+          ).toString('hex'),
+          tx_hash:
+            '86e36b6a65d82c9dcc0370b0ee3953aee579db0b837753306405c28a74de5550',
+          tx_index: 0,
+          utxo_id:
+            '86e36b6a65d82c9dcc0370b0ee3953aee579db0b837753306405c28a74de55500',
+          addressing: {
+            account: 0,
+            change: 0,
+            index: 0,
+          },
+        },
+      ],
+    )
+
+    const accountPrivateKey = await Bip32PrivateKey.from_bytes(
+      Buffer.from(
+        '408a1cb637d615c49e8696c30dd54883302a20a7b9b8a9d1c307d2ed3cd50758c9402acd000461a8fc0f25728666e6d3b86d031b8eea8d2f69b21e8aa6ba2b153e3ec212cc8a36ed9860579dfe1e3ef4d6de778c5dbdd981623b48727cd96247',
+        'hex',
+      ),
+    )
+    const stakingKey = await (await (await accountPrivateKey.derive(2)).derive(
+      NUMBERS.STAKING_KEY_INDEX,
+    )).to_raw_key()
+    const certificate = await Certificate.stake_delegation(
+      await StakeDelegation.new(
+        await DelegationType.full(
+          await PoolId.from_hex(
+            '312e3d449038372ba2fc3300cfedf1b152ae739201b3e5da47ab3f933a421b62',
+          ),
+        ),
+        await stakingKey.to_public(),
+      ),
+    )
+    const fragment = await signTransaction(
+      unsignedTxResponse,
+      accountPrivateKey,
+      false,
+      {
+        stakingKey,
+        certificate,
+      },
+    )
+    const signedTx = await fragment.get_transaction()
+
+    const inputs = await signedTx.inputs()
+    expect(await inputs.size()).toEqual(1)
+    expect(await (await (await inputs.get(0)).value()).to_str()).toEqual(
+      '2000000',
+    )
+    const pointer = await (await inputs.get(0)).get_utxo_pointer()
+    expect(
+      Buffer.from(await (await pointer.fragment_id()).as_bytes()).toString(
+        'hex',
+      ),
+    ).toEqual(
+      '86e36b6a65d82c9dcc0370b0ee3953aee579db0b837753306405c28a74de5550',
+    )
+    expect(pointer.output_index()).toEqual(0)
+
+    const outputs = await signedTx.outputs()
+    expect(await outputs.size()).toEqual(1)
+    const change = await outputs.get(0)
+    expect(
+      await (await change.address()).to_string(CONFIG.BECH32_PREFIX.ADDRESS),
+    ).toEqual(
+      'addr1s5quq8utjkrfntnkngjxa9u9mdd8pcprjal2fwzkm7k0y0prx3k276qm0j8',
+    )
+    expect(await (await change.value()).to_str()).toEqual('1844617')
+
+    expect(
+      Buffer.from(await (await fragment.id()).as_bytes()).toString('hex'),
+    ).toEqual(
+      'fdbb1fe40618b8ded1300483c99cd3c4f1b2c2745f86c01b1018e593d2710951',
+    )
+    expect(
+      Buffer.from(
+        await (await (await fragment.get_transaction()).id()).as_bytes(),
+      ).toString('hex'),
+    ).toEqual(
+      '433c14a1f1bb654e569c381e45e49c97738ecc4e0064e04daaf284b531d56e22',
+    )
+
+    const witnesses = await signedTx.witnesses()
+    expect(await witnesses.size()).toEqual(1)
+    expect(await (await witnesses.get(0)).to_bech32()).toEqual(
+      'witness1q9ukepgn8dchhvc4ynnz3he0ymf9ax5jggfvz2602tqqu62sym0cpfdc5qe7x7v6skf03mv3h8huqgna7x495t4e85r3wg6m5rg25ms9sqh95g',
     )
   })
 })

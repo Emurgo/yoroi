@@ -49,6 +49,11 @@ import {CARDANO_CONFIG} from '../../../config'
 
 const CONFIG = CARDANO_CONFIG.SHELLEY
 
+type TxOutput = {|
+  address: string,
+  amount: string,
+|}
+
 /**
  * This function operates on UTXOs without a way to generate the private key for them
  * Private key needs to be added afterwards either through
@@ -56,8 +61,7 @@ const CONFIG = CARDANO_CONFIG.SHELLEY
  * B) Having the key provided externally
  */
 export const newAdaUnsignedTxFromUtxo = async (
-  receiver: string,
-  amount: string,
+  outputs: Array<TxOutput>,
   changeAddresses: Array<{|address: string, ...Addressing|}>,
   allUtxos: Array<RawUtxo>,
   certificate: void | Certificate,
@@ -69,10 +73,12 @@ export const newAdaUnsignedTxFromUtxo = async (
   )
 
   const ioBuilder = await InputOutputBuilder.empty()
-  await ioBuilder.add_output(
-    await Address.from_bytes(Buffer.from(receiver, 'hex')),
-    await Value.from_str(amount),
-  )
+  for (const output of outputs) {
+    await ioBuilder.add_output(
+      await Address.from_bytes(Buffer.from(output.address, 'hex')),
+      await Value.from_str(output.amount),
+    )
+  }
 
   const payload =
     certificate != null
@@ -129,10 +135,10 @@ export const newAdaUnsignedTxFromUtxo = async (
 }
 
 export const newAdaUnsignedTx = async (
-  receiver: string,
-  amount: string,
+  outputs: Array<TxOutput>,
   changeAdaAddr: Array<{|address: string, ...Addressing|}>,
   allUtxos: Array<AddressedUtxo>,
+  certificate: void | Certificate,
 ): Promise<V3UnsignedTxAddressedUtxoData> => {
   const addressingMap = new Map<RawUtxo, AddressedUtxo>()
   for (const utxo of allUtxos) {
@@ -148,10 +154,10 @@ export const newAdaUnsignedTx = async (
     )
   }
   const unsignedTxResponse = await newAdaUnsignedTxFromUtxo(
-    receiver,
-    amount,
+    outputs,
     changeAdaAddr,
     Array.from(addressingMap.keys()),
+    certificate,
   )
 
   const addressedUtxos = unsignedTxResponse.senderUtxos.map((utxo) => {
@@ -168,6 +174,7 @@ export const newAdaUnsignedTx = async (
     senderUtxos: addressedUtxos,
     IOs: unsignedTxResponse.IOs,
     changeAddr: unsignedTxResponse.changeAddr,
+    certificate,
   }
 }
 
@@ -222,7 +229,7 @@ async function filterToUsedChange(
   for (let i = 0; i < (await outputs.size()); i++) {
     const output = await outputs.get(i)
     const val = (await await output.value()).to_str()
-    // not: both change & outputs all cannot be legacy addresses
+    // note: both change & outputs all cannot be legacy addresses
     const outputPayload = Buffer.from(
       await (await output.address()).as_bytes(),
     ).toString('hex')
@@ -341,6 +348,7 @@ async function addWitnesses(
 export const sendAllUnsignedTxFromUtxo = async (
   receiver: string,
   allUtxos: Array<RawUtxo>,
+  certificate: void | Certificate,
 ): Promise<V3UnsignedTxData> => {
   const totalBalance = allUtxos
     .map((utxo) => new BigNumber(utxo.amount))
@@ -367,10 +375,14 @@ export const sendAllUnsignedTxFromUtxo = async (
       await Address.from_bytes(Buffer.from(receiver, 'hex')),
       await Value.from_str(totalBalance.toString()),
     )
+    const payload =
+      certificate != null
+        ? await Payload.certificate(certificate)
+        : await Payload.no_payload()
     const feeValue = await (await fakeIOBuilder.estimate_fee(
       feeAlgorithm,
       // can't add a certificate to a UTXO transaction
-      await Payload.no_payload(),
+      payload,
     )).to_str()
     fee = new BigNumber(feeValue)
   }
@@ -381,10 +393,15 @@ export const sendAllUnsignedTxFromUtxo = async (
   }
   const newAmount = totalBalance.minus(fee).toString()
   const unsignedTxResponse = await newAdaUnsignedTxFromUtxo(
-    receiver,
-    newAmount,
+    [
+      {
+        address: receiver,
+        amount: newAmount,
+      },
+    ],
     [],
     allUtxos,
+    certificate,
   )
   return unsignedTxResponse
 }
@@ -392,6 +409,7 @@ export const sendAllUnsignedTxFromUtxo = async (
 export const sendAllUnsignedTx = async (
   receiver: string,
   allUtxos: Array<AddressedUtxo>,
+  certificate: void | Certificate,
 ): Promise<V3UnsignedTxAddressedUtxoData> => {
   const addressingMap = new Map<RawUtxo, AddressedUtxo>()
   for (const utxo of allUtxos) {
@@ -409,6 +427,7 @@ export const sendAllUnsignedTx = async (
   const unsignedTxResponse = await sendAllUnsignedTxFromUtxo(
     receiver,
     Array.from(addressingMap.keys()),
+    certificate,
   )
 
   const addressedUtxos = unsignedTxResponse.senderUtxos.map((utxo) => {
@@ -425,5 +444,6 @@ export const sendAllUnsignedTx = async (
     senderUtxos: addressedUtxos,
     IOs: unsignedTxResponse.IOs,
     changeAddr: unsignedTxResponse.changeAddr,
+    certificate,
   }
 }

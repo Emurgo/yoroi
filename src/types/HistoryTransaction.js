@@ -1,5 +1,6 @@
 // @flow
 import {
+  Certificate,
   InputOutput,
   Transaction as V3Transaction,
   Value,
@@ -122,10 +123,12 @@ export type V3UnsignedTxAddressedUtxoData = {|
     value: void | BigNumber,
     ...Addressing,
   |}>,
+  certificate: void | Certificate,
 |}
 
 export type BaseSignRequest<T: V3Transaction | InputOutput> = {|
   senderUtxos: Array<AddressedUtxo>,
   unsignedTx: T,
   changeAddr: Array<{|address: string, ...Value, ...Addressing|}>,
+  certificate: void | Certificate,
 |}
