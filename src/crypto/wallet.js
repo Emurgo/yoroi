@@ -398,7 +398,7 @@ export class Wallet {
     return Buffer.from(signedTxData.cbor_encoded_tx, 'hex').toString('base64')
   }
 
-  async submitTransaction(signedTx: string) {
+  async submitTransaction(signedTx: string | Uint8Array) {
     const response = await api.submitTransaction(signedTx)
     Logger.info(response)
     return response
@@ -628,7 +628,7 @@ class WalletManager {
     )
   }
 
-  async submitTransaction(signedTx: string) {
+  async submitTransaction(signedTx: string | Uint8Array) {
     if (!this._wallet) throw new WalletClosed()
     return await this.abortWhenWalletCloses(
       this._wallet.submitTransaction(signedTx),

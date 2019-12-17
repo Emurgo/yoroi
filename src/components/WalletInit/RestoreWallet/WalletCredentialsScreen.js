@@ -14,6 +14,7 @@ import {withNavigationTitle} from '../../../utils/renderUtils'
 import WalletForm from '../WalletForm'
 import {
   createWallet,
+  submitShelleyTransferTx,
   // handleGeneralError,
   showErrorDialog,
 } from '../../../actions'
@@ -31,6 +32,7 @@ import {errorMessages} from '../../../i18n/global-messages'
 import type {Navigation} from '../../../types/navigation'
 import type {AddressType} from '../../../crypto/byron/util'
 import type {Addressing} from '../../../types/HistoryTransaction'
+import type {TransferTx} from '../../../crypto/shelley/transactions/yoroiTransfer'
 
 const RESTORATION_DIALOG_STEPS = {
   CLOSED: 'CLOSED',
@@ -39,10 +41,6 @@ const RESTORATION_DIALOG_STEPS = {
   CONFIRM_UPGRADE: 'CONFIRM_UPGRADE',
 }
 type restorationDialogSteps = $Values<typeof RESTORATION_DIALOG_STEPS>
-
-// TODO: just placeholders, delete
-const finalBalance = new BigNumber('1234235.0')
-const fees = new BigNumber('234123')
 
 const displayAddrType: AddressType = 'Internal'
 
@@ -69,6 +67,7 @@ const getAddressing = (
 type Props = {
   intl: any,
   navigation: Navigation,
+  createWallet: (string, string, string) => any,
 }
 
 type State = {
@@ -83,7 +82,7 @@ type State = {
   balance: ?BigNumber,
   fee: ?BigNumber,
   isProcessing: boolean,
-  upgrading: boolean,
+  transferTx: ?TransferTx,
 }
 
 class WalletCredentialsScreen extends React.Component<Props, State> {
@@ -99,10 +98,11 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
     balance: null,
     fee: null,
     isProcessing: false,
-    upgrading: false,
+    transferTx: null,
   }
 
   startWalletRestoration = async ({name, password}) => {
+    this.setState({isProcessing: true})
     const phrase = this.state.phrase
     // get first internal byron address
     const byronAddr = await getAddressesFromMnemonics(phrase, displayAddrType, [
@@ -111,6 +111,7 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
     // get staking address
     const shelleyAddr = await getFirstInternalAddr(phrase)
     this.setState({
+      isProcessing: false,
       byronAddress: byronAddr[0],
       shelleyAddressHex: shelleyAddr.hex,
       shelleyAddressBech32: shelleyAddr.bech32,
@@ -133,36 +134,45 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
     const {phrase, shelleyAddressHex} = this.state
     this.setState({isProcessing: true})
     try {
+      // here addresses include addressing info
       const usedLegacyAddrs = await mnemonicsToAddresses(
         phrase,
         CARDANO_CONFIG.SHELLEY,
       )
+      // get list of addresses with utxo. Doesn't include addressing
       // $FlowFixMe
       const {fundedAddresses, sum} = await balanceForAddresses(
         usedLegacyAddrs.map((addr) => addr.address),
         CARDANO_CONFIG.SHELLEY,
       )
-      // get addressing info
-      const addressedFundedAddresses = []
-      for (let i = 0; i < fundedAddresses.length; i++) {
-        const addressedAddr = getAddressing(fundedAddresses[i], usedLegacyAddrs)
-        if (addressedAddr != null) {
-          addressedFundedAddresses.push(addressedAddr)
-        } else {
-          throw new Error('could not retrieve addressing information')
+      if (fundedAddresses.length > 0 && sum != null) {
+        // get addressing info
+        const addressedFundedAddresses = []
+        for (let i = 0; i < fundedAddresses.length; i++) {
+          const addressedAddr = getAddressing(
+            fundedAddresses[i],
+            usedLegacyAddrs,
+          )
+          if (addressedAddr != null) {
+            addressedFundedAddresses.push(addressedAddr)
+          } else {
+            throw new Error('could not retrieve addressing information')
+          }
         }
+        const transferTx = await generateTransferTxFromMnemonic(
+          phrase,
+          shelleyAddressHex,
+          addressedFundedAddresses,
+          CARDANO_CONFIG.SHELLEY,
+        )
+        this.setState({
+          fundedLegacyAddresses: fundedAddresses.map((addr) => addr.address),
+          balance: sum,
+          transferTx,
+        })
       }
-      const transferTx = await generateTransferTxFromMnemonic(
-        phrase,
-        shelleyAddressHex,
-        addressedFundedAddresses,
-        CARDANO_CONFIG.SHELLEY,
-      )
       this.setState({
-        fundedLegacyAddresses: fundedAddresses.map((addr) => addr.address),
-        balance: sum,
         currentDialogStep: RESTORATION_DIALOG_STEPS.CONFIRM_UPGRADE,
-        fee: transferTx.fee,
         isProcessing: false,
       })
     } catch (e) {
@@ -183,14 +193,33 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
     }
   }
 
-  onConfirmUpgrade = () => {
-    // sendtx here
-    this.setState({upgrading: true})
+  onConfirmUpgrade = async () => {
+    const tx = this.state.transferTx
+    const {intl} = this.props
+    this.setState({isProcessing: true})
+    try {
+      if (tx == null) {
+        throw new Error('Transaction data not found.')
+      }
+      await submitShelleyTransferTx(tx.encodedTx)
+      this.setState({isProcessing: false})
+      this.navigateToWallet()
+    } catch (e) {
+      if (e instanceof NetworkError) {
+        await showErrorDialog(errorMessages.networkError, intl)
+      } else if (e instanceof ApiError) {
+        await showErrorDialog(errorMessages.apiError, intl)
+      } else {
+        throw e
+      }
+    } finally {
+      this.setState({isProcessing: false})
+    }
   }
 
   navigateToWallet = async () => {
     const {name, password} = this.state
-    const {navigation} = this.props
+    const {navigation, createWallet} = this.props
     const phrase = navigation.getParam('phrase')
     await createWallet(name, phrase, password)
     navigation.navigate(ROOT_ROUTES.WALLET)
@@ -203,9 +232,12 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
       shelleyAddressBech32,
       fundedLegacyAddresses,
       balance,
-      fee,
       isProcessing,
+      transferTx,
     } = this.state
+
+    const finalBalance = transferTx != null ?
+      transferTx.recoveredBalance.minus(transferTx.fee) : null
 
     return (
       <>
@@ -234,7 +266,7 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
           shelleyAddress={shelleyAddressBech32}
           balance={balance}
           finalBalance={finalBalance}
-          fees={fee}
+          fees={transferTx?.fee}
           onCancel={this.navigateToWallet}
           onConfirm={this.onConfirmUpgrade}
           onContinue={this.navigateToWallet}

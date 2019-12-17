@@ -451,3 +451,7 @@ export const submitTransaction = (
 
   dispatch(updateHistory())
 }
+
+export const submitShelleyTransferTx = async (encodedTx: Uint8Array) => {
+  await walletManager.submitTransaction(encodedTx)
+}

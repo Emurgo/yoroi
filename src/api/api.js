@@ -127,7 +127,7 @@ export const bulkFetchUTXOsForAddresses = async (
   return _.flatten(responses)
 }
 
-export const submitTransaction = (signedTx: string) => {
+export const submitTransaction = (signedTx: string | Uint8Array) => {
   return _fetch('txs/signed', {signedTx})
 }
 
