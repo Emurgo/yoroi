@@ -9,6 +9,7 @@ import MnemonicShowScreen from './CreateWallet/MnemonicShowScreen'
 import HeaderBackButton from '../UiKit/HeaderBackButton'
 import {
   defaultNavigationOptions,
+  shelleyNavigationOptions,
   defaultStackNavigatorOptions,
 } from '../../navigationOptions'
 import MnemonicCheckScreen from './CreateWallet/MnemonicCheckScreen'
@@ -42,11 +43,22 @@ const WalletInitNavigator = createStackNavigator(
   },
   {
     initialRouteName: WALLET_INIT_ROUTES.WALLET_SELECTION,
-    navigationOptions: ({navigation}) => ({
-      title: navigation.getParam('title'),
-      headerLeft: <HeaderBackButton navigation={navigation} />,
-      ...defaultNavigationOptions,
-    }),
+    navigationOptions: ({navigation}) => {
+      let navigationOptions
+      if (navigation.getParam('isShelleyWallet') === true) {
+        navigationOptions = {
+          ...defaultNavigationOptions,
+          ...shelleyNavigationOptions,
+        }
+      } else {
+        navigationOptions = defaultNavigationOptions
+      }
+      return {
+        title: navigation.getParam('title'),
+        headerLeft: <HeaderBackButton navigation={navigation} />,
+        ...navigationOptions,
+      }
+    },
     cardStyle: {
       backgroundColor: 'transparent',
     },

@@ -5,7 +5,7 @@ import {View, ScrollView} from 'react-native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withStateHandlers} from 'recompose'
-import {SafeAreaView} from 'react-navigation'
+import {SafeAreaView, withNavigation} from 'react-navigation'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import _ from 'lodash'
 
@@ -110,6 +110,7 @@ const RestoreWalletScreen = ({
   setPhrase,
   translateInvalidPhraseError,
   isKeyboardOpen,
+  navigation,
 }) => {
   const errors = validateRecoveryPhrase(phrase)
   const visibleErrors = isKeyboardOpen
@@ -158,6 +159,7 @@ export default injectIntl(
     connect((state) => ({
       isKeyboardOpen: isKeyboardOpenSelector(state),
     })),
+    withNavigation,
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withStateHandlers(
       {
@@ -171,6 +173,7 @@ export default injectIntl(
       navigateToWalletCredentials: ({navigation, phrase}) => (event) => {
         navigation.navigate(WALLET_INIT_ROUTES.WALLET_CREDENTIALS, {
           phrase: cleanMnemonic(phrase),
+          isShelleyWallet: navigation.getParam('isShelleyWallet'),
         })
       },
       translateInvalidPhraseError: ({intl}) => (error) =>

@@ -73,7 +73,6 @@ type Props = {
 type State = {
   name: string,
   password: string,
-  phrase: string,
   byronAddress: string,
   shelleyAddressHex: string,
   shelleyAddressBech32: string,
@@ -89,7 +88,6 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
   state = {
     name: '',
     password: '',
-    phrase: this.props.navigation.getParam('phrase'),
     byronAddress: '',
     shelleyAddressHex: '',
     shelleyAddressBech32: '',
@@ -101,9 +99,28 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
     transferTx: null,
   }
 
-  startWalletRestoration = async ({name, password}) => {
+  onSubmitWalletCredentials = ({name, password}) => {
+    // TODO: make sure this call is executed only once
+    const self = this
+    this.setState(
+      {
+        name,
+        password,
+        // call on next tick because setState is async
+      },
+      () => self.startWalletRestoration(),
+    )
+  }
+
+  startWalletRestoration = async () => {
+    const isShelleyWallet = this.props.navigation.getParam('isShelleyWallet')
+    if (isShelleyWallet === false) {
+      this.navigateToWallet()
+      return
+    }
     this.setState({isProcessing: true})
-    const phrase = this.state.phrase
+    const {navigation} = this.props
+    const phrase = navigation.getParam('phrase')
     // get first internal byron address
     const byronAddr = await getAddressesFromMnemonics(phrase, displayAddrType, [
       0,
@@ -116,8 +133,6 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
       shelleyAddressHex: shelleyAddr.hex,
       shelleyAddressBech32: shelleyAddr.bech32,
       currentDialogStep: RESTORATION_DIALOG_STEPS.WALLET_VERIFY,
-      name,
-      password,
     })
   }
 
@@ -130,8 +145,12 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
     })
 
   onCheck = async () => {
-    const {intl} = this.props
-    const {phrase, shelleyAddressHex} = this.state
+    // TODO: there is currently a bug in when displaying the UpgradeCheckModal
+    // tapping the 'check' button does not nothing the first time, but works
+    // the second time. Figure out why
+    const {intl, navigation} = this.props
+    const {shelleyAddressHex} = this.state
+    const phrase = navigation.getParam('phrase')
     this.setState({isProcessing: true})
     try {
       // here addresses include addressing info
@@ -236,42 +255,55 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
       transferTx,
     } = this.state
 
-    const finalBalance = transferTx != null ?
-      transferTx.recoveredBalance.minus(transferTx.fee) : null
+    const isShelleyWallet = this.props.navigation.getParam('isShelleyWallet')
+
+    const finalBalance =
+      transferTx != null
+        ? transferTx.recoveredBalance.minus(transferTx.fee)
+        : null
 
     return (
       <>
-        <WalletForm onSubmit={this.startWalletRestoration} />
-        <WalletVerifyModal
-          visible={currentDialogStep === RESTORATION_DIALOG_STEPS.WALLET_VERIFY}
-          onConfirm={this.onConfirmVerify}
-          onBack={this.onBack}
-          byronAddress={byronAddress}
-          shelleyAddress={shelleyAddressBech32}
-          onRequestClose={this.onBack}
-        />
-        <UpgradeCheckModal
-          visible={currentDialogStep === RESTORATION_DIALOG_STEPS.CHECK_UPGRADE}
-          disableButtons={isProcessing}
-          onCheck={this.onCheck}
-          onSkip={this.navigateToWallet}
-          onRequestClose={this.onBack}
-        />
-        <UpgradeConfirmModal
-          visible={
-            currentDialogStep === RESTORATION_DIALOG_STEPS.CONFIRM_UPGRADE
-          }
-          disableButtons={isProcessing}
-          byronAddresses={fundedLegacyAddresses}
-          shelleyAddress={shelleyAddressBech32}
-          balance={balance}
-          finalBalance={finalBalance}
-          fees={transferTx?.fee}
-          onCancel={this.navigateToWallet}
-          onConfirm={this.onConfirmUpgrade}
-          onContinue={this.navigateToWallet}
-          onRequestClose={this.onBack}
-        />
+        <WalletForm onSubmit={this.onSubmitWalletCredentials} />
+
+        {isShelleyWallet && (
+          <>
+            <WalletVerifyModal
+              visible={
+                currentDialogStep === RESTORATION_DIALOG_STEPS.WALLET_VERIFY
+              }
+              onConfirm={this.onConfirmVerify}
+              onBack={this.onBack}
+              byronAddress={byronAddress}
+              shelleyAddress={shelleyAddressBech32}
+              onRequestClose={this.onBack}
+            />
+            <UpgradeCheckModal
+              visible={
+                currentDialogStep === RESTORATION_DIALOG_STEPS.CHECK_UPGRADE
+              }
+              disableButtons={isProcessing}
+              onCheck={this.onCheck}
+              onSkip={this.navigateToWallet}
+              onRequestClose={this.onBack}
+            />
+            <UpgradeConfirmModal
+              visible={
+                currentDialogStep === RESTORATION_DIALOG_STEPS.CONFIRM_UPGRADE
+              }
+              disableButtons={isProcessing}
+              byronAddresses={fundedLegacyAddresses}
+              shelleyAddress={shelleyAddressBech32}
+              balance={balance}
+              finalBalance={finalBalance}
+              fees={transferTx?.fee}
+              onCancel={this.navigateToWallet}
+              onConfirm={this.onConfirmUpgrade}
+              onContinue={this.navigateToWallet}
+              onRequestClose={this.onBack}
+            />
+          </>
+        )}
       </>
     )
   }

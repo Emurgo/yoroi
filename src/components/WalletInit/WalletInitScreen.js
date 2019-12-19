@@ -25,18 +25,23 @@ const messages = defineMessages({
   },
   createWalletButton: {
     id: 'components.walletinit.walletinitscreen.createWalletButton',
-    defaultMessage: '!!!Create new wallet',
+    defaultMessage: '!!!Create wallet',
     description: 'some desc',
   },
   restoreWalletButton: {
     id: 'components.walletinit.walletinitscreen.restoreWalletButton',
-    defaultMessage: '!!!Restore wallet from backup',
+    defaultMessage: '!!!Restore wallet',
+    description: 'some desc',
+  },
+  restoreShelleyWalletButton: {
+    id: 'components.walletinit.walletinitscreen.restoreShelleyWalletButton',
+    defaultMessage: '!!!Restore wallet (Shelley Testnet)',
     description: 'some desc',
   },
 })
 
 type Props = {
-  navigateRestoreWallet: () => mixed,
+  navigateRestoreWallet: (Object, boolean) => mixed,
   navigateCreateWallet: () => mixed,
   intl: any,
   walletIsInitialized: boolean,
@@ -65,8 +70,16 @@ const WalletInitScreen = ({
 
         <Button
           outline
-          onPress={navigateRestoreWallet}
+          onPress={(event) => navigateRestoreWallet(event, false)}
           title={intl.formatMessage(messages.restoreWalletButton)}
+          style={styles.createButton}
+        />
+
+        <Button
+          outline
+          onPress={(event) => navigateRestoreWallet(event, true)}
+          title={intl.formatMessage(messages.restoreShelleyWalletButton)}
+          shelleyTheme
         />
       </View>
     </ScreenBackground>
@@ -80,8 +93,10 @@ export default injectIntl(
     })),
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
-      navigateRestoreWallet: ({navigation}) => (event) =>
-        navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET),
+      navigateRestoreWallet: ({navigation}) => (event, isShelleyWallet) =>
+        navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET, {
+          isShelleyWallet,
+        }),
       navigateCreateWallet: ({navigation}) => (event) =>
         navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET),
     }),
