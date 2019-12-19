@@ -194,7 +194,7 @@
   "components.walletinit.restorewallet.restorewalletscreen.unknowwords": "{wordlist} {cnt, plural, one {is} other {are}} invalid",
   "components.walletinit.restorewallet.upgradecheckmodal.checkText": "Do you want to check if your wallet needs to be upgraded?",
   "components.walletinit.restorewallet.upgradecheckmodal.checkButton": "Check",
-  "components.walletinit.restorewallet.upgradecheckmodal.explanation": "If you had ADA in your wallet on December 5th, 2019, you will need to upgrade to a new wallet format called a \"reward wallet\" for compatibility with Shelley.",
+  "components.walletinit.restorewallet.upgradecheckmodal.explanation": "If you had ADA in your wallet on November 29th, 2019, you will need to upgrade to a new wallet format called a \"reward wallet\" for compatibility with Shelley.",
   "components.walletinit.restorewallet.upgradecheckmodal.skipButton": "Skip",
   "components.walletinit.restorewallet.upgradecheckmodal.title": "Wallet upgrade",
   "components.walletinit.restorewallet.upgradeconfirmmodal.balanceLabel": "Recovered balance",

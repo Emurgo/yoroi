@@ -152,6 +152,7 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
     const {shelleyAddressHex} = this.state
     const phrase = navigation.getParam('phrase')
     this.setState({isProcessing: true})
+    let transferTx, fundedLegacyAddresses, balance
     try {
       // here addresses include addressing info
       const usedLegacyAddrs = await mnemonicsToAddresses(
@@ -159,12 +160,13 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
         CARDANO_CONFIG.SHELLEY,
       )
       // get list of addresses with utxo. Doesn't include addressing
-      // $FlowFixMe
       const {fundedAddresses, sum} = await balanceForAddresses(
         usedLegacyAddrs.map((addr) => addr.address),
         CARDANO_CONFIG.SHELLEY,
       )
       if (fundedAddresses.length > 0 && sum != null) {
+        balance = sum
+        fundedLegacyAddresses = fundedAddresses
         // get addressing info
         const addressedFundedAddresses = []
         for (let i = 0; i < fundedAddresses.length; i++) {
@@ -178,19 +180,17 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
             throw new Error('could not retrieve addressing information')
           }
         }
-        const transferTx = await generateTransferTxFromMnemonic(
+        transferTx = await generateTransferTxFromMnemonic(
           phrase,
           shelleyAddressHex,
           addressedFundedAddresses,
           CARDANO_CONFIG.SHELLEY,
         )
-        this.setState({
-          fundedLegacyAddresses: fundedAddresses.map((addr) => addr.address),
-          balance: sum,
-          transferTx,
-        })
       }
       this.setState({
+        transferTx,
+        fundedLegacyAddresses: fundedLegacyAddresses || [],
+        balance,
         currentDialogStep: RESTORATION_DIALOG_STEPS.CONFIRM_UPGRADE,
         isProcessing: false,
       })

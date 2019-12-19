@@ -19,7 +19,7 @@ const messages = defineMessages({
   explanation: {
     id: 'components.walletinit.restorewallet.upgradecheckmodal.explanation',
     defaultMessage:
-      '!!!If you had ADA in your wallet on December 5th, 2019, you will need ' +
+      '!!!If you had ADA in your wallet on November 29th, 2019, you will need ' +
       'to upgrade to a new wallet format called a "reward wallet" for ' +
       'compatibility with Shelley.',
   },
