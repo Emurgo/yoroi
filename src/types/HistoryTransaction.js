@@ -132,3 +132,9 @@ export type BaseSignRequest<T: V3Transaction | InputOutput> = {|
   changeAddr: Array<{|address: string, ...Value, ...Addressing|}>,
   certificate: void | Certificate,
 |}
+
+export const AMOUNT_FORMAT = {
+  ADA: 'ADA',
+  LOVELACE: 'LOVELACE',
+}
+export type AmountFormat = $Values<typeof AMOUNT_FORMAT>
