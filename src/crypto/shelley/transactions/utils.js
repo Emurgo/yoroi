@@ -1,5 +1,7 @@
 // @flow
 
+import {BigNumber} from 'bignumber.js'
+
 import {
   AccountBindingSignature,
   Certificate,
@@ -8,15 +10,18 @@ import {
   // CertificateKind
   StakeDelegationAuthData,
 } from 'react-native-chain-libs'
-import type {BaseSignRequest} from '../../../types/HistoryTransaction'
-import {NUMBERS} from '../../../config'
 import {CertificateKind} from '../certificateUtils'
+import {NUMBERS} from '../../../config'
+import {AMOUNT_FORMAT} from '../../../types/HistoryTransaction'
 
-import {BigNumber} from 'bignumber.js'
+import type {
+  BaseSignRequest,
+  AmountFormat,
+} from '../../../types/HistoryTransaction'
 
 export const getTxInputTotal = async (
   IOs: InputOutput,
-  shift: boolean,
+  format?: AmountFormat = AMOUNT_FORMAT.LOVELACE,
 ): Promise<BigNumber> => {
   let sum = new BigNumber(0)
 
@@ -26,7 +31,7 @@ export const getTxInputTotal = async (
     const value = new BigNumber(await (await input.value()).to_str())
     sum = sum.plus(value)
   }
-  if (shift) {
+  if (format === AMOUNT_FORMAT.ADA) {
     return sum.shiftedBy(-NUMBERS.DECIMAL_PLACES_IN_ADA)
   }
   return sum
@@ -34,7 +39,7 @@ export const getTxInputTotal = async (
 
 export const getTxOutputTotal = async (
   IOs: InputOutput,
-  shift: boolean,
+  format?: AmountFormat = AMOUNT_FORMAT.LOVELACE,
 ): Promise<BigNumber> => {
   let sum = new BigNumber(0)
 
@@ -44,7 +49,7 @@ export const getTxOutputTotal = async (
     const value = new BigNumber(await (await output.value()).to_str())
     sum = sum.plus(value)
   }
-  if (shift) {
+  if (format === AMOUNT_FORMAT.ADA) {
     return sum.shiftedBy(-NUMBERS.DECIMAL_PLACES_IN_ADA)
   }
   return sum
@@ -52,12 +57,12 @@ export const getTxOutputTotal = async (
 
 export const getShelleyTxFee = async (
   IOs: InputOutput,
-  shift: boolean,
+  format?: AmountFormat = AMOUNT_FORMAT.LOVELACE,
 ): Promise<BigNumber> => {
-  const out = await getTxOutputTotal(IOs, false)
-  const ins = await getTxInputTotal(IOs, false)
+  const out = await getTxOutputTotal(IOs)
+  const ins = await getTxInputTotal(IOs)
   const result = ins.minus(out)
-  if (shift) {
+  if (format === AMOUNT_FORMAT.ADA) {
     return result.shiftedBy(-NUMBERS.DECIMAL_PLACES_IN_ADA)
   }
   return result
@@ -88,57 +93,6 @@ export const getShelleyTxReceivers = async (
   return receivers
 }
 
-export const shelleyTxEqual = async (
-  req1: InputOutput,
-  req2: InputOutput,
-): Promise<boolean> => {
-  const inputs1 = await req1.inputs()
-  const inputs2 = await req2.inputs()
-  if ((await inputs1.size()) !== (await inputs2.size())) {
-    return false
-  }
-
-  const outputs1 = await req1.outputs()
-  const outputs2 = await req2.outputs()
-  if ((await outputs1.size()) !== (await outputs2.size())) {
-    return false
-  }
-
-  for (let i = 0; i < (await inputs1.size()); i++) {
-    const input1 = Buffer.from(
-      await (await inputs1.get(i)).as_bytes(),
-    ).toString('hex')
-    const input2 = Buffer.from(
-      await (await inputs2.get(i)).as_bytes(),
-    ).toString('hex')
-    if (input1 !== input2) {
-      return false
-    }
-  }
-  for (let i = 0; i < (await outputs1.size()); i++) {
-    const output1 = await outputs1.get(i)
-    const output2 = await outputs2.get(i)
-
-    if (
-      (await (await output1.value()).to_str()) !==
-      (await (await output2.value()).to_str())
-    ) {
-      return false
-    }
-    const out1Addr = Buffer.from(
-      await (await output1.address()).as_bytes(),
-    ).toString('hex')
-    const out2Addr = Buffer.from(
-      await (await output2.address()).as_bytes(),
-    ).toString('hex')
-    if (out1Addr !== out2Addr) {
-      return false
-    }
-  }
-
-  return true
-}
-
 export const generateAuthData = async (
   bindingSignature: AccountBindingSignature,
   certificate: Certificate,
@@ -156,7 +110,7 @@ export const generateAuthData = async (
     }
     default:
       throw new Error(
-        `generateAuthData unexptected cert type ${await certificate.get_type()}`,
+        `generateAuthData unexpected cert type ${await certificate.get_type()}`,
       )
   }
 }

@@ -38,7 +38,7 @@ export const buildYoroiTransferTx = async (payload: {|
 
     // first build a transaction to see what the fee will be
     const unsignedTxResponse = await sendAllUnsignedTx(outputAddr, senderUtxos)
-    const fee = await getShelleyTxFee(unsignedTxResponse.IOs, false)
+    const fee = await getShelleyTxFee(unsignedTxResponse.IOs)
 
     // sign inputs
     const fragment = await signTransaction(
