@@ -31,11 +31,6 @@ const messages = defineMessages({
     id: 'components.walletselection.walletselectionscreen.header',
     defaultMessage: '!!!Your wallets',
   },
-  balanceCheckButton: {
-    id: 'components.walletselection.walletselectionscreen.balanceCheckButton',
-    defaultMessage: '!!!Balance check (Shelley Testnet)',
-    description: 'some ddesc',
-  },
   addWalletButton: {
     id: 'components.walletselection.walletselectionscreen.addWalletButton',
     defaultMessage: '!!!Add wallet',
@@ -46,7 +41,6 @@ const WalletListScreen = ({
   navigation,
   wallets,
   navigateInitWallet,
-  navigateBalanceCheck,
   openWallet,
   intl,
 }) => (
@@ -76,13 +70,6 @@ const WalletListScreen = ({
           title={intl.formatMessage(messages.addWalletButton)}
           style={styles.addWalletButton}
         />
-
-        <Button
-          outline
-          onPress={navigateBalanceCheck}
-          title={intl.formatMessage(messages.balanceCheckButton)}
-          style={styles.balanceCheckButton}
-        />
       </ScreenBackground>
     </Screen>
   </SafeAreaView>
@@ -98,8 +85,6 @@ export default injectIntl(
     withHandlers({
       navigateInitWallet: ({navigation}) => (event) =>
         navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH),
-      navigateBalanceCheck: ({navigation}) => (event) =>
-        navigation.navigate(WALLET_INIT_ROUTES.BALANCE_CHECK),
       openWallet: ({navigation, intl}) => async (wallet) => {
         try {
           await walletManager.openWallet(wallet.id)

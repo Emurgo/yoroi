@@ -23,11 +23,6 @@ const messages = defineMessages({
     defaultMessage: '!!!Add wallet',
     description: 'some desc',
   },
-  balanceCheckButton: {
-    id: 'components.walletinit.walletinitscreen.balanceCheckButton',
-    defaultMessage: '!!!Balance check (Shelley Testnet)',
-    description: 'some desc',
-  },
   createWalletButton: {
     id: 'components.walletinit.walletinitscreen.createWalletButton',
     defaultMessage: '!!!Create new wallet',
@@ -41,29 +36,13 @@ const messages = defineMessages({
 })
 
 type Props = {
-  navigateBalanceCheck: () => mixed,
   navigateRestoreWallet: () => mixed,
   navigateCreateWallet: () => mixed,
   intl: any,
   walletIsInitialized: boolean,
 }
 
-const BalanceCheckButton = ({onPress, walletIsInitialized, intl}) => {
-  if (!walletIsInitialized) {
-    return (
-      <Button
-        onPress={onPress}
-        title={intl.formatMessage(messages.balanceCheckButton)}
-        style={styles.createButton}
-      />
-    )
-  } else {
-    return null
-  }
-}
-
 const WalletInitScreen = ({
-  navigateBalanceCheck,
   navigateCreateWallet,
   navigateRestoreWallet,
   intl,
@@ -77,12 +56,6 @@ const WalletInitScreen = ({
         <View style={styles.content}>
           <WalletDescription />
         </View>
-
-        <BalanceCheckButton
-          onPress={navigateBalanceCheck}
-          walletIsInitialized={walletIsInitialized}
-          intl={intl}
-        />
 
         <Button
           onPress={navigateCreateWallet}
@@ -107,8 +80,6 @@ export default injectIntl(
     })),
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
-      navigateBalanceCheck: ({navigation}) => (event) =>
-        navigation.navigate(WALLET_INIT_ROUTES.BALANCE_CHECK),
       navigateRestoreWallet: ({navigation}) => (event) =>
         navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET),
       navigateCreateWallet: ({navigation}) => (event) =>
