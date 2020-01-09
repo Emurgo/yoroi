@@ -53,8 +53,8 @@ export const buildYoroiTransferTx = async (payload: {|
 
     // return summary of transaction
     return {
-      recoveredBalance: totalBalance.dividedBy(NUMBERS.LOVELACES_PER_ADA),
-      fee: fee.dividedBy(NUMBERS.LOVELACES_PER_ADA),
+      recoveredBalance: totalBalance,
+      fee,
       id: Buffer.from(await (await fragment.id()).as_bytes()).toString('hex'),
       encodedTx: await fragment.as_bytes(),
       // recall: some addresses may be legacy, some may be Shelley

@@ -42,7 +42,7 @@ const RESTORATION_DIALOG_STEPS = {
 }
 type restorationDialogSteps = $Values<typeof RESTORATION_DIALOG_STEPS>
 
-const displayAddrType: AddressType = 'Internal'
+const displayAddrType: AddressType = 'External'
 
 const messages = defineMessages({
   title: {
@@ -121,7 +121,7 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
     this.setState({isProcessing: true})
     const {navigation} = this.props
     const phrase = navigation.getParam('phrase')
-    // get first internal byron address
+    // get first external byron address
     const byronAddr = await getAddressesFromMnemonics(phrase, displayAddrType, [
       0,
     ])
@@ -146,7 +146,7 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
 
   onCheck = async () => {
     // TODO: there is currently a bug in when displaying the UpgradeCheckModal
-    // tapping the 'check' button does not nothing the first time, but works
+    // tapping the 'check' button does nothing the first time, but works
     // the second time. Figure out why
     const {intl, navigation} = this.props
     const {shelleyAddressHex} = this.state

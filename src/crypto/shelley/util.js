@@ -11,7 +11,7 @@ import {
   Bip32PrivateKey,
 } from 'react-native-chain-libs'
 
-import {CONFIG, NUMBERS} from '../../config'
+import {CONFIG, CARDANO_CONFIG, NUMBERS} from '../../config'
 
 export const generateWalletRootKey = async (
   mnemonic: string,
@@ -51,7 +51,7 @@ export const getFirstInternalAddr = async (
   const internalAddr = await Address.delegation_from_public_key(
     internalKey,
     stakingKey,
-    CONFIG.NETWORK === 'Mainnet'
+    CARDANO_CONFIG.SHELLEY.NETWORK === 'Mainnet'
       ? await AddressDiscrimination.Production
       : await AddressDiscrimination.Test,
   )

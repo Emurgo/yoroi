@@ -12,7 +12,7 @@
 
 import {BigNumber} from 'bignumber.js'
 
-import {InsufficientFunds} from '../../errors'
+import {InsufficientFunds} from '../../../errors'
 import {
   AccountBindingSignature,
   Address,
@@ -37,9 +37,9 @@ import {
   selectAllInputSelection,
   firstMatchFirstInputSelection,
   utxoToTxInput,
-} from './inputSelection'
-import {generateAuthData, generateFee} from './utils'
-import {CARDANO_CONFIG} from '../../../config'
+} from '../inputSelection'
+import {generateAuthData, generateFee} from '../utils'
+import {CARDANO_CONFIG} from '../../../../config'
 
 import type {
   V3UnsignedTxData,
@@ -47,7 +47,7 @@ import type {
   RawUtxo,
   AddressedUtxo,
   Addressing,
-} from '../../../types/HistoryTransaction'
+} from '../../../../types/HistoryTransaction'
 
 const CONFIG = CARDANO_CONFIG.SHELLEY
 
@@ -241,7 +241,7 @@ export const signTransaction = async (
 ): Promise<Fragment> => {
   const {senderUtxos, IOs} = signRequest
 
-  const txbuilder = await TransactionBuilder.new()
+  const txbuilder = await new TransactionBuilder()
   const builderSetIOs =
     payload != null
       ? await txbuilder.payload(payload.certificate)

@@ -7314,7 +7314,7 @@ react-native-camera@^1.3.0:
 
 react-native-chain-libs@Emurgo/react-native-chain-libs:
   version "1.0.0"
-  resolved "https://codeload.github.com/Emurgo/react-native-chain-libs/tar.gz/9f39af4f6303d0202e85ed4be043f36d5df375ae"
+  resolved "https://codeload.github.com/Emurgo/react-native-chain-libs/tar.gz/0642ebe492d75c9cb41d9c5e96c79b60781fabc6"
   dependencies:
     base-64 "0.1.0"
 
