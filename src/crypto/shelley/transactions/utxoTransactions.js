@@ -44,7 +44,7 @@ import type {
   AddressedUtxo,
   Addressing,
 } from '../../../types/HistoryTransaction'
-import {generateAuthData} from './utils'
+import {generateAuthData, generateFee} from './utils'
 import {CARDANO_CONFIG} from '../../../config'
 
 const CONFIG = CARDANO_CONFIG.SHELLEY
@@ -66,11 +66,7 @@ export const newAdaUnsignedTxFromUtxo = async (
   allUtxos: Array<RawUtxo>,
   certificate: void | Certificate,
 ): Promise<V3UnsignedTxData> => {
-  const feeAlgorithm = await Fee.linear_fee(
-    await Value.from_str(CONFIG.LINEAR_FEE.CONSTANT),
-    await Value.from_str(CONFIG.LINEAR_FEE.COEFFICIENT),
-    await Value.from_str(CONFIG.LINEAR_FEE.CERTIFICATE),
-  )
+  const feeAlgorithm = await generateFee()
 
   const ioBuilder = await InputOutputBuilder.empty()
   for (const output of outputs) {
@@ -228,7 +224,7 @@ async function filterToUsedChange(
   ).toString('hex')
   for (let i = 0; i < (await outputs.size()); i++) {
     const output = await outputs.get(i)
-    const val = (await await output.value()).to_str()
+    const val = await (await output.value()).to_str()
     // note: both change & outputs all cannot be legacy addresses
     const outputPayload = Buffer.from(
       await (await output.address()).as_bytes(),
@@ -357,11 +353,7 @@ export const sendAllUnsignedTxFromUtxo = async (
     throw new InsufficientFunds()
   }
 
-  const feeAlgorithm = await Fee.linear_fee(
-    await Value.from_str(CONFIG.LINEAR_FEE.CONSTANT),
-    await Value.from_str(CONFIG.LINEAR_FEE.COEFFICIENT),
-    await Value.from_str(CONFIG.LINEAR_FEE.CERTIFICATE),
-  )
+  const feeAlgorithm = await generateFee()
   let fee
   {
     // firts build a transaction to see what the cost would be

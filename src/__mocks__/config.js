@@ -1,8 +1,12 @@
 // @flow
+
+// note(@v_almonacid): following the approach in yoroi frontend, I'm adding a
+// separate config file for jest
+
 import {BigNumber} from 'bignumber.js'
 
-import {LogLevel} from './utils/logging'
-import env from './env'
+import {LogLevel} from '../utils/logging'
+import env from '../env'
 
 const IS_DEBUG = __DEV__
 // debugging flags
@@ -32,12 +36,12 @@ export const CARDANO_CONFIG = {
     EXPLORER_URL_FOR_ADDRESS: (address: string) =>
       `https://shelleyexplorer.cardano.org/address/?id=${address}`,
     LINEAR_FEE: {
-      CONSTANT: '200000',
-      COEFFICIENT: '100000',
-      CERTIFICATE: '400000',
+      CONSTANT: '155381',
+      COEFFICIENT: '1',
+      CERTIFICATE: '4',
       PER_CERTIFICATE_FEES: {
-        CERTIFICATE_POOL_REGISTRATION: '500000000',
-        CERTIFICATE_STAKE_DELEGATION: '400000',
+        CERTIFICATE_POOL_REGISTRATION: '5',
+        CERTIFICATE_STAKE_DELEGATION: '6',
       },
     },
     ADDRESS_DISCRIMINATION: {
