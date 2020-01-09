@@ -18,11 +18,8 @@ import {
   Address,
   Bip32PrivateKey,
   Certificate,
-  Fee,
   Fragment,
-  FragmentId,
   Hash,
-  Input,
   InputOutputBuilder,
   OutputPolicy,
   Outputs,
@@ -32,11 +29,18 @@ import {
   TransactionBuilder,
   TransactionBuilderSetAuthData,
   TransactionBuilderSetWitness,
-  UtxoPointer,
   Value,
   Witness,
   Witnesses,
 } from 'react-native-chain-libs'
+import {
+  selectAllInputSelection,
+  firstMatchFirstInputSelection,
+  utxoToTxInput,
+} from './inputSelection'
+import {generateAuthData, generateFee} from './utils'
+import {CARDANO_CONFIG} from '../../../config'
+
 import type {
   V3UnsignedTxData,
   V3UnsignedTxAddressedUtxoData,
@@ -44,8 +48,6 @@ import type {
   AddressedUtxo,
   Addressing,
 } from '../../../types/HistoryTransaction'
-import {generateAuthData, generateFee} from './utils'
-import {CARDANO_CONFIG} from '../../../config'
 
 const CONFIG = CARDANO_CONFIG.SHELLEY
 
@@ -81,15 +83,16 @@ export const newAdaUnsignedTxFromUtxo = async (
       ? await Payload.certificate(certificate)
       : await Payload.no_payload()
 
-  const selectedUtxos = await firstMatchFirstInputSelection(
-    ioBuilder,
-    allUtxos,
-    feeAlgorithm,
-    payload,
-  )
+  let selectedUtxos
   let IOs
   const change = []
   if (changeAddresses.length === 1) {
+    selectedUtxos = await firstMatchFirstInputSelection(
+      ioBuilder,
+      allUtxos,
+      feeAlgorithm,
+      payload,
+    )
     const changeAddress = changeAddresses[0]
 
     /**
@@ -114,6 +117,12 @@ export const newAdaUnsignedTxFromUtxo = async (
     )
     change.push(...addedChange)
   } else if (changeAddresses.length === 0) {
+    selectedUtxos = await selectAllInputSelection(
+      ioBuilder,
+      allUtxos,
+      feeAlgorithm,
+      payload,
+    )
     IOs = await ioBuilder.seal_with_output_policy(
       payload,
       feeAlgorithm,
@@ -172,31 +181,6 @@ export const newAdaUnsignedTx = async (
     changeAddr: unsignedTxResponse.changeAddr,
     certificate,
   }
-}
-
-async function firstMatchFirstInputSelection(
-  txBuilder: InputOutputBuilder,
-  allUtxos: Array<RawUtxo>,
-  feeAlgorithm: Fee,
-  payload: Payload,
-): Promise<Array<RawUtxo>> {
-  const selectedOutputs = []
-  if (allUtxos.length === 0) {
-    throw new InsufficientFunds()
-  }
-  // add UTXOs in whatever order they're sorted until we have enough for amount+fee
-  for (let i = 0; i < allUtxos.length; i++) {
-    selectedOutputs.push(allUtxos[i])
-    await txBuilder.add_input(await utxoToTxInput(allUtxos[i]))
-    const txBalance = await txBuilder.get_balance(payload, feeAlgorithm)
-    if (!(await txBalance.is_negative())) {
-      break
-    }
-    if (i === allUtxos.length - 1) {
-      throw new InsufficientFunds()
-    }
-  }
-  return selectedOutputs
 }
 
 /**
@@ -288,15 +272,6 @@ export const signTransaction = async (
   const signedTx = await builderSetAuthData.set_payload_auth(payloadAuthData)
   const fragment = await Fragment.from_transaction(signedTx)
   return fragment
-}
-
-async function utxoToTxInput(utxo: RawUtxo): Input {
-  const txoPointer = await UtxoPointer.new(
-    await FragmentId.from_bytes(Buffer.from(utxo.tx_hash, 'hex')),
-    utxo.tx_index,
-    await Value.from_str(utxo.amount),
-  )
-  return await Input.from_utxo(txoPointer)
 }
 
 /**
