@@ -10,6 +10,7 @@ import storage from '../utils/storage'
 import KeyStore from './KeyStore'
 import {AddressChain, AddressGenerator} from './chain'
 import * as util from './byron/util'
+import {ADDRESS_TYPE_TO_CHANGE} from './commonUtils'
 import api from '../api'
 import {CONFIG} from '../config'
 import assert from '../utils/assert'
@@ -317,7 +318,7 @@ export class Wallet {
     chains.forEach(([type, chain]) => {
       if (chain.isMyAddress(utxo.receiver)) {
         addressInfo = {
-          change: util.ADDRESS_TYPE_TO_CHANGE[type],
+          change: ADDRESS_TYPE_TO_CHANGE[type],
           index: chain.getIndexOfAddress(utxo.receiver),
         }
       }

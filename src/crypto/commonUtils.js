@@ -10,6 +10,13 @@ import {Wallet} from 'react-native-cardano'
 import {Address} from 'react-native-chain-libs'
 import {CONFIG} from '../config'
 
+export type AddressType = 'Internal' | 'External'
+
+export const ADDRESS_TYPE_TO_CHANGE: {[AddressType]: number} = {
+  External: 0,
+  Internal: 1,
+}
+
 export const isValidAddress = async (
   address: string,
   isShelley: boolean,

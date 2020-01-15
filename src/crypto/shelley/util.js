@@ -9,9 +9,13 @@ import {
   Address,
   AddressDiscrimination,
   Bip32PrivateKey,
+  Bip32PublicKey,
+  PublicKey,
 } from 'react-native-chain-libs'
-
+import {ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
 import {CONFIG, CARDANO_CONFIG, NUMBERS} from '../../config'
+
+import type {AddressType} from '../commonUtils'
 
 export const generateWalletRootKey = async (
   mnemonic: string,
@@ -62,4 +66,45 @@ export const getFirstInternalAddr = async (
     hex: internalAddrHash,
     bech32: await internalAddr.to_string(CONFIG.BECH32_PREFIX.ADDRESS),
   }
+}
+
+export const getGroupAddresses = async (
+  addressChain: Bip32PublicKey,
+  stakingKey: PublicKey,
+  indices: Array<number>,
+): Promise<Array<string>> => {
+  return await Promise.all(
+    indices.map(async (i) => {
+      const addressKey = await (await addressChain.derive(i)).to_raw_key()
+      const address = await Address.delegation_from_public_key(
+        addressKey,
+        stakingKey,
+        CARDANO_CONFIG.SHELLEY.NETWORK === 'Mainnet'
+          ? await AddressDiscrimination.Production
+          : await AddressDiscrimination.Test,
+      )
+      return await address.to_string(CONFIG.BECH32_PREFIX.ADDRESS)
+    }),
+  )
+}
+
+export const getGroupAddressesFromMnemonics = async (
+  mnemonic: string,
+  type: AddressType,
+  indices: Array<number>,
+): Promise<Array<string>> => {
+  const accountKey = await (await (await (await generateWalletRootKey(
+    mnemonic,
+  )).derive(NUMBERS.WALLET_TYPE_PURPOSE.CIP1852)).derive(
+    NUMBERS.COIN_TYPES.CARDANO,
+  )).derive(0 + NUMBERS.HARD_DERIVATION_START)
+
+  const accountPublic = await accountKey.to_public()
+  const chainKey = await accountPublic.derive(ADDRESS_TYPE_TO_CHANGE[type])
+
+  const stakingKey = await (await (await accountPublic.derive(
+    NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+  )).derive(NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+
+  return await getGroupAddresses(chainKey, stakingKey, indices)
 }

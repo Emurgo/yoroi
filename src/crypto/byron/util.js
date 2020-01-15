@@ -17,6 +17,7 @@ import {
   CardanoError,
 } from '../errors'
 import {AddressChain, AddressGenerator} from '../chain'
+import {ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
 // TODO: refactor to remove these imports here as they are causing a cycle
 import {filterUsedAddresses, bulkFetchUTXOSumForAddresses} from '../../api/api'
 
@@ -25,8 +26,7 @@ import type {
   TransactionOutput,
   Addressing,
 } from '../../types/HistoryTransaction'
-
-export type AddressType = 'Internal' | 'External'
+import type {AddressType} from '../commonUtils'
 
 export type CryptoAccount = {
   derivation_scheme: string,
@@ -105,11 +105,6 @@ export const getAddresses = (
   protocolMagic?: number = CONFIG.CARDANO.PROTOCOL_MAGIC,
 ): Promise<Array<string>> =>
   _rethrow(Wallet.generateAddresses(account, type, indexes, protocolMagic))
-
-export const ADDRESS_TYPE_TO_CHANGE: {[AddressType]: number} = {
-  External: 0,
-  Internal: 1,
-}
 
 export const getAddressesFromMnemonics = async (
   mnemonic: string,

@@ -206,6 +206,7 @@
   "components.walletinit.restorewallet.upgradeconfirmmodal.title": "Wallet upgrade",
   "components.walletinit.restorewallet.upgradeconfirmmodal.toLabel": "To",
   "components.walletinit.restorewallet.walletcredentialsscreen.title": "Wallet credentials",
+  "components.walletinit.restorewallet.walletcredentialsscreen.walletCheckError": "Could not verify wallet funds",
   "components.walletinit.restorewallet.walletverifyscreen.byronAddressLabel": "Byron wallet address:",
   "components.walletinit.restorewallet.walletverifyscreen.shelleyAddressLabel": "Shelley wallet address:",
   "components.walletinit.restorewallet.walletverifyscreen.title": "Verify restored wallet",

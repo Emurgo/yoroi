@@ -130,9 +130,10 @@ export const generateTransferTxFromMnemonic = async (
   networkConfig?: any = CONFIG.CARDANO,
 ): Promise<TransferTx> => {
   // Perform restoration
+  // for now we only support transfering from Byron to Shelley
   const accountKey = await (await (await (await generateWalletRootKey(
     recoveryPhrase,
-  )).derive(NUMBERS.WALLET_TYPE_PURPOSE.CIP1852)).derive(
+  )).derive(NUMBERS.WALLET_TYPE_PURPOSE.BIP44)).derive(
     NUMBERS.COIN_TYPES.CARDANO,
   )).derive(0 + NUMBERS.HARD_DERIVATION_START)
 

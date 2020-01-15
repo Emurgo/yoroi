@@ -15,7 +15,7 @@ import WalletForm from '../WalletForm'
 import {
   createWallet,
   submitShelleyTransferTx,
-  // handleGeneralError,
+  handleGeneralError,
   showErrorDialog,
 } from '../../../actions'
 import {
@@ -23,14 +23,17 @@ import {
   mnemonicsToAddresses,
   balanceForAddresses,
 } from '../../../crypto/byron/util'
-import {getFirstInternalAddr} from '../../../crypto/shelley/util'
+import {
+  getFirstInternalAddr,
+  getGroupAddressesFromMnemonics,
+} from '../../../crypto/shelley/util'
 import {generateTransferTxFromMnemonic} from '../../../crypto/shelley/transactions/yoroiTransfer'
 import {CARDANO_CONFIG} from '../../../config'
 import {NetworkError, ApiError} from '../../../api/errors'
 import {errorMessages} from '../../../i18n/global-messages'
 
 import type {Navigation} from '../../../types/navigation'
-import type {AddressType} from '../../../crypto/byron/util'
+import type {AddressType} from '../../../crypto/commonUtils'
 import type {Addressing} from '../../../types/HistoryTransaction'
 import type {TransferTx} from '../../../crypto/shelley/transactions/yoroiTransfer'
 
@@ -50,6 +53,12 @@ const messages = defineMessages({
     defaultMessage: '!!!Wallet credentials',
     description: 'some desc',
   },
+  walletCheckError: {
+    id:
+      'components.walletinit.restorewallet.walletcredentialsscreen.walletCheckError',
+    defaultMessage: '!!!Could not verify wallet funds',
+    description: 'some desc',
+  },
 })
 
 const getAddressing = (
@@ -64,6 +73,20 @@ const getAddressing = (
   return null
 }
 
+const handleApiError = async (
+  error: Error,
+  intl: any,
+  fallbackMsg: string,
+): Promise<void> => {
+  if (error instanceof NetworkError) {
+    await showErrorDialog(errorMessages.networkError, intl)
+  } else if (error instanceof ApiError) {
+    await showErrorDialog(errorMessages.apiError, intl)
+  } else {
+    await handleGeneralError(fallbackMsg, error)
+  }
+}
+
 type Props = {
   intl: any,
   navigation: Navigation,
@@ -74,10 +97,10 @@ type State = {
   name: string,
   password: string,
   byronAddress: string,
-  shelleyAddressHex: string,
-  shelleyAddressBech32: string,
+  shelleyAddress: string,
   currentDialogStep: restorationDialogSteps,
   fundedLegacyAddresses: Array<string>,
+  outputAddressInfo: ?{bech32: string, hex: string},
   balance: ?BigNumber,
   fee: ?BigNumber,
   isProcessing: boolean,
@@ -89,10 +112,10 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
     name: '',
     password: '',
     byronAddress: '',
-    shelleyAddressHex: '',
-    shelleyAddressBech32: '',
+    shelleyAddress: '',
     currentDialogStep: RESTORATION_DIALOG_STEPS.CLOSED,
     fundedLegacyAddresses: [],
+    outputAddressInfo: null,
     balance: null,
     fee: null,
     isProcessing: false,
@@ -113,27 +136,42 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
   }
 
   startWalletRestoration = async () => {
-    const isShelleyWallet = this.props.navigation.getParam('isShelleyWallet')
+    const {navigation, intl} = this.props
+    const isShelleyWallet = navigation.getParam('isShelleyWallet')
     if (isShelleyWallet === false) {
       this.navigateToWallet()
       return
     }
     this.setState({isProcessing: true})
-    const {navigation} = this.props
     const phrase = navigation.getParam('phrase')
-    // get first external byron address
-    const byronAddr = await getAddressesFromMnemonics(phrase, displayAddrType, [
-      0,
-    ])
-    // get staking address
-    const shelleyAddr = await getFirstInternalAddr(phrase)
-    this.setState({
-      isProcessing: false,
-      byronAddress: byronAddr[0],
-      shelleyAddressHex: shelleyAddr.hex,
-      shelleyAddressBech32: shelleyAddr.bech32,
-      currentDialogStep: RESTORATION_DIALOG_STEPS.WALLET_VERIFY,
-    })
+    try {
+      // get first external byron address
+      const byronAddr = await getAddressesFromMnemonics(
+        phrase,
+        displayAddrType,
+        [0],
+      )
+      // get first external group address (bech32)
+      const shelleyAddr = await getGroupAddressesFromMnemonics(
+        phrase,
+        displayAddrType,
+        [0],
+      )
+      this.setState({
+        isProcessing: false,
+        byronAddress: byronAddr[0],
+        shelleyAddress: shelleyAddr[0],
+        currentDialogStep: RESTORATION_DIALOG_STEPS.WALLET_VERIFY,
+      })
+    } catch (e) {
+      this.setState({
+        currentDialogStep: RESTORATION_DIALOG_STEPS.CLOSED,
+        isProcessing: false,
+      })
+      await showErrorDialog(errorMessages.generalError, intl, {
+        message: e.message,
+      })
+    }
   }
 
   onConfirmVerify = () =>
@@ -145,14 +183,12 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
     })
 
   onCheck = async () => {
-    // TODO: there is currently a bug in when displaying the UpgradeCheckModal
+    // TODO: there is currently a bug when displaying the UpgradeCheckModal
     // tapping the 'check' button does nothing the first time, but works
     // the second time. Figure out why
     const {intl, navigation} = this.props
-    const {shelleyAddressHex} = this.state
     const phrase = navigation.getParam('phrase')
     this.setState({isProcessing: true})
-    let transferTx, fundedLegacyAddresses, balance
     try {
       // here addresses include addressing info
       const usedLegacyAddrs = await mnemonicsToAddresses(
@@ -165,9 +201,7 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
         CARDANO_CONFIG.SHELLEY,
       )
       if (fundedAddresses.length > 0 && sum != null) {
-        balance = sum
-        fundedLegacyAddresses = fundedAddresses
-        // get addressing info
+        // 1. get funded addresses with addressing info
         const addressedFundedAddresses = []
         for (let i = 0; i < fundedAddresses.length; i++) {
           const addressedAddr = getAddressing(
@@ -180,33 +214,29 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
             throw new Error('could not retrieve addressing information')
           }
         }
-        transferTx = await generateTransferTxFromMnemonic(
+        // 2. get destination address
+        const outputAddressInfo = await getFirstInternalAddr(phrase)
+        // 3. generate transfer tx
+        const transferTx = await generateTransferTxFromMnemonic(
           phrase,
-          shelleyAddressHex,
+          outputAddressInfo.hex,
           addressedFundedAddresses,
           CARDANO_CONFIG.SHELLEY,
         )
+        this.setState({
+          outputAddressInfo,
+          transferTx,
+          fundedLegacyAddresses: fundedAddresses,
+          balance: sum,
+        })
       }
       this.setState({
-        transferTx,
-        fundedLegacyAddresses: fundedLegacyAddresses || [],
-        balance,
         currentDialogStep: RESTORATION_DIALOG_STEPS.CONFIRM_UPGRADE,
         isProcessing: false,
       })
     } catch (e) {
       this.setState({currentDialogStep: RESTORATION_DIALOG_STEPS.CLOSED})
-      if (e instanceof NetworkError) {
-        await showErrorDialog(errorMessages.networkError, intl)
-      } else if (e instanceof ApiError) {
-        await showErrorDialog(errorMessages.apiError, intl)
-      } else {
-        // TODO: use handleGeneralError once fix is merged
-        await showErrorDialog(errorMessages.generalError, intl, {
-          message: e.message,
-        })
-        // handleGeneralError('Could not verify wallet funds', e)
-      }
+      handleApiError(e, intl, messages.walletCheckError)
     } finally {
       this.setState({isProcessing: false})
     }
@@ -224,13 +254,7 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
       this.setState({isProcessing: false})
       this.navigateToWallet()
     } catch (e) {
-      if (e instanceof NetworkError) {
-        await showErrorDialog(errorMessages.networkError, intl)
-      } else if (e instanceof ApiError) {
-        await showErrorDialog(errorMessages.apiError, intl)
-      } else {
-        throw e
-      }
+      handleApiError(e, intl, 'could not upgrade wallet')
     } finally {
       this.setState({isProcessing: false})
     }
@@ -248,8 +272,9 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
     const {
       currentDialogStep,
       byronAddress,
-      shelleyAddressBech32,
+      shelleyAddress,
       fundedLegacyAddresses,
+      outputAddressInfo,
       balance,
       isProcessing,
       transferTx,
@@ -275,7 +300,7 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
               onConfirm={this.onConfirmVerify}
               onBack={this.onBack}
               byronAddress={byronAddress}
-              shelleyAddress={shelleyAddressBech32}
+              shelleyAddress={shelleyAddress}
               onRequestClose={this.onBack}
             />
             <UpgradeCheckModal
@@ -293,7 +318,7 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
               }
               disableButtons={isProcessing}
               byronAddresses={fundedLegacyAddresses}
-              shelleyAddress={shelleyAddressBech32}
+              shelleyAddress={outputAddressInfo?.bech32}
               balance={balance}
               finalBalance={finalBalance}
               fees={transferTx?.fee}

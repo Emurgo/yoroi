@@ -9,7 +9,8 @@ import {Logger} from '../utils/logging'
 import * as util from './byron/util'
 
 import type {Dict} from '../state'
-import type {CryptoAccount, AddressType} from './byron/util'
+import type {CryptoAccount} from './byron/util'
+import type {AddressType} from './commonUtils'
 
 export type AddressBlock = [number, Moment, Array<string>]
 
