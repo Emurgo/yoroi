@@ -10,11 +10,16 @@
  * existing structure
  */
 
-import {InsufficientFunds} from '../../errors'
 import {BigNumber} from 'bignumber.js'
+
+import {InsufficientFunds} from '../../errors'
 import {
+  AccountBindingSignature,
   Address,
+  Bip32PrivateKey,
+  Certificate,
   Fee,
+  Fragment,
   FragmentId,
   Hash,
   Input,
@@ -23,7 +28,7 @@ import {
   Outputs,
   Payload,
   PayloadAuthData,
-  Transaction,
+  PrivateKey,
   TransactionBuilder,
   TransactionBuilderSetAuthData,
   TransactionBuilderSetWitness,
@@ -32,7 +37,6 @@ import {
   Witness,
   Witnesses,
 } from 'react-native-chain-libs'
-import {HdWallet, Wallet} from 'react-native-cardano'
 import type {
   V3UnsignedTxData,
   V3UnsignedTxAddressedUtxoData,
@@ -40,7 +44,7 @@ import type {
   AddressedUtxo,
   Addressing,
 } from '../../../types/HistoryTransaction'
-import {v2SkKeyToV3Key} from './utils'
+import {generateAuthData} from './utils'
 import {CARDANO_CONFIG} from '../../../config'
 
 const CONFIG = CARDANO_CONFIG.SHELLEY
@@ -56,6 +60,7 @@ export const newAdaUnsignedTxFromUtxo = async (
   amount: string,
   changeAddresses: Array<{|address: string, ...Addressing|}>,
   allUtxos: Array<RawUtxo>,
+  certificate: void | Certificate,
 ): Promise<V3UnsignedTxData> => {
   const feeAlgorithm = await Fee.linear_fee(
     await Value.from_str(CONFIG.LINEAR_FEE.CONSTANT),
@@ -65,12 +70,14 @@ export const newAdaUnsignedTxFromUtxo = async (
 
   const ioBuilder = await InputOutputBuilder.empty()
   await ioBuilder.add_output(
-    await Address.from_string(receiver),
+    await Address.from_bytes(Buffer.from(receiver, 'hex')),
     await Value.from_str(amount),
   )
 
-  // can't add a certificate to a UTXO transaction
-  const payload = await Payload.no_payload()
+  const payload =
+    certificate != null
+      ? await Payload.certificate(certificate)
+      : await Payload.no_payload()
 
   const selectedUtxos = await firstMatchFirstInputSelection(
     ioBuilder,
@@ -93,18 +100,20 @@ export const newAdaUnsignedTxFromUtxo = async (
     IOs = await ioBuilder.seal_with_output_policy(
       payload,
       feeAlgorithm,
-      await OutputPolicy.one(await Address.from_string(changeAddress.address)),
+      await OutputPolicy.one(
+        await Address.from_bytes(Buffer.from(changeAddress.address, 'hex')),
+      ),
     )
     // given the change address, compute how much coin will be sent to it
-    change.push(
-      ...(await filterToUsedChange(
-        changeAddress,
-        await IOs.outputs(),
-        selectedUtxos,
-      )),
+    const addedChange = await filterToUsedChange(
+      changeAddress,
+      await IOs.outputs(),
+      selectedUtxos,
     )
+    change.push(...addedChange)
   } else if (changeAddresses.length === 0) {
     IOs = await ioBuilder.seal_with_output_policy(
+      payload,
       feeAlgorithm,
       await OutputPolicy.forget(),
     )
@@ -204,15 +213,20 @@ async function filterToUsedChange(
   )
 
   const change = []
+  const changeAddrWasm = await Address.from_bytes(
+    Buffer.from(changeAddr.address, 'hex'),
+  )
+  const changeAddrPayload = Buffer.from(
+    await changeAddrWasm.as_bytes(),
+  ).toString('hex')
   for (let i = 0; i < (await outputs.size()); i++) {
     const output = await outputs.get(i)
-    // we can't know which bech32 prefix was used
-    // so we instead assume the suffix must match
-    const suffix = (await (await output.address()).to_string('dummy')).slice(
-      'dummy'.length,
-    )
     const val = (await await output.value()).to_str()
-    if (changeAddr.address.endsWith(suffix)) {
+    // not: both change & outputs all cannot be legacy addresses
+    const outputPayload = Buffer.from(
+      await (await output.address()).as_bytes(),
+    ).toString('hex')
+    if (changeAddrPayload === outputPayload) {
       const indexInInput = possibleDuplicates.findIndex(
         (utxo) => utxo.amount === val,
       )
@@ -232,27 +246,45 @@ async function filterToUsedChange(
 
 export const signTransaction = async (
   signRequest: V3UnsignedTxAddressedUtxoData,
-  wallet: Wallet.WalletObj,
-): Promise<Transaction> => {
+  signingKey: Bip32PrivateKey,
+  useLegacy: boolean,
+  payload: void | {|
+    stakingKey: PrivateKey,
+    certificate: Certificate,
+  |},
+): Promise<Fragment> => {
   const {senderUtxos, IOs} = signRequest
 
-  const txBuilder = await new TransactionBuilder()
-  const builderSetIOs = await txBuilder.no_payload()
-  const builderSetWitness = await builderSetIOs.set_ios(
+  const txbuilder = await new TransactionBuilder()
+  const builderSetIOs =
+    payload != null
+      ? await txbuilder.payload(payload.certificate)
+      : await txbuilder.no_payload()
+  const builderSetWitnesses = await builderSetIOs.set_ios(
     await IOs.inputs(),
     await IOs.outputs(),
   )
   const builderSetAuthData = await addWitnesses(
-    builderSetWitness,
+    builderSetWitnesses,
     senderUtxos,
-    wallet,
+    signingKey,
+    useLegacy,
   )
 
-  const signedTx = await builderSetAuthData.set_payload_auth(
-    // can't add a certificate to a UTXO transaction
-    await PayloadAuthData.for_no_payload(),
-  )
-  return signedTx
+  // prettier-ignore
+  const payloadAuthData =
+    payload == null
+      ? await PayloadAuthData.for_no_payload()
+      : await generateAuthData(
+        await AccountBindingSignature.new_single(
+          payload.stakingKey,
+          await builderSetAuthData.get_auth_data(),
+        ),
+        payload.certificate,
+      )
+  const signedTx = await builderSetAuthData.set_payload_auth(payloadAuthData)
+  const fragment = await Fragment.from_transaction(signedTx)
+  return fragment
 }
 
 async function utxoToTxInput(utxo: RawUtxo): Input {
@@ -271,35 +303,126 @@ async function utxoToTxInput(utxo: RawUtxo): Input {
 async function addWitnesses(
   builderSetWitnesses: TransactionBuilderSetWitness,
   senderUtxos: Array<AddressedUtxo>,
-  wallet: Wallet.WalletObj,
+  signingKey: Bip32PrivateKey,
+  useLegacy: boolean,
 ): Promise<TransactionBuilderSetAuthData> {
   // get private keys
-  const rootKey = wallet.root_cached_key
   const privateKeys = await Promise.all(
     senderUtxos.map(
-      async (utxo): Promise<HdWallet.XPrv> => {
-        let key = rootKey
-        // this loops 3 times to generate a private key from root level up to the
-        // address level
-        for (let i = 0; i < Object.keys(utxo.addressing).length; i++) {
-          key = await HdWallet.derivePrivate(
-            key,
-            utxo.addressing[Object.keys(utxo.addressing)[i]],
-          )
-        }
-        return key
+      async (utxo): Promise<Bip32PrivateKey> => {
+        const chainKey = await signingKey.derive(utxo.addressing.change)
+        const addressKey = await chainKey.derive(utxo.addressing.index)
+        return addressKey
       },
     ),
   )
 
   const witnesses = await Witnesses.new()
   for (let i = 0; i < senderUtxos.length; i++) {
-    const witness = await Witness.for_utxo(
-      await Hash.from_hex(CONFIG.GENESISHASH),
-      // await txFinalizer.get_txid(),
-      await builderSetWitnesses.get_auth_data_for_witness(),
-      await v2SkKeyToV3Key(privateKeys[i]),
-    )
+    let witness
+    if (useLegacy) {
+      witness = await Witness.for_legacy_icarus_utxo(
+        await Hash.from_hex(CONFIG.GENESISHASH),
+        await builderSetWitnesses.get_auth_data_for_witness(),
+        privateKeys[i],
+      )
+    } else {
+      witness = await Witness.for_utxo(
+        await Hash.from_hex(CONFIG.GENESISHASH),
+        await builderSetWitnesses.get_auth_data_for_witness(),
+        await privateKeys[i].to_raw_key(),
+      )
+    }
     witnesses.add(witness)
+  }
+  return await builderSetWitnesses.set_witnesses(witnesses)
+}
+
+export const sendAllUnsignedTxFromUtxo = async (
+  receiver: string,
+  allUtxos: Array<RawUtxo>,
+): Promise<V3UnsignedTxData> => {
+  const totalBalance = allUtxos
+    .map((utxo) => new BigNumber(utxo.amount))
+    .reduce((acc, amount) => acc.plus(amount), new BigNumber(0))
+  if (totalBalance.isZero()) {
+    throw new InsufficientFunds()
+  }
+
+  const feeAlgorithm = await Fee.linear_fee(
+    await Value.from_str(CONFIG.LINEAR_FEE.CONSTANT),
+    await Value.from_str(CONFIG.LINEAR_FEE.COEFFICIENT),
+    await Value.from_str(CONFIG.LINEAR_FEE.CERTIFICATE),
+  )
+  let fee
+  {
+    // firts build a transaction to see what the cost would be
+    const fakeIOBuilder = await InputOutputBuilder.empty()
+    for (const utxo of allUtxos) {
+      const input = await utxoToTxInput(utxo)
+      await fakeIOBuilder.add_input(input)
+    }
+    await fakeIOBuilder.add_output(
+      await Address.from_bytes(Buffer.from(receiver, 'hex')),
+      await Value.from_str(totalBalance.toString()),
+    )
+    const feeValue = await (await fakeIOBuilder.estimate_fee(
+      feeAlgorithm,
+      // can't add a certificate to a UTXO transaction
+      await Payload.no_payload(),
+    )).to_str()
+    fee = new BigNumber(feeValue)
+  }
+
+  // create a new transaction subtracing the fee from your total UTXO
+  if (totalBalance.isLessThan(fee)) {
+    throw new InsufficientFunds()
+  }
+  const newAmount = totalBalance.minus(fee).toString()
+  const unsignedTxResponse = await newAdaUnsignedTxFromUtxo(
+    receiver,
+    newAmount,
+    [],
+    allUtxos,
+  )
+  return unsignedTxResponse
+}
+
+export const sendAllUnsignedTx = async (
+  receiver: string,
+  allUtxos: Array<AddressedUtxo>,
+): Promise<V3UnsignedTxAddressedUtxoData> => {
+  const addressingMap = new Map<RawUtxo, AddressedUtxo>()
+  for (const utxo of allUtxos) {
+    addressingMap.set(
+      {
+        amount: utxo.amount,
+        receiver: utxo.receiver,
+        tx_hash: utxo.tx_hash,
+        tx_index: utxo.tx_index,
+        utxo_id: utxo.utxo_id,
+      },
+      utxo,
+    )
+  }
+  const unsignedTxResponse = await sendAllUnsignedTxFromUtxo(
+    receiver,
+    Array.from(addressingMap.keys()),
+  )
+
+  const addressedUtxos = unsignedTxResponse.senderUtxos.map((utxo) => {
+    const addressedUtxo = addressingMap.get(utxo)
+    if (addressedUtxo == null) {
+      throw new Error(
+        'sendAllUnsignedTx utxo refernece was changed. Should not happen',
+      )
+    }
+    return addressedUtxo
+  })
+
+  return {
+    senderUtxos: addressedUtxos,
+    IOs: unsignedTxResponse.IOs,
+    changeAddr: unsignedTxResponse.changeAddr,
   }
 }

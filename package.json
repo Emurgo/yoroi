@@ -87,6 +87,7 @@
     "vm-browserify": "^1.1.0"
   },
   "devDependencies": {
+    "@emurgo/js-chain-libs-node": "git+https://github.com/SebastienGllmt/js-chain-libs-node-pkg.git",
     "babel-jest": "^24.8.0",
     "babel-plugin-react-intl": "^3.0.1",
     "babel-plugin-require-context-hook": "^1.0.0",
@@ -95,7 +96,6 @@
     "flow-bin": "0.92",
     "jest": "24.8.0",
     "jetifier": "^1.6.4",
-    "js-chain-libs-node": "^0.1.2",
     "metro-react-native-babel-preset": "0.54.1",
     "prettier": "1.14.3",
     "prettylint": "1.0.0",

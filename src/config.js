@@ -113,4 +113,9 @@ export const CONFIG = {
   LOG_LEVEL: _LOG_LEVEL,
   NETWORK: _USE_TESTNET ? 'Testnet' : 'Mainnet',
   COMMIT: _COMMIT,
+  DECIMAL_PLACES_IN_ADA: 6,
+  STAKING_KEY_INDEX: 0,
+  BECH32_PREFIX: {
+    ADDRESS: 'addr',
+  },
 }

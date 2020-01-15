@@ -1,5 +1,9 @@
 // @flow
-import {InputOutput} from 'react-native-chain-libs'
+import {
+  InputOutput,
+  Transaction as V3Transaction,
+  Value,
+} from 'react-native-chain-libs'
 import {BigNumber} from 'bignumber.js'
 
 export const TRANSACTION_DIRECTION = {
@@ -60,6 +64,7 @@ export type Addressing = {|
   },
 |}
 
+// this is equivalent to yoroi-frontend's `RemoteUnspentOutput`
 export type RawUtxo = {|
   amount: string,
   receiver: string,
@@ -97,6 +102,7 @@ export type PreparedTransactionData = {|
   outputs: Array<TransactionOutput>,
 |}
 
+// similar to yoroi-frontend's V3UnsignedTxUtxoResponse
 export type V3UnsignedTxData = {|
   senderUtxos: Array<RawUtxo>,
   IOs: InputOutput,
@@ -107,6 +113,7 @@ export type V3UnsignedTxData = {|
   |}>,
 |}
 
+// similar to yoroi-frontend's V3UnsignedTxAddressedUtxoResponse
 export type V3UnsignedTxAddressedUtxoData = {|
   senderUtxos: Array<AddressedUtxo>,
   IOs: InputOutput,
@@ -116,3 +123,15 @@ export type V3UnsignedTxAddressedUtxoData = {|
     ...Addressing,
   |}>,
 |}
+
+export type BaseSignRequest<T: V3Transaction | InputOutput> = {|
+  senderUtxos: Array<AddressedUtxo>,
+  unsignedTx: T,
+  changeAddr: Array<{|address: string, ...Value, ...Addressing|}>,
+|}
+
+export const AMOUNT_FORMAT = {
+  ADA: 'ADA',
+  LOVELACE: 'LOVELACE',
+}
+export type AmountFormat = $Values<typeof AMOUNT_FORMAT>

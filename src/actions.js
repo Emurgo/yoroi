@@ -411,7 +411,7 @@ export const showErrorDialog = (
     }
     yesButton = globalMessages.ok.defaultMessage
   }
-  showDialog({title, message, yesButton})
+  return showDialog({title, message, yesButton})
 }
 
 export const showConfirmationDialog = (

@@ -1,1 +1,2 @@
-export * from 'js-chain-libs-node/js_chain_libs_node'
+// @flow
+export * from '@emurgo/js-chain-libs-node/js_chain_libs'

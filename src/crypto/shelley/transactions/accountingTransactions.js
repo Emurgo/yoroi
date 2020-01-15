@@ -12,6 +12,7 @@ import {
   Address,
   Certificate,
   Fee,
+  Fragment,
   Hash,
   Input,
   InputOutput,
@@ -22,14 +23,12 @@ import {
   PrivateKey,
   PublicKey,
   SpendingCounter,
-  StakeDelegation,
-  StakeDelegationAuthData,
-  Transaction,
   TransactionBuilder,
   Value,
   Witness,
   Witnesses,
 } from 'react-native-chain-libs'
+import {generateAuthData} from './utils'
 
 import {CARDANO_CONFIG} from '../../../config'
 
@@ -46,6 +45,7 @@ export const buildUnsignedAccountTx = async (
   typeSpecific: SendType,
   accountBalance: BigNumber,
 ): Promise<InputOutput> => {
+  const wasmReceiver = await Address.from_bytes(Buffer.from(receiver, 'hex'))
   if (typeSpecific.amount != null && typeSpecific.amount.gt(accountBalance)) {
     throw new InsufficientFunds()
   }
@@ -55,7 +55,6 @@ export const buildUnsignedAccountTx = async (
       ? await Payload.certificate(typeSpecific.certificate)
       : await Payload.no_payload()
 
-  // TODO: single_from_public_key not implemented yet
   const sourceAccount = await Account.single_from_public_key(sender)
 
   const feeAlgorithm = await Fee.linear_fee(
@@ -76,7 +75,7 @@ export const buildUnsignedAccountTx = async (
     )
     if (typeSpecific.amount != null) {
       await fakeTxBuilder.add_output(
-        await Address.from_string(receiver),
+        wasmReceiver,
         // the value we put in here is irrelevant. Just need some value to be able to calculate fee
         await Value.from_str('1'),
       )
@@ -105,7 +104,7 @@ export const buildUnsignedAccountTx = async (
     // typeSpecific.amount.toString()
     const outputAmount = typeSpecific.amount
     await ioBuilder.add_output(
-      await Address.from_string(receiver),
+      wasmReceiver,
       await Value.from_str(outputAmount.toString()),
     )
   }
@@ -122,33 +121,12 @@ export const buildUnsignedAccountTx = async (
   return IOs
 }
 
-async function generateAuthData(
-  bindingSignature: AccountBindingSignature,
-  certificate: Certificate,
-): Promise<PayloadAuthData> {
-  if (certificate == null) {
-    return await PayloadAuthData.for_no_payload()
-  }
-
-  switch (await certificate.get_type()) {
-    case StakeDelegation: {
-      return await PayloadAuthData.for_stake_delegation(
-        await StakeDelegationAuthData.new(bindingSignature),
-      )
-    }
-    default:
-      throw new Error(
-        `generateAuthData unexptected cert type ${await certificate.get_type()}`,
-      )
-  }
-}
-
 export const signTransaction = async (
   IOs: InputOutput,
   accountCounter: number,
   certificate: ?Certificate,
   accountPrivateKey: PrivateKey,
-): Promise<Transaction> => {
+): Fragment => {
   const txbuilder = await new TransactionBuilder()
 
   // builderSetIOs: TransactionBuilderSetIOs
@@ -170,26 +148,29 @@ export const signTransaction = async (
     accountPrivateKey,
     await SpendingCounter.from_u32(accountCounter),
   )
-  // await txFinalizer.set_witness(0, witness)
-  // return txFinalizer.build() // TODO: this might be changed to .finalize()
 
   const witnesses = await Witnesses.new()
   await witnesses.add(witness)
 
-  // builderSignCertificate: TransactionBuilderSetAuthData
+  // Type(builderSignCertificate): TransactionBuilderSetAuthData
   const builderSignCertificate = await builderSetWitness.set_witnesses(
     witnesses,
   )
   witnesses.free()
-  const payloadAuthData = await generateAuthData(
-    await AccountBindingSignature.new_single(
-      accountPrivateKey,
-      await builderSignCertificate.get_auth_data(),
-    ),
-    certificate,
-  )
+  // prettier-ignore
+  const payloadAuthData =
+    certificate == null ?
+      await PayloadAuthData.for_no_payload()
+      : await generateAuthData(
+        await AccountBindingSignature.new_single(
+          accountPrivateKey,
+          await builderSignCertificate.get_auth_data(),
+        ),
+        certificate,
+      )
   const signedTx = await builderSignCertificate.set_payload_auth(
     payloadAuthData,
   )
-  return signedTx
+  const fragment = await Fragment.from_transaction(signedTx)
+  return fragment
 }
