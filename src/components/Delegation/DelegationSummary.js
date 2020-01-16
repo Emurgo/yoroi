@@ -128,7 +128,7 @@ type ExternalProps = {|
 
 export default injectIntl(
   (compose(
-    requireInitializedWallet,
+    // requireInitializedWallet, // TODO(shin) enable this before release
     connect(
       (state: State) => ({
         // transactionsInfo: transactionsInfoSelector(state),

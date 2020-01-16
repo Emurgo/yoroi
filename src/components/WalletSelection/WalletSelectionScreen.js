@@ -16,7 +16,7 @@ import walletManager, {
 import WalletListItem from './WalletListItem'
 import Screen from '../Screen'
 import {Button, StatusBar, ScreenBackground} from '../UiKit'
-import {ROOT_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
+import {ROOT_ROUTES, WALLET_INIT_ROUTES, SHELLEY_WALLET_ROUTES} from '../../RoutesList'
 import {showErrorDialog} from '../../actions'
 import {errorMessages} from '../../i18n/global-messages'
 
@@ -40,6 +40,10 @@ const messages = defineMessages({
     id: 'components.walletselection.walletselectionscreen.addWalletButton',
     defaultMessage: '!!!Add wallet',
   },
+  stakeDashboard: {
+    id: 'components.walletselection.walletselectionscreen.stakeDashboardButton',
+    defaultMessage: '!!!Stake Dashboard',
+  },
 })
 
 const WalletListScreen = ({
@@ -47,6 +51,7 @@ const WalletListScreen = ({
   wallets,
   navigateInitWallet,
   navigateBalanceCheck,
+  navigateStakeDashboard,
   openWallet,
   intl,
 }) => (
@@ -83,6 +88,13 @@ const WalletListScreen = ({
           title={intl.formatMessage(messages.balanceCheckButton)}
           style={styles.balanceCheckButton}
         />
+
+        <Button
+          outline
+          onPress={navigateStakeDashboard}
+          title={intl.formatMessage(messages.stakeDashboard)}
+          style={styles.balanceCheckButton}
+        />
       </ScreenBackground>
     </Screen>
   </SafeAreaView>
@@ -100,6 +112,8 @@ export default injectIntl(
         navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH),
       navigateBalanceCheck: ({navigation}) => (event) =>
         navigation.navigate(WALLET_INIT_ROUTES.BALANCE_CHECK),
+      navigateStakeDashboard: ({navigation}) => (event) =>
+        navigation.navigate(SHELLEY_WALLET_ROUTES.DELEGATION_SUMMARY),
       openWallet: ({navigation, intl}) => async (wallet) => {
         try {
           await walletManager.openWallet(wallet.id)

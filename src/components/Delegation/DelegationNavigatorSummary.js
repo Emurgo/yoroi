@@ -10,6 +10,7 @@ import iconGear from '../../assets/img/gear.png'
 import {
   defaultNavigationOptions,
   defaultStackNavigatorOptions,
+  shelleyNavigationOptions,
 } from '../../navigationOptions'
 
 import styles from '../TxHistory/styles/SettingsButton.style'
@@ -29,7 +30,7 @@ const DelegationNavigatorSummary = createStackNavigator(
             withoutBackground
           />
         ),
-        ...defaultNavigationOptions,
+        ...shelleyNavigationOptions,
       }),
     },
     [WALLET_ROUTES.SETTINGS]: {
