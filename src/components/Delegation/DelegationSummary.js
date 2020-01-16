@@ -81,15 +81,15 @@ const AvailableAmountBanner = injectIntl(({intl, amount}) => (
 ))
 
 const DelegationSummary = ({
-                     // amountPending,
-                     // transactionsInfo,
-                     navigation,
-                     isSyncing,
-                     isOnline,
-                     // updateHistory,
-                     lastSyncError,
-                     // availableAmount,
-                   }) => (
+  // amountPending,
+  // transactionsInfo,
+  navigation,
+  isSyncing,
+  isOnline,
+  // updateHistory,
+  lastSyncError,
+  // availableAmount,
+}) => (
   <SafeAreaView style={styles.scrollView}>
     <StatusBar type="dark" />
     <View style={styles.container}>
