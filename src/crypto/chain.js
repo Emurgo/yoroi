@@ -2,11 +2,16 @@
 import _ from 'lodash'
 import type {Moment} from 'moment'
 
-import {CONFIG} from '../config'
+import {CONFIG, NUMBERS} from '../config'
 import assert from '../utils/assert'
 import {defaultMemoize} from 'reselect'
 import {Logger} from '../utils/logging'
 import * as util from './byron/util'
+import * as shelleyUtil from './shelley/util'
+import {
+  Bip32PublicKey,
+  // PublicKey,
+} from 'react-native-chain-libs'
 
 import type {Dict} from '../state'
 import type {CryptoAccount} from './byron/util'
@@ -40,6 +45,53 @@ export class AddressGenerator {
   }
 }
 
+export class ShelleyAddressGenerator {
+  addressChain: Bip32PublicKey
+  // stakingKey: PublicKey
+  // for now, need to store accountKey instead of stakingKey because the latter
+  // is PublicKey instance and from_bech32() is currently mising from the
+  // bindings. This means we cannot restore the wallet
+  accountPublic: Bip32PublicKey
+  type: AddressType
+
+  constructor(
+    addressChain: Bip32PublicKey,
+    type: AddressType,
+    // stakingKey: PublicKey,
+    accountPublic: Bip32PublicKey,
+  ) {
+    this.addressChain = addressChain
+    // this.stakingKey = stakingKey
+    this.accountPublic = accountPublic
+    this.type = type
+  }
+
+  async generate(idxs: Array<number>): Promise<Array<string>> {
+    const stakingKey = await (await (await this.accountPublic.derive(
+      NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+    )).derive(NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+
+    return shelleyUtil.getGroupAddresses(this.addressChain, stakingKey, idxs)
+  }
+
+  async toJSON() {
+    return {
+      addressChainBech32: await this.addressChain.to_bech32(),
+      // stakingKeyBech32: await this.stakingKey.to_bech32(), // to_bech32 not impl yet
+      accountPublicBech32: await this.accountPublic.to_bech32(),
+      type: this.type,
+    }
+  }
+
+  static async fromJSON(data: any) {
+    const {addressChainBech32, accountPublicBech32, type} = data
+    const addressChain = await Bip32PublicKey.from_bech32(addressChainBech32)
+    // const stakingKey = await Bip32PublicKey.from_bech32(stakingKeyBech32)
+    const accountPublic = await Bip32PublicKey.from_bech32(accountPublicBech32)
+    return new ShelleyAddressGenerator(addressChain, accountPublic, type)
+  }
+}
+
 type AsyncAddressFilter = (
   addresses: Array<string>,
   networkConfig?: any,
@@ -52,7 +104,7 @@ const _addressToIdxSelector = (addresses: Array<string>) =>
 
 export class AddressChain {
   _addresses: Addresses = []
-  _addressGenerator: AddressGenerator
+  _addressGenerator: AddressGenerator | ShelleyAddressGenerator
   _blockSize: number
   _gapLimit: number
   _isInitialized: boolean = false

@@ -9,6 +9,7 @@ import {withNavigation} from 'react-navigation'
 import WalletVerifyModal from './WalletVerifyModal'
 import UpgradeCheckModal from './UpgradeCheckModal'
 import UpgradeConfirmModal from './UpgradeConfirmModal'
+import {ignoreConcurrentAsync} from '../../../utils/utils'
 import {ROOT_ROUTES} from '../../../RoutesList'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import WalletForm from '../WalletForm'
@@ -90,7 +91,7 @@ const handleApiError = async (
 type Props = {
   intl: any,
   navigation: Navigation,
-  createWallet: (string, string, string) => any,
+  createWallet: (string, string, string, boolean) => any,
 }
 
 type State = {
@@ -121,6 +122,18 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
     isProcessing: false,
     transferTx: null,
   }
+
+  navigateToWallet = ignoreConcurrentAsync(
+    async (): Promise<void> => {
+      const {name, password} = this.state
+      const {navigation, createWallet} = this.props
+      const phrase = navigation.getParam('phrase')
+      const isShelleyWallet = !!navigation.getParam('isShelleyWallet')
+      await createWallet(name, phrase, password, isShelleyWallet)
+      navigation.navigate(ROOT_ROUTES.WALLET)
+    },
+    1000,
+  )
 
   onSubmitWalletCredentials = ({name, password}) => {
     // TODO: make sure this call is executed only once
@@ -200,6 +213,7 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
         usedLegacyAddrs.map((addr) => addr.address),
         CARDANO_CONFIG.SHELLEY,
       )
+      let outputAddressInfo, transferTx
       if (fundedAddresses.length > 0 && sum != null) {
         // 1. get funded addresses with addressing info
         const addressedFundedAddresses = []
@@ -215,22 +229,20 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
           }
         }
         // 2. get destination address
-        const outputAddressInfo = await getFirstInternalAddr(phrase)
+        outputAddressInfo = await getFirstInternalAddr(phrase)
         // 3. generate transfer tx
-        const transferTx = await generateTransferTxFromMnemonic(
+        transferTx = await generateTransferTxFromMnemonic(
           phrase,
           outputAddressInfo.hex,
           addressedFundedAddresses,
           CARDANO_CONFIG.SHELLEY,
         )
-        this.setState({
-          outputAddressInfo,
-          transferTx,
-          fundedLegacyAddresses: fundedAddresses,
-          balance: sum,
-        })
       }
       this.setState({
+        outputAddressInfo,
+        transferTx,
+        fundedLegacyAddresses: fundedAddresses || [],
+        balance: sum,
         currentDialogStep: RESTORATION_DIALOG_STEPS.CONFIRM_UPGRADE,
         isProcessing: false,
       })
@@ -247,6 +259,10 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
     const {intl} = this.props
     this.setState({isProcessing: true})
     try {
+      const {name, password} = this.state
+      const {navigation, createWallet} = this.props
+      const phrase = navigation.getParam('phrase')
+      await createWallet(name, phrase, password, true)
       if (tx == null) {
         throw new Error('Transaction data not found.')
       }
@@ -258,14 +274,6 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
     } finally {
       this.setState({isProcessing: false})
     }
-  }
-
-  navigateToWallet = async () => {
-    const {name, password} = this.state
-    const {navigation, createWallet} = this.props
-    const phrase = navigation.getParam('phrase')
-    await createWallet(name, phrase, password)
-    navigation.navigate(ROOT_ROUTES.WALLET)
   }
 
   render() {
