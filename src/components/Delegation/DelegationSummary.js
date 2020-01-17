@@ -98,16 +98,17 @@ const DelegationSummary = ({
       {isOnline &&
       lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
 
-      <Text>Delegation Summary</Text>
-      <EpochProgress
-        percentage={99.9}
-        currentEpoch={4}
-        endTime={{
-          h: '12',
-          m: '15',
-          s: '13',
-        }}
-      />
+      <View style={styles.inner}>
+        <EpochProgress
+          percentage={40}
+          currentEpoch={4}
+          endTime={{
+            h: '12',
+            m: '15',
+            s: '13',
+          }}
+        />
+      </View>
       {/*<AvailableAmountBanner amount={availableAmount} />*/}
 
       {/*{_.isEmpty(transactionsInfo) ? (*/}

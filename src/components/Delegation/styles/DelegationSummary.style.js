@@ -21,4 +21,7 @@ export default StyleSheet.create({
     color: '#9B9B9B',
     marginTop: 32,
   },
+  inner: {
+    flex: 1,
+  },
 })

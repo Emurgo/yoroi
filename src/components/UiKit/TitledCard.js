@@ -5,34 +5,30 @@ import type {Node} from 'react'
 import {View} from 'react-native'
 
 import Text from './Text'
-import styles from './styles/Card.style'
+import styles from './styles/TitledCard.style'
 
 type Props = {|
   title?: string,
   children: Node,
 |};
 
-class Card extends Component<Props> {
-
-  static defaultProps = {
-    title: undefined,
-  };
+class TitledCard extends Component<Props> {
 
   render() {
     const {title, children} = this.props
     return (
       <View style={styles.wrapper}>
         {title !== undefined &&
-          <Text className={styles.title}>
+          <Text style={styles.title}>
             {title}
           </Text>
         }
-        {/* <View style={styles.inner}>
+        <View style={styles.inner}>
           {children}
-        </View> */}
+        </View>
       </View>
     )
   }
 }
 
-export default Card
+export default TitledCard

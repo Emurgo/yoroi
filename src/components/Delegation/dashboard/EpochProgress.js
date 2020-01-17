@@ -4,7 +4,7 @@ import type {ComponentType} from 'react'
 import {View} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
-import {Text, Card, ProgressCircle} from '../../UiKit'
+import {Text, TitledCard, ProgressCircle} from '../../UiKit'
 import styles from './styles/EpochProgress.style'
 
 type ExternalProps = {
@@ -19,11 +19,10 @@ type ExternalProps = {
 }
 
 const EpochProgress = ({intl, percentage, currentEpoch, endTime}: ExternalProps) => (
-  <View>
-    <Card title={'Epoch Progress'}>
+  <View style={styles.wrapper}>
+    <TitledCard title={'Epoch Progress'}>
       <ProgressCircle percentage={percentage} />
-    </Card>
-    <Text>EpochProgress</Text>
+    </TitledCard>
   </View>
 )
 
