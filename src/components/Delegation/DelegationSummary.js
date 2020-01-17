@@ -10,6 +10,7 @@ import _ from 'lodash'
 import {injectIntl, defineMessages} from 'react-intl'
 
 import {Text, Banner, OfflineBanner, StatusBar} from '../UiKit'
+import EpochProgress from './dashboard/EpochProgress'
 import {
   transactionsInfoSelector,
   isSynchronizingHistorySelector,
@@ -98,6 +99,15 @@ const DelegationSummary = ({
       lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
 
       <Text>Delegation Summary</Text>
+      <EpochProgress
+        percentage={99.9}
+        currentEpoch={4}
+        endTime={{
+          h: '12',
+          m: '15',
+          s: '13',
+        }}
+      />
       {/*<AvailableAmountBanner amount={availableAmount} />*/}
 
       {/*{_.isEmpty(transactionsInfo) ? (*/}

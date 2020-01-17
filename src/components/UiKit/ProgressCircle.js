@@ -3,7 +3,7 @@ import React, {Component} from 'react'
 import {View} from 'react-native'
 import Svg, {Path} from 'react-native-svg'
 import Text from './Text'
-import styles from './styles/ProgressCircle'
+import styles from './styles/ProgressCircle.style'
 
 type Props = {|
   +percentage: number,
