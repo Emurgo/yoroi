@@ -2,6 +2,8 @@
 import {BigNumber} from 'bignumber.js'
 import {isEmpty} from 'lodash'
 import {Address, Bip32PrivateKey} from 'react-native-chain-libs'
+
+import {InsufficientFunds} from '../../errors'
 import type {AddressedUtxo, Addressing} from '../../../types/HistoryTransaction'
 import {signTransaction, sendAllUnsignedTx} from './utxoTransactions'
 import {getShelleyTxFee} from './utils'
@@ -66,8 +68,13 @@ export const buildYoroiTransferTx = async (payload: {|
       )).to_string(CONFIG.BECH32_PREFIX.ADDRESS),
     }
   } catch (error) {
-    Logger.error(`transfer::buildYoroiTransferTx: ${error.message}`)
-    throw new Error(`buildYoroiTransferTx: ${error.message}`)
+    if (error instanceof InsufficientFunds) {
+      // handle error at UI-level
+      throw error
+    } else {
+      Logger.error(`transfer::buildYoroiTransferTx: ${error.message}`)
+      throw new Error(`buildYoroiTransferTx: ${error.message}`)
+    }
   }
 }
 

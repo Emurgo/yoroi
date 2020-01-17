@@ -45,6 +45,7 @@ export class AddressGenerator {
   }
 }
 
+// TODO: make ShelleyAddressGenerator a subclass of AddressGenerator
 export class ShelleyAddressGenerator {
   addressChain: Bip32PublicKey
   // stakingKey: PublicKey
@@ -114,7 +115,7 @@ export class AddressChain {
   )
 
   constructor(
-    addressGenerator: AddressGenerator,
+    addressGenerator: AddressGenerator | ShelleyAddressGenerator,
     blockSize: number = CONFIG.WALLET.DISCOVERY_BLOCK_SIZE,
     gapLimit: number = CONFIG.WALLET.DISCOVERY_GAP_SIZE,
   ) {

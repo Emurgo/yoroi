@@ -203,8 +203,12 @@ export class Wallet {
     )).derive(0 + NUMBERS.HARD_DERIVATION_START)
 
     const accountPublic = await accountKey.to_public()
-    const privateChainKey = await accountPublic.derive(NUMBERS.CHAIN_DERIVATIONS.INTERNAL)
-    const publicChainKey = await accountPublic.derive(NUMBERS.CHAIN_DERIVATIONS.EXTERNAL)
+    const privateChainKey = await accountPublic.derive(
+      NUMBERS.CHAIN_DERIVATIONS.INTERNAL,
+    )
+    const publicChainKey = await accountPublic.derive(
+      NUMBERS.CHAIN_DERIVATIONS.EXTERNAL,
+    )
 
     this._transactionCache = new TransactionCache()
 
@@ -441,7 +445,7 @@ export class Wallet {
     return Buffer.from(signedTxData.cbor_encoded_tx, 'hex').toString('base64')
   }
 
-  async submitTransaction(signedTx: string | Uint8Array) {
+  async submitTransaction(signedTx: string) {
     const response = await api.submitTransaction(signedTx)
     Logger.info(response)
     return response
@@ -671,7 +675,7 @@ class WalletManager {
     )
   }
 
-  async submitTransaction(signedTx: string | Uint8Array) {
+  async submitTransaction(signedTx: string) {
     if (!this._wallet) throw new WalletClosed()
     return await this.abortWhenWalletCloses(
       this._wallet.submitTransaction(signedTx),
@@ -686,9 +690,9 @@ class WalletManager {
   ): Promise<Wallet> {
     // Ignore id & name for now
     const wallet = new Wallet()
-    const id = isShelleyWallet ?
-      await wallet._createShelleyWallet(mnemonic, password) :
-      await wallet._create(mnemonic, password)
+    const id = isShelleyWallet
+      ? await wallet._createShelleyWallet(mnemonic, password)
+      : await wallet._create(mnemonic, password)
 
     this._id = id
     this._wallets = {

@@ -31,6 +31,7 @@ import {
 import {generateTransferTxFromMnemonic} from '../../../crypto/shelley/transactions/yoroiTransfer'
 import {CARDANO_CONFIG} from '../../../config'
 import {NetworkError, ApiError} from '../../../api/errors'
+import {InsufficientFunds} from '../../../crypto/errors'
 import {errorMessages} from '../../../i18n/global-messages'
 
 import type {Navigation} from '../../../types/navigation'
@@ -84,7 +85,7 @@ const handleApiError = async (
   } else if (error instanceof ApiError) {
     await showErrorDialog(errorMessages.apiError, intl)
   } else {
-    await handleGeneralError(fallbackMsg, error)
+    await handleGeneralError(fallbackMsg, error, intl)
   }
 }
 
@@ -123,17 +124,14 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
     transferTx: null,
   }
 
-  navigateToWallet = ignoreConcurrentAsync(
-    async (): Promise<void> => {
-      const {name, password} = this.state
-      const {navigation, createWallet} = this.props
-      const phrase = navigation.getParam('phrase')
-      const isShelleyWallet = !!navigation.getParam('isShelleyWallet')
-      await createWallet(name, phrase, password, isShelleyWallet)
-      navigation.navigate(ROOT_ROUTES.WALLET)
-    },
-    1000,
-  )
+  navigateToWallet = ignoreConcurrentAsync(async (): Promise<void> => {
+    const {name, password} = this.state
+    const {navigation, createWallet} = this.props
+    const phrase = navigation.getParam('phrase')
+    const isShelleyWallet = !!navigation.getParam('isShelleyWallet')
+    await createWallet(name, phrase, password, isShelleyWallet)
+    navigation.navigate(ROOT_ROUTES.WALLET)
+  }, 1000)
 
   onSubmitWalletCredentials = ({name, password}) => {
     // TODO: make sure this call is executed only once
@@ -248,7 +246,11 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
       })
     } catch (e) {
       this.setState({currentDialogStep: RESTORATION_DIALOG_STEPS.CLOSED})
-      handleApiError(e, intl, messages.walletCheckError)
+      if (e instanceof InsufficientFunds) {
+        await showErrorDialog(errorMessages.insufficientBalance, intl)
+      } else {
+        handleApiError(e, intl, 'Could not check wallet')
+      }
     } finally {
       this.setState({isProcessing: false})
     }
@@ -268,9 +270,9 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
       }
       await submitShelleyTransferTx(tx.encodedTx)
       this.setState({isProcessing: false})
-      this.navigateToWallet()
+      navigation.navigate(ROOT_ROUTES.WALLET)
     } catch (e) {
-      handleApiError(e, intl, 'could not upgrade wallet')
+      handleApiError(e, intl, 'Could not upgrade wallet')
     } finally {
       this.setState({isProcessing: false})
     }

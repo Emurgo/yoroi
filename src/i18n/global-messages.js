@@ -127,6 +127,16 @@ export const errorMessages = {
         'Please try again later or check our Twitter account (https://twitter.com/YoroiWallet)',
     },
   }),
+  insufficientBalance: defineMessages({
+    title: {
+      id: 'global.actions.dialogs.insufficientBalance.title',
+      defaultMessage: '!!!Transaction error',
+    },
+    message: {
+      id: 'global.actions.dialogs.insufficientBalance.message',
+      defaultMessage: '!!Not enough money to make this transaction',
+    },
+  }),
   disableEasyConfirmationFirst: defineMessages({
     title: {
       id: 'global.actions.dialogs.disableEasyConfirmationFirst.title',

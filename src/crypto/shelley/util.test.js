@@ -7,9 +7,7 @@ import {
   // getFirstInternalAddr,
   getGroupAddressesFromMnemonics,
 } from './util'
-import {
-  getMasterKeyFromMnemonic,
-} from '../byron/util'
+import {getMasterKeyFromMnemonic} from '../byron/util'
 import {NUMBERS} from '../../config'
 
 jestSetup.setup()
@@ -23,11 +21,10 @@ const mnemonic = [
 
 test('Can create master key', async () => {
   const masterKeyV2 = await getMasterKeyFromMnemonic(mnemonic)
-  const masterKeyV3 = await generateWalletRootKey(
-    mnemonic,
-  )
+  const masterKeyV3 = await generateWalletRootKey(mnemonic)
   expect(masterKeyV2).toEqual(
-    Buffer.from(await masterKeyV3.as_bytes()).toString('hex'))
+    Buffer.from(await masterKeyV3.as_bytes()).toString('hex'),
+  )
 })
 
 describe('group addresses', () => {

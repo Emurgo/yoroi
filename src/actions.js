@@ -454,9 +454,13 @@ export const setSystemAuth = (enable: boolean) => async (
   }
 }
 
-export const handleGeneralError = async (message: string, e: Error) => {
+export const handleGeneralError = async (
+  message: string,
+  e: Error,
+  intl: ?intlShape,
+) => {
   Logger.error(`${message}: ${e.message}`, e)
-  await showErrorDialog(errorMessages.generalError, null, {message})
+  await showErrorDialog(errorMessages.generalError, intl, {message})
   crashReporting.crash()
 }
 
@@ -471,5 +475,6 @@ export const submitTransaction = (
 }
 
 export const submitShelleyTransferTx = async (encodedTx: Uint8Array) => {
-  await walletManager.submitTransaction(encodedTx)
+  const signedTx64 = Buffer.from(encodedTx).toString('base64')
+  await walletManager.submitTransaction(signedTx64)
 }
