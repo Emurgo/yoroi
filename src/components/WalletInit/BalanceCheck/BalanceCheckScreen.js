@@ -86,15 +86,17 @@ const messages = defineMessages({
 
 const snapshotEndMsg = defineMessages({
   title: {
-    id: 'components.walletinit.balancecheck.balancecheckscreen.snapshotend.title',
+    id:
+      'components.walletinit.balancecheck.balancecheckscreen.snapshotend.title',
     defaultMessage: '!!!Snapshot has ended',
   },
   message: {
-    id: 'components.walletinit.balancecheck.balancecheckscreen.snapshotend.message',
+    id:
+      'components.walletinit.balancecheck.balancecheckscreen.snapshotend.message',
     defaultMessage:
-    '!!!The snapshot period has endeded. You can start delegating now using ' +
-    'the Yoroi extension, and soon you will be able to do it from the mobile ' +
-    'app as well.',
+      '!!!The snapshot period has endeded. You can start delegating now using ' +
+      'the Yoroi extension, and soon you will be able to do it from the mobile ' +
+      'app as well.',
   },
 })
 
