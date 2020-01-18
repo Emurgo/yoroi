@@ -29,10 +29,10 @@ type Props = {
 }
 
 const DelegationNavigationButtons = ({
-                                       navigation,
-                                       navigateToStakingCenter,
-                                       intl,
-                                     }: Props) => (
+  navigation,
+  navigateToStakingCenter,
+  intl,
+}: Props) => (
   <View style={styles.container}>
     <Button
       block

@@ -27,6 +27,7 @@ const messages = defineMessages({
 })
 
 const DelegationCenter = ({navigation, intl}) => (
+  // eslint-disable-next-line react-native/no-inline-styles
   <View style={{flex: 1}}>
     <WebView
       useWebKit
@@ -37,6 +38,7 @@ const DelegationCenter = ({navigation, intl}) => (
         (event) => {
           const getData = decodeURI(event.nativeEvent.data)
           console.log('handle message : ', getData)
+          // eslint-disable-next-line no-alert
           alert(getData)
         }
       }
