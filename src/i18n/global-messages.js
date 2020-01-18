@@ -198,4 +198,8 @@ export default defineMessages({
     id: 'global.availableFunds',
     defaultMessage: '!!!Available funds',
   },
+  epochLabel: {
+    id: 'global.staking.epochLabel',
+    defaultMessage: '!!!Epoch',
+  },
 })

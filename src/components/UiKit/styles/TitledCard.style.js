@@ -2,26 +2,32 @@
 
 import {StyleSheet} from 'react-native'
 
+import {COLORS} from '../../../styles/config'
+
 export default StyleSheet.create({
   wrapper: {
     flex: 1,
+    // backgroundColor: 'cadetblue', // TODO: delete
   },
   title: {
-    fontSize: 14,
+    fontSize: 16,
+    height: 28,
     lineHeight: 24,
-    color: '#4A4A4A',
+    color: COLORS.DARK_GRAY,
+    justifyContent: 'center',
   },
-  inner: {
+  content: {
     flex: 1,
+    flexDirection: 'row',
     padding: 12,
     marginBottom: 16,
     borderRadius: 8,
-    elevation: 1,
+    elevation: 2,
     shadowOpacity: 1,
-    shadowRadius: 6,
+    shadowRadius: 12,
     shadowOffset: {width: 0, height: 2},
-    shadowColor: 'rgba(0, 0, 0, 0.06)',
-    backgroundColor: '#fff',
-    justifyContent: 'center',
+    shadowColor: COLORS.SHADOW_COLOR,
+    backgroundColor: COLORS.BACKGROUND,
+    // backgroundColor: 'coral', // TODO: delete and un-comment above line
   },
 })

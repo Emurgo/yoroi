@@ -1,34 +1,31 @@
 // @flow
 
-import React, {Component} from 'react'
+import React from 'react'
 import type {Node} from 'react'
 import {View} from 'react-native'
 
 import Text from './Text'
 import styles from './styles/TitledCard.style'
 
-type Props = {|
+type ExternalProps = {|
   title?: string,
   children: Node,
 |};
 
-class TitledCard extends Component<Props> {
-
-  render() {
-    const {title, children} = this.props
-    return (
-      <View style={styles.wrapper}>
-        {title !== undefined &&
-          <Text style={styles.title}>
-            {title}
-          </Text>
-        }
-        <View style={styles.inner}>
-          {children}
-        </View>
-      </View>
-    )
-  }
-}
+const TitledCard = ({
+  title,
+  children,
+}: ExternalProps) => (
+  <View style={styles.wrapper}>
+    {title !== undefined &&
+      <Text style={styles.title}>
+        {title}
+      </Text>
+    }
+    <View style={styles.content}>
+      {children}
+    </View>
+  </View>
+)
 
 export default TitledCard

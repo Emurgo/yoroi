@@ -6,6 +6,8 @@
   "components.common.languagepicker.russian": "Русский",
   "components.common.languagepicker.spanish": "Español",
   "components.delegation.delegationnavigationbuttons.stakingCenterButton": "!!!StakingCenter",
+  "components.delegationsummary.epochProgress.endsIn": "Ends in",
+  "components.delegationsummary.epochProgress.title": "Epoch progress",
   "components.delegationsummary.noTransactions": "!!!No transactions to show yet",
   "components.delegationsummary.syncErrorBannerTextWithRefresh": "!!!We are experiencing synchronization issues. Pull to refresh",
   "components.delegationsummary.syncErrorBannerTextWithoutRefresh": "!!!We are experiencing synchronization issues.",
@@ -261,6 +263,7 @@
   "global.error.walletNameTooLong": "Wallet name cannot exceed 40 letters",
   "global.ok": "OK",
   "global.pleaseWait": "please wait ...",
+  "global.staking.epochLabel": "Epoch",
   "global.termsOfUse": "Terms of use",
   "utils.format.today": "Today",
   "utils.format.yesterday": "Yesterday"

@@ -23,5 +23,6 @@ export default StyleSheet.create({
   },
   inner: {
     flex: 1,
+    // backgroundColor: 'blanchedalmond', // TODO: delete
   },
 })

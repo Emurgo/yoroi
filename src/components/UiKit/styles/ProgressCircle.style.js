@@ -2,18 +2,20 @@
 
 import {StyleSheet} from 'react-native'
 
+import {COLORS} from '../../../styles/config'
+
 const styles = StyleSheet.create({
   wrapper: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     width: 100,
+    // backgroundColor: 'cyan', // TODO: delete
   },
   textWrapper: {
     fontSize: 18,
     lineHeight: 22,
     fontWeight: 'bold',
-    color: '#676970',
+    color: COLORS.LIGHT_GRAY_TEXT,
     textAlign: 'center',
   },
   chart: {
