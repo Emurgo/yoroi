@@ -10,7 +10,10 @@ import _ from 'lodash'
 import {injectIntl, defineMessages} from 'react-intl'
 
 import {Text, Banner, OfflineBanner, StatusBar} from '../UiKit'
-import EpochProgress from './dashboard/EpochProgress'
+import {
+  EpochProgress,
+  UpcomingRewardInfo,
+} from './dashboard'
 import {
   transactionsInfoSelector,
   isSynchronizingHistorySelector,
@@ -99,6 +102,11 @@ const DelegationSummary = ({
       lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
 
       <View style={styles.inner}>
+        <UpcomingRewardInfo
+          nextRewardText={'Jan 21st 04:13 AM'}
+          followingRewardText={'Jan 22nd 04:13 AM'}
+          showDisclaimer
+        />
         <EpochProgress
           percentage={40}
           currentEpoch={4}

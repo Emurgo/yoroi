@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   secondary: {
-    color: '#ADAEB6',
+    color: COLORS.DIM_TEXT,
   },
   small: {
     fontSize: 12,

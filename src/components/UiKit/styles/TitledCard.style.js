@@ -20,7 +20,6 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     padding: 12,
-    marginBottom: 16,
     borderRadius: 8,
     elevation: 2,
     shadowOpacity: 1,

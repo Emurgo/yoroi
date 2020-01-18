@@ -29,6 +29,7 @@ export const COLORS = {
   WARNING_TEXT_COLOR: '#9E5B0A',
   DISABLED: '#999',
   SHADOW_COLOR: 'rgba(0, 0, 0, 0.06)',
+  DIM_TEXT: '#ADAEB6',
 }
 
 export const DEBUG_BORDERS = {
