@@ -153,7 +153,7 @@ export class Wallet {
     this._externalChain.addSubscriberToNewAddresses(this.notify)
   }
 
-  async _create(mnemonic: string, newPassword: string, isShelleyWallet: boolean) {
+  async _create(mnemonic: string, newPassword: string, isShelleyWallet?: boolean = false) {
     Logger.info('create wallet')
     this._id = uuid.v4()
     assert.assert(!this._isInitialized, 'createWallet: !isInitialized')

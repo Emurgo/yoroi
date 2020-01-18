@@ -389,7 +389,6 @@ export const showErrorDialog = (
   dialog: Object,
   intl: ?intlShape,
   msgOptions?: Object,
-  // $FlowFixMe
 ): Promise<DialogButton> => {
   let title, message, yesButton
   if (intl != null) {
