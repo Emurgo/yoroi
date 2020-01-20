@@ -57,9 +57,8 @@ const snapshotEndMsg = defineMessages({
   },
 })
 
-
 type Props = {
-  navigateBalanceCheck: () => mixed,
+  showDialog: () => mixed,
   navigateRestoreWallet: () => mixed,
   navigateCreateWallet: () => mixed,
   intl: any,
