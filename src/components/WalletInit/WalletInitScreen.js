@@ -14,6 +14,7 @@ import styles from './styles/WalletInitScreen.style'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {walletIsInitializedSelector} from '../../selectors'
+import {showErrorDialog} from '../../actions'
 
 import type {State} from '../../state'
 
@@ -40,6 +41,23 @@ const messages = defineMessages({
   },
 })
 
+const snapshotEndMsg = defineMessages({
+  title: {
+    id:
+      'components.walletinit.balancecheck.balancecheckscreen.snapshotend.title',
+    defaultMessage: '!!!Snapshot has ended',
+  },
+  message: {
+    id:
+      'components.walletinit.balancecheck.balancecheckscreen.snapshotend.message',
+    defaultMessage:
+      '!!!The snapshot period has ended. You can start delegating now using ' +
+      'the Yoroi extension, and soon you will be able to do it from the mobile ' +
+      'app as well.',
+  },
+})
+
+
 type Props = {
   navigateBalanceCheck: () => mixed,
   navigateRestoreWallet: () => mixed,
@@ -63,7 +81,7 @@ const BalanceCheckButton = ({onPress, walletIsInitialized, intl}) => {
 }
 
 const WalletInitScreen = ({
-  navigateBalanceCheck,
+  showDialog,
   navigateCreateWallet,
   navigateRestoreWallet,
   intl,
@@ -79,7 +97,7 @@ const WalletInitScreen = ({
         </View>
 
         <BalanceCheckButton
-          onPress={navigateBalanceCheck}
+          onPress={showDialog}
           walletIsInitialized={walletIsInitialized}
           intl={intl}
         />
@@ -107,8 +125,8 @@ export default injectIntl(
     })),
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
-      navigateBalanceCheck: ({navigation}) => (event) =>
-        navigation.navigate(WALLET_INIT_ROUTES.BALANCE_CHECK),
+      showDialog: ({intl}) => async (event) =>
+        await showErrorDialog(snapshotEndMsg, intl),
       navigateRestoreWallet: ({navigation}) => (event) =>
         navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET),
       navigateCreateWallet: ({navigation}) => (event) =>

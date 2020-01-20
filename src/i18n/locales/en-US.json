@@ -170,6 +170,8 @@
   "components.walletinit.balancecheck.balancecheckscreen.headsUp": "You are on the Shelley Balance Check Testnet",
   "components.walletinit.balancecheck.balancecheckscreen.instructions": "Enter the 15-word recovery phrase used to back up your wallet to validate the balance. It will take about 1 minute to verify your balance.",
   "components.walletinit.balancecheck.balancecheckscreen.mnemonicInputLabel": "Recovery phrase",
+  "components.walletinit.balancecheck.balancecheckscreen.snapshotend.title": "Snapshot has ended",
+  "components.walletinit.balancecheck.balancecheckscreen.snapshotend.message": "The snapshot period has ended. You can start delegating now using the Yoroi extension, and soon you will be able to do it from the mobile app as well.",
   "components.walletinit.balancecheck.balancecheckscreen.title" : "Balance Check",
   "components.walletinit.createwallet.createwalletscreen.title": "Create a new wallet",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.confirmationButton": "I understand",
