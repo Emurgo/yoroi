@@ -84,6 +84,22 @@ const messages = defineMessages({
   },
 })
 
+const snapshotEndMsg = defineMessages({
+  title: {
+    id:
+      'components.walletinit.balancecheck.balancecheckscreen.snapshotend.title',
+    defaultMessage: '!!!Snapshot has ended',
+  },
+  message: {
+    id:
+      'components.walletinit.balancecheck.balancecheckscreen.snapshotend.message',
+    defaultMessage:
+      '!!!The snapshot period has endeded. You can start delegating now using ' +
+      'the Yoroi extension, and soon you will be able to do it from the mobile ' +
+      'app as well.',
+  },
+})
+
 const _translateInvalidPhraseError = (intl: any, error: InvalidPhraseError) => {
   if (error.code === INVALID_PHRASE_ERROR_CODES.UNKNOWN_WORDS) {
     return intl.formatMessage(mnemonicInputErrorsMessages.UNKNOWN_WORDS, {
@@ -173,7 +189,7 @@ class BalanceCheckScreen extends Component<Props, State> {
       if (e instanceof NetworkError) {
         await showErrorDialog(errorMessages.networkError, intl)
       } else if (e instanceof ApiError) {
-        await showErrorDialog(errorMessages.apiError, intl)
+        await showErrorDialog(snapshotEndMsg, intl)
       } else {
         throw e
       }
