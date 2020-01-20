@@ -42,11 +42,27 @@ const messages = defineMessages({
   },
 })
 
+const snapshotEndMsg = defineMessages({
+  title: {
+    id:
+      'components.walletinit.balancecheck.balancecheckscreen.snapshotend.title',
+    defaultMessage: '!!!Snapshot has ended',
+  },
+  message: {
+    id:
+      'components.walletinit.balancecheck.balancecheckscreen.snapshotend.message',
+    defaultMessage:
+      '!!!The snapshot period has ended. You can start delegating now using ' +
+      'the Yoroi extension, and soon you will be able to do it from the mobile ' +
+      'app as well.',
+  },
+})
+
 const WalletListScreen = ({
   navigation,
   wallets,
   navigateInitWallet,
-  navigateBalanceCheck,
+  showDialog,
   openWallet,
   intl,
 }) => (
@@ -79,7 +95,7 @@ const WalletListScreen = ({
 
         <Button
           outline
-          onPress={navigateBalanceCheck}
+          onPress={showDialog}
           title={intl.formatMessage(messages.balanceCheckButton)}
           style={styles.balanceCheckButton}
         />
@@ -98,8 +114,8 @@ export default injectIntl(
     withHandlers({
       navigateInitWallet: ({navigation}) => (event) =>
         navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH),
-      navigateBalanceCheck: ({navigation}) => (event) =>
-        navigation.navigate(WALLET_INIT_ROUTES.BALANCE_CHECK),
+      showDialog: ({intl}) => async (event) =>
+        await showErrorDialog(snapshotEndMsg, intl),
       openWallet: ({navigation, intl}) => async (wallet) => {
         try {
           await walletManager.openWallet(wallet.id)
