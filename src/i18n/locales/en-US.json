@@ -14,6 +14,9 @@
   "components.delegationsummary.upcomingReward.nextLabel": "Next reward",
   "components.delegationsummary.upcomingReward.followingLabel": "Following reward",
   "components.delegationsummary.upcomingReward.rewardDisclaimerText": "First reward is slower",
+  "components.delegationsummary.userSummary.title": "Your summary",
+  "components.delegationsummary.userSummary.totalRewards": "Total Rewards",
+  "components.delegationsummary.userSummary.totalDelegated": "Total Delegated",
   "components.firstrun.acepttermsofservicescreen.aggreeClause": "I agree with terms of service",
   "components.firstrun.acepttermsofservicescreen.continueButton": "Accept",
   "components.firstrun.acepttermsofservicescreen.savingConsentModalTitle": "Initializing",
@@ -268,6 +271,7 @@
   "global.pleaseWait": "please wait ...",
   "global.staking.epochLabel": "Epoch",
   "global.termsOfUse": "Terms of use",
+  "global.totalAda": "Total ADA",
   "utils.format.today": "Today",
   "utils.format.yesterday": "Yesterday"
 }

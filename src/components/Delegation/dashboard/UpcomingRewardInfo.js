@@ -48,7 +48,7 @@ const UpcomingRewardInfo = ({
       </View>
     </TitledCard>
     {showDisclaimer && (
-      <Text style={styles.disclaimerText}>
+      <Text secondary style={styles.disclaimerText}>
         {intl.formatMessage(messages.rewardDisclaimerText)}
       </Text>
     )}

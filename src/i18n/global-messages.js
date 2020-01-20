@@ -202,4 +202,8 @@ export default defineMessages({
     id: 'global.staking.epochLabel',
     defaultMessage: '!!!Epoch',
   },
+  totalAda: {
+    id: 'global.totalAda',
+    defaultMessage: '!!!Total ADA',
+  },
 })

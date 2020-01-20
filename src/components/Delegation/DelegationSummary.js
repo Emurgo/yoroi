@@ -6,6 +6,7 @@ import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View, RefreshControl, ScrollView, Image} from 'react-native'
 import {SafeAreaView} from 'react-navigation'
+import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 import {injectIntl, defineMessages} from 'react-intl'
 
@@ -13,6 +14,7 @@ import {Text, Banner, OfflineBanner, StatusBar} from '../UiKit'
 import {
   EpochProgress,
   UpcomingRewardInfo,
+  UserSummary,
 } from './dashboard'
 import {
   transactionsInfoSelector,
@@ -115,6 +117,11 @@ const DelegationSummary = ({
             m: '15',
             s: '13',
           }}
+        />
+        <UserSummary
+          totalAdaSum={formatAdaWithText(new BigNumber(1000))}
+          totalRewards={formatAdaWithText(new BigNumber(200))}
+          totalDelegated={formatAdaWithText(new BigNumber(300))}
         />
       </View>
       {/*<AvailableAmountBanner amount={availableAmount} />*/}
