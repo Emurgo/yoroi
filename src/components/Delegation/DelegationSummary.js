@@ -78,14 +78,6 @@ const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
   />
 ))
 
-const AvailableAmountBanner = injectIntl(({intl, amount}) => (
-  <Banner
-    label={intl.formatMessage(globalMessages.availableFunds)}
-    text={formatAdaWithText(amount)}
-    boldText
-  />
-))
-
 const DelegationSummary = ({
   // amountPending,
   // transactionsInfo,
@@ -103,46 +95,29 @@ const DelegationSummary = ({
       {isOnline &&
       lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
 
-      <View style={styles.inner}>
-        <UpcomingRewardInfo
-          nextRewardText={'Jan 21st 04:13 AM'}
-          followingRewardText={'Jan 22nd 04:13 AM'}
-          showDisclaimer
-        />
-        <EpochProgress
-          percentage={40}
-          currentEpoch={4}
-          endTime={{
-            h: '12',
-            m: '15',
-            s: '13',
-          }}
-        />
-        <UserSummary
-          totalAdaSum={formatAdaWithText(new BigNumber(1000))}
-          totalRewards={formatAdaWithText(new BigNumber(200))}
-          totalDelegated={formatAdaWithText(new BigNumber(300))}
-        />
-      </View>
-      {/*<AvailableAmountBanner amount={availableAmount} />*/}
-
-      {/*{_.isEmpty(transactionsInfo) ? (*/}
-      {/*  <ScrollView*/}
-      {/*    refreshControl={*/}
-      {/*      <RefreshControl onRefresh={updateHistory} refreshing={isSyncing} />*/}
-      {/*    }*/}
-      {/*  >*/}
-      {/*    <NoTxHistory />*/}
-      {/*  </ScrollView>*/}
-      {/*) : (*/}
-      {/*  <TxHistoryList*/}
-      {/*    refreshing={isSyncing}*/}
-      {/*    onRefresh={updateHistory}*/}
-      {/*    navigation={navigation}*/}
-      {/*    transactions={transactionsInfo}*/}
-      {/*  />*/}
-      {/*)}*/}
-
+      <ScrollView>
+        <View style={styles.inner}>
+          <UpcomingRewardInfo
+            nextRewardText={'Jan 21st 04:13 AM'}
+            followingRewardText={'Jan 22nd 04:13 AM'}
+            showDisclaimer
+          />
+          <EpochProgress
+            percentage={40}
+            currentEpoch={4}
+            endTime={{
+              h: '12',
+              m: '15',
+              s: '13',
+            }}
+          />
+          <UserSummary
+            totalAdaSum={formatAdaWithText(new BigNumber(1000))}
+            totalRewards={formatAdaWithText(new BigNumber(200))}
+            totalDelegated={formatAdaWithText(new BigNumber(300))}
+          />
+        </View>
+      </ScrollView>
       <DelegationNavigationButtons navigation={navigation} />
     </View>
   </SafeAreaView>
