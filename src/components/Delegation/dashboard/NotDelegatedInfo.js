@@ -14,8 +14,9 @@ const messages = defineMessages({
   },
   secondLine: {
     id: 'components.delegationsummary.notDelegatedInfo.secondLine',
-    // eslint-disable-next-line max-len
-    defaultMessage: '!!!Go to Staking center to choose which stake pool you want to delegate in. Note, you may delegate only to one stake pool in this Tesnnet.',
+    defaultMessage:
+      // eslint-disable-next-line max-len
+      '!!!Go to Staking center to choose which stake pool you want to delegate in. Note, you may delegate only to one stake pool in this Tesnnet.',
   },
 })
 
@@ -23,9 +24,7 @@ type ExternalProps = {|
   +intl: intlShape,
 |}
 
-const NotDelegatedInfo = ({
-  intl,
-}: ExternalProps) => (
+const NotDelegatedInfo = ({intl}: ExternalProps) => (
   <View style={styles.wrapper}>
     <Image source={NotDelegatedImage} />
     <Text style={[styles.text, styles.textFirstLine]}>
