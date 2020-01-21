@@ -7,6 +7,7 @@ export const COLORS = {
   BACKGROUND: '#fff',
   BACKGROUND_GRAY: '#f9f9f9',
   BACKGROUND_BLUE: '#254BC9',
+  BACKGROUND_LIGHT_GRAY: '#F4F6FC',
   BANNER_GREY: '#F0F3F5',
   DARK_GRAY: '#4a4a4a',
   LIGHT_GRAY: '#eee',

@@ -15,6 +15,7 @@ import {
   EpochProgress,
   UpcomingRewardInfo,
   UserSummary,
+  DelegatedStakepoolInfo,
 } from './dashboard'
 import {
   transactionsInfoSelector,
@@ -115,6 +116,11 @@ const DelegationSummary = ({
             totalAdaSum={formatAdaWithText(new BigNumber(1000))}
             totalRewards={formatAdaWithText(new BigNumber(200))}
             totalDelegated={formatAdaWithText(new BigNumber(300))}
+          />
+          <DelegatedStakepoolInfo
+            poolTicker="1EMUR"
+            poolName="EMURGO’s STAKEPOOL"
+            poolHash="7186b11017e877329798ac925480585208516c4e5c30b69e38f0b997e7b72a83"
           />
         </View>
       </ScrollView>

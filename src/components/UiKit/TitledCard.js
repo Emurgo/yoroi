@@ -10,11 +10,13 @@ import styles from './styles/TitledCard.style'
 type ExternalProps = {|
   title?: string,
   children: Node,
+  variant?: string,
 |};
 
 const TitledCard = ({
   title,
   children,
+  variant,
 }: ExternalProps) => (
   <View style={styles.wrapper}>
     {title !== undefined &&
@@ -22,7 +24,7 @@ const TitledCard = ({
         {title}
       </Text>
     }
-    <View style={styles.content}>
+    <View style={[styles.content, variant === 'poolInfo' ? styles.poolInfoContent : undefined]}>
       {children}
     </View>
   </View>

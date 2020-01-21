@@ -29,4 +29,8 @@ export default StyleSheet.create({
     backgroundColor: COLORS.BACKGROUND,
     // backgroundColor: 'coral', // TODO: delete and un-comment above line
   },
+  poolInfoContent: {
+    padding: 0,
+    flexDirection: 'column',
+  },
 })

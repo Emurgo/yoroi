@@ -6,6 +6,7 @@
   "components.common.languagepicker.russian": "Русский",
   "components.common.languagepicker.spanish": "Español",
   "components.delegation.delegationnavigationbuttons.stakingCenterButton": "!!!StakingCenter",
+  "components.delegationsummary.delegatedStakepoolInfo.title": "Stake pool delegated",
   "components.delegationsummary.epochProgress.endsIn": "Ends in",
   "components.delegationsummary.epochProgress.title": "Epoch progress",
   "components.delegationsummary.noTransactions": "!!!No transactions to show yet",
