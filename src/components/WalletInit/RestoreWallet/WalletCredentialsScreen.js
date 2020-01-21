@@ -19,15 +19,12 @@ import {
   handleGeneralError,
   showErrorDialog,
 } from '../../../actions'
-import {
-  getAddressesFromMnemonics,
-  mnemonicsToAddresses,
-  balanceForAddresses,
-} from '../../../crypto/byron/util'
+import {getAddressesFromMnemonics} from '../../../crypto/byron/util'
 import {
   getFirstInternalAddr,
   getGroupAddressesFromMnemonics,
 } from '../../../crypto/shelley/util'
+import {mnemonicsToAddresses, balanceForAddresses} from '../../../crypto/wallet'
 import {generateTransferTxFromMnemonic} from '../../../crypto/shelley/transactions/yoroiTransfer'
 import {CARDANO_CONFIG} from '../../../config'
 import {NetworkError, ApiError} from '../../../api/errors'
@@ -125,16 +122,17 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
   }
 
   navigateToWallet = ignoreConcurrentAsync(async (): Promise<void> => {
+    this.setState({isProcessing: true})
     const {name, password} = this.state
     const {navigation, createWallet} = this.props
     const phrase = navigation.getParam('phrase')
     const isShelleyWallet = !!navigation.getParam('isShelleyWallet')
     await createWallet(name, phrase, password, isShelleyWallet)
+    this.setState({isProcessing: false})
     navigation.navigate(ROOT_ROUTES.WALLET)
   }, 1000)
 
   onSubmitWalletCredentials = ({name, password}) => {
-    // TODO: make sure this call is executed only once
     const self = this
     this.setState(
       {

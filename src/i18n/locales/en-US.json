@@ -51,7 +51,7 @@
   "components.send.sendscreen.amountInput.error.NEGATIVE": "Amount must be positive",
   "components.send.sendscreen.amountInput.error.TOO_LARGE": "Amount too large",
   "components.send.sendscreen.amountInput.error.TOO_MANY_DECIMAL_PLACES": "Please enter valid amount",
-  "components.send.sendscreen.amountInput.error.insufficientBalance": "Not enough money to make this transaction",
+  "components.send.sendscreen.amountInput.error.insufficientBalance": "Not enough funds to make this transaction",
   "components.send.sendscreen.availableFundsBannerIsFetching": "Checking balance...",
   "components.send.sendscreen.availableFundsBannerNotAvailable": "-",
   "components.send.sendscreen.balanceAfterLabel": "Balance after",

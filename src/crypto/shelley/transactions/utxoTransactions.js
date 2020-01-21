@@ -337,7 +337,6 @@ export const sendAllUnsignedTxFromUtxo = async (
       await fakeIOBuilder.add_input(input)
     }
     await fakeIOBuilder.add_output(
-      // note: currently failing
       await Address.from_bytes(Buffer.from(receiver, 'hex')),
       await Value.from_str(totalBalance.toString()),
     )
@@ -347,7 +346,6 @@ export const sendAllUnsignedTxFromUtxo = async (
         : await Payload.no_payload()
     const feeValue = await (await fakeIOBuilder.estimate_fee(
       feeAlgorithm,
-      // can't add a certificate to a UTXO transaction
       payload,
     )).to_str()
     fee = new BigNumber(feeValue)

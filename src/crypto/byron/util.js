@@ -9,22 +9,18 @@ import bs58 from 'bs58'
 import cryptoRandomString from 'crypto-random-string'
 
 import assert from '../../utils/assert'
-import {CONFIG, NUMBERS} from '../../config'
+import {CONFIG} from '../../config'
 import {
   _rethrow,
   InsufficientFunds,
   WrongPassword,
   CardanoError,
 } from '../errors'
-import {AddressChain, AddressGenerator} from '../chain'
 import {ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
-// TODO: refactor to remove these imports here as they are causing a cycle
-import {filterUsedAddresses, bulkFetchUTXOSumForAddresses} from '../../api/api'
 
 import type {
   TransactionInput,
   TransactionOutput,
-  Addressing,
 } from '../../types/HistoryTransaction'
 import type {AddressType} from '../commonUtils'
 
@@ -208,75 +204,4 @@ export const formatBIP44 = (
   return `m/${PURPOSE}'/${COIN}'/${account}'/${
     ADDRESS_TYPE_TO_CHANGE[type]
   }/${index}`
-}
-
-/**
- * returns all used addresses (external and change addresses concatenated)
- * including addressing info
- */
-export const mnemonicsToAddresses = async (
-  mnemonic: string,
-  networkConfig?: Object = CONFIG.CARDANO,
-): Promise<Array<{|address: string, ...Addressing|}>> => {
-  const masterKey = await getMasterKeyFromMnemonic(mnemonic)
-  const account = await getAccountFromMasterKey(masterKey)
-  const internalChain = new AddressChain(
-    new AddressGenerator(account, 'Internal'),
-  )
-  const externalChain = new AddressChain(
-    new AddressGenerator(account, 'External'),
-  )
-  const chains = [['Internal', internalChain], ['External', externalChain]]
-  for (const chain of chains) {
-    await chain[1].initialize()
-    await chain[1].sync(filterUsedAddresses, networkConfig)
-  }
-  // get addresses in chunks
-  const addrChunks = [
-    ...internalChain.getBlocks(),
-    ...externalChain.getBlocks(),
-  ]
-  const filteredAddresses = []
-  for (let i = 0; i < addrChunks.length; i++) {
-    filteredAddresses.push(
-      ...(await filterUsedAddresses(addrChunks[i], networkConfig)),
-    )
-  }
-  // return addresses with addressing info
-  return filteredAddresses.map((addr) => {
-    let change
-    let index
-    if (internalChain.isMyAddress(addr)) {
-      change = NUMBERS.CHAIN_DERIVATIONS.INTERNAL
-      index = internalChain.getIndexOfAddress(addr)
-    } else if (externalChain.isMyAddress(addr)) {
-      change = NUMBERS.CHAIN_DERIVATIONS.EXTERNAL
-      index = externalChain.getIndexOfAddress(addr)
-    } else {
-      // should not happen
-      throw new Error('mnemonicsToAddresses: couldn not find address index')
-    }
-    return {
-      address: addr,
-      addressing: {
-        account: CONFIG.WALLET.ACCOUNT_INDEX,
-        change,
-        index,
-      },
-    }
-  })
-}
-
-export const balanceForAddresses = async (
-  addresses: Array<string>,
-  networkConfig?: any = CONFIG.CARDANO,
-): Promise<{fundedAddresses: Array<string>, sum: BigNumber}> => {
-  const {fundedAddresses, sum} = await bulkFetchUTXOSumForAddresses(
-    addresses,
-    networkConfig,
-  )
-  return {
-    fundedAddresses,
-    sum,
-  }
 }

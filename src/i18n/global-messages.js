@@ -134,7 +134,7 @@ export const errorMessages = {
     },
     message: {
       id: 'global.actions.dialogs.insufficientBalance.message',
-      defaultMessage: '!!Not enough money to make this transaction',
+      defaultMessage: '!!Not enough funds to make this transaction',
     },
   }),
   disableEasyConfirmationFirst: defineMessages({

@@ -166,6 +166,7 @@ const UpgradeConfirmModal = ({
               confirmationMessages.commonButtons.continueButton,
             )}
             shelleyTheme
+            disabled={disableButtons}
           />
         </ScrollView>
       </Modal>

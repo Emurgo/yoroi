@@ -5,10 +5,11 @@ import {BigNumber} from 'bignumber.js'
 import {defaultMemoize} from 'reselect'
 import uuid from 'uuid'
 import ExtendableError from 'es6-error'
+import {Bip32PublicKey} from 'react-native-chain-libs'
 
 import storage from '../utils/storage'
 import KeyStore from './KeyStore'
-import {AddressChain, AddressGenerator, ShelleyAddressGenerator} from './chain'
+import {AddressChain, AddressGenerator} from './chain'
 import * as util from './byron/util'
 import * as shelleyUtil from './shelley/util'
 import {ADDRESS_TYPE_TO_CHANGE} from './commonUtils'
@@ -30,11 +31,84 @@ import {
 } from '../helpers/deviceSettings'
 
 import type {
+  Addressing,
   RawUtxo,
   TransactionInput,
   PreparedTransactionData,
 } from '../types/HistoryTransaction'
 import type {Mutex} from '../utils/promise'
+import type {CryptoAccount} from './byron/util'
+
+/**
+ * returns all used addresses (external and change addresses concatenated)
+ * including addressing info
+ */
+export const mnemonicsToAddresses = async (
+  mnemonic: string,
+  networkConfig?: Object = CONFIG.CARDANO,
+): Promise<Array<{|address: string, ...Addressing|}>> => {
+  const masterKey = await util.getMasterKeyFromMnemonic(mnemonic)
+  const account = await util.getAccountFromMasterKey(masterKey)
+  const internalChain = new AddressChain(
+    new AddressGenerator(account, 'Internal'),
+  )
+  const externalChain = new AddressChain(
+    new AddressGenerator(account, 'External'),
+  )
+  const chains = [['Internal', internalChain], ['External', externalChain]]
+  for (const chain of chains) {
+    await chain[1].initialize()
+    await chain[1].sync(api.filterUsedAddresses, networkConfig)
+  }
+  // get addresses in chunks
+  const addrChunks = [
+    ...internalChain.getBlocks(),
+    ...externalChain.getBlocks(),
+  ]
+  const filteredAddresses = []
+  for (let i = 0; i < addrChunks.length; i++) {
+    filteredAddresses.push(
+      ...(await api.filterUsedAddresses(addrChunks[i], networkConfig)),
+    )
+  }
+  // return addresses with addressing info
+  return filteredAddresses.map((addr) => {
+    let change
+    let index
+    if (internalChain.isMyAddress(addr)) {
+      change = NUMBERS.CHAIN_DERIVATIONS.INTERNAL
+      index = internalChain.getIndexOfAddress(addr)
+    } else if (externalChain.isMyAddress(addr)) {
+      change = NUMBERS.CHAIN_DERIVATIONS.EXTERNAL
+      index = externalChain.getIndexOfAddress(addr)
+    } else {
+      // should not happen
+      throw new Error('mnemonicsToAddresses: could not find address index')
+    }
+    return {
+      address: addr,
+      addressing: {
+        account: CONFIG.WALLET.ACCOUNT_INDEX,
+        change,
+        index,
+      },
+    }
+  })
+}
+
+export const balanceForAddresses = async (
+  addresses: Array<string>,
+  networkConfig?: any = CONFIG.CARDANO,
+): Promise<{fundedAddresses: Array<string>, sum: BigNumber}> => {
+  const {fundedAddresses, sum} = await api.bulkFetchUTXOSumForAddresses(
+    addresses,
+    networkConfig,
+  )
+  return {
+    fundedAddresses,
+    sum,
+  }
+}
 
 export type EncryptionMethod = 'BIOMETRICS' | 'SYSTEM_PIN' | 'MASTER_PASSWORD'
 
@@ -153,71 +227,41 @@ export class Wallet {
     this._externalChain.addSubscriberToNewAddresses(this.notify)
   }
 
-  async _create(mnemonic: string, newPassword: string) {
-    Logger.info('create wallet')
+  async _create(
+    mnemonic: string,
+    newPassword: string,
+    isShelley?: boolean = false,
+  ) {
+    Logger.info(`create wallet (isShelley=${String(isShelley)})`)
     this._id = uuid.v4()
     assert.assert(!this._isInitialized, 'createWallet: !isInitialized')
-    const masterKey = await util.getMasterKeyFromMnemonic(mnemonic)
-    const account = await util.getAccountFromMasterKey(masterKey)
+    const masterKey = await shelleyUtil.generateWalletRootKey(mnemonic)
+    const masterKeyHex = Buffer.from(await masterKey.as_bytes()).toString('hex')
     await this.encryptAndSaveMasterKey(
       'MASTER_PASSWORD',
-      masterKey,
+      masterKeyHex,
       newPassword,
     )
+    let account: CryptoAccount | Bip32PublicKey
+    if (isShelley) {
+      const accountKey = await (await (await masterKey.derive(
+        NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
+      )).derive(NUMBERS.COIN_TYPES.CARDANO)).derive(
+        0 + NUMBERS.HARD_DERIVATION_START,
+      )
+      account = await accountKey.to_public()
+    } else {
+      account = await util.getAccountFromMasterKey(masterKeyHex)
+    }
 
     this._transactionCache = new TransactionCache()
 
     // initialize address chains
     this._internalChain = new AddressChain(
-      new AddressGenerator(account, 'Internal'),
+      new AddressGenerator(account, 'Internal', isShelley),
     )
     this._externalChain = new AddressChain(
-      new AddressGenerator(account, 'External'),
-    )
-
-    // Create at least one address in each block
-    await this._internalChain.initialize()
-    await this._externalChain.initialize()
-
-    this._setupSubscriptions()
-    this.notify()
-
-    this._isInitialized = true
-    return this._id
-  }
-
-  async _createShelleyWallet(mnemonic: string, newPassword: string) {
-    Logger.info('create Shelley wallet')
-    this._id = uuid.v4()
-    assert.assert(!this._isInitialized, 'createWallet: !isInitialized')
-    const masterKey = await util.getMasterKeyFromMnemonic(mnemonic)
-    await this.encryptAndSaveMasterKey(
-      'MASTER_PASSWORD',
-      masterKey,
-      newPassword,
-    )
-    const accountKey = await (await (await (await shelleyUtil.generateWalletRootKey(
-      mnemonic,
-    )).derive(NUMBERS.WALLET_TYPE_PURPOSE.CIP1852)).derive(
-      NUMBERS.COIN_TYPES.CARDANO,
-    )).derive(0 + NUMBERS.HARD_DERIVATION_START)
-
-    const accountPublic = await accountKey.to_public()
-    const privateChainKey = await accountPublic.derive(
-      NUMBERS.CHAIN_DERIVATIONS.INTERNAL,
-    )
-    const publicChainKey = await accountPublic.derive(
-      NUMBERS.CHAIN_DERIVATIONS.EXTERNAL,
-    )
-
-    this._transactionCache = new TransactionCache()
-
-    // initialize address chains
-    this._internalChain = new AddressChain(
-      new ShelleyAddressGenerator(privateChainKey, 'Internal', accountPublic),
-    )
-    this._externalChain = new AddressChain(
-      new ShelleyAddressGenerator(publicChainKey, 'External', accountPublic),
+      new AddressGenerator(account, 'External', isShelley),
     )
 
     // Create at least one address in each block
@@ -686,13 +730,11 @@ class WalletManager {
     name: string,
     mnemonic: string,
     password: string,
-    isShelleyWallet?: boolean = false,
+    isShelley?: boolean = false,
   ): Promise<Wallet> {
     // Ignore id & name for now
     const wallet = new Wallet()
-    const id = isShelleyWallet
-      ? await wallet._createShelleyWallet(mnemonic, password)
-      : await wallet._create(mnemonic, password)
+    const id = await wallet._create(mnemonic, password, isShelley)
 
     this._id = id
     this._wallets = {
