@@ -9,7 +9,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: 100,
-    // backgroundColor: 'cyan', // TODO: delete
   },
   textWrapper: {
     fontSize: 18,

@@ -9,13 +9,11 @@ export default StyleSheet.create({
     height: 244,
     marginTop: 24,
     marginHorizontal: 16,
-    // backgroundColor: 'pink', // TODO: delete
   },
   stats: {
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-around',
-    // backgroundColor: 'pink', // TODO: delete
   },
   row: {
     flexDirection: 'row',

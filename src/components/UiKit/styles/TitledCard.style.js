@@ -7,7 +7,6 @@ import {COLORS} from '../../../styles/config'
 export default StyleSheet.create({
   wrapper: {
     flex: 1,
-    // backgroundColor: 'cadetblue', // TODO: delete
   },
   title: {
     fontSize: 16,
@@ -27,7 +26,6 @@ export default StyleSheet.create({
     shadowOffset: {width: 0, height: 2},
     shadowColor: COLORS.SHADOW_COLOR,
     backgroundColor: COLORS.BACKGROUND,
-    // backgroundColor: 'coral', // TODO: delete and un-comment above line
   },
   poolInfoContent: {
     padding: 0,

@@ -9,6 +9,8 @@
   "components.delegationsummary.delegatedStakepoolInfo.title": "Stake pool delegated",
   "components.delegationsummary.epochProgress.endsIn": "Ends in",
   "components.delegationsummary.epochProgress.title": "Epoch progress",
+  "components.delegationsummary.notDelegatedInfo.firstLine": "You have not delegated your ADA yet.",
+  "components.delegationsummary.notDelegatedInfo.secondLine": "Go to Staking center to choose which stake pool you want to delegate in. Note, you may delegate only to one stake pool in this Tesnnet.",  
   "components.delegationsummary.noTransactions": "!!!No transactions to show yet",
   "components.delegationsummary.syncErrorBannerTextWithRefresh": "!!!We are experiencing synchronization issues. Pull to refresh",
   "components.delegationsummary.syncErrorBannerTextWithoutRefresh": "!!!We are experiencing synchronization issues.",

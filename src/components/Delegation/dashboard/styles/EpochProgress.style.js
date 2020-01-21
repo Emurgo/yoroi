@@ -9,14 +9,12 @@ export default StyleSheet.create({
     height: 140,
     marginTop: 24,
     marginHorizontal: 16,
-    // backgroundColor: 'aquamarine', // TODO: delete
   },
   stats: {
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-around',
     marginLeft: 24,
-    // backgroundColor: 'pink', // TODO: delete
   },
   row: {
     flexDirection: 'row',

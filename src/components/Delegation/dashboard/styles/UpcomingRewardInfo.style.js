@@ -9,7 +9,6 @@ export default StyleSheet.create({
     height: 86,
     marginTop: 24,
     marginHorizontal: 16,
-    // backgroundColor: 'pink', // TODO: delete
   },
   wrapperWithDisclaimer: {
     height: 110,
@@ -19,7 +18,6 @@ export default StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-around',
     marginLeft: 12,
-    // backgroundColor: 'pink', // TODO: delete
   },
   row: {
     flexDirection: 'row',
@@ -40,6 +38,5 @@ export default StyleSheet.create({
     marginTop: 10,
     fontSize: 12,
     lineHeight: 14,
-    // backgroundColor: 'pink', // TODO: delete
   },
 })

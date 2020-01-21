@@ -15,6 +15,7 @@ import {
   UpcomingRewardInfo,
   UserSummary,
   DelegatedStakepoolInfo,
+  NotDelegatedInfo,
 } from './dashboard'
 import {
   isSynchronizingHistorySelector,
@@ -24,11 +25,9 @@ import {
   languageSelector,
 } from '../../selectors'
 import DelegationNavigationButtons from './DelegationNavigationButtons'
-// import {updateDelegationSummary} from '../../actions/delegationSummary'
 import {withNavigationTitle} from '../../utils/renderUtils'
 
 import {formatAdaWithText} from '../../utils/format'
-// import image from '../../assets/img/no_transactions.png'
 
 import styles from './styles/DelegationSummary.style'
 
@@ -51,15 +50,6 @@ const messages = defineMessages({
   },
 })
 
-// const NoDelegationSummary = injectIntl(({intl}) => (
-//   <View style={styles.empty}>
-//     <Image source={image} />
-//     <Text style={styles.emptyText}>
-//       {intl.formatMessage(messages.noDelegation)}
-//     </Text>
-//   </View>
-// ))
-
 const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
   <Banner
     error
@@ -72,14 +62,10 @@ const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
 ))
 
 const DelegationSummary = ({
-  // amountPending,
-  // transactionsInfo,
   navigation,
   isSyncing,
   isOnline,
-  // updateHistory,
   lastSyncError,
-  // availableAmount,
 }) => (
   <SafeAreaView style={styles.scrollView}>
     <StatusBar type="dark" />
@@ -89,6 +75,7 @@ const DelegationSummary = ({
         lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
 
       <ScrollView>
+        <NotDelegatedInfo />
         <View style={styles.inner}>
           <UpcomingRewardInfo
             nextRewardText={'Jan 21st 04:13 AM'}
@@ -130,11 +117,9 @@ export default injectIntl(
     // requireInitializedWallet, // TODO(shin) enable this before release
     connect(
       (state: State) => ({
-        // transactionsInfo: transactionsInfoSelector(state),
         isSyncing: isSynchronizingHistorySelector(state),
         lastSyncError: lastHistorySyncErrorSelector(state),
         isOnline: isOnlineSelector(state),
-        // availableAmount: availableAmountSelector(state),
         walletName: walletNameSelector(state),
         key: languageSelector(state),
       }),
