@@ -153,7 +153,11 @@ export class Wallet {
     this._externalChain.addSubscriberToNewAddresses(this.notify)
   }
 
-  async _create(mnemonic: string, newPassword: string, isShelleyWallet?: boolean = false) {
+  async _create(
+    mnemonic: string,
+    newPassword: string,
+    isShelleyWallet?: boolean = false,
+  ) {
     Logger.info('create wallet')
     this._id = uuid.v4()
     assert.assert(!this._isInitialized, 'createWallet: !isInitialized')
@@ -788,7 +792,7 @@ class WalletManager {
     assert.assert(this._closeReject, 'close: should have _closeReject')
     /* :: if (!this._closeReject) throw 'assert' */
     // Abort all async interactions with the wallet
-    const reject = this._closeReject
+    // const reject = this._closeReject
     this._closePromise = null
     this._closeReject = null
     this._wallet = null

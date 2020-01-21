@@ -7,15 +7,11 @@ import styles from './styles/ProgressCircle.style'
 
 type ExternalProps = {|
   +percentage: number,
-|};
+|}
 
-const ProgressCircle = ({
-  percentage,
-}: ExternalProps) => (
+const ProgressCircle = ({percentage}: ExternalProps) => (
   <View style={styles.wrapper}>
-    <Text style={styles.textWrapper}>
-      {percentage}%
-    </Text>
+    <Text style={styles.textWrapper}>{percentage}%</Text>
     <Svg viewBox="0 0 36 36" style={styles.chart}>
       <Path
         style={styles.circle}

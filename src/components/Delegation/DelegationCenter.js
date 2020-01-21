@@ -1,8 +1,7 @@
 // @flow
 import React from 'react'
-import {CONFIG} from '../../config'
 import {View, WebView} from 'react-native'
-import {compose, withHandlers} from 'recompose'
+import {compose} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
 import type {IntlShape} from 'react-intl'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
@@ -16,14 +15,6 @@ const messages = defineMessages({
     defaultMessage: '!!!Staking Center',
     description: 'some desc',
   },
-  // header: {
-  //   id: 'components.walletselection.walletselectionscreen.header',
-  //   defaultMessage: '!!!Your wallets',
-  // },
-//   addWalletButton: {
-//     id: 'components.walletselection.walletselectionscreen.addWalletButton',
-//     defaultMessage: '!!!Add wallet',
-//   },
 })
 
 const DelegationCenter = ({navigation, intl}) => (
@@ -31,25 +22,34 @@ const DelegationCenter = ({navigation, intl}) => (
   <View style={{flex: 1}}>
     <WebView
       useWebKit
-      source={{uri: 'http://localhost:3000/staking-simple/list?sortBy=REVENUE&searchText=&performance[]=0&performance[]=100'}}
-      onLoadStart={() => {console.log('LOAD START')}}
-      onLoadEnd={() => {console.log('LOAD END ')}}
-      onMessage={
-        (event) => {
-          const getData = decodeURI(event.nativeEvent.data)
-          console.log('handle message : ', getData)
-          // eslint-disable-next-line no-alert
-          alert(getData)
-        }
-      }
+      source={{
+        uri:
+          // eslint-disable-next-line max-len
+          'http://localhost:3000/staking-simple/list?sortBy=REVENUE&searchText=&performance[]=0&performance[]=100',
+      }}
+      onLoadStart={() => {
+        // eslint-disable-next-line no-console
+        console.log('LOAD START')
+      }}
+      onLoadEnd={() => {
+        // eslint-disable-next-line no-console
+        console.log('LOAD END ')
+      }}
+      onMessage={(event) => {
+        const getData = decodeURI(event.nativeEvent.data)
+        // eslint-disable-next-line no-console
+        console.log('handle message : ', getData)
+        // eslint-disable-next-line no-alert
+        alert(getData)
+      }}
     />
   </View>
 )
 
 export default injectIntl(
-  (compose(
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
-  )(DelegationCenter): ComponentType<{
+  (compose(withNavigationTitle(({intl}) => intl.formatMessage(messages.title)))(
+    DelegationCenter,
+  ): ComponentType<{
     intl: IntlShape,
     navigation: NavigationScreenProp<NavigationState>,
   }>),

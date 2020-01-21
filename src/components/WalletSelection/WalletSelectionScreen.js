@@ -16,7 +16,11 @@ import walletManager, {
 import WalletListItem from './WalletListItem'
 import Screen from '../Screen'
 import {Button, StatusBar, ScreenBackground} from '../UiKit'
-import {ROOT_ROUTES, WALLET_INIT_ROUTES, SHELLEY_WALLET_ROUTES} from '../../RoutesList'
+import {
+  ROOT_ROUTES,
+  WALLET_INIT_ROUTES,
+  SHELLEY_WALLET_ROUTES,
+} from '../../RoutesList'
 import {showErrorDialog} from '../../actions'
 import {errorMessages} from '../../i18n/global-messages'
 
@@ -117,7 +121,9 @@ export default injectIntl(
       openWallet: ({navigation, intl}) => async (wallet) => {
         try {
           await walletManager.openWallet(wallet.id)
-          const route = wallet.isShelleyWallet ? ROOT_ROUTES.SHELLEY_WALLET : ROOT_ROUTES.WALLET
+          const route = wallet.isShelleyWallet
+            ? ROOT_ROUTES.SHELLEY_WALLET
+            : ROOT_ROUTES.WALLET
           navigation.navigate(route)
         } catch (e) {
           if (e instanceof SystemAuthDisabled) {

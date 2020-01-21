@@ -22,7 +22,9 @@ const WalletListItem = ({wallet, onPress}) => (
     <View style={styles.icon}>
       <CardanoIcon height={28} width={28} color={COLORS.WHITE} />
     </View>
-    <Text style={styles.nameText}>{wallet.name} {wallet.isShelleyWallet ? '*Shelley' : ''} </Text>
+    <Text style={styles.nameText}>
+      {wallet.name} {wallet.isShelleyWallet ? '*Shelley' : ''}{' '}
+    </Text>
   </TouchableOpacity>
 )
 

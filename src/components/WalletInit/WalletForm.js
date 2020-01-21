@@ -24,8 +24,6 @@ import type {
   PasswordValidationErrors,
   WalletNameValidationErrors,
 } from '../../utils/validators'
-import {SettingsItem} from '../Settings/SettingsItems'
-import message from 'react-intl/src/components/message'
 
 const messages = defineMessages({
   walletNameInputLabel: {
@@ -68,13 +66,17 @@ type ComponentState = {
   password: string,
   passwordConfirmation: string,
   showPasswordsDoNotMatchError: boolean,
-  isShelleyWallet: boolean
+  isShelleyWallet: boolean,
 }
 
 type Props = {
   intl: any,
   walletNames: Array<string>,
-  onSubmit: ({name: string, password: string, isShelleyWallet: boolean}) => mixed,
+  onSubmit: ({
+    name: string,
+    password: string,
+    isShelleyWallet: boolean,
+  }) => mixed,
   validateWalletName: (walletName: string) => WalletNameValidationErrors,
 }
 
@@ -104,7 +106,11 @@ class WalletForm extends PureComponent<Props, ComponentState> {
   }, 300)
 
   handleOnWillBlur = () =>
-    this.setState({password: '', passwordConfirmation: '', isShelleyWallet: false})
+    this.setState({
+      password: '',
+      passwordConfirmation: '',
+      isShelleyWallet: false,
+    })
 
   handleSubmit = () => {
     const {name, password, isShelleyWallet} = this.state

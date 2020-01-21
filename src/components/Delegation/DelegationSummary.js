@@ -4,13 +4,12 @@ import React from 'react'
 import type {ComponentType} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {View, RefreshControl, ScrollView, Image} from 'react-native'
+import {View, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-navigation'
 import {BigNumber} from 'bignumber.js'
-import _ from 'lodash'
 import {injectIntl, defineMessages} from 'react-intl'
 
-import {Text, Banner, OfflineBanner, StatusBar} from '../UiKit'
+import {Banner, OfflineBanner, StatusBar} from '../UiKit'
 import {
   EpochProgress,
   UpcomingRewardInfo,
@@ -18,30 +17,23 @@ import {
   DelegatedStakepoolInfo,
 } from './dashboard'
 import {
-  transactionsInfoSelector,
   isSynchronizingHistorySelector,
   lastHistorySyncErrorSelector,
   isOnlineSelector,
-  availableAmountSelector,
   walletNameSelector,
   languageSelector,
 } from '../../selectors'
 import DelegationNavigationButtons from './DelegationNavigationButtons'
 // import {updateDelegationSummary} from '../../actions/delegationSummary'
-import {
-  onDidMount,
-  requireInitializedWallet,
-  withNavigationTitle,
-} from '../../utils/renderUtils'
+import {withNavigationTitle} from '../../utils/renderUtils'
 
 import {formatAdaWithText} from '../../utils/format'
-import image from '../../assets/img/no_transactions.png'
+// import image from '../../assets/img/no_transactions.png'
 
 import styles from './styles/DelegationSummary.style'
 
 import type {Navigation} from '../../types/navigation'
 import type {State} from '../../state'
-import globalMessages from '../../i18n/global-messages'
 
 const messages = defineMessages({
   noDelegation: {
@@ -59,14 +51,14 @@ const messages = defineMessages({
   },
 })
 
-const NoDelegationSummary = injectIntl(({intl}) => (
-  <View style={styles.empty}>
-    <Image source={image} />
-    <Text style={styles.emptyText}>
-      {intl.formatMessage(messages.noDelegation)}
-    </Text>
-  </View>
-))
+// const NoDelegationSummary = injectIntl(({intl}) => (
+//   <View style={styles.empty}>
+//     <Image source={image} />
+//     <Text style={styles.emptyText}>
+//       {intl.formatMessage(messages.noDelegation)}
+//     </Text>
+//   </View>
+// ))
 
 const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
   <Banner
@@ -94,7 +86,7 @@ const DelegationSummary = ({
     <View style={styles.container}>
       <OfflineBanner />
       {isOnline &&
-      lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
+        lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
 
       <ScrollView>
         <View style={styles.inner}>

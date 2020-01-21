@@ -18,6 +18,7 @@ export const CARDANO_CONFIG = {
     PROTOCOL_MAGIC: 1097911063,
     API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
     SEIZA_STAKING_SIMPLE: (ADA: string) =>
+      // eslint-disable-next-line max-len
       `http://localhost:3000/staking-simple/list?sortBy=REVENUE&searchText=&performance[]=0&performance[]=100&userAda=${ADA}`,
     EXPLORER_URL_FOR_TX: (tx: string) =>
       `https://cardano-explorer.cardano-testnet.iohkdev.io/tx/${tx}`,
@@ -26,6 +27,7 @@ export const CARDANO_CONFIG = {
     PROTOCOL_MAGIC: 764824073,
     API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
     SEIZA_STAKING_SIMPLE: (ADA: string) =>
+      // eslint-disable-next-line max-len
       `http://localhost:3000/staking-simple/list?sortBy=REVENUE&searchText=&performance[]=0&performance[]=100&userAda=${ADA}`,
     EXPLORER_URL_FOR_TX: (tx: string) => `https://cardanoexplorer.com/tx/${tx}`,
   },
@@ -33,6 +35,7 @@ export const CARDANO_CONFIG = {
     PROTOCOL_MAGIC: 764824073,
     API_ROOT: 'https://shelley-testnet-yoroi-backend.yoroiwallet.com/api',
     SEIZA_STAKING_SIMPLE: (ADA: string) =>
+      // eslint-disable-next-line max-len
       `http://localhost:3000/staking-simple/list?sortBy=REVENUE&searchText=&performance[]=0&performance[]=100&userAda=${ADA}`,
     EXPLORER_URL_FOR_ADDRESS: (address: string) =>
       `https://shelleyexplorer.cardano.org/address/?id=${address}`,

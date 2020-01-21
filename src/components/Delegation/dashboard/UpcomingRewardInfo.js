@@ -34,15 +34,24 @@ const UpcomingRewardInfo = ({
   followingRewardText,
   showDisclaimer,
 }: ExternalProps) => (
-  <View style={[styles.wrapper, showDisclaimer ? styles.wrapperWithDisclaimer : undefined]}>
+  <View
+    style={[
+      styles.wrapper,
+      showDisclaimer ? styles.wrapperWithDisclaimer : undefined,
+    ]}
+  >
     <TitledCard>
       <View style={styles.stats}>
         <View style={styles.row}>
-          <Text style={styles.label}>{intl.formatMessage(messages.nextRewardLable)}:</Text>
+          <Text style={styles.label}>
+            {intl.formatMessage(messages.nextRewardLable)}:
+          </Text>
           <Text style={styles.value}>{nextRewardText}</Text>
         </View>
         <View style={styles.row}>
-          <Text style={styles.label}>{intl.formatMessage(messages.followingRewardLable)}:</Text>
+          <Text style={styles.label}>
+            {intl.formatMessage(messages.followingRewardLable)}:
+          </Text>
           <Text style={styles.value}>{followingRewardText}</Text>
         </View>
       </View>

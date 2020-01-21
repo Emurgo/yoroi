@@ -28,14 +28,12 @@ const DelegatedStakepoolInfo = ({
   poolHash,
 }: ExternalProps) => (
   <View style={styles.wrapper}>
-    <TitledCard title={intl.formatMessage(messages.title)} variant={'poolInfo'} >
+    <TitledCard title={intl.formatMessage(messages.title)} variant={'poolInfo'}>
       <View style={styles.topBlock}>
         <Text bold style={styles.pooName}>
           {formatStakepoolNameWithTicker(poolTicker, poolName)}
         </Text>
-        <Text style={styles.poolHash}>
-          {poolHash}
-        </Text>
+        <Text style={styles.poolHash}>{poolHash}</Text>
       </View>
     </TitledCard>
   </View>

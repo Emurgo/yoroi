@@ -108,7 +108,10 @@ export default injectIntl(
         assert.assert(!!mnemonic, 'handleWalletConfirmation:: mnemonic')
         assert.assert(!!password, 'handleWalletConfirmation:: password')
         assert.assert(!!name, 'handleWalletConfirmation:: name')
-        assert.assert(!!isShelleyWallet, 'handleWalletConfirmation:: shelley wallet')
+        assert.assert(
+          !!isShelleyWallet,
+          'handleWalletConfirmation:: shelley wallet',
+        )
         navigation.navigate(WALLET_INIT_ROUTES.MNEMONIC_CHECK, {
           mnemonic,
           password,
