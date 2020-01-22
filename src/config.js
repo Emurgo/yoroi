@@ -36,7 +36,7 @@ export const CARDANO_CONFIG = {
     API_ROOT: 'https://shelley-testnet-yoroi-backend.yoroiwallet.com/api',
     SEIZA_STAKING_SIMPLE: (ADA: string) =>
       // eslint-disable-next-line max-len
-      `http://localhost:3000/staking-simple/list?sortBy=REVENUE&searchText=&performance[]=0&performance[]=100&userAda=${ADA}`,
+      `https://testnet.seiza-website.emurgo.io/staking-simple/list?sortBy=RANDOM&searchText=&performance[]=0&performance[]=100&source=mobile&userAda=${ADA}`,
     EXPLORER_URL_FOR_ADDRESS: (address: string) =>
       `https://shelleyexplorer.cardano.org/address/?id=${address}`,
     LINEAR_FEE: {
