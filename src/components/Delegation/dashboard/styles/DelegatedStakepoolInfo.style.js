@@ -18,9 +18,18 @@ export default StyleSheet.create({
     lineHeight: 24,
     fontSize: 16,
   },
+  poolHashBlock: {
+    flexDirection: 'row',
+    marginTop: 6,
+  },
   poolHash: {
     color: COLORS.LIGHT_GRAY_TEXT,
     lineHeight: 22,
     fontSize: 14,
+    width: 200,
+  },
+  bottomBlock: {
+    paddingHorizontal: 16,
+    paddingVertical: 20,
   },
 })

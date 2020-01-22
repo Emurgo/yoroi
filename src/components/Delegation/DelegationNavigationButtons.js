@@ -34,6 +34,7 @@ const DelegationNavigationButtons = ({
   <View style={styles.container}>
     <Button
       block
+      shelleyTheme
       onPress={navigateToStakingCenter}
       title={intl.formatMessage(messages.stakingCenterButton)}
     />

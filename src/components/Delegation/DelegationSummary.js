@@ -100,6 +100,7 @@ const DelegationSummary = ({
             poolTicker="1EMUR"
             poolName="EMURGO’s STAKEPOOL"
             poolHash="7186b11017e877329798ac925480585208516c4e5c30b69e38f0b997e7b72a83"
+            poolURL="https://yoroi-wallet.com/"
           />
         </View>
       </ScrollView>
