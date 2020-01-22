@@ -1,15 +1,19 @@
 // @flow
 import React from 'react'
 import {createStackNavigator} from 'react-navigation'
+import {Button} from '../UiKit'
 import DelegationCenter from './DelegationCenter'
-import {SHELLEY_WALLET_ROUTES} from '../../RoutesList'
+import {SHELLEY_WALLET_ROUTES, WALLET_ROUTES} from '../../RoutesList'
+import iconGear from '../../assets/img/gear.png'
 
 import {
   defaultNavigationOptions,
   defaultStackNavigatorOptions,
+  shelleyNavigationOptions,
 } from '../../navigationOptions'
 
 import HeaderBackButton from '../UiKit/HeaderBackButton'
+import styles from '../TxHistory/styles/SettingsButton.style'
 
 const DelegationNavigatorCenter = createStackNavigator(
   {
@@ -17,7 +21,16 @@ const DelegationNavigatorCenter = createStackNavigator(
       screen: DelegationCenter,
       navigationOptions: ({navigation}) => ({
         title: navigation.getParam('title'),
-        ...defaultNavigationOptions,
+        headerRight: (
+          <Button
+            style={styles.settingsButton}
+            onPress={() => navigation.navigate(WALLET_ROUTES.SETTINGS)}
+            iconImage={iconGear}
+            title=""
+            withoutBackground
+          />
+        ),
+        ...shelleyNavigationOptions,
       }),
     },
   },
