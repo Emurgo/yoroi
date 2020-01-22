@@ -58,6 +58,7 @@ const DelegatedStakepoolInfo = ({
       </View>
       <View style={styles.bottomBlock}>
         <Button
+          outlineOnLight
           shelleyTheme
           onPress={openExternalURL}
           title={intl.formatMessage(messages.fullDescriptionButtonLabel)}

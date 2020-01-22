@@ -45,6 +45,15 @@ const styles = StyleSheet.create({
   shelleyTheme: {
     backgroundColor: colors.buttonBackgroundBlue,
   },
+  shelleyOutlineOnLight: {
+    backgroundColor: 'transparent',
+    borderColor: colors.buttonBackgroundBlue,
+    borderWidth: 2,
+  },
+  textShelleyOutlineOnLight: {
+    color: colors.buttonBackgroundBlue,
+    fontWeight: '600',
+  },
 })
 
 type ButtonProps = {
@@ -99,6 +108,7 @@ class Button extends React.Component<ButtonProps> {
             disabled === true && styles.buttonDisabled,
             withoutBackground === true && styles.buttonTransparent,
             shelleyTheme === true && styles.shelleyTheme,
+            outlineOnLight === true && shelleyTheme === true && styles.shelleyOutlineOnLight,
             style,
           ]}
         >
@@ -107,6 +117,7 @@ class Button extends React.Component<ButtonProps> {
             style={[
               styles.text,
               outlineOnLight === true && styles.textOutlineOnLight,
+              outlineOnLight === true && shelleyTheme === true && styles.textShelleyOutlineOnLight,
             ]}
           >
             {formattedTitle}
