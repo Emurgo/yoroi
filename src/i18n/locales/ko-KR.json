@@ -132,7 +132,6 @@
   "components.settings.walletsettingscreen.tabTitle": "지갑",
   "components.settings.walletsettingscreen.title": "지갑",
   "components.settings.walletsettingscreen.walletName": "지갑명",
-  "components.stakingcenter.title": "!!!Staking Center",
   "components.txhistory.txdetails.addressPrefixChange": "/change",
   "components.txhistory.txdetails.addressPrefixNotMine": "not mine",
   "components.txhistory.txdetails.addressPrefixReceive": "/{idx}",
