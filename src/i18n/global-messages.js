@@ -27,6 +27,24 @@ export const confirmationMessages = {
       defaultMessage: '!!!No',
     },
   }),
+  commonButtons: defineMessages({
+    confirmButton: {
+      id: 'global.actions.dialogs.commonbuttons.confirmButton',
+      defaultMessage: '!!!Confirm',
+    },
+    continueButton: {
+      id: 'global.actions.dialogs.commonbuttons.continueButton',
+      defaultMessage: '!!!Continue',
+    },
+    cancelButton: {
+      id: 'global.actions.dialogs.commonbuttons.cancelButton',
+      defaultMessage: '!!!Cancel',
+    },
+    backButton: {
+      id: 'global.actions.dialogs.commonbuttons.backButton',
+      defaultMessage: '!!!Back',
+    },
+  }),
 }
 
 export const errorMessages = {
@@ -107,6 +125,16 @@ export const errorMessages = {
       defaultMessage:
         '!!!Error received from api method call while sending transaction. ' +
         'Please try again later or check our Twitter account (https://twitter.com/YoroiWallet)',
+    },
+  }),
+  insufficientBalance: defineMessages({
+    title: {
+      id: 'global.actions.dialogs.insufficientBalance.title',
+      defaultMessage: '!!!Transaction error',
+    },
+    message: {
+      id: 'global.actions.dialogs.insufficientBalance.message',
+      defaultMessage: '!!Not enough funds to make this transaction',
     },
   }),
   disableEasyConfirmationFirst: defineMessages({
