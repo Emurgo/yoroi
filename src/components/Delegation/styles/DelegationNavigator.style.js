@@ -15,7 +15,4 @@ export default StyleSheet.create({
     shadowRadius: 6,
     shadowOffset: {width: 0, height: -8},
   },
-  mainButton: {
-    marginRight: 16,
-  },
 })

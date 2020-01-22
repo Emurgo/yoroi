@@ -11,14 +11,12 @@ import {Button} from '../UiKit'
 
 import styles from './styles/DelegationNavigator.style'
 
-import iconStakingCenter from '../../assets/img/icon/receive.png'
-
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 
 const messages = defineMessages({
   stakingCenterButton: {
     id: 'components.delegation.delegationnavigationbuttons.stakingCenterButton',
-    defaultMessage: '!!!StakingCenter',
+    defaultMessage: '!!!Go to Staking Center',
   },
 })
 
@@ -38,8 +36,6 @@ const DelegationNavigationButtons = ({
       block
       onPress={navigateToStakingCenter}
       title={intl.formatMessage(messages.stakingCenterButton)}
-      style={styles.mainButton}
-      iconImage={iconStakingCenter}
     />
   </View>
 )

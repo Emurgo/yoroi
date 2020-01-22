@@ -5,7 +5,7 @@
   "components.common.languagepicker.korean": "한국어",
   "components.common.languagepicker.russian": "Русский",
   "components.common.languagepicker.spanish": "Español",
-  "components.delegation.delegationnavigationbuttons.stakingCenterButton": "!!!StakingCenter",
+  "components.delegation.delegationnavigationbuttons.stakingCenterButton": "Go to Staking Center",
   "components.delegationsummary.delegatedStakepoolInfo.title": "Stake pool delegated",
   "components.delegationsummary.epochProgress.endsIn": "Ends in",
   "components.delegationsummary.epochProgress.title": "Epoch progress",
