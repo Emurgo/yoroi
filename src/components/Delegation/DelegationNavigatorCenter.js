@@ -3,7 +3,12 @@ import React from 'react'
 import {createStackNavigator} from 'react-navigation'
 import {Button} from '../UiKit'
 import DelegationCenter from './DelegationCenter'
-import {SHELLEY_WALLET_ROUTES, WALLET_ROUTES} from '../../RoutesList'
+import DelegationConfirmation from './DelegationConfirmation'
+import {
+  SHELLEY_WALLET_ROUTES,
+  WALLET_ROUTES,
+  STAKING_CENTER_ROUTES,
+} from '../../RoutesList'
 import iconGear from '../../assets/img/gear.png'
 
 import {
@@ -17,7 +22,7 @@ import styles from '../TxHistory/styles/SettingsButton.style'
 
 const DelegationNavigatorCenter = createStackNavigator(
   {
-    [SHELLEY_WALLET_ROUTES.STAKING_CENTER]: {
+    [STAKING_CENTER_ROUTES.MAIN]: {
       screen: DelegationCenter,
       navigationOptions: ({navigation}) => ({
         title: navigation.getParam('title'),
@@ -30,6 +35,12 @@ const DelegationNavigatorCenter = createStackNavigator(
             withoutBackground
           />
         ),
+        ...shelleyNavigationOptions,
+      }),
+    },
+    [STAKING_CENTER_ROUTES.DELEGATION_CONFIRM]: {
+      screen: DelegationConfirmation,
+      navigationOptions: ({navigation}) => ({
         ...shelleyNavigationOptions,
       }),
     },

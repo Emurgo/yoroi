@@ -1,14 +1,21 @@
 // @flow
 import React from 'react'
 import {View, WebView} from 'react-native'
-import {compose} from 'recompose'
+// import {compose} from 'recompose'
+import {compose} from 'redux'
+import {withHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
 import type {IntlShape} from 'react-intl'
-import type {NavigationScreenProp, NavigationState} from 'react-navigation'
-
 import type {ComponentType} from 'react'
+import {BigNumber} from 'bignumber.js'
+
+import {STAKING_CENTER_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {CARDANO_CONFIG} from '../../config'
+import type {Navigation} from '../../types/navigation'
+import {Logger} from '../../utils/logging'
+
+import styles from './styles/DelegationCenter.style'
 
 const messages = defineMessages({
   title: {
@@ -36,9 +43,8 @@ const prepareStakingURL = (
   return finalURL
 }
 
-const DelegationCenter = ({navigation, intl}) => (
-  // eslint-disable-next-line react-native/no-inline-styles
-  <View style={{flex: 1}}>
+const DelegationCenter = ({navigation, intl, handleOnMessage}) => (
+  <View style={styles.container}>
     <WebView
       useWebKit
       source={{
@@ -47,30 +53,41 @@ const DelegationCenter = ({navigation, intl}) => (
           '31e6f9117efd3a1ae832d358d7cdd78dd713550a516da2ba7f257c562cb41804',
         ]),
       }}
-      onLoadStart={() => {
-        // eslint-disable-next-line no-console
-        console.log('LOAD START')
-      }}
-      onLoadEnd={() => {
-        // eslint-disable-next-line no-console
-        console.log('LOAD END ')
-      }}
-      onMessage={(event) => {
-        const getData = decodeURI(event.nativeEvent.data)
-        // eslint-disable-next-line no-console
-        console.log('handle message : ', getData)
-        // eslint-disable-next-line no-alert
-        alert(getData)
-      }}
+      onMessage={handleOnMessage}
     />
   </View>
 )
 
+type SelectedPool = {|
+  +name: null | string,
+  +poolHash: string,
+|}
+
+type ExternalProps = {|
+  navigation: Navigation,
+  intl: IntlShape,
+|}
+
 export default injectIntl(
-  (compose(withNavigationTitle(({intl}) => intl.formatMessage(messages.title)))(
-    DelegationCenter,
-  ): ComponentType<{
-    intl: IntlShape,
-    navigation: NavigationScreenProp<NavigationState>,
-  }>),
+  (compose(
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withHandlers({
+      handleOnMessage: ({navigation}) => (event) => {
+        const pools: Array<SelectedPool> = JSON.parse(
+          decodeURI(event.nativeEvent.data),
+        )
+        Logger.debug(`From Seiza: ${JSON.stringify(pools)}`)
+
+        if (pools && pools.length >= 1) {
+          navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM, {
+            poolName: pools[0].name,
+            poolHash: pools[0].poolHash,
+            amountToDelegate: new BigNumber(1234.654321),
+            transactionFee: new BigNumber(0.654321),
+            approximateReward: new BigNumber(6.654321),
+          })
+        }
+      },
+    }),
+  )(DelegationCenter): ComponentType<ExternalProps>),
 )

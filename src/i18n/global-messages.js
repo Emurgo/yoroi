@@ -206,4 +206,12 @@ export default defineMessages({
     id: 'global.totalAda',
     defaultMessage: '!!!Total ADA',
   },
+  stakePoolName: {
+    id: 'global.staking.stakePoolName',
+    defaultMessage: '!!!Stake pool name',
+  },
+  stakePoolHash: {
+    id: 'global.staking.stakePoolHash',
+    defaultMessage: '!!!Stake pool hash',
+  },
 })

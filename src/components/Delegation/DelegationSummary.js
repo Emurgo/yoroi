@@ -74,35 +74,33 @@ const DelegationSummary = ({
       {isOnline &&
         lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
 
-      <ScrollView>
+      <ScrollView style={styles.inner}>
         <NotDelegatedInfo />
-        <View style={styles.inner}>
-          <UpcomingRewardInfo
-            nextRewardText={'Jan 21st 04:13 AM'}
-            followingRewardText={'Jan 22nd 04:13 AM'}
-            showDisclaimer
-          />
-          <EpochProgress
-            percentage={40}
-            currentEpoch={4}
-            endTime={{
-              h: '12',
-              m: '15',
-              s: '13',
-            }}
-          />
-          <UserSummary
-            totalAdaSum={formatAdaWithText(new BigNumber(1000))}
-            totalRewards={formatAdaWithText(new BigNumber(200))}
-            totalDelegated={formatAdaWithText(new BigNumber(300))}
-          />
-          <DelegatedStakepoolInfo
-            poolTicker="1EMUR"
-            poolName="EMURGO’s STAKEPOOL"
-            poolHash="7186b11017e877329798ac925480585208516c4e5c30b69e38f0b997e7b72a83"
-            poolURL="https://yoroi-wallet.com/"
-          />
-        </View>
+        <UpcomingRewardInfo
+          nextRewardText={'Jan 21st 04:13 AM'}
+          followingRewardText={'Jan 22nd 04:13 AM'}
+          showDisclaimer
+        />
+        <EpochProgress
+          percentage={40}
+          currentEpoch={4}
+          endTime={{
+            h: '12',
+            m: '15',
+            s: '13',
+          }}
+        />
+        <UserSummary
+          totalAdaSum={formatAdaWithText(new BigNumber(1000))}
+          totalRewards={formatAdaWithText(new BigNumber(200))}
+          totalDelegated={formatAdaWithText(new BigNumber(300))}
+        />
+        <DelegatedStakepoolInfo
+          poolTicker="1EMUR"
+          poolName="EMURGO’s STAKEPOOL"
+          poolHash="7186b11017e877329798ac925480585208516c4e5c30b69e38f0b997e7b72a83"
+          poolURL="https://yoroi-wallet.com/"
+        />
       </ScrollView>
       <DelegationNavigationButtons navigation={navigation} />
     </View>

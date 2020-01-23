@@ -58,8 +58,13 @@ export const WALLET_ROUTES = {
   SETTINGS: SETTINGS_ROUTES.MAIN,
 }
 
+export const STAKING_CENTER_ROUTES = {
+  MAIN: 'staking-center',
+  DELEGATION_CONFIRM: 'delegation-confirmation',
+}
+
 export const SHELLEY_WALLET_ROUTES = {
-  STAKING_CENTER: 'staking-center',
+  STAKING_CENTER: STAKING_CENTER_ROUTES.MAIN,
   DELEGATION_SUMMARY: 'delegation-summary',
 }
 
