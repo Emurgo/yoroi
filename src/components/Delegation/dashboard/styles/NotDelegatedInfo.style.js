@@ -9,6 +9,10 @@ export default StyleSheet.create({
     marginTop: 24,
     marginHorizontal: 16,
   },
+  imageWrap: {
+    flex: 1,
+    alignItems: 'center',
+  },
   text: {
     textAlign: 'center',
     color: COLORS.DARK_TEXT,

@@ -26,7 +26,9 @@ type ExternalProps = {|
 
 const NotDelegatedInfo = ({intl}: ExternalProps) => (
   <View style={styles.wrapper}>
-    <Image source={NotDelegatedImage} />
+    <View style={styles.imageWrap}>
+      <Image source={NotDelegatedImage} />
+    </View>
     <Text style={[styles.text, styles.textFirstLine]}>
       {intl.formatMessage(messages.firstLine)}
     </Text>
