@@ -17,7 +17,8 @@ const messages = defineMessages({
     defaultMessage: '!!!Stake pool delegated',
   },
   fullDescriptionButtonLabel: {
-    id: 'components.delegationsummary.delegatedStakepoolInfo.fullDescriptionButtonLabel',
+    id:
+      'components.delegationsummary.delegatedStakepoolInfo.fullDescriptionButtonLabel',
     defaultMessage: '!!!Full description',
   },
 })
