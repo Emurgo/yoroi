@@ -341,9 +341,9 @@ export const createWallet = (
   name: string,
   mnemonic: string,
   password: string,
-  isShelleyWallet: boolean,
+  isShelley?: boolean = false,
 ) => async (dispatch: Dispatch<any>) => {
-  await walletManager.createWallet(name, mnemonic, password, isShelleyWallet)
+  await walletManager.createWallet(name, mnemonic, password, isShelley)
   dispatch(updateWallets())
 }
 
@@ -454,9 +454,13 @@ export const setSystemAuth = (enable: boolean) => async (
   }
 }
 
-export const handleGeneralError = async (message: string, e: Error) => {
+export const handleGeneralError = async (
+  message: string,
+  e: Error,
+  intl: ?intlShape,
+) => {
   Logger.error(`${message}: ${e.message}`, e)
-  await showErrorDialog(errorMessages.generalError, null, {message})
+  await showErrorDialog(errorMessages.generalError, intl, {message})
   crashReporting.crash()
 }
 
@@ -468,4 +472,9 @@ export const submitTransaction = (
   await walletManager.submitTransaction(signedTx)
 
   dispatch(updateHistory())
+}
+
+export const submitShelleyTransferTx = async (encodedTx: Uint8Array) => {
+  const signedTx64 = Buffer.from(encodedTx).toString('base64')
+  await walletManager.submitTransaction(signedTx64)
 }

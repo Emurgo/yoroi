@@ -11,7 +11,6 @@ import {
   AccountBindingSignature,
   Address,
   Certificate,
-  Fee,
   Fragment,
   Hash,
   Input,
@@ -28,7 +27,7 @@ import {
   Witness,
   Witnesses,
 } from 'react-native-chain-libs'
-import {generateAuthData} from './utils'
+import {generateAuthData, generateFee} from './utils'
 
 import {CARDANO_CONFIG} from '../../../config'
 
@@ -57,11 +56,7 @@ export const buildUnsignedAccountTx = async (
 
   const sourceAccount = await Account.single_from_public_key(sender)
 
-  const feeAlgorithm = await Fee.linear_fee(
-    await Value.from_str(CONFIG.LINEAR_FEE.CONSTANT),
-    await Value.from_str(CONFIG.LINEAR_FEE.COEFFICIENT),
-    await Value.from_str(CONFIG.LINEAR_FEE.CERTIFICATE),
-  )
+  const feeAlgorithm = await generateFee()
 
   let fee
   {

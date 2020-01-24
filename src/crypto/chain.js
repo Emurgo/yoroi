@@ -2,28 +2,52 @@
 import _ from 'lodash'
 import type {Moment} from 'moment'
 
-import {CONFIG} from '../config'
+import {CONFIG, NUMBERS} from '../config'
 import assert from '../utils/assert'
 import {defaultMemoize} from 'reselect'
 import {Logger} from '../utils/logging'
 import * as util from './byron/util'
+import * as shelleyUtil from './shelley/util'
+import {ADDRESS_TYPE_TO_CHANGE} from './commonUtils'
+import {
+  Bip32PublicKey,
+  // PublicKey,
+} from 'react-native-chain-libs'
 
 import type {Dict} from '../state'
-import type {CryptoAccount, AddressType} from './byron/util'
+import type {CryptoAccount} from './byron/util'
+import type {AddressType} from './commonUtils'
 
 export type AddressBlock = [number, Moment, Array<string>]
 
 export class AddressGenerator {
-  account: CryptoAccount
+  account: CryptoAccount | Bip32PublicKey
   type: AddressType
+  isShelley: boolean
 
-  constructor(account: CryptoAccount, type: AddressType) {
+  constructor(
+    account: CryptoAccount | Bip32PublicKey,
+    type: AddressType,
+    isShelley?: boolean = false,
+  ) {
     this.account = account
     this.type = type
+    this.isShelley = isShelley
   }
 
-  generate(idxs: Array<number>): Promise<Array<string>> {
-    return util.getAddresses(this.account, this.type, idxs)
+  async generate(idxs: Array<number>): Promise<Array<string>> {
+    if (this.account instanceof Bip32PublicKey) {
+      const addressChain = await this.account.derive(
+        ADDRESS_TYPE_TO_CHANGE[this.type],
+      )
+      // $FlowFixMe shouldn't fail here (it does not above)
+      const stakingKey = await (await (await this.account.derive(
+        NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+      )).derive(NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+      return shelleyUtil.getGroupAddresses(addressChain, stakingKey, idxs)
+    } else {
+      return util.getAddresses(this.account, this.type, idxs)
+    }
   }
 
   toJSON() {

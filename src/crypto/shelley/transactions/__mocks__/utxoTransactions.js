@@ -12,7 +12,7 @@
 
 import {BigNumber} from 'bignumber.js'
 
-import {InsufficientFunds} from '../../errors'
+import {InsufficientFunds} from '../../../errors'
 import {
   AccountBindingSignature,
   Address,
@@ -37,9 +37,9 @@ import {
   selectAllInputSelection,
   firstMatchFirstInputSelection,
   utxoToTxInput,
-} from './inputSelection'
-import {generateAuthData, generateFee} from './utils'
-import {CARDANO_CONFIG} from '../../../config'
+} from '../inputSelection'
+import {generateAuthData, generateFee} from '../utils'
+import {CARDANO_CONFIG} from '../../../../config'
 
 import type {
   V3UnsignedTxData,
@@ -47,7 +47,7 @@ import type {
   RawUtxo,
   AddressedUtxo,
   Addressing,
-} from '../../../types/HistoryTransaction'
+} from '../../../../types/HistoryTransaction'
 
 const CONFIG = CARDANO_CONFIG.SHELLEY
 
@@ -241,7 +241,7 @@ export const signTransaction = async (
 ): Promise<Fragment> => {
   const {senderUtxos, IOs} = signRequest
 
-  const txbuilder = await TransactionBuilder.new()
+  const txbuilder = await new TransactionBuilder()
   const builderSetIOs =
     payload != null
       ? await txbuilder.payload(payload.certificate)
@@ -337,6 +337,7 @@ export const sendAllUnsignedTxFromUtxo = async (
       await fakeIOBuilder.add_input(input)
     }
     await fakeIOBuilder.add_output(
+      // note: currently failing
       await Address.from_bytes(Buffer.from(receiver, 'hex')),
       await Value.from_str(totalBalance.toString()),
     )
@@ -346,10 +347,12 @@ export const sendAllUnsignedTxFromUtxo = async (
         : await Payload.no_payload()
     const feeValue = await (await fakeIOBuilder.estimate_fee(
       feeAlgorithm,
+      // can't add a certificate to a UTXO transaction
       payload,
     )).to_str()
     fee = new BigNumber(feeValue)
   }
+
   // create a new transaction subtracing the fee from your total UTXO
   if (totalBalance.isLessThan(fee)) {
     throw new InsufficientFunds()

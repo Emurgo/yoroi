@@ -26,8 +26,4 @@ export default StyleSheet.create({
     marginTop: 16,
     marginBottom: 10,
   },
-  balanceCheckButton: {
-    marginHorizontal: 16,
-    marginBottom: 16,
-  },
 })

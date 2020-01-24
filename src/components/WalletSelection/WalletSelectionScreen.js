@@ -19,7 +19,6 @@ import {Button, StatusBar, ScreenBackground} from '../UiKit'
 import {
   ROOT_ROUTES,
   WALLET_INIT_ROUTES,
-  SHELLEY_WALLET_ROUTES,
 } from '../../RoutesList'
 import {showErrorDialog} from '../../actions'
 import {errorMessages} from '../../i18n/global-messages'
@@ -35,11 +34,6 @@ const messages = defineMessages({
     id: 'components.walletselection.walletselectionscreen.header',
     defaultMessage: '!!!Your wallets',
   },
-  balanceCheckButton: {
-    id: 'components.walletselection.walletselectionscreen.balanceCheckButton',
-    defaultMessage: '!!!Balance check (Shelley Testnet)',
-    description: 'some ddesc',
-  },
   addWalletButton: {
     id: 'components.walletselection.walletselectionscreen.addWalletButton',
     defaultMessage: '!!!Add wallet',
@@ -54,8 +48,6 @@ const WalletListScreen = ({
   navigation,
   wallets,
   navigateInitWallet,
-  navigateBalanceCheck,
-  navigateStakeDashboard,
   openWallet,
   intl,
 }) => (
@@ -85,20 +77,6 @@ const WalletListScreen = ({
           title={intl.formatMessage(messages.addWalletButton)}
           style={styles.addWalletButton}
         />
-
-        <Button
-          outline
-          onPress={navigateBalanceCheck}
-          title={intl.formatMessage(messages.balanceCheckButton)}
-          style={styles.balanceCheckButton}
-        />
-
-        <Button
-          outline
-          onPress={navigateStakeDashboard}
-          title={intl.formatMessage(messages.stakeDashboard)}
-          style={styles.balanceCheckButton}
-        />
       </ScreenBackground>
     </Screen>
   </SafeAreaView>
@@ -114,10 +92,6 @@ export default injectIntl(
     withHandlers({
       navigateInitWallet: ({navigation}) => (event) =>
         navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH),
-      navigateBalanceCheck: ({navigation}) => (event) =>
-        navigation.navigate(WALLET_INIT_ROUTES.BALANCE_CHECK),
-      navigateStakeDashboard: ({navigation}) => (event) =>
-        navigation.navigate(SHELLEY_WALLET_ROUTES.DELEGATION_SUMMARY),
       openWallet: ({navigation, intl}) => async (wallet) => {
         try {
           await walletManager.openWallet(wallet.id)

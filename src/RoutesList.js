@@ -33,7 +33,6 @@ export const WALLET_INIT_ROUTES = {
   MNEMONIC_SHOW: 'mnemoinc-show',
   MNEMONIC_CHECK: 'mnemonic-check',
   WALLET_CREDENTIALS: 'wallet-credentials',
-  BALANCE_CHECK: 'check-balance',
 }
 
 export const SETTINGS_ROUTES = {

@@ -8,7 +8,7 @@ import type {IntlShape} from 'react-intl'
 import type {ComponentType} from 'react'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import type {Navigation} from '../../types/navigation'
-import {CONFIG} from '../../config'
+import {NUMBERS} from '../../config'
 import {Button} from '../UiKit'
 import globalMessages from '../../i18n/global-messages'
 
@@ -46,11 +46,11 @@ const DelegationConfirmation = ({intl, navigation, onDelegate}) => {
           </Text>
           <Text>{poolHash}</Text>
         </View>
-        <Text>{amountToDelegate.toFormat(CONFIG.DECIMAL_PLACES_IN_ADA)}</Text>
-        <Text>{transactionFee.toFormat(CONFIG.DECIMAL_PLACES_IN_ADA)}</Text>
+        <Text>{amountToDelegate.toFormat(NUMBERS.DECIMAL_PLACES_IN_ADA)}</Text>
+        <Text>{transactionFee.toFormat(NUMBERS.DECIMAL_PLACES_IN_ADA)}</Text>
         <View style={styles.itemBlock}>
           <Text>
-            {approximateReward.toFormat(CONFIG.DECIMAL_PLACES_IN_ADA)}
+            {approximateReward.toFormat(NUMBERS.DECIMAL_PLACES_IN_ADA)}
           </Text>
         </View>
       </ScrollView>

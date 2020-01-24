@@ -1,22 +1,28 @@
 // @flow
 
+import {BigNumber} from 'bignumber.js'
+
 import {
   AccountBindingSignature,
   Certificate,
   InputOutput,
+  Fee,
   PayloadAuthData,
+  PerCertificateFee,
   // CertificateKind
   StakeDelegationAuthData,
+  Value,
 } from 'react-native-chain-libs'
+import {CertificateKind} from '../certificateUtils'
+import {NUMBERS, CARDANO_CONFIG} from '../../../config'
+import {AMOUNT_FORMAT} from '../../../types/HistoryTransaction'
+
 import type {
   BaseSignRequest,
   AmountFormat,
 } from '../../../types/HistoryTransaction'
-import {CONFIG} from '../../../config'
-import {CertificateKind} from '../certificateUtils'
-import {AMOUNT_FORMAT} from '../../../types/HistoryTransaction'
 
-import {BigNumber} from 'bignumber.js'
+const CONFIG = CARDANO_CONFIG.SHELLEY
 
 export const getTxInputTotal = async (
   IOs: InputOutput,
@@ -31,7 +37,7 @@ export const getTxInputTotal = async (
     sum = sum.plus(value)
   }
   if (format === AMOUNT_FORMAT.ADA) {
-    return sum.shiftedBy(-CONFIG.DECIMAL_PLACES_IN_ADA)
+    return sum.shiftedBy(-NUMBERS.DECIMAL_PLACES_IN_ADA)
   }
   return sum
 }
@@ -49,7 +55,7 @@ export const getTxOutputTotal = async (
     sum = sum.plus(value)
   }
   if (format === AMOUNT_FORMAT.ADA) {
-    return sum.shiftedBy(-CONFIG.DECIMAL_PLACES_IN_ADA)
+    return sum.shiftedBy(-NUMBERS.DECIMAL_PLACES_IN_ADA)
   }
   return sum
 }
@@ -62,7 +68,7 @@ export const getShelleyTxFee = async (
   const ins = await getTxInputTotal(IOs)
   const result = ins.minus(out)
   if (format === AMOUNT_FORMAT.ADA) {
-    return result.shiftedBy(-CONFIG.DECIMAL_PLACES_IN_ADA)
+    return result.shiftedBy(-NUMBERS.DECIMAL_PLACES_IN_ADA)
   }
   return result
 }
@@ -112,4 +118,36 @@ export const generateAuthData = async (
         `generateAuthData unexpected cert type ${await certificate.get_type()}`,
       )
   }
+}
+
+export const generateFee = async (): Promise<Fee> => {
+  const perCertificate = await PerCertificateFee.new()
+  const genesisPerCert = CONFIG.LINEAR_FEE.PER_CERTIFICATE_FEES
+  if (genesisPerCert) {
+    if (genesisPerCert.CERTIFICATE_POOL_REGISTRATION != null) {
+      await perCertificate.set_pool_registration(
+        await Value.from_str(genesisPerCert.CERTIFICATE_POOL_REGISTRATION),
+      )
+    }
+    if (genesisPerCert.CERTIFICATE_STAKE_DELEGATION != null) {
+      await perCertificate.set_stake_delegation(
+        await Value.from_str(genesisPerCert.CERTIFICATE_STAKE_DELEGATION),
+      )
+    }
+    // $FlowFixMe TODO: currently this property is not defined in config
+    if (genesisPerCert.CERTIFICATE_OWNER_STAKE_DELEGATION != null) {
+      await perCertificate.set_owner_stake_delegation(
+        await Value.from_str(genesisPerCert.CERTIFICATE_OWNER_STAKE_DELEGATION),
+      )
+    }
+  }
+
+  const feeAlgorithm = await Fee.linear_fee(
+    await Value.from_str(CONFIG.LINEAR_FEE.CONSTANT),
+    await Value.from_str(CONFIG.LINEAR_FEE.COEFFICIENT),
+    await Value.from_str(CONFIG.LINEAR_FEE.CERTIFICATE),
+    perCertificate,
+  )
+
+  return feeAlgorithm
 }

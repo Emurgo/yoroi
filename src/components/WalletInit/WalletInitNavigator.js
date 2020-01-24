@@ -5,13 +5,12 @@ import {createStackNavigator} from 'react-navigation'
 import WalletInitScreen from './WalletInitScreen'
 import CreateWalletScreen from './CreateWallet/CreateWalletScreen'
 import RestoreWalletScreen from './RestoreWallet/RestoreWalletScreen'
-import BalanceCheckScreen from './BalanceCheck/BalanceCheckScreen'
 import MnemonicShowScreen from './CreateWallet/MnemonicShowScreen'
 import HeaderBackButton from '../UiKit/HeaderBackButton'
 import {
   defaultNavigationOptions,
-  defaultStackNavigatorOptions,
   shelleyNavigationOptions,
+  defaultStackNavigatorOptions,
 } from '../../navigationOptions'
 import MnemonicCheckScreen from './CreateWallet/MnemonicCheckScreen'
 import WalletCredentialsScreen from './RestoreWallet/WalletCredentialsScreen'
@@ -38,23 +37,28 @@ const WalletInitNavigator = createStackNavigator(
     },
     [WALLET_INIT_ROUTES.CREATE_WALLET]: CreateWalletScreen,
     [WALLET_INIT_ROUTES.RESTORE_WALLET]: RestoreWalletScreen,
-    [WALLET_INIT_ROUTES.BALANCE_CHECK]: {
-      screen: BalanceCheckScreen,
-      navigationOptions: {
-        ...shelleyNavigationOptions,
-      },
-    },
     [WALLET_INIT_ROUTES.MNEMONIC_SHOW]: MnemonicShowScreen,
     [WALLET_INIT_ROUTES.MNEMONIC_CHECK]: MnemonicCheckScreen,
     [WALLET_INIT_ROUTES.WALLET_CREDENTIALS]: WalletCredentialsScreen,
   },
   {
     initialRouteName: WALLET_INIT_ROUTES.WALLET_SELECTION,
-    navigationOptions: ({navigation}) => ({
-      title: navigation.getParam('title'),
-      headerLeft: <HeaderBackButton navigation={navigation} />,
-      ...defaultNavigationOptions,
-    }),
+    navigationOptions: ({navigation}) => {
+      let navigationOptions
+      if (navigation.getParam('isShelleyWallet') === true) {
+        navigationOptions = {
+          ...defaultNavigationOptions,
+          ...shelleyNavigationOptions,
+        }
+      } else {
+        navigationOptions = defaultNavigationOptions
+      }
+      return {
+        title: navigation.getParam('title'),
+        headerLeft: <HeaderBackButton navigation={navigation} />,
+        ...navigationOptions,
+      }
+    },
     cardStyle: {
       backgroundColor: 'transparent',
     },
