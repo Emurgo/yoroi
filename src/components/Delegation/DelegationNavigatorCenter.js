@@ -35,14 +35,10 @@ const DelegationNavigatorCenter = createStackNavigator(
             withoutBackground
           />
         ),
-        ...shelleyNavigationOptions,
       }),
     },
     [STAKING_CENTER_ROUTES.DELEGATION_CONFIRM]: {
       screen: DelegationConfirmation,
-      navigationOptions: ({navigation}) => ({
-        ...shelleyNavigationOptions,
-      }),
     },
   },
   {
@@ -51,6 +47,7 @@ const DelegationNavigatorCenter = createStackNavigator(
       title: navigation.getParam('title'),
       headerLeft: <HeaderBackButton navigation={navigation} />,
       ...defaultNavigationOptions,
+      ...shelleyNavigationOptions,
     }),
     ...defaultStackNavigatorOptions,
   },

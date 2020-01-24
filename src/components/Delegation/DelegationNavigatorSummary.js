@@ -30,6 +30,7 @@ const DelegationNavigatorSummary = createStackNavigator(
             withoutBackground
           />
         ),
+        ...defaultNavigationOptions,
         ...shelleyNavigationOptions,
       }),
     },

@@ -16,10 +16,7 @@ import walletManager, {
 import WalletListItem from './WalletListItem'
 import Screen from '../Screen'
 import {Button, StatusBar, ScreenBackground} from '../UiKit'
-import {
-  ROOT_ROUTES,
-  WALLET_INIT_ROUTES,
-} from '../../RoutesList'
+import {ROOT_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import {showErrorDialog} from '../../actions'
 import {errorMessages} from '../../i18n/global-messages'
 
@@ -37,10 +34,6 @@ const messages = defineMessages({
   addWalletButton: {
     id: 'components.walletselection.walletselectionscreen.addWalletButton',
     defaultMessage: '!!!Add wallet',
-  },
-  stakeDashboard: {
-    id: 'components.walletselection.walletselectionscreen.stakeDashboardButton',
-    defaultMessage: '!!!Stake Dashboard',
   },
 })
 
@@ -95,7 +88,7 @@ export default injectIntl(
       openWallet: ({navigation, intl}) => async (wallet) => {
         try {
           await walletManager.openWallet(wallet.id)
-          const route = wallet.isShelleyWallet
+          const route = wallet.isShelley
             ? ROOT_ROUTES.SHELLEY_WALLET
             : ROOT_ROUTES.WALLET
           navigation.navigate(route)

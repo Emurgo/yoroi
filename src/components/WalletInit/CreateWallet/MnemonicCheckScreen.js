@@ -71,11 +71,17 @@ const handleWalletConfirmation = ({navigation, createWallet}) => async () => {
   assert.assert(!!mnemonic, 'handleWalletConfirmation:: mnemonic')
   assert.assert(!!password, 'handleWalletConfirmation:: password')
   assert.assert(!!name, 'handleWalletConfirmation:: name')
-  assert.assert(!!isShelleyWallet, 'handleWalletConfirmation:: shelley wallet')
+  assert.assert(
+    isShelleyWallet != null,
+    'handleWalletConfirmation:: isShelleyWallet',
+  )
 
   await createWallet(name, mnemonic, password, isShelleyWallet)
-  // TODO: Update this to consider Shelley wallet
-  navigation.navigate(ROOT_ROUTES.WALLET)
+
+  const route = isShelleyWallet
+    ? ROOT_ROUTES.SHELLEY_WALLET
+    : ROOT_ROUTES.WALLET
+  navigation.navigate(route)
 }
 
 type WordProps = {

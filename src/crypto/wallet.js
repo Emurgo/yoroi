@@ -285,6 +285,7 @@ export class Wallet {
     this._state = {
       lastGeneratedAddressIndex: data.lastGeneratedAddressIndex,
     }
+    this._isShelley = data.isShelley
     this._internalChain = AddressChain.fromJSON(data.internalChain)
     this._externalChain = AddressChain.fromJSON(data.externalChain)
     this._transactionCache = TransactionCache.fromJSON(data.transactionCache)
@@ -771,6 +772,7 @@ class WalletManager {
     assert.preconditionCheck(!!id, 'openWallet:: !!id')
     const wallet = new Wallet()
     const data = await storage.read(`/wallet/${id}/data`)
+    Logger.debug('openWallet::data', data)
 
     if (!data) throw new Error('Cannot read saved data')
 
