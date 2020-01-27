@@ -394,6 +394,14 @@ export class Wallet {
     return this._accountAddress
   }
 
+  get totalDelegated() {
+    return this._totalDelegated
+  }
+
+  set totalDelegated(totalDelegated: string) {
+    this._totalDelegated = totalDelegated
+  }
+
   get internalAddresses() {
     return this._internalChain.addresses
   }

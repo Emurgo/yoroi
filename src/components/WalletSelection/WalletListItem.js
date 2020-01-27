@@ -20,11 +20,10 @@ type ExternalProps = {
 const WalletListItem = ({wallet, onPress}) => (
   <TouchableOpacity activeOpacity={0.5} onPress={onPress} style={styles.item}>
     <View style={styles.icon}>
-      <CardanoIcon height={28} width={28} color={COLORS.WHITE} />
+      <CardanoIcon height={28} width={28} color={COLORS.WHITE} shelley={wallet.isShelley} />
     </View>
     <Text style={styles.nameText}>
-      {/* TODO: improve style, maybe different background or border? */}
-      {wallet.name} {wallet.isShelley ? '*Shelley' : ''}{' '}
+      {wallet.name}
     </Text>
   </TouchableOpacity>
 )
