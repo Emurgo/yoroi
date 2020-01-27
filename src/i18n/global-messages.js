@@ -226,4 +226,20 @@ export default defineMessages({
     id: 'global.availableFunds',
     defaultMessage: '!!!Available funds',
   },
+  epochLabel: {
+    id: 'global.staking.epochLabel',
+    defaultMessage: '!!!Epoch',
+  },
+  totalAda: {
+    id: 'global.totalAda',
+    defaultMessage: '!!!Total ADA',
+  },
+  stakePoolName: {
+    id: 'global.staking.stakePoolName',
+    defaultMessage: '!!!Stake pool name',
+  },
+  stakePoolHash: {
+    id: 'global.staking.stakePoolHash',
+    defaultMessage: '!!!Stake pool hash',
+  },
 })

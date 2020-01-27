@@ -120,6 +120,8 @@ export class Wallet {
   // $FlowFixMe null
   _id: string = null
 
+  _isShelley: boolean = false
+
   _isEasyConfirmationEnabled: boolean = false
 
   // $FlowFixMe null
@@ -254,6 +256,8 @@ export class Wallet {
       account = await util.getAccountFromMasterKey(masterKeyHex)
     }
 
+    this._isShelley = isShelley
+
     this._transactionCache = new TransactionCache()
 
     // initialize address chains
@@ -281,6 +285,7 @@ export class Wallet {
     this._state = {
       lastGeneratedAddressIndex: data.lastGeneratedAddressIndex,
     }
+    this._isShelley = data.isShelley
     this._internalChain = AddressChain.fromJSON(data.internalChain)
     this._externalChain = AddressChain.fromJSON(data.externalChain)
     this._transactionCache = TransactionCache.fromJSON(data.transactionCache)
@@ -501,6 +506,7 @@ export class Wallet {
       internalChain: this._internalChain.toJSON(),
       externalChain: this._externalChain.toJSON(),
       transactionCache: this._transactionCache.toJSON(),
+      isShelley: this._isShelley,
       isEasyConfirmationEnabled: this._isEasyConfirmationEnabled,
     }
   }
@@ -529,6 +535,8 @@ class WalletManager {
     const result = await Promise.all(
       keys.map((key) => storage.read(`/wallet/${key}`)),
     )
+
+    Logger.debug('result::_listWallets', result)
 
     return result
   }
@@ -624,6 +632,11 @@ class WalletManager {
   get isUsedAddressIndex() {
     if (!this._wallet) return {}
     return this._wallet.isUsedAddressIndex
+  }
+
+  get isShelley() {
+    if (!this._wallet) return false
+    return this._wallet._isShelley
   }
 
   async generateNewUiReceiveAddressIfNeeded() {
@@ -732,14 +745,13 @@ class WalletManager {
     password: string,
     isShelley?: boolean = false,
   ): Promise<Wallet> {
-    // Ignore id & name for now
     const wallet = new Wallet()
     const id = await wallet._create(mnemonic, password, isShelley)
 
     this._id = id
     this._wallets = {
       ...this._wallets,
-      [id]: {id, name, isEasyConfirmationEnabled: false},
+      [id]: {id, name, isShelley, isEasyConfirmationEnabled: false},
     }
 
     this._wallet = wallet
@@ -750,6 +762,9 @@ class WalletManager {
       this._closeReject = reject
     })
     this._notify()
+
+    Logger.debug('Wallet Data::createWallet', wallet)
+
     return wallet
   }
 
@@ -757,6 +772,7 @@ class WalletManager {
     assert.preconditionCheck(!!id, 'openWallet:: !!id')
     const wallet = new Wallet()
     const data = await storage.read(`/wallet/${id}/data`)
+    Logger.debug('openWallet::data', data)
 
     if (!data) throw new Error('Cannot read saved data')
 
@@ -764,6 +780,7 @@ class WalletManager {
     wallet._id = id
     this._wallet = wallet
     this._id = id
+
     wallet.subscribe(this._notify)
     this._closePromise = new Promise((resolve, reject) => {
       this._closeReject = reject
@@ -773,6 +790,8 @@ class WalletManager {
     if (wallet._isEasyConfirmationEnabled) {
       await this.ensureKeysValidity()
     }
+
+    Logger.debug('openWallet::wallet::isShelley', wallet._isShelley)
 
     return wallet
   }
@@ -786,6 +805,9 @@ class WalletManager {
     assert.assert(wallet._id, 'saveState:: wallet._id')
     /* :: if (!this._wallet) throw 'assert' */
     const data = wallet.toJSON()
+
+    Logger.debug('saveState::isShelley', data.isShelley)
+
     await storage.write(`/wallet/${wallet._id}/data`, data)
   }
 
@@ -851,12 +873,12 @@ class WalletManager {
     )
   }
 
-  closeWallet() {
-    if (!this._wallet) return
+  closeWallet(): Promise<void> {
+    if (!this._wallet) return Promise.resolve()
     assert.assert(this._closeReject, 'close: should have _closeReject')
     /* :: if (!this._closeReject) throw 'assert' */
     // Abort all async interactions with the wallet
-    const reject = this._closeReject
+    // const reject = this._closeReject
     this._closePromise = null
     this._closeReject = null
     this._wallet = null
@@ -865,8 +887,10 @@ class WalletManager {
     // need to reject in next microtask otherwise
     // closeWallet would throw if some rejection
     // handler does not catch
-    Promise.resolve().then(() => {
-      reject(new WalletClosed())
+    return Promise.resolve().then(() => {
+      // TODO: Check why Shelley path crash when this is active
+      //  and figure out why this is actually necessary
+      // reject(new WalletClosed())
     })
   }
 

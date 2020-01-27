@@ -7,6 +7,8 @@ export const COLORS = {
   BACKGROUND: '#fff',
   BACKGROUND_GRAY: '#f9f9f9',
   BACKGROUND_BLUE: '#254BC9',
+  BACKGROUND_LIGHT_GRAY: '#F4F6FC',
+  BANNER_GREY: '#F0F3F5',
   DARK_GRAY: '#4a4a4a',
   LIGHT_GRAY: '#eee',
   GRAY: '#777',
@@ -20,11 +22,15 @@ export const COLORS = {
   NEGATIVE_AMOUNT: '#d0021b',
   PRIMARY: '#1036a0',
   PRIMARY_TEXT: '#fff',
+  SECONDARY_TEXT: '#ADAEB6',
+  DARK_TEXT: '#38393D',
+  LIGHT_GRAY_TEXT: '#676970',
   DARK_BLUE: '#1036a0',
   RED: '#ff0000',
   WARNING: '#FFD303',
   WARNING_TEXT_COLOR: '#9E5B0A',
   DISABLED: '#999',
+  SHADOW_COLOR: 'rgba(0, 0, 0, 0.06)',
 }
 
 export const DEBUG_BORDERS = {

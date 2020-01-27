@@ -341,9 +341,9 @@ export const createWallet = (
   name: string,
   mnemonic: string,
   password: string,
-  isShelleyWallet?: boolean = false,
+  isShelley?: boolean = false,
 ) => async (dispatch: Dispatch<any>) => {
-  await walletManager.createWallet(name, mnemonic, password, isShelleyWallet)
+  await walletManager.createWallet(name, mnemonic, password, isShelley)
   dispatch(updateWallets())
 }
 

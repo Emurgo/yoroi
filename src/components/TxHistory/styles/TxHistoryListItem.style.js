@@ -10,7 +10,7 @@ export default StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 6,
     shadowOffset: {width: 0, height: 2},
-    shadowColor: 'rgba(0, 0, 0, 0.06)',
+    shadowColor: COLORS.SHADOW_COLOR,
     backgroundColor: '#fff',
     marginBottom: 16,
     paddingHorizontal: 12,

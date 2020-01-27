@@ -2,13 +2,13 @@
 import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {View, ScrollView} from 'react-native'
+import {View, ScrollView, Switch} from 'react-native'
 import {NavigationEvents, SafeAreaView} from 'react-navigation'
 import _ from 'lodash'
 import {withHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
 
-import {Button, ValidatedTextInput, StatusBar} from '../UiKit'
+import {Button, ValidatedTextInput, StatusBar, Text} from '../UiKit'
 import {
   validatePassword,
   getWalletNameError,
@@ -51,6 +51,11 @@ const messages = defineMessages({
     defaultMessage: '!!!Passwords do not match',
     description: 'some desc',
   },
+  isShelleyWalletLabel: {
+    id: 'components.walletinit.walletform.isShelleyWalletLabel',
+    defaultMessage: '!!!Is Shelley Wallet',
+    description: 'some desc',
+  },
 })
 
 type FormValidationErrors = PasswordValidationErrors &
@@ -61,12 +66,17 @@ type ComponentState = {
   password: string,
   passwordConfirmation: string,
   showPasswordsDoNotMatchError: boolean,
+  isShelleyWallet: boolean,
 }
 
 type Props = {
   intl: any,
   walletNames: Array<string>,
-  onSubmit: ({name: string, password: string}) => mixed,
+  onSubmit: ({
+    name: string,
+    password: string,
+    isShelleyWallet: boolean,
+  }) => mixed,
   validateWalletName: (walletName: string) => WalletNameValidationErrors,
 }
 
@@ -78,12 +88,14 @@ class WalletForm extends PureComponent<Props, ComponentState> {
       password: CONFIG.DEBUG.PASSWORD,
       passwordConfirmation: CONFIG.DEBUG.PASSWORD,
       showPasswordsDoNotMatchError: false,
+      isShelleyWallet: CONFIG.DEBUG.IS_SHELLEY_WALLET,
     }
     : {
       name: '',
       password: '',
       passwordConfirmation: '',
       showPasswordsDoNotMatchError: false,
+      isShelleyWallet: true,
     }
 
   debouncedHandlePasswordMatchValidation = _.debounce(() => {
@@ -94,12 +106,16 @@ class WalletForm extends PureComponent<Props, ComponentState> {
   }, 300)
 
   handleOnWillBlur = () =>
-    this.setState({password: '', passwordConfirmation: ''})
+    this.setState({
+      password: '',
+      passwordConfirmation: '',
+      isShelleyWallet: false,
+    })
 
   handleSubmit = () => {
-    const {name, password} = this.state
+    const {name, password, isShelleyWallet} = this.state
 
-    this.props.onSubmit({name, password})
+    this.props.onSubmit({name, password, isShelleyWallet})
   }
 
   handleSetName = (name) => this.setState({name})
@@ -108,6 +124,9 @@ class WalletForm extends PureComponent<Props, ComponentState> {
     this.debouncedHandlePasswordMatchValidation()
     this.setState({password})
   }
+
+  handleSetIsShelleyWallet = (isShelleyWallet) =>
+    this.setState({isShelleyWallet})
 
   handleSetPasswordConfirmation = (passwordConfirmation) => {
     this.debouncedHandlePasswordMatchValidation()
@@ -130,6 +149,7 @@ class WalletForm extends PureComponent<Props, ComponentState> {
       password,
       passwordConfirmation,
       showPasswordsDoNotMatchError,
+      isShelleyWallet,
     } = this.state
 
     const validationErrors = this.validateForm()
@@ -157,6 +177,14 @@ class WalletForm extends PureComponent<Props, ComponentState> {
                 validationErrors,
               )}
             />
+
+            <View>
+              <Text>{intl.formatMessage(messages.isShelleyWalletLabel)}</Text>
+              <Switch
+                value={isShelleyWallet}
+                onValueChange={this.handleSetIsShelleyWallet}
+              />
+            </View>
 
             <ValidatedTextInput
               secureTextEntry

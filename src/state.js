@@ -7,10 +7,12 @@ export type State = {
   wallets: Dict<{
     id: string,
     name: string,
+    isShelleyWallet: boolean,
   }>,
   wallet: {
     name: string,
     isInitialized: boolean,
+    isShelleyWallet: boolean,
     isEasyConfirmationEnabled: boolean,
     transactions: Dict<Transaction>,
     internalAddresses: Array<string>,
@@ -49,6 +51,7 @@ export const getInitialState = (): State => ({
   wallet: {
     name: '',
     isInitialized: false,
+    isShelleyWallet: false,
     isEasyConfirmationEnabled: false,
     transactions: {},
     internalAddresses: [],

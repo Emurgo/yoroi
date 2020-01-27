@@ -129,7 +129,10 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
     const isShelleyWallet = !!navigation.getParam('isShelleyWallet')
     await createWallet(name, phrase, password, isShelleyWallet)
     this.setState({isProcessing: false})
-    navigation.navigate(ROOT_ROUTES.WALLET)
+    const route = isShelleyWallet
+      ? ROOT_ROUTES.SHELLEY_WALLET
+      : ROOT_ROUTES.WALLET
+    navigation.navigate(route)
   }, 1000)
 
   onSubmitWalletCredentials = ({name, password}) => {
@@ -268,7 +271,7 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
       }
       await submitShelleyTransferTx(tx.encodedTx)
       this.setState({isProcessing: false})
-      navigation.navigate(ROOT_ROUTES.WALLET)
+      navigation.navigate(ROOT_ROUTES.SHELLEY_WALLET)
     } catch (e) {
       handleApiError(e, intl, 'Could not upgrade wallet')
     } finally {
@@ -330,7 +333,7 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
               balance={balance}
               finalBalance={finalBalance}
               fees={transferTx?.fee}
-              onCancel={this.navigateToWallet}
+              onCancel={this.onBack}
               onConfirm={this.onConfirmUpgrade}
               onContinue={this.navigateToWallet}
               onRequestClose={this.onBack}
