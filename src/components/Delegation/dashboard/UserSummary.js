@@ -29,9 +29,9 @@ const ICON_DIM = 44
 
 type ExternalProps = {|
   +intl: intlShape,
-  +totalAdaSum: string,
-  +totalRewards: string,
-  +totalDelegated: string,
+  +totalAdaSum: string | null,
+  +totalRewards: string | null,
+  +totalDelegated: string | null,
 |}
 
 const UserSummary = ({

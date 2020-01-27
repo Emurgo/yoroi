@@ -3,7 +3,7 @@ import React from 'react'
 import {Button} from '../UiKit'
 import {createStackNavigator} from 'react-navigation'
 import DelegationSummary from './DelegationSummary'
-import {SHELLEY_WALLET_ROUTES, WALLET_ROUTES} from '../../RoutesList'
+import {DELEGATION_SUMMARY_ROUTES, WALLET_ROUTES} from '../../RoutesList'
 import SettingsScreenNavigator from '../Settings/SettingsScreenNavigator'
 import iconGear from '../../assets/img/gear.png'
 
@@ -17,7 +17,7 @@ import styles from '../TxHistory/styles/SettingsButton.style'
 
 const DelegationNavigatorSummary = createStackNavigator(
   {
-    [SHELLEY_WALLET_ROUTES.DELEGATION_SUMMARY]: {
+    [DELEGATION_SUMMARY_ROUTES.MAIN]: {
       screen: DelegationSummary,
       navigationOptions: ({navigation}) => ({
         title: navigation.getParam('title'),
@@ -43,7 +43,7 @@ const DelegationNavigatorSummary = createStackNavigator(
     },
   },
   {
-    initialRouteName: SHELLEY_WALLET_ROUTES.DELEGATION_SUMMARY,
+    initialRouteName: DELEGATION_SUMMARY_ROUTES.MAIN,
     ...defaultStackNavigatorOptions,
   },
 )

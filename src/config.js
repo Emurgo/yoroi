@@ -17,6 +17,7 @@ const _COMMIT = env.getString('COMMIT')
 
 export const CARDANO_CONFIG = {
   TESTNET: {
+    IS_SHELLEY: false,
     PROTOCOL_MAGIC: 1097911063,
     API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
     SEIZA_STAKING_SIMPLE: (ADA: string) =>
@@ -26,6 +27,7 @@ export const CARDANO_CONFIG = {
       `https://cardano-explorer.cardano-testnet.iohkdev.io/tx/${tx}`,
   },
   MAINNET: {
+    IS_SHELLEY: false,
     PROTOCOL_MAGIC: 764824073,
     API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
     SEIZA_STAKING_SIMPLE: (ADA: string) =>
@@ -34,6 +36,7 @@ export const CARDANO_CONFIG = {
     EXPLORER_URL_FOR_TX: (tx: string) => `https://cardanoexplorer.com/tx/${tx}`,
   },
   SHELLEY: {
+    IS_SHELLEY: true,
     NETWORK: 'Testnet', // for now, assume Shelley testnet by default
     PROTOCOL_MAGIC: 764824073,
     API_ROOT: 'https://shelley-itn-yoroi-backend.yoroiwallet.com/api',
@@ -57,6 +60,10 @@ export const CARDANO_CONFIG = {
     },
     GENESISHASH:
       '8e4d2a343f3dcf9330ad9035b3e8d168e6728904262f2c434a4f8f934ec7b676',
+    BLOCK0_DATE: 1576264417000,
+    SLOTS_PER_EPOCH: 43200,
+    SLOT_DURATION: 2,
+    EPOCH_REWARD: 19666,
   },
 }
 
@@ -88,6 +95,7 @@ export const NUMBERS = {
     CHIMERIC_ACCOUNT: 2,
   },
   STAKING_KEY_INDEX: 0,
+  EPOCH_REWARD_DENOMINATOR: new BigNumber(10).pow(6),
 }
 
 export const CONFIG = {

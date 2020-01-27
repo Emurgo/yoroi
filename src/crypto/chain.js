@@ -9,10 +9,7 @@ import {Logger} from '../utils/logging'
 import * as util from './byron/util'
 import * as shelleyUtil from './shelley/util'
 import {ADDRESS_TYPE_TO_CHANGE} from './commonUtils'
-import {
-  Bip32PublicKey,
-  // PublicKey,
-} from 'react-native-chain-libs'
+import {Address, Bip32PublicKey} from 'react-native-chain-libs'
 
 import type {Dict} from '../state'
 import type {CryptoAccount} from './byron/util'
@@ -21,12 +18,14 @@ import type {AddressType} from './commonUtils'
 export type AddressBlock = [number, Moment, Array<string>]
 
 export class AddressGenerator {
-  account: CryptoAccount | Bip32PublicKey
+  account: CryptoAccount | string
   type: AddressType
   isShelley: boolean
 
+  _shelleyAccount: Bip32PublicKey
+
   constructor(
-    account: CryptoAccount | Bip32PublicKey,
+    account: CryptoAccount | string,
     type: AddressType,
     isShelley?: boolean = false,
   ) {
@@ -36,17 +35,40 @@ export class AddressGenerator {
   }
 
   async generate(idxs: Array<number>): Promise<Array<string>> {
-    if (this.account instanceof Bip32PublicKey) {
-      const addressChain = await this.account.derive(
+    if (this.isShelley) {
+      // cache shelley account
+      if (
+        this._shelleyAccount == null &&
+        (typeof this.account === 'string' || this.account instanceof String)
+      ) {
+        this._shelleyAccount = await Bip32PublicKey.from_bytes(
+          Buffer.from(this.account, 'hex'),
+        )
+      }
+      const addressChain = await this._shelleyAccount.derive(
         ADDRESS_TYPE_TO_CHANGE[this.type],
       )
-      // $FlowFixMe shouldn't fail here (it does not above)
-      const stakingKey = await (await (await this.account.derive(
+      const stakingKey = await (await (await this._shelleyAccount.derive(
         NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
       )).derive(NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
-      return shelleyUtil.getGroupAddresses(addressChain, stakingKey, idxs)
-    } else {
+      const addrs = await shelleyUtil.getGroupAddresses(
+        addressChain,
+        stakingKey,
+        idxs,
+      )
+      // in contrast to Byron, for Shelley we return hex addresses
+      return await Promise.all(
+        addrs.map(async (addr) => {
+          const obj = await Address.from_string(addr)
+          return Buffer.from(await obj.as_bytes()).toString('hex')
+        }),
+      )
+    } else if (
+      !(typeof this.account === 'string' || this.account instanceof String)
+    ) {
       return util.getAddresses(this.account, this.type, idxs)
+    } else {
+      throw new Error('AddressGenerator::generate: account is invalid')
     }
   }
 
@@ -54,12 +76,13 @@ export class AddressGenerator {
     return {
       account: this.account,
       type: this.type,
+      isShelley: this.isShelley,
     }
   }
 
   static fromJSON(data: any) {
-    const {account, type} = data
-    return new AddressGenerator(account, type)
+    const {account, type, isShelley} = data
+    return new AddressGenerator(account, type, isShelley)
   }
 }
 
@@ -239,5 +262,29 @@ export class AddressChain {
 
   getBlocks() {
     return _.chunk(this.addresses, this._blockSize)
+  }
+
+  // note(v-almonacid): this is an alternative to the method
+  // wallet::getLastUsedIndex, which currently only works in byron environment
+  async getLastUsedIndex(
+    filterFn: AsyncAddressFilter,
+    networkConfig?: any = CONFIG.CARDANO,
+  ) {
+    await this.sync(filterFn, networkConfig)
+    const totalGenerated = this.addresses.length
+    const block = this._getLastBlock()
+    const used = await filterFn(block, networkConfig)
+    const lastUsedRelIdx = used.length > 0 ? block.indexOf(_.last(used)) : -1
+    return totalGenerated > this._blockSize
+      ? totalGenerated - this._blockSize + lastUsedRelIdx
+      : lastUsedRelIdx
+  }
+
+  async getNextUnused(
+    filterFn: AsyncAddressFilter,
+    networkConfig?: any = CONFIG.CARDANO,
+  ) {
+    const lastUsedIdx = await this.getLastUsedIndex(filterFn, networkConfig)
+    return (await this._addressGenerator.generate([lastUsedIdx + 1]))[0]
   }
 }

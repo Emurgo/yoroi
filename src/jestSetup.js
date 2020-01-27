@@ -11,6 +11,11 @@ jest.setMock(
   './crypto/shelley/transactions/utxoTransactions',
   require('./crypto/shelley/transactions/__mocks__/utxoTransactions'),
 )
+jest.mock('react-native-device-info', () => {
+  return {
+    getVersion: () => '1.5.1',
+  }
+})
 
 // $FlowFixMe
 global.TextEncoder = nodeUtil.TextEncoder

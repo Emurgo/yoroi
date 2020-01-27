@@ -5,11 +5,11 @@ import type {ComponentType} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View, ScrollView} from 'react-native'
-import {SafeAreaView} from 'react-navigation'
+import {SafeAreaView, withNavigation} from 'react-navigation'
 import {BigNumber} from 'bignumber.js'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl} from 'react-intl'
 
-import {Banner, OfflineBanner, StatusBar} from '../UiKit'
+import {Banner, OfflineBanner, StatusBar, PleaseWaitModal} from '../UiKit'
 import {
   EpochProgress,
   UpcomingRewardInfo,
@@ -22,114 +22,278 @@ import {
   lastHistorySyncErrorSelector,
   isOnlineSelector,
   walletNameSelector,
-  languageSelector,
+  utxoBalanceSelector,
+  utxosSelector,
+  accountBalanceSelector,
+  isFetchingAccountStateSelector,
+  isFetchingUtxosSelector,
+  poolsSelector,
+  poolInfoSelector,
+  totalDelegatedSelector,
 } from '../../selectors'
 import DelegationNavigationButtons from './DelegationNavigationButtons'
+import UtxoAutoRefresher from '../Send/UtxoAutoRefresher'
+import AccountAutoRefresher from './AccountAutoRefresher'
 import {withNavigationTitle} from '../../utils/renderUtils'
-
-import {formatAdaWithText} from '../../utils/format'
+import {
+  genToRelativeSlotNumber,
+  genCurrentEpochLength,
+  genCurrentSlotLength,
+  genTimeToSlot,
+} from '../../helpers/timeUtils'
+import {fetchPoolInfo} from '../../actions/pools'
+import {SHELLEY_WALLET_ROUTES} from '../../RoutesList'
+import walletManager from '../../crypto/wallet'
+import globalMessages from '../../i18n/global-messages'
+import {formatAdaWithText, formatAdaInteger} from '../../utils/format'
 
 import styles from './styles/DelegationSummary.style'
 
 import type {Navigation} from '../../types/navigation'
-import type {State} from '../../state'
-
-const messages = defineMessages({
-  noDelegation: {
-    id: 'components.delegationsummary.noTransactions',
-    defaultMessage: '!!!No transactions to show yet',
-  },
-  syncErrorBannerTextWithoutRefresh: {
-    id: 'components.delegationsummary.syncErrorBannerTextWithoutRefresh',
-    defaultMessage: '!!!We are experiencing synchronization issues.',
-  },
-  syncErrorBannerTextWithRefresh: {
-    id: 'components.delegationsummary.syncErrorBannerTextWithRefresh',
-    defaultMessage:
-      '!!!We are experiencing synchronization issues. Pull to refresh',
-  },
-})
+import type {
+  PoolTuples,
+  RemotePoolMetaSuccess,
+  RawUtxo,
+} from '../../types/HistoryTransaction'
 
 const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
   <Banner
     error
     text={
       showRefresh
-        ? intl.formatMessage(messages.syncErrorBannerTextWithRefresh)
-        : intl.formatMessage(messages.syncErrorBannerTextWithoutRefresh)
+        ? intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh)
+        : intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh)
     }
   />
 ))
 
-const DelegationSummary = ({
-  navigation,
-  isSyncing,
-  isOnline,
-  lastSyncError,
-}) => (
-  <SafeAreaView style={styles.scrollView}>
-    <StatusBar type="dark" />
-    <View style={styles.container}>
-      <OfflineBanner />
-      {isOnline &&
-        lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
+type Props = {
+  intl: any,
+  navigation: Navigation,
+  isSyncing: boolean,
+  isOnline: boolean,
+  lastSyncError: any,
+  utxoBalance: ?BigNumber,
+  utxos: ?Array<RawUtxo>,
+  accountBalance: ?BigNumber,
+  isFetchingAccountState: boolean,
+  isFetchingUtxos: boolean,
+  pools: ?Array<PoolTuples>,
+  fetchPoolInfo: () => any,
+  poolInfo: ?RemotePoolMetaSuccess,
+  totalDelegated: BigNumber,
+}
 
-      <ScrollView style={styles.inner}>
-        <NotDelegatedInfo />
-        <UpcomingRewardInfo
-          nextRewardText={'Jan 21st 04:13 AM'}
-          followingRewardText={'Jan 22nd 04:13 AM'}
-          showDisclaimer
-        />
-        <EpochProgress
-          percentage={40}
-          currentEpoch={4}
-          endTime={{
-            h: '12',
-            m: '15',
-            s: '13',
-          }}
-        />
-        <UserSummary
-          totalAdaSum={formatAdaWithText(new BigNumber(1000))}
-          totalRewards={formatAdaWithText(new BigNumber(200))}
-          totalDelegated={formatAdaWithText(new BigNumber(300))}
-        />
-        <DelegatedStakepoolInfo
-          poolTicker="1EMUR"
-          poolName="EMURGO’s STAKEPOOL"
-          poolHash="7186b11017e877329798ac925480585208516c4e5c30b69e38f0b997e7b72a83"
-          poolURL="https://yoroi-wallet.com/"
-        />
-      </ScrollView>
-      <DelegationNavigationButtons navigation={navigation} />
-    </View>
-  </SafeAreaView>
-)
+type State = {
+  +currentTime: Date,
+}
+
+class DelegationSummary extends React.Component<Props, State> {
+  state = {
+    currentTime: new Date(),
+  }
+
+  componentDidMount() {
+    this.intervalId = setInterval(
+      () =>
+        this.setState({
+          currentTime: new Date(),
+        }),
+      1000,
+    )
+    this.props.fetchPoolInfo()
+  }
+
+  componentDidUpdate(prevProps) {
+    // update pool info only when pool list gets updated and only once
+    if (
+      prevProps.pools == null &&
+      this.props.pools != null &&
+      this.props.poolInfo == null
+    ) {
+      this.props.fetchPoolInfo()
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.intervalId != null) clearInterval(this.intervalId)
+  }
+
+  intervalId: void | IntervalID
+
+  navigateToStakingCenter: () => void
+  navigateToStakingCenter = async () => {
+    const {navigation, utxos, pools, accountBalance} = this.props
+    /* eslint-disable indent */
+    const utxosForKey =
+      utxos != null ? await walletManager.getAllUtxosForKey(utxos) : null
+    const amountToDelegate =
+      utxosForKey != null
+        ? utxosForKey
+            .map((utxo) => utxo.amount)
+            .reduce(
+              (x: BigNumber, y) => x.plus(new BigNumber(y || 0)),
+              new BigNumber(0),
+            )
+        : BigNumber(0)
+    const poolList = pools != null ? pools.map((pool) => pool[0]) : []
+    /* eslint-enable indent */
+    const approxAdaToDelegate = formatAdaInteger(amountToDelegate)
+    navigation.navigate(SHELLEY_WALLET_ROUTES.STAKING_CENTER, {
+      approxAdaToDelegate,
+      poolList,
+      utxos,
+      valueInAccount: accountBalance,
+    })
+  }
+
+  render() {
+    const {
+      isOnline,
+      isSyncing,
+      lastSyncError,
+      utxoBalance,
+      accountBalance,
+      pools,
+      poolInfo,
+      totalDelegated,
+      intl,
+      isFetchingAccountState,
+      isFetchingUtxos,
+    } = this.props
+
+    const totalBalance =
+      utxoBalance != null && accountBalance != null
+        ? utxoBalance.plus(accountBalance)
+        : null
+
+    const toRelativeSlotNumber = genToRelativeSlotNumber()
+    const timeToSlot = genTimeToSlot()
+
+    const currentAbsoluteSlot = timeToSlot({
+      time: this.state.currentTime,
+    })
+
+    const currentRelativeTime = toRelativeSlotNumber(
+      timeToSlot({
+        time: new Date(),
+      }).slot,
+    )
+    const epochLength = genCurrentEpochLength()()
+    const slotLength = genCurrentSlotLength()()
+
+    const secondsLeftInEpoch =
+      (epochLength - currentRelativeTime.slot) * slotLength
+    const timeLeftInEpoch = new Date(
+      1000 * secondsLeftInEpoch - currentAbsoluteSlot.msIntoSlot,
+    )
+
+    const leftPadDate: (number) => string = (num) => {
+      if (num < 10) return `0${num}`
+      return num.toString()
+    }
+
+    return (
+      <SafeAreaView style={styles.scrollView}>
+        <StatusBar type="dark" />
+        <UtxoAutoRefresher />
+        <AccountAutoRefresher />
+        <View style={styles.container}>
+          <OfflineBanner />
+          {isOnline &&
+            lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
+
+          <ScrollView style={styles.inner}>
+            {poolInfo == null && <NotDelegatedInfo />}
+            <EpochProgress
+              percentage={Math.floor(
+                (100 * currentRelativeTime.slot) / epochLength,
+              )}
+              currentEpoch={currentRelativeTime.epoch}
+              endTime={{
+                h: leftPadDate(timeLeftInEpoch.getUTCHours()),
+                m: leftPadDate(timeLeftInEpoch.getUTCMinutes()),
+                s: leftPadDate(timeLeftInEpoch.getUTCSeconds()),
+              }}
+            />
+            {/* eslint-disable indent */
+            poolInfo != null && (
+              /* TODO */
+              <UpcomingRewardInfo
+                nextRewardText={null}
+                followingRewardText={null}
+                showDisclaimer
+              />
+            )
+            /* eslint-enable indent */
+            }
+            <UserSummary
+              totalAdaSum={
+                totalBalance != null ? formatAdaWithText(totalBalance) : '-'
+              }
+              totalRewards={
+                accountBalance != null ? formatAdaWithText(accountBalance) : '-'
+              }
+              totalDelegated={
+                /* eslint-disable indent */
+                poolInfo !== null && totalDelegated !== null
+                  ? formatAdaWithText(totalDelegated)
+                  : formatAdaWithText(new BigNumber(0))
+              }
+              /* eslint-enable indent */
+            />
+            {/* eslint-disable indent */
+            poolInfo != null &&
+              !!pools && (
+                <DelegatedStakepoolInfo
+                  poolTicker={poolInfo.info?.ticker}
+                  poolName={poolInfo.info?.name}
+                  poolHash={pools[0].length > 0 ? pools[0][0] : ''}
+                  poolURL={poolInfo.info?.homepage}
+                />
+              )
+            /* eslint-enable indent */
+            }
+          </ScrollView>
+          <PleaseWaitModal
+            title=""
+            spinnerText={intl.formatMessage(globalMessages.pleaseWait)}
+            visible={isFetchingAccountState || isFetchingUtxos}
+          />
+          <DelegationNavigationButtons onPress={this.navigateToStakingCenter} />
+        </View>
+      </SafeAreaView>
+    )
+  }
+}
 
 type ExternalProps = {|
   navigation: Navigation,
+  intl: any,
 |}
 
 export default injectIntl(
   (compose(
-    // requireInitializedWallet, // TODO(shin) enable this before release
     connect(
-      (state: State) => ({
+      (state) => ({
+        utxoBalance: utxoBalanceSelector(state),
+        utxos: utxosSelector(state),
+        accountBalance: accountBalanceSelector(state),
+        isFetchingAccountState: isFetchingAccountStateSelector(state),
+        isFetchingUtxos: isFetchingUtxosSelector(state),
+        pools: poolsSelector(state),
+        poolInfo: poolInfoSelector(state),
+        totalDelegated: totalDelegatedSelector(state),
         isSyncing: isSynchronizingHistorySelector(state),
         lastSyncError: lastHistorySyncErrorSelector(state),
         isOnline: isOnlineSelector(state),
         walletName: walletNameSelector(state),
-        key: languageSelector(state),
       }),
-      // {
-      //   updateHistory,
-      // },
+      {
+        fetchPoolInfo,
+      },
     ),
-    // o:w
-    // nDidMount(({updateHistory}) => {
-    //   updateHistory()
-    // }),
+    withNavigation,
     withNavigationTitle(({walletName}) => walletName),
   )(DelegationSummary): ComponentType<ExternalProps>),
 )

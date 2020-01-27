@@ -31,6 +31,7 @@ export const COLORS = {
   WARNING_TEXT_COLOR: '#9E5B0A',
   DISABLED: '#999',
   SHADOW_COLOR: 'rgba(0, 0, 0, 0.06)',
+  SHELLEY_BLUE: '#3154CB',
 }
 
 export const DEBUG_BORDERS = {
