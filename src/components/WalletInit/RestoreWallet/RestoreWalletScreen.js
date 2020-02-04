@@ -173,7 +173,7 @@ export default injectIntl(
       navigateToWalletCredentials: ({navigation, phrase}) => (event) => {
         navigation.navigate(WALLET_INIT_ROUTES.WALLET_CREDENTIALS, {
           phrase: cleanMnemonic(phrase),
-          isShelleyWallet: navigation.getParam('isShelleyWallet'),
+          isShelleyWallet: !!navigation.getParam('isShelleyWallet'),
         })
       },
       translateInvalidPhraseError: ({intl}) => (error) =>
