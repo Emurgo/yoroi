@@ -114,7 +114,7 @@
   "components.settings.termsofservicescreen.title": "Condiciones de Servicio",
   "components.settings.toggleeasyconfirmationscreen.disableButton": "Deshabilitar",
   "components.settings.toggleeasyconfirmationscreen.disableHeading": "Al desactivar esta opción, sólo podrás enviar ADA usando tu contraseña maestra.",
-  "components.settings.toggleeasyconfirmationscreen.enableButton": "Enable",
+  "components.settings.toggleeasyconfirmationscreen.enableButton": "Habilitar",
   "components.settings.toggleeasyconfirmationscreen.enableHeading": "Esta opción permite enviar ADA desde la billetera con sólo confirmar la transacción usando el reconocimiento de huellas dactilares o de rostro, con opción del sistema alternativo estándar. Esto hace que tu billetera sea menos segura. ¡Esto es un equilibrio entre usabilidad y seguridad!",
   "components.settings.toggleeasyconfirmationscreen.enableMasterPassword": "Contraseña maestra",
   "components.settings.toggleeasyconfirmationscreen.enableWarning": "Por favor recuerda tu contraseña maestra, puedes necesitarla en caso de que tus datos biométricos sean borrados de tu dispositivo.",
