@@ -14,9 +14,33 @@ export default StyleSheet.create({
   itemBlock: {
     marginTop: 24,
   },
-  itemTitle: {},
+  itemTitle: {
+    fontSize: 14,
+    lineHeight: 22,
+    color: '#353535',
+  },
+  itemBody: {
+    marginTop: 5,
+    fontSize: 14,
+    lineHeight: 22,
+    color: COLORS.SECONDARY_TEXT,
+  },
   bottomBlock: {
     padding: 16,
     height: 88,
+  },
+  input: {
+    marginTop: 16,
+  },
+  rewards: {
+    marginTop: 5,
+    fontSize: 16,
+    lineHeight: 19,
+    color: COLORS.SHELLEY_BLUE,
+    fontWeight: '500',
+  },
+  fees: {
+    textAlign: 'right',
+    color: '#353535',
   },
 })

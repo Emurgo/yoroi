@@ -13,6 +13,9 @@ export default StyleSheet.create({
   wrapperWithDisclaimer: {
     height: 110,
   },
+  simpleWrapper: {
+    marginHorizontal: 16,
+  },
   stats: {
     flex: 1,
     flexDirection: 'column',
@@ -38,5 +41,6 @@ export default StyleSheet.create({
     marginTop: 10,
     fontSize: 12,
     lineHeight: 14,
+    fontStyle: 'italic',
   },
 })

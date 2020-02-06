@@ -7,7 +7,7 @@ import {Text, TitledCard} from '../../UiKit'
 import styles from './styles/UpcomingRewardInfo.style'
 
 const messages = defineMessages({
-  nextRewardLable: {
+  nextRewardLabel: {
     id: 'components.delegationsummary.upcomingReward.nextLabel',
     defaultMessage: '!!!Next reward',
   },
@@ -17,14 +17,17 @@ const messages = defineMessages({
   },
   rewardDisclaimerText: {
     id: 'components.delegationsummary.upcomingReward.rewardDisclaimerText',
-    defaultMessage: '!!!First reward is slower',
+    defaultMessage:
+      '!!!Remember that your first reward will be allocated ' +
+      'two  epochs after the end of the epoch in which you have submitted ' +
+      'your delegation transaction.',
   },
 })
 
 type ExternalProps = {|
   +intl: intlShape,
-  +nextRewardText: string,
-  +followingRewardText: string,
+  +nextRewardText: ?string,
+  +followingRewardText: ?string,
   +showDisclaimer: boolean,
 |}
 
@@ -33,35 +36,47 @@ const UpcomingRewardInfo = ({
   nextRewardText,
   followingRewardText,
   showDisclaimer,
-}: ExternalProps) => (
-  <View
-    style={[
-      styles.wrapper,
-      showDisclaimer ? styles.wrapperWithDisclaimer : undefined,
-    ]}
-  >
-    <TitledCard>
-      <View style={styles.stats}>
-        <View style={styles.row}>
-          <Text style={styles.label}>
-            {intl.formatMessage(messages.nextRewardLable)}:
+}: ExternalProps) => {
+  if (nextRewardText != null && followingRewardText != null) {
+    return (
+      <View
+        style={[
+          styles.wrapper,
+          showDisclaimer ? styles.wrapperWithDisclaimer : undefined,
+        ]}
+      >
+        <TitledCard>
+          <View style={styles.stats}>
+            <View style={styles.row}>
+              <Text style={styles.label}>
+                {intl.formatMessage(messages.nextRewardLabel)}:
+              </Text>
+              <Text style={styles.value}>{nextRewardText}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.label}>
+                {intl.formatMessage(messages.followingRewardLable)}:
+              </Text>
+              <Text style={styles.value}>{followingRewardText}</Text>
+            </View>
+          </View>
+        </TitledCard>
+        {showDisclaimer && (
+          <Text secondary style={styles.disclaimerText}>
+            {intl.formatMessage(messages.rewardDisclaimerText)}
           </Text>
-          <Text style={styles.value}>{nextRewardText}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>
-            {intl.formatMessage(messages.followingRewardLable)}:
-          </Text>
-          <Text style={styles.value}>{followingRewardText}</Text>
-        </View>
+        )}
       </View>
-    </TitledCard>
-    {showDisclaimer && (
-      <Text secondary style={styles.disclaimerText}>
-        {intl.formatMessage(messages.rewardDisclaimerText)}
-      </Text>
-    )}
-  </View>
-)
+    )
+  } else {
+    return (
+      <View style={styles.simpleWrapper}>
+        <Text secondary style={styles.disclaimerText}>
+          {intl.formatMessage(messages.rewardDisclaimerText)}
+        </Text>
+      </View>
+    )
+  }
+}
 
 export default injectIntl(UpcomingRewardInfo)

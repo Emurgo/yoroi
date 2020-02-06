@@ -5,16 +5,27 @@ import {BigNumber} from 'bignumber.js'
 import {defaultMemoize} from 'reselect'
 import uuid from 'uuid'
 import ExtendableError from 'es6-error'
-import {Bip32PublicKey} from 'react-native-chain-libs'
+import {
+  Address,
+  AddressDiscrimination,
+  Bip32PublicKey,
+  Bip32PrivateKey,
+} from 'react-native-chain-libs'
+import DeviceInfo from 'react-native-device-info'
 
 import storage from '../utils/storage'
 import KeyStore from './KeyStore'
 import {AddressChain, AddressGenerator} from './chain'
 import * as util from './byron/util'
 import * as shelleyUtil from './shelley/util'
+import {
+  createDelegationTx,
+  signDelegationTx,
+  filterAddressesByStakingKey,
+} from './shelley/delegationUtils'
 import {ADDRESS_TYPE_TO_CHANGE} from './commonUtils'
 import api from '../api'
-import {CONFIG, NUMBERS} from '../config'
+import {CONFIG, CARDANO_CONFIG, NUMBERS} from '../config'
 import assert from '../utils/assert'
 import {ObjectValues} from '../utils/flow'
 import {Logger} from '../utils/logging'
@@ -34,10 +45,14 @@ import type {
   Addressing,
   RawUtxo,
   TransactionInput,
+  PoolInfoRequest,
   PreparedTransactionData,
+  V3SignedTx,
+  V3UnsignedTxAddressedUtxoData,
 } from '../types/HistoryTransaction'
 import type {Mutex} from '../utils/promise'
 import type {CryptoAccount} from './byron/util'
+import type {DelegationTxData, PoolData} from './shelley/delegationUtils'
 
 /**
  * returns all used addresses (external and change addresses concatenated)
@@ -128,6 +143,12 @@ export class Wallet {
   _internalChain: AddressChain = null
   // $FlowFixMe null
   _externalChain: AddressChain = null
+
+  // chimeric account address
+  _accountAddress: ?string
+
+  // last known version the wallet has been created/restored
+  _version: ?string
 
   _state: WalletState = {
     lastGeneratedAddressIndex: 0,
@@ -244,14 +265,26 @@ export class Wallet {
       masterKeyHex,
       newPassword,
     )
-    let account: CryptoAccount | Bip32PublicKey
+    let account: CryptoAccount | string
+    let accountAddr // != from above. This is the chimeric account address
     if (isShelley) {
       const accountKey = await (await (await masterKey.derive(
         NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
       )).derive(NUMBERS.COIN_TYPES.CARDANO)).derive(
         0 + NUMBERS.HARD_DERIVATION_START,
       )
-      account = await accountKey.to_public()
+      const accountPubKey = await accountKey.to_public()
+      const stakingKey = await (await (await accountPubKey.derive(
+        NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+      )).derive(NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+      // note(v-almonacid): currently we assume all Shelley config is "test"
+      // but in the near future we need to add a mainnet/testnet switch
+      const accountAddrPtr = await Address.account_from_public_key(
+        stakingKey,
+        await AddressDiscrimination.Test,
+      )
+      account = Buffer.from(await accountPubKey.as_bytes()).toString('hex')
+      accountAddr = Buffer.from(await accountAddrPtr.as_bytes()).toString('hex')
     } else {
       account = await util.getAccountFromMasterKey(masterKeyHex)
     }
@@ -267,6 +300,10 @@ export class Wallet {
     this._externalChain = new AddressChain(
       new AddressGenerator(account, 'External', isShelley),
     )
+
+    this._accountAddress = accountAddr
+
+    this._version = DeviceInfo.getVersion()
 
     // Create at least one address in each block
     await this._internalChain.initialize()
@@ -286,6 +323,8 @@ export class Wallet {
       lastGeneratedAddressIndex: data.lastGeneratedAddressIndex,
     }
     this._isShelley = data.isShelley
+    this._accountAddress = data.accountAddress
+    this._version = data.version != null ? data.version : null
     this._internalChain = AddressChain.fromJSON(data.internalChain)
     this._externalChain = AddressChain.fromJSON(data.externalChain)
     this._transactionCache = TransactionCache.fromJSON(data.transactionCache)
@@ -327,9 +366,10 @@ export class Wallet {
   async _doFullSync() {
     Logger.info('Do full sync')
     assert.assert(this._isInitialized, 'doFullSync: isInitialized')
+    const config = this._isShelley ? CARDANO_CONFIG.SHELLEY : CONFIG.CARDANO
     await Promise.all([
-      this._internalChain.sync(api.filterUsedAddresses),
-      this._externalChain.sync(api.filterUsedAddresses),
+      this._internalChain.sync(api.filterUsedAddresses, config),
+      this._externalChain.sync(api.filterUsedAddresses, config),
     ])
     Logger.info('Discovery done, now syncing transactions')
     let keepGoing = true
@@ -346,6 +386,12 @@ export class Wallet {
       this._state.lastGeneratedAddressIndex = lastUsedIndex
     }
     return this._transactionCache.transactions
+  }
+
+  // returns the chimeric account address associated to the wallet
+  get accountAddress() {
+    assert.assert(this._isShelley, 'getAccountAddress: isShelley')
+    return this._accountAddress
   }
 
   get internalAddresses() {
@@ -495,14 +541,137 @@ export class Wallet {
   }
 
   async submitTransaction(signedTx: string) {
-    const response = await api.submitTransaction(signedTx)
+    const config = this._isShelley ? CARDANO_CONFIG.SHELLEY : CONFIG.CARDANO
+    const response = await api.submitTransaction(signedTx, config)
     Logger.info(response)
     return response
+  }
+
+  async getStakingKey() {
+    assert.assert(this._isShelley, 'getAccountAddress: isShelley')
+    // TODO: save account public key as class member to avoid fetching
+    // from internal chain?
+    const accountHex = this._internalChain._addressGenerator.account
+    if (!(typeof accountHex === 'string' || accountHex instanceof String)) {
+      throw new Error('wallet::getStakingKey: invalid account')
+    }
+    const accountPubKey = await Bip32PublicKey.from_bytes(
+      Buffer.from(accountHex, 'hex'),
+    )
+    const stakingKey = await (await (await accountPubKey.derive(
+      NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+    )).derive(NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+    Logger.info(
+      `getStakingKey: ${Buffer.from(await stakingKey.as_bytes()).toString(
+        'hex',
+      )}`,
+    )
+    return stakingKey
+  }
+
+  async getChangeAddressShelley() {
+    assert.assert(this._isShelley, 'getAccountAddress: isShelley')
+    const nextInternal = await this._internalChain.getNextUnused(
+      api.filterUsedAddresses,
+      CARDANO_CONFIG.SHELLEY,
+    )
+    return {
+      address: nextInternal,
+      addressing: {
+        account: CONFIG.WALLET.ACCOUNT_INDEX,
+        change: NUMBERS.CHAIN_DERIVATIONS.INTERNAL,
+        index: this._internalChain.getIndexOfAddress(nextInternal),
+      },
+    }
+  }
+
+  async getAllUtxosForKey(utxos: Array<RawUtxo>) {
+    assert.assert(this._isShelley, 'getAccountAddress: isShelley')
+    return await filterAddressesByStakingKey(
+      await this.getStakingKey(),
+      this.asAddressedUtxo(utxos),
+    )
+  }
+
+  asAddressedUtxo(utxos: Array<RawUtxo>) {
+    const chains = [
+      ['Internal', this._internalChain],
+      ['External', this._externalChain],
+    ]
+    const addressedUtxos = utxos.map((utxo) => {
+      let addressInfo = null
+      chains.forEach(([type, chain]) => {
+        if (chain.isMyAddress(utxo.receiver)) {
+          addressInfo = {
+            account: CONFIG.WALLET.ACCOUNT_INDEX,
+            change: ADDRESS_TYPE_TO_CHANGE[type],
+            index: chain.getIndexOfAddress(utxo.receiver),
+          }
+        }
+        if (addressInfo == null) {
+          throw new Error(`Address not found for utxo: ${utxo.receiver}`)
+        }
+      })
+      return {
+        ...utxo,
+        addressing: addressInfo,
+      }
+    })
+    return addressedUtxos
+  }
+
+  async prepareDelegationTx(
+    poolData: PoolData,
+    valueInAccount: number,
+    utxos: Array<RawUtxo>,
+  ): Promise<DelegationTxData> {
+    const stakingKey = await this.getStakingKey()
+    const changeAddr = await this.getChangeAddressShelley()
+    const addressedUtxos = this.asAddressedUtxo(utxos)
+
+    const resp = await createDelegationTx(
+      poolData,
+      valueInAccount,
+      // $FlowFixMe already taken care off
+      addressedUtxos,
+      stakingKey,
+      changeAddr,
+    )
+    return resp
+  }
+
+  async signDelegationTx(
+    unsignedTx: V3UnsignedTxAddressedUtxoData,
+    decryptedMasterKey: string,
+  ): Promise<V3SignedTx> {
+    assert.assert(this._isShelley, 'signShelleyTx: isShelley')
+    Logger.debug('wallet::signDelegationTx::unsignedTx ', unsignedTx)
+    Logger.debug(
+      'wallet::signDelegationTx::decryptedMasterKey',
+      decryptedMasterKey,
+    )
+    const masterKey = await Bip32PrivateKey.from_bytes(
+      Buffer.from(decryptedMasterKey, 'hex'),
+    )
+    const accountPvrKey = await (await (await masterKey.derive(
+      NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
+    )).derive(NUMBERS.COIN_TYPES.CARDANO)).derive(
+      0 + NUMBERS.HARD_DERIVATION_START,
+    )
+
+    // get staking key as PrivateKey
+    const stakingKey = await (await (await accountPvrKey.derive(
+      NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+    )).derive(NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+
+    return await signDelegationTx(unsignedTx, accountPvrKey, stakingKey)
   }
 
   toJSON() {
     return {
       lastGeneratedAddressIndex: this._state.lastGeneratedAddressIndex,
+      accountAddress: this._accountAddress,
+      version: this._version,
       internalChain: this._internalChain.toJSON(),
       externalChain: this._externalChain.toJSON(),
       transactionCache: this._transactionCache.toJSON(),
@@ -639,6 +808,11 @@ class WalletManager {
     return this._wallet._isShelley
   }
 
+  get version() {
+    if (!this._wallet) return null
+    return this._wallet._version
+  }
+
   async generateNewUiReceiveAddressIfNeeded() {
     if (!this._wallet) return
     await this.abortWhenWalletCloses(
@@ -737,6 +911,30 @@ class WalletManager {
     return await this.abortWhenWalletCloses(
       this._wallet.submitTransaction(signedTx),
     )
+  }
+
+  async getAllUtxosForKey(utxos: Array<RawUtxo>) {
+    if (!this._wallet) throw new WalletClosed()
+    return await this._wallet.getAllUtxosForKey(utxos)
+  }
+
+  async prepareDelegationTx(
+    poolData: PoolData,
+    valueInAccount: number,
+    utxos: Array<RawUtxo>,
+  ) {
+    if (!this._wallet) throw new WalletClosed()
+    return await this.abortWhenWalletCloses(
+      this._wallet.prepareDelegationTx(poolData, valueInAccount, utxos),
+    )
+  }
+
+  async signDelegationTx(
+    unsignedTx: V3UnsignedTxAddressedUtxoData,
+    decryptedMasterKey: string,
+  ) {
+    if (!this._wallet) throw new WalletClosed()
+    return await this._wallet.signDelegationTx(unsignedTx, decryptedMasterKey)
   }
 
   async createWallet(
@@ -941,12 +1139,36 @@ class WalletManager {
 
   async fetchUTXOs() {
     if (!this._wallet) throw new WalletClosed()
+    const config = this._wallet._isShelley
+      ? CARDANO_CONFIG.SHELLEY
+      : CONFIG.CARDANO
     return await this.abortWhenWalletCloses(
-      api.bulkFetchUTXOsForAddresses([
-        ...this.internalAddresses,
-        ...this.externalAddresses,
-      ]),
+      api.bulkFetchUTXOsForAddresses(
+        [...this.internalAddresses, ...this.externalAddresses],
+        config,
+      ),
     )
+  }
+
+  async fetchAccountState() {
+    if (this._wallet == null) throw new WalletClosed()
+    if (this._wallet._accountAddress == null) {
+      throw new Error('fetchAccountState:: _accountAddress = null')
+    }
+    const config = this._wallet._isShelley
+      ? CARDANO_CONFIG.SHELLEY
+      : CONFIG.CARDANO
+    return await this.abortWhenWalletCloses(
+      api.fetchAccountState([this._wallet._accountAddress], config),
+    )
+  }
+
+  async fetchPoolInfo(pool: PoolInfoRequest) {
+    if (this._wallet == null) throw new WalletClosed()
+    const config = this._wallet._isShelley
+      ? CARDANO_CONFIG.SHELLEY
+      : CONFIG.CARDANO
+    return await api.getPoolInfo(pool, config)
   }
 }
 

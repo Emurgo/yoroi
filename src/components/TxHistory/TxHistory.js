@@ -42,15 +42,6 @@ const messages = defineMessages({
     id: 'components.txhistory.txhistory.noTransactions',
     defaultMessage: '!!!No transactions to show yet',
   },
-  syncErrorBannerTextWithoutRefresh: {
-    id: 'components.txhistory.txhistory.syncErrorBannerTextWithoutRefresh',
-    defaultMessage: '!!!We are experiencing synchronization issues.',
-  },
-  syncErrorBannerTextWithRefresh: {
-    id: 'components.txhistory.txhistory.syncErrorBannerTextWithRefresh',
-    defaultMessage:
-      '!!!We are experiencing synchronization issues. Pull to refresh',
-  },
 })
 
 const NoTxHistory = injectIntl(({intl}) => (
@@ -67,8 +58,8 @@ const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
     error
     text={
       showRefresh
-        ? intl.formatMessage(messages.syncErrorBannerTextWithRefresh)
-        : intl.formatMessage(messages.syncErrorBannerTextWithoutRefresh)
+        ? intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh)
+        : intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh)
     }
   />
 ))

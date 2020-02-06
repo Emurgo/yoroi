@@ -242,4 +242,13 @@ export default defineMessages({
     id: 'global.staking.stakePoolHash',
     defaultMessage: '!!!Stake pool hash',
   },
+  syncErrorBannerTextWithoutRefresh: {
+    id: 'global.network.syncErrorBannerTextWithoutRefresh',
+    defaultMessage: '!!!We are experiencing synchronization issues.',
+  },
+  syncErrorBannerTextWithRefresh: {
+    id: 'global.network.syncErrorBannerTextWithRefresh',
+    defaultMessage:
+      '!!!We are experiencing synchronization issues. Pull to refresh',
+  },
 })

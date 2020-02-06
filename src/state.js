@@ -1,5 +1,11 @@
 // @flow
-import type {Transaction, RawUtxo} from './types/HistoryTransaction'
+import {BigNumber} from 'bignumber.js'
+
+import type {
+  AccountState,
+  Transaction,
+  RawUtxo,
+} from './types/HistoryTransaction'
 
 export type Dict<T> = {[string]: T}
 
@@ -7,12 +13,12 @@ export type State = {
   wallets: Dict<{
     id: string,
     name: string,
-    isShelleyWallet: boolean,
+    isShelley: boolean,
   }>,
   wallet: {
     name: string,
     isInitialized: boolean,
-    isShelleyWallet: boolean,
+    isShelley: boolean,
     isEasyConfirmationEnabled: boolean,
     transactions: Dict<Transaction>,
     internalAddresses: Array<string>,
@@ -30,6 +36,17 @@ export type State = {
     isFetching: boolean,
     lastFetchingError: any,
     utxos: ?Array<RawUtxo>,
+  },
+  accountState: {
+    isFetching: boolean,
+    lastFetchingError: any,
+    totalDelegated: BigNumber,
+    ...AccountState,
+  },
+  poolInfo: {
+    isFetching: boolean,
+    lastFetchingError: any,
+    meta: any, // TODO(v-almonacid): type me
   },
   isOnline: boolean,
   isAppInitialized: boolean,
@@ -51,7 +68,7 @@ export const getInitialState = (): State => ({
   wallet: {
     name: '',
     isInitialized: false,
-    isShelleyWallet: false,
+    isShelley: false,
     isEasyConfirmationEnabled: false,
     transactions: {},
     internalAddresses: [],
@@ -69,6 +86,23 @@ export const getInitialState = (): State => ({
     isFetching: false,
     lastFetchingError: null,
     utxos: null,
+  },
+  accountState: {
+    isFetching: false,
+    lastFetchingError: null,
+    totalDelegated: new BigNumber(0),
+    delegation: {pools: []},
+    value: 0,
+    counter: 0,
+    last_rewards: {
+      epoch: 0,
+      reward: 0,
+    },
+  },
+  poolInfo: {
+    isFetching: false,
+    lastFetchingError: null,
+    meta: null,
   },
   isOnline: true, // we are online by default
   isAppInitialized: false,

@@ -474,7 +474,14 @@ export const submitTransaction = (
   dispatch(updateHistory())
 }
 
-export const submitShelleyTransferTx = async (encodedTx: Uint8Array) => {
+export const submitShelleyTx = (encodedTx: Uint8Array) => async (
+  dispatch: Dispatch<any>,
+) => {
+  Logger.debug('submitting shelley tx...')
   const signedTx64 = Buffer.from(encodedTx).toString('base64')
   await walletManager.submitTransaction(signedTx64)
+
+  // note(v-almonacid): tx history sync for shelley is not implemented yet,
+  // but this action updates the wallet state
+  dispatch(updateHistory())
 }

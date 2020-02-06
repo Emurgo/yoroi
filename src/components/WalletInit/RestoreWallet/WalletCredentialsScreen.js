@@ -15,7 +15,7 @@ import {withNavigationTitle} from '../../../utils/renderUtils'
 import WalletForm from '../WalletForm'
 import {
   createWallet,
-  submitShelleyTransferTx,
+  submitShelleyTx,
   handleGeneralError,
   showErrorDialog,
 } from '../../../actions'
@@ -269,7 +269,7 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
       if (tx == null) {
         throw new Error('Transaction data not found.')
       }
-      await submitShelleyTransferTx(tx.encodedTx)
+      await submitShelleyTx(tx.encodedTx)
       this.setState({isProcessing: false})
       navigation.navigate(ROOT_ROUTES.SHELLEY_WALLET)
     } catch (e) {

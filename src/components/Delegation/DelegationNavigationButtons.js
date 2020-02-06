@@ -1,12 +1,9 @@
 // @flow
 
 import React from 'react'
-import {compose} from 'redux'
 import {View} from 'react-native'
-import {withHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
 
-import {SHELLEY_WALLET_ROUTES} from '../../RoutesList'
 import {Button} from '../UiKit'
 
 import styles from './styles/DelegationNavigator.style'
@@ -22,30 +19,19 @@ const messages = defineMessages({
 
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,
-  navigateToStakingCenter: () => mixed,
   intl: any,
+  onPress: () => void,
 }
 
-const DelegationNavigationButtons = ({
-  navigation,
-  navigateToStakingCenter,
-  intl,
-}: Props) => (
+const DelegationNavigationButtons = ({intl, onPress}: Props) => (
   <View style={styles.container}>
     <Button
       block
       shelleyTheme
-      onPress={navigateToStakingCenter}
+      onPress={onPress}
       title={intl.formatMessage(messages.stakingCenterButton)}
     />
   </View>
 )
 
-export default injectIntl(
-  compose(
-    withHandlers({
-      navigateToStakingCenter: ({navigation}) => (event) =>
-        navigation.navigate(SHELLEY_WALLET_ROUTES.STAKING_CENTER),
-    }),
-  )(DelegationNavigationButtons),
-)
+export default injectIntl(DelegationNavigationButtons)

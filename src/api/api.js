@@ -3,13 +3,19 @@ import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
 
 import {Logger} from '../utils/logging'
-import {CONFIG} from '../config'
+import {CONFIG, CARDANO_CONFIG} from '../config'
 import {NetworkError, ApiError} from './errors'
 import assert from '../utils/assert'
 import {checkAndFacadeTransactionAsync} from './facade'
 
 import type {Moment} from 'moment'
-import type {Transaction, RawUtxo} from '../types/HistoryTransaction'
+import type {
+  Transaction,
+  RawUtxo,
+  AccountStateResponse,
+  PoolInfoRequest,
+  PoolInfoResponse,
+} from '../types/HistoryTransaction'
 
 type Addresses = Array<string>
 
@@ -21,13 +27,9 @@ const _checkResponse = (response, requestPayload) => {
   }
 }
 
-const _fetch = (
-  path: string,
-  payload: any,
-  networkConfig: any = CONFIG.CARDANO,
-) => {
-  Logger.info(`API call: ${path}`)
+const _fetch = (path: string, payload: any, networkConfig: any) => {
   const fullPath = `${networkConfig.API_ROOT}/${path}`
+  Logger.info(`API call: ${fullPath}`)
   return (
     fetch(fullPath, {
       method: 'POST',
@@ -61,7 +63,7 @@ const _fetch = (
 export const fetchNewTxHistory = async (
   dateFrom: Moment,
   addresses: Addresses,
-  networkConfig: any = CONFIG.CARDANO,
+  networkConfig?: any = CONFIG.CARDANO,
 ): Promise<{isLast: boolean, transactions: Array<Transaction>}> => {
   assert.preconditionCheck(
     addresses.length <= CONFIG.API.TX_HISTORY_MAX_ADDRESSES,
@@ -87,7 +89,7 @@ export const fetchNewTxHistory = async (
 
 export const filterUsedAddresses = async (
   addresses: Addresses,
-  networkConfig: any = CONFIG.CARDANO,
+  networkConfig?: any = CONFIG.CARDANO,
 ): Promise<Addresses> => {
   assert.preconditionCheck(
     addresses.length <= CONFIG.API.FILTER_USED_MAX_ADDRESSES,
@@ -106,7 +108,7 @@ export const filterUsedAddresses = async (
 
 export const fetchUTXOsForAddresses = (
   addresses: Addresses,
-  networkConfig: any = CONFIG.CARDANO,
+  networkConfig?: any = CONFIG.CARDANO,
 ) => {
   assert.preconditionCheck(
     addresses.length <= CONFIG.API.FETCH_UTXOS_MAX_ADDRESSES,
@@ -116,8 +118,8 @@ export const fetchUTXOsForAddresses = (
 }
 
 export const bulkFetchUTXOsForAddresses = async (
-  addresses: Array<string>,
-  networkConfig: any = CONFIG.CARDANO,
+  addresses: Addresses,
+  networkConfig?: any = CONFIG.CARDANO,
 ): Promise<Array<RawUtxo>> => {
   const chunks = _.chunk(addresses, CONFIG.API.FETCH_UTXOS_MAX_ADDRESSES)
 
@@ -127,13 +129,16 @@ export const bulkFetchUTXOsForAddresses = async (
   return _.flatten(responses)
 }
 
-export const submitTransaction = (signedTx: string) => {
-  return _fetch('txs/signed', {signedTx})
+export const submitTransaction = (
+  signedTx: string,
+  networkConfig?: any = CONFIG.CARDANO,
+) => {
+  return _fetch('txs/signed', {signedTx}, networkConfig)
 }
 
 export const fetchUTXOSumForAddresses = (
-  addresses: Array<string>,
-  networkConfig: any = CONFIG.CARDANO,
+  addresses: Addresses,
+  networkConfig?: any = CONFIG.CARDANO,
 ): Promise<{sum: string}> => {
   assert.preconditionCheck(
     addresses.length <= CONFIG.API.FETCH_UTXOS_MAX_ADDRESSES,
@@ -143,8 +148,8 @@ export const fetchUTXOSumForAddresses = (
 }
 
 export const bulkFetchUTXOSumForAddresses = async (
-  addresses: Array<string>,
-  networkConfig: any = CONFIG.CARDANO,
+  addresses: Addresses,
+  networkConfig?: any = CONFIG.CARDANO,
 ): Promise<{fundedAddresses: Array<string>, sum: BigNumber}> => {
   const chunks = _.chunk(addresses, CONFIG.API.FETCH_UTXOS_MAX_ADDRESSES)
 
@@ -168,4 +173,37 @@ export const bulkFetchUTXOSumForAddresses = async (
     fundedAddresses: _.uniq(fundedAddresses),
     sum,
   }
+}
+
+export const fetchAccountState = async (
+  addresses: Addresses,
+  networkConfig?: any = CARDANO_CONFIG.SHELLEY,
+): Promise<AccountStateResponse> => {
+  assert.preconditionCheck(
+    addresses.length <= CONFIG.API.FETCH_UTXOS_MAX_ADDRESSES,
+    'fetchAccountState: too many addresses',
+  )
+  const response = await _fetch('v2/account/state', {addresses}, networkConfig)
+  const mapped = {}
+  for (const key of Object.keys(response)) {
+    // Jormungandr returns '' when the address is valid but it hasn't appeared in the blockchain
+    // edit: Jormungandr can now also return a description error when not in the blockchain
+    if (response[key] === '' || response[key] === 'Account does not exist') {
+      mapped[key] = {
+        delegation: {pools: []},
+        value: 0,
+        counter: 0,
+      }
+    } else {
+      mapped[key] = response[key]
+    }
+  }
+  return mapped
+}
+
+export const getPoolInfo = (
+  request: PoolInfoRequest,
+  networkConfig?: any = CARDANO_CONFIG.SHELLEY,
+): Promise<PoolInfoResponse> => {
+  return _fetch('v2/pool/info', request, networkConfig)
 }

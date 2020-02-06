@@ -62,6 +62,10 @@ export const STAKING_CENTER_ROUTES = {
   DELEGATION_CONFIRM: 'delegation-confirmation',
 }
 
+export const DELEGATION_SUMMARY_ROUTES = {
+  MAIN: 'delegation-dashboard',
+}
+
 export const SHELLEY_WALLET_ROUTES = {
   STAKING_CENTER: STAKING_CENTER_ROUTES.MAIN,
   DELEGATION_SUMMARY: 'delegation-summary',
