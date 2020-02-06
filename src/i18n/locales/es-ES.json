@@ -13,7 +13,7 @@
   "components.firstrun.custompinscreen.pinInputSubtitle": "Elige un nuevo PIN para acceder de forma rápida a tu billetera.",
   "components.firstrun.custompinscreen.pinInputTitle": "Ingresa tu PIN",
   "components.firstrun.custompinscreen.title": "Define un PIN",
-  "components.login.appstartscreen.loginButton": "Acceso",
+  "components.login.appstartscreen.loginButton": "Acceder",
   "components.login.custompinlogin.title": "Ingresa tu PIN",
   "components.receive.addressmodal.BIP32path": "Ruta BIP32:",
   "components.receive.addressmodal.copiedLabel": "Copiado",
