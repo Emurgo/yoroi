@@ -35,6 +35,11 @@ const messages = defineMessages({
     id: 'components.walletselection.walletselectionscreen.addWalletButton',
     defaultMessage: '!!!Add wallet',
   },
+  addWalletOnShelleyButton: {
+    id:
+      'components.walletselection.walletselectionscreen.addWalletOnShelleyButton',
+    defaultMessage: '!!!Add wallet (Shelley Testnet)',
+  },
 })
 
 const WalletListScreen = ({
@@ -66,9 +71,16 @@ const WalletListScreen = ({
         </ScrollView>
 
         <Button
-          onPress={navigateInitWallet}
+          onPress={(event) => navigateInitWallet(event, false)}
           title={intl.formatMessage(messages.addWalletButton)}
           style={styles.addWalletButton}
+        />
+
+        <Button
+          outline
+          onPress={(event) => navigateInitWallet(event, true)}
+          title={intl.formatMessage(messages.addWalletOnShelleyButton)}
+          style={styles.addWalletOnShelleyButton}
         />
       </ScreenBackground>
     </Screen>
@@ -83,8 +95,10 @@ export default injectIntl(
       wallets: walletsListSelector(state),
     })),
     withHandlers({
-      navigateInitWallet: ({navigation}) => (event) =>
-        navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH),
+      navigateInitWallet: ({navigation}) => (event, isShelleyWallet) =>
+        navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH, {
+          isShelleyWallet,
+        }),
       openWallet: ({navigation, intl}) => async (wallet) => {
         try {
           await walletManager.openWallet(wallet.id)

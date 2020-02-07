@@ -65,8 +65,10 @@ export default injectIntl(
         const mnemonic = CONFIG.DEBUG.PREFILL_FORMS
           ? CONFIG.DEBUG.MNEMONIC2
           : generateAdaMnemonic()
+        const isShelleyWallet = !!navigation.getParam('isShelleyWallet')
         navigation.navigate(WALLET_INIT_ROUTES.MNEMONIC_SHOW, {
           mnemonic,
+          isShelleyWallet,
           ...formData,
         })
       },

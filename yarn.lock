@@ -7318,8 +7318,8 @@ react-native-camera@^1.3.0:
   resolved "https://github.com/Emurgo/react-native-cardano.git#bdb80184ae86d94a315f32d69edc8aa9350fdb1b"
 
 react-native-chain-libs@Emurgo/react-native-chain-libs:
-  version "1.0.0"
-  resolved "https://codeload.github.com/Emurgo/react-native-chain-libs/tar.gz/a2577e8e561fb1419fd8a9aa73368a4da0a8ab4a"
+  version "1.0.1"
+  resolved "https://codeload.github.com/Emurgo/react-native-chain-libs/tar.gz/e25565cf18a98c5c400afdcb1303671d8772ad5a"
   dependencies:
     base-64 "0.1.0"
 

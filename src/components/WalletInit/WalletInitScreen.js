@@ -16,6 +16,7 @@ import {withNavigationTitle} from '../../utils/renderUtils'
 import {walletIsInitializedSelector} from '../../selectors'
 
 import type {State} from '../../state'
+import type {Navigation} from '../../types/navigation'
 
 const messages = defineMessages({
   title: {
@@ -42,9 +43,10 @@ const messages = defineMessages({
 
 type Props = {
   navigateRestoreWallet: (Object, boolean) => mixed,
-  navigateCreateWallet: () => mixed,
+  navigateCreateWallet: (Object, boolean) => mixed,
   intl: any,
   walletIsInitialized: boolean,
+  navigation: Navigation,
 }
 
 const WalletInitScreen = ({
@@ -52,40 +54,54 @@ const WalletInitScreen = ({
   navigateRestoreWallet,
   intl,
   walletIsInitialized,
-}: Props) => (
-  <SafeAreaView style={styles.safeAreaView}>
-    <StatusBar type="dark" />
+  navigation,
+}: Props) => {
+  const isShelleyWallet = navigation.getParam('isShelleyWallet')
+  let createWalletLabel = intl.formatMessage(messages.createWalletButton)
+  let restoreWalletLabel = intl.formatMessage(messages.restoreWalletButton)
+  if (isShelleyWallet) {
+    createWalletLabel += ' (Shelley Testnet)'
+    restoreWalletLabel += ' (Shelley Testnet)'
+  }
 
-    <ScreenBackground>
-      <View style={styles.container}>
-        <View style={styles.content}>
-          <WalletDescription />
+  return (
+    <SafeAreaView style={styles.safeAreaView}>
+      <StatusBar type="dark" />
+
+      <ScreenBackground>
+        <View style={styles.container}>
+          <View style={styles.content}>
+            <WalletDescription />
+          </View>
+          <Button
+            onPress={(event) => navigateCreateWallet(event, isShelleyWallet)}
+            title={createWalletLabel}
+            style={styles.createButton}
+          />
+          <Button
+            outline
+            onPress={(event) => navigateRestoreWallet(event, isShelleyWallet)}
+            title={restoreWalletLabel}
+            style={styles.createButton}
+          />
+          {/* note(v-almonacid): if the parameter is not set, then this is */}
+          {/* most likely a fresh installation so we show a restore wallet */}
+          {/* for shelley. */}
+          {/* eslint-disable indent */}
+          {isShelleyWallet == null && (
+            <Button
+              outline
+              onPress={(event) => navigateRestoreWallet(event, true)}
+              title={intl.formatMessage(messages.restoreShelleyWalletButton)}
+              shelleyTheme
+            />
+          )}
+          {/* eslint-enable indent */}
         </View>
-
-        <Button
-          onPress={navigateCreateWallet}
-          title={intl.formatMessage(messages.createWalletButton)}
-          style={styles.createButton}
-        />
-
-        <Button
-          outline
-          onPress={(event) => navigateRestoreWallet(event, false)}
-          title={intl.formatMessage(messages.restoreWalletButton)}
-          style={styles.createButton}
-        />
-
-        <Button
-          outline
-          onPress={(event) => navigateRestoreWallet(event, true)}
-          title={intl.formatMessage(messages.restoreShelleyWalletButton)}
-          shelleyTheme
-        />
-      </View>
-    </ScreenBackground>
-  </SafeAreaView>
-)
-
+      </ScreenBackground>
+    </SafeAreaView>
+  )
+}
 export default injectIntl(
   compose(
     connect((state: State) => ({
@@ -97,8 +113,10 @@ export default injectIntl(
         navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET, {
           isShelleyWallet,
         }),
-      navigateCreateWallet: ({navigation}) => (event) =>
-        navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET),
+      navigateCreateWallet: ({navigation}) => (event, isShelleyWallet) =>
+        navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET, {
+          isShelleyWallet,
+        }),
     }),
   )(WalletInitScreen),
 )

@@ -45,7 +45,10 @@ const WalletInitNavigator = createStackNavigator(
     initialRouteName: WALLET_INIT_ROUTES.WALLET_SELECTION,
     navigationOptions: ({navigation}) => {
       let navigationOptions
-      if (navigation.getParam('isShelleyWallet') === true) {
+      if (
+        navigation.getParam('isShelleyWallet') === true &&
+        navigation.state.routeName !== WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH
+      ) {
         navigationOptions = {
           ...defaultNavigationOptions,
           ...shelleyNavigationOptions,
