@@ -104,6 +104,12 @@ export const accountBalanceSelector = (state: State) =>
 export const poolsSelector = (state: State) =>
   state.accountState.isFetching ? null : state.accountState.delegation.pools
 
+export const isFetchingPoolInfoSelector = (state: State): boolean =>
+  state.poolInfo.isFetching
+
+export const lastPoolInfoErrorSelector = (state: State): any =>
+  state.poolInfo.lastFetchingError
+
 export const poolInfoSelector = (state: State) =>
   state.poolInfo.isFetching ? null : state.poolInfo.meta
 
@@ -126,6 +132,9 @@ export const utxosSelector = (state: State): ?Array<RawUtxo> =>
 
 export const isFetchingAccountStateSelector = (state: State): boolean =>
   state.accountState.isFetching
+
+export const lastAccountStateFetchErrorSelector = (state: State): any =>
+  state.accountState.lastFetchingError
 
 export const accountValueSelector = (state: State): number =>
   state.accountState.value

@@ -73,6 +73,10 @@ const messages = defineMessages({
     defaultMessage: '!!!Submitting transaction',
     description: 'some desc',
   },
+  delegationTxSignError: {
+    id: 'components.stakingcenter.delegationTxSignError',
+    defaultMessage: '!!!Error while signing delegation transaction',
+  },
 })
 
 /**
@@ -116,7 +120,11 @@ const handleOnConfirm = async (
       } else if (e instanceof ApiError) {
         await showErrorDialog(errorMessages.apiError, intl)
       } else {
-        throw e
+        await handleGeneralError(
+          intl.formatMessage(messages.delegationTxSignError),
+          e,
+          intl,
+        )
       }
     } finally {
       setSendingTransaction(false)
@@ -164,7 +172,7 @@ const handleOnConfirm = async (
     if (e instanceof WrongPassword) {
       await showErrorDialog(errorMessages.incorrectPassword, intl)
     } else {
-      handleGeneralError('Could not submit transaction', e)
+      handleGeneralError('Could not submit transaction', e, intl)
     }
   }
 }

@@ -49,10 +49,10 @@ export const fetchPoolInfo = () => async (
   dispatch: Dispatch<any>,
   getState: () => State,
 ) => {
-  if (
-    getState().poolInfo.isFetching ||
-    getState().accountState.delegation.pools.length === 0
-  ) {
+  if (getState().poolInfo.isFetching) {
+    return
+  } else if (getState().accountState.delegation.pools.length === 0) {
+    dispatch(_clearPoolInfo())
     return
   }
   dispatch(_clearPoolInfo())
