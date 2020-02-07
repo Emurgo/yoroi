@@ -248,7 +248,9 @@ class DelegationSummary extends React.Component<Props, State> {
                 <DelegatedStakepoolInfo
                   poolTicker={poolInfo.info?.ticker}
                   poolName={poolInfo.info?.name}
-                  poolHash={pools.length > 0 && pools[0].length > 0 ? pools[0][0] : ''}
+                  poolHash={
+                    pools.length > 0 && pools[0].length > 0 ? pools[0][0] : ''
+                  }
                   poolURL={poolInfo.info?.homepage}
                 />
               )
