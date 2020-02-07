@@ -4,12 +4,12 @@ import React from 'react'
 import type {ComponentType} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {View, ScrollView} from 'react-native'
+import {View, ScrollView, RefreshControl} from 'react-native'
 import {SafeAreaView, withNavigation} from 'react-navigation'
 import {BigNumber} from 'bignumber.js'
 import {injectIntl} from 'react-intl'
 
-import {Banner, OfflineBanner, StatusBar, PleaseWaitModal} from '../UiKit'
+import {Banner, OfflineBanner, StatusBar} from '../UiKit'
 import {
   EpochProgress,
   UpcomingRewardInfo,
@@ -18,8 +18,6 @@ import {
   NotDelegatedInfo,
 } from './dashboard'
 import {
-  isSynchronizingHistorySelector,
-  lastHistorySyncErrorSelector,
   isOnlineSelector,
   walletNameSelector,
   utxoBalanceSelector,
@@ -30,6 +28,7 @@ import {
   poolsSelector,
   poolInfoSelector,
   totalDelegatedSelector,
+  lastAccountStateFetchErrorSelector,
 } from '../../selectors'
 import DelegationNavigationButtons from './DelegationNavigationButtons'
 import UtxoAutoRefresher from '../Send/UtxoAutoRefresher'
@@ -41,6 +40,8 @@ import {
   genCurrentSlotLength,
   genTimeToSlot,
 } from '../../helpers/timeUtils'
+import {fetchAccountState} from '../../actions/account'
+import {fetchUTXOs} from '../../actions/utxo'
 import {fetchPoolInfo} from '../../actions/pools'
 import {SHELLEY_WALLET_ROUTES} from '../../RoutesList'
 import walletManager from '../../crypto/wallet'
@@ -70,9 +71,7 @@ const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
 type Props = {
   intl: any,
   navigation: Navigation,
-  isSyncing: boolean,
   isOnline: boolean,
-  lastSyncError: any,
   utxoBalance: ?BigNumber,
   utxos: ?Array<RawUtxo>,
   accountBalance: ?BigNumber,
@@ -80,8 +79,10 @@ type Props = {
   isFetchingUtxos: boolean,
   pools: ?Array<PoolTuples>,
   fetchPoolInfo: () => any,
+  fetchAccountState: () => any,
   poolInfo: ?RemotePoolMetaSuccess,
   totalDelegated: BigNumber,
+  lastAccountStateSyncError: any,
 }
 
 type State = {
@@ -105,12 +106,8 @@ class DelegationSummary extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps) {
-    // update pool info only when pool list gets updated and only once
-    if (
-      prevProps.pools == null &&
-      this.props.pools != null &&
-      this.props.poolInfo == null
-    ) {
+    // update pool info only when pool list gets updated
+    if (prevProps.pools !== this.props.pools && this.props.pools != null) {
       this.props.fetchPoolInfo()
     }
   }
@@ -150,15 +147,14 @@ class DelegationSummary extends React.Component<Props, State> {
   render() {
     const {
       isOnline,
-      isSyncing,
-      lastSyncError,
       utxoBalance,
       accountBalance,
       pools,
       poolInfo,
       totalDelegated,
-      intl,
+      fetchAccountState,
       isFetchingAccountState,
+      lastAccountStateSyncError,
       isFetchingUtxos,
     } = this.props
 
@@ -200,10 +196,24 @@ class DelegationSummary extends React.Component<Props, State> {
         <AccountAutoRefresher />
         <View style={styles.container}>
           <OfflineBanner />
-          {isOnline &&
-            lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
-
-          <ScrollView style={styles.inner}>
+          {/* eslint-disable indent */
+          isOnline &&
+            lastAccountStateSyncError && (
+              <SyncErrorBanner
+                showRefresh={!(isFetchingAccountState || isFetchingUtxos)}
+              />
+            )
+          /* eslint-enable indent */
+          }
+          <ScrollView
+            style={styles.inner}
+            refreshControl={
+              <RefreshControl
+                onRefresh={fetchAccountState}
+                refreshing={isFetchingAccountState || isFetchingUtxos}
+              />
+            }
+          >
             {poolInfo == null && <NotDelegatedInfo />}
             <EpochProgress
               percentage={Math.floor(
@@ -257,11 +267,6 @@ class DelegationSummary extends React.Component<Props, State> {
             /* eslint-enable indent */
             }
           </ScrollView>
-          <PleaseWaitModal
-            title=""
-            spinnerText={intl.formatMessage(globalMessages.pleaseWait)}
-            visible={isFetchingAccountState || isFetchingUtxos}
-          />
           <DelegationNavigationButtons onPress={this.navigateToStakingCenter} />
         </View>
       </SafeAreaView>
@@ -280,19 +285,20 @@ export default injectIntl(
       (state) => ({
         utxoBalance: utxoBalanceSelector(state),
         utxos: utxosSelector(state),
+        isFetchingUtxos: isFetchingUtxosSelector(state),
         accountBalance: accountBalanceSelector(state),
         isFetchingAccountState: isFetchingAccountStateSelector(state),
-        isFetchingUtxos: isFetchingUtxosSelector(state),
+        lastAccountStateSyncError: lastAccountStateFetchErrorSelector(state),
         pools: poolsSelector(state),
         poolInfo: poolInfoSelector(state),
         totalDelegated: totalDelegatedSelector(state),
-        isSyncing: isSynchronizingHistorySelector(state),
-        lastSyncError: lastHistorySyncErrorSelector(state),
         isOnline: isOnlineSelector(state),
         walletName: walletNameSelector(state),
       }),
       {
         fetchPoolInfo,
+        fetchAccountState,
+        fetchUTXOs,
       },
     ),
     withNavigation,

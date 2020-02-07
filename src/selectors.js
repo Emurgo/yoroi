@@ -127,6 +127,9 @@ export const utxosSelector = (state: State): ?Array<RawUtxo> =>
 export const isFetchingAccountStateSelector = (state: State): boolean =>
   state.accountState.isFetching
 
+export const lastAccountStateFetchErrorSelector = (state: State): any =>
+  state.accountState.lastFetchingError
+
 export const accountValueSelector = (state: State): number =>
   state.accountState.value
 

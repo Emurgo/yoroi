@@ -632,7 +632,6 @@ export class Wallet {
     const resp = await createDelegationTx(
       poolData,
       valueInAccount,
-      // $FlowFixMe already taken care off
       addressedUtxos,
       stakingKey,
       changeAddr,
