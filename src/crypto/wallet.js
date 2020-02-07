@@ -608,10 +608,10 @@ export class Wallet {
             index: chain.getIndexOfAddress(utxo.receiver),
           }
         }
-        if (addressInfo == null) {
-          throw new Error(`Address not found for utxo: ${utxo.receiver}`)
-        }
       })
+      if (addressInfo == null) {
+        throw new Error(`Address not found for utxo: ${utxo.receiver}`)
+      }
       return {
         ...utxo,
         addressing: addressInfo,
