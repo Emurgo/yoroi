@@ -145,6 +145,7 @@
   "components.settings.walletsettingscreen.title": "Settings",
   "components.settings.walletsettingscreen.walletName": "Wallet name",
   "components.stakingcenter.confirmDelegation.delegateButtonLabel": "Delegate",
+  "components.stakingcenter.confirmDelegation.delegationTxSignError": "Error while signing delegation transaction",
   "components.stakingcenter.confirmDelegation.ofFees": "of fees",
   "components.stakingcenter.confirmDelegation.rewardsExplanation": "Current approximation of rewards that you will receive per epoch:",
   "components.stakingcenter.confirmDelegation.title": "Confirm delegation",

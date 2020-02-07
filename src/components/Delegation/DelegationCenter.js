@@ -13,7 +13,6 @@ import {withNavigationTitle} from '../../utils/renderUtils'
 import {CARDANO_CONFIG} from '../../config'
 import type {Navigation} from '../../types/navigation'
 import {Logger} from '../../utils/logging'
-import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 import walletManager from '../../crypto/wallet'
 import {getShelleyTxFee} from '../../crypto/shelley/transactions/utils'
 import {InsufficientFunds} from '../../crypto/errors'
@@ -81,46 +80,44 @@ export default injectIntl(
   (compose(
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
-      handleOnMessage: ignoreConcurrentAsyncHandler(
-        ({navigation}) => async (event, intl) => {
-          try {
-            const pools: Array<SelectedPool> = JSON.parse(
-              decodeURI(event.nativeEvent.data),
-            )
-            const utxos = navigation.getParam('utxos')
-            const valueInAccount = navigation.getParam('valueInAccount')
-            Logger.debug(`From Seiza: ${JSON.stringify(pools)}`)
+      handleOnMessage: ({navigation}) => async (event, intl) => {
+        try {
+          const pools: Array<SelectedPool> = JSON.parse(
+            decodeURI(event.nativeEvent.data),
+          )
+          const utxos = navigation.getParam('utxos')
+          const valueInAccount = navigation.getParam('valueInAccount')
+          Logger.debug(`From Seiza: ${JSON.stringify(pools)}`)
 
-            if (pools && pools.length >= 1) {
-              const delegationTxData = await walletManager.prepareDelegationTx(
-                {id: pools[0].poolHash},
-                valueInAccount.toNumber(),
-                utxos,
-              )
-              const fee = await getShelleyTxFee(delegationTxData.unsignedTx.IOs)
-              navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM, {
-                poolName: pools[0].name,
-                poolHash: pools[0].poolHash,
-                amountToDelegate: delegationTxData.totalAmountToDelegate,
-                transactionFee: fee,
-                delegationTxData,
-              })
-            } else {
-              throw new Error('invalid pool data')
-            }
-          } catch (e) {
-            if (e instanceof InsufficientFunds) {
-              await showErrorDialog(errorMessages.insufficientBalance, intl)
-            } else {
-              await handleGeneralError(
-                messages.delegationTxBuildError,
-                e.message,
-                intl,
-              )
-            }
+          if (pools && pools.length >= 1) {
+            const delegationTxData = await walletManager.prepareDelegationTx(
+              {id: pools[0].poolHash},
+              valueInAccount.toNumber(),
+              utxos,
+            )
+            const fee = await getShelleyTxFee(delegationTxData.unsignedTx.IOs)
+            navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM, {
+              poolName: pools[0].name,
+              poolHash: pools[0].poolHash,
+              amountToDelegate: delegationTxData.totalAmountToDelegate,
+              transactionFee: fee,
+              delegationTxData,
+            })
+          } else {
+            throw new Error('invalid pool data')
           }
-        },
-      ),
+        } catch (e) {
+          if (e instanceof InsufficientFunds) {
+            await showErrorDialog(errorMessages.insufficientBalance, intl)
+          } else {
+            await handleGeneralError(
+              intl.formatMessage(messages.delegationTxBuildError),
+              e,
+              intl,
+            )
+          }
+        }
+      },
     }),
   )(DelegationCenter): ComponentType<ExternalProps>),
 )
