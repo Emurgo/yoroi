@@ -18,6 +18,7 @@ import {getShelleyTxFee} from '../../crypto/shelley/transactions/utils'
 import {InsufficientFunds} from '../../crypto/errors'
 import {errorMessages} from '../../i18n/global-messages'
 import {handleGeneralError, showErrorDialog} from '../../actions'
+import {NetworkError, ApiError} from '../../api/errors'
 
 import styles from './styles/DelegationCenter.style'
 
@@ -109,6 +110,10 @@ export default injectIntl(
         } catch (e) {
           if (e instanceof InsufficientFunds) {
             await showErrorDialog(errorMessages.insufficientBalance, intl)
+          } else if (e instanceof NetworkError) {
+            await showErrorDialog(errorMessages.networkError, intl)
+          } else if (e instanceof ApiError) {
+            await showErrorDialog(errorMessages.apiError, intl)
           } else {
             await handleGeneralError(
               intl.formatMessage(messages.delegationTxBuildError),
