@@ -206,7 +206,7 @@
   "components.walletselection.walletselectionscreen.header": "Tus billeteras",
   "crypto.keystore.approveTransaction": "Autorizar con tu huella dactilar",
   "crypto.keystore.cancelButton": "Cancelar",
-  "crypto.keystore.subtitle": "Puedes desactivar esta función en cualquier momento desde el apartado de configuración",
+  "crypto.keystore.subtitle": "Puedes desactivar esta función en cualquier momento desde el apartado de ajustes",
   "global.actions.dialogs.biometricsIsTurnedOff.message": "Parece que has deshabilitado la biometría. Por favor, habilítala",
   "global.actions.dialogs.biometricsIsTurnedOff.title": "La biometría fue deshabilitada",
   "global.actions.dialogs.disableEasyConfirmationFirst.message": "Por favor, deshabilita la función confirmación fácil en todas tus billeteras primero",
