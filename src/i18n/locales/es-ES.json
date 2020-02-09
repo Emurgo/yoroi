@@ -158,7 +158,7 @@
   "components.txhistory.txhistorylistitem.transactionTypeSent": "ADA enviadas",
   "components.txhistory.txnavigationbuttons.receiveButton": "Recibir",
   "components.txhistory.txnavigationbuttons.sendButton": "Enviar",
-  "components.uikit.offlinebanner.offline": "Sin conexión. Por favor revisa los ajustes de tu dispositivo.",
+  "components.uikit.offlinebanner.offline": "Sin conexión. Por favor, revisa los ajustes de tu dispositivo.",
   "components.walletinit.createwallet.createwalletscreen.title": "Crear una nueva billetera",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.confirmationButton": "Entiendo",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.keysStorageCheckbox": "Comprendo que mis claves secretas están almacenadas en forma segura solamente en este dispositivo, y no en los servidores de la empresa",
