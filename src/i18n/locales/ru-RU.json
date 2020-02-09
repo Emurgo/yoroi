@@ -10,7 +10,7 @@
   "components.firstrun.acepttermsofservicescreen.savingConsentModalTitle": "Инициализация",
   "components.firstrun.acepttermsofservicescreen.title": "Соглашение о предоставлении услуг",
   "components.firstrun.custompinscreen.pinConfirmationTitle": "Повторить PIN",
-  "components.firstrun.custompinscreen.pinInputSubtitle": "Выбрать новый PIN для быстрого доступа к кошельку.",
+  "components.firstrun.custompinscreen.pinInputSubtitle": "Выберите новый PIN для быстрого доступа к кошельку.",
   "components.firstrun.custompinscreen.pinInputTitle": "Ввести PIN",
   "components.firstrun.custompinscreen.title": "Установить PIN",
   "components.login.appstartscreen.loginButton": "Вход",
