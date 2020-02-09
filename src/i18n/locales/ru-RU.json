@@ -237,7 +237,7 @@
   "global.actions.dialogs.wrongPinError.title": "Неверный PIN",
   "global.availableFunds": "Доступные средства",
   "global.error.walletNameAlreadyTaken": "У Вас уже есть кошелек с таким именем",
-  "global.error.walletNameTooLong": "Имя кошелька не должно быть длиннее 40 символов",
+  "global.error.walletNameTooLong": "Имя кошелька не может превышать 40 символов",
   "global.ok": "ОК",
   "global.pleaseWait": "пожалуйста, подождите ...",
   "global.termsOfUse": "Условия использования",
