@@ -219,7 +219,7 @@
   "global.actions.dialogs.generalError.title": "Error inesperado",
   "global.actions.dialogs.incorrectPassword.message": "La contraseña que ingresaste es incorrecta.",
   "global.actions.dialogs.incorrectPassword.title": "Contraseña incorrecta",
-  "global.actions.dialogs.incorrectPin.message": "El PIN que ingresaste es incorrecto.",
+  "global.actions.dialogs.incorrectPin.message": "El PIN que has ingresado es incorrecto.",
   "global.actions.dialogs.incorrectPin.title": "PIN inválido",
   "global.actions.dialogs.logout.message": "Realmente quieres salir?",
   "global.actions.dialogs.logout.noButton": "No",
