@@ -184,7 +184,7 @@
   "components.walletinit.passwordstrengthindicator.passwordNumber": "1 número",
   "components.walletinit.passwordstrengthindicator.passwordRequirementsNote": "La contraseña debe contener al menos:",
   "components.walletinit.passwordstrengthindicator.passwordUpperChar": "1 letra en mayúscula",
-  "components.walletinit.restorewallet.restorewalletscreen.instructions": "Para restaurar tu billetera, por favor, ingresa la frase de recuperación que recibiste cuando creaste tu billetera por primera vez.",
+  "components.walletinit.restorewallet.restorewalletscreen.instructions": "Para restaurar tu billetera, por favor, ingresa la frase de recuperación que recibiste al crear tu billetera por primera vez.",
   "components.walletinit.restorewallet.restorewalletscreen.invalidchecksum": "Por favor, ingresa una frase de recuperación válida.",
   "components.walletinit.restorewallet.restorewalletscreen.mnemonicInputLabel": "Frase de recuperación",
   "components.walletinit.restorewallet.restorewalletscreen.restoreButton": "Restaurar billetera",
