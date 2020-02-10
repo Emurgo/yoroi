@@ -5,7 +5,7 @@ import type {ComponentType} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View, ScrollView, RefreshControl, Platform} from 'react-native'
-import {SafeAreaView, withNavigation} from 'react-navigation'
+import {SafeAreaView, withNavigation, NavigationEvents} from 'react-navigation'
 import {BigNumber} from 'bignumber.js'
 import {injectIntl} from 'react-intl'
 
@@ -27,6 +27,7 @@ import {
   isFetchingUtxosSelector,
   poolsSelector,
   poolInfoSelector,
+  isFetchingPoolInfoSelector,
   totalDelegatedSelector,
   lastAccountStateFetchErrorSelector,
 } from '../../selectors'
@@ -79,6 +80,7 @@ type Props = {
   isFetchingUtxos: boolean,
   pools: ?Array<PoolTuples>,
   fetchPoolInfo: () => any,
+  isFetchingPoolInfo: boolean,
   fetchAccountState: () => any,
   poolInfo: ?RemotePoolMetaSuccess,
   totalDelegated: BigNumber,
@@ -93,6 +95,8 @@ class DelegationSummary extends React.Component<Props, State> {
   state = {
     currentTime: new Date(),
   }
+
+  _firstFocus = true
 
   componentDidMount() {
     this.intervalId = setInterval(
@@ -144,6 +148,17 @@ class DelegationSummary extends React.Component<Props, State> {
     })
   }
 
+  handleDidFocus = () => {
+    if (this._firstFocus) {
+      this._firstFocus = false
+      // skip first focus to avoid
+      // didMount -> refetch -> done -> didFocus -> refetch
+      // blinking
+      return
+    }
+    this.props.fetchPoolInfo()
+  }
+
   render() {
     const {
       isOnline,
@@ -151,6 +166,7 @@ class DelegationSummary extends React.Component<Props, State> {
       accountBalance,
       pools,
       poolInfo,
+      isFetchingPoolInfo,
       totalDelegated,
       fetchAccountState,
       isFetchingAccountState,
@@ -211,13 +227,17 @@ class DelegationSummary extends React.Component<Props, State> {
             refreshControl={
               <RefreshControl
                 onRefresh={fetchAccountState}
-                refreshing={isFetchingAccountState || isFetchingUtxos}
+                refreshing={
+                  isFetchingAccountState ||
+                  isFetchingUtxos ||
+                  isFetchingPoolInfo
+                }
               />
             }
           >
-            {(isFetchingAccountState || poolInfo == null) && (
-              <NotDelegatedInfo />
-            )}
+            {(isFetchingAccountState ||
+              isFetchingPoolInfo ||
+              poolInfo == null) && <NotDelegatedInfo />}
             <EpochProgress
               percentage={Math.floor(
                 (100 * currentRelativeTime.slot) / epochLength,
@@ -280,10 +300,13 @@ class DelegationSummary extends React.Component<Props, State> {
             <PleaseWaitModal
               title={''}
               spinnerText={intl.formatMessage(globalMessages.pleaseWait)}
-              visible={isFetchingAccountState || isFetchingUtxos}
+              visible={
+                isFetchingAccountState || isFetchingUtxos || isFetchingPoolInfo
+              }
             />
           )}
         </View>
+        <NavigationEvents onDidFocus={this.handleDidFocus} />
       </SafeAreaView>
     )
   }
@@ -306,6 +329,7 @@ export default injectIntl(
         lastAccountStateSyncError: lastAccountStateFetchErrorSelector(state),
         pools: poolsSelector(state),
         poolInfo: poolInfoSelector(state),
+        isFetchingPoolInfo: isFetchingPoolInfoSelector(state),
         totalDelegated: totalDelegatedSelector(state),
         isOnline: isOnlineSelector(state),
         walletName: walletNameSelector(state),

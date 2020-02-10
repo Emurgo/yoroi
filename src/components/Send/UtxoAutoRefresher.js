@@ -41,7 +41,7 @@ class _UtxoAutoRefresher extends React.Component<{
 
   handleDidFocus = () => {
     if (this._firstFocus) {
-      this._firstFocus = true
+      this._firstFocus = false
       // skip first focus to avoid
       // didMount -> refetch -> done -> didFocus -> refetch
       // blinking

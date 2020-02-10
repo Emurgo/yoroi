@@ -104,6 +104,12 @@ export const accountBalanceSelector = (state: State) =>
 export const poolsSelector = (state: State) =>
   state.accountState.isFetching ? null : state.accountState.delegation.pools
 
+export const isFetchingPoolInfoSelector = (state: State): boolean =>
+  state.poolInfo.isFetching
+
+export const lastPoolInfoErrorSelector = (state: State): any =>
+  state.poolInfo.lastFetchingError
+
 export const poolInfoSelector = (state: State) =>
   state.poolInfo.isFetching ? null : state.poolInfo.meta
 
