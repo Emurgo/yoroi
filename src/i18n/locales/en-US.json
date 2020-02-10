@@ -242,6 +242,8 @@
   "components.walletinit.walletform.repeatPasswordInputError": "Passwords do not match",
   "components.walletinit.walletform.repeatPasswordInputLabel": "Repeat spending password",
   "components.walletinit.walletform.walletNameInputLabel": "Wallet name",
+  "components.walletinit.walletfreshinitscreen.addWalletButton": "Add wallet",
+  "components.walletinit.walletfreshinitscreen.addWalletOnShelleyButton": "Add wallet (Shelley Testnet)",
   "components.walletinit.walletinitscreen.createWalletButton": "Create wallet",
   "components.walletinit.walletinitscreen.restoreWalletButton": "Restore wallet",
   "components.walletinit.walletinitscreen.restoreShelleyWalletButton": "Restore wallet (Shelley Testnet)",
