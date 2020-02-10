@@ -4,12 +4,12 @@ import React from 'react'
 import type {ComponentType} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {View, ScrollView, RefreshControl} from 'react-native'
+import {View, ScrollView, RefreshControl, Platform} from 'react-native'
 import {SafeAreaView, withNavigation} from 'react-navigation'
 import {BigNumber} from 'bignumber.js'
 import {injectIntl} from 'react-intl'
 
-import {Banner, OfflineBanner, StatusBar} from '../UiKit'
+import {Banner, OfflineBanner, StatusBar, PleaseWaitModal} from '../UiKit'
 import {
   EpochProgress,
   UpcomingRewardInfo,
@@ -156,6 +156,7 @@ class DelegationSummary extends React.Component<Props, State> {
       isFetchingAccountState,
       lastAccountStateSyncError,
       isFetchingUtxos,
+      intl,
     } = this.props
 
     const totalBalance =
@@ -267,7 +268,19 @@ class DelegationSummary extends React.Component<Props, State> {
             /* eslint-enable indent */
             }
           </ScrollView>
-          <DelegationNavigationButtons onPress={this.navigateToStakingCenter} />
+          <DelegationNavigationButtons
+            onPress={this.navigateToStakingCenter}
+            disabled={isFetchingAccountState || isFetchingUtxos}
+          />
+          {Platform.OS === 'ios' && (
+            /* note(v-almonacid): for some reason refreshControl's wheel is not
+            /* shown on iOS, so I add a waiting dialog */
+            <PleaseWaitModal
+              title={''}
+              spinnerText={intl.formatMessage(globalMessages.pleaseWait)}
+              visible={isFetchingAccountState || isFetchingUtxos}
+            />
+          )}
         </View>
       </SafeAreaView>
     )
