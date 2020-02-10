@@ -97,6 +97,7 @@ class DelegationSummary extends React.Component<Props, State> {
   }
 
   _firstFocus = true
+  _isDelegating = false
 
   componentDidMount() {
     this.intervalId = setInterval(
@@ -113,6 +114,13 @@ class DelegationSummary extends React.Component<Props, State> {
     // update pool info only when pool list gets updated
     if (prevProps.pools !== this.props.pools && this.props.pools != null) {
       this.props.fetchPoolInfo()
+    }
+    if (
+      prevProps.pools == null &&
+      this.props.pools != null &&
+      this.props.pools.length > 0
+    ) {
+      this._isDelegating = true
     }
   }
 
@@ -235,9 +243,7 @@ class DelegationSummary extends React.Component<Props, State> {
               />
             }
           >
-            {(isFetchingAccountState ||
-              isFetchingPoolInfo ||
-              poolInfo == null) && <NotDelegatedInfo />}
+            {!this._isDelegating && <NotDelegatedInfo />}
             <EpochProgress
               percentage={Math.floor(
                 (100 * currentRelativeTime.slot) / epochLength,
@@ -301,7 +307,7 @@ class DelegationSummary extends React.Component<Props, State> {
               title={''}
               spinnerText={intl.formatMessage(globalMessages.pleaseWait)}
               visible={
-                isFetchingAccountState || isFetchingUtxos || isFetchingPoolInfo
+                isFetchingPoolInfo || isFetchingAccountState || isFetchingUtxos
               }
             />
           )}
