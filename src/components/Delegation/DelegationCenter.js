@@ -94,7 +94,7 @@ export default injectIntl(
       },
       {
         setBusy: () => (busy) => ({busy}),
-      }
+      },
     ),
     withHandlers({
       handleOnMessage: ({navigation, setBusy}) => async (event, intl) => {

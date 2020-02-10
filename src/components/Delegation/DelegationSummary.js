@@ -215,7 +215,9 @@ class DelegationSummary extends React.Component<Props, State> {
               />
             }
           >
-            {poolInfo == null && <NotDelegatedInfo />}
+            {(isFetchingAccountState || poolInfo == null) && (
+              <NotDelegatedInfo />
+            )}
             <EpochProgress
               percentage={Math.floor(
                 (100 * currentRelativeTime.slot) / epochLength,
