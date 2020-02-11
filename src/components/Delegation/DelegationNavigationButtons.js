@@ -21,15 +21,17 @@ type Props = {
   navigation: NavigationScreenProp<NavigationState>,
   intl: any,
   onPress: () => void,
+  disabled?: ?boolean,
 }
 
-const DelegationNavigationButtons = ({intl, onPress}: Props) => (
+const DelegationNavigationButtons = ({intl, onPress, disabled}: Props) => (
   <View style={styles.container}>
     <Button
       block
       shelleyTheme
       onPress={onPress}
       title={intl.formatMessage(messages.stakingCenterButton)}
+      disabled={disabled}
     />
   </View>
 )

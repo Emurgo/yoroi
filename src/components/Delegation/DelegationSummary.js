@@ -4,8 +4,8 @@ import React from 'react'
 import type {ComponentType} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {View, ScrollView} from 'react-native'
-import {SafeAreaView, withNavigation} from 'react-navigation'
+import {View, ScrollView, RefreshControl, Platform} from 'react-native'
+import {SafeAreaView, withNavigation, NavigationEvents} from 'react-navigation'
 import {BigNumber} from 'bignumber.js'
 import {injectIntl} from 'react-intl'
 
@@ -18,8 +18,6 @@ import {
   NotDelegatedInfo,
 } from './dashboard'
 import {
-  isSynchronizingHistorySelector,
-  lastHistorySyncErrorSelector,
   isOnlineSelector,
   walletNameSelector,
   utxoBalanceSelector,
@@ -29,7 +27,9 @@ import {
   isFetchingUtxosSelector,
   poolsSelector,
   poolInfoSelector,
+  isFetchingPoolInfoSelector,
   totalDelegatedSelector,
+  lastAccountStateFetchErrorSelector,
 } from '../../selectors'
 import DelegationNavigationButtons from './DelegationNavigationButtons'
 import UtxoAutoRefresher from '../Send/UtxoAutoRefresher'
@@ -41,6 +41,8 @@ import {
   genCurrentSlotLength,
   genTimeToSlot,
 } from '../../helpers/timeUtils'
+import {fetchAccountState} from '../../actions/account'
+import {fetchUTXOs} from '../../actions/utxo'
 import {fetchPoolInfo} from '../../actions/pools'
 import {SHELLEY_WALLET_ROUTES} from '../../RoutesList'
 import walletManager from '../../crypto/wallet'
@@ -70,9 +72,7 @@ const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
 type Props = {
   intl: any,
   navigation: Navigation,
-  isSyncing: boolean,
   isOnline: boolean,
-  lastSyncError: any,
   utxoBalance: ?BigNumber,
   utxos: ?Array<RawUtxo>,
   accountBalance: ?BigNumber,
@@ -80,8 +80,11 @@ type Props = {
   isFetchingUtxos: boolean,
   pools: ?Array<PoolTuples>,
   fetchPoolInfo: () => any,
+  isFetchingPoolInfo: boolean,
+  fetchAccountState: () => any,
   poolInfo: ?RemotePoolMetaSuccess,
   totalDelegated: BigNumber,
+  lastAccountStateSyncError: any,
 }
 
 type State = {
@@ -92,6 +95,9 @@ class DelegationSummary extends React.Component<Props, State> {
   state = {
     currentTime: new Date(),
   }
+
+  _firstFocus = true
+  _isDelegating = false
 
   componentDidMount() {
     this.intervalId = setInterval(
@@ -105,13 +111,16 @@ class DelegationSummary extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps) {
-    // update pool info only when pool list gets updated and only once
+    // update pool info only when pool list gets updated
+    if (prevProps.pools !== this.props.pools && this.props.pools != null) {
+      this.props.fetchPoolInfo()
+    }
     if (
       prevProps.pools == null &&
       this.props.pools != null &&
-      this.props.poolInfo == null
+      this.props.pools.length > 0
     ) {
-      this.props.fetchPoolInfo()
+      this._isDelegating = true
     }
   }
 
@@ -147,19 +156,31 @@ class DelegationSummary extends React.Component<Props, State> {
     })
   }
 
+  handleDidFocus = () => {
+    if (this._firstFocus) {
+      this._firstFocus = false
+      // skip first focus to avoid
+      // didMount -> refetch -> done -> didFocus -> refetch
+      // blinking
+      return
+    }
+    this.props.fetchPoolInfo()
+  }
+
   render() {
     const {
       isOnline,
-      isSyncing,
-      lastSyncError,
       utxoBalance,
       accountBalance,
       pools,
       poolInfo,
+      isFetchingPoolInfo,
       totalDelegated,
-      intl,
+      fetchAccountState,
       isFetchingAccountState,
+      lastAccountStateSyncError,
       isFetchingUtxos,
+      intl,
     } = this.props
 
     const totalBalance =
@@ -200,11 +221,29 @@ class DelegationSummary extends React.Component<Props, State> {
         <AccountAutoRefresher />
         <View style={styles.container}>
           <OfflineBanner />
-          {isOnline &&
-            lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
-
-          <ScrollView style={styles.inner}>
-            {poolInfo == null && <NotDelegatedInfo />}
+          {/* eslint-disable indent */
+          isOnline &&
+            lastAccountStateSyncError && (
+              <SyncErrorBanner
+                showRefresh={!(isFetchingAccountState || isFetchingUtxos)}
+              />
+            )
+          /* eslint-enable indent */
+          }
+          <ScrollView
+            style={styles.inner}
+            refreshControl={
+              <RefreshControl
+                onRefresh={fetchAccountState}
+                refreshing={
+                  isFetchingAccountState ||
+                  isFetchingUtxos ||
+                  isFetchingPoolInfo
+                }
+              />
+            }
+          >
+            {!this._isDelegating && <NotDelegatedInfo />}
             <EpochProgress
               percentage={Math.floor(
                 (100 * currentRelativeTime.slot) / epochLength,
@@ -257,13 +296,23 @@ class DelegationSummary extends React.Component<Props, State> {
             /* eslint-enable indent */
             }
           </ScrollView>
-          <PleaseWaitModal
-            title=""
-            spinnerText={intl.formatMessage(globalMessages.pleaseWait)}
-            visible={isFetchingAccountState || isFetchingUtxos}
+          <DelegationNavigationButtons
+            onPress={this.navigateToStakingCenter}
+            disabled={isFetchingAccountState || isFetchingUtxos}
           />
-          <DelegationNavigationButtons onPress={this.navigateToStakingCenter} />
+          {Platform.OS === 'ios' && (
+            /* note(v-almonacid): for some reason refreshControl's wheel is not
+            /* shown on iOS, so I add a waiting dialog */
+            <PleaseWaitModal
+              title={''}
+              spinnerText={intl.formatMessage(globalMessages.pleaseWait)}
+              visible={
+                isFetchingPoolInfo || isFetchingAccountState || isFetchingUtxos
+              }
+            />
+          )}
         </View>
+        <NavigationEvents onDidFocus={this.handleDidFocus} />
       </SafeAreaView>
     )
   }
@@ -280,19 +329,21 @@ export default injectIntl(
       (state) => ({
         utxoBalance: utxoBalanceSelector(state),
         utxos: utxosSelector(state),
+        isFetchingUtxos: isFetchingUtxosSelector(state),
         accountBalance: accountBalanceSelector(state),
         isFetchingAccountState: isFetchingAccountStateSelector(state),
-        isFetchingUtxos: isFetchingUtxosSelector(state),
+        lastAccountStateSyncError: lastAccountStateFetchErrorSelector(state),
         pools: poolsSelector(state),
         poolInfo: poolInfoSelector(state),
+        isFetchingPoolInfo: isFetchingPoolInfoSelector(state),
         totalDelegated: totalDelegatedSelector(state),
-        isSyncing: isSynchronizingHistorySelector(state),
-        lastSyncError: lastHistorySyncErrorSelector(state),
         isOnline: isOnlineSelector(state),
         walletName: walletNameSelector(state),
       }),
       {
         fetchPoolInfo,
+        fetchAccountState,
+        fetchUTXOs,
       },
     ),
     withNavigation,

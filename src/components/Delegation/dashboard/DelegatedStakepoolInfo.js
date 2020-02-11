@@ -19,7 +19,7 @@ const messages = defineMessages({
   fullDescriptionButtonLabel: {
     id:
       'components.delegationsummary.delegatedStakepoolInfo.fullDescriptionButtonLabel',
-    defaultMessage: '!!!Full description',
+    defaultMessage: '!!!Go to website',
   },
 })
 

@@ -371,13 +371,16 @@ export class Wallet {
       this._internalChain.sync(api.filterUsedAddresses, config),
       this._externalChain.sync(api.filterUsedAddresses, config),
     ])
-    Logger.info('Discovery done, now syncing transactions')
-    let keepGoing = true
-    while (keepGoing) {
-      keepGoing = await this._transactionCache.doSyncStep([
-        ...this._internalChain.getBlocks(),
-        ...this._externalChain.getBlocks(),
-      ])
+    // TODO: implement for shelley
+    if (!this._isShelley) {
+      Logger.info('Discovery done, now syncing transactions')
+      let keepGoing = true
+      while (keepGoing) {
+        keepGoing = await this._transactionCache.doSyncStep([
+          ...this._internalChain.getBlocks(),
+          ...this._externalChain.getBlocks(),
+        ])
+      }
     }
 
     // update receive screen to include any new addresses found
@@ -632,7 +635,6 @@ export class Wallet {
     const resp = await createDelegationTx(
       poolData,
       valueInAccount,
-      // $FlowFixMe already taken care off
       addressedUtxos,
       stakingKey,
       changeAddr,
