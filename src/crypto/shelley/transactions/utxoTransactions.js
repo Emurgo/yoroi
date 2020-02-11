@@ -122,6 +122,7 @@ export const newAdaUnsignedTxFromUtxo = async (
       feeAlgorithm,
       payload,
     )
+    await ioBuilder.free()
     IOs = await ioBuilder.seal_with_output_policy(
       payload,
       feeAlgorithm,
@@ -130,6 +131,8 @@ export const newAdaUnsignedTxFromUtxo = async (
   } else {
     throw new Error('only support single change address')
   }
+  await feeAlgorithm.free()
+  await payload.free()
 
   return {
     senderUtxos: selectedUtxos,
@@ -205,6 +208,7 @@ async function filterToUsedChange(
   const changeAddrPayload = Buffer.from(
     await changeAddrWasm.as_bytes(),
   ).toString('hex')
+  await changeAddrWasm.free()
   for (let i = 0; i < (await outputs.size()); i++) {
     const output = await outputs.get(i)
     const val = await (await output.value()).to_str()
@@ -212,6 +216,7 @@ async function filterToUsedChange(
     const outputPayload = Buffer.from(
       await (await output.address()).as_bytes(),
     ).toString('hex')
+    await output.free()
     if (changeAddrPayload === outputPayload) {
       const indexInInput = possibleDuplicates.findIndex(
         (utxo) => utxo.amount === val,
@@ -225,6 +230,7 @@ async function filterToUsedChange(
       // remove the duplicate and keep searching
       possibleDuplicates.splice(indexInInput, 1)
     }
+    await val.free()
   }
   // note: if no element found, then no change was needed (tx was perfectly balanced)
   return change
@@ -246,16 +252,19 @@ export const signTransaction = async (
     payload != null
       ? await txbuilder.payload(payload.certificate)
       : await txbuilder.no_payload()
+  await txbuilder.free()
   const builderSetWitnesses = await builderSetIOs.set_ios(
     await IOs.inputs(),
     await IOs.outputs(),
   )
+  await builderSetIOs.free()
   const builderSetAuthData = await addWitnesses(
     builderSetWitnesses,
     senderUtxos,
     signingKey,
     useLegacy,
   )
+  await builderSetWitnesses.free()
 
   // prettier-ignore
   const payloadAuthData =
@@ -269,7 +278,10 @@ export const signTransaction = async (
         payload.certificate,
       )
   const signedTx = await builderSetAuthData.set_payload_auth(payloadAuthData)
+  await payloadAuthData.free()
+  await builderSetAuthData.free()
   const fragment = await Fragment.from_transaction(signedTx)
+  await signedTx.free()
   return fragment
 }
 
@@ -311,8 +323,14 @@ async function addWitnesses(
       )
     }
     witnesses.add(witness)
+    await witness.free()
   }
-  return await builderSetWitnesses.set_witnesses(witnesses)
+  for (let i = 0; i < privateKeys.length; i++) {
+    await privateKeys[i].free()
+  }
+  const builderSetAuthData = await builderSetWitnesses.set_witnesses(witnesses)
+  await witnesses.free()
+  return builderSetAuthData
 }
 
 export const sendAllUnsignedTxFromUtxo = async (
@@ -348,8 +366,11 @@ export const sendAllUnsignedTxFromUtxo = async (
       feeAlgorithm,
       payload,
     )).to_str()
+    await payload.free()
+    await fakeIOBuilder.free()
     fee = new BigNumber(feeValue)
   }
+  await feeAlgorithm.free()
   // create a new transaction subtracing the fee from your total UTXO
   if (totalBalance.isLessThan(fee)) {
     throw new InsufficientFunds()
