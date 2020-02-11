@@ -15,9 +15,11 @@ export default StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-around',
     marginLeft: 24,
+    marginBottom: 10,
   },
   row: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     height: 24,
   },
   label: {
@@ -30,6 +32,11 @@ export default StyleSheet.create({
     lineHeight: 24,
     fontSize: 16,
     color: COLORS.DARK_GRAY,
+  },
+  timeWrapper: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
   },
   timeBlock: {
     width: 28,

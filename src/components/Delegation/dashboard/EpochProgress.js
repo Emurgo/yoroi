@@ -49,11 +49,13 @@ const EpochProgress = ({
           <Text style={styles.label}>
             {intl.formatMessage(messages.endsInLabel)}:
           </Text>
-          <Text style={styles.timeBlock}>{endTime.h}</Text>
-          <Text>:</Text>
-          <Text style={styles.timeBlock}>{endTime.m}</Text>
-          <Text>:</Text>
-          <Text style={styles.timeBlock}>{endTime.s}</Text>
+          <View style={styles.timeWrapper}>
+            <Text style={styles.timeBlock}>{endTime.h}</Text>
+            <Text>:</Text>
+            <Text style={styles.timeBlock}>{endTime.m}</Text>
+            <Text>:</Text>
+            <Text style={styles.timeBlock}>{endTime.s}</Text>
+          </View>
         </View>
       </View>
     </TitledCard>
