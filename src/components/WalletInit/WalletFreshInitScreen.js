@@ -10,38 +10,30 @@ import {injectIntl, defineMessages} from 'react-intl'
 
 import WalletDescription from './WalletDescription'
 import {Button, StatusBar, ScreenBackground} from '../UiKit'
+// uses same styles as WalletInitScreen
 import styles from './styles/WalletInitScreen.style'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {walletIsInitializedSelector} from '../../selectors'
 
 import type {State} from '../../state'
 import type {Navigation} from '../../types/navigation'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.walletinit.walletinitscreen.title',
+  addWalletButton: {
+    id: 'components.walletinit.walletfreshinitscreen.addWalletButton',
     defaultMessage: '!!!Add wallet',
-    description: 'some desc',
   },
-  createWalletButton: {
-    id: 'components.walletinit.walletinitscreen.createWalletButton',
-    defaultMessage: '!!!Create wallet',
-    description: 'some desc',
-  },
-  restoreWalletButton: {
-    id: 'components.walletinit.walletinitscreen.restoreWalletButton',
-    defaultMessage: '!!!Restore wallet',
-    description: 'some desc',
+  addWalletOnShelleyButton: {
+    id: 'components.walletinit.walletfreshinitscreen.addWalletOnShelleyButton',
+    defaultMessage: '!!!Add wallet (Shelley Testnet)',
   },
 })
 
 type Props = {
-  navigateRestoreWallet: (Object, boolean) => mixed,
-  navigateCreateWallet: (Object, boolean) => mixed,
   intl: any,
   walletIsInitialized: boolean,
   navigation: Navigation,
+  navigateInitWallet: (Object, boolean) => mixed,
 }
 
 const WalletInitScreen = ({
@@ -50,15 +42,8 @@ const WalletInitScreen = ({
   intl,
   walletIsInitialized,
   navigation,
+  navigateInitWallet,
 }: Props) => {
-  const isShelleyWallet = navigation.getParam('isShelleyWallet')
-  let createWalletLabel = intl.formatMessage(messages.createWalletButton)
-  let restoreWalletLabel = intl.formatMessage(messages.restoreWalletButton)
-  if (isShelleyWallet) {
-    createWalletLabel += ' (Shelley Testnet)'
-    restoreWalletLabel += ' (Shelley Testnet)'
-  }
-
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <StatusBar type="dark" />
@@ -69,15 +54,15 @@ const WalletInitScreen = ({
             <WalletDescription />
           </View>
           <Button
-            onPress={(event) => navigateCreateWallet(event, isShelleyWallet)}
-            title={createWalletLabel}
+            onPress={(event) => navigateInitWallet(event, false)}
+            title={intl.formatMessage(messages.addWalletButton)}
             style={styles.createButton}
           />
+
           <Button
             outline
-            onPress={(event) => navigateRestoreWallet(event, isShelleyWallet)}
-            title={restoreWalletLabel}
-            style={styles.createButton}
+            onPress={(event) => navigateInitWallet(event, true)}
+            title={intl.formatMessage(messages.addWalletOnShelleyButton)}
           />
         </View>
       </ScreenBackground>
@@ -89,14 +74,9 @@ export default injectIntl(
     connect((state: State) => ({
       walletIsInitialized: walletIsInitializedSelector(state),
     })),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
-      navigateRestoreWallet: ({navigation}) => (event, isShelleyWallet) =>
-        navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET, {
-          isShelleyWallet,
-        }),
-      navigateCreateWallet: ({navigation}) => (event, isShelleyWallet) =>
-        navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET, {
+      navigateInitWallet: ({navigation}) => (event, isShelleyWallet) =>
+        navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH, {
           isShelleyWallet,
         }),
     }),
