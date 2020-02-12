@@ -1,6 +1,7 @@
 // @flow
 import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
+import DeviceInfo from 'react-native-device-info'
 
 import {Logger} from '../utils/logging'
 import {CONFIG, CARDANO_CONFIG} from '../config'
@@ -35,6 +36,8 @@ const _fetch = (path: string, payload: any, networkConfig: any) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
+        'yoroi-version': DeviceInfo.getVersion(),
+        'tangata-manu': 'yoroi',
       },
       body: JSON.stringify(payload),
     })
