@@ -61,6 +61,9 @@ export type State = {
     sendCrashReports: boolean,
     canEnableBiometricEncryption: boolean,
   },
+  // need to add as a non-wallet-specific property to avoid conflict with other
+  // actions that may override this property (otherwise more refactoring is needed)
+  isFlawedWallet: boolean,
 }
 
 export const getInitialState = (): State => ({
@@ -118,6 +121,7 @@ export const getInitialState = (): State => ({
     sendCrashReports: false,
     canEnableBiometricEncryption: false,
   },
+  isFlawedWallet: false,
 })
 
 export default getInitialState

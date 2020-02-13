@@ -18,15 +18,19 @@ import {
   availableAmountSelector,
   walletNameSelector,
   languageSelector,
+  isFlawedWalletSelector,
 } from '../../selectors'
 import TxHistoryList from './TxHistoryList'
 import TxNavigationButtons from './TxNavigationButtons'
 import {updateHistory} from '../../actions/history'
+import {checkForFlawedWallets} from '../../actions'
 import {
   onDidMount,
   requireInitializedWallet,
   withNavigationTitle,
 } from '../../utils/renderUtils'
+import FlawedWalletModal from './FlawedWalletModal'
+import {WALLET_INIT_ROUTES} from '../../RoutesList'
 
 import {formatAdaWithText} from '../../utils/format'
 import image from '../../assets/img/no_transactions.png'
@@ -81,10 +85,19 @@ const TxHistory = ({
   updateHistory,
   lastSyncError,
   availableAmount,
+  isFlawedWallet,
 }) => (
   <SafeAreaView style={styles.scrollView}>
     <StatusBar type="dark" />
     <View style={styles.container}>
+      <FlawedWalletModal
+        visible={isFlawedWallet === true}
+        disableButtons={false}
+        onPress={() => navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)}
+        onRequestClose={() =>
+          navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+        }
+      />
       <OfflineBanner />
       {isOnline &&
         lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
@@ -129,12 +142,15 @@ export default injectIntl(
         availableAmount: availableAmountSelector(state),
         walletName: walletNameSelector(state),
         key: languageSelector(state),
+        isFlawedWallet: isFlawedWalletSelector(state),
       }),
       {
         updateHistory,
+        checkForFlawedWallets,
       },
     ),
-    onDidMount(({updateHistory}) => {
+    onDidMount(({updateHistory, checkForFlawedWallets}) => {
+      checkForFlawedWallets()
       updateHistory()
     }),
     withNavigationTitle(({walletName}) => walletName),
