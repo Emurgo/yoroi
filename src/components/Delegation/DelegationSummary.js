@@ -50,7 +50,7 @@ import {SHELLEY_WALLET_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import walletManager from '../../crypto/wallet'
 import globalMessages from '../../i18n/global-messages'
 import {formatAdaWithText, formatAdaInteger} from '../../utils/format'
-import FlawedWalletModal from '../TxHistory/FlawedWalletModal'
+import FlawedWalletScreen from './FlawedWalletScreen'
 
 import styles from './styles/DelegationSummary.style'
 
@@ -112,8 +112,8 @@ class DelegationSummary extends React.Component<Props, State> {
         }),
       1000,
     )
-    this.props.fetchPoolInfo()
     this.props.checkForFlawedWallets()
+    this.props.fetchPoolInfo()
   }
 
   componentDidUpdate(prevProps) {
@@ -170,6 +170,7 @@ class DelegationSummary extends React.Component<Props, State> {
       // blinking
       return
     }
+    this.props.checkForFlawedWallets()
     this.props.fetchPoolInfo()
   }
 
@@ -224,8 +225,7 @@ class DelegationSummary extends React.Component<Props, State> {
 
     if (isFlawedWallet === true) {
       return (
-        <FlawedWalletModal
-          visible
+        <FlawedWalletScreen
           disableButtons={false}
           onPress={() =>
             navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)

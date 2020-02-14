@@ -1201,6 +1201,14 @@ class WalletManager {
         )
       }
       if (this._wallet == null) throw new WalletClosed()
+      Logger.debug(
+        'WalletManager::checkForFlawedWallets wallet addresses [0]:',
+        this._wallet._externalChain.addresses[0],
+      )
+      Logger.debug(
+        'WalletManager::checkForFlawedWallets flawedAddresses [0]:',
+        flawedAddresses
+      )
       if (this._wallet._externalChain.isMyAddress(flawedAddresses[0])) {
         Logger.debug('WalletManager::checkForFlawedWallets: address match')
         affected = true
