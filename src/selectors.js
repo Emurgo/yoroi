@@ -178,3 +178,6 @@ export const languageSelector = (state: State): string =>
 
 export const isKeyboardOpenSelector = (state: State): boolean =>
   state.isKeyboardOpen
+
+export const isFlawedWalletSelector = (state: State): boolean =>
+  state.isFlawedWallet

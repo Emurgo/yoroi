@@ -1172,6 +1172,44 @@ class WalletManager {
       : CONFIG.CARDANO
     return await api.getPoolInfo(pool, config)
   }
+
+  async checkForFlawedWallets(): Promise<boolean> {
+    const mnemonics = [CONFIG.DEBUG.MNEMONIC1, CONFIG.DEBUG.MNEMONIC2]
+    let affected = false
+    for (const mnemonic of mnemonics) {
+      Logger.debug('WalletManager::checkForFlawedWallets mnemonic:', mnemonic)
+      let flawedAddresses
+      if (this.isShelley) {
+        const flawedAddressesBech32 = await shelleyUtil.getGroupAddressesFromMnemonics(
+          mnemonic,
+          'External',
+          [0],
+        )
+        flawedAddresses = await Promise.all(
+          flawedAddressesBech32.map(async (addr) => {
+            return Buffer.from(
+              await (await Address.from_string(addr)).as_bytes(),
+            ).toString('hex')
+          }),
+        )
+      } else {
+        flawedAddresses = await util.getAddressesFromMnemonics(
+          mnemonic,
+          'External',
+          [0],
+          CARDANO_CONFIG.MAINNET,
+        )
+      }
+      if (this._wallet == null) throw new WalletClosed()
+      if (this._wallet._externalChain.isMyAddress(flawedAddresses[0])) {
+        Logger.debug('WalletManager::checkForFlawedWallets: address match')
+        affected = true
+        return affected
+      }
+    }
+    Logger.debug('WalletManager::checkForFlawedWallets:: no match')
+    return affected
+  }
 }
 
 export default new WalletManager()

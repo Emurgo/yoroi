@@ -30,6 +30,7 @@ import {
   isFetchingPoolInfoSelector,
   totalDelegatedSelector,
   lastAccountStateFetchErrorSelector,
+  isFlawedWalletSelector,
 } from '../../selectors'
 import DelegationNavigationButtons from './DelegationNavigationButtons'
 import UtxoAutoRefresher from '../Send/UtxoAutoRefresher'
@@ -44,10 +45,12 @@ import {
 import {fetchAccountState} from '../../actions/account'
 import {fetchUTXOs} from '../../actions/utxo'
 import {fetchPoolInfo} from '../../actions/pools'
-import {SHELLEY_WALLET_ROUTES} from '../../RoutesList'
+import {checkForFlawedWallets} from '../../actions'
+import {SHELLEY_WALLET_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import walletManager from '../../crypto/wallet'
 import globalMessages from '../../i18n/global-messages'
 import {formatAdaWithText, formatAdaInteger} from '../../utils/format'
+import FlawedWalletModal from '../TxHistory/FlawedWalletModal'
 
 import styles from './styles/DelegationSummary.style'
 
@@ -85,6 +88,8 @@ type Props = {
   poolInfo: ?RemotePoolMetaSuccess,
   totalDelegated: BigNumber,
   lastAccountStateSyncError: any,
+  checkForFlawedWallets: () => any,
+  isFlawedWallet: boolean,
 }
 
 type State = {
@@ -108,6 +113,7 @@ class DelegationSummary extends React.Component<Props, State> {
       1000,
     )
     this.props.fetchPoolInfo()
+    this.props.checkForFlawedWallets()
   }
 
   componentDidUpdate(prevProps) {
@@ -181,6 +187,8 @@ class DelegationSummary extends React.Component<Props, State> {
       lastAccountStateSyncError,
       isFetchingUtxos,
       intl,
+      isFlawedWallet,
+      navigation,
     } = this.props
 
     const totalBalance =
@@ -212,6 +220,21 @@ class DelegationSummary extends React.Component<Props, State> {
     const leftPadDate: (number) => string = (num) => {
       if (num < 10) return `0${num}`
       return num.toString()
+    }
+
+    if (isFlawedWallet === true) {
+      return (
+        <FlawedWalletModal
+          visible
+          disableButtons={false}
+          onPress={() =>
+            navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+          }
+          onRequestClose={() =>
+            navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+          }
+        />
+      )
     }
 
     return (
@@ -339,11 +362,13 @@ export default injectIntl(
         totalDelegated: totalDelegatedSelector(state),
         isOnline: isOnlineSelector(state),
         walletName: walletNameSelector(state),
+        isFlawedWallet: isFlawedWalletSelector(state),
       }),
       {
         fetchPoolInfo,
         fetchAccountState,
         fetchUTXOs,
+        checkForFlawedWallets,
       },
     ),
     withNavigation,

@@ -485,3 +485,20 @@ export const submitShelleyTx = (encodedTx: Uint8Array) => async (
   // but this action updates the wallet state
   dispatch(updateHistory())
 }
+
+export const checkForFlawedWallets = () => async (dispatch: Dispatch<any>) => {
+  let isFlawed = false
+  Logger.debug('actions::checkForFlawedWallets:: checking wallet...')
+  try {
+    isFlawed = await walletManager.checkForFlawedWallets()
+    Logger.debug('actions::checkForFlawedWallets::isFlawed', isFlawed)
+    dispatch({
+      path: ['isFlawedWallet'],
+      payload: isFlawed,
+      reducer: (state, isFlawed) => isFlawed,
+      type: 'SET_FLAWED_WALLET',
+    })
+  } catch (e) {
+    Logger.warn('actions::checkForFlawedWallets error', e)
+  }
+}
