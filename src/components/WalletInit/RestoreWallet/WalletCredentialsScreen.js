@@ -337,6 +337,7 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
               onConfirm={this.onConfirmUpgrade}
               onContinue={this.navigateToWallet}
               onRequestClose={this.onBack}
+              txId={transferTx?.id}
             />
           </>
         )}

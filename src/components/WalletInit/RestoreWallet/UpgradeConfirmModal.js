@@ -51,6 +51,10 @@ const messages = defineMessages({
     id: 'components.walletinit.restorewallet.upgradeconfirmmodal.feesLabel',
     defaultMessage: '!!!Fees',
   },
+  txIdLabel: {
+    id: 'components.walletinit.restorewallet.upgradeconfirmmodal.txIdLabel',
+    defaultMessage: '!!!Transaction ID',
+  },
 })
 
 type Props = {
@@ -66,6 +70,7 @@ type Props = {
   onConfirm: () => any,
   onContinue: () => any,
   onRequestClose: () => any,
+  txId: string,
 }
 
 const UpgradeConfirmModal = ({
@@ -81,6 +86,7 @@ const UpgradeConfirmModal = ({
   onConfirm,
   onContinue,
   onRequestClose,
+  txId,
 }: Props) => {
   if (byronAddresses.length > 0) {
     return (
@@ -120,6 +126,10 @@ const UpgradeConfirmModal = ({
             <View style={styles.item}>
               <Text>{intl.formatMessage(messages.toLabel)}</Text>
               <AddressEntry address={shelleyAddress} />
+            </View>
+            <View style={styles.item}>
+              <Text>{intl.formatMessage(messages.txIdLabel)}</Text>
+              <Text secondary>{txId}</Text>
             </View>
           </View>
           <View style={styles.buttons}>
