@@ -228,6 +228,7 @@
   "components.walletinit.restorewallet.upgradeconfirmmodal.noUpgradeMessage": "Your wallet did not need to be upgraded.",
   "components.walletinit.restorewallet.upgradeconfirmmodal.title": "Wallet upgrade",
   "components.walletinit.restorewallet.upgradeconfirmmodal.toLabel": "To",
+  "components.walletinit.restorewallet.upgradeconfirmmodal.txIdLabel": "Transaction ID",
   "components.walletinit.restorewallet.walletcredentialsscreen.title": "Wallet credentials",
   "components.walletinit.restorewallet.walletcredentialsscreen.walletCheckError": "Could not verify wallet funds",
   "components.walletinit.restorewallet.walletverifyscreen.byronAddressLabel": "Byron wallet address:",
