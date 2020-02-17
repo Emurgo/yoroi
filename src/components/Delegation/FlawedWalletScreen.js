@@ -53,9 +53,7 @@ const FlawedWalletScreen = ({
     <ScrollView style={styles.scrollView}>
       <View style={styles.content}>
         <View style={styles.heading}>
-          <Text style={styles.title}>
-            {intl.formatMessage(messages.title)}
-          </Text>
+          <Text style={styles.title}>{intl.formatMessage(messages.title)}</Text>
           <Image source={image} />
         </View>
         <Text style={styles.paragraph}>

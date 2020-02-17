@@ -32,7 +32,7 @@ export type CryptoAccount = {
   root_cached_key: string,
 }
 
-const KNOWN_ERROR_MSG = {
+export const KNOWN_ERROR_MSG = {
   DECRYPT_FAILED: 'Decryption failed. Check your password.',
   INSUFFICIENT_FUNDS_RE: /NotEnoughInput/,
   SIGN_TX_BUG: /TxBuildError\(CoinError\(Negative\)\)/,
