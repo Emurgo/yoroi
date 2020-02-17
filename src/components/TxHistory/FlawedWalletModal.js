@@ -22,7 +22,7 @@ const messages = defineMessages({
     defaultMessage:
       '!!!It looks like you have accidentally created or restored a wallet ' +
       'that is only included in special versions for development. ' +
-      'As a security mesure, we have disabled this wallet.',
+      'As a security measure, we have disabled this wallet.',
   },
   explanation2: {
     id: 'components.txhistory.flawedwalletmodal.explanation2',
