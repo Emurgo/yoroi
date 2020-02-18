@@ -200,8 +200,8 @@ const DelegationConfirmation = ({
   const transactionFee = navigation.getParam('transactionFee')
   const reward = approximateReward(amountToDelegate)
 
-  const isConfirmationDisabled = (!isEasyConfirmationEnabled && !password)
-    || processingTx
+  const isConfirmationDisabled =
+    (!isEasyConfirmationEnabled && !password) || processingTx
 
   return (
     <View style={styles.container}>
