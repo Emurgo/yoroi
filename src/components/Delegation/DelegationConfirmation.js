@@ -29,6 +29,7 @@ import {NetworkError, ApiError} from '../../api/errors'
 import {WrongPassword} from '../../crypto/errors'
 import walletManager, {SystemAuthDisabled} from '../../crypto/wallet'
 import KeyStore from '../../crypto/KeyStore'
+import {KNOWN_ERROR_MSG} from '../../crypto/byron/util'
 
 import styles from './styles/DelegationConfirmation.style'
 
@@ -74,7 +75,7 @@ const messages = defineMessages({
     description: 'some desc',
   },
   delegationTxSignError: {
-    id: 'components.stakingcenter.delegationTxSignError',
+    id: 'components.stakingcenter.confirmDelegation.delegationTxSignError',
     defaultMessage: '!!!Error while signing delegation transaction',
   },
 })
@@ -120,11 +121,7 @@ const handleOnConfirm = async (
       } else if (e instanceof ApiError) {
         await showErrorDialog(errorMessages.apiError, intl)
       } else {
-        await handleGeneralError(
-          intl.formatMessage(messages.delegationTxSignError),
-          e,
-          intl,
-        )
+        throw e
       }
     } finally {
       setSendingTransaction(false)
@@ -169,10 +166,19 @@ const handleOnConfirm = async (
 
     signAndSubmitTx(decryptedData)
   } catch (e) {
-    if (e instanceof WrongPassword) {
+    if (
+      e instanceof WrongPassword ||
+      // for some reason WrongPassword is not detected by instanceof so I need
+      // to add this hack
+      e.message === KNOWN_ERROR_MSG.DECRYPT_FAILED
+    ) {
       await showErrorDialog(errorMessages.incorrectPassword, intl)
     } else {
-      handleGeneralError('Could not submit transaction', e, intl)
+      handleGeneralError(
+        intl.formatMessage(messages.delegationTxSignError),
+        e,
+        intl,
+      )
     }
   }
 }
