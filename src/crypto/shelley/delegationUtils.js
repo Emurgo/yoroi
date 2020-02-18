@@ -196,7 +196,6 @@ export const signDelegationTx = async (
   signingKey: Bip32PrivateKey,
   stakingKey: PrivateKey,
 ): Promise<V3SignedTx> => {
-  Logger.debug('signDelegationTx called')
   const {certificate, changeAddr, senderUtxos, IOs} = unsignedDelegationTx
   try {
     if (certificate == null) {
@@ -223,12 +222,10 @@ export const signDelegationTx = async (
     )
     const encodedTx = await signedTx.as_bytes()
 
-    const response = {
+    return {
       id,
       encodedTx,
     }
-    Logger.debug('signDelegationTx success', response)
-    return response
   } catch (error) {
     Logger.error(`signDelegationTx error: ${error}`)
     throw error

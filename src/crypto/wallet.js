@@ -323,7 +323,8 @@ export class Wallet {
       lastGeneratedAddressIndex: data.lastGeneratedAddressIndex,
     }
     this._isShelley = data.isShelley != null ? data.isShelley : false
-    this._accountAddress = data.accountAddress != null ? data.accountAddress : null
+    this._accountAddress =
+      data.accountAddress != null ? data.accountAddress : null
     this._version = data.version != null ? data.version : null
     this._internalChain = AddressChain.fromJSON(data.internalChain)
     this._externalChain = AddressChain.fromJSON(data.externalChain)
@@ -648,10 +649,6 @@ export class Wallet {
   ): Promise<V3SignedTx> {
     assert.assert(this._isShelley, 'signShelleyTx: isShelley')
     Logger.debug('wallet::signDelegationTx::unsignedTx ', unsignedTx)
-    Logger.debug(
-      'wallet::signDelegationTx::decryptedMasterKey',
-      decryptedMasterKey,
-    )
     const masterKey = await Bip32PrivateKey.from_bytes(
       Buffer.from(decryptedMasterKey, 'hex'),
     )
@@ -1005,9 +1002,6 @@ class WalletManager {
     assert.assert(wallet._id, 'saveState:: wallet._id')
     /* :: if (!this._wallet) throw 'assert' */
     const data = wallet.toJSON()
-
-    Logger.debug('saveState::isShelley', data.isShelley)
-
     await storage.write(`/wallet/${wallet._id}/data`, data)
   }
 
@@ -1207,7 +1201,7 @@ class WalletManager {
       )
       Logger.debug(
         'WalletManager::checkForFlawedWallets flawedAddresses [0]:',
-        flawedAddresses
+        flawedAddresses,
       )
       if (this._wallet._externalChain.isMyAddress(flawedAddresses[0])) {
         Logger.debug('WalletManager::checkForFlawedWallets: address match')
