@@ -90,6 +90,7 @@ type Props = {
   intl: any,
   navigation: Navigation,
   createWallet: (string, string, string, boolean) => any,
+  submitShelleyTx: (Uint8Array) => any,
 }
 
 type State = {
@@ -263,7 +264,7 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
     this.setState({isProcessing: true})
     try {
       const {name, password} = this.state
-      const {navigation, createWallet} = this.props
+      const {navigation, createWallet, submitShelleyTx} = this.props
       const phrase = navigation.getParam('phrase')
       await createWallet(name, phrase, password, true)
       if (tx == null) {
@@ -273,9 +274,8 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
       this.setState({isProcessing: false})
       navigation.navigate(ROOT_ROUTES.SHELLEY_WALLET)
     } catch (e) {
-      handleApiError(e, intl, 'Could not upgrade wallet')
-    } finally {
       this.setState({isProcessing: false})
+      handleApiError(e, intl, 'Could not upgrade wallet')
     }
   }
 
@@ -350,7 +350,10 @@ export default injectIntl(
   compose(
     connect(
       () => ({}),
-      {createWallet},
+      {
+        createWallet,
+        submitShelleyTx,
+      },
     ),
     withNavigation,
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
