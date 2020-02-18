@@ -322,8 +322,8 @@ export class Wallet {
     this._state = {
       lastGeneratedAddressIndex: data.lastGeneratedAddressIndex,
     }
-    this._isShelley = data.isShelley
-    this._accountAddress = data.accountAddress
+    this._isShelley = data.isShelley != null ? data.isShelley : false
+    this._accountAddress = data.accountAddress != null ? data.accountAddress : null
     this._version = data.version != null ? data.version : null
     this._internalChain = AddressChain.fromJSON(data.internalChain)
     this._externalChain = AddressChain.fromJSON(data.externalChain)
