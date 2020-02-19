@@ -165,6 +165,7 @@ class DelegationSummary extends React.Component<Props, State> {
     })
   }
 
+  handleDidFocus: () => void
   handleDidFocus = () => {
     this._isDelegating = false
     if (this._firstFocus) {
@@ -178,6 +179,7 @@ class DelegationSummary extends React.Component<Props, State> {
     this.update()
   }
 
+  update: () => void
   update = (inProgress?: boolean = false) => {
     const {
       fetchAccountState,
@@ -193,10 +195,7 @@ class DelegationSummary extends React.Component<Props, State> {
       })
       fetchAccountState()
       // come back within 2 s to check status of all requests
-      setTimeout(
-        () => self.update(true),
-        2000,
-      )
+      setTimeout(() => self.update(true), 2000)
       return
     }
     if (!(isFetchingAccountState || isFetchingUtxos || isFetchingPoolInfo)) {
@@ -205,10 +204,7 @@ class DelegationSummary extends React.Component<Props, State> {
       })
     } else {
       // wait 2 s for other requests to finish and update isRefreshing
-      setTimeout(
-        () => self.update(true),
-        2000,
-      )
+      setTimeout(() => self.update(true), 2000)
     }
   }
 
