@@ -4,12 +4,12 @@ import React from 'react'
 import type {ComponentType} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {View, ScrollView, RefreshControl, Platform} from 'react-native'
+import {View, ScrollView, RefreshControl} from 'react-native'
 import {SafeAreaView, withNavigation, NavigationEvents} from 'react-navigation'
 import {BigNumber} from 'bignumber.js'
 import {injectIntl} from 'react-intl'
 
-import {Banner, OfflineBanner, StatusBar, PleaseWaitModal} from '../UiKit'
+import {Banner, OfflineBanner, StatusBar} from '../UiKit'
 import {
   EpochProgress,
   UpcomingRewardInfo,
@@ -94,11 +94,13 @@ type Props = {
 
 type State = {
   +currentTime: Date,
+  isRefreshing: boolean,
 }
 
 class DelegationSummary extends React.Component<Props, State> {
   state = {
     currentTime: new Date(),
+    isRefreshing: false,
   }
 
   _firstFocus = true
@@ -113,20 +115,21 @@ class DelegationSummary extends React.Component<Props, State> {
       1000,
     )
     this.props.checkForFlawedWallets()
-    this.props.fetchPoolInfo()
+    this.update()
   }
 
   componentDidUpdate(prevProps) {
+    // data from the server is obtained in this order:
+    //   - fetchAccountState: account state provides pool list, this is done
+    //     inside AccountAutoRefresher component
+    //   - fetchPoolInfo: only after getting account state (and pool id), we
+    //     fetch detailed pool info
+
     // update pool info only when pool list gets updated
     if (prevProps.pools !== this.props.pools && this.props.pools != null) {
+      // even if pools != null, we can have pools = []
+      if (this.props.pools.length > 0) this._isDelegating = true
       this.props.fetchPoolInfo()
-    }
-    if (
-      prevProps.pools == null &&
-      this.props.pools != null &&
-      this.props.pools.length > 0
-    ) {
-      this._isDelegating = true
     }
   }
 
@@ -163,15 +166,50 @@ class DelegationSummary extends React.Component<Props, State> {
   }
 
   handleDidFocus = () => {
+    this._isDelegating = false
     if (this._firstFocus) {
       this._firstFocus = false
       // skip first focus to avoid
-      // didMount -> refetch -> done -> didFocus -> refetch
+      // didMount -> fetchPoolInfo -> done -> didFocus -> fetchPoolInfo
       // blinking
       return
     }
     this.props.checkForFlawedWallets()
-    this.props.fetchPoolInfo()
+    this.update()
+  }
+
+  update = (inProgress?: boolean = false) => {
+    const {
+      fetchAccountState,
+      isFetchingAccountState,
+      isFetchingUtxos,
+      isFetchingPoolInfo,
+    } = this.props
+    const {isRefreshing} = this.state
+    const self = this
+    if (!isRefreshing && !inProgress) {
+      this.setState({
+        isRefreshing: true,
+      })
+      fetchAccountState()
+      // come back within 2 s to check status of all requests
+      setTimeout(
+        () => self.update(true),
+        2000,
+      )
+      return
+    }
+    if (!(isFetchingAccountState || isFetchingUtxos || isFetchingPoolInfo)) {
+      self.setState({
+        isRefreshing: false,
+      })
+    } else {
+      // wait 2 s for other requests to finish and update isRefreshing
+      setTimeout(
+        () => self.update(true),
+        2000,
+      )
+    }
   }
 
   render() {
@@ -181,13 +219,10 @@ class DelegationSummary extends React.Component<Props, State> {
       accountBalance,
       pools,
       poolInfo,
-      isFetchingPoolInfo,
       totalDelegated,
-      fetchAccountState,
       isFetchingAccountState,
       lastAccountStateSyncError,
       isFetchingUtxos,
-      intl,
       isFlawedWallet,
       navigation,
     } = this.props
@@ -257,12 +292,8 @@ class DelegationSummary extends React.Component<Props, State> {
             style={styles.inner}
             refreshControl={
               <RefreshControl
-                onRefresh={fetchAccountState}
-                refreshing={
-                  isFetchingAccountState ||
-                  isFetchingUtxos ||
-                  isFetchingPoolInfo
-                }
+                onRefresh={this.update}
+                refreshing={this.state.isRefreshing}
               />
             }
           >
@@ -323,17 +354,6 @@ class DelegationSummary extends React.Component<Props, State> {
             onPress={this.navigateToStakingCenter}
             disabled={isFetchingAccountState || isFetchingUtxos}
           />
-          {Platform.OS === 'ios' && (
-            /* note(v-almonacid): for some reason refreshControl's wheel is not
-            /* shown on iOS, so I add a waiting dialog */
-            <PleaseWaitModal
-              title={''}
-              spinnerText={intl.formatMessage(globalMessages.pleaseWait)}
-              visible={
-                isFetchingPoolInfo || isFetchingAccountState || isFetchingUtxos
-              }
-            />
-          )}
         </View>
         <NavigationEvents onDidFocus={this.handleDidFocus} />
       </SafeAreaView>
