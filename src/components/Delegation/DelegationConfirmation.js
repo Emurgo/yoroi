@@ -102,8 +102,10 @@ const handleOnConfirm = async (
   password,
   submitShelleyTx,
   setSendingTransaction,
+  setProcessingTx,
   intl,
 ) => {
+  setProcessingTx(true)
   const delegationTxData = navigation.getParam('delegationTxData')
 
   const signAndSubmitTx = async (decryptedKey) => {
@@ -150,6 +152,8 @@ const handleOnConfirm = async (
       } else {
         throw e
       }
+    } finally {
+      setProcessingTx(false)
     }
 
     return
@@ -180,6 +184,8 @@ const handleOnConfirm = async (
         intl,
       )
     }
+  } finally {
+    setProcessingTx(false)
   }
 }
 
@@ -191,6 +197,7 @@ const DelegationConfirmation = ({
   password,
   setPassword,
   sendingTransaction,
+  processingTx,
   doNothing,
 }) => {
   const poolHash = navigation.getParam('poolHash')
@@ -199,7 +206,8 @@ const DelegationConfirmation = ({
   const transactionFee = navigation.getParam('transactionFee')
   const reward = approximateReward(amountToDelegate)
 
-  const isConfirmationDisabled = !isEasyConfirmationEnabled && !password
+  const isConfirmationDisabled =
+    (!isEasyConfirmationEnabled && !password) || processingTx
 
   return (
     <View style={styles.container}>
@@ -285,12 +293,16 @@ export default injectIntl(
       {
         password: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
         sendingTransaction: false,
+        processingTx: false,
       },
       {
         doNothing: () => () => ({}),
         setPassword: (state) => (value) => ({password: value}),
         setSendingTransaction: () => (sendingTransaction) => ({
           sendingTransaction,
+        }),
+        setProcessingTx: () => (processingTx) => ({
+          processingTx,
         }),
       },
     ),
@@ -302,6 +314,7 @@ export default injectIntl(
           password,
           submitShelleyTx,
           setSendingTransaction,
+          setProcessingTx,
           intl,
         }) => async (event) => {
           await handleOnConfirm(
@@ -310,6 +323,7 @@ export default injectIntl(
             password,
             submitShelleyTx,
             setSendingTransaction,
+            setProcessingTx,
             intl,
           )
         },
