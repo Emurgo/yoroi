@@ -258,7 +258,9 @@ class DelegationSummary extends React.Component<Props, State> {
             style={styles.inner}
             refreshControl={
               <RefreshControl
-                onRefresh={() => Promise.all([fetchUTXOs(), fetchAccountState()])}
+                onRefresh={() =>
+                  Promise.all([fetchUTXOs(), fetchAccountState()])
+                }
                 refreshing={
                   isFetchingAccountState ||
                   isFetchingUtxos ||
