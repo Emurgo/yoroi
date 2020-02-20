@@ -25,9 +25,10 @@ const messages = defineMessages({
   },
   explanation2: {
     id: 'components.delegationsummary.failedwalletupgrademodal.explanation2',
-    defaultMessage: '!!!If you observed an unexpected zero balance after ' +
-    'having upgraded your wallet, we recommend you to restore your wallet ' +
-    'once again. We apologize for any inconvinience this may have caused.',
+    defaultMessage:
+      '!!!If you observed an unexpected zero balance after ' +
+      'having upgraded your wallet, we recommend you to restore your wallet ' +
+      'once again. We apologize for any inconvinience this may have caused.',
   },
   okButton: {
     id: 'components.delegationsummary.failedwalletupgrademodal.okButton',
