@@ -3,7 +3,7 @@
 import React from 'react'
 import {Text, ScrollView, ActivityIndicator} from 'react-native'
 import {connect} from 'react-redux'
-import {compose, withHandlers} from 'recompose'
+import {compose, withHandlers, withStateHandlers} from 'recompose'
 import _ from 'lodash'
 import {SafeAreaView} from 'react-navigation'
 import {injectIntl, defineMessages} from 'react-intl'
@@ -19,6 +19,7 @@ import {Button, StatusBar, ScreenBackground} from '../UiKit'
 import {ROOT_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import {showErrorDialog} from '../../actions'
 import {errorMessages} from '../../i18n/global-messages'
+import FailedWalletUpgradeModal from './FailedWalletUpgradeModal'
 
 import styles from './styles/WalletSelectionScreen.style'
 
@@ -48,9 +49,19 @@ const WalletListScreen = ({
   navigateInitWallet,
   openWallet,
   intl,
+  showModal,
+  hideModal,
 }) => (
   <SafeAreaView style={styles.safeAreaView}>
     <StatusBar type="dark" />
+
+    {wallets != null && _.some(wallets, {isShelley: true}) &&
+      <FailedWalletUpgradeModal
+        visible={showModal}
+        onPress={hideModal}
+        onRequestClose={hideModal}
+      />
+    }
 
     <Screen style={styles.container}>
       <ScreenBackground>
@@ -120,6 +131,14 @@ export default injectIntl(
         }
       },
     }),
+    withStateHandlers(
+      {
+        showModal: true,
+      },
+      {
+        hideModal: (state) => () => ({showModal: false}),
+      },
+    ),
   )(WalletListScreen): ComponentType<{
     intl: IntlShape,
     navigation: NavigationScreenProp<NavigationState>,
