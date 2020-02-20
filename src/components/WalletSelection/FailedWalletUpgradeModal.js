@@ -20,8 +20,7 @@ const messages = defineMessages({
     id: 'components.delegationsummary.failedwalletupgrademodal.explanation1',
     defaultMessage:
       '!!!Some users experienced problems while upgrading their ' +
-      'wallets in the Shelley testnet, and as a result, some were not ' +
-      'able to transfer their funds from the snapshot into their wallet. ',
+      'wallets in the Shelley testnet.',
   },
   explanation2: {
     id: 'components.delegationsummary.failedwalletupgrademodal.explanation2',

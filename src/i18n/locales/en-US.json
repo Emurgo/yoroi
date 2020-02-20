@@ -11,7 +11,7 @@
   "components.delegationsummary.epochProgress.endsIn": "Ends in",
   "components.delegationsummary.epochProgress.title": "Epoch progress",
   "components.delegationsummary.failedwalletupgrademodal.title": "Heads up!",
-  "components.delegationsummary.failedwalletupgrademodal.explanation1": "Some users experienced problems while upgrading their wallets in the Shelley testnet, and as a result, some were not able to transfer their funds from the snapshot into their wallet.",
+  "components.delegationsummary.failedwalletupgrademodal.explanation1": "Some users experienced problems while upgrading their wallets in the Shelley testnet.",
   "components.delegationsummary.failedwalletupgrademodal.explanation2": "If you observed an unexpected zero balance after having upgraded your wallet, we recommend you to restore your wallet once again. We apologize for any inconvinience this may have caused.",
   "components.delegationsummary.failedwalletupgrademodal.okButton": "OK",
   "components.delegationsummary.noTransactions": "!!!No transactions to show yet",
