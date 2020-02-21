@@ -16,7 +16,7 @@
   "components.delegationsummary.failedwalletupgrademodal.okButton": "Хорошо",
   "components.delegationsummary.noTransactions": "!!!Нет транзакций для показа",
   "components.delegationsummary.notDelegatedInfo.firstLine": "Вы еще не делегировали вашу ADA.",
-  "components.delegationsummary.notDelegatedInfo.secondLine": "Go to Staking center to choose which stake pool you want to delegate in. Note, you may delegate only to one stake pool in this Tesnnet.",
+  "components.delegationsummary.notDelegatedInfo.secondLine": "Перейдите в Стейкинг wентр, чтобы выбрать стейк-пул в который вы хотите делегировать. Обратите внимание, что вы можете делегировать только в один стейк-пул в этом тестнете.",
   "components.delegationsummary.syncErrorBannerTextWithRefresh": "!!!Проблемы с синхронизацией. Потяните, чтобы обновить",
   "components.delegationsummary.syncErrorBannerTextWithoutRefresh": "!!!Проблемы с синхронизацией.",
   "components.delegationsummary.upcomingReward.followingLabel": "Предстоящие награды",
