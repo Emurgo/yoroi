@@ -1,29 +1,24 @@
 // @flow
 /* eslint-env jest */
 import jestSetup from '../jestSetup'
-
 import moment from 'moment'
 
+import api from './'
 import {ApiError} from './errors'
 
 jestSetup.setup()
 jest.setTimeout(30 * 1000)
 
-let apiWithTestnet
-
 describe('History API', () => {
-  // We have to mock config before importing api so it propagates in it
-  jest.setMock('react-native-config', {USE_TESTNET: true})
-  apiWithTestnet = require('./api')
   it('can fetch history', async () => {
     const addresses = [
-      '2cWKMJemoBakWtKxxsZpnEhs3ZWRf9tG3R9ReJX6UsAGiZP7PBpmutxYPRAakqEgMsK1g',
+      'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
     ]
     const ts = moment('1970-01-01')
 
     // We are async
     expect.assertions(1)
-    const result = await apiWithTestnet.fetchNewTxHistory(ts, addresses)
+    const result = await api.fetchNewTxHistory(ts, addresses)
 
     expect(result.transactions[0]).toMatchSnapshot({
       bestBlockNum: expect.any(Number),
@@ -40,41 +35,57 @@ describe('History API', () => {
     // We are async
     expect.assertions(1)
 
-    await expect(
-      apiWithTestnet.fetchNewTxHistory(ts, addresses),
-    ).rejects.toThrow(ApiError)
+    await expect(api.fetchNewTxHistory(ts, addresses)).rejects.toThrow(ApiError)
   })
 
   it('filters used addresses', async () => {
     const addresses = [
-      '2cWKMJemoBakWtKxxsZpnEhs3ZWRf9tG3R9ReJX6UsAGiZP7PBpmutxYPRAakqEgMsK1g',
-      '2cWKMJemoBahkhQS5QofBQxmsQMQDTxv1xzzqU9eHXBx6aDxaswBEksqurrfwhMNTYVFK',
-      '2cWKMJemoBahVMF121P6j54LjjKua29QGK6RpXZkxfaBLHExkGDuJ25wcC8vc2ExfuzLp',
+      'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
+      'Ae2tdPwUPEZ8wGxWm9VbZXFJcgLeKQJWKqREVEtHXYdqsqc4bLeGqjSwrtu',
+      'Ae2tdPwUPEZ6T9qZxpao8ciAgg6ahjHRq2jV45ndZ4oPXAwrTYqN9NGUPh4',
+      'Ae2tdPwUPEYzFrD5QSQ8NPHEJ8reecZkch5tT8wFAAYu18CJnkZ9XAm5ySE',
+      'Ae2tdPwUPEZ3UJ2Y5zpbQeF8GEG1gtR1hoTdUoFJ5oHbbGkcinBrPJDhhhq',
+      'Ae2tdPwUPEZ8ipN3wbA8heiZzuKzKRozK5SDzfuEjr8v38RRmFebaVN8ds6',
+      'Ae2tdPwUPEZ1VJ4XrhmMMdyzKPmpEMcqajnt5HPCyAps5fF9aRFQCKYDCvj',
+      'Ae2tdPwUPEZBr5uk5Rd1Ny2wVusVEqccTtsM5efBw6Sq1GdXiGzwAEDmjPP',
+      'Ae2tdPwUPEYzX9Da4KhrarhhSaeFGB6bo8PByqmgj3TfJvr4jaouJ5Sns1N',
+      'Ae2tdPwUPEZM6ok4jNYqLzU5Po2o68JdwNSspqai8axY4tJzYfQfj23M3vg',
+      'Ae2tdPwUPEZ1WyLvNdf2wWPQgmACZ5ZgQBe6W8RYvNQsybYzQhAb5EFkwxQ',
     ]
     const used = [
-      '2cWKMJemoBakWtKxxsZpnEhs3ZWRf9tG3R9ReJX6UsAGiZP7PBpmutxYPRAakqEgMsK1g',
-      '2cWKMJemoBahkhQS5QofBQxmsQMQDTxv1xzzqU9eHXBx6aDxaswBEksqurrfwhMNTYVFK',
+      'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
+      'Ae2tdPwUPEZ8wGxWm9VbZXFJcgLeKQJWKqREVEtHXYdqsqc4bLeGqjSwrtu',
+      'Ae2tdPwUPEZ6T9qZxpao8ciAgg6ahjHRq2jV45ndZ4oPXAwrTYqN9NGUPh4',
+      'Ae2tdPwUPEYzFrD5QSQ8NPHEJ8reecZkch5tT8wFAAYu18CJnkZ9XAm5ySE',
+      'Ae2tdPwUPEZ3UJ2Y5zpbQeF8GEG1gtR1hoTdUoFJ5oHbbGkcinBrPJDhhhq',
+      'Ae2tdPwUPEZ8ipN3wbA8heiZzuKzKRozK5SDzfuEjr8v38RRmFebaVN8ds6',
+      'Ae2tdPwUPEZ1VJ4XrhmMMdyzKPmpEMcqajnt5HPCyAps5fF9aRFQCKYDCvj',
     ]
 
     expect.assertions(1)
-    const result = await apiWithTestnet.filterUsedAddresses(addresses)
+    const result = await api.filterUsedAddresses(addresses)
     expect(result).toEqual(used)
   })
 
   it('keeps order in filterUsedAddresses', async () => {
     const addresses = [
-      '2cWKMJemoBakWtKxxsZpnEhs3ZWRf9tG3R9ReJX6UsAGiZP7PBpmutxYPRAakqEgMsK1g',
-      '2cWKMJemoBahkhQS5QofBQxmsQMQDTxv1xzzqU9eHXBx6aDxaswBEksqurrfwhMNTYVFK',
+      'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
+      'Ae2tdPwUPEZ8wGxWm9VbZXFJcgLeKQJWKqREVEtHXYdqsqc4bLeGqjSwrtu',
+      'Ae2tdPwUPEZ6T9qZxpao8ciAgg6ahjHRq2jV45ndZ4oPXAwrTYqN9NGUPh4',
+      'Ae2tdPwUPEYzFrD5QSQ8NPHEJ8reecZkch5tT8wFAAYu18CJnkZ9XAm5ySE',
+      'Ae2tdPwUPEZ3UJ2Y5zpbQeF8GEG1gtR1hoTdUoFJ5oHbbGkcinBrPJDhhhq',
+      'Ae2tdPwUPEZ8ipN3wbA8heiZzuKzKRozK5SDzfuEjr8v38RRmFebaVN8ds6',
+      'Ae2tdPwUPEZ1VJ4XrhmMMdyzKPmpEMcqajnt5HPCyAps5fF9aRFQCKYDCvj',
     ]
 
     expect.assertions(2)
 
-    const result1 = await apiWithTestnet.filterUsedAddresses(addresses)
+    const result1 = await api.filterUsedAddresses(addresses)
     expect(result1).toEqual(addresses)
 
     addresses.reverse()
 
-    const result2 = await apiWithTestnet.filterUsedAddresses(addresses)
+    const result2 = await api.filterUsedAddresses(addresses)
     expect(result2).toEqual(addresses)
   })
 })

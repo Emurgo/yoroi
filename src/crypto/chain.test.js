@@ -3,6 +3,8 @@ import jestSetup from '../jestSetup'
 
 import {AddressChain, AddressGenerator} from './chain'
 
+import type {CryptoAccount} from './byron/util'
+
 jestSetup.setup()
 
 const getAddr = (i) => `Addr${i}`
@@ -81,7 +83,7 @@ describe('AddressChain', () => {
   })
 
   it('can continue after rehydrating', async () => {
-    const account = {
+    const account: CryptoAccount = {
       derivation_scheme: 'V2',
       root_cached_key:
         '7f53efa3c08093db3824235769079e96ef96b6680fc254f6c021ec420e4d1555' +
@@ -97,13 +99,13 @@ describe('AddressChain', () => {
     const chain2 = AddressChain.fromJSON(data)
 
     const used = [
-      '2cWKMJemoBaiAKW7iBFgK3prZAK3gAEgkndCUTkGpUAoRofmXJcbmie2qe6JTN44dQ2Ag',
+      // '2cWKMJemoBaiAKW7iBFgK3prZAK3gAEgkndCUTkGpUAoRofmXJcbmie2qe6JTN44dQ2Ag', // byron testnet
+      'Ae2tdPwUPEZ6ipzynAWN6atmb9LNqEogput2NrMD3Z8UL7phtQLDhrKt1bf', // byron mainnet
     ]
 
     const filter = (addresses) => {
       return Promise.resolve(addresses.filter((addr) => used.includes(addr)))
     }
-
     await chain.sync(filter)
     await chain2.sync(filter)
     expect(chain.size()).toBe(10)

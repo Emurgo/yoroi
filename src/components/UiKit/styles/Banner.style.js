@@ -2,9 +2,11 @@
 
 import {StyleSheet} from 'react-native'
 
+import {COLORS} from '../../../styles/config'
+
 const styles = StyleSheet.create({
   banner: {
-    backgroundColor: '#F0F3F5',
+    backgroundColor: COLORS.BANNER_GREY,
     padding: 16,
     alignItems: 'center',
     justifyContent: 'center',

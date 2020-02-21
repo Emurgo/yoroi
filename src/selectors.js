@@ -98,6 +98,21 @@ export const utxoBalanceSelector = (state: State) =>
     ? null
     : getUtxoBalance(state.balance.utxos)
 
+export const accountBalanceSelector = (state: State) =>
+  state.accountState.isFetching ? null : new BigNumber(state.accountState.value)
+
+export const poolsSelector = (state: State) =>
+  state.accountState.isFetching ? null : state.accountState.delegation.pools
+
+export const isFetchingPoolInfoSelector = (state: State): boolean =>
+  state.poolInfo.isFetching
+
+export const lastPoolInfoErrorSelector = (state: State): any =>
+  state.poolInfo.lastFetchingError
+
+export const poolInfoSelector = (state: State) =>
+  state.poolInfo.isFetching ? null : state.poolInfo.meta
+
 export const walletIsInitializedSelector = (state: State): boolean =>
   state.wallet.isInitialized
 
@@ -114,6 +129,18 @@ export const lastUtxosFetchErrorSelector = (state: State): any =>
 
 export const utxosSelector = (state: State): ?Array<RawUtxo> =>
   state.balance.utxos
+
+export const isFetchingAccountStateSelector = (state: State): boolean =>
+  state.accountState.isFetching
+
+export const lastAccountStateFetchErrorSelector = (state: State): any =>
+  state.accountState.lastFetchingError
+
+export const accountValueSelector = (state: State): number =>
+  state.accountState.value
+
+export const totalDelegatedSelector = (state: State): BigNumber =>
+  state.accountState.totalDelegated
 
 export const biometricHwSupportSelector = (state: State): boolean =>
   state.appSettings.isBiometricHardwareSupported
@@ -149,5 +176,11 @@ export const tosSelector = (state: State): boolean =>
 export const languageSelector = (state: State): string =>
   state.appSettings.languageCode || ''
 
+export const currentVersionSelector = (state: State): ?string =>
+  state.appSettings.currentVersion
+
 export const isKeyboardOpenSelector = (state: State): boolean =>
   state.isKeyboardOpen
+
+export const isFlawedWalletSelector = (state: State): boolean =>
+  state.isFlawedWallet

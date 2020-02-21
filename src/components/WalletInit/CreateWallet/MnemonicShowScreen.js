@@ -104,13 +104,19 @@ export default injectIntl(
         const name = navigation.getParam('name')
         const password = navigation.getParam('password')
         const mnemonic = navigation.getParam('mnemonic')
+        const isShelleyWallet = navigation.getParam('isShelleyWallet')
         assert.assert(!!mnemonic, 'handleWalletConfirmation:: mnemonic')
         assert.assert(!!password, 'handleWalletConfirmation:: password')
         assert.assert(!!name, 'handleWalletConfirmation:: name')
+        assert.assert(
+          isShelleyWallet != null,
+          'handleWalletConfirmation:: isShelleyWallet',
+        )
         navigation.navigate(WALLET_INIT_ROUTES.MNEMONIC_CHECK, {
           mnemonic,
           password,
           name,
+          isShelleyWallet,
         })
         hideModal()
       },

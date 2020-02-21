@@ -4,6 +4,7 @@ import {AppState, Alert, Keyboard} from 'react-native'
 import uuid from 'uuid'
 import SplashScreen from 'react-native-splash-screen'
 import {intlShape} from 'react-intl'
+import DeviceInfo from 'react-native-device-info'
 
 import crashReporting from './helpers/crashReporting'
 import globalMessages, {errorMessages} from './i18n/global-messages'
@@ -14,7 +15,7 @@ import {
   setBackgroundSyncError,
   updateHistory,
 } from './actions/history'
-import {changeLanguage} from './actions/language'
+import {changeAndSaveLanguage} from './actions/language'
 import {
   canBiometricEncryptionBeEnabled,
   recreateAppSignInKeys,
@@ -39,6 +40,7 @@ import {
   languageSelector,
   tosSelector,
   sendCrashReportsSelector,
+  currentVersionSelector,
 } from './selectors'
 import assert from './utils/assert'
 import NavigationService from './NavigationService'
@@ -126,7 +128,7 @@ const reloadAppSettings = () => async (dispatch: Dispatch<any>) => {
 
   dispatch(_setAppSettings(appSettings))
   if (appSettings.languageCode) {
-    dispatch(changeLanguage(appSettings.languageCode))
+    dispatch(changeAndSaveLanguage(appSettings.languageCode))
   }
 }
 
@@ -205,6 +207,25 @@ const initInstallationId = () => async (
   )
 
   return installationId
+}
+
+export const updateVersion = () => async (
+  dispatch: Dispatch<any>,
+  getState: any,
+): Promise<string> => {
+  let currentVersion = currentVersionSelector(getState())
+  Logger.debug('current version from state', currentVersion)
+  if (currentVersion != null && currentVersion === DeviceInfo.getVersion()) {
+    return currentVersion
+  }
+
+  currentVersion = DeviceInfo.getVersion()
+
+  await dispatch(
+    setAppSettingField(APP_SETTINGS_KEYS.CURRENT_VERSION, currentVersion),
+  )
+  Logger.debug('updated version', currentVersion)
+  return currentVersion
 }
 
 export const closeWallet = () => async (dispatch: Dispatch<any>) => {
@@ -341,8 +362,9 @@ export const createWallet = (
   name: string,
   mnemonic: string,
   password: string,
+  isShelley?: boolean = false,
 ) => async (dispatch: Dispatch<any>) => {
-  await walletManager.createWallet(name, mnemonic, password)
+  await walletManager.createWallet(name, mnemonic, password, isShelley)
   dispatch(updateWallets())
 }
 
@@ -388,7 +410,6 @@ export const showErrorDialog = (
   dialog: Object,
   intl: ?intlShape,
   msgOptions?: Object,
-  // $FlowFixMe
 ): Promise<DialogButton> => {
   let title, message, yesButton
   if (intl != null) {
@@ -410,7 +431,7 @@ export const showErrorDialog = (
     }
     yesButton = globalMessages.ok.defaultMessage
   }
-  showDialog({title, message, yesButton})
+  return showDialog({title, message, yesButton})
 }
 
 export const showConfirmationDialog = (
@@ -454,9 +475,13 @@ export const setSystemAuth = (enable: boolean) => async (
   }
 }
 
-export const handleGeneralError = async (message: string, e: Error) => {
+export const handleGeneralError = async (
+  message: string,
+  e: Error,
+  intl: ?intlShape,
+) => {
   Logger.error(`${message}: ${e.message}`, e)
-  await showErrorDialog(errorMessages.generalError, null, {message})
+  await showErrorDialog(errorMessages.generalError, intl, {message})
   crashReporting.crash()
 }
 
@@ -468,4 +493,33 @@ export const submitTransaction = (
   await walletManager.submitTransaction(signedTx)
 
   dispatch(updateHistory())
+}
+
+export const submitShelleyTx = (encodedTx: Uint8Array) => async (
+  dispatch: Dispatch<any>,
+) => {
+  Logger.debug('submitting shelley tx...')
+  const signedTx64 = Buffer.from(encodedTx).toString('base64')
+  await walletManager.submitTransaction(signedTx64)
+
+  // note(v-almonacid): tx history sync for shelley is not implemented yet,
+  // but this action updates the wallet state
+  dispatch(updateHistory())
+}
+
+export const checkForFlawedWallets = () => async (dispatch: Dispatch<any>) => {
+  let isFlawed = false
+  Logger.debug('actions::checkForFlawedWallets:: checking wallet...')
+  try {
+    isFlawed = await walletManager.checkForFlawedWallets()
+    Logger.debug('actions::checkForFlawedWallets::isFlawed', isFlawed)
+    dispatch({
+      path: ['isFlawedWallet'],
+      payload: isFlawed,
+      reducer: (state, isFlawed) => isFlawed,
+      type: 'SET_FLAWED_WALLET',
+    })
+  } catch (e) {
+    Logger.warn('actions::checkForFlawedWallets error', e)
+  }
 }

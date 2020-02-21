@@ -3,7 +3,7 @@
 import React from 'react'
 import {Text, ScrollView, ActivityIndicator} from 'react-native'
 import {connect} from 'react-redux'
-import {compose, withHandlers} from 'recompose'
+import {compose, withHandlers, withStateHandlers} from 'recompose'
 import _ from 'lodash'
 import {SafeAreaView} from 'react-navigation'
 import {injectIntl, defineMessages} from 'react-intl'
@@ -17,8 +17,10 @@ import WalletListItem from './WalletListItem'
 import Screen from '../Screen'
 import {Button, StatusBar, ScreenBackground} from '../UiKit'
 import {ROOT_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
-import {showErrorDialog} from '../../actions'
+import {showErrorDialog, updateVersion} from '../../actions'
 import {errorMessages} from '../../i18n/global-messages'
+import FailedWalletUpgradeModal from './FailedWalletUpgradeModal'
+import {currentVersionSelector} from '../../selectors'
 
 import styles from './styles/WalletSelectionScreen.style'
 
@@ -35,6 +37,11 @@ const messages = defineMessages({
     id: 'components.walletselection.walletselectionscreen.addWalletButton',
     defaultMessage: '!!!Add wallet',
   },
+  addWalletOnShelleyButton: {
+    id:
+      'components.walletselection.walletselectionscreen.addWalletOnShelleyButton',
+    defaultMessage: '!!!Add wallet (Shelley Testnet)',
+  },
 })
 
 const WalletListScreen = ({
@@ -43,9 +50,25 @@ const WalletListScreen = ({
   navigateInitWallet,
   openWallet,
   intl,
+  currentVersion,
+  showModal,
+  handleHideModal,
 }) => (
   <SafeAreaView style={styles.safeAreaView}>
     <StatusBar type="dark" />
+
+    {/* eslint-disable indent */
+    wallets != null &&
+      currentVersion == null &&
+      _.some(wallets, {isShelley: true}) && (
+        <FailedWalletUpgradeModal
+          visible={showModal}
+          onPress={handleHideModal}
+          onRequestClose={handleHideModal}
+        />
+      )
+    /* eslint-enable indent */
+    }
 
     <Screen style={styles.container}>
       <ScreenBackground>
@@ -66,9 +89,16 @@ const WalletListScreen = ({
         </ScrollView>
 
         <Button
-          onPress={navigateInitWallet}
+          onPress={(event) => navigateInitWallet(event, false)}
           title={intl.formatMessage(messages.addWalletButton)}
           style={styles.addWalletButton}
+        />
+
+        <Button
+          outline
+          onPress={(event) => navigateInitWallet(event, true)}
+          title={intl.formatMessage(messages.addWalletOnShelleyButton)}
+          style={styles.addWalletOnShelleyButton}
         />
       </ScreenBackground>
     </Screen>
@@ -79,16 +109,35 @@ const walletsListSelector = (state) => Object.values(state.wallets)
 
 export default injectIntl(
   (compose(
-    connect((state: State) => ({
-      wallets: walletsListSelector(state),
-    })),
+    connect(
+      (state: State) => ({
+        wallets: walletsListSelector(state),
+        currentVersion: currentVersionSelector(state),
+      }),
+      {
+        updateVersion,
+      },
+    ),
+    withStateHandlers(
+      {
+        showModal: true,
+      },
+      {
+        hideModal: (state) => () => ({showModal: false}),
+      },
+    ),
     withHandlers({
-      navigateInitWallet: ({navigation}) => (event) =>
-        navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH),
+      navigateInitWallet: ({navigation}) => (event, isShelleyWallet) =>
+        navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH, {
+          isShelleyWallet,
+        }),
       openWallet: ({navigation, intl}) => async (wallet) => {
         try {
           await walletManager.openWallet(wallet.id)
-          navigation.navigate(ROOT_ROUTES.WALLET)
+          const route = wallet.isShelley
+            ? ROOT_ROUTES.SHELLEY_WALLET
+            : ROOT_ROUTES.WALLET
+          navigation.navigate(route)
         } catch (e) {
           if (e instanceof SystemAuthDisabled) {
             await walletManager.closeWallet()
@@ -101,6 +150,10 @@ export default injectIntl(
             throw e
           }
         }
+      },
+      handleHideModal: ({hideModal, updateVersion}) => async () => {
+        await updateVersion()
+        hideModal()
       },
     }),
   )(WalletListScreen): ComponentType<{

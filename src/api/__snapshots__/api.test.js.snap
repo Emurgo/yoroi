@@ -3,23 +3,23 @@
 exports[`History API can fetch history 1`] = `
 Object {
   "bestBlockNum": Any<Number>,
-  "blockNum": 111769,
-  "id": "ed9d06931a7a1356bae2a1073b4105e2cf47cccbf769b0be921b01a82e902e51",
+  "blockNum": 1889681,
+  "id": "2401257195a3cd7d43e832b2d2e8215828ebbcdea472ef81f8de3314a535813e",
   "inputs": Array [
     Object {
-      "address": "2cWKMJemoBaiT63LBCH8ZKzmdyu9jVKfVNZWbLJnob9cEjUWmqT95KceCxZS4DXoffYbA",
-      "amount": "1249749760",
+      "address": "DdzFFzCqrhstJ7CLwbESFGX73gJw9inpvFnQjDn9QCpEXPUBdsw5NGHJnvwPB9Vkx6Jf6JPiWh9JQqwV9RDMfec3RSD968vWLwTNwRKE",
+      "amount": "91951210",
     },
   ],
   "lastUpdatedAt": Any<String>,
   "outputs": Array [
     Object {
-      "address": "2cWKMJemoBakWtKxxsZpnEhs3ZWRf9tG3R9ReJX6UsAGiZP7PBpmutxYPRAakqEgMsK1g",
-      "amount": "40000000",
+      "address": "Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7",
+      "amount": "5000000",
     },
     Object {
-      "address": "2cWKMJemoBahQSHLDKv1RXxeHqb58Zatmn1xobMhkXmqEoYYEkrcc2nsg2QpxepPPedNr",
-      "amount": "1209581151",
+      "address": "DdzFFzCqrht3ZCWKPX3a1vHCjrhASfxdXMhdtus6eUcPhnB4o8pPdbggnuCM8dCyPhFnBtszUHkd8wtT4NVqEeypyTAiP2btobSNYC46",
+      "amount": "86781326",
     },
   ],
   "status": "Successful",

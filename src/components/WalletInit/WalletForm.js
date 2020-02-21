@@ -66,7 +66,10 @@ type ComponentState = {
 type Props = {
   intl: any,
   walletNames: Array<string>,
-  onSubmit: ({name: string, password: string}) => mixed,
+  onSubmit: ({
+    name: string,
+    password: string,
+  }) => mixed,
   validateWalletName: (walletName: string) => WalletNameValidationErrors,
 }
 
@@ -94,7 +97,10 @@ class WalletForm extends PureComponent<Props, ComponentState> {
   }, 300)
 
   handleOnWillBlur = () =>
-    this.setState({password: '', passwordConfirmation: ''})
+    this.setState({
+      password: '',
+      passwordConfirmation: '',
+    })
 
   handleSubmit = () => {
     const {name, password} = this.state

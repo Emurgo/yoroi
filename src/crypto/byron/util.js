@@ -3,32 +3,36 @@
 import {BigNumber} from 'bignumber.js'
 import {mnemonicToEntropy, generateMnemonic} from 'bip39'
 import {HdWallet, Wallet, PasswordProtect} from 'react-native-cardano'
+import {
+  encryptWithPassword as encryptWithPasswordJs,
+  decryptWithPassword as decryptWithPasswordJs,
+} from 'emip3js'
 import {randomBytes} from 'react-native-randombytes'
 import bs58 from 'bs58'
 import cryptoRandomString from 'crypto-random-string'
 
-import assert from '../utils/assert'
-import {CONFIG} from '../config'
+import assert from '../../utils/assert'
+import {CONFIG} from '../../config'
 import {
   _rethrow,
   InsufficientFunds,
   WrongPassword,
   CardanoError,
-} from './errors'
+} from '../errors'
+import {ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
 
 import type {
   TransactionInput,
   TransactionOutput,
-} from '../types/HistoryTransaction'
-
-export type AddressType = 'Internal' | 'External'
+} from '../../types/HistoryTransaction'
+import type {AddressType} from '../commonUtils'
 
 export type CryptoAccount = {
   derivation_scheme: string,
   root_cached_key: string,
 }
 
-const KNOWN_ERROR_MSG = {
+export const KNOWN_ERROR_MSG = {
   DECRYPT_FAILED: 'Decryption failed. Check your password.',
   INSUFFICIENT_FUNDS_RE: /NotEnoughInput/,
   SIGN_TX_BUG: /TxBuildError\(CoinError\(Negative\)\)/,
@@ -61,30 +65,42 @@ export const getAccountFromMasterKey = async (
 export const encryptData = async (
   plaintextHex: string,
   secretKey: string,
+  useJs?: boolean = false,
 ): Promise<string> => {
   assert.assert(!!plaintextHex, 'encrypt:: !!plaintextHex')
   assert.assert(!!secretKey, 'encrypt:: !!secretKey')
   const secretKeyHex = Buffer.from(secretKey, 'utf8').toString('hex')
   const saltHex = cryptoRandomString(2 * 32)
   const nonceHex = cryptoRandomString(2 * 12)
-  const ciphertext = await PasswordProtect.encryptWithPassword(
+  if (useJs) {
+    return await encryptWithPasswordJs(
+      secretKeyHex,
+      saltHex,
+      nonceHex,
+      plaintextHex,
+    )
+  }
+  return await PasswordProtect.encryptWithPassword(
     secretKeyHex,
     saltHex,
     nonceHex,
     plaintextHex,
   )
-  return ciphertext
 }
 
 export const decryptData = async (
   ciphertext: string,
   secretKey: string,
+  useJs?: boolean = false,
 ): Promise<string> => {
   assert.assert(!!ciphertext, 'decrypt:: !!cyphertext')
   assert.assert(!!secretKey, 'decrypt:: !!secretKey')
   const secretKeyHex = Buffer.from(secretKey, 'utf8').toString('hex')
   try {
-    return await PasswordProtect.decryptWithPassword(secretKeyHex, ciphertext)
+    if (useJs) {
+      return await decryptWithPasswordJs(secretKeyHex, ciphertext)
+    }
+    return PasswordProtect.decryptWithPassword(secretKeyHex, ciphertext)
   } catch (e) {
     if (e.message === KNOWN_ERROR_MSG.DECRYPT_FAILED) {
       throw new WrongPassword()
@@ -101,9 +117,15 @@ export const getAddresses = (
 ): Promise<Array<string>> =>
   _rethrow(Wallet.generateAddresses(account, type, indexes, protocolMagic))
 
-export const ADDRESS_TYPE_TO_CHANGE: {[AddressType]: number} = {
-  External: 0,
-  Internal: 1,
+export const getAddressesFromMnemonics = async (
+  mnemonic: string,
+  type: AddressType,
+  indexes: Array<number>,
+  networkConfig?: Object = CONFIG.CARDANO,
+): Promise<Array<string>> => {
+  const masterKey = await getMasterKeyFromMnemonic(mnemonic)
+  const account = await getAccountFromMasterKey(masterKey)
+  return getAddresses(account, type, indexes)
 }
 
 export const getExternalAddresses = (

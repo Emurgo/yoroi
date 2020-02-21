@@ -4,7 +4,7 @@ import _ from 'lodash'
 
 import {containsUpperCase, containsLowerCase, isNumeric} from '../utils/string'
 import {CONFIG} from '../config'
-import {isValidAddress} from '../crypto/util'
+import {isValidAddress} from '../crypto/byron/util'
 import assert from '../utils/assert'
 import {parseAdaDecimal, InvalidAdaAmount} from '../utils/parsing'
 

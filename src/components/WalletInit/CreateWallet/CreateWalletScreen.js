@@ -6,7 +6,7 @@ import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
 
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
-import {generateAdaMnemonic} from '../../../crypto/util'
+import {generateAdaMnemonic} from '../../../crypto/byron/util'
 import {CONFIG} from '../../../config'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import WalletForm from '../WalletForm'
@@ -65,8 +65,10 @@ export default injectIntl(
         const mnemonic = CONFIG.DEBUG.PREFILL_FORMS
           ? CONFIG.DEBUG.MNEMONIC2
           : generateAdaMnemonic()
+        const isShelleyWallet = !!navigation.getParam('isShelleyWallet')
         navigation.navigate(WALLET_INIT_ROUTES.MNEMONIC_SHOW, {
           mnemonic,
+          isShelleyWallet,
           ...formData,
         })
       },

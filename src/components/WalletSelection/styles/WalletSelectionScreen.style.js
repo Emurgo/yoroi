@@ -22,6 +22,12 @@ export default StyleSheet.create({
     flex: 1,
   },
   addWalletButton: {
-    margin: 16,
+    marginHorizontal: 16,
+    marginTop: 16,
+    marginBottom: 10,
+  },
+  addWalletOnShelleyButton: {
+    marginHorizontal: 16,
+    marginBottom: 10,
   },
 })

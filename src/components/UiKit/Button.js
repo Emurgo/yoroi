@@ -5,6 +5,12 @@ import {StyleSheet, TouchableOpacity, View, Image} from 'react-native'
 import {colors} from '../../styles/config'
 import Text from './Text'
 
+const buttonOutline = {
+  borderWidth: 1,
+  borderColor: '#fff',
+  backgroundColor: 'transparent',
+}
+
 const styles = StyleSheet.create({
   block: {
     flex: 1,
@@ -21,14 +27,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   buttonOutline: {
-    borderWidth: 1,
-    borderColor: '#fff',
-    backgroundColor: 'transparent',
+    ...buttonOutline,
   },
   buttonOutlineOnLight: {
-    borderWidth: 1,
+    ...buttonOutline,
     borderColor: colors.buttonBackground,
-    backgroundColor: 'transparent',
+  },
+  buttonOutlineShelley: {
+    ...buttonOutline,
+    borderColor: colors.buttonBackgroundBlue,
   },
   text: {
     color: 'white',
@@ -39,8 +46,23 @@ const styles = StyleSheet.create({
   textOutlineOnLight: {
     color: colors.buttonBackground,
   },
+  textOutlineShelley: {
+    color: colors.buttonBackgroundBlue,
+  },
   buttonDisabled: {
     opacity: 0.5,
+  },
+  shelleyTheme: {
+    backgroundColor: colors.buttonBackgroundBlue,
+  },
+  shelleyOutlineOnLight: {
+    backgroundColor: 'transparent',
+    borderColor: colors.buttonBackgroundBlue,
+    borderWidth: 2,
+  },
+  textShelleyOutlineOnLight: {
+    color: colors.buttonBackgroundBlue,
+    fontWeight: '600',
   },
 })
 
@@ -57,6 +79,8 @@ type ButtonProps = {
   block?: boolean,
   iconImage?: number,
   withoutBackground?: boolean,
+  shelleyTheme?: boolean,
+  outlineShelley?: boolean,
 }
 
 class Button extends React.Component<ButtonProps> {
@@ -73,6 +97,8 @@ class Button extends React.Component<ButtonProps> {
       outlineOnLight,
       iconImage,
       withoutBackground,
+      shelleyTheme,
+      outlineShelley,
     } = this.props
 
     const formattedTitle = title && title.toUpperCase()
@@ -93,6 +119,11 @@ class Button extends React.Component<ButtonProps> {
             outlineOnLight === true && styles.buttonOutlineOnLight,
             disabled === true && styles.buttonDisabled,
             withoutBackground === true && styles.buttonTransparent,
+            outlineShelley === true && styles.buttonOutlineShelley,
+            shelleyTheme === true && styles.shelleyTheme,
+            outlineOnLight === true &&
+              shelleyTheme === true &&
+              styles.shelleyOutlineOnLight,
             style,
           ]}
         >
@@ -101,6 +132,10 @@ class Button extends React.Component<ButtonProps> {
             style={[
               styles.text,
               outlineOnLight === true && styles.textOutlineOnLight,
+              outlineOnLight === true &&
+                shelleyTheme === true &&
+                styles.textShelleyOutlineOnLight,
+              outlineShelley === true && styles.textOutlineShelley,
             ]}
           >
             {formattedTitle}

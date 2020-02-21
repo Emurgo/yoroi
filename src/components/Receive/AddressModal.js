@@ -8,7 +8,7 @@ import QRCode from 'react-native-qrcode'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import {externalAddressIndexSelector} from '../../selectors'
-import {formatBIP44} from '../../crypto/util'
+import {formatBIP44} from '../../crypto/byron/util'
 
 import {Text, Button, Modal} from '../UiKit'
 
