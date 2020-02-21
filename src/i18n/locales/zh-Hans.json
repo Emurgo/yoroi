@@ -6,7 +6,7 @@
   "components.common.languagepicker.russian": "俄语",
   "components.common.languagepicker.spanish": "西班牙语",
   "components.delegation.delegationnavigationbuttons.stakingCenterButton": "前往授权中心",
-  "components.delegationsummary.delegatedStakepoolInfo.fullDescriptionButtonLabel": "Go to website",
+  "components.delegationsummary.delegatedStakepoolInfo.fullDescriptionButtonLabel": "进入网站",
   "components.delegationsummary.delegatedStakepoolInfo.title": "Stake pool delegated",
   "components.delegationsummary.epochProgress.endsIn": "Ends in",
   "components.delegationsummary.epochProgress.title": "Epoch progress",
