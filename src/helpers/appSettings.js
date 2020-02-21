@@ -30,6 +30,7 @@ export const APP_SETTINGS_KEYS = {
   BIOMETRIC_HW_SUPPORT: 'isBiometricHardwareSupported',
   SEND_CRASH_REPORTS: 'sendCrashReports',
   CAN_ENABLE_BIOMETRIC_ENCRYPTION: 'canEnableBiometricEncryption',
+  CURRENT_VERSION: 'currentVersion',
 }
 
 export type AppSettingsKey = $Values<typeof APP_SETTINGS_KEYS>

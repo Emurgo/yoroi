@@ -18,6 +18,7 @@ import {
   submitShelleyTx,
   handleGeneralError,
   showErrorDialog,
+  updateVersion,
 } from '../../../actions'
 import {getAddressesFromMnemonics} from '../../../crypto/byron/util'
 import {
@@ -91,6 +92,7 @@ type Props = {
   navigation: Navigation,
   createWallet: (string, string, string, boolean) => any,
   submitShelleyTx: (Uint8Array) => any,
+  updateVersion: () => any,
 }
 
 type State = {
@@ -125,10 +127,11 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
   navigateToWallet = ignoreConcurrentAsync(async (): Promise<void> => {
     this.setState({isProcessing: true})
     const {name, password} = this.state
-    const {navigation, createWallet} = this.props
+    const {navigation, createWallet, updateVersion} = this.props
     const phrase = navigation.getParam('phrase')
     const isShelleyWallet = !!navigation.getParam('isShelleyWallet')
     await createWallet(name, phrase, password, isShelleyWallet)
+    await updateVersion()
     this.setState({isProcessing: false})
     const route = isShelleyWallet
       ? ROOT_ROUTES.SHELLEY_WALLET
@@ -264,13 +267,21 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
     this.setState({isProcessing: true})
     try {
       const {name, password} = this.state
-      const {navigation, createWallet, submitShelleyTx} = this.props
+      const {
+        navigation,
+        createWallet,
+        submitShelleyTx,
+        updateVersion,
+      } = this.props
       const phrase = navigation.getParam('phrase')
       await createWallet(name, phrase, password, true)
       if (tx == null) {
         throw new Error('Transaction data not found.')
       }
       await submitShelleyTx(tx.encodedTx)
+      // note (v-almonacid): this is necessary to avoid showing the failed wallet
+      // restore modal to users with a fresh install
+      await updateVersion()
       this.setState({isProcessing: false})
       navigation.navigate(ROOT_ROUTES.SHELLEY_WALLET)
     } catch (e) {
@@ -353,6 +364,7 @@ export default injectIntl(
       {
         createWallet,
         submitShelleyTx,
+        updateVersion,
       },
     ),
     withNavigation,

@@ -4,6 +4,7 @@ import {AppState, Alert, Keyboard} from 'react-native'
 import uuid from 'uuid'
 import SplashScreen from 'react-native-splash-screen'
 import {intlShape} from 'react-intl'
+import DeviceInfo from 'react-native-device-info'
 
 import crashReporting from './helpers/crashReporting'
 import globalMessages, {errorMessages} from './i18n/global-messages'
@@ -39,6 +40,7 @@ import {
   languageSelector,
   tosSelector,
   sendCrashReportsSelector,
+  currentVersionSelector,
 } from './selectors'
 import assert from './utils/assert'
 import NavigationService from './NavigationService'
@@ -205,6 +207,25 @@ const initInstallationId = () => async (
   )
 
   return installationId
+}
+
+export const updateVersion = () => async (
+  dispatch: Dispatch<any>,
+  getState: any,
+): Promise<string> => {
+  let currentVersion = currentVersionSelector(getState())
+  Logger.debug('current version from state', currentVersion)
+  if (currentVersion != null && currentVersion === DeviceInfo.getVersion()) {
+    return currentVersion
+  }
+
+  currentVersion = DeviceInfo.getVersion()
+
+  await dispatch(
+    setAppSettingField(APP_SETTINGS_KEYS.CURRENT_VERSION, currentVersion),
+  )
+  Logger.debug('updated version', currentVersion)
+  return currentVersion
 }
 
 export const closeWallet = () => async (dispatch: Dispatch<any>) => {

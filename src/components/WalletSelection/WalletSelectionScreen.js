@@ -3,7 +3,7 @@
 import React from 'react'
 import {Text, ScrollView, ActivityIndicator} from 'react-native'
 import {connect} from 'react-redux'
-import {compose, withHandlers} from 'recompose'
+import {compose, withHandlers, withStateHandlers} from 'recompose'
 import _ from 'lodash'
 import {SafeAreaView} from 'react-navigation'
 import {injectIntl, defineMessages} from 'react-intl'
@@ -17,8 +17,10 @@ import WalletListItem from './WalletListItem'
 import Screen from '../Screen'
 import {Button, StatusBar, ScreenBackground} from '../UiKit'
 import {ROOT_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
-import {showErrorDialog} from '../../actions'
+import {showErrorDialog, updateVersion} from '../../actions'
 import {errorMessages} from '../../i18n/global-messages'
+import FailedWalletUpgradeModal from './FailedWalletUpgradeModal'
+import {currentVersionSelector} from '../../selectors'
 
 import styles from './styles/WalletSelectionScreen.style'
 
@@ -48,9 +50,25 @@ const WalletListScreen = ({
   navigateInitWallet,
   openWallet,
   intl,
+  currentVersion,
+  showModal,
+  handleHideModal,
 }) => (
   <SafeAreaView style={styles.safeAreaView}>
     <StatusBar type="dark" />
+
+    {/* eslint-disable indent */
+    wallets != null &&
+      currentVersion == null &&
+      _.some(wallets, {isShelley: true}) && (
+        <FailedWalletUpgradeModal
+          visible={showModal}
+          onPress={handleHideModal}
+          onRequestClose={handleHideModal}
+        />
+      )
+    /* eslint-enable indent */
+    }
 
     <Screen style={styles.container}>
       <ScreenBackground>
@@ -91,9 +109,23 @@ const walletsListSelector = (state) => Object.values(state.wallets)
 
 export default injectIntl(
   (compose(
-    connect((state: State) => ({
-      wallets: walletsListSelector(state),
-    })),
+    connect(
+      (state: State) => ({
+        wallets: walletsListSelector(state),
+        currentVersion: currentVersionSelector(state),
+      }),
+      {
+        updateVersion,
+      },
+    ),
+    withStateHandlers(
+      {
+        showModal: true,
+      },
+      {
+        hideModal: (state) => () => ({showModal: false}),
+      },
+    ),
     withHandlers({
       navigateInitWallet: ({navigation}) => (event, isShelleyWallet) =>
         navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH, {
@@ -118,6 +150,10 @@ export default injectIntl(
             throw e
           }
         }
+      },
+      handleHideModal: ({hideModal, updateVersion}) => async () => {
+        await updateVersion()
+        hideModal()
       },
     }),
   )(WalletListScreen): ComponentType<{
