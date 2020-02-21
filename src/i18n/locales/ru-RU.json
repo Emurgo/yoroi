@@ -289,7 +289,7 @@
   "global.actions.dialogs.logout.title": "Выйти",
   "global.actions.dialogs.logout.yesButton": "Да",
   "global.actions.dialogs.insufficientBalance.title": "Ошибка транзакции",
-  "global.actions.dialogs.insufficientBalance.message": "Not enough funds to make this transaction",
+  "global.actions.dialogs.insufficientBalance.message": "Недостаточно средств для проведения этой транзакции",
   "global.actions.dialogs.networkError.message": "Ошибка при подключении к серверу. Пожалуйста, проверьте Ваше подключение к Интернету",
   "global.actions.dialogs.networkError.title": "Ошибка сети",
   "global.actions.dialogs.pinMismatch.message": "PIN-коды не совпадают.",
