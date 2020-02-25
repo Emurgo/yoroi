@@ -78,7 +78,8 @@ project.ext.react = [
 
 project.ext.envConfigFiles = [
   dev: '.env.staging',
-  main: '.env.production'
+  main: '.env.production',
+  nightly: '.env.production'
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -159,6 +160,15 @@ android {
         dev {
             dimension "version"
             applicationIdSuffix ".staging"
+            applicationId 'com.emurgo'
+            minSdkVersion 21
+            compileSdkVersion = 29
+            targetSdkVersion 29
+            resValue "string", "build_config_package", "com.emurgo"
+        }
+        nightly {
+            dimension "version"
+            applicationIdSuffix ".nightly"
             applicationId 'com.emurgo'
             minSdkVersion 21
             compileSdkVersion = 29
