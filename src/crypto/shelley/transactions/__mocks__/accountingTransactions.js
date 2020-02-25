@@ -115,7 +115,6 @@ export const buildUnsignedAccountTx = async (
     await OutputPolicy.forget(),
   )
 
-
   return IOs
 }
 
