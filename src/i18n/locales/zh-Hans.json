@@ -183,7 +183,7 @@
   "components.txhistory.txhistorylistitem.assuranceLevelMedium": "中",
   "components.txhistory.txhistorylistitem.assuranceLevelPending": "确认中",
   "components.txhistory.txhistorylistitem.fee": "手续费",
-  "components.txhistory.txhistorylistitem.transactionTypeMulti": "Multiparty",
+  "components.txhistory.txhistorylistitem.transactionTypeMulti": "多方",
   "components.txhistory.txhistorylistitem.transactionTypeReceived": "ADA received",
   "components.txhistory.txhistorylistitem.transactionTypeSelf": "Intrawallet",
   "components.txhistory.txhistorylistitem.transactionTypeSent": "ADA sent",
