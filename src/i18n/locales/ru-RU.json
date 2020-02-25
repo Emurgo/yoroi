@@ -157,7 +157,7 @@
   "components.stakingcenter.delegationTxBuildError": "Ошибка при построении транзакции делегирования",
   "components.txhistory.flawedwalletmodal.title": "Предупреждение",
   "components.txhistory.flawedwalletmodal.explanation1": "Похоже, что вы случайно создали или восстановили кошелек, который входит только в специальные версии для разработки. В качестве меры безопасности мы отключили этот кошелек.",
-  "components.txhistory.flawedwalletmodal.explanation2": "You still can create a new wallet or restore one without restrictions. If you were affected in some way by this issue, please contact EMURGO.",
+  "components.txhistory.flawedwalletmodal.explanation2": "Вы можете без ограничений создать новый кошелек или восстановить имеющийся. Если вы столкнулись с проблемой, пожалуйста, свяжитесь с Emurgo.",
   "components.txhistory.flawedwalletmodal.okButton": "Мне понятно",
   "components.txhistory.txdetails.addressPrefixChange": "/изменить",
   "components.txhistory.txdetails.addressPrefixNotMine": "не моего",
