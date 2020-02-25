@@ -59,7 +59,7 @@
   "components.send.biometricauthscreen.useFallbackButton": "Use other login method",
   "components.send.confirmscreen.amount": "Amount",
   "components.send.confirmscreen.balanceAfterTx": "Balance after transaction",
-  "components.send.confirmscreen.confirmButton": "Confirm",
+  "components.send.confirmscreen.confirmButton": "确认",
   "components.send.confirmscreen.fees": "Fees",
   "components.send.confirmscreen.password": "Spending password",
   "components.send.confirmscreen.receiver": "Receiver",
