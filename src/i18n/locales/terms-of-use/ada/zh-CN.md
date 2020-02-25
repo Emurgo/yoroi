@@ -36,34 +36,34 @@
 
 ## 7. 责任限制
 
-IN NO EVENT SHALL THE COMPANY OR ITS SHAREHOLDERS, DIRECTORS, OFFICERS, EMPLOYEES, AFFILIATES OR AGENTS, OR ANY OF ITS OR THEIR RESPECTIVE SERVICE PROVIDERS, BE LIABLE TO USER OR ANY THIRD PARTY FOR ANY USE, INTERRUPTION, DELAY OR INABILITY TO USE THE SOFTWARE, LOST REVENUES OR PROFITS, DELAYS, INTERRUPTION OR LOSS OF SERVICES, BUSINESS OR GOODWILL, LOSS OR CORRUPTION OF DATA, LOSS RESULTING FROM SYSTEM OR SYSTEM SERVICE FAILURE, MALFUNCTION OR SHUTDOWN, FAILURE TO ACCURATELY TRANSFER, READ OR TRANSMIT INFORMATION, FAILURE TO UPDATE OR PROVIDE CORRECT INFORMATION, SYSTEM INCOMPATIBILITY OR PROVISION OF INCORRECT COMPATIBILITY INFORMATION OR BREACHES IN SYSTEM SECURITY, OR FOR ANY CONSEQUENTIAL, INCIDENTAL, INDIRECT, EXEMPLARY, SPECIAL OR PUNITIVE DAMAGES, WHETHER ARISING OUT OF OR IN CONNECTION WITH THIS AGREEMENT, BREACH OF CONTRACT, TORT (INCLUDING NEGLIGENCE) OR OTHERWISE, REGARDLESS OF WHETHER SUCH DAMAGES WERE FORESEEABLE AND WHETHER OR NOT WE WERE ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. IN NO EVENT SHALL THE COMPANY OR ITS SHAREHOLDERS, DIRECTORS, OFFICERS, EMPLOYEES, AFFILIATES OR AGENTS, OR ANY OF ITS OR THEIR RESPECTIVE SERVICE PROVIDERS, BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM OR IN ANY WAY RELATED TO USER'S ACCESS, USE OR INSTALLATION OF THE SOFTWARE. SOME JURISDICTIONS PROHIBIT THE EXCLUSION OR LIMITATION OF INCIDENTAL OR CONSEQUENTIAL DAMAGES, THUS THIS LIMITATION OF LIABILITY MAY NOT APPLY TO USER. IF USER IS DISSATISFIED WITH THE SOFTWARE, USER'S SOLE AND EXCLUSIVE REMEDY SHALL BE FOR USER TO DISCONTINUE USE OF THE SOFTWARE.
+在任何情形下，本公司或其股东、董事、高管、员工、关联方或代理人、或其各自的任何服务提供商对于本软件的任何使用、中断、延迟或无法使用，损失的收益或利润，服务的延迟、中断或丢失，商业或商誉，数据的丢失或损坏，因系统或系统服务故障而造成的损失，故障或关闭，未能准确转移、读取或传输信息，未能更新或提供正确信息，系统不兼容、或提供不正确的兼容性信息、或系统安全破坏，或任何结果的、偶发的、间接的、惩戒性、特殊的或惩罚性损害，无论是因本协议、违反合约、侵权行为（包括过失的侵权行为）或其他而引起的或与之有关，亦无论该等损害是否可预见以及本公司是否已被告知该等损害发生的可能性，均不向用户或任何第三方负责。 在任何情形下，本公司或其股东、董事、高管、员工、关联方或代理人、或其各自的任何服务提供商均不对因用户访问、使用或安装本软件而引起的或与之有任何关联的任何索赔、损害或其他责任负责，无论是在合同行为、侵权行为或其他行为当中。 某些司法管辖区禁止排除或限制偶发的或结果的损害赔偿，因此本责任限制可能不适用于用户。如果用户对本软件不满，用户的唯一且排他的救济是由用户停止对本软件的使用。
 
-## 8. Indemnification
+## 8. 赔偿
 
-User agrees to indemnify, hold harmless and defend the Company, its shareholders, directors, officers, employees, affiliates and agents ("Indemnified Parties") from and against any action, cause, claim, damage, debt, demand or liability, including reasonable costs and attorney's fees, asserted by any person, arising out of or relating to: (a) this Agreement; (b) User's access, use or installation of the Software, including any data or work transmitted or received by User; and (c) any unacceptable use of the Software by any person, including, without limitation, any statement, data or content made, transmitted or republished by User or any person which is prohibited as unacceptable under Section 4. THIS INDEMNIFICATION INCLUDES THE EXPRESS INDEMNIFICATION OF THE COMPANY AND ALL INDEMNIFIED PARTIES FOR ANY ALLEGED NEGLIGENCE (INCLUDING ANY ALLEGED GROSS NEGLIGENCE). OR OTHER ALLEGED MISCONDUCT OF THE COMPANY OR ANY INDEMNIFIED PARTIES.
+就任何人因(a)本协议；(b)用户对本软件的访问、使用或安装，包括用户传输或接收的任何数据或工作；及(c)任何人对本软件的任何不可接受的使用（包括但不限于作为第4条中规定的不可接受的内容而被禁止的由用户或任何人制作、传输或重新发布的任何声明、数据或内容）或与之相关而主张的任何诉讼、诉因、索赔、损害、债务、要求或责任，包括合理费用和律师费用，用户同意向本公司、其股东、董事、高管、员工、关联方和代理人（下称“受偿方”）赔偿、使其免受损害并维护其权益。本赔偿包括对本公司及所有受偿方因本公司或任何受偿方被主张任何过失（包括任何被主张的重大过失）或被主张的其他不当行为而做出的明示赔偿。
 
-## 9. Intellectual Property
+## 9. 知识产权
 
-The Company retains all right, title, and interest in and to all of the Company's brands, logos, and trademarks, including, but not limited to, EMURGO Co., Ltd., EMURGO, Yoroi, Yoroi Cryptocurrency Wallet, Yoroi Wallet, Yoroi App, and variations of the wording of the aforementioned brands, logos, and trademarks.
+本公司保留对本公司的所有品牌、标识和商标的所有权利、所有权和利益，包括但不限于EMURGO Co., Ltd.、EMURGO、Yoroi、Yoroi Cryptocurrency Wallet、Yoroi Wallet、Yoroi App以及前述品牌、标识和商标的用语变化形式。
 
-## 10. Warnings
+## 10. 警告
 
-User acknowledges that the Company shall not be responsible for transferring, safeguarding, or maintaining private keys and/or User's ADA or any other cryptocurrency. If User and/or any co-signing authorities lose, mishandle, or have stolen associated private keys, or if User's cosigners refuse to provide requisite authority, User acknowledges that User may not be able to recover User's ADA or any other cryptocurrency, and that the Company shall not be responsible for such loss.
+用户认可，本公司不负责转让、保护或维护私有密钥和/或用户的ADA或任何其他加密数字货币。如果用户和/或任何联署当局丢失、错误处理或使关联的私有密钥失窃，或用户的联署人拒绝提供必要的授权，用户认可，用户可能无法恢复用户的ADA或任何其他数字加密货币，且本公司不为该等损失负责。
 
-User acknowledges and agrees that ADA or any other cryptocurrency transactions facilitated by the Software and/or the Company may be delayed, and that the Company shall not be responsible for any associated loss. User acknowledges and agrees that the Company shall not be responsible for any aspect of the information, content, or services contained in any third-party materials or on any third party sites accessible or linked to the Software and/or the Company.
+用户认可并同意，通过本软件和/或本公司促成的ADA或任何其他加密数字货币交易可能会被延迟，且本公司不为任何相关损失负责。 用户认可并同意，本公司不对包含在任何第三方资料中的、或在可访问或链接至本软件和/或本公司的任何第三方网站上的信息、内容或服务的任何方面负责。
 
-User agrees that User should never share User's certificate with any natural or legal person, including the Company, Cardano Foundation, Input Output HK Limited, or any other entity. Further, User acknowledges that sharing User's certificate may result in loss of User's ADA or any other cryptocurrency, and User agrees that the Company shall not be responsible for such loss. User acknowledges and agrees that by redeeming ADA in the testnet, User redeems test-ADA only, and that in order to redeem actual ADA, User must repeat the procedure in the mainnet, once released.
+用户同意，用户不应与任何自然人或法人（包括本公司、Cardano Foundation、Input Output HK Limited或任何其他实体）分享用户的证书。另外，用户认可，分享用户的证书可能导致用户的ADA或任何其他加密数字货币的损失，且用户同意，本公司不对该等损失负责。 用户认可并同意，通过在测试网络中赎回ADA，用户仅赎回测试ADA，且为了赎回真实的ADA，用户必须在经发布后的主网中重复这一程序。
 
-By using the Software, User acknowledges and agrees: (i) that the Company is not responsible for the operation of the underlying protocols and that the Company makes no guarantee of their functionality, security, or availability; and (ii) that the underlying protocols are subject to sudden main-chain changes in operating rules ("forks"), and that such forks may materially affect the value, and/or function of the ADA or any other cryptocurrency that User stores on the Software. In the event of a fork, User agrees that the Company may temporarily suspend the Software operations (with or without notice to User) and that the Company may, in its sole discretion, (a) configure or reconfigure its systems or (b) decide not to support (or cease supporting) the forked protocol entirely, provided, however, that User will have an opportunity to withdraw funds from the Software. User acknowledges and agrees that the Company assumes absolutely no responsibility whatsoever in respect of an unsupported branch of a forked protocol.
+通过使用本软件，用户认可并同意：(i)本公司不负责底层协议的运行，且本公司不对其功能性、安全性或可用性做任何担保；且(ii)底层协议受制于运行规则中的突发主链变化（下称“分叉”），且该等分叉可能对用户存储在本软件上的ADA或任何其他加密数字货币的价值和/或功能有重大影响。如发生分叉，用户同意，本公司可以（在通知或不通知用户的情况下）暂时中止本软件的运行，且本公司可以自行(a)配置或重新配置其系统或(b)决定完全不支援（或停止支援）分叉协议，但前提是用户有机会从本软件中取回资金。用户认可并同意，本公司绝不就有关分叉协议的不受支援的分支承担任何责任。
 
-## 11. Miscellaneous
+## 11. 其他事项
 
-**a. Amendment.** The Company shall have the right, at any time and without notice, to add to or modify the terms of this Agreement, simply by delivering such amended terms to User by electronic message through any medium to any address provided to the Company by User. User's access to or use of the Software after the date such amended terms are delivered to User shall be deemed to constitute acceptance of such amended terms.
+**a.修订。** 本公司有权随时不经通知地增加或修改本协议的条款，仅通过向用户提供给本公司的任何地址发送借由任何媒介的电子信息，向用户交付该等修订后的条款。在该等修订后条款被交付给用户后，用户对本软件的访问或使用视为构成对该等修订后条款的接受。
 
-**b. Severance.** If any provision or part-provision of this Agreement is, or becomes invalid, illegal or unenforceable, it shall be deemed modified to the minimum extent necessary to make it valid, legal and enforceable. If such modification is not possible, the relevant provision or part-provision shall be deemed deleted. Any modification to or deletion of a provision or part-provision under this Article shall not affect the validity and enforceability of the rest of this Agreement.
+**b.可分性。** 如果本协议的任何条款或条款部分为或变为无效、违法或不可执行，则应视为在使其有效、合法且可执行所必要的最低限度内被修改。如果该等修改是不可能的，则相关条款或条款部分应视为被删除。本条规定的任何对条款或条款部分的修改或删除均不影响本协议的剩余部分的有效性和可执行性。
 
-**c. Entire Agreement – Disclaimer of Reliance**. This Agreement constitutes the entire agreement between the Parties with respect to the subject matter hereof and supersedes all prior agreements or understandings between the Parties. User expressly represents and warrants that it is not relying upon any statements, understandings, representations, expectations or agreements other than those expressly set forth in this Agreement.
+**c.完整协议——信赖免责。** 本协议构成双方当事人之间就本协议内容的完整协议，并取代双方当事人之间的所有在先协议或理解。用户明确声明与保证，其不会依赖本协议中明示规定的内容以外的任何表述、理解、声明、预期或协议。
 
-**d. THIS AGREEMENT IS SUBJECT TO BINDING ARBITRATION.** User agrees that any and all disputes or claims against any person arising out of or in any way related to this Agreement or the access, use or installation of the Software by User or any other person shall be subject to binding arbitration under the Rules of Arbitration of the International Chamber of Commerce by one or more arbitrators appointed in accordance with the said Rules. The location of the arbitration shall be Japan. The language of the arbitration shall be English.
+**d.本协议受限于有约束力的仲裁。** 用户同意，因本协议或用户或其他任何人对本软件的访问、使用或安装而引起的或与之有任何关联的针对任何人的任何争议或索赔，均应受限于由按照国际商会仲裁规则委派的一名或多名仲裁员根据该等仲裁规则做出的有约束力的仲裁。仲裁地应为日本。仲裁语言为英语。
 
-**e. LANGUAGE.** Any translation of this Agreement is made for purposes of local reference only and in the event of any inconsistency between the English and any non-English versions, the English version of this Agreement shall prevail and govern in all respects.
+**e.语言。** 本协议的任何翻译均仅为本地参考之用，如果英文版本与非英文版本之间发生任何不一致，在任何情况下均应以本协议的英文版本为准并有约束力。
