@@ -78,7 +78,8 @@ project.ext.react = [
 
 project.ext.envConfigFiles = [
   dev: '.env.staging',
-  main: '.env.production'
+  main: '.env.production',
+  nightly: '.env.production'
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
