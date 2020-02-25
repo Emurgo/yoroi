@@ -11,6 +11,10 @@ jest.setMock(
   './crypto/shelley/transactions/utxoTransactions',
   require('./crypto/shelley/transactions/__mocks__/utxoTransactions'),
 )
+jest.setMock(
+  './crypto/shelley/transactions/accountingTransactions',
+  require('./crypto/shelley/transactions/__mocks__/accountingTransactions'),
+)
 jest.mock('react-native-device-info', () => {
   return {
     getVersion: () => '1.5.1',

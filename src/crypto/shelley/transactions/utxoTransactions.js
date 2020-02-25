@@ -1,6 +1,9 @@
 // @flow
 
 /**
+ * HEADS UP: when modifying or adding new functions to this library, keep
+ * in mind there is a copy in ./__mocks__ that needs to be in sync.
+ *
  * note: the functions in this module have been borrowed from yoroi-frontend:
  * https://github.com/Emurgo/yoroi-frontend/blob/shelley/app/api/ada/
  * transactions/shelley/utxoTransactions.js

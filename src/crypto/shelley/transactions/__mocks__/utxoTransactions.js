@@ -1,6 +1,11 @@
 // @flow
 
 /**
+ * this file should be almost exaclty than the original (in ../). It basically
+ * doesn't free the rust pointers because jest uses a node version of chain
+ * libs that crashes when freeing a null pointer (by contrast, in the original
+ * file we free everything (including possible null pointers))
+ *
  * note: the functions in this module have been borrowed from yoroi-frontend:
  * https://github.com/Emurgo/yoroi-frontend/blob/shelley/app/api/ada/
  * transactions/shelley/utxoTransactions.js

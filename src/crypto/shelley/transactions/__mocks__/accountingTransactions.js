@@ -1,13 +1,15 @@
 // @flow
 
 /**
- * HEADS UP: when modifying or adding new functions to this library, keep
- * in mind there is a copy in ./__mocks__ that needs to be in sync.
+ * this file should be almost exaclty than the original (in ../). It basically
+ * doesn't free the rust pointers because jest uses a node version of chain
+ * libs that crashes when freeing a null pointer (by contrast, in the original
+ * file we free everything (including possible null pointers))
  *
  * Based on `accountingTransactions.js` from yoroi-frontend
  */
 
-import {InsufficientFunds} from '../../errors'
+import {InsufficientFunds} from '../../../errors'
 import {BigNumber} from 'bignumber.js'
 import {
   Account,
@@ -30,9 +32,9 @@ import {
   Witness,
   Witnesses,
 } from 'react-native-chain-libs'
-import {generateAuthData, generateFee} from './utils'
+import {generateAuthData, generateFee} from '../utils'
 
-import {CARDANO_CONFIG} from '../../../config'
+import {CARDANO_CONFIG} from '../../../../config'
 
 const CONFIG = CARDANO_CONFIG.SHELLEY
 
@@ -96,7 +98,6 @@ export const buildUnsignedAccountTx = async (
       await Value.from_str(newAmount.toString()),
     ),
   )
-  await sourceAccount.free()
   if (typeSpecific.amount != null) {
     // need to use this aux variable because flow don't like
     // typeSpecific.amount.toString()
@@ -106,7 +107,6 @@ export const buildUnsignedAccountTx = async (
       await Value.from_str(outputAmount.toString()),
     )
   }
-  await wasmReceiver.free()
 
   const IOs = await ioBuilder.seal_with_output_policy(
     payload,
@@ -115,9 +115,6 @@ export const buildUnsignedAccountTx = async (
     await OutputPolicy.forget(),
   )
 
-  await payload.free()
-  await feeAlgorithm.free()
-  await ioBuilder.free()
 
   return IOs
 }
@@ -135,7 +132,6 @@ export const signTransaction = async (
     certificate != null
       ? await txbuilder.payload(certificate)
       : await txbuilder.no_payload()
-  await txbuilder.free()
 
   // builderSetWitness: TransactionBuilderSetWitness
   const builderSetWitness = await builderSetIOs.set_ios(
@@ -143,7 +139,6 @@ export const signTransaction = async (
     await IOs.outputs(),
   )
   await IOs.free()
-  await builderSetIOs.free()
 
   const witness = await Witness.for_account(
     await Hash.from_hex(CONFIG.GENESISHASH),
@@ -175,7 +170,6 @@ export const signTransaction = async (
     payloadAuthData,
   )
   await payloadAuthData.free()
-  await builderSignCertificate.free()
   const fragment = await Fragment.from_transaction(signedTx)
   await signedTx.free()
   return fragment
