@@ -4,12 +4,17 @@ import {BigNumber} from 'bignumber.js'
 import {LogLevel} from './utils/logging'
 import env from './env'
 
-const IS_DEBUG = false
-// debugging flags
-const _SHOW_INIT_DEBUG_SCREEN = false
-const _PREFILL_WALLET_INFO = false
+const IS_DEBUG = __DEV__
+/** debugging flags
+ *
+ * WARNING: NEVER change these flags direclty here.
+ * ALWAYS use the corresponding .env files.
+ */
+const _SHOW_INIT_DEBUG_SCREEN = env.getBoolean('SHOW_INIT_DEBUG_SCREEN', false)
+const _PREFILL_WALLET_INFO = env.getBoolean('PREFILL_WALLET_INFO', false)
 const _USE_TESTNET = env.getBoolean('USE_TESTNET', true)
 const _SENTRY = env.getString('SENTRY')
+
 const _LOG_LEVEL = IS_DEBUG ? LogLevel.Debug : LogLevel.Warn
 const _ASSURANCE_STRICT = false
 
@@ -100,8 +105,9 @@ export const NUMBERS = {
 
 export const CONFIG = {
   DEBUG: {
-    START_WITH_INDEX_SCREEN: _SHOW_INIT_DEBUG_SCREEN,
-    PREFILL_FORMS: _PREFILL_WALLET_INFO,
+    // WARNING: NEVER change these flags
+    START_WITH_INDEX_SCREEN: __DEV__ ? _SHOW_INIT_DEBUG_SCREEN : false,
+    PREFILL_FORMS: __DEV__ ? _PREFILL_WALLET_INFO : false,
     WALLET_NAME: 'My wallet',
     IS_SHELLEY_WALLET: true,
     PASSWORD: 'aeg?eP3M:)(:',

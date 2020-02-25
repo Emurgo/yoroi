@@ -218,7 +218,18 @@ tasks.create('getCurrentCommitHash') {
     }
 }
 
+tasks.create('checkEnvVariables') {
+  doFirst {
+    if (project.env.get("SHOW_INIT_DEBUG_SCREEN") != "false" || project.env.get("PREFILL_WALLET_INFO") != "false") {
+      throw new GradleException("should not allow debug flags for release builds")
+    }
+  }
+}
+
 tasks.whenTaskAdded { task ->
+    if(task.name.startsWith("bundleMainnetReleaseJsAndAssets")) {
+      task.dependsOn checkEnvVariables
+    }
     if (task.name.startsWith('install') || task.name.startsWith('assemble')) {
         task.dependsOn getCurrentCommitHash
     }
