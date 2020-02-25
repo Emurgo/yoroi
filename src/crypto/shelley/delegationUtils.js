@@ -60,11 +60,14 @@ export const groupAddrContainsAccountKey = async (
     return false
   }
   const groupKey = await wasmAddr.to_group_address()
+  await wasmAddr.free()
   if (groupKey == null) return false
   const accountKey = await groupKey.get_account_key()
+  await groupKey.free()
   const accountKeyString = Buffer.from(await accountKey.as_bytes()).toString(
     'hex',
   )
+  await accountKey.free()
   return targetAccountKey === accountKeyString
 }
 
@@ -134,7 +137,9 @@ export const getDifferenceAfterTx = async (
         const value = new BigNumber(await (await output.value()).to_str())
         sumOutForKey = sumOutForKey.plus(value)
       }
+      await output.free()
     }
+    await outputs.free()
   }
 
   return sumOutForKey.minus(sumInForKey)
@@ -165,6 +170,7 @@ export const createDelegationTx = async (
     addressedUtxos,
     certificate,
   )
+  await certificate.free()
 
   const allUtxosForKey = await filterAddressesByStakingKey(
     stakingKey,
@@ -222,6 +228,7 @@ export const signDelegationTx = async (
       'hex',
     )
     const encodedTx = await signedTx.as_bytes()
+    await signedTx.free()
 
     const response = {
       id,
