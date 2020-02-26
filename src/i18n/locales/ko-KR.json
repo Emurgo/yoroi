@@ -1,4 +1,5 @@
 {
+  "components.common.languagepicker.chinese": "中文",
   "components.common.languagepicker.continueButton": "언어를 선택해 주십시오",
   "components.common.languagepicker.english": "English",
   "components.common.languagepicker.japanese": "日本語",
@@ -14,11 +15,8 @@
   "components.delegationsummary.failedwalletupgrademodal.explanation1": "Some users experienced problems while upgrading their wallets in the Shelley testnet.",
   "components.delegationsummary.failedwalletupgrademodal.explanation2": "If you observed an unexpected zero balance after having upgraded your wallet, we recommend you to restore your wallet once again. We apologize for any inconvinience this may have caused.",
   "components.delegationsummary.failedwalletupgrademodal.okButton": "OK",
-  "components.delegationsummary.noTransactions": "No transactions to show yet",
   "components.delegationsummary.notDelegatedInfo.firstLine": "You have not delegated your ADA yet.",
-  "components.delegationsummary.notDelegatedInfo.secondLine": "Go to Staking center to choose which stake pool you want to delegate in. Note, you may delegate only to one stake pool in this Testnet.",
-  "components.delegationsummary.syncErrorBannerTextWithRefresh": "We are experiencing synchronization issues. Pull to refresh",
-  "components.delegationsummary.syncErrorBannerTextWithoutRefresh": "We are experiencing synchronization issues.",
+  "components.delegationsummary.notDelegatedInfo.secondLine": "Go to Staking center to choose which stake pool you want to delegate in. Note, you may delegate only to one stake pool in this Tesnnet.",
   "components.delegationsummary.upcomingReward.followingLabel": "Following reward",
   "components.delegationsummary.upcomingReward.nextLabel": "Next reward",
   "components.delegationsummary.upcomingReward.rewardDisclaimerText": "Remember that your first reward will be allocated two epochs after the end of the epoch in which you have submitted your delegation transaction.",

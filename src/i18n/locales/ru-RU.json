@@ -1,4 +1,5 @@
 {
+  "components.common.languagepicker.chinese": "中文",
   "components.common.languagepicker.continueButton": "Выберите язык",
   "components.common.languagepicker.english": "English",
   "components.common.languagepicker.japanese": "日本語",
@@ -14,11 +15,8 @@
   "components.delegationsummary.failedwalletupgrademodal.explanation1": "Некоторые пользователи столкнулись с проблемами при обновлении своих кошельков в тестовой сети Shelley.",
   "components.delegationsummary.failedwalletupgrademodal.explanation2": "Если после обновления вашего кошелька вы обнаружили неожиданный нулевой баланс, мы рекомендуем вам восстановить ваш кошелек еще раз. Мы приносим свои извинения за возможные неудобства.",
   "components.delegationsummary.failedwalletupgrademodal.okButton": "Хорошо",
-  "components.delegationsummary.noTransactions": "Нет транзакций для показа",
   "components.delegationsummary.notDelegatedInfo.firstLine": "Вы еще не делегировали вашу ADA.",
-  "components.delegationsummary.notDelegatedInfo.secondLine": "Перейдите в Стейкинг центр, чтобы выбрать стейк-пул в который вы хотите делегировать. Обратите внимание, что вы можете делегировать только в один стейк-пул в этом тестнете.",
-  "components.delegationsummary.syncErrorBannerTextWithRefresh": "Проблемы с синхронизацией. Потяните, чтобы обновить",
-  "components.delegationsummary.syncErrorBannerTextWithoutRefresh": "Проблемы с синхронизацией.",
+  "components.delegationsummary.notDelegatedInfo.secondLine": "Go to Staking center to choose which stake pool you want to delegate in. Note, you may delegate only to one stake pool in this Tesnnet.",
   "components.delegationsummary.upcomingReward.followingLabel": "Предстоящие награды",
   "components.delegationsummary.upcomingReward.nextLabel": "Следующая награда",
   "components.delegationsummary.upcomingReward.rewardDisclaimerText": "Помните, что ваша первая награда будет получена через две эпохи после окончания той эпохи, в которой вы отправили транзакцию делегирования.",

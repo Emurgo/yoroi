@@ -1,4 +1,5 @@
 {
+  "components.common.languagepicker.chinese": "中文",
   "components.common.languagepicker.continueButton": "言語を選んでください",
   "components.common.languagepicker.english": "English",
   "components.common.languagepicker.japanese": "日本語",
@@ -14,11 +15,8 @@
   "components.delegationsummary.failedwalletupgrademodal.explanation1": "Shelleyテストネットでウォレットをアップグレードする際に問題が生じる場合があります。",
   "components.delegationsummary.failedwalletupgrademodal.explanation2": "ウォレットのアップグレード後、残高がゼロと誤って表示される場合は、ウォレットの復元を実行いただくことをお勧めします。ご迷惑をおかけいたしますことをお詫び申し上げます。",
   "components.delegationsummary.failedwalletupgrademodal.okButton": "OK",
-  "components.delegationsummary.noTransactions": "トランザクションがありません。",
   "components.delegationsummary.notDelegatedInfo.firstLine": "まだADAを委任していません.",
-  "components.delegationsummary.notDelegatedInfo.secondLine": "ステーキングセンターにアクセスして、委任したいステークプールを選択してください。本テストネットでは、委任できるステークプールは1つだけですのでご注意ください。",
-  "components.delegationsummary.syncErrorBannerTextWithRefresh": "同期エラーが発生しています。 再読み込みをしてください",
-  "components.delegationsummary.syncErrorBannerTextWithoutRefresh": "同期エラーが発生しています。",
+  "components.delegationsummary.notDelegatedInfo.secondLine": "Go to Staking center to choose which stake pool you want to delegate in. Note, you may delegate only to one stake pool in this Tesnnet.",
   "components.delegationsummary.upcomingReward.followingLabel": "以下の報酬",
   "components.delegationsummary.upcomingReward.nextLabel": "次の報酬",
   "components.delegationsummary.upcomingReward.rewardDisclaimerText": "最初の報酬は、委任トランザクションを送信したエポックの終了後に、2つのエポックに割り当てられることにご注意ください。",

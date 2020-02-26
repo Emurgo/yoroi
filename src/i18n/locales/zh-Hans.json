@@ -1,4 +1,5 @@
 {
+  "components.common.languagepicker.chinese": "中文",
   "components.common.languagepicker.continueButton": "请选择语言",
   "components.common.languagepicker.english": "英语",
   "components.common.languagepicker.japanese": "日语",
@@ -14,11 +15,8 @@
   "components.delegationsummary.failedwalletupgrademodal.explanation1": "一些用户在升级他们的Shelley测试网钱包时遇到了问题。",
   "components.delegationsummary.failedwalletupgrademodal.explanation2": "如果您升级完钱包后发现原有余额变为零，我们建议您用助记词重新恢复钱包。由此给您带来的不便我们深表歉意,敬请谅解。",
   "components.delegationsummary.failedwalletupgrademodal.okButton": "完成",
-  "components.delegationsummary.noTransactions": "无交易可显示",
   "components.delegationsummary.notDelegatedInfo.firstLine": "您尚未委托您的ADA.",
-  "components.delegationsummary.notDelegatedInfo.secondLine": "前往质押中心选择您想要委托的权益池。注意，此次测试网中仅能同时委托一个权益池。",
-  "components.delegationsummary.syncErrorBannerTextWithRefresh": "我们遇到同步问题，下拉刷新。",
-  "components.delegationsummary.syncErrorBannerTextWithoutRefresh": "我们遇到同步问题。",
+  "components.delegationsummary.notDelegatedInfo.secondLine": "Go to Staking center to choose which stake pool you want to delegate in. Note, you may delegate only to one stake pool in this Tesnnet.",
   "components.delegationsummary.upcomingReward.followingLabel": "之后的收益",
   "components.delegationsummary.upcomingReward.nextLabel": "下一次收益",
   "components.delegationsummary.upcomingReward.rewardDisclaimerText": "注意：您的首次收益会在当前委托纪元的两个纪元后到账",

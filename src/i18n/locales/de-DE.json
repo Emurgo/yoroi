@@ -1,4 +1,5 @@
 {
+  "components.common.languagepicker.chinese": "中文",
   "components.common.languagepicker.continueButton": "Sprachwahl",
   "components.common.languagepicker.english": "English",
   "components.common.languagepicker.japanese": "日本語",
@@ -14,11 +15,8 @@
   "components.delegationsummary.failedwalletupgrademodal.explanation1": "Einige Benutzer hatten Probleme während der Aktualisierung ihrer Wallets im Shelley testnet.",
   "components.delegationsummary.failedwalletupgrademodal.explanation2": "Wenn Du nach der Aufrüstung Deiner Wallet einen unerwarteten Nullsaldo festgestellt haben solltest, empfehlen wir Dir, deine Wallet noch einmal wiederherzustellen. Wir entschuldigen uns für etwaige Unannehmlichkeiten, die dies verursacht haben könnte.",
   "components.delegationsummary.failedwalletupgrademodal.okButton": "OK",
-  "components.delegationsummary.noTransactions": "Noch keine Transaktion die angezeigt werden kann",
   "components.delegationsummary.notDelegatedInfo.firstLine": "Du hast noch keine ADA delegiert.",
-  "components.delegationsummary.notDelegatedInfo.secondLine": "Verwende das Staking center, um auszuwählen, an welchem Stakepool Du delegieren möchtest. Hinweis: Du kannst nur an einen Stakeholder-Pool in diesem Testnetz delegieren.",
-  "components.delegationsummary.syncErrorBannerTextWithRefresh": "Wir haben Synchronisationsprobleme. Aktualisiere die Ansicht",
-  "components.delegationsummary.syncErrorBannerTextWithoutRefresh": "Wir haben Synchronisationsprobleme.",
+  "components.delegationsummary.notDelegatedInfo.secondLine": "Go to Staking center to choose which stake pool you want to delegate in. Note, you may delegate only to one stake pool in this Tesnnet.",
   "components.delegationsummary.upcomingReward.followingLabel": "Folgende Erträge",
   "components.delegationsummary.upcomingReward.nextLabel": "Nächster Ertrag",
   "components.delegationsummary.upcomingReward.rewardDisclaimerText": "Denke daran, dass Deine ersten Erträge zwei Epochen nach dem Ende der Epoche zugeteilt wird, in der die Delegationstransaktion eingereicht wurde.",
