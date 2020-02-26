@@ -8,7 +8,7 @@ import koreanFlagIcon from '../../assets/img/flags/korean.png'
 import japaneseFlagIcon from '../../assets/img/flags/japanese.png'
 import russianFlagIcon from '../../assets/img/flags/russian.png'
 import englishFlagIcon from '../../assets/img/flags/english.png'
-// import chineseFlagIcon from '../../assets/img/flags/chinese.png'
+import chineseFlagIcon from '../../assets/img/flags/chinese.png'
 import spanishFlagIcon from '../../assets/img/flags/spanish.png'
 import selectLanguageImage from '../../assets/img/select_language.png'
 import LanguageListItem from './LanguageListItem'
@@ -41,6 +41,11 @@ const messages = defineMessages({
     defaultMessage: 'Spanish',
     description: 'some desc',
   },
+  chinese: {
+    id: 'components.common.languagepicker.chinese',
+    defaultMessage: '中文',
+    description: 'some desc',
+  },
   continueButton: {
     id: 'components.common.languagepicker.continueButton',
     defaultMessage: '!!!Choose language',
@@ -50,17 +55,6 @@ const messages = defineMessages({
 
 const supportedLanguages = (intl) => {
   return [
-    // TODO: Add back when chinese is available
-    // {
-    //   label: languages.chineseSimplified,
-    //   code: LANGUAGES.CHINESE_SIMPLIFIED,
-    //   icon: chineseFlagIcon,
-    // },
-    // {
-    //   label: languages.chineseTraditional,
-    //   code: LANGUAGES.CHINESE_TRADITIONAL,
-    //   icon: chineseFlagIcon,
-    // },
     {
       label: intl.formatMessage(messages.english),
       code: LANGUAGES.ENGLISH,
@@ -86,6 +80,17 @@ const supportedLanguages = (intl) => {
       code: LANGUAGES.SPANISH,
       icon: spanishFlagIcon,
     },
+    {
+      label: intl.formatMessage(messages.chinese),
+      code: LANGUAGES.CHINESE_SIMPLIFIED,
+      icon: chineseFlagIcon,
+    },
+    // TODO: Add back when chinese traditional is available
+    // {
+    //   label: languages.chineseTraditional,
+    //   code: LANGUAGES.CHINESE_TRADITIONAL,
+    //   icon: chineseFlagIcon,
+    // },
   ]
 }
 
