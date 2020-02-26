@@ -260,7 +260,7 @@
   "components.walletselection.walletselectionscreen.addWalletButton": "Añadir billetera",
   "components.walletselection.walletselectionscreen.addWalletOnShelleyButton": "Añadir billetera (Testnet de Shelley)",
   "components.walletselection.walletselectionscreen.header": "Tus billeteras",
-  "components.walletselection.walletselectionscreen.stakeDashboardButton": "Tablero de Control",
+  "components.walletselection.walletselectionscreen.stakeDashboardButton": "Seguimiento",
   "crypto.keystore.approveTransaction": "Autorizar con tu huella dactilar",
   "crypto.keystore.cancelButton": "Cancelar",
   "crypto.keystore.subtitle": "Puedes desactivar esta función en cualquier momento desde el apartado de configuración",
