@@ -162,7 +162,7 @@
   "components.txhistory.txdetails.addressPrefixChange": "/alterar",
   "components.txhistory.txdetails.addressPrefixNotMine": "não é meu",
   "components.txhistory.txdetails.addressPrefixReceive": "/{idx}",
-  "components.txhistory.txdetails.confirmations": "{cnt} {cnt, plural, one {CONFIRMATION} other {CONFIRMATIONS}}",
+  "components.txhistory.txdetails.confirmations": "{cnt} {cnt, plural, one {CONFIRMAÇÃO} other {CONFIRMAÇÕES}}",
   "components.txhistory.txdetails.fee": "Tarifa:",
   "components.txhistory.txdetails.fromAddresses": "Do endereço",
   "components.txhistory.txdetails.omittedCount": "+ {cnt} omitida",
