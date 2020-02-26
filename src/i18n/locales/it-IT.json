@@ -155,7 +155,7 @@
   "components.stakingcenter.delegationTxBuildError": "Errore durante la creazione della transazione di delega",
   "components.txhistory.flawedwalletmodal.title": "Attenzione",
   "components.txhistory.flawedwalletmodal.explanation1": "Sembra che tu abbia creato o ripristinato accidentalmente un portafoglio incluso solo in versioni speciali per lo sviluppo. Come misura di sicurezza, abbiamo disabilitato questo portafoglio.",
-  "components.txhistory.flawedwalletmodal.explanation2": "You still can create a new wallet or restore one without restrictions. If you were affected in some way by this issue, please contact EMURGO.",
+  "components.txhistory.flawedwalletmodal.explanation2": "È comunque possibile creare un nuovo portafoglio o ripristinarne uno senza restrizioni. Se siete affetti in qualche modo da questo problema, si prega di contattare EMURGO.",
   "components.txhistory.flawedwalletmodal.okButton": "Ho capito",
   "components.txhistory.txdetails.addressPrefixChange": "/change",
   "components.txhistory.txdetails.addressPrefixNotMine": "non mio",
