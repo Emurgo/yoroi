@@ -1,4 +1,5 @@
 {
+  "components.common.languagepicker.chinese": "中文",
   "components.common.languagepicker.continueButton": "请选择语言",
   "components.common.languagepicker.english": "英语",
   "components.common.languagepicker.japanese": "日语",
