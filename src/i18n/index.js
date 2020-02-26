@@ -12,10 +12,12 @@ import 'moment/locale/es'
 import assert from '../utils/assert'
 import {LANGUAGES} from './languages'
 
+// note(v-almonacid): there is no distinction between trad vs simplified
+// chinese locales in momentjs
 const momentLocales = {
   [LANGUAGES.ENGLISH]: 'en',
-  // TODO: Add when chinese is available
-  // [LANGUAGES.CHINESE_SIMPLIFIED]: 'zh-cn',
+  [LANGUAGES.CHINESE_SIMPLIFIED]: 'zh-cn',
+  // TODO: Add when chinese traditional is available
   // [LANGUAGES.CHINESE_TRADITIONAL]: 'zh-cn',
   [LANGUAGES.KOREAN]: 'ko',
   [LANGUAGES.JAPANESE]: 'ja',
@@ -70,8 +72,8 @@ const spanishNumberFmt = {
 
 const numberLocales = {
   [LANGUAGES.ENGLISH]: defaultNumberFmt,
-  // TODO: Add when chinese is available
-  // [LANGUAGES.CHINESE_SIMPLIFIED]: customNumberFmt,
+  [LANGUAGES.CHINESE_SIMPLIFIED]: defaultNumberFmt,
+  // TODO: Add when chinese traditional is available
   // [LANGUAGES.CHINESE_TRADITIONAL]: customNumberFmt,
   [LANGUAGES.KOREAN]: defaultNumberFmt,
   [LANGUAGES.JAPANESE]: defaultNumberFmt,

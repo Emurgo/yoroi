@@ -10,6 +10,7 @@ import JA_JP_TOS from '../i18n/locales/terms-of-use/ada/ja-JP.md'
 import KO_KR_TOS from '../i18n/locales/terms-of-use/ada/ko-KR.md'
 import RU_RU_TOS from '../i18n/locales/terms-of-use/ada/ru-RU.md'
 import ES_ES_TOS from '../i18n/locales/terms-of-use/ada/es-ES.md'
+import ZH_CN_TOS from '../i18n/locales/terms-of-use/ada/zh-CN.md'
 
 const tosByCode = {
   'en-US': EN_US_TOS,
@@ -17,6 +18,7 @@ const tosByCode = {
   'ko-KR': KO_KR_TOS,
   'ru-RU': RU_RU_TOS,
   'es-ES': ES_ES_TOS,
+  'zh-Hans': ZH_CN_TOS,
 }
 
 // Note(ppershing): following values have to be in sync with
