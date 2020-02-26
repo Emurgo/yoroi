@@ -2,6 +2,7 @@
 import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
 import DeviceInfo from 'react-native-device-info'
+import {Platform} from 'react-native'
 
 import {Logger} from '../utils/logging'
 import {CONFIG, CARDANO_CONFIG} from '../config'
@@ -30,13 +31,16 @@ const _checkResponse = (response, requestPayload) => {
 
 const _fetch = (path: string, payload: any, networkConfig: any) => {
   const fullPath = `${networkConfig.API_ROOT}/${path}`
+  const platform =
+    Platform.OS === 'android' || Platform.OS === 'ios' ? Platform.OS : '-'
+  const yoroiVersion = `${platform} / ${DeviceInfo.getVersion()}`
   Logger.info(`API call: ${fullPath}`)
   return (
     fetch(fullPath, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
-        'yoroi-version': DeviceInfo.getVersion(),
+        'yoroi-version': yoroiVersion,
         'tangata-manu': 'yoroi',
       },
       body: JSON.stringify(payload),
