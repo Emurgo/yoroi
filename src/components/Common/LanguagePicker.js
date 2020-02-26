@@ -43,7 +43,7 @@ const messages = defineMessages({
   },
   chinese: {
     id: 'components.common.languagepicker.chinese',
-    defaultMessage: '中文',
+    defaultMessage: '简体中文',
     description: 'some desc',
   },
   continueButton: {
