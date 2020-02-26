@@ -1,5 +1,5 @@
 {
-  "components.common.languagepicker.chinese": "中文",
+  "components.common.languagepicker.chinese": "Chino",
   "components.common.languagepicker.continueButton": "Elige tu idioma",
   "components.common.languagepicker.english": "Inglés",
   "components.common.languagepicker.japanese": "Japonés",
@@ -16,7 +16,7 @@
   "components.delegationsummary.failedwalletupgrademodal.explanation2": "Si has detectado un inesperado saldo cero luego de haber actualizado tu billetera, te recomendamos que vuelvas a restaurarla. Nos disculpamos por cualquier inconveniente que esto pueda haber causado.",
   "components.delegationsummary.failedwalletupgrademodal.okButton": "OK",
   "components.delegationsummary.notDelegatedInfo.firstLine": "No has delegado tus ADA aún.",
-  "components.delegationsummary.notDelegatedInfo.secondLine": "Go to Staking center to choose which stake pool you want to delegate in. Note, you may delegate only to one stake pool in this Tesnnet.",
+  "components.delegationsummary.notDelegatedInfo.secondLine": "Dirígete al Centro de Delegación para elegir el stake pool al cuál delegar. Ten en cuenta que sólo puedes delegar en un único stake pool durante esta testnet.",
   "components.delegationsummary.upcomingReward.followingLabel": "Próximas recompensas",
   "components.delegationsummary.upcomingReward.nextLabel": "Próxima recompensa",
   "components.delegationsummary.upcomingReward.rewardDisclaimerText": "Recuerda que la primera recompensa será entregada dos epochs posteriores al final del epoch en el que hayas efectuado la transacción de delegación.",
