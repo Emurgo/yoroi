@@ -222,7 +222,7 @@
   "components.walletinit.restorewallet.restorewalletscreen.title": "Restaurar carteira",
   "components.walletinit.restorewallet.restorewalletscreen.toolong": "Frase muito longa.",
   "components.walletinit.restorewallet.restorewalletscreen.tooshort": "Frase muito curta.",
-  "components.walletinit.restorewallet.restorewalletscreen.unknowwords": "{wordlist} {cnt, plural, one {is} other {are}} invalid",
+  "components.walletinit.restorewallet.restorewalletscreen.unknowwords": "{wordlist} {cnt, plural, one {é inválida} other {são inválidas}}",
   "components.walletinit.restorewallet.upgradecheckmodal.checkText": "Deseja verificar se sua carteira precisa ser atualizada?",
   "components.walletinit.restorewallet.upgradecheckmodal.checkButton": "Verificar",
   "components.walletinit.restorewallet.upgradecheckmodal.explanation": "Se você tinha o ADA em sua carteira em 29 de novembro de 2019, precisará atualizar para um novo formato de carteira chamado \"carteira de recompensa\" para compatibilidade com a Shelley.",
