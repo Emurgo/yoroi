@@ -1,5 +1,5 @@
 {
-  "components.common.languagepicker.chinese": "中文",
+  "components.common.languagepicker.chinese": "Chinês",
   "components.common.languagepicker.continueButton": "Escolha o idioma",
   "components.common.languagepicker.english": "Inglês",
   "components.common.languagepicker.japanese": "Japonês",
@@ -16,7 +16,7 @@
   "components.delegationsummary.failedwalletupgrademodal.explanation2": "Se você encontrar o seu saldo zerado após ter feito a atualização da sua carteira, nós recomendamos que você restaure a sua carteira novamente. Nós nos desculpamos por qualquer inconveniência que isso tenha causado.",
   "components.delegationsummary.failedwalletupgrademodal.okButton": "OK",
   "components.delegationsummary.notDelegatedInfo.firstLine": "Você não delegou a sua ADA ainda.",
-  "components.delegationsummary.notDelegatedInfo.secondLine": "Go to Staking center to choose which stake pool you want to delegate in. Note, you may delegate only to one stake pool in this Tesnnet.",
+  "components.delegationsummary.notDelegatedInfo.secondLine": "Vá para o centro de Staking para escolher em qual pool você deseja delegar. Nota, você pode delegar apenas a um stake pool na Testenet.",
   "components.delegationsummary.upcomingReward.followingLabel": "Após a recompensa",
   "components.delegationsummary.upcomingReward.nextLabel": "Próxima recompensa",
   "components.delegationsummary.upcomingReward.rewardDisclaimerText": "Lembre que sua primeira recompensa será alocada 2 épocas após o fim da época em que você enviou a sua transação de delegação.",
