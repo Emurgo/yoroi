@@ -21,6 +21,7 @@ import {showErrorDialog, updateVersion} from '../../actions'
 import {errorMessages} from '../../i18n/global-messages'
 import FailedWalletUpgradeModal from './FailedWalletUpgradeModal'
 import {currentVersionSelector} from '../../selectors'
+import {onDidMount} from '../../utils/renderUtils'
 
 import styles from './styles/WalletSelectionScreen.style'
 
@@ -50,23 +51,20 @@ const WalletListScreen = ({
   navigateInitWallet,
   openWallet,
   intl,
-  currentVersion,
   showModal,
-  handleHideModal,
+  setShowModal,
 }) => (
   <SafeAreaView style={styles.safeAreaView}>
     <StatusBar type="dark" />
 
     {/* eslint-disable indent */
-    wallets != null &&
-      currentVersion == null &&
-      _.some(wallets, {isShelley: true}) && (
-        <FailedWalletUpgradeModal
-          visible={showModal}
-          onPress={handleHideModal}
-          onRequestClose={handleHideModal}
-        />
-      )
+    false && (
+      <FailedWalletUpgradeModal
+        visible={showModal}
+        onPress={() => setShowModal(false)}
+        onRequestClose={() => setShowModal(false)}
+      />
+    )
     /* eslint-enable indent */
     }
 
@@ -123,7 +121,7 @@ export default injectIntl(
         showModal: true,
       },
       {
-        hideModal: (state) => () => ({showModal: false}),
+        setShowModal: (state) => (value) => ({showModal: value}),
       },
     ),
     withHandlers({
@@ -151,11 +149,26 @@ export default injectIntl(
           }
         }
       },
-      handleHideModal: ({hideModal, updateVersion}) => async () => {
-        await updateVersion()
-        hideModal()
-      },
     }),
+    onDidMount(
+      async ({setShowModal, wallets, currentVersion, updateVersion}) => {
+        const currVersionInt =
+          currentVersion != null
+            ? parseInt(currentVersion.replace(/\./g, ''), 10)
+            : 0
+        if (
+          wallets != null &&
+          currVersionInt <= 204 &&
+          _.some(wallets, {isShelley: true})
+        ) {
+          setShowModal(true)
+        }
+        // update version to make sure users won't see the dialog the next
+        // time they open the app. Also, users that didn't see it in the first
+        // place, shouldn't see it in the future either
+        await updateVersion()
+      },
+    ),
   )(WalletListScreen): ComponentType<{
     intl: IntlShape,
     navigation: NavigationScreenProp<NavigationState>,
