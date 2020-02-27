@@ -1,7 +1,8 @@
 // @flow
 import React from 'react'
-import {View, Image, FlatList} from 'react-native'
+import {View, FlatList} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
+import Markdown from 'react-native-easy-markdown'
 
 import styles from './styles/LanguagePicker.style'
 import koreanFlagIcon from '../../assets/img/flags/korean.png'
@@ -10,7 +11,6 @@ import russianFlagIcon from '../../assets/img/flags/russian.png'
 import englishFlagIcon from '../../assets/img/flags/english.png'
 // import chineseFlagIcon from '../../assets/img/flags/chinese.png'
 import spanishFlagIcon from '../../assets/img/flags/spanish.png'
-import selectLanguageImage from '../../assets/img/select_language.png'
 import LanguageListItem from './LanguageListItem'
 import {LANGUAGES} from '../../i18n/languages'
 import {Button, StatusBar} from '../UiKit'
@@ -44,6 +44,18 @@ const messages = defineMessages({
   continueButton: {
     id: 'components.common.languagepicker.continueButton',
     defaultMessage: '!!!Choose language',
+    description: 'some desc',
+  },
+  acknowledgement: {
+    id: 'components.common.languagepicker.acknowledgement',
+    defaultMessage:
+      '!!!**The selected language translation is fully provided by the community**. ' +
+      'EMURGO is grateful to all those who have contributed',
+    description: 'some desc',
+  },
+  contributors: {
+    id: 'components.common.languagepicker.contributors',
+    defaultMessage: '-',
     description: 'some desc',
   },
 })
@@ -123,7 +135,25 @@ export const LanguagePicker = ({
         )}
       />
 
-      <Image source={selectLanguageImage} style={styles.image} />
+      {languageCode !== 'en-US' && (
+        <View style={styles.ackBlock}>
+          {intl.formatMessage(messages.contributors) !== '_' ? (
+            <Markdown>
+              {/* eslint-disable */
+              `${intl.formatMessage(
+                messages.acknowledgement,
+              )}: ${intl.formatMessage(messages.contributors)}`
+              /* eslint-enable */
+              }
+            </Markdown>
+          ) : (
+            <Markdown>{`${intl.formatMessage(
+              messages.acknowledgement,
+            )}.`}</Markdown>
+          )}
+        </View>
+      )}
+
       <Button
         onPress={handleContinue}
         title={intl.formatMessage(messages.continueButton)}
