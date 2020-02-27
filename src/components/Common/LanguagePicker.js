@@ -55,7 +55,7 @@ const messages = defineMessages({
   },
   contributors: {
     id: 'components.common.languagepicker.contributors',
-    defaultMessage: '-',
+    defaultMessage: '_',
     description: 'some desc',
   },
 })
