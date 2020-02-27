@@ -8,6 +8,11 @@ import ko from 'react-intl/locale-data/ko'
 import ru from 'react-intl/locale-data/ru'
 import es from 'react-intl/locale-data/es'
 import zh from 'react-intl/locale-data/zh'
+import id from 'react-intl/locale-data/id'
+import pt from 'react-intl/locale-data/pt'
+import de from 'react-intl/locale-data/de'
+import fr from 'react-intl/locale-data/fr'
+import it from 'react-intl/locale-data/it'
 
 import {connect, Provider} from 'react-redux'
 
@@ -40,7 +45,19 @@ global.Promise = bluebird
 global.onunhandledrejection = (e) => handleGeneralError(e.message, e)
 
 // https://github.com/yahoo/react-intl/wiki#loading-locale-data
-addLocaleData([...en, ...ja, ...ko, ...ru, ...es, ...zh])
+addLocaleData([
+  ...en,
+  ...ja,
+  ...ko,
+  ...ru,
+  ...es,
+  ...zh,
+  ...id,
+  ...pt,
+  ...de,
+  ...fr,
+  ...it,
+])
 
 const store = getConfiguredStore()
 
