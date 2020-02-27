@@ -16,6 +16,12 @@ const messages = defineMessages({
     id: 'components.delegationsummary.delegatedStakepoolInfo.title',
     defaultMessage: '!!!Stake pool delegated',
   },
+  warning: {
+    id: 'components.delegationsummary.delegatedStakepoolInfo.warning',
+    defaultMessage:
+      '!!!If you just delegated to a new stake pool it may ' +
+      ' take a couple of minutes for the network to process your request.',
+  },
   fullDescriptionButtonLabel: {
     id:
       'components.delegationsummary.delegatedStakepoolInfo.fullDescriptionButtonLabel',
@@ -42,7 +48,7 @@ const DelegatedStakepoolInfo = ({
   <View style={styles.wrapper}>
     <TitledCard title={intl.formatMessage(messages.title)} variant={'poolInfo'}>
       <View style={styles.topBlock}>
-        <Text bold style={styles.pooName}>
+        <Text bold style={styles.poolName}>
           {formatStakepoolNameWithTicker(poolTicker, poolName)}
         </Text>
         <View style={styles.poolHashBlock}>
@@ -66,6 +72,9 @@ const DelegatedStakepoolInfo = ({
         />
       </View>
     </TitledCard>
+    <Text secondary style={styles.warning}>
+      {intl.formatMessage(messages.warning)}
+    </Text>
   </View>
 )
 

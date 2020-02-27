@@ -14,7 +14,7 @@ export default StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 16,
   },
-  pooName: {
+  poolName: {
     lineHeight: 24,
     fontSize: 16,
   },
@@ -31,5 +31,11 @@ export default StyleSheet.create({
   bottomBlock: {
     paddingHorizontal: 16,
     paddingVertical: 20,
+  },
+  warning: {
+    fontStyle: 'italic',
+    marginTop: 10,
+    fontSize: 12,
+    lineHeight: 14,
   },
 })
