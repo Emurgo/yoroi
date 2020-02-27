@@ -135,7 +135,7 @@ export const LanguagePicker = ({
         )}
       />
 
-      {languageCode !== 'en-US' && (
+      {languageCode !== 'en-US' && languageCode !== 'ja-JP' && (
         <View style={styles.ackBlock}>
           {intl.formatMessage(messages.contributors) !== '_' ? (
             <Markdown>
