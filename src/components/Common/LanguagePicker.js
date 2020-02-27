@@ -143,7 +143,7 @@ export const LanguagePicker = ({
               <Markdown>
                 {`${intl.formatMessage(
                   messages.acknowledgement,
-                )}: ${intl.formatMessage(messages.contributors)}`}
+                )}: **${intl.formatMessage(messages.contributors)}**`}
               </Markdown>
             ) : (
               <Markdown>{`${intl.formatMessage(
