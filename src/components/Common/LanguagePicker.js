@@ -135,24 +135,25 @@ export const LanguagePicker = ({
         )}
       />
 
-      {languageCode !== 'en-US' && languageCode !== 'ja-JP' && (
-        <View style={styles.ackBlock}>
-          {intl.formatMessage(messages.contributors) !== '_' ? (
-            <Markdown>
-              {/* eslint-disable */
-              `${intl.formatMessage(
+      {/* eslint-disable indent */
+      languageCode !== 'en-US' &&
+        languageCode !== 'ja-JP' && (
+          <View style={styles.ackBlock}>
+            {intl.formatMessage(messages.contributors) !== '_' ? (
+              <Markdown>
+                {`${intl.formatMessage(
+                  messages.acknowledgement,
+                )}: ${intl.formatMessage(messages.contributors)}`}
+              </Markdown>
+            ) : (
+              <Markdown>{`${intl.formatMessage(
                 messages.acknowledgement,
-              )}: ${intl.formatMessage(messages.contributors)}`
-              /* eslint-enable */
-              }
-            </Markdown>
-          ) : (
-            <Markdown>{`${intl.formatMessage(
-              messages.acknowledgement,
-            )}.`}</Markdown>
-          )}
-        </View>
-      )}
+              )}.`}</Markdown>
+            )}
+          </View>
+        )
+      /* eslint-enable indent */
+      }
 
       <Button
         onPress={handleContinue}
