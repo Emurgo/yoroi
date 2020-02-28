@@ -85,7 +85,7 @@
   "components.settings.applicationsettingsscreen.commit": "Commit:",
   "components.settings.applicationsettingsscreen.crashReporting": "崩溃报告",
   "components.settings.applicationsettingsscreen.crashReportingText": "将崩溃报告发送给EMURGO。此选项重启APP后生效。",
-  "components.settings.applicationsettingsscreen.currentLanguage": "英语",
+  "components.settings.applicationsettingsscreen.currentLanguage": "中文",
   "components.settings.applicationsettingsscreen.language": "当前语言",
   "components.settings.applicationsettingsscreen.network": "网络类型：",
   "components.settings.applicationsettingsscreen.security": "安全",
