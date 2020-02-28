@@ -1,9 +1,11 @@
 {
   "components.common.languagepicker.chinese": "简体中文",
   "components.common.languagepicker.continueButton": "Scegli la lingua",
+  "components.common.languagepicker.contributors": "_",
   "components.common.languagepicker.english": "Inglese",
   "components.common.languagepicker.japanese": "Giapponese",
   "components.common.languagepicker.korean": "Coreano",
+  "components.common.languagepicker.acknowledgement": "**The selected language translation is fully provided by the community**. EMURGO is grateful to all those who have contributed",
   "components.common.languagepicker.russian": "Russo",
   "components.common.languagepicker.spanish": "Spagnolo",
   "components.delegation.delegationnavigationbuttons.stakingCenterButton": "Vai allo Staking Center",
