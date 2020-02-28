@@ -57,16 +57,11 @@ const WalletListScreen = ({
   <SafeAreaView style={styles.safeAreaView}>
     <StatusBar type="dark" />
 
-    {/* eslint-disable indent */
-    false && (
-      <FailedWalletUpgradeModal
-        visible={showModal}
-        onPress={() => setShowModal(false)}
-        onRequestClose={() => setShowModal(false)}
-      />
-    )
-    /* eslint-enable indent */
-    }
+    <FailedWalletUpgradeModal
+      visible={showModal}
+      onPress={() => setShowModal(false)}
+      onRequestClose={() => setShowModal(false)}
+    />
 
     <Screen style={styles.container}>
       <ScreenBackground>
@@ -118,7 +113,7 @@ export default injectIntl(
     ),
     withStateHandlers(
       {
-        showModal: true,
+        showModal: false,
       },
       {
         setShowModal: (state) => (value) => ({showModal: value}),
