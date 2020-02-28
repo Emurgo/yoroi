@@ -85,7 +85,7 @@
   "components.settings.applicationsettingsscreen.commit": "Commit:",
   "components.settings.applicationsettingsscreen.crashReporting": "Relatório de falhas",
   "components.settings.applicationsettingsscreen.crashReportingText": "Envie relatórios de falha para a EMURGO. As alterações nessa opção serão refletidas após reiniciar o aplicativo.",
-  "components.settings.applicationsettingsscreen.currentLanguage": "Inglês",
+  "components.settings.applicationsettingsscreen.currentLanguage": "Português brasileiro",
   "components.settings.applicationsettingsscreen.language": "Seu idioma",
   "components.settings.applicationsettingsscreen.network": "Rede:",
   "components.settings.applicationsettingsscreen.security": "Segurança",
