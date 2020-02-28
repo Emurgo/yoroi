@@ -1,5 +1,6 @@
 // @flow
 import {StyleSheet} from 'react-native'
+import {COLORS} from '../../../styles/config'
 
 export default StyleSheet.create({
   container: {
@@ -16,5 +17,10 @@ export default StyleSheet.create({
   image: {
     marginBottom: 80,
     alignSelf: 'center',
+  },
+  ackBlock: {
+    color: COLORS.LIGHT_GRAY,
+    marginHorizontal: 16,
+    marginBottom: 40,
   },
 })
