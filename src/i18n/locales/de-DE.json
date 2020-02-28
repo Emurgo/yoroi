@@ -85,7 +85,7 @@
   "components.settings.applicationsettingsscreen.commit": "Commit:",
   "components.settings.applicationsettingsscreen.crashReporting": "Fehler melden",
   "components.settings.applicationsettingsscreen.crashReportingText": "Schicke Crash-Berichte an EMURGO. Änderungen an dieser Option werden nach dem Neustart der Anwendung übernommen.",
-  "components.settings.applicationsettingsscreen.currentLanguage": "English",
+  "components.settings.applicationsettingsscreen.currentLanguage": "German",
   "components.settings.applicationsettingsscreen.language": "Deine Sprache",
   "components.settings.applicationsettingsscreen.network": "Netzwerk:",
   "components.settings.applicationsettingsscreen.security": "Sicherheit",
