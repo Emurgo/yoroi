@@ -166,7 +166,7 @@
   "components.txhistory.txdetails.omittedCount": "+ {cnt} 省略",
   "components.txhistory.txdetails.toAddresses": "目标地址",
   "components.txhistory.txdetails.transactionId": "交易 ID",
-  "components.txhistory.txdetails.txAssuranceLevel": "交易担保级别",
+  "components.txhistory.txdetails.txAssuranceLevel": "交易确认数",
   "components.txhistory.txdetails.txTypeMulti": "多方交易",
   "components.txhistory.txdetails.txTypeReceived": "已接收的资金",
   "components.txhistory.txdetails.txTypeSelf": "钱包内交易",
