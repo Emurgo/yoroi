@@ -1,11 +1,11 @@
 {
   "components.common.languagepicker.chinese": "简体中文",
   "components.common.languagepicker.continueButton": "Escolha o idioma",
-  "components.common.languagepicker.contributors": "_",
+  "components.common.languagepicker.contributors": "Thiago Nunes [OUROS]",
   "components.common.languagepicker.english": "Inglês",
   "components.common.languagepicker.japanese": "Japonês",
   "components.common.languagepicker.korean": "Coreano",
-  "components.common.languagepicker.acknowledgement": "**The selected language translation is fully provided by the community**. EMURGO is grateful to all those who have contributed",
+  "components.common.languagepicker.acknowledgement": "** A tradução do idioma selecionado é totalmente fornecida pela comunidade **. A EMURGO agradece a todos que contribuíram",
   "components.common.languagepicker.russian": "Russo",
   "components.common.languagepicker.spanish": "Espanhol",
   "components.delegation.delegationnavigationbuttons.stakingCenterButton": "Vá para Centro de Stake",
