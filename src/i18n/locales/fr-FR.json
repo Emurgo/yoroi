@@ -93,7 +93,7 @@
   "components.settings.applicationsettingsscreen.commit": "Soumission :",
   "components.settings.applicationsettingsscreen.crashReporting": "Rapport d'accident",
   "components.settings.applicationsettingsscreen.crashReportingText": "Send crash reports to EMURGO. Changes to this option will be reflected  after restarting the application.",
-  "components.settings.applicationsettingsscreen.currentLanguage": "English",
+  "components.settings.applicationsettingsscreen.currentLanguage": "Français",
   "components.settings.applicationsettingsscreen.language": "Votre langue",
   "components.settings.applicationsettingsscreen.network": "Réseau :",
   "components.settings.applicationsettingsscreen.security": "Sécurité",
