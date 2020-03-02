@@ -294,8 +294,6 @@
   "global.actions.dialogs.logout.noButton": "No",
   "global.actions.dialogs.logout.title": "Logout",
   "global.actions.dialogs.logout.yesButton": "Yes",
-  "global.actions.dialogs.apiError.title": "API error",
-  "global.actions.dialogs.apiError.message": "Error received from api method call while sending transaction. Please try again later or check our Twitter account (https://twitter.com/YoroiWallet)",
   "global.actions.dialogs.insufficientBalance.title": "Transaction error",
   "global.actions.dialogs.insufficientBalance.message": "Not enough funds to make this transaction",
   "global.actions.dialogs.networkError.message": "Error connecting to the server. Please check your internet connection",
