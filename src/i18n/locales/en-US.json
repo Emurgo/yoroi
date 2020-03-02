@@ -27,7 +27,7 @@
   "components.delegationsummary.notDelegatedInfo.secondLine": "Go to Staking center to choose which stake pool you want to delegate in. Note, you may delegate only to one stake pool in this Tesnnet.",
   "components.delegationsummary.upcomingReward.followingLabel": "Following reward",
   "components.delegationsummary.upcomingReward.nextLabel": "Next reward",
-  "components.delegationsummary.upcomingReward.rewardDisclaimerText": "Remember that your first reward will be allocated two epochs after the end of the epoch in which you have submitted your delegation transaction.",
+  "components.delegationsummary.upcomingReward.rewardDisclaimerText": "Note that after you delegate to a stake pool, there will be a delay of two epochs before you start receiving rewards.",
   "components.delegationsummary.userSummary.title": "Your summary",
   "components.delegationsummary.userSummary.totalDelegated": "Total Delegated",
   "components.delegationsummary.userSummary.totalRewards": "Total Rewards",
