@@ -16,7 +16,7 @@
   "components.delegation.delegationnavigationbuttons.stakingCenterButton": "Vai allo Staking Center",
   "components.delegationsummary.delegatedStakepoolInfo.fullDescriptionButtonLabel": "Vai al sito Web",
   "components.delegationsummary.delegatedStakepoolInfo.title": "Stake Pool delegata",
-  "components.delegationsummary.delegatedStakepoolInfo.warning": "If you just delegated to a new stake pool, it may take a couple of minutes for the network to process your request.",
+  "components.delegationsummary.delegatedStakepoolInfo.warning": "Se avete appena delegato ad una nuova pool, la rete potrebbe impiegare un paio di minuti per elaborare la vostra richiesta.",
   "components.delegationsummary.epochProgress.endsIn": "Termina tra",
   "components.delegationsummary.epochProgress.title": "Progresso dell'epoca",
   "components.delegationsummary.failedwalletupgrademodal.title": "Dritta!",
