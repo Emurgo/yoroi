@@ -14,7 +14,6 @@ import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
 import {Text, Button, StatusBar} from '../../UiKit'
 import {ROOT_ROUTES} from '../../../RoutesList'
 import {createWallet} from '../../../actions'
-import {CONFIG} from '../../../config'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 
 import styles from './styles/MnemonicCheckScreen.style'
@@ -223,9 +222,7 @@ export default injectIntl(
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withStateHandlers(
       {
-        partialPhrase: CONFIG.DEBUG.PREFILL_FORMS
-          ? _mnemonicToPartialPhrase(CONFIG.DEBUG.MNEMONIC2)
-          : [],
+        partialPhrase: [],
       },
       {
         deselectWord: ({partialPhrase}) => (wordIdx) => ({
