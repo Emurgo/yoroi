@@ -235,7 +235,7 @@ const ApplicationSettingsScreen = ({
 
       <SettingsBuildItem
         label={intl.formatMessage(messages.network)}
-        value={CONFIG.NETWORK}
+        value={'Byron Mainnet / Shelley Testnet'}
       />
 
       <SettingsBuildItem
