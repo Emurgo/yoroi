@@ -20,6 +20,7 @@ export default StyleSheet.create({
   },
   ackBlock: {
     color: COLORS.LIGHT_GRAY,
+    marginTop: 16,
     marginHorizontal: 16,
     marginBottom: 40,
   },

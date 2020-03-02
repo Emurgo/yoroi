@@ -8,6 +8,11 @@ import 'moment/locale/ja'
 import 'moment/locale/zh-cn'
 import 'moment/locale/ru'
 import 'moment/locale/es'
+import 'moment/locale/id'
+import 'moment/locale/pt'
+import 'moment/locale/de'
+import 'moment/locale/fr'
+import 'moment/locale/it'
 
 import assert from '../utils/assert'
 import {LANGUAGES} from './languages'
@@ -23,6 +28,11 @@ const momentLocales = {
   [LANGUAGES.JAPANESE]: 'ja',
   [LANGUAGES.RUSSIAN]: 'ru',
   [LANGUAGES.SPANISH]: 'es',
+  [LANGUAGES.INDONESIAN]: 'id',
+  [LANGUAGES.BRAZILIAN]: 'pt',
+  [LANGUAGES.GERMAN]: 'de',
+  [LANGUAGES.FRENCH]: 'fr',
+  [LANGUAGES.ITALIAN]: 'it',
 }
 
 // Add default custom formatting functions
@@ -57,13 +67,17 @@ const defaultNumberFmt = {
   suffix: '',
 }
 
-// Note(ppershing): this is just temporary
-// and should be replaced with real configs
-const russianNumberFmt = {
+// note(v-almonacid): most countries use comma as decimal separator, so this
+// is more genereic than the above
+const defaultCommaDecimalSeparatorFmt = {
   ...defaultNumberFmt,
   decimalSeparator: ',',
   groupSeparator: ' ',
 }
+
+// Note(ppershing): this is just temporary
+// and should be replaced with real configs
+const russianNumberFmt = defaultCommaDecimalSeparatorFmt
 const spanishNumberFmt = {
   ...defaultNumberFmt,
   decimalSeparator: ',',
@@ -79,6 +93,11 @@ const numberLocales = {
   [LANGUAGES.JAPANESE]: defaultNumberFmt,
   [LANGUAGES.RUSSIAN]: russianNumberFmt,
   [LANGUAGES.SPANISH]: spanishNumberFmt,
+  [LANGUAGES.INDONESIAN]: defaultCommaDecimalSeparatorFmt,
+  [LANGUAGES.BRAZILIAN]: defaultCommaDecimalSeparatorFmt,
+  [LANGUAGES.GERMAN]: defaultCommaDecimalSeparatorFmt,
+  [LANGUAGES.FRENCH]: defaultCommaDecimalSeparatorFmt,
+  [LANGUAGES.ITALIAN]: defaultCommaDecimalSeparatorFmt,
 }
 
 export const setLanguage = (code: string) => {

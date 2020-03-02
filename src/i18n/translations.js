@@ -5,6 +5,11 @@ import koKR from './locales/ko-KR'
 import ruRU from './locales/ru-RU'
 import esES from './locales/es-ES'
 import zhHans from './locales/zh-Hans'
+import idID from './locales/id-ID'
+import ptBR from './locales/pt-BR'
+import deDE from './locales/de-DE'
+import frFR from './locales/fr-FR'
+import itIT from './locales/it-IT'
 // TODO: Add when chinese traditional is available
 // import zhHant from './locales/zh-Hant'
 
@@ -29,5 +34,10 @@ translations[LANGUAGES.CHINESE_SIMPLIFIED] = Object.assign(
 )
 // TODO: Add when chinese traditional is available
 // translations[LANGUAGES.CHINESE_TRADITIONAL] = Object.assign({}, defaultLocale, zhHans)
+translations[LANGUAGES.INDONESIAN] = Object.assign({}, defaultLocale, idID)
+translations[LANGUAGES.BRAZILIAN] = Object.assign({}, defaultLocale, ptBR)
+translations[LANGUAGES.GERMAN] = Object.assign({}, defaultLocale, deDE)
+translations[LANGUAGES.FRENCH] = Object.assign({}, defaultLocale, frFR)
+translations[LANGUAGES.ITALIAN] = Object.assign({}, defaultLocale, itIT)
 
 export default translations

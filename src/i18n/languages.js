@@ -8,4 +8,9 @@ export const LANGUAGES = {
   KOREAN: 'ko-KR',
   RUSSIAN: 'ru-RU',
   SPANISH: 'es-ES',
+  INDONESIAN: 'id-ID',
+  BRAZILIAN: 'pt-BR',
+  GERMAN: 'de-DE',
+  FRENCH: 'fr-FR',
+  ITALIAN: 'it-IT',
 }
