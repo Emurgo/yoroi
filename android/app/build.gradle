@@ -120,6 +120,9 @@ android {
         ndk {
           abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
         }
+        // detox setup
+        testBuildType System.getProperty('testBuildType', 'debug')  // This will later be used to control the test apk build type
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     signingConfigs {
         release {
@@ -211,6 +214,13 @@ dependencies {
 
     implementation project(':react-native-background-timer')
     implementation "com.google.android.gms:play-services-base:15.0.1"
+
+    // detox setup
+    androidTestImplementation('com.wix:detox:+') {
+        transitive = true
+        exclude group: 'com.facebook.react.module.annotations', module: 'ReactModule'
+    }
+    androidTestImplementation 'junit:junit:4.12'
 }
 
 // Run this once to be able to run the application with BUCK
