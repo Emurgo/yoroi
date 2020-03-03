@@ -218,6 +218,7 @@ export const LanguagePicker = ({
       <Button
         onPress={handleContinue}
         title={intl.formatMessage(messages.continueButton)}
+        testID="chooseLangButton"
       />
     </View>
   )

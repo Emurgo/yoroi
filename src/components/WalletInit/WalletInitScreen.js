@@ -72,12 +72,14 @@ const WalletInitScreen = ({
             onPress={(event) => navigateCreateWallet(event, isShelleyWallet)}
             title={createWalletLabel}
             style={styles.createButton}
+            testID="createWalletButton"
           />
           <Button
             outline
             onPress={(event) => navigateRestoreWallet(event, isShelleyWallet)}
             title={restoreWalletLabel}
             style={styles.createButton}
+            testID="restoreWalletButton"
           />
         </View>
       </ScreenBackground>

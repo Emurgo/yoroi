@@ -69,11 +69,13 @@ const AcceptTermsOfServiceScreen = ({
       checked={acceptedTos}
       text={intl.formatMessage(messages.aggreeClause)}
       onChange={setAcceptedTos}
+      testID="acceptTosCheckbox"
     />
     <Button
       onPress={handleAccepted}
       disabled={!acceptedTos}
       title={intl.formatMessage(messages.continueButton)}
+      testID="acceptTosButton"
     />
 
     <PleaseWaitModal

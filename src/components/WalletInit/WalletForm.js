@@ -162,6 +162,7 @@ class WalletForm extends PureComponent<Props, ComponentState> {
                 },
                 validationErrors,
               )}
+              testID="walletNameInput"
             />
 
             <ValidatedTextInput
@@ -169,6 +170,7 @@ class WalletForm extends PureComponent<Props, ComponentState> {
               label={intl.formatMessage(messages.newPasswordInput)}
               value={password}
               onChangeText={this.handleSetPassword}
+              testID="walletPasswordInput"
             />
 
             <ValidatedTextInput
@@ -180,6 +182,7 @@ class WalletForm extends PureComponent<Props, ComponentState> {
                 showPasswordsDoNotMatchError &&
                 intl.formatMessage(messages.repeatPasswordInputError)
               }
+              testID="walletRepeatPasswordInput"
             />
 
             <PasswordStrengthIndicator password={password} />
@@ -191,6 +194,7 @@ class WalletForm extends PureComponent<Props, ComponentState> {
             onPress={this.handleSubmit}
             disabled={!_.isEmpty(validationErrors)}
             title={intl.formatMessage(messages.continueButton)}
+            testID="walletFormContinueButton"
           />
         </View>
       </SafeAreaView>

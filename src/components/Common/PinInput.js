@@ -59,6 +59,7 @@ const KeyboardKey = ({value, onKeyDown}) => {
       onPress={onKeyDown}
       underlayColor="#bbbbbb"
       disabled={isEmpty}
+      testID={`pinKey${value}`}
     >
       {isBackspace ? (
         <Image source={backspaceIcon} />
