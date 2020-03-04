@@ -11,12 +11,20 @@ async function readTextValue(testID) {
     return ''
   } catch (error) {
     if (device.getPlatform() === 'ios') {
-      const start = 'accessibilityLabel was "'
-      const end = '" on '
+      console.log(error);
+      const start = `AX.id='${testID}';`
+      const end = '; AX.frame'
       const errorMessage = error.message.toString()
       const [, restMessage] = errorMessage.split(start)
       const [label] = restMessage.split(end)
-      return label
+      const [, value] = label.split('=')
+      return value.slice(1, value.length - 1)
+      // const start = 'accessibilityLabel was "'
+      // const end = '" on '
+      // const errorMessage = error.message.toString()
+      // const [, restMessage] = errorMessage.split(start)
+      // const [label] = restMessage.split(end)
+      // return label
     } else {
       const start = 'Got:'
       const end = '}"'
@@ -65,14 +73,13 @@ describe('Setup a fresh wallet on Byron network', () => {
     await element(by.id('addWalletOnByronButton')).tap()
 
     await expect(element(by.id('createWalletButton'))).toBeVisible()
-    await element(by.id('addWalletOnByronButton')).tap()
+    await element(by.id('createWalletButton')).tap()
 
-    await expect(element(by.id('createWalletButton'))).toBeVisible()
     await element(by.id('walletNameInput')).typeText('test wallet')
     await element(by.id('walletPasswordInput')).typeText('abracadabra123')
     await element(by.id('walletRepeatPasswordInput')).typeText('abracadabra123')
-    await element(by.id('walletFormContinueButton')).tap()
 
+    await element(by.id('walletFormContinueButton')).tap()
     await element(by.id('mnemonicExplanationModal')).tap()
 
     const mnemonic = []
