@@ -216,3 +216,9 @@ export type RemotePoolMetaFailure = {|
 export type PoolInfoResponse = {
   [key: string]: RemotePoolMetaSuccess | RemotePoolMetaFailure,
 }
+
+export type ReputationObject = {
+  node_flags?: number,
+  // note: could be more metrics that are not handled
+}
+export type ReputationResponse = {[poolId: string]: ReputationObject}
