@@ -116,7 +116,11 @@
     "transform": {
       "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js"
     },
-    "preset": "react-native"
+    "preset": "react-native",
+    "testMatch": [
+        "**/__tests__/**/*.[jt]s?(x)",
+        "**/?(*.)+(test).[jt]s?(x)"
+    ]
   },
   "xcodeSchemes": {
     "Debug": [
