@@ -56,7 +56,11 @@ const MnemonicShowScreen = ({
         <Text>{intl.formatMessage(messages.mnemonicNote)}</Text>
         <View style={styles.mnemonicWordsContainer}>
           {mnemonic.split(' ').map((word, index) => (
-            <Text key={index} style={styles.mnemonicText} testID={`mnemonic-${index}`}>
+            <Text
+              key={index}
+              style={styles.mnemonicText}
+              testID={`mnemonic-${index}`}
+            >
               {word}
             </Text>
           ))}

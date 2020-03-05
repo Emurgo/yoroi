@@ -1,6 +1,11 @@
 // @flow
 /* eslint-disable no-undef */
 
+// detox doesn't provide flow types
+declare var element: any
+declare var by: any
+declare var device: any
+
 /**
  * hack to get text from element (feature not available in detox)
  *  see issue https://github.com/wix/detox/issues/445
@@ -11,7 +16,6 @@ async function readTextValue(testID) {
     return ''
   } catch (error) {
     if (device.getPlatform() === 'ios') {
-      console.log(error);
       const start = `AX.id='${testID}';`
       const end = '; AX.frame'
       const errorMessage = error.message.toString()
@@ -19,12 +23,6 @@ async function readTextValue(testID) {
       const [label] = restMessage.split(end)
       const [, value] = label.split('=')
       return value.slice(1, value.length - 1)
-      // const start = 'accessibilityLabel was "'
-      // const end = '" on '
-      // const errorMessage = error.message.toString()
-      // const [, restMessage] = errorMessage.split(start)
-      // const [label] = restMessage.split(end)
-      // return label
     } else {
       const start = 'Got:'
       const end = '}"'
@@ -83,7 +81,7 @@ describe('Setup a fresh wallet on Byron network', () => {
     await element(by.id('mnemonicExplanationModal')).tap()
 
     const mnemonic = []
-    for (i = 0; i < 15; i++) {
+    for (let i = 0; i < 15; i++) {
       const word = await readTextValue(`mnemonic-${i}`)
       mnemonic.push(word)
     }
@@ -93,7 +91,7 @@ describe('Setup a fresh wallet on Byron network', () => {
     await element(by.id('mnemonicBackupImportanceModal::checkBox2')).tap()
     await element(by.id('mnemonicBackupImportanceModal::confirm')).tap()
 
-    for (i = 0; i < 15; i++) {
+    for (let i = 0; i < 15; i++) {
       await element(by.id(`wordBadgeNonTapped-${mnemonic[i]}`)).tap()
     }
     await element(by.id('mnemonicCheckScreen::confirm')).tap()
