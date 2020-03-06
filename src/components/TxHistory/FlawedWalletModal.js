@@ -5,9 +5,9 @@ import {View, ScrollView, Image} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import {Text, Button, Modal} from '../UiKit'
+import {confirmationMessages} from '../../i18n/global-messages'
 
 import styles from './styles/FlawedWalletModal.style'
-// import image from '../../assets/img/alert-circle@3x.png'
 import image from '../../assets/img/mnemonic_explanation.png'
 
 import type {ComponentType} from 'react'
@@ -29,10 +29,6 @@ const messages = defineMessages({
     defaultMessage:
       '!!!You still can create a new wallet or restore one without restrictions. ' +
       'If you were affected in some way by this issue, please contact Emurgo.',
-  },
-  okButton: {
-    id: 'components.txhistory.flawedwalletmodal.okButton',
-    defaultMessage: '!!!I understand',
   },
 })
 
@@ -73,7 +69,9 @@ const FlawedWalletModal = ({
             block
             outlineShelley
             onPress={onPress}
-            title={intl.formatMessage(messages.okButton)}
+            title={intl.formatMessage(
+              confirmationMessages.commonButtons.iUnderstandButton,
+            )}
             style={styles.button}
             disabled={disableButtons}
           />

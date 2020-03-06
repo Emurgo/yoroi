@@ -17,6 +17,7 @@ import type {
   AccountStateResponse,
   PoolInfoRequest,
   PoolInfoResponse,
+  ReputationResponse,
 } from '../types/HistoryTransaction'
 
 type Addresses = Array<string>
@@ -33,7 +34,7 @@ type RequestMethod = 'POST' | 'GET'
 
 const _fetch = (
   path: string,
-  payload: any,
+  payload: ?any,
   networkConfig: any,
   method?: RequestMethod = 'POST',
 ) => {
@@ -50,7 +51,7 @@ const _fetch = (
         'yoroi-version': yoroiVersion,
         'tangata-manu': 'yoroi',
       },
-      body: JSON.stringify(payload),
+      body: payload != null ? JSON.stringify(payload) : undefined,
     })
       // Fetch throws only for network/dns/related errors, not http statuses
       .catch((e) => {
@@ -225,5 +226,5 @@ export const getPoolInfo = (
 export const getReputation = (
   networkConfig?: any = CARDANO_CONFIG.SHELLEY,
 ): Promise<ReputationResponse> => {
-  return _fetch('v2/pool/reputation', {}, networkConfig, 'GET')
+  return _fetch('v2/pool/reputation', null, networkConfig, 'GET')
 }
