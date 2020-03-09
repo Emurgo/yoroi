@@ -35,6 +35,18 @@ const messages = defineMessages({
   },
 })
 
+const noPoolDataDialog = defineMessages({
+  title: {
+    id: 'components.stakingcenter.noPoolDataDialog.title',
+    defaultMessage: '!!!Invalid Pool Data',
+  },
+  message: {
+    id: 'components.stakingcenter.noPoolDataDialog.message',
+    defaultMessage:
+      '!!!The data from the stake pool(s) you selected is invalid. Please try again',
+  },
+})
+
 /**
  * Prepares WebView's target staking URI
  * @param {*} userAda : needs to be in ADA (not Lovelaces) as per Seiza API
@@ -74,12 +86,15 @@ const DelegationCenter = ({
         <WebView
           useWebKit
           source={{uri: prepareStakingURL(approxAdaToDelegate, poolList)}}
-          onMessage={(event) => handleOnMessage(event, intl)}
+          onMessage={(event) => handleOnMessage(event)}
         />
       </View>
       <PoolWarningModal
         visible={showPoolWarning}
-        onPress={() => setShowPoolWarning(false)}
+        onPress={() => {
+          setShowPoolWarning(false)
+          navigateToDelegationConfirm(selectedPools)
+        }}
         onRequestClose={() => {
           setShowPoolWarning(false)
           navigateToDelegationConfirm(selectedPools)
@@ -103,7 +118,6 @@ type SelectedPool = {|
 type ExternalProps = {|
   navigation: Navigation,
   intl: IntlShape,
-  navigateToDelegationConfirm: (Array<SelectedPool>) => any,
 |}
 
 export default injectIntl(
@@ -124,58 +138,27 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      navigateToDelegationConfirm: ({navigation, setBusy}) => async (
+      navigateToDelegationConfirm: ({intl, navigation, setBusy}) => async (
         selectedPools,
       ) => {
-        setBusy(true) // trigger "please wait" modal
-        const utxos = navigation.getParam('utxos')
-        const valueInAccount = navigation.getParam('valueInAccount')
-        const delegationTxData = await walletManager.prepareDelegationTx(
-          {id: selectedPools[0].poolHash},
-          valueInAccount.toNumber(),
-          utxos,
-        )
-        const fee = await getShelleyTxFee(delegationTxData.unsignedTx.IOs)
-        setBusy(false)
-        navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM, {
-          poolName: selectedPools[0].name,
-          poolHash: selectedPools[0].poolHash,
-          amountToDelegate: delegationTxData.totalAmountToDelegate,
-          transactionFee: fee,
-          delegationTxData,
-        })
-      },
-      handleOnMessage: ({
-        navigation,
-        navigateToDelegationConfirm,
-        setReputationInfo,
-        setSelectedPools,
-        setShowPoolWarning,
-      }) => async (event, intl) => {
         try {
-          const selectedPools: Array<SelectedPool> = JSON.parse(
-            decodeURI(event.nativeEvent.data),
+          setBusy(true) // trigger "please wait" modal
+          const utxos = navigation.getParam('utxos')
+          const valueInAccount = navigation.getParam('valueInAccount')
+          const delegationTxData = await walletManager.prepareDelegationTx(
+            {id: selectedPools[0].poolHash},
+            valueInAccount.toNumber(),
+            utxos,
           )
-          const poolsReputation = navigation.getParam('poolsReputation')
-          Logger.debug(`From Seiza: ${JSON.stringify(selectedPools)}`)
-          if (selectedPools && selectedPools.length >= 1) {
-            setSelectedPools(selectedPools)
-            // check if pool in blacklist
-            const poolsInBlackList = []
-            for (const pool of selectedPools) {
-              if (pool.poolHash in poolsReputation) {
-                poolsInBlackList.push(pool.poolHash)
-              }
-            }
-            if (poolsInBlackList.length > 0) {
-              setReputationInfo(poolsReputation[poolsInBlackList[0]])
-              setShowPoolWarning(true)
-            } else {
-              navigateToDelegationConfirm(selectedPools)
-            }
-          } else {
-            throw new Error('invalid pool data')
-          }
+          const fee = await getShelleyTxFee(delegationTxData.unsignedTx.IOs)
+          setBusy(false)
+          navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM, {
+            poolName: selectedPools[0].name,
+            poolHash: selectedPools[0].poolHash,
+            amountToDelegate: delegationTxData.totalAmountToDelegate,
+            transactionFee: fee,
+            delegationTxData,
+          })
         } catch (e) {
           if (e instanceof InsufficientFunds) {
             await showErrorDialog(errorMessages.insufficientBalance, intl)
@@ -191,7 +174,45 @@ export default injectIntl(
             )
           }
         } finally {
-          // setBusy(false)
+          setBusy(false)
+        }
+      },
+    }),
+    withHandlers({
+      handleOnMessage: ({
+        navigation,
+        navigateToDelegationConfirm,
+        setReputationInfo,
+        setSelectedPools,
+        setShowPoolWarning,
+        intl,
+      }) => async (event) => {
+        const selectedPools: Array<SelectedPool> = JSON.parse(
+          decodeURI(event.nativeEvent.data),
+        )
+        const poolsReputation = navigation.getParam('poolsReputation')
+        Logger.debug(`From Seiza: ${JSON.stringify(selectedPools)}`)
+        if (
+          selectedPools &&
+          selectedPools.length >= 1 &&
+          selectedPools[0].poolHash != null
+        ) {
+          setSelectedPools(selectedPools)
+          // check if pool in blacklist
+          const poolsInBlackList = []
+          for (const pool of selectedPools) {
+            if (pool.poolHash in poolsReputation) {
+              poolsInBlackList.push(pool.poolHash)
+            }
+          }
+          if (poolsInBlackList.length > 0) {
+            setReputationInfo(poolsReputation[poolsInBlackList[0]])
+            setShowPoolWarning(true)
+          } else {
+            navigateToDelegationConfirm(selectedPools)
+          }
+        } else {
+          await showErrorDialog(noPoolDataDialog, intl)
         }
       },
     }),

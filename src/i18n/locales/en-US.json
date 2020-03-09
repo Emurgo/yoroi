@@ -159,6 +159,8 @@
   "components.stakingcenter.confirmDelegation.ofFees": "of fees",
   "components.stakingcenter.confirmDelegation.rewardsExplanation": "Current approximation of rewards that you will receive per epoch:",
   "components.stakingcenter.confirmDelegation.title": "Confirm delegation",
+  "components.stakingcenter.noPoolDataDialog.message": "The data from the stake pool(s) you selected is invalid. Please try again",
+  "components.stakingcenter.noPoolDataDialog.title": "Invalid pool data",
   "components.stakingcenter.poolwarningmodal.censoringTxs": "Purposely excludes transactions from blocks (censoring the network)",
   "components.stakingcenter.poolwarningmodal.header": "Based on network activity, it seems this pool:",
   "components.stakingcenter.poolwarningmodal.multiBlock": "Creates multiple blocks in the same slot (purposely causing forks)",
