@@ -18,9 +18,9 @@ const messages = defineMessages({
   rewardDisclaimerText: {
     id: 'components.delegationsummary.upcomingReward.rewardDisclaimerText',
     defaultMessage:
-      '!!!Remember that your first reward will be allocated ' +
-      'two  epochs after the end of the epoch in which you have submitted ' +
-      'your delegation transaction.',
+      '!!!Note that after you delegate to a stake pool, you will need ' +
+      'to wait until the end of the epoch, plus two additional epochs, ' +
+      'before starting receiving rewards.',
   },
 })
 
