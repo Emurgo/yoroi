@@ -77,6 +77,42 @@
 		BA3D0647FB29475CA53128CF /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 16BAD3D7933540D184340C1B /* libresolv.tbd */; };
 		E2FC0BF821C7F02200DA195B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E2FC0BFA21C7F02200DA195B /* InfoPlist.strings */; };
 		E6AB85BA13E748AB947E1A2A /* libRNRandomBytes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9F4B6BEEFC4DF6A66C1383 /* libRNRandomBytes.a */; };
+		E9693BB62416C82F008886C1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
+		E9693BB72416C82F008886C1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		E9693BB92416C82F008886C1 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EFC90242305E12E00430A87 /* libRNDeviceInfo.a */; };
+		E9693BBA2416C82F008886C1 /* libRNCAsyncStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E3AA4C322EAB99F0066F8A1 /* libRNCAsyncStorage.a */; };
+		E9693BBB2416C82F008886C1 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
+		E9693BBC2416C82F008886C1 /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E2373C8021CA447C0003317D /* libReactNativeConfig.a */; };
+		E9693BBD2416C82F008886C1 /* libRNSentry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EF1208C22795E47007BE6F5 /* libRNSentry.a */; };
+		E9693BBE2416C82F008886C1 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
+		E9693BBF2416C82F008886C1 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
+		E9693BC02416C82F008886C1 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		E9693BC12416C82F008886C1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
+		E9693BC22416C82F008886C1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
+		E9693BC32416C82F008886C1 /* libRCTImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302C01ABCB91800DB3ED1 /* libRCTImage.a */; };
+		E9693BC42416C82F008886C1 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
+		E9693BC52416C82F008886C1 /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
+		E9693BC62416C82F008886C1 /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
+		E9693BC72416C82F008886C1 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
+		E9693BC82416C82F008886C1 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
+		E9693BC92416C82F008886C1 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
+		E9693BCA2416C82F008886C1 /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9443C3481304C079FB7BE23 /* libRNSVG.a */; };
+		E9693BCB2416C82F008886C1 /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84D0E245B86E495693516CD7 /* libBVLinearGradient.a */; };
+		E9693BCC2416C82F008886C1 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8306E0AE63AA483DBF7F6BF0 /* libRNFS.a */; };
+		E9693BCD2416C82F008886C1 /* libRNRandomBytes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9F4B6BEEFC4DF6A66C1383 /* libRNRandomBytes.a */; };
+		E9693BCE2416C82F008886C1 /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 29CDBB4B7FB64C0086FF65C6 /* libRNCamera.a */; };
+		E9693BCF2416C82F008886C1 /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C8259C93DE584FDAAFB4E9FF /* libReactNativePermissions.a */; };
+		E9693BD02416C82F008886C1 /* libRNKeychain.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA9C2C759F984A23843777A9 /* libRNKeychain.a */; };
+		E9693BD12416C82F008886C1 /* libRNBackgroundTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 09D460C9C03E41CB9D785437 /* libRNBackgroundTimer.a */; };
+		E9693BD22416C82F008886C1 /* libSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DBE1771E1614BCAB6A3665D /* libSplashScreen.a */; };
+		E9693BD32416C82F008886C1 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F410A0AB183D4990BCAF936B /* libz.tbd */; };
+		E9693BD42416C82F008886C1 /* libChainLibs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E9DE0E6A23D9F064000B82BE /* libChainLibs.a */; };
+		E9693BD52416C82F008886C1 /* libRNCardano.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1103DA1A18D54C3EA133F4DC /* libRNCardano.a */; };
+		E9693BD62416C82F008886C1 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 16BAD3D7933540D184340C1B /* libresolv.tbd */; };
+		E9693BD72416C82F008886C1 /* libPods-emurgo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4492A3C818B4FB1C2344B6A4 /* libPods-emurgo.a */; };
+		E9693BD92416C82F008886C1 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		E9693BDA2416C82F008886C1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E2FC0BFA21C7F02200DA195B /* InfoPlist.strings */; };
+		E9693BDB2416C82F008886C1 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		E9DE0E6B23D9F087000B82BE /* libChainLibs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E9DE0E6A23D9F064000B82BE /* libChainLibs.a */; };
 		ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
 		ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
@@ -535,7 +571,7 @@
 		1103DA1A18D54C3EA133F4DC /* libRNCardano.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCardano.a; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* emurgo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = emurgo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* Yoroi Wallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Yoroi Wallet.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = emurgo/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = emurgo/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -607,6 +643,8 @@
 		E2FC0C3A21C7F30300DA195B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		E2FC0C3C21C7F32300DA195B /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		E88E56A3C4A142ADB2AC0796 /* RNRandomBytes.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNRandomBytes.xcodeproj; path = "../node_modules/react-native-randombytes/RNRandomBytes.xcodeproj"; sourceTree = "<group>"; };
+		E9693BE42416C82F008886C1 /* yoroi-nightly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "yoroi-nightly.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E9693BE52416C82F008886C1 /* emurgo copy2-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "emurgo copy2-Info.plist"; path = "/Users/vicente/dev/emurgo/yoroi-mobile/ios/emurgo copy2-Info.plist"; sourceTree = "<absolute>"; };
 		E9DE0E6523D9F064000B82BE /* ChainLibs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ChainLibs.xcodeproj; path = "../node_modules/react-native-chain-libs/ios/ChainLibs.xcodeproj"; sourceTree = "<group>"; };
 		EAFCACBCB7663E88BDEEA360 /* Pods-emurgo-tvOSTests.testnet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-tvOSTests.testnet.debug.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo-tvOSTests/Pods-emurgo-tvOSTests.testnet.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -698,6 +736,44 @@
 				2E3E7CF32298ACEA00D5C487 /* libSplashScreen.a in Frameworks */,
 				2E3E7CF52298ACEA00D5C487 /* libz.tbd in Frameworks */,
 				2E1E7A27230E996A00D35F69 /* libRNCardano.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9693BB82416C82F008886C1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9693BB92416C82F008886C1 /* libRNDeviceInfo.a in Frameworks */,
+				E9693BBA2416C82F008886C1 /* libRNCAsyncStorage.a in Frameworks */,
+				E9693BBB2416C82F008886C1 /* JavaScriptCore.framework in Frameworks */,
+				E9693BBC2416C82F008886C1 /* libReactNativeConfig.a in Frameworks */,
+				E9693BBD2416C82F008886C1 /* libRNSentry.a in Frameworks */,
+				E9693BBE2416C82F008886C1 /* libRCTBlob.a in Frameworks */,
+				E9693BBF2416C82F008886C1 /* libRCTAnimation.a in Frameworks */,
+				E9693BC02416C82F008886C1 /* libReact.a in Frameworks */,
+				E9693BC12416C82F008886C1 /* libRCTActionSheet.a in Frameworks */,
+				E9693BC22416C82F008886C1 /* libRCTGeolocation.a in Frameworks */,
+				E9693BC32416C82F008886C1 /* libRCTImage.a in Frameworks */,
+				E9693BC42416C82F008886C1 /* libRCTLinking.a in Frameworks */,
+				E9693BC52416C82F008886C1 /* libRCTNetwork.a in Frameworks */,
+				E9693BC62416C82F008886C1 /* libRCTSettings.a in Frameworks */,
+				E9693BC72416C82F008886C1 /* libRCTText.a in Frameworks */,
+				E9693BC82416C82F008886C1 /* libRCTVibration.a in Frameworks */,
+				E9693BC92416C82F008886C1 /* libRCTWebSocket.a in Frameworks */,
+				E9693BCA2416C82F008886C1 /* libRNSVG.a in Frameworks */,
+				E9693BCB2416C82F008886C1 /* libBVLinearGradient.a in Frameworks */,
+				E9693BCC2416C82F008886C1 /* libRNFS.a in Frameworks */,
+				E9693BCD2416C82F008886C1 /* libRNRandomBytes.a in Frameworks */,
+				E9693BCE2416C82F008886C1 /* libRNCamera.a in Frameworks */,
+				E9693BCF2416C82F008886C1 /* libReactNativePermissions.a in Frameworks */,
+				E9693BD02416C82F008886C1 /* libRNKeychain.a in Frameworks */,
+				E9693BD12416C82F008886C1 /* libRNBackgroundTimer.a in Frameworks */,
+				E9693BD22416C82F008886C1 /* libSplashScreen.a in Frameworks */,
+				E9693BD32416C82F008886C1 /* libz.tbd in Frameworks */,
+				E9693BD42416C82F008886C1 /* libChainLibs.a in Frameworks */,
+				E9693BD52416C82F008886C1 /* libRNCardano.a in Frameworks */,
+				E9693BD62416C82F008886C1 /* libresolv.tbd in Frameworks */,
+				E9693BD72416C82F008886C1 /* libPods-emurgo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -977,6 +1053,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				F7FBD967219C5A6D003FE9E2 /* Recovered References */,
 				661CFB1B626FF527BA54DEF4 /* Pods */,
+				E9693BE52416C82F008886C1 /* emurgo copy2-Info.plist */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -986,9 +1063,10 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* emurgo.app */,
+				13B07F961A680F5B00A75B9A /* Yoroi Wallet.app */,
 				00E356EE1AD99517003FC87E /* emurgoTests.xctest */,
 				2E3E7D012298ACEA00D5C487 /* emurgo-staging.app */,
+				E9693BE42416C82F008886C1 /* yoroi-nightly.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1143,8 +1221,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "emurgo" */;
 			buildPhases = (
-				E911CC5C23FB1F2E00D560F8 /* Check env variables */,
 				F90484421D44E955B0727931 /* [CP] Check Pods Manifest.lock */,
+				E911CC5C23FB1F2E00D560F8 /* Check env variables */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
@@ -1157,7 +1235,7 @@
 			);
 			name = emurgo;
 			productName = "Hello World";
-			productReference = 13B07F961A680F5B00A75B9A /* emurgo.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* Yoroi Wallet.app */;
 			productType = "com.apple.product-type.application";
 		};
 		2E3E7CD52298ACEA00D5C487 /* emurgo-staging */ = {
@@ -1176,6 +1254,27 @@
 			name = "emurgo-staging";
 			productName = "Hello World";
 			productReference = 2E3E7D012298ACEA00D5C487 /* emurgo-staging.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E9693BB22416C82F008886C1 /* emurgo-nightly */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E9693BDE2416C82F008886C1 /* Build configuration list for PBXNativeTarget "emurgo-nightly" */;
+			buildPhases = (
+				E9693BB32416C82F008886C1 /* [CP] Check Pods Manifest.lock */,
+				E9693BB42416C82F008886C1 /* Check env variables */,
+				E9693BB52416C82F008886C1 /* Sources */,
+				E9693BB82416C82F008886C1 /* Frameworks */,
+				E9693BD82416C82F008886C1 /* Resources */,
+				E9693BDC2416C82F008886C1 /* Bundle React Native code and images */,
+				E9693BDD2416C82F008886C1 /* Upload Debug Symbols to Sentry */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "emurgo-nightly";
+			productName = "Hello World";
+			productReference = E9693BE42416C82F008886C1 /* yoroi-nightly.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1201,6 +1300,9 @@
 						};
 					};
 					2E3E7CD52298ACEA00D5C487 = {
+						DevelopmentTeam = F8NVT2G2L4;
+					};
+					E9693BB22416C82F008886C1 = {
 						DevelopmentTeam = F8NVT2G2L4;
 					};
 				};
@@ -1337,6 +1439,7 @@
 				13B07F861A680F5B00A75B9A /* emurgo */,
 				2E3E7CD52298ACEA00D5C487 /* emurgo-staging */,
 				00E356ED1AD99517003FC87E /* emurgoTests */,
+				E9693BB22416C82F008886C1 /* emurgo-nightly */,
 			);
 		};
 /* End PBXProject section */
@@ -1799,6 +1902,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E9693BD82416C82F008886C1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9693BD92416C82F008886C1 /* Images.xcassets in Resources */,
+				E9693BDA2416C82F008886C1 /* InfoPlist.strings in Resources */,
+				E9693BDB2416C82F008886C1 /* LaunchScreen.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
@@ -1861,6 +1974,73 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# check env variables\n${PROJECT_DIR}/../check_env_variables.sh\n";
+		};
+		E9693BB32416C82F008886C1 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-emurgo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+		};
+		E9693BB42416C82F008886C1 /* Check env variables */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Check env variables";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# check env variables\n${PROJECT_DIR}/../check_env_variables.sh\n";
+		};
+		E9693BDC2416C82F008886C1 /* Bundle React Native code and images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Bundle React Native code and images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(Staging.Debug|Debug)\"\nexport NODE_BINARY=node\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh";
+		};
+		E9693BDD2416C82F008886C1 /* Upload Debug Symbols to Sentry */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Upload Debug Symbols to Sentry";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export SENTRY_PROPERTIES=sentry.properties\n../node_modules/@sentry/cli/bin/sentry-cli upload-dsym\n";
 		};
 		F7DB15954E94922466B0837E /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1931,6 +2111,15 @@
 			files = (
 				2E3E7CD82298ACEA00D5C487 /* AppDelegate.m in Sources */,
 				2E3E7CD92298ACEA00D5C487 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9693BB52416C82F008886C1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9693BB62416C82F008886C1 /* AppDelegate.m in Sources */,
+				E9693BB72416C82F008886C1 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2091,7 +2280,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.emurgo.yoroi;
-				PRODUCT_NAME = emurgo;
+				PRODUCT_NAME = "Yoroi Wallet";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -2133,7 +2322,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.emurgo.yoroi;
-				PRODUCT_NAME = emurgo;
+				PRODUCT_NAME = "Yoroi Wallet";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -2522,7 +2711,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.emurgo.yoroi;
-				PRODUCT_NAME = emurgo;
+				PRODUCT_NAME = "Yoroi Wallet";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Staging.Debug;
@@ -2657,7 +2846,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.emurgo.yoroi;
-				PRODUCT_NAME = emurgo;
+				PRODUCT_NAME = "Yoroi Wallet";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Staging.Release;
@@ -2702,6 +2891,396 @@
 			};
 			name = Staging.Release;
 		};
+		E9693B712416BD70008886C1 /* Nightly.Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
+				INFOPLIST_PREFIX_HEADER = "${BUILD_DIR}/GeneratedInfoPlistDotEnv.h";
+				INFOPLIST_PREPROCESS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Nightly.Release;
+		};
+		E9693B722416BD70008886C1 /* Nightly.Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C48D4F995097D200AD67B4EF /* Pods-emurgo.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon.nightly;
+				BUNDLE_DISPLAY_NAME = Yoroi;
+				BUNDLE_ID_SUFFIX = .nightly;
+				CURRENT_PROJECT_VERSION = 40;
+				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+				);
+				INFOPLIST_FILE = emurgo/Info.plist;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREFIX_HEADER = "";
+				INFOPLIST_PREPROCESS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 2.1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.emurgo.yoroi;
+				PRODUCT_NAME = "Yoroi Wallet";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Nightly.Release;
+		};
+		E9693B732416BD70008886C1 /* Nightly.Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon.nightly;
+				BUNDLE_DISPLAY_NAME = Yoroi;
+				BUNDLE_ID_SUFFIX = "";
+				CURRENT_PROJECT_VERSION = 40;
+				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+				);
+				INFOPLIST_FILE = "Staging-Info.plist";
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREFIX_HEADER = "";
+				INFOPLIST_PREPROCESS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
+				MARKETING_VERSION = 2.1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-stag";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Nightly.Release;
+		};
+		E9693B742416BD70008886C1 /* Nightly.Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 60EB9F171F0E514B4D4195F8 /* Pods-emurgoTests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+				);
+				INFOPLIST_FILE = emurgoTests/Info.plist;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREFIX_HEADER = "";
+				INFOPLIST_PREPROCESS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "-com.emurgo.yoroi";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/emurgo.app/emurgo";
+			};
+			name = Nightly.Release;
+		};
+		E9693BDF2416C82F008886C1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1B4492487DEB8AF14CFA180F /* Pods-emurgo.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
+				BUNDLE_DISPLAY_NAME = Yoroi;
+				BUNDLE_ID_SUFFIX = "";
+				CURRENT_PROJECT_VERSION = 40;
+				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/emurgo/Info.plist";
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREFIX_HEADER = "";
+				INFOPLIST_PREPROCESS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 2.1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-nightly";
+				PRODUCT_NAME = "yoroi-nightly";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		E9693BE02416C82F008886C1 /* Staging.Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B80175A1449495C7FD15E4CC /* Pods-emurgo.staging.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
+				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
+				BUNDLE_ID_SUFFIX = .staging;
+				CURRENT_PROJECT_VERSION = 40;
+				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/emurgo/Info.plist";
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREFIX_HEADER = "";
+				INFOPLIST_PREPROCESS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 2.1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-nightly";
+				PRODUCT_NAME = "yoroi-nightly";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Staging.Debug;
+		};
+		E9693BE12416C82F008886C1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C48D4F995097D200AD67B4EF /* Pods-emurgo.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
+				BUNDLE_DISPLAY_NAME = Yoroi;
+				BUNDLE_ID_SUFFIX = "";
+				CURRENT_PROJECT_VERSION = 40;
+				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/emurgo/Info.plist";
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREFIX_HEADER = "";
+				INFOPLIST_PREPROCESS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 2.1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-nightly";
+				PRODUCT_NAME = "yoroi-nightly";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		E9693BE22416C82F008886C1 /* Nightly.Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C48D4F995097D200AD67B4EF /* Pods-emurgo.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
+				BUNDLE_DISPLAY_NAME = Yoroi;
+				BUNDLE_ID_SUFFIX = .nightly;
+				CURRENT_PROJECT_VERSION = 40;
+				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/emurgo/Info.plist";
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREFIX_HEADER = "";
+				INFOPLIST_PREPROCESS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 2.1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-nightly";
+				PRODUCT_NAME = "yoroi-nightly";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Nightly.Release;
+		};
+		E9693BE32416C82F008886C1 /* Staging.Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = ADCE947A57226AE53DF07897 /* Pods-emurgo.staging.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
+				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
+				BUNDLE_ID_SUFFIX = .staging;
+				CURRENT_PROJECT_VERSION = 40;
+				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/emurgo/Info.plist";
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREFIX_HEADER = "";
+				INFOPLIST_PREPROCESS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 2.1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-nightly";
+				PRODUCT_NAME = "yoroi-nightly";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Staging.Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -2711,6 +3290,7 @@
 				00E356F61AD99517003FC87E /* Debug */,
 				E2373CB521CA4BB40003317D /* Staging.Debug */,
 				00E356F71AD99517003FC87E /* Release */,
+				E9693B742416BD70008886C1 /* Nightly.Release */,
 				E2373CF221CA4BDC0003317D /* Staging.Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -2722,6 +3302,7 @@
 				13B07F941A680F5B00A75B9A /* Debug */,
 				E2373CB421CA4BB40003317D /* Staging.Debug */,
 				13B07F951A680F5B00A75B9A /* Release */,
+				E9693B722416BD70008886C1 /* Nightly.Release */,
 				E2373CF121CA4BDC0003317D /* Staging.Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -2733,6 +3314,7 @@
 				2E3E7CFD2298ACEA00D5C487 /* Debug */,
 				2E3E7CFE2298ACEA00D5C487 /* Staging.Debug */,
 				2E3E7CFF2298ACEA00D5C487 /* Release */,
+				E9693B732416BD70008886C1 /* Nightly.Release */,
 				2E3E7D002298ACEA00D5C487 /* Staging.Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -2744,7 +3326,20 @@
 				83CBBA201A601CBA00E9B192 /* Debug */,
 				E2373CB321CA4BB40003317D /* Staging.Debug */,
 				83CBBA211A601CBA00E9B192 /* Release */,
+				E9693B712416BD70008886C1 /* Nightly.Release */,
 				E2373CF021CA4BDC0003317D /* Staging.Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E9693BDE2416C82F008886C1 /* Build configuration list for PBXNativeTarget "emurgo-nightly" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E9693BDF2416C82F008886C1 /* Debug */,
+				E9693BE02416C82F008886C1 /* Staging.Debug */,
+				E9693BE12416C82F008886C1 /* Release */,
+				E9693BE22416C82F008886C1 /* Nightly.Release */,
+				E9693BE32416C82F008886C1 /* Staging.Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
