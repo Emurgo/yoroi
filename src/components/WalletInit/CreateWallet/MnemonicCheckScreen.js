@@ -200,17 +200,6 @@ const MnemonicCheckScreen = ({
   )
 }
 
-// For debugging purposes
-// it turns mnemonic into partialPhrase array
-const _mnemonicToPartialPhrase = (mnemonic: string) =>
-  _(mnemonic.split(' ')) // ['c', 'a', 'b']
-    .map((word, i) => ({word, i})) // (c,0) (a,1) (b,2)
-    .sortBy(({word, i}) => word) // (a,1) (b,2) (c,0)
-    .map(({word, i}, j) => [i, j]) // [1,0], [2,1], [0,2]
-    .sortBy(([i, j]) => i) // [1,0], [2,1], [0,2]
-    .map(([i, j]) => j) // [1,2,0]
-    .value()
-
 export default injectIntl(
   (compose(
     connect(
