@@ -46,9 +46,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "Yoroi Wallet.app"
-               BlueprintName = "emurgo"
+               BlueprintIdentifier = "E9693BB22416C82F008886C1"
+               BuildableName = "Yoroi Nightly.app"
+               BlueprintName = "emurgo-nightly"
                ReferencedContainer = "container:emurgo.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -63,20 +63,6 @@
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
                BuildableName = "emurgoTests.xctest"
                BlueprintName = "emurgoTests"
-               ReferencedContainer = "container:emurgo.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E9693BB22416C82F008886C1"
-               BuildableName = "yoroi-nightly.app"
-               BlueprintName = "emurgo-nightly"
                ReferencedContainer = "container:emurgo.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -133,20 +119,11 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E9693BB22416C82F008886C1"
-            BuildableName = "yoroi-nightly.app"
+            BuildableName = "Yoroi Nightly.app"
             BlueprintName = "emurgo-nightly"
             ReferencedContainer = "container:emurgo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "Yoroi Wallet.app"
-            BlueprintName = "emurgo"
-            ReferencedContainer = "container:emurgo.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "OS_ACTIVITY_MODE"
@@ -166,7 +143,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E9693BB22416C82F008886C1"
-            BuildableName = "yoroi-nightly.app"
+            BuildableName = "Yoroi Nightly.app"
             BlueprintName = "emurgo-nightly"
             ReferencedContainer = "container:emurgo.xcodeproj">
          </BuildableReference>

@@ -643,7 +643,7 @@
 		E2FC0C3A21C7F30300DA195B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		E2FC0C3C21C7F32300DA195B /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		E88E56A3C4A142ADB2AC0796 /* RNRandomBytes.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNRandomBytes.xcodeproj; path = "../node_modules/react-native-randombytes/RNRandomBytes.xcodeproj"; sourceTree = "<group>"; };
-		E9693BE42416C82F008886C1 /* yoroi-nightly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "yoroi-nightly.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E9693BE42416C82F008886C1 /* Yoroi Nightly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Yoroi Nightly.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9693BE52416C82F008886C1 /* emurgo copy2-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "emurgo copy2-Info.plist"; path = "/Users/vicente/dev/emurgo/yoroi-mobile/ios/emurgo copy2-Info.plist"; sourceTree = "<absolute>"; };
 		E9DE0E6523D9F064000B82BE /* ChainLibs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ChainLibs.xcodeproj; path = "../node_modules/react-native-chain-libs/ios/ChainLibs.xcodeproj"; sourceTree = "<group>"; };
 		EAFCACBCB7663E88BDEEA360 /* Pods-emurgo-tvOSTests.testnet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-tvOSTests.testnet.debug.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo-tvOSTests/Pods-emurgo-tvOSTests.testnet.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1066,7 +1066,7 @@
 				13B07F961A680F5B00A75B9A /* Yoroi Wallet.app */,
 				00E356EE1AD99517003FC87E /* emurgoTests.xctest */,
 				2E3E7D012298ACEA00D5C487 /* emurgo-staging.app */,
-				E9693BE42416C82F008886C1 /* yoroi-nightly.app */,
+				E9693BE42416C82F008886C1 /* Yoroi Nightly.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1273,7 +1273,7 @@
 			);
 			name = "emurgo-nightly";
 			productName = "Hello World";
-			productReference = E9693BE42416C82F008886C1 /* yoroi-nightly.app */;
+			productReference = E9693BE42416C82F008886C1 /* Yoroi Nightly.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1303,6 +1303,7 @@
 					};
 					E9693BB22416C82F008886C1 = {
 						DevelopmentTeam = F8NVT2G2L4;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -2227,7 +2228,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = Yoroi;
 				BUNDLE_ID_SUFFIX = "";
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 47;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -2270,8 +2271,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = Yoroi;
 				BUNDLE_ID_SUFFIX = "";
-				CURRENT_PROJECT_VERSION = 40;
-				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 47;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2301,6 +2304,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.emurgo.yoroi;
 				PRODUCT_NAME = "Yoroi Wallet";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -2311,7 +2315,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = Yoroi;
 				BUNDLE_ID_SUFFIX = "";
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 47;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -2357,7 +2361,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 47;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -2403,7 +2407,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = Yoroi;
 				BUNDLE_ID_SUFFIX = "";
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
@@ -2448,7 +2452,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
@@ -2658,7 +2662,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 47;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -2794,7 +2798,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
@@ -2875,7 +2879,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
 				BUNDLE_DISPLAY_NAME = Yoroi;
 				BUNDLE_ID_SUFFIX = "";
-				CURRENT_PROJECT_VERSION = 40;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 47;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -2906,7 +2912,8 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-nightly";
-				PRODUCT_NAME = "yoroi-nightly";
+				PRODUCT_NAME = "Yoroi Nightly";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.emurgo.yoroi-nightly";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -2917,7 +2924,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
-				CURRENT_PROJECT_VERSION = 40;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 47;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -2948,7 +2957,8 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-nightly";
-				PRODUCT_NAME = "yoroi-nightly";
+				PRODUCT_NAME = "Yoroi Nightly";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.emurgo.yoroi-nightly";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Staging.Debug;
@@ -2959,8 +2969,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
 				BUNDLE_DISPLAY_NAME = Yoroi;
 				BUNDLE_ID_SUFFIX = "";
-				CURRENT_PROJECT_VERSION = 40;
-				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 47;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2989,7 +3001,8 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-nightly";
-				PRODUCT_NAME = "yoroi-nightly";
+				PRODUCT_NAME = "Yoroi Nightly";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -3000,7 +3013,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
-				CURRENT_PROJECT_VERSION = 40;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
@@ -3030,7 +3045,8 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-nightly";
-				PRODUCT_NAME = "yoroi-nightly";
+				PRODUCT_NAME = "Yoroi Nightly";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.emurgo.yoroi-nightly";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Staging.Release;
