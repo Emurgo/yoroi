@@ -65,6 +65,7 @@
 		2EFC90322305E23700430A87 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EFC90242305E12E00430A87 /* libRNDeviceInfo.a */; };
 		2EFC90332305E24000430A87 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EFC90242305E12E00430A87 /* libRNDeviceInfo.a */; };
 		30646D574618D6C438E082C1 /* libPods-emurgo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4492A3C818B4FB1C2344B6A4 /* libPods-emurgo.a */; };
+		369A705518B6BCBDD5D86413 /* libPods-emurgo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4492A3C818B4FB1C2344B6A4 /* libPods-emurgo.a */; };
 		4129CAD9C4C34ACF9E00AA5E /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9443C3481304C079FB7BE23 /* libRNSVG.a */; };
 		469514AC7443466390FF834A /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F410A0AB183D4990BCAF936B /* libz.tbd */; };
 		4C623EB4CCE24A6EA5889C23 /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 29CDBB4B7FB64C0086FF65C6 /* libRNCamera.a */; };
@@ -109,7 +110,6 @@
 		E9693BD42416C82F008886C1 /* libChainLibs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E9DE0E6A23D9F064000B82BE /* libChainLibs.a */; };
 		E9693BD52416C82F008886C1 /* libRNCardano.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1103DA1A18D54C3EA133F4DC /* libRNCardano.a */; };
 		E9693BD62416C82F008886C1 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 16BAD3D7933540D184340C1B /* libresolv.tbd */; };
-		E9693BD72416C82F008886C1 /* libPods-emurgo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4492A3C818B4FB1C2344B6A4 /* libPods-emurgo.a */; };
 		E9693BD92416C82F008886C1 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		E9693BDA2416C82F008886C1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E2FC0BFA21C7F02200DA195B /* InfoPlist.strings */; };
 		E9693BDB2416C82F008886C1 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
@@ -580,7 +580,6 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = emurgo/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		16BAD3D7933540D184340C1B /* libresolv.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
-		1B4492487DEB8AF14CFA180F /* Pods-emurgo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo/Pods-emurgo.debug.xcconfig"; sourceTree = "<group>"; };
 		1BEE7BD7C7A1239035DAE21F /* Pods-emurgo.testnet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo.testnet.debug.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo/Pods-emurgo.testnet.debug.xcconfig"; sourceTree = "<group>"; };
 		1E77717D3AF6027DF768FCCF /* Pods-emurgo-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-tvOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo-tvOS/Pods-emurgo-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		29CDBB4B7FB64C0086FF65C6 /* libRNCamera.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCamera.a; sourceTree = "<group>"; };
@@ -596,9 +595,11 @@
 		359687B3464F4A7C89D45AF9 /* libRNRandomBytes-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNRandomBytes-tvOS.a"; sourceTree = "<group>"; };
 		36ED7BB7AA874C7A8590BAEB /* RNCardano.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNCardano.xcodeproj; path = "../node_modules/react-native-cardano/ios/RNCardano.xcodeproj"; sourceTree = "<group>"; };
 		3F3CAD29F11A422EBD119E74 /* RNBackgroundTimer.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundTimer.xcodeproj; path = "../node_modules/react-native-background-timer/ios/RNBackgroundTimer.xcodeproj"; sourceTree = "<group>"; };
+		4438665BE754B4C10EE67736 /* Pods-emurgo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo.release.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo/Pods-emurgo.release.xcconfig"; sourceTree = "<group>"; };
 		4447F097A41617FBCC553C4F /* Pods-emurgoTests.staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgoTests.staging.debug.xcconfig"; path = "Pods/Target Support Files/Pods-emurgoTests/Pods-emurgoTests.staging.debug.xcconfig"; sourceTree = "<group>"; };
 		4492A3C818B4FB1C2344B6A4 /* libPods-emurgo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-emurgo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		492DFE0B47FACAFC309573B3 /* libPods-emurgo-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-emurgo-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		58433FECA0BFDE5335F79020 /* Pods-emurgo.staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo.staging.debug.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo/Pods-emurgo.staging.debug.xcconfig"; sourceTree = "<group>"; };
 		5DBE1771E1614BCAB6A3665D /* libSplashScreen.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libSplashScreen.a; sourceTree = "<group>"; };
 		5DBF6642BF3B4B119153FD14 /* libRNFirebase.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFirebase.a; sourceTree = "<group>"; };
 		5DD5929CCB1559BC3022C92D /* Pods-emurgo-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-tvOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo-tvOS/Pods-emurgo-tvOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -614,6 +615,7 @@
 		73BB86E178B52EB93AB072B1 /* Pods-emurgo-tvOS.staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-tvOS.staging.debug.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo-tvOS/Pods-emurgo-tvOS.staging.debug.xcconfig"; sourceTree = "<group>"; };
 		746923B3D658412D94D241BD /* libRNSVG-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNSVG-tvOS.a"; sourceTree = "<group>"; };
 		768E354DE5BC390CF4EEDE79 /* Pods-emurgo.testnet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo.testnet.release.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo/Pods-emurgo.testnet.release.xcconfig"; sourceTree = "<group>"; };
+		77CC650447B43D66B46C6A76 /* Pods-emurgo.staging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo.staging.release.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo/Pods-emurgo.staging.release.xcconfig"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		7CED8B32F09C469D87E21C64 /* RNFS.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFS.xcodeproj; path = "../node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; };
 		7EF05E688AF3169F4FAC3D93 /* libPods-emurgoTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-emurgoTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -622,11 +624,9 @@
 		84D0E245B86E495693516CD7 /* libBVLinearGradient.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libBVLinearGradient.a; sourceTree = "<group>"; };
 		8DBF02153B8E47798175A31D /* RNCamera.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RNCamera.xcodeproj"; sourceTree = "<group>"; };
 		923D9548D05E4BB0A7AA748E /* RNSVG.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNSVG.xcodeproj; path = "../node_modules/react-native-svg/ios/RNSVG.xcodeproj"; sourceTree = "<group>"; };
+		98915DBE64FB7D49455085EC /* Pods-emurgo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo/Pods-emurgo.debug.xcconfig"; sourceTree = "<group>"; };
 		9F587800988514CEB07F4F99 /* Pods-emurgo-tvOS.testnet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-tvOS.testnet.release.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo-tvOS/Pods-emurgo-tvOS.testnet.release.xcconfig"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
-		ADCE947A57226AE53DF07897 /* Pods-emurgo.staging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo.staging.release.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo/Pods-emurgo.staging.release.xcconfig"; sourceTree = "<group>"; };
-		B80175A1449495C7FD15E4CC /* Pods-emurgo.staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo.staging.debug.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo/Pods-emurgo.staging.debug.xcconfig"; sourceTree = "<group>"; };
-		C48D4F995097D200AD67B4EF /* Pods-emurgo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo.release.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo/Pods-emurgo.release.xcconfig"; sourceTree = "<group>"; };
 		C8259C93DE584FDAAFB4E9FF /* libReactNativePermissions.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativePermissions.a; sourceTree = "<group>"; };
 		C9443C3481304C079FB7BE23 /* libRNSVG.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSVG.a; sourceTree = "<group>"; };
 		CDE15259840049359AA0828C /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
@@ -701,6 +701,7 @@
 				2CB56B544D0B4507B07F751B /* libRNCardano.a in Frameworks */,
 				BA3D0647FB29475CA53128CF /* libresolv.tbd in Frameworks */,
 				30646D574618D6C438E082C1 /* libPods-emurgo.a in Frameworks */,
+				369A705518B6BCBDD5D86413 /* libPods-emurgo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -773,7 +774,6 @@
 				E9693BD42416C82F008886C1 /* libChainLibs.a in Frameworks */,
 				E9693BD52416C82F008886C1 /* libRNCardano.a in Frameworks */,
 				E9693BD62416C82F008886C1 /* libresolv.tbd in Frameworks */,
-				E9693BD72416C82F008886C1 /* libPods-emurgo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -983,10 +983,10 @@
 				6FC5EE3CE6BCCAEA0CFC328F /* Pods-emurgo-tvOSTests.staging.release.xcconfig */,
 				4447F097A41617FBCC553C4F /* Pods-emurgoTests.staging.debug.xcconfig */,
 				68BBB02E022DD5CE50BB7D1B /* Pods-emurgoTests.staging.release.xcconfig */,
-				1B4492487DEB8AF14CFA180F /* Pods-emurgo.debug.xcconfig */,
-				B80175A1449495C7FD15E4CC /* Pods-emurgo.staging.debug.xcconfig */,
-				C48D4F995097D200AD67B4EF /* Pods-emurgo.release.xcconfig */,
-				ADCE947A57226AE53DF07897 /* Pods-emurgo.staging.release.xcconfig */,
+				98915DBE64FB7D49455085EC /* Pods-emurgo.debug.xcconfig */,
+				58433FECA0BFDE5335F79020 /* Pods-emurgo.staging.debug.xcconfig */,
+				4438665BE754B4C10EE67736 /* Pods-emurgo.release.xcconfig */,
+				77CC650447B43D66B46C6A76 /* Pods-emurgo.staging.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -1260,7 +1260,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E9693BDE2416C82F008886C1 /* Build configuration list for PBXNativeTarget "emurgo-nightly" */;
 			buildPhases = (
-				E9693BB32416C82F008886C1 /* [CP] Check Pods Manifest.lock */,
 				E9693BB42416C82F008886C1 /* Check env variables */,
 				E9693BB52416C82F008886C1 /* Sources */,
 				E9693BB82416C82F008886C1 /* Frameworks */,
@@ -1975,27 +1974,6 @@
 			shellPath = /bin/sh;
 			shellScript = "# check env variables\n${PROJECT_DIR}/../check_env_variables.sh\n";
 		};
-		E9693BB32416C82F008886C1 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-emurgo-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-		};
 		E9693BB42416C82F008886C1 /* Check env variables */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2244,7 +2222,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1B4492487DEB8AF14CFA180F /* Pods-emurgo.debug.xcconfig */;
+			baseConfigurationReference = 98915DBE64FB7D49455085EC /* Pods-emurgo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = Yoroi;
@@ -2287,7 +2265,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C48D4F995097D200AD67B4EF /* Pods-emurgo.release.xcconfig */;
+			baseConfigurationReference = 4438665BE754B4C10EE67736 /* Pods-emurgo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = Yoroi;
@@ -2675,7 +2653,7 @@
 		};
 		E2373CB421CA4BB40003317D /* Staging.Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B80175A1449495C7FD15E4CC /* Pods-emurgo.staging.debug.xcconfig */;
+			baseConfigurationReference = 58433FECA0BFDE5335F79020 /* Pods-emurgo.staging.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
@@ -2811,7 +2789,7 @@
 		};
 		E2373CF121CA4BDC0003317D /* Staging.Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = ADCE947A57226AE53DF07897 /* Pods-emurgo.staging.release.xcconfig */;
+			baseConfigurationReference = 77CC650447B43D66B46C6A76 /* Pods-emurgo.staging.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
@@ -2891,187 +2869,8 @@
 			};
 			name = Staging.Release;
 		};
-		E9693B712416BD70008886C1 /* Nightly.Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = YES;
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
-				INFOPLIST_PREFIX_HEADER = "${BUILD_DIR}/GeneratedInfoPlistDotEnv.h";
-				INFOPLIST_PREPROCESS = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Nightly.Release;
-		};
-		E9693B722416BD70008886C1 /* Nightly.Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = C48D4F995097D200AD67B4EF /* Pods-emurgo.release.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon.nightly;
-				BUNDLE_DISPLAY_NAME = Yoroi;
-				BUNDLE_ID_SUFFIX = .nightly;
-				CURRENT_PROJECT_VERSION = 40;
-				DEVELOPMENT_TEAM = F8NVT2G2L4;
-				ENABLE_BITCODE = NO;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
-					"$(SRCROOT)/../node_modules/react-native-fs/**",
-					"$(SRCROOT)/../node_modules/react-native-randombytes",
-					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
-					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
-					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
-					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
-					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
-				);
-				INFOPLIST_FILE = emurgo/Info.plist;
-				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
-				INFOPLIST_PREFIX_HEADER = "";
-				INFOPLIST_PREPROCESS = NO;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.1.0;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-ObjC",
-					"-lc++",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.emurgo.yoroi;
-				PRODUCT_NAME = "Yoroi Wallet";
-				VERSIONING_SYSTEM = "apple-generic";
-			};
-			name = Nightly.Release;
-		};
-		E9693B732416BD70008886C1 /* Nightly.Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon.nightly;
-				BUNDLE_DISPLAY_NAME = Yoroi;
-				BUNDLE_ID_SUFFIX = "";
-				CURRENT_PROJECT_VERSION = 40;
-				DEVELOPMENT_TEAM = F8NVT2G2L4;
-				ENABLE_BITCODE = NO;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
-					"$(SRCROOT)/../node_modules/react-native-fs/**",
-					"$(SRCROOT)/../node_modules/react-native-randombytes",
-					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
-					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
-					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
-					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
-					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
-				);
-				INFOPLIST_FILE = "Staging-Info.plist";
-				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
-				INFOPLIST_PREFIX_HEADER = "";
-				INFOPLIST_PREPROCESS = NO;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
-				MARKETING_VERSION = 2.1.0;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-ObjC",
-					"-lc++",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-stag";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				VERSIONING_SYSTEM = "apple-generic";
-			};
-			name = Nightly.Release;
-		};
-		E9693B742416BD70008886C1 /* Nightly.Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 60EB9F171F0E514B4D4195F8 /* Pods-emurgoTests.release.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = F8NVT2G2L4;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
-					"$(SRCROOT)/../node_modules/react-native-fs/**",
-					"$(SRCROOT)/../node_modules/react-native-randombytes",
-					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
-					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
-					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
-					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
-				);
-				INFOPLIST_FILE = emurgoTests/Info.plist;
-				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
-				INFOPLIST_PREFIX_HEADER = "";
-				INFOPLIST_PREPROCESS = NO;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-lc++",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "-com.emurgo.yoroi";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/emurgo.app/emurgo";
-			};
-			name = Nightly.Release;
-		};
 		E9693BDF2416C82F008886C1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1B4492487DEB8AF14CFA180F /* Pods-emurgo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
 				BUNDLE_DISPLAY_NAME = Yoroi;
@@ -3114,7 +2913,6 @@
 		};
 		E9693BE02416C82F008886C1 /* Staging.Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B80175A1449495C7FD15E4CC /* Pods-emurgo.staging.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
@@ -3157,7 +2955,6 @@
 		};
 		E9693BE12416C82F008886C1 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C48D4F995097D200AD67B4EF /* Pods-emurgo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
 				BUNDLE_DISPLAY_NAME = Yoroi;
@@ -3197,51 +2994,8 @@
 			};
 			name = Release;
 		};
-		E9693BE22416C82F008886C1 /* Nightly.Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = C48D4F995097D200AD67B4EF /* Pods-emurgo.release.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
-				BUNDLE_DISPLAY_NAME = Yoroi;
-				BUNDLE_ID_SUFFIX = .nightly;
-				CURRENT_PROJECT_VERSION = 40;
-				DEVELOPMENT_TEAM = F8NVT2G2L4;
-				ENABLE_BITCODE = NO;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
-					"$(SRCROOT)/../node_modules/react-native-fs/**",
-					"$(SRCROOT)/../node_modules/react-native-randombytes",
-					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
-					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
-					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
-					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
-					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
-				);
-				INFOPLIST_FILE = "$(SRCROOT)/emurgo/Info.plist";
-				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
-				INFOPLIST_PREFIX_HEADER = "";
-				INFOPLIST_PREPROCESS = NO;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.1.0;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-ObjC",
-					"-lc++",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-nightly";
-				PRODUCT_NAME = "yoroi-nightly";
-				VERSIONING_SYSTEM = "apple-generic";
-			};
-			name = Nightly.Release;
-		};
 		E9693BE32416C82F008886C1 /* Staging.Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = ADCE947A57226AE53DF07897 /* Pods-emurgo.staging.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
@@ -3290,7 +3044,6 @@
 				00E356F61AD99517003FC87E /* Debug */,
 				E2373CB521CA4BB40003317D /* Staging.Debug */,
 				00E356F71AD99517003FC87E /* Release */,
-				E9693B742416BD70008886C1 /* Nightly.Release */,
 				E2373CF221CA4BDC0003317D /* Staging.Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -3302,7 +3055,6 @@
 				13B07F941A680F5B00A75B9A /* Debug */,
 				E2373CB421CA4BB40003317D /* Staging.Debug */,
 				13B07F951A680F5B00A75B9A /* Release */,
-				E9693B722416BD70008886C1 /* Nightly.Release */,
 				E2373CF121CA4BDC0003317D /* Staging.Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -3314,7 +3066,6 @@
 				2E3E7CFD2298ACEA00D5C487 /* Debug */,
 				2E3E7CFE2298ACEA00D5C487 /* Staging.Debug */,
 				2E3E7CFF2298ACEA00D5C487 /* Release */,
-				E9693B732416BD70008886C1 /* Nightly.Release */,
 				2E3E7D002298ACEA00D5C487 /* Staging.Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -3326,7 +3077,6 @@
 				83CBBA201A601CBA00E9B192 /* Debug */,
 				E2373CB321CA4BB40003317D /* Staging.Debug */,
 				83CBBA211A601CBA00E9B192 /* Release */,
-				E9693B712416BD70008886C1 /* Nightly.Release */,
 				E2373CF021CA4BDC0003317D /* Staging.Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -3338,7 +3088,6 @@
 				E9693BDF2416C82F008886C1 /* Debug */,
 				E9693BE02416C82F008886C1 /* Staging.Debug */,
 				E9693BE12416C82F008886C1 /* Release */,
-				E9693BE22416C82F008886C1 /* Nightly.Release */,
 				E9693BE32416C82F008886C1 /* Staging.Release */,
 			);
 			defaultConfigurationIsVisible = 0;
