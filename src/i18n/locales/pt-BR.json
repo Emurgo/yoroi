@@ -27,7 +27,7 @@
   "components.delegationsummary.notDelegatedInfo.secondLine": "Vá para o centro de Staking para escolher em qual pool você deseja delegar. Nota, você pode delegar apenas a um stake pool na Testenet.",
   "components.delegationsummary.upcomingReward.followingLabel": "Após a recompensa",
   "components.delegationsummary.upcomingReward.nextLabel": "Próxima recompensa",
-  "components.delegationsummary.upcomingReward.rewardDisclaimerText": "Lembre que sua primeira recompensa será alocada 2 épocas após o fim da época em que você enviou a sua transação de delegação.",
+  "components.delegationsummary.upcomingReward.rewardDisclaimerText": "Note that after you delegate to a stake pool, you will need to wait until the end of the current epoch, plus two additional epochs, before starting receiving rewards.",
   "components.delegationsummary.userSummary.title": "Seu resumo",
   "components.delegationsummary.userSummary.totalDelegated": "Total Delegado",
   "components.delegationsummary.userSummary.totalRewards": "Total de Recompensas",
