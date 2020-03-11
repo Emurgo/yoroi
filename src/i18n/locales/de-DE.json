@@ -27,7 +27,7 @@
   "components.delegationsummary.notDelegatedInfo.secondLine": "Öffne das Staking center, um auszuwählen, an welchem Stakepool Du delegieren möchtest. Hinweis: Du kannst nur an einen Stakeholder-Pool in diesem Testnetz delegieren.",
   "components.delegationsummary.upcomingReward.followingLabel": "Folgende Erträge",
   "components.delegationsummary.upcomingReward.nextLabel": "Nächster Ertrag",
-  "components.delegationsummary.upcomingReward.rewardDisclaimerText": "Note that after you delegate to a stake pool, you will need to wait until the end of the current epoch, plus two additional epochs, before starting receiving rewards.",
+  "components.delegationsummary.upcomingReward.rewardDisclaimerText": "Beachte bitte, dass nach der Delegierung an einen Stake pool bis zum Ende der aktuellen Epoche plus zwei weitere Epochen gewartet werden muss, bevor die ersten Erträge überwiesen werden.\n",
   "components.delegationsummary.userSummary.title": "Zusammenfassung",
   "components.delegationsummary.userSummary.totalDelegated": "Insgesamt delegiert",
   "components.delegationsummary.userSummary.totalRewards": "Summe der Erträge",
