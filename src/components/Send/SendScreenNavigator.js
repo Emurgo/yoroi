@@ -33,15 +33,17 @@ const SendScreenNavigator = createStackNavigator(
             onPress={() =>
               navigation.navigate(SEND_ROUTES.ADDRESS_READER_QR, {
                 onSuccess: (stringQR) => {
-                  const regex = /(cardano):([a-zA-Z1-9]\w+)\?/
+                  const regex = /(cardano):([a-zA-Z1-9]\w+)\??/
 
                   if (regex.test(stringQR)) {
                     const address = stringQR.match(regex)[2]
-                    const index = stringQR.indexOf('?')
-                    const params = getParams(stringQR.substr(index))
-                    if ('amount' in params) {
-                      setAddress(address, navigation)
-                      setAmount(params.amount, navigation)
+                    if (stringQR.indexOf('?') != -1) {
+                      const index = stringQR.indexOf('?')
+                      const params = getParams(stringQR.substr(index))
+                      if ('amount' in params) {
+                        setAddress(address, navigation)
+                        setAmount(params.amount, navigation)
+                      }
                     } else {
                       setAddress(address, navigation)
                     }
@@ -83,7 +85,7 @@ const SendScreenNavigator = createStackNavigator(
 function getParams(params) {
   const query = params.substr(1)
   const result = {}
-  query.split('&').forEach((part) => {
+  query.split('?').forEach((part) => {
     const item = part.split('=')
     result[item[0]] = decodeURIComponent(item[1])
   })
