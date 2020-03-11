@@ -27,7 +27,7 @@
   "components.delegationsummary.notDelegatedInfo.secondLine": "Перейдите в Стейкинг центр, чтобы выбрать стейк-пул в который вы хотите делегировать. Обратите внимание, что вы можете делегировать только в один стейк-пул в этом тестнете.",
   "components.delegationsummary.upcomingReward.followingLabel": "Предстоящие награды",
   "components.delegationsummary.upcomingReward.nextLabel": "Следующая награда",
-  "components.delegationsummary.upcomingReward.rewardDisclaimerText": "Помните, что ваша первая награда будет получена через две эпохи после окончания той эпохи, в которой вы отправили транзакцию делегирования.",
+  "components.delegationsummary.upcomingReward.rewardDisclaimerText": "Note that after you delegate to a stake pool, you will need to wait until the end of the current epoch, plus two additional epochs, before starting receiving rewards.",
   "components.delegationsummary.userSummary.title": "Ваш итог",
   "components.delegationsummary.userSummary.totalDelegated": "Всего делегировано",
   "components.delegationsummary.userSummary.totalRewards": "Всего Наград",
