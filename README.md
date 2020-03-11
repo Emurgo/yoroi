@@ -101,6 +101,43 @@ If these steps fail, try looking at the [android CLI](https://github.com/Emurgo/
 4. `react-native run-ios --scheme=emurgo-staging --configuration=Staging.Debug` - staging (testnet) configuration
 5. `react-native run-ios --scheme=emurgo --configuration=Debug` - production configuration
 
+# Testing
+
+## Unit Testing
+
+To run all unit tests:
+```bash
+$ yarn test
+```
+
+You can also run single test files, e.g.:
+```bash
+$ jest wallet.test.js
+```
+
+## End-to-end Testing
+For E2E tsting we use the [detox](https://github.com/wix/Detox) framework.
+
+### Requirements
+- **iOS**: MacOS 10.13 (High Sierra) or higher, Xcode 10.1 or higher.
+- **Android**: Tested on Android Studio 3.5.1. Simulator: Android >= 9, API >= 28 (but prior versions may work too).
+
+### Setup (applies to iOS only)
+You only need to follow the instructions listed in the Step 1 of Detox's official [docs](https://github.com/wix/Detox/blob/master/docs/Introduction.GettingStarted.md#step-1-install-dependencies):
+```bash
+$ brew tap wix/brew
+$ brew install applesimutils
+$ npm install -g detox-cli
+```
+### Building and Running
+Important: You need to build the app not only the first time you run the tests but also anytime you modify the code.
+
+```bash
+$ yarn e2e:build-android # for ios just replace "android" by "ios"
+$ yarn e2e:test-android
+```
+This will build and test a *release* version of the app.
+
 # Debugging
 
 Read through [this page](https://facebook.github.io/react-native/docs/debugging) to understand debugging for React-Native

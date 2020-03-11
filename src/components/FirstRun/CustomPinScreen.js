@@ -40,7 +40,7 @@ const messages = defineMessages({
 })
 
 const CustomPinScreen = ({handlePinEntered, intl}) => (
-  <View style={styles.container}>
+  <View style={styles.container} testID="customPinContainer">
     <StatusBar type="dark" />
 
     <PinRegistrationForm

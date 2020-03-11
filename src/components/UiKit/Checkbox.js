@@ -11,8 +11,12 @@ import checkEmptyIcon from '../../assets/img/check-empty.png'
 
 import type {ComponentType} from 'react'
 
-const Checkbox = ({checked, text, handleChange, style}) => (
-  <TouchableOpacity style={[styles.container, style]} onPress={handleChange}>
+const Checkbox = ({checked, text, handleChange, style, testID}) => (
+  <TouchableOpacity
+    style={[styles.container, style]}
+    onPress={handleChange}
+    testID={testID}
+  >
     <Image source={checked ? checkIcon : checkEmptyIcon} />
     <Text style={styles.text}>{text}</Text>
   </TouchableOpacity>
@@ -23,6 +27,7 @@ type ExternalProps = {
   text: string,
   onChange: (checked: boolean) => void,
   style?: Object,
+  testID?: string,
 }
 
 export default (withHandlers({

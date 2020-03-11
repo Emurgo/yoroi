@@ -57,12 +57,14 @@ const WalletInitScreen = ({
             onPress={(event) => navigateInitWallet(event, false)}
             title={intl.formatMessage(messages.addWalletButton)}
             style={styles.createButton}
+            testID="addWalletOnByronButton"
           />
 
           <Button
             outline
             onPress={(event) => navigateInitWallet(event, true)}
             title={intl.formatMessage(messages.addWalletOnShelleyButton)}
+            testID="addWalletOnShelleyButton"
           />
         </View>
       </ScreenBackground>

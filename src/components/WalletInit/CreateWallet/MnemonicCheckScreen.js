@@ -101,6 +101,7 @@ const _WordBadge = ({word, handleOnPress, selected, hidden}) => (
       selected && styles.selected,
       hidden && styles.hidden,
     ]}
+    testID={selected ? `wordBadgeTapped-${word}` : `wordBadgeNonTapped-${word}`}
   >
     <Text style={[selected && styles.selectedText]}>{word}</Text>
   </TouchableOpacity>
@@ -193,6 +194,7 @@ const MnemonicCheckScreen = ({
             disabled={!isPhraseComplete || !isPhraseValid}
             title={intl.formatMessage(messages.confirmButton)}
             style={styles.confirmButton}
+            testID="mnemonicCheckScreen::confirm"
           />
         </View>
       </View>

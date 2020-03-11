@@ -81,6 +81,7 @@ type ButtonProps = {
   withoutBackground?: boolean,
   shelleyTheme?: boolean,
   outlineShelley?: boolean,
+  testID?: string,
 }
 
 class Button extends React.Component<ButtonProps> {
@@ -99,6 +100,7 @@ class Button extends React.Component<ButtonProps> {
       withoutBackground,
       shelleyTheme,
       outlineShelley,
+      testID,
     } = this.props
 
     const formattedTitle = title && title.toUpperCase()
@@ -111,6 +113,7 @@ class Button extends React.Component<ButtonProps> {
         onPress={onPress}
         style={[block === true && styles.block, containerStyle]}
         activeOpacity={0.5}
+        testID={testID}
       >
         <View
           style={[

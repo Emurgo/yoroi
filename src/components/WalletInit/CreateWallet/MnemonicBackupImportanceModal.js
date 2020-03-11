@@ -65,17 +65,20 @@ const MnemonicBackupImportanceModal = ({
       onChange={setAcceptedKeyStorage}
       checked={acceptedKeyStorage}
       text={intl.formatMessage(messages.keysStorageCheckbox)}
+      testID="mnemonicBackupImportanceModal::checkBox1"
     />
     <Checkbox
       style={styles.checkbox}
       onChange={setAcceptedNewDeviceRecovery}
       checked={acceptedNewDeviceRecovery}
       text={intl.formatMessage(messages.newDeviceRecoveryCheckbox)}
+      testID="mnemonicBackupImportanceModal::checkBox2"
     />
     <Button
       disabled={!acceptedKeyStorage || !acceptedNewDeviceRecovery}
       onPress={onConfirm}
       title={intl.formatMessage(messages.confirmationButton)}
+      testID="mnemonicBackupImportanceModal::confirm"
     />
   </Modal>
 )

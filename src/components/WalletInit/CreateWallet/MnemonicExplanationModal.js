@@ -66,6 +66,7 @@ const MnemonicExplanationModal = ({
     <Button
       onPress={onConfirm}
       title={intl.formatMessage(messages.nextButton)}
+      testID="mnemonicExplanationModal"
     />
   </Modal>
 )
