@@ -1,25 +1,42 @@
 // @flow
-
 import React from 'react'
-import {Button} from '../UiKit'
 import {createStackNavigator} from 'react-navigation'
+
+import {Button} from '../UiKit'
 import SendScreen from './SendScreen'
 import ConfirmScreen from './ConfirmScreen'
 import AddressReaderQR from './AddressReaderQR'
 import BiometricAuthScreen from './BiometricAuthScreen'
 import iconQR from '../../assets/img/qr_code.png'
-
+import {pastedFormatter} from './amountUtils'
 import HeaderBackButton from '../UiKit/HeaderBackButton'
 import {
   defaultNavigationOptions,
   defaultStackNavigatorOptions,
 } from '../../navigationOptions'
-
 import {SEND_ROUTES} from '../../RoutesList'
 
 import styles from './styles/QrButton.style'
 
-import {pastedFormatter} from './amountUtils'
+const getParams = (params) => {
+  const query = params.substr(1)
+  const result = {}
+  query.split('?').forEach((part) => {
+    const item = part.split('=')
+    result[item[0]] = decodeURIComponent(item[1])
+  })
+  return result
+}
+
+const setAddress = (address, navigation) => {
+  const handlerAddress = navigation.getParam('onScanAddress')
+  handlerAddress && handlerAddress(address)
+}
+
+const setAmount = (amount, navigation) => {
+  const handlerAmount = navigation.getParam('onScanAmount')
+  handlerAmount && handlerAmount(pastedFormatter(amount))
+}
 
 const SendScreenNavigator = createStackNavigator(
   {
@@ -37,7 +54,7 @@ const SendScreenNavigator = createStackNavigator(
 
                   if (regex.test(stringQR)) {
                     const address = stringQR.match(regex)[2]
-                    if (stringQR.indexOf('?') != -1) {
+                    if (stringQR.indexOf('?') !== -1) {
                       const index = stringQR.indexOf('?')
                       const params = getParams(stringQR.substr(index))
                       if ('amount' in params) {
@@ -81,25 +98,5 @@ const SendScreenNavigator = createStackNavigator(
     ...defaultStackNavigatorOptions,
   },
 )
-
-function getParams(params) {
-  const query = params.substr(1)
-  const result = {}
-  query.split('?').forEach((part) => {
-    const item = part.split('=')
-    result[item[0]] = decodeURIComponent(item[1])
-  })
-  return result
-}
-
-function setAddress(address, navigation) {
-  const handlerAddress = navigation.getParam('onScanAddress')
-  handlerAddress && handlerAddress(address)
-}
-
-function setAmount(amount, navigation) {
-  const handlerAmount = navigation.getParam('onScanAmount')
-  handlerAmount && handlerAmount(pastedFormatter(amount))
-}
 
 export default SendScreenNavigator
