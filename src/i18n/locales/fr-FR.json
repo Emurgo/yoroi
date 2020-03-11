@@ -27,7 +27,7 @@
   "components.delegationsummary.notDelegatedInfo.secondLine": "Cliquez sur 'Simple 'ou 'Advanced Staking' pour choisir le Stake Pool (groupe d'enjeu) dans lequel vous voulez déléguer. Notez que vous ne pouvez déléguer qu'à un seul Stake Pool durant ce Testnet.",
   "components.delegationsummary.upcomingReward.followingLabel": "Following reward",
   "components.delegationsummary.upcomingReward.nextLabel": "Next reward",
-  "components.delegationsummary.upcomingReward.rewardDisclaimerText": "Remember that your first reward will be allocated two epochs after the end of the epoch in which you have submitted your delegation transaction.",
+  "components.delegationsummary.upcomingReward.rewardDisclaimerText": "Note that after you delegate to a stake pool, you will need to wait until the end of the current epoch, plus two additional epochs, before starting receiving rewards.",
   "components.delegationsummary.userSummary.title": "Your summary",
   "components.delegationsummary.userSummary.totalDelegated": "Total Delegated",
   "components.delegationsummary.userSummary.totalRewards": "Total Rewards",
