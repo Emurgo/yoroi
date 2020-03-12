@@ -18,7 +18,11 @@ import {
   PleaseWaitModal,
 } from '../UiKit'
 import {easyConfirmationSelector} from '../../selectors'
-import globalMessages, {errorMessages} from '../../i18n/global-messages'
+import globalMessages, {
+  errorMessages,
+  txLabels,
+  confirmationMessages,
+} from '../../i18n/global-messages'
 import walletManager, {SystemAuthDisabled} from '../../crypto/wallet'
 import {SEND_ROUTES, WALLET_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import {CONFIG} from '../../config'
@@ -41,41 +45,6 @@ const messages = defineMessages({
   title: {
     id: 'components.send.confirmscreen.title',
     defaultMessage: '!!!Send',
-    description: 'some desc',
-  },
-  amount: {
-    id: 'components.send.confirmscreen.amount',
-    defaultMessage: '!!!Amount',
-    description: 'some desc',
-  },
-  balanceAfterTx: {
-    id: 'components.send.confirmscreen.balanceAfterTx',
-    defaultMessage: '!!!Balance after transaction',
-    description: 'some desc',
-  },
-  fees: {
-    id: 'components.send.confirmscreen.fees',
-    defaultMessage: '!!!Fees',
-    description: 'some desc',
-  },
-  password: {
-    id: 'components.send.confirmscreen.password',
-    defaultMessage: '!!!Spending password',
-    description: 'some desc',
-  },
-  receiver: {
-    id: 'components.send.confirmscreen.receiver',
-    defaultMessage: '!!!Receiver',
-    description: 'some desc',
-  },
-  confirmButton: {
-    id: 'components.send.confirmscreen.confirmButton',
-    defaultMessage: '!!!Confirm',
-    description: 'some desc',
-  },
-  sendingModalTitle: {
-    id: 'components.send.confirmscreen.sendingModalTitle',
-    defaultMessage: '!!!Submitting transaction',
     description: 'some desc',
   },
 })
@@ -186,20 +155,20 @@ const ConfirmScreen = ({
 
         <ScrollView style={styles.container}>
           <Text small>
-            {intl.formatMessage(messages.fees)}:{' '}
+            {intl.formatMessage(txLabels.fees)}:{' '}
             {formatAdaWithSymbol(transactionData.fee)}
           </Text>
           <Text small>
-            {intl.formatMessage(messages.balanceAfterTx)}:{' '}
+            {intl.formatMessage(txLabels.balanceAfterTx)}:{' '}
             {formatAdaWithSymbol(balanceAfterTx)}
           </Text>
 
           <Text style={styles.heading} small>
-            {intl.formatMessage(messages.receiver)}
+            {intl.formatMessage(txLabels.receiver)}
           </Text>
           <Text>{address}</Text>
           <Text style={styles.heading} small>
-            {intl.formatMessage(messages.amount)}
+            {intl.formatMessage(txLabels.amount)}
           </Text>
           <Text>{formatAdaWithSymbol(amount)}</Text>
 
@@ -208,7 +177,7 @@ const ConfirmScreen = ({
               <ValidatedTextInput
                 secureTextEntry
                 value={password}
-                label={intl.formatMessage(messages.password)}
+                label={intl.formatMessage(txLabels.password)}
                 onChangeText={setPassword}
               />
             </View>
@@ -217,14 +186,16 @@ const ConfirmScreen = ({
         <View style={styles.actions}>
           <Button
             onPress={onConfirm}
-            title={intl.formatMessage(messages.confirmButton)}
+            title={intl.formatMessage(
+              confirmationMessages.commonButtons.confirmButton,
+            )}
             disabled={isConfirmationDisabled}
           />
         </View>
       </View>
 
       <PleaseWaitModal
-        title={intl.formatMessage(messages.sendingModalTitle)}
+        title={intl.formatMessage(txLabels.submittingTx)}
         spinnerText={intl.formatMessage(globalMessages.pleaseWait)}
         visible={sendingTransaction}
       />

@@ -5,6 +5,7 @@ import type {
   AccountState,
   Transaction,
   RawUtxo,
+  RemotePoolMetaSuccess,
 } from './types/HistoryTransaction'
 
 export type Dict<T> = {[string]: T}
@@ -46,7 +47,7 @@ export type State = {
   poolInfo: {
     isFetching: boolean,
     lastFetchingError: any,
-    meta: any, // TODO(v-almonacid): type me
+    meta: ?RemotePoolMetaSuccess,
   },
   isOnline: boolean,
   isAppInitialized: boolean,

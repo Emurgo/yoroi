@@ -1,7 +1,6 @@
 // @flow
 import React from 'react'
 import {View, WebView} from 'react-native'
-// import {compose} from 'recompose'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'

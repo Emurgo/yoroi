@@ -223,7 +223,6 @@ export default injectIntl(
           partialPhrase: [...partialPhrase, wordIdx],
         }),
         handleClear: (state) => () => ({
-          // $FlowFixMe null
           partialPhrase: [],
         }),
       },

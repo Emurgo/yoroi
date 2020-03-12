@@ -38,12 +38,12 @@ const messages = defineMessages({
   },
   russian: {
     id: 'components.common.languagepicker.russian',
-    defaultMessage: 'Russian',
+    defaultMessage: 'Русский',
     description: 'some desc',
   },
   spanish: {
     id: 'components.common.languagepicker.spanish',
-    defaultMessage: 'Spanish',
+    defaultMessage: 'Español',
     description: 'some desc',
   },
   chinese: {
@@ -63,7 +63,7 @@ const messages = defineMessages({
   },
   german: {
     id: 'components.common.languagepicker.german',
-    defaultMessage: 'Deutsche',
+    defaultMessage: 'Deutsch',
     description: 'some desc',
   },
   french: {

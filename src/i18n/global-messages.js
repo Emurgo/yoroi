@@ -47,6 +47,34 @@ export const confirmationMessages = {
   }),
 }
 
+// common strings used when displaying tx data
+export const txLabels = defineMessages({
+  amount: {
+    id: 'global.txLabels.amount',
+    defaultMessage: '!!!Amount',
+  },
+  balanceAfterTx: {
+    id: 'global.txLabels.balanceAfterTx',
+    defaultMessage: '!!!Balance after transaction',
+  },
+  fees: {
+    id: 'global.txLabels.fees',
+    defaultMessage: '!!!Fees',
+  },
+  password: {
+    id: 'global.txLabels.password',
+    defaultMessage: '!!!Spending password',
+  },
+  receiver: {
+    id: 'global.txLabels.receiver',
+    defaultMessage: '!!!Receiver',
+  },
+  submittingTx: {
+    id: 'global.txLabels.submittingTx',
+    defaultMessage: 'Submitting transaction',
+  },
+})
+
 export const errorMessages = {
   pinMismatch: defineMessages({
     title: {

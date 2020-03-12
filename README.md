@@ -15,6 +15,8 @@ rustup target add wasm32-unknown-unknown --toolchain 1.32.0
 ```
 Make sure `rustc --version` outputs `1.32.0`, which is the stable version (and not nightly).
 
+Also, make sure your `nodeJS` verison matches `v10.14.2`. If you have `nvm` installed, you can just `nvm use`.
+
 ### ios
 
 Install cocoapods and download ios dependencies:

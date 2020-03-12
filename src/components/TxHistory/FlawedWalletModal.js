@@ -7,7 +7,6 @@ import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import {Text, Button, Modal} from '../UiKit'
 
 import styles from './styles/FlawedWalletModal.style'
-// import image from '../../assets/img/alert-circle@3x.png'
 import image from '../../assets/img/mnemonic_explanation.png'
 
 import type {ComponentType} from 'react'

@@ -11,7 +11,10 @@ import {easyConfirmationSelector} from '../../selectors'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {NUMBERS, CONFIG, CARDANO_CONFIG} from '../../config'
 import {Button, ValidatedTextInput, Text, PleaseWaitModal} from '../UiKit'
-import globalMessages, {errorMessages} from '../../i18n/global-messages'
+import globalMessages, {
+  errorMessages,
+  txLabels,
+} from '../../i18n/global-messages'
 import {formatAdaWithText, formatAda} from '../../utils/format'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 import {
@@ -46,18 +49,6 @@ const messages = defineMessages({
     id: 'components.stakingcenter.confirmDelegation.delegateButtonLabel',
     defaultMessage: '!!!Delegate',
   },
-  password: {
-    // TODO: add to global messages
-    id: 'components.send.confirmscreen.password',
-    defaultMessage: '!!!Spending password',
-    description: 'some desc',
-  },
-  amountLabel: {
-    // TODO: add to global messages
-    id: 'components.send.amountfield.label',
-    defaultMessage: '!!!Amount',
-    description: 'some desc',
-  },
   ofFees: {
     id: 'components.stakingcenter.confirmDelegation.ofFees',
     defaultMessage: '!!!of fees',
@@ -67,12 +58,6 @@ const messages = defineMessages({
     defaultMessage:
       '!!!Current approximation of rewards that you will ' +
       'receive per epoch:',
-  },
-  // TODO: add to global messages
-  sendingModalTitle: {
-    id: 'components.send.confirmscreen.sendingModalTitle',
-    defaultMessage: '!!!Submitting transaction',
-    description: 'some desc',
   },
   delegationTxSignError: {
     id: 'components.stakingcenter.confirmDelegation.delegationTxSignError',
@@ -235,7 +220,7 @@ const DelegationConfirmation = ({
             onChangeText={doNothing}
             editable={false}
             value={formatAda(amountToDelegate)}
-            label={intl.formatMessage(messages.amountLabel)}
+            label={intl.formatMessage(txLabels.amount)}
           />
         </View>
         {!isEasyConfirmationEnabled && (
@@ -243,7 +228,7 @@ const DelegationConfirmation = ({
             <ValidatedTextInput
               secureTextEntry
               value={password}
-              label={intl.formatMessage(messages.password)}
+              label={intl.formatMessage(txLabels.password)}
               onChangeText={setPassword}
             />
           </View>
@@ -266,7 +251,7 @@ const DelegationConfirmation = ({
       </View>
 
       <PleaseWaitModal
-        title={intl.formatMessage(messages.sendingModalTitle)}
+        title={intl.formatMessage(txLabels.submittingTx)}
         spinnerText={intl.formatMessage(globalMessages.pleaseWait)}
         visible={sendingTransaction}
       />
