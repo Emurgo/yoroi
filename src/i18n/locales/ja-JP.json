@@ -27,7 +27,7 @@
   "components.delegationsummary.notDelegatedInfo.secondLine": "ステーキングセンターにアクセスして、委任したいステークプールを選択してください。本テストネットでは、委任できるステークプールは1つだけですのでご注意ください。",
   "components.delegationsummary.upcomingReward.followingLabel": "以下の報酬",
   "components.delegationsummary.upcomingReward.nextLabel": "次の報酬",
-  "components.delegationsummary.upcomingReward.rewardDisclaimerText": "Note that after you delegate to a stake pool, you will need to wait until the end of the current epoch, plus two additional epochs, before starting receiving rewards.",
+  "components.delegationsummary.upcomingReward.rewardDisclaimerText": "ステークプールへの委任後、報酬を受領するまでには、現在のエポックが終了してからさらに2エポック分待つ必要があることに注意してください。",
   "components.delegationsummary.userSummary.title": "サマリー",
   "components.delegationsummary.userSummary.totalDelegated": "委任合計額",
   "components.delegationsummary.userSummary.totalRewards": "報酬合計額",
