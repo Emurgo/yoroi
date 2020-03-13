@@ -88,4 +88,5 @@ export const ROOT_ROUTES = {
   WALLET: 'app-root',
   SHELLEY_WALLET: 'app-root-shelley',
   INIT: INIT_SCREEN,
+  STORYBOOK: 'storybook',
 }

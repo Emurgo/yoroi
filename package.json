@@ -18,7 +18,9 @@
     "e2e:test-ios": "detox test -c ios.release",
     "e2e:build-ios": "detox build -c ios.release",
     "e2e:test-android": "detox test -c android.emu.mainnet.release",
-    "e2e:build-android": "detox build -c android.emu.mainnet.release"
+    "e2e:build-android": "detox build -c android.emu.mainnet.release",
+    "prestorybook": "rnstl  --searchDir ./src/components --pattern '**/*.stories.js'",
+    "storybook": "(adb reverse tcp:7007 tcp:7007 || true) && start-storybook"
   },
   "dependencies": {
     "@babel/cli": "7.2.3",
@@ -92,7 +94,13 @@
   },
   "devDependencies": {
     "@emurgo/js-chain-libs-node": "git+https://github.com/SebastienGllmt/js-chain-libs-node-pkg.git",
+    "@storybook/addon-actions": "^5.3.14",
+    "@storybook/addon-links": "^5.3.14",
+    "@storybook/addons": "^5.3.14",
+    "@storybook/react-native": "^5.3.14",
+    "@storybook/react-native-server": "^5.3.14",
     "babel-jest": "^24.8.0",
+    "babel-loader": "^8.0.6",
     "babel-plugin-react-intl": "^3.0.1",
     "babel-plugin-require-context-hook": "^1.0.0",
     "detox": "15.4.2",
@@ -104,9 +112,11 @@
     "metro-react-native-babel-preset": "0.54.1",
     "prettier": "1.14.3",
     "prettylint": "1.0.0",
+    "react-dom": "16.8.3",
     "react-intl-translations-manager": "^5.0.3",
     "react-native-inhibit-warnings": "https://github.com/Emurgo/react-native-inhibit-warnings.git",
     "react-native-schemes-manager": "^1.0.5",
+    "react-native-storybook-loader": "^1.8.1",
     "react-test-renderer": "16.8.3"
   },
   "resolutions": {
@@ -118,8 +128,8 @@
     },
     "preset": "react-native",
     "testMatch": [
-        "**/__tests__/**/*.[jt]s?(x)",
-        "**/?(*.)+(test).[jt]s?(x)"
+      "**/__tests__/**/*.[jt]s?(x)",
+      "**/?(*.)+(test).[jt]s?(x)"
     ]
   },
   "xcodeSchemes": {
@@ -146,8 +156,7 @@
       },
       "android.emu.mainnet.debug": {
         "binaryPath": "android/app/build/outputs/apk/mainnet/debug/app-mainnet-debug.apk",
-        "build":
-        "cd android && ./gradlew assembleMainnetDebug assembleMainnetDebugAndroidTest -DtestBuildType=debug && cd ..",
+        "build": "cd android && ./gradlew assembleMainnetDebug assembleMainnetDebugAndroidTest -DtestBuildType=debug && cd ..",
         "type": "android.emulator",
         "device": {
           "avdName": "Nexus_6_API_28_2_e2e_"

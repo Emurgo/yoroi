@@ -11,6 +11,7 @@ import SendScreenNavigator from './components/Send/SendScreenNavigator'
 import ReceiveScreenNavigator from './components/Receive/ReceiveScreenNavigator'
 import FirstRunNavigator from './components/FirstRun/FirstRunNavigator'
 import IndexScreen from './components/IndexScreen'
+import StorybookScreen from './components/StorybookScreen'
 import SplashScreen from './components/SplashScreen'
 import AppStartScreen from './components/Login/AppStartScreen'
 import {WALLET_ROUTES, SHELLEY_WALLET_ROUTES, ROOT_ROUTES} from './RoutesList'
@@ -56,6 +57,7 @@ const AppNavigator = createSwitchNavigator(
   {
     [ROOT_ROUTES.SPLASH]: SplashScreen,
     [ROOT_ROUTES.INDEX]: IndexScreen,
+    [ROOT_ROUTES.STORYBOOK]: StorybookScreen,
     [ROOT_ROUTES.FIRST_RUN]: FirstRunNavigator,
     [ROOT_ROUTES.NEW_WALLET]: WalletInitNavigator,
     [ROOT_ROUTES.BIO_AUTH]: BiometricAuthScreen,
