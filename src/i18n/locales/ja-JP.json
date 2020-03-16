@@ -16,7 +16,7 @@
   "components.delegation.delegationnavigationbuttons.stakingCenterButton": "ステーキングセンターへ",
   "components.delegationsummary.delegatedStakepoolInfo.fullDescriptionButtonLabel": "ウェブサイトへ",
   "components.delegationsummary.delegatedStakepoolInfo.title": "ステークプールに委任しました",
-  "components.delegationsummary.delegatedStakepoolInfo.warning": "If you just delegated to a new stake pool, it may take a couple of minutes for the network to process your request.",
+  "components.delegationsummary.delegatedStakepoolInfo.warning": "委任先のステークプールを変更した場合、変更が反映されるまで数分かかる場合があります。",
   "components.delegationsummary.epochProgress.endsIn": "終了まで",
   "components.delegationsummary.epochProgress.title": "エポック進歩",
   "components.delegationsummary.failedwalletupgrademodal.title": "警告！",
