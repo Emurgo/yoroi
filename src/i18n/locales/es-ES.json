@@ -316,6 +316,12 @@
   "global.staking.stakePoolHash": "Hash del stake pool",
   "global.termsOfUse": "Términos de uso",
   "global.totalAda": "Total ADA",
+  "global.txLabels.amount": "Amount",
+  "global.txLabels.balanceAfterTx": "balanceAfterTx",
+  "global.txLabels.fees": "Fees",
+  "global.txLabels.password": "Spending password",
+  "global.txLabels.receiver": "Receiver",
+  "global.txLabels.submittingTx": "Submitting transaction",
   "utils.format.today": "Hoy",
   "utils.format.yesterday": "Ayer"
 }
