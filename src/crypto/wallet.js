@@ -552,7 +552,7 @@ export class Wallet {
   }
 
   async getStakingKey() {
-    assert.assert(this._isShelley, 'getAccountAddress: isShelley')
+    assert.assert(this._isShelley, 'getStakingKey: isShelley')
     // TODO: save account public key as class member to avoid fetching
     // from internal chain?
     const accountHex = this._internalChain._addressGenerator.account
@@ -574,7 +574,7 @@ export class Wallet {
   }
 
   async getChangeAddressShelley() {
-    assert.assert(this._isShelley, 'getAccountAddress: isShelley')
+    assert.assert(this._isShelley, 'getChangeAddressShelley: isShelley')
     const nextInternal = await this._internalChain.getNextUnused(
       api.filterUsedAddresses,
       CARDANO_CONFIG.SHELLEY,
@@ -590,7 +590,7 @@ export class Wallet {
   }
 
   async getAllUtxosForKey(utxos: Array<RawUtxo>) {
-    assert.assert(this._isShelley, 'getAccountAddress: isShelley')
+    assert.assert(this._isShelley, 'getAllUtxosForKey: isShelley')
     return await filterAddressesByStakingKey(
       await this.getStakingKey(),
       this.asAddressedUtxo(utxos),
@@ -629,6 +629,7 @@ export class Wallet {
     valueInAccount: number,
     utxos: Array<RawUtxo>,
   ): Promise<DelegationTxData> {
+    assert.assert(this._isShelley, 'prepareDelegationTx: isShelley')
     const stakingKey = await this.getStakingKey()
     const changeAddr = await this.getChangeAddressShelley()
     const addressedUtxos = this.asAddressedUtxo(utxos)
@@ -647,7 +648,7 @@ export class Wallet {
     unsignedTx: V3UnsignedTxAddressedUtxoData,
     decryptedMasterKey: string,
   ): Promise<V3SignedTx> {
-    assert.assert(this._isShelley, 'signShelleyTx: isShelley')
+    assert.assert(this._isShelley, 'signDelegationTx: isShelley')
     Logger.debug('wallet::signDelegationTx::unsignedTx ', unsignedTx)
     const masterKey = await Bip32PrivateKey.from_bytes(
       Buffer.from(decryptedMasterKey, 'hex'),
@@ -987,8 +988,6 @@ class WalletManager {
     if (wallet._isEasyConfirmationEnabled) {
       await this.ensureKeysValidity()
     }
-
-    Logger.debug('openWallet::wallet::isShelley', wallet._isShelley)
 
     return wallet
   }
