@@ -5,7 +5,7 @@
   "components.common.languagepicker.contributors": "_",
   "components.common.languagepicker.english": "English",
   "components.common.languagepicker.french": "Français",
-  "components.common.languagepicker.german": "Deutsche",
+  "components.common.languagepicker.german": "Deutsch",
   "components.common.languagepicker.indonesian": "Bahasa Indonesia",
   "components.common.languagepicker.italian": "Italiano",
   "components.common.languagepicker.japanese": "日本語",
@@ -316,6 +316,12 @@
   "global.staking.stakePoolHash": "ステークプールハッシュ",
   "global.termsOfUse": "利用規約",
   "global.totalAda": "ADA合計額",
+  "global.txLabels.amount": "Amount",
+  "global.txLabels.balanceAfterTx": "balanceAfterTx",
+  "global.txLabels.fees": "Fees",
+  "global.txLabels.password": "Spending password",
+  "global.txLabels.receiver": "Receiver",
+  "global.txLabels.submittingTx": "Submitting transaction",
   "utils.format.today": "今日",
   "utils.format.yesterday": "昨日"
 }
