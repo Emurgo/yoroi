@@ -5,7 +5,7 @@
   "components.common.languagepicker.contributors": "红中玉",
   "components.common.languagepicker.english": "英语",
   "components.common.languagepicker.french": "法语",
-  "components.common.languagepicker.german": "德语",
+  "components.common.languagepicker.german": "Deutsch",
   "components.common.languagepicker.indonesian": "印尼语",
   "components.common.languagepicker.italian": "意大利语",
   "components.common.languagepicker.japanese": "日语",
@@ -316,6 +316,12 @@
   "global.staking.stakePoolHash": "权益池哈希",
   "global.termsOfUse": "使用条款",
   "global.totalAda": "ADA总量",
+  "global.txLabels.amount": "Amount",
+  "global.txLabels.balanceAfterTx": "balanceAfterTx",
+  "global.txLabels.fees": "Fees",
+  "global.txLabels.password": "Spending password",
+  "global.txLabels.receiver": "Receiver",
+  "global.txLabels.submittingTx": "Submitting transaction",
   "utils.format.today": "今天",
   "utils.format.yesterday": "昨天"
 }
