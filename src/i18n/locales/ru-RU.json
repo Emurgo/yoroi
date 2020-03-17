@@ -316,12 +316,12 @@
   "global.staking.stakePoolHash": "Хэш стейк-пула",
   "global.termsOfUse": "Условия использования",
   "global.totalAda": "Всего ADA",
-  "global.txLabels.amount": "Amount",
+  "global.txLabels.amount": "Сумма",
   "global.txLabels.balanceAfterTx": "balanceAfterTx",
-  "global.txLabels.fees": "Fees",
-  "global.txLabels.password": "Spending password",
-  "global.txLabels.receiver": "Receiver",
-  "global.txLabels.submittingTx": "Submitting transaction",
+  "global.txLabels.fees": "Комиссия",
+  "global.txLabels.password": "Пароль",
+  "global.txLabels.receiver": "Получатель",
+  "global.txLabels.submittingTx": "Отправка транзакции",
   "utils.format.today": "Сегодня",
   "utils.format.yesterday": "Вчера"
 }
