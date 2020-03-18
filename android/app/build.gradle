@@ -18,6 +18,9 @@ import com.android.build.OutputFile
  *   // the entry file for bundle generation
  *   entryFile: "index.android.js",
  *
+ *   // https://facebook.github.io/react-native/docs/performance#enable-the-ram-format
+ *   bundleCommand: "ram-bundle",
+ *
  *   // whether to bundle JS and assets in debug mode
  *   bundleInDebug: false,
  *
@@ -83,7 +86,7 @@ project.ext.envConfigFiles = [
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
-apply from: "../../node_modules/react-native-sentry/sentry.gradle"
+apply from: "../../node_modules/@sentry/react-native/sentry.gradle"
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -102,6 +105,15 @@ def enableProguardInReleaseBuilds = false
 
 def Properties properties = new Properties()
 properties.load(project.rootProject.file("gradle.properties.local").newDataInputStream())
+
+/**
+ * Use international variant JavaScriptCore
+ * International variant includes ICU i18n library and necessary data allowing to use
+ * e.g. Date.toLocaleString and String.localeCompare that give correct results
+ * when using with locales other than en-US.
+ * Note that this variant is about 6MiB larger per architecture than default.
+ */
+def useIntlJsc = false
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -123,8 +135,15 @@ android {
         // detox setup
         testBuildType System.getProperty('testBuildType', 'debug')  // This will later be used to control the test apk build type
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        missingDimensionStrategy 'react-native-camera', 'general'
     }
     signingConfigs {
+        debug {
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
         release {
             if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
                 storeFile file(MYAPP_RELEASE_STORE_FILE)
@@ -143,6 +162,9 @@ android {
         }
     }
     buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
@@ -183,8 +205,8 @@ android {
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
             // For each separate APK per architecture, set a unique version code as described here:
-            // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
-            def versionCodes = ["armeabi-v7a":1, "x86":2, "arm64-v8a":3, "x86_64":4]
+            // https://developer.android.com/studio/build/configure-apk-splits.html
+            def versionCodes = ["armeabi-v7a": 1, "x86": 2, "arm64-v8a": 3, "x86_64": 4]
             def abi = output.getFilter(OutputFile.ABI)
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =
@@ -192,38 +214,17 @@ android {
             }
         }
     }
-    // jsc-android
-    packagingOptions {
-        pickFirst '**/libjsc.so'
-        pickFirst '**/libc++_shared.so'
-    }
 }
 
 dependencies {
-    implementation "org.webkit:android-jsc:r241213"
-    implementation project(':react-native-ble-plx')
-    implementation project(':react-native-chain-libs')
-    implementation project(':react-native-device-info')
-    implementation project(':@react-native-community_async-storage')
-    implementation project(':react-native-cardano')
-    implementation project(':react-native-sentry')
-    implementation project(':react-native-local-resource')
-    implementation project(':react-native-config')
-    implementation project(':react-native-splash-screen')
-    implementation project(':react-native-camera')
-    implementation project(':react-native-randombytes')
-    implementation project(':react-native-fs')
-    implementation project(':react-native-linear-gradient')
-    implementation project(':react-native-svg')
-    implementation project(':react-native-webview')
-    // implementation project(':@ledgerhq_react-native-hid')
-    implementation project(':@v-almonacid_react-native-hid')
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation "com.facebook.react:react-native:+"  // From node_modules
-
-    implementation project(':react-native-background-timer')
-    implementation "com.google.android.gms:play-services-base:15.0.1"
+    // JSC from node_modules
+    if (useIntlJsc) {
+        implementation 'org.webkit:android-jsc-intl:+'
+    } else {
+        implementation 'org.webkit:android-jsc:+'
+    }
 
     // detox setup
     androidTestImplementation('com.wix:detox:+') {
@@ -266,3 +267,4 @@ tasks.whenTaskAdded { task ->
 }
 
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
+apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)

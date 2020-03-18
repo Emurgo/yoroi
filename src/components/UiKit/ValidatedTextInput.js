@@ -35,8 +35,13 @@ const ValidatedTextInput = ({
 }) => (
   <View style={styles.container}>
     <TextInput
-      style={[styles.input, error && styles.inputError, style]}
-      secureTextEntry={secureTextEntry && !showPassword}
+      {...restProps}
+      style={[
+        styles.input,
+        error != null && error !== false && styles.inputError,
+        style,
+      ]}
+      secureTextEntry={secureTextEntry === true && !showPassword}
       autoCorrect={!secureTextEntry}
       keyboardType={
         keyboardType
@@ -47,15 +52,21 @@ const ValidatedTextInput = ({
               : 'default' // visible-password is Android-only
           : 'default'
       }
-      {...restProps}
     />
-    {!!label && (
+    {label != null && (
       <View style={styles.labelWrap}>
-        <Text style={[styles.label, error && styles.labelError]}>{label}</Text>
+        <Text
+          style={[
+            styles.label,
+            error != null && error !== false && styles.labelError,
+          ]}
+        >
+          {label}
+        </Text>
       </View>
     )}
 
-    {secureTextEntry && (
+    {secureTextEntry === true && (
       <TouchableOpacity
         style={styles.showPasswordContainer}
         onPress={toggleShowPassword}
@@ -67,7 +78,8 @@ const ValidatedTextInput = ({
       </TouchableOpacity>
     )}
 
-    {!!error && <Text style={styles.error}>{error}</Text>}
+    {error != null &&
+      error !== false && <Text style={styles.error}>{error}</Text>}
   </View>
 )
 

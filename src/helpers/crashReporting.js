@@ -1,6 +1,6 @@
 // @flow
 
-import {Sentry, SentrySeverity} from 'react-native-sentry'
+import {Sentry, SentrySeverity} from '@sentry/react-native'
 
 import {CONFIG} from '../config'
 import {Logger} from '../utils/logging'
@@ -16,9 +16,15 @@ const addLog = (
 
 /* eslint-disable no-console */
 const enable = () => {
-  Sentry.config(CONFIG.SENTRY)
-    .install({deactivateStacktraceMerging: false})
-    .then((_enabled = true))
+  if (!CONFIG.SENTRY.ENABLE) {
+    return
+  }
+  // TODO(v-almonacid): test new setup
+  Sentry.init({
+    dsn: CONFIG.SENTRY.DSN,
+  }).then(() => {
+    _enabled = true
+  })
 
   Logger.setLogger({
     debug: console.debug,
@@ -58,10 +64,15 @@ const crash = () => {
   _enabled && Sentry.crash()
 }
 
+const testNativeCrash = () => {
+  _enabled && Sentry.nativeCrash()
+}
+
 export default {
   enable,
   setUserId,
   crash,
+  testNativeCrash,
   setStringValue,
   setBoolValue,
 }

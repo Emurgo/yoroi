@@ -93,7 +93,7 @@ class Text extends React.Component<Props, State> {
 
     if (adjustsFontSizeToFit != null && Platform.OS === 'ios') {
       return (
-        <RNText style={textStyle} {...restProps}>
+        <RNText {...restProps} style={textStyle}>
           {children}
         </RNText>
       )
@@ -103,6 +103,7 @@ class Text extends React.Component<Props, State> {
       // https://github.com/facebook/react-native/issues/20906
       return (
         <RNText
+          {...restProps}
           onLayout={(event) => {
             if (adjustsFontSizeToFit == null || typeof children !== 'string') {
               return
@@ -121,7 +122,6 @@ class Text extends React.Component<Props, State> {
             this.setState({fontSize})
           }}
           style={textStyle}
-          {...restProps}
         >
           {children}
         </RNText>

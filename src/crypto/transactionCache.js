@@ -20,10 +20,10 @@ type SyncMetadata = {
   bestBlockNum: number,
 }
 
-type TransactionCacheState = {
+type TransactionCacheState = {|
   transactions: Dict<Transaction>,
   perAddressSyncMetadata: Dict<SyncMetadata>,
-}
+|}
 
 const getLastTimestamp = (transactions: Array<Transaction>): ?Moment => {
   // Note(ppershing): ISO8601 dates can be sorted as strings
@@ -250,7 +250,7 @@ export class TransactionCache {
     return this._state
   }
 
-  static fromJSON(data: any) {
+  static fromJSON(data: TransactionCacheState) {
     const cache = new TransactionCache()
     cache.updateState(data)
     return cache

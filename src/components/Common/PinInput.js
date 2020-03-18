@@ -98,8 +98,12 @@ const PinInput = ({
     <View style={styles.infoContainer}>
       <Text style={styles.title}>{labels.title}</Text>
 
-      <Text style={styles.subtitle}>{labels.subtitle}</Text>
-      <Text style={styles.subtitle}>{labels.subtitle2}</Text>
+      <Text style={styles.subtitle}>
+        {labels.subtitle == null ? null : labels.subtitle}
+      </Text>
+      <Text style={styles.subtitle}>
+        {labels.subtitle2 == null ? null : labels.subtitle2}
+      </Text>
 
       <View style={styles.pinContainer}>
         {_.range(0, pinMaxLength).map((index) => (

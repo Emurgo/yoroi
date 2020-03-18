@@ -153,13 +153,13 @@ type State = {
 
 export default injectIntl(
   (compose(
-    withStateHandlers<State, *, *>(
+    withStateHandlers(
       {
         error: null,
       },
       {
-        setError: (state) => (error: ErrorCode) => ({error}),
-        clearError: (state) => () => ({error: null}),
+        setError: (state: State) => (error: ErrorCode) => ({error}),
+        clearError: (state: State) => () => ({error: null}),
       },
     ),
     withHandlers({

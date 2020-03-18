@@ -940,7 +940,7 @@ class WalletManager {
   async generateNewUiReceiveAddressIfNeeded() {
     if (!this._wallet) return
     await this.abortWhenWalletCloses(
-      this._wallet.generateNewUiReceiveAddressIfNeeded(),
+      Promise.resolve(this._wallet.generateNewUiReceiveAddressIfNeeded()),
     )
   }
 

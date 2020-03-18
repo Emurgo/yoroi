@@ -25,10 +25,12 @@ export const mapArrayToId = (
   id: number | string,
   mapByProp?: string,
 ) => ({
+  // future note: flow doesn't support computed keys
   [id]: mappingFn(data, mapByProp),
 })
 
 export const mapObjToId = (data: Object, id: number | string) => ({
+  // future note: flow doesn't support computed keys
   [id]: data,
 })
 

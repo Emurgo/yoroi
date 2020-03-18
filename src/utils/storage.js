@@ -13,7 +13,7 @@ const checkPathFormat = (path: string) =>
 const parseJson = (json: string) =>
   json !== null ? JSON.parse(json) : undefined
 
-export const read = async (path: string) => {
+export const read: (string) => Promise<void | any> = async (path) => {
   assert.preconditionCheck(checkPathFormat(path), 'Wrong storage key path')
 
   try {

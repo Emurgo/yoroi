@@ -102,6 +102,7 @@ export const withNavigationTitle = <Props: {navigation: any}>(
       )
 
       setTitle = (value) => this.props.navigation.setParams({
+        // future note: flow doesn't support computed keys
         [paramName != null ? paramName : 'title']: value,
       })
 

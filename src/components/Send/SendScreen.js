@@ -153,7 +153,7 @@ const getTransactionData = (utxos, address, amount) => {
 const recomputeAll = async ({amount, address, utxos}) => {
   const amountErrors = validateAmount(amount)
   const addressErrors = await validateAddressAsync(address)
-  let balanceErrors = {}
+  let balanceErrors = Object.freeze({})
   let fee = null
   let balanceAfter = null
 
@@ -218,7 +218,7 @@ class SendScreen extends Component<Props, State> {
     amountErrors: {amountIsRequired: true},
     fee: null,
     balanceAfter: null,
-    balanceErrors: {},
+    balanceErrors: Object.freeze({}),
   }
 
   componentDidMount() {

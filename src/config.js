@@ -13,7 +13,11 @@ const IS_DEBUG = __DEV__
 const _SHOW_INIT_DEBUG_SCREEN = env.getBoolean('SHOW_INIT_DEBUG_SCREEN', false)
 const _PREFILL_WALLET_INFO = env.getBoolean('PREFILL_WALLET_INFO', false)
 const _USE_TESTNET = env.getBoolean('USE_TESTNET', true)
-const _SENTRY = env.getString('SENTRY')
+// TODO(v-almonacid): consider adding 'ENABLE' as an env variable
+const _SENTRY = {
+  DSN: env.getString('SENTRY'),
+  ENABLE: false,
+}
 
 const _LOG_LEVEL = IS_DEBUG ? LogLevel.Debug : LogLevel.Warn
 const _ASSURANCE_STRICT = false

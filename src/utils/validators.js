@@ -6,32 +6,32 @@ import {isValidAddress} from '../crypto/byron/util'
 import assert from '../utils/assert'
 import {parseAdaDecimal, InvalidAdaAmount} from '../utils/parsing'
 
-export type PasswordValidationErrors = {
+export type PasswordValidationErrors = {|
   passwordReq?: boolean,
   passwordConfirmationReq?: boolean,
   matchesConfirmation?: boolean,
   passwordIsWeak?: boolean,
-}
+|}
 
-export type WalletNameValidationErrors = {
+export type WalletNameValidationErrors = {|
   tooLong?: boolean,
   nameAlreadyTaken?: boolean,
   mustBeFilled?: boolean,
-}
+|}
 
-export type AddressValidationErrors = {
+export type AddressValidationErrors = {|
   addressIsRequired?: boolean,
   invalidAddress?: boolean,
-}
+|}
 
-export type AmountValidationErrors = {
+export type AmountValidationErrors = {|
   amountIsRequired?: boolean,
   invalidAmount?: $Values<typeof InvalidAdaAmount.ERROR_CODES>,
-}
+|}
 
-export type BalanceValidationErrors = {
+export type BalanceValidationErrors = {|
   insufficientBalance?: boolean,
-}
+|}
 
 export const INVALID_PHRASE_ERROR_CODES = {
   TOO_LONG: 'TOO_LONG',
@@ -125,7 +125,7 @@ export const validateAddressAsync = async (
   }
 
   const isValid = await isValidAddress(address)
-  return isValid ? {} : {invalidAddress: true}
+  return isValid ? Object.freeze({}) : {invalidAddress: true}
 }
 
 export const validateAmount = (value: string): AmountValidationErrors => {
@@ -135,7 +135,7 @@ export const validateAmount = (value: string): AmountValidationErrors => {
 
   try {
     parseAdaDecimal(value)
-    return {}
+    return Object.freeze({})
   } catch (e) {
     if (e instanceof InvalidAdaAmount) {
       return {invalidAmount: e.errorCode}

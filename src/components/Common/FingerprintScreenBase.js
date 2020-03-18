@@ -49,7 +49,9 @@ const FingerprintScreenBase = ({
       </View>
     </View>
 
-    {error ? <Text style={styles.error}>{error}</Text> : null}
+    {error != null && error !== false ? (
+      <Text style={styles.error}>{error}</Text>
+    ) : null}
 
     <View style={styles.controls}>{buttons}</View>
   </ScreenBackground>

@@ -33,19 +33,19 @@ allprojects {
         jcenter()
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-            url "$rootDir/../node_modules/react-native/android"
+            url("$rootDir/../node_modules/react-native/android")
+        }
+        maven {
+            // Android JSC is installed from npm
+            url("$rootDir/../node_modules/jsc-android/dist")
         }
         maven {
             // All of Detox' artifacts are provided via the npm module
-            url "$rootDir/../node_modules/detox/Detox-android"
+            url("$rootDir/../node_modules/detox/Detox-android")
         }
         // react-native-ble-plx setup
+        // https://github.com/Polidea/react-native-ble-plx (@2.0.0)
         maven { url 'https://jitpack.io' }
-        // jsc-android setup
-        maven {
-          // Local Maven repo containing AARs with JSC library built for Android
-          url "$rootDir/../node_modules/jsc-android/dist"
-        }
     }
 }
 

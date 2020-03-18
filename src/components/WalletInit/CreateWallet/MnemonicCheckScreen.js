@@ -99,7 +99,7 @@ const _WordBadge = ({word, handleOnPress, selected, hidden}) => (
     style={[
       styles.wordBadge,
       selected && styles.selected,
-      hidden && styles.hidden,
+      hidden === true && styles.hidden,
     ]}
     testID={selected ? `wordBadgeTapped-${word}` : `wordBadgeNonTapped-${word}`}
   >

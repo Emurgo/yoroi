@@ -23,9 +23,7 @@ type ExternalProps = {|
   intl: intlShape,
 |}
 
-const AddressReaderQR = ({address, setAddress, onSuccess}) => (
-  <QRCodeScanner onRead={onSuccess} />
-)
+const AddressReaderQR = ({onSuccess}) => <QRCodeScanner onRead={onSuccess} />
 
 export default injectIntl(
   (compose(
