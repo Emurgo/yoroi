@@ -316,12 +316,12 @@
   "global.staking.stakePoolHash": "Stake pool hash",
   "global.termsOfUse": "Nutzungsbestimmungen",
   "global.totalAda": "ADA insgesamt",
-  "global.txLabels.amount": "Amount",
-  "global.txLabels.balanceAfterTx": "balanceAfterTx",
-  "global.txLabels.fees": "Fees",
-  "global.txLabels.password": "Spending password",
-  "global.txLabels.receiver": "Receiver",
-  "global.txLabels.submittingTx": "Submitting transaction",
+  "global.txLabels.amount": "Betrag",
+  "global.txLabels.balanceAfterTx": "KontostandNachTx",
+  "global.txLabels.fees": "Gebühren",
+  "global.txLabels.password": "Ausgaben-Passwort",
+  "global.txLabels.receiver": "Empfänger",
+  "global.txLabels.submittingTx": "Überweisung versenden",
   "utils.format.today": "Heute",
   "utils.format.yesterday": "Gestern"
 }
