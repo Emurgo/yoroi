@@ -110,7 +110,8 @@
     "react-test-renderer": "16.8.3"
   },
   "resolutions": {
-    "base-x": "3.0.4"
+    "base-x": "3.0.4",
+    "minimist": "1.2.3"
   },
   "jest": {
     "transform": {
