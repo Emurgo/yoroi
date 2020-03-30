@@ -13,7 +13,7 @@ configure(() => {
   loadStories()
 }, module)
 
-addDecorator((storyFn) => <CenterView>{storyFn()}</CenterView>)
+// addDecorator((storyFn) => <CenterView>{storyFn()}</CenterView>)
 
 
 // Refer to
