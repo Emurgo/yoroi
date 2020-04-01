@@ -13,16 +13,16 @@ configure(() => {
 }, module)
 
 // mockup navigation prop
+// some stories may require specific navigation parameters to work; these should
+// be specified locally in the story file
 const navigation = {
   navigate: (route, params) => {
-    action('navigated!')
-    // console.log('navigated!')
+    action(`navigated to ${route}`)
   },
   setParams: (params) => {
     action(params)
-    // console.log(params)
   },
-  getParam: (param) => ({param: true}),
+  getParam: (param) => true,
 }
 
 addDecorator((storyFn) => storyFn({navigation}))

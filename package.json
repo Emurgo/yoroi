@@ -20,7 +20,7 @@
     "e2e:test-android": "detox test -c android.emu.mainnet.release",
     "e2e:build-android": "detox build -c android.emu.mainnet.release",
     "prestorybook": "rnstl  --searchDir ./src/components --pattern '**/*.stories.js'",
-    "storybook": "(adb reverse tcp:7007 tcp:7007 || true) && start-storybook",
+    "storybook": "(adb reverse tcp:7007 tcp:7007 || true) && start-storybook --config-dir ./storybook",
     "storybook:web": "start-storybook -p 6006 --config-dir ./storybook-web",
     "storybook-build:web": "build-storybook --config-dir ./storybook-web -o .dist-storybook-website --quiet",
     "deploy-storybook": "storybook-to-ghpages -- --out=.dist-storybook-website"
