@@ -1,5 +1,5 @@
 // @flow
-import {encryptData, decryptData} from './byron/util'
+import {encryptData, decryptData, KNOWN_ERROR_MSG} from './byron/util'
 import {WrongPassword} from './errors'
 
 export const encryptCustomPin = async (installationId: string, pin: string) => {
@@ -16,7 +16,12 @@ export const authenticateByCustomPin = async (
     await decryptData(customPinHash, pinCandidate)
     return true
   } catch (err) {
-    if (err instanceof WrongPassword) {
+    if (
+      err instanceof WrongPassword ||
+      // for some reason WrongPassword is not detected by instanceof so I need
+      // to add this hack
+      err.message === KNOWN_ERROR_MSG.DECRYPT_FAILED
+    ) {
       return false
     }
     throw err
