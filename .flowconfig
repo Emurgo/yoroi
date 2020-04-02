@@ -19,6 +19,9 @@
 ; Ignore metro
 .*/node_modules/metro/.*
 
+; Ignore findup (storybook dependency)
+.*/node_modules/findup/test/.*
+
 [include]
 
 [libs]

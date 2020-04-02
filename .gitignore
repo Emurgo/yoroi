@@ -93,5 +93,4 @@ output.json
 java_pid*
 
 # storybook
-.dist-storybook-website
 storybook/storyLoader.js
