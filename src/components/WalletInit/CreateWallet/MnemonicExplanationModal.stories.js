@@ -8,7 +8,6 @@ import {storiesOf} from '@storybook/react-native'
 
 import MnemonicExplanationModal from './MnemonicExplanationModal'
 
-
 const ModalWrapper = compose(
   withStateHandlers(
     {
@@ -17,11 +16,10 @@ const ModalWrapper = compose(
     {
       onRequestClose: (state) => () => ({visible: false}),
       onConfirm: (state) => () => ({visible: false}),
-    }
-  )
+    },
+  ),
 )(MnemonicExplanationModal)
 
-storiesOf('MnemonicExplanationModal', module)
-  .add('Default', () => (
-    <ModalWrapper />
-  ))
+storiesOf('MnemonicExplanationModal', module).add('Default', () => (
+  <ModalWrapper />
+))

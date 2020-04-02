@@ -18,10 +18,6 @@ const navigation = {
   getParam: (param) => ({param: true}),
 }
 
-
-storiesOf('AcceptTermsOfServiceScreen', module)
-  .add('Default', () => (
-    <AcceptTermsOfServiceScreen
-      navigation={navigation}
-    />
-  ))
+storiesOf('AcceptTermsOfServiceScreen', module).add('Default', () => (
+  <AcceptTermsOfServiceScreen navigation={navigation} />
+))

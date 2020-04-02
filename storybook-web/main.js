@@ -1,5 +1,3 @@
-// @flow
-
 const path = require('path')
 
 const rootDirectory = path.resolve(__dirname, '../')

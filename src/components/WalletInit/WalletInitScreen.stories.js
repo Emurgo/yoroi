@@ -12,12 +12,12 @@ storiesOf('WalletInitScreen', module)
       if (param === 'isShelleyWallet') return true
       return ''
     }
-    return (<WalletInitScreen navigation={navigation} />)
+    return <WalletInitScreen navigation={navigation} />
   })
   .add('Byron', ({navigation}) => {
     navigation.getParam = (param) => {
       if (param === 'isShelleyWallet') return false
       return ''
     }
-    return (<WalletInitScreen navigation={navigation} />)
+    return <WalletInitScreen navigation={navigation} />
   })
