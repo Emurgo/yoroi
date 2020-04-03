@@ -247,7 +247,7 @@ tasks.create('checkEnvVariables') {
 }
 
 tasks.whenTaskAdded { task ->
-    if(task.name.startsWith("bundleMainnetReleaseJsAndAssets")) {
+    if(task.name.startsWith("bundleMainnetReleaseJsAndAssets") || task.name.startsWith("bundleNightly")) {
       task.dependsOn checkEnvVariables
     }
     if (task.name.startsWith('install') || task.name.startsWith('assemble')) {
