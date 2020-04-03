@@ -15,6 +15,7 @@ import storage from '../utils/storage'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 
 const routes = [
+  {label: 'Storybook', path: ROOT_ROUTES.STORYBOOK},
   {label: 'Skip to wallet list', path: WALLET_INIT_ROUTES.WALLET_SELECTION},
   {label: 'Default', path: ROOT_ROUTES.LOGIN},
 ]

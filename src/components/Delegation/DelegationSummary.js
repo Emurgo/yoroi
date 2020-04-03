@@ -362,6 +362,11 @@ export default injectIntl(
         fetchUTXOs,
         checkForFlawedWallets,
       },
+      (state, dispatchProps, ownProps) => ({
+        ...state,
+        ...dispatchProps,
+        ...ownProps,
+      }),
     ),
     withNavigation,
     withNavigationTitle(({walletName}) => walletName),
