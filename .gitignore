@@ -91,6 +91,3 @@ sentry.properties
 app-mainnet-release.apk
 output.json
 java_pid*
-
-# storybook
-storybook/storyLoader.js
