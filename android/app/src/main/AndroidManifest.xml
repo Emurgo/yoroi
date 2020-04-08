@@ -7,6 +7,11 @@
     <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <!-- note(v-almonacid): added FINE_LOCATION instead of COARSE_LOCATION as target API >= 29 -->
+    <!-- see https://developer.android.com/guide/topics/connectivity/bluetooth-le.html#permissions -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
       android:name=".MainApplication"

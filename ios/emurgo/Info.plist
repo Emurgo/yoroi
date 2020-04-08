@@ -43,6 +43,8 @@
 	<string>Enable apple music usage</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Enable bluetooth usage</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Yoroi mobile needs to access Bluetooth in order to be able to pair with hardware wallets that support this feature</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Enable calendars usage</string>
 	<key>NSCameraUsageDescription</key>

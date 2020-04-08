@@ -1297,6 +1297,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = F8NVT2G2L4;
+						LastSwiftMigration = 1130;
 						SystemCapabilities = {
 							com.apple.Keychain = {
 								enabled = 0;
@@ -1305,6 +1306,7 @@
 					};
 					2E3E7CD52298ACEA00D5C487 = {
 						DevelopmentTeam = F8NVT2G2L4;
+						LastSwiftMigration = 1130;
 					};
 					E9A1C7D824185CCA00151CFA = {
 						DevelopmentTeam = F8NVT2G2L4;
@@ -2105,6 +2107,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				E95C95D0243E1B530023EA61 /* dummy_ble.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2114,6 +2117,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E3E7CD82298ACEA00D5C487 /* AppDelegate.m in Sources */,
+				E95C95D1243E1B530023EA61 /* dummy_ble.swift in Sources */,
 				2E3E7CD92298ACEA00D5C487 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2167,6 +2171,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6FD7087B702DAF596F1ACBFF /* Pods-emurgoTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2210,6 +2215,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 60EB9F171F0E514B4D4195F8 /* Pods-emurgoTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
@@ -2253,6 +2259,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = Yoroi;
 				BUNDLE_ID_SUFFIX = "";
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 40;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
@@ -2285,6 +2292,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.emurgo.yoroi;
 				PRODUCT_NAME = emurgo;
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -2296,6 +2306,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = Yoroi;
 				BUNDLE_ID_SUFFIX = "";
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 40;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -2327,6 +2338,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.emurgo.yoroi;
 				PRODUCT_NAME = emurgo;
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -2337,6 +2350,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = Yoroi;
 				BUNDLE_ID_SUFFIX = "";
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 40;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
@@ -2373,6 +2387,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-stag";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-staging-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -2383,6 +2400,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 40;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
@@ -2419,6 +2437,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-stag";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-staging-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Staging.Debug;
@@ -2429,6 +2450,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = Yoroi;
 				BUNDLE_ID_SUFFIX = "";
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 40;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -2464,6 +2486,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-stag";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-staging-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -2474,6 +2498,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 40;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -2509,6 +2534,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-stag";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-staging-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Staging.Release;
@@ -2684,6 +2711,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 40;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
@@ -2716,6 +2744,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.emurgo.yoroi;
 				PRODUCT_NAME = emurgo;
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Staging.Debug;
@@ -2724,6 +2755,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4447F097A41617FBCC553C4F /* Pods-emurgoTests.staging.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2820,6 +2852,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 40;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -2851,6 +2884,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.emurgo.yoroi;
 				PRODUCT_NAME = emurgo;
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Staging.Release;
@@ -2859,6 +2894,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 68BBB02E022DD5CE50BB7D1B /* Pods-emurgoTests.staging.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;

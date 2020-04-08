@@ -22,6 +22,9 @@
 ; Ignore findup (storybook dependency)
 .*/node_modules/findup/test/.*
 
+; Ignore @ledgerhq/react-native-hw-transport-ble
+.*/node_modules/@ledgerhq/react-native-hw-transport-ble/src/BleTransport.js
+
 [include]
 
 [libs]
