@@ -21,6 +21,11 @@ or alternatively using `brew cask install fastlane`
 fastlane ios staging
 ```
 Push a new staging build to TestFlight
+### ios nightly
+```
+fastlane ios nightly
+```
+Push a new nightly build to TestFlight
 ### ios mainnet
 ```
 fastlane ios mainnet
