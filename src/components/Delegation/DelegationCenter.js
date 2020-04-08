@@ -4,13 +4,10 @@ import {View, WebView} from 'react-native'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
-import type {IntlShape} from 'react-intl'
-import type {ComponentType} from 'react'
 
 import {STAKING_CENTER_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {CARDANO_CONFIG} from '../../config'
-import type {Navigation} from '../../types/navigation'
 import {Logger} from '../../utils/logging'
 import walletManager from '../../crypto/wallet'
 import {getShelleyTxFee} from '../../crypto/shelley/transactions/utils'
@@ -22,6 +19,10 @@ import {PleaseWaitModal} from '../UiKit'
 import PoolWarningModal from './PoolWarningModal'
 
 import styles from './styles/DelegationCenter.style'
+
+import type {IntlShape} from 'react-intl'
+import type {ComponentType} from 'react'
+import type {Navigation} from '../../types/navigation'
 
 const messages = defineMessages({
   title: {

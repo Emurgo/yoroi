@@ -1,5 +1,6 @@
 // @flow
 export {default as Banner} from './Banner'
+export {default as BulletPointItem} from './BulletPointItem'
 export {default as Button} from './Button'
 export {default as Checkbox} from './Checkbox'
 export {default as Modal} from './Modal'
@@ -12,3 +13,4 @@ export {default as PleaseWaitModal} from './PleaseWaitModal'
 export {default as ProgressCircle} from './ProgressCircle'
 export {default as TitledCard} from './TitledCard'
 export {default as Line} from './Line'
+export {default as Link} from './Link'

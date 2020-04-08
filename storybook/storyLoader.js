@@ -12,6 +12,9 @@ function loadStories() {
 	require('../src/components/FirstRun/CustomPinScreen.stories');
 	require('../src/components/FirstRun/LanguagePickerScreen.stories');
 	require('../src/components/UiKit/Button.stories');
+	require('../src/components/WalletInit/ConnectNanoX/CheckNanoXScreen.stories');
+	require('../src/components/WalletInit/ConnectNanoX/ConnectNanoXScreen.stories');
+	require('../src/components/WalletInit/ConnectNanoX/SaveNanoXScreen.stories');
 	require('../src/components/WalletInit/CreateWallet/CreateWalletScreen.stories');
 	require('../src/components/WalletInit/CreateWallet/MnemonicCheckScreen.stories');
 	require('../src/components/WalletInit/CreateWallet/MnemonicExplanationModal.stories');
@@ -31,6 +34,9 @@ const stories = [
 	'../src/components/FirstRun/CustomPinScreen.stories',
 	'../src/components/FirstRun/LanguagePickerScreen.stories',
 	'../src/components/UiKit/Button.stories',
+	'../src/components/WalletInit/ConnectNanoX/CheckNanoXScreen.stories',
+	'../src/components/WalletInit/ConnectNanoX/ConnectNanoXScreen.stories',
+	'../src/components/WalletInit/ConnectNanoX/SaveNanoXScreen.stories',
 	'../src/components/WalletInit/CreateWallet/CreateWalletScreen.stories',
 	'../src/components/WalletInit/CreateWallet/MnemonicCheckScreen.stories',
 	'../src/components/WalletInit/CreateWallet/MnemonicExplanationModal.stories',
