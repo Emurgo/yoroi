@@ -267,7 +267,7 @@
   "components.walletselection.walletselectionscreen.addWalletOnShelleyButton": "Добавить кошелек (Shelley Testnet)",
   "components.walletselection.walletselectionscreen.header": "Ваши кошельки",
   "components.walletselection.walletselectionscreen.stakeDashboardButton": "Панель управления стейком",
-  "crypto.keystore.approveTransaction": "Авторизовать с помощью отпечатка пальца'",
+  "crypto.keystore.approveTransaction": "Авторизовать с помощью отпечатка пальца",
   "crypto.keystore.cancelButton": "Отменить",
   "crypto.keystore.subtitle": "Вы можете включить эту функцию в любое время в меню «Настройки»",
   "global.actions.dialogs.apiError.message": "Получена ошибка при вызове метода API во время отправки транзакции. Пожалуйста, повторите попытку позже или проверьте нашу учетную запись Twitter (https://twitter.com/YoroiWallet)",
