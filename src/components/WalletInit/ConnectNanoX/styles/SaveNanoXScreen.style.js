@@ -6,6 +6,7 @@ import {spacing} from '../../../../styles/config'
 export default StyleSheet.create({
   safeAreaView: {
     flex: 1,
+    backgroundColor: '#fff',
   },
   container: {
     paddingTop: 30,

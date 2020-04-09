@@ -7,7 +7,7 @@ import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 
-import {Button, ValidatedTextInput} from '../../UiKit'
+import {Button, ValidatedTextInput, ProgressStep} from '../../UiKit'
 import {getWalletNameError, validateWalletName} from '../../../utils/validators'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import globalMessages from '../../../../src/i18n/global-messages'
@@ -41,9 +41,12 @@ const SaveNanoXScreen = ({
   validateForm,
   validateWalletName,
   setName,
+  navigation,
 }) => {
+  const hwDeviceInfo = navigation.getParam('hwDeviceInfo')
   return (
     <SafeAreaView style={styles.safeAreaView}>
+      <ProgressStep currentStep={3} totalSteps={3} displayStepNumber />
       <View style={styles.container}>
         <View style={styles.content}>
           <View style={styles.heading}>

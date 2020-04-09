@@ -6,7 +6,7 @@ import {injectIntl, defineMessages} from 'react-intl'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 
-import {Text, Button, Link, BulletPointItem} from '../../UiKit'
+import {Text, Button, Link, BulletPointItem, ProgressStep} from '../../UiKit'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import {confirmationMessages} from '../../../../src/i18n/global-messages'
 
@@ -56,6 +56,7 @@ const CheckNanoXScreen = ({intl, onPress, navigation}) => {
   ]
   return (
     <SafeAreaView style={styles.safeAreaView}>
+      <ProgressStep currentStep={1} totalSteps={3} displayStepNumber />
       <View style={styles.container}>
         <View style={styles.content}>
           <View style={styles.heading}>

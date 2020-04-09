@@ -1,11 +1,12 @@
 // @flow
 import {StyleSheet} from 'react-native'
 
-import {spacing} from '../../../../styles/config'
+import {COLORS, spacing} from '../../../../styles/config'
 
 export default StyleSheet.create({
   safeAreaView: {
     flex: 1,
+    backgroundColor: '#fff',
   },
   container: {
     paddingTop: 30,
@@ -14,6 +15,7 @@ export default StyleSheet.create({
   },
   scrollView: {
     flex: 1,
+    marginBottom: 22,
   },
   heading: {
     flex: 1,
@@ -26,6 +28,9 @@ export default StyleSheet.create({
   },
   flatList: {
     flex: 1,
+  },
+  error: {
+    color: COLORS.ERROR_TEXT_COLOR,
   },
   paragraph: {
     marginVertical: 24,

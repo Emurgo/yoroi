@@ -1,13 +1,24 @@
 // @flow
 
 import React from 'react'
-import {View, SafeAreaView, ScrollView, FlatList, Image} from 'react-native'
+import {
+  View,
+  SafeAreaView,
+  ScrollView,
+  FlatList,
+  Image,
+  Platform,
+  PermissionsAndroid,
+} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import {compose} from 'redux'
+import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
+import {checkAndStoreHWDeviceInfo} from '../../../crypto/byron/ledgerUtils'
 
-import {Text, BulletPointItem} from '../../UiKit'
+import {Text, BulletPointItem, ProgressStep} from '../../UiKit'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import DeviceItem from './DeviceItem'
+import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 
 import styles from './styles/ConnectNanoXScreen.style'
 import image from '../../../assets/img/bluetooth.png'
@@ -39,13 +50,27 @@ const messages = defineMessages({
   line3: {
     id: 'components.walletinit.connectnanox.connectnanoxscreen.line3',
     defaultMessage:
-      "!!!Allow location on your device (EMURGO won't store any location data).",
+      '!!!Allow location on your device.' +
+      'Android requires location to be enabled to provide access to Bluetooth,' +
+      ' but EMURGO will never store any location data.',
   },
+  error: {
+    id: 'components.walletinit.connectnanox.connectnanoxscreen.error',
+    defaultMessage:
+      '!!!An error occurred trying to connect with your hardware wallet.' +
+      'Please try again. If the error persists, please conntact EMURGO support.',
+  },
+})
+
+const deviceAddition = (device) => ({devices}) => ({
+  devices: devices.some((i) => i.id === device.id)
+    ? devices
+    : devices.concat(device),
 })
 
 type Props = {
   intl: intlShape,
-  defaultDevices: ?Array<any>,
+  defaultDevices: ?Array<any>, // for UI design prototyping
 }
 
 // TODO: type correctly
@@ -66,24 +91,95 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
     extPublicKey: null,
   }
 
+  subscriptions = null
+
+  async componentDidMount() {
+    if (Platform.OS === 'android') {
+      await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      )
+    }
+    // check if bluetooth is available
+    let previousAvailable = false
+    TransportBLE.observeState({
+      next: (e) => {
+        if (e.available !== previousAvailable) {
+          previousAvailable = e.available
+          if (e.available) {
+            this.reload()
+          }
+        }
+      },
+    })
+    this.startScan()
+  }
+
+  componentWillUnmount() {
+    if (this.subscriptions != null) this.subscriptions.unsubscribe()
+  }
+
+  startScan = () => {
+    this.setState({refreshing: true})
+    this.subscriptions = TransportBLE.listen({
+      complete: () => {
+        this.setState({refreshing: false})
+      },
+      next: (e) => {
+        if (e.type === 'add') {
+          this.setState(deviceAddition(e.descriptor))
+        }
+      },
+      error: (error) => {
+        this.setState({error, refreshing: false})
+      },
+    })
+  }
+
   // TODO
   reload = () => {
+    if (this.subscriptions != null) this.subscriptions.unsubscribe()
     this.setState({
       devices: [],
       error: null,
       refreshing: false,
     })
+    this.startScan()
   }
 
   // TODO
-  onSelectDevice = (device) => {
-    // eslint-disable-next-line
-    console.log(device)
+  onSelectDevice = async (device) => {
+    try {
+      const transport = await TransportBLE.open(device)
+      const {navigation} = this.props
+      transport.on('disconnect', () => {
+        // Intentionally for the sake of simplicity we use a transport local state
+        // and remove it on disconnect.
+        // A better way is to pass in the device.id and handle the connection internally.
+        this.setState({transport: null})
+      })
+      const hwDeviceInfo = await checkAndStoreHWDeviceInfo(transport)
+      const extPublicKey = hwDeviceInfo.publicMasterKey
+      this.setState({extPublicKey, transport}) // TODO: remove transport from local state
+      navigation.navigate(WALLET_INIT_ROUTES.SAVE_NANO_X, {hwDeviceInfo})
+    } catch (error) {
+      this.setState({error})
+    }
   }
 
   renderItem = ({item}: {item: *}) => (
     <DeviceItem device={item} onSelect={this.onSelectDevice} />
   )
+
+  ListHeader = () => {
+    const {error} = this.state
+    const {intl} = this.props
+    return error == null ? (
+      <View style={styles.errorBlock}>
+        <Text style={styles.errorHeader}>{intl.formatMessage(messages.error)}</Text>
+        <Text style={styles.error}>{String(error.message)}</Text>
+      </View>
+    ) : null
+  }
 
   render() {
     const {intl} = this.props
@@ -92,10 +188,10 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
     const rows = [
       intl.formatMessage(messages.line1),
       intl.formatMessage(messages.line2),
-      intl.formatMessage(messages.line3),
     ]
     return (
       <SafeAreaView style={styles.safeAreaView}>
+        <ProgressStep currentStep={2} totalSteps={3} displayStepNumber />
         <View style={styles.container}>
           <View style={styles.heading}>
             <Image source={image} />
@@ -103,6 +199,22 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
               {intl.formatMessage(messages.caption)}
             </Text>
           </View>
+          {devices.length === 0 && (
+            <View style={styles.paragraph}>
+              <Text styles={styles.paragraphText}>
+                {intl.formatMessage(messages.introline)}
+              </Text>
+              {rows.map((row, i) => (
+                <BulletPointItem textRow={row} key={i} style={styles.item} />
+              ))}
+              {Platform.OS === 'android' && (
+                <BulletPointItem
+                  textRow={intl.formatMessage(messages.line3)}
+                  style={styles.item}
+                />
+              )}
+            </View>
+          )}
           <ScrollView style={styles.scrollView}>
             {/* ListHeaderComponent={this.ListHeader} */}
             <FlatList
@@ -115,14 +227,6 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
               refreshing={refreshing}
             />
           </ScrollView>
-          <View style={styles.paragraph}>
-            <Text styles={styles.paragraphText}>
-              {intl.formatMessage(messages.introline)}
-            </Text>
-            {rows.map((row, i) => (
-              <BulletPointItem textRow={row} key={i} style={styles.item} />
-            ))}
-          </View>
         </View>
       </SafeAreaView>
     )
