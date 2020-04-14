@@ -9,6 +9,7 @@ import {withHandlers} from 'recompose'
 import {Text, Button, Link, BulletPointItem, ProgressStep} from '../../UiKit'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import {confirmationMessages} from '../../../../src/i18n/global-messages'
+import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 
 import styles from './styles/CheckNanoXScreen.style'
 import image from '../../../assets/img/ledger_1.png'
@@ -96,8 +97,8 @@ export default injectIntl(
   (compose(
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
-      // TODO
-      onPress: ({navigation}) => () => navigation.navigate(),
+      onPress: ({navigation}) => () =>
+        navigation.navigate(WALLET_INIT_ROUTES.CONNECT_NANO_X),
     }),
   )(CheckNanoXScreen): ComponentType<ExternalProps>),
 )

@@ -57,9 +57,13 @@ const WalletInitScreen = ({
   const isShelleyWallet = navigation.getParam('isShelleyWallet')
   let createWalletLabel = intl.formatMessage(messages.createWalletButton)
   let restoreWalletLabel = intl.formatMessage(messages.restoreWalletButton)
+  let createWalletWithLedgerLabel = intl.formatMessage(
+    messages.createWalletWithLedgerButton,
+  )
   if (isShelleyWallet) {
     createWalletLabel += ' (Shelley Testnet)'
     restoreWalletLabel += ' (Shelley Testnet)'
+    createWalletWithLedgerLabel += ' (Shelley Testnet)'
   }
 
   return (
@@ -88,7 +92,7 @@ const WalletInitScreen = ({
             <Button
               outline
               onPress={(event) => navigateCheckNanoX(event, isShelleyWallet)}
-              title={restoreWalletLabel}
+              title={createWalletWithLedgerLabel}
               style={styles.createButton}
             />
           )}

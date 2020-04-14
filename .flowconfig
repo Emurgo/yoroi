@@ -24,6 +24,10 @@
 
 ; Ignore @ledgerhq/react-native-hw-transport-ble
 .*/node_modules/@ledgerhq/react-native-hw-transport-ble/src/BleTransport.js
+.*/node_modules/@ledgerhq/react-native-hw-transport-ble/lib/BleTransport.js.flow
+
+; Ignore @cardano-foundation/ledgerjs-hw-app-cardano
+.*/node_modules/@cardano-foundation/ledgerjs-hw-app-cardano/lib/Ada.js.flow
 
 [include]
 

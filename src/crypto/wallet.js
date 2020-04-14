@@ -145,7 +145,7 @@ export class Wallet {
   _externalChain: AddressChain = null
 
   // chimeric account address
-  _accountAddress: ?string
+  _chimericAccountAddress: ?string
 
   // last known version the wallet has been created/restored
   _version: ?string
@@ -250,6 +250,38 @@ export class Wallet {
     this._externalChain.addSubscriberToNewAddresses(this.notify)
   }
 
+  async _initialize(
+    isShelley: boolean,
+    account: CryptoAccount | string,
+    chimericAccountAddr: ?string,
+  ) {
+    this._isShelley = isShelley
+
+    this._transactionCache = new TransactionCache()
+
+    // initialize address chains
+    this._internalChain = new AddressChain(
+      new AddressGenerator(account, 'Internal', isShelley),
+    )
+    this._externalChain = new AddressChain(
+      new AddressGenerator(account, 'External', isShelley),
+    )
+
+    this._chimericAccountAddress = chimericAccountAddr
+
+    this._version = DeviceInfo.getVersion()
+
+    // Create at least one address in each block
+    await this._internalChain.initialize()
+    await this._externalChain.initialize()
+
+    this._setupSubscriptions()
+    this.notify()
+
+    this._isInitialized = true
+    return this._id
+  }
+
   async _create(
     mnemonic: string,
     newPassword: string,
@@ -266,7 +298,7 @@ export class Wallet {
       newPassword,
     )
     let account: CryptoAccount | string
-    let accountAddr // != from above. This is the chimeric account address
+    let chimericAccountAddr
     if (isShelley) {
       const accountKey = await (await (await masterKey.derive(
         NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
@@ -279,41 +311,37 @@ export class Wallet {
       )).derive(NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
       // note(v-almonacid): currently we assume all Shelley config is "test"
       // but in the near future we need to add a mainnet/testnet switch
-      const accountAddrPtr = await Address.account_from_public_key(
+      const chimericAccountAddrPtr = await Address.account_from_public_key(
         stakingKey,
         await AddressDiscrimination.Test,
       )
       account = Buffer.from(await accountPubKey.as_bytes()).toString('hex')
-      accountAddr = Buffer.from(await accountAddrPtr.as_bytes()).toString('hex')
+      chimericAccountAddr = Buffer.from(
+        await chimericAccountAddrPtr.as_bytes(),
+      ).toString('hex')
     } else {
       account = await util.getAccountFromMasterKey(masterKeyHex)
     }
 
-    this._isShelley = isShelley
+    return await this._initialize(isShelley, account, chimericAccountAddr)
+  }
 
-    this._transactionCache = new TransactionCache()
-
-    // initialize address chains
-    this._internalChain = new AddressChain(
-      new AddressGenerator(account, 'Internal', isShelley),
+  async _createWithMasterKey(
+    accountPublicKey: string,
+    isShelley?: boolean = false,
+  ) {
+    Logger.info(
+      `create wallet with account pub key (isShelley=${String(isShelley)})`,
     )
-    this._externalChain = new AddressChain(
-      new AddressGenerator(account, 'External', isShelley),
-    )
-
-    this._accountAddress = accountAddr
-
-    this._version = DeviceInfo.getVersion()
-
-    // Create at least one address in each block
-    await this._internalChain.initialize()
-    await this._externalChain.initialize()
-
-    this._setupSubscriptions()
-    this.notify()
-
-    this._isInitialized = true
-    return this._id
+    Logger.debug('account pub key', accountPublicKey)
+    this._id = uuid.v4()
+    assert.assert(!this._isInitialized, 'createWallet: !isInitialized')
+    const chimericAccountAddr = null // only byron wallets supported for now
+    const accountObj: CryptoAccount = {
+      root_cached_key: accountPublicKey,
+      derivation_scheme: 'V2',
+    }
+    return await this._initialize(isShelley, accountObj, chimericAccountAddr)
   }
 
   _restore(data) {
@@ -323,8 +351,8 @@ export class Wallet {
       lastGeneratedAddressIndex: data.lastGeneratedAddressIndex,
     }
     this._isShelley = data.isShelley != null ? data.isShelley : false
-    this._accountAddress =
-      data.accountAddress != null ? data.accountAddress : null
+    this._chimericAccountAddress =
+      data.chimericAccountAddress != null ? data.chimericAccountAddress : null
     this._version = data.version != null ? data.version : null
     this._internalChain = AddressChain.fromJSON(data.internalChain)
     this._externalChain = AddressChain.fromJSON(data.externalChain)
@@ -335,6 +363,15 @@ export class Wallet {
     this._setupSubscriptions()
 
     this._isInitialized = true
+
+    Logger.info(
+      'account address',
+      this._internalChain._addressGenerator.account,
+    )
+    Logger.info(
+      'account address',
+      this._externalChain._addressGenerator.account,
+    )
   }
 
   async doFullSync() {
@@ -392,10 +429,9 @@ export class Wallet {
     return this._transactionCache.transactions
   }
 
-  // returns the chimeric account address associated to the wallet
-  get accountAddress() {
-    assert.assert(this._isShelley, 'getAccountAddress: isShelley')
-    return this._accountAddress
+  get chimericAccountAddress() {
+    assert.assert(this._isShelley, 'get chimericAccountAddress: isShelley')
+    return this._chimericAccountAddress
   }
 
   get internalAddresses() {
@@ -670,7 +706,7 @@ export class Wallet {
   toJSON() {
     return {
       lastGeneratedAddressIndex: this._state.lastGeneratedAddressIndex,
-      accountAddress: this._accountAddress,
+      chimericAccountAddress: this._chimericAccountAddress,
       version: this._version,
       internalChain: this._internalChain.toJSON(),
       externalChain: this._externalChain.toJSON(),
@@ -937,15 +973,12 @@ class WalletManager {
     return await this._wallet.signDelegationTx(unsignedTx, decryptedMasterKey)
   }
 
-  async createWallet(
+  async saveWallet(
+    id: string,
     name: string,
-    mnemonic: string,
-    password: string,
-    isShelley?: boolean = false,
-  ): Promise<Wallet> {
-    const wallet = new Wallet()
-    const id = await wallet._create(mnemonic, password, isShelley)
-
+    wallet: Wallet,
+    isShelley: boolean,
+  ) {
     this._id = id
     this._wallets = {
       ...this._wallets,
@@ -964,6 +997,30 @@ class WalletManager {
     Logger.debug('Wallet Data::createWallet', wallet)
 
     return wallet
+  }
+
+  async createWallet(
+    name: string,
+    mnemonic: string,
+    password: string,
+    isShelley?: boolean = false,
+  ): Promise<Wallet> {
+    const wallet = new Wallet()
+    const id = await wallet._create(mnemonic, password, isShelley)
+
+    return this.saveWallet(id, name, wallet, isShelley)
+  }
+
+  async createWalletWithMasterKey(
+    name: string,
+    accountPublicKey: string,
+    isShelley?: boolean = false,
+  ) {
+    const wallet = new Wallet()
+    const id = await wallet._createWithMasterKey(accountPublicKey)
+    Logger.debug('creating wallet...', wallet)
+
+    return this.saveWallet(id, name, wallet, isShelley)
   }
 
   async openWallet(id: string): Promise<Wallet> {
@@ -1147,14 +1204,14 @@ class WalletManager {
 
   async fetchAccountState() {
     if (this._wallet == null) throw new WalletClosed()
-    if (this._wallet._accountAddress == null) {
-      throw new Error('fetchAccountState:: _accountAddress = null')
+    if (this._wallet._chimericAccountAddress == null) {
+      throw new Error('fetchAccountState:: _chimericAccountAddress = null')
     }
     const config = this._wallet._isShelley
       ? CARDANO_CONFIG.SHELLEY
       : CONFIG.CARDANO
     return await this.abortWhenWalletCloses(
-      api.fetchAccountState([this._wallet._accountAddress], config),
+      api.fetchAccountState([this._wallet._chimericAccountAddress], config),
     )
   }
 

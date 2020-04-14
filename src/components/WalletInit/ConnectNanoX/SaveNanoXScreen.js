@@ -12,6 +12,8 @@ import {getWalletNameError, validateWalletName} from '../../../utils/validators'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import globalMessages from '../../../../src/i18n/global-messages'
 import {walletNamesSelector} from '../../../selectors'
+import {createWalletWithMasterKey} from '../../../actions'
+import {ROOT_ROUTES} from '../../../RoutesList'
 
 import styles from './styles/SaveNanoXScreen.style'
 import image from '../../../assets/img/ledger_2.png'
@@ -43,7 +45,6 @@ const SaveNanoXScreen = ({
   setName,
   navigation,
 }) => {
-  const hwDeviceInfo = navigation.getParam('hwDeviceInfo')
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <ProgressStep currentStep={3} totalSteps={3} displayStepNumber />
@@ -95,6 +96,7 @@ export default injectIntl(
       }),
       {
         validateWalletName,
+        createWalletWithMasterKey,
       },
     ),
     withStateHandlers(
@@ -108,8 +110,11 @@ export default injectIntl(
     withHandlers({
       validateWalletName: ({walletNames}) => (walletName) =>
         validateWalletName(walletName, null, walletNames),
-      // eslint-disable-next-line
-      onPress: () => () => {}, // TODO
+      onPress: ({createWalletWithMasterKey, name, navigation}) => async () => {
+        const hwDeviceInfo = navigation.getParam('hwDeviceInfo')
+        await createWalletWithMasterKey(name, hwDeviceInfo.bip44AccountPublic)
+        navigation.navigate(ROOT_ROUTES.WALLET)
+      },
     }),
     withHandlers({
       validateForm: ({name, validateWalletName}) => () =>

@@ -247,7 +247,7 @@ tasks.create('getCurrentCommitHash') {
 
 tasks.create('checkEnvVariables') {
   doFirst {
-    if (project.env.get("SHOW_INIT_DEBUG_SCREEN") != "false" || project.env.get("PREFILL_WALLET_INFO") != "false") {
+    if (project.env.get("SHOW_INIT_DEBUG_SCREEN") == "true" || project.env.get("PREFILL_WALLET_INFO") == "true") {
       throw new GradleException("should not allow debug flags for release builds")
     }
   }

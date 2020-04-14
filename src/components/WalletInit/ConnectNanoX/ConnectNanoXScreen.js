@@ -19,11 +19,13 @@ import {Text, BulletPointItem, ProgressStep} from '../../UiKit'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import DeviceItem from './DeviceItem'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
+import {BluetoothDisabledError} from './errors'
 
 import styles from './styles/ConnectNanoXScreen.style'
 import image from '../../../assets/img/bluetooth.png'
 
 import type {ComponentType} from 'react'
+import type {Device} from '@ledgerhq/react-native-hw-transport-ble'
 import type {Navigation} from '../../../types/navigation'
 
 const messages = defineMessages({
@@ -54,11 +56,20 @@ const messages = defineMessages({
       'Android requires location to be enabled to provide access to Bluetooth,' +
       ' but EMURGO will never store any location data.',
   },
+  exportKey: {
+    id: 'components.walletinit.connectnanox.connectnanoxscreen.exportKey',
+    defaultMessage:
+      '!!!Action needed: Please, export public key from your Ledger device.',
+  },
   error: {
     id: 'components.walletinit.connectnanox.connectnanoxscreen.error',
     defaultMessage:
-      '!!!An error occurred trying to connect with your hardware wallet.' +
-      'Please try again. If the error persists, please conntact EMURGO support.',
+      '!!!An error occurred while trying to connect with your hardware wallet:',
+  },
+  bluetoothDisabled: {
+    id:
+      'components.walletinit.connectnanox.connectnanoxscreen.bluetoothDisabled',
+    defaultMessage: '!!!Bluetooth is disabled in your smartphone',
   },
 })
 
@@ -70,28 +81,30 @@ const deviceAddition = (device) => ({devices}) => ({
 
 type Props = {
   intl: intlShape,
-  defaultDevices: ?Array<any>, // for UI design prototyping
+  defaultDevices: ?Array<Device>, // for UI design prototyping
+  navigation: Navigation,
 }
 
 // TODO: type correctly
 type State = {
-  devices: Array<any>,
-  error: ?string,
+  devices: Array<Device>,
+  deviceId: ?string,
+  error: ?Error,
   refreshing: boolean,
-  transport: any,
-  extPublicKey: ?string,
+  bip44AccountPublic: ?string,
 }
 
 class ConnectNanoXScreen extends React.Component<Props, State> {
   state = {
     devices: this.props.defaultDevices ? this.props.defaultDevices : [],
+    deviceId: null,
     error: null,
     refreshing: false,
-    transport: null,
-    extPublicKey: null,
+    bip44AccountPublic: null,
   }
 
   subscriptions = null
+  bluetoothEnabled: ?boolean = null
 
   async componentDidMount() {
     if (Platform.OS === 'android') {
@@ -103,9 +116,17 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
     let previousAvailable = false
     TransportBLE.observeState({
       next: (e) => {
+        if (this.bluetoothEnabled == null && !e.available) {
+          // consider adding a specific string since this is a common error
+          this.setState({
+            error: new BluetoothDisabledError(),
+            refreshing: false,
+          })
+        }
         if (e.available !== previousAvailable) {
           previousAvailable = e.available
           if (e.available) {
+            this.bluetoothEnabled = e.available
             this.reload()
           }
         }
@@ -113,6 +134,9 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
     })
     this.startScan()
   }
+
+  // componentDidUpdate = (prevProps) => {
+  // }
 
   componentWillUnmount() {
     if (this.subscriptions != null) this.subscriptions.unsubscribe()
@@ -147,19 +171,18 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
   }
 
   // TODO
-  onSelectDevice = async (device) => {
+  onSelectDevice = (device) => {
+    this.setState({deviceId: device.id}, () => this.navigateToSave())
+  }
+
+  navigateToSave = async () => {
     try {
-      const transport = await TransportBLE.open(device)
+      const {deviceId} = this.state
       const {navigation} = this.props
-      transport.on('disconnect', () => {
-        // Intentionally for the sake of simplicity we use a transport local state
-        // and remove it on disconnect.
-        // A better way is to pass in the device.id and handle the connection internally.
-        this.setState({transport: null})
-      })
+      const transport = await TransportBLE.open(deviceId)
       const hwDeviceInfo = await checkAndStoreHWDeviceInfo(transport)
-      const extPublicKey = hwDeviceInfo.publicMasterKey
-      this.setState({extPublicKey, transport}) // TODO: remove transport from local state
+      const bip44AccountPublic = hwDeviceInfo?.bip44AccountPublic
+      this.setState({bip44AccountPublic})
       navigation.navigate(WALLET_INIT_ROUTES.SAVE_NANO_X, {hwDeviceInfo})
     } catch (error) {
       this.setState({error})
@@ -167,23 +190,43 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
   }
 
   renderItem = ({item}: {item: *}) => (
-    <DeviceItem device={item} onSelect={this.onSelectDevice} />
+    <DeviceItem device={item} onSelect={() => this.onSelectDevice(item)} />
   )
 
   ListHeader = () => {
-    const {error} = this.state
+    const {error, deviceId, bip44AccountPublic} = this.state
     const {intl} = this.props
-    return error == null ? (
-      <View style={styles.errorBlock}>
-        <Text style={styles.errorHeader}>{intl.formatMessage(messages.error)}</Text>
-        <Text style={styles.error}>{String(error.message)}</Text>
-      </View>
-    ) : null
+    if (error != null) {
+      let msg
+      if (error instanceof BluetoothDisabledError) {
+        msg = intl.formatMessage(messages.bluetoothDisabled)
+      } else {
+        msg = String(error.message)
+      }
+      return (
+        <View style={styles.listHeader}>
+          <Text style={[styles.paragraph, styles.paragraphText]}>
+            {intl.formatMessage(messages.error)}
+          </Text>
+          <Text style={[styles.error, styles.paragraphText]}>{msg}</Text>
+        </View>
+      )
+    } else if (deviceId != null && bip44AccountPublic == null) {
+      return (
+        <View style={styles.listHeader}>
+          <Text style={[styles.paragraph, styles.paragraphText]}>
+            {intl.formatMessage(messages.exportKey)}
+          </Text>
+        </View>
+      )
+    } else {
+      return null
+    }
   }
 
   render() {
     const {intl} = this.props
-    const {error, devices, refreshing} = this.state
+    const {error, devices, refreshing, deviceId} = this.state
 
     const rows = [
       intl.formatMessage(messages.line1),
@@ -200,7 +243,7 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
             </Text>
           </View>
           {devices.length === 0 && (
-            <View style={styles.paragraph}>
+            <View style={styles.instructionsBlock}>
               <Text styles={styles.paragraphText}>
                 {intl.formatMessage(messages.introline)}
               </Text>
@@ -216,12 +259,12 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
             </View>
           )}
           <ScrollView style={styles.scrollView}>
-            {/* ListHeaderComponent={this.ListHeader} */}
             <FlatList
-              extraData={error}
+              extraData={[error, deviceId]}
               style={styles.flatList}
               data={devices}
               renderItem={this.renderItem}
+              ListHeaderComponent={this.ListHeader}
               keyExtractor={(item) => item.id.toString()}
               onRefresh={this.reload}
               refreshing={refreshing}
@@ -236,7 +279,7 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
 type ExternalProps = {|
   navigation: Navigation,
   intl: any,
-  defaultDevices: ?Array<any>,
+  defaultDevices: ?Array<Device>,
 |}
 
 export default injectIntl(

@@ -29,13 +29,18 @@ export default StyleSheet.create({
   flatList: {
     flex: 1,
   },
+  listHeader: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paragraph: {
+    marginBottom: spacing.paragraphBottomMargin,
+  },
   error: {
     color: COLORS.ERROR_TEXT_COLOR,
   },
-  paragraph: {
+  instructionsBlock: {
     marginVertical: 24,
-    fontSize: 14,
-    lineHeight: 22,
   },
   paragraphText: {
     fontSize: 14,

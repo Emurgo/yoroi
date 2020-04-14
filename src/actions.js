@@ -368,6 +368,19 @@ export const createWallet = (
   dispatch(updateWallets())
 }
 
+export const createWalletWithMasterKey = (
+  name: string,
+  accountPublicKey: string,
+  isShelley?: boolean = false,
+) => async (dispatch: Dispatch<any>) => {
+  await walletManager.createWalletWithMasterKey(
+    name,
+    accountPublicKey,
+    isShelley,
+  )
+  dispatch(updateWallets())
+}
+
 export const removeCurrentWallet = () => async (dispatch: Dispatch<any>) => {
   await walletManager.removeCurrentWallet()
   dispatch(updateWallets())
