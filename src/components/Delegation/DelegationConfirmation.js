@@ -32,7 +32,6 @@ import {NetworkError, ApiError} from '../../api/errors'
 import {WrongPassword} from '../../crypto/errors'
 import walletManager, {SystemAuthDisabled} from '../../crypto/wallet'
 import KeyStore from '../../crypto/KeyStore'
-import {KNOWN_ERROR_MSG} from '../../crypto/byron/util'
 
 import styles from './styles/DelegationConfirmation.style'
 
@@ -155,12 +154,7 @@ const handleOnConfirm = async (
 
     signAndSubmitTx(decryptedData)
   } catch (e) {
-    if (
-      e instanceof WrongPassword ||
-      // for some reason WrongPassword is not detected by instanceof so I need
-      // to add this hack
-      e.message === KNOWN_ERROR_MSG.DECRYPT_FAILED
-    ) {
+    if (e instanceof WrongPassword) {
       await showErrorDialog(errorMessages.incorrectPassword, intl)
     } else {
       handleGeneralError(

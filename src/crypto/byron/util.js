@@ -100,7 +100,7 @@ export const decryptData = async (
     if (useJs) {
       return await decryptWithPasswordJs(secretKeyHex, ciphertext)
     }
-    return PasswordProtect.decryptWithPassword(secretKeyHex, ciphertext)
+    return await PasswordProtect.decryptWithPassword(secretKeyHex, ciphertext)
   } catch (e) {
     if (e.message === KNOWN_ERROR_MSG.DECRYPT_FAILED) {
       throw new WrongPassword()
