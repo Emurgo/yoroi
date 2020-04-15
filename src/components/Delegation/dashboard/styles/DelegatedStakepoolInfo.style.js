@@ -28,6 +28,9 @@ export default StyleSheet.create({
     fontSize: 14,
     width: 200,
   },
+  spacedElem: {
+    marginLeft: 5,
+  },
   bottomBlock: {
     paddingHorizontal: 16,
     paddingVertical: 20,

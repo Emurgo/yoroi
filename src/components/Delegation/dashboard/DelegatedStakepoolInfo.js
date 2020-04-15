@@ -1,9 +1,16 @@
 // @flow
-import React from 'react'
+import React, {useState} from 'react'
 import type {ComponentType} from 'react'
 import {compose} from 'redux'
-import {withHandlers} from 'recompose'
-import {View, Image, Linking} from 'react-native'
+import {withHandlers, withStateHandlers} from 'recompose'
+import {
+  View,
+  Image,
+  Linking,
+  TouchableOpacity,
+  Clipboard,
+  Animated,
+} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import {Text, TitledCard, Button} from '../../UiKit'
@@ -27,7 +34,34 @@ const messages = defineMessages({
       'components.delegationsummary.delegatedStakepoolInfo.fullDescriptionButtonLabel',
     defaultMessage: '!!!Go to website',
   },
+  copied: {
+    id: 'components.delegationsummary.delegatedStakepoolInfo.copied',
+    defaultMessage: '!!!Copied!',
+  },
 })
+
+const FadeOutView = (props) => {
+  const [fadeAnim] = useState(new Animated.Value(1))
+
+  React.useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 2000,
+      delay: 3000,
+    }).start()
+  }, [])
+
+  return (
+    <Animated.View
+      style={{
+        ...props.style,
+        opacity: fadeAnim,
+      }}
+    >
+      {props.children}
+    </Animated.View>
+  )
+}
 
 type ExternalProps = {|
   +intl: intlShape,
@@ -44,6 +78,8 @@ const DelegatedStakepoolInfo = ({
   poolHash,
   poolURL,
   openExternalURL,
+  copyPoolHash,
+  showCopyNotif,
 }) => (
   <View style={styles.wrapper}>
     <TitledCard title={intl.formatMessage(messages.title)} variant={'poolInfo'}>
@@ -60,7 +96,18 @@ const DelegatedStakepoolInfo = ({
           >
             {poolHash}
           </Text>
-          <Image source={copyIcon} width={24} />
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={copyPoolHash}
+            style={styles.spacedElem}
+          >
+            <Image source={copyIcon} width={24} />
+          </TouchableOpacity>
+          {showCopyNotif && (
+            <FadeOutView style={styles.spacedElem}>
+              <Text>{intl.formatMessage(messages.copied)}</Text>
+            </FadeOutView>
+          )}
         </View>
       </View>
       <View style={styles.bottomBlock}>
@@ -80,11 +127,24 @@ const DelegatedStakepoolInfo = ({
 
 export default injectIntl(
   (compose(
+    withStateHandlers(
+      {
+        showCopyNotif: false,
+      },
+      {
+        setshowCopyNotif: () => (showCopyNotif) => ({showCopyNotif}),
+      },
+    ),
     withHandlers({
       openExternalURL: ({poolURL}) => () => {
         if (poolURL) {
           Linking.openURL(poolURL)
         }
+      },
+      copyPoolHash: ({poolHash, setshowCopyNotif}) => () => {
+        Clipboard.setString(poolHash)
+        setshowCopyNotif(true)
+        setTimeout(() => setshowCopyNotif(false), 10000)
       },
     }),
   )(DelegatedStakepoolInfo): ComponentType<ExternalProps>),

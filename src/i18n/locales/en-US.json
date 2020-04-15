@@ -14,6 +14,7 @@
   "components.common.languagepicker.russian": "Русский",
   "components.common.languagepicker.spanish": "Español",
   "components.delegation.delegationnavigationbuttons.stakingCenterButton": "Go to Staking Center",
+  "components.delegationsummary.delegatedStakepoolInfo.copied": "copied!",
   "components.delegationsummary.delegatedStakepoolInfo.fullDescriptionButtonLabel": "Go to website",
   "components.delegationsummary.delegatedStakepoolInfo.title": "Stake pool delegated",
   "components.delegationsummary.delegatedStakepoolInfo.warning": "If you just delegated to a new stake pool, it may take a couple of minutes for the network to process your request.",
