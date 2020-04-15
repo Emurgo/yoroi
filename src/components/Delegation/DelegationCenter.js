@@ -138,44 +138,56 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      navigateToDelegationConfirm: ({intl, navigation, setBusy}) => async (
-        selectedPools,
-      ) => {
+      withPleaseWaitModal: ({setBusy}) => async (
+        func: () => Promise<void>,
+      ): Promise<void> => {
+        setBusy(true)
         try {
-          setBusy(true) // trigger "please wait" modal
-          const utxos = navigation.getParam('utxos')
-          const valueInAccount = navigation.getParam('valueInAccount')
-          const delegationTxData = await walletManager.prepareDelegationTx(
-            {id: selectedPools[0].poolHash},
-            valueInAccount.toNumber(),
-            utxos,
-          )
-          const fee = await getShelleyTxFee(delegationTxData.unsignedTx.IOs)
-          setBusy(false)
-          navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM, {
-            poolName: selectedPools[0].name,
-            poolHash: selectedPools[0].poolHash,
-            amountToDelegate: delegationTxData.totalAmountToDelegate,
-            transactionFee: fee,
-            delegationTxData,
-          })
-        } catch (e) {
-          if (e instanceof InsufficientFunds) {
-            await showErrorDialog(errorMessages.insufficientBalance, intl)
-          } else if (e instanceof NetworkError) {
-            await showErrorDialog(errorMessages.networkError, intl)
-          } else if (e instanceof ApiError) {
-            await showErrorDialog(errorMessages.apiError, intl)
-          } else {
-            await handleGeneralError(
-              intl.formatMessage(messages.delegationTxBuildError),
-              e,
-              intl,
-            )
-          }
+          await func()
         } finally {
           setBusy(false)
         }
+      },
+    }),
+    withHandlers({
+      navigateToDelegationConfirm: ({
+        intl,
+        navigation,
+        withPleaseWaitModal,
+      }) => async (selectedPools) => {
+        await withPleaseWaitModal(async () => {
+          try {
+            const utxos = navigation.getParam('utxos')
+            const valueInAccount = navigation.getParam('valueInAccount')
+            const delegationTxData = await walletManager.prepareDelegationTx(
+              {id: selectedPools[0].poolHash},
+              valueInAccount.toNumber(),
+              utxos,
+            )
+            const fee = await getShelleyTxFee(delegationTxData.unsignedTx.IOs)
+            navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM, {
+              poolName: selectedPools[0].name,
+              poolHash: selectedPools[0].poolHash,
+              amountToDelegate: delegationTxData.totalAmountToDelegate,
+              transactionFee: fee,
+              delegationTxData,
+            })
+          } catch (e) {
+            if (e instanceof InsufficientFunds) {
+              await showErrorDialog(errorMessages.insufficientBalance, intl)
+            } else if (e instanceof NetworkError) {
+              await showErrorDialog(errorMessages.networkError, intl)
+            } else if (e instanceof ApiError) {
+              await showErrorDialog(errorMessages.apiError, intl)
+            } else {
+              await handleGeneralError(
+                intl.formatMessage(messages.delegationTxBuildError),
+                e,
+                intl,
+              )
+            }
+          }
+        })
       },
     }),
     withHandlers({

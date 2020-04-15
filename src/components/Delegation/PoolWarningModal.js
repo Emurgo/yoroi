@@ -72,7 +72,7 @@ const BulletPointItem = ({textRow}) => {
 type Props = {
   intl: intlShape,
   visible: boolean,
-  onPress: () => any,
+  onPress: () => void,
   onRequestClose: () => any,
   disableButtons: boolean,
   reputationInfo: {node_flags?: number},
