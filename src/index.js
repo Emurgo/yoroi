@@ -34,16 +34,6 @@ bluebird.config({
   warnings: true,
 })
 
-/*
-  Warning(ppershing): DO NOT EVER REMOVE FOLLOWING LINE!
-  React-native promise implementation is totally broken, see
-  https://github.com/facebook/react-native/issues/19490
-  https://github.com/facebook/react-native/issues/17972
-*/
-global.Promise = bluebird
-
-global.onunhandledrejection = (e) => handleGeneralError(e.message, e)
-
 // https://github.com/yahoo/react-intl/wiki#loading-locale-data
 addLocaleData([
   ...en,
@@ -58,6 +48,21 @@ addLocaleData([
   ...fr,
   ...it,
 ])
+
+/*
+  Warning(ppershing): DO NOT EVER REMOVE FOLLOWING LINE!
+  React-native promise implementation is totally broken, see
+  https://github.com/facebook/react-native/issues/19490
+  https://github.com/facebook/react-native/issues/17972
+*/
+global.Promise = bluebird
+
+const intlProvider = new IntlProvider({
+  locale: 'en-US',
+  messages: translations['en-US'],
+})
+const {intl} = intlProvider.getChildContext()
+global.onunhandledrejection = (e) => handleGeneralError(e.message, e, intl)
 
 const store = getConfiguredStore()
 
