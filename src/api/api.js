@@ -17,6 +17,7 @@ import type {
   AccountStateResponse,
   PoolInfoRequest,
   PoolInfoResponse,
+  ReputationResponse,
 } from '../types/HistoryTransaction'
 
 type Addresses = Array<string>
@@ -29,7 +30,14 @@ const _checkResponse = (response, requestPayload) => {
   }
 }
 
-const _fetch = (path: string, payload: any, networkConfig: any) => {
+type RequestMethod = 'POST' | 'GET'
+
+const _fetch = (
+  path: string,
+  payload: ?any,
+  networkConfig: any,
+  method?: RequestMethod = 'POST',
+) => {
   const fullPath = `${networkConfig.API_ROOT}/${path}`
   const platform =
     Platform.OS === 'android' || Platform.OS === 'ios' ? Platform.OS : '-'
@@ -37,13 +45,13 @@ const _fetch = (path: string, payload: any, networkConfig: any) => {
   Logger.info(`API call: ${fullPath}`)
   return (
     fetch(fullPath, {
-      method: 'POST',
+      method,
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
         'yoroi-version': yoroiVersion,
         'tangata-manu': 'yoroi',
       },
-      body: JSON.stringify(payload),
+      body: payload != null ? JSON.stringify(payload) : undefined,
     })
       // Fetch throws only for network/dns/related errors, not http statuses
       .catch((e) => {
@@ -213,4 +221,10 @@ export const getPoolInfo = (
   networkConfig?: any = CARDANO_CONFIG.SHELLEY,
 ): Promise<PoolInfoResponse> => {
   return _fetch('v2/pool/info', request, networkConfig)
+}
+
+export const getReputation = (
+  networkConfig?: any = CARDANO_CONFIG.SHELLEY,
+): Promise<ReputationResponse> => {
+  return _fetch('v2/pool/reputation', null, networkConfig, 'GET')
 }

@@ -44,6 +44,10 @@ export const confirmationMessages = {
       id: 'global.actions.dialogs.commonbuttons.backButton',
       defaultMessage: '!!!Back',
     },
+    iUnderstandButton: {
+      id: 'global.actions.dialogs.commonbuttons.iUnderstandButton',
+      defaultMessage: '!!!I understand',
+    },
   }),
 }
 

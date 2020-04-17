@@ -51,6 +51,7 @@ import walletManager from '../../crypto/wallet'
 import globalMessages from '../../i18n/global-messages'
 import {formatAdaWithText, formatAdaInteger} from '../../utils/format'
 import FlawedWalletScreen from './FlawedWalletScreen'
+import {getReputation} from '../../api/api'
 
 import styles from './styles/DelegationSummary.style'
 
@@ -59,6 +60,7 @@ import type {
   PoolTuples,
   RemotePoolMetaSuccess,
   RawUtxo,
+  ReputationResponse,
 } from '../../types/HistoryTransaction'
 
 const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
@@ -104,8 +106,9 @@ class DelegationSummary extends React.Component<Props, State> {
 
   _firstFocus = true
   _isDelegating = false
+  _poolsReputation: ReputationResponse = {}
 
-  componentDidMount() {
+  async componentDidMount() {
     this.intervalId = setInterval(
       () =>
         this.setState({
@@ -114,6 +117,7 @@ class DelegationSummary extends React.Component<Props, State> {
       1000,
     )
     this.props.checkForFlawedWallets()
+    this._poolsReputation = await getReputation()
   }
 
   componentDidUpdate(prevProps) {
@@ -160,6 +164,7 @@ class DelegationSummary extends React.Component<Props, State> {
       poolList,
       utxos,
       valueInAccount: accountBalance,
+      poolsReputation: this._poolsReputation,
     })
   }
 
