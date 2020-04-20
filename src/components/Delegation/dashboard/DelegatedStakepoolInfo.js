@@ -12,10 +12,11 @@ import {
   Animated,
 } from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
-import _ from 'lodash'
+import {debounce} from 'lodash'
 
 import {Text, TitledCard, Button} from '../../UiKit'
 import {formatStakepoolNameWithTicker} from '../../../utils/format'
+import {onWillUnmount} from '../../../utils/renderUtils'
 import copyIcon from '../../../assets/img/icon/copy.png'
 import styles from './styles/DelegatedStakepoolInfo.style'
 
@@ -101,7 +102,7 @@ const DelegatedStakepoolInfo = ({
           </Text>
           <TouchableOpacity
             activeOpacity={0.5}
-            onPress={_.debounce(copyPoolHash, COPY_NOTIFICATION_TIME, {
+            onPress={debounce(copyPoolHash, COPY_NOTIFICATION_TIME, {
               leading: true,
             })}
             style={styles.spacedElem}
@@ -135,9 +136,13 @@ export default injectIntl(
     withStateHandlers(
       {
         showCopyNotif: false,
+        timeoutIds: [],
       },
       {
         setShowCopyNotif: () => (showCopyNotif) => ({showCopyNotif}),
+        registerTimeout: ({timeoutIds}) => (id) => ({
+          timeoutIds: [...timeoutIds, id],
+        }),
       },
     ),
     withHandlers({
@@ -146,11 +151,18 @@ export default injectIntl(
           Linking.openURL(poolURL)
         }
       },
-      copyPoolHash: ({poolHash, setShowCopyNotif}) => () => {
+      copyPoolHash: ({poolHash, setShowCopyNotif, registerTimeout}) => () => {
         Clipboard.setString(poolHash)
         setShowCopyNotif(true)
-        setTimeout(() => setShowCopyNotif(false), COPY_NOTIFICATION_TIME)
+        const t = setTimeout(
+          () => setShowCopyNotif(false),
+          COPY_NOTIFICATION_TIME,
+        )
+        registerTimeout(t)
       },
     }),
+    onWillUnmount(({timeoutIds}) =>
+      timeoutIds.forEach((id) => clearTimeout(id)),
+    ),
   )(DelegatedStakepoolInfo): ComponentType<ExternalProps>),
 )
