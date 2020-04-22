@@ -25,9 +25,6 @@ export const CARDANO_CONFIG = {
     IS_SHELLEY: false,
     PROTOCOL_MAGIC: 1097911063,
     API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
-    SEIZA_STAKING_SIMPLE: (ADA: string) =>
-      // eslint-disable-next-line max-len
-      `http://localhost:3000/staking-simple/list?sortBy=REVENUE&searchText=&performance[]=0&performance[]=100&userAda=${ADA}`,
     EXPLORER_URL_FOR_TX: (tx: string) =>
       `https://cardano-explorer.cardano-testnet.iohkdev.io/tx/${tx}`,
   },
@@ -35,9 +32,6 @@ export const CARDANO_CONFIG = {
     IS_SHELLEY: false,
     PROTOCOL_MAGIC: 764824073,
     API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
-    SEIZA_STAKING_SIMPLE: (ADA: string) =>
-      // eslint-disable-next-line max-len
-      `http://localhost:3000/staking-simple/list?sortBy=REVENUE&searchText=&performance[]=0&performance[]=100&userAda=${ADA}`,
     EXPLORER_URL_FOR_TX: (tx: string) => `https://cardanoexplorer.com/tx/${tx}`,
   },
   SHELLEY: {
@@ -92,7 +86,7 @@ export const NUMBERS = {
     CIP1852: 2147485500, // HARD_DERIVATION_START + 1852;
   },
   COIN_TYPES: {
-    CARDANO: 2147485463, // HARD_DERIVATION_START + 1812;
+    CARDANO: 2147485463, // HARD_DERIVATION_START + 1815;
   },
   ACCOUNT_INDEX: 0,
   CHAIN_DERIVATIONS: {
@@ -104,13 +98,20 @@ export const NUMBERS = {
   EPOCH_REWARD_DENOMINATOR: new BigNumber(10).pow(6),
 }
 
+const HARDWARE_WALLETS = {
+  LEDGER_NANO_X: {
+    DEFAULT_WALLET_NAME: 'My Ledger Wallet',
+    VENDOR: 'ledger.com',
+    MODEL: 'NanoX',
+  },
+}
+
 export const CONFIG = {
   DEBUG: {
     // WARNING: NEVER change these flags
     START_WITH_INDEX_SCREEN: __DEV__ ? _SHOW_INIT_DEBUG_SCREEN : false,
     PREFILL_FORMS: __DEV__ ? _PREFILL_WALLET_INFO : false,
     WALLET_NAME: 'My wallet',
-    IS_SHELLEY_WALLET: true,
     PASSWORD: 'aeg?eP3M:)(:',
     MNEMONIC1: [
       'dry balcony arctic what garbage sort',
@@ -146,11 +147,12 @@ export const CONFIG = {
     : ASSURANCE_LEVELS.NORMAL,
   HISTORY_REFRESH_TIME: 10 * 1000,
   WALLET: {
-    ACCOUNT_INDEX: 0,
     DISCOVERY_GAP_SIZE: 20,
     DISCOVERY_BLOCK_SIZE: 50, // should be less than API limitations
     MAX_GENERATED_UNUSED: 20, // must be <= gap size
   },
+  NUMBERS,
+  HARDWARE_WALLETS,
   PIN_LENGTH: 6,
   APP_LOCK_TIMEOUT: 30 * 1000,
   ALLOW_SHORT_PASSWORD: false,

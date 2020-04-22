@@ -25,7 +25,7 @@ import {
 } from './shelley/delegationUtils'
 import {ADDRESS_TYPE_TO_CHANGE} from './commonUtils'
 import api from '../api'
-import {CONFIG, CARDANO_CONFIG, NUMBERS} from '../config'
+import {CONFIG, CARDANO_CONFIG} from '../config'
 import assert from '../utils/assert'
 import {ObjectValues} from '../utils/flow'
 import {Logger} from '../utils/logging'
@@ -49,9 +49,12 @@ import type {
   PreparedTransactionData,
   V3SignedTx,
   V3UnsignedTxAddressedUtxoData,
+  TxBodiesRequest,
+  TxBodiesResponse,
 } from '../types/HistoryTransaction'
 import type {Mutex} from '../utils/promise'
 import type {CryptoAccount} from './byron/util'
+import type {HWDeviceInfo} from './byron/ledgerUtils'
 import type {DelegationTxData, PoolData} from './shelley/delegationUtils'
 
 /**
@@ -91,10 +94,10 @@ export const mnemonicsToAddresses = async (
     let change
     let index
     if (internalChain.isMyAddress(addr)) {
-      change = NUMBERS.CHAIN_DERIVATIONS.INTERNAL
+      change = CONFIG.NUMBERS.CHAIN_DERIVATIONS.INTERNAL
       index = internalChain.getIndexOfAddress(addr)
     } else if (externalChain.isMyAddress(addr)) {
-      change = NUMBERS.CHAIN_DERIVATIONS.EXTERNAL
+      change = CONFIG.NUMBERS.CHAIN_DERIVATIONS.EXTERNAL
       index = externalChain.getIndexOfAddress(addr)
     } else {
       // should not happen
@@ -103,7 +106,7 @@ export const mnemonicsToAddresses = async (
     return {
       address: addr,
       addressing: {
-        account: CONFIG.WALLET.ACCOUNT_INDEX,
+        account: CONFIG.NUMBERS.ACCOUNT_INDEX,
         change,
         index,
       },
@@ -136,6 +139,10 @@ export class Wallet {
   _id: string = null
 
   _isShelley: boolean = false
+
+  _isHW: boolean = false
+
+  _hwDeviceInfo: ?HWDeviceInfo
 
   _isEasyConfirmationEnabled: boolean = false
 
@@ -254,8 +261,13 @@ export class Wallet {
     isShelley: boolean,
     account: CryptoAccount | string,
     chimericAccountAddr: ?string,
+    hwDeviceInfo: ?HWDeviceInfo,
   ) {
     this._isShelley = isShelley
+
+    this._isHW = hwDeviceInfo != null
+
+    this._hwDeviceInfo = hwDeviceInfo
 
     this._transactionCache = new TransactionCache()
 
@@ -301,14 +313,14 @@ export class Wallet {
     let chimericAccountAddr
     if (isShelley) {
       const accountKey = await (await (await masterKey.derive(
-        NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
-      )).derive(NUMBERS.COIN_TYPES.CARDANO)).derive(
-        0 + NUMBERS.HARD_DERIVATION_START,
+        CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
+      )).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)).derive(
+        0 + CONFIG.NUMBERS.HARD_DERIVATION_START,
       )
       const accountPubKey = await accountKey.to_public()
       const stakingKey = await (await (await accountPubKey.derive(
-        NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-      )).derive(NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+        CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+      )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
       // note(v-almonacid): currently we assume all Shelley config is "test"
       // but in the near future we need to add a mainnet/testnet switch
       const chimericAccountAddrPtr = await Address.account_from_public_key(
@@ -323,11 +335,17 @@ export class Wallet {
       account = await util.getAccountFromMasterKey(masterKeyHex)
     }
 
-    return await this._initialize(isShelley, account, chimericAccountAddr)
+    return await this._initialize(
+      isShelley,
+      account,
+      chimericAccountAddr,
+      null, // this is not a HW
+    )
   }
 
-  async _createWithMasterKey(
+  async _createWithBip44Account(
     accountPublicKey: string,
+    hwDeviceInfo: ?HWDeviceInfo,
     isShelley?: boolean = false,
   ) {
     Logger.info(
@@ -341,37 +359,80 @@ export class Wallet {
       root_cached_key: accountPublicKey,
       derivation_scheme: 'V2',
     }
-    return await this._initialize(isShelley, accountObj, chimericAccountAddr)
+    return await this._initialize(
+      isShelley,
+      accountObj,
+      chimericAccountAddr,
+      hwDeviceInfo,
+    )
   }
 
-  _restore(data) {
+  async _integrityCheck(data) {
+    try {
+      if (this._isShelley) {
+        const accountHex = this._internalChain._addressGenerator.account
+        if (!(typeof accountHex === 'string' || accountHex instanceof String)) {
+          throw new Error('wallet::_integrityCheck: invalid account')
+        }
+        // note(v-almonacid): renamed accountAddress by chimericAccountAddress
+        // for more clarity, so this check step is needed
+        if (this._chimericAccountAddress == null) {
+          const retrieveChimericAddr = async (data) => {
+            if (data.accountAddress != null) return data.accountAddress
+            const accountPubKey = await Bip32PublicKey.from_bytes(
+              Buffer.from(accountHex, 'hex'),
+            )
+            const stakingKey = await (await (await accountPubKey.derive(
+              CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+            )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+            const chimericAccountAddrPtr = await Address.account_from_public_key(
+              stakingKey,
+              // TODO: currently we assume all Shelley config is "test"
+              // but in the near future we need to add a mainnet/testnet switch
+              await AddressDiscrimination.Test,
+            )
+            return Buffer.from(
+              await chimericAccountAddrPtr.as_bytes(),
+            ).toString('hex')
+          }
+          this._chimericAccountAddress = await retrieveChimericAddr(data)
+        }
+      }
+    } catch (e) {
+      Logger.error('wallet::_integrityCheck', e)
+      // TODO: open general error dialog. Use intl
+      throw new Error(
+        'Wallet is in inconsistent state. You may solve this by ' +
+          'restoring your wallet with your mnemonics. Contact EMURGO support if ' +
+          'problem persists',
+      )
+    }
+  }
+
+  async _restore(data) {
     Logger.info('restore wallet')
     assert.assert(!this._isInitialized, 'restoreWallet: !isInitialized')
     this._state = {
       lastGeneratedAddressIndex: data.lastGeneratedAddressIndex,
     }
     this._isShelley = data.isShelley != null ? data.isShelley : false
-    this._chimericAccountAddress =
-      data.chimericAccountAddress != null ? data.chimericAccountAddress : null
-    this._version = data.version != null ? data.version : null
+    this._isHW = data.isHW != null ? data.isHW : false
+    this._hwDeviceInfo = data.hwDeviceInfo
+    // note(v-almonacid): chimericAccountAddr can be null. _integrityCheck is
+    // required for versions <= 2.1.0
+    this._chimericAccountAddress = data.chimericAccountAddress
+    this._version = data.version
     this._internalChain = AddressChain.fromJSON(data.internalChain)
     this._externalChain = AddressChain.fromJSON(data.externalChain)
     this._transactionCache = TransactionCache.fromJSON(data.transactionCache)
     this._isEasyConfirmationEnabled = data.isEasyConfirmationEnabled
 
+    await this._integrityCheck(data)
+
     // subscriptions
     this._setupSubscriptions()
 
     this._isInitialized = true
-
-    Logger.info(
-      'account address',
-      this._internalChain._addressGenerator.account,
-    )
-    Logger.info(
-      'account address',
-      this._externalChain._addressGenerator.account,
-    )
   }
 
   async doFullSync() {
@@ -518,7 +579,7 @@ export class Wallet {
         value: utxo.amount,
       },
       addressing: {
-        account: CONFIG.WALLET.ACCOUNT_INDEX,
+        account: CONFIG.NUMBERS.ACCOUNT_INDEX,
         change: addressInfo.change,
         index: addressInfo.index,
       },
@@ -599,8 +660,8 @@ export class Wallet {
       Buffer.from(accountHex, 'hex'),
     )
     const stakingKey = await (await (await accountPubKey.derive(
-      NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-    )).derive(NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+      CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+    )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
     Logger.info(
       `getStakingKey: ${Buffer.from(await stakingKey.as_bytes()).toString(
         'hex',
@@ -618,11 +679,19 @@ export class Wallet {
     return {
       address: nextInternal,
       addressing: {
-        account: CONFIG.WALLET.ACCOUNT_INDEX,
-        change: NUMBERS.CHAIN_DERIVATIONS.INTERNAL,
+        account: CONFIG.NUMBERS.ACCOUNT_INDEX,
+        change: CONFIG.NUMBERS.CHAIN_DERIVATIONS.INTERNAL,
         index: this._internalChain.getIndexOfAddress(nextInternal),
       },
     }
+  }
+
+  async getTxsBodiesForUTXOs(
+    request: TxBodiesRequest,
+  ): Promise<TxBodiesResponse> {
+    const config = this._isShelley ? CARDANO_CONFIG.SHELLEY : CONFIG.CARDANO
+    const response = await api.getTxsBodiesForUTXOs(request, config)
+    return response
   }
 
   async getAllUtxosForKey(utxos: Array<RawUtxo>) {
@@ -633,22 +702,27 @@ export class Wallet {
     )
   }
 
-  asAddressedUtxo(utxos: Array<RawUtxo>) {
+  getAddressingInfo(address: string) {
     const chains = [
       ['Internal', this._internalChain],
       ['External', this._externalChain],
     ]
-    const addressedUtxos = utxos.map((utxo) => {
-      let addressInfo = null
-      chains.forEach(([type, chain]) => {
-        if (chain.isMyAddress(utxo.receiver)) {
-          addressInfo = {
-            account: CONFIG.WALLET.ACCOUNT_INDEX,
-            change: ADDRESS_TYPE_TO_CHANGE[type],
-            index: chain.getIndexOfAddress(utxo.receiver),
-          }
+    let addressInfo = null
+    chains.forEach(([type, chain]) => {
+      if (chain.isMyAddress(address)) {
+        addressInfo = {
+          account: CONFIG.NUMBERS.ACCOUNT_INDEX,
+          change: ADDRESS_TYPE_TO_CHANGE[type],
+          index: chain.getIndexOfAddress(address),
         }
-      })
+      }
+    })
+    return addressInfo
+  }
+
+  asAddressedUtxo(utxos: Array<RawUtxo>) {
+    const addressedUtxos = utxos.map((utxo) => {
+      const addressInfo = this.getAddressingInfo(utxo.receiver)
       if (addressInfo == null) {
         throw new Error(`Address not found for utxo: ${utxo.receiver}`)
       }
@@ -690,15 +764,15 @@ export class Wallet {
       Buffer.from(decryptedMasterKey, 'hex'),
     )
     const accountPvrKey = await (await (await masterKey.derive(
-      NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
-    )).derive(NUMBERS.COIN_TYPES.CARDANO)).derive(
-      0 + NUMBERS.HARD_DERIVATION_START,
+      CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
+    )).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)).derive(
+      0 + CONFIG.NUMBERS.HARD_DERIVATION_START,
     )
 
     // get staking key as PrivateKey
     const stakingKey = await (await (await accountPvrKey.derive(
-      NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-    )).derive(NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+      CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+    )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
 
     return await signDelegationTx(unsignedTx, accountPvrKey, stakingKey)
   }
@@ -712,6 +786,8 @@ export class Wallet {
       externalChain: this._externalChain.toJSON(),
       transactionCache: this._transactionCache.toJSON(),
       isShelley: this._isShelley,
+      isHW: this._isHW,
+      hwDeviceInfo: this._hwDeviceInfo,
       isEasyConfirmationEnabled: this._isEasyConfirmationEnabled,
     }
   }
@@ -795,6 +871,11 @@ class WalletManager {
     this._syncErrorSubscribers.push(handler)
   }
 
+  /* ========== getters =============
+   * these properties are passed on to redux's State in
+   * actions/history.js::mirrorTxHistory
+   */
+
   get isInitialized() {
     return this._wallet
   }
@@ -842,6 +923,16 @@ class WalletManager {
   get isShelley() {
     if (!this._wallet) return false
     return this._wallet._isShelley
+  }
+
+  get isHW() {
+    if (!this._wallet) return false
+    return this._wallet._isHW
+  }
+
+  get hwDeviceInfo() {
+    if (!this._wallet) return {}
+    return this._wallet._hwDeviceInfo
   }
 
   get version() {
@@ -949,9 +1040,26 @@ class WalletManager {
     )
   }
 
+  async getTxsBodiesForUTXOs(request: TxBodiesRequest) {
+    if (!this._wallet) throw new WalletClosed()
+    return await this.abortWhenWalletCloses(
+      this._wallet.getTxsBodiesForUTXOs(request),
+    )
+  }
+
   async getAllUtxosForKey(utxos: Array<RawUtxo>) {
     if (!this._wallet) throw new WalletClosed()
     return await this._wallet.getAllUtxosForKey(utxos)
+  }
+
+  getAddressingInfo(address: string) {
+    if (!this._wallet) throw new WalletClosed()
+    return this._wallet.getAddressingInfo(address)
+  }
+
+  asAddressedUtxo(utxos: Array<RawUtxo>) {
+    if (!this._wallet) throw new WalletClosed()
+    return this._wallet.asAddressedUtxo(utxos)
   }
 
   async prepareDelegationTx(
@@ -1011,13 +1119,17 @@ class WalletManager {
     return this.saveWallet(id, name, wallet, isShelley)
   }
 
-  async createWalletWithMasterKey(
+  async createWalletWithBip44Account(
     name: string,
-    accountPublicKey: string,
+    bip44AccountPublic: string,
+    hwDeviceInfo: ?HWDeviceInfo,
     isShelley?: boolean = false,
   ) {
     const wallet = new Wallet()
-    const id = await wallet._createWithMasterKey(accountPublicKey)
+    const id = await wallet._createWithBip44Account(
+      bip44AccountPublic,
+      hwDeviceInfo,
+    )
     Logger.debug('creating wallet...', wallet)
 
     return this.saveWallet(id, name, wallet, isShelley)
@@ -1031,7 +1143,7 @@ class WalletManager {
 
     if (!data) throw new Error('Cannot read saved data')
 
-    wallet._restore(data)
+    await wallet._restore(data)
     wallet._id = id
     this._wallet = wallet
     this._id = id
@@ -1188,6 +1300,10 @@ class WalletManager {
 
     this._notify()
   }
+
+  // =========== TODO ============
+  // all these api calls should wrap a call to the internal wallet, ie this._wallet
+  // walletManager shouldn't do these calls directly
 
   async fetchUTXOs() {
     if (!this._wallet) throw new WalletClosed()

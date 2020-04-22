@@ -50,6 +50,7 @@ import KeyStore from './crypto/KeyStore'
 import {type Dispatch} from 'redux'
 import {type State} from './state'
 import type {PreparedTransactionData} from './types/HistoryTransaction'
+import type {HWDeviceInfo} from './crypto/byron/ledgerUtils'
 
 const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
   const handlers = {
@@ -368,14 +369,16 @@ export const createWallet = (
   dispatch(updateWallets())
 }
 
-export const createWalletWithMasterKey = (
+export const createWalletWithBip44Account = (
   name: string,
-  accountPublicKey: string,
+  bip44AccountPublic: string,
+  hwDeviceInfo: ?HWDeviceInfo,
   isShelley?: boolean = false,
 ) => async (dispatch: Dispatch<any>) => {
-  await walletManager.createWalletWithMasterKey(
+  await walletManager.createWalletWithBip44Account(
     name,
-    accountPublicKey,
+    bip44AccountPublic,
+    hwDeviceInfo,
     isShelley,
   )
   dispatch(updateWallets())
@@ -498,26 +501,30 @@ export const handleGeneralError = async (
   crashReporting.crash()
 }
 
+export const submitSignedTx = (signedTx: string) => async (
+  dispatch: Dispatch<any>,
+) => {
+  Logger.info('submitting tx...')
+  await walletManager.submitTransaction(signedTx)
+
+  // note(v-almonacid): tx history sync for shelley is not implemented yet,
+  // but this action is required to update the wallet state
+  dispatch(updateHistory())
+}
+
 export const submitTransaction = (
   decryptedKey: string,
   transactionData: PreparedTransactionData,
 ) => async (dispatch: Dispatch<any>) => {
   const signedTx = await walletManager.signTx(transactionData, decryptedKey)
-  await walletManager.submitTransaction(signedTx)
-
-  dispatch(updateHistory())
+  dispatch(submitSignedTx(signedTx))
 }
 
-export const submitShelleyTx = (encodedTx: Uint8Array) => async (
+export const submitShelleyTx = (encodedTx: Uint8Array) => (
   dispatch: Dispatch<any>,
 ) => {
-  Logger.debug('submitting shelley tx...')
   const signedTx64 = Buffer.from(encodedTx).toString('base64')
-  await walletManager.submitTransaction(signedTx64)
-
-  // note(v-almonacid): tx history sync for shelley is not implemented yet,
-  // but this action updates the wallet state
-  dispatch(updateHistory())
+  dispatch(submitSignedTx(signedTx64))
 }
 
 export const checkForFlawedWallets = () => async (dispatch: Dispatch<any>) => {
@@ -535,4 +542,17 @@ export const checkForFlawedWallets = () => async (dispatch: Dispatch<any>) => {
   } catch (e) {
     Logger.warn('actions::checkForFlawedWallets error', e)
   }
+}
+
+const _saveHW = (hwDeviceInfo) => ({
+  path: ['wallet', 'hwDeviceInfo'],
+  payload: hwDeviceInfo,
+  reducer: (state, value) => value,
+  type: 'SAVE_HW',
+})
+
+export const saveHW = (hwDeviceInfo: HWDeviceInfo) => (
+  dispatch: Dispatch<any>,
+) => {
+  dispatch(_saveHW(hwDeviceInfo))
 }

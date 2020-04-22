@@ -17,13 +17,21 @@ import {
   Banner,
   PleaseWaitModal,
 } from '../UiKit'
-import {easyConfirmationSelector} from '../../selectors'
+import {
+  easyConfirmationSelector,
+  isHWSelector,
+  hwDeviceInfoSelector,
+} from '../../selectors'
 import globalMessages, {
   errorMessages,
   txLabels,
   confirmationMessages,
 } from '../../i18n/global-messages'
 import walletManager, {SystemAuthDisabled} from '../../crypto/wallet'
+import {
+  createLedgerSignTxPayload,
+  signTxWithLedger,
+} from '../../crypto/byron/ledgerUtils'
 import {SEND_ROUTES, WALLET_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import {CONFIG} from '../../config'
 import KeyStore from '../../crypto/KeyStore'
@@ -31,15 +39,17 @@ import {
   showErrorDialog,
   handleGeneralError,
   submitTransaction,
+  submitSignedTx,
 } from '../../actions'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {formatAdaWithSymbol, formatAdaWithText} from '../../utils/format'
 import {NetworkError, ApiError} from '../../api/errors'
+import {WrongPassword} from '../../crypto/errors'
+import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 
 import styles from './styles/ConfirmScreen.style'
 
-import {WrongPassword} from '../../crypto/errors'
-import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
+import type {PreparedTransactionData} from '../../types/HistoryTransaction'
 
 const messages = defineMessages({
   title: {
@@ -51,31 +61,73 @@ const messages = defineMessages({
 
 const handleOnConfirm = async (
   navigation,
+  isHW,
+  hwDeviceInfo,
   isEasyConfirmationEnabled,
   password,
   submitTransaction,
-  setSendingTransaction,
+  submitSignedTx,
+  withPleaseWaitModal,
   intl,
 ) => {
   const transactionData = navigation.getParam('transactionData')
 
-  const submitTx = async (decryptedKey) => {
-    try {
-      setSendingTransaction(true)
-      await submitTransaction(decryptedKey, transactionData)
+  const submitTx = async (
+    tx: string | PreparedTransactionData,
+    decryptedKey: ?string,
+  ) => {
+    await withPleaseWaitModal(async () => {
+      try {
+        if (decryptedKey != null) {
+          await submitTransaction(decryptedKey, tx)
+        } else {
+          await submitSignedTx(tx)
+        }
 
-      navigation.navigate(WALLET_ROUTES.TX_HISTORY)
-    } catch (e) {
-      if (e instanceof NetworkError) {
-        await showErrorDialog(errorMessages.networkError, intl)
-      } else if (e instanceof ApiError) {
-        await showErrorDialog(errorMessages.apiError, intl)
-      } else {
-        throw e
+        navigation.navigate(WALLET_ROUTES.TX_HISTORY)
+      } catch (e) {
+        if (e instanceof NetworkError) {
+          await showErrorDialog(errorMessages.networkError, intl)
+        } else if (e instanceof ApiError) {
+          await showErrorDialog(errorMessages.apiError, intl)
+        } else {
+          throw e
+        }
       }
-    } finally {
-      setSendingTransaction(false)
+    })
+  }
+
+  if (isHW) {
+    try {
+      // Map inputs to UNIQUE tx hashes (there might be multiple inputs from the same tx)
+      const txsHashes = [
+        ...new Set(transactionData.inputs.map((x) => x.ptr.id)),
+      ]
+      const txsBodiesMap = await walletManager.getTxsBodiesForUTXOs({txsHashes})
+      const addressedChange = {
+        address: transactionData.changeAddress,
+        addressing: walletManager.getAddressingInfo(
+          transactionData.changeAddress,
+        ),
+      }
+      const {ledgerSignTxPayload, partialTx} = await createLedgerSignTxPayload(
+        transactionData,
+        txsBodiesMap,
+        addressedChange,
+      )
+
+      const tx = await signTxWithLedger(
+        ledgerSignTxPayload,
+        partialTx,
+        hwDeviceInfo,
+      )
+
+      await submitTx(Buffer.from(tx.cbor_encoded_tx, 'hex').toString('base64'))
+    } catch (e) {
+      handleGeneralError('Could not submit transaction', e, intl)
     }
+
+    return
   }
 
   if (isEasyConfirmationEnabled) {
@@ -86,7 +138,7 @@ const handleOnConfirm = async (
         onSuccess: (decryptedKey) => {
           navigation.navigate(SEND_ROUTES.CONFIRM)
 
-          submitTx(decryptedKey)
+          submitTx(transactionData, decryptedKey)
         },
         onFail: () => navigation.goBack(),
       })
@@ -98,7 +150,7 @@ const handleOnConfirm = async (
 
         return
       } else {
-        throw e
+        handleGeneralError('Could not submit transaction', e, intl)
       }
     }
 
@@ -114,12 +166,12 @@ const handleOnConfirm = async (
       intl,
     )
 
-    submitTx(decryptedData)
+    submitTx(transactionData, decryptedData)
   } catch (e) {
     if (e instanceof WrongPassword) {
       await showErrorDialog(errorMessages.incorrectPassword, intl)
     } else {
-      handleGeneralError('Could not submit transaction', e)
+      handleGeneralError('Could not submit transaction', e, intl)
     }
   }
 }
@@ -131,6 +183,7 @@ const ConfirmScreen = ({
   password,
   setPassword,
   isEasyConfirmationEnabled,
+  isHW,
   sendingTransaction,
 }) => {
   const amount = navigation.getParam('amount')
@@ -139,7 +192,8 @@ const ConfirmScreen = ({
   const balanceAfterTx = navigation.getParam('balanceAfterTx')
   const availableAmount = navigation.getParam('availableAmount')
 
-  const isConfirmationDisabled = !isEasyConfirmationEnabled && !password
+  const isConfirmationDisabled =
+    !isEasyConfirmationEnabled && !password && !isHW
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -172,16 +226,20 @@ const ConfirmScreen = ({
           </Text>
           <Text>{formatAdaWithSymbol(amount)}</Text>
 
-          {!isEasyConfirmationEnabled && (
-            <View style={styles.input}>
-              <ValidatedTextInput
-                secureTextEntry
-                value={password}
-                label={intl.formatMessage(txLabels.password)}
-                onChangeText={setPassword}
-              />
-            </View>
-          )}
+          {/* eslint-disable indent */
+          !isEasyConfirmationEnabled &&
+            !isHW && (
+              <View style={styles.input}>
+                <ValidatedTextInput
+                  secureTextEntry
+                  value={password}
+                  label={intl.formatMessage(txLabels.password)}
+                  onChangeText={setPassword}
+                />
+              </View>
+            )
+          /* eslint-enable indent */
+          }
         </ScrollView>
         <View style={styles.actions}>
           <Button
@@ -208,9 +266,12 @@ export default injectIntl(
     connect(
       (state) => ({
         isEasyConfirmationEnabled: easyConfirmationSelector(state),
+        isHW: isHWSelector(state),
+        hwDeviceInfo: hwDeviceInfoSelector(state),
       }),
       {
         submitTransaction,
+        submitSignedTx,
       },
     ),
     withStateHandlers(
@@ -227,21 +288,39 @@ export default injectIntl(
     ),
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
+      withPleaseWaitModal: ({setSendingTransaction}) => async (
+        func: () => Promise<void>,
+      ): Promise<void> => {
+        setSendingTransaction(true)
+        try {
+          await func()
+        } finally {
+          setSendingTransaction(false)
+        }
+      },
+    }),
+    withHandlers({
       onConfirm: ignoreConcurrentAsyncHandler(
         ({
           navigation,
+          isHW,
+          hwDeviceInfo,
           isEasyConfirmationEnabled,
           password,
           submitTransaction,
-          setSendingTransaction,
+          submitSignedTx,
+          withPleaseWaitModal,
           intl,
         }) => async (event) => {
           await handleOnConfirm(
             navigation,
+            isHW,
+            hwDeviceInfo,
             isEasyConfirmationEnabled,
             password,
             submitTransaction,
-            setSendingTransaction,
+            submitSignedTx,
+            withPleaseWaitModal,
             intl,
           )
         },

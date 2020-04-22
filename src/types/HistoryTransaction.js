@@ -104,6 +104,12 @@ export type PreparedTransactionData = {|
   outputs: Array<TransactionOutput>,
 |}
 
+export type V1SignedTx = {
+  cbor_encoded_tx: string,
+  fee: BigNumber,
+  changedUsed: boolean,
+}
+
 // similar to yoroi-frontend's V3UnsignedTxUtxoResponse
 export type V3UnsignedTxData = {|
   senderUtxos: Array<RawUtxo>,
@@ -216,6 +222,10 @@ export type RemotePoolMetaFailure = {|
 export type PoolInfoResponse = {
   [key: string]: RemotePoolMetaSuccess | RemotePoolMetaFailure,
 }
+
+// getTxsBodiesForUTXOs
+export type TxBodiesRequest = {|txsHashes: Array<string>|}
+export type TxBodiesResponse = {[key: string]: string}
 
 export type ReputationObject = {
   node_flags?: number,

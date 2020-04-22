@@ -10,10 +10,11 @@ import env from '../env'
 
 const IS_DEBUG = __DEV__
 // debugging flags
-const _SHOW_INIT_DEBUG_SCREEN = false
-const _PREFILL_WALLET_INFO = false
+const _SHOW_INIT_DEBUG_SCREEN = env.getBoolean('SHOW_INIT_DEBUG_SCREEN', false)
+const _PREFILL_WALLET_INFO = env.getBoolean('PREFILL_WALLET_INFO', false)
 const _USE_TESTNET = env.getBoolean('USE_TESTNET', true)
 const _SENTRY = env.getString('SENTRY')
+
 const _LOG_LEVEL = IS_DEBUG ? LogLevel.Debug : LogLevel.Warn
 const _ASSURANCE_STRICT = false
 
@@ -21,18 +22,25 @@ const _COMMIT = env.getString('COMMIT')
 
 export const CARDANO_CONFIG = {
   TESTNET: {
+    IS_SHELLEY: false,
     PROTOCOL_MAGIC: 764824073,
     API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
     EXPLORER_URL_FOR_TX: (tx: string) => `https://cardanoexplorer.com/tx/${tx}`,
   },
   MAINNET: {
+    IS_SHELLEY: false,
     PROTOCOL_MAGIC: 764824073,
     API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
     EXPLORER_URL_FOR_TX: (tx: string) => `https://cardanoexplorer.com/tx/${tx}`,
   },
   SHELLEY: {
+    IS_SHELLEY: true,
+    NETWORK: 'Testnet', // for now, assume Shelley testnet by default
     PROTOCOL_MAGIC: 764824073,
     API_ROOT: 'https://shelley-itn-yoroi-backend.yoroiwallet.com/api',
+    SEIZA_STAKING_SIMPLE: (ADA: string) =>
+      // eslint-disable-next-line max-len
+      `https://testnet.seiza-website.emurgo.io/staking-simple/list?sortBy=RANDOM&searchText=&performance[]=0&performance[]=100&source=mobile&userAda=${ADA}`,
     EXPLORER_URL_FOR_ADDRESS: (address: string) =>
       `https://shelleyexplorer.cardano.org/address/?id=${address}`,
     LINEAR_FEE: {
@@ -50,6 +58,10 @@ export const CARDANO_CONFIG = {
     },
     GENESISHASH:
       'adbdd5ede31637f6c9bad5c271eec0bc3d0cb9efb86a5b913bb55cba549d0770',
+    BLOCK0_DATE: 1576264417000,
+    SLOTS_PER_EPOCH: 5000,
+    SLOT_DURATION: 10,
+    EPOCH_REWARD: 21414,
   },
 }
 
@@ -75,12 +87,22 @@ export const NUMBERS = {
   COIN_TYPES: {
     CARDANO: 2147485463, // HARD_DERIVATION_START + 1812;
   },
+  ACCOUNT_INDEX: 0,
   CHAIN_DERIVATIONS: {
     EXTERNAL: 0,
     INTERNAL: 1,
     CHIMERIC_ACCOUNT: 2,
   },
   STAKING_KEY_INDEX: 0,
+  EPOCH_REWARD_DENOMINATOR: new BigNumber(10).pow(6),
+}
+
+const HARDWARE_WALLETS = {
+  LEDGER_NANO_X: {
+    DEFAULT_WALLET_NAME: 'My Ledger Wallet',
+    VENDOR: 'ledger.com',
+    MODEL: 'NanoX',
+  },
 }
 
 export const CONFIG = {
@@ -123,11 +145,12 @@ export const CONFIG = {
     : ASSURANCE_LEVELS.NORMAL,
   HISTORY_REFRESH_TIME: 10 * 1000,
   WALLET: {
-    ACCOUNT_INDEX: 0,
     DISCOVERY_GAP_SIZE: 20,
     DISCOVERY_BLOCK_SIZE: 50, // should be less than API limitations
     MAX_GENERATED_UNUSED: 20, // must be <= gap size
   },
+  NUMBERS,
+  HARDWARE_WALLETS,
   PIN_LENGTH: 6,
   APP_LOCK_TIMEOUT: 30 * 1000,
   ALLOW_SHORT_PASSWORD: false,

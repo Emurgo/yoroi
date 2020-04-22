@@ -13,7 +13,7 @@ import {
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import {compose} from 'redux'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
-import {checkAndStoreHWDeviceInfo} from '../../../crypto/byron/ledgerUtils'
+import {getHWDeviceInfo} from '../../../crypto/byron/ledgerUtils'
 
 import {Text, BulletPointItem, ProgressStep} from '../../UiKit'
 import {withNavigationTitle} from '../../../utils/renderUtils'
@@ -85,7 +85,6 @@ type Props = {
   navigation: Navigation,
 }
 
-// TODO: type correctly
 type State = {
   devices: Array<Device>,
   deviceId: ?string,
@@ -180,7 +179,7 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
       const {deviceId} = this.state
       const {navigation} = this.props
       const transport = await TransportBLE.open(deviceId)
-      const hwDeviceInfo = await checkAndStoreHWDeviceInfo(transport)
+      const hwDeviceInfo = await getHWDeviceInfo(transport)
       const bip44AccountPublic = hwDeviceInfo?.bip44AccountPublic
       this.setState({bip44AccountPublic})
       navigation.navigate(WALLET_INIT_ROUTES.SAVE_NANO_X, {hwDeviceInfo})

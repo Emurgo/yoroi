@@ -1615,7 +1615,7 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@cardano-foundation/ledgerjs-hw-app-cardano@^1.0.8":
+"@cardano-foundation/ledgerjs-hw-app-cardano@1.0.8":
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/@cardano-foundation/ledgerjs-hw-app-cardano/-/ledgerjs-hw-app-cardano-1.0.8.tgz#89918236e78154b1817f32916e5fc036ab6fe41f"
   integrity sha512-I4nNXuIj1YMuOCUSZjou4DrIKvMKd9c5y50Bz3YacMsulWJP7SqwD7+PQvd1bKsLU/HVo25rUf3CpqgWIRk5nQ==
@@ -1928,7 +1928,7 @@
   resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-5.13.0.tgz#42e848f7c6f662387dfc5f3e86e3e5b4e07a5fae"
   integrity sha512-yMvzQiMjWDMRma3HPxQQibhvEqMaEdXXkNBk1+eaW+N47Y3neYSSyCJlyihzzMBeeoin4ChlP/5uKQaABwBeTg==
 
-"@ledgerhq/react-native-hw-transport-ble@^5.13.0":
+"@ledgerhq/react-native-hw-transport-ble@5.13.0":
   version "5.13.0"
   resolved "https://registry.yarnpkg.com/@ledgerhq/react-native-hw-transport-ble/-/react-native-hw-transport-ble-5.13.0.tgz#783c32eade3ddb2390f9c4c640cf5061e36c0510"
   integrity sha512-z62bfwzxTPytZr3dKcT5rZsx9cXnj+OuJNZdRF5Qhsul+0taRecvlrvZR+cdqTm/ihLmIRYBj+fwAaFcN3e09w==
@@ -3887,6 +3887,11 @@ bignumber.js@^7.2.1:
   resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-7.2.1.tgz#80c048759d826800807c4bfd521e50edbba57a5f"
   integrity sha512-S4XzBk5sMB+Rcb/LNcpzXr57VRTxgAvaAEDAl1AwRx27j00hT84O6OkteE7u8UB3NuaaygCRrEpqox4uDOrbdQ==
 
+bignumber.js@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-9.0.0.tgz#805880f84a329b5eac6e7cb6f8274b6d82bdf075"
+  integrity sha512-t/OYhhJ2SD+YGBQcjY8GzzDHEk9f3nerxjtfa6tlMXfe7frs/WozhvCNoGvpM0P3bNf3Gq5ZRMlGr5f3r4/N8A==
+
 binary-extensions@^1.0.0:
   version "1.13.1"
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-1.13.1.tgz#598afe54755b2868a5330d2aff9d4ebb53209b65"
@@ -4408,6 +4413,14 @@ caseless@^0.12.0, caseless@~0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
+
+cbor@5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/cbor/-/cbor-5.0.2.tgz#aa8c3820280ebb9f3a45b2a4c66ac344294443de"
+  integrity sha512-6JiKVURxxO92FntzTJq54QdN/8fBaBwD7+nNyGIAi1HL9mBgU3YK6ULV8k7WTuT/EwfRsjy3MuqDKlkQMCmfXg==
+  dependencies:
+    bignumber.js "^9.0.0"
+    nofilter "^1.0.3"
 
 chacha-native@^2.0.0:
   version "2.0.2"
@@ -10362,6 +10375,11 @@ node-version@^1.0.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/node-version/-/node-version-1.2.0.tgz#34fde3ffa8e1149bd323983479dda620e1b5060d"
   integrity sha512-ma6oU4Sk0qOoKEAymVoTvk8EdXEobdS7m/mAGhDJ8Rouugho48crHBORAmy5BoOcv8wraPM6xumapQp5hl4iIQ==
+
+nofilter@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/nofilter/-/nofilter-1.0.3.tgz#34e54b4cc9757de0cad38cc0d19462489b1b7f5d"
+  integrity sha512-FlUlqwRK6reQCaFLAhMcF+6VkVG2caYjKQY3YsRDTl4/SEch595Qb3oLjJRDr8dkHAAOVj2pOx3VknfnSgkE5g==
 
 nopt@^4.0.1:
   version "4.0.1"

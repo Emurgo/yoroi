@@ -12,8 +12,9 @@ import {getWalletNameError, validateWalletName} from '../../../utils/validators'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import globalMessages from '../../../../src/i18n/global-messages'
 import {walletNamesSelector} from '../../../selectors'
-import {createWalletWithMasterKey} from '../../../actions'
+import {createWalletWithBip44Account, saveHW} from '../../../actions'
 import {ROOT_ROUTES} from '../../../RoutesList'
+import {CONFIG} from '../../../config'
 
 import styles from './styles/SaveNanoXScreen.style'
 import image from '../../../assets/img/ledger_2.png'
@@ -96,12 +97,13 @@ export default injectIntl(
       }),
       {
         validateWalletName,
-        createWalletWithMasterKey,
+        createWalletWithBip44Account,
+        saveHW,
       },
     ),
     withStateHandlers(
       {
-        name: 'My Ledger Wallet',
+        name: CONFIG.HARDWARE_WALLETS.LEDGER_NANO_X.DEFAULT_WALLET_NAME,
       },
       {
         setName: () => (name) => ({name}),
@@ -110,10 +112,21 @@ export default injectIntl(
     withHandlers({
       validateWalletName: ({walletNames}) => (walletName) =>
         validateWalletName(walletName, null, walletNames),
-      onPress: ({createWalletWithMasterKey, name, navigation}) => async () => {
+      onPress: ({
+        createWalletWithBip44Account,
+        saveHW,
+        name,
+        navigation,
+      }) => async () => {
         const hwDeviceInfo = navigation.getParam('hwDeviceInfo')
-        await createWalletWithMasterKey(name, hwDeviceInfo.bip44AccountPublic)
+        await createWalletWithBip44Account(
+          name,
+          hwDeviceInfo.bip44AccountPublic,
+          hwDeviceInfo,
+          false, // not Shelley
+        )
         navigation.navigate(ROOT_ROUTES.WALLET)
+        saveHW(hwDeviceInfo)
       },
     }),
     withHandlers({
