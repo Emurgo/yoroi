@@ -13,14 +13,13 @@ export default StyleSheet.create({
     paddingHorizontal: 20,
     flex: 1,
   },
-  content: {
-    flex: 1,
-    marginBottom: 24,
-  },
   heading: {
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: spacing.paragraphBottomMargin,
+  },
+  scrollView: {
+    flex: 1,
   },
   paragraph: {
     marginBottom: spacing.paragraphBottomMargin,

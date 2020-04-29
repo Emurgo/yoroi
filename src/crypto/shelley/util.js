@@ -55,7 +55,7 @@ export const getFirstInternalAddr = async (
   const internalAddr = await Address.delegation_from_public_key(
     internalKey,
     stakingKey,
-    CARDANO_CONFIG.SHELLEY.NETWORK === 'Mainnet'
+    CARDANO_CONFIG.SHELLEY.IS_MAINNET
       ? await AddressDiscrimination.Production
       : await AddressDiscrimination.Test,
   )
@@ -79,7 +79,7 @@ export const getGroupAddresses = async (
       const address = await Address.delegation_from_public_key(
         addressKey,
         stakingKey,
-        CARDANO_CONFIG.SHELLEY.NETWORK === 'Mainnet'
+        CARDANO_CONFIG.SHELLEY.IS_MAINNET
           ? await AddressDiscrimination.Production
           : await AddressDiscrimination.Test,
       )

@@ -1,14 +1,17 @@
 // @flow
 
 import React from 'react'
-import {View, SafeAreaView, Image} from 'react-native'
+import {View, SafeAreaView, ScrollView, Image, Platform} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 
 import {Text, Button, Link, BulletPointItem, ProgressStep} from '../../UiKit'
 import {withNavigationTitle} from '../../../utils/renderUtils'
-import {confirmationMessages} from '../../../../src/i18n/global-messages'
+import {
+  confirmationMessages,
+  ledgerMessages,
+} from '../../../../src/i18n/global-messages'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 
 import styles from './styles/CheckNanoXScreen.style'
@@ -27,19 +30,6 @@ const messages = defineMessages({
     id: 'components.walletinit.connectnanox.checknanoxscreen.introline',
     defaultMessage: '!!!Before continuing, please make sure that:',
   },
-  line1: {
-    id: 'components.walletinit.connectnanox.checknanoxscreen.line1',
-    defaultMessage: '!!!Bluetooth is enabled on your smartphone.',
-  },
-  line2: {
-    id: 'components.walletinit.connectnanox.checknanoxscreen.line2',
-    defaultMessage:
-      '!!!Cardano ADA app is installed on your Ledger Nano X device.',
-  },
-  line3: {
-    id: 'components.walletinit.connectnanox.checknanoxscreen.line3',
-    defaultMessage: '!!!Your smartphone is connected to the Internet.',
-  },
   learnMore: {
     id: 'components.walletinit.connectnanox.checknanoxscreen.learnMore',
     defaultMessage: '!!!Learn more about using Yoroi with Ledger',
@@ -51,25 +41,32 @@ const url = 'https://yoroi-wallet.com/'
 
 const CheckNanoXScreen = ({intl, onPress, navigation}) => {
   const rows = [
-    intl.formatMessage(messages.line1),
-    intl.formatMessage(messages.line2),
-    intl.formatMessage(messages.line3),
+    intl.formatMessage(ledgerMessages.bluetoothEnabled),
+    intl.formatMessage(ledgerMessages.appInstalled),
+    intl.formatMessage(ledgerMessages.appOpened),
+    intl.formatMessage(ledgerMessages.internetConnected),
   ]
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <ProgressStep currentStep={1} totalSteps={3} displayStepNumber />
       <View style={styles.container}>
-        <View style={styles.content}>
-          <View style={styles.heading}>
-            <Image source={image} />
-          </View>
-          <View style={styles.paragraph}>
-            <Text>{intl.formatMessage(messages.introline)}</Text>
-            {rows.map((row, i) => (
-              <BulletPointItem textRow={row} key={i} style={styles.item} />
-            ))}
-          </View>
+        <View style={styles.heading}>
+          <Image source={image} />
         </View>
+        <Text style={styles.item}>
+          {intl.formatMessage(messages.introline)}
+        </Text>
+        <ScrollView style={[styles.paragraph, styles.scrollView]}>
+          {rows.map((row, i) => (
+            <BulletPointItem textRow={row} key={i} style={styles.item} />
+          ))}
+          {Platform.OS === 'android' && (
+            <BulletPointItem
+              textRow={intl.formatMessage(ledgerMessages.locationEnabled)}
+              style={styles.item}
+            />
+          )}
+        </ScrollView>
         <View style={styles.linkContainer}>
           <Link url={url} text={intl.formatMessage(messages.learnMore)} />
         </View>

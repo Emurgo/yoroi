@@ -79,6 +79,49 @@ export const txLabels = defineMessages({
   },
 })
 
+export const ledgerMessages = defineMessages({
+  // prerequisites
+  bluetoothEnabled: {
+    id: 'global.ledgerMessages.bluetoothEnabled',
+    defaultMessage: '!!!Bluetooth is enabled on your smartphone.',
+  },
+  locationEnabled: {
+    id: 'global.ledgerMessages.locationEnabled',
+    defaultMessage:
+      '!!!Location is enabled on your device.' +
+      'Android requires location to be enabled to provide access to Bluetooth,' +
+      ' but EMURGO will never store any location data.',
+  },
+  appInstalled: {
+    id: 'global.ledgerMessages.appInstalled',
+    defaultMessage:
+      '!!!Cardano ADA app is installed on your Ledger Nano X device.',
+  },
+  appOpened: {
+    id: 'global.ledgerMessages.appOpened',
+    defaultMessage:
+      '!!!Cardano ADA app must remain open on your Ledger Nano X device.',
+  },
+  internetConnected: {
+    id: 'global.ledgerMessages.internetConnected',
+    defaultMessage: '!!!Your smartphone is connected to the Internet.',
+  },
+  // connection requisites
+  enterPin: {
+    id: 'global.ledgerMessages.enterPin',
+    defaultMessage: '!!!Power on your ledger device and enter your PIN.',
+  },
+  openApp: {
+    id: 'global.ledgerMessages.openApp',
+    defaultMessage: '!!!Open Cardano ADA app on the Ledger device.',
+  },
+  // common errors
+  bluetoothDisabledError: {
+    id: 'global.ledgerMessages.bluetoothDisabledError',
+    defaultMessage: '!!!Bluetooth is disabled in your smartphone',
+  },
+})
+
 export const errorMessages = {
   pinMismatch: defineMessages({
     title: {
@@ -133,6 +176,20 @@ export const errorMessages = {
         'As a result the easy transaction confirmation was disabled ' +
         'and transaction submitting is allowed only with master password. ' +
         'You can re-enable easy transactions confirmation in settings',
+    },
+  }),
+  walletStateInvalid: defineMessages({
+    title: {
+      id: 'global.actions.dialogs.walletStateInvalid.title',
+      defaultMessage: '!!!Invalid wallet state',
+    },
+    message: {
+      id: 'global.actions.dialogs.walletStateInvalid.message',
+      defaultMessage:
+        '!!!Your wallet is in an inconsistent state. You may solve this by ' +
+        'restoring your wallet with your mnemonics. Please contact EMURGO ' +
+        'support to report this issue as this may help us fix the problem ' +
+        'in a future release.',
     },
   }),
   networkError: defineMessages({

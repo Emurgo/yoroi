@@ -84,13 +84,7 @@ const makeCardanoBIP44Path = (
   account: number,
   chain: number,
   address: number,
-) => [
-  PURPOSE,
-  COIN_TYPE,
-  HARDENED + account,
-  chain,
-  address,
-]
+) => [PURPOSE, COIN_TYPE, HARDENED + account, chain, address]
 
 const validateHWResponse = (resp: LedgerConnectionResponse): boolean => {
   const {extendedPublicKeyResp, versionResp} = resp

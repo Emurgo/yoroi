@@ -134,6 +134,8 @@ type WalletState = {|
   lastGeneratedAddressIndex: number,
 |}
 
+export class InvalidState extends ExtendableError {}
+
 export class Wallet {
   // $FlowFixMe null
   _id: string = null
@@ -321,11 +323,11 @@ export class Wallet {
       const stakingKey = await (await (await accountPubKey.derive(
         CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
       )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
-      // note(v-almonacid): currently we assume all Shelley config is "test"
-      // but in the near future we need to add a mainnet/testnet switch
       const chimericAccountAddrPtr = await Address.account_from_public_key(
         stakingKey,
-        await AddressDiscrimination.Test,
+        CARDANO_CONFIG.SHELLEY.IS_MAINNET
+          ? await AddressDiscrimination.Production
+          : await AddressDiscrimination.Test,
       )
       account = Buffer.from(await accountPubKey.as_bytes()).toString('hex')
       chimericAccountAddr = Buffer.from(
@@ -387,9 +389,9 @@ export class Wallet {
             )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
             const chimericAccountAddrPtr = await Address.account_from_public_key(
               stakingKey,
-              // TODO: currently we assume all Shelley config is "test"
-              // but in the near future we need to add a mainnet/testnet switch
-              await AddressDiscrimination.Test,
+              CARDANO_CONFIG.SHELLEY.IS_MAINNET
+                ? await AddressDiscrimination.Production
+                : await AddressDiscrimination.Test,
             )
             return Buffer.from(
               await chimericAccountAddrPtr.as_bytes(),
@@ -400,12 +402,7 @@ export class Wallet {
       }
     } catch (e) {
       Logger.error('wallet::_integrityCheck', e)
-      // TODO: open general error dialog. Use intl
-      throw new Error(
-        'Wallet is in inconsistent state. You may solve this by ' +
-          'restoring your wallet with your mnemonics. Contact EMURGO support if ' +
-          'problem persists',
-      )
+      throw new InvalidState()
     }
   }
 

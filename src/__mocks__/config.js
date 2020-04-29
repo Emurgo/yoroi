@@ -35,7 +35,7 @@ export const CARDANO_CONFIG = {
   },
   SHELLEY: {
     IS_SHELLEY: true,
-    NETWORK: 'Testnet', // for now, assume Shelley testnet by default
+    IS_MAINNET: false, // for now, assume Shelley testnet by default
     PROTOCOL_MAGIC: 764824073,
     API_ROOT: 'https://shelley-itn-yoroi-backend.yoroiwallet.com/api',
     SEIZA_STAKING_SIMPLE: (ADA: string) =>

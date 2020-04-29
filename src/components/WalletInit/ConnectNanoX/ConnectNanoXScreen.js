@@ -20,6 +20,7 @@ import {withNavigationTitle} from '../../../utils/renderUtils'
 import DeviceItem from './DeviceItem'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {BluetoothDisabledError} from './errors'
+import {ledgerMessages} from '../../../i18n/global-messages'
 
 import styles from './styles/ConnectNanoXScreen.style'
 import image from '../../../assets/img/bluetooth.png'
@@ -41,21 +42,6 @@ const messages = defineMessages({
     id: 'components.walletinit.connectnanox.connectnanoxscreen.introline',
     defaultMessage: "!!!You'll need to:",
   },
-  line1: {
-    id: 'components.walletinit.connectnanox.connectnanoxscreen.line1',
-    defaultMessage: '!!!Enter your PIN on the ledger device.',
-  },
-  line2: {
-    id: 'components.walletinit.connectnanox.connectnanoxscreen.line2',
-    defaultMessage: '!!!Open Cardano ADA app on the Ledger device.',
-  },
-  line3: {
-    id: 'components.walletinit.connectnanox.connectnanoxscreen.line3',
-    defaultMessage:
-      '!!!Allow location on your device.' +
-      'Android requires location to be enabled to provide access to Bluetooth,' +
-      ' but EMURGO will never store any location data.',
-  },
   exportKey: {
     id: 'components.walletinit.connectnanox.connectnanoxscreen.exportKey',
     defaultMessage:
@@ -65,11 +51,6 @@ const messages = defineMessages({
     id: 'components.walletinit.connectnanox.connectnanoxscreen.error',
     defaultMessage:
       '!!!An error occurred while trying to connect with your hardware wallet:',
-  },
-  bluetoothDisabled: {
-    id:
-      'components.walletinit.connectnanox.connectnanoxscreen.bluetoothDisabled',
-    defaultMessage: '!!!Bluetooth is disabled in your smartphone',
   },
 })
 
@@ -116,7 +97,6 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
     TransportBLE.observeState({
       next: (e) => {
         if (this.bluetoothEnabled == null && !e.available) {
-          // consider adding a specific string since this is a common error
           this.setState({
             error: new BluetoothDisabledError(),
             refreshing: false,
@@ -133,9 +113,6 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
     })
     this.startScan()
   }
-
-  // componentDidUpdate = (prevProps) => {
-  // }
 
   componentWillUnmount() {
     if (this.subscriptions != null) this.subscriptions.unsubscribe()
@@ -158,7 +135,6 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
     })
   }
 
-  // TODO
   reload = () => {
     if (this.subscriptions != null) this.subscriptions.unsubscribe()
     this.setState({
@@ -169,7 +145,6 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
     this.startScan()
   }
 
-  // TODO
   onSelectDevice = (device) => {
     this.setState({deviceId: device.id}, () => this.navigateToSave())
   }
@@ -198,7 +173,7 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
     if (error != null) {
       let msg
       if (error instanceof BluetoothDisabledError) {
-        msg = intl.formatMessage(messages.bluetoothDisabled)
+        msg = intl.formatMessage(ledgerMessages.bluetoothDisabledError)
       } else {
         msg = String(error.message)
       }
@@ -228,8 +203,8 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
     const {error, devices, refreshing, deviceId} = this.state
 
     const rows = [
-      intl.formatMessage(messages.line1),
-      intl.formatMessage(messages.line2),
+      intl.formatMessage(ledgerMessages.enterPin),
+      intl.formatMessage(ledgerMessages.openApp),
     ]
     return (
       <SafeAreaView style={styles.safeAreaView}>
@@ -249,12 +224,6 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
               {rows.map((row, i) => (
                 <BulletPointItem textRow={row} key={i} style={styles.item} />
               ))}
-              {Platform.OS === 'android' && (
-                <BulletPointItem
-                  textRow={intl.formatMessage(messages.line3)}
-                  style={styles.item}
-                />
-              )}
             </View>
           )}
           <ScrollView style={styles.scrollView}>

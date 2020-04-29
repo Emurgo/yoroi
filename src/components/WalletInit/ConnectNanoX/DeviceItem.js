@@ -11,6 +11,7 @@ import {compose, withHandlers, withStateHandlers} from 'recompose'
 import {COLORS} from '../../../styles/config'
 
 import type {ComponentType} from 'react'
+import type {Device} from '@ledgerhq/react-native-hw-transport-ble'
 
 const styles = StyleSheet.create({
   deviceItem: {
@@ -33,10 +34,10 @@ const styles = StyleSheet.create({
   },
 })
 
-type Props = {
-  onSelect: (device: any) => any, // TODO
-  device: any, // TODO
-}
+type Props = {|
+  onSelect: (device: Device) => any,
+  device: Device,
+|}
 
 const DeviceItem = ({device, pending, onPress}) => (
   <TouchableOpacity

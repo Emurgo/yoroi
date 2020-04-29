@@ -11,6 +11,7 @@ import {injectIntl, defineMessages} from 'react-intl'
 import {
   Text,
   Button,
+  BulletPointItem,
   OfflineBanner,
   ValidatedTextInput,
   StatusBar,
@@ -26,6 +27,7 @@ import globalMessages, {
   errorMessages,
   txLabels,
   confirmationMessages,
+  ledgerMessages,
 } from '../../i18n/global-messages'
 import walletManager, {SystemAuthDisabled} from '../../crypto/wallet'
 import {
@@ -57,7 +59,33 @@ const messages = defineMessages({
     defaultMessage: '!!!Send',
     description: 'some desc',
   },
+  confirmWithLedger: {
+    id: 'components.send.confirmscreen.confirmWithLedger',
+    defaultMessage: '!!!Confirm with Ledger',
+  },
+  beforeConfirm: {
+    id: 'components.send.confirmscreen.beforeConfirm',
+    defaultMessage:
+      '!!!Before tapping on confirm, please follow these instructions:',
+  },
 })
+
+const RenderHWInstructions = ({intl}) => {
+  const rows = [
+    intl.formatMessage(ledgerMessages.enterPin),
+    intl.formatMessage(ledgerMessages.openApp),
+  ]
+  return (
+    <View style={styles.instructionsBlock}>
+      <Text styles={styles.paragraphText}>
+        {intl.formatMessage(messages.beforeConfirm)}
+      </Text>
+      {rows.map((row, i) => (
+        <BulletPointItem textRow={row} key={i} style={styles.item} />
+      ))}
+    </View>
+  )
+}
 
 const handleOnConfirm = async (
   navigation,
@@ -68,6 +96,7 @@ const handleOnConfirm = async (
   submitTransaction,
   submitSignedTx,
   withPleaseWaitModal,
+  withDisabledButton,
   intl,
 ) => {
   const transactionData = navigation.getParam('transactionData')
@@ -98,35 +127,45 @@ const handleOnConfirm = async (
   }
 
   if (isHW) {
-    try {
-      // Map inputs to UNIQUE tx hashes (there might be multiple inputs from the same tx)
-      const txsHashes = [
-        ...new Set(transactionData.inputs.map((x) => x.ptr.id)),
-      ]
-      const txsBodiesMap = await walletManager.getTxsBodiesForUTXOs({txsHashes})
-      const addressedChange = {
-        address: transactionData.changeAddress,
-        addressing: walletManager.getAddressingInfo(
-          transactionData.changeAddress,
-        ),
+    withDisabledButton(async () => {
+      try {
+        // Map inputs to UNIQUE tx hashes (there might be multiple inputs from the same tx)
+        const txsHashes = [
+          ...new Set(transactionData.inputs.map((x) => x.ptr.id)),
+        ]
+        const txsBodiesMap = await walletManager.getTxsBodiesForUTXOs({
+          txsHashes,
+        })
+        const addressedChange = {
+          address: transactionData.changeAddress,
+          addressing: walletManager.getAddressingInfo(
+            transactionData.changeAddress,
+          ),
+        }
+        const {
+          ledgerSignTxPayload,
+          partialTx,
+        } = await createLedgerSignTxPayload(
+          transactionData,
+          txsBodiesMap,
+          addressedChange,
+        )
+
+        const tx = await signTxWithLedger(
+          ledgerSignTxPayload,
+          partialTx,
+          hwDeviceInfo,
+        )
+
+        await submitTx(
+          Buffer.from(tx.cbor_encoded_tx, 'hex').toString('base64'),
+        )
+      } catch (e) {
+        // TODO(v-almonacid): there are a couple of common exceptions that
+        // should be handled before throwing a general error
+        handleGeneralError('Could not submit transaction', e, intl)
       }
-      const {ledgerSignTxPayload, partialTx} = await createLedgerSignTxPayload(
-        transactionData,
-        txsBodiesMap,
-        addressedChange,
-      )
-
-      const tx = await signTxWithLedger(
-        ledgerSignTxPayload,
-        partialTx,
-        hwDeviceInfo,
-      )
-
-      await submitTx(Buffer.from(tx.cbor_encoded_tx, 'hex').toString('base64'))
-    } catch (e) {
-      handleGeneralError('Could not submit transaction', e, intl)
-    }
-
+    })
     return
   }
 
@@ -185,6 +224,7 @@ const ConfirmScreen = ({
   isEasyConfirmationEnabled,
   isHW,
   sendingTransaction,
+  buttonDisabled,
 }) => {
   const amount = navigation.getParam('amount')
   const address = navigation.getParam('address')
@@ -240,6 +280,7 @@ const ConfirmScreen = ({
             )
           /* eslint-enable indent */
           }
+          {isHW && <RenderHWInstructions intl={intl} />}
         </ScrollView>
         <View style={styles.actions}>
           <Button
@@ -247,7 +288,7 @@ const ConfirmScreen = ({
             title={intl.formatMessage(
               confirmationMessages.commonButtons.confirmButton,
             )}
-            disabled={isConfirmationDisabled}
+            disabled={isConfirmationDisabled || buttonDisabled}
           />
         </View>
       </View>
@@ -278,12 +319,14 @@ export default injectIntl(
       {
         password: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
         sendingTransaction: false,
+        buttonDisabled: false,
       },
       {
         setPassword: (state) => (value) => ({password: value}),
         setSendingTransaction: () => (sendingTransaction) => ({
           sendingTransaction,
         }),
+        setButtonDisabled: () => (buttonDisabled) => ({buttonDisabled}),
       },
     ),
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
@@ -298,6 +341,16 @@ export default injectIntl(
           setSendingTransaction(false)
         }
       },
+      withDisabledButton: ({setButtonDisabled}) => async (
+        func: () => Promise<void>,
+      ): Promise<void> => {
+        setButtonDisabled(true)
+        try {
+          await func()
+        } finally {
+          setButtonDisabled(false)
+        }
+      },
     }),
     withHandlers({
       onConfirm: ignoreConcurrentAsyncHandler(
@@ -310,6 +363,7 @@ export default injectIntl(
           submitTransaction,
           submitSignedTx,
           withPleaseWaitModal,
+          withDisabledButton,
           intl,
         }) => async (event) => {
           await handleOnConfirm(
@@ -321,6 +375,7 @@ export default injectIntl(
             submitTransaction,
             submitSignedTx,
             withPleaseWaitModal,
+            withDisabledButton,
             intl,
           )
         },
