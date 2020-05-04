@@ -120,6 +120,13 @@ export const ledgerMessages = defineMessages({
     id: 'global.ledgerMessages.bluetoothDisabledError',
     defaultMessage: '!!!Bluetooth is disabled in your smartphone',
   },
+  connectionError: {
+    id: 'global.ledgerMessages.connectionError',
+    defaultMessage:
+      '!!!An error occured while trying to connect with your ' +
+      'hardware wallet. Please, make sure you are following the steps' +
+      'correctly. Restarting your hardware wallet may also fix the problem.',
+  },
 })
 
 export const errorMessages = {

@@ -84,10 +84,10 @@ const SaveNanoXScreen = ({
   )
 }
 
-type ExternalProps = {
+type ExternalProps = {|
   intl: intlShape,
   navigation: Navigation,
-}
+|}
 
 export default injectIntl(
   (compose(

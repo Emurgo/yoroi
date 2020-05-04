@@ -63,7 +63,7 @@
     "react-markdown": "^4.0.6",
     "react-native": "0.59.10",
     "react-native-background-timer": "^2.1.1",
-    "react-native-ble-plx": "^1.1.1",
+    "react-native-ble-plx": "1.1.1",
     "react-native-camera": "^1.3.0",
     "react-native-cardano": "https://github.com/Emurgo/react-native-cardano.git",
     "react-native-chain-libs": "Emurgo/react-native-chain-libs",

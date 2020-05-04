@@ -1,8 +1,10 @@
 // @flow
 
-import AppAda from '@cardano-foundation/ledgerjs-hw-app-cardano'
+import AppAda, {ErrorCodes} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {BigNumber} from 'bignumber.js'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
+import {BleError} from 'react-native-ble-plx'
+import ExtendableError from 'es6-error'
 
 import {Logger} from '../../utils/logging'
 import {CONFIG} from '../../config'
@@ -34,35 +36,65 @@ import type {
 import type {TxWitness} from './util'
 import type BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble'
 
-// these are defined in LedgerConnectStore.js in yoroi-frontend
-type LedgerConnectionResponse = {
-  versionResp: GetVersionResponse,
-  extendedPublicKeyResp: GetExtendedPublicKeyResponse,
-  deviceId: string,
+//
+// ============== Errors ==================
+//
+
+export class BluetoothDisabledError extends ExtendableError {
+  constructor() {
+    super('BluetoothDisabledError')
+  }
 }
 
-type LedgerSignTxPayload = {
+export class GeneralConnectionError extends ExtendableError {
+  constructor() {
+    super('GeneralConnectionError')
+  }
+}
+
+const _isConnectionError = (e: Error): boolean => {
+  if (
+    e instanceof BleError ||
+    e.message.includes('was disconnected') ||
+    e.message.includes('DisconnectedDevice') ||
+    e.message.includes('not found')
+  ) {
+    return true
+  }
+  return false
+}
+
+//
+// ============== Types ==================
+//
+
+// these are defined in LedgerConnectStore.js in yoroi-frontend
+type LedgerConnectionResponse = {|
+  extendedPublicKeyResp: GetExtendedPublicKeyResponse,
+  deviceId: string,
+|}
+
+type LedgerSignTxPayload = {|
   inputs: Array<InputTypeUTxO>,
   outputs: Array<OutputTypeAddress | OutputTypeChange>,
-}
+|}
 
 // Hardware wallet device Features object
 // borrowed from HWConnectStoreTypes.js in yoroi-frontend
-export type HWFeatures = {
+export type HWFeatures = {|
   vendor: string,
   model: string,
-  label: string,
   deviceId: string,
-  language: string,
-  majorVersion: number,
-  minorVersion: number,
-  patchVersion: number,
-}
+|}
 
-export type HWDeviceInfo = {
+export type HWDeviceInfo = {|
   bip44AccountPublic: string,
   hwFeatures: HWFeatures,
-}
+|}
+
+//
+// ============== General util ==================
+//
 
 const VENDOR = CONFIG.HARDWARE_WALLETS.LEDGER_NANO_X.VENDOR
 const MODEL = CONFIG.HARDWARE_WALLETS.LEDGER_NANO_X.MODEL
@@ -87,9 +119,9 @@ const makeCardanoBIP44Path = (
 ) => [PURPOSE, COIN_TYPE, HARDENED + account, chain, address]
 
 const validateHWResponse = (resp: LedgerConnectionResponse): boolean => {
-  const {extendedPublicKeyResp, versionResp} = resp
-  if (versionResp == null) {
-    throw new Error('Ledger device version response is undefined')
+  const {extendedPublicKeyResp, deviceId} = resp
+  if (deviceId == null) {
+    throw new Error('Ledger device id response is undefined')
   }
   if (extendedPublicKeyResp == null) {
     throw new Error('Ledger device extended public key response is undefined')
@@ -99,19 +131,14 @@ const validateHWResponse = (resp: LedgerConnectionResponse): boolean => {
 
 const normalizeHWResponse = (resp: LedgerConnectionResponse): HWDeviceInfo => {
   validateHWResponse(resp)
-  const {extendedPublicKeyResp, versionResp, deviceId} = resp
+  const {extendedPublicKeyResp, deviceId} = resp
   return {
     bip44AccountPublic:
       extendedPublicKeyResp.publicKeyHex + extendedPublicKeyResp.chainCodeHex,
     hwFeatures: {
       vendor: VENDOR,
       model: MODEL,
-      label: '',
       deviceId,
-      language: '',
-      majorVersion: parseInt(versionResp.major, 10),
-      minorVersion: parseInt(versionResp.minor, 10),
-      patchVersion: parseInt(versionResp.patch, 10),
     },
   }
 }
@@ -142,15 +169,21 @@ export const getHWDeviceInfo = async (
     const deviceId = transport.id
 
     const hwDeviceInfo = normalizeHWResponse({
-      versionResp,
       extendedPublicKeyResp,
       deviceId,
     })
     Logger.info('ledgerUtils::getHWDeviceInfo: Ledger device OK')
     return hwDeviceInfo
-  } catch (error) {
-    Logger.error(error)
-    throw error
+  } catch (e) {
+    if (e.statusCode === ErrorCodes.ERR_REJECTED_BY_USER) {
+      Logger.info('ledgerUtils::getHWDeviceInfo: Action rejected by user', e)
+    } else if (_isConnectionError(e)) {
+      Logger.info('ledgerUtils::getHWDeviceInfo: general/BleError', e)
+      throw new GeneralConnectionError()
+    } else {
+      Logger.error('ledgerUtils::getHWDeviceInfo', e)
+    }
+    throw e
   }
 }
 
@@ -320,8 +353,13 @@ export const signTxWithLedger = async (
     Logger.debug('ledgerUtils::signTxWithLedger finalTx')
     return finalTx
   } catch (e) {
-    Logger.debug('ledgerUtils::signTxWithLedger error', e)
-    throw e
+    if (_isConnectionError(e)) {
+      Logger.info('ledgerUtils::getHWDeviceInfo: general/BleError', e)
+      throw new GeneralConnectionError()
+    } else {
+      Logger.debug('ledgerUtils::signTxWithLedger error', e)
+      throw e
+    }
   }
 }
 

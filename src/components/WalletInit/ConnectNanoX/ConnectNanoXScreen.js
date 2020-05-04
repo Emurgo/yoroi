@@ -13,13 +13,18 @@ import {
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import {compose} from 'redux'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
-import {getHWDeviceInfo} from '../../../crypto/byron/ledgerUtils'
+import {ErrorCodes} from '@cardano-foundation/ledgerjs-hw-app-cardano'
+import {BleError} from 'react-native-ble-plx'
 
+import {
+  getHWDeviceInfo,
+  BluetoothDisabledError,
+  GeneralConnectionError,
+} from '../../../crypto/byron/ledgerUtils'
 import {Text, BulletPointItem, ProgressStep} from '../../UiKit'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import DeviceItem from './DeviceItem'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
-import {BluetoothDisabledError} from './errors'
 import {ledgerMessages} from '../../../i18n/global-messages'
 
 import styles from './styles/ConnectNanoXScreen.style'
@@ -60,19 +65,19 @@ const deviceAddition = (device) => ({devices}) => ({
     : devices.concat(device),
 })
 
-type Props = {
+type Props = {|
   intl: intlShape,
   defaultDevices: ?Array<Device>, // for UI design prototyping
   navigation: Navigation,
-}
+|}
 
-type State = {
+type State = {|
   devices: Array<Device>,
   deviceId: ?string,
   error: ?Error,
   refreshing: boolean,
   bip44AccountPublic: ?string,
-}
+|}
 
 class ConnectNanoXScreen extends React.Component<Props, State> {
   state = {
@@ -139,6 +144,7 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
     if (this.subscriptions != null) this.subscriptions.unsubscribe()
     this.setState({
       devices: [],
+      deviceId: null,
       error: null,
       refreshing: false,
     })
@@ -146,6 +152,7 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
   }
 
   onSelectDevice = (device) => {
+    if (this.state.deviceId != null) return
     this.setState({deviceId: device.id}, () => this.navigateToSave())
   }
 
@@ -159,7 +166,11 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
       this.setState({bip44AccountPublic})
       navigation.navigate(WALLET_INIT_ROUTES.SAVE_NANO_X, {hwDeviceInfo})
     } catch (error) {
-      this.setState({error})
+      if (error.statusCode === ErrorCodes.ERR_REJECTED_BY_USER) {
+        this.reload()
+        return
+      }
+      this.setState({error, refreshing: false})
     }
   }
 
@@ -174,6 +185,11 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
       let msg
       if (error instanceof BluetoothDisabledError) {
         msg = intl.formatMessage(ledgerMessages.bluetoothDisabledError)
+      } else if (
+        error instanceof BleError ||
+        error instanceof GeneralConnectionError
+      ) {
+        msg = intl.formatMessage(ledgerMessages.connectionError)
       } else {
         msg = String(error.message)
       }

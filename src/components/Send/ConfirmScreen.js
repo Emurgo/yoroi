@@ -7,7 +7,7 @@ import {ScrollView, View} from 'react-native'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {SafeAreaView} from 'react-navigation'
 import {injectIntl, defineMessages} from 'react-intl'
-import {BleError} from 'react-native-ble-plx'
+import {ErrorCodes} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 
 import {
   Text,
@@ -34,6 +34,7 @@ import walletManager, {SystemAuthDisabled} from '../../crypto/wallet'
 import {
   createLedgerSignTxPayload,
   signTxWithLedger,
+  GeneralConnectionError,
 } from '../../crypto/byron/ledgerUtils'
 import {SEND_ROUTES, WALLET_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import {CONFIG} from '../../config'
@@ -162,7 +163,9 @@ const handleOnConfirm = async (
           Buffer.from(tx.cbor_encoded_tx, 'hex').toString('base64'),
         )
       } catch (e) {
-        if (e instanceof BleError) {
+        if (e.statusCode === ErrorCodes.ERR_REJECTED_BY_USER) {
+          return
+        } else if (e instanceof GeneralConnectionError) {
           await showErrorDialog(errorMessages.hwConnectionError, intl)
         } else {
           handleGeneralError('Could not submit transaction', e, intl)
