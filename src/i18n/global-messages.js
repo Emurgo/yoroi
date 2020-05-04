@@ -276,6 +276,19 @@ export const errorMessages = {
       defaultMessage: '!!!PIN is incorrect.',
     },
   }),
+  hwConnectionError: defineMessages({
+    title: {
+      id: 'global.actions.dialogs.hwConnectionError.title',
+      defaultMessage: '!!!Connection error',
+    },
+    message: {
+      id: 'global.actions.dialogs.hwConnectionError.message',
+      defaultMessage:
+        '!!!An error occured while trying to connect with your ' +
+        'hardware wallet. Please, make sure you are following the steps' +
+        'correctly. Restarting your hardware wallet may also fix the problem.',
+    },
+  }),
   generalError: defineMessages({
     title: {
       id: 'global.actions.dialogs.generalError.title',

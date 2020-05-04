@@ -7,6 +7,7 @@ import {ScrollView, View} from 'react-native'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {SafeAreaView} from 'react-navigation'
 import {injectIntl, defineMessages} from 'react-intl'
+import {BleError} from 'react-native-ble-plx'
 
 import {
   Text,
@@ -161,9 +162,11 @@ const handleOnConfirm = async (
           Buffer.from(tx.cbor_encoded_tx, 'hex').toString('base64'),
         )
       } catch (e) {
-        // TODO(v-almonacid): there are a couple of common exceptions that
-        // should be handled before throwing a general error
-        handleGeneralError('Could not submit transaction', e, intl)
+        if (e instanceof BleError) {
+          await showErrorDialog(errorMessages.hwConnectionError, intl)
+        } else {
+          handleGeneralError('Could not submit transaction', e, intl)
+        }
       }
     })
     return
