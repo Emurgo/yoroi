@@ -224,7 +224,7 @@
   "components.walletinit.createwallet.mnemonicshowscreen.title": "Recovery phrase",
   "components.walletinit.passwordstrengthindicator.continueButton": "Continue",
   "components.walletinit.passwordstrengthindicator.or": "Or",
-  "components.walletinit.passwordstrengthindicator.passwordBigLength": "12 characters",
+  "components.walletinit.passwordstrengthindicator.passwordBigLength": "10 characters",
   "components.walletinit.passwordstrengthindicator.passwordLowerChar": "1 lowercase letter",
   "components.walletinit.passwordstrengthindicator.passwordMinLength": "7 characters",
   "components.walletinit.passwordstrengthindicator.passwordNumber": "1 number",
