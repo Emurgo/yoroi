@@ -74,7 +74,7 @@ export const getPasswordStrength = (password: string): PasswordStrength => {
     return {isStrong: false}
   }
 
-  if (password.length >= 12) {
+  if (password.length >= 10) {
     return {isStrong: true, hasTwelveCharacters: true}
   } else if (!CONFIG.ALLOW_SHORT_PASSWORD) {
     return {isStrong: false}

@@ -48,7 +48,7 @@ const messages = defineMessages({
   },
   passwordBigLength: {
     id: 'components.walletinit.passwordstrengthindicator.passwordBigLength',
-    defaultMessage: '!!!12 characters',
+    defaultMessage: '!!!10 characters',
     description: 'some desc',
   },
   or: {
