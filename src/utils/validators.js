@@ -64,7 +64,7 @@ export type PasswordStrength = {
   hasUppercase?: boolean,
   hasLowercase?: boolean,
   hasDigit?: boolean,
-  hasTwelveCharacters?: boolean,
+  satisfiesPasswordRequirement?: boolean,
 }
 
 const pickOnlyFailingValidations = (validation: Object) => _.pickBy(validation)
@@ -75,19 +75,10 @@ export const getPasswordStrength = (password: string): PasswordStrength => {
   }
 
   if (password.length >= 10) {
-    return {isStrong: true, hasTwelveCharacters: true}
-  } else if (!CONFIG.ALLOW_SHORT_PASSWORD) {
-    return {isStrong: false}
+    return {isStrong: true, satisfiesPasswordRequirement: true}
   }
 
-  const validation = {
-    hasSevenCharacters: password.length >= 7,
-    hasUppercase: containsUpperCase(password),
-    hasLowercase: containsLowerCase(password),
-    hasDigit: password.split('').some(isNumeric),
-  }
-
-  return {...validation, isStrong: Object.values(validation).every((x) => x)}
+  return {isStrong: false}
 }
 
 export const validatePassword = (

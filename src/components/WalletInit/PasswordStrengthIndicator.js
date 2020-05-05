@@ -84,17 +84,17 @@ type Props = {
   hasSevenCharacters?: boolean,
   hasLowercase?: boolean,
   hasDigit?: boolean,
-  hasTwelveCharacters?: boolean,
+  satisfiesPasswordRequirement?: boolean,
 }
 
 const LongPasswordStrengthIndicator = injectIntl(
-  ({hasTwelveCharacters, intl}: Props) => (
+  ({satisfiesPasswordRequirement, intl}: Props) => (
     <View>
       <Text>{intl.formatMessage(messages.passwordRequirementsNote)}</Text>
 
       <View style={styles.container}>
         <ValidationCheckIcon
-          isSatisfied={hasTwelveCharacters}
+          isSatisfied={satisfiesPasswordRequirement}
           label={intl.formatMessage(messages.passwordBigLength)}
         />
       </View>
@@ -108,7 +108,7 @@ const CombinedPasswordStrengthIndicator = ({
   hasUppercase,
   hasLowercase,
   hasDigit,
-  hasTwelveCharacters,
+  satisfiesPasswordRequirement,
 }: Props) => (
   <View style={styles.container}>
     <Text secondary>
@@ -135,16 +135,12 @@ const CombinedPasswordStrengthIndicator = ({
     <Text secondary>{intl.formatMessage(messages.or)}</Text>
 
     <ValidationCheckIcon
-      isSatisfied={hasTwelveCharacters}
+      isSatisfied={satisfiesPasswordRequirement}
       label={intl.formatMessage(messages.passwordBigLength)}
     />
   </View>
 )
 
-const indicator = CONFIG.ALLOW_SHORT_PASSWORD
-  ? CombinedPasswordStrengthIndicator
-  : LongPasswordStrengthIndicator
-
 export default injectIntl(
-  compose(withProps(({password}) => getPasswordStrength(password)))(indicator),
+  compose(withProps(({password}) => getPasswordStrength(password)))(LongPasswordStrengthIndicator),
 )
