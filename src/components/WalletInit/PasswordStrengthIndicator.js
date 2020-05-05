@@ -82,5 +82,7 @@ const LongPasswordStrengthIndicator = injectIntl(
 )
 
 export default injectIntl(
-  compose(withProps(({password}) => getPasswordStrength(password)))(LongPasswordStrengthIndicator),
+  compose(withProps(({password}) => getPasswordStrength(password)))(
+    LongPasswordStrengthIndicator,
+  ),
 )
