@@ -20,19 +20,9 @@ const messages = defineMessages({
     defaultMessage: '!!!The password needs to contain at least:',
     description: 'some desc',
   },
-  continueButton: {
-    id: 'components.walletinit.passwordstrengthindicator.continueButton',
-    defaultMessage: '!!!Continue',
-    description: 'some desc',
-  },
   passwordBigLength: {
     id: 'components.walletinit.passwordstrengthindicator.passwordBigLength',
     defaultMessage: '!!!10 characters',
-    description: 'some desc',
-  },
-  or: {
-    id: 'components.walletinit.passwordstrengthindicator.or',
-    defaultMessage: '!!!Or',
     description: 'some desc',
   },
 })
