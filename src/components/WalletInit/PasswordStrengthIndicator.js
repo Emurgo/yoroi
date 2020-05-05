@@ -9,7 +9,6 @@ import {injectIntl, defineMessages} from 'react-intl'
 import {getPasswordStrength} from '../../utils/validators'
 import {Text} from '../UiKit'
 import CheckIcon from '../../assets/CheckIcon'
-import {CONFIG} from '../../config'
 
 import styles from './styles/PasswordStrengthIndicator.style'
 import {COLORS} from '../../styles/config'
