@@ -152,7 +152,6 @@ export const CONFIG = {
   },
   PIN_LENGTH: 6,
   APP_LOCK_TIMEOUT: 30 * 1000,
-  ALLOW_SHORT_PASSWORD: false,
   LOG_LEVEL: _LOG_LEVEL,
   NETWORK: _USE_TESTNET ? 'Testnet' : 'Mainnet',
   COMMIT: _COMMIT,

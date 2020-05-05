@@ -2,8 +2,6 @@
 import {validateMnemonic, wordlists} from 'bip39'
 import _ from 'lodash'
 
-import {containsUpperCase, containsLowerCase, isNumeric} from '../utils/string'
-import {CONFIG} from '../config'
 import {isValidAddress} from '../crypto/byron/util'
 import assert from '../utils/assert'
 import {parseAdaDecimal, InvalidAdaAmount} from '../utils/parsing'
@@ -58,14 +56,10 @@ export type RecoveryPhraseErrors = {
   minLength?: boolean,
 }
 
-export type PasswordStrength = {
+export type PasswordStrength = {|
   isStrong: boolean,
-  hasSevenCharacters?: boolean,
-  hasUppercase?: boolean,
-  hasLowercase?: boolean,
-  hasDigit?: boolean,
-  hasTwelveCharacters?: boolean,
-}
+  satisfiesPasswordRequirement?: boolean,
+|}
 
 const pickOnlyFailingValidations = (validation: Object) => _.pickBy(validation)
 
@@ -74,20 +68,11 @@ export const getPasswordStrength = (password: string): PasswordStrength => {
     return {isStrong: false}
   }
 
-  if (password.length >= 12) {
-    return {isStrong: true, hasTwelveCharacters: true}
-  } else if (!CONFIG.ALLOW_SHORT_PASSWORD) {
-    return {isStrong: false}
+  if (password.length >= 10) {
+    return {isStrong: true, satisfiesPasswordRequirement: true}
   }
 
-  const validation = {
-    hasSevenCharacters: password.length >= 7,
-    hasUppercase: containsUpperCase(password),
-    hasLowercase: containsLowerCase(password),
-    hasDigit: password.split('').some(isNumeric),
-  }
-
-  return {...validation, isStrong: Object.values(validation).every((x) => x)}
+  return {isStrong: false}
 }
 
 export const validatePassword = (
