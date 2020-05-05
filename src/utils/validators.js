@@ -56,14 +56,10 @@ export type RecoveryPhraseErrors = {
   minLength?: boolean,
 }
 
-export type PasswordStrength = {
+export type PasswordStrength = {|
   isStrong: boolean,
-  hasSevenCharacters?: boolean,
-  hasUppercase?: boolean,
-  hasLowercase?: boolean,
-  hasDigit?: boolean,
   satisfiesPasswordRequirement?: boolean,
-}
+|}
 
 const pickOnlyFailingValidations = (validation: Object) => _.pickBy(validation)
 

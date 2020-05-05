@@ -27,11 +27,10 @@ const messages = defineMessages({
   },
 })
 
-type ValidationCheckIconProps = {
+type ValidationCheckIconProps = {|
   isSatisfied?: boolean,
-  hasSevenCharacters?: boolean,
   label: string,
-}
+|}
 
 const ValidationCheckIcon = ({
   isSatisfied,
@@ -47,14 +46,10 @@ const ValidationCheckIcon = ({
   )
 }
 
-type Props = {
+type Props = {|
   intl: any,
-  hasUppercase?: boolean,
-  hasSevenCharacters?: boolean,
-  hasLowercase?: boolean,
-  hasDigit?: boolean,
   satisfiesPasswordRequirement?: boolean,
-}
+|}
 
 const LongPasswordStrengthIndicator = injectIntl(
   ({satisfiesPasswordRequirement, intl}: Props) => (
