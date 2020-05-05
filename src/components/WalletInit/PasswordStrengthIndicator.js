@@ -21,26 +21,6 @@ const messages = defineMessages({
     defaultMessage: '!!!The password needs to contain at least:',
     description: 'some desc',
   },
-  passwordMinLength: {
-    id: 'components.walletinit.passwordstrengthindicator.passwordMinLength',
-    defaultMessage: '!!!7 characters',
-    description: 'some desc',
-  },
-  passwordUpperChar: {
-    id: 'components.walletinit.passwordstrengthindicator.passwordUpperChar',
-    defaultMessage: '!!!1 uppercase letter',
-    description: 'some desc',
-  },
-  passwordLowerChar: {
-    id: 'components.walletinit.passwordstrengthindicator.passwordLowerChar',
-    defaultMessage: '!!!1 lowercase letter',
-    description: 'some desc',
-  },
-  passwordNumber: {
-    id: 'components.walletinit.passwordstrengthindicator.passwordNumber',
-    defaultMessage: '!!!1 number',
-    description: 'some desc',
-  },
   continueButton: {
     id: 'components.walletinit.passwordstrengthindicator.continueButton',
     defaultMessage: '!!!Continue',
@@ -100,45 +80,6 @@ const LongPasswordStrengthIndicator = injectIntl(
       </View>
     </View>
   ),
-)
-
-const CombinedPasswordStrengthIndicator = ({
-  intl,
-  hasSevenCharacters,
-  hasUppercase,
-  hasLowercase,
-  hasDigit,
-  satisfiesPasswordRequirement,
-}: Props) => (
-  <View style={styles.container}>
-    <Text secondary>
-      {intl.formatMessage(messages.passwordRequirementsNote)}
-    </Text>
-
-    <ValidationCheckIcon
-      isSatisfied={hasSevenCharacters}
-      label={intl.formatMessage(messages.passwordMinLength)}
-    />
-    <ValidationCheckIcon
-      isSatisfied={hasLowercase}
-      label={intl.formatMessage(messages.passwordLowerChar)}
-    />
-    <ValidationCheckIcon
-      isSatisfied={hasUppercase}
-      label={intl.formatMessage(messages.passwordUpperChar)}
-    />
-    <ValidationCheckIcon
-      isSatisfied={hasDigit}
-      label={intl.formatMessage(messages.passwordNumber)}
-    />
-
-    <Text secondary>{intl.formatMessage(messages.or)}</Text>
-
-    <ValidationCheckIcon
-      isSatisfied={satisfiesPasswordRequirement}
-      label={intl.formatMessage(messages.passwordBigLength)}
-    />
-  </View>
 )
 
 export default injectIntl(
