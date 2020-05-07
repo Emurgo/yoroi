@@ -8,6 +8,7 @@ buildscript {
         targetSdkVersion = 29
         supportLibVersion = "28.0.0"
         androidXAnnotation = "1.1.0"
+        firebaseIidVersion = "19.0.1" // DeviceInfo
         kotlinVersion = "1.3.10"
     }
     repositories {

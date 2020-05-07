@@ -69,7 +69,7 @@
     "react-native-chain-libs": "Emurgo/react-native-chain-libs",
     "react-native-config": "^0.11.7",
     "react-native-crypto": "^2.1.2",
-    "react-native-device-info": "2.3.2",
+    "react-native-device-info": "5.5.7",
     "react-native-easy-markdown": "1.4.1",
     "react-native-fs": "^2.11.18",
     "react-native-keychain": "3.0.0",
