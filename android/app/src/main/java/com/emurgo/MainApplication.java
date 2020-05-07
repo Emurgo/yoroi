@@ -18,6 +18,7 @@ import com.bitgo.randombytes.RandomBytesPackage;
 import com.rnfs.RNFSPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.horcrux.svg.SvgPackage;
+import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -53,7 +54,8 @@ public class MainApplication extends Application implements ReactApplication {
         new LinearGradientPackage(),
         new SvgPackage(),
         new KeyStorePackage(),
-        new BackgroundTimerPackage()
+        new BackgroundTimerPackage(),
+        new RNCWebViewPackage()
       );
     }
 

@@ -119,6 +119,9 @@
 		E9EACF89245B42C40062ED1D /* dummy_ble.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9EACF87245B42C40062ED1D /* dummy_ble.swift */; };
 		E9EACF8A245B42C40062ED1D /* dummy_ble.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9EACF87245B42C40062ED1D /* dummy_ble.swift */; };
 		E9EAD083245B478B0062ED1D /* libBleClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E9EAD045245B47770062ED1D /* libBleClient.a */; };
+		E9EAD163246163CE0062ED1D /* libRNCWebView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E9EAD1552461639E0062ED1D /* libRNCWebView.a */; };
+		E9EAD164246163DC0062ED1D /* libRNCWebView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E9EAD1552461639E0062ED1D /* libRNCWebView.a */; };
+		E9EAD165246163F20062ED1D /* libRNCWebView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E9EAD1552461639E0062ED1D /* libRNCWebView.a */; };
 		ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
 		ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
 /* End PBXBuildFile section */
@@ -481,6 +484,13 @@
 			remoteGlobalIDString = D73F06E81D48E17B00AD5963;
 			remoteInfo = BleClient;
 		};
+		E9EAD1542461639E0062ED1D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E9EAD11F2461639E0062ED1D /* RNCWebView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNCWebView;
+		};
 		F7FBD9A1219C5A71003FE9E2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CDE15259840049359AA0828C /* BVLinearGradient.xcodeproj */;
@@ -664,6 +674,7 @@
 		E9EACF86245B42C40062ED1D /* emurgo-nightly-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "emurgo-nightly-Bridging-Header.h"; sourceTree = "<group>"; };
 		E9EACF87245B42C40062ED1D /* dummy_ble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dummy_ble.swift; sourceTree = "<group>"; };
 		E9EAD040245B47770062ED1D /* BleClient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BleClient.xcodeproj; path = "../node_modules/react-native-ble-plx/ios/BleClient.xcodeproj"; sourceTree = "<group>"; };
+		E9EAD11F2461639E0062ED1D /* RNCWebView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCWebView.xcodeproj; path = "../node_modules/react-native-webview/ios/RNCWebView.xcodeproj"; sourceTree = "<group>"; };
 		EAFCACBCB7663E88BDEEA360 /* Pods-emurgo-tvOSTests.testnet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-tvOSTests.testnet.debug.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo-tvOSTests/Pods-emurgo-tvOSTests.testnet.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
@@ -692,6 +703,7 @@
 				2EBAA9D822EE742100EA8AAF /* libRNCAsyncStorage.a in Frameworks */,
 				ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */,
 				2E3E7CD42298A85F00D5C487 /* libReactNativeConfig.a in Frameworks */,
+				E9EAD163246163CE0062ED1D /* libRNCWebView.a in Frameworks */,
 				2E3E7CD322987AC100D5C487 /* libRNSentry.a in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				E9EAD083245B478B0062ED1D /* libBleClient.a in Frameworks */,
@@ -734,6 +746,7 @@
 				2EBA2AD022EA877F00BF8A5B /* JavaScriptCore.framework in Frameworks */,
 				2E3E7CDB2298ACEA00D5C487 /* libReactNativeConfig.a in Frameworks */,
 				2E3E7CDC2298ACEA00D5C487 /* libRNSentry.a in Frameworks */,
+				E9EAD164246163DC0062ED1D /* libRNCWebView.a in Frameworks */,
 				2E3E7CDD2298ACEA00D5C487 /* libRCTBlob.a in Frameworks */,
 				2E3E7CDE2298ACEA00D5C487 /* libRCTAnimation.a in Frameworks */,
 				2E3E7CDF2298ACEA00D5C487 /* libReact.a in Frameworks */,
@@ -766,6 +779,7 @@
 			files = (
 				E9A1C7DF24185CCA00151CFA /* libRNDeviceInfo.a in Frameworks */,
 				E9A1C7E024185CCA00151CFA /* libRNCAsyncStorage.a in Frameworks */,
+				E9EAD165246163F20062ED1D /* libRNCWebView.a in Frameworks */,
 				E9A1C7E124185CCA00151CFA /* JavaScriptCore.framework in Frameworks */,
 				E9A1C7E224185CCA00151CFA /* libReactNativeConfig.a in Frameworks */,
 				E9A1C7E324185CCA00151CFA /* libRNSentry.a in Frameworks */,
@@ -1023,6 +1037,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				E9EAD11F2461639E0062ED1D /* RNCWebView.xcodeproj */,
 				E9EAD040245B47770062ED1D /* BleClient.xcodeproj */,
 				E9DE0E6523D9F064000B82BE /* ChainLibs.xcodeproj */,
 				2EFC8FEF2305E12E00430A87 /* RNDeviceInfo.xcodeproj */,
@@ -1144,6 +1159,14 @@
 			isa = PBXGroup;
 			children = (
 				E9EAD045245B47770062ED1D /* libBleClient.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E9EAD1202461639E0062ED1D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E9EAD1552461639E0062ED1D /* libRNCWebView.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1444,6 +1467,10 @@
 				{
 					ProductGroup = 2E3AA48F22EAB99F0066F8A1 /* Products */;
 					ProjectRef = 2E3AA48E22EAB99F0066F8A1 /* RNCAsyncStorage.xcodeproj */;
+				},
+				{
+					ProductGroup = E9EAD1202461639E0062ED1D /* Products */;
+					ProjectRef = E9EAD11F2461639E0062ED1D /* RNCWebView.xcodeproj */;
 				},
 				{
 					ProductGroup = 2EFC8FF02305E12E00430A87 /* Products */;
@@ -1833,6 +1860,13 @@
 			fileType = archive.ar;
 			path = libBleClient.a;
 			remoteRef = E9EAD044245B47770062ED1D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		E9EAD1552461639E0062ED1D /* libRNCWebView.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNCWebView.a;
+			remoteRef = E9EAD1542461639E0062ED1D /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		F7FBD9A2219C5A71003FE9E2 /* libBVLinearGradient.a */ = {
