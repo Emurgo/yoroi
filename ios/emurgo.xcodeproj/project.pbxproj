@@ -79,6 +79,8 @@
 		BA3D0647FB29475CA53128CF /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 16BAD3D7933540D184340C1B /* libresolv.tbd */; };
 		E2FC0BF821C7F02200DA195B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E2FC0BFA21C7F02200DA195B /* InfoPlist.strings */; };
 		E6AB85BA13E748AB947E1A2A /* libRNRandomBytes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9F4B6BEEFC4DF6A66C1383 /* libRNRandomBytes.a */; };
+		E932483A246477AF007E19F0 /* libBleClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E9EAD045245B47770062ED1D /* libBleClient.a */; };
+		E932483B246477BB007E19F0 /* libBleClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E9EAD045245B47770062ED1D /* libBleClient.a */; };
 		E9A1C7DC24185CCA00151CFA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		E9A1C7DD24185CCA00151CFA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		E9A1C7DF24185CCA00151CFA /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EFC90242305E12E00430A87 /* libRNDeviceInfo.a */; };
@@ -747,6 +749,7 @@
 				2E3E7CDB2298ACEA00D5C487 /* libReactNativeConfig.a in Frameworks */,
 				2E3E7CDC2298ACEA00D5C487 /* libRNSentry.a in Frameworks */,
 				E9EAD164246163DC0062ED1D /* libRNCWebView.a in Frameworks */,
+				E932483B246477BB007E19F0 /* libBleClient.a in Frameworks */,
 				2E3E7CDD2298ACEA00D5C487 /* libRCTBlob.a in Frameworks */,
 				2E3E7CDE2298ACEA00D5C487 /* libRCTAnimation.a in Frameworks */,
 				2E3E7CDF2298ACEA00D5C487 /* libReact.a in Frameworks */,
@@ -780,6 +783,7 @@
 				E9A1C7DF24185CCA00151CFA /* libRNDeviceInfo.a in Frameworks */,
 				E9A1C7E024185CCA00151CFA /* libRNCAsyncStorage.a in Frameworks */,
 				E9EAD165246163F20062ED1D /* libRNCWebView.a in Frameworks */,
+				E932483A246477AF007E19F0 /* libBleClient.a in Frameworks */,
 				E9A1C7E124185CCA00151CFA /* JavaScriptCore.framework in Frameworks */,
 				E9A1C7E224185CCA00151CFA /* libReactNativeConfig.a in Frameworks */,
 				E9A1C7E324185CCA00151CFA /* libRNSentry.a in Frameworks */,
@@ -2086,7 +2090,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(Staging.Debug|Debug)\"\nexport NODE_BINARY=node\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh";
+			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(Staging.Debug|Debug)\"\nexport NODE_BINARY=node\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh\n";
 		};
 		E9A1C80424185CCA00151CFA /* Upload Debug Symbols to Sentry */ = {
 			isa = PBXShellScriptBuildPhase;
