@@ -28,6 +28,11 @@ export default StyleSheet.create({
   },
   flatList: {
     flex: 1,
+    flexDirection: 'column',
+    minHeight: 148,
+  },
+  flatListContentContainer: {
+    flexGrow: 1,
   },
   listHeader: {
     alignItems: 'center',

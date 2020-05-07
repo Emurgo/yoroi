@@ -9,6 +9,7 @@ import {
   Image,
   Platform,
   PermissionsAndroid,
+  RefreshControl,
 } from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import {compose} from 'redux'
@@ -20,6 +21,7 @@ import {
   getHWDeviceInfo,
   BluetoothDisabledError,
   GeneralConnectionError,
+  LedgerUserError,
 } from '../../../crypto/byron/ledgerUtils'
 import {Text, BulletPointItem, ProgressStep} from '../../UiKit'
 import {withNavigationTitle} from '../../../utils/renderUtils'
@@ -153,7 +155,9 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
 
   onSelectDevice = (device) => {
     if (this.state.deviceId != null) return
-    this.setState({deviceId: device.id}, () => this.navigateToSave())
+    this.setState({deviceId: device.id, refreshing: false}, () =>
+      this.navigateToSave(),
+    )
   }
 
   navigateToSave = async () => {
@@ -187,7 +191,8 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
         msg = intl.formatMessage(ledgerMessages.bluetoothDisabledError)
       } else if (
         error instanceof BleError ||
-        error instanceof GeneralConnectionError
+        error instanceof GeneralConnectionError ||
+        error instanceof LedgerUserError
       ) {
         msg = intl.formatMessage(ledgerMessages.connectionError)
       } else {
@@ -246,12 +251,18 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
             <FlatList
               extraData={[error, deviceId]}
               style={styles.flatList}
+              contentContainerStyle={styles.flatListContentContainer}
               data={devices}
               renderItem={this.renderItem}
               ListHeaderComponent={this.ListHeader}
               keyExtractor={(item) => item.id.toString()}
-              onRefresh={this.reload}
-              refreshing={refreshing}
+              refreshControl={
+                <RefreshControl
+                  onRefresh={this.reload}
+                  refreshing={refreshing}
+                  progressViewOffset={74 /* approx. the size of one elem */}
+                />
+              }
             />
           </ScrollView>
         </View>

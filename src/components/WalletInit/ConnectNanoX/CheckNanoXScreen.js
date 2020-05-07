@@ -24,7 +24,7 @@ import type {Navigation} from '../../../types/navigation'
 const messages = defineMessages({
   title: {
     id: 'components.walletinit.connectnanox.checknanoxscreen.title',
-    defaultMessage: '!!!Create Wallet with Ledger',
+    defaultMessage: '!!!Connect to Ledger Nano X',
   },
   introline: {
     id: 'components.walletinit.connectnanox.checknanoxscreen.introline',
@@ -37,14 +37,14 @@ const messages = defineMessages({
 })
 
 // TODO
-const url = 'https://yoroi-wallet.com/'
+const url = '' // 'https://yoroi-wallet.com/...'
 
 const CheckNanoXScreen = ({intl, onPress, navigation}) => {
   const rows = [
     intl.formatMessage(ledgerMessages.bluetoothEnabled),
     intl.formatMessage(ledgerMessages.appInstalled),
     intl.formatMessage(ledgerMessages.appOpened),
-    intl.formatMessage(ledgerMessages.internetConnected),
+    // intl.formatMessage(ledgerMessages.internetConnected),
   ]
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -67,9 +67,11 @@ const CheckNanoXScreen = ({intl, onPress, navigation}) => {
             />
           )}
         </ScrollView>
-        <View style={styles.linkContainer}>
-          <Link url={url} text={intl.formatMessage(messages.learnMore)} />
-        </View>
+        {url !== '' && (
+          <View style={styles.linkContainer}>
+            <Link url={url} text={intl.formatMessage(messages.learnMore)} />
+          </View>
+        )}
       </View>
       <View style={styles.buttons}>
         <Button

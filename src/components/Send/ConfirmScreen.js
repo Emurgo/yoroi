@@ -35,6 +35,7 @@ import {
   createLedgerSignTxPayload,
   signTxWithLedger,
   GeneralConnectionError,
+  LedgerUserError,
 } from '../../crypto/byron/ledgerUtils'
 import {SEND_ROUTES, WALLET_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import {CONFIG} from '../../config'
@@ -74,6 +75,7 @@ const messages = defineMessages({
 
 const RenderHWInstructions = ({intl}) => {
   const rows = [
+    intl.formatMessage(ledgerMessages.enableTransport),
     intl.formatMessage(ledgerMessages.enterPin),
     intl.formatMessage(ledgerMessages.openApp),
   ]
@@ -165,7 +167,10 @@ const handleOnConfirm = async (
       } catch (e) {
         if (e.statusCode === ErrorCodes.ERR_REJECTED_BY_USER) {
           return
-        } else if (e instanceof GeneralConnectionError) {
+        } else if (
+          e instanceof GeneralConnectionError ||
+          e instanceof LedgerUserError
+        ) {
           await showErrorDialog(errorMessages.hwConnectionError, intl)
         } else {
           handleGeneralError('Could not submit transaction', e, intl)

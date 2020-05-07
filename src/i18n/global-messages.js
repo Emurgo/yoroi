@@ -107,6 +107,10 @@ export const ledgerMessages = defineMessages({
     defaultMessage: '!!!Your smartphone is connected to the Internet.',
   },
   // connection requisites
+  enableTransport: {
+    id: 'global.ledgerMessages.enableTransport',
+    defaultMessage: '!!!Enable bluetooth and location services (Android only).',
+  },
   enterPin: {
     id: 'global.ledgerMessages.enterPin',
     defaultMessage: '!!!Power on your ledger device and enter your PIN.',

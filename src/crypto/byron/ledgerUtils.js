@@ -3,6 +3,7 @@
 import AppAda, {ErrorCodes} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {BigNumber} from 'bignumber.js'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
+import {TransportStatusError} from '@ledgerhq/hw-transport'
 import {BleError} from 'react-native-ble-plx'
 import ExtendableError from 'es6-error'
 
@@ -52,12 +53,32 @@ export class GeneralConnectionError extends ExtendableError {
   }
 }
 
-const _isConnectionError = (e: Error): boolean => {
+export class LedgerUserError extends ExtendableError {
+  constructor() {
+    super('LedgerUserError')
+  }
+}
+
+const _isConnectionError = (e: Error | TransportStatusError): boolean => {
   if (
     e instanceof BleError ||
     e.message.includes('was disconnected') ||
     e.message.includes('DisconnectedDevice') ||
+    e.name.includes('DisconnectedDevice') ||
     e.message.includes('not found')
+  ) {
+    return true
+  }
+  return false
+}
+
+// note: e.statusCode === ErrorCodes.ERR_CLA_NOT_SUPPORTED probably means
+// user hasn't opened ADA app
+const _isUserError = (e: Error | TransportStatusError): boolean => {
+  if (
+    (e.statusCode != null &&
+      e.statusCode === ErrorCodes.ERR_REJECTED_BY_USER) ||
+    (e.statusCode != null && e.statusCode === ErrorCodes.ERR_CLA_NOT_SUPPORTED)
   ) {
     return true
   }
@@ -175,15 +196,16 @@ export const getHWDeviceInfo = async (
     Logger.info('ledgerUtils::getHWDeviceInfo: Ledger device OK')
     return hwDeviceInfo
   } catch (e) {
-    if (e.statusCode === ErrorCodes.ERR_REJECTED_BY_USER) {
-      Logger.info('ledgerUtils::getHWDeviceInfo: Action rejected by user', e)
+    if (_isUserError(e)) {
+      Logger.info('ledgerUtils::getHWDeviceInfo: User-side error', e)
+      throw new LedgerUserError()
     } else if (_isConnectionError(e)) {
-      Logger.info('ledgerUtils::getHWDeviceInfo: general/BleError', e)
+      Logger.info('ledgerUtils::getHWDeviceInfo: General/BleError', e)
       throw new GeneralConnectionError()
     } else {
-      Logger.error('ledgerUtils::getHWDeviceInfo', e)
+      Logger.error('ledgerUtils::getHWDeviceInfo: Unexpected error', e)
+      throw e
     }
-    throw e
   }
 }
 
@@ -353,11 +375,14 @@ export const signTxWithLedger = async (
     Logger.debug('ledgerUtils::signTxWithLedger finalTx')
     return finalTx
   } catch (e) {
-    if (_isConnectionError(e)) {
-      Logger.info('ledgerUtils::getHWDeviceInfo: general/BleError', e)
+    if (_isUserError(e)) {
+      Logger.info('ledgerUtils::signTxWithLedger: User-side error', e)
+      throw new LedgerUserError()
+    } else if (_isConnectionError(e)) {
+      Logger.info('ledgerUtils::signTxWithLedger: general/BleError', e)
       throw new GeneralConnectionError()
     } else {
-      Logger.debug('ledgerUtils::signTxWithLedger error', e)
+      Logger.error('ledgerUtils::signTxWithLedger: Unexpected error', e)
       throw e
     }
   }
