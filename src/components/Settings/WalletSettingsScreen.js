@@ -22,6 +22,7 @@ import {
   easyConfirmationSelector,
   walletNameSelector,
   languageSelector,
+  isHWSelector,
 } from '../../selectors'
 import {
   SettingsItem,
@@ -92,6 +93,7 @@ const WalletSettingsScreen = ({
   walletName,
   onSwitchWallet,
   onLogout,
+  isHW,
 }) => (
   <ScrollView style={styles.scrollView}>
     <StatusBar type="dark" />
@@ -119,16 +121,17 @@ const WalletSettingsScreen = ({
       <NavigatedSettingsItem
         label={intl.formatMessage(messages.changePassword)}
         navigateTo={SETTINGS_ROUTES.CHANGE_PASSWORD}
+        disabled={isHW}
       />
 
       <SettingsItem
         label={intl.formatMessage(messages.easyConfirmation)}
-        disabled={!isSystemAuthEnabled}
+        disabled={!isSystemAuthEnabled || isHW}
       >
         <Switch
           value={isEasyConfirmationEnabled}
           onValueChange={onToggleEasyConfirmation}
-          disabled={!isSystemAuthEnabled}
+          disabled={!isSystemAuthEnabled || isHW}
         />
       </SettingsItem>
     </SettingsSection>
@@ -157,6 +160,7 @@ export default injectIntl(
     connect(
       (state) => ({
         walletName: walletNameSelector(state),
+        isHW: isHWSelector(state),
       }),
       {
         closeWallet,

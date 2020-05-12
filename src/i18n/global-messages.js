@@ -102,14 +102,14 @@ export const ledgerMessages = defineMessages({
     defaultMessage:
       '!!!Cardano ADA app must remain open on your Ledger Nano X device.',
   },
-  internetConnected: {
-    id: 'global.ledgerMessages.internetConnected',
-    defaultMessage: '!!!Your smartphone is connected to the Internet.',
-  },
   // connection requisites
   enableTransport: {
     id: 'global.ledgerMessages.enableTransport',
-    defaultMessage: '!!!Enable bluetooth and location services (Android only).',
+    defaultMessage: '!!!Enable bluetooth.',
+  },
+  enableLocation: {
+    id: 'global.ledgerMessages.enableLocation',
+    defaultMessage: '!!!Enable location services.',
   },
   enterPin: {
     id: 'global.ledgerMessages.enterPin',

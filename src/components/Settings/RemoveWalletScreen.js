@@ -9,7 +9,7 @@ import {injectIntl, defineMessages} from 'react-intl'
 import {Button, Text, Checkbox, ValidatedTextInput, StatusBar} from '../UiKit'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
-import {walletNameSelector} from '../../selectors'
+import {walletNameSelector, isHWSelector} from '../../selectors'
 import {removeCurrentWallet} from '../../actions'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 
@@ -67,9 +67,9 @@ const handleRemoveWallet = ({navigation, removeCurrentWallet}) => async () => {
 type Prop = {
   intl: any,
   walletName: string,
+  isHW: boolean,
   typedWalletName: string,
   setTypedWalletName: (string) => any,
-  isRemovingWallet: boolean,
   handleRemoveWallet: () => any,
   setHasMnemonicWrittenDown: (boolean) => any,
   hasMnemonicWrittenDown: boolean,
@@ -78,7 +78,7 @@ type Prop = {
 const RemoveWalletScreen = ({
   intl,
   walletName,
-  isRemovingWallet,
+  isHW,
   handleRemoveWallet,
   hasMnemonicWrittenDown,
   setHasMnemonicWrittenDown,
@@ -86,18 +86,18 @@ const RemoveWalletScreen = ({
   setTypedWalletName,
 }: Prop) => {
   const disabled =
-    isRemovingWallet ||
-    !hasMnemonicWrittenDown ||
-    walletName !== typedWalletName
+    (!isHW && !hasMnemonicWrittenDown) || walletName !== typedWalletName
 
   return (
     <View style={styles.container}>
       <StatusBar type="dark" />
 
       <View style={styles.descriptionContainer}>
-        <Text style={styles.description}>
-          {intl.formatMessage(messages.descriptionParagraph1)}
-        </Text>
+        {!isHW && (
+          <Text style={styles.description}>
+            {intl.formatMessage(messages.descriptionParagraph1)}
+          </Text>
+        )}
         <Text style={styles.description}>
           {intl.formatMessage(messages.descriptionParagraph2)}
         </Text>
@@ -122,11 +122,13 @@ const RemoveWalletScreen = ({
       </ScrollView>
 
       <View style={styles.actions}>
-        <Checkbox
-          checked={hasMnemonicWrittenDown}
-          text={intl.formatMessage(messages.hasWrittenDownMnemonic)}
-          onChange={setHasMnemonicWrittenDown}
-        />
+        {!isHW && (
+          <Checkbox
+            checked={hasMnemonicWrittenDown}
+            text={intl.formatMessage(messages.hasWrittenDownMnemonic)}
+            onChange={setHasMnemonicWrittenDown}
+          />
+        )}
 
         <Button
           onPress={handleRemoveWallet}
@@ -144,6 +146,7 @@ export default injectIntl(
     connect(
       (state: State) => ({
         walletName: walletNameSelector(state),
+        isHW: isHWSelector(state),
       }),
       {
         removeCurrentWallet,

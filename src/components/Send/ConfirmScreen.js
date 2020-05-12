@@ -3,7 +3,7 @@
 import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {ScrollView, View} from 'react-native'
+import {ScrollView, View, Platform} from 'react-native'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {SafeAreaView} from 'react-navigation'
 import {injectIntl, defineMessages} from 'react-intl'
@@ -74,11 +74,15 @@ const messages = defineMessages({
 })
 
 const RenderHWInstructions = ({intl}) => {
-  const rows = [
+  const rows = []
+  if (Platform.OS === 'android') {
+    rows.push(intl.formatMessage(ledgerMessages.enableLocation))
+  }
+  rows.push(
     intl.formatMessage(ledgerMessages.enableTransport),
     intl.formatMessage(ledgerMessages.enterPin),
     intl.formatMessage(ledgerMessages.openApp),
-  ]
+  )
   return (
     <View style={styles.instructionsBlock}>
       <Text styles={styles.paragraphText}>

@@ -44,7 +44,6 @@ const CheckNanoXScreen = ({intl, onPress, navigation}) => {
     intl.formatMessage(ledgerMessages.bluetoothEnabled),
     intl.formatMessage(ledgerMessages.appInstalled),
     intl.formatMessage(ledgerMessages.appOpened),
-    // intl.formatMessage(ledgerMessages.internetConnected),
   ]
   return (
     <SafeAreaView style={styles.safeAreaView}>

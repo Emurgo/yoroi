@@ -69,7 +69,7 @@ const deviceAddition = (device) => ({devices}) => ({
 
 type Props = {|
   intl: intlShape,
-  defaultDevices: ?Array<Device>, // for UI design prototyping
+  defaultDevices: ?Array<Device>, // for storybook
   navigation: Navigation,
 |}
 

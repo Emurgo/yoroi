@@ -72,8 +72,8 @@ const _isConnectionError = (e: Error | TransportStatusError): boolean => {
   return false
 }
 
-// note: e.statusCode === ErrorCodes.ERR_CLA_NOT_SUPPORTED probably means
-// user hasn't opened ADA app
+// note: e.statusCode === ErrorCodes.ERR_CLA_NOT_SUPPORTED is more probably due
+// to user not having ADA app opened instead of having the wrong app opened
 const _isUserError = (e: Error | TransportStatusError): boolean => {
   if (
     (e.statusCode != null &&
