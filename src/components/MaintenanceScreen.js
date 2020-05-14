@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {View, Image} from 'react-native'
+import {View, Image, BackHandler} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import {Text, Modal, Link} from './UiKit'
@@ -69,10 +69,7 @@ const MaintenanceModal = ({intl, visible, onRequestClose}: Props) => {
 const MaintenanceScreen = ({intl}) => (
   <MaintenanceModal
     visible
-    onRequestClose={
-      /* eslint-disable-next-line */
-      () => {}
-    }
+    onRequestClose={() => BackHandler.exitApp()}
     intl={intl}
   />
 )
