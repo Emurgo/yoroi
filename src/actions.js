@@ -244,7 +244,6 @@ export const logout = () => async (dispatch: Dispatch<any>) => {
 }
 
 export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
-
   try {
     const status = await api.checkServerStatus()
     dispatch({
