@@ -9,6 +9,7 @@ import {
 } from 'emip3js'
 import {randomBytes} from 'react-native-randombytes'
 import bs58 from 'bs58'
+import cbor from 'cbor'
 import cryptoRandomString from 'crypto-random-string'
 
 import assert from '../../utils/assert'
@@ -24,6 +25,7 @@ import {ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
 import type {
   TransactionInput,
   TransactionOutput,
+  V1SignedTx,
 } from '../../types/HistoryTransaction'
 import type {AddressType} from '../commonUtils'
 
@@ -54,7 +56,7 @@ export const getMasterKeyFromMnemonic = async (mnemonic: string) => {
 
 export const getAccountFromMasterKey = async (
   masterKey: Buffer,
-  accountIndex?: number = CONFIG.WALLET.ACCOUNT_INDEX,
+  accountIndex?: number = CONFIG.NUMBERS.ACCOUNT_INDEX,
   protocolMagic?: number = CONFIG.CARDANO.PROTOCOL_MAGIC,
 ): Promise<CryptoAccount> => {
   const wallet = await _rethrow(Wallet.fromMasterKey(masterKey))
@@ -180,7 +182,7 @@ export const signTransaction = async (
   inputs: Array<TransactionInput>,
   outputs: Array<TransactionOutput>,
   changeAddress: string,
-) => {
+): Promise<V1SignedTx> => {
   try {
     const result = await Wallet.spend(wallet, inputs, outputs, changeAddress)
 
@@ -219,4 +221,86 @@ export const formatBIP44 = (
   return `m/${PURPOSE}'/${COIN}'/${account}'/${
     ADDRESS_TYPE_TO_CHANGE[type]
   }/${index}`
+}
+
+export type TxWitness = {PkWitness: [string, string]}
+export type CryptoTransaction = {
+  tx: {
+    tx: {
+      inputs: Array<{id: string, index: number}>,
+      outputs: Array<{address: string, value: number}>,
+    },
+    witnesses: Array<TxWitness>,
+  },
+}
+export type RustRawTxBody = string
+
+export const decodeRustTx = (rustTxBody: RustRawTxBody): CryptoTransaction => {
+  if (rustTxBody == null) {
+    throw new Error('Cannot decode inputs from undefined transaction!')
+  }
+  const [[[inputs, outputs], witnesses]] = cbor.decodeAllSync(
+    Buffer.from(rustTxBody, 'hex'),
+  )
+  const decInputs: Array<{id: string, index: number}> = inputs.map((x) => {
+    const [[buf, idx]] = cbor.decodeAllSync(x[1].value)
+    return {
+      id: buf.toString('hex'),
+      index: idx,
+    }
+  })
+  const decOutputs: Array<{address: string, value: number}> = outputs.map(
+    (x) => {
+      const [addr, val] = x
+      return {
+        address: bs58.encode(cbor.encode(addr)),
+        value: val,
+      }
+    },
+  )
+  const decWitnesses: Array<TxWitness> = witnesses.map((w) => {
+    if (w[0] === 0) {
+      return {
+        PkWitness: cbor
+          .decodeAllSync(w[1].value)[0]
+          .map((x) => x.toString('hex')),
+      }
+    }
+    throw Error(`Unexpected witness type: ${w}`)
+  })
+  return {
+    tx: {
+      tx: {
+        inputs: decInputs,
+        outputs: decOutputs,
+      },
+      witnesses: decWitnesses,
+    },
+  }
+}
+
+export const encodeTxAsRust = (tx: CryptoTransaction): Buffer => {
+  // normalize tx
+  const inputs = tx.tx.tx.inputs.map((i) => {
+    return [
+      0,
+      new cbor.Tagged(24, cbor.encode([Buffer.from(i.id, 'hex'), i.index])),
+    ]
+  })
+
+  const outputs = tx.tx.tx.outputs.map((o) => {
+    return [cbor.decodeAllSync(bs58.decode(o.address))[0], o.value]
+  })
+
+  const witnesses = tx.tx.witnesses.map((w) => {
+    return [
+      0,
+      new cbor.Tagged(
+        24,
+        cbor.encode(w.PkWitness.map((x) => Buffer.from(x, 'hex'))),
+      ),
+    ]
+  })
+  const normTx = [[inputs, outputs, {}], witnesses]
+  return cbor.encode(normTx)
 }

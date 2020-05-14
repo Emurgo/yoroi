@@ -29,6 +29,7 @@ export const COLORS = {
   RED: '#ff0000',
   WARNING: '#FFD303',
   WARNING_TEXT_COLOR: '#9E5B0A',
+  ERROR_TEXT_COLOR: '#FF1351',
   DISABLED: '#999',
   SHADOW_COLOR: 'rgba(0, 0, 0, 0.06)',
   SHELLEY_BLUE: '#3154CB',

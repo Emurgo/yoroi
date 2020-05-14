@@ -1,4 +1,6 @@
 rootProject.name = 'emurgo'
+include ':react-native-ble-plx'
+project(':react-native-ble-plx').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-ble-plx/android')
 include ':react-native-chain-libs'
 project(':react-native-chain-libs').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-chain-libs/android')
 include ':react-native-device-info'
@@ -27,5 +29,7 @@ include ':react-native-svg'
 project(':react-native-svg').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-svg/android')
 include ':react-native-background-timer'
 project(':react-native-background-timer').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-background-timer/android')
+include ':react-native-webview'
+project(':react-native-webview').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-webview/android')
 
 include ':app'

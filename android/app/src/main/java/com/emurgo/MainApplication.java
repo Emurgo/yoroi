@@ -3,6 +3,7 @@ package com.emurgo;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.polidea.reactnativeble.BlePackage;
 import io.emurgo.chainlibs.ChainLibsPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
@@ -17,6 +18,7 @@ import com.bitgo.randombytes.RandomBytesPackage;
 import com.rnfs.RNFSPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.horcrux.svg.SvgPackage;
+import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -37,6 +39,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+        new BlePackage(),
         new ChainLibsPackage(),
         new RNDeviceInfo(),
         new AsyncStoragePackage(),
@@ -51,7 +54,8 @@ public class MainApplication extends Application implements ReactApplication {
         new LinearGradientPackage(),
         new SvgPackage(),
         new KeyStorePackage(),
-        new BackgroundTimerPackage()
+        new BackgroundTimerPackage(),
+        new RNCWebViewPackage()
       );
     }
 

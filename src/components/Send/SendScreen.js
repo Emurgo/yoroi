@@ -306,6 +306,7 @@ class SendScreen extends Component<Props, State> {
         amount: parseAdaDecimal(amount),
         transactionData,
         balanceAfterTx: balanceAfter,
+        utxos,
       })
     }
   }

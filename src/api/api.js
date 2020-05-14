@@ -17,6 +17,8 @@ import type {
   AccountStateResponse,
   PoolInfoRequest,
   PoolInfoResponse,
+  TxBodiesRequest,
+  TxBodiesResponse,
   ReputationResponse,
 } from '../types/HistoryTransaction'
 
@@ -188,6 +190,13 @@ export const bulkFetchUTXOSumForAddresses = async (
     fundedAddresses: _.uniq(fundedAddresses),
     sum,
   }
+}
+
+export const getTxsBodiesForUTXOs = (
+  request: TxBodiesRequest,
+  networkConfig?: any = CONFIG.CARDANO,
+): Promise<TxBodiesResponse> => {
+  return _fetch('txs/txBodies', request, networkConfig)
 }
 
 export const fetchAccountState = async (

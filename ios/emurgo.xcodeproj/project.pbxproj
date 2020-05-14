@@ -62,8 +62,6 @@
 		2EBA2AD022EA877F00BF8A5B /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
 		2EBAA9D822EE742100EA8AAF /* libRNCAsyncStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E3AA4C322EAB99F0066F8A1 /* libRNCAsyncStorage.a */; };
 		2EBAAA1222EE743000EA8AAF /* libRNCAsyncStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E3AA4C322EAB99F0066F8A1 /* libRNCAsyncStorage.a */; };
-		2EFC90322305E23700430A87 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EFC90242305E12E00430A87 /* libRNDeviceInfo.a */; };
-		2EFC90332305E24000430A87 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EFC90242305E12E00430A87 /* libRNDeviceInfo.a */; };
 		30646D574618D6C438E082C1 /* libPods-emurgo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4492A3C818B4FB1C2344B6A4 /* libPods-emurgo.a */; };
 		4129CAD9C4C34ACF9E00AA5E /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9443C3481304C079FB7BE23 /* libRNSVG.a */; };
 		469514AC7443466390FF834A /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F410A0AB183D4990BCAF936B /* libz.tbd */; };
@@ -79,9 +77,13 @@
 		BA3D0647FB29475CA53128CF /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 16BAD3D7933540D184340C1B /* libresolv.tbd */; };
 		E2FC0BF821C7F02200DA195B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E2FC0BFA21C7F02200DA195B /* InfoPlist.strings */; };
 		E6AB85BA13E748AB947E1A2A /* libRNRandomBytes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9F4B6BEEFC4DF6A66C1383 /* libRNRandomBytes.a */; };
+		E932483A246477AF007E19F0 /* libBleClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E9EAD045245B47770062ED1D /* libBleClient.a */; };
+		E932483B246477BB007E19F0 /* libBleClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E9EAD045245B47770062ED1D /* libBleClient.a */; };
+		E932484524647DC2007E19F0 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E932484224647DA8007E19F0 /* libRNDeviceInfo.a */; };
+		E932484624647DCD007E19F0 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E932484224647DA8007E19F0 /* libRNDeviceInfo.a */; };
+		E932484724647DD6007E19F0 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E932484224647DA8007E19F0 /* libRNDeviceInfo.a */; };
 		E9A1C7DC24185CCA00151CFA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		E9A1C7DD24185CCA00151CFA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		E9A1C7DF24185CCA00151CFA /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EFC90242305E12E00430A87 /* libRNDeviceInfo.a */; };
 		E9A1C7E024185CCA00151CFA /* libRNCAsyncStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E3AA4C322EAB99F0066F8A1 /* libRNCAsyncStorage.a */; };
 		E9A1C7E124185CCA00151CFA /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
 		E9A1C7E224185CCA00151CFA /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E2373C8021CA447C0003317D /* libReactNativeConfig.a */; };
@@ -115,6 +117,13 @@
 		E9A1C80124185CCA00151CFA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E2FC0BFA21C7F02200DA195B /* InfoPlist.strings */; };
 		E9A1C80224185CCA00151CFA /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		E9DE0E6B23D9F087000B82BE /* libChainLibs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E9DE0E6A23D9F064000B82BE /* libChainLibs.a */; };
+		E9EACF88245B42C40062ED1D /* dummy_ble.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9EACF87245B42C40062ED1D /* dummy_ble.swift */; };
+		E9EACF89245B42C40062ED1D /* dummy_ble.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9EACF87245B42C40062ED1D /* dummy_ble.swift */; };
+		E9EACF8A245B42C40062ED1D /* dummy_ble.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9EACF87245B42C40062ED1D /* dummy_ble.swift */; };
+		E9EAD083245B478B0062ED1D /* libBleClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E9EAD045245B47770062ED1D /* libBleClient.a */; };
+		E9EAD163246163CE0062ED1D /* libRNCWebView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E9EAD1552461639E0062ED1D /* libRNCWebView.a */; };
+		E9EAD164246163DC0062ED1D /* libRNCWebView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E9EAD1552461639E0062ED1D /* libRNCWebView.a */; };
+		E9EAD165246163F20062ED1D /* libRNCWebView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E9EAD1552461639E0062ED1D /* libRNCWebView.a */; };
 		ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
 		ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
 /* End PBXBuildFile section */
@@ -302,20 +311,6 @@
 			remoteGlobalIDString = 274692C321B4414400BF91A8;
 			remoteInfo = "RNSentry-tvOS";
 		};
-		2EFC90232305E12E00430A87 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2EFC8FEF2305E12E00430A87 /* RNDeviceInfo.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = DA5891D81BA9A9FC002B4DB2;
-			remoteInfo = RNDeviceInfo;
-		};
-		2EFC90252305E12E00430A87 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2EFC8FEF2305E12E00430A87 /* RNDeviceInfo.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = E72EC1401F7ABB5A0001BC90;
-			remoteInfo = "RNDeviceInfo-tvOS";
-		};
 		3DAD3E831DF850E9000B6D8A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 00C302BB1ABCB91800DB3ED1 /* RCTImage.xcodeproj */;
@@ -463,12 +458,40 @@
 			remoteGlobalIDString = 641926921ECB4257009CF731;
 			remoteInfo = "RNBackgroundTimer-tvOS";
 		};
+		E932484124647DA8007E19F0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E932483C24647DA8007E19F0 /* RNDeviceInfo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DA5891D81BA9A9FC002B4DB2;
+			remoteInfo = RNDeviceInfo;
+		};
+		E932484324647DA8007E19F0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E932483C24647DA8007E19F0 /* RNDeviceInfo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E72EC1401F7ABB5A0001BC90;
+			remoteInfo = "RNDeviceInfo-tvOS";
+		};
 		E9DE0E6923D9F064000B82BE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E9DE0E6523D9F064000B82BE /* ChainLibs.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = ChainLibs;
+		};
+		E9EAD044245B47770062ED1D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E9EAD040245B47770062ED1D /* BleClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D73F06E81D48E17B00AD5963;
+			remoteInfo = BleClient;
+		};
+		E9EAD1542461639E0062ED1D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E9EAD11F2461639E0062ED1D /* RNCWebView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNCWebView;
 		};
 		F7FBD9A1219C5A71003FE9E2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -593,7 +616,6 @@
 		2EF1204922795CAD007BE6F5 /* libSentryReactNative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSentryReactNative.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EF1208322795DE3007BE6F5 /* libSentryReactNative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSentryReactNative.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EF1208522795E47007BE6F5 /* RNSentry.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNSentry.xcodeproj; path = "../node_modules/react-native-sentry/ios/RNSentry.xcodeproj"; sourceTree = "<group>"; };
-		2EFC8FEF2305E12E00430A87 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/ios/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		359687B3464F4A7C89D45AF9 /* libRNRandomBytes-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNRandomBytes-tvOS.a"; sourceTree = "<group>"; };
 		36ED7BB7AA874C7A8590BAEB /* RNCardano.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNCardano.xcodeproj; path = "../node_modules/react-native-cardano/ios/RNCardano.xcodeproj"; sourceTree = "<group>"; };
 		3F3CAD29F11A422EBD119E74 /* RNBackgroundTimer.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundTimer.xcodeproj; path = "../node_modules/react-native-background-timer/ios/RNBackgroundTimer.xcodeproj"; sourceTree = "<group>"; };
@@ -644,10 +666,17 @@
 		E2FC0C3A21C7F30300DA195B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		E2FC0C3C21C7F32300DA195B /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		E88E56A3C4A142ADB2AC0796 /* RNRandomBytes.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNRandomBytes.xcodeproj; path = "../node_modules/react-native-randombytes/RNRandomBytes.xcodeproj"; sourceTree = "<group>"; };
+		E932483C24647DA8007E19F0 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/ios/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		E9A1C61824183FB700151CFA /* emurgo copy2-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "emurgo copy2-Info.plist"; path = "/Users/vicente/dev/emurgo/yoroi-mobile/ios/emurgo copy2-Info.plist"; sourceTree = "<absolute>"; };
 		E9A1C80A24185CCA00151CFA /* emurgo-nightly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "emurgo-nightly.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9A1C80B24185CCA00151CFA /* emurgo copy3-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "emurgo copy3-Info.plist"; path = "/Users/vicente/dev/emurgo/yoroi-mobile/ios/emurgo copy3-Info.plist"; sourceTree = "<absolute>"; };
 		E9DE0E6523D9F064000B82BE /* ChainLibs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ChainLibs.xcodeproj; path = "../node_modules/react-native-chain-libs/ios/ChainLibs.xcodeproj"; sourceTree = "<group>"; };
+		E9EACF84245B42C40062ED1D /* emurgo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "emurgo-Bridging-Header.h"; sourceTree = "<group>"; };
+		E9EACF85245B42C40062ED1D /* emurgo-staging-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "emurgo-staging-Bridging-Header.h"; sourceTree = "<group>"; };
+		E9EACF86245B42C40062ED1D /* emurgo-nightly-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "emurgo-nightly-Bridging-Header.h"; sourceTree = "<group>"; };
+		E9EACF87245B42C40062ED1D /* dummy_ble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dummy_ble.swift; sourceTree = "<group>"; };
+		E9EAD040245B47770062ED1D /* BleClient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BleClient.xcodeproj; path = "../node_modules/react-native-ble-plx/ios/BleClient.xcodeproj"; sourceTree = "<group>"; };
+		E9EAD11F2461639E0062ED1D /* RNCWebView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCWebView.xcodeproj; path = "../node_modules/react-native-webview/ios/RNCWebView.xcodeproj"; sourceTree = "<group>"; };
 		EAFCACBCB7663E88BDEEA360 /* Pods-emurgo-tvOSTests.testnet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-tvOSTests.testnet.debug.xcconfig"; path = "Pods/Target Support Files/Pods-emurgo-tvOSTests/Pods-emurgo-tvOSTests.testnet.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
@@ -672,12 +701,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EFC90332305E24000430A87 /* libRNDeviceInfo.a in Frameworks */,
 				2EBAA9D822EE742100EA8AAF /* libRNCAsyncStorage.a in Frameworks */,
 				ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */,
 				2E3E7CD42298A85F00D5C487 /* libReactNativeConfig.a in Frameworks */,
+				E932484524647DC2007E19F0 /* libRNDeviceInfo.a in Frameworks */,
+				E9EAD163246163CE0062ED1D /* libRNCWebView.a in Frameworks */,
 				2E3E7CD322987AC100D5C487 /* libRNSentry.a in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
+				E9EAD083245B478B0062ED1D /* libBleClient.a in Frameworks */,
 				11D1A2F320CAFA9E000508D9 /* libRCTAnimation.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
@@ -712,11 +743,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EFC90322305E23700430A87 /* libRNDeviceInfo.a in Frameworks */,
 				2EBAAA1222EE743000EA8AAF /* libRNCAsyncStorage.a in Frameworks */,
 				2EBA2AD022EA877F00BF8A5B /* JavaScriptCore.framework in Frameworks */,
 				2E3E7CDB2298ACEA00D5C487 /* libReactNativeConfig.a in Frameworks */,
 				2E3E7CDC2298ACEA00D5C487 /* libRNSentry.a in Frameworks */,
+				E932484624647DCD007E19F0 /* libRNDeviceInfo.a in Frameworks */,
+				E9EAD164246163DC0062ED1D /* libRNCWebView.a in Frameworks */,
+				E932483B246477BB007E19F0 /* libBleClient.a in Frameworks */,
 				2E3E7CDD2298ACEA00D5C487 /* libRCTBlob.a in Frameworks */,
 				2E3E7CDE2298ACEA00D5C487 /* libRCTAnimation.a in Frameworks */,
 				2E3E7CDF2298ACEA00D5C487 /* libReact.a in Frameworks */,
@@ -747,8 +780,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E9A1C7DF24185CCA00151CFA /* libRNDeviceInfo.a in Frameworks */,
 				E9A1C7E024185CCA00151CFA /* libRNCAsyncStorage.a in Frameworks */,
+				E932484724647DD6007E19F0 /* libRNDeviceInfo.a in Frameworks */,
+				E9EAD165246163F20062ED1D /* libRNCWebView.a in Frameworks */,
+				E932483A246477AF007E19F0 /* libBleClient.a in Frameworks */,
 				E9A1C7E124185CCA00151CFA /* JavaScriptCore.framework in Frameworks */,
 				E9A1C7E224185CCA00151CFA /* libReactNativeConfig.a in Frameworks */,
 				E9A1C7E324185CCA00151CFA /* libRNSentry.a in Frameworks */,
@@ -945,15 +980,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		2EFC8FF02305E12E00430A87 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				2EFC90242305E12E00430A87 /* libRNDeviceInfo.a */,
-				2EFC90262305E12E00430A87 /* libRNDeviceInfo-tvOS.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		5E91572E1DD0AC6500FF2AA8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1006,8 +1032,10 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				E932483C24647DA8007E19F0 /* RNDeviceInfo.xcodeproj */,
+				E9EAD11F2461639E0062ED1D /* RNCWebView.xcodeproj */,
+				E9EAD040245B47770062ED1D /* BleClient.xcodeproj */,
 				E9DE0E6523D9F064000B82BE /* ChainLibs.xcodeproj */,
-				2EFC8FEF2305E12E00430A87 /* RNDeviceInfo.xcodeproj */,
 				2E3AA48E22EAB99F0066F8A1 /* RNCAsyncStorage.xcodeproj */,
 				2EF1208522795E47007BE6F5 /* RNSentry.xcodeproj */,
 				E2373C7A21CA447C0003317D /* ReactNativeConfig.xcodeproj */,
@@ -1049,6 +1077,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				E9EACF87245B42C40062ED1D /* dummy_ble.swift */,
 				13B07FAE1A68108700A75B9A /* emurgo */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* emurgoTests */,
@@ -1058,6 +1087,9 @@
 				661CFB1B626FF527BA54DEF4 /* Pods */,
 				E9A1C61824183FB700151CFA /* emurgo copy2-Info.plist */,
 				E9A1C80B24185CCA00151CFA /* emurgo copy3-Info.plist */,
+				E9EACF84245B42C40062ED1D /* emurgo-Bridging-Header.h */,
+				E9EACF85245B42C40062ED1D /* emurgo-staging-Bridging-Header.h */,
+				E9EACF86245B42C40062ED1D /* emurgo-nightly-Bridging-Header.h */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -1110,10 +1142,35 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		E932483D24647DA8007E19F0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E932484224647DA8007E19F0 /* libRNDeviceInfo.a */,
+				E932484424647DA8007E19F0 /* libRNDeviceInfo-tvOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		E9DE0E6623D9F064000B82BE /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				E9DE0E6A23D9F064000B82BE /* libChainLibs.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E9EAD041245B47770062ED1D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E9EAD045245B47770062ED1D /* libBleClient.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E9EAD1202461639E0062ED1D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E9EAD1552461639E0062ED1D /* libRNCWebView.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1264,7 +1321,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E9A1C80524185CCA00151CFA /* Build configuration list for PBXNativeTarget "emurgo-nightly" */;
 			buildPhases = (
-				E9D4F9D12418ED9D0054DA96 /* [CP] Check Pods Manifest.lock */,
 				E9A1C7DA24185CCA00151CFA /* Check env variables */,
 				E9A1C7DB24185CCA00151CFA /* Sources */,
 				E9A1C7DE24185CCA00151CFA /* Frameworks */,
@@ -1297,6 +1353,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = F8NVT2G2L4;
+						LastSwiftMigration = 1130;
 						SystemCapabilities = {
 							com.apple.Keychain = {
 								enabled = 0;
@@ -1305,9 +1362,11 @@
 					};
 					2E3E7CD52298ACEA00D5C487 = {
 						DevelopmentTeam = F8NVT2G2L4;
+						LastSwiftMigration = 1130;
 					};
 					E9A1C7D824185CCA00151CFA = {
 						DevelopmentTeam = F8NVT2G2L4;
+						LastSwiftMigration = 1130;
 					};
 				};
 			};
@@ -1329,6 +1388,10 @@
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
+				{
+					ProductGroup = E9EAD041245B47770062ED1D /* Products */;
+					ProjectRef = E9EAD040245B47770062ED1D /* BleClient.xcodeproj */;
+				},
 				{
 					ProductGroup = F7FBD98F219C5A71003FE9E2 /* Products */;
 					ProjectRef = CDE15259840049359AA0828C /* BVLinearGradient.xcodeproj */;
@@ -1410,8 +1473,12 @@
 					ProjectRef = 2E3AA48E22EAB99F0066F8A1 /* RNCAsyncStorage.xcodeproj */;
 				},
 				{
-					ProductGroup = 2EFC8FF02305E12E00430A87 /* Products */;
-					ProjectRef = 2EFC8FEF2305E12E00430A87 /* RNDeviceInfo.xcodeproj */;
+					ProductGroup = E9EAD1202461639E0062ED1D /* Products */;
+					ProjectRef = E9EAD11F2461639E0062ED1D /* RNCWebView.xcodeproj */;
+				},
+				{
+					ProductGroup = E932483D24647DA8007E19F0 /* Products */;
+					ProjectRef = E932483C24647DA8007E19F0 /* RNDeviceInfo.xcodeproj */;
 				},
 				{
 					ProductGroup = F7FBD995219C5A71003FE9E2 /* Products */;
@@ -1624,20 +1691,6 @@
 			remoteRef = 2EF1208D22795E47007BE6F5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		2EFC90242305E12E00430A87 /* libRNDeviceInfo.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNDeviceInfo.a;
-			remoteRef = 2EFC90232305E12E00430A87 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		2EFC90262305E12E00430A87 /* libRNDeviceInfo-tvOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libRNDeviceInfo-tvOS.a";
-			remoteRef = 2EFC90252305E12E00430A87 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		3DAD3E841DF850E9000B6D8A /* libRCTImage-tvOS.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1785,11 +1838,39 @@
 			remoteRef = E2C46F5A21AD2396009E186F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		E932484224647DA8007E19F0 /* libRNDeviceInfo.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNDeviceInfo.a;
+			remoteRef = E932484124647DA8007E19F0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		E932484424647DA8007E19F0 /* libRNDeviceInfo-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRNDeviceInfo-tvOS.a";
+			remoteRef = E932484324647DA8007E19F0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		E9DE0E6A23D9F064000B82BE /* libChainLibs.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libChainLibs.a;
 			remoteRef = E9DE0E6923D9F064000B82BE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		E9EAD045245B47770062ED1D /* libBleClient.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libBleClient.a;
+			remoteRef = E9EAD044245B47770062ED1D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		E9EAD1552461639E0062ED1D /* libRNCWebView.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNCWebView.a;
+			remoteRef = E9EAD1542461639E0062ED1D /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		F7FBD9A2219C5A71003FE9E2 /* libBVLinearGradient.a */ = {
@@ -2009,7 +2090,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(Staging.Debug|Debug)\"\nexport NODE_BINARY=node\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh";
+			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(Staging.Debug|Debug)\"\nexport NODE_BINARY=node\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh\n";
 		};
 		E9A1C80424185CCA00151CFA /* Upload Debug Symbols to Sentry */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2024,27 +2105,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export SENTRY_PROPERTIES=sentry.properties\n../node_modules/@sentry/cli/bin/sentry-cli upload-dsym\n";
-		};
-		E9D4F9D12418ED9D0054DA96 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-emurgo-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 		};
 		F7DB15954E94922466B0837E /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2105,6 +2165,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				E9EACF88245B42C40062ED1D /* dummy_ble.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2114,6 +2175,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E3E7CD82298ACEA00D5C487 /* AppDelegate.m in Sources */,
+				E9EACF89245B42C40062ED1D /* dummy_ble.swift in Sources */,
 				2E3E7CD92298ACEA00D5C487 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2123,6 +2185,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E9A1C7DC24185CCA00151CFA /* AppDelegate.m in Sources */,
+				E9EACF8A245B42C40062ED1D /* dummy_ble.swift in Sources */,
 				E9A1C7DD24185CCA00151CFA /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2167,6 +2230,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6FD7087B702DAF596F1ACBFF /* Pods-emurgoTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2210,6 +2274,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 60EB9F171F0E514B4D4195F8 /* Pods-emurgoTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
@@ -2253,6 +2318,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = Yoroi;
 				BUNDLE_ID_SUFFIX = "";
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 40;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
@@ -2285,6 +2351,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.emurgo.yoroi;
 				PRODUCT_NAME = emurgo;
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -2296,6 +2365,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = Yoroi;
 				BUNDLE_ID_SUFFIX = "";
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 40;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -2327,6 +2397,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.emurgo.yoroi;
 				PRODUCT_NAME = emurgo;
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -2337,6 +2409,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = Yoroi;
 				BUNDLE_ID_SUFFIX = "";
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 40;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
@@ -2373,6 +2446,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-stag";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-staging-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -2383,6 +2459,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 40;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
@@ -2419,6 +2496,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-stag";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-staging-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Staging.Debug;
@@ -2429,6 +2509,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = Yoroi;
 				BUNDLE_ID_SUFFIX = "";
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 40;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -2464,6 +2545,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-stag";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-staging-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -2474,6 +2557,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 40;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -2509,6 +2593,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-stag";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-staging-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Staging.Release;
@@ -2684,6 +2770,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 40;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
@@ -2716,6 +2803,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.emurgo.yoroi;
 				PRODUCT_NAME = emurgo;
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Staging.Debug;
@@ -2724,6 +2814,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4447F097A41617FBCC553C4F /* Pods-emurgoTests.staging.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2820,6 +2911,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 40;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -2851,6 +2943,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.emurgo.yoroi;
 				PRODUCT_NAME = emurgo;
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Staging.Release;
@@ -2859,6 +2953,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 68BBB02E022DD5CE50BB7D1B /* Pods-emurgoTests.staging.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
@@ -2901,6 +2996,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
 				BUNDLE_DISPLAY_NAME = Yoroi;
 				BUNDLE_ID_SUFFIX = "";
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 40;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
@@ -2933,6 +3029,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-nightly";
 				PRODUCT_NAME = "emurgo-nightly";
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-nightly-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -2943,6 +3042,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 40;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
@@ -2975,6 +3075,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-nightly";
 				PRODUCT_NAME = "emurgo-nightly";
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-nightly-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Staging.Debug;
@@ -2985,6 +3088,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
 				BUNDLE_DISPLAY_NAME = Yoroi;
 				BUNDLE_ID_SUFFIX = "";
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 40;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -3016,6 +3120,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-nightly";
 				PRODUCT_NAME = "emurgo-nightly";
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-nightly-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -3026,6 +3132,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 40;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -3057,6 +3164,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-nightly";
 				PRODUCT_NAME = "emurgo-nightly";
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-nightly-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Staging.Release;

@@ -192,9 +192,16 @@ android {
             }
         }
     }
+    // jsc-android
+    packagingOptions {
+        pickFirst '**/libjsc.so'
+        pickFirst '**/libc++_shared.so'
+    }
 }
 
 dependencies {
+    implementation "org.webkit:android-jsc:r241213"
+    implementation project(':react-native-ble-plx')
     implementation project(':react-native-chain-libs')
     implementation project(':react-native-device-info')
     implementation project(':@react-native-community_async-storage')
@@ -208,6 +215,7 @@ dependencies {
     implementation project(':react-native-fs')
     implementation project(':react-native-linear-gradient')
     implementation project(':react-native-svg')
+    implementation project(':react-native-webview')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation "com.facebook.react:react-native:+"  // From node_modules
@@ -240,7 +248,7 @@ tasks.create('getCurrentCommitHash') {
 
 tasks.create('checkEnvVariables') {
   doFirst {
-    if (project.env.get("SHOW_INIT_DEBUG_SCREEN") != "false" || project.env.get("PREFILL_WALLET_INFO") != "false") {
+    if (project.env.get("SHOW_INIT_DEBUG_SCREEN") == "true" || project.env.get("PREFILL_WALLET_INFO") == "true") {
       throw new GradleException("should not allow debug flags for release builds")
     }
   }

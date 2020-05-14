@@ -8,6 +8,7 @@ buildscript {
         targetSdkVersion = 29
         supportLibVersion = "28.0.0"
         androidXAnnotation = "1.1.0"
+        firebaseIidVersion = "19.0.1" // DeviceInfo
         kotlinVersion = "1.3.10"
     }
     repositories {
@@ -37,6 +38,13 @@ allprojects {
         maven {
             // All of Detox' artifacts are provided via the npm module
             url "$rootDir/../node_modules/detox/Detox-android"
+        }
+        // react-native-ble-plx setup
+        maven { url 'https://jitpack.io' }
+        // jsc-android setup
+        maven {
+          // Local Maven repo containing AARs with JSC library built for Android
+          url "$rootDir/../node_modules/jsc-android/dist"
         }
     }
 }

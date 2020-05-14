@@ -11,6 +11,8 @@ import {
   decryptData,
   formatBIP44,
   signTransaction,
+  decodeRustTx,
+  encodeTxAsRust,
 } from './util'
 
 import {InsufficientFunds} from '../errors'
@@ -39,7 +41,7 @@ test('Can generate external addresses', async () => {
   const masterKey = await getMasterKeyFromMnemonic(mnemonic)
   const account = await getAccountFromMasterKey(
     masterKey,
-    CONFIG.WALLET.ACCOUNT_INDEX,
+    CONFIG.NUMBERS.ACCOUNT_INDEX,
     CARDANO_CONFIG.TESTNET.PROTOCOL_MAGIC,
   )
   const addresses = await getExternalAddresses(
@@ -300,5 +302,42 @@ describe('signTransaction', () => {
     // This is minimum feasible fee for the transaction
     // const GOOD_FEE = 167838
     // expect(fee).toBeGreaterThanOrEqual(GOOD_FEE)
+  })
+})
+
+describe('encode/decode rust tx', () => {
+  const wallet = require('./__fixtures/fake_wallet.json')
+  const inputs = require('./__fixtures/transaction_inputs.json')
+  const outputAddress =
+    'Ae2tdPwUPEZAghGCdQykbGxc991wdoA8bXmSn7eCGuUKXF4EsRhWj4PJitn'
+  const change = 'Ae2tdPwUPEZJcamJUVWxJEwR8rj5x74t3FkUFDzKEdoL8YSyeRdwmJCW9c3'
+  const outputs = [
+    {
+      address: outputAddress,
+      value: '15097900',
+    },
+  ]
+  it('can decode rust tx', async () => {
+    const tx = await signTransaction(wallet, inputs, outputs, change)
+    const decodedTx = decodeRustTx(tx.cbor_encoded_tx)
+    expect(decodedTx.tx.tx.inputs[0].id).toBe(inputs[0].ptr.id)
+    expect(decodedTx.tx.tx.inputs[0].index).toBe(inputs[0].ptr.index)
+    expect(decodedTx.tx.tx.outputs[0].address).toBe(outputs[0].address)
+  })
+  it('encode rust tx', async () => {
+    // bytes generated from rust
+    const tx = await signTransaction(wallet, inputs, outputs, change)
+    // bytes -> js object
+    const decodedTx = decodeRustTx(tx.cbor_encoded_tx)
+    // js object -> bytes
+    const reEncodedTx = encodeTxAsRust(decodedTx)
+    // bytes -> js object
+    const reDecodedTx = decodeRustTx(reEncodedTx.toString('hex'))
+    expect(reDecodedTx.tx.tx.inputs[0].id).toBe(inputs[0].ptr.id)
+    expect(reDecodedTx.tx.tx.inputs[0].index).toBe(inputs[0].ptr.index)
+    expect(reDecodedTx.tx.tx.outputs[0].address).toBe(outputs[0].address)
+    expect(reDecodedTx.tx.witnesses[0].PkWitness[0]).toBe(
+      decodedTx.tx.witnesses[0].PkWitness[0],
+    )
   })
 })

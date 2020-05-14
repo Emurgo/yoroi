@@ -16,6 +16,7 @@ import type {
   TransactionInfo,
   RawUtxo,
 } from './types/HistoryTransaction'
+import type {HWDeviceInfo} from './crypto/byron/ledgerUtils'
 
 export const transactionsInfoSelector: (State) => Dict<
   TransactionInfo,
@@ -53,6 +54,11 @@ export const externalAddressIndexSelector: (
 
 export const isUsedAddressIndexSelector = (state: State) =>
   state.wallet.isUsedAddressIndex
+
+export const isHWSelector = (state: State): boolean => state.wallet.isHW
+
+export const hwDeviceInfoSelector = (state: State): ?HWDeviceInfo =>
+  state.wallet.hwDeviceInfo
 
 const BigNumberSum = (data: Array<BigNumber | string>): BigNumber =>
   data.reduce((x: BigNumber, y) => x.plus(y), new BigNumber(0))

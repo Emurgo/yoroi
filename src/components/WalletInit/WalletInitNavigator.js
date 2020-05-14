@@ -6,6 +6,9 @@ import WalletFreshInitScreen from './WalletFreshInitScreen'
 import WalletInitScreen from './WalletInitScreen'
 import CreateWalletScreen from './CreateWallet/CreateWalletScreen'
 import RestoreWalletScreen from './RestoreWallet/RestoreWalletScreen'
+import CheckNanoXScreen from './ConnectNanoX/CheckNanoXScreen'
+import ConnectNanoXScreen from './ConnectNanoX/ConnectNanoXScreen'
+import SaveNanoXScreen from './ConnectNanoX/SaveNanoXScreen'
 import MnemonicShowScreen from './CreateWallet/MnemonicShowScreen'
 import HeaderBackButton from '../UiKit/HeaderBackButton'
 import {
@@ -38,6 +41,9 @@ const WalletInitNavigator = createStackNavigator(
     },
     [WALLET_INIT_ROUTES.CREATE_WALLET]: CreateWalletScreen,
     [WALLET_INIT_ROUTES.RESTORE_WALLET]: RestoreWalletScreen,
+    [WALLET_INIT_ROUTES.CHECK_NANO_X]: CheckNanoXScreen,
+    [WALLET_INIT_ROUTES.CONNECT_NANO_X]: ConnectNanoXScreen,
+    [WALLET_INIT_ROUTES.SAVE_NANO_X]: SaveNanoXScreen,
     [WALLET_INIT_ROUTES.MNEMONIC_SHOW]: MnemonicShowScreen,
     [WALLET_INIT_ROUTES.MNEMONIC_CHECK]: MnemonicCheckScreen,
     [WALLET_INIT_ROUTES.WALLET_CREDENTIALS]: WalletCredentialsScreen,

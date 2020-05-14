@@ -16,6 +16,12 @@ jest.mock('react-native-device-info', () => {
     getVersion: () => '1.5.1',
   }
 })
+jest.mock('react-native-randombytes', () => {
+  const crypto = require('crypto')
+  return crypto.randomBytes
+})
+
+jest.mock('@ledgerhq/react-native-hw-transport-ble', () => ({}))
 
 // $FlowFixMe
 global.TextEncoder = nodeUtil.TextEncoder

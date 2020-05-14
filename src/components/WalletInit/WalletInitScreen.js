@@ -22,23 +22,25 @@ const messages = defineMessages({
   title: {
     id: 'components.walletinit.walletinitscreen.title',
     defaultMessage: '!!!Add wallet',
-    description: 'some desc',
   },
   createWalletButton: {
     id: 'components.walletinit.walletinitscreen.createWalletButton',
     defaultMessage: '!!!Create wallet',
-    description: 'some desc',
   },
   restoreWalletButton: {
     id: 'components.walletinit.walletinitscreen.restoreWalletButton',
     defaultMessage: '!!!Restore wallet',
-    description: 'some desc',
+  },
+  createWalletWithLedgerButton: {
+    id: 'components.walletinit.walletinitscreen.createWalletWithLedgerButton',
+    defaultMessage: '!!!Connect to Ledger Nano X',
   },
 })
 
 type Props = {
   navigateRestoreWallet: (Object, boolean) => mixed,
   navigateCreateWallet: (Object, boolean) => mixed,
+  navigateCheckNanoX: (Object, boolean) => mixed,
   intl: any,
   walletIsInitialized: boolean,
   navigation: Navigation,
@@ -47,6 +49,7 @@ type Props = {
 const WalletInitScreen = ({
   navigateCreateWallet,
   navigateRestoreWallet,
+  navigateCheckNanoX,
   intl,
   walletIsInitialized,
   navigation,
@@ -54,9 +57,13 @@ const WalletInitScreen = ({
   const isShelleyWallet = navigation.getParam('isShelleyWallet')
   let createWalletLabel = intl.formatMessage(messages.createWalletButton)
   let restoreWalletLabel = intl.formatMessage(messages.restoreWalletButton)
+  let createWalletWithLedgerLabel = intl.formatMessage(
+    messages.createWalletWithLedgerButton,
+  )
   if (isShelleyWallet) {
     createWalletLabel += ' (Shelley Testnet)'
     restoreWalletLabel += ' (Shelley Testnet)'
+    createWalletWithLedgerLabel += ' (Shelley Testnet)'
   }
 
   return (
@@ -81,6 +88,14 @@ const WalletInitScreen = ({
             style={styles.createButton}
             testID="restoreWalletButton"
           />
+          {!isShelleyWallet && (
+            <Button
+              outline
+              onPress={(event) => navigateCheckNanoX(event, isShelleyWallet)}
+              title={createWalletWithLedgerLabel}
+              style={styles.createButton}
+            />
+          )}
         </View>
       </ScreenBackground>
     </SafeAreaView>
@@ -99,6 +114,10 @@ export default injectIntl(
         }),
       navigateCreateWallet: ({navigation}) => (event, isShelleyWallet) =>
         navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET, {
+          isShelleyWallet,
+        }),
+      navigateCheckNanoX: ({navigation}) => (event, isShelleyWallet) =>
+        navigation.navigate(WALLET_INIT_ROUTES.CHECK_NANO_X, {
           isShelleyWallet,
         }),
     }),

@@ -7,6 +7,7 @@ import type {
   RawUtxo,
   RemotePoolMetaSuccess,
 } from './types/HistoryTransaction'
+import type {HWDeviceInfo} from './crypto/byron/ledgerUtils'
 
 export type Dict<T> = {[string]: T}
 
@@ -15,11 +16,14 @@ export type State = {
     id: string,
     name: string,
     isShelley: boolean,
+    isHW: boolean,
   }>,
   wallet: {
     name: string,
     isInitialized: boolean,
     isShelley: boolean,
+    isHW: boolean,
+    hwDeviceInfo: ?HWDeviceInfo,
     isEasyConfirmationEnabled: boolean,
     transactions: Dict<Transaction>,
     internalAddresses: Array<string>,
@@ -74,6 +78,8 @@ export const getInitialState = (): State => ({
     name: '',
     isInitialized: false,
     isShelley: false,
+    isHW: false,
+    hwDeviceInfo: null,
     isEasyConfirmationEnabled: false,
     transactions: {},
     internalAddresses: [],

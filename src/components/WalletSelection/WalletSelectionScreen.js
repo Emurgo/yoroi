@@ -12,6 +12,7 @@ import type {IntlShape} from 'react-intl'
 import walletManager, {
   SystemAuthDisabled,
   KeysAreInvalid,
+  InvalidState,
 } from '../../crypto/wallet'
 import WalletListItem from './WalletListItem'
 import Screen from '../Screen'
@@ -135,6 +136,10 @@ export default injectIntl(
           if (e instanceof SystemAuthDisabled) {
             await walletManager.closeWallet()
             await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
+            navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+          } else if (e instanceof InvalidState) {
+            await walletManager.closeWallet()
+            await showErrorDialog(errorMessages.walletStateInvalid, intl)
             navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
           } else if (e instanceof KeysAreInvalid) {
             await walletManager.cleanupInvalidKeys()

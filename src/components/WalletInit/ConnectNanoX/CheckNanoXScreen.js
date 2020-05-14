@@ -1,0 +1,102 @@
+// @flow
+
+import React from 'react'
+import {View, SafeAreaView, ScrollView, Image, Platform} from 'react-native'
+import {injectIntl, defineMessages} from 'react-intl'
+import {compose} from 'redux'
+import {withHandlers} from 'recompose'
+
+import {Text, Button, Link, BulletPointItem, ProgressStep} from '../../UiKit'
+import {withNavigationTitle} from '../../../utils/renderUtils'
+import {
+  confirmationMessages,
+  ledgerMessages,
+} from '../../../../src/i18n/global-messages'
+import {WALLET_INIT_ROUTES} from '../../../RoutesList'
+
+import styles from './styles/CheckNanoXScreen.style'
+import image from '../../../assets/img/ledger_1.png'
+
+import type {ComponentType} from 'react'
+import type {IntlShape} from 'react-intl'
+import type {Navigation} from '../../../types/navigation'
+
+const messages = defineMessages({
+  title: {
+    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
+    defaultMessage: '!!!Connect to Ledger Nano X',
+  },
+  introline: {
+    id: 'components.walletinit.connectnanox.checknanoxscreen.introline',
+    defaultMessage: '!!!Before continuing, please make sure that:',
+  },
+  learnMore: {
+    id: 'components.walletinit.connectnanox.checknanoxscreen.learnMore',
+    defaultMessage: '!!!Learn more about using Yoroi with Ledger',
+  },
+})
+
+// TODO
+const url = '' // 'https://yoroi-wallet.com/...'
+
+const CheckNanoXScreen = ({intl, onPress, navigation}) => {
+  const rows = [
+    intl.formatMessage(ledgerMessages.bluetoothEnabled),
+    intl.formatMessage(ledgerMessages.appInstalled),
+    intl.formatMessage(ledgerMessages.appOpened),
+  ]
+  return (
+    <SafeAreaView style={styles.safeAreaView}>
+      <ProgressStep currentStep={1} totalSteps={3} displayStepNumber />
+      <View style={styles.container}>
+        <View style={styles.heading}>
+          <Image source={image} />
+        </View>
+        <Text style={styles.item}>
+          {intl.formatMessage(messages.introline)}
+        </Text>
+        <ScrollView style={[styles.paragraph, styles.scrollView]}>
+          {rows.map((row, i) => (
+            <BulletPointItem textRow={row} key={i} style={styles.item} />
+          ))}
+          {Platform.OS === 'android' && (
+            <BulletPointItem
+              textRow={intl.formatMessage(ledgerMessages.locationEnabled)}
+              style={styles.item}
+            />
+          )}
+        </ScrollView>
+        {url !== '' && (
+          <View style={styles.linkContainer}>
+            <Link url={url} text={intl.formatMessage(messages.learnMore)} />
+          </View>
+        )}
+      </View>
+      <View style={styles.buttons}>
+        <Button
+          block
+          onPress={onPress}
+          title={intl.formatMessage(
+            confirmationMessages.commonButtons.continueButton,
+          )}
+          style={styles.button}
+        />
+      </View>
+    </SafeAreaView>
+  )
+}
+
+type ExternalProps = {|
+  navigation: Navigation,
+  intl: IntlShape,
+|}
+
+export default injectIntl(
+  (compose(
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withHandlers({
+      onPress: ({navigation}) => () =>
+        navigation.navigate(WALLET_INIT_ROUTES.CONNECT_NANO_X),
+    }),
+  )(CheckNanoXScreen): ComponentType<ExternalProps>),
+)

@@ -4,7 +4,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {Clipboard, View} from 'react-native'
-import QRCode from 'react-native-qrcode'
+import QRCode from 'react-native-qrcode-svg'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import {externalAddressIndexSelector} from '../../selectors'
@@ -87,7 +87,12 @@ class AddressModal extends React.Component<Props, State> {
     return (
       <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
         <View style={styles.content}>
-          <QRCode value={address} size={140} bgColor="black" fgColor="white" />
+          <QRCode
+            value={address}
+            size={140}
+            backgroundColor="white"
+            color="black"
+          />
 
           {index != null && (
             <Text style={styles.address}>

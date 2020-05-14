@@ -34,18 +34,11 @@ const messages = defineMessages({
 
 type Props = {
   intl: intlShape,
-  visible: boolean,
   onPress: () => any,
-  onRequestClose: () => any,
   disableButtons: boolean,
 }
 
-const FlawedWalletScreen = ({
-  intl,
-  onPress,
-  onRequestClose,
-  disableButtons,
-}: Props) => {
+const FlawedWalletScreen = ({intl, onPress, disableButtons}: Props) => {
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.content}>
