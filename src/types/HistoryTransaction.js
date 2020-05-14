@@ -232,3 +232,8 @@ export type ReputationObject = {
   // note: could be more metrics that are not handled
 }
 export type ReputationResponse = {[poolId: string]: ReputationObject}
+
+export type ServerStatusResponse = {|
+  isServerOk: boolean,
+  isMaintenance: boolean,
+|}
