@@ -314,6 +314,10 @@ export const errorMessages = {
 }
 
 export default defineMessages({
+  attention: {
+    id: 'global.attention',
+    defaultMessage: 'Attention',
+  },
   walletNameErrorTooLong: {
     id: 'global.error.walletNameTooLong',
     defaultMessage: 'Wallet name cannot exceed 40 letters',

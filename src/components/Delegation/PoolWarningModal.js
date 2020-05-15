@@ -5,7 +5,7 @@ import {View, ScrollView, Image} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import {Text, Button, Modal} from '../UiKit'
-import {confirmationMessages} from '../../i18n/global-messages'
+import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
 
 import styles from './styles/PoolWarningModal.style'
 import image from '../../assets/img/mnemonic_explanation.png'
@@ -13,10 +13,6 @@ import image from '../../assets/img/mnemonic_explanation.png'
 import type {ComponentType} from 'react'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.stakingcenter.poolwarningmodal.title',
-    defaultMessage: '!!!Attention',
-  },
   header: {
     id: 'components.stakingcenter.poolwarningmodal.header',
     defaultMessage: '!!!Based on network activity, it seems this pool:',
@@ -92,7 +88,7 @@ const PoolWarningModal = ({
         <View style={styles.content}>
           <View style={styles.heading}>
             <Text style={styles.title}>
-              {intl.formatMessage(messages.title)}
+              {intl.formatMessage(globalMessages.attention)}
             </Text>
             <Image source={image} />
           </View>

@@ -5,6 +5,7 @@ import {View, Image, BackHandler} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import {Text, Modal, Link} from './UiKit'
+import globalMessages from '../i18n/global-messages'
 
 import styles from './styles/MaintenanceScreen.styles'
 import image from '../assets/img/error.png'
@@ -15,10 +16,6 @@ const messages = defineMessages({
   title: {
     id: 'components.maintenancemodal.title',
     defaultMessage: '!!!Temporary Maintenance',
-  },
-  attention: {
-    id: 'components.maintenancemodal.attention',
-    defaultMessage: '!!!ATTENTION:',
   },
   explanation: {
     id: 'components.maintenancemodal.explanation',
@@ -34,11 +31,11 @@ const messages = defineMessages({
 
 const URL = 'https://twitter.com/YoroiWallet'
 
-type Props = {
+type Props = {|
   intl: intlShape,
   visible: boolean,
   onRequestClose: () => void,
-}
+|}
 
 const MaintenanceModal = ({intl, visible, onRequestClose}: Props) => {
   return (
@@ -51,7 +48,7 @@ const MaintenanceModal = ({intl, visible, onRequestClose}: Props) => {
       <View style={styles.content}>
         <Image source={image} style={styles.image} />
         <Text style={[styles.paragraph, styles.attention]}>
-          {intl.formatMessage(messages.attention)}
+          {`${intl.formatMessage(globalMessages.attention).toUpperCase()}:`}
         </Text>
         <Text style={styles.paragraph}>
           {intl.formatMessage(messages.explanation)}
