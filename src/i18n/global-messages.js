@@ -318,6 +318,10 @@ export default defineMessages({
     id: 'global.attention',
     defaultMessage: 'Attention',
   },
+  tryAgain: {
+    id: 'global.tryAgain',
+    defaultMessage: 'Try again',
+  },
   walletNameErrorTooLong: {
     id: 'global.error.walletNameTooLong',
     defaultMessage: 'Wallet name cannot exceed 40 letters',

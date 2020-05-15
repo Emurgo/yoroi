@@ -349,6 +349,7 @@
   "global.staking.stakePoolHash": "Stake pool hash",
   "global.termsOfUse": "Terms of use",
   "global.totalAda": "Total ADA",
+  "global.tryAgain": "Try again",
   "global.txLabels.amount": "Amount",
   "global.txLabels.balanceAfterTx": "balanceAfterTx",
   "global.txLabels.fees": "Fees",
