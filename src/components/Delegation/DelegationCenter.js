@@ -1,6 +1,7 @@
 // @flow
 import React from 'react'
-import {View, WebView} from 'react-native'
+import {View} from 'react-native'
+import {WebView} from 'react-native-webview'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
@@ -84,7 +85,6 @@ const DelegationCenter = ({
     <>
       <View style={styles.container}>
         <WebView
-          useWebKit
           source={{uri: prepareStakingURL(approxAdaToDelegate, poolList)}}
           onMessage={(event) => handleOnMessage(event)}
         />
