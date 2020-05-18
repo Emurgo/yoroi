@@ -14,6 +14,7 @@ import {
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import {compose} from 'redux'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
+import TransportHID from '@ledgerhq/react-native-hid'
 import {ErrorCodes} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {BleError} from 'react-native-ble-plx'
 
@@ -28,6 +29,7 @@ import {withNavigationTitle} from '../../../utils/renderUtils'
 import DeviceItem from './DeviceItem'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {ledgerMessages} from '../../../i18n/global-messages'
+import {Logger} from '../../../utils/logging'
 
 import styles from './styles/ConnectNanoXScreen.style'
 import image from '../../../assets/img/bluetooth.png'
@@ -36,10 +38,16 @@ import type {ComponentType} from 'react'
 import type {Device} from '@ledgerhq/react-native-hw-transport-ble'
 import type {Navigation} from '../../../types/navigation'
 
+// TODO
+// type DeviceObj = {
+//   vendorId: number,
+//   productId: number,
+// }
+
 const messages = defineMessages({
   title: {
     id: 'components.walletinit.connectnanox.connectnanoxscreen.title',
-    defaultMessage: '!!!Connect to Ledger',
+    defaultMessage: '!!!Connect to Ledger Device',
   },
   caption: {
     id: 'components.walletinit.connectnanox.connectnanoxscreen.caption',
@@ -61,11 +69,23 @@ const messages = defineMessages({
   },
 })
 
-const deviceAddition = (device) => ({devices}) => ({
-  devices: devices.some((i) => i.id === device.id)
-    ? devices
-    : devices.concat(device),
-})
+// TODO: check if productId is effectively what we want to store. Can we open
+// a connection using it?
+const deviceAddition = (device) => ({devices}) => {
+  if (device.id) {
+    return {
+      devices: devices.some((i) => i.id === device.id)
+        ? devices
+        : devices.concat(device),
+    }
+  } else {
+    return {
+      devices: devices.some((i) => i.productId === device.productId)
+        ? devices
+        : devices.concat(device),
+    }
+  }
+}
 
 type Props = {|
   intl: intlShape,
@@ -92,32 +112,38 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
 
   subscriptions = null
   bluetoothEnabled: ?boolean = null
+  transportLib: Object = null
 
   async componentDidMount() {
-    if (Platform.OS === 'android') {
-      await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      )
-    }
-    // check if bluetooth is available
-    let previousAvailable = false
-    TransportBLE.observeState({
-      next: (e) => {
-        if (this.bluetoothEnabled == null && !e.available) {
-          this.setState({
-            error: new BluetoothDisabledError(),
-            refreshing: false,
-          })
-        }
-        if (e.available !== previousAvailable) {
-          previousAvailable = e.available
-          if (e.available) {
-            this.bluetoothEnabled = e.available
-            this.reload()
+    const {navigation} = this.props
+    const useUSB = navigation.getParam('useUSB')
+    this.transportLib = useUSB ? TransportHID : TransportBLE
+    if (!useUSB) {
+      if (Platform.OS === 'android') {
+        await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        )
+      }
+      // check if bluetooth is available
+      let previousAvailable = false
+      TransportBLE.observeState({
+        next: (e) => {
+          if (this.bluetoothEnabled == null && !e.available) {
+            this.setState({
+              error: new BluetoothDisabledError(),
+              refreshing: false,
+            })
           }
-        }
-      },
-    })
+          if (e.available !== previousAvailable) {
+            previousAvailable = e.available
+            if (e.available) {
+              this.bluetoothEnabled = e.available
+              this.reload()
+            }
+          }
+        },
+      })
+    }
     this.startScan()
   }
 
@@ -125,9 +151,17 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
     if (this.subscriptions != null) this.subscriptions.unsubscribe()
   }
 
-  startScan = () => {
+  startScan = async () => {
+    const {navigation} = this.props
+    const useUSB = navigation.getParam('useUSB')
     this.setState({refreshing: true})
-    this.subscriptions = TransportBLE.listen({
+    // TODO: remove this block, just for debugging
+    if (useUSB) {
+      const devices = await TransportHID.list()
+      Logger.debug('devices', devices)
+      this.setState({devices})
+    }
+    this.subscriptions = this.transportLib.listen({
       complete: () => {
         this.setState({refreshing: false})
       },
@@ -164,7 +198,7 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
     try {
       const {deviceId} = this.state
       const {navigation} = this.props
-      const transport = await TransportBLE.open(deviceId)
+      const transport = await this.transportLib.open(deviceId)
       const hwDeviceInfo = await getHWDeviceInfo(transport)
       const bip44AccountPublic = hwDeviceInfo?.bip44AccountPublic
       this.setState({bip44AccountPublic})
@@ -227,6 +261,7 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
       intl.formatMessage(ledgerMessages.enterPin),
       intl.formatMessage(ledgerMessages.openApp),
     ]
+    // TODO: change image for USB case and also "Sacnning for bluetooth" string
     return (
       <SafeAreaView style={styles.safeAreaView}>
         <ProgressStep currentStep={2} totalSteps={3} displayStepNumber />

@@ -20,6 +20,7 @@ function loadStories() {
 	require('../src/components/WalletInit/CreateWallet/MnemonicCheckScreen.stories');
 	require('../src/components/WalletInit/CreateWallet/MnemonicExplanationModal.stories');
 	require('../src/components/WalletInit/CreateWallet/MnemonicShowScreen.stories');
+	require('../src/components/WalletInit/LedgerSwitchModal.stories');
 	require('../src/components/WalletInit/RestoreWallet/RestoreWalletScreen.stories');
 	require('../src/components/WalletInit/RestoreWallet/WalletCredentialsScreen.stories');
 	require('../src/components/WalletInit/WalletInitScreen.stories');
@@ -43,6 +44,7 @@ const stories = [
 	'../src/components/WalletInit/CreateWallet/MnemonicCheckScreen.stories',
 	'../src/components/WalletInit/CreateWallet/MnemonicExplanationModal.stories',
 	'../src/components/WalletInit/CreateWallet/MnemonicShowScreen.stories',
+	'../src/components/WalletInit/LedgerSwitchModal.stories',
 	'../src/components/WalletInit/RestoreWallet/RestoreWalletScreen.stories',
 	'../src/components/WalletInit/RestoreWallet/WalletCredentialsScreen.stories',
 	'../src/components/WalletInit/WalletInitScreen.stories',

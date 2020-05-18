@@ -24,7 +24,7 @@ import type {Navigation} from '../../../types/navigation'
 const messages = defineMessages({
   title: {
     id: 'components.walletinit.connectnanox.checknanoxscreen.title',
-    defaultMessage: '!!!Connect to Ledger Nano X',
+    defaultMessage: '!!!Connect to Ledger Device',
   },
   introline: {
     id: 'components.walletinit.connectnanox.checknanoxscreen.introline',
@@ -72,16 +72,13 @@ const CheckNanoXScreen = ({intl, onPress, navigation}) => {
           </View>
         )}
       </View>
-      <View style={styles.buttons}>
-        <Button
-          block
-          onPress={onPress}
-          title={intl.formatMessage(
-            confirmationMessages.commonButtons.continueButton,
-          )}
-          style={styles.button}
-        />
-      </View>
+      <Button
+        onPress={onPress}
+        title={intl.formatMessage(
+          confirmationMessages.commonButtons.continueButton,
+        )}
+        style={styles.button}
+      />
     </SafeAreaView>
   )
 }

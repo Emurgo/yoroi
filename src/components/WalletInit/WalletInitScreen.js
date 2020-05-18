@@ -34,7 +34,7 @@ const messages = defineMessages({
   },
   createWalletWithLedgerButton: {
     id: 'components.walletinit.walletinitscreen.createWalletWithLedgerButton',
-    defaultMessage: '!!!Connect to Ledger Nano X',
+    defaultMessage: '!!!Connect to Ledger Nano',
   },
 })
 

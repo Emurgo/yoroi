@@ -94,13 +94,12 @@ export const ledgerMessages = defineMessages({
   },
   appInstalled: {
     id: 'global.ledgerMessages.appInstalled',
-    defaultMessage:
-      '!!!Cardano ADA app is installed on your Ledger Nano X device.',
+    defaultMessage: '!!!Cardano ADA app is installed on your Ledger device.',
   },
   appOpened: {
     id: 'global.ledgerMessages.appOpened',
     defaultMessage:
-      '!!!Cardano ADA app must remain open on your Ledger Nano X device.',
+      '!!!Cardano ADA app must remain open on your Ledger device.',
   },
   // connection requisites
   enableTransport: {

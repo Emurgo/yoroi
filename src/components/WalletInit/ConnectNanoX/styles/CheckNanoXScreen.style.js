@@ -11,6 +11,7 @@ export default StyleSheet.create({
   container: {
     paddingTop: 30,
     paddingHorizontal: 20,
+    marginBottom: 8,
     flex: 1,
   },
   heading: {
@@ -40,12 +41,8 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
-  buttons: {
-    flexDirection: 'row',
-    marginTop: 12,
-  },
   button: {
     marginHorizontal: 10,
-    marginVertical: 16,
+    marginBottom: 8,
   },
 })
