@@ -7,7 +7,7 @@ import {Clipboard, View} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
-import {externalAddressIndexSelector} from '../../selectors'
+import {externalAddressIndexSelector, isHWSelector} from '../../selectors'
 import {formatBIP44} from '../../crypto/byron/util'
 
 import {Text, Button, Modal} from '../UiKit'
@@ -39,13 +39,15 @@ const messages = defineMessages({
   },
 })
 
-type Props = {
+type Props = {|
   address: ?string,
   index?: number,
   intl: any,
   onRequestClose: () => any,
   visible: boolean,
-}
+  onAddressVerify: () => void,
+  isHW: boolean,
+|}
 
 type State = {
   isCopied: boolean,
@@ -82,7 +84,15 @@ class AddressModal extends React.Component<Props, State> {
 
   render() {
     const {isCopied} = this.state
-    const {address, index, intl, onRequestClose, visible} = this.props
+    const {
+      address,
+      index,
+      intl,
+      onRequestClose,
+      visible,
+      onAddressVerify,
+      isHW,
+    } = this.props
 
     return (
       <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
@@ -113,23 +123,35 @@ class AddressModal extends React.Component<Props, State> {
               : intl.formatMessage(messages.copyLabel)
           }
         />
+        {isHW && (
+          <Button
+            onPress={onAddressVerify}
+            title={
+              /* TODO */
+              'Verify address with Ledger'
+            }
+            style={styles.button}
+          />
+        )}
       </Modal>
     )
   }
 }
 
-type ExternalProps = {
+type ExternalProps = {|
   address: ?string,
   onRequestClose: () => any,
   visible: boolean,
   intl: intlShape,
-}
+  onAddressVerify: () => void,
+|}
 
 export default injectIntl(
   (compose(
     connect(
       (state, {address}) => ({
         index: externalAddressIndexSelector(state)[address],
+        isHW: isHWSelector(state),
       }),
       null,
     ),

@@ -24,8 +24,11 @@ export default StyleSheet.create({
   index: {
     paddingRight: 8,
   },
+  icon: {
+    marginLeft: 8,
+  },
   text: {
-    paddingRight: 36,
+    paddingRight: 30,
     paddingLeft: 5,
   },
 })

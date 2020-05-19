@@ -209,6 +209,49 @@ export const getHWDeviceInfo = async (
   }
 }
 
+export const verifyAddress = async (
+  address: string,
+  addressing: Addressing,
+  hwDeviceInfo: HWDeviceInfo,
+  useUSB?: boolean = false,
+): Promise<void> => {
+  try {
+    Logger.debug('ledgerUtils::verifyAddress called')
+
+    // TODO once USB support is added
+    // const transport = useUSB ? TransportHID : TransportBLE
+    const transportLib = TransportBLE
+
+    if (hwDeviceInfo == null || hwDeviceInfo.hwFeatures.deviceId == null) {
+      throw new Error('ledgerUtils::verifyAddress: deviceId is null')
+    }
+
+    const path = makeCardanoBIP44Path(
+      addressing.addressing.account,
+      addressing.addressing.change,
+      addressing.addressing.index,
+    )
+
+    // TODO once USB support is added
+    // if using USB, use correct input for open()
+    const transport = await transportLib.open(hwDeviceInfo.hwFeatures.deviceId)
+    const appAda = new AppAda(transport)
+
+    await appAda.showAddress(path)
+  } catch (e) {
+    if (_isUserError(e)) {
+      Logger.info('ledgerUtils::verifyAddress: User-side error', e)
+      throw new LedgerUserError()
+    } else if (_isConnectionError(e)) {
+      Logger.info('ledgerUtils::verifyAddress: general/BleError', e)
+      throw new GeneralConnectionError()
+    } else {
+      Logger.error('ledgerUtils::verifyAddress: Unexpected error', e)
+      throw e
+    }
+  }
+}
+
 //
 // ============== transaction logic ==================
 //
