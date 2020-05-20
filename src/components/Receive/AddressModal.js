@@ -37,6 +37,10 @@ const messages = defineMessages({
     defaultMessage: '!!!Copied',
     description: 'some desc',
   },
+  verifyLabel: {
+    id: 'components.receive.addressverifymodal.title',
+    defaultMessage: '!!!Verify Address on Ledger',
+  },
 })
 
 type Props = {|
@@ -126,10 +130,7 @@ class AddressModal extends React.Component<Props, State> {
         {isHW && (
           <Button
             onPress={onAddressVerify}
-            title={
-              /* TODO */
-              'Verify address with Ledger'
-            }
+            title={intl.formatMessage(messages.verifyLabel)}
             style={styles.button}
           />
         )}

@@ -1,12 +1,11 @@
 // @flow
 import {StyleSheet} from 'react-native'
 
-import {spacing} from '../../../styles/config'
+import {spacing, COLORS} from '../../../styles/config'
 
 export default StyleSheet.create({
   scrollView: {
     paddingRight: 10,
-    height: 180,
     marginBottom: 12,
   },
   paragraph: {
@@ -31,10 +30,10 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 1,
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: {width: 2, height: 2},
     shadowRadius: 12,
-    shadowOpacity: 0.06,
-    shadowColor: 'black',
+    shadowOpacity: 1,
+    shadowColor: COLORS.SHADOW_COLOR,
     backgroundColor: '#fff',
     borderRadius: 8,
     marginBottom: 10,

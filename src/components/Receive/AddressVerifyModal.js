@@ -60,38 +60,37 @@ const AddressVerifyModal = ({
   )
   return (
     <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
-      <View style={styles.heading}>
-        <Text style={styles.title}>{intl.formatMessage(messages.title)}</Text>
-      </View>
       <ScrollView style={styles.scrollView}>
+        <View style={styles.heading}>
+          <Text style={styles.title}>{intl.formatMessage(messages.title)}</Text>
+        </View>
         <Text style={styles.paragraph}>
           {intl.formatMessage(messages.beforeConfirm)}
         </Text>
         {rows.map((row, i) => (
           <BulletPointItem textRow={row} key={i} style={styles.paragraph} />
         ))}
+        <Text style={styles.paragraph}>
+          {intl.formatMessage(messages.afterConfirm)}
+        </Text>
+        <View style={styles.addressDetailsView}>
+          <Text secondary style={styles.paragraph}>
+            {address}
+          </Text>
+          <Text secondary style={styles.paragraph}>
+            {path}
+          </Text>
+        </View>
+        <Button
+          onPress={onConfirm}
+          title={intl.formatMessage(
+            confirmationMessages.commonButtons.confirmButton,
+          )}
+          style={styles.button}
+          disabled={isWaiting}
+        />
+        {isWaiting && <ActivityIndicator />}
       </ScrollView>
-      <Text style={styles.paragraph}>
-        {intl.formatMessage(messages.afterConfirm)}
-      </Text>
-      <View style={styles.addressDetailsView}>
-        <Text secondary style={styles.paragraph}>
-          {address}
-        </Text>
-        <Text secondary style={styles.paragraph}>
-          {path}
-        </Text>
-      </View>
-      {/* </ScrollView> */}
-      <Button
-        onPress={onConfirm}
-        title={intl.formatMessage(
-          confirmationMessages.commonButtons.confirmButton,
-        )}
-        style={styles.button}
-        disabled={isWaiting}
-      />
-      {isWaiting && <ActivityIndicator />}
     </Modal>
   )
 }
