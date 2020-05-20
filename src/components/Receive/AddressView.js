@@ -3,39 +3,101 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {withStateHandlers} from 'recompose'
+import {withStateHandlers, withHandlers} from 'recompose'
 import {View, TouchableOpacity, Image} from 'react-native'
 import {withNavigation} from 'react-navigation'
+import {injectIntl, intlShape} from 'react-intl'
 
 import {
   isUsedAddressIndexSelector,
   externalAddressIndexSelector,
+  isHWSelector,
+  hwDeviceInfoSelector,
 } from '../../selectors'
+import {showErrorDialog, handleGeneralError} from '../../actions'
 
 import {Text} from '../UiKit'
 import AddressModal from './AddressModal'
+import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
+import AddressVerifyModal from './AddressVerifyModal'
+import {
+  verifyAddress,
+  GeneralConnectionError,
+  LedgerUserError,
+} from '../../crypto/byron/ledgerUtils'
+import walletManager from '../../crypto/wallet'
+import {formatBIP44} from '../../crypto/byron/util'
+import {errorMessages} from '../../i18n/global-messages'
 
 import styles from './styles/AddressView.style'
-import copyIcon from '../../assets/img/icon/copy.png'
+import infoIcon from '../../assets/img/icon/info.png'
 
 import type {ComponentType} from 'react'
+import type {HWDeviceInfo} from '../../crypto/byron/ledgerUtils'
 
-type Props = {
+const _handleOnVerifyAddress = async (
+  intl: intlShape,
+  address: string,
+  index: number,
+  hwDeviceInfo: HWDeviceInfo,
+  useUSB: boolean,
+  closeDetails: () => void,
+  withActivityIndicator: (() => Promise<void>) => Promise<void>,
+) => {
+  await withActivityIndicator(async () => {
+    try {
+      const addressing = walletManager.getAddressingInfo(address)
+      if (addressing == null) {
+        throw new Error('No addressing data, should never happen')
+      }
+      await verifyAddress(address, {addressing}, hwDeviceInfo, useUSB)
+    } catch (e) {
+      if (e instanceof GeneralConnectionError || e instanceof LedgerUserError) {
+        await showErrorDialog(errorMessages.hwConnectionError, intl)
+      } else {
+        handleGeneralError('Could not verify address', e, intl)
+      }
+    } finally {
+      closeDetails()
+    }
+  })
+}
+
+const ADDRESS_DIALOG_STEPS = {
+  CLOSED: 'CLOSED',
+  ADDRESS_DETAILS: 'ADDRESS_DETAILS',
+  CHOOSE_TRANSPORT: 'CHOOSE_TRANSPORT',
+  ADDRESS_VERIFY: 'ADDRESS_VERIFY',
+}
+type AddressDialogSteps = $Values<typeof ADDRESS_DIALOG_STEPS>
+
+type Props = {|
   index: number,
   address: string,
   isUsed: boolean,
   openDetails: () => void,
   closeDetails: () => void,
-  showDetails: boolean,
-}
+  onVerifyAddress: () => void,
+  addressDialogStep: AddressDialogSteps,
+  openTransportSwitch: () => void,
+  openAddressVerify: (Object, boolean) => void,
+  useUSB: boolean,
+  isWaiting: boolean,
+|}
 
 const AddressView = ({
   address,
-  showDetails,
   index,
   isUsed,
+  isHW,
   openDetails,
   closeDetails,
+  onVerifyAddress,
+  addressDialogStep,
+  openTransportSwitch,
+  openAddressVerify,
+  useUSB,
+  isWaiting,
 }: Props) => (
   <>
     <TouchableOpacity activeOpacity={0.5} onPress={openDetails}>
@@ -53,35 +115,107 @@ const AddressView = ({
             {address}
           </Text>
         </View>
-        <Image source={copyIcon} width={24} />
+        <Image source={infoIcon} width={24} />
       </View>
     </TouchableOpacity>
+
     <AddressModal
-      visible={showDetails}
+      visible={addressDialogStep === ADDRESS_DIALOG_STEPS.ADDRESS_DETAILS}
       address={address}
       onRequestClose={closeDetails}
+      onAddressVerify={openTransportSwitch}
+    />
+
+    <LedgerTransportSwitchModal
+      visible={addressDialogStep === ADDRESS_DIALOG_STEPS.CHOOSE_TRANSPORT}
+      onRequestClose={closeDetails}
+      onSelectUSB={(event) => openAddressVerify(event, true)}
+      onSelectBLE={(event) => openAddressVerify(event, false)}
+      showCloseIcon
+    />
+
+    <AddressVerifyModal
+      visible={addressDialogStep === ADDRESS_DIALOG_STEPS.ADDRESS_VERIFY}
+      onRequestClose={closeDetails}
+      showCloseIcon
+      onConfirm={onVerifyAddress}
+      address={address}
+      path={formatBIP44(0, 'External', index)}
+      isWaiting={isWaiting}
+      disableButtons={isWaiting}
     />
   </>
 )
 
-type ExternalProps = {
+type ExternalProps = {|
   address: string,
-}
+|}
 
-export default (compose(
-  // TODO(ppershing): this makes Flow bail out from checking types
-  withNavigation,
-  connect((state, {address}) => ({
-    index: externalAddressIndexSelector(state)[address],
-    isUsed: !!isUsedAddressIndexSelector(state)[address],
-  })),
-  withStateHandlers(
-    {
-      showDetails: false,
-    },
-    {
-      openDetails: (state) => () => ({showDetails: true}),
-      closeDetails: (state) => () => ({showDetails: false}),
-    },
-  ),
-)(AddressView): ComponentType<ExternalProps>)
+export default injectIntl(
+  (compose(
+    // TODO(ppershing): this makes Flow bail out from checking types
+    withNavigation,
+    connect((state, {address}) => ({
+      index: externalAddressIndexSelector(state)[address],
+      isUsed: !!isUsedAddressIndexSelector(state)[address],
+      isHW: isHWSelector(state),
+      hwDeviceInfo: hwDeviceInfoSelector(state),
+    })),
+    withStateHandlers(
+      {
+        addressDialogStep: ADDRESS_DIALOG_STEPS.CLOSED,
+        useUSB: false,
+        isWaiting: false,
+      },
+      {
+        openDetails: (state) => () => ({
+          addressDialogStep: ADDRESS_DIALOG_STEPS.ADDRESS_DETAILS,
+        }),
+        closeDetails: (state) => () => ({
+          addressDialogStep: ADDRESS_DIALOG_STEPS.CLOSED,
+        }),
+        openTransportSwitch: (state) => () => ({
+          addressDialogStep: ADDRESS_DIALOG_STEPS.CHOOSE_TRANSPORT,
+        }),
+        openAddressVerify: (state) => (useUSB) => ({
+          addressDialogStep: ADDRESS_DIALOG_STEPS.ADDRESS_VERIFY,
+          useUSB,
+        }),
+        setIsWaiting: () => (isWaiting) => ({isWaiting}),
+      },
+    ),
+    withHandlers({
+      withActivityIndicator: ({setIsWaiting}) => async (
+        func: () => Promise<void>,
+      ): Promise<void> => {
+        setIsWaiting(true)
+        try {
+          await func()
+        } finally {
+          setIsWaiting(false)
+        }
+      },
+    }),
+    withHandlers({
+      onVerifyAddress: ({
+        intl,
+        address,
+        index,
+        hwDeviceInfo,
+        useUSB,
+        closeDetails,
+        withActivityIndicator,
+      }) => async (event) => {
+        await _handleOnVerifyAddress(
+          intl,
+          address,
+          index,
+          hwDeviceInfo,
+          useUSB,
+          closeDetails,
+          withActivityIndicator,
+        )
+      },
+    }),
+  )(AddressView): ComponentType<ExternalProps>),
+)

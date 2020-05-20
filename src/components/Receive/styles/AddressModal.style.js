@@ -10,4 +10,7 @@ export default StyleSheet.create({
     marginTop: 24,
     textAlign: 'center',
   },
+  button: {
+    marginTop: 10,
+  },
 })
