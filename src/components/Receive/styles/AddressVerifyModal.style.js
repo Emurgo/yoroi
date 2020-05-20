@@ -6,20 +6,17 @@ import {spacing} from '../../../styles/config'
 export default StyleSheet.create({
   scrollView: {
     paddingRight: 10,
+    height: 180,
+    marginBottom: 12,
   },
   paragraph: {
-    marginBottom: spacing.paragraphBottomMargin,
+    marginBottom: 12,
     fontSize: 14,
     lineHeight: 22,
-  },
-  content: {
-    flex: 1,
-    marginBottom: 24,
   },
   heading: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: spacing.paragraphBottomMargin,
   },
   title: {
     fontSize: 20,
@@ -29,5 +26,18 @@ export default StyleSheet.create({
   },
   button: {
     marginHorizontal: 10,
+  },
+  addressDetailsView: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 1,
+    shadowOffset: {width: 0, height: 2},
+    shadowRadius: 12,
+    shadowOpacity: 0.06,
+    shadowColor: 'black',
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    marginBottom: 10,
+    padding: 8,
   },
 })

@@ -19,7 +19,6 @@ export default StyleSheet.create({
   heading: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: spacing.paragraphBottomMargin,
   },
   title: {
     fontSize: 20,
@@ -29,5 +28,12 @@ export default StyleSheet.create({
   },
   button: {
     marginHorizontal: 10,
+    marginBottom: spacing.paragraphBottomMargin,
+  },
+  // TODO: remove then USB is supported
+  comingSoon: {
+    fontStyle: 'italic',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 })

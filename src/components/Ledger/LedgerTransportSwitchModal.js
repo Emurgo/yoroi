@@ -69,6 +69,12 @@ const LedgerTransportSwitchModal = ({
           <Text style={styles.paragraph}>
             {intl.formatMessage(messages.usbExplanation)}
           </Text>
+
+          {/* TODO(v-almonacid): remove when USB is supported */}
+          <Text secondary style={[styles.paragraph, styles.comingSoon]}>
+            {'Coming soon...'}
+          </Text>
+
           <Button
             block
             onPress={onSelectUSB}
@@ -78,8 +84,7 @@ const LedgerTransportSwitchModal = ({
                 : intl.formatMessage(messages.usbButton)
             }
             disabled={
-              /* TODO(v-almonacid): this will be enabled in a follow-up PR,
-               * which adds support for USB transport */
+              /* TODO(v-almonacid): remove `true` when USB is supported */
               true || Platform.OS === 'iOS'
             }
             style={styles.button}

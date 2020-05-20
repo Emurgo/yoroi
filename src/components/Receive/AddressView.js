@@ -26,10 +26,11 @@ import {
   LedgerUserError,
 } from '../../crypto/byron/ledgerUtils'
 import walletManager from '../../crypto/wallet'
+import {formatBIP44} from '../../crypto/byron/util'
 import {errorMessages} from '../../i18n/global-messages'
 
 import styles from './styles/AddressView.style'
-import copyIcon from '../../assets/img/icon/copy.png'
+import infoIcon from '../../assets/img/icon/info.png'
 
 import type {ComponentType} from 'react'
 import type {HWDeviceInfo} from '../../crypto/byron/ledgerUtils'
@@ -41,20 +42,25 @@ const _handleOnVerifyAddress = async (
   hwDeviceInfo: HWDeviceInfo,
   useUSB: boolean,
   closeDetails: () => void,
+  withActivityIndicator: (() => Promise<void>) => Promise<void>,
 ) => {
-  try {
-    const addressing = walletManager.getAddressingInfo(address)
-    if (addressing == null) return
-    await verifyAddress(address, {addressing}, hwDeviceInfo, useUSB)
-  } catch (e) {
-    if (e instanceof GeneralConnectionError || e instanceof LedgerUserError) {
-      await showErrorDialog(errorMessages.hwConnectionError, intl)
-    } else {
-      handleGeneralError('Could not submit transaction', e, intl)
+  await withActivityIndicator(async () => {
+    try {
+      const addressing = walletManager.getAddressingInfo(address)
+      if (addressing == null) {
+        throw new Error('No addressing data, should never happen')
+      }
+      await verifyAddress(address, {addressing}, hwDeviceInfo, useUSB)
+    } catch (e) {
+      if (e instanceof GeneralConnectionError || e instanceof LedgerUserError) {
+        await showErrorDialog(errorMessages.hwConnectionError, intl)
+      } else {
+        handleGeneralError('Could not verify address', e, intl)
+      }
+    } finally {
+      closeDetails()
     }
-  } finally {
-    closeDetails()
-  }
+  })
 }
 
 const ADDRESS_DIALOG_STEPS = {
@@ -76,6 +82,7 @@ type Props = {|
   openTransportSwitch: () => void,
   openAddressVerify: (Object, boolean) => void,
   useUSB: boolean,
+  isWaiting: boolean,
 |}
 
 const AddressView = ({
@@ -90,6 +97,7 @@ const AddressView = ({
   openTransportSwitch,
   openAddressVerify,
   useUSB,
+  isWaiting,
 }: Props) => (
   <>
     <TouchableOpacity activeOpacity={0.5} onPress={openDetails}>
@@ -107,9 +115,10 @@ const AddressView = ({
             {address}
           </Text>
         </View>
-        <Image source={copyIcon} width={24} />
+        <Image source={infoIcon} width={24} />
       </View>
     </TouchableOpacity>
+
     <AddressModal
       visible={addressDialogStep === ADDRESS_DIALOG_STEPS.ADDRESS_DETAILS}
       address={address}
@@ -130,6 +139,10 @@ const AddressView = ({
       onRequestClose={closeDetails}
       showCloseIcon
       onConfirm={onVerifyAddress}
+      address={address}
+      path={formatBIP44(0, 'External', index)}
+      isWaiting={isWaiting}
+      disableButtons={isWaiting}
     />
   </>
 )
@@ -152,6 +165,7 @@ export default injectIntl(
       {
         addressDialogStep: ADDRESS_DIALOG_STEPS.CLOSED,
         useUSB: false,
+        isWaiting: false,
       },
       {
         openDetails: (state) => () => ({
@@ -167,8 +181,21 @@ export default injectIntl(
           addressDialogStep: ADDRESS_DIALOG_STEPS.ADDRESS_VERIFY,
           useUSB,
         }),
+        setIsWaiting: () => (isWaiting) => ({isWaiting}),
       },
     ),
+    withHandlers({
+      withActivityIndicator: ({setIsWaiting}) => async (
+        func: () => Promise<void>,
+      ): Promise<void> => {
+        setIsWaiting(true)
+        try {
+          await func()
+        } finally {
+          setIsWaiting(false)
+        }
+      },
+    }),
     withHandlers({
       onVerifyAddress: ({
         intl,
@@ -177,6 +204,7 @@ export default injectIntl(
         hwDeviceInfo,
         useUSB,
         closeDetails,
+        withActivityIndicator,
       }) => async (event) => {
         await _handleOnVerifyAddress(
           intl,
@@ -185,6 +213,7 @@ export default injectIntl(
           hwDeviceInfo,
           useUSB,
           closeDetails,
+          withActivityIndicator,
         )
       },
     }),
