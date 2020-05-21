@@ -174,7 +174,7 @@
   "components.stakingcenter.poolwarningmodal.censoringTxs": "Purposely excludes transactions from blocks (censoring the network)",
   "components.stakingcenter.poolwarningmodal.header": "Based on network activity, it seems this pool:",
   "components.stakingcenter.poolwarningmodal.multiBlock": "Creates multiple blocks in the same slot (purposely causing forks)",
-  "components.stakingcenter.poolwarningmodal.suggested": "We suggest contacting the pool owner through the stake pool\'s webpage to ask about their behavior. Remember, you can change your delegation at any time without any interruptions in rewards.",
+  "components.stakingcenter.poolwarningmodal.suggested": "We suggest contacting the pool owner through the stake pool's webpage to ask about their behavior. Remember, you can change your delegation at any time without any interruptions in rewards.",
   "components.stakingcenter.poolwarningmodal.title": "Attention",
   "components.stakingcenter.poolwarningmodal.unknown": "Causes some unknown issue (look online for more info)",
   "components.stakingcenter.title": "Staking Center",
