@@ -328,7 +328,7 @@
   "global.actions.dialogs.pinMismatch.title": "PINが無効です",
   "global.actions.dialogs.walletKeysInvalidated.message": " 端末で生体認証の変更が検出されました。 これにより簡易トランザクション承認が無効になりました。トランザクションはマスターパスワードによってのみ承認されます。 設定で簡易トランザクション承認を有効にできます。",
   "global.actions.dialogs.walletKeysInvalidated.title": "生体認証が変更されました。",
-  "global.actions.dialogs.walletStateInvalid.message": "Your wallet is in an inconsistent state. You may solve this by restoring your wallet with your mnemonics. Please contact EMURGO support to report this issue as this may help us fix the problem in a future release.",
+  "global.actions.dialogs.walletStateInvalid.message": "ウォレットが整合していません。復元フレーズを使ってウォレットを復元することで、問題が解消される場合があります。今後のリリースに向け、問題への対応を進めるため、EMURGOテクニカルサポートデスクに事象をお知らせください。",
   "global.actions.dialogs.walletStateInvalid.title": "ウォレットが無効状態です",
   "global.actions.dialogs.wrongPinError.message": "入力したPIN が間違っています 。",
   "global.actions.dialogs.wrongPinError.title": "PINが無効です。",
