@@ -56,7 +56,7 @@ class MaintenanceModal extends React.Component<Props, State> {
     AppState.removeEventListener('change', this._handleAppStateChange)
   }
 
-  _handleAppStateChange = (nextAppState): void => {
+  _handleAppStateChange: (?string) => void = (nextAppState) => {
     const {appState} = this.state
     this.setState({appState: nextAppState})
     if (

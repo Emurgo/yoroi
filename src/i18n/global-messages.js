@@ -315,7 +315,7 @@ export const errorMessages = {
 
 export default defineMessages({
   attention: {
-    id: 'global.attention',
+    id: 'components.stakingcenter.poolwarningmodal.title',
     defaultMessage: 'Attention',
   },
   tryAgain: {
