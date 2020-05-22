@@ -314,6 +314,14 @@ export const errorMessages = {
 }
 
 export default defineMessages({
+  attention: {
+    id: 'components.stakingcenter.poolwarningmodal.title',
+    defaultMessage: 'Attention',
+  },
+  tryAgain: {
+    id: 'global.tryAgain',
+    defaultMessage: 'Try again',
+  },
   walletNameErrorTooLong: {
     id: 'global.error.walletNameTooLong',
     defaultMessage: 'Wallet name cannot exceed 40 letters',

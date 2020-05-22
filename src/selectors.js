@@ -190,3 +190,6 @@ export const isKeyboardOpenSelector = (state: State): boolean =>
 
 export const isFlawedWalletSelector = (state: State): boolean =>
   state.isFlawedWallet
+
+export const isMaintenanceSelector = (state: State): boolean =>
+  state.isMaintenance

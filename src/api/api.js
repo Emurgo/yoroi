@@ -20,6 +20,7 @@ import type {
   TxBodiesRequest,
   TxBodiesResponse,
   ReputationResponse,
+  ServerStatusResponse,
 } from '../types/HistoryTransaction'
 
 type Addresses = Array<string>
@@ -76,6 +77,10 @@ const _fetch = (
       })
   )
 }
+
+export const checkServerStatus = (
+  networkConfig?: any = CONFIG.CARDANO,
+): Promise<ServerStatusResponse> => _fetch('status', null, networkConfig, 'GET')
 
 export const fetchNewTxHistory = async (
   dateFrom: Moment,

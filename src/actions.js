@@ -41,11 +41,13 @@ import {
   tosSelector,
   sendCrashReportsSelector,
   currentVersionSelector,
+  isMaintenanceSelector,
 } from './selectors'
 import assert from './utils/assert'
 import NavigationService from './NavigationService'
 import {ROOT_ROUTES} from './RoutesList'
 import KeyStore from './crypto/KeyStore'
+import api from './api'
 
 import {type Dispatch} from 'redux'
 import {type State} from './state'
@@ -166,7 +168,9 @@ export const navigateFromSplash = () => (
 
   let route
 
-  if (
+  if (isMaintenanceSelector(state)) {
+    route = ROOT_ROUTES.MAINTENANCE
+  } else if (
     !languageSelector(state) ||
     !tosSelector(state) ||
     (!isSystemAuthEnabledSelector(state) && !customPinHashSelector(state))
@@ -240,6 +244,18 @@ export const logout = () => async (dispatch: Dispatch<any>) => {
 }
 
 export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
+  try {
+    const status = await api.checkServerStatus()
+    dispatch({
+      path: ['isMaintenance'],
+      payload: status.isMaintenance != null ? status.isMaintenance : false,
+      type: 'SET_IS_MAINTENANCE',
+      reducer: (state, payload) => payload,
+    })
+  } catch (e) {
+    Logger.warn('actions::initApp could not retrieve server status', e)
+  }
+
   await dispatch(reloadAppSettings())
 
   const installationId = await dispatch(initInstallationId())
