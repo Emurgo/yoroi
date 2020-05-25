@@ -336,6 +336,7 @@
   "global.actions.dialogs.wrongPinError.message": "PIN 이 잘못되었습니다.",
   "global.actions.dialogs.wrongPinError.title": "유효하지 않는 PIN",
   "global.availableFunds": "사용 가능한 금액",
+  "global.comingSoon": "Coming soon",
   "global.error.walletNameAlreadyTaken": "이미 사용하고 있는 지갑명입니다.",
   "global.error.walletNameTooLong": "지갑명은 40자를 초과할 수 없습니다",
   "global.ledgerMessages.appInstalled": "Cardano ADA app is installed on your Ledger Nano X device.",
