@@ -332,7 +332,7 @@
   "global.actions.dialogs.walletKeysInvalidated.message": "Hemos detectado que la biometría en tu móvil ha cambiado. En consecuencia, la función de confirmación fácil ha sido deshabilitada, y el envío de transacciones es permitido usando sólo la contraseña maestra. Puedes volver a habilitar la función de confirmación fácil desde el apartado de configuración",
   "global.actions.dialogs.walletKeysInvalidated.title": "Se modificó la biometría",
   "global.actions.dialogs.walletStateInvalid.message": "Tu billetera está en un estado inconsistente. Puedes resolver esto restaurando tu billetera con tu frase de recuperación. Por favor, contacta con el soporte de EMURGO para informar sobre este inconveniente, ya que puede ayudarnos a solucionar el problema en una futura versión.",
-  "global.actions.dialogs.walletStateInvalid.title": "El estado de la billetera es inválido",
+  "global.actions.dialogs.walletStateInvalid.title": "Estado inválido de la billetera",
   "global.actions.dialogs.wrongPinError.message": "PIN incorrecto.",
   "global.actions.dialogs.wrongPinError.title": "PIN inválido",
   "global.availableFunds": "Fondos disponibles",
