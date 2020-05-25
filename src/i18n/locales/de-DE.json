@@ -336,6 +336,7 @@
   "global.actions.dialogs.wrongPinError.message": "Ungültige PIN.",
   "global.actions.dialogs.wrongPinError.title": "Ungültige PIN",
   "global.availableFunds": "Verfügbarer Betrag",
+  "global.comingSoon": "Coming soon",
   "global.error.walletNameAlreadyTaken": "Du hast bereits eine Wallet mit diesem Namen",
   "global.error.walletNameTooLong": "Der Wallet-namen kann nicht länger als 40 Zeichen sein",
   "global.ledgerMessages.appInstalled": "Die Cardano ADA-App ist auf dem Ledger Nano X installiert.",
