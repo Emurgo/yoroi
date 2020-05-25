@@ -15,7 +15,7 @@
                   <BuildableReference
                      BuildableIdentifier = "primary"
                      BlueprintIdentifier = "E9A1C7D824185CCA00151CFA"
-                     BuildableName = "emurgo-nightly.app"
+                     BuildableName = "Yoroi Nightly.app"
                      BlueprintName = "emurgo-nightly"
                      ReferencedContainer = "container:emurgo.xcodeproj">
                   </BuildableReference>
@@ -47,7 +47,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E9A1C7D824185CCA00151CFA"
-               BuildableName = "emurgo-nightly.app"
+               BuildableName = "Yoroi Nightly.app"
                BlueprintName = "emurgo-nightly"
                ReferencedContainer = "container:emurgo.xcodeproj">
             </BuildableReference>
@@ -91,7 +91,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E9A1C7D824185CCA00151CFA"
-            BuildableName = "emurgo-nightly.app"
+            BuildableName = "Yoroi Nightly.app"
             BlueprintName = "emurgo-nightly"
             ReferencedContainer = "container:emurgo.xcodeproj">
          </BuildableReference>
@@ -108,7 +108,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E9A1C7D824185CCA00151CFA"
-            BuildableName = "emurgo-nightly.app"
+            BuildableName = "Yoroi Nightly.app"
             BlueprintName = "emurgo-nightly"
             ReferencedContainer = "container:emurgo.xcodeproj">
          </BuildableReference>

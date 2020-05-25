@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key></key>
+	<string></string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -21,7 +23,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<string>57</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
@@ -41,16 +43,18 @@
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Enable apple music usage</string>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Enable bluetooth usage</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Yoroi mobile needs to access Bluetooth in order to be able to pair with hardware wallets that support this feature</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Enable bluetooth usage</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Enable calendars usage</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Enabling camera allows you to scan QR codes.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Enabling Face ID allows you quick and secure access to your account.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>One of the software dependencies of Yoroi mobile requires this permission, but Emurgo does not use neither store this information</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Enable location usage</string>
 	<key>NSMotionUsageDescription</key>
