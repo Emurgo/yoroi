@@ -5,10 +5,11 @@ import {connect} from 'react-redux'
 import {View} from 'react-native'
 import {SafeAreaView} from 'react-navigation'
 import {compose} from 'redux'
-import {withHandlers} from 'recompose'
+import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
 
 import WalletDescription from './WalletDescription'
+import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
 import {Button, StatusBar, ScreenBackground} from '../UiKit'
 import styles from './styles/WalletInitScreen.style'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
@@ -40,10 +41,12 @@ const messages = defineMessages({
 type Props = {
   navigateRestoreWallet: (Object, boolean) => mixed,
   navigateCreateWallet: (Object, boolean) => mixed,
-  navigateCheckNanoX: (Object, boolean) => mixed,
+  navigateCheckNanoX: (Object, boolean, boolean) => mixed,
   intl: any,
   walletIsInitialized: boolean,
   navigation: Navigation,
+  showModal: boolean,
+  setShowModal: (Object, boolean) => void,
 }
 
 const WalletInitScreen = ({
@@ -53,6 +56,8 @@ const WalletInitScreen = ({
   intl,
   walletIsInitialized,
   navigation,
+  showModal,
+  setShowModal,
 }: Props) => {
   const isShelleyWallet = navigation.getParam('isShelleyWallet')
   let createWalletLabel = intl.formatMessage(messages.createWalletButton)
@@ -89,12 +94,25 @@ const WalletInitScreen = ({
             testID="restoreWalletButton"
           />
           {!isShelleyWallet && (
-            <Button
-              outline
-              onPress={(event) => navigateCheckNanoX(event, isShelleyWallet)}
-              title={createWalletWithLedgerLabel}
-              style={styles.createButton}
-            />
+            <>
+              <Button
+                outline
+                onPress={(event) => setShowModal(event, true)}
+                title={createWalletWithLedgerLabel}
+                style={styles.createButton}
+              />
+              <LedgerTransportSwitchModal
+                visible={showModal}
+                onRequestClose={(event) => setShowModal(event, false)}
+                onSelectUSB={(event) =>
+                  navigateCheckNanoX(event, isShelleyWallet, true)
+                }
+                onSelectBLE={(event) =>
+                  navigateCheckNanoX(event, isShelleyWallet, false)
+                }
+                showCloseIcon
+              />
+            </>
           )}
         </View>
       </ScreenBackground>
@@ -107,6 +125,14 @@ export default injectIntl(
       walletIsInitialized: walletIsInitializedSelector(state),
     })),
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withStateHandlers(
+      {
+        showModal: false,
+      },
+      {
+        setShowModal: (state) => (event, showModal) => ({showModal}),
+      },
+    ),
     withHandlers({
       navigateRestoreWallet: ({navigation}) => (event, isShelleyWallet) =>
         navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET, {
@@ -116,9 +142,10 @@ export default injectIntl(
         navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET, {
           isShelleyWallet,
         }),
-      navigateCheckNanoX: ({navigation}) => (event, isShelleyWallet) =>
+      navigateCheckNanoX: ({navigation}) => (event, isShelleyWallet, useUSB) =>
         navigation.navigate(WALLET_INIT_ROUTES.CHECK_NANO_X, {
           isShelleyWallet,
+          useUSB,
         }),
     }),
   )(WalletInitScreen),

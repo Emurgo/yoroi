@@ -347,6 +347,10 @@ export default defineMessages({
     id: 'global.availableFunds',
     defaultMessage: '!!!Available funds',
   },
+  comingSoon: {
+    id: 'global.comingSoon',
+    defaultMessage: '!!!Coming soon',
+  },
   epochLabel: {
     id: 'global.staking.epochLabel',
     defaultMessage: '!!!Epoch',
