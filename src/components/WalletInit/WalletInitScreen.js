@@ -11,10 +11,11 @@ import {injectIntl, defineMessages} from 'react-intl'
 import WalletDescription from './WalletDescription'
 import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
 import {Button, StatusBar, ScreenBackground} from '../UiKit'
-import styles from './styles/WalletInitScreen.style'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {walletIsInitializedSelector} from '../../selectors'
+
+import styles from './styles/WalletInitScreen.style'
 
 import type {State} from '../../state'
 import type {Navigation} from '../../types/navigation'

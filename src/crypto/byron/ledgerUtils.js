@@ -3,6 +3,7 @@
 import AppAda, {ErrorCodes} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {BigNumber} from 'bignumber.js'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
+import TransportHID from '@ledgerhq/react-native-hid'
 import {TransportStatusError} from '@ledgerhq/hw-transport'
 import {BleError} from 'react-native-ble-plx'
 import ExtendableError from 'es6-error'
@@ -36,6 +37,7 @@ import type {
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import type {TxWitness} from './util'
 import type BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble'
+import type HIDTransport from '@ledgerhq/react-native-hid'
 
 //
 // ============== Errors ==================
@@ -100,12 +102,23 @@ type LedgerSignTxPayload = {|
   outputs: Array<OutputTypeAddress | OutputTypeChange>,
 |}
 
+// this type is used by @ledgerhq/react-native-hid and it's not exposed
+// so we redefine it here
+export type DeviceObj = {
+  vendorId: number,
+  productId: number,
+}
+
+// for bluetooth, we just save a string id
+export type DeviceId = string
+
 // Hardware wallet device Features object
 // borrowed from HWConnectStoreTypes.js in yoroi-frontend
 export type HWFeatures = {|
   vendor: string,
   model: string,
-  deviceId: string,
+  deviceId: ?DeviceId, // for establishing a connection through BLE
+  deviceObj: ?DeviceObj, // for establishing a connection through USB
 |}
 
 export type HWDeviceInfo = {|
@@ -117,8 +130,8 @@ export type HWDeviceInfo = {|
 // ============== General util ==================
 //
 
-const VENDOR = CONFIG.HARDWARE_WALLETS.LEDGER_NANO_X.VENDOR
-const MODEL = CONFIG.HARDWARE_WALLETS.LEDGER_NANO_X.MODEL
+const VENDOR = CONFIG.HARDWARE_WALLETS.LEDGER_NANO.VENDOR
+const MODEL = CONFIG.HARDWARE_WALLETS.LEDGER_NANO.MODEL
 
 const HARDENED = CONFIG.NUMBERS.HARD_DERIVATION_START
 const PURPOSE = CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
@@ -165,7 +178,7 @@ const normalizeHWResponse = (resp: LedgerConnectionResponse): HWDeviceInfo => {
 }
 
 export const getHWDeviceInfo = async (
-  transport: BluetoothTransport,
+  transport: BluetoothTransport | HIDTransport,
 ): Promise<?HWDeviceInfo> => {
   try {
     Logger.debug('ledgerUtils::getHWDeviceInfo called')
@@ -217,10 +230,9 @@ export const verifyAddress = async (
 ): Promise<void> => {
   try {
     Logger.debug('ledgerUtils::verifyAddress called')
+    Logger.debug('hwDeviceInfo', hwDeviceInfo)
 
-    // TODO once USB support is added
-    // const transport = useUSB ? TransportHID : TransportBLE
-    const transportLib = TransportBLE
+    const transportLib = useUSB ? TransportHID : TransportBLE
 
     if (hwDeviceInfo == null || hwDeviceInfo.hwFeatures.deviceId == null) {
       throw new Error('ledgerUtils::verifyAddress: deviceId is null')

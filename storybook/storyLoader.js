@@ -11,6 +11,7 @@ function loadStories() {
 	require('../src/components/FirstRun/AcceptTermsOfService.stories');
 	require('../src/components/FirstRun/CustomPinScreen.stories');
 	require('../src/components/FirstRun/LanguagePickerScreen.stories');
+	require('../src/components/Ledger/LedgerTransportSwitchModal.stories');
 	require('../src/components/MaintenanceScreen.stories');
 	require('../src/components/UiKit/Button.stories');
 	require('../src/components/WalletInit/ConnectNanoX/CheckNanoXScreen.stories');
@@ -20,7 +21,6 @@ function loadStories() {
 	require('../src/components/WalletInit/CreateWallet/MnemonicCheckScreen.stories');
 	require('../src/components/WalletInit/CreateWallet/MnemonicExplanationModal.stories');
 	require('../src/components/WalletInit/CreateWallet/MnemonicShowScreen.stories');
-	require('../src/components/WalletInit/LedgerSwitchModal.stories');
 	require('../src/components/WalletInit/RestoreWallet/RestoreWalletScreen.stories');
 	require('../src/components/WalletInit/RestoreWallet/WalletCredentialsScreen.stories');
 	require('../src/components/WalletInit/WalletInitScreen.stories');
@@ -35,6 +35,7 @@ const stories = [
 	'../src/components/FirstRun/AcceptTermsOfService.stories',
 	'../src/components/FirstRun/CustomPinScreen.stories',
 	'../src/components/FirstRun/LanguagePickerScreen.stories',
+	'../src/components/Ledger/LedgerTransportSwitchModal.stories',
 	'../src/components/MaintenanceScreen.stories',
 	'../src/components/UiKit/Button.stories',
 	'../src/components/WalletInit/ConnectNanoX/CheckNanoXScreen.stories',
@@ -44,7 +45,6 @@ const stories = [
 	'../src/components/WalletInit/CreateWallet/MnemonicCheckScreen.stories',
 	'../src/components/WalletInit/CreateWallet/MnemonicExplanationModal.stories',
 	'../src/components/WalletInit/CreateWallet/MnemonicShowScreen.stories',
-	'../src/components/WalletInit/LedgerSwitchModal.stories',
 	'../src/components/WalletInit/RestoreWallet/RestoreWalletScreen.stories',
 	'../src/components/WalletInit/RestoreWallet/WalletCredentialsScreen.stories',
 	'../src/components/WalletInit/WalletInitScreen.stories',

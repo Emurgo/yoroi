@@ -98,7 +98,7 @@ export const NUMBERS = {
 }
 
 const HARDWARE_WALLETS = {
-  LEDGER_NANO_X: {
+  LEDGER_NANO: {
     DEFAULT_WALLET_NAME: 'My Ledger Wallet',
     VENDOR: 'ledger.com',
     MODEL: 'NanoX',

@@ -32,17 +32,13 @@ import {ledgerMessages} from '../../../i18n/global-messages'
 import {Logger} from '../../../utils/logging'
 
 import styles from './styles/ConnectNanoXScreen.style'
-import image from '../../../assets/img/bluetooth.png'
+import bleImage from '../../../assets/img/bluetooth.png'
+import usbImage from '../../../assets/img/ledger-nano-usb.png'
 
 import type {ComponentType} from 'react'
 import type {Device} from '@ledgerhq/react-native-hw-transport-ble'
 import type {Navigation} from '../../../types/navigation'
-
-// TODO
-// type DeviceObj = {
-//   vendorId: number,
-//   productId: number,
-// }
+import type {DeviceId, DeviceObj} from '../../../crypto/byron/ledgerUtils'
 
 const messages = defineMessages({
   title: {
@@ -69,21 +65,11 @@ const messages = defineMessages({
   },
 })
 
-// TODO: check if productId is effectively what we want to store. Can we open
-// a connection using it?
 const deviceAddition = (device) => ({devices}) => {
-  if (device.id) {
-    return {
-      devices: devices.some((i) => i.id === device.id)
-        ? devices
-        : devices.concat(device),
-    }
-  } else {
-    return {
-      devices: devices.some((i) => i.productId === device.productId)
-        ? devices
-        : devices.concat(device),
-    }
+  return {
+    devices: devices.some((i) => i.id === device.id)
+      ? devices
+      : devices.concat(device),
   }
 }
 
@@ -95,7 +81,9 @@ type Props = {|
 
 type State = {|
   devices: Array<Device>,
-  deviceId: ?string,
+  // deviceId: ?string,
+  deviceId: ?DeviceId,
+  deviceObj: ?DeviceObj,
   error: ?Error,
   refreshing: boolean,
   bip44AccountPublic: ?string,
@@ -105,6 +93,7 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
   state = {
     devices: this.props.defaultDevices ? this.props.defaultDevices : [],
     deviceId: null,
+    deviceObj: null,
     error: null,
     refreshing: false,
     bip44AccountPublic: null,
@@ -113,11 +102,13 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
   subscriptions = null
   bluetoothEnabled: ?boolean = null
   transportLib: Object = null
+  useUSB: boolean = false
 
   async componentDidMount() {
     const {navigation} = this.props
-    const useUSB = navigation.getParam('useUSB')
+    const useUSB = navigation.getParam('useUSB') === true
     this.transportLib = useUSB ? TransportHID : TransportBLE
+    this.useUSB = useUSB
     if (!useUSB) {
       if (Platform.OS === 'android') {
         await PermissionsAndroid.request(
@@ -152,22 +143,35 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
   }
 
   startScan = async () => {
-    const {navigation} = this.props
-    const useUSB = navigation.getParam('useUSB')
+    const useUSB = this.useUSB
     this.setState({refreshing: true})
+
     // TODO: remove this block, just for debugging
     if (useUSB) {
       const devices = await TransportHID.list()
       Logger.debug('devices', devices)
-      this.setState({devices})
     }
+
     this.subscriptions = this.transportLib.listen({
       complete: () => {
+        Logger.debug('listen: subscription completed')
         this.setState({refreshing: false})
       },
       next: (e) => {
         if (e.type === 'add') {
-          this.setState(deviceAddition(e.descriptor))
+          Logger.debug('listen: new device detected')
+          if (useUSB) {
+            // if a device is detected, save it immediately
+            this.setState({
+              refreshing: false,
+              deviceObj: e.descriptor,
+            }, () =>
+              this.navigateToSave(),
+            )
+          } else {
+            // with bluetooth, new devices are appended in the screen
+            this.setState(deviceAddition(e.descriptor))
+          }
         }
       },
       error: (error) => {
@@ -181,6 +185,7 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
     this.setState({
       devices: [],
       deviceId: null,
+      deviceObj: null,
       error: null,
       refreshing: false,
     })
@@ -189,7 +194,7 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
 
   onSelectDevice = (device) => {
     if (this.state.deviceId != null) return
-    this.setState({deviceId: device.id, refreshing: false}, () =>
+    this.setState({deviceId: device.id.toString(), refreshing: false}, () =>
       this.navigateToSave(),
     )
   }
@@ -254,8 +259,9 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
   }
 
   render() {
-    const {intl} = this.props
+    const {intl, navigation} = this.props
     const {error, devices, refreshing, deviceId} = this.state
+    const useUSB = navigation.getParam('useUSB')
 
     const rows = [
       intl.formatMessage(ledgerMessages.enterPin),
@@ -267,10 +273,13 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
         <ProgressStep currentStep={2} totalSteps={3} displayStepNumber />
         <View style={styles.container}>
           <View style={styles.heading}>
-            <Image source={image} />
-            <Text secondary style={styles.caption}>
-              {intl.formatMessage(messages.caption)}
-            </Text>
+            <Image source={useUSB ? usbImage : bleImage} />
+            {!useUSB &&
+              (<Text secondary style={styles.caption}>
+                {intl.formatMessage(messages.caption)}
+              </Text>)
+            }
+
           </View>
           {devices.length === 0 && (
             <View style={styles.instructionsBlock}>
@@ -290,7 +299,10 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
               data={devices}
               renderItem={this.renderItem}
               ListHeaderComponent={this.ListHeader}
-              keyExtractor={(item) => item.id.toString()}
+              keyExtractor={(item) => useUSB
+                ? item.productId.toString()
+                : item.id.toString()
+              }
               refreshControl={
                 <RefreshControl
                   onRefresh={this.reload}

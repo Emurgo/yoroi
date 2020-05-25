@@ -40,11 +40,22 @@ const messages = defineMessages({
 const url = '' // 'https://yoroi-wallet.com/...'
 
 const CheckNanoXScreen = ({intl, onPress, navigation}) => {
-  const rows = [
-    intl.formatMessage(ledgerMessages.bluetoothEnabled),
+  const useUSB = navigation.getParam('useUSB')
+  const requirements: Array<string> = []
+  if (useUSB) {
+    requirements.push(intl.formatMessage(ledgerMessages.haveOTGAdapter))
+    requirements.push(intl.formatMessage(ledgerMessages.usbAlwaysConnected))
+  } else {
+    requirements.push(intl.formatMessage(ledgerMessages.bluetoothEnabled))
+    if (Platform.OS === 'android') {
+      requirements.push(intl.formatMessage(ledgerMessages.locationEnabled))
+    }
+  }
+  requirements.push(
     intl.formatMessage(ledgerMessages.appInstalled),
     intl.formatMessage(ledgerMessages.appOpened),
-  ]
+  )
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <ProgressStep currentStep={1} totalSteps={3} displayStepNumber />
@@ -55,16 +66,10 @@ const CheckNanoXScreen = ({intl, onPress, navigation}) => {
         <Text style={styles.item}>
           {intl.formatMessage(messages.introline)}
         </Text>
-        <ScrollView style={[styles.paragraph, styles.scrollView]}>
-          {rows.map((row, i) => (
+        <ScrollView style={styles.scrollView}>
+          {requirements.map((row, i) => (
             <BulletPointItem textRow={row} key={i} style={styles.item} />
           ))}
-          {Platform.OS === 'android' && (
-            <BulletPointItem
-              textRow={intl.formatMessage(ledgerMessages.locationEnabled)}
-              style={styles.item}
-            />
-          )}
         </ScrollView>
         {url !== '' && (
           <View style={styles.linkContainer}>
@@ -73,7 +78,7 @@ const CheckNanoXScreen = ({intl, onPress, navigation}) => {
         )}
       </View>
       <Button
-        onPress={onPress}
+        onPress={(event) => onPress(event, useUSB)}
         title={intl.formatMessage(
           confirmationMessages.commonButtons.continueButton,
         )}
@@ -92,8 +97,9 @@ export default injectIntl(
   (compose(
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
-      onPress: ({navigation}) => () =>
-        navigation.navigate(WALLET_INIT_ROUTES.CONNECT_NANO_X),
+      onPress: ({navigation}) => (event, useUSB) =>
+        navigation.navigate(WALLET_INIT_ROUTES.CONNECT_NANO_X,
+          {useUSB}),
     }),
   )(CheckNanoXScreen): ComponentType<ExternalProps>),
 )

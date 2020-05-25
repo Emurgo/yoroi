@@ -103,7 +103,7 @@ export default injectIntl(
     ),
     withStateHandlers(
       {
-        name: CONFIG.HARDWARE_WALLETS.LEDGER_NANO_X.DEFAULT_WALLET_NAME,
+        name: CONFIG.HARDWARE_WALLETS.LEDGER_NANO.DEFAULT_WALLET_NAME,
       },
       {
         setName: () => (name) => ({name}),

@@ -92,6 +92,18 @@ export const ledgerMessages = defineMessages({
       'Android requires location to be enabled to provide access to Bluetooth,' +
       ' but EMURGO will never store any location data.',
   },
+  haveOTGAdapter: {
+    id: 'global.ledgerMessages.haveOTGAdapter',
+    defaultMessage:
+      '!!!You have an on-the-go adapter allowing you to connect your Ledger' +
+      'device with your smartphone using a USB cable.',
+  },
+  usbAlwaysConnected: {
+    id: 'global.ledgerMessages.usbAlwaysConnected',
+    defaultMessage:
+      '!!!Your Ledger device remains connected through USB until the process' +
+      'is completed.',
+  },
   appInstalled: {
     id: 'global.ledgerMessages.appInstalled',
     defaultMessage: '!!!Cardano ADA app is installed on your Ledger device.',

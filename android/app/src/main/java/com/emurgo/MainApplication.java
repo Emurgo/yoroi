@@ -19,6 +19,7 @@ import com.rnfs.RNFSPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.horcrux.svg.SvgPackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
+import com.ledgerwallet.hid.ReactHIDPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -55,7 +56,8 @@ public class MainApplication extends Application implements ReactApplication {
         new SvgPackage(),
         new KeyStorePackage(),
         new BackgroundTimerPackage(),
-        new RNCWebViewPackage()
+        new RNCWebViewPackage(),
+        new ReactHIDPackage()
       );
     }
 

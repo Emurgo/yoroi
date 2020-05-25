@@ -70,16 +70,6 @@ const LedgerTransportSwitchModal = ({
           <Text style={styles.paragraph}>
             {intl.formatMessage(messages.usbExplanation)}
           </Text>
-
-          {/* TODO(v-almonacid): remove when USB is supported */}
-          {Platform.OS === 'android' && (
-            <View style={styles.heading}>
-              <Text secondary style={[styles.paragraph, styles.comingSoon]}>
-                {`${intl.formatMessage(globalMessages.comingSoon)}...`}
-              </Text>
-            </View>
-          )}
-
           <Button
             block
             onPress={onSelectUSB}
@@ -88,10 +78,7 @@ const LedgerTransportSwitchModal = ({
                 ? intl.formatMessage(messages.usbButtonDisabled)
                 : intl.formatMessage(messages.usbButton)
             }
-            disabled={
-              /* TODO(v-almonacid): remove `true` when USB is supported */
-              true || Platform.OS === 'iOS'
-            }
+            disabled={Platform.OS === 'iOS'}
             style={styles.button}
           />
           <Text style={styles.paragraph}>
