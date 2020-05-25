@@ -336,7 +336,7 @@
   "global.actions.dialogs.wrongPinError.message": "PIN incorrecto.",
   "global.actions.dialogs.wrongPinError.title": "PIN inválido",
   "global.availableFunds": "Fondos disponibles",
-  "global.comingSoon": "Coming soon",
+  "global.comingSoon": "Pronto disponible",
   "global.error.walletNameAlreadyTaken": "Ya tienes una billetera con este nombre",
   "global.error.walletNameTooLong": "El nombre de la billetera no puede exceder los 40 caracteres",
   "global.ledgerMessages.appInstalled": "La aplicación ADA de Cardano está instalada en tu dispositivo Ledger Nano X.",
