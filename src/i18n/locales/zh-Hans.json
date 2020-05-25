@@ -336,6 +336,7 @@
   "global.actions.dialogs.wrongPinError.message": "PIN码不正确",
   "global.actions.dialogs.wrongPinError.title": "无效的PIN码",
   "global.availableFunds": "可用资金",
+  "global.comingSoon": "Coming soon",
   "global.error.walletNameAlreadyTaken": "您已经有一个使用此名称的钱包",
   "global.error.walletNameTooLong": "钱包名称不能超过40个字母",
   "global.ledgerMessages.appInstalled": "Cardano ADA app is installed on your Ledger Nano X device.",
