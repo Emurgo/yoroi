@@ -336,6 +336,7 @@
   "global.actions.dialogs.wrongPinError.message": "неверный PIN-код.",
   "global.actions.dialogs.wrongPinError.title": "Неверный PIN",
   "global.availableFunds": "Доступные средства",
+  "global.comingSoon": "Coming soon",
   "global.error.walletNameAlreadyTaken": "У Вас уже есть кошелек с таким именем",
   "global.error.walletNameTooLong": "Имя кошелька не может превышать 40 символов",
   "global.ledgerMessages.appInstalled": "Cardano ADA app is installed on your Ledger Nano X device.",
