@@ -5,6 +5,7 @@ import {View, ScrollView, Platform} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import {Text, Button, Modal} from '../UiKit'
+import globalMessages from '../../i18n/global-messages'
 
 import styles from './styles/LedgerTransportSwitchModal.style'
 
@@ -71,9 +72,13 @@ const LedgerTransportSwitchModal = ({
           </Text>
 
           {/* TODO(v-almonacid): remove when USB is supported */}
-          <Text secondary style={[styles.paragraph, styles.comingSoon]}>
-            {'Coming soon...'}
-          </Text>
+          {Platform.OS === 'android' && (
+            <View style={styles.heading}>
+              <Text secondary style={[styles.paragraph, styles.comingSoon]}>
+                {`${intl.formatMessage(globalMessages.comingSoon)}...`}
+              </Text>
+            </View>
+          )}
 
           <Button
             block
