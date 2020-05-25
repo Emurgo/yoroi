@@ -336,6 +336,7 @@
   "global.actions.dialogs.wrongPinError.message": "PIN salah.",
   "global.actions.dialogs.wrongPinError.title": "PIN tidak valid",
   "global.availableFunds": "Dana yang tersedia",
+  "global.comingSoon": "Coming soon",
   "global.error.walletNameAlreadyTaken": "Kamu sudah mempunyai wallet dengan nama ini",
   "global.error.walletNameTooLong": "Nama wallet tidak boleh melebihi dari 40 huruf",
   "global.ledgerMessages.appInstalled": "Cardano ADA app is installed on your Ledger Nano X device.",
