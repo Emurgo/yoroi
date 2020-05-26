@@ -336,7 +336,7 @@
   "global.actions.dialogs.wrongPinError.message": "入力したPIN が間違っています 。",
   "global.actions.dialogs.wrongPinError.title": "PINが無効です。",
   "global.availableFunds": "利用可能な資金",
-  "global.comingSoon": "Coming soon",
+  "global.comingSoon": "間もなくリリース",
   "global.error.walletNameAlreadyTaken": "同じ名前のウォレットが存在します。",
   "global.error.walletNameTooLong": "ウォレット名が40文字を超えています。",
   "global.ledgerMessages.appInstalled": "Cardano ADAアプリがLedger Nano Xデバイスにインストールされています。",
