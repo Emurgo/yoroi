@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.emurgo">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -12,6 +13,10 @@
     <!-- note(v-almonacid): added FINE_LOCATION instead of COARSE_LOCATION as target API >= 29 -->
     <!-- see https://developer.android.com/guide/topics/connectivity/bluetooth-le.html#permissions -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission
+      android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE"
+      tools:node="remove"
+    />
 
     <application
       android:name=".MainApplication"
