@@ -247,7 +247,7 @@
   "components.walletinit.passwordstrengthindicator.passwordBigLength": "10 characters",
   "components.walletinit.passwordstrengthindicator.passwordRequirementsNote": "The password needs to contain at least:",
   "components.walletinit.restorewallet.restorewalletscreen.instructions": "To restore your wallet, please provide the recovery phrase generated when you created your wallet for the first time.",
-  "components.walletinit.restorewallet.restorewalletscreen.invalidchecksum": "Please enter valid mnemonic.",
+  "components.walletinit.restorewallet.restorewalletscreen.invalidchecksum": "Please enter valid recovery phrase.",
   "components.walletinit.restorewallet.restorewalletscreen.mnemonicInputLabel": "Recovery phrase",
   "components.walletinit.restorewallet.restorewalletscreen.restoreButton": "Restore wallet",
   "components.walletinit.restorewallet.restorewalletscreen.title": "Restore wallet",
