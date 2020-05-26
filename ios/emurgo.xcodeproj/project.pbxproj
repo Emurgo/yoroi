@@ -668,7 +668,7 @@
 		E88E56A3C4A142ADB2AC0796 /* RNRandomBytes.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNRandomBytes.xcodeproj; path = "../node_modules/react-native-randombytes/RNRandomBytes.xcodeproj"; sourceTree = "<group>"; };
 		E932483C24647DA8007E19F0 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/ios/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		E9A1C61824183FB700151CFA /* emurgo copy2-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "emurgo copy2-Info.plist"; path = "/Users/vicente/dev/emurgo/yoroi-mobile/ios/emurgo copy2-Info.plist"; sourceTree = "<absolute>"; };
-		E9A1C80A24185CCA00151CFA /* emurgo-nightly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "emurgo-nightly.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E9A1C80A24185CCA00151CFA /* Yoroi Nightly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Yoroi Nightly.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9A1C80B24185CCA00151CFA /* emurgo copy3-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "emurgo copy3-Info.plist"; path = "/Users/vicente/dev/emurgo/yoroi-mobile/ios/emurgo copy3-Info.plist"; sourceTree = "<absolute>"; };
 		E9DE0E6523D9F064000B82BE /* ChainLibs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ChainLibs.xcodeproj; path = "../node_modules/react-native-chain-libs/ios/ChainLibs.xcodeproj"; sourceTree = "<group>"; };
 		E9EACF84245B42C40062ED1D /* emurgo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "emurgo-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -1102,7 +1102,7 @@
 				13B07F961A680F5B00A75B9A /* emurgo.app */,
 				00E356EE1AD99517003FC87E /* emurgoTests.xctest */,
 				2E3E7D012298ACEA00D5C487 /* emurgo-staging.app */,
-				E9A1C80A24185CCA00151CFA /* emurgo-nightly.app */,
+				E9A1C80A24185CCA00151CFA /* Yoroi Nightly.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1334,7 +1334,7 @@
 			);
 			name = "emurgo-nightly";
 			productName = "Hello World";
-			productReference = E9A1C80A24185CCA00151CFA /* emurgo-nightly.app */;
+			productReference = E9A1C80A24185CCA00151CFA /* Yoroi Nightly.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -2319,7 +2319,7 @@
 				BUNDLE_DISPLAY_NAME = Yoroi;
 				BUNDLE_ID_SUFFIX = "";
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 57;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -2343,7 +2343,7 @@
 				INFOPLIST_PREPROCESS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.1.0;
+				MARKETING_VERSION = 2.2.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2366,7 +2366,7 @@
 				BUNDLE_DISPLAY_NAME = Yoroi;
 				BUNDLE_ID_SUFFIX = "";
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 57;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
@@ -2389,7 +2389,7 @@
 				INFOPLIST_PREPROCESS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.1.0;
+				MARKETING_VERSION = 2.2.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2410,7 +2410,7 @@
 				BUNDLE_DISPLAY_NAME = Yoroi;
 				BUNDLE_ID_SUFFIX = "";
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 57;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -2438,7 +2438,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
-				MARKETING_VERSION = 2.1.0;
+				MARKETING_VERSION = 2.2.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2460,7 +2460,7 @@
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 57;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -2488,7 +2488,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
-				MARKETING_VERSION = 2.1.0;
+				MARKETING_VERSION = 2.2.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2510,7 +2510,7 @@
 				BUNDLE_DISPLAY_NAME = Yoroi;
 				BUNDLE_ID_SUFFIX = "";
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 57;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
@@ -2537,7 +2537,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
-				MARKETING_VERSION = 2.1.0;
+				MARKETING_VERSION = 2.2.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2558,7 +2558,7 @@
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 57;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
@@ -2585,7 +2585,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
-				MARKETING_VERSION = 2.1.0;
+				MARKETING_VERSION = 2.2.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2771,7 +2771,7 @@
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 57;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -2795,7 +2795,7 @@
 				INFOPLIST_PREPROCESS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.1.0;
+				MARKETING_VERSION = 2.2.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2912,7 +2912,7 @@
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 57;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
@@ -2935,7 +2935,7 @@
 				INFOPLIST_PREPROCESS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.1.0;
+				MARKETING_VERSION = 2.2.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2997,7 +2997,7 @@
 				BUNDLE_DISPLAY_NAME = Yoroi;
 				BUNDLE_ID_SUFFIX = "";
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 57;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -3021,14 +3021,14 @@
 				INFOPLIST_PREPROCESS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.1.0;
+				MARKETING_VERSION = 2.2.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-nightly";
-				PRODUCT_NAME = "emurgo-nightly";
+				PRODUCT_NAME = "Yoroi Nightly";
 				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-nightly-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -3043,7 +3043,7 @@
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 57;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -3067,14 +3067,14 @@
 				INFOPLIST_PREPROCESS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.1.0;
+				MARKETING_VERSION = 2.2.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-nightly";
-				PRODUCT_NAME = "emurgo-nightly";
+				PRODUCT_NAME = "Yoroi Nightly";
 				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-nightly-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -3089,7 +3089,9 @@
 				BUNDLE_DISPLAY_NAME = Yoroi;
 				BUNDLE_ID_SUFFIX = "";
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 40;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 57;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
@@ -3112,14 +3114,15 @@
 				INFOPLIST_PREPROCESS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.1.0;
+				MARKETING_VERSION = 2.2.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-nightly";
-				PRODUCT_NAME = "emurgo-nightly";
+				PRODUCT_NAME = "Yoroi Nightly";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.emurgo.yoroi-nightly";
 				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-nightly-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -3133,7 +3136,7 @@
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 57;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
@@ -3156,14 +3159,14 @@
 				INFOPLIST_PREPROCESS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.1.0;
+				MARKETING_VERSION = 2.2.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-nightly";
-				PRODUCT_NAME = "emurgo-nightly";
+				PRODUCT_NAME = "Yoroi Nightly";
 				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-nightly-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
