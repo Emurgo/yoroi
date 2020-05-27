@@ -360,7 +360,7 @@
   "global.totalAda": "Total ADA",
   "global.tryAgain": "Essayez à nouveau",
   "global.txLabels.amount": "Montant",
-  "global.txLabels.balanceAfterTx": "Balance after transaction",
+  "global.txLabels.balanceAfterTx": "Solde après transaction",
   "global.txLabels.fees": "Frais",
   "global.txLabels.password": "Mot de passe de paiement",
   "global.txLabels.receiver": "Destinataire",
