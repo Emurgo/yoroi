@@ -98,8 +98,7 @@ export default injectIntl(
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
       onPress: ({navigation}) => (event, useUSB) =>
-        navigation.navigate(WALLET_INIT_ROUTES.CONNECT_NANO_X,
-          {useUSB}),
+        navigation.navigate(WALLET_INIT_ROUTES.CONNECT_NANO_X, {useUSB}),
     }),
   )(CheckNanoXScreen): ComponentType<ExternalProps>),
 )

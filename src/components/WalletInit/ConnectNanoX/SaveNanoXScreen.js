@@ -15,6 +15,7 @@ import {walletNamesSelector} from '../../../selectors'
 import {createWalletWithBip44Account, saveHW} from '../../../actions'
 import {ROOT_ROUTES} from '../../../RoutesList'
 import {CONFIG} from '../../../config'
+import assert from '../../../utils/assert'
 
 import styles from './styles/SaveNanoXScreen.style'
 import image from '../../../assets/img/ledger_2.png'
@@ -119,6 +120,10 @@ export default injectIntl(
         navigation,
       }) => async () => {
         const hwDeviceInfo = navigation.getParam('hwDeviceInfo')
+        assert.assert(
+          hwDeviceInfo != null,
+          'SaveNanoXScreen::onPress hwDeviceInfo',
+        )
         await createWalletWithBip44Account(
           name,
           hwDeviceInfo.bip44AccountPublic,

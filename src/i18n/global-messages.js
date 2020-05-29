@@ -122,6 +122,18 @@ export const ledgerMessages = defineMessages({
     id: 'global.ledgerMessages.enableLocation',
     defaultMessage: '!!!Enable location services.',
   },
+  connectUsb: {
+    id: 'global.ledgerMessages.connectUsb',
+    defaultMessage:
+      "!!!Connect your Ledger device through your smartphone's" +
+      'USB port using your OTG adapter.',
+  },
+  keepUsbConnected: {
+    id: 'global.ledgerMessages.keepUsbConnected',
+    defaultMessage:
+      '!!!Make sure your device remains connected until the ' +
+      'operation is completed.',
+  },
   enterPin: {
     id: 'global.ledgerMessages.enterPin',
     defaultMessage: '!!!Power on your ledger device and enter your PIN.',

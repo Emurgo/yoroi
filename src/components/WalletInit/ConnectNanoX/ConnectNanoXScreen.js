@@ -30,7 +30,10 @@ import {Text, BulletPointItem, ProgressStep, Button} from '../../UiKit'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import DeviceItem from './DeviceItem'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
-import {ledgerMessages, confirmationMessages} from '../../../i18n/global-messages'
+import {
+  ledgerMessages,
+  confirmationMessages,
+} from '../../../i18n/global-messages'
 import {Logger} from '../../../utils/logging'
 
 import styles from './styles/ConnectNanoXScreen.style'
@@ -83,7 +86,6 @@ type Props = {|
 
 type State = {|
   devices: Array<Device>,
-  // deviceId: ?string,
   deviceId: ?DeviceId,
   deviceObj: ?DeviceObj,
   error: ?Error,
@@ -164,10 +166,6 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
               refreshing: false,
               deviceObj: e.descriptor,
             })
-            // await this.navigateToSave(e.descriptor)
-            // , () =>
-            //   this.navigateToSave(),
-            // )
           } else {
             // with bluetooth, new devices are appended in the screen
             this.setState(deviceAddition(e.descriptor))
@@ -194,21 +192,25 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
 
   onSelectDevice = (device) => {
     if (this.state.deviceId != null) return
-    this.setState({deviceId: device.id.toString(), refreshing: false}, () =>
-      this.navigateToSave(device.id.toString()),
+    if (this.subscriptions != null) this.subscriptions.unsubscribe()
+    this.setState(
+      {deviceId: device.id.toString(), refreshing: false},
+      async () => await this.navigateToSave(),
     )
   }
 
-  navigateToSave = async (descriptor: DeviceId | DeviceObj) => {
+  navigateToSave = async (deviceObj: ?DeviceObj) => {
     try {
-      const {deviceId, deviceObj} = this.state
-      const {navigation} = this.props
       this.setState({waiting: true})
-      // const descriptor = this.useUSB ? deviceObj : deviceId
-      const transport = await this.transportLib.open(descriptor)
-      const hwDeviceInfo = await getHWDeviceInfo(transport)
-      const bip44AccountPublic = hwDeviceInfo?.bip44AccountPublic
-      this.setState({bip44AccountPublic, waiting: false})
+      const {navigation} = this.props
+      const {deviceId} = this.state
+      if (deviceId == null && deviceObj == null) return
+      const hwDeviceInfo = await getHWDeviceInfo(
+        deviceId,
+        deviceObj,
+        this.useUSB,
+      )
+      this.setState({waiting: false})
       navigation.navigate(WALLET_INIT_ROUTES.SAVE_NANO_X, {hwDeviceInfo})
     } catch (error) {
       if (error.statusCode === ErrorCodes.ERR_REJECTED_BY_USER) {
@@ -224,7 +226,7 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
   )
 
   ListHeader = () => {
-    const {error, deviceId, deviceObj, bip44AccountPublic} = this.state
+    const {error, waiting} = this.state
     const {intl} = this.props
     if (error != null) {
       let msg
@@ -247,9 +249,7 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
           <Text style={[styles.error, styles.paragraphText]}>{msg}</Text>
         </View>
       )
-    } else if (
-      (deviceId != null || deviceObj != null)
-        && bip44AccountPublic == null) {
+    } else if (waiting) {
       return (
         <View style={styles.listHeader}>
           <Text style={[styles.paragraph, styles.paragraphText]}>
@@ -270,7 +270,6 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
       refreshing,
       deviceId,
       deviceObj,
-      bip44AccountPublic,
       waiting,
     } = this.state
     const useUSB = navigation.getParam('useUSB')
@@ -285,14 +284,13 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
         <View style={styles.container}>
           <View style={styles.heading}>
             <Image source={useUSB ? usbImage : bleImage} />
-            {!useUSB &&
-              (<Text secondary style={styles.caption}>
+            {!useUSB && (
+              <Text secondary style={styles.caption}>
                 {intl.formatMessage(messages.caption)}
-              </Text>)
-            }
-
+              </Text>
+            )}
           </View>
-          {devices.length === 0 || deviceObj == null && (
+          {(devices.length === 0 || (useUSB === true && deviceObj == null)) && (
             <View style={styles.instructionsBlock}>
               <Text styles={styles.paragraphText}>
                 {intl.formatMessage(messages.introline)}
@@ -310,10 +308,7 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
               data={devices}
               renderItem={this.renderItem}
               ListHeaderComponent={this.ListHeader}
-              keyExtractor={(item) => useUSB
-                ? item.productId.toString()
-                : item.id.toString()
-              }
+              keyExtractor={(item) => item.id.toString()}
               refreshControl={
                 <RefreshControl
                   onRefresh={this.reload}
@@ -331,11 +326,7 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
               confirmationMessages.commonButtons.confirmButton,
             )}
             style={styles.button}
-            disabled={
-              refreshing ||
-              deviceObj == null ||
-              (deviceObj != null && bip44AccountPublic != null)
-            }
+            disabled={refreshing || deviceObj == null || waiting}
           />
         )}
         {waiting && <ActivityIndicator />}

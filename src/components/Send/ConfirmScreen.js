@@ -12,7 +12,6 @@ import {ErrorCodes} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {
   Text,
   Button,
-  BulletPointItem,
   OfflineBanner,
   ValidatedTextInput,
   StatusBar,
@@ -28,7 +27,6 @@ import globalMessages, {
   errorMessages,
   txLabels,
   confirmationMessages,
-  ledgerMessages,
 } from '../../i18n/global-messages'
 import walletManager, {SystemAuthDisabled} from '../../crypto/wallet'
 import {
@@ -51,6 +49,8 @@ import {formatAdaWithSymbol, formatAdaWithText} from '../../utils/format'
 import {NetworkError, ApiError} from '../../api/errors'
 import {WrongPassword} from '../../crypto/errors'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
+import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
+import HWInstructions from '../Ledger/HWInstructions'
 
 import styles from './styles/ConfirmScreen.style'
 
@@ -66,34 +66,7 @@ const messages = defineMessages({
     id: 'components.send.confirmscreen.confirmWithLedger',
     defaultMessage: '!!!Confirm with Ledger',
   },
-  beforeConfirm: {
-    id: 'components.send.confirmscreen.beforeConfirm',
-    defaultMessage:
-      '!!!Before tapping on confirm, please follow these instructions:',
-  },
 })
-
-const RenderHWInstructions = ({intl}) => {
-  const rows = []
-  if (Platform.OS === 'android') {
-    rows.push(intl.formatMessage(ledgerMessages.enableLocation))
-  }
-  rows.push(
-    intl.formatMessage(ledgerMessages.enableTransport),
-    intl.formatMessage(ledgerMessages.enterPin),
-    intl.formatMessage(ledgerMessages.openApp),
-  )
-  return (
-    <View style={styles.instructionsBlock}>
-      <Text styles={styles.paragraphText}>
-        {intl.formatMessage(messages.beforeConfirm)}
-      </Text>
-      {rows.map((row, i) => (
-        <BulletPointItem textRow={row} key={i} style={styles.item} />
-      ))}
-    </View>
-  )
-}
 
 const handleOnConfirm = async (
   navigation,
@@ -106,6 +79,7 @@ const handleOnConfirm = async (
   withPleaseWaitModal,
   withDisabledButton,
   intl,
+  useUSB,
 ) => {
   const transactionData = navigation.getParam('transactionData')
 
@@ -163,6 +137,7 @@ const handleOnConfirm = async (
           ledgerSignTxPayload,
           partialTx,
           hwDeviceInfo,
+          useUSB,
         )
 
         await submitTx(
@@ -230,6 +205,12 @@ const handleOnConfirm = async (
   }
 }
 
+const LEDGER_DIALOG_STEPS = {
+  CLOSED: 'CLOSED',
+  CHOOSE_TRANSPORT: 'CHOOSE_TRANSPORT',
+  // PAIR_DEVICE: 'PAIR_DEVICE', // we may consider adding an additional screen
+}
+
 const ConfirmScreen = ({
   onConfirm,
   intl,
@@ -240,6 +221,10 @@ const ConfirmScreen = ({
   isHW,
   sendingTransaction,
   buttonDisabled,
+  ledgerDialogStep,
+  closeLedgerDialog,
+  setTransport,
+  useUSB,
 }) => {
   const amount = navigation.getParam('amount')
   const address = navigation.getParam('address')
@@ -295,7 +280,7 @@ const ConfirmScreen = ({
             )
           /* eslint-enable indent */
           }
-          {isHW && <RenderHWInstructions intl={intl} />}
+          {isHW && <HWInstructions useUSB={useUSB} addMargin />}
         </ScrollView>
         <View style={styles.actions}>
           <Button
@@ -307,6 +292,20 @@ const ConfirmScreen = ({
           />
         </View>
       </View>
+
+      {/* eslint-disable indent */
+      isHW &&
+        Platform.OS === 'android' && (
+          <LedgerTransportSwitchModal
+            visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT}
+            onRequestClose={closeLedgerDialog}
+            onSelectUSB={(event) => setTransport(event, true)}
+            onSelectBLE={(event) => setTransport(event, false)}
+            showCloseIcon
+          />
+        )
+      /* eslint-enable indent */
+      }
 
       <PleaseWaitModal
         title={intl.formatMessage(txLabels.submittingTx)}
@@ -335,6 +334,8 @@ export default injectIntl(
         password: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
         sendingTransaction: false,
         buttonDisabled: false,
+        useUSB: false,
+        ledgerDialogStep: LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT,
       },
       {
         setPassword: (state) => (value) => ({password: value}),
@@ -342,6 +343,13 @@ export default injectIntl(
           sendingTransaction,
         }),
         setButtonDisabled: () => (buttonDisabled) => ({buttonDisabled}),
+        closeLedgerDialog: (state) => () => ({
+          ledgerDialogStep: LEDGER_DIALOG_STEPS.CLOSED,
+        }),
+        setTransport: (state) => (event, useUSB) => ({
+          ledgerDialogStep: LEDGER_DIALOG_STEPS.CLOSED,
+          useUSB,
+        }),
       },
     ),
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
@@ -380,6 +388,7 @@ export default injectIntl(
           withPleaseWaitModal,
           withDisabledButton,
           intl,
+          useUSB,
         }) => async (event) => {
           await handleOnConfirm(
             navigation,
@@ -392,6 +401,7 @@ export default injectIntl(
             withPleaseWaitModal,
             withDisabledButton,
             intl,
+            useUSB,
           )
         },
         1000,

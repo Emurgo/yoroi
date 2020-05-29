@@ -143,6 +143,7 @@ const AddressView = ({
       path={formatBIP44(0, 'External', index)}
       isWaiting={isWaiting}
       disableButtons={isWaiting}
+      useUSB={useUSB}
     />
   </>
 )
@@ -177,7 +178,7 @@ export default injectIntl(
         openTransportSwitch: (state) => () => ({
           addressDialogStep: ADDRESS_DIALOG_STEPS.CHOOSE_TRANSPORT,
         }),
-        openAddressVerify: (state) => (useUSB) => ({
+        openAddressVerify: (state) => (event, useUSB) => ({
           addressDialogStep: ADDRESS_DIALOG_STEPS.ADDRESS_VERIFY,
           useUSB,
         }),
