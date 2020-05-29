@@ -3,7 +3,8 @@
 import AppAda, {ErrorCodes} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {BigNumber} from 'bignumber.js'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
-import TransportHID from '@ledgerhq/react-native-hid'
+// import TransportHID from '@ledgerhq/react-native-hid'
+import TransportHID from '@v-almonacid/react-native-hid'
 import {TransportStatusError} from '@ledgerhq/hw-transport'
 import {BleError} from 'react-native-ble-plx'
 import ExtendableError from 'es6-error'
@@ -207,6 +208,7 @@ export const getHWDeviceInfo = async (
       deviceId,
     })
     Logger.info('ledgerUtils::getHWDeviceInfo: Ledger device OK')
+    Logger.info(hwDeviceInfo)
     return hwDeviceInfo
   } catch (e) {
     if (_isUserError(e)) {

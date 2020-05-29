@@ -56,4 +56,8 @@ export default StyleSheet.create({
     fontSize: 14,
     lineHeight: 22,
   },
+  button: {
+    marginHorizontal: 10,
+    marginBottom: 8,
+  },
 })

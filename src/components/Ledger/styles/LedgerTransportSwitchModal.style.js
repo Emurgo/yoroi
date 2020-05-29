@@ -30,8 +30,4 @@ export default StyleSheet.create({
     marginHorizontal: 10,
     marginBottom: spacing.paragraphBottomMargin,
   },
-  // TODO: remove when USB is supported
-  comingSoon: {
-    fontStyle: 'italic',
-  },
 })
