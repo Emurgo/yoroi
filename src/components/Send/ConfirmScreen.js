@@ -17,6 +17,7 @@ import {
   StatusBar,
   Banner,
   PleaseWaitModal,
+  Modal,
 } from '../UiKit'
 import {
   easyConfirmationSelector,
@@ -44,12 +45,14 @@ import {
   submitTransaction,
   submitSignedTx,
 } from '../../actions'
+import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {formatAdaWithSymbol, formatAdaWithText} from '../../utils/format'
 import {NetworkError, ApiError} from '../../api/errors'
 import {WrongPassword} from '../../crypto/errors'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
+import LedgerConnect from '../Ledger/LedgerConnect'
 import HWInstructions from '../Ledger/HWInstructions'
 
 import styles from './styles/ConfirmScreen.style'
@@ -208,7 +211,7 @@ const handleOnConfirm = async (
 const LEDGER_DIALOG_STEPS = {
   CLOSED: 'CLOSED',
   CHOOSE_TRANSPORT: 'CHOOSE_TRANSPORT',
-  // PAIR_DEVICE: 'PAIR_DEVICE', // we may consider adding an additional screen
+  LEDGER_CONNECT: 'LEDGER_CONNECT',
 }
 
 const ConfirmScreen = ({
@@ -223,8 +226,10 @@ const ConfirmScreen = ({
   buttonDisabled,
   ledgerDialogStep,
   closeLedgerDialog,
-  setTransport,
   useUSB,
+  onChooseTransport,
+  setLedgerDeviceId,
+  setLedgerDeviceObj,
 }) => {
   const amount = navigation.getParam('amount')
   const address = navigation.getParam('address')
@@ -296,13 +301,29 @@ const ConfirmScreen = ({
       {/* eslint-disable indent */
       isHW &&
         Platform.OS === 'android' && (
-          <LedgerTransportSwitchModal
-            visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT}
-            onRequestClose={closeLedgerDialog}
-            onSelectUSB={(event) => setTransport(event, true)}
-            onSelectBLE={(event) => setTransport(event, false)}
-            showCloseIcon
-          />
+          <>
+            <LedgerTransportSwitchModal
+              visible={
+                ledgerDialogStep === LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT
+              }
+              onRequestClose={closeLedgerDialog}
+              onSelectUSB={(event) => onChooseTransport(event, true)}
+              onSelectBLE={(event) => onChooseTransport(event, false)}
+              showCloseIcon
+            />
+            <Modal
+              visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.LEDGER_CONNECT}
+              onRequestClose={closeLedgerDialog}
+            >
+              <LedgerConnect
+                onSelectBLE={setLedgerDeviceId}
+                onSelectUSB={setLedgerDeviceObj}
+                onComplete={closeLedgerDialog}
+                useUSB={useUSB}
+                onWaitingMessage={''}
+              />
+            </Modal>
+          </>
         )
       /* eslint-enable indent */
       }
@@ -327,6 +348,8 @@ export default injectIntl(
       {
         submitTransaction,
         submitSignedTx,
+        setLedgerDeviceId,
+        setLedgerDeviceObj,
       },
     ),
     withStateHandlers(
@@ -343,13 +366,13 @@ export default injectIntl(
           sendingTransaction,
         }),
         setButtonDisabled: () => (buttonDisabled) => ({buttonDisabled}),
+        openLedgerConnect: (state) => () => ({
+          ledgerDialogStep: LEDGER_DIALOG_STEPS.LEDGER_CONNECT,
+        }),
         closeLedgerDialog: (state) => () => ({
           ledgerDialogStep: LEDGER_DIALOG_STEPS.CLOSED,
         }),
-        setTransport: (state) => (event, useUSB) => ({
-          ledgerDialogStep: LEDGER_DIALOG_STEPS.CLOSED,
-          useUSB,
-        }),
+        setUseUSB: (state) => (useUSB) => ({useUSB}),
       },
     ),
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
@@ -376,6 +399,22 @@ export default injectIntl(
       },
     }),
     withHandlers({
+      onChooseTransport: ({
+        hwDeviceInfo,
+        setUseUSB,
+        openLedgerConnect,
+        closeLedgerDialog,
+      }) => (event, useUSB) => {
+        setUseUSB(useUSB)
+        if (
+          (useUSB && hwDeviceInfo.hwFeatures.deviceObj == null) ||
+          (!useUSB && hwDeviceInfo.hwFeatures.deviceId == null)
+        ) {
+          openLedgerConnect()
+        } else {
+          closeLedgerDialog()
+        }
+      },
       onConfirm: ignoreConcurrentAsyncHandler(
         ({
           navigation,

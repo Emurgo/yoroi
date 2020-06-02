@@ -559,16 +559,3 @@ export const checkForFlawedWallets = () => async (dispatch: Dispatch<any>) => {
     Logger.warn('actions::checkForFlawedWallets error', e)
   }
 }
-
-const _saveHW = (hwDeviceInfo) => ({
-  path: ['wallet', 'hwDeviceInfo'],
-  payload: hwDeviceInfo,
-  reducer: (state, value) => value,
-  type: 'SAVE_HW',
-})
-
-export const saveHW = (hwDeviceInfo: HWDeviceInfo) => (
-  dispatch: Dispatch<any>,
-) => {
-  dispatch(_saveHW(hwDeviceInfo))
-}

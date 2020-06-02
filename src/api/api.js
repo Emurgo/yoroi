@@ -72,7 +72,7 @@ const _fetch = (
 
         _checkResponse(r, payload)
         const response = await r.json()
-        Logger.debug('Response:', response)
+        // Logger.debug('Response:', response)
         return response
       })
   )

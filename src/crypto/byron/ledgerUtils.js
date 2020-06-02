@@ -242,6 +242,7 @@ export const getHWDeviceInfo = async (
     })
     Logger.info('ledgerUtils::getHWDeviceInfo: Ledger device OK')
     Logger.info('hwDeviceInfo', hwDeviceInfo)
+    await transport.close()
     return hwDeviceInfo
   } catch (e) {
     if (_isUserError(e)) {
@@ -285,6 +286,7 @@ export const verifyAddress = async (
     const appAda = new AppAda(transport)
 
     await appAda.showAddress(path)
+    await transport.close()
   } catch (e) {
     if (_isUserError(e)) {
       Logger.info('ledgerUtils::verifyAddress: User-side error', e)
@@ -453,6 +455,8 @@ export const signTxWithLedger = async (
       payload.inputs,
       payload.outputs,
     )
+
+    await transport.close()
 
     const decodedRustTx = decodeRustTx(partialTx.cbor_encoded_tx)
     // replace fake witnesses by correct one
