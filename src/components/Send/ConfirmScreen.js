@@ -228,8 +228,8 @@ const ConfirmScreen = ({
   closeLedgerDialog,
   useUSB,
   onChooseTransport,
-  setLedgerDeviceId,
-  setLedgerDeviceObj,
+  onConnectBLE,
+  onConnectUSB,
 }) => {
   const amount = navigation.getParam('amount')
   const address = navigation.getParam('address')
@@ -316,11 +316,9 @@ const ConfirmScreen = ({
               onRequestClose={closeLedgerDialog}
             >
               <LedgerConnect
-                onSelectBLE={setLedgerDeviceId}
-                onSelectUSB={setLedgerDeviceObj}
-                onComplete={closeLedgerDialog}
+                onConnectBLE={onConnectBLE}
+                onConnectUSB={onConnectUSB}
                 useUSB={useUSB}
-                onWaitingMessage={''}
               />
             </Modal>
           </>
@@ -414,6 +412,16 @@ export default injectIntl(
         } else {
           closeLedgerDialog()
         }
+      },
+      onConnectUSB: ({setLedgerDeviceObj, closeLedgerDialog}) => (
+        deviceObj,
+      ) => {
+        setLedgerDeviceObj(deviceObj)
+        closeLedgerDialog()
+      },
+      onConnectBLE: ({setLedgerDeviceId, closeLedgerDialog}) => (deviceId) => {
+        setLedgerDeviceId(deviceId)
+        closeLedgerDialog()
       },
       onConfirm: ignoreConcurrentAsyncHandler(
         ({

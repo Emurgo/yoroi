@@ -26,8 +26,8 @@ const LedgerConnectModal = ({
   <Modal visible={visible} onRequestClose={onRequestClose}>
     <LedgerConnect
       navigation={navigation}
-      onSelectBLE={() => ({})}
-      onSelectUSB={() => ({})}
+      onConnectBLE={() => ({})}
+      onConnectUSB={() => ({})}
       onComplete={() => ({})}
       useUSB={useUSB}
       onWaitingMessage={''}

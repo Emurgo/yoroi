@@ -4,7 +4,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withStateHandlers, withHandlers} from 'recompose'
-import {View, TouchableOpacity, Image} from 'react-native'
+import {View, TouchableOpacity, Image, Platform} from 'react-native'
 import {withNavigation} from 'react-navigation'
 import {injectIntl, intlShape} from 'react-intl'
 
@@ -87,13 +87,14 @@ type Props = {|
   closeDetails: () => void,
   onVerifyAddress: () => void,
   addressDialogStep: AddressDialogSteps,
+  onToggleAddrVerifyDialog: () => void,
   openTransportSwitch: () => void,
   onChooseTransport: (Object, boolean) => void,
   openAddressVerify: () => void,
   useUSB: boolean,
   isWaiting: boolean,
-  setLedgerDeviceId: (DeviceId) => void,
-  setLedgerDeviceObj: (DeviceObj) => void,
+  onConnectBLE: (DeviceId) => void,
+  onConnectUSB: (DeviceObj) => void,
 |}
 
 const AddressView = ({
@@ -105,13 +106,14 @@ const AddressView = ({
   closeDetails,
   onVerifyAddress,
   addressDialogStep,
+  onToggleAddrVerifyDialog,
   openTransportSwitch,
   onChooseTransport,
   openAddressVerify,
   useUSB,
   isWaiting,
-  setLedgerDeviceId,
-  setLedgerDeviceObj,
+  onConnectUSB,
+  onConnectBLE,
 }: Props) => (
   <>
     <TouchableOpacity activeOpacity={0.5} onPress={openDetails}>
@@ -137,7 +139,7 @@ const AddressView = ({
       visible={addressDialogStep === ADDRESS_DIALOG_STEPS.ADDRESS_DETAILS}
       address={address}
       onRequestClose={closeDetails}
-      onAddressVerify={openTransportSwitch}
+      onAddressVerify={onToggleAddrVerifyDialog}
     />
 
     <LedgerTransportSwitchModal
@@ -153,11 +155,9 @@ const AddressView = ({
       onRequestClose={closeDetails}
     >
       <LedgerConnect
-        onSelectBLE={setLedgerDeviceId}
-        onSelectUSB={setLedgerDeviceObj}
-        onComplete={openAddressVerify}
+        onConnectBLE={onConnectBLE}
+        onConnectUSB={onConnectUSB}
         useUSB={useUSB}
-        onWaitingMessage={''}
       />
     </Modal>
 
@@ -233,6 +233,16 @@ export default injectIntl(
           setIsWaiting(false)
         }
       },
+      onToggleAddrVerifyDialog: ({
+        openTransportSwitch,
+        openAddressVerify,
+      }) => () => {
+        if (Platform.OS === 'android') {
+          openTransportSwitch()
+        } else {
+          openAddressVerify()
+        }
+      },
     }),
     withHandlers({
       onChooseTransport: ({
@@ -251,6 +261,16 @@ export default injectIntl(
         } else {
           openAddressVerify()
         }
+      },
+      onConnectUSB: ({setLedgerDeviceObj, openAddressVerify}) => (
+        deviceObj,
+      ) => {
+        setLedgerDeviceObj(deviceObj)
+        openAddressVerify()
+      },
+      onConnectBLE: ({setLedgerDeviceId, openAddressVerify}) => (deviceId) => {
+        setLedgerDeviceId(deviceId)
+        openAddressVerify()
       },
       onVerifyAddress: ({
         intl,

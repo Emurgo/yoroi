@@ -16,6 +16,7 @@ import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 // import TransportHID from '@ledgerhq/react-native-hid'
 import TransportHID from '@v-almonacid/react-native-hid'
 import {BleError} from 'react-native-ble-plx'
+import {ErrorCodes} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 
 import {
   BluetoothDisabledError,
@@ -37,10 +38,6 @@ import type {Navigation} from '../../types/navigation'
 import type {DeviceId, DeviceObj} from '../../crypto/byron/ledgerUtils'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.walletinit.connectnanox.connectnanoxscreen.title',
-    defaultMessage: '!!!Connect to Ledger Device',
-  },
   caption: {
     id: 'components.walletinit.connectnanox.connectnanoxscreen.caption',
     defaultMessage: '!!!Scanning bluetooth devices...',
@@ -48,11 +45,6 @@ const messages = defineMessages({
   introline: {
     id: 'components.walletinit.connectnanox.connectnanoxscreen.introline',
     defaultMessage: "!!!You'll need to:",
-  },
-  exportKey: {
-    id: 'components.walletinit.connectnanox.connectnanoxscreen.exportKey',
-    defaultMessage:
-      '!!!Action needed: Please, export public key from your Ledger device.',
   },
   usbDeviceReady: {
     id: 'components.ledger.ledgerconnect.usbDeviceReady',
@@ -78,9 +70,8 @@ type Props = {|
   intl: intlShape,
   defaultDevices: ?Array<Device>, // for storybook
   navigation: Navigation,
-  onSelectUSB: (DeviceObj) => any,
-  onSelectBLE: (DeviceId) => any,
-  onComplete: () => any,
+  onConnectUSB: (DeviceObj) => any,
+  onConnectBLE: (DeviceId) => any,
   useUSB?: boolean,
   onWaitingMessage?: string,
 |}
@@ -208,29 +199,47 @@ class LedgerConnect extends React.Component<Props, State> {
     this.startScan()
   }
 
-  _onSelectDevice = (device) => {
+  _onSelectDevice = async (device) => {
     if (this.state.deviceId != null) return
     this._unsubscribe()
-    const {onSelectBLE, onComplete} = this.props
+    const {onConnectBLE} = this.props
     try {
       this.setState({
         deviceId: device.id.toString(),
         refreshing: false,
         waiting: true,
       })
-      onSelectBLE(device.id.toString())
+      await onConnectBLE(device.id.toString())
     } catch (e) {
       Logger.debug(e)
+      if (e.statusCode === ErrorCodes.ERR_REJECTED_BY_USER) {
+        this.reload()
+        return
+      }
+      this.setState({error: e})
     } finally {
       this.setState({waiting: false})
     }
-    onComplete()
   }
 
-  _onConfirm = (deviceObj: ?DeviceObj): void => {
+  _onConfirm = async (deviceObj: ?DeviceObj): Promise<void> => {
     if (deviceObj == null) return // should never happen
-    this.props.onSelectUSB(deviceObj)
-    this.props.onComplete()
+    this._unsubscribe()
+    try {
+      this.setState({
+        waiting: true,
+      })
+      await this.props.onConnectUSB(deviceObj)
+    } catch (e) {
+      Logger.debug(e)
+      if (e.statusCode === ErrorCodes.ERR_REJECTED_BY_USER) {
+        this.reload()
+        return
+      }
+      this.setState({error: e})
+    } finally {
+      this.setState({waiting: false})
+    }
   }
 
   renderItem = ({item}: {item: *}) => (
@@ -264,19 +273,14 @@ class LedgerConnect extends React.Component<Props, State> {
         errMsg = String(error.message)
       }
     } else {
-      if (waiting && onWaitingMessage != null) {
+      if (waiting && typeof onWaitingMessage !== 'undefined') {
         msg = onWaitingMessage
       } else if (deviceObj != null) {
         msg = intl.formatMessage(messages.usbDeviceReady)
       }
     }
     if (msg == null) return null
-    return (
-      <ListHeaderWrapper
-        msg={intl.formatMessage(messages.error)}
-        err={errMsg}
-      />
-    )
+    return <ListHeaderWrapper msg={msg} err={errMsg} />
   }
 
   render() {
@@ -357,9 +361,8 @@ type ExternalProps = {|
   defaultDevices: ?Array<Device>,
   useUSB: boolean,
   onWaitingMessage: string,
-  onSelectUSB: (DeviceObj) => any,
-  onSelectBLE: (DeviceId) => any,
-  onComplete: () => any,
+  onConnectUSB: (DeviceObj) => any,
+  onConnectBLE: (DeviceId) => any,
 |}
 
 export default injectIntl((LedgerConnect: ComponentType<ExternalProps>))
