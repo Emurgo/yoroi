@@ -105,16 +105,18 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
     waiting: false,
   }
 
-  subscriptions = null
+  subscriptions: Array<{unsubscribe: () => void}> = []
   bluetoothEnabled: ?boolean = null
   transportLib: Object = null
   useUSB: boolean = false
+  _isMounted: boolean = false
 
   async componentDidMount() {
     const {navigation} = this.props
     const useUSB = navigation.getParam('useUSB') === true
     this.transportLib = useUSB ? TransportHID : TransportBLE
     this.useUSB = useUSB
+    this._isMounted = true
     if (!useUSB) {
       if (Platform.OS === 'android') {
         await PermissionsAndroid.request(
@@ -123,63 +125,80 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
       }
       // check if bluetooth is available
       let previousAvailable = false
-      TransportBLE.observeState({
-        next: (e) => {
-          if (this.bluetoothEnabled == null && !e.available) {
-            this.setState({
-              error: new BluetoothDisabledError(),
-              refreshing: false,
-            })
-          }
-          if (e.available !== previousAvailable) {
-            previousAvailable = e.available
-            if (e.available) {
-              this.bluetoothEnabled = e.available
-              this.reload()
+      this.subscriptions.push(
+        TransportBLE.observeState({
+          next: (e) => {
+            if (this._isMounted) {
+              Logger.debug('BLE observeState event', e)
+              if (this.bluetoothEnabled == null && !e.available) {
+                this.setState({
+                  error: new BluetoothDisabledError(),
+                  refreshing: false,
+                })
+              }
+              if (e.available !== previousAvailable) {
+                previousAvailable = e.available
+                this.bluetoothEnabled = e.available
+                if (e.available) {
+                  this.reload()
+                } else {
+                  this.setState({
+                    error: new BluetoothDisabledError(),
+                    refreshing: false,
+                  })
+                }
+              }
             }
-          }
-        },
-      })
+          },
+        }),
+      )
     }
     this.startScan()
   }
 
   componentWillUnmount() {
-    if (this.subscriptions != null) this.subscriptions.unsubscribe()
+    this.unsubscribeAll()
+    this._isMounted = false
   }
 
   startScan = () => {
     const useUSB = this.useUSB
     this.setState({refreshing: true})
 
-    this.subscriptions = this.transportLib.listen({
-      complete: () => {
-        Logger.debug('listen: subscription completed')
-        this.setState({refreshing: false})
-      },
-      next: (e) => {
-        if (e.type === 'add') {
-          Logger.debug('listen: new device detected')
-          if (useUSB) {
-            // if a device is detected, save it in state immediately
-            this.setState({
-              refreshing: false,
-              deviceObj: e.descriptor,
-            })
-          } else {
-            // with bluetooth, new devices are appended in the screen
-            this.setState(deviceAddition(e.descriptor))
+    this.subscriptions.push(
+      this.transportLib.listen({
+        complete: () => {
+          Logger.debug('listen: subscription completed')
+          this.setState({refreshing: false})
+        },
+        next: (e) => {
+          if (e.type === 'add') {
+            Logger.debug('listen: new device detected')
+            if (useUSB) {
+              // if a device is detected, save it in state immediately
+              this.setState({
+                refreshing: false,
+                deviceObj: e.descriptor,
+              })
+            } else {
+              // with bluetooth, new devices are appended in the screen
+              this.setState(deviceAddition(e.descriptor))
+            }
           }
-        }
-      },
-      error: (error) => {
-        this.setState({error, refreshing: false})
-      },
-    })
+        },
+        error: (error) => {
+          this.setState({error, refreshing: false})
+        },
+      }),
+    )
   }
 
   reload = () => {
-    if (this.subscriptions != null) this.subscriptions.unsubscribe()
+    // we don't unsubscribe from ble state scanning, only from listen
+    if (this.subscriptions.length > 0) {
+      const lastSubscription = this.subscriptions.pop()
+      lastSubscription.unsubscribe()
+    }
     this.setState({
       devices: this.props.defaultDevices ? this.props.defaultDevices : [],
       deviceId: null,
@@ -190,9 +209,17 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
     this.startScan()
   }
 
+  unsubscribeAll = () => {
+    if (this.subscriptions.length > 0) {
+      Logger.debug('subscriptions', this.subscriptions)
+      this.subscriptions.forEach((handler) => handler.unsubscribe())
+    }
+    this.subscriptions = []
+  }
+
   onSelectDevice = (device) => {
     if (this.state.deviceId != null) return
-    if (this.subscriptions != null) this.subscriptions.unsubscribe()
+    this.unsubscribeAll()
     this.setState(
       {deviceId: device.id.toString(), refreshing: false},
       async () => await this.navigateToSave(),
@@ -217,7 +244,9 @@ class ConnectNanoXScreen extends React.Component<Props, State> {
         this.reload()
         return
       }
-      this.setState({error, refreshing: false})
+      this.setState({error})
+    } finally {
+      this.setState({waiting: false})
     }
   }
 

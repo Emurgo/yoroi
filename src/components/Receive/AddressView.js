@@ -107,7 +107,6 @@ const AddressView = ({
   addressDialogStep,
   openTransportSwitch,
   onChooseTransport,
-  onSelectDevice,
   openAddressVerify,
   useUSB,
   isWaiting,
@@ -253,7 +252,6 @@ export default injectIntl(
           openAddressVerify()
         }
       },
-      onSelectDevice: ({setLedgerDeviceId}) => () => ({}),
       onVerifyAddress: ({
         intl,
         address,

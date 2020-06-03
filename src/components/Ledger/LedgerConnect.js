@@ -54,6 +54,11 @@ const messages = defineMessages({
     defaultMessage:
       '!!!Action needed: Please, export public key from your Ledger device.',
   },
+  usbDeviceReady: {
+    id: 'components.ledger.ledgerconnect.usbDeviceReady',
+    defaultMessage:
+      '!!!USB device is ready, please tap on Confirm to continue.',
+  },
   error: {
     id: 'components.walletinit.connectnanox.connectnanoxscreen.error',
     defaultMessage:
@@ -99,13 +104,15 @@ class LedgerConnect extends React.Component<Props, State> {
     waiting: false,
   }
 
-  subscriptions = null
-  bluetoothEnabled: ?boolean = null
-  transportLib: Object = null
+  _subscriptions: ?{unsubscribe: () => any} = null
+  _bluetoothEnabled: ?boolean = null
+  _transportLib: Object = null
+  _isMounted: boolean = false
 
   async componentDidMount() {
     const {useUSB} = this.props
-    this.transportLib = useUSB === true ? TransportHID : TransportBLE
+    this._transportLib = useUSB === true ? TransportHID : TransportBLE
+    this._isMounted = true
     if (useUSB === false) {
       if (Platform.OS === 'android') {
         await PermissionsAndroid.request(
@@ -113,20 +120,32 @@ class LedgerConnect extends React.Component<Props, State> {
         )
       }
       // check if bluetooth is available
+      // no need to save a reference to this subscription's unsubscribe func
+      // as it's just an empty method. Rather, we make sure sate is only
+      // modified when component is mounted
       let previousAvailable = false
       TransportBLE.observeState({
         next: (e) => {
-          if (this.bluetoothEnabled == null && !e.available) {
-            this.setState({
-              error: new BluetoothDisabledError(),
-              refreshing: false,
-            })
-          }
-          if (e.available !== previousAvailable) {
-            previousAvailable = e.available
-            if (e.available) {
-              this.bluetoothEnabled = e.available
-              this.reload()
+          if (this._isMounted) {
+            Logger.debug('BLE observeState event', e)
+            if (this._bluetoothEnabled == null && !e.available) {
+              this.setState({
+                error: new BluetoothDisabledError(),
+                refreshing: false,
+              })
+            }
+            if (e.available !== previousAvailable) {
+              previousAvailable = e.available
+              this._bluetoothEnabled = e.available
+              if (e.available) {
+                this.reload()
+              } else {
+                this.setState({
+                  error: new BluetoothDisabledError(),
+                  refreshing: false,
+                  devices: [],
+                })
+              }
             }
           }
         },
@@ -136,14 +155,15 @@ class LedgerConnect extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    if (this.subscriptions != null) this.subscriptions.unsubscribe()
+    this._unsubscribe()
+    this._isMounted = false
   }
 
   startScan = () => {
     const {useUSB} = this.props
     this.setState({refreshing: true})
 
-    this.subscriptions = this.transportLib.listen({
+    this._subscriptions = this._transportLib.listen({
       complete: () => {
         Logger.debug('listen: subscription completed')
         this.setState({refreshing: false})
@@ -164,13 +184,20 @@ class LedgerConnect extends React.Component<Props, State> {
         }
       },
       error: (error) => {
-        this.setState({error, refreshing: false})
+        this.setState({error, refreshing: false, devices: []})
       },
     })
   }
 
+  _unsubscribe: () => void = () => {
+    if (this._subscriptions != null) {
+      this._subscriptions.unsubscribe()
+      this._subscriptions = null
+    }
+  }
+
   reload = () => {
-    if (this.subscriptions != null) this.subscriptions.unsubscribe()
+    this._unsubscribe()
     this.setState({
       devices: this.props.defaultDevices ? this.props.defaultDevices : [],
       deviceId: null,
@@ -183,13 +210,20 @@ class LedgerConnect extends React.Component<Props, State> {
 
   _onSelectDevice = (device) => {
     if (this.state.deviceId != null) return
-    if (this.subscriptions != null) this.subscriptions.unsubscribe()
+    this._unsubscribe()
     const {onSelectBLE, onComplete} = this.props
-    this.setState(
-      {deviceId: device.id.toString(), refreshing: false, waiting: true},
-      () => onSelectBLE(device.id.toString()),
-    )
-    this.setState({waiting: false})
+    try {
+      this.setState({
+        deviceId: device.id.toString(),
+        refreshing: false,
+        waiting: true,
+      })
+      onSelectBLE(device.id.toString())
+    } catch (e) {
+      Logger.debug(e)
+    } finally {
+      this.setState({waiting: false})
+    }
     onComplete()
   }
 
@@ -204,40 +238,45 @@ class LedgerConnect extends React.Component<Props, State> {
   )
 
   ListHeader = () => {
-    const {error, waiting} = this.state
+    const {error, waiting, deviceObj} = this.state
     const {intl, onWaitingMessage} = this.props
+
+    const ListHeaderWrapper = ({msg, err}: {msg: string, err: ?string}) => (
+      <View style={styles.listHeader}>
+        <Text style={[styles.paragraph, styles.paragraphText]}>{msg}</Text>
+        {err != null && (
+          <Text style={[styles.error, styles.paragraphText]}>{err}</Text>
+        )}
+      </View>
+    )
+    let msg, errMsg
     if (error != null) {
-      let msg
+      msg = intl.formatMessage(messages.error)
       if (error instanceof BluetoothDisabledError) {
-        msg = intl.formatMessage(ledgerMessages.bluetoothDisabledError)
+        errMsg = intl.formatMessage(ledgerMessages.bluetoothDisabledError)
       } else if (
         error instanceof BleError ||
         error instanceof GeneralConnectionError ||
         error instanceof LedgerUserError
       ) {
-        msg = intl.formatMessage(ledgerMessages.connectionError)
+        errMsg = intl.formatMessage(ledgerMessages.connectionError)
       } else {
-        msg = String(error.message)
+        errMsg = String(error.message)
       }
-      return (
-        <View style={styles.listHeader}>
-          <Text style={[styles.paragraph, styles.paragraphText]}>
-            {intl.formatMessage(messages.error)}
-          </Text>
-          <Text style={[styles.error, styles.paragraphText]}>{msg}</Text>
-        </View>
-      )
-    } else if (waiting && onWaitingMessage != null) {
-      return (
-        <View style={styles.listHeader}>
-          <Text style={[styles.paragraph, styles.paragraphText]}>
-            {onWaitingMessage}
-          </Text>
-        </View>
-      )
     } else {
-      return null
+      if (waiting && onWaitingMessage != null) {
+        msg = onWaitingMessage
+      } else if (deviceObj != null) {
+        msg = intl.formatMessage(messages.usbDeviceReady)
+      }
     }
+    if (msg == null) return null
+    return (
+      <ListHeaderWrapper
+        msg={intl.formatMessage(messages.error)}
+        err={errMsg}
+      />
+    )
   }
 
   render() {
