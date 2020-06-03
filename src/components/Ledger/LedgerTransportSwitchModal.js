@@ -5,7 +5,6 @@ import {View, ScrollView, Platform} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import {Text, Button, Modal} from '../UiKit'
-import globalMessages from '../../i18n/global-messages'
 
 import styles from './styles/LedgerTransportSwitchModal.style'
 

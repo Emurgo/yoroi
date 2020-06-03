@@ -46,13 +46,13 @@ const _navigateToSave = async (
   navigation.navigate(WALLET_INIT_ROUTES.SAVE_NANO_X, {hwDeviceInfo})
 }
 
-type Props = {|
+type Props = {
   intl: intlShape,
   defaultDevices: ?Array<Device>, // for storybook
   navigation: Navigation,
   onConnectBLE: (DeviceId) => Promise<void>,
   onConnectUSB: (DeviceObj) => Promise<void>,
-|}
+}
 
 const ConnectNanoXScreen = ({
   intl,
