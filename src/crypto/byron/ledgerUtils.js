@@ -10,6 +10,7 @@ import TransportHID from '@v-almonacid/react-native-hid'
 import {TransportStatusError} from '@ledgerhq/hw-transport'
 import {BleError} from 'react-native-ble-plx'
 import ExtendableError from 'es6-error'
+import {Platform, PermissionsAndroid} from 'react-native'
 
 import {Logger} from '../../utils/logging'
 import {CONFIG} from '../../config'
@@ -200,6 +201,12 @@ const connectionHandler = async (
     }
     return await TransportHID.open(descriptor)
   } else {
+    // check for permissions just in case
+    if (Platform.OS === 'android') {
+      await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      )
+    }
     descriptor = deviceId
     if (descriptor == null) {
       throw new Error('ledgerUtils::connectionHandler deviceId is null')

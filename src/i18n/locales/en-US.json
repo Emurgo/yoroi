@@ -46,6 +46,7 @@
   "components.ledger.ledgertransportswitchmodal.title": "Choose Connection Method",
   "components.ledger.ledgertransportswitchmodal.usbButton": "Connect with USB",
   "components.ledger.ledgertransportswitchmodal.usbButtonDisabled": "Connect with USB\n(Blocked by Apple for iOS)",
+  "components.ledger.ledgertransportswitchmodal.usbButtonNotSupported": "Connect with USB\n(Not supported)",
   "components.ledger.ledgertransportswitchmodal.usbExplanation": "Choose this option if you want to connect to a Ledger Nano model X or S using an on-the-go USB cable adaptor:",
   "components.login.appstartscreen.loginButton": "Login",
   "components.login.custompinlogin.title": "Enter PIN",

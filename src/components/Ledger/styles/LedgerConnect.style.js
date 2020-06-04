@@ -7,10 +7,11 @@ export default StyleSheet.create({
   container: {
     paddingTop: 30,
     paddingHorizontal: 20,
-    // flex: 1,
+  },
+  fillSpace: {
+    flex: 1,
   },
   scrollView: {
-    // flex: 1,
     marginBottom: 22,
   },
   heading: {

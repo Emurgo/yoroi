@@ -74,6 +74,7 @@ type Props = {|
   onConnectBLE: (DeviceId) => any,
   useUSB?: boolean,
   onWaitingMessage?: string,
+  fillSpace?: boolean,
 |}
 
 type State = {|
@@ -187,9 +188,13 @@ class LedgerConnect extends React.Component<Props, State> {
     }
   }
 
+  _setStateSafe: ($Shape<State>) => void = (newState) => {
+    if (this._isMounted) this.setState(newState)
+  }
+
   reload = () => {
     this._unsubscribe()
-    this.setState({
+    this._setStateSafe({
       devices: this.props.defaultDevices ? this.props.defaultDevices : [],
       deviceId: null,
       deviceObj: null,
@@ -216,9 +221,9 @@ class LedgerConnect extends React.Component<Props, State> {
         this.reload()
         return
       }
-      this.setState({error: e})
+      this._setStateSafe({error: e})
     } finally {
-      this.setState({waiting: false})
+      this._setStateSafe({waiting: false})
     }
   }
 
@@ -236,9 +241,9 @@ class LedgerConnect extends React.Component<Props, State> {
         this.reload()
         return
       }
-      this.setState({error: e})
+      this._setStateSafe({error: e})
     } finally {
-      this.setState({waiting: false})
+      this._setStateSafe({waiting: false})
     }
   }
 
@@ -284,7 +289,7 @@ class LedgerConnect extends React.Component<Props, State> {
   }
 
   render() {
-    const {intl, useUSB} = this.props
+    const {intl, useUSB, fillSpace} = this.props
     const {
       error,
       devices,
@@ -300,7 +305,9 @@ class LedgerConnect extends React.Component<Props, State> {
     ]
     return (
       <>
-        <View style={styles.container}>
+        <View
+          style={[styles.container, fillSpace === true && styles.fillSpace]}
+        >
           <View style={styles.heading}>
             <Image source={useUSB === true ? usbImage : bleImage} />
             {useUSB === false && (
@@ -359,10 +366,12 @@ type ExternalProps = {|
   navigation: Navigation,
   intl: any,
   defaultDevices: ?Array<Device>,
-  useUSB: boolean,
   onWaitingMessage: string,
   onConnectUSB: (DeviceObj) => any,
   onConnectBLE: (DeviceId) => any,
+  useUSB?: boolean,
+  onWaitingMessage?: string,
+  fillSpace?: boolean,
 |}
 
 export default injectIntl((LedgerConnect: ComponentType<ExternalProps>))

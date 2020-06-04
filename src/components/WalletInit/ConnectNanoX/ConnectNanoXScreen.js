@@ -73,6 +73,7 @@ const ConnectNanoXScreen = ({
         useUSB={useUSB}
         onWaitingMessage={intl.formatMessage(messages.exportKey)}
         defaultDevices={defaultDevices}
+        fillSpace
       />
     </SafeAreaView>
   )

@@ -300,7 +300,8 @@ const ConfirmScreen = ({
 
       {/* eslint-disable indent */
       isHW &&
-        Platform.OS === 'android' && (
+        Platform.OS === 'android' &&
+        CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT && (
           <>
             <LedgerTransportSwitchModal
               visible={

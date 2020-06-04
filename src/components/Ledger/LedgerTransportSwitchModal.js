@@ -5,6 +5,7 @@ import {View, ScrollView, Platform} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import {Text, Button, Modal} from '../UiKit'
+import {CONFIG} from '../../config'
 
 import styles from './styles/LedgerTransportSwitchModal.style'
 
@@ -24,6 +25,10 @@ const messages = defineMessages({
   usbButton: {
     id: 'components.ledger.ledgertransportswitchmodal.usbButton',
     defaultMessage: '!!!Connect with USB',
+  },
+  usbButtonNotSupported: {
+    id: 'components.ledger.ledgertransportswitchmodal.usbButtonNotSupported',
+    defaultMessage: '!!!Connect with USB\n(Not supported)',
   },
   usbButtonDisabled: {
     id: 'components.ledger.ledgertransportswitchmodal.usbButtonDisabled',
@@ -55,8 +60,16 @@ const LedgerTransportSwitchModal = ({
   onSelectUSB,
   onSelectBLE,
   onRequestClose,
-  disableButtons,
 }: Props) => {
+  const getUsbButtonTitle = () => {
+    if (Platform.OS === 'iOS') {
+      return intl.formatMessage(messages.usbButtonDisabled)
+    } else if (!CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT) {
+      return intl.formatMessage(messages.usbButtonNotSupported)
+    } else {
+      return intl.formatMessage(messages.usbButton)
+    }
+  }
   return (
     <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
       <ScrollView style={styles.scrollView}>
@@ -72,12 +85,11 @@ const LedgerTransportSwitchModal = ({
           <Button
             block
             onPress={onSelectUSB}
-            title={
-              Platform.OS === 'iOS'
-                ? intl.formatMessage(messages.usbButtonDisabled)
-                : intl.formatMessage(messages.usbButton)
+            title={getUsbButtonTitle()}
+            disabled={
+              Platform.OS === 'iOS' ||
+              !CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT
             }
-            disabled={Platform.OS === 'iOS'}
             style={styles.button}
           />
           <Text style={styles.paragraph}>
