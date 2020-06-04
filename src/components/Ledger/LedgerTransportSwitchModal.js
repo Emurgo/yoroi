@@ -62,7 +62,7 @@ const LedgerTransportSwitchModal = ({
   onRequestClose,
 }: Props) => {
   const getUsbButtonTitle = () => {
-    if (Platform.OS === 'iOS') {
+    if (Platform.OS === 'ios') {
       return intl.formatMessage(messages.usbButtonDisabled)
     } else if (!CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT) {
       return intl.formatMessage(messages.usbButtonNotSupported)
@@ -87,7 +87,7 @@ const LedgerTransportSwitchModal = ({
             onPress={onSelectUSB}
             title={getUsbButtonTitle()}
             disabled={
-              Platform.OS === 'iOS' ||
+              Platform.OS === 'ios' ||
               !CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT
             }
             style={styles.button}

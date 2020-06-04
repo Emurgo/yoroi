@@ -17,7 +17,8 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: colors.buttonBackground,
-    height: 48,
+    minHeight: 48,
+    maxHeight: 54,
     borderRadius: 8,
     flexDirection: 'row',
     alignItems: 'center',
