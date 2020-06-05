@@ -102,6 +102,7 @@ const HARDWARE_WALLETS = {
     DEFAULT_WALLET_NAME: 'My Ledger Wallet',
     VENDOR: 'ledger.com',
     MODEL: 'NanoX',
+    ENABLE_USB_TRANSPORT: true,
   },
 }
 
