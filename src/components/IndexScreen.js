@@ -46,7 +46,7 @@ type Props = {
 }
 
 const crash = () => {
-  Promise.reject(new Error('Forced crash'))
+  return Promise.reject(new Error('Forced crash'))
 }
 
 const IndexScreen = ({navigation}: Props) => (

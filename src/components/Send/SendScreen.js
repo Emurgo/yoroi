@@ -230,7 +230,7 @@ class SendScreen extends Component<Props, State> {
     this.props.navigation.setParams({onScanAmount: this.handleAmountChange})
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps, prevState) {
     const utxos = this.props.utxos
     const {address, amount} = this.state
 
@@ -242,7 +242,7 @@ class SendScreen extends Component<Props, State> {
       prevAddress !== address ||
       prevAmount !== amount
     ) {
-      this.revalidate({utxos, address, amount})
+      await this.revalidate({utxos, address, amount})
     }
   }
 

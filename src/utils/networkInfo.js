@@ -43,6 +43,8 @@ const _handleConnectionChange = (netInfo) => {
 }
 
 NetInfo.addEventListener('connectionChange', _handleConnectionChange)
+
+// note: don't await on purpose
 _fetchConnectionInfo().then(_handleConnectionChange)
 
 export default {

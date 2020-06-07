@@ -177,7 +177,7 @@ const handleOnConfirm = async (
         ) {
           await showErrorDialog(errorMessages.hwConnectionError, intl)
         } else {
-          handleGeneralError('Could not submit transaction', e, intl)
+          await handleGeneralError('Could not submit transaction', e, intl)
         }
       }
     })
@@ -189,10 +189,10 @@ const handleOnConfirm = async (
       await walletManager.ensureKeysValidity()
       navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
         keyId: walletManager._id,
-        onSuccess: (decryptedKey) => {
+        onSuccess: async (decryptedKey) => {
           navigation.navigate(SEND_ROUTES.CONFIRM)
 
-          submitTx(transactionData, decryptedKey)
+          await submitTx(transactionData, decryptedKey)
         },
         onFail: () => navigation.goBack(),
       })
@@ -204,7 +204,7 @@ const handleOnConfirm = async (
 
         return
       } else {
-        handleGeneralError('Could not submit transaction', e, intl)
+        await handleGeneralError('Could not submit transaction', e, intl)
       }
     }
 
@@ -220,12 +220,12 @@ const handleOnConfirm = async (
       intl,
     )
 
-    submitTx(transactionData, decryptedData)
+    await submitTx(transactionData, decryptedData)
   } catch (e) {
     if (e instanceof WrongPassword) {
       await showErrorDialog(errorMessages.incorrectPassword, intl)
     } else {
-      handleGeneralError('Could not submit transaction', e, intl)
+      await handleGeneralError('Could not submit transaction', e, intl)
     }
   }
 }

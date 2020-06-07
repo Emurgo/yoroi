@@ -269,7 +269,7 @@ export default injectIntl(
     withHandlers({
       onToggleBiometricsAuthIn,
       updateDeviceSettings: ({setAppSettingField}) => () => {
-        // Runaway promise. This is neaded because
+        // Runaway promise. This is needed because
         // onWillFocus accepts only ()=>void
         updateDeviceSettings({setAppSettingField})
       },

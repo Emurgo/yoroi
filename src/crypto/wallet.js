@@ -526,7 +526,7 @@ export class Wallet {
     return this.numReceiveAddresses < this.externalAddresses.length
   }
 
-  generateNewUiReceiveAddressIfNeeded() {
+  generateNewUiReceiveAddressIfNeeded(): boolean {
     /* new addresse is automatically generated when you use the latest unused */
     const lastGeneratedAddress = this._externalChain.addresses[
       this._state.lastGeneratedAddressIndex
@@ -717,7 +717,10 @@ export class Wallet {
     return addressInfo
   }
 
-  asAddressedUtxo(utxos: Array<RawUtxo>) {
+  asAddressedUtxo(utxos: Array<RawUtxo>): Array<{|
+    ...RawUtxo,
+    ...Addressing,
+  |} {
     const addressedUtxos = utxos.map((utxo) => {
       const addressInfo = this.getAddressingInfo(utxo.receiver)
       if (addressInfo == null) {
@@ -805,6 +808,7 @@ class WalletManager {
   _wallets = {}
 
   constructor() {
+    // do not await on purpose
     this._backgroundSync()
   }
 
@@ -940,7 +944,7 @@ class WalletManager {
   async generateNewUiReceiveAddressIfNeeded() {
     if (!this._wallet) return
     await this.abortWhenWalletCloses(
-      this._wallet.generateNewUiReceiveAddressIfNeeded(),
+      Promise.resolve(this._wallet.generateNewUiReceiveAddressIfNeeded()),
     )
   }
 
@@ -950,7 +954,7 @@ class WalletManager {
 
     const didGenerateNew = wallet.generateNewUiReceiveAddress()
     if (didGenerateNew) {
-      // Note: save is runaway
+      // note: don't await on purpose
       this._saveState(wallet)
     }
     return didGenerateNew
@@ -1006,7 +1010,7 @@ class WalletManager {
     if (!this._wallet) return
     const wallet = this._wallet
     await this.abortWhenWalletCloses(wallet.doFullSync())
-    // Note: save is runaway
+    // note: don't await on purpose
     // TODO(ppershing): should we save in case wallet is closed mid-sync?
     this._saveState(wallet)
     return
@@ -1263,7 +1267,7 @@ class WalletManager {
     }
     await this.deleteEncryptedKey('MASTER_PASSWORD')
 
-    this.closeWallet()
+    await this.closeWallet()
     await storage.remove(`/wallet/${id}/data`)
     await storage.remove(`/wallet/${id}`)
 

@@ -320,6 +320,7 @@ export default injectIntl(
     withHandlers({
       openInExplorer: ({transaction}) => () => {
         if (transaction) {
+          // note: don't await on purpose
           Linking.openURL(CONFIG.CARDANO.EXPLORER_URL_FOR_TX(transaction.id))
         }
       },

@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "flow": "flow",
+    "flow": "flow --show-all-errors .",
     "lint": "eslint --max-warnings=0 ./src && prettylint \"src/**/*.js\" --config src/.prettierrc",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",

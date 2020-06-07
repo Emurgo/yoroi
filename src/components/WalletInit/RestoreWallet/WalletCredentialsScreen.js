@@ -155,7 +155,7 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
     const {navigation, intl} = this.props
     const isShelleyWallet = navigation.getParam('isShelleyWallet')
     if (isShelleyWallet === false) {
-      this.navigateToWallet()
+      await this.navigateToWallet()
       return
     }
     this.setState({isProcessing: true})
@@ -254,7 +254,7 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
       if (e instanceof InsufficientFunds) {
         await showErrorDialog(errorMessages.insufficientBalance, intl)
       } else {
-        handleApiError(e, intl, 'Could not check wallet')
+        await handleApiError(e, intl, 'Could not check wallet')
       }
     } finally {
       this.setState({isProcessing: false})
@@ -286,7 +286,7 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
       navigation.navigate(ROOT_ROUTES.SHELLEY_WALLET)
     } catch (e) {
       this.setState({isProcessing: false})
-      handleApiError(e, intl, 'Could not upgrade wallet')
+      await handleApiError(e, intl, 'Could not upgrade wallet')
     }
   }
 

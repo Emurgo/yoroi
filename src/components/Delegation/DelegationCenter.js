@@ -91,13 +91,13 @@ const DelegationCenter = ({
       </View>
       <PoolWarningModal
         visible={showPoolWarning}
-        onPress={() => {
+        onPress={async () => {
           setShowPoolWarning(false)
-          navigateToDelegationConfirm(selectedPools)
+          await navigateToDelegationConfirm(selectedPools)
         }}
-        onRequestClose={() => {
+        onRequestClose={async () => {
           setShowPoolWarning(false)
-          navigateToDelegationConfirm(selectedPools)
+          await navigateToDelegationConfirm(selectedPools)
         }}
         reputationInfo={reputationInfo}
       />
@@ -221,7 +221,7 @@ export default injectIntl(
             setReputationInfo(poolsReputation[poolsInBlackList[0]])
             setShowPoolWarning(true)
           } else {
-            navigateToDelegationConfirm(selectedPools)
+            await navigateToDelegationConfirm(selectedPools)
           }
         } else {
           await showErrorDialog(noPoolDataDialog, intl)

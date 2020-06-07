@@ -148,6 +148,7 @@ export default injectIntl(
     withHandlers({
       openExternalURL: ({poolURL}) => () => {
         if (poolURL) {
+          // note: do not await on purpose
           Linking.openURL(poolURL)
         }
       },

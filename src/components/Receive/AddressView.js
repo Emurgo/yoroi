@@ -55,7 +55,7 @@ const _handleOnVerifyAddress = async (
       if (e instanceof GeneralConnectionError || e instanceof LedgerUserError) {
         await showErrorDialog(errorMessages.hwConnectionError, intl)
       } else {
-        handleGeneralError('Could not verify address', e, intl)
+        await handleGeneralError('Could not verify address', e, intl)
       }
     } finally {
       closeDetails()

@@ -119,10 +119,10 @@ const handleOnConfirm = async (
       await walletManager.ensureKeysValidity()
       navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
         keyId: walletManager._id,
-        onSuccess: (decryptedKey) => {
+        onSuccess: async (decryptedKey) => {
           navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM)
 
-          signAndSubmitTx(decryptedKey)
+          await signAndSubmitTx(decryptedKey)
         },
         onFail: () => navigation.goBack(),
       })
@@ -152,12 +152,12 @@ const handleOnConfirm = async (
       intl,
     )
 
-    signAndSubmitTx(decryptedData)
+    await signAndSubmitTx(decryptedData)
   } catch (e) {
     if (e instanceof WrongPassword) {
       await showErrorDialog(errorMessages.incorrectPassword, intl)
     } else {
-      handleGeneralError(
+      await handleGeneralError(
         intl.formatMessage(messages.delegationTxSignError),
         e,
         intl,
