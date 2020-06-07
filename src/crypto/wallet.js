@@ -717,10 +717,12 @@ export class Wallet {
     return addressInfo
   }
 
-  asAddressedUtxo(utxos: Array<RawUtxo>): Array<{|
+  asAddressedUtxo(
+    utxos: Array<RawUtxo>,
+  ): Array<{|
     ...RawUtxo,
     ...Addressing,
-  |} {
+  |}> {
     const addressedUtxos = utxos.map((utxo) => {
       const addressInfo = this.getAddressingInfo(utxo.receiver)
       if (addressInfo == null) {

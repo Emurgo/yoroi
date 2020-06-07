@@ -107,6 +107,7 @@ class DelegationSummary extends React.Component<Props, State> {
   _firstFocus = true
   _isDelegating = false
   _poolsReputation: ReputationResponse = {}
+  intervalId: void | IntervalID
 
   async componentDidMount() {
     this.intervalId = setInterval(
@@ -139,10 +140,7 @@ class DelegationSummary extends React.Component<Props, State> {
     if (this.intervalId != null) clearInterval(this.intervalId)
   }
 
-  intervalId: void | IntervalID
-
-  navigateToStakingCenter: () => void
-  navigateToStakingCenter = async () => {
+  navigateToStakingCenter: (void) => Promise<void> = async () => {
     const {navigation, utxos, pools, accountBalance} = this.props
     /* eslint-disable indent */
     const utxosForKey =
@@ -168,8 +166,7 @@ class DelegationSummary extends React.Component<Props, State> {
     })
   }
 
-  handleDidFocus: () => void
-  handleDidFocus = () => {
+  handleDidFocus: (void) => void = () => {
     if (this._firstFocus) {
       this._firstFocus = false
       // skip first focus to avoid

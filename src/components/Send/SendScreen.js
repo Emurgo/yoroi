@@ -260,14 +260,11 @@ class SendScreen extends Component<Props, State> {
     this.setState(newState)
   }
 
-  handleAddressChange: (string) => void
-  handleAddressChange = (address) => this.setState({address})
+  handleAddressChange: (string) => void = (address) => this.setState({address})
 
-  handleAmountChange: (string) => void
-  handleAmountChange = (amount) => this.setState({amount})
+  handleAmountChange: (string) => void = (amount) => this.setState({amount})
 
-  handleConfirm: () => Promise<void>
-  handleConfirm = async () => {
+  handleConfirm: (void) => Promise<void> = async () => {
     const {navigation, utxos, availableAmount} = this.props
     const {address, amount} = this.state
 
