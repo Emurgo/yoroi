@@ -25,7 +25,7 @@
   "components.delegationsummary.failedwalletupgrademodal.explanation2": "如果您升级完钱包后发现原有余额变为零，我们建议您用助记词重新恢复钱包。由此给您带来的不便我们深表歉意,敬请谅解。",
   "components.delegationsummary.failedwalletupgrademodal.okButton": "完成",
   "components.delegationsummary.notDelegatedInfo.firstLine": "您尚未委托您的ADA.",
-  "components.delegationsummary.notDelegatedInfo.secondLine": "Go to the Staking Center to choose which stake pool you want to delegate to. Note that you may delegate only to one stake pool.",
+  "components.delegationsummary.notDelegatedInfo.secondLine": "前往质押中心选择您想要委托的权益池。注意，您仅能同时委托一个权益池。",
   "components.delegationsummary.upcomingReward.followingLabel": "之后的收益",
   "components.delegationsummary.upcomingReward.nextLabel": "下一次收益",
   "components.delegationsummary.upcomingReward.rewardDisclaimerText": "请注意，在委托给权益池之后，您需要等到当前纪元结束，再等待额外的两个纪元后，才能开始接收奖励。",
