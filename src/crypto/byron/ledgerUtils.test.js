@@ -17,10 +17,21 @@ describe('prepare HW tx', () => {
       },
       value: {
         address: 'Ae2tdPwUPEZHvQHe6x1roq1J9DTAKY5v8XLYGFg7UrjopY8wEBNyiiiULY1',
-        // value: '4330556', // real value
-        value: '22222',
+        value: '4330556', // real value
       },
       addressing: {account: 0, change: 0, index: 0},
+    },
+    {
+      ptr: {
+        // same id as above, different index
+        id: 'e360c88cbbbad25db19a08c1278f0fc63416d668f5d5e7b17961ea716c103c14',
+        index: 1,
+      },
+      value: {
+        address: 'Ae2tdPwUPEZJcamJUVWxJEwR8rj5x74t3FkUFDzKEdoL8YSyeRdwmJCW9c3',
+        value: '22222',
+      },
+      addressing: {account: 0, change: 0, index: 1},
     },
     {
       ptr: {
@@ -44,7 +55,7 @@ describe('prepare HW tx', () => {
   }
 
   it('can create payload to sign with ledger', async () => {
-    expect.assertions(3)
+    expect.assertions(5)
 
     const outputs = [
       {
@@ -77,5 +88,10 @@ describe('prepare HW tx', () => {
     )
     expect(ledgerSignTxPayload.inputs).not.toBeNull()
     expect(ledgerSignTxPayload.outputs).not.toBeNull()
+    // should only use first input
+    expect(ledgerSignTxPayload.inputs[0].txDataHex).toBe(
+      txsBodiesMap[inputs[0].ptr.id],
+    )
+    expect(ledgerSignTxPayload.inputs.length).toBe(1)
   })
 })
