@@ -266,6 +266,9 @@ export const createLedgerSignTxPayload = async (
   txsBodiesMap: TxBodiesResponse,
   addressedChange: {address: string, ...Addressing},
 ): Promise<CreateLedgerSignTxPayloadResponse> => {
+  Logger.debug('unsigned inputs', JSON.stringify(unsignedTx.inputs))
+  Logger.debug('unsigned outputs', JSON.stringify(unsignedTx.outputs))
+
   const fakeWallet = await generateFakeWallet()
   const fakeTx = await signTransaction(
     fakeWallet,
@@ -288,15 +291,20 @@ export const createLedgerSignTxPayload = async (
   // we'll use only the inputs that were selected in rust
   const inputs = unsignedTx.inputs.filter((input) => {
     for (const i of decodedRustTx.tx.tx.inputs) {
-      if (i.id === input.ptr.id) return true
+      if (i.id === input.ptr.id && i.index === input.ptr.index) return true
     }
     return false
   })
+  Logger.debug(
+    'ledgerUtils::createLedgerSignTxPayload: selected inputs',
+    JSON.stringify(inputs),
+  )
   if (inputs.length === 0) {
     throw Error('createLedgerSignTxPayload: no inputs. Should never happen')
   }
-
-  Logger.debug('ledgerUtils::createLedgerSignTxPayload selected inputs', inputs)
+  if (inputs.length !== decodedRustTx.tx.tx.inputs.length) {
+    throw Error('createLedgerSignTxPayload: input selection error')
+  }
 
   const ledgerInputs: Array<InputTypeUTxO> = _transformToLedgerInputs(
     inputs,
@@ -415,7 +423,10 @@ export const signTxWithLedger = async (
     )
     const finalTx = {...partialTx}
     finalTx.cbor_encoded_tx = encodeTxAsRust(decodedRustTx).toString('hex')
-    Logger.debug('ledgerUtils::signTxWithLedger finalTx')
+    Logger.debug(
+      'ledgerUtils::signTxWithLedger finalTx',
+      JSON.stringify(finalTx),
+    )
     return finalTx
   } catch (e) {
     if (_isUserError(e)) {
