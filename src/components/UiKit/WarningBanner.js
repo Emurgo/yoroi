@@ -12,7 +12,7 @@ type Props = {|
   title: string,
   icon: ?number,
   message: string,
-  buttonTitle?: ?string,
+  buttonTitle?: string,
   action?: (event?: any) => mixed,
   showCloseIcon?: boolean,
   onRequestClose?: (any) => any,
@@ -43,7 +43,7 @@ export const WarningBanner = ({
       <Text style={styles.messageText}>{message}</Text>
     </View>
     {/* eslint-disable indent */
-    buttonTitle !== null &&
+    buttonTitle !== undefined &&
       action !== undefined && (
         <Button onPress={action} title={buttonTitle} style={styles.button} />
       )
