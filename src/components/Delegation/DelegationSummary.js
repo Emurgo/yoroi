@@ -7,9 +7,9 @@ import {compose} from 'redux'
 import {View, ScrollView, RefreshControl} from 'react-native'
 import {SafeAreaView, withNavigation, NavigationEvents} from 'react-navigation'
 import {BigNumber} from 'bignumber.js'
-import {injectIntl} from 'react-intl'
+import {injectIntl, defineMessages} from 'react-intl'
 
-import {Banner, OfflineBanner, StatusBar} from '../UiKit'
+import {Banner, OfflineBanner, StatusBar, WarningBanner} from '../UiKit'
 import {
   EpochProgress,
   UpcomingRewardInfo,
@@ -53,6 +53,7 @@ import {formatAdaWithText, formatAdaInteger} from '../../utils/format'
 import FlawedWalletScreen from './FlawedWalletScreen'
 import {getReputation} from '../../api/api'
 
+import infoIcon from '../../assets/img/icon/info-light-green.png'
 import styles from './styles/DelegationSummary.style'
 
 import type {Navigation} from '../../types/navigation'
@@ -62,6 +63,19 @@ import type {
   RawUtxo,
   ReputationResponse,
 } from '../../types/HistoryTransaction'
+
+const warningBannerMessages = defineMessages({
+  title: {
+    id: 'components.delegationsummary.warningbanner.title',
+    defaultMessage: '!!!Note:',
+  },
+  message: {
+    id: 'components.delegationsummary.warningbanner.message',
+    defaultMessage:
+      '!!!The last ITN rewards were distributed on epoch 190. ' +
+      'Rewards can be claimed on mainnet once Shelley is released on mainnet.',
+  },
+})
 
 const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
   <Banner
@@ -74,7 +88,7 @@ const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
   />
 ))
 
-type Props = {
+type Props = {|
   intl: any,
   navigation: Navigation,
   isOnline: boolean,
@@ -93,7 +107,7 @@ type Props = {
   lastAccountStateSyncError: any,
   checkForFlawedWallets: () => any,
   isFlawedWallet: boolean,
-}
+|}
 
 type State = {
   +currentTime: Date,
@@ -182,6 +196,7 @@ class DelegationSummary extends React.Component<Props, State> {
 
   render() {
     const {
+      intl,
       isOnline,
       utxoBalance,
       accountBalance,
@@ -274,6 +289,14 @@ class DelegationSummary extends React.Component<Props, State> {
               />
             }
           >
+            <WarningBanner
+              title={intl
+                .formatMessage(warningBannerMessages.title)
+                .toUpperCase()}
+              icon={infoIcon}
+              message={intl.formatMessage(warningBannerMessages.message)}
+              style={styles.itemTopMargin}
+            />
             {!this._isDelegating && <NotDelegatedInfo />}
             <EpochProgress
               percentage={Math.floor(
