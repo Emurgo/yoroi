@@ -42,8 +42,13 @@ export const WarningBanner = ({
     <View style={styles.body}>
       <Text style={styles.messageText}>{message}</Text>
     </View>
-    {buttonTitle !== null &&
-      action !== undefined && <Button onPress={action} title={title} />}
+    {/* eslint-disable indent */
+    buttonTitle !== null &&
+      action !== undefined && (
+        <Button onPress={action} title={buttonTitle} style={styles.button} />
+      )
+    /* eslint-enable indent */
+    }
   </View>
 )
 
