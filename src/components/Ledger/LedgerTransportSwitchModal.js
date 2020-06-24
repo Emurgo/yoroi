@@ -2,10 +2,14 @@
 
 import React from 'react'
 import {View, ScrollView, Platform} from 'react-native'
+import {compose} from 'redux'
+import {withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import DeviceInfo from 'react-native-device-info'
 
 import {Text, Button, Modal} from '../UiKit'
 import {CONFIG} from '../../config'
+import {onDidMount} from '../../utils/renderUtils'
 
 import styles from './styles/LedgerTransportSwitchModal.style'
 
@@ -46,13 +50,15 @@ const messages = defineMessages({
   },
 })
 
-type Props = {|
+type Props = {
   intl: intlShape,
   visible: boolean,
   onSelectUSB: () => any,
   onSelectBLE: () => any,
   onRequestClose: () => any,
-|}
+  showCloseIcon?: boolean,
+  isUSBSupported: boolean,
+}
 
 const LedgerTransportSwitchModal = ({
   intl,
@@ -60,18 +66,27 @@ const LedgerTransportSwitchModal = ({
   onSelectUSB,
   onSelectBLE,
   onRequestClose,
+  isUSBSupported,
+  showCloseIcon,
 }: Props) => {
-  const getUsbButtonTitle = () => {
+  const getUsbButtonTitle = (): string => {
     if (Platform.OS === 'ios') {
       return intl.formatMessage(messages.usbButtonDisabled)
-    } else if (!CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT) {
+    } else if (
+      !CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT ||
+      !isUSBSupported
+    ) {
       return intl.formatMessage(messages.usbButtonNotSupported)
     } else {
       return intl.formatMessage(messages.usbButton)
     }
   }
   return (
-    <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
+    <Modal
+      visible={visible}
+      onRequestClose={onRequestClose}
+      showCloseIcon={showCloseIcon === true}
+    >
       <ScrollView style={styles.scrollView}>
         <View style={styles.content}>
           <View style={styles.heading}>
@@ -88,6 +103,7 @@ const LedgerTransportSwitchModal = ({
             title={getUsbButtonTitle()}
             disabled={
               Platform.OS === 'ios' ||
+              !isUSBSupported ||
               !CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT
             }
             style={styles.button}
@@ -107,4 +123,22 @@ const LedgerTransportSwitchModal = ({
   )
 }
 
-export default injectIntl((LedgerTransportSwitchModal: ComponentType<Props>))
+export default injectIntl(
+  (compose(
+    withStateHandlers(
+      {
+        isUSBSupported: true, // assume true by default
+      },
+      {
+        checkUSBSupport: () => (sdk) => {
+          const isUSBSupported = Platform.OS === 'android' &&
+            sdk >= CONFIG.HARDWARE_WALLETS.LEDGER_NANO.USB_MIN_SDK
+          return {isUSBSupported}
+        },
+      },
+    ),
+    onDidMount(({checkUSBSupport}) =>
+      DeviceInfo.getApiLevel().then((sdk) => checkUSBSupport(sdk)),
+    ),
+  )(LedgerTransportSwitchModal): ComponentType<Props>),
+)
