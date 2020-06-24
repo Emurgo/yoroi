@@ -25,4 +25,7 @@ export default StyleSheet.create({
     flex: 1,
     paddingBottom: 24,
   },
+  itemTopMargin: {
+    marginVertical: 10,
+  },
 })
