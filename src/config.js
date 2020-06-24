@@ -104,7 +104,7 @@ const HARDWARE_WALLETS = {
     VENDOR: 'ledger.com',
     MODEL: 'Nano',
     ENABLE_USB_TRANSPORT: true,
-    USB_MIN_SDK: 26, // USB transport only supported for Android SDK >= 26
+    USB_MIN_SDK: 24, // USB transport officially supported for Android SDK >= 24
   },
 }
 
