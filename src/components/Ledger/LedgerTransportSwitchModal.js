@@ -131,7 +131,8 @@ export default injectIntl(
       },
       {
         checkUSBSupport: () => (sdk) => {
-          const isUSBSupported = Platform.OS === 'android' &&
+          const isUSBSupported =
+            Platform.OS === 'android' &&
             sdk >= CONFIG.HARDWARE_WALLETS.LEDGER_NANO.USB_MIN_SDK
           return {isUSBSupported}
         },
