@@ -18,7 +18,7 @@ const StorybookModalWrapper = (WrappedModal: ComponentType<ModalProps>) =>
       showModal: true,
     }
 
-    closeModal = () => this.setState({showModal: false})
+    closeModal: (void) => void = () => this.setState({showModal: false})
 
     render() {
       return (

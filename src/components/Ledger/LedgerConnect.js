@@ -13,7 +13,6 @@ import {
 } from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
-// import TransportHID from '@ledgerhq/react-native-hid'
 import TransportHID from '@v-almonacid/react-native-hid'
 import {BleError} from 'react-native-ble-plx'
 import {ErrorCodes} from '@cardano-foundation/ledgerjs-hw-app-cardano'
@@ -188,7 +187,7 @@ class LedgerConnect extends React.Component<Props, State> {
     }
   }
 
-  _setStateSafe: ($Shape<State>) => void = (newState) => {
+  _setStateSafe: (InexactSubset<State>) => void = (newState) => {
     if (this._isMounted) this.setState(newState)
   }
 
