@@ -12,9 +12,11 @@ import {getWalletNameError, validateWalletName} from '../../../utils/validators'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import globalMessages from '../../../../src/i18n/global-messages'
 import {walletNamesSelector} from '../../../selectors'
-import {createWalletWithBip44Account, saveHW} from '../../../actions'
+import {createWalletWithBip44Account} from '../../../actions'
+import {saveHW} from '../../../actions/hwWallet'
 import {ROOT_ROUTES} from '../../../RoutesList'
 import {CONFIG} from '../../../config'
+import assert from '../../../utils/assert'
 
 import styles from './styles/SaveNanoXScreen.style'
 import image from '../../../assets/img/ledger_2.png'
@@ -103,7 +105,7 @@ export default injectIntl(
     ),
     withStateHandlers(
       {
-        name: CONFIG.HARDWARE_WALLETS.LEDGER_NANO_X.DEFAULT_WALLET_NAME,
+        name: CONFIG.HARDWARE_WALLETS.LEDGER_NANO.DEFAULT_WALLET_NAME,
       },
       {
         setName: () => (name) => ({name}),
@@ -119,6 +121,10 @@ export default injectIntl(
         navigation,
       }) => async () => {
         const hwDeviceInfo = navigation.getParam('hwDeviceInfo')
+        assert.assert(
+          hwDeviceInfo != null,
+          'SaveNanoXScreen::onPress hwDeviceInfo',
+        )
         await createWalletWithBip44Account(
           name,
           hwDeviceInfo.bip44AccountPublic,

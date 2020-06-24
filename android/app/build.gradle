@@ -216,6 +216,8 @@ dependencies {
     implementation project(':react-native-linear-gradient')
     implementation project(':react-native-svg')
     implementation project(':react-native-webview')
+    // implementation project(':@ledgerhq_react-native-hid')
+    implementation project(':@v-almonacid_react-native-hid')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation "com.facebook.react:react-native:+"  // From node_modules

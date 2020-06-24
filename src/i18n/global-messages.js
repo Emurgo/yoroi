@@ -92,15 +92,26 @@ export const ledgerMessages = defineMessages({
       'Android requires location to be enabled to provide access to Bluetooth,' +
       ' but EMURGO will never store any location data.',
   },
+  haveOTGAdapter: {
+    id: 'global.ledgerMessages.haveOTGAdapter',
+    defaultMessage:
+      '!!!You have an on-the-go adapter allowing you to connect your Ledger' +
+      'device with your smartphone using a USB cable.',
+  },
+  usbAlwaysConnected: {
+    id: 'global.ledgerMessages.usbAlwaysConnected',
+    defaultMessage:
+      '!!!Your Ledger device remains connected through USB until the process' +
+      'is completed.',
+  },
   appInstalled: {
     id: 'global.ledgerMessages.appInstalled',
-    defaultMessage:
-      '!!!Cardano ADA app is installed on your Ledger Nano X device.',
+    defaultMessage: '!!!Cardano ADA app is installed on your Ledger device.',
   },
   appOpened: {
     id: 'global.ledgerMessages.appOpened',
     defaultMessage:
-      '!!!Cardano ADA app must remain open on your Ledger Nano X device.',
+      '!!!Cardano ADA app must remain open on your Ledger device.',
   },
   // connection requisites
   enableTransport: {
@@ -110,6 +121,18 @@ export const ledgerMessages = defineMessages({
   enableLocation: {
     id: 'global.ledgerMessages.enableLocation',
     defaultMessage: '!!!Enable location services.',
+  },
+  connectUsb: {
+    id: 'global.ledgerMessages.connectUsb',
+    defaultMessage:
+      "!!!Connect your Ledger device through your smartphone's" +
+      'USB port using your OTG adapter.',
+  },
+  keepUsbConnected: {
+    id: 'global.ledgerMessages.keepUsbConnected',
+    defaultMessage:
+      '!!!Make sure your device remains connected until the ' +
+      'operation is completed.',
   },
   enterPin: {
     id: 'global.ledgerMessages.enterPin',

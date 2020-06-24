@@ -95,7 +95,7 @@ export class TransactionCache {
   /* global $Shape */
   updateState(update: $Shape<TransactionCacheState>) {
     Logger.debug('TransactionHistory update state')
-    Logger.debug('Update', update)
+    // Logger.debug('Update', update)
 
     this._state = {
       ...this._state,
@@ -168,7 +168,7 @@ export class TransactionCache {
 
   // Returns number of updated transactions
   _checkUpdatedTransactions(transactions: Array<Transaction>): number {
-    Logger.debug('_updateTransactions', transactions)
+    // Logger.debug('_updateTransactions', transactions)
     // Currently we do not support two updates inside a same batch
     // (and backend shouldn't support it either)
     assert.assert(
@@ -181,7 +181,7 @@ export class TransactionCache {
   }
 
   async doSyncStep(blocks: Array<Array<string>>): Promise<boolean> {
-    Logger.info('doSyncStep', blocks)
+    // Logger.info('doSyncStep', blocks)
     let count = 0
     let wasPaginated = false
     const errors = []

@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import {compose, withHandlers, withStateHandlers} from 'recompose'
 
-import {COLORS} from '../../../styles/config'
+import {COLORS} from '../../styles/config'
 
 import type {ComponentType} from 'react'
 import type {Device} from '@ledgerhq/react-native-hw-transport-ble'

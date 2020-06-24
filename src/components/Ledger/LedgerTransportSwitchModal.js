@@ -5,7 +5,7 @@ import {View, ScrollView, Platform} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import {Text, Button, Modal} from '../UiKit'
-import globalMessages from '../../i18n/global-messages'
+import {CONFIG} from '../../config'
 
 import styles from './styles/LedgerTransportSwitchModal.style'
 
@@ -25,6 +25,10 @@ const messages = defineMessages({
   usbButton: {
     id: 'components.ledger.ledgertransportswitchmodal.usbButton',
     defaultMessage: '!!!Connect with USB',
+  },
+  usbButtonNotSupported: {
+    id: 'components.ledger.ledgertransportswitchmodal.usbButtonNotSupported',
+    defaultMessage: '!!!Connect with USB\n(Not supported)',
   },
   usbButtonDisabled: {
     id: 'components.ledger.ledgertransportswitchmodal.usbButtonDisabled',
@@ -56,8 +60,16 @@ const LedgerTransportSwitchModal = ({
   onSelectUSB,
   onSelectBLE,
   onRequestClose,
-  disableButtons,
 }: Props) => {
+  const getUsbButtonTitle = () => {
+    if (Platform.OS === 'ios') {
+      return intl.formatMessage(messages.usbButtonDisabled)
+    } else if (!CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT) {
+      return intl.formatMessage(messages.usbButtonNotSupported)
+    } else {
+      return intl.formatMessage(messages.usbButton)
+    }
+  }
   return (
     <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
       <ScrollView style={styles.scrollView}>
@@ -70,27 +82,13 @@ const LedgerTransportSwitchModal = ({
           <Text style={styles.paragraph}>
             {intl.formatMessage(messages.usbExplanation)}
           </Text>
-
-          {/* TODO(v-almonacid): remove when USB is supported */}
-          {Platform.OS === 'android' && (
-            <View style={styles.heading}>
-              <Text secondary style={[styles.paragraph, styles.comingSoon]}>
-                {`${intl.formatMessage(globalMessages.comingSoon)}...`}
-              </Text>
-            </View>
-          )}
-
           <Button
             block
             onPress={onSelectUSB}
-            title={
-              Platform.OS === 'iOS'
-                ? intl.formatMessage(messages.usbButtonDisabled)
-                : intl.formatMessage(messages.usbButton)
-            }
+            title={getUsbButtonTitle()}
             disabled={
-              /* TODO(v-almonacid): remove `true` when USB is supported */
-              true || Platform.OS === 'iOS'
+              Platform.OS === 'ios' ||
+              !CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT
             }
             style={styles.button}
           />

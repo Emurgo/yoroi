@@ -1,11 +1,12 @@
 // @flow
 
 import React from 'react'
-import {View, ScrollView, Platform, ActivityIndicator} from 'react-native'
+import {View, ScrollView, ActivityIndicator} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
-import {Text, Button, Modal, BulletPointItem} from '../UiKit'
-import {ledgerMessages, confirmationMessages} from '../../i18n/global-messages'
+import {Text, Button, Modal} from '../UiKit'
+import {confirmationMessages} from '../../i18n/global-messages'
+import HWInstructions from '../Ledger/HWInstructions'
 
 import styles from './styles/AddressVerifyModal.style'
 
@@ -15,11 +16,6 @@ const messages = defineMessages({
   title: {
     id: 'components.receive.addressverifymodal.title',
     defaultMessage: '!!!Verify Address on Ledger',
-  },
-  beforeConfirm: {
-    id: 'components.send.confirmscreen.beforeConfirm',
-    defaultMessage:
-      '!!!Before tapping on confirm, please follow these instructions:',
   },
   afterConfirm: {
     id: 'components.receive.addressverifymodal.afterConfirm',
@@ -38,6 +34,7 @@ type Props = {|
   address: string,
   path: string,
   isWaiting: boolean,
+  useUSB: boolean,
 |}
 
 const AddressVerifyModal = ({
@@ -48,51 +45,36 @@ const AddressVerifyModal = ({
   address,
   path,
   isWaiting,
-}: Props) => {
-  const rows: Array<string> = []
-  if (Platform.OS === 'android') {
-    rows.push(intl.formatMessage(ledgerMessages.enableLocation))
-  }
-  rows.push(
-    intl.formatMessage(ledgerMessages.enableTransport),
-    intl.formatMessage(ledgerMessages.enterPin),
-    intl.formatMessage(ledgerMessages.openApp),
-  )
-  return (
-    <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.heading}>
-          <Text style={styles.title}>{intl.formatMessage(messages.title)}</Text>
-        </View>
-        <Text style={styles.paragraph}>
-          {intl.formatMessage(messages.beforeConfirm)}
+  useUSB,
+}: Props) => (
+  <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
+    <ScrollView style={styles.scrollView}>
+      <View style={styles.heading}>
+        <Text style={styles.title}>{intl.formatMessage(messages.title)}</Text>
+      </View>
+      <HWInstructions useUSB={useUSB} />
+      <Text style={styles.paragraph}>
+        {intl.formatMessage(messages.afterConfirm)}
+      </Text>
+      <View style={styles.addressDetailsView}>
+        <Text secondary style={styles.paragraph}>
+          {address}
         </Text>
-        {rows.map((row, i) => (
-          <BulletPointItem textRow={row} key={i} style={styles.paragraph} />
-        ))}
-        <Text style={styles.paragraph}>
-          {intl.formatMessage(messages.afterConfirm)}
+        <Text secondary style={styles.paragraph}>
+          {path}
         </Text>
-        <View style={styles.addressDetailsView}>
-          <Text secondary style={styles.paragraph}>
-            {address}
-          </Text>
-          <Text secondary style={styles.paragraph}>
-            {path}
-          </Text>
-        </View>
-        <Button
-          onPress={onConfirm}
-          title={intl.formatMessage(
-            confirmationMessages.commonButtons.confirmButton,
-          )}
-          style={styles.button}
-          disabled={isWaiting}
-        />
-        {isWaiting && <ActivityIndicator />}
-      </ScrollView>
-    </Modal>
-  )
-}
+      </View>
+      <Button
+        onPress={onConfirm}
+        title={intl.formatMessage(
+          confirmationMessages.commonButtons.confirmButton,
+        )}
+        style={styles.button}
+        disabled={isWaiting}
+      />
+      {isWaiting && <ActivityIndicator />}
+    </ScrollView>
+  </Modal>
+)
 
 export default injectIntl((AddressVerifyModal: ComponentType<Props>))

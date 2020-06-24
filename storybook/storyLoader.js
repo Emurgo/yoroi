@@ -11,6 +11,8 @@ function loadStories() {
 	require('../src/components/FirstRun/AcceptTermsOfService.stories');
 	require('../src/components/FirstRun/CustomPinScreen.stories');
 	require('../src/components/FirstRun/LanguagePickerScreen.stories');
+	require('../src/components/Ledger/LedgerConnect.stories');
+	require('../src/components/Ledger/LedgerTransportSwitchModal.stories');
 	require('../src/components/MaintenanceScreen.stories');
 	require('../src/components/UiKit/Button.stories');
 	require('../src/components/WalletInit/ConnectNanoX/CheckNanoXScreen.stories');
@@ -34,6 +36,8 @@ const stories = [
 	'../src/components/FirstRun/AcceptTermsOfService.stories',
 	'../src/components/FirstRun/CustomPinScreen.stories',
 	'../src/components/FirstRun/LanguagePickerScreen.stories',
+	'../src/components/Ledger/LedgerConnect.stories',
+	'../src/components/Ledger/LedgerTransportSwitchModal.stories',
 	'../src/components/MaintenanceScreen.stories',
 	'../src/components/UiKit/Button.stories',
 	'../src/components/WalletInit/ConnectNanoX/CheckNanoXScreen.stories',

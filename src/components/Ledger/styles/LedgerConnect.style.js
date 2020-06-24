@@ -1,31 +1,47 @@
 // @flow
 import {StyleSheet} from 'react-native'
 
-import {spacing} from '../../../../styles/config'
+import {COLORS, spacing} from '../../../styles/config'
 
 export default StyleSheet.create({
-  safeAreaView: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
   container: {
     paddingTop: 30,
     paddingHorizontal: 20,
-    marginBottom: 8,
+  },
+  fillSpace: {
     flex: 1,
+  },
+  scrollView: {
+    marginBottom: 22,
   },
   heading: {
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: spacing.paragraphBottomMargin,
   },
-  scrollView: {
+  caption: {
+    marginTop: 12,
+  },
+  flatList: {
     flex: 1,
+    flexDirection: 'column',
+    height: 150,
+  },
+  flatListContentContainer: {
+    flexGrow: 1,
+  },
+  listHeader: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   paragraph: {
     marginBottom: spacing.paragraphBottomMargin,
-    fontSize: 14,
-    lineHeight: 22,
+  },
+  error: {
+    color: COLORS.ERROR_TEXT_COLOR,
+  },
+  instructionsBlock: {
+    marginVertical: 24,
   },
   paragraphText: {
     fontSize: 14,
@@ -35,11 +51,6 @@ export default StyleSheet.create({
     marginTop: 12,
     fontSize: 14,
     lineHeight: 22,
-  },
-  linkContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
   },
   button: {
     marginHorizontal: 10,

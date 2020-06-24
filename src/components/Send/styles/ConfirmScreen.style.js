@@ -29,16 +29,4 @@ export default StyleSheet.create({
   input: {
     marginTop: 16,
   },
-  instructionsBlock: {
-    marginVertical: 24,
-  },
-  paragraphText: {
-    fontSize: 14,
-    lineHeight: 22,
-  },
-  item: {
-    marginTop: 12,
-    fontSize: 14,
-    lineHeight: 22,
-  },
 })

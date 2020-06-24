@@ -3,9 +3,14 @@
 import AppAda, {ErrorCodes} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {BigNumber} from 'bignumber.js'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
+// note(v-almonacid) we'll be using a fork of @ledgerhq/react-native-hid
+// so that we can keep minSdkVersion = 21
+// import TransportHID from '@ledgerhq/react-native-hid'
+import TransportHID from '@v-almonacid/react-native-hid'
 import {TransportStatusError} from '@ledgerhq/hw-transport'
 import {BleError} from 'react-native-ble-plx'
 import ExtendableError from 'es6-error'
+import {Platform, PermissionsAndroid} from 'react-native'
 
 import {Logger} from '../../utils/logging'
 import {CONFIG} from '../../config'
@@ -36,6 +41,8 @@ import type {
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import type {TxWitness} from './util'
 import type BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble'
+// import type HIDTransport from '@ledgerhq/react-native-hid'
+import type HIDTransport from '@v-almonacid/react-native-hid'
 
 //
 // ============== Errors ==================
@@ -89,10 +96,21 @@ const _isUserError = (e: Error | TransportStatusError): boolean => {
 // ============== Types ==================
 //
 
+// this type is used by @ledgerhq/react-native-hid and it's not exposed
+// so we redefine it here
+export type DeviceObj = {
+  vendorId: number,
+  productId: number,
+}
+
+// for bluetooth, we just save a string id
+export type DeviceId = string
+
 // these are defined in LedgerConnectStore.js in yoroi-frontend
 type LedgerConnectionResponse = {|
   extendedPublicKeyResp: GetExtendedPublicKeyResponse,
-  deviceId: string,
+  deviceId: ?DeviceId,
+  deviceObj: ?DeviceObj,
 |}
 
 type LedgerSignTxPayload = {|
@@ -105,7 +123,8 @@ type LedgerSignTxPayload = {|
 export type HWFeatures = {|
   vendor: string,
   model: string,
-  deviceId: string,
+  deviceId: ?DeviceId, // for establishing a connection through BLE
+  deviceObj: ?DeviceObj, // for establishing a connection through USB
 |}
 
 export type HWDeviceInfo = {|
@@ -117,8 +136,8 @@ export type HWDeviceInfo = {|
 // ============== General util ==================
 //
 
-const VENDOR = CONFIG.HARDWARE_WALLETS.LEDGER_NANO_X.VENDOR
-const MODEL = CONFIG.HARDWARE_WALLETS.LEDGER_NANO_X.MODEL
+const VENDOR = CONFIG.HARDWARE_WALLETS.LEDGER_NANO.VENDOR
+const MODEL = CONFIG.HARDWARE_WALLETS.LEDGER_NANO.MODEL
 
 const HARDENED = CONFIG.NUMBERS.HARD_DERIVATION_START
 const PURPOSE = CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
@@ -140,19 +159,23 @@ const makeCardanoBIP44Path = (
 ) => [PURPOSE, COIN_TYPE, HARDENED + account, chain, address]
 
 const validateHWResponse = (resp: LedgerConnectionResponse): boolean => {
-  const {extendedPublicKeyResp, deviceId} = resp
-  if (deviceId == null) {
-    throw new Error('Ledger device id response is undefined')
+  const {extendedPublicKeyResp, deviceId, deviceObj} = resp
+  if (deviceId == null && deviceObj == null) {
+    throw new Error(
+      'LedgerUtils::validateHWResponse: a non-null descriptor is required',
+    )
   }
   if (extendedPublicKeyResp == null) {
-    throw new Error('Ledger device extended public key response is undefined')
+    throw new Error(
+      'LedgerUtils::validateHWResponse: extended public key is undefined',
+    )
   }
   return true
 }
 
 const normalizeHWResponse = (resp: LedgerConnectionResponse): HWDeviceInfo => {
   validateHWResponse(resp)
-  const {extendedPublicKeyResp, deviceId} = resp
+  const {extendedPublicKeyResp, deviceId, deviceObj} = resp
   return {
     bip44AccountPublic:
       extendedPublicKeyResp.publicKeyHex + extendedPublicKeyResp.chainCodeHex,
@@ -160,16 +183,47 @@ const normalizeHWResponse = (resp: LedgerConnectionResponse): HWDeviceInfo => {
       vendor: VENDOR,
       model: MODEL,
       deviceId,
+      deviceObj,
     },
   }
 }
 
+const connectionHandler = async (
+  deviceId: ?DeviceId,
+  deviceObj: ?DeviceObj,
+  useUSB?: boolean = false,
+): Promise<BluetoothTransport | HIDTransport> => {
+  let descriptor
+  if (useUSB) {
+    descriptor = deviceObj
+    if (descriptor == null) {
+      throw new Error('ledgerUtils::connectionHandler deviceObj is null')
+    }
+    return await TransportHID.open(descriptor)
+  } else {
+    // check for permissions just in case
+    if (Platform.OS === 'android') {
+      await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      )
+    }
+    descriptor = deviceId
+    if (descriptor == null) {
+      throw new Error('ledgerUtils::connectionHandler deviceId is null')
+    }
+    return await TransportBLE.open(descriptor)
+  }
+}
+
 export const getHWDeviceInfo = async (
-  transport: BluetoothTransport,
-): Promise<?HWDeviceInfo> => {
+  deviceId: ?DeviceId,
+  deviceObj: ?DeviceObj,
+  useUSB?: boolean = false,
+): Promise<HWDeviceInfo> => {
   try {
     Logger.debug('ledgerUtils::getHWDeviceInfo called')
 
+    const transport = await connectionHandler(deviceId, deviceObj, useUSB)
     const appAda = new AppAda(transport)
     const versionResp: GetVersionResponse = await appAda.getVersion()
     Logger.debug('AppAda version', versionResp)
@@ -186,14 +240,16 @@ export const getHWDeviceInfo = async (
       accountPath,
     )
     Logger.debug('extended public key', extendedPublicKeyResp)
-
-    const deviceId = transport.id
+    Logger.debug('transport.id', transport.id)
 
     const hwDeviceInfo = normalizeHWResponse({
       extendedPublicKeyResp,
       deviceId,
+      deviceObj,
     })
     Logger.info('ledgerUtils::getHWDeviceInfo: Ledger device OK')
+    Logger.info('hwDeviceInfo', hwDeviceInfo)
+    await transport.close()
     return hwDeviceInfo
   } catch (e) {
     if (_isUserError(e)) {
@@ -217,13 +273,10 @@ export const verifyAddress = async (
 ): Promise<void> => {
   try {
     Logger.debug('ledgerUtils::verifyAddress called')
+    Logger.debug('hwDeviceInfo', hwDeviceInfo)
 
-    // TODO once USB support is added
-    // const transport = useUSB ? TransportHID : TransportBLE
-    const transportLib = TransportBLE
-
-    if (hwDeviceInfo == null || hwDeviceInfo.hwFeatures.deviceId == null) {
-      throw new Error('ledgerUtils::verifyAddress: deviceId is null')
+    if (hwDeviceInfo == null) {
+      throw new Error('ledgerUtils::verifyAddress: hwDeviceInfo is null')
     }
 
     const path = makeCardanoBIP44Path(
@@ -232,12 +285,15 @@ export const verifyAddress = async (
       addressing.addressing.index,
     )
 
-    // TODO once USB support is added
-    // if using USB, use correct input for open()
-    const transport = await transportLib.open(hwDeviceInfo.hwFeatures.deviceId)
+    const transport = await connectionHandler(
+      hwDeviceInfo.hwFeatures.deviceId,
+      hwDeviceInfo.hwFeatures.deviceObj,
+      useUSB,
+    )
     const appAda = new AppAda(transport)
 
     await appAda.showAddress(path)
+    await transport.close()
   } catch (e) {
     if (_isUserError(e)) {
       Logger.info('ledgerUtils::verifyAddress: User-side error', e)
@@ -391,15 +447,20 @@ export const signTxWithLedger = async (
   payload: LedgerSignTxPayload,
   partialTx: V1SignedTx,
   hwDeviceInfo: HWDeviceInfo,
+  useUSB?: boolean = false,
 ): Promise<V1SignedTx> => {
   try {
     Logger.debug('ledgerUtils::signTxWithLedger called')
 
-    if (hwDeviceInfo == null || hwDeviceInfo.hwFeatures.deviceId == null) {
-      throw new Error('ledgerUtils::signTxWithLedger: deviceId is null')
+    if (hwDeviceInfo == null) {
+      throw new Error('ledgerUtils::signTxWithLedger: hwDeviceInfo is null')
     }
 
-    const transport = await TransportBLE.open(hwDeviceInfo.hwFeatures.deviceId)
+    const transport = await connectionHandler(
+      hwDeviceInfo.hwFeatures.deviceId,
+      hwDeviceInfo.hwFeatures.deviceObj,
+      useUSB,
+    )
     const appAda = new AppAda(transport)
 
     Logger.debug('ledgerUtils::signTxWithLedger inputs', payload.inputs)
@@ -409,6 +470,8 @@ export const signTxWithLedger = async (
       payload.inputs,
       payload.outputs,
     )
+
+    await transport.close()
 
     const decodedRustTx = decodeRustTx(partialTx.cbor_encoded_tx)
     // replace fake witnesses by correct one

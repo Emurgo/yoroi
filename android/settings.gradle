@@ -31,5 +31,10 @@ include ':react-native-background-timer'
 project(':react-native-background-timer').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-background-timer/android')
 include ':react-native-webview'
 project(':react-native-webview').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-webview/android')
+// include ':@ledgerhq_react-native-hid'
+// project(':@ledgerhq_react-native-hid').projectDir = new File(rootProject.projectDir, '../node_modules/@ledgerhq/react-native-hid/android')
+include ':@v-almonacid_react-native-hid'
+project(':@v-almonacid_react-native-hid').projectDir = new File(rootProject.projectDir, '../node_modules/@v-almonacid/react-native-hid/android')
+
 
 include ':app'
