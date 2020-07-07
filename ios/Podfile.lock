@@ -109,7 +109,7 @@ PODS:
   - React-RCTWebSocket (0.60.0):
     - React-Core (= 0.60.0)
     - React-fishhook (= 0.60.0)
-  - RNCardano (0.2.1):
+  - RNCardano (0.2.2):
     - React
   - RNCAsyncStorage (1.5.1):
     - React
@@ -290,7 +290,7 @@ SPEC CHECKSUMS:
   React-RCTText: 685fca2e13b024271048e7e247ef24476f28a41e
   React-RCTVibration: 4ee1cf208ab17a50fafb1c16ffe28fe594a64e4f
   React-RCTWebSocket: fca087d583724aa0e5fef7d911f0f2a28d0f2736
-  RNCardano: fe63fb53fdde524a5303d7489484a86346d88366
+  RNCardano: 7b7060d93453e30b1889ff66d41e1874eadeb9e2
   RNCAsyncStorage: b63d6e83fc629b01df6b624688f17944cea5637f
   RNDeviceInfo: e2102056bde3ad5d137fd029d8d431510a00486a
   RNFS: c9bbde46b0d59619f8e7b735991c60e0f73d22c1

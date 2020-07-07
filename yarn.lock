@@ -2105,15 +2105,24 @@
     "@ledgerhq/logs" "^5.15.0"
     rxjs "^6.5.5"
 
+"@ledgerhq/devices@^5.19.0":
+  version "5.19.0"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/devices/-/devices-5.19.0.tgz#6b55980628181da7e1b02ae668657821b2011209"
+  integrity sha512-b8isGErLpGOYnAIswav54j7EWmynTQOvnXriny3eqgzpLt8HOJ9g+C6+67RDzFidwz+5RZW+Qn+ZWAQ3Xo5e/g==
+  dependencies:
+    "@ledgerhq/errors" "^5.19.0"
+    "@ledgerhq/logs" "^5.19.0"
+    rxjs "^6.6.0"
+
 "@ledgerhq/errors@^5.13.0", "@ledgerhq/errors@^5.15.0":
   version "5.15.0"
   resolved "https://registry.yarnpkg.com/@ledgerhq/errors/-/errors-5.15.0.tgz#e5d5b5ad48fc07f6308b78b065242e158bc044a2"
   integrity sha512-ZlLhR7qaChPgEbvcqOptRepWGm8VhhwOM6kC1gx3WErutbtaOjUX8lLA4ButWFU2f+xTl2rS/5c86wC7qGqGXQ==
 
-"@ledgerhq/errors@^5.15.0":
-  version "5.15.0"
-  resolved "https://registry.yarnpkg.com/@ledgerhq/errors/-/errors-5.15.0.tgz#e5d5b5ad48fc07f6308b78b065242e158bc044a2"
-  integrity sha512-ZlLhR7qaChPgEbvcqOptRepWGm8VhhwOM6kC1gx3WErutbtaOjUX8lLA4ButWFU2f+xTl2rS/5c86wC7qGqGXQ==
+"@ledgerhq/errors@^5.19.0":
+  version "5.19.0"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/errors/-/errors-5.19.0.tgz#b5580c084a2b9bd8efb21cb50f69a712e3a02b2d"
+  integrity sha512-UrRS1xZ/UidIrGyM+h/T/h57DpiFgfqMtlu5VBic1LbekNUojBPx0cMb099p07uyEwKggfawzbdLmxv4j9Ct+g==
 
 "@ledgerhq/hw-transport@^5.12.0", "@ledgerhq/hw-transport@^5.13.0":
   version "5.15.0"
@@ -2124,15 +2133,24 @@
     "@ledgerhq/errors" "^5.15.0"
     events "^3.1.0"
 
+"@ledgerhq/hw-transport@^5.15.0":
+  version "5.19.0"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport/-/hw-transport-5.19.0.tgz#0b82185728ac5fe397a9a160aeef1de302399dd9"
+  integrity sha512-MpIut+ZX88PPKmiqX+Df1lch930/Io0SqvjNPtXbYSg1SVZjxW8t85OuAwzukkaXr3tfUTb6IFlSHKC+QYCSBA==
+  dependencies:
+    "@ledgerhq/devices" "^5.19.0"
+    "@ledgerhq/errors" "^5.19.0"
+    events "^3.1.0"
+
 "@ledgerhq/logs@^5.13.0", "@ledgerhq/logs@^5.15.0":
   version "5.15.0"
   resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-5.15.0.tgz#870524ade408b50ce74971509aa170e9d85c0575"
   integrity sha512-QuAva3K3YFDtQidi8xAfOQcb+aExJus3p0GhPNscOE+r152klBdiZUHLp818zEeQZT7PRSm83gEknmeUYjGU9A==
 
-"@ledgerhq/logs@^5.15.0":
-  version "5.15.0"
-  resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-5.15.0.tgz#870524ade408b50ce74971509aa170e9d85c0575"
-  integrity sha512-QuAva3K3YFDtQidi8xAfOQcb+aExJus3p0GhPNscOE+r152klBdiZUHLp818zEeQZT7PRSm83gEknmeUYjGU9A==
+"@ledgerhq/logs@^5.19.0":
+  version "5.19.0"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-5.19.0.tgz#78268722135cf2c0c8596295a2c34c40f3fe2663"
+  integrity sha512-gShImyBi0UQUc3Oo3nNwhGDovo1SNRKZYkhA2OKgeUe7PPiKBGuRqfD+cCvvgxcaoTbWlRYeOWbtShnRLRT8HA==
 
 "@ledgerhq/react-native-hw-transport-ble@5.13.0":
   version "5.13.0"
@@ -3074,6 +3092,17 @@
   integrity sha512-XAvHLwG7UQ+8M4caKIH0ZozIOYay5fQkAgyIXegXT9jPtdIGdhga+sUEdAr1CiG46aB+c64xQEYyEzlwWVTNzA==
   dependencies:
     "@types/yargs-parser" "*"
+
+"@v-almonacid/react-native-hid@5.15.4":
+  version "5.15.4"
+  resolved "https://registry.yarnpkg.com/@v-almonacid/react-native-hid/-/react-native-hid-5.15.4.tgz#30b6c1a2b3235da61fe5f4cf4777538876c5039b"
+  integrity sha512-4NBMVCUuBoa/SpRFIbH4FOoEaORSE8beaoKnWtRjV7bACscbHA5cZSguvPJijiB7miHju0h5Xnx4oa5yVOrjbQ==
+  dependencies:
+    "@ledgerhq/devices" "^5.15.0"
+    "@ledgerhq/errors" "^5.15.0"
+    "@ledgerhq/hw-transport" "^5.15.0"
+    "@ledgerhq/logs" "^5.15.0"
+    rxjs "^6.5.5"
 
 "@webassemblyjs/ast@1.9.0":
   version "1.9.0"
@@ -12427,9 +12456,9 @@ react-native-camera@3.30.0:
   dependencies:
     prop-types "^15.6.2"
 
-react-native-cardano@Emurgo/react-native-cardano:
-  version "0.2.1"
-  resolved "https://codeload.github.com/Emurgo/react-native-cardano/tar.gz/c7a64fbb752fb0df3354efb8608bf3d990c90afe"
+react-native-cardano@Emurgo/react-native-cardano#0.2.2:
+  version "0.2.2"
+  resolved "https://codeload.github.com/Emurgo/react-native-cardano/tar.gz/d15390978afb83c1ff2a83e59281139a1f2d6eb1"
 
 react-native-chain-libs@Emurgo/react-native-chain-libs#2.0.0:
   version "2.0.0"
@@ -13499,6 +13528,13 @@ rxjs@^6.5.3, rxjs@^6.5.5:
   version "6.5.5"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.5.5.tgz#c5c884e3094c8cfee31bf27eb87e54ccfc87f9ec"
   integrity sha512-WfQI+1gohdf0Dai/Bbmk5L5ItH5tYqm3ki2c5GdWhKjalzjg93N3avFjVStyZZz+A2Em+ZxKH5bNghw9UeylGQ==
+  dependencies:
+    tslib "^1.9.0"
+
+rxjs@^6.6.0:
+  version "6.6.0"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.6.0.tgz#af2901eedf02e3a83ffa7f886240ff9018bbec84"
+  integrity sha512-3HMA8z/Oz61DUHe+SdOiQyzIf4tOx5oQHmMir7IZEu6TMqCLHT4LRcmNaUS0NwOz8VLvmmBduMsoaUvMaIiqzg==
   dependencies:
     tslib "^1.9.0"
 
