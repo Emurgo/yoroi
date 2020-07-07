@@ -17,6 +17,7 @@ import {
   defaultStackNavigatorOptions,
 } from '../../navigationOptions'
 import MnemonicCheckScreen from './CreateWallet/MnemonicCheckScreen'
+import VerifyRestoredWallet from './RestoreWallet/VerifyRestoredWallet'
 import WalletCredentialsScreen from './RestoreWallet/WalletCredentialsScreen'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 // eslint-disable-next-line max-len
@@ -47,6 +48,7 @@ const WalletInitNavigator = createStackNavigator(
     [WALLET_INIT_ROUTES.SAVE_NANO_X]: SaveNanoXScreen,
     [WALLET_INIT_ROUTES.MNEMONIC_SHOW]: MnemonicShowScreen,
     [WALLET_INIT_ROUTES.MNEMONIC_CHECK]: MnemonicCheckScreen,
+    [WALLET_INIT_ROUTES.VERIFY_RESTORED_WALLET]: VerifyRestoredWallet,
     [WALLET_INIT_ROUTES.WALLET_CREDENTIALS]: WalletCredentialsScreen,
   },
   {

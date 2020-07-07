@@ -171,7 +171,7 @@ export default injectIntl(
     ),
     withHandlers({
       navigateToWalletCredentials: ({navigation, phrase}) => (event) => {
-        navigation.navigate(WALLET_INIT_ROUTES.WALLET_CREDENTIALS, {
+        navigation.navigate(WALLET_INIT_ROUTES.VERIFY_RESTORED_WALLET, {
           phrase: cleanMnemonic(phrase),
           networkId: navigation.getParam('networkId'),
           walletImplementationId: navigation.getParam('walletImplementationId'),
