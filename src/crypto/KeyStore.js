@@ -47,6 +47,9 @@ class KeyStore {
     }
 
     const data = await storage.read(`${KeyStore.storagePrefix}/${dataKey}`)
+    if (data == null) {
+      throw new Error('KeyStore::getData:: data is null, should never happen')
+    }
     switch (encryptionMethod) {
       case 'BIOMETRICS': {
         let decryptedKey = ''
@@ -60,7 +63,7 @@ class KeyStore {
             dataKey,
             intl.formatMessage(messages.approveTransaction),
             intl.formatMessage(messages.subtitle),
-            '', // adding a description seems redudant
+            '', // adding a description seems redundant
             intl.formatMessage(messages.cancelButton),
           )
         } else {

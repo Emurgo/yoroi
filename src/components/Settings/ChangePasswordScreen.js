@@ -55,7 +55,11 @@ const messages = defineMessages({
   },
 })
 
-type FormValidationErrors = PasswordValidationErrors & {
+// type FormValidationErrors = PasswordValidationErrors & {
+//   oldPasswordRequired?: boolean,
+// }
+type FormValidationErrors = {
+  ...PasswordValidationErrors,
   oldPasswordRequired?: boolean,
 }
 

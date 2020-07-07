@@ -1,6 +1,6 @@
 // @flow
 
-import {NetInfo, Platform} from 'react-native'
+import NetInfo from '@react-native-community/netinfo'
 
 import {SubscriptionManager} from './subscription'
 
@@ -8,22 +8,7 @@ export type ConnectionInfo = {
   isOnline: boolean,
 }
 
-// https://github.com/facebook/react-native/issues/19039#issuecomment-386228738
-const _fetchConnectionInfo = (): Promise<any> => {
-  if (Platform.OS === 'ios') {
-    return new Promise((resolve, reject) => {
-      const handler = (info) => {
-        NetInfo.removeEventListener('connectionChange', handler)
-
-        resolve(info)
-      }
-
-      NetInfo.addEventListener('connectionChange', handler)
-    })
-  } else {
-    return NetInfo.getConnectionInfo()
-  }
-}
+const _fetchConnectionInfo = (): Promise<any> => NetInfo.fetch()
 
 // Hides native implementation details
 const _facadeInfo = (info): ConnectionInfo => ({
@@ -42,7 +27,7 @@ const _handleConnectionChange = (netInfo) => {
   _subscriptions.notify(_latestInfo)
 }
 
-NetInfo.addEventListener('connectionChange', _handleConnectionChange)
+NetInfo.addEventListener(_handleConnectionChange)
 _fetchConnectionInfo().then(_handleConnectionChange)
 
 export default {

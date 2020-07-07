@@ -514,7 +514,6 @@ export const handleGeneralError = async (
 ) => {
   Logger.error(`${message}: ${e.message}`, e)
   await showErrorDialog(errorMessages.generalError, intl, {message})
-  crashReporting.crash()
 }
 
 export const submitSignedTx = (signedTx: string) => async (

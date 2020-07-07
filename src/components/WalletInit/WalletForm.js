@@ -53,8 +53,10 @@ const messages = defineMessages({
   },
 })
 
-type FormValidationErrors = PasswordValidationErrors &
-  WalletNameValidationErrors
+type FormValidationErrors = {
+  nameErrors: WalletNameValidationErrors,
+  passwordErrors: PasswordValidationErrors,
+}
 
 type ComponentState = {
   name: string,
@@ -126,7 +128,10 @@ class WalletForm extends PureComponent<Props, ComponentState> {
     const nameErrors = this.props.validateWalletName(name)
     const passwordErrors = validatePassword(password, passwordConfirmation)
 
-    return {...nameErrors, ...passwordErrors}
+    return {
+      nameErrors,
+      passwordErrors,
+    }
   }
 
   render() {
@@ -160,7 +165,7 @@ class WalletForm extends PureComponent<Props, ComponentState> {
                     globalMessages.walletNameErrorNameAlreadyTaken,
                   ),
                 },
-                validationErrors,
+                validationErrors.nameErrors,
               )}
               testID="walletNameInput"
             />
@@ -192,7 +197,12 @@ class WalletForm extends PureComponent<Props, ComponentState> {
         <View style={styles.action}>
           <Button
             onPress={this.handleSubmit}
-            disabled={!_.isEmpty(validationErrors)}
+            disabled={
+              !_.isEmpty({
+                ...validationErrors.nameErrors,
+                ...validationErrors.passwordErrors,
+              })
+            }
             title={intl.formatMessage(messages.continueButton)}
             testID="walletFormContinueButton"
           />

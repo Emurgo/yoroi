@@ -29,16 +29,14 @@ const messages = defineMessages({
   },
 })
 
-type Props = {
+type Props = {|
   intl: any,
   walletIsInitialized: boolean,
   navigation: Navigation,
   navigateInitWallet: (Object, boolean) => mixed,
-}
+|}
 
 const WalletInitScreen = ({
-  navigateCreateWallet,
-  navigateRestoreWallet,
   intl,
   walletIsInitialized,
   navigation,

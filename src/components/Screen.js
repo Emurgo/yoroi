@@ -32,12 +32,12 @@ const Screen = ({
 
   return (
     <Container
+      {...restProps}
       style={[
         styles.container,
         {backgroundColor: bgColor != null ? bgColor : COLORS.WHITE},
         style,
       ]}
-      {...restProps}
     >
       {children}
     </Container>
