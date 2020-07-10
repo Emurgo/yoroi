@@ -1,5 +1,5 @@
 app_identifier("com.emurgo.yoroi") # The bundle identifier of your app
-apple_id("nicolas@emurgo.io") # Your Apple email address
+apple_id("vicente@emurgo.io") # Your Apple email address
 
 itc_team_id("119491519") # App Store Connect Team ID
 team_id("F8NVT2G2L4") # Developer Portal Team ID
