@@ -2,9 +2,8 @@
 
 exports[`History API can fetch history 1`] = `
 Object {
-  "bestBlockNum": Any<Number>,
   "blockHash": "008a32c2b852aefdf9077bcb471492c3303c88d64d281f7aa6ebf2e87ba63e34",
-  "blockNum": 1889681,
+  "blockNum": Any<Number>,
   "epoch": 87,
   "id": "2401257195a3cd7d43e832b2d2e8215828ebbcdea472ef81f8de3314a535813e",
   "inputs": Array [

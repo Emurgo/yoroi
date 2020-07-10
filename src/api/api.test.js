@@ -24,7 +24,7 @@ describe('History API', () => {
     const result = await api.fetchNewTxHistory(request)
 
     expect(result.transactions[0]).toMatchSnapshot({
-      bestBlockNum: expect.any(Number),
+      blockNum: expect.any(Number),
       lastUpdatedAt: expect.any(String), // these fields may change (e.g. after restarting a node)
       submittedAt: expect.any(String),
     })
@@ -62,7 +62,7 @@ describe('History API', () => {
     // We are async
     expect.assertions(1)
 
-    await expect(api.fetchNewTxHistory(request, 4404464)).rejects.toThrow(
+    await expect(api.fetchNewTxHistory(request)).rejects.toThrow(
       ApiHistoryError,
     )
   })
