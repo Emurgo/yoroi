@@ -6,11 +6,10 @@ import {Platform} from 'react-native'
 
 import {Logger} from '../utils/logging'
 import {CONFIG, CARDANO_CONFIG} from '../config'
-import {NetworkError, ApiError} from './errors'
+import {NetworkError, ApiError, ApiHistoryError} from './errors'
 import assert from '../utils/assert'
 import {checkAndFacadeTransactionAsync} from './facade'
 
-import type {Moment} from 'moment'
 import type {
   Transaction,
   RawUtxo,
@@ -21,11 +20,23 @@ import type {
   TxBodiesResponse,
   ReputationResponse,
   ServerStatusResponse,
+  BestblockResponse,
+  TxHistoryRequest,
 } from '../types/HistoryTransaction'
 
 type Addresses = Array<string>
 
-const _checkResponse = (response, requestPayload) => {
+const _checkResponse = async (response, requestPayload) => {
+  if (response.status === 404) {
+    const responseBody = await response.json()
+    if (
+      responseBody.status === 'REFERENCE_TX_NOT_FOUND' ||
+      responseBody.status === 'REFERENCE_BLOCK_MISMATCH' ||
+      responseBody.status === 'REFERENCE_BEST_BLOCK_MISMATCH'
+    ) {
+      throw new ApiHistoryError(responseBody.status)
+    }
+  }
   if (response.status !== 200) {
     Logger.debug('Bad status code from server', response.status)
     Logger.debug('Request payload:', requestPayload)
@@ -70,7 +81,7 @@ const _fetch = (
       .then(async (r) => {
         Logger.info(`API call ${path} finished`)
 
-        _checkResponse(r, payload)
+        await _checkResponse(r, payload)
         const response = await r.json()
         // Logger.debug('Response:', response)
         return response
@@ -82,30 +93,26 @@ export const checkServerStatus = (
   networkConfig?: any = CONFIG.CARDANO,
 ): Promise<ServerStatusResponse> => _fetch('status', null, networkConfig, 'GET')
 
+export const getBestBlock = (
+  networkConfig?: any = CONFIG.CARDANO,
+): Promise<BestblockResponse> =>
+  _fetch('v2/bestblock', null, networkConfig, 'GET')
+
 export const fetchNewTxHistory = async (
-  dateFrom: Moment,
-  addresses: Addresses,
+  request: TxHistoryRequest,
   networkConfig?: any = CONFIG.CARDANO,
 ): Promise<{isLast: boolean, transactions: Array<Transaction>}> => {
   assert.preconditionCheck(
-    addresses.length <= CONFIG.API.TX_HISTORY_MAX_ADDRESSES,
+    request.addresses.length <= CONFIG.API.TX_HISTORY_MAX_ADDRESSES,
     'fetchNewTxHistory: too many addresses',
   )
-  const response = await _fetch(
-    'txs/history',
-    {
-      addresses,
-      dateFrom: dateFrom.toISOString(),
-    },
-    networkConfig,
-  )
-
+  const response = await _fetch('v2/txs/history', request, networkConfig)
   const transactions = await Promise.all(
     response.map(checkAndFacadeTransactionAsync),
   )
   return {
     transactions,
-    isLast: response.length <= CONFIG.API.TX_HISTORY_RESPONSE_LIMIT,
+    isLast: response.length < CONFIG.API.TX_HISTORY_RESPONSE_LIMIT,
   }
 }
 
@@ -120,7 +127,7 @@ export const filterUsedAddresses = async (
   // Take a copy in case underlying data mutates during await
   const copy = [...addresses]
   const used = await _fetch(
-    'addresses/filterUsed',
+    'v2/addresses/filterUsed',
     {addresses: copy},
     networkConfig,
   )
