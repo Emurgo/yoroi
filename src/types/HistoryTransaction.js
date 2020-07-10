@@ -41,7 +41,7 @@ export type TransactionInfo = {|
   bruttoFee: BigNumber,
   direction: TransactionDirection,
   confirmations: number,
-  submittedAt: string,
+  submittedAt: ?string,
   lastUpdatedAt: string,
   status: TransactionStatus,
   assurance: TransactionAssurance,
@@ -53,9 +53,13 @@ export type Transaction = {|
   inputs: Array<{address: string, amount: string}>,
   outputs: Array<{address: string, amount: string}>,
   blockNum: ?number,
-  bestBlockNum: number,
-  submittedAt: string,
+  blockHash: ?string,
+  txOrdinal: ?number,
+  bestBlockNum: ?number,
+  submittedAt: ?string,
   lastUpdatedAt: string,
+  epoch: ?number,
+  slot: ?number,
 |}
 
 export type Addressing = {|
@@ -151,6 +155,15 @@ export const AMOUNT_FORMAT = {
 }
 export type AmountFormat = $Values<typeof AMOUNT_FORMAT>
 
+/**
+ * API-related types.
+ * TODO: re-organize and create separate types for API, internal wallet
+ * state, currency, etc. In the near future, types need to be completly
+ * decoupled to support different currencies.
+ */
+
+// account state
+
 export type PoolTuples = [
   string, // PoolId
   number, // parts
@@ -224,6 +237,7 @@ export type PoolInfoResponse = {
 }
 
 // getTxsBodiesForUTXOs
+
 export type TxBodiesRequest = {|txsHashes: Array<string>|}
 export type TxBodiesResponse = {[key: string]: string}
 
@@ -236,4 +250,69 @@ export type ReputationResponse = {[poolId: string]: ReputationObject}
 export type ServerStatusResponse = {|
   isServerOk: boolean,
   isMaintenance: boolean,
+|}
+
+export type BestblockResponse = {|
+  height: number,
+  epoch: ?number,
+  slot: ?number,
+  hash: ?string,
+|}
+
+// tx history
+
+export type TxHistoryRequest = {|
+  addresses: Array<string>,
+  untilBlock: string,
+  after?: {
+    block: string,
+    tx: string,
+  },
+|}
+
+export type RemoteTransactionInputBase = {|
+  +address: string,
+  +amount: string,
+|}
+
+export type RemoteTransactionUtxoInput = {|
+  +id: string, // concatenation of txHash || index
+  +index: number,
+  +txHash: string,
+|}
+
+// not considering acount txs for now
+export type RemoteTransactionInput = {|
+  ...RemoteTransactionInputBase,
+  ...RemoteTransactionUtxoInput,
+|}
+
+export type RemoteTransactionOutput = {|
+  +address: string,
+  +amount: string,
+|}
+
+/**
+ * only present if TX is in a block
+ */
+export type RemoteTxBlockMeta = {|
+  +block_num: number,
+  +block_hash: string,
+  +tx_ordinal: number,
+  +time: string, // timestamp with timezone
+  +epoch: number,
+  +slot: number,
+|}
+
+export type RemoteTxInfo = {|
+  +hash: string,
+  +last_update: string, // timestamp with timezone
+  +tx_state: TransactionStatus,
+  +inputs: Array<RemoteTransactionInput>,
+  +outputs: Array<RemoteTransactionOutput>,
+|}
+
+export type RawTransaction = {|
+  ...WithNullableFields<RemoteTxBlockMeta>,
+  ...RemoteTxInfo,
 |}

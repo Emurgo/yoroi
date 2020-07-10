@@ -845,6 +845,8 @@ class WalletManager {
   }
 
   // Note(ppershing): no need to abortWhenWalletCloses here
+  // Note(v-almonacid): if sync fails because of a chain rollback, we just wait
+  // for the next sync round (tx cache should be wiped out in between)
   async _backgroundSync() {
     try {
       if (this._wallet) {

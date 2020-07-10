@@ -203,7 +203,7 @@ class LedgerConnect extends React.Component<Props, State> {
     this.startScan()
   }
 
-  _onSelectDevice = async (device) => {
+  _onSelectDevice = async (device: Device) => {
     if (this.state.deviceId != null) return
     this._unsubscribe()
     const {onConnectBLE} = this.props
@@ -246,7 +246,7 @@ class LedgerConnect extends React.Component<Props, State> {
     }
   }
 
-  renderItem = ({item}: {item: *}) => (
+  renderItem = ({item}: {item: Device}) => (
     <DeviceItem device={item} onSelect={() => this._onSelectDevice(item)} />
   )
 

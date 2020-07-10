@@ -1,5 +1,4 @@
 // @flow
-import moment from 'moment'
 import {defaultMemoize} from 'reselect'
 import _ from 'lodash'
 import assert from '../utils/assert'
@@ -8,16 +7,17 @@ import {ObjectValues} from '../utils/flow'
 import {limitConcurrency} from '../utils/promise'
 import {Logger} from '../utils/logging'
 import api from '../api'
+import {ApiHistoryError} from '../api/errors'
 import {CONFIG} from '../config'
 
-import type {Moment} from 'moment'
 import type {Dict} from '../state'
-import type {Transaction} from '../types/HistoryTransaction'
+import type {Transaction, TxHistoryRequest} from '../types/HistoryTransaction'
 import {TRANSACTION_STATUS} from '../types/HistoryTransaction'
 
 type SyncMetadata = {
-  lastUpdated: string,
   bestBlockNum: number,
+  bestBlockHash: ?string,
+  bestTxHash: ?string,
 }
 
 type TransactionCacheState = {|
@@ -25,12 +25,44 @@ type TransactionCacheState = {|
   perAddressSyncMetadata: Dict<SyncMetadata>,
 |}
 
-const getLastTimestamp = (transactions: Array<Transaction>): ?Moment => {
-  // Note(ppershing): ISO8601 dates can be sorted as strings
-  // and the result is expected
-  return (
-    _.max(transactions.map((tx) => tx.lastUpdatedAt)) || moment(0).toISOString()
-  )
+export type TimeForTx = {|
+  blockHash: string,
+  blockNum: number,
+  txHash: string,
+  txOrdinal: number,
+|}
+
+const getLatestTransaction: (Array<Transaction>) => void | TimeForTx = (
+  txs,
+) => {
+  const blockInfo: Array<TimeForTx> = []
+  for (const tx of txs) {
+    if (tx.blockHash != null && tx.txOrdinal != null && tx.blockNum != null) {
+      blockInfo.push({
+        blockHash: tx.blockHash,
+        txHash: tx.id,
+        txOrdinal: tx.txOrdinal,
+        blockNum: tx.blockNum,
+      })
+    }
+  }
+  if (blockInfo.length === 0) {
+    return undefined
+  }
+  let best = blockInfo[0]
+  for (let i = 1; i < blockInfo.length; i++) {
+    if (blockInfo[i].blockNum > best.blockNum) {
+      best = blockInfo[i]
+      continue
+    }
+    if (blockInfo[i].blockNum === best.blockNum) {
+      if (blockInfo[i].txOrdinal > best.txOrdinal) {
+        best = blockInfo[i]
+        continue
+      }
+    }
+  }
+  return best
 }
 
 const perAddressTxsSelector = (state: TransactionCacheState) => {
@@ -92,8 +124,7 @@ export class TransactionCache {
     this._subscriptions.push(handler)
   }
 
-  /* global $Shape */
-  updateState(update: $Shape<TransactionCacheState>) {
+  updateState(update: TransactionCacheState) {
     Logger.debug('TransactionHistory update state')
     // Logger.debug('Update', update)
 
@@ -102,6 +133,14 @@ export class TransactionCache {
       ...update,
     }
 
+    this._subscriptions.forEach((handler) => handler())
+  }
+
+  resetState() {
+    this._state = {
+      perAddressSyncMetadata: {},
+      transactions: {},
+    }
     this._subscriptions.forEach((handler) => handler())
   }
 
@@ -132,22 +171,49 @@ export class TransactionCache {
         'getBlockMetadata: undefined vs defined',
       )
       return {
-        lastUpdated: moment(0).toISOString(),
         bestBlockNum: 0,
+        bestBlockHash: null,
+        bestTxHash: null,
       }
     } else {
       // Old addresses
       assert.assert(
-        metadata.every((x) => x.lastUpdated === first.lastUpdated),
-        'getBlockMetadata: lastUpdated metadata same',
-      )
-      assert.assert(
         metadata.every((x) => x.bestBlockNum === first.bestBlockNum),
         'getBlockMetadata: bestBlockNum metadata same',
+      )
+      assert.assert(
+        metadata.every((x) => x.bestBlockHash === first.bestBlockHash),
+        'getBlockMetadata: bestBlockHash metadata same',
       )
 
       return first
     }
+  }
+
+  _buildTxHistoryRequest(
+    addresses: Array<string>,
+    metadata: SyncMetadata,
+    currentBestBlockHash: ?string,
+  ): TxHistoryRequest {
+    assert.assert(
+      currentBestBlockHash != null,
+      'buildTxHistoryRequest: bestBlock not null',
+    )
+    /* :: if (currentBestBlockHash == null) throw 'assert' */
+    const request = {
+      addresses,
+      untilBlock: currentBestBlockHash,
+    }
+    if (metadata.bestBlockHash != null && metadata.bestTxHash != null) {
+      return {
+        ...request,
+        after: {
+          block: metadata.bestBlockHash,
+          tx: metadata.bestTxHash,
+        },
+      }
+    }
+    return request
   }
 
   _isUpdatedTransaction(tx: Transaction): boolean {
@@ -168,7 +234,7 @@ export class TransactionCache {
 
   // Returns number of updated transactions
   _checkUpdatedTransactions(transactions: Array<Transaction>): number {
-    // Logger.debug('_updateTransactions', transactions)
+    Logger.debug('_updateTransactions', transactions)
     // Currently we do not support two updates inside a same batch
     // (and backend shouldn't support it either)
     assert.assert(
@@ -185,12 +251,19 @@ export class TransactionCache {
     let count = 0
     let wasPaginated = false
     const errors = []
+    const currentBestBlock = await api.getBestBlock()
 
     const tasks = blocks.map((addrs) => {
       const metadata = this._getBlockMetadata(addrs)
+      const historyRequest = this._buildTxHistoryRequest(
+        addrs,
+        metadata,
+        currentBestBlock.hash,
+      )
+
       return () =>
         api
-          .fetchNewTxHistory(moment(metadata.lastUpdated), addrs)
+          .fetchNewTxHistory(historyRequest, currentBestBlock.height)
           .then((response) => [addrs, response])
     })
 
@@ -198,14 +271,14 @@ export class TransactionCache {
 
     const promises = tasks.map((t) => limit(t))
 
-    // Note(ppershing): This serializes the respons order
+    // Note(ppershing): This serializes the response order
     // but still allows for concurrent requests
     for (const promise of promises) {
       try {
         const [addrs, response] = await promise
         wasPaginated = wasPaginated || !response.isLast
         const metadata = this._getBlockMetadata(addrs)
-        const newLastUpdated = getLastTimestamp(response.transactions)
+        const bestTx = getLatestTransaction(response.transactions)
         // Note: we can update best block number only if we are processing
         // the last page of the history request, see design doc for details
         const newBestBlockNum =
@@ -214,8 +287,9 @@ export class TransactionCache {
             : metadata.bestBlockNum
 
         const newMetadata = {
-          lastUpdated: newLastUpdated,
           bestBlockNum: newBestBlockNum,
+          bestBlockHash: bestTx?.blockHash,
+          bestTxHash: bestTx?.txHash,
         }
 
         const transactionsUpdate = _.fromPairs(
@@ -235,6 +309,12 @@ export class TransactionCache {
           },
         })
       } catch (e) {
+        if (e instanceof ApiHistoryError) {
+          // flush cache to resync
+          // (consider only removing cache for current address block)
+          this.resetState()
+          throw e
+        }
         errors.push(e)
       }
     }
@@ -252,7 +332,15 @@ export class TransactionCache {
 
   static fromJSON(data: TransactionCacheState) {
     const cache = new TransactionCache()
-    cache.updateState(data)
+    // if cache is deprecated it means it was obtained from old history endpoint.
+    // in this case, we do not load the data and start from a fresh object.
+    const isDeprecatedCache = ObjectValues(data.perAddressSyncMetadata).some(
+      // $FlowFixMe
+      (metadata) => metadata.lastUpdated != null,
+    )
+    if (!isDeprecatedCache) {
+      cache.updateState(data)
+    }
     return cache
   }
 }
