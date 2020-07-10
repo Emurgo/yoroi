@@ -23,6 +23,7 @@ type SyncMetadata = {
 type TransactionCacheState = {|
   transactions: Dict<Transaction>,
   perAddressSyncMetadata: Dict<SyncMetadata>,
+  bestBlockNum: ?number, // global best block, not per address
 |}
 
 export type TimeForTx = {|
@@ -99,7 +100,7 @@ const confirmationCountsSelector = (state: TransactionCacheState) => {
         : 0
 
     const bestBlockNum = _.max([
-      tx.bestBlockNum,
+      state.bestBlockNum,
       ...tx.inputs.map(getBlockNum),
       ...tx.outputs.map(getBlockNum),
     ])
@@ -114,6 +115,7 @@ export class TransactionCache {
   _state: TransactionCacheState = {
     perAddressSyncMetadata: {},
     transactions: {},
+    bestBlockNum: 0,
   }
 
   _subscriptions: Array<() => any> = []
@@ -140,6 +142,7 @@ export class TransactionCache {
     this._state = {
       perAddressSyncMetadata: {},
       transactions: {},
+      bestBlockNum: 0,
     }
     this._subscriptions.forEach((handler) => handler())
   }
@@ -234,7 +237,6 @@ export class TransactionCache {
 
   // Returns number of updated transactions
   _checkUpdatedTransactions(transactions: Array<Transaction>): number {
-    Logger.debug('_updateTransactions', transactions)
     // Currently we do not support two updates inside a same batch
     // (and backend shouldn't support it either)
     assert.assert(
@@ -247,7 +249,6 @@ export class TransactionCache {
   }
 
   async doSyncStep(blocks: Array<Array<string>>): Promise<boolean> {
-    // Logger.info('doSyncStep', blocks)
     let count = 0
     let wasPaginated = false
     const errors = []
@@ -263,7 +264,7 @@ export class TransactionCache {
 
       return () =>
         api
-          .fetchNewTxHistory(historyRequest, currentBestBlock.height)
+          .fetchNewTxHistory(historyRequest)
           .then((response) => [addrs, response])
     })
 
@@ -283,7 +284,7 @@ export class TransactionCache {
         // the last page of the history request, see design doc for details
         const newBestBlockNum =
           response.isLast && response.transactions.length
-            ? response.transactions[0].bestBlockNum
+            ? currentBestBlock.height
             : metadata.bestBlockNum
 
         const newMetadata = {
@@ -307,6 +308,7 @@ export class TransactionCache {
             ...this._state.perAddressSyncMetadata,
             ...metadataUpdate,
           },
+          bestBlockNum: currentBestBlock.height,
         })
       } catch (e) {
         if (e instanceof ApiHistoryError) {
@@ -332,10 +334,11 @@ export class TransactionCache {
 
   static fromJSON(data: TransactionCacheState) {
     const cache = new TransactionCache()
-    // if cache is deprecated it means it was obtained from old history endpoint.
+    // if cache is deprecated it means it was obtained when the old history
+    // endpoint was still being used (in versions <= 2.2.1)
     // in this case, we do not load the data and start from a fresh object.
     const isDeprecatedCache = ObjectValues(data.perAddressSyncMetadata).some(
-      // $FlowFixMe
+      // $FlowFixMe SyncMetadata type changed after migration to new history API
       (metadata) => metadata.lastUpdated != null,
     )
     if (!isDeprecatedCache) {

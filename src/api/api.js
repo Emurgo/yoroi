@@ -100,7 +100,6 @@ export const getBestBlock = (
 
 export const fetchNewTxHistory = async (
   request: TxHistoryRequest,
-  bestBlockNumber: number,
   networkConfig?: any = CONFIG.CARDANO,
 ): Promise<{isLast: boolean, transactions: Array<Transaction>}> => {
   assert.preconditionCheck(
@@ -109,7 +108,7 @@ export const fetchNewTxHistory = async (
   )
   const response = await _fetch('v2/txs/history', request, networkConfig)
   const transactions = await Promise.all(
-    response.map((tx) => checkAndFacadeTransactionAsync(tx, bestBlockNumber)),
+    response.map(checkAndFacadeTransactionAsync),
   )
   return {
     transactions,

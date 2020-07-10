@@ -55,7 +55,6 @@ export type Transaction = {|
   blockNum: ?number,
   blockHash: ?string,
   txOrdinal: ?number,
-  bestBlockNum: ?number,
   submittedAt: ?string,
   lastUpdatedAt: string,
   epoch: ?number,

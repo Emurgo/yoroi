@@ -21,7 +21,7 @@ describe('History API', () => {
 
     // We are async
     expect.assertions(1)
-    const result = await api.fetchNewTxHistory(request, bestBlock.height)
+    const result = await api.fetchNewTxHistory(request)
 
     expect(result.transactions[0]).toMatchSnapshot({
       bestBlockNum: expect.any(Number),
@@ -40,7 +40,7 @@ describe('History API', () => {
     // We are async
     expect.assertions(1)
 
-    await expect(api.fetchNewTxHistory(request, 0)).rejects.toThrow(ApiError)
+    await expect(api.fetchNewTxHistory(request)).rejects.toThrow(ApiError)
   })
 
   it('throws ApiHistoryError on bad request', async () => {

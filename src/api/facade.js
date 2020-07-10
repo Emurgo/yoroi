@@ -40,18 +40,15 @@ export const checkISO8601Date = (data: ?string) => {
   return data === moment(data).toISOString()
 }
 
-export const checkValidHash = (data: string) => {
+export const checkValidHash = (data: ?string) => {
+  if (data == null) return false
   const regex = /^[0-9a-f]{64}$/
   return regex.test(data)
 }
 
 export const checkAndFacadeTransactionAsync = async (
   tx: RawTransaction,
-  bestBlockNum: number,
 ): Promise<Transaction> => {
-  // const blockNum = tx.block_num != null ? parseInt(tx.block_num, 10) : null
-  // const txOrdinal = tx.tx_ordinal != null ? parseInt(tx.tx_ordinal, 10) : null
-
   tx.inputs.forEach((i) => {
     assert.assert(
       checkNonNegativeInt(i.amount),
@@ -89,18 +86,38 @@ export const checkAndFacadeTransactionAsync = async (
   )
 
   assert.assert(
-    tx.tx_state !== 'Successful' || checkISO8601Date(tx.time),
-    'Invalid time',
-    tx.time,
-  )
-
-  assert.assert(
     checkISO8601Date(tx.last_update),
     'Invalid last_update',
     tx.last_update,
   )
 
   assert.assert(checkValidHash(tx.hash), 'Invalid hash', tx.hash)
+
+  /**
+   * all of the following parameters must exist if the tx was successful
+   */
+
+  assert.assert(
+    tx.tx_state !== 'Successful' || checkISO8601Date(tx.time),
+    'Invalid time',
+    tx.time,
+  )
+
+  assert.assert(
+    tx.tx_state !== 'Successful' || checkValidHash(tx.block_hash),
+    'Invalid block_hash',
+    tx.block_hash,
+  )
+
+  assert.assert(
+    tx.tx_state !== 'Successful' ||
+      (tx.block_num != null &&
+        tx.tx_ordinal != null &&
+        tx.epoch != null &&
+        tx.slot != null),
+    'Successful tx must include full metadata',
+    tx.time,
+  )
 
   return {
     id: tx.hash,
@@ -113,7 +130,6 @@ export const checkAndFacadeTransactionAsync = async (
       address: o.address,
       amount: o.amount,
     })),
-    bestBlockNum,
     lastUpdatedAt: tx.last_update,
     // all of these can be null
     submittedAt: tx.time,
