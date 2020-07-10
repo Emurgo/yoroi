@@ -1,6 +1,7 @@
 // @flow
 import walletManager, {WalletClosed} from '../crypto/wallet'
 import {Logger} from '../utils/logging'
+import {ApiHistoryError} from '../api/errors'
 
 import {type Dispatch} from 'redux'
 
@@ -34,7 +35,18 @@ export const updateHistory = () => async (dispatch: Dispatch<any>) => {
     await walletManager.doFullSync()
     dispatch(_setSyncError(null))
   } catch (e) {
-    if (e instanceof WalletClosed) {
+    if (e instanceof ApiHistoryError) {
+      // try again after wiping out state
+      // (note(v-almonacid): I'm deliberately avoiding calling updateHistory
+      // recursively to prevent an infinite loop in case ApiHistoryError persists)
+      try {
+        await walletManager.doFullSync()
+        dispatch(_setSyncError(null))
+      } catch (e) {
+        Logger.error('Sync error', e)
+        dispatch(_setSyncError(e.message))
+      }
+    } else if (e instanceof WalletClosed) {
       // do nothing
     } else {
       // TODO(ppershing): should we set error object or just

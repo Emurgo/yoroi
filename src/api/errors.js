@@ -16,3 +16,10 @@ export class NetworkError extends ExtendableError {
     super('NetworkError')
   }
 }
+
+// thrown by the backend after a rollback
+export class ApiHistoryError extends ApiError {
+  constructor(status: string) {
+    super(`ApiHistoryError::${status}`)
+  }
+}

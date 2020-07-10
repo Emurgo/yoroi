@@ -24,6 +24,7 @@ const DayHeader = ({ts, intl}) => (
 
 const getTransactionsByDate = (transactions: Dict<TransactionInfo>) =>
   _(transactions)
+    .filter((t) => t.submittedAt != null)
     .sortBy((t) => t.submittedAt)
     .reverse()
     .groupBy((t) => t.submittedAt.substring(0, '2001-01-01'.length))

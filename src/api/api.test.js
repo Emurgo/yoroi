@@ -1,27 +1,30 @@
 // @flow
 /* eslint-env jest */
 import jestSetup from '../jestSetup'
-import moment from 'moment'
 
 import api from './'
-import {ApiError} from './errors'
+import {ApiError, ApiHistoryError} from './errors'
 
 jestSetup.setup()
 jest.setTimeout(30 * 1000)
 
 describe('History API', () => {
   it('can fetch history', async () => {
+    const bestBlock = await api.getBestBlock()
     const addresses = [
       'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
     ]
-    const ts = moment('1970-01-01')
+    const request = {
+      addresses,
+      untilBlock: bestBlock.hash != null ? bestBlock.hash : '',
+    }
 
     // We are async
     expect.assertions(1)
-    const result = await api.fetchNewTxHistory(ts, addresses)
+    const result = await api.fetchNewTxHistory(request)
 
     expect(result.transactions[0]).toMatchSnapshot({
-      bestBlockNum: expect.any(Number),
+      blockNum: expect.any(Number),
       lastUpdatedAt: expect.any(String), // these fields may change (e.g. after restarting a node)
       submittedAt: expect.any(String),
     })
@@ -29,13 +32,39 @@ describe('History API', () => {
 
   it('throws ApiError on bad request', async () => {
     const addresses = []
-    // mock moment
-    const ts = {toISOString: () => 'not-a-date'}
+    const request = {
+      addresses,
+      untilBlock: '',
+    }
 
     // We are async
     expect.assertions(1)
 
-    await expect(api.fetchNewTxHistory(ts, addresses)).rejects.toThrow(ApiError)
+    await expect(api.fetchNewTxHistory(request)).rejects.toThrow(ApiError)
+  })
+
+  it('throws ApiHistoryError on bad request', async () => {
+    const addresses = [
+      'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
+    ]
+    const request = {
+      addresses,
+      untilBlock:
+        '6ac8fc52c0a9587357c7a1e91bbe8c744127cc107947c05616635ccc7c7701fc',
+      after: {
+        block:
+          '5ec2d5241112cf8cd624842350fcd402fd66f4a6c6c3605465c7a98dc1914cad',
+        // fake tx hash, should give REFERENCE_TX_NOT_FOUND
+        tx: 'abca63ff6e71784779e30533b764966819003214e04e236a741af540eff1f895',
+      },
+    }
+
+    // We are async
+    expect.assertions(1)
+
+    await expect(api.fetchNewTxHistory(request)).rejects.toThrow(
+      ApiHistoryError,
+    )
   })
 
   it('filters used addresses', async () => {
