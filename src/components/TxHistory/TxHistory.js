@@ -50,6 +50,24 @@ const messages = defineMessages({
   },
 })
 
+const warningBannerMessages = defineMessages({
+  title: {
+    id: 'components.txhistory.txhistory.warningbanner.title',
+    defaultMessage: '!!!Note:',
+  },
+  message: {
+    id: 'components.txhistory.txhistory.warningbanner.message',
+    defaultMessage:
+      '!!!The Shelley protocol upgrade adds a new Shelley wallet type which supports delegation.',
+  },
+  buttonText: {
+    id: 'components.txhistory.txhistory.warningbanner.buttonText',
+    defaultMessage:
+      '!!!Upgrade' +
+      'Rewards can be claimed on mainnet once Shelley is released on mainnet.',
+  },
+})
+
 const NoTxHistory = injectIntl(({intl}) => (
   <View style={styles.empty}>
     <Image source={image} />
@@ -90,67 +108,62 @@ const TxHistory = ({
   isFlawedWallet,
   isWarningNoteOpen,
   closeWarningBannerNote,
-}) => {
-  console.log('@@@@@@@@@@@@@@@', isWarningNoteOpen)
-  return (
-    <SafeAreaView style={styles.scrollView}>
-      <StatusBar type="dark" />
-      <View style={styles.container}>
-        <FlawedWalletModal
-          visible={isFlawedWallet === true}
-          disableButtons={false}
-          onPress={() =>
-            navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+  intl,
+}) => (
+  <SafeAreaView style={styles.scrollView}>
+    <StatusBar type="dark" />
+    <View style={styles.container}>
+      <FlawedWalletModal
+        visible={isFlawedWallet === true}
+        disableButtons={false}
+        onPress={() => navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)}
+        onRequestClose={() =>
+          navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+        }
+      />
+      <OfflineBanner />
+      {isOnline &&
+        lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
+
+      <AvailableAmountBanner amount={availableAmount} />
+
+      {_.isEmpty(transactionsInfo) ? (
+        <ScrollView
+          refreshControl={
+            <RefreshControl onRefresh={updateHistory} refreshing={isSyncing} />
           }
-          onRequestClose={() =>
-            navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
-          }
+        >
+          <NoTxHistory />
+        </ScrollView>
+      ) : (
+        <TxHistoryList
+          refreshing={isSyncing}
+          onRefresh={updateHistory}
+          navigation={navigation}
+          transactions={transactionsInfo}
         />
-        <OfflineBanner />
-        {isOnline &&
-          lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
+      )}
 
-        <AvailableAmountBanner amount={availableAmount} />
-
-        {_.isEmpty(transactionsInfo) ? (
-          <ScrollView
-            refreshControl={
-              <RefreshControl
-                onRefresh={updateHistory}
-                refreshing={isSyncing}
-              />
-            }
-          >
-            <NoTxHistory />
-          </ScrollView>
-        ) : (
-          <TxHistoryList
-            refreshing={isSyncing}
-            onRefresh={updateHistory}
-            navigation={navigation}
-            transactions={transactionsInfo}
-          />
-        )}
-
-        <TxNavigationButtons navigation={navigation} />
-        <WarningBanner
-          title="Note:"
-          icon={infoIcon}
-          message="The Shelley protocol upgrade adds a new Shelley wallet type which supports delegation. To delegate your ADA you will need to upgrade to a Shelley wallet."
-          showCloseIcon={isWarningNoteOpen}
-          onRequestClose={() => closeWarningBannerNote(false)}
-          buttonTitle="Upgrade"
-          // eslint-disable-next-line no-alert
-          action={() => alert('Upgrade pressed')}
-          style={[
-            styles.warningNoteStyles,
-            !isWarningNoteOpen && styles.noWarningBanner,
-          ]}
-        />
-      </View>
-    </SafeAreaView>
-  )
-}
+      <TxNavigationButtons navigation={navigation} />
+      <WarningBanner
+        title={intl.formatMessage(warningBannerMessages.title).toUpperCase()}
+        icon={infoIcon}
+        message={intl.formatMessage(warningBannerMessages.message)}
+        showCloseIcon={isWarningNoteOpen}
+        onRequestClose={() => closeWarningBannerNote(false)}
+        buttonTitle={intl
+          .formatMessage(warningBannerMessages.buttonText)
+          .toUpperCase()}
+        // eslint-disable-next-line no-alert
+        action={() => alert('Upgrade pressed')}
+        style={[
+          styles.warningNoteStyles,
+          !isWarningNoteOpen && styles.noWarningBanner,
+        ]}
+      />
+    </View>
+  </SafeAreaView>
+)
 
 type ExternalProps = {|
   navigation: Navigation,
