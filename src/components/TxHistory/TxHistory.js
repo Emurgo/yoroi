@@ -9,7 +9,8 @@ import {SafeAreaView} from 'react-navigation'
 import _ from 'lodash'
 import {injectIntl, defineMessages} from 'react-intl'
 
-import {Text, Banner, OfflineBanner, StatusBar} from '../UiKit'
+import {Text, Banner, OfflineBanner, StatusBar, WarningBanner} from '../UiKit'
+import infoIcon from '../../assets/img/icon/info-light-green.png'
 import {
   transactionsInfoSelector,
   isSynchronizingHistorySelector,
@@ -122,6 +123,17 @@ const TxHistory = ({
       )}
 
       <TxNavigationButtons navigation={navigation} />
+      <WarningBanner
+        title="Note:"
+        icon={infoIcon}
+        message="The Shelley protocol upgrade adds a new Shelley wallet type which supports delegation. To delegate your ADA you will need to upgrade to a Shelley wallet."
+        showCloseIcon
+        // onRequestClose={}
+        buttonTitle="Upgrade"
+        // eslint-disable-next-line no-alert
+        action={() => alert('Upgrade pressed')}
+        style={styles.warningNoteStyles}
+      />
     </View>
   </SafeAreaView>
 )
@@ -143,6 +155,7 @@ export default injectIntl(
         walletName: walletNameSelector(state),
         key: languageSelector(state),
         isFlawedWallet: isFlawedWalletSelector(state),
+        // isNoteOpen:
       }),
       {
         updateHistory,
