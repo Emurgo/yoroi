@@ -62,9 +62,7 @@ const warningBannerMessages = defineMessages({
   },
   buttonText: {
     id: 'components.txhistory.txhistory.warningbanner.buttonText',
-    defaultMessage:
-      '!!!Upgrade' +
-      'Rewards can be claimed on mainnet once Shelley is released on mainnet.',
+    defaultMessage: '!!!Upgrade',
   },
 })
 
