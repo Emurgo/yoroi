@@ -25,4 +25,8 @@ export default StyleSheet.create({
     zIndex: 2,
     bottom: 0,
   },
+  noWarningBanner: {
+    position: 'relative',
+    display: 'none',
+  },
 })

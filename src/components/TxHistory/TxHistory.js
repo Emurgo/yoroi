@@ -20,10 +20,11 @@ import {
   walletNameSelector,
   languageSelector,
   isFlawedWalletSelector,
+  isWarningBannerOpen,
 } from '../../selectors'
 import TxHistoryList from './TxHistoryList'
 import TxNavigationButtons from './TxNavigationButtons'
-import {updateHistory} from '../../actions/history'
+import {updateHistory, closeWarningBannerNote} from '../../actions/history'
 import {checkForFlawedWallets} from '../../actions'
 import {
   onDidMount,
@@ -87,56 +88,69 @@ const TxHistory = ({
   lastSyncError,
   availableAmount,
   isFlawedWallet,
-}) => (
-  <SafeAreaView style={styles.scrollView}>
-    <StatusBar type="dark" />
-    <View style={styles.container}>
-      <FlawedWalletModal
-        visible={isFlawedWallet === true}
-        disableButtons={false}
-        onPress={() => navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)}
-        onRequestClose={() =>
-          navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
-        }
-      />
-      <OfflineBanner />
-      {isOnline &&
-        lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
-
-      <AvailableAmountBanner amount={availableAmount} />
-
-      {_.isEmpty(transactionsInfo) ? (
-        <ScrollView
-          refreshControl={
-            <RefreshControl onRefresh={updateHistory} refreshing={isSyncing} />
+  isWarningNoteOpen,
+  closeWarningBannerNote,
+}) => {
+  console.log('@@@@@@@@@@@@@@@', isWarningNoteOpen)
+  return (
+    <SafeAreaView style={styles.scrollView}>
+      <StatusBar type="dark" />
+      <View style={styles.container}>
+        <FlawedWalletModal
+          visible={isFlawedWallet === true}
+          disableButtons={false}
+          onPress={() =>
+            navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
           }
-        >
-          <NoTxHistory />
-        </ScrollView>
-      ) : (
-        <TxHistoryList
-          refreshing={isSyncing}
-          onRefresh={updateHistory}
-          navigation={navigation}
-          transactions={transactionsInfo}
+          onRequestClose={() =>
+            navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+          }
         />
-      )}
+        <OfflineBanner />
+        {isOnline &&
+          lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
 
-      <TxNavigationButtons navigation={navigation} />
-      <WarningBanner
-        title="Note:"
-        icon={infoIcon}
-        message="The Shelley protocol upgrade adds a new Shelley wallet type which supports delegation. To delegate your ADA you will need to upgrade to a Shelley wallet."
-        showCloseIcon
-        // onRequestClose={}
-        buttonTitle="Upgrade"
-        // eslint-disable-next-line no-alert
-        action={() => alert('Upgrade pressed')}
-        style={styles.warningNoteStyles}
-      />
-    </View>
-  </SafeAreaView>
-)
+        <AvailableAmountBanner amount={availableAmount} />
+
+        {_.isEmpty(transactionsInfo) ? (
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                onRefresh={updateHistory}
+                refreshing={isSyncing}
+              />
+            }
+          >
+            <NoTxHistory />
+          </ScrollView>
+        ) : (
+          <TxHistoryList
+            refreshing={isSyncing}
+            onRefresh={updateHistory}
+            navigation={navigation}
+            transactions={transactionsInfo}
+          />
+        )}
+
+        <TxNavigationButtons navigation={navigation} />
+        <WarningBanner
+          title="Note:"
+          icon={infoIcon}
+          message="The Shelley protocol upgrade adds a new Shelley wallet type which supports delegation. To delegate your ADA you will need to upgrade to a Shelley wallet."
+          showCloseIcon={isWarningNoteOpen}
+          onRequestClose={() => closeWarningBannerNote(false)}
+          buttonTitle="Upgrade"
+          // eslint-disable-next-line no-alert
+          action={() => alert('Upgrade pressed')}
+          style={[
+            styles.warningNoteStyles,
+            !isWarningNoteOpen && styles.noWarningBanner,
+          ]}
+        />
+      </View>
+    </SafeAreaView>
+  )
+}
 
 type ExternalProps = {|
   navigation: Navigation,
@@ -155,11 +169,12 @@ export default injectIntl(
         walletName: walletNameSelector(state),
         key: languageSelector(state),
         isFlawedWallet: isFlawedWalletSelector(state),
-        // isNoteOpen:
+        isWarningNoteOpen: isWarningBannerOpen(state),
       }),
       {
         updateHistory,
         checkForFlawedWallets,
+        closeWarningBannerNote,
       },
     ),
     onDidMount(({updateHistory, checkForFlawedWallets}) => {

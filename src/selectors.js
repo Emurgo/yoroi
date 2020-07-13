@@ -93,6 +93,9 @@ export const isOnlineSelector = (state: State): boolean => state.isOnline
 export const isSynchronizingHistorySelector = (state: State): boolean =>
   state.txHistory.isSynchronizing
 
+export const isWarningBannerOpen = (state: State): boolean =>
+  state.txHistory.isWarningBannerOpen
+
 export const lastHistorySyncErrorSelector = (state: State): any =>
   state.txHistory.lastSyncError
 

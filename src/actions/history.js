@@ -26,6 +26,19 @@ const _setSyncError = (message: ?string): any => ({
   reducer: (state, message) => message,
 })
 
+export const _setWarningBannerNote = (mode: ?boolean): any => ({
+  type: 'Set Warning Note',
+  path: ['txHistory', 'isWarningBannerOpen'],
+  payload: mode,
+  reducer: (state, mode) => mode,
+})
+
+export const closeWarningBannerNote = (mode: boolean) => (
+  dispatch: Dispatch<any>,
+) => {
+  dispatch(_setWarningBannerNote(mode))
+}
+
 export const setBackgroundSyncError = _setSyncError
 
 export const updateHistory = () => async (dispatch: Dispatch<any>) => {
