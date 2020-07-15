@@ -367,7 +367,7 @@ describe('encode/decode rust tx', () => {
         addressing: {account: 0, change: 0, index: 0},
       },
     ]
-    outputs.value = 900000000 // 900 ADA
+    outputs[0].value = '900000000' // 900 ADA
     const tx = await signTransaction(wallet, inputs, outputs, change)
     const decodedTx = decodeRustTx(tx.cbor_encoded_tx)
     const reEncodedTx = encodeTxAsRust(decodedTx)
@@ -375,7 +375,7 @@ describe('encode/decode rust tx', () => {
   })
 
   it('can recreate rust tx, with a small amount', async () => {
-    outputs.value = 100
+    outputs[0].value = '100'
     const tx = await signTransaction(wallet, inputs, outputs, change)
     const decodedTx = decodeRustTx(tx.cbor_encoded_tx)
     const reEncodedTx = encodeTxAsRust(decodedTx)
@@ -398,7 +398,7 @@ describe('encode/decode rust tx', () => {
         addressing: {account: 0, change: 0, index: 0},
       },
     ]
-    outputs.value = 999999000000 // 999999 ADA
+    outputs[0].value = '999999000000' // 999999 ADA
     const tx = await signTransaction(wallet, inputs, outputs, change)
     const decodedTx = decodeRustTx(tx.cbor_encoded_tx)
     const reEncodedTx = encodeTxAsRust(decodedTx)
