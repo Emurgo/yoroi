@@ -340,4 +340,11 @@ describe('encode/decode rust tx', () => {
       decodedTx.tx.witnesses[0].PkWitness[0],
     )
   })
+  it('can recreate rust tx, generating exactly the same bytes', async () => {
+    // this tx has multiple inputs so it's a good test for our custom decoder
+    const tx = await signTransaction(wallet, inputs, outputs, change)
+    const decodedTx = decodeRustTx(tx.cbor_encoded_tx)
+    const reEncodedTx = encodeTxAsRust(decodedTx)
+    expect(reEncodedTx.toString('hex')).toBe(tx.cbor_encoded_tx)
+  })
 })
