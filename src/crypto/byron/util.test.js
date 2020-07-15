@@ -317,6 +317,7 @@ describe('encode/decode rust tx', () => {
       value: '15097900',
     },
   ]
+
   it('can decode rust tx', async () => {
     const tx = await signTransaction(wallet, inputs, outputs, change)
     const decodedTx = decodeRustTx(tx.cbor_encoded_tx)
@@ -324,6 +325,7 @@ describe('encode/decode rust tx', () => {
     expect(decodedTx.tx.tx.inputs[0].index).toBe(inputs[0].ptr.index)
     expect(decodedTx.tx.tx.outputs[0].address).toBe(outputs[0].address)
   })
+
   it('encode rust tx', async () => {
     // bytes generated from rust
     const tx = await signTransaction(wallet, inputs, outputs, change)
@@ -340,8 +342,95 @@ describe('encode/decode rust tx', () => {
       decodedTx.tx.witnesses[0].PkWitness[0],
     )
   })
-  it('can recreate rust tx, generating exactly the same bytes', async () => {
-    // this tx has multiple inputs so it's a good test for our custom decoder
+
+  it('can recreate rust tx, with multiple inputs', async () => {
+    // this tx has multiple inputs so it's a good test for our custom encoder
+    const tx = await signTransaction(wallet, inputs, outputs, change)
+    const decodedTx = decodeRustTx(tx.cbor_encoded_tx)
+    const reEncodedTx = encodeTxAsRust(decodedTx)
+    expect(reEncodedTx.toString('hex')).toBe(tx.cbor_encoded_tx)
+  })
+
+  it('can recreate rust tx, with only 1 input', async () => {
+    const inputs = [
+      {
+        ptr: {
+          id:
+            '0cd1ec4dce33c7872c3e090c88e9af2fc56c4d7fba6745d15d4fce5e1d4620ba',
+          index: 0,
+        },
+        value: {
+          address:
+            'Ae2tdPwUPEYxoQwHKy1BEiuFLBtHEAtertUUijFeZMFg9NeaW6N1nWbb7T9',
+          value: '1000000000', // 1000 ADA
+        },
+        addressing: {account: 0, change: 0, index: 0},
+      },
+    ]
+    outputs.value = 900000000 // 900 ADA
+    const tx = await signTransaction(wallet, inputs, outputs, change)
+    const decodedTx = decodeRustTx(tx.cbor_encoded_tx)
+    const reEncodedTx = encodeTxAsRust(decodedTx)
+    expect(reEncodedTx.toString('hex')).toBe(tx.cbor_encoded_tx)
+  })
+
+  it('can recreate rust tx, with a small amount', async () => {
+    outputs.value = 100
+    const tx = await signTransaction(wallet, inputs, outputs, change)
+    const decodedTx = decodeRustTx(tx.cbor_encoded_tx)
+    const reEncodedTx = encodeTxAsRust(decodedTx)
+    expect(reEncodedTx.toString('hex')).toBe(tx.cbor_encoded_tx)
+  })
+
+  it('can recreate rust tx, with a ~big amount', async () => {
+    const inputs = [
+      {
+        ptr: {
+          id:
+            '0cd1ec4dce33c7872c3e090c88e9af2fc56c4d7fba6745d15d4fce5e1d4620ba',
+          index: 0,
+        },
+        value: {
+          address:
+            'Ae2tdPwUPEYxoQwHKy1BEiuFLBtHEAtertUUijFeZMFg9NeaW6N1nWbb7T9',
+          value: '1000000000000', // 1M ADA
+        },
+        addressing: {account: 0, change: 0, index: 0},
+      },
+    ]
+    outputs.value = 999999000000 // 999999 ADA
+    const tx = await signTransaction(wallet, inputs, outputs, change)
+    const decodedTx = decodeRustTx(tx.cbor_encoded_tx)
+    const reEncodedTx = encodeTxAsRust(decodedTx)
+    expect(reEncodedTx.toString('hex')).toBe(tx.cbor_encoded_tx)
+  })
+
+  it('can recreate rust tx, with big amounts and multiple outputs', async () => {
+    const inputs = [
+      {
+        ptr: {
+          id:
+            '0cd1ec4dce33c7872c3e090c88e9af2fc56c4d7fba6745d15d4fce5e1d4620ba',
+          index: 0,
+        },
+        value: {
+          address:
+            'Ae2tdPwUPEYxoQwHKy1BEiuFLBtHEAtertUUijFeZMFg9NeaW6N1nWbb7T9',
+          value: '10000000000000000', // 10G ADA
+        },
+        addressing: {account: 0, change: 0, index: 0},
+      },
+    ]
+    const outputs = [
+      {
+        address: 'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
+        value: '4400000000000000',
+      },
+      {
+        address: 'Ae2tdPwUPEZ8wGxWm9VbZXFJcgLeKQJWKqREVEtHXYdqsqc4bLeGqjSwrtu',
+        value: '4400000000000000',
+      },
+    ]
     const tx = await signTransaction(wallet, inputs, outputs, change)
     const decodedTx = decodeRustTx(tx.cbor_encoded_tx)
     const reEncodedTx = encodeTxAsRust(decodedTx)
