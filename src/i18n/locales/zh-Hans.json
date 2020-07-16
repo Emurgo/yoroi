@@ -33,6 +33,7 @@
   "components.delegationsummary.userSummary.totalDelegated": "委托总量",
   "components.delegationsummary.userSummary.totalRewards": "收益总量",
   "components.delegationsummary.warningbanner.message": " 最后的ITN奖励在190号纪元截止发放完毕。一旦Shelley在主网上发布，就可以在主网上领取ITN奖励。",
+  "components.delegationsummary.warningbanner.message2": "Your ITN wallet rewards and balance may not be correctly displayed, but this information is still securely stored in the ITN blockchain.",
   "components.delegationsummary.warningbanner.title": "注意：",
   "components.firstrun.acepttermsofservicescreen.aggreeClause": "我同意服务条款",
   "components.firstrun.acepttermsofservicescreen.continueButton": "接受",
