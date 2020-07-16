@@ -109,6 +109,8 @@ PODS:
   - React-RCTWebSocket (0.60.0):
     - React-Core (= 0.60.0)
     - React-fishhook (= 0.60.0)
+  - ReactNativePermissions (1.2.1):
+    - React
   - RNCardano (0.2.2):
     - React
   - RNCAsyncStorage (1.5.1):
@@ -124,9 +126,9 @@ PODS:
     - Sentry (~> 5.1.4)
   - RNSVG (7.2.1):
     - React
-  - Sentry (5.1.4):
-    - Sentry/Core (= 5.1.4)
-  - Sentry/Core (5.1.4)
+  - Sentry (5.1.9):
+    - Sentry/Core (= 5.1.9)
+  - Sentry/Core (5.1.9)
   - yoga (0.60.0.React)
 
 DEPENDENCIES:
@@ -161,12 +163,13 @@ DEPENDENCIES:
   - React-RCTText (from `../node_modules/react-native/Libraries/Text`)
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-RCTWebSocket (from `../node_modules/react-native/Libraries/WebSocket`)
+  - ReactNativePermissions (from `../node_modules/react-native-permissions/ReactNativePermissions.podspec`)
   - RNCardano (from `../node_modules/react-native-cardano`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNFS (from `../node_modules/react-native-fs`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
-  - "RNSentry (from `../node_modules/@sentry/react-native`)"
+  - "RNSentry (from `../node_modules/@sentry/react-native/RNSentry.podspec`)"
   - RNSVG (from `../node_modules/react-native-svg`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -239,6 +242,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/Vibration"
   React-RCTWebSocket:
     :path: "../node_modules/react-native/Libraries/WebSocket"
+  ReactNativePermissions:
+    :podspec: "../node_modules/react-native-permissions/ReactNativePermissions.podspec"
   RNCardano:
     :path: "../node_modules/react-native-cardano"
   RNCAsyncStorage:
@@ -250,7 +255,7 @@ EXTERNAL SOURCES:
   RNKeychain:
     :path: "../node_modules/react-native-keychain"
   RNSentry:
-    :path: "../node_modules/@sentry/react-native"
+    :path: "../node_modules/@sentry/react-native/RNSentry.podspec"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   yoga:
@@ -290,6 +295,7 @@ SPEC CHECKSUMS:
   React-RCTText: 685fca2e13b024271048e7e247ef24476f28a41e
   React-RCTVibration: 4ee1cf208ab17a50fafb1c16ffe28fe594a64e4f
   React-RCTWebSocket: fca087d583724aa0e5fef7d911f0f2a28d0f2736
+  ReactNativePermissions: 7cfad56d13c8961cd2a1005b4955b1400c79ef3e
   RNCardano: 7b7060d93453e30b1889ff66d41e1874eadeb9e2
   RNCAsyncStorage: b63d6e83fc629b01df6b624688f17944cea5637f
   RNDeviceInfo: e2102056bde3ad5d137fd029d8d431510a00486a
@@ -297,9 +303,9 @@ SPEC CHECKSUMS:
   RNKeychain: 3aa3cf891a09a0d18d306862ab2bb9e106079b24
   RNSentry: 0a70359ddacbfb9b1cbbb0971e54065b9f70ac57
   RNSVG: 6c8e8c6f9e5a0caf910dd25aa6e4216045426e1d
-  Sentry: 74f2ad93a20a5567a1badaedf5b3f60b142ad082
+  Sentry: 81f7f2bd3cb041137ea7efcde3aa5ad0d5a67632
   yoga: 616fde658be980aa60a2158835170f3f9c2d04b4
 
-PODFILE CHECKSUM: 0fbec2fcc6c080ddc6fa2a7a4f76ca767269a11a
+PODFILE CHECKSUM: 5eb22e991dd8c6f04861321cfa16585cdf437cfb
 
 COCOAPODS: 1.9.1
