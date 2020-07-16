@@ -302,5 +302,47 @@ export const encodeTxAsRust = (tx: CryptoTransaction): Buffer => {
     ]
   })
   const normTx = [[inputs, outputs, {}], witnesses]
+  // next we change a few CBOR symbols in order to, hopefully, generate
+  // exactly the same output that is generated through the rust libs
+
+  let txHex = cbor
+    .encode(normTx)
+    .toString('hex')
+    .toLowerCase()
+
+  // eslint-disable-next-line max-len
+  const CBOR_REGEX = /^(8283)(8\d)(8200d8185824[0-9A-Fa-f]{72})+(8\d)(8282d8185821[0-9A-Fa-f]{66}1(a|b)[0-9A-Fa-f]{6,}1(a|b)[0-9A-Fa-f]{6,})+(a08\d[0-9A-Fa-f]*$)/
+
+  if (CBOR_REGEX.test(txHex)) {
+    // replace opening array tag by indefinite-length tag (9f) for inputs array
+    const inputsRegex = /^(8283)(8\d)(8200d8185824)/
+    assert.assert(inputsRegex.test(txHex), 'can locate input array opening tag')
+    txHex = txHex.replace(inputsRegex, '$19f$3')
+
+    // add closing tag for inputs array (ff)
+    const inputsClosingRegex = /([0-9A-Fa-f]{72})(8\d8282d8185821)/
+    assert.assert(
+      inputsClosingRegex.test(txHex),
+      'can locate input array closing tag',
+    )
+    txHex = txHex.replace(inputsClosingRegex, '$1ff$2')
+
+    // do the same for outputs array
+    const outputsRegex = /([0-9A-Fa-f]{72}ff)(8\d)(8282d8185821)/
+    assert.assert(
+      outputsRegex.test(txHex),
+      'can locate output array opening tag',
+    )
+    txHex = txHex.replace(outputsRegex, '$19f$3')
+
+    const outputsClosingRegex = /(1(?:a|b)[0-9A-Fa-f]{6,})(a08\d[0-9A-Fa-f]*$)/
+    assert.assert(
+      outputsClosingRegex.test(txHex),
+      'can locate output array closing tag',
+    )
+    txHex = txHex.replace(outputsClosingRegex, '$1ff$2')
+
+    return Buffer.from(txHex, 'hex')
+  }
   return cbor.encode(normTx)
 }
