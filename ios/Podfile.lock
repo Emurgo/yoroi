@@ -169,7 +169,7 @@ DEPENDENCIES:
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNFS (from `../node_modules/react-native-fs`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
-  - "RNSentry (from `../node_modules/@sentry/react-native`)"
+  - "RNSentry (from `../node_modules/@sentry/react-native/RNSentry.podspec`)"
   - RNSVG (from `../node_modules/react-native-svg`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -255,7 +255,7 @@ EXTERNAL SOURCES:
   RNKeychain:
     :path: "../node_modules/react-native-keychain"
   RNSentry:
-    :path: "../node_modules/@sentry/react-native"
+    :path: "../node_modules/@sentry/react-native/RNSentry.podspec"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   yoga:
@@ -306,6 +306,6 @@ SPEC CHECKSUMS:
   Sentry: 81f7f2bd3cb041137ea7efcde3aa5ad0d5a67632
   yoga: 616fde658be980aa60a2158835170f3f9c2d04b4
 
-PODFILE CHECKSUM: e4d4476098bdf754f01c417bdfc20ae99a726743
+PODFILE CHECKSUM: 5eb22e991dd8c6f04861321cfa16585cdf437cfb
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.9.1

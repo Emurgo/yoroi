@@ -28,7 +28,7 @@ def pods()
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  pod 'RNSentry', :path => '../node_modules/@sentry/react-native'
+  pod 'RNSentry', :path => '../node_modules/@sentry/react-native/RNSentry.podspec'
 
   pod 'ReactNativePermissions', :podspec => '../node_modules/react-native-permissions/ReactNativePermissions.podspec'
 
