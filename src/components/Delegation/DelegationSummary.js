@@ -52,6 +52,7 @@ import globalMessages from '../../i18n/global-messages'
 import {formatAdaWithText, formatAdaInteger} from '../../utils/format'
 import FlawedWalletScreen from './FlawedWalletScreen'
 import {getReputation} from '../../api/api'
+import {Logger} from '../../utils/logging'
 
 import infoIcon from '../../assets/img/icon/info-light-green.png'
 import styles from './styles/DelegationSummary.style'
@@ -74,6 +75,12 @@ const warningBannerMessages = defineMessages({
     defaultMessage:
       '!!!The last ITN rewards were distributed on epoch 190. ' +
       'Rewards can be claimed on mainnet once Shelley is released on mainnet.',
+  },
+  message2: {
+    id: 'components.delegationsummary.warningbanner.message2',
+    defaultMessage:
+      '!!!Your ITN wallet rewards and balance may not be correctly displayed,' +
+      'but this information is still securely stored in the ITN blockchain.',
   },
 })
 
@@ -131,7 +138,12 @@ class DelegationSummary extends React.Component<Props, State> {
       1000,
     )
     this.props.checkForFlawedWallets()
-    this._poolsReputation = await getReputation()
+    // wrap with try/catch to avoid unnecessary error prompt
+    try {
+      this._poolsReputation = await getReputation()
+    } catch (e) {
+      Logger.warn(e.message)
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -294,7 +306,9 @@ class DelegationSummary extends React.Component<Props, State> {
                 .formatMessage(warningBannerMessages.title)
                 .toUpperCase()}
               icon={infoIcon}
-              message={intl.formatMessage(warningBannerMessages.message)}
+              message={`${intl.formatMessage(
+                warningBannerMessages.message,
+              )}\n${intl.formatMessage(warningBannerMessages.message2)}`}
               style={styles.itemTopMargin}
             />
             {!this._isDelegating && <NotDelegatedInfo />}
@@ -350,9 +364,10 @@ class DelegationSummary extends React.Component<Props, State> {
             /* eslint-enable indent */
             }
           </ScrollView>
+          {/* disable button by default as ITN is over */}
           <DelegationNavigationButtons
             onPress={this.navigateToStakingCenter}
-            disabled={isFetchingAccountState || isFetchingUtxos}
+            disabled
           />
         </View>
         <NavigationEvents onDidFocus={this.handleDidFocus} />
