@@ -33,6 +33,7 @@
   "components.delegationsummary.userSummary.totalDelegated": "Ukupno Uloženo",
   "components.delegationsummary.userSummary.totalRewards": "Ukupne Nagrade",
   "components.delegationsummary.warningbanner.message": "The last ITN rewards were distributed on epoch 190. Rewards can be claimed on mainnet once Shelley is released on mainnet.",
+  "components.delegationsummary.warningbanner.message2": "Your ITN wallet rewards and balance may not be correctly displayed, but this information is still securely stored in the ITN blockchain.",
   "components.delegationsummary.warningbanner.title": "Note:",
   "components.firstrun.acepttermsofservicescreen.aggreeClause": "I agree with the Terms of Service",
   "components.firstrun.acepttermsofservicescreen.continueButton": "Prihvati",
