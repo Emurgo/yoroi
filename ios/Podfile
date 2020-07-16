@@ -29,6 +29,9 @@ def pods()
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
   pod 'RNSentry', :path => '../node_modules/@sentry/react-native'
+
+  pod 'ReactNativePermissions', :podspec => '../node_modules/react-native-permissions/ReactNativePermissions.podspec'
+
 end
 
 target 'emurgo' do
