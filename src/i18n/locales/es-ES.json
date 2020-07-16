@@ -33,7 +33,7 @@
   "components.delegationsummary.userSummary.totalDelegated": "Total delegado",
   "components.delegationsummary.userSummary.totalRewards": "Total recompensas",
   "components.delegationsummary.warningbanner.message": "Las últimas recompensas de la ITN fueron distribuidas en el epoch 190. Las recompensas podrán ser reclamadas en la red principal (mainnet) una vez que Shelley sea lanzado.",
-  "components.delegationsummary.warningbanner.message2": "Es posible que la recompensa y el saldo de su billetera ITN no se muestren correctamente, pero esta información sigue almacenada de forma segura en la blockchain de ITN.",
+  "components.delegationsummary.warningbanner.message2": "Es posible que las recompensas y el saldo de tu billetera de la ITN no se muestren correctamente, sin embargo esta información permanece almacenada de forma segura en la blockchain de la ITN.",
   "components.delegationsummary.warningbanner.title": "Nota:",
   "components.firstrun.acepttermsofservicescreen.aggreeClause": "Estoy de acuerdo con los términos de servicio.",
   "components.firstrun.acepttermsofservicescreen.continueButton": "Aceptar",
