@@ -30,7 +30,8 @@ def pods()
 
   pod 'RNSentry', :path => '../node_modules/@sentry/react-native/RNSentry.podspec'
 
-  pod 'ReactNativePermissions', :podspec => '../node_modules/react-native-permissions/ReactNativePermissions.podspec'
+  permissions_path = '../node_modules/react-native-permissions/ios'
+  pod 'Permission-Camera', :path => "#{permissions_path}/Camera.podspec"
 
 end
 
