@@ -33,7 +33,7 @@
   "components.delegationsummary.userSummary.totalDelegated": "Total Délégué",
   "components.delegationsummary.userSummary.totalRewards": "Total des Récompenses",
   "components.delegationsummary.warningbanner.message": "Les dernières récompenses ITN ont été distribuées à l'époque 190. Les récompenses peuvent être récupérées sur le réseau principal une fois que Shelley sera activé sur le réseau principal.",
-  "components.delegationsummary.warningbanner.message2": "Il est possible que les récompenses et le solde de votre portefeuille de ITN ne s'affichent pas correctement, mais ces informations sont tout de même stockées en toute sécurité dans la blockchain de ITN.",
+  "components.delegationsummary.warningbanner.message2": "Il est possible que les récompenses et le solde de votre portefeuille de l'ITN ne s'affichent pas correctement, mais ces informations sont tout de même stockées en toute sécurité dans la blockchain de l'ITN.",
   "components.delegationsummary.warningbanner.title": "Remarque :",
   "components.firstrun.acepttermsofservicescreen.aggreeClause": "J'accepte les conditions d'utilisation",
   "components.firstrun.acepttermsofservicescreen.continueButton": "Accepter",
