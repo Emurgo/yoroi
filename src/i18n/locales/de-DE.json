@@ -33,7 +33,7 @@
   "components.delegationsummary.userSummary.totalDelegated": "Insgesamt delegiert",
   "components.delegationsummary.userSummary.totalRewards": "Summe der Erträge",
   "components.delegationsummary.warningbanner.message": "Die letzten ITN Erträge wurden in Epoche 190 ausbezahlt. Erträge können im Mainnet beantragt werden sobald Shelley im Mainnet veröfföntlicht wurde.",
-  "components.delegationsummary.warningbanner.message2": "Your ITN wallet rewards and balance may not be correctly displayed, but this information is still securely stored in the ITN blockchain.",
+  "components.delegationsummary.warningbanner.message2": "Deine ITN Wallet Erträge und der Kontostand werden vielleicht nicht korrekt angezeigt. Die Information ist aber immer sicher in der ITN Blockchain gespeichert. ",
   "components.delegationsummary.warningbanner.title": "Notiz:",
   "components.firstrun.acepttermsofservicescreen.aggreeClause": "Ich stimme den Nutzungsbestimmungen zu",
   "components.firstrun.acepttermsofservicescreen.continueButton": "Akzeptieren",
