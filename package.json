@@ -54,7 +54,7 @@
     "intl": "^1.2.5",
     "jsc-android": "241213.1.0",
     "localized-strings": "^0.2.0",
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.19",
     "moment": "^2.22.2",
     "net": "^1.0.2",
     "node-cardano-wallet": "https://github.com/Emurgo/node-cardano-wallet.git",
