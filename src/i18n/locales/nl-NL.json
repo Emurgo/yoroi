@@ -33,7 +33,7 @@
   "components.delegationsummary.userSummary.totalDelegated": "Total Delegated",
   "components.delegationsummary.userSummary.totalRewards": "Total Rewards",
   "components.delegationsummary.warningbanner.message": "De laatste ITN-beloningen werden toegewezen in periode 190. Beloningen kunnen worden opgeëist op publieke net zodra Shelley wordt vrijgegeven op het publieke net.",
-  "components.delegationsummary.warningbanner.message2": "Your ITN wallet rewards and balance may not be correctly displayed, but this information is still securely stored in the ITN blockchain.",
+  "components.delegationsummary.warningbanner.message2": "De beloningen en het saldo van uw ITN-portemonnee worden mogelijk niet correct weergegeven, maar deze informatie wordt nog steeds veilig opgeslagen in de I.T.N. Blockchain.",
   "components.delegationsummary.warningbanner.title": "Opmerking:",
   "components.firstrun.acepttermsofservicescreen.aggreeClause": "Ik ga akkoord met de servicevoorwaarden",
   "components.firstrun.acepttermsofservicescreen.continueButton": "Accept",
