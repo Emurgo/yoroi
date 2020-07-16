@@ -33,6 +33,7 @@
   "components.delegationsummary.userSummary.totalDelegated": "Totale delegato",
   "components.delegationsummary.userSummary.totalRewards": "Totale ricompense",
   "components.delegationsummary.warningbanner.message": "Gli ultimi premi ITN sono stati distribuiti durante l'epoca 190. I premi possono essere reclamati su mainnet una volta che Shelley è stata rilasciata su mainnet.",
+  "components.delegationsummary.warningbanner.message2": "Your ITN wallet rewards and balance may not be correctly displayed, but this information is still securely stored in the ITN blockchain.",
   "components.delegationsummary.warningbanner.title": "Nota:",
   "components.firstrun.acepttermsofservicescreen.aggreeClause": "Accetto i Termini di Servizio",
   "components.firstrun.acepttermsofservicescreen.continueButton": "Accetto",
