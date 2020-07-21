@@ -14,6 +14,8 @@ PODS:
     - glog
   - glog (0.3.5)
   - MultiplatformBleAdapter (0.1.5)
+  - Permission-Camera (2.1.5):
+    - RNPermissions
   - React (0.60.0):
     - React-Core (= 0.60.0)
     - React-DevSupport (= 0.60.0)
@@ -109,8 +111,6 @@ PODS:
   - React-RCTWebSocket (0.60.0):
     - React-Core (= 0.60.0)
     - React-fishhook (= 0.60.0)
-  - ReactNativePermissions (1.2.1):
-    - React
   - RNCardano (0.2.2):
     - React
   - RNCAsyncStorage (1.5.1):
@@ -120,6 +120,8 @@ PODS:
   - RNFS (2.13.3):
     - React
   - RNKeychain (3.0.0):
+    - React
+  - RNPermissions (2.1.5):
     - React
   - RNSentry (1.4.5):
     - React
@@ -136,6 +138,7 @@ DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - Permission-Camera (from `../node_modules/react-native-permissions/ios/Camera.podspec`)
   - React (from `../node_modules/react-native`)
   - React-Core (from `../node_modules/react-native/React`)
   - React-cxxreact (from `../node_modules/react-native/ReactCommon/cxxreact`)
@@ -163,12 +166,12 @@ DEPENDENCIES:
   - React-RCTText (from `../node_modules/react-native/Libraries/Text`)
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-RCTWebSocket (from `../node_modules/react-native/Libraries/WebSocket`)
-  - ReactNativePermissions (from `../node_modules/react-native-permissions/ReactNativePermissions.podspec`)
   - RNCardano (from `../node_modules/react-native-cardano`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNFS (from `../node_modules/react-native-fs`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
+  - RNPermissions (from `../node_modules/react-native-permissions`)
   - "RNSentry (from `../node_modules/@sentry/react-native/RNSentry.podspec`)"
   - RNSVG (from `../node_modules/react-native-svg`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -188,6 +191,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/Folly.podspec"
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
+  Permission-Camera:
+    :path: "../node_modules/react-native-permissions/ios/Camera.podspec"
   React:
     :path: "../node_modules/react-native"
   React-Core:
@@ -242,8 +247,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/Vibration"
   React-RCTWebSocket:
     :path: "../node_modules/react-native/Libraries/WebSocket"
-  ReactNativePermissions:
-    :podspec: "../node_modules/react-native-permissions/ReactNativePermissions.podspec"
   RNCardano:
     :path: "../node_modules/react-native-cardano"
   RNCAsyncStorage:
@@ -254,6 +257,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-fs"
   RNKeychain:
     :path: "../node_modules/react-native-keychain"
+  RNPermissions:
+    :path: "../node_modules/react-native-permissions"
   RNSentry:
     :path: "../node_modules/@sentry/react-native/RNSentry.podspec"
   RNSVG:
@@ -268,6 +273,7 @@ SPEC CHECKSUMS:
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
   MultiplatformBleAdapter: 3c4391d428382738a47662ae1f665a29ce78ff39
+  Permission-Camera: afad27bf90337684d4a86f3825112d648c8c4d3b
   React: 4b3c068e793e96672dcd186a2b572fac43e4b031
   React-Core: 3dc86b22920597f813c62a96db3165950b64826b
   React-cxxreact: 0dacb291e59b81e7c3f22a2118bee853ba8a60d2
@@ -295,17 +301,17 @@ SPEC CHECKSUMS:
   React-RCTText: 685fca2e13b024271048e7e247ef24476f28a41e
   React-RCTVibration: 4ee1cf208ab17a50fafb1c16ffe28fe594a64e4f
   React-RCTWebSocket: fca087d583724aa0e5fef7d911f0f2a28d0f2736
-  ReactNativePermissions: 7cfad56d13c8961cd2a1005b4955b1400c79ef3e
   RNCardano: 7b7060d93453e30b1889ff66d41e1874eadeb9e2
   RNCAsyncStorage: b63d6e83fc629b01df6b624688f17944cea5637f
   RNDeviceInfo: e2102056bde3ad5d137fd029d8d431510a00486a
   RNFS: c9bbde46b0d59619f8e7b735991c60e0f73d22c1
   RNKeychain: 3aa3cf891a09a0d18d306862ab2bb9e106079b24
+  RNPermissions: ad71dd4f767ec254f2cd57592fbee02afee75467
   RNSentry: 0a70359ddacbfb9b1cbbb0971e54065b9f70ac57
   RNSVG: 6c8e8c6f9e5a0caf910dd25aa6e4216045426e1d
   Sentry: 81f7f2bd3cb041137ea7efcde3aa5ad0d5a67632
   yoga: 616fde658be980aa60a2158835170f3f9c2d04b4
 
-PODFILE CHECKSUM: 5eb22e991dd8c6f04861321cfa16585cdf437cfb
+PODFILE CHECKSUM: 2a3f32cbedbb24796d1391777367809ab3a8b1ca
 
 COCOAPODS: 1.9.1
