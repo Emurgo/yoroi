@@ -1,6 +1,6 @@
 // @flow
 
-import {CONFIG} from './config.js'
+import {CONFIG} from './config/config'
 
 export const TX_HISTORY_ROUTES = {
   MAIN: 'tx-history-list',
