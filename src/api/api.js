@@ -1,4 +1,10 @@
 // @flow
+
+/**
+ * this is the old API library used for Byron
+ * TODO: remove
+ */
+
 import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
 import DeviceInfo from 'react-native-device-info'

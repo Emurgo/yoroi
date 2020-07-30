@@ -37,6 +37,7 @@ export const ASSURANCE_LEVELS = {
 
 const HARDWARE_WALLETS = {
   LEDGER_NANO: {
+    ENABLED: false,
     DEFAULT_WALLET_NAME: 'My Ledger Wallet',
     VENDOR: 'ledger.com',
     MODEL: 'Nano',

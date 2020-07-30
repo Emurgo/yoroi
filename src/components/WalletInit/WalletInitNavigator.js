@@ -13,7 +13,7 @@ import MnemonicShowScreen from './CreateWallet/MnemonicShowScreen'
 import HeaderBackButton from '../UiKit/HeaderBackButton'
 import {
   defaultNavigationOptions,
-  shelleyNavigationOptions,
+  jormunNavigationOptions,
   defaultStackNavigatorOptions,
 } from '../../navigationOptions'
 import MnemonicCheckScreen from './CreateWallet/MnemonicCheckScreen'
@@ -21,6 +21,7 @@ import WalletCredentialsScreen from './RestoreWallet/WalletCredentialsScreen'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 // eslint-disable-next-line max-len
 import WalletSelectionScreen from '../../components/WalletSelection/WalletSelectionScreen'
+import {isJormungandr} from '../../config/networks'
 
 const WalletInitNavigator = createStackNavigator(
   {
@@ -53,12 +54,12 @@ const WalletInitNavigator = createStackNavigator(
     navigationOptions: ({navigation}) => {
       let navigationOptions
       if (
-        navigation.getParam('isShelleyWallet') === true &&
+        isJormungandr(navigation.getParam('networkId')) &&
         navigation.state.routeName !== WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH
       ) {
         navigationOptions = {
           ...defaultNavigationOptions,
-          ...shelleyNavigationOptions,
+          ...jormunNavigationOptions,
         }
       } else {
         navigationOptions = defaultNavigationOptions

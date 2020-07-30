@@ -13,7 +13,7 @@ import cbor from 'cbor'
 import cryptoRandomString from 'crypto-random-string'
 
 import assert from '../../utils/assert'
-import {CONFIG} from '../../config'
+import {CONFIG} from '../../config/config'
 import {
   _rethrow,
   InsufficientFunds,
@@ -57,7 +57,7 @@ export const getMasterKeyFromMnemonic = async (mnemonic: string) => {
 export const getAccountFromMasterKey = async (
   masterKey: Buffer,
   accountIndex?: number = CONFIG.NUMBERS.ACCOUNT_INDEX,
-  protocolMagic?: number = CONFIG.CARDANO.PROTOCOL_MAGIC,
+  protocolMagic?: number = CONFIG.NETWORKS.BYRON_MAINNET.PROTOCOL_MAGIC,
 ): Promise<CryptoAccount> => {
   const wallet = await _rethrow(Wallet.fromMasterKey(masterKey))
   wallet.config.protocol_magic = protocolMagic
@@ -115,7 +115,7 @@ export const getAddresses = (
   account: CryptoAccount,
   type: AddressType,
   indexes: Array<number>,
-  protocolMagic?: number = CONFIG.CARDANO.PROTOCOL_MAGIC,
+  protocolMagic?: number = CONFIG.NETWORKS.BYRON_MAINNET.PROTOCOL_MAGIC,
 ): Promise<Array<string>> =>
   _rethrow(Wallet.generateAddresses(account, type, indexes, protocolMagic))
 
@@ -123,7 +123,6 @@ export const getAddressesFromMnemonics = async (
   mnemonic: string,
   type: AddressType,
   indexes: Array<number>,
-  networkConfig?: Object = CONFIG.CARDANO,
 ): Promise<Array<string>> => {
   const masterKey = await getMasterKeyFromMnemonic(mnemonic)
   const account = await getAccountFromMasterKey(masterKey)
@@ -133,13 +132,13 @@ export const getAddressesFromMnemonics = async (
 export const getExternalAddresses = (
   account: CryptoAccount,
   indexes: Array<number>,
-  protocolMagic?: number = CONFIG.CARDANO.PROTOCOL_MAGIC,
+  protocolMagic?: number = CONFIG.NETWORKS.BYRON_MAINNET.PROTOCOL_MAGIC,
 ) => getAddresses(account, 'External', indexes, protocolMagic)
 
 export const getInternalAddresses = (
   account: CryptoAccount,
   indexes: Array<number>,
-  protocolMagic?: number = CONFIG.CARDANO.PROTOCOL_MAGIC,
+  protocolMagic?: number = CONFIG.NETWORKS.BYRON_MAINNET.PROTOCOL_MAGIC,
 ) => getAddresses(account, 'Internal', indexes, protocolMagic)
 
 export const getAddressInHex = (address: string): string => {
@@ -170,7 +169,7 @@ export const generateFakeWallet = async () => {
 
 export const getWalletFromMasterKey = async (
   masterKeyHex: string,
-  protocolMagic?: number = CONFIG.CARDANO.PROTOCOL_MAGIC,
+  protocolMagic?: number = CONFIG.NETWORKS.BYRON_MAINNET.PROTOCOL_MAGIC,
 ) => {
   const wallet = await _rethrow(Wallet.fromMasterKey(masterKeyHex))
   wallet.config.protocol_magic = protocolMagic

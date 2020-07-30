@@ -30,7 +30,7 @@ export default (
   payload: ?any,
   networkConfig: any,
   method?: RequestMethod = 'POST',
-  checkResponse?: () => void = _checkResponse
+  checkResponse?: () => void = _checkResponse,
 ) => {
   const fullPath = `${networkConfig.API_ROOT}/${path}`
   const platform =

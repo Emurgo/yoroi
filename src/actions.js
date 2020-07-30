@@ -53,6 +53,7 @@ import {type Dispatch} from 'redux'
 import {type State} from './state'
 import type {PreparedTransactionData} from './types/HistoryTransaction'
 import type {HWDeviceInfo} from './crypto/byron/ledgerUtils'
+import type {NetworkId} from './config/networks'
 
 const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
   const handlers = {
@@ -379,9 +380,9 @@ export const createWallet = (
   name: string,
   mnemonic: string,
   password: string,
-  isShelley?: boolean = false,
+  networkId: NetworkId,
 ) => async (dispatch: Dispatch<any>) => {
-  await walletManager.createWallet(name, mnemonic, password, isShelley)
+  await walletManager.createWallet(name, mnemonic, password, networkId)
   dispatch(updateWallets())
 }
 
@@ -389,13 +390,13 @@ export const createWalletWithBip44Account = (
   name: string,
   bip44AccountPublic: string,
   hwDeviceInfo: ?HWDeviceInfo,
-  isShelley?: boolean = false,
+  networkId: NetworkId,
 ) => async (dispatch: Dispatch<any>) => {
   await walletManager.createWalletWithBip44Account(
     name,
     bip44AccountPublic,
     hwDeviceInfo,
-    isShelley,
+    networkId,
   )
   dispatch(updateWallets())
 }
@@ -522,8 +523,6 @@ export const submitSignedTx = (signedTx: string) => async (
   Logger.info('submitting tx...')
   await walletManager.submitTransaction(signedTx)
 
-  // note(v-almonacid): tx history sync for shelley is not implemented yet,
-  // but this action is required to update the wallet state
   dispatch(updateHistory())
 }
 

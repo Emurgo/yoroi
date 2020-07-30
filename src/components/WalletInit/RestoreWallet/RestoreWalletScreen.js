@@ -11,7 +11,7 @@ import _ from 'lodash'
 
 import {Text, Button, ValidatedTextInput, StatusBar} from '../../UiKit'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
-import {CONFIG} from '../../../config'
+import {CONFIG} from '../../../config/config'
 import {
   validateRecoveryPhrase,
   INVALID_PHRASE_ERROR_CODES,
@@ -173,7 +173,7 @@ export default injectIntl(
       navigateToWalletCredentials: ({navigation, phrase}) => (event) => {
         navigation.navigate(WALLET_INIT_ROUTES.WALLET_CREDENTIALS, {
           phrase: cleanMnemonic(phrase),
-          isShelleyWallet: !!navigation.getParam('isShelleyWallet'),
+          networkId: navigation.getParam('networkId'),
         })
       },
       translateInvalidPhraseError: ({intl}) => (error) =>

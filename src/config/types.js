@@ -5,6 +5,7 @@ export const NETWORK_REGISTRY = {
   HASKELL_SHELLEY: 1,
   JORMUNGANDR: 100,
   // ERGO: 200,
+  UNDEFINED: -1,
 }
 
 export type NetworkId = $Values<typeof NETWORK_REGISTRY>

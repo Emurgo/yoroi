@@ -21,8 +21,8 @@ const NETWORK_CONFIG = CONFIG.NETWORKS.BYRON_MAINNET.BACKEND
 
 type Addresses = Array<string>
 
-export const checkServerStatus = (
-): Promise<ServerStatusResponse> => checkedFetch('status', null, NETWORK_CONFIG, 'GET')
+export const checkServerStatus = (): Promise<ServerStatusResponse> =>
+  checkedFetch('status', null, NETWORK_CONFIG, 'GET')
 
 export const getBestBlock = (): Promise<BestblockResponse> =>
   checkedFetch('v2/bestblock', null, NETWORK_CONFIG, 'GET')
@@ -62,9 +62,7 @@ export const filterUsedAddresses = async (
   return copy.filter((addr) => used.includes(addr))
 }
 
-export const fetchUTXOsForAddresses = (
-  addresses: Addresses,
-) => {
+export const fetchUTXOsForAddresses = (addresses: Addresses) => {
   assert.preconditionCheck(
     addresses.length <= NETWORK_CONFIG.FETCH_UTXOS_MAX_ADDRESSES,
     'fetchNewTxHistory: too many addresses',
@@ -73,7 +71,8 @@ export const fetchUTXOsForAddresses = (
 }
 
 export const bulkFetchUTXOsForAddresses = async (
-  addresses: Addresses): Promise<Array<RawUtxo>> => {
+  addresses: Addresses,
+): Promise<Array<RawUtxo>> => {
   const chunks = _.chunk(addresses, NETWORK_CONFIG.FETCH_UTXOS_MAX_ADDRESSES)
 
   const responses = await Promise.all(
@@ -82,9 +81,7 @@ export const bulkFetchUTXOsForAddresses = async (
   return _.flatten(responses)
 }
 
-export const submitTransaction = (
-  signedTx: string,
-) => {
+export const submitTransaction = (signedTx: string) => {
   return checkedFetch('txs/signed', {signedTx}, NETWORK_CONFIG)
 }
 
@@ -126,6 +123,7 @@ export const bulkFetchUTXOSumForAddresses = async (
 }
 
 export const getTxsBodiesForUTXOs = (
-  request: TxBodiesRequest): Promise<TxBodiesResponse> => {
+  request: TxBodiesRequest,
+): Promise<TxBodiesResponse> => {
   return checkedFetch('txs/txBodies', request, NETWORK_CONFIG)
 }

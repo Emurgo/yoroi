@@ -21,11 +21,10 @@ const NETWORK_CONFIG = CONFIG.NETWORKS.JORMUNGANDR.BACKEND
 
 type Addresses = Array<string>
 
-export const checkServerStatus = (
-): Promise<ServerStatusResponse> => checkedFetch('status', null, NETWORK_CONFIG, 'GET')
+export const checkServerStatus = (): Promise<ServerStatusResponse> =>
+  checkedFetch('status', null, NETWORK_CONFIG, 'GET')
 
-export const getBestBlock = (
-): Promise<BestblockResponse> =>
+export const getBestBlock = (): Promise<BestblockResponse> =>
   checkedFetch('v2/bestblock', null, NETWORK_CONFIG, 'GET')
 
 export const fetchNewTxHistory = async (
@@ -82,9 +81,7 @@ export const bulkFetchUTXOsForAddresses = async (
   return _.flatten(responses)
 }
 
-export const submitTransaction = (
-  signedTx: string,
-) => {
+export const submitTransaction = (signedTx: string) => {
   return checkedFetch('txs/signed', {signedTx}, NETWORK_CONFIG)
 }
 
@@ -138,7 +135,11 @@ export const fetchAccountState = async (
     addresses.length <= NETWORK_CONFIG.FETCH_UTXOS_MAX_ADDRESSES,
     'fetchAccountState: too many addresses',
   )
-  const response = await checkedFetch('v2/account/state', {addresses}, NETWORK_CONFIG)
+  const response = await checkedFetch(
+    'v2/account/state',
+    {addresses},
+    NETWORK_CONFIG,
+  )
   const mapped = {}
   for (const key of Object.keys(response)) {
     // Jormungandr returns '' when the address is valid but it hasn't appeared in the blockchain
@@ -162,7 +163,6 @@ export const getPoolInfo = (
   return checkedFetch('v2/pool/info', request, NETWORK_CONFIG)
 }
 
-export const getReputation = (
-): Promise<ReputationResponse> => {
+export const getReputation = (): Promise<ReputationResponse> => {
   return checkedFetch('v2/pool/reputation', null, NETWORK_CONFIG, 'GET')
 }

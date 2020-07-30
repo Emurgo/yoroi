@@ -46,7 +46,7 @@ import {fetchAccountState} from '../../actions/account'
 import {fetchUTXOs} from '../../actions/utxo'
 import {fetchPoolInfo} from '../../actions/pools'
 import {checkForFlawedWallets} from '../../actions'
-import {SHELLEY_WALLET_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
+import {JORMUN_WALLET_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import walletManager from '../../crypto/wallet'
 import globalMessages from '../../i18n/global-messages'
 import {formatAdaWithText, formatAdaInteger} from '../../utils/format'
@@ -185,7 +185,7 @@ class DelegationSummary extends React.Component<Props, State> {
     const poolList = pools != null ? pools.map((pool) => pool[0]) : []
     /* eslint-enable indent */
     const approxAdaToDelegate = formatAdaInteger(amountToDelegate)
-    navigation.navigate(SHELLEY_WALLET_ROUTES.STAKING_CENTER, {
+    navigation.navigate(JORMUN_WALLET_ROUTES.STAKING_CENTER, {
       approxAdaToDelegate,
       poolList,
       utxos,

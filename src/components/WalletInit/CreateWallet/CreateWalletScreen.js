@@ -61,11 +61,13 @@ export default injectIntl(
     withHandlers({
       navigateToMnemonicScreen: ({formData, clear, navigation}) => () => {
         clear()
+        // TODO(v-almonacid): we need to generate mnemonics according to the
+        // target network.
         const mnemonic = generateAdaMnemonic()
-        const isShelleyWallet = !!navigation.getParam('isShelleyWallet')
+        const networkId = navigation.getParam('networkId')
         navigation.navigate(WALLET_INIT_ROUTES.MNEMONIC_SHOW, {
           mnemonic,
-          isShelleyWallet,
+          networkId,
           ...formData,
         })
       },

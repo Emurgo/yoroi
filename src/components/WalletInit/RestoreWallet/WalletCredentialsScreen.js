@@ -24,18 +24,21 @@ import {getAddressesFromMnemonics} from '../../../crypto/byron/util'
 import {
   getFirstInternalAddr,
   getGroupAddressesFromMnemonics,
-} from '../../../crypto/shelley/util'
+} from '../../../crypto/jormungandr/util'
 import {mnemonicsToAddresses, balanceForAddresses} from '../../../crypto/wallet'
-import {generateTransferTxFromMnemonic} from '../../../crypto/shelley/transactions/yoroiTransfer'
-import {CARDANO_CONFIG} from '../../../config'
+// prettier-ignore
+import {
+  generateTransferTxFromMnemonic,
+} from '../../../crypto/jormungandr/transactions/yoroiTransfer'
 import {NetworkError, ApiError} from '../../../api/errors'
 import {InsufficientFunds} from '../../../crypto/errors'
 import {errorMessages} from '../../../i18n/global-messages'
+import {isJormungandr} from '../../../config/networks'
 
 import type {Navigation} from '../../../types/navigation'
 import type {AddressType} from '../../../crypto/commonUtils'
 import type {Addressing} from '../../../types/HistoryTransaction'
-import type {TransferTx} from '../../../crypto/shelley/transactions/yoroiTransfer'
+import type {TransferTx} from '../../../crypto/jormungandr/transactions/yoroiTransfer'
 
 const RESTORATION_DIALOG_STEPS = {
   CLOSED: 'CLOSED',
@@ -129,12 +132,12 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
     const {name, password} = this.state
     const {navigation, createWallet, updateVersion} = this.props
     const phrase = navigation.getParam('phrase')
-    const isShelleyWallet = !!navigation.getParam('isShelleyWallet')
-    await createWallet(name, phrase, password, isShelleyWallet)
+    const networkId = navigation.getParam
+    await createWallet(name, phrase, password, networkId)
     await updateVersion()
     this.setState({isProcessing: false})
-    const route = isShelleyWallet
-      ? ROOT_ROUTES.SHELLEY_WALLET
+    const route = isJormungandr(networkId)
+      ? ROOT_ROUTES.JORMUN_WALLET
       : ROOT_ROUTES.WALLET
     navigation.navigate(route)
   }, 1000)
@@ -153,8 +156,8 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
 
   startWalletRestoration = async () => {
     const {navigation, intl} = this.props
-    const isShelleyWallet = navigation.getParam('isShelleyWallet')
-    if (isShelleyWallet === false) {
+    const networkId = navigation.getParam('networkId')
+    if (!isJormungandr(networkId)) {
       this.navigateToWallet()
       return
     }
@@ -207,14 +210,10 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
     this.setState({isProcessing: true})
     try {
       // here addresses include addressing info
-      const usedLegacyAddrs = await mnemonicsToAddresses(
-        phrase,
-        CARDANO_CONFIG.SHELLEY,
-      )
+      const usedLegacyAddrs = await mnemonicsToAddresses(phrase)
       // get list of addresses with utxo. Doesn't include addressing
       const {fundedAddresses, sum} = await balanceForAddresses(
         usedLegacyAddrs.map((addr) => addr.address),
-        CARDANO_CONFIG.SHELLEY,
       )
       let outputAddressInfo, transferTx
       if (fundedAddresses.length > 0 && sum != null) {
@@ -238,7 +237,6 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
           phrase,
           outputAddressInfo.hex,
           addressedFundedAddresses,
-          CARDANO_CONFIG.SHELLEY,
         )
       }
       this.setState({
@@ -274,7 +272,8 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
         updateVersion,
       } = this.props
       const phrase = navigation.getParam('phrase')
-      await createWallet(name, phrase, password, true)
+      const networkId = navigation.getParam('networkId')
+      await createWallet(name, phrase, password, networkId)
       if (tx == null) {
         throw new Error('Transaction data not found.')
       }
@@ -302,7 +301,7 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
       transferTx,
     } = this.state
 
-    const isShelleyWallet = this.props.navigation.getParam('isShelleyWallet')
+    const networkId = this.props.navigation.getParam('networkId')
 
     const finalBalance =
       transferTx != null
@@ -313,7 +312,7 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
       <>
         <WalletForm onSubmit={this.onSubmitWalletCredentials} />
 
-        {isShelleyWallet && (
+        {isJormungandr(networkId) && (
           <>
             <WalletVerifyModal
               visible={

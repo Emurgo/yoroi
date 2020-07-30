@@ -32,7 +32,7 @@ export const defaultStackNavigatorOptions = {
 
 // note: the header option takes a HeaderProps object but it seems like this
 // type is not exposed by the react-navigation library
-export const shelleyNavigationOptions = {
+export const jormunNavigationOptions = {
   header: (props: any) => <GradientHeader {...props} />,
   headerStyle: {
     backgroundColor: 'transparent',

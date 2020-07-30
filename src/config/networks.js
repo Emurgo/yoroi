@@ -2,6 +2,8 @@
 import {NETWORK_REGISTRY} from './types'
 import {NUMBERS} from './numbers'
 
+import type {NetworkId} from './types'
+
 const _DEFAULT_BACKEND_RULES = {
   FETCH_UTXOS_MAX_ADDRESSES: 50,
   TX_HISTORY_MAX_ADDRESSES: 50,
@@ -13,7 +15,6 @@ export const NETWORKS = {
   BYRON_MAINNET: {
     NETWORK_ID: NETWORK_REGISTRY.BYRON_MAINNET,
     IS_MAINNET: true,
-    // API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
     EXPLORER_URL_FOR_TX: (tx: string) => `https://cardanoexplorer.com/tx/${tx}`,
     PROTOCOL_MAGIC: 764824073,
     BACKEND: {
@@ -29,7 +30,6 @@ export const NETWORKS = {
       API_ROOT: 'TODO',
       ..._DEFAULT_BACKEND_RULES,
     },
-    API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api', // TODO
     START_AT: 208,
     SLOTS_PER_EPOCH: 432000,
     SLOT_DURATION: 1,
@@ -38,7 +38,7 @@ export const NETWORKS = {
   },
   JORMUNGANDR: {
     NETWORK_ID: NETWORK_REGISTRY.JORMUNGANDR,
-    IS_MAINNET: false, // for now, assume testnet by default
+    IS_MAINNET: false,
     PROTOCOL_MAGIC: 764824073,
     BACKEND: {
       API_ROOT: 'https://shelley-itn-yoroi-backend.yoroiwallet.com/api',
@@ -73,3 +73,6 @@ export const NETWORKS = {
     },
   },
 }
+
+export const isJormungandr = (networkId: NetworkId): boolean =>
+  networkId === NETWORK_REGISTRY.JORMUNGANDR

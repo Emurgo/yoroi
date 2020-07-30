@@ -26,7 +26,7 @@ import {
   SEND_ROUTES,
   WALLET_INIT_ROUTES,
   STAKING_CENTER_ROUTES,
-  SHELLEY_WALLET_ROUTES,
+  JORMUN_WALLET_ROUTES,
 } from '../../RoutesList'
 import {NetworkError, ApiError} from '../../api/errors'
 import {WrongPassword} from '../../crypto/errors'
@@ -100,7 +100,7 @@ const handleOnConfirm = async (
       )
       setSendingTransaction(true)
       await submitShelleyTx(signedTx.encodedTx)
-      navigation.navigate(SHELLEY_WALLET_ROUTES.DELEGATION_SUMMARY)
+      navigation.navigate(JORMUN_WALLET_ROUTES.DELEGATION_SUMMARY)
     } catch (e) {
       if (e instanceof NetworkError) {
         await showErrorDialog(errorMessages.networkError, intl)

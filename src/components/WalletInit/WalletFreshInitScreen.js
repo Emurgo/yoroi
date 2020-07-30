@@ -14,9 +14,11 @@ import {Button, StatusBar, ScreenBackground} from '../UiKit'
 import styles from './styles/WalletInitScreen.style'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {walletIsInitializedSelector} from '../../selectors'
+import {NETWORK_REGISTRY} from '../../config/types'
 
 import type {State} from '../../state'
 import type {Navigation} from '../../types/navigation'
+import type {NetworkId} from '../../config/types'
 
 const messages = defineMessages({
   addWalletButton: {
@@ -52,7 +54,9 @@ const WalletInitScreen = ({
             <WalletDescription />
           </View>
           <Button
-            onPress={(event) => navigateInitWallet(event, false)}
+            onPress={(event) =>
+              navigateInitWallet(event, NETWORK_REGISTRY.BYRON_MAINNET)
+            }
             title={intl.formatMessage(messages.addWalletButton)}
             style={styles.createButton}
             testID="addWalletOnByronButton"
@@ -60,7 +64,9 @@ const WalletInitScreen = ({
 
           <Button
             outline
-            onPress={(event) => navigateInitWallet(event, true)}
+            onPress={(event) =>
+              navigateInitWallet(event, NETWORK_REGISTRY.JORMUNGANDR)
+            }
             title={intl.formatMessage(messages.addWalletOnShelleyButton)}
             testID="addWalletOnShelleyButton"
           />
@@ -75,9 +81,12 @@ export default injectIntl(
       walletIsInitialized: walletIsInitializedSelector(state),
     })),
     withHandlers({
-      navigateInitWallet: ({navigation}) => (event, isShelleyWallet) =>
+      navigateInitWallet: ({navigation}) => (
+        event: any,
+        networkId: NetworkId,
+      ) =>
         navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH, {
-          isShelleyWallet,
+          networkId,
         }),
     }),
   )(WalletInitScreen),

@@ -9,7 +9,7 @@ import nodeUtil from 'util'
 jest.setMock('./config', require('./__mocks__/config'))
 jest.setMock(
   './crypto/shelley/transactions/utxoTransactions',
-  require('./crypto/shelley/transactions/__mocks__/utxoTransactions'),
+  require('./crypto/jormungandr/transactions/__mocks__/utxoTransactions'),
 )
 jest.mock('react-native-device-info', () => {
   return {
