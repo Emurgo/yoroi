@@ -10,7 +10,7 @@ import iconGear from '../../assets/img/gear.png'
 import {
   defaultNavigationOptions,
   defaultStackNavigatorOptions,
-  shelleyNavigationOptions,
+  jormunNavigationOptions,
 } from '../../navigationOptions'
 
 import styles from '../TxHistory/styles/SettingsButton.style'
@@ -31,7 +31,7 @@ const DelegationNavigatorSummary = createStackNavigator(
           />
         ),
         ...defaultNavigationOptions,
-        ...shelleyNavigationOptions,
+        ...jormunNavigationOptions,
       }),
     },
     [WALLET_ROUTES.SETTINGS]: {

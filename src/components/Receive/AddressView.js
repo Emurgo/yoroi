@@ -31,7 +31,7 @@ import walletManager from '../../crypto/wallet'
 import {formatBIP44} from '../../crypto/byron/util'
 import {errorMessages} from '../../i18n/global-messages'
 import {Logger} from '../../utils/logging'
-import {CONFIG} from '../../config'
+import {CONFIG} from '../../config/config'
 
 import styles from './styles/AddressView.style'
 import infoIcon from '../../assets/img/icon/info.png'

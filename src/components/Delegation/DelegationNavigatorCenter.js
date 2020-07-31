@@ -16,7 +16,7 @@ import iconGear from '../../assets/img/gear.png'
 import {
   defaultNavigationOptions,
   defaultStackNavigatorOptions,
-  shelleyNavigationOptions,
+  jormunNavigationOptions,
 } from '../../navigationOptions'
 
 import HeaderBackButton from '../UiKit/HeaderBackButton'
@@ -55,7 +55,7 @@ const DelegationNavigatorCenter = createStackNavigator(
       title: navigation.getParam('title'),
       headerLeft: <HeaderBackButton navigation={navigation} />,
       ...defaultNavigationOptions,
-      ...shelleyNavigationOptions,
+      ...jormunNavigationOptions,
     }),
     ...defaultStackNavigatorOptions,
   },

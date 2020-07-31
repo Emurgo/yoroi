@@ -9,7 +9,7 @@ import {BigNumber} from 'bignumber.js'
 
 import {easyConfirmationSelector} from '../../selectors'
 import {withNavigationTitle} from '../../utils/renderUtils'
-import {NUMBERS, CONFIG, CARDANO_CONFIG} from '../../config'
+import {CONFIG} from '../../config/config'
 import {Button, ValidatedTextInput, Text, PleaseWaitModal} from '../UiKit'
 import globalMessages, {
   errorMessages,
@@ -26,7 +26,7 @@ import {
   SEND_ROUTES,
   WALLET_INIT_ROUTES,
   STAKING_CENTER_ROUTES,
-  SHELLEY_WALLET_ROUTES,
+  JORMUN_WALLET_ROUTES,
 } from '../../RoutesList'
 import {NetworkError, ApiError} from '../../api/errors'
 import {WrongPassword} from '../../crypto/errors'
@@ -72,8 +72,8 @@ const approximateReward = (amount: BigNumber): BigNumber => {
   // needs to be update per-network
   const rewardMultiplier = (number) =>
     number
-      .times(CARDANO_CONFIG.SHELLEY.EPOCH_REWARD)
-      .div(NUMBERS.EPOCH_REWARD_DENOMINATOR)
+      .times(CONFIG.NETWORKS.JORMUNGANDR.EPOCH_REWARD)
+      .div(CONFIG.NUMBERS.EPOCH_REWARD_DENOMINATOR)
       .div(100)
 
   const result = rewardMultiplier(amount)
@@ -100,7 +100,7 @@ const handleOnConfirm = async (
       )
       setSendingTransaction(true)
       await submitShelleyTx(signedTx.encodedTx)
-      navigation.navigate(SHELLEY_WALLET_ROUTES.DELEGATION_SUMMARY)
+      navigation.navigate(JORMUN_WALLET_ROUTES.DELEGATION_SUMMARY)
     } catch (e) {
       if (e instanceof NetworkError) {
         await showErrorDialog(errorMessages.networkError, intl)

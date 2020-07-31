@@ -40,6 +40,7 @@ const messages = defineMessages({
 const url = '' // 'https://yoroi-wallet.com/...'
 
 const CheckNanoXScreen = ({intl, onPress, navigation}) => {
+  const networkId = navigation.getParam('networkId')
   const useUSB = navigation.getParam('useUSB')
   const requirements: Array<string> = []
   if (useUSB) {
@@ -78,7 +79,7 @@ const CheckNanoXScreen = ({intl, onPress, navigation}) => {
         )}
       </View>
       <Button
-        onPress={(event) => onPress(event, useUSB)}
+        onPress={(event) => onPress(event, networkId, useUSB)}
         title={intl.formatMessage(
           confirmationMessages.commonButtons.continueButton,
         )}
@@ -97,8 +98,11 @@ export default injectIntl(
   (compose(
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
-      onPress: ({navigation}) => (event, useUSB) =>
-        navigation.navigate(WALLET_INIT_ROUTES.CONNECT_NANO_X, {useUSB}),
+      onPress: ({navigation}) => (event, networkId, useUSB) =>
+        navigation.navigate(WALLET_INIT_ROUTES.CONNECT_NANO_X, {
+          networkId,
+          useUSB,
+        }),
     }),
   )(CheckNanoXScreen): ComponentType<ExternalProps>),
 )

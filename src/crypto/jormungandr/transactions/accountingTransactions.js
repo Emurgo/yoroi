@@ -29,9 +29,9 @@ import {
 } from 'react-native-chain-libs'
 import {generateAuthData, generateFee} from './utils'
 
-import {CARDANO_CONFIG} from '../../../config'
+import {NETWORKS} from '../../../config/networks'
 
-const CONFIG = CARDANO_CONFIG.SHELLEY
+const CONFIG = NETWORKS.JORMUNGANDR
 
 /**
  * Transactions cannot both send money and post a certifiate

@@ -6,7 +6,7 @@ import {connect} from 'react-redux'
 import {View} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
-import {CONFIG} from '../../config'
+import {CONFIG} from '../../config/config'
 import PinInput from '../Common/PinInput'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {withHandlers} from 'recompose'

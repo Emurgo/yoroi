@@ -15,7 +15,7 @@ import {walletNamesSelector} from '../../../selectors'
 import {createWalletWithBip44Account} from '../../../actions'
 import {saveHW} from '../../../actions/hwWallet'
 import {ROOT_ROUTES} from '../../../RoutesList'
-import {CONFIG} from '../../../config'
+import {CONFIG} from '../../../config/config'
 import assert from '../../../utils/assert'
 
 import styles from './styles/SaveNanoXScreen.style'
@@ -120,6 +120,7 @@ export default injectIntl(
         name,
         navigation,
       }) => async () => {
+        const networkId = navigation.getParam('networkId')
         const hwDeviceInfo = navigation.getParam('hwDeviceInfo')
         assert.assert(
           hwDeviceInfo != null,
@@ -128,8 +129,8 @@ export default injectIntl(
         await createWalletWithBip44Account(
           name,
           hwDeviceInfo.bip44AccountPublic,
+          networkId,
           hwDeviceInfo,
-          false, // not Shelley
         )
         navigation.navigate(ROOT_ROUTES.WALLET)
         saveHW(hwDeviceInfo)

@@ -8,10 +8,10 @@ import {injectIntl, defineMessages} from 'react-intl'
 
 import {STAKING_CENTER_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
-import {CARDANO_CONFIG} from '../../config'
+import {CONFIG} from '../../config/config'
 import {Logger} from '../../utils/logging'
 import walletManager from '../../crypto/wallet'
-import {getShelleyTxFee} from '../../crypto/shelley/transactions/utils'
+import {getShelleyTxFee} from '../../crypto/jormungandr/transactions/utils'
 import {InsufficientFunds} from '../../crypto/errors'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {handleGeneralError, showErrorDialog} from '../../actions'
@@ -61,7 +61,7 @@ const prepareStakingURL = (
   // Refer: https://github.com/Emurgo/yoroi-frontend/blob/2f06f7afa5283365f1070b6a042bcfedba51646f/app/containers/wallet/staking/StakingPage.js#L60
   // source=mobile is constant and already included
   // TODO: add locale parameter
-  let finalURL = CARDANO_CONFIG.SHELLEY.SEIZA_STAKING_SIMPLE(userAda)
+  let finalURL = CONFIG.NETWORKS.JORMUNGANDR.SEIZA_STAKING_SIMPLE(userAda)
   if (poolList != null) {
     finalURL += `&delegated=${encodeURIComponent(JSON.stringify(poolList))}`
   }

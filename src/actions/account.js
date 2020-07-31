@@ -78,7 +78,6 @@ export const fetchAccountState = () => async (
   dispatch(_clearAccountState())
   dispatch(_startFetching())
   try {
-    // $FlowFixMe (v-almonacid): not sure how to correctly handle union types
     const accountStateResp = await walletManager.fetchAccountState()
     const accountState = Object.keys(accountStateResp).map(
       (key) => accountStateResp[key],

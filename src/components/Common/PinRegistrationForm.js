@@ -8,7 +8,7 @@ import {NavigationEvents} from 'react-navigation'
 import {injectIntl, intlShape} from 'react-intl'
 
 import PinInput from './PinInput'
-import {CONFIG} from '../../config'
+import {CONFIG} from '../../config/config'
 import {showErrorDialog} from '../../actions'
 import {errorMessages} from '../../i18n/global-messages'
 

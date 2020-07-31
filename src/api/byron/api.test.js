@@ -1,9 +1,9 @@
 // @flow
 /* eslint-env jest */
-import jestSetup from '../jestSetup'
+import jestSetup from '../../jestSetup'
 
-import api from './'
-import {ApiError, ApiHistoryError} from './errors'
+import * as api from './api'
+import {ApiError, ApiHistoryError} from '../errors'
 
 jestSetup.setup()
 jest.setTimeout(30 * 1000)

@@ -1,6 +1,8 @@
 // @flow
 import {BigNumber} from 'bignumber.js'
 
+import {NETWORK_REGISTRY} from './config/types'
+
 import type {
   AccountState,
   Transaction,
@@ -8,6 +10,7 @@ import type {
   RemotePoolMetaSuccess,
 } from './types/HistoryTransaction'
 import type {HWDeviceInfo} from './crypto/byron/ledgerUtils'
+import type {NetworkId} from './config/types'
 
 export type Dict<T> = {[string]: T}
 
@@ -15,13 +18,13 @@ export type State = {
   wallets: Dict<{
     id: string,
     name: string,
-    isShelley: boolean,
+    networkId: NetworkId,
     isHW: boolean,
   }>,
   wallet: {
     name: string,
     isInitialized: boolean,
-    isShelley: boolean,
+    networkId: ?NetworkId,
     isHW: boolean,
     hwDeviceInfo: ?HWDeviceInfo,
     isEasyConfirmationEnabled: boolean,
@@ -78,7 +81,7 @@ export const getInitialState = (): State => ({
   wallet: {
     name: '',
     isInitialized: false,
-    isShelley: false,
+    networkId: NETWORK_REGISTRY.BYRON_MAINNET,
     isHW: false,
     hwDeviceInfo: null,
     isEasyConfirmationEnabled: false,

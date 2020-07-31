@@ -7,6 +7,7 @@ import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import AddressEntry from '../../Common/AddressEntry'
 import {Text, Button, Modal} from '../../UiKit'
 import {confirmationMessages} from '../../../i18n/global-messages'
+import {CONFIG} from '../../../config/config'
 
 import styles from './styles/WalletVerifyModal.style'
 
@@ -89,11 +90,21 @@ const WalletVerifyModal = ({
         <Text style={[styles.label, styles.text]}>
           {intl.formatMessage(messages.byronAddressesLabel)}
         </Text>
-        <AddressEntry address={byronAddress} />
+        <AddressEntry
+          address={byronAddress}
+          explorerForAddress={
+            CONFIG.NETWORKS.JORMUNGANDR.EXPLORER_URL_FOR_ADDRESS
+          }
+        />
         <Text style={[styles.label, styles.text]}>
           {intl.formatMessage(messages.shelleyAddressesLabel)}
         </Text>
-        <AddressEntry address={shelleyAddress} />
+        <AddressEntry
+          address={shelleyAddress}
+          explorerForAddress={
+            CONFIG.NETWORKS.JORMUNGANDR.EXPLORER_URL_FOR_ADDRESS
+          }
+        />
       </View>
 
       <View style={styles.buttons}>

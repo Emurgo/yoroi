@@ -15,6 +15,7 @@ import {Text, Button, StatusBar} from '../../UiKit'
 import {ROOT_ROUTES} from '../../../RoutesList'
 import {createWallet} from '../../../actions'
 import {withNavigationTitle} from '../../../utils/renderUtils'
+import {isJormungandr} from '../../../config/networks'
 
 import styles from './styles/MnemonicCheckScreen.style'
 
@@ -66,19 +67,16 @@ const handleWalletConfirmation = ({navigation, createWallet}) => async () => {
   const mnemonic = navigation.getParam('mnemonic')
   const password = navigation.getParam('password')
   const name = navigation.getParam('name')
-  const isShelleyWallet = navigation.getParam('isShelleyWallet')
+  const networkId = navigation.getParam('networkId')
   assert.assert(!!mnemonic, 'handleWalletConfirmation:: mnemonic')
   assert.assert(!!password, 'handleWalletConfirmation:: password')
   assert.assert(!!name, 'handleWalletConfirmation:: name')
-  assert.assert(
-    isShelleyWallet != null,
-    'handleWalletConfirmation:: isShelleyWallet',
-  )
+  assert.assert(networkId != null, 'handleWalletConfirmation:: networkId')
 
-  await createWallet(name, mnemonic, password, isShelleyWallet)
+  await createWallet(name, mnemonic, password, networkId)
 
-  const route = isShelleyWallet
-    ? ROOT_ROUTES.SHELLEY_WALLET
+  const route = isJormungandr(networkId)
+    ? ROOT_ROUTES.JORMUN_WALLET
     : ROOT_ROUTES.WALLET
   navigation.navigate(route)
 }

@@ -12,7 +12,7 @@ import {withNavigationTitle} from '../../utils/renderUtils'
 import {errorMessages} from '../../i18n/global-messages'
 import {setAppSettingField, setSystemAuth, showErrorDialog} from '../../actions'
 import {APP_SETTINGS_KEYS} from '../../helpers/appSettings'
-import {CONFIG} from '../../config'
+import {CONFIG} from '../../config/config'
 import {
   isBiometricEncryptionHardwareSupported,
   canBiometricEncryptionBeEnabled,

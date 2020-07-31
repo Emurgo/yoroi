@@ -4,7 +4,7 @@ import {Bip32PublicKey} from 'react-native-chain-libs'
 import jestSetup from '../../jestSetup'
 import {createDelegationTx} from './delegationUtils'
 import {getTxInputTotal, getTxOutputTotal} from './transactions/utils'
-import {NUMBERS} from '../../config'
+import {NUMBERS} from '../../config/numbers'
 
 import type {AddressedUtxo} from '../../types/HistoryTransaction'
 import type {PoolData} from './delegationUtils'

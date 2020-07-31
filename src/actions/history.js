@@ -64,7 +64,7 @@ export const mirrorTxHistory = () => (dispatch: Dispatch<any>) => {
   const {
     walletName: name,
     isInitialized,
-    isShelley,
+    networkId,
     isHW,
     hwDeviceInfo,
     transactions,
@@ -84,7 +84,7 @@ export const mirrorTxHistory = () => (dispatch: Dispatch<any>) => {
       name,
       isEasyConfirmationEnabled,
       isInitialized,
-      isShelley,
+      networkId,
       isHW,
       hwDeviceInfo,
       transactions,

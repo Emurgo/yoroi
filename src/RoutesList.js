@@ -1,6 +1,6 @@
 // @flow
 
-import {CONFIG} from './config.js'
+import {CONFIG} from './config/config'
 
 export const TX_HISTORY_ROUTES = {
   MAIN: 'tx-history-list',
@@ -69,7 +69,7 @@ export const DELEGATION_SUMMARY_ROUTES = {
   MAIN: 'delegation-dashboard',
 }
 
-export const SHELLEY_WALLET_ROUTES = {
+export const JORMUN_WALLET_ROUTES = {
   STAKING_CENTER: STAKING_CENTER_ROUTES.MAIN,
   DELEGATION_SUMMARY: 'delegation-summary',
 }
@@ -89,7 +89,7 @@ export const ROOT_ROUTES = {
   FIRST_RUN: 'first-run',
   NEW_WALLET: 'new-wallet',
   WALLET: 'app-root',
-  SHELLEY_WALLET: 'app-root-shelley',
+  JORMUN_WALLET: 'app-root-jormun',
   INIT: INIT_SCREEN,
   STORYBOOK: 'storybook',
   MAINTENANCE: 'maintenance',

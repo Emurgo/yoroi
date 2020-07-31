@@ -17,15 +17,18 @@ import storage from '../utils/storage'
 import KeyStore from './KeyStore'
 import {AddressChain, AddressGenerator} from './chain'
 import * as util from './byron/util'
-import * as shelleyUtil from './shelley/util'
+import * as jormungandrUtil from './jormungandr/util'
 import {
   createDelegationTx,
   signDelegationTx,
   filterAddressesByStakingKey,
-} from './shelley/delegationUtils'
+} from './jormungandr/delegationUtils'
 import {ADDRESS_TYPE_TO_CHANGE} from './commonUtils'
-import api from '../api'
-import {CONFIG, CARDANO_CONFIG} from '../config'
+import * as api from '../api/byron/api'
+import * as jormunApi from '../api/jormungandr/api'
+import {CONFIG} from '../config/config'
+import {NETWORK_REGISTRY} from '../config/types'
+import {isJormungandr} from '../config/networks'
 import assert from '../utils/assert'
 import {ObjectValues} from '../utils/flow'
 import {Logger} from '../utils/logging'
@@ -55,15 +58,16 @@ import type {
 import type {Mutex} from '../utils/promise'
 import type {CryptoAccount} from './byron/util'
 import type {HWDeviceInfo} from './byron/ledgerUtils'
-import type {DelegationTxData, PoolData} from './shelley/delegationUtils'
+import type {DelegationTxData, PoolData} from './jormungandr/delegationUtils'
+import type {NetworkId} from '../config/types'
 
 /**
  * returns all used addresses (external and change addresses concatenated)
  * including addressing info
+ * note: uses byron api by default
  */
 export const mnemonicsToAddresses = async (
   mnemonic: string,
-  networkConfig?: Object = CONFIG.CARDANO,
 ): Promise<Array<{|address: string, ...Addressing|}>> => {
   const masterKey = await util.getMasterKeyFromMnemonic(mnemonic)
   const account = await util.getAccountFromMasterKey(masterKey)
@@ -76,7 +80,7 @@ export const mnemonicsToAddresses = async (
   const chains = [['Internal', internalChain], ['External', externalChain]]
   for (const chain of chains) {
     await chain[1].initialize()
-    await chain[1].sync(api.filterUsedAddresses, networkConfig)
+    await chain[1].sync(api.filterUsedAddresses)
   }
   // get addresses in chunks
   const addrChunks = [
@@ -85,9 +89,7 @@ export const mnemonicsToAddresses = async (
   ]
   const filteredAddresses = []
   for (let i = 0; i < addrChunks.length; i++) {
-    filteredAddresses.push(
-      ...(await api.filterUsedAddresses(addrChunks[i], networkConfig)),
-    )
+    filteredAddresses.push(...(await api.filterUsedAddresses(addrChunks[i])))
   }
   // return addresses with addressing info
   return filteredAddresses.map((addr) => {
@@ -114,13 +116,12 @@ export const mnemonicsToAddresses = async (
   })
 }
 
+// note: uses byron api by default
 export const balanceForAddresses = async (
   addresses: Array<string>,
-  networkConfig?: any = CONFIG.CARDANO,
 ): Promise<{fundedAddresses: Array<string>, sum: BigNumber}> => {
   const {fundedAddresses, sum} = await api.bulkFetchUTXOSumForAddresses(
     addresses,
-    networkConfig,
   )
   return {
     fundedAddresses,
@@ -140,7 +141,7 @@ export class Wallet {
   // $FlowFixMe null
   _id: string = null
 
-  _isShelley: boolean = false
+  _networkId: NetworkId = -1
 
   _isHW: boolean = false
 
@@ -260,12 +261,12 @@ export class Wallet {
   }
 
   async _initialize(
-    isShelley: boolean,
+    networkId: NetworkId,
     account: CryptoAccount | string,
     chimericAccountAddr: ?string,
     hwDeviceInfo: ?HWDeviceInfo,
   ) {
-    this._isShelley = isShelley
+    this._networkId = networkId
 
     this._isHW = hwDeviceInfo != null
 
@@ -275,10 +276,10 @@ export class Wallet {
 
     // initialize address chains
     this._internalChain = new AddressChain(
-      new AddressGenerator(account, 'Internal', isShelley),
+      new AddressGenerator(account, 'Internal', isJormungandr(networkId)),
     )
     this._externalChain = new AddressChain(
-      new AddressGenerator(account, 'External', isShelley),
+      new AddressGenerator(account, 'External', isJormungandr(networkId)),
     )
 
     this._chimericAccountAddress = chimericAccountAddr
@@ -296,15 +297,11 @@ export class Wallet {
     return this._id
   }
 
-  async _create(
-    mnemonic: string,
-    newPassword: string,
-    isShelley?: boolean = false,
-  ) {
-    Logger.info(`create wallet (isShelley=${String(isShelley)})`)
+  async _create(mnemonic: string, newPassword: string, networkId: NetworkId) {
+    Logger.info(`create wallet (networkId=${String(networkId)})`)
     this._id = uuid.v4()
     assert.assert(!this._isInitialized, 'createWallet: !isInitialized')
-    const masterKey = await shelleyUtil.generateWalletRootKey(mnemonic)
+    const masterKey = await jormungandrUtil.generateWalletRootKey(mnemonic)
     const masterKeyHex = Buffer.from(await masterKey.as_bytes()).toString('hex')
     await this.encryptAndSaveMasterKey(
       'MASTER_PASSWORD',
@@ -313,7 +310,7 @@ export class Wallet {
     )
     let account: CryptoAccount | string
     let chimericAccountAddr
-    if (isShelley) {
+    if (isJormungandr(networkId)) {
       const accountKey = await (await (await masterKey.derive(
         CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
       )).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)).derive(
@@ -325,7 +322,7 @@ export class Wallet {
       )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
       const chimericAccountAddrPtr = await Address.account_from_public_key(
         stakingKey,
-        CARDANO_CONFIG.SHELLEY.IS_MAINNET
+        CONFIG.NETWORKS.JORMUNGANDR.IS_MAINNET
           ? await AddressDiscrimination.Production
           : await AddressDiscrimination.Test,
       )
@@ -338,7 +335,7 @@ export class Wallet {
     }
 
     return await this._initialize(
-      isShelley,
+      networkId,
       account,
       chimericAccountAddr,
       null, // this is not a HW
@@ -347,11 +344,11 @@ export class Wallet {
 
   async _createWithBip44Account(
     accountPublicKey: string,
+    networkId: NetworkId,
     hwDeviceInfo: ?HWDeviceInfo,
-    isShelley?: boolean = false,
   ) {
     Logger.info(
-      `create wallet with account pub key (isShelley=${String(isShelley)})`,
+      `create wallet with account pub key (networkId=${String(networkId)})`,
     )
     Logger.debug('account pub key', accountPublicKey)
     this._id = uuid.v4()
@@ -362,7 +359,7 @@ export class Wallet {
       derivation_scheme: 'V2',
     }
     return await this._initialize(
-      isShelley,
+      networkId,
       accountObj,
       chimericAccountAddr,
       hwDeviceInfo,
@@ -371,7 +368,7 @@ export class Wallet {
 
   async _integrityCheck(data) {
     try {
-      if (this._isShelley) {
+      if (isJormungandr(this._networkId)) {
         const accountHex = this._internalChain._addressGenerator.account
         if (!(typeof accountHex === 'string' || accountHex instanceof String)) {
           throw new Error('wallet::_integrityCheck: invalid account')
@@ -389,7 +386,7 @@ export class Wallet {
             )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
             const chimericAccountAddrPtr = await Address.account_from_public_key(
               stakingKey,
-              CARDANO_CONFIG.SHELLEY.IS_MAINNET
+              CONFIG.NETWORKS.JORMUNGANDR.IS_MAINNET
                 ? await AddressDiscrimination.Production
                 : await AddressDiscrimination.Test,
             )
@@ -399,6 +396,17 @@ export class Wallet {
           }
           this._chimericAccountAddress = await retrieveChimericAddr(data)
         }
+      }
+      if (this._networkId === NETWORK_REGISTRY.UNDEFINED) {
+        // prettier-ignore
+        this._networkId =
+          data.isShelley != null
+            ? data.isShelley
+              ? NETWORK_REGISTRY.JORMUNGANDR
+              : NETWORK_REGISTRY.BYRON_MAINNET
+            : (() => {
+              throw new Error('wallet::_integrityCheck: networkId')
+            })()
       }
     } catch (e) {
       Logger.error('wallet::_integrityCheck', e)
@@ -412,7 +420,8 @@ export class Wallet {
     this._state = {
       lastGeneratedAddressIndex: data.lastGeneratedAddressIndex,
     }
-    this._isShelley = data.isShelley != null ? data.isShelley : false
+    this._networkId =
+      data.networkId != null ? data.networkId : NETWORK_REGISTRY.UNDEFINED
     this._isHW = data.isHW != null ? data.isHW : false
     this._hwDeviceInfo = data.hwDeviceInfo
     // note(v-almonacid): chimericAccountAddr can be null. _integrityCheck is
@@ -462,13 +471,15 @@ export class Wallet {
   async _doFullSync() {
     Logger.info('Do full sync')
     assert.assert(this._isInitialized, 'doFullSync: isInitialized')
-    const config = this._isShelley ? CARDANO_CONFIG.SHELLEY : CONFIG.CARDANO
+    const filterFn = isJormungandr(this._networkId)
+      ? jormunApi.filterUsedAddresses
+      : api.filterUsedAddresses
     await Promise.all([
-      this._internalChain.sync(api.filterUsedAddresses, config),
-      this._externalChain.sync(api.filterUsedAddresses, config),
+      this._internalChain.sync(filterFn),
+      this._externalChain.sync(filterFn),
     ])
     // TODO: implement for shelley
-    if (!this._isShelley) {
+    if (!isJormungandr(this._networkId)) {
       Logger.info('Discovery done, now syncing transactions')
       let keepGoing = true
       while (keepGoing) {
@@ -488,7 +499,10 @@ export class Wallet {
   }
 
   get chimericAccountAddress() {
-    assert.assert(this._isShelley, 'get chimericAccountAddress: isShelley')
+    assert.assert(
+      isJormungandr(this._networkId),
+      'get chimericAccountAddress: isJormungandr',
+    )
     return this._chimericAccountAddress
   }
 
@@ -639,14 +653,19 @@ export class Wallet {
   }
 
   async submitTransaction(signedTx: string) {
-    const config = this._isShelley ? CARDANO_CONFIG.SHELLEY : CONFIG.CARDANO
-    const response = await api.submitTransaction(signedTx, config)
+    const submitTxFn = isJormungandr(this._networkId)
+      ? jormunApi.submitTransaction
+      : api.submitTransaction
+    const response = await submitTxFn(signedTx)
     Logger.info(response)
     return response
   }
 
   async getStakingKey() {
-    assert.assert(this._isShelley, 'getStakingKey: isShelley')
+    assert.assert(
+      isJormungandr(this._networkId),
+      'getStakingKey: isJormungandr',
+    )
     // TODO: save account public key as class member to avoid fetching
     // from internal chain?
     const accountHex = this._internalChain._addressGenerator.account
@@ -668,10 +687,12 @@ export class Wallet {
   }
 
   async getChangeAddressShelley() {
-    assert.assert(this._isShelley, 'getChangeAddressShelley: isShelley')
+    assert.assert(
+      isJormungandr(this._networkId),
+      'getChangeAddressShelley: isJormungandr',
+    )
     const nextInternal = await this._internalChain.getNextUnused(
-      api.filterUsedAddresses,
-      CARDANO_CONFIG.SHELLEY,
+      jormunApi.filterUsedAddresses,
     )
     return {
       address: nextInternal,
@@ -686,13 +707,17 @@ export class Wallet {
   async getTxsBodiesForUTXOs(
     request: TxBodiesRequest,
   ): Promise<TxBodiesResponse> {
-    const config = this._isShelley ? CARDANO_CONFIG.SHELLEY : CONFIG.CARDANO
-    const response = await api.getTxsBodiesForUTXOs(request, config)
-    return response
+    const getTxsBodiesForUTXOsFn = isJormungandr(this._networkId)
+      ? api.getTxsBodiesForUTXOs
+      : jormunApi.getTxsBodiesForUTXOs
+    return await getTxsBodiesForUTXOsFn(request)
   }
 
   async getAllUtxosForKey(utxos: Array<RawUtxo>) {
-    assert.assert(this._isShelley, 'getAllUtxosForKey: isShelley')
+    assert.assert(
+      isJormungandr(this._networkId),
+      'getAllUtxosForKey: isJormungandr',
+    )
     return await filterAddressesByStakingKey(
       await this.getStakingKey(),
       this.asAddressedUtxo(utxos),
@@ -736,7 +761,10 @@ export class Wallet {
     valueInAccount: number,
     utxos: Array<RawUtxo>,
   ): Promise<DelegationTxData> {
-    assert.assert(this._isShelley, 'prepareDelegationTx: isShelley')
+    assert.assert(
+      isJormungandr(this._networkId),
+      'prepareDelegationTx: isJormungandr',
+    )
     const stakingKey = await this.getStakingKey()
     const changeAddr = await this.getChangeAddressShelley()
     const addressedUtxos = this.asAddressedUtxo(utxos)
@@ -755,7 +783,10 @@ export class Wallet {
     unsignedTx: V3UnsignedTxAddressedUtxoData,
     decryptedMasterKey: string,
   ): Promise<V3SignedTx> {
-    assert.assert(this._isShelley, 'signDelegationTx: isShelley')
+    assert.assert(
+      isJormungandr(this._networkId),
+      'signDelegationTx: isJormungandr',
+    )
     Logger.debug('wallet::signDelegationTx::unsignedTx ', unsignedTx)
     const masterKey = await Bip32PrivateKey.from_bytes(
       Buffer.from(decryptedMasterKey, 'hex'),
@@ -774,6 +805,28 @@ export class Wallet {
     return await signDelegationTx(unsignedTx, accountPvrKey, stakingKey)
   }
 
+  async fetchUTXOs() {
+    const fetchFn = isJormungandr(this._networkId)
+      ? jormunApi.bulkFetchUTXOsForAddresses
+      : api.bulkFetchUTXOsForAddresses
+    return await fetchFn([...this.internalAddresses, ...this.externalAddresses])
+  }
+
+  async fetchAccountState() {
+    if (this._chimericAccountAddress == null) {
+      throw new Error('fetchAccountState:: _chimericAccountAddress = null')
+    }
+    return await jormunApi.fetchAccountState([this._chimericAccountAddress])
+  }
+
+  async fetchPoolInfo(pool: PoolInfoRequest) {
+    assert.assert(
+      isJormungandr(this._networkId),
+      'fetchPoolInfo:: isJormungandr',
+    )
+    return await jormunApi.getPoolInfo(pool)
+  }
+
   toJSON() {
     return {
       lastGeneratedAddressIndex: this._state.lastGeneratedAddressIndex,
@@ -782,7 +835,7 @@ export class Wallet {
       internalChain: this._internalChain.toJSON(),
       externalChain: this._externalChain.toJSON(),
       transactionCache: this._transactionCache.toJSON(),
-      isShelley: this._isShelley,
+      networkId: this._networkId,
       isHW: this._isHW,
       hwDeviceInfo: this._hwDeviceInfo,
       isEasyConfirmationEnabled: this._isEasyConfirmationEnabled,
@@ -919,9 +972,14 @@ class WalletManager {
     return this._wallet.isUsedAddressIndex
   }
 
-  get isShelley() {
+  get networkId() {
+    if (!this._wallet) return NETWORK_REGISTRY.UNDEFINED
+    return this._wallet._networkId
+  }
+
+  get isJormungandr() {
     if (!this._wallet) return false
-    return this._wallet._isShelley
+    return isJormungandr(this._wallet._networkId)
   }
 
   get isHW() {
@@ -1025,6 +1083,10 @@ class WalletManager {
     )
   }
 
+  /**
+   * Common API calls
+   */
+
   async signTx(transactionData: PreparedTransactionData, decryptedKey: string) {
     if (!this._wallet) throw new WalletClosed()
     return await this.abortWhenWalletCloses(
@@ -1080,16 +1142,31 @@ class WalletManager {
     return await this._wallet.signDelegationTx(unsignedTx, decryptedMasterKey)
   }
 
+  async fetchUTXOs() {
+    if (!this._wallet) throw new WalletClosed()
+    return await this.abortWhenWalletCloses(this._wallet.fetchUTXOs())
+  }
+
+  async fetchAccountState() {
+    if (this._wallet == null) throw new WalletClosed()
+    return await this.abortWhenWalletCloses(this._wallet.fetchAccountState())
+  }
+
+  async fetchPoolInfo(pool: PoolInfoRequest) {
+    if (this._wallet == null) throw new WalletClosed()
+    return await this._wallet.fetchPoolInfo(pool)
+  }
+
   async saveWallet(
     id: string,
     name: string,
     wallet: Wallet,
-    isShelley: boolean,
+    networkId: NetworkId,
   ) {
     this._id = id
     this._wallets = {
       ...this._wallets,
-      [id]: {id, name, isShelley, isEasyConfirmationEnabled: false},
+      [id]: {id, name, networkId, isEasyConfirmationEnabled: false},
     }
 
     this._wallet = wallet
@@ -1101,7 +1178,7 @@ class WalletManager {
     })
     this._notify()
 
-    Logger.debug('Wallet Data::createWallet', wallet)
+    Logger.debug('WalletManager::saveWallet::wallet', wallet)
 
     return wallet
   }
@@ -1110,28 +1187,29 @@ class WalletManager {
     name: string,
     mnemonic: string,
     password: string,
-    isShelley?: boolean = false,
+    networkId: NetworkId,
   ): Promise<Wallet> {
     const wallet = new Wallet()
-    const id = await wallet._create(mnemonic, password, isShelley)
+    const id = await wallet._create(mnemonic, password, networkId)
 
-    return this.saveWallet(id, name, wallet, isShelley)
+    return this.saveWallet(id, name, wallet, networkId)
   }
 
   async createWalletWithBip44Account(
     name: string,
     bip44AccountPublic: string,
+    networkId: NetworkId,
     hwDeviceInfo: ?HWDeviceInfo,
-    isShelley?: boolean = false,
   ) {
     const wallet = new Wallet()
     const id = await wallet._createWithBip44Account(
       bip44AccountPublic,
+      networkId,
       hwDeviceInfo,
     )
     Logger.debug('creating wallet...', wallet)
 
-    return this.saveWallet(id, name, wallet, isShelley)
+    return this.saveWallet(id, name, wallet, networkId)
   }
 
   async openWallet(id: string): Promise<Wallet> {
@@ -1300,52 +1378,14 @@ class WalletManager {
     this._notify()
   }
 
-  // =========== TODO ============
-  // all these api calls should wrap a call to the internal wallet, ie this._wallet
-  // walletManager shouldn't do these calls directly
-
-  async fetchUTXOs() {
-    if (!this._wallet) throw new WalletClosed()
-    const config = this._wallet._isShelley
-      ? CARDANO_CONFIG.SHELLEY
-      : CONFIG.CARDANO
-    return await this.abortWhenWalletCloses(
-      api.bulkFetchUTXOsForAddresses(
-        [...this.internalAddresses, ...this.externalAddresses],
-        config,
-      ),
-    )
-  }
-
-  async fetchAccountState() {
-    if (this._wallet == null) throw new WalletClosed()
-    if (this._wallet._chimericAccountAddress == null) {
-      throw new Error('fetchAccountState:: _chimericAccountAddress = null')
-    }
-    const config = this._wallet._isShelley
-      ? CARDANO_CONFIG.SHELLEY
-      : CONFIG.CARDANO
-    return await this.abortWhenWalletCloses(
-      api.fetchAccountState([this._wallet._chimericAccountAddress], config),
-    )
-  }
-
-  async fetchPoolInfo(pool: PoolInfoRequest) {
-    if (this._wallet == null) throw new WalletClosed()
-    const config = this._wallet._isShelley
-      ? CARDANO_CONFIG.SHELLEY
-      : CONFIG.CARDANO
-    return await api.getPoolInfo(pool, config)
-  }
-
   async checkForFlawedWallets(): Promise<boolean> {
     const mnemonics = [CONFIG.DEBUG.MNEMONIC1, CONFIG.DEBUG.MNEMONIC2]
     let affected = false
     for (const mnemonic of mnemonics) {
       Logger.debug('WalletManager::checkForFlawedWallets mnemonic:', mnemonic)
       let flawedAddresses
-      if (this.isShelley) {
-        const flawedAddressesBech32 = await shelleyUtil.getGroupAddressesFromMnemonics(
+      if (this.isJormungandr) {
+        const flawedAddressesBech32 = await jormungandrUtil.getGroupAddressesFromMnemonics(
           mnemonic,
           'External',
           [0],
@@ -1362,7 +1402,6 @@ class WalletManager {
           mnemonic,
           'External',
           [0],
-          CARDANO_CONFIG.MAINNET,
         )
       }
       if (this._wallet == null) throw new WalletClosed()

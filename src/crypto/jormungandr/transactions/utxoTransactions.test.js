@@ -24,7 +24,8 @@ import {
 } from './utxoTransactions'
 import {InsufficientFunds} from '../../errors'
 import {getTxInputTotal, getTxOutputTotal} from './utils'
-import {CONFIG, NUMBERS} from '../../../config'
+import {CONFIG} from '../../../config/config'
+import {NUMBERS} from '../../../config/numbers'
 
 jestSetup.setup()
 
@@ -409,7 +410,9 @@ describe('Create signed transactions', () => {
     expect(await outputs.size()).toEqual(2)
     const change = await outputs.get(1)
     expect(
-      await (await change.address()).to_string(CONFIG.BECH32_PREFIX.ADDRESS),
+      await (await change.address()).to_string(
+        CONFIG.NETWORKS.JORMUNGANDR.BECH32_PREFIX.ADDRESS,
+      ),
     ).toEqual(
       'addr1s5quq8utjkrfntnkngjxa9u9mdd8pcprjal2fwzkm7k0y0prx3k276qm0j8',
     )
@@ -524,7 +527,9 @@ describe('Create signed transactions', () => {
     expect(await outputs.size()).toEqual(1)
     const change = await outputs.get(0)
     expect(
-      await (await change.address()).to_string(CONFIG.BECH32_PREFIX.ADDRESS),
+      await (await change.address()).to_string(
+        CONFIG.NETWORKS.JORMUNGANDR.BECH32_PREFIX.ADDRESS,
+      ),
     ).toEqual(
       'addr1s5quq8utjkrfntnkngjxa9u9mdd8pcprjal2fwzkm7k0y0prx3k276qm0j8',
     )

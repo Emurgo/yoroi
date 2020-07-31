@@ -23,6 +23,8 @@ import {errorMessages} from '../../i18n/global-messages'
 import FailedWalletUpgradeModal from './FailedWalletUpgradeModal'
 import {currentVersionSelector} from '../../selectors'
 import {onDidMount} from '../../utils/renderUtils'
+import {isJormungandr} from '../../config/networks'
+import {NETWORK_REGISTRY} from '../../config/types'
 
 import styles from './styles/WalletSelectionScreen.style'
 
@@ -121,15 +123,15 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      navigateInitWallet: ({navigation}) => (event, isShelleyWallet) =>
+      navigateInitWallet: ({navigation}) => (event, isJormungandr) =>
         navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH, {
-          isShelleyWallet,
+          networkId: NETWORK_REGISTRY.JORMUNGANDR,
         }),
       openWallet: ({navigation, intl}) => async (wallet) => {
         try {
           await walletManager.openWallet(wallet.id)
-          const route = wallet.isShelley
-            ? ROOT_ROUTES.SHELLEY_WALLET
+          const route = isJormungandr(wallet.networkId)
+            ? ROOT_ROUTES.JORMUN_WALLET
             : ROOT_ROUTES.WALLET
           navigation.navigate(route)
         } catch (e) {

@@ -13,7 +13,7 @@ import ExtendableError from 'es6-error'
 import {Platform, PermissionsAndroid} from 'react-native'
 
 import {Logger} from '../../utils/logging'
-import {CONFIG} from '../../config'
+import {CONFIG} from '../../config/config'
 import {
   generateFakeWallet,
   signTransaction,

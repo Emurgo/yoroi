@@ -37,7 +37,7 @@ import {
   LedgerUserError,
 } from '../../crypto/byron/ledgerUtils'
 import {SEND_ROUTES, WALLET_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
-import {CONFIG} from '../../config'
+import {CONFIG} from '../../config/config'
 import KeyStore from '../../crypto/KeyStore'
 import {
   showErrorDialog,

@@ -2,7 +2,7 @@
 
 import {Sentry, SentrySeverity} from '@sentry/react-native'
 
-import {CONFIG} from '../config'
+import {CONFIG} from '../config/config'
 import {Logger} from '../utils/logging'
 
 let _enabled = false

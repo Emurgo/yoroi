@@ -14,11 +14,14 @@ import {Button, StatusBar, ScreenBackground} from '../UiKit'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {walletIsInitializedSelector} from '../../selectors'
+import {isJormungandr} from '../../config/networks'
+import {CONFIG} from '../../config/config'
 
 import styles from './styles/WalletInitScreen.style'
 
 import type {State} from '../../state'
 import type {Navigation} from '../../types/navigation'
+import type {NetworkId} from '../../config/types'
 
 const messages = defineMessages({
   title: {
@@ -60,13 +63,13 @@ const WalletInitScreen = ({
   showModal,
   setShowModal,
 }: Props) => {
-  const isShelleyWallet = navigation.getParam('isShelleyWallet')
+  const networkId = navigation.getParam('networkId')
   let createWalletLabel = intl.formatMessage(messages.createWalletButton)
   let restoreWalletLabel = intl.formatMessage(messages.restoreWalletButton)
   let createWalletWithLedgerLabel = intl.formatMessage(
     messages.createWalletWithLedgerButton,
   )
-  if (isShelleyWallet) {
+  if (isJormungandr(networkId)) {
     createWalletLabel += ' (Shelley Testnet)'
     restoreWalletLabel += ' (Shelley Testnet)'
     createWalletWithLedgerLabel += ' (Shelley Testnet)'
@@ -82,19 +85,19 @@ const WalletInitScreen = ({
             <WalletDescription />
           </View>
           <Button
-            onPress={(event) => navigateCreateWallet(event, isShelleyWallet)}
+            onPress={(event) => navigateCreateWallet(event, networkId)}
             title={createWalletLabel}
             style={styles.createButton}
             testID="createWalletButton"
           />
           <Button
             outline
-            onPress={(event) => navigateRestoreWallet(event, isShelleyWallet)}
+            onPress={(event) => navigateRestoreWallet(event, networkId)}
             title={restoreWalletLabel}
             style={styles.createButton}
             testID="restoreWalletButton"
           />
-          {!isShelleyWallet && (
+          {CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLED && (
             <>
               <Button
                 outline
@@ -106,10 +109,10 @@ const WalletInitScreen = ({
                 visible={showModal}
                 onRequestClose={(event) => setShowModal(event, false)}
                 onSelectUSB={(event) =>
-                  navigateCheckNanoX(event, isShelleyWallet, true)
+                  navigateCheckNanoX(event, networkId, true)
                 }
                 onSelectBLE={(event) =>
-                  navigateCheckNanoX(event, isShelleyWallet, false)
+                  navigateCheckNanoX(event, networkId, false)
                 }
                 showCloseIcon
               />
@@ -135,17 +138,27 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      navigateRestoreWallet: ({navigation}) => (event, isShelleyWallet) =>
+      navigateRestoreWallet: ({navigation}) => (
+        event: Object,
+        networkId: NetworkId,
+      ) =>
         navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET, {
-          isShelleyWallet,
+          networkId,
         }),
-      navigateCreateWallet: ({navigation}) => (event, isShelleyWallet) =>
+      navigateCreateWallet: ({navigation}) => (
+        event: Object,
+        networkId: NetworkId,
+      ) =>
         navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET, {
-          isShelleyWallet,
+          networkId,
         }),
-      navigateCheckNanoX: ({navigation}) => (event, isShelleyWallet, useUSB) =>
+      navigateCheckNanoX: ({navigation}) => (
+        event: Object,
+        networkId: NetworkId,
+        useUSB: boolean,
+      ) =>
         navigation.navigate(WALLET_INIT_ROUTES.CHECK_NANO_X, {
-          isShelleyWallet,
+          networkId,
           useUSB,
         }),
     }),

@@ -2,12 +2,13 @@
 import _ from 'lodash'
 import type {Moment} from 'moment'
 
-import {CONFIG, NUMBERS} from '../config'
+import {CONFIG} from '../config/config'
+import {NUMBERS} from '../config/numbers'
 import assert from '../utils/assert'
 import {defaultMemoize} from 'reselect'
 import {Logger} from '../utils/logging'
 import * as util from './byron/util'
-import * as shelleyUtil from './shelley/util'
+import * as jormunUtil from './jormungandr/util'
 import {ADDRESS_TYPE_TO_CHANGE} from './commonUtils'
 import {Address, Bip32PublicKey} from 'react-native-chain-libs'
 
@@ -20,22 +21,22 @@ export type AddressBlock = [number, Moment, Array<string>]
 export class AddressGenerator {
   account: CryptoAccount | string
   type: AddressType
-  isShelley: boolean
+  isJormungandr: boolean
 
   _shelleyAccount: Bip32PublicKey
 
   constructor(
     account: CryptoAccount | string,
     type: AddressType,
-    isShelley?: boolean = false,
+    isJormungandr?: boolean = false,
   ) {
     this.account = account
     this.type = type
-    this.isShelley = isShelley
+    this.isJormungandr = isJormungandr
   }
 
   async generate(idxs: Array<number>): Promise<Array<string>> {
-    if (this.isShelley) {
+    if (this.isJormungandr) {
       // cache shelley account
       if (
         this._shelleyAccount == null &&
@@ -51,7 +52,7 @@ export class AddressGenerator {
       const stakingKey = await (await (await this._shelleyAccount.derive(
         NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
       )).derive(NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
-      const addrs = await shelleyUtil.getGroupAddresses(
+      const addrs = await jormunUtil.getGroupAddresses(
         addressChain,
         stakingKey,
         idxs,
@@ -76,20 +77,26 @@ export class AddressGenerator {
     return {
       account: this.account,
       type: this.type,
-      isShelley: this.isShelley,
+      isJormungandr: this.isJormungandr,
     }
   }
 
   static fromJSON(data: any) {
-    const {account, type, isShelley} = data
-    return new AddressGenerator(account, type, isShelley)
+    const {account, type, isJormungandr} = data
+    if (isJormungandr == null) {
+      if (data.isShelley != null) {
+        return new AddressGenerator(account, type, data.isShelley)
+      } else {
+        throw new Error(
+          "AddressGenerator::fromJSON: can't retrieve wallet type",
+        )
+      }
+    }
+    return new AddressGenerator(account, type, isJormungandr)
   }
 }
 
-type AsyncAddressFilter = (
-  addresses: Array<string>,
-  networkConfig?: any,
-) => Promise<Array<string>>
+type AsyncAddressFilter = (addresses: Array<string>) => Promise<Array<string>>
 
 type Addresses = Array<string>
 
@@ -211,23 +218,17 @@ export class AddressChain {
     )
   }
 
-  async sync(
-    filterFn: AsyncAddressFilter,
-    networkConfig: any = CONFIG.CARDANO,
-  ) {
+  async sync(filterFn: AsyncAddressFilter) {
     let keepSyncing = true
     while (keepSyncing) {
-      keepSyncing = await this._syncStep(filterFn, networkConfig)
+      keepSyncing = await this._syncStep(filterFn)
     }
   }
 
-  async _syncStep(
-    filterFn: AsyncAddressFilter,
-    networkConfig: any = CONFIG.CARDANO,
-  ) {
+  async _syncStep(filterFn: AsyncAddressFilter) {
     this._selfCheck()
     const block = this._getLastBlock()
-    const used = await filterFn(block, networkConfig)
+    const used = await filterFn(block)
 
     // Index relative to the start of the block
     // It is okay to "overshoot" with -1 here
@@ -266,25 +267,19 @@ export class AddressChain {
 
   // note(v-almonacid): this is an alternative to the method
   // wallet::getLastUsedIndex, which currently only works in byron environment
-  async getLastUsedIndex(
-    filterFn: AsyncAddressFilter,
-    networkConfig?: any = CONFIG.CARDANO,
-  ) {
-    await this.sync(filterFn, networkConfig)
+  async getLastUsedIndex(filterFn: AsyncAddressFilter) {
+    await this.sync(filterFn)
     const totalGenerated = this.addresses.length
     const block = this._getLastBlock()
-    const used = await filterFn(block, networkConfig)
+    const used = await filterFn(block)
     const lastUsedRelIdx = used.length > 0 ? block.indexOf(_.last(used)) : -1
     return totalGenerated > this._blockSize
       ? totalGenerated - this._blockSize + lastUsedRelIdx
       : lastUsedRelIdx
   }
 
-  async getNextUnused(
-    filterFn: AsyncAddressFilter,
-    networkConfig?: any = CONFIG.CARDANO,
-  ) {
-    const lastUsedIdx = await this.getLastUsedIndex(filterFn, networkConfig)
+  async getNextUnused(filterFn: AsyncAddressFilter) {
+    const lastUsedIdx = await this.getLastUsedIndex(filterFn)
     return (await this._addressGenerator.generate([lastUsedIdx + 1]))[0]
   }
 }

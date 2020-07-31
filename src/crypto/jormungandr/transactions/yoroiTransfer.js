@@ -9,8 +9,8 @@ import {signTransaction, sendAllUnsignedTx} from './utxoTransactions'
 import {getShelleyTxFee} from './utils'
 import {generateWalletRootKey} from '../util'
 import {addressToDisplayString} from '../../commonUtils'
-import {bulkFetchUTXOsForAddresses} from '../../../api/api'
-import {CONFIG, NUMBERS} from '../../../config'
+import {bulkFetchUTXOsForAddresses} from '../../../api/byron/api'
+import {CONFIG} from '../../../config/config'
 import {Logger} from '../../../utils/logging'
 
 export type TransferTx = {
@@ -65,7 +65,7 @@ export const buildYoroiTransferTx = async (payload: {|
       ),
       receiver: await (await Address.from_bytes(
         Buffer.from(outputAddr, 'hex'),
-      )).to_string(CONFIG.BECH32_PREFIX.ADDRESS),
+      )).to_string(CONFIG.NETWORKS.JORMUNGANDR.BECH32_PREFIX.ADDRESS),
     }
   } catch (error) {
     if (error instanceof InsufficientFunds) {
@@ -83,12 +83,10 @@ export const buildYoroiTransferTx = async (payload: {|
  */
 export const toSenderUtxos = async (
   addresses: Array<{|...Address, ...Addressing|}>,
-  networkConfig?: any = CONFIG.CARDANO,
 ): Promise<Array<AddressedUtxo>> => {
   // fetch UTXO
   const utxos = await bulkFetchUTXOsForAddresses(
     addresses.map((addr) => addr.address),
-    networkConfig,
   )
   // add addressing info to the UTXO
   const addressingMap = new Map<string, Addressing>(
@@ -118,9 +116,8 @@ export const generateLegacyYoroiTransferTx = async (
   addresses: Array<{|address: string, ...Addressing|}>,
   outputAddr: string,
   signingKey: Bip32PrivateKey,
-  networkConfig?: any = CONFIG.CARDANO,
 ): Promise<TransferTx> => {
-  const senderUtxos = await toSenderUtxos(addresses, networkConfig)
+  const senderUtxos = await toSenderUtxos(addresses)
 
   const txRequest = {
     outputAddr,
@@ -134,22 +131,20 @@ export const generateTransferTxFromMnemonic = async (
   recoveryPhrase: string,
   destinationAddress: string,
   fundedAddresses: Array<{|address: string, ...Addressing|}>,
-  networkConfig?: any = CONFIG.CARDANO,
 ): Promise<TransferTx> => {
   // Perform restoration
   // for now we only support transfering from Byron to Shelley
   const accountKey = await (await (await (await generateWalletRootKey(
     recoveryPhrase,
-  )).derive(NUMBERS.WALLET_TYPE_PURPOSE.BIP44)).derive(
-    NUMBERS.COIN_TYPES.CARDANO,
-  )).derive(0 + NUMBERS.HARD_DERIVATION_START)
+  )).derive(CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44)).derive(
+    CONFIG.NUMBERS.COIN_TYPES.CARDANO,
+  )).derive(0 + CONFIG.NUMBERS.HARD_DERIVATION_START)
 
   // generate transaction
   const transferTx = await generateLegacyYoroiTransferTx(
     fundedAddresses,
     destinationAddress,
     accountKey,
-    networkConfig,
   )
   // Possible exception: NotEnoughMoneyToSendError
   return transferTx

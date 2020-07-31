@@ -15,7 +15,7 @@ import StorybookScreen from './components/StorybookScreen'
 import SplashScreen from './components/SplashScreen'
 import MaintenanceScreen from './components/MaintenanceScreen'
 import AppStartScreen from './components/Login/AppStartScreen'
-import {WALLET_ROUTES, SHELLEY_WALLET_ROUTES, ROOT_ROUTES} from './RoutesList'
+import {WALLET_ROUTES, JORMUN_WALLET_ROUTES, ROOT_ROUTES} from './RoutesList'
 import BiometricAuthScreen from './components/Send/BiometricAuthScreen'
 import CustomPinLogin from './components/Login/CustomPinLogin'
 import {
@@ -39,15 +39,15 @@ const WalletNavigator = createStackNavigator(
   },
 )
 
-const ShelleyWalletNavigator = createStackNavigator(
+const JormunWalletNavigator = createStackNavigator(
   {
-    [SHELLEY_WALLET_ROUTES.DELEGATION_SUMMARY]: DelegationNavigatorSummary,
-    [SHELLEY_WALLET_ROUTES.STAKING_CENTER]: DelegationNavigatorCenter,
+    [JORMUN_WALLET_ROUTES.DELEGATION_SUMMARY]: DelegationNavigatorSummary,
+    [JORMUN_WALLET_ROUTES.STAKING_CENTER]: DelegationNavigatorCenter,
   },
   {
     // TODO(ppershing): initialRouteName
     // works reversed. Figure out why!
-    initialRouteName: SHELLEY_WALLET_ROUTES.DELEGATION_SUMMARY,
+    initialRouteName: JORMUN_WALLET_ROUTES.DELEGATION_SUMMARY,
     navigationOptions: {
       header: null,
     },
@@ -64,7 +64,7 @@ const AppNavigator = createSwitchNavigator(
     [ROOT_ROUTES.NEW_WALLET]: WalletInitNavigator,
     [ROOT_ROUTES.BIO_AUTH]: BiometricAuthScreen,
     [ROOT_ROUTES.WALLET]: WalletNavigator,
-    [ROOT_ROUTES.SHELLEY_WALLET]: ShelleyWalletNavigator,
+    [ROOT_ROUTES.JORMUN_WALLET]: JormunWalletNavigator,
     [ROOT_ROUTES.LOGIN]: createStackNavigator(
       {
         [ROOT_ROUTES.LOGIN]: {

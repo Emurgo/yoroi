@@ -1,15 +1,15 @@
 // @flow
 import moment from 'moment'
 
-import assert from '../utils/assert'
-import {TRANSACTION_STATUS} from '../types/HistoryTransaction'
-import {isValidAddress} from '../crypto/byron/util'
+import assert from '../../utils/assert'
+import {TRANSACTION_STATUS} from '../../types/HistoryTransaction'
+import {isValidAddress} from '../../crypto/byron/util'
 
 import type {
   Transaction,
   TransactionStatus,
   RawTransaction,
-} from '../types/HistoryTransaction'
+} from '../../types/HistoryTransaction'
 
 const checkAndFacadeStatus = (status: string): TransactionStatus => {
   const mapping = {

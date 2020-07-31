@@ -2,6 +2,7 @@
 /* eslint-env jest */
 import jestSetup from '../jestSetup'
 import {Wallet} from './wallet'
+import {NETWORK_REGISTRY} from '../config/types'
 
 jestSetup.setup()
 // We do a lot of API calls for sync tests
@@ -13,10 +14,12 @@ const mnemonic = [
   'slide assault bus',
 ].join(' ')
 
+const networkId = NETWORK_REGISTRY.BYRON_MAINNET
+
 test('Can restore wallet', async () => {
   expect.assertions(2)
   const wallet = new Wallet()
-  await wallet._create(mnemonic, 'password')
+  await wallet._create(mnemonic, 'password', networkId)
   await wallet.doFullSync()
   // Note(ppershing): these are just loose tests because we are testing
   // agains live test-wallet and so the numbers might increase over time
@@ -44,7 +47,7 @@ const expectedTxs = [
 test('Can sync txs after restoring wallet', async () => {
   expect.assertions(expectedTxs.length)
   const wallet = new Wallet()
-  await wallet._create(mnemonic, 'password')
+  await wallet._create(mnemonic, 'password', networkId)
 
   await wallet.doFullSync()
 

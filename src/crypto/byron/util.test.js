@@ -19,7 +19,7 @@ import {InsufficientFunds} from '../errors'
 
 import longAddress from './__fixtures/long_address.json'
 
-import {CARDANO_CONFIG, CONFIG} from '../../config'
+import {CONFIG} from '../../config/config'
 
 jestSetup.setup()
 
@@ -42,12 +42,12 @@ test('Can generate external addresses', async () => {
   const account = await getAccountFromMasterKey(
     masterKey,
     CONFIG.NUMBERS.ACCOUNT_INDEX,
-    CARDANO_CONFIG.TESTNET.PROTOCOL_MAGIC,
+    CONFIG.NETWORKS.BYRON_MAINNET.PROTOCOL_MAGIC,
   )
   const addresses = await getExternalAddresses(
     account,
     [0, 1],
-    CONFIG.CARDANO.PROTOCOL_MAGIC,
+    CONFIG.NETWORKS.BYRON_MAINNET.PROTOCOL_MAGIC,
   )
 
   expect(addresses).toEqual(externalAddresses)
