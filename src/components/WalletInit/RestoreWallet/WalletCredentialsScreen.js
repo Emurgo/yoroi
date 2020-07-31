@@ -282,7 +282,7 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
       // restore modal to users with a fresh install
       await updateVersion()
       this.setState({isProcessing: false})
-      navigation.navigate(ROOT_ROUTES.SHELLEY_WALLET)
+      navigation.navigate(ROOT_ROUTES.JORMUN_WALLET)
     } catch (e) {
       this.setState({isProcessing: false})
       handleApiError(e, intl, 'Could not upgrade wallet')

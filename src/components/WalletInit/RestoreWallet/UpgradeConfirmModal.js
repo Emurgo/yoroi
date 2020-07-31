@@ -9,6 +9,7 @@ import AddressEntry from '../../Common/AddressEntry'
 import {Text, Button, Modal} from '../../UiKit'
 import {formatAdaWithText} from '../../../utils/format'
 import {confirmationMessages} from '../../../i18n/global-messages'
+import {CONFIG} from '../../../config/config'
 
 import styles from './styles/UpgradeConfirmModal.style'
 import imageSucess from '../../../assets/img/transfer-success.inline.png'
@@ -120,12 +121,23 @@ const UpgradeConfirmModal = ({
             <View style={styles.item}>
               <Text>{intl.formatMessage(messages.fromLabel)}</Text>
               {byronAddresses.map((address, i) => (
-                <AddressEntry key={i} address={address} />
+                <AddressEntry
+                  key={i}
+                  address={address}
+                  explorerForAddress={
+                    CONFIG.NETWORKS.JORMUNGANDR.EXPLORER_URL_FOR_ADDRESS
+                  }
+                />
               ))}
             </View>
             <View style={styles.item}>
               <Text>{intl.formatMessage(messages.toLabel)}</Text>
-              <AddressEntry address={shelleyAddress} />
+              <AddressEntry
+                address={shelleyAddress}
+                explorerForAddress={
+                  CONFIG.NETWORKS.JORMUNGANDR.EXPLORER_URL_FOR_ADDRESS
+                }
+              />
             </View>
             <View style={styles.item}>
               <Text>{intl.formatMessage(messages.txIdLabel)}</Text>

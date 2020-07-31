@@ -4,21 +4,22 @@ import {withHandlers} from 'recompose'
 import {Linking, TouchableOpacity} from 'react-native'
 
 import {Text} from '../UiKit'
-import {CARDANO_CONFIG} from '../../config'
 
 import type {ComponentType} from 'react'
 
 type handlerProps = {
   address: string,
+  explorerForAddress: (string) => string,
 }
 type Props = {
   address: string,
   onPress: () => any,
+  explorerForAddress: (string) => string,
 }
 
 const AddressEntry: ComponentType<handlerProps> = withHandlers({
-  onPress: ({address}: {address: string}) => () =>
-    Linking.openURL(CARDANO_CONFIG.SHELLEY.EXPLORER_URL_FOR_ADDRESS(address)),
+  onPress: ({address, explorerForAddress}) => () =>
+    Linking.openURL(explorerForAddress(address)),
 })(({address, onPress}: Props) => {
   return (
     <TouchableOpacity activeOpacity={0.5} onPress={onPress}>

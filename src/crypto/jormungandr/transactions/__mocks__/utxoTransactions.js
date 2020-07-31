@@ -39,7 +39,7 @@ import {
   utxoToTxInput,
 } from '../inputSelection'
 import {generateAuthData, generateFee} from '../utils'
-import {CARDANO_CONFIG} from '../../../../config'
+import {NETWORKS} from '../../../../config/networks'
 
 import type {
   V3UnsignedTxData,
@@ -49,7 +49,7 @@ import type {
   Addressing,
 } from '../../../../types/HistoryTransaction'
 
-const CONFIG = CARDANO_CONFIG.SHELLEY
+const CONFIG = NETWORKS.JORMUNGANDR
 
 type TxOutput = {|
   address: string,

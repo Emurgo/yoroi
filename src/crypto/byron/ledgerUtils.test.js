@@ -3,7 +3,7 @@ import jestSetup from '../../jestSetup'
 
 import {createLedgerSignTxPayload} from './ledgerUtils'
 import {signTransaction} from './util'
-import {getTxsBodiesForUTXOs} from '../../api/api'
+import {getTxsBodiesForUTXOs} from '../../api/byron/api'
 
 jestSetup.setup()
 

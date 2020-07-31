@@ -14,7 +14,7 @@ import {
   getWalletNameError,
   validateWalletName,
 } from '../../utils/validators'
-import {CONFIG} from '../../config'
+import {CONFIG} from '../../config/config'
 import PasswordStrengthIndicator from './PasswordStrengthIndicator'
 import styles from './styles/WalletForm.style'
 import {walletNamesSelector} from '../../selectors'

@@ -10,8 +10,12 @@ import {checkAndFacadeTransactionAsync} from '../byron/facade'
 import type {
   Transaction,
   RawUtxo,
+  AccountStateResponse,
+  PoolInfoRequest,
+  PoolInfoResponse,
   TxBodiesRequest,
   TxBodiesResponse,
+  ReputationResponse,
   ServerStatusResponse,
   BestblockResponse,
   TxHistoryRequest,
@@ -76,7 +80,7 @@ export const bulkFetchUTXOsForAddresses = async (
   const chunks = _.chunk(addresses, NETWORK_CONFIG.FETCH_UTXOS_MAX_ADDRESSES)
 
   const responses = await Promise.all(
-    chunks.map((addrs) => fetchUTXOsForAddresses(addrs, NETWORK_CONFIG)),
+    chunks.map((addrs) => fetchUTXOsForAddresses(addrs)),
   )
   return _.flatten(responses)
 }
@@ -101,7 +105,7 @@ export const bulkFetchUTXOSumForAddresses = async (
   const chunks = _.chunk(addresses, NETWORK_CONFIG.FETCH_UTXOS_MAX_ADDRESSES)
 
   const responses = await Promise.all(
-    chunks.map((addrs) => fetchUTXOSumForAddresses(addrs, NETWORK_CONFIG)),
+    chunks.map((addrs) => fetchUTXOSumForAddresses(addrs)),
   )
   const sum = responses.reduce(
     (x: BigNumber, y) => x.plus(new BigNumber(y.sum || 0)),
@@ -109,7 +113,7 @@ export const bulkFetchUTXOSumForAddresses = async (
   )
 
   const responseUTXOAddresses = await Promise.all(
-    chunks.map((addrs) => fetchUTXOsForAddresses(addrs, NETWORK_CONFIG)),
+    chunks.map((addrs) => fetchUTXOsForAddresses(addrs)),
   )
 
   const fundedAddresses = _.flatten(responseUTXOAddresses).map(

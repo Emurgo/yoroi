@@ -64,7 +64,7 @@ const AppNavigator = createSwitchNavigator(
     [ROOT_ROUTES.NEW_WALLET]: WalletInitNavigator,
     [ROOT_ROUTES.BIO_AUTH]: BiometricAuthScreen,
     [ROOT_ROUTES.WALLET]: WalletNavigator,
-    [ROOT_ROUTES.SHELLEY_WALLET]: JormunWalletNavigator,
+    [ROOT_ROUTES.JORMUN_WALLET]: JormunWalletNavigator,
     [ROOT_ROUTES.LOGIN]: createStackNavigator(
       {
         [ROOT_ROUTES.LOGIN]: {

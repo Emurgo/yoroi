@@ -10,7 +10,7 @@ import {getShelleyTxFee} from './utils'
 import {generateWalletRootKey} from '../util'
 import {addressToDisplayString} from '../../commonUtils'
 import {bulkFetchUTXOsForAddresses} from '../../../api/byron/api'
-import {CONFIG, NUMBERS} from '../../../config'
+import {CONFIG} from '../../../config/config'
 import {Logger} from '../../../utils/logging'
 
 export type TransferTx = {
@@ -65,7 +65,7 @@ export const buildYoroiTransferTx = async (payload: {|
       ),
       receiver: await (await Address.from_bytes(
         Buffer.from(outputAddr, 'hex'),
-      )).to_string(CONFIG.BECH32_PREFIX.ADDRESS),
+      )).to_string(CONFIG.NETWORKS.JORMUNGANDR.BECH32_PREFIX.ADDRESS),
     }
   } catch (error) {
     if (error instanceof InsufficientFunds) {
@@ -136,9 +136,9 @@ export const generateTransferTxFromMnemonic = async (
   // for now we only support transfering from Byron to Shelley
   const accountKey = await (await (await (await generateWalletRootKey(
     recoveryPhrase,
-  )).derive(NUMBERS.WALLET_TYPE_PURPOSE.BIP44)).derive(
-    NUMBERS.COIN_TYPES.CARDANO,
-  )).derive(0 + NUMBERS.HARD_DERIVATION_START)
+  )).derive(CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44)).derive(
+    CONFIG.NUMBERS.COIN_TYPES.CARDANO,
+  )).derive(0 + CONFIG.NUMBERS.HARD_DERIVATION_START)
 
   // generate transaction
   const transferTx = await generateLegacyYoroiTransferTx(

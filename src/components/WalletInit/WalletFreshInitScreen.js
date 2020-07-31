@@ -35,7 +35,7 @@ type Props = {|
   intl: any,
   walletIsInitialized: boolean,
   navigation: Navigation,
-  navigateInitWallet: (Object, boolean) => mixed,
+  navigateInitWallet: (Object, NetworkId) => mixed,
 |}
 
 const WalletInitScreen = ({
@@ -82,7 +82,7 @@ export default injectIntl(
     })),
     withHandlers({
       navigateInitWallet: ({navigation}) => (
-        event: any,
+        event: Object,
         networkId: NetworkId,
       ) =>
         navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH, {

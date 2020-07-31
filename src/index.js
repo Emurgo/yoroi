@@ -23,7 +23,7 @@ import getConfiguredStore from './helpers/configureStore'
 import {setupHooks, handleGeneralError} from './actions'
 import {languageSelector} from './selectors'
 import {setLogLevel} from './utils/logging'
-import {CONFIG} from './config'
+import {CONFIG} from './config/config'
 import translations from './i18n/translations'
 import bluebird from 'bluebird'
 

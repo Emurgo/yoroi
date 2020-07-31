@@ -8,7 +8,7 @@ import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import DeviceInfo from 'react-native-device-info'
 
 import {Text, Button, Modal} from '../UiKit'
-import {CONFIG} from '../../config'
+import {CONFIG} from '../../config/config'
 import {onDidMount} from '../../utils/renderUtils'
 
 import styles from './styles/LedgerTransportSwitchModal.style'

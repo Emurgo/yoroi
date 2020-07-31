@@ -17,7 +17,7 @@ import {withNavigationTitle} from '../../utils/renderUtils'
 import {formatAdaWithSymbol, formatDateToSeconds} from '../../utils/format'
 import {Text, Button, OfflineBanner, Banner, StatusBar} from '../UiKit'
 import Screen from '../../components/Screen'
-import {CONFIG} from '../../config'
+import {CONFIG} from '../../config/config'
 import AddressModal from '../Receive/AddressModal'
 
 import styles from './styles/TxDetails.style'
@@ -320,7 +320,9 @@ export default injectIntl(
     withHandlers({
       openInExplorer: ({transaction}) => () => {
         if (transaction) {
-          Linking.openURL(CONFIG.CARDANO.EXPLORER_URL_FOR_TX(transaction.id))
+          Linking.openURL(
+            CONFIG.NETWORKS.BYRON_MAINNET.EXPLORER_URL_FOR_TX(transaction.id),
+          )
         }
       },
       showModalForAddress: ({setAddressDetail}) => (address) => {

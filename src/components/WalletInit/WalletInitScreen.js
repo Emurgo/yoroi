@@ -139,21 +139,21 @@ export default injectIntl(
     ),
     withHandlers({
       navigateRestoreWallet: ({navigation}) => (
-        event: any,
+        event: Object,
         networkId: NetworkId,
       ) =>
         navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET, {
           networkId,
         }),
       navigateCreateWallet: ({navigation}) => (
-        event: any,
+        event: Object,
         networkId: NetworkId,
       ) =>
         navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET, {
           networkId,
         }),
       navigateCheckNanoX: ({navigation}) => (
-        event: any,
+        event: Object,
         networkId: NetworkId,
         useUSB: boolean,
       ) =>

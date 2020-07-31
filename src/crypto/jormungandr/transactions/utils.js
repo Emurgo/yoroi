@@ -14,7 +14,8 @@ import {
   Value,
 } from 'react-native-chain-libs'
 import {CertificateKind} from '../certificateUtils'
-import {NUMBERS, CARDANO_CONFIG} from '../../../config'
+import {NUMBERS} from '../../../config/numbers'
+import {NETWORKS} from '../../../config/networks'
 import {AMOUNT_FORMAT} from '../../../types/HistoryTransaction'
 
 import type {
@@ -22,7 +23,7 @@ import type {
   AmountFormat,
 } from '../../../types/HistoryTransaction'
 
-const CONFIG = CARDANO_CONFIG.SHELLEY
+const CONFIG = NETWORKS.JORMUNGANDR
 
 export const getTxInputTotal = async (
   IOs: InputOutput,

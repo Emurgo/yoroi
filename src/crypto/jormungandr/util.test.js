@@ -8,7 +8,7 @@ import {
   getGroupAddressesFromMnemonics,
 } from './util'
 import {getMasterKeyFromMnemonic} from '../byron/util'
-import {NUMBERS} from '../../config'
+import {NUMBERS} from '../../config/numbers'
 
 jestSetup.setup()
 

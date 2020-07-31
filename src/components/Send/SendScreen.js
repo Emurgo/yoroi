@@ -9,7 +9,7 @@ import _ from 'lodash'
 import {SafeAreaView} from 'react-navigation'
 import {injectIntl, defineMessages} from 'react-intl'
 
-import {CONFIG} from '../../config'
+import {CONFIG} from '../../config/config'
 import {SEND_ROUTES} from '../../RoutesList'
 import {
   Text,

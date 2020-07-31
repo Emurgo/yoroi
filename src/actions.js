@@ -47,13 +47,13 @@ import assert from './utils/assert'
 import NavigationService from './NavigationService'
 import {ROOT_ROUTES} from './RoutesList'
 import KeyStore from './crypto/KeyStore'
-import api from './api'
+import * as api from './api/byron/api'
 
 import {type Dispatch} from 'redux'
 import {type State} from './state'
 import type {PreparedTransactionData} from './types/HistoryTransaction'
 import type {HWDeviceInfo} from './crypto/byron/ledgerUtils'
-import type {NetworkId} from './config/networks'
+import type {NetworkId} from './config/types'
 
 const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
   const handlers = {
@@ -389,14 +389,14 @@ export const createWallet = (
 export const createWalletWithBip44Account = (
   name: string,
   bip44AccountPublic: string,
-  hwDeviceInfo: ?HWDeviceInfo,
   networkId: NetworkId,
+  hwDeviceInfo: ?HWDeviceInfo,
 ) => async (dispatch: Dispatch<any>) => {
   await walletManager.createWalletWithBip44Account(
     name,
     bip44AccountPublic,
-    hwDeviceInfo,
     networkId,
+    hwDeviceInfo,
   )
   dispatch(updateWallets())
 }

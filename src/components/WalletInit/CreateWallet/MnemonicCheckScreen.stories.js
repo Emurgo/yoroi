@@ -3,7 +3,7 @@ import React from 'react'
 import {storiesOf} from '@storybook/react-native'
 
 import MnemonicCheckScreen from './MnemonicCheckScreen'
-import {CONFIG} from '../../../config'
+import {CONFIG} from '../../../config/config'
 
 storiesOf('MnemonicCheckScreen', module).add('Default', ({navigation}) => {
   navigation.getParam = (param) => {
@@ -14,8 +14,8 @@ storiesOf('MnemonicCheckScreen', module).add('Default', ({navigation}) => {
         return CONFIG.DEBUG.WALLET_NAME
       case 'password':
         return CONFIG.DEBUG.PASSWORD
-      case 'isShelleyWallet':
-        return true
+      case 'networkId':
+        return CONFIG.NETWORKS.BYRON_MAINNET.NETWORK_ID
       default:
         return ''
     }

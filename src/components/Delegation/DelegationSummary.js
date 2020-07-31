@@ -51,7 +51,7 @@ import walletManager from '../../crypto/wallet'
 import globalMessages from '../../i18n/global-messages'
 import {formatAdaWithText, formatAdaInteger} from '../../utils/format'
 import FlawedWalletScreen from './FlawedWalletScreen'
-import {getReputation} from '../../api/api'
+import {getReputation} from '../../api/jormungandr/api'
 import {Logger} from '../../utils/logging'
 
 import infoIcon from '../../assets/img/icon/info-light-green.png'

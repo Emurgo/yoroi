@@ -24,8 +24,8 @@ import {
   filterAddressesByStakingKey,
 } from './jormungandr/delegationUtils'
 import {ADDRESS_TYPE_TO_CHANGE} from './commonUtils'
-import api from '../api/byron/api'
-import jormunApi from '../api/jormungandr/api'
+import * as api from '../api/byron/api'
+import * as jormunApi from '../api/jormungandr/api'
 import {CONFIG} from '../config/config'
 import {NETWORK_REGISTRY} from '../config/types'
 import {isJormungandr} from '../config/networks'
@@ -344,8 +344,8 @@ export class Wallet {
 
   async _createWithBip44Account(
     accountPublicKey: string,
-    hwDeviceInfo: ?HWDeviceInfo,
     networkId: NetworkId,
+    hwDeviceInfo: ?HWDeviceInfo,
   ) {
     Logger.info(
       `create wallet with account pub key (networkId=${String(networkId)})`,
@@ -398,12 +398,15 @@ export class Wallet {
         }
       }
       if (this._networkId === NETWORK_REGISTRY.UNDEFINED) {
+        // prettier-ignore
         this._networkId =
           data.isShelley != null
             ? data.isShelley
               ? NETWORK_REGISTRY.JORMUNGANDR
               : NETWORK_REGISTRY.BYRON_MAINNET
-            : (() => throw new Error('wallet::_integrityCheck: networkId'))()
+            : (() => {
+              throw new Error('wallet::_integrityCheck: networkId')
+            })()
       }
     } catch (e) {
       Logger.error('wallet::_integrityCheck', e)
@@ -659,7 +662,10 @@ export class Wallet {
   }
 
   async getStakingKey() {
-    assert.assert(isJormungandr(this._networkId), 'getStakingKey: isShelley')
+    assert.assert(
+      isJormungandr(this._networkId),
+      'getStakingKey: isJormungandr',
+    )
     // TODO: save account public key as class member to avoid fetching
     // from internal chain?
     const accountHex = this._internalChain._addressGenerator.account
@@ -704,8 +710,7 @@ export class Wallet {
     const getTxsBodiesForUTXOsFn = isJormungandr(this._networkId)
       ? api.getTxsBodiesForUTXOs
       : jormunApi.getTxsBodiesForUTXOs
-    const response = await getTxsBodiesForUTXOsFn(request)
-    return response
+    return await getTxsBodiesForUTXOsFn(request)
   }
 
   async getAllUtxosForKey(utxos: Array<RawUtxo>) {
@@ -811,9 +816,7 @@ export class Wallet {
     if (this._chimericAccountAddress == null) {
       throw new Error('fetchAccountState:: _chimericAccountAddress = null')
     }
-    return await this.abortWhenWalletCloses(
-      jormunApi.fetchAccountState([this._chimericAccountAddress]),
-    )
+    return await jormunApi.fetchAccountState([this._chimericAccountAddress])
   }
 
   async fetchPoolInfo(pool: PoolInfoRequest) {
@@ -969,9 +972,14 @@ class WalletManager {
     return this._wallet.isUsedAddressIndex
   }
 
-  get isShelley() {
+  get networkId() {
+    if (!this._wallet) return NETWORK_REGISTRY.UNDEFINED
+    return this._wallet._networkId
+  }
+
+  get isJormungandr() {
     if (!this._wallet) return false
-    return this._wallet._isShelley
+    return isJormungandr(this._wallet._networkId)
   }
 
   get isHW() {
@@ -1146,19 +1154,19 @@ class WalletManager {
 
   async fetchPoolInfo(pool: PoolInfoRequest) {
     if (this._wallet == null) throw new WalletClosed()
-    return await this._wallet.getPoolInfo(pool)
+    return await this._wallet.fetchPoolInfo(pool)
   }
 
   async saveWallet(
     id: string,
     name: string,
     wallet: Wallet,
-    isShelley: boolean,
+    networkId: NetworkId,
   ) {
     this._id = id
     this._wallets = {
       ...this._wallets,
-      [id]: {id, name, isShelley, isEasyConfirmationEnabled: false},
+      [id]: {id, name, networkId, isEasyConfirmationEnabled: false},
     }
 
     this._wallet = wallet
@@ -1190,17 +1198,18 @@ class WalletManager {
   async createWalletWithBip44Account(
     name: string,
     bip44AccountPublic: string,
+    networkId: NetworkId,
     hwDeviceInfo: ?HWDeviceInfo,
-    isShelley?: boolean = false,
   ) {
     const wallet = new Wallet()
     const id = await wallet._createWithBip44Account(
       bip44AccountPublic,
+      networkId,
       hwDeviceInfo,
     )
     Logger.debug('creating wallet...', wallet)
 
-    return this.saveWallet(id, name, wallet, isShelley)
+    return this.saveWallet(id, name, wallet, networkId)
   }
 
   async openWallet(id: string): Promise<Wallet> {
@@ -1375,7 +1384,7 @@ class WalletManager {
     for (const mnemonic of mnemonics) {
       Logger.debug('WalletManager::checkForFlawedWallets mnemonic:', mnemonic)
       let flawedAddresses
-      if (isJormungandr(this.networkId)) {
+      if (this.isJormungandr) {
         const flawedAddressesBech32 = await jormungandrUtil.getGroupAddressesFromMnemonics(
           mnemonic,
           'External',

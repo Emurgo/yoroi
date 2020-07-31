@@ -13,7 +13,7 @@ import {
   PublicKey,
 } from 'react-native-chain-libs'
 import {ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
-import {CONFIG, CARDANO_CONFIG, NUMBERS} from '../../config'
+import {CONFIG} from '../../config/config'
 
 import type {AddressType} from '../commonUtils'
 
@@ -40,22 +40,22 @@ export const getFirstInternalAddr = async (
 ): Promise<{bech32: string, hex: string}> => {
   const accountKey = await (await (await (await generateWalletRootKey(
     recoveryPhrase,
-  )).derive(NUMBERS.WALLET_TYPE_PURPOSE.CIP1852)).derive(
-    NUMBERS.COIN_TYPES.CARDANO,
-  )).derive(0 + NUMBERS.HARD_DERIVATION_START)
+  )).derive(CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852)).derive(
+    CONFIG.NUMBERS.COIN_TYPES.CARDANO,
+  )).derive(0 + CONFIG.NUMBERS.HARD_DERIVATION_START)
 
   const internalKey = await (await (await (await accountKey.derive(
-    NUMBERS.CHAIN_DERIVATIONS.INTERNAL,
+    CONFIG.NUMBERS.CHAIN_DERIVATIONS.INTERNAL,
   )).derive(0)).to_public()).to_raw_key()
 
   const stakingKey = await (await (await (await accountKey.derive(
-    NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-  )).derive(NUMBERS.STAKING_KEY_INDEX)).to_public()).to_raw_key()
+    CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+  )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_public()).to_raw_key()
 
   const internalAddr = await Address.delegation_from_public_key(
     internalKey,
     stakingKey,
-    CARDANO_CONFIG.SHELLEY.IS_MAINNET
+    CONFIG.NETWORKS.JORMUNGANDR.IS_MAINNET
       ? await AddressDiscrimination.Production
       : await AddressDiscrimination.Test,
   )
@@ -64,7 +64,9 @@ export const getFirstInternalAddr = async (
   )
   return {
     hex: internalAddrHash,
-    bech32: await internalAddr.to_string(CONFIG.BECH32_PREFIX.ADDRESS),
+    bech32: await internalAddr.to_string(
+      CONFIG.NETWORKS.JORMUNGANDR.BECH32_PREFIX.ADDRESS,
+    ),
   }
 }
 
@@ -79,11 +81,13 @@ export const getGroupAddresses = async (
       const address = await Address.delegation_from_public_key(
         addressKey,
         stakingKey,
-        CARDANO_CONFIG.SHELLEY.IS_MAINNET
+        CONFIG.NETWORKS.JORMUNGANDR.IS_MAINNET
           ? await AddressDiscrimination.Production
           : await AddressDiscrimination.Test,
       )
-      return await address.to_string(CONFIG.BECH32_PREFIX.ADDRESS)
+      return await address.to_string(
+        CONFIG.NETWORKS.JORMUNGANDR.BECH32_PREFIX.ADDRESS,
+      )
     }),
   )
 }
@@ -95,16 +99,16 @@ export const getGroupAddressesFromMnemonics = async (
 ): Promise<Array<string>> => {
   const accountKey = await (await (await (await generateWalletRootKey(
     mnemonic,
-  )).derive(NUMBERS.WALLET_TYPE_PURPOSE.CIP1852)).derive(
-    NUMBERS.COIN_TYPES.CARDANO,
-  )).derive(0 + NUMBERS.HARD_DERIVATION_START)
+  )).derive(CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852)).derive(
+    CONFIG.NUMBERS.COIN_TYPES.CARDANO,
+  )).derive(0 + CONFIG.NUMBERS.HARD_DERIVATION_START)
 
   const accountPublic = await accountKey.to_public()
   const chainKey = await accountPublic.derive(ADDRESS_TYPE_TO_CHANGE[type])
 
   const stakingKey = await (await (await accountPublic.derive(
-    NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-  )).derive(NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+    CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+  )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
 
   return await getGroupAddresses(chainKey, stakingKey, indices)
 }

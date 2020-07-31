@@ -1,10 +1,12 @@
 // @flow
 
 // library borrowed from yoroi-frontend
+// TODO(v-almonacid): this needs to be rewritten and needs to accepts config
+// parameters according to the target network
 
-import {CARDANO_CONFIG} from '../config'
+import {NETWORKS} from '../config/networks'
 
-const CONFIG = CARDANO_CONFIG.SHELLEY
+const CONFIG = NETWORKS.JORMUNGANDR
 
 export type ToAbsoluteSlotNumberRequest = {|
   epoch: number,

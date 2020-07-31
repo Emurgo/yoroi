@@ -2,7 +2,7 @@
 /* eslint-env jest */
 import jestSetup from '../../jestSetup'
 
-import api from './api'
+import * as api from './api'
 import {ApiError, ApiHistoryError} from '../errors'
 
 jestSetup.setup()

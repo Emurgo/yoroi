@@ -8,7 +8,7 @@
 
 import {Wallet} from 'react-native-cardano'
 import {Address} from 'react-native-chain-libs'
-import {CONFIG} from '../config'
+import {CONFIG} from '../config/config'
 
 export type AddressType = 'Internal' | 'External'
 
@@ -47,7 +47,9 @@ export const addressToDisplayString = async (
   } else {
     try {
       const wasmAddr = await Address.from_bytes(Buffer.from(address, 'hex'))
-      return await wasmAddr.to_string(CONFIG.BECH32_PREFIX.ADDRESS)
+      return await wasmAddr.to_string(
+        CONFIG.NETWORKS.JORMUNGANDR.BECH32_PREFIX.ADDRESS,
+      )
     } catch (e) {
       throw new Error(
         `addressToDisplayString: failed to parse address ${address}`,

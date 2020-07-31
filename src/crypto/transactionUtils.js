@@ -5,7 +5,7 @@ import {
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
 } from '../types/HistoryTransaction'
-import {CONFIG} from '../config'
+import {CONFIG} from '../config/config'
 import {Logger} from '../utils/logging'
 import assert from '../utils/assert'
 

@@ -3,7 +3,7 @@ import {AppState} from 'react-native'
 
 import BackgroundTimer from 'react-native-background-timer'
 
-import {CONFIG} from '.././config'
+import {CONFIG} from '../config/config'
 
 let timeout
 
