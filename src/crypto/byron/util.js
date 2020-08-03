@@ -22,11 +22,7 @@ import {
 } from '../errors'
 import {ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
 
-import type {
-  TransactionInput,
-  TransactionOutput,
-  V1SignedTx,
-} from '../../types/HistoryTransaction'
+import type {TransactionInput, TransactionOutput, V1SignedTx} from '../types'
 import type {AddressType} from '../commonUtils'
 
 export type CryptoAccount = {

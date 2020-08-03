@@ -11,11 +11,8 @@ import {
 import {ObjectValues} from './utils/flow'
 
 import type {Dict, State} from './state'
-import type {
-  Transaction,
-  TransactionInfo,
-  RawUtxo,
-} from './types/HistoryTransaction'
+import type {TransactionInfo, Transaction} from './types/HistoryTransaction'
+import type {RawUtxo} from './api/types'
 import type {HWDeviceInfo} from './crypto/byron/ledgerUtils'
 
 export const transactionsInfoSelector: (State) => Dict<

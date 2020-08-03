@@ -7,8 +7,8 @@ import {CONFIG} from '../../config/config'
 import assert from '../../utils/assert'
 import {checkAndFacadeTransactionAsync} from '../byron/facade'
 
+import type {Transaction} from '../../crypto/types'
 import type {
-  Transaction,
   RawUtxo,
   AccountStateResponse,
   PoolInfoRequest,
@@ -19,7 +19,7 @@ import type {
   ServerStatusResponse,
   BestblockResponse,
   TxHistoryRequest,
-} from '../../types/HistoryTransaction'
+} from '../types'
 
 const NETWORK_CONFIG = CONFIG.NETWORKS.JORMUNGANDR.BACKEND
 

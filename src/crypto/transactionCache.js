@@ -11,7 +11,8 @@ import {ApiHistoryError} from '../api/errors'
 import {CONFIG} from '../config/config'
 
 import type {Dict} from '../state'
-import type {Transaction, TxHistoryRequest} from '../types/HistoryTransaction'
+import type {Transaction} from '../types/HistoryTransaction'
+import type {TxHistoryRequest} from '../api/types'
 import {TRANSACTION_STATUS} from '../types/HistoryTransaction'
 
 type SyncMetadata = {

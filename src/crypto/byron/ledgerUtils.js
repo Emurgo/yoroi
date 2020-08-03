@@ -22,14 +22,14 @@ import {
 } from './util'
 import {Bip32PublicKey} from 'react-native-chain-libs'
 
+import type {TxBodiesResponse} from '../../api/types'
 import type {
   Addressing,
   PreparedTransactionData,
   TransactionInput,
   TransactionOutput,
-  TxBodiesResponse,
   V1SignedTx,
-} from '../../types/HistoryTransaction'
+} from '../../crypto/types'
 import type {
   GetVersionResponse,
   GetExtendedPublicKeyResponse,

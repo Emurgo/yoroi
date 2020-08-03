@@ -45,16 +45,18 @@ import {
 } from '../helpers/deviceSettings'
 
 import type {
-  Addressing,
   RawUtxo,
-  TransactionInput,
   PoolInfoRequest,
+  TxBodiesRequest,
+  TxBodiesResponse,
+} from '../api/types'
+import type {
+  Addressing,
+  TransactionInput,
   PreparedTransactionData,
   V3SignedTx,
   V3UnsignedTxAddressedUtxoData,
-  TxBodiesRequest,
-  TxBodiesResponse,
-} from '../types/HistoryTransaction'
+} from './types'
 import type {Mutex} from '../utils/promise'
 import type {CryptoAccount} from './byron/util'
 import type {HWDeviceInfo} from './byron/ledgerUtils'
