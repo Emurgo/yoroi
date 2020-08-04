@@ -24,7 +24,7 @@ import {Bip32PublicKey} from 'react-native-chain-libs'
 
 import type {TxBodiesResponse} from '../../api/types'
 import type {
-  Addressing,
+  LegacyAddressing,
   PreparedTransactionData,
   TransactionInput,
   TransactionOutput,
@@ -267,7 +267,7 @@ export const getHWDeviceInfo = async (
 
 export const verifyAddress = async (
   address: string,
-  addressing: Addressing,
+  addressing: LegacyAddressing,
   hwDeviceInfo: HWDeviceInfo,
   useUSB?: boolean = false,
 ): Promise<void> => {
@@ -320,7 +320,7 @@ export type CreateLedgerSignTxPayloadResponse = {
 export const createLedgerSignTxPayload = async (
   unsignedTx: PreparedTransactionData,
   txsBodiesMap: TxBodiesResponse,
-  addressedChange: {address: string, ...Addressing},
+  addressedChange: {address: string, ...LegacyAddressing},
 ): Promise<CreateLedgerSignTxPayloadResponse> => {
   Logger.debug('unsigned inputs', JSON.stringify(unsignedTx.inputs))
   Logger.debug('unsigned outputs', JSON.stringify(unsignedTx.outputs))
@@ -422,7 +422,7 @@ function _transformToLedgerInputs(
 
 function _transformToLedgerOutputs(
   txOutputs: Array<TransactionOutput>,
-  changeAddr: {address: string, ...Addressing},
+  changeAddr: {address: string, ...LegacyAddressing},
   changeAmount: string,
 ): Array<OutputTypeAddress | OutputTypeChange> {
   return txOutputs.map((txOutput) => {

@@ -32,8 +32,8 @@ import type {
   Addressing,
   AddressedUtxo,
   BaseSignRequest,
-  RawUtxo,
 } from '../types'
+import type {RawUtxo} from '../../api/types'
 
 jestSetup.setup()
 
@@ -70,10 +70,12 @@ const genSampleUtxos: (void) => Promise<Array<RawUtxo>> = async () => [
   },
 ]
 
-const genSampleAdaAddresses: (void) => Promise<Array<{|
-  ...Address,
-  ...Addressing,
-|}>> = async () => [
+const genSampleAdaAddresses: (void) => Promise<
+  Array<{|
+    ...Address,
+    ...Addressing,
+  |}>,
+> = async () => [
   {
     address: await byronAddrToHex(
       'Ae2tdPwUPEZEtwz7LKtJn9ub8y7ireuj3sq2yUCZ57ccj6ZkJKn7xEiApV9',

@@ -7,7 +7,7 @@ import {CONFIG} from '../../config/config'
 import assert from '../../utils/assert'
 import {checkAndFacadeTransactionAsync} from '../byron/facade'
 
-import type {Transaction} from '../../crypto/types'
+import type {Transaction} from '../../types/HistoryTransaction'
 import type {
   RawUtxo,
   AccountStateResponse,

@@ -38,7 +38,9 @@ Promise<Ed25519KeyHash | null | void> => {
   throw new Error('getCardanoAddrKeyHash:: unknown address type')
 }
 
-export const normalizeToAddress = async (addr: string): Promise<void | Address> => {
+export const normalizeToAddress = async (
+  addr: string,
+): Promise<void | Address> => {
   // in Shelley, addresses can be base16, bech32 or base58
   // this function, we try parsing in all encodings possible
 

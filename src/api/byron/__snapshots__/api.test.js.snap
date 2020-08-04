@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`History API can fetch history 1`] = `
+Object {
+  "blockHash": "008a32c2b852aefdf9077bcb471492c3303c88d64d281f7aa6ebf2e87ba63e34",
+  "blockNum": Any<Number>,
+  "epoch": 87,
+  "id": "2401257195a3cd7d43e832b2d2e8215828ebbcdea472ef81f8de3314a535813e",
+  "inputs": Array [
+    Object {
+      "address": "DdzFFzCqrhstJ7CLwbESFGX73gJw9inpvFnQjDn9QCpEXPUBdsw5NGHJnvwPB9Vkx6Jf6JPiWh9JQqwV9RDMfec3RSD968vWLwTNwRKE",
+      "amount": "91951210",
+    },
+  ],
+  "lastUpdatedAt": Any<String>,
+  "outputs": Array [
+    Object {
+      "address": "Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7",
+      "amount": "5000000",
+    },
+    Object {
+      "address": "DdzFFzCqrht3ZCWKPX3a1vHCjrhASfxdXMhdtus6eUcPhnB4o8pPdbggnuCM8dCyPhFnBtszUHkd8wtT4NVqEeypyTAiP2btobSNYC46",
+      "amount": "86781326",
+    },
+  ],
+  "slot": 11945,
+  "status": "Successful",
+  "submittedAt": Any<String>,
+  "txOrdinal": 0,
+}
+`;

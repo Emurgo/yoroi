@@ -4,7 +4,6 @@ import {isEmpty} from 'lodash'
 import {Address, Bip32PrivateKey} from 'react-native-chain-libs'
 
 import {InsufficientFunds} from '../../errors'
-import type {AddressedUtxo, Addressing} from '../../../types/HistoryTransaction'
 import {signTransaction, sendAllUnsignedTx} from './utxoTransactions'
 import {getShelleyTxFee} from './utils'
 import {generateWalletRootKey} from '../util'
@@ -12,6 +11,8 @@ import {addressToDisplayString} from '../../commonUtils'
 import {bulkFetchUTXOsForAddresses} from '../../../api/byron/api'
 import {CONFIG} from '../../../config/config'
 import {Logger} from '../../../utils/logging'
+
+import type {AddressedUtxo, Addressing} from '../../types'
 
 export type TransferTx = {
   recoveredBalance: BigNumber,

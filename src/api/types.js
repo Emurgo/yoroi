@@ -3,6 +3,8 @@
 /**
  * API-related types
  */
+import {CertificateKind} from 'react-native-chain-libs'
+import type {TransactionStatus} from '../types/HistoryTransaction'
 
 // this is equivalent to yoroi-frontend's `RemoteUnspentOutput`
 export type RawUtxo = {|

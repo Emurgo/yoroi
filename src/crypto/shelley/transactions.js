@@ -2,7 +2,7 @@
 
 // Handles interfacing w/ cardano-serialization-lib to create transaction
 
-import BigNumber from 'bignumber.js'
+import {BigNumber} from 'bignumber.js'
 /* eslint-disable camelcase */
 import {
   BigNum,
@@ -54,7 +54,7 @@ export const sendAllUnsignedTxFromUtxo = async (
     poolDeposit: BigNum,
     keyDeposit: BigNum,
   |},
-): V4UnsignedTxUtxoResponse => {
+): Promise<V4UnsignedTxUtxoResponse> => {
   const totalBalance = allUtxos
     .map((utxo) => new BigNumber(utxo.amount))
     .reduce((acc, amount) => acc.plus(amount), new BigNumber(0))
@@ -113,7 +113,7 @@ export const sendAllUnsignedTx = async (
     poolDeposit: BigNum,
     keyDeposit: BigNum,
   |},
-): V4UnsignedTxAddressedUtxoResponse => {
+): Promise<V4UnsignedTxAddressedUtxoResponse> => {
   const addressingMap = new Map<RawUtxo, AddressedUtxo>()
   for (const utxo of allUtxos) {
     addressingMap.set(
@@ -154,7 +154,7 @@ export const sendAllUnsignedTx = async (
 async function addUtxoInput(
   txBuilder: TransactionBuilder,
   input: RawUtxo,
-): void {
+): Promise<void> {
   const wasmInput = await normalizeToAddress(input.receiver)
   if (wasmInput == null) {
     throw new Error('addUtxoInput:: input not a valid Shelley address')
@@ -202,7 +202,7 @@ export const newAdaUnsignedTxFromUtxo = async (
     poolDeposit: BigNum,
     keyDeposit: BigNum,
   |},
-): V4UnsignedTxUtxoResponse => {
+): Promise<V4UnsignedTxUtxoResponse> => {
   const wasmReceiver = await normalizeToAddress(receiver)
   if (wasmReceiver == null) {
     throw new Error(
@@ -250,7 +250,7 @@ export const newAdaUnsignedTxFromUtxo = async (
     }
   }
 
-  const changeAddr = (async () => {
+  const changeAddr = await (async () => {
     if (changeAdaAddr == null) {
       await txBuilder.set_fee(await txBuilder.estimate_fee())
       return []
@@ -300,7 +300,7 @@ export const newAdaUnsignedTx = async (
     poolDeposit: BigNum,
     keyDeposit: BigNum,
   |},
-): V4UnsignedTxAddressedUtxoResponse => {
+): Promise<V4UnsignedTxAddressedUtxoResponse> => {
   const addressingMap = new Map<RawUtxo, AddressedUtxo>()
   for (const utxo of allUtxos) {
     addressingMap.set(
@@ -347,7 +347,7 @@ export const signTransaction = async (
   keyLevel: number,
   signingKey: Bip32PrivateKey,
   metadata: void | TransactionMetadata,
-): Transaction => {
+): Promise<Transaction> => {
   const seenByronKeys: Set<string> = new Set()
   const seenKeyHashes: Set<string> = new Set()
   const deduped: Array<AddressedUtxo> = []
@@ -398,7 +398,7 @@ async function addWitnesses(
   uniqueUtxos: Array<AddressedUtxo>, // pre-req: does not contain duplicate keys
   keyLevel: number,
   signingKey: Bip32PrivateKey,
-): TransactionWitnessSet {
+): Promise<TransactionWitnessSet> {
   // get private keys
   const privateKeys = uniqueUtxos.map((utxo) => {
     const lastLevelSpecified =

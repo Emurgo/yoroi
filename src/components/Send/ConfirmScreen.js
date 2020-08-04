@@ -57,7 +57,7 @@ import HWInstructions from '../Ledger/HWInstructions'
 
 import styles from './styles/ConfirmScreen.style'
 
-import type {PreparedTransactionData} from '../../types/HistoryTransaction'
+import type {PreparedTransactionData} from '../../crypto/types'
 
 const messages = defineMessages({
   title: {

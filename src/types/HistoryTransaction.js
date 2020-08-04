@@ -54,7 +54,6 @@ export type Transaction = {|
   slot: ?number,
 |}
 
-
 export const AMOUNT_FORMAT = {
   ADA: 'ADA',
   LOVELACE: 'LOVELACE',
