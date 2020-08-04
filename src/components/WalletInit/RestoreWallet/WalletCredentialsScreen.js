@@ -37,7 +37,7 @@ import {isJormungandr} from '../../../config/networks'
 
 import type {Navigation} from '../../../types/navigation'
 import type {AddressType} from '../../../crypto/commonUtils'
-import type {Addressing} from '../../../types/HistoryTransaction'
+import type {Addressing} from '../../../crypto/types'
 import type {TransferTx} from '../../../crypto/jormungandr/transactions/yoroiTransfer'
 
 const RESTORATION_DIALOG_STEPS = {

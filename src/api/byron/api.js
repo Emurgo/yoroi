@@ -7,15 +7,16 @@ import {CONFIG} from '../../config/config'
 import assert from '../../utils/assert'
 import {checkAndFacadeTransactionAsync} from './facade'
 
+import type {Transaction} from '../../types/HistoryTransaction'
+
 import type {
-  Transaction,
   RawUtxo,
   TxBodiesRequest,
   TxBodiesResponse,
   ServerStatusResponse,
   BestblockResponse,
   TxHistoryRequest,
-} from '../../types/HistoryTransaction'
+} from '../types'
 
 const NETWORK_CONFIG = CONFIG.NETWORKS.BYRON_MAINNET.BACKEND
 

@@ -8,8 +8,8 @@ import {isValidAddress} from '../../crypto/byron/util'
 import type {
   Transaction,
   TransactionStatus,
-  RawTransaction,
 } from '../../types/HistoryTransaction'
+import type {RawTransaction} from '../../api/types'
 
 const checkAndFacadeStatus = (status: string): TransactionStatus => {
   const mapping = {

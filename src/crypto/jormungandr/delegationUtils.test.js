@@ -6,7 +6,7 @@ import {createDelegationTx} from './delegationUtils'
 import {getTxInputTotal, getTxOutputTotal} from './transactions/utils'
 import {NUMBERS} from '../../config/numbers'
 
-import type {AddressedUtxo} from '../../types/HistoryTransaction'
+import type {AddressedUtxo} from '../types'
 import type {PoolData} from './delegationUtils'
 
 jestSetup.setup()
@@ -22,9 +22,8 @@ const sampleUtxos: Array<AddressedUtxo> = [
     utxo_id:
       '381f1885f2cfd66f45481ca75d114b7522b0bc4a0458b627df66a4cb55df7bc70',
     addressing: {
-      account: 0,
-      change: 1,
-      index: 0,
+      path: [0, 1, 0],
+      startLevel: NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
     },
   },
 ]
@@ -54,9 +53,8 @@ describe('create delegation transaction', () => {
           // eslint-disable-next-line
           '840c4f2fcc7ad16450970b99c0c7b84331aaccdb9afa5257fb6613b4a30fbced25b3f377c0915e440af99364c0fe23e68d96e15fd26461b2c8e9a268ed229f417f',
         addressing: {
-          account: 0,
-          change: 1,
-          index: 1,
+          path: [0, 1, 1],
+          startLevel: NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
         },
       },
     )

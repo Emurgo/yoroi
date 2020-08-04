@@ -18,10 +18,8 @@ import {NUMBERS} from '../../../config/numbers'
 import {NETWORKS} from '../../../config/networks'
 import {AMOUNT_FORMAT} from '../../../types/HistoryTransaction'
 
-import type {
-  BaseSignRequest,
-  AmountFormat,
-} from '../../../types/HistoryTransaction'
+import type {BaseSignRequest} from '../../types'
+import type {AmountFormat} from '../../../types/HistoryTransaction'
 
 const CONFIG = NETWORKS.JORMUNGANDR
 

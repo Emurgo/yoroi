@@ -51,7 +51,7 @@ import * as api from './api/byron/api'
 
 import {type Dispatch} from 'redux'
 import {type State} from './state'
-import type {PreparedTransactionData} from './types/HistoryTransaction'
+import type {PreparedTransactionData} from './crypto/types'
 import type {HWDeviceInfo} from './crypto/byron/ledgerUtils'
 import type {NetworkId} from './config/types'
 

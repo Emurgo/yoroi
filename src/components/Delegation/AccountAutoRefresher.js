@@ -13,7 +13,7 @@ import {
 } from '../../selectors'
 import {fetchAccountState} from '../../actions/account'
 
-import type {RawUtxo} from '../../types/HistoryTransaction'
+import type {RawUtxo} from '../../api/types'
 
 class _AccountAutoRefresher extends React.Component<{
   isFetching: boolean,

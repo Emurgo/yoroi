@@ -1,5 +1,4 @@
 // @flow
-
 import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
 import {defaultMemoize} from 'reselect'
@@ -45,16 +44,18 @@ import {
 } from '../helpers/deviceSettings'
 
 import type {
-  Addressing,
   RawUtxo,
-  TransactionInput,
   PoolInfoRequest,
+  TxBodiesRequest,
+  TxBodiesResponse,
+} from '../api/types'
+import type {
+  Addressing,
+  TransactionInput,
   PreparedTransactionData,
   V3SignedTx,
   V3UnsignedTxAddressedUtxoData,
-  TxBodiesRequest,
-  TxBodiesResponse,
-} from '../types/HistoryTransaction'
+} from './types'
 import type {Mutex} from '../utils/promise'
 import type {CryptoAccount} from './byron/util'
 import type {HWDeviceInfo} from './byron/ledgerUtils'
@@ -108,9 +109,8 @@ export const mnemonicsToAddresses = async (
     return {
       address: addr,
       addressing: {
-        account: CONFIG.NUMBERS.ACCOUNT_INDEX,
-        change,
-        index,
+        path: [CONFIG.NUMBERS.ACCOUNT_INDEX, change, index],
+        startLevel: CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
       },
     }
   })
@@ -697,10 +697,18 @@ export class Wallet {
     return {
       address: nextInternal,
       addressing: {
-        account: CONFIG.NUMBERS.ACCOUNT_INDEX,
-        change: CONFIG.NUMBERS.CHAIN_DERIVATIONS.INTERNAL,
-        index: this._internalChain.getIndexOfAddress(nextInternal),
+        path: [
+          CONFIG.NUMBERS.ACCOUNT_INDEX,
+          CONFIG.NUMBERS.CHAIN_DERIVATIONS.INTERNAL,
+          this._internalChain.getIndexOfAddress(nextInternal),
+        ],
+        startLevel: CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
       },
+      // addressing: {
+      //   account: CONFIG.NUMBERS.ACCOUNT_INDEX,
+      //   change: CONFIG.NUMBERS.CHAIN_DERIVATIONS.INTERNAL,
+      //   index: this._internalChain.getIndexOfAddress(nextInternal),
+      // },
     }
   }
 
@@ -733,9 +741,12 @@ export class Wallet {
     chains.forEach(([type, chain]) => {
       if (chain.isMyAddress(address)) {
         addressInfo = {
-          account: CONFIG.NUMBERS.ACCOUNT_INDEX,
-          change: ADDRESS_TYPE_TO_CHANGE[type],
-          index: chain.getIndexOfAddress(address),
+          path: [
+            CONFIG.NUMBERS.ACCOUNT_INDEX,
+            ADDRESS_TYPE_TO_CHANGE[type],
+            chain.getIndexOfAddress(address),
+          ],
+          startLevel: CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
         }
       }
     })

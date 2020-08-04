@@ -42,7 +42,7 @@ import styles from './styles/SendScreen.style'
 
 import type {Navigation} from '../../types/navigation'
 import globalMessages from '../../i18n/global-messages'
-import type {RawUtxo} from '../../types/HistoryTransaction'
+import type {RawUtxo} from '../../api/types'
 import type {
   AddressValidationErrors,
   AmountValidationErrors,

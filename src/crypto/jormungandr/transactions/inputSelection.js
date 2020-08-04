@@ -10,7 +10,7 @@ import {
   Value,
 } from 'react-native-chain-libs'
 
-import type {RawUtxo} from '../../../types/HistoryTransaction'
+import type {RawUtxo} from '../../../api/types'
 
 export const utxoToTxInput = async (utxo: RawUtxo): Input => {
   const txoPointer = await UtxoPointer.new(

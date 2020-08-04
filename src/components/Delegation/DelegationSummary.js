@@ -63,7 +63,7 @@ import type {
   RemotePoolMetaSuccess,
   RawUtxo,
   ReputationResponse,
-} from '../../types/HistoryTransaction'
+} from '../../api/types'
 
 const warningBannerMessages = defineMessages({
   title: {

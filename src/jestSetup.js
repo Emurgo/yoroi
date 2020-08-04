@@ -6,9 +6,9 @@ import {Logger, LogLevel} from './utils/logging'
 
 import nodeUtil from 'util'
 
-jest.setMock('./config', require('./__mocks__/config'))
+jest.setMock('./config/networks', require('./config/__mocks__/networks'))
 jest.setMock(
-  './crypto/shelley/transactions/utxoTransactions',
+  './crypto/jormungandr/transactions/utxoTransactions',
   require('./crypto/jormungandr/transactions/__mocks__/utxoTransactions'),
 )
 jest.mock('react-native-device-info', () => {

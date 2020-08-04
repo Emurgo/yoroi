@@ -11,11 +11,6 @@ import {
   StakeDelegation,
   PoolId,
 } from 'react-native-chain-libs'
-import type {
-  RawUtxo,
-  AddressedUtxo,
-  Addressing,
-} from '../../../types/HistoryTransaction'
 import {
   newAdaUnsignedTx,
   newAdaUnsignedTxFromUtxo,
@@ -26,6 +21,9 @@ import {InsufficientFunds} from '../../errors'
 import {getTxInputTotal, getTxOutputTotal} from './utils'
 import {CONFIG} from '../../../config/config'
 import {NUMBERS} from '../../../config/numbers'
+
+import type {RawUtxo} from '../../../api/types'
+import type {AddressedUtxo, Addressing} from '../../types'
 
 jestSetup.setup()
 
@@ -92,25 +90,22 @@ const sampleAdaAddresses: Array<{|address: string, ...Addressing|}> = [
     address:
       '03f2e59a16a9cab2a3cc86aa11db6fba582d773b5b16ca78764bb6620624baccb7',
     addressing: {
-      account: 0,
-      change: 1,
-      index: 11,
+      path: [0, 1, 11],
+      startLevel: NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
     },
   },
   {
     address: 'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
     addressing: {
-      account: 0,
-      change: 0,
-      index: 135,
+      path: [0, 0, 135],
+      startLevel: NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
     },
   },
   {
     address: 'Ae2tdPwUPEZ4xAL3nxLq4Py7BfS1D2tJ3u2rxZGnrAXC8TNkWhTaz41J3FN',
     addressing: {
-      account: 0,
-      change: 0,
-      index: 134,
+      path: [0, 0, 134],
+      startLevel: NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
     },
   },
 ]
@@ -351,9 +346,8 @@ describe('Create signed transactions', () => {
             )).as_bytes(),
           ).toString('hex'),
           addressing: {
-            account: 0,
-            change: 1,
-            index: 0,
+            path: [0, 1, 0],
+            startLevel: NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
           },
         },
       ],
@@ -371,9 +365,8 @@ describe('Create signed transactions', () => {
           utxo_id:
             '86e36b6a65d82c9dcc0370b0ee3953aee579db0b837753306405c28a74de55500',
           addressing: {
-            account: 0,
-            change: 0,
-            index: 0,
+            path: [0, 0, 0],
+            startLevel: NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
           },
         },
       ],
@@ -468,9 +461,8 @@ describe('Create signed transactions', () => {
             )).as_bytes(),
           ).toString('hex'),
           addressing: {
-            account: 0,
-            change: 1,
-            index: 0,
+            path: [0, 1, 0],
+            startLevel: NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
           },
         },
       ],
@@ -488,9 +480,8 @@ describe('Create signed transactions', () => {
           utxo_id:
             '86e36b6a65d82c9dcc0370b0ee3953aee579db0b837753306405c28a74de55500',
           addressing: {
-            account: 0,
-            change: 0,
-            index: 0,
+            path: [0, 0, 0],
+            startLevel: NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
           },
         },
       ],

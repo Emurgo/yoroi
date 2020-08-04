@@ -41,13 +41,13 @@ import {
 import {generateAuthData, generateFee} from './utils'
 import {NETWORKS} from '../../../config/networks'
 
+import type {RawUtxo} from '../../../api/types'
 import type {
   V3UnsignedTxData,
   V3UnsignedTxAddressedUtxoData,
-  RawUtxo,
   AddressedUtxo,
   Addressing,
-} from '../../../types/HistoryTransaction'
+} from '../../types'
 
 const CONFIG = NETWORKS.JORMUNGANDR
 
@@ -287,8 +287,8 @@ async function addWitnesses(
   const privateKeys = await Promise.all(
     senderUtxos.map(
       async (utxo): Promise<Bip32PrivateKey> => {
-        const chainKey = await signingKey.derive(utxo.addressing.change)
-        const addressKey = await chainKey.derive(utxo.addressing.index)
+        const chainKey = await signingKey.derive(utxo.addressing.path[1])
+        const addressKey = await chainKey.derive(utxo.addressing.path[2])
         return addressKey
       },
     ),

@@ -18,6 +18,14 @@ export const NUMBERS = {
     INTERNAL: 1,
     CHIMERIC_ACCOUNT: 2,
   },
+  BIP44_DERIVATION_LEVELS: {
+    ROOT: 0,
+    PURPOSE: 1,
+    COIN_TYPE: 2,
+    ACCOUNT: 3,
+    CHAIN: 4,
+    ADDRESS: 5,
+  },
   STAKING_KEY_INDEX: 0,
   EPOCH_REWARD_DENOMINATOR: new BigNumber(10).pow(6),
 }

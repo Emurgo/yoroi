@@ -16,14 +16,14 @@ import {
   newAdaUnsignedTx,
   signTransaction,
 } from './transactions/utxoTransactions'
+import {Logger} from '../../utils/logging'
 
 import type {
+  V3UnsignedTxAddressedUtxoData,
+  V3SignedTx,
   AddressedUtxo,
   Addressing,
-  V3SignedTx,
-  V3UnsignedTxAddressedUtxoData,
-} from '../../types/HistoryTransaction'
-import {Logger} from '../../utils/logging'
+} from '../types'
 
 // note(v-almonacid): ratio delegation won't be supported for now
 
