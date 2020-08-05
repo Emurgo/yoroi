@@ -9,7 +9,7 @@ import {NavigationEvents} from 'react-navigation'
 import {injectIntl, defineMessages} from 'react-intl'
 
 import {withNavigationTitle} from '../../utils/renderUtils'
-import walletManager from '../../crypto/wallet'
+import walletManager from '../../crypto/walletManager'
 import {Text, Button, ValidatedTextInput, StatusBar} from '../UiKit'
 import {setEasyConfirmation, showErrorDialog} from '../../actions'
 import {easyConfirmationSelector} from '../../selectors'

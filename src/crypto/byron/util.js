@@ -42,8 +42,6 @@ export const KNOWN_ERROR_MSG = {
   AMOUNT_SUM_OVERFLOW: /CoinError\(OutOfBound/,
 }
 
-export type EncryptionMethod = 'BIOMETRICS' | 'SYSTEM_PIN' | 'MASTER_PASSWORD'
-
 export const getMasterKeyFromMnemonic = async (mnemonic: string) => {
   const entropy = mnemonicToEntropy(mnemonic)
   const masterKey = await _rethrow(HdWallet.fromEnhancedEntropy(entropy, ''))

@@ -12,8 +12,8 @@ import type {IntlShape} from 'react-intl'
 import walletManager, {
   SystemAuthDisabled,
   KeysAreInvalid,
-  InvalidState,
-} from '../../crypto/wallet'
+} from '../../crypto/walletManager'
+import {InvalidState} from '../../crypto/errors'
 import WalletListItem from './WalletListItem'
 import Screen from '../Screen'
 import {Button, StatusBar, ScreenBackground} from '../UiKit'
@@ -129,7 +129,8 @@ export default injectIntl(
         }),
       openWallet: ({navigation, intl}) => async (wallet) => {
         try {
-          await walletManager.openWallet(wallet.id)
+          // note: networkId can be null for versions <= 2.2.3
+          await walletManager.openWallet(wallet.id, wallet.networkId)
           const route = isJormungandr(wallet.networkId)
             ? ROOT_ROUTES.JORMUN_WALLET
             : ROOT_ROUTES.WALLET

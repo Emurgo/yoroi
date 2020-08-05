@@ -30,7 +30,7 @@ import {
   sendCrashReportsSelector,
   languageSelector,
 } from '../../selectors'
-import walletManager from '../../crypto/wallet'
+import walletManager from '../../crypto/walletManager'
 import KeyStore from '../../crypto/KeyStore'
 import {StatusBar} from '../UiKit'
 

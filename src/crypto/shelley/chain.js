@@ -1,20 +1,25 @@
 // @flow
+
+/**
+ * TODO(v-almonacid): implement for Shelley
+ */
+
 import _ from 'lodash'
 import type {Moment} from 'moment'
 
-import {CONFIG} from '../config/config'
-import {NUMBERS} from '../config/numbers'
-import assert from '../utils/assert'
+import {CONFIG} from '../../config/config'
+import {NUMBERS} from '../../config/numbers'
+import assert from '../../utils/assert'
 import {defaultMemoize} from 'reselect'
-import {Logger} from '../utils/logging'
-import * as util from './byron/util'
-import * as jormunUtil from './jormungandr/util'
-import {ADDRESS_TYPE_TO_CHANGE} from './commonUtils'
+import {Logger} from '../../utils/logging'
+import * as util from '../byron/util'
+import * as jormunUtil from '../jormungandr/util'
+import {ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
 import {Address, Bip32PublicKey} from 'react-native-chain-libs'
 
-import type {Dict} from '../state'
-import type {CryptoAccount} from './byron/util'
-import type {AddressType} from './commonUtils'
+import type {Dict} from '../../state'
+import type {CryptoAccount} from '../byron/util'
+import type {AddressType} from '../commonUtils'
 
 export type AddressBlock = [number, Moment, Array<string>]
 
@@ -98,7 +103,7 @@ export class AddressGenerator {
 
 type AsyncAddressFilter = (addresses: Array<string>) => Promise<Array<string>>
 
-export type Addresses = Array<string>
+type Addresses = Array<string>
 
 const _addressToIdxSelector = (addresses: Array<string>) =>
   _.fromPairs(addresses.map((addr, i) => [addr, i]))

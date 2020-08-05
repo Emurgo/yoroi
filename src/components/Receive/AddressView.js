@@ -27,7 +27,7 @@ import {
   GeneralConnectionError,
   LedgerUserError,
 } from '../../crypto/byron/ledgerUtils'
-import walletManager from '../../crypto/wallet'
+import walletManager from '../../crypto/walletManager'
 import {formatBIP44} from '../../crypto/byron/util'
 import {errorMessages} from '../../i18n/global-messages'
 import {Logger} from '../../utils/logging'
@@ -42,6 +42,23 @@ import type {
   DeviceId,
   DeviceObj,
 } from '../../crypto/byron/ledgerUtils'
+import type {Addressing, LegacyAddressing} from '../../crypto/types'
+
+const _toLegacyAddressing = (addressing: Addressing): LegacyAddressing => {
+  if (
+    addressing.addressing.startLevel !==
+    CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT
+  ) {
+    throw Error('unexpected addressing info')
+  }
+  return {
+    addressing: {
+      account: addressing.addressing.path[0],
+      change: addressing.addressing.path[1],
+      index: addressing.addressing.path[2],
+    },
+  }
+}
 
 const _handleOnVerifyAddress = async (
   intl: intlShape,
@@ -54,11 +71,14 @@ const _handleOnVerifyAddress = async (
 ) => {
   await withActivityIndicator(async () => {
     try {
-      const addressing = walletManager.getAddressingInfo(address)
-      if (addressing == null) {
+      const addressingInfo = walletManager.getAddressingInfo(address)
+      if (addressingInfo == null) {
         throw new Error('No addressing data, should never happen')
       }
-      await verifyAddress(address, {addressing}, hwDeviceInfo, useUSB)
+      const addressing = _toLegacyAddressing({
+        addressing: addressingInfo,
+      })
+      await verifyAddress(address, addressing, hwDeviceInfo, useUSB)
     } catch (e) {
       if (e instanceof GeneralConnectionError || e instanceof LedgerUserError) {
         await showErrorDialog(errorMessages.hwConnectionError, intl)

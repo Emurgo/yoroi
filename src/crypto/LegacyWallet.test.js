@@ -1,7 +1,7 @@
 // @flow
 /* eslint-env jest */
 import jestSetup from '../jestSetup'
-import {Wallet} from './wallet'
+import Wallet from './LegacyWallet'
 import {NETWORK_REGISTRY} from '../config/types'
 
 jestSetup.setup()
@@ -19,12 +19,12 @@ const networkId = NETWORK_REGISTRY.BYRON_MAINNET
 test('Can restore wallet', async () => {
   expect.assertions(2)
   const wallet = new Wallet()
-  await wallet._create(mnemonic, 'password', networkId)
+  await wallet.create(mnemonic, 'password', networkId)
   await wallet.doFullSync()
   // Note(ppershing): these are just loose tests because we are testing
   // agains live test-wallet and so the numbers might increase over time
-  expect(wallet._internalChain.size()).toBeGreaterThanOrEqual(50)
-  expect(wallet._externalChain.size()).toBeGreaterThanOrEqual(50)
+  expect(wallet.internalChain.size()).toBeGreaterThanOrEqual(50)
+  expect(wallet.externalChain.size()).toBeGreaterThanOrEqual(50)
 })
 
 const expectedTxs = [
@@ -47,7 +47,7 @@ const expectedTxs = [
 test('Can sync txs after restoring wallet', async () => {
   expect.assertions(expectedTxs.length)
   const wallet = new Wallet()
-  await wallet._create(mnemonic, 'password', networkId)
+  await wallet.create(mnemonic, 'password', networkId)
 
   await wallet.doFullSync()
 

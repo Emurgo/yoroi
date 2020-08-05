@@ -2,7 +2,7 @@
 import type {Dispatch} from 'redux'
 import {BigNumber} from 'bignumber.js'
 
-import walletManager from '../crypto/wallet'
+import walletManager from '../crypto/walletManager'
 import type {State} from '../state'
 
 // start fetching account balance

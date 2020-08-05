@@ -9,7 +9,7 @@ import storage from '../utils/storage'
 import assert from '../utils/assert'
 import {decryptData, encryptData} from '../crypto/byron/util'
 
-export type EncryptionMethod = 'BIOMETRICS' | 'SYSTEM_PIN' | 'MASTER_PASSWORD'
+import type {EncryptionMethod} from './types'
 
 const messages = defineMessages({
   approveTransaction: {

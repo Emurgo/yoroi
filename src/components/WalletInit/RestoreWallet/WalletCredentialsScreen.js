@@ -25,7 +25,10 @@ import {
   getFirstInternalAddr,
   getGroupAddressesFromMnemonics,
 } from '../../../crypto/jormungandr/util'
-import {mnemonicsToAddresses, balanceForAddresses} from '../../../crypto/wallet'
+import {
+  mnemonicsToAddresses,
+  balanceForAddresses,
+} from '../../../crypto/walletManager'
 // prettier-ignore
 import {
   generateTransferTxFromMnemonic,
