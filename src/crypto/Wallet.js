@@ -72,14 +72,6 @@ export default class Wallet {
 
   // =================== getters =================== //
 
-  get chimericAccountAddress() {
-    assert.assert(
-      isJormungandr(this.networkId),
-      'get chimericAccountAddress: isJormungandr',
-    )
-    return this.chimericAccountAddress
-  }
-
   get internalAddresses() {
     return this.internalChain.addresses
   }

@@ -31,6 +31,7 @@ import styles from './styles/WalletSelectionScreen.style'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {State} from '../../state'
 import type {ComponentType} from 'react'
+import type {NetworkId} from '../../config/types'
 
 const messages = defineMessages({
   header: {
@@ -85,14 +86,18 @@ const WalletListScreen = ({
         </ScrollView>
 
         <Button
-          onPress={(event) => navigateInitWallet(event, false)}
+          onPress={(event) =>
+            navigateInitWallet(event, NETWORK_REGISTRY.BYRON_MAINNET)
+          }
           title={intl.formatMessage(messages.addWalletButton)}
           style={styles.addWalletButton}
         />
 
         <Button
           outline
-          onPress={(event) => navigateInitWallet(event, true)}
+          onPress={(event) =>
+            navigateInitWallet(event, NETWORK_REGISTRY.JORMUNGANDR)
+          }
           title={intl.formatMessage(messages.addWalletOnShelleyButton)}
           style={styles.addWalletOnShelleyButton}
         />
@@ -123,9 +128,12 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      navigateInitWallet: ({navigation}) => (event, isJormungandr) =>
+      navigateInitWallet: ({navigation}) => (
+        event: Object,
+        networkId: NetworkId,
+      ) =>
         navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH, {
-          networkId: NETWORK_REGISTRY.JORMUNGANDR,
+          networkId,
         }),
       openWallet: ({navigation, intl}) => async (wallet) => {
         try {

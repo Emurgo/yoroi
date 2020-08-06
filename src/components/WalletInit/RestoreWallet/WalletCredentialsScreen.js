@@ -135,7 +135,7 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
     const {name, password} = this.state
     const {navigation, createWallet, updateVersion} = this.props
     const phrase = navigation.getParam('phrase')
-    const networkId = navigation.getParam
+    const networkId = navigation.getParam('networkId')
     await createWallet(name, phrase, password, networkId)
     await updateVersion()
     this.setState({isProcessing: false})
