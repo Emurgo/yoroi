@@ -1,7 +1,7 @@
 // @flow
 import type {Dispatch} from 'redux'
 
-import walletManager from '../crypto/wallet'
+import walletManager from '../crypto/walletManager'
 import type {State} from '../state'
 
 const _startFetching = () => ({

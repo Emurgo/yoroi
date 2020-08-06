@@ -29,7 +29,7 @@ import globalMessages, {
   txLabels,
   confirmationMessages,
 } from '../../i18n/global-messages'
-import walletManager, {SystemAuthDisabled} from '../../crypto/wallet'
+import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
 import {
   createLedgerSignTxPayload,
   signTxWithLedger,

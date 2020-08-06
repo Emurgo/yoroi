@@ -1,6 +1,6 @@
 // @flow
 
-import walletManager from '../crypto/wallet'
+import walletManager from '../crypto/walletManager'
 
 import type {Dispatch} from 'redux'
 

@@ -12,8 +12,8 @@ import type {IntlShape} from 'react-intl'
 import walletManager, {
   SystemAuthDisabled,
   KeysAreInvalid,
-  InvalidState,
-} from '../../crypto/wallet'
+} from '../../crypto/walletManager'
+import {InvalidState} from '../../crypto/errors'
 import WalletListItem from './WalletListItem'
 import Screen from '../Screen'
 import {Button, StatusBar, ScreenBackground} from '../UiKit'
@@ -31,6 +31,7 @@ import styles from './styles/WalletSelectionScreen.style'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {State} from '../../state'
 import type {ComponentType} from 'react'
+import type {NetworkId} from '../../config/types'
 
 const messages = defineMessages({
   header: {
@@ -85,14 +86,18 @@ const WalletListScreen = ({
         </ScrollView>
 
         <Button
-          onPress={(event) => navigateInitWallet(event, false)}
+          onPress={(event) =>
+            navigateInitWallet(event, NETWORK_REGISTRY.BYRON_MAINNET)
+          }
           title={intl.formatMessage(messages.addWalletButton)}
           style={styles.addWalletButton}
         />
 
         <Button
           outline
-          onPress={(event) => navigateInitWallet(event, true)}
+          onPress={(event) =>
+            navigateInitWallet(event, NETWORK_REGISTRY.JORMUNGANDR)
+          }
           title={intl.formatMessage(messages.addWalletOnShelleyButton)}
           style={styles.addWalletOnShelleyButton}
         />
@@ -123,13 +128,17 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      navigateInitWallet: ({navigation}) => (event, isJormungandr) =>
+      navigateInitWallet: ({navigation}) => (
+        event: Object,
+        networkId: NetworkId,
+      ) =>
         navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH, {
-          networkId: NETWORK_REGISTRY.JORMUNGANDR,
+          networkId,
         }),
       openWallet: ({navigation, intl}) => async (wallet) => {
         try {
-          await walletManager.openWallet(wallet.id)
+          // note: networkId can be null for versions <= 2.2.3
+          await walletManager.openWallet(wallet.id, wallet.networkId)
           const route = isJormungandr(wallet.networkId)
             ? ROOT_ROUTES.JORMUN_WALLET
             : ROOT_ROUTES.WALLET

@@ -14,7 +14,7 @@ import {withNavigationTitle} from '../../utils/renderUtils'
 import {errorMessages} from '../../i18n/global-messages'
 import PasswordStrengthIndicator from '../WalletInit/PasswordStrengthIndicator'
 import {showErrorDialog} from '../../actions'
-import walletManager from '../../crypto/wallet'
+import walletManager from '../../crypto/walletManager'
 import {WrongPassword} from '../../crypto/errors'
 
 import styles from './styles/ChangePasswordScreen.style'

@@ -9,7 +9,7 @@ import DeviceInfo from 'react-native-device-info'
 import crashReporting from './helpers/crashReporting'
 import globalMessages, {errorMessages} from './i18n/global-messages'
 import {Logger} from './utils/logging'
-import walletManager from './crypto/wallet'
+import walletManager from './crypto/walletManager'
 import {
   mirrorTxHistory,
   setBackgroundSyncError,

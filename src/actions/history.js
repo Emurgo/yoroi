@@ -1,5 +1,5 @@
 // @flow
-import walletManager, {WalletClosed} from '../crypto/wallet'
+import walletManager, {WalletClosed} from '../crypto/walletManager'
 import {Logger} from '../utils/logging'
 import {ApiHistoryError} from '../api/errors'
 

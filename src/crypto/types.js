@@ -30,6 +30,11 @@ export type LegacyAddressing = {|
   },
 |}
 
+export type LegacyAddressedUtxo = {|
+  ...RawUtxo,
+  ...LegacyAddressing,
+|}
+
 export type Addressing = {|
   +addressing: {|
     +path: Array<number>,
@@ -128,3 +133,12 @@ export type V4UnsignedTxAddressedUtxoResponse = {|
   txBuilder: V4TransactionBuilder,
   changeAddr: Array<{|...Address, ...Value, ...Addressing|}>,
 |}
+
+/**
+ * wallet types
+ */
+export type WalletState = {|
+  lastGeneratedAddressIndex: number,
+|}
+
+export type EncryptionMethod = 'BIOMETRICS' | 'SYSTEM_PIN' | 'MASTER_PASSWORD'

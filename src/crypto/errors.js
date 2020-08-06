@@ -19,3 +19,5 @@ export const _rethrow = <T>(x: Promise<T>): Promise<T> =>
   x.catch((e) => {
     throw new CardanoError(e.message)
   })
+
+export class InvalidState extends ExtendableError {}

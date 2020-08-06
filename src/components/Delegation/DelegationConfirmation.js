@@ -30,7 +30,7 @@ import {
 } from '../../RoutesList'
 import {NetworkError, ApiError} from '../../api/errors'
 import {WrongPassword} from '../../crypto/errors'
-import walletManager, {SystemAuthDisabled} from '../../crypto/wallet'
+import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
 import KeyStore from '../../crypto/KeyStore'
 
 import styles from './styles/DelegationConfirmation.style'
