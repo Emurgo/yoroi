@@ -291,7 +291,7 @@ export const newAdaUnsignedTxFromUtxo = async (
       }
       // recall: min fee assumes the largest fee possible
       // so no worries of cbor issue by including larger fee
-      await txBuilder.set_fee(await BigNum.from_str(fee.toString()))
+      await txBuilder.set_fee(await Coin.from_str(fee.toString()))
       return []
     }
     const oldOutput = await txBuilder.get_explicit_output()
@@ -398,7 +398,7 @@ export const signTransaction = async (
       throw new Error('signTransaction:: utxo not a valid Shelley address')
     }
     const keyHash = await getCardanoAddrKeyHash(wasmAddr)
-    const addrHex = Buffer.from(wasmAddr.to_bytes()).toString('hex')
+    const addrHex = Buffer.from(await wasmAddr.to_bytes()).toString('hex')
     if (keyHash === null) {
       if (!seenByronKeys.has(addrHex)) {
         seenByronKeys.add(addrHex)
@@ -516,20 +516,3 @@ async function addWitnesses(
     }
   }
 }
-
-// TODO(v-almonacid): I think I'll put this one in the corresponding wallet
-// class
-// export function asAddressedUtxo(
-//   utxos: IGetAllUtxosResponse,
-// ): Array<AddressedUtxo> {
-//   return utxos.map((utxo) => {
-//     return {
-//       amount: utxo.output.UtxoTransactionOutput.Amount,
-//       receiver: utxo.address,
-//       tx_hash: utxo.output.Transaction.Hash,
-//       tx_index: utxo.output.UtxoTransactionOutput.OutputIndex,
-//       utxo_id: utxo.output.Transaction.Hash + utxo.output.UtxoTransactionOutput.OutputIndex,
-//       addressing: utxo.addressing,
-//     }
-//   })
-// }

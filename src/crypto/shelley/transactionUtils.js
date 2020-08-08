@@ -9,7 +9,7 @@ import {
 
 import {sendAllUnsignedTx, newAdaUnsignedTx} from './transactions'
 import {NETWORKS} from '../../config/networks'
-import {CardanoError} from '../errors'
+import {CardanoError, InsufficientFunds} from '../errors'
 import {Logger} from '../../utils/logging'
 
 import type {Addressing, AddressedUtxo, BaseSignRequest} from '../types'
@@ -91,6 +91,7 @@ export const createUnsignedTx = async (
       certificate: undefined,
     }
   } catch (e) {
+    if (e instanceof InsufficientFunds) throw e
     Logger.error(`shelley::createUnsignedTx:: ${e.message}`, e)
     throw new CardanoError(e.message)
   }
