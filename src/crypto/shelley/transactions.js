@@ -11,6 +11,7 @@ import {
   ByronAddress,
   Certificate,
   Certificates,
+  Coin,
   LinearFee,
   hash_transaction,
   make_icarus_bootstrap_witness,
@@ -117,7 +118,7 @@ export const sendAllUnsignedTx = async (
   absSlotNumber: BigNumber,
   protocolParams: {|
     linearFee: LinearFee,
-    minimumUtxoVal: BigNum,
+    minimumUtxoVal: Coin,
     poolDeposit: BigNum,
     keyDeposit: BigNum,
   |},
@@ -179,7 +180,7 @@ async function addUtxoInput(
     await txBuilder.add_bootstrap_input(
       byronAddr,
       await utxoToTxInput(input),
-      await BigNum.from_str(input.amount),
+      await Coin.from_str(input.amount),
     )
     return
   }
@@ -189,7 +190,7 @@ async function addUtxoInput(
   await txBuilder.add_key_input(
     keyHash,
     await utxoToTxInput(input),
-    await BigNum.from_str(input.amount),
+    await Coin.from_str(input.amount),
   )
 }
 
@@ -238,7 +239,7 @@ export const newAdaUnsignedTxFromUtxo = async (
       await txBuilder.add_output(
         await TransactionOutput.new(
           wasmReceiver,
-          await BigNum.from_str(output.amount),
+          await Coin.from_str(output.amount),
         ),
       )
     }
@@ -333,7 +334,7 @@ export const newAdaUnsignedTx = async (
   absSlotNumber: BigNumber,
   protocolParams: {|
     linearFee: LinearFee,
-    minimumUtxoVal: BigNum,
+    minimumUtxoVal: Coin,
     poolDeposit: BigNum,
     keyDeposit: BigNum,
   |},

@@ -36,7 +36,7 @@ export type CreateUnsignedTxResponse = BaseSignRequest<TransactionBuilder>
 export const createUnsignedTx = async (
   request: CreateUnsignedTxRequest,
 ): Promise<CreateUnsignedTxResponse> => {
-  // Logger.debug(`${nameof(AdaApi)}::${nameof(this.createUnsignedTx)} called`);
+  Logger.debug('createUnsignedTx called', request)
   const {changeAddr, receiver, addressedUtxos, absSlotNumber} = request
   try {
     const KEY_DEPOSIT = NETWORKS.HASKELL_SHELLEY.KEY_DEPOSIT
