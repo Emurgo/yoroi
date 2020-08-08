@@ -26,12 +26,7 @@ import {
 } from '../helpers/deviceSettings'
 
 import type {RawUtxo, PoolInfoRequest, TxBodiesRequest} from '../api/types'
-import type {
-  Addressing,
-  EncryptionMethod,
-  PreparedTransactionData,
-  V3UnsignedTxAddressedUtxoData,
-} from './types'
+import type {Addressing, BaseSignRequest, EncryptionMethod} from './types'
 import type {HWDeviceInfo} from './byron/ledgerUtils'
 import type {PoolData} from './jormungandr/delegationUtils'
 import type {NetworkId} from '../config/types'
@@ -604,6 +599,18 @@ class WalletManager {
     return this._wallet.asAddressedUtxo(utxos)
   }
 
+  async createUnsignedTx(
+    utxos: Array<RawUtxo>,
+    receiver: string,
+    amount: string,
+  ) {
+    if (!this._wallet) throw new WalletClosed()
+    return await this.abortWhenWalletCloses(
+      // TODO(v-almonacid): maybe there is a better way instead of any
+      this._wallet.createUnsignedTx<any>(utxos, receiver, amount),
+    )
+  }
+
   async prepareTransaction(
     utxos: Array<RawUtxo>,
     address: string,
@@ -615,10 +622,10 @@ class WalletManager {
     )
   }
 
-  async signTx(transactionData: PreparedTransactionData, decryptedKey: string) {
+  async signTx<T>(request: BaseSignRequest<T>, decryptedKey: string) {
     if (!this._wallet) throw new WalletClosed()
     return await this.abortWhenWalletCloses(
-      this._wallet.signTx(transactionData, decryptedKey),
+      this._wallet.signTx(request, decryptedKey),
     )
   }
 
@@ -633,12 +640,12 @@ class WalletManager {
     )
   }
 
-  async signDelegationTx(
-    unsignedTx: V3UnsignedTxAddressedUtxoData,
-    decryptedMasterKey: string,
-  ) {
+  async signDelegationTx<T>(unsignedTx: T, decryptedMasterKey: string) {
     if (!this._wallet) throw new WalletClosed()
-    return await this._wallet.signDelegationTx(unsignedTx, decryptedMasterKey)
+    return await this._wallet.signDelegationTx<any>(
+      unsignedTx,
+      decryptedMasterKey,
+    )
   }
 
   // =================== backend API =================== //

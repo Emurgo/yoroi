@@ -51,7 +51,7 @@ import * as api from './api/byron/api'
 
 import {type Dispatch} from 'redux'
 import {type State} from './state'
-import type {PreparedTransactionData} from './crypto/types'
+import type {BaseSignRequest} from './crypto/types'
 import type {HWDeviceInfo} from './crypto/byron/ledgerUtils'
 import type {NetworkId} from './config/types'
 
@@ -526,13 +526,16 @@ export const submitSignedTx = (signedTx: string) => async (
   dispatch(updateHistory())
 }
 
-export const submitTransaction = (
+/* eslint-disable indent */
+export const submitTransaction = <T>(
   decryptedKey: string,
-  transactionData: PreparedTransactionData,
+  signRequest: BaseSignRequest<T>,
 ) => async (dispatch: Dispatch<any>) => {
-  const signedTx = await walletManager.signTx(transactionData, decryptedKey)
-  dispatch(submitSignedTx(signedTx))
+  const {encodedTx} = await walletManager.signTx(signRequest, decryptedKey)
+  const signedTxBase64 = Buffer.from(encodedTx).toString('base64')
+  dispatch(submitSignedTx(signedTxBase64))
 }
+/* eslint-enable */
 
 export const submitShelleyTx = (encodedTx: Uint8Array) => (
   dispatch: Dispatch<any>,

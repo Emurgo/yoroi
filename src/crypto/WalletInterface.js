@@ -13,8 +13,10 @@ import type {
 } from '../api/types'
 import type {
   AddressedUtxo,
+  BaseSignRequest,
   EncryptionMethod,
   PreparedTransactionData,
+  SignedTx,
   V3SignedTx,
   V3UnsignedTxAddressedUtxoData,
   WalletState,
@@ -126,6 +128,7 @@ export interface WalletInterface {
 
   // =================== tx building =================== //
 
+  // not exposed to wallet manager, consider removing
   getChangeAddress(): string;
 
   getAllUtxosForKey(utxos: Array<RawUtxo>): Promise<Array<AddressedUtxo>>;
@@ -134,16 +137,29 @@ export interface WalletInterface {
 
   asAddressedUtxo(utxos: Array<RawUtxo>): Array<AddressedUtxo>;
 
+  // byron-era, deprecated
   prepareTransaction(
     utxos: Array<RawUtxo>,
     receiverAddress: string,
     amount: BigNumber,
   ): Promise<PreparedTransactionData>;
 
-  signTx(
+  // byron-era, deprecated
+  legacySignTx(
     transaction: PreparedTransactionData,
     decryptedMasterKey: string,
   ): Promise<string>;
+
+  createUnsignedTx<T>(
+    utxos: Array<RawUtxo>,
+    receiver: string,
+    amount: string,
+  ): Promise<BaseSignRequest<T>>;
+
+  signTx<T>(
+    signRequest: BaseSignRequest<T>,
+    decryptedMasterKey: string,
+  ): Promise<SignedTx>;
 
   prepareDelegationTx(
     poolData: PoolData,
@@ -151,8 +167,8 @@ export interface WalletInterface {
     utxos: Array<RawUtxo>,
   ): Promise<DelegationTxData>;
 
-  signDelegationTx(
-    unsignedTx: V3UnsignedTxAddressedUtxoData,
+  signDelegationTx<T: V3UnsignedTxAddressedUtxoData>(
+    unsignedTx: T,
     decryptedMasterKey: string,
   ): Promise<V3SignedTx>;
 

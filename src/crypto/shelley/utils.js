@@ -2,6 +2,7 @@
 import {
   Address,
   BaseAddress,
+  Bip32PrivateKey,
   ByronAddress,
   Ed25519KeyHash,
   // TODO(v-almonacid): these bindings are not yet implemented
@@ -9,6 +10,8 @@ import {
   // EnterpriseAddress,
   // RewardAddress,
 } from 'react-native-haskell-shelley'
+
+import type {Addressing} from '../types'
 
 export const getCardanoAddrKeyHash = async (
   addr: Address,
@@ -46,7 +49,7 @@ export const normalizeToAddress = async (
 
   // 1) Try converting from base58
   if (await ByronAddress.is_valid(addr)) {
-    return await ByronAddress.from_base58(addr).to_address()
+    return await (await ByronAddress.from_base58(addr)).to_address()
   }
 
   // 2) If already base16, simply return
@@ -66,4 +69,25 @@ export const byronAddrToHex = async (base58Addr: string): Promise<string> => {
   return Buffer.from(
     await (await ByronAddress.from_base58(base58Addr)).to_bytes(),
   ).toString('hex')
+}
+
+export const derivePrivateByAddressing = async (request: {|
+  addressing: $PropertyType<Addressing, 'addressing'>,
+  startingFrom: {|
+    key: Bip32PrivateKey,
+    level: number,
+  |},
+|}): Promise<Bip32PrivateKey> => {
+  if (request.startingFrom.level + 1 < request.addressing.startLevel) {
+    throw new Error('derivePrivateByAddressing: keyLevel < startLevel')
+  }
+  let derivedKey = request.startingFrom.key
+  for (
+    let i = request.startingFrom.level - request.addressing.startLevel + 1;
+    i < request.addressing.path.length;
+    i++
+  ) {
+    derivedKey = await derivedKey.derive(request.addressing.path[i])
+  }
+  return derivedKey
 }

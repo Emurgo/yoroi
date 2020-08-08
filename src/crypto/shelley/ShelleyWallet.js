@@ -4,9 +4,15 @@
 // but still the byron-era implementation
 
 import _ from 'lodash'
-import {BigNumber} from 'bignumber.js'
 import uuid from 'uuid'
 import DeviceInfo from 'react-native-device-info'
+import {
+  /* eslint-disable-next-line camelcase */
+  hash_transaction,
+  /* eslint-disable-next-line no-unused-vars */
+  TransactionBuilder,
+} from 'react-native-haskell-shelley'
+import {BigNumber} from 'bignumber.js'
 
 import Wallet from '../Wallet'
 import {WalletInterface} from '../WalletInterface'
@@ -22,14 +28,16 @@ import assert from '../../utils/assert'
 import {Logger} from '../../utils/logging'
 import {InvalidState} from '../errors'
 import {TransactionCache} from '../transactionCache'
+import {signTransaction} from './transactions'
+import {createUnsignedTx} from './transactionUtils'
+import {genTimeToSlot} from '../../utils/timeUtils'
 
 import type {RawUtxo, TxBodiesRequest, TxBodiesResponse} from '../../api/types'
 import type {
   AddressedUtxo,
-  TransactionInput,
+  BaseSignRequest,
   PreparedTransactionData,
-  V3SignedTx,
-  V3UnsignedTxAddressedUtxoData,
+  SignedTx,
 } from './../types'
 import type {CryptoAccount} from '../byron/util'
 import type {HWDeviceInfo} from '../byron/ledgerUtils'
@@ -170,42 +178,6 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
 
   // =================== tx building =================== //
 
-  _transformUtxoToInput(utxo: RawUtxo): TransactionInput {
-    const chains = [
-      ['Internal', this.internalChain],
-      ['External', this.externalChain],
-    ]
-
-    let addressInfo = null
-    chains.forEach(([type, chain]) => {
-      if (chain.isMyAddress(utxo.receiver)) {
-        addressInfo = {
-          change: ADDRESS_TYPE_TO_CHANGE[type],
-          index: chain.getIndexOfAddress(utxo.receiver),
-        }
-      }
-    })
-
-    /* :: if (!addressInfo) throw 'assert' */
-    assert.assert(addressInfo, `Address not found for utxo: ${utxo.receiver}`)
-
-    return {
-      ptr: {
-        id: utxo.tx_hash,
-        index: utxo.tx_index,
-      },
-      value: {
-        address: utxo.receiver,
-        value: utxo.amount,
-      },
-      addressing: {
-        account: CONFIG.NUMBERS.ACCOUNT_INDEX,
-        change: addressInfo.change,
-        index: addressInfo.index,
-      },
-    }
-  }
-
   getChangeAddress() {
     const candidateAddresses = this.internalChain.addresses
     const unseen = candidateAddresses.filter(
@@ -213,6 +185,18 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     )
     assert.assert(unseen.length > 0, 'Cannot find change address')
     return _.first(unseen)
+  }
+
+  _getAddressedChangeAddress() {
+    const changeAddr = this.getChangeAddress()
+    const addressInfo = this.getAddressingInfo(changeAddr)
+    if (addressInfo == null) {
+      throw new Error("Couldn't get change addressing, should never happen")
+    }
+    return {
+      address: changeAddr,
+      addressing: addressInfo,
+    }
   }
 
   getAllUtxosForKey(utxos: Array<RawUtxo>) {
@@ -264,11 +248,61 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     throw Error('not implemented')
   }
 
-  signTx(
+  legacySignTx(
     transaction: PreparedTransactionData,
     decryptedMasterKey: string,
   ): Promise<string> {
     throw Error('not implemented')
+  }
+
+  async createUnsignedTx<TransactionBuilder>(
+    utxos: Array<RawUtxo>,
+    receiver: string,
+    amount: string,
+  ): Promise<BaseSignRequest<TransactionBuilder>> {
+    // const bestblock = await this.getBestBlock()
+    const timeToSlotFn = await genTimeToSlot([
+      {
+        StartAt: CONFIG.NETWORKS.HASKELL_SHELLEY.START_AT,
+        GenesisDate: CONFIG.NETWORKS.HASKELL_SHELLEY.GENESIS_DATE,
+        SlotsPerEpoch: CONFIG.NETWORKS.HASKELL_SHELLEY.SLOTS_PER_EPOCH,
+        SlotDuration: CONFIG.NETWORKS.HASKELL_SHELLEY.SLOT_DURATION,
+      },
+    ])
+    const absSlotNumber = new BigNumber(timeToSlotFn({time: new Date()}).slot)
+    const changeAddr = await this._getAddressedChangeAddress()
+    const addressedUtxos = this.asAddressedUtxo(utxos)
+
+    const resp = await createUnsignedTx({
+      changeAddr,
+      absSlotNumber,
+      receiver,
+      addressedUtxos,
+      amount,
+    })
+    Logger.debug(JSON.stringify(resp))
+    return resp
+  }
+
+  async signTx<TransactionBuilder>(
+    signRequest: BaseSignRequest<TransactionBuilder>,
+    decryptedMasterKey: string,
+  ): Promise<SignedTx> {
+    const signedTx = await signTransaction(
+      signRequest,
+      CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
+      decryptedMasterKey,
+      [], // no staking key
+      undefined,
+    )
+    const id = Buffer.from(
+      await (await hash_transaction(await signedTx.body())).to_bytes(),
+    ).toString('hex')
+    const encodedTx = await signedTx.to_bytes()
+    return {
+      id,
+      encodedTx,
+    }
   }
 
   prepareDelegationTx(
@@ -279,14 +313,19 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     throw Error('not implemented')
   }
 
-  signDelegationTx(
-    unsignedTx: V3UnsignedTxAddressedUtxoData,
+  // remove and just use signTx
+  signDelegationTx<V4UnsignedTxAddressedUtxoResponse>(
+    unsignedTx: V4UnsignedTxAddressedUtxoResponse,
     decryptedMasterKey: string,
-  ): Promise<V3SignedTx> {
+  ): Promise<SignedTx> {
     throw Error('not implemented')
   }
 
   // =================== backend API =================== //
+
+  async getBestBlock() {
+    return await api.getBestBlock()
+  }
 
   async submitTransaction(signedTx: string) {
     const response = await api.submitTransaction(signedTx)

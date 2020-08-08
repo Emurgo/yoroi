@@ -11,6 +11,7 @@ export class InvalidAdaAmount extends ExtendableError {
     INVALID_AMOUNT: 'INVALID_AMOUNT',
     TOO_MANY_DECIMAL_PLACES: 'TOO_MANY_DECIMAL_PLACES',
     TOO_LARGE: 'TOO_LARGE',
+    TOO_LOW: 'TOO_LOW',
     NEGATIVE: 'NEGATIVE',
   }
 
@@ -39,6 +40,10 @@ export const parseAdaDecimal = (amount: string) => {
 
   if (value.gte(MAX_ADA)) {
     throw new InvalidAdaAmount(InvalidAdaAmount.ERROR_CODES.TOO_LARGE)
+  }
+
+  if (value.lt(1)) {
+    throw new InvalidAdaAmount(InvalidAdaAmount.ERROR_CODES.TOO_LOW)
   }
 
   if (value.lt(0)) {

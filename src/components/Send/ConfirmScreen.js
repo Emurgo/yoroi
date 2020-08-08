@@ -111,6 +111,7 @@ const handleOnConfirm = async (
     })
   }
 
+  // TODO(v-almonacid): this need to be re-written
   if (isHW) {
     withDisabledButton(async () => {
       try {
@@ -233,9 +234,9 @@ const ConfirmScreen = ({
 }) => {
   const amount = navigation.getParam('amount')
   const address = navigation.getParam('address')
-  const transactionData = navigation.getParam('transactionData')
   const balanceAfterTx = navigation.getParam('balanceAfterTx')
   const availableAmount = navigation.getParam('availableAmount')
+  const fee = navigation.getParam('fee')
 
   const isConfirmationDisabled =
     !isEasyConfirmationEnabled && !password && !isHW
@@ -254,8 +255,7 @@ const ConfirmScreen = ({
 
         <ScrollView style={styles.container}>
           <Text small>
-            {intl.formatMessage(txLabels.fees)}:{' '}
-            {formatAdaWithSymbol(transactionData.fee)}
+            {intl.formatMessage(txLabels.fees)}: {formatAdaWithSymbol(fee)}
           </Text>
           <Text small>
             {intl.formatMessage(txLabels.balanceAfterTx)}:{' '}
