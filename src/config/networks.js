@@ -18,8 +18,7 @@ export const NETWORKS = {
     EXPLORER_URL_FOR_TX: (tx: string) => `https://cardanoexplorer.com/tx/${tx}`,
     PROTOCOL_MAGIC: 764824073,
     BACKEND: {
-      // API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
-      API_ROOT: 'https://stage-backend.yoroiwallet.com',
+      API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
       ..._DEFAULT_BACKEND_RULES,
     },
     COIN_TYPE: NUMBERS.COIN_TYPES.CARDANO,
