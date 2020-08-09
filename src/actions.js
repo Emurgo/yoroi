@@ -526,23 +526,31 @@ export const submitSignedTx = (signedTx: string) => async (
   dispatch(updateHistory())
 }
 
+// note: eslint doesn't like polymorphic types
 /* eslint-disable indent */
 export const submitTransaction = <T>(
   decryptedKey: string,
   signRequest: BaseSignRequest<T>,
 ) => async (dispatch: Dispatch<any>) => {
   const {encodedTx} = await walletManager.signTx(signRequest, decryptedKey)
+  Logger.info('submitTransaction::encodedTx', encodedTx)
   const signedTxBase64 = Buffer.from(encodedTx).toString('base64')
   dispatch(submitSignedTx(signedTxBase64))
 }
-/* eslint-enable */
 
-export const submitShelleyTx = (encodedTx: Uint8Array) => (
-  dispatch: Dispatch<any>,
-) => {
-  const signedTx64 = Buffer.from(encodedTx).toString('base64')
-  dispatch(submitSignedTx(signedTx64))
+export const submitDelegationTx = <T>(
+  decryptedKey: string,
+  signRequest: T,
+) => async (dispatch: Dispatch<any>) => {
+  const {encodedTx} = await walletManager.signDelegationTx(
+    signRequest,
+    decryptedKey,
+  )
+  Logger.info('submitDelegationTransaction::encodedTx', encodedTx)
+  const signedTxBase64 = Buffer.from(encodedTx).toString('base64')
+  dispatch(submitSignedTx(signedTxBase64))
 }
+/* eslint-enable indent */
 
 export const checkForFlawedWallets = () => async (dispatch: Dispatch<any>) => {
   let isFlawed = false

@@ -1,4 +1,13 @@
 // @flow
+
+/** ================ Legacy wallet implementation ===============
+ * this contains the wallet functions that were used during the Byron-Jormungandr
+ * era. Some are just kept as an archive and are not used anymore anywhere in
+ * the app. The important implementations here are those related to the
+ * Jormungandr wallet (delegation).
+ * TODO: consider removing this class and create a new one for Jormungandr.
+ */
+
 import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
 import uuid from 'uuid'
@@ -43,7 +52,7 @@ import type {
   BaseSignRequest,
   TransactionInput,
   PreparedTransactionData,
-  V3SignedTx,
+  SignedTx,
   V3UnsignedTxAddressedUtxoData,
 } from './types'
 import type {CryptoAccount} from './byron/util'
@@ -475,7 +484,7 @@ export default class LegacyWallet extends Wallet implements WalletInterface {
   async signDelegationTx<T: V3UnsignedTxAddressedUtxoData>(
     unsignedTx: T,
     decryptedMasterKey: string,
-  ): Promise<V3SignedTx> {
+  ): Promise<SignedTx> {
     assert.assert(
       isJormungandr(this.networkId),
       'signDelegationTx: isJormungandr',

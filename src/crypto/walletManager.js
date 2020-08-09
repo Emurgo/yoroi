@@ -611,17 +611,6 @@ class WalletManager {
     )
   }
 
-  async prepareTransaction(
-    utxos: Array<RawUtxo>,
-    address: string,
-    amount: BigNumber,
-  ) {
-    if (!this._wallet) throw new WalletClosed()
-    return await this.abortWhenWalletCloses(
-      this._wallet.prepareTransaction(utxos, address, amount),
-    )
-  }
-
   async signTx<T>(request: BaseSignRequest<T>, decryptedKey: string) {
     if (!this._wallet) throw new WalletClosed()
     return await this.abortWhenWalletCloses(

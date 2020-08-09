@@ -57,6 +57,11 @@ export type BaseSignRequest<T> = {|
   certificate: void | Certificate,
 |}
 
+export type SignedTx = {|
+  id: string,
+  encodedTx: Uint8Array,
+|}
+
 // Byron-era Types
 
 export type TransactionOutput = {|
@@ -116,12 +121,6 @@ export type V3UnsignedTxAddressedUtxoData = {|
   certificate: void | Certificate,
 |}
 
-// TODO: remove and use SignedTx
-export type V3SignedTx = {|
-  id: string,
-  encodedTx: Uint8Array,
-|}
-
 /**
  * Haskell-Shelley-era tx types
  */
@@ -142,11 +141,6 @@ export type V4UnsignedTxAddressedUtxoResponse = {|
   txBuilder: V4TransactionBuilder,
   changeAddr: Array<{|...Address, ...Value, ...Addressing|}>,
   certificates: $ReadOnlyArray<V4Certificate>,
-|}
-
-export type SignedTx = {|
-  id: string,
-  encodedTx: Uint8Array,
 |}
 
 /**

@@ -193,7 +193,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     const changeAddr = this.getChangeAddress()
     const addressInfo = this.getAddressingInfo(changeAddr)
     if (addressInfo == null) {
-      throw new Error('Couldn\'t get change addressing, should never happen')
+      throw new Error("Couldn't get change addressing, should never happen")
     }
     return {
       address: changeAddr,
@@ -262,26 +262,25 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     receiver: string,
     amount: string,
   ): Promise<BaseSignRequest<TransactionBuilder>> {
-
-    const timeToSlotFn = await genTimeToSlot([{
-      StartAt: CONFIG.NETWORKS.HASKELL_SHELLEY.START_AT,
-      GenesisDate: CONFIG.NETWORKS.HASKELL_SHELLEY.GENESIS_DATE,
-      SlotsPerEpoch: CONFIG.NETWORKS.HASKELL_SHELLEY.SLOTS_PER_EPOCH,
-      SlotDuration: CONFIG.NETWORKS.HASKELL_SHELLEY.SLOT_DURATION,
-    }])
+    const timeToSlotFn = await genTimeToSlot([
+      {
+        StartAt: CONFIG.NETWORKS.HASKELL_SHELLEY.START_AT,
+        GenesisDate: CONFIG.NETWORKS.HASKELL_SHELLEY.GENESIS_DATE,
+        SlotsPerEpoch: CONFIG.NETWORKS.HASKELL_SHELLEY.SLOTS_PER_EPOCH,
+        SlotDuration: CONFIG.NETWORKS.HASKELL_SHELLEY.SLOT_DURATION,
+      },
+    ])
     const absSlotNumber = new BigNumber(timeToSlotFn({time: new Date()}).slot)
     const changeAddr = await this._getAddressedChangeAddress()
     const addressedUtxos = this.asAddressedUtxo(utxos)
 
-    const resp = await createUnsignedTx(
-      {
-        changeAddr,
-        absSlotNumber,
-        receiver,
-        addressedUtxos,
-        amount,
-      }
-    )
+    const resp = await createUnsignedTx({
+      changeAddr,
+      absSlotNumber,
+      receiver,
+      addressedUtxos,
+      amount,
+    })
     Logger.debug(JSON.stringify(resp))
     return resp
   }
@@ -306,7 +305,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       undefined,
     )
     const id = Buffer.from(
-      await (await hash_transaction(await signedTx.body())).to_bytes()
+      await (await hash_transaction(await signedTx.body())).to_bytes(),
     ).toString('hex')
     const encodedTx = await signedTx.to_bytes()
     return {

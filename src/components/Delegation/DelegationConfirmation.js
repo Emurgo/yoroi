@@ -20,7 +20,7 @@ import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 import {
   showErrorDialog,
   handleGeneralError,
-  submitShelleyTx,
+  submitDelegationTx,
 } from '../../actions'
 import {
   SEND_ROUTES,
@@ -84,7 +84,7 @@ const handleOnConfirm = async (
   navigation,
   isEasyConfirmationEnabled,
   password,
-  submitShelleyTx,
+  submitDelegationTx,
   setSendingTransaction,
   setProcessingTx,
   intl,
@@ -94,12 +94,8 @@ const handleOnConfirm = async (
 
   const signAndSubmitTx = async (decryptedKey) => {
     try {
-      const signedTx = await walletManager.signDelegationTx(
-        delegationTxData.unsignedTx,
-        decryptedKey,
-      )
       setSendingTransaction(true)
-      await submitShelleyTx(signedTx.encodedTx)
+      await submitDelegationTx(decryptedKey, delegationTxData.unsignedTx)
       navigation.navigate(JORMUN_WALLET_ROUTES.DELEGATION_SUMMARY)
     } catch (e) {
       if (e instanceof NetworkError) {
@@ -265,7 +261,7 @@ export default injectIntl(
         isEasyConfirmationEnabled: easyConfirmationSelector(state),
       }),
       {
-        submitShelleyTx,
+        submitDelegationTx,
       },
     ),
     withStateHandlers(
@@ -291,7 +287,7 @@ export default injectIntl(
           navigation,
           isEasyConfirmationEnabled,
           password,
-          submitShelleyTx,
+          submitDelegationTx,
           setSendingTransaction,
           setProcessingTx,
           intl,
@@ -300,7 +296,7 @@ export default injectIntl(
             navigation,
             isEasyConfirmationEnabled,
             password,
-            submitShelleyTx,
+            submitDelegationTx,
             setSendingTransaction,
             setProcessingTx,
             intl,

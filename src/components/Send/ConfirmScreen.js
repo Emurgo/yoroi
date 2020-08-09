@@ -55,9 +55,9 @@ import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
 import LedgerConnect from '../Ledger/LedgerConnect'
 import HWInstructions from '../Ledger/HWInstructions'
 
-import styles from './styles/ConfirmScreen.style'
+import type {BaseSignRequest} from '../../crypto/types'
 
-import type {PreparedTransactionData} from '../../crypto/types'
+import styles from './styles/ConfirmScreen.style'
 
 const messages = defineMessages({
   title: {
@@ -86,8 +86,8 @@ const handleOnConfirm = async (
 ) => {
   const transactionData = navigation.getParam('transactionData')
 
-  const submitTx = async (
-    tx: string | PreparedTransactionData,
+  const submitTx = async <T>(
+    tx: string | BaseSignRequest<T>,
     decryptedKey: ?string,
   ) => {
     await withPleaseWaitModal(async () => {
