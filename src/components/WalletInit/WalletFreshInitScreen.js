@@ -56,7 +56,7 @@ const WalletInitScreen = ({
           </View>
           <Button
             onPress={(event) =>
-              navigateInitWallet(event, NETWORK_REGISTRY.BYRON_MAINNET)
+              navigateInitWallet(event, NETWORK_REGISTRY.HASKELL_SHELLEY)
             }
             title={intl.formatMessage(messages.addWalletButton)}
             style={styles.createButton}

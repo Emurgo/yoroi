@@ -81,7 +81,7 @@ export const getInitialState = (): State => ({
   wallet: {
     name: '',
     isInitialized: false,
-    networkId: NETWORK_REGISTRY.BYRON_MAINNET,
+    networkId: NETWORK_REGISTRY.UNDEFINED,
     isHW: false,
     hwDeviceInfo: null,
     isEasyConfirmationEnabled: false,
