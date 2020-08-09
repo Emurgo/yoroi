@@ -2,7 +2,7 @@
 import {validateMnemonic, wordlists} from 'bip39'
 import _ from 'lodash'
 
-import {isValidAddress} from '../crypto/byron/util'
+import {normalizeToAddress} from '../crypto/shelley/utils'
 import assert from '../utils/assert'
 import {parseAdaDecimal, InvalidAdaAmount} from '../utils/parsing'
 
@@ -124,8 +124,8 @@ export const validateAddressAsync = async (
     return {addressIsRequired: true}
   }
 
-  const isValid = await isValidAddress(address)
-  return isValid ? Object.freeze({}) : {invalidAddress: true}
+  const isValid = await normalizeToAddress(address)
+  return isValid != null ? Object.freeze({}) : {invalidAddress: true}
 }
 
 export const validateAmount = (value: string): AmountValidationErrors => {
