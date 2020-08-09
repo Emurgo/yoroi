@@ -35,12 +35,7 @@ import {createUnsignedTx} from './transactionUtils'
 import {genTimeToSlot} from '../../utils/timeUtils'
 
 import type {RawUtxo, TxBodiesRequest, TxBodiesResponse} from '../../api/types'
-import type {
-  AddressedUtxo,
-  BaseSignRequest,
-  PreparedTransactionData,
-  SignedTx,
-} from './../types'
+import type {AddressedUtxo, BaseSignRequest, SignedTx} from './../types'
 import type {CryptoAccount} from '../byron/util'
 import type {HWDeviceInfo} from '../byron/ledgerUtils'
 import type {NetworkId} from '../../config/types'
@@ -240,21 +235,6 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       },
     )
     return addressedUtxos
-  }
-
-  prepareTransaction(
-    utxos: Array<RawUtxo>,
-    receiverAddress: string,
-    amount: BigNumber,
-  ): Promise<PreparedTransactionData> {
-    throw Error('not implemented')
-  }
-
-  legacySignTx(
-    transaction: PreparedTransactionData,
-    decryptedMasterKey: string,
-  ): Promise<string> {
-    throw Error('not implemented')
   }
 
   async createUnsignedTx<TransactionBuilder>(

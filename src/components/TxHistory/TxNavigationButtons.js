@@ -7,9 +7,11 @@ import {View} from 'react-native'
 import {withHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
 
-import {hasAnyTransaction} from '../../selectors'
+import {hasAnyTransaction, isHWSelector} from '../../selectors'
 import {WALLET_ROUTES} from '../../RoutesList'
 import {Button} from '../UiKit'
+import {showErrorDialog} from '../../actions'
+import {errorMessages} from '../../i18n/global-messages'
 
 import styles from './styles/TxNavigationButtons.style'
 
@@ -66,12 +68,18 @@ export default injectIntl(
   compose(
     connect((state) => ({
       sendDisabled: !hasAnyTransaction(state),
+      isHW: isHWSelector(state),
     })),
     withHandlers({
       navigateToReceive: ({navigation}) => (event) =>
         navigation.navigate(WALLET_ROUTES.RECEIVE),
-      navigateToSend: ({navigation}) => (event) =>
-        navigation.navigate(WALLET_ROUTES.SEND),
+      navigateToSend: ({navigation, isHW, intl}) => (event) => {
+        if (isHW) {
+          showErrorDialog(errorMessages.notSupportedError, intl)
+          return
+        }
+        navigation.navigate(WALLET_ROUTES.SEND)
+      },
     }),
   )(TxNavigationButtons),
 )

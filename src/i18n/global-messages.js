@@ -323,6 +323,18 @@ export const errorMessages = {
         'correctly. Restarting your hardware wallet may also fix the problem.',
     },
   }),
+  notSupportedError: defineMessages({
+    title: {
+      id: 'global.notSupported',
+      defaultMessage: '!!!Feature not supported',
+    },
+    message: {
+      id: 'global.actions.dialogs.notSupportedError.message',
+      defaultMessage:
+        '!!!This feature is not yet supported. It will be enabled ' +
+        'in a future release.',
+    },
+  }),
   generalError: defineMessages({
     title: {
       id: 'global.actions.dialogs.generalError.title',
@@ -377,6 +389,10 @@ export default defineMessages({
   epochLabel: {
     id: 'global.staking.epochLabel',
     defaultMessage: '!!!Epoch',
+  },
+  notSupported: {
+    id: 'global.notSupported',
+    defaultMessage: '!!!Feature not supported',
   },
   totalAda: {
     id: 'global.totalAda',
