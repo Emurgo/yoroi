@@ -10,13 +10,17 @@ import type {NetworkId} from './config/types'
 
 export type Dict<T> = {[string]: T}
 
+export type WalletItem = {
+  id: string,
+  name: string,
+  networkId: NetworkId,
+  isHW: boolean,
+  isShelley: ?boolean, // legacy jormungandr
+  isEasyConfirmationEnabled: boolean,
+}
+
 export type State = {
-  wallets: Dict<{
-    id: string,
-    name: string,
-    networkId: NetworkId,
-    isHW: boolean,
-  }>,
+  wallets: Dict<WalletItem>,
   wallet: {
     name: string,
     isInitialized: boolean,

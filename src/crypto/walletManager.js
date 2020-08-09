@@ -129,6 +129,18 @@ class WalletManager {
 
   async initialize() {
     const wallets = await this._listWallets()
+    wallets.map((w) => {
+      if (w.networkId == null && w.isShelley != null) {
+        return {
+          ...w,
+          networkId: w.isShelley
+            ? NETWORK_REGISTRY.JORMUNGANDR
+            : NETWORK_REGISTRY.HASKELL_SHELLEY,
+        }
+      } else {
+        return w
+      }
+    })
     this._wallets = _.fromPairs(wallets.map((w) => [w.id, w]))
   }
 

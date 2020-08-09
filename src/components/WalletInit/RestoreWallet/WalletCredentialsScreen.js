@@ -197,7 +197,8 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
   }
 
   onConfirmVerify = () =>
-    this.setState({currentDialogStep: RESTORATION_DIALOG_STEPS.CHECK_UPGRADE})
+    // this.setState({currentDialogStep: RESTORATION_DIALOG_STEPS.CHECK_UPGRADE})
+    this.navigateToWallet()
 
   onBack = () =>
     this.setState({

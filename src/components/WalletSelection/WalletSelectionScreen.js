@@ -45,7 +45,7 @@ const messages = defineMessages({
   addWalletOnShelleyButton: {
     id:
       'components.walletselection.walletselectionscreen.addWalletOnShelleyButton',
-    defaultMessage: '!!!Add wallet (Shelley Testnet)',
+    defaultMessage: '!!!Add wallet (Jormungandr ITN)',
   },
 })
 
@@ -167,6 +167,7 @@ export default injectIntl(
           currentVersion != null
             ? parseInt(currentVersion.replace(/\./g, ''), 10)
             : 0
+        // note: old wallets didn't have networkId but just an isShelley flag
         if (
           wallets != null &&
           currVersionInt <= 204 &&
