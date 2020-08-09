@@ -23,7 +23,7 @@ import {errorMessages} from '../../i18n/global-messages'
 import FailedWalletUpgradeModal from './FailedWalletUpgradeModal'
 import {currentVersionSelector} from '../../selectors'
 import {onDidMount} from '../../utils/renderUtils'
-import {isJormungandr} from '../../config/networks'
+import {isJormungandr, NETWORKS} from '../../config/networks'
 import {NETWORK_REGISTRY} from '../../config/types'
 
 import styles from './styles/WalletSelectionScreen.style'
@@ -93,14 +93,16 @@ const WalletListScreen = ({
           style={styles.addWalletButton}
         />
 
-        <Button
-          outline
-          onPress={(event) =>
-            navigateInitWallet(event, NETWORK_REGISTRY.JORMUNGANDR)
-          }
-          title={intl.formatMessage(messages.addWalletOnShelleyButton)}
-          style={styles.addWalletOnShelleyButton}
-        />
+        {NETWORKS.JORMUNGANDR.ENABLED && (
+          <Button
+            outline
+            onPress={(event) =>
+              navigateInitWallet(event, NETWORK_REGISTRY.JORMUNGANDR)
+            }
+            title={intl.formatMessage(messages.addWalletOnShelleyButton)}
+            style={styles.addWalletOnShelleyButton}
+          />
+        )}
       </ScreenBackground>
     </Screen>
   </SafeAreaView>
