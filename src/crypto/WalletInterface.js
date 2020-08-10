@@ -1,5 +1,4 @@
 // @flow
-import {BigNumber} from 'bignumber.js'
 
 import {AddressChain} from './chain'
 import {TransactionCache} from './transactionCache'
@@ -13,9 +12,9 @@ import type {
 } from '../api/types'
 import type {
   AddressedUtxo,
+  BaseSignRequest,
   EncryptionMethod,
-  PreparedTransactionData,
-  V3SignedTx,
+  SignedTx,
   V3UnsignedTxAddressedUtxoData,
   WalletState,
 } from './types'
@@ -126,6 +125,7 @@ export interface WalletInterface {
 
   // =================== tx building =================== //
 
+  // not exposed to wallet manager, consider removing
   getChangeAddress(): string;
 
   getAllUtxosForKey(utxos: Array<RawUtxo>): Promise<Array<AddressedUtxo>>;
@@ -134,16 +134,16 @@ export interface WalletInterface {
 
   asAddressedUtxo(utxos: Array<RawUtxo>): Array<AddressedUtxo>;
 
-  prepareTransaction(
+  createUnsignedTx<T>(
     utxos: Array<RawUtxo>,
-    receiverAddress: string,
-    amount: BigNumber,
-  ): Promise<PreparedTransactionData>;
+    receiver: string,
+    amount: string,
+  ): Promise<BaseSignRequest<T>>;
 
-  signTx(
-    transaction: PreparedTransactionData,
+  signTx<T>(
+    signRequest: BaseSignRequest<T>,
     decryptedMasterKey: string,
-  ): Promise<string>;
+  ): Promise<SignedTx>;
 
   prepareDelegationTx(
     poolData: PoolData,
@@ -151,10 +151,10 @@ export interface WalletInterface {
     utxos: Array<RawUtxo>,
   ): Promise<DelegationTxData>;
 
-  signDelegationTx(
-    unsignedTx: V3UnsignedTxAddressedUtxoData,
+  signDelegationTx<T: V3UnsignedTxAddressedUtxoData>(
+    unsignedTx: T,
     decryptedMasterKey: string,
-  ): Promise<V3SignedTx>;
+  ): Promise<SignedTx>;
 
   // =================== backend API =================== //
 

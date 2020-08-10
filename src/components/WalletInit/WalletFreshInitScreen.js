@@ -15,6 +15,7 @@ import styles from './styles/WalletInitScreen.style'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {walletIsInitializedSelector} from '../../selectors'
 import {NETWORK_REGISTRY} from '../../config/types'
+import {NETWORKS} from '../../config/networks'
 
 import type {State} from '../../state'
 import type {Navigation} from '../../types/navigation'
@@ -55,21 +56,23 @@ const WalletInitScreen = ({
           </View>
           <Button
             onPress={(event) =>
-              navigateInitWallet(event, NETWORK_REGISTRY.BYRON_MAINNET)
+              navigateInitWallet(event, NETWORK_REGISTRY.HASKELL_SHELLEY)
             }
             title={intl.formatMessage(messages.addWalletButton)}
             style={styles.createButton}
             testID="addWalletOnByronButton"
           />
 
-          <Button
-            outline
-            onPress={(event) =>
-              navigateInitWallet(event, NETWORK_REGISTRY.JORMUNGANDR)
-            }
-            title={intl.formatMessage(messages.addWalletOnShelleyButton)}
-            testID="addWalletOnShelleyButton"
-          />
+          {NETWORKS.JORMUNGANDR.ENABLED && (
+            <Button
+              outline
+              onPress={(event) =>
+                navigateInitWallet(event, NETWORK_REGISTRY.JORMUNGANDR)
+              }
+              title={intl.formatMessage(messages.addWalletOnShelleyButton)}
+              testID="addWalletOnShelleyButton"
+            />
+          )}
         </View>
       </ScreenBackground>
     </SafeAreaView>

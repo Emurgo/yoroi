@@ -26,12 +26,7 @@ import {
 } from '../helpers/deviceSettings'
 
 import type {RawUtxo, PoolInfoRequest, TxBodiesRequest} from '../api/types'
-import type {
-  Addressing,
-  EncryptionMethod,
-  PreparedTransactionData,
-  V3UnsignedTxAddressedUtxoData,
-} from './types'
+import type {Addressing, BaseSignRequest, EncryptionMethod} from './types'
 import type {HWDeviceInfo} from './byron/ledgerUtils'
 import type {PoolData} from './jormungandr/delegationUtils'
 import type {NetworkId} from '../config/types'
@@ -134,6 +129,18 @@ class WalletManager {
 
   async initialize() {
     const wallets = await this._listWallets()
+    wallets.map((w) => {
+      if (w.networkId == null && w.isShelley != null) {
+        return {
+          ...w,
+          networkId: w.isShelley
+            ? NETWORK_REGISTRY.JORMUNGANDR
+            : NETWORK_REGISTRY.HASKELL_SHELLEY,
+        }
+      } else {
+        return w
+      }
+    })
     this._wallets = _.fromPairs(wallets.map((w) => [w.id, w]))
   }
 
@@ -604,21 +611,22 @@ class WalletManager {
     return this._wallet.asAddressedUtxo(utxos)
   }
 
-  async prepareTransaction(
+  async createUnsignedTx(
     utxos: Array<RawUtxo>,
-    address: string,
-    amount: BigNumber,
+    receiver: string,
+    amount: string,
   ) {
     if (!this._wallet) throw new WalletClosed()
     return await this.abortWhenWalletCloses(
-      this._wallet.prepareTransaction(utxos, address, amount),
+      // TODO(v-almonacid): maybe there is a better way instead of any
+      this._wallet.createUnsignedTx<any>(utxos, receiver, amount),
     )
   }
 
-  async signTx(transactionData: PreparedTransactionData, decryptedKey: string) {
+  async signTx<T>(request: BaseSignRequest<T>, decryptedKey: string) {
     if (!this._wallet) throw new WalletClosed()
     return await this.abortWhenWalletCloses(
-      this._wallet.signTx(transactionData, decryptedKey),
+      this._wallet.signTx(request, decryptedKey),
     )
   }
 
@@ -633,12 +641,12 @@ class WalletManager {
     )
   }
 
-  async signDelegationTx(
-    unsignedTx: V3UnsignedTxAddressedUtxoData,
-    decryptedMasterKey: string,
-  ) {
+  async signDelegationTx<T>(unsignedTx: T, decryptedMasterKey: string) {
     if (!this._wallet) throw new WalletClosed()
-    return await this._wallet.signDelegationTx(unsignedTx, decryptedMasterKey)
+    return await this._wallet.signDelegationTx<any>(
+      unsignedTx,
+      decryptedMasterKey,
+    )
   }
 
   // =================== backend API =================== //

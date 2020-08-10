@@ -66,6 +66,12 @@ const amountInputErrorMessages = defineMessages({
     defaultMessage: '!!!Amount too large',
     description: 'some desc',
   },
+  // TODO: should not be ADA specific
+  TOO_LOW: {
+    id: 'components.send.sendscreen.amountInput.error.TOO_LOW',
+    defaultMessage: '!!!Cannot send less than 1 ADA',
+    description: 'some desc',
+  },
   NEGATIVE: {
     id: 'components.send.sendscreen.amountInput.error.NEGATIVE',
     defaultMessage: '!!!Amount must be positive',
@@ -145,9 +151,13 @@ const messages = defineMessages({
   },
 })
 
-const getTransactionData = (utxos, address, amount) => {
+const getTransactionData = async (utxos, address, amount) => {
   const adaAmount = parseAdaDecimal(amount)
-  return walletManager.prepareTransaction(utxos, address, adaAmount)
+  return await walletManager.createUnsignedTx(
+    utxos,
+    address,
+    adaAmount.toString(),
+  )
 }
 
 const recomputeAll = async ({amount, address, utxos}) => {
@@ -160,7 +170,10 @@ const recomputeAll = async ({amount, address, utxos}) => {
   if (_.isEmpty(addressErrors) && _.isEmpty(amountErrors) && utxos) {
     try {
       const parsedAmount = parseAdaDecimal(amount)
-      const {fee: _fee} = await getTransactionData(utxos, address, amount)
+      const {unsignedTx} = await getTransactionData(utxos, address, amount)
+      const _fee = new BigNumber(
+        await (await unsignedTx.get_fee_or_calc()).to_str(),
+      )
       balanceAfter = getUtxoBalance(utxos)
         .minus(parsedAmount)
         .minus(_fee)
@@ -299,6 +312,9 @@ class SendScreen extends Component<Props, State> {
     if (isValid === true) {
       /* :: if (!utxos) throw 'assert' */
       const transactionData = await getTransactionData(utxos, address, amount)
+      const fee = new BigNumber(
+        await (await transactionData.unsignedTx.get_fee_or_calc()).to_str(),
+      )
 
       navigation.navigate(SEND_ROUTES.CONFIRM, {
         availableAmount,
@@ -307,6 +323,7 @@ class SendScreen extends Component<Props, State> {
         transactionData,
         balanceAfterTx: balanceAfter,
         utxos,
+        fee,
       })
     }
   }

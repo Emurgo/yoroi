@@ -1,4 +1,13 @@
 // @flow
+
+/** ================ Legacy wallet implementation ===============
+ * this contains the wallet functions that were used during the Byron-Jormungandr
+ * era. Some are just kept as an archive and are not used anymore anywhere in
+ * the app. The important implementations here are those related to the
+ * Jormungandr wallet (delegation).
+ * TODO: consider removing this class and create a new one for Jormungandr.
+ */
+
 import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
 import uuid from 'uuid'
@@ -7,6 +16,7 @@ import {
   AddressDiscrimination,
   Bip32PublicKey,
   Bip32PrivateKey,
+  PrivateKey,
 } from 'react-native-chain-libs'
 import DeviceInfo from 'react-native-device-info'
 
@@ -39,9 +49,10 @@ import type {
 } from '../api/types'
 import type {
   AddressedUtxo,
+  BaseSignRequest,
   TransactionInput,
   PreparedTransactionData,
-  V3SignedTx,
+  SignedTx,
   V3UnsignedTxAddressedUtxoData,
 } from './types'
 import type {CryptoAccount} from './byron/util'
@@ -374,7 +385,7 @@ export default class LegacyWallet extends Wallet implements WalletInterface {
     }
   }
 
-  async signTx(
+  async legacySignTx(
     transaction: PreparedTransactionData,
     decryptedMasterKey: string,
   ) {
@@ -390,6 +401,18 @@ export default class LegacyWallet extends Wallet implements WalletInterface {
     assert.assert(fee.eq(signedTxData.fee), 'Transaction fee does not match')
 
     return Buffer.from(signedTxData.cbor_encoded_tx, 'hex').toString('base64')
+  }
+
+  createUnsignedTx(
+    utxos: Array<RawUtxo>,
+    receiver: string,
+    amount: string,
+  ): Promise<BaseSignRequest<any>> {
+    throw Error('not implemented')
+  }
+
+  signTx(unsignedTx: any, decryptedMasterKey: string): Promise<any> {
+    throw Error('not implemented')
   }
 
   async _getStakingKey() {
@@ -458,10 +481,10 @@ export default class LegacyWallet extends Wallet implements WalletInterface {
     return resp
   }
 
-  async signDelegationTx(
-    unsignedTx: V3UnsignedTxAddressedUtxoData,
+  async signDelegationTx<T: V3UnsignedTxAddressedUtxoData>(
+    unsignedTx: T,
     decryptedMasterKey: string,
-  ): Promise<V3SignedTx> {
+  ): Promise<SignedTx> {
     assert.assert(
       isJormungandr(this.networkId),
       'signDelegationTx: isJormungandr',
@@ -470,14 +493,14 @@ export default class LegacyWallet extends Wallet implements WalletInterface {
     const masterKey = await Bip32PrivateKey.from_bytes(
       Buffer.from(decryptedMasterKey, 'hex'),
     )
-    const accountPvrKey = await (await (await masterKey.derive(
+    const accountPvrKey: Bip32PrivateKey = await (await (await masterKey.derive(
       CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
     )).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)).derive(
       0 + CONFIG.NUMBERS.HARD_DERIVATION_START,
     )
 
     // get staking key as PrivateKey
-    const stakingKey = await (await (await accountPvrKey.derive(
+    const stakingKey: PrivateKey = await (await (await accountPvrKey.derive(
       CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
     )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
 

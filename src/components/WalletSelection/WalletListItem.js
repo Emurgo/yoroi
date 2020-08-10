@@ -7,21 +7,22 @@ import LinearGradient from 'react-native-linear-gradient'
 
 import CardanoIcon from '../../assets/CardanoIcon'
 import {COLORS} from '../../styles/config'
+import {isJormungandr} from '../../config/networks'
 
 import styles from './styles/WalletListItem.style'
 
-import type {Wallet} from './types'
+import type {WalletItem} from '../../state'
 import type {ComponentType} from 'react'
 
 type ExternalProps = {
-  wallet: Wallet,
-  onPress: (Wallet) => any,
+  wallet: WalletItem,
+  onPress: (WalletItem) => any,
 }
 
 const WalletListItem = ({wallet, onPress}) => (
   <TouchableOpacity activeOpacity={0.5} onPress={onPress} style={styles.item}>
     {/* eslint-disable */
-    wallet.isShelley ? (
+    isJormungandr(wallet.networkId) ? (
       <View>
         <LinearGradient
           start={{x: 0, y: 1}}
@@ -41,7 +42,7 @@ const WalletListItem = ({wallet, onPress}) => (
     }
     <Text style={styles.nameText}>
       {wallet.name}
-      {wallet.isShelley && ' (Testnet)'}
+      {isJormungandr(wallet.networkId) && ' (ITN)'}
     </Text>
   </TouchableOpacity>
 )

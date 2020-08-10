@@ -1869,10 +1869,10 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.5.tgz#8eed982e2ee6f7f4e44c253e12962980791efd46"
   integrity sha512-6U71C2Wp7r5XtFtQzYrW5iKFT67OixrSxjI4MptCHzdSVlgabczzqLe0ZSgnub/5Kp4hSbpDB1tMytZY9pwxxA==
 
-"@emurgo/cardano-serialization-lib-nodejs@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@emurgo/cardano-serialization-lib-nodejs/-/cardano-serialization-lib-nodejs-1.0.1.tgz#79a27b68154defd2db878be58c23ea7cf0047423"
-  integrity sha512-eTsTodYP69JFeL8JH08zADqny+ZO9NR+xgaU7r2ySCSh5jfA1mqhwKCjNUOSejpJvADyH5ppJwwIfICcwqKcDg==
+"@emurgo/cardano-serialization-lib-nodejs@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/cardano-serialization-lib-nodejs/-/cardano-serialization-lib-nodejs-1.1.0.tgz#1098d8041b75cdbadf72dde1a092aa94862ebf36"
+  integrity sha512-ujOZuBHRWDauRa5pFyCo87zT41jgf7wcNqeeG8t/a22nVluY1N2sywJZ+8VtqRpK5BEkfWTvQvmqYaokiZBl2g==
 
 "@emurgo/js-chain-libs-node@git+https://github.com/SebastienGllmt/js-chain-libs-node-pkg.git":
   version "0.7.0"
@@ -12608,7 +12608,7 @@ react-native-fs@^2.11.18:
 
 react-native-haskell-shelley@Emurgo/react-native-haskell-shelley:
   version "1.0.0"
-  resolved "https://codeload.github.com/Emurgo/react-native-haskell-shelley/tar.gz/2cd05faad2c791ed675972fa590e90f1a155bf61"
+  resolved "https://codeload.github.com/Emurgo/react-native-haskell-shelley/tar.gz/918b84f976ecb5e0274106e662c25a5a7d564519"
   dependencies:
     base-64 "0.1.0"
 

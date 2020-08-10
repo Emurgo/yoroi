@@ -10,13 +10,17 @@ import type {NetworkId} from './config/types'
 
 export type Dict<T> = {[string]: T}
 
+export type WalletItem = {
+  id: string,
+  name: string,
+  networkId: NetworkId,
+  isHW: boolean,
+  isShelley: ?boolean, // legacy jormungandr
+  isEasyConfirmationEnabled: boolean,
+}
+
 export type State = {
-  wallets: Dict<{
-    id: string,
-    name: string,
-    networkId: NetworkId,
-    isHW: boolean,
-  }>,
+  wallets: Dict<WalletItem>,
   wallet: {
     name: string,
     isInitialized: boolean,
@@ -77,7 +81,7 @@ export const getInitialState = (): State => ({
   wallet: {
     name: '',
     isInitialized: false,
-    networkId: NETWORK_REGISTRY.BYRON_MAINNET,
+    networkId: NETWORK_REGISTRY.UNDEFINED,
     isHW: false,
     hwDeviceInfo: null,
     isEasyConfirmationEnabled: false,

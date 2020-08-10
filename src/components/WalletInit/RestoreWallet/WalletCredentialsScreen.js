@@ -15,7 +15,7 @@ import {withNavigationTitle} from '../../../utils/renderUtils'
 import WalletForm from '../WalletForm'
 import {
   createWallet,
-  submitShelleyTx,
+  submitTransaction,
   handleGeneralError,
   showErrorDialog,
   updateVersion,
@@ -40,7 +40,7 @@ import {isJormungandr} from '../../../config/networks'
 
 import type {Navigation} from '../../../types/navigation'
 import type {AddressType} from '../../../crypto/commonUtils'
-import type {Addressing} from '../../../crypto/types'
+import type {Addressing, SignedTx} from '../../../crypto/types'
 import type {TransferTx} from '../../../crypto/jormungandr/transactions/yoroiTransfer'
 
 const RESTORATION_DIALOG_STEPS = {
@@ -97,7 +97,7 @@ type Props = {
   intl: any,
   navigation: Navigation,
   createWallet: (string, string, string, boolean) => any,
-  submitShelleyTx: (Uint8Array) => any,
+  submitTransaction: (SignedTx) => any,
   updateVersion: () => any,
 }
 
@@ -197,7 +197,8 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
   }
 
   onConfirmVerify = () =>
-    this.setState({currentDialogStep: RESTORATION_DIALOG_STEPS.CHECK_UPGRADE})
+    // this.setState({currentDialogStep: RESTORATION_DIALOG_STEPS.CHECK_UPGRADE})
+    this.navigateToWallet()
 
   onBack = () =>
     this.setState({
@@ -271,7 +272,7 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
       const {
         navigation,
         createWallet,
-        submitShelleyTx,
+        submitTransaction,
         updateVersion,
       } = this.props
       const phrase = navigation.getParam('phrase')
@@ -280,7 +281,10 @@ class WalletCredentialsScreen extends React.Component<Props, State> {
       if (tx == null) {
         throw new Error('Transaction data not found.')
       }
-      await submitShelleyTx(tx.encodedTx)
+      await submitTransaction({
+        id: tx.id,
+        encodedTx: tx.encodedTx,
+      })
       // note (v-almonacid): this is necessary to avoid showing the failed wallet
       // restore modal to users with a fresh install
       await updateVersion()
@@ -365,7 +369,7 @@ export default injectIntl(
       () => ({}),
       {
         createWallet,
-        submitShelleyTx,
+        submitTransaction,
         updateVersion,
       },
     ),

@@ -9,10 +9,14 @@ import {
   Bip32PrivateKey,
   BootstrapWitnesses,
   ByronAddress,
+  Certificate,
+  Certificates,
+  Coin,
   LinearFee,
   hash_transaction,
   make_icarus_bootstrap_witness,
   make_vkey_witness,
+  PrivateKey,
   Transaction,
   TransactionBody,
   TransactionBuilder,
@@ -26,7 +30,11 @@ import {
 /* eslint-enable camelcase */
 import {CONFIG} from '../../config/config'
 import {InsufficientFunds} from '../errors'
-import {getCardanoAddrKeyHash, normalizeToAddress} from './utils'
+import {
+  getCardanoAddrKeyHash,
+  normalizeToAddress,
+  derivePrivateByAddressing,
+} from './utils'
 
 import type {
   Address,
@@ -35,6 +43,7 @@ import type {
   V4UnsignedTxUtxoResponse,
   V4UnsignedTxAddressedUtxoResponse,
   AddressedUtxo,
+  TxOutput,
 } from '../types'
 import type {RawUtxo} from '../../api/types'
 
@@ -109,7 +118,7 @@ export const sendAllUnsignedTx = async (
   absSlotNumber: BigNumber,
   protocolParams: {|
     linearFee: LinearFee,
-    minimumUtxoVal: BigNum,
+    minimumUtxoVal: Coin,
     poolDeposit: BigNum,
     keyDeposit: BigNum,
   |},
@@ -148,6 +157,7 @@ export const sendAllUnsignedTx = async (
     senderUtxos: addressedUtxos,
     txBuilder: unsignedTxResponse.txBuilder,
     changeAddr: unsignedTxResponse.changeAddr,
+    certificates: [],
   }
 }
 
@@ -170,7 +180,7 @@ async function addUtxoInput(
     await txBuilder.add_bootstrap_input(
       byronAddr,
       await utxoToTxInput(input),
-      await BigNum.from_str(input.amount),
+      await Coin.from_str(input.amount),
     )
     return
   }
@@ -180,7 +190,7 @@ async function addUtxoInput(
   await txBuilder.add_key_input(
     keyHash,
     await utxoToTxInput(input),
-    await BigNum.from_str(input.amount),
+    await Coin.from_str(input.amount),
   )
 }
 
@@ -191,8 +201,7 @@ async function addUtxoInput(
  * B) Having the key provided externally
  */
 export const newAdaUnsignedTxFromUtxo = async (
-  receiver: string,
-  amount: string,
+  outputs: Array<TxOutput>,
   changeAdaAddr: void | {|...Address, ...Addressing|},
   utxos: Array<RawUtxo>,
   absSlotNumber: BigNumber,
@@ -202,24 +211,39 @@ export const newAdaUnsignedTxFromUtxo = async (
     poolDeposit: BigNum,
     keyDeposit: BigNum,
   |},
+  certificates: $ReadOnlyArray<Certificate>,
 ): Promise<V4UnsignedTxUtxoResponse> => {
-  const wasmReceiver = await normalizeToAddress(receiver)
-  if (wasmReceiver == null) {
-    throw new Error(
-      'newAdaUnsignedTxFromUtxo:: receiver not a valid Shelley address',
-    )
-  }
-
   const txBuilder = await TransactionBuilder.new(
     protocolParams.linearFee,
     protocolParams.minimumUtxoVal,
     protocolParams.poolDeposit,
     protocolParams.keyDeposit,
   )
+  if (certificates.length > 0) {
+    const certsNative = await Certificates.new()
+    for (const cert of certificates) {
+      await certsNative.add(cert)
+    }
+    await txBuilder.set_certs(certsNative)
+  }
   await txBuilder.set_ttl(absSlotNumber.plus(defaultTtlOffset).toNumber())
-  await txBuilder.add_output(
-    await TransactionOutput.new(wasmReceiver, await BigNum.from_str(amount)),
-  )
+
+  {
+    for (const output of outputs) {
+      const wasmReceiver = await normalizeToAddress(output.address)
+      if (wasmReceiver == null) {
+        throw new Error(
+          'newAdaUnsignedTxFromUtxo:: receiver not a valid Shelley address',
+        )
+      }
+      await txBuilder.add_output(
+        await TransactionOutput.new(
+          wasmReceiver,
+          await Coin.from_str(output.amount),
+        ),
+      )
+    }
+  }
 
   let currentInputSum = new BigNumber(0)
   const usedUtxos: Array<RawUtxo> = []
@@ -252,7 +276,22 @@ export const newAdaUnsignedTxFromUtxo = async (
 
   const changeAddr = await (async () => {
     if (changeAdaAddr == null) {
-      await txBuilder.set_fee(await txBuilder.estimate_fee())
+      const totalInput = await (await txBuilder.get_explicit_input()).checked_add(
+        await txBuilder.get_implicit_input(),
+      )
+      const totalOutput = await txBuilder.get_explicit_output()
+      const fee = new BigNumber(
+        await (await totalInput.checked_sub(totalOutput)).to_str(),
+      )
+      const minFee = new BigNumber(
+        await (await txBuilder.estimate_fee()).to_str(),
+      )
+      if (fee.lt(minFee)) {
+        throw new InsufficientFunds()
+      }
+      // recall: min fee assumes the largest fee possible
+      // so no worries of cbor issue by including larger fee
+      await txBuilder.set_fee(await Coin.from_str(fee.toString()))
       return []
     }
     const oldOutput = await txBuilder.get_explicit_output()
@@ -289,17 +328,17 @@ export const newAdaUnsignedTxFromUtxo = async (
  * we use all UTXOs as possible inputs for selection
  */
 export const newAdaUnsignedTx = async (
-  receiver: string,
-  amount: string,
+  outputs: Array<TxOutput>,
   changeAdaAddr: void | {|...Address, ...Addressing|},
   allUtxos: Array<AddressedUtxo>,
   absSlotNumber: BigNumber,
   protocolParams: {|
     linearFee: LinearFee,
-    minimumUtxoVal: BigNum,
+    minimumUtxoVal: Coin,
     poolDeposit: BigNum,
     keyDeposit: BigNum,
   |},
+  certificates: $ReadOnlyArray<Certificate>,
 ): Promise<V4UnsignedTxAddressedUtxoResponse> => {
   const addressingMap = new Map<RawUtxo, AddressedUtxo>()
   for (const utxo of allUtxos) {
@@ -315,19 +354,19 @@ export const newAdaUnsignedTx = async (
     )
   }
   const unsignedTxResponse = await newAdaUnsignedTxFromUtxo(
-    receiver,
-    amount,
+    outputs,
     changeAdaAddr,
     Array.from(addressingMap.keys()),
     absSlotNumber,
     protocolParams,
+    certificates,
   )
 
   const addressedUtxos = unsignedTxResponse.senderUtxos.map((utxo) => {
     const addressedUtxo = addressingMap.get(utxo)
     if (addressedUtxo == null) {
       throw new Error(
-        'newAdaUnsignedTx utxo reference was changed. Should not happen',
+        'newAdaUnsignedTx:: utxo reference was changed. Should not happen',
       )
     }
     return addressedUtxo
@@ -337,6 +376,7 @@ export const newAdaUnsignedTx = async (
     senderUtxos: addressedUtxos,
     txBuilder: unsignedTxResponse.txBuilder,
     changeAddr: unsignedTxResponse.changeAddr,
+    certificates,
   }
 }
 
@@ -346,6 +386,7 @@ export const signTransaction = async (
     | BaseSignRequest<TransactionBody>,
   keyLevel: number,
   signingKey: Bip32PrivateKey,
+  stakingKeys: Array<PrivateKey>,
   metadata: void | TransactionMetadata,
 ): Promise<Transaction> => {
   const seenByronKeys: Set<string> = new Set()
@@ -357,7 +398,7 @@ export const signTransaction = async (
       throw new Error('signTransaction:: utxo not a valid Shelley address')
     }
     const keyHash = await getCardanoAddrKeyHash(wasmAddr)
-    const addrHex = Buffer.from(wasmAddr.to_bytes()).toString('hex')
+    const addrHex = Buffer.from(await wasmAddr.to_bytes()).toString('hex')
     if (keyHash === null) {
       if (!seenByronKeys.has(addrHex)) {
         seenByronKeys.add(addrHex)
@@ -381,8 +422,37 @@ export const signTransaction = async (
     signRequest.unsignedTx instanceof TransactionBuilder
       ? await signRequest.unsignedTx.build()
       : signRequest.unsignedTx
+  const txHash = await hash_transaction(txBody)
 
-  const witnessSet = await addWitnesses(txBody, deduped, keyLevel, signingKey)
+  const vkeyWits = await Vkeywitnesses.new()
+  const bootstrapWits = await BootstrapWitnesses.new()
+
+  await addWitnesses(
+    txHash,
+    deduped,
+    keyLevel,
+    signingKey,
+    vkeyWits,
+    bootstrapWits,
+  )
+
+  const stakingKeySet = new Set<string>()
+  for (const stakingKey of stakingKeys) {
+    const asString = Buffer.from(await stakingKey.as_bytes()).toString('hex')
+    if (stakingKeySet.has(asString)) {
+      continue
+    }
+    stakingKeySet.add(asString)
+    const vkeyWit = await make_vkey_witness(txHash, stakingKey)
+    await vkeyWits.add(vkeyWit)
+  }
+
+  const witnessSet = await TransactionWitnessSet.new()
+  if ((await bootstrapWits.len()) > 0) {
+    await witnessSet.set_bootstraps(bootstrapWits)
+  }
+  if ((await vkeyWits.len()) > 0) await witnessSet.set_vkeys(vkeyWits)
+
   return await Transaction.new(txBody, witnessSet, metadata)
 }
 
@@ -394,41 +464,40 @@ async function utxoToTxInput(utxo: RawUtxo): TransactionInput {
 }
 
 async function addWitnesses(
-  txBody: TransactionBody,
+  txHash: TransactionHash,
   uniqueUtxos: Array<AddressedUtxo>, // pre-req: does not contain duplicate keys
   keyLevel: number,
   signingKey: Bip32PrivateKey,
-): Promise<TransactionWitnessSet> {
+  vkeyWits: Vkeywitnesses,
+  bootstrapWits: BootstrapWitnesses,
+): Promise<void> {
   // get private keys
-  const privateKeys = uniqueUtxos.map((utxo) => {
-    const lastLevelSpecified =
-      utxo.addressing.startLevel + utxo.addressing.path.length - 1
-    if (lastLevelSpecified !== CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ADDRESS) {
-      throw new Error('addWitnesses:: incorrect addressing size')
-    }
-    if (keyLevel + 1 < utxo.addressing.startLevel) {
-      throw new Error('addWitnesses keyLevel < startLevel')
-    }
-    let key = signingKey
-    // TODO: addressing
-    for (
-      let i = keyLevel - utxo.addressing.startLevel + 1;
-      i < utxo.addressing.path.length;
-      i++
-    ) {
-      key = key.derive(utxo.addressing.path[i])
-    }
-    return key
-  })
+  const privateKeys = await Promise.all(
+    uniqueUtxos.map(
+      async (utxo): Promise<Bip32PrivateKey> => {
+        const lastLevelSpecified =
+          utxo.addressing.startLevel + utxo.addressing.path.length - 1
+        if (
+          lastLevelSpecified !== CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ADDRESS
+        ) {
+          throw new Error('addWitnesses:: incorrect addressing size')
+        }
+        return await derivePrivateByAddressing({
+          addressing: utxo.addressing,
+          startingFrom: {
+            level: keyLevel,
+            key: signingKey,
+          },
+        })
+      },
+    ),
+  )
 
-  // sign the transactions
-  const txHash = await hash_transaction(txBody)
-  const vkeyWits = await Vkeywitnesses.new()
-  const bootstrapWits = await BootstrapWitnesses.new()
+  // sign the transaction
   for (let i = 0; i < uniqueUtxos.length; i++) {
     const wasmAddr = await normalizeToAddress(uniqueUtxos[i].receiver)
     if (wasmAddr == null) {
-      throw new Error('addWitnesses)} utxo not a valid Shelley address')
+      throw new Error('addWitnesses: utxo not a valid Shelley address')
     }
     const byronAddr = await ByronAddress.from_address(wasmAddr)
     if (byronAddr == null) {
@@ -446,28 +515,4 @@ async function addWitnesses(
       await bootstrapWits.add(bootstrapWit)
     }
   }
-
-  const witSet = await TransactionWitnessSet.new()
-  if ((await bootstrapWits.len()) > 0) {
-    await witSet.set_bootstraps(bootstrapWits)
-  }
-  if ((await vkeyWits.len()) > 0) await witSet.set_vkeys(vkeyWits)
-  return witSet
 }
-
-// TODO(v-almonacid): I think I'll put this one in the corresponding wallet
-// class
-// export function asAddressedUtxo(
-//   utxos: IGetAllUtxosResponse,
-// ): Array<AddressedUtxo> {
-//   return utxos.map((utxo) => {
-//     return {
-//       amount: utxo.output.UtxoTransactionOutput.Amount,
-//       receiver: utxo.address,
-//       tx_hash: utxo.output.Transaction.Hash,
-//       tx_index: utxo.output.UtxoTransactionOutput.OutputIndex,
-//       utxo_id: utxo.output.Transaction.Hash + utxo.output.UtxoTransactionOutput.OutputIndex,
-//       addressing: utxo.addressing,
-//     }
-//   })
-// }

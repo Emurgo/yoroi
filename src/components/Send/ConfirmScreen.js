@@ -55,9 +55,9 @@ import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
 import LedgerConnect from '../Ledger/LedgerConnect'
 import HWInstructions from '../Ledger/HWInstructions'
 
-import styles from './styles/ConfirmScreen.style'
+import type {BaseSignRequest} from '../../crypto/types'
 
-import type {PreparedTransactionData} from '../../crypto/types'
+import styles from './styles/ConfirmScreen.style'
 
 const messages = defineMessages({
   title: {
@@ -86,8 +86,8 @@ const handleOnConfirm = async (
 ) => {
   const transactionData = navigation.getParam('transactionData')
 
-  const submitTx = async (
-    tx: string | PreparedTransactionData,
+  const submitTx = async <T>(
+    tx: string | BaseSignRequest<T>,
     decryptedKey: ?string,
   ) => {
     await withPleaseWaitModal(async () => {
@@ -111,6 +111,7 @@ const handleOnConfirm = async (
     })
   }
 
+  // TODO(v-almonacid): this need to be re-written
   if (isHW) {
     withDisabledButton(async () => {
       try {
@@ -233,9 +234,9 @@ const ConfirmScreen = ({
 }) => {
   const amount = navigation.getParam('amount')
   const address = navigation.getParam('address')
-  const transactionData = navigation.getParam('transactionData')
   const balanceAfterTx = navigation.getParam('balanceAfterTx')
   const availableAmount = navigation.getParam('availableAmount')
+  const fee = navigation.getParam('fee')
 
   const isConfirmationDisabled =
     !isEasyConfirmationEnabled && !password && !isHW
@@ -254,8 +255,7 @@ const ConfirmScreen = ({
 
         <ScrollView style={styles.container}>
           <Text small>
-            {intl.formatMessage(txLabels.fees)}:{' '}
-            {formatAdaWithSymbol(transactionData.fee)}
+            {intl.formatMessage(txLabels.fees)}: {formatAdaWithSymbol(fee)}
           </Text>
           <Text small>
             {intl.formatMessage(txLabels.balanceAfterTx)}:{' '}

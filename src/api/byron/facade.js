@@ -3,7 +3,7 @@ import moment from 'moment'
 
 import assert from '../../utils/assert'
 import {TRANSACTION_STATUS} from '../../types/HistoryTransaction'
-import {isValidAddress} from '../../crypto/byron/util'
+import {normalizeToAddress} from '../../crypto/shelley/utils'
 
 import type {
   Transaction,
@@ -68,7 +68,7 @@ export const checkAndFacadeTransactionAsync = async (
   await Promise.all(
     tx.inputs.map(async (input) => {
       assert.assert(
-        await isValidAddress(input.address),
+        (await normalizeToAddress(input.address)) != null,
         'Invalid input address',
         input.address,
       )
@@ -78,7 +78,7 @@ export const checkAndFacadeTransactionAsync = async (
   await Promise.all(
     tx.outputs.map(async (output) => {
       assert.assert(
-        await isValidAddress(output.address),
+        (await normalizeToAddress(output.address)) != null,
         'Invalid output address',
         output.address,
       )

@@ -70,9 +70,9 @@ const WalletInitScreen = ({
     messages.createWalletWithLedgerButton,
   )
   if (isJormungandr(networkId)) {
-    createWalletLabel += ' (Shelley Testnet)'
-    restoreWalletLabel += ' (Shelley Testnet)'
-    createWalletWithLedgerLabel += ' (Shelley Testnet)'
+    createWalletLabel += ' (ITN)'
+    restoreWalletLabel += ' (ITN)'
+    createWalletWithLedgerLabel += ' (ITN)'
   }
 
   return (
@@ -97,9 +97,10 @@ const WalletInitScreen = ({
             style={styles.createButton}
             testID="restoreWalletButton"
           />
-          {CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLED && (
+          {!isJormungandr(networkId) && (
             <>
               <Button
+                disabled={!CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLED}
                 outline
                 onPress={(event) => setShowModal(event, true)}
                 title={createWalletWithLedgerLabel}

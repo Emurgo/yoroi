@@ -20,7 +20,7 @@ import {Logger} from '../../utils/logging'
 
 import type {
   V3UnsignedTxAddressedUtxoData,
-  V3SignedTx,
+  SignedTx,
   AddressedUtxo,
   Addressing,
 } from '../types'
@@ -195,7 +195,7 @@ export const signDelegationTx = async (
   unsignedDelegationTx: V3UnsignedTxAddressedUtxoData,
   signingKey: Bip32PrivateKey,
   stakingKey: PrivateKey,
-): Promise<V3SignedTx> => {
+): Promise<SignedTx> => {
   const {certificate, changeAddr, senderUtxos, IOs} = unsignedDelegationTx
   try {
     if (certificate == null) {

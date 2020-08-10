@@ -19,9 +19,9 @@ export const ADDRESS_TYPE_TO_CHANGE: {[AddressType]: number} = {
 
 export const isValidAddress = async (
   address: string,
-  isShelley: boolean,
+  isJormungandr: boolean,
 ): Promise<boolean> => {
-  if (isShelley) {
+  if (isJormungandr) {
     try {
       await Address.from_string(address)
       return true

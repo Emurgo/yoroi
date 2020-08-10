@@ -8,19 +8,19 @@ jestSetup.setup()
 const validAddresses = [
   {
     addr: 'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-    isShelley: false,
+    isJormungandr: false,
   },
   {
     addr: 'Ae2tdPwUPEZ4xAL3nxLq4Py7BfS1D2tJ3u2rxZGnrAXC8TNkWhTaz41J3FN',
-    isShelley: false,
+    isJormungandr: false,
   },
   {
     addr: 'addr1qw8mq0p65pf028qgd32t6szeatfd9epx4jyl5jeuuswtlkyqpdguqd6r42j',
-    isShelley: true,
+    isJormungandr: true,
   },
   {
     addr: 'ca1sw8mq0p65pf028qgd32t6szeatfd9epx4jyl5jeuuswtlkyqpdguq9rance',
-    isShelley: true,
+    isJormungandr: true,
   },
 ]
 
@@ -44,7 +44,7 @@ describe('address handling', () => {
   it('can validate valid addresses', async () => {
     expect.assertions(validAddresses.length)
     for (const address of validAddresses) {
-      const isValid = await isValidAddress(address.addr, address.isShelley)
+      const isValid = await isValidAddress(address.addr, address.isJormungandr)
       expect(isValid).toBe(true)
     }
   })

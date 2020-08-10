@@ -1,7 +1,10 @@
 // @flow
 
 import {Certificate, InputOutput} from 'react-native-chain-libs'
-import {TransactionBuilder as V4TransactionBuilder} from 'react-native-haskell-shelley'
+import {
+  TransactionBuilder as V4TransactionBuilder,
+  Certificate as V4Certificate,
+} from 'react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 
 import type {RawUtxo} from '../api/types'
@@ -52,6 +55,11 @@ export type BaseSignRequest<T> = {|
   unsignedTx: T,
   changeAddr: Array<{|address: string, ...Value, ...Addressing|}>,
   certificate: void | Certificate,
+|}
+
+export type SignedTx = {|
+  id: string,
+  encodedTx: Uint8Array,
 |}
 
 // Byron-era Types
@@ -113,14 +121,14 @@ export type V3UnsignedTxAddressedUtxoData = {|
   certificate: void | Certificate,
 |}
 
-export type V3SignedTx = {|
-  id: string,
-  encodedTx: Uint8Array,
-|}
-
 /**
  * Haskell-Shelley-era tx types
  */
+
+export type TxOutput = {|
+  ...Address,
+  amount: string,
+|}
 
 export type V4UnsignedTxUtxoResponse = {|
   senderUtxos: Array<RawUtxo>,
@@ -132,6 +140,7 @@ export type V4UnsignedTxAddressedUtxoResponse = {|
   senderUtxos: Array<AddressedUtxo>,
   txBuilder: V4TransactionBuilder,
   changeAddr: Array<{|...Address, ...Value, ...Addressing|}>,
+  certificates: $ReadOnlyArray<V4Certificate>,
 |}
 
 /**

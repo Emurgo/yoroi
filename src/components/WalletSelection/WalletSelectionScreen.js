@@ -23,7 +23,7 @@ import {errorMessages} from '../../i18n/global-messages'
 import FailedWalletUpgradeModal from './FailedWalletUpgradeModal'
 import {currentVersionSelector} from '../../selectors'
 import {onDidMount} from '../../utils/renderUtils'
-import {isJormungandr} from '../../config/networks'
+import {isJormungandr, NETWORKS} from '../../config/networks'
 import {NETWORK_REGISTRY} from '../../config/types'
 
 import styles from './styles/WalletSelectionScreen.style'
@@ -45,7 +45,7 @@ const messages = defineMessages({
   addWalletOnShelleyButton: {
     id:
       'components.walletselection.walletselectionscreen.addWalletOnShelleyButton',
-    defaultMessage: '!!!Add wallet (Shelley Testnet)',
+    defaultMessage: '!!!Add wallet (Jormungandr ITN)',
   },
 })
 
@@ -87,20 +87,22 @@ const WalletListScreen = ({
 
         <Button
           onPress={(event) =>
-            navigateInitWallet(event, NETWORK_REGISTRY.BYRON_MAINNET)
+            navigateInitWallet(event, NETWORK_REGISTRY.HASKELL_SHELLEY)
           }
           title={intl.formatMessage(messages.addWalletButton)}
           style={styles.addWalletButton}
         />
 
-        <Button
-          outline
-          onPress={(event) =>
-            navigateInitWallet(event, NETWORK_REGISTRY.JORMUNGANDR)
-          }
-          title={intl.formatMessage(messages.addWalletOnShelleyButton)}
-          style={styles.addWalletOnShelleyButton}
-        />
+        {NETWORKS.JORMUNGANDR.ENABLED && (
+          <Button
+            outline
+            onPress={(event) =>
+              navigateInitWallet(event, NETWORK_REGISTRY.JORMUNGANDR)
+            }
+            title={intl.formatMessage(messages.addWalletOnShelleyButton)}
+            style={styles.addWalletOnShelleyButton}
+          />
+        )}
       </ScreenBackground>
     </Screen>
   </SafeAreaView>
@@ -167,6 +169,7 @@ export default injectIntl(
           currentVersion != null
             ? parseInt(currentVersion.replace(/\./g, ''), 10)
             : 0
+        // note: old wallets didn't have networkId but just an isShelley flag
         if (
           wallets != null &&
           currVersionInt <= 204 &&
