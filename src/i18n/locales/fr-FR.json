@@ -333,7 +333,7 @@
   "global.actions.dialogs.insufficientBalance.message": "Fonds insuffisants pour opérer cette transaction",
   "global.actions.dialogs.networkError.message": "Erreur de connexion au serveur. Veuillez vérifier votre connexion Internet",
   "global.actions.dialogs.networkError.title": "Erreur réseau",
-  "global.actions.dialogs.notSupportedError.message": "This feature is not yet supported. It will be enabled in a future release.",
+  "global.actions.dialogs.notSupportedError.message": "Cette fonctionnalité n'est pas encore supportée. Elle sera activée dans une prochaine version.",
   "global.actions.dialogs.pinMismatch.message": "Les codes PIN ne correspondent pas.",
   "global.actions.dialogs.pinMismatch.title": "Code PIN invalide",
   "global.actions.dialogs.walletKeysInvalidated.message": "Nous avons détecté que la biométrie de votre téléphone a changé. Par conséquent, la confirmation facile de la transaction a été désactivée et la soumission de la transaction n'est autorisée qu'avec le mot de passe principal. Vous pouvez réactiver la confirmation facile des transactions dans les paramètres",
