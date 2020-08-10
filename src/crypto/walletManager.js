@@ -128,8 +128,10 @@ class WalletManager {
   }
 
   async initialize() {
-    const wallets = await this._listWallets()
-    wallets.map((w) => {
+    const _wallets = await this._listWallets()
+    // need to migrate wallet list to new format after (haskell) shelley
+    // integration. Prior to v3.0, w.isShelley denoted an ITN wallet
+    const wallets = _wallets.map((w) => {
       if (w.networkId == null && w.isShelley != null) {
         return {
           ...w,
@@ -142,6 +144,7 @@ class WalletManager {
       }
     })
     this._wallets = _.fromPairs(wallets.map((w) => [w.id, w]))
+    Logger.debug('WalletManager::initialize::wallets()', this._wallets)
   }
 
   getWallets() {
