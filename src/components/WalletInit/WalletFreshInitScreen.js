@@ -58,9 +58,22 @@ const WalletInitScreen = ({
             onPress={(event) =>
               navigateInitWallet(event, NETWORK_REGISTRY.HASKELL_SHELLEY)
             }
-            title={intl.formatMessage(messages.addWalletButton)}
+            title={`${intl.formatMessage(
+              messages.addWalletButton,
+            )} (Byron-era)`}
             style={styles.createButton}
             testID="addWalletOnByronButton"
+          />
+
+          <Button
+            onPress={(event) => ({})}
+            outline
+            disabled
+            title={`${intl.formatMessage(
+              messages.addWalletButton,
+            )} (Shelley-era)`}
+            style={styles.createButton}
+            testID="addWalletOnHaskellShelleyButton"
           />
 
           {NETWORKS.JORMUNGANDR.ENABLED && (

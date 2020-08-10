@@ -89,8 +89,18 @@ const WalletListScreen = ({
           onPress={(event) =>
             navigateInitWallet(event, NETWORK_REGISTRY.HASKELL_SHELLEY)
           }
-          title={intl.formatMessage(messages.addWalletButton)}
+          title={`${intl.formatMessage(messages.addWalletButton)} (Byron-era)`}
           style={styles.addWalletButton}
+        />
+
+        <Button
+          disabled
+          outline
+          onPress={(event) => ({})}
+          title={`${intl.formatMessage(
+            messages.addWalletButton,
+          )} (Shelley-era)`}
+          style={styles.addWalletOnShelleyButton}
         />
 
         {NETWORKS.JORMUNGANDR.ENABLED && (
