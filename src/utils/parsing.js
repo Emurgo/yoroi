@@ -42,7 +42,7 @@ export const parseAdaDecimal = (amount: string) => {
     throw new InvalidAdaAmount(InvalidAdaAmount.ERROR_CODES.TOO_LARGE)
   }
 
-  if (value.lt(1)) {
+  if (value.lt(MICRO)) {
     throw new InvalidAdaAmount(InvalidAdaAmount.ERROR_CODES.TOO_LOW)
   }
 
