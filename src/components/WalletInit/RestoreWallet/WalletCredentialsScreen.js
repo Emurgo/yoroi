@@ -71,17 +71,16 @@ export default injectIntl(
         updateVersion,
       }) => ({name, password}) =>
         ignoreConcurrentAsync(
-          withActivityIndicator(
-            async (): Promise<void> => {
-              const phrase = navigation.getParam('phrase')
-              const networkId = navigation.getParam('networkId')
-              await createWallet(name, phrase, password, networkId)
-              await updateVersion()
-              const route = isJormungandr(networkId)
-                ? ROOT_ROUTES.JORMUN_WALLET
-                : ROOT_ROUTES.WALLET
-              navigation.navigate(route)
-            }, 1000),
+          withActivityIndicator(async (): Promise<void> => {
+            const phrase = navigation.getParam('phrase')
+            const networkId = navigation.getParam('networkId')
+            await createWallet(name, phrase, password, networkId)
+            await updateVersion()
+            const route = isJormungandr(networkId)
+              ? ROOT_ROUTES.JORMUN_WALLET
+              : ROOT_ROUTES.WALLET
+            navigation.navigate(route)
+          }, 1000),
         ),
     }),
   )(WalletCredentialsScreen): ComponentType<{
