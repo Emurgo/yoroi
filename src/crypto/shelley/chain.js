@@ -8,14 +8,10 @@ import _ from 'lodash'
 import type {Moment} from 'moment'
 
 import {CONFIG} from '../../config/config'
-import {NUMBERS} from '../../config/numbers'
 import assert from '../../utils/assert'
 import {defaultMemoize} from 'reselect'
 import {Logger} from '../../utils/logging'
 import * as util from '../byron/util'
-import * as jormunUtil from '../jormungandr/util'
-import {ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
-import {Address, Bip32PublicKey} from 'react-native-chain-libs'
 
 import type {Dict} from '../../state'
 import type {CryptoAccount} from '../byron/util'
@@ -24,14 +20,12 @@ import type {AddressType} from '../commonUtils'
 export type AddressBlock = [number, Moment, Array<string>]
 
 export class AddressGenerator {
-  account: CryptoAccount | string
+  account: CryptoAccount
   type: AddressType
   isJormungandr: boolean
 
-  _shelleyAccount: Bip32PublicKey
-
   constructor(
-    account: CryptoAccount | string,
+    account: CryptoAccount,
     type: AddressType,
     isJormungandr?: boolean = false,
   ) {
@@ -41,63 +35,24 @@ export class AddressGenerator {
   }
 
   async generate(idxs: Array<number>): Promise<Array<string>> {
-    if (this.isJormungandr) {
-      // cache shelley account
-      if (
-        this._shelleyAccount == null &&
-        (typeof this.account === 'string' || this.account instanceof String)
-      ) {
-        this._shelleyAccount = await Bip32PublicKey.from_bytes(
-          Buffer.from(this.account, 'hex'),
-        )
-      }
-      const addressChain = await this._shelleyAccount.derive(
-        ADDRESS_TYPE_TO_CHANGE[this.type],
-      )
-      const stakingKey = await (await (await this._shelleyAccount.derive(
-        NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-      )).derive(NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
-      const addrs = await jormunUtil.getGroupAddresses(
-        addressChain,
-        stakingKey,
-        idxs,
-      )
-      // in contrast to Byron, for Shelley we return hex addresses
-      return await Promise.all(
-        addrs.map(async (addr) => {
-          const obj = await Address.from_string(addr)
-          return Buffer.from(await obj.as_bytes()).toString('hex')
-        }),
-      )
-    } else if (
-      !(typeof this.account === 'string' || this.account instanceof String)
-    ) {
-      return util.getAddresses(this.account, this.type, idxs)
-    } else {
-      throw new Error('AddressGenerator::generate: account is invalid')
-    }
+    // make sure this is a Byron AddressGenerator
+    assert.assert(
+      !(typeof this.account === 'string' || this.account instanceof String),
+      'chain::generate: account type is invalid',
+    )
+    return await util.getAddresses(this.account, this.type, idxs)
   }
 
   toJSON() {
     return {
       account: this.account,
       type: this.type,
-      isJormungandr: this.isJormungandr,
     }
   }
 
   static fromJSON(data: any) {
-    const {account, type, isJormungandr} = data
-    if (isJormungandr == null) {
-      if (data.isShelley != null) {
-        return new AddressGenerator(account, type, data.isShelley)
-      } else {
-        throw new Error(
-          "AddressGenerator::fromJSON: can't retrieve wallet type",
-        )
-      }
-    }
-    return new AddressGenerator(account, type, isJormungandr)
+    const {account, type} = data
+    return new AddressGenerator(account, type)
   }
 }
 

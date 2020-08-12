@@ -6,16 +6,16 @@ import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
 
-import {STAKING_CENTER_ROUTES} from '../../RoutesList'
+// import {STAKING_CENTER_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {CONFIG} from '../../config/config'
 import {Logger} from '../../utils/logging'
-import walletManager from '../../crypto/walletManager'
-import {getShelleyTxFee} from '../../crypto/jormungandr/transactions/utils'
-import {InsufficientFunds} from '../../crypto/errors'
-import globalMessages, {errorMessages} from '../../i18n/global-messages'
-import {handleGeneralError, showErrorDialog} from '../../actions'
-import {NetworkError, ApiError} from '../../api/errors'
+// import walletManager from '../../crypto/walletManager'
+// import {getShelleyTxFee} from '../../crypto/jormungandr/transactions/utils'
+// import {InsufficientFunds} from '../../crypto/errors'
+import globalMessages from '../../i18n/global-messages'
+import {showErrorDialog} from '../../actions'
+// import {NetworkError, ApiError} from '../../api/errors'
 import {PleaseWaitModal} from '../UiKit'
 import PoolWarningModal from './PoolWarningModal'
 
@@ -93,11 +93,11 @@ const DelegationCenter = ({
         visible={showPoolWarning}
         onPress={() => {
           setShowPoolWarning(false)
-          navigateToDelegationConfirm(selectedPools)
+          navigateToDelegationConfirm()
         }}
         onRequestClose={() => {
           setShowPoolWarning(false)
-          navigateToDelegationConfirm(selectedPools)
+          navigateToDelegationConfirm()
         }}
         reputationInfo={reputationInfo}
       />
@@ -150,45 +150,7 @@ export default injectIntl(
       },
     }),
     withHandlers({
-      navigateToDelegationConfirm: ({
-        intl,
-        navigation,
-        withPleaseWaitModal,
-      }) => async (selectedPools) => {
-        await withPleaseWaitModal(async () => {
-          try {
-            const utxos = navigation.getParam('utxos')
-            const valueInAccount = navigation.getParam('valueInAccount')
-            const delegationTxData = await walletManager.prepareDelegationTx(
-              {id: selectedPools[0].poolHash},
-              valueInAccount.toNumber(),
-              utxos,
-            )
-            const fee = await getShelleyTxFee(delegationTxData.unsignedTx.IOs)
-            navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM, {
-              poolName: selectedPools[0].name,
-              poolHash: selectedPools[0].poolHash,
-              amountToDelegate: delegationTxData.totalAmountToDelegate,
-              transactionFee: fee,
-              delegationTxData,
-            })
-          } catch (e) {
-            if (e instanceof InsufficientFunds) {
-              await showErrorDialog(errorMessages.insufficientBalance, intl)
-            } else if (e instanceof NetworkError) {
-              await showErrorDialog(errorMessages.networkError, intl)
-            } else if (e instanceof ApiError) {
-              await showErrorDialog(errorMessages.apiError, intl)
-            } else {
-              await handleGeneralError(
-                intl.formatMessage(messages.delegationTxBuildError),
-                e,
-                intl,
-              )
-            }
-          }
-        })
-      },
+      navigateToDelegationConfirm: () => () => ({}),
     }),
     withHandlers({
       handleOnMessage: ({
@@ -221,7 +183,7 @@ export default injectIntl(
             setReputationInfo(poolsReputation[poolsInBlackList[0]])
             setShowPoolWarning(true)
           } else {
-            navigateToDelegationConfirm(selectedPools)
+            navigateToDelegationConfirm()
           }
         } else {
           await showErrorDialog(noPoolDataDialog, intl)

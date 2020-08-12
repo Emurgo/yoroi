@@ -51,7 +51,6 @@ import walletManager from '../../crypto/walletManager'
 import globalMessages from '../../i18n/global-messages'
 import {formatAdaWithText, formatAdaInteger} from '../../utils/format'
 import FlawedWalletScreen from './FlawedWalletScreen'
-import {getReputation} from '../../api/jormungandr/api'
 import {Logger} from '../../utils/logging'
 
 import infoIcon from '../../assets/img/icon/info-light-green.png'
@@ -60,7 +59,7 @@ import styles from './styles/DelegationSummary.style'
 import type {Navigation} from '../../types/navigation'
 import type {
   PoolTuples,
-  RemotePoolMetaSuccess,
+  // RemotePoolMetaSuccess,
   RawUtxo,
   ReputationResponse,
 } from '../../api/types'
@@ -109,7 +108,7 @@ type Props = {|
   fetchPoolInfo: () => any,
   isFetchingPoolInfo: boolean,
   fetchAccountState: () => any,
-  poolInfo: ?RemotePoolMetaSuccess,
+  poolInfo: any, // ?RemotePoolMetaSuccess,
   totalDelegated: BigNumber,
   lastAccountStateSyncError: any,
   checkForFlawedWallets: () => any,
@@ -129,7 +128,7 @@ class DelegationSummary extends React.Component<Props, State> {
   _isDelegating = false
   _poolsReputation: ReputationResponse = {}
 
-  async componentDidMount() {
+  componentDidMount() {
     this.intervalId = setInterval(
       () =>
         this.setState({
@@ -140,7 +139,7 @@ class DelegationSummary extends React.Component<Props, State> {
     this.props.checkForFlawedWallets()
     // wrap with try/catch to avoid unnecessary error prompt
     try {
-      this._poolsReputation = await getReputation()
+      this._poolsReputation = {} // getReputation()
     } catch (e) {
       Logger.warn(e.message)
     }

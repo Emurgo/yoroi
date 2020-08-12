@@ -5,7 +5,6 @@ import {defaultMemoize} from 'reselect'
 import KeyStore from './KeyStore'
 import {AddressChain} from './chain'
 import * as api from '../api/byron/api'
-import * as jormunApi from './../api/jormungandr/api'
 import {CONFIG} from '../config/config'
 import {isJormungandr} from '../config/networks'
 import assert from '../utils/assert'
@@ -202,9 +201,7 @@ export default class Wallet {
   async _doFullSync() {
     Logger.info('Do full sync')
     assert.assert(this.isInitialized, 'doFullSync: isInitialized')
-    const filterFn = isJormungandr(this.networkId)
-      ? jormunApi.filterUsedAddresses
-      : api.filterUsedAddresses
+    const filterFn = api.filterUsedAddresses
     await Promise.all([
       this.internalChain.sync(filterFn),
       this.externalChain.sync(filterFn),

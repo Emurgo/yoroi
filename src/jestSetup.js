@@ -7,10 +7,6 @@ import {Logger, LogLevel} from './utils/logging'
 import nodeUtil from 'util'
 
 jest.setMock('./config/networks', require('./config/__mocks__/networks'))
-jest.setMock(
-  './crypto/jormungandr/transactions/utxoTransactions',
-  require('./crypto/jormungandr/transactions/__mocks__/utxoTransactions'),
-)
 jest.mock('react-native-device-info', () => {
   return {
     getVersion: () => '1.5.1',

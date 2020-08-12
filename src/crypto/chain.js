@@ -3,14 +3,10 @@ import _ from 'lodash'
 import type {Moment} from 'moment'
 
 import {CONFIG} from '../config/config'
-import {NUMBERS} from '../config/numbers'
 import assert from '../utils/assert'
 import {defaultMemoize} from 'reselect'
 import {Logger} from '../utils/logging'
 import * as util from './byron/util'
-import * as jormunUtil from './jormungandr/util'
-import {ADDRESS_TYPE_TO_CHANGE} from './commonUtils'
-import {Address, Bip32PublicKey} from 'react-native-chain-libs'
 
 import type {Dict} from '../state'
 import type {CryptoAccount} from './byron/util'
@@ -23,8 +19,6 @@ export class AddressGenerator {
   type: AddressType
   isJormungandr: boolean
 
-  _shelleyAccount: Bip32PublicKey
-
   constructor(
     account: CryptoAccount | string,
     type: AddressType,
@@ -35,35 +29,9 @@ export class AddressGenerator {
     this.isJormungandr = isJormungandr
   }
 
-  async generate(idxs: Array<number>): Promise<Array<string>> {
+  generate(idxs: Array<number>): Promise<Array<string>> {
     if (this.isJormungandr) {
-      // cache shelley account
-      if (
-        this._shelleyAccount == null &&
-        (typeof this.account === 'string' || this.account instanceof String)
-      ) {
-        this._shelleyAccount = await Bip32PublicKey.from_bytes(
-          Buffer.from(this.account, 'hex'),
-        )
-      }
-      const addressChain = await this._shelleyAccount.derive(
-        ADDRESS_TYPE_TO_CHANGE[this.type],
-      )
-      const stakingKey = await (await (await this._shelleyAccount.derive(
-        NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-      )).derive(NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
-      const addrs = await jormunUtil.getGroupAddresses(
-        addressChain,
-        stakingKey,
-        idxs,
-      )
-      // in contrast to Byron, for Shelley we return hex addresses
-      return await Promise.all(
-        addrs.map(async (addr) => {
-          const obj = await Address.from_string(addr)
-          return Buffer.from(await obj.as_bytes()).toString('hex')
-        }),
-      )
+      throw new Error('Jormungandr wallets are not supported')
     } else if (
       !(typeof this.account === 'string' || this.account instanceof String)
     ) {

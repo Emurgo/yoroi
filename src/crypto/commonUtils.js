@@ -1,14 +1,12 @@
 // @flow
 
 /**
- * Contains utility functions that can be used in both Byron and Shelley
+ * Contains utility functions that can be used in both Byron and Jormungandr
  * environments. Replaces the old util.js library now moved to Byron/util.js
  * TODO: migrate here common utilities from Byron/util.js
  */
 
 import {Wallet} from 'react-native-cardano'
-import {Address} from 'react-native-chain-libs'
-import {CONFIG} from '../config/config'
 
 export type AddressType = 'Internal' | 'External'
 
@@ -22,12 +20,7 @@ export const isValidAddress = async (
   isJormungandr: boolean,
 ): Promise<boolean> => {
   if (isJormungandr) {
-    try {
-      await Address.from_string(address)
-      return true
-    } catch (e) {
-      return false
-    }
+    throw new Error('cannot validate jormungandr addresses')
   } else {
     try {
       return await Wallet.checkAddress(address)
@@ -45,15 +38,6 @@ export const addressToDisplayString = async (
   if (await isValidAddress(address, false)) {
     return address
   } else {
-    try {
-      const wasmAddr = await Address.from_bytes(Buffer.from(address, 'hex'))
-      return await wasmAddr.to_string(
-        CONFIG.NETWORKS.JORMUNGANDR.BECH32_PREFIX.ADDRESS,
-      )
-    } catch (e) {
-      throw new Error(
-        `addressToDisplayString: failed to parse address ${address}`,
-      )
-    }
+    throw new Error('cannot display jormungandr addresses')
   }
 }

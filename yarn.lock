@@ -12534,12 +12534,6 @@ react-native-cardano@Emurgo/react-native-cardano#0.2.3:
   version "0.2.3"
   resolved "https://codeload.github.com/Emurgo/react-native-cardano/tar.gz/a56794eaad23dd1ac73eeed182dc126218403bda"
 
-react-native-chain-libs@Emurgo/react-native-chain-libs#2.0.1:
-  version "2.0.1"
-  resolved "https://codeload.github.com/Emurgo/react-native-chain-libs/tar.gz/a536091a4c73e2bcd2953d38e1dbce16a39c4cb9"
-  dependencies:
-    base-64 "0.1.0"
-
 react-native-config@0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/react-native-config/-/react-native-config-0.12.0.tgz#910e52226b60e0c9f2b648772eea2a93f8701751"
