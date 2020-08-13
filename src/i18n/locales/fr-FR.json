@@ -94,7 +94,7 @@
   "components.send.sendscreen.amountInput.error.INVALID_AMOUNT": "Veuillez entrer un montant valide",
   "components.send.sendscreen.amountInput.error.NEGATIVE": "Le montant doit être positif",
   "components.send.sendscreen.amountInput.error.TOO_LARGE": "Montant trop élevé",
-  "components.send.sendscreen.amountInput.error.TOO_LOW": "Vous ne pouvez pas envoyer moins de  1 ADA",
+  "components.send.sendscreen.amountInput.error.TOO_LOW": "Vous ne pouvez pas envoyer moins de 1 ADA",
   "components.send.sendscreen.amountInput.error.TOO_MANY_DECIMAL_PLACES": "Veuillez entrer un montant valide",
   "components.send.sendscreen.amountInput.error.insufficientBalance": "Fonds insuffisants pour opérer cette transaction",
   "components.send.sendscreen.availableFundsBannerIsFetching": "Vérification du solde...",
