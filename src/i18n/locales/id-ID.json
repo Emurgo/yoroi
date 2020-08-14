@@ -325,6 +325,8 @@
   "global.actions.dialogs.incorrectPassword.title": "Kata sandi salah",
   "global.actions.dialogs.incorrectPin.message": "PIN yang anda masukkan salah.",
   "global.actions.dialogs.incorrectPin.title": "PIN salah",
+  "global.actions.dialogs.itnNotSupported.message": "Wallets created during the Incentivized Testnet (ITN) are no longer operative.\nIf you would like to claim your rewards, we will update Yoroi Mobile as well as Yoroi Desktop in the next couple of weeks.",
+  "global.actions.dialogs.itnNotSupported.title": "The Cardano ITN (Rewards Testnet) has finalized",
   "global.actions.dialogs.logout.message": "Apakah anda yakin ingin logout?",
   "global.actions.dialogs.logout.noButton": "Tidak",
   "global.actions.dialogs.logout.title": "Logout",
