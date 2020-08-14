@@ -7,7 +7,7 @@ import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import {withNavigation} from 'react-navigation'
 
-import {ignoreConcurrentAsync} from '../../../utils/utils'
+import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
 import {ROOT_ROUTES} from '../../../RoutesList'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import WalletForm from '../WalletForm'
@@ -52,36 +52,29 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      withActivityIndicator: ({setWaiting}) => async (
-        func: () => Promise<void>,
-      ): Promise<void> => {
-        setWaiting(true)
-        try {
-          await func()
-        } finally {
-          setWaiting(false)
-        }
-      },
-    }),
-    withHandlers({
-      navigateToWallet: ({
-        withActivityIndicator,
-        navigation,
-        createWallet,
-        updateVersion,
-      }) => ({name, password}) =>
-        ignoreConcurrentAsync(
-          withActivityIndicator(async (): Promise<void> => {
-            const phrase = navigation.getParam('phrase')
-            const networkId = navigation.getParam('networkId')
+      navigateToWallet: ignoreConcurrentAsyncHandler(
+        ({
+          navigation,
+          createWallet,
+          updateVersion,
+          setWaiting,
+        }) => async ({name, password}) => {
+          setWaiting(true)
+          const phrase = navigation.getParam('phrase')
+          const networkId = navigation.getParam('networkId')
+          try {
             await createWallet(name, phrase, password, networkId)
             await updateVersion()
-            const route = isJormungandr(networkId)
-              ? ROOT_ROUTES.JORMUN_WALLET
-              : ROOT_ROUTES.WALLET
-            navigation.navigate(route)
-          }, 1000),
-        ),
+          } finally {
+            setWaiting(false)
+          }
+          const route = isJormungandr(networkId)
+            ? ROOT_ROUTES.JORMUN_WALLET
+            : ROOT_ROUTES.WALLET
+          navigation.navigate(route)
+        },
+        1000,
+      ),
     }),
   )(WalletCredentialsScreen): ComponentType<{
     navigation: Navigation,
