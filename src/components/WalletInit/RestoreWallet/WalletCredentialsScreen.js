@@ -53,12 +53,10 @@ export default injectIntl(
     ),
     withHandlers({
       navigateToWallet: ignoreConcurrentAsyncHandler(
-        ({
-          navigation,
-          createWallet,
-          updateVersion,
-          setWaiting,
-        }) => async ({name, password}) => {
+        ({navigation, createWallet, updateVersion, setWaiting}) => async ({
+          name,
+          password,
+        }) => {
           setWaiting(true)
           const phrase = navigation.getParam('phrase')
           const networkId = navigation.getParam('networkId')
