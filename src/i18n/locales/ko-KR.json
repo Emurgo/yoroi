@@ -325,6 +325,8 @@
   "global.actions.dialogs.incorrectPassword.title": "잘못된 비밀번호",
   "global.actions.dialogs.incorrectPin.message": "입력하신 PIN가 올바르지 않습니다.",
   "global.actions.dialogs.incorrectPin.title": "유효하지 않는 PIN",
+  "global.actions.dialogs.itnNotSupported.message": "Wallets created during the Incentivized Testnet (ITN) are no longer operative.\nIf you would like to claim your rewards, we will update Yoroi Mobile as well as Yoroi Desktop in the next couple of weeks.",
+  "global.actions.dialogs.itnNotSupported.title": "The Cardano ITN (Rewards Testnet) has finalized",
   "global.actions.dialogs.logout.message": "로그아웃 하시겠습니까?",
   "global.actions.dialogs.logout.noButton": "아니오",
   "global.actions.dialogs.logout.title": "로그아웃",
