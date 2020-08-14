@@ -325,6 +325,8 @@
   "global.actions.dialogs.incorrectPassword.title": "密码错误",
   "global.actions.dialogs.incorrectPin.message": "您输入的PIN码不正确。",
   "global.actions.dialogs.incorrectPin.title": "无效的PIN码",
+  "global.actions.dialogs.itnNotSupported.message": "Wallets created during the Incentivized Testnet (ITN) are no longer operative.\nIf you would like to claim your rewards, we will update Yoroi Mobile as well as Yoroi Desktop in the next couple of weeks.",
+  "global.actions.dialogs.itnNotSupported.title": "The Cardano ITN (Rewards Testnet) has finalized",
   "global.actions.dialogs.logout.message": "您确定登出吗？",
   "global.actions.dialogs.logout.noButton": "否",
   "global.actions.dialogs.logout.title": "登出",
