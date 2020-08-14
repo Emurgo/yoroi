@@ -74,7 +74,7 @@
     "react-native-device-info": "5.5.7",
     "react-native-easy-markdown": "1.4.1",
     "react-native-fs": "^2.11.18",
-    "react-native-haskell-shelley": "Emurgo/react-native-haskell-shelley#0.0.1",
+    "react-native-haskell-shelley": "Emurgo/react-native-haskell-shelley#0.0.2",
     "react-native-keychain": "3.0.0",
     "react-native-linear-gradient": "2.5.6",
     "react-native-local-resource": "^0.1.3",
