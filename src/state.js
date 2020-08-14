@@ -3,7 +3,7 @@ import {BigNumber} from 'bignumber.js'
 
 import {NETWORK_REGISTRY} from './config/types'
 
-import type {AccountState, RawUtxo, RemotePoolMetaSuccess} from './api/types'
+import type {AccountState, RawUtxo} from './api/types'
 import type {Transaction} from './types/HistoryTransaction'
 import type {HWDeviceInfo} from './crypto/byron/ledgerUtils'
 import type {NetworkId} from './config/types'
@@ -54,7 +54,7 @@ export type State = {
   poolInfo: {
     isFetching: boolean,
     lastFetchingError: any,
-    meta: ?RemotePoolMetaSuccess,
+    meta: any,
   },
   isOnline: boolean,
   isAppInitialized: boolean,

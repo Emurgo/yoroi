@@ -149,11 +149,13 @@ export default injectIntl(
         }),
       openWallet: ({navigation, intl}) => async (wallet) => {
         try {
+          if (wallet.isShelley || isJormungandr(wallet.networkId)) {
+            await showErrorDialog(errorMessages.itnNotSupported, intl)
+            return
+          }
           // note: networkId can be null for versions <= 2.2.3
           await walletManager.openWallet(wallet.id, wallet.networkId)
-          const route = isJormungandr(wallet.networkId)
-            ? ROOT_ROUTES.JORMUN_WALLET
-            : ROOT_ROUTES.WALLET
+          const route = ROOT_ROUTES.WALLET
           navigation.navigate(route)
         } catch (e) {
           if (e instanceof SystemAuthDisabled) {

@@ -3,7 +3,6 @@
 /**
  * API-related types
  */
-import {CertificateKind} from 'react-native-chain-libs'
 import type {TransactionStatus} from '../types/HistoryTransaction'
 
 // this is equivalent to yoroi-frontend's `RemoteUnspentOutput`
@@ -49,45 +48,45 @@ export type PoolInfoRequest = {|
   ids: Array<string>,
 |}
 
-export type RemoteCertificate = {|
-  payloadKind:
-    | 'PoolRegistration'
-    | 'PoolUpdate'
-    | 'PoolRetirement'
-    | 'StakeDelegation'
-    | 'OwnerStakeDelegation',
-  payloadKindId: CertificateKind,
-  payloadHex: string,
-|}
+// export type RemoteCertificate = {|
+//   payloadKind:
+//     | 'PoolRegistration'
+//     | 'PoolUpdate'
+//     | 'PoolRetirement'
+//     | 'StakeDelegation'
+//     | 'OwnerStakeDelegation',
+//   payloadKindId: CertificateKind,
+//   payloadHex: string,
+// |}
 
-export type RemotePoolMetaSuccess = {|
-  info: ?{|
-    name?: string,
-    ticker?: string,
-    description?: string,
-    homepage?: string,
-  |},
-  history: Array<{|
-    epoch: number,
-    slot: number,
-    tx_ordinal: number,
-    cert_ordinal: 0,
-    payload: RemoteCertificate,
-  |}>,
-  owners: ?{
-    [key: string]: {|
-      pledgeAddress: string,
-    |},
-  },
-|}
+// export type RemotePoolMetaSuccess = {|
+//   info: ?{|
+//     name?: string,
+//     ticker?: string,
+//     description?: string,
+//     homepage?: string,
+//   |},
+//   history: Array<{|
+//     epoch: number,
+//     slot: number,
+//     tx_ordinal: number,
+//     cert_ordinal: 0,
+//     payload: RemoteCertificate,
+//   |}>,
+//   owners: ?{
+//     [key: string]: {|
+//       pledgeAddress: string,
+//     |},
+//   },
+// |}
 
-export type RemotePoolMetaFailure = {|
-  error: string,
-|}
-
-export type PoolInfoResponse = {
-  [key: string]: RemotePoolMetaSuccess | RemotePoolMetaFailure,
-}
+// export type RemotePoolMetaFailure = {|
+//   error: string,
+// |}
+//
+// export type PoolInfoResponse = {
+//   [key: string]: RemotePoolMetaSuccess | RemotePoolMetaFailure,
+// }
 
 // getTxsBodiesForUTXOs
 

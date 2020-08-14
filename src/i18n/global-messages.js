@@ -226,6 +226,20 @@ export const errorMessages = {
         'in a future release.',
     },
   }),
+  itnNotSupported: defineMessages({
+    title: {
+      id: 'global.actions.dialogs.itnNotSupported.title',
+      defaultMessage: '!!!ITN Wallet not longer supported',
+    },
+    message: {
+      id: 'global.actions.dialogs.itnNotSupported.message',
+      defaultMessage:
+        '!!!Wallets created during the Incentivized Testnet (ITN) are no ' +
+        'longer operative. If you would like to claim your rewards, we will ' +
+        'update Yoroi Mobile as well as Yoroi Desktop in the next couple ' +
+        'of weeks.',
+    },
+  }),
   networkError: defineMessages({
     title: {
       id: 'global.actions.dialogs.networkError.title',

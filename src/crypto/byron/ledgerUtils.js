@@ -20,7 +20,7 @@ import {
   encodeTxAsRust,
   decodeRustTx,
 } from './util'
-import {Bip32PublicKey} from 'react-native-chain-libs'
+import {Bip32PublicKey} from 'react-native-haskell-shelley'
 
 import type {TxBodiesResponse} from '../../api/types'
 import type {
@@ -512,6 +512,7 @@ async function normalizeWitness(
   witness: Witness,
   keyLevel?: number = ACCOUNT_LEVEL,
 ): Promise<TxWitness> {
+  // TOOD(v-almonacid) bindings for Bip32PublicKey are not yet implemented
   let finalKey = await Bip32PublicKey.from_bytes(
     Buffer.from(bip44AccountPublic, 'hex'),
   )

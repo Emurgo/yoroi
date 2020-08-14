@@ -15,10 +15,8 @@ import type {
   BaseSignRequest,
   EncryptionMethod,
   SignedTx,
-  V3UnsignedTxAddressedUtxoData,
   WalletState,
 } from './types'
-import type {DelegationTxData, PoolData} from './jormungandr/delegationUtils'
 import type {HWDeviceInfo} from './byron/ledgerUtils'
 import type {NetworkId} from '../config/types'
 import type {Dict} from '../state'
@@ -121,7 +119,7 @@ export interface WalletInterface {
   // TODO: type
   toJSON(): any;
 
-  restore(data: any): Promise<void>;
+  restore(data: any, networkId?: NetworkId): Promise<void>;
 
   // =================== tx building =================== //
 
@@ -145,13 +143,13 @@ export interface WalletInterface {
     decryptedMasterKey: string,
   ): Promise<SignedTx>;
 
-  prepareDelegationTx(
-    poolData: PoolData,
+  prepareDelegationTx<T>(
+    poolData: any, //
     valueInAccount: number,
     utxos: Array<RawUtxo>,
-  ): Promise<DelegationTxData>;
+  ): Promise<T>;
 
-  signDelegationTx<T: V3UnsignedTxAddressedUtxoData>(
+  signDelegationTx<T>(
     unsignedTx: T,
     decryptedMasterKey: string,
   ): Promise<SignedTx>;

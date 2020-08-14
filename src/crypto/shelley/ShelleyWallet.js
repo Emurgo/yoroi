@@ -20,7 +20,6 @@ import Wallet from '../Wallet'
 import {WalletInterface} from '../WalletInterface'
 import {AddressChain, AddressGenerator} from '../chain'
 import * as byronUtil from '../byron/util'
-import * as jormungandrUtil from '../jormungandr/util'
 import {ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
 import * as api from '../../api/byron/api'
 import {CONFIG} from '../../config/config'
@@ -39,7 +38,6 @@ import type {AddressedUtxo, BaseSignRequest, SignedTx} from './../types'
 import type {CryptoAccount} from '../byron/util'
 import type {HWDeviceInfo} from '../byron/ledgerUtils'
 import type {NetworkId} from '../../config/types'
-import type {DelegationTxData, PoolData} from '../jormungandr/delegationUtils'
 
 export default class ShelleyWallet extends Wallet implements WalletInterface {
   // =================== create =================== //
@@ -85,20 +83,20 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     Logger.info(`create wallet (networkId=${String(networkId)})`)
     this.id = uuid.v4()
     assert.assert(!this.isInitialized, 'createWallet: !isInitialized')
-    const masterKey = await jormungandrUtil.generateWalletRootKey(mnemonic)
-    const masterKeyHex = Buffer.from(await masterKey.as_bytes()).toString('hex')
+    const masterKey = await byronUtil.getMasterKeyFromMnemonic(mnemonic)
     await this.encryptAndSaveMasterKey(
       'MASTER_PASSWORD',
-      masterKeyHex,
+      masterKey,
       newPassword,
     )
-    const chimericAccountAddr = null // not jormun
-    const account = await byronUtil.getAccountFromMasterKey(masterKeyHex)
+    const account: CryptoAccount = await byronUtil.getAccountFromMasterKey(
+      masterKey,
+    )
 
     return await this._initialize(
       networkId,
       account,
-      chimericAccountAddr,
+      null,
       null, // this is not a HW
     )
   }
@@ -129,18 +127,14 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
 
   // =================== persistence =================== //
 
-  _integrityCheck(data) {
+  _integrityCheck(data): void {
     try {
-      if (this.networkId === NETWORK_REGISTRY.UNDEFINED) {
-        // prettier-ignore
-        this.networkId =
-          data.isShelley != null
-            ? data.isShelley
-              ? NETWORK_REGISTRY.JORMUNGANDR
-              : NETWORK_REGISTRY.BYRON_MAINNET
-            : (() => {
-              throw new Error('wallet::_integrityCheck: networkId')
-            })()
+      if (this.networkId == null) {
+        if (data.isShelley != null && data.isShelley === false) {
+          this.networkId = NETWORK_REGISTRY.BYRON_MAINNET
+        } else {
+          throw new Error('invalid networkId')
+        }
       }
     } catch (e) {
       Logger.error('wallet::_integrityCheck', e)
@@ -149,14 +143,16 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   // TODO(v-almonacid): move to parent class?
-  async restore(data: any) {
+  restore(data: any, networkId?: NetworkId) {
     Logger.info('restore wallet')
     assert.assert(!this.isInitialized, 'restoreWallet: !isInitialized')
+    if (networkId != null) {
+      assert.assert(!isJormungandr(networkId), 'restore: !isJormungandr')
+    }
     this.state = {
       lastGeneratedAddressIndex: data.lastGeneratedAddressIndex,
     }
-    this.networkId =
-      data.networkId != null ? data.networkId : NETWORK_REGISTRY.UNDEFINED
+    this.networkId = data.networkId // can be null for versions < 3.0.0
     this.isHW = data.isHW != null ? data.isHW : false
     this.hwDeviceInfo = data.hwDeviceInfo
     this.version = data.version
@@ -165,12 +161,13 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     this.transactionCache = TransactionCache.fromJSON(data.transactionCache)
     this.isEasyConfirmationEnabled = data.isEasyConfirmationEnabled
 
-    await this._integrityCheck(data)
+    this._integrityCheck(data)
 
     // subscriptions
     this.setupSubscriptions()
 
     this.isInitialized = true
+    return Promise.resolve()
   }
 
   // =================== tx building =================== //
@@ -295,10 +292,10 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   prepareDelegationTx(
-    poolData: PoolData,
+    poolData: any,
     valueInAccount: number,
     utxos: Array<RawUtxo>,
-  ): Promise<DelegationTxData> {
+  ): Promise<any> {
     throw Error('not implemented')
   }
 

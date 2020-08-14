@@ -1,6 +1,5 @@
 // @flow
 
-import {Certificate, InputOutput} from 'react-native-chain-libs'
 import {
   TransactionBuilder as V4TransactionBuilder,
   Certificate as V4Certificate,
@@ -54,7 +53,7 @@ export type BaseSignRequest<T> = {|
   senderUtxos: Array<AddressedUtxo>,
   unsignedTx: T,
   changeAddr: Array<{|address: string, ...Value, ...Addressing|}>,
-  certificate: void | Certificate,
+  certificate: void | any,
 |}
 
 export type SignedTx = {|
@@ -99,9 +98,9 @@ export type V1SignedTx = {
  */
 
 // similar to yoroi-frontend's V3UnsignedTxUtxoResponse
-export type V3UnsignedTxData = {|
+export type V3UnsignedTxData<T> = {|
   senderUtxos: Array<RawUtxo>,
-  IOs: InputOutput,
+  IOs: T,
   changeAddr: Array<{|
     address: string,
     value: void | BigNumber,
@@ -110,15 +109,15 @@ export type V3UnsignedTxData = {|
 |}
 
 // similar to yoroi-frontend's V3UnsignedTxAddressedUtxoResponse
-export type V3UnsignedTxAddressedUtxoData = {|
+export type V3UnsignedTxAddressedUtxoData<T> = {|
   senderUtxos: Array<AddressedUtxo>,
-  IOs: InputOutput,
+  IOs: T,
   changeAddr: Array<{|
     address: string,
     value: void | BigNumber,
     ...Addressing,
   |}>,
-  certificate: void | Certificate,
+  certificate: void | any,
 |}
 
 /**

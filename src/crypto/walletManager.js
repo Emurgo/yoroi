@@ -2,7 +2,6 @@
 import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
-import {Address} from 'react-native-chain-libs'
 
 // import Wallet from './Wallet'
 import {WalletInterface} from './WalletInterface'
@@ -12,7 +11,6 @@ import storage from '../utils/storage'
 import KeyStore from './KeyStore'
 import {AddressChain, AddressGenerator} from './chain'
 import * as util from './byron/util'
-import * as jormungandrUtil from './jormungandr/util'
 import * as api from '../api/byron/api'
 import {CONFIG} from '../config/config'
 import {NETWORK_REGISTRY} from '../config/types'
@@ -28,7 +26,6 @@ import {
 import type {RawUtxo, PoolInfoRequest, TxBodiesRequest} from '../api/types'
 import type {Addressing, BaseSignRequest, EncryptionMethod} from './types'
 import type {HWDeviceInfo} from './byron/ledgerUtils'
-import type {PoolData} from './jormungandr/delegationUtils'
 import type {NetworkId} from '../config/types'
 
 /**
@@ -456,7 +453,7 @@ class WalletManager {
     }
     const wallet: WalletInterface = this._getWalletImplementation(_networkId)
 
-    await wallet.restore(data)
+    await wallet.restore(data, _networkId)
     wallet.id = id
     this._wallet = wallet
     this._id = id
@@ -634,7 +631,7 @@ class WalletManager {
   }
 
   async prepareDelegationTx(
-    poolData: PoolData,
+    poolData: any,
     valueInAccount: number,
     utxos: Array<RawUtxo>,
   ) {
@@ -686,31 +683,19 @@ class WalletManager {
   // =================== misc =================== //
 
   async checkForFlawedWallets(): Promise<boolean> {
+    assert.assert(
+      !this.isJormungandr,
+      'walletManager::checkForFlawedWallets::!isJormungandr',
+    )
     const mnemonics = [CONFIG.DEBUG.MNEMONIC1, CONFIG.DEBUG.MNEMONIC2]
     let affected = false
     for (const mnemonic of mnemonics) {
       Logger.debug('WalletManager::checkForFlawedWallets mnemonic:', mnemonic)
-      let flawedAddresses
-      if (this.isJormungandr) {
-        const flawedAddressesBech32 = await jormungandrUtil.getGroupAddressesFromMnemonics(
-          mnemonic,
-          'External',
-          [0],
-        )
-        flawedAddresses = await Promise.all(
-          flawedAddressesBech32.map(async (addr) => {
-            return Buffer.from(
-              await (await Address.from_string(addr)).as_bytes(),
-            ).toString('hex')
-          }),
-        )
-      } else {
-        flawedAddresses = await util.getAddressesFromMnemonics(
-          mnemonic,
-          'External',
-          [0],
-        )
-      }
+      const flawedAddresses = await util.getAddressesFromMnemonics(
+        mnemonic,
+        'External',
+        [0],
+      )
       if (this._wallet == null) throw new WalletClosed()
       const externalChain = this._wallet.externalChain
       Logger.debug(

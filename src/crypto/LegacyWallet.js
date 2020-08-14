@@ -11,28 +11,14 @@
 import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
 import uuid from 'uuid'
-import {
-  Address,
-  AddressDiscrimination,
-  Bip32PublicKey,
-  Bip32PrivateKey,
-  PrivateKey,
-} from 'react-native-chain-libs'
 import DeviceInfo from 'react-native-device-info'
 
 import Wallet from './Wallet'
 import {WalletInterface} from './WalletInterface'
 import {AddressChain, AddressGenerator} from './chain'
 import * as util from './byron/util'
-import * as jormungandrUtil from './jormungandr/util'
-import {
-  createDelegationTx,
-  signDelegationTx,
-  filterAddressesByStakingKey,
-} from './jormungandr/delegationUtils'
 import {ADDRESS_TYPE_TO_CHANGE} from './commonUtils'
 import * as api from '../api/byron/api'
-import * as jormunApi from './../api/jormungandr/api'
 import {CONFIG} from '../config/config'
 import {NETWORK_REGISTRY} from '../config/types'
 import {isJormungandr} from '../config/networks'
@@ -53,11 +39,9 @@ import type {
   TransactionInput,
   PreparedTransactionData,
   SignedTx,
-  V3UnsignedTxAddressedUtxoData,
 } from './types'
 import type {CryptoAccount} from './byron/util'
 import type {HWDeviceInfo} from './byron/ledgerUtils'
-import type {DelegationTxData, PoolData} from './jormungandr/delegationUtils'
 import type {NetworkId} from '../config/types'
 
 export default class LegacyWallet extends Wallet implements WalletInterface {
@@ -102,45 +86,22 @@ export default class LegacyWallet extends Wallet implements WalletInterface {
 
   async create(mnemonic: string, newPassword: string, networkId: NetworkId) {
     Logger.info(`create wallet (networkId=${String(networkId)})`)
-    this.id = uuid.v4()
+    this.id = uuid.v4() // required by encryptAndSaveMasterKey
     assert.assert(!this.isInitialized, 'createWallet: !isInitialized')
-    const masterKey = await jormungandrUtil.generateWalletRootKey(mnemonic)
-    const masterKeyHex = Buffer.from(await masterKey.as_bytes()).toString('hex')
+    assert.assert(!isJormungandr(networkId), 'createWallet: !isJormungandr')
+
+    const masterKey = await util.getMasterKeyFromMnemonic(mnemonic)
     await this.encryptAndSaveMasterKey(
       'MASTER_PASSWORD',
-      masterKeyHex,
+      masterKey,
       newPassword,
     )
-    let account: CryptoAccount | string
-    let chimericAccountAddr
-    if (isJormungandr(networkId)) {
-      const accountKey = await (await (await masterKey.derive(
-        CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
-      )).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)).derive(
-        0 + CONFIG.NUMBERS.HARD_DERIVATION_START,
-      )
-      const accountPubKey = await accountKey.to_public()
-      const stakingKey = await (await (await accountPubKey.derive(
-        CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-      )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
-      const chimericAccountAddrPtr = await Address.account_from_public_key(
-        stakingKey,
-        CONFIG.NETWORKS.JORMUNGANDR.IS_MAINNET
-          ? await AddressDiscrimination.Production
-          : await AddressDiscrimination.Test,
-      )
-      account = Buffer.from(await accountPubKey.as_bytes()).toString('hex')
-      chimericAccountAddr = Buffer.from(
-        await chimericAccountAddrPtr.as_bytes(),
-      ).toString('hex')
-    } else {
-      account = await util.getAccountFromMasterKey(masterKeyHex)
-    }
+    const account: CryptoAccount = await util.getAccountFromMasterKey(masterKey)
 
     return await this._initialize(
       networkId,
       account,
-      chimericAccountAddr,
+      null, // only byron wallet supported, no chimeric account
       null, // this is not a HW
     )
   }
@@ -186,47 +147,14 @@ export default class LegacyWallet extends Wallet implements WalletInterface {
     }
   }
 
-  async _integrityCheck(data): Promise<void> {
+  _integrityCheck(data): void {
     try {
-      if (isJormungandr(this.networkId)) {
-        const accountHex = this.internalChain._addressGenerator.account
-        if (!(typeof accountHex === 'string' || accountHex instanceof String)) {
-          throw new Error('wallet::_integrityCheck: invalid account')
+      if (this.networkId == null) {
+        if (data.isShelley != null && data.isShelley === false) {
+          this.networkId = NETWORK_REGISTRY.BYRON_MAINNET
+        } else {
+          throw new Error('invalid networkId')
         }
-        // note(v-almonacid): renamed accountAddress by chimericAccountAddress
-        // for more clarity, so this check step is needed
-        if (this.chimericAccountAddress == null) {
-          const retrieveChimericAddr = async (data) => {
-            if (data.accountAddress != null) return data.accountAddress
-            const accountPubKey = await Bip32PublicKey.from_bytes(
-              Buffer.from(accountHex, 'hex'),
-            )
-            const stakingKey = await (await (await accountPubKey.derive(
-              CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-            )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
-            const chimericAccountAddrPtr = await Address.account_from_public_key(
-              stakingKey,
-              CONFIG.NETWORKS.JORMUNGANDR.IS_MAINNET
-                ? await AddressDiscrimination.Production
-                : await AddressDiscrimination.Test,
-            )
-            return Buffer.from(
-              await chimericAccountAddrPtr.as_bytes(),
-            ).toString('hex')
-          }
-          this.chimericAccountAddress = await retrieveChimericAddr(data)
-        }
-      }
-      if (this.networkId === NETWORK_REGISTRY.UNDEFINED) {
-        // prettier-ignore
-        this.networkId =
-          data.isShelley != null
-            ? data.isShelley
-              ? NETWORK_REGISTRY.JORMUNGANDR
-              : NETWORK_REGISTRY.BYRON_MAINNET
-            : (() => {
-              throw new Error('wallet::_integrityCheck: networkId')
-            })()
       }
     } catch (e) {
       Logger.error('wallet::_integrityCheck', e)
@@ -234,14 +162,16 @@ export default class LegacyWallet extends Wallet implements WalletInterface {
     }
   }
 
-  async restore(data: any): Promise<void> {
+  restore(data: any, networkId?: NetworkId): Promise<void> {
     Logger.info('restore wallet')
     assert.assert(!this.isInitialized, 'restoreWallet: !isInitialized')
+    if (networkId != null) {
+      assert.assert(!isJormungandr(networkId), 'restore: !isJormungandr')
+    }
     this.state = {
       lastGeneratedAddressIndex: data.lastGeneratedAddressIndex,
     }
-    this.networkId =
-      data.networkId != null ? data.networkId : NETWORK_REGISTRY.UNDEFINED
+    this.networkId = data.networkId // can be null for versions < 3.0.0
     this.isHW = data.isHW != null ? data.isHW : false
     this.hwDeviceInfo = data.hwDeviceInfo
     // note(v-almonacid): chimericAccountAddr can be null. _integrityCheck is
@@ -253,12 +183,13 @@ export default class LegacyWallet extends Wallet implements WalletInterface {
     this.transactionCache = TransactionCache.fromJSON(data.transactionCache)
     this.isEasyConfirmationEnabled = data.isEasyConfirmationEnabled
 
-    await this._integrityCheck(data)
+    this._integrityCheck(data)
 
     // subscriptions
     this.setupSubscriptions()
 
     this.isInitialized = true
+    return Promise.resolve()
   }
 
   // =================== tx building =================== //
@@ -309,15 +240,8 @@ export default class LegacyWallet extends Wallet implements WalletInterface {
     return _.first(unseen)
   }
 
-  async getAllUtxosForKey(utxos: Array<RawUtxo>) {
-    assert.assert(
-      isJormungandr(this.networkId),
-      'getAllUtxosForKey: isJormungandr',
-    )
-    return await filterAddressesByStakingKey(
-      await this._getStakingKey(),
-      this.asAddressedUtxo(utxos),
-    )
+  getAllUtxosForKey(utxos: Array<RawUtxo>) {
+    throw Error('not implemented')
   }
 
   getAddressingInfo(address: string) {
@@ -415,104 +339,25 @@ export default class LegacyWallet extends Wallet implements WalletInterface {
     throw Error('not implemented')
   }
 
-  async _getStakingKey() {
-    assert.assert(isJormungandr(this.networkId), 'getStakingKey: isJormungandr')
-    // TODO: save account public key as class member to avoid fetching
-    // from internal chain?
-    const accountHex = this.internalChain._addressGenerator.account
-    if (!(typeof accountHex === 'string' || accountHex instanceof String)) {
-      throw new Error('wallet::getStakingKey: invalid account')
-    }
-    const accountPubKey = await Bip32PublicKey.from_bytes(
-      Buffer.from(accountHex, 'hex'),
-    )
-    const stakingKey = await (await (await accountPubKey.derive(
-      CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-    )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
-    Logger.info(
-      `getStakingKey: ${Buffer.from(await stakingKey.as_bytes()).toString(
-        'hex',
-      )}`,
-    )
-    return stakingKey
-  }
-
-  async _getChangeAddressShelley() {
-    assert.assert(
-      isJormungandr(this.networkId),
-      'getChangeAddressShelley: isJormungandr',
-    )
-    const nextInternal = await this.internalChain.getNextUnused(
-      jormunApi.filterUsedAddresses,
-    )
-    return {
-      address: nextInternal,
-      addressing: {
-        path: [
-          CONFIG.NUMBERS.ACCOUNT_INDEX,
-          CONFIG.NUMBERS.CHAIN_DERIVATIONS.INTERNAL,
-          this.internalChain.getIndexOfAddress(nextInternal),
-        ],
-        startLevel: CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
-      },
-    }
-  }
-
-  async prepareDelegationTx(
-    poolData: PoolData,
+  prepareDelegationTx<T>(
+    poolData: any,
     valueInAccount: number,
     utxos: Array<RawUtxo>,
-  ): Promise<DelegationTxData> {
-    assert.assert(
-      isJormungandr(this.networkId),
-      'prepareDelegationTx: isJormungandr',
-    )
-    const stakingKey = await this._getStakingKey()
-    const changeAddr = await this._getChangeAddressShelley()
-    const addressedUtxos = this.asAddressedUtxo(utxos)
-
-    const resp = await createDelegationTx(
-      poolData,
-      valueInAccount,
-      addressedUtxos,
-      stakingKey,
-      changeAddr,
-    )
-    return resp
+  ): Promise<T> {
+    throw Error('not implemented')
   }
 
-  async signDelegationTx<T: V3UnsignedTxAddressedUtxoData>(
+  signDelegationTx<T>(
     unsignedTx: T,
     decryptedMasterKey: string,
   ): Promise<SignedTx> {
-    assert.assert(
-      isJormungandr(this.networkId),
-      'signDelegationTx: isJormungandr',
-    )
-    Logger.debug('wallet::signDelegationTx::unsignedTx ', unsignedTx)
-    const masterKey = await Bip32PrivateKey.from_bytes(
-      Buffer.from(decryptedMasterKey, 'hex'),
-    )
-    const accountPvrKey: Bip32PrivateKey = await (await (await masterKey.derive(
-      CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
-    )).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)).derive(
-      0 + CONFIG.NUMBERS.HARD_DERIVATION_START,
-    )
-
-    // get staking key as PrivateKey
-    const stakingKey: PrivateKey = await (await (await accountPvrKey.derive(
-      CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-    )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
-
-    return await signDelegationTx(unsignedTx, accountPvrKey, stakingKey)
+    throw Error('not implemented')
   }
 
   // =================== backend API =================== //
 
   async submitTransaction(signedTx: string) {
-    const submitTxFn = isJormungandr(this.networkId)
-      ? jormunApi.submitTransaction
-      : api.submitTransaction
+    const submitTxFn = api.submitTransaction
     const response = await submitTxFn(signedTx)
     Logger.info(response)
     return response
@@ -521,31 +366,20 @@ export default class LegacyWallet extends Wallet implements WalletInterface {
   async getTxsBodiesForUTXOs(
     request: TxBodiesRequest,
   ): Promise<TxBodiesResponse> {
-    const getTxsBodiesForUTXOsFn = isJormungandr(this.networkId)
-      ? api.getTxsBodiesForUTXOs
-      : jormunApi.getTxsBodiesForUTXOs
+    const getTxsBodiesForUTXOsFn = api.getTxsBodiesForUTXOs
     return await getTxsBodiesForUTXOsFn(request)
   }
 
   async fetchUTXOs() {
-    const fetchFn = isJormungandr(this.networkId)
-      ? jormunApi.bulkFetchUTXOsForAddresses
-      : api.bulkFetchUTXOsForAddresses
+    const fetchFn = api.bulkFetchUTXOsForAddresses
     return await fetchFn([...this.internalAddresses, ...this.externalAddresses])
   }
 
-  async fetchAccountState() {
-    if (this.chimericAccountAddress == null) {
-      throw new Error('fetchAccountState:: _chimericAccountAddress = null')
-    }
-    return await jormunApi.fetchAccountState([this.chimericAccountAddress])
+  fetchAccountState() {
+    throw new Error('not implemented')
   }
 
-  async fetchPoolInfo(pool: PoolInfoRequest) {
-    assert.assert(
-      isJormungandr(this.networkId),
-      'fetchPoolInfo:: isJormungandr',
-    )
-    return await jormunApi.getPoolInfo(pool)
+  fetchPoolInfo(pool: PoolInfoRequest) {
+    throw Error('not implemented')
   }
 }
