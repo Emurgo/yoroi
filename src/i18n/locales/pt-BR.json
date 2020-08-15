@@ -326,7 +326,7 @@
   "global.actions.dialogs.incorrectPin.message": "O PIN que você digitou é incorreto.",
   "global.actions.dialogs.incorrectPin.title": "PIN inválido",
   "global.actions.dialogs.itnNotSupported.message": "Carteiras criadas durante a Testnet incentivada (ITN) não estão mais operacionais. Se você quiser resgatar suas recompensas, atualizaremos a Yoroi Mobile e Yoroi Desktop nas próximas semanas",
-  "global.actions.dialogs.itnNotSupported.title": "\nA Cardano ITN (Testnet incentivada) finalizou",
+  "global.actions.dialogs.itnNotSupported.title": "\nA Cardano ITN (Rede de testes incentivada) finalizou",
   "global.actions.dialogs.logout.message": "Você realmente quer sair?",
   "global.actions.dialogs.logout.noButton": "Não",
   "global.actions.dialogs.logout.title": "Sair",
