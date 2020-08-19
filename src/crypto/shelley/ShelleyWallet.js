@@ -330,8 +330,20 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     const masterKey = await Bip32PrivateKey.from_bytes(
       Buffer.from(decryptedMasterKey, 'hex'),
     )
+    let _purpose
+    switch (this.walletImplementationId) {
+      case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
+        _purpose = CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
+        break
+      case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
+        _purpose = CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
+        break
+      default:
+        _purpose = CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
+    }
+
     const accountPvrKey: Bip32PrivateKey = await (await (await masterKey.derive(
-      CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44,
+      _purpose,
     )).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)).derive(
       0 + CONFIG.NUMBERS.HARD_DERIVATION_START,
     )
