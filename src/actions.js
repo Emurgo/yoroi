@@ -53,7 +53,7 @@ import {type Dispatch} from 'redux'
 import {type State} from './state'
 import type {BaseSignRequest} from './crypto/types'
 import type {HWDeviceInfo} from './crypto/byron/ledgerUtils'
-import type {NetworkId} from './config/types'
+import type {NetworkId, WalletImplementationId} from './config/types'
 
 const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
   const handlers = {
@@ -381,8 +381,15 @@ export const createWallet = (
   mnemonic: string,
   password: string,
   networkId: NetworkId,
+  implementationId: WalletImplementationId,
 ) => async (dispatch: Dispatch<any>) => {
-  await walletManager.createWallet(name, mnemonic, password, networkId)
+  await walletManager.createWallet(
+    name,
+    mnemonic,
+    password,
+    networkId,
+    implementationId,
+  )
   dispatch(updateWallets())
 }
 
@@ -390,12 +397,14 @@ export const createWalletWithBip44Account = (
   name: string,
   bip44AccountPublic: string,
   networkId: NetworkId,
+  implementationId: WalletImplementationId,
   hwDeviceInfo: ?HWDeviceInfo,
 ) => async (dispatch: Dispatch<any>) => {
   await walletManager.createWalletWithBip44Account(
     name,
     bip44AccountPublic,
     networkId,
+    implementationId,
     hwDeviceInfo,
   )
   dispatch(updateWallets())

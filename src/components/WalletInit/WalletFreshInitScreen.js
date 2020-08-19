@@ -14,12 +14,12 @@ import {Button, StatusBar, ScreenBackground} from '../UiKit'
 import styles from './styles/WalletInitScreen.style'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {walletIsInitializedSelector} from '../../selectors'
-import {NETWORK_REGISTRY} from '../../config/types'
+import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../../config/types'
 import {NETWORKS} from '../../config/networks'
 
 import type {State} from '../../state'
 import type {Navigation} from '../../types/navigation'
-import type {NetworkId} from '../../config/types'
+import type {NetworkId, WalletImplementationId} from '../../config/types'
 
 const messages = defineMessages({
   addWalletButton: {
@@ -36,7 +36,7 @@ type Props = {|
   intl: any,
   walletIsInitialized: boolean,
   navigation: Navigation,
-  navigateInitWallet: (Object, NetworkId) => mixed,
+  navigateInitWallet: (Object, NetworkId, WalletImplementationId) => mixed,
 |}
 
 const WalletInitScreen = ({
@@ -56,7 +56,11 @@ const WalletInitScreen = ({
           </View>
           <Button
             onPress={(event) =>
-              navigateInitWallet(event, NETWORK_REGISTRY.HASKELL_SHELLEY)
+              navigateInitWallet(
+                event,
+                NETWORK_REGISTRY.HASKELL_SHELLEY,
+                WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
+              )
             }
             title={`${intl.formatMessage(
               messages.addWalletButton,
@@ -66,9 +70,12 @@ const WalletInitScreen = ({
           />
 
           <Button
-            onPress={(event) => ({})}
+            onPress={(event) => navigateInitWallet(
+              event,
+              NETWORK_REGISTRY.HASKELL_SHELLEY,
+              WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY,
+            )}
             outline
-            disabled
             title={`${intl.formatMessage(
               messages.addWalletButton,
             )} (Shelley-era)`}
@@ -79,9 +86,11 @@ const WalletInitScreen = ({
           {NETWORKS.JORMUNGANDR.ENABLED && (
             <Button
               outline
-              onPress={(event) =>
-                navigateInitWallet(event, NETWORK_REGISTRY.JORMUNGANDR)
-              }
+              onPress={(event) => navigateInitWallet(
+                event,
+                NETWORK_REGISTRY.JORMUNGANDR,
+                WALLET_IMPLEMENTATION_REGISTRY.JORMUNGANDR_ITN,
+              )}
               title={intl.formatMessage(messages.addWalletOnShelleyButton)}
               testID="addWalletOnShelleyButton"
             />
@@ -100,9 +109,11 @@ export default injectIntl(
       navigateInitWallet: ({navigation}) => (
         event: Object,
         networkId: NetworkId,
+        walletImplementationId: WalletImplementationId,
       ) =>
         navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH, {
           networkId,
+          walletImplementationId,
         }),
     }),
   )(WalletInitScreen),

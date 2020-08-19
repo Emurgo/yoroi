@@ -18,13 +18,12 @@ import {BigNumber} from 'bignumber.js'
 
 import Wallet from '../Wallet'
 import {WalletInterface} from '../WalletInterface'
-import {AddressChain, AddressGenerator} from '../chain'
+import {AddressChain, AddressGenerator} from './chain'
 import * as byronUtil from '../byron/util'
 import {ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
 import * as api from '../../api/byron/api'
 import {CONFIG} from '../../config/config'
-import {NETWORK_REGISTRY} from '../../config/types'
-import {isJormungandr} from '../../config/networks'
+import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../../config/types'
 import assert from '../../utils/assert'
 import {Logger} from '../../utils/logging'
 import {InvalidState} from '../errors'
@@ -37,18 +36,33 @@ import type {RawUtxo, TxBodiesRequest, TxBodiesResponse} from '../../api/types'
 import type {AddressedUtxo, BaseSignRequest, SignedTx} from './../types'
 import type {CryptoAccount} from '../byron/util'
 import type {HWDeviceInfo} from '../byron/ledgerUtils'
-import type {NetworkId} from '../../config/types'
+import type {NetworkId, WalletImplementationId} from '../../config/types'
+import type {WalletMeta} from '../../state'
+
+const _getWalletConfig = (implementationId: WalletImplementationId) => {
+  switch (implementationId) {
+    case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
+      return CONFIG.WALLETS.HASKELL_BYRON
+    case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
+      return CONFIG.WALLETS.HASKELL_SHELLEY
+    default:
+      return CONFIG.WALLETS.HASKELL_SHELLEY
+  }
+}
 
 export default class ShelleyWallet extends Wallet implements WalletInterface {
   // =================== create =================== //
 
   async _initialize(
     networkId: NetworkId,
-    account: CryptoAccount | string,
+    implementationId: WalletImplementationId,
+    accountPubKeyHex: string,
     chimericAccountAddr: ?string,
     hwDeviceInfo: ?HWDeviceInfo,
   ) {
     this.networkId = networkId
+
+    this.walletImplementationId = implementationId
 
     this.isHW = hwDeviceInfo != null
 
@@ -58,10 +72,14 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
 
     // initialize address chains
     this.internalChain = new AddressChain(
-      new AddressGenerator(account, 'Internal', isJormungandr(networkId)),
+      new AddressGenerator(accountPubKeyHex, 'Internal', implementationId),
+      _getWalletConfig(implementationId).DISCOVERY_BLOCK_SIZE,
+      _getWalletConfig(implementationId).DISCOVERY_GAP_SIZE,
     )
     this.externalChain = new AddressChain(
-      new AddressGenerator(account, 'External', isJormungandr(networkId)),
+      new AddressGenerator(accountPubKeyHex, 'External', implementationId),
+      _getWalletConfig(implementationId).DISCOVERY_BLOCK_SIZE,
+      _getWalletConfig(implementationId).DISCOVERY_GAP_SIZE,
     )
 
     this.chimericAccountAddress = chimericAccountAddr
@@ -79,8 +97,14 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     return this.id
   }
 
-  async create(mnemonic: string, newPassword: string, networkId: NetworkId) {
+  async create(
+    mnemonic: string,
+    newPassword: string,
+    networkId: NetworkId,
+    implementationId: WalletImplementationId,
+  ) {
     Logger.info(`create wallet (networkId=${String(networkId)})`)
+    Logger.info(`create wallet (implementationId=${String(implementationId)})`)
     this.id = uuid.v4()
     assert.assert(!this.isInitialized, 'createWallet: !isInitialized')
     const masterKey = await byronUtil.getMasterKeyFromMnemonic(mnemonic)
@@ -89,13 +113,33 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       masterKey,
       newPassword,
     )
-    const account: CryptoAccount = await byronUtil.getAccountFromMasterKey(
-      masterKey,
+    let _purpose
+    switch (implementationId) {
+      case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
+        _purpose = CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
+        break
+      case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
+        _purpose = CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
+        break
+      default:
+        throw new Error('wallet implementation id not valid')
+    }
+
+    const masterKeyPtr = await Bip32PrivateKey.from_bytes(
+      Buffer.from(masterKey, 'hex'),
     )
+    const accountKey = await (await (await masterKeyPtr.derive(_purpose))
+      .derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO))
+      .derive(0 + CONFIG.NUMBERS.HARD_DERIVATION_START)
+    const accountPubKey = await accountKey.to_public()
+    const accountPubKeyHex = Buffer.from(
+      await accountPubKey.as_bytes(),
+    ).toString('hex')
 
     return await this._initialize(
       networkId,
-      account,
+      implementationId,
+      accountPubKeyHex,
       null,
       null, // this is not a HW
     )
@@ -104,6 +148,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
   async createWithBip44Account(
     accountPublicKey: string,
     networkId: NetworkId,
+    implementationId: WalletImplementationId,
     hwDeviceInfo: ?HWDeviceInfo,
   ) {
     Logger.info(
@@ -113,13 +158,10 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     this.id = uuid.v4()
     assert.assert(!this.isInitialized, 'createWallet: !isInitialized')
     const chimericAccountAddr = null // only byron wallets supported for now
-    const accountObj: CryptoAccount = {
-      root_cached_key: accountPublicKey,
-      derivation_scheme: 'V2',
-    }
     return await this._initialize(
       networkId,
-      accountObj,
+      implementationId,
+      accountPublicKey,
       chimericAccountAddr,
       hwDeviceInfo,
     )
@@ -127,32 +169,44 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
 
   // =================== persistence =================== //
 
-  _integrityCheck(data): void {
+  _integrityCheck(): void {
     try {
-      if (this.networkId == null) {
-        if (data.isShelley != null && data.isShelley === false) {
-          this.networkId = NETWORK_REGISTRY.BYRON_MAINNET
-        } else {
-          throw new Error('invalid networkId')
-        }
+      assert.assert(this.networkId === NETWORK_REGISTRY.HASKELL_SHELLEY,
+        'invalid networkId')
+      assert.assert(
+        this.walletImplementationId === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY ||
+        this.walletImplementationId === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
+        'invalid walletImplementationId',
+      )
+      if (this.isHW) {
+        assert.assert(
+          this.hwDeviceInfo != null,
+          'no device info for hardware wallet',
+        )
       }
     } catch (e) {
       Logger.error('wallet::_integrityCheck', e)
-      throw new InvalidState()
+      throw new InvalidState(e.message)
     }
   }
 
   // TODO(v-almonacid): move to parent class?
-  restore(data: any, networkId?: NetworkId) {
+  restore(data: any, walletMeta: WalletMeta) {
     Logger.info('restore wallet')
     assert.assert(!this.isInitialized, 'restoreWallet: !isInitialized')
-    if (networkId != null) {
-      assert.assert(!isJormungandr(networkId), 'restore: !isJormungandr')
-    }
     this.state = {
       lastGeneratedAddressIndex: data.lastGeneratedAddressIndex,
     }
-    this.networkId = data.networkId // can be null for versions < 3.0.0
+
+    // can be null for versions < 3.0.0
+    this.networkId = data.networkId != null
+      ? data.networkId
+      : walletMeta.networkId
+    // can be null for versions < 3.0.2
+    this.walletImplementationId = data.walletImplementationId != null
+      ? data.walletImplementationId
+      : walletMeta.walletImplementationId
+
     this.isHW = data.isHW != null ? data.isHW : false
     this.hwDeviceInfo = data.hwDeviceInfo
     this.version = data.version
@@ -161,7 +215,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     this.transactionCache = TransactionCache.fromJSON(data.transactionCache)
     this.isEasyConfirmationEnabled = data.isEasyConfirmationEnabled
 
-    this._integrityCheck(data)
+    this._integrityCheck()
 
     // subscriptions
     this.setupSubscriptions()

@@ -60,8 +60,16 @@ export default injectIntl(
           setWaiting(true)
           const phrase = navigation.getParam('phrase')
           const networkId = navigation.getParam('networkId')
+          const implementationId = navigation.getParam('walletImplementationId')
+          console.log(implementationId);
           try {
-            await createWallet(name, phrase, password, networkId)
+            await createWallet(
+              name,
+              phrase,
+              password,
+              networkId,
+              implementationId,
+            )
             await updateVersion()
           } finally {
             setWaiting(false)

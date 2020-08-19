@@ -1,4 +1,7 @@
 // @flow
+
+// Byron-compatible address generation
+
 import _ from 'lodash'
 import type {Moment} from 'moment'
 
@@ -84,8 +87,8 @@ export class AddressChain {
 
   constructor(
     addressGenerator: AddressGenerator,
-    blockSize: number = CONFIG.WALLET.DISCOVERY_BLOCK_SIZE,
-    gapLimit: number = CONFIG.WALLET.DISCOVERY_GAP_SIZE,
+    blockSize: number = CONFIG.WALLETS.HASKELL_BYRON.DISCOVERY_BLOCK_SIZE,
+    gapLimit: number = CONFIG.WALLETS.HASKELL_BYRON.DISCOVERY_GAP_SIZE,
   ) {
     assert.assert(blockSize > gapLimit, 'Block size needs to be > gap limit')
 

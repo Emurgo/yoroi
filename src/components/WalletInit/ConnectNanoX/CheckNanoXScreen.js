@@ -41,6 +41,7 @@ const url = '' // 'https://yoroi-wallet.com/...'
 
 const CheckNanoXScreen = ({intl, onPress, navigation}) => {
   const networkId = navigation.getParam('networkId')
+  const walletImplementationId = navigation.getParam('walletImplementationId')
   const useUSB = navigation.getParam('useUSB')
   const requirements: Array<string> = []
   if (useUSB) {
@@ -79,7 +80,7 @@ const CheckNanoXScreen = ({intl, onPress, navigation}) => {
         )}
       </View>
       <Button
-        onPress={(event) => onPress(event, networkId, useUSB)}
+        onPress={(event) => onPress(event, networkId, walletImplementationId, useUSB)}
         title={intl.formatMessage(
           confirmationMessages.commonButtons.continueButton,
         )}

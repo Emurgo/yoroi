@@ -64,6 +64,7 @@ const WalletInitScreen = ({
   setShowModal,
 }: Props) => {
   const networkId = navigation.getParam('networkId')
+  const implementationId = navigation.getParam('walletImplementationId')
   let createWalletLabel = intl.formatMessage(messages.createWalletButton)
   let restoreWalletLabel = intl.formatMessage(messages.restoreWalletButton)
   let createWalletWithLedgerLabel = intl.formatMessage(
@@ -85,14 +86,14 @@ const WalletInitScreen = ({
             <WalletDescription />
           </View>
           <Button
-            onPress={(event) => navigateCreateWallet(event, networkId)}
+            onPress={(event) => navigateCreateWallet(event, networkId, implementationId)}
             title={createWalletLabel}
             style={styles.createButton}
             testID="createWalletButton"
           />
           <Button
             outline
-            onPress={(event) => navigateRestoreWallet(event, networkId)}
+            onPress={(event) => navigateRestoreWallet(event, networkId, implementationId)}
             title={restoreWalletLabel}
             style={styles.createButton}
             testID="restoreWalletButton"
@@ -110,10 +111,10 @@ const WalletInitScreen = ({
                 visible={showModal}
                 onRequestClose={(event) => setShowModal(event, false)}
                 onSelectUSB={(event) =>
-                  navigateCheckNanoX(event, networkId, true)
+                  navigateCheckNanoX(event, networkId, implementationId, true)
                 }
                 onSelectBLE={(event) =>
-                  navigateCheckNanoX(event, networkId, false)
+                  navigateCheckNanoX(event, networkId, implementationId, false)
                 }
                 showCloseIcon
               />
@@ -142,24 +143,30 @@ export default injectIntl(
       navigateRestoreWallet: ({navigation}) => (
         event: Object,
         networkId: NetworkId,
+        walletImplementationId: WalletImplementationId,
       ) =>
         navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET, {
           networkId,
+          walletImplementationId,
         }),
       navigateCreateWallet: ({navigation}) => (
         event: Object,
         networkId: NetworkId,
+        walletImplementationId: WalletImplementationId,
       ) =>
         navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET, {
           networkId,
+          walletImplementationId,
         }),
       navigateCheckNanoX: ({navigation}) => (
         event: Object,
         networkId: NetworkId,
+        walletImplementationId: WalletImplementationId,
         useUSB: boolean,
       ) =>
         navigation.navigate(WALLET_INIT_ROUTES.CHECK_NANO_X, {
           networkId,
+          walletImplementationId,
           useUSB,
         }),
     }),

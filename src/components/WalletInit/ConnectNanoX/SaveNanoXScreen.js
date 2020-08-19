@@ -121,6 +121,7 @@ export default injectIntl(
         navigation,
       }) => async () => {
         const networkId = navigation.getParam('networkId')
+        const walletImplementationId = navigation.getParam('walletImplementationId')
         const hwDeviceInfo = navigation.getParam('hwDeviceInfo')
         assert.assert(
           hwDeviceInfo != null,
@@ -130,6 +131,7 @@ export default injectIntl(
           name,
           hwDeviceInfo.bip44AccountPublic,
           networkId,
+          walletImplementationId,
           hwDeviceInfo,
         )
         navigation.navigate(ROOT_ROUTES.WALLET)

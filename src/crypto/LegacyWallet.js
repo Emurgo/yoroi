@@ -20,7 +20,7 @@ import * as util from './byron/util'
 import {ADDRESS_TYPE_TO_CHANGE} from './commonUtils'
 import * as api from '../api/byron/api'
 import {CONFIG} from '../config/config'
-import {NETWORK_REGISTRY} from '../config/types'
+import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../config/types'
 import {isJormungandr} from '../config/networks'
 import assert from '../utils/assert'
 import {Logger} from '../utils/logging'
@@ -42,7 +42,8 @@ import type {
 } from './types'
 import type {CryptoAccount} from './byron/util'
 import type {HWDeviceInfo} from './byron/ledgerUtils'
-import type {NetworkId} from '../config/types'
+import type {NetworkId, WalletImplementationId} from '../config/types'
+import type {WalletMeta} from '../state'
 
 export default class LegacyWallet extends Wallet implements WalletInterface {
   // =================== create =================== //
@@ -52,8 +53,11 @@ export default class LegacyWallet extends Wallet implements WalletInterface {
     account: CryptoAccount | string,
     chimericAccountAddr: ?string,
     hwDeviceInfo: ?HWDeviceInfo,
+    implementationId: WalletImplementationId,
   ) {
     this.networkId = networkId
+
+    this.walletImplementationId = implementationId
 
     this.isHW = hwDeviceInfo != null
 
@@ -84,8 +88,14 @@ export default class LegacyWallet extends Wallet implements WalletInterface {
     return this.id
   }
 
-  async create(mnemonic: string, newPassword: string, networkId: NetworkId) {
+  async create(
+    mnemonic: string,
+    newPassword: string,
+    networkId: NetworkId,
+    implementationId: WalletImplementationId,
+  ) {
     Logger.info(`create wallet (networkId=${String(networkId)})`)
+    Logger.info(`create wallet (implementationId=${String(implementationId)})`)
     this.id = uuid.v4() // required by encryptAndSaveMasterKey
     assert.assert(!this.isInitialized, 'createWallet: !isInitialized')
     assert.assert(!isJormungandr(networkId), 'createWallet: !isJormungandr')
@@ -100,6 +110,7 @@ export default class LegacyWallet extends Wallet implements WalletInterface {
 
     return await this._initialize(
       networkId,
+      implementationId,
       account,
       null, // only byron wallet supported, no chimeric account
       null, // this is not a HW
@@ -109,6 +120,7 @@ export default class LegacyWallet extends Wallet implements WalletInterface {
   async createWithBip44Account(
     accountPublicKey: string,
     networkId: NetworkId,
+    implementationId: WalletImplementationId,
     hwDeviceInfo: ?HWDeviceInfo,
   ) {
     Logger.info(
@@ -124,6 +136,7 @@ export default class LegacyWallet extends Wallet implements WalletInterface {
     }
     return await this._initialize(
       networkId,
+      implementationId,
       accountObj,
       chimericAccountAddr,
       hwDeviceInfo,
@@ -141,41 +154,53 @@ export default class LegacyWallet extends Wallet implements WalletInterface {
       externalChain: this.externalChain.toJSON(),
       transactionCache: this.transactionCache.toJSON(),
       networkId: this.networkId,
+      walletImplementationId: this.walletImplementationId,
       isHW: this.isHW,
       hwDeviceInfo: this.hwDeviceInfo,
       isEasyConfirmationEnabled: this.isEasyConfirmationEnabled,
     }
   }
 
-  _integrityCheck(data): void {
+  _integrityCheck(): void {
     try {
-      if (this.networkId == null) {
-        if (data.isShelley != null && data.isShelley === false) {
-          this.networkId = NETWORK_REGISTRY.BYRON_MAINNET
-        } else {
-          throw new Error('invalid networkId')
-        }
+      assert.assert(this.networkId === NETWORK_REGISTRY.BYRON_MAINNET,
+        'invalid networkId')
+      assert.assert(
+        this.walletImplementationId === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
+        'invalid walletClassId',
+      )
+      if (this.isHW) {
+        assert.assert(
+          this.hwDeviceInfo != null,
+          'no device info for hardware wallet',
+        )
       }
     } catch (e) {
       Logger.error('wallet::_integrityCheck', e)
-      throw new InvalidState()
+      throw new InvalidState(e.message)
     }
   }
 
-  restore(data: any, networkId?: NetworkId): Promise<void> {
+  restore(data: any, walletMeta: WalletMeta): Promise<void> {
     Logger.info('restore wallet')
     assert.assert(!this.isInitialized, 'restoreWallet: !isInitialized')
-    if (networkId != null) {
-      assert.assert(!isJormungandr(networkId), 'restore: !isJormungandr')
-    }
     this.state = {
       lastGeneratedAddressIndex: data.lastGeneratedAddressIndex,
     }
-    this.networkId = data.networkId // can be null for versions < 3.0.0
+
+    // can be null for versions < 3.0.0
+    this.networkId = data.networkId != null
+      ? data.networkId
+      : walletMeta.networkId
+    // can be null for versions < 3.0.2
+    this.walletClassId = data.walletClassId != null
+      ? data.walletClassId
+      : walletMeta.walletClassId
+
     this.isHW = data.isHW != null ? data.isHW : false
     this.hwDeviceInfo = data.hwDeviceInfo
-    // note(v-almonacid): chimericAccountAddr can be null. _integrityCheck is
-    // required for versions <= 2.1.0
+    // note(v-almonacid): chimericAccountAddr can be null in versions <= 2.1.0
+    // before it was named accountAddress
     this.chimericAccountAddress = data.chimericAccountAddress
     this.version = data.version
     this.internalChain = AddressChain.fromJSON(data.internalChain)
@@ -183,7 +208,7 @@ export default class LegacyWallet extends Wallet implements WalletInterface {
     this.transactionCache = TransactionCache.fromJSON(data.transactionCache)
     this.isEasyConfirmationEnabled = data.isEasyConfirmationEnabled
 
-    this._integrityCheck(data)
+    this._integrityCheck()
 
     // subscriptions
     this.setupSubscriptions()

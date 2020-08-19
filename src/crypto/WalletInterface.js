@@ -18,8 +18,8 @@ import type {
   WalletState,
 } from './types'
 import type {HWDeviceInfo} from './byron/ledgerUtils'
-import type {NetworkId} from '../config/types'
-import type {Dict} from '../state'
+import type {NetworkId, WalletImplementationId} from '../config/types'
+import type {Dict, WalletMeta} from '../state'
 import type {Transaction} from '../types/HistoryTransaction'
 import type {Addresses} from './chain'
 
@@ -27,6 +27,8 @@ export interface WalletInterface {
   id: string;
 
   networkId: NetworkId;
+
+  walletImplementationId: WalletImplementationId;
 
   isHW: boolean;
 
@@ -70,11 +72,13 @@ export interface WalletInterface {
     mnemonic: string,
     newPassword: string,
     networkId: NetworkId,
+    implementationId: WalletImplementationId,
   ): Promise<string>;
 
   createWithBip44Account(
     accountPublicKey: string,
     networkId: NetworkId,
+    implementationId: WalletImplementationId,
     hwDeviceInfo: ?HWDeviceInfo,
   ): Promise<string>;
 
@@ -119,7 +123,7 @@ export interface WalletInterface {
   // TODO: type
   toJSON(): any;
 
-  restore(data: any, networkId?: NetworkId): Promise<void>;
+  restore(data: any, walletMeta: WalletMeta): Promise<void>;
 
   // =================== tx building =================== //
 

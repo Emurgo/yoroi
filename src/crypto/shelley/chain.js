@@ -6,53 +6,121 @@
 
 import _ from 'lodash'
 import type {Moment} from 'moment'
+import {
+  BaseAddress,
+  Bip32PublicKey,
+  StakeCredential,
+} from 'react-native-haskell-shelley'
+
 
 import {CONFIG} from '../../config/config'
+import {WALLET_IMPLEMENTATION_REGISTRY} from '../../config/types'
 import assert from '../../utils/assert'
 import {defaultMemoize} from 'reselect'
 import {Logger} from '../../utils/logging'
 import * as util from '../byron/util'
+import {ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
 
 import type {Dict} from '../../state'
 import type {CryptoAccount} from '../byron/util'
 import type {AddressType} from '../commonUtils'
+import type {WalletImplementationId} from '../../config/types'
 
 export type AddressBlock = [number, Moment, Array<string>]
 
 export class AddressGenerator {
-  account: CryptoAccount
+  accountPubKeyHex: string
   type: AddressType
-  isJormungandr: boolean
+  walletImplementationId: WalletImplementationId
+
+  _accountPubKeyPtr: Bip32PublicKey
 
   constructor(
-    account: CryptoAccount,
+    accountPubKeyHex: string,
     type: AddressType,
-    isJormungandr?: boolean = false,
+    walletImplementationId: WalletImplementationId,
   ) {
-    this.account = account
+    this.accountPubKeyHex = accountPubKeyHex
     this.type = type
-    this.isJormungandr = isJormungandr
+    this.walletImplementationId = walletImplementationId
+  }
+
+  get byronAccount(): CryptoAccount {
+    assert.assert(
+      this.walletImplementationId === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
+      'chain::get::byronAccount: not a byron wallet',
+    )
+    return {
+      derivation_scheme: 'V2',
+      root_cached_key: this.accountPubKeyHex,
+    }
   }
 
   async generate(idxs: Array<number>): Promise<Array<string>> {
-    // make sure this is a Byron AddressGenerator
-    assert.assert(
-      !(typeof this.account === 'string' || this.account instanceof String),
-      'chain::generate: account type is invalid',
-    )
-    return await util.getAddresses(this.account, this.type, idxs)
+    if (this.walletImplementationId ===
+      WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY) {
+    // cache account public key
+      if (this._accountPubKeyPtr == null) {
+        this._accountPubKeyPtr = await Bip32PublicKey.from_bytes(
+          Buffer.from(this.accountPubKeyHex, 'hex'),
+        )
+      }
+      const internalKey = await this._accountPubKeyPtr
+        .derive(ADDRESS_TYPE_TO_CHANGE[this.type])
+      const stakingKey = await (await (await this._accountPubKeyPtr.derive(
+        CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+      )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+
+      return await Promise.all(idxs.map(async (idx) => {
+        const addrKey = await (await internalKey.derive(idx)).to_raw_key()
+        const addr = await BaseAddress.new(
+          parseInt(CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID, 10),
+          await StakeCredential.from_keyhash(await addrKey.hash()),
+          await StakeCredential.from_keyhash(
+            await stakingKey.hash()
+          ),
+        )
+        return await (await addr.to_address()).to_bech32()
+      }))
+    }
+
+    return await util.getAddresses(this.byronAccount, this.type, idxs)
   }
 
   toJSON() {
     return {
-      account: this.account,
+      accountPubKeyHex: this.accountPubKeyHex,
+      walletImplementationId: this.walletImplementationId,
       type: this.type,
     }
   }
 
   static fromJSON(data: any) {
-    const {account, type} = data
-    return new AddressGenerator(account, type)
+    const {
+      accountPubKeyHex,
+      type,
+      walletImplementationId,
+    } = data
+
+    let _accountPubKeyHex
+    if (accountPubKeyHex == null) {
+      const {account} = data
+      if (account.root_cached_key != null) {
+        _accountPubKeyHex = account.root_cached_key
+      } else {
+        throw Error('cannot retrieve account public key.')
+      }
+    } else {
+      _accountPubKeyHex = accountPubKeyHex
+    }
+
+    let _walletImplementationId
+    if (walletImplementationId == null) {
+      _walletImplementationId = WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
+    } else {
+      _walletImplementationId = walletImplementationId
+    }
+    return new AddressGenerator(_accountPubKeyHex, type, _walletImplementationId)
   }
 }
 
@@ -76,8 +144,8 @@ export class AddressChain {
 
   constructor(
     addressGenerator: AddressGenerator,
-    blockSize: number = CONFIG.WALLET.DISCOVERY_BLOCK_SIZE,
-    gapLimit: number = CONFIG.WALLET.DISCOVERY_GAP_SIZE,
+    blockSize: number = CONFIG.WALLETS.HASKELL_SHELLEY.DISCOVERY_BLOCK_SIZE,
+    gapLimit: number = CONFIG.WALLETS.HASKELL_SHELLEY.DISCOVERY_GAP_SIZE,
   ) {
     assert.assert(blockSize > gapLimit, 'Block size needs to be > gap limit')
 

@@ -89,7 +89,11 @@ describe('AddressChain', () => {
         '7f53efa3c08093db3824235769079e96ef96b6680fc254f6c021ec420e4d1555' +
         'b5bafb0b1fc6c8040cc8f69f7c1948dfb4dcadec4acd09730c0efb39c6159362',
     }
-    chain = new AddressChain(new AddressGenerator(account, 'Internal'), 5, 2)
+    chain = new AddressChain(
+      new AddressGenerator(account.root_cached_key, 'Internal', 'haskell-byron'),
+      5,
+      2,
+    )
 
     expect.assertions(2)
 

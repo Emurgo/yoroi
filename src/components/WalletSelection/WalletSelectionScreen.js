@@ -24,14 +24,17 @@ import FailedWalletUpgradeModal from './FailedWalletUpgradeModal'
 import {currentVersionSelector} from '../../selectors'
 import {onDidMount} from '../../utils/renderUtils'
 import {isJormungandr, NETWORKS} from '../../config/networks'
-import {NETWORK_REGISTRY} from '../../config/types'
+import {
+  NETWORK_REGISTRY,
+  WALLET_IMPLEMENTATION_REGISTRY,
+} from '../../config/types'
 
 import styles from './styles/WalletSelectionScreen.style'
 
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {State} from '../../state'
 import type {ComponentType} from 'react'
-import type {NetworkId} from '../../config/types'
+import type {NetworkId, WalletImplementationId} from '../../config/types'
 
 const messages = defineMessages({
   header: {
@@ -87,16 +90,23 @@ const WalletListScreen = ({
 
         <Button
           onPress={(event) =>
-            navigateInitWallet(event, NETWORK_REGISTRY.HASKELL_SHELLEY)
+            navigateInitWallet(
+              event,
+              NETWORK_REGISTRY.HASKELL_SHELLEY,
+              WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
+            )
           }
           title={`${intl.formatMessage(messages.addWalletButton)} (Byron-era)`}
           style={styles.addWalletButton}
         />
 
         <Button
-          disabled
           outline
-          onPress={(event) => ({})}
+          onPress={(event) => navigateInitWallet(
+            event,
+            NETWORK_REGISTRY.HASKELL_SHELLEY,
+            WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY,
+          )}
           title={`${intl.formatMessage(
             messages.addWalletButton,
           )} (Shelley-era)`}
@@ -107,7 +117,10 @@ const WalletListScreen = ({
           <Button
             outline
             onPress={(event) =>
-              navigateInitWallet(event, NETWORK_REGISTRY.JORMUNGANDR)
+              navigateInitWallet(
+                event,
+                NETWORK_REGISTRY.JORMUNGANDR,
+                WALLET_IMPLEMENTATION_REGISTRY.JORMUNGANDR_ITN)
             }
             title={intl.formatMessage(messages.addWalletOnShelleyButton)}
             style={styles.addWalletOnShelleyButton}
@@ -143,9 +156,11 @@ export default injectIntl(
       navigateInitWallet: ({navigation}) => (
         event: Object,
         networkId: NetworkId,
+        walletImplementationId: WalletImplementationId,
       ) =>
         navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH, {
           networkId,
+          walletImplementationId,
         }),
       openWallet: ({navigation, intl}) => async (wallet) => {
         try {
@@ -153,8 +168,7 @@ export default injectIntl(
             await showErrorDialog(errorMessages.itnNotSupported, intl)
             return
           }
-          // note: networkId can be null for versions <= 2.2.3
-          await walletManager.openWallet(wallet.id, wallet.networkId)
+          await walletManager.openWallet(wallet)
           const route = ROOT_ROUTES.WALLET
           navigation.navigate(route)
         } catch (e) {

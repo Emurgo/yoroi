@@ -12,8 +12,11 @@ import KeyStore from './KeyStore'
 import {AddressChain, AddressGenerator} from './chain'
 import * as util from './byron/util'
 import * as api from '../api/byron/api'
-import {CONFIG} from '../config/config'
-import {NETWORK_REGISTRY} from '../config/types'
+import {CONFIG, WALLETS} from '../config/config'
+import {
+  NETWORK_REGISTRY,
+  WALLET_IMPLEMENTATION_REGISTRY,
+} from '../config/types'
 import {isJormungandr} from '../config/networks'
 import assert from '../utils/assert'
 import {ObjectValues} from '../utils/flow'
@@ -23,10 +26,11 @@ import {
   isSystemAuthSupported,
 } from '../helpers/deviceSettings'
 
+import type {WalletMeta} from '../state'
 import type {RawUtxo, PoolInfoRequest, TxBodiesRequest} from '../api/types'
 import type {Addressing, BaseSignRequest, EncryptionMethod} from './types'
 import type {HWDeviceInfo} from './byron/ledgerUtils'
-import type {NetworkId} from '../config/types'
+import type {NetworkId, WalletImplementationId} from '../config/types'
 
 /**
  * returns all used addresses (external and change addresses concatenated)
@@ -135,10 +139,30 @@ class WalletManager {
           networkId: w.isShelley
             ? NETWORK_REGISTRY.JORMUNGANDR
             : NETWORK_REGISTRY.HASKELL_SHELLEY,
+          walletImplementationId: w.isShelley
+            ? WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID
+            : WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
         }
       } else {
-        return w
+        // if wallet implementation is not defined, assume Byron
+        return {
+          ...w,
+          walletImplementationId: w.walletImplementationId != null
+            ? w.walletImplementationId
+            : WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
+        }
       }
+    })
+    // integrity check
+    wallets.forEach((w) => {
+      assert.assert(w.networkId != null, 'wallet should have networkId')
+      assert.assert(!!w.walletImplementationId, 'wallet should have walletClassId')
+      assert.assert(
+        Object.values(
+          WALLET_IMPLEMENTATION_REGISTRY,
+        ).indexOf(w.walletImplementationId) > -1,
+        'invalid walletClassId',
+      )
     })
     this._wallets = _.fromPairs(wallets.map((w) => [w.id, w]))
     Logger.debug('WalletManager::initialize::wallets()', this._wallets)
@@ -162,24 +186,6 @@ class WalletManager {
 
   _notifySyncError = (error: any) => {
     this._syncErrorSubscribers.forEach((handler) => handler(error))
-  }
-
-  // Note(ppershing): no need to abortWhenWalletCloses here
-  // Note(v-almonacid): if sync fails because of a chain rollback, we just wait
-  // for the next sync round (tx cache should be wiped out in between)
-  async _backgroundSync() {
-    try {
-      if (this._wallet) {
-        const wallet = this._wallet
-        await wallet.tryDoFullSync()
-        await this._saveState(wallet)
-      }
-      this._notifySyncError(null)
-    } catch (e) {
-      this._notifySyncError(e)
-    } finally {
-      setTimeout(() => this._backgroundSync(), CONFIG.HISTORY_REFRESH_TIME)
-    }
   }
 
   subscribe(handler: () => any) {
@@ -242,6 +248,11 @@ class WalletManager {
   get networkId() {
     if (!this._wallet) return NETWORK_REGISTRY.UNDEFINED
     return this._wallet.networkId
+  }
+
+  get walletImplementationId() {
+    if (!this._wallet) return ''
+    return this._wallet.walletImplementationId
   }
 
   get isJormungandr() {
@@ -372,6 +383,24 @@ class WalletManager {
 
   // =================== synch =================== //
 
+  // Note(ppershing): no need to abortWhenWalletCloses here
+  // Note(v-almonacid): if sync fails because of a chain rollback, we just wait
+  // for the next sync round (tx cache should be wiped out in between)
+  async _backgroundSync() {
+    try {
+      if (this._wallet) {
+        const wallet = this._wallet
+        await wallet.tryDoFullSync()
+        await this._saveState(wallet)
+      }
+      this._notifySyncError(null)
+    } catch (e) {
+      this._notifySyncError(e)
+    } finally {
+      setTimeout(() => this._backgroundSync(), CONFIG.HISTORY_REFRESH_TIME)
+    }
+  }
+
   async doFullSync() {
     // TODO(ppershing): this should "quit" early if we change wallet
     if (!this._wallet) return
@@ -411,11 +440,18 @@ class WalletManager {
     name: string,
     wallet: WalletInterface,
     networkId: NetworkId,
+    walletImplementationId: WalletImplementationId,
   ) {
     this._id = id
     this._wallets = {
       ...this._wallets,
-      [id]: {id, name, networkId, isEasyConfirmationEnabled: false},
+      [id]: {
+        id,
+        name,
+        networkId,
+        walletImplementationId,
+        isEasyConfirmationEnabled: false,
+      },
     }
 
     this._wallet = wallet
@@ -433,30 +469,21 @@ class WalletManager {
   }
 
   async openWallet(
-    id: string,
-    networkId: ?NetworkId,
+    walletMeta: WalletMeta,
   ): Promise<WalletInterface> {
-    assert.preconditionCheck(!!id, 'openWallet:: !!id')
-    const data = await storage.read(`/wallet/${id}/data`)
+    assert.preconditionCheck(!!walletMeta.id, 'openWallet:: !!id')
+    const data = await storage.read(`/wallet/${walletMeta.id}/data`)
     Logger.debug('openWallet::data', data)
     if (!data) throw new Error('Cannot read saved data')
 
-    let _networkId
-    if (networkId == null) {
-      if (data.isShelley === true) {
-        _networkId = NETWORK_REGISTRY.JORMUNGANDR
-      } else {
-        _networkId = NETWORK_REGISTRY.BYRON_MAINNET
-      }
-    } else {
-      _networkId = networkId
-    }
-    const wallet: WalletInterface = this._getWalletImplementation(_networkId)
+    const wallet: WalletInterface = this._getWalletImplementation(
+      walletMeta.walletImplementationId,
+    )
 
-    await wallet.restore(data, _networkId)
-    wallet.id = id
+    await wallet.restore(data, walletMeta)
+    wallet.id = walletMeta.id
     this._wallet = wallet
-    this._id = id
+    this._id = walletMeta.id
 
     wallet.subscribe(this._notify)
     this._closePromise = new Promise((resolve, reject) => {
@@ -554,14 +581,22 @@ class WalletManager {
 
   // =================== create =================== //
 
-  _getWalletImplementation(networkId: NetworkId): WalletInterface {
-    switch (networkId) {
-      case NETWORK_REGISTRY.BYRON_MAINNET || NETWORK_REGISTRY.JORMUNGANDR:
+  // returns the corresponding implementation of WalletInterface. Normally we
+  // should expect that each blockchain network has 1 wallet implementation.
+  // In the case of Cardano, there are two: Byron-era and Shelley-era.
+  // TODO(v-almonacid): remove LegacyWallet as it will no longer be supported
+  _getWalletImplementation(
+    walletImplementationId: WalletImplementationId,
+  ): WalletInterface {
+    switch (walletImplementationId) {
+      case WALLET_IMPLEMENTATION_REGISTRY.BYRON:
         return new LegacyWallet()
-      case NETWORK_REGISTRY.HASKELL_SHELLEY:
+      case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
+        return new ShelleyWallet()
+      case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
         return new ShelleyWallet()
       default:
-        return new ShelleyWallet()
+        throw new Error('cannot retrieve wallet implementation')
     }
   }
 
@@ -570,28 +605,36 @@ class WalletManager {
     mnemonic: string,
     password: string,
     networkId: NetworkId,
+    implementationId: WalletImplementationId,
   ): Promise<WalletInterface> {
-    const wallet = this._getWalletImplementation(networkId)
-    const id = await wallet.create(mnemonic, password, networkId)
+    const wallet = this._getWalletImplementation(implementationId)
+    const id = await wallet.create(
+      mnemonic,
+      password,
+      networkId,
+      implementationId,
+    )
 
-    return this.saveWallet(id, name, wallet, networkId)
+    return this.saveWallet(id, name, wallet, networkId, implementationId)
   }
 
   async createWalletWithBip44Account(
     name: string,
     bip44AccountPublic: string,
     networkId: NetworkId,
+    implementationId: WalletImplementationId,
     hwDeviceInfo: ?HWDeviceInfo,
   ) {
-    const wallet = this._getWalletImplementation(networkId)
+    const wallet = this._getWalletImplementation(implementationId)
     const id = await wallet.createWithBip44Account(
       bip44AccountPublic,
       networkId,
+      implementationId,
       hwDeviceInfo,
     )
     Logger.debug('creating wallet...', wallet)
 
-    return this.saveWallet(id, name, wallet, networkId)
+    return this.saveWallet(id, name, wallet, networkId, implementationId)
   }
 
   // =================== tx building =================== //
