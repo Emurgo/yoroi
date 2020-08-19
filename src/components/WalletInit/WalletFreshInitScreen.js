@@ -14,7 +14,10 @@ import {Button, StatusBar, ScreenBackground} from '../UiKit'
 import styles from './styles/WalletInitScreen.style'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {walletIsInitializedSelector} from '../../selectors'
-import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../../config/types'
+import {
+  NETWORK_REGISTRY,
+  WALLET_IMPLEMENTATION_REGISTRY,
+} from '../../config/types'
 import {NETWORKS} from '../../config/networks'
 
 import type {State} from '../../state'
@@ -70,11 +73,13 @@ const WalletInitScreen = ({
           />
 
           <Button
-            onPress={(event) => navigateInitWallet(
-              event,
-              NETWORK_REGISTRY.HASKELL_SHELLEY,
-              WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY,
-            )}
+            onPress={(event) =>
+              navigateInitWallet(
+                event,
+                NETWORK_REGISTRY.HASKELL_SHELLEY,
+                WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY,
+              )
+            }
             outline
             title={`${intl.formatMessage(
               messages.addWalletButton,
@@ -86,11 +91,13 @@ const WalletInitScreen = ({
           {NETWORKS.JORMUNGANDR.ENABLED && (
             <Button
               outline
-              onPress={(event) => navigateInitWallet(
-                event,
-                NETWORK_REGISTRY.JORMUNGANDR,
-                WALLET_IMPLEMENTATION_REGISTRY.JORMUNGANDR_ITN,
-              )}
+              onPress={(event) =>
+                navigateInitWallet(
+                  event,
+                  NETWORK_REGISTRY.JORMUNGANDR,
+                  WALLET_IMPLEMENTATION_REGISTRY.JORMUNGANDR_ITN,
+                )
+              }
               title={intl.formatMessage(messages.addWalletOnShelleyButton)}
               testID="addWalletOnShelleyButton"
             />

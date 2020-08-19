@@ -24,7 +24,9 @@ export const WALLET_IMPLEMENTATION_REGISTRY = {
   // ERGO: 'ergo',
   UNDEFINED: '',
 }
-export type WalletImplementationId = $Values<typeof WALLET_IMPLEMENTATION_REGISTRY>
+export type WalletImplementationId = $Values<
+  typeof WALLET_IMPLEMENTATION_REGISTRY,
+>
 
 export type WalletImplementation = {
   +WALLET_IMPLEMENTATION_ID: WalletImplementationId,

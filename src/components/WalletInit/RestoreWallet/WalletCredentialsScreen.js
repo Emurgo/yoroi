@@ -7,6 +7,7 @@ import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import {withNavigation} from 'react-navigation'
 
+import assert from '../../../utils/assert'
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
 import {ROOT_ROUTES} from '../../../RoutesList'
 import {withNavigationTitle} from '../../../utils/renderUtils'
@@ -61,7 +62,9 @@ export default injectIntl(
           const phrase = navigation.getParam('phrase')
           const networkId = navigation.getParam('networkId')
           const implementationId = navigation.getParam('walletImplementationId')
-          console.log(implementationId);
+          assert.assert(!!phrase, 'mnemonic')
+          assert.assert(networkId != null, 'networkId')
+          assert.assert(!!implementationId, 'implementationId')
           try {
             await createWallet(
               name,

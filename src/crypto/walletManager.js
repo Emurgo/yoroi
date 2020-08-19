@@ -5,7 +5,6 @@ import ExtendableError from 'es6-error'
 
 // import Wallet from './Wallet'
 import {WalletInterface} from './WalletInterface'
-import LegacyWallet from './LegacyWallet'
 import ShelleyWallet from './shelley/ShelleyWallet'
 import storage from '../utils/storage'
 import KeyStore from './KeyStore'
@@ -13,10 +12,7 @@ import {AddressChain, AddressGenerator} from './chain'
 import * as util from './byron/util'
 import * as api from '../api/byron/api'
 import {CONFIG, WALLETS} from '../config/config'
-import {
-  NETWORK_REGISTRY,
-  WALLET_IMPLEMENTATION_REGISTRY,
-} from '../config/types'
+import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../config/types'
 import {isJormungandr} from '../config/networks'
 import assert from '../utils/assert'
 import {ObjectValues} from '../utils/flow'
@@ -147,20 +143,24 @@ class WalletManager {
         // if wallet implementation is not defined, assume Byron
         return {
           ...w,
-          walletImplementationId: w.walletImplementationId != null
-            ? w.walletImplementationId
-            : WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
+          walletImplementationId:
+            w.walletImplementationId != null
+              ? w.walletImplementationId
+              : WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
         }
       }
     })
     // integrity check
     wallets.forEach((w) => {
       assert.assert(w.networkId != null, 'wallet should have networkId')
-      assert.assert(!!w.walletImplementationId, 'wallet should have walletClassId')
       assert.assert(
-        Object.values(
-          WALLET_IMPLEMENTATION_REGISTRY,
-        ).indexOf(w.walletImplementationId) > -1,
+        !!w.walletImplementationId,
+        'wallet should have walletClassId',
+      )
+      assert.assert(
+        Object.values(WALLET_IMPLEMENTATION_REGISTRY).indexOf(
+          w.walletImplementationId,
+        ) > -1,
         'invalid walletClassId',
       )
     })
@@ -468,9 +468,7 @@ class WalletManager {
     return wallet
   }
 
-  async openWallet(
-    walletMeta: WalletMeta,
-  ): Promise<WalletInterface> {
+  async openWallet(walletMeta: WalletMeta): Promise<WalletInterface> {
     assert.preconditionCheck(!!walletMeta.id, 'openWallet:: !!id')
     const data = await storage.read(`/wallet/${walletMeta.id}/data`)
     Logger.debug('openWallet::data', data)
@@ -584,17 +582,17 @@ class WalletManager {
   // returns the corresponding implementation of WalletInterface. Normally we
   // should expect that each blockchain network has 1 wallet implementation.
   // In the case of Cardano, there are two: Byron-era and Shelley-era.
-  // TODO(v-almonacid): remove LegacyWallet as it will no longer be supported
   _getWalletImplementation(
     walletImplementationId: WalletImplementationId,
   ): WalletInterface {
     switch (walletImplementationId) {
-      case WALLET_IMPLEMENTATION_REGISTRY.BYRON:
-        return new LegacyWallet()
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
         return new ShelleyWallet()
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
         return new ShelleyWallet()
+      // TODO
+      // case WALLET_IMPLEMENTATION_REGISTRY.ERGO:
+      //   return ErgoWallet()
       default:
         throw new Error('cannot retrieve wallet implementation')
     }

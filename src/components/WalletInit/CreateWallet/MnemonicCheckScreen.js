@@ -68,12 +68,17 @@ const handleWalletConfirmation = ({navigation, createWallet}) => async () => {
   const password = navigation.getParam('password')
   const name = navigation.getParam('name')
   const networkId = navigation.getParam('networkId')
+  const implementationId = navigation.getParam('walletImplementationId')
   assert.assert(!!mnemonic, 'handleWalletConfirmation:: mnemonic')
   assert.assert(!!password, 'handleWalletConfirmation:: password')
   assert.assert(!!name, 'handleWalletConfirmation:: name')
   assert.assert(networkId != null, 'handleWalletConfirmation:: networkId')
+  assert.assert(
+    !!implementationId,
+    'handleWalletConfirmation:: implementationId',
+  )
 
-  await createWallet(name, mnemonic, password, networkId)
+  await createWallet(name, mnemonic, password, networkId, implementationId)
 
   const route = isJormungandr(networkId)
     ? ROOT_ROUTES.JORMUN_WALLET

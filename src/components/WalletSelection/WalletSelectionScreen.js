@@ -102,11 +102,13 @@ const WalletListScreen = ({
 
         <Button
           outline
-          onPress={(event) => navigateInitWallet(
-            event,
-            NETWORK_REGISTRY.HASKELL_SHELLEY,
-            WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY,
-          )}
+          onPress={(event) =>
+            navigateInitWallet(
+              event,
+              NETWORK_REGISTRY.HASKELL_SHELLEY,
+              WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY,
+            )
+          }
           title={`${intl.formatMessage(
             messages.addWalletButton,
           )} (Shelley-era)`}
@@ -120,7 +122,8 @@ const WalletListScreen = ({
               navigateInitWallet(
                 event,
                 NETWORK_REGISTRY.JORMUNGANDR,
-                WALLET_IMPLEMENTATION_REGISTRY.JORMUNGANDR_ITN)
+                WALLET_IMPLEMENTATION_REGISTRY.JORMUNGANDR_ITN,
+              )
             }
             title={intl.formatMessage(messages.addWalletOnShelleyButton)}
             style={styles.addWalletOnShelleyButton}

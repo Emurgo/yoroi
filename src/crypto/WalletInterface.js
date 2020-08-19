@@ -1,7 +1,10 @@
 // @flow
 
+// TODO(v-almonacid): transactionCache should be decoupled from this class.
+// Use an interface instead
+
 import {AddressChain} from './chain'
-import {TransactionCache} from './transactionCache'
+import {TransactionCache} from './shelley/transactionCache'
 import Wallet from './Wallet'
 
 import type {

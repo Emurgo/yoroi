@@ -12,7 +12,6 @@ import {
   StakeCredential,
 } from 'react-native-haskell-shelley'
 
-
 import {CONFIG} from '../../config/config'
 import {WALLET_IMPLEMENTATION_REGISTRY} from '../../config/types'
 import assert from '../../utils/assert'
@@ -47,7 +46,8 @@ export class AddressGenerator {
 
   get byronAccount(): CryptoAccount {
     assert.assert(
-      this.walletImplementationId === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
+      this.walletImplementationId ===
+        WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
       'chain::get::byronAccount: not a byron wallet',
     )
     return {
@@ -57,31 +57,34 @@ export class AddressGenerator {
   }
 
   async generate(idxs: Array<number>): Promise<Array<string>> {
-    if (this.walletImplementationId ===
-      WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY) {
-    // cache account public key
+    if (
+      this.walletImplementationId ===
+      WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY
+    ) {
+      // cache account public key
       if (this._accountPubKeyPtr == null) {
         this._accountPubKeyPtr = await Bip32PublicKey.from_bytes(
           Buffer.from(this.accountPubKeyHex, 'hex'),
         )
       }
-      const internalKey = await this._accountPubKeyPtr
-        .derive(ADDRESS_TYPE_TO_CHANGE[this.type])
+      const internalKey = await this._accountPubKeyPtr.derive(
+        ADDRESS_TYPE_TO_CHANGE[this.type],
+      )
       const stakingKey = await (await (await this._accountPubKeyPtr.derive(
         CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
       )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
 
-      return await Promise.all(idxs.map(async (idx) => {
-        const addrKey = await (await internalKey.derive(idx)).to_raw_key()
-        const addr = await BaseAddress.new(
-          parseInt(CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID, 10),
-          await StakeCredential.from_keyhash(await addrKey.hash()),
-          await StakeCredential.from_keyhash(
-            await stakingKey.hash()
-          ),
-        )
-        return await (await addr.to_address()).to_bech32()
-      }))
+      return await Promise.all(
+        idxs.map(async (idx) => {
+          const addrKey = await (await internalKey.derive(idx)).to_raw_key()
+          const addr = await BaseAddress.new(
+            parseInt(CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID, 10),
+            await StakeCredential.from_keyhash(await addrKey.hash()),
+            await StakeCredential.from_keyhash(await stakingKey.hash()),
+          )
+          return await (await addr.to_address()).to_bech32()
+        }),
+      )
     }
 
     return await util.getAddresses(this.byronAccount, this.type, idxs)
@@ -95,20 +98,20 @@ export class AddressGenerator {
     }
   }
 
+  // note: byron-era wallets (ie. wallets created before the shelley
+  // hardfork), stored the account-level publick key as a CryptoAccount object.
+  // From v3.0.2 on, we simply store it as a plain hex string)
   static fromJSON(data: any) {
-    const {
-      accountPubKeyHex,
-      type,
-      walletImplementationId,
-    } = data
+    const {accountPubKeyHex, type, walletImplementationId} = data
 
     let _accountPubKeyHex
     if (accountPubKeyHex == null) {
+      // this should be wallet created in Byron
       const {account} = data
       if (account.root_cached_key != null) {
         _accountPubKeyHex = account.root_cached_key
       } else {
-        throw Error('cannot retrieve account public key.')
+        throw new Error('cannot retrieve account public key.')
       }
     } else {
       _accountPubKeyHex = accountPubKeyHex
@@ -120,7 +123,11 @@ export class AddressGenerator {
     } else {
       _walletImplementationId = walletImplementationId
     }
-    return new AddressGenerator(_accountPubKeyHex, type, _walletImplementationId)
+    return new AddressGenerator(
+      _accountPubKeyHex,
+      type,
+      _walletImplementationId,
+    )
   }
 }
 

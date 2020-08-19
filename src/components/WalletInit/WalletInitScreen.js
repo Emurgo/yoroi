@@ -21,7 +21,7 @@ import styles from './styles/WalletInitScreen.style'
 
 import type {State} from '../../state'
 import type {Navigation} from '../../types/navigation'
-import type {NetworkId} from '../../config/types'
+import type {NetworkId, WalletImplementationId} from '../../config/types'
 
 const messages = defineMessages({
   title: {
@@ -43,9 +43,14 @@ const messages = defineMessages({
 })
 
 type Props = {
-  navigateRestoreWallet: (Object, boolean) => mixed,
-  navigateCreateWallet: (Object, boolean) => mixed,
-  navigateCheckNanoX: (Object, boolean, boolean) => mixed,
+  navigateRestoreWallet: (Object, NetworkId, WalletImplementationId) => mixed,
+  navigateCreateWallet: (Object, NetworkId, WalletImplementationId) => mixed,
+  navigateCheckNanoX: (
+    Object,
+    NetworkId,
+    WalletImplementationId,
+    boolean,
+  ) => mixed,
   intl: any,
   walletIsInitialized: boolean,
   navigation: Navigation,
@@ -86,14 +91,18 @@ const WalletInitScreen = ({
             <WalletDescription />
           </View>
           <Button
-            onPress={(event) => navigateCreateWallet(event, networkId, implementationId)}
+            onPress={(event) =>
+              navigateCreateWallet(event, networkId, implementationId)
+            }
             title={createWalletLabel}
             style={styles.createButton}
             testID="createWalletButton"
           />
           <Button
             outline
-            onPress={(event) => navigateRestoreWallet(event, networkId, implementationId)}
+            onPress={(event) =>
+              navigateRestoreWallet(event, networkId, implementationId)
+            }
             title={restoreWalletLabel}
             style={styles.createButton}
             testID="restoreWalletButton"

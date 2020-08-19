@@ -90,7 +90,11 @@ describe('AddressChain', () => {
         'b5bafb0b1fc6c8040cc8f69f7c1948dfb4dcadec4acd09730c0efb39c6159362',
     }
     chain = new AddressChain(
-      new AddressGenerator(account.root_cached_key, 'Internal', 'haskell-byron'),
+      new AddressGenerator(
+        account.root_cached_key,
+        'Internal',
+        'haskell-byron',
+      ),
       5,
       2,
     )

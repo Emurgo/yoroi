@@ -1,4 +1,8 @@
 // @flow
+
+// TODO(v-almonacid): transactionCache should be decoupled from this class.
+// Use an interface instead
+
 import _ from 'lodash'
 import {defaultMemoize} from 'reselect'
 
@@ -14,7 +18,7 @@ import {
   nonblockingSynchronize,
   IsLockedError,
 } from '../utils/promise'
-import {TransactionCache} from './transactionCache'
+import {TransactionCache} from './shelley/transactionCache'
 import {validatePassword} from '../utils/validators'
 
 import type {EncryptionMethod} from './types'
@@ -245,7 +249,8 @@ export default class Wallet {
   canGenerateNewReceiveAddress() {
     const lastUsedIndex = this.getLastUsedIndex(this.externalChain)
     // TODO: should use specific wallet config
-    const maxIndex = lastUsedIndex + CONFIG.WALLETS.HASKELL_SHELLEY.MAX_GENERATED_UNUSED
+    const maxIndex =
+      lastUsedIndex + CONFIG.WALLETS.HASKELL_SHELLEY.MAX_GENERATED_UNUSED
     if (this.state.lastGeneratedAddressIndex >= maxIndex) {
       return false
     }

@@ -1,7 +1,6 @@
 // @flow
 
-// TODO(v-almonacid): this doesn't include haskell shelley logic yet
-// but still the byron-era implementation
+// implements Shelley-era wallets. Also supports legacy Byron wallets
 
 import _ from 'lodash'
 import uuid from 'uuid'
@@ -23,18 +22,20 @@ import * as byronUtil from '../byron/util'
 import {ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
 import * as api from '../../api/byron/api'
 import {CONFIG} from '../../config/config'
-import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../../config/types'
+import {
+  NETWORK_REGISTRY,
+  WALLET_IMPLEMENTATION_REGISTRY,
+} from '../../config/types'
 import assert from '../../utils/assert'
 import {Logger} from '../../utils/logging'
 import {InvalidState} from '../errors'
-import {TransactionCache} from '../transactionCache'
+import {TransactionCache} from './transactionCache'
 import {signTransaction} from './transactions'
 import {createUnsignedTx} from './transactionUtils'
 import {genTimeToSlot} from '../../utils/timeUtils'
 
 import type {RawUtxo, TxBodiesRequest, TxBodiesResponse} from '../../api/types'
 import type {AddressedUtxo, BaseSignRequest, SignedTx} from './../types'
-import type {CryptoAccount} from '../byron/util'
 import type {HWDeviceInfo} from '../byron/ledgerUtils'
 import type {NetworkId, WalletImplementationId} from '../../config/types'
 import type {WalletMeta} from '../../state'
@@ -128,9 +129,11 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     const masterKeyPtr = await Bip32PrivateKey.from_bytes(
       Buffer.from(masterKey, 'hex'),
     )
-    const accountKey = await (await (await masterKeyPtr.derive(_purpose))
-      .derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO))
-      .derive(0 + CONFIG.NUMBERS.HARD_DERIVATION_START)
+    const accountKey = await (await (await masterKeyPtr.derive(
+      _purpose,
+    )).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)).derive(
+      0 + CONFIG.NUMBERS.HARD_DERIVATION_START,
+    )
     const accountPubKey = await accountKey.to_public()
     const accountPubKeyHex = Buffer.from(
       await accountPubKey.as_bytes(),
@@ -171,11 +174,15 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
 
   _integrityCheck(): void {
     try {
-      assert.assert(this.networkId === NETWORK_REGISTRY.HASKELL_SHELLEY,
-        'invalid networkId')
       assert.assert(
-        this.walletImplementationId === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY ||
-        this.walletImplementationId === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
+        this.networkId === NETWORK_REGISTRY.HASKELL_SHELLEY,
+        'invalid networkId',
+      )
+      assert.assert(
+        this.walletImplementationId ===
+          WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY ||
+          this.walletImplementationId ===
+            WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
         'invalid walletImplementationId',
       )
       if (this.isHW) {
@@ -199,13 +206,13 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     }
 
     // can be null for versions < 3.0.0
-    this.networkId = data.networkId != null
-      ? data.networkId
-      : walletMeta.networkId
+    this.networkId =
+      data.networkId != null ? data.networkId : walletMeta.networkId
     // can be null for versions < 3.0.2
-    this.walletImplementationId = data.walletImplementationId != null
-      ? data.walletImplementationId
-      : walletMeta.walletImplementationId
+    this.walletImplementationId =
+      data.walletImplementationId != null
+        ? data.walletImplementationId
+        : walletMeta.walletImplementationId
 
     this.isHW = data.isHW != null ? data.isHW : false
     this.hwDeviceInfo = data.hwDeviceInfo

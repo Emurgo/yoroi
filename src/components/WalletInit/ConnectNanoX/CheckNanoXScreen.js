@@ -80,7 +80,9 @@ const CheckNanoXScreen = ({intl, onPress, navigation}) => {
         )}
       </View>
       <Button
-        onPress={(event) => onPress(event, networkId, walletImplementationId, useUSB)}
+        onPress={(event) =>
+          onPress(event, networkId, walletImplementationId, useUSB)
+        }
         title={intl.formatMessage(
           confirmationMessages.commonButtons.continueButton,
         )}
