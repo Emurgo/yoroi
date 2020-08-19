@@ -2,7 +2,6 @@
 import {BigNumber} from 'bignumber.js'
 import {
   BigNum,
-  Coin,
   LinearFee,
   TransactionBuilder,
 } from 'react-native-haskell-shelley'
@@ -47,10 +46,10 @@ export const createUnsignedTx = async (
     const protocolParams = {
       keyDeposit: await BigNum.from_str(KEY_DEPOSIT),
       linearFee: await LinearFee.new(
-        await Coin.from_str(LINEAR_FEE.COEFFICIENT),
-        await Coin.from_str(LINEAR_FEE.CONSTANT),
+        await BigNum.from_str(LINEAR_FEE.COEFFICIENT),
+        await BigNum.from_str(LINEAR_FEE.CONSTANT),
       ),
-      minimumUtxoVal: await Coin.from_str(MINIMUM_UTXO_VAL),
+      minimumUtxoVal: await BigNum.from_str(MINIMUM_UTXO_VAL),
       poolDeposit: await BigNum.from_str(POOL_DEPOSIT),
     }
 
