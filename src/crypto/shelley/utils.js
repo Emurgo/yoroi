@@ -48,9 +48,11 @@ export const normalizeToAddress = async (
   // this function, we try parsing in all encodings possible
 
   // 1) Try converting from base58
-  if (await ByronAddress.is_valid(addr)) {
-    return await (await ByronAddress.from_base58(addr)).to_address()
-  }
+  try {
+    if (await ByronAddress.is_valid(addr)) {
+      return await (await ByronAddress.from_base58(addr)).to_address()
+    }
+  } catch (_e) {} // eslint-disable-line no-empty
 
   // 2) If already base16, simply return
   try {
