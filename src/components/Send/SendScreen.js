@@ -171,8 +171,9 @@ const recomputeAll = async ({amount, address, utxos}) => {
     try {
       const parsedAmount = parseAdaDecimal(amount)
       const {unsignedTx} = await getTransactionData(utxos, address, amount)
+      // TODO: compute fee as difference
       const _fee = new BigNumber(
-        await (await unsignedTx.get_fee_or_calc()).to_str(),
+        await (await unsignedTx.get_fee_if_set()).to_str(),
       )
       balanceAfter = getUtxoBalance(utxos)
         .minus(parsedAmount)
@@ -313,7 +314,7 @@ class SendScreen extends Component<Props, State> {
       /* :: if (!utxos) throw 'assert' */
       const transactionData = await getTransactionData(utxos, address, amount)
       const fee = new BigNumber(
-        await (await transactionData.unsignedTx.get_fee_or_calc()).to_str(),
+        await (await transactionData.unsignedTx.get_fee_if_set()).to_str(),
       )
 
       navigation.navigate(SEND_ROUTES.CONFIRM, {

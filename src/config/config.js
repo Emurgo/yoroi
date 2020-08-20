@@ -1,8 +1,11 @@
 // @flow
 import {NUMBERS} from './numbers'
 import {NETWORKS} from './networks'
+import {WALLET_IMPLEMENTATION_REGISTRY, DERIVATION_TYPES} from './types'
 import {LogLevel} from '../utils/logging'
 import env from '../env'
+
+import type {WalletImplementation} from './types'
 
 const IS_DEBUG = __DEV__
 /** debugging flags
@@ -33,6 +36,33 @@ export const ASSURANCE_LEVELS = {
     LOW: 5,
     MEDIUM: 15,
   },
+}
+
+const _DEFAULT_DISCOVERY_SETTINGS = {
+  DISCOVERY_GAP_SIZE: 20,
+  DISCOVERY_BLOCK_SIZE: 50, // should be less than API limitations
+  MAX_GENERATED_UNUSED: 20, // must be <= gap size
+}
+
+export const WALLETS = {
+  HASKELL_BYRON: ({
+    WALLET_IMPLEMENTATION_ID: WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
+    TYPE: DERIVATION_TYPES.BIP44,
+    MNEMONIC_LEN: 15,
+    ..._DEFAULT_DISCOVERY_SETTINGS,
+  }: WalletImplementation),
+  HASKELL_SHELLEY: ({
+    WALLET_IMPLEMENTATION_ID: WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY,
+    TYPE: DERIVATION_TYPES.CIP1852,
+    MNEMONIC_LEN: 15,
+    ..._DEFAULT_DISCOVERY_SETTINGS,
+  }: WalletImplementation),
+  JORMUNGANDR_ITN: ({
+    WALLET_IMPLEMENTATION_ID: WALLET_IMPLEMENTATION_REGISTRY.JORMUNGANDR_ITN,
+    TYPE: DERIVATION_TYPES.CIP1852,
+    MNEMONIC_LEN: 15,
+    ..._DEFAULT_DISCOVERY_SETTINGS,
+  }: WalletImplementation),
 }
 
 const HARDWARE_WALLETS = {
@@ -73,12 +103,8 @@ export const CONFIG = {
     ? ASSURANCE_LEVELS.STRICT
     : ASSURANCE_LEVELS.NORMAL,
   HISTORY_REFRESH_TIME: 10 * 1000,
-  WALLET: {
-    DISCOVERY_GAP_SIZE: 20,
-    DISCOVERY_BLOCK_SIZE: 50, // should be less than API limitations
-    MAX_GENERATED_UNUSED: 20, // must be <= gap size
-  },
   NUMBERS,
+  WALLETS,
   NETWORKS,
   HARDWARE_WALLETS,
   PIN_LENGTH: 6,

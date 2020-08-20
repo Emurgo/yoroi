@@ -11,7 +11,6 @@ import {
   ByronAddress,
   Certificate,
   Certificates,
-  Coin,
   LinearFee,
   hash_transaction,
   make_icarus_bootstrap_witness,
@@ -82,7 +81,7 @@ export const sendAllUnsignedTxFromUtxo = async (
     await addUtxoInput(txBuilder, input)
   }
 
-  if (totalBalance.lt(await (await txBuilder.estimate_fee()).to_str())) {
+  if (totalBalance.lt(await (await txBuilder.min_fee()).to_str())) {
     // not enough in inputs to even cover the cost of including themselves in a tx
     throw new InsufficientFunds()
   }
@@ -118,7 +117,7 @@ export const sendAllUnsignedTx = async (
   absSlotNumber: BigNumber,
   protocolParams: {|
     linearFee: LinearFee,
-    minimumUtxoVal: Coin,
+    minimumUtxoVal: BigNum,
     poolDeposit: BigNum,
     keyDeposit: BigNum,
   |},
@@ -180,7 +179,7 @@ async function addUtxoInput(
     await txBuilder.add_bootstrap_input(
       byronAddr,
       await utxoToTxInput(input),
-      await Coin.from_str(input.amount),
+      await BigNum.from_str(input.amount),
     )
     return
   }
@@ -190,7 +189,7 @@ async function addUtxoInput(
   await txBuilder.add_key_input(
     keyHash,
     await utxoToTxInput(input),
-    await Coin.from_str(input.amount),
+    await BigNum.from_str(input.amount),
   )
 }
 
@@ -212,6 +211,11 @@ export const newAdaUnsignedTxFromUtxo = async (
     keyDeposit: BigNum,
   |},
   certificates: $ReadOnlyArray<Certificate>,
+  // TODO
+  // withdrawals: $ReadOnlyArray<{|
+  //   address: RewardAddress,
+  //   amount: BigNum,
+  // |}>,
 ): Promise<V4UnsignedTxUtxoResponse> => {
   const txBuilder = await TransactionBuilder.new(
     protocolParams.linearFee,
@@ -239,38 +243,47 @@ export const newAdaUnsignedTxFromUtxo = async (
       await txBuilder.add_output(
         await TransactionOutput.new(
           wasmReceiver,
-          await Coin.from_str(output.amount),
+          await BigNum.from_str(output.amount),
         ),
       )
     }
   }
 
-  let currentInputSum = new BigNumber(0)
+  // pick inputs
   const usedUtxos: Array<RawUtxo> = []
-  // add utxos until we have enough to send the transaction
-  for (const utxo of utxos) {
-    usedUtxos.push(utxo)
-    currentInputSum = currentInputSum.plus(utxo.amount)
-    await addUtxoInput(txBuilder, utxo)
-    const output = new BigNumber(
-      await (await (await txBuilder.get_explicit_output()).checked_add(
-        await txBuilder.estimate_fee(),
-      )).to_str(),
-    )
-
-    if (currentInputSum.gte(output)) {
-      break
-    }
-  }
-  // check to see if we have enough balance in the wallet to cover the transaction
   {
-    const output = new BigNumber(
-      await (await (await txBuilder.get_explicit_output()).checked_add(
-        await txBuilder.estimate_fee(),
-      )).to_str(),
+    // recall: we might have some implicit input to start with from deposit refunds
+    let currentInputSum = new BigNumber(
+      await (await txBuilder.get_explicit_input()).to_str(),
     )
-    if (currentInputSum.lt(output)) {
+    if (utxos.length === 0) {
       throw new InsufficientFunds()
+    }
+    // add utxos until we have enough to send the transaction
+    for (const utxo of utxos) {
+      usedUtxos.push(utxo) // note: this ensure we have at least one UTXO in the tx
+      currentInputSum = currentInputSum.plus(utxo.amount)
+      await addUtxoInput(txBuilder, utxo)
+      const output = new BigNumber(
+        await (await (await (await txBuilder.get_explicit_output()).checked_add(
+          await txBuilder.min_fee(),
+        )).checked_add(await txBuilder.get_deposit())).to_str(),
+      )
+
+      if (currentInputSum.gte(output)) {
+        break
+      }
+    }
+    // check to see if we have enough balance in the wallet to cover the transaction
+    {
+      const output = new BigNumber(
+        await (await (await (await txBuilder.get_explicit_output()).checked_add(
+          await txBuilder.min_fee(),
+        )).checked_add(await txBuilder.get_deposit())).to_str(),
+      )
+      if (currentInputSum.lt(output)) {
+        throw new InsufficientFunds()
+      }
     }
   }
 
@@ -280,18 +293,19 @@ export const newAdaUnsignedTxFromUtxo = async (
         await txBuilder.get_implicit_input(),
       )
       const totalOutput = await txBuilder.get_explicit_output()
-      const fee = new BigNumber(
-        await (await totalInput.checked_sub(totalOutput)).to_str(),
+      const deposit = await txBuilder.get_deposit()
+      const difference = new BigNumber(
+        await (await (await totalInput.checked_sub(totalOutput)).checked_sub(
+          deposit,
+        )).to_str(),
       )
-      const minFee = new BigNumber(
-        await (await txBuilder.estimate_fee()).to_str(),
-      )
-      if (fee.lt(minFee)) {
+      const minFee = new BigNumber(await (await txBuilder.min_fee()).to_str())
+      if (difference.lt(minFee)) {
         throw new InsufficientFunds()
       }
       // recall: min fee assumes the largest fee possible
       // so no worries of cbor issue by including larger fee
-      await txBuilder.set_fee(await Coin.from_str(fee.toString()))
+      await txBuilder.set_fee(await BigNum.from_str(difference.toString()))
       return []
     }
     const oldOutput = await txBuilder.get_explicit_output()
@@ -334,7 +348,7 @@ export const newAdaUnsignedTx = async (
   absSlotNumber: BigNumber,
   protocolParams: {|
     linearFee: LinearFee,
-    minimumUtxoVal: Coin,
+    minimumUtxoVal: BigNum,
     poolDeposit: BigNum,
     keyDeposit: BigNum,
   |},

@@ -25,6 +25,7 @@ export const NETWORKS = {
   },
   HASKELL_SHELLEY: {
     NETWORK_ID: NETWORK_REGISTRY.HASKELL_SHELLEY,
+    CHAIN_NETWORK_ID: '1',
     IS_MAINNET: true,
     BACKEND: {
       API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',

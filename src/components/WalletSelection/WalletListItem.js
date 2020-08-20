@@ -11,12 +11,12 @@ import {isJormungandr} from '../../config/networks'
 
 import styles from './styles/WalletListItem.style'
 
-import type {WalletItem} from '../../state'
+import type {WalletMeta} from '../../state'
 import type {ComponentType} from 'react'
 
 type ExternalProps = {
-  wallet: WalletItem,
-  onPress: (WalletItem) => any,
+  wallet: WalletMeta,
+  onPress: (WalletMeta) => any,
 }
 
 const WalletListItem = ({wallet, onPress}) => (

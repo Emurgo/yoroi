@@ -6,21 +6,22 @@ import {NETWORK_REGISTRY} from './config/types'
 import type {AccountState, RawUtxo} from './api/types'
 import type {Transaction} from './types/HistoryTransaction'
 import type {HWDeviceInfo} from './crypto/byron/ledgerUtils'
-import type {NetworkId} from './config/types'
+import type {NetworkId, WalletImplementationId} from './config/types'
 
 export type Dict<T> = {[string]: T}
 
-export type WalletItem = {
+export type WalletMeta = {
   id: string,
   name: string,
   networkId: NetworkId,
+  walletImplementationId: WalletImplementationId,
   isHW: boolean,
   isShelley: ?boolean, // legacy jormungandr
   isEasyConfirmationEnabled: boolean,
 }
 
 export type State = {
-  wallets: Dict<WalletItem>,
+  wallets: Dict<WalletMeta>,
   wallet: {
     name: string,
     isInitialized: boolean,

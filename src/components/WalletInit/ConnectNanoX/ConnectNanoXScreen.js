@@ -40,11 +40,16 @@ const _navigateToSave = async (
   Logger.debug('deviceObj', deviceObj)
   const useUSB = navigation.getParam('useUSB') === true
   const networkId = navigation.getParam('networkId')
+  const walletImplementationId = navigation.getParam('walletImplementationId')
   if (deviceId == null && deviceObj == null) {
     throw new Error('null descriptor, should never happen')
   }
   const hwDeviceInfo = await getHWDeviceInfo(deviceId, deviceObj, useUSB)
-  navigation.navigate(WALLET_INIT_ROUTES.SAVE_NANO_X, {hwDeviceInfo, networkId})
+  navigation.navigate(WALLET_INIT_ROUTES.SAVE_NANO_X, {
+    hwDeviceInfo,
+    networkId,
+    walletImplementationId,
+  })
 }
 
 type Props = {

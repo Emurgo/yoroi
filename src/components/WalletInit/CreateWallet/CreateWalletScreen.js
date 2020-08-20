@@ -65,9 +65,13 @@ export default injectIntl(
         // target network.
         const mnemonic = generateAdaMnemonic()
         const networkId = navigation.getParam('networkId')
+        const walletImplementationId = navigation.getParam(
+          'walletImplementationId',
+        )
         navigation.navigate(WALLET_INIT_ROUTES.MNEMONIC_SHOW, {
           mnemonic,
           networkId,
+          walletImplementationId,
           ...formData,
         })
       },

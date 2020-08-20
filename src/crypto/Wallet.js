@@ -1,4 +1,8 @@
 // @flow
+
+// TODO(v-almonacid): transactionCache should be decoupled from this class.
+// Use an interface instead
+
 import _ from 'lodash'
 import {defaultMemoize} from 'reselect'
 
@@ -14,13 +18,13 @@ import {
   nonblockingSynchronize,
   IsLockedError,
 } from '../utils/promise'
-import {TransactionCache} from './transactionCache'
+import {TransactionCache} from './shelley/transactionCache'
 import {validatePassword} from '../utils/validators'
 
 import type {EncryptionMethod} from './types'
 import type {Mutex} from '../utils/promise'
 import type {HWDeviceInfo} from './byron/ledgerUtils'
-import type {NetworkId} from '../config/types'
+import type {NetworkId, WalletImplementationId} from '../config/types'
 
 type WalletState = {|
   lastGeneratedAddressIndex: number,
@@ -31,6 +35,8 @@ export default class Wallet {
   id: string = null
 
   networkId: NetworkId
+
+  walletImplementationId: WalletImplementationId
 
   isHW: boolean = false
 
@@ -242,7 +248,9 @@ export default class Wallet {
 
   canGenerateNewReceiveAddress() {
     const lastUsedIndex = this.getLastUsedIndex(this.externalChain)
-    const maxIndex = lastUsedIndex + CONFIG.WALLET.MAX_GENERATED_UNUSED
+    // TODO: should use specific wallet config
+    const maxIndex =
+      lastUsedIndex + CONFIG.WALLETS.HASKELL_SHELLEY.MAX_GENERATED_UNUSED
     if (this.state.lastGeneratedAddressIndex >= maxIndex) {
       return false
     }
@@ -272,6 +280,7 @@ export default class Wallet {
 
   // ========== persistence ============= //
 
+  // TODO: move to specific child class?
   toJSON() {
     return {
       lastGeneratedAddressIndex: this.state.lastGeneratedAddressIndex,
@@ -281,6 +290,7 @@ export default class Wallet {
       externalChain: this.externalChain.toJSON(),
       transactionCache: this.transactionCache.toJSON(),
       networkId: this.networkId,
+      walletImplementationId: this.walletImplementationId,
       isHW: this.isHW,
       hwDeviceInfo: this.hwDeviceInfo,
       isEasyConfirmationEnabled: this.isEasyConfirmationEnabled,

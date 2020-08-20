@@ -174,6 +174,7 @@ export default injectIntl(
         navigation.navigate(WALLET_INIT_ROUTES.WALLET_CREDENTIALS, {
           phrase: cleanMnemonic(phrase),
           networkId: navigation.getParam('networkId'),
+          walletImplementationId: navigation.getParam('walletImplementationId'),
         })
       },
       translateInvalidPhraseError: ({intl}) => (error) =>
