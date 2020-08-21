@@ -25,6 +25,7 @@ import type {EncryptionMethod} from './types'
 import type {Mutex} from '../utils/promise'
 import type {HWDeviceInfo} from './byron/ledgerUtils'
 import type {NetworkId, WalletImplementationId} from '../config/types'
+import type {WalletChecksum} from '@emurgo/cip4-js'
 
 type WalletState = {|
   lastGeneratedAddressIndex: number,
@@ -54,6 +55,8 @@ export default class Wallet {
 
   // last known version the wallet has been created/restored
   version: ?string
+
+  checksum: WalletChecksum
 
   state: WalletState = {
     lastGeneratedAddressIndex: 0,

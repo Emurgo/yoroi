@@ -163,7 +163,7 @@ export default injectIntl(
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withStateHandlers(
       {
-        phrase: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.MNEMONIC1 : '',
+        phrase: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.MNEMONIC3 : '',
       },
       {
         setPhrase: (state) => (value) => ({phrase: value}),

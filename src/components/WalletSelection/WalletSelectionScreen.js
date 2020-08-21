@@ -36,10 +36,6 @@ import type {State} from '../../state'
 import type {ComponentType} from 'react'
 import type {NetworkId, WalletImplementationId} from '../../config/types'
 
-import walletAvatar from '../../assets/mockAssets/avatar.png'
-import CardanoIcon from '../../assets/CardanoIcon'
-import {COLORS} from '../../styles/config'
-
 const messages = defineMessages({
   header: {
     id: 'components.walletselection.walletselectionscreen.header',
@@ -143,20 +139,10 @@ const walletsListSelector = (state) => Object.values(state.wallets)
 export default injectIntl(
   (compose(
     connect(
-      (state: State) => {
-        const newWalletsData = walletsListSelector(state).map((obj) => ({
-          ...obj,
-          avatar: walletAvatar, // hardcoded mock image
-          checksum: 'BONE-0730', // hardcoded text for now
-          // not sure what will be the best way to handle the icon here
-          icon: <CardanoIcon height={16} width={16} color={COLORS.WHITE} />,
-          iconName: 'Cardano, ADA', // hardcoded text for now
-        }))
-        return {
-          wallets: newWalletsData,
-          currentVersion: currentVersionSelector(state),
-        }
-      },
+      (state: State) => ({
+        wallets: walletsListSelector(state),
+        currentVersion: currentVersionSelector(state),
+      }),
       {
         updateVersion,
       },

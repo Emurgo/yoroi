@@ -14,6 +14,7 @@ import {
   TransactionBuilder,
 } from 'react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
+import {walletChecksum, legacyWalletChecksum} from '@emurgo/cip4-js'
 
 import Wallet from '../Wallet'
 import {WalletInterface} from '../WalletInterface'
@@ -86,6 +87,11 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     this.chimericAccountAddress = chimericAccountAddr
 
     this.version = DeviceInfo.getVersion()
+
+    this.checksum =
+      implementationId === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
+        ? legacyWalletChecksum(accountPubKeyHex)
+        : walletChecksum(accountPubKeyHex)
 
     // Create at least one address in each block
     await this.internalChain.initialize()

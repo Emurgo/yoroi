@@ -3,14 +3,25 @@ import React, {useState} from 'react'
 import type {ComponentType} from 'react'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
-import {View, Image, TouchableOpacity, Clipboard, Animated} from 'react-native'
+import {
+  View,
+  Image,
+  TouchableOpacity,
+  Clipboard,
+  Animated,
+  Linking,
+} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import {debounce} from 'lodash'
 
 import {onWillUnmount} from '../../../utils/renderUtils'
 import copyIcon from '../../../assets/img/icon/copy.png'
 import {Text} from '../../UiKit'
+import {getNetworkConfigById} from '../../../config/networks'
+
 import styles from './styles/VerifyRestoredWallet.style'
+
+import type {NetworkId} from '../../../config/types'
 
 const messages = defineMessages({
   copied: {
@@ -46,20 +57,29 @@ const FadeOutView = (props) => {
 type ExternalProps = {|
   +intl: intlShape,
   +addressHash: string,
+  +networkId: NetworkId,
 |}
 
-const WalletAddress = ({intl, addressHash, copyPoolHash, showCopyNotif}) => (
+const WalletAddress = ({
+  intl,
+  addressHash,
+  onTapAddress,
+  copyHash,
+  showCopyNotif,
+}) => (
   <View style={styles.addressRowStyles}>
-    <Text numberOfLines={1} ellipsizeMode="middle" style={styles.addressHash}>
-      {addressHash}
-    </Text>
+    <TouchableOpacity activeOpacity={0.5} onPress={onTapAddress}>
+      <Text numberOfLines={1} ellipsizeMode="middle" style={styles.addressHash}>
+        {addressHash}
+      </Text>
+    </TouchableOpacity>
     <TouchableOpacity
       activeOpacity={0.5}
-      onPress={debounce(copyPoolHash, COPY_NOTIFICATION_TIME, {
+      onPress={debounce(copyHash, COPY_NOTIFICATION_TIME, {
         leading: true,
       })}
     >
-      <Image source={copyIcon} style={styles.copyIcon} width={24} height={24} />
+      <Image source={copyIcon} style={styles.copyIcon} width={22} height={22} />
     </TouchableOpacity>
     {showCopyNotif && (
       <FadeOutView>
@@ -86,11 +106,11 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      copyPoolHash: ({
-        addressHash,
-        setShowCopyNotif,
-        registerTimeout,
-      }) => () => {
+      onTapAddress: ({addressHash, networkId}) => () => {
+        const config = getNetworkConfigById(networkId)
+        Linking.openURL(config.EXPLORER_URL_FOR_ADDRESS(addressHash))
+      },
+      copyHash: ({addressHash, setShowCopyNotif, registerTimeout}) => () => {
         Clipboard.setString(addressHash)
         setShowCopyNotif(true)
         const t = setTimeout(

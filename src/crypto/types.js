@@ -6,6 +6,7 @@ import {
 } from 'react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 
+import type {WalletChecksum} from '@emurgo/cip4-js'
 import type {RawUtxo} from '../api/types'
 
 export type Address = {|
@@ -150,3 +151,8 @@ export type WalletState = {|
 |}
 
 export type EncryptionMethod = 'BIOMETRICS' | 'SYSTEM_PIN' | 'MASTER_PASSWORD'
+
+export type PlateResponse = {|
+  addresses: Array<string>,
+  accountPlate: WalletChecksum,
+|}

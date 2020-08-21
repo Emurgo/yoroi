@@ -1,12 +1,16 @@
 // @flow
 import React from 'react'
-import {TouchableOpacity, Text, View, Image} from 'react-native'
+import {TouchableOpacity, Text, View} from 'react-native'
 import {compose, withHandlers} from 'recompose'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {isJormungandr} from '../../config/networks'
+import {WALLET_IMPLEMENTATION_REGISTRY} from '../../config/types'
+import WalletAccountIcon from '../Common/WalletAccountIcon'
 
 import styles from './styles/WalletListItem.style'
+import CardanoIcon from '../../assets/CardanoIcon'
+import {COLORS} from '../../styles/config'
 
 import type {WalletMeta} from '../../state'
 import type {Node, ComponentType} from 'react'
@@ -21,12 +25,34 @@ type CustomIconProps = {
   icon: Node,
 }
 
-const getWalletTitle = (walletMeta: WalletMeta): string => {
-  // TODO: add label for shelley/byron era wallets
-  if (isJormungandr(walletMeta.networkId)) {
-    return `${walletMeta.name} (ITN)`
+type WalletItemMeta = {
+  type: string,
+  iconName: string,
+  icon: Node,
+}
+const getWalletItemMeta = (walletMeta: WalletMeta): WalletItemMeta => {
+  switch (walletMeta.walletImplementationId) {
+    case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
+      return {
+        type: 'Byron',
+        icon: <CardanoIcon height={16} width={16} color={COLORS.WHITE} />,
+        iconName: 'Cardano, ADA',
+      }
+    case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
+      return {
+        type: 'Shelley',
+        icon: <CardanoIcon height={16} width={16} color={COLORS.WHITE} />,
+        iconName: 'Cardano, ADA',
+      }
+    case WALLET_IMPLEMENTATION_REGISTRY.JORMUNGANDR_ITN:
+      return {
+        type: 'ITN',
+        icon: <CardanoIcon height={16} width={16} color={COLORS.WHITE} />,
+        iconName: 'Testnet, ADA',
+      }
+    default:
+      throw new Error('getWalletItemMeta:: invalid wallet implementation id')
   }
-  return walletMeta.name
 }
 
 const CustomCardanoIcon = ({isJormungandr, icon}: CustomIconProps) =>
@@ -43,21 +69,32 @@ const CustomCardanoIcon = ({isJormungandr, icon}: CustomIconProps) =>
     <View style={[styles.iconWrapper, styles.blueBackground]}>{icon}</View>
   )
 
-const WalletListItem = ({wallet, onPress}) => (
-  <TouchableOpacity activeOpacity={0.5} onPress={onPress} style={styles.item}>
-    <View style={styles.leftSide}>
-      <Image source={wallet.avatar} style={styles.walletAvatar} />
-      <View>
-        <Text style={styles.walletName}>{getWalletTitle(wallet)}</Text>
-        <Text style={styles.walletChecksum}>{wallet.checksum}</Text>
+const WalletListItem = ({wallet, onPress}) => {
+  const {type, icon, iconName} = getWalletItemMeta(wallet)
+  return (
+    <TouchableOpacity activeOpacity={0.5} onPress={onPress} style={styles.item}>
+      <View style={styles.leftSide}>
+        <WalletAccountIcon
+          iconSeed={wallet.checksum.ImagePart}
+          style={styles.walletAvatar}
+        />
+        <View>
+          <Text style={styles.walletName}>{wallet.name}</Text>
+          <Text style={styles.walletMeta}>
+            {wallet.checksum ? `${wallet.checksum.TextPart} | ${type}` : type}
+          </Text>
+        </View>
       </View>
-    </View>
-    <View style={styles.rightSide}>
-      <CustomCardanoIcon isJormungandr={isJormungandr(wallet.networkId)} icon={wallet.icon} />
-      <Text style={styles.iconText}>{wallet.iconName}</Text>
-    </View>
-  </TouchableOpacity>
-)
+      <View style={styles.rightSide}>
+        <CustomCardanoIcon
+          isJormungandr={isJormungandr(wallet.networkId)}
+          icon={icon}
+        />
+        <Text style={styles.iconText}>{iconName}</Text>
+      </View>
+    </TouchableOpacity>
+  )
+}
 
 export default (compose(
   withHandlers({

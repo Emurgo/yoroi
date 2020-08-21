@@ -76,6 +76,7 @@ export const mirrorTxHistory = () => (dispatch: Dispatch<any>) => {
     numReceiveAddresses,
     canGenerateNewReceiveAddress,
     isEasyConfirmationEnabled,
+    checksum,
   } = walletManager
 
   dispatch({
@@ -96,6 +97,7 @@ export const mirrorTxHistory = () => (dispatch: Dispatch<any>) => {
       isUsedAddressIndex,
       numReceiveAddresses,
       canGenerateNewReceiveAddress,
+      checksum,
     },
     reducer: (state, payload) => payload,
   })

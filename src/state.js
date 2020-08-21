@@ -7,6 +7,7 @@ import type {AccountState, RawUtxo} from './api/types'
 import type {Transaction} from './types/HistoryTransaction'
 import type {HWDeviceInfo} from './crypto/byron/ledgerUtils'
 import type {NetworkId, WalletImplementationId} from './config/types'
+import type {WalletChecksum} from '@emurgo/cip4-js'
 
 export type Dict<T> = {[string]: T}
 
@@ -18,6 +19,7 @@ export type WalletMeta = {
   isHW: boolean,
   isShelley: ?boolean, // legacy jormungandr
   isEasyConfirmationEnabled: boolean,
+  checksum: WalletChecksum,
 }
 
 export type State = {

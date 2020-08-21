@@ -5,7 +5,6 @@ import stylesConfig, {COLORS} from '../../../styles/config'
 
 export default StyleSheet.create({
   item: {
-    // padding: 10,
     paddingHorizontal: 16,
     paddingVertical: 18,
     flexDirection: 'row',
@@ -20,11 +19,6 @@ export default StyleSheet.create({
     flexDirection: 'row',
   },
   walletAvatar: {
-    height: 32,
-    width: 32,
-    borderRadius: 4,
-    borderColor: COLORS.WHITE,
-    borderWidth: 0.5,
     marginRight: 12,
     marginTop: 5,
   },
@@ -34,7 +28,7 @@ export default StyleSheet.create({
     color: COLORS.WHITE,
     lineHeight: 24,
   },
-  walletChecksum: {
+  walletMeta: {
     color: COLORS.WHITE,
     opacity: 0.5,
     fontSize: 10,

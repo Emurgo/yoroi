@@ -49,7 +49,7 @@ export default StyleSheet.create({
     paddingBottom: 10,
   },
   copyIcon: {
-    marginLeft: 10,
+    marginLeft: 4,
   },
 
   addressHash: {
