@@ -489,14 +489,15 @@ class WalletManager {
     this._id = id
     this._wallets = {
       ...this._wallets,
-      [id]: {
+      [id]: ({
         id,
         name,
         networkId,
         walletImplementationId,
+        isHW: wallet.isHW,
         checksum: wallet.checksum,
         isEasyConfirmationEnabled: false,
-      },
+      }: WalletMeta),
     }
 
     this._wallet = wallet

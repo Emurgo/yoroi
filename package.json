@@ -69,6 +69,7 @@
     "react-native": "0.60.0",
     "react-native-background-timer": "2.2.0",
     "react-native-ble-plx": "2.0.0",
+    "react-native-blockies-svg": "Emurgo/react-native-blockies-svg",
     "react-native-camera": "3.30.0",
     "react-native-cardano": "Emurgo/react-native-cardano#0.2.3",
     "react-native-config": "0.12.0",

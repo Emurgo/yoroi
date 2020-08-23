@@ -17,7 +17,7 @@ export type WalletMeta = {
   networkId: NetworkId,
   walletImplementationId: WalletImplementationId,
   isHW: boolean,
-  isShelley: ?boolean, // legacy jormungandr
+  isShelley?: ?boolean, // legacy jormungandr
   isEasyConfirmationEnabled: boolean,
   checksum: WalletChecksum,
 }

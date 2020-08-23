@@ -86,8 +86,7 @@ const walletRestaurationIntruction = (formatMessage) => [
 
 const CheckSumView = ({icon, checksum}) => (
   <View style={styles.checkSumView}>
-    {/* <Blokies blockies={icon} size={2} style={{width: 35, height: 35}} /> */}
-    <WalletAccountIcon iconSeed={icon} style={{width: 35, height: 35}} />
+    <WalletAccountIcon iconSeed={icon} />
     <Text style={styles.checksumText}>{checksum}</Text>
   </View>
 )

@@ -1,10 +1,11 @@
 // @flow
 
 import React from 'react'
-import {StyleSheet} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import tinycolor from 'tinycolor2'
+import Blockies from 'react-native-blockies-svg'
 
-import Blockie from './Blockie'
+import {COLORS as APP_COLORS} from '../../styles/config'
 
 import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
@@ -30,8 +31,13 @@ const saturation = (color, factor: number = 0) => {
 
 const styles = StyleSheet.create({
   defaultStyle: {
-    height: 32,
-    width: 32,
+    borderColor: APP_COLORS.LIGHT_GRAY,
+    borderRadius: 6,
+    borderWidth: 0.5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    aspectRatio: 1,
+    overflow: 'hidden',
   },
 })
 
@@ -51,15 +57,16 @@ const WalletAccountIcon = ({
   const colorIdx = Buffer.from(iconSeed, 'hex')[0] % COLORS.length
   const color = COLORS[colorIdx]
   return (
-    <Blockie
-      style={[styles.defaultStyle, style]}
-      blockies={iconSeed}
-      size={7}
-      scale={scalePx != null ? scalePx : 5}
-      bgColor={saturation(color.primary, saturationFactor)}
-      color={saturation(color.secondary, saturationFactor)}
-      spotColor={saturation(color.spots, saturationFactor)}
-    />
+    <View style={[styles.defaultStyle, style]}>
+      <Blockies
+        seed={iconSeed}
+        size={7}
+        scale={scalePx != null ? scalePx : 5}
+        bgcolor={saturation(color.primary, saturationFactor)}
+        color={saturation(color.secondary, saturationFactor)}
+        spotcolor={saturation(color.spots, saturationFactor)}
+      />
+    </View>
   )
 }
 

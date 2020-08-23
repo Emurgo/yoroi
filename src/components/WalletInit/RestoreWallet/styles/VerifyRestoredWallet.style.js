@@ -26,13 +26,6 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     paddingLeft: 12,
   },
-  avatarImage: {
-    width: 32,
-    height: 32,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: COLORS.WHITE,
-  },
   titleStyles: {
     marginBottom: 8,
   },
