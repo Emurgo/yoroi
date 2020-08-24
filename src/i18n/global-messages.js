@@ -150,7 +150,7 @@ export const ledgerMessages = defineMessages({
   connectionError: {
     id: 'global.ledgerMessages.connectionError',
     defaultMessage:
-      '!!!An error occured while trying to connect with your ' +
+      '!!!An error occurred while trying to connect with your ' +
       'hardware wallet. Please, make sure you are following the steps' +
       'correctly. Restarting your hardware wallet may also fix the problem.',
   },
@@ -332,7 +332,7 @@ export const errorMessages = {
     message: {
       id: 'global.actions.dialogs.hwConnectionError.message',
       defaultMessage:
-        '!!!An error occured while trying to connect with your ' +
+        '!!!An error occurred while trying to connect with your ' +
         'hardware wallet. Please, make sure you are following the steps' +
         'correctly. Restarting your hardware wallet may also fix the problem.',
     },
