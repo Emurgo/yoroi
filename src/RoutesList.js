@@ -35,6 +35,7 @@ export const WALLET_INIT_ROUTES = {
   SAVE_NANO_X: 'save-nano-x',
   MNEMONIC_SHOW: 'mnemoinc-show',
   MNEMONIC_CHECK: 'mnemonic-check',
+  VERIFY_RESTORED_WALLET: 'wallet-account-checksum',
   WALLET_CREDENTIALS: 'wallet-credentials',
 }
 

@@ -25,6 +25,7 @@ import type {NetworkId, WalletImplementationId} from '../config/types'
 import type {Dict, WalletMeta} from '../state'
 import type {Transaction} from '../types/HistoryTransaction'
 import type {Addresses} from './chain'
+import type {WalletChecksum} from '@emurgo/cip4-js'
 
 export interface WalletInterface {
   id: string;
@@ -54,6 +55,8 @@ export interface WalletInterface {
   isInitialized: boolean;
 
   transactionCache: TransactionCache;
+
+  checksum: WalletChecksum;
 
   // =================== getters =================== //
 

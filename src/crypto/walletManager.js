@@ -2,13 +2,13 @@
 import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
+import {walletChecksum, legacyWalletChecksum} from '@emurgo/cip4-js'
 
-// import Wallet from './Wallet'
 import {WalletInterface} from './WalletInterface'
 import ShelleyWallet from './shelley/ShelleyWallet'
 import storage from '../utils/storage'
 import KeyStore from './KeyStore'
-import {AddressChain, AddressGenerator} from './chain'
+import {AddressChain, AddressGenerator} from './shelley/chain'
 import * as util from './byron/util'
 import * as api from '../api/byron/api'
 import {CONFIG, WALLETS} from '../config/config'
@@ -27,6 +27,7 @@ import type {RawUtxo, PoolInfoRequest, TxBodiesRequest} from '../api/types'
 import type {Addressing, BaseSignRequest, EncryptionMethod} from './types'
 import type {HWDeviceInfo} from './byron/ledgerUtils'
 import type {NetworkId, WalletImplementationId} from '../config/types'
+import type {WalletChecksum} from '@emurgo/cip4-js'
 
 /**
  * returns all used addresses (external and change addresses concatenated)
@@ -39,10 +40,10 @@ export const mnemonicsToAddresses = async (
   const masterKey = await util.getMasterKeyFromMnemonic(mnemonic)
   const account = await util.getAccountFromMasterKey(masterKey)
   const internalChain = new AddressChain(
-    new AddressGenerator(account, 'Internal'),
+    new AddressGenerator(account.root_cached_key, 'Internal'),
   )
   const externalChain = new AddressChain(
-    new AddressGenerator(account, 'External'),
+    new AddressGenerator(account.root_cached_key, 'External'),
   )
   const chains = [['Internal', internalChain], ['External', externalChain]]
   for (const chain of chains) {
@@ -124,44 +125,86 @@ class WalletManager {
     return result
   }
 
+  // note(v-almonacid): This method retrieves all the wallets' metadata from
+  // storage. Unfortunately, as new metadata is added over time (eg. networkId),
+  // we need to infer some values for wallets created in older versions,
+  // which may induce errors and leave us with this ugly method.
+  // The responsability to check data consistency is left to the each wallet
+  // implementation.
   async initialize() {
     const _wallets = await this._listWallets()
     // need to migrate wallet list to new format after (haskell) shelley
     // integration. Prior to v3.0, w.isShelley denoted an ITN wallet
-    const wallets = _wallets.map((w) => {
-      if (w.networkId == null && w.isShelley != null) {
-        return {
-          ...w,
-          networkId: w.isShelley
+    const wallets = await Promise.all(
+      _wallets.map(async (w) => {
+        let networkId
+        let walletImplementationId
+        if (w.networkId == null && w.isShelley != null) {
+          networkId = w.isShelley
             ? NETWORK_REGISTRY.JORMUNGANDR
-            : NETWORK_REGISTRY.HASKELL_SHELLEY,
-          walletImplementationId: w.isShelley
+            : NETWORK_REGISTRY.HASKELL_SHELLEY
+          walletImplementationId = w.isShelley
             ? WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID
-            : WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
-        }
-      } else {
-        // if wallet implementation is not defined, assume Byron
-        return {
-          ...w,
-          walletImplementationId:
+            : WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID
+        } else {
+          // if wallet implementation/network is not defined, assume Byron
+          walletImplementationId =
             w.walletImplementationId != null
               ? w.walletImplementationId
-              : WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
+              : WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID
+          networkId =
+            w.networkId != null ? w.networkId : NETWORK_REGISTRY.HASKELL_SHELLEY
         }
-      }
-    })
+
+        let checksum: WalletChecksum
+        const data = await storage.read(`/wallet/${w.id}/data`)
+        if (w.checksum == null) {
+          if (data != null && data.externalChain.addressGenerator != null) {
+            const {
+              account,
+              accountPubKeyHex,
+            } = data.externalChain.addressGenerator
+            switch (walletImplementationId) {
+              case WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID:
+                checksum = legacyWalletChecksum(account.root_cached_key)
+                break
+              case WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID:
+                checksum = walletChecksum(accountPubKeyHex)
+                break
+              case WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID:
+                checksum = legacyWalletChecksum(account)
+                break
+              default:
+                checksum = {ImagePart: '', TextPart: ''}
+            }
+          } else {
+            checksum = {ImagePart: '', TextPart: ''}
+          }
+        } else {
+          checksum = w.checksum
+        }
+        const isHW = data != null && data.isHW != null ? data.isHW : false
+        return {
+          ...w,
+          isHW,
+          networkId,
+          walletImplementationId,
+          checksum,
+        }
+      }),
+    )
     // integrity check
     wallets.forEach((w) => {
       assert.assert(w.networkId != null, 'wallet should have networkId')
       assert.assert(
         !!w.walletImplementationId,
-        'wallet should have walletClassId',
+        'wallet should have walletImplementationId',
       )
       assert.assert(
         Object.values(WALLET_IMPLEMENTATION_REGISTRY).indexOf(
           w.walletImplementationId,
         ) > -1,
-        'invalid walletClassId',
+        'invalid walletImplementationId',
       )
     })
     this._wallets = _.fromPairs(wallets.map((w) => [w.id, w]))
@@ -273,6 +316,11 @@ class WalletManager {
   get version() {
     if (!this._wallet) return null
     return this._wallet.version
+  }
+
+  get checksum() {
+    if (!this._wallet) return ''
+    return this._wallet.checksum
   }
 
   get walletName() {
@@ -445,13 +493,15 @@ class WalletManager {
     this._id = id
     this._wallets = {
       ...this._wallets,
-      [id]: {
+      [id]: ({
         id,
         name,
         networkId,
         walletImplementationId,
+        isHW: wallet.isHW,
+        checksum: wallet.checksum,
         isEasyConfirmationEnabled: false,
-      },
+      }: WalletMeta),
     }
 
     this._wallet = wallet

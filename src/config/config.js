@@ -93,6 +93,12 @@ export const CONFIG = {
       'amount decrease congress flee smile impulse',
       'parade perfect normal',
     ].join(' '),
+    MNEMONIC3: [
+      'make exercise taxi asset',
+      'reject seek brain volcano roof',
+      'boss already cement scrub',
+      'nut priority',
+    ].join(' '),
     SEND_ADDRESS: 'Ae2tdPwUPEZAghGCdQykbGxc991wdoA8bXmSn7eCGuUKXF4EsRhWj4PJitn',
     SEND_AMOUNT: '1',
   },

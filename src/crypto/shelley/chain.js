@@ -1,7 +1,7 @@
 // @flow
 
 /**
- * TODO(v-almonacid): implement for Shelley
+ * Shelley- & Byron-compatible address generator
  */
 
 import _ from 'lodash'
@@ -37,7 +37,8 @@ export class AddressGenerator {
   constructor(
     accountPubKeyHex: string,
     type: AddressType,
-    walletImplementationId: WalletImplementationId,
+    walletImplementationId: WalletImplementationId = CONFIG.WALLETS
+      .HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
   ) {
     this.accountPubKeyHex = accountPubKeyHex
     this.type = type
@@ -67,7 +68,7 @@ export class AddressGenerator {
           Buffer.from(this.accountPubKeyHex, 'hex'),
         )
       }
-      const internalKey = await this._accountPubKeyPtr.derive(
+      const chainKey = await this._accountPubKeyPtr.derive(
         ADDRESS_TYPE_TO_CHANGE[this.type],
       )
       const stakingKey = await (await (await this._accountPubKeyPtr.derive(
@@ -76,7 +77,7 @@ export class AddressGenerator {
 
       return await Promise.all(
         idxs.map(async (idx) => {
-          const addrKey = await (await internalKey.derive(idx)).to_raw_key()
+          const addrKey = await (await chainKey.derive(idx)).to_raw_key()
           const addr = await BaseAddress.new(
             parseInt(CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID, 10),
             await StakeCredential.from_keyhash(await addrKey.hash()),
@@ -109,11 +110,13 @@ export class AddressGenerator {
       // this should be wallet created in Byron
       const {account} = data
       if (account.root_cached_key != null) {
+        // byron-era wallet
         _accountPubKeyHex = account.root_cached_key
       } else {
         throw new Error('cannot retrieve account public key.')
       }
     } else {
+      // shelley-era wallet
       _accountPubKeyHex = accountPubKeyHex
     }
 

@@ -15,7 +15,10 @@ export const NETWORKS = {
   BYRON_MAINNET: {
     NETWORK_ID: NETWORK_REGISTRY.BYRON_MAINNET,
     IS_MAINNET: true,
-    EXPLORER_URL_FOR_TX: (tx: string) => `https://cardanoexplorer.com/tx/${tx}`,
+    EXPLORER_URL_FOR_ADDRESS: (address: string) =>
+      `https://explorer.cardano.org/en/address?address=${address}`,
+    EXPLORER_URL_FOR_TX: (tx: string) =>
+      `https://explorer.cardano.org/tx/${tx}`,
     PROTOCOL_MAGIC: 764824073,
     BACKEND: {
       API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
@@ -27,6 +30,8 @@ export const NETWORKS = {
     NETWORK_ID: NETWORK_REGISTRY.HASKELL_SHELLEY,
     CHAIN_NETWORK_ID: '1',
     IS_MAINNET: true,
+    EXPLORER_URL_FOR_ADDRESS: (address: string) =>
+      `https://explorer.cardano.org/en/address?address=${address}`,
     BACKEND: {
       API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
       ..._DEFAULT_BACKEND_RULES,
@@ -86,3 +91,16 @@ export const NETWORKS = {
 
 export const isJormungandr = (networkId: NetworkId): boolean =>
   networkId === NETWORK_REGISTRY.JORMUNGANDR
+
+type NetworkConfig =
+  | typeof NETWORKS.BYRON_MAINNET
+  | typeof NETWORKS.HASKELL_SHELLEY
+  | typeof NETWORKS.JORMUNGANDR
+export const getNetworkConfigById = (id: NetworkId): NetworkConfig => {
+  const idx = Object.values(NETWORK_REGISTRY).indexOf(id)
+  const network = Object.keys(NETWORK_REGISTRY)[idx]
+  if (network != null && network !== 'UNDEFINED' && NETWORKS[network] != null) {
+    return NETWORKS[network]
+  }
+  throw new Error('invalid networkId')
+}
