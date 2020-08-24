@@ -27,6 +27,7 @@ import type {RawUtxo, PoolInfoRequest, TxBodiesRequest} from '../api/types'
 import type {Addressing, BaseSignRequest, EncryptionMethod} from './types'
 import type {HWDeviceInfo} from './byron/ledgerUtils'
 import type {NetworkId, WalletImplementationId} from '../config/types'
+import type {WalletChecksum} from '@emurgo/cip4-js'
 
 /**
  * returns all used addresses (external and change addresses concatenated)
@@ -154,26 +155,27 @@ class WalletManager {
           networkId =
             w.networkId != null ? w.networkId : NETWORK_REGISTRY.HASKELL_SHELLEY
         }
-        //
-        let checksum
+
+        let checksum: WalletChecksum
         const data = await storage.read(`/wallet/${w.id}/data`)
         if (w.checksum == null) {
           if (data != null && data.externalChain.addressGenerator != null) {
-            const chain = AddressGenerator.fromJSON(
-              data.externalChain.addressGenerator,
-            )
+            const {
+              account,
+              accountPubKeyHex,
+            } = data.externalChain.addressGenerator
             switch (walletImplementationId) {
               case WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID:
-                checksum = legacyWalletChecksum(chain.accountPubKeyHex)
+                checksum = legacyWalletChecksum(account.root_cached_key)
                 break
               case WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID:
-                checksum = walletChecksum(chain.accountPubKeyHex)
+                checksum = walletChecksum(accountPubKeyHex)
                 break
               case WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID:
-                checksum = legacyWalletChecksum(chain.accountPubKeyHex)
+                checksum = legacyWalletChecksum(account)
                 break
               default:
-                checksum = ''
+                checksum = {ImagePart: '', TextPart: ''}
             }
           } else {
             checksum = {ImagePart: '', TextPart: ''}
@@ -181,8 +183,10 @@ class WalletManager {
         } else {
           checksum = w.checksum
         }
+        const isHW = data != null && data.isHW != null ? data.isHW : false
         return {
           ...w,
+          isHW,
           networkId,
           walletImplementationId,
           checksum,
