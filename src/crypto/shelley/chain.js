@@ -195,6 +195,10 @@ export class AddressChain {
     return this._addressToIdxSelector(this.addresses)
   }
 
+  get publicKey() {
+    return this._addressGenerator.accountPubKeyHex
+  }
+
   addSubscriberToNewAddresses(subscriber: (Addresses) => mixed) {
     this._subscriptions.push(subscriber)
   }

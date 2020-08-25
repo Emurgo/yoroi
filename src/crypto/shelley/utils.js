@@ -73,6 +73,15 @@ export const byronAddrToHex = async (base58Addr: string): Promise<string> => {
   ).toString('hex')
 }
 
+// need to format shelley addresses as base16 but only legacy addresses as base58
+export const toHexOrBase58 = async (address: Address): Promise<string> => {
+  const asByron = await ByronAddress.from_address(address)
+  if (asByron == null) {
+    return Buffer.from(await address.to_bytes()).toString('hex')
+  }
+  return await asByron.to_base58()
+}
+
 export const derivePrivateByAddressing = async (request: {|
   addressing: $PropertyType<Addressing, 'addressing'>,
   startingFrom: {|

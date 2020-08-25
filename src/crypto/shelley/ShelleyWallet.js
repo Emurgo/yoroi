@@ -7,6 +7,7 @@ import uuid from 'uuid'
 import DeviceInfo from 'react-native-device-info'
 import {
   Bip32PrivateKey,
+  Bip32PublicKey,
   /* eslint-disable-next-line camelcase */
   hash_transaction,
   Transaction,
@@ -83,6 +84,8 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       _getWalletConfig(implementationId).DISCOVERY_BLOCK_SIZE,
       _getWalletConfig(implementationId).DISCOVERY_GAP_SIZE,
     )
+
+    this.publicKeyHex = accountPubKeyHex
 
     this.chimericAccountAddress = chimericAccountAddr
 
@@ -225,6 +228,12 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     this.version = data.version
     this.internalChain = AddressChain.fromJSON(data.internalChain)
     this.externalChain = AddressChain.fromJSON(data.externalChain)
+    // can be null for versions < 3.0.2, in which case we can just retrieve
+    // from address generator
+    this.publicKeyHex =
+      data.publicKeyHex != null
+        ? data.publicKeyHex
+        : this.internalChain.publicKey
     this.transactionCache = TransactionCache.fromJSON(data.transactionCache)
     this.isEasyConfirmationEnabled = data.isEasyConfirmationEnabled
 
@@ -258,6 +267,26 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       address: changeAddr,
       addressing: addressInfo,
     }
+  }
+
+  async getStakingKey() {
+    assert.assert(
+      this.walletImplementationId ===
+        WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY,
+      'cannot get staking key from a byron-era wallet',
+    )
+    const accountPubKey = await Bip32PublicKey.from_bytes(
+      Buffer.from(this.publicKeyHex, 'hex'),
+    )
+    const stakingKey = await (await (await accountPubKey.derive(
+      CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+    )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+    Logger.info(
+      `getStakingKey: ${Buffer.from(await stakingKey.as_bytes()).toString(
+        'hex',
+      )}`,
+    )
+    return stakingKey
   }
 
   getAllUtxosForKey(utxos: Array<RawUtxo>) {
@@ -370,9 +399,9 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     }
   }
 
-  prepareDelegationTx(
+  createDelegationTx(
     poolData: any,
-    valueInAccount: number,
+    valueInAccount: BigNumber,
     utxos: Array<RawUtxo>,
   ): Promise<any> {
     throw Error('not implemented')

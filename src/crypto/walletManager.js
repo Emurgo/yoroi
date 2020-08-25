@@ -721,14 +721,17 @@ class WalletManager {
     )
   }
 
-  async prepareDelegationTx(
-    poolData: any,
-    valueInAccount: number,
+  async createDelegationTx<T>(
+    poolRequest: any,
+    valueInAccount: BigNumber,
     utxos: Array<RawUtxo>,
-  ) {
+  ): Promise<{
+    signTxRequest: BaseSignRequest<T>,
+    totalAmountToDelegate: BigNumber,
+  }> {
     if (!this._wallet) throw new WalletClosed()
     return await this.abortWhenWalletCloses(
-      this._wallet.prepareDelegationTx(poolData, valueInAccount, utxos),
+      this._wallet.createDelegationTx(poolRequest, valueInAccount, utxos),
     )
   }
 

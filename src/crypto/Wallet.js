@@ -53,6 +53,9 @@ export default class Wallet {
   // chimeric account address
   chimericAccountAddress: ?string
 
+  // account public key
+  publicKeyHex: string
+
   // last known version the wallet has been created/restored
   version: ?string
 
@@ -288,6 +291,7 @@ export default class Wallet {
     return {
       lastGeneratedAddressIndex: this.state.lastGeneratedAddressIndex,
       chimericAccountAddress: this.chimericAccountAddress,
+      publicKeyHex: this.publicKeyHex,
       version: this.version,
       internalChain: this.internalChain.toJSON(),
       externalChain: this.externalChain.toJSON(),
