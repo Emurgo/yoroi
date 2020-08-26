@@ -36,3 +36,6 @@ export type WalletImplementation = {
   +DISCOVERY_BLOCK_SIZE: number,
   +MAX_GENERATED_UNUSED: number,
 }
+
+export const isByron = (id: WalletImplementationId): boolean =>
+  id === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
