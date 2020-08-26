@@ -5,7 +5,7 @@ import {BigNumber} from 'bignumber.js'
 
 import {storiesOf} from '@storybook/react-native'
 
-import DelegationSummary from './DelegationSummary'
+import StakingDashboard from './StakingDashboard'
 
 const poolInfo = {
   info: {
@@ -37,8 +37,8 @@ const poolInfo = {
   },
 }
 
-storiesOf('DelegationSummary', module).add('Default', ({navigation}) => (
-  <DelegationSummary
+storiesOf('StakingDashboard', module).add('Default', ({navigation}) => (
+  <StakingDashboard
     navigation={navigation}
     isOnline
     lastAccountStateSyncError={false}

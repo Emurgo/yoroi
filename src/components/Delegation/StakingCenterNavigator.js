@@ -3,7 +3,7 @@ import React from 'react'
 import {createStackNavigator} from 'react-navigation'
 
 import {Button} from '../UiKit'
-import DelegationCenter from './DelegationCenter'
+import StakingCenter from './StakingCenter'
 import BiometricAuthScreen from '../Send/BiometricAuthScreen'
 import DelegationConfirmation from './DelegationConfirmation'
 import {
@@ -22,10 +22,10 @@ import {
 import HeaderBackButton from '../UiKit/HeaderBackButton'
 import styles from '../TxHistory/styles/SettingsButton.style'
 
-const DelegationNavigatorCenter = createStackNavigator(
+const StakingNavigatorCenter = createStackNavigator(
   {
     [STAKING_CENTER_ROUTES.MAIN]: {
-      screen: DelegationCenter,
+      screen: StakingCenter,
       navigationOptions: ({navigation}) => ({
         title: navigation.getParam('title'),
         headerRight: (
@@ -61,4 +61,4 @@ const DelegationNavigatorCenter = createStackNavigator(
   },
 )
 
-export default DelegationNavigatorCenter
+export default StakingNavigatorCenter

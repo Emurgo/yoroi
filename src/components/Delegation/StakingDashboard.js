@@ -7,9 +7,9 @@ import {compose} from 'redux'
 import {View, ScrollView, RefreshControl} from 'react-native'
 import {SafeAreaView, withNavigation, NavigationEvents} from 'react-navigation'
 import {BigNumber} from 'bignumber.js'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl} from 'react-intl'
 
-import {Banner, OfflineBanner, StatusBar, WarningBanner} from '../UiKit'
+import {Banner, OfflineBanner, StatusBar} from '../UiKit'
 import {
   EpochProgress,
   UpcomingRewardInfo,
@@ -41,19 +41,19 @@ import {
   genCurrentEpochLength,
   genCurrentSlotLength,
   genTimeToSlot,
-} from '../../helpers/timeUtils'
+} from '../../utils/timeUtils'
 import {fetchAccountState} from '../../actions/account'
 import {fetchUTXOs} from '../../actions/utxo'
 import {fetchPoolInfo} from '../../actions/pools'
 import {checkForFlawedWallets} from '../../actions'
-import {JORMUN_WALLET_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
+import {DELEGATION_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import walletManager from '../../crypto/walletManager'
 import globalMessages from '../../i18n/global-messages'
 import {formatAdaWithText, formatAdaInteger} from '../../utils/format'
 import FlawedWalletScreen from './FlawedWalletScreen'
 import {Logger} from '../../utils/logging'
+import {CONFIG} from '../../config/config'
 
-import infoIcon from '../../assets/img/icon/info-light-green.png'
 import styles from './styles/DelegationSummary.style'
 
 import type {Navigation} from '../../types/navigation'
@@ -64,24 +64,24 @@ import type {
   ReputationResponse,
 } from '../../api/types'
 
-const warningBannerMessages = defineMessages({
-  title: {
-    id: 'components.delegationsummary.warningbanner.title',
-    defaultMessage: '!!!Note:',
-  },
-  message: {
-    id: 'components.delegationsummary.warningbanner.message',
-    defaultMessage:
-      '!!!The last ITN rewards were distributed on epoch 190. ' +
-      'Rewards can be claimed on mainnet once Shelley is released on mainnet.',
-  },
-  message2: {
-    id: 'components.delegationsummary.warningbanner.message2',
-    defaultMessage:
-      '!!!Your ITN wallet rewards and balance may not be correctly displayed,' +
-      'but this information is still securely stored in the ITN blockchain.',
-  },
-})
+// const warningBannerMessages = defineMessages({
+//   title: {
+//     id: 'components.delegationsummary.warningbanner.title',
+//     defaultMessage: '!!!Note:',
+//   },
+//   message: {
+//     id: 'components.delegationsummary.warningbanner.message',
+//     defaultMessage:
+//       '!!!The last ITN rewards were distributed on epoch 190. ' +
+//       'Rewards can be claimed on mainnet once Shelley is released on mainnet.',
+//   },
+//   message2: {
+//     id: 'components.delegationsummary.warningbanner.message2',
+//     defaultMessage:
+//       '!!!Your ITN wallet rewards and balance may not be correctly displayed,' +
+//       'but this information is still securely stored in the ITN blockchain.',
+//   },
+// })
 
 const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
   <Banner
@@ -184,7 +184,7 @@ class DelegationSummary extends React.Component<Props, State> {
     const poolList = pools != null ? pools.map((pool) => pool[0]) : []
     /* eslint-enable indent */
     const approxAdaToDelegate = formatAdaInteger(amountToDelegate)
-    navigation.navigate(JORMUN_WALLET_ROUTES.STAKING_CENTER, {
+    navigation.navigate(DELEGATION_ROUTES.STAKING_CENTER, {
       approxAdaToDelegate,
       poolList,
       utxos,
@@ -207,7 +207,6 @@ class DelegationSummary extends React.Component<Props, State> {
 
   render() {
     const {
-      intl,
       isOnline,
       utxoBalance,
       accountBalance,
@@ -229,20 +228,27 @@ class DelegationSummary extends React.Component<Props, State> {
         ? utxoBalance.plus(accountBalance)
         : null
 
-    const toRelativeSlotNumber = genToRelativeSlotNumber()
-    const timeToSlot = genTimeToSlot()
+    // TODO: shouldn't be haskell-shelley specific
+    const config = {
+      StartAt: CONFIG.NETWORKS.HASKELL_SHELLEY.START_AT,
+      GenesisDate: CONFIG.NETWORKS.HASKELL_SHELLEY.GENESIS_DATE,
+      SlotsPerEpoch: CONFIG.NETWORKS.HASKELL_SHELLEY.SLOTS_PER_EPOCH,
+      SlotDuration: CONFIG.NETWORKS.HASKELL_SHELLEY.SLOT_DURATION,
+    }
+    const toRelativeSlotNumberFn = genToRelativeSlotNumber([config])
+    const timeToSlotFn = genTimeToSlot([config])
 
-    const currentAbsoluteSlot = timeToSlot({
+    const currentAbsoluteSlot = timeToSlotFn({
       time: this.state.currentTime,
     })
 
-    const currentRelativeTime = toRelativeSlotNumber(
-      timeToSlot({
+    const currentRelativeTime = toRelativeSlotNumberFn(
+      timeToSlotFn({
         time: new Date(),
       }).slot,
     )
-    const epochLength = genCurrentEpochLength()()
-    const slotLength = genCurrentSlotLength()()
+    const epochLength = genCurrentEpochLength([config])()
+    const slotLength = genCurrentSlotLength([config])()
 
     const secondsLeftInEpoch =
       (epochLength - currentRelativeTime.slot) * slotLength
@@ -300,16 +306,6 @@ class DelegationSummary extends React.Component<Props, State> {
               />
             }
           >
-            <WarningBanner
-              title={intl
-                .formatMessage(warningBannerMessages.title)
-                .toUpperCase()}
-              icon={infoIcon}
-              message={`${intl.formatMessage(
-                warningBannerMessages.message,
-              )}\n${intl.formatMessage(warningBannerMessages.message2)}`}
-              style={styles.itemTopMargin}
-            />
             {!this._isDelegating && <NotDelegatedInfo />}
             <EpochProgress
               percentage={Math.floor(
@@ -317,6 +313,7 @@ class DelegationSummary extends React.Component<Props, State> {
               )}
               currentEpoch={currentRelativeTime.epoch}
               endTime={{
+                d: leftPadDate(Math.floor(secondsLeftInEpoch / (3600 * 24))),
                 h: leftPadDate(timeLeftInEpoch.getUTCHours()),
                 m: leftPadDate(timeLeftInEpoch.getUTCMinutes()),
                 s: leftPadDate(timeLeftInEpoch.getUTCSeconds()),

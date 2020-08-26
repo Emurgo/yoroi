@@ -43,6 +43,7 @@ const TxNavigationButtons = ({
   navigation,
   navigateToReceive,
   navigateToSend,
+  navigateToDelegate,
   intl,
   sendDisabled,
 }: Props) => (
@@ -59,7 +60,15 @@ const TxNavigationButtons = ({
       block
       onPress={navigateToReceive}
       title={intl.formatMessage(messages.receiveButton)}
+      style={styles.firstButton}
       iconImage={iconReceive}
+    />
+    {/* TODO: {isShelley && ( */}
+    <Button
+      block
+      onPress={navigateToDelegate}
+      /* iconImage={iconReceive} */
+      title={'₳ Delegate'}
     />
   </View>
 )
@@ -79,6 +88,13 @@ export default injectIntl(
           return
         }
         navigation.navigate(WALLET_ROUTES.SEND)
+      },
+      navigateToDelegate: ({navigation, isHW, intl}) => (event) => {
+        if (isHW) {
+          showErrorDialog(errorMessages.notSupportedError, intl)
+          return
+        }
+        navigation.navigate(WALLET_ROUTES.DELEGATE)
       },
     }),
   )(TxNavigationButtons),

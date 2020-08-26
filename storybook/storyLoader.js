@@ -4,10 +4,10 @@
 // https://github.com/elderfo/react-native-storybook-loader.git
 
 function loadStories() {
-	require('../src/components/Delegation/DelegationCenter.stories');
 	require('../src/components/Delegation/DelegationConfirmation.stories');
-	require('../src/components/Delegation/DelegationSummary.stories');
 	require('../src/components/Delegation/FlawedWalletScreen.stories');
+	require('../src/components/Delegation/StakingCenter.stories');
+	require('../src/components/Delegation/StakingDashboard.stories');
 	require('../src/components/FirstRun/AcceptTermsOfService.stories');
 	require('../src/components/FirstRun/CustomPinScreen.stories');
 	require('../src/components/FirstRun/LanguagePickerScreen.stories');
@@ -30,10 +30,10 @@ function loadStories() {
 }
 
 const stories = [
-	'../src/components/Delegation/DelegationCenter.stories',
 	'../src/components/Delegation/DelegationConfirmation.stories',
-	'../src/components/Delegation/DelegationSummary.stories',
 	'../src/components/Delegation/FlawedWalletScreen.stories',
+	'../src/components/Delegation/StakingCenter.stories',
+	'../src/components/Delegation/StakingDashboard.stories',
 	'../src/components/FirstRun/AcceptTermsOfService.stories',
 	'../src/components/FirstRun/CustomPinScreen.stories',
 	'../src/components/FirstRun/LanguagePickerScreen.stories',
