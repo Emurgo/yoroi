@@ -4,12 +4,14 @@ import React from 'react'
 import type {ComponentType} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
+import {withStateHandlers} from 'recompose'
 import {View, RefreshControl, ScrollView, Image} from 'react-native'
 import {SafeAreaView} from 'react-navigation'
 import _ from 'lodash'
 import {injectIntl, defineMessages} from 'react-intl'
 
-import {Text, Banner, OfflineBanner, StatusBar} from '../UiKit'
+import {Text, Banner, OfflineBanner, StatusBar, WarningBanner} from '../UiKit'
+import infoIcon from '../../assets/img/icon/info-light-green.png'
 import {
   transactionsInfoSelector,
   isSynchronizingHistorySelector,
@@ -45,6 +47,18 @@ const messages = defineMessages({
   noTransactions: {
     id: 'components.txhistory.txhistory.noTransactions',
     defaultMessage: '!!!No transactions to show yet',
+  },
+})
+
+const warningBannerMessages = defineMessages({
+  title: {
+    id: 'components.txhistory.txhistory.warningbanner.title',
+    defaultMessage: '!!!Note:',
+  },
+  message: {
+    id: 'components.txhistory.txhistory.warningbanner.message',
+    defaultMessage:
+      '!!!The Shelley protocol upgrade adds a new Shelley wallet type which supports delegation.',
   },
 })
 
@@ -86,6 +100,9 @@ const TxHistory = ({
   lastSyncError,
   availableAmount,
   isFlawedWallet,
+  showWarning,
+  setShowWarning,
+  intl,
 }) => (
   <SafeAreaView style={styles.scrollView}>
     <StatusBar type="dark" />
@@ -122,6 +139,16 @@ const TxHistory = ({
       )}
 
       <TxNavigationButtons navigation={navigation} />
+      {showWarning && (
+        <WarningBanner
+          title={intl.formatMessage(warningBannerMessages.title).toUpperCase()}
+          icon={infoIcon}
+          message={intl.formatMessage(warningBannerMessages.message)}
+          showCloseIcon
+          onRequestClose={() => setShowWarning(false)}
+          style={styles.warningNoteStyles}
+        />
+      )}
     </View>
   </SafeAreaView>
 )
@@ -153,6 +180,14 @@ export default injectIntl(
       checkForFlawedWallets()
       updateHistory()
     }),
+    withStateHandlers(
+      {
+        showWarning: true,
+      },
+      {
+        setShowWarning: () => (showWarning: boolean) => ({showWarning}),
+      },
+    ),
     withNavigationTitle(({walletName}) => walletName),
   )(TxHistory): ComponentType<ExternalProps>),
 )
