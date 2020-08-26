@@ -36,7 +36,6 @@ export type State = {
   txHistory: {
     isSynchronizing: boolean,
     lastSyncError: any, // TODO(ppershing): type me
-    isWarningBannerOpen: boolean,
   },
   balance: {
     isFetching: boolean,
@@ -94,7 +93,6 @@ export const getInitialState = (): State => ({
   txHistory: {
     isSynchronizing: false,
     lastSyncError: null,
-    isWarningBannerOpen: true,
   },
   balance: {
     isFetching: false,

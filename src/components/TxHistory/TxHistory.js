@@ -4,6 +4,7 @@ import React from 'react'
 import type {ComponentType} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
+import {withStateHandlers} from 'recompose'
 import {View, RefreshControl, ScrollView, Image} from 'react-native'
 import {SafeAreaView} from 'react-navigation'
 import _ from 'lodash'
@@ -20,11 +21,10 @@ import {
   walletNameSelector,
   languageSelector,
   isFlawedWalletSelector,
-  isWarningBannerOpen,
 } from '../../selectors'
 import TxHistoryList from './TxHistoryList'
 import TxNavigationButtons from './TxNavigationButtons'
-import {updateHistory, closeWarningBannerNote} from '../../actions/history'
+import {updateHistory} from '../../actions/history'
 import {checkForFlawedWallets} from '../../actions'
 import {
   onDidMount,
@@ -59,10 +59,6 @@ const warningBannerMessages = defineMessages({
     id: 'components.txhistory.txhistory.warningbanner.message',
     defaultMessage:
       '!!!The Shelley protocol upgrade adds a new Shelley wallet type which supports delegation.',
-  },
-  buttonText: {
-    id: 'components.txhistory.txhistory.warningbanner.buttonText',
-    defaultMessage: '!!!Upgrade',
   },
 })
 
@@ -104,8 +100,8 @@ const TxHistory = ({
   lastSyncError,
   availableAmount,
   isFlawedWallet,
-  isWarningNoteOpen,
-  closeWarningBannerNote,
+  showWarning,
+  setShowWarning,
   intl,
 }) => (
   <SafeAreaView style={styles.scrollView}>
@@ -143,22 +139,16 @@ const TxHistory = ({
       )}
 
       <TxNavigationButtons navigation={navigation} />
-      <WarningBanner
-        title={intl.formatMessage(warningBannerMessages.title).toUpperCase()}
-        icon={infoIcon}
-        message={intl.formatMessage(warningBannerMessages.message)}
-        showCloseIcon={isWarningNoteOpen}
-        onRequestClose={() => closeWarningBannerNote(false)}
-        buttonTitle={intl
-          .formatMessage(warningBannerMessages.buttonText)
-          .toUpperCase()}
-        // eslint-disable-next-line no-alert
-        action={() => alert('Upgrade pressed')}
-        style={[
-          styles.warningNoteStyles,
-          !isWarningNoteOpen && styles.noWarningBanner,
-        ]}
-      />
+      {showWarning && (
+        <WarningBanner
+          title={intl.formatMessage(warningBannerMessages.title).toUpperCase()}
+          icon={infoIcon}
+          message={intl.formatMessage(warningBannerMessages.message)}
+          showCloseIcon
+          onRequestClose={() => setShowWarning(false)}
+          style={styles.warningNoteStyles}
+        />
+      )}
     </View>
   </SafeAreaView>
 )
@@ -180,18 +170,24 @@ export default injectIntl(
         walletName: walletNameSelector(state),
         key: languageSelector(state),
         isFlawedWallet: isFlawedWalletSelector(state),
-        isWarningNoteOpen: isWarningBannerOpen(state),
       }),
       {
         updateHistory,
         checkForFlawedWallets,
-        closeWarningBannerNote,
       },
     ),
     onDidMount(({updateHistory, checkForFlawedWallets}) => {
       checkForFlawedWallets()
       updateHistory()
     }),
+    withStateHandlers(
+      {
+        showWarning: true,
+      },
+      {
+        setShowWarning: () => (showWarning: boolean) => ({showWarning}),
+      },
+    ),
     withNavigationTitle(({walletName}) => walletName),
   )(TxHistory): ComponentType<ExternalProps>),
 )
