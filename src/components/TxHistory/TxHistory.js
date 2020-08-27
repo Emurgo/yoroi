@@ -18,7 +18,7 @@ import {
   lastHistorySyncErrorSelector,
   isOnlineSelector,
   availableAmountSelector,
-  walletNameSelector,
+  walletMetaSelector,
   languageSelector,
   isFlawedWalletSelector,
 } from '../../selectors'
@@ -33,6 +33,7 @@ import {
 } from '../../utils/renderUtils'
 import FlawedWalletModal from './FlawedWalletModal'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
+import {isByron} from '../../config/types'
 
 import {formatAdaWithText} from '../../utils/format'
 import image from '../../assets/img/no_transactions.png'
@@ -102,6 +103,7 @@ const TxHistory = ({
   isFlawedWallet,
   showWarning,
   setShowWarning,
+  walletMeta,
   intl,
 }) => (
   <SafeAreaView style={styles.scrollView}>
@@ -139,16 +141,22 @@ const TxHistory = ({
       )}
 
       <TxNavigationButtons navigation={navigation} />
-      {showWarning && (
-        <WarningBanner
-          title={intl.formatMessage(warningBannerMessages.title).toUpperCase()}
-          icon={infoIcon}
-          message={intl.formatMessage(warningBannerMessages.message)}
-          showCloseIcon
-          onRequestClose={() => setShowWarning(false)}
-          style={styles.warningNoteStyles}
-        />
-      )}
+      {/* eslint-disable indent */
+      isByron(walletMeta.walletImplementationId) &&
+        showWarning && (
+          <WarningBanner
+            title={intl
+              .formatMessage(warningBannerMessages.title)
+              .toUpperCase()}
+            icon={infoIcon}
+            message={intl.formatMessage(warningBannerMessages.message)}
+            showCloseIcon
+            onRequestClose={() => setShowWarning(false)}
+            style={styles.warningNoteStyles}
+          />
+        )
+      /* eslint-enable indent */
+      }
     </View>
   </SafeAreaView>
 )
@@ -167,9 +175,9 @@ export default injectIntl(
         lastSyncError: lastHistorySyncErrorSelector(state),
         isOnline: isOnlineSelector(state),
         availableAmount: availableAmountSelector(state),
-        walletName: walletNameSelector(state),
         key: languageSelector(state),
         isFlawedWallet: isFlawedWalletSelector(state),
+        walletMeta: walletMetaSelector(state),
       }),
       {
         updateHistory,
@@ -188,6 +196,6 @@ export default injectIntl(
         setShowWarning: () => (showWarning: boolean) => ({showWarning}),
       },
     ),
-    withNavigationTitle(({walletName}) => walletName),
+    withNavigationTitle(({walletMeta}) => walletMeta.name),
   )(TxHistory): ComponentType<ExternalProps>),
 )
