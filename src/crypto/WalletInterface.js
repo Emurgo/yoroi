@@ -3,6 +3,8 @@
 // TODO(v-almonacid): transactionCache should be decoupled from this class.
 // Use an interface instead
 
+import {BigNumber} from 'bignumber.js'
+
 import {AddressChain} from './chain'
 import {TransactionCache} from './shelley/transactionCache'
 import Wallet from './Wallet'
@@ -44,7 +46,10 @@ export interface WalletInterface {
 
   externalChain: AddressChain;
 
-  // chimeric account address
+  // note: currently not exposed to redux's state
+  publicKeyHex: string;
+
+  // chimeric account address (depreacted)
   chimericAccountAddress: ?string;
 
   // last known version the wallet has been created/restored
@@ -153,11 +158,14 @@ export interface WalletInterface {
     decryptedMasterKey: string,
   ): Promise<SignedTx>;
 
-  prepareDelegationTx<T>(
-    poolData: any, //
-    valueInAccount: number,
+  createDelegationTx<T>(
+    poolRequest: void | string,
+    valueInAccount: BigNumber,
     utxos: Array<RawUtxo>,
-  ): Promise<T>;
+  ): Promise<{
+    signTxRequest: BaseSignRequest<T>,
+    totalAmountToDelegate: BigNumber,
+  }>;
 
   signDelegationTx<T>(
     unsignedTx: T,
