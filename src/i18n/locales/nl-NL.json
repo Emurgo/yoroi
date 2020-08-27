@@ -209,7 +209,7 @@
   "components.txhistory.txhistory.noTransactions": "No transactions to show yet",
   "components.txhistory.txhistory.warningbanner.title": "components.txhistory.txhistory.warningbanner.title",
   "components.txhistory.txhistory.warningbanner.message": "Het protocol van de Shelley upgrade voegt een nieuw Shelley portemonnee type toe dat delegatie ondersteunt. Om uw ADA te kunnen delegeren, moet u uw oude portemonnee omzetten naar een nieuwe Shelley-portemonnee.",
-  "components.txhistory.txhistory.warningbanner.buttonText": "Upgrade",
+  "components.txhistory.txhistory.warningbanner.buttonText": "Nieuwe versie",
   "components.txhistory.txhistory.syncErrorBannerTextWithRefresh": "We are experiencing synchronization issues. Pull to refresh",
   "components.txhistory.txhistory.syncErrorBannerTextWithoutRefresh": "We are experiencing synchronization issues.",
   "components.txhistory.txhistorylistitem.assuranceLevelFailed": "Failed",
