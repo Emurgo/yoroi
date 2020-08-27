@@ -4,19 +4,21 @@ import React from 'react'
 import type {ComponentType} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
+import {withStateHandlers} from 'recompose'
 import {View, RefreshControl, ScrollView, Image} from 'react-native'
 import {SafeAreaView} from 'react-navigation'
 import _ from 'lodash'
 import {injectIntl, defineMessages} from 'react-intl'
 
-import {Text, Banner, OfflineBanner, StatusBar} from '../UiKit'
+import {Text, Banner, OfflineBanner, StatusBar, WarningBanner} from '../UiKit'
+import infoIcon from '../../assets/img/icon/info-light-green.png'
 import {
   transactionsInfoSelector,
   isSynchronizingHistorySelector,
   lastHistorySyncErrorSelector,
   isOnlineSelector,
   availableAmountSelector,
-  walletNameSelector,
+  walletMetaSelector,
   languageSelector,
   isFlawedWalletSelector,
 } from '../../selectors'
@@ -31,6 +33,7 @@ import {
 } from '../../utils/renderUtils'
 import FlawedWalletModal from './FlawedWalletModal'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
+import {isByron} from '../../config/types'
 
 import {formatAdaWithText} from '../../utils/format'
 import image from '../../assets/img/no_transactions.png'
@@ -45,6 +48,18 @@ const messages = defineMessages({
   noTransactions: {
     id: 'components.txhistory.txhistory.noTransactions',
     defaultMessage: '!!!No transactions to show yet',
+  },
+})
+
+const warningBannerMessages = defineMessages({
+  title: {
+    id: 'components.txhistory.txhistory.warningbanner.title',
+    defaultMessage: '!!!Note:',
+  },
+  message: {
+    id: 'components.txhistory.txhistory.warningbanner.message',
+    defaultMessage:
+      '!!!The Shelley protocol upgrade adds a new Shelley wallet type which supports delegation.',
   },
 })
 
@@ -86,6 +101,10 @@ const TxHistory = ({
   lastSyncError,
   availableAmount,
   isFlawedWallet,
+  showWarning,
+  setShowWarning,
+  walletMeta,
+  intl,
 }) => (
   <SafeAreaView style={styles.scrollView}>
     <StatusBar type="dark" />
@@ -122,6 +141,22 @@ const TxHistory = ({
       )}
 
       <TxNavigationButtons navigation={navigation} />
+      {/* eslint-disable indent */
+      isByron(walletMeta.walletImplementationId) &&
+        showWarning && (
+          <WarningBanner
+            title={intl
+              .formatMessage(warningBannerMessages.title)
+              .toUpperCase()}
+            icon={infoIcon}
+            message={intl.formatMessage(warningBannerMessages.message)}
+            showCloseIcon
+            onRequestClose={() => setShowWarning(false)}
+            style={styles.warningNoteStyles}
+          />
+        )
+      /* eslint-enable indent */
+      }
     </View>
   </SafeAreaView>
 )
@@ -140,9 +175,9 @@ export default injectIntl(
         lastSyncError: lastHistorySyncErrorSelector(state),
         isOnline: isOnlineSelector(state),
         availableAmount: availableAmountSelector(state),
-        walletName: walletNameSelector(state),
         key: languageSelector(state),
         isFlawedWallet: isFlawedWalletSelector(state),
+        walletMeta: walletMetaSelector(state),
       }),
       {
         updateHistory,
@@ -153,6 +188,14 @@ export default injectIntl(
       checkForFlawedWallets()
       updateHistory()
     }),
-    withNavigationTitle(({walletName}) => walletName),
+    withStateHandlers(
+      {
+        showWarning: true,
+      },
+      {
+        setShowWarning: () => (showWarning: boolean) => ({showWarning}),
+      },
+    ),
+    withNavigationTitle(({walletMeta}) => walletMeta.name),
   )(TxHistory): ComponentType<ExternalProps>),
 )

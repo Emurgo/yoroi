@@ -40,7 +40,7 @@ const messages = defineMessages({
   instructions1: {
     id: 'components.walletinit.verifyrestoredwallet.instructionLabel-1',
     defaultMessage:
-      '!!!Make sure your wallet account cheksum and icon ' +
+      '!!!Make sure your wallet account checksum and icon ' +
       'match what you remember.',
   },
   instructions2: {

@@ -109,7 +109,7 @@ export class AddressGenerator {
     if (accountPubKeyHex == null) {
       // this should be wallet created in Byron
       const {account} = data
-      if (account.root_cached_key != null) {
+      if (account?.root_cached_key != null) {
         // byron-era wallet
         _accountPubKeyHex = account.root_cached_key
       } else {

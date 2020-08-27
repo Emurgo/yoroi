@@ -10,7 +10,7 @@ import {
 } from './types/HistoryTransaction'
 import {ObjectValues} from './utils/flow'
 
-import type {Dict, State} from './state'
+import type {Dict, State, WalletMeta} from './state'
 import type {TransactionInfo, Transaction} from './types/HistoryTransaction'
 import type {RawUtxo} from './api/types'
 import type {HWDeviceInfo} from './crypto/byron/ledgerUtils'
@@ -56,6 +56,17 @@ export const isHWSelector = (state: State): boolean => state.wallet.isHW
 
 export const hwDeviceInfoSelector = (state: State): ?HWDeviceInfo =>
   state.wallet.hwDeviceInfo
+
+export const walletMetaSelector = (
+  state: State,
+): $Diff<WalletMeta, {id: string}> => ({
+  name: state.wallet.name,
+  networkId: state.wallet.networkId,
+  walletImplementationId: state.wallet.walletImplementationId,
+  isHW: state.wallet.isHW,
+  isEasyConfirmationEnabled: state.wallet.isEasyConfirmationEnabled,
+  checksum: state.wallet.checksum,
+})
 
 const BigNumberSum = (data: Array<BigNumber | string>): BigNumber =>
   data.reduce((x: BigNumber, y) => x.plus(y), new BigNumber(0))

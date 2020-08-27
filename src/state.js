@@ -27,7 +27,7 @@ export type State = {
   wallet: {
     name: string,
     isInitialized: boolean,
-    networkId: ?NetworkId,
+    networkId: NetworkId,
     walletImplementationId: WalletImplementationId,
     isHW: boolean,
     hwDeviceInfo: ?HWDeviceInfo,
@@ -35,10 +35,11 @@ export type State = {
     transactions: Dict<Transaction>,
     internalAddresses: Array<string>,
     externalAddresses: Array<string>,
-    isUsedAddressIndex: Dict<boolean>,
     confirmationCounts: Dict<number>,
+    isUsedAddressIndex: Dict<boolean>,
     numReceiveAddresses: number,
     canGenerateNewReceiveAddress: boolean,
+    checksum: WalletChecksum,
   },
   txHistory: {
     isSynchronizing: boolean,
@@ -97,6 +98,7 @@ export const getInitialState = (): State => ({
     isUsedAddressIndex: {},
     numReceiveAddresses: 0,
     canGenerateNewReceiveAddress: false,
+    checksum: {ImagePart: '', TextPart: ''},
   },
   txHistory: {
     isSynchronizing: false,
