@@ -15,7 +15,6 @@ import {Text, Button, StatusBar} from '../../UiKit'
 import {ROOT_ROUTES} from '../../../RoutesList'
 import {createWallet} from '../../../actions'
 import {withNavigationTitle} from '../../../utils/renderUtils'
-import {isJormungandr} from '../../../config/networks'
 
 import styles from './styles/MnemonicCheckScreen.style'
 
@@ -80,10 +79,7 @@ const handleWalletConfirmation = ({navigation, createWallet}) => async () => {
 
   await createWallet(name, mnemonic, password, networkId, implementationId)
 
-  const route = isJormungandr(networkId)
-    ? ROOT_ROUTES.JORMUN_WALLET
-    : ROOT_ROUTES.WALLET
-  navigation.navigate(route)
+  navigation.navigate(ROOT_ROUTES.WALLET)
 }
 
 type WordProps = {

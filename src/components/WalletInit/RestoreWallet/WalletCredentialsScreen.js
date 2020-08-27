@@ -13,7 +13,6 @@ import {ROOT_ROUTES} from '../../../RoutesList'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import WalletForm from '../WalletForm'
 import {createWallet, updateVersion} from '../../../actions'
-import {isJormungandr} from '../../../config/networks'
 
 import type {Navigation} from '../../../types/navigation'
 import type {ComponentType} from 'react'
@@ -77,10 +76,7 @@ export default injectIntl(
           } finally {
             setWaiting(false)
           }
-          const route = isJormungandr(networkId)
-            ? ROOT_ROUTES.JORMUN_WALLET
-            : ROOT_ROUTES.WALLET
-          navigation.navigate(route)
+          navigation.navigate(ROOT_ROUTES.WALLET)
         },
         1000,
       ),

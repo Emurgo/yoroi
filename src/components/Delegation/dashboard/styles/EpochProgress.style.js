@@ -13,11 +13,11 @@ export default StyleSheet.create({
   stats: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-around',
     marginLeft: 24,
     marginBottom: 10,
   },
   row: {
+    flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
     height: 24,

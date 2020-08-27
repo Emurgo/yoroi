@@ -15,7 +15,7 @@ import StorybookScreen from './components/StorybookScreen'
 import SplashScreen from './components/SplashScreen'
 import MaintenanceScreen from './components/MaintenanceScreen'
 import AppStartScreen from './components/Login/AppStartScreen'
-import {WALLET_ROUTES, DELEGATION_ROUTES, ROOT_ROUTES} from './RoutesList'
+import {WALLET_ROUTES, ROOT_ROUTES} from './RoutesList'
 import BiometricAuthScreen from './components/Send/BiometricAuthScreen'
 import CustomPinLogin from './components/Login/CustomPinLogin'
 import {
@@ -28,27 +28,13 @@ const WalletNavigator = createStackNavigator(
     [WALLET_ROUTES.TX_HISTORY]: TxHistoryNavigator,
     [WALLET_ROUTES.SEND]: SendScreenNavigator,
     [WALLET_ROUTES.RECEIVE]: ReceiveScreenNavigator,
-    [WALLET_ROUTES.DELEGATE]: StakingDashboardNavigator,
+    [WALLET_ROUTES.DASHBOARD]: StakingDashboardNavigator,
+    [WALLET_ROUTES.DELEGATE]: StakingCenterNavigator,
   },
   {
     // TODO(ppershing): initialRouteName
     // works reversed. Figure out why!
     initialRouteName: WALLET_ROUTES.TX_HISTORY,
-    navigationOptions: {
-      header: null,
-    },
-  },
-)
-
-const DelegationNavigator = createStackNavigator(
-  {
-    [DELEGATION_ROUTES.STAKING_DASHBOARD]: StakingDashboardNavigator,
-    [DELEGATION_ROUTES.STAKING_CENTER]: StakingCenterNavigator,
-  },
-  {
-    // TODO(ppershing): initialRouteName
-    // works reversed. Figure out why!
-    initialRouteName: DELEGATION_ROUTES.DELEGATION_SUMMARY,
     navigationOptions: {
       header: null,
     },
@@ -65,7 +51,6 @@ const AppNavigator = createSwitchNavigator(
     [ROOT_ROUTES.NEW_WALLET]: WalletInitNavigator,
     [ROOT_ROUTES.BIO_AUTH]: BiometricAuthScreen,
     [ROOT_ROUTES.WALLET]: WalletNavigator,
-    [ROOT_ROUTES.JORMUN_WALLET]: DelegationNavigator,
     [ROOT_ROUTES.LOGIN]: createStackNavigator(
       {
         [ROOT_ROUTES.LOGIN]: {

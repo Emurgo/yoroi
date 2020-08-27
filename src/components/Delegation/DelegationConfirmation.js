@@ -96,7 +96,7 @@ const handleOnConfirm = async (
     try {
       setSendingTransaction(true)
       await submitDelegationTx(decryptedKey, delegationTxData.unsignedTx)
-      navigation.navigate(DELEGATION_ROUTES.DELEGATION_SUMMARY)
+      navigation.navigate(DELEGATION_ROUTES.STAKING_DASHBOARD)
     } catch (e) {
       if (e instanceof NetworkError) {
         await showErrorDialog(errorMessages.networkError, intl)

@@ -64,25 +64,6 @@ import type {
   ReputationResponse,
 } from '../../api/types'
 
-// const warningBannerMessages = defineMessages({
-//   title: {
-//     id: 'components.delegationsummary.warningbanner.title',
-//     defaultMessage: '!!!Note:',
-//   },
-//   message: {
-//     id: 'components.delegationsummary.warningbanner.message',
-//     defaultMessage:
-//       '!!!The last ITN rewards were distributed on epoch 190. ' +
-//       'Rewards can be claimed on mainnet once Shelley is released on mainnet.',
-//   },
-//   message2: {
-//     id: 'components.delegationsummary.warningbanner.message2',
-//     defaultMessage:
-//       '!!!Your ITN wallet rewards and balance may not be correctly displayed,' +
-//       'but this information is still securely stored in the ITN blockchain.',
-//   },
-// })
-
 const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
   <Banner
     error

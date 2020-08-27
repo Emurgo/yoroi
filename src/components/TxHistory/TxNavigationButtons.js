@@ -9,7 +9,7 @@ import {injectIntl, defineMessages} from 'react-intl'
 
 import {hasAnyTransaction, isHWSelector} from '../../selectors'
 import {WALLET_ROUTES} from '../../RoutesList'
-import {Button} from '../UiKit'
+import NavButton from './NavButton'
 import {showErrorDialog} from '../../actions'
 import {errorMessages} from '../../i18n/global-messages'
 
@@ -17,6 +17,7 @@ import styles from './styles/TxNavigationButtons.style'
 
 import iconSend from '../../assets/img/icon/send.png'
 import iconReceive from '../../assets/img/icon/receive.png'
+import iconDelegate from '../../assets/img/icon/delegation.png'
 
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 
@@ -29,12 +30,17 @@ const messages = defineMessages({
     id: 'components.txhistory.txnavigationbuttons.receiveButton',
     defaultMessage: '!!!Receive',
   },
+  delegateButton: {
+    id: 'components.txhistory.txnavigationbuttons.delegateButton',
+    defaultMessage: '!!!Delegate',
+  },
 })
 
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,
   navigateToReceive: () => mixed,
   navigateToSend: () => mixed,
+  navigateToDashboard: () => mixed,
   intl: any,
   sendDisabled: boolean,
 }
@@ -43,32 +49,30 @@ const TxNavigationButtons = ({
   navigation,
   navigateToReceive,
   navigateToSend,
-  navigateToDelegate,
+  navigateToDashboard,
   intl,
   sendDisabled,
 }: Props) => (
   <View style={styles.container}>
-    <Button
+    <NavButton
       block
       disabled={sendDisabled}
       onPress={navigateToSend}
       title={intl.formatMessage(messages.sendButton)}
-      style={styles.firstButton}
       iconImage={iconSend}
     />
-    <Button
+    <NavButton
       block
       onPress={navigateToReceive}
       title={intl.formatMessage(messages.receiveButton)}
-      style={styles.firstButton}
       iconImage={iconReceive}
     />
     {/* TODO: {isShelley && ( */}
-    <Button
+    <NavButton
       block
-      onPress={navigateToDelegate}
-      /* iconImage={iconReceive} */
-      title={'₳ Delegate'}
+      onPress={navigateToDashboard}
+      iconImage={iconDelegate}
+      title={intl.formatMessage(messages.delegateButton)}
     />
   </View>
 )
@@ -89,13 +93,21 @@ export default injectIntl(
         }
         navigation.navigate(WALLET_ROUTES.SEND)
       },
-      navigateToDelegate: ({navigation, isHW, intl}) => (event) => {
+      navigateToDashboard: ({navigation, isHW, intl}) => (event) => {
         if (isHW) {
           showErrorDialog(errorMessages.notSupportedError, intl)
           return
         }
-        navigation.navigate(WALLET_ROUTES.DELEGATE)
+        navigation.navigate(WALLET_ROUTES.DASHBOARD)
       },
+      // TODO
+      // navigateToDelegate: ({navigation, isHW, intl}) => (event) => {
+      //   if (isHW) {
+      //     showErrorDialog(errorMessages.notSupportedError, intl)
+      //     return
+      //   }
+      //   navigation.navigate(WALLET_ROUTES.DELEGATE)
+      // },
     }),
   )(TxNavigationButtons),
 )

@@ -51,7 +51,7 @@ const EpochProgress = ({
             {intl.formatMessage(messages.endsInLabel)}:
           </Text>
           <View style={styles.timeWrapper}>
-            <Text style={styles.timeBlock}>{endTime.d}</Text>
+            {endTime.d && <Text style={styles.timeBlock}>{endTime.d}</Text>}
             <Text style={styles.timeBlock}>{endTime.h}</Text>
             <Text>:</Text>
             <Text style={styles.timeBlock}>{endTime.m}</Text>
