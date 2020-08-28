@@ -1,6 +1,6 @@
 {
-  "components.common.navigation.dashboardButton": "Dashboard",
-  "components.common.navigation.delegateButton": "Delegate",
+  "components.common.navigation.dashboardButton": "Tableau de bord",
+  "components.common.navigation.delegateButton": "Déléguer",
   "components.common.languagepicker.brazilian": "Português brasileiro",
   "components.common.languagepicker.chinese": "简体中文",
   "components.common.languagepicker.continueButton": "Choisissez votre langue",
@@ -225,7 +225,7 @@
   "components.txhistory.txhistorylistitem.transactionTypeReceived": "ADA reçus",
   "components.txhistory.txhistorylistitem.transactionTypeSelf": "Intra-wallet",
   "components.txhistory.txhistorylistitem.transactionTypeSent": "ADA envoyés",
-  "components.txhistory.txnavigationbuttons.delegateButton": "Delegate",
+  "components.txhistory.txnavigationbuttons.delegateButton": "Déléguer",
   "components.txhistory.txnavigationbuttons.receiveButton": "Recevoir",
   "components.txhistory.txnavigationbuttons.sendButton": "Envoyer",
   "components.uikit.offlinebanner.offline": "Vous êtes déconnecté. Veuillez vérifier les paramètres de votre appareil.",
