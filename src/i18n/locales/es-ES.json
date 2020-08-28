@@ -1,4 +1,6 @@
 {
+  "components.common.navigation.dashboardButton": "Dashboard",
+  "components.common.navigation.delegateButton": "Delegate",
   "components.common.languagepicker.brazilian": "Português brasileiro",
   "components.common.languagepicker.chinese": "简体中文",
   "components.common.languagepicker.continueButton": "Elige tu idioma",
@@ -223,6 +225,7 @@
   "components.txhistory.txhistorylistitem.transactionTypeReceived": "ADA recibidas",
   "components.txhistory.txhistorylistitem.transactionTypeSelf": "Intra-billetera",
   "components.txhistory.txhistorylistitem.transactionTypeSent": "ADA enviadas",
+  "components.txhistory.txnavigationbuttons.delegateButton": "Delegate",
   "components.txhistory.txnavigationbuttons.receiveButton": "Recibir",
   "components.txhistory.txnavigationbuttons.sendButton": "Enviar",
   "components.uikit.offlinebanner.offline": "Sin conexión. Por favor, revisa los ajustes de tu dispositivo.",
