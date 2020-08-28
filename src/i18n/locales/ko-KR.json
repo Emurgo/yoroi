@@ -1,4 +1,6 @@
 {
+  "components.common.navigation.dashboardButton": "Dashboard",
+  "components.common.navigation.delegateButton": "Delegate",
   "components.common.languagepicker.brazilian": "브라질 포르투갈어",
   "components.common.languagepicker.chinese": "简体中文",
   "components.common.languagepicker.continueButton": "언어를 선택해 주십시오",
@@ -223,6 +225,7 @@
   "components.txhistory.txhistorylistitem.transactionTypeReceived": "받은 ADA",
   "components.txhistory.txhistorylistitem.transactionTypeSelf": "지갑 내",
   "components.txhistory.txhistorylistitem.transactionTypeSent": "보낸 ADA",
+  "components.txhistory.txnavigationbuttons.delegateButton": "Delegate",
   "components.txhistory.txnavigationbuttons.receiveButton": "받기",
   "components.txhistory.txnavigationbuttons.sendButton": "보내기",
   "components.uikit.offlinebanner.offline": "현재 오프라인 상태입니다. 디바이스 설정을 확인해 주세요.",
