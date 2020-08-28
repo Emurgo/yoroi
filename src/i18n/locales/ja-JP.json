@@ -1,4 +1,6 @@
 {
+  "components.common.navigation.dashboardButton": "Dashboard",
+  "components.common.navigation.delegateButton": "Delegate",
   "components.common.languagepicker.brazilian": "Português brasileiro",
   "components.common.languagepicker.chinese": "简体中文",
   "components.common.languagepicker.continueButton": "言語を選んでください",
@@ -223,6 +225,7 @@
   "components.txhistory.txhistorylistitem.transactionTypeReceived": "ADAを受信しました。",
   "components.txhistory.txhistorylistitem.transactionTypeSelf": "ウォレット内",
   "components.txhistory.txhistorylistitem.transactionTypeSent": "ADAが送信されました。",
+  "components.txhistory.txnavigationbuttons.delegateButton": "Delegate",
   "components.txhistory.txnavigationbuttons.receiveButton": "受信",
   "components.txhistory.txnavigationbuttons.sendButton": "送信",
   "components.uikit.offlinebanner.offline": "オフラインになっています。 デバイスの設定を確認してください。",
