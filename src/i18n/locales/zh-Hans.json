@@ -1,4 +1,6 @@
 {
+  "components.common.navigation.dashboardButton": "Dashboard",
+  "components.common.navigation.delegateButton": "Delegate",
   "components.common.languagepicker.brazilian": "巴西葡萄牙语",
   "components.common.languagepicker.chinese": "简体中文",
   "components.common.languagepicker.continueButton": "请选择语言",
@@ -223,6 +225,7 @@
   "components.txhistory.txhistorylistitem.transactionTypeReceived": "已接收的ADA",
   "components.txhistory.txhistorylistitem.transactionTypeSelf": "钱包内",
   "components.txhistory.txhistorylistitem.transactionTypeSent": "已发送的ADA",
+  "components.txhistory.txnavigationbuttons.delegateButton": "Delegate",
   "components.txhistory.txnavigationbuttons.receiveButton": "接收",
   "components.txhistory.txnavigationbuttons.sendButton": "发送",
   "components.uikit.offlinebanner.offline": "您已离线。请检查您设备的网络设置。",
