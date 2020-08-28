@@ -33,7 +33,7 @@ import {
 } from '../../utils/renderUtils'
 import FlawedWalletModal from './FlawedWalletModal'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
-import {isByron} from '../../config/types'
+import {isByron} from '../../config/config'
 
 import {formatAdaWithText} from '../../utils/format'
 import image from '../../assets/img/no_transactions.png'

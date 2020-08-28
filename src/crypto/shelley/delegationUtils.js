@@ -2,12 +2,14 @@
 
 import {BigNumber} from 'bignumber.js'
 import {
+  Address,
   BaseAddress,
   BigNum,
   Certificate,
   Ed25519KeyHash,
   LinearFee,
   PublicKey,
+  RewardAddress,
   StakeCredential,
   StakeDelegation,
   StakeDeregistration,
@@ -95,7 +97,7 @@ const addrContainsAccountKey = async (
   return acceptTypeMismatch
 }
 
-const filterAddressesByStakingKey = async (
+export const filterAddressesByStakingKey = async (
   stakingKey: StakeCredential,
   utxos: $ReadOnlyArray<$ReadOnly<AddressedUtxo>>,
   acceptTypeMismatch: boolean,
@@ -295,4 +297,39 @@ export const createDelegationTx = async (
     Logger.error(`shelley::createDelegationTx:: ${e.message}`, e)
     throw new CardanoError(e.message)
   }
+}
+
+export const unwrapStakingKey = async (
+  stakingAddress: string,
+): Promise<StakeCredential> => {
+  const accountAddress = await RewardAddress.from_address(
+    await Address.from_bytes(Buffer.from(stakingAddress, 'hex')),
+  )
+  if (accountAddress == null) {
+    throw new Error('unwrapStakingKe: staking key invalid')
+  }
+  const stakingKey = await accountAddress.payment_cred()
+
+  return stakingKey
+}
+
+export const getUtxoDelegatedBalance = async (
+  allUtxo: $ReadOnlyArray<$ReadOnly<AddressedUtxo>>,
+  stakingAddress: string,
+): Promise<BigNumber> => {
+  // TODO: need to also deal with pointer address summing
+  // can get most recent pointer from getCurrentDelegation result
+
+  const stakingKey = await unwrapStakingKey(stakingAddress)
+  const allUtxosForKey = await filterAddressesByStakingKey(
+    stakingKey,
+    allUtxo,
+    false,
+  )
+  const utxoSum = allUtxosForKey.reduce(
+    (sum, utxo) => sum.plus(new BigNumber(utxo.amount)),
+    new BigNumber(0),
+  )
+
+  return utxoSum
 }

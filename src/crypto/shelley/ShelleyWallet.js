@@ -6,10 +6,14 @@ import _ from 'lodash'
 import uuid from 'uuid'
 import DeviceInfo from 'react-native-device-info'
 import {
+  Address,
   Bip32PrivateKey,
   Bip32PublicKey,
   /* eslint-disable-next-line camelcase */
   hash_transaction,
+  PublicKey,
+  RewardAddress,
+  StakeCredential,
   Transaction,
   /* eslint-disable-next-line no-unused-vars */
   TransactionBuilder,
@@ -35,6 +39,7 @@ import {TransactionCache} from './transactionCache'
 import {signTransaction} from './transactions'
 import {createUnsignedTx} from './transactionUtils'
 import {genTimeToSlot} from '../../utils/timeUtils'
+import {filterAddressesByStakingKey} from './delegationUtils'
 
 import type {RawUtxo, TxBodiesRequest, TxBodiesResponse} from '../../api/types'
 import type {AddressedUtxo, BaseSignRequest, SignedTx} from './../types'
@@ -269,7 +274,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     }
   }
 
-  async getStakingKey() {
+  async getStakingKey(): PublicKey {
     assert.assert(
       this.walletImplementationId ===
         WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY,
@@ -289,8 +294,31 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     return stakingKey
   }
 
-  getAllUtxosForKey(utxos: Array<RawUtxo>) {
-    throw Error('not implemented')
+  async getRewardAddress(): Address {
+    assert.assert(
+      this.walletImplementationId ===
+        WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY,
+      'cannot get reward address from a byron-era wallet',
+    )
+    const stakingKey = await this.getStakingKey()
+    const credential = await StakeCredential.from_keyhash(
+      await stakingKey.hash(),
+    )
+    const rewardAddr = await RewardAddress.new(
+      Number.parseInt(CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID, 10),
+      credential,
+    )
+    return await rewardAddr.to_address()
+  }
+
+  async getAllUtxosForKey(utxos: Array<RawUtxo>) {
+    return await filterAddressesByStakingKey(
+      await StakeCredential.from_keyhash(
+        await (await this.getStakingKey()).hash(),
+      ),
+      this.asAddressedUtxo(utxos),
+      false,
+    )
   }
 
   getAddressingInfo(address: string) {
@@ -440,8 +468,12 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     ])
   }
 
-  fetchAccountState() {
-    throw Error('not implemented')
+  async fetchAccountState() {
+    const rewardAddrHex = Buffer.from(
+      await (await this.getRewardAddress()).to_bytes(),
+      'hex',
+    ).toString('hex')
+    return await api.bulkGetAccountState([rewardAddrHex])
   }
 
   fetchPoolInfo() {

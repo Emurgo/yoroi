@@ -37,5 +37,10 @@ export type WalletImplementation = {
   +MAX_GENERATED_UNUSED: number,
 }
 
-export const isByron = (id: WalletImplementationId): boolean =>
-  id === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
+export type NetworkConfig = {
+  API_ROOT: string,
+  FETCH_UTXOS_MAX_ADDRESSES: number,
+  TX_HISTORY_MAX_ADDRESSES: number,
+  FILTER_USED_MAX_ADDRESSES: number,
+  TX_HISTORY_RESPONSE_LIMIT: number,
+}

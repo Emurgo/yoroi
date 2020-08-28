@@ -4,9 +4,10 @@ import {StyleSheet} from 'react-native'
 export default StyleSheet.create({
   container: {
     flexDirection: 'row',
+    justifyContent: 'center',
     backgroundColor: '#fff',
-    padding: 16,
-    height: 88,
+    padding: 10,
+    height: 80,
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
     elevation: 1,

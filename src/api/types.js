@@ -14,79 +14,88 @@ export type RawUtxo = {|
   utxo_id: string,
 |}
 
-// account state
+// account state (jormun-era)
 
-export type PoolTuples = [
-  string, // PoolId
-  number, // parts
-]
-
-export type AccountStateDelegation = {|
-  pools: Array<PoolTuples>,
-|}
-
-export type AccountState = {|
-  delegation: AccountStateDelegation,
-  value: number,
-  counter: number,
-  last_rewards: {
-    epoch: number,
-    reward: number,
-  },
-|}
-
-export type AccountStateFailure = {|
-  error: string,
-  comment: string,
-|}
-
-export type AccountStateResponse = {
-  [key: string]: AccountState | AccountStateFailure,
-}
-
-export type PoolInfoRequest = {|
-  ids: Array<string>,
-|}
-
-// export type RemoteCertificate = {|
-//   payloadKind:
-//     | 'PoolRegistration'
-//     | 'PoolUpdate'
-//     | 'PoolRetirement'
-//     | 'StakeDelegation'
-//     | 'OwnerStakeDelegation',
-//   payloadKindId: CertificateKind,
-//   payloadHex: string,
-// |}
-
-// export type RemotePoolMetaSuccess = {|
-//   info: ?{|
-//     name?: string,
-//     ticker?: string,
-//     description?: string,
-//     homepage?: string,
-//   |},
-//   history: Array<{|
-//     epoch: number,
-//     slot: number,
-//     tx_ordinal: number,
-//     cert_ordinal: 0,
-//     payload: RemoteCertificate,
-//   |}>,
-//   owners: ?{
-//     [key: string]: {|
-//       pledgeAddress: string,
-//     |},
-//   },
-// |}
-
-// export type RemotePoolMetaFailure = {|
-//   error: string,
+// export type PoolTuples = [
+//   string, // PoolId
+//   number, // parts
+// ]
+//
+// export type AccountStateDelegation = {|
+//   pools: Array<PoolTuples>,
 // |}
 //
-// export type PoolInfoResponse = {
-//   [key: string]: RemotePoolMetaSuccess | RemotePoolMetaFailure,
+// export type AccountState = {|
+//   delegation: AccountStateDelegation,
+//   value: number,
+//   counter: number,
+//   last_rewards: {
+//     epoch: number,
+//     reward: number,
+//   },
+// |}
+//
+// export type AccountStateFailure = {|
+//   error: string,
+//   comment: string,
+// |}
+//
+// export type AccountStateResponse = {
+//   [key: string]: AccountState | AccountStateFailure,
 // }
+//
+
+// getAccountState
+
+export type AccountStateRequest = {|
+  addresses: Array<string>,
+|}
+export type RemoteAccountState = {|
+  poolOperator: null, // not implemented yet
+  remainingAmount: string, // current remaining awards
+  rewards: string, // all the rewards every added
+  withdrawals: string, // all the withdrawals that have ever happened
+|}
+export type AccountStateResponse = {|
+  [key: string]: null | RemoteAccountState,
+|}
+
+// getPoolInfo
+
+export type RemoteCertificate = {|
+  kind: 'PoolRegistration' | 'PoolRetirement',
+  certIndex: number,
+  poolParams: Object, // don't think this is relevant
+|}
+
+export type RemotePoolMetaSuccess = {|
+  info: ?{
+    name?: string,
+    ticker?: string,
+    description?: string,
+    homepage?: string,
+    // other stuff from SMASH.
+  },
+  history: Array<{|
+    epoch: number,
+    slot: number,
+    tx_ordinal: number,
+    cert_ordinal: number,
+    payload: RemoteCertificate,
+  |}>,
+|}
+
+export type RemotePoolMetaFailure = {|
+  error: Object,
+|}
+
+export type PoolInfoRequest = {|
+  poolIds: Array<string>,
+|}
+
+export type PoolInfoResponse = {
+  [key: string]: RemotePoolMetaSuccess | RemotePoolMetaFailure,
+}
 
 // getTxsBodiesForUTXOs
 

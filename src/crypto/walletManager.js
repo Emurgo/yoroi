@@ -23,7 +23,7 @@ import {
 } from '../helpers/deviceSettings'
 
 import type {WalletMeta} from '../state'
-import type {RawUtxo, PoolInfoRequest, TxBodiesRequest} from '../api/types'
+import type {RawUtxo, TxBodiesRequest} from '../api/types'
 import type {Addressing, BaseSignRequest, EncryptionMethod} from './types'
 import type {HWDeviceInfo} from './byron/ledgerUtils'
 import type {NetworkId, WalletImplementationId} from '../config/types'
@@ -769,7 +769,7 @@ class WalletManager {
     return await this.abortWhenWalletCloses(this._wallet.fetchAccountState())
   }
 
-  async fetchPoolInfo(pool: PoolInfoRequest) {
+  async fetchPoolInfo(pool: any) {
     if (this._wallet == null) throw new WalletClosed()
     return await this._wallet.fetchPoolInfo(pool)
   }

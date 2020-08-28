@@ -5,8 +5,8 @@ import {createStackNavigator, createSwitchNavigator} from 'react-navigation'
 import HeaderBackButton from './components/UiKit/HeaderBackButton'
 import WalletInitNavigator from './components/WalletInit/WalletInitNavigator'
 import TxHistoryNavigator from './components/TxHistory/TxHistoryNavigator'
-import DelegationNavigatorSummary from './components/Delegation/DelegationNavigatorSummary'
-import DelegationNavigatorCenter from './components/Delegation/DelegationNavigatorCenter'
+import StakingCenterNavigator from './components/Delegation/StakingCenterNavigator'
+import StakingDashboardNavigator from './components/Delegation/StakingDashboardNavigator'
 import SendScreenNavigator from './components/Send/SendScreenNavigator'
 import ReceiveScreenNavigator from './components/Receive/ReceiveScreenNavigator'
 import FirstRunNavigator from './components/FirstRun/FirstRunNavigator'
@@ -15,7 +15,7 @@ import StorybookScreen from './components/StorybookScreen'
 import SplashScreen from './components/SplashScreen'
 import MaintenanceScreen from './components/MaintenanceScreen'
 import AppStartScreen from './components/Login/AppStartScreen'
-import {WALLET_ROUTES, JORMUN_WALLET_ROUTES, ROOT_ROUTES} from './RoutesList'
+import {WALLET_ROUTES, ROOT_ROUTES} from './RoutesList'
 import BiometricAuthScreen from './components/Send/BiometricAuthScreen'
 import CustomPinLogin from './components/Login/CustomPinLogin'
 import {
@@ -28,26 +28,13 @@ const WalletNavigator = createStackNavigator(
     [WALLET_ROUTES.TX_HISTORY]: TxHistoryNavigator,
     [WALLET_ROUTES.SEND]: SendScreenNavigator,
     [WALLET_ROUTES.RECEIVE]: ReceiveScreenNavigator,
+    [WALLET_ROUTES.DASHBOARD]: StakingDashboardNavigator,
+    [WALLET_ROUTES.DELEGATE]: StakingCenterNavigator,
   },
   {
     // TODO(ppershing): initialRouteName
     // works reversed. Figure out why!
     initialRouteName: WALLET_ROUTES.TX_HISTORY,
-    navigationOptions: {
-      header: null,
-    },
-  },
-)
-
-const JormunWalletNavigator = createStackNavigator(
-  {
-    [JORMUN_WALLET_ROUTES.DELEGATION_SUMMARY]: DelegationNavigatorSummary,
-    [JORMUN_WALLET_ROUTES.STAKING_CENTER]: DelegationNavigatorCenter,
-  },
-  {
-    // TODO(ppershing): initialRouteName
-    // works reversed. Figure out why!
-    initialRouteName: JORMUN_WALLET_ROUTES.DELEGATION_SUMMARY,
     navigationOptions: {
       header: null,
     },
@@ -64,7 +51,6 @@ const AppNavigator = createSwitchNavigator(
     [ROOT_ROUTES.NEW_WALLET]: WalletInitNavigator,
     [ROOT_ROUTES.BIO_AUTH]: BiometricAuthScreen,
     [ROOT_ROUTES.WALLET]: WalletNavigator,
-    [ROOT_ROUTES.JORMUN_WALLET]: JormunWalletNavigator,
     [ROOT_ROUTES.LOGIN]: createStackNavigator(
       {
         [ROOT_ROUTES.LOGIN]: {

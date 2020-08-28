@@ -23,6 +23,7 @@ type ExternalProps = {
   +percentage: number,
   +currentEpoch: number,
   +endTime: {
+    +d?: string,
     +h: string,
     +m: string,
     +s: string,
@@ -50,6 +51,7 @@ const EpochProgress = ({
             {intl.formatMessage(messages.endsInLabel)}:
           </Text>
           <View style={styles.timeWrapper}>
+            {endTime.d && <Text style={styles.timeBlock}>{endTime.d}</Text>}
             <Text style={styles.timeBlock}>{endTime.h}</Text>
             <Text>:</Text>
             <Text style={styles.timeBlock}>{endTime.m}</Text>

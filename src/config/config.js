@@ -5,7 +5,7 @@ import {WALLET_IMPLEMENTATION_REGISTRY, DERIVATION_TYPES} from './types'
 import {LogLevel} from '../utils/logging'
 import env from '../env'
 
-import type {WalletImplementation} from './types'
+import type {WalletImplementation, WalletImplementationId} from './types'
 
 const IS_DEBUG = __DEV__
 /** debugging flags
@@ -118,3 +118,9 @@ export const CONFIG = {
   LOG_LEVEL: _LOG_LEVEL,
   COMMIT: _COMMIT,
 }
+
+export const isByron = (id: WalletImplementationId): boolean =>
+  id === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
+
+export const isHaskellShelley = (id: WalletImplementationId): boolean =>
+  id === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY

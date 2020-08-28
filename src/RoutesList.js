@@ -54,25 +54,27 @@ export const SETTINGS_ROUTES = {
   SETUP_CUSTOM_PIN: 'setup-custom-pin',
 }
 
-export const WALLET_ROUTES = {
-  TX_HISTORY: 'history',
-  SEND: SEND_ROUTES.MAIN,
-  RECEIVE: RECEIVE_ROUTES.MAIN,
-  SETTINGS: SETTINGS_ROUTES.MAIN,
-}
-
 export const STAKING_CENTER_ROUTES = {
   MAIN: 'staking-center',
   DELEGATION_CONFIRM: 'delegation-confirmation',
 }
 
-export const DELEGATION_SUMMARY_ROUTES = {
-  MAIN: 'delegation-dashboard',
+export const STAKING_DASHBOARD_ROUTES = {
+  MAIN: 'staking-dashboard',
 }
 
-export const JORMUN_WALLET_ROUTES = {
+export const DELEGATION_ROUTES = {
+  STAKING_DASHBOARD: STAKING_DASHBOARD_ROUTES.MAIN,
   STAKING_CENTER: STAKING_CENTER_ROUTES.MAIN,
-  DELEGATION_SUMMARY: 'delegation-summary',
+}
+
+export const WALLET_ROUTES = {
+  TX_HISTORY: 'history',
+  SEND: SEND_ROUTES.MAIN,
+  RECEIVE: RECEIVE_ROUTES.MAIN,
+  DASHBOARD: DELEGATION_ROUTES.STAKING_DASHBOARD,
+  DELEGATE: DELEGATION_ROUTES.STAKING_CENTER,
+  SETTINGS: SETTINGS_ROUTES.MAIN,
 }
 
 const INDEX_SCREEN = 'screens-index'
@@ -90,7 +92,6 @@ export const ROOT_ROUTES = {
   FIRST_RUN: 'first-run',
   NEW_WALLET: 'new-wallet',
   WALLET: 'app-root',
-  JORMUN_WALLET: 'app-root-jormun',
   INIT: INIT_SCREEN,
   STORYBOOK: 'storybook',
   MAINTENANCE: 'maintenance',

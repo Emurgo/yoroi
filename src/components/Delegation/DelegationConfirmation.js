@@ -26,7 +26,7 @@ import {
   SEND_ROUTES,
   WALLET_INIT_ROUTES,
   STAKING_CENTER_ROUTES,
-  JORMUN_WALLET_ROUTES,
+  DELEGATION_ROUTES,
 } from '../../RoutesList'
 import {NetworkError, ApiError} from '../../api/errors'
 import {WrongPassword} from '../../crypto/errors'
@@ -96,7 +96,7 @@ const handleOnConfirm = async (
     try {
       setSendingTransaction(true)
       await submitDelegationTx(decryptedKey, delegationTxData.unsignedTx)
-      navigation.navigate(JORMUN_WALLET_ROUTES.DELEGATION_SUMMARY)
+      navigation.navigate(DELEGATION_ROUTES.STAKING_DASHBOARD)
     } catch (e) {
       if (e instanceof NetworkError) {
         await showErrorDialog(errorMessages.networkError, intl)

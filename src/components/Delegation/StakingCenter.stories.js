@@ -4,9 +4,9 @@ import React from 'react'
 
 import {storiesOf} from '@storybook/react-native'
 
-import DelegationCenter from './DelegationCenter'
+import StakingCenter from './StakingCenter'
 
-storiesOf('DelegationCenter', module).add(
+storiesOf('StakingCenter', module).add(
   'with 100 ADA to delegate',
   ({navigation}) => {
     navigation.getParam = (param) => {
@@ -21,6 +21,6 @@ storiesOf('DelegationCenter', module).add(
           return ''
       }
     }
-    return <DelegationCenter navigation={navigation} />
+    return <StakingCenter navigation={navigation} />
   },
 )

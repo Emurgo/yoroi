@@ -84,17 +84,17 @@ export function genToRelativeSlotNumber(
       const start =
         config[i].StartAt ??
         (() => {
-          throw new Error('genToAbsoluteSlotNumber missing start')
+          throw new Error('genToRelativeSlotNumber missing start')
         })()
       const end =
         config[i + 1].StartAt ??
         (() => {
-          throw new Error('genToAbsoluteSlotNumbermissing end')
+          throw new Error('genToRelativeSlotNumber end')
         })()
       const numEpochs = end - start
 
       if (SlotsPerEpoch == null) {
-        throw new Error('genToAbsoluteSlotNumbermissing params')
+        throw new Error('genToRelativeSlotNumber params')
       }
 
       // queried time is before the next protocol parameter choice
