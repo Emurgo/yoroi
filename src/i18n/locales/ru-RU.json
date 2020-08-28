@@ -1,4 +1,6 @@
 {
+  "components.common.navigation.dashboardButton": "Dashboard",
+  "components.common.navigation.delegateButton": "Delegate",
   "components.common.languagepicker.brazilian": "Português brasileiro",
   "components.common.languagepicker.chinese": "简体中文",
   "components.common.languagepicker.continueButton": "Выберите язык",
@@ -223,6 +225,7 @@
   "components.txhistory.txhistorylistitem.transactionTypeReceived": "получить ADA",
   "components.txhistory.txhistorylistitem.transactionTypeSelf": "Внутренний кошелек",
   "components.txhistory.txhistorylistitem.transactionTypeSent": "отправить ADA",
+  "components.txhistory.txnavigationbuttons.delegateButton": "Delegate",
   "components.txhistory.txnavigationbuttons.receiveButton": "Получить",
   "components.txhistory.txnavigationbuttons.sendButton": "Отправить",
   "components.uikit.offlinebanner.offline": "Вы не подключены к сети. Пожалуйста, проверьте настройки на Вашем устройстве.",
