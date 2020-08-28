@@ -702,6 +702,11 @@ class WalletManager {
     return this._wallet.asAddressedUtxo(utxos)
   }
 
+  async getDelegationStatus() {
+    if (!this._wallet) throw new WalletClosed()
+    return await this._wallet.getDelegationStatus()
+  }
+
   async createUnsignedTx(
     utxos: Array<RawUtxo>,
     receiver: string,
@@ -769,9 +774,9 @@ class WalletManager {
     return await this.abortWhenWalletCloses(this._wallet.fetchAccountState())
   }
 
-  async fetchPoolInfo(pool: any) {
+  async fetchPoolInfo(request: any) {
     if (this._wallet == null) throw new WalletClosed()
-    return await this._wallet.fetchPoolInfo(pool)
+    return await this._wallet.fetchPoolInfo(request)
   }
 
   // =================== misc =================== //

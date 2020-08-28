@@ -225,7 +225,6 @@
   "components.txhistory.txhistorylistitem.transactionTypeReceived": "ADA received",
   "components.txhistory.txhistorylistitem.transactionTypeSelf": "Intrawallet",
   "components.txhistory.txhistorylistitem.transactionTypeSent": "ADA sent",
-  "components.txhistory.txnavigationbuttons.delegateButton": "Delegate",
   "components.txhistory.txnavigationbuttons.receiveButton": "Receive",
   "components.txhistory.txnavigationbuttons.sendButton": "Send",
   "components.uikit.offlinebanner.offline": "You are offline. Please check settings on your device.",

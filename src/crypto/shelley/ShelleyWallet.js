@@ -39,9 +39,18 @@ import {TransactionCache} from './transactionCache'
 import {signTransaction} from './transactions'
 import {createUnsignedTx} from './transactionUtils'
 import {genTimeToSlot} from '../../utils/timeUtils'
-import {filterAddressesByStakingKey} from './delegationUtils'
+import {
+  filterAddressesByStakingKey,
+  getDelegationStatus,
+} from './delegationUtils'
 
-import type {RawUtxo, TxBodiesRequest, TxBodiesResponse} from '../../api/types'
+import type {
+  RawUtxo,
+  TxBodiesRequest,
+  TxBodiesResponse,
+  PoolInfoRequest,
+  PoolInfoResponse,
+} from '../../api/types'
 import type {AddressedUtxo, BaseSignRequest, SignedTx} from './../types'
 import type {HWDeviceInfo} from '../byron/ledgerUtils'
 import type {NetworkId, WalletImplementationId} from '../../config/types'
@@ -358,6 +367,17 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     return addressedUtxos
   }
 
+  async getDelegationStatus() {
+    const rewardAddrHex = Buffer.from(
+      await (await this.getRewardAddress()).to_bytes(),
+      'hex',
+    ).toString('hex')
+    const certsForKey = this.transactionCache.perRewardAddressCertificates[
+      rewardAddrHex
+    ]
+    return getDelegationStatus(rewardAddrHex, certsForKey)
+  }
+
   async createUnsignedTx<TransactionBuilder>(
     utxos: Array<RawUtxo>,
     receiver: string,
@@ -476,7 +496,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     return await api.bulkGetAccountState([rewardAddrHex])
   }
 
-  fetchPoolInfo() {
-    throw Error('not implemented')
+  async fetchPoolInfo(request: PoolInfoRequest): Promise<PoolInfoResponse> {
+    return await api.getPoolInfo(request)
   }
 }

@@ -76,12 +76,16 @@ export const fetchAccountState = () => async (
   dispatch(_clearAccountState())
   dispatch(_startFetching())
   try {
+    const status = await walletManager.getDelegationStatus()
+    Logger.debug('account actions::getDelegationStatus', status)
+    dispatch(_setAccountPool(status.poolKeyHash))
+
     const accountStateResp = await walletManager.fetchAccountState()
     const accountState: RemoteAccountState = Object.keys(accountStateResp).map(
       (key) => accountStateResp[key],
     )[0]
     const value = accountState.remainingAmount
-    const poolOperator = accountState.poolOperator // note: currently returns null
+    // const poolOperator = accountState.poolOperator // note: currently returns null
     const utxos = getState().balance.utxos
     if (utxos != null) {
       const utxosForKey = await walletManager.getAllUtxosForKey(utxos)
@@ -100,10 +104,10 @@ export const fetchAccountState = () => async (
       )
     }
     dispatch(_setAccountValue(new BigNumber(value)))
-    dispatch(_setAccountPool(poolOperator))
+    // dispatch(_setAccountPool(poolOperator))
     dispatch(_setLastError(null))
   } catch (err) {
-    Logger.debug(err)
+    Logger.warn(err)
     dispatch(_setLastError(err))
   } finally {
     dispatch(_endFetching())

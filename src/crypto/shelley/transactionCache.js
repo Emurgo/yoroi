@@ -12,7 +12,7 @@ import {CONFIG} from '../../config/config'
 
 import type {Dict} from '../../state'
 import type {Transaction} from '../../types/HistoryTransaction'
-import type {TxHistoryRequest} from '../../api/types'
+import type {TxHistoryRequest, RemoteCertificateMeta} from '../../api/types'
 import {TRANSACTION_STATUS} from '../../types/HistoryTransaction'
 
 type SyncMetadata = {
@@ -87,6 +87,46 @@ const perAddressTxsSelector = (state: TransactionCacheState) => {
   return addressToTxs
 }
 
+export type TimestampedCertMeta = {
+  submittedAt: string,
+  epoch: number,
+  certificates: Array<RemoteCertificateMeta>,
+}
+type PerAddressCertificatesDict = Dict<Dict<TimestampedCertMeta>>
+const perAddressCertificatesSelector = (
+  state: TransactionCacheState,
+): PerAddressCertificatesDict => {
+  const transactions = state.transactions
+  const addressToPerTxCerts = {}
+
+  const addTxTo = (
+    txId: string,
+    certificates: Array<RemoteCertificateMeta>,
+    submittedAt: ?string,
+    epoch: ?number,
+    addr: string,
+  ) => {
+    const current: Dict<TimestampedCertMeta> = addressToPerTxCerts[addr] || {}
+    if (current[txId] == null && submittedAt != null && epoch != null) {
+      current[txId] = {
+        submittedAt,
+        epoch,
+        certificates,
+      }
+      addressToPerTxCerts[addr] = current
+    }
+  }
+
+  ObjectValues(transactions).forEach((tx) => {
+    tx.certificates.forEach(({rewardAddress}) => {
+      if (rewardAddress != null) {
+        addTxTo(tx.id, tx.certificates, tx.submittedAt, tx.epoch, rewardAddress)
+      }
+    })
+  })
+  return addressToPerTxCerts
+}
+
 const confirmationCountsSelector = (state: TransactionCacheState) => {
   const {perAddressSyncMetadata, transactions} = state
   return _.mapValues(transactions, (tx: Transaction) => {
@@ -121,6 +161,7 @@ export class TransactionCache {
 
   _subscriptions: Array<() => any> = []
   _perAddressTxsSelector = defaultMemoize(perAddressTxsSelector)
+  _perAddressCertificates = defaultMemoize(perAddressCertificatesSelector)
   _confirmationCountsSelector = defaultMemoize(confirmationCountsSelector)
 
   subscribe(handler: () => any) {
@@ -154,6 +195,10 @@ export class TransactionCache {
 
   get perAddressTxs() {
     return this._perAddressTxsSelector(this._state)
+  }
+
+  get perRewardAddressCertificates() {
+    return this._perAddressCertificates(this._state)
   }
 
   get confirmationCounts() {
@@ -342,8 +387,18 @@ export class TransactionCache {
       // $FlowFixMe SyncMetadata type changed after migration to new history API
       (metadata) => metadata.lastUpdated != null,
     )
-    if (!isDeprecatedCache) {
+    // similarly, the haskell shelley endpoint introduces withdrawals & certs.
+    // versions < 3.0.1 need resync
+    const txs = ObjectValues(data.transactions)
+    const lacksShelleyTxData = txs
+      ? txs.some((tx) => tx.withdrawals == null || tx.certificates == null)
+      : false
+    if (!isDeprecatedCache && !lacksShelleyTxData) {
       cache.updateState(data)
+    } else {
+      Logger.info(
+        'TransactionCache: deprecated tx. Restoring from empty object',
+      )
     }
     return cache
   }

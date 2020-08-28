@@ -18,6 +18,8 @@ import type {
   TxHistoryRequest,
   AccountStateRequest,
   AccountStateResponse,
+  PoolInfoRequest,
+  PoolInfoResponse,
 } from '../types'
 
 const NETWORK_CONFIG = CONFIG.NETWORKS.HASKELL_SHELLEY.BACKEND
@@ -150,4 +152,10 @@ export const bulkGetAccountState = async (
     chunks.map((addrs) => getAccountState({addresses: addrs})),
   )
   return Object.assign({}, ...responses)
+}
+
+export const getPoolInfo = (
+  request: PoolInfoRequest,
+): Promise<PoolInfoResponse> => {
+  return checkedFetch('getPoolInfo', request, NETWORK_CONFIG)
 }

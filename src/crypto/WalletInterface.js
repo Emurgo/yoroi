@@ -18,6 +18,7 @@ import type {
   WalletState,
 } from './types'
 import type {HWDeviceInfo} from './byron/ledgerUtils'
+import type {DelegationStatus} from './shelley/delegationUtils'
 import type {NetworkId, WalletImplementationId} from '../config/types'
 import type {Dict, WalletMeta} from '../state'
 import type {Transaction} from '../types/HistoryTransaction'
@@ -141,6 +142,8 @@ export interface WalletInterface {
   getAddressingInfo(address: string): any;
 
   asAddressedUtxo(utxos: Array<RawUtxo>): Array<AddressedUtxo>;
+
+  getDelegationStatus(): Promise<DelegationStatus>;
 
   createUnsignedTx<T>(
     utxos: Array<RawUtxo>,

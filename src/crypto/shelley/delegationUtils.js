@@ -16,12 +16,15 @@ import {
   StakeRegistration,
   TransactionBuilder,
 } from 'react-native-haskell-shelley'
+import {sortBy} from 'lodash'
 
 import {newAdaUnsignedTx} from './transactions'
 import {normalizeToAddress} from './utils'
 import {NETWORKS} from '../../config/networks'
 import {Logger} from '../../utils/logging'
 import {CardanoError} from '../errors'
+import {ObjectValues} from '../../utils/flow'
+import assert from '../../utils/assert'
 
 import type {
   Addressing,
@@ -29,6 +32,8 @@ import type {
   BaseSignRequest,
   V4UnsignedTxAddressedUtxoResponse,
 } from '../types'
+import type {TimestampedCertMeta} from './transactionCache'
+import type {Dict} from '../../state'
 
 const createCertificate = async (
   stakingKey: PublicKey,
@@ -332,4 +337,55 @@ export const getUtxoDelegatedBalance = async (
   )
 
   return utxoSum
+}
+
+export type DelegationStatus = {|
+  +isRegistered: boolean,
+  +poolKeyHash: ?string,
+|}
+export const getDelegationStatus = (
+  rewardAddress: string,
+  txCertificatesForKey: Dict<TimestampedCertMeta>, // key is txId
+): DelegationStatus => {
+  let isRegistered = false
+  let poolKeyHash = null
+  if (txCertificatesForKey == null) {
+    return {
+      isRegistered,
+      poolKeyHash,
+    }
+  }
+  Logger.debug('txCertificatesForKey', txCertificatesForKey)
+  // start with older certificate
+  const sortedCerts = sortBy(
+    txCertificatesForKey,
+    (txCerts) => txCerts.submittedAt,
+  )
+  Logger.debug('sortedCerts', sortedCerts)
+
+  for (const certData of ObjectValues(sortedCerts)) {
+    const certificates = certData.certificates
+    for (const cert of certificates) {
+      assert.assert(
+        cert.rewardAddress === rewardAddress,
+        'getDelegationStatus:: reward addresses mismatch',
+      )
+      if (cert.kind === 'StakeDelegation') {
+        assert.assert(
+          cert.poolKeyHash != null,
+          'getDelegationStatus:: StakeDelegation certificate without poolKeyHash',
+        )
+        poolKeyHash = cert.poolKeyHash
+        isRegistered = true
+      } else if (cert.kind === 'StakeRegistration') {
+        isRegistered = true
+      } else if (cert.kind === 'StakeDeregistration') {
+        isRegistered = false
+      }
+    }
+  }
+  return {
+    isRegistered,
+    poolKeyHash,
+  }
 }

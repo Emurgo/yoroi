@@ -138,9 +138,7 @@ class StakingDashboard extends React.Component<Props, State> {
       this.props.poolOperator != null
     ) {
       this._isDelegating = true
-      // TODO(v-almonacid): poolOperator is always null. Need to get pool info
-      // from tx history
-      // this.props.fetchPoolInfo()
+      this.props.fetchPoolInfo()
     }
   }
 

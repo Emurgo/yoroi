@@ -1,6 +1,8 @@
 // @flow
 import {BigNumber} from 'bignumber.js'
 
+import type {CertificateKind} from '../api/types'
+
 export const TRANSACTION_DIRECTION = {
   SENT: 'SENT',
   RECEIVED: 'RECEIVED',
@@ -52,6 +54,15 @@ export type Transaction = {|
   lastUpdatedAt: string,
   epoch: ?number,
   slot: ?number,
+  withdrawals: Array<{|
+    address: string, // hex
+    amount: string,
+  |}>,
+  certificates: Array<{
+    kind: CertificateKind,
+    rewardAddress?: string,
+    poolKeyHash?: string,
+  }>,
 |}
 
 export const AMOUNT_FORMAT = {

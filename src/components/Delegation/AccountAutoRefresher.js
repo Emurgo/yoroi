@@ -24,8 +24,8 @@ class _AccountAutoRefresher extends React.Component<{
 }> {
   _firstFocus = true
 
-  componentDidMount = () => {
-    this.refetch()
+  componentDidMount = async () => {
+    await this.refetch()
   }
 
   // TODO: this ideally should only track the state of a delegation tx
