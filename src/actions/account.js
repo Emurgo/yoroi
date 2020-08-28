@@ -3,7 +3,10 @@ import type {Dispatch} from 'redux'
 import {BigNumber} from 'bignumber.js'
 
 import walletManager from '../crypto/walletManager'
+import {Logger} from '../utils/logging'
+
 import type {State} from '../state'
+import type {RemoteAccountState} from '../api/types'
 
 // start fetching account balance
 const _startFetching = () => ({
@@ -27,11 +30,11 @@ const _setAccountValue = (value) => ({
   reducer: (state, value) => value,
 })
 
-const _setAccountPools = (pools) => ({
+const _setAccountPool = (poolOperator) => ({
   type: 'SET_ACCOUNT_POOLS',
-  path: ['accountState', 'delegation', 'pools'],
-  payload: pools,
-  reducer: (state, pools) => pools,
+  path: ['accountState', 'poolOperator'],
+  payload: poolOperator,
+  reducer: (state, poolOperator) => poolOperator,
 })
 
 const _setAccountTotalDelegated = (value) => ({
@@ -50,13 +53,8 @@ const _clearAccountState = () => ({
       isFetching: false,
       lastFetchingError: null,
       totalDelegated: new BigNumber(0),
-      delegation: {pools: []},
-      value: 0,
-      counter: 0,
-      last_rewards: {
-        epoch: 0,
-        reward: 0,
-      },
+      value: new BigNumber(0),
+      poolOperator: null,
     }
   },
 })
@@ -79,12 +77,11 @@ export const fetchAccountState = () => async (
   dispatch(_startFetching())
   try {
     const accountStateResp = await walletManager.fetchAccountState()
-    const accountState = Object.keys(accountStateResp).map(
+    const accountState: RemoteAccountState = Object.keys(accountStateResp).map(
       (key) => accountStateResp[key],
     )[0]
-    if (accountState.error != null) throw new Error(accountState.error)
-    const value = accountState.value
-    const pools = accountState.delegation.pools
+    const value = accountState.remainingAmount
+    const poolOperator = accountState.poolOperator // note: currently returns null
     const utxos = getState().balance.utxos
     if (utxos != null) {
       const utxosForKey = await walletManager.getAllUtxosForKey(utxos)
@@ -102,10 +99,11 @@ export const fetchAccountState = () => async (
         _setAccountTotalDelegated(amountToDelegate.plus(new BigNumber(value))),
       )
     }
-    dispatch(_setAccountValue(value))
-    dispatch(_setAccountPools(pools))
+    dispatch(_setAccountValue(new BigNumber(value)))
+    dispatch(_setAccountPool(poolOperator))
     dispatch(_setLastError(null))
   } catch (err) {
+    Logger.debug(err)
     dispatch(_setLastError(err))
   } finally {
     dispatch(_endFetching())

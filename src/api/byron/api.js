@@ -16,9 +16,11 @@ import type {
   ServerStatusResponse,
   BestblockResponse,
   TxHistoryRequest,
+  AccountStateRequest,
+  AccountStateResponse,
 } from '../types'
 
-const NETWORK_CONFIG = CONFIG.NETWORKS.BYRON_MAINNET.BACKEND
+const NETWORK_CONFIG = CONFIG.NETWORKS.HASKELL_SHELLEY.BACKEND
 
 type Addresses = Array<string>
 
@@ -127,4 +129,25 @@ export const getTxsBodiesForUTXOs = (
   request: TxBodiesRequest,
 ): Promise<TxBodiesResponse> => {
   return checkedFetch('txs/txBodies', request, NETWORK_CONFIG)
+}
+
+export const getAccountState = async (
+  request: AccountStateRequest,
+): Promise<AccountStateResponse> => {
+  assert.preconditionCheck(
+    request.addresses.length <= NETWORK_CONFIG.FETCH_UTXOS_MAX_ADDRESSES,
+    'getAccountState: too many addresses',
+  )
+  return await checkedFetch('getAccountState', request, NETWORK_CONFIG)
+}
+
+export const bulkGetAccountState = async (
+  addresses: Addresses,
+): Promise<AccountStateResponse> => {
+  const chunks = _.chunk(addresses, NETWORK_CONFIG.FETCH_UTXOS_MAX_ADDRESSES)
+
+  const responses = await Promise.all(
+    chunks.map((addrs) => getAccountState({addresses: addrs})),
+  )
+  return Object.assign({}, ...responses)
 }

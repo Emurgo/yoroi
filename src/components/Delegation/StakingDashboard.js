@@ -25,7 +25,7 @@ import {
   accountBalanceSelector,
   isFetchingAccountStateSelector,
   isFetchingUtxosSelector,
-  poolsSelector,
+  poolOperatorSelector,
   poolInfoSelector,
   isFetchingPoolInfoSelector,
   totalDelegatedSelector,
@@ -58,8 +58,7 @@ import styles from './styles/DelegationSummary.style'
 
 import type {Navigation} from '../../types/navigation'
 import type {
-  PoolTuples,
-  // RemotePoolMetaSuccess,
+  RemotePoolMetaSuccess,
   RawUtxo,
   ReputationResponse,
 } from '../../api/types'
@@ -85,11 +84,11 @@ type Props = {|
   isFetchingAccountState: boolean,
   fetchUTXOs: () => any,
   isFetchingUtxos: boolean,
-  pools: ?Array<PoolTuples>,
+  poolOperator: string,
   fetchPoolInfo: () => any,
   isFetchingPoolInfo: boolean,
   fetchAccountState: () => any,
-  poolInfo: any, // ?RemotePoolMetaSuccess,
+  poolInfo: ?RemotePoolMetaSuccess,
   totalDelegated: BigNumber,
   lastAccountStateSyncError: any,
   checkForFlawedWallets: () => any,
@@ -100,7 +99,7 @@ type State = {
   +currentTime: Date,
 }
 
-class DelegationSummary extends React.Component<Props, State> {
+class StakingDashboard extends React.Component<Props, State> {
   state = {
     currentTime: new Date(),
   }
@@ -134,10 +133,14 @@ class DelegationSummary extends React.Component<Props, State> {
     //     fetch detailed pool info
 
     // update pool info only when pool list gets updated
-    if (prevProps.pools !== this.props.pools && this.props.pools != null) {
-      // note: even if pools != null, we can have pools = []
-      if (this.props.pools.length > 0) this._isDelegating = true
-      this.props.fetchPoolInfo()
+    if (
+      prevProps.poolOperator !== this.props.poolOperator &&
+      this.props.poolOperator != null
+    ) {
+      this._isDelegating = true
+      // TODO(v-almonacid): poolOperator is always null. Need to get pool info
+      // from tx history
+      // this.props.fetchPoolInfo()
     }
   }
 
@@ -149,7 +152,7 @@ class DelegationSummary extends React.Component<Props, State> {
 
   navigateToStakingCenter: () => void
   navigateToStakingCenter = async () => {
-    const {navigation, utxos, pools, accountBalance} = this.props
+    const {navigation, utxos, poolOperator, accountBalance} = this.props
     /* eslint-disable indent */
     const utxosForKey =
       utxos != null ? await walletManager.getAllUtxosForKey(utxos) : null
@@ -162,7 +165,7 @@ class DelegationSummary extends React.Component<Props, State> {
               new BigNumber(0),
             )
         : BigNumber(0)
-    const poolList = pools != null ? pools.map((pool) => pool[0]) : []
+    const poolList = poolOperator != null ? [poolOperator] : []
     /* eslint-enable indent */
     const approxAdaToDelegate = formatAdaInteger(amountToDelegate)
     navigation.navigate(DELEGATION_ROUTES.STAKING_CENTER, {
@@ -191,7 +194,7 @@ class DelegationSummary extends React.Component<Props, State> {
       isOnline,
       utxoBalance,
       accountBalance,
-      pools,
+      poolOperator,
       poolInfo,
       isFetchingPoolInfo,
       totalDelegated,
@@ -328,13 +331,11 @@ class DelegationSummary extends React.Component<Props, State> {
             />
             {/* eslint-disable indent */
             poolInfo != null &&
-              !!pools && (
+              !!poolOperator && (
                 <DelegatedStakepoolInfo
                   poolTicker={poolInfo.info?.ticker}
                   poolName={poolInfo.info?.name}
-                  poolHash={
-                    pools.length > 0 && pools[0].length > 0 ? pools[0][0] : ''
-                  }
+                  poolHash={poolOperator != null ? poolOperator : ''}
                   poolURL={poolInfo.info?.homepage}
                 />
               )
@@ -368,7 +369,7 @@ export default injectIntl(
         accountBalance: accountBalanceSelector(state),
         isFetchingAccountState: isFetchingAccountStateSelector(state),
         lastAccountStateSyncError: lastAccountStateFetchErrorSelector(state),
-        pools: poolsSelector(state),
+        poolOperator: poolOperatorSelector(state),
         poolInfo: poolInfoSelector(state),
         isFetchingPoolInfo: isFetchingPoolInfoSelector(state),
         totalDelegated: totalDelegatedSelector(state),
@@ -390,5 +391,5 @@ export default injectIntl(
     ),
     withNavigation,
     withNavigationTitle(({walletName}) => walletName),
-  )(DelegationSummary): ComponentType<ExternalProps>),
+  )(StakingDashboard): ComponentType<ExternalProps>),
 )

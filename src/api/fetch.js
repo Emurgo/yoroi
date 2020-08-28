@@ -5,6 +5,8 @@ import {Platform} from 'react-native'
 import {Logger} from '../utils/logging'
 import {NetworkError, ApiError, ApiHistoryError} from './errors'
 
+import type {NetworkConfig} from '../config/types'
+
 type RequestMethod = 'POST' | 'GET'
 
 const _checkResponse = async (response, requestPayload) => {
@@ -28,7 +30,7 @@ const _checkResponse = async (response, requestPayload) => {
 export default (
   path: string,
   payload: ?any,
-  networkConfig: any,
+  networkConfig: NetworkConfig,
   method?: RequestMethod = 'POST',
   checkResponse?: (any, ?any) => Promise<void> = _checkResponse,
 ) => {
@@ -63,7 +65,7 @@ export default (
 
         await _checkResponse(r, payload)
         const response = await r.json()
-        // Logger.debug('Response:', response)
+        Logger.debug('Response:', response)
         return response
       })
   )

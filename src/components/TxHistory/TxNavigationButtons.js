@@ -7,19 +7,22 @@ import {View} from 'react-native'
 import {withHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
 
-import {hasAnyTransaction, isHWSelector} from '../../selectors'
+import {hasAnyTransaction, walletMetaSelector} from '../../selectors'
 import {WALLET_ROUTES} from '../../RoutesList'
 import NavButton from './NavButton'
 import {showErrorDialog} from '../../actions'
 import {errorMessages} from '../../i18n/global-messages'
+import {isHaskellShelley} from '../../config/config'
 
 import styles from './styles/TxNavigationButtons.style'
 
 import iconSend from '../../assets/img/icon/send.png'
 import iconReceive from '../../assets/img/icon/receive.png'
+import iconDashboard from '../../assets/img/icon/dashboard.png'
 import iconDelegate from '../../assets/img/icon/delegation.png'
 
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
+import type {WalletMeta} from '../../state'
 
 const messages = defineMessages({
   sendButton: {
@@ -30,8 +33,12 @@ const messages = defineMessages({
     id: 'components.txhistory.txnavigationbuttons.receiveButton',
     defaultMessage: '!!!Receive',
   },
+  dashboardButton: {
+    id: 'components.common.navigation.dashboardButton',
+    defaultMessage: '!!!Dashboard',
+  },
   delegateButton: {
-    id: 'components.txhistory.txnavigationbuttons.delegateButton',
+    id: 'components.common.navigation.delegateButton',
     defaultMessage: '!!!Delegate',
   },
 })
@@ -41,8 +48,10 @@ type Props = {
   navigateToReceive: () => mixed,
   navigateToSend: () => mixed,
   navigateToDashboard: () => mixed,
+  navigateToDelegate: () => mixed,
   intl: any,
   sendDisabled: boolean,
+  walletMeta: $Diff<WalletMeta, {id: string}>,
 }
 
 const TxNavigationButtons = ({
@@ -50,8 +59,10 @@ const TxNavigationButtons = ({
   navigateToReceive,
   navigateToSend,
   navigateToDashboard,
+  navigateToDelegate,
   intl,
   sendDisabled,
+  walletMeta,
 }: Props) => (
   <View style={styles.container}>
     <NavButton
@@ -67,13 +78,23 @@ const TxNavigationButtons = ({
       title={intl.formatMessage(messages.receiveButton)}
       iconImage={iconReceive}
     />
-    {/* TODO: {isShelley && ( */}
-    <NavButton
-      block
-      onPress={navigateToDashboard}
-      iconImage={iconDelegate}
-      title={intl.formatMessage(messages.delegateButton)}
-    />
+    {isHaskellShelley(walletMeta.walletImplementationId) && (
+      <>
+        <NavButton
+          block
+          onPress={navigateToDashboard}
+          iconImage={iconDashboard}
+          title={intl.formatMessage(messages.dashboardButton)}
+        />
+        <NavButton
+          block
+          disabled
+          onPress={navigateToDelegate}
+          iconImage={iconDelegate}
+          title={intl.formatMessage(messages.delegateButton)}
+        />
+      </>
+    )}
   </View>
 )
 
@@ -81,33 +102,32 @@ export default injectIntl(
   compose(
     connect((state) => ({
       sendDisabled: !hasAnyTransaction(state),
-      isHW: isHWSelector(state),
+      walletMeta: walletMetaSelector(state),
     })),
     withHandlers({
       navigateToReceive: ({navigation}) => (event) =>
         navigation.navigate(WALLET_ROUTES.RECEIVE),
-      navigateToSend: ({navigation, isHW, intl}) => (event) => {
-        if (isHW) {
+      navigateToSend: ({navigation, walletMeta, intl}) => (event) => {
+        if (walletMeta.isHW) {
           showErrorDialog(errorMessages.notSupportedError, intl)
           return
         }
         navigation.navigate(WALLET_ROUTES.SEND)
       },
-      navigateToDashboard: ({navigation, isHW, intl}) => (event) => {
-        if (isHW) {
+      navigateToDashboard: ({navigation, walletMeta, intl}) => (event) => {
+        if (walletMeta.isHW) {
           showErrorDialog(errorMessages.notSupportedError, intl)
           return
         }
         navigation.navigate(WALLET_ROUTES.DASHBOARD)
       },
-      // TODO
-      // navigateToDelegate: ({navigation, isHW, intl}) => (event) => {
-      //   if (isHW) {
-      //     showErrorDialog(errorMessages.notSupportedError, intl)
-      //     return
-      //   }
-      //   navigation.navigate(WALLET_ROUTES.DELEGATE)
-      // },
+      navigateToDelegate: ({navigation, walletMeta, intl}) => (event) => {
+        if (walletMeta.isHW) {
+          showErrorDialog(errorMessages.notSupportedError, intl)
+          return
+        }
+        navigation.navigate(WALLET_ROUTES.DELEGATE)
+      },
     }),
   )(TxNavigationButtons),
 )

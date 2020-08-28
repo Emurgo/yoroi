@@ -3,6 +3,7 @@ import type {Dispatch} from 'redux'
 
 import walletManager from '../crypto/walletManager'
 import type {State} from '../state'
+import type {PoolInfoRequest, PoolInfoResponse} from '../api/types'
 
 const _startFetching = () => ({
   type: 'START_FETCHING_POOL_INFO',
@@ -49,19 +50,25 @@ export const fetchPoolInfo = () => async (
   dispatch: Dispatch<any>,
   getState: () => State,
 ) => {
-  if (getState().poolInfo.isFetching) {
+  // TODO: get pool info
+  if (
+    getState().poolInfo.isFetching ||
+    getState().accountState.poolOperator == null
+  ) {
     return
-  } else if (getState().accountState.delegation.pools.length === 0) {
+  } else if (getState().accountState.poolOperator == null) {
     dispatch(_clearPoolInfo())
     return
   }
   dispatch(_clearPoolInfo())
   dispatch(_startFetching())
   try {
-    const pools = getState().accountState.delegation.pools
-    const poolInfoResp = await walletManager.fetchPoolInfo({
-      ids: pools.map((pool) => pool[0]),
-    })
+    const poolOperator = getState().accountState.poolOperator
+    const poolInfoResp: PoolInfoResponse = await walletManager.fetchPoolInfo(
+      ({
+        poolIds: [poolOperator],
+      }: PoolInfoRequest),
+    )
     const poolInfo = Object.keys(poolInfoResp).map(
       (key) => poolInfoResp[key],
     )[0]

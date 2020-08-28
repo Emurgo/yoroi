@@ -3,7 +3,7 @@ import {BigNumber} from 'bignumber.js'
 
 import {NETWORK_REGISTRY} from './config/types'
 
-import type {AccountState, RawUtxo} from './api/types'
+import type {RawUtxo, RemotePoolMetaSuccess} from './api/types'
 import type {Transaction} from './types/HistoryTransaction'
 import type {HWDeviceInfo} from './crypto/byron/ledgerUtils'
 import type {NetworkId, WalletImplementationId} from './config/types'
@@ -54,12 +54,13 @@ export type State = {
     isFetching: boolean,
     lastFetchingError: any,
     totalDelegated: BigNumber,
-    ...AccountState,
+    value: BigNumber,
+    poolOperator: any, // TODO: type
   },
   poolInfo: {
     isFetching: boolean,
     lastFetchingError: any,
-    meta: any,
+    meta: ?RemotePoolMetaSuccess,
   },
   isOnline: boolean,
   isAppInitialized: boolean,
@@ -113,13 +114,8 @@ export const getInitialState = (): State => ({
     isFetching: false,
     lastFetchingError: null,
     totalDelegated: new BigNumber(0),
-    delegation: {pools: []},
-    value: 0,
-    counter: 0,
-    last_rewards: {
-      epoch: 0,
-      reward: 0,
-    },
+    value: new BigNumber(0),
+    poolOperator: null,
   },
   poolInfo: {
     isFetching: false,

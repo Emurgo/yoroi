@@ -12373,9 +12373,9 @@ react-native-fs@^2.11.18:
     base-64 "^0.1.0"
     utf8 "^2.1.1"
 
-react-native-haskell-shelley@Emurgo/react-native-haskell-shelley#0.0.3:
+react-native-haskell-shelley@Emurgo/react-native-haskell-shelley:
   version "0.0.3"
-  resolved "https://codeload.github.com/Emurgo/react-native-haskell-shelley/tar.gz/1c6d369cb787d4ed279528e976324e70e1bb8681"
+  resolved "https://codeload.github.com/Emurgo/react-native-haskell-shelley/tar.gz/80ecfbf76ad17e4ef934a8492257bad5c2926970"
   dependencies:
     base-64 "0.1.0"
 

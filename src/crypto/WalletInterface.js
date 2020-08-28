@@ -9,12 +9,7 @@ import {AddressChain} from './chain'
 import {TransactionCache} from './shelley/transactionCache'
 import Wallet from './Wallet'
 
-import type {
-  RawUtxo,
-  PoolInfoRequest,
-  TxBodiesRequest,
-  TxBodiesResponse,
-} from '../api/types'
+import type {RawUtxo, TxBodiesRequest, TxBodiesResponse} from '../api/types'
 import type {
   AddressedUtxo,
   BaseSignRequest,
@@ -182,5 +177,5 @@ export interface WalletInterface {
 
   fetchAccountState(): Promise<any>;
 
-  fetchPoolInfo(pool: PoolInfoRequest): Promise<any>;
+  fetchPoolInfo(request: any): Promise<any>;
 }
