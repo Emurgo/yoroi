@@ -1,4 +1,6 @@
 {
+  "components.common.navigation.dashboardButton": "Dashboard",
+  "components.common.navigation.delegateButton": "Delegate",
   "components.common.languagepicker.brazilian": "Portoghese brasiliano",
   "components.common.languagepicker.chinese": "简体中文",
   "components.common.languagepicker.continueButton": "Scegli la lingua",
@@ -223,6 +225,7 @@
   "components.txhistory.txhistorylistitem.transactionTypeReceived": "ADA ricevuti",
   "components.txhistory.txhistorylistitem.transactionTypeSelf": "Intrawallet",
   "components.txhistory.txhistorylistitem.transactionTypeSent": "ADA inviati",
+  "components.txhistory.txnavigationbuttons.delegateButton": "Delegate",
   "components.txhistory.txnavigationbuttons.receiveButton": "Ricevere",
   "components.txhistory.txnavigationbuttons.sendButton": "Inviare",
   "components.uikit.offlinebanner.offline": "Sei offline. Controllare le impostazioni del dispositivo.",
