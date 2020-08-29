@@ -51,7 +51,6 @@ import walletManager from '../../crypto/walletManager'
 import globalMessages from '../../i18n/global-messages'
 import {formatAdaWithText, formatAdaInteger} from '../../utils/format'
 import FlawedWalletScreen from './FlawedWalletScreen'
-import {Logger} from '../../utils/logging'
 import {CONFIG} from '../../config/config'
 
 import styles from './styles/DelegationSummary.style'
@@ -60,7 +59,6 @@ import type {Navigation} from '../../types/navigation'
 import type {
   RemotePoolMetaSuccess,
   RawUtxo,
-  ReputationResponse,
 } from '../../api/types'
 
 const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
@@ -106,7 +104,6 @@ class StakingDashboard extends React.Component<Props, State> {
 
   _firstFocus = true
   _isDelegating = false
-  _poolsReputation: ReputationResponse = {}
 
   componentDidMount() {
     this.intervalId = setInterval(
@@ -117,12 +114,6 @@ class StakingDashboard extends React.Component<Props, State> {
       1000,
     )
     this.props.checkForFlawedWallets()
-    // wrap with try/catch to avoid unnecessary error prompt
-    try {
-      this._poolsReputation = {} // getReputation()
-    } catch (e) {
-      Logger.warn(e.message)
-    }
   }
 
   componentDidUpdate(prevProps) {
@@ -133,10 +124,7 @@ class StakingDashboard extends React.Component<Props, State> {
     //     fetch detailed pool info
 
     // update pool info only when pool list gets updated
-    if (
-      prevProps.poolOperator !== this.props.poolOperator &&
-      this.props.poolOperator != null
-    ) {
+    if (prevProps.poolOperator !== this.props.poolOperator && this.props.poolOperator != null) {
       this._isDelegating = true
       this.props.fetchPoolInfo()
     }
@@ -171,7 +159,6 @@ class StakingDashboard extends React.Component<Props, State> {
       poolList,
       utxos,
       valueInAccount: accountBalance,
-      poolsReputation: this._poolsReputation,
     })
   }
 

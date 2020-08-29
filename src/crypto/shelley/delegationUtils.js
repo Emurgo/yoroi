@@ -134,7 +134,7 @@ const getDifferenceAfterTx = async (
   allUtxos: Array<AddressedUtxo>,
   stakingKey: PublicKey,
 ): Promise<BigNumber> => {
-  const stakeCredential = await StakeCredential.from_keyhash(stakingKey.hash())
+  const stakeCredential = await StakeCredential.from_keyhash(await stakingKey.hash())
 
   let sumInForKey = new BigNumber(0)
   {
@@ -180,7 +180,6 @@ const getDifferenceAfterTx = async (
 
 export type CreateDelegationTxRequest = {|
   absSlotNumber: BigNumber,
-  // computeRegistrationStatus: (void) => Promise<boolean>,
   registrationStatus: boolean,
   poolRequest: void | string,
   valueInAccount: BigNumber,
@@ -202,17 +201,16 @@ export type CreateDelegationTxResponse = {|
 export const createDelegationTx = async (
   request: CreateDelegationTxRequest,
 ): Promise<CreateDelegationTxResponse> => {
-  Logger.debug('delegationUtils::createDelegationTx called')
+  Logger.debug('delegationUtils::createDelegationTx called', request)
   const {
     changeAddr,
+    registrationStatus,
     addressedUtxos,
     absSlotNumber,
     stakingKey,
     poolRequest,
   } = request
   try {
-    // const registrationStatus = await request.computeRegistrationStatus()
-
     const config = NETWORKS.HASKELL_SHELLEY
     const protocolParams = {
       keyDeposit: await BigNum.from_str(config.KEY_DEPOSIT),
@@ -226,7 +224,7 @@ export const createDelegationTx = async (
 
     const stakeDelegationCert = await createCertificate(
       stakingKey,
-      request.registrationStatus,
+      registrationStatus,
       poolRequest,
     )
     const unsignedTx = await newAdaUnsignedTx(

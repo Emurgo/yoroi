@@ -20,7 +20,7 @@ import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 import {
   showErrorDialog,
   handleGeneralError,
-  submitDelegationTx,
+  submitTransaction,
 } from '../../actions'
 import {
   SEND_ROUTES,
@@ -72,9 +72,8 @@ const approximateReward = (amount: BigNumber): BigNumber => {
   // needs to be update per-network
   const rewardMultiplier = (number) =>
     number
-      .times(CONFIG.NETWORKS.JORMUNGANDR.EPOCH_REWARD)
+      .times(CONFIG.NETWORKS.HASKELL_SHELLEY.PER_EPOCH_PERCENTAGE_REWARD)
       .div(CONFIG.NUMBERS.EPOCH_REWARD_DENOMINATOR)
-      .div(100)
 
   const result = rewardMultiplier(amount)
   return result
@@ -84,7 +83,7 @@ const handleOnConfirm = async (
   navigation,
   isEasyConfirmationEnabled,
   password,
-  submitDelegationTx,
+  submitTransaction,
   setSendingTransaction,
   setProcessingTx,
   intl,
@@ -95,7 +94,7 @@ const handleOnConfirm = async (
   const signAndSubmitTx = async (decryptedKey) => {
     try {
       setSendingTransaction(true)
-      await submitDelegationTx(decryptedKey, delegationTxData.unsignedTx)
+      await submitTransaction(decryptedKey, delegationTxData.signTxRequest)
       navigation.navigate(DELEGATION_ROUTES.STAKING_DASHBOARD)
     } catch (e) {
       if (e instanceof NetworkError) {
@@ -177,7 +176,8 @@ const DelegationConfirmation = ({
 }) => {
   const poolHash = navigation.getParam('poolHash')
   const poolName = navigation.getParam('poolName')
-  const amountToDelegate = navigation.getParam('amountToDelegate')
+  const delegationTxData = navigation.getParam('delegationTxData')
+  const amountToDelegate = delegationTxData.totalAmountToDelegate
   const transactionFee = navigation.getParam('transactionFee')
   const reward = approximateReward(amountToDelegate)
 
@@ -261,7 +261,7 @@ export default injectIntl(
         isEasyConfirmationEnabled: easyConfirmationSelector(state),
       }),
       {
-        submitDelegationTx,
+        submitTransaction,
       },
     ),
     withStateHandlers(
@@ -287,7 +287,7 @@ export default injectIntl(
           navigation,
           isEasyConfirmationEnabled,
           password,
-          submitDelegationTx,
+          submitTransaction,
           setSendingTransaction,
           setProcessingTx,
           intl,
@@ -296,7 +296,7 @@ export default injectIntl(
             navigation,
             isEasyConfirmationEnabled,
             password,
-            submitDelegationTx,
+            submitTransaction,
             setSendingTransaction,
             setProcessingTx,
             intl,

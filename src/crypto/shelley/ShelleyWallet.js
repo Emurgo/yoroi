@@ -42,6 +42,7 @@ import {genTimeToSlot} from '../../utils/timeUtils'
 import {
   filterAddressesByStakingKey,
   getDelegationStatus,
+  createDelegationTx,
 } from './delegationUtils'
 
 import type {
@@ -447,12 +448,35 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     }
   }
 
-  createDelegationTx(
-    poolData: any,
+  async createDelegationTx(
+    poolRequest: void | string,
     valueInAccount: BigNumber,
     utxos: Array<RawUtxo>,
   ): Promise<any> {
-    throw Error('not implemented')
+    const timeToSlotFn = await genTimeToSlot([
+      {
+        StartAt: CONFIG.NETWORKS.HASKELL_SHELLEY.START_AT,
+        GenesisDate: CONFIG.NETWORKS.HASKELL_SHELLEY.GENESIS_DATE,
+        SlotsPerEpoch: CONFIG.NETWORKS.HASKELL_SHELLEY.SLOTS_PER_EPOCH,
+        SlotDuration: CONFIG.NETWORKS.HASKELL_SHELLEY.SLOT_DURATION,
+      },
+    ])
+    const absSlotNumber = new BigNumber(timeToSlotFn({time: new Date()}).slot)
+    const changeAddr = await this._getAddressedChangeAddress()
+    const addressedUtxos = this.asAddressedUtxo(utxos)
+    const registrationStatus = (await this.getDelegationStatus()).isRegistered
+    const stakingKey = await this.getStakingKey()
+    const resp = await createDelegationTx({
+      absSlotNumber,
+      registrationStatus,
+      poolRequest,
+      valueInAccount,
+      addressedUtxos,
+      stakingKey,
+      changeAddr,
+    })
+    Logger.debug('createDelegationTx::response', JSON.stringify(resp))
+    return resp
   }
 
   // remove and just use signTx
