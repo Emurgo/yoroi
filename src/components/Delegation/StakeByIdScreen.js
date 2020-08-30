@@ -11,10 +11,8 @@ import {STAKING_CENTER_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {Logger} from '../../utils/logging'
 import walletManager from '../../crypto/walletManager'
-// import {InsufficientFunds} from '../../crypto/errors'
-import {confirmationMessages} from '../../i18n/global-messages'
+import {confirmationMessages, errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../actions'
-// import {NetworkError, ApiError} from '../../api/errors'
 import {ValidatedTextInput, Button} from '../UiKit'
 import {COLORS} from '../../styles/config'
 import {ObjectValues} from '../../utils/flow'
@@ -25,6 +23,8 @@ import {
 } from '../../selectors'
 import UtxoAutoRefresher from '../Send/UtxoAutoRefresher'
 import AccountAutoRefresher from './AccountAutoRefresher'
+import {NetworkError, ApiError} from '../../api/errors'
+import {InsufficientFunds} from '../../crypto/errors'
 
 import type {IntlShape} from 'react-intl'
 import type {ComponentType} from 'react'
@@ -103,7 +103,9 @@ const StakeByIdScreen = ({
         <View style={styles.actions}>
           <Button
             onPress={handleOnContinue}
-            title={intl.formatMessage(confirmationMessages.commonButtons.continueButton)}
+            title={intl.formatMessage(
+              confirmationMessages.commonButtons.continueButton,
+            )}
             disabled={!poolId || utxos == null || busy}
           />
         </View>
@@ -121,19 +123,11 @@ type ExternalProps = {|
 export default injectIntl(
   (compose(
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
-    connect(
-      (state) => ({
-        utxos: utxosSelector(state),
-        accountBalance: accountBalanceSelector(state),
-        isOnline: isOnlineSelector(state),
-      }),
-      {},
-      (state, dispatchProps, ownProps) => ({
-        ...state,
-        ...dispatchProps,
-        ...ownProps,
-      }),
-    ),
+    connect((state) => ({
+      utxos: utxosSelector(state),
+      accountBalance: accountBalanceSelector(state),
+      isOnline: isOnlineSelector(state),
+    })),
     withStateHandlers(
       {
         busy: false,
@@ -150,23 +144,35 @@ export default injectIntl(
         navigation,
         accountBalance,
         utxos,
+        intl,
       }) => async (selectedPool) => {
-        const delegationTxData = await walletManager.createDelegationTx(
-          poolId,
-          accountBalance,
-          utxos,
-        )
-        const _fee = await delegationTxData.signTxRequest.unsignedTx.get_fee_if_set()
-        const transactionFee = new BigNumber(
-          _fee != null ? _fee.to_str() : '0',
-        ).plus(await (await delegationTxData.signTxRequest.unsignedTx.get_deposit()).to_str())
+        try {
+          const delegationTxData = await walletManager.createDelegationTx(
+            poolId,
+            accountBalance,
+            utxos,
+          )
+          const _fee = await delegationTxData.signTxRequest.unsignedTx.get_fee_if_set()
+          const transactionFee = new BigNumber(
+            _fee != null ? await _fee.to_str() : '0',
+          ).plus(
+            await (await delegationTxData.signTxRequest.unsignedTx.get_deposit()).to_str(),
+          )
 
-        navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM, {
-          poolName: selectedPool.poolName,
-          poolHash: selectedPool.poolHash,
-          transactionFee,
-          delegationTxData,
-        })
+          navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM, {
+            poolName: selectedPool.poolName,
+            poolHash: selectedPool.poolHash,
+            transactionFee,
+            delegationTxData,
+          })
+        } catch (e) {
+          if (e instanceof InsufficientFunds) {
+            await showErrorDialog(errorMessages.insufficientBalance, intl)
+          } else {
+            Logger.error(e)
+            throw e
+          }
+        }
       },
     }),
     withHandlers({
@@ -178,10 +184,12 @@ export default injectIntl(
         poolId,
       }) => async (event) => {
         try {
-          const poolInfoResponse = await walletManager.fetchPoolInfo({poolIds: [poolId]})
+          const poolInfoResponse = await walletManager.fetchPoolInfo({
+            poolIds: [poolId],
+          })
           const poolInfo = ObjectValues(poolInfoResponse)[0]
           Logger.debug('handleOnContinue::poolInfo', poolInfo)
-          if (poolInfo.info != null) {
+          if (poolInfo?.info != null) {
             const selectedPool = {
               poolName: poolInfo.info.name,
               poolHash: poolId,
@@ -191,7 +199,14 @@ export default injectIntl(
             await showErrorDialog(noPoolDataDialog, intl)
           }
         } catch (e) {
-          Logger.error(e)
+          if (e instanceof NetworkError) {
+            await showErrorDialog(errorMessages.networkError, intl)
+          } else if (e instanceof ApiError) {
+            await showErrorDialog(noPoolDataDialog, intl)
+          } else {
+            Logger.error(e)
+            throw e
+          }
         }
       },
     }),

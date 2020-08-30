@@ -88,6 +88,7 @@ const TxNavigationButtons = ({
         />
         <NavButton
           block
+          disabled={sendDisabled}
           onPress={navigateToDelegate}
           iconImage={iconDelegate}
           title={intl.formatMessage(messages.delegateButton)}

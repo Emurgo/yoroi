@@ -6,7 +6,6 @@ import walletManager from '../crypto/walletManager'
 import {Logger} from '../utils/logging'
 
 import type {State} from '../state'
-import type {RemoteAccountState} from '../api/types'
 
 // start fetching account balance
 const _startFetching = () => ({
@@ -81,10 +80,13 @@ export const fetchAccountState = () => async (
     dispatch(_setAccountPool(status.poolKeyHash))
 
     const accountStateResp = await walletManager.fetchAccountState()
-    const accountState: RemoteAccountState = Object.keys(accountStateResp).map(
+    const accountState = Object.keys(accountStateResp).map(
       (key) => accountStateResp[key],
     )[0]
-    const value = accountState.remainingAmount
+    const value =
+      accountState?.remainingAmount != null
+        ? accountState?.remainingAmount
+        : '0'
     // const poolOperator = accountState.poolOperator // note: currently returns null
     const utxos = getState().balance.utxos
     if (utxos != null) {

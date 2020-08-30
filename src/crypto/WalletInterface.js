@@ -166,7 +166,7 @@ export interface WalletInterface {
   }>;
 
   signDelegationTx<T>(
-    unsignedTx: T,
+    signRequest: BaseSignRequest<T>,
     decryptedMasterKey: string,
   ): Promise<SignedTx>;
 

@@ -480,11 +480,45 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   // remove and just use signTx
-  signDelegationTx<V4UnsignedTxAddressedUtxoResponse>(
-    unsignedTx: V4UnsignedTxAddressedUtxoResponse,
+  async signDelegationTx<TransactionBuilder>(
+    signRequest: BaseSignRequest<TransactionBuilder>,
     decryptedMasterKey: string,
   ): Promise<SignedTx> {
-    throw Error('not implemented')
+    assert.assert(
+      this.walletImplementationId ===
+        WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY,
+      'cannot get reward address from a byron-era wallet',
+    )
+    const masterKey = await Bip32PrivateKey.from_bytes(
+      Buffer.from(decryptedMasterKey, 'hex'),
+    )
+    const _purpose = CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
+
+    const accountPvrKey: Bip32PrivateKey = await (await (await masterKey.derive(
+      _purpose,
+    )).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)).derive(
+      0 + CONFIG.NUMBERS.HARD_DERIVATION_START,
+    )
+
+    const stakingKey = await (await (await accountPvrKey.derive(
+      CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+    )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+
+    const signedTx: Transaction = await signTransaction(
+      signRequest,
+      CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
+      accountPvrKey,
+      [stakingKey],
+      undefined,
+    )
+    const id = Buffer.from(
+      await (await hash_transaction(await signedTx.body())).to_bytes(),
+    ).toString('hex')
+    const encodedTx = await signedTx.to_bytes()
+    return {
+      id,
+      encodedTx,
+    }
   }
 
   // =================== backend API =================== //

@@ -12,7 +12,6 @@ import {injectIntl} from 'react-intl'
 import {Banner, OfflineBanner, StatusBar} from '../UiKit'
 import {
   EpochProgress,
-  UpcomingRewardInfo,
   UserSummary,
   DelegatedStakepoolInfo,
   NotDelegatedInfo,
@@ -56,10 +55,7 @@ import {CONFIG} from '../../config/config'
 import styles from './styles/DelegationSummary.style'
 
 import type {Navigation} from '../../types/navigation'
-import type {
-  RemotePoolMetaSuccess,
-  RawUtxo,
-} from '../../api/types'
+import type {RemotePoolMetaSuccess, RawUtxo} from '../../api/types'
 
 const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
   <Banner
@@ -124,7 +120,10 @@ class StakingDashboard extends React.Component<Props, State> {
     //     fetch detailed pool info
 
     // update pool info only when pool list gets updated
-    if (prevProps.poolOperator !== this.props.poolOperator && this.props.poolOperator != null) {
+    if (
+      prevProps.poolOperator !== this.props.poolOperator &&
+      this.props.poolOperator != null
+    ) {
       this._isDelegating = true
       this.props.fetchPoolInfo()
     }
@@ -288,17 +287,6 @@ class StakingDashboard extends React.Component<Props, State> {
                 s: leftPadDate(timeLeftInEpoch.getUTCSeconds()),
               }}
             />
-            {/* eslint-disable indent */
-            poolInfo != null && (
-              /* TODO */
-              <UpcomingRewardInfo
-                nextRewardText={null}
-                followingRewardText={null}
-                showDisclaimer
-              />
-            )
-            /* eslint-enable indent */
-            }
             <UserSummary
               totalAdaSum={
                 totalBalance != null ? formatAdaWithText(totalBalance) : '-'
@@ -328,10 +316,7 @@ class StakingDashboard extends React.Component<Props, State> {
             }
           </ScrollView>
           {/* disable button by default as ITN is over */}
-          <DelegationNavigationButtons
-            onPress={this.navigateToStakingCenter}
-            disabled
-          />
+          <DelegationNavigationButtons onPress={this.navigateToStakingCenter} />
         </View>
         <NavigationEvents onDidFocus={this.handleDidFocus} />
       </SafeAreaView>

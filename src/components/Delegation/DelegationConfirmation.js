@@ -20,13 +20,13 @@ import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 import {
   showErrorDialog,
   handleGeneralError,
-  submitTransaction,
+  submitDelegationTx,
 } from '../../actions'
 import {
   SEND_ROUTES,
   WALLET_INIT_ROUTES,
   STAKING_CENTER_ROUTES,
-  DELEGATION_ROUTES,
+  WALLET_ROUTES,
 } from '../../RoutesList'
 import {NetworkError, ApiError} from '../../api/errors'
 import {WrongPassword} from '../../crypto/errors'
@@ -83,7 +83,7 @@ const handleOnConfirm = async (
   navigation,
   isEasyConfirmationEnabled,
   password,
-  submitTransaction,
+  submitDelegationTx,
   setSendingTransaction,
   setProcessingTx,
   intl,
@@ -94,8 +94,8 @@ const handleOnConfirm = async (
   const signAndSubmitTx = async (decryptedKey) => {
     try {
       setSendingTransaction(true)
-      await submitTransaction(decryptedKey, delegationTxData.signTxRequest)
-      navigation.navigate(DELEGATION_ROUTES.STAKING_DASHBOARD)
+      await submitDelegationTx(decryptedKey, delegationTxData.signTxRequest)
+      navigation.navigate(WALLET_ROUTES.TX_HISTORY)
     } catch (e) {
       if (e instanceof NetworkError) {
         await showErrorDialog(errorMessages.networkError, intl)
@@ -261,7 +261,7 @@ export default injectIntl(
         isEasyConfirmationEnabled: easyConfirmationSelector(state),
       }),
       {
-        submitTransaction,
+        submitDelegationTx,
       },
     ),
     withStateHandlers(
@@ -287,7 +287,7 @@ export default injectIntl(
           navigation,
           isEasyConfirmationEnabled,
           password,
-          submitTransaction,
+          submitDelegationTx,
           setSendingTransaction,
           setProcessingTx,
           intl,
@@ -296,7 +296,7 @@ export default injectIntl(
             navigation,
             isEasyConfirmationEnabled,
             password,
-            submitTransaction,
+            submitDelegationTx,
             setSendingTransaction,
             setProcessingTx,
             intl,

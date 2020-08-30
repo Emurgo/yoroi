@@ -740,12 +740,12 @@ class WalletManager {
     )
   }
 
-  async signDelegationTx<T>(unsignedTx: T, decryptedMasterKey: string) {
+  async signDelegationTx<T>(
+    request: BaseSignRequest<T>,
+    decryptedMasterKey: string,
+  ) {
     if (!this._wallet) throw new WalletClosed()
-    return await this._wallet.signDelegationTx<any>(
-      unsignedTx,
-      decryptedMasterKey,
-    )
+    return await this._wallet.signDelegationTx<any>(request, decryptedMasterKey)
   }
 
   // =================== backend API =================== //

@@ -22,7 +22,7 @@ import {newAdaUnsignedTx} from './transactions'
 import {normalizeToAddress} from './utils'
 import {NETWORKS} from '../../config/networks'
 import {Logger} from '../../utils/logging'
-import {CardanoError} from '../errors'
+import {CardanoError, InsufficientFunds} from '../errors'
 import {ObjectValues} from '../../utils/flow'
 import assert from '../../utils/assert'
 
@@ -134,7 +134,9 @@ const getDifferenceAfterTx = async (
   allUtxos: Array<AddressedUtxo>,
   stakingKey: PublicKey,
 ): Promise<BigNumber> => {
-  const stakeCredential = await StakeCredential.from_keyhash(await stakingKey.hash())
+  const stakeCredential = await StakeCredential.from_keyhash(
+    await stakingKey.hash(),
+  )
 
   let sumInForKey = new BigNumber(0)
   {
@@ -297,6 +299,7 @@ export const createDelegationTx = async (
       totalAmountToDelegate,
     }
   } catch (e) {
+    if (e instanceof InsufficientFunds) throw e
     Logger.error(`shelley::createDelegationTx:: ${e.message}`, e)
     throw new CardanoError(e.message)
   }
@@ -353,21 +356,17 @@ export const getDelegationStatus = (
       poolKeyHash,
     }
   }
-  Logger.debug('txCertificatesForKey', txCertificatesForKey)
   // start with older certificate
   const sortedCerts = sortBy(
     txCertificatesForKey,
     (txCerts) => txCerts.submittedAt,
   )
-  Logger.debug('sortedCerts', sortedCerts)
+  Logger.debug('txCertificatesForKey', sortedCerts)
 
   for (const certData of ObjectValues(sortedCerts)) {
     const certificates = certData.certificates
     for (const cert of certificates) {
-      assert.assert(
-        cert.rewardAddress === rewardAddress,
-        'getDelegationStatus:: reward addresses mismatch',
-      )
+      if (cert.rewardAddress !== rewardAddress) continue
       if (cert.kind === 'StakeDelegation') {
         assert.assert(
           cert.poolKeyHash != null,
@@ -375,7 +374,10 @@ export const getDelegationStatus = (
         )
         poolKeyHash = cert.poolKeyHash
         isRegistered = true
-      } else if (cert.kind === 'StakeRegistration') {
+      } else if (
+        cert.kind === 'StakeRegistration' ||
+        cert.kind === 'MoveInstantaneousRewardsCert'
+      ) {
         isRegistered = true
       } else if (cert.kind === 'StakeDeregistration') {
         isRegistered = false

@@ -542,20 +542,26 @@ export const submitTransaction = <T>(
   signRequest: BaseSignRequest<T>,
 ) => async (dispatch: Dispatch<any>) => {
   const {encodedTx} = await walletManager.signTx(signRequest, decryptedKey)
-  Logger.info('submitTransaction::encodedTx', encodedTx)
+  Logger.info(
+    'submitTransaction::encodedTx',
+    Buffer.from(encodedTx).toString('hex'),
+  )
   const signedTxBase64 = Buffer.from(encodedTx).toString('base64')
   dispatch(submitSignedTx(signedTxBase64))
 }
 
 export const submitDelegationTx = <T>(
   decryptedKey: string,
-  signRequest: T,
+  signRequest: BaseSignRequest<T>,
 ) => async (dispatch: Dispatch<any>) => {
   const {encodedTx} = await walletManager.signDelegationTx(
     signRequest,
     decryptedKey,
   )
-  Logger.info('submitDelegationTransaction::encodedTx', encodedTx)
+  Logger.info(
+    'submitDelegationTransaction::encodedTx',
+    Buffer.from(encodedTx).toString('hex'),
+  )
   const signedTxBase64 = Buffer.from(encodedTx).toString('base64')
   dispatch(submitSignedTx(signedTxBase64))
 }

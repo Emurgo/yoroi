@@ -23,6 +23,7 @@ const _checkResponse = async (response, requestPayload) => {
   if (response.status !== 200) {
     Logger.debug('Bad status code from server', response.status)
     Logger.debug('Request payload:', requestPayload)
+    Logger.info('response', await response.json())
     throw new ApiError(response)
   }
 }
