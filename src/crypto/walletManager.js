@@ -170,9 +170,7 @@ class WalletManager {
             } = data.externalChain.addressGenerator
             switch (walletImplementationId) {
               case WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID:
-                checksum = legacyWalletChecksum(
-                  accountPubKeyHex || account.root_cached_key,
-                )
+                checksum = legacyWalletChecksum(accountPubKeyHex || account.root_cached_key)
                 break
               case WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID:
                 checksum = walletChecksum(accountPubKeyHex)
