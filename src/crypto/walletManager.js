@@ -153,7 +153,11 @@ class WalletManager {
               ? w.walletImplementationId
               : WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID
           networkId =
-            w.networkId != null ? w.networkId : NETWORK_REGISTRY.HASKELL_SHELLEY
+            w.networkId != null
+              ? w.networkId === NETWORK_REGISTRY.BYRON_MAINNET
+                ? NETWORK_REGISTRY.HASKELL_SHELLEY
+                : w.networkId
+              : NETWORK_REGISTRY.HASKELL_SHELLEY
         }
 
         let checksum: WalletChecksum

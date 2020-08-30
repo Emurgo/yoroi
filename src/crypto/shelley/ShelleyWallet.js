@@ -198,6 +198,9 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
 
   _integrityCheck(): void {
     try {
+      if (this.networkId === NETWORK_REGISTRY.BYRON_MAINNET) {
+        this.networkId = NETWORK_REGISTRY.HASKELL_SHELLEY
+      }
       assert.assert(
         this.networkId === NETWORK_REGISTRY.HASKELL_SHELLEY,
         'invalid networkId',
