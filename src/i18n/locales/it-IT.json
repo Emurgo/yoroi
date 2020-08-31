@@ -181,7 +181,7 @@
   "components.stakingcenter.confirmDelegation.rewardsExplanation": "Approssimazione attuale delle ricompense che riceverai per epoca:",
   "components.stakingcenter.confirmDelegation.title": "Conferma la delega",
   "components.stakingcenter.delegationbyid.stakePoolId": "Stake pool id",
-  "components.stakingcenter.delegationbyid.title": "Delegation by Id",
+  "components.stakingcenter.delegationbyid.title": "Delegazione per Id",
   "components.stakingcenter.noPoolDataDialog.message": "I dati della(e) pool selezionata(e) non sono validi. Si prega di riprovare",
   "components.stakingcenter.noPoolDataDialog.title": "Dati della pool non validi",
   "components.stakingcenter.poolwarningmodal.censoringTxs": "Esclude intenzionalmente le transazioni dai blocchi (censura della rete)",
