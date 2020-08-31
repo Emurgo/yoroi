@@ -39,7 +39,7 @@
     "base-x": "3.0.4",
     "bignumber.js": "^7.2.1",
     "bip39": "^2.5.0",
-    "bluebird": "^3.5.2",
+    "bluebird": "^3.7.2",
     "bs58": "^4.0.1",
     "cbor": "5.0.2",
     "crypto-random-string": "^1.0.0",
