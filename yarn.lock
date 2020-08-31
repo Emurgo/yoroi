@@ -12280,10 +12280,10 @@ react-markdown@^4.0.6:
     unist-util-visit "^1.3.0"
     xtend "^4.0.1"
 
-react-native-background-timer@2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/react-native-background-timer/-/react-native-background-timer-2.2.0.tgz#ff82d30899209b924983cc00e6ce174b8de5054a"
-  integrity sha512-Y7N6diSFko/FCJPMmB0PoBlmY1kEcma7qDVwn8t7zi12GLqpe/Vwls97onkSD8/QL+BR33BygUHOrLTPwgeKfg==
+react-native-background-timer@2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/react-native-background-timer/-/react-native-background-timer-2.3.1.tgz#83044a4572c62f5b99e929057b7bda5596b033ae"
+  integrity sha512-cqsXqNOZYtFYrzdwXdfFciJOXjQwr1DpCb2Oy4Z3+FGETRRl+wH3uf8YuqnYUHFnKulHJ0BwYKTvkmmbY0eTxQ==
 
 react-native-ble-plx@2.0.0:
   version "2.0.0"
