@@ -10667,7 +10667,8 @@ no-case@^3.0.3:
 
 "node-cardano-wallet@https://github.com/Emurgo/node-cardano-wallet.git":
   version "0.0.2"
-  resolved "https://github.com/Emurgo/node-cardano-wallet.git#4a812e4b0464bd8832be55728ef8a10e7e5d4eca"
+  uid c2e5a8490ec694cc7d2399e1a50359a318befd9d
+  resolved "https://github.com/Emurgo/node-cardano-wallet.git#c2e5a8490ec694cc7d2399e1a50359a318befd9d"
   dependencies:
     neon-cli "^0.2.0"
 
