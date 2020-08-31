@@ -26,7 +26,7 @@
     "@babel/cli": "7.2.3",
     "@babel/core": "7.5.5",
     "@babel/node": "7.0.0",
-    "@babel/runtime": "7.5.5",
+    "@babel/runtime": "7.11.2",
     "@cardano-foundation/ledgerjs-hw-app-cardano": "1.0.8",
     "@emurgo/cip4-js": "1.0.5",
     "@ledgerhq/react-native-hw-transport-ble": "5.13.0",
