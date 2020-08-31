@@ -32,7 +32,7 @@
     "@ledgerhq/react-native-hw-transport-ble": "5.13.0",
     "@react-native-community/async-storage": "1.5.1",
     "@react-native-community/netinfo": "5.6.2",
-    "@sentry/react-native": "1.4.5",
+    "@sentry/react-native": "1.7.2",
     "@v-almonacid/react-native-hid": "5.15.4",
     "add": "2.0.6",
     "babel-eslint": "^10.0.1",
