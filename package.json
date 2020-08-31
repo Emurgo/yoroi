@@ -97,7 +97,7 @@
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "safe-buffer": "^5.1.2",
-    "stream-browserify": "^2.0.1",
+    "stream-browserify": "^3.0.0",
     "tinycolor2": "^1.4.1",
     "url": "^0.11.0",
     "util": "^0.11.0",
