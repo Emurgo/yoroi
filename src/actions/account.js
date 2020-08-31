@@ -87,7 +87,6 @@ export const fetchAccountState = () => async (
       accountState?.remainingAmount != null
         ? accountState?.remainingAmount
         : '0'
-    // const poolOperator = accountState.poolOperator // note: currently returns null
     const utxos = getState().balance.utxos
     if (utxos != null) {
       const utxosForKey = await walletManager.getAllUtxosForKey(utxos)
@@ -106,7 +105,6 @@ export const fetchAccountState = () => async (
       )
     }
     dispatch(_setAccountValue(new BigNumber(value)))
-    // dispatch(_setAccountPool(poolOperator))
     dispatch(_setLastError(null))
   } catch (err) {
     Logger.warn(err)
