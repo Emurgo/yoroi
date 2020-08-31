@@ -9646,10 +9646,10 @@ loader-utils@^2.0.0:
     emojis-list "^3.0.0"
     json5 "^2.1.2"
 
-localized-strings@^0.2.0:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/localized-strings/-/localized-strings-0.2.2.tgz#25620bd07c30946cae2f60d878d3a14b343651b7"
-  integrity sha512-00SLj5499BxJPjMPYJXqnva14T/ebRNnLoWTrOqogrmR3gSYR6NidA7xXb3bjMTkSPtrPhFDlx6cGC8cym+LEA==
+localized-strings@^0.2.4:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/localized-strings/-/localized-strings-0.2.4.tgz#9d61c06b60cc7b5edf7c46e6c7f2d1ecb84aeb2c"
+  integrity sha512-TKDhqFPkIIN/if2FSvVVZTaM/GP9TzfgdQ2uY65mr32xgFu5nqkKXprXbzy5rfx32DF5LDvS/y1UqYF/mAscYA==
 
 locate-path@^2.0.0:
   version "2.0.0"

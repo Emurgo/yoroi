@@ -55,7 +55,7 @@
     "immer": "^1.7.2",
     "intl": "^1.2.5",
     "jsc-android": "241213.1.0",
-    "localized-strings": "^0.2.0",
+    "localized-strings": "^0.2.4",
     "lodash": "^4.17.19",
     "moment": "^2.22.2",
     "net": "^1.0.2",
