@@ -3,7 +3,7 @@ import React from 'react'
 import {createStackNavigator} from 'react-navigation'
 
 import {Button} from '../UiKit'
-import StakingCenter from './StakingCenter'
+import StakeByIdScreen from './StakeByIdScreen'
 import BiometricAuthScreen from '../Send/BiometricAuthScreen'
 import DelegationConfirmation from './DelegationConfirmation'
 import {
@@ -16,7 +16,6 @@ import iconGear from '../../assets/img/gear.png'
 import {
   defaultNavigationOptions,
   defaultStackNavigatorOptions,
-  jormunNavigationOptions,
 } from '../../navigationOptions'
 
 import HeaderBackButton from '../UiKit/HeaderBackButton'
@@ -25,7 +24,8 @@ import styles from '../TxHistory/styles/SettingsButton.style'
 const StakingNavigatorCenter = createStackNavigator(
   {
     [STAKING_CENTER_ROUTES.MAIN]: {
-      screen: StakingCenter,
+      // this should be temporal. Implement StakingCenter in next iteration
+      screen: StakeByIdScreen,
       navigationOptions: ({navigation}) => ({
         title: navigation.getParam('title'),
         headerRight: (
@@ -55,7 +55,6 @@ const StakingNavigatorCenter = createStackNavigator(
       title: navigation.getParam('title'),
       headerLeft: <HeaderBackButton navigation={navigation} />,
       ...defaultNavigationOptions,
-      ...jormunNavigationOptions,
     }),
     ...defaultStackNavigatorOptions,
   },

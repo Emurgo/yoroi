@@ -218,15 +218,21 @@ export default class Wallet {
       this.internalChain.sync(filterFn),
       this.externalChain.sync(filterFn),
     ])
-    // TODO: implement for shelley
+    const _rewardAddressHex = await this.internalChain.getRewardAddressHex()
+    // prettier-ignore
+    const addresses =
+      _rewardAddressHex != null
+        ? [
+          ...this.internalChain.getBlocks(),
+          ...this.externalChain.getBlocks(),
+          ...[[_rewardAddressHex]],
+        ]
+        : [...this.internalChain.getBlocks(), ...this.externalChain.getBlocks()]
     if (!isJormungandr(this.networkId)) {
       Logger.info('Discovery done, now syncing transactions')
       let keepGoing = true
       while (keepGoing) {
-        keepGoing = await this.transactionCache.doSyncStep([
-          ...this.internalChain.getBlocks(),
-          ...this.externalChain.getBlocks(),
-        ])
+        keepGoing = await this.transactionCache.doSyncStep(addresses)
       }
     }
 

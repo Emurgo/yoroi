@@ -10,6 +10,7 @@ import {
   BaseAddress,
   Bip32PublicKey,
   StakeCredential,
+  RewardAddress,
 } from 'react-native-haskell-shelley'
 
 import {CONFIG} from '../../config/config'
@@ -33,6 +34,7 @@ export class AddressGenerator {
   walletImplementationId: WalletImplementationId
 
   _accountPubKeyPtr: Bip32PublicKey
+  _rewardAddressHex: string
 
   constructor(
     accountPubKeyHex: string,
@@ -55,6 +57,40 @@ export class AddressGenerator {
       derivation_scheme: 'V2',
       root_cached_key: this.accountPubKeyHex,
     }
+  }
+
+  async getRewardAddressHex() {
+    if (
+      this.walletImplementationId !==
+      WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY
+    ) {
+      return null
+    }
+    if (this._rewardAddressHex != null) return this._rewardAddressHex
+    // cache account public key
+    if (this._accountPubKeyPtr == null) {
+      this._accountPubKeyPtr = await Bip32PublicKey.from_bytes(
+        Buffer.from(this.accountPubKeyHex, 'hex'),
+      )
+    }
+    const stakingKey = await (await (await this._accountPubKeyPtr.derive(
+      CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+    )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+
+    // cache reward address
+    const credential = await StakeCredential.from_keyhash(
+      await stakingKey.hash(),
+    )
+    const rewardAddr = await RewardAddress.new(
+      parseInt(CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID, 10),
+      credential,
+    )
+    const rewardAddrAsAddr = await rewardAddr.to_address()
+    this._rewardAddressHex = Buffer.from(
+      await rewardAddrAsAddr.to_bytes(),
+      'hex',
+    ).toString('hex')
+    return this._rewardAddressHex
   }
 
   async generate(idxs: Array<number>): Promise<Array<string>> {
@@ -197,6 +233,10 @@ export class AddressChain {
 
   get publicKey() {
     return this._addressGenerator.accountPubKeyHex
+  }
+
+  async getRewardAddressHex() {
+    return await this._addressGenerator.getRewardAddressHex()
   }
 
   addSubscriberToNewAddresses(subscriber: (Addresses) => mixed) {

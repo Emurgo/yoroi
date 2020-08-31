@@ -138,5 +138,7 @@ export const checkAndFacadeTransactionAsync = async (
     txOrdinal: tx.tx_ordinal,
     epoch: tx.epoch,
     slot: tx.slot,
+    withdrawals: tx.withdrawals,
+    certificates: tx.certificates,
   }
 }

@@ -14,6 +14,16 @@ export type RawUtxo = {|
   utxo_id: string,
 |}
 
+export const CERTIFICATE_KIND = {
+  STAKE_REGISTRATION: 'StakeRegistration',
+  STAKE_DEREGISTRATION: 'StakeDeregistration',
+  STAKE_DELEGATION: 'StakeDelegation',
+  POOL_REGISTRATION: 'PoolRegistration',
+  POOL_RETIREMENT: 'PoolRetirement',
+  MOVE_INSTANTANEOUS_REWARDS: 'MoveInstantaneousRewardsCert',
+}
+export type CertificateKind = $Values<typeof CERTIFICATE_KIND>
+
 // account state (jormun-era)
 
 // export type PoolTuples = [
@@ -171,12 +181,22 @@ export type RemoteTxBlockMeta = {|
   +slot: number,
 |}
 
+export type RemoteCertificateMeta = {
+  kind: CertificateKind,
+  rewardAddress?: string, // hex
+  poolKeyHash?: string, // hex
+}
 export type RemoteTxInfo = {|
   +hash: string,
   +last_update: string, // timestamp with timezone
   +tx_state: TransactionStatus,
   +inputs: Array<RemoteTransactionInput>,
   +outputs: Array<RemoteTransactionOutput>,
+  +withdrawals: Array<{|
+    address: string, // hex
+    amount: string,
+  |}>,
+  +certificates: Array<RemoteCertificateMeta>,
 |}
 
 export type RawTransaction = {|

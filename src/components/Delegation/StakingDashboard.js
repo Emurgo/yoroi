@@ -12,7 +12,6 @@ import {injectIntl} from 'react-intl'
 import {Banner, OfflineBanner, StatusBar} from '../UiKit'
 import {
   EpochProgress,
-  UpcomingRewardInfo,
   UserSummary,
   DelegatedStakepoolInfo,
   NotDelegatedInfo,
@@ -51,17 +50,12 @@ import walletManager from '../../crypto/walletManager'
 import globalMessages from '../../i18n/global-messages'
 import {formatAdaWithText, formatAdaInteger} from '../../utils/format'
 import FlawedWalletScreen from './FlawedWalletScreen'
-import {Logger} from '../../utils/logging'
 import {CONFIG} from '../../config/config'
 
 import styles from './styles/DelegationSummary.style'
 
 import type {Navigation} from '../../types/navigation'
-import type {
-  RemotePoolMetaSuccess,
-  RawUtxo,
-  ReputationResponse,
-} from '../../api/types'
+import type {RemotePoolMetaSuccess, RawUtxo} from '../../api/types'
 
 const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
   <Banner
@@ -106,7 +100,6 @@ class StakingDashboard extends React.Component<Props, State> {
 
   _firstFocus = true
   _isDelegating = false
-  _poolsReputation: ReputationResponse = {}
 
   componentDidMount() {
     this.intervalId = setInterval(
@@ -117,12 +110,6 @@ class StakingDashboard extends React.Component<Props, State> {
       1000,
     )
     this.props.checkForFlawedWallets()
-    // wrap with try/catch to avoid unnecessary error prompt
-    try {
-      this._poolsReputation = {} // getReputation()
-    } catch (e) {
-      Logger.warn(e.message)
-    }
   }
 
   componentDidUpdate(prevProps) {
@@ -138,9 +125,7 @@ class StakingDashboard extends React.Component<Props, State> {
       this.props.poolOperator != null
     ) {
       this._isDelegating = true
-      // TODO(v-almonacid): poolOperator is always null. Need to get pool info
-      // from tx history
-      // this.props.fetchPoolInfo()
+      this.props.fetchPoolInfo()
     }
   }
 
@@ -173,7 +158,6 @@ class StakingDashboard extends React.Component<Props, State> {
       poolList,
       utxos,
       valueInAccount: accountBalance,
-      poolsReputation: this._poolsReputation,
     })
   }
 
@@ -303,17 +287,6 @@ class StakingDashboard extends React.Component<Props, State> {
                 s: leftPadDate(timeLeftInEpoch.getUTCSeconds()),
               }}
             />
-            {/* eslint-disable indent */
-            poolInfo != null && (
-              /* TODO */
-              <UpcomingRewardInfo
-                nextRewardText={null}
-                followingRewardText={null}
-                showDisclaimer
-              />
-            )
-            /* eslint-enable indent */
-            }
             <UserSummary
               totalAdaSum={
                 totalBalance != null ? formatAdaWithText(totalBalance) : '-'
@@ -343,10 +316,7 @@ class StakingDashboard extends React.Component<Props, State> {
             }
           </ScrollView>
           {/* disable button by default as ITN is over */}
-          <DelegationNavigationButtons
-            onPress={this.navigateToStakingCenter}
-            disabled
-          />
+          <DelegationNavigationButtons onPress={this.navigateToStakingCenter} />
         </View>
         <NavigationEvents onDidFocus={this.handleDidFocus} />
       </SafeAreaView>

@@ -39,9 +39,19 @@ import {TransactionCache} from './transactionCache'
 import {signTransaction} from './transactions'
 import {createUnsignedTx} from './transactionUtils'
 import {genTimeToSlot} from '../../utils/timeUtils'
-import {filterAddressesByStakingKey} from './delegationUtils'
+import {
+  filterAddressesByStakingKey,
+  getDelegationStatus,
+  createDelegationTx,
+} from './delegationUtils'
 
-import type {RawUtxo, TxBodiesRequest, TxBodiesResponse} from '../../api/types'
+import type {
+  RawUtxo,
+  TxBodiesRequest,
+  TxBodiesResponse,
+  PoolInfoRequest,
+  PoolInfoResponse,
+} from '../../api/types'
 import type {AddressedUtxo, BaseSignRequest, SignedTx} from './../types'
 import type {HWDeviceInfo} from '../byron/ledgerUtils'
 import type {NetworkId, WalletImplementationId} from '../../config/types'
@@ -188,6 +198,9 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
 
   _integrityCheck(): void {
     try {
+      if (this.networkId === NETWORK_REGISTRY.BYRON_MAINNET) {
+        this.networkId = NETWORK_REGISTRY.HASKELL_SHELLEY
+      }
       assert.assert(
         this.networkId === NETWORK_REGISTRY.HASKELL_SHELLEY,
         'invalid networkId',
@@ -358,6 +371,17 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     return addressedUtxos
   }
 
+  async getDelegationStatus() {
+    const rewardAddrHex = Buffer.from(
+      await (await this.getRewardAddress()).to_bytes(),
+      'hex',
+    ).toString('hex')
+    const certsForKey = this.transactionCache.perRewardAddressCertificates[
+      rewardAddrHex
+    ]
+    return getDelegationStatus(rewardAddrHex, certsForKey)
+  }
+
   async createUnsignedTx<TransactionBuilder>(
     utxos: Array<RawUtxo>,
     receiver: string,
@@ -427,20 +451,77 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     }
   }
 
-  createDelegationTx(
-    poolData: any,
+  async createDelegationTx(
+    poolRequest: void | string,
     valueInAccount: BigNumber,
     utxos: Array<RawUtxo>,
   ): Promise<any> {
-    throw Error('not implemented')
+    const timeToSlotFn = await genTimeToSlot([
+      {
+        StartAt: CONFIG.NETWORKS.HASKELL_SHELLEY.START_AT,
+        GenesisDate: CONFIG.NETWORKS.HASKELL_SHELLEY.GENESIS_DATE,
+        SlotsPerEpoch: CONFIG.NETWORKS.HASKELL_SHELLEY.SLOTS_PER_EPOCH,
+        SlotDuration: CONFIG.NETWORKS.HASKELL_SHELLEY.SLOT_DURATION,
+      },
+    ])
+    const absSlotNumber = new BigNumber(timeToSlotFn({time: new Date()}).slot)
+    const changeAddr = await this._getAddressedChangeAddress()
+    const addressedUtxos = this.asAddressedUtxo(utxos)
+    const registrationStatus = (await this.getDelegationStatus()).isRegistered
+    const stakingKey = await this.getStakingKey()
+    const resp = await createDelegationTx({
+      absSlotNumber,
+      registrationStatus,
+      poolRequest,
+      valueInAccount,
+      addressedUtxos,
+      stakingKey,
+      changeAddr,
+    })
+    Logger.debug('createDelegationTx::response', JSON.stringify(resp))
+    return resp
   }
 
   // remove and just use signTx
-  signDelegationTx<V4UnsignedTxAddressedUtxoResponse>(
-    unsignedTx: V4UnsignedTxAddressedUtxoResponse,
+  async signDelegationTx<TransactionBuilder>(
+    signRequest: BaseSignRequest<TransactionBuilder>,
     decryptedMasterKey: string,
   ): Promise<SignedTx> {
-    throw Error('not implemented')
+    assert.assert(
+      this.walletImplementationId ===
+        WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY,
+      'cannot get reward address from a byron-era wallet',
+    )
+    const masterKey = await Bip32PrivateKey.from_bytes(
+      Buffer.from(decryptedMasterKey, 'hex'),
+    )
+    const _purpose = CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
+
+    const accountPvrKey: Bip32PrivateKey = await (await (await masterKey.derive(
+      _purpose,
+    )).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)).derive(
+      0 + CONFIG.NUMBERS.HARD_DERIVATION_START,
+    )
+
+    const stakingKey = await (await (await accountPvrKey.derive(
+      CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+    )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+
+    const signedTx: Transaction = await signTransaction(
+      signRequest,
+      CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
+      accountPvrKey,
+      [stakingKey],
+      undefined,
+    )
+    const id = Buffer.from(
+      await (await hash_transaction(await signedTx.body())).to_bytes(),
+    ).toString('hex')
+    const encodedTx = await signedTx.to_bytes()
+    return {
+      id,
+      encodedTx,
+    }
   }
 
   // =================== backend API =================== //
@@ -476,7 +557,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     return await api.bulkGetAccountState([rewardAddrHex])
   }
 
-  fetchPoolInfo() {
-    throw Error('not implemented')
+  async fetchPoolInfo(request: PoolInfoRequest): Promise<PoolInfoResponse> {
+    return await api.getPoolInfo(request)
   }
 }

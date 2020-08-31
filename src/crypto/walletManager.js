@@ -153,7 +153,11 @@ class WalletManager {
               ? w.walletImplementationId
               : WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID
           networkId =
-            w.networkId != null ? w.networkId : NETWORK_REGISTRY.HASKELL_SHELLEY
+            w.networkId != null
+              ? w.networkId === NETWORK_REGISTRY.BYRON_MAINNET
+                ? NETWORK_REGISTRY.HASKELL_SHELLEY
+                : w.networkId
+              : NETWORK_REGISTRY.HASKELL_SHELLEY
         }
 
         let checksum: WalletChecksum
@@ -166,7 +170,9 @@ class WalletManager {
             } = data.externalChain.addressGenerator
             switch (walletImplementationId) {
               case WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID:
-                checksum = legacyWalletChecksum(account.root_cached_key)
+                checksum = legacyWalletChecksum(
+                  accountPubKeyHex || account.root_cached_key,
+                )
                 break
               case WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID:
                 checksum = walletChecksum(accountPubKeyHex)
@@ -702,6 +708,11 @@ class WalletManager {
     return this._wallet.asAddressedUtxo(utxos)
   }
 
+  async getDelegationStatus() {
+    if (!this._wallet) throw new WalletClosed()
+    return await this._wallet.getDelegationStatus()
+  }
+
   async createUnsignedTx(
     utxos: Array<RawUtxo>,
     receiver: string,
@@ -735,12 +746,12 @@ class WalletManager {
     )
   }
 
-  async signDelegationTx<T>(unsignedTx: T, decryptedMasterKey: string) {
+  async signDelegationTx<T>(
+    request: BaseSignRequest<T>,
+    decryptedMasterKey: string,
+  ) {
     if (!this._wallet) throw new WalletClosed()
-    return await this._wallet.signDelegationTx<any>(
-      unsignedTx,
-      decryptedMasterKey,
-    )
+    return await this._wallet.signDelegationTx<any>(request, decryptedMasterKey)
   }
 
   // =================== backend API =================== //
@@ -769,9 +780,9 @@ class WalletManager {
     return await this.abortWhenWalletCloses(this._wallet.fetchAccountState())
   }
 
-  async fetchPoolInfo(pool: any) {
+  async fetchPoolInfo(request: any) {
     if (this._wallet == null) throw new WalletClosed()
-    return await this._wallet.fetchPoolInfo(pool)
+    return await this._wallet.fetchPoolInfo(request)
   }
 
   // =================== misc =================== //

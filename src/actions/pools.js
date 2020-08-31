@@ -2,6 +2,8 @@
 import type {Dispatch} from 'redux'
 
 import walletManager from '../crypto/walletManager'
+import {Logger} from '../utils/logging'
+
 import type {State} from '../state'
 import type {PoolInfoRequest, PoolInfoResponse} from '../api/types'
 
@@ -50,11 +52,7 @@ export const fetchPoolInfo = () => async (
   dispatch: Dispatch<any>,
   getState: () => State,
 ) => {
-  // TODO: get pool info
-  if (
-    getState().poolInfo.isFetching ||
-    getState().accountState.poolOperator == null
-  ) {
+  if (getState().poolInfo.isFetching) {
     return
   } else if (getState().accountState.poolOperator == null) {
     dispatch(_clearPoolInfo())
@@ -76,6 +74,7 @@ export const fetchPoolInfo = () => async (
     dispatch(_setPoolInfo(poolInfo))
     dispatch(_setLastError(null))
   } catch (err) {
+    Logger.warn(err)
     dispatch(_setLastError(err))
   } finally {
     dispatch(_endFetching())

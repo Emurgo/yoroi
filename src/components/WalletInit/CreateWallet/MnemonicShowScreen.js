@@ -110,16 +110,21 @@ export default injectIntl(
         const password = navigation.getParam('password')
         const mnemonic = navigation.getParam('mnemonic')
         const networkId = navigation.getParam('networkId')
+        const walletImplementationId = navigation.getParam(
+          'walletImplementationId',
+        )
         assert.assert(!!mnemonic, 'navigateToMnemonicCheck:: mnemonic')
         assert.assert(!!password, 'navigateToMnemonicCheck:: password')
         assert.assert(!!name, 'navigateToMnemonicCheck:: name')
         assert.assert(networkId != null, 'navigateToMnemonicCheck:: networkId')
+        assert.assert(!!walletImplementationId, 'walletImplementationId')
 
         navigation.navigate(WALLET_INIT_ROUTES.MNEMONIC_CHECK, {
           mnemonic,
           password,
           name,
           networkId,
+          walletImplementationId,
         })
         hideModal()
       },

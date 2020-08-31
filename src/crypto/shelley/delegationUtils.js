@@ -16,12 +16,15 @@ import {
   StakeRegistration,
   TransactionBuilder,
 } from 'react-native-haskell-shelley'
+import {sortBy} from 'lodash'
 
 import {newAdaUnsignedTx} from './transactions'
 import {normalizeToAddress} from './utils'
 import {NETWORKS} from '../../config/networks'
 import {Logger} from '../../utils/logging'
-import {CardanoError} from '../errors'
+import {CardanoError, InsufficientFunds} from '../errors'
+import {ObjectValues} from '../../utils/flow'
+import assert from '../../utils/assert'
 
 import type {
   Addressing,
@@ -29,6 +32,8 @@ import type {
   BaseSignRequest,
   V4UnsignedTxAddressedUtxoResponse,
 } from '../types'
+import type {TimestampedCertMeta} from './transactionCache'
+import type {Dict} from '../../state'
 
 const createCertificate = async (
   stakingKey: PublicKey,
@@ -129,7 +134,9 @@ const getDifferenceAfterTx = async (
   allUtxos: Array<AddressedUtxo>,
   stakingKey: PublicKey,
 ): Promise<BigNumber> => {
-  const stakeCredential = await StakeCredential.from_keyhash(stakingKey.hash())
+  const stakeCredential = await StakeCredential.from_keyhash(
+    await stakingKey.hash(),
+  )
 
   let sumInForKey = new BigNumber(0)
   {
@@ -175,7 +182,6 @@ const getDifferenceAfterTx = async (
 
 export type CreateDelegationTxRequest = {|
   absSlotNumber: BigNumber,
-  // computeRegistrationStatus: (void) => Promise<boolean>,
   registrationStatus: boolean,
   poolRequest: void | string,
   valueInAccount: BigNumber,
@@ -197,17 +203,16 @@ export type CreateDelegationTxResponse = {|
 export const createDelegationTx = async (
   request: CreateDelegationTxRequest,
 ): Promise<CreateDelegationTxResponse> => {
-  Logger.debug('delegationUtils::createDelegationTx called')
+  Logger.debug('delegationUtils::createDelegationTx called', request)
   const {
     changeAddr,
+    registrationStatus,
     addressedUtxos,
     absSlotNumber,
     stakingKey,
     poolRequest,
   } = request
   try {
-    // const registrationStatus = await request.computeRegistrationStatus()
-
     const config = NETWORKS.HASKELL_SHELLEY
     const protocolParams = {
       keyDeposit: await BigNum.from_str(config.KEY_DEPOSIT),
@@ -221,7 +226,7 @@ export const createDelegationTx = async (
 
     const stakeDelegationCert = await createCertificate(
       stakingKey,
-      request.registrationStatus,
+      registrationStatus,
       poolRequest,
     )
     const unsignedTx = await newAdaUnsignedTx(
@@ -294,6 +299,7 @@ export const createDelegationTx = async (
       totalAmountToDelegate,
     }
   } catch (e) {
+    if (e instanceof InsufficientFunds) throw e
     Logger.error(`shelley::createDelegationTx:: ${e.message}`, e)
     throw new CardanoError(e.message)
   }
@@ -332,4 +338,54 @@ export const getUtxoDelegatedBalance = async (
   )
 
   return utxoSum
+}
+
+export type DelegationStatus = {|
+  +isRegistered: boolean,
+  +poolKeyHash: ?string,
+|}
+export const getDelegationStatus = (
+  rewardAddress: string,
+  txCertificatesForKey: Dict<TimestampedCertMeta>, // key is txId
+): DelegationStatus => {
+  let isRegistered = false
+  let poolKeyHash = null
+  if (txCertificatesForKey == null) {
+    return {
+      isRegistered,
+      poolKeyHash,
+    }
+  }
+  // start with older certificate
+  const sortedCerts = sortBy(
+    txCertificatesForKey,
+    (txCerts) => txCerts.submittedAt,
+  )
+  Logger.debug('txCertificatesForKey', sortedCerts)
+
+  for (const certData of ObjectValues(sortedCerts)) {
+    const certificates = certData.certificates
+    for (const cert of certificates) {
+      if (cert.rewardAddress !== rewardAddress) continue
+      if (cert.kind === 'StakeDelegation') {
+        assert.assert(
+          cert.poolKeyHash != null,
+          'getDelegationStatus:: StakeDelegation certificate without poolKeyHash',
+        )
+        poolKeyHash = cert.poolKeyHash
+        isRegistered = true
+      } else if (
+        cert.kind === 'StakeRegistration' ||
+        cert.kind === 'MoveInstantaneousRewardsCert'
+      ) {
+        isRegistered = true
+      } else if (cert.kind === 'StakeDeregistration') {
+        isRegistered = false
+      }
+    }
+  }
+  return {
+    isRegistered,
+    poolKeyHash,
+  }
 }
