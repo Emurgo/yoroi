@@ -8,6 +8,7 @@ import {STAKING_DASHBOARD_ROUTES, WALLET_ROUTES} from '../../RoutesList'
 import SettingsScreenNavigator from '../Settings/SettingsScreenNavigator'
 import iconGear from '../../assets/img/gear.png'
 import {isJormungandr} from '../../config/networks'
+import HeaderBackButton from '../UiKit/HeaderBackButton'
 
 import {
   defaultNavigationOptions,
@@ -51,7 +52,10 @@ const DelegationNavigatorSummary = createStackNavigator(
   },
   {
     initialRouteName: STAKING_DASHBOARD_ROUTES.MAIN,
-    ...defaultStackNavigatorOptions,
+    navigationOptions: ({navigation}) => ({
+      headerLeft: <HeaderBackButton navigation={navigation} />,
+      ...defaultStackNavigatorOptions,
+    }),
   },
 )
 
