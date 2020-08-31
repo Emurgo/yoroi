@@ -61,7 +61,7 @@
     "net": "^1.0.2",
     "node-cardano-wallet": "https://github.com/Emurgo/node-cardano-wallet.git",
     "node-fetch": "^2.2.0",
-    "p-limit": "^2.0.0",
+    "p-limit": "^3.0.2",
     "path-browserify": "^1.0.0",
     "react": "16.8.6",
     "react-intl": "^2.8.0",
