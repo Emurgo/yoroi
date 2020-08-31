@@ -29,7 +29,7 @@
     "@babel/runtime": "7.5.5",
     "@cardano-foundation/ledgerjs-hw-app-cardano": "1.0.8",
     "@emurgo/cip4-js": "1.0.5",
-    "@ledgerhq/react-native-hw-transport-ble": "5.13.0",
+    "@ledgerhq/react-native-hw-transport-ble": "5.22.0",
     "@react-native-community/async-storage": "1.5.1",
     "@react-native-community/netinfo": "5.6.2",
     "@sentry/react-native": "1.4.5",
