@@ -109,14 +109,19 @@ const TxHistory = ({
   <SafeAreaView style={styles.scrollView}>
     <StatusBar type="dark" />
     <View style={styles.container}>
-      <FlawedWalletModal
-        visible={isFlawedWallet === true}
-        disableButtons={false}
-        onPress={() => navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)}
-        onRequestClose={() =>
-          navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
-        }
-      />
+      {isFlawedWallet === true && (
+        <FlawedWalletModal
+          visible={isFlawedWallet === true}
+          disableButtons={false}
+          onPress={() =>
+            navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+          }
+          onRequestClose={() =>
+            navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+          }
+        />
+      )}
+
       <OfflineBanner />
       {isOnline &&
         lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
