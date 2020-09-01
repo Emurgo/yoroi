@@ -1,7 +1,8 @@
 // @flow
 import jestSetup from '../jestSetup'
 
-import {isValidAddress, addressToDisplayString} from './commonUtils'
+import {isValidAddress, addressToDisplayString, formatPath} from './commonUtils'
+import {WALLET_IMPLEMENTATION_REGISTRY} from '../config/types'
 
 jestSetup.setup()
 
@@ -18,34 +19,49 @@ const validAddresses = [
     addr: 'addr1qw8mq0p65pf028qgd32t6szeatfd9epx4jyl5jeuuswtlkyqpdguqd6r42j',
     isJormungandr: true,
   },
-  {
-    addr: 'ca1sw8mq0p65pf028qgd32t6szeatfd9epx4jyl5jeuuswtlkyqpdguq9rance',
-    isJormungandr: true,
-  },
 ]
 
 describe('address handling', () => {
   it('should parse valid addresses', async () => {
-    expect.assertions(2)
+    expect.assertions(1)
 
     const legacyAddr =
       'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4'
     expect(await addressToDisplayString(legacyAddr)).toEqual(
       'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
     )
-
-    const bech32Addr =
-      '038fb03c3aa052f51c086c54bd4059ead2d2e426ac89fa4b3ce41cbfd8800b51c0'
-    expect(await addressToDisplayString(bech32Addr)).toEqual(
-      'addr1qw8mq0p65pf028qgd32t6szeatfd9epx4jyl5jeuuswtlkyqpdguqd6r42j',
-    )
   })
 
   it('can validate valid addresses', async () => {
-    expect.assertions(validAddresses.length)
-    for (const address of validAddresses) {
+    expect.assertions(3)
+    const byronAddrs = validAddresses.slice(0, 2)
+    for (const address of byronAddrs) {
       const isValid = await isValidAddress(address.addr, address.isJormungandr)
       expect(isValid).toBe(true)
     }
+    const promise = isValidAddress(
+      validAddresses[2].addr,
+      validAddresses[2].isJormungandr,
+    )
+    await expect(promise).rejects.not.toBeNull()
   })
+})
+
+test('Can format address', () => {
+  expect(
+    formatPath(
+      42,
+      'Internal',
+      47,
+      WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
+    ),
+  ).toBe("m/44'/1815'/42'/1/47")
+  expect(
+    formatPath(
+      42,
+      'Internal',
+      47,
+      WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY,
+    ),
+  ).toBe("m/1852'/1815'/42'/1/47")
 })

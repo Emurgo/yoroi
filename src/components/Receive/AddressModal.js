@@ -7,14 +7,19 @@ import {Clipboard, View} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
-import {externalAddressIndexSelector, isHWSelector} from '../../selectors'
-import {formatBIP44} from '../../crypto/byron/util'
+import {
+  externalAddressIndexSelector,
+  isHWSelector,
+  walletMetaSelector,
+} from '../../selectors'
+import {formatPath} from '../../crypto/commonUtils'
 
 import {Text, Button, Modal} from '../UiKit'
 
 import styles from './styles/AddressModal.style'
 
 import type {ComponentType} from 'react'
+import type {WalletMeta} from '../../state'
 
 const messages = defineMessages({
   walletAddress: {
@@ -51,6 +56,7 @@ type Props = {|
   visible: boolean,
   onAddressVerify: () => void,
   isHW: boolean,
+  walletMeta: WalletMeta,
 |}
 
 type State = {
@@ -96,6 +102,7 @@ class AddressModal extends React.Component<Props, State> {
       visible,
       onAddressVerify,
       isHW,
+      walletMeta,
     } = this.props
 
     return (
@@ -111,7 +118,12 @@ class AddressModal extends React.Component<Props, State> {
           {index != null && (
             <Text style={styles.address}>
               {intl.formatMessage(messages.BIP32path)}{' '}
-              {formatBIP44(0, 'External', index)}
+              {formatPath(
+                0,
+                'External',
+                index,
+                walletMeta.walletImplementationId,
+              )}
             </Text>
           )}
           <Text monospace style={styles.address}>
@@ -153,6 +165,7 @@ export default injectIntl(
       (state, {address}) => ({
         index: externalAddressIndexSelector(state)[address],
         isHW: isHWSelector(state),
+        walletMeta: walletMetaSelector(state),
       }),
       null,
     ),

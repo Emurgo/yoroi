@@ -9,7 +9,6 @@ import {
   isValidAddress,
   encryptData,
   decryptData,
-  formatBIP44,
   signTransaction,
   decodeRustTx,
   encodeTxAsRust,
@@ -133,10 +132,6 @@ describe('encryption/decryption', () => {
 test('Make sure that we are using safe buffers', () => {
   // in response to https://github.com/nodejs/node/issues/4660
   expect(new Buffer(10).toString('hex')).toBe('00000000000000000000')
-})
-
-test('Can format address', () => {
-  expect(formatBIP44(42, 'Internal', 47)).toBe("m/44'/1815'/42'/1/47")
 })
 
 describe('signTransaction', () => {
