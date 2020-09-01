@@ -13,6 +13,7 @@ import {
   externalAddressIndexSelector,
   isHWSelector,
   hwDeviceInfoSelector,
+  walletMetaSelector,
 } from '../../selectors'
 import {showErrorDialog, handleGeneralError} from '../../actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
@@ -28,7 +29,7 @@ import {
   LedgerUserError,
 } from '../../crypto/byron/ledgerUtils'
 import walletManager from '../../crypto/walletManager'
-import {formatBIP44} from '../../crypto/byron/util'
+import {formatPath} from '../../crypto/commonUtils'
 import {errorMessages} from '../../i18n/global-messages'
 import {Logger} from '../../utils/logging'
 import {CONFIG} from '../../config/config'
@@ -43,6 +44,7 @@ import type {
   DeviceObj,
 } from '../../crypto/byron/ledgerUtils'
 import type {Addressing, LegacyAddressing} from '../../crypto/types'
+import type {WalletMeta} from '../../state'
 
 const _toLegacyAddressing = (addressing: Addressing): LegacyAddressing => {
   if (
@@ -104,6 +106,8 @@ type Props = {|
   index: number,
   address: string,
   isUsed: boolean,
+  isHW: boolean,
+  walletMeta: WalletMeta,
   openDetails: () => void,
   closeDetails: () => void,
   onVerifyAddress: () => void,
@@ -119,10 +123,11 @@ type Props = {|
 |}
 
 const AddressView = ({
-  address,
   index,
+  address,
   isUsed,
   isHW,
+  walletMeta,
   openDetails,
   closeDetails,
   onVerifyAddress,
@@ -188,7 +193,7 @@ const AddressView = ({
       showCloseIcon
       onConfirm={onVerifyAddress}
       address={address}
-      path={formatBIP44(0, 'External', index)}
+      path={formatPath(0, 'External', index, walletMeta.walletImplementationId)}
       isWaiting={isWaiting}
       disableButtons={isWaiting}
       useUSB={useUSB}
@@ -210,6 +215,7 @@ export default injectIntl(
         isUsed: !!isUsedAddressIndexSelector(state)[address],
         isHW: isHWSelector(state),
         hwDeviceInfo: hwDeviceInfoSelector(state),
+        walletMeta: walletMetaSelector(state),
       }),
       {
         setLedgerDeviceId,

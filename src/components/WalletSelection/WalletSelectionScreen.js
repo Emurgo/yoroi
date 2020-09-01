@@ -19,7 +19,7 @@ import Screen from '../Screen'
 import {Button, StatusBar, ScreenBackground} from '../UiKit'
 import {ROOT_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import {showErrorDialog, updateVersion} from '../../actions'
-import {errorMessages} from '../../i18n/global-messages'
+import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import FailedWalletUpgradeModal from './FailedWalletUpgradeModal'
 import {currentVersionSelector} from '../../selectors'
 import {onDidMount} from '../../utils/renderUtils'
@@ -93,11 +93,13 @@ const WalletListScreen = ({
             navigateInitWallet(
               event,
               NETWORK_REGISTRY.HASKELL_SHELLEY,
-              WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
+              WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY,
             )
           }
-          title={`${intl.formatMessage(messages.addWalletButton)} (Byron-era)`}
-          style={styles.addWalletButton}
+          title={`${intl.formatMessage(
+            messages.addWalletButton,
+          )} (Shelley-era)`}
+          style={styles.topButton}
         />
 
         <Button
@@ -106,13 +108,13 @@ const WalletListScreen = ({
             navigateInitWallet(
               event,
               NETWORK_REGISTRY.HASKELL_SHELLEY,
-              WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY,
+              WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
             )
           }
           title={`${intl.formatMessage(
             messages.addWalletButton,
-          )} (Shelley-era)`}
-          style={styles.addWalletOnShelleyButton}
+          )} (Byron-era - ${intl.formatMessage(globalMessages.deprecated)})`}
+          style={styles.button}
         />
 
         {NETWORKS.JORMUNGANDR.ENABLED && (
@@ -126,7 +128,7 @@ const WalletListScreen = ({
               )
             }
             title={intl.formatMessage(messages.addWalletOnShelleyButton)}
-            style={styles.addWalletOnShelleyButton}
+            style={styles.button}
           />
         )}
       </ScreenBackground>

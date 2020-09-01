@@ -20,7 +20,6 @@ import {
   WrongPassword,
   CardanoError,
 } from '../errors'
-import {ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
 
 import type {TransactionInput, TransactionOutput, V1SignedTx} from '../types'
 import type {AddressType} from '../commonUtils'
@@ -201,19 +200,6 @@ export const signTransaction = async (
     }
     throw new CardanoError(e.message)
   }
-}
-
-export const formatBIP44 = (
-  account: number,
-  type: AddressType,
-  index: number,
-) => {
-  const PURPOSE = 44
-  const COIN = 1815
-
-  return `m/${PURPOSE}'/${COIN}'/${account}'/${
-    ADDRESS_TYPE_TO_CHANGE[type]
-  }/${index}`
 }
 
 export type TxWitness = {PkWitness: [string, string]}
