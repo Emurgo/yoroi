@@ -380,6 +380,7 @@
   "global.network.syncErrorBannerTextWithoutRefresh": "我们遇到同步问题。",
   "global.network.syncErrorBannerTextWithRefresh": "我们遇到同步问题，下拉刷新。",
   "global.notSupported": "不支持的功能",
+  "global.deprecated": "Deprecated",
   "global.ok": "完成",
   "global.pleaseWait": "请稍后...",
   "global.staking.epochLabel": "纪元",
