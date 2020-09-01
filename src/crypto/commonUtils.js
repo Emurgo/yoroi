@@ -1,7 +1,7 @@
 // @flow
 
 /**
- * Contain utility functions that can be required by different wallet
+ * Utility functions that can be required by different wallet
  * environments. Replaces the old util.js library now moved to Byron/util.js
  * TODO: migrate here common utilities from Byron/util.js
  */
