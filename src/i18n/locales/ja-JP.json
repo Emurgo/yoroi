@@ -380,6 +380,7 @@
   "global.network.syncErrorBannerTextWithoutRefresh": "同期エラーが発生しています。",
   "global.network.syncErrorBannerTextWithRefresh": "同期エラーが発生しています。 再読み込みをしてください",
   "global.notSupported": "Feature not supported",
+  "global.deprecated": "Deprecated",
   "global.ok": "OK",
   "global.pleaseWait": "お待ちください....",
   "global.staking.epochLabel": "エポック",
