@@ -380,6 +380,7 @@
   "global.network.syncErrorBannerTextWithoutRefresh": "현재 동기화 문제가 발생하고 있습니다.",
   "global.network.syncErrorBannerTextWithRefresh": "현재 동기화 문제가 발생하고 있습니다. 당겨서 새로고침 해주세요.",
   "global.notSupported": "Feature not supported",
+  "global.deprecated": "Deprecated",
   "global.ok": "확인",
   "global.pleaseWait": "잠시 기다려 주십시오 ...",
   "global.staking.epochLabel": "에포크",

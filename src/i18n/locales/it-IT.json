@@ -380,6 +380,7 @@
   "global.network.syncErrorBannerTextWithoutRefresh": "Stiamo riscontrando problemi di sincronizzazione.",
   "global.network.syncErrorBannerTextWithRefresh": "Stiamo riscontrando problemi di sincronizzazione. Ricarica",
   "global.notSupported": "Funzionalità non supportata",
+  "global.deprecated": "Deprecated",
   "global.ok": "OK",
   "global.pleaseWait": "attendere prego...",
   "global.staking.epochLabel": "Epoca",

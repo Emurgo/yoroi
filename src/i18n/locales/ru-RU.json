@@ -380,6 +380,7 @@
   "global.network.syncErrorBannerTextWithoutRefresh": "Проблемы с синхронизацией.",
   "global.network.syncErrorBannerTextWithRefresh": "Проблемы с синхронизацией. Потяните, чтобы обновить",
   "global.notSupported": "Feature not supported",
+  "global.deprecated": "Deprecated",
   "global.ok": "Хорошо",
   "global.pleaseWait": "пожалуйста, подождите ...",
   "global.staking.epochLabel": "Эпоха",
