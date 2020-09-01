@@ -21,12 +21,12 @@ export default StyleSheet.create({
     margin: 16,
     flex: 1,
   },
-  addWalletButton: {
+  topButton: {
     marginHorizontal: 16,
     marginTop: 16,
     marginBottom: 10,
   },
-  addWalletOnShelleyButton: {
+  button: {
     marginHorizontal: 16,
     marginBottom: 10,
   },

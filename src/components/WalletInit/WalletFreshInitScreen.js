@@ -62,14 +62,14 @@ const WalletInitScreen = ({
               navigateInitWallet(
                 event,
                 NETWORK_REGISTRY.HASKELL_SHELLEY,
-                WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
+                WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY,
               )
             }
             title={`${intl.formatMessage(
               messages.addWalletButton,
-            )} (Byron-era)`}
+            )} (Shelley-era)`}
             style={styles.createButton}
-            testID="addWalletOnByronButton"
+            testID="addWalletOnHaskellShelleyButton"
           />
 
           <Button
@@ -77,15 +77,15 @@ const WalletInitScreen = ({
               navigateInitWallet(
                 event,
                 NETWORK_REGISTRY.HASKELL_SHELLEY,
-                WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY,
+                WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
               )
             }
-            outline
             title={`${intl.formatMessage(
               messages.addWalletButton,
-            )} (Shelley-era)`}
+            )} (Byron-era)`}
+            outline
             style={styles.createButton}
-            testID="addWalletOnHaskellShelleyButton"
+            testID="addWalletOnByronButton"
           />
 
           {NETWORKS.JORMUNGANDR.ENABLED && (

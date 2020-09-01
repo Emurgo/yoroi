@@ -400,6 +400,10 @@ export default defineMessages({
     id: 'global.comingSoon',
     defaultMessage: '!!!Coming soon',
   },
+  deprecated: {
+    id: 'global.deprecated',
+    defaultMessage: '!!!Deprecated',
+  },
   epochLabel: {
     id: 'global.staking.epochLabel',
     defaultMessage: '!!!Epoch',
