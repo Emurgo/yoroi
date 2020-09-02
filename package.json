@@ -122,7 +122,7 @@
     "flow-bin": "^0.98.0",
     "flow-typed": "3.1.0",
     "jest": "24.8.0",
-    "jetifier": "^1.6.4",
+    "jetifier": "^1.6.6",
     "metro-react-native-babel-preset": "0.55.0",
     "prettier": "1.14.3",
     "prettylint": "1.0.0",
