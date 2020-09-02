@@ -124,7 +124,7 @@
     "jest": "24.8.0",
     "jetifier": "^1.6.4",
     "metro-react-native-babel-preset": "0.55.0",
-    "prettier": "1.14.3",
+    "prettier": "1.19.1",
     "prettylint": "1.0.0",
     "react-dom": "16.8.3",
     "react-intl-translations-manager": "^5.0.3",
