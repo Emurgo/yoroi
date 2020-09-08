@@ -74,7 +74,8 @@ export const createUnsignedTx = async (
         absSlotNumber,
         protocolParams,
         [],
-        // [], // TODO
+        [],
+        true,
       )
     } else {
       throw new Error('shelley::createUnsignedTx:: unknown param')

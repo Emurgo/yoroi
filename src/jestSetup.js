@@ -6,7 +6,6 @@ import {Logger, LogLevel} from './utils/logging'
 
 import nodeUtil from 'util'
 
-jest.setMock('./config/networks', require('./config/__mocks__/networks'))
 jest.mock('react-native-device-info', () => {
   return {
     getVersion: () => '1.5.1',

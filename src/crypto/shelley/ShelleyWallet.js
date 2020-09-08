@@ -9,8 +9,10 @@ import {
   Address,
   Bip32PrivateKey,
   Bip32PublicKey,
-  /* eslint-disable-next-line camelcase */
+  /* eslint-disable camelcase */
   hash_transaction,
+  make_vkey_witness,
+  /* eslint-enable camelcase */
   PublicKey,
   RewardAddress,
   StakeCredential,
@@ -438,7 +440,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       signRequest,
       CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
       accountPvrKey,
-      [], // no staking key
+      new Set(), // no staking key
       undefined,
     )
     const id = Buffer.from(
@@ -507,11 +509,26 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
     )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
 
+    const wits = new Set()
+
+    const txBuilder: TransactionBuilder = signRequest.unsignedTx
+    wits.add(
+      Buffer.from(
+        await await make_vkey_witness(
+          await hash_transaction(
+            // $FlowFixMe
+            await txBuilder.build(),
+          ),
+          stakingKey,
+        ).to_bytes(),
+      ).toString('hex'),
+    )
+
     const signedTx: Transaction = await signTransaction(
       signRequest,
       CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
       accountPvrKey,
-      [stakingKey],
+      wits,
       undefined,
     )
     const id = Buffer.from(
