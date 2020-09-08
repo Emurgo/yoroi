@@ -1,5 +1,5 @@
 {
-  "components.common.navigation.dashboardButton": "Dashboard",
+  "components.common.navigation.dashboardButton": "Painel",
   "components.common.navigation.delegateButton": "Delegar",
   "components.common.languagepicker.brazilian": "Português brasileiro",
   "components.common.languagepicker.chinese": "简体中文",
@@ -212,7 +212,7 @@
   "components.txhistory.txdetails.txTypeSent": "Fundos enviados",
   "components.txhistory.txhistory.noTransactions": "No momento nenhuma transação para exibir",
   "components.txhistory.txhistory.warningbanner.title": "Nota:",
-  "components.txhistory.txhistory.warningbanner.message": "The Shelley protocol upgrade adds a new Shelley wallet type which supports delegation. To delegate your ADA you will need to upgrade to a Shelley wallet.",
+  "components.txhistory.txhistory.warningbanner.message": "A atualização do protocolo Shelley adiciona um novo tipo de carteira Shelley que suporta delegação. Para delegar seu ADA, você precisará atualizar para uma carteira Shelley.",
   "components.txhistory.txhistory.warningbanner.buttonText": "Upgrade",
   "components.txhistory.txhistory.syncErrorBannerTextWithRefresh": "Estamos com problemas de sincronização. Atualize",
   "components.txhistory.txhistory.syncErrorBannerTextWithoutRefresh": "Estamos com problemas de sincronização.",
