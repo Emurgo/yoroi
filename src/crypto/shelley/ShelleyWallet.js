@@ -512,15 +512,16 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     const wits = new Set()
 
     const txBuilder: TransactionBuilder = signRequest.unsignedTx
+    // prettier-ignore
     wits.add(
       Buffer.from(
-        await await make_vkey_witness(
+        await (await make_vkey_witness(
           await hash_transaction(
             // $FlowFixMe
             await txBuilder.build(),
           ),
           stakingKey,
-        ).to_bytes(),
+        )).to_bytes(),
       ).toString('hex'),
     )
 
