@@ -485,8 +485,8 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   // remove and just use signTx
-  async signDelegationTx<TransactionBuilder>(
-    signRequest: BaseSignRequest<TransactionBuilder>,
+  async signDelegationTx<T: TransactionBuilder>(
+    signRequest: BaseSignRequest<T>,
     decryptedMasterKey: string,
   ): Promise<SignedTx> {
     assert.assert(
@@ -511,13 +511,16 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
 
     const wits = new Set()
 
-    const txBuilder: TransactionBuilder = signRequest.unsignedTx
+    if (!(signRequest.unsignedTx instanceof TransactionBuilder)) {
+      throw new Error('signDelegationTx::Invalid unsignedTx type')
+    }
+    const txBuilder = signRequest.unsignedTx
+
     // prettier-ignore
     wits.add(
       Buffer.from(
         await (await make_vkey_witness(
           await hash_transaction(
-            // $FlowFixMe
             await txBuilder.build(),
           ),
           stakingKey,

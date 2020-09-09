@@ -240,7 +240,7 @@ export const createDelegationTx = async (
       protocolParams,
       stakeDelegationCert,
       [], // no withdrawals
-      true,
+      false,
     )
 
     const allUtxosForKey = await filterAddressesByStakingKey(
