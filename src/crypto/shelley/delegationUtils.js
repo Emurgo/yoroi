@@ -239,7 +239,8 @@ export const createDelegationTx = async (
       absSlotNumber,
       protocolParams,
       stakeDelegationCert,
-      // [], // TODO
+      [], // no withdrawals
+      false,
     )
 
     const allUtxosForKey = await filterAddressesByStakingKey(

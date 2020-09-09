@@ -52,10 +52,10 @@ describe('History API', () => {
       untilBlock:
         '6ac8fc52c0a9587357c7a1e91bbe8c744127cc107947c05616635ccc7c7701fc',
       after: {
+        // should give REFERENCE_BLOCK_MISMATCH
         block:
-          '5ec2d5241112cf8cd624842350fcd402fd66f4a6c6c3605465c7a98dc1914cad',
-        // fake tx hash, should give REFERENCE_TX_NOT_FOUND
-        tx: 'abca63ff6e71784779e30533b764966819003214e04e236a741af540eff1f895',
+          '0000000000000000000000000000000000000000000000000000000000000000',
+        tx: 'ea2b2abb9bf440a8ab89685e359e88399802c002383a21e4d09a7d636a9514d2',
       },
     }
 

@@ -1,6 +1,8 @@
 // @flow
 
 // Handles interfacing w/ cardano-serialization-lib to create transaction
+// Note: All this code was taken from the Yoroi Extension and adapted for
+// compatibility with Yoroi mobile's types and async operation
 
 import {BigNumber} from 'bignumber.js'
 /* eslint-disable camelcase */
@@ -15,7 +17,7 @@ import {
   hash_transaction,
   make_icarus_bootstrap_witness,
   make_vkey_witness,
-  PrivateKey,
+  RewardAddress,
   Transaction,
   TransactionBody,
   TransactionBuilder,
@@ -24,11 +26,13 @@ import {
   TransactionMetadata,
   TransactionOutput,
   TransactionWitnessSet,
+  Vkeywitness,
   Vkeywitnesses,
+  Withdrawals,
 } from 'react-native-haskell-shelley'
 /* eslint-enable camelcase */
 import {CONFIG} from '../../config/config'
-import {InsufficientFunds} from '../errors'
+import {InsufficientFunds, NoOutputsError} from '../errors'
 import {
   getCardanoAddrKeyHash,
   normalizeToAddress,
@@ -211,12 +215,27 @@ export const newAdaUnsignedTxFromUtxo = async (
     keyDeposit: BigNum,
   |},
   certificates: $ReadOnlyArray<Certificate>,
-  // TODO
-  // withdrawals: $ReadOnlyArray<{|
-  //   address: RewardAddress,
-  //   amount: BigNum,
-  // |}>,
+  withdrawals: $ReadOnlyArray<{|
+    address: RewardAddress,
+    amount: BigNum,
+  |}>,
+  allowNoOutputs: boolean,
 ): Promise<V4UnsignedTxUtxoResponse> => {
+  /**
+   * Shelley supports transactions with no outputs by simply burning any leftover ADA as fee
+   * This is can happen in the following:
+   * - if you have a 3ADA UTXO and you register a staking key, there will be 0 outputs
+   * However, if there is no output, there is no way to tell the network of the transaction
+   * This allows for replay attacks of 0-output transactions on testnets that use a mainnet snapshot
+   * To protect against this, we can choose to force that there is always even one output
+   * by simply enforcing a change address if no outputs are specified for the transaction
+   * This is actually enforced by hardware wallets at the moment (will error on 0 outputs)
+   */
+  const shouldForceChange = !allowNoOutputs && outputs.length === 0
+  if (shouldForceChange && changeAdaAddr == null) {
+    throw new NoOutputsError()
+  }
+
   const txBuilder = await TransactionBuilder.new(
     protocolParams.linearFee,
     protocolParams.minimumUtxoVal,
@@ -229,6 +248,13 @@ export const newAdaUnsignedTxFromUtxo = async (
       await certsNative.add(cert)
     }
     await txBuilder.set_certs(certsNative)
+  }
+  if (withdrawals.length > 0) {
+    const withdrawalsNative = await Withdrawals.new()
+    for (const withdrawal of withdrawals) {
+      await withdrawalsNative.insert(withdrawal.address, withdrawal.amount)
+    }
+    await txBuilder.set_withdrawals(withdrawalsNative)
   }
   await txBuilder.set_ttl(absSlotNumber.plus(defaultTtlOffset).toNumber())
 
@@ -264,13 +290,25 @@ export const newAdaUnsignedTxFromUtxo = async (
       usedUtxos.push(utxo) // note: this ensure we have at least one UTXO in the tx
       currentInputSum = currentInputSum.plus(utxo.amount)
       await addUtxoInput(txBuilder, utxo)
+      // need to recalculate each time because fee changes
       const output = new BigNumber(
         await (await (await (await txBuilder.get_explicit_output()).checked_add(
           await txBuilder.min_fee(),
         )).checked_add(await txBuilder.get_deposit())).to_str(),
       )
 
-      if (currentInputSum.gte(output)) {
+      if (shouldForceChange) {
+        if (changeAdaAddr == null) throw new NoOutputsError()
+        const minimumNeededForChange = await getFeeForChange(
+          txBuilder,
+          changeAdaAddr,
+          protocolParams,
+        )
+        if (currentInputSum.gte(minimumNeededForChange.plus(output))) {
+          break
+        }
+      }
+      if (!shouldForceChange && currentInputSum.gte(output)) {
         break
       }
     }
@@ -281,7 +319,18 @@ export const newAdaUnsignedTxFromUtxo = async (
           await txBuilder.min_fee(),
         )).checked_add(await txBuilder.get_deposit())).to_str(),
       )
-      if (currentInputSum.lt(output)) {
+      if (shouldForceChange) {
+        if (changeAdaAddr == null) throw new NoOutputsError()
+        const minimumNeededForChange = await getFeeForChange(
+          txBuilder,
+          changeAdaAddr,
+          protocolParams,
+        )
+        if (currentInputSum.lt(minimumNeededForChange.plus(output))) {
+          throw new InsufficientFunds()
+        }
+      }
+      if (!shouldForceChange && currentInputSum.lt(output)) {
         throw new InsufficientFunds()
       }
     }
@@ -289,6 +338,9 @@ export const newAdaUnsignedTxFromUtxo = async (
 
   const changeAddr = await (async () => {
     if (changeAdaAddr == null) {
+      if (shouldForceChange) {
+        throw new NoOutputsError()
+      }
       const totalInput = await (await txBuilder.get_explicit_input()).checked_add(
         await txBuilder.get_implicit_input(),
       )
@@ -353,6 +405,11 @@ export const newAdaUnsignedTx = async (
     keyDeposit: BigNum,
   |},
   certificates: $ReadOnlyArray<Certificate>,
+  withdrawals: $ReadOnlyArray<{|
+    address: RewardAddress,
+    amount: BigNum,
+  |}>,
+  allowNoOutputs: boolean,
 ): Promise<V4UnsignedTxAddressedUtxoResponse> => {
   const addressingMap = new Map<RawUtxo, AddressedUtxo>()
   for (const utxo of allUtxos) {
@@ -374,6 +431,8 @@ export const newAdaUnsignedTx = async (
     absSlotNumber,
     protocolParams,
     certificates,
+    withdrawals,
+    allowNoOutputs,
   )
 
   const addressedUtxos = unsignedTxResponse.senderUtxos.map((utxo) => {
@@ -394,13 +453,43 @@ export const newAdaUnsignedTx = async (
   }
 }
 
+// return the minimum amount of input ADA required to generate an output
+async function getFeeForChange(
+  txBuilder: TransactionBuilder,
+  changeAdaAddr: {|...Address, ...Addressing|},
+  protocolParams: {
+    linearFee: LinearFee,
+    minimumUtxoVal: BigNum,
+  },
+): Promise<BigNumber> {
+  if (changeAdaAddr == null) throw new NoOutputsError()
+  const wasmChange = await normalizeToAddress(changeAdaAddr.address)
+  if (wasmChange == null) {
+    throw new Error(
+      'transactions::getFeeForChange: change not a valid Shelley address',
+    )
+  }
+  const feeForChange = await (await txBuilder.fee_for_output(
+    await TransactionOutput.new(
+      wasmChange,
+      // largest possible CBOR value
+      // note: this slightly over-estimates by a few bytes
+      await BigNum.from_str((0x100000000).toString()),
+    ),
+  )).to_str()
+  const minimumNeededForChange = new BigNumber(feeForChange).plus(
+    await protocolParams.minimumUtxoVal.to_str(),
+  )
+  return minimumNeededForChange
+}
+
 export const signTransaction = async (
   signRequest:
     | BaseSignRequest<TransactionBuilder>
     | BaseSignRequest<TransactionBody>,
   keyLevel: number,
   signingKey: Bip32PrivateKey,
-  stakingKeys: Array<PrivateKey>,
+  stakingKeyWits: Set<string>,
   metadata: void | TransactionMetadata,
 ): Promise<Transaction> => {
   const seenByronKeys: Set<string> = new Set()
@@ -450,15 +539,15 @@ export const signTransaction = async (
     bootstrapWits,
   )
 
-  const stakingKeySet = new Set<string>()
-  for (const stakingKey of stakingKeys) {
-    const asString = Buffer.from(await stakingKey.as_bytes()).toString('hex')
-    if (stakingKeySet.has(asString)) {
+  const stakingKeySigSet = new Set<string>()
+  for (const witness of stakingKeyWits) {
+    if (stakingKeySigSet.has(witness)) {
       continue
     }
-    stakingKeySet.add(asString)
-    const vkeyWit = await make_vkey_witness(txHash, stakingKey)
-    await vkeyWits.add(vkeyWit)
+    stakingKeySigSet.add(witness)
+    await vkeyWits.add(
+      await Vkeywitness.from_bytes(Buffer.from(witness, 'hex')),
+    )
   }
 
   const witnessSet = await TransactionWitnessSet.new()

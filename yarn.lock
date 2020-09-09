@@ -1812,10 +1812,10 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.5.tgz#8eed982e2ee6f7f4e44c253e12962980791efd46"
   integrity sha512-6U71C2Wp7r5XtFtQzYrW5iKFT67OixrSxjI4MptCHzdSVlgabczzqLe0ZSgnub/5Kp4hSbpDB1tMytZY9pwxxA==
 
-"@emurgo/cardano-serialization-lib-nodejs@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cardano-serialization-lib-nodejs/-/cardano-serialization-lib-nodejs-2.0.0.tgz#e0dc17587bcda0a852aa27cb9cebcfe174a20a62"
-  integrity sha512-JZapVXweLo2MEpXtlonES7BrvpzNPGZdOWL2QUAyd30tC30I75ZpTiLyBKeVYBj3yvAV1BwReQpvcO+PsXWBog==
+"@emurgo/cardano-serialization-lib-nodejs@3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/cardano-serialization-lib-nodejs/-/cardano-serialization-lib-nodejs-3.0.0.tgz#0d3027a8449dd684cdd484d4df13d7b319507b96"
+  integrity sha512-MlrViFSPOtyCPnbWTQK2Dus9aYBtgzuclzDcoTqgkrEkeXrER4sBZ7ogniQm+AkWqkAJnX7YBAzQ+95UH2LwMw==
 
 "@emurgo/cip4-js@1.0.5":
   version "1.0.5"
@@ -12373,9 +12373,9 @@ react-native-fs@^2.11.18:
     base-64 "^0.1.0"
     utf8 "^2.1.1"
 
-react-native-haskell-shelley@Emurgo/react-native-haskell-shelley#0.0.5:
+react-native-haskell-shelley@Emurgo/react-native-haskell-shelley#ff2b8cb9fa8655c65464403a9afd5e8a52134d20:
   version "0.0.5"
-  resolved "https://codeload.github.com/Emurgo/react-native-haskell-shelley/tar.gz/e321b3b376bd1f0701ff26ea88cf2b754aa08c21"
+  resolved "https://codeload.github.com/Emurgo/react-native-haskell-shelley/tar.gz/ff2b8cb9fa8655c65464403a9afd5e8a52134d20"
   dependencies:
     base-64 "0.1.0"
 
