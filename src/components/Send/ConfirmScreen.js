@@ -32,10 +32,9 @@ import globalMessages, {
 import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
 import {
   createLedgerSignTxPayload,
-  signTxWithLedger,
   GeneralConnectionError,
   LedgerUserError,
-} from '../../crypto/byron/ledgerUtils'
+} from '../../crypto/shelley/ledgerUtils'
 import {SEND_ROUTES, WALLET_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import {CONFIG} from '../../config/config'
 import KeyStore from '../../crypto/KeyStore'
@@ -113,54 +112,55 @@ const handleOnConfirm = async (
 
   // TODO(v-almonacid): this need to be re-written
   if (isHW) {
-    withDisabledButton(async () => {
-      try {
-        // Map inputs to UNIQUE tx hashes (there might be multiple inputs from the same tx)
-        const txsHashes = [
-          ...new Set(transactionData.inputs.map((x) => x.ptr.id)),
-        ]
-        const txsBodiesMap = await walletManager.getTxsBodiesForUTXOs({
-          txsHashes,
-        })
-        const addressedChange = {
-          address: transactionData.changeAddress,
-          addressing: walletManager.getAddressingInfo(
-            transactionData.changeAddress,
-          ),
-        }
-        const {
-          ledgerSignTxPayload,
-          partialTx,
-        } = await createLedgerSignTxPayload(
-          transactionData,
-          txsBodiesMap,
-          addressedChange,
-        )
-
-        const tx = await signTxWithLedger(
-          ledgerSignTxPayload,
-          partialTx,
-          hwDeviceInfo,
-          useUSB,
-        )
-
-        await submitTx(
-          Buffer.from(tx.cbor_encoded_tx, 'hex').toString('base64'),
-        )
-      } catch (e) {
-        if (e.statusCode === ErrorCodes.ERR_REJECTED_BY_USER) {
-          return
-        } else if (
-          e instanceof GeneralConnectionError ||
-          e instanceof LedgerUserError
-        ) {
-          await showErrorDialog(errorMessages.hwConnectionError, intl)
-        } else {
-          handleGeneralError('Could not submit transaction', e, intl)
-        }
-      }
-    })
-    return
+    throw new Error('TODO')
+    // withDisabledButton(async () => {
+    //   try {
+    //     // Map inputs to UNIQUE tx hashes (there might be multiple inputs from the same tx)
+    //     const txsHashes = [
+    //       ...new Set(transactionData.inputs.map((x) => x.ptr.id)),
+    //     ]
+    //     const txsBodiesMap = await walletManager.getTxsBodiesForUTXOs({
+    //       txsHashes,
+    //     })
+    //     const addressedChange = {
+    //       address: transactionData.changeAddress,
+    //       addressing: walletManager.getAddressingInfo(
+    //         transactionData.changeAddress,
+    //       ),
+    //     }
+    //     const {
+    //       ledgerSignTxPayload,
+    //       partialTx,
+    //     } = await createLedgerSignTxPayload(
+    //       transactionData,
+    //       txsBodiesMap,
+    //       addressedChange,
+    //     )
+    //
+    //     const tx = await signTxWithLedger(
+    //       ledgerSignTxPayload,
+    //       partialTx,
+    //       hwDeviceInfo,
+    //       useUSB,
+    //     )
+    //
+    //     await submitTx(
+    //       Buffer.from(tx.cbor_encoded_tx, 'hex').toString('base64'),
+    //     )
+    //   } catch (e) {
+    //     if (e.statusCode === ErrorCodes.ERR_REJECTED_BY_USER) {
+    //       return
+    //     } else if (
+    //       e instanceof GeneralConnectionError ||
+    //       e instanceof LedgerUserError
+    //     ) {
+    //       await showErrorDialog(errorMessages.hwConnectionError, intl)
+    //     } else {
+    //       handleGeneralError('Could not submit transaction', e, intl)
+    //     }
+    //   }
+    // })
+    // return
   }
 
   if (isEasyConfirmationEnabled) {

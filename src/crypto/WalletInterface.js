@@ -8,6 +8,7 @@ import {BigNumber} from 'bignumber.js'
 import {AddressChain} from './chain'
 import {TransactionCache} from './shelley/transactionCache'
 import Wallet from './Wallet'
+import ISignRequest from './ISignRequest'
 
 import type {RawUtxo, TxBodiesRequest, TxBodiesResponse} from '../api/types'
 import type {
@@ -17,7 +18,7 @@ import type {
   SignedTx,
   WalletState,
 } from './types'
-import type {HWDeviceInfo} from './byron/ledgerUtils'
+import type {HWDeviceInfo} from './shelley/ledgerUtils'
 import type {DelegationStatus} from './shelley/delegationUtils'
 import type {NetworkId, WalletImplementationId} from '../config/types'
 import type {Dict, WalletMeta} from '../state'
@@ -149,7 +150,7 @@ export interface WalletInterface {
     utxos: Array<RawUtxo>,
     receiver: string,
     amount: string,
-  ): Promise<BaseSignRequest<T>>;
+  ): Promise<ISignRequest<T>>;
 
   signTx<T>(
     signRequest: BaseSignRequest<T>,

@@ -21,7 +21,7 @@ import {
   BluetoothDisabledError,
   GeneralConnectionError,
   LedgerUserError,
-} from '../../crypto/byron/ledgerUtils'
+} from '../../crypto/shelley/ledgerUtils'
 import {Text, BulletPointItem, Button} from '../UiKit'
 import DeviceItem from './DeviceItem'
 import {ledgerMessages, confirmationMessages} from '../../i18n/global-messages'
@@ -34,7 +34,7 @@ import usbImage from '../../assets/img/ledger-nano-usb.png'
 import type {ComponentType} from 'react'
 import type {Device} from '@ledgerhq/react-native-hw-transport-ble'
 import type {Navigation} from '../../types/navigation'
-import type {DeviceId, DeviceObj} from '../../crypto/byron/ledgerUtils'
+import type {DeviceId, DeviceObj} from '../../crypto/shelley/ledgerUtils'
 
 const messages = defineMessages({
   caption: {

@@ -1,15 +1,12 @@
 // @flow
 
-// TODO(v-almonacid): we cannot yet implement HaskellShelleyTxSignRequest
-// because there are still some bindings missing
-
 import {BigNumber} from 'bignumber.js'
 import {ISignRequest} from '../ISignRequest'
 /* eslint-disable camelcase */
 import {
-  RewardAddress, // TODO
+  RewardAddress,
   TransactionBuilder,
-  TransactionMetadata, // TODO
+  TransactionMetadata, // TODO: rust bindings not yet available
   hash_transaction,
 } from 'react-native-haskell-shelley'
 

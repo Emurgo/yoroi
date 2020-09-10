@@ -27,7 +27,7 @@ import {
   verifyAddress,
   GeneralConnectionError,
   LedgerUserError,
-} from '../../crypto/byron/ledgerUtils'
+} from '../../crypto/shelley/ledgerUtils'
 import walletManager from '../../crypto/walletManager'
 import {formatPath} from '../../crypto/commonUtils'
 import {errorMessages} from '../../i18n/global-messages'
@@ -42,7 +42,7 @@ import type {
   HWDeviceInfo,
   DeviceId,
   DeviceObj,
-} from '../../crypto/byron/ledgerUtils'
+} from '../../crypto/shelley/ledgerUtils'
 import type {Addressing, LegacyAddressing} from '../../crypto/types'
 import type {WalletMeta} from '../../state'
 

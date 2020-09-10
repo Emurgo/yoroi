@@ -6,7 +6,7 @@ import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 
 import LedgerConnect from '../../Ledger/LedgerConnect'
-import {getHWDeviceInfo} from '../../../crypto/byron/ledgerUtils'
+import {getHWDeviceInfo} from '../../../crypto/shelley/ledgerUtils'
 import {ProgressStep} from '../../UiKit'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
@@ -17,7 +17,7 @@ import styles from './styles/ConnectNanoXScreen.style'
 import type {ComponentType} from 'react'
 import type {Device} from '@ledgerhq/react-native-hw-transport-ble'
 import type {Navigation} from '../../../types/navigation'
-import type {DeviceId, DeviceObj} from '../../../crypto/byron/ledgerUtils'
+import type {DeviceId, DeviceObj} from '../../../crypto/shelley/ledgerUtils'
 
 const messages = defineMessages({
   title: {
@@ -44,7 +44,12 @@ const _navigateToSave = async (
   if (deviceId == null && deviceObj == null) {
     throw new Error('null descriptor, should never happen')
   }
-  const hwDeviceInfo = await getHWDeviceInfo(deviceId, deviceObj, useUSB)
+  const hwDeviceInfo = await getHWDeviceInfo(
+    walletImplementationId,
+    deviceId,
+    deviceObj,
+    useUSB,
+  )
   navigation.navigate(WALLET_INIT_ROUTES.SAVE_NANO_X, {
     hwDeviceInfo,
     networkId,

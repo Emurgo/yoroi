@@ -41,7 +41,6 @@
     "bip39": "^2.5.0",
     "bluebird": "^3.5.2",
     "bs58": "^4.0.1",
-    "cbor": "5.0.2",
     "crypto-random-string": "^1.0.0",
     "emip3js": "Emurgo/emip3js",
     "es6-error": "^4.1.1",

@@ -52,7 +52,7 @@ import * as api from './api/byron/api'
 import {type Dispatch} from 'redux'
 import {type State} from './state'
 import type {BaseSignRequest} from './crypto/types'
-import type {HWDeviceInfo} from './crypto/byron/ledgerUtils'
+import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
 import type {NetworkId, WalletImplementationId} from './config/types'
 
 const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {

@@ -17,7 +17,6 @@ import {
   RewardAddress,
   StakeCredential,
   Transaction,
-  /* eslint-disable-next-line no-unused-vars */
   TransactionBuilder,
 } from 'react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
@@ -29,7 +28,7 @@ import {AddressChain, AddressGenerator} from './chain'
 import * as byronUtil from '../byron/util'
 import {ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
 import * as api from '../../api/byron/api'
-import {CONFIG} from '../../config/config'
+import {CONFIG, isByron} from '../../config/config'
 import {
   NETWORK_REGISTRY,
   WALLET_IMPLEMENTATION_REGISTRY,
@@ -46,6 +45,7 @@ import {
   getDelegationStatus,
   createDelegationTx,
 } from './delegationUtils'
+import {createLedgerSignTxPayload} from './ledgerUtils'
 
 import type {
   RawUtxo,
@@ -54,8 +54,16 @@ import type {
   PoolInfoRequest,
   PoolInfoResponse,
 } from '../../api/types'
-import type {AddressedUtxo, BaseSignRequest, SignedTx} from './../types'
-import type {HWDeviceInfo} from '../byron/ledgerUtils'
+import type {
+  AddressedUtxo,
+  BaseSignRequest,
+  SignedTx,
+} from './../types'
+import type {
+  HWDeviceInfo,
+  CreateLedgerSignTxDataRequest,
+  CreateLedgerSignTxDataResponse,
+} from '../shelley/ledgerUtils'
 import type {NetworkId, WalletImplementationId} from '../../config/types'
 import type {WalletMeta} from '../../state'
 
@@ -337,6 +345,9 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   getAddressingInfo(address: string) {
+    const purpose = isByron(this.walletImplementationId)
+      ? CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
+      : CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
     const chains = [
       ['Internal', this.internalChain],
       ['External', this.externalChain],
@@ -346,11 +357,13 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       if (chain.isMyAddress(address)) {
         addressInfo = {
           path: [
-            CONFIG.NUMBERS.ACCOUNT_INDEX,
+            purpose,
+            CONFIG.NUMBERS.COIN_TYPES.CARDANO,
+            CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
             ADDRESS_TYPE_TO_CHANGE[type],
             chain.getIndexOfAddress(address),
           ],
-          startLevel: CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
+          startLevel: CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE,
         }
       }
     })
@@ -408,7 +421,6 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       addressedUtxos,
       amount,
     })
-    Logger.debug(JSON.stringify(resp))
     return resp
   }
 
@@ -542,6 +554,30 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     return {
       id,
       encodedTx,
+    }
+  }
+
+  async createLedgerSignTxData(
+    request: CreateLedgerSignTxDataRequest,
+  ): Promise<CreateLedgerSignTxDataResponse> {
+    Logger.debug('ShelleyWallet::createLedgerSignTxData called')
+
+    const ledgerSignTxPayload = await createLedgerSignTxPayload({
+      signRequest: request.signRequest,
+      byronNetworkMagic: CONFIG.NETWORKS.BYRON_MAINNET.PROTOCOL_MAGIC,
+      networkId: Number.parseInt(
+        CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID,
+        10,
+      ),
+      addressingMap: request.addressingMap,
+    })
+
+    Logger.debug(
+      'ShelleyWallet::createLedgerSignTxData success:',
+      JSON.stringify(ledgerSignTxPayload),
+    )
+    return {
+      ledgerSignTxPayload,
     }
   }
 

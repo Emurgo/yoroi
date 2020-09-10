@@ -5,7 +5,7 @@ import {NETWORK_REGISTRY} from './config/types'
 
 import type {RawUtxo, RemotePoolMetaSuccess} from './api/types'
 import type {Transaction} from './types/HistoryTransaction'
-import type {HWDeviceInfo} from './crypto/byron/ledgerUtils'
+import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
 import type {NetworkId, WalletImplementationId} from './config/types'
 import type {WalletChecksum} from '@emurgo/cip4-js'
 

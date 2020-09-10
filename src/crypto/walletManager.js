@@ -25,7 +25,7 @@ import {
 import type {WalletMeta} from '../state'
 import type {RawUtxo, TxBodiesRequest} from '../api/types'
 import type {Addressing, BaseSignRequest, EncryptionMethod} from './types'
-import type {HWDeviceInfo} from './byron/ledgerUtils'
+import type {HWDeviceInfo} from './shelley/ledgerUtils'
 import type {NetworkId, WalletImplementationId} from '../config/types'
 import type {WalletChecksum} from '@emurgo/cip4-js'
 
