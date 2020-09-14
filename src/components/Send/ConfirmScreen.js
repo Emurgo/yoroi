@@ -53,6 +53,7 @@ import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
 import LedgerConnect from '../Ledger/LedgerConnect'
 import HWInstructions from '../Ledger/HWInstructions'
+import {Logger} from '../../utils/logging'
 
 import type {BaseSignRequest} from '../../crypto/types'
 
@@ -83,7 +84,8 @@ const handleOnConfirm = async (
   intl,
   useUSB,
 ) => {
-  const transactionData = navigation.getParam('transactionData')
+  const transactionData = navigation.getParam('transactionData') // ISignRequest
+  const signRequest = transactionData.signRequest
 
   const submitTx = async <T>(
     tx: string | BaseSignRequest<T>,
@@ -110,57 +112,30 @@ const handleOnConfirm = async (
     })
   }
 
-  // TODO(v-almonacid): this need to be re-written
   if (isHW) {
-    throw new Error('TODO')
-    // withDisabledButton(async () => {
-    //   try {
-    //     // Map inputs to UNIQUE tx hashes (there might be multiple inputs from the same tx)
-    //     const txsHashes = [
-    //       ...new Set(transactionData.inputs.map((x) => x.ptr.id)),
-    //     ]
-    //     const txsBodiesMap = await walletManager.getTxsBodiesForUTXOs({
-    //       txsHashes,
-    //     })
-    //     const addressedChange = {
-    //       address: transactionData.changeAddress,
-    //       addressing: walletManager.getAddressingInfo(
-    //         transactionData.changeAddress,
-    //       ),
-    //     }
-    //     const {
-    //       ledgerSignTxPayload,
-    //       partialTx,
-    //     } = await createLedgerSignTxPayload(
-    //       transactionData,
-    //       txsBodiesMap,
-    //       addressedChange,
-    //     )
-    //
-    //     const tx = await signTxWithLedger(
-    //       ledgerSignTxPayload,
-    //       partialTx,
-    //       hwDeviceInfo,
-    //       useUSB,
-    //     )
-    //
-    //     await submitTx(
-    //       Buffer.from(tx.cbor_encoded_tx, 'hex').toString('base64'),
-    //     )
-    //   } catch (e) {
-    //     if (e.statusCode === ErrorCodes.ERR_REJECTED_BY_USER) {
-    //       return
-    //     } else if (
-    //       e instanceof GeneralConnectionError ||
-    //       e instanceof LedgerUserError
-    //     ) {
-    //       await showErrorDialog(errorMessages.hwConnectionError, intl)
-    //     } else {
-    //       handleGeneralError('Could not submit transaction', e, intl)
-    //     }
-    //   }
-    // })
-    // return
+    withDisabledButton(async () => {
+      try {
+        const signedTx = await walletManager.signTxWithLedger(
+          transactionData,
+          useUSB,
+        )
+        await submitTx(
+          Buffer.from(signedTx.encodedTx).toString('base64'),
+        )
+      } catch (e) {
+        if (e.statusCode === ErrorCodes.ERR_REJECTED_BY_USER) {
+          return
+        } else if (
+          e instanceof GeneralConnectionError ||
+          e instanceof LedgerUserError
+        ) {
+          await showErrorDialog(errorMessages.hwConnectionError, intl)
+        } else {
+          handleGeneralError('Could not submit transaction', e, intl)
+        }
+      }
+    })
+    return
   }
 
   if (isEasyConfirmationEnabled) {
@@ -171,7 +146,7 @@ const handleOnConfirm = async (
         onSuccess: (decryptedKey) => {
           navigation.navigate(SEND_ROUTES.CONFIRM)
 
-          submitTx(transactionData, decryptedKey)
+          submitTx(signRequest, decryptedKey)
         },
         onFail: () => navigation.goBack(),
       })
@@ -199,7 +174,7 @@ const handleOnConfirm = async (
       intl,
     )
 
-    submitTx(transactionData, decryptedData)
+    submitTx(signRequest, decryptedData)
   } catch (e) {
     if (e instanceof WrongPassword) {
       await showErrorDialog(errorMessages.incorrectPassword, intl)

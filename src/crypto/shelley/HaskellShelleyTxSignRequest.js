@@ -115,7 +115,7 @@ implements ISignRequest<TransactionBuilder> {
   async fee(shift: boolean): Promise<BigNumber> {
     const _fee = await this.signRequest.unsignedTx.get_fee_if_set()
     const fee = new BigNumber(
-      _fee != null ? _fee.to_str() : '0',
+      _fee != null ? await _fee.to_str() : '0',
     ).plus(await (await this.signRequest.unsignedTx.get_deposit()).to_str())
 
     if (shift) {

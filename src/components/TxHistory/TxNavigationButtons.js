@@ -108,10 +108,6 @@ export default injectIntl(
       navigateToReceive: ({navigation}) => (event) =>
         navigation.navigate(WALLET_ROUTES.RECEIVE),
       navigateToSend: ({navigation, walletMeta, intl}) => (event) => {
-        if (walletMeta.isHW) {
-          showErrorDialog(errorMessages.notSupportedError, intl)
-          return
-        }
         navigation.navigate(WALLET_ROUTES.SEND)
       },
       navigateToDashboard: ({navigation, walletMeta, intl}) => (event) => {

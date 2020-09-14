@@ -67,6 +67,7 @@ const _handleOnVerifyAddress = async (
   address: string,
   index: number,
   hwDeviceInfo: HWDeviceInfo,
+  walletMeta: WalletMeta,
   useUSB: boolean,
   closeDetails: () => void,
   withActivityIndicator: (() => Promise<void>) => Promise<void>,
@@ -80,11 +81,18 @@ const _handleOnVerifyAddress = async (
       const addressing = _toLegacyAddressing({
         addressing: addressingInfo,
       })
-      await verifyAddress(address, addressing, hwDeviceInfo, useUSB)
+      await verifyAddress(
+        walletMeta.walletImplementationId,
+        address,
+        addressing,
+        hwDeviceInfo,
+        useUSB,
+      )
     } catch (e) {
       if (e instanceof GeneralConnectionError || e instanceof LedgerUserError) {
         await showErrorDialog(errorMessages.hwConnectionError, intl)
       } else {
+        Logger.error(e)
         handleGeneralError('Could not verify address', e, intl)
       }
     } finally {
@@ -307,6 +315,7 @@ export default injectIntl(
         address,
         index,
         hwDeviceInfo,
+        walletMeta,
         useUSB,
         closeDetails,
         withActivityIndicator,
@@ -316,6 +325,7 @@ export default injectIntl(
           address,
           index,
           hwDeviceInfo,
+          walletMeta,
           useUSB,
           closeDetails,
           withActivityIndicator,

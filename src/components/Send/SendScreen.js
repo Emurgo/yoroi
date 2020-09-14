@@ -170,7 +170,7 @@ const recomputeAll = async ({amount, address, utxos}) => {
   if (_.isEmpty(addressErrors) && _.isEmpty(amountErrors) && utxos) {
     try {
       const parsedAmount = parseAdaDecimal(amount)
-      const {unsignedTx} = await getTransactionData(utxos, address, amount)
+      const unsignedTx = await getTransactionData(utxos, address, amount)
       const _fee = await unsignedTx.fee(false) // in lovelaces
       balanceAfter = getUtxoBalance(utxos)
         .minus(parsedAmount)

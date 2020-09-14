@@ -44,6 +44,7 @@ import {NUMBERS} from '../../config/numbers'
 import {
   verifyFromBip44Root,
   toHexOrBase58,
+  normalizeToAddress,
   derivePublicByAddressing,
 } from './utils'
 
@@ -61,6 +62,7 @@ import type {
   InputTypeUTxO,
   OutputTypeAddress,
   OutputTypeAddressParams,
+  SignTransactionResponse,
   StakingBlockchainPointer,
   Witness,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
@@ -157,13 +159,26 @@ export type HWDeviceInfo = {|
 // tx API
 // createLedgerSignTxData
 
-export type CreateLedgerSignTxDataRequest = {|
-  signRequest: HaskellShelleyTxSignRequest,
-  addressingMap: (string) => void | $PropertyType<Addressing, 'addressing'>,
+// from yoroi-extension-ledger-connect-handler
+export type SignTransactionRequest = {|
+  networkId: number,
+  protocolMagic: number,
+  inputs: Array<InputTypeUTxO>,
+  outputs: Array<OutputTypeAddress | OutputTypeAddressParams>,
+  feeStr: string,
+  ttlStr: string,
+  certificates: Array<Certificate>,
+  withdrawals: Array<Withdrawal>,
+  metadataHashHex: ?string
 |}
-export type CreateLedgerSignTxDataResponse = {|
-  ledgerSignTxPayload: SignTransactionRequest,
-|}
+
+// export type CreateLedgerSignTxDataRequest = {|
+//   signRequest: HaskellShelleyTxSignRequest,
+//   addressingMap: (string) => void | $PropertyType<Addressing, 'addressing'>,
+// |}
+// export type CreateLedgerSignTxDataResponse = {|
+//   ledgerSignTxPayload: SignTransactionRequest,
+// |}
 
 //
 // ============== General util ==================
@@ -173,23 +188,34 @@ const VENDOR = CONFIG.HARDWARE_WALLETS.LEDGER_NANO.VENDOR
 const MODEL = CONFIG.HARDWARE_WALLETS.LEDGER_NANO.MODEL
 
 const HARDENED = CONFIG.NUMBERS.HARD_DERIVATION_START
-const PURPOSE = CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
+const WALLET_TYPE_PURPOSE = CONFIG.NUMBERS.WALLET_TYPE_PURPOSE
 const COIN_TYPE = CONFIG.NUMBERS.COIN_TYPES.CARDANO
+
+const getWalletType = (id: WalletImplementationId): WalletType => {
+  if (isByron(id)) {
+    return 'BIP44'
+  } else if (isHaskellShelley(id)) {
+    return 'CIP1852'
+  } else {
+    throw new Error('ledgerUtils::getWalletType: wallet type not supported')
+  }
+}
 
 const makeCardanoAccountBIP44Path = (
   walletType: WalletType,
   account: number,
 ) => [
-  CONFIG.NUMBERS.WALLET_TYPE_PURPOSE[walletType],
+  WALLET_TYPE_PURPOSE[walletType],
   COIN_TYPE,
   HARDENED + account,
 ]
 
 const makeCardanoBIP44Path = (
+  walletType: WalletType,
   account: number,
   chain: number,
   address: number,
-) => [PURPOSE, COIN_TYPE, HARDENED + account, chain, address]
+) => [WALLET_TYPE_PURPOSE[walletType], COIN_TYPE, HARDENED + account, chain, address]
 
 const validateHWResponse = (resp: LedgerConnectionResponse): boolean => {
   const {extendedPublicKeyResp, deviceId, deviceObj} = resp
@@ -262,18 +288,9 @@ export const getHWDeviceInfo = async (
     const versionResp: GetVersionResponse = await appAda.getVersion()
     Logger.debug('AppAda version', versionResp)
 
-    let walletType: WalletType
-    if (isByron(walletImplementationId)) {
-      walletType = 'BIP44'
-    } else if (isHaskellShelley(walletImplementationId)) {
-      walletType = 'CIP1852'
-    } else {
-      throw new Error('ledgerUtils::getHWDeviceInfo: wallet type not supported')
-    }
-
     // assume single account in Yoroi
     const accountPath = makeCardanoAccountBIP44Path(
-      walletType,
+      getWalletType(walletImplementationId),
       CONFIG.NUMBERS.ACCOUNT_INDEX,
     )
     Logger.debug('bip44 account path', accountPath)
@@ -310,6 +327,7 @@ export const getHWDeviceInfo = async (
 }
 
 export const verifyAddress = async (
+  walletImplementationId: WalletImplementationId,
   address: string,
   addressing: LegacyAddressing,
   hwDeviceInfo: HWDeviceInfo,
@@ -324,6 +342,7 @@ export const verifyAddress = async (
     }
 
     const path = makeCardanoBIP44Path(
+      getWalletType(walletImplementationId),
       addressing.addressing.account,
       addressing.addressing.change,
       addressing.addressing.index,
@@ -363,6 +382,8 @@ export const createLedgerSignTxPayload = async (request: {|
   networkId: number,
   addressingMap: (string) => void | $PropertyType<Addressing, 'addressing'>,
 |}): Promise<SignTransactionRequest> => {
+  Logger.debug('ledgerUtils::createLedgerSignTxPayload called')
+  Logger.debug('signRequest', JSON.stringify(request.signRequest))
   const txBody = await request.signRequest.self().unsignedTx.build()
 
   // Inputs
@@ -404,8 +425,8 @@ export const createLedgerSignTxPayload = async (request: {|
   return {
     inputs: ledgerInputs,
     outputs: ledgerOutputs,
-    feeStr: await txBody.fee().to_str(),
-    ttlStr: await txBody.ttl().toString(),
+    feeStr: await (await txBody.fee()).to_str(),
+    ttlStr: (await txBody.ttl()).toString(),
     protocolMagic: request.byronNetworkMagic,
     withdrawals: ledgerWithdrawal,
     certificates: ledgerCertificates,
@@ -433,6 +454,18 @@ async function _transformToLedgerOutputs(request: {|
   changeAddrs: Array<{|...JsAddress, ...Value, ...Addressing|}>,
   addressingMap: (string) => void | $PropertyType<Addressing, 'addressing'>,
 |}): Promise<Array<OutputTypeAddress | OutputTypeAddressParams>> {
+  // normalize change addresses. Shelley addresses come as bech32 strings
+  // while byron addresses as base58 strings
+  // const changeAddrs = await Promise.all(
+  //   request.changeAddrs.map(async (change) => {
+  //     const addrPtr = await normalizeToAddress(change.address)
+  //     if (!addrPtr) throw new Error('cannot normalize change address')
+  //     return {
+  //       ...change,
+  //       address: await toHexOrBase58(addrPtr),
+  //     }
+  //   })
+  // )
   const result = []
   for (let i = 0; i < (await request.txOutputs.len()); i++) {
     const output = await request.txOutputs.get(i)
@@ -505,7 +538,7 @@ async function formatLedgerCertificates(
   certificates: Certificates,
   addressingMap: (string) => void | $PropertyType<Addressing, 'addressing'>,
 ): Promise<Array<Certificate>> {
-  const getPath = async (stakeCredential: StakeCredential): Array<number> => {
+  const getPath = async (stakeCredential: StakeCredential): Promise<Array<number>> => {
     const rewardAddr = await RewardAddress.new(networkId, stakeCredential)
     const addressPayload = Buffer.from(
       await (await rewardAddr.to_address()).to_bytes(),
@@ -577,9 +610,7 @@ export async function toLedgerAddressParameters(request: {|
     if (byronAddr) {
       return {
         addressTypeNibble: AddressTypeNibbles.BYRON,
-        // TODO(v-almonacid): bindings for byronAddr.byron_protocol_magic()
-        // are missing. We assume mainnet protocol magic for now
-        networkIdOrProtocolMagic: CONFIG.NETWORKS.BYRON_MAINNET.PROTOCOL_MAGIC,
+        networkIdOrProtocolMagic: await byronAddr.byron_protocol_magic(),
         spendingPath: request.path,
         stakingPath: undefined,
         stakingKeyHashHex: undefined,
@@ -602,8 +633,7 @@ export async function toLedgerAddressParameters(request: {|
       let stakingKeyInfo
       if (addressing == null) {
         const stakeCred = await baseAddr.stake_cred()
-        // TODO(v-almonacid): StakeCredential::to_scripthash() not implemented yet
-        const wasmHash = await stakeCred.to_keyhash() // ?? await stakeCred.to_scripthash()
+        const wasmHash = await stakeCred.to_keyhash() ?? await stakeCred.to_scripthash()
         if (wasmHash == null) {
           throw new Error('toLedgerAddressParameters unknown hash type')
         }
@@ -625,7 +655,6 @@ export async function toLedgerAddressParameters(request: {|
       }
       return {
         addressTypeNibble: AddressTypeNibbles.BASE,
-        // TODO(v-almonacid): Address::network_id() is not yet implemented
         networkIdOrProtocolMagic: await (await baseAddr.to_address()).network_id(),
         spendingPath: request.path,
         ...stakingKeyInfo,
@@ -681,6 +710,62 @@ export async function toLedgerAddressParameters(request: {|
     }
   }
   throw new Error('toLedgerAddressParameters: unknown address type')
+}
+
+export const signTxWithLedger = async (
+  payload: SignTransactionRequest,
+  hwDeviceInfo: HWDeviceInfo,
+  useUSB?: boolean = false,
+): Promise<SignTransactionResponse> => {
+  try {
+    Logger.debug('ledgerUtils::signTxWithLedger called')
+
+    if (hwDeviceInfo == null) {
+      throw new Error('ledgerUtils::signTxWithLedger: hwDeviceInfo is null')
+    }
+
+    const transport = await connectionHandler(
+      hwDeviceInfo.hwFeatures.deviceId,
+      hwDeviceInfo.hwFeatures.deviceObj,
+      useUSB,
+    )
+    const appAda = new AppAda(transport)
+
+    Logger.debug('ledgerUtils::signTxWithLedger inputs', payload.inputs)
+    Logger.debug('ledgerUtils::signTxWithLedger outputs', payload.outputs)
+
+    const ledgerSignature: SignTransactionResponse =
+      await appAda.signTransaction(
+        payload.networkId,
+        payload.protocolMagic,
+        payload.inputs,
+        payload.outputs,
+        payload.feeStr,
+        payload.ttlStr,
+        payload.certificates,
+        payload.withdrawals,
+        payload.metadataHashHex,
+      )
+
+    await transport.close()
+
+    Logger.debug(
+      'ledgerUtils::ledgerSignature',
+      JSON.stringify(ledgerSignature),
+    )
+    return ledgerSignature
+  } catch (e) {
+    if (_isUserError(e)) {
+      Logger.info('ledgerUtils::signTxWithLedger: User-side error', e)
+      throw new LedgerUserError()
+    } else if (_isConnectionError(e)) {
+      Logger.info('ledgerUtils::signTxWithLedger: general/BleError', e)
+      throw new GeneralConnectionError()
+    } else {
+      Logger.error('ledgerUtils::signTxWithLedger: Unexpected error', e)
+      throw e
+    }
+  }
 }
 
 export const buildSignedTransaction = async (

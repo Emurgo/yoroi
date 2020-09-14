@@ -8,7 +8,7 @@ import {BigNumber} from 'bignumber.js'
 import {AddressChain} from './chain'
 import {TransactionCache} from './shelley/transactionCache'
 import Wallet from './Wallet'
-import ISignRequest from './ISignRequest'
+import {ISignRequest} from './ISignRequest'
 
 import type {RawUtxo, TxBodiesRequest, TxBodiesResponse} from '../api/types'
 import type {
@@ -169,6 +169,11 @@ export interface WalletInterface {
   signDelegationTx<T>(
     signRequest: BaseSignRequest<T>,
     decryptedMasterKey: string,
+  ): Promise<SignedTx>;
+
+  signTxWithLedger<T>(
+    request: ISignRequest<T>,
+    useUSB: boolean,
   ): Promise<SignedTx>;
 
   // =================== backend API =================== //

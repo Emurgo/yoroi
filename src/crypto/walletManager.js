@@ -5,6 +5,7 @@ import ExtendableError from 'es6-error'
 import {walletChecksum, legacyWalletChecksum} from '@emurgo/cip4-js'
 
 import {WalletInterface} from './WalletInterface'
+import {ISignRequest} from './ISignRequest'
 import ShelleyWallet from './shelley/ShelleyWallet'
 import storage from '../utils/storage'
 import KeyStore from './KeyStore'
@@ -752,6 +753,16 @@ class WalletManager {
   ) {
     if (!this._wallet) throw new WalletClosed()
     return await this._wallet.signDelegationTx<any>(request, decryptedMasterKey)
+  }
+
+  async signTxWithLedger<T>(
+    request: ISignRequest<T>,
+    useUSB: boolean,
+  ) {
+    if (!this._wallet) throw new WalletClosed()
+    return await this.abortWhenWalletCloses(
+      this._wallet.signTxWithLedger<T>(request, useUSB),
+    )
   }
 
   // =================== backend API =================== //
