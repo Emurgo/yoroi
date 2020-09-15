@@ -44,6 +44,7 @@ import {NUMBERS} from '../../config/numbers'
 import {
   verifyFromBip44Root,
   toHexOrBase58,
+  normalizeToAddress,
   derivePublicByAddressing,
 } from './utils'
 
@@ -51,7 +52,6 @@ import type {
   Address as JsAddress,
   Addressing,
   AddressedUtxo,
-  LegacyAddressing,
   Value,
 } from '../../crypto/types'
 import type {
@@ -156,7 +156,6 @@ export type HWDeviceInfo = {|
 |}
 
 // tx API
-// createLedgerSignTxData
 
 // from yoroi-extension-ledger-connect-handler
 export type SignTransactionRequest = {|
@@ -170,14 +169,6 @@ export type SignTransactionRequest = {|
   withdrawals: Array<Withdrawal>,
   metadataHashHex: ?string,
 |}
-
-// export type CreateLedgerSignTxDataRequest = {|
-//   signRequest: HaskellShelleyTxSignRequest,
-//   addressingMap: (string) => void | $PropertyType<Addressing, 'addressing'>,
-// |}
-// export type CreateLedgerSignTxDataResponse = {|
-//   ledgerSignTxPayload: SignTransactionRequest,
-// |}
 
 //
 // ============== General util ==================
@@ -204,19 +195,6 @@ const makeCardanoAccountBIP44Path = (
   walletType: WalletType,
   account: number,
 ) => [WALLET_TYPE_PURPOSE[walletType], COIN_TYPE, HARDENED + account]
-
-const makeCardanoBIP44Path = (
-  walletType: WalletType,
-  account: number,
-  chain: number,
-  address: number,
-) => [
-  WALLET_TYPE_PURPOSE[walletType],
-  COIN_TYPE,
-  HARDENED + account,
-  chain,
-  address,
-]
 
 const validateHWResponse = (resp: LedgerConnectionResponse): boolean => {
   const {extendedPublicKeyResp, deviceId, deviceObj} = resp
@@ -330,24 +308,56 @@ export const getHWDeviceInfo = async (
 export const verifyAddress = async (
   walletImplementationId: WalletImplementationId,
   address: string,
-  addressing: LegacyAddressing,
+  addressing: $PropertyType<Addressing, 'addressing'>,
   hwDeviceInfo: HWDeviceInfo,
   useUSB?: boolean = false,
 ): Promise<void> => {
   try {
     Logger.debug('ledgerUtils::verifyAddress called')
     Logger.debug('hwDeviceInfo', hwDeviceInfo)
+    Logger.debug('path', addressing.path)
 
     if (hwDeviceInfo == null) {
       throw new Error('ledgerUtils::verifyAddress: hwDeviceInfo is null')
     }
 
-    const path = makeCardanoBIP44Path(
-      getWalletType(walletImplementationId),
-      addressing.addressing.account,
-      addressing.addressing.change,
-      addressing.addressing.index,
-    )
+    verifyFromBip44Root(addressing)
+
+    const addressPtr = await normalizeToAddress(address)
+
+    const stakingKeyAddressing = {}
+    if (isHaskellShelley(walletImplementationId)) {
+      const baseAddr = await BaseAddress.from_address(addressPtr)
+      if (baseAddr) {
+        const rewardAddr = await RewardAddress.new(
+          Number.parseInt(CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID, 10),
+          await baseAddr.stake_cred(),
+        )
+        const addressPayload = Buffer.from(
+          await (await rewardAddr.to_address()).to_bytes(),
+        ).toString('hex')
+        stakingKeyAddressing[addressPayload] = {
+          path: [
+            CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
+            CONFIG.NUMBERS.COIN_TYPES.CARDANO,
+            CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
+            CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+            CONFIG.NUMBERS.STAKING_KEY_INDEX,
+          ],
+          startLevel: CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE,
+        }
+      }
+    }
+    const addressingMap = (address) => stakingKeyAddressing[address]
+    const addressParams = await toLedgerAddressParameters({
+      networkId: Number.parseInt(
+        CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID,
+        10,
+      ),
+      address: await normalizeToAddress(address),
+      path: addressing.path,
+      addressingMap,
+    })
 
     const transport = await connectionHandler(
       hwDeviceInfo.hwFeatures.deviceId,
@@ -356,7 +366,14 @@ export const verifyAddress = async (
     )
     const appAda = new AppAda(transport)
 
-    await appAda.showAddress(path)
+    await appAda.showAddress(
+      addressParams.addressTypeNibble,
+      addressParams.networkIdOrProtocolMagic,
+      addressParams.spendingPath,
+      addressParams.stakingPath,
+      addressParams.stakingKeyHashHex,
+      addressParams.stakingBlockchainPointer,
+    )
     await transport.close()
   } catch (e) {
     if (_isUserError(e)) {

@@ -43,24 +43,7 @@ import type {
   DeviceId,
   DeviceObj,
 } from '../../crypto/shelley/ledgerUtils'
-import type {Addressing, LegacyAddressing} from '../../crypto/types'
 import type {WalletMeta} from '../../state'
-
-const _toLegacyAddressing = (addressing: Addressing): LegacyAddressing => {
-  if (
-    addressing.addressing.startLevel !==
-    CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT
-  ) {
-    throw Error('unexpected addressing info')
-  }
-  return {
-    addressing: {
-      account: addressing.addressing.path[0],
-      change: addressing.addressing.path[1],
-      index: addressing.addressing.path[2],
-    },
-  }
-}
 
 const _handleOnVerifyAddress = async (
   intl: intlShape,
@@ -78,13 +61,10 @@ const _handleOnVerifyAddress = async (
       if (addressingInfo == null) {
         throw new Error('No addressing data, should never happen')
       }
-      const addressing = _toLegacyAddressing({
-        addressing: addressingInfo,
-      })
       await verifyAddress(
         walletMeta.walletImplementationId,
         address,
-        addressing,
+        addressingInfo,
         hwDeviceInfo,
         useUSB,
       )
