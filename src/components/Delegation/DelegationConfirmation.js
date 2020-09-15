@@ -1,27 +1,40 @@
 // @flow
 import React from 'react'
-import {View, ScrollView} from 'react-native'
+import {View, ScrollView, Platform} from 'react-native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withStateHandlers, withHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
 import {BigNumber} from 'bignumber.js'
+import {ErrorCodes} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 
-import {easyConfirmationSelector} from '../../selectors'
+import {
+  easyConfirmationSelector,
+  isHWSelector,
+  hwDeviceInfoSelector,
+} from '../../selectors'
+import {
+  showErrorDialog,
+  handleGeneralError,
+  submitDelegationTx,
+  submitSignedTx,
+} from '../../actions'
+import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {CONFIG} from '../../config/config'
-import {Button, ValidatedTextInput, Text, PleaseWaitModal} from '../UiKit'
+import {
+  Button,
+  ValidatedTextInput,
+  Text,
+  PleaseWaitModal,
+  Modal,
+} from '../UiKit'
 import globalMessages, {
   errorMessages,
   txLabels,
 } from '../../i18n/global-messages'
 import {formatAdaWithText, formatAda} from '../../utils/format'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
-import {
-  showErrorDialog,
-  handleGeneralError,
-  submitDelegationTx,
-} from '../../actions'
 import {
   SEND_ROUTES,
   WALLET_INIT_ROUTES,
@@ -31,13 +44,22 @@ import {
 import {NetworkError, ApiError} from '../../api/errors'
 import {WrongPassword} from '../../crypto/errors'
 import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
+import {
+  GeneralConnectionError,
+  LedgerUserError,
+} from '../../crypto/shelley/ledgerUtils'
 import KeyStore from '../../crypto/KeyStore'
+import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
+import LedgerConnect from '../Ledger/LedgerConnect'
+import HWInstructions from '../Ledger/HWInstructions'
 
 import styles from './styles/DelegationConfirmation.style'
 
+import type {BaseSignRequest} from '../../crypto/types'
 import type {IntlShape} from 'react-intl'
 import type {ComponentType} from 'react'
 import type {Navigation} from '../../types/navigation'
+import type {CreateDelegationTxResponse} from '../../crypto/shelley/delegationUtils'
 
 const messages = defineMessages({
   title: {
@@ -81,20 +103,30 @@ const approximateReward = (amount: BigNumber): BigNumber => {
 
 const handleOnConfirm = async (
   navigation,
+  isHW,
   isEasyConfirmationEnabled,
   password,
   submitDelegationTx,
+  submitSignedTx,
   setSendingTransaction,
   setProcessingTx,
   intl,
+  useUSB,
 ) => {
-  setProcessingTx(true)
-  const delegationTxData = navigation.getParam('delegationTxData')
+  const transactionData = navigation.getParam('transactionData')
+  const signRequest = transactionData.signTxRequest.signRequest
 
-  const signAndSubmitTx = async (decryptedKey) => {
+  const submitTx = async <T>(
+    tx: string | BaseSignRequest<T>,
+    decryptedKey: ?string,
+  ) => {
     try {
       setSendingTransaction(true)
-      await submitDelegationTx(decryptedKey, delegationTxData.signTxRequest)
+      if (decryptedKey != null) {
+        await submitDelegationTx(decryptedKey, tx)
+      } else {
+        await submitSignedTx(tx)
+      }
       navigation.navigate(WALLET_ROUTES.TX_HISTORY)
     } catch (e) {
       if (e instanceof NetworkError) {
@@ -109,6 +141,35 @@ const handleOnConfirm = async (
     }
   }
 
+  if (isHW) {
+    try {
+      setProcessingTx(true)
+      const signedTx = await walletManager.signTxWithLedger(
+        transactionData.signTxRequest,
+        useUSB,
+      )
+      await submitTx(Buffer.from(signedTx.encodedTx).toString('base64'))
+    } catch (e) {
+      if (e.statusCode === ErrorCodes.ERR_REJECTED_BY_USER) {
+        return
+      } else if (
+        e instanceof GeneralConnectionError ||
+        e instanceof LedgerUserError
+      ) {
+        await showErrorDialog(errorMessages.hwConnectionError, intl)
+      } else {
+        handleGeneralError(
+          intl.formatMessage(messages.delegationTxSignError),
+          e,
+          intl,
+        )
+      }
+    } finally {
+      setProcessingTx(false)
+    }
+    return
+  }
+
   if (isEasyConfirmationEnabled) {
     try {
       await walletManager.ensureKeysValidity()
@@ -117,7 +178,7 @@ const handleOnConfirm = async (
         onSuccess: (decryptedKey) => {
           navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM)
 
-          signAndSubmitTx(decryptedKey)
+          submitTx(signRequest, decryptedKey)
         },
         onFail: () => navigation.goBack(),
       })
@@ -129,10 +190,12 @@ const handleOnConfirm = async (
 
         return
       } else {
-        throw e
+        handleGeneralError(
+          intl.formatMessage(messages.delegationTxSignError),
+          e,
+          intl,
+        )
       }
-    } finally {
-      setProcessingTx(false)
     }
 
     return
@@ -147,7 +210,7 @@ const handleOnConfirm = async (
       intl,
     )
 
-    signAndSubmitTx(decryptedData)
+    submitTx(signRequest, decryptedData)
   } catch (e) {
     if (e instanceof WrongPassword) {
       await showErrorDialog(errorMessages.incorrectPassword, intl)
@@ -158,9 +221,13 @@ const handleOnConfirm = async (
         intl,
       )
     }
-  } finally {
-    setProcessingTx(false)
   }
+}
+
+const LEDGER_DIALOG_STEPS = {
+  CLOSED: 'CLOSED',
+  CHOOSE_TRANSPORT: 'CHOOSE_TRANSPORT',
+  LEDGER_CONNECT: 'LEDGER_CONNECT',
 }
 
 const DelegationConfirmation = ({
@@ -173,10 +240,19 @@ const DelegationConfirmation = ({
   sendingTransaction,
   processingTx,
   doNothing,
+  isHW,
+  ledgerDialogStep,
+  closeLedgerDialog,
+  useUSB,
+  onChooseTransport,
+  onConnectBLE,
+  onConnectUSB,
 }) => {
   const poolHash = navigation.getParam('poolHash')
   const poolName = navigation.getParam('poolName')
-  const delegationTxData = navigation.getParam('delegationTxData')
+  const delegationTxData: CreateDelegationTxResponse = navigation.getParam(
+    'transactionData',
+  )
   const amountToDelegate = delegationTxData.totalAmountToDelegate
   const transactionFee = navigation.getParam('transactionFee')
   const reward = approximateReward(amountToDelegate)
@@ -229,6 +305,7 @@ const DelegationConfirmation = ({
           </Text>
           <Text style={styles.rewards}>{formatAdaWithText(reward)}</Text>
         </View>
+        {isHW && <HWInstructions useUSB={useUSB} addMargin />}
       </ScrollView>
       <View style={styles.bottomBlock}>
         <Button
@@ -239,6 +316,35 @@ const DelegationConfirmation = ({
           disabled={isConfirmationDisabled}
         />
       </View>
+
+      {/* eslint-disable indent */
+      isHW &&
+        Platform.OS === 'android' &&
+        CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT && (
+          <>
+            <LedgerTransportSwitchModal
+              visible={
+                ledgerDialogStep === LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT
+              }
+              onRequestClose={closeLedgerDialog}
+              onSelectUSB={(event) => onChooseTransport(event, true)}
+              onSelectBLE={(event) => onChooseTransport(event, false)}
+              showCloseIcon
+            />
+            <Modal
+              visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.LEDGER_CONNECT}
+              onRequestClose={closeLedgerDialog}
+            >
+              <LedgerConnect
+                onConnectBLE={onConnectBLE}
+                onConnectUSB={onConnectUSB}
+                useUSB={useUSB}
+              />
+            </Modal>
+          </>
+        )
+      /* eslint-enable indent */
+      }
 
       <PleaseWaitModal
         title={intl.formatMessage(txLabels.submittingTx)}
@@ -259,9 +365,14 @@ export default injectIntl(
     connect(
       (state) => ({
         isEasyConfirmationEnabled: easyConfirmationSelector(state),
+        isHW: isHWSelector(state),
+        hwDeviceInfo: hwDeviceInfoSelector(state),
       }),
       {
         submitDelegationTx,
+        submitSignedTx,
+        setLedgerDeviceId,
+        setLedgerDeviceObj,
       },
     ),
     withStateHandlers(
@@ -269,6 +380,8 @@ export default injectIntl(
         password: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
         sendingTransaction: false,
         processingTx: false,
+        useUSB: false,
+        ledgerDialogStep: LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT,
       },
       {
         doNothing: () => () => ({}),
@@ -279,27 +392,66 @@ export default injectIntl(
         setProcessingTx: () => (processingTx) => ({
           processingTx,
         }),
+        openLedgerConnect: (state) => () => ({
+          ledgerDialogStep: LEDGER_DIALOG_STEPS.LEDGER_CONNECT,
+        }),
+        closeLedgerDialog: (state) => () => ({
+          ledgerDialogStep: LEDGER_DIALOG_STEPS.CLOSED,
+        }),
+        setUseUSB: (state) => (useUSB) => ({useUSB}),
       },
     ),
     withHandlers({
+      onChooseTransport: ({
+        hwDeviceInfo,
+        setUseUSB,
+        openLedgerConnect,
+        closeLedgerDialog,
+      }) => (event, useUSB) => {
+        setUseUSB(useUSB)
+        if (
+          (useUSB && hwDeviceInfo.hwFeatures.deviceObj == null) ||
+          (!useUSB && hwDeviceInfo.hwFeatures.deviceId == null)
+        ) {
+          openLedgerConnect()
+        } else {
+          closeLedgerDialog()
+        }
+      },
+      onConnectUSB: ({setLedgerDeviceObj, closeLedgerDialog}) => (
+        deviceObj,
+      ) => {
+        setLedgerDeviceObj(deviceObj)
+        closeLedgerDialog()
+      },
+      onConnectBLE: ({setLedgerDeviceId, closeLedgerDialog}) => (deviceId) => {
+        setLedgerDeviceId(deviceId)
+        closeLedgerDialog()
+      },
       onDelegate: ignoreConcurrentAsyncHandler(
         ({
           navigation,
+          isHW,
           isEasyConfirmationEnabled,
           password,
           submitDelegationTx,
+          submitSignedTx,
           setSendingTransaction,
           setProcessingTx,
           intl,
+          useUSB,
         }) => async (event) => {
           await handleOnConfirm(
             navigation,
+            isHW,
             isEasyConfirmationEnabled,
             password,
             submitDelegationTx,
+            submitSignedTx,
             setSendingTransaction,
             setProcessingTx,
             intl,
+            useUSB,
           )
         },
         1000,

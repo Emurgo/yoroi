@@ -31,7 +31,6 @@ import globalMessages, {
 } from '../../i18n/global-messages'
 import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
 import {
-  createLedgerSignTxPayload,
   GeneralConnectionError,
   LedgerUserError,
 } from '../../crypto/shelley/ledgerUtils'
@@ -53,7 +52,6 @@ import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
 import LedgerConnect from '../Ledger/LedgerConnect'
 import HWInstructions from '../Ledger/HWInstructions'
-import {Logger} from '../../utils/logging'
 
 import type {BaseSignRequest} from '../../crypto/types'
 
@@ -119,9 +117,7 @@ const handleOnConfirm = async (
           transactionData,
           useUSB,
         )
-        await submitTx(
-          Buffer.from(signedTx.encodedTx).toString('base64'),
-        )
+        await submitTx(Buffer.from(signedTx.encodedTx).toString('base64'))
       } catch (e) {
         if (e.statusCode === ErrorCodes.ERR_REJECTED_BY_USER) {
           return

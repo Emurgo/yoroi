@@ -99,8 +99,11 @@ export const CONFIG = {
       'boss already cement scrub',
       'nut priority',
     ].join(' '),
-    SEND_ADDRESS: 'Ae2tdPwUPEZAghGCdQykbGxc991wdoA8bXmSn7eCGuUKXF4EsRhWj4PJitn',
+    SEND_ADDRESS:
+      'addr1q8dewyn53xdjyzu20xjj6wg7kkxyqq63upxqevt24jga8f' +
+      'gcdwap96xuy84apchhj8u6r7uvl974sy9qz0sedc7ayjks3sxz7a',
     SEND_AMOUNT: '1',
+    POOL_HASH: 'af22f95915a19cd57adb14c558dcc4a175f60c6193dc23b8bd2d8beb',
   },
   MAX_CONCURRENT_REQUESTS: 5,
   SENTRY: _SENTRY,

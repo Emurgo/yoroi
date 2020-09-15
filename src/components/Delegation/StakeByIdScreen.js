@@ -1,5 +1,4 @@
 // @flow
-import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import {View, StyleSheet, ActivityIndicator} from 'react-native'
 import {connect} from 'react-redux'
@@ -7,6 +6,7 @@ import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
 
+import {CONFIG} from '../../config/config'
 import {STAKING_CENTER_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {Logger} from '../../utils/logging'
@@ -131,7 +131,7 @@ export default injectIntl(
     withStateHandlers(
       {
         busy: false,
-        poolId: '',
+        poolId: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.POOL_HASH : '',
       },
       {
         setBusy: () => (busy) => ({busy}),
@@ -147,23 +147,18 @@ export default injectIntl(
         intl,
       }) => async (selectedPool) => {
         try {
-          const delegationTxData = await walletManager.createDelegationTx(
+          const transactionData = await walletManager.createDelegationTx(
             poolId,
             accountBalance,
             utxos,
           )
-          const _fee = await delegationTxData.signTxRequest.unsignedTx.get_fee_if_set()
-          const transactionFee = new BigNumber(
-            _fee != null ? await _fee.to_str() : '0',
-          ).plus(
-            await (await delegationTxData.signTxRequest.unsignedTx.get_deposit()).to_str(),
-          )
+          const transactionFee = await transactionData.signTxRequest.fee(false)
 
           navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM, {
             poolName: selectedPool.poolName,
             poolHash: selectedPool.poolHash,
+            transactionData,
             transactionFee,
-            delegationTxData,
           })
         } catch (e) {
           if (e instanceof InsufficientFunds) {

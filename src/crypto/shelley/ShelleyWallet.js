@@ -47,7 +47,11 @@ import {
   getDelegationStatus,
   createDelegationTx,
 } from './delegationUtils'
-import {createLedgerSignTxPayload, signTxWithLedger, buildSignedTransaction} from './ledgerUtils'
+import {
+  createLedgerSignTxPayload,
+  signTxWithLedger,
+  buildSignedTransaction,
+} from './ledgerUtils'
 import {normalizeToAddress, toHexOrBase58} from './utils'
 
 import type {
@@ -58,6 +62,7 @@ import type {
   PoolInfoResponse,
 } from '../../api/types'
 import type {
+  Addressing,
   AddressedUtxo,
   BaseSignRequest,
   SignedTx,
@@ -286,7 +291,8 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     }
   }
 
-  getChangeAddress() {
+  // returns the address in bech32 (Shelley) or base58 (Byron) format
+  getChangeAddress(): string {
     const candidateAddresses = this.internalChain.addresses
     const unseen = candidateAddresses.filter(
       (addr) => !this.isUsedAddress(addr),
@@ -295,7 +301,11 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     return _.first(unseen)
   }
 
-  async _getAddressedChangeAddress() {
+  // returns the address in hex (Shelley) or base58 (Byron) format
+  async _getAddressedChangeAddress(): Promise<{
+    address: string,
+    ...Addressing,
+  }> {
     const changeAddr = this.getChangeAddress()
     const addressInfo = this.getAddressingInfo(changeAddr)
     if (addressInfo == null) {
@@ -438,20 +448,9 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     const masterKey = await Bip32PrivateKey.from_bytes(
       Buffer.from(decryptedMasterKey, 'hex'),
     )
-    let _purpose
-    switch (this.walletImplementationId) {
-      case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
-        _purpose = CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
-        break
-      case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
-        _purpose = CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
-        break
-      default:
-        _purpose = CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
-    }
 
     const accountPvrKey: Bip32PrivateKey = await (await (await masterKey.derive(
-      _purpose,
+      this._getPurpose(),
     )).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)).derive(
       0 + CONFIG.NUMBERS.HARD_DERIVATION_START,
     )
@@ -476,7 +475,10 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     poolRequest: void | string,
     valueInAccount: BigNumber,
     utxos: Array<RawUtxo>,
-  ): Promise<any> {
+  ): Promise<{|
+    signTxRequest: ISignRequest<TransactionBuilder>,
+    totalAmountToDelegate: BigNumber,
+  |}> {
     const timeToSlotFn = await genTimeToSlot([
       {
         StartAt: CONFIG.NETWORKS.HASKELL_SHELLEY.START_AT,
@@ -574,15 +576,34 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     }
 
     const addressingInfo = {}
-    for (const addr of await request.receivers(true)) {
+    for (const change of await request.signRequest.changeAddr) {
+      /* eslint-disable indent */
       const addressing = isByron(this.walletImplementationId)
-        ? this.getAddressingInfo(addr)
+        ? this.getAddressingInfo(change.address)
         : this.getAddressingInfo(
-          await (await Address.from_bytes(
-            Buffer.from(addr, 'hex'))).to_bech32(),
-        )
-      if (addressing != null) addressingInfo[addr] = addressing
+            await (await Address.from_bytes(
+              Buffer.from(change.address, 'hex'),
+            )).to_bech32(),
+          )
+      /* eslint-enable indent */
+      if (addressing != null) addressingInfo[change.address] = addressing
     }
+    // add reward address to addressingMap
+    const rewardAddrHex = Buffer.from(
+      await (await this.getRewardAddress()).to_bytes(),
+      'hex',
+    ).toString('hex')
+    addressingInfo[rewardAddrHex] = {
+      path: [
+        this._getPurpose(),
+        CONFIG.NUMBERS.COIN_TYPES.CARDANO,
+        CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
+        CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+        CONFIG.NUMBERS.STAKING_KEY_INDEX,
+      ],
+      startLevel: CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE,
+    }
+
     // TODO: add withdrawal addressing
     const addressingMap = (address) => addressingInfo[address]
 
@@ -603,13 +624,12 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     if (this.hwDeviceInfo == null) {
       throw new Error('Device info is null.')
     }
-    const ledgerSignTxResp: SignTransactionResponse
-      = await signTxWithLedger(
-        ledgerSignTxPayload,
-        this.hwDeviceInfo,
-      )
+    const ledgerSignTxResp: SignTransactionResponse = await signTxWithLedger(
+      ledgerSignTxPayload,
+      this.hwDeviceInfo,
+    )
 
-    const txBody = await (request.self().unsignedTx).build()
+    const txBody = await request.self().unsignedTx.build()
 
     const key = await Bip32PublicKey.from_bytes(
       Buffer.from(this.publicKeyHex, 'hex'),

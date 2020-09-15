@@ -44,7 +44,6 @@ import {NUMBERS} from '../../config/numbers'
 import {
   verifyFromBip44Root,
   toHexOrBase58,
-  normalizeToAddress,
   derivePublicByAddressing,
 } from './utils'
 
@@ -169,7 +168,7 @@ export type SignTransactionRequest = {|
   ttlStr: string,
   certificates: Array<Certificate>,
   withdrawals: Array<Withdrawal>,
-  metadataHashHex: ?string
+  metadataHashHex: ?string,
 |}
 
 // export type CreateLedgerSignTxDataRequest = {|
@@ -204,18 +203,20 @@ const getWalletType = (id: WalletImplementationId): WalletType => {
 const makeCardanoAccountBIP44Path = (
   walletType: WalletType,
   account: number,
-) => [
-  WALLET_TYPE_PURPOSE[walletType],
-  COIN_TYPE,
-  HARDENED + account,
-]
+) => [WALLET_TYPE_PURPOSE[walletType], COIN_TYPE, HARDENED + account]
 
 const makeCardanoBIP44Path = (
   walletType: WalletType,
   account: number,
   chain: number,
   address: number,
-) => [WALLET_TYPE_PURPOSE[walletType], COIN_TYPE, HARDENED + account, chain, address]
+) => [
+  WALLET_TYPE_PURPOSE[walletType],
+  COIN_TYPE,
+  HARDENED + account,
+  chain,
+  address,
+]
 
 const validateHWResponse = (resp: LedgerConnectionResponse): boolean => {
   const {extendedPublicKeyResp, deviceId, deviceObj} = resp
@@ -454,18 +455,6 @@ async function _transformToLedgerOutputs(request: {|
   changeAddrs: Array<{|...JsAddress, ...Value, ...Addressing|}>,
   addressingMap: (string) => void | $PropertyType<Addressing, 'addressing'>,
 |}): Promise<Array<OutputTypeAddress | OutputTypeAddressParams>> {
-  // normalize change addresses. Shelley addresses come as bech32 strings
-  // while byron addresses as base58 strings
-  // const changeAddrs = await Promise.all(
-  //   request.changeAddrs.map(async (change) => {
-  //     const addrPtr = await normalizeToAddress(change.address)
-  //     if (!addrPtr) throw new Error('cannot normalize change address')
-  //     return {
-  //       ...change,
-  //       address: await toHexOrBase58(addrPtr),
-  //     }
-  //   })
-  // )
   const result = []
   for (let i = 0; i < (await request.txOutputs.len()); i++) {
     const output = await request.txOutputs.get(i)
@@ -538,7 +527,9 @@ async function formatLedgerCertificates(
   certificates: Certificates,
   addressingMap: (string) => void | $PropertyType<Addressing, 'addressing'>,
 ): Promise<Array<Certificate>> {
-  const getPath = async (stakeCredential: StakeCredential): Promise<Array<number>> => {
+  const getPath = async (
+    stakeCredential: StakeCredential,
+  ): Promise<Array<number>> => {
     const rewardAddr = await RewardAddress.new(networkId, stakeCredential)
     const addressPayload = Buffer.from(
       await (await rewardAddr.to_address()).to_bytes(),
@@ -633,7 +624,8 @@ export async function toLedgerAddressParameters(request: {|
       let stakingKeyInfo
       if (addressing == null) {
         const stakeCred = await baseAddr.stake_cred()
-        const wasmHash = await stakeCred.to_keyhash() ?? await stakeCred.to_scripthash()
+        const wasmHash =
+          (await stakeCred.to_keyhash()) ?? (await stakeCred.to_scripthash())
         if (wasmHash == null) {
           throw new Error('toLedgerAddressParameters unknown hash type')
         }
@@ -734,18 +726,17 @@ export const signTxWithLedger = async (
     Logger.debug('ledgerUtils::signTxWithLedger inputs', payload.inputs)
     Logger.debug('ledgerUtils::signTxWithLedger outputs', payload.outputs)
 
-    const ledgerSignature: SignTransactionResponse =
-      await appAda.signTransaction(
-        payload.networkId,
-        payload.protocolMagic,
-        payload.inputs,
-        payload.outputs,
-        payload.feeStr,
-        payload.ttlStr,
-        payload.certificates,
-        payload.withdrawals,
-        payload.metadataHashHex,
-      )
+    const ledgerSignature: SignTransactionResponse = await appAda.signTransaction(
+      payload.networkId,
+      payload.protocolMagic,
+      payload.inputs,
+      payload.outputs,
+      payload.feeStr,
+      payload.ttlStr,
+      payload.certificates,
+      payload.withdrawals,
+      payload.metadataHashHex,
+    )
 
     await transport.close()
 

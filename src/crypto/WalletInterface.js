@@ -162,7 +162,7 @@ export interface WalletInterface {
     valueInAccount: BigNumber,
     utxos: Array<RawUtxo>,
   ): Promise<{
-    signTxRequest: BaseSignRequest<T>,
+    signTxRequest: ISignRequest<T>,
     totalAmountToDelegate: BigNumber,
   }>;
 
