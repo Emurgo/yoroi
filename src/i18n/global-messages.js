@@ -370,6 +370,16 @@ export const errorMessages = {
         '!!!Requested operation failed. This is all we know: {message}',
     },
   }),
+  generalLocalizableError: defineMessages({
+    title: {
+      id: 'global.actions.dialogs.generalLocalizableError.title',
+      defaultMessage: '!!!Operation failed',
+    },
+    message: {
+      id: 'global.actions.dialogs.generalLocalizableError.message',
+      defaultMessage: '!!!Requested operation failed: {message}',
+    },
+  }),
   generalTxError: defineMessages({
     title: {
       id: 'global.actions.dialogs.generalTxError.title',

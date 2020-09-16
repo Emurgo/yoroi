@@ -62,14 +62,14 @@ const _navigateToSave = async (
     })
   } catch (e) {
     if (e instanceof LocalizableError) {
-      await showErrorDialog(errorMessages.hwConnectionError, intl, {
+      await showErrorDialog(errorMessages.generalLocalizableError, intl, {
         message: intl.formatMessage({
           id: e.id,
           defaultMessage: e.defaultMessage,
         }),
       })
     } else {
-      Logger.error(e)
+      Logger.info(e)
       await showErrorDialog(errorMessages.hwConnectionError, intl, {
         message: String(e.message),
       })

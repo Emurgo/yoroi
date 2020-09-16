@@ -59,6 +59,7 @@ import type {
   BIP32Path,
   GetVersionResponse,
   GetExtendedPublicKeyResponse,
+  GetSerialResponse,
   InputTypeUTxO,
   OutputTypeAddress,
   OutputTypeAddressParams,
@@ -136,7 +137,7 @@ const _isConnectionError = (e: Error | TransportStatusError): boolean => {
 
 // note: e.statusCode === ErrorCodes.ERR_CLA_NOT_SUPPORTED is more probably due
 // to user not having ADA app opened instead of having the wrong app opened
-const _isUserError = (e: any): boolean => {
+const _isUserError = (e: Error | TransportStatusError): boolean => {
   if (
     e &&
     e.statusCode != null &&
@@ -147,20 +148,34 @@ const _isUserError = (e: any): boolean => {
   return false
 }
 
+const _isRejectedError = (e: Error | TransportStatusError): boolean => {
+  if (
+    e &&
+    e.statusCode != null &&
+    e.statusCode === ErrorCodes.ERR_REJECTED_BY_USER
+  ) {
+    return true
+  }
+  return false
+}
+
 export const mapLedgerError = (
   e: Error | TransportStatusError,
 ): Error | LocalizableError => {
   if (_isUserError(e)) {
-    Logger.info('ledgerUtils::handleLedgerError: User-side error', e)
+    Logger.info('ledgerUtils::mapLedgerError: User-side error', e)
     return new LedgerUserError()
+  } else if (_isRejectedError(e)) {
+    Logger.info('ledgerUtils::mapLedgerError: Rejected by user error', e)
+    return new RejectedByUserError()
   } else if (_isConnectionError(e)) {
-    Logger.info('ledgerUtils::handleLedgerError: General/BleError', e)
+    Logger.info('ledgerUtils::mapLedgerError: General/BleError', e)
     return new GeneralConnectionError()
   } else if (e instanceof DeprecatedFirmwareError) {
-    Logger.info('ledgerUtils::handleLedgerError: deprecated firmware', e)
+    Logger.info('ledgerUtils::mapLedgerError: Deprecated firmware', e)
     return e
   } else {
-    Logger.error('ledgerUtils::handleLedgerError: Unexpected error', e)
+    Logger.error('ledgerUtils::mapLedgerError: Unexpected error', e)
     return e
   }
 }
@@ -186,6 +201,7 @@ type LedgerConnectionResponse = {|
   extendedPublicKeyResp: GetExtendedPublicKeyResponse,
   deviceId: ?DeviceId,
   deviceObj: ?DeviceObj,
+  serial: string,
 |}
 
 // Hardware wallet device Features object
@@ -195,6 +211,7 @@ export type HWFeatures = {|
   model: string,
   deviceId: ?DeviceId, // for establishing a connection through BLE
   deviceObj: ?DeviceObj, // for establishing a connection through USB
+  serial?: string,
 |}
 
 export type HWDeviceInfo = {|
@@ -244,7 +261,7 @@ const makeCardanoAccountBIP44Path = (
 ) => [WALLET_TYPE_PURPOSE[walletType], COIN_TYPE, HARDENED + account]
 
 const validateHWResponse = (resp: LedgerConnectionResponse): boolean => {
-  const {extendedPublicKeyResp, deviceId, deviceObj} = resp
+  const {extendedPublicKeyResp, deviceId, deviceObj, serial} = resp
   if (deviceId == null && deviceObj == null) {
     throw new Error(
       'LedgerUtils::validateHWResponse: a non-null descriptor is required',
@@ -255,12 +272,17 @@ const validateHWResponse = (resp: LedgerConnectionResponse): boolean => {
       'LedgerUtils::validateHWResponse: extended public key is undefined',
     )
   }
+  if (serial == null) {
+    throw new Error(
+      'LedgerUtils::validateHWResponse: device serial number is undefined',
+    )
+  }
   return true
 }
 
 const normalizeHWResponse = (resp: LedgerConnectionResponse): HWDeviceInfo => {
   validateHWResponse(resp)
-  const {extendedPublicKeyResp, deviceId, deviceObj} = resp
+  const {extendedPublicKeyResp, deviceId, deviceObj, serial} = resp
   return {
     bip44AccountPublic:
       extendedPublicKeyResp.publicKeyHex + extendedPublicKeyResp.chainCodeHex,
@@ -269,6 +291,7 @@ const normalizeHWResponse = (resp: LedgerConnectionResponse): HWDeviceInfo => {
       model: MODEL,
       deviceId,
       deviceObj,
+      serial,
     },
   }
 }
@@ -357,10 +380,13 @@ export const getHWDeviceInfo = async (
     Logger.debug('extended public key', extendedPublicKeyResp)
     Logger.debug('transport.id', transport.id)
 
+    const serial: GetSerialResponse = await appAda.getSerial()
+
     const hwDeviceInfo = normalizeHWResponse({
       extendedPublicKeyResp,
       deviceId,
       deviceObj,
+      ...serial,
     })
     Logger.info('ledgerUtils::getHWDeviceInfo: Ledger device OK')
     Logger.info('hwDeviceInfo', hwDeviceInfo)
