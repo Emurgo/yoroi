@@ -6,7 +6,6 @@ import {connect} from 'react-redux'
 import {withStateHandlers, withHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
 import {BigNumber} from 'bignumber.js'
-import {ErrorCodes} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 
 import {
   easyConfirmationSelector,
@@ -15,7 +14,6 @@ import {
 } from '../../selectors'
 import {
   showErrorDialog,
-  handleGeneralError,
   submitDelegationTx,
   submitSignedTx,
 } from '../../actions'
@@ -44,14 +42,11 @@ import {
 import {NetworkError, ApiError} from '../../api/errors'
 import {WrongPassword} from '../../crypto/errors'
 import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
-import {
-  GeneralConnectionError,
-  LedgerUserError,
-} from '../../crypto/shelley/ledgerUtils'
 import KeyStore from '../../crypto/KeyStore'
 import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
 import LedgerConnect from '../Ledger/LedgerConnect'
 import HWInstructions from '../Ledger/HWInstructions'
+import LocalizableError from '../../i18n/LocalizableError'
 
 import styles from './styles/DelegationConfirmation.style'
 
@@ -79,10 +74,6 @@ const messages = defineMessages({
     defaultMessage:
       '!!!Current approximation of rewards that you will ' +
       'receive per epoch:',
-  },
-  delegationTxSignError: {
-    id: 'components.stakingcenter.confirmDelegation.delegationTxSignError',
-    defaultMessage: '!!!Error while signing delegation transaction',
   },
 })
 
@@ -132,7 +123,9 @@ const handleOnConfirm = async (
       if (e instanceof NetworkError) {
         await showErrorDialog(errorMessages.networkError, intl)
       } else if (e instanceof ApiError) {
-        await showErrorDialog(errorMessages.apiError, intl)
+        await showErrorDialog(errorMessages.apiError, intl, {
+          message: JSON.stringify(e.request),
+        })
       } else {
         throw e
       }
@@ -150,19 +143,17 @@ const handleOnConfirm = async (
       )
       await submitTx(Buffer.from(signedTx.encodedTx).toString('base64'))
     } catch (e) {
-      if (e.statusCode === ErrorCodes.ERR_REJECTED_BY_USER) {
-        return
-      } else if (
-        e instanceof GeneralConnectionError ||
-        e instanceof LedgerUserError
-      ) {
-        await showErrorDialog(errorMessages.hwConnectionError, intl)
+      if (e instanceof LocalizableError) {
+        await showErrorDialog(errorMessages.generalTxError, intl, {
+          message: intl.formatMessage({
+            id: e.id,
+            defaultMessage: e.defaultMessage,
+          }),
+        })
       } else {
-        handleGeneralError(
-          intl.formatMessage(messages.delegationTxSignError),
-          e,
-          intl,
-        )
+        await showErrorDialog(errorMessages.generalTxError, intl, {
+          message: String(e.message),
+        })
       }
     } finally {
       setProcessingTx(false)
@@ -190,11 +181,9 @@ const handleOnConfirm = async (
 
         return
       } else {
-        handleGeneralError(
-          intl.formatMessage(messages.delegationTxSignError),
-          e,
-          intl,
-        )
+        await showErrorDialog(errorMessages.generalTxError, intl, {
+          message: String(e.message),
+        })
       }
     }
 
@@ -215,11 +204,9 @@ const handleOnConfirm = async (
     if (e instanceof WrongPassword) {
       await showErrorDialog(errorMessages.incorrectPassword, intl)
     } else {
-      handleGeneralError(
-        intl.formatMessage(messages.delegationTxSignError),
-        e,
-        intl,
-      )
+      await showErrorDialog(errorMessages.generalTxError, intl, {
+        message: String(e.message),
+      })
     }
   }
 }

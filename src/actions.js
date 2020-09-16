@@ -449,9 +449,9 @@ const showDialog = (translations: DialogOptions): Promise<DialogButton> =>
   })
 
 export const showErrorDialog = (
-  dialog: Object,
+  dialog: {title: Object, message: Object},
   intl: ?intlShape,
-  msgOptions?: Object,
+  msgOptions?: {message: string},
 ): Promise<DialogButton> => {
   let title, message, yesButton
   if (intl != null) {

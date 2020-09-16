@@ -11,6 +11,9 @@ import {ProgressStep} from '../../UiKit'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {Logger} from '../../../utils/logging'
+import {errorMessages} from '../../../i18n/global-messages'
+import {showErrorDialog} from '../../../actions'
+import LocalizableError from '../../../i18n/LocalizableError'
 
 import styles from './styles/ConnectNanoXScreen.style'
 
@@ -35,26 +38,43 @@ const _navigateToSave = async (
   deviceId: ?DeviceId,
   deviceObj: ?DeviceObj,
   navigation: Navigation,
+  intl: intlShape,
 ): Promise<void> => {
-  Logger.debug('deviceId', deviceId)
-  Logger.debug('deviceObj', deviceObj)
-  const useUSB = navigation.getParam('useUSB') === true
-  const networkId = navigation.getParam('networkId')
-  const walletImplementationId = navigation.getParam('walletImplementationId')
-  if (deviceId == null && deviceObj == null) {
-    throw new Error('null descriptor, should never happen')
+  try {
+    Logger.debug('deviceId', deviceId)
+    Logger.debug('deviceObj', deviceObj)
+    const useUSB = navigation.getParam('useUSB') === true
+    const networkId = navigation.getParam('networkId')
+    const walletImplementationId = navigation.getParam('walletImplementationId')
+    if (deviceId == null && deviceObj == null) {
+      throw new Error('null descriptor, should never happen')
+    }
+    const hwDeviceInfo = await getHWDeviceInfo(
+      walletImplementationId,
+      deviceId,
+      deviceObj,
+      useUSB,
+    )
+    navigation.navigate(WALLET_INIT_ROUTES.SAVE_NANO_X, {
+      hwDeviceInfo,
+      networkId,
+      walletImplementationId,
+    })
+  } catch (e) {
+    if (e instanceof LocalizableError) {
+      await showErrorDialog(errorMessages.hwConnectionError, intl, {
+        message: intl.formatMessage({
+          id: e.id,
+          defaultMessage: e.defaultMessage,
+        }),
+      })
+    } else {
+      Logger.error(e)
+      await showErrorDialog(errorMessages.hwConnectionError, intl, {
+        message: String(e.message),
+      })
+    }
   }
-  const hwDeviceInfo = await getHWDeviceInfo(
-    walletImplementationId,
-    deviceId,
-    deviceObj,
-    useUSB,
-  )
-  navigation.navigate(WALLET_INIT_ROUTES.SAVE_NANO_X, {
-    hwDeviceInfo,
-    networkId,
-    walletImplementationId,
-  })
 }
 
 type Props = {
@@ -100,11 +120,11 @@ export default injectIntl(
   (compose(
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
-      onConnectBLE: ({navigation}) => async (deviceId: DeviceId) => {
-        await _navigateToSave(deviceId, null, navigation)
+      onConnectBLE: ({navigation, intl}) => async (deviceId: DeviceId) => {
+        await _navigateToSave(deviceId, null, navigation, intl)
       },
-      onConnectUSB: ({navigation}) => async (deviceObj: DeviceObj) => {
-        await _navigateToSave(null, deviceObj, navigation)
+      onConnectUSB: ({navigation, intl}) => async (deviceObj: DeviceObj) => {
+        await _navigateToSave(null, deviceObj, navigation, intl)
       },
     }),
   )(ConnectNanoXScreen): ComponentType<ExternalProps>),

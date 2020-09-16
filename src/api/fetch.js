@@ -10,7 +10,6 @@ import type {NetworkConfig} from '../config/types'
 type RequestMethod = 'POST' | 'GET'
 
 const _checkResponse = (status, responseBody, requestPayload) => {
-  // TODO: verify that this is the correct behaviour
   if (status !== 200) {
     if (
       responseBody.error?.response === 'REFERENCE_TX_NOT_FOUND' ||

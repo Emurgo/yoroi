@@ -154,6 +154,14 @@ export const ledgerMessages = defineMessages({
       'hardware wallet. Please, make sure you are following the steps' +
       'correctly. Restarting your hardware wallet may also fix the problem.',
   },
+  deprecatedFirmwareError: {
+    id: 'global.ledgerMessages.deprecatedFirmwareError',
+    defaultMessage: '!!!Your device firmware is not up-to-date.',
+  },
+  rejectedByUserError: {
+    id: 'global.ledgerMessages.rejectedByUserError',
+    defaultMessage: '!!!Operation rejected by user.',
+  },
 })
 
 export const errorMessages = {
@@ -261,7 +269,8 @@ export const errorMessages = {
       id: 'global.actions.dialogs.apiError.message',
       defaultMessage:
         '!!!Error received from api method call while sending transaction. ' +
-        'Please try again later or check our Twitter account (https://twitter.com/YoroiWallet)',
+        'Please try again later or check our Twitter account (https://twitter.com/YoroiWallet)' +
+        'Error: {message}',
     },
   }),
   insufficientBalance: defineMessages({
@@ -334,7 +343,8 @@ export const errorMessages = {
       defaultMessage:
         '!!!An error occurred while trying to connect with your ' +
         'hardware wallet. Please, make sure you are following the steps' +
-        'correctly. Restarting your hardware wallet may also fix the problem.',
+        'correctly. Restarting your hardware wallet may also fix the problem.' +
+        'Error: {message}',
     },
   }),
   notSupportedError: defineMessages({
@@ -358,6 +368,17 @@ export const errorMessages = {
       id: 'global.actions.dialogs.generalError.message',
       defaultMessage:
         '!!!Requested operation failed. This is all we know: {message}',
+    },
+  }),
+  generalTxError: defineMessages({
+    title: {
+      id: 'global.actions.dialogs.generalTxError.title',
+      defaultMessage: '!!!Error sending transaction',
+    },
+    message: {
+      id: 'global.actions.dialogs.generalTxError.message',
+      defaultMessage:
+        '!!!An error occurred while trying to send the transaction: {message}',
     },
   }),
 }

@@ -7,7 +7,6 @@ import {ScrollView, View, Platform} from 'react-native'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {SafeAreaView} from 'react-navigation'
 import {injectIntl, defineMessages} from 'react-intl'
-import {ErrorCodes} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 
 import {
   Text,
@@ -30,19 +29,10 @@ import globalMessages, {
   confirmationMessages,
 } from '../../i18n/global-messages'
 import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
-import {
-  GeneralConnectionError,
-  LedgerUserError,
-} from '../../crypto/shelley/ledgerUtils'
 import {SEND_ROUTES, WALLET_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import {CONFIG} from '../../config/config'
 import KeyStore from '../../crypto/KeyStore'
-import {
-  showErrorDialog,
-  handleGeneralError,
-  submitTransaction,
-  submitSignedTx,
-} from '../../actions'
+import {showErrorDialog, submitTransaction, submitSignedTx} from '../../actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {formatAdaWithSymbol, formatAdaWithText} from '../../utils/format'
@@ -52,6 +42,7 @@ import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
 import LedgerConnect from '../Ledger/LedgerConnect'
 import HWInstructions from '../Ledger/HWInstructions'
+import LocalizableError from '../../i18n/LocalizableError'
 
 import type {BaseSignRequest} from '../../crypto/types'
 
@@ -102,7 +93,9 @@ const handleOnConfirm = async (
         if (e instanceof NetworkError) {
           await showErrorDialog(errorMessages.networkError, intl)
         } else if (e instanceof ApiError) {
-          await showErrorDialog(errorMessages.apiError, intl)
+          await showErrorDialog(errorMessages.apiError, intl, {
+            message: JSON.stringify(e.request),
+          })
         } else {
           throw e
         }
@@ -119,15 +112,17 @@ const handleOnConfirm = async (
         )
         await submitTx(Buffer.from(signedTx.encodedTx).toString('base64'))
       } catch (e) {
-        if (e.statusCode === ErrorCodes.ERR_REJECTED_BY_USER) {
-          return
-        } else if (
-          e instanceof GeneralConnectionError ||
-          e instanceof LedgerUserError
-        ) {
-          await showErrorDialog(errorMessages.hwConnectionError, intl)
+        if (e instanceof LocalizableError) {
+          await showErrorDialog(errorMessages.generalTxError, intl, {
+            message: intl.formatMessage({
+              id: e.id,
+              defaultMessage: e.defaultMessage,
+            }),
+          })
         } else {
-          handleGeneralError('Could not submit transaction', e, intl)
+          await showErrorDialog(errorMessages.generalTxError, intl, {
+            message: String(e.message),
+          })
         }
       }
     })
@@ -154,7 +149,9 @@ const handleOnConfirm = async (
 
         return
       } else {
-        handleGeneralError('Could not submit transaction', e, intl)
+        await showErrorDialog(errorMessages.generalTxError, intl, {
+          message: String(e.message),
+        })
       }
     }
 
@@ -175,7 +172,9 @@ const handleOnConfirm = async (
     if (e instanceof WrongPassword) {
       await showErrorDialog(errorMessages.incorrectPassword, intl)
     } else {
-      handleGeneralError('Could not submit transaction', e, intl)
+      await showErrorDialog(errorMessages.generalTxError, intl, {
+        message: String(e.message),
+      })
     }
   }
 }

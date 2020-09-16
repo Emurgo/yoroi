@@ -15,7 +15,7 @@ import {
   hwDeviceInfoSelector,
   walletMetaSelector,
 } from '../../selectors'
-import {showErrorDialog, handleGeneralError} from '../../actions'
+import {showErrorDialog} from '../../actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
 
 import {Text, Modal} from '../UiKit'
@@ -23,14 +23,11 @@ import AddressModal from './AddressModal'
 import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
 import LedgerConnect from '../Ledger/LedgerConnect'
 import AddressVerifyModal from './AddressVerifyModal'
-import {
-  verifyAddress,
-  GeneralConnectionError,
-  LedgerUserError,
-} from '../../crypto/shelley/ledgerUtils'
+import {verifyAddress} from '../../crypto/shelley/ledgerUtils'
 import walletManager from '../../crypto/walletManager'
 import {formatPath} from '../../crypto/commonUtils'
 import {errorMessages} from '../../i18n/global-messages'
+import LocalizableError from '../../i18n/LocalizableError'
 import {Logger} from '../../utils/logging'
 import {CONFIG} from '../../config/config'
 
@@ -69,11 +66,18 @@ const _handleOnVerifyAddress = async (
         useUSB,
       )
     } catch (e) {
-      if (e instanceof GeneralConnectionError || e instanceof LedgerUserError) {
-        await showErrorDialog(errorMessages.hwConnectionError, intl)
+      if (e instanceof LocalizableError) {
+        await showErrorDialog(errorMessages.hwConnectionError, intl, {
+          message: intl.formatMessage({
+            id: e.id,
+            defaultMessage: e.defaultMessage,
+          }),
+        })
       } else {
         Logger.error(e)
-        handleGeneralError('Could not verify address', e, intl)
+        await showErrorDialog(errorMessages.hwConnectionError, intl, {
+          message: String(e.message),
+        })
       }
     } finally {
       closeDetails()

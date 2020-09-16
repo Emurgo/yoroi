@@ -12,7 +12,6 @@ import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 import TransportHID from '@v-almonacid/react-native-hid'
 import {TransportStatusError} from '@ledgerhq/hw-transport'
 import {BleError} from 'react-native-ble-plx'
-import ExtendableError from 'es6-error'
 import {Platform, PermissionsAndroid} from 'react-native'
 import {
   Address,
@@ -47,6 +46,8 @@ import {
   normalizeToAddress,
   derivePublicByAddressing,
 } from './utils'
+import {ledgerMessages} from '../../i18n/global-messages'
+import LocalizableError from '../../i18n/LocalizableError'
 
 import type {
   Address as JsAddress,
@@ -74,21 +75,49 @@ import type {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
 // ============== Errors ==================
 //
 
-export class BluetoothDisabledError extends ExtendableError {
+export class BluetoothDisabledError extends LocalizableError {
   constructor() {
-    super('BluetoothDisabledError')
+    super({
+      id: ledgerMessages.bluetoothDisabledError.id,
+      defaultMessage: ledgerMessages.bluetoothDisabledError.defaultMessage,
+    })
   }
 }
 
-export class GeneralConnectionError extends ExtendableError {
+export class GeneralConnectionError extends LocalizableError {
   constructor() {
-    super('GeneralConnectionError')
+    super({
+      id: ledgerMessages.connectionError.id,
+      defaultMessage: ledgerMessages.connectionError.defaultMessage,
+    })
   }
 }
 
-export class LedgerUserError extends ExtendableError {
+// note: uses same message as above.
+export class LedgerUserError extends LocalizableError {
   constructor() {
-    super('LedgerUserError')
+    super({
+      id: ledgerMessages.connectionError.id,
+      defaultMessage: ledgerMessages.connectionError.defaultMessage,
+    })
+  }
+}
+
+export class RejectedByUserError extends LocalizableError {
+  constructor() {
+    super({
+      id: ledgerMessages.rejectedByUserError.id,
+      defaultMessage: ledgerMessages.rejectedByUserError.defaultMessage,
+    })
+  }
+}
+
+export class DeprecatedFirmwareError extends LocalizableError {
+  constructor() {
+    super({
+      id: ledgerMessages.deprecatedFirmwareError.id,
+      defaultMessage: ledgerMessages.deprecatedFirmwareError.defaultMessage,
+    })
   }
 }
 
@@ -107,15 +136,33 @@ const _isConnectionError = (e: Error | TransportStatusError): boolean => {
 
 // note: e.statusCode === ErrorCodes.ERR_CLA_NOT_SUPPORTED is more probably due
 // to user not having ADA app opened instead of having the wrong app opened
-const _isUserError = (e: Error | TransportStatusError): boolean => {
+const _isUserError = (e: any): boolean => {
   if (
-    (e.statusCode != null &&
-      e.statusCode === ErrorCodes.ERR_REJECTED_BY_USER) ||
-    (e.statusCode != null && e.statusCode === ErrorCodes.ERR_CLA_NOT_SUPPORTED)
+    e &&
+    e.statusCode != null &&
+    e.statusCode === ErrorCodes.ERR_CLA_NOT_SUPPORTED
   ) {
     return true
   }
   return false
+}
+
+export const mapLedgerError = (
+  e: Error | TransportStatusError,
+): Error | LocalizableError => {
+  if (_isUserError(e)) {
+    Logger.info('ledgerUtils::handleLedgerError: User-side error', e)
+    return new LedgerUserError()
+  } else if (_isConnectionError(e)) {
+    Logger.info('ledgerUtils::handleLedgerError: General/BleError', e)
+    return new GeneralConnectionError()
+  } else if (e instanceof DeprecatedFirmwareError) {
+    Logger.info('ledgerUtils::handleLedgerError: deprecated firmware', e)
+    return e
+  } else {
+    Logger.error('ledgerUtils::handleLedgerError: Unexpected error', e)
+    return e
+  }
 }
 
 //
@@ -226,18 +273,43 @@ const normalizeHWResponse = (resp: LedgerConnectionResponse): HWDeviceInfo => {
   }
 }
 
+const checkDeviceVersion = (version: GetVersionResponse): void => {
+  if (version.major == null || version.minor == null || version.patch == null) {
+    Logger.warn(
+      'ledgerUtils::checkDeviceVersion: incomplete version data from device',
+    )
+    return
+  }
+  const deviceVersionArray = [version.major, version.minor, version.path]
+  const minVersionArray = CONFIG.HARDWARE_WALLETS.LEDGER_NANO.MIN_FIRMWARE_VERSION.split(
+    '.',
+  )
+  if (minVersionArray.length !== deviceVersionArray.length) {
+    Logger.warn('ledgerUtils::checkDeviceVersion: version formats mismatch')
+    return
+  }
+  for (let i = 0; i < minVersionArray.length; i++) {
+    if (
+      parseInt(deviceVersionArray[i], 10) < parseInt(minVersionArray[i], 10)
+    ) {
+      throw new DeprecatedFirmwareError()
+    }
+  }
+}
+
 const connectionHandler = async (
   deviceId: ?DeviceId,
   deviceObj: ?DeviceObj,
   useUSB?: boolean = false,
 ): Promise<BluetoothTransport | HIDTransport> => {
   let descriptor
+  let transport
   if (useUSB) {
     descriptor = deviceObj
     if (descriptor == null) {
       throw new Error('ledgerUtils::connectionHandler deviceObj is null')
     }
-    return await TransportHID.open(descriptor)
+    transport = await TransportHID.open(descriptor)
   } else {
     // check for permissions just in case
     if (Platform.OS === 'android') {
@@ -249,8 +321,13 @@ const connectionHandler = async (
     if (descriptor == null) {
       throw new Error('ledgerUtils::connectionHandler deviceId is null')
     }
-    return await TransportBLE.open(descriptor)
+    transport = await TransportBLE.open(descriptor)
   }
+  const appAda = new AppAda(transport)
+  const versionResp: GetVersionResponse = await appAda.getVersion()
+  Logger.debug('ledgerUtils::connectionHandler: AppAda version', versionResp)
+  checkDeviceVersion(versionResp)
+  return transport
 }
 
 export const getHWDeviceInfo = async (
@@ -264,8 +341,6 @@ export const getHWDeviceInfo = async (
 
     const transport = await connectionHandler(deviceId, deviceObj, useUSB)
     const appAda = new AppAda(transport)
-    const versionResp: GetVersionResponse = await appAda.getVersion()
-    Logger.debug('AppAda version', versionResp)
 
     // assume single account in Yoroi
     const accountPath = makeCardanoAccountBIP44Path(
@@ -292,16 +367,7 @@ export const getHWDeviceInfo = async (
     await transport.close()
     return hwDeviceInfo
   } catch (e) {
-    if (_isUserError(e)) {
-      Logger.info('ledgerUtils::getHWDeviceInfo: User-side error', e)
-      throw new LedgerUserError()
-    } else if (_isConnectionError(e)) {
-      Logger.info('ledgerUtils::getHWDeviceInfo: General/BleError', e)
-      throw new GeneralConnectionError()
-    } else {
-      Logger.error('ledgerUtils::getHWDeviceInfo: Unexpected error', e)
-      throw e
-    }
+    throw mapLedgerError(e)
   }
 }
 
@@ -364,6 +430,8 @@ export const verifyAddress = async (
       hwDeviceInfo.hwFeatures.deviceObj,
       useUSB,
     )
+    Logger.debug('transport.id', transport.id)
+
     const appAda = new AppAda(transport)
 
     await appAda.showAddress(
@@ -376,16 +444,7 @@ export const verifyAddress = async (
     )
     await transport.close()
   } catch (e) {
-    if (_isUserError(e)) {
-      Logger.info('ledgerUtils::verifyAddress: User-side error', e)
-      throw new LedgerUserError()
-    } else if (_isConnectionError(e)) {
-      Logger.info('ledgerUtils::verifyAddress: general/BleError', e)
-      throw new GeneralConnectionError()
-    } else {
-      Logger.error('ledgerUtils::verifyAddress: Unexpected error', e)
-      throw e
-    }
+    throw mapLedgerError(e)
   }
 }
 
@@ -738,6 +797,7 @@ export const signTxWithLedger = async (
       hwDeviceInfo.hwFeatures.deviceObj,
       useUSB,
     )
+    Logger.debug('transport.id', transport.id)
     const appAda = new AppAda(transport)
 
     Logger.debug('ledgerUtils::signTxWithLedger inputs', payload.inputs)
@@ -763,16 +823,7 @@ export const signTxWithLedger = async (
     )
     return ledgerSignature
   } catch (e) {
-    if (_isUserError(e)) {
-      Logger.info('ledgerUtils::signTxWithLedger: User-side error', e)
-      throw new LedgerUserError()
-    } else if (_isConnectionError(e)) {
-      Logger.info('ledgerUtils::signTxWithLedger: general/BleError', e)
-      throw new GeneralConnectionError()
-    } else {
-      Logger.error('ledgerUtils::signTxWithLedger: Unexpected error', e)
-      throw e
-    }
+    throw mapLedgerError(e)
   }
 }
 
