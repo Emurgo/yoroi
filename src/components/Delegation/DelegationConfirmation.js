@@ -245,7 +245,7 @@ const DelegationConfirmation = ({
   const reward = approximateReward(amountToDelegate)
 
   const isConfirmationDisabled =
-    (!isEasyConfirmationEnabled && !password) || processingTx
+    (!isEasyConfirmationEnabled && !password && !isHW) || processingTx
 
   return (
     <View style={styles.container}>
@@ -276,16 +276,20 @@ const DelegationConfirmation = ({
             label={intl.formatMessage(txLabels.amount)}
           />
         </View>
-        {!isEasyConfirmationEnabled && (
-          <View style={styles.input}>
-            <ValidatedTextInput
-              secureTextEntry
-              value={password}
-              label={intl.formatMessage(txLabels.password)}
-              onChangeText={setPassword}
-            />
-          </View>
-        )}
+        {/* eslint-disable indent */
+        !isEasyConfirmationEnabled &&
+          !isHW && (
+            <View style={styles.input}>
+              <ValidatedTextInput
+                secureTextEntry
+                value={password}
+                label={intl.formatMessage(txLabels.password)}
+                onChangeText={setPassword}
+              />
+            </View>
+          )
+        /* eslint-enable indent */
+        }
         <View style={styles.itemBlock}>
           <Text style={styles.itemTitle}>
             {intl.formatMessage(messages.rewardsExplanation)}
