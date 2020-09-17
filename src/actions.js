@@ -52,7 +52,7 @@ import * as api from './api/byron/api'
 import {type Dispatch} from 'redux'
 import {type State} from './state'
 import type {BaseSignRequest} from './crypto/types'
-import type {HWDeviceInfo} from './crypto/byron/ledgerUtils'
+import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
 import type {NetworkId, WalletImplementationId} from './config/types'
 
 const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
@@ -449,9 +449,9 @@ const showDialog = (translations: DialogOptions): Promise<DialogButton> =>
   })
 
 export const showErrorDialog = (
-  dialog: Object,
+  dialog: {title: Object, message: Object},
   intl: ?intlShape,
-  msgOptions?: Object,
+  msgOptions?: {message: string},
 ): Promise<DialogButton> => {
   let title, message, yesButton
   if (intl != null) {
@@ -547,7 +547,7 @@ export const submitTransaction = <T>(
     Buffer.from(encodedTx).toString('hex'),
   )
   const signedTxBase64 = Buffer.from(encodedTx).toString('base64')
-  dispatch(submitSignedTx(signedTxBase64))
+  await dispatch(submitSignedTx(signedTxBase64))
 }
 
 export const submitDelegationTx = <T>(
@@ -563,7 +563,7 @@ export const submitDelegationTx = <T>(
     Buffer.from(encodedTx).toString('hex'),
   )
   const signedTxBase64 = Buffer.from(encodedTx).toString('base64')
-  dispatch(submitSignedTx(signedTxBase64))
+  await dispatch(submitSignedTx(signedTxBase64))
 }
 /* eslint-enable indent */
 

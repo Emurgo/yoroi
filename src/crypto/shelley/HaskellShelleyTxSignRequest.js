@@ -1,15 +1,12 @@
 // @flow
 
-// TODO(v-almonacid): we cannot yet implement HaskellShelleyTxSignRequest
-// because there are still some bindings missing
-
 import {BigNumber} from 'bignumber.js'
 import {ISignRequest} from '../ISignRequest'
 /* eslint-disable camelcase */
 import {
-  RewardAddress, // TODO
+  RewardAddress,
   TransactionBuilder,
-  TransactionMetadata, // TODO
+  TransactionMetadata, // TODO: rust bindings not yet available
   hash_transaction,
 } from 'react-native-haskell-shelley'
 
@@ -118,7 +115,7 @@ implements ISignRequest<TransactionBuilder> {
   async fee(shift: boolean): Promise<BigNumber> {
     const _fee = await this.signRequest.unsignedTx.get_fee_if_set()
     const fee = new BigNumber(
-      _fee != null ? _fee.to_str() : '0',
+      _fee != null ? await _fee.to_str() : '0',
     ).plus(await (await this.signRequest.unsignedTx.get_deposit()).to_str())
 
     if (shift) {

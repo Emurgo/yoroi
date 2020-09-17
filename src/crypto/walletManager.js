@@ -5,6 +5,7 @@ import ExtendableError from 'es6-error'
 import {walletChecksum, legacyWalletChecksum} from '@emurgo/cip4-js'
 
 import {WalletInterface} from './WalletInterface'
+import {ISignRequest} from './ISignRequest'
 import ShelleyWallet from './shelley/ShelleyWallet'
 import storage from '../utils/storage'
 import KeyStore from './KeyStore'
@@ -25,7 +26,7 @@ import {
 import type {WalletMeta} from '../state'
 import type {RawUtxo, TxBodiesRequest} from '../api/types'
 import type {Addressing, BaseSignRequest, EncryptionMethod} from './types'
-import type {HWDeviceInfo} from './byron/ledgerUtils'
+import type {HWDeviceInfo} from './shelley/ledgerUtils'
 import type {NetworkId, WalletImplementationId} from '../config/types'
 import type {WalletChecksum} from '@emurgo/cip4-js'
 
@@ -721,7 +722,7 @@ class WalletManager {
     if (!this._wallet) throw new WalletClosed()
     return await this.abortWhenWalletCloses(
       // TODO(v-almonacid): maybe there is a better way instead of any
-      this._wallet.createUnsignedTx<any>(utxos, receiver, amount),
+      this._wallet.createUnsignedTx<mixed>(utxos, receiver, amount),
     )
   }
 
@@ -732,17 +733,18 @@ class WalletManager {
     )
   }
 
-  async createDelegationTx<T>(
-    poolRequest: any,
+  async createDelegationTx(
+    poolRequest: void | string,
     valueInAccount: BigNumber,
     utxos: Array<RawUtxo>,
-  ): Promise<{
-    signTxRequest: BaseSignRequest<T>,
-    totalAmountToDelegate: BigNumber,
-  }> {
+  ) {
     if (!this._wallet) throw new WalletClosed()
     return await this.abortWhenWalletCloses(
-      this._wallet.createDelegationTx(poolRequest, valueInAccount, utxos),
+      this._wallet.createDelegationTx<mixed>(
+        poolRequest,
+        valueInAccount,
+        utxos,
+      ),
     )
   }
 
@@ -751,7 +753,16 @@ class WalletManager {
     decryptedMasterKey: string,
   ) {
     if (!this._wallet) throw new WalletClosed()
-    return await this._wallet.signDelegationTx<any>(request, decryptedMasterKey)
+    return await this.abortWhenWalletCloses(
+      this._wallet.signDelegationTx<any>(request, decryptedMasterKey),
+    )
+  }
+
+  async signTxWithLedger<T>(request: ISignRequest<T>, useUSB: boolean) {
+    if (!this._wallet) throw new WalletClosed()
+    return await this.abortWhenWalletCloses(
+      this._wallet.signTxWithLedger<T>(request, useUSB),
+    )
   }
 
   // =================== backend API =================== //

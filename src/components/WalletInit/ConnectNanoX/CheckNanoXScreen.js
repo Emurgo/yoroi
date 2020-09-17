@@ -101,9 +101,15 @@ export default injectIntl(
   (compose(
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
-      onPress: ({navigation}) => (event, networkId, useUSB) =>
+      onPress: ({navigation}) => (
+        event,
+        networkId,
+        walletImplementationId,
+        useUSB,
+      ) =>
         navigation.navigate(WALLET_INIT_ROUTES.CONNECT_NANO_X, {
           networkId,
+          walletImplementationId,
           useUSB,
         }),
     }),

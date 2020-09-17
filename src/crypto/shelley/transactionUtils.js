@@ -1,17 +1,14 @@
 // @flow
 import {BigNumber} from 'bignumber.js'
-import {
-  BigNum,
-  LinearFee,
-  TransactionBuilder,
-} from 'react-native-haskell-shelley'
+import {BigNum, LinearFee} from 'react-native-haskell-shelley'
 
+import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
 import {sendAllUnsignedTx, newAdaUnsignedTx} from './transactions'
 import {NETWORKS} from '../../config/networks'
-import {CardanoError, InsufficientFunds} from '../errors'
+import {CardanoError, InsufficientFunds, NoOutputsError} from '../errors'
 import {Logger} from '../../utils/logging'
 
-import type {Addressing, AddressedUtxo, BaseSignRequest} from '../types'
+import type {Addressing, AddressedUtxo} from '../types'
 
 export type CreateUnsignedTxRequest = {|
   changeAddr: {
@@ -30,7 +27,7 @@ export type CreateUnsignedTxRequest = {|
       |},
 |}
 
-export type CreateUnsignedTxResponse = BaseSignRequest<TransactionBuilder>
+export type CreateUnsignedTxResponse = HaskellShelleyTxSignRequest
 
 export const createUnsignedTx = async (
   request: CreateUnsignedTxRequest,
@@ -38,10 +35,13 @@ export const createUnsignedTx = async (
   Logger.debug('createUnsignedTx called', request)
   const {changeAddr, receiver, addressedUtxos, absSlotNumber} = request
   try {
-    const KEY_DEPOSIT = NETWORKS.HASKELL_SHELLEY.KEY_DEPOSIT
-    const LINEAR_FEE = NETWORKS.HASKELL_SHELLEY.LINEAR_FEE
-    const MINIMUM_UTXO_VAL = NETWORKS.HASKELL_SHELLEY.MINIMUM_UTXO_VAL
-    const POOL_DEPOSIT = NETWORKS.HASKELL_SHELLEY.POOL_DEPOSIT
+    const NETWORK_CONFIG = NETWORKS.HASKELL_SHELLEY
+
+    const KEY_DEPOSIT = NETWORK_CONFIG.KEY_DEPOSIT
+    const POOL_DEPOSIT = NETWORK_CONFIG.POOL_DEPOSIT
+    const LINEAR_FEE = NETWORK_CONFIG.LINEAR_FEE
+    const MINIMUM_UTXO_VAL = NETWORK_CONFIG.MINIMUM_UTXO_VAL
+    const CHAIN_NETWORK_ID = NETWORK_CONFIG.CHAIN_NETWORK_ID
 
     const protocolParams = {
       keyDeposit: await BigNum.from_str(KEY_DEPOSIT),
@@ -83,16 +83,26 @@ export const createUnsignedTx = async (
     Logger.debug(
       `createUnsignedTx success: ${JSON.stringify(unsignedTxResponse)}`,
     )
-    // TODO(V-almonacid): Should we instead return a HaskellShelleyTxSignRequest
-    // instance like in yoroi frontend?
-    return {
-      senderUtxos: unsignedTxResponse.senderUtxos,
-      unsignedTx: unsignedTxResponse.txBuilder,
-      changeAddr: unsignedTxResponse.changeAddr,
-      certificate: undefined,
-    }
+    return new HaskellShelleyTxSignRequest(
+      {
+        senderUtxos: unsignedTxResponse.senderUtxos,
+        unsignedTx: unsignedTxResponse.txBuilder,
+        changeAddr: unsignedTxResponse.changeAddr,
+        certificate: undefined,
+      },
+      undefined,
+      {
+        ChainNetworkId: Number.parseInt(CHAIN_NETWORK_ID, 10),
+        KeyDeposit: new BigNumber(KEY_DEPOSIT),
+        PoolDeposit: new BigNumber(POOL_DEPOSIT),
+      },
+      {
+        neededHashes: new Set(),
+        wits: new Set(),
+      },
+    )
   } catch (e) {
-    if (e instanceof InsufficientFunds) throw e
+    if (e instanceof InsufficientFunds || e instanceof NoOutputsError) throw e
     Logger.error(`shelley::createUnsignedTx:: ${e.message}`, e)
     throw new CardanoError(e.message)
   }

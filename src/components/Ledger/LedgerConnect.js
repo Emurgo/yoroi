@@ -14,18 +14,16 @@ import {
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 import TransportHID from '@v-almonacid/react-native-hid'
-import {BleError} from 'react-native-ble-plx'
-import {ErrorCodes} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 
 import {
   BluetoothDisabledError,
-  GeneralConnectionError,
-  LedgerUserError,
-} from '../../crypto/byron/ledgerUtils'
+  RejectedByUserError,
+} from '../../crypto/shelley/ledgerUtils'
 import {Text, BulletPointItem, Button} from '../UiKit'
 import DeviceItem from './DeviceItem'
 import {ledgerMessages, confirmationMessages} from '../../i18n/global-messages'
 import {Logger} from '../../utils/logging'
+import LocalizableError from '../../i18n/LocalizableError'
 
 import styles from './styles/LedgerConnect.style'
 import bleImage from '../../assets/img/bluetooth.png'
@@ -34,7 +32,7 @@ import usbImage from '../../assets/img/ledger-nano-usb.png'
 import type {ComponentType} from 'react'
 import type {Device} from '@ledgerhq/react-native-hw-transport-ble'
 import type {Navigation} from '../../types/navigation'
-import type {DeviceId, DeviceObj} from '../../crypto/byron/ledgerUtils'
+import type {DeviceId, DeviceObj} from '../../crypto/shelley/ledgerUtils'
 
 const messages = defineMessages({
   caption: {
@@ -216,7 +214,7 @@ class LedgerConnect extends React.Component<Props, State> {
       await onConnectBLE(device.id.toString())
     } catch (e) {
       Logger.debug(e)
-      if (e.statusCode === ErrorCodes.ERR_REJECTED_BY_USER) {
+      if (e instanceof RejectedByUserError) {
         this.reload()
         return
       }
@@ -236,7 +234,7 @@ class LedgerConnect extends React.Component<Props, State> {
       await this.props.onConnectUSB(deviceObj)
     } catch (e) {
       Logger.debug(e)
-      if (e.statusCode === ErrorCodes.ERR_REJECTED_BY_USER) {
+      if (e instanceof RejectedByUserError) {
         this.reload()
         return
       }
@@ -265,14 +263,11 @@ class LedgerConnect extends React.Component<Props, State> {
     let msg, errMsg
     if (error != null) {
       msg = intl.formatMessage(messages.error)
-      if (error instanceof BluetoothDisabledError) {
-        errMsg = intl.formatMessage(ledgerMessages.bluetoothDisabledError)
-      } else if (
-        error instanceof BleError ||
-        error instanceof GeneralConnectionError ||
-        error instanceof LedgerUserError
-      ) {
-        errMsg = intl.formatMessage(ledgerMessages.connectionError)
+      if (error instanceof LocalizableError) {
+        errMsg = intl.formatMessage({
+          id: error.id,
+          defaultMessage: error.defaultMessage,
+        })
       } else {
         errMsg = String(error.message)
       }

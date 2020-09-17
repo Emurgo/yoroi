@@ -17,7 +17,6 @@ import {
   RewardAddress,
   StakeCredential,
   Transaction,
-  /* eslint-disable-next-line no-unused-vars */
   TransactionBuilder,
 } from 'react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
@@ -25,11 +24,13 @@ import {walletChecksum, legacyWalletChecksum} from '@emurgo/cip4-js'
 
 import Wallet from '../Wallet'
 import {WalletInterface} from '../WalletInterface'
+import {ISignRequest} from '../ISignRequest'
+import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
 import {AddressChain, AddressGenerator} from './chain'
 import * as byronUtil from '../byron/util'
 import {ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
 import * as api from '../../api/byron/api'
-import {CONFIG} from '../../config/config'
+import {CONFIG, isByron, isHaskellShelley} from '../../config/config'
 import {
   NETWORK_REGISTRY,
   WALLET_IMPLEMENTATION_REGISTRY,
@@ -46,6 +47,12 @@ import {
   getDelegationStatus,
   createDelegationTx,
 } from './delegationUtils'
+import {
+  createLedgerSignTxPayload,
+  signTxWithLedger,
+  buildSignedTransaction,
+} from './ledgerUtils'
+import {normalizeToAddress, toHexOrBase58} from './utils'
 
 import type {
   RawUtxo,
@@ -54,10 +61,16 @@ import type {
   PoolInfoRequest,
   PoolInfoResponse,
 } from '../../api/types'
-import type {AddressedUtxo, BaseSignRequest, SignedTx} from './../types'
-import type {HWDeviceInfo} from '../byron/ledgerUtils'
+import type {
+  Addressing,
+  AddressedUtxo,
+  BaseSignRequest,
+  SignedTx,
+} from './../types'
+import type {HWDeviceInfo} from '../shelley/ledgerUtils'
 import type {NetworkId, WalletImplementationId} from '../../config/types'
 import type {WalletMeta} from '../../state'
+import type {SignTransactionResponse} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 
 const _getWalletConfig = (implementationId: WalletImplementationId) => {
   switch (implementationId) {
@@ -268,7 +281,18 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
 
   // =================== tx building =================== //
 
-  getChangeAddress() {
+  _getPurpose(): number {
+    if (isByron(this.walletImplementationId)) {
+      return CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
+    } else if (isHaskellShelley(this.walletImplementationId)) {
+      return CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
+    } else {
+      throw new Error('ShelleyWallet::_getPurpose: invalid wallet impl. id')
+    }
+  }
+
+  // returns the address in bech32 (Shelley) or base58 (Byron) format
+  getChangeAddress(): string {
     const candidateAddresses = this.internalChain.addresses
     const unseen = candidateAddresses.filter(
       (addr) => !this.isUsedAddress(addr),
@@ -277,22 +301,26 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     return _.first(unseen)
   }
 
-  _getAddressedChangeAddress() {
+  // returns the address in hex (Shelley) or base58 (Byron) format
+  async _getAddressedChangeAddress(): Promise<{
+    address: string,
+    ...Addressing,
+  }> {
     const changeAddr = this.getChangeAddress()
     const addressInfo = this.getAddressingInfo(changeAddr)
     if (addressInfo == null) {
       throw new Error("Couldn't get change addressing, should never happen")
     }
+    const normAddr = await normalizeToAddress(changeAddr)
     return {
-      address: changeAddr,
+      address: await toHexOrBase58(normAddr),
       addressing: addressInfo,
     }
   }
 
   async getStakingKey(): PublicKey {
     assert.assert(
-      this.walletImplementationId ===
-        WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY,
+      isHaskellShelley(this.walletImplementationId),
       'cannot get staking key from a byron-era wallet',
     )
     const accountPubKey = await Bip32PublicKey.from_bytes(
@@ -311,8 +339,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
 
   async getRewardAddress(): Address {
     assert.assert(
-      this.walletImplementationId ===
-        WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY,
+      isHaskellShelley(this.walletImplementationId),
       'cannot get reward address from a byron-era wallet',
     )
     const stakingKey = await this.getStakingKey()
@@ -337,6 +364,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   getAddressingInfo(address: string) {
+    const purpose = this._getPurpose()
     const chains = [
       ['Internal', this.internalChain],
       ['External', this.externalChain],
@@ -346,11 +374,13 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       if (chain.isMyAddress(address)) {
         addressInfo = {
           path: [
-            CONFIG.NUMBERS.ACCOUNT_INDEX,
+            purpose,
+            CONFIG.NUMBERS.COIN_TYPES.CARDANO,
+            CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
             ADDRESS_TYPE_TO_CHANGE[type],
             chain.getIndexOfAddress(address),
           ],
-          startLevel: CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
+          startLevel: CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE,
         }
       }
     })
@@ -388,7 +418,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     utxos: Array<RawUtxo>,
     receiver: string,
     amount: string,
-  ): Promise<BaseSignRequest<TransactionBuilder>> {
+  ): Promise<ISignRequest<TransactionBuilder>> {
     const timeToSlotFn = await genTimeToSlot([
       {
         StartAt: CONFIG.NETWORKS.HASKELL_SHELLEY.START_AT,
@@ -408,7 +438,6 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       addressedUtxos,
       amount,
     })
-    Logger.debug(JSON.stringify(resp))
     return resp
   }
 
@@ -419,20 +448,9 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     const masterKey = await Bip32PrivateKey.from_bytes(
       Buffer.from(decryptedMasterKey, 'hex'),
     )
-    let _purpose
-    switch (this.walletImplementationId) {
-      case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
-        _purpose = CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
-        break
-      case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
-        _purpose = CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
-        break
-      default:
-        _purpose = CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
-    }
 
     const accountPvrKey: Bip32PrivateKey = await (await (await masterKey.derive(
-      _purpose,
+      this._getPurpose(),
     )).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)).derive(
       0 + CONFIG.NUMBERS.HARD_DERIVATION_START,
     )
@@ -457,7 +475,10 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     poolRequest: void | string,
     valueInAccount: BigNumber,
     utxos: Array<RawUtxo>,
-  ): Promise<any> {
+  ): Promise<{|
+    signTxRequest: ISignRequest<TransactionBuilder>,
+    totalAmountToDelegate: BigNumber,
+  |}> {
     const timeToSlotFn = await genTimeToSlot([
       {
         StartAt: CONFIG.NETWORKS.HASKELL_SHELLEY.START_AT,
@@ -480,7 +501,6 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       stakingKey,
       changeAddr,
     })
-    Logger.debug('createDelegationTx::response', JSON.stringify(resp))
     return resp
   }
 
@@ -534,6 +554,104 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       accountPvrKey,
       wits,
       undefined,
+    )
+    const id = Buffer.from(
+      await (await hash_transaction(await signedTx.body())).to_bytes(),
+    ).toString('hex')
+    const encodedTx = await signedTx.to_bytes()
+    return {
+      id,
+      encodedTx,
+    }
+  }
+
+  async signTxWithLedger(
+    request: ISignRequest<TransactionBuilder>,
+    useUSB: boolean,
+  ): Promise<SignedTx> {
+    Logger.debug('ShelleyWallet::signTxWithLedger called')
+
+    if (!(request instanceof HaskellShelleyTxSignRequest)) {
+      throw new Error('expected instance of HaskellShelleyTxSignRequest')
+    }
+
+    const addressingInfo = {}
+    for (const change of await request.signRequest.changeAddr) {
+      /* eslint-disable indent */
+      const addressing = isByron(this.walletImplementationId)
+        ? this.getAddressingInfo(change.address)
+        : this.getAddressingInfo(
+            await (await Address.from_bytes(
+              Buffer.from(change.address, 'hex'),
+            )).to_bech32(),
+          )
+      /* eslint-enable indent */
+      if (addressing != null) addressingInfo[change.address] = addressing
+    }
+    // add reward address to addressingMap
+    const rewardAddrHex = Buffer.from(
+      await (await this.getRewardAddress()).to_bytes(),
+      'hex',
+    ).toString('hex')
+    addressingInfo[rewardAddrHex] = {
+      path: [
+        this._getPurpose(),
+        CONFIG.NUMBERS.COIN_TYPES.CARDANO,
+        CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
+        CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+        CONFIG.NUMBERS.STAKING_KEY_INDEX,
+      ],
+      startLevel: CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE,
+    }
+
+    // TODO: add withdrawal addressing
+    const addressingMap = (address) => addressingInfo[address]
+
+    const ledgerSignTxPayload = await createLedgerSignTxPayload({
+      signRequest: request,
+      byronNetworkMagic: CONFIG.NETWORKS.BYRON_MAINNET.PROTOCOL_MAGIC,
+      networkId: Number.parseInt(
+        CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID,
+        10,
+      ),
+      addressingMap,
+    })
+
+    Logger.debug(
+      'ShelleyWallet::signTxWithLedger::ledgerSignTxPayload:',
+      JSON.stringify(ledgerSignTxPayload),
+    )
+    if (this.hwDeviceInfo == null) {
+      throw new Error('Device info is null.')
+    }
+    const ledgerSignTxResp: SignTransactionResponse = await signTxWithLedger(
+      ledgerSignTxPayload,
+      this.hwDeviceInfo,
+    )
+
+    const txBody = await request.self().unsignedTx.build()
+
+    const key = await Bip32PublicKey.from_bytes(
+      Buffer.from(this.publicKeyHex, 'hex'),
+    )
+    const addressing = {
+      path: [
+        this._getPurpose(),
+        CONFIG.NUMBERS.COIN_TYPES.CARDANO,
+        CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
+      ],
+      startLevel: CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE,
+    }
+
+    const signedTx = await buildSignedTransaction(
+      txBody,
+      request.signRequest.senderUtxos,
+      ledgerSignTxResp.witnesses,
+      {
+        addressing,
+        key,
+      },
+      request.txMetadata(),
     )
     const id = Buffer.from(
       await (await hash_transaction(await signedTx.body())).to_bytes(),

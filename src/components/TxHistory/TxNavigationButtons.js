@@ -10,8 +10,6 @@ import {injectIntl, defineMessages} from 'react-intl'
 import {hasAnyTransaction, walletMetaSelector} from '../../selectors'
 import {WALLET_ROUTES} from '../../RoutesList'
 import NavButton from './NavButton'
-import {showErrorDialog} from '../../actions'
-import {errorMessages} from '../../i18n/global-messages'
 import {isHaskellShelley} from '../../config/config'
 
 import styles from './styles/TxNavigationButtons.style'
@@ -107,25 +105,13 @@ export default injectIntl(
     withHandlers({
       navigateToReceive: ({navigation}) => (event) =>
         navigation.navigate(WALLET_ROUTES.RECEIVE),
-      navigateToSend: ({navigation, walletMeta, intl}) => (event) => {
-        if (walletMeta.isHW) {
-          showErrorDialog(errorMessages.notSupportedError, intl)
-          return
-        }
+      navigateToSend: ({navigation}) => (event) => {
         navigation.navigate(WALLET_ROUTES.SEND)
       },
-      navigateToDashboard: ({navigation, walletMeta, intl}) => (event) => {
-        if (walletMeta.isHW) {
-          showErrorDialog(errorMessages.notSupportedError, intl)
-          return
-        }
+      navigateToDashboard: ({navigation}) => (event) => {
         navigation.navigate(WALLET_ROUTES.DASHBOARD)
       },
-      navigateToDelegate: ({navigation, walletMeta, intl}) => (event) => {
-        if (walletMeta.isHW) {
-          showErrorDialog(errorMessages.notSupportedError, intl)
-          return
-        }
+      navigateToDelegate: ({navigation}) => (event) => {
         navigation.navigate(WALLET_ROUTES.DELEGATE)
       },
     }),

@@ -15,7 +15,7 @@ import {
   hwDeviceInfoSelector,
   walletMetaSelector,
 } from '../../selectors'
-import {showErrorDialog, handleGeneralError} from '../../actions'
+import {showErrorDialog} from '../../actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
 
 import {Text, Modal} from '../UiKit'
@@ -23,14 +23,11 @@ import AddressModal from './AddressModal'
 import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
 import LedgerConnect from '../Ledger/LedgerConnect'
 import AddressVerifyModal from './AddressVerifyModal'
-import {
-  verifyAddress,
-  GeneralConnectionError,
-  LedgerUserError,
-} from '../../crypto/byron/ledgerUtils'
+import {verifyAddress} from '../../crypto/shelley/ledgerUtils'
 import walletManager from '../../crypto/walletManager'
 import {formatPath} from '../../crypto/commonUtils'
 import {errorMessages} from '../../i18n/global-messages'
+import LocalizableError from '../../i18n/LocalizableError'
 import {Logger} from '../../utils/logging'
 import {CONFIG} from '../../config/config'
 
@@ -42,31 +39,15 @@ import type {
   HWDeviceInfo,
   DeviceId,
   DeviceObj,
-} from '../../crypto/byron/ledgerUtils'
-import type {Addressing, LegacyAddressing} from '../../crypto/types'
+} from '../../crypto/shelley/ledgerUtils'
 import type {WalletMeta} from '../../state'
-
-const _toLegacyAddressing = (addressing: Addressing): LegacyAddressing => {
-  if (
-    addressing.addressing.startLevel !==
-    CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT
-  ) {
-    throw Error('unexpected addressing info')
-  }
-  return {
-    addressing: {
-      account: addressing.addressing.path[0],
-      change: addressing.addressing.path[1],
-      index: addressing.addressing.path[2],
-    },
-  }
-}
 
 const _handleOnVerifyAddress = async (
   intl: intlShape,
   address: string,
   index: number,
   hwDeviceInfo: HWDeviceInfo,
+  walletMeta: WalletMeta,
   useUSB: boolean,
   closeDetails: () => void,
   withActivityIndicator: (() => Promise<void>) => Promise<void>,
@@ -77,15 +58,26 @@ const _handleOnVerifyAddress = async (
       if (addressingInfo == null) {
         throw new Error('No addressing data, should never happen')
       }
-      const addressing = _toLegacyAddressing({
-        addressing: addressingInfo,
-      })
-      await verifyAddress(address, addressing, hwDeviceInfo, useUSB)
+      await verifyAddress(
+        walletMeta.walletImplementationId,
+        address,
+        addressingInfo,
+        hwDeviceInfo,
+        useUSB,
+      )
     } catch (e) {
-      if (e instanceof GeneralConnectionError || e instanceof LedgerUserError) {
-        await showErrorDialog(errorMessages.hwConnectionError, intl)
+      if (e instanceof LocalizableError) {
+        await showErrorDialog(errorMessages.generalLocalizableError, intl, {
+          message: intl.formatMessage({
+            id: e.id,
+            defaultMessage: e.defaultMessage,
+          }),
+        })
       } else {
-        handleGeneralError('Could not verify address', e, intl)
+        Logger.error(e)
+        await showErrorDialog(errorMessages.hwConnectionError, intl, {
+          message: String(e.message),
+        })
       }
     } finally {
       closeDetails()
@@ -307,6 +299,7 @@ export default injectIntl(
         address,
         index,
         hwDeviceInfo,
+        walletMeta,
         useUSB,
         closeDetails,
         withActivityIndicator,
@@ -316,6 +309,7 @@ export default injectIntl(
           address,
           index,
           hwDeviceInfo,
+          walletMeta,
           useUSB,
           closeDetails,
           withActivityIndicator,
