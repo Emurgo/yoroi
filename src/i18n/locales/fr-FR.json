@@ -1,5 +1,5 @@
 {
-  "components.common.errormodal.hideError": "Hide error message",
+  "components.common.errormodal.hideError": "Cacher le message d'erreur",
   "components.common.errormodal.showError": "Show error message",
   "components.common.navigation.dashboardButton": "Tableau de bord",
   "components.common.navigation.delegateButton": "Déléguer",
