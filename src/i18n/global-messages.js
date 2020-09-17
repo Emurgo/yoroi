@@ -269,8 +269,7 @@ export const errorMessages = {
       id: 'global.actions.dialogs.apiError.message',
       defaultMessage:
         '!!!Error received from api method call while sending transaction. ' +
-        'Please try again later or check our Twitter account (https://twitter.com/YoroiWallet)' +
-        'Error: {message}',
+        'Please try again later or check our Twitter account (https://twitter.com/YoroiWallet)',
     },
   }),
   insufficientBalance: defineMessages({
@@ -383,12 +382,12 @@ export const errorMessages = {
   generalTxError: defineMessages({
     title: {
       id: 'global.actions.dialogs.generalTxError.title',
-      defaultMessage: '!!!Error sending transaction',
+      defaultMessage: '!!!Transaction Error',
     },
     message: {
       id: 'global.actions.dialogs.generalTxError.message',
       defaultMessage:
-        '!!!An error occurred while trying to send the transaction: {message}',
+        '!!!An error occurred while trying to send the transaction.',
     },
   }),
 }
@@ -422,6 +421,10 @@ export default defineMessages({
   ok: {
     id: 'global.ok',
     defaultMessage: '!!!OK',
+  },
+  close: {
+    id: 'global.close',
+    defaultMessage: '!!!close',
   },
   availableFunds: {
     id: 'global.availableFunds',

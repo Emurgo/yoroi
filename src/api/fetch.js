@@ -21,7 +21,7 @@ const _checkResponse = (status, responseBody, requestPayload) => {
     Logger.debug('Bad status code from server', status)
     Logger.debug('Request payload:', requestPayload)
     Logger.info('response', responseBody)
-    throw new ApiError(responseBody)
+    throw new ApiError(responseBody.error?.response)
   }
 }
 

@@ -22,11 +22,13 @@ import {withNavigationTitle} from '../../utils/renderUtils'
 import {CONFIG} from '../../config/config'
 import {
   Button,
+  OfflineBanner,
   ValidatedTextInput,
   Text,
   PleaseWaitModal,
   Modal,
 } from '../UiKit'
+import ErrorModal from '../Common/ErrorModal'
 import globalMessages, {
   errorMessages,
   txLabels,
@@ -103,6 +105,7 @@ const handleOnConfirm = async (
   setProcessingTx,
   intl,
   useUSB,
+  setErrorData,
 ) => {
   const transactionData = navigation.getParam('transactionData')
   const signRequest = transactionData.signTxRequest.signRequest
@@ -121,11 +124,18 @@ const handleOnConfirm = async (
       navigation.navigate(WALLET_ROUTES.TX_HISTORY)
     } catch (e) {
       if (e instanceof NetworkError) {
-        await showErrorDialog(errorMessages.networkError, intl)
+        // trigger error modal
+        setErrorData(
+          true,
+          intl.formatMessage(errorMessages.networkError.message),
+          null,
+        )
       } else if (e instanceof ApiError) {
-        await showErrorDialog(errorMessages.apiError, intl, {
-          message: JSON.stringify(e.request),
-        })
+        setErrorData(
+          true,
+          intl.formatMessage(errorMessages.apiError.message),
+          JSON.stringify(e.request),
+        )
       } else {
         throw e
       }
@@ -144,16 +154,17 @@ const handleOnConfirm = async (
       await submitTx(Buffer.from(signedTx.encodedTx).toString('base64'))
     } catch (e) {
       if (e instanceof LocalizableError) {
-        await showErrorDialog(errorMessages.generalTxError, intl, {
-          message: intl.formatMessage({
-            id: e.id,
-            defaultMessage: e.defaultMessage,
-          }),
-        })
+        setErrorData(
+          true,
+          intl.formatMessage({id: e.id, defaultMessage: e.defaultMessage}),
+          null,
+        )
       } else {
-        await showErrorDialog(errorMessages.generalTxError, intl, {
-          message: String(e.message),
-        })
+        setErrorData(
+          true,
+          intl.formatMessage(errorMessages.generalTxError.message),
+          String(e.message),
+        )
       }
     } finally {
       setProcessingTx(false)
@@ -181,9 +192,11 @@ const handleOnConfirm = async (
 
         return
       } else {
-        await showErrorDialog(errorMessages.generalTxError, intl, {
-          message: String(e.message),
-        })
+        setErrorData(
+          true,
+          intl.formatMessage(errorMessages.generalTxError.message),
+          String(e.message),
+        )
       }
     }
 
@@ -199,14 +212,16 @@ const handleOnConfirm = async (
       intl,
     )
 
-    submitTx(signRequest, decryptedData)
+    await submitTx(signRequest, decryptedData)
   } catch (e) {
     if (e instanceof WrongPassword) {
       await showErrorDialog(errorMessages.incorrectPassword, intl)
     } else {
-      await showErrorDialog(errorMessages.generalTxError, intl, {
-        message: String(e.message),
-      })
+      setErrorData(
+        true,
+        intl.formatMessage(errorMessages.generalTxError.message),
+        String(e.message),
+      )
     }
   }
 }
@@ -234,6 +249,10 @@ const DelegationConfirmation = ({
   onChooseTransport,
   onConnectBLE,
   onConnectUSB,
+  closeErrorModal,
+  showErrorModal,
+  errorMessageHeader,
+  errorMessage,
 }) => {
   const poolHash = navigation.getParam('poolHash')
   const poolName = navigation.getParam('poolName')
@@ -249,6 +268,7 @@ const DelegationConfirmation = ({
 
   return (
     <View style={styles.container}>
+      <OfflineBanner />
       <ScrollView style={styles.scrollView}>
         <View style={styles.itemBlock}>
           <Text style={styles.itemTitle}>
@@ -336,6 +356,13 @@ const DelegationConfirmation = ({
         )
       /* eslint-enable indent */
       }
+      <ErrorModal
+        visible={showErrorModal}
+        title={intl.formatMessage(errorMessages.generalTxError.title)}
+        message={errorMessageHeader}
+        errorMessage={errorMessage}
+        onRequestClose={closeErrorModal}
+      />
 
       <PleaseWaitModal
         title={intl.formatMessage(txLabels.submittingTx)}
@@ -373,6 +400,9 @@ export default injectIntl(
         processingTx: false,
         useUSB: false,
         ledgerDialogStep: LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT,
+        showErrorModal: false,
+        errorMessageHeader: '',
+        errorMessage: '',
       },
       {
         doNothing: () => () => ({}),
@@ -390,6 +420,12 @@ export default injectIntl(
           ledgerDialogStep: LEDGER_DIALOG_STEPS.CLOSED,
         }),
         setUseUSB: (state) => (useUSB) => ({useUSB}),
+        closeErrorModal: (state) => () => ({showErrorModal: false}),
+        setErrorData: () => (
+          showErrorModal,
+          errorMessageHeader,
+          errorMessage,
+        ) => ({showErrorModal, errorMessageHeader, errorMessage}),
       },
     ),
     withHandlers({
@@ -431,6 +467,7 @@ export default injectIntl(
           setProcessingTx,
           intl,
           useUSB,
+          setErrorData,
         }) => async (event) => {
           await handleOnConfirm(
             navigation,
@@ -443,6 +480,7 @@ export default injectIntl(
             setProcessingTx,
             intl,
             useUSB,
+            setErrorData,
           )
         },
         1000,

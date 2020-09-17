@@ -102,6 +102,7 @@ const StakeByIdScreen = ({
         />
         <View style={styles.actions}>
           <Button
+            shelleyTheme
             onPress={handleOnContinue}
             title={intl.formatMessage(
               confirmationMessages.commonButtons.continueButton,

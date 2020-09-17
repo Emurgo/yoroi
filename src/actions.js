@@ -547,7 +547,7 @@ export const submitTransaction = <T>(
     Buffer.from(encodedTx).toString('hex'),
   )
   const signedTxBase64 = Buffer.from(encodedTx).toString('base64')
-  dispatch(submitSignedTx(signedTxBase64))
+  await dispatch(submitSignedTx(signedTxBase64))
 }
 
 export const submitDelegationTx = <T>(
@@ -563,7 +563,7 @@ export const submitDelegationTx = <T>(
     Buffer.from(encodedTx).toString('hex'),
   )
   const signedTxBase64 = Buffer.from(encodedTx).toString('base64')
-  dispatch(submitSignedTx(signedTxBase64))
+  await dispatch(submitSignedTx(signedTxBase64))
 }
 /* eslint-enable indent */
 
