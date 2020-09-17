@@ -910,7 +910,9 @@ export const buildSignedTransaction = async (
         await addressKey.chaincode(),
         await byronAddr.attributes(),
       )
-      const asString = Buffer.from(bootstrapWit.to_bytes()).toString('hex')
+      const asString = Buffer.from(await bootstrapWit.to_bytes()).toString(
+        'hex',
+      )
       if (seenBootstrapWit.has(asString)) {
         continue
       }
