@@ -9,10 +9,10 @@ import StakingDashboard from './StakingDashboard'
 
 const poolInfo = {
   info: {
-    ticker: '3EMUR',
-    name: 'EMURGO’ STAKEPOOL',
+    ticker: 'EMUR1',
+    name: 'Emurgo #1',
     description:
-      'EMURGO’s official Stake Pool. EMURGO is one of three organizations that contribute to the development of Cardano. Let’s make this Testnet successful by delegation to multiple stakepools.',
+      'EMURGO is a multinational blockchain technology company providing solutions for developers, startups, enterprises, and governments.',
     homepage: 'https://emurgo.io',
   },
   history: [

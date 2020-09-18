@@ -32,6 +32,7 @@ export const NETWORKS = {
     IS_MAINNET: true,
     EXPLORER_URL_FOR_ADDRESS: (address: string) =>
       `https://explorer.cardano.org/en/address?address=${address}`,
+    POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
     BACKEND: {
       API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
       ..._DEFAULT_BACKEND_RULES,

@@ -3,7 +3,7 @@ import React from 'react'
 import {createStackNavigator} from 'react-navigation'
 
 import {Button} from '../UiKit'
-import StakeByIdScreen from './StakeByIdScreen'
+import StakingCenter from './StakingCenter'
 import BiometricAuthScreen from '../Send/BiometricAuthScreen'
 import DelegationConfirmation from './DelegationConfirmation'
 import {
@@ -24,8 +24,7 @@ import styles from '../TxHistory/styles/SettingsButton.style'
 const StakingNavigatorCenter = createStackNavigator(
   {
     [STAKING_CENTER_ROUTES.MAIN]: {
-      // this should be temporal. Implement StakingCenter in next iteration
-      screen: StakeByIdScreen,
+      screen: StakingCenter,
       navigationOptions: ({navigation}) => ({
         title: navigation.getParam('title'),
         headerRight: (
