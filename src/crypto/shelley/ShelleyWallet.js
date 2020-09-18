@@ -588,20 +588,23 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       /* eslint-enable indent */
       if (addressing != null) addressingInfo[change.address] = addressing
     }
-    // add reward address to addressingMap
-    const rewardAddrHex = Buffer.from(
-      await (await this.getRewardAddress()).to_bytes(),
-      'hex',
-    ).toString('hex')
-    addressingInfo[rewardAddrHex] = {
-      path: [
-        this._getPurpose(),
-        CONFIG.NUMBERS.COIN_TYPES.CARDANO,
-        CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
-        CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-        CONFIG.NUMBERS.STAKING_KEY_INDEX,
-      ],
-      startLevel: CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE,
+
+    if (isHaskellShelley(this.walletImplementationId)) {
+      // add reward address to addressingMap
+      const rewardAddrHex = Buffer.from(
+        await (await this.getRewardAddress()).to_bytes(),
+        'hex',
+      ).toString('hex')
+      addressingInfo[rewardAddrHex] = {
+        path: [
+          this._getPurpose(),
+          CONFIG.NUMBERS.COIN_TYPES.CARDANO,
+          CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
+          CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+          CONFIG.NUMBERS.STAKING_KEY_INDEX,
+        ],
+        startLevel: CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE,
+      }
     }
 
     // TODO: add withdrawal addressing
