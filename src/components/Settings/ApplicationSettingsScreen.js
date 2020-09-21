@@ -93,10 +93,6 @@ const messages = defineMessages({
     id: 'components.settings.applicationsettingsscreen.version',
     defaultMessage: '!!!Current version:',
   },
-  network: {
-    id: 'components.settings.applicationsettingsscreen.network',
-    defaultMessage: '!!!Network:',
-  },
   commit: {
     id: 'components.settings.applicationsettingsscreen.commit',
     defaultMessage: '!!!Commit:',
@@ -231,11 +227,6 @@ const ApplicationSettingsScreen = ({
       <SettingsBuildItem
         label={intl.formatMessage(messages.version)}
         value={version}
-      />
-
-      <SettingsBuildItem
-        label={intl.formatMessage(messages.network)}
-        value={'Byron Mainnet / Shelley Testnet'}
       />
 
       <SettingsBuildItem
