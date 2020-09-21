@@ -6,21 +6,21 @@ import {COLORS} from '../../../../styles/config'
 
 export default StyleSheet.create({
   wrapper: {
-    height: 140,
     marginTop: 24,
     marginHorizontal: 16,
   },
   stats: {
     flex: 1,
     flexDirection: 'column',
-    marginLeft: 24,
+    marginLeft: 18,
     marginBottom: 10,
+    flexWrap: 'wrap',
   },
   row: {
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    height: 24,
+    alignItems: 'flex-start',
   },
   label: {
     color: COLORS.GRAY,
@@ -35,8 +35,7 @@ export default StyleSheet.create({
   },
   timeWrapper: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
+    flexWrap: 'nowrap',
   },
   timeBlock: {
     width: 28,

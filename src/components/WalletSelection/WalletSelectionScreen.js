@@ -3,7 +3,7 @@
 import React from 'react'
 import {Text, ScrollView, ActivityIndicator} from 'react-native'
 import {connect} from 'react-redux'
-import {compose, withHandlers, withStateHandlers} from 'recompose'
+import {compose, withHandlers} from 'recompose'
 import _ from 'lodash'
 import {SafeAreaView} from 'react-navigation'
 import {injectIntl, defineMessages} from 'react-intl'
@@ -20,7 +20,6 @@ import {Button, StatusBar, ScreenBackground} from '../UiKit'
 import {ROOT_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import {showErrorDialog, updateVersion} from '../../actions'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
-import FailedWalletUpgradeModal from './FailedWalletUpgradeModal'
 import {currentVersionSelector} from '../../selectors'
 import {onDidMount} from '../../utils/renderUtils'
 import {isJormungandr, NETWORKS} from '../../config/networks'
@@ -58,17 +57,9 @@ const WalletListScreen = ({
   navigateInitWallet,
   openWallet,
   intl,
-  showModal,
-  setShowModal,
 }) => (
   <SafeAreaView style={styles.safeAreaView}>
     <StatusBar type="dark" />
-
-    <FailedWalletUpgradeModal
-      visible={showModal}
-      onPress={() => setShowModal(false)}
-      onRequestClose={() => setShowModal(false)}
-    />
 
     <Screen style={styles.container}>
       <ScreenBackground>
@@ -149,14 +140,6 @@ export default injectIntl(
         updateVersion,
       },
     ),
-    withStateHandlers(
-      {
-        showModal: false,
-      },
-      {
-        setShowModal: (state) => (value) => ({showModal: value}),
-      },
-    ),
     withHandlers({
       navigateInitWallet: ({navigation}) => (
         event: Object,
@@ -194,26 +177,12 @@ export default injectIntl(
         }
       },
     }),
-    onDidMount(
-      async ({setShowModal, wallets, currentVersion, updateVersion}) => {
-        const currVersionInt =
-          currentVersion != null
-            ? parseInt(currentVersion.replace(/\./g, ''), 10)
-            : 0
-        // note: old wallets didn't have networkId but just an isShelley flag
-        if (
-          wallets != null &&
-          currVersionInt <= 204 &&
-          _.some(wallets, {isShelley: true})
-        ) {
-          setShowModal(true)
-        }
-        // update version to make sure users won't see the dialog the next
-        // time they open the app. Also, users that didn't see it in the first
-        // place, shouldn't see it in the future either
-        await updateVersion()
-      },
-    ),
+    onDidMount(async ({updateVersion}) => {
+      // if needed, one can add logic here for, e.g., notifying the user about
+      // new features after an update
+
+      await updateVersion()
+    }),
   )(WalletListScreen): ComponentType<{
     intl: IntlShape,
     navigation: NavigationScreenProp<NavigationState>,
