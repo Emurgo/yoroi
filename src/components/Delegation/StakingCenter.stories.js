@@ -14,9 +14,7 @@ storiesOf('StakingCenter', module).add(
         case 'approxAdaToDelegate':
           return '100'
         case 'pools':
-          return [
-            'bd885c7fa6bcceaa6e530fe4f285daa4c631fab6ff31544dfc37b88eade9763e',
-          ]
+          return ['af22f95915a19cd57adb14c558dcc4a175f60c6193dc23b8bd2d8beb']
         default:
           return ''
       }
