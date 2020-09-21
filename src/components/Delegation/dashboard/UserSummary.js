@@ -49,7 +49,7 @@ const UserSummary = ({
           </View>
           <View style={styles.amountBlock}>
             <Text style={styles.label}>
-              {intl.formatMessage(globalMessages.totalAda)}:
+              {intl.formatMessage(globalMessages.availableFunds)}:
             </Text>
             <Text bold style={styles.value}>
               {totalAdaSum}
