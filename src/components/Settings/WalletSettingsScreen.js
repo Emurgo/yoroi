@@ -23,17 +23,23 @@ import {
   walletNameSelector,
   languageSelector,
   isHWSelector,
+  walletMetaSelector,
 } from '../../selectors'
 import {
   SettingsItem,
+  SettingsBuildItem,
   NavigatedSettingsItem,
   SettingsSection,
   PressableSettingsItem,
 } from './SettingsItems'
 import {StatusBar} from '../UiKit'
+import {isByron, isHaskellShelley} from '../../config/config'
+import {getNetworkConfigById} from '../../config/networks'
 
 import type {Navigation} from '../../types/navigation'
 import type {ComponentType} from 'react'
+import type {NetworkId, WalletImplementationId} from '../../config/types'
+import type {MessageDescriptor} from 'react-intl'
 
 const messages = defineMessages({
   title: {
@@ -77,6 +83,23 @@ const messages = defineMessages({
     id: 'components.settings.walletsettingscreen.removeWallet',
     defaultMessage: '!!!Remove wallet',
   },
+  // note: moved here from application settings
+  network: {
+    id: 'components.settings.applicationsettingsscreen.network',
+    defaultMessage: '!!!Network:',
+  },
+  walletType: {
+    id: 'components.settings.walletsettingscreen.walletType',
+    defaultMessage: '!!!Wallet type:',
+  },
+  byronWallet: {
+    id: 'components.settings.walletsettingscreen.byronWallet',
+    defaultMessage: '!!!Byron-era wallet',
+  },
+  shelleyWallet: {
+    id: 'components.settings.walletsettingscreen.shelleyWallet',
+    defaultMessage: '!!!Shelley-era wallet',
+  },
 })
 
 const styles = StyleSheet.create({
@@ -84,6 +107,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 })
+
+const _getNetworkName = (networkId: NetworkId) => {
+  const config = getNetworkConfigById(networkId)
+  return config.MARKETING_NAME
+}
+
+const _getWalletType = (implId: WalletImplementationId): ?MessageDescriptor => {
+  if (isByron(implId)) return messages.byronWallet
+  else if (isHaskellShelley(implId)) return messages.shelleyWallet
+  else return null
+}
 
 const WalletSettingsScreen = ({
   onToggleEasyConfirmation,
@@ -94,6 +128,7 @@ const WalletSettingsScreen = ({
   onSwitchWallet,
   onLogout,
   isHW,
+  walletMeta,
 }) => (
   <ScrollView style={styles.scrollView}>
     <StatusBar type="dark" />
@@ -142,6 +177,21 @@ const WalletSettingsScreen = ({
         navigateTo={SETTINGS_ROUTES.REMOVE_WALLET}
       />
     </SettingsSection>
+
+    <SettingsSection title="About">
+      <SettingsBuildItem
+        label={intl.formatMessage(messages.network)}
+        value={_getNetworkName(walletMeta.networkId)}
+      />
+      {_getWalletType(walletMeta.walletImplementationId) != null && (
+        <SettingsBuildItem
+          label={intl.formatMessage(messages.walletType)}
+          value={intl.formatMessage(
+            _getWalletType(walletMeta.walletImplementationId),
+          )}
+        />
+      )}
+    </SettingsSection>
   </ScrollView>
 )
 
@@ -161,6 +211,7 @@ export default injectIntl(
       (state) => ({
         walletName: walletNameSelector(state),
         isHW: isHWSelector(state),
+        walletMeta: walletMetaSelector(state),
       }),
       {
         closeWallet,

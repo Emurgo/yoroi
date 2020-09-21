@@ -11,6 +11,9 @@ export default StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 20,
   },
+  scrollView: {
+    paddingRight: 10,
+  },
   textStyles: {
     fontSize: 14,
   },
