@@ -43,6 +43,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingBottom: 10,
+    flexWrap: 'wrap',
   },
   copyIcon: {
     marginLeft: 4,

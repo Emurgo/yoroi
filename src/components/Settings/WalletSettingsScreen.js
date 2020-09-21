@@ -109,8 +109,13 @@ const styles = StyleSheet.create({
 })
 
 const _getNetworkName = (networkId: NetworkId) => {
-  const config = getNetworkConfigById(networkId)
-  return config.MARKETING_NAME
+  // note(v-almonacid): this throws when switching wallet
+  try {
+    const config = getNetworkConfigById(networkId)
+    return config.MARKETING_NAME
+  } catch (_e) {
+    return '-'
+  }
 }
 
 const _getWalletType = (implId: WalletImplementationId): ?MessageDescriptor => {
