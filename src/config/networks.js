@@ -14,6 +14,7 @@ const _DEFAULT_BACKEND_RULES = {
 export const NETWORKS = {
   BYRON_MAINNET: {
     NETWORK_ID: NETWORK_REGISTRY.BYRON_MAINNET,
+    MARKETING_NAME: 'Mainnet',
     IS_MAINNET: true,
     EXPLORER_URL_FOR_ADDRESS: (address: string) =>
       `https://explorer.cardano.org/en/address?address=${address}`,
@@ -28,10 +29,12 @@ export const NETWORKS = {
   },
   HASKELL_SHELLEY: {
     NETWORK_ID: NETWORK_REGISTRY.HASKELL_SHELLEY,
+    MARKETING_NAME: 'Mainnet',
     CHAIN_NETWORK_ID: '1',
     IS_MAINNET: true,
     EXPLORER_URL_FOR_ADDRESS: (address: string) =>
       `https://explorer.cardano.org/en/address?address=${address}`,
+    POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
     BACKEND: {
       API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
       ..._DEFAULT_BACKEND_RULES,
@@ -52,6 +55,7 @@ export const NETWORKS = {
   },
   JORMUNGANDR: {
     NETWORK_ID: NETWORK_REGISTRY.JORMUNGANDR,
+    MARKETING_NAME: 'Incentivized Testnet (ITN)',
     ENABLED: false,
     IS_MAINNET: false,
     PROTOCOL_MAGIC: 764824073,

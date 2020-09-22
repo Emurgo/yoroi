@@ -13,7 +13,7 @@ import {ObjectValues} from './utils/flow'
 import type {Dict, State, WalletMeta} from './state'
 import type {TransactionInfo, Transaction} from './types/HistoryTransaction'
 import type {RawUtxo} from './api/types'
-import type {HWDeviceInfo} from './crypto/byron/ledgerUtils'
+import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
 
 export const transactionsInfoSelector: (State) => Dict<
   TransactionInfo,

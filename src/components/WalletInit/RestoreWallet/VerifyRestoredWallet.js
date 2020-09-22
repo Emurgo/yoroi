@@ -3,7 +3,7 @@
 import React, {useState, useEffect} from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {View, FlatList} from 'react-native'
+import {View, FlatList, ScrollView} from 'react-native'
 import {withHandlers} from 'recompose'
 import {SafeAreaView, withNavigation} from 'react-navigation'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
@@ -121,7 +121,7 @@ const VerifyWalletScreen = ({
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <StatusBar type="dark" />
-      <View>
+      <ScrollView style={styles.scrollView}>
         <Text style={styles.textStyles}>
           {formatMessage(messages.checksumLabel)}
         </Text>
@@ -153,7 +153,7 @@ const VerifyWalletScreen = ({
             )}
           />
         </View>
-      </View>
+      </ScrollView>
       <Button
         onPress={navigateToWalletCredentials}
         title={formatMessage(messages.buttonText)}

@@ -170,11 +170,8 @@ const recomputeAll = async ({amount, address, utxos}) => {
   if (_.isEmpty(addressErrors) && _.isEmpty(amountErrors) && utxos) {
     try {
       const parsedAmount = parseAdaDecimal(amount)
-      const {unsignedTx} = await getTransactionData(utxos, address, amount)
-      // TODO: compute fee as difference
-      const _fee = new BigNumber(
-        await (await unsignedTx.get_fee_if_set()).to_str(),
-      )
+      const unsignedTx = await getTransactionData(utxos, address, amount)
+      const _fee = await unsignedTx.fee(false) // in lovelaces
       balanceAfter = getUtxoBalance(utxos)
         .minus(parsedAmount)
         .minus(_fee)
@@ -313,9 +310,7 @@ class SendScreen extends Component<Props, State> {
     if (isValid === true) {
       /* :: if (!utxos) throw 'assert' */
       const transactionData = await getTransactionData(utxos, address, amount)
-      const fee = new BigNumber(
-        await (await transactionData.unsignedTx.get_fee_if_set()).to_str(),
-      )
+      const fee = await transactionData.fee(false)
 
       navigation.navigate(SEND_ROUTES.CONFIRM, {
         availableAmount,

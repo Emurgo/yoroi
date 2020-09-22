@@ -2,14 +2,17 @@
 import {
   Address,
   BaseAddress,
+  Bip32PublicKey,
   Bip32PrivateKey,
   ByronAddress,
   Ed25519KeyHash,
+  RewardAddress,
   // TODO(v-almonacid): these bindings are not yet implemented
   // PointerAddress,
   // EnterpriseAddress,
-  // RewardAddress,
 } from 'react-native-haskell-shelley'
+
+import {NUMBERS} from '../../config/numbers'
 
 import type {Addressing} from '../types'
 
@@ -34,10 +37,10 @@ Promise<Ed25519KeyHash | null | void> => {
   //   const enterpriseAddr = await EnterpriseAddress.from_address(addr)
   //   if (enterpriseAddr) return enterpriseAddr.payment_cred().to_keyhash()
   // }
-  // {
-  //   const rewardAddr = await RewardAddress.from_address(addr)
-  //   if (rewardAddr) return rewardAddr.payment_cred().to_keyhash()
-  // }
+  {
+    const rewardAddr = await RewardAddress.from_address(addr)
+    if (rewardAddr) return await (await rewardAddr.payment_cred()).to_keyhash()
+  }
   throw new Error('getCardanoAddrKeyHash:: unknown address type')
 }
 
@@ -45,7 +48,7 @@ export const normalizeToAddress = async (
   addr: string,
 ): Promise<void | Address> => {
   // in Shelley, addresses can be base16, bech32 or base58
-  // this function, we try parsing in all encodings possible
+  // in this function, we try parsing in all encodings possible
 
   // 1) Try converting from base58
   try {
@@ -82,6 +85,27 @@ export const toHexOrBase58 = async (address: Address): Promise<string> => {
   return await asByron.to_base58()
 }
 
+export const derivePublicByAddressing = async (request: {|
+  addressing: $PropertyType<Addressing, 'addressing'>,
+  startingFrom: {|
+    key: Bip32PublicKey,
+    level: number,
+  |},
+|}): Promise<Bip32PublicKey> => {
+  if (request.startingFrom.level + 1 < request.addressing.startLevel) {
+    throw new Error('derivePublicByAddressing: keyLevel < startLevel')
+  }
+  let derivedKey = request.startingFrom.key
+  for (
+    let i = request.startingFrom.level - request.addressing.startLevel + 1;
+    i < request.addressing.path.length;
+    i++
+  ) {
+    derivedKey = await derivedKey.derive(request.addressing.path[i])
+  }
+  return derivedKey
+}
+
 export const derivePrivateByAddressing = async (request: {|
   addressing: $PropertyType<Addressing, 'addressing'>,
   startingFrom: {|
@@ -101,4 +125,19 @@ export const derivePrivateByAddressing = async (request: {|
     derivedKey = await derivedKey.derive(request.addressing.path[i])
   }
   return derivedKey
+}
+
+export const verifyFromBip44Root = (
+  request: $ReadOnly<{|
+    ...$PropertyType<Addressing, 'addressing'>,
+  |}>,
+): void => {
+  const accountPosition = request.startLevel
+  if (accountPosition !== NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE) {
+    throw new Error('verifyFromBip44Root: addressing does not start from root')
+  }
+  const lastLevelSpecified = request.startLevel + request.path.length - 1
+  if (lastLevelSpecified !== NUMBERS.BIP44_DERIVATION_LEVELS.ADDRESS) {
+    throw new Error('verifyFromBip44Root: incorrect addressing size')
+  }
 }

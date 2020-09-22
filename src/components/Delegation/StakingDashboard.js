@@ -191,11 +191,6 @@ class StakingDashboard extends React.Component<Props, State> {
       navigation,
     } = this.props
 
-    const totalBalance =
-      utxoBalance != null && accountBalance != null
-        ? utxoBalance.plus(accountBalance)
-        : null
-
     // TODO: shouldn't be haskell-shelley specific
     const config = {
       StartAt: CONFIG.NETWORKS.HASKELL_SHELLEY.START_AT,
@@ -289,7 +284,7 @@ class StakingDashboard extends React.Component<Props, State> {
             />
             <UserSummary
               totalAdaSum={
-                totalBalance != null ? formatAdaWithText(totalBalance) : '-'
+                utxoBalance != null ? formatAdaWithText(utxoBalance) : '-'
               }
               totalRewards={
                 accountBalance != null ? formatAdaWithText(accountBalance) : '-'

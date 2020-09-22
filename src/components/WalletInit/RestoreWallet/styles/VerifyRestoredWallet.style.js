@@ -11,6 +11,9 @@ export default StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 20,
   },
+  scrollView: {
+    paddingRight: 10,
+  },
   textStyles: {
     fontSize: 14,
   },
@@ -40,6 +43,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingBottom: 10,
+    flexWrap: 'wrap',
   },
   copyIcon: {
     marginLeft: 4,

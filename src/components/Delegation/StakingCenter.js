@@ -2,22 +2,30 @@
 import React from 'react'
 import {View} from 'react-native'
 import {WebView} from 'react-native-webview'
+import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
 
-// import {STAKING_CENTER_ROUTES} from '../../RoutesList'
+import {STAKING_CENTER_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {CONFIG} from '../../config/config'
 import {Logger} from '../../utils/logging'
-// import walletManager from '../../crypto/walletManager'
-// import {getShelleyTxFee} from '../../crypto/jormungandr/transactions/utils'
-// import {InsufficientFunds} from '../../crypto/errors'
-import globalMessages from '../../i18n/global-messages'
+import walletManager from '../../crypto/walletManager'
+import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../actions'
-// import {NetworkError, ApiError} from '../../api/errors'
 import {PleaseWaitModal} from '../UiKit'
 import PoolWarningModal from './PoolWarningModal'
+import {ObjectValues} from '../../utils/flow'
+import {
+  isOnlineSelector,
+  utxosSelector,
+  accountBalanceSelector,
+} from '../../selectors'
+import UtxoAutoRefresher from '../Send/UtxoAutoRefresher'
+import AccountAutoRefresher from './AccountAutoRefresher'
+import {NetworkError, ApiError} from '../../api/errors'
+import {InsufficientFunds} from '../../crypto/errors'
 
 import styles from './styles/DelegationCenter.style'
 
@@ -50,25 +58,19 @@ const noPoolDataDialog = defineMessages({
 
 /**
  * Prepares WebView's target staking URI
- * @param {*} userAda : needs to be in ADA (not Lovelaces) as per Seiza API
  * @param {*} poolList : Array of delegated pool hash
  */
-const prepareStakingURL = (
-  userAda: string,
-  poolList: Array<string>,
-): null | string => {
-  // eslint-disable-next-line max-len
-  // Refer: https://github.com/Emurgo/yoroi-frontend/blob/2f06f7afa5283365f1070b6a042bcfedba51646f/app/containers/wallet/staking/StakingPage.js#L60
+const prepareStakingURL = (poolList: ?Array<string>): null | string => {
   // source=mobile is constant and already included
   // TODO: add locale parameter
-  let finalURL = CONFIG.NETWORKS.JORMUNGANDR.SEIZA_STAKING_SIMPLE(userAda)
+  let finalURL = CONFIG.NETWORKS.HASKELL_SHELLEY.POOL_EXPLORER
   if (poolList != null) {
     finalURL += `&delegated=${encodeURIComponent(JSON.stringify(poolList))}`
   }
   return finalURL
 }
 
-const DelegationCenter = ({
+const StakingCenter = ({
   navigation,
   intl,
   handleOnMessage,
@@ -79,13 +81,15 @@ const DelegationCenter = ({
   selectedPools,
   reputationInfo,
 }) => {
-  const approxAdaToDelegate = navigation.getParam('approxAdaToDelegate')
-  const poolList = navigation.getParam('pools')
+  // pools user is currently delegating to
+  const poolList: ?Array<string> = navigation.getParam('poolList')
   return (
     <>
       <View style={styles.container}>
+        <UtxoAutoRefresher />
+        <AccountAutoRefresher />
         <WebView
-          source={{uri: prepareStakingURL(approxAdaToDelegate, poolList)}}
+          source={{uri: prepareStakingURL(poolList)}}
           onMessage={(event) => handleOnMessage(event)}
         />
       </View>
@@ -111,7 +115,7 @@ const DelegationCenter = ({
 }
 
 type SelectedPool = {|
-  +name: null | string,
+  +poolName: null | string,
   +poolHash: string,
 |}
 
@@ -123,6 +127,11 @@ type ExternalProps = {|
 export default injectIntl(
   (compose(
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    connect((state) => ({
+      utxos: utxosSelector(state),
+      accountBalance: accountBalanceSelector(state),
+      isOnline: isOnlineSelector(state),
+    })),
     withStateHandlers(
       {
         busy: false,
@@ -150,7 +159,37 @@ export default injectIntl(
       },
     }),
     withHandlers({
-      navigateToDelegationConfirm: () => () => ({}),
+      navigateToDelegationConfirm: ({
+        navigation,
+        accountBalance,
+        utxos,
+        intl,
+      }) => async (selectedPools: Array<SelectedPool>) => {
+        try {
+          const selectedPool = selectedPools[0]
+          const transactionData = await walletManager.createDelegationTx(
+            selectedPool.poolHash,
+            accountBalance,
+            utxos,
+          )
+          const transactionFee = await transactionData.signTxRequest.fee(false)
+          navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM, {
+            poolName: selectedPool.poolName,
+            poolHash: selectedPool.poolHash,
+            transactionData,
+            transactionFee,
+          })
+        } catch (e) {
+          if (e instanceof InsufficientFunds) {
+            await showErrorDialog(errorMessages.insufficientBalance, intl)
+          } else {
+            Logger.error(e)
+            await showErrorDialog(errorMessages.generalError, intl, {
+              message: e.message,
+            })
+          }
+        }
+      },
     }),
     withHandlers({
       handleOnMessage: ({
@@ -161,34 +200,57 @@ export default injectIntl(
         setShowPoolWarning,
         intl,
       }) => async (event) => {
-        const selectedPools: Array<SelectedPool> = JSON.parse(
-          decodeURI(event.nativeEvent.data),
-        )
-        const poolsReputation = navigation.getParam('poolsReputation')
-        Logger.debug(`From Seiza: ${JSON.stringify(selectedPools)}`)
-        if (
-          selectedPools &&
-          selectedPools.length >= 1 &&
-          selectedPools[0].poolHash != null
-        ) {
-          setSelectedPools(selectedPools)
-          // check if pool in blacklist
-          const poolsInBlackList = []
-          for (const pool of selectedPools) {
-            if (pool.poolHash in poolsReputation) {
-              poolsInBlackList.push(pool.poolHash)
+        try {
+          const selectedPoolHashes: Array<string> = JSON.parse(
+            decodeURI(event.nativeEvent.data),
+          )
+          Logger.debug('selected pools from explorer:', selectedPoolHashes)
+
+          const poolInfoResponse = await walletManager.fetchPoolInfo({
+            poolIds: selectedPoolHashes,
+          })
+          const poolInfo = ObjectValues(poolInfoResponse)[0]
+          Logger.debug('poolInfo', poolInfo)
+
+          // TODO: fetch reputation info once an endpoint is implemented
+          const poolsReputation: {[key: string]: mixed} = {}
+          if (poolInfo?.info != null) {
+            const selectedPools: Array<SelectedPool> = [
+              {
+                poolName: poolInfo.info.name,
+                poolHash: selectedPoolHashes[0],
+              },
+            ]
+            setSelectedPools(selectedPools)
+            // check if pool in blacklist
+            const poolsInBlackList = []
+            for (const pool of selectedPoolHashes) {
+              if (pool in poolsReputation) {
+                poolsInBlackList.push(pool)
+              }
             }
-          }
-          if (poolsInBlackList.length > 0) {
-            setReputationInfo(poolsReputation[poolsInBlackList[0]])
-            setShowPoolWarning(true)
+            if (poolsInBlackList.length > 0) {
+              setReputationInfo(poolsReputation[poolsInBlackList[0]])
+              setShowPoolWarning(true)
+            } else {
+              navigateToDelegationConfirm(selectedPools)
+            }
           } else {
-            navigateToDelegationConfirm()
+            await showErrorDialog(noPoolDataDialog, intl)
           }
-        } else {
-          await showErrorDialog(noPoolDataDialog, intl)
+        } catch (e) {
+          if (e instanceof NetworkError) {
+            await showErrorDialog(errorMessages.networkError, intl)
+          } else if (e instanceof ApiError) {
+            await showErrorDialog(noPoolDataDialog, intl)
+          } else {
+            Logger.error(e)
+            await showErrorDialog(errorMessages.generalError, intl, {
+              message: e.message,
+            })
+          }
         }
       },
     }),
-  )(DelegationCenter): ComponentType<ExternalProps>),
+  )(StakingCenter): ComponentType<ExternalProps>),
 )

@@ -7,7 +7,6 @@ import {ScrollView, View, Platform} from 'react-native'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {SafeAreaView} from 'react-navigation'
 import {injectIntl, defineMessages} from 'react-intl'
-import {ErrorCodes} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 
 import {
   Text,
@@ -19,6 +18,7 @@ import {
   PleaseWaitModal,
   Modal,
 } from '../UiKit'
+import ErrorModal from '../Common/ErrorModal'
 import {
   easyConfirmationSelector,
   isHWSelector,
@@ -30,21 +30,10 @@ import globalMessages, {
   confirmationMessages,
 } from '../../i18n/global-messages'
 import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
-import {
-  createLedgerSignTxPayload,
-  signTxWithLedger,
-  GeneralConnectionError,
-  LedgerUserError,
-} from '../../crypto/byron/ledgerUtils'
 import {SEND_ROUTES, WALLET_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import {CONFIG} from '../../config/config'
 import KeyStore from '../../crypto/KeyStore'
-import {
-  showErrorDialog,
-  handleGeneralError,
-  submitTransaction,
-  submitSignedTx,
-} from '../../actions'
+import {showErrorDialog, submitTransaction, submitSignedTx} from '../../actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {formatAdaWithSymbol, formatAdaWithText} from '../../utils/format'
@@ -54,6 +43,7 @@ import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
 import LedgerConnect from '../Ledger/LedgerConnect'
 import HWInstructions from '../Ledger/HWInstructions'
+import LocalizableError from '../../i18n/LocalizableError'
 
 import type {BaseSignRequest} from '../../crypto/types'
 
@@ -83,8 +73,10 @@ const handleOnConfirm = async (
   withDisabledButton,
   intl,
   useUSB,
+  setErrorData,
 ) => {
-  const transactionData = navigation.getParam('transactionData')
+  const transactionData = navigation.getParam('transactionData') // ISignRequest
+  const signRequest = transactionData.signRequest
 
   const submitTx = async <T>(
     tx: string | BaseSignRequest<T>,
@@ -101,9 +93,18 @@ const handleOnConfirm = async (
         navigation.navigate(WALLET_ROUTES.TX_HISTORY)
       } catch (e) {
         if (e instanceof NetworkError) {
-          await showErrorDialog(errorMessages.networkError, intl)
+          // trigger error modal
+          setErrorData(
+            true,
+            intl.formatMessage(errorMessages.networkError.message),
+            null,
+          )
         } else if (e instanceof ApiError) {
-          await showErrorDialog(errorMessages.apiError, intl)
+          setErrorData(
+            true,
+            intl.formatMessage(errorMessages.apiError.message),
+            JSON.stringify(e.request),
+          )
         } else {
           throw e
         }
@@ -111,52 +112,27 @@ const handleOnConfirm = async (
     })
   }
 
-  // TODO(v-almonacid): this need to be re-written
   if (isHW) {
     withDisabledButton(async () => {
       try {
-        // Map inputs to UNIQUE tx hashes (there might be multiple inputs from the same tx)
-        const txsHashes = [
-          ...new Set(transactionData.inputs.map((x) => x.ptr.id)),
-        ]
-        const txsBodiesMap = await walletManager.getTxsBodiesForUTXOs({
-          txsHashes,
-        })
-        const addressedChange = {
-          address: transactionData.changeAddress,
-          addressing: walletManager.getAddressingInfo(
-            transactionData.changeAddress,
-          ),
-        }
-        const {
-          ledgerSignTxPayload,
-          partialTx,
-        } = await createLedgerSignTxPayload(
+        const signedTx = await walletManager.signTxWithLedger(
           transactionData,
-          txsBodiesMap,
-          addressedChange,
-        )
-
-        const tx = await signTxWithLedger(
-          ledgerSignTxPayload,
-          partialTx,
-          hwDeviceInfo,
           useUSB,
         )
-
-        await submitTx(
-          Buffer.from(tx.cbor_encoded_tx, 'hex').toString('base64'),
-        )
+        await submitTx(Buffer.from(signedTx.encodedTx).toString('base64'))
       } catch (e) {
-        if (e.statusCode === ErrorCodes.ERR_REJECTED_BY_USER) {
-          return
-        } else if (
-          e instanceof GeneralConnectionError ||
-          e instanceof LedgerUserError
-        ) {
-          await showErrorDialog(errorMessages.hwConnectionError, intl)
+        if (e instanceof LocalizableError) {
+          setErrorData(
+            true,
+            intl.formatMessage({id: e.id, defaultMessage: e.defaultMessage}),
+            null,
+          )
         } else {
-          handleGeneralError('Could not submit transaction', e, intl)
+          setErrorData(
+            true,
+            intl.formatMessage(errorMessages.generalTxError.message),
+            String(e.message),
+          )
         }
       }
     })
@@ -171,7 +147,7 @@ const handleOnConfirm = async (
         onSuccess: (decryptedKey) => {
           navigation.navigate(SEND_ROUTES.CONFIRM)
 
-          submitTx(transactionData, decryptedKey)
+          submitTx(signRequest, decryptedKey)
         },
         onFail: () => navigation.goBack(),
       })
@@ -183,7 +159,11 @@ const handleOnConfirm = async (
 
         return
       } else {
-        handleGeneralError('Could not submit transaction', e, intl)
+        setErrorData(
+          true,
+          intl.formatMessage(errorMessages.generalTxError.message),
+          String(e.message),
+        )
       }
     }
 
@@ -199,12 +179,16 @@ const handleOnConfirm = async (
       intl,
     )
 
-    submitTx(transactionData, decryptedData)
+    await submitTx(signRequest, decryptedData)
   } catch (e) {
     if (e instanceof WrongPassword) {
       await showErrorDialog(errorMessages.incorrectPassword, intl)
     } else {
-      handleGeneralError('Could not submit transaction', e, intl)
+      setErrorData(
+        true,
+        intl.formatMessage(errorMessages.generalTxError.message),
+        String(e.message),
+      )
     }
   }
 }
@@ -231,6 +215,10 @@ const ConfirmScreen = ({
   onChooseTransport,
   onConnectBLE,
   onConnectUSB,
+  closeErrorModal,
+  showErrorModal,
+  errorMessageHeader,
+  errorMessage,
 }) => {
   const amount = navigation.getParam('amount')
   const address = navigation.getParam('address')
@@ -326,6 +314,13 @@ const ConfirmScreen = ({
         )
       /* eslint-enable indent */
       }
+      <ErrorModal
+        visible={showErrorModal}
+        title={intl.formatMessage(errorMessages.generalTxError.title)}
+        message={errorMessageHeader}
+        errorMessage={errorMessage}
+        onRequestClose={closeErrorModal}
+      />
 
       <PleaseWaitModal
         title={intl.formatMessage(txLabels.submittingTx)}
@@ -358,6 +353,9 @@ export default injectIntl(
         buttonDisabled: false,
         useUSB: false,
         ledgerDialogStep: LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT,
+        showErrorModal: false,
+        errorMessageHeader: '',
+        errorMessage: '',
       },
       {
         setPassword: (state) => (value) => ({password: value}),
@@ -372,6 +370,12 @@ export default injectIntl(
           ledgerDialogStep: LEDGER_DIALOG_STEPS.CLOSED,
         }),
         setUseUSB: (state) => (useUSB) => ({useUSB}),
+        closeErrorModal: (state) => () => ({showErrorModal: false}),
+        setErrorData: () => (
+          showErrorModal,
+          errorMessageHeader,
+          errorMessage,
+        ) => ({showErrorModal, errorMessageHeader, errorMessage}),
       },
     ),
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
@@ -437,6 +441,7 @@ export default injectIntl(
           withDisabledButton,
           intl,
           useUSB,
+          setErrorData,
         }) => async (event) => {
           await handleOnConfirm(
             navigation,
@@ -450,6 +455,7 @@ export default injectIntl(
             withDisabledButton,
             intl,
             useUSB,
+            setErrorData,
           )
         },
         1000,

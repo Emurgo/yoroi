@@ -7,7 +7,7 @@ import type {
   HWDeviceInfo,
   DeviceId,
   DeviceObj,
-} from '../crypto/byron/ledgerUtils'
+} from '../crypto/shelley/ledgerUtils'
 import type {State} from '../state'
 
 const _saveHW = (hwDeviceInfo) => ({

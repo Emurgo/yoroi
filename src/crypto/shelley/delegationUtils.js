@@ -14,7 +14,6 @@ import {
   StakeDelegation,
   StakeDeregistration,
   StakeRegistration,
-  TransactionBuilder,
 } from 'react-native-haskell-shelley'
 import {sortBy} from 'lodash'
 
@@ -25,11 +24,11 @@ import {Logger} from '../../utils/logging'
 import {CardanoError, InsufficientFunds} from '../errors'
 import {ObjectValues} from '../../utils/flow'
 import assert from '../../utils/assert'
+import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
 
 import type {
   Addressing,
   AddressedUtxo,
-  BaseSignRequest,
   V4UnsignedTxAddressedUtxoResponse,
 } from '../types'
 import type {TimestampedCertMeta} from './transactionCache'
@@ -189,14 +188,9 @@ export type CreateDelegationTxRequest = {|
   stakingKey: PublicKey,
   changeAddr: {address: string, ...Addressing},
 |}
-// TODO(v-almonacid): we cannot yet implement HaskellShelleyTxSignRequest
-// because there are still some bindings missing
-// export type CreateDelegationTxResponse = {|
-//   signTxRequest: HaskellShelleyTxSignRequest,
-//   totalAmountToDelegate: BigNumber,
-// |}
+
 export type CreateDelegationTxResponse = {|
-  signTxRequest: BaseSignRequest<TransactionBuilder>,
+  signTxRequest: HaskellShelleyTxSignRequest,
   totalAmountToDelegate: BigNumber,
 |}
 
@@ -239,7 +233,8 @@ export const createDelegationTx = async (
       absSlotNumber,
       protocolParams,
       stakeDelegationCert,
-      // [], // TODO
+      [], // no withdrawals
+      false,
     )
 
     const allUtxosForKey = await filterAddressesByStakingKey(
@@ -262,38 +257,30 @@ export const createDelegationTx = async (
       .plus(differenceAfterTx) // subtract any part of the fee that comes from UTXO
       .plus(request.valueInAccount) // recall: rewards are compounding
 
-    const signTxRequest = {
-      senderUtxos: unsignedTx.senderUtxos,
-      unsignedTx: unsignedTx.txBuilder,
-      changeAddr: unsignedTx.changeAddr,
-      certificate: undefined,
-    }
-
-    // TODO(v-almonacid): we cannot yet implement HaskellShelleyTxSignRequest
-    // because there are still some bindings missing
-
-    // const signTxRequest = new HaskellShelleyTxSignRequest(
-    //   {
-    //     senderUtxos: unsignedTx.senderUtxos,
-    //     unsignedTx: unsignedTx.txBuilder,
-    //     changeAddr: unsignedTx.changeAddr,
-    //     certificate: undefined,
-    //   },
-    //   undefined,
-    //   {
-    //     ChainNetworkId: Number.parseInt(config.ChainNetworkId, 10),
-    //     KeyDeposit: new BigNumber(config.KeyDeposit),
-    //     PoolDeposit: new BigNumber(config.PoolDeposit),
-    //   },
-    //   {
-    //     neededHashes: new Set([
-    //       Buffer.from(
-    //         await StakeCredential.from_keyhash(stakingKey.hash()).to_bytes(),
-    //       ).toString('hex'),
-    //     ]),
-    //     wits: new Set(),
-    //   },
-    // )
+    const signTxRequest = new HaskellShelleyTxSignRequest(
+      {
+        senderUtxos: unsignedTx.senderUtxos,
+        unsignedTx: unsignedTx.txBuilder,
+        changeAddr: unsignedTx.changeAddr,
+        certificate: undefined,
+      },
+      undefined,
+      {
+        ChainNetworkId: Number.parseInt(config.CHAIN_NETWORK_ID, 10),
+        KeyDeposit: new BigNumber(config.KEY_DEPOSIT),
+        PoolDeposit: new BigNumber(config.POOL_DEPOSIT),
+      },
+      {
+        neededHashes: new Set([
+          Buffer.from(
+            await (await StakeCredential.from_keyhash(
+              await stakingKey.hash(),
+            )).to_bytes(),
+          ).toString('hex'),
+        ]),
+        wits: new Set(),
+      },
+    )
     return {
       signTxRequest,
       totalAmountToDelegate,

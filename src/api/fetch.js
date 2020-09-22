@@ -9,22 +9,19 @@ import type {NetworkConfig} from '../config/types'
 
 type RequestMethod = 'POST' | 'GET'
 
-const _checkResponse = async (response, requestPayload) => {
-  if (response.status === 404) {
-    const responseBody = await response.json()
+const _checkResponse = (status, responseBody, requestPayload) => {
+  if (status !== 200) {
     if (
-      responseBody.status === 'REFERENCE_TX_NOT_FOUND' ||
-      responseBody.status === 'REFERENCE_BLOCK_MISMATCH' ||
-      responseBody.status === 'REFERENCE_BEST_BLOCK_MISMATCH'
+      responseBody.error?.response === 'REFERENCE_TX_NOT_FOUND' ||
+      responseBody.error?.response === 'REFERENCE_BLOCK_MISMATCH' ||
+      responseBody.error?.response === 'REFERENCE_BEST_BLOCK_MISMATCH'
     ) {
-      throw new ApiHistoryError(responseBody.status)
+      throw new ApiHistoryError(responseBody.error.response)
     }
-  }
-  if (response.status !== 200) {
-    Logger.debug('Bad status code from server', response.status)
+    Logger.debug('Bad status code from server', status)
     Logger.debug('Request payload:', requestPayload)
-    Logger.info('response', await response.json())
-    throw new ApiError(response)
+    Logger.info('response', responseBody)
+    throw new ApiError(responseBody.error?.response)
   }
 }
 
@@ -33,7 +30,7 @@ export default (
   payload: ?any,
   networkConfig: NetworkConfig,
   method?: RequestMethod = 'POST',
-  checkResponse?: (any, ?any) => Promise<void> = _checkResponse,
+  checkResponse?: (number, any, ?any) => void = _checkResponse,
 ) => {
   const fullPath = `${networkConfig.API_ROOT}/${path}`
   const platform =
@@ -64,8 +61,9 @@ export default (
       .then(async (r) => {
         Logger.info(`API call ${path} finished`)
 
-        await _checkResponse(r, payload)
+        const status = r.status
         const response = await r.json()
+        checkResponse(status, response, payload)
         // Logger.debug('Response:', response)
         return response
       })
