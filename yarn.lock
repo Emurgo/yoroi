@@ -6177,7 +6177,8 @@ elliptic@^6.0.0, elliptic@^6.5.2:
 
 emip3js@Emurgo/emip3js:
   version "0.0.1"
-  resolved "https://codeload.github.com/Emurgo/emip3js/tar.gz/289ea46d2aa184ecad2b03ff290fb4a8a0d6504f"
+  uid "9c41d1951aa76c7025fd3a99e472d465c5adad41"
+  resolved "https://codeload.github.com/Emurgo/emip3js/tar.gz/9c41d1951aa76c7025fd3a99e472d465c5adad41"
   dependencies:
     chacha "git+https://github.com/calvinmetcalf/chacha20poly1305.git"
     pbkdf2 "3.0.17"
