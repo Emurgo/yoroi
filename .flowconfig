@@ -38,6 +38,9 @@ node_modules/warning/.*
 ; Ignore @emurgo/cardano-serialization-lib-nodejs
 .*/node_modules/@emurgo/cardano-serialization-lib-nodejs/cardano_serialization_lib.js.flow
 
+; Ignore @react-native-community/checkbox
+.*/node_modules/@react-native-community/checkbox/.*/.*
+
 [include]
 
 [libs]

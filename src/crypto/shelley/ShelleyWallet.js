@@ -417,7 +417,8 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
   async createUnsignedTx<TransactionBuilder>(
     utxos: Array<RawUtxo>,
     receiver: string,
-    amount: string,
+    amount: ?string,
+    sendAll: boolean,
   ): Promise<ISignRequest<TransactionBuilder>> {
     const timeToSlotFn = await genTimeToSlot([
       {
@@ -431,14 +432,23 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     const changeAddr = await this._getAddressedChangeAddress()
     const addressedUtxos = this.asAddressedUtxo(utxos)
 
-    const resp = await createUnsignedTx({
+    if (sendAll) {
+      return await createUnsignedTx({
+        changeAddr,
+        absSlotNumber,
+        receiver,
+        addressedUtxos,
+        shouldSendAll: true,
+      })
+    }
+    if (amount == null) throw new Error('Amount is null')
+    return await createUnsignedTx({
       changeAddr,
       absSlotNumber,
       receiver,
       addressedUtxos,
       amount,
     })
-    return resp
   }
 
   async signTx<TransactionBuilder>(

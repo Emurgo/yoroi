@@ -26,6 +26,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginBottom: 16,
   },
+  rowView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
 })
 
 export default styles
