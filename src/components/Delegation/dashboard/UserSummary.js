@@ -1,9 +1,10 @@
 // @flow
+import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import {View} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
-import {Text, TitledCard} from '../../UiKit'
+import {Text, TitledCard, Button} from '../../UiKit'
 import TotalAdaIcon from '../../../assets/staking/TotalAdaIcon'
 import TotalRewardIcon from '../../../assets/staking/TotalRewardIcon'
 import TotalDelegatedIcon from '../../../assets/staking/TotalDelegatedIcon'
@@ -23,6 +24,10 @@ const messages = defineMessages({
     id: 'components.delegationsummary.userSummary.totalDelegated',
     defaultMessage: '!!!Total Delegated',
   },
+  withdrawButtonTitle: {
+    id: 'components.delegationsummary.userSummary.withdrawButtonTitle',
+    defaultMessage: '!!!Withdraw',
+  },
 })
 
 const ICON_DIM = 44
@@ -32,6 +37,7 @@ type ExternalProps = {|
   +totalAdaSum: string | null,
   +totalRewards: string | null,
   +totalDelegated: string | null,
+  +onWithdraw: () => void,
 |}
 
 const UserSummary = ({
@@ -39,6 +45,7 @@ const UserSummary = ({
   totalAdaSum,
   totalRewards,
   totalDelegated,
+  onWithdraw,
 }: ExternalProps) => (
   <View style={styles.wrapper}>
     <TitledCard title={intl.formatMessage(messages.title)}>
@@ -67,6 +74,16 @@ const UserSummary = ({
             <Text bold style={styles.value}>
               {totalRewards}
             </Text>
+          </View>
+          <View style={styles.withdrawBlock}>
+            <Button
+              disabled={new BigNumber(totalAdaSum ?? '0').gt(0)}
+              outlineOnLight
+              shelleyTheme
+              onPress={onWithdraw}
+              title={intl.formatMessage(messages.withdrawButtonTitle)}
+              style={styles.withdrawButton}
+            />
           </View>
         </View>
         <View style={styles.row}>

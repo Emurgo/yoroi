@@ -758,6 +758,13 @@ class WalletManager {
     )
   }
 
+  async createWithdrawalTx(utxos: Array<RawUtxo>, shouldDeregister: boolean) {
+    if (!this._wallet) throw new WalletClosed()
+    return await this.abortWhenWalletCloses(
+      this._wallet.createWithdrawalTx<mixed>(utxos, shouldDeregister),
+    )
+  }
+
   async signTxWithLedger<T>(request: ISignRequest<T>, useUSB: boolean) {
     if (!this._wallet) throw new WalletClosed()
     return await this.abortWhenWalletCloses(

@@ -4,7 +4,7 @@ import React from 'react'
 import type {ComponentType} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {View, ScrollView, RefreshControl} from 'react-native'
+import {View, ScrollView, RefreshControl, Platform} from 'react-native'
 import {SafeAreaView, withNavigation, NavigationEvents} from 'react-navigation'
 import {BigNumber} from 'bignumber.js'
 import {injectIntl} from 'react-intl'
@@ -16,6 +16,7 @@ import {
   DelegatedStakepoolInfo,
   NotDelegatedInfo,
 } from './dashboard'
+import WithdrawalDialog from './WithdrawalDialog'
 import {
   isOnlineSelector,
   walletNameSelector,
@@ -30,6 +31,8 @@ import {
   totalDelegatedSelector,
   lastAccountStateFetchErrorSelector,
   isFlawedWalletSelector,
+  isHWSelector,
+  hwDeviceInfoSelector,
 } from '../../selectors'
 import DelegationNavigationButtons from './DelegationNavigationButtons'
 import UtxoAutoRefresher from '../Send/UtxoAutoRefresher'
@@ -44,6 +47,7 @@ import {
 import {fetchAccountState} from '../../actions/account'
 import {fetchUTXOs} from '../../actions/utxo'
 import {fetchPoolInfo} from '../../actions/pools'
+import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
 import {checkForFlawedWallets} from '../../actions'
 import {DELEGATION_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import walletManager from '../../crypto/walletManager'
@@ -51,11 +55,18 @@ import globalMessages from '../../i18n/global-messages'
 import {formatAdaWithText, formatAdaInteger} from '../../utils/format'
 import FlawedWalletScreen from './FlawedWalletScreen'
 import {CONFIG} from '../../config/config'
+import {WITHDRAWAL_DIALOG_STEPS, type WithdrawalDialogSteps} from './types'
+import {HaskellShelleyTxSignRequest} from '../../crypto/shelley/HaskellShelleyTxSignRequest'
 
 import styles from './styles/DelegationSummary.style'
 
 import type {Navigation} from '../../types/navigation'
 import type {RemotePoolMetaSuccess, RawUtxo} from '../../api/types'
+import type {
+  HWDeviceInfo,
+  DeviceObj,
+  DeviceId,
+} from '../../crypto/shelley/ledgerUtils'
 
 const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
   <Banner
@@ -86,20 +97,41 @@ type Props = {|
   totalDelegated: BigNumber,
   lastAccountStateSyncError: any,
   checkForFlawedWallets: () => any,
+  setLedgerDeviceId: (DeviceId) => Promise<void>,
+  setLedgerDeviceObj: (DeviceObj) => Promise<void>,
   isFlawedWallet: boolean,
+  isHW: boolean,
+  hwDeviceInfo: HWDeviceInfo,
 |}
 
-type State = {
+type State = {|
   +currentTime: Date,
-}
+  withdrawalDialogStep: WithdrawalDialogSteps,
+  useUSB: boolean,
+|}
 
 class StakingDashboard extends React.Component<Props, State> {
   state = {
     currentTime: new Date(),
+    withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.CLOSED,
+    useUSB: false,
   }
 
-  _firstFocus = true
-  _isDelegating = false
+  _firstFocus: boolean = true
+  _isDelegating: boolean = false
+
+  _shouldDeregister: boolean = false
+
+  // TODO: these should be state variables
+  _withdrawals: Array<{|
+    address: string,
+    amount: BigNumber,
+  |}> = []
+
+  _deregistrations: ?Array<{|
+    rewardAddress: string,
+    refund: BigNumber,
+  |}> = null
 
   componentDidMount() {
     this.intervalId = setInterval(
@@ -172,6 +204,91 @@ class StakingDashboard extends React.Component<Props, State> {
     }
     this.props.checkForFlawedWallets()
   }
+
+  /* withdrawal logic */
+
+  openWithdrawalDialog: () => void
+  openWithdrawalDialog = () =>
+    this.setState({
+      withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WARNING,
+    })
+
+  onKeepOrDeregisterKey: (Object, boolean) => Promise<void>
+  onKeepOrDeregisterKey = async (event, shouldDeregister) => {
+    this._shouldDeregister = shouldDeregister
+    if (
+      this.props.isHW &&
+      Platform.OS === 'android' &&
+      CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT
+    ) {
+      // toggle ledger transport switch modal
+      this.setState({
+        withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.CHOOSE_TRANSPORT,
+      })
+    } else {
+      await this.createWithdrawalTx()
+    }
+  }
+
+  /* create withdrawal tx and move to confirm */
+  createWithdrawalTx: () => Promise<void>
+  createWithdrawalTx = async () => {
+    const {utxos} = this.props
+    if (utxos == null) return // should never happen
+    try {
+      const unsignedTx = await walletManager.createWithdrawalTx(
+        utxos,
+        this._shouldDeregister,
+      )
+      if (unsignedTx instanceof HaskellShelleyTxSignRequest) {
+        this._withdrawals = await unsignedTx.withdrawals()
+        this._deregistrations = await unsignedTx.keyDeregistrations()
+        this.setState({
+          withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.CONFIRM,
+        })
+      } else {
+        throw new Error('unexpected withdrawal tx type')
+      }
+    } catch (e) {}
+  }
+
+  openLedgerConnect: () => void
+  openLedgerConnect = () =>
+    this.setState({
+      withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.LEDGER_CONNECT,
+    })
+
+  onChooseTransport: (Object, boolean) => Promise<void>
+  onChooseTransport = async (event, useUSB) => {
+    const {hwDeviceInfo} = this.props
+    this.setState({useUSB})
+    if (
+      (useUSB && hwDeviceInfo.hwFeatures.deviceObj == null) ||
+      (!useUSB && hwDeviceInfo.hwFeatures.deviceId == null)
+    ) {
+      this.openLedgerConnect()
+    } else {
+      await this.createWithdrawalTx()
+    }
+  }
+
+  onConnectUSB: () => Promise<void>
+  onConnectUSB = async (deviceObj) => {
+    await this.props.setLedgerDeviceObj(deviceObj)
+    await this.createWithdrawalTx()
+  }
+
+  onConnectBLE: () => Promise<void>
+  onConnectBLE = async (deviceId) => {
+    await this.props.setLedgerDeviceId(deviceId)
+    await this.createWithdrawalTx()
+  }
+
+  closeWithdrawalDialog: () => void
+  closeWithdrawalDialog = () =>
+    this.setState({
+      withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.CLOSED,
+    })
 
   render() {
     const {
@@ -302,8 +419,9 @@ class StakingDashboard extends React.Component<Props, State> {
                 poolInfo !== null && totalDelegated !== null
                   ? formatAdaWithText(totalDelegated)
                   : formatAdaWithText(new BigNumber(0))
+                /* eslint-enable indent */
               }
-              /* eslint-enable indent */
+              onWithdraw={this.openWithdrawalDialog}
             />
             {/* eslint-disable indent */
             poolInfo != null &&
@@ -322,6 +440,20 @@ class StakingDashboard extends React.Component<Props, State> {
           <DelegationNavigationButtons onPress={this.navigateToStakingCenter} />
         </View>
         <NavigationEvents onDidFocus={this.handleDidFocus} />
+
+        <WithdrawalDialog
+          step={this.state.withdrawalDialogStep}
+          onKeepKey={(event) => this.onKeepOrDeregisterKey(event, false)}
+          onDeregisterKey={(event) => this.onKeepOrDeregisterKey(event, true)}
+          onChooseTransport={this.onChooseTransport}
+          useUSB={this.state.useUSB}
+          onConnectBLE={this.onConnectBLE}
+          onConnectUSB={this.onConnectUSB}
+          withdrawals={this._withdrawals}
+          deregistrations={this._deregistrations}
+          onConfirm={() => ({})}
+          onRequestClose={this.closeWithdrawalDialog}
+        />
       </SafeAreaView>
     )
   }
@@ -349,12 +481,16 @@ export default injectIntl(
         isOnline: isOnlineSelector(state),
         walletName: walletNameSelector(state),
         isFlawedWallet: isFlawedWalletSelector(state),
+        isHW: isHWSelector(state),
+        hwDeviceInfo: hwDeviceInfoSelector(state),
       }),
       {
         fetchPoolInfo,
         fetchAccountState,
         fetchUTXOs,
         checkForFlawedWallets,
+        setLedgerDeviceId,
+        setLedgerDeviceObj,
       },
       (state, dispatchProps, ownProps) => ({
         ...state,

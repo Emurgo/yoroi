@@ -61,6 +61,10 @@ export const txLabels = defineMessages({
     id: 'global.txLabels.balanceAfterTx',
     defaultMessage: '!!!Balance after transaction',
   },
+  confirmTx: {
+    id: 'global.txLabels.confirmTx',
+    defaultMessage: 'Confirm transaction',
+  },
   fees: {
     id: 'global.txLabels.fees',
     defaultMessage: '!!!Fees',
@@ -73,9 +77,17 @@ export const txLabels = defineMessages({
     id: 'global.txLabels.receiver',
     defaultMessage: '!!!Receiver',
   },
+  stakeDeregistration: {
+    id: 'global.txLabels.stakeDeregistration',
+    defaultMessage: '!!!Staking key deregistration',
+  },
   submittingTx: {
     id: 'global.txLabels.submittingTx',
     defaultMessage: 'Submitting transaction',
+  },
+  withdrawals: {
+    id: 'global.txLabels.withdrawals',
+    defaultMessage: '!!!Withdrawals',
   },
 })
 

@@ -1,4 +1,5 @@
 // @flow
+/* eslint-disable camelcase */
 
 import {BigNumber} from 'bignumber.js'
 import {
@@ -8,6 +9,9 @@ import {
   Certificate,
   Ed25519KeyHash,
   LinearFee,
+  hash_transaction,
+  make_vkey_witness,
+  PrivateKey,
   PublicKey,
   RewardAddress,
   StakeCredential,
@@ -16,12 +20,18 @@ import {
   StakeRegistration,
 } from 'react-native-haskell-shelley'
 import {sortBy} from 'lodash'
+import ExtendableError from 'es6-error'
 
 import {newAdaUnsignedTx} from './transactions'
 import {normalizeToAddress} from './utils'
-import {NETWORKS} from '../../config/networks'
+import {CONFIG} from '../../config/config'
 import {Logger} from '../../utils/logging'
-import {CardanoError, InsufficientFunds} from '../errors'
+import LocalizableError from '../../i18n/LocalizableError'
+import {
+  CardanoError,
+  InsufficientFunds,
+  RewardAddressEmptyError,
+} from '../errors'
 import {ObjectValues} from '../../utils/flow'
 import assert from '../../utils/assert'
 import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
@@ -32,6 +42,7 @@ import type {
   V4UnsignedTxAddressedUtxoResponse,
 } from '../types'
 import type {TimestampedCertMeta} from './transactionCache'
+import type {AccountStateRequest, AccountStateResponse} from '../../api/types'
 import type {Dict} from '../../state'
 
 const createCertificate = async (
@@ -179,119 +190,6 @@ const getDifferenceAfterTx = async (
   return sumOutForKey.minus(sumInForKey)
 }
 
-export type CreateDelegationTxRequest = {|
-  absSlotNumber: BigNumber,
-  registrationStatus: boolean,
-  poolRequest: void | string,
-  valueInAccount: BigNumber,
-  addressedUtxos: Array<AddressedUtxo>,
-  stakingKey: PublicKey,
-  changeAddr: {address: string, ...Addressing},
-|}
-
-export type CreateDelegationTxResponse = {|
-  signTxRequest: HaskellShelleyTxSignRequest,
-  totalAmountToDelegate: BigNumber,
-|}
-
-export const createDelegationTx = async (
-  request: CreateDelegationTxRequest,
-): Promise<CreateDelegationTxResponse> => {
-  Logger.debug('delegationUtils::createDelegationTx called', request)
-  const {
-    changeAddr,
-    registrationStatus,
-    addressedUtxos,
-    absSlotNumber,
-    stakingKey,
-    poolRequest,
-  } = request
-  try {
-    const config = NETWORKS.HASKELL_SHELLEY
-    const protocolParams = {
-      keyDeposit: await BigNum.from_str(config.KEY_DEPOSIT),
-      linearFee: await LinearFee.new(
-        await BigNum.from_str(config.LINEAR_FEE.COEFFICIENT),
-        await BigNum.from_str(config.LINEAR_FEE.CONSTANT),
-      ),
-      minimumUtxoVal: await BigNum.from_str(config.MINIMUM_UTXO_VAL),
-      poolDeposit: await BigNum.from_str(config.POOL_DEPOSIT),
-    }
-
-    const stakeDelegationCert = await createCertificate(
-      stakingKey,
-      registrationStatus,
-      poolRequest,
-    )
-    const unsignedTx = await newAdaUnsignedTx(
-      [],
-      {
-        address: changeAddr.address,
-        addressing: changeAddr.addressing,
-      },
-      addressedUtxos,
-      absSlotNumber,
-      protocolParams,
-      stakeDelegationCert,
-      [], // no withdrawals
-      false,
-    )
-
-    const allUtxosForKey = await filterAddressesByStakingKey(
-      await StakeCredential.from_keyhash(await stakingKey.hash()),
-      addressedUtxos,
-      false,
-    )
-    const utxoSum = allUtxosForKey.reduce(
-      (sum, utxo) => sum.plus(new BigNumber(utxo.amount)),
-      new BigNumber(0),
-    )
-
-    const differenceAfterTx = await getDifferenceAfterTx(
-      unsignedTx,
-      addressedUtxos,
-      stakingKey,
-    )
-
-    const totalAmountToDelegate = utxoSum
-      .plus(differenceAfterTx) // subtract any part of the fee that comes from UTXO
-      .plus(request.valueInAccount) // recall: rewards are compounding
-
-    const signTxRequest = new HaskellShelleyTxSignRequest(
-      {
-        senderUtxos: unsignedTx.senderUtxos,
-        unsignedTx: unsignedTx.txBuilder,
-        changeAddr: unsignedTx.changeAddr,
-        certificate: undefined,
-      },
-      undefined,
-      {
-        ChainNetworkId: Number.parseInt(config.CHAIN_NETWORK_ID, 10),
-        KeyDeposit: new BigNumber(config.KEY_DEPOSIT),
-        PoolDeposit: new BigNumber(config.POOL_DEPOSIT),
-      },
-      {
-        neededHashes: new Set([
-          Buffer.from(
-            await (await StakeCredential.from_keyhash(
-              await stakingKey.hash(),
-            )).to_bytes(),
-          ).toString('hex'),
-        ]),
-        wits: new Set(),
-      },
-    )
-    return {
-      signTxRequest,
-      totalAmountToDelegate,
-    }
-  } catch (e) {
-    if (e instanceof InsufficientFunds) throw e
-    Logger.error(`shelley::createDelegationTx:: ${e.message}`, e)
-    throw new CardanoError(e.message)
-  }
-}
-
 export const unwrapStakingKey = async (
   stakingAddress: string,
 ): Promise<StakeCredential> => {
@@ -374,5 +272,306 @@ export const getDelegationStatus = (
   return {
     isRegistered,
     poolKeyHash,
+  }
+}
+
+export type CreateDelegationTxRequest = {|
+  absSlotNumber: BigNumber,
+  registrationStatus: boolean,
+  poolRequest: void | string,
+  valueInAccount: BigNumber,
+  addressedUtxos: Array<AddressedUtxo>,
+  stakingKey: PublicKey,
+  changeAddr: {address: string, ...Addressing},
+|}
+
+export type CreateDelegationTxResponse = {|
+  signTxRequest: HaskellShelleyTxSignRequest,
+  totalAmountToDelegate: BigNumber,
+|}
+
+export const createDelegationTx = async (
+  request: CreateDelegationTxRequest,
+): Promise<CreateDelegationTxResponse> => {
+  Logger.debug('delegationUtils::createDelegationTx called', request)
+  const {
+    changeAddr,
+    registrationStatus,
+    addressedUtxos,
+    absSlotNumber,
+    stakingKey,
+    poolRequest,
+  } = request
+  try {
+    const config = CONFIG.NETWORKS.HASKELL_SHELLEY
+    const protocolParams = {
+      keyDeposit: await BigNum.from_str(config.KEY_DEPOSIT),
+      linearFee: await LinearFee.new(
+        await BigNum.from_str(config.LINEAR_FEE.COEFFICIENT),
+        await BigNum.from_str(config.LINEAR_FEE.CONSTANT),
+      ),
+      minimumUtxoVal: await BigNum.from_str(config.MINIMUM_UTXO_VAL),
+      poolDeposit: await BigNum.from_str(config.POOL_DEPOSIT),
+    }
+
+    const stakeDelegationCert = await createCertificate(
+      stakingKey,
+      registrationStatus,
+      poolRequest,
+    )
+    const unsignedTx = await newAdaUnsignedTx(
+      [],
+      {
+        address: changeAddr.address,
+        addressing: changeAddr.addressing,
+      },
+      addressedUtxos,
+      absSlotNumber,
+      protocolParams,
+      stakeDelegationCert,
+      [], // no withdrawals
+      false,
+    )
+
+    const allUtxosForKey = await filterAddressesByStakingKey(
+      await StakeCredential.from_keyhash(await stakingKey.hash()),
+      addressedUtxos,
+      false,
+    )
+    const utxoSum = allUtxosForKey.reduce(
+      (sum, utxo) => sum.plus(new BigNumber(utxo.amount)),
+      new BigNumber(0),
+    )
+
+    const differenceAfterTx = await getDifferenceAfterTx(
+      unsignedTx,
+      addressedUtxos,
+      stakingKey,
+    )
+
+    const totalAmountToDelegate = utxoSum
+      .plus(differenceAfterTx) // subtract any part of the fee that comes from UTXO
+      .plus(request.valueInAccount) // recall: rewards are compounding
+
+    const signTxRequest = new HaskellShelleyTxSignRequest(
+      {
+        senderUtxos: unsignedTx.senderUtxos,
+        unsignedTx: unsignedTx.txBuilder,
+        changeAddr: unsignedTx.changeAddr,
+        certificate: undefined,
+      },
+      undefined,
+      {
+        ChainNetworkId: Number.parseInt(config.CHAIN_NETWORK_ID, 10),
+        KeyDeposit: new BigNumber(config.KEY_DEPOSIT),
+        PoolDeposit: new BigNumber(config.POOL_DEPOSIT),
+      },
+      {
+        neededHashes: new Set([
+          Buffer.from(
+            await (await StakeCredential.from_keyhash(
+              await stakingKey.hash(),
+            )).to_bytes(),
+          ).toString('hex'),
+        ]),
+        wits: new Set(),
+      },
+    )
+    return {
+      signTxRequest,
+      totalAmountToDelegate,
+    }
+  } catch (e) {
+    if (e instanceof LocalizableError || e instanceof ExtendableError) throw e
+    Logger.error(`shelley::createDelegationTx:: ${e.message}`, e)
+    throw new CardanoError(e.message)
+  }
+}
+
+export type CreateWithdrawalTxRequest = {|
+  absSlotNumber: BigNumber,
+  getAccountState: (AccountStateRequest) => Promise<AccountStateResponse>,
+  addressedUtxos: Array<AddressedUtxo>,
+  withdrawals: Array<{|
+    ...{|privateKey: PrivateKey|} | {|...Addressing|},
+    rewardAddress: string, // address you're withdrawing from (hex)
+    /**
+     * you need to withdraw all ADA before deregistering
+     * but you don't need to deregister in order to withdraw
+     * deregistering gives you back the key deposit
+     * so it makes sense if you don't intend to stake on the wallet anymore
+     */
+    shouldDeregister: boolean,
+  |}>,
+  changeAddr: {address: string, ...Addressing},
+|}
+export type CreateWithdrawalTxResponse = HaskellShelleyTxSignRequest
+
+export const createWithdrawalTx = async (
+  request: CreateWithdrawalTxRequest,
+): Promise<CreateWithdrawalTxResponse> => {
+  Logger.debug('delegationUtils::createWithdrawalTx called', request)
+  const {
+    changeAddr,
+    addressedUtxos,
+    // stakingKey,
+  } = request
+  try {
+    const config = CONFIG.NETWORKS.HASKELL_SHELLEY
+    const protocolParams = {
+      keyDeposit: await BigNum.from_str(config.KEY_DEPOSIT),
+      linearFee: await LinearFee.new(
+        await BigNum.from_str(config.LINEAR_FEE.COEFFICIENT),
+        await BigNum.from_str(config.LINEAR_FEE.CONSTANT),
+      ),
+      minimumUtxoVal: await BigNum.from_str(config.MINIMUM_UTXO_VAL),
+      poolDeposit: await BigNum.from_str(config.POOL_DEPOSIT),
+    }
+
+    const certificates = []
+    const neededKeys = {
+      neededHashes: new Set(),
+      wits: new Set(),
+    }
+
+    const requiredWits: Array<Ed25519KeyHash> = []
+    for (const withdrawal of request.withdrawals) {
+      const wasmAddr = await RewardAddress.from_address(
+        await Address.from_bytes(Buffer.from(withdrawal.rewardAddress, 'hex')),
+      )
+      if (wasmAddr == null) {
+        throw new Error(
+          'delegationUtils::createWithdrawalTx withdrawal not a reward address',
+        )
+      }
+      const paymentCred = await wasmAddr.payment_cred()
+
+      const keyHash = await paymentCred.to_keyhash()
+      if (keyHash == null) {
+        throw new Error('Unexpected: withdrawal from a script hash')
+      }
+      requiredWits.push(keyHash)
+
+      if (withdrawal.shouldDeregister) {
+        certificates.push(
+          await Certificate.new_stake_deregistration(
+            await StakeDeregistration.new(paymentCred),
+          ),
+        )
+        neededKeys.neededHashes.add(
+          Buffer.from(await paymentCred.to_bytes()).toString('hex'),
+        )
+      }
+    }
+    const accountStates = await request.getAccountState({
+      addresses: request.withdrawals.map(
+        (withdrawal) => withdrawal.rewardAddress,
+      ),
+    })
+
+    const finalWithdrawals: Array<{|
+      address: RewardAddress,
+      amount: BigNum,
+    |}> = []
+    for (const address of Object.keys(accountStates)) {
+      const rewardForAddress = accountStates[address]
+      // if key is not registered, we just skip this withdrawal
+      if (rewardForAddress == null) {
+        continue
+      }
+
+      const rewardBalance = new BigNumber(rewardForAddress.remainingAmount)
+
+      // if the reward address is empty, we filter it out of the withdrawal list
+      // although the protocol allows withdrawals of 0 ADA, it's pointless to do
+      // recall: you may want to undelegate the ADA even if there is 0 ADA in the reward address
+      // since you may want to get back your deposit
+      if (rewardBalance.eq(0)) {
+        continue
+      }
+
+      const rewardAddress = await RewardAddress.from_address(
+        await Address.from_bytes(Buffer.from(address, 'hex')),
+      )
+      if (rewardAddress == null) {
+        throw new Error('withdrawal not a reward address')
+      }
+      {
+        const stakeCredential = await rewardAddress.payment_cred()
+        neededKeys.neededHashes.add(
+          Buffer.from(await stakeCredential.to_bytes()).toString('hex'),
+        )
+      }
+      finalWithdrawals.push({
+        address: rewardAddress,
+        amount: await BigNum.from_str(rewardForAddress.remainingAmount),
+      })
+    }
+
+    // if the end result is no withdrawals and no deregistrations, throw an error
+    if (finalWithdrawals.length === 0 && certificates.length === 0) {
+      throw new RewardAddressEmptyError()
+    }
+
+    const unsignedTxResponse = await newAdaUnsignedTx(
+      [],
+      {
+        address: changeAddr.address,
+        addressing: changeAddr.addressing,
+      },
+      addressedUtxos,
+      request.absSlotNumber,
+      protocolParams,
+      certificates,
+      finalWithdrawals,
+      false,
+    )
+    // there wasn't enough in the withdrawal to send anything to us
+    if (unsignedTxResponse.changeAddr.length === 0) {
+      throw new InsufficientFunds()
+    }
+    Logger.debug(
+      'delegationUtils::createWithdrawalTx success',
+      JSON.stringify(unsignedTxResponse),
+    )
+
+    {
+      const body = await unsignedTxResponse.txBuilder.build()
+      for (const withdrawal of request.withdrawals) {
+        if (withdrawal.privateKey != null) {
+          const {privateKey} = withdrawal
+          neededKeys.wits.add(
+            Buffer.from(
+              await await make_vkey_witness(
+                await hash_transaction(body),
+                privateKey,
+              ).to_bytes(),
+            ).toString('hex'),
+          )
+        }
+      }
+    }
+    return new HaskellShelleyTxSignRequest(
+      {
+        senderUtxos: unsignedTxResponse.senderUtxos,
+        unsignedTx: unsignedTxResponse.txBuilder,
+        changeAddr: unsignedTxResponse.changeAddr,
+        certificate: undefined,
+      },
+      undefined,
+      {
+        ChainNetworkId: Number.parseInt(config.CHAIN_NETWORK_ID, 10),
+        KeyDeposit: new BigNumber(config.KEY_DEPOSIT),
+        PoolDeposit: new BigNumber(config.POOL_DEPOSIT),
+      },
+      neededKeys,
+    )
+  } catch (e) {
+    Logger.error(
+      'delegationUtils::createWithdrawalTx error:',
+      JSON.stringify(e),
+    )
+    if (e instanceof LocalizableError || e instanceof ExtendableError) throw e
+    throw e
   }
 }

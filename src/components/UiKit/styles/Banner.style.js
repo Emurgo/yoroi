@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   textError: {
-    color: '#FF1351',
+    color: COLORS.ERROR_TEXT_COLOR,
   },
   bannerError: {
     backgroundColor: '#fff',

@@ -37,4 +37,13 @@ export default StyleSheet.create({
     lineHeight: 24,
     fontSize: 16,
   },
+  withdrawBlock: {
+    flex: 1,
+    padding: 5,
+    justifyContent: 'flex-end',
+    flexDirection: 'row',
+  },
+  withdrawButton: {
+    minHeight: 18,
+  },
 })
