@@ -539,7 +539,9 @@ class SendScreen extends Component<Props, State> {
               value={sendAll}
               onValueChange={this.handleCheckBoxChange}
             />
-            <Text>{intl.formatMessage(messages.checkboxLabel)}</Text>
+            <Text style={styles.checkboxLabel}>
+              {intl.formatMessage(messages.checkboxLabel)}
+            </Text>
           </View>
         </ScrollView>
         <View style={styles.actions}>

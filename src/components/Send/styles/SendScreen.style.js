@@ -30,6 +30,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  checkboxLabel: {
+    marginLeft: 5,
+  },
 })
 
 export default styles
