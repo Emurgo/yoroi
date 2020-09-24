@@ -192,14 +192,22 @@ class StakingDashboard extends React.Component<Props, State> {
     } = this.props
 
     // TODO: shouldn't be haskell-shelley specific
-    const config = {
-      StartAt: CONFIG.NETWORKS.HASKELL_SHELLEY.START_AT,
-      GenesisDate: CONFIG.NETWORKS.HASKELL_SHELLEY.GENESIS_DATE,
-      SlotsPerEpoch: CONFIG.NETWORKS.HASKELL_SHELLEY.SLOTS_PER_EPOCH,
-      SlotDuration: CONFIG.NETWORKS.HASKELL_SHELLEY.SLOT_DURATION,
-    }
-    const toRelativeSlotNumberFn = genToRelativeSlotNumber([config])
-    const timeToSlotFn = genTimeToSlot([config])
+    const config = [
+      {
+        StartAt: CONFIG.NETWORKS.BYRON_MAINNET.START_AT,
+        GenesisDate: CONFIG.NETWORKS.BYRON_MAINNET.GENESIS_DATE,
+        SlotsPerEpoch: CONFIG.NETWORKS.BYRON_MAINNET.SLOTS_PER_EPOCH,
+        SlotDuration: CONFIG.NETWORKS.BYRON_MAINNET.SLOT_DURATION,
+      },
+      {
+        StartAt: CONFIG.NETWORKS.HASKELL_SHELLEY.START_AT,
+        GenesisDate: CONFIG.NETWORKS.HASKELL_SHELLEY.GENESIS_DATE,
+        SlotsPerEpoch: CONFIG.NETWORKS.HASKELL_SHELLEY.SLOTS_PER_EPOCH,
+        SlotDuration: CONFIG.NETWORKS.HASKELL_SHELLEY.SLOT_DURATION,
+      },
+    ]
+    const toRelativeSlotNumberFn = genToRelativeSlotNumber(config)
+    const timeToSlotFn = genTimeToSlot(config)
 
     const currentAbsoluteSlot = timeToSlotFn({
       time: this.state.currentTime,
@@ -210,8 +218,8 @@ class StakingDashboard extends React.Component<Props, State> {
         time: new Date(),
       }).slot,
     )
-    const epochLength = genCurrentEpochLength([config])()
-    const slotLength = genCurrentSlotLength([config])()
+    const epochLength = genCurrentEpochLength(config)()
+    const slotLength = genCurrentSlotLength(config)()
 
     const secondsLeftInEpoch =
       (epochLength - currentRelativeTime.slot) * slotLength

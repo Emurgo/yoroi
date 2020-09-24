@@ -25,6 +25,10 @@ export const NETWORKS = {
       API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
       ..._DEFAULT_BACKEND_RULES,
     },
+    GENESIS_DATE: '1506203091000',
+    START_AT: 0,
+    SLOTS_PER_EPOCH: 21600,
+    SLOT_DURATION: 20,
     COIN_TYPE: NUMBERS.COIN_TYPES.CARDANO,
   },
   HASKELL_SHELLEY: {
