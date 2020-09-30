@@ -114,49 +114,56 @@ const TransferSummaryModal = ({
         {formatAdaWithText(finalBalance)}
       </Text>
     </View>
-    {withdrawals != null &&
+    {/* eslint-disable indent */
+    withdrawals != null &&
       withdrawals.length > 0 && (
-      <View style={styles.item}>
-        <Text>{intl.formatMessage(txLabels.withdrawals)}</Text>
-        {withdrawals.map((withdrawal, i) => (
-          <AddressEntry
-            key={i}
-            address={withdrawal.address}
-            explorerForAddress={
-              getNetworkConfigById(walletMeta.networkId).EXPLORER_URL_FOR_ADDRESS
-            }
-          />
-        ))}
-      </View>
-    )
-    }
-    {deregistrations != null && deregistrations.length > 0 && (
-      <>
         <View style={styles.item}>
-          <Text>{intl.formatMessage(txLabels.stakeDeregistration)}</Text>
-          {deregistrations.map((deregistration, i) => (
+          <Text>{intl.formatMessage(txLabels.withdrawals)}</Text>
+          {withdrawals.map((withdrawal, i) => (
             <AddressEntry
               key={i}
-              address={deregistration.rewardAddress}
+              address={withdrawal.address}
               explorerForAddress={
-                getNetworkConfigById(walletMeta.networkId).EXPLORER_URL_FOR_ADDRESS
+                getNetworkConfigById(walletMeta.networkId)
+                  .EXPLORER_URL_FOR_ADDRESS
               }
             />
           ))}
         </View>
-        <View style={styles.item}>
-          <Text>{intl.formatMessage(
-            messages.unregisterExplanation,
-            {
-              refundAmount: formatAda(deregistrations.reduce(
-                (sum, curr) => (curr.refund == null ? sum : sum.plus(curr.refund)),
-                new BigNumber(0),
-              )).toString(),
-            }
-          )}</Text>
-        </View>
-      </>
-    )}
+      )}
+    {deregistrations != null &&
+      deregistrations.length > 0 && (
+        <>
+          <View style={styles.item}>
+            <Text>{intl.formatMessage(txLabels.stakeDeregistration)}</Text>
+            {deregistrations.map((deregistration, i) => (
+              <AddressEntry
+                key={i}
+                address={deregistration.rewardAddress}
+                explorerForAddress={
+                  getNetworkConfigById(walletMeta.networkId)
+                    .EXPLORER_URL_FOR_ADDRESS
+                }
+              />
+            ))}
+          </View>
+          <View style={styles.item}>
+            <Text>
+              {intl.formatMessage(messages.unregisterExplanation, {
+                refundAmount: formatAda(
+                  deregistrations.reduce(
+                    (sum, curr) =>
+                      curr.refund == null ? sum : sum.plus(curr.refund),
+                    new BigNumber(0),
+                  ),
+                ).toString(),
+              })}
+            </Text>
+          </View>
+        </>
+      )
+    /* eslint-enable indent */
+    }
 
     {walletMeta.isHW && <HWInstructions useUSB={useUSB} addMargin />}
 
@@ -178,9 +185,9 @@ const TransferSummaryModal = ({
 )
 
 type ExternalProps = {|
-  intl: any,
-  visible: boolean,
-  disableButtons: boolean,
+  +intl: any,
+  +visible: boolean,
+  +disableButtons: boolean,
   +withdrawals?: Array<{|
     +address: string,
     +amount: BigNumber,
@@ -192,17 +199,15 @@ type ExternalProps = {|
   balance: BigNumber,
   finalBalance: BigNumber,
   fees: BigNumber,
-  onConfirm: (password?: string,) => mixed,
+  onConfirm: (password?: string) => mixed,
   onRequestClose: () => any,
 |}
 
 export default injectIntl(
   (compose(
-    connect(
-      (state) => ({
-        walletMeta: walletMetaSelector(state),
-      }),
-    ),
+    connect((state) => ({
+      walletMeta: walletMetaSelector(state),
+    })),
     withStateHandlers(
       {
         password: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
