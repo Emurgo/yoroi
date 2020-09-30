@@ -76,4 +76,4 @@ const StandardModal = ({
   </Modal>
 )
 
-export default (injectIntl(StandardModal): ComponentType<Props>)
+export default injectIntl((StandardModal: ComponentType<Props>))

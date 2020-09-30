@@ -128,3 +128,18 @@ export const isByron = (id: WalletImplementationId): boolean =>
 
 export const isHaskellShelley = (id: WalletImplementationId): boolean =>
   id === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY
+
+export const getCardanoBaseConfig = () => [
+  {
+    StartAt: CONFIG.NETWORKS.BYRON_MAINNET.START_AT,
+    GenesisDate: CONFIG.NETWORKS.BYRON_MAINNET.GENESIS_DATE,
+    SlotsPerEpoch: CONFIG.NETWORKS.BYRON_MAINNET.SLOTS_PER_EPOCH,
+    SlotDuration: CONFIG.NETWORKS.BYRON_MAINNET.SLOT_DURATION,
+  },
+  {
+    StartAt: CONFIG.NETWORKS.HASKELL_SHELLEY.START_AT,
+    GenesisDate: CONFIG.NETWORKS.HASKELL_SHELLEY.GENESIS_DATE,
+    SlotsPerEpoch: CONFIG.NETWORKS.HASKELL_SHELLEY.SLOTS_PER_EPOCH,
+    SlotDuration: CONFIG.NETWORKS.HASKELL_SHELLEY.SLOT_DURATION,
+  },
+]

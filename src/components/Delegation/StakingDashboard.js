@@ -17,6 +17,8 @@ import {
   NotDelegatedInfo,
 } from './dashboard'
 import WithdrawalDialog from './WithdrawalDialog'
+import ErrorModal from '../Common/ErrorModal'
+import LocalizableError from '../../i18n/LocalizableError'
 import {
   isOnlineSelector,
   walletNameSelector,
@@ -32,6 +34,7 @@ import {
   lastAccountStateFetchErrorSelector,
   isFlawedWalletSelector,
   isHWSelector,
+  easyConfirmationSelector,
   hwDeviceInfoSelector,
 } from '../../selectors'
 import DelegationNavigationButtons from './DelegationNavigationButtons'
@@ -48,15 +51,27 @@ import {fetchAccountState} from '../../actions/account'
 import {fetchUTXOs} from '../../actions/utxo'
 import {fetchPoolInfo} from '../../actions/pools'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
-import {checkForFlawedWallets} from '../../actions'
-import {DELEGATION_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
-import walletManager from '../../crypto/walletManager'
-import globalMessages from '../../i18n/global-messages'
+import {
+  checkForFlawedWallets,
+  submitDelegationTx,
+  submitSignedTx,
+  showErrorDialog,
+} from '../../actions'
+import {
+  DELEGATION_ROUTES,
+  SEND_ROUTES,
+  WALLET_INIT_ROUTES,
+} from '../../RoutesList'
+import {NetworkError, ApiError} from '../../api/errors'
+import {WrongPassword} from '../../crypto/errors'
+import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
+import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {formatAdaWithText, formatAdaInteger} from '../../utils/format'
 import FlawedWalletScreen from './FlawedWalletScreen'
 import {CONFIG} from '../../config/config'
 import {WITHDRAWAL_DIALOG_STEPS, type WithdrawalDialogSteps} from './types'
 import {HaskellShelleyTxSignRequest} from '../../crypto/shelley/HaskellShelleyTxSignRequest'
+import KeyStore from '../../crypto/KeyStore'
 
 import styles from './styles/DelegationSummary.style'
 
@@ -67,6 +82,7 @@ import type {
   DeviceObj,
   DeviceId,
 } from '../../crypto/shelley/ledgerUtils'
+import type {BaseSignRequest} from '../../crypto/types'
 
 const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
   <Banner
@@ -101,13 +117,30 @@ type Props = {|
   setLedgerDeviceObj: (DeviceObj) => Promise<void>,
   isFlawedWallet: boolean,
   isHW: boolean,
+  isEasyConfirmationEnabled: boolean,
   hwDeviceInfo: HWDeviceInfo,
+  submitDelegationTx: <T>(string, BaseSignRequest<T>) => Promise<void>,
+  submitSignedTx: (string) => Promise<void>,
 |}
 
 type State = {|
   +currentTime: Date,
   withdrawalDialogStep: WithdrawalDialogSteps,
   useUSB: boolean,
+  signTxRequest: ?HaskellShelleyTxSignRequest,
+  withdrawals: ?Array<{|
+    address: string,
+    amount: BigNumber,
+  |}>,
+  deregistrations: ?Array<{|
+    rewardAddress: string,
+    refund: BigNumber,
+  |}>,
+  balance: BigNumber,
+  finalBalance: BigNumber,
+  fees: BigNumber,
+  errorMessage: ?string,
+  errorLogs: ?string,
 |}
 
 class StakingDashboard extends React.Component<Props, State> {
@@ -115,23 +148,20 @@ class StakingDashboard extends React.Component<Props, State> {
     currentTime: new Date(),
     withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.CLOSED,
     useUSB: false,
+    signTxRequest: null,
+    withdrawals: null,
+    deregistrations: null,
+    balance: new BigNumber(0),
+    finalBalance: new BigNumber(0),
+    fees: new BigNumber(0),
+    errorMessage: null,
+    errorLogs: null,
   }
 
   _firstFocus: boolean = true
   _isDelegating: boolean = false
 
   _shouldDeregister: boolean = false
-
-  // TODO: these should be state variables
-  _withdrawals: Array<{|
-    address: string,
-    amount: BigNumber,
-  |}> = []
-
-  _deregistrations: ?Array<{|
-    rewardAddress: string,
-    refund: BigNumber,
-  |}> = null
 
   componentDidMount() {
     this.intervalId = setInterval(
@@ -233,23 +263,62 @@ class StakingDashboard extends React.Component<Props, State> {
   /* create withdrawal tx and move to confirm */
   createWithdrawalTx: () => Promise<void>
   createWithdrawalTx = async () => {
-    const {utxos} = this.props
+    const {intl, utxos} = this.props
     if (utxos == null) return // should never happen
     try {
-      const unsignedTx = await walletManager.createWithdrawalTx(
+      this.setState({withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WAITING})
+      const signTxRequest = await walletManager.createWithdrawalTx(
         utxos,
         this._shouldDeregister,
       )
-      if (unsignedTx instanceof HaskellShelleyTxSignRequest) {
-        this._withdrawals = await unsignedTx.withdrawals()
-        this._deregistrations = await unsignedTx.keyDeregistrations()
+      if (signTxRequest instanceof HaskellShelleyTxSignRequest) {
+        const withdrawals = await signTxRequest.withdrawals()
+        const deregistrations = await signTxRequest.keyDeregistrations()
+        const balance = withdrawals.reduce(
+          (sum, curr) => (curr.amount == null ? sum : sum.plus(curr.amount)),
+          new BigNumber(0),
+        )
+        const fees = await signTxRequest.fee(false)
+        const finalBalance = balance
+          .plus(
+            deregistrations.reduce(
+              (sum, curr) =>
+                curr.refund == null ? sum : sum.plus(curr.refund),
+              new BigNumber(0),
+            ),
+          )
+          .minus(fees)
         this.setState({
+          signTxRequest,
+          withdrawals,
+          deregistrations,
+          balance,
+          finalBalance,
+          fees,
           withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.CONFIRM,
         })
       } else {
         throw new Error('unexpected withdrawal tx type')
       }
-    } catch (e) {}
+    } catch (e) {
+      if (e instanceof LocalizableError) {
+        this.setState({
+          withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.CLOSED,
+          errorMessage: intl.formatMessage({
+            id: e.id,
+            defaultMessage: e.defaultMessage,
+          }),
+          errorLogs: e.message,
+        })
+      } else {
+        this.setState({
+          withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.CLOSED,
+          errorMessage: intl.formatMessage(errorMessages.generalError.message, {
+            message: e.message,
+          }),
+        })
+      }
+    }
   }
 
   openLedgerConnect: () => void
@@ -284,6 +353,148 @@ class StakingDashboard extends React.Component<Props, State> {
     await this.createWithdrawalTx()
   }
 
+  // TODO: this code has been copy-pasted from the tx confirmation page.
+  // Ideally, all this logic should be moved away and perhaps written as a
+  // redux action that can be reused in all components with tx signing and sending
+  onConfirm = async (event, password) => {
+    const {signTxRequest, useUSB} = this.state
+    const {
+      intl,
+      navigation,
+      isHW,
+      isEasyConfirmationEnabled,
+      submitDelegationTx,
+      submitSignedTx,
+    } = this.props
+    if (signTxRequest == null) throw new Error('no tx data')
+    const signRequest = signTxRequest.signRequest
+
+    const submitTx = async <T>(
+      tx: string | BaseSignRequest<T>,
+      decryptedKey: ?string,
+    ) => {
+      try {
+        this.setState({withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WAITING})
+        if (
+          decryptedKey == null &&
+          (typeof tx === 'string' || tx instanceof String)
+        ) {
+          await submitSignedTx(tx)
+        } else if (
+          decryptedKey != null &&
+          !(typeof tx === 'string' || tx instanceof String)
+        ) {
+          await submitDelegationTx(decryptedKey, tx)
+        }
+      } catch (e) {
+        if (e instanceof NetworkError) {
+          this.setState({
+            errorMessage: intl.formatMessage(
+              errorMessages.networkError.message,
+            ),
+          })
+        } else if (e instanceof ApiError) {
+          this.setState({
+            errorMessage: intl.formatMessage(errorMessages.apiError.message),
+            errorLogs: JSON.stringify(e.request),
+          })
+        } else {
+          throw e
+        }
+      } finally {
+        this.closeWithdrawalDialog()
+      }
+    }
+
+    if (isHW) {
+      try {
+        this.setState({withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WAITING})
+        if (signTxRequest == null) throw new Error('no tx data')
+        const signedTx = await walletManager.signTxWithLedger(
+          signTxRequest,
+          useUSB,
+        )
+        await submitTx(Buffer.from(signedTx.encodedTx).toString('base64'))
+      } catch (e) {
+        if (e instanceof LocalizableError) {
+          this.setState({
+            errorMessage: intl.formatMessage({
+              id: e.id,
+              defaultMessage: e.defaultMessage,
+            }),
+            errorLogs: String(e.message),
+          })
+        } else {
+          this.setState({
+            errorMessage: intl.formatMessage(
+              errorMessages.generalTxError.message,
+            ),
+            errorLogs: String(e.message),
+          })
+        }
+      } finally {
+        this.closeWithdrawalDialog()
+      }
+      return
+    }
+
+    if (isEasyConfirmationEnabled) {
+      try {
+        await walletManager.ensureKeysValidity()
+        navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
+          keyId: walletManager._id,
+          onSuccess: (decryptedKey) => {
+            navigation.navigate(DELEGATION_ROUTES.STAKING_DASHBOARD)
+
+            submitTx(signRequest, decryptedKey)
+          },
+          onFail: () => navigation.goBack(),
+        })
+      } catch (e) {
+        if (e instanceof SystemAuthDisabled) {
+          await walletManager.closeWallet()
+          await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
+          navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+
+          return
+        } else {
+          this.setState({
+            errorMessage: intl.formatMessage(
+              errorMessages.generalTxError.message,
+            ),
+            errorLogs: String(e.message),
+          })
+        }
+      } finally {
+        this.closeWithdrawalDialog()
+      }
+      return
+    }
+
+    try {
+      const decryptedData = await KeyStore.getData(
+        walletManager._id,
+        'MASTER_PASSWORD',
+        '',
+        password,
+        intl,
+      )
+
+      await submitTx(signRequest, decryptedData)
+    } catch (e) {
+      if (e instanceof WrongPassword) {
+        await showErrorDialog(errorMessages.incorrectPassword, intl)
+      } else {
+        this.setState({
+          errorMessage: intl.formatMessage(
+            errorMessages.generalTxError.message,
+          ),
+          errorLogs: String(e.message),
+        })
+      }
+    }
+  }
+
   closeWithdrawalDialog: () => void
   closeWithdrawalDialog = () =>
     this.setState({
@@ -292,6 +503,7 @@ class StakingDashboard extends React.Component<Props, State> {
 
   render() {
     const {
+      intl,
       isOnline,
       utxoBalance,
       accountBalance,
@@ -449,10 +661,23 @@ class StakingDashboard extends React.Component<Props, State> {
           useUSB={this.state.useUSB}
           onConnectBLE={this.onConnectBLE}
           onConnectUSB={this.onConnectUSB}
-          withdrawals={this._withdrawals}
-          deregistrations={this._deregistrations}
-          onConfirm={() => ({})}
+          withdrawals={this.state.withdrawals}
+          deregistrations={this.state.deregistrations}
+          balance={this.state.balance}
+          finalBalance={this.state.finalBalance}
+          fees={this.state.fees}
+          onConfirm={this.onConfirm}
           onRequestClose={this.closeWithdrawalDialog}
+        />
+
+        <ErrorModal
+          visible={this.state.errorMessage != null}
+          title={intl.formatMessage(
+            errorMessages.generalLocalizableError.title,
+          )}
+          message={this.state.errorMessage}
+          errorMessage={this.state.errorLogs}
+          onRequestClose={() => this.setState({errorMessage: null})}
         />
       </SafeAreaView>
     )
@@ -481,6 +706,7 @@ export default injectIntl(
         isOnline: isOnlineSelector(state),
         walletName: walletNameSelector(state),
         isFlawedWallet: isFlawedWalletSelector(state),
+        isEasyConfirmationEnabled: easyConfirmationSelector(state),
         isHW: isHWSelector(state),
         hwDeviceInfo: hwDeviceInfoSelector(state),
       }),
@@ -491,6 +717,8 @@ export default injectIntl(
         checkForFlawedWallets,
         setLedgerDeviceId,
         setLedgerDeviceObj,
+        submitDelegationTx,
+        submitSignedTx,
       },
       (state, dispatchProps, ownProps) => ({
         ...state,

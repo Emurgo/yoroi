@@ -10,9 +10,10 @@ import {injectIntl, defineMessages} from 'react-intl'
 
 import StandardModal from '../Common/StandardModal'
 import AddressEntry from '../Common/AddressEntry'
+import HWInstructions from '../Ledger/HWInstructions'
 import {Text, ValidatedTextInput} from '../UiKit'
 import {walletMetaSelector} from '../../selectors'
-import {formatAdaWithText} from '../../utils/format'
+import {formatAda, formatAdaWithText} from '../../utils/format'
 import {confirmationMessages, txLabels} from '../../i18n/global-messages'
 import {CONFIG} from '../../config/config'
 import {getNetworkConfigById} from '../../config/networks'
@@ -54,18 +55,18 @@ type Props = {
     +address: string,
     +amount: BigNumber,
   |}>,
-  deregistrations?: Array<{|
+  +deregistrations?: Array<{|
     +rewardAddress: string,
     +refund: BigNumber,
   |}>,
   +balance: BigNumber,
   +finalBalance: BigNumber,
   +fees: BigNumber,
-  +onConfirm: () => any,
-  +onContinue: () => any,
+  +onConfirm: (event: Object, password?: string) => mixed,
   +onRequestClose: () => any,
   +walletMeta: $Diff<WalletMeta, {id: string}>,
   +showCloseIcon?: boolean,
+  +useUSB?: boolean,
 }
 
 const TransferSummaryModal = ({
@@ -83,6 +84,7 @@ const TransferSummaryModal = ({
   onRequestClose,
   walletMeta,
   showCloseIcon,
+  useUSB,
 }: Props) => (
   <StandardModal
     visible
@@ -92,7 +94,7 @@ const TransferSummaryModal = ({
       label: intl.formatMessage(
         confirmationMessages.commonButtons.confirmButton,
       ),
-      onPress: onConfirm,
+      onPress: (event) => onConfirm(event, password),
     }}
     secondaryButton={{}}
     showCloseIcon={showCloseIcon === true}
@@ -112,7 +114,8 @@ const TransferSummaryModal = ({
         {formatAdaWithText(finalBalance)}
       </Text>
     </View>
-    {withdrawals != null && (
+    {withdrawals != null &&
+      withdrawals.length > 0 && (
       <View style={styles.item}>
         <Text>{intl.formatMessage(txLabels.withdrawals)}</Text>
         {withdrawals.map((withdrawal, i) => (
@@ -120,14 +123,14 @@ const TransferSummaryModal = ({
             key={i}
             address={withdrawal.address}
             explorerForAddress={
-              getNetworkConfigById(walletMeta.networkId)
-                .EXPLORER_URL_FOR_ADDRESS
+              getNetworkConfigById(walletMeta.networkId).EXPLORER_URL_FOR_ADDRESS
             }
           />
         ))}
       </View>
-    )}
-    {deregistrations != null && (
+    )
+    }
+    {deregistrations != null && deregistrations.length > 0 && (
       <>
         <View style={styles.item}>
           <Text>{intl.formatMessage(txLabels.stakeDeregistration)}</Text>
@@ -136,27 +139,26 @@ const TransferSummaryModal = ({
               key={i}
               address={deregistration.rewardAddress}
               explorerForAddress={
-                getNetworkConfigById(walletMeta.networkId)
-                  .EXPLORER_URL_FOR_ADDRESS
+                getNetworkConfigById(walletMeta.networkId).EXPLORER_URL_FOR_ADDRESS
               }
             />
           ))}
         </View>
         <View style={styles.item}>
-          <Text>
-            {intl.formatMessage(messages.unregisterExplanation, {
-              refundAmount: deregistrations
-                .reduce(
-                  (sum, curr) =>
-                    curr.refund == null ? sum : sum.plus(curr.refund),
-                  new BigNumber(0),
-                )
-                .toString(),
-            })}
-          </Text>
+          <Text>{intl.formatMessage(
+            messages.unregisterExplanation,
+            {
+              refundAmount: formatAda(deregistrations.reduce(
+                (sum, curr) => (curr.refund == null ? sum : sum.plus(curr.refund)),
+                new BigNumber(0),
+              )).toString(),
+            }
+          )}</Text>
         </View>
       </>
     )}
+
+    {walletMeta.isHW && <HWInstructions useUSB={useUSB} addMargin />}
 
     {/* eslint-disable indent */
     !walletMeta.isEasyConfirmationEnabled &&
@@ -190,16 +192,17 @@ type ExternalProps = {|
   balance: BigNumber,
   finalBalance: BigNumber,
   fees: BigNumber,
-  onConfirm: () => any,
-  onContinue: () => any,
+  onConfirm: (password?: string,) => mixed,
   onRequestClose: () => any,
 |}
 
 export default injectIntl(
   (compose(
-    connect((state) => ({
-      walletMeta: walletMetaSelector(state),
-    })),
+    connect(
+      (state) => ({
+        walletMeta: walletMetaSelector(state),
+      }),
+    ),
     withStateHandlers(
       {
         password: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',

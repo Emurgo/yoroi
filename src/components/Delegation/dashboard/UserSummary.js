@@ -77,7 +77,10 @@ const UserSummary = ({
           </View>
           <View style={styles.withdrawBlock}>
             <Button
-              disabled={new BigNumber(totalAdaSum ?? '0').gt(0)}
+              disabled={
+                new BigNumber(totalAdaSum ?? '0').eq(0) ||
+                new BigNumber(totalRewards ?? '0').eq(0)
+              }
               outlineOnLight
               shelleyTheme
               onPress={onWithdraw}

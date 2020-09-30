@@ -4,12 +4,12 @@ import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
-import {Text, Modal} from '../UiKit'
+import {Text, Modal, PleaseWaitModal} from '../UiKit'
 import DangerousActionModal from '../Common/DangerousActionModal'
 import TransferSummaryModal from '../Transfer/TransferSummaryModal'
 import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
 import LedgerConnect from '../Ledger/LedgerConnect'
-// import globalMessages from '../../i18n/global-messages'
+import globalMessages from '../../i18n/global-messages'
 import {WITHDRAWAL_DIALOG_STEPS, type WithdrawalDialogSteps} from './types'
 
 import styles from './styles/WithdrawalDialog.style'
@@ -69,28 +69,28 @@ const messages = defineMessages({
 })
 
 type Props = {|
-  intl: intlShape,
-  step: WithdrawalDialogSteps,
-  onKeepKey: () => any,
-  onDeregisterKey: () => any,
-  onChooseTransport: (Object, boolean) => any,
-  onConnectBLE: () => any,
-  onConnectUSB: () => any,
-  +withdrawals?: Array<{|
+  +intl: intlShape,
+  +step: WithdrawalDialogSteps,
+  +onKeepKey: () => any,
+  +onDeregisterKey: () => any,
+  +onChooseTransport: (Object, boolean) => any,
+  +onConnectBLE: () => any,
+  +onConnectUSB: () => any,
+  +withdrawals?: ?Array<{|
     +address: string,
     +amount: BigNumber,
   |}>,
-  +deregistrations?: Array<{|
+  +deregistrations?: ?Array<{|
     +rewardAddress: string,
     +refund: BigNumber,
   |}>,
-  balance: BigNumber,
-  finalBalance: BigNumber,
-  fees: BigNumber,
-  onConfirm: () => any,
-  onRequestClose: () => any,
-  useUSB: boolean,
-  showCloseIcon?: boolean,
+  +balance: BigNumber,
+  +finalBalance: BigNumber,
+  +fees: BigNumber,
+  +onConfirm: (event: Object, password?: string) => mixed,
+  +onRequestClose: () => any,
+  +useUSB: boolean,
+  +showCloseIcon?: boolean,
 |}
 
 const WithdrawalDialog = ({
@@ -104,6 +104,9 @@ const WithdrawalDialog = ({
   onConnectUSB,
   withdrawals,
   deregistrations,
+  balance,
+  finalBalance,
+  fees,
   onConfirm,
   onRequestClose,
   showCloseIcon,
@@ -169,32 +172,24 @@ const WithdrawalDialog = ({
       return (
         <TransferSummaryModal
           visible
+          onRequestClose={onRequestClose}
           disableButtons={false}
-          withdrawals={
-            withdrawals
-            /*
-            [
-              {
-                address: 'stake1uxym8c6uc7udykq26aqv4rvn5kjluhvm2r53d0xw67ky64ca6aspa',
-              },
-            ]
-            */
-          }
-          deregistrations={
-            deregistrations
-            /*
-            [
-              {
-                address: 'stake1uxym8c6uc7udykq26aqv4rvn5kjluhvm2r53d0xw67ky64ca6aspa',
-                refund: new BigNumber('2000000'),
-              },
-            ]
-            */
-          }
-          balance={new BigNumber('1000000')}
-          finalBalance={new BigNumber('3000000')}
-          fees={new BigNumber('170000')}
+          withdrawals={withdrawals}
+          deregistrations={deregistrations}
+          balance={balance}
+          finalBalance={finalBalance}
+          fees={fees}
+          onConfirm={onConfirm}
           showCloseIcon
+          useUSB={useUSB}
+        />
+      )
+    case WITHDRAWAL_DIALOG_STEPS.WAITING:
+      return (
+        <PleaseWaitModal
+          visible
+          title={''}
+          spinnerText={intl.formatMessage(globalMessages.pleaseWait)}
         />
       )
     default:

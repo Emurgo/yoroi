@@ -88,11 +88,13 @@ const DangerousActionModal = ({
           onChange={toogleCheck}
           checked={isChecked}
           text={
+            /* eslint-disable indent */
             checkboxLabel != null
               ? checkboxLabel
               : intl.formatMessage(
                   confirmationMessages.commonButtons.iUnderstandButton,
                 )
+            /* eslint-enable indent */
           }
         />
       </View>

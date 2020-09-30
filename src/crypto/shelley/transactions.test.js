@@ -131,9 +131,9 @@ const genSampleAdaAddresses: (void) => Promise<
   },
   {
     address: Buffer.from(
-      await await ShelleyAddress.from_bech32(
+      await (await ShelleyAddress.from_bech32(
         'addr1q8gpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqphf76y',
-      ).to_bytes(),
+      )).to_bytes(),
     ).toString('hex'),
     addressing: {
       path: [0, 0],
@@ -801,9 +801,9 @@ describe('Create sendAll unsigned TX from UTXO', () => {
       ).toEqual('1342')
       // make sure we don't accidentally burn a lot of coins
       expect(
-        await await (await sendAllResponse.txBuilder.get_explicit_input())
-          .checked_sub(await sendAllResponse.txBuilder.get_explicit_output())
-          .to_str(),
+        await (await (await sendAllResponse.txBuilder.get_explicit_input()).checked_sub(
+          await sendAllResponse.txBuilder.get_explicit_output(),
+        )).to_str(),
       ).toEqual('1350')
     })
   })
