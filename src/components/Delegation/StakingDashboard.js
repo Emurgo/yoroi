@@ -308,7 +308,6 @@ class StakingDashboard extends React.Component<Props, State> {
             id: e.id,
             defaultMessage: e.defaultMessage,
           }),
-          errorLogs: e.message,
         })
       } else {
         this.setState({
@@ -374,7 +373,6 @@ class StakingDashboard extends React.Component<Props, State> {
       decryptedKey: ?string,
     ) => {
       try {
-        this.setState({withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WAITING})
         if (
           decryptedKey == null &&
           (typeof tx === 'string' || tx instanceof String)
@@ -401,19 +399,20 @@ class StakingDashboard extends React.Component<Props, State> {
         } else {
           throw e
         }
-      } finally {
-        this.closeWithdrawalDialog()
       }
     }
 
     if (isHW) {
       try {
-        this.setState({withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WAITING})
+        this.setState({
+          withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WAITING_HW_RESPONSE,
+        })
         if (signTxRequest == null) throw new Error('no tx data')
         const signedTx = await walletManager.signTxWithLedger(
           signTxRequest,
           useUSB,
         )
+        this.setState({withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WAITING})
         await submitTx(Buffer.from(signedTx.encodedTx).toString('base64'))
       } catch (e) {
         if (e instanceof LocalizableError) {
@@ -422,7 +421,6 @@ class StakingDashboard extends React.Component<Props, State> {
               id: e.id,
               defaultMessage: e.defaultMessage,
             }),
-            errorLogs: String(e.message),
           })
         } else {
           this.setState({
@@ -472,6 +470,7 @@ class StakingDashboard extends React.Component<Props, State> {
     }
 
     try {
+      this.setState({withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WAITING})
       const decryptedData = await KeyStore.getData(
         walletManager._id,
         'MASTER_PASSWORD',
@@ -492,6 +491,8 @@ class StakingDashboard extends React.Component<Props, State> {
           errorLogs: String(e.message),
         })
       }
+    } finally {
+      this.closeWithdrawalDialog()
     }
   }
 

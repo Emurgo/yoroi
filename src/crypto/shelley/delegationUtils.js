@@ -568,11 +568,11 @@ export const createWithdrawalTx = async (
       neededKeys,
     )
   } catch (e) {
+    if (e instanceof LocalizableError || e instanceof ExtendableError) throw e
     Logger.error(
       'delegationUtils::createWithdrawalTx error:',
       JSON.stringify(e),
     )
-    if (e instanceof LocalizableError || e instanceof ExtendableError) throw e
     throw e
   }
 }

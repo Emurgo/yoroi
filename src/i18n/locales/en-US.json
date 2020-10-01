@@ -394,6 +394,7 @@
   "global.ledgerMessages.enableLocation": "Enable location services.",
   "global.ledgerMessages.enableTransport": "Enable bluetooth.",
   "global.ledgerMessages.enterPin": "Power on your ledger device and enter your PIN.",
+  "global.ledgerMessages.followSteps": "Please, follow the steps shown in your Ledger device",
   "global.ledgerMessages.haveOTGAdapter": "You have an on-the-go adapter allowing you to connect your Ledger device with your smartphone using a USB cable.",
   "global.ledgerMessages.keepUsbConnected": "Make sure your device remains connected until the operation is completed.",
   "global.ledgerMessages.locationEnabled": "Location is enabled on your device. Android requires location to be enabled to provide access to Bluetooth, but EMURGO will never store any location data.",

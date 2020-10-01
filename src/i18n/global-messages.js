@@ -154,6 +154,10 @@ export const ledgerMessages = defineMessages({
     id: 'global.ledgerMessages.openApp',
     defaultMessage: '!!!Open Cardano ADA app on the Ledger device.',
   },
+  followSteps: {
+    id: 'global.ledgerMessages.followSteps',
+    defaultMessage: '!!!Please, follow the steps shown in your Ledger device',
+  },
   // common errors
   bluetoothDisabledError: {
     id: 'global.ledgerMessages.bluetoothDisabledError',

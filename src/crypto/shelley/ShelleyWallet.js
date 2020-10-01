@@ -630,7 +630,6 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       addressingInfo[rewardAddrHex] = this._getRewardAddressAddressing()
     }
 
-    // TODO: add withdrawal addressing
     const addressingMap = (address) => addressingInfo[address]
 
     const ledgerSignTxPayload = await createLedgerSignTxPayload({

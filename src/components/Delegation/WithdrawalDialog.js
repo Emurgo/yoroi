@@ -9,7 +9,7 @@ import DangerousActionModal from '../Common/DangerousActionModal'
 import TransferSummaryModal from '../Transfer/TransferSummaryModal'
 import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
 import LedgerConnect from '../Ledger/LedgerConnect'
-import globalMessages from '../../i18n/global-messages'
+import globalMessages, {ledgerMessages} from '../../i18n/global-messages'
 import {WITHDRAWAL_DIALOG_STEPS, type WithdrawalDialogSteps} from './types'
 
 import styles from './styles/WithdrawalDialog.style'
@@ -182,6 +182,14 @@ const WithdrawalDialog = ({
           onConfirm={onConfirm}
           showCloseIcon
           useUSB={useUSB}
+        />
+      )
+    case WITHDRAWAL_DIALOG_STEPS.WAITING_HW_RESPONSE:
+      return (
+        <PleaseWaitModal
+          visible
+          title={''}
+          spinnerText={intl.formatMessage(ledgerMessages.followSteps)}
         />
       )
     case WITHDRAWAL_DIALOG_STEPS.WAITING:
