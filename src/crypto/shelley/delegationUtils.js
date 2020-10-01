@@ -265,6 +265,7 @@ export const getDelegationStatus = (
       ) {
         isRegistered = true
       } else if (cert.kind === 'StakeDeregistration') {
+        poolKeyHash = null
         isRegistered = false
       }
     }

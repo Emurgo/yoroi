@@ -25,6 +25,7 @@ import {
   utxoBalanceSelector,
   utxosSelector,
   accountBalanceSelector,
+  isDelegatingSelector,
   isFetchingAccountStateSelector,
   isFetchingUtxosSelector,
   poolOperatorSelector,
@@ -61,6 +62,7 @@ import {
   DELEGATION_ROUTES,
   SEND_ROUTES,
   WALLET_INIT_ROUTES,
+  WALLET_ROUTES,
 } from '../../RoutesList'
 import {NetworkError, ApiError} from '../../api/errors'
 import {WrongPassword} from '../../crypto/errors'
@@ -102,6 +104,7 @@ type Props = {|
   utxoBalance: ?BigNumber,
   utxos: ?Array<RawUtxo>,
   accountBalance: ?BigNumber,
+  isDelegating: boolean,
   isFetchingAccountState: boolean,
   fetchUTXOs: () => any,
   isFetchingUtxos: boolean,
@@ -159,7 +162,6 @@ class StakingDashboard extends React.Component<Props, State> {
   }
 
   _firstFocus: boolean = true
-  _isDelegating: boolean = false
 
   _shouldDeregister: boolean = false
 
@@ -174,7 +176,7 @@ class StakingDashboard extends React.Component<Props, State> {
     this.props.checkForFlawedWallets()
   }
 
-  componentDidUpdate(prevProps) {
+  async componentDidUpdate(prevProps) {
     // data from the server is obtained in this order:
     //   - fetchAccountState: account state provides pool list, this is done
     //     inside AccountAutoRefresher component
@@ -186,8 +188,7 @@ class StakingDashboard extends React.Component<Props, State> {
       prevProps.poolOperator !== this.props.poolOperator &&
       this.props.poolOperator != null
     ) {
-      this._isDelegating = true
-      this.props.fetchPoolInfo()
+      await this.props.fetchPoolInfo()
     }
   }
 
@@ -384,6 +385,7 @@ class StakingDashboard extends React.Component<Props, State> {
         ) {
           await submitDelegationTx(decryptedKey, tx)
         }
+        navigation.navigate(WALLET_ROUTES.TX_HISTORY)
       } catch (e) {
         if (e instanceof NetworkError) {
           this.setState({
@@ -507,6 +509,7 @@ class StakingDashboard extends React.Component<Props, State> {
       intl,
       isOnline,
       utxoBalance,
+      isDelegating,
       accountBalance,
       poolOperator,
       poolInfo,
@@ -607,7 +610,7 @@ class StakingDashboard extends React.Component<Props, State> {
               />
             }
           >
-            {!this._isDelegating && <NotDelegatedInfo />}
+            {!isDelegating && <NotDelegatedInfo />}
             <EpochProgress
               percentage={Math.floor(
                 (100 * currentRelativeTime.slot) / epochLength,
@@ -688,6 +691,7 @@ export default injectIntl(
         utxos: utxosSelector(state),
         isFetchingUtxos: isFetchingUtxosSelector(state),
         accountBalance: accountBalanceSelector(state),
+        isDelegating: isDelegatingSelector(state),
         isFetchingAccountState: isFetchingAccountStateSelector(state),
         lastAccountStateSyncError: lastAccountStateFetchErrorSelector(state),
         poolOperator: poolOperatorSelector(state),

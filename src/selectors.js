@@ -117,6 +117,9 @@ export const utxoBalanceSelector = (state: State) =>
 export const isFetchingAccountStateSelector = (state: State): boolean =>
   state.accountState.isFetching
 
+export const isDelegatingSelector = (state: State): boolean =>
+  state.accountState.isDelegating
+
 export const lastAccountStateFetchErrorSelector = (state: State): any =>
   state.accountState.lastFetchingError
 
