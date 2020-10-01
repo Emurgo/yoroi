@@ -8,7 +8,6 @@ import {ScrollView, View} from 'react-native'
 import _ from 'lodash'
 import {SafeAreaView} from 'react-navigation'
 import {injectIntl, defineMessages} from 'react-intl'
-import CheckBox from '@react-native-community/checkbox'
 
 import {CONFIG} from '../../config/config'
 import {NUMBERS} from '../../config/numbers'
@@ -20,6 +19,7 @@ import {
   ValidatedTextInput,
   StatusBar,
   Banner,
+  Checkbox,
 } from '../UiKit'
 import {
   isFetchingUtxosSelector,
@@ -533,16 +533,12 @@ class SendScreen extends Component<Props, State> {
             error={getAmountErrorText(intl, amountErrors, balanceErrors)}
             editable={!sendAll}
           />
-          <View style={styles.rowView}>
-            <CheckBox
-              disabled={false}
-              value={sendAll}
-              onValueChange={this.handleCheckBoxChange}
-            />
-            <Text style={styles.checkboxLabel}>
-              {intl.formatMessage(messages.checkboxLabel)}
-            </Text>
-          </View>
+          <Checkbox
+            disabled={false}
+            checked={sendAll}
+            onChange={this.handleCheckBoxChange}
+            text={intl.formatMessage(messages.checkboxLabel)}
+          />
         </ScrollView>
         <View style={styles.actions}>
           <Button

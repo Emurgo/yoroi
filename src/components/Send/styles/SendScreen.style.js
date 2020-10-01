@@ -26,13 +26,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginBottom: 16,
   },
-  rowView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  checkboxLabel: {
-    marginLeft: 5,
-  },
 })
 
 export default styles

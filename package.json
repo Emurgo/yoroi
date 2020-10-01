@@ -31,7 +31,6 @@
     "@emurgo/cip4-js": "1.0.5",
     "@ledgerhq/react-native-hw-transport-ble": "5.22.0",
     "@react-native-community/async-storage": "1.5.1",
-    "@react-native-community/checkbox": "0.5.3",
     "@react-native-community/netinfo": "5.9.6",
     "@sentry/react-native": "1.4.5",
     "@v-almonacid/react-native-hid": "5.15.4",
