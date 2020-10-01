@@ -115,8 +115,6 @@ PODS:
     - React
   - RNCAsyncStorage (1.5.1):
     - React
-  - RNCCheckbox (0.5.3):
-    - React
   - RNDeviceInfo (6.0.1):
     - React
   - RNFS (2.13.3):
@@ -170,7 +168,6 @@ DEPENDENCIES:
   - React-RCTWebSocket (from `../node_modules/react-native/Libraries/WebSocket`)
   - RNCardano (from `../node_modules/react-native-cardano`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
-  - "RNCCheckbox (from `../node_modules/@react-native-community/checkbox`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNFS (from `../node_modules/react-native-fs`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
@@ -254,8 +251,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-cardano"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-community/async-storage"
-  RNCCheckbox:
-    :path: "../node_modules/@react-native-community/checkbox"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
   RNFS:
@@ -308,7 +303,6 @@ SPEC CHECKSUMS:
   React-RCTWebSocket: fca087d583724aa0e5fef7d911f0f2a28d0f2736
   RNCardano: ffdd908e7dde81508914dbff2fbd739183b2bf34
   RNCAsyncStorage: b63d6e83fc629b01df6b624688f17944cea5637f
-  RNCCheckbox: 47d045535fbb16796df628022a7cd631c78a4d9b
   RNDeviceInfo: 6dd5c07a482f2a5e4a29fe8a9d99eadd4277175a
   RNFS: c9bbde46b0d59619f8e7b735991c60e0f73d22c1
   RNKeychain: 3aa3cf891a09a0d18d306862ab2bb9e106079b24
