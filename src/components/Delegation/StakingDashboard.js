@@ -66,7 +66,7 @@ import {NetworkError, ApiError} from '../../api/errors'
 import {WrongPassword} from '../../crypto/errors'
 import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
-import {formatAdaWithText, formatAdaInteger} from '../../utils/format'
+import {formatAdaInteger} from '../../utils/format'
 import FlawedWalletScreen from './FlawedWalletScreen'
 import {CONFIG} from '../../config/config'
 import {WITHDRAWAL_DIALOG_STEPS, type WithdrawalDialogSteps} from './types'
@@ -110,7 +110,7 @@ type Props = {|
   isFetchingPoolInfo: boolean,
   fetchAccountState: () => any,
   poolInfo: ?RemotePoolMetaSuccess,
-  totalDelegated: BigNumber,
+  totalDelegated: ?BigNumber,
   lastAccountStateSyncError: any,
   checkForFlawedWallets: () => any,
   setLedgerDeviceId: (DeviceId) => Promise<void>,
@@ -621,19 +621,9 @@ class StakingDashboard extends React.Component<Props, State> {
               }}
             />
             <UserSummary
-              totalAdaSum={
-                utxoBalance != null ? formatAdaWithText(utxoBalance) : '-'
-              }
-              totalRewards={
-                accountBalance != null ? formatAdaWithText(accountBalance) : '-'
-              }
-              totalDelegated={
-                /* eslint-disable indent */
-                poolInfo !== null && totalDelegated !== null
-                  ? formatAdaWithText(totalDelegated)
-                  : formatAdaWithText(new BigNumber(0))
-                /* eslint-enable indent */
-              }
+              totalAdaSum={utxoBalance}
+              totalRewards={accountBalance}
+              totalDelegated={totalDelegated}
               onWithdraw={this.openWithdrawalDialog}
             />
             {/* eslint-disable indent */
