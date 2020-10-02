@@ -117,7 +117,7 @@
     "detox": "15.4.2",
     "eslint-plugin-flowtype": "3.12.1",
     "extract-react-intl-messages": "^0.14.0",
-    "flow-bin": "^0.98.0",
+    "flow-bin": "^0.135.0",
     "flow-typed": "3.1.0",
     "jest": "24.8.0",
     "metro-react-native-babel-preset": "0.55.0",
