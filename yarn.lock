@@ -12351,10 +12351,10 @@ react-native-markdown-renderer@^3.2.8:
     prop-types "^15.5.10"
     react-native-fit-image "^1.5.2"
 
-react-native-permissions@2.2.0, react-native-permissions@^2.0.2:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-2.2.0.tgz#7980caccf98814c6a4677816d21e90ba456362d3"
-  integrity sha512-y5GvcYdEe9PEWVM12UgdkNI/BVvjEU6SZGN7zBpoalTczSlWGQ4SeD2dBz9KfCu1jg5l1752sKDAggTjaq3QKQ==
+react-native-permissions@2.2.2, react-native-permissions@^2.0.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-2.2.2.tgz#3d2a63f6b7d6be52fc86e30f77412a9566283028"
+  integrity sha512-ihf4shQDSX5Oo9ChQXb9kr13mmyyNem5MaEvOpr3dCjhBOBWyEMztXm9/uPK1Qg5PsNpaYLa1KpcPZDCw87LXg==
 
 react-native-qrcode-scanner@1.4.1:
   version "1.4.1"
