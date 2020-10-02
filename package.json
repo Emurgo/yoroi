@@ -86,7 +86,7 @@
     "react-native-randombytes": "3.5.3",
     "react-native-splash-screen": "^3.1.1",
     "react-native-svg": "^7.2.0",
-    "react-native-webview": "10.8.3",
+    "react-native-webview": "10.9.1",
     "react-navigation": "^2.17.0",
     "react-redux": "7.2.1",
     "recompose": "^0.30.0",
