@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@babel/cli": "7.2.3",
-    "@babel/core": "7.5.5",
+    "@babel/core": "7.11.6",
     "@babel/node": "7.0.0",
     "@babel/runtime": "7.5.5",
     "@cardano-foundation/ledgerjs-hw-app-cardano": "2.0.1",
