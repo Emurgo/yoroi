@@ -458,6 +458,10 @@ export default defineMessages({
     id: 'global.staking.epochLabel',
     defaultMessage: '!!!Epoch',
   },
+  learnMore: {
+    id: 'components.maintenancemodal.learnMore',
+    defaultMessage: '!!!Learn more',
+  },
   notSupported: {
     id: 'global.notSupported',
     defaultMessage: '!!!Feature not supported',

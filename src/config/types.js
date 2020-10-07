@@ -19,7 +19,7 @@ export type DerivationType = $Values<typeof DERIVATION_TYPES>
 export const WALLET_IMPLEMENTATION_REGISTRY = {
   HASKELL_BYRON: 'haskell-byron', // bip44
   HASKELL_SHELLEY: 'haskell-shelley', // cip1852
-  BYRON: 'byron', // deprecated
+  DAEDALUS_HASKELL_SHELLEY: 'daedalus-haskell-shelley', // cip1852
   JORMUNGANDR_ITN: 'jormungandr-itn', // deprecated
   // ERGO: 'ergo',
   UNDEFINED: '',

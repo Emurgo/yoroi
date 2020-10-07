@@ -59,6 +59,8 @@ const WalletInitScreen = ({
           </View>
           <Button
             onPress={(event) =>
+              // assume regular haskell shelley wallet. In next screen, user
+              // may choose to use a 24-word mnemonic (-> diffferent impl id)
               navigateInitWallet(
                 event,
                 NETWORK_REGISTRY.HASKELL_SHELLEY,

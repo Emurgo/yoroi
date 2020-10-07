@@ -22,6 +22,9 @@ export default StyleSheet.create({
   createButton: {
     marginBottom: 10,
   },
+  mnemonicDialogButton: {
+    marginTop: 15,
+  },
   emurgoCreditsContainer: {
     alignItems: 'center',
     flexDirection: 'row',

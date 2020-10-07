@@ -11,7 +11,7 @@ import _ from 'lodash'
 
 import {Text, Button, ValidatedTextInput, StatusBar} from '../../UiKit'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
-import {CONFIG} from '../../../config/config'
+import {CONFIG, getWalletConfigById} from '../../../config/config'
 import {
   validateRecoveryPhrase,
   INVALID_PHRASE_ERROR_CODES,
@@ -25,6 +25,7 @@ import styles from './styles/RestoreWalletScreen.style'
 import type {InvalidPhraseError} from '../../../utils/validators'
 import type {ComponentType} from 'react'
 import type {Navigation} from '../../../types/navigation'
+import type {WalletImplementationId} from '../../../config/types'
 
 const mnemonicInputErrorsMessages = defineMessages({
   TOO_LONG: {
@@ -112,7 +113,11 @@ const RestoreWalletScreen = ({
   isKeyboardOpen,
   navigation,
 }) => {
-  const errors = validateRecoveryPhrase(phrase)
+  const implId: WalletImplementationId = navigation.getParam(
+    'walletImplementationId',
+  )
+  const walletConfig = getWalletConfigById(implId)
+  const errors = validateRecoveryPhrase(phrase, walletConfig.MNEMONIC_LEN)
   const visibleErrors = isKeyboardOpen
     ? errorsVisibleWhileWriting(errors.invalidPhrase || [])
     : errors.invalidPhrase || []

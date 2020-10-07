@@ -81,6 +81,8 @@ const WalletListScreen = ({
 
         <Button
           onPress={(event) =>
+            // note: assume wallet implementation = yoroi haskell shelley
+            // (15 words), but user may choose 24 words in next screen
             navigateInitWallet(
               event,
               NETWORK_REGISTRY.HASKELL_SHELLEY,

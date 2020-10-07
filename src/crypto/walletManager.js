@@ -175,6 +175,7 @@ class WalletManager {
                   accountPubKeyHex || account.root_cached_key,
                 )
                 break
+              case WALLETS.DAEDALUS_HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID:
               case WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID:
                 checksum = walletChecksum(accountPubKeyHex)
                 break
@@ -644,8 +645,8 @@ class WalletManager {
   ): WalletInterface {
     switch (walletImplementationId) {
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
-        return new ShelleyWallet()
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
+      case WALLET_IMPLEMENTATION_REGISTRY.DAEDALUS_HASKELL_SHELLEY:
         return new ShelleyWallet()
       // TODO
       // case WALLET_IMPLEMENTATION_REGISTRY.ERGO:

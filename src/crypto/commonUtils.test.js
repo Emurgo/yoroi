@@ -64,4 +64,12 @@ test('Can format address', () => {
       WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY,
     ),
   ).toBe("m/1852'/1815'/42'/1/47")
+  expect(
+    formatPath(
+      42,
+      'Internal',
+      47,
+      WALLET_IMPLEMENTATION_REGISTRY.DAEDALUS_HASKELL_SHELLEY,
+    ),
+  ).toBe("m/1852'/1815'/42'/1/47")
 })

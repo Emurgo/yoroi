@@ -151,8 +151,6 @@ wordlists.EN.forEach((word) => {
   )
 })
 
-const MNEMONIC_LENGTH = 15
-
 export const cleanMnemonic = (mnemonic: string) => {
   // get rid of common punctuation
   mnemonic = mnemonic.replace(/[.,?]/g, ' ')
@@ -164,13 +162,16 @@ export const cleanMnemonic = (mnemonic: string) => {
   return mnemonic.trim()
 }
 
-export const validateRecoveryPhrase = (mnemonic: string) => {
+export const validateRecoveryPhrase = (
+  mnemonic: string,
+  mnemonicLength: number,
+) => {
   const cleaned = cleanMnemonic(mnemonic)
   // Deal with edge case ''.split(' ') -> ['']
   const words = cleaned ? cleaned.split(' ') : []
 
-  const tooShort = words.length < MNEMONIC_LENGTH
-  const tooLong = words.length > MNEMONIC_LENGTH
+  const tooShort = words.length < mnemonicLength
+  const tooLong = words.length > mnemonicLength
   const invalidPhraseErrors = []
 
   if (tooLong) {
