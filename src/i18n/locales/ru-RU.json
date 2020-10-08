@@ -30,6 +30,7 @@
   "components.delegationsummary.delegatedStakepoolInfo.copied": "Copied!",
   "components.delegationsummary.delegatedStakepoolInfo.fullDescriptionButtonLabel": "Перейти на сайт",
   "components.delegationsummary.delegatedStakepoolInfo.title": "Делегировано в стейк-пул",
+  "components.delegationsummary.delegatedStakepoolInfo.unknownPool": "Unknown pool",
   "components.delegationsummary.delegatedStakepoolInfo.warning": "Если вы только что делегировали в новый стейк-пул, сети может потребоваться несколько минут, чтобы обработать ваш запрос.",
   "components.delegationsummary.epochProgress.endsIn": "Заканчивается в",
   "components.delegationsummary.epochProgress.title": "Прогресс эпохи",
