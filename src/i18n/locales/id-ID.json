@@ -116,6 +116,7 @@
   "components.send.sendscreen.availableFundsBannerNotAvailable": "-",
   "components.send.sendscreen.balanceAfterLabel": "Saldo setelah",
   "components.send.sendscreen.balanceAfterNotAvailable": "-",
+  "components.send.sendscreen.checkboxLabel": "Send full balance",
   "components.send.sendscreen.continueButton": "Lanjut",
   "components.send.sendscreen.errorBannerNetworkError": "We encountered a problem while fetching your current balance. Click to retry.",
   "components.send.sendscreen.errorBannerPendingOutgoingTransaction": "Anda tidak dapat mengirim transaksi jika masih ada transaksi tertunda",
