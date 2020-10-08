@@ -149,7 +149,8 @@ export interface WalletInterface {
   createUnsignedTx<T>(
     utxos: Array<RawUtxo>,
     receiver: string,
-    amount: string,
+    amount: ?string,
+    sendAll: boolean,
   ): Promise<ISignRequest<T>>;
 
   signTx<T>(

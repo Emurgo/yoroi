@@ -30,7 +30,7 @@ const handleSetAmount = ({setAmount, amount}) => (text) => {
   setAmount(formatter(text))
 }
 
-const AmountField = ({amount, handleSetAmount, intl, error}) => (
+const AmountField = ({amount, handleSetAmount, intl, error, editable}) => (
   <ValidatedTextInput
     returnKeyType="done"
     keyboardType="numeric"
@@ -38,6 +38,7 @@ const AmountField = ({amount, handleSetAmount, intl, error}) => (
     value={amount}
     onChangeText={handleSetAmount}
     error={error}
+    editable={editable != null ? editable : true}
   />
 )
 
@@ -46,6 +47,7 @@ type ExternalProps = {
   setAmount: (amount: string) => mixed,
   error: ?string,
   intl: intlShape,
+  editable?: boolean,
 }
 
 export default injectIntl(

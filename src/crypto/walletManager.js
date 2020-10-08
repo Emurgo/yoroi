@@ -717,12 +717,16 @@ class WalletManager {
   async createUnsignedTx(
     utxos: Array<RawUtxo>,
     receiver: string,
-    amount: string,
+    amount: ?string,
+    sendAll?: boolean = false,
   ) {
     if (!this._wallet) throw new WalletClosed()
+    if (sendAll === false && amount == null) {
+      throw new Error('WalletManager::createUnsignedTx: amount is null')
+    }
     return await this.abortWhenWalletCloses(
-      // TODO(v-almonacid): maybe there is a better way instead of any
-      this._wallet.createUnsignedTx<mixed>(utxos, receiver, amount),
+      // TODO(v-almonacid): maybe there is a better way instead of mixed
+      this._wallet.createUnsignedTx<mixed>(utxos, receiver, amount, sendAll),
     )
   }
 

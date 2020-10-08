@@ -14,7 +14,7 @@ PODS:
     - glog
   - glog (0.3.5)
   - MultiplatformBleAdapter (0.1.6)
-  - Permission-Camera (2.1.5):
+  - Permission-Camera (2.2.0):
     - RNPermissions
   - React (0.60.0):
     - React-Core (= 0.60.0)
@@ -62,30 +62,30 @@ PODS:
     - React-cxxreact (= 0.60.0)
     - React-jsi (= 0.60.0)
   - React-jsinspector (0.60.0)
-  - react-native-background-timer (2.2.0):
+  - react-native-background-timer (2.4.0):
     - React
   - react-native-ble-plx (2.0.1):
     - MultiplatformBleAdapter (= 0.1.6)
     - React
-  - react-native-camera (3.30.0):
+  - react-native-camera (3.38.0):
     - React
-    - react-native-camera/RCT (= 3.30.0)
-    - react-native-camera/RN (= 3.30.0)
-  - react-native-camera/RCT (3.30.0):
+    - react-native-camera/RCT (= 3.38.0)
+    - react-native-camera/RN (= 3.38.0)
+  - react-native-camera/RCT (3.38.0):
     - React
-  - react-native-camera/RN (3.30.0):
+  - react-native-camera/RN (3.38.0):
     - React
   - react-native-config (0.12.0):
     - React
   - react-native-haskell-shelley (0.0.8):
     - React
-  - react-native-netinfo (5.6.2):
+  - react-native-netinfo (5.9.6):
     - React
   - react-native-randombytes (3.5.3):
     - React
   - react-native-splash-screen (3.2.0):
     - React
-  - react-native-webview (10.3.2):
+  - react-native-webview (10.8.3):
     - React
   - React-RCTActionSheet (0.60.0):
     - React-Core (= 0.60.0)
@@ -121,7 +121,7 @@ PODS:
     - React
   - RNKeychain (3.0.0):
     - React
-  - RNPermissions (2.1.5):
+  - RNPermissions (2.2.0):
     - React
   - RNSentry (1.4.5):
     - React
@@ -273,7 +273,7 @@ SPEC CHECKSUMS:
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
   MultiplatformBleAdapter: 652f47ecd7f5036756517cf66833210709a72eab
-  Permission-Camera: afad27bf90337684d4a86f3825112d648c8c4d3b
+  Permission-Camera: 9ff12884205fb282b4a22b9e8c358ba53cee7567
   React: 4b3c068e793e96672dcd186a2b572fac43e4b031
   React-Core: 3dc86b22920597f813c62a96db3165950b64826b
   React-cxxreact: 0dacb291e59b81e7c3f22a2118bee853ba8a60d2
@@ -282,15 +282,15 @@ SPEC CHECKSUMS:
   React-jsi: 8e128c4d0d8febc2977ef617d1c09bb54326069c
   React-jsiexecutor: 7a3554f703a58963ec80b860144ea0f0e9b910e1
   React-jsinspector: d4ed52225912efe0019bb7f1a225aec20f23049a
-  react-native-background-timer: 1f7d560647b40e6a60b01c452ba29c54bf581fc4
+  react-native-background-timer: 029c606b3fd6dd476b153e177c518b6ade4c169f
   react-native-ble-plx: d8dcca81ecc617eda824a4ace85f7ffd55d90c6c
-  react-native-camera: eeb5b5f4ba4c1365fed3563af8a72007cbad7aab
+  react-native-camera: 74f48f9b6e198c77e2187b10aca39126971080b2
   react-native-config: f2c2ae45625a068c35681a16b9bfb1ca58b0adc7
   react-native-haskell-shelley: 241bdb4e191404ed8ee4e877388482fb0d73f03d
-  react-native-netinfo: 73303369946c2487c600418961bfdc87748b832f
+  react-native-netinfo: 38a1e0b3e89b48e4b5833ed475d8df5f049f6f90
   react-native-randombytes: 3638d24759d67c68f6ccba60c52a7a8a8faa6a23
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
-  react-native-webview: 679b6f400176e2ea8a785acf7ae16cf282e7d1eb
+  react-native-webview: 598605cd213f5096e695f5b33fbee210a47e60ab
   React-RCTActionSheet: b27ff3cf3a68f917c46d2b94abf938b625b96570
   React-RCTAnimation: 9e4708e5bd65fca8285ce7c0aa076f3f4fa5c2f8
   React-RCTBlob: 6eafcc3a24f33785692a7be24918ade607bc8719
@@ -306,7 +306,7 @@ SPEC CHECKSUMS:
   RNDeviceInfo: 6dd5c07a482f2a5e4a29fe8a9d99eadd4277175a
   RNFS: c9bbde46b0d59619f8e7b735991c60e0f73d22c1
   RNKeychain: 3aa3cf891a09a0d18d306862ab2bb9e106079b24
-  RNPermissions: ad71dd4f767ec254f2cd57592fbee02afee75467
+  RNPermissions: 477d88d0be7ecb0a7b344e4d5fbb0352de104626
   RNSentry: 0a70359ddacbfb9b1cbbb0971e54065b9f70ac57
   RNSVG: 6c8e8c6f9e5a0caf910dd25aa6e4216045426e1d
   Sentry: 81f7f2bd3cb041137ea7efcde3aa5ad0d5a67632

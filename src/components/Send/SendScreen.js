@@ -10,6 +10,7 @@ import {SafeAreaView} from 'react-navigation'
 import {injectIntl, defineMessages} from 'react-intl'
 
 import {CONFIG} from '../../config/config'
+import {NUMBERS} from '../../config/numbers'
 import {SEND_ROUTES} from '../../RoutesList'
 import {
   Text,
@@ -18,6 +19,7 @@ import {
   ValidatedTextInput,
   StatusBar,
   Banner,
+  Checkbox,
 } from '../UiKit'
 import {
   isFetchingUtxosSelector,
@@ -130,6 +132,11 @@ const messages = defineMessages({
     defaultMessage: '!!!Address',
     description: 'some desc',
   },
+  checkboxLabel: {
+    id: 'components.send.sendscreen.checkboxLabel',
+    defaultMessage: '!!!Send full balance',
+    description: 'some desc',
+  },
   continueButton: {
     id: 'components.send.sendscreen.continueButton',
     defaultMessage: '!!!Continue',
@@ -151,31 +158,62 @@ const messages = defineMessages({
   },
 })
 
-const getTransactionData = async (utxos, address, amount) => {
-  const adaAmount = parseAdaDecimal(amount)
-  return await walletManager.createUnsignedTx(
-    utxos,
-    address,
-    adaAmount.toString(),
-  )
+const getTransactionData = async (
+  utxos: Array<RawUtxo>,
+  address: string,
+  amount: string,
+  sendAll: boolean,
+) => {
+  if (sendAll) {
+    return await walletManager.createUnsignedTx(utxos, address, null, sendAll)
+  } else {
+    const adaAmount = parseAdaDecimal(amount)
+    return await walletManager.createUnsignedTx(
+      utxos,
+      address,
+      adaAmount.toString(),
+    )
+  }
 }
 
-const recomputeAll = async ({amount, address, utxos}) => {
+const recomputeAll = async ({amount, address, utxos, sendAll}) => {
   const amountErrors = validateAmount(amount)
   const addressErrors = await validateAddressAsync(address)
   let balanceErrors = Object.freeze({})
   let fee = null
   let balanceAfter = null
+  let recomputedAmount = amount
 
-  if (_.isEmpty(addressErrors) && _.isEmpty(amountErrors) && utxos) {
+  if (_.isEmpty(addressErrors) && utxos) {
     try {
-      const parsedAmount = parseAdaDecimal(amount)
-      const unsignedTx = await getTransactionData(utxos, address, amount)
-      const _fee = await unsignedTx.fee(false) // in lovelaces
-      balanceAfter = getUtxoBalance(utxos)
-        .minus(parsedAmount)
-        .minus(_fee)
-
+      let _fee: ?BigNumber = null
+      if (sendAll) {
+        const unsignedTx = await getTransactionData(
+          utxos,
+          address,
+          amount,
+          sendAll,
+        )
+        _fee = await unsignedTx.fee(false) // in lovelaces
+        recomputedAmount = getUtxoBalance(utxos)
+          .minus(_fee)
+          .dividedBy(NUMBERS.LOVELACES_PER_ADA) // to ada
+          .decimalPlaces(NUMBERS.DECIMAL_PLACES_IN_ADA)
+          .toString()
+        balanceAfter = new BigNumber('0')
+      } else if (_.isEmpty(amountErrors)) {
+        const parsedAmount = parseAdaDecimal(amount)
+        const unsignedTx = await getTransactionData(
+          utxos,
+          address,
+          amount,
+          false,
+        )
+        _fee = await unsignedTx.fee(false) // in lovelaces
+        balanceAfter = getUtxoBalance(utxos)
+          .minus(parsedAmount)
+          .minus(_fee)
+      }
       // now we can update fee as well
       fee = _fee
     } catch (err) {
@@ -184,7 +222,14 @@ const recomputeAll = async ({amount, address, utxos}) => {
       }
     }
   }
-  return {amountErrors, addressErrors, balanceErrors, fee, balanceAfter}
+  return {
+    amount: recomputedAmount,
+    amountErrors,
+    addressErrors,
+    balanceErrors,
+    fee,
+    balanceAfter,
+  }
 }
 
 const getAmountErrorText = (intl, amountErrors, balanceErrors) => {
@@ -219,6 +264,7 @@ type State = {
   balanceErrors: BalanceValidationErrors,
   fee: ?BigNumber,
   balanceAfter: ?BigNumber,
+  sendAll: boolean,
 }
 
 class SendScreen extends Component<Props, State> {
@@ -230,6 +276,7 @@ class SendScreen extends Component<Props, State> {
     fee: null,
     balanceAfter: null,
     balanceErrors: Object.freeze({}),
+    sendAll: false,
   }
 
   componentDidMount() {
@@ -243,26 +290,32 @@ class SendScreen extends Component<Props, State> {
 
   componentDidUpdate(prevProps, prevState) {
     const utxos = this.props.utxos
-    const {address, amount} = this.state
+    const {address, amount, sendAll} = this.state
 
     const prevUtxos = prevProps.utxos
-    const {address: prevAddress, amount: prevAmount} = prevState
+    const {
+      address: prevAddress,
+      amount: prevAmount,
+      sendAll: prevSendAll,
+    } = prevState
 
     if (
       prevUtxos !== utxos ||
       prevAddress !== address ||
-      prevAmount !== amount
+      prevAmount !== amount ||
+      prevSendAll !== sendAll
     ) {
-      this.revalidate({utxos, address, amount})
+      this.revalidate({utxos, address, amount, sendAll})
     }
   }
 
-  async revalidate({utxos, address, amount}) {
-    const newState = await recomputeAll({utxos, address, amount})
+  async revalidate({utxos, address, amount, sendAll}) {
+    const newState = await recomputeAll({utxos, address, amount, sendAll})
 
     if (
       this.state.address !== address ||
       this.state.amount !== amount ||
+      this.state.sendAll !== sendAll ||
       this.props.utxos !== utxos
     ) {
       return
@@ -277,10 +330,13 @@ class SendScreen extends Component<Props, State> {
   handleAmountChange: (string) => void
   handleAmountChange = (amount) => this.setState({amount})
 
+  handleCheckBoxChange: (string) => void
+  handleCheckBoxChange = (sendAll) => this.setState({sendAll})
+
   handleConfirm: () => Promise<void>
   handleConfirm = async () => {
     const {navigation, utxos, availableAmount} = this.props
-    const {address, amount} = this.state
+    const {address, amount, sendAll} = this.state
 
     const {
       addressErrors,
@@ -291,6 +347,7 @@ class SendScreen extends Component<Props, State> {
       amount,
       address,
       utxos,
+      sendAll,
     })
 
     // Note(ppershing): use this.props as they might have
@@ -309,7 +366,12 @@ class SendScreen extends Component<Props, State> {
 
     if (isValid === true) {
       /* :: if (!utxos) throw 'assert' */
-      const transactionData = await getTransactionData(utxos, address, amount)
+      const transactionData = await getTransactionData(
+        utxos,
+        address,
+        amount,
+        sendAll,
+      )
       const fee = await transactionData.fee(false)
 
       navigation.navigate(SEND_ROUTES.CONFIRM, {
@@ -426,6 +488,7 @@ class SendScreen extends Component<Props, State> {
       amountErrors,
       addressErrors,
       balanceErrors,
+      sendAll,
     } = this.state
 
     const isValid =
@@ -468,6 +531,13 @@ class SendScreen extends Component<Props, State> {
             amount={amount}
             setAmount={this.handleAmountChange}
             error={getAmountErrorText(intl, amountErrors, balanceErrors)}
+            editable={!sendAll}
+          />
+          <Checkbox
+            disabled={false}
+            checked={sendAll}
+            onChange={this.handleCheckBoxChange}
+            text={intl.formatMessage(messages.checkboxLabel)}
           />
         </ScrollView>
         <View style={styles.actions}>
