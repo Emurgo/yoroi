@@ -41,7 +41,7 @@ const messages = defineMessages({
   },
   unknownPool: {
     id: 'components.delegationsummary.delegatedStakepoolInfo.unknownPool',
-    defaultMessage: '!!!Unknown pool!',
+    defaultMessage: '!!!Unknown pool',
   },
 })
 
