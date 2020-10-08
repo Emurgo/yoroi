@@ -30,6 +30,7 @@
   "components.delegationsummary.delegatedStakepoolInfo.copied": "Kopirano!",
   "components.delegationsummary.delegatedStakepoolInfo.fullDescriptionButtonLabel": "Idi na web-stranicu",
   "components.delegationsummary.delegatedStakepoolInfo.title": "Ulog delegiran ulagačkom bazenu",
+  "components.delegationsummary.delegatedStakepoolInfo.unknownPool": "Unknown pool",
   "components.delegationsummary.delegatedStakepoolInfo.warning": "Ako ste upravo delegirali novom ulagačkom bazenu, potrebno je nekoliko minuta da mreža obradi vaš zahtjev.",
   "components.delegationsummary.epochProgress.endsIn": "Završava za",
   "components.delegationsummary.epochProgress.title": "Napredovanje epohe",
