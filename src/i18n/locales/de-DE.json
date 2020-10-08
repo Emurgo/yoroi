@@ -30,6 +30,7 @@
   "components.delegationsummary.delegatedStakepoolInfo.copied": "Kopiert!",
   "components.delegationsummary.delegatedStakepoolInfo.fullDescriptionButtonLabel": "Zur Webseite",
   "components.delegationsummary.delegatedStakepoolInfo.title": "Delegierter Stake Pool",
+  "components.delegationsummary.delegatedStakepoolInfo.unknownPool": "Unknown pool",
   "components.delegationsummary.delegatedStakepoolInfo.warning": "Wenn Du gerade an einen neuen Stakepool delegiert hast, kann es einige Minuten dauern, bis das Netzwerk Deine Anfrage bearbeitet hat.",
   "components.delegationsummary.epochProgress.endsIn": "Endet in",
   "components.delegationsummary.epochProgress.title": "Epochen Fortschritt",
