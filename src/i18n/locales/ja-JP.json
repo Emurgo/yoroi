@@ -116,6 +116,7 @@
   "components.send.sendscreen.availableFundsBannerNotAvailable": "-",
   "components.send.sendscreen.balanceAfterLabel": "その後の残高",
   "components.send.sendscreen.balanceAfterNotAvailable": "-",
+  "components.send.sendscreen.checkboxLabel": "Send full balance",
   "components.send.sendscreen.continueButton": "次へ",
   "components.send.sendscreen.errorBannerNetworkError": "We encountered a problem while fetching your current balance. Click to retry.",
   "components.send.sendscreen.errorBannerPendingOutgoingTransaction": "既存のトランザクションが進行中の時は、 新しいトランザクションを行えません。",
