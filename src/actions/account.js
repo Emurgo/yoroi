@@ -36,6 +36,13 @@ const _setAccountPool = (poolOperator) => ({
   reducer: (state, poolOperator) => poolOperator,
 })
 
+const _setAccountDelegationStatus = (isDelegating) => ({
+  type: 'SET_ACCOUNT_DELEGATION_STATUS',
+  path: ['accountState', 'isDelegating'],
+  payload: isDelegating,
+  reducer: (state, isDelegating) => isDelegating,
+})
+
 const _setAccountTotalDelegated = (value) => ({
   type: 'SET_ACCOUNT_TOTAL_DELEGATED',
   path: ['accountState', 'totalDelegated'],
@@ -78,6 +85,7 @@ export const fetchAccountState = () => async (
     const status = await walletManager.getDelegationStatus()
     Logger.debug('account actions::getDelegationStatus', status)
     dispatch(_setAccountPool(status.poolKeyHash))
+    dispatch(_setAccountDelegationStatus(status.isRegistered))
 
     const accountStateResp = await walletManager.fetchAccountState()
     const accountState = Object.keys(accountStateResp).map(
@@ -92,7 +100,7 @@ export const fetchAccountState = () => async (
       const utxosForKey = await walletManager.getAllUtxosForKey(utxos)
       // prettier-ignore
       const amountToDelegate =
-        utxosForKey != null
+        (utxosForKey != null && status.isRegistered)
           ? utxosForKey
             .map((utxo) => utxo.amount)
             .reduce(

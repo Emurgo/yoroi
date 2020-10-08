@@ -37,7 +37,7 @@ export type WalletImplementation = {
   +MAX_GENERATED_UNUSED: number,
 }
 
-export type NetworkConfig = {
+export type BackendConfig = {
   API_ROOT: string,
   FETCH_UTXOS_MAX_ADDRESSES: number,
   TX_HISTORY_MAX_ADDRESSES: number,

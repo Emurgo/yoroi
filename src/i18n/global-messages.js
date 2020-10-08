@@ -61,6 +61,10 @@ export const txLabels = defineMessages({
     id: 'global.txLabels.balanceAfterTx',
     defaultMessage: '!!!Balance after transaction',
   },
+  confirmTx: {
+    id: 'global.txLabels.confirmTx',
+    defaultMessage: 'Confirm transaction',
+  },
   fees: {
     id: 'global.txLabels.fees',
     defaultMessage: '!!!Fees',
@@ -73,9 +77,17 @@ export const txLabels = defineMessages({
     id: 'global.txLabels.receiver',
     defaultMessage: '!!!Receiver',
   },
+  stakeDeregistration: {
+    id: 'global.txLabels.stakeDeregistration',
+    defaultMessage: '!!!Staking key deregistration',
+  },
   submittingTx: {
     id: 'global.txLabels.submittingTx',
     defaultMessage: 'Submitting transaction',
+  },
+  withdrawals: {
+    id: 'global.txLabels.withdrawals',
+    defaultMessage: '!!!Withdrawals',
   },
 })
 
@@ -141,6 +153,10 @@ export const ledgerMessages = defineMessages({
   openApp: {
     id: 'global.ledgerMessages.openApp',
     defaultMessage: '!!!Open Cardano ADA app on the Ledger device.',
+  },
+  followSteps: {
+    id: 'global.ledgerMessages.followSteps',
+    defaultMessage: '!!!Please, follow the steps shown in your Ledger device',
   },
   // common errors
   bluetoothDisabledError: {

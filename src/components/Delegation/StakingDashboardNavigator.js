@@ -4,7 +4,12 @@ import {Button} from '../UiKit'
 import {createStackNavigator} from 'react-navigation'
 
 import StakingDashboard from './StakingDashboard'
-import {STAKING_DASHBOARD_ROUTES, WALLET_ROUTES} from '../../RoutesList'
+import BiometricAuthScreen from '../Send/BiometricAuthScreen'
+import {
+  STAKING_DASHBOARD_ROUTES,
+  WALLET_ROUTES,
+  SEND_ROUTES,
+} from '../../RoutesList'
 import SettingsScreenNavigator from '../Settings/SettingsScreenNavigator'
 import iconGear from '../../assets/img/gear.png'
 import {isJormungandr} from '../../config/networks'
@@ -42,6 +47,12 @@ const DelegationNavigatorSummary = createStackNavigator(
         }
       },
     },
+    [SEND_ROUTES.BIOMETRICS_SIGNING]: {
+      screen: BiometricAuthScreen,
+      navigationOptions: {
+        header: null,
+      },
+    },
     [WALLET_ROUTES.SETTINGS]: {
       screen: SettingsScreenNavigator,
       navigationOptions: {
@@ -54,8 +65,8 @@ const DelegationNavigatorSummary = createStackNavigator(
     initialRouteName: STAKING_DASHBOARD_ROUTES.MAIN,
     navigationOptions: ({navigation}) => ({
       headerLeft: <HeaderBackButton navigation={navigation} />,
-      ...defaultStackNavigatorOptions,
     }),
+    ...defaultStackNavigatorOptions,
   },
 )
 

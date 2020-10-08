@@ -30,7 +30,12 @@ import {AddressChain, AddressGenerator} from './chain'
 import * as byronUtil from '../byron/util'
 import {ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
 import * as api from '../../api/byron/api'
-import {CONFIG, isByron, isHaskellShelley} from '../../config/config'
+import {
+  CONFIG,
+  isByron,
+  isHaskellShelley,
+  getCardanoBaseConfig,
+} from '../../config/config'
 import {
   NETWORK_REGISTRY,
   WALLET_IMPLEMENTATION_REGISTRY,
@@ -45,6 +50,7 @@ import {genTimeToSlot} from '../../utils/timeUtils'
 import {
   filterAddressesByStakingKey,
   getDelegationStatus,
+  createWithdrawalTx,
   createDelegationTx,
 } from './delegationUtils'
 import {
@@ -353,6 +359,19 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     return await rewardAddr.to_address()
   }
 
+  _getRewardAddressAddressing() {
+    return {
+      path: [
+        this._getPurpose(),
+        CONFIG.NUMBERS.COIN_TYPES.CARDANO,
+        CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
+        CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+        CONFIG.NUMBERS.STAKING_KEY_INDEX,
+      ],
+      startLevel: CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE,
+    }
+  }
+
   async getAllUtxosForKey(utxos: Array<RawUtxo>) {
     return await filterAddressesByStakingKey(
       await StakeCredential.from_keyhash(
@@ -419,20 +438,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     receiver: string,
     amount: string,
   ): Promise<ISignRequest<TransactionBuilder>> {
-    const timeToSlotFn = await genTimeToSlot([
-      {
-        StartAt: CONFIG.NETWORKS.BYRON_MAINNET.START_AT,
-        GenesisDate: CONFIG.NETWORKS.BYRON_MAINNET.GENESIS_DATE,
-        SlotsPerEpoch: CONFIG.NETWORKS.BYRON_MAINNET.SLOTS_PER_EPOCH,
-        SlotDuration: CONFIG.NETWORKS.BYRON_MAINNET.SLOT_DURATION,
-      },
-      {
-        StartAt: CONFIG.NETWORKS.HASKELL_SHELLEY.START_AT,
-        GenesisDate: CONFIG.NETWORKS.HASKELL_SHELLEY.GENESIS_DATE,
-        SlotsPerEpoch: CONFIG.NETWORKS.HASKELL_SHELLEY.SLOTS_PER_EPOCH,
-        SlotDuration: CONFIG.NETWORKS.HASKELL_SHELLEY.SLOT_DURATION,
-      },
-    ])
+    const timeToSlotFn = await genTimeToSlot(getCardanoBaseConfig())
     const absSlotNumber = new BigNumber(timeToSlotFn({time: new Date()}).slot)
     const changeAddr = await this._getAddressedChangeAddress()
     const addressedUtxos = this.asAddressedUtxo(utxos)
@@ -485,20 +491,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     signTxRequest: ISignRequest<TransactionBuilder>,
     totalAmountToDelegate: BigNumber,
   |}> {
-    const timeToSlotFn = await genTimeToSlot([
-      {
-        StartAt: CONFIG.NETWORKS.BYRON_MAINNET.START_AT,
-        GenesisDate: CONFIG.NETWORKS.BYRON_MAINNET.GENESIS_DATE,
-        SlotsPerEpoch: CONFIG.NETWORKS.BYRON_MAINNET.SLOTS_PER_EPOCH,
-        SlotDuration: CONFIG.NETWORKS.BYRON_MAINNET.SLOT_DURATION,
-      },
-      {
-        StartAt: CONFIG.NETWORKS.HASKELL_SHELLEY.START_AT,
-        GenesisDate: CONFIG.NETWORKS.HASKELL_SHELLEY.GENESIS_DATE,
-        SlotsPerEpoch: CONFIG.NETWORKS.HASKELL_SHELLEY.SLOTS_PER_EPOCH,
-        SlotDuration: CONFIG.NETWORKS.HASKELL_SHELLEY.SLOT_DURATION,
-      },
-    ])
+    const timeToSlotFn = await genTimeToSlot(getCardanoBaseConfig())
     const absSlotNumber = new BigNumber(timeToSlotFn({time: new Date()}).slot)
     const changeAddr = await this._getAddressedChangeAddress()
     const addressedUtxos = this.asAddressedUtxo(utxos)
@@ -577,6 +570,33 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     }
   }
 
+  async createWithdrawalTx(
+    utxos: Array<RawUtxo>,
+    shouldDeregister: boolean,
+  ): Promise<ISignRequest<TransactionBuilder>> {
+    const timeToSlotFn = await genTimeToSlot(getCardanoBaseConfig())
+    const absSlotNumber = new BigNumber(timeToSlotFn({time: new Date()}).slot)
+    const changeAddr = await this._getAddressedChangeAddress()
+    const addressedUtxos = this.asAddressedUtxo(utxos)
+    const resp = await createWithdrawalTx({
+      absSlotNumber,
+      getAccountState: api.getAccountState,
+      addressedUtxos,
+      withdrawals: [
+        {
+          addressing: this._getRewardAddressAddressing(),
+          rewardAddress: Buffer.from(
+            await (await this.getRewardAddress()).to_bytes(),
+            'hex',
+          ).toString('hex'),
+          shouldDeregister,
+        },
+      ],
+      changeAddr,
+    })
+    return resp
+  }
+
   async signTxWithLedger(
     request: ISignRequest<TransactionBuilder>,
     useUSB: boolean,
@@ -607,19 +627,9 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
         await (await this.getRewardAddress()).to_bytes(),
         'hex',
       ).toString('hex')
-      addressingInfo[rewardAddrHex] = {
-        path: [
-          this._getPurpose(),
-          CONFIG.NUMBERS.COIN_TYPES.CARDANO,
-          CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
-          CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-          CONFIG.NUMBERS.STAKING_KEY_INDEX,
-        ],
-        startLevel: CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE,
-      }
+      addressingInfo[rewardAddrHex] = this._getRewardAddressAddressing()
     }
 
-    // TODO: add withdrawal addressing
     const addressingMap = (address) => addressingInfo[address]
 
     const ledgerSignTxPayload = await createLedgerSignTxPayload({

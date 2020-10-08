@@ -1,12 +1,14 @@
 // @flow
+import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import {View} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
-import {Text, TitledCard} from '../../UiKit'
+import {Text, TitledCard, Button} from '../../UiKit'
 import TotalAdaIcon from '../../../assets/staking/TotalAdaIcon'
 import TotalRewardIcon from '../../../assets/staking/TotalRewardIcon'
 import TotalDelegatedIcon from '../../../assets/staking/TotalDelegatedIcon'
+import {formatAdaWithText} from '../../../utils/format'
 import globalMessages from '../../../i18n/global-messages'
 import styles from './styles/UserSummary.style'
 
@@ -23,15 +25,20 @@ const messages = defineMessages({
     id: 'components.delegationsummary.userSummary.totalDelegated',
     defaultMessage: '!!!Total Delegated',
   },
+  withdrawButtonTitle: {
+    id: 'components.delegationsummary.userSummary.withdrawButtonTitle',
+    defaultMessage: '!!!Withdraw',
+  },
 })
 
 const ICON_DIM = 44
 
 type ExternalProps = {|
   +intl: intlShape,
-  +totalAdaSum: string | null,
-  +totalRewards: string | null,
-  +totalDelegated: string | null,
+  +totalAdaSum: ?BigNumber,
+  +totalRewards: ?BigNumber,
+  +totalDelegated: ?BigNumber,
+  +onWithdraw: () => void,
 |}
 
 const UserSummary = ({
@@ -39,6 +46,7 @@ const UserSummary = ({
   totalAdaSum,
   totalRewards,
   totalDelegated,
+  onWithdraw,
 }: ExternalProps) => (
   <View style={styles.wrapper}>
     <TitledCard title={intl.formatMessage(messages.title)}>
@@ -52,7 +60,7 @@ const UserSummary = ({
               {intl.formatMessage(globalMessages.availableFunds)}:
             </Text>
             <Text bold style={styles.value}>
-              {totalAdaSum}
+              {totalAdaSum != null ? formatAdaWithText(totalAdaSum) : '-'}
             </Text>
           </View>
         </View>
@@ -65,8 +73,23 @@ const UserSummary = ({
               {intl.formatMessage(messages.rewardsLabel)}:
             </Text>
             <Text bold style={styles.value}>
-              {totalRewards}
+              {totalRewards != null ? formatAdaWithText(totalRewards) : '-'}
             </Text>
+          </View>
+          <View style={styles.withdrawBlock}>
+            <Button
+              disabled={
+                totalAdaSum == null ||
+                (totalAdaSum != null && totalAdaSum.eq(0)) ||
+                totalRewards == null ||
+                (totalRewards != null && totalRewards.eq(0))
+              }
+              outlineOnLight
+              shelleyTheme
+              onPress={onWithdraw}
+              title={intl.formatMessage(messages.withdrawButtonTitle)}
+              style={styles.withdrawButton}
+            />
           </View>
         </View>
         <View style={styles.row}>
@@ -78,7 +101,7 @@ const UserSummary = ({
               {intl.formatMessage(messages.delegatedLabel)}:
             </Text>
             <Text bold style={styles.value}>
-              {totalDelegated}
+              {totalDelegated != null ? formatAdaWithText(totalDelegated) : '-'}
             </Text>
           </View>
         </View>

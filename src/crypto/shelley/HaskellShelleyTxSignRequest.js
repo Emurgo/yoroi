@@ -132,8 +132,9 @@ implements ISignRequest<TransactionBuilder> {
       amount: BigNumber,
     |}>,
   > {
-    const withdrawals = await await this.signRequest.unsignedTx
-      .build()
+    // prettier-ignore
+    const withdrawals = await (await this.signRequest.unsignedTx
+      .build())
       .withdrawals()
     if (withdrawals == null) return []
 

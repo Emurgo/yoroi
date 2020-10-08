@@ -166,6 +166,11 @@ export interface WalletInterface {
     totalAmountToDelegate: BigNumber,
   }>;
 
+  createWithdrawalTx<T>(
+    utxos: Array<RawUtxo>,
+    shouldDeregister: boolean,
+  ): Promise<ISignRequest<T>>;
+
   signDelegationTx<T>(
     signRequest: BaseSignRequest<T>,
     decryptedMasterKey: string,

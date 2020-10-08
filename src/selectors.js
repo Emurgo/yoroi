@@ -117,6 +117,9 @@ export const utxoBalanceSelector = (state: State) =>
 export const isFetchingAccountStateSelector = (state: State): boolean =>
   state.accountState.isFetching
 
+export const isDelegatingSelector = (state: State): boolean =>
+  state.accountState.isDelegating
+
 export const lastAccountStateFetchErrorSelector = (state: State): any =>
   state.accountState.lastFetchingError
 
@@ -126,8 +129,8 @@ export const accountValueSelector = (state: State): BigNumber =>
 export const accountBalanceSelector = (state: State): ?BigNumber =>
   state.accountState.isFetching ? null : state.accountState.value
 
-export const totalDelegatedSelector = (state: State): BigNumber =>
-  state.accountState.totalDelegated
+export const totalDelegatedSelector = (state: State): ?BigNumber =>
+  state.accountState.isFetching ? null : state.accountState.totalDelegated
 
 export const poolOperatorSelector = (state: State) =>
   state.accountState.isFetching ? null : state.accountState.poolOperator

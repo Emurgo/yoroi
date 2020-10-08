@@ -52,6 +52,7 @@ export type State = {
   },
   accountState: {
     isFetching: boolean,
+    isDelegating: boolean,
     lastFetchingError: any,
     totalDelegated: BigNumber,
     value: BigNumber,
@@ -112,6 +113,7 @@ export const getInitialState = (): State => ({
   },
   accountState: {
     isFetching: false,
+    isDelegating: false,
     lastFetchingError: null,
     totalDelegated: new BigNumber(0),
     value: new BigNumber(0),

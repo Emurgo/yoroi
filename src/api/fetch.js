@@ -5,7 +5,7 @@ import {Platform} from 'react-native'
 import {Logger} from '../utils/logging'
 import {NetworkError, ApiError, ApiHistoryError} from './errors'
 
-import type {NetworkConfig} from '../config/types'
+import type {BackendConfig} from '../config/types'
 
 type RequestMethod = 'POST' | 'GET'
 
@@ -28,7 +28,7 @@ const _checkResponse = (status, responseBody, requestPayload) => {
 export default (
   path: string,
   payload: ?any,
-  networkConfig: NetworkConfig,
+  networkConfig: BackendConfig,
   method?: RequestMethod = 'POST',
   checkResponse?: (number, any, ?any) => void = _checkResponse,
 ) => {
