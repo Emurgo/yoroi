@@ -30,6 +30,7 @@
   "components.delegationsummary.delegatedStakepoolInfo.copied": "Copié!",
   "components.delegationsummary.delegatedStakepoolInfo.fullDescriptionButtonLabel": "Aller au site web",
   "components.delegationsummary.delegatedStakepoolInfo.title": "Stake Pool délégué",
+  "components.delegationsummary.delegatedStakepoolInfo.unknownPool": "Unknown pool",
   "components.delegationsummary.delegatedStakepoolInfo.warning": "Si vous venez tout juste de déléguer à un nouveau groupe d'enjeu, cela peut prendre quelques minutes au réseau avant d'enregistrer votre requête.",
   "components.delegationsummary.epochProgress.endsIn": "Se termine dans",
   "components.delegationsummary.epochProgress.title": "Progrès dans l'époque",
