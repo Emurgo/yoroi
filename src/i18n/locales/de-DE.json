@@ -116,6 +116,7 @@
   "components.send.sendscreen.availableFundsBannerNotAvailable": "-",
   "components.send.sendscreen.balanceAfterLabel": "Guthaben danach",
   "components.send.sendscreen.balanceAfterNotAvailable": "-",
+  "components.send.sendscreen.checkboxLabel": "Send full balance",
   "components.send.sendscreen.continueButton": "Weiter",
   "components.send.sendscreen.errorBannerNetworkError": "Wir haben Probleme damit, Deinen aktuellen Kontostand zu ermitteln. Klicke hier, um es erneut zu versuchen.",
   "components.send.sendscreen.errorBannerPendingOutgoingTransaction": "Es kann keine neue Transaktion gesendet werden, solange noch eine bestehende aussteht",
