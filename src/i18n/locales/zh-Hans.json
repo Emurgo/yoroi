@@ -116,6 +116,7 @@
   "components.send.sendscreen.availableFundsBannerNotAvailable": "-",
   "components.send.sendscreen.balanceAfterLabel": "之后的余额",
   "components.send.sendscreen.balanceAfterNotAvailable": "-",
+  "components.send.sendscreen.checkboxLabel": "Send full balance",
   "components.send.sendscreen.continueButton": "继续",
   "components.send.sendscreen.errorBannerNetworkError": "我们在提取您当前余额时遇到问题，点击重试。",
   "components.send.sendscreen.errorBannerPendingOutgoingTransaction": "由于目前有待处理状态的交易，新交易无法发送。",
