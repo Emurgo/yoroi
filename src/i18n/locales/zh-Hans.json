@@ -30,6 +30,7 @@
   "components.delegationsummary.delegatedStakepoolInfo.copied": "已复制!",
   "components.delegationsummary.delegatedStakepoolInfo.fullDescriptionButtonLabel": "前往站点",
   "components.delegationsummary.delegatedStakepoolInfo.title": "已委托的权益池",
+  "components.delegationsummary.delegatedStakepoolInfo.unknownPool": "Unknown pool",
   "components.delegationsummary.delegatedStakepoolInfo.warning": "如果您刚委托给新​​的权益池，则网络可能需要花费几分钟来处理您的请求。",
   "components.delegationsummary.epochProgress.endsIn": "结束于",
   "components.delegationsummary.epochProgress.title": "纪元进度",
