@@ -122,6 +122,15 @@ export class DeprecatedFirmwareError extends LocalizableError {
   }
 }
 
+export class NoDeviceInfoError extends LocalizableError {
+  constructor() {
+    super({
+      id: ledgerMessages.noDeviceInfoError.id,
+      defaultMessage: ledgerMessages.noDeviceInfoError.defaultMessage,
+    })
+  }
+}
+
 const _isConnectionError = (e: Error | TransportStatusError): boolean => {
   if (
     e instanceof BleError ||

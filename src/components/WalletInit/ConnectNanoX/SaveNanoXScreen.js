@@ -136,8 +136,8 @@ export default injectIntl(
           walletImplementationId,
           hwDeviceInfo,
         )
-        navigation.navigate(ROOT_ROUTES.WALLET)
         saveHW(hwDeviceInfo)
+        navigation.navigate(ROOT_ROUTES.WALLET)
       },
     }),
     withHandlers({

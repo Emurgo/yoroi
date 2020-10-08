@@ -206,6 +206,10 @@ class LedgerConnect extends React.Component<Props, State> {
     this._unsubscribe()
     const {onConnectBLE} = this.props
     try {
+      if (device.id == null) {
+        // should never happen
+        throw new Error('device id is null')
+      }
       this.setState({
         deviceId: device.id.toString(),
         refreshing: false,
@@ -225,9 +229,12 @@ class LedgerConnect extends React.Component<Props, State> {
   }
 
   _onConfirm = async (deviceObj: ?DeviceObj): Promise<void> => {
-    if (deviceObj == null) return // should never happen
     this._unsubscribe()
     try {
+      if (deviceObj == null) {
+        // should never happen
+        throw new Error('deviceObj is null')
+      }
       this.setState({
         waiting: true,
       })
