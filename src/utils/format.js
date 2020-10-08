@@ -68,10 +68,3 @@ export const formatDateRelative = (ts: string | moment, intl: any) => {
   }
   return moment(ts).calendar(null, config)
 }
-
-export const formatStakepoolNameWithTicker = (
-  poolTicker: string,
-  poolName: string,
-): string => {
-  return `(${poolTicker}) ${poolName}`
-}

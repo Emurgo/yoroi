@@ -15,7 +15,6 @@ import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import {debounce} from 'lodash'
 
 import {Text, TitledCard, Button} from '../../UiKit'
-import {formatStakepoolNameWithTicker} from '../../../utils/format'
 import {onWillUnmount} from '../../../utils/renderUtils'
 import copyIcon from '../../../assets/img/icon/copy.png'
 import styles from './styles/DelegatedStakepoolInfo.style'
@@ -40,7 +39,23 @@ const messages = defineMessages({
     id: 'components.delegationsummary.delegatedStakepoolInfo.copied',
     defaultMessage: '!!!Copied!',
   },
+  unknownPool: {
+    id: 'components.delegationsummary.delegatedStakepoolInfo.unknownPool',
+    defaultMessage: '!!!Unknown pool',
+  },
 })
+
+export const formatStakepoolNameWithTicker = (
+  poolTicker: ?string,
+  poolName: ?string,
+  intl: intlShape,
+): string => {
+  return poolTicker == null
+    ? poolName ?? intl.formatMessage(messages.unknownPool)
+    : poolName == null
+      ? `${poolTicker}`
+      : `(${poolTicker}) ${poolName}`
+}
 
 const COPY_NOTIFICATION_TIME = 5000 // show 'copied' notification for 5 s
 
@@ -89,7 +104,7 @@ const DelegatedStakepoolInfo = ({
     <TitledCard title={intl.formatMessage(messages.title)} variant={'poolInfo'}>
       <View style={styles.topBlock}>
         <Text bold style={styles.poolName}>
-          {formatStakepoolNameWithTicker(poolTicker, poolName)}
+          {formatStakepoolNameWithTicker(poolTicker, poolName, intl)}
         </Text>
         <View style={styles.poolHashBlock}>
           <Text
