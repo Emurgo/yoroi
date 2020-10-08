@@ -116,6 +116,7 @@
   "components.send.sendscreen.availableFundsBannerNotAvailable": "-",
   "components.send.sendscreen.balanceAfterLabel": "거래 후 잔액",
   "components.send.sendscreen.balanceAfterNotAvailable": "-",
+  "components.send.sendscreen.checkboxLabel": "Send full balance",
   "components.send.sendscreen.continueButton": "계속",
   "components.send.sendscreen.errorBannerNetworkError": "We encountered a problem while fetching your current balance. Click to retry.",
   "components.send.sendscreen.errorBannerPendingOutgoingTransaction": "현재 보류중인 거래가 있을 경우 새로운 거래를 진행할 수 없습니다",
