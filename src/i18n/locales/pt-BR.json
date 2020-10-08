@@ -116,6 +116,7 @@
   "components.send.sendscreen.availableFundsBannerNotAvailable": "-",
   "components.send.sendscreen.balanceAfterLabel": "Balanço após",
   "components.send.sendscreen.balanceAfterNotAvailable": "-",
+  "components.send.sendscreen.checkboxLabel": "Send full balance",
   "components.send.sendscreen.continueButton": "Continuar",
   "components.send.sendscreen.errorBannerNetworkError": "Estamos com problemas para obter seu saldo atual. Clique para tentar novamente.",
   "components.send.sendscreen.errorBannerPendingOutgoingTransaction": "Não é possível realizar uma nova transação enquanto outra ainda está pendente",
