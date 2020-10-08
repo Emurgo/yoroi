@@ -30,6 +30,7 @@
   "components.delegationsummary.delegatedStakepoolInfo.copied": "コピーされました!",
   "components.delegationsummary.delegatedStakepoolInfo.fullDescriptionButtonLabel": "ウェブサイトへ",
   "components.delegationsummary.delegatedStakepoolInfo.title": "ステークプールに委任しました",
+  "components.delegationsummary.delegatedStakepoolInfo.unknownPool": "Unknown pool",
   "components.delegationsummary.delegatedStakepoolInfo.warning": "委任先のステークプールを変更した場合、変更が反映されるまで数分かかる場合があります。",
   "components.delegationsummary.epochProgress.endsIn": "終了まで",
   "components.delegationsummary.epochProgress.title": "エポック進歩",
