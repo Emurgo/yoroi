@@ -324,8 +324,7 @@ class SendScreen extends Component<Props, State> {
     this.setState(newState)
   }
 
-  handleAddressChange: (string) => void
-  handleAddressChange = (address) => this.setState({address})
+  handleAddressChange: (string) => void = (address) => this.setState({address})
 
   handleAmountChange: (string) => void = (amount) => this.setState({amount})
 

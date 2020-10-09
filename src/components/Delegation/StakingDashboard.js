@@ -236,14 +236,15 @@ class StakingDashboard extends React.Component<Props, State> {
 
   /* withdrawal logic */
 
-  openWithdrawalDialog: () => void
-  openWithdrawalDialog = () =>
+  openWithdrawalDialog: () => void = () =>
     this.setState({
       withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WARNING,
     })
 
-  onKeepOrDeregisterKey: (Object, boolean) => Promise<void>
-  onKeepOrDeregisterKey = async (event, shouldDeregister) => {
+  onKeepOrDeregisterKey: (Object, boolean) => Promise<void> = async (
+    event,
+    shouldDeregister,
+  ) => {
     this._shouldDeregister = shouldDeregister
     if (
       this.props.isHW &&
@@ -260,8 +261,7 @@ class StakingDashboard extends React.Component<Props, State> {
   }
 
   /* create withdrawal tx and move to confirm */
-  createWithdrawalTx: () => Promise<void>
-  createWithdrawalTx = async () => {
+  createWithdrawalTx: () => Promise<void> = async () => {
     const {intl, utxos} = this.props
     if (utxos == null) return // should never happen
     try {
@@ -319,14 +319,15 @@ class StakingDashboard extends React.Component<Props, State> {
     }
   }
 
-  openLedgerConnect: () => void
-  openLedgerConnect = () =>
+  openLedgerConnect: () => void = () =>
     this.setState({
       withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.LEDGER_CONNECT,
     })
 
-  onChooseTransport: (Object, boolean) => Promise<void>
-  onChooseTransport = async (event, useUSB) => {
+  onChooseTransport: (Object, boolean) => Promise<void> = async (
+    event,
+    useUSB,
+  ) => {
     const {hwDeviceInfo} = this.props
     this.setState({useUSB})
     if (
@@ -339,14 +340,12 @@ class StakingDashboard extends React.Component<Props, State> {
     }
   }
 
-  onConnectUSB: () => Promise<void>
-  onConnectUSB = async (deviceObj) => {
+  onConnectUSB: (DeviceObj) => Promise<void> = async (deviceObj) => {
     await this.props.setLedgerDeviceObj(deviceObj)
     await this.createWithdrawalTx()
   }
 
-  onConnectBLE: () => Promise<void>
-  onConnectBLE = async (deviceId) => {
+  onConnectBLE: (DeviceId) => Promise<void> = async (deviceId) => {
     await this.props.setLedgerDeviceId(deviceId)
     await this.createWithdrawalTx()
   }
@@ -354,7 +353,7 @@ class StakingDashboard extends React.Component<Props, State> {
   // TODO: this code has been copy-pasted from the tx confirmation page.
   // Ideally, all this logic should be moved away and perhaps written as a
   // redux action that can be reused in all components with tx signing and sending
-  onConfirm = async (event, password) => {
+  onConfirm: (Object, string) => Promise<void> = async (event, password) => {
     const {signTxRequest, useUSB} = this.state
     const {
       intl,
@@ -496,8 +495,7 @@ class StakingDashboard extends React.Component<Props, State> {
     }
   }
 
-  closeWithdrawalDialog: () => void
-  closeWithdrawalDialog = () =>
+  closeWithdrawalDialog: () => void = () =>
     this.setState({
       withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.CLOSED,
     })
