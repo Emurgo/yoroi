@@ -29,7 +29,7 @@ module.exports = {
     'no-multi-str': 0,
     'no-lone-blocks': 0,
     'react/no-typos': 2,
-    'react/sort-comp': 1,
+    'react/sort-comp': 0,
     'no-duplicate-imports': 0,
     'import/no-duplicates': 1,
     'react-native/no-unused-styles': 2,

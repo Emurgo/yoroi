@@ -95,13 +95,13 @@ const StakingCenter = ({
       </View>
       <PoolWarningModal
         visible={showPoolWarning}
-        onPress={() => {
+        onPress={async () => {
           setShowPoolWarning(false)
-          navigateToDelegationConfirm()
+          await navigateToDelegationConfirm()
         }}
-        onRequestClose={() => {
+        onRequestClose={async () => {
           setShowPoolWarning(false)
-          navigateToDelegationConfirm()
+          await navigateToDelegationConfirm()
         }}
         reputationInfo={reputationInfo}
       />
@@ -233,7 +233,7 @@ export default injectIntl(
               setReputationInfo(poolsReputation[poolsInBlackList[0]])
               setShowPoolWarning(true)
             } else {
-              navigateToDelegationConfirm(selectedPools)
+              await navigateToDelegationConfirm(selectedPools)
             }
           } else {
             await showErrorDialog(noPoolDataDialog, intl)

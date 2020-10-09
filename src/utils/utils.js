@@ -14,7 +14,7 @@ export const ignoreConcurrentAsync = <T, R>(
     try {
       return await handler(...args)
     } finally {
-      // runaway
+      // note: don't await on purpose
       delay(additionalDelay || 0).then(() => {
         _inProgress = false
       })

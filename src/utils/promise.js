@@ -52,6 +52,7 @@ export const synchronize = <T>(
 
     mutex.lock = newLock
 
+    // note: don't await on purpose
     orig.finally(() => {
       Logger.debug('Synchronize lock resume')
       // Ok, waiting for the original is done, now let's do our work

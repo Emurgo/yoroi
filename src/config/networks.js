@@ -38,6 +38,8 @@ export const NETWORKS = {
     IS_MAINNET: true,
     EXPLORER_URL_FOR_ADDRESS: (address: string) =>
       `https://explorer.cardano.org/en/address?address=${address}`,
+    EXPLORER_URL_FOR_TX: (tx: string) =>
+      `https://explorer.cardano.org/tx/${tx}`,
     POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
     BACKEND: {
       API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
@@ -72,6 +74,9 @@ export const NETWORKS = {
       `https://testnet.seiza-website.emurgo.io/staking-simple/list?sortBy=RANDOM&searchText=&performance[]=0&performance[]=100&source=mobile&userAda=${ADA}`,
     EXPLORER_URL_FOR_ADDRESS: (address: string) =>
       `https://shelleyexplorer.cardano.org/address/?id=${address}`,
+    EXPLORER_URL_FOR_TX: (tx: string) => {
+      throw new Error('not supported network')
+    },
     LINEAR_FEE: {
       CONSTANT: '200000',
       COEFFICIENT: '100000',

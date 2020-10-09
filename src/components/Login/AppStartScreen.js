@@ -85,7 +85,7 @@ export default injectIntl(
             onFail: async (reason) => {
               if (reason === KeyStore.REJECTIONS.INVALID_KEY) {
                 if (await canBiometricEncryptionBeEnabled()) {
-                  recreateAppSignInKeys(installationId)
+                  await recreateAppSignInKeys(installationId)
                 } else {
                   await showErrorDialog(
                     errorMessages.biometricsIsTurnedOff,

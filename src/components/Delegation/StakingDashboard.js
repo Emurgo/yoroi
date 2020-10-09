@@ -165,8 +165,10 @@ class StakingDashboard extends React.Component<Props, State> {
 
   _shouldDeregister: boolean = false
 
+  _intervalId: void | IntervalID = undefined
+
   componentDidMount() {
-    this.intervalId = setInterval(
+    this._intervalId = setInterval(
       () =>
         this.setState({
           currentTime: new Date(),
@@ -193,13 +195,10 @@ class StakingDashboard extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    if (this.intervalId != null) clearInterval(this.intervalId)
+    if (this._intervalId != null) clearInterval(this._intervalId)
   }
 
-  intervalId: void | IntervalID
-
-  navigateToStakingCenter: () => void
-  navigateToStakingCenter = async () => {
+  navigateToStakingCenter: (void) => Promise<void> = async () => {
     const {navigation, utxos, poolOperator, accountBalance} = this.props
     /* eslint-disable indent */
     const utxosForKey =
@@ -224,8 +223,7 @@ class StakingDashboard extends React.Component<Props, State> {
     })
   }
 
-  handleDidFocus: () => void
-  handleDidFocus = () => {
+  handleDidFocus: (void) => void = () => {
     if (this._firstFocus) {
       this._firstFocus = false
       // skip first focus to avoid
@@ -443,10 +441,10 @@ class StakingDashboard extends React.Component<Props, State> {
         await walletManager.ensureKeysValidity()
         navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
           keyId: walletManager._id,
-          onSuccess: (decryptedKey) => {
+          onSuccess: async (decryptedKey) => {
             navigation.navigate(DELEGATION_ROUTES.STAKING_DASHBOARD)
 
-            submitTx(signRequest, decryptedKey)
+            await submitTx(signRequest, decryptedKey)
           },
           onFail: () => navigation.goBack(),
         })
