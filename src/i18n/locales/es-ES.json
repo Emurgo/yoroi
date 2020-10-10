@@ -208,7 +208,7 @@
   "components.stakingcenter.poolwarningmodal.unknown": "Causa un problema desconocido (busca en Internet para obtener más información)",
   "components.stakingcenter.title": "Centro de Delegación",
   "components.stakingcenter.delegationTxBuildError": "Error al crear la transacción de delegación",
-  "components.transfer.transfersummarymodal.unregisterExplanation": "Esta transacción desregistrará una o más claves de delegación, devolviéndote tus {refundAmount} ADA de tu depósito.",
+  "components.transfer.transfersummarymodal.unregisterExplanation": "Esta transacción desregistrará una o más claves de delegación, devolviéndote las {refundAmount} ADA de tu depósito.",
   "components.txhistory.flawedwalletmodal.title": "Advertencia",
   "components.txhistory.flawedwalletmodal.explanation1": "Parece que has creado o restaurado accidentalmente una billetera que sólo se incluye en versiones especiales de desarrollo. Como medida de seguridad, hemos desactivado esta billetera.",
   "components.txhistory.flawedwalletmodal.explanation2": "Todavía puedes crear una nueva billetera o restaurar una sin restricciones. Si te has visto afectado de alguna manera por este inconveniente, por favor, contacta con EMURGO.",
