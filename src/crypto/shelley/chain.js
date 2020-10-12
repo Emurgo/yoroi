@@ -58,7 +58,7 @@ export class AddressGenerator {
   }
 
   async getRewardAddressHex() {
-    if (isHaskellShelley(this.walletImplementationId)) {
+    if (!isHaskellShelley(this.walletImplementationId)) {
       return null
     }
     if (this._rewardAddressHex != null) return this._rewardAddressHex

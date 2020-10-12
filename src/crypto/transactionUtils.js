@@ -8,6 +8,7 @@ import {
 import {CONFIG} from '../config/config'
 import {Logger} from '../utils/logging'
 import assert from '../utils/assert'
+import {CERTIFICATE_KIND} from '../api/types'
 
 import type {TransactionInfo, Transaction} from '../types/HistoryTransaction'
 
@@ -56,6 +57,20 @@ export const processTxHistoryData = (
   const isIntraWallet = hasOnlyOwnInputs && hasOnlyOwnOutputs
   const isMultiParty =
     ownInputs.length > 0 && ownInputs.length !== tx.inputs.length
+
+  // check if tx includes a deregistration (which means output *may* contain
+  // a deposit to this wallet). This is only for consistency check
+  const hasKeyDeregistration = (() => {
+    let _hasKeyDeregistration = false
+    for (const cert of tx.certificates) {
+      if (cert.kind === CERTIFICATE_KIND.STAKE_DEREGISTRATION) {
+        _hasKeyDeregistration = true
+        break
+      }
+    }
+    return _hasKeyDeregistration
+  })()
+
   if (isMultiParty && !_multiPartyWarningCache[tx.id]) {
     _multiPartyWarningCache[tx.id] = true
     Logger.warn(
@@ -116,7 +131,9 @@ export const processTxHistoryData = (
     amount = brutto
     fee = null
   } else if (hasOnlyOwnInputs) {
-    assert.assert(brutto.lte(0), 'More funds after sending')
+    if (!(tx.withdrawals.length !== 0 || hasKeyDeregistration)) {
+      assert.assert(brutto.lte(0), 'More funds after sending')
+    }
     direction = TRANSACTION_DIRECTION.SENT
     amount = brutto.minus(totalFee)
     fee = totalFee
