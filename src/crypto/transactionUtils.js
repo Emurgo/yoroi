@@ -8,9 +8,11 @@ import {
 import {CONFIG} from '../config/config'
 import {Logger} from '../utils/logging'
 import assert from '../utils/assert'
+import {getNetworkConfigById} from '../config/networks'
 import {CERTIFICATE_KIND} from '../api/types'
 
 import type {TransactionInfo, Transaction} from '../types/HistoryTransaction'
+import type {NetworkId} from '../config/types'
 
 type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
 
@@ -43,6 +45,7 @@ export const processTxHistoryData = (
   tx: Transaction,
   ownAddresses: Array<string>,
   confirmations: number,
+  networkId: NetworkId,
 ): TransactionInfo => {
   const ownInputs = tx.inputs.filter(({address}) =>
     ownAddresses.includes(address),
@@ -58,18 +61,30 @@ export const processTxHistoryData = (
   const isMultiParty =
     ownInputs.length > 0 && ownInputs.length !== tx.inputs.length
 
-  // check if tx includes a deregistration (which means output *may* contain
-  // a deposit to this wallet). This is only for consistency check
+  // check if tx includes a deregistration (which means output may contain
+  // a deposit to this wallet)
   const hasKeyDeregistration = (() => {
     let _hasKeyDeregistration = false
     for (const cert of tx.certificates) {
-      if (cert.kind === CERTIFICATE_KIND.STAKE_DEREGISTRATION) {
+      if (
+        cert.kind === CERTIFICATE_KIND.STAKE_DEREGISTRATION &&
+        ownAddresses.includes(cert.rewardAddress)
+      ) {
         _hasKeyDeregistration = true
         break
       }
     }
     return _hasKeyDeregistration
   })()
+
+  // check if tx includes withdrawals to this wallet
+  const ownWithdrawals = []
+  for (const withdrawal of tx.withdrawals) {
+    if (ownAddresses.includes(withdrawal.address)) {
+      ownWithdrawals.push(withdrawal)
+    }
+  }
+  const hasWithdrawals = ownWithdrawals.length > 0
 
   if (isMultiParty && !_multiPartyWarningCache[tx.id]) {
     _multiPartyWarningCache[tx.id] = true
@@ -79,6 +94,15 @@ export const processTxHistoryData = (
     Logger.warn('This probably means broken address discovery!')
     Logger.warn(`Transaction: ${tx.id}`)
   }
+
+  const totalOwnWithdrawals = _sum(ownWithdrawals)
+  const _keyDeposit =
+    getNetworkConfigById(networkId).KEY_DEPOSIT != null
+      ? getNetworkConfigById(networkId).KEY_DEPOSIT
+      : new BigNumber('0')
+  const totalOwnRefunds = hasKeyDeregistration
+    ? _keyDeposit
+    : new BigNumber('0')
 
   const totalIn = _sum(tx.inputs)
   const totalOut = _sum(tx.outputs)
@@ -126,17 +150,21 @@ export const processTxHistoryData = (
     direction = TRANSACTION_DIRECTION.SELF
     amount = null
     fee = totalFee
+    if (hasWithdrawals || hasKeyDeregistration) {
+      fee = totalFee.minus(totalOwnWithdrawals).minus(totalOwnRefunds)
+      amount = brutto.minus(fee)
+    }
   } else if (isMultiParty) {
     direction = TRANSACTION_DIRECTION.MULTI
     amount = brutto
     fee = null
   } else if (hasOnlyOwnInputs) {
-    if (!(tx.withdrawals.length !== 0 || hasKeyDeregistration)) {
+    if (!(hasWithdrawals || hasKeyDeregistration)) {
       assert.assert(brutto.lte(0), 'More funds after sending')
     }
     direction = TRANSACTION_DIRECTION.SENT
-    amount = brutto.minus(totalFee)
-    fee = totalFee
+    fee = totalFee.minus(totalOwnWithdrawals).minus(totalOwnRefunds)
+    amount = brutto.minus(fee)
   } else {
     assert.assert(
       ownInputs.length === 0,

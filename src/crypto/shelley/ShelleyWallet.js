@@ -83,7 +83,6 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     networkId: NetworkId,
     implementationId: WalletImplementationId,
     accountPubKeyHex: string,
-    chimericAccountAddr: ?string,
     hwDeviceInfo: ?HWDeviceInfo,
   ) {
     this.networkId = networkId
@@ -109,9 +108,9 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       _walletConfig.DISCOVERY_GAP_SIZE,
     )
 
-    this.publicKeyHex = accountPubKeyHex
+    this.rewardAddressHex = await this.internalChain.getRewardAddressHex()
 
-    this.chimericAccountAddress = chimericAccountAddr
+    this.publicKeyHex = accountPubKeyHex
 
     this.version = DeviceInfo.getVersion()
 
@@ -169,7 +168,6 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       networkId,
       implementationId,
       accountPubKeyHex,
-      null,
       null, // this is not a HW
     )
   }
@@ -186,12 +184,10 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     Logger.debug('account pub key', accountPublicKey)
     this.id = uuid.v4()
     assert.assert(!this.isInitialized, 'createWallet: !isInitialized')
-    const chimericAccountAddr = null // only byron wallets supported for now
     return await this._initialize(
       networkId,
       implementationId,
       accountPublicKey,
-      chimericAccountAddr,
       hwDeviceInfo,
     )
   }
@@ -212,6 +208,9 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
           isHaskellShelley(this.walletImplementationId),
         'invalid walletImplementationId',
       )
+      if (isHaskellShelley(this.walletImplementationId)) {
+        assert.assert(this.rewardAddressHex != null, 'reward address is null')
+      }
       if (this.isHW) {
         assert.assert(
           this.hwDeviceInfo != null,
@@ -225,7 +224,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   // TODO(v-almonacid): move to parent class?
-  restore(data: any, walletMeta: WalletMeta) {
+  async restore(data: any, walletMeta: WalletMeta) {
     Logger.info('restore wallet')
     assert.assert(!this.isInitialized, 'restoreWallet: !isInitialized')
     this.state = {
@@ -246,6 +245,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     this.version = data.version
     this.internalChain = AddressChain.fromJSON(data.internalChain)
     this.externalChain = AddressChain.fromJSON(data.externalChain)
+    this.rewardAddressHex = await this.internalChain.getRewardAddressHex()
     // can be null for versions < 3.0.2, in which case we can just retrieve
     // from address generator
     this.publicKeyHex =
@@ -261,7 +261,6 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     this.setupSubscriptions()
 
     this.isInitialized = true
-    return Promise.resolve()
   }
 
   // =================== tx building =================== //
@@ -401,15 +400,14 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     return addressedUtxos
   }
 
-  async getDelegationStatus() {
-    const rewardAddrHex = Buffer.from(
-      await (await this.getRewardAddress()).to_bytes(),
-      'hex',
-    ).toString('hex')
+  getDelegationStatus() {
+    if (this.rewardAddressHex == null) throw new Error('reward address is null')
     const certsForKey = this.transactionCache.perRewardAddressCertificates[
-      rewardAddrHex
+      this.rewardAddressHex
     ]
-    return getDelegationStatus(rewardAddrHex, certsForKey)
+    return Promise.resolve(
+      getDelegationStatus(this.rewardAddressHex, certsForKey),
+    )
   }
 
   async createUnsignedTx<TransactionBuilder>(
@@ -562,6 +560,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     utxos: Array<RawUtxo>,
     shouldDeregister: boolean,
   ): Promise<ISignRequest<TransactionBuilder>> {
+    if (this.rewardAddressHex == null) throw new Error('reward address is null')
     const timeToSlotFn = await genTimeToSlot(getCardanoBaseConfig())
     const absSlotNumber = new BigNumber(timeToSlotFn({time: new Date()}).slot)
     const changeAddr = await this._getAddressedChangeAddress()
@@ -573,10 +572,8 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       withdrawals: [
         {
           addressing: this._getRewardAddressAddressing(),
-          rewardAddress: Buffer.from(
-            await (await this.getRewardAddress()).to_bytes(),
-            'hex',
-          ).toString('hex'),
+          // $FlowFixMe flow thinks rewardAddressHex can be null
+          rewardAddress: this.rewardAddressHex,
           shouldDeregister,
         },
       ],
@@ -609,13 +606,10 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       if (addressing != null) addressingInfo[change.address] = addressing
     }
 
-    if (isHaskellShelley(this.walletImplementationId)) {
-      // add reward address to addressingMap
-      const rewardAddrHex = Buffer.from(
-        await (await this.getRewardAddress()).to_bytes(),
-        'hex',
-      ).toString('hex')
-      addressingInfo[rewardAddrHex] = this._getRewardAddressAddressing()
+    // add reward address to addressingMap
+    if (this.rewardAddressHex != null) {
+      // $FlowFixMe flow thinks rewardAddressHex can be null
+      addressingInfo[this.rewardAddressHex] = this._getRewardAddressAddressing()
     }
 
     const addressingMap = (address) => addressingInfo[address]
@@ -702,11 +696,8 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   async fetchAccountState() {
-    const rewardAddrHex = Buffer.from(
-      await (await this.getRewardAddress()).to_bytes(),
-      'hex',
-    ).toString('hex')
-    return await api.bulkGetAccountState([rewardAddrHex])
+    if (this.rewardAddressHex == null) throw new Error('reward address is null')
+    return await api.bulkGetAccountState([this.rewardAddressHex])
   }
 
   async fetchPoolInfo(request: PoolInfoRequest): Promise<PoolInfoResponse> {

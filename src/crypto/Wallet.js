@@ -50,11 +50,10 @@ export default class Wallet {
   // $FlowFixMe null
   externalChain: AddressChain = null
 
-  // chimeric account address
-  chimericAccountAddress: ?string
-
   // account public key
   publicKeyHex: string
+
+  rewardAddressHex: ?string = null
 
   // last known version the wallet has been created/restored
   version: ?string
@@ -218,14 +217,13 @@ export default class Wallet {
       this.internalChain.sync(filterFn),
       this.externalChain.sync(filterFn),
     ])
-    const _rewardAddressHex = await this.internalChain.getRewardAddressHex()
     // prettier-ignore
     const addresses =
-      _rewardAddressHex != null
+      this.rewardAddressHex != null
         ? [
           ...this.internalChain.getBlocks(),
           ...this.externalChain.getBlocks(),
-          ...[[_rewardAddressHex]],
+          ...[[this.rewardAddressHex]],
         ]
         : [...this.internalChain.getBlocks(), ...this.externalChain.getBlocks()]
     if (!isJormungandr(this.networkId)) {
@@ -296,7 +294,6 @@ export default class Wallet {
   toJSON() {
     return {
       lastGeneratedAddressIndex: this.state.lastGeneratedAddressIndex,
-      chimericAccountAddress: this.chimericAccountAddress,
       publicKeyHex: this.publicKeyHex,
       version: this.version,
       internalChain: this.internalChain.toJSON(),

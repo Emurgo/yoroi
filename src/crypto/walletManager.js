@@ -271,6 +271,11 @@ class WalletManager {
     return this._wallet.externalAddresses
   }
 
+  get rewardAddressHex() {
+    if (!this._wallet) return null
+    return this._wallet.rewardAddressHex
+  }
+
   get isEasyConfirmationEnabled() {
     if (!this._wallet) return {}
     return this._wallet.isEasyConfirmationEnabled
