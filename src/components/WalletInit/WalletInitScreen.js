@@ -53,10 +53,10 @@ const messages = defineMessages({
     id: 'components.walletinit.walletinitscreen.restore24WordWalletLabel',
     defaultMessage: '!!!24-word Wallet',
   },
-  restore24WordWalletExplanation: {
-    id: 'components.walletinit.walletinitscreen.restore24WordWalletExplanation',
+  restoreNWordWalletExplanation: {
+    id: 'components.walletinit.walletinitscreen.restoreNWordWalletExplanation',
     defaultMessage:
-      '!!!If you have a recovery phrase consisting of 24 ' +
+      '!!!If you have a recovery phrase consisting of {mnemonicLength} ' +
       'words, choose this option to restore your wallet.',
   },
   createWalletWithLedgerButton: {
@@ -98,8 +98,10 @@ const WalletInitScreen = ({
   modalState,
   setModalState,
 }: Props) => {
-  const networkId = navigation.getParam('networkId')
-  const implementationId = navigation.getParam('walletImplementationId')
+  const networkId: NetworkId = navigation.getParam('networkId')
+  const implementationId: WalletImplementationId = navigation.getParam(
+    'walletImplementationId',
+  )
   let createWalletLabel = intl.formatMessage(messages.createWalletButton)
   let restoreWalletLabel = intl.formatMessage(messages.restoreWalletButton)
   let createWalletWithLedgerLabel = intl.formatMessage(
@@ -201,7 +203,8 @@ const WalletInitScreen = ({
               <ExapandableItem
                 label={intl.formatMessage(globalMessages.learnMore)}
                 content={intl.formatMessage(
-                  messages.restore24WordWalletExplanation,
+                  messages.restoreNWordWalletExplanation,
+                  {mnemonicLength: 24},
                 )}
               />
             </Modal>
