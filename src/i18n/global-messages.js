@@ -178,6 +178,12 @@ export const ledgerMessages = defineMessages({
     id: 'global.ledgerMessages.rejectedByUserError',
     defaultMessage: '!!!Operation rejected by user.',
   },
+  noDeviceInfoError: {
+    id: 'global.ledgerMessages.noDeviceInfoError',
+    defaultMessage:
+      '!!!Device metadata was lost or corrupted. To fix this issue' +
+      ', please add a new wallet and connect it with your device.',
+  },
 })
 
 export const errorMessages = {

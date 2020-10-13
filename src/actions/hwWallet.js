@@ -1,6 +1,7 @@
 // @flow
 import {hwDeviceInfoSelector} from '../selectors'
 import {Logger} from '../utils/logging'
+import {NoDeviceInfoError} from '../crypto/shelley/ledgerUtils'
 
 import type {Dispatch} from 'redux'
 import type {
@@ -31,8 +32,7 @@ export const setLedgerDeviceId = (deviceId: DeviceId) => (
   const state = getState()
   const hwDeviceInfo = hwDeviceInfoSelector(state)
   if (hwDeviceInfo == null || hwDeviceInfo.hwFeatures == null) {
-    Logger.warn('hwDeviceInfo.hwFeatures is null')
-    return
+    throw new NoDeviceInfoError()
   }
   hwDeviceInfo.hwFeatures.deviceId = deviceId
   dispatch(_saveHW(hwDeviceInfo))
@@ -46,8 +46,7 @@ export const setLedgerDeviceObj = (deviceObj: DeviceObj) => (
   const state = getState()
   const hwDeviceInfo = hwDeviceInfoSelector(state)
   if (hwDeviceInfo == null || hwDeviceInfo.hwFeatures == null) {
-    Logger.warn('hwDeviceInfo.hwFeatures is null')
-    return
+    throw new NoDeviceInfoError()
   }
   hwDeviceInfo.hwFeatures.deviceObj = deviceObj
   dispatch(_saveHW(hwDeviceInfo))
