@@ -249,13 +249,13 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     this.version = data.version
     this.internalChain = AddressChain.fromJSON(data.internalChain)
     this.externalChain = AddressChain.fromJSON(data.externalChain)
-    this.rewardAddressHex = await this.internalChain.getRewardAddressHex()
     // can be null for versions < 3.0.2, in which case we can just retrieve
     // from address generator
     this.publicKeyHex =
       data.publicKeyHex != null
         ? data.publicKeyHex
         : this.internalChain.publicKey
+    this.rewardAddressHex = await deriveRewardAddressHex(this.publicKeyHex)
     this.transactionCache = TransactionCache.fromJSON(data.transactionCache)
     this.isEasyConfirmationEnabled = data.isEasyConfirmationEnabled
 
@@ -564,7 +564,8 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     utxos: Array<RawUtxo>,
     shouldDeregister: boolean,
   ): Promise<ISignRequest<TransactionBuilder>> {
-    if (this.rewardAddressHex == null) throw new Error('reward address is null')
+    const {rewardAddressHex} = this
+    if (rewardAddressHex == null) throw new Error('reward address is null')
     const timeToSlotFn = await genTimeToSlot(getCardanoBaseConfig())
     const absSlotNumber = new BigNumber(timeToSlotFn({time: new Date()}).slot)
     const changeAddr = await this._getAddressedChangeAddress()
@@ -576,8 +577,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       withdrawals: [
         {
           addressing: this._getRewardAddressAddressing(),
-          // $FlowFixMe flow thinks rewardAddressHex can be null
-          rewardAddress: this.rewardAddressHex,
+          rewardAddress: rewardAddressHex,
           shouldDeregister,
         },
       ],
@@ -610,10 +610,10 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       if (addressing != null) addressingInfo[change.address] = addressing
     }
 
+    const {rewardAddressHex} = this
     // add reward address to addressingMap
-    if (this.rewardAddressHex != null) {
-      // $FlowFixMe flow thinks rewardAddressHex can be null
-      addressingInfo[this.rewardAddressHex] = this._getRewardAddressAddressing()
+    if (rewardAddressHex != null) {
+      addressingInfo[rewardAddressHex] = this._getRewardAddressAddressing()
     }
 
     const addressingMap = (address) => addressingInfo[address]
