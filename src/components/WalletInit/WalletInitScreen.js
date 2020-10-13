@@ -192,8 +192,7 @@ const WalletInitScreen = ({
                   navigateRestoreWallet(
                     event,
                     networkId,
-                    CONFIG.WALLETS.DAEDALUS_HASKELL_SHELLEY
-                      .WALLET_IMPLEMENTATION_ID,
+                    CONFIG.WALLETS.HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID,
                   )
                 }
                 title={intl.formatMessage(messages.restore24WordWalletLabel)}

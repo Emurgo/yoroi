@@ -69,7 +69,7 @@ test('Can format address', () => {
       42,
       'Internal',
       47,
-      WALLET_IMPLEMENTATION_REGISTRY.DAEDALUS_HASKELL_SHELLEY,
+      WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24,
     ),
   ).toBe("m/1852'/1815'/42'/1/47")
 })
