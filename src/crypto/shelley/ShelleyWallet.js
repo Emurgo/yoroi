@@ -56,7 +56,11 @@ import {
   signTxWithLedger,
   buildSignedTransaction,
 } from './ledgerUtils'
-import {normalizeToAddress, toHexOrBase58} from './utils'
+import {
+  normalizeToAddress,
+  toHexOrBase58,
+  deriveRewardAddressHex,
+} from './utils'
 
 import type {
   RawUtxo,
@@ -108,7 +112,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       _walletConfig.DISCOVERY_GAP_SIZE,
     )
 
-    this.rewardAddressHex = await this.internalChain.getRewardAddressHex()
+    this.rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex)
 
     this.publicKeyHex = accountPubKeyHex
 

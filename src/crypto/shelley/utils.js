@@ -7,12 +7,13 @@ import {
   ByronAddress,
   Ed25519KeyHash,
   RewardAddress,
+  StakeCredential,
   // TODO(v-almonacid): these bindings are not yet implemented
   // PointerAddress,
   // EnterpriseAddress,
 } from 'react-native-haskell-shelley'
 
-import {NUMBERS} from '../../config/numbers'
+import {CONFIG} from '../../config/config'
 
 import type {Addressing} from '../types'
 
@@ -133,11 +134,32 @@ export const verifyFromBip44Root = (
   |}>,
 ): void => {
   const accountPosition = request.startLevel
-  if (accountPosition !== NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE) {
+  if (accountPosition !== CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE) {
     throw new Error('verifyFromBip44Root: addressing does not start from root')
   }
   const lastLevelSpecified = request.startLevel + request.path.length - 1
-  if (lastLevelSpecified !== NUMBERS.BIP44_DERIVATION_LEVELS.ADDRESS) {
+  if (lastLevelSpecified !== CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ADDRESS) {
     throw new Error('verifyFromBip44Root: incorrect addressing size')
   }
+}
+
+export const deriveRewardAddressHex = async (
+  accountPubKeyHex: string,
+): Promise<string> => {
+  const accountPubKeyPtr = await Bip32PublicKey.from_bytes(
+    Buffer.from(accountPubKeyHex, 'hex'),
+  )
+
+  const stakingKey = await (await (await accountPubKeyPtr.derive(
+    CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+  )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+
+  const credential = await StakeCredential.from_keyhash(await stakingKey.hash())
+
+  const rewardAddr = await RewardAddress.new(
+    parseInt(CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID, 10),
+    credential,
+  )
+  const rewardAddrAsAddr = await rewardAddr.to_address()
+  return Buffer.from(await rewardAddrAsAddr.to_bytes(), 'hex').toString('hex')
 }
