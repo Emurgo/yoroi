@@ -23,14 +23,14 @@ export const transactionsInfoSelector: (State) => Dict<
   (state) => state.wallet.externalAddresses,
   (state) => state.wallet.rewardAddressHex,
   (state) => state.wallet.confirmationCounts,
-  (state) => state.wallet.networkId,
+  (state) => state.wallet.walletImplementationId,
   (
     transactions,
     internalAddresses,
     externalAddresses,
     rewardAddressHex,
     confirmationCounts,
-    networkId,
+    walletImplementationId,
   ) =>
     _.mapValues(transactions, (tx: Transaction) =>
       processTxHistoryData(
@@ -39,7 +39,7 @@ export const transactionsInfoSelector: (State) => Dict<
           ? [...internalAddresses, ...externalAddresses, ...[rewardAddressHex]]
           : [...internalAddresses, ...externalAddresses],
         confirmationCounts[tx.id] || 0,
-        networkId,
+        walletImplementationId,
       ),
     ),
 )

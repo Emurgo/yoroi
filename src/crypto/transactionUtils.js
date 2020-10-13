@@ -5,14 +5,13 @@ import {
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
 } from '../types/HistoryTransaction'
-import {CONFIG} from '../config/config'
+import {CONFIG, isHaskellShelley} from '../config/config'
 import {Logger} from '../utils/logging'
 import assert from '../utils/assert'
-import {getNetworkConfigById} from '../config/networks'
 import {CERTIFICATE_KIND} from '../api/types'
 
 import type {TransactionInfo, Transaction} from '../types/HistoryTransaction'
-import type {NetworkId} from '../config/types'
+import type {WalletImplementationId} from '../config/types'
 
 type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
 
@@ -45,7 +44,7 @@ export const processTxHistoryData = (
   tx: Transaction,
   ownAddresses: Array<string>,
   confirmations: number,
-  networkId: NetworkId,
+  walletImplementationId: WalletImplementationId,
 ): TransactionInfo => {
   const ownInputs = tx.inputs.filter(({address}) =>
     ownAddresses.includes(address),
@@ -96,12 +95,11 @@ export const processTxHistoryData = (
   }
 
   const totalOwnWithdrawals = _sum(ownWithdrawals)
-  const _keyDeposit =
-    getNetworkConfigById(networkId).KEY_DEPOSIT != null
-      ? getNetworkConfigById(networkId).KEY_DEPOSIT
-      : new BigNumber('0')
+  const _KEY_DEPOSIT = isHaskellShelley(walletImplementationId)
+    ? CONFIG.NETWORKS.HASKELL_SHELLEY.KEY_DEPOSIT
+    : new BigNumber('0')
   const totalOwnRefunds = hasKeyDeregistration
-    ? _keyDeposit
+    ? _KEY_DEPOSIT
     : new BigNumber('0')
 
   const totalIn = _sum(tx.inputs)
