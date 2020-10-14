@@ -662,6 +662,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     const ledgerSignTxResp: SignTransactionResponse = await signTxWithLedger(
       ledgerSignTxPayload,
       this.hwDeviceInfo,
+      useUSB,
     )
 
     const txBody = await request.self().unsignedTx.build()
