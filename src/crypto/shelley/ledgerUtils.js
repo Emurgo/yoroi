@@ -818,7 +818,7 @@ export async function toLedgerAddressParameters(request: {|
 export const signTxWithLedger = async (
   payload: SignTransactionRequest,
   hwDeviceInfo: HWDeviceInfo,
-  useUSB?: boolean = false,
+  useUSB: boolean,
 ): Promise<SignTransactionResponse> => {
   try {
     Logger.debug('ledgerUtils::signTxWithLedger called')
