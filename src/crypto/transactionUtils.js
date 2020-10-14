@@ -144,7 +144,7 @@ export const processTxHistoryData = (
 
   let amount
   let fee
-  const remoteFee = tx.fee != null ? new BigNumber(tx.fee) : null
+  const remoteFee = tx.fee != null ? new BigNumber(tx.fee).times(-1) : null
   let direction
   if (isIntraWallet) {
     direction = TRANSACTION_DIRECTION.SELF
