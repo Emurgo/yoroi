@@ -162,7 +162,9 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     )
     const accountKey = await (await (await masterKeyPtr.derive(purpose)).derive(
       CONFIG.NUMBERS.COIN_TYPES.CARDANO,
-    )).derive(0 + CONFIG.NUMBERS.HARD_DERIVATION_START)
+    )).derive(
+      CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
+    )
     const accountPubKey = await accountKey.to_public()
     const accountPubKeyHex = Buffer.from(
       await accountPubKey.as_bytes(),
