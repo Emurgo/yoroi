@@ -100,15 +100,14 @@ export default injectIntl(
         modal: false,
       },
       {
-        showModal: (state) => () => ({modal: true}),
-        hideModal: (state) => () => ({modal: false}),
+        showModal: () => () => ({modal: true}),
+        hideModal: () => () => ({modal: false}),
       },
     ),
     withHandlers({
       navigateToMnemonicCheck: ({navigation, hideModal, mnemonic}) => () => {
         const name = navigation.getParam('name')
         const password = navigation.getParam('password')
-        const mnemonic = navigation.getParam('mnemonic')
         const networkId = navigation.getParam('networkId')
         const walletImplementationId = navigation.getParam(
           'walletImplementationId',

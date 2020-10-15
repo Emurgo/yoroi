@@ -5,6 +5,7 @@ import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers, withState} from 'recompose'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {withNavigation} from 'react-navigation'
 
 import PinInput from '../Common/PinInput'
 import PinRegistrationForm from '../Common/PinRegistrationForm'
@@ -91,7 +92,6 @@ const handleNewPinEnter = ({navigation, encryptAndStoreCustomPin}) => async (
 
 const ChangeCustomPinScreen = ({
   intl,
-  navigation,
   isCurrentPinVerified,
   handleNewPinEnter,
   handleVerifyPin,
@@ -135,6 +135,7 @@ export default injectIntl(
         encryptAndStoreCustomPin,
       },
     ),
+    withNavigation,
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withState('isCurrentPinVerified', 'setIsCurrentPinVerified', false),
     withHandlers({

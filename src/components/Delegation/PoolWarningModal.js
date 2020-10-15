@@ -73,8 +73,7 @@ type Props = {
   intl: intlShape,
   visible: boolean,
   onPress: () => void,
-  onRequestClose: () => any,
-  disableButtons: boolean,
+  onRequestClose: () => void,
   reputationInfo: {node_flags?: number},
 }
 
@@ -83,7 +82,6 @@ const PoolWarningModal = ({
   visible,
   onPress,
   onRequestClose,
-  disableButtons,
   reputationInfo,
 }: Props) => {
   return (

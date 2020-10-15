@@ -108,7 +108,7 @@ export default injectIntl(
         walletName: oldName,
       }),
       {
-        setWalletName: (state) => (value) => ({walletName: value}),
+        setWalletName: () => (value) => ({walletName: value}),
       },
     ),
     withHandlers({

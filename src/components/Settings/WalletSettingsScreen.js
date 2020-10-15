@@ -224,10 +224,7 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      onToggleEasyConfirmation: ({
-        isEasyConfirmationEnabled,
-        navigation,
-      }) => () => {
+      onToggleEasyConfirmation: ({navigation}) => () => {
         navigation.navigate(SETTINGS_ROUTES.EASY_COMFIRMATION)
       },
     }),

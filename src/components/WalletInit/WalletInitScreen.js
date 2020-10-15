@@ -13,7 +13,6 @@ import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
 import {Button, StatusBar, ScreenBackground} from '../UiKit'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
-import {walletIsInitializedSelector} from '../../selectors'
 import {isJormungandr} from '../../config/networks'
 import {CONFIG} from '../../config/config'
 
@@ -52,7 +51,6 @@ type Props = {
     boolean,
   ) => mixed,
   intl: any,
-  walletIsInitialized: boolean,
   navigation: Navigation,
   showModal: boolean,
   setShowModal: (Object, boolean) => void,
@@ -63,7 +61,6 @@ const WalletInitScreen = ({
   navigateRestoreWallet,
   navigateCheckNanoX,
   intl,
-  walletIsInitialized,
   navigation,
   showModal,
   setShowModal,
@@ -136,16 +133,14 @@ const WalletInitScreen = ({
 }
 export default injectIntl(
   compose(
-    connect((state: State) => ({
-      walletIsInitialized: walletIsInitializedSelector(state),
-    })),
+    connect((_state: State) => ({})),
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withStateHandlers(
       {
         showModal: false,
       },
       {
-        setShowModal: (state) => (event, showModal) => ({showModal}),
+        setShowModal: () => (event, showModal) => ({showModal}),
       },
     ),
     withHandlers({

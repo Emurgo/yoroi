@@ -54,7 +54,7 @@ const messages = defineMessages({
   },
 })
 
-const Item = ({title, text, url, onPress}) => (
+const Item = ({title, text, onPress}) => (
   <TouchableOpacity onPress={onPress} style={styles.item}>
     <View style={styles.itemWrap}>
       <Text style={styles.title}>{title}</Text>

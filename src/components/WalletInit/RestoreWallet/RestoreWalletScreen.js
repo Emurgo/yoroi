@@ -110,7 +110,6 @@ const RestoreWalletScreen = ({
   setPhrase,
   translateInvalidPhraseError,
   isKeyboardOpen,
-  navigation,
 }) => {
   const errors = validateRecoveryPhrase(phrase)
   const visibleErrors = isKeyboardOpen
@@ -166,11 +165,11 @@ export default injectIntl(
         phrase: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.MNEMONIC3 : '',
       },
       {
-        setPhrase: (state) => (value) => ({phrase: value}),
+        setPhrase: () => (value) => ({phrase: value}),
       },
     ),
     withHandlers({
-      navigateToWalletCredentials: ({navigation, phrase}) => (event) => {
+      navigateToWalletCredentials: ({navigation, phrase}) => (_event) => {
         navigation.navigate(WALLET_INIT_ROUTES.VERIFY_RESTORED_WALLET, {
           phrase: cleanMnemonic(phrase),
           networkId: navigation.getParam('networkId'),

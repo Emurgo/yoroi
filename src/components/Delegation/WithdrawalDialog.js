@@ -109,7 +109,6 @@ const WithdrawalDialog = ({
   fees,
   onConfirm,
   onRequestClose,
-  showCloseIcon,
 }: Props) => {
   switch (step) {
     case WITHDRAWAL_DIALOG_STEPS.CLOSED:

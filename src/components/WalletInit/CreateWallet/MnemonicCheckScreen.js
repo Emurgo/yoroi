@@ -221,7 +221,7 @@ export default injectIntl(
         selectWord: ({partialPhrase}) => (wordIdx) => ({
           partialPhrase: [...partialPhrase, wordIdx],
         }),
-        handleClear: (state) => () => ({
+        handleClear: () => () => ({
           partialPhrase: [],
         }),
       },

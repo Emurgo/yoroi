@@ -39,15 +39,7 @@ const messages = defineMessages({
   },
 })
 
-const SaveNanoXScreen = ({
-  intl,
-  onPress,
-  name,
-  validateForm,
-  validateWalletName,
-  setName,
-  navigation,
-}) => {
+const SaveNanoXScreen = ({intl, onPress, name, validateForm, setName}) => {
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <ProgressStep currentStep={3} totalSteps={3} displayStepNumber />

@@ -14,8 +14,8 @@ const ModalWrapper = compose(
       visible: true,
     },
     {
-      onRequestClose: (state) => () => ({visible: false}),
-      onConfirm: (state) => () => ({visible: false}),
+      onRequestClose: () => () => ({visible: false}),
+      onConfirm: () => () => ({visible: false}),
     },
   ),
 )(MnemonicExplanationModal)

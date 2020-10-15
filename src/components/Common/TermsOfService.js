@@ -7,7 +7,7 @@ import Markdown from 'react-native-easy-markdown'
 import type {ComponentType} from 'react'
 
 type Props = {
-  tos: any,
+  tos: string,
 }
 
 const TermsOfService = ({tos}: Props) => {

@@ -9,13 +9,12 @@ import AcceptTermsOfServiceScreen from './AcceptTermsOfServiceScreen'
 
 // mockup navigation
 const navigation = {
-  navigate: (route, params) => {
+  navigate: (_route, _params) => {
     action('navigated!')
   },
   setParams: (params) => {
     action(params)
   },
-  getParam: (param) => ({param: true}),
 }
 
 storiesOf('AcceptTermsOfServiceScreen', module).add('Default', () => (

@@ -7,5 +7,8 @@ import {action} from '@storybook/addon-actions'
 import SaveNanoXScreen from './SaveNanoXScreen'
 
 storiesOf('SaveNanoXScreen', module).add('default', ({navigation}) => (
-  <SaveNanoXScreen navigation={navigation} onPress={(e) => action('clicked')} />
+  <SaveNanoXScreen
+    navigation={navigation}
+    onPress={(_e) => action('clicked')}
+  />
 ))

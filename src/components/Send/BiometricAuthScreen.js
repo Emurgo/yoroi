@@ -154,19 +154,19 @@ type State = {
 export default injectIntl(
   (compose(
     withStateHandlers(
-      {
+      ({
         error: null,
-      },
+      }: State),
       {
-        setError: (state: State) => (error: ErrorCode) => ({error}),
-        clearError: (state: State) => () => ({error: null}),
+        setError: () => (error: ErrorCode) => ({error}),
+        clearError: () => () => ({error: null}),
       },
     ),
     withHandlers({
       // we have this handler because we need to let JAVA side know user
       // cancelled the scanning by either navigating out of this window
       // or using fallback
-      cancelScanning: ({setError, clearError, navigation}) => async () => {
+      cancelScanning: ({clearError, navigation}) => async () => {
         const wasScanningStarted = await KeyStore.cancelFingerprintScanning(
           KeyStore.REJECTIONS.CANCELED,
         )

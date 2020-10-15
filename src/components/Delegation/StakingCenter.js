@@ -78,7 +78,6 @@ const StakingCenter = ({
   busy,
   showPoolWarning,
   setShowPoolWarning,
-  selectedPools,
   reputationInfo,
 }) => {
   // pools user is currently delegating to
@@ -193,7 +192,6 @@ export default injectIntl(
     }),
     withHandlers({
       handleOnMessage: ({
-        navigation,
         navigateToDelegationConfirm,
         setReputationInfo,
         setSelectedPools,

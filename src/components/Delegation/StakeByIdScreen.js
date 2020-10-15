@@ -77,15 +77,12 @@ const styles = StyleSheet.create({
 })
 
 const StakeByIdScreen = ({
-  navigation,
   intl,
-  navigateToDelegationConfirm,
   busy,
   handleInputChange,
   handleOnContinue,
   poolId,
   utxos,
-  errors,
 }) => {
   return (
     <>
@@ -173,12 +170,9 @@ export default injectIntl(
     }),
     withHandlers({
       handleInputChange: ({setPoolId}) => (poolId) => setPoolId(poolId),
-      handleOnContinue: ({
-        navigation,
-        navigateToDelegationConfirm,
-        intl,
-        poolId,
-      }) => async (event) => {
+      handleOnContinue: ({navigateToDelegationConfirm, intl, poolId}) => async (
+        _event,
+      ) => {
         try {
           const poolInfoResponse = await walletManager.fetchPoolInfo({
             poolIds: [poolId],

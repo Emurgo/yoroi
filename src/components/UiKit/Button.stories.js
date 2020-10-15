@@ -22,5 +22,5 @@ storiesOf('Button', module)
     <Button block shelleyTheme onPress={action('clicked')} title="Okay" />
   ))
   .add('with Byron theme', () => (
-    <Button block onPress={(e) => action('clicked')} title="Okay" />
+    <Button block onPress={(_e) => action('clicked')} title="Okay" />
   ))

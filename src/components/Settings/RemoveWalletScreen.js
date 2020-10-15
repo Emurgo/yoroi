@@ -159,10 +159,10 @@ export default injectIntl(
         typedWalletName: '',
       },
       {
-        setHasMnemonicWrittenDown: (state) => (value) => ({
+        setHasMnemonicWrittenDown: () => (value) => ({
           hasMnemonicWrittenDown: value,
         }),
-        setTypedWalletName: (state) => (value) => ({typedWalletName: value}),
+        setTypedWalletName: () => (value) => ({typedWalletName: value}),
       },
     ),
     withHandlers({

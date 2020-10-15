@@ -30,7 +30,7 @@ const LanguagePickerScreen = ({
 
 export default (compose(
   connect(
-    (state, {navigation}) => ({
+    (state) => ({
       languageCode: languageSelector(state),
     }),
     languageActions,
@@ -40,7 +40,7 @@ export default (compose(
       navigation,
       changeAndSaveLanguage,
       languageCode,
-    }) => async (event) => {
+    }) => async (_event) => {
       await changeAndSaveLanguage(languageCode)
 
       navigation.goBack(null)

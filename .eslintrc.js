@@ -33,6 +33,7 @@ module.exports = {
     'no-duplicate-imports': 0,
     'import/no-duplicates': 1,
     'react-native/no-unused-styles': 2,
+    'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     'react-native/split-platform-components': 0,
     'react-native/no-inline-styles': 2,
     'no-multiple-empty-lines': ['warn', {max: 2, maxEOF: 0}],

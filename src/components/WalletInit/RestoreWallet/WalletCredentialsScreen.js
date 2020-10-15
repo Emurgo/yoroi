@@ -48,7 +48,7 @@ export default injectIntl(
         waiting: false,
       },
       {
-        setWaiting: (state) => (waiting: boolean) => ({waiting}),
+        setWaiting: () => (waiting: boolean) => ({waiting}),
       },
     ),
     withHandlers({

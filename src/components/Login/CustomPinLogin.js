@@ -55,7 +55,6 @@ type ExternalProps = {|
   navigation: Navigation,
   customPinHash: ?string,
   intl: intlShape,
-  isLoginInProgress: boolean,
 |}
 
 export default injectIntl(
@@ -65,12 +64,9 @@ export default injectIntl(
     })),
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
-      onPinEnter: ({
-        navigation,
-        isLoginInProgress,
-        customPinHash,
-        intl,
-      }: ExternalProps) => async (pin) => {
+      onPinEnter: ({navigation, customPinHash, intl}: ExternalProps) => async (
+        pin,
+      ) => {
         if (customPinHash == null) {
           throw new Error('Custom pin is not setup')
         }

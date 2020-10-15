@@ -103,7 +103,7 @@ const messages = defineMessages({
 
 const Label = ({children}) => <Text style={styles.label}>{children}</Text>
 
-const AdaAmount = ({amount, direction}) => {
+const AdaAmount = ({amount}) => {
   const amountStyle = amount.gte(0)
     ? styles.positiveAmount
     : styles.negativeAmount
@@ -151,19 +151,19 @@ const getShownAddresses = (
 
   const {isHighlightedFrom, filterFrom, isHighlightedTo, filterTo} = {
     [TRANSACTION_DIRECTION.SENT]: {
-      isHighlightedFrom: (address) => false,
+      isHighlightedFrom: (_address) => false,
       filterFrom: null,
       isHighlightedTo: (address) => !isMyAddress(address),
       filterTo: null,
     },
     [TRANSACTION_DIRECTION.RECEIVED]: {
-      isHighlightedFrom: (address) => false,
+      isHighlightedFrom: (_address) => false,
       filterFrom: null,
       isHighlightedTo: (address) => isMyAddress(address),
       filterTo: (address) => isMyAddress(address),
     },
     [TRANSACTION_DIRECTION.SELF]: {
-      isHighlightedFrom: (address) => false,
+      isHighlightedFrom: (_address) => false,
       filterFrom: null,
       isHighlightedTo: (address) => !isMyChange(address),
       filterTo: null,
@@ -206,7 +206,6 @@ const getShownAddresses = (
 }
 
 const TxDetails = ({
-  navigation,
   intl,
   transaction,
   internalAddressIndex,
@@ -312,7 +311,7 @@ export default injectIntl(
     withStateHandlers(
       {addressDetail: null},
       {
-        setAddressDetail: (state, props) => (address) => ({
+        setAddressDetail: () => (address) => ({
           addressDetail: address,
         }),
       },

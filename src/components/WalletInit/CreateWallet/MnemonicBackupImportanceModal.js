@@ -91,10 +91,10 @@ export default injectIntl(
         acceptedNewDeviceRecovery: false,
       },
       {
-        setAcceptedKeyStorage: (state) => (value) => ({
+        setAcceptedKeyStorage: () => (value) => ({
           acceptedKeyStorage: value,
         }),
-        setAcceptedNewDeviceRecovery: (state) => (value) => ({
+        setAcceptedNewDeviceRecovery: () => (value) => ({
           acceptedNewDeviceRecovery: value,
         }),
       },

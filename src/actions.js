@@ -152,10 +152,7 @@ export const encryptAndStoreCustomPin = (pin: string) => async (
   )
 }
 
-export const removeCustomPin = () => async (
-  dispatch: Dispatch<any>,
-  getState: () => State,
-) => {
+export const removeCustomPin = () => async (dispatch: Dispatch<any>) => {
   await dispatch(clearAppSettingField(APP_SETTINGS_KEYS.CUSTOM_PIN_HASH))
 }
 
@@ -234,7 +231,7 @@ export const updateVersion = () => async (
   return currentVersion
 }
 
-export const closeWallet = () => async (dispatch: Dispatch<any>) => {
+export const closeWallet = () => async (_dispatch: Dispatch<any>) => {
   await walletManager.closeWallet()
 }
 
@@ -358,13 +355,13 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
 }
 
 export const generateNewReceiveAddress = () => async (
-  dispatch: Dispatch<any>,
+  _dispatch: Dispatch<any>,
 ) => {
   return await walletManager.generateNewUiReceiveAddress()
 }
 
 export const generateNewReceiveAddressIfNeeded = () => async (
-  dispatch: Dispatch<any>,
+  _dispatch: Dispatch<any>,
 ) => {
   return await walletManager.generateNewUiReceiveAddressIfNeeded()
 }
@@ -430,7 +427,7 @@ export const DIALOG_BUTTONS = Object.freeze({
 type DialogButton = $Values<typeof DIALOG_BUTTONS>
 
 const showDialog = (translations: DialogOptions): Promise<DialogButton> =>
-  new Promise((resolve, reject) => {
+  new Promise((resolve) => {
     const {title, message, yesButton, noButton} = translations
     const buttons = []
 

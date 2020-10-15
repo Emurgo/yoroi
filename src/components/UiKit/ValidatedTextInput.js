@@ -86,7 +86,7 @@ const ValidatedTextInput = ({
 export default (withStateHandlers(
   {showPassword: false},
   {
-    toggleShowPassword: (state, props) => () => ({
+    toggleShowPassword: (state) => () => ({
       showPassword: !state.showPassword,
     }),
   },

@@ -12,14 +12,14 @@ const _startFetching = () => ({
   type: 'START_FETCHING_ACCOUNT_STATE',
   path: ['accountState', 'isFetching'],
   payload: null,
-  reducer: (state, isFetching) => true,
+  reducer: (_state, _isFetching) => true,
 })
 
 const _endFetching = () => ({
   type: 'END_FETCHING_ACCOUNT_STATE',
   path: ['accountState', 'isFetching'],
   payload: null,
-  reducer: (state, isFetching) => false,
+  reducer: (_state, _isFetching) => false,
 })
 
 const _setAccountValue = (value) => ({
@@ -54,7 +54,7 @@ const _clearAccountState = () => ({
   type: 'CLEAR_ACCOUNT_STATE',
   path: ['accountState'],
   payload: null,
-  reducer: (state) => {
+  reducer: (_state) => {
     return {
       isFetching: false,
       lastFetchingError: null,

@@ -164,11 +164,11 @@ const VerifyWalletScreen = ({
 
 export default injectIntl(
   (compose(
-    connect((state) => ({})),
+    connect((_state) => ({})),
     withNavigation,
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
-      navigateToWalletCredentials: ({navigation, walletNumber}) => (event) => {
+      navigateToWalletCredentials: ({navigation, walletNumber}) => (_event) => {
         navigation.navigate(WALLET_INIT_ROUTES.WALLET_CREDENTIALS, {
           walletNumber,
           phrase: navigation.getParam('phrase'),

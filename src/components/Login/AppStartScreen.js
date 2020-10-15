@@ -33,7 +33,7 @@ const messages = defineMessages({
   },
 })
 
-const AppStartScreen = ({navigateLogin, intl, locale}) => {
+const AppStartScreen = ({navigateLogin, intl}) => {
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <StatusBar type="dark" />
@@ -61,12 +61,10 @@ export default injectIntl(
       installationId: installationIdSelector(state),
       customPinHash: customPinHashSelector(state),
       isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
-      locale: state.appSettings.languageCode,
     })),
     withHandlers({
       navigateLogin: ({
         isSystemAuthEnabled,
-        customPinHash,
         navigation,
         installationId,
         intl,
