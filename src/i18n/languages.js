@@ -13,4 +13,5 @@ export const LANGUAGES = {
   GERMAN: 'de-DE',
   FRENCH: 'fr-FR',
   ITALIAN: 'it-IT',
+  DUTCH: 'nl-NL',
 }

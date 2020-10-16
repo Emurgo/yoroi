@@ -13,6 +13,7 @@ import 'moment/locale/pt'
 import 'moment/locale/de'
 import 'moment/locale/fr'
 import 'moment/locale/it'
+import 'moment/locale/nl'
 
 import assert from '../utils/assert'
 import {LANGUAGES} from './languages'
@@ -33,6 +34,7 @@ const momentLocales = {
   [LANGUAGES.GERMAN]: 'de',
   [LANGUAGES.FRENCH]: 'fr',
   [LANGUAGES.ITALIAN]: 'it',
+  [LANGUAGES.DUTCH]: 'nl',
 }
 
 // Add default custom formatting functions
@@ -98,6 +100,7 @@ const numberLocales = {
   [LANGUAGES.GERMAN]: defaultCommaDecimalSeparatorFmt,
   [LANGUAGES.FRENCH]: defaultCommaDecimalSeparatorFmt,
   [LANGUAGES.ITALIAN]: defaultCommaDecimalSeparatorFmt,
+  [LANGUAGES.DUTCH]: defaultNumberFmt,
 }
 
 export const setLanguage = (code: string) => {
