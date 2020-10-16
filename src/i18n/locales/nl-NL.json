@@ -128,7 +128,7 @@
   "components.settings.applicationsettingsscreen.commit": "Uitvoeren:",
   "components.settings.applicationsettingsscreen.crashReporting": "Crash rapportage",
   "components.settings.applicationsettingsscreen.crashReportingText": "Stuur de Crashrapporten naar EMURGO. Wijzigingen aan deze optie worden doorgevoerd na het herstarten van de applicatie.",
-  "components.settings.applicationsettingsscreen.currentLanguage": "English",
+  "components.settings.applicationsettingsscreen.currentLanguage": "Nederlands",
   "components.settings.applicationsettingsscreen.language": "Uw taal",
   "components.settings.applicationsettingsscreen.network": "Netwerk:",
   "components.settings.applicationsettingsscreen.security": "Beveiliging",
