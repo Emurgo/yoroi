@@ -9,6 +9,7 @@ import {Logger} from '../../utils/logging'
 import * as api from '../../api/byron/api'
 import {ApiHistoryError} from '../../api/errors'
 import {CONFIG} from '../../config/config'
+import {CERTIFICATE_KIND} from '../../api/types'
 
 import type {Dict} from '../../state'
 import type {Transaction} from '../../types/HistoryTransaction'
@@ -118,8 +119,13 @@ const perAddressCertificatesSelector = (
   }
 
   ObjectValues(transactions).forEach((tx) => {
-    tx.certificates.forEach(({rewardAddress}) => {
-      if (rewardAddress != null) {
+    tx.certificates.forEach((cert) => {
+      if (
+        cert.kind === CERTIFICATE_KIND.STAKE_REGISTRATION ||
+        cert.kind === CERTIFICATE_KIND.STAKE_DEREGISTRATION ||
+        cert.kind === CERTIFICATE_KIND.STAKE_DELEGATION
+      ) {
+        const {rewardAddress} = cert
         addTxTo(tx.id, tx.certificates, tx.submittedAt, tx.epoch, rewardAddress)
       }
     })

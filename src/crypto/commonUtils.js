@@ -7,8 +7,8 @@
  */
 
 import {Wallet} from 'react-native-cardano'
-import {CONFIG} from '../config/config'
-import {WALLET_IMPLEMENTATION_REGISTRY} from '../config/types'
+import {CONFIG, getWalletConfigById} from '../config/config'
+import {DERIVATION_TYPES} from '../config/types'
 
 import type {WalletImplementationId} from '../config/types'
 
@@ -53,19 +53,14 @@ export const formatPath = (
   walletImplementationId: WalletImplementationId,
 ) => {
   const HARD_DERIVATION_START = CONFIG.NUMBERS.HARD_DERIVATION_START
+  const walletConfig = getWalletConfigById(walletImplementationId)
   let purpose
-  switch (walletImplementationId) {
-    case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
-      purpose = CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
-      break
-    case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
-      purpose = CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
-      break
-    case WALLET_IMPLEMENTATION_REGISTRY.JORMUNGANDR_ITN:
-      purpose = CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
-      break
-    default:
-      throw new Error('wallet implementation id not valid')
+  if (walletConfig.TYPE === DERIVATION_TYPES.BIP44) {
+    purpose = CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
+  } else if (walletConfig.TYPE === DERIVATION_TYPES.CIP1852) {
+    purpose = CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
+  } else {
+    throw new Error('Unknown wallet purpose')
   }
   purpose = purpose - HARD_DERIVATION_START
 

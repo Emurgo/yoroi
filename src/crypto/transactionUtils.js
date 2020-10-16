@@ -4,12 +4,15 @@ import {BigNumber} from 'bignumber.js'
 import {
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
+  TRANSACTION_TYPE,
 } from '../types/HistoryTransaction'
 import {CONFIG} from '../config/config'
 import {Logger} from '../utils/logging'
 import assert from '../utils/assert'
+import {CERTIFICATE_KIND} from '../api/types'
 
 import type {TransactionInfo, Transaction} from '../types/HistoryTransaction'
+import type {WalletImplementationId} from '../config/types'
 
 type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
 
@@ -42,20 +45,60 @@ export const processTxHistoryData = (
   tx: Transaction,
   ownAddresses: Array<string>,
   confirmations: number,
+  walletImplementationId: WalletImplementationId,
 ): TransactionInfo => {
-  const ownInputs = tx.inputs.filter(({address}) =>
+  // rename to match yoroi extension notation
+  const utxoInputs = tx.inputs
+  const utxoOutputs = tx.outputs
+  const accountingInputs = tx.withdrawals
+  // const accountingOutpus // eventually
+
+  const ownImplicitInput = new BigNumber(0)
+  const ownImplicitOutput = (() => {
+    if (tx.type === TRANSACTION_TYPE.SHELLEY) {
+      let implicitOutputSum = new BigNumber(0)
+      for (const cert of tx.certificates) {
+        if (cert.kind !== CERTIFICATE_KIND.MOVE_INSTANTANEOUS_REWARDS) {
+          continue
+        }
+        const {rewards} = cert
+        if (rewards == null) continue // shouldn't happen
+        for (const rewardAddr in rewards) {
+          if (ownAddresses.includes(rewardAddr)) {
+            implicitOutputSum = implicitOutputSum.plus(rewards[rewardAddr])
+          }
+        }
+      }
+      return implicitOutputSum
+    }
+    return new BigNumber(0)
+  })()
+
+  const unifiedInputs = [...utxoInputs, ...accountingInputs]
+  const unifiedOutputs = [
+    ...utxoOutputs,
+    // ...accountingOutpus,
+  ]
+  const ownInputs = unifiedInputs.filter(({address}) =>
     ownAddresses.includes(address),
   )
 
-  const ownOutputs = tx.outputs.filter(({address}) =>
+  const ownOutputs = unifiedOutputs.filter(({address}) =>
     ownAddresses.includes(address),
   )
 
-  const hasOnlyOwnInputs = ownInputs.length === tx.inputs.length
-  const hasOnlyOwnOutputs = ownOutputs.length === tx.outputs.length
+  const totalIn = _sum(unifiedInputs)
+  const totalOut = _sum(unifiedOutputs)
+  const ownIn = _sum(ownInputs).plus(ownImplicitInput)
+  const ownOut = _sum(ownOutputs).plus(ownImplicitOutput)
+
+  const hasOnlyOwnInputs = ownInputs.length === unifiedInputs.length
+  const hasOnlyOwnOutputs = ownOutputs.length === unifiedOutputs.length
+
   const isIntraWallet = hasOnlyOwnInputs && hasOnlyOwnOutputs
   const isMultiParty =
-    ownInputs.length > 0 && ownInputs.length !== tx.inputs.length
+    ownInputs.length > 0 && ownInputs.length !== unifiedInputs.length
+
   if (isMultiParty && !_multiPartyWarningCache[tx.id]) {
     _multiPartyWarningCache[tx.id] = true
     Logger.warn(
@@ -64,11 +107,6 @@ export const processTxHistoryData = (
     Logger.warn('This probably means broken address discovery!')
     Logger.warn(`Transaction: ${tx.id}`)
   }
-
-  const totalIn = _sum(tx.inputs)
-  const totalOut = _sum(tx.outputs)
-  const ownIn = _sum(ownInputs)
-  const ownOut = _sum(ownOutputs)
 
   /*
   Calculating costs and direction from just inputs and outputs is quite tricky.
@@ -106,20 +144,20 @@ export const processTxHistoryData = (
 
   let amount
   let fee
+  const remoteFee = tx.fee != null ? new BigNumber(tx.fee).times(-1) : null
   let direction
   if (isIntraWallet) {
     direction = TRANSACTION_DIRECTION.SELF
-    amount = null
-    fee = totalFee
+    amount = new BigNumber(0)
+    fee = remoteFee ?? totalFee
   } else if (isMultiParty) {
     direction = TRANSACTION_DIRECTION.MULTI
     amount = brutto
     fee = null
   } else if (hasOnlyOwnInputs) {
-    assert.assert(brutto.lte(0), 'More funds after sending')
     direction = TRANSACTION_DIRECTION.SENT
     amount = brutto.minus(totalFee)
-    fee = totalFee
+    fee = remoteFee ?? totalFee
   } else {
     assert.assert(
       ownInputs.length === 0,

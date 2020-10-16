@@ -121,6 +121,8 @@ export const checkAndFacadeTransactionAsync = async (
 
   return {
     id: tx.hash,
+    type: tx.type,
+    fee: tx.fee ?? undefined,
     status: checkAndFacadeStatus(tx.tx_state),
     inputs: tx.inputs.map((i) => ({
       address: i.address,

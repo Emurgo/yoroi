@@ -1,7 +1,7 @@
 // @flow
 import {BigNumber} from 'bignumber.js'
 
-import type {CertificateKind} from '../api/types'
+import type {RemoteCertificateMeta} from '../api/types'
 
 export const TRANSACTION_DIRECTION = {
   SENT: 'SENT',
@@ -42,8 +42,16 @@ export type TransactionInfo = {|
   assurance: TransactionAssurance,
 |}
 
+export const TRANSACTION_TYPE = {
+  BYRON: 'byron',
+  SHELLEY: 'shelley',
+}
+export type TransactionType = $Values<typeof TRANSACTION_TYPE>
+
 export type Transaction = {|
   id: string,
+  type?: TransactionType,
+  fee?: string,
   status: TransactionStatus,
   inputs: Array<{address: string, amount: string}>,
   outputs: Array<{address: string, amount: string}>,
@@ -58,11 +66,7 @@ export type Transaction = {|
     address: string, // hex
     amount: string,
   |}>,
-  certificates: Array<{
-    kind: CertificateKind,
-    rewardAddress?: string,
-    poolKeyHash?: string,
-  }>,
+  certificates: Array<RemoteCertificateMeta>,
 |}
 
 export const AMOUNT_FORMAT = {

@@ -13,8 +13,7 @@ import {
   RewardAddress,
 } from 'react-native-haskell-shelley'
 
-import {CONFIG} from '../../config/config'
-import {WALLET_IMPLEMENTATION_REGISTRY} from '../../config/types'
+import {CONFIG, isByron, isHaskellShelley} from '../../config/config'
 import assert from '../../utils/assert'
 import {defaultMemoize} from 'reselect'
 import {Logger} from '../../utils/logging'
@@ -49,8 +48,7 @@ export class AddressGenerator {
 
   get byronAccount(): CryptoAccount {
     assert.assert(
-      this.walletImplementationId ===
-        WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
+      isByron(this.walletImplementationId),
       'chain::get::byronAccount: not a byron wallet',
     )
     return {
@@ -60,10 +58,7 @@ export class AddressGenerator {
   }
 
   async getRewardAddressHex() {
-    if (
-      this.walletImplementationId !==
-      WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY
-    ) {
+    if (!isHaskellShelley(this.walletImplementationId)) {
       return null
     }
     if (this._rewardAddressHex != null) return this._rewardAddressHex
@@ -94,10 +89,7 @@ export class AddressGenerator {
   }
 
   async generate(idxs: Array<number>): Promise<Array<string>> {
-    if (
-      this.walletImplementationId ===
-      WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY
-    ) {
+    if (isHaskellShelley(this.walletImplementationId)) {
       // cache account public key
       if (this._accountPubKeyPtr == null) {
         this._accountPubKeyPtr = await Bip32PublicKey.from_bytes(
@@ -158,7 +150,8 @@ export class AddressGenerator {
 
     let _walletImplementationId
     if (walletImplementationId == null) {
-      _walletImplementationId = WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
+      _walletImplementationId =
+        CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID
     } else {
       _walletImplementationId = walletImplementationId
     }
