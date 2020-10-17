@@ -316,7 +316,7 @@
   "components.walletinit.walletfreshinitscreen.addWalletOnShelleyButton": "Voeg portemonnee toe (Jormungandr ITN)",
   "components.walletinit.walletinitscreen.createWalletButton": "Maak een Portemonnee",
   "components.walletinit.walletinitscreen.createWalletWithLedgerButton": "Verbinden met Ledger Nano apparaat",
-  "components.walletinit.walletinitscreen.restoreNormalWalletExplanation": "If you have a Yoroi recovery phrase consisting of 15 words generated when you created a Yoroi Wallet, choose this option to restore your wallet.",
+  "components.walletinit.walletinitscreen.restoreNormalWalletExplanation": "Als u een Yoroi herstelzin heeft die bestaat uit 15 woorden die zijn gegenereerd toen u een Yoroi Portemonnee maakte, kiest u deze optie om uw Portemonnee te herstellen.",
   "components.walletinit.walletinitscreen.restoreNormalWalletLabel": "15-word Wallet",
   "components.walletinit.walletinitscreen.restoreNWordWalletExplanation": "If you have a recovery phrase consisting of {mnemonicLength} words, choose this option to restore your wallet.",
   "components.walletinit.walletinitscreen.restoreWalletButton": "Herstel Portemonnee",
