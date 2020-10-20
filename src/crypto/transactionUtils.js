@@ -12,7 +12,6 @@ import assert from '../utils/assert'
 import {CERTIFICATE_KIND} from '../api/types'
 
 import type {TransactionInfo, Transaction} from '../types/HistoryTransaction'
-import type {WalletImplementationId} from '../config/types'
 
 type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
 
@@ -45,7 +44,6 @@ export const processTxHistoryData = (
   tx: Transaction,
   ownAddresses: Array<string>,
   confirmations: number,
-  walletImplementationId: WalletImplementationId,
 ): TransactionInfo => {
   // rename to match yoroi extension notation
   const utxoInputs = tx.inputs

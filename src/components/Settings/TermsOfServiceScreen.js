@@ -20,11 +20,7 @@ const messages = defineMessages({
   },
 })
 
-type Props = {
-  intl: any,
-}
-
-const TermsOfServiceScreen = ({intl}: Props) => (
+const TermsOfServiceScreen = () => (
   <SafeAreaView style={styles.safeAreaView}>
     <StatusBar type="dark" />
 

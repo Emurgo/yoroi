@@ -134,7 +134,7 @@ export default injectIntl(
     onDidMount(({generateNewReceiveAddressIfNeeded}) =>
       generateNewReceiveAddressIfNeeded(),
     ),
-    onDidUpdate(({generateNewReceiveAddressIfNeeded}, prevProps) =>
+    onDidUpdate(({generateNewReceiveAddressIfNeeded}, _prevProps) =>
       generateNewReceiveAddressIfNeeded(),
     ),
   )(ReceiveScreen): ComponentType<{navigation: Navigation, intl: intlShape}>),

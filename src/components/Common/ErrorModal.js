@@ -35,7 +35,6 @@ const ErrorModal = ({
   showErrorMessage,
   setShowErrorMessage,
   errorMessage,
-  onPress,
   onRequestClose,
 }) => (
   <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>

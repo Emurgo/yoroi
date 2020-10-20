@@ -86,14 +86,7 @@ type ExternalProps = {
   pinMaxLength: number,
 }
 
-const PinInput = ({
-  pin,
-  setPin,
-  pinMaxLength,
-  labels,
-  onKeyDown,
-  onPinEnter,
-}) => (
+const PinInput = ({pin, pinMaxLength, labels, onKeyDown}) => (
   <ScreenBackground style={styles.root}>
     <View style={styles.infoContainer}>
       <Text style={styles.title}>{labels.title}</Text>
@@ -136,7 +129,7 @@ export default (compose(
       pin: '',
     },
     {
-      setPin: (state) => (value) => ({pin: value}),
+      setPin: () => (value) => ({pin: value}),
     },
   ),
   withHandlers({

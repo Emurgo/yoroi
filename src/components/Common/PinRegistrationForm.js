@@ -17,13 +17,9 @@ import styles from './styles/PinRegistrationForm.style'
 import type {ComponentType} from 'react'
 import type {PinInputLabels} from './PinInput'
 
-const handlePinEnter = ({
-  pin,
-  setPin,
-  encryptAndStoreCustomPin,
-  onPinEntered,
-  intl,
-}) => async (pinConfirmation) => {
+const handlePinEnter = ({pin, setPin, onPinEntered, intl}) => async (
+  pinConfirmation,
+) => {
   if (pin !== pinConfirmation) {
     setPin('')
     await showErrorDialog(errorMessages.pinMismatch, intl)
@@ -70,7 +66,6 @@ const PinRegistrationForm = ({
   labels,
   handlePinEnter,
   clearPin,
-  intl,
 }: Props) => {
   const inputLabels = !pin ? labels.PinInput : labels.PinConfirmationInput
 
@@ -93,8 +88,8 @@ export default injectIntl(
         pin: '',
       },
       {
-        setPin: (state) => (pin: string) => ({pin}),
-        clearPin: (state) => () => ({pin: ''}),
+        setPin: () => (pin: string) => ({pin}),
+        clearPin: () => () => ({pin: ''}),
       },
     ),
     withHandlers({

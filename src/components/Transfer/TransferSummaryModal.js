@@ -47,8 +47,8 @@ const messages = defineMessages({
 
 type Props = {
   +intl: any,
-  +visible: boolean,
-  +disableButtons: boolean,
+  +visible?: boolean,
+  +disableButtons?: boolean,
   password: string,
   +setPassword: (string) => void,
   +withdrawals?: Array<{|
@@ -87,7 +87,7 @@ const TransferSummaryModal = ({
   useUSB,
 }: Props) => (
   <StandardModal
-    visible
+    visible={visible ?? true}
     title={intl.formatMessage(txLabels.confirmTx)}
     onRequestClose={onRequestClose}
     primaryButton={{
@@ -98,7 +98,7 @@ const TransferSummaryModal = ({
     }}
     secondaryButton={{}}
     showCloseIcon={showCloseIcon === true}
-    disableButtons
+    disableButtons={disableButtons ?? false}
   >
     <View style={styles.item}>
       <Text>{intl.formatMessage(messages.balanceLabel)}</Text>
@@ -213,7 +213,7 @@ export default injectIntl(
         password: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
       },
       {
-        setPassword: (state) => (value) => ({password: value}),
+        setPassword: () => (value) => ({password: value}),
       },
     ),
   )(TransferSummaryModal): ComponentType<ExternalProps>),

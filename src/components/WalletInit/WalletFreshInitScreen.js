@@ -13,7 +13,6 @@ import {Button, StatusBar, ScreenBackground} from '../UiKit'
 // uses same styles as WalletInitScreen
 import styles from './styles/WalletInitScreen.style'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
-import {walletIsInitializedSelector} from '../../selectors'
 import {CONFIG} from '../../config/config'
 
 import type {State} from '../../state'
@@ -33,17 +32,11 @@ const messages = defineMessages({
 
 type Props = {|
   intl: any,
-  walletIsInitialized: boolean,
   navigation: Navigation,
   navigateInitWallet: (Object, NetworkId, WalletImplementationId) => mixed,
 |}
 
-const WalletInitScreen = ({
-  intl,
-  walletIsInitialized,
-  navigation,
-  navigateInitWallet,
-}: Props) => {
+const WalletInitScreen = ({intl, navigateInitWallet}: Props) => {
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <StatusBar type="dark" />
@@ -107,9 +100,7 @@ const WalletInitScreen = ({
 }
 export default injectIntl(
   compose(
-    connect((state: State) => ({
-      walletIsInitialized: walletIsInitializedSelector(state),
-    })),
+    connect((_state: State) => ({})),
     withHandlers({
       navigateInitWallet: ({navigation}) => (
         event: Object,

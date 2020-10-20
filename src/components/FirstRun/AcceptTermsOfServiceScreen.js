@@ -107,7 +107,6 @@ export default injectIntl(
     withHandlers({
       handleAccepted: ({
         navigation,
-        isSystemAuthEnabled,
         acceptAndSaveTos,
         setSystemAuth,
         setSavingConsent,

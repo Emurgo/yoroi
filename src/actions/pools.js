@@ -11,14 +11,14 @@ const _startFetching = () => ({
   type: 'START_FETCHING_POOL_INFO',
   path: ['poolInfo', 'isFetching'],
   payload: null,
-  reducer: (state, isFetching) => true,
+  reducer: (_state, _isFetching) => true,
 })
 
 const _endFetching = () => ({
   type: 'END_FETCHING_POOL_INFO',
   path: ['poolInfo', 'isFetching'],
   payload: null,
-  reducer: (state, isFetching) => false,
+  reducer: (_state, _isFetching) => false,
 })
 
 const _setPoolInfo = (poolInfo) => ({
@@ -32,7 +32,7 @@ const _clearPoolInfo = () => ({
   type: 'CLEAR_POOL_INFO',
   path: ['poolInfo'],
   payload: null,
-  reducer: (state) => {
+  reducer: (_state) => {
     return {
       isFetching: false,
       lastFetchingError: null,

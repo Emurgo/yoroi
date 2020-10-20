@@ -51,13 +51,7 @@ const messages = defineMessages({
   },
 })
 
-const WalletListScreen = ({
-  navigation,
-  wallets,
-  navigateInitWallet,
-  openWallet,
-  intl,
-}) => (
+const WalletListScreen = ({wallets, navigateInitWallet, openWallet, intl}) => (
   <SafeAreaView style={styles.safeAreaView}>
     <StatusBar type="dark" />
 

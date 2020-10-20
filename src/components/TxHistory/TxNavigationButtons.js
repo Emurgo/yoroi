@@ -53,7 +53,6 @@ type Props = {
 }
 
 const TxNavigationButtons = ({
-  navigation,
   navigateToReceive,
   navigateToSend,
   navigateToDashboard,
@@ -103,15 +102,15 @@ export default injectIntl(
       walletMeta: walletMetaSelector(state),
     })),
     withHandlers({
-      navigateToReceive: ({navigation}) => (event) =>
+      navigateToReceive: ({navigation}) => (_event) =>
         navigation.navigate(WALLET_ROUTES.RECEIVE),
-      navigateToSend: ({navigation}) => (event) => {
+      navigateToSend: ({navigation}) => (_event) => {
         navigation.navigate(WALLET_ROUTES.SEND)
       },
-      navigateToDashboard: ({navigation}) => (event) => {
+      navigateToDashboard: ({navigation}) => (_event) => {
         navigation.navigate(WALLET_ROUTES.DASHBOARD)
       },
-      navigateToDelegate: ({navigation}) => (event) => {
+      navigateToDelegate: ({navigation}) => (_event) => {
         navigation.navigate(WALLET_ROUTES.DELEGATE)
       },
     }),

@@ -19,7 +19,6 @@ const LedgerConnectModal = ({
   visible,
   onRequestClose,
   navigation,
-  intl,
   defaultDevices,
   useUSB,
 }) => (

@@ -11,14 +11,14 @@ const _startFetching = () => ({
   type: 'START_FETCHING_BALANCE',
   path: ['balance', 'isFetching'],
   payload: null,
-  reducer: (state, isFetching) => true,
+  reducer: (_state, _isFetching) => true,
 })
 
 const _endFetching = () => ({
   type: 'END_FETCHING_BALANCE',
   path: ['balance', 'isFetching'],
   payload: null,
-  reducer: (state, isFetching) => false,
+  reducer: (_state, _isFetching) => false,
 })
 
 const _setUTXOs = (rawUTXOs) => ({
@@ -32,7 +32,7 @@ const _clearUTXOs = () => ({
   type: 'CLEAR_UTXOS',
   path: ['balance', 'utxos'],
   payload: null,
-  reducer: (state, utxos) => null,
+  reducer: (_state, _utxos) => null,
 })
 
 const _setLastError = (error) => ({

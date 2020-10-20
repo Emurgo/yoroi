@@ -14,7 +14,6 @@ import {Modal, Button, StatusBar, ScreenBackground} from '../UiKit'
 import ExapandableItem from '../Common/ExpandableItem'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
-import {walletIsInitializedSelector} from '../../selectors'
 import {isJormungandr} from '../../config/networks'
 import {CONFIG, isHaskellShelley} from '../../config/config'
 import globalMessages from '../../i18n/global-messages'
@@ -82,7 +81,6 @@ type Props = {
     boolean,
   ) => mixed,
   intl: any,
-  walletIsInitialized: boolean,
   navigation: Navigation,
   modalState: ModalState,
   setModalState: (Object, ModalState) => void,
@@ -93,7 +91,6 @@ const WalletInitScreen = ({
   navigateRestoreWallet,
   navigateCheckNanoX,
   intl,
-  walletIsInitialized,
   navigation,
   modalState,
   setModalState,
@@ -216,16 +213,14 @@ const WalletInitScreen = ({
 }
 export default injectIntl(
   compose(
-    connect((state: State) => ({
-      walletIsInitialized: walletIsInitializedSelector(state),
-    })),
+    connect((_state: State) => ({})),
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withStateHandlers(
       {
         modalState: MODAL_STATES.CLOSED,
       },
       {
-        setModalState: (state) => (event: Object, modalState: ModalState) => ({
+        setModalState: () => (event: Object, modalState: ModalState) => ({
           modalState,
         }),
       },

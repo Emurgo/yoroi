@@ -9,7 +9,7 @@ import type {GenericAction, Dispatch} from '../types/reduxTypes'
 
 export default () => {
   const logger = {
-    log: (message: string, payload: Object) => null,
+    log: (_message: string, _payload: Object) => null,
   }
 
   const loggerMiddleware = createLogger({

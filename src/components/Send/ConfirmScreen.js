@@ -358,19 +358,19 @@ export default injectIntl(
         errorMessage: '',
       },
       {
-        setPassword: (state) => (value) => ({password: value}),
+        setPassword: () => (value) => ({password: value}),
         setSendingTransaction: () => (sendingTransaction) => ({
           sendingTransaction,
         }),
         setButtonDisabled: () => (buttonDisabled) => ({buttonDisabled}),
-        openLedgerConnect: (state) => () => ({
+        openLedgerConnect: () => () => ({
           ledgerDialogStep: LEDGER_DIALOG_STEPS.LEDGER_CONNECT,
         }),
-        closeLedgerDialog: (state) => () => ({
+        closeLedgerDialog: () => () => ({
           ledgerDialogStep: LEDGER_DIALOG_STEPS.CLOSED,
         }),
-        setUseUSB: (state) => (useUSB) => ({useUSB}),
-        closeErrorModal: (state) => () => ({showErrorModal: false}),
+        setUseUSB: () => (useUSB) => ({useUSB}),
+        closeErrorModal: () => () => ({showErrorModal: false}),
         setErrorData: () => (
           showErrorModal,
           errorMessageHeader,
@@ -442,7 +442,7 @@ export default injectIntl(
           intl,
           useUSB,
           setErrorData,
-        }) => async (event) => {
+        }) => async (_event) => {
           await handleOnConfirm(
             navigation,
             isHW,

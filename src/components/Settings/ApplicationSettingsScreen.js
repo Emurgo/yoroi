@@ -114,7 +114,6 @@ const disableBiometrics = ({navigation, setSystemAuth}) => async () => {
 const onToggleBiometricsAuthIn = ({
   isSystemAuthEnabled,
   navigation,
-  setSystemAuth,
   intl,
   installationId,
   disableBiometrics,
@@ -173,7 +172,6 @@ const ApplicationSettingsScreen = ({
   isSystemAuthEnabled,
   sendCrashReports,
   setCrashReporting,
-  locale,
 }) => (
   <ScrollView style={styles.scrollView}>
     <StatusBar type="dark" />

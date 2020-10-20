@@ -11,7 +11,6 @@ import {setLanguage} from '../i18n'
 
 export const changeLanguage = (languageCode: string) => (
   dispatch: Dispatch<any>,
-  getState: any,
 ) => {
   setLanguage(languageCode)
   dispatch({
@@ -22,10 +21,7 @@ export const changeLanguage = (languageCode: string) => (
   })
 }
 
-export const changeTOSLanguage = (tos: string) => (
-  dispatch: Dispatch<any>,
-  getState: any,
-) => {
+export const changeTOSLanguage = (tos: string) => (dispatch: Dispatch<any>) => {
   dispatch({
     path: ['tos'],
     payload: tos,

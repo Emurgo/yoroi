@@ -84,7 +84,7 @@ const BiometricsLinkScreen = ({
 export default injectIntl(
   compose(
     connect(
-      (state) => ({}),
+      (_state) => ({}),
       {setSystemAuth},
     ),
     withHandlers({

@@ -92,7 +92,6 @@ const AvailableAmountBanner = injectIntl(({intl, amount}) => (
 ))
 
 const TxHistory = ({
-  amountPending,
   transactionsInfo,
   navigation,
   isSyncing,

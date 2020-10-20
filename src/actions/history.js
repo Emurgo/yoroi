@@ -9,14 +9,14 @@ const _startFetch = () => ({
   type: 'Fetch transaction history',
   path: ['txHistory', 'isSynchronizing'],
   payload: null,
-  reducer: (state, payload) => true,
+  reducer: (_state, _payload) => true,
 })
 
 const _endFetch = () => ({
   type: 'Finished fetching transaction history',
   path: ['txHistory', 'isSynchronizing'],
   payload: null,
-  reducer: (state, payload) => false,
+  reducer: (_state, _payload) => false,
 })
 
 const _setSyncError = (message: ?string): any => ({

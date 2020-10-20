@@ -95,7 +95,6 @@ const DelegatedStakepoolInfo = ({
   poolTicker,
   poolName,
   poolHash,
-  poolURL,
   openExternalURL,
   copyPoolHash,
   showCopyNotif,

@@ -11,7 +11,6 @@ import {injectIntl, intlShape} from 'react-intl'
 import {
   isUsedAddressIndexSelector,
   externalAddressIndexSelector,
-  isHWSelector,
   hwDeviceInfoSelector,
   walletMetaSelector,
 } from '../../selectors'
@@ -98,7 +97,6 @@ type Props = {|
   index: number,
   address: string,
   isUsed: boolean,
-  isHW: boolean,
   walletMeta: WalletMeta,
   openDetails: () => void,
   closeDetails: () => void,
@@ -118,16 +116,13 @@ const AddressView = ({
   index,
   address,
   isUsed,
-  isHW,
   walletMeta,
   openDetails,
   closeDetails,
   onVerifyAddress,
   addressDialogStep,
   onToggleAddrVerifyDialog,
-  openTransportSwitch,
   onChooseTransport,
-  openAddressVerify,
   useUSB,
   isWaiting,
   onConnectUSB,
@@ -205,7 +200,6 @@ export default injectIntl(
       (state, {address}) => ({
         index: externalAddressIndexSelector(state)[address],
         isUsed: !!isUsedAddressIndexSelector(state)[address],
-        isHW: isHWSelector(state),
         hwDeviceInfo: hwDeviceInfoSelector(state),
         walletMeta: walletMetaSelector(state),
       }),
@@ -222,22 +216,22 @@ export default injectIntl(
         deviceId: null,
       },
       {
-        openDetails: (state) => () => ({
+        openDetails: () => () => ({
           addressDialogStep: ADDRESS_DIALOG_STEPS.ADDRESS_DETAILS,
         }),
-        closeDetails: (state) => () => ({
+        closeDetails: () => () => ({
           addressDialogStep: ADDRESS_DIALOG_STEPS.CLOSED,
         }),
-        openTransportSwitch: (state) => () => ({
+        openTransportSwitch: () => () => ({
           addressDialogStep: ADDRESS_DIALOG_STEPS.CHOOSE_TRANSPORT,
         }),
-        openLedgerConnect: (state) => () => ({
+        openLedgerConnect: () => () => ({
           addressDialogStep: ADDRESS_DIALOG_STEPS.LEDGER_CONNECT,
         }),
-        openAddressVerify: (state) => () => ({
+        openAddressVerify: () => () => ({
           addressDialogStep: ADDRESS_DIALOG_STEPS.ADDRESS_VERIFY,
         }),
-        setUseUSB: (state) => (useUSB) => ({useUSB}),
+        setUseUSB: () => (useUSB) => ({useUSB}),
         setIsWaiting: () => (isWaiting) => ({isWaiting}),
       },
     ),
@@ -303,7 +297,7 @@ export default injectIntl(
         useUSB,
         closeDetails,
         withActivityIndicator,
-      }) => async (event) => {
+      }) => async (_event) => {
         await _handleOnVerifyAddress(
           intl,
           address,

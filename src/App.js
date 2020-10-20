@@ -12,7 +12,7 @@ import {compose} from 'recompose'
 import {connect} from 'react-redux'
 import {initApp} from './actions'
 
-const App = (props, context) => {
+const App = (_props, _context) => {
   return <AppNavigator ref={NavigationService.setTopLevelNavigator} />
 }
 

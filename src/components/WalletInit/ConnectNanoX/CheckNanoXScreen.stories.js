@@ -9,6 +9,6 @@ import CheckNanoXScreen from './CheckNanoXScreen'
 storiesOf('CheckNanoXScreen', module).add('default', ({navigation}) => (
   <CheckNanoXScreen
     navigation={navigation}
-    onPress={(e) => action('clicked')}
+    onPress={(_e) => action('clicked')}
   />
 ))

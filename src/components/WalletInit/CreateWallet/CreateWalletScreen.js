@@ -45,14 +45,14 @@ export default injectIntl(
         formData: null,
       },
       {
-        setFormData: (state) => (formData: any) => ({
+        setFormData: () => (formData: any) => ({
           formData,
           visibleMnemonicExplanation: true,
         }),
-        hideMnemonicExplanation: (state) => () => ({
+        hideMnemonicExplanation: () => () => ({
           visibleMnemonicExplanation: false,
         }),
-        clear: (state) => () => ({
+        clear: () => () => ({
           visibleMnemonicExplanation: false,
           formData: null,
         }),

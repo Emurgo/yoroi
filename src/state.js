@@ -67,6 +67,7 @@ export type State = {
   isOnline: boolean,
   isAppInitialized: boolean,
   isKeyboardOpen: boolean,
+  tos: string,
   appSettings: {
     acceptedTos: boolean,
     installationId: ?string,
