@@ -10,11 +10,13 @@ import {injectIntl, defineMessages} from 'react-intl'
 
 import WalletDescription from './WalletDescription'
 import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
-import {Button, StatusBar, ScreenBackground} from '../UiKit'
+import {Modal, Button, StatusBar, ScreenBackground} from '../UiKit'
+import ExapandableItem from '../Common/ExpandableItem'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {isJormungandr} from '../../config/networks'
-import {CONFIG} from '../../config/config'
+import {CONFIG, isHaskellShelley} from '../../config/config'
+import globalMessages from '../../i18n/global-messages'
 
 import styles from './styles/WalletInitScreen.style'
 
@@ -35,11 +37,39 @@ const messages = defineMessages({
     id: 'components.walletinit.walletinitscreen.restoreWalletButton',
     defaultMessage: '!!!Restore wallet',
   },
+  restoreNormalWalletLabel: {
+    id: 'components.walletinit.walletinitscreen.restoreNormalWalletLabel',
+    defaultMessage: '!!!15-word Wallet',
+  },
+  restoreNormalWalletExplanation: {
+    id: 'components.walletinit.walletinitscreen.restoreNormalWalletExplanation',
+    defaultMessage:
+      '!!!If you have a Yoroi recovery phrase consisting of 15 ' +
+      'words generated when you created a Yoroi Wallet, choose this option ' +
+      'to restore your wallet.',
+  },
+  restore24WordWalletLabel: {
+    id: 'components.walletinit.walletinitscreen.restore24WordWalletLabel',
+    defaultMessage: '!!!24-word Wallet',
+  },
+  restoreNWordWalletExplanation: {
+    id: 'components.walletinit.walletinitscreen.restoreNWordWalletExplanation',
+    defaultMessage:
+      '!!!If you have a recovery phrase consisting of {mnemonicLength} ' +
+      'words, choose this option to restore your wallet.',
+  },
   createWalletWithLedgerButton: {
     id: 'components.walletinit.walletinitscreen.createWalletWithLedgerButton',
     defaultMessage: '!!!Connect to Ledger Nano',
   },
 })
+
+const MODAL_STATES = {
+  CLOSED: 'CLOSED',
+  CHOOSE_MNEMONICS_LEN: 'CHOOSE_MNEMONICS_LEN',
+  LEDGER_TRANSPORT_SWITCH: 'LEDGER_TRANSPORT_SWITCH',
+}
+type ModalState = $Values<typeof MODAL_STATES>
 
 type Props = {
   navigateRestoreWallet: (Object, NetworkId, WalletImplementationId) => mixed,
@@ -52,8 +82,8 @@ type Props = {
   ) => mixed,
   intl: any,
   navigation: Navigation,
-  showModal: boolean,
-  setShowModal: (Object, boolean) => void,
+  modalState: ModalState,
+  setModalState: (Object, ModalState) => void,
 }
 
 const WalletInitScreen = ({
@@ -62,11 +92,13 @@ const WalletInitScreen = ({
   navigateCheckNanoX,
   intl,
   navigation,
-  showModal,
-  setShowModal,
+  modalState,
+  setModalState,
 }: Props) => {
-  const networkId = navigation.getParam('networkId')
-  const implementationId = navigation.getParam('walletImplementationId')
+  const networkId: NetworkId = navigation.getParam('networkId')
+  const implementationId: WalletImplementationId = navigation.getParam(
+    'walletImplementationId',
+  )
   let createWalletLabel = intl.formatMessage(messages.createWalletButton)
   let restoreWalletLabel = intl.formatMessage(messages.restoreWalletButton)
   let createWalletWithLedgerLabel = intl.formatMessage(
@@ -97,9 +129,11 @@ const WalletInitScreen = ({
           />
           <Button
             outline
-            onPress={(event) =>
-              navigateRestoreWallet(event, networkId, implementationId)
-            }
+            onPress={(event) => {
+              isHaskellShelley(implementationId)
+                ? setModalState(event, MODAL_STATES.CHOOSE_MNEMONICS_LEN)
+                : navigateRestoreWallet(event, networkId, implementationId)
+            }}
             title={restoreWalletLabel}
             style={styles.createButton}
             testID="restoreWalletButton"
@@ -109,13 +143,17 @@ const WalletInitScreen = ({
               <Button
                 disabled={!CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLED}
                 outline
-                onPress={(event) => setShowModal(event, true)}
+                onPress={(event) =>
+                  setModalState(event, MODAL_STATES.LEDGER_TRANSPORT_SWITCH)
+                }
                 title={createWalletWithLedgerLabel}
                 style={styles.createButton}
               />
               <LedgerTransportSwitchModal
-                visible={showModal}
-                onRequestClose={(event) => setShowModal(event, false)}
+                visible={modalState === MODAL_STATES.LEDGER_TRANSPORT_SWITCH}
+                onRequestClose={(event) =>
+                  setModalState(event, MODAL_STATES.CLOSED)
+                }
                 onSelectUSB={(event) =>
                   navigateCheckNanoX(event, networkId, implementationId, true)
                 }
@@ -125,6 +163,48 @@ const WalletInitScreen = ({
                 showCloseIcon
               />
             </>
+          )}
+          {isHaskellShelley(implementationId) && (
+            <Modal
+              visible={modalState === MODAL_STATES.CHOOSE_MNEMONICS_LEN}
+              onRequestClose={(event) =>
+                setModalState(event, MODAL_STATES.CLOSED)
+              }
+              showCloseIcon
+            >
+              <Button
+                onPress={(event) =>
+                  navigateRestoreWallet(event, networkId, implementationId)
+                }
+                title={intl.formatMessage(messages.restoreNormalWalletLabel)}
+                style={styles.mnemonicDialogButton}
+              />
+              <ExapandableItem
+                label={intl.formatMessage(globalMessages.learnMore)}
+                content={intl.formatMessage(
+                  messages.restoreNormalWalletExplanation,
+                )}
+              />
+              <Button
+                outlineOnLight
+                onPress={(event) =>
+                  navigateRestoreWallet(
+                    event,
+                    networkId,
+                    CONFIG.WALLETS.HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID,
+                  )
+                }
+                title={intl.formatMessage(messages.restore24WordWalletLabel)}
+                style={styles.mnemonicDialogButton}
+              />
+              <ExapandableItem
+                label={intl.formatMessage(globalMessages.learnMore)}
+                content={intl.formatMessage(
+                  messages.restoreNWordWalletExplanation,
+                  {mnemonicLength: 24},
+                )}
+              />
+            </Modal>
           )}
         </View>
       </ScreenBackground>
@@ -137,10 +217,12 @@ export default injectIntl(
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withStateHandlers(
       {
-        showModal: false,
+        modalState: MODAL_STATES.CLOSED,
       },
       {
-        setShowModal: () => (event, showModal) => ({showModal}),
+        setModalState: () => (event: Object, modalState: ModalState) => ({
+          modalState,
+        }),
       },
     ),
     withHandlers({

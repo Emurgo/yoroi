@@ -57,6 +57,12 @@ export const WALLETS = {
     MNEMONIC_LEN: 15,
     ..._DEFAULT_DISCOVERY_SETTINGS,
   }: WalletImplementation),
+  HASKELL_SHELLEY_24: ({
+    WALLET_IMPLEMENTATION_ID: WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24,
+    TYPE: DERIVATION_TYPES.CIP1852,
+    MNEMONIC_LEN: 24,
+    ..._DEFAULT_DISCOVERY_SETTINGS,
+  }: WalletImplementation),
   JORMUNGANDR_ITN: ({
     WALLET_IMPLEMENTATION_ID: WALLET_IMPLEMENTATION_REGISTRY.JORMUNGANDR_ITN,
     TYPE: DERIVATION_TYPES.CIP1852,
@@ -127,7 +133,23 @@ export const isByron = (id: WalletImplementationId): boolean =>
   id === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
 
 export const isHaskellShelley = (id: WalletImplementationId): boolean =>
-  id === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY
+  id === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY ||
+  id === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24
+
+export const getWalletConfigById = (
+  id: WalletImplementationId,
+): WalletImplementation => {
+  const idx = Object.values(WALLET_IMPLEMENTATION_REGISTRY).indexOf(id)
+  const walletKey = Object.keys(WALLET_IMPLEMENTATION_REGISTRY)[idx]
+  if (
+    walletKey != null &&
+    walletKey !== 'UNDEFINED' &&
+    WALLETS[walletKey] != null
+  ) {
+    return WALLETS[walletKey]
+  }
+  throw new Error('invalid walletImplementationId')
+}
 
 export const getCardanoBaseConfig = () => [
   {

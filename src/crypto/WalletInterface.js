@@ -46,8 +46,8 @@ export interface WalletInterface {
   // note: currently not exposed to redux's state
   publicKeyHex: string;
 
-  // chimeric account address (depreacted)
-  chimericAccountAddress: ?string;
+  // note: exposed to redux's state but not in storage (as it can be derived)
+  rewardAddressHex: ?string;
 
   // last known version the wallet has been created/restored
   version: ?string;

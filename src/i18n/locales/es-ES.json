@@ -400,6 +400,7 @@
   "global.ledgerMessages.haveOTGAdapter": "Tienes un adaptador on-the-go que te permite conectar tu dispositivo Ledger con tu smartphone mediante un cable USB.",
   "global.ledgerMessages.keepUsbConnected": "Asegúrate de que tu dispositivo permanezca conectado hasta que la operación se complete.",
   "global.ledgerMessages.locationEnabled": "La localización está habilitada en tu dispositivo. Android requiere que la localización esté habilitada para proporcionar acceso al bluetooth, pero EMURGO nunca almacenará ningún dato de localización.",
+  "global.ledgerMessages.noDeviceInfoError": "Los metadatos del dispositivo se perdieron o se corrompieron. Para solucionar este problema, por favor, añade una nueva billetera y conéctala con tu dispositivo.",
   "global.ledgerMessages.openApp": "Abre la aplicación ADA de Cardano en el dispositivo Ledger.",
   "global.ledgerMessages.rejectedByUserError": "Operación rechazada por el usuario.",
   "global.ledgerMessages.usbAlwaysConnected": "Tu dispositivo Ledger permanece conectado a través del USB hasta que el proceso se completa.",

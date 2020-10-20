@@ -13,11 +13,7 @@ import {Button, StatusBar, ScreenBackground} from '../UiKit'
 // uses same styles as WalletInitScreen
 import styles from './styles/WalletInitScreen.style'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
-import {
-  NETWORK_REGISTRY,
-  WALLET_IMPLEMENTATION_REGISTRY,
-} from '../../config/types'
-import {NETWORKS} from '../../config/networks'
+import {CONFIG} from '../../config/config'
 
 import type {State} from '../../state'
 import type {Navigation} from '../../types/navigation'
@@ -52,10 +48,12 @@ const WalletInitScreen = ({intl, navigateInitWallet}: Props) => {
           </View>
           <Button
             onPress={(event) =>
+              // assume regular haskell shelley wallet. In next screen, user
+              // may choose to use a 24-word mnemonic (-> diffferent impl id)
               navigateInitWallet(
                 event,
-                NETWORK_REGISTRY.HASKELL_SHELLEY,
-                WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY,
+                CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
+                CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
               )
             }
             title={`${intl.formatMessage(
@@ -69,8 +67,8 @@ const WalletInitScreen = ({intl, navigateInitWallet}: Props) => {
             onPress={(event) =>
               navigateInitWallet(
                 event,
-                NETWORK_REGISTRY.HASKELL_SHELLEY,
-                WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
+                CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
+                CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
               )
             }
             title={`${intl.formatMessage(
@@ -81,14 +79,14 @@ const WalletInitScreen = ({intl, navigateInitWallet}: Props) => {
             testID="addWalletOnByronButton"
           />
 
-          {NETWORKS.JORMUNGANDR.ENABLED && (
+          {CONFIG.NETWORKS.JORMUNGANDR.ENABLED && (
             <Button
               outline
               onPress={(event) =>
                 navigateInitWallet(
                   event,
-                  NETWORK_REGISTRY.JORMUNGANDR,
-                  WALLET_IMPLEMENTATION_REGISTRY.JORMUNGANDR_ITN,
+                  CONFIG.NETWORKS.JORMUNGANDR.NETWORK_ID,
+                  CONFIG.WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID,
                 )
               }
               title={intl.formatMessage(messages.addWalletOnShelleyButton)}

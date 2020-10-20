@@ -181,12 +181,38 @@ export type RemoteTxBlockMeta = {|
   +slot: number,
 |}
 
-export type RemoteCertificateMeta = {
-  kind: CertificateKind,
-  rewardAddress?: string, // hex
-  poolKeyHash?: string, // hex
-}
+// See complete types in:
+// https://github.com/Emurgo/yoroi-graphql-migration-backend#output-6
+export type RemoteCertificateMeta =
+  | {|
+      kind: typeof CERTIFICATE_KIND.STAKE_REGISTRATION,
+      rewardAddress: string, // hex
+    |}
+  | {|
+      kind: typeof CERTIFICATE_KIND.STAKE_DEREGISTRATION,
+      rewardAddress: string, // hex
+    |}
+  | {|
+      kind: typeof CERTIFICATE_KIND.STAKE_DELEGATION,
+      rewardAddress: string, // hex
+      poolKeyHash: string, // hex
+    |}
+  | {|
+      kind: typeof CERTIFICATE_KIND.POOL_REGISTRATION,
+      poolParams: Object, // we don't care about this for now
+    |}
+  | {|
+      kind: typeof CERTIFICATE_KIND.POOL_RETIREMENT,
+      poolKeyHash: string, // hex
+    |}
+  | {|
+      kind: typeof CERTIFICATE_KIND.MOVE_INSTANTANEOUS_REWARDS,
+      rewards: {[addresses: string]: string},
+      pot: 0 | 1,
+    |}
 export type RemoteTxInfo = {|
+  +type: 'byron' | 'shelley',
+  +fee?: string, // only in shelley txs
   +hash: string,
   +last_update: string, // timestamp with timezone
   +tx_state: TransactionStatus,

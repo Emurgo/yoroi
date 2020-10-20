@@ -38,6 +38,7 @@ const getWalletItemMeta = (walletMeta: WalletMeta): WalletItemMeta => {
         icon: <CardanoIcon height={16} width={16} color={COLORS.WHITE} />,
         iconName: 'Cardano, ADA',
       }
+    case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24:
     case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
       return {
         type: 'Shelley',

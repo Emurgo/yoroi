@@ -35,11 +35,9 @@ import {
   isByron,
   isHaskellShelley,
   getCardanoBaseConfig,
+  getWalletConfigById,
 } from '../../config/config'
-import {
-  NETWORK_REGISTRY,
-  WALLET_IMPLEMENTATION_REGISTRY,
-} from '../../config/types'
+import {NETWORK_REGISTRY} from '../../config/types'
 import assert from '../../utils/assert'
 import {Logger} from '../../utils/logging'
 import {InvalidState} from '../errors'
@@ -58,7 +56,11 @@ import {
   signTxWithLedger,
   buildSignedTransaction,
 } from './ledgerUtils'
-import {normalizeToAddress, toHexOrBase58} from './utils'
+import {
+  normalizeToAddress,
+  toHexOrBase58,
+  deriveRewardAddressHex,
+} from './utils'
 
 import type {
   RawUtxo,
@@ -78,17 +80,6 @@ import type {NetworkId, WalletImplementationId} from '../../config/types'
 import type {WalletMeta} from '../../state'
 import type {SignTransactionResponse} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 
-const _getWalletConfig = (implementationId: WalletImplementationId) => {
-  switch (implementationId) {
-    case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
-      return CONFIG.WALLETS.HASKELL_BYRON
-    case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
-      return CONFIG.WALLETS.HASKELL_SHELLEY
-    default:
-      return CONFIG.WALLETS.HASKELL_SHELLEY
-  }
-}
-
 export default class ShelleyWallet extends Wallet implements WalletInterface {
   // =================== create =================== //
 
@@ -96,7 +87,6 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     networkId: NetworkId,
     implementationId: WalletImplementationId,
     accountPubKeyHex: string,
-    chimericAccountAddr: ?string,
     hwDeviceInfo: ?HWDeviceInfo,
   ) {
     this.networkId = networkId
@@ -110,27 +100,27 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     this.transactionCache = new TransactionCache()
 
     // initialize address chains
+    const _walletConfig = getWalletConfigById(implementationId)
     this.internalChain = new AddressChain(
       new AddressGenerator(accountPubKeyHex, 'Internal', implementationId),
-      _getWalletConfig(implementationId).DISCOVERY_BLOCK_SIZE,
-      _getWalletConfig(implementationId).DISCOVERY_GAP_SIZE,
+      _walletConfig.DISCOVERY_BLOCK_SIZE,
+      _walletConfig.DISCOVERY_GAP_SIZE,
     )
     this.externalChain = new AddressChain(
       new AddressGenerator(accountPubKeyHex, 'External', implementationId),
-      _getWalletConfig(implementationId).DISCOVERY_BLOCK_SIZE,
-      _getWalletConfig(implementationId).DISCOVERY_GAP_SIZE,
+      _walletConfig.DISCOVERY_BLOCK_SIZE,
+      _walletConfig.DISCOVERY_GAP_SIZE,
     )
+
+    this.rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex)
 
     this.publicKeyHex = accountPubKeyHex
 
-    this.chimericAccountAddress = chimericAccountAddr
-
     this.version = DeviceInfo.getVersion()
 
-    this.checksum =
-      implementationId === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
-        ? legacyWalletChecksum(accountPubKeyHex)
-        : walletChecksum(accountPubKeyHex)
+    this.checksum = isByron(implementationId)
+      ? legacyWalletChecksum(accountPubKeyHex)
+      : walletChecksum(accountPubKeyHex)
 
     // Create at least one address in each block
     await this.internalChain.initialize()
@@ -153,31 +143,27 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     Logger.info(`create wallet (implementationId=${String(implementationId)})`)
     this.id = uuid.v4()
     assert.assert(!this.isInitialized, 'createWallet: !isInitialized')
+    assert.assert(
+      isByron(implementationId) || isHaskellShelley(implementationId),
+      'ShelleyWallet::create: invalid walletImplementationId',
+    )
     const masterKey = await byronUtil.getMasterKeyFromMnemonic(mnemonic)
     await this.encryptAndSaveMasterKey(
       'MASTER_PASSWORD',
       masterKey,
       newPassword,
     )
-    let _purpose
-    switch (implementationId) {
-      case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
-        _purpose = CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
-        break
-      case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
-        _purpose = CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
-        break
-      default:
-        throw new Error('wallet implementation id not valid')
-    }
+    const purpose = isByron(implementationId)
+      ? CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
+      : CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
 
     const masterKeyPtr = await Bip32PrivateKey.from_bytes(
       Buffer.from(masterKey, 'hex'),
     )
-    const accountKey = await (await (await masterKeyPtr.derive(
-      _purpose,
-    )).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)).derive(
-      0 + CONFIG.NUMBERS.HARD_DERIVATION_START,
+    const accountKey = await (await (await masterKeyPtr.derive(purpose)).derive(
+      CONFIG.NUMBERS.COIN_TYPES.CARDANO,
+    )).derive(
+      CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
     )
     const accountPubKey = await accountKey.to_public()
     const accountPubKeyHex = Buffer.from(
@@ -188,7 +174,6 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       networkId,
       implementationId,
       accountPubKeyHex,
-      null,
       null, // this is not a HW
     )
   }
@@ -205,12 +190,10 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     Logger.debug('account pub key', accountPublicKey)
     this.id = uuid.v4()
     assert.assert(!this.isInitialized, 'createWallet: !isInitialized')
-    const chimericAccountAddr = null // only byron wallets supported for now
     return await this._initialize(
       networkId,
       implementationId,
       accountPublicKey,
-      chimericAccountAddr,
       hwDeviceInfo,
     )
   }
@@ -227,12 +210,13 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
         'invalid networkId',
       )
       assert.assert(
-        this.walletImplementationId ===
-          WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY ||
-          this.walletImplementationId ===
-            WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
+        isByron(this.walletImplementationId) ||
+          isHaskellShelley(this.walletImplementationId),
         'invalid walletImplementationId',
       )
+      if (isHaskellShelley(this.walletImplementationId)) {
+        assert.assert(this.rewardAddressHex != null, 'reward address is null')
+      }
       if (this.isHW) {
         assert.assert(
           this.hwDeviceInfo != null,
@@ -246,7 +230,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   // TODO(v-almonacid): move to parent class?
-  restore(data: any, walletMeta: WalletMeta) {
+  async restore(data: any, walletMeta: WalletMeta) {
     Logger.info('restore wallet')
     assert.assert(!this.isInitialized, 'restoreWallet: !isInitialized')
     this.state = {
@@ -273,6 +257,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       data.publicKeyHex != null
         ? data.publicKeyHex
         : this.internalChain.publicKey
+    this.rewardAddressHex = await deriveRewardAddressHex(this.publicKeyHex)
     this.transactionCache = TransactionCache.fromJSON(data.transactionCache)
     this.isEasyConfirmationEnabled = data.isEasyConfirmationEnabled
 
@@ -282,7 +267,6 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     this.setupSubscriptions()
 
     this.isInitialized = true
-    return Promise.resolve()
   }
 
   // =================== tx building =================== //
@@ -422,15 +406,14 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     return addressedUtxos
   }
 
-  async getDelegationStatus() {
-    const rewardAddrHex = Buffer.from(
-      await (await this.getRewardAddress()).to_bytes(),
-      'hex',
-    ).toString('hex')
+  getDelegationStatus() {
+    if (this.rewardAddressHex == null) throw new Error('reward address is null')
     const certsForKey = this.transactionCache.perRewardAddressCertificates[
-      rewardAddrHex
+      this.rewardAddressHex
     ]
-    return getDelegationStatus(rewardAddrHex, certsForKey)
+    return Promise.resolve(
+      getDelegationStatus(this.rewardAddressHex, certsForKey),
+    )
   }
 
   async createUnsignedTx<TransactionBuilder>(
@@ -525,8 +508,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     decryptedMasterKey: string,
   ): Promise<SignedTx> {
     assert.assert(
-      this.walletImplementationId ===
-        WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY,
+      isHaskellShelley(this.walletImplementationId),
       'cannot get reward address from a byron-era wallet',
     )
     const masterKey = await Bip32PrivateKey.from_bytes(
@@ -584,6 +566,8 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     utxos: Array<RawUtxo>,
     shouldDeregister: boolean,
   ): Promise<ISignRequest<TransactionBuilder>> {
+    const {rewardAddressHex} = this
+    if (rewardAddressHex == null) throw new Error('reward address is null')
     const timeToSlotFn = await genTimeToSlot(getCardanoBaseConfig())
     const absSlotNumber = new BigNumber(timeToSlotFn({time: new Date()}).slot)
     const changeAddr = await this._getAddressedChangeAddress()
@@ -595,10 +579,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       withdrawals: [
         {
           addressing: this._getRewardAddressAddressing(),
-          rewardAddress: Buffer.from(
-            await (await this.getRewardAddress()).to_bytes(),
-            'hex',
-          ).toString('hex'),
+          rewardAddress: rewardAddressHex,
           shouldDeregister,
         },
       ],
@@ -631,13 +612,10 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       if (addressing != null) addressingInfo[change.address] = addressing
     }
 
-    if (isHaskellShelley(this.walletImplementationId)) {
-      // add reward address to addressingMap
-      const rewardAddrHex = Buffer.from(
-        await (await this.getRewardAddress()).to_bytes(),
-        'hex',
-      ).toString('hex')
-      addressingInfo[rewardAddrHex] = this._getRewardAddressAddressing()
+    const {rewardAddressHex} = this
+    // add reward address to addressingMap
+    if (rewardAddressHex != null) {
+      addressingInfo[rewardAddressHex] = this._getRewardAddressAddressing()
     }
 
     const addressingMap = (address) => addressingInfo[address]
@@ -725,11 +703,8 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   async fetchAccountState() {
-    const rewardAddrHex = Buffer.from(
-      await (await this.getRewardAddress()).to_bytes(),
-      'hex',
-    ).toString('hex')
-    return await api.bulkGetAccountState([rewardAddrHex])
+    if (this.rewardAddressHex == null) throw new Error('reward address is null')
+    return await api.bulkGetAccountState([this.rewardAddressHex])
   }
 
   async fetchPoolInfo(request: PoolInfoRequest): Promise<PoolInfoResponse> {

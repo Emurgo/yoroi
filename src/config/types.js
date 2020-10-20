@@ -18,8 +18,8 @@ export type DerivationType = $Values<typeof DERIVATION_TYPES>
 // these are the different wallet implementations we have/had
 export const WALLET_IMPLEMENTATION_REGISTRY = {
   HASKELL_BYRON: 'haskell-byron', // bip44
-  HASKELL_SHELLEY: 'haskell-shelley', // cip1852
-  BYRON: 'byron', // deprecated
+  HASKELL_SHELLEY: 'haskell-shelley', // cip1852/15 words
+  HASKELL_SHELLEY_24: 'haskell-shelley-24', // cip1852/24 words
   JORMUNGANDR_ITN: 'jormungandr-itn', // deprecated
   // ERGO: 'ergo',
   UNDEFINED: '',

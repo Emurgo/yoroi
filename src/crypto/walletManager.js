@@ -175,6 +175,7 @@ class WalletManager {
                   accountPubKeyHex || account.root_cached_key,
                 )
                 break
+              case WALLETS.HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID:
               case WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID:
                 checksum = walletChecksum(accountPubKeyHex)
                 break
@@ -268,6 +269,11 @@ class WalletManager {
   get externalAddresses() {
     if (!this._wallet) return []
     return this._wallet.externalAddresses
+  }
+
+  get rewardAddressHex() {
+    if (!this._wallet) return null
+    return this._wallet.rewardAddressHex
   }
 
   get isEasyConfirmationEnabled() {
@@ -644,8 +650,8 @@ class WalletManager {
   ): WalletInterface {
     switch (walletImplementationId) {
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
-        return new ShelleyWallet()
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
+      case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24:
         return new ShelleyWallet()
       // TODO
       // case WALLET_IMPLEMENTATION_REGISTRY.ERGO:
