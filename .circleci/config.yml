@@ -3,7 +3,7 @@ version: 2
 rn_defaults: &rn_defaults
   working_directory: ~/project
   docker:
-    - image: circleci/node:10.9
+    - image: circleci/node:10.14.2
 
 jobs:
   install-dependencies:
@@ -11,7 +11,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: ~/project 
+          at: ~/project
       - restore_cache:
           keys:
           - v1-0-dependencies-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
@@ -19,7 +19,7 @@ jobs:
       # install rustup
       - run: curl https://sh.rustup.rs -sSf | sh -s -- -y
       - run: echo 'export PATH=$HOME/.cargo/bin/:$PATH' >> $BASH_ENV
-      # use 1.32.0 version. 
+      # use 1.32.0 version.
       - run: rustup install 1.32.0
       - run: rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
       - run: cargo install cargo-lipo
@@ -89,7 +89,7 @@ jobs:
       # install rustup
       - run: curl https://sh.rustup.rs -sSf | sh -s -- -y
       - run: echo 'export PATH=$HOME/.cargo/bin/:$PATH' >> $BASH_ENV
-      # use 1.32.0 version. 
+      # use 1.32.0 version.
       - run: rustup install 1.32.0
       - run: rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
       - run: cargo install cargo-lipo
@@ -123,7 +123,7 @@ workflows:
           requires:
             - install-dependencies
 #      - android:
-#          requires: 
+#          requires:
 #            - install-dependencies
 #            - lint
 #            - flow

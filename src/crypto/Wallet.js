@@ -268,7 +268,7 @@ export default class Wallet {
   }
 
   generateNewUiReceiveAddressIfNeeded() {
-    /* new addresse is automatically generated when you use the latest unused */
+    /* new address is automatically generated when you use the latest unused */
     const lastGeneratedAddress = this.externalChain.addresses[
       this.state.lastGeneratedAddressIndex
     ]

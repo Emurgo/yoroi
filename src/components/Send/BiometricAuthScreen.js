@@ -107,7 +107,7 @@ const handleOnConfirm = async (
     } else if (error.code === KeyStore.REJECTIONS.SENSOR_LOCKOUT_PERMANENT) {
       setError('SENSOR_LOCKOUT_PERMANENT')
     } else if (error.code !== KeyStore.REJECTIONS.DECRYPTION_FAILED) {
-      handleOnConfirm(navigation, setError, clearError, false, intl)
+      await handleOnConfirm(navigation, setError, clearError, false, intl)
     } else {
       Logger.error('BiometricAuthScreen', error)
       setError('UNKNOWN_ERROR')
@@ -180,7 +180,7 @@ export default injectIntl(
         await KeyStore.cancelFingerprintScanning(
           KeyStore.REJECTIONS.SWAPPED_TO_FALLBACK,
         )
-        handleOnConfirm(navigation, setError, clearError, true, intl)
+        await handleOnConfirm(navigation, setError, clearError, true, intl)
       },
     }),
     onWillUnmount(async () => {

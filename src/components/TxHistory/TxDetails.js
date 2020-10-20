@@ -12,12 +12,13 @@ import {
   transactionsInfoSelector,
   internalAddressIndexSelector,
   externalAddressIndexSelector,
+  walletMetaSelector,
 } from '../../selectors'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {formatAdaWithSymbol, formatDateToSeconds} from '../../utils/format'
 import {Text, Button, OfflineBanner, Banner, StatusBar} from '../UiKit'
 import Screen from '../../components/Screen'
-import {CONFIG} from '../../config/config'
+import {getNetworkConfigById} from '../../config/networks'
 import AddressModal from '../Receive/AddressModal'
 
 import styles from './styles/TxDetails.style'
@@ -304,6 +305,7 @@ export default injectIntl(
         transaction: transactionsInfoSelector(state)[navigation.getParam('id')],
         internalAddressIndex: internalAddressIndexSelector(state),
         externalAddressIndex: externalAddressIndexSelector(state),
+        walletMeta: walletMetaSelector(state),
       }
     }),
     withNavigationTitle(({transaction}) =>
@@ -318,11 +320,11 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      openInExplorer: ({transaction}) => () => {
+      openInExplorer: ({transaction, walletMeta}) => () => {
         if (transaction) {
-          Linking.openURL(
-            CONFIG.NETWORKS.BYRON_MAINNET.EXPLORER_URL_FOR_TX(transaction.id),
-          )
+          const networkConfig = getNetworkConfigById(walletMeta.networkId)
+          // note: don't await on purpose
+          Linking.openURL(networkConfig.EXPLORER_URL_FOR_TX(transaction.id))
         }
       },
       showModalForAddress: ({setAddressDetail}) => (address) => {

@@ -144,10 +144,10 @@ const handleOnConfirm = async (
       await walletManager.ensureKeysValidity()
       navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
         keyId: walletManager._id,
-        onSuccess: (decryptedKey) => {
+        onSuccess: async (decryptedKey) => {
           navigation.navigate(SEND_ROUTES.CONFIRM)
 
-          submitTx(signRequest, decryptedKey)
+          await submitTx(signRequest, decryptedKey)
         },
         onFail: () => navigation.goBack(),
       })

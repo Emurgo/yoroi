@@ -112,6 +112,7 @@ class WalletManager {
   _wallets = {}
 
   constructor() {
+    // do not await on purpose
     this._backgroundSync()
   }
 
@@ -467,7 +468,7 @@ class WalletManager {
     if (!this._wallet) return
     const wallet = this._wallet
     await this.abortWhenWalletCloses(wallet.doFullSync())
-    // Note: save is runaway
+    // note: don't await on purpose
     // TODO(ppershing): should we save in case wallet is closed mid-sync?
     this._saveState(wallet)
     return
@@ -488,7 +489,7 @@ class WalletManager {
 
     const didGenerateNew = wallet.generateNewUiReceiveAddress()
     if (didGenerateNew) {
-      // Note: save is runaway
+      // note: don't await on purpose
       this._saveState(wallet)
     }
     return didGenerateNew
@@ -610,7 +611,7 @@ class WalletManager {
     }
     await this.deleteEncryptedKey('MASTER_PASSWORD')
 
-    this.closeWallet()
+    await this.closeWallet()
     await storage.remove(`/wallet/${id}/data`)
     await storage.remove(`/wallet/${id}`)
 

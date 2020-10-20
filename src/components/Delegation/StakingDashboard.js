@@ -165,8 +165,10 @@ class StakingDashboard extends React.Component<Props, State> {
 
   _shouldDeregister: boolean = false
 
+  _intervalId: void | IntervalID = undefined
+
   componentDidMount() {
-    this.intervalId = setInterval(
+    this._intervalId = setInterval(
       () =>
         this.setState({
           currentTime: new Date(),
@@ -193,13 +195,10 @@ class StakingDashboard extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    if (this.intervalId != null) clearInterval(this.intervalId)
+    if (this._intervalId != null) clearInterval(this._intervalId)
   }
 
-  intervalId: void | IntervalID
-
-  navigateToStakingCenter: () => void
-  navigateToStakingCenter = async () => {
+  navigateToStakingCenter: (void) => Promise<void> = async () => {
     const {navigation, utxos, poolOperator, accountBalance} = this.props
     /* eslint-disable indent */
     const utxosForKey =
@@ -224,8 +223,7 @@ class StakingDashboard extends React.Component<Props, State> {
     })
   }
 
-  handleDidFocus: () => void
-  handleDidFocus = () => {
+  handleDidFocus: (void) => void = () => {
     if (this._firstFocus) {
       this._firstFocus = false
       // skip first focus to avoid
@@ -238,14 +236,15 @@ class StakingDashboard extends React.Component<Props, State> {
 
   /* withdrawal logic */
 
-  openWithdrawalDialog: () => void
-  openWithdrawalDialog = () =>
+  openWithdrawalDialog: () => void = () =>
     this.setState({
       withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WARNING,
     })
 
-  onKeepOrDeregisterKey: (Object, boolean) => Promise<void>
-  onKeepOrDeregisterKey = async (event, shouldDeregister) => {
+  onKeepOrDeregisterKey: (Object, boolean) => Promise<void> = async (
+    event,
+    shouldDeregister,
+  ) => {
     this._shouldDeregister = shouldDeregister
     if (
       this.props.isHW &&
@@ -262,8 +261,7 @@ class StakingDashboard extends React.Component<Props, State> {
   }
 
   /* create withdrawal tx and move to confirm */
-  createWithdrawalTx: () => Promise<void>
-  createWithdrawalTx = async () => {
+  createWithdrawalTx: () => Promise<void> = async () => {
     const {intl, utxos} = this.props
     if (utxos == null) return // should never happen
     try {
@@ -321,14 +319,15 @@ class StakingDashboard extends React.Component<Props, State> {
     }
   }
 
-  openLedgerConnect: () => void
-  openLedgerConnect = () =>
+  openLedgerConnect: () => void = () =>
     this.setState({
       withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.LEDGER_CONNECT,
     })
 
-  onChooseTransport: (Object, boolean) => Promise<void>
-  onChooseTransport = async (event, useUSB) => {
+  onChooseTransport: (Object, boolean) => Promise<void> = async (
+    event,
+    useUSB,
+  ) => {
     const {hwDeviceInfo} = this.props
     this.setState({useUSB})
     if (
@@ -341,14 +340,12 @@ class StakingDashboard extends React.Component<Props, State> {
     }
   }
 
-  onConnectUSB: () => Promise<void>
-  onConnectUSB = async (deviceObj) => {
+  onConnectUSB: (DeviceObj) => Promise<void> = async (deviceObj) => {
     await this.props.setLedgerDeviceObj(deviceObj)
     await this.createWithdrawalTx()
   }
 
-  onConnectBLE: () => Promise<void>
-  onConnectBLE = async (deviceId) => {
+  onConnectBLE: (DeviceId) => Promise<void> = async (deviceId) => {
     await this.props.setLedgerDeviceId(deviceId)
     await this.createWithdrawalTx()
   }
@@ -356,7 +353,7 @@ class StakingDashboard extends React.Component<Props, State> {
   // TODO: this code has been copy-pasted from the tx confirmation page.
   // Ideally, all this logic should be moved away and perhaps written as a
   // redux action that can be reused in all components with tx signing and sending
-  onConfirm = async (event, password) => {
+  onConfirm: (Object, string) => Promise<void> = async (event, password) => {
     const {signTxRequest, useUSB} = this.state
     const {
       intl,
@@ -443,10 +440,10 @@ class StakingDashboard extends React.Component<Props, State> {
         await walletManager.ensureKeysValidity()
         navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
           keyId: walletManager._id,
-          onSuccess: (decryptedKey) => {
+          onSuccess: async (decryptedKey) => {
             navigation.navigate(DELEGATION_ROUTES.STAKING_DASHBOARD)
 
-            submitTx(signRequest, decryptedKey)
+            await submitTx(signRequest, decryptedKey)
           },
           onFail: () => navigation.goBack(),
         })
@@ -498,8 +495,7 @@ class StakingDashboard extends React.Component<Props, State> {
     }
   }
 
-  closeWithdrawalDialog: () => void
-  closeWithdrawalDialog = () =>
+  closeWithdrawalDialog: () => void = () =>
     this.setState({
       withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.CLOSED,
     })

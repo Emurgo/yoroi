@@ -288,7 +288,7 @@ class SendScreen extends Component<Props, State> {
     this.props.navigation.setParams({onScanAmount: this.handleAmountChange})
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps, prevState) {
     const utxos = this.props.utxos
     const {address, amount, sendAll} = this.state
 
@@ -305,7 +305,7 @@ class SendScreen extends Component<Props, State> {
       prevAmount !== amount ||
       prevSendAll !== sendAll
     ) {
-      this.revalidate({utxos, address, amount, sendAll})
+      await this.revalidate({utxos, address, amount, sendAll})
     }
   }
 
@@ -324,17 +324,14 @@ class SendScreen extends Component<Props, State> {
     this.setState(newState)
   }
 
-  handleAddressChange: (string) => void
-  handleAddressChange = (address) => this.setState({address})
+  handleAddressChange: (string) => void = (address) => this.setState({address})
 
-  handleAmountChange: (string) => void
-  handleAmountChange = (amount) => this.setState({amount})
+  handleAmountChange: (string) => void = (amount) => this.setState({amount})
 
-  handleCheckBoxChange: (string) => void
-  handleCheckBoxChange = (sendAll) => this.setState({sendAll})
+  handleCheckBoxChange: (boolean) => void = (sendAll) =>
+    this.setState({sendAll})
 
-  handleConfirm: () => Promise<void>
-  handleConfirm = async () => {
+  handleConfirm: () => Promise<void> = async () => {
     const {navigation, utxos, availableAmount} = this.props
     const {address, amount, sendAll} = this.state
 

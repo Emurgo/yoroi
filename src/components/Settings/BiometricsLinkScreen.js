@@ -96,7 +96,7 @@ export default injectIntl(
               showErrorDialog(errorMessages.disableEasyConfirmationFirst, intl),
             )
         } else {
-          showErrorDialog(errorMessages.enableFingerprintsFirst, intl)
+          await showErrorDialog(errorMessages.enableFingerprintsFirst, intl)
         }
       },
       cancelLinking: ({navigation}) => () =>
