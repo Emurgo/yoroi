@@ -433,8 +433,8 @@ class StakingDashboard extends React.Component<Props, State> {
       } catch (e) {
         if (e instanceof LocalizableError) {
           this.setState({
+            withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
             error: {
-              withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
               errorMessage: intl.formatMessage({
                 id: e.id,
                 defaultMessage: e.defaultMessage,
@@ -443,8 +443,8 @@ class StakingDashboard extends React.Component<Props, State> {
           })
         } else {
           this.setState({
+            withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
             error: {
-              withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
               errorMessage: intl.formatMessage(
                 errorMessages.generalTxError.message,
               ),
