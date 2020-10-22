@@ -8,6 +8,7 @@ export const WITHDRAWAL_DIALOG_STEPS = {
   CONFIRM: 'CONFIRM',
   WAITING_HW_RESPONSE: 'WAITING_HW_RESPONSE',
   WAITING: 'WAITING',
+  ERROR: 'ERROR',
 }
 
 export type WithdrawalDialogSteps = $Values<typeof WITHDRAWAL_DIALOG_STEPS>

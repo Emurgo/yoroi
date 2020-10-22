@@ -16,7 +16,6 @@ import type {ComponentType} from 'react'
 
 type Props = {
   +intl: intlShape,
-  +visible: boolean,
   +title: string,
   +children: React$Node,
   +alertBox?: {
@@ -36,12 +35,10 @@ type Props = {
   +checkboxLabel?: string,
   isChecked: boolean,
   +toogleCheck: (accepted: boolean) => void,
-  +showCloseIcon?: boolean,
 }
 
-const DangerousActionModal = ({
+const DangerousActionView = ({
   intl,
-  visible,
   title,
   children,
   alertBox,
@@ -51,78 +48,71 @@ const DangerousActionModal = ({
   checkboxLabel,
   isChecked,
   toogleCheck,
-  showCloseIcon,
 }: Props) => (
-  <Modal
-    visible={visible}
-    onRequestClose={onRequestClose}
-    showCloseIcon={showCloseIcon === true}
-  >
-    <ScrollView style={styles.scrollView}>
-      <View style={styles.content}>
-        <View style={styles.heading}>
-          <Text style={styles.titleText}>{title}</Text>
-        </View>
+  <ScrollView style={styles.scrollView}>
+    <View style={styles.content}>
+      <View style={styles.heading}>
+        <Text style={styles.titleText}>{title}</Text>
+      </View>
 
-        {children}
+      {children}
 
-        {alertBox != null && (
-          <View style={styles.alertBlock}>
-            <View style={styles.heading}>
-              <Image source={image} style={styles.image} />
-              <Text style={[styles.titleText, styles.alertText]}>
-                {alertBox.title != null
-                  ? alertBox.title
-                  : intl.formatMessage(globalMessages.attention)}
-              </Text>
-            </View>
-            {alertBox.content.map((line, i) => (
-              <Text key={i} style={[styles.paragraph, styles.alertText]}>
-                {line}
-              </Text>
-            ))}
+      {alertBox != null && (
+        <View style={styles.alertBlock}>
+          <View style={styles.heading}>
+            <Image source={image} style={styles.image} />
+            <Text style={[styles.titleText, styles.alertText]}>
+              {alertBox.title != null
+                ? alertBox.title
+                : intl.formatMessage(globalMessages.attention)}
+            </Text>
           </View>
-        )}
+          {alertBox.content.map((line, i) => (
+            <Text key={i} style={[styles.paragraph, styles.alertText]}>
+              {line}
+            </Text>
+          ))}
+        </View>
+      )}
 
-        <Checkbox
-          onChange={toogleCheck}
-          checked={isChecked}
-          text={
-            /* eslint-disable indent */
-            checkboxLabel != null
-              ? checkboxLabel
-              : intl.formatMessage(
-                  confirmationMessages.commonButtons.iUnderstandButton,
-                )
-            /* eslint-enable indent */
-          }
-        />
-      </View>
-      <View style={styles.buttons}>
-        <Button
-          block
-          onPress={primaryButton.onPress}
-          title={primaryButton.label}
-          style={styles.primaryButton}
-        />
-        <Button
-          block
-          disabled={!isChecked}
-          onPress={
-            secondaryButton != null ? secondaryButton.onPress : onRequestClose
-          }
-          title={
-            secondaryButton?.label ??
-            intl.formatMessage(confirmationMessages.commonButtons.cancelButton)
-          }
-          style={styles.secondaryButton}
-        />
-      </View>
-    </ScrollView>
-  </Modal>
+      <Checkbox
+        onChange={toogleCheck}
+        checked={isChecked}
+        text={
+          /* eslint-disable indent */
+          checkboxLabel != null
+            ? checkboxLabel
+            : intl.formatMessage(
+                confirmationMessages.commonButtons.iUnderstandButton,
+              )
+          /* eslint-enable indent */
+        }
+      />
+    </View>
+    <View style={styles.buttons}>
+      <Button
+        block
+        onPress={primaryButton.onPress}
+        title={primaryButton.label}
+        style={styles.primaryButton}
+      />
+      <Button
+        block
+        disabled={!isChecked}
+        onPress={
+          secondaryButton != null ? secondaryButton.onPress : onRequestClose
+        }
+        title={
+          secondaryButton?.label ??
+          intl.formatMessage(confirmationMessages.commonButtons.cancelButton)
+        }
+        style={styles.secondaryButton}
+      />
+    </View>
+  </ScrollView>
 )
 
-export default injectIntl(
+export const DangerousAction = injectIntl(
   (compose(
     withStateHandlers(
       {
@@ -132,5 +122,58 @@ export default injectIntl(
         toogleCheck: () => (isChecked) => ({isChecked}),
       },
     ),
-  )(DangerousActionModal): ComponentType<Props>),
+  )(DangerousActionView): ComponentType<Props>),
 )
+
+type ModalProps = {
+  +visible: boolean,
+  +onRequestClose: () => void,
+  +showCloseIcon: boolean,
+  +title: string,
+  +children: React$Node,
+  +alertBox?: {
+    title?: string,
+    content: Array<string>,
+  },
+  +primaryButton: {|
+    +label: string,
+    +onPress: (void) => PossiblyAsync<void>,
+  |},
+  +secondaryButton?: {|
+    label?: string,
+    onPress: (void) => void,
+    primary?: boolean,
+  |},
+  +checkboxLabel?: string,
+}
+
+const DangerousActionModal = ({
+  visible,
+  onRequestClose,
+  showCloseIcon,
+  title,
+  children,
+  alertBox,
+  primaryButton,
+  secondaryButton,
+  checkboxLabel,
+}: ModalProps) => (
+  <Modal
+    visible={visible}
+    onRequestClose={onRequestClose}
+    showCloseIcon={showCloseIcon === true}
+  >
+    <DangerousAction
+      onRequestClose={onRequestClose}
+      title={title}
+      alertBox={alertBox}
+      primaryButton={primaryButton}
+      secondaryButton={secondaryButton}
+      checkboxLabel={checkboxLabel}
+    >
+      {children}
+    </DangerousAction>
+  </Modal>
+)
+
+export default DangerousActionModal

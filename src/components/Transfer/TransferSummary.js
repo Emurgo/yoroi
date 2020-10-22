@@ -8,7 +8,7 @@ import {withStateHandlers} from 'recompose'
 import {View} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 
-import StandardModal from '../Common/StandardModal'
+import TwoActionView from '../Common/TwoActionView'
 import AddressEntry from '../Common/AddressEntry'
 import HWInstructions from '../Ledger/HWInstructions'
 import {Text, ValidatedTextInput} from '../UiKit'
@@ -18,7 +18,7 @@ import {confirmationMessages, txLabels} from '../../i18n/global-messages'
 import {CONFIG} from '../../config/config'
 import {getNetworkConfigById} from '../../config/networks'
 
-import styles from './styles/TransferSummaryModal.style'
+import styles from './styles/TransferSummary.style'
 
 import type {ComponentType} from 'react'
 import type {WalletMeta} from '../../state'
@@ -47,8 +47,6 @@ const messages = defineMessages({
 
 type Props = {
   +intl: any,
-  +visible?: boolean,
-  +disableButtons?: boolean,
   password: string,
   +setPassword: (string) => void,
   +withdrawals?: Array<{|
@@ -63,42 +61,36 @@ type Props = {
   +finalBalance: BigNumber,
   +fees: BigNumber,
   +onConfirm: (event: Object, password?: string) => mixed,
-  +onRequestClose: () => any,
+  +onCancel: () => mixed,
   +walletMeta: $Diff<WalletMeta, {id: string}>,
-  +showCloseIcon?: boolean,
   +useUSB?: boolean,
 }
 
-const TransferSummaryModal = ({
+const TransferSummary = ({
   intl,
-  visible,
   password,
   setPassword,
-  disableButtons,
   withdrawals,
   deregistrations,
   balance,
   finalBalance,
   fees,
   onConfirm,
-  onRequestClose,
+  onCancel,
   walletMeta,
-  showCloseIcon,
   useUSB,
 }: Props) => (
-  <StandardModal
-    visible={visible ?? true}
+  <TwoActionView
     title={intl.formatMessage(txLabels.confirmTx)}
-    onRequestClose={onRequestClose}
     primaryButton={{
       label: intl.formatMessage(
         confirmationMessages.commonButtons.confirmButton,
       ),
       onPress: (event) => onConfirm(event, password),
     }}
-    secondaryButton={{}}
-    showCloseIcon={showCloseIcon === true}
-    disableButtons={disableButtons ?? false}
+    secondaryButton={{
+      onPress: onCancel,
+    }}
   >
     <View style={styles.item}>
       <Text>{intl.formatMessage(messages.balanceLabel)}</Text>
@@ -181,13 +173,11 @@ const TransferSummaryModal = ({
       )
     /* eslint-enable indent */
     }
-  </StandardModal>
+  </TwoActionView>
 )
 
 type ExternalProps = {|
   +intl: any,
-  +visible: boolean,
-  +disableButtons: boolean,
   +withdrawals?: Array<{|
     +address: string,
     +amount: BigNumber,
@@ -196,11 +186,11 @@ type ExternalProps = {|
     +rewardAddress: string,
     +refund: BigNumber,
   |}>,
-  balance: BigNumber,
-  finalBalance: BigNumber,
-  fees: BigNumber,
-  onConfirm: (password?: string) => mixed,
-  onRequestClose: () => any,
+  +balance: BigNumber,
+  +finalBalance: BigNumber,
+  +fees: BigNumber,
+  +onConfirm: (password?: string) => mixed,
+  +onCancel: () => mixed,
 |}
 
 export default injectIntl(
@@ -216,5 +206,5 @@ export default injectIntl(
         setPassword: () => (value) => ({password: value}),
       },
     ),
-  )(TransferSummaryModal): ComponentType<ExternalProps>),
+  )(TransferSummary): ComponentType<ExternalProps>),
 )

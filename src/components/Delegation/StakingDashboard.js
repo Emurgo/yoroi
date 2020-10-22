@@ -17,7 +17,6 @@ import {
   NotDelegatedInfo,
 } from './dashboard'
 import WithdrawalDialog from './WithdrawalDialog'
-import ErrorModal from '../Common/ErrorModal'
 import LocalizableError from '../../i18n/LocalizableError'
 import {
   isOnlineSelector,
@@ -142,8 +141,10 @@ type State = {|
   balance: BigNumber,
   finalBalance: BigNumber,
   fees: BigNumber,
-  errorMessage: ?string,
-  errorLogs: ?string,
+  error: {
+    errorMessage: ?string,
+    errorLogs?: ?string,
+  },
 |}
 
 class StakingDashboard extends React.Component<Props, State> {
@@ -157,8 +158,10 @@ class StakingDashboard extends React.Component<Props, State> {
     balance: new BigNumber(0),
     finalBalance: new BigNumber(0),
     fees: new BigNumber(0),
-    errorMessage: null,
-    errorLogs: null,
+    error: {
+      errorMessage: null,
+      errorLogs: null,
+    },
   }
 
   _firstFocus: boolean = true
@@ -267,8 +270,8 @@ class StakingDashboard extends React.Component<Props, State> {
   /* create withdrawal tx and move to confirm */
   createWithdrawalTx: () => Promise<void> = async () => {
     const {intl, utxos} = this.props
-    if (utxos == null) return // should never happen
     try {
+      if (utxos == null) throw new Error('cannot get utxos') // should never happen
       this.setState({withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WAITING})
       const signTxRequest = await walletManager.createWithdrawalTx(
         utxos,
@@ -306,18 +309,23 @@ class StakingDashboard extends React.Component<Props, State> {
     } catch (e) {
       if (e instanceof LocalizableError) {
         this.setState({
-          withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.CLOSED,
-          errorMessage: intl.formatMessage({
-            id: e.id,
-            defaultMessage: e.defaultMessage,
-          }),
+          withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
+          error: {
+            errorMessage: intl.formatMessage({
+              id: e.id,
+              defaultMessage: e.defaultMessage,
+            }),
+          },
         })
       } else {
         this.setState({
-          withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.CLOSED,
-          errorMessage: intl.formatMessage(errorMessages.generalError.message, {
-            message: e.message,
-          }),
+          withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
+          error: {
+            errorMessage: intl.formatMessage(
+              errorMessages.generalError.message,
+              {message: e.message},
+            ),
+          },
         })
       }
     }
@@ -390,14 +398,18 @@ class StakingDashboard extends React.Component<Props, State> {
       } catch (e) {
         if (e instanceof NetworkError) {
           this.setState({
-            errorMessage: intl.formatMessage(
-              errorMessages.networkError.message,
-            ),
+            error: {
+              errorMessage: intl.formatMessage(
+                errorMessages.networkError.message,
+              ),
+            },
           })
         } else if (e instanceof ApiError) {
           this.setState({
-            errorMessage: intl.formatMessage(errorMessages.apiError.message),
-            errorLogs: JSON.stringify(e.request),
+            error: {
+              errorMessage: intl.formatMessage(errorMessages.apiError.message),
+              errorLogs: JSON.stringify(e.request),
+            },
           })
         } else {
           throw e
@@ -417,24 +429,29 @@ class StakingDashboard extends React.Component<Props, State> {
         )
         this.setState({withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WAITING})
         await submitTx(Buffer.from(signedTx.encodedTx).toString('base64'))
+        this.closeWithdrawalDialog()
       } catch (e) {
         if (e instanceof LocalizableError) {
           this.setState({
-            errorMessage: intl.formatMessage({
-              id: e.id,
-              defaultMessage: e.defaultMessage,
-            }),
+            error: {
+              withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
+              errorMessage: intl.formatMessage({
+                id: e.id,
+                defaultMessage: e.defaultMessage,
+              }),
+            },
           })
         } else {
           this.setState({
-            errorMessage: intl.formatMessage(
-              errorMessages.generalTxError.message,
-            ),
-            errorLogs: String(e.message),
+            error: {
+              withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
+              errorMessage: intl.formatMessage(
+                errorMessages.generalTxError.message,
+              ),
+              errorLogs: String(e.message),
+            },
           })
         }
-      } finally {
-        this.closeWithdrawalDialog()
       }
       return
     }
@@ -453,6 +470,7 @@ class StakingDashboard extends React.Component<Props, State> {
         })
       } catch (e) {
         if (e instanceof SystemAuthDisabled) {
+          this.closeWithdrawalDialog()
           await walletManager.closeWallet()
           await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
           navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
@@ -460,14 +478,15 @@ class StakingDashboard extends React.Component<Props, State> {
           return
         } else {
           this.setState({
-            errorMessage: intl.formatMessage(
-              errorMessages.generalTxError.message,
-            ),
-            errorLogs: String(e.message),
+            withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
+            error: {
+              errorMessage: intl.formatMessage(
+                errorMessages.generalTxError.message,
+              ),
+              errorLogs: String(e.message),
+            },
           })
         }
-      } finally {
-        this.closeWithdrawalDialog()
       }
       return
     }
@@ -483,19 +502,28 @@ class StakingDashboard extends React.Component<Props, State> {
       )
 
       await submitTx(signRequest, decryptedData)
+      this.closeWithdrawalDialog()
     } catch (e) {
       if (e instanceof WrongPassword) {
-        await showErrorDialog(errorMessages.incorrectPassword, intl)
+        this.setState({
+          withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
+          error: {
+            errorMessage: intl.formatMessage(
+              errorMessages.incorrectPassword.message,
+            ),
+          },
+        })
       } else {
         this.setState({
-          errorMessage: intl.formatMessage(
-            errorMessages.generalTxError.message,
-          ),
-          errorLogs: String(e.message),
+          withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
+          error: {
+            errorMessage: intl.formatMessage(
+              errorMessages.generalTxError.message,
+            ),
+            errorLogs: String(e.message),
+          },
         })
       }
-    } finally {
-      this.closeWithdrawalDialog()
     }
   }
 
@@ -506,7 +534,6 @@ class StakingDashboard extends React.Component<Props, State> {
 
   render() {
     const {
-      intl,
       isOnline,
       utxoBalance,
       isDelegating,
@@ -666,16 +693,7 @@ class StakingDashboard extends React.Component<Props, State> {
           fees={this.state.fees}
           onConfirm={this.onConfirm}
           onRequestClose={this.closeWithdrawalDialog}
-        />
-
-        <ErrorModal
-          visible={this.state.errorMessage != null}
-          title={intl.formatMessage(
-            errorMessages.generalLocalizableError.title,
-          )}
-          message={this.state.errorMessage}
-          errorMessage={this.state.errorLogs}
-          onRequestClose={() => this.setState({errorMessage: null})}
+          error={this.state.error}
         />
       </SafeAreaView>
     )

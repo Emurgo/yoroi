@@ -4,10 +4,12 @@ import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
-import {Text, Modal, PleaseWaitModal} from '../UiKit'
-import DangerousActionModal from '../Common/DangerousActionModal'
-import TransferSummaryModal from '../Transfer/TransferSummaryModal'
-import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
+import {Text, Modal} from '../UiKit'
+import {DangerousAction} from '../Common/DangerousActionModal'
+import {ErrorView} from '../Common/ErrorModal'
+import {PleaseWaitView} from '../UiKit/PleaseWaitModal'
+import TransferSummary from '../Transfer/TransferSummary'
+import {LedgerTransportSwitch} from '../Ledger/LedgerTransportSwitchModal'
 import LedgerConnect from '../Ledger/LedgerConnect'
 import globalMessages, {ledgerMessages} from '../../i18n/global-messages'
 import {WITHDRAWAL_DIALOG_STEPS, type WithdrawalDialogSteps} from './types'
@@ -91,6 +93,10 @@ type Props = {|
   +onRequestClose: () => any,
   +useUSB: boolean,
   +showCloseIcon?: boolean,
+  +error: {
+    +errorMessage: ?string,
+    +errorLogs?: ?string,
+  },
 |}
 
 const WithdrawalDialog = ({
@@ -109,99 +115,111 @@ const WithdrawalDialog = ({
   fees,
   onConfirm,
   onRequestClose,
+  error,
 }: Props) => {
-  switch (step) {
-    case WITHDRAWAL_DIALOG_STEPS.CLOSED:
-      return null
-    case WITHDRAWAL_DIALOG_STEPS.WARNING:
-      return (
-        <DangerousActionModal
-          visible
-          title={intl.formatMessage(messages.warningModalTitle)}
-          alertBox={{
-            content: [
-              intl.formatMessage(messages.warning1),
-              intl.formatMessage(messages.warning2),
-              intl.formatMessage(messages.warning3),
-            ],
-          }}
-          onRequestClose={onRequestClose}
-          primaryButton={{
-            label: intl.formatMessage(messages.keepButton),
-            onPress: onKeepKey,
-          }}
-          secondaryButton={{
-            label: intl.formatMessage(messages.deregisterButton),
-            onPress: onDeregisterKey,
-          }}
-          showCloseIcon
-        >
-          <Text style={styles.paragraph}>
-            {intl.formatMessage(messages.explanation1)}
-          </Text>
-          <Text style={styles.paragraph}>
-            {intl.formatMessage(messages.explanation2)}
-          </Text>
-          <Text style={styles.paragraph}>
-            {intl.formatMessage(messages.explanation3)}
-          </Text>
-        </DangerousActionModal>
-      )
-    case WITHDRAWAL_DIALOG_STEPS.CHOOSE_TRANSPORT:
-      return (
-        <LedgerTransportSwitchModal
-          visible
-          onRequestClose={onRequestClose}
-          onSelectUSB={(event) => onChooseTransport(event, true)}
-          onSelectBLE={(event) => onChooseTransport(event, false)}
-          showCloseIcon
-        />
-      )
-    case WITHDRAWAL_DIALOG_STEPS.LEDGER_CONNECT:
-      return (
-        <Modal visible onRequestClose={onRequestClose} showCloseIcon>
+  const getModalBody = () => {
+    switch (step) {
+      case WITHDRAWAL_DIALOG_STEPS.CLOSED:
+        return null
+      case WITHDRAWAL_DIALOG_STEPS.WARNING:
+        return (
+          <DangerousAction
+            title={intl.formatMessage(messages.warningModalTitle)}
+            alertBox={{
+              content: [
+                intl.formatMessage(messages.warning1),
+                intl.formatMessage(messages.warning2),
+                intl.formatMessage(messages.warning3),
+              ],
+            }}
+            onRequestClose={onRequestClose}
+            primaryButton={{
+              label: intl.formatMessage(messages.keepButton),
+              onPress: onKeepKey,
+            }}
+            secondaryButton={{
+              label: intl.formatMessage(messages.deregisterButton),
+              onPress: onDeregisterKey,
+            }}
+          >
+            <Text style={styles.paragraph}>
+              {intl.formatMessage(messages.explanation1)}
+            </Text>
+            <Text style={styles.paragraph}>
+              {intl.formatMessage(messages.explanation2)}
+            </Text>
+            <Text style={styles.paragraph}>
+              {intl.formatMessage(messages.explanation3)}
+            </Text>
+          </DangerousAction>
+        )
+      case WITHDRAWAL_DIALOG_STEPS.CHOOSE_TRANSPORT:
+        return (
+          <LedgerTransportSwitch
+            onSelectUSB={(event) => onChooseTransport(event, true)}
+            onSelectBLE={(event) => onChooseTransport(event, false)}
+          />
+        )
+      case WITHDRAWAL_DIALOG_STEPS.LEDGER_CONNECT:
+        return (
           <LedgerConnect
             onConnectBLE={onConnectBLE}
             onConnectUSB={onConnectUSB}
             useUSB={useUSB}
           />
-        </Modal>
-      )
-    case WITHDRAWAL_DIALOG_STEPS.CONFIRM:
-      return (
-        <TransferSummaryModal
-          visible
-          onRequestClose={onRequestClose}
-          disableButtons={false}
-          withdrawals={withdrawals}
-          deregistrations={deregistrations}
-          balance={balance}
-          finalBalance={finalBalance}
-          fees={fees}
-          onConfirm={onConfirm}
-          showCloseIcon
-          useUSB={useUSB}
-        />
-      )
-    case WITHDRAWAL_DIALOG_STEPS.WAITING_HW_RESPONSE:
-      return (
-        <PleaseWaitModal
-          visible
-          title={''}
-          spinnerText={intl.formatMessage(ledgerMessages.followSteps)}
-        />
-      )
-    case WITHDRAWAL_DIALOG_STEPS.WAITING:
-      return (
-        <PleaseWaitModal
-          visible
-          title={''}
-          spinnerText={intl.formatMessage(globalMessages.pleaseWait)}
-        />
-      )
-    default:
-      return null
+        )
+      case WITHDRAWAL_DIALOG_STEPS.CONFIRM:
+        return (
+          <TransferSummary
+            withdrawals={withdrawals}
+            deregistrations={deregistrations}
+            balance={balance}
+            finalBalance={finalBalance}
+            fees={fees}
+            onConfirm={onConfirm}
+            onCancel={onRequestClose}
+            useUSB={useUSB}
+          />
+        )
+      case WITHDRAWAL_DIALOG_STEPS.WAITING_HW_RESPONSE:
+        return (
+          <PleaseWaitView
+            title={''}
+            spinnerText={intl.formatMessage(ledgerMessages.followSteps)}
+          />
+        )
+      case WITHDRAWAL_DIALOG_STEPS.WAITING:
+        return (
+          <PleaseWaitView
+            title={''}
+            spinnerText={intl.formatMessage(globalMessages.pleaseWait)}
+          />
+        )
+      case WITHDRAWAL_DIALOG_STEPS.ERROR:
+        return (
+          <ErrorView
+            errorMessage={error.errorMessage}
+            errorLogs={error.errorLogs}
+            onDismiss={onRequestClose}
+          />
+        )
+      default:
+        return null
+    }
   }
+  if (step === WITHDRAWAL_DIALOG_STEPS.CLOSED) return null
+  return (
+    <Modal
+      visible
+      onRequestClose={onRequestClose}
+      showCloseIcon={
+        step !== WITHDRAWAL_DIALOG_STEPS.WAITING_HW_RESPONSE &&
+        step !== WITHDRAWAL_DIALOG_STEPS.WAITING
+      }
+    >
+      {getModalBody()}
+    </Modal>
+  )
 }
 
 export default injectIntl((WithdrawalDialog: ComponentType<Props>))

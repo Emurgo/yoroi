@@ -52,23 +52,17 @@ const messages = defineMessages({
 
 type Props = {
   intl: intlShape,
-  visible: boolean,
   onSelectUSB: () => any,
   onSelectBLE: () => any,
-  onRequestClose: () => any,
-  showCloseIcon?: boolean,
   isUSBSupported: boolean,
 }
 
-const LedgerTransportSwitchModal = ({
+const LedgerTransportSwitchView = ({
   intl,
-  visible,
   onSelectUSB,
   onSelectBLE,
-  onRequestClose,
   isUSBSupported,
-  showCloseIcon,
-}: Props) => {
+}) => {
   const getUsbButtonTitle = (): string => {
     if (Platform.OS === 'ios') {
       return intl.formatMessage(messages.usbButtonDisabled)
@@ -82,48 +76,40 @@ const LedgerTransportSwitchModal = ({
     }
   }
   return (
-    <Modal
-      visible={visible}
-      onRequestClose={onRequestClose}
-      showCloseIcon={showCloseIcon === true}
-    >
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.content}>
-          <View style={styles.heading}>
-            <Text style={styles.title}>
-              {intl.formatMessage(messages.title)}
-            </Text>
-          </View>
-          <Text style={styles.paragraph}>
-            {intl.formatMessage(messages.usbExplanation)}
-          </Text>
-          <Button
-            block
-            onPress={onSelectUSB}
-            title={getUsbButtonTitle()}
-            disabled={
-              Platform.OS === 'ios' ||
-              !isUSBSupported ||
-              !CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT
-            }
-            style={styles.button}
-          />
-          <Text style={styles.paragraph}>
-            {intl.formatMessage(messages.bluetoothExaplanation)}
-          </Text>
-          <Button
-            block
-            onPress={onSelectBLE}
-            title={intl.formatMessage(messages.bluetoothButton)}
-            style={styles.button}
-          />
+    <ScrollView style={styles.scrollView}>
+      <View style={styles.content}>
+        <View style={styles.heading}>
+          <Text style={styles.title}>{intl.formatMessage(messages.title)}</Text>
         </View>
-      </ScrollView>
-    </Modal>
+        <Text style={styles.paragraph}>
+          {intl.formatMessage(messages.usbExplanation)}
+        </Text>
+        <Button
+          block
+          onPress={onSelectUSB}
+          title={getUsbButtonTitle()}
+          disabled={
+            Platform.OS === 'ios' ||
+            !isUSBSupported ||
+            !CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT
+          }
+          style={styles.button}
+        />
+        <Text style={styles.paragraph}>
+          {intl.formatMessage(messages.bluetoothExaplanation)}
+        </Text>
+        <Button
+          block
+          onPress={onSelectBLE}
+          title={intl.formatMessage(messages.bluetoothButton)}
+          style={styles.button}
+        />
+      </View>
+    </ScrollView>
   )
 }
 
-export default injectIntl(
+export const LedgerTransportSwitch = injectIntl(
   (compose(
     withStateHandlers(
       {
@@ -141,5 +127,34 @@ export default injectIntl(
     onDidMount(({checkUSBSupport}) =>
       DeviceInfo.getApiLevel().then((sdk) => checkUSBSupport(sdk)),
     ),
-  )(LedgerTransportSwitchModal): ComponentType<Props>),
+  )(LedgerTransportSwitchView): ComponentType<Props>),
 )
+
+type ModalProps = {|
+  visible: boolean,
+  onSelectUSB: () => any,
+  onSelectBLE: () => any,
+  onRequestClose: () => any,
+  showCloseIcon?: boolean,
+|}
+
+const LedgerTransportSwitchModal = ({
+  visible,
+  onSelectUSB,
+  onSelectBLE,
+  onRequestClose,
+  showCloseIcon,
+}: ModalProps) => (
+  <Modal
+    visible={visible}
+    onRequestClose={onRequestClose}
+    showCloseIcon={showCloseIcon === true}
+  >
+    <LedgerTransportSwitch
+      onSelectUSB={onSelectUSB}
+      onSelectBLE={onSelectBLE}
+    />
+  </Modal>
+)
+
+export default (LedgerTransportSwitchModal: ComponentType<ModalProps>)

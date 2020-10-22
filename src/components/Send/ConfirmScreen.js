@@ -217,8 +217,8 @@ const ConfirmScreen = ({
   onConnectUSB,
   closeErrorModal,
   showErrorModal,
-  errorMessageHeader,
   errorMessage,
+  errorLogs,
 }) => {
   const amount = navigation.getParam('amount')
   const address = navigation.getParam('address')
@@ -317,8 +317,8 @@ const ConfirmScreen = ({
       <ErrorModal
         visible={showErrorModal}
         title={intl.formatMessage(errorMessages.generalTxError.title)}
-        message={errorMessageHeader}
         errorMessage={errorMessage}
+        errorLogs={errorLogs}
         onRequestClose={closeErrorModal}
       />
 
@@ -354,8 +354,8 @@ export default injectIntl(
         useUSB: false,
         ledgerDialogStep: LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT,
         showErrorModal: false,
-        errorMessageHeader: '',
         errorMessage: '',
+        errorLogs: '',
       },
       {
         setPassword: () => (value) => ({password: value}),
@@ -371,11 +371,11 @@ export default injectIntl(
         }),
         setUseUSB: () => (useUSB) => ({useUSB}),
         closeErrorModal: () => () => ({showErrorModal: false}),
-        setErrorData: () => (
+        setErrorData: () => (showErrorModal, errorMessage, errorLogs) => ({
           showErrorModal,
-          errorMessageHeader,
           errorMessage,
-        ) => ({showErrorModal, errorMessageHeader, errorMessage}),
+          errorLogs,
+        }),
       },
     ),
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),

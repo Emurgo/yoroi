@@ -9,22 +9,30 @@ import styles from './styles/PleaseWaitModal.style'
 
 import type {ComponentType} from 'react'
 
-const SendingModal = ({visible, title, spinnerText}) => (
+type Props = {|
+  title: string,
+  spinnerText: string,
+|}
+export const PleaseWaitView = ({title, spinnerText}: Props) => (
+  <View style={styles.container}>
+    <Text style={styles.title}>{title}</Text>
+
+    <ActivityIndicator size="large" />
+
+    <Text style={styles.wait}>{spinnerText}</Text>
+  </View>
+)
+
+const PleaseWaitModal = ({visible, title, spinnerText}) => (
   <Modal noPadding visible={visible} onRequestClose={() => null}>
-    <View style={styles.container}>
-      <Text style={styles.title}>{title}</Text>
-
-      <ActivityIndicator size="large" />
-
-      <Text style={styles.wait}>{spinnerText}</Text>
-    </View>
+    <PleaseWaitView title={title} spinnerText={spinnerText} />
   </Modal>
 )
 
-type ExternalProps = {
+type ExternalProps = {|
   visible: boolean,
   title: string,
   spinnerText: string,
-}
+|}
 
-export default (SendingModal: ComponentType<ExternalProps>)
+export default (PleaseWaitModal: ComponentType<ExternalProps>)
