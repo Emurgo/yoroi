@@ -117,6 +117,8 @@ PODS:
     - React
   - RNDeviceInfo (6.0.1):
     - React
+  - RNFS (2.13.3):
+    - React
   - RNKeychain (3.0.0):
     - React
   - RNPermissions (2.2.0):
@@ -167,6 +169,7 @@ DEPENDENCIES:
   - RNCardano (from `../node_modules/react-native-cardano`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
+  - RNFS (from `../node_modules/react-native-fs`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - "RNSentry (from `../node_modules/@sentry/react-native/RNSentry.podspec`)"
@@ -250,6 +253,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/async-storage"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
+  RNFS:
+    :path: "../node_modules/react-native-fs"
   RNKeychain:
     :path: "../node_modules/react-native-keychain"
   RNPermissions:
@@ -299,6 +304,7 @@ SPEC CHECKSUMS:
   RNCardano: ffdd908e7dde81508914dbff2fbd739183b2bf34
   RNCAsyncStorage: b63d6e83fc629b01df6b624688f17944cea5637f
   RNDeviceInfo: 6dd5c07a482f2a5e4a29fe8a9d99eadd4277175a
+  RNFS: c9bbde46b0d59619f8e7b735991c60e0f73d22c1
   RNKeychain: 3aa3cf891a09a0d18d306862ab2bb9e106079b24
   RNPermissions: 477d88d0be7ecb0a7b344e4d5fbb0352de104626
   RNSentry: 0a70359ddacbfb9b1cbbb0971e54065b9f70ac57
