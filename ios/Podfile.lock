@@ -14,7 +14,7 @@ PODS:
     - glog
   - glog (0.3.5)
   - MultiplatformBleAdapter (0.1.6)
-  - Permission-Camera (2.2.0):
+  - Permission-Camera (2.2.2):
     - RNPermissions
   - React (0.60.0):
     - React-Core (= 0.60.0)
@@ -121,8 +121,8 @@ PODS:
     - React
   - RNKeychain (3.0.0):
     - React
-  - RNPermissions (2.2.0):
-    - React
+  - RNPermissions (2.2.2):
+    - React-Core
   - RNSentry (1.4.5):
     - React
     - Sentry (~> 5.1.4)
@@ -273,7 +273,7 @@ SPEC CHECKSUMS:
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
   MultiplatformBleAdapter: 652f47ecd7f5036756517cf66833210709a72eab
-  Permission-Camera: 9ff12884205fb282b4a22b9e8c358ba53cee7567
+  Permission-Camera: 5d2aaf95592660b6dcb5e8d1d90ed5d0156cad02
   React: 4b3c068e793e96672dcd186a2b572fac43e4b031
   React-Core: 3dc86b22920597f813c62a96db3165950b64826b
   React-cxxreact: 0dacb291e59b81e7c3f22a2118bee853ba8a60d2
@@ -306,7 +306,7 @@ SPEC CHECKSUMS:
   RNDeviceInfo: 6dd5c07a482f2a5e4a29fe8a9d99eadd4277175a
   RNFS: c9bbde46b0d59619f8e7b735991c60e0f73d22c1
   RNKeychain: 3aa3cf891a09a0d18d306862ab2bb9e106079b24
-  RNPermissions: 477d88d0be7ecb0a7b344e4d5fbb0352de104626
+  RNPermissions: 5df468064df661a4c8c017e2791ce90d7695eea5
   RNSentry: 0a70359ddacbfb9b1cbbb0971e54065b9f70ac57
   RNSVG: 6c8e8c6f9e5a0caf910dd25aa6e4216045426e1d
   Sentry: 81f7f2bd3cb041137ea7efcde3aa5ad0d5a67632
