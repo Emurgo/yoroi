@@ -331,6 +331,10 @@ class SendScreen extends Component<Props, State> {
   handleCheckBoxChange: (boolean) => void = (sendAll) =>
     this.setState({sendAll})
 
+  /**
+   * TODO(v-almonacid): prefer computing balance from tx cache instead of
+   * utxo set
+   */
   handleConfirm: () => Promise<void> = async () => {
     const {navigation, utxos, availableAmount} = this.props
     const {address, amount, sendAll} = this.state

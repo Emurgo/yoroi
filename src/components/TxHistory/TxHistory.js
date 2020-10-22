@@ -128,6 +128,10 @@ const TxHistory = ({
       {isOnline &&
         lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
 
+      {
+        // TODO(v-almonacid): prefer computing balance from tx cache
+        // instead of utxo set
+      }
       <AvailableAmountBanner amount={utxoBalance} />
 
       {_.isEmpty(transactionsInfo) ? (
