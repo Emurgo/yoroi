@@ -198,6 +198,10 @@ class StakingDashboard extends React.Component<Props, State> {
     if (this._intervalId != null) clearInterval(this._intervalId)
   }
 
+  /**
+   * TODO(v-almonacid): prefer computing balance from tx cache instead of
+   * utxo set
+   */
   navigateToStakingCenter: (void) => Promise<void> = async () => {
     const {navigation, utxos, poolOperator, accountBalance} = this.props
     /* eslint-disable indent */
@@ -619,6 +623,10 @@ class StakingDashboard extends React.Component<Props, State> {
                 s: leftPadDate(timeLeftInEpoch.getUTCSeconds()),
               }}
             />
+            {
+              // TODO(v-almonacid): prefer computing balance from tx cache
+              // instead of utxo set
+            }
             <UserSummary
               totalAdaSum={utxoBalance}
               totalRewards={accountBalance}

@@ -9,6 +9,7 @@ import {View, RefreshControl, ScrollView, Image} from 'react-native'
 import {SafeAreaView} from 'react-navigation'
 import _ from 'lodash'
 import {injectIntl, defineMessages} from 'react-intl'
+import {fetchUTXOs} from '../../actions/utxo'
 
 import {Text, Banner, OfflineBanner, StatusBar, WarningBanner} from '../UiKit'
 import infoIcon from '../../assets/img/icon/info-light-green.png'
@@ -18,6 +19,7 @@ import {
   lastHistorySyncErrorSelector,
   isOnlineSelector,
   availableAmountSelector,
+  utxoBalanceSelector,
   walletMetaSelector,
   languageSelector,
   isFlawedWalletSelector,
@@ -28,6 +30,7 @@ import {updateHistory} from '../../actions/history'
 import {checkForFlawedWallets} from '../../actions'
 import {
   onDidMount,
+  onDidUpdate,
   requireInitializedWallet,
   withNavigationTitle,
 } from '../../utils/renderUtils'
@@ -86,7 +89,7 @@ const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
 const AvailableAmountBanner = injectIntl(({intl, amount}) => (
   <Banner
     label={intl.formatMessage(globalMessages.availableFunds)}
-    text={formatAdaWithText(amount)}
+    text={amount != null ? formatAdaWithText(amount) : '-'}
     boldText
   />
 ))
@@ -98,7 +101,7 @@ const TxHistory = ({
   isOnline,
   updateHistory,
   lastSyncError,
-  availableAmount,
+  utxoBalance,
   isFlawedWallet,
   showWarning,
   setShowWarning,
@@ -125,7 +128,11 @@ const TxHistory = ({
       {isOnline &&
         lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
 
-      <AvailableAmountBanner amount={availableAmount} />
+      {
+        // TODO(v-almonacid): prefer computing balance from tx cache
+        // instead of utxo set
+      }
+      <AvailableAmountBanner amount={utxoBalance} />
 
       {_.isEmpty(transactionsInfo) ? (
         <ScrollView
@@ -179,6 +186,9 @@ export default injectIntl(
         lastSyncError: lastHistorySyncErrorSelector(state),
         isOnline: isOnlineSelector(state),
         availableAmount: availableAmountSelector(state),
+        utxoBalance: isSynchronizingHistorySelector(state)
+          ? null
+          : utxoBalanceSelector(state),
         key: languageSelector(state),
         isFlawedWallet: isFlawedWalletSelector(state),
         walletMeta: walletMetaSelector(state),
@@ -186,11 +196,18 @@ export default injectIntl(
       {
         updateHistory,
         checkForFlawedWallets,
+        fetchUTXOs,
       },
     ),
     onDidMount(({updateHistory, checkForFlawedWallets}) => {
       checkForFlawedWallets()
+      fetchUTXOs()
       updateHistory()
+    }),
+    onDidUpdate(({fetchUTXOs, isSyncing}, prevProps) => {
+      if (!isSyncing && isSyncing !== prevProps.isSyncing) {
+        fetchUTXOs()
+      }
     }),
     withStateHandlers(
       {
