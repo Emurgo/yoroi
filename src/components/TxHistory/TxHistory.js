@@ -186,9 +186,7 @@ export default injectIntl(
         lastSyncError: lastHistorySyncErrorSelector(state),
         isOnline: isOnlineSelector(state),
         availableAmount: availableAmountSelector(state),
-        utxoBalance: isSynchronizingHistorySelector(state)
-          ? null
-          : utxoBalanceSelector(state),
+        utxoBalance: utxoBalanceSelector(state),
         key: languageSelector(state),
         isFlawedWallet: isFlawedWalletSelector(state),
         walletMeta: walletMetaSelector(state),
@@ -204,8 +202,13 @@ export default injectIntl(
       fetchUTXOs()
       updateHistory()
     }),
-    onDidUpdate(({fetchUTXOs, isSyncing}, prevProps) => {
-      if (!isSyncing && isSyncing !== prevProps.isSyncing) {
+    onDidUpdate(({fetchUTXOs, availableAmount, utxoBalance}, prevProps) => {
+      // note(v-almonacid): currently the availableAmount selector is not
+      // accurate, so instead we rely on the utxo balance.
+      if (
+        utxoBalance == null ||
+        !availableAmount.eq(prevProps.availableAmount)
+      ) {
         fetchUTXOs()
       }
     }),
