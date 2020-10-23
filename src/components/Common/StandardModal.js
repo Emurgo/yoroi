@@ -1,18 +1,13 @@
 // @flow
 
 import React from 'react'
-import {View, ScrollView} from 'react-native'
-import {injectIntl, intlShape} from 'react-intl'
 
-import {Text, Button, Modal} from '../UiKit'
-import {confirmationMessages} from '../../i18n/global-messages'
-
-import styles from './styles/StandardModal.style'
+import {Modal} from '../UiKit'
+import TwoActionView from './TwoActionView'
 
 import type {ComponentType} from 'react'
 
-type Props = {
-  +intl: intlShape,
+type Props = {|
   +visible: boolean,
   +title: string,
   +children: React$Node,
@@ -23,13 +18,12 @@ type Props = {
   |},
   +secondaryButton?: {|
     label?: string,
-    onPress?: (void) => void,
+    onPress: (void) => void,
   |},
   +showCloseIcon?: boolean,
-}
+|}
 
 const StandardModal = ({
-  intl,
   visible,
   title,
   children,
@@ -43,37 +37,14 @@ const StandardModal = ({
     onRequestClose={onRequestClose}
     showCloseIcon={showCloseIcon === true}
   >
-    <ScrollView style={styles.scrollView}>
-      <View style={styles.content}>
-        <View style={styles.heading}>
-          <Text style={styles.titleText}>{title}</Text>
-        </View>
-        {children}
-      </View>
-      <View style={styles.buttons}>
-        {secondaryButton != null && (
-          <Button
-            outlineOnLight
-            block
-            onPress={secondaryButton.onPress ?? onRequestClose}
-            title={
-              secondaryButton.label ??
-              intl.formatMessage(
-                confirmationMessages.commonButtons.cancelButton,
-              )
-            }
-            style={styles.secondaryButton}
-          />
-        )}
-        <Button
-          block
-          onPress={primaryButton.onPress}
-          title={primaryButton.label}
-          style={styles.primaryButton}
-        />
-      </View>
-    </ScrollView>
+    <TwoActionView
+      title={title}
+      primaryButton={primaryButton}
+      secondaryButton={secondaryButton}
+    >
+      {children}
+    </TwoActionView>
   </Modal>
 )
 
-export default injectIntl((StandardModal: ComponentType<Props>))
+export default (StandardModal: ComponentType<Props>)

@@ -251,8 +251,8 @@ const DelegationConfirmation = ({
   onConnectUSB,
   closeErrorModal,
   showErrorModal,
-  errorMessageHeader,
   errorMessage,
+  errorLogs,
 }) => {
   const poolHash = navigation.getParam('poolHash')
   const poolName = navigation.getParam('poolName')
@@ -359,8 +359,8 @@ const DelegationConfirmation = ({
       <ErrorModal
         visible={showErrorModal}
         title={intl.formatMessage(errorMessages.generalTxError.title)}
-        message={errorMessageHeader}
         errorMessage={errorMessage}
+        errorLogs={errorLogs}
         onRequestClose={closeErrorModal}
       />
 
@@ -401,8 +401,8 @@ export default injectIntl(
         useUSB: false,
         ledgerDialogStep: LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT,
         showErrorModal: false,
-        errorMessageHeader: '',
         errorMessage: '',
+        errorLogs: '',
       },
       {
         doNothing: () => () => ({}),
@@ -421,11 +421,11 @@ export default injectIntl(
         }),
         setUseUSB: () => (useUSB) => ({useUSB}),
         closeErrorModal: () => () => ({showErrorModal: false}),
-        setErrorData: () => (
+        setErrorData: () => (showErrorModal, errorMessage, errorLogs) => ({
           showErrorModal,
-          errorMessageHeader,
           errorMessage,
-        ) => ({showErrorModal, errorMessageHeader, errorMessage}),
+          errorLogs,
+        }),
       },
     ),
     withHandlers({

@@ -1,5 +1,18 @@
 // @flow
 
+/**
+ * IMPORTANT:
+ * Modals may have unexpected behaviours, particularly on iOS.
+ * A few recommandations when using them:
+ * - iOS: make sure you test in a *release* build and on a real device
+ * - avoid chaining modals (ie. creating a dialog in which one modal is shown
+ * after the other)
+ * - when visibility is controled through a component state variable, remember
+ * that setState() is a *request* to change the state. The actual change may
+ * occur within several UI ticks and not immediately.
+ * - avoid mixing modals with Alert.alert() as this may freeze the UI
+ * on iOS. See https://github.com/facebook/react-native/issues/10471
+ */
 import React from 'react'
 import {View, Modal as RNModal, TouchableOpacity, Image} from 'react-native'
 import {NavigationEvents} from 'react-navigation'

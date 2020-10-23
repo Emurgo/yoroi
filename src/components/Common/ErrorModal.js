@@ -7,7 +7,7 @@ import {compose} from 'redux'
 import {withStateHandlers} from 'recompose'
 
 import {Modal, Button} from '../UiKit'
-import globalMessages from '../../i18n/global-messages'
+import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import chevronRight from '../../assets/img/chevron_right.png'
 import chevronLeft from '../../assets/img/chevron_left.png'
 import image from '../../assets/img/error.png'
@@ -27,77 +27,103 @@ const messages = defineMessages({
   },
 })
 
-const ErrorModal = ({
+type Props = {
+  title?: string,
+  errorMessage: string,
+  errorLogs?: ?string,
+  onDismiss: () => void,
+}
+
+const _ErrorView = ({
   intl,
+  title,
+  errorMessage,
+  errorLogs,
+  onDismiss,
+  showErrorLogs,
+  setShowErrorLogs,
+}) => (
+  <ScrollView style={styles.scrollView}>
+    <View style={styles.headerView}>
+      <Text style={styles.title}>
+        {title ??
+          intl.formatMessage(errorMessages.generalLocalizableError.title)}
+      </Text>
+      <Image source={image} style={styles.image} />
+    </View>
+    <Text style={styles.paragraph}>{errorMessage}</Text>
+
+    {errorLogs != null && (
+      <View style={styles.errorSection}>
+        <TouchableOpacity
+          accessibilityRole="button"
+          onPress={setShowErrorLogs}
+          activeOpacity={0.5}
+        >
+          <View style={styles.errorSectionHeader}>
+            <Text style={styles.showErrorTrigger}>
+              {showErrorLogs
+                ? intl.formatMessage(messages.hideError)
+                : intl.formatMessage(messages.showError)}
+            </Text>
+            <Image source={showErrorLogs ? chevronLeft : chevronRight} />
+          </View>
+        </TouchableOpacity>
+        {showErrorLogs && (
+          <View style={styles.errorSectionView}>
+            <View style={styles.errorSectionContent}>
+              <Text style={styles.paragraph}>{showErrorLogs}</Text>
+            </View>
+          </View>
+        )}
+      </View>
+    )}
+    <Button
+      block
+      onPress={onDismiss}
+      title={intl.formatMessage(globalMessages.close)}
+    />
+  </ScrollView>
+)
+
+export const ErrorView = injectIntl(
+  (compose(
+    withStateHandlers(
+      {
+        showErrorLogs: false,
+      },
+      {
+        setShowErrorLogs: (state) => () => ({
+          showErrorLogs: !state.showErrorLogs,
+        }),
+      },
+    ),
+  )(_ErrorView): ComponentType<Props>),
+)
+
+const ErrorModal = ({
   visible,
   title,
-  message,
-  showErrorMessage,
-  setShowErrorMessage,
   errorMessage,
+  errorLogs,
   onRequestClose,
 }) => (
   <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
-    <ScrollView style={styles.scrollView}>
-      <View style={styles.headerView}>
-        <Text style={styles.title}>{title}</Text>
-        <Image source={image} style={styles.image} />
-      </View>
-      <Text style={styles.paragraph}>{message}</Text>
-
-      {errorMessage && (
-        <View style={styles.errorSection}>
-          <TouchableOpacity
-            accessibilityRole="button"
-            onPress={setShowErrorMessage}
-            activeOpacity={0.5}
-          >
-            <View style={styles.errorSectionHeader}>
-              <Text style={styles.showErrorTrigger}>
-                {showErrorMessage
-                  ? intl.formatMessage(messages.hideError)
-                  : intl.formatMessage(messages.showError)}
-              </Text>
-              <Image source={showErrorMessage ? chevronLeft : chevronRight} />
-            </View>
-          </TouchableOpacity>
-          {showErrorMessage && (
-            <View style={styles.errorSectionView}>
-              <View style={styles.errorSectionContent}>
-                <Text style={styles.paragraph}>{errorMessage}</Text>
-              </View>
-            </View>
-          )}
-        </View>
-      )}
-      <Button
-        block
-        onPress={onRequestClose}
-        title={intl.formatMessage(globalMessages.close)}
-      />
-    </ScrollView>
+    <ErrorView
+      title={title}
+      errorMessage={errorMessage}
+      errorLogs={errorLogs}
+      onDismiss={onRequestClose}
+    />
   </Modal>
 )
 
 type ExternalProps = {
   visible: boolean,
-  title: string,
-  message: string,
-  errorMessage?: ?string,
+  title?: string,
+  errorMessage: string,
+  errorLogs?: ?string,
   onRequestClose: () => void,
 }
 
-export default injectIntl(
-  (compose(
-    withStateHandlers(
-      {
-        showErrorMessage: false,
-      },
-      {
-        setShowErrorMessage: (state) => () => ({
-          showErrorMessage: !state.showErrorMessage,
-        }),
-      },
-    ),
-  )(ErrorModal): ComponentType<ExternalProps>),
-)
+export default (ErrorModal: ComponentType<ExternalProps>)
