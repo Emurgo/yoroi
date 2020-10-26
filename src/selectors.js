@@ -89,7 +89,7 @@ export const availableAmountSelector: (
 
   const zero = new BigNumber(0)
 
-  const result = BigNumberSum(processed.map((tx) => tx.bruttoAmount))
+  const result = BigNumberSum(processed.map((tx) => tx.delta))
 
   return result.lt(zero) ? zero : result
 })

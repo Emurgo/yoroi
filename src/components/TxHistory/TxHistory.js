@@ -19,7 +19,6 @@ import {
   lastHistorySyncErrorSelector,
   isOnlineSelector,
   availableAmountSelector,
-  utxoBalanceSelector,
   walletMetaSelector,
   languageSelector,
   isFlawedWalletSelector,
@@ -30,7 +29,6 @@ import {updateHistory} from '../../actions/history'
 import {checkForFlawedWallets} from '../../actions'
 import {
   onDidMount,
-  onDidUpdate,
   requireInitializedWallet,
   withNavigationTitle,
 } from '../../utils/renderUtils'
@@ -101,7 +99,7 @@ const TxHistory = ({
   isOnline,
   updateHistory,
   lastSyncError,
-  utxoBalance,
+  availableAmount,
   isFlawedWallet,
   showWarning,
   setShowWarning,
@@ -128,11 +126,7 @@ const TxHistory = ({
       {isOnline &&
         lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
 
-      {
-        // TODO(v-almonacid): prefer computing balance from tx cache
-        // instead of utxo set
-      }
-      <AvailableAmountBanner amount={utxoBalance} />
+      <AvailableAmountBanner amount={availableAmount} />
 
       {_.isEmpty(transactionsInfo) ? (
         <ScrollView
@@ -186,7 +180,6 @@ export default injectIntl(
         lastSyncError: lastHistorySyncErrorSelector(state),
         isOnline: isOnlineSelector(state),
         availableAmount: availableAmountSelector(state),
-        utxoBalance: utxoBalanceSelector(state),
         key: languageSelector(state),
         isFlawedWallet: isFlawedWalletSelector(state),
         walletMeta: walletMetaSelector(state),
@@ -199,18 +192,7 @@ export default injectIntl(
     ),
     onDidMount(({updateHistory, checkForFlawedWallets}) => {
       checkForFlawedWallets()
-      fetchUTXOs()
       updateHistory()
-    }),
-    onDidUpdate(({fetchUTXOs, availableAmount, utxoBalance}, prevProps) => {
-      // note(v-almonacid): currently the availableAmount selector is not
-      // accurate, so instead we rely on the utxo balance.
-      if (
-        utxoBalance == null ||
-        !availableAmount.eq(prevProps.availableAmount)
-      ) {
-        fetchUTXOs()
-      }
     }),
     withStateHandlers(
       {
