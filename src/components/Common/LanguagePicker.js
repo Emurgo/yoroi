@@ -16,6 +16,7 @@ import brazilianFlagIcon from '../../assets/img/flags/brazilian.png'
 import germanFlagIcon from '../../assets/img/flags/german.png'
 import frenchFlagIcon from '../../assets/img/flags/french.png'
 import italianFlagIcon from '../../assets/img/flags/italian.png'
+import dutchFlagIcon from '../../assets/img/flags/dutch.png'
 import LanguageListItem from './LanguageListItem'
 import {LANGUAGES} from '../../i18n/languages'
 import {Button, StatusBar} from '../UiKit'
@@ -74,6 +75,11 @@ const messages = defineMessages({
   italian: {
     id: 'components.common.languagepicker.italian',
     defaultMessage: 'Italiano',
+    description: 'some desc',
+  },
+  dutch: {
+    id: 'components.common.languagepicker.dutch',
+    defaultMessage: 'Nederlands',
     description: 'some desc',
   },
   continueButton: {
@@ -151,6 +157,11 @@ const supportedLanguages = (intl) => {
       label: intl.formatMessage(messages.italian),
       code: LANGUAGES.ITALIAN,
       icon: italianFlagIcon,
+    },
+    {
+      label: intl.formatMessage(messages.dutch),
+      code: LANGUAGES.DUTCH,
+      icon: dutchFlagIcon,
     },
     // TODO: Add back when chinese traditional is available
     // {

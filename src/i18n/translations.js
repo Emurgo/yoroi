@@ -10,6 +10,7 @@ import ptBR from './locales/pt-BR'
 import deDE from './locales/de-DE'
 import frFR from './locales/fr-FR'
 import itIT from './locales/it-IT'
+import nlNL from './locales/nl-NL'
 // TODO: Add when chinese traditional is available
 // import zhHant from './locales/zh-Hant'
 
@@ -39,5 +40,6 @@ translations[LANGUAGES.BRAZILIAN] = Object.assign({}, defaultLocale, ptBR)
 translations[LANGUAGES.GERMAN] = Object.assign({}, defaultLocale, deDE)
 translations[LANGUAGES.FRENCH] = Object.assign({}, defaultLocale, frFR)
 translations[LANGUAGES.ITALIAN] = Object.assign({}, defaultLocale, itIT)
+translations[LANGUAGES.DUTCH] = Object.assign({}, defaultLocale, nlNL)
 
 export default translations
