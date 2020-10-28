@@ -197,6 +197,12 @@ export const easyConfirmationSelector = (state: State): boolean =>
 export const customPinHashSelector = (state: State): ?string =>
   state.appSettings.customPinHash
 
+export const isAppInitializedSelector = (state: State): boolean =>
+  state.isAppInitialized
+
+export const isAuthenticatedSelector = (state: State): boolean =>
+  state.isAuthenticated
+
 export const installationIdSelector = (state: State): ?string =>
   state.appSettings.installationId
 

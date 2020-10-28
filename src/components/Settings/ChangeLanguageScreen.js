@@ -1,13 +1,12 @@
 // @flow
 
 import React from 'react'
-import {SafeAreaView} from 'react-navigation'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {withHandlers} from 'recompose'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 
 import type {ComponentType} from 'react'
-import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 
 import languageActions from '../../actions/language'
 import LanguagePicker from '../Common/LanguagePicker'
@@ -47,5 +46,5 @@ export default (compose(
     },
   }),
 )(LanguagePickerScreen): ComponentType<{
-  navigation: NavigationScreenProp<NavigationState>,
+  navigation: any, // TODO: type
 }>)

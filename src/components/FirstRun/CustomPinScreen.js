@@ -39,7 +39,7 @@ const messages = defineMessages({
   },
 })
 
-const CustomPinScreen = ({handlePinEntered, intl}) => (
+const CustomPinScreen = ({handlePinEntered, intl, navigation}) => (
   <View style={styles.container} testID="customPinContainer">
     <StatusBar type="dark" />
 
@@ -54,6 +54,7 @@ const CustomPinScreen = ({handlePinEntered, intl}) => (
           title: intl.formatMessage(messages.pinConfirmationTitle),
         },
       }}
+      navigation={navigation}
     />
   </View>
 )

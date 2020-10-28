@@ -19,7 +19,6 @@ import iconReceive from '../../assets/img/icon/receive.png'
 import iconDashboard from '../../assets/img/icon/dashboard.png'
 import iconDelegate from '../../assets/img/icon/delegation.png'
 
-import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {WalletMeta} from '../../state'
 
 const messages = defineMessages({
@@ -42,7 +41,7 @@ const messages = defineMessages({
 })
 
 type Props = {
-  navigation: NavigationScreenProp<NavigationState>,
+  navigation: any, // TODO: type
   navigateToReceive: () => mixed,
   navigateToSend: () => mixed,
   navigateToDashboard: () => mixed,

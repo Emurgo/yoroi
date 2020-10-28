@@ -25,7 +25,7 @@ export const FIRST_RUN_ROUTES = {
 }
 
 export const WALLET_INIT_ROUTES = {
-  WALLET_SELECTION: 'wallet-selection',
+  WALLET_SELECTION: 'wallet-selection', // TODO: remove?
   CREATE_RESTORE_SWITCH: 'choose-create-restore',
   INITIAL_CREATE_RESTORE_SWITCH: 'initial-choose-create-restore',
   CREATE_WALLET: 'create-wallet-form',
@@ -69,6 +69,7 @@ export const DELEGATION_ROUTES = {
 }
 
 export const WALLET_ROUTES = {
+  WALLET_SELECTION: 'wallet-selection',
   TX_HISTORY: 'history',
   SEND: SEND_ROUTES.MAIN,
   RECEIVE: RECEIVE_ROUTES.MAIN,

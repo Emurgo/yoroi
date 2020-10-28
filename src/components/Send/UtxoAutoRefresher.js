@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import {NavigationEvents} from 'react-navigation'
+import {useNavigation} from '@react-navigation/native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import type {ComponentType} from 'react'
@@ -18,9 +18,14 @@ class _UtxoAutoRefresher extends React.Component<{
   fetchUTXOs: () => any,
   hasPendingTx: boolean,
 }> {
-  _firstFocus = true
+  _firstFocus: boolean = true
+  _unsubscribe: void | () => mixed = undefined
 
   componentDidMount = () => {
+    const navigation = useNavigation()
+    this._unsubscribe = navigation.addListener('focus', () =>
+      this.handleDidFocus()
+    )
     this.refetch()
   }
 
@@ -33,6 +38,10 @@ class _UtxoAutoRefresher extends React.Component<{
       // because fetching is already in progress for some reason
       this.refetch()
     }
+  }
+
+  componentWillUnmount = () => {
+    if (this._unsubscribe != null) this._unsubscribe()
   }
 
   refetch = () => {
@@ -50,7 +59,7 @@ class _UtxoAutoRefresher extends React.Component<{
     this.refetch()
   }
 
-  render = () => <NavigationEvents onDidFocus={this.handleDidFocus} />
+  render = () => null
 }
 
 export default (compose(

@@ -4,7 +4,7 @@ import React from 'react'
 import {View, Image, Dimensions} from 'react-native'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers, withProps} from 'recompose'
-import {SafeAreaView} from 'react-navigation'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import assert from '../../../utils/assert'

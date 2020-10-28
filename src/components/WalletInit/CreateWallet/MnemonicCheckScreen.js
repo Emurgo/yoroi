@@ -5,7 +5,7 @@ import _ from 'lodash'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withProps, withStateHandlers} from 'recompose'
-import {SafeAreaView} from 'react-navigation'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import {View, ScrollView, TouchableOpacity, Dimensions} from 'react-native'
 

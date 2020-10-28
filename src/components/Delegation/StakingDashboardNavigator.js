@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import {Button} from '../UiKit'
-import {createStackNavigator} from 'react-navigation'
+import {createStackNavigator} from '@react-navigation/stack'
 
 import StakingDashboard from './StakingDashboard'
 import BiometricAuthScreen from '../Send/BiometricAuthScreen'
@@ -23,7 +23,7 @@ import {
 
 import styles from '../TxHistory/styles/SettingsButton.style'
 
-const DelegationNavigatorSummary = createStackNavigator(
+const _DelegationNavigatorSummary = createStackNavigator(
   {
     [STAKING_DASHBOARD_ROUTES.MAIN]: {
       screen: StakingDashboard,
@@ -68,6 +68,15 @@ const DelegationNavigatorSummary = createStackNavigator(
     }),
     ...defaultStackNavigatorOptions,
   },
+)
+
+const Stack = createStackNavigator()
+
+// TODO
+const DelegationNavigatorSummary = () => (
+  <Stack.Navigator>
+    <Stack.Screen name={STAKING_DASHBOARD_ROUTES.MAIN} component={StakingDashboard} />
+  </Stack.Navigator>
 )
 
 export default DelegationNavigatorSummary

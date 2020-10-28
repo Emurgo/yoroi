@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import {createStackNavigator} from 'react-navigation'
+import {createStackNavigator} from '@react-navigation/stack'
 
 import ReceiveScreen from './ReceiveScreen'
 import {RECEIVE_ROUTES} from '../../RoutesList'
@@ -10,7 +10,7 @@ import {
   defaultStackNavigatorOptions,
 } from '../../navigationOptions'
 
-const ReceiveScreenNavigator = createStackNavigator(
+const _ReceiveScreenNavigator = createStackNavigator(
   {
     [RECEIVE_ROUTES.MAIN]: ReceiveScreen,
   },
@@ -25,6 +25,15 @@ const ReceiveScreenNavigator = createStackNavigator(
     }),
     ...defaultStackNavigatorOptions,
   },
+)
+
+const Stack = createStackNavigator()
+
+// TODO
+const ReceiveScreenNavigator = () => (
+  <Stack.Navigator>
+    <Stack.Screen name={RECEIVE_ROUTES.MAIN} component={ReceiveScreen} />
+  </Stack.Navigator>
 )
 
 export default ReceiveScreenNavigator

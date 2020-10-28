@@ -1,9 +1,27 @@
 // @flow
 import React from 'react'
-import {createStackNavigator, createSwitchNavigator} from 'react-navigation'
+import {compose} from 'redux'
+import {connect} from 'react-redux'
+// import {createStackNavigator, createSwitchNavigator} from 'react-navigation'
+import {NavigationContainer} from '@react-navigation/native'
+import {createStackNavigator} from '@react-navigation/stack'
+import {createDrawerNavigator} from '@react-navigation/drawer'
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 
+import {CONFIG} from './config/config'
+import {
+  isAppInitializedSelector,
+  isMaintenanceSelector,
+  languageSelector,
+  tosSelector,
+  isSystemAuthEnabledSelector,
+  isAuthenticatedSelector,
+  customPinHashSelector,
+} from './selectors'
 import HeaderBackButton from './components/UiKit/HeaderBackButton'
 import WalletInitNavigator from './components/WalletInit/WalletInitNavigator'
+// eslint-disable-next-line max-len
+import WalletSelectionScreen from './components/WalletSelection/WalletSelectionScreen'
 import TxHistoryNavigator from './components/TxHistory/TxHistoryNavigator'
 import StakingCenterNavigator from './components/Delegation/StakingCenterNavigator'
 import StakingDashboardNavigator from './components/Delegation/StakingDashboardNavigator'
@@ -23,7 +41,7 @@ import {
   defaultStackNavigatorOptions,
 } from './navigationOptions'
 
-const WalletNavigator = createStackNavigator(
+const _WalletNavigator = createStackNavigator(
   {
     [WALLET_ROUTES.TX_HISTORY]: TxHistoryNavigator,
     [WALLET_ROUTES.SEND]: SendScreenNavigator,
@@ -40,8 +58,23 @@ const WalletNavigator = createStackNavigator(
     },
   },
 )
+const Tab = createBottomTabNavigator()
+const WalletNavigator = () => (
+  <Stack.Navigator>
+    <Stack.Screen name={WALLET_ROUTES.WALLET_SELECTION} component={WalletSelectionScreen} />
+    <Tab.Navigator initialRouteName={WALLET_ROUTES.TX_HISTORY}>
+      <Stack.Screen name={WALLET_ROUTES.TX_HISTORY} component={TxHistoryNavigator} />
+      <Stack.Screen name={WALLET_ROUTES.SEND} component={SendScreenNavigator} />
+      <Stack.Screen name={WALLET_ROUTES.RECEIVE} component={ReceiveScreenNavigator} />
+      <Stack.Screen name={WALLET_ROUTES.DASHBOARD} component={StakingDashboardNavigator} />
+      <Stack.Screen name={WALLET_ROUTES.DELEGATE} component={StakingCenterNavigator} />
+    </Tab.Navigator>
+  </Stack.Navigator>
+)
 
-const AppNavigator = createSwitchNavigator(
+// TODO: remove
+const _AppNavigator = // createSwitchNavigator(
+[
   {
     [ROOT_ROUTES.SPLASH]: SplashScreen,
     [ROOT_ROUTES.INDEX]: IndexScreen,
@@ -74,6 +107,96 @@ const AppNavigator = createSwitchNavigator(
   {
     initialRouteName: ROOT_ROUTES.SPLASH,
   },
+]
+// )
+
+const Stack = createStackNavigator()
+const Drawer = createDrawerNavigator()
+
+const WalletSelectionDrawer = () => (
+  <Drawer.Navigator initialRouteName="Home">
+    <Drawer.Screen name="Home" component={TxHistoryNavigator} />
+  </Drawer.Navigator>
 )
+
+const navigatorSwitch = compose(
+  connect(
+    (state) => ({
+      isAppInitialized: isAppInitializedSelector(state),
+      isMaintenance: isMaintenanceSelector(state),
+      languageCode: languageSelector(state),
+      acceptedTos: tosSelector(state),
+      isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
+      isAuthenticated: isAuthenticatedSelector(state),
+      customPinHash: customPinHashSelector(state),
+    }),
+  ),
+)(({
+  isAppInitialized,
+  isMaintenance,
+  languageCode,
+  acceptedTos,
+  isSystemAuthEnabled,
+  isAuthenticated,
+  customPinHash,
+}) => {
+  if (!isAppInitialized) {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen name={ROOT_ROUTES.SPLASH} component={SplashScreen} />
+      </Stack.Navigator>
+    )
+  }
+  if (isMaintenance) {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen name={ROOT_ROUTES.MAINTENANCE} component={MaintenanceScreen} />
+      </Stack.Navigator>
+    )
+  }
+  if (
+    !languageCode ||
+    !acceptedTos ||
+    (!isSystemAuthEnabled && !customPinHash)
+  ) {
+    return (
+      <FirstRunNavigator />
+    )
+  }
+  return (
+    <Stack.Navigator initialRouteName={ROOT_ROUTES.INIT}>
+      {CONFIG.DEBUG.START_WITH_INDEX_SCREEN && (
+        <>
+          <Stack.Screen name={ROOT_ROUTES.INDEX} component={IndexScreen} />
+          <Stack.Screen name={ROOT_ROUTES.STORYBOOK} component={StorybookScreen} />
+          <Stack.Screen name={ROOT_ROUTES.NEW_WALLET} component={WalletInitNavigator} />
+          <Stack.Screen name={ROOT_ROUTES.WALLET} component={WalletNavigator} />
+        </>
+      )}
+      {!isAuthenticated && (
+        <Stack.Navigator>
+          {/* TODO: should we instead go directly to login screen ? */}
+          <Stack.Screen name={ROOT_ROUTES.LOGIN} component={AppStartScreen} />
+          <Stack.Screen name={ROOT_ROUTES.CUSTOM_PIN_AUTH} component={CustomPinLogin} />
+          <Stack.Screen name={ROOT_ROUTES.BIO_AUTH} component={BiometricAuthScreen} />
+        </Stack.Navigator>
+      )}
+      {isAuthenticated &&
+        <Stack.Navigator initialRouteName={ROOT_ROUTES.NEW_WALLET}>
+          <Stack.Screen name={ROOT_ROUTES.NEW_WALLET} component={WalletInitNavigator} />
+          <Stack.Screen name={ROOT_ROUTES.WALLET} component={WalletNavigator} />
+        </Stack.Navigator>
+      }
+    </Stack.Navigator>
+  )
+})
+
+const AppNavigator = () => {
+  return (
+    <NavigationContainer>
+      {navigatorSwitch()}
+    </NavigationContainer>
+  )
+}
 
 export default AppNavigator

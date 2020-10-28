@@ -12,8 +12,6 @@ import {Text, Button, StatusBar} from './UiKit'
 import {ROOT_ROUTES, WALLET_INIT_ROUTES} from '../RoutesList'
 import storage from '../utils/storage'
 
-import type {NavigationScreenProp, NavigationState} from 'react-navigation'
-
 const routes = [
   {label: 'Storybook', path: ROOT_ROUTES.STORYBOOK},
   {label: 'Skip to wallet list', path: WALLET_INIT_ROUTES.WALLET_SELECTION},
@@ -41,8 +39,9 @@ const styles = StyleSheet.create({
   },
 })
 
+// TODO: re-type
 type Props = {
-  navigation: NavigationScreenProp<NavigationState>,
+  navigation: any, // NavigationScreenProp<NavigationState>,
 }
 
 const crash = () => {

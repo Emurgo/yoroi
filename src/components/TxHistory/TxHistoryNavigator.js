@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import {Button} from '../UiKit'
-import {createStackNavigator} from 'react-navigation'
+import {createStackNavigator} from '@react-navigation/stack'
 import TxHistory from './TxHistory'
 import TxDetails from './TxDetails'
 import {TX_HISTORY_ROUTES, WALLET_ROUTES} from '../../RoutesList'
@@ -15,7 +15,7 @@ import {
 
 import styles from './styles/SettingsButton.style'
 
-const TxHistoryNavigator = createStackNavigator(
+const _TxHistoryNavigator = createStackNavigator(
   {
     [TX_HISTORY_ROUTES.MAIN]: {
       screen: TxHistory,
@@ -52,6 +52,15 @@ const TxHistoryNavigator = createStackNavigator(
     initialRouteName: TX_HISTORY_ROUTES.MAIN,
     ...defaultStackNavigatorOptions,
   },
+)
+
+const Stack = createStackNavigator()
+
+// TODO
+const TxHistoryNavigator = () => (
+  <Stack.Navigator>
+    <Stack.Screen name={TX_HISTORY_ROUTES.MAIN} component={TxHistory} />
+  </Stack.Navigator>
 )
 
 export default TxHistoryNavigator

@@ -5,7 +5,7 @@ import {Text, ScrollView, ActivityIndicator} from 'react-native'
 import {connect} from 'react-redux'
 import {compose, withHandlers} from 'recompose'
 import _ from 'lodash'
-import {SafeAreaView} from 'react-navigation'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages} from 'react-intl'
 import type {IntlShape} from 'react-intl'
 
@@ -30,7 +30,6 @@ import {
 
 import styles from './styles/WalletSelectionScreen.style'
 
-import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {State} from '../../state'
 import type {ComponentType} from 'react'
 import type {NetworkId, WalletImplementationId} from '../../config/types'
@@ -181,6 +180,6 @@ export default injectIntl(
     }),
   )(WalletListScreen): ComponentType<{
     intl: IntlShape,
-    navigation: NavigationScreenProp<NavigationState>,
+    navigation: any, // TODO: type
   }>),
 )

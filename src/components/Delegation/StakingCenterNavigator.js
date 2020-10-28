@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import {createStackNavigator} from 'react-navigation'
+import {createStackNavigator} from '@react-navigation/stack'
 
 import {Button} from '../UiKit'
 import StakingCenter from './StakingCenter'
@@ -21,7 +21,7 @@ import {
 import HeaderBackButton from '../UiKit/HeaderBackButton'
 import styles from '../TxHistory/styles/SettingsButton.style'
 
-const StakingNavigatorCenter = createStackNavigator(
+const _StakingNavigatorCenter = createStackNavigator(
   {
     [STAKING_CENTER_ROUTES.MAIN]: {
       screen: StakingCenter,
@@ -59,4 +59,13 @@ const StakingNavigatorCenter = createStackNavigator(
   },
 )
 
-export default StakingNavigatorCenter
+const Stack = createStackNavigator()
+
+// TODO
+const StakingCenterNavigator = () => (
+  <Stack.Navigator>
+    <Stack.Screen name={STAKING_CENTER_ROUTES.MAIN} component={StakingCenter} />
+  </Stack.Navigator>
+)
+
+export default StakingCenterNavigator

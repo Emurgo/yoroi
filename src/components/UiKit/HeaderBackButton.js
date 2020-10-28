@@ -5,7 +5,7 @@ import {HeaderBackButton} from 'react-navigation-stack'
 import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 
 type Props = {
-  navigation: NavigationScreenProp<NavigationState>,
+  navigation: any, // TODO: type
   shouldPopOutOfLastNavigator?: boolean,
 }
 

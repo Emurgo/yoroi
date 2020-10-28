@@ -19,7 +19,6 @@ import {
   formatTimeToSeconds,
 } from '../../utils/format'
 
-import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {TransactionInfo} from '../../types/HistoryTransaction'
 
 const messages = defineMessages({
@@ -80,7 +79,7 @@ const messages = defineMessages({
 
 type Props = {
   transaction: TransactionInfo,
-  navigation: NavigationScreenProp<NavigationState>,
+  navigation: any, // TODO: type
   intl: any,
 }
 

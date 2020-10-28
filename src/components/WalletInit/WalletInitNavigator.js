@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import {createStackNavigator} from 'react-navigation'
+import {createStackNavigator} from '@react-navigation/stack'
 
 import WalletFreshInitScreen from './WalletFreshInitScreen'
 import WalletInitScreen from './WalletInitScreen'
@@ -24,7 +24,8 @@ import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import WalletSelectionScreen from '../../components/WalletSelection/WalletSelectionScreen'
 import {isJormungandr} from '../../config/networks'
 
-const WalletInitNavigator = createStackNavigator(
+// TODO: remove
+const _WalletInitNavigator = createStackNavigator(
   {
     [WALLET_INIT_ROUTES.WALLET_SELECTION]: {
       screen: WalletSelectionScreen,
@@ -77,6 +78,26 @@ const WalletInitNavigator = createStackNavigator(
     },
     ...defaultStackNavigatorOptions,
   },
+)
+
+const Stack = createStackNavigator()
+
+// TODO: navigation options
+const WalletInitNavigator = () => (
+  <Stack.Navigator initialRouteName={WALLET_INIT_ROUTES.WALLET_SELECTION}>
+    {/* <Stack.Screen name={WALLET_INIT_ROUTES.WALLET_SELECTION} component={WalletSelectionScreen} /> */}
+    <Stack.Screen name={WALLET_INIT_ROUTES.INITIAL_CREATE_RESTORE_SWITCH} component={WalletFreshInitScreen} />
+    <Stack.Screen name={WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH} component={WalletInitScreen} />
+    <Stack.Screen name={WALLET_INIT_ROUTES.CREATE_WALLET} component={CreateWalletScreen} />
+    <Stack.Screen name={WALLET_INIT_ROUTES.RESTORE_WALLET} component={RestoreWalletScreen} />
+    <Stack.Screen name={WALLET_INIT_ROUTES.CHECK_NANO_X} component={CheckNanoXScreen} />
+    <Stack.Screen name={WALLET_INIT_ROUTES.CONNECT_NANO_X} component={ConnectNanoXScreen} />
+    <Stack.Screen name={WALLET_INIT_ROUTES.SAVE_NANO_X} component={SaveNanoXScreen} />
+    <Stack.Screen name={WALLET_INIT_ROUTES.MNEMONIC_SHOW} component={MnemonicShowScreen} />
+    <Stack.Screen name={WALLET_INIT_ROUTES.MNEMONIC_CHECK} component={MnemonicCheckScreen} />
+    <Stack.Screen name={WALLET_INIT_ROUTES.VERIFY_RESTORED_WALLET} component={VerifyRestoredWallet} />
+    <Stack.Screen name={WALLET_INIT_ROUTES.WALLET_CREDENTIALS} component={WalletCredentialsScreen} />
+  </Stack.Navigator>
 )
 
 export default WalletInitNavigator

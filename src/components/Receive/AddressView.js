@@ -5,7 +5,6 @@ import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withStateHandlers, withHandlers} from 'recompose'
 import {View, TouchableOpacity, Image, Platform} from 'react-native'
-import {withNavigation} from 'react-navigation'
 import {injectIntl, intlShape} from 'react-intl'
 
 import {
@@ -194,8 +193,6 @@ type ExternalProps = {|
 
 export default injectIntl(
   (compose(
-    // TODO(ppershing): this makes Flow bail out from checking types
-    withNavigation,
     connect(
       (state, {address}) => ({
         index: externalAddressIndexSelector(state)[address],

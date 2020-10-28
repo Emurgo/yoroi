@@ -3,7 +3,7 @@ import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View, ScrollView} from 'react-native'
-import {NavigationEvents, SafeAreaView} from 'react-navigation'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import _ from 'lodash'
 import {withHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
@@ -91,6 +91,18 @@ class WalletForm extends PureComponent<Props, ComponentState> {
       showPasswordsDoNotMatchError: false,
     }
 
+  _unsubscribe: void | () => mixed = undefined
+
+  componentDidMount = () => {
+    this._unsubscribe = this.props.navigation.addListener('blur', () =>
+      this.handleOnWillBlur()
+    )
+  }
+
+  componentWillUnmount = () => {
+    if (this._unsubscribe != null) this._unsubscribe()
+  }
+
   debouncedHandlePasswordMatchValidation = _.debounce(() => {
     this.setState(({password, passwordConfirmation}) => ({
       showPasswordsDoNotMatchError:
@@ -148,7 +160,6 @@ class WalletForm extends PureComponent<Props, ComponentState> {
     return (
       <SafeAreaView style={styles.safeAreaView}>
         <StatusBar type="dark" />
-        <NavigationEvents onWillBlur={this.handleOnWillBlur} />
 
         <ScrollView keyboardDismissMode="on-drag">
           <View style={styles.content}>

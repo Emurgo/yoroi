@@ -44,7 +44,6 @@ import {
   isMaintenanceSelector,
 } from './selectors'
 import assert from './utils/assert'
-import NavigationService from './NavigationService'
 import {ROOT_ROUTES} from './RoutesList'
 import KeyStore from './crypto/KeyStore'
 import * as api from './api/byron/api'
@@ -156,6 +155,8 @@ export const removeCustomPin = () => async (dispatch: Dispatch<any>) => {
   await dispatch(clearAppSettingField(APP_SETTINGS_KEYS.CUSTOM_PIN_HASH))
 }
 
+// TODO: all of this logic should be removed since initial navigation is
+// hanlded through store state
 export const navigateFromSplash = () => (
   dispatch: Dispatch<any>,
   getState: any,
@@ -183,11 +184,11 @@ export const navigateFromSplash = () => (
   // button remounts the App component other solution is:
   // eslint-disable-next-line
   // https://github.com/facebook/react-native/issues/13775#issuecomment-319673305
-  try {
-    NavigationService.navigate(route)
-  } catch (e) {
-    Logger.warn('Could not navigate from splash screen')
-  }
+  // try {
+  //   NavigationService.navigate(route)
+  // } catch (e) {
+  //   Logger.warn('Could not navigate from splash screen')
+  // }
 }
 
 export const acceptAndSaveTos = () => async (dispatch: Dispatch<any>) => {
@@ -235,6 +236,27 @@ export const closeWallet = () => async (_dispatch: Dispatch<any>) => {
   await walletManager.closeWallet()
 }
 
+// note(v-almonacid): authentication occurs after entering pin or biometrics,
+// it does not mean we opened a wallet
+export const signin = () => (dispatch: Dispatch<any>) => {
+  dispatch({
+    path: ['isAuthenticated'],
+    payload: true,
+    type: 'SIGN_IN',
+    reducer: (state, payload) => payload,
+  })
+}
+
+export const signout = () => (dispatch: Dispatch<any>) => {
+  dispatch({
+    path: ['isAuthenticated'],
+    payload: false,
+    type: 'SIGN_OUT',
+    reducer: (state, payload) => payload,
+  })
+}
+
+// logout closes the active wallet but does not signout
 export const logout = () => async (dispatch: Dispatch<any>) => {
   await closeWallet()
 
@@ -339,6 +361,7 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
   Logger.debug('setting up app lock')
   const onTimeoutAction = () => {
     dispatch(logout())
+    dispatch(signout())
   }
 
   AppState.addEventListener('change', () => {

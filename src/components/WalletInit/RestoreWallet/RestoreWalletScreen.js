@@ -5,7 +5,7 @@ import {View, ScrollView} from 'react-native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withStateHandlers} from 'recompose'
-import {SafeAreaView, withNavigation} from 'react-navigation'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import _ from 'lodash'
 
@@ -164,7 +164,6 @@ export default injectIntl(
     connect((state) => ({
       isKeyboardOpen: isKeyboardOpenSelector(state),
     })),
-    withNavigation,
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withStateHandlers(
       {

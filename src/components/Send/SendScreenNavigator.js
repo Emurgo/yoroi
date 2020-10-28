@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import {createStackNavigator} from 'react-navigation'
+import {createStackNavigator} from '@react-navigation/stack'
 
 import {Button} from '../UiKit'
 import SendScreen from './SendScreen'
@@ -38,7 +38,7 @@ const setAmount = (amount, navigation) => {
   handlerAmount && handlerAmount(pastedFormatter(amount))
 }
 
-const SendScreenNavigator = createStackNavigator(
+const _SendScreenNavigator = createStackNavigator(
   {
     [SEND_ROUTES.MAIN]: {
       screen: SendScreen,
@@ -97,6 +97,15 @@ const SendScreenNavigator = createStackNavigator(
     }),
     ...defaultStackNavigatorOptions,
   },
+)
+
+const Stack = createStackNavigator()
+
+// TODO
+const SendScreenNavigator = () => (
+  <Stack.Navigator>
+    <Stack.Screen name={SEND_ROUTES.MAIN} component={SendScreen} />
+  </Stack.Navigator>
 )
 
 export default SendScreenNavigator

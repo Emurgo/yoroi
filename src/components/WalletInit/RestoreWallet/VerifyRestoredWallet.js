@@ -5,7 +5,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {View, FlatList, ScrollView} from 'react-native'
 import {withHandlers} from 'recompose'
-import {SafeAreaView, withNavigation} from 'react-navigation'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import {Text, Button, StatusBar, BulletPointItem} from '../../UiKit'
@@ -166,7 +166,6 @@ const VerifyWalletScreen = ({
 export default injectIntl(
   (compose(
     connect((_state) => ({})),
-    withNavigation,
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
       navigateToWalletCredentials: ({navigation, walletNumber}) => (_event) => {

@@ -3,7 +3,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {SafeAreaView} from 'react-navigation'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {withStateHandlers, withHandlers} from 'recompose'
 import {ScrollView} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
