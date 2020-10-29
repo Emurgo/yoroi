@@ -14,8 +14,6 @@ import {connect} from 'react-redux'
 import {initApp} from './actions'
 
 const App = (_props, _context) => {
-  console.log(_props);
-  console.log(_context);
   return (
     <SafeAreaProvider>
       <AppNavigator />

@@ -3,7 +3,7 @@
 import React, {PureComponent} from 'react'
 import {compose} from 'redux'
 import {View, ScrollView} from 'react-native'
-import {SafeAreaView, NavigationEvents} from 'react-navigation'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import _ from 'lodash'
 import {withHandlers} from 'recompose'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
@@ -97,12 +97,24 @@ class ChangePasswordScreen extends PureComponent<Props, ComponentState> {
     showPasswordsDoNotMatchError: false,
   }
 
+  _unsubscribe: void | () => mixed = undefined
+
   debouncedHandlePasswordMatchValidation = _.debounce(() => {
     this.setState(({password, passwordConfirmation}) => ({
       showPasswordsDoNotMatchError:
         !!passwordConfirmation && password !== passwordConfirmation,
     }))
   }, 300)
+
+  componentDidMount = () => {
+    this._unsubscribe = this.props.navigation.addListener('blur', () =>
+      this.handleOnWillBlur()
+    )
+  }
+
+  componentWillUnmount = () => {
+    if (this._unsubscribe != null) this._unsubscribe()
+  }
 
   handleSetOldPassword = (oldPassword) => this.setState({oldPassword})
 
@@ -145,7 +157,6 @@ class ChangePasswordScreen extends PureComponent<Props, ComponentState> {
         <StatusBar type="dark" />
 
         <View style={styles.container}>
-          <NavigationEvents onWillBlur={this.handleOnWillBlur} />
 
           <ScrollView
             keyboardDismissMode="on-drag"

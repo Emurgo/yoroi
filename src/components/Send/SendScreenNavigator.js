@@ -38,7 +38,8 @@ const setAmount = (amount, navigation) => {
   handlerAmount && handlerAmount(pastedFormatter(amount))
 }
 
-const _SendScreenNavigator = createStackNavigator(
+const _SendScreenNavigator = // createStackNavigator(
+[
   {
     [SEND_ROUTES.MAIN]: {
       screen: SendScreen,
@@ -97,7 +98,7 @@ const _SendScreenNavigator = createStackNavigator(
     }),
     ...defaultStackNavigatorOptions,
   },
-)
+]
 
 const Stack = createStackNavigator()
 

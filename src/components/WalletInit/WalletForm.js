@@ -93,6 +93,13 @@ class WalletForm extends PureComponent<Props, ComponentState> {
 
   _unsubscribe: void | () => mixed = undefined
 
+  debouncedHandlePasswordMatchValidation = _.debounce(() => {
+    this.setState(({password, passwordConfirmation}) => ({
+      showPasswordsDoNotMatchError:
+        !!passwordConfirmation && password !== passwordConfirmation,
+    }))
+  }, 300)
+
   componentDidMount = () => {
     this._unsubscribe = this.props.navigation.addListener('blur', () =>
       this.handleOnWillBlur()
@@ -102,13 +109,6 @@ class WalletForm extends PureComponent<Props, ComponentState> {
   componentWillUnmount = () => {
     if (this._unsubscribe != null) this._unsubscribe()
   }
-
-  debouncedHandlePasswordMatchValidation = _.debounce(() => {
-    this.setState(({password, passwordConfirmation}) => ({
-      showPasswordsDoNotMatchError:
-        !!passwordConfirmation && password !== passwordConfirmation,
-    }))
-  }, 300)
 
   handleOnWillBlur = () =>
     this.setState({

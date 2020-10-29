@@ -10,7 +10,8 @@ import {
   defaultStackNavigatorOptions,
 } from '../../navigationOptions'
 
-const _ReceiveScreenNavigator = createStackNavigator(
+const _ReceiveScreenNavigator = // createStackNavigator(
+[
   {
     [RECEIVE_ROUTES.MAIN]: ReceiveScreen,
   },
@@ -25,7 +26,7 @@ const _ReceiveScreenNavigator = createStackNavigator(
     }),
     ...defaultStackNavigatorOptions,
   },
-)
+]
 
 const Stack = createStackNavigator()
 

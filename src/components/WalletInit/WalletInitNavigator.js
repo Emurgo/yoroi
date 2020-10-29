@@ -25,7 +25,8 @@ import WalletSelectionScreen from '../../components/WalletSelection/WalletSelect
 import {isJormungandr} from '../../config/networks'
 
 // TODO: remove
-const _WalletInitNavigator = createStackNavigator(
+const _WalletInitNavigator = // createStackNavigator(
+[
   {
     [WALLET_INIT_ROUTES.WALLET_SELECTION]: {
       screen: WalletSelectionScreen,
@@ -78,15 +79,22 @@ const _WalletInitNavigator = createStackNavigator(
     },
     ...defaultStackNavigatorOptions,
   },
-)
+]
 
 const Stack = createStackNavigator()
 
 // TODO: navigation options
+/* <Stack.Screen name={WALLET_INIT_ROUTES.WALLET_SELECTION} component={WalletSelectionScreen} /> */
 const WalletInitNavigator = () => (
-  <Stack.Navigator initialRouteName={WALLET_INIT_ROUTES.WALLET_SELECTION}>
-    {/* <Stack.Screen name={WALLET_INIT_ROUTES.WALLET_SELECTION} component={WalletSelectionScreen} /> */}
-    <Stack.Screen name={WALLET_INIT_ROUTES.INITIAL_CREATE_RESTORE_SWITCH} component={WalletFreshInitScreen} />
+  <Stack.Navigator
+    initialRouteName={WALLET_INIT_ROUTES.INITIAL_CREATE_RESTORE_SWITCH}
+    screenOptions={defaultNavigationOptions}
+  >
+    <Stack.Screen
+      name={WALLET_INIT_ROUTES.INITIAL_CREATE_RESTORE_SWITCH}
+      component={WalletFreshInitScreen}
+      options={{headerShown: false}}
+    />
     <Stack.Screen name={WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH} component={WalletInitScreen} />
     <Stack.Screen name={WALLET_INIT_ROUTES.CREATE_WALLET} component={CreateWalletScreen} />
     <Stack.Screen name={WALLET_INIT_ROUTES.RESTORE_WALLET} component={RestoreWalletScreen} />

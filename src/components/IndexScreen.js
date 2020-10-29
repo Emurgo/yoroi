@@ -9,12 +9,12 @@ import {
 } from 'react-native'
 
 import {Text, Button, StatusBar} from './UiKit'
-import {ROOT_ROUTES, WALLET_INIT_ROUTES} from '../RoutesList'
+import {ROOT_ROUTES} from '../RoutesList'
 import storage from '../utils/storage'
 
 const routes = [
   {label: 'Storybook', path: ROOT_ROUTES.STORYBOOK},
-  {label: 'Skip to wallet list', path: WALLET_INIT_ROUTES.WALLET_SELECTION},
+  {label: 'Skip to wallet list', path: ROOT_ROUTES.WALLET},
   {label: 'Default', path: ROOT_ROUTES.LOGIN},
 ]
 

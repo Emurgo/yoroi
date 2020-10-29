@@ -13,7 +13,8 @@ import AcceptTermsOfServiceScreen from './AcceptTermsOfServiceScreen'
 import CustomPinScreen from './CustomPinScreen'
 
 // TODO: remove
-const WalletInitNavigator = createStackNavigator(
+const WalletInitNavigator = // createStackNavigator(
+[
   {
     [FIRST_RUN_ROUTES.LANGUAGE]: {
       screen: LanguagePickerScreen,
@@ -41,7 +42,7 @@ const WalletInitNavigator = createStackNavigator(
     },
     ...defaultStackNavigatorOptions,
   },
-)
+]
 
 const Stack = createStackNavigator()
 

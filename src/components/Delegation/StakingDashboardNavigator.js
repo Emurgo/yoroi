@@ -23,7 +23,8 @@ import {
 
 import styles from '../TxHistory/styles/SettingsButton.style'
 
-const _DelegationNavigatorSummary = createStackNavigator(
+const _DelegationNavigatorSummary = // createStackNavigator(
+[
   {
     [STAKING_DASHBOARD_ROUTES.MAIN]: {
       screen: StakingDashboard,
@@ -68,7 +69,7 @@ const _DelegationNavigatorSummary = createStackNavigator(
     }),
     ...defaultStackNavigatorOptions,
   },
-)
+]
 
 const Stack = createStackNavigator()
 

@@ -5,7 +5,6 @@ import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {View, ScrollView} from 'react-native'
-import {NavigationEvents} from 'react-navigation'
 import {injectIntl, defineMessages} from 'react-intl'
 
 import {withNavigationTitle} from '../../utils/renderUtils'
@@ -97,51 +96,59 @@ const ToggleEasyConfirmationScreen = ({
   clearPassword,
   setMasterPassword,
   masterPassword,
-}) => (
-  <View style={styles.root}>
-    <StatusBar type="dark" />
+  navigation,
+}) => {
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      clearPassword()
+    })
+    return unsubscribe
+  }, [navigation])
 
-    <NavigationEvents onDidBlur={clearPassword} />
+  return (
+    <View style={styles.root}>
+      <StatusBar type="dark" />
 
-    {!isEasyConfirmationEnabled ? (
-      <ScrollView keyboardDismissMode="on-drag">
-        <Text style={styles.heading}>
-          {intl.formatMessage(messages.enableHeading)}
-        </Text>
-        <Text style={styles.warning}>
-          {intl.formatMessage(messages.enableWarning)}
-        </Text>
+      {!isEasyConfirmationEnabled ? (
+        <ScrollView keyboardDismissMode="on-drag">
+          <Text style={styles.heading}>
+            {intl.formatMessage(messages.enableHeading)}
+          </Text>
+          <Text style={styles.warning}>
+            {intl.formatMessage(messages.enableWarning)}
+          </Text>
 
-        <ValidatedTextInput
-          secureTextEntry
-          label={intl.formatMessage(messages.enableMasterPassword)}
-          onChangeText={setMasterPassword}
-          value={masterPassword}
-        />
-      </ScrollView>
-    ) : (
-      <View style={[styles.main, styles.mainCentered]}>
-        <Text style={styles.heading}>
-          {intl.formatMessage(messages.disableHeading)}
-        </Text>
-      </View>
-    )}
+          <ValidatedTextInput
+            secureTextEntry
+            label={intl.formatMessage(messages.enableMasterPassword)}
+            onChangeText={setMasterPassword}
+            value={masterPassword}
+          />
+        </ScrollView>
+      ) : (
+        <View style={[styles.main, styles.mainCentered]}>
+          <Text style={styles.heading}>
+            {intl.formatMessage(messages.disableHeading)}
+          </Text>
+        </View>
+      )}
 
-    <Button
-      title={
-        isEasyConfirmationEnabled
-          ? intl.formatMessage(messages.disableButton)
-          : intl.formatMessage(messages.enableButton)
-      }
-      onPress={
-        isEasyConfirmationEnabled
-          ? disableEasyConfirmation
-          : enableEasyConfirmation
-      }
-      disabled={!masterPassword && !isEasyConfirmationEnabled}
-    />
-  </View>
-)
+      <Button
+        title={
+          isEasyConfirmationEnabled
+            ? intl.formatMessage(messages.disableButton)
+            : intl.formatMessage(messages.enableButton)
+        }
+        onPress={
+          isEasyConfirmationEnabled
+            ? disableEasyConfirmation
+            : enableEasyConfirmation
+        }
+        disabled={!masterPassword && !isEasyConfirmationEnabled}
+      />
+    </View>
+  )
+}
 
 export default injectIntl(
   compose(

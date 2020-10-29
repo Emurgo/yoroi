@@ -21,7 +21,8 @@ import {
 import HeaderBackButton from '../UiKit/HeaderBackButton'
 import styles from '../TxHistory/styles/SettingsButton.style'
 
-const _StakingNavigatorCenter = createStackNavigator(
+const _StakingNavigatorCenter = // createStackNavigator(
+[
   {
     [STAKING_CENTER_ROUTES.MAIN]: {
       screen: StakingCenter,
@@ -57,7 +58,7 @@ const _StakingNavigatorCenter = createStackNavigator(
     }),
     ...defaultStackNavigatorOptions,
   },
-)
+]
 
 const Stack = createStackNavigator()
 

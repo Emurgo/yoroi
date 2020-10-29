@@ -17,7 +17,7 @@ import {InvalidState} from '../../crypto/errors'
 import WalletListItem from './WalletListItem'
 import Screen from '../Screen'
 import {Button, StatusBar, ScreenBackground} from '../UiKit'
-import {ROOT_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
+import {WALLET_ROOT_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
 import {showErrorDialog, updateVersion} from '../../actions'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {currentVersionSelector} from '../../selectors'
@@ -152,7 +152,7 @@ export default injectIntl(
             return
           }
           await walletManager.openWallet(wallet)
-          const route = ROOT_ROUTES.WALLET
+          const route = WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES
           navigation.navigate(route)
         } catch (e) {
           if (e instanceof SystemAuthDisabled) {

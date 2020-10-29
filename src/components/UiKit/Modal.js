@@ -15,7 +15,7 @@
  */
 import React from 'react'
 import {View, Modal as RNModal, TouchableOpacity, Image} from 'react-native'
-import {NavigationEvents} from 'react-navigation'
+import {useNavigation} from '@react-navigation/native'
 
 import styles from './styles/Modal.style'
 import closeIcon from '../../assets/img/close.png'
@@ -44,6 +44,22 @@ class Modal extends React.Component<Props, State> {
     isFocused: true,
   }
 
+  _subscriptions: Array<() => mixed> = []
+
+  componentDidMount = () => {
+    const navigation = useNavigation()
+    this._subscriptions.push(navigation.addListener('focus', () =>
+      this.handleWillFocus()
+    ))
+    this._subscriptions.push(navigation.addListener('blur', () =>
+      this.handleWillBlur()
+    ))
+  }
+
+  componentWillUnmount = () => {
+    this._subscriptions.forEach((unsubscribeFn) => unsubscribeFn())
+  }
+
   handleWillBlur = () => this.setState({isFocused: false})
   handleWillFocus = () => this.setState({isFocused: true})
 
@@ -59,10 +75,6 @@ class Modal extends React.Component<Props, State> {
 
     return (
       <>
-        <NavigationEvents
-          onWillBlur={this.handleWillBlur}
-          onWillFocus={this.handleWillFocus}
-        />
         <RNModal
           transparent
           animationType="fade"

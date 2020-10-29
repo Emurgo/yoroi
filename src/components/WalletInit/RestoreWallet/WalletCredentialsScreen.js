@@ -5,7 +5,6 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
-import {withNavigation} from 'react-navigation'
 
 import assert from '../../../utils/assert'
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
@@ -41,7 +40,6 @@ export default injectIntl(
         updateVersion,
       },
     ),
-    withNavigation,
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withStateHandlers(
       {

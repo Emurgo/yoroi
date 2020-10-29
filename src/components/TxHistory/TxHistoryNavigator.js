@@ -15,7 +15,8 @@ import {
 
 import styles from './styles/SettingsButton.style'
 
-const _TxHistoryNavigator = createStackNavigator(
+const _TxHistoryNavigator = // createStackNavigator(
+[
   {
     [TX_HISTORY_ROUTES.MAIN]: {
       screen: TxHistory,
@@ -52,7 +53,7 @@ const _TxHistoryNavigator = createStackNavigator(
     initialRouteName: TX_HISTORY_ROUTES.MAIN,
     ...defaultStackNavigatorOptions,
   },
-)
+]
 
 const Stack = createStackNavigator()
 

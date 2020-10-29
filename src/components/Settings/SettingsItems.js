@@ -3,7 +3,7 @@ import React from 'react'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 import {TouchableOpacity, View, Image} from 'react-native'
-import {withNavigation} from 'react-navigation'
+import {useNavigation} from '@react-navigation/native'
 
 import chevronRight from '../../assets/img/chevron_right.png'
 import {Text} from '../UiKit'
@@ -15,9 +15,11 @@ const Touchable = (props: {}) => (
 )
 
 const NavigateTo = compose(
-  withNavigation,
   withHandlers({
-    onPress: ({navigation, to}) => () => navigation.navigate(to),
+    onPress: ({to}) => () => {
+      const navigation = useNavigation()
+      navigation.navigate(to)
+    },
   }),
 )((props) => <Touchable {...props} />)
 
