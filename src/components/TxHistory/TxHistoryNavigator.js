@@ -61,6 +61,7 @@ const Stack = createStackNavigator()
 const TxHistoryNavigator = () => (
   <Stack.Navigator>
     <Stack.Screen name={TX_HISTORY_ROUTES.MAIN} component={TxHistory} />
+    <Stack.Screen name={TX_HISTORY_ROUTES.TX_DETAIL} component={TxDetails} />
   </Stack.Navigator>
 )
 

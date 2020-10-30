@@ -70,7 +70,7 @@ export const onDidUpdate = <
     }
 
 // prettier-ignore
-export const withNavigationTitle = <Props: {navigation: any}>(
+export const withNavigationTitle = <Props: {navigation: any, route: any}>(
   getTitle: (Props) => string,
   paramName?: string
 ): HOC<Props, Props> => (
@@ -97,12 +97,13 @@ export const withNavigationTitle = <Props: {navigation: any}>(
         }
       }
 
-      getCurrentTitle = () => this.props.navigation.getParam(
-        paramName != null ? paramName : 'title'
-      )
+      getCurrentTitle = () => {
+        return paramName != null
+          ? this.props.route.params[paramName]
+          : this.props.route.params?.title ?? ''
+      }
 
-      // TODO: this might be setOptions in new API
-      setTitle = (value) => this.props.navigation.setParams({
+      setTitle = (value) => this.props.navigation.setOptions({
         // future note: flow doesn't support computed keys
         [paramName != null ? paramName : 'title']: value,
       })

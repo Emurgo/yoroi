@@ -299,9 +299,9 @@ const TxDetails = ({
 
 export default injectIntl(
   (compose(
-    connect((state: State, {navigation}) => {
+    connect((state: State, {route}) => {
       return {
-        transaction: transactionsInfoSelector(state)[navigation.getParam('id')],
+        transaction: transactionsInfoSelector(state)[route.params.id],
         internalAddressIndex: internalAddressIndexSelector(state),
         externalAddressIndex: externalAddressIndexSelector(state),
         walletMeta: walletMetaSelector(state),

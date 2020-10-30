@@ -40,25 +40,6 @@ import {
   defaultStackNavigatorOptions,
 } from './navigationOptions'
 
-const _WalletNavigator = // createStackNavigator(
-[
-  {
-    [WALLET_ROUTES.TX_HISTORY]: TxHistoryNavigator,
-    [WALLET_ROUTES.SEND]: SendScreenNavigator,
-    [WALLET_ROUTES.RECEIVE]: ReceiveScreenNavigator,
-    [WALLET_ROUTES.DASHBOARD]: StakingDashboardNavigator,
-    [WALLET_ROUTES.DELEGATE]: StakingCenterNavigator,
-  },
-  {
-    // TODO(ppershing): initialRouteName
-    // works reversed. Figure out why!
-    initialRouteName: WALLET_ROUTES.TX_HISTORY,
-    navigationOptions: {
-      header: null,
-    },
-  },
-]
-
 const Tab = createBottomTabNavigator()
 const WalletTabNavigator = () => (
   <Tab.Navigator
@@ -167,7 +148,7 @@ const NavigatorSwitch = compose(
   }
   if (isMaintenance) {
     return (
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen name={ROOT_ROUTES.MAINTENANCE} component={MaintenanceScreen} />
       </Stack.Navigator>
     )
@@ -183,7 +164,10 @@ const NavigatorSwitch = compose(
   }
   if (CONFIG.DEBUG.START_WITH_INDEX_SCREEN) {
     return (
-      <Stack.Navigator initialRouteName={ROOT_ROUTES.INIT}>
+      <Stack.Navigator
+        initialRouteName={ROOT_ROUTES.INIT}
+        screenOptions={{headerShown: false}}
+      >
         <Stack.Screen
           name={ROOT_ROUTES.INDEX}
           component={IndexScreen}
@@ -197,7 +181,10 @@ const NavigatorSwitch = compose(
   }
   if (!isAuthenticated) {
     return (
-      <Stack.Navigator>
+      <Stack.Navigator
+        initialRouteName={ROOT_ROUTES.INIT}
+        screenOptions={{headerShown: false}}
+      >
         <Stack.Screen name={ROOT_ROUTES.LOGIN} component={AppStartScreen} />
         <Stack.Screen name={ROOT_ROUTES.CUSTOM_PIN_AUTH} component={CustomPinLogin} />
         <Stack.Screen name={ROOT_ROUTES.BIO_AUTH} component={BiometricAuthScreen} />
@@ -205,7 +192,10 @@ const NavigatorSwitch = compose(
     )
   }
   return (
-    <Stack.Navigator initialRouteName={ROOT_ROUTES.NEW_WALLET}>
+    <Stack.Navigator
+      initialRouteName={ROOT_ROUTES.NEW_WALLET}
+      screenOptions={{headerShown: false}}
+    >
       <Stack.Screen name={ROOT_ROUTES.NEW_WALLET} component={WalletInitNavigator} />
       <Stack.Screen name={ROOT_ROUTES.WALLET} component={WalletNavigator} />
     </Stack.Navigator>
