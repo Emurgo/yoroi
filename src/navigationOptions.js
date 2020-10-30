@@ -28,7 +28,7 @@ export const defaultNavigationOptions = {
 }
 
 export const defaultStackNavigatorOptions = {
-  headerLayoutPreset: 'center',
+  headerTitleAlign: 'center',
 }
 
 // note: the header option takes a HeaderProps object but it seems like this

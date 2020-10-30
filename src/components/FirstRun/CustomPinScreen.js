@@ -7,7 +7,8 @@ import {withHandlers, withProps} from 'recompose'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import PinRegistrationForm from '../Common/PinRegistrationForm'
-import {encryptAndStoreCustomPin} from '../../actions'
+import {encryptAndStoreCustomPin, signin} from '../../actions'
+import {isAuthenticatedSelector} from '../../selectors'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {StatusBar} from '../UiKit'
 
@@ -68,20 +69,29 @@ export default injectIntl(
   (compose(
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     connect(
-      () => ({}),
+      (state) => ({
+        isAuth: isAuthenticatedSelector(state),
+      }),
       {
         encryptAndStoreCustomPin,
+        signin,
       },
     ),
     withProps(({navigation}) => ({
       onSuccess: navigation.getParam('onSuccess'),
     })),
     withHandlers({
-      handlePinEntered: ({onSuccess, encryptAndStoreCustomPin}) => async (
+      handlePinEntered: ({
+        onSuccess,
+        encryptAndStoreCustomPin,
+        isAuth,
+        signin,
+      }) => async (
         pin,
       ) => {
         await encryptAndStoreCustomPin(pin)
-        onSuccess()
+        if (!isAuth) signin() // because in first run user is not authenticated
+        if (onSuccess !== undefined) onSuccess()
       },
     }),
   )(CustomPinScreen): ComponentType<ExternalProps>),

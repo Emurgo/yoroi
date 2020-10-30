@@ -11,7 +11,7 @@ import {injectIntl, defineMessages} from 'react-intl'
 import WalletDescription from '../WalletInit/WalletDescription'
 import {Button, StatusBar, ScreenBackground} from '../UiKit'
 import styles from './styles/AppStartScreen.style'
-import {ROOT_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
+import {ROOT_ROUTES} from '../../RoutesList'
 import KeyStore from '../../crypto/KeyStore'
 import {
   installationIdSelector,
@@ -83,7 +83,6 @@ export default injectIntl(
           navigation.navigate(ROOT_ROUTES.BIO_AUTH, {
             keyId: installationId,
             onSuccess: () => {
-              // navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
               signin()
             },
             onFail: async (reason) => {
