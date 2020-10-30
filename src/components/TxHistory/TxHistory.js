@@ -25,7 +25,6 @@ import {
   isFlawedWalletSelector,
 } from '../../selectors'
 import TxHistoryList from './TxHistoryList'
-import TxNavigationButtons from './TxNavigationButtons'
 import {updateHistory} from '../../actions/history'
 import {checkForFlawedWallets} from '../../actions'
 import {
@@ -151,7 +150,6 @@ const TxHistory = ({
         />
       )}
 
-      <TxNavigationButtons navigation={navigation} />
       {/* eslint-disable indent */
       isByron(walletMeta.walletImplementationId) &&
         showWarning && (

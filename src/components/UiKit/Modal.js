@@ -28,6 +28,7 @@ type Props = {
   children: Node,
   showCloseIcon?: boolean,
   noPadding?: boolean,
+  navigation: any,
 }
 
 type State = {
@@ -47,7 +48,7 @@ class Modal extends React.Component<Props, State> {
   _subscriptions: Array<() => mixed> = []
 
   componentDidMount = () => {
-    const navigation = useNavigation()
+    const {navigation} = this.props
     this._subscriptions.push(navigation.addListener('focus', () =>
       this.handleWillFocus()
     ))
@@ -103,4 +104,7 @@ class Modal extends React.Component<Props, State> {
   }
 }
 
-export default Modal
+export default (props) => {
+  const navigation = useNavigation()
+  return <Modal {...props} navigation={navigation} />
+}

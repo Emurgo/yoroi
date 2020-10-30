@@ -30,8 +30,4 @@ const TermsOfServiceScreen = () => (
   </SafeAreaView>
 )
 
-export default injectIntl(
-  compose(withNavigationTitle(({intl}) => intl.formatMessage(messages.title)))(
-    TermsOfServiceScreen,
-  ),
-)
+export default TermsOfServiceScreen
