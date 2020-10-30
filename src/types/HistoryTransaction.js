@@ -32,6 +32,7 @@ export type TransactionInfo = {|
   toAddresses: Array<string>,
   amount: ?BigNumber,
   fee: ?BigNumber,
+  delta: BigNumber,
   bruttoAmount: BigNumber,
   bruttoFee: BigNumber,
   direction: TransactionDirection,

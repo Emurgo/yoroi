@@ -51,6 +51,13 @@ export const processTxHistoryData = (
   const accountingInputs = tx.withdrawals
   // const accountingOutpus // eventually
 
+  const ownUtxoInputs = utxoInputs.filter(({address}) =>
+    ownAddresses.includes(address),
+  )
+  const ownUtxoOutputs = utxoOutputs.filter(({address}) =>
+    ownAddresses.includes(address),
+  )
+
   const ownImplicitInput = new BigNumber(0)
   const ownImplicitOutput = (() => {
     if (tx.type === TRANSACTION_TYPE.SHELLEY) {
@@ -140,6 +147,15 @@ export const processTxHistoryData = (
   const brutto = ownOut.minus(ownIn)
   const totalFee = totalOut.minus(totalIn) // should be negative
 
+  // note(v-almonacid): delta will be used to compute the wallet balance
+  // and is defined as
+  //    delta = own utxo outputs - own utxo inputs
+  // Then the balance is obtained as
+  //    balance = sum(delta)
+  // recall: if the tx has withdrawals or refunds to this wallet, they are
+  // included in own utxo outputs
+  const delta = _sum(ownUtxoOutputs).minus(_sum(ownUtxoInputs))
+
   let amount
   let fee
   const remoteFee = tx.fee != null ? new BigNumber(tx.fee).times(-1) : null
@@ -177,6 +193,7 @@ export const processTxHistoryData = (
     fee,
     bruttoAmount: brutto,
     bruttoFee: totalFee,
+    delta,
     confirmations,
     direction,
     submittedAt: tx.submittedAt,
