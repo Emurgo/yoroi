@@ -74,15 +74,13 @@ const messages = defineMessages({
 })
 
 const handleOnConfirm = async (
-  navigation,
+  route,
   setError,
   clearError,
   useFallback = false,
   intl,
 ) => {
-  const keyId = navigation.getParam('keyId')
-  const onSuccess = navigation.getParam('onSuccess')
-  const onFail = navigation.getParam('onFail')
+  const {keyId, onSuccess, onFail} = route.params
 
   try {
     const decryptedData = await KeyStore.getData(
@@ -107,7 +105,7 @@ const handleOnConfirm = async (
     } else if (error.code === KeyStore.REJECTIONS.SENSOR_LOCKOUT_PERMANENT) {
       setError('SENSOR_LOCKOUT_PERMANENT')
     } else if (error.code !== KeyStore.REJECTIONS.DECRYPTION_FAILED) {
-      await handleOnConfirm(navigation, setError, clearError, false, intl)
+      await handleOnConfirm(route, setError, clearError, false, intl)
     } else {
       Logger.error('BiometricAuthScreen', error)
       setError('UNKNOWN_ERROR')
@@ -137,6 +135,7 @@ const BiometricAuthScreen = ({cancelScanning, useFallback, error, intl}) => (
 
 type ExternalProps = {|
   navigation: Navigation,
+  route: any, // TODO: type
   intl: any,
 |}
 
@@ -176,18 +175,18 @@ export default injectIntl(
           navigation.getParam('onFail')(KeyStore.REJECTIONS.CANCELED)
         }
       },
-      useFallback: ({navigation, setError, clearError, intl}) => async () => {
+      useFallback: ({route, setError, clearError, intl}) => async () => {
         await KeyStore.cancelFingerprintScanning(
           KeyStore.REJECTIONS.SWAPPED_TO_FALLBACK,
         )
-        await handleOnConfirm(navigation, setError, clearError, true, intl)
+        await handleOnConfirm(route, setError, clearError, true, intl)
       },
     }),
     onWillUnmount(async () => {
       await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
     }),
-    onDidMount(({navigation, setError, clearError, intl}) =>
-      handleOnConfirm(navigation, setError, clearError, false, intl),
+    onDidMount(({route, setError, clearError, intl}) =>
+      handleOnConfirm(route, setError, clearError, false, intl),
     ),
   )(BiometricAuthScreen): ComponentType<ExternalProps>),
 )
