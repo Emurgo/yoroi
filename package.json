@@ -46,7 +46,7 @@
     "es6-error": "^4.1.1",
     "es6-symbol": "^3.1.1",
     "events": "^3.0.0",
-    "immer": "^1.7.2",
+    "immer": "^7.0.14",
     "intl": "^1.2.5",
     "jsc-android": "241213.1.0",
     "localized-strings": "^0.2.0",
