@@ -1844,10 +1844,10 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.5.tgz#8eed982e2ee6f7f4e44c253e12962980791efd46"
   integrity sha512-6U71C2Wp7r5XtFtQzYrW5iKFT67OixrSxjI4MptCHzdSVlgabczzqLe0ZSgnub/5Kp4hSbpDB1tMytZY9pwxxA==
 
-"@emurgo/cardano-serialization-lib-nodejs@3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cardano-serialization-lib-nodejs/-/cardano-serialization-lib-nodejs-3.0.0.tgz#0d3027a8449dd684cdd484d4df13d7b319507b96"
-  integrity sha512-MlrViFSPOtyCPnbWTQK2Dus9aYBtgzuclzDcoTqgkrEkeXrER4sBZ7ogniQm+AkWqkAJnX7YBAzQ+95UH2LwMw==
+"@emurgo/cardano-serialization-lib-nodejs@4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/cardano-serialization-lib-nodejs/-/cardano-serialization-lib-nodejs-4.2.0.tgz#d28792e3f73b8cc6a04b0a36871d5694e7b50374"
+  integrity sha512-RlbrZWKlg4tDHt4f7305h7Dbuu5W2U2PBRwkB3G8V22xKaDKE87KoROzcIEfQpjHPAFqUEeNB8DFHs/A4pPJmg==
 
 "@emurgo/cip4-js@1.0.5":
   version "1.0.5"
