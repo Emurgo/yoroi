@@ -78,7 +78,7 @@
     "react-native-permissions": "2.2.2",
     "react-native-qrcode-scanner": "1.4.1",
     "react-native-qrcode-svg": "6.0.6",
-    "react-native-randombytes": "3.5.3",
+    "react-native-randombytes": "3.6.0",
     "react-native-splash-screen": "^3.1.1",
     "react-native-svg": "^7.2.0",
     "react-native-webview": "10.8.3",
