@@ -51,7 +51,7 @@
     "jsc-android": "241213.1.0",
     "localized-strings": "^0.2.0",
     "lodash": "^4.17.20",
-    "moment": "^2.22.2",
+    "moment": "^2.29.1",
     "net": "^1.0.2",
     "node-fetch": "^2.6.1",
     "p-limit": "^2.0.0",
