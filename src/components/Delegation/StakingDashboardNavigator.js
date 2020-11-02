@@ -73,7 +73,7 @@ const _DelegationNavigatorSummary = // createStackNavigator(
 
 const Stack = createStackNavigator()
 
-// TODO
+// TODO(navigation)
 const DelegationNavigatorSummary = () => (
   <Stack.Navigator>
     <Stack.Screen name={STAKING_DASHBOARD_ROUTES.MAIN} component={StakingDashboard} />

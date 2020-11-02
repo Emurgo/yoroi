@@ -102,7 +102,7 @@ const _SendScreenNavigator = // createStackNavigator(
 
 const Stack = createStackNavigator()
 
-// TODO: add header back button if necessary
+// TODO(navigation): add header back button if necessary
 const SendScreenNavigator = () => (
   <Stack.Navigator
     initialRouteName={SEND_ROUTES.MAIN}

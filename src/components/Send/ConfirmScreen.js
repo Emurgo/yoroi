@@ -63,6 +63,7 @@ const messages = defineMessages({
 
 const handleOnConfirm = async (
   navigation,
+  route,
   isHW,
   hwDeviceInfo,
   isEasyConfirmationEnabled,
@@ -75,7 +76,7 @@ const handleOnConfirm = async (
   useUSB,
   setErrorData,
 ) => {
-  const transactionData = navigation.getParam('transactionData') // ISignRequest
+  const transactionData = route.params.transactionData // ISignRequest
   const signRequest = transactionData.signRequest
 
   const submitTx = async <T>(
@@ -202,7 +203,7 @@ const LEDGER_DIALOG_STEPS = {
 const ConfirmScreen = ({
   onConfirm,
   intl,
-  navigation,
+  route,
   password,
   setPassword,
   isEasyConfirmationEnabled,
@@ -220,11 +221,13 @@ const ConfirmScreen = ({
   errorMessage,
   errorLogs,
 }) => {
-  const amount = navigation.getParam('amount')
-  const address = navigation.getParam('address')
-  const balanceAfterTx = navigation.getParam('balanceAfterTx')
-  const availableAmount = navigation.getParam('availableAmount')
-  const fee = navigation.getParam('fee')
+  const {
+    amount,
+    address,
+    balanceAfterTx,
+    availableAmount,
+    fee,
+  } = route.params
 
   const isConfirmationDisabled =
     !isEasyConfirmationEnabled && !password && !isHW
@@ -431,6 +434,7 @@ export default injectIntl(
       onConfirm: ignoreConcurrentAsyncHandler(
         ({
           navigation,
+          route,
           isHW,
           hwDeviceInfo,
           isEasyConfirmationEnabled,
@@ -445,6 +449,7 @@ export default injectIntl(
         }) => async (_event) => {
           await handleOnConfirm(
             navigation,
+            route,
             isHW,
             hwDeviceInfo,
             isEasyConfirmationEnabled,

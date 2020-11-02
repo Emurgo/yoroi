@@ -8,17 +8,15 @@ import WalletInitScreen from './WalletInitScreen'
 import {NETWORK_REGISTRY} from '../../config/types'
 
 storiesOf('WalletInitScreen', module)
-  .add('Shelley', ({navigation}) => {
-    navigation.getParam = (param) => {
-      if (param === 'networkId') return NETWORK_REGISTRY.JORMUNGANDR
-      return ''
+  .add('Shelley', ({route}) => {
+    route.params = {
+      networkId: NETWORK_REGISTRY.JORMUNGANDR,
     }
-    return <WalletInitScreen navigation={navigation} />
+    return <WalletInitScreen navigation={route} />
   })
-  .add('Byron', ({navigation}) => {
-    navigation.getParam = (param) => {
-      if (param === 'networkId') return NETWORK_REGISTRY.BYRON_MAINNET
-      return ''
+  .add('Byron', ({route}) => {
+    route.params = {
+      networkId: NETWORK_REGISTRY.BYRON_MAINNET,
     }
-    return <WalletInitScreen navigation={navigation} />
+    return <WalletInitScreen navigation={route} />
   })

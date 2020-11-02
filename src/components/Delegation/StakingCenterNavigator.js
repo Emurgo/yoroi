@@ -62,7 +62,7 @@ const _StakingNavigatorCenter = // createStackNavigator(
 
 const Stack = createStackNavigator()
 
-// TODO
+// TODO(navigation)
 const StakingCenterNavigator = () => (
   <Stack.Navigator>
     <Stack.Screen name={STAKING_CENTER_ROUTES.MAIN} component={StakingCenter} />

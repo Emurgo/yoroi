@@ -71,7 +71,7 @@ const prepareStakingURL = (poolList: ?Array<string>): null | string => {
 }
 
 const StakingCenter = ({
-  navigation,
+  route,
   intl,
   handleOnMessage,
   navigateToDelegationConfirm,
@@ -81,7 +81,7 @@ const StakingCenter = ({
   reputationInfo,
 }) => {
   // pools user is currently delegating to
-  const poolList: ?Array<string> = navigation.getParam('poolList')
+  const poolList: ?Array<string> = route.params?.poolList
   return (
     <>
       <View style={styles.container}>
@@ -120,6 +120,7 @@ type SelectedPool = {|
 
 type ExternalProps = {|
   navigation: Navigation,
+  route: Object, // TODO(navigation): type
   intl: IntlShape,
 |}
 

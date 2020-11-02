@@ -165,14 +165,16 @@ export default injectIntl(
       // we have this handler because we need to let JAVA side know user
       // cancelled the scanning by either navigating out of this window
       // or using fallback
-      cancelScanning: ({clearError, navigation}) => async () => {
+      cancelScanning: ({clearError, route}) => async () => {
         const wasScanningStarted = await KeyStore.cancelFingerprintScanning(
           KeyStore.REJECTIONS.CANCELED,
         )
 
         if (!wasScanningStarted) {
           clearError()
-          navigation.getParam('onFail')(KeyStore.REJECTIONS.CANCELED)
+          const {onFail} = route.params
+          if (onFail == null) throw new Error('BiometricAuthScreen::onFail')
+          onFail(KeyStore.REJECTIONS.CANCELED)
         }
       },
       useFallback: ({route, setError, clearError, intl}) => async () => {

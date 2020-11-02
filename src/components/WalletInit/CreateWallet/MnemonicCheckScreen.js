@@ -62,22 +62,28 @@ const validatePhrase = (mnemonic, words, partialPhrase) => {
   return isPhraseCorrect
 }
 
-const handleWalletConfirmation = ({navigation, createWallet}) => async () => {
-  const mnemonic = navigation.getParam('mnemonic')
-  const password = navigation.getParam('password')
-  const name = navigation.getParam('name')
-  const networkId = navigation.getParam('networkId')
-  const implementationId = navigation.getParam('walletImplementationId')
+const handleWalletConfirmation = ({
+  navigation,
+  route,
+  createWallet,
+}) => async () => {
+  const {
+    mnemonic,
+    password,
+    name,
+    networkId,
+    walletImplementationId,
+  } = route.params
   assert.assert(!!mnemonic, 'handleWalletConfirmation:: mnemonic')
   assert.assert(!!password, 'handleWalletConfirmation:: password')
   assert.assert(!!name, 'handleWalletConfirmation:: name')
   assert.assert(networkId != null, 'handleWalletConfirmation:: networkId')
   assert.assert(
-    !!implementationId,
+    !!walletImplementationId,
     'handleWalletConfirmation:: implementationId',
   )
 
-  await createWallet(name, mnemonic, password, networkId, implementationId)
+  await createWallet(name, mnemonic, password, networkId, walletImplementationId)
 
   navigation.navigate(ROOT_ROUTES.WALLET)
 }
