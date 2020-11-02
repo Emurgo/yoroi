@@ -117,7 +117,7 @@ const SendScreenNavigator = () => (
       component={SendScreen}
       options={({navigation, route}) => ({
         title: route.params?.title ?? undefined,
-        headerRight: (
+        headerRight: () => (
           <Button
             style={styles.qrButton}
             onPress={() =>

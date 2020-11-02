@@ -155,19 +155,6 @@ const WalletNavigator = () => (
     <Stack.Screen
       name={WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES}
       component={WalletTabNavigator}
-      screenOptions={(route, navigation) => ({
-        title: route.params?.title ?? undefined,
-        headerRight: () => (
-          <Button
-            style={styles.settingsButton}
-            onPress={() => navigation.navigate(WALLET_ROUTES.SETTINGS)}
-            iconImage={iconGear}
-            title=""
-            withoutBackground
-          />
-        ),
-        ...defaultNavigationOptions,
-      })}
     />
     <Stack.Screen
       name={WALLET_ROUTES.SETTINGS}
