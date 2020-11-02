@@ -13,7 +13,7 @@ import {compose} from 'recompose'
 import {connect} from 'react-redux'
 import {initApp} from './actions'
 
-const App = (_props, _context) => {
+const App = (props, _context) => {
   return (
     <SafeAreaProvider>
       <AppNavigator />

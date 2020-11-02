@@ -28,13 +28,13 @@ const getParams = (params) => {
   return result
 }
 
-const setAddress = (address, navigation) => {
-  const handlerAddress = navigation.getParam('onScanAddress')
+const setAddress = (address, route) => {
+  const handlerAddress = route.params?.onScanAddress
   handlerAddress && handlerAddress(address)
 }
 
-const setAmount = (amount, navigation) => {
-  const handlerAmount = navigation.getParam('onScanAmount')
+const setAmount = (amount, route) => {
+  const handlerAmount = route.params?.onScanAmount
   handlerAmount && handlerAmount(pastedFormatter(amount))
 }
 
@@ -102,10 +102,63 @@ const _SendScreenNavigator = // createStackNavigator(
 
 const Stack = createStackNavigator()
 
-// TODO
+// TODO: add header back button if necessary
 const SendScreenNavigator = () => (
-  <Stack.Navigator>
-    <Stack.Screen name={SEND_ROUTES.MAIN} component={SendScreen} />
+  <Stack.Navigator
+    initialRouteName={SEND_ROUTES.MAIN}
+    screenOptions={({route}) => ({
+      title: route.params?.title ?? undefined,
+      ...defaultNavigationOptions,
+      ...defaultStackNavigatorOptions,
+    })}
+  >
+    <Stack.Screen
+      name={SEND_ROUTES.MAIN}
+      component={SendScreen}
+      options={({navigation, route}) => ({
+        title: route.params?.title ?? undefined,
+        headerRight: (
+          <Button
+            style={styles.qrButton}
+            onPress={() =>
+              navigation.navigate(SEND_ROUTES.ADDRESS_READER_QR, {
+                onSuccess: (stringQR) => {
+                  const regex = /(cardano):([a-zA-Z1-9]\w+)\??/
+
+                  if (regex.test(stringQR)) {
+                    const address = stringQR.match(regex)[2]
+                    if (stringQR.indexOf('?') !== -1) {
+                      const index = stringQR.indexOf('?')
+                      const params = getParams(stringQR.substr(index))
+                      if ('amount' in params) {
+                        setAddress(address, navigation)
+                        setAmount(params.amount, navigation)
+                      }
+                    } else {
+                      setAddress(address, navigation)
+                    }
+                  } else {
+                    setAddress(stringQR, navigation)
+                  }
+                  navigation.navigate(SEND_ROUTES.MAIN)
+                },
+              })
+            }
+            iconImage={iconQR}
+            title=""
+            withoutBackground
+          />
+        ),
+        ...defaultNavigationOptions,
+      })}
+    />
+    <Stack.Screen name={SEND_ROUTES.ADDRESS_READER_QR} component={AddressReaderQR} />
+    <Stack.Screen name={SEND_ROUTES.CONFIRM} component={ConfirmScreen} />
+    <Stack.Screen
+      name={SEND_ROUTES.BIOMETRICS_SIGNING}
+      component={BiometricAuthScreen}
+      options={{headerShown: false}}
+    />
   </Stack.Navigator>
 )
 

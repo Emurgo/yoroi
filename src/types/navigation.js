@@ -1,5 +1,5 @@
 // @flow
 // import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 
-// TODO
+// TODO(navigation)
 export type Navigation = any

@@ -25,9 +25,10 @@ const CreateWalletScreen = ({
   hideMnemonicExplanation,
   visibleMnemonicExplanation,
   navigateToMnemonicScreen,
+  navigation,
 }) => (
   <>
-    <WalletForm onSubmit={setFormData} />
+    <WalletForm onSubmit={setFormData} navigation={navigation} />
     <MnemonicExplanationModal
       visible={visibleMnemonicExplanation}
       onRequestClose={hideMnemonicExplanation}

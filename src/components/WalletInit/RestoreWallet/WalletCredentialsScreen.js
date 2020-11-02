@@ -24,9 +24,9 @@ const messages = defineMessages({
   },
 })
 
-const WalletCredentialsScreen = ({navigateToWallet, waiting}) => (
+const WalletCredentialsScreen = ({navigateToWallet, waiting, navigation}) => (
   <>
-    <WalletForm onSubmit={navigateToWallet} />
+    <WalletForm onSubmit={navigateToWallet} navigation={navigation} />
     {waiting && <ActivityIndicator />}
   </>
 )
@@ -51,24 +51,22 @@ export default injectIntl(
     ),
     withHandlers({
       navigateToWallet: ignoreConcurrentAsyncHandler(
-        ({navigation, createWallet, updateVersion, setWaiting}) => async ({
+        ({navigation, route, createWallet, updateVersion, setWaiting}) => async ({
           name,
           password,
         }) => {
           setWaiting(true)
-          const phrase = navigation.getParam('phrase')
-          const networkId = navigation.getParam('networkId')
-          const implementationId = navigation.getParam('walletImplementationId')
+          const {phrase, networkId, walletImplementationId} = route.params
           assert.assert(!!phrase, 'mnemonic')
           assert.assert(networkId != null, 'networkId')
-          assert.assert(!!implementationId, 'implementationId')
+          assert.assert(!!walletImplementationId, 'walletImplementationId')
           try {
             await createWallet(
               name,
               phrase,
               password,
               networkId,
-              implementationId,
+              walletImplementationId,
             )
             await updateVersion()
           } finally {

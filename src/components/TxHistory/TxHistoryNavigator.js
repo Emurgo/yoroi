@@ -1,7 +1,8 @@
 // @flow
 import React from 'react'
-import {Button} from '../UiKit'
 import {createStackNavigator} from '@react-navigation/stack'
+
+import {Button} from '../UiKit'
 import TxHistory from './TxHistory'
 import TxDetails from './TxDetails'
 import {TX_HISTORY_ROUTES, WALLET_ROUTES} from '../../RoutesList'
@@ -59,9 +60,40 @@ const Stack = createStackNavigator()
 
 // TODO
 const TxHistoryNavigator = () => (
-  <Stack.Navigator>
-    <Stack.Screen name={TX_HISTORY_ROUTES.MAIN} component={TxHistory} />
-    <Stack.Screen name={TX_HISTORY_ROUTES.TX_DETAIL} component={TxDetails} />
+  <Stack.Navigator screenOptions={{...defaultStackNavigatorOptions}}>
+    <Stack.Screen
+      name={TX_HISTORY_ROUTES.MAIN}
+      component={TxHistory}
+      options={({navigation, route}) => ({
+        title: route.params?.title ?? undefined,
+        headerRight: () => (
+          <Button
+            style={styles.settingsButton}
+            onPress={() => navigation.navigate(WALLET_ROUTES.SETTINGS)}
+            iconImage={iconGear}
+            title=""
+            withoutBackground
+          />
+        ),
+        ...defaultNavigationOptions,
+      })}
+    />
+    <Stack.Screen
+      name={TX_HISTORY_ROUTES.TX_DETAIL}
+      component={TxDetails}
+      options={({route}) => ({
+        title: route.params?.title ?? undefined,
+        ...defaultNavigationOptions,
+      })}
+    />
+    <Stack.Screen
+      name={WALLET_ROUTES.SETTINGS}
+      component={SettingsScreenNavigator}
+      screenOptions={{
+        headerShown: false,
+        ...defaultNavigationOptions,
+      }}
+    />
   </Stack.Navigator>
 )
 

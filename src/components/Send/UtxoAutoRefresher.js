@@ -12,7 +12,7 @@ import {
 } from '../../selectors'
 import {fetchUTXOs} from '../../actions/utxo'
 
-class _UtxoAutoRefresher extends React.Component<{
+class UtxoAutoRefresher extends React.Component<{
   isFetching: boolean,
   isOnline: boolean,
   fetchUTXOs: () => any,
@@ -22,8 +22,7 @@ class _UtxoAutoRefresher extends React.Component<{
   _unsubscribe: void | () => mixed = undefined
 
   componentDidMount = () => {
-    const navigation = useNavigation()
-    this._unsubscribe = navigation.addListener('focus', () =>
+    this._unsubscribe = this.props.navigation.addListener('focus', () =>
       this.handleDidFocus()
     )
     this.refetch()
@@ -73,4 +72,7 @@ export default (compose(
       fetchUTXOs,
     },
   ),
-)(_UtxoAutoRefresher): ComponentType<{}>)
+)((props) => {
+  const navigation = useNavigation()
+  return <UtxoAutoRefresher {...props} navigation={navigation} />
+}): ComponentType<{}>)

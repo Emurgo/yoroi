@@ -24,6 +24,7 @@ import type {
   PasswordValidationErrors,
   WalletNameValidationErrors,
 } from '../../utils/validators'
+import type {Navigation} from '../../types/navigation'
 
 const messages = defineMessages({
   walletNameInputLabel: {
@@ -73,6 +74,7 @@ type Props = {
     password: string,
   }) => mixed,
   validateWalletName: (walletName: string) => WalletNameValidationErrors,
+  navigation: Navigation,
 }
 
 class WalletForm extends PureComponent<Props, ComponentState> {

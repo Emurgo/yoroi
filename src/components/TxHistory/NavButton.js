@@ -1,5 +1,7 @@
 // @flow
 
+// TODO(navigation): delete component?
+
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View, Image} from 'react-native'
 import {COLORS} from '../../styles/config'

@@ -15,7 +15,7 @@ import {fetchAccountState} from '../../actions/account'
 
 import type {RawUtxo} from '../../api/types'
 
-class _AccountAutoRefresher extends React.Component<{
+class AccountAutoRefresher extends React.Component<{
   isFetching: boolean,
   isOnline: boolean,
   fetchAccountState: () => any,
@@ -26,8 +26,7 @@ class _AccountAutoRefresher extends React.Component<{
   _unsubscribe: void | () => mixed = undefined
 
   componentDidMount = async () => {
-    const navigation = useNavigation()
-    this._unsubscribe = navigation.addListener('focus', () =>
+    this._unsubscribe = this.props.navigation.addListener('focus', () =>
       this.handleDidFocus()
     )
     await this.refetch()
@@ -80,4 +79,7 @@ export default (compose(
       fetchAccountState,
     },
   ),
-)(_AccountAutoRefresher): ComponentType<{}>)
+)((props) => {
+  const navigation = useNavigation()
+  return <AccountAutoRefresher {...props} navigation={navigation} />
+}): ComponentType<{}>)

@@ -147,19 +147,30 @@ const NavigatorSwitch = compose(
           ...defaultStackNavigatorOptions,
         })}
       >
-        <Stack.Screen name={ROOT_ROUTES.LOGIN} component={AppStartScreen} />
-        <Stack.Screen name={ROOT_ROUTES.CUSTOM_PIN_AUTH} component={CustomPinLogin} />
-        <Stack.Screen name={ROOT_ROUTES.BIO_AUTH} component={BiometricAuthScreen} />
+        <Stack.Screen
+          name={ROOT_ROUTES.LOGIN}
+          component={AppStartScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name={ROOT_ROUTES.CUSTOM_PIN_AUTH}
+          component={CustomPinLogin}
+        />
+        <Stack.Screen
+          name={ROOT_ROUTES.BIO_AUTH}
+          component={BiometricAuthScreen}
+          options={{headerShown: false}}
+        />
       </Stack.Navigator>
     )
   }
   return (
     <Stack.Navigator
-      initialRouteName={ROOT_ROUTES.NEW_WALLET}
+      initialRouteName={ROOT_ROUTES.WALLET}
       screenOptions={{headerShown: false}}
     >
-      <Stack.Screen name={ROOT_ROUTES.NEW_WALLET} component={WalletInitNavigator} />
       <Stack.Screen name={ROOT_ROUTES.WALLET} component={WalletNavigator} />
+      <Stack.Screen name={ROOT_ROUTES.NEW_WALLET} component={WalletInitNavigator} />
     </Stack.Navigator>
   )
 })

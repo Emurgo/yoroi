@@ -81,7 +81,7 @@ type Props = {
     boolean,
   ) => mixed,
   intl: any,
-  navigation: Navigation,
+  route: Object, // TODO(navigation): type
   modalState: ModalState,
   setModalState: (Object, ModalState) => void,
 }
@@ -91,14 +91,13 @@ const WalletInitScreen = ({
   navigateRestoreWallet,
   navigateCheckNanoX,
   intl,
-  navigation,
+  route,
   modalState,
   setModalState,
 }: Props) => {
-  const networkId: NetworkId = navigation.getParam('networkId')
-  const implementationId: WalletImplementationId = navigation.getParam(
-    'walletImplementationId',
-  )
+  const networkId: NetworkId = route.params.networkId
+  const implementationId: WalletImplementationId =
+    route.params.walletImplementationId
   let createWalletLabel = intl.formatMessage(messages.createWalletButton)
   let restoreWalletLabel = intl.formatMessage(messages.restoreWalletButton)
   let createWalletWithLedgerLabel = intl.formatMessage(
