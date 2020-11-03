@@ -25,7 +25,7 @@ export const FIRST_RUN_ROUTES = {
 }
 
 export const WALLET_INIT_ROUTES = {
-  WALLET_SELECTION: 'wallet-selection', // TODO: remove?
+  WALLET_SELECTION: 'wallet-selection', // TODO(navigation): remove?
   CREATE_RESTORE_SWITCH: 'choose-create-restore',
   INITIAL_CREATE_RESTORE_SWITCH: 'initial-choose-create-restore',
   CREATE_WALLET: 'create-wallet-form',
@@ -52,6 +52,11 @@ export const SETTINGS_ROUTES = {
   CHANGE_CUSTOM_PIN: 'change-custom-pin',
   BIO_AUTHENTICATE: 'bio-authenticate',
   SETUP_CUSTOM_PIN: 'setup-custom-pin',
+}
+
+export const SETTINGS_TABS = {
+  WALLET_SETTINGS: 'wallet-settings',
+  APP_SETTINGS: 'app-settings',
 }
 
 export const STAKING_CENTER_ROUTES = {

@@ -16,10 +16,7 @@ const Touchable = (props: {}) => (
 
 const NavigateTo = compose(
   withHandlers({
-    onPress: ({to}) => () => {
-      const navigation = useNavigation()
-      navigation.navigate(to)
-    },
+    onPress: ({to, navigation}) => () => navigation.navigate(to),
   }),
 )((props) => <Touchable {...props} />)
 
@@ -81,13 +78,16 @@ export const NavigatedSettingsItem = ({
   label,
   navigateTo,
   disabled,
-}: NavigatedSettingsItemProps) => (
-  <NavigateTo to={navigateTo} disabled={disabled}>
-    <SettingsItem label={label} disabled={disabled}>
-      <Image source={chevronRight} />
-    </SettingsItem>
-  </NavigateTo>
-)
+}: NavigatedSettingsItemProps) => {
+  const navigation = useNavigation()
+  return (
+    <NavigateTo to={navigateTo} navigation={navigation} disabled={disabled}>
+      <SettingsItem label={label} disabled={disabled}>
+        <Image source={chevronRight} />
+      </SettingsItem>
+    </NavigateTo>
+  )
+}
 
 type PressableSettingsItemProps = {|
   label: string,

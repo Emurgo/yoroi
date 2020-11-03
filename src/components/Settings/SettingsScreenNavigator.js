@@ -3,6 +3,7 @@
 import React from 'react'
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
 import {createStackNavigator} from '@react-navigation/stack'
+import {injectIntl, defineMessages} from 'react-intl'
 
 import HeaderBackButton from '../UiKit/HeaderBackButton'
 
@@ -19,7 +20,7 @@ import ChangePasswordScreen from './ChangePasswordScreen'
 import ChangeCustomPinScreen from './ChangeCustomPinScreen'
 import CustomPinScreen from '../FirstRun/CustomPinScreen'
 import BiometricAuthScreen from '../Send/BiometricAuthScreen'
-import {SETTINGS_ROUTES} from '../../RoutesList'
+import {SETTINGS_ROUTES, SETTINGS_TABS} from '../../RoutesList'
 import {
   defaultNavigationOptions,
   defaultStackNavigatorOptions,
@@ -27,33 +28,91 @@ import {
 
 import {COLORS} from '../../styles/config'
 
+const messages = defineMessages({
+  walletTabTitle: {
+    id: 'components.settings.walletsettingscreen.tabTitle',
+    defaultMessage: 'Wallet',
+  },
+  appTabTitle: {
+    id: 'components.settings.applicationsettingsscreen.tabTitle',
+    defaultMessage: 'Application',
+  },
+})
+
 const Tab = createMaterialTopTabNavigator()
-// TODO
-const TabNavigator = () => (
-  <Tab.Navigator>
-    <Tab.Screen name="Wallet" component={WalletSettingsScreen} />
-    <Tab.Screen name="Application" component={ApplicationSettingsScreen} />
+const SettingsTabNavigator = injectIntl(({intl}) => (
+  <Tab.Navigator
+    screenOptions={({route}) => ({
+      tabBarLabel: route.name === SETTINGS_TABS.WALLET_SETTINGS
+        ? intl.formatMessage(messages.walletTabTitle)
+        : intl.formatMessage(messages.appTabTitle),
+    })}
+    tabBarOptions={{
+      style: {
+        backgroundColor: COLORS.BACKGROUND_BLUE,
+        elevation: 0,
+        shadowOpacity: 0,
+      },
+      tabStyle: {
+        elevation: 0,
+        shadowOpacity: 0,
+      },
+      labelStyle: {
+        color: COLORS.WHITE,
+      },
+      indicatorStyle: {
+        backgroundColor: '#fff',
+        height: 2,
+      },
+    }}
+  >
+    <Tab.Screen
+      name={SETTINGS_TABS.WALLET_SETTINGS}
+      component={WalletSettingsScreen}
+    />
+    <Tab.Screen
+      name={SETTINGS_TABS.APP_SETTINGS}
+      component={ApplicationSettingsScreen}
+    />
   </Tab.Navigator>
-)
+))
 
 const Stack = createStackNavigator()
 const SettingsScreenNavigator = () => (
-  <Stack.Navigator>
-    <Stack.Screen name={SETTINGS_ROUTES.MAIN} component={TabNavigator} />
+  <Stack.Navigator
+    screenOptions={(route) => {
+      console.log(route);
+      return ({
+        ...defaultNavigationOptions,
+        ...defaultStackNavigatorOptions,
+      })
+    }}
+  >
+    <Stack.Screen name={SETTINGS_ROUTES.MAIN} component={SettingsTabNavigator} />
     <Stack.Screen name={SETTINGS_ROUTES.CHANGE_WALLET_NAME} component={ChangeWalletName} />
     <Stack.Screen name={SETTINGS_ROUTES.TERMS_OF_USE} component={TermsOfServiceScreen} />
     <Stack.Screen name={SETTINGS_ROUTES.SUPPORT} component={SupportScreen} />
-    <Stack.Screen name={SETTINGS_ROUTES.FINGERPRINT_LINK} component={BiometricsLinkScreen} />
+    <Stack.Screen
+      name={SETTINGS_ROUTES.FINGERPRINT_LINK}
+      component={BiometricsLinkScreen}
+      options={{headerShown: false}}
+    />
     <Stack.Screen name={SETTINGS_ROUTES.REMOVE_WALLET} component={RemoveWalletScreen} />
     <Stack.Screen name={SETTINGS_ROUTES.CHANGE_LANGUAGE} component={LanguagePickerScreen} />
-    <Stack.Screen name={SETTINGS_ROUTES.EASY_COMFIRMATION} component={ToggleEasyConfirmatioScreen} />
+    <Stack.Screen
+      name={SETTINGS_ROUTES.EASY_COMFIRMATION}
+      component={ToggleEasyConfirmatioScreen}
+    />
     <Stack.Screen name={SETTINGS_ROUTES.CHANGE_PASSWORD} component={ChangePasswordScreen} />
     <Stack.Screen name={SETTINGS_ROUTES.CHANGE_CUSTOM_PIN} component={ChangeCustomPinScreen} />
-    <Stack.Screen name={SETTINGS_ROUTES.BIO_AUTHENTICATE} component={BiometricAuthScreen} />
+    <Stack.Screen
+      name={SETTINGS_ROUTES.BIO_AUTHENTICATE}
+      component={BiometricAuthScreen}
+      options={{headerShown: false}}
+    />
     <Stack.Screen name={SETTINGS_ROUTES.SETUP_CUSTOM_PIN} component={CustomPinScreen} />
   </Stack.Navigator>
 )
-
 
 // const _SettingsScreenNavigator = createStackNavigator(
 //   {
