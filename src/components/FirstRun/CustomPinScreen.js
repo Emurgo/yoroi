@@ -77,8 +77,8 @@ export default injectIntl(
         signin,
       },
     ),
-    withProps(({navigation}) => ({
-      onSuccess: navigation.getParam('onSuccess'),
+    withProps(({route}) => ({
+      onSuccess: route.params?.onSuccess,
     })),
     withHandlers({
       handlePinEntered: ({

@@ -15,7 +15,6 @@ import {
   isAuthenticatedSelector,
   customPinHashSelector,
 } from './selectors'
-import HeaderBackButton from './components/UiKit/HeaderBackButton'
 import WalletNavigator from './components/WalletNavigator'
 import WalletInitNavigator from './components/WalletInit/WalletInitNavigator'
 import FirstRunNavigator from './components/FirstRun/FirstRunNavigator'
@@ -31,44 +30,6 @@ import {
   defaultNavigationOptions,
   defaultStackNavigatorOptions,
 } from './navigationOptions'
-
-// TODO: remove
-const _AppNavigator = // createSwitchNavigator(
-[
-  {
-    [ROOT_ROUTES.SPLASH]: SplashScreen,
-    [ROOT_ROUTES.INDEX]: IndexScreen,
-    [ROOT_ROUTES.STORYBOOK]: StorybookScreen,
-    [ROOT_ROUTES.MAINTENANCE]: MaintenanceScreen,
-    [ROOT_ROUTES.FIRST_RUN]: FirstRunNavigator,
-    [ROOT_ROUTES.NEW_WALLET]: WalletInitNavigator,
-    [ROOT_ROUTES.BIO_AUTH]: BiometricAuthScreen,
-    [ROOT_ROUTES.WALLET]: WalletNavigator,
-    // [ROOT_ROUTES.LOGIN]: createStackNavigator(
-    //   {
-    //     [ROOT_ROUTES.LOGIN]: {
-    //       screen: AppStartScreen,
-    //       navigationOptions: {
-    //         header: null,
-    //       },
-    //     },
-    //     [ROOT_ROUTES.CUSTOM_PIN_AUTH]: CustomPinLogin,
-    //   },
-    //   {
-    //     navigationOptions: ({navigation}) => ({
-    //       title: navigation.getParam('title'),
-    //       headerLeft: <HeaderBackButton navigation={navigation} />,
-    //       ...defaultNavigationOptions,
-    //     }),
-    //     ...defaultStackNavigatorOptions,
-    //   },
-    // ),
-  },
-  {
-    initialRouteName: ROOT_ROUTES.SPLASH,
-  },
-]
-// )
 
 const Stack = createStackNavigator()
 

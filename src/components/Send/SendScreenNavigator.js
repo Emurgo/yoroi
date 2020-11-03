@@ -9,7 +9,6 @@ import AddressReaderQR from './AddressReaderQR'
 import BiometricAuthScreen from './BiometricAuthScreen'
 import iconQR from '../../assets/img/qr_code.png'
 import {pastedFormatter} from './amountUtils'
-import HeaderBackButton from '../UiKit/HeaderBackButton'
 import {
   defaultNavigationOptions,
   defaultStackNavigatorOptions,
@@ -38,71 +37,8 @@ const setAmount = (amount, route) => {
   handlerAmount && handlerAmount(pastedFormatter(amount))
 }
 
-const _SendScreenNavigator = // createStackNavigator(
-[
-  {
-    [SEND_ROUTES.MAIN]: {
-      screen: SendScreen,
-      navigationOptions: ({navigation}) => ({
-        title: navigation.getParam('title'),
-        headerRight: (
-          <Button
-            style={styles.qrButton}
-            onPress={() =>
-              navigation.navigate(SEND_ROUTES.ADDRESS_READER_QR, {
-                onSuccess: (stringQR) => {
-                  const regex = /(cardano):([a-zA-Z1-9]\w+)\??/
-
-                  if (regex.test(stringQR)) {
-                    const address = stringQR.match(regex)[2]
-                    if (stringQR.indexOf('?') !== -1) {
-                      const index = stringQR.indexOf('?')
-                      const params = getParams(stringQR.substr(index))
-                      if ('amount' in params) {
-                        setAddress(address, navigation)
-                        setAmount(params.amount, navigation)
-                      }
-                    } else {
-                      setAddress(address, navigation)
-                    }
-                  } else {
-                    setAddress(stringQR, navigation)
-                  }
-                  navigation.navigate(SEND_ROUTES.MAIN)
-                },
-              })
-            }
-            iconImage={iconQR}
-            title=""
-            withoutBackground
-          />
-        ),
-        ...defaultNavigationOptions,
-      }),
-    },
-    [SEND_ROUTES.ADDRESS_READER_QR]: AddressReaderQR,
-    [SEND_ROUTES.CONFIRM]: ConfirmScreen,
-    [SEND_ROUTES.BIOMETRICS_SIGNING]: {
-      screen: BiometricAuthScreen,
-      navigationOptions: {
-        header: null,
-      },
-    },
-  },
-  {
-    initialRouteName: SEND_ROUTES.MAIN,
-    navigationOptions: ({navigation}) => ({
-      title: navigation.getParam('title'),
-      headerLeft: <HeaderBackButton navigation={navigation} />,
-      ...defaultNavigationOptions,
-    }),
-    ...defaultStackNavigatorOptions,
-  },
-]
-
 const Stack = createStackNavigator()
 
-// TODO(navigation): add header back button if necessary
 const SendScreenNavigator = () => (
   <Stack.Navigator
     initialRouteName={SEND_ROUTES.MAIN}

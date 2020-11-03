@@ -99,7 +99,9 @@ export const withNavigationTitle = <Props: {navigation: any, route: any}>(
 
       getCurrentTitle = () => {
         return paramName != null
-          ? this.props.route.params[paramName]
+          ? this.props.route.params
+            ? this.props.route.params[paramName]
+            : undefined
           : this.props.route.params?.title ?? undefined
       }
 

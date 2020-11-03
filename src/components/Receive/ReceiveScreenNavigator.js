@@ -11,7 +11,6 @@ import {
 
 const Stack = createStackNavigator()
 
-// TODO(navigation): check back button
 const ReceiveScreenNavigator = () => (
   <Stack.Navigator
     screenOptions={({route}) => ({

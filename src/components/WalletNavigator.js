@@ -110,7 +110,7 @@ const WalletTabNavigator = injectIntl(
           headerRight: () => (
             <Button
               style={styles.settingsButton}
-              onPress={() => navigation.navigate(WALLET_ROUTES.SETTINGS)}
+              onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)}
               iconImage={iconGear}
               title=""
               withoutBackground
@@ -157,7 +157,7 @@ const WalletNavigator = () => (
       component={WalletTabNavigator}
     />
     <Stack.Screen
-      name={WALLET_ROUTES.SETTINGS}
+      name={WALLET_ROOT_ROUTES.SETTINGS}
       component={SettingsScreenNavigator}
       screenOptions={{
         headerShown: false,

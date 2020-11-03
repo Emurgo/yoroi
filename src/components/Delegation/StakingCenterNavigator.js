@@ -7,7 +7,7 @@ import StakingCenter from './StakingCenter'
 import BiometricAuthScreen from '../Send/BiometricAuthScreen'
 import DelegationConfirmation from './DelegationConfirmation'
 import {
-  WALLET_ROUTES,
+  WALLET_ROOT_ROUTES,
   STAKING_CENTER_ROUTES,
   SEND_ROUTES,
 } from '../../RoutesList'
@@ -18,59 +18,43 @@ import {
   defaultStackNavigatorOptions,
 } from '../../navigationOptions'
 
-import HeaderBackButton from '../UiKit/HeaderBackButton'
 import styles from '../TxHistory/styles/SettingsButton.style'
-
-const _StakingNavigatorCenter = // createStackNavigator(
-[
-  {
-    [STAKING_CENTER_ROUTES.MAIN]: {
-      screen: StakingCenter,
-      navigationOptions: ({navigation}) => ({
-        title: navigation.getParam('title'),
-        headerRight: (
-          <Button
-            style={styles.settingsButton}
-            onPress={() => navigation.navigate(WALLET_ROUTES.SETTINGS)}
-            iconImage={iconGear}
-            title=""
-            withoutBackground
-          />
-        ),
-      }),
-    },
-    [STAKING_CENTER_ROUTES.DELEGATION_CONFIRM]: {
-      screen: DelegationConfirmation,
-    },
-    [SEND_ROUTES.BIOMETRICS_SIGNING]: {
-      screen: BiometricAuthScreen,
-      navigationOptions: {
-        header: null,
-      },
-    },
-  },
-  {
-    initialRouteName: STAKING_CENTER_ROUTES.MAIN,
-    navigationOptions: ({navigation}) => ({
-      title: navigation.getParam('title'),
-      headerLeft: <HeaderBackButton navigation={navigation} />,
-      ...defaultNavigationOptions,
-    }),
-    ...defaultStackNavigatorOptions,
-  },
-]
 
 const Stack = createStackNavigator()
 
 // TODO(navigation)
 const StakingCenterNavigator = () => (
   <Stack.Navigator
-    screenOptions={{
+    screenOptions={({route}) => ({
+      title: route.params?.title ?? undefined,
       ...defaultNavigationOptions,
       ...defaultStackNavigatorOptions,
-    }}
+    })}
   >
-    <Stack.Screen name={STAKING_CENTER_ROUTES.MAIN} component={StakingCenter} />
+    <Stack.Screen
+      name={STAKING_CENTER_ROUTES.MAIN}
+      component={StakingCenter}
+      options={({navigation}) => ({
+        headerRight: () => (
+          <Button
+            style={styles.settingsButton}
+            onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)}
+            iconImage={iconGear}
+            title=""
+            withoutBackground
+          />
+        ),
+      })}
+    />
+    <Stack.Screen
+      name={STAKING_CENTER_ROUTES.DELEGATION_CONFIRM}
+      component={DelegationConfirmation}
+    />
+    <Stack.Screen
+      name={SEND_ROUTES.BIOMETRICS_SIGNING}
+      component={BiometricAuthScreen}
+      options={{headerShown: false}}
+    />
   </Stack.Navigator>
 )
 

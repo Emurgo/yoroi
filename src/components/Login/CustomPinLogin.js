@@ -67,7 +67,7 @@ export default injectIntl(
     ),
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
-      onPinEnter: ({navigation, customPinHash, intl}: ExternalProps) => async (
+      onPinEnter: ({customPinHash, intl, signin}: ExternalProps) => async (
         pin,
       ) => {
         if (customPinHash == null) {
@@ -76,7 +76,7 @@ export default injectIntl(
 
         const isPinValid = await authenticateByCustomPin(customPinHash, pin)
         if (isPinValid) {
-          navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+          signin()
         } else {
           await showErrorDialog(errorMessages.incorrectPin, intl)
         }
