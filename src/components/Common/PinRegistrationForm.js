@@ -69,12 +69,15 @@ const PinRegistrationForm = ({
 }: Props) => {
   const inputLabels = !pin ? labels.PinInput : labels.PinConfirmationInput
 
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener('blur', () => {
-      clearPin()
-    })
-    return unsubscribe
-  }, [navigation])
+  React.useEffect(
+    () => {
+      const unsubscribe = navigation.addListener('blur', () => {
+        clearPin()
+      })
+      return unsubscribe
+    },
+    [navigation],
+  )
 
   return (
     <View style={styles.container}>

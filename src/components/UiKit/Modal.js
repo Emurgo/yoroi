@@ -49,12 +49,12 @@ class Modal extends React.Component<Props, State> {
 
   componentDidMount = () => {
     const {navigation} = this.props
-    this._subscriptions.push(navigation.addListener('focus', () =>
-      this.handleWillFocus()
-    ))
-    this._subscriptions.push(navigation.addListener('blur', () =>
-      this.handleWillBlur()
-    ))
+    this._subscriptions.push(
+      navigation.addListener('focus', () => this.handleWillFocus()),
+    )
+    this._subscriptions.push(
+      navigation.addListener('blur', () => this.handleWillBlur()),
+    )
   }
 
   componentWillUnmount = () => {

@@ -17,7 +17,11 @@ import {InvalidState} from '../../crypto/errors'
 import WalletListItem from './WalletListItem'
 import Screen from '../Screen'
 import {Button, StatusBar, ScreenBackground} from '../UiKit'
-import {WALLET_ROOT_ROUTES, WALLET_INIT_ROUTES, ROOT_ROUTES} from '../../RoutesList'
+import {
+  WALLET_ROOT_ROUTES,
+  WALLET_INIT_ROUTES,
+  ROOT_ROUTES,
+} from '../../RoutesList'
 import {showErrorDialog, updateVersion} from '../../actions'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {currentVersionSelector} from '../../selectors'

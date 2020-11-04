@@ -62,7 +62,7 @@ export default injectIntl(
       (state) => ({
         customPinHash: customPinHashSelector(state),
       }),
-      {signin}
+      {signin},
     ),
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({

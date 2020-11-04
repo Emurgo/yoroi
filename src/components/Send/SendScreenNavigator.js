@@ -88,7 +88,10 @@ const SendScreenNavigator = () => (
         ...defaultNavigationOptions,
       })}
     />
-    <Stack.Screen name={SEND_ROUTES.ADDRESS_READER_QR} component={AddressReaderQR} />
+    <Stack.Screen
+      name={SEND_ROUTES.ADDRESS_READER_QR}
+      component={AddressReaderQR}
+    />
     <Stack.Screen name={SEND_ROUTES.CONFIRM} component={ConfirmScreen} />
     <Stack.Screen
       name={SEND_ROUTES.BIOMETRICS_SIGNING}

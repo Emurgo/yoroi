@@ -12,7 +12,8 @@ storiesOf('SaveNanoXScreen', module).add('default', ({navigation}) => (
     route={{
       params: {
         networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-        walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+        walletImplementationId:
+          CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
         hwDeviceInfo: {
           bip44AccountPublic: '0x1',
           hwFeatures: {

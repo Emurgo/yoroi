@@ -41,9 +41,10 @@ const Tab = createMaterialTopTabNavigator()
 const SettingsTabNavigator = injectIntl(({intl}) => (
   <Tab.Navigator
     screenOptions={({route}) => ({
-      tabBarLabel: route.name === SETTINGS_TABS.WALLET_SETTINGS
-        ? intl.formatMessage(messages.walletTabTitle)
-        : intl.formatMessage(messages.appTabTitle),
+      tabBarLabel:
+        route.name === SETTINGS_TABS.WALLET_SETTINGS
+          ? intl.formatMessage(messages.walletTabTitle)
+          : intl.formatMessage(messages.appTabTitle),
     })}
     tabBarOptions={{
       style: {
@@ -84,16 +85,28 @@ const SettingsScreenNavigator = () => (
     }}
     initialRouteName={SETTINGS_ROUTES.MAIN}
   >
-    <Stack.Screen name={SETTINGS_ROUTES.MAIN} component={SettingsTabNavigator} />
-    <Stack.Screen name={SETTINGS_ROUTES.CHANGE_WALLET_NAME} component={ChangeWalletName} />
-    <Stack.Screen name={SETTINGS_ROUTES.TERMS_OF_USE} component={TermsOfServiceScreen} />
+    <Stack.Screen
+      name={SETTINGS_ROUTES.MAIN}
+      component={SettingsTabNavigator}
+    />
+    <Stack.Screen
+      name={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
+      component={ChangeWalletName}
+    />
+    <Stack.Screen
+      name={SETTINGS_ROUTES.TERMS_OF_USE}
+      component={TermsOfServiceScreen}
+    />
     <Stack.Screen name={SETTINGS_ROUTES.SUPPORT} component={SupportScreen} />
     <Stack.Screen
       name={SETTINGS_ROUTES.FINGERPRINT_LINK}
       component={BiometricsLinkScreen}
       options={{headerShown: false}}
     />
-    <Stack.Screen name={SETTINGS_ROUTES.REMOVE_WALLET} component={RemoveWalletScreen} />
+    <Stack.Screen
+      name={SETTINGS_ROUTES.REMOVE_WALLET}
+      component={RemoveWalletScreen}
+    />
     <Stack.Screen
       name={SETTINGS_ROUTES.CHANGE_LANGUAGE}
       component={LanguagePickerScreen}
@@ -103,7 +116,10 @@ const SettingsScreenNavigator = () => (
       name={SETTINGS_ROUTES.EASY_COMFIRMATION}
       component={ToggleEasyConfirmatioScreen}
     />
-    <Stack.Screen name={SETTINGS_ROUTES.CHANGE_PASSWORD} component={ChangePasswordScreen} />
+    <Stack.Screen
+      name={SETTINGS_ROUTES.CHANGE_PASSWORD}
+      component={ChangePasswordScreen}
+    />
     <Stack.Screen
       name={SETTINGS_ROUTES.CHANGE_CUSTOM_PIN}
       component={ChangeCustomPinScreen}
@@ -119,7 +135,10 @@ const SettingsScreenNavigator = () => (
       component={BiometricAuthScreen}
       options={{headerShown: false}}
     />
-    <Stack.Screen name={SETTINGS_ROUTES.SETUP_CUSTOM_PIN} component={CustomPinScreen} />
+    <Stack.Screen
+      name={SETTINGS_ROUTES.SETUP_CUSTOM_PIN}
+      component={CustomPinScreen}
+    />
   </Stack.Navigator>
 )
 

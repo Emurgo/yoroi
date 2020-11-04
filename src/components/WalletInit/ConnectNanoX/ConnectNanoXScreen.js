@@ -123,10 +123,14 @@ export default injectIntl(
   (compose(
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
-      onConnectBLE: ({navigation, route, intl}) => async (deviceId: DeviceId) => {
+      onConnectBLE: ({navigation, route, intl}) => async (
+        deviceId: DeviceId,
+      ) => {
         await _navigateToSave(deviceId, null, navigation, route, intl)
       },
-      onConnectUSB: ({navigation, route, intl}) => async (deviceObj: DeviceObj) => {
+      onConnectUSB: ({navigation, route, intl}) => async (
+        deviceObj: DeviceObj,
+      ) => {
         await _navigateToSave(null, deviceObj, navigation, route, intl)
       },
     }),

@@ -221,13 +221,7 @@ const ConfirmScreen = ({
   errorMessage,
   errorLogs,
 }) => {
-  const {
-    amount,
-    address,
-    balanceAfterTx,
-    availableAmount,
-    fee,
-  } = route.params
+  const {amount, address, balanceAfterTx, availableAmount, fee} = route.params
 
   const isConfirmationDisabled =
     !isEasyConfirmationEnabled && !password && !isHW

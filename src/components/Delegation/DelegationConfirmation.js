@@ -258,7 +258,8 @@ const DelegationConfirmation = ({
 }) => {
   const poolHash = route.params.poolHash
   const poolName = route.params.poolName
-  const delegationTxData: CreateDelegationTxResponse = route.params.transactionData
+  const delegationTxData: CreateDelegationTxResponse =
+    route.params.transactionData
   const amountToDelegate = delegationTxData.totalAmountToDelegate
   const transactionFee = route.params.transactionFee
   const reward = approximateReward(amountToDelegate)

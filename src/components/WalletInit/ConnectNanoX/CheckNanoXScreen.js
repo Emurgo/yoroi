@@ -40,11 +40,7 @@ const messages = defineMessages({
 const url = '' // 'https://yoroi-wallet.com/...'
 
 const CheckNanoXScreen = ({intl, onPress, route}) => {
-  const {
-    networkId,
-    walletImplementationId,
-    useUSB,
-  } = route.params
+  const {networkId, walletImplementationId, useUSB} = route.params
   const requirements: Array<string> = []
   if (useUSB) {
     requirements.push(intl.formatMessage(ledgerMessages.haveOTGAdapter))

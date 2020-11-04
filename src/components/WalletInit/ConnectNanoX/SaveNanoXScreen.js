@@ -114,11 +114,7 @@ export default injectIntl(
         navigation,
         route,
       }) => async () => {
-        const {
-          networkId,
-          walletImplementationId,
-          hwDeviceInfo,
-        } = route.params
+        const {networkId, walletImplementationId, hwDeviceInfo} = route.params
         assert.assert(
           hwDeviceInfo != null,
           'SaveNanoXScreen::onPress hwDeviceInfo',

@@ -51,10 +51,13 @@ export default injectIntl(
     ),
     withHandlers({
       navigateToWallet: ignoreConcurrentAsyncHandler(
-        ({navigation, route, createWallet, updateVersion, setWaiting}) => async ({
-          name,
-          password,
-        }) => {
+        ({
+          navigation,
+          route,
+          createWallet,
+          updateVersion,
+          setWaiting,
+        }) => async ({name, password}) => {
           setWaiting(true)
           const {phrase, networkId, walletImplementationId} = route.params
           assert.assert(!!phrase, 'mnemonic')
@@ -72,9 +75,7 @@ export default injectIntl(
           } finally {
             setWaiting(false)
           }
-          navigation.navigate(
-            WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
-          )
+          navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)
         },
         1000,
       ),

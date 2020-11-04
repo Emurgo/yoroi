@@ -105,13 +105,13 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      navigateToMnemonicCheck: ({navigation, route, hideModal, mnemonic}) => () => {
-        const {
-          name,
-          password,
-          networkId,
-          walletImplementationId,
-        } = route.params
+      navigateToMnemonicCheck: ({
+        navigation,
+        route,
+        hideModal,
+        mnemonic,
+      }) => () => {
+        const {name, password, networkId, walletImplementationId} = route.params
         assert.assert(!!mnemonic, 'navigateToMnemonicCheck:: mnemonic')
         assert.assert(!!password, 'navigateToMnemonicCheck:: password')
         assert.assert(!!name, 'navigateToMnemonicCheck:: name')

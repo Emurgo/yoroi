@@ -22,7 +22,6 @@ import ReceiveScreenNavigator from './Receive/ReceiveScreenNavigator'
 import SettingsScreenNavigator from './Settings/SettingsScreenNavigator'
 import {defaultNavigationOptions} from '../navigationOptions'
 
-
 import {DEFAULT_THEME_COLORS} from '../styles/config'
 import styles from './TxHistory/styles/SettingsButton.style'
 import iconHistory from '../assets/img/icon/txhistory.png'
@@ -100,10 +99,10 @@ const WalletTabNavigator = injectIntl(
       screenOptions={({navigation, route}) => {
         const attributes = routeTabAttributes[route.name]
         if (attributes == null) throw new Error('unknown wallet route')
-        return ({
+        return {
           tabBarIcon: ({focused, _color, _size}) => {
             const icon = focused ? attributes.activeIcon : attributes.normalIcon
-            return (<Image source={icon} />)
+            return <Image source={icon} />
           },
           tabBarLabel: intl.formatMessage(attributes.label),
           title: route.params?.title ?? undefined,
@@ -117,7 +116,7 @@ const WalletTabNavigator = injectIntl(
             />
           ),
           ...defaultNavigationOptions,
-        })
+        }
       }}
       tabBarOptions={{
         activeTintColor: DEFAULT_THEME_COLORS.NAVIGATION_ACTIVE,
@@ -130,11 +129,20 @@ const WalletTabNavigator = injectIntl(
         options={{headerShown: false}}
       />
       <Tab.Screen name={WALLET_ROUTES.SEND} component={SendScreenNavigator} />
-      <Tab.Screen name={WALLET_ROUTES.RECEIVE} component={ReceiveScreenNavigator} />
+      <Tab.Screen
+        name={WALLET_ROUTES.RECEIVE}
+        component={ReceiveScreenNavigator}
+      />
       {isHaskellShelley(walletMeta.walletImplementationId) && (
         <>
-          <Tab.Screen name={WALLET_ROUTES.DASHBOARD} component={StakingDashboardNavigator} />
-          <Tab.Screen name={WALLET_ROUTES.DELEGATE} component={StakingCenterNavigator} />
+          <Tab.Screen
+            name={WALLET_ROUTES.DASHBOARD}
+            component={StakingDashboardNavigator}
+          />
+          <Tab.Screen
+            name={WALLET_ROUTES.DELEGATE}
+            component={StakingCenterNavigator}
+          />
         </>
       )}
     </Tab.Navigator>

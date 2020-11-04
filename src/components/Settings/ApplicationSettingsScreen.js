@@ -173,13 +173,15 @@ const ApplicationSettingsScreen = ({
   setCrashReporting,
   navigation,
 }) => {
-
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      updateDeviceSettings()
-    })
-    return unsubscribe
-  }, [navigation])
+  React.useEffect(
+    () => {
+      const unsubscribe = navigation.addListener('focus', () => {
+        updateDeviceSettings()
+      })
+      return unsubscribe
+    },
+    [navigation],
+  )
 
   return (
     <ScrollView style={styles.scrollView}>

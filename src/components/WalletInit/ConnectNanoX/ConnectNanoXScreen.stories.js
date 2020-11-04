@@ -18,7 +18,8 @@ const route = {
   params: {
     useUSB: false,
     networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-    walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+    walletImplementationId:
+      CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
   },
 }
 
@@ -27,7 +28,11 @@ storiesOf('ConnectNanoXScreen', module)
     <ConnectNanoXScreen navigation={navigation} route={route} />
   ))
   .add('with one device', ({navigation}) => (
-    <ConnectNanoXScreen navigation={navigation} route={route} defaultDevices={[devices[0]]} />
+    <ConnectNanoXScreen
+      navigation={navigation}
+      route={route}
+      defaultDevices={[devices[0]]}
+    />
   ))
   .add('with two devices', ({navigation}) => (
     <ConnectNanoXScreen
@@ -37,5 +42,9 @@ storiesOf('ConnectNanoXScreen', module)
     />
   ))
   .add('with many devices', ({navigation}) => (
-    <ConnectNanoXScreen navigation={navigation} route={route} defaultDevices={devices} />
+    <ConnectNanoXScreen
+      navigation={navigation}
+      route={route}
+      defaultDevices={devices}
+    />
   ))

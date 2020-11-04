@@ -4,7 +4,6 @@ import React from 'react'
 import 'intl'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 
-
 import {injectIntl} from 'react-intl'
 
 import AppNavigator from './AppNavigator'

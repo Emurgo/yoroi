@@ -17,14 +17,14 @@ const FirstRunNavigator = () => (
   <Stack.Navigator
     initialRouteName={FIRST_RUN_ROUTES.LANGUAGE}
     screenOptions={({route}) => {
-      return ({
+      return {
         title: route.params?.title ?? undefined,
         cardStyle: {
           backgroundColor: 'transparent',
         },
         ...defaultNavigationOptions,
         ...defaultStackNavigatorOptions,
-      })
+      }
     }}
   >
     <Stack.Screen
@@ -43,6 +43,5 @@ const FirstRunNavigator = () => (
     />
   </Stack.Navigator>
 )
-
 
 export default FirstRunNavigator

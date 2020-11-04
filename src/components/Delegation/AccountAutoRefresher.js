@@ -23,11 +23,11 @@ class AccountAutoRefresher extends React.Component<{
   utxo: ?Array<RawUtxo>,
 }> {
   _firstFocus = true
-  _unsubscribe: void | () => mixed = undefined
+  _unsubscribe: void | (() => mixed) = undefined
 
   componentDidMount = async () => {
     this._unsubscribe = this.props.navigation.addListener('focus', () =>
-      this.handleDidFocus()
+      this.handleDidFocus(),
     )
     await this.refetch()
   }

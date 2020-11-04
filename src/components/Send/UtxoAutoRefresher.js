@@ -19,11 +19,11 @@ class UtxoAutoRefresher extends React.Component<{
   hasPendingTx: boolean,
 }> {
   _firstFocus: boolean = true
-  _unsubscribe: void | () => mixed = undefined
+  _unsubscribe: void | (() => mixed) = undefined
 
   componentDidMount = () => {
     this._unsubscribe = this.props.navigation.addListener('focus', () =>
-      this.handleDidFocus()
+      this.handleDidFocus(),
     )
     this.refetch()
   }

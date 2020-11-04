@@ -97,7 +97,7 @@ class ChangePasswordScreen extends PureComponent<Props, ComponentState> {
     showPasswordsDoNotMatchError: false,
   }
 
-  _unsubscribe: void | () => mixed = undefined
+  _unsubscribe: void | (() => mixed) = undefined
 
   debouncedHandlePasswordMatchValidation = _.debounce(() => {
     this.setState(({password, passwordConfirmation}) => ({
@@ -108,7 +108,7 @@ class ChangePasswordScreen extends PureComponent<Props, ComponentState> {
 
   componentDidMount = () => {
     this._unsubscribe = this.props.navigation.addListener('blur', () =>
-      this.handleOnWillBlur()
+      this.handleOnWillBlur(),
     )
   }
 
@@ -157,7 +157,6 @@ class ChangePasswordScreen extends PureComponent<Props, ComponentState> {
         <StatusBar type="dark" />
 
         <View style={styles.container}>
-
           <ScrollView
             keyboardDismissMode="on-drag"
             contentContainerStyle={styles.content}

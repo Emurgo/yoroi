@@ -83,7 +83,13 @@ const handleWalletConfirmation = ({
     'handleWalletConfirmation:: implementationId',
   )
 
-  await createWallet(name, mnemonic, password, networkId, walletImplementationId)
+  await createWallet(
+    name,
+    mnemonic,
+    password,
+    networkId,
+    walletImplementationId,
+  )
 
   navigation.navigate(ROOT_ROUTES.WALLET)
 }

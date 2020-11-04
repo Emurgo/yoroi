@@ -86,9 +86,7 @@ export default injectIntl(
         encryptAndStoreCustomPin,
         isAuth,
         signin,
-      }) => async (
-        pin,
-      ) => {
+      }) => async (pin) => {
         await encryptAndStoreCustomPin(pin)
         if (!isAuth) signin() // because in first run user is not authenticated
         if (onSuccess !== undefined) onSuccess()

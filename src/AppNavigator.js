@@ -34,107 +34,117 @@ import {
 const Stack = createStackNavigator()
 
 const NavigatorSwitch = compose(
-  connect(
-    (state) => ({
-      isAppInitialized: isAppInitializedSelector(state),
-      isMaintenance: isMaintenanceSelector(state),
-      languageCode: languageSelector(state),
-      acceptedTos: tosSelector(state),
-      isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
-      isAuthenticated: isAuthenticatedSelector(state),
-      customPinHash: customPinHashSelector(state),
-    }),
-  ),
-)(({
-  isAppInitialized,
-  isMaintenance,
-  languageCode,
-  acceptedTos,
-  isSystemAuthEnabled,
-  isAuthenticated,
-  customPinHash,
-}) => {
-  if (!isAppInitialized) {
-    return (
-      <Stack.Navigator>
-        <Stack.Screen
-          name={ROOT_ROUTES.SPLASH}
-          component={SplashScreen}
-          options={{headerShown: false}}
-        />
-      </Stack.Navigator>
-    )
-  }
-  if (isMaintenance) {
-    return (
-      <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name={ROOT_ROUTES.MAINTENANCE} component={MaintenanceScreen} />
-      </Stack.Navigator>
-    )
-  }
-  if (
-    !languageCode ||
-    !acceptedTos ||
-    (!isSystemAuthEnabled && !customPinHash)
-  ) {
-    return (
-      <FirstRunNavigator />
-    )
-  }
-  if (CONFIG.DEBUG.START_WITH_INDEX_SCREEN) {
+  connect((state) => ({
+    isAppInitialized: isAppInitializedSelector(state),
+    isMaintenance: isMaintenanceSelector(state),
+    languageCode: languageSelector(state),
+    acceptedTos: tosSelector(state),
+    isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
+    isAuthenticated: isAuthenticatedSelector(state),
+    customPinHash: customPinHashSelector(state),
+  })),
+)(
+  ({
+    isAppInitialized,
+    isMaintenance,
+    languageCode,
+    acceptedTos,
+    isSystemAuthEnabled,
+    isAuthenticated,
+    customPinHash,
+  }) => {
+    if (!isAppInitialized) {
+      return (
+        <Stack.Navigator>
+          <Stack.Screen
+            name={ROOT_ROUTES.SPLASH}
+            component={SplashScreen}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      )
+    }
+    if (isMaintenance) {
+      return (
+        <Stack.Navigator screenOptions={{headerShown: false}}>
+          <Stack.Screen
+            name={ROOT_ROUTES.MAINTENANCE}
+            component={MaintenanceScreen}
+          />
+        </Stack.Navigator>
+      )
+    }
+    if (
+      !languageCode ||
+      !acceptedTos ||
+      (!isSystemAuthEnabled && !customPinHash)
+    ) {
+      return <FirstRunNavigator />
+    }
+    if (CONFIG.DEBUG.START_WITH_INDEX_SCREEN) {
+      return (
+        <Stack.Navigator
+          initialRouteName={ROOT_ROUTES.INIT}
+          screenOptions={{headerShown: false}}
+        >
+          <Stack.Screen
+            name={ROOT_ROUTES.INDEX}
+            component={IndexScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name={ROOT_ROUTES.STORYBOOK}
+            component={StorybookScreen}
+          />
+          <Stack.Screen
+            name={ROOT_ROUTES.NEW_WALLET}
+            component={WalletInitNavigator}
+          />
+          <Stack.Screen name={ROOT_ROUTES.WALLET} component={WalletNavigator} />
+        </Stack.Navigator>
+      )
+    }
+    if (!isAuthenticated) {
+      return (
+        <Stack.Navigator
+          initialRouteName={ROOT_ROUTES.INIT}
+          screenOptions={({route}) => ({
+            title: route.params?.title ?? undefined,
+            ...defaultNavigationOptions,
+            ...defaultStackNavigatorOptions,
+          })}
+        >
+          <Stack.Screen
+            name={ROOT_ROUTES.LOGIN}
+            component={AppStartScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name={ROOT_ROUTES.CUSTOM_PIN_AUTH}
+            component={CustomPinLogin}
+          />
+          <Stack.Screen
+            name={ROOT_ROUTES.BIO_AUTH}
+            component={BiometricAuthScreen}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      )
+    }
     return (
       <Stack.Navigator
-        initialRouteName={ROOT_ROUTES.INIT}
+        initialRouteName={ROOT_ROUTES.WALLET}
         screenOptions={{headerShown: false}}
       >
-        <Stack.Screen
-          name={ROOT_ROUTES.INDEX}
-          component={IndexScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen name={ROOT_ROUTES.STORYBOOK} component={StorybookScreen} />
-        <Stack.Screen name={ROOT_ROUTES.NEW_WALLET} component={WalletInitNavigator} />
         <Stack.Screen name={ROOT_ROUTES.WALLET} component={WalletNavigator} />
-      </Stack.Navigator>
-    )
-  }
-  if (!isAuthenticated) {
-    return (
-      <Stack.Navigator
-        initialRouteName={ROOT_ROUTES.INIT}
-        screenOptions={({route}) => ({
-          title: route.params?.title ?? undefined,
-          ...defaultNavigationOptions,
-          ...defaultStackNavigatorOptions,
-        })}
-      >
         <Stack.Screen
-          name={ROOT_ROUTES.LOGIN}
-          component={AppStartScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name={ROOT_ROUTES.CUSTOM_PIN_AUTH}
-          component={CustomPinLogin}
-        />
-        <Stack.Screen
-          name={ROOT_ROUTES.BIO_AUTH}
-          component={BiometricAuthScreen}
-          options={{headerShown: false}}
+          name={ROOT_ROUTES.NEW_WALLET}
+          component={WalletInitNavigator}
         />
       </Stack.Navigator>
     )
-  }
-  return (
-    <Stack.Navigator
-      initialRouteName={ROOT_ROUTES.WALLET}
-      screenOptions={{headerShown: false}}
-    >
-      <Stack.Screen name={ROOT_ROUTES.WALLET} component={WalletNavigator} />
-      <Stack.Screen name={ROOT_ROUTES.NEW_WALLET} component={WalletInitNavigator} />
-    </Stack.Navigator>
-  )
-})
+  },
+)
 
 const AppNavigator = () => {
   return (

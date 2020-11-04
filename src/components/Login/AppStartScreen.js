@@ -63,7 +63,7 @@ export default injectIntl(
         customPinHash: customPinHashSelector(state),
         isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
       }),
-      {signin}
+      {signin},
     ),
     withHandlers({
       navigateLogin: ({

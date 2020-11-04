@@ -27,9 +27,9 @@ const DelegationNavigatorSummary = () => (
   <Stack.Navigator
     screenOptions={({route}) => {
       const extraOptions = isJormungandr(route.params?.networkId)
-        ? jormunNavigationOptions :
-        {}
-      return ({
+        ? jormunNavigationOptions
+        : {}
+      return {
         cardStyle: {
           backgroundColor: 'transparent',
         },
@@ -37,7 +37,7 @@ const DelegationNavigatorSummary = () => (
         ...defaultNavigationOptions,
         ...defaultStackNavigatorOptions,
         ...extraOptions,
-      })
+      }
     }}
     initialRouteName={STAKING_DASHBOARD_ROUTES.MAIN}
   >

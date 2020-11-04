@@ -170,7 +170,7 @@ class StakingDashboard extends React.Component<Props, State> {
 
   _intervalId: void | IntervalID = undefined
 
-  _unsubscribe: void | () => mixed = undefined
+  _unsubscribe: void | (() => mixed) = undefined
 
   componentDidMount() {
     this._intervalId = setInterval(
@@ -182,7 +182,7 @@ class StakingDashboard extends React.Component<Props, State> {
     )
     this.props.checkForFlawedWallets()
     this._unsubscribe = this.props.navigation.addListener('focus', () =>
-      this.handleDidFocus()
+      this.handleDidFocus(),
     )
   }
 

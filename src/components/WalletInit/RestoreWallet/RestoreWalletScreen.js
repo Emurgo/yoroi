@@ -172,7 +172,9 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      navigateToWalletCredentials: ({navigation, route, phrase}) => (_event) => {
+      navigateToWalletCredentials: ({navigation, route, phrase}) => (
+        _event,
+      ) => {
         navigation.navigate(WALLET_INIT_ROUTES.VERIFY_RESTORED_WALLET, {
           phrase: cleanMnemonic(phrase),
           networkId: route.params.networkId,

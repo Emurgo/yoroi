@@ -13,7 +13,8 @@ storiesOf('VefifyRestoredWallet', module).add('Default', ({navigation}) => (
     route={{
       params: {
         networkId: CONFIG.NETWORKS.BYRON_MAINNET.NETWORK_ID,
-        walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+        walletImplementationId:
+          CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
         phrase: cleanMnemonic(CONFIG.DEBUG.MNEMONIC3),
       },
     }}

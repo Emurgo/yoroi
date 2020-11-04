@@ -30,9 +30,9 @@ const WalletInitNavigator = () => (
       // note: jormun is currently not supported. If you want to add this
       // jormun style, make sure to pass the networkId as a route param
       const extraOptions = isJormungandr(route.params?.networkId)
-        ? jormunNavigationOptions :
-        {}
-      return ({
+        ? jormunNavigationOptions
+        : {}
+      return {
         cardStyle: {
           backgroundColor: 'transparent',
         },
@@ -40,7 +40,7 @@ const WalletInitNavigator = () => (
         ...defaultNavigationOptions,
         ...defaultStackNavigatorOptions,
         ...extraOptions,
-      })
+      }
     }}
   >
     <Stack.Screen
@@ -48,16 +48,46 @@ const WalletInitNavigator = () => (
       component={WalletFreshInitScreen}
       options={{headerShown: false}}
     />
-    <Stack.Screen name={WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH} component={WalletInitScreen} />
-    <Stack.Screen name={WALLET_INIT_ROUTES.CREATE_WALLET} component={CreateWalletScreen} />
-    <Stack.Screen name={WALLET_INIT_ROUTES.RESTORE_WALLET} component={RestoreWalletScreen} />
-    <Stack.Screen name={WALLET_INIT_ROUTES.CHECK_NANO_X} component={CheckNanoXScreen} />
-    <Stack.Screen name={WALLET_INIT_ROUTES.CONNECT_NANO_X} component={ConnectNanoXScreen} />
-    <Stack.Screen name={WALLET_INIT_ROUTES.SAVE_NANO_X} component={SaveNanoXScreen} />
-    <Stack.Screen name={WALLET_INIT_ROUTES.MNEMONIC_SHOW} component={MnemonicShowScreen} />
-    <Stack.Screen name={WALLET_INIT_ROUTES.MNEMONIC_CHECK} component={MnemonicCheckScreen} />
-    <Stack.Screen name={WALLET_INIT_ROUTES.VERIFY_RESTORED_WALLET} component={VerifyRestoredWallet} />
-    <Stack.Screen name={WALLET_INIT_ROUTES.WALLET_CREDENTIALS} component={WalletCredentialsScreen} />
+    <Stack.Screen
+      name={WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH}
+      component={WalletInitScreen}
+    />
+    <Stack.Screen
+      name={WALLET_INIT_ROUTES.CREATE_WALLET}
+      component={CreateWalletScreen}
+    />
+    <Stack.Screen
+      name={WALLET_INIT_ROUTES.RESTORE_WALLET}
+      component={RestoreWalletScreen}
+    />
+    <Stack.Screen
+      name={WALLET_INIT_ROUTES.CHECK_NANO_X}
+      component={CheckNanoXScreen}
+    />
+    <Stack.Screen
+      name={WALLET_INIT_ROUTES.CONNECT_NANO_X}
+      component={ConnectNanoXScreen}
+    />
+    <Stack.Screen
+      name={WALLET_INIT_ROUTES.SAVE_NANO_X}
+      component={SaveNanoXScreen}
+    />
+    <Stack.Screen
+      name={WALLET_INIT_ROUTES.MNEMONIC_SHOW}
+      component={MnemonicShowScreen}
+    />
+    <Stack.Screen
+      name={WALLET_INIT_ROUTES.MNEMONIC_CHECK}
+      component={MnemonicCheckScreen}
+    />
+    <Stack.Screen
+      name={WALLET_INIT_ROUTES.VERIFY_RESTORED_WALLET}
+      component={VerifyRestoredWallet}
+    />
+    <Stack.Screen
+      name={WALLET_INIT_ROUTES.WALLET_CREDENTIALS}
+      component={WalletCredentialsScreen}
+    />
   </Stack.Navigator>
 )
 
