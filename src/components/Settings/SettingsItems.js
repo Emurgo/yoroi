@@ -8,17 +8,24 @@ import {useNavigation} from '@react-navigation/native'
 import chevronRight from '../../assets/img/chevron_right.png'
 import {Text} from '../UiKit'
 
+import type {ComponentType} from 'react'
+
 import styles from './styles/SettingsItems.style'
 
 const Touchable = (props: {}) => (
   <TouchableOpacity {...props} activeOpacity={0.5} />
 )
 
-const NavigateTo = compose(
+type NavigateToProps = {
+  to: string,
+  navigation: any,
+}
+const NavigateTo = (compose(
   withHandlers({
-    onPress: ({to, navigation}) => () => navigation.navigate(to),
+    onPress: ({to, navigation}: NavigateToProps) => () =>
+      navigation.navigate(to),
   }),
-)((props) => <Touchable {...props} />)
+)((props) => <Touchable {...props} />): ComponentType<NavigateToProps>)
 
 type SettingsSectionProps = {
   title?: string,

@@ -15,6 +15,7 @@ import styles from './styles/PinRegistrationForm.style'
 
 import type {ComponentType} from 'react'
 import type {PinInputLabels} from './PinInput'
+import type {Navigation} from '../../types/navigation'
 
 const handlePinEnter = ({pin, setPin, onPinEntered, intl}) => async (
   pinConfirmation,
@@ -49,6 +50,7 @@ type ExternalProps = {
   labels: PinRegistrationFormLabels,
   onPinEntered: (string) => any,
   intl: intlShape,
+  navigation: Navigation,
 }
 
 type Props = ExternalProps & {

@@ -34,7 +34,7 @@ import {
   withNavigationTitle,
 } from '../../utils/renderUtils'
 import FlawedWalletModal from './FlawedWalletModal'
-import {WALLET_INIT_ROUTES} from '../../RoutesList'
+import {WALLET_ROOT_ROUTES} from '../../RoutesList'
 import {isByron} from '../../config/config'
 
 import {formatAdaWithText} from '../../utils/format'
@@ -115,10 +115,10 @@ const TxHistory = ({
           visible={isFlawedWallet === true}
           disableButtons={false}
           onPress={() =>
-            navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+            navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
           }
           onRequestClose={() =>
-            navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+            navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
           }
         />
       )}

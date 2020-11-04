@@ -30,7 +30,7 @@ import globalMessages, {
   confirmationMessages,
 } from '../../i18n/global-messages'
 import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
-import {SEND_ROUTES, WALLET_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
+import {SEND_ROUTES, WALLET_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
 import {CONFIG} from '../../config/config'
 import KeyStore from '../../crypto/KeyStore'
 import {showErrorDialog, submitTransaction, submitSignedTx} from '../../actions'
@@ -156,7 +156,7 @@ const handleOnConfirm = async (
       if (e instanceof SystemAuthDisabled) {
         await walletManager.closeWallet()
         await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-        navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+        navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
 
         return
       } else {

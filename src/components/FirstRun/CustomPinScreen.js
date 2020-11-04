@@ -62,6 +62,7 @@ const CustomPinScreen = ({handlePinEntered, intl, navigation}) => (
 
 type ExternalProps = {|
   navigation: Navigation,
+  route: Object, // TODO(navigation): type
   intl: intlShape,
 |}
 

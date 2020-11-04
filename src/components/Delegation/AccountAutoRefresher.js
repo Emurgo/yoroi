@@ -21,6 +21,7 @@ class AccountAutoRefresher extends React.Component<{
   fetchAccountState: () => any,
   hasPendingTx: boolean,
   utxo: ?Array<RawUtxo>,
+  navigation: any,
 }> {
   _firstFocus = true
   _unsubscribe: void | (() => mixed) = undefined

@@ -104,7 +104,7 @@ class Modal extends React.Component<Props, State> {
   }
 }
 
-export default (props) => {
+export default (props: $Diff<Props, {navigation: any}>) => {
   const navigation = useNavigation()
   return <Modal {...props} navigation={navigation} />
 }

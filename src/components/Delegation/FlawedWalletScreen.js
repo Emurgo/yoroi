@@ -32,11 +32,11 @@ const messages = defineMessages({
   },
 })
 
-type Props = {
+type Props = {|
   intl: intlShape,
   onPress: () => any,
   disableButtons: boolean,
-}
+|}
 
 const FlawedWalletScreen = ({intl, onPress, disableButtons}: Props) => {
   return (

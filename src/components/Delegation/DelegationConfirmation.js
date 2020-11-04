@@ -37,7 +37,7 @@ import {formatAdaWithText, formatAda} from '../../utils/format'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 import {
   SEND_ROUTES,
-  WALLET_INIT_ROUTES,
+  WALLET_ROOT_ROUTES,
   STAKING_CENTER_ROUTES,
   WALLET_ROUTES,
 } from '../../RoutesList'
@@ -190,7 +190,7 @@ const handleOnConfirm = async (
       if (e instanceof SystemAuthDisabled) {
         await walletManager.closeWallet()
         await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-        navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+        navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
 
         return
       } else {

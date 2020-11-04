@@ -66,9 +66,7 @@ export default injectIntl(
     ),
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
-      onPinEnter: ({customPinHash, intl, signin}: ExternalProps) => async (
-        pin,
-      ) => {
+      onPinEnter: ({customPinHash, intl, signin}) => async (pin) => {
         if (customPinHash == null) {
           throw new Error('Custom pin is not setup')
         }

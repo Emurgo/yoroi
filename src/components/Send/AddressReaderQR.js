@@ -19,6 +19,7 @@ const messages = defineMessages({
 
 type ExternalProps = {|
   route: Object, // TODO(navigation): type
+  navigation: any,
   intl: intlShape,
 |}
 

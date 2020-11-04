@@ -60,7 +60,7 @@ import {
 import {
   DELEGATION_ROUTES,
   SEND_ROUTES,
-  WALLET_INIT_ROUTES,
+  WALLET_ROOT_ROUTES,
   WALLET_ROUTES,
 } from '../../RoutesList'
 import {NetworkError, ApiError} from '../../api/errors'
@@ -479,7 +479,7 @@ class StakingDashboard extends React.Component<Props, State> {
           this.closeWithdrawalDialog()
           await walletManager.closeWallet()
           await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-          navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+          navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
 
           return
         } else {
@@ -603,10 +603,7 @@ class StakingDashboard extends React.Component<Props, State> {
         <FlawedWalletScreen
           disableButtons={false}
           onPress={() =>
-            navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
-          }
-          onRequestClose={() =>
-            navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+            navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
           }
         />
       )

@@ -17,6 +17,7 @@ class UtxoAutoRefresher extends React.Component<{
   isOnline: boolean,
   fetchUTXOs: () => any,
   hasPendingTx: boolean,
+  navigation: any,
 }> {
   _firstFocus: boolean = true
   _unsubscribe: void | (() => mixed) = undefined

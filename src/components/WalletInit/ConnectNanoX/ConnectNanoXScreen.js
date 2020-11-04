@@ -82,6 +82,7 @@ type Props = {
   intl: intlShape,
   defaultDevices: ?Array<Device>, // for storybook
   navigation: Navigation,
+  route: Object, // TODO(navigation): type
   onConnectBLE: (DeviceId) => Promise<void>,
   onConnectUSB: (DeviceObj) => Promise<void>,
 }
