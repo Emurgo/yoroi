@@ -6,6 +6,6 @@ import {storiesOf} from '@storybook/react-native'
 
 import StakingByIdScreen from './StakeByIdScreen'
 
-storiesOf('StakingByIdScreen', module).add('Default', () => (
-  <StakingByIdScreen />
+storiesOf('StakingByIdScreen', module).add('Default', ({navigation}) => (
+  <StakingByIdScreen navigation={navigation} />
 ))

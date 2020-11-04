@@ -232,8 +232,8 @@ export default injectIntl(
         }),
       },
     ),
-    withProps(({navigation}) => {
-      const mnemonic = navigation.getParam('mnemonic')
+    withProps(({route}) => {
+      const {mnemonic} = route.params
       return {
         mnemonic,
         words: mnemonic.split(' ').sort(),

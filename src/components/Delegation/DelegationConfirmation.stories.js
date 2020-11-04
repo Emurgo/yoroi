@@ -7,7 +7,7 @@ import {storiesOf} from '@storybook/react-native'
 
 import DelegationConfirmation from './DelegationConfirmation'
 
-storiesOf('DelegationConfirmation', module).add('Default', ({route}) => {
+storiesOf('DelegationConfirmation', module).add('Default', ({navigation, route}) => {
   route.params = {
     poolName: 'EMURGO’ STAKEPOOL',
     poolHash: [
@@ -18,5 +18,5 @@ storiesOf('DelegationConfirmation', module).add('Default', ({route}) => {
     },
     transactionFee: new BigNumber('2000000'), // 2 ADA
   }
-  return <DelegationConfirmation route={route} />
+  return <DelegationConfirmation route={route} navigation={navigation} />
 })

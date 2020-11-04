@@ -21,7 +21,6 @@ import globalMessages from '../../i18n/global-messages'
 import styles from './styles/WalletInitScreen.style'
 
 import type {State} from '../../state'
-import type {Navigation} from '../../types/navigation'
 import type {NetworkId, WalletImplementationId} from '../../config/types'
 
 const messages = defineMessages({

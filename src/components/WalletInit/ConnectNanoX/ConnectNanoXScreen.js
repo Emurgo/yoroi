@@ -38,14 +38,15 @@ const _navigateToSave = async (
   deviceId: ?DeviceId,
   deviceObj: ?DeviceObj,
   navigation: Navigation,
+  route: Object,
   intl: intlShape,
 ): Promise<void> => {
   try {
     Logger.debug('deviceId', deviceId)
     Logger.debug('deviceObj', deviceObj)
-    const useUSB = navigation.getParam('useUSB') === true
-    const networkId = navigation.getParam('networkId')
-    const walletImplementationId = navigation.getParam('walletImplementationId')
+    const useUSB = route.params?.useUSB === true
+    const networkId = route.params?.networkId
+    const walletImplementationId = route.params?.walletImplementationId
     if (deviceId == null && deviceObj == null) {
       throw new Error('null descriptor, should never happen')
     }
@@ -89,10 +90,11 @@ const ConnectNanoXScreen = ({
   intl,
   defaultDevices,
   navigation,
+  route,
   onConnectBLE,
   onConnectUSB,
 }: Props) => {
-  const useUSB = navigation.getParam('useUSB') === true
+  const useUSB = route.params?.useUSB === true
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -114,17 +116,18 @@ type ExternalProps = {|
   intl: intlShape,
   defaultDevices: ?Array<Device>,
   navigation: Navigation,
+  route: Object, // TODO(navigation): type
 |}
 
 export default injectIntl(
   (compose(
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
-      onConnectBLE: ({navigation, intl}) => async (deviceId: DeviceId) => {
-        await _navigateToSave(deviceId, null, navigation, intl)
+      onConnectBLE: ({navigation, route, intl}) => async (deviceId: DeviceId) => {
+        await _navigateToSave(deviceId, null, navigation, route, intl)
       },
-      onConnectUSB: ({navigation, intl}) => async (deviceObj: DeviceObj) => {
-        await _navigateToSave(null, deviceObj, navigation, intl)
+      onConnectUSB: ({navigation, route, intl}) => async (deviceObj: DeviceObj) => {
+        await _navigateToSave(null, deviceObj, navigation, route, intl)
       },
     }),
   )(ConnectNanoXScreen): ComponentType<ExternalProps>),

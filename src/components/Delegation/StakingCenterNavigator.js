@@ -22,7 +22,6 @@ import styles from '../TxHistory/styles/SettingsButton.style'
 
 const Stack = createStackNavigator()
 
-// TODO(navigation)
 const StakingCenterNavigator = () => (
   <Stack.Navigator
     screenOptions={({route}) => ({

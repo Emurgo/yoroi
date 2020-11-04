@@ -142,8 +142,11 @@ export default injectIntl(
         walletImplementationId: WalletImplementationId,
       ) =>
         navigation.navigate(ROOT_ROUTES.NEW_WALLET, {
-          networkId,
-          walletImplementationId,
+          screen: WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH,
+          params: {
+            networkId,
+            walletImplementationId,
+          },
         }),
       openWallet: ({navigation, intl}) => async (wallet) => {
         try {
@@ -158,11 +161,11 @@ export default injectIntl(
           if (e instanceof SystemAuthDisabled) {
             await walletManager.closeWallet()
             await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-            navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+            navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
           } else if (e instanceof InvalidState) {
             await walletManager.closeWallet()
             await showErrorDialog(errorMessages.walletStateInvalid, intl)
-            navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+            navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
           } else if (e instanceof KeysAreInvalid) {
             await walletManager.cleanupInvalidKeys()
             await showErrorDialog(errorMessages.walletKeysInvalidated, intl)

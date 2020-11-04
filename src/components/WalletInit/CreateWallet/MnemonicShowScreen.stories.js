@@ -5,12 +5,12 @@ import {storiesOf} from '@storybook/react-native'
 import MnemonicShowScreen from './MnemonicShowScreen'
 import {CONFIG} from '../../../config/config'
 
-storiesOf('MnemonicShowScreen', module).add('Default', ({route}) => {
+storiesOf('MnemonicShowScreen', module).add('Default', ({route, navigation}) => {
   route.params = {
     mnemonic: CONFIG.DEBUG.MNEMONIC1,
     name: CONFIG.DEBUG.WALLET_NAME,
     password: CONFIG.DEBUG.PASSWORD,
     networkId: CONFIG.NETWORKS.BYRON_MAINNET.NETWORK_ID,
   }
-  return <MnemonicShowScreen route={route} />
+  return <MnemonicShowScreen route={route} navigation={navigation} />
 })

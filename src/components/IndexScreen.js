@@ -12,10 +12,11 @@ import {Text, Button, StatusBar} from './UiKit'
 import {ROOT_ROUTES} from '../RoutesList'
 import storage from '../utils/storage'
 
+import type {Navigation} from '../types/navigation'
+
 const routes = [
   {label: 'Storybook', path: ROOT_ROUTES.STORYBOOK},
   {label: 'Skip to wallet list', path: ROOT_ROUTES.WALLET},
-  {label: 'Default', path: ROOT_ROUTES.LOGIN},
 ]
 
 const styles = StyleSheet.create({
@@ -39,9 +40,8 @@ const styles = StyleSheet.create({
   },
 })
 
-// TODO: re-type
 type Props = {
-  navigation: any, // NavigationScreenProp<NavigationState>,
+  navigation: Navigation,
 }
 
 const crash = () => {

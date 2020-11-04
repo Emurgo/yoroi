@@ -27,6 +27,8 @@ const WalletInitNavigator = () => (
   <Stack.Navigator
     initialRouteName={WALLET_INIT_ROUTES.INITIAL_CREATE_RESTORE_SWITCH}
     screenOptions={({route}) => {
+      // note: jormun is currently not supported. If you want to add this
+      // jormun style, make sure to pass the networkId as a route param
       const extraOptions = isJormungandr(route.params?.networkId)
         ? jormunNavigationOptions :
         {}

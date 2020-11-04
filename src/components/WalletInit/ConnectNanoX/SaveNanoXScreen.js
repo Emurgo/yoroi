@@ -14,7 +14,7 @@ import globalMessages from '../../../../src/i18n/global-messages'
 import {walletNamesSelector} from '../../../selectors'
 import {createWalletWithBip44Account} from '../../../actions'
 import {saveHW} from '../../../actions/hwWallet'
-import {ROOT_ROUTES} from '../../../RoutesList'
+import {WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import {CONFIG} from '../../../config/config'
 import assert from '../../../utils/assert'
 
@@ -81,6 +81,7 @@ const SaveNanoXScreen = ({intl, onPress, name, validateForm, setName}) => {
 type ExternalProps = {|
   intl: intlShape,
   navigation: Navigation,
+  route: Object, // TODO(navigation): type
 |}
 
 export default injectIntl(
@@ -111,12 +112,13 @@ export default injectIntl(
         saveHW,
         name,
         navigation,
+        route,
       }) => async () => {
-        const networkId = navigation.getParam('networkId')
-        const walletImplementationId = navigation.getParam(
-          'walletImplementationId',
-        )
-        const hwDeviceInfo = navigation.getParam('hwDeviceInfo')
+        const {
+          networkId,
+          walletImplementationId,
+          hwDeviceInfo,
+        } = route.params
         assert.assert(
           hwDeviceInfo != null,
           'SaveNanoXScreen::onPress hwDeviceInfo',
@@ -129,7 +131,7 @@ export default injectIntl(
           hwDeviceInfo,
         )
         saveHW(hwDeviceInfo)
-        navigation.navigate(ROOT_ROUTES.WALLET)
+        navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)
       },
     }),
     withHandlers({
