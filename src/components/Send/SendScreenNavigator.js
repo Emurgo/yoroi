@@ -67,14 +67,14 @@ const SendScreenNavigator = () => (
                       const index = stringQR.indexOf('?')
                       const params = getParams(stringQR.substr(index))
                       if ('amount' in params) {
-                        setAddress(address, navigation)
-                        setAmount(params.amount, navigation)
+                        setAddress(address, route)
+                        setAmount(params.amount, route)
                       }
                     } else {
-                      setAddress(address, navigation)
+                      setAddress(address, route)
                     }
                   } else {
-                    setAddress(stringQR, navigation)
+                    setAddress(stringQR, route)
                   }
                   navigation.navigate(SEND_ROUTES.MAIN)
                 },
