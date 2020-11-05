@@ -215,9 +215,10 @@ export const signout = () => (dispatch: Dispatch<any>) => {
   })
 }
 
-// logout closes the active wallet but does not signout
-export const logout = () => async (_dispatch: Dispatch<any>) => {
+// logout closes the active wallet and signout
+export const logout = () => async (dispatch: Dispatch<any>) => {
   await closeWallet()
+  dispatch(signout())
 }
 
 export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
@@ -317,7 +318,6 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
   Logger.debug('setting up app lock')
   const onTimeoutAction = () => {
     dispatch(logout())
-    dispatch(signout())
   }
 
   AppState.addEventListener('change', () => {
