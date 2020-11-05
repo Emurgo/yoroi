@@ -18,6 +18,7 @@ export const defaultNavigationOptions = {
   headerStyle: {
     backgroundColor: COLORS.BACKGROUND_BLUE,
     borderBottomWidth: 0,
+    shadowColor: 'transparent',
   },
   headerTintColor: '#fff',
 }

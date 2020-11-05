@@ -5,7 +5,6 @@ import {Image} from 'react-native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {createStackNavigator} from '@react-navigation/stack'
-// import {createDrawerNavigator} from '@react-navigation/drawer' // TODO(navigation)
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {injectIntl, defineMessages} from 'react-intl'
 

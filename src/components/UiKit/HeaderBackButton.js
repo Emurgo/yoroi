@@ -2,7 +2,7 @@
 import React from 'react'
 import {HeaderBackButton} from '@react-navigation/stack'
 
-// TODO(navigation): still needed?
+// note: this component is not used anywhere, consider removing
 
 type Props = {
   navigation: any,
