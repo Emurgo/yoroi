@@ -24,6 +24,7 @@ export const defaultNavigationOptions = {
 
 export const defaultStackNavigatorOptions = {
   headerTitleAlign: 'center',
+  headerBackTitleVisible: false,
 }
 
 export const jormunNavigationOptions = {
