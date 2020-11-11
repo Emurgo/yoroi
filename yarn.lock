@@ -12578,10 +12578,10 @@ react-native-blockies-svg@Emurgo/react-native-blockies-svg:
   dependencies:
     react-native-svg "^7.2.0"
 
-react-native-camera@3.38.0:
-  version "3.38.0"
-  resolved "https://registry.yarnpkg.com/react-native-camera/-/react-native-camera-3.38.0.tgz#d51bd78306c185d8210cd89c6cf8d8b1b4cc1294"
-  integrity sha512-mczUap9TWHeFuGOY5fCoMnPWv704BiPyGNU5p4filB/XuQL4/M93Teqgw6gWMdd8KfElY9uqH4QNtHruJ67A5A==
+react-native-camera@3.40.0:
+  version "3.40.0"
+  resolved "https://registry.yarnpkg.com/react-native-camera/-/react-native-camera-3.40.0.tgz#69845991e46b0892cc2b50322d49b18f292c3202"
+  integrity sha512-Ur0hZqZcl3SntTVMB9GxuiLYpQxqwgzhQVb+7EGae4WjfDzQEwlGF0bJ7UpZyeUTb1oZmsiSib58xUckn11XMw==
   dependencies:
     prop-types "^15.6.2"
 
