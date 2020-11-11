@@ -3,6 +3,7 @@
   "components.common.errormodal.showError": "显示错误讯息",
   "components.common.navigation.dashboardButton": "仪表板",
   "components.common.navigation.delegateButton": "委托",
+  "components.common.navigation.transactionsButton": "Transactions",
   "components.common.languagepicker.brazilian": "巴西葡萄牙语",
   "components.common.languagepicker.chinese": "简体中文",
   "components.common.languagepicker.continueButton": "请选择语言",
