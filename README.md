@@ -198,7 +198,6 @@ import {confirmationsToAssuranceLevel, printAda} from '../../helpers/utils'
 import styles from './TxDetails.style'
 
 // types
-import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {TransactionType} from '../../types/HistoryTransaction'
 ```
 

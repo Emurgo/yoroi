@@ -37,7 +37,7 @@ import {formatAdaWithText, formatAda} from '../../utils/format'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 import {
   SEND_ROUTES,
-  WALLET_INIT_ROUTES,
+  WALLET_ROOT_ROUTES,
   STAKING_CENTER_ROUTES,
   WALLET_ROUTES,
 } from '../../RoutesList'
@@ -96,6 +96,7 @@ const approximateReward = (amount: BigNumber): BigNumber => {
 
 const handleOnConfirm = async (
   navigation,
+  route,
   isHW,
   isEasyConfirmationEnabled,
   password,
@@ -107,7 +108,8 @@ const handleOnConfirm = async (
   useUSB,
   setErrorData,
 ) => {
-  const transactionData = navigation.getParam('transactionData')
+  const transactionData = route.params?.transactionData
+  if (transactionData == null) throw new Error('DelegationConfirmation:txData')
   const signRequest = transactionData.signTxRequest.signRequest
 
   const submitTx = async <T>(
@@ -188,7 +190,7 @@ const handleOnConfirm = async (
       if (e instanceof SystemAuthDisabled) {
         await walletManager.closeWallet()
         await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-        navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+        navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
 
         return
       } else {
@@ -234,7 +236,7 @@ const LEDGER_DIALOG_STEPS = {
 
 const DelegationConfirmation = ({
   intl,
-  navigation,
+  route,
   onDelegate,
   isEasyConfirmationEnabled,
   password,
@@ -254,13 +256,12 @@ const DelegationConfirmation = ({
   errorMessage,
   errorLogs,
 }) => {
-  const poolHash = navigation.getParam('poolHash')
-  const poolName = navigation.getParam('poolName')
-  const delegationTxData: CreateDelegationTxResponse = navigation.getParam(
-    'transactionData',
-  )
+  const poolHash = route.params.poolHash
+  const poolName = route.params.poolName
+  const delegationTxData: CreateDelegationTxResponse =
+    route.params.transactionData
   const amountToDelegate = delegationTxData.totalAmountToDelegate
-  const transactionFee = navigation.getParam('transactionFee')
+  const transactionFee = route.params.transactionFee
   const reward = approximateReward(amountToDelegate)
 
   const isConfirmationDisabled =
@@ -376,6 +377,7 @@ const DelegationConfirmation = ({
 type ExternalProps = {|
   intl: IntlShape,
   navigation: Navigation,
+  route: Object, // TODO(navigation): type
 |}
 
 export default injectIntl(
@@ -458,6 +460,7 @@ export default injectIntl(
       onDelegate: ignoreConcurrentAsyncHandler(
         ({
           navigation,
+          route,
           isHW,
           isEasyConfirmationEnabled,
           password,
@@ -471,6 +474,7 @@ export default injectIntl(
         }) => async (_event) => {
           await handleOnConfirm(
             navigation,
+            route,
             isHW,
             isEasyConfirmationEnabled,
             password,

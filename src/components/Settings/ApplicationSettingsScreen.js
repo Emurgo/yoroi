@@ -4,7 +4,6 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers} from 'recompose'
 import {ScrollView, StyleSheet, Switch} from 'react-native'
-import {NavigationEvents} from 'react-navigation'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import {SETTINGS_ROUTES} from '../../RoutesList'
@@ -172,69 +171,80 @@ const ApplicationSettingsScreen = ({
   isSystemAuthEnabled,
   sendCrashReports,
   setCrashReporting,
-}) => (
-  <ScrollView style={styles.scrollView}>
-    <StatusBar type="dark" />
+  navigation,
+}) => {
+  React.useEffect(
+    () => {
+      const unsubscribe = navigation.addListener('focus', () => {
+        updateDeviceSettings()
+      })
+      return unsubscribe
+    },
+    [navigation],
+  )
 
-    <NavigationEvents onWillFocus={updateDeviceSettings} />
-    <SettingsSection title={intl.formatMessage(messages.language)}>
-      <NavigatedSettingsItem
-        label={intl.formatMessage(messages.currentLanguage)}
-        navigateTo={SETTINGS_ROUTES.CHANGE_LANGUAGE}
-      />
-    </SettingsSection>
+  return (
+    <ScrollView style={styles.scrollView}>
+      <StatusBar type="dark" />
 
-    <SettingsSection title={intl.formatMessage(messages.security)}>
-      <NavigatedSettingsItem
-        label={intl.formatMessage(messages.changePin)}
-        navigateTo={SETTINGS_ROUTES.CHANGE_CUSTOM_PIN}
-        disabled={isSystemAuthEnabled}
-      />
-
-      <SettingsItem
-        label={intl.formatMessage(messages.biometricsSignIn)}
-        disabled={!isBiometricEncryptionHardwareSupported}
-      >
-        <Switch
-          value={isSystemAuthEnabled}
-          onValueChange={onToggleBiometricsAuthIn}
-          disabled={!isBiometricHardwareSupported}
+      <SettingsSection title={intl.formatMessage(messages.language)}>
+        <NavigatedSettingsItem
+          label={intl.formatMessage(messages.currentLanguage)}
+          navigateTo={SETTINGS_ROUTES.CHANGE_LANGUAGE}
         />
-      </SettingsItem>
-    </SettingsSection>
+      </SettingsSection>
 
-    <SettingsSection title={intl.formatMessage(messages.crashReporting)}>
-      <SettingsItem label={intl.formatMessage(messages.crashReportingText)}>
-        <Switch value={sendCrashReports} onValueChange={setCrashReporting} />
-      </SettingsItem>
-    </SettingsSection>
+      <SettingsSection title={intl.formatMessage(messages.security)}>
+        <NavigatedSettingsItem
+          label={intl.formatMessage(messages.changePin)}
+          navigateTo={SETTINGS_ROUTES.CHANGE_CUSTOM_PIN}
+          disabled={isSystemAuthEnabled}
+        />
 
-    <SettingsSection>
-      <NavigatedSettingsItem
-        label={intl.formatMessage(messages.termsOfUse)}
-        navigateTo={SETTINGS_ROUTES.TERMS_OF_USE}
-      />
+        <SettingsItem
+          label={intl.formatMessage(messages.biometricsSignIn)}
+          disabled={!isBiometricEncryptionHardwareSupported}
+        >
+          <Switch
+            value={isSystemAuthEnabled}
+            onValueChange={onToggleBiometricsAuthIn}
+            disabled={!isBiometricHardwareSupported}
+          />
+        </SettingsItem>
+      </SettingsSection>
 
-      <NavigatedSettingsItem
-        label={intl.formatMessage(messages.support)}
-        navigateTo={SETTINGS_ROUTES.SUPPORT}
-      />
-    </SettingsSection>
+      <SettingsSection title={intl.formatMessage(messages.crashReporting)}>
+        <SettingsItem label={intl.formatMessage(messages.crashReportingText)}>
+          <Switch value={sendCrashReports} onValueChange={setCrashReporting} />
+        </SettingsItem>
+      </SettingsSection>
 
-    <SettingsSection title="About">
-      <SettingsBuildItem
-        label={intl.formatMessage(messages.version)}
-        value={version}
-      />
+      <SettingsSection>
+        <NavigatedSettingsItem
+          label={intl.formatMessage(messages.termsOfUse)}
+          navigateTo={SETTINGS_ROUTES.TERMS_OF_USE}
+        />
 
-      <SettingsBuildItem
-        label={intl.formatMessage(messages.commit)}
-        value={CONFIG.COMMIT}
-      />
-    </SettingsSection>
-  </ScrollView>
-)
+        <NavigatedSettingsItem
+          label={intl.formatMessage(messages.support)}
+          navigateTo={SETTINGS_ROUTES.SUPPORT}
+        />
+      </SettingsSection>
 
+      <SettingsSection title="About">
+        <SettingsBuildItem
+          label={intl.formatMessage(messages.version)}
+          value={version}
+        />
+
+        <SettingsBuildItem
+          label={intl.formatMessage(messages.commit)}
+          value={CONFIG.COMMIT}
+        />
+      </SettingsSection>
+    </ScrollView>
+  )
+}
 export default injectIntl(
   (compose(
     connect(

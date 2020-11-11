@@ -29,7 +29,7 @@ Object {
   "status": "Successful",
   "submittedAt": Any<String>,
   "txOrdinal": 0,
-  "type": "shelley",
+  "type": "byron",
   "withdrawals": Array [],
 }
 `;

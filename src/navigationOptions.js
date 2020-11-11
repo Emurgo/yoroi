@@ -1,40 +1,33 @@
 // @flow
 
 import React from 'react'
-import {View} from 'react-native'
-import {Header} from 'react-navigation'
+import {StyleSheet} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {COLORS} from './styles/config'
 
-const GradientHeader = (props: any) => (
-  <View style={{backgroundColor: COLORS.LIGHT_GRAY}}>
-    <LinearGradient
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 0}}
-      colors={['#1A44B7', '#F14D78']}
-    >
-      <Header {...props} />
-    </LinearGradient>
-  </View>
+const GradientHeader = () => (
+  <LinearGradient
+    start={{x: 0, y: 0}}
+    end={{x: 1, y: 0}}
+    colors={['#1A44B7', '#F14D78']}
+    style={{...StyleSheet.absoluteFill}}
+  />
 )
 
 export const defaultNavigationOptions = {
   headerStyle: {
     backgroundColor: COLORS.BACKGROUND_BLUE,
     borderBottomWidth: 0,
+    shadowColor: 'transparent',
   },
   headerTintColor: '#fff',
 }
 
 export const defaultStackNavigatorOptions = {
-  headerLayoutPreset: 'center',
+  headerTitleAlign: 'center',
+  headerBackTitleVisible: false,
 }
 
-// note: the header option takes a HeaderProps object but it seems like this
-// type is not exposed by the react-navigation library
 export const jormunNavigationOptions = {
-  header: (props: any) => <GradientHeader {...props} />,
-  headerStyle: {
-    backgroundColor: 'transparent',
-  },
+  headerBackground: () => <GradientHeader />,
 }

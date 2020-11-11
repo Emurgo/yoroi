@@ -7,7 +7,6 @@ import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import {withNavigationTitle} from '../../utils/renderUtils'
 
-import type {Navigation} from '../../types/navigation'
 import type {ComponentType} from 'react'
 
 const messages = defineMessages({
@@ -19,7 +18,8 @@ const messages = defineMessages({
 })
 
 type ExternalProps = {|
-  navigation: Navigation,
+  route: Object, // TODO(navigation): type
+  navigation: any,
   intl: intlShape,
 |}
 
@@ -29,8 +29,8 @@ export default injectIntl(
   (compose(
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
-      onSuccess: ({navigation}) => (event) => {
-        const onSuccess = navigation.getParam('onSuccess')
+      onSuccess: ({route}) => (event) => {
+        const onSuccess = route.params?.onSuccess
         if (onSuccess) {
           onSuccess(event.data)
         }

@@ -10,10 +10,9 @@ import {CONFIG} from '../../config/config'
 import PinInput from '../Common/PinInput'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {withHandlers} from 'recompose'
-import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {authenticateByCustomPin} from '../../crypto/customPin'
 import {customPinHashSelector} from '../../selectors'
-import {showErrorDialog} from '../../actions'
+import {showErrorDialog, signin} from '../../actions'
 import {errorMessages} from '../../i18n/global-messages'
 
 import {StatusBar} from '../UiKit'
@@ -59,21 +58,22 @@ type ExternalProps = {|
 
 export default injectIntl(
   (compose(
-    connect((state) => ({
-      customPinHash: customPinHashSelector(state),
-    })),
+    connect(
+      (state) => ({
+        customPinHash: customPinHashSelector(state),
+      }),
+      {signin},
+    ),
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
-      onPinEnter: ({navigation, customPinHash, intl}: ExternalProps) => async (
-        pin,
-      ) => {
+      onPinEnter: ({customPinHash, intl, signin}) => async (pin) => {
         if (customPinHash == null) {
           throw new Error('Custom pin is not setup')
         }
 
         const isPinValid = await authenticateByCustomPin(customPinHash, pin)
         if (isPinValid) {
-          navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+          signin()
         } else {
           await showErrorDialog(errorMessages.incorrectPin, intl)
         }

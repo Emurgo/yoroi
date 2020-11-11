@@ -4,7 +4,7 @@ import {compose} from 'redux'
 import _ from 'lodash'
 import {Image, View, TouchableHighlight} from 'react-native'
 import {withStateHandlers, withHandlers} from 'recompose'
-import {SafeAreaView} from 'react-navigation'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import utfSymbols from '../../utils/utfSymbols'
 import {Text, ScreenBackground} from '../UiKit'

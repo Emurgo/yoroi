@@ -4,7 +4,6 @@ import React from 'react'
 import {View} from 'react-native'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
-import {NavigationEvents} from 'react-navigation'
 import {injectIntl, intlShape} from 'react-intl'
 
 import PinInput from './PinInput'
@@ -16,6 +15,7 @@ import styles from './styles/PinRegistrationForm.style'
 
 import type {ComponentType} from 'react'
 import type {PinInputLabels} from './PinInput'
+import type {Navigation} from '../../types/navigation'
 
 const handlePinEnter = ({pin, setPin, onPinEntered, intl}) => async (
   pinConfirmation,
@@ -50,6 +50,7 @@ type ExternalProps = {
   labels: PinRegistrationFormLabels,
   onPinEntered: (string) => any,
   intl: intlShape,
+  navigation: Navigation,
 }
 
 type Props = ExternalProps & {
@@ -66,12 +67,22 @@ const PinRegistrationForm = ({
   labels,
   handlePinEnter,
   clearPin,
+  navigation,
 }: Props) => {
   const inputLabels = !pin ? labels.PinInput : labels.PinConfirmationInput
 
+  React.useEffect(
+    () => {
+      const unsubscribe = navigation.addListener('blur', () => {
+        clearPin()
+      })
+      return unsubscribe
+    },
+    [navigation],
+  )
+
   return (
     <View style={styles.container}>
-      <NavigationEvents onDidBlur={clearPin} />
       <PinInput
         labels={inputLabels}
         onPinEnter={pin ? handlePinEnter : handleSetPin}

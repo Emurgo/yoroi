@@ -36,16 +36,10 @@ import networkInfo from './utils/networkInfo'
 import {
   installationIdSelector,
   isSystemAuthEnabledSelector,
-  customPinHashSelector,
-  languageSelector,
-  tosSelector,
   sendCrashReportsSelector,
   currentVersionSelector,
-  isMaintenanceSelector,
 } from './selectors'
 import assert from './utils/assert'
-import NavigationService from './NavigationService'
-import {ROOT_ROUTES} from './RoutesList'
 import KeyStore from './crypto/KeyStore'
 import * as api from './api/byron/api'
 
@@ -156,40 +150,6 @@ export const removeCustomPin = () => async (dispatch: Dispatch<any>) => {
   await dispatch(clearAppSettingField(APP_SETTINGS_KEYS.CUSTOM_PIN_HASH))
 }
 
-export const navigateFromSplash = () => (
-  dispatch: Dispatch<any>,
-  getState: any,
-) => {
-  // TODO(ppershing): here we should switch between
-  // onboarding and normal wallet flow
-  const state = getState()
-
-  let route
-
-  if (isMaintenanceSelector(state)) {
-    route = ROOT_ROUTES.MAINTENANCE
-  } else if (
-    !languageSelector(state) ||
-    !tosSelector(state) ||
-    (!isSystemAuthEnabledSelector(state) && !customPinHashSelector(state))
-  ) {
-    route = ROOT_ROUTES.FIRST_RUN
-  } else {
-    // TODO: change to login in prod
-    route = ROOT_ROUTES.INIT
-  }
-
-  // cool-user: Fixes app crashing, as Android back
-  // button remounts the App component other solution is:
-  // eslint-disable-next-line
-  // https://github.com/facebook/react-native/issues/13775#issuecomment-319673305
-  try {
-    NavigationService.navigate(route)
-  } catch (e) {
-    Logger.warn('Could not navigate from splash screen')
-  }
-}
-
 export const acceptAndSaveTos = () => async (dispatch: Dispatch<any>) => {
   await dispatch(setAppSettingField(APP_SETTINGS_KEYS.ACCEPTED_TOS, true))
 }
@@ -235,10 +195,30 @@ export const closeWallet = () => async (_dispatch: Dispatch<any>) => {
   await walletManager.closeWallet()
 }
 
+// note(v-almonacid): authentication occurs after entering pin or biometrics,
+// it does not mean we opened a wallet
+export const signin = () => (dispatch: Dispatch<any>) => {
+  dispatch({
+    path: ['isAuthenticated'],
+    payload: true,
+    type: 'SIGN_IN',
+    reducer: (state, payload) => payload,
+  })
+}
+
+export const signout = () => (dispatch: Dispatch<any>) => {
+  dispatch({
+    path: ['isAuthenticated'],
+    payload: false,
+    type: 'SIGN_OUT',
+    reducer: (state, payload) => payload,
+  })
+}
+
+// logout closes the active wallet and signout
 export const logout = () => async (dispatch: Dispatch<any>) => {
   await closeWallet()
-
-  await dispatch(navigateFromSplash())
+  dispatch(signout())
 }
 
 export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
@@ -303,7 +283,6 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
     reducer: (state, value) => value,
     type: 'INITIALIZE_APP',
   })
-  dispatch(navigateFromSplash())
   SplashScreen.hide()
 }
 

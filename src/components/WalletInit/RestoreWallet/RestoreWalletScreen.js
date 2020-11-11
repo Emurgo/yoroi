@@ -5,7 +5,7 @@ import {View, ScrollView} from 'react-native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withStateHandlers} from 'recompose'
-import {SafeAreaView, withNavigation} from 'react-navigation'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import _ from 'lodash'
 
@@ -111,11 +111,9 @@ const RestoreWalletScreen = ({
   setPhrase,
   translateInvalidPhraseError,
   isKeyboardOpen,
-  navigation,
+  route,
 }) => {
-  const implId: WalletImplementationId = navigation.getParam(
-    'walletImplementationId',
-  )
+  const implId: WalletImplementationId = route.params.walletImplementationId
   const walletConfig = getWalletConfigById(implId)
   const errors = validateRecoveryPhrase(phrase, walletConfig.MNEMONIC_LEN)
   const visibleErrors = isKeyboardOpen
@@ -164,7 +162,6 @@ export default injectIntl(
     connect((state) => ({
       isKeyboardOpen: isKeyboardOpenSelector(state),
     })),
-    withNavigation,
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withStateHandlers(
       {
@@ -175,11 +172,13 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      navigateToWalletCredentials: ({navigation, phrase}) => (_event) => {
+      navigateToWalletCredentials: ({navigation, route, phrase}) => (
+        _event,
+      ) => {
         navigation.navigate(WALLET_INIT_ROUTES.VERIFY_RESTORED_WALLET, {
           phrase: cleanMnemonic(phrase),
-          networkId: navigation.getParam('networkId'),
-          walletImplementationId: navigation.getParam('walletImplementationId'),
+          networkId: route.params.networkId,
+          walletImplementationId: route.params.walletImplementationId,
         })
       },
       translateInvalidPhraseError: ({intl}) => (error) =>
@@ -187,6 +186,7 @@ export default injectIntl(
     }),
   )(RestoreWalletScreen): ComponentType<{
     navigation: Navigation,
+    route: Object, // TODO(navigation): type
     intl: intlShape,
   }>),
 )

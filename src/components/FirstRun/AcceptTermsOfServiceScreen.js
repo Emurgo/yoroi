@@ -3,7 +3,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {SafeAreaView} from 'react-navigation'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {withStateHandlers, withHandlers} from 'recompose'
 import {ScrollView} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
@@ -11,9 +11,9 @@ import {injectIntl, defineMessages} from 'react-intl'
 import TermsOfService from '../Common/TermsOfService'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {Checkbox, Button, StatusBar, PleaseWaitModal} from '../UiKit'
-import {FIRST_RUN_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
+import {FIRST_RUN_ROUTES} from '../../RoutesList'
 import {isSystemAuthEnabledSelector} from '../../selectors'
-import {acceptAndSaveTos, setSystemAuth} from '../../actions'
+import {acceptAndSaveTos, setSystemAuth, signin} from '../../actions'
 import {canBiometricEncryptionBeEnabled} from '../../helpers/deviceSettings'
 
 import styles from './styles/AcceptTermsOfServiceScreen.styles'
@@ -92,7 +92,7 @@ export default injectIntl(
       (state) => ({
         isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
       }),
-      {acceptAndSaveTos, setSystemAuth},
+      {acceptAndSaveTos, setSystemAuth, signin},
     ),
     withStateHandlers(
       {
@@ -110,25 +110,22 @@ export default injectIntl(
         acceptAndSaveTos,
         setSystemAuth,
         setSavingConsent,
+        signin,
       }) => async () => {
         setSavingConsent(true)
         await acceptAndSaveTos()
 
         const canSystemAuthBeEnabled = await canBiometricEncryptionBeEnabled()
 
-        const navigateToWalletCreateRestore = () =>
-          navigation.navigate(WALLET_INIT_ROUTES.INITIAL_CREATE_RESTORE_SWITCH)
-
         if (canSystemAuthBeEnabled) {
           await setSystemAuth(true)
-
-          setSavingConsent(false)
-          navigateToWalletCreateRestore()
+          // note(v-almonacid) here we don't setSavingConsent(false)
+          // because signin() will likely unmount the component before the
+          // update is dispatched
+          signin()
         } else {
           setSavingConsent(false)
-          navigation.navigate(FIRST_RUN_ROUTES.CUSTOM_PIN, {
-            onSuccess: navigateToWalletCreateRestore,
-          })
+          navigation.navigate(FIRST_RUN_ROUTES.CUSTOM_PIN)
         }
       },
     }),

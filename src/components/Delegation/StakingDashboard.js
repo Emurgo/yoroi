@@ -5,7 +5,7 @@ import type {ComponentType} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View, ScrollView, RefreshControl, Platform} from 'react-native'
-import {SafeAreaView, withNavigation, NavigationEvents} from 'react-navigation'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {BigNumber} from 'bignumber.js'
 import {injectIntl} from 'react-intl'
 
@@ -60,7 +60,7 @@ import {
 import {
   DELEGATION_ROUTES,
   SEND_ROUTES,
-  WALLET_INIT_ROUTES,
+  WALLET_ROOT_ROUTES,
   WALLET_ROUTES,
 } from '../../RoutesList'
 import {NetworkError, ApiError} from '../../api/errors'
@@ -170,6 +170,8 @@ class StakingDashboard extends React.Component<Props, State> {
 
   _intervalId: void | IntervalID = undefined
 
+  _unsubscribe: void | (() => mixed) = undefined
+
   componentDidMount() {
     this._intervalId = setInterval(
       () =>
@@ -179,6 +181,9 @@ class StakingDashboard extends React.Component<Props, State> {
       1000,
     )
     this.props.checkForFlawedWallets()
+    this._unsubscribe = this.props.navigation.addListener('focus', () =>
+      this.handleDidFocus(),
+    )
   }
 
   async componentDidUpdate(prevProps) {
@@ -199,6 +204,7 @@ class StakingDashboard extends React.Component<Props, State> {
 
   componentWillUnmount() {
     if (this._intervalId != null) clearInterval(this._intervalId)
+    if (this._unsubscribe != null) this._unsubscribe()
   }
 
   /**
@@ -473,7 +479,7 @@ class StakingDashboard extends React.Component<Props, State> {
           this.closeWithdrawalDialog()
           await walletManager.closeWallet()
           await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-          navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+          navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
 
           return
         } else {
@@ -597,10 +603,7 @@ class StakingDashboard extends React.Component<Props, State> {
         <FlawedWalletScreen
           disableButtons={false}
           onPress={() =>
-            navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
-          }
-          onRequestClose={() =>
-            navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+            navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
           }
         />
       )
@@ -676,7 +679,6 @@ class StakingDashboard extends React.Component<Props, State> {
           {/* disable button by default as ITN is over */}
           <DelegationNavigationButtons onPress={this.navigateToStakingCenter} />
         </View>
-        <NavigationEvents onDidFocus={this.handleDidFocus} />
 
         <WithdrawalDialog
           step={this.state.withdrawalDialogStep}
@@ -743,7 +745,6 @@ export default injectIntl(
         ...ownProps,
       }),
     ),
-    withNavigation,
     withNavigationTitle(({walletName}) => walletName),
   )(StakingDashboard): ComponentType<ExternalProps>),
 )

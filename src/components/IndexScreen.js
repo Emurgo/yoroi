@@ -9,15 +9,14 @@ import {
 } from 'react-native'
 
 import {Text, Button, StatusBar} from './UiKit'
-import {ROOT_ROUTES, WALLET_INIT_ROUTES} from '../RoutesList'
+import {ROOT_ROUTES} from '../RoutesList'
 import storage from '../utils/storage'
 
-import type {NavigationScreenProp, NavigationState} from 'react-navigation'
+import type {Navigation} from '../types/navigation'
 
 const routes = [
   {label: 'Storybook', path: ROOT_ROUTES.STORYBOOK},
-  {label: 'Skip to wallet list', path: WALLET_INIT_ROUTES.WALLET_SELECTION},
-  {label: 'Default', path: ROOT_ROUTES.LOGIN},
+  {label: 'Skip to wallet list', path: ROOT_ROUTES.WALLET},
 ]
 
 const styles = StyleSheet.create({
@@ -42,7 +41,7 @@ const styles = StyleSheet.create({
 })
 
 type Props = {
-  navigation: NavigationScreenProp<NavigationState>,
+  navigation: Navigation,
 }
 
 const crash = () => {

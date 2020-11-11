@@ -1,12 +1,12 @@
 // @flow
 import React from 'react'
-import {NavigationEvents} from 'react-navigation'
+import {useNavigation} from '@react-navigation/native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import type {ComponentType} from 'react'
 
 import {
-  hasPendingOutgoingTransactionSelector, // TODO
+  hasPendingOutgoingTransactionSelector,
   isFetchingAccountStateSelector,
   isOnlineSelector,
   utxosSelector,
@@ -15,16 +15,21 @@ import {fetchAccountState} from '../../actions/account'
 
 import type {RawUtxo} from '../../api/types'
 
-class _AccountAutoRefresher extends React.Component<{
+class AccountAutoRefresher extends React.Component<{
   isFetching: boolean,
   isOnline: boolean,
   fetchAccountState: () => any,
   hasPendingTx: boolean,
   utxo: ?Array<RawUtxo>,
+  navigation: any,
 }> {
   _firstFocus = true
+  _unsubscribe: void | (() => mixed) = undefined
 
   componentDidMount = async () => {
+    this._unsubscribe = this.props.navigation.addListener('focus', () =>
+      this.handleDidFocus(),
+    )
     await this.refetch()
   }
 
@@ -39,6 +44,10 @@ class _AccountAutoRefresher extends React.Component<{
       // because fetching is already in progress for some reason
       this.refetch()
     }
+  }
+
+  componentWillUnmount = () => {
+    if (this._unsubscribe != null) this._unsubscribe()
   }
 
   refetch = () => {
@@ -56,7 +65,7 @@ class _AccountAutoRefresher extends React.Component<{
     this.refetch()
   }
 
-  render = () => <NavigationEvents onDidFocus={this.handleDidFocus} />
+  render = () => null
 }
 
 export default (compose(
@@ -71,4 +80,7 @@ export default (compose(
       fetchAccountState,
     },
   ),
-)(_AccountAutoRefresher): ComponentType<{}>)
+)((props) => {
+  const navigation = useNavigation()
+  return <AccountAutoRefresher {...props} navigation={navigation} />
+}): ComponentType<{}>)

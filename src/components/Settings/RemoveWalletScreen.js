@@ -8,7 +8,7 @@ import {injectIntl, defineMessages} from 'react-intl'
 
 import {Button, Text, Checkbox, ValidatedTextInput, StatusBar} from '../UiKit'
 import {withNavigationTitle} from '../../utils/renderUtils'
-import {WALLET_INIT_ROUTES} from '../../RoutesList'
+import {WALLET_ROOT_ROUTES} from '../../RoutesList'
 import {walletNameSelector, isHWSelector} from '../../selectors'
 import {removeCurrentWallet} from '../../actions'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
@@ -61,7 +61,7 @@ const messages = defineMessages({
 
 const handleRemoveWallet = ({navigation, removeCurrentWallet}) => async () => {
   await removeCurrentWallet()
-  navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+  navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
 }
 
 type Prop = {

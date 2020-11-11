@@ -3,10 +3,12 @@ import React from 'react'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 import {TouchableOpacity, View, Image} from 'react-native'
-import {withNavigation} from 'react-navigation'
+import {useNavigation} from '@react-navigation/native'
 
 import chevronRight from '../../assets/img/chevron_right.png'
 import {Text} from '../UiKit'
+
+import type {ComponentType} from 'react'
 
 import styles from './styles/SettingsItems.style'
 
@@ -14,12 +16,16 @@ const Touchable = (props: {}) => (
   <TouchableOpacity {...props} activeOpacity={0.5} />
 )
 
-const NavigateTo = compose(
-  withNavigation,
+type NavigateToProps = {
+  to: string,
+  navigation: any,
+}
+const NavigateTo = (compose(
   withHandlers({
-    onPress: ({navigation, to}) => () => navigation.navigate(to),
+    onPress: ({to, navigation}: NavigateToProps) => () =>
+      navigation.navigate(to),
   }),
-)((props) => <Touchable {...props} />)
+)((props) => <Touchable {...props} />): ComponentType<NavigateToProps>)
 
 type SettingsSectionProps = {
   title?: string,
@@ -79,13 +85,16 @@ export const NavigatedSettingsItem = ({
   label,
   navigateTo,
   disabled,
-}: NavigatedSettingsItemProps) => (
-  <NavigateTo to={navigateTo} disabled={disabled}>
-    <SettingsItem label={label} disabled={disabled}>
-      <Image source={chevronRight} />
-    </SettingsItem>
-  </NavigateTo>
-)
+}: NavigatedSettingsItemProps) => {
+  const navigation = useNavigation()
+  return (
+    <NavigateTo to={navigateTo} navigation={navigation} disabled={disabled}>
+      <SettingsItem label={label} disabled={disabled}>
+        <Image source={chevronRight} />
+      </SettingsItem>
+    </NavigateTo>
+  )
+}
 
 type PressableSettingsItemProps = {|
   label: string,

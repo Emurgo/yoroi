@@ -39,10 +39,8 @@ const messages = defineMessages({
 // TODO
 const url = '' // 'https://yoroi-wallet.com/...'
 
-const CheckNanoXScreen = ({intl, onPress, navigation}) => {
-  const networkId = navigation.getParam('networkId')
-  const walletImplementationId = navigation.getParam('walletImplementationId')
-  const useUSB = navigation.getParam('useUSB')
+const CheckNanoXScreen = ({intl, onPress, route}) => {
+  const {networkId, walletImplementationId, useUSB} = route.params
   const requirements: Array<string> = []
   if (useUSB) {
     requirements.push(intl.formatMessage(ledgerMessages.haveOTGAdapter))
@@ -94,6 +92,7 @@ const CheckNanoXScreen = ({intl, onPress, navigation}) => {
 
 type ExternalProps = {|
   navigation: Navigation,
+  route: Object, // TODO(navigation): type
   intl: IntlShape,
 |}
 

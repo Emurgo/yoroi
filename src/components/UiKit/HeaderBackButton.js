@@ -1,11 +1,11 @@
 // @flow
 import React from 'react'
-import {HeaderBackButton} from 'react-navigation-stack'
+import {HeaderBackButton} from '@react-navigation/stack'
 
-import type {NavigationScreenProp, NavigationState} from 'react-navigation'
+// note: this component is not used anywhere, consider removing
 
 type Props = {
-  navigation: NavigationScreenProp<NavigationState>,
+  navigation: any,
   shouldPopOutOfLastNavigator?: boolean,
 }
 

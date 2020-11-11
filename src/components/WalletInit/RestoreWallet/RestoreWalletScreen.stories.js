@@ -4,12 +4,13 @@ import React from 'react'
 import {storiesOf} from '@storybook/react-native'
 
 import RestoreWalletScreen from './RestoreWalletScreen'
-import {NETWORK_REGISTRY} from '../../../config/types'
+import {CONFIG} from '../../../config/config'
 
-storiesOf('RestoreWalletScreen', module).add('Default', ({navigation}) => {
-  navigation.getParam = (param) => {
-    if (param === 'networkId') return NETWORK_REGISTRY.JORMUNGANDR
-    return ''
+storiesOf('RestoreWalletScreen', module).add('Default', ({route}) => {
+  route.params = {
+    networkId: CONFIG.NETWORKS.BYRON_MAINNET.NETWORK_ID,
+    walletImplementationId:
+      CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
   }
-  return <RestoreWalletScreen navigation={navigation} />
+  return <RestoreWalletScreen route={route} />
 })

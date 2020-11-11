@@ -4,7 +4,7 @@ import React from 'react'
 import {View, Image, Dimensions} from 'react-native'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers, withProps} from 'recompose'
-import {SafeAreaView} from 'react-navigation'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import assert from '../../../utils/assert'
@@ -94,7 +94,7 @@ const MnemonicShowScreen = ({
 export default injectIntl(
   (compose(
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
-    withProps((props) => ({mnemonic: props.navigation.getParam('mnemonic')})),
+    withProps((props) => ({mnemonic: props.route.params.mnemonic})),
     withStateHandlers(
       {
         modal: false,
@@ -105,13 +105,13 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      navigateToMnemonicCheck: ({navigation, hideModal, mnemonic}) => () => {
-        const name = navigation.getParam('name')
-        const password = navigation.getParam('password')
-        const networkId = navigation.getParam('networkId')
-        const walletImplementationId = navigation.getParam(
-          'walletImplementationId',
-        )
+      navigateToMnemonicCheck: ({
+        navigation,
+        route,
+        hideModal,
+        mnemonic,
+      }) => () => {
+        const {name, password, networkId, walletImplementationId} = route.params
         assert.assert(!!mnemonic, 'navigateToMnemonicCheck:: mnemonic')
         assert.assert(!!password, 'navigateToMnemonicCheck:: password')
         assert.assert(!!name, 'navigateToMnemonicCheck:: name')
@@ -130,6 +130,7 @@ export default injectIntl(
     }),
   )(MnemonicShowScreen): ComponentType<{
     navigation: Navigation,
+    route: Object, // TODO
     intl: intlShape,
   }>),
 )

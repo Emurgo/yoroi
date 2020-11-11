@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import {createStackNavigator} from 'react-navigation'
+import {createStackNavigator} from '@react-navigation/stack'
 
 import {Button} from '../UiKit'
 import SendScreen from './SendScreen'
@@ -9,7 +9,6 @@ import AddressReaderQR from './AddressReaderQR'
 import BiometricAuthScreen from './BiometricAuthScreen'
 import iconQR from '../../assets/img/qr_code.png'
 import {pastedFormatter} from './amountUtils'
-import HeaderBackButton from '../UiKit/HeaderBackButton'
 import {
   defaultNavigationOptions,
   defaultStackNavigatorOptions,
@@ -28,23 +27,33 @@ const getParams = (params) => {
   return result
 }
 
-const setAddress = (address, navigation) => {
-  const handlerAddress = navigation.getParam('onScanAddress')
+const setAddress = (address, route) => {
+  const handlerAddress = route.params?.onScanAddress
   handlerAddress && handlerAddress(address)
 }
 
-const setAmount = (amount, navigation) => {
-  const handlerAmount = navigation.getParam('onScanAmount')
+const setAmount = (amount, route) => {
+  const handlerAmount = route.params?.onScanAmount
   handlerAmount && handlerAmount(pastedFormatter(amount))
 }
 
-const SendScreenNavigator = createStackNavigator(
-  {
-    [SEND_ROUTES.MAIN]: {
-      screen: SendScreen,
-      navigationOptions: ({navigation}) => ({
-        title: navigation.getParam('title'),
-        headerRight: (
+const Stack = createStackNavigator()
+
+const SendScreenNavigator = () => (
+  <Stack.Navigator
+    initialRouteName={SEND_ROUTES.MAIN}
+    screenOptions={({route}) => ({
+      title: route.params?.title ?? undefined,
+      ...defaultNavigationOptions,
+      ...defaultStackNavigatorOptions,
+    })}
+  >
+    <Stack.Screen
+      name={SEND_ROUTES.MAIN}
+      component={SendScreen}
+      options={({navigation, route}) => ({
+        title: route.params?.title ?? undefined,
+        headerRight: () => (
           <Button
             style={styles.qrButton}
             onPress={() =>
@@ -58,14 +67,14 @@ const SendScreenNavigator = createStackNavigator(
                       const index = stringQR.indexOf('?')
                       const params = getParams(stringQR.substr(index))
                       if ('amount' in params) {
-                        setAddress(address, navigation)
-                        setAmount(params.amount, navigation)
+                        setAddress(address, route)
+                        setAmount(params.amount, route)
                       }
                     } else {
-                      setAddress(address, navigation)
+                      setAddress(address, route)
                     }
                   } else {
-                    setAddress(stringQR, navigation)
+                    setAddress(stringQR, route)
                   }
                   navigation.navigate(SEND_ROUTES.MAIN)
                 },
@@ -77,26 +86,19 @@ const SendScreenNavigator = createStackNavigator(
           />
         ),
         ...defaultNavigationOptions,
-      }),
-    },
-    [SEND_ROUTES.ADDRESS_READER_QR]: AddressReaderQR,
-    [SEND_ROUTES.CONFIRM]: ConfirmScreen,
-    [SEND_ROUTES.BIOMETRICS_SIGNING]: {
-      screen: BiometricAuthScreen,
-      navigationOptions: {
-        header: null,
-      },
-    },
-  },
-  {
-    initialRouteName: SEND_ROUTES.MAIN,
-    navigationOptions: ({navigation}) => ({
-      title: navigation.getParam('title'),
-      headerLeft: <HeaderBackButton navigation={navigation} />,
-      ...defaultNavigationOptions,
-    }),
-    ...defaultStackNavigatorOptions,
-  },
+      })}
+    />
+    <Stack.Screen
+      name={SEND_ROUTES.ADDRESS_READER_QR}
+      component={AddressReaderQR}
+    />
+    <Stack.Screen name={SEND_ROUTES.CONFIRM} component={ConfirmScreen} />
+    <Stack.Screen
+      name={SEND_ROUTES.BIOMETRICS_SIGNING}
+      component={BiometricAuthScreen}
+      options={{headerShown: false}}
+    />
+  </Stack.Navigator>
 )
 
 export default SendScreenNavigator

@@ -15,7 +15,7 @@ import {
   showConfirmationDialog,
   DIALOG_BUTTONS,
 } from '../../actions'
-import {WALLET_INIT_ROUTES, SETTINGS_ROUTES} from '../../RoutesList'
+import {WALLET_ROOT_ROUTES, SETTINGS_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {
   isSystemAuthEnabledSelector,
@@ -232,7 +232,7 @@ export default injectIntl(
       onSwitchWallet: ignoreConcurrentAsyncHandler(
         ({navigation, closeWallet}) => async () => {
           await closeWallet()
-          navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+          navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
         },
         1000,
       ),

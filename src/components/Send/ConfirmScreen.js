@@ -5,7 +5,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {ScrollView, View, Platform} from 'react-native'
 import {withHandlers, withStateHandlers} from 'recompose'
-import {SafeAreaView} from 'react-navigation'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages} from 'react-intl'
 
 import {
@@ -30,7 +30,7 @@ import globalMessages, {
   confirmationMessages,
 } from '../../i18n/global-messages'
 import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
-import {SEND_ROUTES, WALLET_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
+import {SEND_ROUTES, WALLET_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
 import {CONFIG} from '../../config/config'
 import KeyStore from '../../crypto/KeyStore'
 import {showErrorDialog, submitTransaction, submitSignedTx} from '../../actions'
@@ -63,6 +63,7 @@ const messages = defineMessages({
 
 const handleOnConfirm = async (
   navigation,
+  route,
   isHW,
   hwDeviceInfo,
   isEasyConfirmationEnabled,
@@ -75,7 +76,7 @@ const handleOnConfirm = async (
   useUSB,
   setErrorData,
 ) => {
-  const transactionData = navigation.getParam('transactionData') // ISignRequest
+  const transactionData = route.params.transactionData // ISignRequest
   const signRequest = transactionData.signRequest
 
   const submitTx = async <T>(
@@ -155,7 +156,7 @@ const handleOnConfirm = async (
       if (e instanceof SystemAuthDisabled) {
         await walletManager.closeWallet()
         await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-        navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+        navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
 
         return
       } else {
@@ -202,7 +203,7 @@ const LEDGER_DIALOG_STEPS = {
 const ConfirmScreen = ({
   onConfirm,
   intl,
-  navigation,
+  route,
   password,
   setPassword,
   isEasyConfirmationEnabled,
@@ -220,11 +221,7 @@ const ConfirmScreen = ({
   errorMessage,
   errorLogs,
 }) => {
-  const amount = navigation.getParam('amount')
-  const address = navigation.getParam('address')
-  const balanceAfterTx = navigation.getParam('balanceAfterTx')
-  const availableAmount = navigation.getParam('availableAmount')
-  const fee = navigation.getParam('fee')
+  const {amount, address, balanceAfterTx, availableAmount, fee} = route.params
 
   const isConfirmationDisabled =
     !isEasyConfirmationEnabled && !password && !isHW
@@ -431,6 +428,7 @@ export default injectIntl(
       onConfirm: ignoreConcurrentAsyncHandler(
         ({
           navigation,
+          route,
           isHW,
           hwDeviceInfo,
           isEasyConfirmationEnabled,
@@ -445,6 +443,7 @@ export default injectIntl(
         }) => async (_event) => {
           await handleOnConfirm(
             navigation,
+            route,
             isHW,
             hwDeviceInfo,
             isEasyConfirmationEnabled,

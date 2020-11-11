@@ -8,8 +8,6 @@ import {Button} from '../UiKit'
 
 import styles from './styles/DelegationNavigator.style'
 
-import type {NavigationScreenProp, NavigationState} from 'react-navigation'
-
 const messages = defineMessages({
   stakingCenterButton: {
     id: 'components.delegation.delegationnavigationbuttons.stakingCenterButton',
@@ -18,7 +16,7 @@ const messages = defineMessages({
 })
 
 type Props = {
-  navigation: NavigationScreenProp<NavigationState>,
+  navigation: any, // TODO: type
   intl: any,
   onPress: () => void,
   disabled?: ?boolean,

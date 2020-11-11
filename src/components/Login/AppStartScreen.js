@@ -3,7 +3,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {View} from 'react-native'
-import {SafeAreaView} from 'react-navigation'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
@@ -11,7 +11,7 @@ import {injectIntl, defineMessages} from 'react-intl'
 import WalletDescription from '../WalletInit/WalletDescription'
 import {Button, StatusBar, ScreenBackground} from '../UiKit'
 import styles from './styles/AppStartScreen.style'
-import {ROOT_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
+import {ROOT_ROUTES} from '../../RoutesList'
 import KeyStore from '../../crypto/KeyStore'
 import {
   installationIdSelector,
@@ -22,7 +22,7 @@ import {
   recreateAppSignInKeys,
   canBiometricEncryptionBeEnabled,
 } from '../../helpers/deviceSettings'
-import {showErrorDialog} from '../../actions'
+import {showErrorDialog, signin} from '../../actions'
 import {errorMessages} from '../../i18n/global-messages'
 
 const messages = defineMessages({
@@ -57,17 +57,21 @@ const AppStartScreen = ({navigateLogin, intl}) => {
 
 export default injectIntl(
   compose(
-    connect((state) => ({
-      installationId: installationIdSelector(state),
-      customPinHash: customPinHashSelector(state),
-      isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
-    })),
+    connect(
+      (state) => ({
+        installationId: installationIdSelector(state),
+        customPinHash: customPinHashSelector(state),
+        isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
+      }),
+      {signin},
+    ),
     withHandlers({
       navigateLogin: ({
         isSystemAuthEnabled,
         navigation,
         installationId,
         intl,
+        signin,
       }) => async () => {
         if (!isSystemAuthEnabled) {
           navigation.navigate(ROOT_ROUTES.CUSTOM_PIN_AUTH)
@@ -78,8 +82,9 @@ export default injectIntl(
         if (await canBiometricEncryptionBeEnabled()) {
           navigation.navigate(ROOT_ROUTES.BIO_AUTH, {
             keyId: installationId,
-            onSuccess: () =>
-              navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION),
+            onSuccess: () => {
+              signin()
+            },
             onFail: async (reason) => {
               if (reason === KeyStore.REJECTIONS.INVALID_KEY) {
                 if (await canBiometricEncryptionBeEnabled()) {

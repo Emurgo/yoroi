@@ -5,7 +5,7 @@ import {Text, ScrollView, ActivityIndicator} from 'react-native'
 import {connect} from 'react-redux'
 import {compose, withHandlers} from 'recompose'
 import _ from 'lodash'
-import {SafeAreaView} from 'react-navigation'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages} from 'react-intl'
 import type {IntlShape} from 'react-intl'
 
@@ -17,7 +17,11 @@ import {InvalidState} from '../../crypto/errors'
 import WalletListItem from './WalletListItem'
 import Screen from '../Screen'
 import {Button, StatusBar, ScreenBackground} from '../UiKit'
-import {ROOT_ROUTES, WALLET_INIT_ROUTES} from '../../RoutesList'
+import {
+  WALLET_ROOT_ROUTES,
+  WALLET_INIT_ROUTES,
+  ROOT_ROUTES,
+} from '../../RoutesList'
 import {showErrorDialog, updateVersion} from '../../actions'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {currentVersionSelector} from '../../selectors'
@@ -30,7 +34,6 @@ import {
 
 import styles from './styles/WalletSelectionScreen.style'
 
-import type {NavigationScreenProp, NavigationState} from 'react-navigation'
 import type {State} from '../../state'
 import type {ComponentType} from 'react'
 import type {NetworkId, WalletImplementationId} from '../../config/types'
@@ -142,9 +145,12 @@ export default injectIntl(
         networkId: NetworkId,
         walletImplementationId: WalletImplementationId,
       ) =>
-        navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH, {
-          networkId,
-          walletImplementationId,
+        navigation.navigate(ROOT_ROUTES.NEW_WALLET, {
+          screen: WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH,
+          params: {
+            networkId,
+            walletImplementationId,
+          },
         }),
       openWallet: ({navigation, intl}) => async (wallet) => {
         try {
@@ -153,17 +159,17 @@ export default injectIntl(
             return
           }
           await walletManager.openWallet(wallet)
-          const route = ROOT_ROUTES.WALLET
+          const route = WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES
           navigation.navigate(route)
         } catch (e) {
           if (e instanceof SystemAuthDisabled) {
             await walletManager.closeWallet()
             await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-            navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+            navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
           } else if (e instanceof InvalidState) {
             await walletManager.closeWallet()
             await showErrorDialog(errorMessages.walletStateInvalid, intl)
-            navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+            navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
           } else if (e instanceof KeysAreInvalid) {
             await walletManager.cleanupInvalidKeys()
             await showErrorDialog(errorMessages.walletKeysInvalidated, intl)
@@ -181,6 +187,6 @@ export default injectIntl(
     }),
   )(WalletListScreen): ComponentType<{
     intl: IntlShape,
-    navigation: NavigationScreenProp<NavigationState>,
+    navigation: any, // TODO: type
   }>),
 )

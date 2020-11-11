@@ -1,19 +1,17 @@
 // @flow
 import React from 'react'
 import {Button} from '../UiKit'
-import {createStackNavigator} from 'react-navigation'
+import {createStackNavigator} from '@react-navigation/stack'
 
 import StakingDashboard from './StakingDashboard'
 import BiometricAuthScreen from '../Send/BiometricAuthScreen'
 import {
   STAKING_DASHBOARD_ROUTES,
-  WALLET_ROUTES,
+  WALLET_ROOT_ROUTES,
   SEND_ROUTES,
 } from '../../RoutesList'
-import SettingsScreenNavigator from '../Settings/SettingsScreenNavigator'
 import iconGear from '../../assets/img/gear.png'
 import {isJormungandr} from '../../config/networks'
-import HeaderBackButton from '../UiKit/HeaderBackButton'
 
 import {
   defaultNavigationOptions,
@@ -23,51 +21,47 @@ import {
 
 import styles from '../TxHistory/styles/SettingsButton.style'
 
-const DelegationNavigatorSummary = createStackNavigator(
-  {
-    [STAKING_DASHBOARD_ROUTES.MAIN]: {
-      screen: StakingDashboard,
-      navigationOptions: ({navigation}) => {
-        const extraNavOptions = isJormungandr(navigation.getParam('networkId'))
-          ? jormunNavigationOptions
-          : {}
-        return {
-          title: navigation.getParam('title'),
-          headerRight: (
-            <Button
-              style={styles.settingsButton}
-              onPress={() => navigation.navigate(WALLET_ROUTES.SETTINGS)}
-              iconImage={iconGear}
-              title=""
-              withoutBackground
-            />
-          ),
-          ...defaultNavigationOptions,
-          ...extraNavOptions,
-        }
-      },
-    },
-    [SEND_ROUTES.BIOMETRICS_SIGNING]: {
-      screen: BiometricAuthScreen,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    [WALLET_ROUTES.SETTINGS]: {
-      screen: SettingsScreenNavigator,
-      navigationOptions: {
-        header: null,
+const Stack = createStackNavigator()
+
+const DelegationNavigatorSummary = () => (
+  <Stack.Navigator
+    screenOptions={({route}) => {
+      const extraOptions = isJormungandr(route.params?.networkId)
+        ? jormunNavigationOptions
+        : {}
+      return {
+        cardStyle: {
+          backgroundColor: 'transparent',
+        },
+        title: route.params?.title ?? undefined,
         ...defaultNavigationOptions,
-      },
-    },
-  },
-  {
-    initialRouteName: STAKING_DASHBOARD_ROUTES.MAIN,
-    navigationOptions: ({navigation}) => ({
-      headerLeft: <HeaderBackButton navigation={navigation} />,
-    }),
-    ...defaultStackNavigatorOptions,
-  },
+        ...defaultStackNavigatorOptions,
+        ...extraOptions,
+      }
+    }}
+    initialRouteName={STAKING_DASHBOARD_ROUTES.MAIN}
+  >
+    <Stack.Screen
+      name={STAKING_DASHBOARD_ROUTES.MAIN}
+      component={StakingDashboard}
+      options={({navigation}) => ({
+        headerRight: () => (
+          <Button
+            style={styles.settingsButton}
+            onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)}
+            iconImage={iconGear}
+            title=""
+            withoutBackground
+          />
+        ),
+      })}
+    />
+    <Stack.Screen
+      name={SEND_ROUTES.BIOMETRICS_SIGNING}
+      component={BiometricAuthScreen}
+      options={{headerShown: false}}
+    />
+  </Stack.Navigator>
 )
 
 export default DelegationNavigatorSummary

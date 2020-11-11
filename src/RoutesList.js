@@ -25,7 +25,6 @@ export const FIRST_RUN_ROUTES = {
 }
 
 export const WALLET_INIT_ROUTES = {
-  WALLET_SELECTION: 'wallet-selection',
   CREATE_RESTORE_SWITCH: 'choose-create-restore',
   INITIAL_CREATE_RESTORE_SWITCH: 'initial-choose-create-restore',
   CREATE_WALLET: 'create-wallet-form',
@@ -54,6 +53,11 @@ export const SETTINGS_ROUTES = {
   SETUP_CUSTOM_PIN: 'setup-custom-pin',
 }
 
+export const SETTINGS_TABS = {
+  WALLET_SETTINGS: 'wallet-settings',
+  APP_SETTINGS: 'app-settings',
+}
+
 export const STAKING_CENTER_ROUTES = {
   MAIN: 'staking-center',
   DELEGATION_CONFIRM: 'delegation-confirmation',
@@ -74,6 +78,11 @@ export const WALLET_ROUTES = {
   RECEIVE: RECEIVE_ROUTES.MAIN,
   DASHBOARD: DELEGATION_ROUTES.STAKING_DASHBOARD,
   DELEGATE: DELEGATION_ROUTES.STAKING_CENTER,
+}
+
+export const WALLET_ROOT_ROUTES = {
+  WALLET_SELECTION: 'wallet-selection',
+  MAIN_WALLET_ROUTES: 'main-wallet-routes',
   SETTINGS: SETTINGS_ROUTES.MAIN,
 }
 

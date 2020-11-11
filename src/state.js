@@ -66,6 +66,7 @@ export type State = {
   },
   isOnline: boolean,
   isAppInitialized: boolean,
+  isAuthenticated: boolean,
   isKeyboardOpen: boolean,
   tos: string,
   appSettings: {
@@ -129,6 +130,7 @@ export const getInitialState = (): State => ({
   },
   isOnline: true, // we are online by default
   isAppInitialized: false,
+  isAuthenticated: false,
   isKeyboardOpen: false,
   tos: '',
   appSettings: {

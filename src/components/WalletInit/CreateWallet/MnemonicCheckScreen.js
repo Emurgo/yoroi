@@ -5,7 +5,7 @@ import _ from 'lodash'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withProps, withStateHandlers} from 'recompose'
-import {SafeAreaView} from 'react-navigation'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import {View, ScrollView, TouchableOpacity, Dimensions} from 'react-native'
 
@@ -62,22 +62,34 @@ const validatePhrase = (mnemonic, words, partialPhrase) => {
   return isPhraseCorrect
 }
 
-const handleWalletConfirmation = ({navigation, createWallet}) => async () => {
-  const mnemonic = navigation.getParam('mnemonic')
-  const password = navigation.getParam('password')
-  const name = navigation.getParam('name')
-  const networkId = navigation.getParam('networkId')
-  const implementationId = navigation.getParam('walletImplementationId')
+const handleWalletConfirmation = ({
+  navigation,
+  route,
+  createWallet,
+}) => async () => {
+  const {
+    mnemonic,
+    password,
+    name,
+    networkId,
+    walletImplementationId,
+  } = route.params
   assert.assert(!!mnemonic, 'handleWalletConfirmation:: mnemonic')
   assert.assert(!!password, 'handleWalletConfirmation:: password')
   assert.assert(!!name, 'handleWalletConfirmation:: name')
   assert.assert(networkId != null, 'handleWalletConfirmation:: networkId')
   assert.assert(
-    !!implementationId,
+    !!walletImplementationId,
     'handleWalletConfirmation:: implementationId',
   )
 
-  await createWallet(name, mnemonic, password, networkId, implementationId)
+  await createWallet(
+    name,
+    mnemonic,
+    password,
+    networkId,
+    walletImplementationId,
+  )
 
   navigation.navigate(ROOT_ROUTES.WALLET)
 }
@@ -226,8 +238,8 @@ export default injectIntl(
         }),
       },
     ),
-    withProps(({navigation}) => {
-      const mnemonic = navigation.getParam('mnemonic')
+    withProps(({route}) => {
+      const {mnemonic} = route.params
       return {
         mnemonic,
         words: mnemonic.split(' ').sort(),

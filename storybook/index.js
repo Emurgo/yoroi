@@ -15,17 +15,22 @@ configure(() => {
 // mockup navigation prop
 // some stories may require specific navigation parameters to work; these should
 // be specified locally in the story file
+let route = {
+  params: {},
+}
 const navigation = {
-  navigate: (route, params) => {
+  navigate: (route, _params) => {
     action(`navigated to ${route}`)
   },
   setParams: (params) => {
     action(params)
   },
-  getParam: (param) => true,
+  setOptions: (options) => {route = {...route, ...options}},
+  addListener: (_fn) => (() => ({})),
 }
 
-addDecorator((storyFn) => storyFn({navigation}))
+
+addDecorator((storyFn) => storyFn({navigation, route}))
 
 // Refer to
 // https://github.com/storybookjs/storybook/tree/master/app/react-native#start-command-parameters

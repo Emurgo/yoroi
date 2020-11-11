@@ -6,7 +6,7 @@ import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withStateHandlers} from 'recompose'
 import {View, RefreshControl, ScrollView, Image} from 'react-native'
-import {SafeAreaView} from 'react-navigation'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import _ from 'lodash'
 import {injectIntl, defineMessages} from 'react-intl'
 import {fetchUTXOs} from '../../actions/utxo'
@@ -24,7 +24,6 @@ import {
   isFlawedWalletSelector,
 } from '../../selectors'
 import TxHistoryList from './TxHistoryList'
-import TxNavigationButtons from './TxNavigationButtons'
 import {updateHistory} from '../../actions/history'
 import {checkForFlawedWallets} from '../../actions'
 import {
@@ -33,7 +32,7 @@ import {
   withNavigationTitle,
 } from '../../utils/renderUtils'
 import FlawedWalletModal from './FlawedWalletModal'
-import {WALLET_INIT_ROUTES} from '../../RoutesList'
+import {WALLET_ROOT_ROUTES} from '../../RoutesList'
 import {isByron} from '../../config/config'
 
 import {formatAdaWithText} from '../../utils/format'
@@ -114,10 +113,10 @@ const TxHistory = ({
           visible={isFlawedWallet === true}
           disableButtons={false}
           onPress={() =>
-            navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+            navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
           }
           onRequestClose={() =>
-            navigation.navigate(WALLET_INIT_ROUTES.WALLET_SELECTION)
+            navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
           }
         />
       )}
@@ -145,7 +144,6 @@ const TxHistory = ({
         />
       )}
 
-      <TxNavigationButtons navigation={navigation} />
       {/* eslint-disable indent */
       isByron(walletMeta.walletImplementationId) &&
         showWarning && (

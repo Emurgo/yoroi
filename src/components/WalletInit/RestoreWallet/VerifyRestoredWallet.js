@@ -5,7 +5,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {View, FlatList, ScrollView} from 'react-native'
 import {withHandlers} from 'recompose'
-import {SafeAreaView, withNavigation} from 'react-navigation'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import {Text, Button, StatusBar, BulletPointItem} from '../../UiKit'
@@ -92,11 +92,7 @@ const CheckSumView = ({icon, checksum}) => (
   </View>
 )
 
-const VerifyWalletScreen = ({
-  navigateToWalletCredentials,
-  intl,
-  navigation,
-}) => {
+const VerifyWalletScreen = ({navigateToWalletCredentials, intl, route}) => {
   const [plate, setPlate] = useState({
     accountPlate: {
       ImagePart: '',
@@ -106,12 +102,14 @@ const VerifyWalletScreen = ({
   })
 
   const {formatMessage} = intl
-  const phrase = navigation.getParam('phrase')
-  const walletImplId = navigation.getParam('walletImplementationId')
-  const networkId = navigation.getParam('networkId')
+  const {phrase, networkId, walletImplementationId} = route.params
 
   const generatePlates = async () => {
-    const {addresses, accountPlate} = await _getPlate(walletImplId, phrase, 1)
+    const {addresses, accountPlate} = await _getPlate(
+      walletImplementationId,
+      phrase,
+      1,
+    )
     setPlate({addresses, accountPlate})
   }
 
@@ -166,20 +164,22 @@ const VerifyWalletScreen = ({
 export default injectIntl(
   (compose(
     connect((_state) => ({})),
-    withNavigation,
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
-      navigateToWalletCredentials: ({navigation, walletNumber}) => (_event) => {
+      navigateToWalletCredentials: ({navigation, route, walletNumber}) => (
+        _event,
+      ) => {
         navigation.navigate(WALLET_INIT_ROUTES.WALLET_CREDENTIALS, {
           walletNumber,
-          phrase: navigation.getParam('phrase'),
-          networkId: navigation.getParam('networkId'),
-          walletImplementationId: navigation.getParam('walletImplementationId'),
+          phrase: route.params.phrase,
+          networkId: route.params.networkId,
+          walletImplementationId: route.params.walletImplementationId,
         })
       },
     }),
   )(VerifyWalletScreen): ComponentType<{
     navigation: Navigation,
+    route: Object, // TODO(navigation): type
     intl: intlShape,
   }>),
 )

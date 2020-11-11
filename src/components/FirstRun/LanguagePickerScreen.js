@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {SafeAreaView} from 'react-navigation'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {withHandlers} from 'recompose'
 import {compose} from 'redux'
 import {connect} from 'react-redux'

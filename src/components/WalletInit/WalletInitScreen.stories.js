@@ -5,20 +5,30 @@ import React from 'react'
 import {storiesOf} from '@storybook/react-native'
 
 import WalletInitScreen from './WalletInitScreen'
-import {NETWORK_REGISTRY} from '../../config/types'
+import {CONFIG} from '../../config/config'
 
 storiesOf('WalletInitScreen', module)
-  .add('Shelley', ({navigation}) => {
-    navigation.getParam = (param) => {
-      if (param === 'networkId') return NETWORK_REGISTRY.JORMUNGANDR
-      return ''
-    }
-    return <WalletInitScreen navigation={navigation} />
-  })
-  .add('Byron', ({navigation}) => {
-    navigation.getParam = (param) => {
-      if (param === 'networkId') return NETWORK_REGISTRY.BYRON_MAINNET
-      return ''
-    }
-    return <WalletInitScreen navigation={navigation} />
-  })
+  .add('Shelley', ({navigation}) => (
+    <WalletInitScreen
+      navigation={navigation}
+      route={{
+        params: {
+          networkId: CONFIG.NETWORKS.BYRON_MAINNET.NETWORK_ID,
+          walletImplementationId:
+            CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
+        },
+      }}
+    />
+  ))
+  .add('Byron', ({navigation}) => (
+    <WalletInitScreen
+      navigation={navigation}
+      route={{
+        params: {
+          networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
+          walletImplementationId:
+            CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+        },
+      }}
+    />
+  ))

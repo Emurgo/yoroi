@@ -5,11 +5,10 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
-import {withNavigation} from 'react-navigation'
 
 import assert from '../../../utils/assert'
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
-import {ROOT_ROUTES} from '../../../RoutesList'
+import {WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import WalletForm from '../WalletForm'
 import {createWallet, updateVersion} from '../../../actions'
@@ -25,9 +24,9 @@ const messages = defineMessages({
   },
 })
 
-const WalletCredentialsScreen = ({navigateToWallet, waiting}) => (
+const WalletCredentialsScreen = ({navigateToWallet, waiting, navigation}) => (
   <>
-    <WalletForm onSubmit={navigateToWallet} />
+    <WalletForm onSubmit={navigateToWallet} navigation={navigation} />
     {waiting && <ActivityIndicator />}
   </>
 )
@@ -41,7 +40,6 @@ export default injectIntl(
         updateVersion,
       },
     ),
-    withNavigation,
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withStateHandlers(
       {
@@ -53,30 +51,31 @@ export default injectIntl(
     ),
     withHandlers({
       navigateToWallet: ignoreConcurrentAsyncHandler(
-        ({navigation, createWallet, updateVersion, setWaiting}) => async ({
-          name,
-          password,
-        }) => {
+        ({
+          navigation,
+          route,
+          createWallet,
+          updateVersion,
+          setWaiting,
+        }) => async ({name, password}) => {
           setWaiting(true)
-          const phrase = navigation.getParam('phrase')
-          const networkId = navigation.getParam('networkId')
-          const implementationId = navigation.getParam('walletImplementationId')
+          const {phrase, networkId, walletImplementationId} = route.params
           assert.assert(!!phrase, 'mnemonic')
           assert.assert(networkId != null, 'networkId')
-          assert.assert(!!implementationId, 'implementationId')
+          assert.assert(!!walletImplementationId, 'walletImplementationId')
           try {
             await createWallet(
               name,
               phrase,
               password,
               networkId,
-              implementationId,
+              walletImplementationId,
             )
             await updateVersion()
           } finally {
             setWaiting(false)
           }
-          navigation.navigate(ROOT_ROUTES.WALLET)
+          navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)
         },
         1000,
       ),

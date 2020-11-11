@@ -25,9 +25,10 @@ const CreateWalletScreen = ({
   hideMnemonicExplanation,
   visibleMnemonicExplanation,
   navigateToMnemonicScreen,
+  navigation,
 }) => (
   <>
-    <WalletForm onSubmit={setFormData} />
+    <WalletForm onSubmit={setFormData} navigation={navigation} />
     <MnemonicExplanationModal
       visible={visibleMnemonicExplanation}
       onRequestClose={hideMnemonicExplanation}
@@ -59,15 +60,17 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      navigateToMnemonicScreen: ({formData, clear, navigation}) => () => {
+      navigateToMnemonicScreen: ({
+        formData,
+        clear,
+        navigation,
+        route,
+      }) => () => {
         clear()
         // TODO(v-almonacid): we need to generate mnemonics according to the
         // target network.
         const mnemonic = generateAdaMnemonic()
-        const networkId = navigation.getParam('networkId')
-        const walletImplementationId = navigation.getParam(
-          'walletImplementationId',
-        )
+        const {networkId, walletImplementationId} = route.params
         navigation.navigate(WALLET_INIT_ROUTES.MNEMONIC_SHOW, {
           mnemonic,
           networkId,

@@ -37,9 +37,10 @@ const poolInfo = {
   },
 }
 
-storiesOf('StakingDashboard', module).add('Default', ({navigation}) => (
+storiesOf('StakingDashboard', module).add('Default', ({navigation, route}) => (
   <StakingDashboard
     navigation={navigation}
+    route={route}
     isOnline
     lastAccountStateSyncError={false}
     pools={[

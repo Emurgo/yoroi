@@ -115,6 +115,7 @@ const StakeByIdScreen = ({
 
 type ExternalProps = {|
   navigation: Navigation,
+  route: Object, // TODO(navigation): type
   intl: IntlShape,
 |}
 
