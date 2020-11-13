@@ -1,7 +1,7 @@
 // @flow
 import {StyleSheet} from 'react-native'
 
-import {spacing} from '../../../../styles/config'
+import {spacing} from '../../../styles/config'
 
 export default StyleSheet.create({
   safeAreaView: {
