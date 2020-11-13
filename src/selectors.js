@@ -66,6 +66,9 @@ export const isHWSelector = (state: State): boolean => state.wallet.isHW
 export const hwDeviceInfoSelector = (state: State): ?HWDeviceInfo =>
   state.wallet.hwDeviceInfo
 
+export const isReadOnlySelector = (state: State): boolean =>
+  state.wallet.isReadOnly
+
 export const walletMetaSelector = (
   state: State,
 ): $Diff<WalletMeta, {id: string}> => ({

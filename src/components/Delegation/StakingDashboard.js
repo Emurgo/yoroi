@@ -34,6 +34,7 @@ import {
   lastAccountStateFetchErrorSelector,
   isFlawedWalletSelector,
   isHWSelector,
+  isReadOnlySelector,
   easyConfirmationSelector,
   hwDeviceInfoSelector,
 } from '../../selectors'
@@ -119,6 +120,7 @@ type Props = {|
   setLedgerDeviceObj: (DeviceObj) => Promise<void>,
   isFlawedWallet: boolean,
   isHW: boolean,
+  isReadOnly: boolean,
   isEasyConfirmationEnabled: boolean,
   hwDeviceInfo: HWDeviceInfo,
   submitDelegationTx: <T>(string, BaseSignRequest<T>) => Promise<void>,
@@ -662,6 +664,7 @@ class StakingDashboard extends React.Component<Props, State> {
               totalRewards={accountBalance}
               totalDelegated={totalDelegated}
               onWithdraw={this.openWithdrawalDialog}
+              disableWithdraw={this.props.isReadOnly}
             />
             {/* eslint-disable indent */
             poolInfo != null &&
@@ -676,8 +679,10 @@ class StakingDashboard extends React.Component<Props, State> {
             /* eslint-enable indent */
             }
           </ScrollView>
-          {/* disable button by default as ITN is over */}
-          <DelegationNavigationButtons onPress={this.navigateToStakingCenter} />
+          <DelegationNavigationButtons
+            onPress={this.navigateToStakingCenter}
+            disabled={this.props.isReadOnly}
+          />
         </View>
 
         <WithdrawalDialog
@@ -727,6 +732,7 @@ export default injectIntl(
         isFlawedWallet: isFlawedWalletSelector(state),
         isEasyConfirmationEnabled: easyConfirmationSelector(state),
         isHW: isHWSelector(state),
+        isReadOnly: isReadOnlySelector(state),
         hwDeviceInfo: hwDeviceInfoSelector(state),
       }),
       {

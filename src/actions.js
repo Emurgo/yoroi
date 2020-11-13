@@ -375,6 +375,7 @@ export const createWalletWithBip44Account = (
   networkId: NetworkId,
   implementationId: WalletImplementationId,
   hwDeviceInfo: ?HWDeviceInfo,
+  readOnly: boolean,
 ) => async (dispatch: Dispatch<any>) => {
   await walletManager.createWalletWithBip44Account(
     name,
@@ -382,6 +383,7 @@ export const createWalletWithBip44Account = (
     networkId,
     implementationId,
     hwDeviceInfo,
+    readOnly,
   )
   dispatch(updateWallets())
 }

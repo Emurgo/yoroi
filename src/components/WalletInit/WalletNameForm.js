@@ -6,12 +6,14 @@ import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
+import {isEmpty} from 'lodash'
 
 import {Button, ValidatedTextInput, ProgressStep} from '../UiKit'
 import {getWalletNameError, validateWalletName} from '../../utils/validators'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import globalMessages from '../../../src/i18n/global-messages'
 import {walletNamesSelector} from '../../selectors'
+import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 
 import styles from './styles/WalletNameForm.style'
 
@@ -42,6 +44,7 @@ const WalletNameForm = ({
   setName,
   progress,
 }) => {
+  const validationErrors = validateForm()
   return (
     <SafeAreaView style={styles.safeAreaView}>
       {progress != null && (
@@ -69,7 +72,7 @@ const WalletNameForm = ({
                   globalMessages.walletNameErrorNameAlreadyTaken,
                 ),
               },
-              validateForm(),
+              validationErrors,
             )}
           />
         </View>
@@ -80,6 +83,7 @@ const WalletNameForm = ({
           onPress={onPress}
           title={intl.formatMessage(messages.save)}
           style={styles.button}
+          disabled={!isEmpty(validationErrors)}
         />
       </View>
     </SafeAreaView>
@@ -115,9 +119,12 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      onPress: ({onSubmit, name}) => async () => {
-        await onSubmit({name})
-      },
+      onPress: ignoreConcurrentAsyncHandler(
+        ({onSubmit, name}) => async () => {
+          await onSubmit({name})
+        },
+        1000,
+      ),
       validateWalletName: ({walletNames}) => (walletName) =>
         validateWalletName(walletName, null, walletNames),
     }),

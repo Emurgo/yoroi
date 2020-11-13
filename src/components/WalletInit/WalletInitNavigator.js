@@ -6,6 +6,8 @@ import WalletFreshInitScreen from './WalletFreshInitScreen'
 import WalletInitScreen from './WalletInitScreen'
 import CreateWalletScreen from './CreateWallet/CreateWalletScreen'
 import RestoreWalletScreen from './RestoreWallet/RestoreWalletScreen'
+import ImportReadOnlyWalletScreen from './RestoreWallet/ImportReadOnlyWalletScreen'
+import SaveReadOnlyWalletScreen from './RestoreWallet/SaveReadOnlyWalletScreen'
 import CheckNanoXScreen from './ConnectNanoX/CheckNanoXScreen'
 import ConnectNanoXScreen from './ConnectNanoX/ConnectNanoXScreen'
 import SaveNanoXScreen from './ConnectNanoX/SaveNanoXScreen'
@@ -59,6 +61,14 @@ const WalletInitNavigator = () => (
     <Stack.Screen
       name={WALLET_INIT_ROUTES.RESTORE_WALLET}
       component={RestoreWalletScreen}
+    />
+    <Stack.Screen
+      name={WALLET_INIT_ROUTES.IMPORT_READ_ONLY_WALLET}
+      component={ImportReadOnlyWalletScreen}
+    />
+    <Stack.Screen
+      name={WALLET_INIT_ROUTES.SAVE_READ_ONLY_WALLET}
+      component={SaveReadOnlyWalletScreen}
     />
     <Stack.Screen
       name={WALLET_INIT_ROUTES.CHECK_NANO_X}

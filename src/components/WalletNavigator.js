@@ -8,7 +8,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {injectIntl, defineMessages} from 'react-intl'
 
-import {walletMetaSelector} from '../selectors'
+import {walletMetaSelector, isReadOnlySelector} from '../selectors'
 import {isHaskellShelley} from '../config/config'
 import {WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../RoutesList'
 import {Button} from './UiKit'
@@ -91,8 +91,9 @@ const WalletTabNavigator = injectIntl(
   compose(
     connect((state) => ({
       walletMeta: walletMetaSelector(state),
+      isReadOnly: isReadOnlySelector(state),
     })),
-  )(({intl, walletMeta}) => (
+  )(({intl, walletMeta, isReadOnly}) => (
     <Tab.Navigator
       initialRouteName={WALLET_ROUTES.TX_HISTORY}
       screenOptions={({navigation, route}) => {
@@ -127,7 +128,9 @@ const WalletTabNavigator = injectIntl(
         component={TxHistoryNavigator}
         options={{headerShown: false}}
       />
-      <Tab.Screen name={WALLET_ROUTES.SEND} component={SendScreenNavigator} />
+      {!isReadOnly && (
+        <Tab.Screen name={WALLET_ROUTES.SEND} component={SendScreenNavigator} />
+      )}
       <Tab.Screen
         name={WALLET_ROUTES.RECEIVE}
         component={ReceiveScreenNavigator}
@@ -138,10 +141,12 @@ const WalletTabNavigator = injectIntl(
             name={WALLET_ROUTES.DASHBOARD}
             component={StakingDashboardNavigator}
           />
-          <Tab.Screen
-            name={WALLET_ROUTES.DELEGATE}
-            component={StakingCenterNavigator}
-          />
+          {!isReadOnly && (
+            <Tab.Screen
+              name={WALLET_ROUTES.DELEGATE}
+              component={StakingCenterNavigator}
+            />
+          )}
         </>
       )}
     </Tab.Navigator>

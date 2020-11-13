@@ -57,6 +57,17 @@ const messages = defineMessages({
       '!!!If you have a recovery phrase consisting of {mnemonicLength} ' +
       'words, choose this option to restore your wallet.',
   },
+  importReadOnlyWalletLabel: {
+    id: 'components.walletinit.walletinitscreen.importReadOnlyWalletLabel',
+    defaultMessage: '!!!Read-only wallet',
+  },
+  importReadOnlyWalletExplanation: {
+    id:
+      'components.walletinit.walletinitscreen.importReadOnlyWalletExplanation',
+    defaultMessage:
+      "!!!If you have a QR code containing a wallet's public key," +
+      ', choose this option to import this wallet in read-only mode.',
+  },
   createWalletWithLedgerButton: {
     id: 'components.walletinit.walletinitscreen.createWalletWithLedgerButton',
     defaultMessage: '!!!Connect to Ledger Nano',
@@ -71,8 +82,9 @@ const MODAL_STATES = {
 type ModalState = $Values<typeof MODAL_STATES>
 
 type Props = {
-  navigateRestoreWallet: (Object, NetworkId, WalletImplementationId) => mixed,
-  navigateCreateWallet: (Object, NetworkId, WalletImplementationId) => mixed,
+  navigateRestoreWallet: (Object, NetworkId, WalletImplementationId) => void,
+  navigateCreateWallet: (Object, NetworkId, WalletImplementationId) => void,
+  navigateImportReadOnlyWallet: (Object) => void,
   navigateCheckNanoX: (
     Object,
     NetworkId,
@@ -88,6 +100,7 @@ type Props = {
 const WalletInitScreen = ({
   navigateCreateWallet,
   navigateRestoreWallet,
+  navigateImportReadOnlyWallet,
   navigateCheckNanoX,
   intl,
   route,
@@ -202,6 +215,18 @@ const WalletInitScreen = ({
                   {mnemonicLength: 24},
                 )}
               />
+              <Button
+                outlineOnLight
+                onPress={navigateImportReadOnlyWallet}
+                title={intl.formatMessage(messages.importReadOnlyWalletLabel)}
+                style={styles.mnemonicDialogButton}
+              />
+              <ExapandableItem
+                label={intl.formatMessage(globalMessages.learnMore)}
+                content={intl.formatMessage(
+                  messages.importReadOnlyWalletExplanation,
+                )}
+              />
             </Modal>
           )}
         </View>
@@ -253,6 +278,8 @@ export default injectIntl(
           walletImplementationId,
           useUSB,
         }),
+      navigateImportReadOnlyWallet: ({navigation}) => (_event: Object) =>
+        navigation.navigate(WALLET_INIT_ROUTES.IMPORT_READ_ONLY_WALLET),
     }),
   )(WalletInitScreen),
 )

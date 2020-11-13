@@ -64,6 +64,7 @@ export default injectIntl(
           networkId,
           walletImplementationId,
           hwDeviceInfo,
+          false,
         )
         saveHW(hwDeviceInfo)
         navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)

@@ -88,6 +88,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     implementationId: WalletImplementationId,
     accountPubKeyHex: string,
     hwDeviceInfo: ?HWDeviceInfo,
+    readOnly: boolean,
   ) {
     this.networkId = networkId
 
@@ -96,6 +97,8 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     this.isHW = hwDeviceInfo != null
 
     this.hwDeviceInfo = hwDeviceInfo
+
+    this.isReadOnly = readOnly
 
     this.transactionCache = new TransactionCache()
 
@@ -175,6 +178,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       implementationId,
       accountPubKeyHex,
       null, // this is not a HW
+      false, // not a read-only wallet
     )
   }
 
@@ -183,6 +187,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     networkId: NetworkId,
     implementationId: WalletImplementationId,
     hwDeviceInfo: ?HWDeviceInfo,
+    readOnly: boolean,
   ) {
     Logger.info(
       `create wallet with account pub key (networkId=${String(networkId)})`,
@@ -195,6 +200,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       implementationId,
       accountPublicKey,
       hwDeviceInfo,
+      readOnly,
     )
   }
 
@@ -246,8 +252,9 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
         ? data.walletImplementationId
         : walletMeta.walletImplementationId
 
-    this.isHW = data.isHW != null ? data.isHW : false
+    this.isHW = data.isHW ?? false
     this.hwDeviceInfo = data.hwDeviceInfo
+    this.isReadOnly = data.isReadOnly ?? false
     this.version = data.version
     this.internalChain = AddressChain.fromJSON(data.internalChain)
     this.externalChain = AddressChain.fromJSON(data.externalChain)
