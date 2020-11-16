@@ -14,6 +14,7 @@ import {
   isSystemAuthEnabledSelector,
   isAuthenticatedSelector,
   customPinHashSelector,
+  installationIdSelector,
 } from './selectors'
 import WalletNavigator from './components/WalletNavigator'
 import WalletInitNavigator from './components/WalletInit/WalletInitNavigator'
@@ -22,7 +23,6 @@ import IndexScreen from './components/IndexScreen'
 import StorybookScreen from './components/StorybookScreen'
 import SplashScreen from './components/SplashScreen'
 import MaintenanceScreen from './components/MaintenanceScreen'
-import AppStartScreen from './components/Login/AppStartScreen'
 import {ROOT_ROUTES} from './RoutesList'
 import BiometricAuthScreen from './components/Send/BiometricAuthScreen'
 import CustomPinLogin from './components/Login/CustomPinLogin'
@@ -30,19 +30,30 @@ import {
   defaultNavigationOptions,
   defaultStackNavigatorOptions,
 } from './navigationOptions'
+import {signin, showErrorDialog} from './actions'
+import {
+  recreateAppSignInKeys,
+  canBiometricEncryptionBeEnabled,
+} from './helpers/deviceSettings'
+import {errorMessages} from './i18n/global-messages'
+import KeyStore from './crypto/KeyStore'
 
 const Stack = createStackNavigator()
 
 const NavigatorSwitch = compose(
-  connect((state) => ({
-    isAppInitialized: isAppInitializedSelector(state),
-    isMaintenance: isMaintenanceSelector(state),
-    languageCode: languageSelector(state),
-    acceptedTos: tosSelector(state),
-    isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
-    isAuthenticated: isAuthenticatedSelector(state),
-    customPinHash: customPinHashSelector(state),
-  })),
+  connect(
+    (state) => ({
+      isAppInitialized: isAppInitializedSelector(state),
+      isMaintenance: isMaintenanceSelector(state),
+      languageCode: languageSelector(state),
+      acceptedTos: tosSelector(state),
+      isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
+      isAuthenticated: isAuthenticatedSelector(state),
+      customPinHash: customPinHashSelector(state),
+      installationId: installationIdSelector(state),
+    }),
+    {signin},
+  ),
 )(
   ({
     isAppInitialized,
@@ -52,6 +63,8 @@ const NavigatorSwitch = compose(
     isSystemAuthEnabled,
     isAuthenticated,
     customPinHash,
+    installationId,
+    signin,
   }) => {
     if (!isAppInitialized) {
       return (
@@ -107,27 +120,43 @@ const NavigatorSwitch = compose(
     if (!isAuthenticated) {
       return (
         <Stack.Navigator
-          initialRouteName={ROOT_ROUTES.INIT}
           screenOptions={({route}) => ({
             title: route.params?.title ?? undefined,
             ...defaultNavigationOptions,
             ...defaultStackNavigatorOptions,
           })}
         >
-          <Stack.Screen
-            name={ROOT_ROUTES.LOGIN}
-            component={AppStartScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name={ROOT_ROUTES.CUSTOM_PIN_AUTH}
-            component={CustomPinLogin}
-          />
-          <Stack.Screen
-            name={ROOT_ROUTES.BIO_AUTH}
-            component={BiometricAuthScreen}
-            options={{headerShown: false}}
-          />
+          {!isSystemAuthEnabled && (
+            <Stack.Screen
+              name={ROOT_ROUTES.CUSTOM_PIN_AUTH}
+              component={CustomPinLogin}
+            />
+          )}
+          {isSystemAuthEnabled && (
+            <Stack.Screen
+              name={ROOT_ROUTES.BIO_AUTH}
+              component={BiometricAuthScreen}
+              options={{headerShown: false}}
+              initialParams={{
+                keyId: installationId,
+                onSuccess: () => {
+                  signin()
+                },
+                onFail: async (reason, intl) => {
+                  if (reason === KeyStore.REJECTIONS.INVALID_KEY) {
+                    if (await canBiometricEncryptionBeEnabled()) {
+                      await recreateAppSignInKeys(installationId)
+                    } else {
+                      await showErrorDialog(
+                        errorMessages.biometricsIsTurnedOff,
+                        intl,
+                      )
+                    }
+                  }
+                },
+              }}
+            />
+          )}
         </Stack.Navigator>
       )
     }

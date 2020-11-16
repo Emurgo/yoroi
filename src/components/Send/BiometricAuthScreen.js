@@ -10,6 +10,9 @@ import {Button} from '../UiKit'
 import FingerprintScreenBase from '../Common/FingerprintScreenBase'
 import KeyStore from '../../crypto/KeyStore'
 import {onDidMount, onWillUnmount} from '../../utils/renderUtils'
+import {canBiometricEncryptionBeEnabled} from '../../helpers/deviceSettings'
+import {errorMessages as globalErrorMessages} from '../../i18n/global-messages'
+import {showErrorDialog} from '../../actions'
 
 import styles from './styles/BiometricAuthScreen.style'
 
@@ -97,9 +100,9 @@ const handleOnConfirm = async (
       clearError()
     } else if (error.code === KeyStore.REJECTIONS.CANCELED) {
       clearError()
-      onFail(KeyStore.REJECTIONS.CANCELED)
+      onFail(KeyStore.REJECTIONS.CANCELED, intl)
     } else if (error.code === KeyStore.REJECTIONS.INVALID_KEY) {
-      onFail(KeyStore.REJECTIONS.INVALID_KEY)
+      onFail(KeyStore.REJECTIONS.INVALID_KEY, intl)
     } else if (error.code === KeyStore.REJECTIONS.SENSOR_LOCKOUT) {
       setError('SENSOR_LOCKOUT')
     } else if (error.code === KeyStore.REJECTIONS.SENSOR_LOCKOUT_PERMANENT) {
@@ -165,7 +168,7 @@ export default injectIntl(
       // we have this handler because we need to let JAVA side know user
       // cancelled the scanning by either navigating out of this window
       // or using fallback
-      cancelScanning: ({clearError, route}) => async () => {
+      cancelScanning: ({clearError, route, intl}) => async () => {
         const wasScanningStarted = await KeyStore.cancelFingerprintScanning(
           KeyStore.REJECTIONS.CANCELED,
         )
@@ -174,7 +177,7 @@ export default injectIntl(
           clearError()
           const {onFail} = route.params
           if (onFail == null) throw new Error('BiometricAuthScreen::onFail')
-          onFail(KeyStore.REJECTIONS.CANCELED)
+          onFail(KeyStore.REJECTIONS.CANCELED, intl)
         }
       },
       useFallback: ({route, setError, clearError, intl}) => async () => {
@@ -187,8 +190,12 @@ export default injectIntl(
     onWillUnmount(async () => {
       await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
     }),
-    onDidMount(({route, setError, clearError, intl}) =>
-      handleOnConfirm(route, setError, clearError, false, intl),
-    ),
+    onDidMount(async ({route, setError, clearError, intl}) => {
+      if (!(await canBiometricEncryptionBeEnabled())) {
+        await showErrorDialog(globalErrorMessages.biometricsIsTurnedOff, intl)
+        return
+      }
+      handleOnConfirm(route, setError, clearError, false, intl)
+    }),
   )(BiometricAuthScreen): ComponentType<ExternalProps>),
 )

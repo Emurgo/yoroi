@@ -96,7 +96,7 @@ export default injectIntl(
                   )
                 }
               }
-              navigation.navigate(ROOT_ROUTES.LOGIN)
+              // navigation.navigate(ROOT_ROUTES.LOGIN)
             },
           })
         } else {
