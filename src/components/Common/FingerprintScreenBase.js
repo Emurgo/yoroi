@@ -1,15 +1,28 @@
 // @flow
 
 import React from 'react'
-import {View, Image, TouchableOpacity} from 'react-native'
+import {View, Image, TouchableOpacity, Platform} from 'react-native'
+import {defineMessages} from 'react-intl'
+import {compose} from 'redux'
+import {withStateHandlers} from 'recompose'
+import DeviceInfo from 'react-native-device-info'
 
 import {Text, StatusBar, ScreenBackground} from '../UiKit'
 import fingerprintImage from '../../assets/img/fingerprint.png'
 import chevronLeft from '../../assets/img/chevron_left.png'
+import {onDidMount} from '../../utils/renderUtils'
 
 import styles from './styles/FingerprintScreenBase.style'
 
 import type {ComponentType} from 'react'
+
+const messages = defineMessages({
+  welcomeMessage: {
+    id: 'components.common.fingerprintscreenbase.welcomeMessage',
+    defaultMessage: '!!!Welcome Back',
+    description: 'some desc',
+  },
+})
 
 const FingerprintScreenBase = ({
   headings,
@@ -17,6 +30,9 @@ const FingerprintScreenBase = ({
   buttons,
   onGoBack,
   error,
+  addWelcomeMessage,
+  intl,
+  showImage,
 }) => (
   <ScreenBackground style={styles.container}>
     <StatusBar type="dark" />
@@ -44,9 +60,23 @@ const FingerprintScreenBase = ({
         </View>
       ) : null}
 
-      <View style={styles.imageContainer}>
-        <Image source={fingerprintImage} style={styles.image} />
-      </View>
+      {/* eslint-disable indent */
+      addWelcomeMessage === true &&
+        intl != null && (
+          <View style={styles.welcomeMessageContainer}>
+            <Text style={styles.welcomeMessageText}>
+              {intl.formatMessage(messages.welcomeMessage)}
+            </Text>
+          </View>
+        )
+      /* eslint-enable indent */
+      }
+
+      {showImage === true && (
+        <View style={styles.imageContainer}>
+          <Image source={fingerprintImage} style={styles.image} />
+        </View>
+      )}
     </View>
 
     {error != null && error !== false ? (
@@ -63,6 +93,25 @@ type ExternalProps = {
   buttons: Array<any>,
   onGoBack?: () => any,
   error?: null | false | string,
+  addWelcomeMessage?: boolean,
+  intl?: any,
 }
 
-export default (FingerprintScreenBase: ComponentType<ExternalProps>)
+export default compose(
+  withStateHandlers(
+    {
+      showImage: false,
+    },
+    {
+      shouldShowImage: () => (sdk) => {
+        // note(v-almonacid): the decrypt with biometrics prompt only appears
+        // for API level >= 28
+        const showImage = Platform.OS === 'android' && sdk < 28
+        return {showImage}
+      },
+    },
+  ),
+  onDidMount(({shouldShowImage}) =>
+    DeviceInfo.getApiLevel().then((sdk) => shouldShowImage(sdk)),
+  ),
+)((FingerprintScreenBase: ComponentType<ExternalProps>))

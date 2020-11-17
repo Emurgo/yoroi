@@ -22,23 +22,24 @@ import type {Navigation} from '../../types/navigation'
 const errorMessages = defineMessages({
   NOT_RECOGNIZED: {
     id: 'components.send.biometricauthscreen.NOT_RECOGNIZED',
-    defaultMessage: '!!!Fingerprint was not recognized try again',
+    defaultMessage: '!!!Biometrics were not recognized. Try again',
     description: 'some desc',
   },
   SENSOR_LOCKOUT: {
     id: 'components.send.biometricauthscreen.SENSOR_LOCKOUT',
-    defaultMessage: '!!!You used too many fingers sensor is disabled',
+    defaultMessage: '!!!Too many failed attempts. The sensor is now disabled',
     description: 'some desc',
   },
   SENSOR_LOCKOUT_PERMANENT: {
     id: 'components.send.biometricauthscreen.SENSOR_LOCKOUT_PERMANENT',
     defaultMessage:
-      '!!!You permanently locked out your fingerprint sensor. Use fallback.',
+      '!!!Your biometrics sensor has been permanently locked. Use an alternate login method.',
     description: 'some desc',
   },
   DECRYPTION_FAILED: {
     id: 'components.send.biometricauthscreen.DECRYPTION_FAILED',
-    defaultMessage: '!!!Fingerprint sensor failed please use fallback',
+    defaultMessage:
+      '!!!Biometrics login failed. Please use an alternate login method.',
     description: 'some desc',
   },
   UNKNOWN_ERROR: {
@@ -66,7 +67,7 @@ const messages = defineMessages({
   },
   headings2: {
     id: 'components.send.biometricauthscreen.headings2',
-    defaultMessage: '!!!fingerprint',
+    defaultMessage: '!!!biometrics',
     description: 'some desc',
   },
   cancelButton: {
@@ -133,6 +134,8 @@ const BiometricAuthScreen = ({cancelScanning, useFallback, error, intl}) => (
       />,
     ]}
     error={error && intl.formatMessage(errorMessages[error])}
+    addWelcomeMessage
+    intl={intl}
   />
 )
 

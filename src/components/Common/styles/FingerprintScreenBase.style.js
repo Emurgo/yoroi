@@ -4,6 +4,11 @@ import {StyleSheet} from 'react-native'
 
 import {COLORS} from '../../../styles/config'
 
+const headingTextStyle = {
+  color: COLORS.WHITE,
+  textAlign: 'center',
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -23,20 +28,18 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   heading: {
+    ...headingTextStyle,
     fontSize: 22,
     lineHeight: 28,
-    color: COLORS.WHITE,
-    textAlign: 'center',
   },
   subHeadingContainer: {
     marginVertical: 10,
   },
   subHeading: {
-    color: COLORS.WHITE,
-    textAlign: 'center',
+    ...headingTextStyle,
   },
   imageContainer: {
-    marginTop: 10,
+    marginVertical: 20,
     width: '100%',
     height: 200,
     justifyContent: 'center',
@@ -47,6 +50,16 @@ const styles = StyleSheet.create({
   image: {
     height: 120,
     width: 120,
+  },
+  welcomeMessageContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  welcomeMessageText: {
+    ...headingTextStyle,
+    fontSize: 50,
+    lineHeight: 60,
   },
   controls: {
     flexDirection: 'row',
