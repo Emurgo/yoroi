@@ -14,7 +14,7 @@ import type {EncryptionMethod} from './types'
 const messages = defineMessages({
   approveTransaction: {
     id: 'crypto.keystore.approveTransaction',
-    defaultMessage: 'Authorize with your fingerprint',
+    defaultMessage: 'Authorize with your biometrics',
   },
   subtitle: {
     id: 'crypto.keystore.subtitle',

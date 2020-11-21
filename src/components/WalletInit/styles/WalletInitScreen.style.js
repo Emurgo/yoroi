@@ -26,6 +26,7 @@ export default StyleSheet.create({
     marginTop: 15,
   },
   emurgoCreditsContainer: {
+    marginTop: 10,
     alignItems: 'center',
     flexDirection: 'row',
   },

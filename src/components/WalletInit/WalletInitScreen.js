@@ -40,13 +40,6 @@ const messages = defineMessages({
     id: 'components.walletinit.walletinitscreen.restoreNormalWalletLabel',
     defaultMessage: '!!!15-word Wallet',
   },
-  restoreNormalWalletExplanation: {
-    id: 'components.walletinit.walletinitscreen.restoreNormalWalletExplanation',
-    defaultMessage:
-      '!!!If you have a Yoroi recovery phrase consisting of 15 ' +
-      'words generated when you created a Yoroi Wallet, choose this option ' +
-      'to restore your wallet.',
-  },
   restore24WordWalletLabel: {
     id: 'components.walletinit.walletinitscreen.restore24WordWalletLabel',
     defaultMessage: '!!!24-word Wallet',
@@ -180,7 +173,8 @@ const WalletInitScreen = ({
               <ExapandableItem
                 label={intl.formatMessage(globalMessages.learnMore)}
                 content={intl.formatMessage(
-                  messages.restoreNormalWalletExplanation,
+                  messages.restoreNWordWalletExplanation,
+                  {mnemonicLength: 15},
                 )}
               />
               <Button

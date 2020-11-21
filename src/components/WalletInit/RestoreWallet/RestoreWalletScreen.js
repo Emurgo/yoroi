@@ -71,8 +71,9 @@ const messages = defineMessages({
   instructions: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.instructions',
     defaultMessage:
-      '!!!To restore your wallet please provide the recovery phrase you ' +
-      'received when you created your wallet for the first time.',
+      '!!!To restore your wallet please provide the {mnemonicLength}-word ' +
+      'recovery phrase you received when you created your wallet for the ' +
+      'first time.',
     description: 'some desc',
   },
 })
@@ -130,7 +131,11 @@ const RestoreWalletScreen = ({
 
       <ScrollView keyboardDismissMode="on-drag">
         <View style={styles.container}>
-          <Text>{intl.formatMessage(messages.instructions)}</Text>
+          <Text>
+            {intl.formatMessage(messages.instructions, {
+              mnemonicLength: walletConfig.MNEMONIC_LEN,
+            })}
+          </Text>
           <ValidatedTextInput
             multiline
             numberOfLines={3}

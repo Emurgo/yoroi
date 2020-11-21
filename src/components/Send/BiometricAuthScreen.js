@@ -10,6 +10,9 @@ import {Button} from '../UiKit'
 import FingerprintScreenBase from '../Common/FingerprintScreenBase'
 import KeyStore from '../../crypto/KeyStore'
 import {onDidMount, onWillUnmount} from '../../utils/renderUtils'
+import {canBiometricEncryptionBeEnabled} from '../../helpers/deviceSettings'
+import {errorMessages as globalErrorMessages} from '../../i18n/global-messages'
+import {showErrorDialog} from '../../actions'
 
 import styles from './styles/BiometricAuthScreen.style'
 
@@ -19,23 +22,24 @@ import type {Navigation} from '../../types/navigation'
 const errorMessages = defineMessages({
   NOT_RECOGNIZED: {
     id: 'components.send.biometricauthscreen.NOT_RECOGNIZED',
-    defaultMessage: '!!!Fingerprint was not recognized try again',
+    defaultMessage: '!!!Biometrics were not recognized. Try again',
     description: 'some desc',
   },
   SENSOR_LOCKOUT: {
     id: 'components.send.biometricauthscreen.SENSOR_LOCKOUT',
-    defaultMessage: '!!!You used too many fingers sensor is disabled',
+    defaultMessage: '!!!Too many failed attempts. The sensor is now disabled',
     description: 'some desc',
   },
   SENSOR_LOCKOUT_PERMANENT: {
     id: 'components.send.biometricauthscreen.SENSOR_LOCKOUT_PERMANENT',
     defaultMessage:
-      '!!!You permanently locked out your fingerprint sensor. Use fallback.',
+      '!!!Your biometrics sensor has been permanently locked. Use an alternate login method.',
     description: 'some desc',
   },
   DECRYPTION_FAILED: {
     id: 'components.send.biometricauthscreen.DECRYPTION_FAILED',
-    defaultMessage: '!!!Fingerprint sensor failed please use fallback',
+    defaultMessage:
+      '!!!Biometrics login failed. Please use an alternate login method.',
     description: 'some desc',
   },
   UNKNOWN_ERROR: {
@@ -63,7 +67,7 @@ const messages = defineMessages({
   },
   headings2: {
     id: 'components.send.biometricauthscreen.headings2',
-    defaultMessage: '!!!fingerprint',
+    defaultMessage: '!!!biometrics',
     description: 'some desc',
   },
   cancelButton: {
@@ -97,9 +101,9 @@ const handleOnConfirm = async (
       clearError()
     } else if (error.code === KeyStore.REJECTIONS.CANCELED) {
       clearError()
-      onFail(KeyStore.REJECTIONS.CANCELED)
+      onFail(KeyStore.REJECTIONS.CANCELED, intl)
     } else if (error.code === KeyStore.REJECTIONS.INVALID_KEY) {
-      onFail(KeyStore.REJECTIONS.INVALID_KEY)
+      onFail(KeyStore.REJECTIONS.INVALID_KEY, intl)
     } else if (error.code === KeyStore.REJECTIONS.SENSOR_LOCKOUT) {
       setError('SENSOR_LOCKOUT')
     } else if (error.code === KeyStore.REJECTIONS.SENSOR_LOCKOUT_PERMANENT) {
@@ -130,6 +134,8 @@ const BiometricAuthScreen = ({cancelScanning, useFallback, error, intl}) => (
       />,
     ]}
     error={error && intl.formatMessage(errorMessages[error])}
+    addWelcomeMessage
+    intl={intl}
   />
 )
 
@@ -165,7 +171,7 @@ export default injectIntl(
       // we have this handler because we need to let JAVA side know user
       // cancelled the scanning by either navigating out of this window
       // or using fallback
-      cancelScanning: ({clearError, route}) => async () => {
+      cancelScanning: ({clearError, route, intl}) => async () => {
         const wasScanningStarted = await KeyStore.cancelFingerprintScanning(
           KeyStore.REJECTIONS.CANCELED,
         )
@@ -174,7 +180,7 @@ export default injectIntl(
           clearError()
           const {onFail} = route.params
           if (onFail == null) throw new Error('BiometricAuthScreen::onFail')
-          onFail(KeyStore.REJECTIONS.CANCELED)
+          onFail(KeyStore.REJECTIONS.CANCELED, intl)
         }
       },
       useFallback: ({route, setError, clearError, intl}) => async () => {
@@ -187,8 +193,12 @@ export default injectIntl(
     onWillUnmount(async () => {
       await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
     }),
-    onDidMount(({route, setError, clearError, intl}) =>
-      handleOnConfirm(route, setError, clearError, false, intl),
-    ),
+    onDidMount(async ({route, setError, clearError, intl}) => {
+      if (!(await canBiometricEncryptionBeEnabled())) {
+        await showErrorDialog(globalErrorMessages.biometricsIsTurnedOff, intl)
+        return
+      }
+      handleOnConfirm(route, setError, clearError, false, intl)
+    }),
   )(BiometricAuthScreen): ComponentType<ExternalProps>),
 )
