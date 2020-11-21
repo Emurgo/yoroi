@@ -24,6 +24,17 @@ const messages = defineMessages({
   },
 })
 
+type Props = {
+  headings: Array<string>,
+  subHeadings?: Array<string>,
+  buttons: Array<any>,
+  onGoBack?: () => any,
+  error?: null | false | string,
+  addWelcomeMessage?: boolean,
+  intl?: any,
+  showImage: boolean,
+}
+
 const FingerprintScreenBase = ({
   headings,
   subHeadings,
@@ -33,7 +44,7 @@ const FingerprintScreenBase = ({
   addWelcomeMessage,
   intl,
   showImage,
-}) => (
+}: Props) => (
   <ScreenBackground style={styles.container}>
     <StatusBar type="dark" />
 
@@ -97,13 +108,13 @@ type ExternalProps = {
   intl?: any,
 }
 
-export default compose(
+export default (compose(
   withStateHandlers(
     {
       showImage: false,
     },
     {
-      shouldShowImage: () => (sdk) => {
+      shouldShowImage: () => (sdk: number): {showImage: boolean} => {
         // note(v-almonacid): the decrypt with biometrics prompt only appears
         // for API level >= 28
         const showImage = Platform.OS === 'android' && sdk < 28
@@ -114,4 +125,4 @@ export default compose(
   onDidMount(({shouldShowImage}) =>
     DeviceInfo.getApiLevel().then((sdk) => shouldShowImage(sdk)),
   ),
-)((FingerprintScreenBase: ComponentType<ExternalProps>))
+)(FingerprintScreenBase): ComponentType<ExternalProps>)
