@@ -1,7 +1,7 @@
 {
   "components.common.errormodal.hideError": "Nascondi messaggio di errore",
   "components.common.errormodal.showError": "Mostra messaggio di errore",
-  "components.common.fingerprintscreenbase.welcomeMessage": "Welcome Back",
+  "components.common.fingerprintscreenbase.welcomeMessage": "Ben tornato",
   "components.common.languagepicker.brazilian": "Portoghese brasiliano",
   "components.common.languagepicker.chinese": "简体中文",
   "components.common.languagepicker.continueButton": "Scegli la lingua",
@@ -88,7 +88,7 @@
   "components.receive.receivescreen.usedAddresses": "Indirizzi utilizzati",
   "components.send.addressreaderqr.title": "Scansiona l'indirizzo del codice QR",
   "components.send.amountfield.label": "Importo",
-  "components.send.biometricauthscreen.DECRYPTION_FAILED": "Biometrics login failed. Please use an alternate login method.",
+  "components.send.biometricauthscreen.DECRYPTION_FAILED": "Il login biometrico non è riuscito. Si prega di utilizzare un metodo di login alternativo.",
   "components.send.biometricauthscreen.NOT_RECOGNIZED": "Biometrics were not recognized. Try again",
   "components.send.biometricauthscreen.SENSOR_LOCKOUT": "Troppi tentativi falliti. Il sensore e' ora disabilitato.",
   "components.send.biometricauthscreen.SENSOR_LOCKOUT_PERMANENT": "Your biometrics sensor has been permanently locked. Use an alternate login method.",
