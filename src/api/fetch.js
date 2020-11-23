@@ -10,26 +10,27 @@ import type {BackendConfig} from '../config/types'
 type RequestMethod = 'POST' | 'GET'
 
 const _checkResponse = async (rawResponse: Object, requestPayload: Object) => {
+  let responseBody = {}
   try {
-    const status = rawResponse.status
-    const responseBody = await rawResponse.json()
-    if (status !== 200) {
-      if (
-        responseBody.error?.response === 'REFERENCE_TX_NOT_FOUND' ||
-        responseBody.error?.response === 'REFERENCE_BLOCK_MISMATCH' ||
-        responseBody.error?.response === 'REFERENCE_BEST_BLOCK_MISMATCH'
-      ) {
-        throw new ApiHistoryError(responseBody.error.response)
-      }
-      Logger.debug('Bad status code from server', status)
-      Logger.debug('Request payload:', requestPayload)
-      Logger.info('response', responseBody)
-      throw new ApiError(responseBody.error?.response)
-    }
-    return responseBody
+    responseBody = await rawResponse.json()
   } catch (_e) {
     throw new ApiError('unexpected server response')
   }
+  const status = rawResponse.status
+  if (status !== 200) {
+    if (
+      responseBody.error?.response === 'REFERENCE_TX_NOT_FOUND' ||
+      responseBody.error?.response === 'REFERENCE_BLOCK_MISMATCH' ||
+      responseBody.error?.response === 'REFERENCE_BEST_BLOCK_MISMATCH'
+    ) {
+      throw new ApiHistoryError(responseBody.error.response)
+    }
+    Logger.debug('Bad status code from server', status)
+    Logger.debug('Request payload:', requestPayload)
+    Logger.info('response', responseBody)
+    throw new ApiError(responseBody.error?.response)
+  }
+  return responseBody
 }
 
 export default (
