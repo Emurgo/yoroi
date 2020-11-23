@@ -9,19 +9,26 @@ import type {BackendConfig} from '../config/types'
 
 type RequestMethod = 'POST' | 'GET'
 
-const _checkResponse = (status, responseBody, requestPayload) => {
-  if (status !== 200) {
-    if (
-      responseBody.error?.response === 'REFERENCE_TX_NOT_FOUND' ||
-      responseBody.error?.response === 'REFERENCE_BLOCK_MISMATCH' ||
-      responseBody.error?.response === 'REFERENCE_BEST_BLOCK_MISMATCH'
-    ) {
-      throw new ApiHistoryError(responseBody.error.response)
+const _checkResponse = async (rawResponse: Object, requestPayload: Object) => {
+  try {
+    const status = rawResponse.status
+    const responseBody = await rawResponse.json()
+    if (status !== 200) {
+      if (
+        responseBody.error?.response === 'REFERENCE_TX_NOT_FOUND' ||
+        responseBody.error?.response === 'REFERENCE_BLOCK_MISMATCH' ||
+        responseBody.error?.response === 'REFERENCE_BEST_BLOCK_MISMATCH'
+      ) {
+        throw new ApiHistoryError(responseBody.error.response)
+      }
+      Logger.debug('Bad status code from server', status)
+      Logger.debug('Request payload:', requestPayload)
+      Logger.info('response', responseBody)
+      throw new ApiError(responseBody.error?.response)
     }
-    Logger.debug('Bad status code from server', status)
-    Logger.debug('Request payload:', requestPayload)
-    Logger.info('response', responseBody)
-    throw new ApiError(responseBody.error?.response)
+    return responseBody
+  } catch (_e) {
+    throw new ApiError('unexpected server response')
   }
 }
 
@@ -30,7 +37,7 @@ export default (
   payload: ?any,
   networkConfig: BackendConfig,
   method?: RequestMethod = 'POST',
-  checkResponse?: (number, any, ?any) => void = _checkResponse,
+  checkResponse?: (Object, Object) => Promise<Object> = _checkResponse,
 ) => {
   const fullPath = `${networkConfig.API_ROOT}/${path}`
   const platform =
@@ -60,10 +67,7 @@ export default (
       })
       .then(async (r) => {
         Logger.info(`API call ${path} finished`)
-
-        const status = r.status
-        const response = await r.json()
-        checkResponse(status, response, payload)
+        const response = await checkResponse(r, payload)
         // Logger.debug('Response:', response)
         return response
       })
