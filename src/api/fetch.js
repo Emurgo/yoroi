@@ -9,7 +9,14 @@ import type {BackendConfig} from '../config/types'
 
 type RequestMethod = 'POST' | 'GET'
 
-const _checkResponse = (status, responseBody, requestPayload) => {
+const _checkResponse = async (rawResponse: Object, requestPayload: Object) => {
+  let responseBody = {}
+  try {
+    responseBody = await rawResponse.json()
+  } catch (_e) {
+    throw new ApiError('unexpected server response')
+  }
+  const status = rawResponse.status
   if (status !== 200) {
     if (
       responseBody.error?.response === 'REFERENCE_TX_NOT_FOUND' ||
@@ -23,6 +30,7 @@ const _checkResponse = (status, responseBody, requestPayload) => {
     Logger.info('response', responseBody)
     throw new ApiError(responseBody.error?.response)
   }
+  return responseBody
 }
 
 export default (
@@ -30,7 +38,7 @@ export default (
   payload: ?any,
   networkConfig: BackendConfig,
   method?: RequestMethod = 'POST',
-  checkResponse?: (number, any, ?any) => void = _checkResponse,
+  checkResponse?: (Object, Object) => Promise<Object> = _checkResponse,
 ) => {
   const fullPath = `${networkConfig.API_ROOT}/${path}`
   const platform =
@@ -60,10 +68,7 @@ export default (
       })
       .then(async (r) => {
         Logger.info(`API call ${path} finished`)
-
-        const status = r.status
-        const response = await r.json()
-        checkResponse(status, response, payload)
+        const response = await checkResponse(r, payload)
         // Logger.debug('Response:', response)
         return response
       })
