@@ -4655,12 +4655,7 @@ blake2b@2.1.3:
     blake2b-wasm "^1.1.0"
     nanoassert "^1.0.0"
 
-bluebird@3.5.x:
-  version "3.5.5"
-  resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.5.tgz#a8d0afd73251effbbd5fe384a77d73003c17a71f"
-  integrity sha512-5am6HnnfN+urzt4yfg7IgTbotDjIT/u8AJpEt0sIU9FtXfVeezXAPKswrG+xKUCOYAINpSdgZVDU6QFh+cuH3w==
-
-bluebird@^3.3.5, bluebird@^3.5.5:
+bluebird@^3.3.5, bluebird@^3.5.4, bluebird@^3.5.5:
   version "3.7.2"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.7.2.tgz#9f229c15be272454ffa973ace0dbee79a1b0c36f"
   integrity sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==
@@ -6299,16 +6294,17 @@ detect-port@^1.3.0:
     address "^1.0.1"
     debug "^2.6.0"
 
-detox@15.4.2:
-  version "15.4.2"
-  resolved "https://registry.yarnpkg.com/detox/-/detox-15.4.2.tgz#1f947a7a6124e8ff2815abc9737c32f36fe34d5b"
-  integrity sha512-nUNY8kM3T4iPqzg0KvdcpXpVc0rvbRHNAYOldCsRQZo6WlOKFdiQAD8snvp1We0Wwm0cm4UZ4/Usj/UPtFc8Uw==
+detox@16.7.2:
+  version "16.7.2"
+  resolved "https://registry.yarnpkg.com/detox/-/detox-16.7.2.tgz#531c98416adf52d4ba95601b669969acadafb970"
+  integrity sha512-+837eRgk4xOewXmeF5H6vOTn0RbKUFIyCi5UsTXEhvplsMk+KrrqfKik2j8fvubJkByry7HqIN/JF9jKe+meIQ==
   dependencies:
     "@babel/core" "^7.4.5"
     bunyan "^1.8.12"
     bunyan-debug-stream "^1.1.0"
     chalk "^2.4.2"
     child-process-promise "^2.2.0"
+    find-up "^4.1.0"
     fs-extra "^4.0.2"
     funpermaproxy "^1.0.1"
     get-port "^2.1.0"
@@ -6319,7 +6315,7 @@ detox@15.4.2:
     sanitize-filename "^1.6.1"
     shell-utils "^1.0.9"
     tail "^2.0.0"
-    telnet-client "0.15.3"
+    telnet-client "1.2.8"
     tempfile "^2.0.0"
     which "^1.3.1"
     ws "^3.3.1"
@@ -12738,6 +12734,13 @@ react-native-safe-area-context@3.1.8:
   resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-3.1.8.tgz#7a9883aa0f38f9c77d4bef2b89e4e285bc1024a3"
   integrity sha512-9gUlsDZ96QwT9AKzA6aVWM/NX5rlJgauZ9HgCDVzKbe29UQYT1740QJnnaI2GExmkFGp6o7ZLNhCXZW95eYVFA==
 
+react-native-safe-area-view@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-safe-area-view/-/react-native-safe-area-view-2.0.0.tgz#98fc9bb1bf3cb8c97ba684efb7dd897765afff3b"
+  integrity sha512-tGlGZwRoZpTQ0gEdSSRgbkeyyKC50ZsEv2H/LQKjXhc00IHffbU0BA5chSzTqNwDrs5MFXfTG1ooRQK+0FVTjw==
+  dependencies:
+    hoist-non-react-statics "^2.3.1"
+
 react-native-schemes-manager@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/react-native-schemes-manager/-/react-native-schemes-manager-1.0.5.tgz#84ee2d0af9a46679806de77d53fd509ab2f92936"
@@ -14498,12 +14501,12 @@ telejson@^3.2.0:
     lodash "^4.17.15"
     memoizerific "^1.11.3"
 
-telnet-client@0.15.3:
-  version "0.15.3"
-  resolved "https://registry.yarnpkg.com/telnet-client/-/telnet-client-0.15.3.tgz#99ec754e4acf6fa51dc69898f574df3c2550712e"
-  integrity sha512-GSfdzQV0BKIYsmeXq7bJFJ2wHeJud6icaIxCUf6QCGQUD6R0BBGbT1+yLDhq67JRdgRpwyPwUbV7JxFeRrZomQ==
+telnet-client@1.2.8:
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/telnet-client/-/telnet-client-1.2.8.tgz#946c0dadc8daa3f19bb40a3e898cb870403a4ca4"
+  integrity sha512-W+w4k3QAmULVNhBVT2Fei369kGZCh/TH25M7caJAXW+hLxwoQRuw0di3cX4l0S9fgH3Mvq7u+IFMoBDpEw/eIg==
   dependencies:
-    bluebird "3.5.x"
+    bluebird "^3.5.4"
 
 temp-dir@^1.0.0:
   version "1.0.0"

@@ -6,7 +6,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {ScrollView, View} from 'react-native'
 import _ from 'lodash'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import SafeAreaView from 'react-native-safe-area-view'
 import {injectIntl, defineMessages} from 'react-intl'
 
 import {CONFIG} from '../../config/config'

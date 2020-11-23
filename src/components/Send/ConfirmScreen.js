@@ -5,7 +5,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {ScrollView, View, Platform} from 'react-native'
 import {withHandlers, withStateHandlers} from 'recompose'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import SafeAreaView from 'react-native-safe-area-view'
 import {injectIntl, defineMessages} from 'react-intl'
 
 import {
