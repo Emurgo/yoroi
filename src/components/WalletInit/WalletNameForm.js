@@ -10,7 +10,6 @@ import {isEmpty} from 'lodash'
 
 import {Button, ValidatedTextInput, ProgressStep} from '../UiKit'
 import {getWalletNameError, validateWalletName} from '../../utils/validators'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import globalMessages from '../../../src/i18n/global-messages'
 import {walletNamesSelector} from '../../selectors'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
@@ -18,13 +17,8 @@ import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 import styles from './styles/WalletNameForm.style'
 
 import type {ComponentType} from 'react'
-import type {Navigation} from '../../types/navigation'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.walletinit.connectnanox.savenanoxscreen.title',
-    defaultMessage: '!!!Save wallet',
-  },
   walletNameInputLabel: {
     id: 'components.walletinit.walletform.walletNameInputLabel',
     defaultMessage: '!!!Wallet name',
@@ -92,7 +86,6 @@ const WalletNameForm = ({
 
 type ExternalProps = {|
   intl: intlShape,
-  navigation: Navigation,
   onSubmit: ({name: string}) => PossiblyAsync<void>,
   defaultName?: string,
   image: string,
@@ -132,6 +125,5 @@ export default injectIntl(
       validateForm: ({name, validateWalletName}) => () =>
         validateWalletName(name),
     }),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
   )(WalletNameForm): ComponentType<ExternalProps>),
 )

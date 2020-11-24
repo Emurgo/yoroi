@@ -8,6 +8,7 @@ import {injectIntl, intlShape, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
+import {withNavigationTitle} from '../../../utils/renderUtils'
 
 import {Text, StatusBar} from '../../UiKit'
 import WalletNameForm from '../WalletNameForm'
@@ -29,6 +30,11 @@ import type {ComponentType} from 'react'
 import type {Navigation} from '../../../types/navigation'
 
 const messages = defineMessages({
+  title: {
+    id: 'components.walletinit.savereadonlywalletscreen.title',
+    defaultMessage: '!!!Verify read-only wallet',
+    description: 'some desc',
+  },
   defaultWalletName: {
     id: 'components.walletinit.savereadonlywalletscreen.defaultWalletName',
     defaultMessage: '!!!My read-only wallet',
@@ -50,7 +56,7 @@ const CheckSumView = ({icon, checksum}) => (
   </View>
 )
 
-const SaveReadOnlyWalletScreen = ({onSubmit, navigation, route, intl}) => {
+const SaveReadOnlyWalletScreen = ({onSubmit, route, intl}) => {
   const [plate, setPlate] = useState({
     accountPlate: {
       ImagePart: '',
@@ -103,7 +109,6 @@ const SaveReadOnlyWalletScreen = ({onSubmit, navigation, route, intl}) => {
 
       <WalletNameForm
         onSubmit={onSubmit}
-        navigation={navigation}
         defaultWalletName={intl.formatMessage(messages.defaultWalletName)}
       />
     </>
@@ -124,6 +129,7 @@ export default injectIntl(
         createWalletWithBip44Account,
       },
     ),
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
       onSubmit: ({
         createWalletWithBip44Account,

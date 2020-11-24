@@ -313,6 +313,7 @@
   "components.walletinit.restorewallet.walletverifyscreen.verifyInstructions1": "Make sure the Byron wallet address matches your old wallet.",
   "components.walletinit.restorewallet.walletverifyscreen.verifyInstructions2": "If you entered the wrong recovery phrase, you will get an empty wallet with different addresses from your old one.",
   "components.walletinit.savereadonlywalletscreen.defaultWalletName": "My read-only wallet",
+  "components.walletinit.savereadonlywalletscreen.title": "Verify read-only wallet",
   "components.walletinit.walletdescription.byEmurgo": "By",
   "components.walletinit.walletform.continueButton": "Continue",
   "components.walletinit.walletform.newPasswordInput": "Spending password",

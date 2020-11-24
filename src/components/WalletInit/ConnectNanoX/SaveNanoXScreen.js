@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {injectIntl, intlShape} from 'react-intl'
+import {injectIntl, intlShape, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
@@ -12,16 +12,23 @@ import {saveHW} from '../../../actions/hwWallet'
 import {WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import {CONFIG} from '../../../config/config'
 import assert from '../../../utils/assert'
+import {withNavigationTitle} from '../../../utils/renderUtils'
 
 import image from '../../../assets/img/ledger_2.png'
 
 import type {ComponentType} from 'react'
 import type {Navigation} from '../../../types/navigation'
 
-const SaveNanoXScreen = ({onSubmit, navigation}) => (
+const messages = defineMessages({
+  title: {
+    id: 'components.walletinit.connectnanox.savenanoxscreen.title',
+    defaultMessage: '!!!Save wallet',
+  },
+})
+
+const SaveNanoXScreen = ({onSubmit}) => (
   <WalletNameForm
     onSubmit={onSubmit}
-    navigation={navigation}
     defaultWalletName={CONFIG.HARDWARE_WALLETS.LEDGER_NANO.DEFAULT_WALLET_NAME}
     image={image}
     progress={{
@@ -46,6 +53,7 @@ export default injectIntl(
         saveHW,
       },
     ),
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
       onSubmit: ({
         createWalletWithBip44Account,
