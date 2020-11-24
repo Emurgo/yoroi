@@ -1,20 +1,32 @@
 // @flow
 import {StyleSheet} from 'react-native'
 
-import {COLORS} from '../../../../styles/config'
+import {THEME} from '../../../../styles/config'
+
+const SECTION_MARGIN = 22
+const LABEL_MARGIN = 6
 
 export default StyleSheet.create({
   safeAreaView: {
-    backgroundColor: COLORS.WHITE,
+    backgroundColor: THEME.COLORS.BACKGROUND,
     paddingHorizontal: 16,
     paddingTop: 30,
   },
-  checkSumView: {
+  scrollView: {
+    paddingRight: 10,
+  },
+  label: {
+    marginBottom: LABEL_MARGIN,
+  },
+  checksumContainer: {
+    marginBottom: SECTION_MARGIN,
+  },
+  checksumView: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 12,
-    marginBottom: 32,
     borderColor: 'red',
+    flexWrap: 'wrap',
   },
   checksumText: {
     fontSize: 18,
@@ -22,6 +34,14 @@ export default StyleSheet.create({
     paddingLeft: 12,
   },
   addressesContainer: {
-    marginBottom: 32,
+    marginBottom: SECTION_MARGIN,
+  },
+  keyAttributesContainer: {
+    marginBottom: SECTION_MARGIN,
+  },
+  keyView: {
+    padding: 4,
+    backgroundColor: THEME.COLORS.CODE_STYLE_BACKGROUND,
+    marginBottom: 10,
   },
 })

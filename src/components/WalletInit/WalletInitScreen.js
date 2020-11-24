@@ -65,8 +65,9 @@ const messages = defineMessages({
     id:
       'components.walletinit.walletinitscreen.importReadOnlyWalletExplanation',
     defaultMessage:
-      "!!!If you have a QR code containing a wallet's public key," +
-      ', choose this option to import this wallet in read-only mode.',
+      "!!!The Yoroi extension allows you to export any of your wallets' " +
+      'public keys in a QR code. Choose this option to import a wallet from ' +
+      ' a QR code in read-only mode.',
   },
   createWalletWithLedgerButton: {
     id: 'components.walletinit.walletinitscreen.createWalletWithLedgerButton',

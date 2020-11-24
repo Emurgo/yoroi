@@ -8,8 +8,8 @@ import {injectIntl, intlShape, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
-import {withNavigationTitle} from '../../../utils/renderUtils'
 
+import {withNavigationTitle} from '../../../utils/renderUtils'
 import {Text, StatusBar} from '../../UiKit'
 import WalletNameForm from '../WalletNameForm'
 import {
@@ -17,6 +17,7 @@ import {
   handleGeneralError,
 } from '../../../actions'
 import {generateShelleyPlateFromKey} from '../../../crypto/shelley/plate'
+import {formatPath} from '../../../crypto/commonUtils'
 import {WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import {CONFIG} from '../../../config/config'
 import assert from '../../../utils/assert'
@@ -47,10 +48,18 @@ const messages = defineMessages({
     id: 'components.walletinit.verifyrestoredwallet.walletAddressLabel',
     defaultMessage: '!!!Wallet Address(es):',
   },
+  key: {
+    id: 'components.walletinit.savereadonlywalletscreen.key',
+    defaultMessage: '!!!Key:',
+  },
+  derivationPath: {
+    id: 'components.walletinit.savereadonlywalletscreen.derivationPath',
+    defaultMessage: '!!!Derivation path:',
+  },
 })
 
 const CheckSumView = ({icon, checksum}) => (
-  <View style={styles.checkSumView}>
+  <View style={styles.checksumView}>
     <WalletAccountIcon iconSeed={icon} />
     <Text style={styles.checksumText}>{checksum}</Text>
   </View>
@@ -66,7 +75,13 @@ const SaveReadOnlyWalletScreen = ({onSubmit, route, intl}) => {
   })
 
   const {formatMessage} = intl
-  const {publicKeyHex} = route.params
+  const {publicKeyHex, path} = route.params
+
+  const normalizedPath = path.map((i) => {
+    if (i >= CONFIG.NUMBERS.HARD_DERIVATION_START) {
+      return i - CONFIG.NUMBERS.HARD_DERIVATION_START
+    }
+  })
 
   const generatePlates = async () => {
     const {addresses, accountPlate} = await generateShelleyPlateFromKey(
@@ -84,26 +99,48 @@ const SaveReadOnlyWalletScreen = ({onSubmit, route, intl}) => {
     <>
       <SafeAreaView style={styles.safeAreaView}>
         <StatusBar type="dark" />
-        <Text>{formatMessage(messages.checksumLabel)}</Text>
-        {!!plate.accountPlate.ImagePart && (
-          <CheckSumView
-            icon={plate.accountPlate.ImagePart}
-            checksum={plate.accountPlate.TextPart}
-          />
-        )}
-
-        <View style={styles.addressesContainer}>
-          <Text>{formatMessage(messages.walletAddressLabel)}</Text>
-          <FlatList
-            data={plate.addresses}
-            keyExtractor={(item) => item}
-            renderItem={({item}) => (
-              <WalletAddress
-                addressHash={item}
-                networkId={CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID}
+        <View style={styles.scrollView}>
+          <View style={styles.checksumContainer}>
+            <Text>{formatMessage(messages.checksumLabel)}</Text>
+            {!!plate.accountPlate.ImagePart && (
+              <CheckSumView
+                icon={plate.accountPlate.ImagePart}
+                checksum={plate.accountPlate.TextPart}
               />
             )}
-          />
+          </View>
+
+          <View style={styles.addressesContainer}>
+            <Text>{formatMessage(messages.walletAddressLabel)}</Text>
+            <FlatList
+              data={plate.addresses}
+              keyExtractor={(item) => item}
+              renderItem={({item}) => (
+                <WalletAddress
+                  addressHash={item}
+                  networkId={CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID}
+                />
+              )}
+            />
+          </View>
+
+          <View style={styles.keyAttributesContainer}>
+            <Text style={styles.label}>{formatMessage(messages.key)}</Text>
+            <View style={styles.keyView}>
+              <Text secondary monospace>
+                {publicKeyHex}
+              </Text>
+            </View>
+
+            <Text style={styles.label}>
+              {formatMessage(messages.derivationPath)}
+            </Text>
+            <Text secondary monospace>
+              {`m/${normalizedPath[0]}'/${normalizedPath[1]}'/${
+                normalizedPath[2]
+              }`}
+            </Text>
+          </View>
         </View>
       </SafeAreaView>
 

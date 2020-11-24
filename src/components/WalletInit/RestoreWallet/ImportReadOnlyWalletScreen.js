@@ -6,7 +6,6 @@ import {View, ScrollView, Dimensions} from 'react-native'
 import {withHandlers} from 'recompose'
 import {injectIntl, defineMessages, type intlShape} from 'react-intl'
 import QRCodeScanner from 'react-native-qrcode-scanner'
-import {Bip32PublicKey} from 'react-native-haskell-shelley'
 
 import {Text, BulletPointItem} from '../../UiKit'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
@@ -14,6 +13,10 @@ import {withNavigationTitle} from '../../../utils/renderUtils'
 import {Logger} from '../../../utils/logging'
 import {errorMessages} from '../../../i18n/global-messages'
 import {showErrorDialog} from '../../../actions'
+import {
+  isValidPublicKey,
+  isCIP1852AccountPath,
+} from '../../../utils/bip44Validators'
 
 import styles from './styles/ImportReadOnlyWalletScreen.style'
 
@@ -45,28 +48,6 @@ const messages = defineMessages({
 
 let scannerRef // reference to QR code sanner to re-activate if required
 
-// TODO(v-almonacid): move these validators somewhere else
-
-const isString = (s) => typeof s === 'string' || s instanceof String
-
-const isValidPath = (path: Array<any>) => {
-  for (const i of path) {
-    if (!(Number.isInteger(i) && i >= 0)) {
-      return false
-    }
-  }
-  return true
-}
-
-const canParsePublicKey = async (publicKeyHex: string): Promise<boolean> => {
-  try {
-    await Bip32PublicKey.from_bytes(Buffer.from(publicKeyHex, 'hex'))
-    return true
-  } catch (_e) {
-    return false
-  }
-}
-
 const handleOnRead = async (
   event: Object,
   navigation: Navigation,
@@ -76,14 +57,7 @@ const handleOnRead = async (
     Logger.debug('ImportReadOnlyWalletScreen::handleOnRead::data', event.data)
     const dataObj = JSON.parse(event.data)
     const {publicKeyHex, path} = dataObj
-    if (
-      publicKeyHex != null &&
-      isString(publicKeyHex) &&
-      (await canParsePublicKey(publicKeyHex)) &&
-      path != null &&
-      Array.isArray(path) &&
-      isValidPath(path)
-    ) {
+    if (isCIP1852AccountPath(path) && (await isValidPublicKey(publicKeyHex))) {
       Logger.debug('ImportReadOnlyWalletScreen::publicKeyHex', publicKeyHex)
       Logger.debug('ImportReadOnlyWalletScreen::path', path)
       navigation.navigate(WALLET_INIT_ROUTES.SAVE_READ_ONLY_WALLET, {
