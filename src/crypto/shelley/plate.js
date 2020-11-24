@@ -9,6 +9,24 @@ import {CONFIG} from '../../config/config'
 import type {AddressType} from '../commonUtils'
 import type {PlateResponse} from '../types'
 
+export const generateShelleyPlateFromKey = async (
+  key: string,
+  count: number,
+  isJormungandr?: boolean = false,
+): Promise<PlateResponse> => {
+  const addrType: AddressType = 'External'
+  const addrGenerator = new AddressGenerator(
+    key,
+    addrType,
+    CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+  )
+  const accountPlate = isJormungandr
+    ? legacyWalletChecksum(key)
+    : walletChecksum(key)
+  const addresses = await addrGenerator.generate([...Array(count).keys()])
+  return {addresses, accountPlate}
+}
+
 export const generateShelleyPlateFromMnemonics = async (
   phrase: string,
   count: number,
@@ -28,15 +46,9 @@ export const generateShelleyPlateFromMnemonics = async (
     'hex',
   )
 
-  const addrType: AddressType = 'External'
-  const addrGenerator = new AddressGenerator(
+  return await generateShelleyPlateFromKey(
     accountPubKeyHex,
-    addrType,
-    CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+    count,
+    isJormungandr,
   )
-  const accountPlate = isJormungandr
-    ? legacyWalletChecksum(accountPubKeyHex)
-    : walletChecksum(accountPubKeyHex)
-  const addresses = await addrGenerator.generate([...Array(count).keys()])
-  return {addresses, accountPlate}
 }
