@@ -7,13 +7,20 @@ const SECTION_MARGIN = 22
 const LABEL_MARGIN = 6
 
 export default StyleSheet.create({
-  safeAreaView: {
+  container: {
+    flex: 1,
     backgroundColor: THEME.COLORS.BACKGROUND,
     paddingHorizontal: 16,
     paddingTop: 30,
   },
   scrollView: {
     paddingRight: 10,
+  },
+  walletInfoContainer: {
+    flex: 3, // uses 3/5 of container
+  },
+  formContainer: {
+    flex: 2, // uses 2/5 of container
   },
   label: {
     marginBottom: LABEL_MARGIN,

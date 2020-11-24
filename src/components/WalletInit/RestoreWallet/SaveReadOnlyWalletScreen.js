@@ -3,7 +3,7 @@
 import React, {useState, useEffect} from 'react'
 // TODO: in the future, prefer SafeAreaView from react-native-safe-area-context,
 // current version however doesn't work well on iOS
-import {View, SafeAreaView, FlatList} from 'react-native'
+import {View, SafeAreaView, FlatList, ScrollView} from 'react-native'
 import {injectIntl, intlShape, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
@@ -17,7 +17,6 @@ import {
   handleGeneralError,
 } from '../../../actions'
 import {generateShelleyPlateFromKey} from '../../../crypto/shelley/plate'
-import {formatPath} from '../../../crypto/commonUtils'
 import {WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import {CONFIG} from '../../../config/config'
 import assert from '../../../utils/assert'
@@ -81,6 +80,7 @@ const SaveReadOnlyWalletScreen = ({onSubmit, route, intl}) => {
     if (i >= CONFIG.NUMBERS.HARD_DERIVATION_START) {
       return i - CONFIG.NUMBERS.HARD_DERIVATION_START
     }
+    return i
   })
 
   const generatePlates = async () => {
@@ -96,10 +96,10 @@ const SaveReadOnlyWalletScreen = ({onSubmit, route, intl}) => {
   }, [])
 
   return (
-    <>
-      <SafeAreaView style={styles.safeAreaView}>
-        <StatusBar type="dark" />
-        <View style={styles.scrollView}>
+    <SafeAreaView style={styles.container}>
+      <StatusBar type="dark" />
+      <View style={styles.walletInfoContainer}>
+        <ScrollView style={styles.scrollView}>
           <View style={styles.checksumContainer}>
             <Text>{formatMessage(messages.checksumLabel)}</Text>
             {!!plate.accountPlate.ImagePart && (
@@ -141,14 +141,16 @@ const SaveReadOnlyWalletScreen = ({onSubmit, route, intl}) => {
               }`}
             </Text>
           </View>
-        </View>
-      </SafeAreaView>
+        </ScrollView>
+      </View>
 
-      <WalletNameForm
-        onSubmit={onSubmit}
-        defaultWalletName={intl.formatMessage(messages.defaultWalletName)}
-      />
-    </>
+      <View style={styles.formContainer}>
+        <WalletNameForm
+          onSubmit={onSubmit}
+          defaultWalletName={intl.formatMessage(messages.defaultWalletName)}
+        />
+      </View>
+    </SafeAreaView>
   )
 }
 
