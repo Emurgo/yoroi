@@ -17,6 +17,7 @@ import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 import styles from './styles/WalletNameForm.style'
 
 import type {ComponentType} from 'react'
+import type {TextStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
 const messages = defineMessages({
   walletNameInputLabel: {
@@ -37,6 +38,7 @@ const WalletNameForm = ({
   validateForm,
   setName,
   progress,
+  containerStyle,
 }) => {
   const validationErrors = validateForm()
   return (
@@ -48,7 +50,7 @@ const WalletNameForm = ({
           displayStepNumber
         />
       )}
-      <View style={styles.container}>
+      <View style={[styles.container, containerStyle]}>
         <View style={styles.content}>
           <View style={styles.heading}>
             {image != null && <Image source={image} />}
@@ -93,6 +95,7 @@ type ExternalProps = {|
     currentStep: number,
     totalSteps: number,
   },
+  containerStyle?: TextStyleProp,
 |}
 
 export default injectIntl(

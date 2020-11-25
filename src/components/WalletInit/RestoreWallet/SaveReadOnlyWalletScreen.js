@@ -127,7 +127,12 @@ const SaveReadOnlyWalletScreen = ({onSubmit, route, intl}) => {
           <View style={styles.keyAttributesContainer}>
             <Text style={styles.label}>{formatMessage(messages.key)}</Text>
             <View style={styles.keyView}>
-              <Text secondary monospace>
+              <Text
+                secondary
+                monospace
+                numberOfLines={1}
+                ellipsizeMode="middle"
+              >
                 {publicKeyHex}
               </Text>
             </View>
@@ -148,6 +153,7 @@ const SaveReadOnlyWalletScreen = ({onSubmit, route, intl}) => {
         <WalletNameForm
           onSubmit={onSubmit}
           defaultWalletName={intl.formatMessage(messages.defaultWalletName)}
+          containerStyle={styles.walletFormStyle}
         />
       </View>
     </SafeAreaView>

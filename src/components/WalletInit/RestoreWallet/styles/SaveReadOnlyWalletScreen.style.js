@@ -17,10 +17,10 @@ export default StyleSheet.create({
     paddingRight: 10,
   },
   walletInfoContainer: {
-    flex: 3, // uses 3/5 of container
+    flex: 1, // uses 1/2 of container
   },
   formContainer: {
-    flex: 2, // uses 2/5 of container
+    flex: 1, // uses 1/2 of container
   },
   label: {
     marginBottom: LABEL_MARGIN,
@@ -43,12 +43,13 @@ export default StyleSheet.create({
   addressesContainer: {
     marginBottom: SECTION_MARGIN,
   },
-  keyAttributesContainer: {
-    marginBottom: SECTION_MARGIN,
-  },
+  keyAttributesContainer: {},
   keyView: {
     padding: 4,
     backgroundColor: THEME.COLORS.CODE_STYLE_BACKGROUND,
     marginBottom: 10,
+  },
+  walletFormStyle: {
+    paddingTop: 0,
   },
 })
