@@ -221,6 +221,7 @@ const WalletInitScreen = ({
                 onPress={navigateImportReadOnlyWallet}
                 title={intl.formatMessage(messages.importReadOnlyWalletLabel)}
                 style={styles.mnemonicDialogButton}
+                testID="importReadOnlyWalletButton"
               />
               <ExapandableItem
                 label={intl.formatMessage(globalMessages.learnMore)}

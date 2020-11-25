@@ -6,10 +6,12 @@ import {View, ScrollView, Dimensions} from 'react-native'
 import {withHandlers} from 'recompose'
 import {injectIntl, defineMessages, type intlShape} from 'react-intl'
 import QRCodeScanner from 'react-native-qrcode-scanner'
+import DeviceInfo from 'react-native-device-info'
 
 import {Text, BulletPointItem} from '../../UiKit'
+import {CONFIG} from '../../../config/config'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
-import {withNavigationTitle} from '../../../utils/renderUtils'
+import {withNavigationTitle, onDidMount} from '../../../utils/renderUtils'
 import {Logger} from '../../../utils/logging'
 import {errorMessages} from '../../../i18n/global-messages'
 import {showErrorDialog} from '../../../actions'
@@ -111,6 +113,16 @@ const ImportReadOnlyWalletScreen = ({intl, onRead}) => (
 export default injectIntl(
   (compose(
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    onDidMount(async ({navigation, intl}) => {
+      if (CONFIG.E2E.IS_TESTING && (await DeviceInfo.isEmulator())) {
+        const event = {
+          data: `{"publicKeyHex": "${
+            CONFIG.DEBUG.PUB_KEY
+          }", "path": [1852,1815,0]}`,
+        }
+        await handleOnRead(event, navigation, intl)
+      }
+    }),
     withHandlers({
       onRead: ({navigation, intl}) => async (event) => {
         await handleOnRead(event, navigation, intl)

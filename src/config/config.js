@@ -15,6 +15,8 @@ const IS_DEBUG = __DEV__
  */
 const _SHOW_INIT_DEBUG_SCREEN = env.getBoolean('SHOW_INIT_DEBUG_SCREEN', false)
 const _PREFILL_WALLET_INFO = env.getBoolean('PREFILL_WALLET_INFO', false)
+// e2e testing
+const _IS_TESTING = env.getBoolean('IS_TESTING', false)
 
 // TODO(v-almonacid): consider adding 'ENABLE' as an env variable
 const _SENTRY = {
@@ -111,6 +113,14 @@ export const CONFIG = {
       'gcdwap96xuy84apchhj8u6r7uvl974sy9qz0sedc7ayjks3sxz7a',
     SEND_AMOUNT: '1',
     POOL_HASH: 'af22f95915a19cd57adb14c558dcc4a175f60c6193dc23b8bd2d8beb',
+    PUB_KEY:
+      '42cfdc53da2220ba52ce62f8e20ab9bb99857a3fceacf43d676d7987ad909b53' +
+      'ed75534e0d0ee8fce835eb2e7c67c5caec18a9c894388d9a046380edebbfc46d',
+  },
+  E2E: {
+    // WARNING: NEVER change these flags here, use .env.e2e
+    // we test release configurations so we allow this flag when __DEV__=false
+    IS_TESTING: _IS_TESTING,
   },
   MAX_CONCURRENT_REQUESTS: 5,
   SENTRY: _SENTRY,

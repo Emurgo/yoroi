@@ -8,10 +8,11 @@ import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import assert from '../../../utils/assert'
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
-import {WALLET_ROOT_ROUTES} from '../../../RoutesList'
+import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import WalletForm from '../WalletForm'
 import {createWallet, updateVersion} from '../../../actions'
+import {Logger} from '../../../utils/logging'
 
 import type {Navigation} from '../../../types/navigation'
 import type {ComponentType} from 'react'
@@ -75,7 +76,18 @@ export default injectIntl(
           } finally {
             setWaiting(false)
           }
-          navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)
+
+          try {
+            // note(v-almonacid): it looks like we need the parent in order to
+            // navigate from nested navigator to nested navigator
+            const parentNavigation = navigation.dangerouslyGetParent()
+            parentNavigation.navigate(ROOT_ROUTES.WALLET, {
+              screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
+            })
+          } catch (_e) {
+            Logger.warn('could not navigate from parent navigator')
+            navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)
+          }
         },
         1000,
       ),

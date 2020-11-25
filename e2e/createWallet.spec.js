@@ -1,71 +1,14 @@
 // @flow
 /* eslint-disable no-undef */
-
-// detox doesn't provide flow types
-declare var element: any
-declare var by: any
-declare var device: any
-
-/**
- * hack to get text from element (feature not available in detox)
- *  see issue https://github.com/wix/detox/issues/445
- */
-async function readTextValue(testID) {
-  try {
-    await expect(element(by.id(testID))).toHaveText('__read_element_error_')
-    return ''
-  } catch (error) {
-    if (device.getPlatform() === 'ios') {
-      const start = `AX.id='${testID}';`
-      const end = '; AX.frame'
-      const errorMessage = error.message.toString()
-      const [, restMessage] = errorMessage.split(start)
-      const [label] = restMessage.split(end)
-      const [, value] = label.split('=')
-      return value.slice(1, value.length - 1)
-    } else {
-      const start = 'Got:'
-      const end = '}"'
-      const errorMessage = error.message.toString()
-      const [, restMessage] = errorMessage.split(start)
-      const [label] = restMessage.split(end)
-      const value = label.split(',')
-      const combineText = value.find((i) => i.includes('text=')).trim()
-      const [, elementText] = combineText.split('=')
-      return elementText
-    }
-  }
-}
+import {setupWallet, readTextValue} from './utils'
 
 describe('Setup a fresh wallet on Byron network', () => {
   beforeEach(async () => {
     await device.reloadReactNative()
+    await setupWallet()
   })
 
   it('should create a new wallet called "test wallet"', async () => {
-    await expect(element(by.text('English'))).toBeVisible()
-    await element(by.id('chooseLangButton')).tap()
-    await expect(element(by.id('acceptTosButton'))).toBeVisible()
-    await expect(element(by.id('acceptTosCheckbox'))).toBeVisible()
-    await element(by.id('acceptTosCheckbox')).tap()
-    await element(by.id('acceptTosButton')).tap()
-    await expect(element(by.id('customPinContainer'))).toBeVisible()
-    await expect(element(by.id('pinKey0'))).toBeVisible()
-
-    // set dummy pin
-    await element(by.id('pinKey0')).tap()
-    await element(by.id('pinKey1')).tap()
-    await element(by.id('pinKey2')).tap()
-    await element(by.id('pinKey3')).tap()
-    await element(by.id('pinKey4')).tap()
-    await element(by.id('pinKey5')).tap()
-    await expect(element(by.id('pinKey0'))).toBeVisible()
-    await element(by.id('pinKey0')).tap()
-    await element(by.id('pinKey1')).tap()
-    await element(by.id('pinKey2')).tap()
-    await element(by.id('pinKey3')).tap()
-    await element(by.id('pinKey4')).tap()
-    await element(by.id('pinKey5')).tap()
 
     await expect(element(by.id('addWalletOnByronButton'))).toBeVisible()
     await element(by.id('addWalletOnByronButton')).tap()
@@ -95,6 +38,6 @@ describe('Setup a fresh wallet on Byron network', () => {
       await element(by.id(`wordBadgeNonTapped-${mnemonic[i]}`)).tap()
     }
     await element(by.id('mnemonicCheckScreen::confirm')).tap()
-    await expect(element(by.text('test wallet'))).toBeVisible()
+    await expect(element(by.text('Available funds'))).toBeVisible()
   })
 })

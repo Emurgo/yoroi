@@ -17,12 +17,13 @@ import {
   handleGeneralError,
 } from '../../../actions'
 import {generateShelleyPlateFromKey} from '../../../crypto/shelley/plate'
-import {WALLET_ROOT_ROUTES} from '../../../RoutesList'
+import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import {CONFIG} from '../../../config/config'
 import assert from '../../../utils/assert'
 import WalletAddress from './WalletAddress'
 import WalletAccountIcon from '../../Common/WalletAccountIcon'
 import {Logger} from '../../../utils/logging'
+import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
 
 import styles from './styles/SaveReadOnlyWalletScreen.style'
 
@@ -96,7 +97,7 @@ const SaveReadOnlyWalletScreen = ({onSubmit, route, intl}) => {
   }, [])
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} testID="saveReadOnlyWalletContainer">
       <StatusBar type="dark" />
       <View style={styles.walletInfoContainer}>
         <ScrollView style={styles.scrollView}>
@@ -176,32 +177,42 @@ export default injectIntl(
     ),
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
-      onSubmit: ({
-        createWalletWithBip44Account,
-        navigation,
-        intl,
-        route,
-      }) => async ({name}) => {
-        try {
-          const {publicKeyHex} = route.params
-          assert.assert(
-            publicKeyHex != null,
-            'SaveReadOnlyWalletScreen::onPress publicKeyHex',
-          )
-          await createWalletWithBip44Account(
-            name,
-            publicKeyHex,
-            CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-            CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
-            null,
-            true, // important: read-only flag
-          )
-          navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)
-        } catch (e) {
-          Logger.error('SaveReadOnlyWalletScreen::onSubmit', e)
-          await handleGeneralError(e.message, e, intl)
-        }
-      },
+      onSubmit: ignoreConcurrentAsyncHandler(
+        ({createWalletWithBip44Account, navigation, intl, route}) => async ({
+          name,
+        }) => {
+          try {
+            const {publicKeyHex} = route.params
+            assert.assert(
+              publicKeyHex != null,
+              'SaveReadOnlyWalletScreen::onPress publicKeyHex',
+            )
+            await createWalletWithBip44Account(
+              name,
+              publicKeyHex,
+              CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
+              CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+              null,
+              true, // important: read-only flag
+            )
+            try {
+              // note(v-almonacid): it looks like we need the parent in order to
+              // navigate from nested navigator to nested navigator
+              const parentNavigation = navigation.dangerouslyGetParent()
+              parentNavigation.navigate(ROOT_ROUTES.WALLET, {
+                screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
+              })
+            } catch (_e) {
+              Logger.warn('could not navigate from parent navigator')
+              navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)
+            }
+          } catch (e) {
+            Logger.error('SaveReadOnlyWalletScreen::onSubmit', e)
+            await handleGeneralError(e.message, e, intl)
+          }
+        },
+        1000,
+      ),
     }),
   )(SaveReadOnlyWalletScreen): ComponentType<ExternalProps>),
 )

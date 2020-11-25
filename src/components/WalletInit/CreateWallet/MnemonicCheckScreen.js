@@ -12,7 +12,7 @@ import {View, ScrollView, TouchableOpacity, Dimensions} from 'react-native'
 import assert from '../../../utils/assert'
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
 import {Text, Button, StatusBar} from '../../UiKit'
-import {ROOT_ROUTES} from '../../../RoutesList'
+import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import {createWallet} from '../../../actions'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 
@@ -91,7 +91,14 @@ const handleWalletConfirmation = ({
     walletImplementationId,
   )
 
-  navigation.navigate(ROOT_ROUTES.WALLET)
+  try {
+    navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)
+  } catch (_e) {
+    const parentNavigation = navigation.dangerouslyGetParent()
+    parentNavigation.navigate(ROOT_ROUTES.WALLET, {
+      screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
+    })
+  }
 }
 
 type WordProps = {

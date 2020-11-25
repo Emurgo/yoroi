@@ -80,6 +80,7 @@ const WalletNameForm = ({
           title={intl.formatMessage(messages.save)}
           style={styles.button}
           disabled={!isEmpty(validationErrors)}
+          testID="saveWalletButton"
         />
       </View>
     </SafeAreaView>

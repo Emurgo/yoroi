@@ -79,6 +79,7 @@ project.ext.react = [
     entryFile: "index.js"
 ]
 
+// note: for detox (e2e) we use a different config file (.env.e2e)
 project.ext.envConfigFiles = [
   dev: '.env.staging',
   main: '.env.production',
