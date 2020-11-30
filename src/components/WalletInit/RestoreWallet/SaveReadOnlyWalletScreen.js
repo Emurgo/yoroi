@@ -10,7 +10,7 @@ import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 
 import {withNavigationTitle} from '../../../utils/renderUtils'
-import {Text, StatusBar} from '../../UiKit'
+import {Text, StatusBar, Line} from '../../UiKit'
 import WalletNameForm from '../WalletNameForm'
 import {
   createWalletWithBip44Account,
@@ -65,6 +65,72 @@ const CheckSumView = ({icon, checksum}) => (
   </View>
 )
 
+type WalletInfoProps = {|
+  intl: any,
+  plate: {
+    accountPlate: {
+      ImagePart: string,
+      TextPart: string,
+    },
+    addresses: Array<string>,
+  },
+  normalizedPath: Array<number>,
+  publicKeyHex: string,
+|}
+
+const WalletInfoView = ({
+  intl,
+  plate,
+  normalizedPath,
+  publicKeyHex,
+}: WalletInfoProps) => (
+  <View style={styles.walletInfoContainer}>
+    <ScrollView style={styles.scrollView}>
+      <View style={styles.checksumContainer}>
+        <Text>{intl.formatMessage(messages.checksumLabel)}</Text>
+        {!!plate.accountPlate.ImagePart && (
+          <CheckSumView
+            icon={plate.accountPlate.ImagePart}
+            checksum={plate.accountPlate.TextPart}
+          />
+        )}
+      </View>
+
+      <View style={styles.addressesContainer}>
+        <Text>{intl.formatMessage(messages.walletAddressLabel)}</Text>
+        <FlatList
+          data={plate.addresses}
+          keyExtractor={(item) => item}
+          renderItem={({item}) => (
+            <WalletAddress
+              addressHash={item}
+              networkId={CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID}
+            />
+          )}
+        />
+      </View>
+
+      <Line />
+
+      <View style={styles.keyAttributesContainer}>
+        <Text style={styles.label}>{intl.formatMessage(messages.key)}</Text>
+        <View style={styles.keyView}>
+          <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">
+            {publicKeyHex}
+          </Text>
+        </View>
+
+        <Text style={styles.label}>
+          {intl.formatMessage(messages.derivationPath)}
+        </Text>
+        <Text secondary monospace>
+          {`m/${normalizedPath[0]}'/${normalizedPath[1]}'/${normalizedPath[2]}`}
+        </Text>
+      </View>
+    </ScrollView>
+  </View>
+)
+
 const SaveReadOnlyWalletScreen = ({onSubmit, route, intl}) => {
   const [plate, setPlate] = useState({
     accountPlate: {
@@ -74,7 +140,6 @@ const SaveReadOnlyWalletScreen = ({onSubmit, route, intl}) => {
     addresses: [],
   })
 
-  const {formatMessage} = intl
   const {publicKeyHex, path} = route.params
 
   const normalizedPath = path.map((i) => {
@@ -99,64 +164,20 @@ const SaveReadOnlyWalletScreen = ({onSubmit, route, intl}) => {
   return (
     <SafeAreaView style={styles.container} testID="saveReadOnlyWalletContainer">
       <StatusBar type="dark" />
-      <View style={styles.walletInfoContainer}>
-        <ScrollView style={styles.scrollView}>
-          <View style={styles.checksumContainer}>
-            <Text>{formatMessage(messages.checksumLabel)}</Text>
-            {!!plate.accountPlate.ImagePart && (
-              <CheckSumView
-                icon={plate.accountPlate.ImagePart}
-                checksum={plate.accountPlate.TextPart}
-              />
-            )}
-          </View>
-
-          <View style={styles.addressesContainer}>
-            <Text>{formatMessage(messages.walletAddressLabel)}</Text>
-            <FlatList
-              data={plate.addresses}
-              keyExtractor={(item) => item}
-              renderItem={({item}) => (
-                <WalletAddress
-                  addressHash={item}
-                  networkId={CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID}
-                />
-              )}
-            />
-          </View>
-
-          <View style={styles.keyAttributesContainer}>
-            <Text style={styles.label}>{formatMessage(messages.key)}</Text>
-            <View style={styles.keyView}>
-              <Text
-                secondary
-                monospace
-                numberOfLines={1}
-                ellipsizeMode="middle"
-              >
-                {publicKeyHex}
-              </Text>
-            </View>
-
-            <Text style={styles.label}>
-              {formatMessage(messages.derivationPath)}
-            </Text>
-            <Text secondary monospace>
-              {`m/${normalizedPath[0]}'/${normalizedPath[1]}'/${
-                normalizedPath[2]
-              }`}
-            </Text>
-          </View>
-        </ScrollView>
-      </View>
-
-      <View style={styles.formContainer}>
-        <WalletNameForm
-          onSubmit={onSubmit}
-          defaultWalletName={intl.formatMessage(messages.defaultWalletName)}
-          containerStyle={styles.walletFormStyle}
-        />
-      </View>
+      <WalletNameForm
+        onSubmit={onSubmit}
+        defaultWalletName={intl.formatMessage(messages.defaultWalletName)}
+        containerStyle={styles.walletFormStyle}
+        bottomContent={
+          <WalletInfoView
+            intl={intl}
+            plate={plate}
+            normalizedPath={normalizedPath}
+            publicKeyHex={publicKeyHex}
+          />
+        }
+        buttonStyle={styles.walletFormButtonStyle}
+      />
     </SafeAreaView>
   )
 }

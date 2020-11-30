@@ -39,6 +39,9 @@ const WalletNameForm = ({
   setName,
   progress,
   containerStyle,
+  buttonStyle,
+  topContent,
+  bottomContent,
 }) => {
   const validationErrors = validateForm()
   return (
@@ -51,34 +54,34 @@ const WalletNameForm = ({
         />
       )}
       <View style={[styles.container, containerStyle]}>
-        <View style={styles.content}>
-          <View style={styles.heading}>
-            {image != null && <Image source={image} />}
-          </View>
-          <ValidatedTextInput
-            label={intl.formatMessage(messages.walletNameInputLabel)}
-            value={name}
-            onChangeText={setName}
-            error={getWalletNameError(
-              {
-                tooLong: intl.formatMessage(
-                  globalMessages.walletNameErrorTooLong,
-                ),
-                nameAlreadyTaken: intl.formatMessage(
-                  globalMessages.walletNameErrorNameAlreadyTaken,
-                ),
-              },
-              validationErrors,
-            )}
-          />
+        <View style={styles.heading}>
+          {image != null && <Image source={image} />}
         </View>
+        {topContent}
+        <ValidatedTextInput
+          label={intl.formatMessage(messages.walletNameInputLabel)}
+          value={name}
+          onChangeText={setName}
+          error={getWalletNameError(
+            {
+              tooLong: intl.formatMessage(
+                globalMessages.walletNameErrorTooLong,
+              ),
+              nameAlreadyTaken: intl.formatMessage(
+                globalMessages.walletNameErrorNameAlreadyTaken,
+              ),
+            },
+            validationErrors,
+          )}
+        />
+        {bottomContent}
       </View>
       <View style={styles.buttonContainer}>
         <Button
           block
           onPress={onPress}
           title={intl.formatMessage(messages.save)}
-          style={styles.button}
+          style={[styles.button, buttonStyle]}
           disabled={!isEmpty(validationErrors)}
           testID="saveWalletButton"
         />
@@ -97,6 +100,9 @@ type ExternalProps = {|
     totalSteps: number,
   },
   containerStyle?: TextStyleProp,
+  buttonStyle?: TextStyleProp,
+  topContent?: React$Node,
+  bottomContent?: React$Node,
 |}
 
 export default injectIntl(

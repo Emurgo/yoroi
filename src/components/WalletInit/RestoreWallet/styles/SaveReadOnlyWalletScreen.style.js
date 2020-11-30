@@ -11,16 +11,12 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: THEME.COLORS.BACKGROUND,
     paddingHorizontal: 16,
-    paddingTop: 30,
   },
   scrollView: {
     paddingRight: 10,
   },
   walletInfoContainer: {
-    flex: 1, // uses 1/2 of container
-  },
-  formContainer: {
-    flex: 1, // uses 1/2 of container
+    marginTop: SECTION_MARGIN,
   },
   label: {
     marginBottom: LABEL_MARGIN,
@@ -43,7 +39,9 @@ export default StyleSheet.create({
   addressesContainer: {
     marginBottom: SECTION_MARGIN,
   },
-  keyAttributesContainer: {},
+  keyAttributesContainer: {
+    marginTop: SECTION_MARGIN,
+  },
   keyView: {
     padding: 4,
     backgroundColor: THEME.COLORS.CODE_STYLE_BACKGROUND,
@@ -51,5 +49,9 @@ export default StyleSheet.create({
   },
   walletFormStyle: {
     paddingTop: 0,
+    paddingHorizontal: 0,
+  },
+  walletFormButtonStyle: {
+    marginHorizontal: 0,
   },
 })
