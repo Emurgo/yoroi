@@ -95,18 +95,18 @@ const ImportReadOnlyWalletScreen = ({intl, onRead}) => (
   <View style={styles.container}>
     <View style={styles.cameraContainer}>
       <QRCodeScanner
-        onRead={onRead}
         cameraProps={{
           ratio: '1:1',
-          width: Dimensions.get('screen').width,
+          height: Dimensions.get('screen').height / 2,
         }}
+        cameraStyle={{overflow: 'hidden'}}
+        onRead={onRead}
         ref={(node) => {
           scannerRef = node
         }}
-        cameraStyle={{overflow: 'hidden'}}
       />
     </View>
-    <View style={styles.bottomView}>{getContent(intl.formatMessage)}</View>
+    {getContent(intl.formatMessage)}
   </View>
 )
 

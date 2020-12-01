@@ -1,5 +1,5 @@
 // @flow
-import {StyleSheet} from 'react-native'
+import {StyleSheet, Dimensions} from 'react-native'
 
 import {spacing, THEME} from '../../../../styles/config'
 
@@ -9,13 +9,17 @@ export default StyleSheet.create({
     backgroundColor: THEME.COLORS.BACKGROUND,
   },
   cameraContainer: {
-    backgroundColor: THEME.COLORS.BACKGROUND,
-    flex: 1,
+    position: 'absolute',
+    top: 0,
+    height: Dimensions.get('screen').height / 2,
   },
   bottomView: {
-    marginTop: 30,
-    marginHorizontal: 20,
-    flex: 1,
+    paddingTop: 24,
+    paddingHorizontal: 16,
+    height: Dimensions.get('screen').height / 2,
+    position: 'absolute',
+    top: Dimensions.get('screen').height / 2,
+    backgroundColor: THEME.COLORS.BACKGROUND, // important
   },
   paragraph: {
     marginBottom: spacing.paragraphBottomMargin,
