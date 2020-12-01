@@ -12,7 +12,6 @@ import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import WalletForm from '../WalletForm'
 import {createWallet, updateVersion} from '../../../actions'
-import {Logger} from '../../../utils/logging'
 
 import type {Navigation} from '../../../types/navigation'
 import type {ComponentType} from 'react'
@@ -77,19 +76,9 @@ export default injectIntl(
             setWaiting(false)
           }
 
-          try {
-            navigation.navigate(ROOT_ROUTES.WALLET, {
-              screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
-            })
-          } catch (_e) {
-            Logger.warn(
-              'could not navigate from child navigator. Trying parent...',
-            )
-            const parentNavigation = navigation.dangerouslyGetParent()
-            parentNavigation.navigate(ROOT_ROUTES.WALLET, {
-              screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
-            })
-          }
+          navigation.navigate(ROOT_ROUTES.WALLET, {
+            screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
+          })
         },
         1000,
       ),

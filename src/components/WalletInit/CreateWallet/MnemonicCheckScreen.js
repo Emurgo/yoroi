@@ -92,17 +92,9 @@ const handleWalletConfirmation = ({
     walletImplementationId,
   )
 
-  try {
-    navigation.navigate(ROOT_ROUTES.WALLET, {
-      screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
-    })
-  } catch (_e) {
-    Logger.warn('could not navigate from child navigator. Trying parent...')
-    const parentNavigation = navigation.dangerouslyGetParent()
-    parentNavigation.navigate(ROOT_ROUTES.WALLET, {
-      screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
-    })
-  }
+  navigation.navigate(ROOT_ROUTES.WALLET, {
+    screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
+  })
 }
 
 type WordProps = {

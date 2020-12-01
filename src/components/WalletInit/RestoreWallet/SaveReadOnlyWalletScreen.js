@@ -246,21 +246,10 @@ export default injectIntl(
                 ),
             )
 
-            try {
-              navigation.navigate(ROOT_ROUTES.WALLET, {
-                screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
-              })
-            } catch (_e) {
-              // note: for some reason, navigation sometimes fails during e2e
-              // tests, hence this workaround.
-              Logger.warn(
-                'could not navigate from child navigator. Trying parent...',
-              )
-              const parentNavigation = navigation.dangerouslyGetParent()
-              parentNavigation.navigate(ROOT_ROUTES.WALLET, {
-                screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
-              })
-            }
+            navigation.navigate(ROOT_ROUTES.WALLET, {
+              screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
+            })
+
           } catch (e) {
             Logger.error('SaveReadOnlyWalletScreen::onSubmit', e)
             await handleGeneralError(e.message, e, intl)
