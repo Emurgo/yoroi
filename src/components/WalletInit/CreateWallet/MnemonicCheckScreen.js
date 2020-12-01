@@ -15,7 +15,6 @@ import {Text, Button, StatusBar} from '../../UiKit'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import {createWallet} from '../../../actions'
 import {withNavigationTitle} from '../../../utils/renderUtils'
-import {Logger} from '../../../utils/logging'
 
 import styles from './styles/MnemonicCheckScreen.style'
 

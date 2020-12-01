@@ -249,7 +249,6 @@ export default injectIntl(
             navigation.navigate(ROOT_ROUTES.WALLET, {
               screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
             })
-
           } catch (e) {
             Logger.error('SaveReadOnlyWalletScreen::onSubmit', e)
             await handleGeneralError(e.message, e, intl)
