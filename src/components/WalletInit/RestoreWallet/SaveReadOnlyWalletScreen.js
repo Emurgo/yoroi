@@ -7,7 +7,7 @@ import {View, SafeAreaView, FlatList, ScrollView} from 'react-native'
 import {injectIntl, intlShape, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {withHandlers} from 'recompose'
+import {withHandlers, withStateHandlers} from 'recompose'
 
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import {Text, StatusBar, Line} from '../../UiKit'
@@ -131,7 +131,7 @@ const WalletInfoView = ({
   </View>
 )
 
-const SaveReadOnlyWalletScreen = ({onSubmit, route, intl}) => {
+const SaveReadOnlyWalletScreen = ({onSubmit, isWaiting, route, intl}) => {
   const [plate, setPlate] = useState({
     accountPlate: {
       ImagePart: '',
@@ -177,6 +177,7 @@ const SaveReadOnlyWalletScreen = ({onSubmit, route, intl}) => {
           />
         }
         buttonStyle={styles.walletFormButtonStyle}
+        isWaiting={isWaiting}
       />
     </SafeAreaView>
   )
@@ -197,35 +198,68 @@ export default injectIntl(
       },
     ),
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withStateHandlers(
+      {
+        isWaiting: false,
+      },
+      {
+        setWaiting: () => (isWaiting: boolean) => ({isWaiting}),
+      },
+    ),
+    withHandlers({
+      withActivityIndicator: ({setWaiting}) => async (
+        func: () => Promise<void>,
+      ): Promise<void> => {
+        setWaiting(true)
+        try {
+          await func()
+        } finally {
+          setWaiting(false)
+        }
+      },
+    }),
     withHandlers({
       onSubmit: ignoreConcurrentAsyncHandler(
-        ({createWalletWithBip44Account, navigation, intl, route}) => async ({
-          name,
-        }) => {
+        ({
+          createWalletWithBip44Account,
+          withActivityIndicator,
+          navigation,
+          intl,
+          route,
+        }) => async ({name}) => {
           try {
             const {publicKeyHex} = route.params
             assert.assert(
               publicKeyHex != null,
               'SaveReadOnlyWalletScreen::onPress publicKeyHex',
             )
-            await createWalletWithBip44Account(
-              name,
-              publicKeyHex,
-              CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-              CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
-              null,
-              true, // important: read-only flag
+
+            await withActivityIndicator(
+              async () =>
+                await createWalletWithBip44Account(
+                  name,
+                  publicKeyHex,
+                  CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
+                  CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+                  null,
+                  true, // important: read-only flag
+                ),
             )
+
             try {
-              // note(v-almonacid): it looks like we need the parent in order to
-              // navigate from nested navigator to nested navigator
+              navigation.navigate(ROOT_ROUTES.WALLET, {
+                screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
+              })
+            } catch (_e) {
+              // note: for some reason, navigation sometimes fails during e2e
+              // tests, hence this workaround.
+              Logger.warn(
+                'could not navigate from child navigator. Trying parent...',
+              )
               const parentNavigation = navigation.dangerouslyGetParent()
               parentNavigation.navigate(ROOT_ROUTES.WALLET, {
                 screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
               })
-            } catch (_e) {
-              Logger.warn('could not navigate from parent navigator')
-              navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)
             }
           } catch (e) {
             Logger.error('SaveReadOnlyWalletScreen::onSubmit', e)

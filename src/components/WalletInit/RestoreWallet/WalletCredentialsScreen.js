@@ -78,15 +78,17 @@ export default injectIntl(
           }
 
           try {
-            // note(v-almonacid): it looks like we need the parent in order to
-            // navigate from nested navigator to nested navigator
+            navigation.navigate(ROOT_ROUTES.WALLET, {
+              screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
+            })
+          } catch (_e) {
+            Logger.warn(
+              'could not navigate from child navigator. Trying parent...',
+            )
             const parentNavigation = navigation.dangerouslyGetParent()
             parentNavigation.navigate(ROOT_ROUTES.WALLET, {
               screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
             })
-          } catch (_e) {
-            Logger.warn('could not navigate from parent navigator')
-            navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)
           }
         },
         1000,

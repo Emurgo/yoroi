@@ -49,6 +49,7 @@ const messages = defineMessages({
 })
 
 let scannerRef // reference to QR code sanner to re-activate if required
+let firstFocus = true
 
 const handleOnRead = async (
   event: Object,
@@ -114,6 +115,17 @@ export default injectIntl(
   (compose(
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     onDidMount(async ({navigation, intl}) => {
+      navigation.addListener('focus', () => {
+        // re-enable QR code scanning
+        if (
+          firstFocus === false &&
+          scannerRef != null &&
+          scannerRef.reactivate != null
+        ) {
+          scannerRef.reactivate()
+        }
+        if (firstFocus === true) firstFocus = false
+      })
       if (CONFIG.E2E.IS_TESTING && (await DeviceInfo.isEmulator())) {
         const event = {
           data: `{"publicKeyHex": "${

@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {View, SafeAreaView, Image} from 'react-native'
+import {View, SafeAreaView, Image, ActivityIndicator} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
@@ -42,6 +42,7 @@ const WalletNameForm = ({
   buttonStyle,
   topContent,
   bottomContent,
+  isWaiting = false,
 }) => {
   const validationErrors = validateForm()
   return (
@@ -86,6 +87,7 @@ const WalletNameForm = ({
           testID="saveWalletButton"
         />
       </View>
+      {isWaiting === true && <ActivityIndicator />}
     </SafeAreaView>
   )
 }
@@ -103,6 +105,7 @@ type ExternalProps = {|
   buttonStyle?: TextStyleProp,
   topContent?: React$Node,
   bottomContent?: React$Node,
+  isWaiting?: boolean,
 |}
 
 export default injectIntl(

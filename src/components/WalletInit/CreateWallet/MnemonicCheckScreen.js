@@ -15,6 +15,7 @@ import {Text, Button, StatusBar} from '../../UiKit'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import {createWallet} from '../../../actions'
 import {withNavigationTitle} from '../../../utils/renderUtils'
+import {Logger} from '../../../utils/logging'
 
 import styles from './styles/MnemonicCheckScreen.style'
 
@@ -92,8 +93,11 @@ const handleWalletConfirmation = ({
   )
 
   try {
-    navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)
+    navigation.navigate(ROOT_ROUTES.WALLET, {
+      screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
+    })
   } catch (_e) {
+    Logger.warn('could not navigate from child navigator. Trying parent...')
     const parentNavigation = navigation.dangerouslyGetParent()
     parentNavigation.navigate(ROOT_ROUTES.WALLET, {
       screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
