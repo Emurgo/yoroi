@@ -12590,10 +12590,10 @@ react-native-cardano@Emurgo/react-native-cardano#0.2.3:
   version "0.2.3"
   resolved "https://codeload.github.com/Emurgo/react-native-cardano/tar.gz/a56794eaad23dd1ac73eeed182dc126218403bda"
 
-react-native-config@0.12.0:
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/react-native-config/-/react-native-config-0.12.0.tgz#910e52226b60e0c9f2b648772eea2a93f8701751"
-  integrity sha512-lC8QOZCGCXgFh74uWSVGMaChg+Qf2BScWzVd9C4yrFnfxrHSFyIekqOOq/sjE8Uu2ifgxZmSiK1Z8EEi78AmQA==
+react-native-config@1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/react-native-config/-/react-native-config-1.4.1.tgz#3549d0d1f4545e45659b2c2105c0866bdce9967f"
+  integrity sha512-isK9z1ibzG0Z8HPRhCk0krmvtLknONCpEHLGSpBtf+oQ02PllAXljGMFN/XJCnq3G3MdmP1CffZh3vm4e/A50w==
 
 react-native-crypto@^2.1.2:
   version "2.1.2"
