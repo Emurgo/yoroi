@@ -111,7 +111,7 @@
     "@emurgo/cardano-serialization-lib-nodejs": "3.0.0",
     "@emurgo/js-chain-libs-node": "git+https://github.com/SebastienGllmt/js-chain-libs-node-pkg.git",
     "@storybook/addon-actions": "^5.3.14",
-    "@storybook/addon-links": "^5.3.14",
+    "@storybook/addon-links": "^6.1.9",
     "@storybook/addons": "^5.3.14",
     "@storybook/react-native": "5.3.23",
     "@storybook/react-native-server": "^5.3.14",
