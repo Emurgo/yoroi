@@ -23,7 +23,7 @@
     "prestorybook": "rnstl  --searchDir ./src/components --pattern '**/*.stories.js'"
   },
   "dependencies": {
-    "@babel/cli": "7.2.3",
+    "@babel/cli": "7.12.8",
     "@babel/core": "7.9.0",
     "@babel/node": "7.0.0",
     "@babel/runtime": "7.9.0",
