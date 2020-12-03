@@ -43,6 +43,8 @@ export default class Wallet {
 
   hwDeviceInfo: ?HWDeviceInfo
 
+  isReadOnly: boolean
+
   isEasyConfirmationEnabled: boolean = false
 
   // $FlowFixMe null
@@ -303,6 +305,7 @@ export default class Wallet {
       walletImplementationId: this.walletImplementationId,
       isHW: this.isHW,
       hwDeviceInfo: this.hwDeviceInfo,
+      isReadOnly: this.isReadOnly,
       isEasyConfirmationEnabled: this.isEasyConfirmationEnabled,
     }
   }

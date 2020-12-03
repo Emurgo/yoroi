@@ -23,6 +23,7 @@ import {
   walletNameSelector,
   languageSelector,
   isHWSelector,
+  isReadOnlySelector,
   walletMetaSelector,
 } from '../../selectors'
 import {
@@ -133,6 +134,7 @@ const WalletSettingsScreen = ({
   onSwitchWallet,
   onLogout,
   isHW,
+  isReadOnly,
   walletMeta,
 }) => (
   <ScrollView style={styles.scrollView}>
@@ -161,17 +163,17 @@ const WalletSettingsScreen = ({
       <NavigatedSettingsItem
         label={intl.formatMessage(messages.changePassword)}
         navigateTo={SETTINGS_ROUTES.CHANGE_PASSWORD}
-        disabled={isHW}
+        disabled={isHW || isReadOnly}
       />
 
       <SettingsItem
         label={intl.formatMessage(messages.easyConfirmation)}
-        disabled={!isSystemAuthEnabled || isHW}
+        disabled={!isSystemAuthEnabled || isHW || isReadOnly}
       >
         <Switch
           value={isEasyConfirmationEnabled}
           onValueChange={onToggleEasyConfirmation}
-          disabled={!isSystemAuthEnabled || isHW}
+          disabled={!isSystemAuthEnabled || isHW || isReadOnly}
         />
       </SettingsItem>
     </SettingsSection>
@@ -216,6 +218,7 @@ export default injectIntl(
       (state) => ({
         walletName: walletNameSelector(state),
         isHW: isHWSelector(state),
+        isReadOnly: isReadOnlySelector(state),
         walletMeta: walletMetaSelector(state),
       }),
       {

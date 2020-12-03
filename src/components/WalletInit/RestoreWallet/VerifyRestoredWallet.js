@@ -166,11 +166,8 @@ export default injectIntl(
     connect((_state) => ({})),
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
-      navigateToWalletCredentials: ({navigation, route, walletNumber}) => (
-        _event,
-      ) => {
+      navigateToWalletCredentials: ({navigation, route}) => (_event) => {
         navigation.navigate(WALLET_INIT_ROUTES.WALLET_CREDENTIALS, {
-          walletNumber,
           phrase: route.params.phrase,
           networkId: route.params.networkId,
           walletImplementationId: route.params.walletImplementationId,

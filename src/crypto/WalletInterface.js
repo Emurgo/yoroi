@@ -37,6 +37,8 @@ export interface WalletInterface {
 
   hwDeviceInfo: ?HWDeviceInfo;
 
+  isReadOnly: boolean;
+
   isEasyConfirmationEnabled: boolean;
 
   internalChain: AddressChain;
@@ -88,6 +90,7 @@ export interface WalletInterface {
     networkId: NetworkId,
     implementationId: WalletImplementationId,
     hwDeviceInfo: ?HWDeviceInfo,
+    isReadOnly: boolean,
   ): Promise<string>;
 
   // ============ security & key management ============ //

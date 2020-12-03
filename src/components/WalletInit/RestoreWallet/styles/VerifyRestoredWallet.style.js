@@ -50,7 +50,7 @@ export default StyleSheet.create({
   },
 
   addressHash: {
-    width: 300,
+    width: 280,
     color: '#9B9B9B',
     lineHeight: 30,
   },

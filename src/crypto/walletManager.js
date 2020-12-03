@@ -327,6 +327,11 @@ class WalletManager {
     return this._wallet.hwDeviceInfo
   }
 
+  get isReadOnly() {
+    if (!this._wallet) return false
+    return this._wallet.isReadOnly
+  }
+
   get version() {
     if (!this._wallet) return null
     return this._wallet.version
@@ -686,6 +691,7 @@ class WalletManager {
     networkId: NetworkId,
     implementationId: WalletImplementationId,
     hwDeviceInfo: ?HWDeviceInfo,
+    isReadOnly: boolean,
   ) {
     const wallet = this._getWalletImplementation(implementationId)
     const id = await wallet.createWithBip44Account(
@@ -693,6 +699,7 @@ class WalletManager {
       networkId,
       implementationId,
       hwDeviceInfo,
+      isReadOnly,
     )
     Logger.debug('creating wallet...', wallet)
 

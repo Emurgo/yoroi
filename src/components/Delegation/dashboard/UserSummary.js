@@ -39,6 +39,7 @@ type ExternalProps = {|
   +totalRewards: ?BigNumber,
   +totalDelegated: ?BigNumber,
   +onWithdraw: () => void,
+  +disableWithdraw: boolean,
 |}
 
 const UserSummary = ({
@@ -47,6 +48,7 @@ const UserSummary = ({
   totalRewards,
   totalDelegated,
   onWithdraw,
+  disableWithdraw,
 }: ExternalProps) => (
   <View style={styles.wrapper}>
     <TitledCard title={intl.formatMessage(messages.title)}>
@@ -79,6 +81,7 @@ const UserSummary = ({
           <View style={styles.withdrawBlock}>
             <Button
               disabled={
+                disableWithdraw ||
                 totalAdaSum == null ||
                 (totalAdaSum != null && totalAdaSum.eq(0)) ||
                 totalRewards == null ||

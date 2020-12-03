@@ -29,6 +29,8 @@ export const WALLET_INIT_ROUTES = {
   INITIAL_CREATE_RESTORE_SWITCH: 'initial-choose-create-restore',
   CREATE_WALLET: 'create-wallet-form',
   RESTORE_WALLET: 'restore-wallet-form',
+  IMPORT_READ_ONLY_WALLET: 'import-read-only',
+  SAVE_READ_ONLY_WALLET: 'save-read-only',
   CHECK_NANO_X: 'check-nano-x',
   CONNECT_NANO_X: 'connect-nano-x',
   SAVE_NANO_X: 'save-nano-x',

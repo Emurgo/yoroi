@@ -1,24 +1,19 @@
 // @flow
 
 import React from 'react'
-import {View, SafeAreaView, Image} from 'react-native'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, intlShape, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {withHandlers, withStateHandlers} from 'recompose'
+import {withHandlers} from 'recompose'
 
-import {Button, ValidatedTextInput, ProgressStep} from '../../UiKit'
-import {getWalletNameError, validateWalletName} from '../../../utils/validators'
-import {withNavigationTitle} from '../../../utils/renderUtils'
-import globalMessages from '../../../../src/i18n/global-messages'
-import {walletNamesSelector} from '../../../selectors'
+import WalletNameForm from '../WalletNameForm'
 import {createWalletWithBip44Account} from '../../../actions'
 import {saveHW} from '../../../actions/hwWallet'
 import {WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import {CONFIG} from '../../../config/config'
 import assert from '../../../utils/assert'
+import {withNavigationTitle} from '../../../utils/renderUtils'
 
-import styles from './styles/SaveNanoXScreen.style'
 import image from '../../../assets/img/ledger_2.png'
 
 import type {ComponentType} from 'react'
@@ -29,54 +24,19 @@ const messages = defineMessages({
     id: 'components.walletinit.connectnanox.savenanoxscreen.title',
     defaultMessage: '!!!Save wallet',
   },
-  walletNameInputLabel: {
-    id: 'components.walletinit.walletform.walletNameInputLabel',
-    defaultMessage: '!!!Wallet name',
-  },
-  save: {
-    id: 'components.walletinit.connectnanox.savenanoxscreen.save',
-    defaultMessage: '!!!Save',
-  },
 })
 
-const SaveNanoXScreen = ({intl, onPress, name, validateForm, setName}) => {
-  return (
-    <SafeAreaView style={styles.safeAreaView}>
-      <ProgressStep currentStep={3} totalSteps={3} displayStepNumber />
-      <View style={styles.container}>
-        <View style={styles.content}>
-          <View style={styles.heading}>
-            <Image source={image} />
-          </View>
-          <ValidatedTextInput
-            label={intl.formatMessage(messages.walletNameInputLabel)}
-            value={name}
-            onChangeText={setName}
-            error={getWalletNameError(
-              {
-                tooLong: intl.formatMessage(
-                  globalMessages.walletNameErrorTooLong,
-                ),
-                nameAlreadyTaken: intl.formatMessage(
-                  globalMessages.walletNameErrorNameAlreadyTaken,
-                ),
-              },
-              validateForm(),
-            )}
-          />
-        </View>
-      </View>
-      <View style={styles.buttonContainer}>
-        <Button
-          block
-          onPress={onPress}
-          title={intl.formatMessage(messages.save)}
-          style={styles.button}
-        />
-      </View>
-    </SafeAreaView>
-  )
-}
+const SaveNanoXScreen = ({onSubmit}) => (
+  <WalletNameForm
+    onSubmit={onSubmit}
+    defaultWalletName={CONFIG.HARDWARE_WALLETS.LEDGER_NANO.DEFAULT_WALLET_NAME}
+    image={image}
+    progress={{
+      currentStep: 3,
+      totalSteps: 3,
+    }}
+  />
+)
 
 type ExternalProps = {|
   intl: intlShape,
@@ -87,33 +47,20 @@ type ExternalProps = {|
 export default injectIntl(
   (compose(
     connect(
-      (state) => ({
-        walletNames: walletNamesSelector(state),
-      }),
+      (_state) => ({}),
       {
-        validateWalletName,
         createWalletWithBip44Account,
         saveHW,
       },
     ),
-    withStateHandlers(
-      {
-        name: CONFIG.HARDWARE_WALLETS.LEDGER_NANO.DEFAULT_WALLET_NAME,
-      },
-      {
-        setName: () => (name) => ({name}),
-      },
-    ),
+    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
-      validateWalletName: ({walletNames}) => (walletName) =>
-        validateWalletName(walletName, null, walletNames),
-      onPress: ({
+      onSubmit: ({
         createWalletWithBip44Account,
         saveHW,
-        name,
         navigation,
         route,
-      }) => async () => {
+      }) => async ({name}) => {
         const {networkId, walletImplementationId, hwDeviceInfo} = route.params
         assert.assert(
           hwDeviceInfo != null,
@@ -125,15 +72,11 @@ export default injectIntl(
           networkId,
           walletImplementationId,
           hwDeviceInfo,
+          false,
         )
         saveHW(hwDeviceInfo)
         navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)
       },
     }),
-    withHandlers({
-      validateForm: ({name, validateWalletName}) => () =>
-        validateWalletName(name),
-    }),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
   )(SaveNanoXScreen): ComponentType<ExternalProps>),
 )

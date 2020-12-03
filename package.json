@@ -20,6 +20,8 @@
     "e2e:build-ios": "detox build -c ios.release",
     "e2e:test-android": "detox test -c android.emu.mainnet.release",
     "e2e:build-android": "detox build -c android.emu.mainnet.release",
+    "e2e:test-android-debug": "detox test -c android.emu.mainnet.debug",
+    "e2e:build-android-debug": "detox build -c android.emu.mainnet.debug",
     "prestorybook": "rnstl  --searchDir ./src/components --pattern '**/*.stories.js'"
   },
   "dependencies": {
@@ -179,7 +181,7 @@
       },
       "android.emu.mainnet.debug": {
         "binaryPath": "android/app/build/outputs/apk/mainnet/debug/app-mainnet-debug.apk",
-        "build": "cd android && ./gradlew assembleMainnetDebug assembleMainnetDebugAndroidTest -DtestBuildType=debug && cd ..",
+        "build": "cd android && ENVFILE=.env.e2e ./gradlew assembleMainnetDebug assembleMainnetDebugAndroidTest -DtestBuildType=debug && cd ..",
         "type": "android.emulator",
         "device": {
           "avdName": "Nexus_6_API_28_2_e2e_"
@@ -187,7 +189,7 @@
       },
       "android.emu.mainnet.release": {
         "binaryPath": "android/app/build/outputs/apk/mainnet/release/app-mainnet-release.apk",
-        "build": "cd android && ./gradlew assembleMainnetRelease assembleMainnetReleaseAndroidTest -DtestBuildType=release && cd ..",
+        "build": "cd android && ENVFILE=.env.e2e ./gradlew assembleMainnetRelease assembleMainnetReleaseAndroidTest -DtestBuildType=release && cd ..",
         "type": "android.emulator",
         "device": {
           "avdName": "Nexus_6_API_28_2_e2e_"

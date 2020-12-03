@@ -412,6 +412,18 @@ export const errorMessages = {
         '!!!An error occurred while trying to send the transaction.',
     },
   }),
+  invalidQRCode: defineMessages({
+    title: {
+      id: 'global.actions.dialogs.invalidQRCode.title',
+      defaultMessage: '!!!Invalid QR code',
+    },
+    message: {
+      id: 'global.actions.dialogs.invalidQRCode.message',
+      defaultMessage:
+        '!!!The QR code you scanned does not seem to contain a valid public ' +
+        'key. Please try again with a new one.',
+    },
+  }),
 }
 
 export default defineMessages({

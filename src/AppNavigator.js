@@ -4,6 +4,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {NavigationContainer} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
+import {isEmpty} from 'lodash'
 
 import {CONFIG} from './config/config'
 import {
@@ -38,6 +39,10 @@ import {
 import {errorMessages} from './i18n/global-messages'
 import KeyStore from './crypto/KeyStore'
 
+import type {State} from './state'
+
+const hasAnyWalletSelector = (state: State): boolean => !isEmpty(state.wallets)
+
 const Stack = createStackNavigator()
 
 const NavigatorSwitch = compose(
@@ -50,6 +55,7 @@ const NavigatorSwitch = compose(
       isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
       isAuthenticated: isAuthenticatedSelector(state),
       customPinHash: customPinHashSelector(state),
+      hasAnyWallet: hasAnyWalletSelector(state),
       installationId: installationIdSelector(state),
     }),
     {signin},
@@ -63,6 +69,7 @@ const NavigatorSwitch = compose(
     isSystemAuthEnabled,
     isAuthenticated,
     customPinHash,
+    hasAnyWallet,
     installationId,
     signin,
   }) => {
@@ -117,7 +124,7 @@ const NavigatorSwitch = compose(
         </Stack.Navigator>
       )
     }
-    if (!isAuthenticated) {
+    if (hasAnyWallet && !isAuthenticated) {
       return (
         <Stack.Navigator
           screenOptions={({route}) => ({
@@ -157,6 +164,22 @@ const NavigatorSwitch = compose(
               }}
             />
           )}
+        </Stack.Navigator>
+      )
+    }
+    // note: it makes much more sense to only change the initialRouteName in the
+    // following two cases, but that didn't work (probably bug in react-navigation)
+    if (!hasAnyWallet) {
+      return (
+        <Stack.Navigator
+          initialRouteName={ROOT_ROUTES.NEW_WALLET}
+          screenOptions={{headerShown: false}}
+        >
+          <Stack.Screen
+            name={ROOT_ROUTES.NEW_WALLET}
+            component={WalletInitNavigator}
+          />
+          <Stack.Screen name={ROOT_ROUTES.WALLET} component={WalletNavigator} />
         </Stack.Navigator>
       )
     }

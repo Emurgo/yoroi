@@ -8,7 +8,7 @@ import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import assert from '../../../utils/assert'
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
-import {WALLET_ROOT_ROUTES} from '../../../RoutesList'
+import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import WalletForm from '../WalletForm'
 import {createWallet, updateVersion} from '../../../actions'
@@ -75,7 +75,10 @@ export default injectIntl(
           } finally {
             setWaiting(false)
           }
-          navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)
+
+          navigation.navigate(ROOT_ROUTES.WALLET, {
+            screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
+          })
         },
         1000,
       ),
