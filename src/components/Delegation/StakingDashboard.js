@@ -5,7 +5,7 @@ import type {ComponentType} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View, ScrollView, RefreshControl, Platform} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import SafeAreaView from 'react-native-safe-area-view'
 import {BigNumber} from 'bignumber.js'
 import {injectIntl} from 'react-intl'
 
