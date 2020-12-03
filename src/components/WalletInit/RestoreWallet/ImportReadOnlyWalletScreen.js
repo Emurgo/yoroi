@@ -43,8 +43,12 @@ const messages = defineMessages({
   line2: {
     id: 'components.walletinit.importreadonlywalletscreen.line2',
     defaultMessage:
-      '!!!Click on the QR code icon of the wallet you want to ' +
+      '!!!Look for the {buttonType} for the wallet you want to ' +
       'import in the mobile app.',
+  },
+  buttonType: {
+    id: 'components.walletinit.importreadonlywalletscreen.buttonType',
+    defaultMessage: '!!!export read-only wallet button',
   },
 })
 
@@ -80,7 +84,9 @@ const handleOnRead = async (
 
 const getInstructions = (formatMessage) => [
   formatMessage(messages.line1),
-  formatMessage(messages.line2),
+  formatMessage(messages.line2, {
+    buttonType: formatMessage(messages.buttonType),
+  }),
 ]
 
 const getContent = (formatMessage) => (
