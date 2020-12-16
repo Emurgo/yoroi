@@ -9,7 +9,7 @@ import {withHandlers} from 'recompose'
 import WalletNameForm from '../WalletNameForm'
 import {createWalletWithBip44Account} from '../../../actions'
 import {saveHW} from '../../../actions/hwWallet'
-import {WALLET_ROOT_ROUTES} from '../../../RoutesList'
+import {WALLET_ROOT_ROUTES, ROOT_ROUTES} from '../../../RoutesList'
 import {CONFIG} from '../../../config/config'
 import assert from '../../../utils/assert'
 import {withNavigationTitle} from '../../../utils/renderUtils'
@@ -75,7 +75,9 @@ export default injectIntl(
           false,
         )
         saveHW(hwDeviceInfo)
-        navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)
+        navigation.navigate(ROOT_ROUTES.WALLET, {
+          screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
+        })
       },
     }),
   )(SaveNanoXScreen): ComponentType<ExternalProps>),
