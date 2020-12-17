@@ -141,9 +141,6 @@
     "react-native-storybook-loader": "^1.8.1",
     "react-test-renderer": "16.8.6"
   },
-  "resolutions": {
-    "base-x": "3.0.4"
-  },
   "jest": {
     "transform": {
       "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js"
