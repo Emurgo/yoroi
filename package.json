@@ -61,7 +61,7 @@
     "moment": "^2.22.2",
     "net": "^1.0.2",
     "node-fetch": "^2.6.1",
-    "p-limit": "^2.0.0",
+    "p-limit": "3.1.0",
     "path-browserify": "^1.0.0",
     "react": "16.8.6",
     "react-intl": "^2.8.0",
