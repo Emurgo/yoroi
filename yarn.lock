@@ -2504,10 +2504,10 @@
     query-string "^6.13.6"
     react-is "^16.13.0"
 
-"@react-navigation/drawer@5.10.0":
-  version "5.10.0"
-  resolved "https://registry.yarnpkg.com/@react-navigation/drawer/-/drawer-5.10.0.tgz#70c9188fe6ff65ae49e91a5e61dd3e1880174901"
-  integrity sha512-NRt92vpeqIRAh7pR1CE4QDKfvN/GYjbqCHkhP62VK/TsAA4j61pKOZea5bPbmKZTJfPV5p2ySIK3nI0yn8Nmxg==
+"@react-navigation/drawer@5.11.4":
+  version "5.11.4"
+  resolved "https://registry.yarnpkg.com/@react-navigation/drawer/-/drawer-5.11.4.tgz#8cc4c6ccd2579e78ee1d84948e2eedb2aff9d891"
+  integrity sha512-6Wpv2Ng9+ZMcmZ8AhwAvV+QvWERPlPUr2IH9ogufGu/fc/ppURStdJcMhHZPH4oOc1OcPow87Ew4oaMmjX4Pvw==
   dependencies:
     color "^3.1.3"
     react-native-iphone-x-helper "^1.3.0"
