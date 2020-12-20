@@ -47,7 +47,7 @@
     "base-x": "3.0.8",
     "bignumber.js": "^7.2.1",
     "bip39": "^2.5.0",
-    "bluebird": "^3.5.2",
+    "bluebird": "3.7.2",
     "bs58": "^4.0.1",
     "crypto-random-string": "^1.0.0",
     "emip3js": "Emurgo/emip3js",
