@@ -115,24 +115,24 @@ PODS:
     - React-fishhook (= 0.60.0)
   - RNCardano (0.2.3):
     - React
-  - RNCAsyncStorage (1.5.1):
-    - React
+  - RNCAsyncStorage (1.12.1):
+    - React-Core
   - RNCMaskedView (0.1.10):
     - React
   - RNDeviceInfo (6.0.1):
     - React
   - RNFS (2.13.3):
     - React
-  - RNGestureHandler (1.8.0):
-    - React
+  - RNGestureHandler (1.9.0):
+    - React-Core
   - RNKeychain (3.0.0):
     - React
   - RNPermissions (2.2.2):
     - React-Core
   - RNReanimated (1.13.2):
     - React-Core
-  - RNScreens (2.11.0):
-    - React
+  - RNScreens (2.15.0):
+    - React-Core
   - RNSentry (1.4.5):
     - React
     - Sentry (~> 5.1.4)
@@ -328,15 +328,15 @@ SPEC CHECKSUMS:
   React-RCTVibration: 4ee1cf208ab17a50fafb1c16ffe28fe594a64e4f
   React-RCTWebSocket: fca087d583724aa0e5fef7d911f0f2a28d0f2736
   RNCardano: ffdd908e7dde81508914dbff2fbd739183b2bf34
-  RNCAsyncStorage: b63d6e83fc629b01df6b624688f17944cea5637f
+  RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
   RNDeviceInfo: 6dd5c07a482f2a5e4a29fe8a9d99eadd4277175a
   RNFS: c9bbde46b0d59619f8e7b735991c60e0f73d22c1
-  RNGestureHandler: 7a5833d0f788dbd107fbb913e09aa0c1ff333c39
+  RNGestureHandler: 9b7e605a741412e20e13c512738a31bd1611759b
   RNKeychain: 3aa3cf891a09a0d18d306862ab2bb9e106079b24
   RNPermissions: 5df468064df661a4c8c017e2791ce90d7695eea5
   RNReanimated: e03f7425cb7a38dcf1b644d680d1bfc91c3337ad
-  RNScreens: 0e91da98ab26d5d04c7b59a9b6bd694124caf88c
+  RNScreens: 2ad555d4d9fa10b91bb765ca07fe9b29d59573f0
   RNSentry: 0a70359ddacbfb9b1cbbb0971e54065b9f70ac57
   RNSVG: 6c8e8c6f9e5a0caf910dd25aa6e4216045426e1d
   Sentry: 8715e88b813bde9ad37aead365d5b04ac7302153
