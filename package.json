@@ -137,7 +137,7 @@
     "react-dom": "16.8.3",
     "react-intl-translations-manager": "^5.0.3",
     "react-native-inhibit-warnings": "https://github.com/Emurgo/react-native-inhibit-warnings.git",
-    "react-native-schemes-manager": "^1.0.5",
+    "react-native-schemes-manager": "^2.0.0",
     "react-native-storybook-loader": "^1.8.1",
     "react-test-renderer": "16.8.6"
   },
