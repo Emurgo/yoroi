@@ -297,9 +297,9 @@ const DelegationConfirmation = ({
             label={intl.formatMessage(txLabels.amount)}
           />
         </View>
-        {/* eslint-disable indent */
-        !isEasyConfirmationEnabled &&
-          !isHW && (
+        {
+          /* eslint-disable indent */
+          !isEasyConfirmationEnabled && !isHW && (
             <View style={styles.input}>
               <ValidatedTextInput
                 secureTextEntry
@@ -309,7 +309,7 @@ const DelegationConfirmation = ({
               />
             </View>
           )
-        /* eslint-enable indent */
+          /* eslint-enable indent */
         }
         <View style={styles.itemBlock}>
           <Text style={styles.itemTitle}>
@@ -329,33 +329,36 @@ const DelegationConfirmation = ({
         />
       </View>
 
-      {/* eslint-disable indent */
-      isHW &&
-        Platform.OS === 'android' &&
-        CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT && (
-          <>
-            <LedgerTransportSwitchModal
-              visible={
-                ledgerDialogStep === LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT
-              }
-              onRequestClose={closeLedgerDialog}
-              onSelectUSB={(event) => onChooseTransport(event, true)}
-              onSelectBLE={(event) => onChooseTransport(event, false)}
-              showCloseIcon
-            />
-            <Modal
-              visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.LEDGER_CONNECT}
-              onRequestClose={closeLedgerDialog}
-            >
-              <LedgerConnect
-                onConnectBLE={onConnectBLE}
-                onConnectUSB={onConnectUSB}
-                useUSB={useUSB}
+      {
+        /* eslint-disable indent */
+        isHW &&
+          Platform.OS === 'android' &&
+          CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT && (
+            <>
+              <LedgerTransportSwitchModal
+                visible={
+                  ledgerDialogStep === LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT
+                }
+                onRequestClose={closeLedgerDialog}
+                onSelectUSB={(event) => onChooseTransport(event, true)}
+                onSelectBLE={(event) => onChooseTransport(event, false)}
+                showCloseIcon
               />
-            </Modal>
-          </>
-        )
-      /* eslint-enable indent */
+              <Modal
+                visible={
+                  ledgerDialogStep === LEDGER_DIALOG_STEPS.LEDGER_CONNECT
+                }
+                onRequestClose={closeLedgerDialog}
+              >
+                <LedgerConnect
+                  onConnectBLE={onConnectBLE}
+                  onConnectUSB={onConnectUSB}
+                  useUSB={useUSB}
+                />
+              </Modal>
+            </>
+          )
+        /* eslint-enable indent */
       }
       <ErrorModal
         visible={showErrorModal}

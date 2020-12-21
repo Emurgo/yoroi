@@ -122,8 +122,9 @@ const TxHistory = ({
       )}
 
       <OfflineBanner />
-      {isOnline &&
-        lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
+      {isOnline && lastSyncError && (
+        <SyncErrorBanner showRefresh={!isSyncing} />
+      )}
 
       <AvailableAmountBanner amount={availableAmount} />
 
@@ -144,9 +145,9 @@ const TxHistory = ({
         />
       )}
 
-      {/* eslint-disable indent */
-      isByron(walletMeta.walletImplementationId) &&
-        showWarning && (
+      {
+        /* eslint-disable indent */
+        isByron(walletMeta.walletImplementationId) && showWarning && (
           <WarningBanner
             title={intl
               .formatMessage(warningBannerMessages.title)
@@ -158,7 +159,7 @@ const TxHistory = ({
             style={styles.warningNoteStyles}
           />
         )
-      /* eslint-enable indent */
+        /* eslint-enable indent */
       }
     </View>
   </SafeAreaView>

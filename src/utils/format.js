@@ -41,10 +41,7 @@ export const formatAdaInteger = (amount: BigNumber) => {
 }
 
 export const formatAdaFractional = (amount: BigNumber) => {
-  const fractional = amount
-    .abs()
-    .modulo(MICRO)
-    .dividedBy(MICRO)
+  const fractional = amount.abs().modulo(MICRO).dividedBy(MICRO)
   // remove leading '0'
   return fractional.toFormat(6).substring(1)
 }

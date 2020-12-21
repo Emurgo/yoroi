@@ -50,6 +50,7 @@ export const formatStakepoolNameWithTicker = (
   poolName: ?string,
   intl: intlShape,
 ): string => {
+  // prettier-ignore
   return poolTicker == null
     ? poolName ?? intl.formatMessage(messages.unknownPool)
     : poolName == null

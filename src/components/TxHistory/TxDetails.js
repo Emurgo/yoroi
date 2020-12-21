@@ -183,8 +183,8 @@ const getShownAddresses = (
     path: getPath(address),
     isHighlighted: isHighlightedFrom(address),
   }))
-  const fromFiltered = fromAddresses.filter(
-    ({address}) => (filterFrom ? filterFrom(address) : true),
+  const fromFiltered = fromAddresses.filter(({address}) =>
+    filterFrom ? filterFrom(address) : true,
   )
   const cntOmittedFrom = fromAddresses.length - fromFiltered.length
 
@@ -193,8 +193,8 @@ const getShownAddresses = (
     path: getPath(address),
     isHighlighted: isHighlightedTo(address),
   }))
-  const toFiltered = toAddresses.filter(
-    ({address}) => (filterTo ? filterTo(address) : true),
+  const toFiltered = toAddresses.filter(({address}) =>
+    filterTo ? filterTo(address) : true,
   )
   const cntOmittedTo = toAddresses.length - toFiltered.length
 

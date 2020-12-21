@@ -758,7 +758,9 @@ export async function toLedgerAddressParameters(request: {|
       }
       return {
         addressTypeNibble: AddressTypeNibbles.BASE,
-        networkIdOrProtocolMagic: await (await baseAddr.to_address()).network_id(),
+        networkIdOrProtocolMagic: await (
+          await baseAddr.to_address()
+        ).network_id(),
         spendingPath: request.path,
         ...stakingKeyInfo,
         stakingBlockchainPointer: undefined,

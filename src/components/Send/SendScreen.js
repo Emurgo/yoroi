@@ -210,9 +210,7 @@ const recomputeAll = async ({amount, address, utxos, sendAll}) => {
           false,
         )
         _fee = await unsignedTx.fee(false) // in lovelaces
-        balanceAfter = getUtxoBalance(utxos)
-          .minus(parsedAmount)
-          .minus(_fee)
+        balanceAfter = getUtxoBalance(utxos).minus(parsedAmount).minus(_fee)
       }
       // now we can update fee as well
       fee = _fee
@@ -428,6 +426,7 @@ class SendScreen extends Component<Props, State> {
       <Banner
         label={intl.formatMessage(globalMessages.availableFunds)}
         text={
+          // prettier-ignore
           isFetchingBalance
             ? intl.formatMessage(messages.availableFundsBannerIsFetching)
             : availableAmount

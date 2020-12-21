@@ -117,12 +117,9 @@ const MaintenanceScreen = ({intl, initApp}: ScreenProps) => (
 
 export default injectIntl(
   (compose(
-    connect(
-      () => ({}),
-      {
-        initApp,
-      },
-    ),
+    connect(() => ({}), {
+      initApp,
+    }),
   )(MaintenanceScreen): ComponentType<{|
     intl: intlShape,
   |}>),

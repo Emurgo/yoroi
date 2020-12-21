@@ -83,10 +83,7 @@ const BiometricsLinkScreen = ({
 
 export default injectIntl(
   compose(
-    connect(
-      (_state) => ({}),
-      {setSystemAuth},
-    ),
+    connect((_state) => ({}), {setSystemAuth}),
     withHandlers({
       linkBiometricsSignIn: ({navigation, setSystemAuth, intl}) => async () => {
         if (await canBiometricEncryptionBeEnabled()) {

@@ -68,9 +68,13 @@ export class AddressGenerator {
         Buffer.from(this.accountPubKeyHex, 'hex'),
       )
     }
-    const stakingKey = await (await (await this._accountPubKeyPtr.derive(
-      CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-    )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+    const stakingKey = await (
+      await (
+        await this._accountPubKeyPtr.derive(
+          CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+        )
+      ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
+    ).to_raw_key()
 
     // cache reward address
     const credential = await StakeCredential.from_keyhash(
@@ -99,9 +103,13 @@ export class AddressGenerator {
       const chainKey = await this._accountPubKeyPtr.derive(
         ADDRESS_TYPE_TO_CHANGE[this.type],
       )
-      const stakingKey = await (await (await this._accountPubKeyPtr.derive(
-        CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-      )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+      const stakingKey = await (
+        await (
+          await this._accountPubKeyPtr.derive(
+            CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+          )
+        ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
+      ).to_raw_key()
 
       return await Promise.all(
         idxs.map(async (idx) => {

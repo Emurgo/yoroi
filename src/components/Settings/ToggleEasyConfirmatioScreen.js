@@ -98,15 +98,12 @@ const ToggleEasyConfirmationScreen = ({
   masterPassword,
   navigation,
 }) => {
-  React.useEffect(
-    () => {
-      const unsubscribe = navigation.addListener('blur', () => {
-        clearPassword()
-      })
-      return unsubscribe
-    },
-    [navigation],
-  )
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      clearPassword()
+    })
+    return unsubscribe
+  }, [navigation])
 
   return (
     <View style={styles.root}>

@@ -33,13 +33,10 @@ const WalletCredentialsScreen = ({navigateToWallet, waiting, navigation}) => (
 
 export default injectIntl(
   (compose(
-    connect(
-      () => ({}),
-      {
-        createWallet,
-        updateVersion,
-      },
-    ),
+    connect(() => ({}), {
+      createWallet,
+      updateVersion,
+    }),
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withStateHandlers(
       {

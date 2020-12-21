@@ -46,7 +46,10 @@ export const mnemonicsToAddresses = async (
   const externalChain = new AddressChain(
     new AddressGenerator(account.root_cached_key, 'External'),
   )
-  const chains = [['Internal', internalChain], ['External', externalChain]]
+  const chains = [
+    ['Internal', internalChain],
+    ['External', externalChain],
+  ]
   for (const chain of chains) {
     await chain[1].initialize()
     await chain[1].sync(api.filterUsedAddresses)

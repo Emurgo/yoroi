@@ -44,6 +44,7 @@ const ValidatedTextInput = ({
       secureTextEntry={secureTextEntry === true && !showPassword}
       autoCorrect={!secureTextEntry}
       keyboardType={
+        // prettier-ignore
         keyboardType
           ? keyboardType !== 'visible-password'
             ? keyboardType
@@ -78,8 +79,9 @@ const ValidatedTextInput = ({
       </TouchableOpacity>
     )}
 
-    {error != null &&
-      error !== false && <Text style={styles.error}>{error}</Text>}
+    {error != null && error !== false && (
+      <Text style={styles.error}>{error}</Text>
+    )}
   </View>
 )
 

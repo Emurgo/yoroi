@@ -15,9 +15,7 @@ import type {TransactionInfo, Transaction} from './types/HistoryTransaction'
 import type {RawUtxo} from './api/types'
 import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
 
-export const transactionsInfoSelector: (State) => Dict<
-  TransactionInfo,
-> = createSelector(
+export const transactionsInfoSelector: (State) => Dict<TransactionInfo> = createSelector(
   (state) => state.wallet.transactions,
   (state) => state.wallet.internalAddresses,
   (state) => state.wallet.externalAddresses,

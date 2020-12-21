@@ -217,12 +217,9 @@ const MnemonicCheckScreen = ({
 
 export default injectIntl(
   (compose(
-    connect(
-      () => ({}),
-      {
-        createWallet,
-      },
-    ),
+    connect(() => ({}), {
+      createWallet,
+    }),
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withStateHandlers(
       {

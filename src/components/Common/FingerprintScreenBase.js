@@ -71,16 +71,16 @@ const FingerprintScreenBase = ({
         </View>
       ) : null}
 
-      {/* eslint-disable indent */
-      addWelcomeMessage === true &&
-        intl != null && (
+      {
+        /* eslint-disable indent */
+        addWelcomeMessage === true && intl != null && (
           <View style={styles.welcomeMessageContainer}>
             <Text style={styles.welcomeMessageText}>
               {intl.formatMessage(messages.welcomeMessage)}
             </Text>
           </View>
         )
-      /* eslint-enable indent */
+        /* eslint-enable indent */
       }
 
       {showImage === true && (

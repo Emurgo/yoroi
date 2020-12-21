@@ -106,9 +106,9 @@ const TransferSummary = ({
         {formatAdaWithText(finalBalance)}
       </Text>
     </View>
-    {/* eslint-disable indent */
-    withdrawals != null &&
-      withdrawals.length > 0 && (
+    {
+      /* eslint-disable indent */
+      withdrawals != null && withdrawals.length > 0 && (
         <View style={styles.item}>
           <Text>{intl.formatMessage(txLabels.withdrawals)}</Text>
           {withdrawals.map((withdrawal, i) => (
@@ -122,9 +122,10 @@ const TransferSummary = ({
             />
           ))}
         </View>
-      )}
-    {deregistrations != null &&
-      deregistrations.length > 0 && (
+      )
+    }
+    {
+      deregistrations != null && deregistrations.length > 0 && (
         <>
           <View style={styles.item}>
             <Text>{intl.formatMessage(txLabels.stakeDeregistration)}</Text>
@@ -154,14 +155,14 @@ const TransferSummary = ({
           </View>
         </>
       )
-    /* eslint-enable indent */
+      /* eslint-enable indent */
     }
 
     {walletMeta.isHW && <HWInstructions useUSB={useUSB} addMargin />}
 
-    {/* eslint-disable indent */
-    !walletMeta.isEasyConfirmationEnabled &&
-      !walletMeta.isHW && (
+    {
+      /* eslint-disable indent */
+      !walletMeta.isEasyConfirmationEnabled && !walletMeta.isHW && (
         <View style={styles.input}>
           <ValidatedTextInput
             secureTextEntry
@@ -171,7 +172,7 @@ const TransferSummary = ({
           />
         </View>
       )
-    /* eslint-enable indent */
+      /* eslint-enable indent */
     }
   </TwoActionView>
 )

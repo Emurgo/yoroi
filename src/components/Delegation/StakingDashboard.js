@@ -618,14 +618,14 @@ class StakingDashboard extends React.Component<Props, State> {
         <AccountAutoRefresher />
         <View style={styles.container}>
           <OfflineBanner />
-          {/* eslint-disable indent */
-          isOnline &&
-            lastAccountStateSyncError && (
+          {
+            /* eslint-disable indent */
+            isOnline && lastAccountStateSyncError && (
               <SyncErrorBanner
                 showRefresh={!(isFetchingAccountState || isFetchingUtxos)}
               />
             )
-          /* eslint-enable indent */
+            /* eslint-enable indent */
           }
           <ScrollView
             style={styles.inner}
@@ -666,9 +666,9 @@ class StakingDashboard extends React.Component<Props, State> {
               onWithdraw={this.openWithdrawalDialog}
               disableWithdraw={this.props.isReadOnly}
             />
-            {/* eslint-disable indent */
-            poolInfo != null &&
-              !!poolOperator && (
+            {
+              /* eslint-disable indent */
+              poolInfo != null && !!poolOperator && (
                 <DelegatedStakepoolInfo
                   poolTicker={poolInfo.info?.ticker}
                   poolName={poolInfo.info?.name}
@@ -676,7 +676,7 @@ class StakingDashboard extends React.Component<Props, State> {
                   poolURL={poolInfo.info?.homepage}
                 />
               )
-            /* eslint-enable indent */
+              /* eslint-enable indent */
             }
           </ScrollView>
           <DelegationNavigationButtons

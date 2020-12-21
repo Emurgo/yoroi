@@ -292,9 +292,13 @@ export const newAdaUnsignedTxFromUtxo = async (
       await addUtxoInput(txBuilder, utxo)
       // need to recalculate each time because fee changes
       const output = new BigNumber(
-        await (await (await (await txBuilder.get_explicit_output()).checked_add(
-          await txBuilder.min_fee(),
-        )).checked_add(await txBuilder.get_deposit())).to_str(),
+        await (
+          await (
+            await (await txBuilder.get_explicit_output()).checked_add(
+              await txBuilder.min_fee(),
+            )
+          ).checked_add(await txBuilder.get_deposit())
+        ).to_str(),
       )
 
       if (shouldForceChange) {
@@ -315,9 +319,13 @@ export const newAdaUnsignedTxFromUtxo = async (
     // check to see if we have enough balance in the wallet to cover the transaction
     {
       const output = new BigNumber(
-        await (await (await (await txBuilder.get_explicit_output()).checked_add(
-          await txBuilder.min_fee(),
-        )).checked_add(await txBuilder.get_deposit())).to_str(),
+        await (
+          await (
+            await (await txBuilder.get_explicit_output()).checked_add(
+              await txBuilder.min_fee(),
+            )
+          ).checked_add(await txBuilder.get_deposit())
+        ).to_str(),
       )
       if (shouldForceChange) {
         if (changeAdaAddr == null) throw new NoOutputsError()
@@ -341,15 +349,15 @@ export const newAdaUnsignedTxFromUtxo = async (
       if (shouldForceChange) {
         throw new NoOutputsError()
       }
-      const totalInput = await (await txBuilder.get_explicit_input()).checked_add(
-        await txBuilder.get_implicit_input(),
-      )
+      const totalInput = await (
+        await txBuilder.get_explicit_input()
+      ).checked_add(await txBuilder.get_implicit_input())
       const totalOutput = await txBuilder.get_explicit_output()
       const deposit = await txBuilder.get_deposit()
       const difference = new BigNumber(
-        await (await (await totalInput.checked_sub(totalOutput)).checked_sub(
-          deposit,
-        )).to_str(),
+        await (
+          await (await totalInput.checked_sub(totalOutput)).checked_sub(deposit)
+        ).to_str(),
       )
       const minFee = new BigNumber(await (await txBuilder.min_fee()).to_str())
       if (difference.lt(minFee)) {
@@ -370,9 +378,9 @@ export const newAdaUnsignedTxFromUtxo = async (
     }
     const changeWasAdded = await txBuilder.add_change_if_needed(wasmChange)
     const changeValue = new BigNumber(
-      await (await (await txBuilder.get_explicit_output()).checked_sub(
-        oldOutput,
-      )).to_str(),
+      await (
+        await (await txBuilder.get_explicit_output()).checked_sub(oldOutput)
+      ).to_str(),
     )
     // prettier-ignore
     return changeWasAdded
@@ -469,14 +477,16 @@ async function getFeeForChange(
       'transactions::getFeeForChange: change not a valid Shelley address',
     )
   }
-  const feeForChange = await (await txBuilder.fee_for_output(
-    await TransactionOutput.new(
-      wasmChange,
-      // largest possible CBOR value
-      // note: this slightly over-estimates by a few bytes
-      await BigNum.from_str((0x100000000).toString()),
-    ),
-  )).to_str()
+  const feeForChange = await (
+    await txBuilder.fee_for_output(
+      await TransactionOutput.new(
+        wasmChange,
+        // largest possible CBOR value
+        // note: this slightly over-estimates by a few bytes
+        await BigNum.from_str((0x100000000).toString()),
+      ),
+    )
+  ).to_str()
   const minimumNeededForChange = new BigNumber(feeForChange).plus(
     await protocolParams.minimumUtxoVal.to_str(),
   )
@@ -576,24 +586,22 @@ async function addWitnesses(
 ): Promise<void> {
   // get private keys
   const privateKeys = await Promise.all(
-    uniqueUtxos.map(
-      async (utxo): Promise<Bip32PrivateKey> => {
-        const lastLevelSpecified =
-          utxo.addressing.startLevel + utxo.addressing.path.length - 1
-        if (
-          lastLevelSpecified !== CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ADDRESS
-        ) {
-          throw new Error('addWitnesses:: incorrect addressing size')
-        }
-        return await derivePrivateByAddressing({
-          addressing: utxo.addressing,
-          startingFrom: {
-            level: keyLevel,
-            key: signingKey,
-          },
-        })
-      },
-    ),
+    uniqueUtxos.map(async (utxo): Promise<Bip32PrivateKey> => {
+      const lastLevelSpecified =
+        utxo.addressing.startLevel + utxo.addressing.path.length - 1
+      if (
+        lastLevelSpecified !== CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ADDRESS
+      ) {
+        throw new Error('addWitnesses:: incorrect addressing size')
+      }
+      return await derivePrivateByAddressing({
+        addressing: utxo.addressing,
+        startingFrom: {
+          level: keyLevel,
+          key: signingKey,
+        },
+      })
+    }),
   )
 
   // sign the transaction

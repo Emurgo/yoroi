@@ -66,7 +66,5 @@ export const formatPath = (
 
   const COIN = CONFIG.NUMBERS.COIN_TYPES.CARDANO - HARD_DERIVATION_START
 
-  return `m/${purpose}'/${COIN}'/${account}'/${
-    ADDRESS_TYPE_TO_CHANGE[type]
-  }/${index}`
+  return `m/${purpose}'/${COIN}'/${account}'/${ADDRESS_TYPE_TO_CHANGE[type]}/${index}`
 }

@@ -180,9 +180,9 @@ class TxHistoryListItem extends Component<Props> {
                       amount could be null*/}
                   {formatAdaFractional(transaction.amount)}
                 </Text>
-                <Text style={amountStyle}>{`${utfSymbols.NBSP}${
-                  utfSymbols.ADA
-                }`}</Text>
+                <Text
+                  style={amountStyle}
+                >{`${utfSymbols.NBSP}${utfSymbols.ADA}`}</Text>
               </View>
             ) : (
               <Text style={amountStyle}>- -</Text>

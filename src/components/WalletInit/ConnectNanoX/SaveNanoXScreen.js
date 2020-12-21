@@ -46,13 +46,10 @@ type ExternalProps = {|
 
 export default injectIntl(
   (compose(
-    connect(
-      (_state) => ({}),
-      {
-        createWalletWithBip44Account,
-        saveHW,
-      },
-    ),
+    connect((_state) => ({}), {
+      createWalletWithBip44Account,
+      saveHW,
+    }),
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
     withHandlers({
       onSubmit: ({
