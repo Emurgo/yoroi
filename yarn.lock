@@ -12756,10 +12756,10 @@ react-native-device-info@6.0.1:
   resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-6.0.1.tgz#4aae636cd826e9ab53c0db68bb3baec86f81890f"
   integrity sha512-cE3TbTcJ6jrKHD+IHsdKGJISz4UpBo6xwwDWYr+EqvlZ+OMCIcPjjDzApuFCiHhNDvbxJgcElG3eAq8tl6ojKw==
 
-react-native-easy-markdown@1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/react-native-easy-markdown/-/react-native-easy-markdown-1.4.1.tgz#adfe7c8082308bf7ca4e94bbe8fb6eaa27317dfd"
-  integrity sha512-vKBPVmYtt1UNyW/c6zMJdIA9+eXqBBdqTwURktQ62DzOGhNWFq7U3IEkArSFsJjgJq3AHvaf71PtSXndGE+c5g==
+react-native-easy-markdown@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-easy-markdown/-/react-native-easy-markdown-2.0.0.tgz#d15f08520b07267ca0c617b059a4f5eb4ad67e9b"
+  integrity sha512-vGK41pZj/4lM9q8/Bqox/2qqfJVrSxLugBWDBNLuOqvxpBw/b3q4aUxCpP8nyBWv5BifrD8+OcdhC27bRvEFIw==
   dependencies:
     simple-markdown "^0.4.4"
 
