@@ -44,7 +44,7 @@
     "@v-almonacid/react-native-hid": "5.15.4",
     "add": "2.0.6",
     "babel-eslint": "^10.1.0",
-    "base-x": "3.0.4",
+    "base-x": "3.0.8",
     "bignumber.js": "^7.2.1",
     "bip39": "^2.5.0",
     "bluebird": "^3.5.2",
@@ -145,7 +145,7 @@
     "react-test-renderer": "16.8.6"
   },
   "resolutions": {
-    "base-x": "3.0.4"
+    "base-x": "3.0.8"
   },
   "jest": {
     "transform": {
