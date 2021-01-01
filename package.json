@@ -39,7 +39,7 @@
     "@react-navigation/drawer": "5.10.0",
     "@react-navigation/material-top-tabs": "5.3.1",
     "@react-navigation/native": "5.8.0",
-    "@react-navigation/stack": "5.10.0",
+    "@react-navigation/stack": "5.12.8",
     "@sentry/react-native": "1.4.5",
     "@v-almonacid/react-native-hid": "5.15.4",
     "add": "2.0.6",
