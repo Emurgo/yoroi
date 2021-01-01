@@ -120,7 +120,7 @@
     "@storybook/react-native-server": "^5.3.14",
     "babel-jest": "^24.8.0",
     "babel-loader": "^8.0.6",
-    "babel-plugin-react-intl": "^3.0.1",
+    "babel-plugin-react-intl": "^8.2.23",
     "babel-plugin-require-context-hook": "^1.0.0",
     "detox": "16.7.2",
     "eslint": "6.5.1",
