@@ -27,7 +27,7 @@
   "dependencies": {
     "@babel/cli": "7.2.3",
     "@babel/core": "7.9.0",
-    "@babel/node": "7.0.0",
+    "@babel/node": "7.12.10",
     "@babel/runtime": "7.9.0",
     "@cardano-foundation/ledgerjs-hw-app-cardano": "2.1.0",
     "@emurgo/cip4-js": "1.0.5",
