@@ -11,20 +11,25 @@ const _DEFAULT_BACKEND_RULES = {
   TX_HISTORY_RESPONSE_LIMIT: 50,
 }
 
+/**
+ * note(v-almonacid): this list contains configuration data for current and
+ * deprecated networks. Naturally, these are not normalized (some networks
+ * require parameters that other networks don't).
+ * Design decisions:
+ * - each blockchain protocol can have multiple networks (eg. a mainnet and a
+     testnet)
+ * - the app can be built on mainnet or testnet mode. When built on testnet mode,
+ *   we'll use testnet configuration if available (see ./config.js)
+ * - as a general rule, all configuration data should be accessed from a single
+ *   global object -> ./config.js and not from here.
+ */
 export const NETWORKS = {
+  // Deprecated. Consider removing
   BYRON_MAINNET: {
     NETWORK_ID: NETWORK_REGISTRY.BYRON_MAINNET,
     MARKETING_NAME: 'Mainnet',
     IS_MAINNET: true,
-    EXPLORER_URL_FOR_ADDRESS: (address: string) =>
-      `https://explorer.cardano.org/en/address?address=${address}`,
-    EXPLORER_URL_FOR_TX: (tx: string) =>
-      `https://explorer.cardano.org/tx/${tx}`,
     PROTOCOL_MAGIC: 764824073,
-    BACKEND: {
-      API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
-      ..._DEFAULT_BACKEND_RULES,
-    },
     GENESIS_DATE: '1506203091000',
     START_AT: 0,
     SLOTS_PER_EPOCH: 21600,
@@ -33,7 +38,7 @@ export const NETWORKS = {
   },
   HASKELL_SHELLEY: {
     NETWORK_ID: NETWORK_REGISTRY.HASKELL_SHELLEY,
-    MARKETING_NAME: 'Mainnet',
+    MARKETING_NAME: 'Cardano Mainnet',
     CHAIN_NETWORK_ID: '1',
     IS_MAINNET: true,
     EXPLORER_URL_FOR_ADDRESS: (address: string) =>
@@ -45,10 +50,22 @@ export const NETWORKS = {
       API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
       ..._DEFAULT_BACKEND_RULES,
     },
-    GENESIS_DATE: '1506203091000',
-    START_AT: 208,
-    SLOTS_PER_EPOCH: 432000,
-    SLOT_DURATION: 1,
+    BASE_CONFIG: [
+      {
+        // byron-era
+        PROTOCOL_MAGIC: 764824073, // aka byron network id
+        START_AT: 0,
+        GENESIS_DATE: '1506203091000',
+        SLOTS_PER_EPOCH: 21600,
+        SLOT_DURATION: 20,
+      },
+      {
+        // shelley-era
+        START_AT: 208,
+        SLOTS_PER_EPOCH: 432000,
+        SLOT_DURATION: 1,
+      },
+    ],
     PER_EPOCH_PERCENTAGE_REWARD: 69344,
     COIN_TYPE: NUMBERS.COIN_TYPES.CARDANO,
     LINEAR_FEE: {
@@ -59,6 +76,7 @@ export const NETWORKS = {
     POOL_DEPOSIT: '500000000',
     KEY_DEPOSIT: '2000000',
   },
+  // Deprecated. Consider removing
   JORMUNGANDR: {
     NETWORK_ID: NETWORK_REGISTRY.JORMUNGANDR,
     MARKETING_NAME: 'Incentivized Testnet (ITN)',
@@ -100,6 +118,43 @@ export const NETWORKS = {
       ADDRESS: 'addr',
     },
   },
+  HASKELL_SHELLEY_TESTNET: {
+    NETWORK_ID: NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET,
+    MARKETING_NAME: 'Cardano testnet',
+    CHAIN_NETWORK_ID: '0',
+    IS_MAINNET: false,
+    EXPLORER_URL_FOR_ADDRESS: (_address: string) => '',
+    EXPLORER_URL_FOR_TX: (_tx: string) => '',
+    POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
+    BACKEND: {
+      API_ROOT: 'https://testnet-backend.yoroiwallet.com',
+      ..._DEFAULT_BACKEND_RULES,
+    },
+    BASE_CONFIG: [
+      {
+        PROTOCOL_MAGIC: 1097911063, // aka byron network id
+        START_AT: 0,
+        GENESIS_DATE: '1563999616000',
+        SLOTS_PER_EPOCH: 21600,
+        SLOT_DURATION: 20,
+      },
+      {
+        // shelley-era
+        START_AT: 74,
+        SLOTS_PER_EPOCH: 432000,
+        SLOT_DURATION: 1,
+      },
+    ],
+    PER_EPOCH_PERCENTAGE_REWARD: 69344,
+    COIN_TYPE: NUMBERS.COIN_TYPES.CARDANO,
+    LINEAR_FEE: {
+      COEFFICIENT: '44',
+      CONSTANT: '155381',
+    },
+    MINIMUM_UTXO_VAL: '1000000',
+    POOL_DEPOSIT: '500000000',
+    KEY_DEPOSIT: '2000000',
+  },
 }
 
 export const isJormungandr = (networkId: NetworkId): boolean =>
@@ -108,6 +163,7 @@ export const isJormungandr = (networkId: NetworkId): boolean =>
 type NetworkConfig =
   | typeof NETWORKS.BYRON_MAINNET
   | typeof NETWORKS.HASKELL_SHELLEY
+  | typeof NETWORKS.HASKELL_SHELLEY_TESTNET
   | typeof NETWORKS.JORMUNGANDR
 export const getNetworkConfigById = (id: NetworkId): NetworkConfig => {
   const idx = Object.values(NETWORK_REGISTRY).indexOf(id)

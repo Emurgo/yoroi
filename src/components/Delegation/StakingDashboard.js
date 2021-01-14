@@ -70,7 +70,7 @@ import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {formatAdaInteger} from '../../utils/format'
 import FlawedWalletScreen from './FlawedWalletScreen'
-import {CONFIG} from '../../config/config'
+import {CONFIG, getCardanoBaseConfig} from '../../config/config'
 import {WITHDRAWAL_DIALOG_STEPS, type WithdrawalDialogSteps} from './types'
 import {HaskellShelleyTxSignRequest} from '../../crypto/shelley/HaskellShelleyTxSignRequest'
 import KeyStore from '../../crypto/KeyStore'
@@ -560,20 +560,8 @@ class StakingDashboard extends React.Component<Props, State> {
     } = this.props
 
     // TODO: shouldn't be haskell-shelley specific
-    const config = [
-      {
-        StartAt: CONFIG.NETWORKS.BYRON_MAINNET.START_AT,
-        GenesisDate: CONFIG.NETWORKS.BYRON_MAINNET.GENESIS_DATE,
-        SlotsPerEpoch: CONFIG.NETWORKS.BYRON_MAINNET.SLOTS_PER_EPOCH,
-        SlotDuration: CONFIG.NETWORKS.BYRON_MAINNET.SLOT_DURATION,
-      },
-      {
-        StartAt: CONFIG.NETWORKS.HASKELL_SHELLEY.START_AT,
-        GenesisDate: CONFIG.NETWORKS.HASKELL_SHELLEY.GENESIS_DATE,
-        SlotsPerEpoch: CONFIG.NETWORKS.HASKELL_SHELLEY.SLOTS_PER_EPOCH,
-        SlotDuration: CONFIG.NETWORKS.HASKELL_SHELLEY.SLOT_DURATION,
-      },
-    ]
+    const config = getCardanoBaseConfig()
+
     const toRelativeSlotNumberFn = genToRelativeSlotNumber(config)
     const timeToSlotFn = genTimeToSlot(config)
 

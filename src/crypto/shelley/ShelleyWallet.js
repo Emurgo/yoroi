@@ -212,7 +212,8 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
         this.networkId = NETWORK_REGISTRY.HASKELL_SHELLEY
       }
       assert.assert(
-        this.networkId === NETWORK_REGISTRY.HASKELL_SHELLEY,
+        this.networkId === NETWORK_REGISTRY.HASKELL_SHELLEY ||
+          this.networkId === NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET,
         'invalid networkId',
       )
       assert.assert(
@@ -629,7 +630,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
 
     const ledgerSignTxPayload = await createLedgerSignTxPayload({
       signRequest: request,
-      byronNetworkMagic: CONFIG.NETWORKS.BYRON_MAINNET.PROTOCOL_MAGIC,
+      byronNetworkMagic: CONFIG.NETWORKS.BYRON.PROTOCOL_MAGIC,
       networkId: Number.parseInt(
         CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID,
         10,

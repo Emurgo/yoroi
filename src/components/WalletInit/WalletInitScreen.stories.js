@@ -8,19 +8,19 @@ import WalletInitScreen from './WalletInitScreen'
 import {CONFIG} from '../../config/config'
 
 storiesOf('WalletInitScreen', module)
-  .add('Shelley', ({navigation}) => (
+  .add('Byron', ({navigation}) => (
     <WalletInitScreen
       navigation={navigation}
       route={{
         params: {
-          networkId: CONFIG.NETWORKS.BYRON_MAINNET.NETWORK_ID,
+          networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
           walletImplementationId:
             CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
         },
       }}
     />
   ))
-  .add('Byron', ({navigation}) => (
+  .add('Shelley', ({navigation}) => (
     <WalletInitScreen
       navigation={navigation}
       route={{

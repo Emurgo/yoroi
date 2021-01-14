@@ -39,12 +39,12 @@ test('Can generate external addresses', async () => {
   const account = await getAccountFromMasterKey(
     masterKey,
     CONFIG.NUMBERS.ACCOUNT_INDEX,
-    CONFIG.NETWORKS.BYRON_MAINNET.PROTOCOL_MAGIC,
+    CONFIG.NETWORKS.BYRON.PROTOCOL_MAGIC,
   )
   const addresses = await getExternalAddresses(
     account,
     [0, 1],
-    CONFIG.NETWORKS.BYRON_MAINNET.PROTOCOL_MAGIC,
+    CONFIG.NETWORKS.BYRON.PROTOCOL_MAGIC,
   )
 
   expect(addresses).toEqual(externalAddresses)
