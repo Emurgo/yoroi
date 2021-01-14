@@ -44,6 +44,10 @@ target 'emurgo' do
     inherit! :search_paths
     # Pods for testing
   end
+  
+  target 'emurgo-staging' do
+    inherit! :complete
+  end
 
   target 'emurgo-nightly' do
     inherit! :complete

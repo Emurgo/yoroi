@@ -21,6 +21,7 @@
 		2EBA2AD022EA877F00BF8A5B /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
 		9BFE476FFB747F6055B203A4 /* libPods-emurgo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 88A95429FF52104866D7E49D /* libPods-emurgo.a */; };
 		B0C137C68DE95847EC884660 /* libPods-emurgo-emurgo-nightly.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B84F3B989285F57F66CF87E0 /* libPods-emurgo-emurgo-nightly.a */; };
+		B536838130B681A4B8A341AE /* libPods-emurgo-emurgo-staging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92EF314B8ECF261556A866AE /* libPods-emurgo-emurgo-staging.a */; };
 		BA3D0647FB29475CA53128CF /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 16BAD3D7933540D184340C1B /* libresolv.tbd */; };
 		E2FC0BF821C7F02200DA195B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E2FC0BFA21C7F02200DA195B /* InfoPlist.strings */; };
 		E9A1C7DC24185CCA00151CFA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
@@ -73,17 +74,22 @@
 		2EF1204922795CAD007BE6F5 /* libSentryReactNative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSentryReactNative.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EF1208322795DE3007BE6F5 /* libSentryReactNative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSentryReactNative.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		359687B3464F4A7C89D45AF9 /* libRNRandomBytes-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNRandomBytes-tvOS.a"; sourceTree = "<group>"; };
+		38FA8332D0A8491079DD4CE6 /* Pods-emurgo-emurgo-staging.staging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-staging.staging.release.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-staging/Pods-emurgo-emurgo-staging.staging.release.xcconfig"; sourceTree = "<group>"; };
+		3EB7D285720EC3018253DCE8 /* Pods-emurgo-emurgo-staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-staging.debug.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-staging/Pods-emurgo-emurgo-staging.debug.xcconfig"; sourceTree = "<group>"; };
 		40208C83B2A34C816931818E /* Pods-emurgo-emurgo-nightly.staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-nightly.staging.debug.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-nightly/Pods-emurgo-emurgo-nightly.staging.debug.xcconfig"; sourceTree = "<group>"; };
+		5614626E94A9488458C3C847 /* Pods-emurgo-emurgo-staging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-staging.release.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-staging/Pods-emurgo-emurgo-staging.release.xcconfig"; sourceTree = "<group>"; };
 		57AEDE250E1257B118F9D5EE /* Pods-emurgoTests.staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgoTests.staging.debug.xcconfig"; path = "Target Support Files/Pods-emurgoTests/Pods-emurgoTests.staging.debug.xcconfig"; sourceTree = "<group>"; };
 		5DBE1771E1614BCAB6A3665D /* libSplashScreen.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libSplashScreen.a; sourceTree = "<group>"; };
 		5DBF6642BF3B4B119153FD14 /* libRNFirebase.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFirebase.a; sourceTree = "<group>"; };
 		5F9F4B6BEEFC4DF6A66C1383 /* libRNRandomBytes.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNRandomBytes.a; sourceTree = "<group>"; };
 		746923B3D658412D94D241BD /* libRNSVG-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNSVG-tvOS.a"; sourceTree = "<group>"; };
 		77CF8607F90E508D57EAA5A2 /* Pods-emurgo.staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo.staging.debug.xcconfig"; path = "Target Support Files/Pods-emurgo/Pods-emurgo.staging.debug.xcconfig"; sourceTree = "<group>"; };
+		7C49D6020D63B9FB6BA277E6 /* Pods-emurgo-emurgo-staging.staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-staging.staging.debug.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-staging/Pods-emurgo-emurgo-staging.staging.debug.xcconfig"; sourceTree = "<group>"; };
 		80201ADDACC8F1043483092B /* Pods-emurgoTests.staging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgoTests.staging.release.xcconfig"; path = "Target Support Files/Pods-emurgoTests/Pods-emurgoTests.staging.release.xcconfig"; sourceTree = "<group>"; };
 		8306E0AE63AA483DBF7F6BF0 /* libRNFS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFS.a; sourceTree = "<group>"; };
 		84D0E245B86E495693516CD7 /* libBVLinearGradient.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libBVLinearGradient.a; sourceTree = "<group>"; };
 		88A95429FF52104866D7E49D /* libPods-emurgo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-emurgo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		92EF314B8ECF261556A866AE /* libPods-emurgo-emurgo-staging.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-emurgo-emurgo-staging.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B84F3B989285F57F66CF87E0 /* libPods-emurgo-emurgo-nightly.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-emurgo-emurgo-nightly.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEBE63E4D9B94639A10A5296 /* Pods-emurgoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgoTests.debug.xcconfig"; path = "Target Support Files/Pods-emurgoTests/Pods-emurgoTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C78E8C902DF33189DDE7D7E7 /* Pods-emurgo-emurgo-nightly.staging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-nightly.staging.release.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-nightly/Pods-emurgo-emurgo-nightly.staging.release.xcconfig"; sourceTree = "<group>"; };
@@ -136,6 +142,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2EBA2AD022EA877F00BF8A5B /* JavaScriptCore.framework in Frameworks */,
+				B536838130B681A4B8A341AE /* libPods-emurgo-emurgo-staging.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -198,6 +205,7 @@
 				88A95429FF52104866D7E49D /* libPods-emurgo.a */,
 				B84F3B989285F57F66CF87E0 /* libPods-emurgo-emurgo-nightly.a */,
 				1FC5BB94532A4954BB77BB41 /* libPods-emurgoTests.a */,
+				92EF314B8ECF261556A866AE /* libPods-emurgo-emurgo-staging.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -257,6 +265,10 @@
 				57AEDE250E1257B118F9D5EE /* Pods-emurgoTests.staging.debug.xcconfig */,
 				F877CE0888C912B225811E4A /* Pods-emurgoTests.release.xcconfig */,
 				80201ADDACC8F1043483092B /* Pods-emurgoTests.staging.release.xcconfig */,
+				3EB7D285720EC3018253DCE8 /* Pods-emurgo-emurgo-staging.debug.xcconfig */,
+				7C49D6020D63B9FB6BA277E6 /* Pods-emurgo-emurgo-staging.staging.debug.xcconfig */,
+				5614626E94A9488458C3C847 /* Pods-emurgo-emurgo-staging.release.xcconfig */,
+				38FA8332D0A8491079DD4CE6 /* Pods-emurgo-emurgo-staging.staging.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -328,6 +340,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2E3E7CFC2298ACEA00D5C487 /* Build configuration list for PBXNativeTarget "emurgo-staging" */;
 			buildPhases = (
+				530EB74876CC05217B90CF1B /* [CP] Check Pods Manifest.lock */,
 				2E3E7CD72298ACEA00D5C487 /* Sources */,
 				2E3E7CDA2298ACEA00D5C487 /* Frameworks */,
 				2E3E7CF62298ACEA00D5C487 /* Resources */,
@@ -490,6 +503,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(Staging.Debug|Debug)\"\nexport NODE_BINARY=node\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh\n";
+		};
+		530EB74876CC05217B90CF1B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-emurgo-emurgo-staging-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
 		};
 		6C8B7B6608A19809AEC03D8B /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -874,6 +909,7 @@
 		};
 		2E3E7CFD2298ACEA00D5C487 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3EB7D285720EC3018253DCE8 /* Pods-emurgo-emurgo-staging.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = Yoroi;
@@ -924,6 +960,7 @@
 		};
 		2E3E7CFE2298ACEA00D5C487 /* Staging.Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7C49D6020D63B9FB6BA277E6 /* Pods-emurgo-emurgo-staging.staging.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
@@ -974,6 +1011,7 @@
 		};
 		2E3E7CFF2298ACEA00D5C487 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5614626E94A9488458C3C847 /* Pods-emurgo-emurgo-staging.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = Yoroi;
@@ -1025,6 +1063,7 @@
 		};
 		2E3E7D002298ACEA00D5C487 /* Staging.Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 38FA8332D0A8491079DD4CE6 /* Pods-emurgo-emurgo-staging.staging.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
