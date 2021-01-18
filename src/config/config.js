@@ -1,6 +1,11 @@
 // @flow
 import {NUMBERS} from './numbers'
-import {NETWORKS} from './networks'
+import {
+  NETWORKS,
+  DEFAULT_ASSETS,
+  getNetworkConfigById,
+  isHaskellShelleyNetwork,
+} from './networks'
 import {WALLET_IMPLEMENTATION_REGISTRY, DERIVATION_TYPES} from './types'
 import {LogLevel} from '../utils/logging'
 import env from '../env'
@@ -123,6 +128,7 @@ export const CONFIG = {
     // we test release configurations so we allow this flag when __DEV__=false
     IS_TESTING: _IS_TESTING,
   },
+  IS_TESTNET_BUILD: _USE_TESTNET,
   MAX_CONCURRENT_REQUESTS: 5,
   SENTRY: _SENTRY,
   MNEMONIC_STRENGTH: 160,
@@ -132,15 +138,14 @@ export const CONFIG = {
   HISTORY_REFRESH_TIME: 10 * 1000,
   NUMBERS,
   WALLETS,
+  // prettier-ignore
   NETWORKS: _USE_TESTNET
     ? {
       ...NETWORKS,
-      BYRON: NETWORKS.BYRON_MAINNET, // just keep mainnet data
       HASKELL_SHELLEY: NETWORKS.HASKELL_SHELLEY_TESTNET,
     }
     : {
       ...NETWORKS,
-      BYRON: NETWORKS.BYRON_MAINNET,
       HASKELL_SHELLEY: NETWORKS.HASKELL_SHELLEY,
     },
   HARDWARE_WALLETS,
@@ -149,6 +154,10 @@ export const CONFIG = {
   LOG_LEVEL: _LOG_LEVEL,
   COMMIT: _COMMIT,
 }
+
+/**
+ * queries related to wallet parameters
+ */
 
 export const isByron = (id: WalletImplementationId): boolean =>
   id === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
@@ -183,12 +192,37 @@ export const getCardanoBaseConfig = (): Array<{
   {
     StartAt: CONFIG.NETWORKS.HASKELL_SHELLEY.BASE_CONFIG[0].START_AT,
     GenesisDate: CONFIG.NETWORKS.HASKELL_SHELLEY.BASE_CONFIG[0].GENESIS_DATE,
-    SlotsPerEpoch: CONFIG.NETWORKS.HASKELL_SHELLEY.BASE_CONFIG[0].SLOTS_PER_EPOCH,
+    SlotsPerEpoch:
+      CONFIG.NETWORKS.HASKELL_SHELLEY.BASE_CONFIG[0].SLOTS_PER_EPOCH,
     SlotDuration: CONFIG.NETWORKS.HASKELL_SHELLEY.BASE_CONFIG[0].SLOT_DURATION,
   },
   {
     StartAt: CONFIG.NETWORKS.HASKELL_SHELLEY.BASE_CONFIG[1].START_AT,
-    SlotsPerEpoch: CONFIG.NETWORKS.HASKELL_SHELLEY.BASE_CONFIG[1].SLOTS_PER_EPOCH,
+    SlotsPerEpoch:
+      CONFIG.NETWORKS.HASKELL_SHELLEY.BASE_CONFIG[1].SLOTS_PER_EPOCH,
     SlotDuration: CONFIG.NETWORKS.HASKELL_SHELLEY.BASE_CONFIG[1].SLOT_DURATION,
   },
 ]
+
+export const getCardanoDefaultAsset = () => {
+  const assetData = DEFAULT_ASSETS.filter((network) => {
+    const config = getNetworkConfigById(network.NETWORK_ID)
+    return (
+      config.IS_MAINNET !== CONFIG.IS_TESTNET_BUILD &&
+      isHaskellShelleyNetwork(network.NETWORK_ID)
+    )
+  })[0]
+  return {
+    networkId: assetData.NETWORK_ID,
+    identifier: assetData.IDENTIFIER,
+    isDefault: assetData.IS_DEFAULT,
+    metadata: {
+      type: assetData.METADATA.TYPE,
+      policyId: assetData.METADATA.POLICY_ID,
+      assetName: assetData.METADATA.ASSET_NAME,
+      ticker: assetData.METADATA.TICKER,
+      longName: assetData.METADATA.LONG_NAME,
+      numberOfDecimals: assetData.METADATA.NUMBER_OF_DECIMALS,
+    },
+  }
+}

@@ -4,6 +4,8 @@ import {defineMessages} from 'react-intl'
 import moment from 'moment'
 import utfSymbols from './utfSymbols'
 
+import {getCardanoDefaultAsset} from '../config/config'
+
 const messages = defineMessages({
   today: {
     id: 'utils.format.today',
@@ -15,11 +17,11 @@ const messages = defineMessages({
   },
 })
 
-// 1 ADA = 1 000 000 micro ada
-const MICRO = 1000000
+const defaultAssetMeta = getCardanoDefaultAsset().metadata
+const normalizationFactor = Math.pow(10, defaultAssetMeta.numberOfDecimals)
 
 export const formatAda = (amount: BigNumber) => {
-  const num = amount.dividedBy(MICRO)
+  const num = amount.dividedBy(normalizationFactor)
   return num.toFormat(6)
 }
 
@@ -28,11 +30,11 @@ export const formatAdaWithSymbol = (amount: BigNumber) =>
 
 // We assume that "ADA" is non-localized
 export const formatAdaWithText = (amount: BigNumber) =>
-  `${formatAda(amount)}${utfSymbols.NBSP}ADA`
+  `${formatAda(amount)}${utfSymbols.NBSP}${defaultAssetMeta.ticker}`
 
 export const formatAdaInteger = (amount: BigNumber) => {
-  const num = amount.dividedToIntegerBy(MICRO)
-  if (amount.lt(0) && amount.gt(-MICRO)) {
+  const num = amount.dividedToIntegerBy(normalizationFactor)
+  if (amount.lt(0) && amount.gt(-normalizationFactor)) {
     // -0 needs special handling
     return '-0'
   } else {
@@ -43,8 +45,8 @@ export const formatAdaInteger = (amount: BigNumber) => {
 export const formatAdaFractional = (amount: BigNumber) => {
   const fractional = amount
     .abs()
-    .modulo(MICRO)
-    .dividedBy(MICRO)
+    .modulo(normalizationFactor)
+    .dividedBy(normalizationFactor)
   // remove leading '0'
   return fractional.toFormat(6).substring(1)
 }

@@ -17,6 +17,9 @@ import {InsufficientFunds} from '../errors'
 import longAddress from './__fixtures/long_address.json'
 
 import {CONFIG} from '../../config/config'
+import {getCardanoByronConfig} from '../../config/networks'
+
+const BYRON_PROTOCOL_MAGIC = getCardanoByronConfig().PROTOCOL_MAGIC
 
 jestSetup.setup()
 
@@ -39,12 +42,12 @@ test('Can generate external addresses', async () => {
   const account = await getAccountFromMasterKey(
     masterKey,
     CONFIG.NUMBERS.ACCOUNT_INDEX,
-    CONFIG.NETWORKS.BYRON.PROTOCOL_MAGIC,
+    BYRON_PROTOCOL_MAGIC,
   )
   const addresses = await getExternalAddresses(
     account,
     [0, 1],
-    CONFIG.NETWORKS.BYRON.PROTOCOL_MAGIC,
+    BYRON_PROTOCOL_MAGIC,
   )
 
   expect(addresses).toEqual(externalAddresses)
