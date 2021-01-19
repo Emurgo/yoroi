@@ -330,7 +330,6 @@
   "components.walletinit.walletinitscreen.createWalletWithLedgerButton": "Verbinden met Ledger Nano apparaat",
   "components.walletinit.walletinitscreen.importReadOnlyWalletExplanation": "De Yoroi-extensie stelt u in staat de openbare sleutels van uw portemonnee exporteren in een QR-code. Kies deze optie om een ​​portefeuille van een QR-code in alleen-lezen modus te importeren.",
   "components.walletinit.walletinitscreen.importReadOnlyWalletLabel": "Alleen-lezen portemonnee",
-  "components.walletinit.walletinitscreen.restoreNormalWalletExplanation": "Als u een Yoroi herstelzin heeft die bestaat uit 15 woorden die zijn gegenereerd toen u een Yoroi Portemonnee maakte, kiest u deze optie om uw Portemonnee te herstellen.",
   "components.walletinit.walletinitscreen.restoreNormalWalletLabel": "15-woorden portemonnee",
   "components.walletinit.walletinitscreen.restoreNWordWalletExplanation": "Als u een herstelzin heeft die uit {mnemonicLength} woorden bestaat, kiest u deze optie om uw portemonnee te herstellen.",
   "components.walletinit.walletinitscreen.restoreWalletButton": "Herstel Portemonnee",
