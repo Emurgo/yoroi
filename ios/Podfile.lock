@@ -13,7 +13,7 @@ PODS:
     - DoubleConversion
     - glog
   - glog (0.3.5)
-  - MultiplatformBleAdapter (0.1.6)
+  - MultiplatformBleAdapter (0.1.7)
   - Permission-Camera (2.2.2):
     - RNPermissions
   - React (0.60.0):
@@ -64,8 +64,8 @@ PODS:
   - React-jsinspector (0.60.0)
   - react-native-background-timer (2.4.1):
     - React-Core
-  - react-native-ble-plx (2.0.1):
-    - MultiplatformBleAdapter (= 0.1.6)
+  - react-native-ble-plx (2.0.2):
+    - MultiplatformBleAdapter (= 0.1.7)
     - React
   - react-native-camera (3.40.0):
     - React-Core
@@ -79,11 +79,11 @@ PODS:
     - React
   - react-native-haskell-shelley (0.0.8):
     - React
-  - react-native-netinfo (5.9.7):
+  - react-native-netinfo (5.9.9):
     - React-Core
   - react-native-randombytes (3.5.3):
     - React
-  - react-native-safe-area-context (3.1.8):
+  - react-native-safe-area-context (3.1.9):
     - React-Core
   - react-native-splash-screen (3.2.0):
     - React
@@ -129,8 +129,8 @@ PODS:
     - React
   - RNPermissions (2.2.2):
     - React-Core
-  - RNReanimated (1.13.1):
-    - React
+  - RNReanimated (1.13.2):
+    - React-Core
   - RNScreens (2.11.0):
     - React
   - RNSentry (1.4.5):
@@ -297,7 +297,7 @@ SPEC CHECKSUMS:
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
-  MultiplatformBleAdapter: 652f47ecd7f5036756517cf66833210709a72eab
+  MultiplatformBleAdapter: 975cfb2a333b2c42b7a11628bd100ccb61872da2
   Permission-Camera: 5d2aaf95592660b6dcb5e8d1d90ed5d0156cad02
   React: 4b3c068e793e96672dcd186a2b572fac43e4b031
   React-Core: 3dc86b22920597f813c62a96db3165950b64826b
@@ -308,13 +308,13 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 7a3554f703a58963ec80b860144ea0f0e9b910e1
   React-jsinspector: d4ed52225912efe0019bb7f1a225aec20f23049a
   react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
-  react-native-ble-plx: d8dcca81ecc617eda824a4ace85f7ffd55d90c6c
+  react-native-ble-plx: caac53ee98151ec81198239d591c203809a1ed6e
   react-native-camera: 35854c4f764a4a6cf61c1c3525888b92f0fe4b31
   react-native-config: f2c2ae45625a068c35681a16b9bfb1ca58b0adc7
   react-native-haskell-shelley: 241bdb4e191404ed8ee4e877388482fb0d73f03d
-  react-native-netinfo: 250dc0ca126512f618a8a2ca6a936577e1f66586
+  react-native-netinfo: 0212ce8604e88edf686f1481b925b17a42a52449
   react-native-randombytes: 3638d24759d67c68f6ccba60c52a7a8a8faa6a23
-  react-native-safe-area-context: 79fea126c6830c85f65947c223a5e3058a666937
+  react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-webview: dfd7202ff115c44d3ea401c2f36122fb3ac79f07
   React-RCTActionSheet: b27ff3cf3a68f917c46d2b94abf938b625b96570
@@ -335,7 +335,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: 7a5833d0f788dbd107fbb913e09aa0c1ff333c39
   RNKeychain: 3aa3cf891a09a0d18d306862ab2bb9e106079b24
   RNPermissions: 5df468064df661a4c8c017e2791ce90d7695eea5
-  RNReanimated: dd8c286ab5dd4ba36d3a7fef8bff7e08711b5476
+  RNReanimated: e03f7425cb7a38dcf1b644d680d1bfc91c3337ad
   RNScreens: 0e91da98ab26d5d04c7b59a9b6bd694124caf88c
   RNSentry: 0a70359ddacbfb9b1cbbb0971e54065b9f70ac57
   RNSVG: 6c8e8c6f9e5a0caf910dd25aa6e4216045426e1d

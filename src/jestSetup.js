@@ -4,8 +4,6 @@
 import fetch from 'node-fetch'
 import {Logger, LogLevel} from './utils/logging'
 
-import nodeUtil from 'util'
-
 jest.mock('react-native-device-info', () => {
   return {
     getVersion: () => '1.5.1',
@@ -17,11 +15,6 @@ jest.mock('react-native-randombytes', () => {
 })
 
 jest.mock('@ledgerhq/react-native-hw-transport-ble', () => ({}))
-
-// $FlowFixMe
-global.TextEncoder = nodeUtil.TextEncoder
-// $FlowFixMe
-global.TextDecoder = nodeUtil.TextDecoder
 
 export default {
   setup: () => {
