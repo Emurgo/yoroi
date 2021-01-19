@@ -37,6 +37,10 @@ import {
   getCardanoBaseConfig,
   getWalletConfigById,
 } from '../../config/config'
+import {
+  isHaskellShelleyNetwork,
+  getCardanoByronConfig,
+} from '../../config/networks'
 import {NETWORK_REGISTRY} from '../../config/types'
 import assert from '../../utils/assert'
 import {Logger} from '../../utils/logging'
@@ -212,7 +216,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
         this.networkId = NETWORK_REGISTRY.HASKELL_SHELLEY
       }
       assert.assert(
-        this.networkId === NETWORK_REGISTRY.HASKELL_SHELLEY,
+        isHaskellShelleyNetwork(this.networkId),
         'invalid networkId',
       )
       assert.assert(
@@ -629,7 +633,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
 
     const ledgerSignTxPayload = await createLedgerSignTxPayload({
       signRequest: request,
-      byronNetworkMagic: CONFIG.NETWORKS.BYRON_MAINNET.PROTOCOL_MAGIC,
+      byronNetworkMagic: getCardanoByronConfig().PROTOCOL_MAGIC,
       networkId: Number.parseInt(
         CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID,
         10,

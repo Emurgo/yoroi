@@ -1,6 +1,11 @@
 // @flow
 import {NUMBERS} from './numbers'
-import {NETWORKS} from './networks'
+import {
+  NETWORKS,
+  DEFAULT_ASSETS,
+  getNetworkConfigById,
+  isHaskellShelleyNetwork,
+} from './networks'
 import {WALLET_IMPLEMENTATION_REGISTRY, DERIVATION_TYPES} from './types'
 import {LogLevel} from '../utils/logging'
 import env from '../env'
@@ -17,6 +22,7 @@ const _SHOW_INIT_DEBUG_SCREEN = env.getBoolean('SHOW_INIT_DEBUG_SCREEN', false)
 const _PREFILL_WALLET_INFO = env.getBoolean('PREFILL_WALLET_INFO', false)
 // e2e testing
 const _IS_TESTING = env.getBoolean('IS_TESTING', false)
+const _USE_TESTNET = env.getBoolean('USE_TESTNET', false)
 
 // TODO(v-almonacid): consider adding 'ENABLE' as an env variable
 const _SENTRY = {
@@ -122,6 +128,7 @@ export const CONFIG = {
     // we test release configurations so we allow this flag when __DEV__=false
     IS_TESTING: _IS_TESTING,
   },
+  IS_TESTNET_BUILD: _USE_TESTNET,
   MAX_CONCURRENT_REQUESTS: 5,
   SENTRY: _SENTRY,
   MNEMONIC_STRENGTH: 160,
@@ -131,13 +138,26 @@ export const CONFIG = {
   HISTORY_REFRESH_TIME: 10 * 1000,
   NUMBERS,
   WALLETS,
-  NETWORKS,
+  // prettier-ignore
+  NETWORKS: _USE_TESTNET
+    ? {
+      ...NETWORKS,
+      HASKELL_SHELLEY: NETWORKS.HASKELL_SHELLEY_TESTNET,
+    }
+    : {
+      ...NETWORKS,
+      HASKELL_SHELLEY: NETWORKS.HASKELL_SHELLEY,
+    },
   HARDWARE_WALLETS,
   PIN_LENGTH: 6,
   APP_LOCK_TIMEOUT: 120 * 1000,
   LOG_LEVEL: _LOG_LEVEL,
   COMMIT: _COMMIT,
 }
+
+/**
+ * queries related to wallet parameters
+ */
 
 export const isByron = (id: WalletImplementationId): boolean =>
   id === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
@@ -161,17 +181,48 @@ export const getWalletConfigById = (
   throw new Error('invalid walletImplementationId')
 }
 
-export const getCardanoBaseConfig = () => [
+// need to accomodate base config parameters as required by certain API shared
+// by yoroi extension and yoroi mobile
+export const getCardanoBaseConfig = (): Array<{
+  StartAt?: number,
+  GenesisDate?: string,
+  SlotsPerEpoch?: number,
+  SlotDuration?: number,
+}> => [
   {
-    StartAt: CONFIG.NETWORKS.BYRON_MAINNET.START_AT,
-    GenesisDate: CONFIG.NETWORKS.BYRON_MAINNET.GENESIS_DATE,
-    SlotsPerEpoch: CONFIG.NETWORKS.BYRON_MAINNET.SLOTS_PER_EPOCH,
-    SlotDuration: CONFIG.NETWORKS.BYRON_MAINNET.SLOT_DURATION,
+    StartAt: CONFIG.NETWORKS.HASKELL_SHELLEY.BASE_CONFIG[0].START_AT,
+    GenesisDate: CONFIG.NETWORKS.HASKELL_SHELLEY.BASE_CONFIG[0].GENESIS_DATE,
+    SlotsPerEpoch:
+      CONFIG.NETWORKS.HASKELL_SHELLEY.BASE_CONFIG[0].SLOTS_PER_EPOCH,
+    SlotDuration: CONFIG.NETWORKS.HASKELL_SHELLEY.BASE_CONFIG[0].SLOT_DURATION,
   },
   {
-    StartAt: CONFIG.NETWORKS.HASKELL_SHELLEY.START_AT,
-    GenesisDate: CONFIG.NETWORKS.HASKELL_SHELLEY.GENESIS_DATE,
-    SlotsPerEpoch: CONFIG.NETWORKS.HASKELL_SHELLEY.SLOTS_PER_EPOCH,
-    SlotDuration: CONFIG.NETWORKS.HASKELL_SHELLEY.SLOT_DURATION,
+    StartAt: CONFIG.NETWORKS.HASKELL_SHELLEY.BASE_CONFIG[1].START_AT,
+    SlotsPerEpoch:
+      CONFIG.NETWORKS.HASKELL_SHELLEY.BASE_CONFIG[1].SLOTS_PER_EPOCH,
+    SlotDuration: CONFIG.NETWORKS.HASKELL_SHELLEY.BASE_CONFIG[1].SLOT_DURATION,
   },
 ]
+
+export const getCardanoDefaultAsset = () => {
+  const assetData = DEFAULT_ASSETS.filter((network) => {
+    const config = getNetworkConfigById(network.NETWORK_ID)
+    return (
+      config.IS_MAINNET !== CONFIG.IS_TESTNET_BUILD &&
+      isHaskellShelleyNetwork(network.NETWORK_ID)
+    )
+  })[0]
+  return {
+    networkId: assetData.NETWORK_ID,
+    identifier: assetData.IDENTIFIER,
+    isDefault: assetData.IS_DEFAULT,
+    metadata: {
+      type: assetData.METADATA.TYPE,
+      policyId: assetData.METADATA.POLICY_ID,
+      assetName: assetData.METADATA.ASSET_NAME,
+      ticker: assetData.METADATA.TICKER,
+      longName: assetData.METADATA.LONG_NAME,
+      numberOfDecimals: assetData.METADATA.NUMBER_OF_DECIMALS,
+    },
+  }
+}
