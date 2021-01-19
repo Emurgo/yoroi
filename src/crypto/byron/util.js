@@ -67,8 +67,8 @@ export const encryptData = async (
   assert.assert(!!plaintextHex, 'encrypt:: !!plaintextHex')
   assert.assert(!!secretKey, 'encrypt:: !!secretKey')
   const secretKeyHex = Buffer.from(secretKey, 'utf8').toString('hex')
-  const saltHex = cryptoRandomString(2 * 32)
-  const nonceHex = cryptoRandomString(2 * 12)
+  const saltHex = cryptoRandomString({length: 2 * 32})
+  const nonceHex = cryptoRandomString({length: 2 * 12})
   if (useJs) {
     return await encryptWithPasswordJs(
       secretKeyHex,

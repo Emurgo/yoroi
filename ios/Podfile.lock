@@ -121,8 +121,6 @@ PODS:
     - React
   - RNDeviceInfo (6.0.1):
     - React
-  - RNFS (2.13.3):
-    - React
   - RNGestureHandler (1.8.0):
     - React
   - RNKeychain (3.0.0):
@@ -181,7 +179,6 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
-  - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
@@ -272,8 +269,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/masked-view"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
-  RNFS:
-    :path: "../node_modules/react-native-fs"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNKeychain:
@@ -331,7 +326,6 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: b63d6e83fc629b01df6b624688f17944cea5637f
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
   RNDeviceInfo: 6dd5c07a482f2a5e4a29fe8a9d99eadd4277175a
-  RNFS: c9bbde46b0d59619f8e7b735991c60e0f73d22c1
   RNGestureHandler: 7a5833d0f788dbd107fbb913e09aa0c1ff333c39
   RNKeychain: 3aa3cf891a09a0d18d306862ab2bb9e106079b24
   RNPermissions: 5df468064df661a4c8c017e2791ce90d7695eea5
