@@ -330,7 +330,6 @@
   "components.walletinit.walletinitscreen.createWalletWithLedgerButton": "Connect to Ledger Nano",
   "components.walletinit.walletinitscreen.importReadOnlyWalletExplanation": "The Yoroi extension allows you to export any of your wallets' public keys in a QR code. Choose this option to import a wallet from a QR code in read-only mode.",
   "components.walletinit.walletinitscreen.importReadOnlyWalletLabel": "Read-only wallet",
-  "components.walletinit.walletinitscreen.restoreNormalWalletExplanation": "If you have a Yoroi recovery phrase consisting of 15 words generated when you created a Yoroi Wallet, choose this option to restore your wallet.",
   "components.walletinit.walletinitscreen.restoreNormalWalletLabel": "15-word Wallet",
   "components.walletinit.walletinitscreen.restoreNWordWalletExplanation": "If you have a recovery phrase consisting of {mnemonicLength} words, choose this option to restore your wallet.",
   "components.walletinit.walletinitscreen.restoreWalletButton": "Восстановить кошелек",
