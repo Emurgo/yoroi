@@ -330,7 +330,6 @@
   "components.walletinit.walletinitscreen.createWalletWithLedgerButton": "连接到Ledger Nano",
   "components.walletinit.walletinitscreen.importReadOnlyWalletExplanation": "The Yoroi extension allows you to export any of your wallets' public keys in a QR code. Choose this option to import a wallet from a QR code in read-only mode.",
   "components.walletinit.walletinitscreen.importReadOnlyWalletLabel": "Read-only wallet",
-  "components.walletinit.walletinitscreen.restoreNormalWalletExplanation": "如果您创建Yoroi钱包时恢复密钥为15个助记词，请选择此选项来恢复您的钱包。",
   "components.walletinit.walletinitscreen.restoreNormalWalletLabel": "15-助记词钱包",
   "components.walletinit.walletinitscreen.restoreNWordWalletExplanation": "如果您有一个包含{mnemonicLength}个单词的恢复短语，请选择此选项以恢复您的钱包。",
   "components.walletinit.walletinitscreen.restoreWalletButton": "恢复钱包",
