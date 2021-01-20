@@ -69,14 +69,6 @@ class AddressModal extends React.Component<Props, State> {
   /* eslint-disable-next-line react/sort-comp */
   _hideModalTimeoutId = null
 
-  async componentDidUpdate() {
-    const cbData = await Clipboard.getString()
-    if (this.state.isCopied && cbData !== this.props.address) {
-      // eslint-disable-next-line
-      this.setState({isCopied: false})
-    }
-  }
-
   componentWillUnmount() {
     if (this._hideModalTimeoutId) clearTimeout(this._hideModalTimeoutId)
   }
@@ -86,10 +78,12 @@ class AddressModal extends React.Component<Props, State> {
     Clipboard.setString(this.props.address)
     this.setState({isCopied: true})
 
-    this._hideModalTimeoutId = setTimeout(
-      () => this.props.onRequestClose(),
-      1000,
-    )
+    // To avoid reading the clipboard, we simply reset state once the modal
+    // is closed
+    this._hideModalTimeoutId = setTimeout(() => {
+      this.props.onRequestClose()
+      this.setState({isCopied: false})
+    }, 1000)
   }
 
   render() {
