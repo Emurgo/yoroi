@@ -32,7 +32,7 @@
     "@cardano-foundation/ledgerjs-hw-app-cardano": "2.1.0",
     "@emurgo/cip4-js": "1.0.5",
     "@ledgerhq/react-native-hw-transport-ble": "5.34.0",
-    "@react-native-community/async-storage": "1.12.1",
+    "@react-native-async-storage/async-storage": "1.13.3",
     "@react-native-community/masked-view": "0.1.10",
     "@react-native-community/netinfo": "5.9.9",
     "@react-navigation/bottom-tabs": "5.11.2",
