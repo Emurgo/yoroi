@@ -9,8 +9,6 @@ import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
 import type {NetworkId, WalletImplementationId} from './config/types'
 import type {WalletChecksum} from '@emurgo/cip4-js'
 
-export type Dict<T> = {[string]: T}
-
 export type WalletMeta = {
   id: string,
   name: string,
@@ -50,7 +48,7 @@ export type State = {
   balance: {
     isFetching: boolean,
     lastFetchingError: any,
-    utxos: ?Array<RawUtxo>,
+    utxos: ?Array<RawUtxo>, // TODO(multi-asset)
   },
   accountState: {
     isFetching: boolean,

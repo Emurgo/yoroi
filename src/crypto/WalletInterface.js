@@ -9,20 +9,22 @@ import {AddressChain} from './chain'
 import {TransactionCache} from './shelley/transactionCache'
 import Wallet from './Wallet'
 import {ISignRequest} from './ISignRequest'
+import {MultiToken} from './MultiToken'
 
 import type {RawUtxo, TxBodiesRequest, TxBodiesResponse} from '../api/types'
 import type {
   AddressedUtxo,
-  BaseSignRequest,
   EncryptionMethod,
+  SendTokenList,
   SignedTx,
   WalletState,
 } from './types'
+import type {DefaultTokenEntry} from './MultiToken'
 import type {HWDeviceInfo} from './shelley/ledgerUtils'
 import type {DelegationStatus} from './shelley/delegationUtils'
 import type {NetworkId, WalletImplementationId} from '../config/types'
-import type {Dict, WalletMeta} from '../state'
-import type {Transaction} from '../types/HistoryTransaction'
+import type {WalletMeta} from '../state'
+import type {Transaction, DefaultAsset} from '../types/HistoryTransaction'
 import type {Addresses} from './chain'
 import type {WalletChecksum} from '@emurgo/cip4-js'
 
@@ -152,12 +154,12 @@ export interface WalletInterface {
   createUnsignedTx<T>(
     utxos: Array<RawUtxo>,
     receiver: string,
-    amount: ?string,
-    sendAll: boolean,
+    tokens: SendTokenList,
+    defaultToken: DefaultTokenEntry,
   ): Promise<ISignRequest<T>>;
 
   signTx<T>(
-    signRequest: BaseSignRequest<T>,
+    signRequest: ISignRequest<T>,
     decryptedMasterKey: string,
   ): Promise<SignedTx>;
 
@@ -165,20 +167,16 @@ export interface WalletInterface {
     poolRequest: void | string,
     valueInAccount: BigNumber,
     utxos: Array<RawUtxo>,
+    defaultAsset: DefaultAsset,
   ): Promise<{
-    signTxRequest: ISignRequest<T>,
-    totalAmountToDelegate: BigNumber,
+    signRequest: ISignRequest<T>,
+    totalAmountToDelegate: MultiToken,
   }>;
 
   createWithdrawalTx<T>(
     utxos: Array<RawUtxo>,
     shouldDeregister: boolean,
   ): Promise<ISignRequest<T>>;
-
-  signDelegationTx<T>(
-    signRequest: BaseSignRequest<T>,
-    decryptedMasterKey: string,
-  ): Promise<SignedTx>;
 
   signTxWithLedger<T>(
     request: ISignRequest<T>,

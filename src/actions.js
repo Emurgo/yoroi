@@ -42,12 +42,12 @@ import {
 } from './selectors'
 import assert from './utils/assert'
 import KeyStore from './crypto/KeyStore'
-import * as api from './api/byron/api'
+import * as api from './api/shelley/api'
+import {ISignRequest} from './crypto/ISignRequest'
 import {CONFIG} from './config/config'
 
 import {type Dispatch} from 'redux'
 import {type State} from './state'
-import type {BaseSignRequest} from './crypto/types'
 import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
 import type {NetworkId, WalletImplementationId} from './config/types'
 
@@ -534,28 +534,12 @@ export const submitSignedTx = (signedTx: string) => async (
 // note: eslint doesn't like polymorphic types
 /* eslint-disable indent */
 export const submitTransaction = <T>(
+  signRequest: ISignRequest<T>,
   decryptedKey: string,
-  signRequest: BaseSignRequest<T>,
 ) => async (dispatch: Dispatch<any>) => {
   const {encodedTx} = await walletManager.signTx(signRequest, decryptedKey)
   Logger.info(
     'submitTransaction::encodedTx',
-    Buffer.from(encodedTx).toString('hex'),
-  )
-  const signedTxBase64 = Buffer.from(encodedTx).toString('base64')
-  await dispatch(submitSignedTx(signedTxBase64))
-}
-
-export const submitDelegationTx = <T>(
-  decryptedKey: string,
-  signRequest: BaseSignRequest<T>,
-) => async (dispatch: Dispatch<any>) => {
-  const {encodedTx} = await walletManager.signDelegationTx(
-    signRequest,
-    decryptedKey,
-  )
-  Logger.info(
-    'submitDelegationTransaction::encodedTx',
     Buffer.from(encodedTx).toString('hex'),
   )
   const signedTxBase64 = Buffer.from(encodedTx).toString('base64')

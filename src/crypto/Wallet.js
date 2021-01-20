@@ -8,7 +8,7 @@ import {defaultMemoize} from 'reselect'
 
 import KeyStore from './KeyStore'
 import {AddressChain} from './chain'
-import * as api from '../api/byron/api'
+import * as api from '../api/shelley/api'
 import {CONFIG} from '../config/config'
 import {isJormungandr} from '../config/networks'
 import assert from '../utils/assert'

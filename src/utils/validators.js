@@ -4,7 +4,9 @@ import _ from 'lodash'
 
 import {normalizeToAddress} from '../crypto/shelley/utils'
 import assert from '../utils/assert'
-import {parseAdaDecimal, InvalidAdaAmount} from '../utils/parsing'
+import {parseAmountDecimal, InvalidAssetAmount} from '../utils/parsing'
+
+import type {Token} from '../types/HistoryTransaction'
 
 export type PasswordValidationErrors = {|
   passwordReq?: boolean,
@@ -26,7 +28,7 @@ export type AddressValidationErrors = {|
 
 export type AmountValidationErrors = {|
   amountIsRequired?: boolean,
-  invalidAmount?: $Values<typeof InvalidAdaAmount.ERROR_CODES>,
+  invalidAmount?: $Values<typeof InvalidAssetAmount.ERROR_CODES>,
 |}
 
 export type BalanceValidationErrors = {|
@@ -128,16 +130,19 @@ export const validateAddressAsync = async (
   return isValid != null ? Object.freeze({}) : {invalidAddress: true}
 }
 
-export const validateAmount = (value: string): AmountValidationErrors => {
+export const validateAmount = (
+  value: string,
+  token: ?Token,
+): AmountValidationErrors => {
   if (!value) {
     return {amountIsRequired: true}
   }
 
   try {
-    parseAdaDecimal(value)
+    parseAmountDecimal(value, token)
     return Object.freeze({})
   } catch (e) {
-    if (e instanceof InvalidAdaAmount) {
+    if (e instanceof InvalidAssetAmount) {
       return {invalidAmount: e.errorCode}
     }
     throw e

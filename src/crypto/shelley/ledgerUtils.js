@@ -23,6 +23,7 @@ import {
   Certificate,
   Certificates,
   Ed25519Signature,
+  MultiAsset,
   RewardAddress,
   StakeCredential,
   Transaction,
@@ -35,7 +36,7 @@ import {
   Vkeywitnesses,
   Withdrawal,
   Withdrawals,
-} from 'react-native-haskell-shelley'
+} from '@emurgo/react-native-haskell-shelley'
 
 import {Logger} from '../../utils/logging'
 import {CONFIG, isByron, isHaskellShelley} from '../../config/config'
@@ -56,6 +57,7 @@ import type {
   Value,
 } from '../../crypto/types'
 import type {
+  AssetGroup,
   BIP32Path,
   GetVersionResponse,
   GetExtendedPublicKeyResponse,
@@ -65,6 +67,7 @@ import type {
   TxOutputTypeAddressParams,
   SignTransactionResponse,
   StakingBlockchainPointer,
+  Token as LedgerToken,
   Witness,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import type BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble'
@@ -240,10 +243,11 @@ export type SignTransactionRequest = {|
   inputs: Array<InputTypeUTxO>,
   outputs: Array<TxOutputTypeAddress | TxOutputTypeAddressParams>,
   feeStr: string,
-  ttlStr: string,
+  ttlStr: string | void,
   certificates: Array<Certificate>,
   withdrawals: Array<Withdrawal>,
   metadataHashHex: ?string,
+  validityIntervalStartStr: string | void,
 |}
 
 //
@@ -497,18 +501,16 @@ export const createLedgerSignTxPayload = async (request: {|
 |}): Promise<SignTransactionRequest> => {
   Logger.debug('ledgerUtils::createLedgerSignTxPayload called')
   Logger.debug('signRequest', JSON.stringify(request.signRequest))
-  const txBody = await request.signRequest.self().unsignedTx.build()
+  const txBody = await request.signRequest.self().build()
 
   // Inputs
-  const ledgerInputs = _transformToLedgerInputs(
-    request.signRequest.self().senderUtxos,
-  )
+  const ledgerInputs = _transformToLedgerInputs(request.signRequest.senderUtxos)
 
   // Output
   const ledgerOutputs = await _transformToLedgerOutputs({
     networkId: request.networkId,
     txOutputs: await txBody.outputs(),
-    changeAddrs: request.signRequest.self().changeAddr,
+    changeAddrs: request.signRequest.changeAddr,
     addressingMap: request.addressingMap,
   })
 
@@ -535,16 +537,19 @@ export const createLedgerSignTxPayload = async (request: {|
     )
   }
 
+  const ttl = await txBody.ttl()
+
   return {
     inputs: ledgerInputs,
     outputs: ledgerOutputs,
     feeStr: await (await txBody.fee()).to_str(),
-    ttlStr: (await txBody.ttl()).toString(),
+    ttlStr: ttl === undefined ? ttl : ttl.toString(),
     protocolMagic: request.byronNetworkMagic,
     withdrawals: ledgerWithdrawal,
     certificates: ledgerCertificates,
     metadataHashHex: undefined,
     networkId: request.networkId,
+    validityIntervalStartStr: undefined,
   }
 }
 
@@ -559,6 +564,38 @@ function _transformToLedgerInputs(
     outputIndex: input.tx_index,
     path: input.addressing.path,
   }))
+}
+
+async function toLedgerTokenBundle(
+  assets: MultiAsset,
+): Promise<Array<AssetGroup>> {
+  const assetGroup: Array<AssetGroup> = []
+  if (assets == null) return assetGroup
+
+  const policyHashes = await assets.keys()
+  for (let i = 0; i < (await policyHashes.len()); i++) {
+    const policyId = await policyHashes.get(i)
+    const assetsForPolicy = await assets.get(policyId)
+    if (assetsForPolicy == null) continue
+
+    const tokens: Array<LedgerToken> = []
+    const assetNames = await assetsForPolicy.keys()
+    for (let j = 0; j < (await assetNames.len()); j++) {
+      const assetName = await assetNames.get(j)
+      const amount = await assetsForPolicy.get(assetName)
+      if (amount == null) continue
+
+      tokens.push({
+        amountStr: await amount.to_str(),
+        assetNameHex: Buffer.from(await assetName.name()).toString('hex'),
+      })
+    }
+    assetGroup.push({
+      policyIdHex: Buffer.from(await policyId.to_bytes()).toString('hex'),
+      tokens,
+    })
+  }
+  return assetGroup
 }
 
 async function _transformToLedgerOutputs(request: {|
@@ -590,14 +627,18 @@ async function _transformToLedgerOutputs(request: {|
         stakingBlockchainPointer: addressParams.stakingBlockchainPointer,
         stakingKeyHashHex: addressParams.stakingKeyHashHex,
         stakingPath: addressParams.stakingPath,
-        amountStr: await (await output.amount()).to_str(),
-        tokenBundle: [],
+        amountStr: await (await (await output.amount()).coin()).to_str(),
+        tokenBundle: toLedgerTokenBundle(
+          await await output.amount().multiasset(),
+        ),
       })
     } else {
       result.push({
         addressHex: Buffer.from(await address.to_bytes()).toString('hex'),
-        amountStr: await (await output.amount()).to_str(),
-        tokenBundle: [],
+        amountStr: await (await (await output.amount()).coin()).to_str(),
+        tokenBundle: toLedgerTokenBundle(
+          await await output.amount().multiasset(),
+        ),
       })
     }
   }

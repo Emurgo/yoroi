@@ -2,56 +2,78 @@
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
 
-// 1 ADA = 1 000 000 micro ada
-const MICRO = 1000000
+import {CONFIG, getCardanoDefaultAsset} from '../config/config'
+import {isHaskellShelleyNetwork} from '../config/networks'
 
-export class InvalidAdaAmount extends ExtendableError {
+import type {Token} from '../types/HistoryTransaction'
+
+export class InvalidAssetAmount extends ExtendableError {
   static ERROR_CODES = {
     // general parsing problem or amount is equal to 0
     INVALID_AMOUNT: 'INVALID_AMOUNT',
     TOO_MANY_DECIMAL_PLACES: 'TOO_MANY_DECIMAL_PLACES',
     TOO_LARGE: 'TOO_LARGE',
     TOO_LOW: 'TOO_LOW',
+    LT_MIN_UTXO: 'LT_MIN_UTXO', // amount is less than min utxo value allowed
     NEGATIVE: 'NEGATIVE',
   }
 
-  constructor(errorCode: $Values<typeof InvalidAdaAmount.ERROR_CODES>) {
-    super('InvalidAdaAmount')
+  constructor(errorCode: $Values<typeof InvalidAssetAmount.ERROR_CODES>) {
+    super('InvalidAssetAmount')
     this.errorCode = errorCode
   }
 }
 
-// Maximum ADA supply in microADA
-const MAX_ADA = new BigNumber('45 000 000 000 000000'.replace(/ /g, ''), 10)
+// expects an amount in regular currency units (eg ADA, not Lovelace)
+export const parseAmountDecimal = (
+  amount: string,
+  token: ?Token,
+): BigNumber => {
+  const assetMeta = token ?? getCardanoDefaultAsset()
 
-export const parseAdaDecimal = (amount: string) => {
+  // note: maxSupply can be null
+  const maxSupply =
+    assetMeta.metadata.maxSupply != null
+      ? new BigNumber(assetMeta.metadata.maxSupply, 10)
+      : null
+  const numberOfDecimals: number = assetMeta.metadata.numberOfDecimals
+  const normalizationFactor = Math.pow(10, numberOfDecimals)
+
   const parsed = new BigNumber(amount, 10)
   if (parsed.isNaN()) {
-    throw new InvalidAdaAmount(InvalidAdaAmount.ERROR_CODES.INVALID_AMOUNT)
+    throw new InvalidAssetAmount(InvalidAssetAmount.ERROR_CODES.INVALID_AMOUNT)
   }
 
-  if (parsed.decimalPlaces() > 6) {
-    throw new InvalidAdaAmount(
-      InvalidAdaAmount.ERROR_CODES.TOO_MANY_DECIMAL_PLACES,
+  if (parsed.decimalPlaces() > numberOfDecimals) {
+    throw new InvalidAssetAmount(
+      InvalidAssetAmount.ERROR_CODES.TOO_MANY_DECIMAL_PLACES,
     )
   }
 
-  const value = parsed.times(MICRO)
+  const value = parsed.times(normalizationFactor)
 
-  if (value.gte(MAX_ADA)) {
-    throw new InvalidAdaAmount(InvalidAdaAmount.ERROR_CODES.TOO_LARGE)
+  if (maxSupply != null && value.gte(maxSupply)) {
+    throw new InvalidAssetAmount(InvalidAssetAmount.ERROR_CODES.TOO_LARGE)
   }
 
-  if (value.lt(MICRO)) {
-    throw new InvalidAdaAmount(InvalidAdaAmount.ERROR_CODES.TOO_LOW)
+  if (isHaskellShelleyNetwork(assetMeta.networkId) && assetMeta.isDefault) {
+    // ...this is ADA or tADA
+    const minValue = CONFIG.NETWORKS.HASKELL_SHELLEY.MINIMUM_UTXO_VAL
+    if (value.lt(minValue)) {
+      throw new InvalidAssetAmount(InvalidAssetAmount.ERROR_CODES.LT_MIN_UTXO)
+    }
+  }
+
+  if (value.lt(1)) {
+    throw new InvalidAssetAmount(InvalidAssetAmount.ERROR_CODES.TOO_LOW)
   }
 
   if (value.lt(0)) {
-    throw new InvalidAdaAmount(InvalidAdaAmount.ERROR_CODES.NEGATIVE)
+    throw new InvalidAssetAmount(InvalidAssetAmount.ERROR_CODES.NEGATIVE)
   }
 
   if (value.eq(0)) {
-    throw new InvalidAdaAmount(InvalidAdaAmount.ERROR_CODES.INVALID_AMOUNT)
+    throw new InvalidAssetAmount(InvalidAssetAmount.ERROR_CODES.INVALID_AMOUNT)
   }
 
   return value

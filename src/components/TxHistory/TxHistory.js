@@ -1,13 +1,13 @@
 // @flow
 
 import React from 'react'
-import type {ComponentType} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withStateHandlers} from 'recompose'
 import {View, RefreshControl, ScrollView, Image} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import _ from 'lodash'
+import {BigNumber} from 'bignumber.js'
 import {injectIntl, defineMessages} from 'react-intl'
 import {fetchUTXOs} from '../../actions/utxo'
 
@@ -18,7 +18,8 @@ import {
   isSynchronizingHistorySelector,
   lastHistorySyncErrorSelector,
   isOnlineSelector,
-  availableAmountSelector,
+  tokenBalanceSelector,
+  availableAssetsSelector,
   walletMetaSelector,
   languageSelector,
   isFlawedWalletSelector,
@@ -35,14 +36,16 @@ import FlawedWalletModal from './FlawedWalletModal'
 import {WALLET_ROOT_ROUTES} from '../../RoutesList'
 import {isByron} from '../../config/config'
 
-import {formatAdaWithText} from '../../utils/format'
+import {formatTokenWithText} from '../../utils/format'
 import image from '../../assets/img/no_transactions.png'
+import globalMessages from '../../i18n/global-messages'
 
 import styles from './styles/TxHistory.style'
 
+import type {ComponentType} from 'react'
 import type {Navigation} from '../../types/navigation'
 import type {State} from '../../state'
-import globalMessages from '../../i18n/global-messages'
+import type {Token} from '../../types/HistoryTransaction'
 
 const messages = defineMessages({
   noTransactions: {
@@ -83,13 +86,22 @@ const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
   />
 ))
 
-const AvailableAmountBanner = injectIntl(({intl, amount}) => (
-  <Banner
-    label={intl.formatMessage(globalMessages.availableFunds)}
-    text={amount != null ? formatAdaWithText(amount) : '-'}
-    boldText
-  />
-))
+type AvailableAmountProps = {|
+  intl: any,
+  amount: BigNumber,
+  amountAssetMetaData: Token,
+|}
+const AvailableAmountBanner = injectIntl(
+  ({intl, amount, amountAssetMetaData}: AvailableAmountProps) => (
+    <Banner
+      label={intl.formatMessage(globalMessages.availableFunds)}
+      text={
+        amount != null ? formatTokenWithText(amount, amountAssetMetaData) : '-'
+      }
+      boldText
+    />
+  ),
+)
 
 const TxHistory = ({
   transactionsInfo,
@@ -98,7 +110,8 @@ const TxHistory = ({
   isOnline,
   updateHistory,
   lastSyncError,
-  availableAmount,
+  tokenBalance,
+  availableAssets,
   isFlawedWallet,
   showWarning,
   setShowWarning,
@@ -125,7 +138,10 @@ const TxHistory = ({
       {isOnline &&
         lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
 
-      <AvailableAmountBanner amount={availableAmount} />
+      <AvailableAmountBanner
+        amount={tokenBalance.getDefault()}
+        amountAssetMetaData={availableAssets[tokenBalance.getDefaultId()]}
+      />
 
       {_.isEmpty(transactionsInfo) ? (
         <ScrollView
@@ -177,7 +193,8 @@ export default injectIntl(
         isSyncing: isSynchronizingHistorySelector(state),
         lastSyncError: lastHistorySyncErrorSelector(state),
         isOnline: isOnlineSelector(state),
-        availableAmount: availableAmountSelector(state),
+        tokenBalance: tokenBalanceSelector(state),
+        availableAssets: availableAssetsSelector(state),
         key: languageSelector(state),
         isFlawedWallet: isFlawedWalletSelector(state),
         walletMeta: walletMetaSelector(state),

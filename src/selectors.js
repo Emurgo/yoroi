@@ -1,17 +1,25 @@
 // @flow
-import _ from 'lodash'
+import {mapValues, isEmpty, fromPairs} from 'lodash'
 import {BigNumber} from 'bignumber.js'
 import {createSelector} from 'reselect'
 
-import {processTxHistoryData} from './crypto/transactionUtils'
+import {processTxHistoryData} from './crypto/processTransactions'
 import {
   TRANSACTION_STATUS,
   TRANSACTION_DIRECTION,
 } from './types/HistoryTransaction'
 import {ObjectValues} from './utils/flow'
+import {MultiToken, getDefaultNetworkTokenEntry} from './crypto/MultiToken'
+import {getDefaultAssets, getDefaultAssetByNetworkId} from './config/config'
 
-import type {Dict, State, WalletMeta} from './state'
-import type {TransactionInfo, Transaction} from './types/HistoryTransaction'
+import type {State, WalletMeta} from './state'
+import type {
+  TransactionInfo,
+  Transaction,
+  Token,
+  DefaultAsset,
+} from './types/HistoryTransaction'
+import type {NetworkId} from './config/types'
 import type {RawUtxo} from './api/types'
 import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
 
@@ -23,39 +31,79 @@ export const transactionsInfoSelector: (State) => Dict<
   (state) => state.wallet.externalAddresses,
   (state) => state.wallet.rewardAddressHex,
   (state) => state.wallet.confirmationCounts,
+  (state) => state.wallet.networkId,
   (
     transactions,
     internalAddresses,
     externalAddresses,
     rewardAddressHex,
     confirmationCounts,
+    networkId,
   ) =>
-    _.mapValues(transactions, (tx: Transaction) =>
+    mapValues(transactions, (tx: Transaction) =>
       processTxHistoryData(
         tx,
         rewardAddressHex != null
           ? [...internalAddresses, ...externalAddresses, ...[rewardAddressHex]]
           : [...internalAddresses, ...externalAddresses],
         confirmationCounts[tx.id] || 0,
+        networkId,
       ),
     ),
 )
 
 export const hasAnyTransaction = (state: State): boolean =>
-  !_.isEmpty(state.wallet.transactions)
+  !isEmpty(state.wallet.transactions)
+
+const _initAssetsRegistry = (networkId: NetworkId): Dict<DefaultAsset> =>
+  fromPairs(
+    getDefaultAssets()
+      .filter((asset) => asset.networkId === networkId)
+      .map((asset) => [asset.identifier, asset]),
+  )
+
+export const availableAssetsSelector: (
+  state: State,
+) => Dict<Token> = createSelector(
+  transactionsInfoSelector,
+  (state) => state.wallet.networkId,
+  (txs, networkId) => {
+    const tokens: Dict<Token> = fromPairs(
+      ObjectValues(_initAssetsRegistry(networkId)).map((asset) => [
+        asset.identifier,
+        {
+          ...asset,
+          metadata: {
+            ...asset.metadata,
+            ticker: asset.metadata.ticker,
+          },
+        },
+      ]),
+    )
+    ObjectValues(txs).forEach((tx) => Object.assign(tokens, tx.tokens))
+    return tokens
+  },
+)
+
+export const defaultNetworkAssetSelector: (
+  state: State,
+) => DefaultAsset = createSelector(
+  (state) => state.wallet.networkId,
+  (networkId) => getDefaultAssetByNetworkId(networkId),
+)
 
 export const internalAddressIndexSelector: (
   state: State,
 ) => Object = createSelector(
   (state) => state.wallet.internalAddresses,
-  (addresses) => _.fromPairs(addresses.map((addr, i) => [addr, i])),
+  (addresses) => fromPairs(addresses.map((addr, i) => [addr, i])),
 )
 
 export const externalAddressIndexSelector: (
   state: State,
 ) => Object = createSelector(
   (state) => state.wallet.externalAddresses,
-  (addresses) => _.fromPairs(addresses.map((addr, i) => [addr, i])),
+  (addresses) => fromPairs(addresses.map((addr, i) => [addr, i])),
 )
 
 export const isUsedAddressIndexSelector = (state: State) =>
@@ -83,19 +131,24 @@ export const walletMetaSelector = (
 const BigNumberSum = (data: Array<BigNumber | string>): BigNumber =>
   data.reduce((x: BigNumber, y) => x.plus(y), new BigNumber(0))
 
-export const availableAmountSelector: (
+export const tokenBalanceSelector: (
   state: State,
-) => BigNumber = createSelector(transactionsInfoSelector, (transactions) => {
-  const processed = ObjectValues(transactions).filter(
-    (tx) => tx.status === TRANSACTION_STATUS.SUCCESSFUL,
-  )
-
-  const zero = new BigNumber(0)
-
-  const result = BigNumberSum(processed.map((tx) => tx.delta))
-
-  return result.lt(zero) ? zero : result
-})
+) => MultiToken = createSelector(
+  transactionsInfoSelector,
+  walletMetaSelector,
+  (transactions, walletMeta) => {
+    const processed = ObjectValues(transactions).filter(
+      (tx) => tx.status === TRANSACTION_STATUS.SUCCESSFUL,
+    )
+    const result = processed
+      .map((tx) => tx.delta)
+      .reduce(
+        (acc, curr) => acc.joinAddMutable(curr),
+        new MultiToken([], getDefaultNetworkTokenEntry(walletMeta.networkId)),
+      )
+    return result
+  },
+)
 
 export const receiveAddressesSelector: (
   state: State,
@@ -116,10 +169,10 @@ export const isSynchronizingHistorySelector = (state: State): boolean =>
 export const lastHistorySyncErrorSelector = (state: State): any =>
   state.txHistory.lastSyncError
 
-export const getUtxoBalance = (utxos: Array<RawUtxo>) =>
+export const getUtxoBalance = (utxos: Array<RawUtxo>): BigNumber =>
   BigNumberSum(utxos.map(({amount}) => amount))
 
-export const utxoBalanceSelector = (state: State) =>
+export const utxoBalanceSelector = (state: State): ?BigNumber =>
   state.balance.isFetching || !state.balance.utxos
     ? null
     : getUtxoBalance(state.balance.utxos)

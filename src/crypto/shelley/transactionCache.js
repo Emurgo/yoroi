@@ -1,17 +1,16 @@
 // @flow
 import {defaultMemoize} from 'reselect'
-import _ from 'lodash'
+import {uniq, fromPairs, max, mapValues, sum} from 'lodash'
 import assert from '../../utils/assert'
 
 import {ObjectValues} from '../../utils/flow'
 import {limitConcurrency} from '../../utils/promise'
 import {Logger} from '../../utils/logging'
-import * as api from '../../api/byron/api'
+import * as api from '../../api/shelley/api'
 import {ApiHistoryError} from '../../api/errors'
 import {CONFIG} from '../../config/config'
 import {CERTIFICATE_KIND} from '../../api/types'
 
-import type {Dict} from '../../state'
 import type {Transaction} from '../../types/HistoryTransaction'
 import type {TxHistoryRequest, RemoteCertificateMeta} from '../../api/types'
 import {TRANSACTION_STATUS} from '../../types/HistoryTransaction'
@@ -135,7 +134,7 @@ const perAddressCertificatesSelector = (
 
 const confirmationCountsSelector = (state: TransactionCacheState) => {
   const {perAddressSyncMetadata, transactions} = state
-  return _.mapValues(transactions, (tx: Transaction) => {
+  return mapValues(transactions, (tx: Transaction) => {
     if (tx.status !== TRANSACTION_STATUS.SUCCESSFUL) {
       // TODO(ppershing): do failed transactions have assurance?
       return null
@@ -146,7 +145,7 @@ const confirmationCountsSelector = (state: TransactionCacheState) => {
         ? perAddressSyncMetadata[address].bestBlockNum
         : 0
 
-    const bestBlockNum = _.max([
+    const bestBlockNum = max([
       state.bestBlockNum,
       ...tx.inputs.map(getBlockNum),
       ...tx.outputs.map(getBlockNum),
@@ -292,12 +291,12 @@ export class TransactionCache {
     // Currently we do not support two updates inside a same batch
     // (and backend shouldn't support it either)
     assert.assert(
-      transactions.length === _.uniq(transactions.map((tx) => tx.id)).length,
+      transactions.length === uniq(transactions.map((tx) => tx.id)).length,
       'Got the same transaction twice in one batch',
       transactions,
     )
     const updated = transactions.map((tx) => this._isUpdatedTransaction(tx))
-    return _.sum(updated, (x) => (x ? 1 : 0))
+    return sum(updated, (x) => (x ? 1 : 0))
   }
 
   async doSyncStep(blocks: Array<Array<string>>): Promise<boolean> {
@@ -345,10 +344,10 @@ export class TransactionCache {
           bestTxHash: bestTx?.txHash,
         }
 
-        const transactionsUpdate = _.fromPairs(
+        const transactionsUpdate = fromPairs(
           response.transactions.map((tx) => [tx.id, tx]),
         )
-        const metadataUpdate = _.fromPairs(
+        const metadataUpdate = fromPairs(
           addrs.map((addr) => [addr, newMetadata]),
         )
 

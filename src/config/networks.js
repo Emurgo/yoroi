@@ -1,4 +1,6 @@
 // @flow
+import {flatten} from 'lodash'
+
 import {NETWORK_REGISTRY} from './types'
 import {NUMBERS} from './numbers'
 
@@ -201,29 +203,32 @@ export const PRIMARY_ASSET_CONSTANTS = {
   // JORMUNGANDR: '',
 }
 
-export const DEFAULT_ASSETS = Object.keys(NETWORKS)
-  .map((key) => NETWORKS[key])
-  .filter((network) => network.ENABLED)
-  // $FlowFixMe flatMap is not supported in our current version of flow
-  .flatMap((network) => {
-    if (isHaskellShelleyNetwork(network.NETWORK_ID)) {
-      return [
-        {
-          NETWORK_ID: network.NETWORK_ID,
-          IDENTIFIER: PRIMARY_ASSET_CONSTANTS.CARDANO,
-          IS_DEFAULT: true,
-          METADATA: {
-            TYPE: 'Cardano',
-            POLICY_ID: PRIMARY_ASSET_CONSTANTS.CARDANO,
-            ASSET_NAME: PRIMARY_ASSET_CONSTANTS.CARDANO,
-            TICKER: network.IS_MAINNET ? 'ADA' : 'TADA',
-            LONG_NAME: null,
-            NUMBER_OF_DECIMALS: 6,
+// returns Array<Object>
+export const DEFAULT_ASSETS = flatten(
+  Object.keys(NETWORKS)
+    .map((key) => NETWORKS[key])
+    .filter((network) => network.ENABLED)
+    .map((network) => {
+      if (isHaskellShelleyNetwork(network.NETWORK_ID)) {
+        return [
+          {
+            NETWORK_ID: network.NETWORK_ID,
+            IDENTIFIER: PRIMARY_ASSET_CONSTANTS.CARDANO,
+            IS_DEFAULT: true,
+            METADATA: {
+              TYPE: 'Cardano',
+              POLICY_ID: PRIMARY_ASSET_CONSTANTS.CARDANO,
+              ASSET_NAME: PRIMARY_ASSET_CONSTANTS.CARDANO,
+              TICKER: network.IS_MAINNET ? 'ADA' : 'TADA',
+              LONG_NAME: null,
+              NUMBER_OF_DECIMALS: 6,
+              MAX_SUPPLY: '45 000 000 000 000000'.replace(/ /g, ''),
+            },
           },
-        },
-      ]
-    }
-    throw new Error(
-      `Missing default asset for network type ${JSON.stringify(network)}`,
-    )
-  })
+        ]
+      }
+      throw new Error(
+        `Missing default asset for network type ${JSON.stringify(network)}`,
+      )
+    }),
+)

@@ -9,8 +9,13 @@ export const BOX_CHECKED = '☑'
 
 export const ADA = AUSTRAL
 
+// key should be asset ticker
+const CURRENCIES: {[string]: string} = {
+  ADA: AUSTRAL,
+}
+
 export default {
-  ADA,
+  CURRENCIES,
   ERASE_TO_LEFT,
   GEAR,
   X_CROSS,

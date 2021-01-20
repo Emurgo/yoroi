@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react'
+import {BigNumber} from 'bignumber.js'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {ScrollView, View, Platform} from 'react-native'
@@ -23,6 +24,7 @@ import {
   easyConfirmationSelector,
   isHWSelector,
   hwDeviceInfoSelector,
+  defaultNetworkAssetSelector,
 } from '../../selectors'
 import globalMessages, {
   errorMessages,
@@ -36,7 +38,7 @@ import KeyStore from '../../crypto/KeyStore'
 import {showErrorDialog, submitTransaction, submitSignedTx} from '../../actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
 import {withNavigationTitle} from '../../utils/renderUtils'
-import {formatAdaWithSymbol, formatAdaWithText} from '../../utils/format'
+import {formatTokenWithSymbol, formatTokenWithText} from '../../utils/format'
 import {NetworkError, ApiError} from '../../api/errors'
 import {WrongPassword} from '../../crypto/errors'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
@@ -44,8 +46,9 @@ import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
 import LedgerConnect from '../Ledger/LedgerConnect'
 import HWInstructions from '../Ledger/HWInstructions'
 import LocalizableError from '../../i18n/LocalizableError'
+import {ISignRequest} from '../../crypto/ISignRequest'
 
-import type {BaseSignRequest} from '../../crypto/types'
+import type {CreateUnsignedTxResponse} from '../../crypto/shelley/transactionUtils'
 
 import styles from './styles/ConfirmScreen.style'
 
@@ -76,17 +79,16 @@ const handleOnConfirm = async (
   useUSB,
   setErrorData,
 ) => {
-  const transactionData = route.params.transactionData // ISignRequest
-  const signRequest = transactionData.signRequest
+  const signRequest: CreateUnsignedTxResponse = route.params.transactionData
 
   const submitTx = async <T>(
-    tx: string | BaseSignRequest<T>,
+    tx: string | ISignRequest<T>,
     decryptedKey: ?string,
   ) => {
     await withPleaseWaitModal(async () => {
       try {
         if (decryptedKey != null) {
-          await submitTransaction(decryptedKey, tx)
+          await submitTransaction(tx, decryptedKey)
         } else {
           await submitSignedTx(tx)
         }
@@ -117,7 +119,7 @@ const handleOnConfirm = async (
     withDisabledButton(async () => {
       try {
         const signedTx = await walletManager.signTxWithLedger(
-          transactionData,
+          signRequest,
           useUSB,
         )
         await submitTx(Buffer.from(signedTx.encodedTx).toString('base64'))
@@ -211,6 +213,7 @@ const ConfirmScreen = ({
   setPassword,
   isEasyConfirmationEnabled,
   isHW,
+  defaultAsset,
   sendingTransaction,
   buttonDisabled,
   ledgerDialogStep,
@@ -224,7 +227,19 @@ const ConfirmScreen = ({
   errorMessage,
   errorLogs,
 }) => {
-  const {amount, address, balanceAfterTx, availableAmount, fee} = route.params
+  const {
+    amount,
+    address,
+    balanceAfterTx,
+    availableAmount,
+    fee,
+  }: {|
+    amount: BigNumber,
+    address: string,
+    balanceAfterTx: BigNumber,
+    availableAmount: BigNumber,
+    fee: BigNumber,
+  |} = route.params
 
   const isConfirmationDisabled =
     !isEasyConfirmationEnabled && !password && !isHW
@@ -237,17 +252,18 @@ const ConfirmScreen = ({
         <OfflineBanner />
         <Banner
           label={intl.formatMessage(globalMessages.availableFunds)}
-          text={formatAdaWithText(availableAmount)}
+          text={formatTokenWithText(availableAmount, defaultAsset)}
           boldText
         />
 
         <ScrollView style={styles.container}>
           <Text small>
-            {intl.formatMessage(txLabels.fees)}: {formatAdaWithSymbol(fee)}
+            {intl.formatMessage(txLabels.fees)}:{' '}
+            {formatTokenWithSymbol(fee, defaultAsset)}
           </Text>
           <Text small>
             {intl.formatMessage(txLabels.balanceAfterTx)}:{' '}
-            {formatAdaWithSymbol(balanceAfterTx)}
+            {formatTokenWithSymbol(balanceAfterTx, defaultAsset)}
           </Text>
 
           <Text style={styles.heading} small>
@@ -257,7 +273,7 @@ const ConfirmScreen = ({
           <Text style={styles.heading} small>
             {intl.formatMessage(txLabels.amount)}
           </Text>
-          <Text>{formatAdaWithSymbol(amount)}</Text>
+          <Text>{formatTokenWithSymbol(amount, defaultAsset)}</Text>
 
           {/* eslint-disable indent */
           !isEasyConfirmationEnabled &&
@@ -338,6 +354,7 @@ export default injectIntl(
         isEasyConfirmationEnabled: easyConfirmationSelector(state),
         isHW: isHWSelector(state),
         hwDeviceInfo: hwDeviceInfoSelector(state),
+        defaultAsset: defaultNetworkAssetSelector(state),
       }),
       {
         submitTransaction,

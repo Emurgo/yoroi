@@ -8,14 +8,15 @@ import {
   TransactionBuilder,
   TransactionMetadata, // TODO: rust bindings not yet available
   hash_transaction,
-} from 'react-native-haskell-shelley'
+} from '@emurgo/react-native-haskell-shelley'
 
 import {CONFIG} from '../../config/config'
-import {toHexOrBase58} from './utils'
+import {multiTokenFromCardanoValue, toHexOrBase58} from './utils'
+import {MultiToken} from '../MultiToken'
 
-import type {BaseSignRequest} from '../types'
+import type {Address, AddressedUtxo, Addressing, Value} from '../types'
 
-const NUMBERS = CONFIG.NUMBERS
+const PRIMARY_ASSET_CONSTANTS = CONFIG.PRIMARY_ASSET_CONSTANTS
 
 export const shelleyTxEqual = async (
   req1: TransactionBuilder,
@@ -42,6 +43,7 @@ export const shelleyTxEqual = async (
  */
 type NetworkSettingSnapshot = {|
   // there is no way given just a transaction body to 100% know which network it belongs to
+  +NetworkId: number,
   +ChainNetworkId: number,
   +PoolDeposit: BigNumber,
   +KeyDeposit: BigNumber,
@@ -49,8 +51,10 @@ type NetworkSettingSnapshot = {|
 // prettier-ignore
 export class HaskellShelleyTxSignRequest
 implements ISignRequest<TransactionBuilder> {
-  signRequest: BaseSignRequest<TransactionBuilder>
-  metadata: void | TransactionMetadata // TODO: shouldn't need this
+  senderUtxos: Array<AddressedUtxo>
+  unsignedTx: TransactionBuilder
+  changeAddr: Array<{| ...Address, ...Value, ...Addressing |}>
+  metadata: void | TransactionMetadata
   networkSettingSnapshot: NetworkSettingSnapshot
   // TODO: this should be provided by WASM in some SignedTxBuilder interface of some kind
   neededStakingKeyHashes: {|
@@ -59,7 +63,9 @@ implements ISignRequest<TransactionBuilder> {
   |}
 
   constructor(
-    signRequest: BaseSignRequest<TransactionBuilder>,
+    senderUtxos: Array<AddressedUtxo>,
+    unsignedTx: TransactionBuilder,
+    changeAddr: Array<{| ...Address, ...Value, ...Addressing |}>,
     metadata: void | TransactionMetadata,
     networkSettingSnapshot: NetworkSettingSnapshot,
     neededStakingKeyHashes: {|
@@ -67,7 +73,9 @@ implements ISignRequest<TransactionBuilder> {
       wits: Set<string>, // Vkeywitness
     |},
   ) {
-    this.signRequest = signRequest
+    this.senderUtxos = senderUtxos
+    this.unsignedTx = unsignedTx
+    this.changeAddr = changeAddr
     this.metadata = metadata
     this.networkSettingSnapshot = networkSettingSnapshot
     this.neededStakingKeyHashes = neededStakingKeyHashes
@@ -76,7 +84,7 @@ implements ISignRequest<TransactionBuilder> {
   async txId(): Promise<string> {
     return Buffer.from(
       await (await hash_transaction(
-        await this.signRequest.unsignedTx.build(),
+        await this.unsignedTx.build(),
       )).to_bytes(),
     ).toString('hex')
   }
@@ -85,55 +93,55 @@ implements ISignRequest<TransactionBuilder> {
     return this.metadata
   }
 
-  async totalInput(shift: boolean): Promise<BigNumber> {
-    const inputTotal = await (
-      await this.signRequest.unsignedTx.get_implicit_input()
-    ).checked_add(
-      await this.signRequest.unsignedTx.get_explicit_input(),
+  async totalInput(): Promise<MultiToken> {
+    const values = await multiTokenFromCardanoValue(
+      await (await this.unsignedTx.get_implicit_input()).checked_add(
+        await this.unsignedTx.get_explicit_input()
+      ),
+      {
+        defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
+        defaultNetworkId: this.networkSettingSnapshot.NetworkId,
+      },
     )
+    this.changeAddr.forEach((change) => values.joinSubtractMutable(change.values))
 
-    const change = this.signRequest.changeAddr
-      .map((val) => new BigNumber(val.value || new BigNumber(0)))
-      .reduce((sum, val) => sum.plus(val), new BigNumber(0))
-    const result = new BigNumber(await inputTotal.to_str()).minus(change)
-    if (shift) {
-      return result.shiftedBy(-NUMBERS.DECIMAL_PLACES_IN_ADA)
-    }
-    return result
+    return values
   }
 
-  async totalOutput(shift: boolean): Promise<BigNumber> {
-    const totalOutput = await this.signRequest.unsignedTx.get_explicit_output()
-
-    const result = new BigNumber(await totalOutput.to_str())
-    if (shift) {
-      return result.shiftedBy(-NUMBERS.DECIMAL_PLACES_IN_ADA)
-    }
-    return result
+  async totalOutput(): Promise<MultiToken> {
+    return multiTokenFromCardanoValue(
+      await this.unsignedTx.get_explicit_output(),
+      {
+        defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
+        defaultNetworkId: this.networkSettingSnapshot.NetworkId,
+      },
+    )
   }
 
-  async fee(shift: boolean): Promise<BigNumber> {
-    const _fee = await this.signRequest.unsignedTx.get_fee_if_set()
+  async fee(): Promise<MultiToken> {
+    const values = new MultiToken(
+      [],
+      {
+        defaultNetworkId: this.networkSettingSnapshot.NetworkId,
+        defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
+      }
+    )
+    const _fee = await this.unsignedTx.get_fee_if_set()
     const fee = new BigNumber(
       _fee != null ? await _fee.to_str() : '0',
-    ).plus(await (await this.signRequest.unsignedTx.get_deposit()).to_str())
+    ).plus(await (await this.unsignedTx.get_deposit()).to_str())
 
-    if (shift) {
-      return fee.shiftedBy(-NUMBERS.DECIMAL_PLACES_IN_ADA)
-    }
-    return fee
+    values.add({
+      identifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
+      amount: fee,
+      networkId: this.networkSettingSnapshot.NetworkId,
+    })
+    return values
   }
 
-  async withdrawals(
-    shift: boolean,
-  ): Promise<
-    Array<{|
-      address: string,
-      amount: BigNumber,
-    |}>,
-  > {
+  async withdrawals(): Promise<Array<{|address: string, amount: MultiToken|}>> {
     // prettier-ignore
-    const withdrawals = await (await this.signRequest.unsignedTx
+    const withdrawals = await (await this.unsignedTx
       .build())
       .withdrawals()
     if (withdrawals == null) return []
@@ -146,11 +154,17 @@ implements ISignRequest<TransactionBuilder> {
       if (withdrawalAmountPtr == null) continue
       const withdrawalAmount = await withdrawalAmountPtr.to_str()
 
-      const amount = shift
-        ? new BigNumber(withdrawalAmount).shiftedBy(
-          -NUMBERS.DECIMAL_PLACES_IN_ADA,
-        )
-        : new BigNumber(withdrawalAmount)
+      const amount = new MultiToken(
+        [{
+          identifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
+          amount: new BigNumber(withdrawalAmount),
+          networkId: this.networkSettingSnapshot.NetworkId,
+        }],
+        {
+          defaultNetworkId: this.networkSettingSnapshot.NetworkId,
+          defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
+        }
+      )
       result.push({
         address: Buffer.from(
           await (await rewardAddress.to_address()).to_bytes(),
@@ -161,15 +175,12 @@ implements ISignRequest<TransactionBuilder> {
     return result
   }
 
-  async keyDeregistrations(
-    shift: boolean,
-  ): Promise<
+  async keyDeregistrations(): Promise<
     Array<{|
       rewardAddress: string,
-      refund: BigNumber,
-    |}>,
-  > {
-    const certs = await (await this.signRequest.unsignedTx.build()).certs()
+      refund: MultiToken,
+    |}>> {
+    const certs = await (await this.unsignedTx.build()).certs()
     if (certs == null) return []
 
     const result = []
@@ -186,18 +197,24 @@ implements ISignRequest<TransactionBuilder> {
           await (await address.to_address()).to_bytes(),
         ).toString('hex'),
         // recall: for now you get the full deposit back. May change in the future
-        refund: shift
-          ? this.networkSettingSnapshot.KeyDeposit.shiftedBy(
-            -NUMBERS.DECIMAL_PLACES_IN_ADA,
-          )
-          : this.networkSettingSnapshot.KeyDeposit,
+        refund: new MultiToken(
+          [{
+            identifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
+            amount: this.networkSettingSnapshot.KeyDeposit,
+            networkId: this.networkSettingSnapshot.NetworkId,
+          }],
+          {
+            defaultNetworkId: this.networkSettingSnapshot.NetworkId,
+            defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
+          }
+        ),
       })
     }
     return result
   }
 
   async receivers(includeChange: boolean): Promise<Array<string>> {
-    const outputs = await (await this.signRequest.unsignedTx.build()).outputs()
+    const outputs = await (await this.unsignedTx.build()).outputs()
 
     const outputStrings = []
     for (let i = 0; i < (await outputs.len()); i++) {
@@ -207,7 +224,7 @@ implements ISignRequest<TransactionBuilder> {
     }
 
     if (!includeChange) {
-      const changeAddrs = this.signRequest.changeAddr.map(
+      const changeAddrs = this.changeAddr.map(
         (change) => change.address,
       )
       return outputStrings.filter((addr) => !changeAddrs.includes(addr))
@@ -217,7 +234,7 @@ implements ISignRequest<TransactionBuilder> {
 
   uniqueSenderAddresses(): Array<string> {
     return Array.from(
-      new Set(this.signRequest.senderUtxos.map((utxo) => utxo.receiver)),
+      new Set(this.senderUtxos.map((utxo) => utxo.receiver)),
     )
   }
 
@@ -226,10 +243,10 @@ implements ISignRequest<TransactionBuilder> {
     if (!(tx instanceof TransactionBuilder)) {
       return false
     }
-    return await shelleyTxEqual(this.signRequest.unsignedTx, tx)
+    return await shelleyTxEqual(this.unsignedTx, tx)
   }
 
-  self(): BaseSignRequest<TransactionBuilder> {
-    return this.signRequest
+  self(): TransactionBuilder {
+    return this.unsignedTx
   }
 }

@@ -11,7 +11,7 @@ import {
   Bip32PublicKey,
   StakeCredential,
   RewardAddress,
-} from 'react-native-haskell-shelley'
+} from '@emurgo/react-native-haskell-shelley'
 
 import {CONFIG, isByron, isHaskellShelley} from '../../config/config'
 import assert from '../../utils/assert'
@@ -20,7 +20,6 @@ import {Logger} from '../../utils/logging'
 import * as util from '../byron/util'
 import {ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
 
-import type {Dict} from '../../state'
 import type {CryptoAccount} from '../byron/util'
 import type {AddressType} from '../commonUtils'
 import type {WalletImplementationId} from '../../config/types'

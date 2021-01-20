@@ -7,15 +7,18 @@ import {View, Linking, TouchableOpacity} from 'react-native'
 import _ from 'lodash'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {BigNumber} from 'bignumber.js'
 
 import {
   transactionsInfoSelector,
   internalAddressIndexSelector,
   externalAddressIndexSelector,
   walletMetaSelector,
+  availableAssetsSelector,
+  defaultNetworkAssetSelector,
 } from '../../selectors'
 import {withNavigationTitle} from '../../utils/renderUtils'
-import {formatAdaWithSymbol, formatDateToSeconds} from '../../utils/format'
+import {formatTokenWithSymbol, formatDateToSeconds} from '../../utils/format'
 import {Text, Button, OfflineBanner, Banner, StatusBar} from '../UiKit'
 import Screen from '../../components/Screen'
 import {getNetworkConfigById} from '../../config/networks'
@@ -26,7 +29,7 @@ import styles from './styles/TxDetails.style'
 import type {State} from '../../state'
 import type {Navigation} from '../../types/navigation'
 import type {ComponentType} from 'react'
-import {TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
+import {TRANSACTION_DIRECTION, type Token} from '../../types/HistoryTransaction'
 
 const txTypeMessages = defineMessages({
   SENT: {
@@ -104,12 +107,12 @@ const messages = defineMessages({
 
 const Label = ({children}) => <Text style={styles.label}>{children}</Text>
 
-const AdaAmount = ({amount}) => {
+const AdaAmount = ({amount, token}: {amount: BigNumber, token: Token}) => {
   const amountStyle = amount.gte(0)
     ? styles.positiveAmount
     : styles.negativeAmount
 
-  return <Text style={amountStyle}>{formatAdaWithSymbol(amount)}</Text>
+  return <Text style={amountStyle}>{formatTokenWithSymbol(amount, token)}</Text>
 }
 
 const AddressEntry = withHandlers({
@@ -211,6 +214,8 @@ const TxDetails = ({
   transaction,
   internalAddressIndex,
   externalAddressIndex,
+  availableAssets,
+  defaultNetworkAsset,
   openInExplorer,
   showModalForAddress,
   addressDetail,
@@ -227,7 +232,14 @@ const TxDetails = ({
     internalAddressIndex,
     externalAddressIndex,
   )
-  const txFee = transaction.fee
+  const txFee: ?BigNumber = transaction.fee
+    ? transaction.fee.getDefault()
+    : null
+  const amount: BigNumber = transaction.amount.getDefault()
+  const amountDefaultAsset: ?Token =
+    availableAssets[transaction.amount.getDefaultId()]
+
+  const defaultAsset = amountDefaultAsset || defaultNetworkAsset
 
   return (
     <View style={styles.container}>
@@ -238,15 +250,11 @@ const TxDetails = ({
         <Banner
           label={intl.formatMessage(txTypeMessages[transaction.direction])}
         >
-          {transaction.amount && (
-            <AdaAmount
-              amount={transaction.amount}
-              direction={transaction.direction}
-            />
-          )}
+          <AdaAmount amount={amount} token={defaultAsset} />
           {txFee && (
             <Text small>
-              {intl.formatMessage(messages.fee)} {formatAdaWithSymbol(txFee)}
+              {intl.formatMessage(messages.fee)}{' '}
+              {formatTokenWithSymbol(txFee, defaultAsset)}
             </Text>
           )}
         </Banner>
@@ -305,6 +313,8 @@ export default injectIntl(
         internalAddressIndex: internalAddressIndexSelector(state),
         externalAddressIndex: externalAddressIndexSelector(state),
         walletMeta: walletMetaSelector(state),
+        availableAssets: availableAssetsSelector(state),
+        defaultNetworkAsset: defaultNetworkAssetSelector(state),
       }
     }),
     withNavigationTitle(({transaction}) =>

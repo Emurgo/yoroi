@@ -1,15 +1,13 @@
 // @flow
-import {BigNumber} from 'bignumber.js'
-
-import type {BaseSignRequest} from './types'
+import {MultiToken} from './MultiToken'
 
 export interface ISignRequest<T> {
-  totalInput(shift: boolean): Promise<BigNumber>;
-  totalOutput(shift: boolean): Promise<BigNumber>;
-  fee(shift: boolean): Promise<BigNumber>;
+  totalInput(shift: boolean): Promise<MultiToken>;
+  totalOutput(shift: boolean): Promise<MultiToken>;
+  fee(): Promise<MultiToken>;
   uniqueSenderAddresses(): Array<string>;
   receivers(includeChange: boolean): Promise<Array<string>>;
   isEqual(tx: ?mixed): Promise<boolean>;
 
-  self(): BaseSignRequest<T>;
+  self(): T;
 }

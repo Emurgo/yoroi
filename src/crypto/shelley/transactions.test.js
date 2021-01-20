@@ -17,15 +17,15 @@ import {
   StakeRegistration,
   StakeDeregistration,
   TransactionBody,
-  TransactionBuilder,
   TransactionHash,
   TransactionInput,
   TransactionInputs,
   TransactionOutput,
   TransactionOutputs,
+  Value,
   make_vkey_witness,
   hash_transaction,
-} from 'react-native-haskell-shelley'
+} from '@emurgo/react-native-haskell-shelley'
 
 import {
   newAdaUnsignedTx,
@@ -34,21 +34,25 @@ import {
   signTransaction,
 } from './transactions'
 import {InsufficientFunds, NoOutputsError} from '../errors'
-import {byronAddrToHex} from './utils'
-import {NUMBERS} from '../../config/numbers'
+import {byronAddrToHex, identifierToCardanoAsset} from './utils'
+import {CONFIG, getDefaultAssets} from '../../config/config'
 import {NETWORKS} from '../../config/networks'
+import {MultiToken} from '../MultiToken'
 
-import type {
-  Address,
-  Addressing,
-  AddressedUtxo,
-  BaseSignRequest,
-} from '../types'
+import type {Address, Addressing, AddressedUtxo} from '../types'
 import type {RawUtxo} from '../../api/types'
 
 jestSetup.setup()
 
+const NUMBERS = CONFIG.NUMBERS
 const NETWORK = NETWORKS.HASKELL_SHELLEY
+
+const defaultIdentifier = getDefaultAssets().filter(
+  (asset) => asset.networkId === NETWORK.NETWORK_ID,
+)[0].identifier
+
+const testAssetId =
+  'd27197682d71905c087c5c3b61b10e6d746db0b9bef351014d75bb26.6e69636f696e'
 
 const genSampleUtxos: (void) => Promise<Array<RawUtxo>> = async () => [
   {
@@ -60,6 +64,7 @@ const genSampleUtxos: (void) => Promise<Array<RawUtxo>> = async () => [
     tx_index: 0,
     utxo_id:
       '05ec4a4a7f4645fa66886cef2e34706907a3a7f9d88e0d48b313ad2cdf76fb5f0',
+    assets: [],
   },
   {
     amount: '1000001',
@@ -70,6 +75,7 @@ const genSampleUtxos: (void) => Promise<Array<RawUtxo>> = async () => [
     tx_index: 0,
     utxo_id:
       '6930f123df83e4178b0324ae617b2028c0b38c6ff4660583a2abf1f7b08195fe0',
+    assets: [],
   },
   {
     amount: '10000001',
@@ -80,6 +86,7 @@ const genSampleUtxos: (void) => Promise<Array<RawUtxo>> = async () => [
     tx_index: 0,
     utxo_id:
       '0df0273e382739f8b4ae3783d81168093e78e0b48ec2c5430ff03d444806a1730',
+    assets: [],
   },
   {
     amount: '30000000',
@@ -93,6 +100,28 @@ const genSampleUtxos: (void) => Promise<Array<RawUtxo>> = async () => [
     tx_index: 0,
     utxo_id:
       '86e36b6a65d82c9dcc0370b0ee3953aee579db0b837753306405c28a74de55500',
+    assets: [],
+  },
+  {
+    amount: '1000001',
+    receiver: Buffer.from(
+      await ShelleyAddress.from_bech32(
+        // external addr 0, staking key 0
+        'addr1q8gpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqphf76y',
+      ).to_bytes(),
+    ).toString('hex'),
+    tx_hash: '86e36b6a65d82c9dcc0370b0ee3953aee579db0b837753306405c28a74de5550',
+    tx_index: 0,
+    utxo_id:
+      '86e36b6a65d82c9dcc0370b0ee3953aee579db0b837753306405c28a74de55500',
+    assets: [
+      {
+        amount: '1234',
+        assetId: testAssetId,
+        policyId: testAssetId.split('.')[0],
+        name: testAssetId.split('.')[1],
+      },
+    ],
   },
 ]
 
@@ -161,6 +190,7 @@ const getProtocolParams: () => Promise<{|
   minimumUtxoVal: BigNum,
   poolDeposit: BigNum,
   keyDeposit: BigNum,
+  networkId: number,
 |}> = async () => {
   return {
     linearFee: await LinearFee.new(
@@ -170,12 +200,27 @@ const getProtocolParams: () => Promise<{|
     minimumUtxoVal: await BigNum.from_str('1'),
     poolDeposit: await BigNum.from_str('500'),
     keyDeposit: await BigNum.from_str('500'),
+    networkId: NETWORK.NETWORK_ID,
   }
 }
 
 describe('Create unsigned TX from UTXO', () => {
   it('Should fail due to insufficient funds (bigger than all inputs)', async () => {
     const sampleUtxos = await genSampleUtxos()
+    const output = new MultiToken(
+      [
+        {
+          // bigger than input including fees
+          amount: new BigNumber(1900001),
+          identifier: defaultIdentifier,
+          networkId: NETWORK.NETWORK_ID,
+        },
+      ],
+      {
+        defaultIdentifier,
+        defaultNetworkId: NETWORK.NETWORK_ID,
+      },
+    )
     const utxos: Array<RawUtxo> = [sampleUtxos[1]]
     const promise = newAdaUnsignedTxFromUtxo(
       [
@@ -183,7 +228,7 @@ describe('Create unsigned TX from UTXO', () => {
           address: await byronAddrToHex(
             'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
           ),
-          amount: '1900001', // bigger than input including fees
+          amount: output,
         },
       ],
       undefined,
@@ -198,17 +243,31 @@ describe('Create unsigned TX from UTXO', () => {
   })
 
   it('Should fail due to insufficient funds (no inputs)', async () => {
+    const output = new MultiToken(
+      [
+        {
+          // bigger than input including fees
+          amount: new BigNumber(1),
+          identifier: defaultIdentifier,
+          networkId: NETWORK.NETWORK_ID,
+        },
+      ],
+      {
+        defaultIdentifier,
+        defaultNetworkId: NETWORK.NETWORK_ID,
+      },
+    )
     const promise = newAdaUnsignedTxFromUtxo(
       [
         {
           address: await byronAddrToHex(
             'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
           ),
-          amount: '1', // bigger than input including fees
+          amount: output,
         },
       ],
       undefined,
-      [],
+      [], // no utxos
       new BigNumber(0),
       await getProtocolParams(),
       [],
@@ -219,6 +278,20 @@ describe('Create unsigned TX from UTXO', () => {
   })
 
   it('Should fail due to insufficient funds (not enough to cover fees)', async () => {
+    const output = new MultiToken(
+      [
+        {
+          // bigger than input including fees
+          amount: new BigNumber(1),
+          identifier: defaultIdentifier,
+          networkId: NETWORK.NETWORK_ID,
+        },
+      ],
+      {
+        defaultIdentifier,
+        defaultNetworkId: NETWORK.NETWORK_ID,
+      },
+    )
     const sampleUtxos = await genSampleUtxos()
     const utxos: Array<RawUtxo> = [sampleUtxos[0]]
     const promise = newAdaUnsignedTxFromUtxo(
@@ -227,7 +300,7 @@ describe('Create unsigned TX from UTXO', () => {
           address: await byronAddrToHex(
             'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
           ),
-          amount: '1', // bigger than input including fees
+          amount: output,
         },
       ],
       undefined,
@@ -256,7 +329,8 @@ describe('Create unsigned TX from UTXO', () => {
           new BigNumber(0),
           {
             ...(await getProtocolParams()),
-            minimumUtxoVal: BigNum.from_str('999000'),
+            // high enough that we can't send the remaining amount as change
+            minimumUtxoVal: BigNum.from_str('999100'),
           },
           [],
           [],
@@ -302,7 +376,7 @@ describe('Create unsigned TX from UTXO', () => {
   it('Should fail due to no outputs', async () => {
     const sampleUtxos = await genSampleUtxos()
     const utxos: Array<RawUtxo> = [sampleUtxos[1]]
-    expect(
+    await expect(
       (async () =>
         newAdaUnsignedTxFromUtxo(
           [],
@@ -317,20 +391,36 @@ describe('Create unsigned TX from UTXO', () => {
     ).rejects.toThrow(NoOutputsError)
   })
 
-  it('Should pick inputs when using input selection', async () => {
+  it('Should pick ada-only inputs when using input selection', async () => {
     const utxos: Array<RawUtxo> = await genSampleUtxos()
     const sampleAdaAddresses = await genSampleAdaAddresses()
+
+    const output = new MultiToken(
+      [
+        {
+          // smaller than input
+          amount: new BigNumber(1001),
+          identifier: defaultIdentifier,
+          networkId: NETWORK.NETWORK_ID,
+        },
+      ],
+      {
+        defaultIdentifier,
+        defaultNetworkId: NETWORK.NETWORK_ID,
+      },
+    )
+
     const unsignedTxResponse = await newAdaUnsignedTxFromUtxo(
       [
         {
           address: await byronAddrToHex(
             'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
           ),
-          amount: '1001', // smaller than input
+          amount: output,
         },
       ],
       sampleAdaAddresses[0],
-      utxos,
+      [utxos[0], utxos[1], utxos[2], utxos[3]],
       new BigNumber(0),
       await getProtocolParams(),
       [],
@@ -339,29 +429,283 @@ describe('Create unsigned TX from UTXO', () => {
     )
     // input selection will only take 2 of the 3 inputs
     // it takes 2 inputs because input selection algorithm
+    const expectedFee = new BigNumber('1166')
     expect(unsignedTxResponse.senderUtxos).toEqual([utxos[0], utxos[1]])
     expect(
-      await (await unsignedTxResponse.txBuilder.get_explicit_input()).to_str(),
+      await (await (await unsignedTxResponse.txBuilder.get_explicit_input()).coin()).to_str(),
     ).toEqual('1000702')
     expect(
-      await (await unsignedTxResponse.txBuilder.get_explicit_output()).to_str(),
-    ).toEqual('999528')
+      await (await (await unsignedTxResponse.txBuilder.get_explicit_output()).coin()).to_str(),
+    ).toEqual('999536')
     expect(
       await (await unsignedTxResponse.txBuilder.min_fee()).to_str(),
-    ).toEqual('1166')
+    ).toEqual(expectedFee.toString())
+  })
+
+  it('Should exclude ada-only inputs smaller than fee to include them', async () => {
+    const utxos: Array<RawUtxo> = await genSampleUtxos()
+    const sampleAdaAddresses = await genSampleAdaAddresses()
+
+    const output = new MultiToken(
+      [
+        {
+          // smaller than input
+          amount: new BigNumber(1001),
+          identifier: defaultIdentifier,
+          networkId: NETWORK.NETWORK_ID,
+        },
+      ],
+      {
+        defaultIdentifier,
+        defaultNetworkId: NETWORK.NETWORK_ID,
+      },
+    )
+
+    const unsignedTxResponse = await newAdaUnsignedTxFromUtxo(
+      [
+        {
+          address: await byronAddrToHex(
+            'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
+          ),
+          amount: output,
+        },
+      ],
+      sampleAdaAddresses[0],
+      [utxos[0], utxos[1]],
+      new BigNumber(0),
+      {
+        linearFee: await LinearFee.new(
+          // make sure the 1st utxo is excluded since it's too small
+          await BigNum.from_str(
+            new BigNumber(utxos[0].amount).plus(1).toString(),
+          ),
+          await BigNum.from_str('500'),
+        ),
+        minimumUtxoVal: await BigNum.from_str('1'),
+        poolDeposit: await BigNum.from_str('500'),
+        keyDeposit: await BigNum.from_str('500'),
+        networkId: NETWORK.NETWORK_ID,
+      },
+      [],
+      [],
+      true,
+    )
+    // input selection will only take 2 of the 3 inputs
+    // it takes 2 inputs because input selection algorithm
+    const expectedFee = new BigNumber('208994')
+    expect(unsignedTxResponse.senderUtxos).toEqual([utxos[1]])
+    expect(
+      await (await (await unsignedTxResponse.txBuilder.get_explicit_input()).coin()).to_str(),
+    ).toEqual('1000001')
+    expect(
+      await (await (await unsignedTxResponse.txBuilder.get_explicit_output()).coin()).to_str(),
+    ).toEqual('791007')
+    expect(
+      await (await unsignedTxResponse.txBuilder.min_fee()).to_str(),
+    ).toEqual(expectedFee.toString())
+  })
+
+  it('Should pick inputs with tokens when using input selection', async () => {
+    const utxos: Array<RawUtxo> = await genSampleUtxos()
+    const sampleAdaAddresses = await genSampleAdaAddresses()
+
+    const output = new MultiToken(
+      [
+        {
+          // smaller than input
+          amount: new BigNumber(1001),
+          identifier: defaultIdentifier,
+          networkId: NETWORK.NETWORK_ID,
+        },
+        {
+          amount: new BigNumber(1000),
+          identifier: testAssetId,
+          networkId: NETWORK.NETWORK_ID,
+        },
+      ],
+      {
+        defaultIdentifier,
+        defaultNetworkId: NETWORK.NETWORK_ID,
+      },
+    )
+
+    const unsignedTxResponse = await newAdaUnsignedTxFromUtxo(
+      [
+        {
+          address: await byronAddrToHex(
+            'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
+          ),
+          amount: output,
+        },
+      ],
+      sampleAdaAddresses[0],
+      [utxos[0], utxos[1], utxos[2], utxos[3], utxos[4]],
+      new BigNumber(0),
+      await getProtocolParams(),
+      [],
+      [],
+      true,
+    )
+    // input selection will only take 3 of the 5 inputs
+    // it takes 2 inputs after which the ADA amount is satisfied
+    // then it skips inputs until it found an input  containing the desired token
+    const expectedFee = new BigNumber('1614')
+    expect(unsignedTxResponse.senderUtxos).toEqual([
+      utxos[0],
+      utxos[1],
+      utxos[4],
+    ])
+    expect(
+      await (await (await unsignedTxResponse.txBuilder.get_explicit_input()).coin()).to_str(),
+    ).toEqual('2000703')
+    expect(
+      await (await (await unsignedTxResponse.txBuilder.get_explicit_output()).coin()).to_str(),
+    ).toEqual('1999089')
+    expect(
+      await (await unsignedTxResponse.txBuilder.min_fee()).to_str(),
+    ).toEqual(expectedFee.toString())
+
+    const assetInfo = await identifierToCardanoAsset(testAssetId)
+
+    // current version of flow does not allow method calls in optional chains
+    // expect(await (await ((await (await unsignedTxResponse.txBuilder.get_explicit_input()).multiasset())
+    //   ?.get(assetInfo.policyId))
+    //   ?.get(assetInfo.name))
+    //   ?.to_str()
+    // ).toEqual('1234')
+    let _multiAsset = await (await unsignedTxResponse.txBuilder.get_explicit_input()).multiasset()
+    // prettier-ignore
+    let _assetAmountStr =
+      _multiAsset != null
+        ? (await _multiAsset.get(assetInfo.policyId)) != null
+          ? (await (await _multiAsset.get(assetInfo.policyId)).get(
+            assetInfo.name,
+          )) != null
+            ? await (await (await _multiAsset.get(assetInfo.policyId)).get(
+              assetInfo.name,
+            )).to_str()
+            : null
+          : null
+        : null
+    expect(_assetAmountStr).toEqual('1234')
+
+    const tx = await unsignedTxResponse.txBuilder.build()
+    _multiAsset = await (await (await (await tx.outputs()).get(
+      1,
+    )).amount()).multiasset()
+    // prettier-ignore
+    _assetAmountStr =
+      _multiAsset != null
+        ? (await _multiAsset.get(assetInfo.policyId)) != null
+          ? (await (await _multiAsset.get(assetInfo.policyId)).get(
+            assetInfo.name,
+          )) != null
+            ? await (await (await _multiAsset.get(assetInfo.policyId)).get(
+              assetInfo.name,
+            )).to_str()
+            : null
+          : null
+        : null
+    expect(_assetAmountStr).toEqual('234') // expected change
+  })
+
+  it('Should fail when not enough ADA to avoid burning tokens', async () => {
+    const utxos: Array<RawUtxo> = await genSampleUtxos()
+    const sampleAdaAddresses = await genSampleAdaAddresses()
+
+    const output = new MultiToken(
+      [
+        {
+          // smaller than input
+          amount: new BigNumber(900000),
+          identifier: defaultIdentifier,
+          networkId: NETWORK.NETWORK_ID,
+        },
+        {
+          amount: new BigNumber(1000),
+          identifier: testAssetId,
+          networkId: NETWORK.NETWORK_ID,
+        },
+      ],
+      {
+        defaultIdentifier,
+        defaultNetworkId: NETWORK.NETWORK_ID,
+      },
+    )
+
+    expect.assertions(1)
+
+    await expect(
+      newAdaUnsignedTxFromUtxo(
+        [
+          {
+            address: await byronAddrToHex(
+              'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
+            ),
+            amount: output,
+          },
+        ],
+        sampleAdaAddresses[0],
+        [utxos[4]],
+        new BigNumber(0),
+        {
+          ...(await getProtocolParams()),
+          // high enough that we can't send the remaining amount as change
+          minimumUtxoVal: await BigNum.from_str('500000'),
+        },
+        [],
+        [],
+        true,
+      ),
+    ).rejects.toThrow(InsufficientFunds)
+  })
+
+  it('Should succeed when not enough ADA to avoid burning tokens but is sending all', async () => {
+    const utxos: Array<RawUtxo> = await genSampleUtxos()
+    await expect(
+      sendAllUnsignedTxFromUtxo(
+        {
+          address: await byronAddrToHex(
+            'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
+          ),
+        },
+        [utxos[4]],
+        new BigNumber(0),
+        {
+          ...(await getProtocolParams()),
+          // high enough that we can't send the remaining amount as change
+          minimumUtxoVal: await BigNum.from_str('500000'),
+        },
+        undefined,
+      ),
+    ).resolves.not.toThrow(InsufficientFunds)
   })
 })
 
 describe('Create unsigned TX from addresses', () => {
   it('Should create a valid transaction without selection', async () => {
     const addressedUtxos = await genAddressedUtxos()
+    const output = new MultiToken(
+      [
+        {
+          // smaller than input
+          amount: new BigNumber(5001),
+          identifier: defaultIdentifier,
+          networkId: NETWORK.NETWORK_ID,
+        },
+      ],
+      {
+        defaultIdentifier,
+        defaultNetworkId: NETWORK.NETWORK_ID,
+      },
+    )
     const unsignedTxResponse = await newAdaUnsignedTx(
       [
         {
           address: await byronAddrToHex(
             'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
           ),
-          amount: '5001', // smaller than input
+          amount: output,
         },
       ],
       undefined,
@@ -378,21 +722,23 @@ describe('Create unsigned TX from addresses', () => {
     ])
 
     expect(
-      await (await unsignedTxResponse.txBuilder.get_explicit_input()).to_str(),
+      await (await (await unsignedTxResponse.txBuilder.get_explicit_input()).coin()).to_str(),
     ).toEqual('1000702')
     expect(
-      await (await unsignedTxResponse.txBuilder.get_explicit_output()).to_str(),
+      await (await unsignedTxResponse.txBuilder.get_explicit_output())
+        .coin()
+        .to_str(),
     ).toEqual('5001')
     expect(
       await (await unsignedTxResponse.txBuilder.min_fee()).to_str(),
     ).toEqual('1064')
     // burns remaining amount
     expect(
-      await (await (await unsignedTxResponse.txBuilder.get_explicit_input()).checked_sub(
+      await (await (await (await unsignedTxResponse.txBuilder.get_explicit_input()).checked_sub(
         await unsignedTxResponse.txBuilder.get_explicit_output(),
-      )).to_str(),
+      )).coin()).to_str(),
     ).toEqual(
-      await (await await unsignedTxResponse.txBuilder.build().fee()).to_str(),
+      await (await (await unsignedTxResponse.txBuilder.build()).fee()).to_str(),
     )
   })
 })
@@ -400,13 +746,28 @@ describe('Create unsigned TX from addresses', () => {
 describe('Create signed transactions', () => {
   it('Witness should match on valid private key', async () => {
     const addressedUtxos = await genAddressedUtxos()
+
+    const output = new MultiToken(
+      [
+        {
+          // smaller than input
+          amount: new BigNumber(5001),
+          identifier: defaultIdentifier,
+          networkId: NETWORK.NETWORK_ID,
+        },
+      ],
+      {
+        defaultIdentifier,
+        defaultNetworkId: NETWORK.NETWORK_ID,
+      },
+    )
     const unsignedTxResponse = await newAdaUnsignedTx(
       [
         {
           address: await byronAddrToHex(
             'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
           ),
-          amount: '5001', // smaller than input
+          amount: output,
         },
       ],
       undefined,
@@ -417,12 +778,6 @@ describe('Create signed transactions', () => {
       [],
       true,
     )
-    const signRequest: BaseSignRequest<TransactionBuilder> = {
-      changeAddr: unsignedTxResponse.changeAddr,
-      senderUtxos: unsignedTxResponse.senderUtxos,
-      unsignedTx: unsignedTxResponse.txBuilder,
-      certificate: undefined,
-    }
 
     const accountPrivateKey = await Bip32PrivateKey.from_bytes(
       Buffer.from(
@@ -431,7 +786,8 @@ describe('Create signed transactions', () => {
       ),
     )
     const signedTx = await signTransaction(
-      signRequest,
+      unsignedTxResponse.senderUtxos,
+      unsignedTxResponse.txBuilder,
       NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
       accountPrivateKey,
       new Set(),
@@ -497,7 +853,7 @@ describe('Create signed transactions', () => {
             'hex',
           ),
         ),
-        await BigNum.from_str('5001'),
+        await Value.new(await BigNum.from_str('5001')),
       ),
     )
     const txBody = await TransactionBody.new(
@@ -506,9 +862,8 @@ describe('Create signed transactions', () => {
       await BigNum.from_str('1000'),
       0,
     )
-    const signRequest: BaseSignRequest<TransactionBody> = {
-      changeAddr: [],
-      senderUtxos: [
+    const signedTx = await signTransaction(
+      [
         {
           amount: '7001',
           receiver: await byronAddrToHex(
@@ -529,6 +884,7 @@ describe('Create signed transactions', () => {
             ],
             startLevel: 1,
           },
+          assets: [],
         },
         {
           amount: '1000001',
@@ -550,19 +906,16 @@ describe('Create signed transactions', () => {
             ],
             startLevel: 1,
           },
+          assets: [],
         },
       ],
-      unsignedTx: txBody,
-      certificate: undefined,
-    }
-
-    const signedTx = await signTransaction(
-      signRequest,
+      txBody,
       NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
       accountPrivateKey,
       new Set(),
       undefined,
     )
+
     const witnesses = await signedTx.witness_set()
 
     expect(await witnesses.vkeys()).toEqual(undefined)
@@ -595,13 +948,28 @@ describe('Create signed transactions', () => {
     )).to_raw_key()
 
     const addressedUtxos = await genAddressedUtxos()
+
+    const output = new MultiToken(
+      [
+        {
+          // smaller than input
+          amount: new BigNumber(5001),
+          identifier: defaultIdentifier,
+          networkId: NETWORK.NETWORK_ID,
+        },
+      ],
+      {
+        defaultIdentifier,
+        defaultNetworkId: NETWORK.NETWORK_ID,
+      },
+    )
     const unsignedTxResponse = await newAdaUnsignedTx(
       [
         {
           address: await byronAddrToHex(
             'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
           ),
-          amount: '5001', // smaller than input
+          amount: output,
         },
       ],
       undefined,
@@ -633,20 +1001,15 @@ describe('Create signed transactions', () => {
       [],
       true,
     )
-    const signRequest: BaseSignRequest<TransactionBuilder> = {
-      changeAddr: unsignedTxResponse.changeAddr,
-      senderUtxos: unsignedTxResponse.senderUtxos,
-      unsignedTx: unsignedTxResponse.txBuilder,
-      certificate: undefined,
-    }
     const signedTx = await signTransaction(
-      signRequest,
+      unsignedTxResponse.senderUtxos,
+      unsignedTxResponse.txBuilder,
       NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
       accountPrivateKey,
       new Set([
         Buffer.from(
           await (await make_vkey_witness(
-            await hash_transaction(await signRequest.unsignedTx.build()),
+            await hash_transaction(await unsignedTxResponse.txBuilder.build()),
             stakingKey,
           )).to_bytes(),
         ).toString('hex'),
@@ -717,20 +1080,15 @@ describe('Create signed transactions', () => {
       ],
       true,
     )
-    const signRequest: BaseSignRequest<TransactionBuilder> = {
-      changeAddr: unsignedTxResponse.changeAddr,
-      senderUtxos: unsignedTxResponse.senderUtxos,
-      unsignedTx: unsignedTxResponse.txBuilder,
-      certificate: undefined,
-    }
     const signedTx = await signTransaction(
-      signRequest,
+      unsignedTxResponse.senderUtxos,
+      unsignedTxResponse.txBuilder,
       NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
       accountPrivateKey,
       new Set([
         Buffer.from(
           await (await make_vkey_witness(
-            await hash_transaction(await signRequest.unsignedTx.build()),
+            await hash_transaction(await unsignedTxResponse.txBuilder.build()),
             stakingKey,
           )).to_bytes(),
         ).toString('hex'),
@@ -750,10 +1108,12 @@ describe('Create signed transactions', () => {
     if (withdrawals == null) throw new Error('Withdrawals should not be null')
     expect(await withdrawals.len()).toEqual(1)
     const fee = await (await txBody.fee()).to_str()
-    expect(fee).toEqual('1310')
+    expect(fee).toEqual('1302')
     expect(await (await txBody.outputs()).len()).toEqual(1)
     expect(
-      await (await (await (await txBody.outputs()).get(0)).amount()).to_str(),
+      await (await (await (await (await txBody.outputs()).get(
+        0,
+      )).amount()).coin()).to_str(),
     ).toEqual(
       new BigNumber(addressedUtxos[3].amount)
         .minus(fee)
@@ -769,50 +1129,54 @@ describe('Create signed transactions', () => {
     ].sort()
 
     expect(witArray).toEqual([
-      '82582001c01f8b958699ae769a246e9785db5a70e023977ea4b856dfacf23c23346caf5840ed278dd61c950a8e8c8a5252dd028ac5ccde0571be351bd84e7d363071bb852ae803d5cd882036d3d6495a3a20078c3843c15be6c76236bc5f25f432acf3f108',
-      '82582038c14a0756e1743081a8ebfdb9169b11283a7bf6c38045c4c4a5e62a7689639d5840f533e0d1bad015c5b2f409309405c58ae27f5da6b38e24f3e7b92faba77dee0021865d6a2b70dcc3cb5b816469affd42f0aff83edf5c4773c861ee0255991f03',
+      '82582001c01f8b958699ae769a246e9785db5a70e023977ea4b856dfacf23c23346caf5840d684b2ee3f8959eb76024280903236edebb244e41c16bafca05d0a30669c7e9df19c3896002c976d8734e25a64d7273b5b58400102fffeb4f858a81f191c8204',
+      '82582038c14a0756e1743081a8ebfdb9169b11283a7bf6c38045c4c4a5e62a7689639d5840168146e19cf1074036b48b0ba6b26f9ff08cd2e6fa381f84480e9c8c9fb582a5c8d85062e62809143b1c0edc4b9412b5504f78f3de6413386a0088d302d2b301',
     ])
   })
 })
 
 describe('Create sendAll unsigned TX from UTXO', () => {
-  describe('Create send-all TX from UTXO', () => {
-    it('Create a transaction involving all input with no change', async () => {
-      const sampleUtxos = await genSampleUtxos()
-      const utxos: Array<RawUtxo> = [sampleUtxos[1], sampleUtxos[2]]
-      const sendAllResponse = await sendAllUnsignedTxFromUtxo(
-        await byronAddrToHex(
+  it('Create a transaction involving all input with no change', async () => {
+    const sampleUtxos = await genSampleUtxos()
+    const utxos: Array<RawUtxo> = [sampleUtxos[1], sampleUtxos[2]]
+    const sendAllResponse = await sendAllUnsignedTxFromUtxo(
+      {
+        address: await byronAddrToHex(
           'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
         ),
-        utxos,
-        new BigNumber(0),
-        await getProtocolParams(),
-      )
+      },
+      utxos,
+      new BigNumber(0),
+      await getProtocolParams(),
+    )
+    const expectedFee = new BigNumber('1342')
+    const expectedInput = new BigNumber('11000002')
 
-      expect(sendAllResponse.senderUtxos).toEqual([utxos[0], utxos[1]])
-      expect(
-        await (await sendAllResponse.txBuilder.get_explicit_input()).to_str(),
-      ).toEqual('11000002')
-      expect(
-        await (await sendAllResponse.txBuilder.get_explicit_output()).to_str(),
-      ).toEqual('10998652')
-      expect(
-        await (await sendAllResponse.txBuilder.min_fee()).to_str(),
-      ).toEqual('1342')
-      // make sure we don't accidentally burn a lot of coins
-      expect(
-        await (await (await sendAllResponse.txBuilder.get_explicit_input()).checked_sub(
-          await sendAllResponse.txBuilder.get_explicit_output(),
-        )).to_str(),
-      ).toEqual('1350')
-    })
+    expect(sendAllResponse.senderUtxos).toEqual([utxos[0], utxos[1]])
+    expect(
+      await (await (await sendAllResponse.txBuilder.get_explicit_input()).coin()).to_str(),
+    ).toEqual(expectedInput.toString())
+    expect(
+      await (await (await sendAllResponse.txBuilder.get_explicit_output()).coin()).to_str(),
+    ).toEqual(expectedInput.minus(expectedFee).toString())
+    expect(await (await sendAllResponse.txBuilder.min_fee()).to_str()).toEqual(
+      expectedFee.toString(),
+    )
+    // make sure we don't accidentally burn a lot of coins
+    expect(
+      await (await (await (await sendAllResponse.txBuilder.get_explicit_input()).checked_sub(
+        await sendAllResponse.txBuilder.get_explicit_output(),
+      )).coin()).to_str(),
+    ).toEqual(expectedFee.toString())
   })
 
   it('Should fail due to insufficient funds (no inputs)', async () => {
     const promise = sendAllUnsignedTxFromUtxo(
-      await byronAddrToHex(
-        'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-      ),
+      {
+        address: await byronAddrToHex(
+          'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
+        ),
+      },
       [],
       new BigNumber(0),
       await getProtocolParams(),
@@ -824,9 +1188,11 @@ describe('Create sendAll unsigned TX from UTXO', () => {
     const sampleUtxos = await genSampleUtxos()
     const utxos: Array<RawUtxo> = [sampleUtxos[0]]
     const promise = sendAllUnsignedTxFromUtxo(
-      await byronAddrToHex(
-        'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-      ),
+      {
+        address: await byronAddrToHex(
+          'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
+        ),
+      },
       utxos,
       new BigNumber(0),
       await getProtocolParams(),

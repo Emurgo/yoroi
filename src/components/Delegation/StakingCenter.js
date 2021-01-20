@@ -21,6 +21,7 @@ import {
   isOnlineSelector,
   utxosSelector,
   accountBalanceSelector,
+  defaultNetworkAssetSelector,
 } from '../../selectors'
 import UtxoAutoRefresher from '../Send/UtxoAutoRefresher'
 import AccountAutoRefresher from './AccountAutoRefresher'
@@ -131,6 +132,7 @@ export default injectIntl(
       utxos: utxosSelector(state),
       accountBalance: accountBalanceSelector(state),
       isOnline: isOnlineSelector(state),
+      defaultAsset: defaultNetworkAssetSelector(state),
     })),
     withStateHandlers(
       {
@@ -164,6 +166,7 @@ export default injectIntl(
         accountBalance,
         utxos,
         intl,
+        defaultAsset,
       }) => async (selectedPools: Array<SelectedPool>) => {
         try {
           const selectedPool = selectedPools[0]
@@ -171,8 +174,9 @@ export default injectIntl(
             selectedPool.poolHash,
             accountBalance,
             utxos,
+            defaultAsset,
           )
-          const transactionFee = await transactionData.signTxRequest.fee(false)
+          const transactionFee = await transactionData.signRequest.fee()
           navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM, {
             poolName: selectedPool.poolName,
             poolHash: selectedPool.poolHash,

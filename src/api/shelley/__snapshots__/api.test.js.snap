@@ -12,6 +12,7 @@ Object {
     Object {
       "address": "DdzFFzCqrhstJ7CLwbESFGX73gJw9inpvFnQjDn9QCpEXPUBdsw5NGHJnvwPB9Vkx6Jf6JPiWh9JQqwV9RDMfec3RSD968vWLwTNwRKE",
       "amount": "91951210",
+      "assets": Array [],
     },
   ],
   "lastUpdatedAt": Any<String>,
@@ -19,10 +20,12 @@ Object {
     Object {
       "address": "Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7",
       "amount": "5000000",
+      "assets": Array [],
     },
     Object {
       "address": "DdzFFzCqrht3ZCWKPX3a1vHCjrhASfxdXMhdtus6eUcPhnB4o8pPdbggnuCM8dCyPhFnBtszUHkd8wtT4NVqEeypyTAiP2btobSNYC46",
       "amount": "86781326",
+      "assets": Array [],
     },
   ],
   "slot": 11945,

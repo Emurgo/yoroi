@@ -59,7 +59,7 @@ const messages = defineMessages({
   },
   buttonText: {
     id: 'components.walletinit.verifyrestoredwallet.buttonText',
-    defaultMessage: '!!!Wallet Instruction',
+    defaultMessage: '!!!Continue',
   },
 })
 
