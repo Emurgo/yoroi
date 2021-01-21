@@ -25,6 +25,10 @@ node_modules/warning/.*
 ; Ignore findup (storybook dependency)
 .*/node_modules/findup/test/.*
 
+; Ignore immer (re-enable once we are on >= flow-bin@0.101.0)
+.*/node_modules/immer/dist/index.js.flow
+.*/node_modules/immer/src/types/index.js.flow
+
 [untyped]
 .*/node_modules/@react-native-community/cli/.*/.*
 
