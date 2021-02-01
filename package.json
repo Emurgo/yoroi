@@ -118,7 +118,7 @@
     "babel-plugin-react-intl": "^3.0.1",
     "babel-plugin-require-context-hook": "^1.0.0",
     "detox": "16.7.2",
-    "eslint": "6.5.1",
+    "eslint": "7.19.0",
     "eslint-config-vacuumlabs": "1.9.0",
     "eslint-plugin-flowtype": "3.12.1",
     "eslint-plugin-import": "2.22.1",
