@@ -128,7 +128,7 @@
     "flow-bin": "^0.98.0",
     "flow-typed": "3.1.0",
     "jest": "24.8.0",
-    "metro-react-native-babel-preset": "0.59.0",
+    "metro-react-native-babel-preset": "0.65.0",
     "node-cardano-wallet": "https://github.com/Emurgo/node-cardano-wallet.git",
     "prettier": "1.14.3",
     "prettylint": "1.0.0",
