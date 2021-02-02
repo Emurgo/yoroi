@@ -3,7 +3,7 @@
 import AppAda, {
   ErrorCodes,
   AddressTypeNibbles,
-  CertTypes,
+  CertificateTypes,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 // note(v-almonacid) we'll be using a fork of @ledgerhq/react-native-hid
@@ -661,7 +661,7 @@ async function formatLedgerCertificates(
     const registrationCert = await cert.as_stake_registration()
     if (registrationCert != null) {
       result.push({
-        type: CertTypes.staking_key_registration,
+        type: CertificateTypes.STAKE_REGISTRATION,
         path: await getPath(await registrationCert.stake_credential()),
         poolKeyHashHex: undefined,
       })
@@ -670,7 +670,7 @@ async function formatLedgerCertificates(
     const deregistrationCert = await cert.as_stake_deregistration()
     if (deregistrationCert != null) {
       result.push({
-        type: CertTypes.staking_key_deregistration,
+        type: CertificateTypes.STAKE_DEREGISTRATION,
         path: await getPath(await deregistrationCert.stake_credential()),
         poolKeyHashHex: undefined,
       })
@@ -679,7 +679,7 @@ async function formatLedgerCertificates(
     const delegationCert = await cert.as_stake_delegation()
     if (delegationCert != null) {
       result.push({
-        type: CertTypes.delegation,
+        type: CertificateTypes.STAKE_DELEGATION,
         path: await getPath(await delegationCert.stake_credential()),
         poolKeyHashHex: Buffer.from(
           await (await delegationCert.pool_keyhash()).to_bytes(),
