@@ -31,29 +31,15 @@ Install cocoapods and download ios dependencies:
 
 ```
 gem install cocoapods
-cd ios && pod install
 ```
 
 Install rust build targets: `rustup target add aarch64-apple-ios armv7-apple-ios armv7s-apple-ios x86_64-apple-ios i386-apple-ios`
 
 Install cargo-lipo for building: `cargo install cargo-lipo`
 
-Setup React Native third-party libraries (Run these after `yarn install`):
-```
-node_modules/react-native/scripts/ios-install-third-party.sh
-node_modules/react-native/third-party/glog-0.3.5/configure
-```
+#### Additional configuration for MacOS Big Sur users
 
-In case of problems generating the compiled targets for iOS. You can use the precompiled targets
-```
-sh install_precompiled_targets.sh
-```
-
-If you get an error of the style:
-
-`Could not list contents of '/Users/myself/yoroi-mobile/third-party/glog-0.3.5/test-driver'. Couldn't follow symbolic link.`
-
-Command for updating link `ln -sf /usr/local/share/automake-<version>/test-driver  <path_to_repo>/third-party/glog-0.3.5/test-driver`
+MacOS Big Sur changed the default path of the system C linker, which breaks `cargo lipo`. Some approaches to fix this are detailed here https://github.com/TimNN/cargo-lipo/issues/41.
 
 ### android
 
@@ -99,13 +85,14 @@ Make sure the rust targets for the platform you will work on (android/iOS) have 
 
 1. `yarn install`
 1. `yarn setup_configs` - links libraries to ios testnet build configurations
+1. When building on iOS: `cd ios && pod install`
 
 If these steps fail, try looking at the [android CLI](https://github.com/Emurgo/yoroi-mobile/blob/develop/.circleci/config.yml#L68)
 
 # Launching
 
 1. `react-native start` - this will run RN packager, let it running (optional step)
-2. `react-native run-android --variant=devDebug` - for version with testnet
+2. `react-native run-android --variant=devDebug --appIdSuffix=staging` - for version with testnet
 3. `react-native run-android --variant=mainnetDebug` - for version with mainnet
 
 4. `react-native run-ios --scheme=emurgo-staging --configuration=Staging.Debug` - staging (testnet) configuration
