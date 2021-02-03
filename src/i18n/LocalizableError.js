@@ -24,7 +24,7 @@ class LocalizableError extends ExtendableError {
     super(`${id}: ${JSON.stringify(values)}`)
     this.id = id
     this.defaultMessage = defaultMessage
-    this.values = values
+    this.values = values ?? {}
   }
 }
 

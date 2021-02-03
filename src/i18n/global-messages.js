@@ -170,9 +170,11 @@ export const ledgerMessages = defineMessages({
       'hardware wallet. Please, make sure you are following the steps' +
       'correctly. Restarting your hardware wallet may also fix the problem.',
   },
-  deprecatedFirmwareError: {
-    id: 'global.ledgerMessages.deprecatedFirmwareError',
-    defaultMessage: '!!!Your device firmware is not up-to-date.',
+  deprecatedAdaAppError: {
+    id: 'global.ledgerMessages.deprecatedAdaAppError',
+    defaultMessage:
+      '!!!The Cardano ADA app installed in your Ledger device' +
+      'is not up-to-date. Required version: {version}',
   },
   rejectedByUserError: {
     id: 'global.ledgerMessages.rejectedByUserError',

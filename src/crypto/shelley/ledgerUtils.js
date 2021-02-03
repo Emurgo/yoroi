@@ -1,7 +1,7 @@
 // @flow
 
 import AppAda, {
-  ErrorCodes,
+  DeviceErrorCodes,
   AddressTypeNibbles,
   CertificateTypes,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
@@ -113,11 +113,14 @@ export class RejectedByUserError extends LocalizableError {
   }
 }
 
-export class DeprecatedFirmwareError extends LocalizableError {
+export class DeprecatedAdaAppError extends LocalizableError {
   constructor() {
     super({
-      id: ledgerMessages.deprecatedFirmwareError.id,
-      defaultMessage: ledgerMessages.deprecatedFirmwareError.defaultMessage,
+      id: ledgerMessages.deprecatedAdaAppError.id,
+      defaultMessage: ledgerMessages.deprecatedAdaAppError.defaultMessage,
+      values: {
+        version: `${CONFIG.HARDWARE_WALLETS.LEDGER_NANO.MIN_ADA_APP_VERSION}`,
+      },
     })
   }
 }
@@ -144,13 +147,13 @@ const _isConnectionError = (e: Error | TransportStatusError): boolean => {
   return false
 }
 
-// note: e.statusCode === ErrorCodes.ERR_CLA_NOT_SUPPORTED is more probably due
+// note: e.statusCode === DeviceErrorCodes.ERR_CLA_NOT_SUPPORTED is more probably due
 // to user not having ADA app opened instead of having the wrong app opened
 const _isUserError = (e: Error | TransportStatusError): boolean => {
   if (
     e &&
     e.statusCode != null &&
-    e.statusCode === ErrorCodes.ERR_CLA_NOT_SUPPORTED
+    e.statusCode === DeviceErrorCodes.ERR_CLA_NOT_SUPPORTED
   ) {
     return true
   }
@@ -161,7 +164,7 @@ const _isRejectedError = (e: Error | TransportStatusError): boolean => {
   if (
     e &&
     e.statusCode != null &&
-    e.statusCode === ErrorCodes.ERR_REJECTED_BY_USER
+    e.statusCode === DeviceErrorCodes.ERR_REJECTED_BY_USER
   ) {
     return true
   }
@@ -180,8 +183,8 @@ export const mapLedgerError = (
   } else if (_isConnectionError(e)) {
     Logger.info('ledgerUtils::mapLedgerError: General/BleError', e)
     return new GeneralConnectionError()
-  } else if (e instanceof DeprecatedFirmwareError) {
-    Logger.info('ledgerUtils::mapLedgerError: Deprecated firmware', e)
+  } else if (e instanceof DeprecatedAdaAppError) {
+    Logger.info('ledgerUtils::mapLedgerError: Deprecated Ada app', e)
     return e
   } else {
     Logger.error('ledgerUtils::mapLedgerError: Unexpected error', e)
@@ -305,15 +308,15 @@ const normalizeHWResponse = (resp: LedgerConnectionResponse): HWDeviceInfo => {
   }
 }
 
-const checkDeviceVersion = (version: GetVersionResponse): void => {
+export const checkDeviceVersion = (version: GetVersionResponse): void => {
   if (version.major == null || version.minor == null || version.patch == null) {
     Logger.warn(
       'ledgerUtils::checkDeviceVersion: incomplete version data from device',
     )
     return
   }
-  const deviceVersionArray = [version.major, version.minor, version.path]
-  const minVersionArray = CONFIG.HARDWARE_WALLETS.LEDGER_NANO.MIN_FIRMWARE_VERSION.split(
+  const deviceVersionArray = [version.major, version.minor, version.patch]
+  const minVersionArray = CONFIG.HARDWARE_WALLETS.LEDGER_NANO.MIN_ADA_APP_VERSION.split(
     '.',
   )
   if (minVersionArray.length !== deviceVersionArray.length) {
@@ -324,7 +327,7 @@ const checkDeviceVersion = (version: GetVersionResponse): void => {
     if (
       parseInt(deviceVersionArray[i], 10) < parseInt(minVersionArray[i], 10)
     ) {
-      throw new DeprecatedFirmwareError()
+      throw new DeprecatedAdaAppError()
     }
   }
 }
