@@ -3,7 +3,7 @@ version: 2
 rn_defaults: &rn_defaults
   working_directory: ~/project
   docker:
-    - image: circleci/node:10.14.2
+    - image: circleci/node:12.16.1
 
 jobs:
   install-dependencies:
@@ -23,7 +23,6 @@ jobs:
       - run: rustup install 1.32.0
       - run: rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
       - run: cargo install cargo-lipo
-      - run: nvm use
 
       - run:
           name: Match bitrise's yarn version
