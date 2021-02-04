@@ -87,7 +87,7 @@ const HARDWARE_WALLETS = {
     MODEL: 'Nano',
     ENABLE_USB_TRANSPORT: true,
     USB_MIN_SDK: 24, // USB transport officially supported for Android SDK >= 24
-    MIN_FIRMWARE_VERSION: '2.0.4',
+    MIN_ADA_APP_VERSION: '2.1.0',
   },
 }
 

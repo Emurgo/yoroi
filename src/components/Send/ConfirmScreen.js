@@ -125,7 +125,10 @@ const handleOnConfirm = async (
         if (e instanceof LocalizableError) {
           setErrorData(
             true,
-            intl.formatMessage({id: e.id, defaultMessage: e.defaultMessage}),
+            intl.formatMessage(
+              {id: e.id, defaultMessage: e.defaultMessage},
+              e.values,
+            ),
             null,
           )
         } else {
