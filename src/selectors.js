@@ -175,6 +175,8 @@ export const lastUtxosFetchErrorSelector = (state: State): any =>
 export const utxosSelector = (state: State): ?Array<RawUtxo> =>
   state.balance.utxos
 
+// app-related selectors
+
 export const biometricHwSupportSelector = (state: State): boolean =>
   state.appSettings.isBiometricHardwareSupported
 
@@ -226,3 +228,19 @@ export const isFlawedWalletSelector = (state: State): boolean =>
 
 export const isMaintenanceSelector = (state: State): boolean =>
   state.isMaintenance
+
+/**
+ * Before users can actually create a wallet, 3 steps must be completed:
+ * - language selection (though en-US is set by default)
+ * - Terms of service acceptance
+ * - Authentication system setup (based on pin or biometrics)
+ */
+export const isAppSetupCompleteSelector: (
+  state: State,
+) => boolean = createSelector(
+  tosSelector,
+  isSystemAuthEnabledSelector,
+  customPinHashSelector,
+  (acceptedTos, isSystemAuthEnabled, customPinHash) =>
+    acceptedTos && (isSystemAuthEnabled || customPinHash != null),
+)

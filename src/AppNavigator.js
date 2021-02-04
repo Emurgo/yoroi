@@ -10,12 +10,10 @@ import {CONFIG} from './config/config'
 import {
   isAppInitializedSelector,
   isMaintenanceSelector,
-  languageSelector,
-  tosSelector,
   isSystemAuthEnabledSelector,
   isAuthenticatedSelector,
-  customPinHashSelector,
   installationIdSelector,
+  isAppSetupCompleteSelector,
 } from './selectors'
 import WalletNavigator from './components/WalletNavigator'
 import WalletInitNavigator from './components/WalletInit/WalletInitNavigator'
@@ -50,13 +48,11 @@ const NavigatorSwitch = compose(
     (state) => ({
       isAppInitialized: isAppInitializedSelector(state),
       isMaintenance: isMaintenanceSelector(state),
-      languageCode: languageSelector(state),
-      acceptedTos: tosSelector(state),
       isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
       isAuthenticated: isAuthenticatedSelector(state),
-      customPinHash: customPinHashSelector(state),
       hasAnyWallet: hasAnyWalletSelector(state),
       installationId: installationIdSelector(state),
+      isAppSetupComplete: isAppSetupCompleteSelector(state),
     }),
     {signin},
   ),
@@ -64,14 +60,12 @@ const NavigatorSwitch = compose(
   ({
     isAppInitialized,
     isMaintenance,
-    languageCode,
-    acceptedTos,
     isSystemAuthEnabled,
     isAuthenticated,
-    customPinHash,
     hasAnyWallet,
     installationId,
     signin,
+    isAppSetupComplete,
   }) => {
     if (!isAppInitialized) {
       return (
@@ -94,11 +88,7 @@ const NavigatorSwitch = compose(
         </Stack.Navigator>
       )
     }
-    if (
-      !languageCode ||
-      !acceptedTos ||
-      (!isSystemAuthEnabled && !customPinHash)
-    ) {
+    if (!isAppSetupComplete) {
       return <FirstRunNavigator />
     }
     if (CONFIG.DEBUG.START_WITH_INDEX_SCREEN) {

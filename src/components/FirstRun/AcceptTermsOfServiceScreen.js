@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {withStateHandlers, withHandlers} from 'recompose'
-import {ScrollView} from 'react-native'
+import {ScrollView, Platform} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 
 import TermsOfService from '../Common/TermsOfService'
@@ -15,6 +15,7 @@ import {FIRST_RUN_ROUTES} from '../../RoutesList'
 import {isSystemAuthEnabledSelector} from '../../selectors'
 import {acceptAndSaveTos, setSystemAuth, signin} from '../../actions'
 import {canBiometricEncryptionBeEnabled} from '../../helpers/deviceSettings'
+import {CONFIG} from '../../config/config'
 
 import styles from './styles/AcceptTermsOfServiceScreen.styles'
 import globalMessages from '../../i18n/global-messages'
@@ -117,7 +118,14 @@ export default injectIntl(
 
         const canSystemAuthBeEnabled = await canBiometricEncryptionBeEnabled()
 
-        if (canSystemAuthBeEnabled) {
+        // temporary disable biometric auth for Android SDK >= 29
+        // TODO(v-almonacid): re-enable for Android SDK >= 29 once the module
+        // is updated
+        const shouldNotEnableBiometricAuth =
+          Platform.OS === 'android' &&
+          Platform.Version >= CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK[0]
+
+        if (canSystemAuthBeEnabled && !shouldNotEnableBiometricAuth) {
           await setSystemAuth(true)
           // note(v-almonacid) here we don't setSavingConsent(false)
           // because signin() will likely unmount the component before the
