@@ -411,7 +411,7 @@
   "global.ledgerMessages.bluetoothDisabledError": "Bluetooth is uitgeschakeld op uw Smartphone.",
   "global.ledgerMessages.connectionError": "Er is een fout opgetreden bij het maken van verbinding met uw hardwareportefeuille. Zorg ervoor dat u de stappen correct volgt. Het herstarten van uw hardware Portemonnee kan het probleem ook oplossen.",
   "global.ledgerMessages.connectUsb": "\nVerbind uw Ledger apparaat via de USB-poort van uw smartphone met behulp van uw \"OTG\" (On the Go) adapter.",
-  "global.ledgerMessages.deprecatedAdaAppError": "The Cardano ADA app installed in your Ledger device is not up-to-date. Required version: {version}",
+  "global.ledgerMessages.deprecatedAdaAppError": "De Cardano ADA app die op uw Ledger apparaat is geïnstalleerd is verouderd, Vereiste versie: {version}",
   "global.ledgerMessages.enableLocation": "Schakel locatieservices in.",
   "global.ledgerMessages.enableTransport": "Schakel Bluetooth in.",
   "global.ledgerMessages.enterPin": "Schakel uw Ledger apparaat in en voer uw pincode in",
