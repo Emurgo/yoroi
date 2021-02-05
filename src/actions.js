@@ -258,7 +258,7 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   if (
     !isAppSetupCompleteSelector(state) &&
     Platform.OS === 'android' &&
-    Platform.Version >= CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK[0]
+    CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version)
   ) {
     shouldNotEnableBiometricAuth = true
   }

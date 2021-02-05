@@ -123,7 +123,7 @@ export default injectIntl(
         // is updated
         const shouldNotEnableBiometricAuth =
           Platform.OS === 'android' &&
-          Platform.Version >= CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK[0]
+          CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version)
 
         if (canSystemAuthBeEnabled && !shouldNotEnableBiometricAuth) {
           await setSystemAuth(true)
