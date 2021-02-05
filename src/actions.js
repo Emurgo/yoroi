@@ -1,6 +1,6 @@
 // @flow
 
-import {AppState, Alert, Keyboard} from 'react-native'
+import {AppState, Alert, Keyboard, Platform} from 'react-native'
 import uuid from 'uuid'
 import SplashScreen from 'react-native-splash-screen'
 import {intlShape} from 'react-intl'
@@ -38,10 +38,12 @@ import {
   isSystemAuthEnabledSelector,
   sendCrashReportsSelector,
   currentVersionSelector,
+  isAppSetupCompleteSelector,
 } from './selectors'
 import assert from './utils/assert'
 import KeyStore from './crypto/KeyStore'
 import * as api from './api/byron/api'
+import {CONFIG} from './config/config'
 
 import {type Dispatch} from 'redux'
 import {type State} from './state'
@@ -247,9 +249,25 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
 
   crashReporting.setUserId(installationIdSelector(getState()))
 
+  /**
+   * note(v-almonacid): temporary disable biometric auth for Android >= 10
+   * (SDK >= 29), as our java auth module is currently outdated, causing
+   * issues in some devices
+   */
+  let shouldNotEnableBiometricAuth = false
+  if (
+    !isAppSetupCompleteSelector(state) &&
+    Platform.OS === 'android' &&
+    CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version)
+  ) {
+    shouldNotEnableBiometricAuth = true
+  }
+  Logger.debug('shouldDisableBiometricAuth:', shouldNotEnableBiometricAuth)
+  Logger.debug('isSystemAuthEnabled:', isSystemAuthEnabledSelector(state))
+
   // prettier-ignore
   const canEnableBiometricEncryption =
-    await canBiometricEncryptionBeEnabled()
+    (await canBiometricEncryptionBeEnabled()) && !shouldNotEnableBiometricAuth
 
   await dispatch(
     setAppSettingField(

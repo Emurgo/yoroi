@@ -3,7 +3,7 @@ import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers} from 'recompose'
-import {ScrollView, StyleSheet, Switch} from 'react-native'
+import {ScrollView, StyleSheet, Switch, Platform} from 'react-native'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
 import {SETTINGS_ROUTES} from '../../RoutesList'
@@ -183,6 +183,16 @@ const ApplicationSettingsScreen = ({
     [navigation],
   )
 
+  // it's better if we prevent users who:
+  //   1. are not using biometric auth yet
+  //   2. are on Android 10+
+  // from enabling this feature since they can encounter issues (and may not be
+  // able to access their wallets eventually, neither rollback this!)
+  const shouldNotEnableBiometricAuth =
+    Platform.OS === 'android' &&
+    CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version) &&
+    !isSystemAuthEnabled
+
   return (
     <ScrollView style={styles.scrollView}>
       <StatusBar type="dark" />
@@ -203,12 +213,17 @@ const ApplicationSettingsScreen = ({
 
         <SettingsItem
           label={intl.formatMessage(messages.biometricsSignIn)}
-          disabled={!isBiometricEncryptionHardwareSupported}
+          disabled={
+            !isBiometricEncryptionHardwareSupported ||
+            shouldNotEnableBiometricAuth
+          }
         >
           <Switch
             value={isSystemAuthEnabled}
             onValueChange={onToggleBiometricsAuthIn}
-            disabled={!isBiometricHardwareSupported}
+            disabled={
+              !isBiometricHardwareSupported || shouldNotEnableBiometricAuth
+            }
           />
         </SettingsItem>
       </SettingsSection>
