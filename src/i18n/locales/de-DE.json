@@ -411,7 +411,7 @@
   "global.ledgerMessages.bluetoothDisabledError": "Bluetooth ist auf deinem Smartphone deaktiviert",
   "global.ledgerMessages.connectionError": "Beim Versuch, eine Verbindung mit deiner Hardware-Wallet herzustellen, ist ein Fehler aufgetreten. Bitte stelle sicher, dass Du die Schritte korrekt ausführst. Ein Neustart Deiner Hardware-Wallet kann das Problem ebenfalls beheben.",
   "global.ledgerMessages.connectUsb": "Verbinde Dein Ledger Gerät mit einem OTG Adapter zum USB Port deines Smartphone.",
-  "global.ledgerMessages.deprecatedAdaAppError": "The Cardano ADA app installed in your Ledger device is not up-to-date. Required version: {version}",
+  "global.ledgerMessages.deprecatedAdaAppError": "Die auf dem Ledger Gerät installierte Cardano ADA app ist nicht aktuell. Benötigte Version: {version}",
   "global.ledgerMessages.enableLocation": "Aktiviere die Lokalisierungsdienste.",
   "global.ledgerMessages.enableTransport": "Aktiviere Bluetooth",
   "global.ledgerMessages.enterPin": "Schalte Dein Ledger Gerät an und gebe deinen PIN ein.",
