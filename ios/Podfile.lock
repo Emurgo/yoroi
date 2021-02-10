@@ -67,13 +67,13 @@ PODS:
   - react-native-ble-plx (2.0.2):
     - MultiplatformBleAdapter (= 0.1.7)
     - React
-  - react-native-camera (3.40.0):
+  - react-native-camera (3.42.0):
     - React-Core
-    - react-native-camera/RCT (= 3.40.0)
-    - react-native-camera/RN (= 3.40.0)
-  - react-native-camera/RCT (3.40.0):
+    - react-native-camera/RCT (= 3.42.0)
+    - react-native-camera/RN (= 3.42.0)
+  - react-native-camera/RCT (3.42.0):
     - React-Core
-  - react-native-camera/RN (3.40.0):
+  - react-native-camera/RN (3.42.0):
     - React-Core
   - react-native-config (0.12.0):
     - React
@@ -304,7 +304,7 @@ SPEC CHECKSUMS:
   React-jsinspector: d4ed52225912efe0019bb7f1a225aec20f23049a
   react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
   react-native-ble-plx: caac53ee98151ec81198239d591c203809a1ed6e
-  react-native-camera: 35854c4f764a4a6cf61c1c3525888b92f0fe4b31
+  react-native-camera: cf8a153d33138dcc457172fc3c33fdf4e5d288d2
   react-native-config: f2c2ae45625a068c35681a16b9bfb1ca58b0adc7
   react-native-haskell-shelley: 241bdb4e191404ed8ee4e877388482fb0d73f03d
   react-native-netinfo: 0212ce8604e88edf686f1481b925b17a42a52449
