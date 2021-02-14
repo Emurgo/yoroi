@@ -95,7 +95,7 @@
   "components.send.biometricauthscreen.UNKNOWN_ERROR": "Unbekannter Fehler",
   "components.send.biometricauthscreen.authorizeOperation": "Autorisiere den Vorgang",
   "components.send.biometricauthscreen.cancelButton": "Abbrechen",
-  "components.send.biometricauthscreen.headings1": "Autorisiere mit deinem",
+  "components.send.biometricauthscreen.headings1": "Autorisiere mit deiner",
   "components.send.biometricauthscreen.headings2": "Biometrie",
   "components.send.biometricauthscreen.useFallbackButton": "Verwende eine andere Anmeldemethode",
   "components.send.confirmscreen.amount": "Betrag",
