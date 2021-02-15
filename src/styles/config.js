@@ -35,6 +35,9 @@ export const COLORS = {
   DISABLED: '#999',
   SHADOW_COLOR: 'rgba(0, 0, 0, 0.06)',
   SHELLEY_BLUE: '#3154CB',
+  DIVIDER: '#536ee9',
+  TEXT_GRAY: '#353535',
+  TEXT_GRAY2: '#9b9b9b',
 }
 
 export const DEFAULT_THEME_COLORS = {

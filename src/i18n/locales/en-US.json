@@ -333,7 +333,7 @@
   "components.walletinit.verifyrestoredwallet.buttonText": "CONTINUE",
   "components.walletselection.walletselectionscreen.addWalletButton": "Add wallet",
   "components.walletselection.walletselectionscreen.addWalletOnShelleyButton": "Add wallet (Jormungandr ITN)",
-  "components.walletselection.walletselectionscreen.header": "Your wallets",
+  "components.walletselection.walletselectionscreen.header": "My wallets",
   "components.walletselection.walletselectionscreen.stakeDashboardButton": "Stake Dashboard",
   "crypto.errors.rewardAddressEmpty": "Reward address is empty.",
   "crypto.keystore.approveTransaction": "Authorize with your biometrics",

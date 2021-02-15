@@ -14,7 +14,7 @@ import walletManager, {
   KeysAreInvalid,
 } from '../../crypto/walletManager'
 import {InvalidState} from '../../crypto/errors'
-import WalletListItem from './WalletListItem'
+import WalletListItemAccordion from './WalletListItemAccordion'
 import Screen from '../Screen'
 import {Button, StatusBar, ScreenBackground} from '../UiKit'
 import {
@@ -38,7 +38,7 @@ import type {NetworkId, WalletImplementationId} from '../../config/types'
 const messages = defineMessages({
   header: {
     id: 'components.walletselection.walletselectionscreen.header',
-    defaultMessage: '!!!Your wallets',
+    defaultMessage: '!!!My wallets',
   },
   addWalletButton: {
     id: 'components.walletselection.walletselectionscreen.addWalletButton',
@@ -62,7 +62,7 @@ const WalletListScreen = ({wallets, navigateInitWallet, openWallet, intl}) => (
         <ScrollView style={styles.wallets}>
           {wallets ? (
             _.sortBy(wallets, ({name}) => name).map((wallet) => (
-              <WalletListItem
+              <WalletListItemAccordion
                 key={wallet.id}
                 wallet={wallet}
                 onPress={openWallet}

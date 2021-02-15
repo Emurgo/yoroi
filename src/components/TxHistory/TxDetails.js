@@ -1,9 +1,15 @@
 // @flow
 
-import React from 'react'
+import React, {useState} from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {View, Linking, TouchableOpacity} from 'react-native'
+import {
+  View,
+  Linking,
+  TouchableOpacity,
+  LayoutAnimation,
+  Image,
+} from 'react-native'
 import _ from 'lodash'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
@@ -23,13 +29,18 @@ import {Text, Button, OfflineBanner, Banner, StatusBar} from '../UiKit'
 import Screen from '../../components/Screen'
 import {getNetworkConfigById} from '../../config/networks'
 import AddressModal from '../Receive/AddressModal'
+import AssetList from '../Common/assetList/AssetList'
+import AssetListStyle from '../Common/assetList/assetListTransaction.style'
 
 import styles from './styles/TxDetails.style'
+
+import arrowUp from '../../assets/img/chevron_up.png'
+import arrowDown from '../../assets/img/chevron_down.png'
 
 import type {State} from '../../state'
 import type {Navigation} from '../../types/navigation'
 import type {ComponentType} from 'react'
-import {TRANSACTION_DIRECTION, type Token} from '../../types/HistoryTransaction'
+import {TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
 
 const txTypeMessages = defineMessages({
   SENT: {
@@ -241,6 +252,37 @@ const TxDetails = ({
 
   const defaultAsset = amountDefaultAsset || defaultNetworkAsset
 
+  const [expandedIn, setExpandedIn] = useState(false)
+  const [expandedOut, setExpandedOut] = useState(false)
+
+  const toggleExpandIn = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    setExpandedIn(!expandedIn)
+  }
+
+  const toggleExpandOut = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    setExpandedOut(!expandedOut)
+  }
+
+  const assets = [
+    {
+      assetName: 'YROI',
+      assetId: 'tokenhkjshdf',
+      balance: '2,000',
+    },
+    {
+      assetName: 'ERG',
+      assetId: 'tokenhkjshdf',
+      balance: '3,000',
+    },
+    {
+      assetName: 'YRG',
+      assetId: 'tokenhkjshdf',
+      balance: '4,000',
+    },
+  ]
+
   return (
     <View style={styles.container}>
       <StatusBar type="dark" />
@@ -272,7 +314,19 @@ const TxDetails = ({
               {intl.formatMessage(messages.omittedCount, {cnt: cntOmittedFrom})}
             </Text>
           )}
-          <Label>{intl.formatMessage(messages.toAddresses)}</Label>
+          <TouchableOpacity
+            style={styles.assetsExpandable}
+            activeOpacity={0.5}
+            onPress={() => toggleExpandIn()}
+          >
+            <Text style={styles.assetsTitle}> -3 assets </Text>
+            <Image source={expandedIn ? arrowUp : arrowDown} />
+          </TouchableOpacity>
+          {expandedIn && <AssetList styles={AssetListStyle} assets={assets} />}
+
+          <View style={styles.borderTop}>
+            <Label>{intl.formatMessage(messages.toAddresses)}</Label>
+          </View>
           {toFiltered.map((item, i) => (
             <AddressEntry
               key={i}
@@ -285,14 +339,27 @@ const TxDetails = ({
               {intl.formatMessage(messages.omittedCount, {cnt: cntOmittedTo})}
             </Text>
           )}
-          <Label>{intl.formatMessage(messages.txAssuranceLevel)}</Label>
-          <Text secondary>
-            {intl.formatMessage(messages.confirmations, {
-              cnt: transaction.confirmations,
-            })}
-          </Text>
-          <Label>{intl.formatMessage(messages.transactionId)}</Label>
-          <Button onPress={openInExplorer} title={transaction.id} />
+          <TouchableOpacity
+            style={styles.assetsExpandable}
+            activeOpacity={0.5}
+            onPress={() => toggleExpandOut()}
+          >
+            <Text style={styles.assetsTitle}> +3 assets </Text>
+            <Image source={expandedOut ? arrowUp : arrowDown} />
+          </TouchableOpacity>
+          {expandedOut && <AssetList styles={AssetListStyle} assets={assets} />}
+          <View style={styles.borderTop}>
+            <Label>{intl.formatMessage(messages.txAssuranceLevel)}</Label>
+          </View>
+          <View>
+            <Text secondary>
+              {intl.formatMessage(messages.confirmations, {
+                cnt: transaction.confirmations,
+              })}
+            </Text>
+            <Label>{intl.formatMessage(messages.transactionId)}</Label>
+            <Button onPress={openInExplorer} title={transaction.id} />
+          </View>
         </View>
       </Screen>
       <AddressModal

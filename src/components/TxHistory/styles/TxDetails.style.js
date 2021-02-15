@@ -1,7 +1,7 @@
 // @flow
 import {StyleSheet} from 'react-native'
 
-import {COLORS} from '../../../styles/config'
+import stylesConfig, {COLORS} from '../../../styles/config'
 
 export default StyleSheet.create({
   container: {
@@ -40,5 +40,21 @@ export default StyleSheet.create({
   label: {
     marginTop: 16,
     marginBottom: 8,
+  },
+  assetsExpandable: {
+    paddingTop: 12,
+    paddingBottom: 24,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignContent: 'center',
+  },
+  assetsTitle: {
+    fontSize: 14,
+    fontFamily: stylesConfig.defaultFont,
+    color: COLORS.TEXT_GRAY,
+  },
+  borderTop: {
+    borderTopWidth: 1,
+    borderColor: 'rgba(173, 174, 182, 0.3)',
   },
 })

@@ -19,6 +19,7 @@ import {
   StatusBar,
   Banner,
   Checkbox,
+  AssetSelector,
 } from '../UiKit'
 import {
   isFetchingUtxosSelector,
@@ -48,7 +49,6 @@ import {InsufficientFunds} from '../../crypto/errors'
 import {MultiToken} from '../../crypto/MultiToken'
 
 import styles from './styles/SendScreen.style'
-
 import type {Navigation} from '../../types/navigation'
 import type {Token, DefaultAsset} from '../../types/HistoryTransaction'
 import type {CreateUnsignedTxResponse} from '../../crypto/shelley/transactionUtils'
@@ -60,6 +60,13 @@ import type {
   BalanceValidationErrors,
 } from '../../utils/validators'
 import type {ComponentType} from 'react'
+
+// to be updated later
+type tokenType = {|
+  assetName: string,
+  assetId: string,
+  balance: string,
+|}
 
 const amountInputErrorMessages = defineMessages({
   INVALID_AMOUNT: {
@@ -334,6 +341,7 @@ type State = {
   fee: ?BigNumber,
   balanceAfter: ?BigNumber,
   sendAll: boolean,
+  selectedAsset: tokenType | null,
 }
 
 class SendScreen extends Component<Props, State> {
@@ -346,6 +354,7 @@ class SendScreen extends Component<Props, State> {
     balanceAfter: null,
     balanceErrors: Object.freeze({}),
     sendAll: false,
+    selectedAsset: null,
   }
 
   componentDidMount() {
@@ -402,6 +411,9 @@ class SendScreen extends Component<Props, State> {
   }
 
   handleAddressChange: (string) => void = (address) => this.setState({address})
+
+  onAssetSelect: (tokenType | null) => void = (token) =>
+    this.setState({selectedAsset: token})
 
   handleAmountChange: (string) => void = (amount) => this.setState({amount})
 
@@ -581,6 +593,23 @@ class SendScreen extends Component<Props, State> {
         ...amountErrors,
         ...balanceErrors,
       })
+    const assets = [
+      {
+        assetName: 'YROI',
+        assetId: 'tokenhkjshdf',
+        balance: '2,000',
+      },
+      {
+        assetName: 'ERG',
+        assetId: 'tokenhkjshdf',
+        balance: '3,000',
+      },
+      {
+        assetName: 'YRG',
+        assetId: 'tokenhkjshdf',
+        balance: '4,000',
+      },
+    ]
 
     return (
       <SafeAreaView style={styles.container}>
@@ -622,6 +651,12 @@ class SendScreen extends Component<Props, State> {
             checked={sendAll}
             onChange={this.handleCheckBoxChange}
             text={intl.formatMessage(messages.checkboxLabel)}
+          />
+          <AssetSelector
+            onSelect={this.onAssetSelect}
+            selectedAsset={this.state.selectedAsset}
+            label={'Asset'}
+            assets={assets}
           />
         </ScrollView>
         <View style={styles.actions}>
