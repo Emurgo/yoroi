@@ -15,6 +15,10 @@
 
 default_platform(:ios)
 
+# when building on BigSur, you may need to use Xcode11 to push to TestFlight
+# as Xcode12 is still in beta
+# xcode_select("/Applications/Xcode11.3.app")
+
 platform :ios do
   desc "Push a new staging build to TestFlight"
   lane :staging do
