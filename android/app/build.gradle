@@ -183,15 +183,6 @@ android {
             targetSdkVersion 29
             resValue "string", "build_config_package", "com.emurgo"
         }
-        mainnet2 {
-            dimension "version"
-            applicationId 'com.emurgo'
-            applicationIdSuffix ".mainnet2"
-            minSdkVersion 21
-            compileSdkVersion = 29
-            targetSdkVersion 29
-            resValue "string", "build_config_package", "com.emurgo"
-        }
         dev {
             dimension "version"
             applicationIdSuffix ".staging"
