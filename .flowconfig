@@ -36,10 +36,6 @@ node_modules/warning/.*
 .*/node_modules/@ledgerhq/react-native-hw-transport-ble/src/BleTransport.js
 .*/node_modules/@ledgerhq/react-native-hw-transport-ble/lib/BleTransport.js.flow
 
-; Ignore @cardano-foundation/ledgerjs-hw-app-cardano
-; Note: this should be removed from the untyped list once RN/flow is upgraded
-.*/node_modules/@cardano-foundation/ledgerjs-hw-app-cardano/lib/utils.js.flow
-
 ; Ignore @emurgo/cardano-serialization-lib-nodejs
 .*/node_modules/@emurgo/cardano-serialization-lib-nodejs/cardano_serialization_lib.js.flow
 
