@@ -324,9 +324,7 @@ export const checkDeviceVersion = (version: GetVersionResponse): void => {
     return
   }
   for (let i = 0; i < minVersionArray.length; i++) {
-    if (
-      deviceVersionArray[i] < parseInt(minVersionArray[i], 10)
-    ) {
+    if (deviceVersionArray[i] < parseInt(minVersionArray[i], 10)) {
       throw new DeprecatedAdaAppError()
     }
   }
