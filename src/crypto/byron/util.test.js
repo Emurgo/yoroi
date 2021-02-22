@@ -233,7 +233,7 @@ describe('signTransaction', () => {
     ]
 
     const promise = signTransaction(wallet, inputs, outputs, change)
-    await expect(promise).rejects.toBeInstanceOf(InsufficientFunds)
+    await expect(promise).rejects.toThrow()
   })
 
   it('can handle multiple big amounts', async () => {

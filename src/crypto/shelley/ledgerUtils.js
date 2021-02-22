@@ -628,16 +628,16 @@ async function _transformToLedgerOutputs(request: {|
         stakingKeyHashHex: addressParams.stakingKeyHashHex,
         stakingPath: addressParams.stakingPath,
         amountStr: await (await (await output.amount()).coin()).to_str(),
-        tokenBundle: toLedgerTokenBundle(
-          await await output.amount().multiasset(),
+        tokenBundle: await toLedgerTokenBundle(
+          await (await output.amount()).multiasset(), // FIXME
         ),
       })
     } else {
       result.push({
         addressHex: Buffer.from(await address.to_bytes()).toString('hex'),
         amountStr: await (await (await output.amount()).coin()).to_str(),
-        tokenBundle: toLedgerTokenBundle(
-          await await output.amount().multiasset(),
+        tokenBundle: await toLedgerTokenBundle(
+          await (await output.amount()).multiasset(), // FIXME
         ),
       })
     }
