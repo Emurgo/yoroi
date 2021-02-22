@@ -61,8 +61,8 @@ import type {
   GetExtendedPublicKeyResponse,
   GetSerialResponse,
   InputTypeUTxO,
-  OutputTypeAddress,
-  OutputTypeAddressParams,
+  TxOutputTypeAddress,
+  TxOutputTypeAddressParams,
   SignTransactionResponse,
   StakingBlockchainPointer,
   Witness,
@@ -238,7 +238,7 @@ export type SignTransactionRequest = {|
   networkId: number,
   protocolMagic: number,
   inputs: Array<InputTypeUTxO>,
-  outputs: Array<OutputTypeAddress | OutputTypeAddressParams>,
+  outputs: Array<TxOutputTypeAddress | TxOutputTypeAddressParams>,
   feeStr: string,
   ttlStr: string,
   certificates: Array<Certificate>,
@@ -325,7 +325,7 @@ export const checkDeviceVersion = (version: GetVersionResponse): void => {
   }
   for (let i = 0; i < minVersionArray.length; i++) {
     if (
-      parseInt(deviceVersionArray[i], 10) < parseInt(minVersionArray[i], 10)
+      deviceVersionArray[i] < parseInt(minVersionArray[i], 10)
     ) {
       throw new DeprecatedAdaAppError()
     }
@@ -568,7 +568,7 @@ async function _transformToLedgerOutputs(request: {|
   txOutputs: TransactionOutputs,
   changeAddrs: Array<{|...JsAddress, ...Value, ...Addressing|}>,
   addressingMap: (string) => void | $PropertyType<Addressing, 'addressing'>,
-|}): Promise<Array<OutputTypeAddress | OutputTypeAddressParams>> {
+|}): Promise<Array<TxOutputTypeAddress | TxOutputTypeAddressParams>> {
   const result = []
   for (let i = 0; i < (await request.txOutputs.len()); i++) {
     const output = await request.txOutputs.get(i)
@@ -593,11 +593,13 @@ async function _transformToLedgerOutputs(request: {|
         stakingKeyHashHex: addressParams.stakingKeyHashHex,
         stakingPath: addressParams.stakingPath,
         amountStr: await (await output.amount()).to_str(),
+        tokenBundle: [],
       })
     } else {
       result.push({
         addressHex: Buffer.from(await address.to_bytes()).toString('hex'),
         amountStr: await (await output.amount()).to_str(),
+        tokenBundle: [],
       })
     }
   }

@@ -10,9 +10,9 @@ describe('encryption/decryption', () => {
   it('should throw on outdated ledger Ada app', () => {
     expect.assertions(1)
     const mockResponse: GetVersionResponse = {
-      major: '2',
-      minor: '0',
-      patch: '4',
+      major: 2,
+      minor: 0,
+      patch: 4,
       flags: {isDebug: false},
     }
     expect(() => checkDeviceVersion(mockResponse)).toThrow(
