@@ -212,7 +212,7 @@
   "components.stakingcenter.poolwarningmodal.unknown": "Veroorzaakt een onbekend probleem (kijk online voor meer informatie)",
   "components.stakingcenter.title": "Stemcentrum",
   "components.stakingcenter.delegationTxBuildError": "Fout bij het opbouwen van de delegatietransactie",
-  "components.transfer.transfersummarymodal.unregisterExplanation": "This transaction will unregister one or more staking keys, giving you back your {refundAmount} from your deposit.",
+  "components.transfer.transfersummarymodal.unregisterExplanation": "Bij deze transactie worden een of meer Stemsleutels afgemeld, waardoor u uw {refundAmount} terug krijgt van uw storting.",
   "components.txhistory.flawedwalletmodal.title": "Waarschuwing",
   "components.txhistory.flawedwalletmodal.explanation1": "Het lijkt erop dat u per ongeluk een portefeuille heeft gemaakt of hersteld die alleen in speciale versies voor ontwikkeling is opgenomen. Als veiligheidsmaatregel hebben we deze portemonnee uitgeschakeld.",
   "components.txhistory.flawedwalletmodal.explanation2": "U kunt nog steeds een nieuwe portemonnee maken of er een herstellen zonder beperkingen. Als u op de een of andere manier last heeft gehad van dit probleem, neem dan contact op met EMURGO.",
