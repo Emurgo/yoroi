@@ -18,7 +18,7 @@ import {
   StakeDelegation,
   StakeDeregistration,
   StakeRegistration,
-} from 'react-native-haskell-shelley'
+} from '@emurgo/react-native-haskell-shelley'
 import {sortBy} from 'lodash'
 import ExtendableError from 'es6-error'
 
@@ -35,15 +35,16 @@ import {
 import {ObjectValues} from '../../utils/flow'
 import assert from '../../utils/assert'
 import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
+import {MultiToken} from '../MultiToken'
 
 import type {
   Addressing,
   AddressedUtxo,
   V4UnsignedTxAddressedUtxoResponse,
 } from '../types'
+import type {DefaultAsset} from '../../types/HistoryTransaction'
 import type {TimestampedCertMeta} from './transactionCache'
 import type {AccountStateRequest, AccountStateResponse} from '../../api/types'
-import type {Dict} from '../../state'
 
 const createCertificate = async (
   stakingKey: PublicKey,
@@ -181,7 +182,9 @@ const getDifferenceAfterTx = async (
         await (await output.address()).to_bytes(),
       ).toString('hex')
       if (await addrContainsAccountKey(address, stakeCredential, true)) {
-        const value = new BigNumber(await (await output.amount()).to_str())
+        const value = new BigNumber(
+          await (await (await output.amount()).coin()).to_str(),
+        )
         sumOutForKey = sumOutForKey.plus(value)
       }
     }
@@ -284,11 +287,12 @@ export type CreateDelegationTxRequest = {|
   addressedUtxos: Array<AddressedUtxo>,
   stakingKey: PublicKey,
   changeAddr: {address: string, ...Addressing},
+  defaultAsset: DefaultAsset,
 |}
 
 export type CreateDelegationTxResponse = {|
-  signTxRequest: HaskellShelleyTxSignRequest,
-  totalAmountToDelegate: BigNumber,
+  signRequest: HaskellShelleyTxSignRequest,
+  totalAmountToDelegate: MultiToken,
 |}
 
 export const createDelegationTx = async (
@@ -302,6 +306,8 @@ export const createDelegationTx = async (
     absSlotNumber,
     stakingKey,
     poolRequest,
+    valueInAccount,
+    defaultAsset,
   } = request
   try {
     const config = CONFIG.NETWORKS.HASKELL_SHELLEY
@@ -313,6 +319,7 @@ export const createDelegationTx = async (
       ),
       minimumUtxoVal: await BigNum.from_str(config.MINIMUM_UTXO_VAL),
       poolDeposit: await BigNum.from_str(config.POOL_DEPOSIT),
+      networkId: config.NETWORK_ID,
     }
 
     const stakeDelegationCert = await createCertificate(
@@ -350,19 +357,31 @@ export const createDelegationTx = async (
       stakingKey,
     )
 
-    const totalAmountToDelegate = utxoSum
+    const totalAmountToDelegateBigNum = utxoSum
       .plus(differenceAfterTx) // subtract any part of the fee that comes from UTXO
-      .plus(request.valueInAccount) // recall: rewards are compounding
+      .plus(valueInAccount) // recall: rewards are compounding
 
-    const signTxRequest = new HaskellShelleyTxSignRequest(
+    const totalAmountToDelegate = new MultiToken(
+      [
+        {
+          identifier: defaultAsset.identifier,
+          networkId: defaultAsset.networkId,
+          amount: totalAmountToDelegateBigNum,
+        },
+      ],
       {
-        senderUtxos: unsignedTx.senderUtxos,
-        unsignedTx: unsignedTx.txBuilder,
-        changeAddr: unsignedTx.changeAddr,
-        certificate: undefined,
+        defaultNetworkId: defaultAsset.networkId,
+        defaultIdentifier: defaultAsset.identifier,
       },
+    )
+
+    const signRequest = new HaskellShelleyTxSignRequest(
+      unsignedTx.senderUtxos,
+      unsignedTx.txBuilder,
+      unsignedTx.changeAddr,
       undefined,
       {
+        NetworkId: config.NETWORK_ID,
         ChainNetworkId: Number.parseInt(config.CHAIN_NETWORK_ID, 10),
         KeyDeposit: new BigNumber(config.KEY_DEPOSIT),
         PoolDeposit: new BigNumber(config.POOL_DEPOSIT),
@@ -379,7 +398,7 @@ export const createDelegationTx = async (
       },
     )
     return {
-      signTxRequest,
+      signRequest,
       totalAmountToDelegate,
     }
   } catch (e) {
@@ -427,6 +446,7 @@ export const createWithdrawalTx = async (
       ),
       minimumUtxoVal: await BigNum.from_str(config.MINIMUM_UTXO_VAL),
       poolDeposit: await BigNum.from_str(config.POOL_DEPOSIT),
+      networkId: config.NETWORK_ID,
     }
 
     const certificates = []
@@ -554,14 +574,12 @@ export const createWithdrawalTx = async (
       }
     }
     return new HaskellShelleyTxSignRequest(
-      {
-        senderUtxos: unsignedTxResponse.senderUtxos,
-        unsignedTx: unsignedTxResponse.txBuilder,
-        changeAddr: unsignedTxResponse.changeAddr,
-        certificate: undefined,
-      },
+      unsignedTxResponse.senderUtxos,
+      unsignedTxResponse.txBuilder,
+      unsignedTxResponse.changeAddr,
       undefined,
       {
+        NetworkId: config.NETWORK_ID,
         ChainNetworkId: Number.parseInt(config.CHAIN_NETWORK_ID, 10),
         KeyDeposit: new BigNumber(config.KEY_DEPOSIT),
         PoolDeposit: new BigNumber(config.POOL_DEPOSIT),

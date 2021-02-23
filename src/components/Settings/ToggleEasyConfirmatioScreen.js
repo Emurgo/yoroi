@@ -26,7 +26,7 @@ const messages = defineMessages({
   enableHeading: {
     id: 'components.settings.toggleeasyconfirmationscreen.enableHeading',
     defaultMessage:
-      '!!!This option will allow you to send ADA transactions ' +
+      '!!!This option will allow you to send transactions ' +
       'from your wallet just by confirming with fingerprint or ' +
       'face recognition with standard system fallback option. ' +
       'This makes your wallet less secure. This is a compromise ' +
@@ -53,7 +53,7 @@ const messages = defineMessages({
   disableHeading: {
     id: 'components.settings.toggleeasyconfirmationscreen.disableHeading',
     defaultMessage:
-      'By disabling this option you will be able to spend your ADA ' +
+      'By disabling this option you will be able to spend your assets ' +
       'only with your master password.',
   },
   disableButton: {

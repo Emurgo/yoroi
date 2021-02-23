@@ -1,14 +1,22 @@
 // @flow
 import {BigNumber} from 'bignumber.js'
-import {BigNum, LinearFee} from 'react-native-haskell-shelley'
+import {
+  BigNum,
+  LinearFee,
+  TransactionMetadata,
+} from '@emurgo/react-native-haskell-shelley'
 
 import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
 import {sendAllUnsignedTx, newAdaUnsignedTx} from './transactions'
-import {NETWORKS} from '../../config/networks'
+import {hasSendAllDefault, builtSendTokenList} from '../commonUtils'
+import {multiTokenFromRemote} from './utils'
+import {CONFIG} from '../../config/config'
 import {CardanoError, InsufficientFunds, NoOutputsError} from '../errors'
 import {Logger} from '../../utils/logging'
+import assert from '../../utils/assert'
 
-import type {Addressing, AddressedUtxo} from '../types'
+import type {Addressing, AddressedUtxo, SendTokenList} from '../types'
+import type {DefaultTokenEntry} from '../MultiToken'
 
 export type CreateUnsignedTxRequest = {|
   changeAddr: {
@@ -18,13 +26,9 @@ export type CreateUnsignedTxRequest = {|
   absSlotNumber: BigNumber,
   receiver: string,
   addressedUtxos: Array<AddressedUtxo>,
-  ...
-    | {|
-        amount: string, // in lovelaces
-      |}
-    | {|
-        shouldSendAll: true,
-      |},
+  defaultToken: DefaultTokenEntry,
+  tokens: SendTokenList,
+  metadata: Array<TransactionMetadata> | void,
 |}
 
 export type CreateUnsignedTxResponse = HaskellShelleyTxSignRequest
@@ -35,12 +39,13 @@ export const createUnsignedTx = async (
   Logger.debug('createUnsignedTx called', request)
   const {changeAddr, receiver, addressedUtxos, absSlotNumber} = request
   try {
-    const NETWORK_CONFIG = NETWORKS.HASKELL_SHELLEY
+    const NETWORK_CONFIG = CONFIG.NETWORKS.HASKELL_SHELLEY
 
     const KEY_DEPOSIT = NETWORK_CONFIG.KEY_DEPOSIT
     const POOL_DEPOSIT = NETWORK_CONFIG.POOL_DEPOSIT
     const LINEAR_FEE = NETWORK_CONFIG.LINEAR_FEE
     const MINIMUM_UTXO_VAL = NETWORK_CONFIG.MINIMUM_UTXO_VAL
+    const NETWORK_ID = NETWORK_CONFIG.NETWORK_ID
     const CHAIN_NETWORK_ID = NETWORK_CONFIG.CHAIN_NETWORK_ID
 
     const protocolParams = {
@@ -51,21 +56,42 @@ export const createUnsignedTx = async (
       ),
       minimumUtxoVal: await BigNum.from_str(MINIMUM_UTXO_VAL),
       poolDeposit: await BigNum.from_str(POOL_DEPOSIT),
+      networkId: NETWORK_ID,
+    }
+
+    // TODO(metadata)
+    if (request.metadata !== undefined) {
+      throw new Error('Metadata transactions not yet supported')
     }
 
     let unsignedTxResponse
-    if (request.shouldSendAll != null) {
+    if (hasSendAllDefault(request.tokens)) {
+      assert.assert(receiver != null, 'sendAll requires a receiver address')
       unsignedTxResponse = await sendAllUnsignedTx(
-        receiver,
+        {address: receiver},
         addressedUtxos,
         absSlotNumber,
         protocolParams,
+        undefined, // // TODO(metadata)
       )
-    } else if (request.amount != null) {
-      const amount = request.amount
-
+    } else {
+      assert.assert(
+        changeAddr.address != null && changeAddr.addressing != null,
+        'change address missing, should never happen',
+      )
       unsignedTxResponse = await newAdaUnsignedTx(
-        [{address: receiver, amount}],
+        [
+          {
+            address: receiver,
+            amount: builtSendTokenList(
+              request.defaultToken,
+              request.tokens,
+              addressedUtxos.map((utxo) =>
+                multiTokenFromRemote(utxo, protocolParams.networkId),
+              ),
+            ),
+          },
+        ],
         {
           address: changeAddr.address,
           addressing: changeAddr.addressing,
@@ -73,25 +99,23 @@ export const createUnsignedTx = async (
         addressedUtxos,
         absSlotNumber,
         protocolParams,
-        [],
-        [],
-        false,
+        [], // no certificates
+        [], // no withdrawals
+        false, // do not allow no outputs
+        undefined, // TODO(metadata)
       )
-    } else {
-      throw new Error('shelley::createUnsignedTx:: unknown param')
     }
+
     Logger.debug(
       `createUnsignedTx success: ${JSON.stringify(unsignedTxResponse)}`,
     )
     return new HaskellShelleyTxSignRequest(
+      unsignedTxResponse.senderUtxos,
+      unsignedTxResponse.txBuilder,
+      unsignedTxResponse.changeAddr,
+      undefined, // TODO(metadata)
       {
-        senderUtxos: unsignedTxResponse.senderUtxos,
-        unsignedTx: unsignedTxResponse.txBuilder,
-        changeAddr: unsignedTxResponse.changeAddr,
-        certificate: undefined,
-      },
-      undefined,
-      {
+        NetworkId: NETWORK_ID,
         ChainNetworkId: Number.parseInt(CHAIN_NETWORK_ID, 10),
         KeyDeposit: new BigNumber(KEY_DEPOSIT),
         PoolDeposit: new BigNumber(POOL_DEPOSIT),

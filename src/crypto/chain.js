@@ -11,7 +11,6 @@ import {defaultMemoize} from 'reselect'
 import {Logger} from '../utils/logging'
 import * as util from './byron/util'
 
-import type {Dict} from '../state'
 import type {CryptoAccount} from './byron/util'
 import type {AddressType} from './commonUtils'
 

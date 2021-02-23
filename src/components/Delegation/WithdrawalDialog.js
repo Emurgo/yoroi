@@ -12,6 +12,7 @@ import TransferSummary from '../Transfer/TransferSummary'
 import {LedgerTransportSwitch} from '../Ledger/LedgerTransportSwitchModal'
 import LedgerConnect from '../Ledger/LedgerConnect'
 import globalMessages, {ledgerMessages} from '../../i18n/global-messages'
+import {MultiToken} from '../../crypto/MultiToken'
 import {WITHDRAWAL_DIALOG_STEPS, type WithdrawalDialogSteps} from './types'
 
 import styles from './styles/WithdrawalDialog.style'
@@ -80,11 +81,11 @@ type Props = {|
   +onConnectUSB: () => any,
   +withdrawals?: ?Array<{|
     +address: string,
-    +amount: BigNumber,
+    +amount: MultiToken,
   |}>,
   +deregistrations?: ?Array<{|
     +rewardAddress: string,
-    +refund: BigNumber,
+    +refund: MultiToken,
   |}>,
   +balance: BigNumber,
   +finalBalance: BigNumber,

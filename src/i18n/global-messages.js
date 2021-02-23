@@ -69,6 +69,10 @@ export const txLabels = defineMessages({
     id: 'global.txLabels.fees',
     defaultMessage: '!!!Fees',
   },
+  from: {
+    id: 'components.walletinit.restorewallet.upgradeconfirmmodal.fromLabel',
+    defaultMessage: 'From',
+  },
   password: {
     id: 'global.txLabels.password',
     defaultMessage: '!!!Spending password',
@@ -84,6 +88,14 @@ export const txLabels = defineMessages({
   submittingTx: {
     id: 'global.txLabels.submittingTx',
     defaultMessage: 'Submitting transaction',
+  },
+  to: {
+    id: 'components.walletinit.restorewallet.upgradeconfirmmodal.toLabel',
+    defaultMessage: 'To',
+  },
+  txId: {
+    id: 'components.walletinit.restorewallet.upgradeconfirmmodal.txIdLabel',
+    defaultMessage: 'Transaction ID',
   },
   withdrawals: {
     id: 'global.txLabels.withdrawals',
@@ -429,6 +441,11 @@ export const errorMessages = {
 }
 
 export default defineMessages({
+  allDone: {
+    id:
+      'components.walletinit.restorewallet.upgradeconfirmmodal.noUpgradeLabel',
+    defaultMessage: 'All done!',
+  },
   attention: {
     id: 'components.stakingcenter.poolwarningmodal.title',
     defaultMessage: 'Attention',

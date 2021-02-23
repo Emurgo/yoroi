@@ -14,7 +14,6 @@ import styles from './styles/TxHistoryList.style'
 
 import type {TransactionInfo} from '../../types/HistoryTransaction'
 import type {Navigation} from '../../types/navigation'
-import type {Dict} from '../../state'
 import type {ComponentType} from 'react'
 
 const DayHeader = ({ts, intl}) => (

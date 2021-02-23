@@ -5,21 +5,28 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {View, TouchableOpacity} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
+import {BigNumber} from 'bignumber.js'
 
 import {Text} from '../UiKit'
 import utfSymbols from '../../utils/utfSymbols'
-import {transactionsInfoSelector} from '../../selectors'
+import {
+  transactionsInfoSelector,
+  availableAssetsSelector,
+  defaultNetworkAssetSelector,
+} from '../../selectors'
 import {TX_HISTORY_ROUTES} from '../../RoutesList'
 import styles from './styles/TxHistoryListItem.style'
 
 import {
-  formatAda,
-  formatAdaInteger,
-  formatAdaFractional,
+  getAssetDenomination,
+  formatTokenAmount,
+  formatTokenInteger,
+  formatTokenFractional,
   formatTimeToSeconds,
 } from '../../utils/format'
+import {MultiToken} from '../../crypto/MultiToken'
 
-import type {TransactionInfo} from '../../types/HistoryTransaction'
+import type {TransactionInfo, Token} from '../../types/HistoryTransaction'
 
 const messages = defineMessages({
   fee: {
@@ -79,6 +86,8 @@ const messages = defineMessages({
 
 type Props = {
   transaction: TransactionInfo,
+  availableAssets: Dict<Token>,
+  defaultNetworkAsset: Token,
   navigation: any, // TODO: type
   intl: any,
 }
@@ -114,7 +123,8 @@ class TxHistoryListItem extends Component<Props> {
     const tx = this.props.transaction
     const nextTx = nextProps.transaction
 
-    const sameMaybeBignum = (x, y) => (x && y ? x.eq(y) : x === y)
+    const sameValue = (x: ?MultiToken, y: ?MultiToken) =>
+      x && y ? x.isEqualTo(y) : x === y
     const sameTs = (x, y) => x === y
 
     return (
@@ -122,8 +132,8 @@ class TxHistoryListItem extends Component<Props> {
       tx.id !== nextTx.id ||
       tx.assurance !== nextTx.assurance ||
       tx.direction !== nextTx.direction ||
-      !sameMaybeBignum(tx.amount, nextTx.amount) ||
-      !sameMaybeBignum(tx.fee, nextTx.fee) ||
+      !sameValue(tx.amount, nextTx.amount) ||
+      !sameValue(tx.fee, nextTx.fee) ||
       !sameTs(tx.submittedAt, nextTx.submittedAt)
     )
   }
@@ -135,10 +145,20 @@ class TxHistoryListItem extends Component<Props> {
   }
 
   render() {
-    const {transaction, intl} = this.props
+    const {transaction, availableAssets, defaultNetworkAsset, intl} = this.props
 
-    const amountStyle = transaction.amount
-      ? transaction.amount.gte(0)
+    const amount: BigNumber = transaction.amount.getDefault()
+    const amountDefaultAsset: ?Token =
+      availableAssets[transaction.amount.getDefaultId()]
+
+    const defaultAsset = amountDefaultAsset || defaultNetworkAsset
+
+    // if we don't have a symbol for this asset, default to ticker first and
+    // then to identifier
+    const assetSymbol = getAssetDenomination(defaultAsset)
+
+    const amountStyle = amount
+      ? amount.gte(0)
         ? styles.positiveAmount
         : styles.negativeAmount
       : styles.neutralAmount
@@ -151,8 +171,9 @@ class TxHistoryListItem extends Component<Props> {
       SELF: messages.transactionTypeSelf,
       MULTI: messages.transactionTypeMulti,
     }
-    const txFee = transaction.fee
-    const feeInAda = txFee ? formatAda(txFee) : '-'
+    const txFee: ?BigNumber =
+      transaction.fee != null ? transaction.fee.getDefault() : null
+    const feeStr = txFee ? formatTokenAmount(txFee, defaultAsset) : '-'
 
     return (
       <TouchableOpacity onPress={this.showDetails} activeOpacity={0.5}>
@@ -161,7 +182,7 @@ class TxHistoryListItem extends Component<Props> {
             <Text small>{formatTimeToSeconds(transaction.submittedAt)}</Text>
             {transaction.fee && (
               <Text secondary={!isPending}>
-                {`${intl.formatMessage(messages.fee)} ${feeInAda}`}
+                {`${intl.formatMessage(messages.fee)} ${feeStr}`}
               </Text>
             )}
             <Text secondary={!isPending}>
@@ -173,16 +194,14 @@ class TxHistoryListItem extends Component<Props> {
             {transaction.amount ? (
               <View style={styles.amount}>
                 <Text style={amountStyle}>
-                  {formatAdaInteger(transaction.amount)}
+                  {formatTokenInteger(amount, defaultAsset)}
                 </Text>
                 <Text small style={amountStyle}>
-                  {/* $FlowFixMe not sure why flow thinks
-                      amount could be null*/}
-                  {formatAdaFractional(transaction.amount)}
+                  {formatTokenFractional(amount, defaultAsset)}
                 </Text>
-                <Text style={amountStyle}>{`${utfSymbols.NBSP}${
-                  utfSymbols.ADA
-                }`}</Text>
+                <Text style={amountStyle}>{`${
+                  utfSymbols.NBSP
+                }${assetSymbol}`}</Text>
               </View>
             ) : (
               <Text style={amountStyle}>- -</Text>
@@ -198,6 +217,8 @@ export default injectIntl(
   compose(
     connect((state, {id}) => ({
       transaction: transactionsInfoSelector(state)[id],
+      availableAssets: availableAssetsSelector(state),
+      defaultNetworkAsset: defaultNetworkAssetSelector(state),
     })),
   )(TxHistoryListItem),
 )

@@ -37,6 +37,7 @@ import {
   isReadOnlySelector,
   easyConfirmationSelector,
   hwDeviceInfoSelector,
+  defaultNetworkAssetSelector,
 } from '../../selectors'
 import DelegationNavigationButtons from './DelegationNavigationButtons'
 import UtxoAutoRefresher from '../Send/UtxoAutoRefresher'
@@ -54,7 +55,7 @@ import {fetchPoolInfo} from '../../actions/pools'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
 import {
   checkForFlawedWallets,
-  submitDelegationTx,
+  submitTransaction,
   submitSignedTx,
   showErrorDialog,
 } from '../../actions'
@@ -74,17 +75,19 @@ import {CONFIG, getCardanoBaseConfig} from '../../config/config'
 import {WITHDRAWAL_DIALOG_STEPS, type WithdrawalDialogSteps} from './types'
 import {HaskellShelleyTxSignRequest} from '../../crypto/shelley/HaskellShelleyTxSignRequest'
 import KeyStore from '../../crypto/KeyStore'
+import {MultiToken} from '../../crypto/MultiToken'
+import {ISignRequest} from '../../crypto/ISignRequest'
 
 import styles from './styles/DelegationSummary.style'
 
 import type {Navigation} from '../../types/navigation'
+import type {DefaultAsset} from '../../types/HistoryTransaction'
 import type {RemotePoolMetaSuccess, RawUtxo} from '../../api/types'
 import type {
   HWDeviceInfo,
   DeviceObj,
   DeviceId,
 } from '../../crypto/shelley/ledgerUtils'
-import type {BaseSignRequest} from '../../crypto/types'
 
 const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
   <Banner
@@ -123,8 +126,9 @@ type Props = {|
   isReadOnly: boolean,
   isEasyConfirmationEnabled: boolean,
   hwDeviceInfo: HWDeviceInfo,
-  submitDelegationTx: <T>(string, BaseSignRequest<T>) => Promise<void>,
+  submitTransaction: <T>(ISignRequest<T>, string) => Promise<void>,
   submitSignedTx: (string) => Promise<void>,
+  defaultAsset: DefaultAsset,
 |}
 
 type State = {|
@@ -134,11 +138,11 @@ type State = {|
   signTxRequest: ?HaskellShelleyTxSignRequest,
   withdrawals: ?Array<{|
     address: string,
-    amount: BigNumber,
+    amount: MultiToken,
   |}>,
   deregistrations: ?Array<{|
     rewardAddress: string,
-    refund: BigNumber,
+    refund: MultiToken,
   |}>,
   balance: BigNumber,
   finalBalance: BigNumber,
@@ -277,7 +281,7 @@ class StakingDashboard extends React.Component<Props, State> {
 
   /* create withdrawal tx and move to confirm */
   createWithdrawalTx: () => Promise<void> = async () => {
-    const {intl, utxos} = this.props
+    const {intl, utxos, defaultAsset} = this.props
     try {
       if (utxos == null) throw new Error('cannot get utxos') // should never happen
       this.setState({withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WAITING})
@@ -289,26 +293,33 @@ class StakingDashboard extends React.Component<Props, State> {
         const withdrawals = await signTxRequest.withdrawals()
         const deregistrations = await signTxRequest.keyDeregistrations()
         const balance = withdrawals.reduce(
-          (sum, curr) => (curr.amount == null ? sum : sum.plus(curr.amount)),
-          new BigNumber(0),
+          (sum, curr) =>
+            curr.amount == null ? sum : sum.joinAddCopy(curr.amount),
+          new MultiToken([], {
+            defaultNetworkId: defaultAsset.networkId,
+            defaultIdentifier: defaultAsset.identifier,
+          }),
         )
-        const fees = await signTxRequest.fee(false)
+        const fees = await signTxRequest.fee()
         const finalBalance = balance
-          .plus(
+          .joinAddMutable(
             deregistrations.reduce(
               (sum, curr) =>
-                curr.refund == null ? sum : sum.plus(curr.refund),
-              new BigNumber(0),
+                curr.refund == null ? sum : sum.joinAddCopy(curr.refund),
+              new MultiToken([], {
+                defaultNetworkId: defaultAsset.networkId,
+                defaultIdentifier: defaultAsset.identifier,
+              }),
             ),
           )
-          .minus(fees)
+          .joinSubtractMutable(fees)
         this.setState({
           signTxRequest,
           withdrawals,
           deregistrations,
-          balance,
-          finalBalance,
-          fees,
+          balance: balance.getDefault(),
+          finalBalance: finalBalance.getDefault(),
+          fees: fees.getDefault(),
           withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.CONFIRM,
         })
       } else {
@@ -380,27 +391,23 @@ class StakingDashboard extends React.Component<Props, State> {
       navigation,
       isHW,
       isEasyConfirmationEnabled,
-      submitDelegationTx,
+      submitTransaction,
       submitSignedTx,
     } = this.props
     if (signTxRequest == null) throw new Error('no tx data')
-    const signRequest = signTxRequest.signRequest
 
     const submitTx = async <T>(
-      tx: string | BaseSignRequest<T>,
+      tx: string | ISignRequest<T>,
       decryptedKey: ?string,
     ) => {
       try {
-        if (
-          decryptedKey == null &&
-          (typeof tx === 'string' || tx instanceof String)
-        ) {
+        if (decryptedKey == null && typeof tx === 'string') {
           await submitSignedTx(tx)
         } else if (
           decryptedKey != null &&
           !(typeof tx === 'string' || tx instanceof String)
         ) {
-          await submitDelegationTx(decryptedKey, tx)
+          await submitTransaction(tx, decryptedKey)
         }
         navigation.navigate(WALLET_ROUTES.TX_HISTORY)
       } catch (e) {
@@ -472,7 +479,7 @@ class StakingDashboard extends React.Component<Props, State> {
           onSuccess: async (decryptedKey) => {
             navigation.navigate(DELEGATION_ROUTES.STAKING_DASHBOARD)
 
-            await submitTx(signRequest, decryptedKey)
+            await submitTx(signTxRequest, decryptedKey)
           },
           onFail: () => navigation.goBack(),
         })
@@ -509,7 +516,7 @@ class StakingDashboard extends React.Component<Props, State> {
         intl,
       )
 
-      await submitTx(signRequest, decryptedData)
+      await submitTx(signTxRequest, decryptedData)
       this.closeWithdrawalDialog()
     } catch (e) {
       if (e instanceof WrongPassword) {
@@ -722,6 +729,7 @@ export default injectIntl(
         isHW: isHWSelector(state),
         isReadOnly: isReadOnlySelector(state),
         hwDeviceInfo: hwDeviceInfoSelector(state),
+        defaultAsset: defaultNetworkAssetSelector(state),
       }),
       {
         fetchPoolInfo,
@@ -730,7 +738,7 @@ export default injectIntl(
         checkForFlawedWallets,
         setLedgerDeviceId,
         setLedgerDeviceObj,
-        submitDelegationTx,
+        submitTransaction,
         submitSignedTx,
       },
       (state, dispatchProps, ownProps) => ({

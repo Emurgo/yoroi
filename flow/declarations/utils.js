@@ -1,5 +1,7 @@
 // @flow
 
+declare type Dict<T> = {[string]: T}
+
 declare type InexactSubset<T: {...}> = $Rest<T, {...}>;
 declare type Inexact<T: {...}> = { ...T, ... };
 

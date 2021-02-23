@@ -9,9 +9,7 @@ import {ISignRequest} from './ISignRequest'
 import ShelleyWallet from './shelley/ShelleyWallet'
 import storage from '../utils/storage'
 import KeyStore from './KeyStore'
-import {AddressChain, AddressGenerator} from './shelley/chain'
 import * as util from './byron/util'
-import * as api from '../api/byron/api'
 import {CONFIG, WALLETS} from '../config/config'
 import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../config/types'
 import {isJormungandr} from '../config/networks'
@@ -25,77 +23,12 @@ import {
 
 import type {WalletMeta} from '../state'
 import type {RawUtxo, TxBodiesRequest} from '../api/types'
-import type {Addressing, BaseSignRequest, EncryptionMethod} from './types'
+import type {EncryptionMethod, SendTokenList} from './types'
+import type {DefaultAsset} from '../types/HistoryTransaction'
 import type {HWDeviceInfo} from './shelley/ledgerUtils'
 import type {NetworkId, WalletImplementationId} from '../config/types'
 import type {WalletChecksum} from '@emurgo/cip4-js'
-
-/**
- * returns all used addresses (external and change addresses concatenated)
- * including addressing info
- * note: uses byron api by default
- */
-export const mnemonicsToAddresses = async (
-  mnemonic: string,
-): Promise<Array<{|address: string, ...Addressing|}>> => {
-  const masterKey = await util.getMasterKeyFromMnemonic(mnemonic)
-  const account = await util.getAccountFromMasterKey(masterKey)
-  const internalChain = new AddressChain(
-    new AddressGenerator(account.root_cached_key, 'Internal'),
-  )
-  const externalChain = new AddressChain(
-    new AddressGenerator(account.root_cached_key, 'External'),
-  )
-  const chains = [['Internal', internalChain], ['External', externalChain]]
-  for (const chain of chains) {
-    await chain[1].initialize()
-    await chain[1].sync(api.filterUsedAddresses)
-  }
-  // get addresses in chunks
-  const addrChunks = [
-    ...internalChain.getBlocks(),
-    ...externalChain.getBlocks(),
-  ]
-  const filteredAddresses = []
-  for (let i = 0; i < addrChunks.length; i++) {
-    filteredAddresses.push(...(await api.filterUsedAddresses(addrChunks[i])))
-  }
-  // return addresses with addressing info
-  return filteredAddresses.map((addr) => {
-    let change
-    let index
-    if (internalChain.isMyAddress(addr)) {
-      change = CONFIG.NUMBERS.CHAIN_DERIVATIONS.INTERNAL
-      index = internalChain.getIndexOfAddress(addr)
-    } else if (externalChain.isMyAddress(addr)) {
-      change = CONFIG.NUMBERS.CHAIN_DERIVATIONS.EXTERNAL
-      index = externalChain.getIndexOfAddress(addr)
-    } else {
-      // should not happen
-      throw new Error('mnemonicsToAddresses: could not find address index')
-    }
-    return {
-      address: addr,
-      addressing: {
-        path: [CONFIG.NUMBERS.ACCOUNT_INDEX, change, index],
-        startLevel: CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
-      },
-    }
-  })
-}
-
-// note: uses byron api by default
-export const balanceForAddresses = async (
-  addresses: Array<string>,
-): Promise<{fundedAddresses: Array<string>, sum: BigNumber}> => {
-  const {fundedAddresses, sum} = await api.bulkFetchUTXOSumForAddresses(
-    addresses,
-  )
-  return {
-    fundedAddresses,
-    sum,
-  }
-}
+import type {DefaultTokenEntry} from './MultiToken'
 
 export class WalletClosed extends ExtendableError {}
 export class SystemAuthDisabled extends ExtendableError {}
@@ -731,23 +664,25 @@ class WalletManager {
   async createUnsignedTx(
     utxos: Array<RawUtxo>,
     receiver: string,
-    amount: ?string,
-    sendAll?: boolean = false,
+    tokens: SendTokenList,
+    defaultToken: DefaultTokenEntry,
   ) {
     if (!this._wallet) throw new WalletClosed()
-    if (sendAll === false && amount == null) {
-      throw new Error('WalletManager::createUnsignedTx: amount is null')
-    }
     return await this.abortWhenWalletCloses(
       // TODO(v-almonacid): maybe there is a better way instead of mixed
-      this._wallet.createUnsignedTx<mixed>(utxos, receiver, amount, sendAll),
+      this._wallet.createUnsignedTx<mixed>(
+        utxos,
+        receiver,
+        tokens,
+        defaultToken,
+      ),
     )
   }
 
-  async signTx<T>(request: BaseSignRequest<T>, decryptedKey: string) {
+  async signTx<T>(signRequest: ISignRequest<T>, decryptedKey: string) {
     if (!this._wallet) throw new WalletClosed()
     return await this.abortWhenWalletCloses(
-      this._wallet.signTx(request, decryptedKey),
+      this._wallet.signTx(signRequest, decryptedKey),
     )
   }
 
@@ -755,6 +690,7 @@ class WalletManager {
     poolRequest: void | string,
     valueInAccount: BigNumber,
     utxos: Array<RawUtxo>,
+    defaultAsset: DefaultAsset,
   ) {
     if (!this._wallet) throw new WalletClosed()
     return await this.abortWhenWalletCloses(
@@ -762,17 +698,8 @@ class WalletManager {
         poolRequest,
         valueInAccount,
         utxos,
+        defaultAsset,
       ),
-    )
-  }
-
-  async signDelegationTx<T>(
-    request: BaseSignRequest<T>,
-    decryptedMasterKey: string,
-  ) {
-    if (!this._wallet) throw new WalletClosed()
-    return await this.abortWhenWalletCloses(
-      this._wallet.signDelegationTx<any>(request, decryptedMasterKey),
     )
   }
 

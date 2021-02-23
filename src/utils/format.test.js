@@ -2,13 +2,29 @@
 import jestSetup from '../jestSetup'
 
 import {BigNumber} from 'bignumber.js'
-import {formatAda, formatAdaInteger, formatAdaFractional} from './format'
+import {
+  getAssetDenomination,
+  formatTokenAmount,
+  formatTokenInteger,
+  formatTokenFractional,
+} from './format'
+import {getCardanoDefaultAsset} from '../config/config'
 
 jestSetup.setup()
 
+const defaultCardanoAsset = getCardanoDefaultAsset()
+
+describe('getAssetDenomination', () => {
+  it('correctly represents ADA symbol', () => {
+    expect(getAssetDenomination(defaultCardanoAsset)).toEqual('₳')
+  })
+})
+
 describe('formatAda', () => {
   it('formats zero', () => {
-    expect(formatAda(new BigNumber(0))).toEqual('0.000000')
+    expect(formatTokenAmount(new BigNumber(0), defaultCardanoAsset)).toEqual(
+      '0.000000',
+    )
   })
 
   it('formats positive', () => {
@@ -21,7 +37,9 @@ describe('formatAda', () => {
       ['9999999000000', '9,999,999.000000'],
     ]
     tests.forEach(([ada, formatted]) => {
-      expect(formatAda(new BigNumber(ada, 10))).toEqual(formatted)
+      expect(
+        formatTokenAmount(new BigNumber(ada, 10), defaultCardanoAsset),
+      ).toEqual(formatted)
     })
   })
   it('formats negative', () => {
@@ -34,14 +52,18 @@ describe('formatAda', () => {
       ['-9999999000000', '-9,999,999.000000'],
     ]
     tests.forEach(([ada, formatted]) => {
-      expect(formatAda(new BigNumber(ada, 10))).toEqual(formatted)
+      expect(
+        formatTokenAmount(new BigNumber(ada, 10), defaultCardanoAsset),
+      ).toEqual(formatted)
     })
   })
 })
 
 describe('formatAdaFractional', () => {
   it('formats zero', () => {
-    expect(formatAdaFractional(new BigNumber(0))).toEqual('.000000')
+    expect(
+      formatTokenFractional(new BigNumber(0), defaultCardanoAsset),
+    ).toEqual('.000000')
   })
 
   it('formats positive', () => {
@@ -54,7 +76,9 @@ describe('formatAdaFractional', () => {
       ['9999999000000', '.000000'],
     ]
     tests.forEach(([ada, formatted]) => {
-      expect(formatAdaFractional(new BigNumber(ada, 10))).toEqual(formatted)
+      expect(
+        formatTokenFractional(new BigNumber(ada, 10), defaultCardanoAsset),
+      ).toEqual(formatted)
     })
   })
   it('formats negative', () => {
@@ -67,14 +91,18 @@ describe('formatAdaFractional', () => {
       ['-9999999000000', '.000000'],
     ]
     tests.forEach(([ada, formatted]) => {
-      expect(formatAdaFractional(new BigNumber(ada, 10))).toEqual(formatted)
+      expect(
+        formatTokenFractional(new BigNumber(ada, 10), defaultCardanoAsset),
+      ).toEqual(formatted)
     })
   })
 })
 
 describe('formatAdaInteger', () => {
   it('formats zero', () => {
-    expect(formatAdaInteger(new BigNumber(0))).toEqual('0')
+    expect(formatTokenInteger(new BigNumber(0), defaultCardanoAsset)).toEqual(
+      '0',
+    )
   })
 
   it('formats positive', () => {
@@ -88,7 +116,9 @@ describe('formatAdaInteger', () => {
       ['9999999000000', '9,999,999'],
     ]
     tests.forEach(([ada, formatted]) => {
-      expect(formatAdaInteger(new BigNumber(ada, 10))).toEqual(formatted)
+      expect(
+        formatTokenInteger(new BigNumber(ada, 10), defaultCardanoAsset),
+      ).toEqual(formatted)
     })
   })
   it('formats negative', () => {
@@ -102,7 +132,9 @@ describe('formatAdaInteger', () => {
       ['-9999999000000', '-9,999,999'],
     ]
     tests.forEach(([ada, formatted]) => {
-      expect(formatAdaInteger(new BigNumber(ada, 10))).toEqual(formatted)
+      expect(
+        formatTokenInteger(new BigNumber(ada, 10), defaultCardanoAsset),
+      ).toEqual(formatted)
     })
   })
 })

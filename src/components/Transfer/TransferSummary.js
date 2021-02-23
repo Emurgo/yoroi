@@ -12,16 +12,18 @@ import TwoActionView from '../Common/TwoActionView'
 import AddressEntry from '../Common/AddressEntry'
 import HWInstructions from '../Ledger/HWInstructions'
 import {Text, ValidatedTextInput} from '../UiKit'
-import {walletMetaSelector} from '../../selectors'
-import {formatAda, formatAdaWithText} from '../../utils/format'
+import {walletMetaSelector, defaultNetworkAssetSelector} from '../../selectors'
+import {formatTokenWithText} from '../../utils/format'
 import {confirmationMessages, txLabels} from '../../i18n/global-messages'
 import {CONFIG} from '../../config/config'
 import {getNetworkConfigById} from '../../config/networks'
+import {MultiToken} from '../../crypto/MultiToken'
 
 import styles from './styles/TransferSummary.style'
 
 import type {ComponentType} from 'react'
 import type {WalletMeta} from '../../state'
+import type {DefaultAsset} from '../../types/HistoryTransaction'
 
 const messages = defineMessages({
   fromLabel: {
@@ -41,7 +43,7 @@ const messages = defineMessages({
     id: 'components.transfer.transfersummarymodal.unregisterExplanation',
     defaultMessage:
       '!!!This transaction will unregister one or more staking ' +
-      'keys, giving you back your {refundAmount} ADA from your deposit',
+      'keys, giving you back your {refundAmount} from your deposit',
   },
 })
 
@@ -51,11 +53,11 @@ type Props = {
   +setPassword: (string) => void,
   +withdrawals?: Array<{|
     +address: string,
-    +amount: BigNumber,
+    +amount: MultiToken,
   |}>,
   +deregistrations?: Array<{|
     +rewardAddress: string,
-    +refund: BigNumber,
+    +refund: MultiToken,
   |}>,
   +balance: BigNumber,
   +finalBalance: BigNumber,
@@ -63,6 +65,7 @@ type Props = {
   +onConfirm: (event: Object, password?: string) => mixed,
   +onCancel: () => mixed,
   +walletMeta: $Diff<WalletMeta, {id: string}>,
+  +defaultAsset: DefaultAsset,
   +useUSB?: boolean,
 }
 
@@ -78,6 +81,7 @@ const TransferSummary = ({
   onConfirm,
   onCancel,
   walletMeta,
+  defaultAsset,
   useUSB,
 }: Props) => (
   <TwoActionView
@@ -94,16 +98,20 @@ const TransferSummary = ({
   >
     <View style={styles.item}>
       <Text>{intl.formatMessage(messages.balanceLabel)}</Text>
-      <Text style={styles.balanceAmount}>{formatAdaWithText(balance)}</Text>
+      <Text style={styles.balanceAmount}>
+        {formatTokenWithText(balance, defaultAsset)}
+      </Text>
     </View>
     <View style={styles.item}>
       <Text>{intl.formatMessage(txLabels.fees)}</Text>
-      <Text style={styles.balanceAmount}>{formatAdaWithText(fees)}</Text>
+      <Text style={styles.balanceAmount}>
+        {formatTokenWithText(fees, defaultAsset)}
+      </Text>
     </View>
     <View style={styles.item}>
       <Text>{intl.formatMessage(messages.finalBalanceLabel)}</Text>
       <Text style={styles.balanceAmount}>
-        {formatAdaWithText(finalBalance)}
+        {formatTokenWithText(finalBalance, defaultAsset)}
       </Text>
     </View>
     {/* eslint-disable indent */
@@ -142,12 +150,20 @@ const TransferSummary = ({
           <View style={styles.item}>
             <Text>
               {intl.formatMessage(messages.unregisterExplanation, {
-                refundAmount: formatAda(
-                  deregistrations.reduce(
-                    (sum, curr) =>
-                      curr.refund == null ? sum : sum.plus(curr.refund),
-                    new BigNumber(0),
-                  ),
+                refundAmount: formatTokenWithText(
+                  deregistrations
+                    .reduce(
+                      (sum, curr) =>
+                        curr.refund == null
+                          ? sum
+                          : sum.joinAddCopy(curr.refund),
+                      new MultiToken([], {
+                        defaultNetworkId: defaultAsset.networkId,
+                        defaultIdentifier: defaultAsset.identifier,
+                      }),
+                    )
+                    .getDefault(),
+                  defaultAsset,
                 ).toString(),
               })}
             </Text>
@@ -180,7 +196,7 @@ type ExternalProps = {|
   +intl: any,
   +withdrawals?: Array<{|
     +address: string,
-    +amount: BigNumber,
+    +amount: MultiToken,
   |}>,
   +deregistrations?: Array<{|
     +rewardAddress: string,
@@ -197,6 +213,7 @@ export default injectIntl(
   (compose(
     connect((state) => ({
       walletMeta: walletMetaSelector(state),
+      defaultAsset: defaultNetworkAssetSelector(state),
     })),
     withStateHandlers(
       {

@@ -3,23 +3,21 @@
 import {
   TransactionBuilder as V4TransactionBuilder,
   Certificate as V4Certificate,
-} from 'react-native-haskell-shelley'
+} from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
+
+import {MultiToken} from './MultiToken'
 
 import type {WalletChecksum} from '@emurgo/cip4-js'
 import type {RawUtxo} from '../api/types'
+import type {Token} from '../types/HistoryTransaction'
 
 export type Address = {|
   +address: string,
 |}
 
 export type Value = {|
-  /**
-   * note: an undefined value is different than a value of 0
-   * since you can have a UTXO with a value of 0
-   * which is different from having no UTXO at all
-   */
-  +value: void | BigNumber,
+  values: MultiToken,
 |}
 
 // note(v-almonacid): this is the old addressing format used during the Byron
@@ -45,16 +43,10 @@ export type Addressing = {|
   |},
 |}
 
+// equivalent to CardanoAddressedUtxo in the Yoroi extension
 export type AddressedUtxo = {|
-  ...RawUtxo,
-  ...Addressing,
-|}
-
-export type BaseSignRequest<T> = {|
-  senderUtxos: Array<AddressedUtxo>,
-  unsignedTx: T,
-  changeAddr: Array<{|address: string, ...Value, ...Addressing|}>,
-  certificate: void | any,
+  ...$ReadOnly<RawUtxo>,
+  ...$ReadOnly<Addressing>,
 |}
 
 export type SignedTx = {|
@@ -127,7 +119,7 @@ export type V3UnsignedTxAddressedUtxoData<T> = {|
 
 export type TxOutput = {|
   ...Address,
-  amount: string,
+  amount: MultiToken,
 |}
 
 export type V4UnsignedTxUtxoResponse = {|
@@ -142,6 +134,17 @@ export type V4UnsignedTxAddressedUtxoResponse = {|
   changeAddr: Array<{|...Address, ...Value, ...Addressing|}>,
   certificates: $ReadOnlyArray<V4Certificate>,
 |}
+
+export type SendTokenList = Array<
+  | $ReadOnly<{|
+      token: $ReadOnly<Token>,
+      amount: string, // in lovelaces
+    |}>
+  | $ReadOnly<{|
+      token: $ReadOnly<Token>,
+      shouldSendAll: true,
+    |}>,
+>
 
 /**
  * wallet types

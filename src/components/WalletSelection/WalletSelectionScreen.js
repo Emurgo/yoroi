@@ -26,11 +26,8 @@ import {showErrorDialog, updateVersion} from '../../actions'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {currentVersionSelector} from '../../selectors'
 import {onDidMount} from '../../utils/renderUtils'
-import {isJormungandr, NETWORKS} from '../../config/networks'
-import {
-  NETWORK_REGISTRY,
-  WALLET_IMPLEMENTATION_REGISTRY,
-} from '../../config/types'
+import {CONFIG} from '../../config/config'
+import {isJormungandr} from '../../config/networks'
 
 import styles from './styles/WalletSelectionScreen.style'
 
@@ -82,8 +79,8 @@ const WalletListScreen = ({wallets, navigateInitWallet, openWallet, intl}) => (
             // (15 words), but user may choose 24 words in next screen
             navigateInitWallet(
               event,
-              NETWORK_REGISTRY.HASKELL_SHELLEY,
-              WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY,
+              CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
+              CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
             )
           }
           title={`${intl.formatMessage(
@@ -97,8 +94,8 @@ const WalletListScreen = ({wallets, navigateInitWallet, openWallet, intl}) => (
           onPress={(event) =>
             navigateInitWallet(
               event,
-              NETWORK_REGISTRY.HASKELL_SHELLEY,
-              WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
+              CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
+              CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
             )
           }
           title={`${intl.formatMessage(
@@ -107,14 +104,14 @@ const WalletListScreen = ({wallets, navigateInitWallet, openWallet, intl}) => (
           style={styles.button}
         />
 
-        {NETWORKS.JORMUNGANDR.ENABLED && (
+        {CONFIG.NETWORKS.JORMUNGANDR.ENABLED && (
           <Button
             outline
             onPress={(event) =>
               navigateInitWallet(
                 event,
-                NETWORK_REGISTRY.JORMUNGANDR,
-                WALLET_IMPLEMENTATION_REGISTRY.JORMUNGANDR_ITN,
+                CONFIG.NETWORKS.JORMUNGANDR.NETWORK_ID,
+                CONFIG.WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID,
               )
             }
             title={intl.formatMessage(messages.addWalletOnShelleyButton)}

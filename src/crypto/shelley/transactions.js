@@ -17,6 +17,8 @@ import {
   hash_transaction,
   make_icarus_bootstrap_witness,
   make_vkey_witness,
+  min_ada_required,
+  MultiAsset,
   RewardAddress,
   Transaction,
   TransactionBody,
@@ -26,10 +28,11 @@ import {
   TransactionMetadata,
   TransactionOutput,
   TransactionWitnessSet,
+  Value,
   Vkeywitness,
   Vkeywitnesses,
   Withdrawals,
-} from 'react-native-haskell-shelley'
+} from '@emurgo/react-native-haskell-shelley'
 /* eslint-enable camelcase */
 import {CONFIG} from '../../config/config'
 import {InsufficientFunds, NoOutputsError} from '../errors'
@@ -37,12 +40,14 @@ import {
   getCardanoAddrKeyHash,
   normalizeToAddress,
   derivePrivateByAddressing,
+  cardanoValueFromRemoteFormat,
+  multiTokenFromCardanoValue,
+  cardanoValueFromMultiToken,
 } from './utils'
 
 import type {
   Address,
   Addressing,
-  BaseSignRequest,
   V4UnsignedTxUtxoResponse,
   V4UnsignedTxAddressedUtxoResponse,
   AddressedUtxo,
@@ -50,6 +55,7 @@ import type {
 } from '../types'
 import type {RawUtxo} from '../../api/types'
 
+const PRIMARY_ASSET_CONSTANTS = CONFIG.PRIMARY_ASSET_CONSTANTS
 /**
  * based off what the cardano-wallet team found worked empirically
  * note: slots are 1 second in Shelley mainnet, so this is 2 minutes
@@ -57,7 +63,7 @@ import type {RawUtxo} from '../../api/types'
 const defaultTtlOffset = 7200
 
 export const sendAllUnsignedTxFromUtxo = async (
-  receiver: string,
+  receiver: {|...Address, ...InexactSubset<Addressing>|},
   allUtxos: Array<RawUtxo>,
   absSlotNumber: BigNumber,
   protocolParams: {|
@@ -65,7 +71,9 @@ export const sendAllUnsignedTxFromUtxo = async (
     minimumUtxoVal: BigNum,
     poolDeposit: BigNum,
     keyDeposit: BigNum,
+    networkId: number,
   |},
+  metadata: TransactionMetadata | void,
 ): Promise<V4UnsignedTxUtxoResponse> => {
   const totalBalance = allUtxos
     .map((utxo) => new BigNumber(utxo.amount))
@@ -82,7 +90,13 @@ export const sendAllUnsignedTxFromUtxo = async (
   )
   await txBuilder.set_ttl(absSlotNumber.plus(defaultTtlOffset).toNumber())
   for (const input of allUtxos) {
-    await addUtxoInput(txBuilder, input)
+    await addUtxoInput(txBuilder, undefined, input, false, {
+      networkId: protocolParams.networkId,
+    })
+  }
+
+  if (metadata !== undefined) {
+    txBuilder.set_metadata(metadata)
   }
 
   if (totalBalance.lt(await (await txBuilder.min_fee()).to_str())) {
@@ -90,7 +104,7 @@ export const sendAllUnsignedTxFromUtxo = async (
     throw new InsufficientFunds()
   }
   {
-    const wasmReceiver = await normalizeToAddress(receiver)
+    const wasmReceiver = await normalizeToAddress(receiver.address)
     if (wasmReceiver == null) {
       throw new Error(
         'sendAllUnsignedTxFromUtxo receiver not a valid Shelley address',
@@ -108,15 +122,34 @@ export const sendAllUnsignedTxFromUtxo = async (
     }
   }
 
+  const changeAddr = await (async () => {
+    if (receiver.addressing == null) return []
+    const {addressing} = receiver
+
+    return [
+      {
+        addressing,
+        address: receiver.address,
+        values: await multiTokenFromCardanoValue(
+          await txBuilder.get_explicit_output(),
+          {
+            defaultNetworkId: protocolParams.networkId,
+            defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
+          },
+        ),
+      },
+    ]
+  })()
+
   return {
     senderUtxos: allUtxos,
     txBuilder,
-    changeAddr: [], // no change for sendAll
+    changeAddr,
   }
 }
 
 export const sendAllUnsignedTx = async (
-  receiver: string,
+  receiver: {|...Address, ...InexactSubset<Addressing>|},
   allUtxos: Array<AddressedUtxo>,
   absSlotNumber: BigNumber,
   protocolParams: {|
@@ -124,7 +157,9 @@ export const sendAllUnsignedTx = async (
     minimumUtxoVal: BigNum,
     poolDeposit: BigNum,
     keyDeposit: BigNum,
+    networkId: number,
   |},
+  _metadata: TransactionMetadata | void,
 ): Promise<V4UnsignedTxAddressedUtxoResponse> => {
   const addressingMap = new Map<RawUtxo, AddressedUtxo>()
   for (const utxo of allUtxos) {
@@ -135,6 +170,7 @@ export const sendAllUnsignedTx = async (
         tx_hash: utxo.tx_hash,
         tx_index: utxo.tx_index,
         utxo_id: utxo.utxo_id,
+        assets: utxo.assets,
       },
       utxo,
     )
@@ -166,35 +202,79 @@ export const sendAllUnsignedTx = async (
 
 async function addUtxoInput(
   txBuilder: TransactionBuilder,
+  remaining: void | {|
+    hasInput: boolean, // every tx requires at least one input
+    value: Value,
+  |},
   input: RawUtxo,
-): Promise<void> {
-  const wasmInput = await normalizeToAddress(input.receiver)
-  if (wasmInput == null) {
+  /* don't add the input if the amount is smaller than the fee to add it to the tx */
+  excludeIfSmall: boolean,
+  protocolParams: {|
+    networkId: number,
+  |},
+): Promise<boolean> {
+  const wasmAddr = await normalizeToAddress(input.receiver)
+  if (wasmAddr == null) {
     throw new Error('addUtxoInput:: input not a valid Shelley address')
   }
-  const keyHash = await getCardanoAddrKeyHash(wasmInput)
-  if (keyHash === null) {
-    const byronAddr = await ByronAddress.from_address(wasmInput)
-    if (byronAddr == null) {
-      throw new Error(
-        'addUtxoInput:: should never happen: non-byron address without key hash',
-      )
+
+  const txInput = await utxoToTxInput(input)
+  const wasmAmount = await cardanoValueFromRemoteFormat(input)
+
+  const skipInput = async () => {
+    if (remaining == null) return false
+
+    const defaultEntry = {
+      defaultNetworkId: protocolParams.networkId,
+      defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
     }
-    await txBuilder.add_bootstrap_input(
-      byronAddr,
-      await utxoToTxInput(input),
-      await BigNum.from_str(input.amount),
+    const tokenSetInInput = new Set(input.assets.map((asset) => asset.assetId))
+    const remainingTokens = await multiTokenFromCardanoValue(
+      remaining.value,
+      defaultEntry,
     )
-    return
+    const includedTargets = remainingTokens
+      .nonDefaultEntries()
+      .filter((entry) => tokenSetInInput.has(entry.identifier))
+    if (
+      remainingTokens.getDefaultEntry().amount.gt(0) &&
+      new BigNumber(input.amount).gt(0)
+    ) {
+      includedTargets.push(remainingTokens.getDefaultEntry())
+    }
+
+    // it's possible to have no target left and yet have no input added yet
+    // due to refunds in Cardano
+    // so we still want to add the input in this case even if we don't care about the coins in it
+    if (includedTargets.length === 0 && remaining.hasInput) {
+      return true
+    }
+
+    const onlyDefaultEntry =
+      includedTargets.length === 1 &&
+      includedTargets[0].identifier === defaultEntry.defaultIdentifier
+    // ignore UTXO that contribute less than their fee if they also don't contribute a token
+    if (onlyDefaultEntry && excludeIfSmall) {
+      const feeForInput = new BigNumber(
+        await (await txBuilder.fee_for_input(
+          wasmAddr,
+          txInput,
+          wasmAmount,
+        )).to_str(),
+      )
+      if (feeForInput.gt(input.amount)) {
+        return true
+      }
+    }
+    return false
   }
-  if (keyHash === undefined) {
-    throw new Error('addUtxoInput:: script inputs not expected')
+
+  if (await skipInput()) {
+    return false
   }
-  await txBuilder.add_key_input(
-    keyHash,
-    await utxoToTxInput(input),
-    await BigNum.from_str(input.amount),
-  )
+
+  await txBuilder.add_input(wasmAddr, txInput, wasmAmount)
+  return true
 }
 
 /**
@@ -213,6 +293,7 @@ export const newAdaUnsignedTxFromUtxo = async (
     minimumUtxoVal: BigNum,
     poolDeposit: BigNum,
     keyDeposit: BigNum,
+    networkId: number,
   |},
   certificates: $ReadOnlyArray<Certificate>,
   withdrawals: $ReadOnlyArray<{|
@@ -220,6 +301,7 @@ export const newAdaUnsignedTxFromUtxo = async (
     amount: BigNum,
   |}>,
   allowNoOutputs: boolean,
+  metadata: TransactionMetadata | void,
 ): Promise<V4UnsignedTxUtxoResponse> => {
   /**
    * Shelley supports transactions with no outputs by simply burning any leftover ADA as fee
@@ -230,11 +312,24 @@ export const newAdaUnsignedTxFromUtxo = async (
    * To protect against this, we can choose to force that there is always even one output
    * by simply enforcing a change address if no outputs are specified for the transaction
    * This is actually enforced by hardware wallets at the moment (will error on 0 outputs)
+   *
+   * Additionally, it's not possible to burn tokens as fees at the moment
+   * but this functionality may come at a later date
    */
-  const shouldForceChange = !allowNoOutputs && outputs.length === 0
-  if (shouldForceChange && changeAdaAddr == null) {
-    throw new NoOutputsError()
+  const shouldForceChange = async (
+    assetsForChange: MultiAsset | void,
+  ): Promise<boolean> => {
+    const noOutputDisallowed = !allowNoOutputs && outputs.length === 0
+    if (noOutputDisallowed && changeAdaAddr == null) {
+      throw new NoOutputsError()
+    }
+    if (assetsForChange != null && (await assetsForChange.len()) > 0) {
+      return true
+    }
+    return noOutputDisallowed
   }
+  const emptyAsset = await MultiAsset.new()
+  await shouldForceChange(undefined)
 
   const txBuilder = await TransactionBuilder.new(
     protocolParams.linearFee,
@@ -248,6 +343,9 @@ export const newAdaUnsignedTxFromUtxo = async (
       await certsNative.add(cert)
     }
     await txBuilder.set_certs(certsNative)
+  }
+  if (metadata !== undefined) {
+    await txBuilder.set_metadata(metadata)
   }
   if (withdrawals.length > 0) {
     const withdrawalsNative = await Withdrawals.new()
@@ -269,98 +367,158 @@ export const newAdaUnsignedTxFromUtxo = async (
       await txBuilder.add_output(
         await TransactionOutput.new(
           wasmReceiver,
-          await BigNum.from_str(output.amount),
+          await cardanoValueFromMultiToken(output.amount),
         ),
       )
     }
   }
 
+  // output excluding fee
+  const targetOutput = await (await txBuilder.get_explicit_output()).checked_add(
+    await Value.new(await txBuilder.get_deposit()),
+  )
+
   // pick inputs
   const usedUtxos: Array<RawUtxo> = []
   {
     // recall: we might have some implicit input to start with from deposit refunds
-    let currentInputSum = new BigNumber(
-      await (await txBuilder.get_explicit_input()).to_str(),
-    )
-    if (utxos.length === 0) {
-      throw new InsufficientFunds()
-    }
+    const implicitSum = await txBuilder.get_implicit_input()
+
     // add utxos until we have enough to send the transaction
     for (const utxo of utxos) {
-      usedUtxos.push(utxo) // note: this ensure we have at least one UTXO in the tx
-      currentInputSum = currentInputSum.plus(utxo.amount)
-      await addUtxoInput(txBuilder, utxo)
-      // need to recalculate each time because fee changes
-      const output = new BigNumber(
-        await (await (await (await txBuilder.get_explicit_output()).checked_add(
-          await txBuilder.min_fee(),
-        )).checked_add(await txBuilder.get_deposit())).to_str(),
+      const currentInputSum = await (await txBuilder.get_explicit_input()).checked_add(
+        implicitSum,
       )
+      const output = await targetOutput.checked_add(
+        await Value.new(await txBuilder.min_fee()),
+      )
+      const remainingNeeded = await output.clamped_sub(currentInputSum)
 
-      if (shouldForceChange) {
+      // update amount required to make sure we have ADA required for change UTXO entry
+      // prettier-ignore
+      const _assetsForChange =
+        (await currentInputSum.multiasset()) != null
+          ? await (await currentInputSum.multiasset()).sub(
+            (await output.multiasset()) ?? emptyAsset,
+          )
+          : undefined
+      if (await shouldForceChange(_assetsForChange)) {
         if (changeAdaAddr == null) throw new NoOutputsError()
-        const minimumNeededForChange = await getFeeForChange(
+        const difference = await currentInputSum.clamped_sub(output)
+        const minimumNeededForChange = await minRequiredForChange(
           txBuilder,
           changeAdaAddr,
+          difference,
           protocolParams,
         )
-        if (currentInputSum.gte(minimumNeededForChange.plus(output))) {
+        const adaNeededLeftForChange = await minimumNeededForChange.clamped_sub(
+          await difference.coin(),
+        )
+        if (
+          (await (await remainingNeeded.coin()).compare(
+            adaNeededLeftForChange,
+          )) < 0
+        ) {
+          await remainingNeeded.set_coin(adaNeededLeftForChange)
+        }
+      }
+      // stop if we've added all the assets we needed
+      {
+        const remainingAssets = await remainingNeeded.multiasset()
+        if (
+          (await (await remainingNeeded.coin()).compare(
+            await BigNum.from_str('0'),
+          )) === 0 &&
+          (remainingAssets == null || (await remainingAssets.len()) === 0) &&
+          usedUtxos.length > 0
+        ) {
           break
         }
       }
-      if (!shouldForceChange && currentInputSum.gte(output)) {
-        break
-      }
+
+      const added = await addUtxoInput(
+        txBuilder,
+        {
+          value: remainingNeeded,
+          hasInput: usedUtxos.length > 0,
+        },
+        utxo,
+        true,
+        {networkId: protocolParams.networkId},
+      )
+      if (!added) continue
+
+      usedUtxos.push(utxo)
     }
     // check to see if we have enough balance in the wallet to cover the transaction
     {
-      const output = new BigNumber(
-        await (await (await (await txBuilder.get_explicit_output()).checked_add(
-          await txBuilder.min_fee(),
-        )).checked_add(await txBuilder.get_deposit())).to_str(),
+      const currentInputSum = await (await txBuilder.get_explicit_input()).checked_add(
+        implicitSum,
       )
-      if (shouldForceChange) {
+
+      // need to recalculate each time because fee changes
+      const output = await targetOutput.checked_add(
+        await Value.new(await txBuilder.min_fee()),
+      )
+
+      const compare = await currentInputSum.compare(output)
+      const enoughInput = compare != null && compare >= 0
+
+      // prettier-ignore
+      const _assetsForChange =
+        (await currentInputSum.multiasset()) != null
+          ? await (await currentInputSum.multiasset()).sub(
+            (await output.multiasset()) ?? emptyAsset,
+          )
+          : undefined
+      const forceChange = await shouldForceChange(_assetsForChange)
+
+      if (forceChange) {
         if (changeAdaAddr == null) throw new NoOutputsError()
-        const minimumNeededForChange = await getFeeForChange(
+        const difference = await currentInputSum.checked_sub(output)
+        const minimumNeededForChange = await minRequiredForChange(
           txBuilder,
           changeAdaAddr,
+          difference,
           protocolParams,
         )
-        if (currentInputSum.lt(minimumNeededForChange.plus(output))) {
+        if (
+          (await (await difference.coin()).compare(minimumNeededForChange)) < 0
+        ) {
           throw new InsufficientFunds()
         }
       }
-      if (!shouldForceChange && currentInputSum.lt(output)) {
+      if (!forceChange && !enoughInput) {
         throw new InsufficientFunds()
       }
     }
   }
 
   const changeAddr = await (async () => {
+    const totalInput = await (await txBuilder.get_explicit_input()).checked_add(
+      await txBuilder.get_implicit_input(),
+    )
+    const difference = await totalInput.checked_sub(targetOutput)
+
+    const forceChange = await shouldForceChange(
+      (await difference.multiasset()) ?? emptyAsset,
+    )
     if (changeAdaAddr == null) {
-      if (shouldForceChange) {
+      if (forceChange) {
         throw new NoOutputsError()
       }
-      const totalInput = await (await txBuilder.get_explicit_input()).checked_add(
-        await txBuilder.get_implicit_input(),
-      )
-      const totalOutput = await txBuilder.get_explicit_output()
-      const deposit = await txBuilder.get_deposit()
-      const difference = new BigNumber(
-        await (await (await totalInput.checked_sub(totalOutput)).checked_sub(
-          deposit,
-        )).to_str(),
-      )
-      const minFee = new BigNumber(await (await txBuilder.min_fee()).to_str())
-      if (difference.lt(minFee)) {
+      const minFee = await txBuilder.min_fee()
+      if ((await (await difference.coin()).compare(minFee)) < 0) {
         throw new InsufficientFunds()
       }
       // recall: min fee assumes the largest fee possible
       // so no worries of cbor issue by including larger fee
-      await txBuilder.set_fee(await BigNum.from_str(difference.toString()))
+      await txBuilder.set_fee(
+        await BigNum.from_str(await difference.coin().to_str()),
+      )
       return []
     }
-    const oldOutput = await txBuilder.get_explicit_output()
+    const outputBeforeChange = await txBuilder.get_explicit_output()
 
     const wasmChange = await normalizeToAddress(changeAdaAddr.address)
     if (wasmChange == null) {
@@ -369,16 +527,26 @@ export const newAdaUnsignedTxFromUtxo = async (
       )
     }
     const changeWasAdded = await txBuilder.add_change_if_needed(wasmChange)
-    const changeValue = new BigNumber(
-      await (await (await txBuilder.get_explicit_output()).checked_sub(
-        oldOutput,
-      )).to_str(),
+    if (forceChange && !changeWasAdded) {
+      // note: this should never happened since it should have been handled by earlier code
+      throw new Error('No change added even though it should be forced')
+    }
+    const output = await multiTokenFromCardanoValue(
+      // since the change is added as an output
+      // the amount of change is the new output minus what the output was before we added the change
+      await (await txBuilder.get_explicit_output()).checked_sub(
+        outputBeforeChange,
+      ),
+      {
+        defaultNetworkId: protocolParams.networkId,
+        defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
+      },
     )
     // prettier-ignore
     return changeWasAdded
       ? [{
         ...changeAdaAddr,
-        value: changeValue,
+        values: output,
       }]
       : []
   })()
@@ -403,6 +571,7 @@ export const newAdaUnsignedTx = async (
     minimumUtxoVal: BigNum,
     poolDeposit: BigNum,
     keyDeposit: BigNum,
+    networkId: number,
   |},
   certificates: $ReadOnlyArray<Certificate>,
   withdrawals: $ReadOnlyArray<{|
@@ -410,6 +579,7 @@ export const newAdaUnsignedTx = async (
     amount: BigNum,
   |}>,
   allowNoOutputs: boolean,
+  metadata: TransactionMetadata | void,
 ): Promise<V4UnsignedTxAddressedUtxoResponse> => {
   const addressingMap = new Map<RawUtxo, AddressedUtxo>()
   for (const utxo of allUtxos) {
@@ -420,6 +590,7 @@ export const newAdaUnsignedTx = async (
         tx_hash: utxo.tx_hash,
         tx_index: utxo.tx_index,
         utxo_id: utxo.utxo_id,
+        assets: utxo.assets,
       },
       utxo,
     )
@@ -433,6 +604,7 @@ export const newAdaUnsignedTx = async (
     certificates,
     withdrawals,
     allowNoOutputs,
+    metadata,
   )
 
   const addressedUtxos = unsignedTxResponse.senderUtxos.map((utxo) => {
@@ -454,39 +626,47 @@ export const newAdaUnsignedTx = async (
 }
 
 // return the minimum amount of input ADA required to generate an output
-async function getFeeForChange(
+async function minRequiredForChange(
   txBuilder: TransactionBuilder,
   changeAdaAddr: {|...Address, ...Addressing|},
+  value: Value,
   protocolParams: {
     linearFee: LinearFee,
     minimumUtxoVal: BigNum,
   },
-): Promise<BigNumber> {
+): Promise<BigNum> {
   if (changeAdaAddr == null) throw new NoOutputsError()
   const wasmChange = await normalizeToAddress(changeAdaAddr.address)
   if (wasmChange == null) {
     throw new Error(
-      'transactions::getFeeForChange: change not a valid Shelley address',
+      'transactions::minRequiredForChange: change not a valid Shelley address',
     )
   }
-  const feeForChange = await (await txBuilder.fee_for_output(
-    await TransactionOutput.new(
-      wasmChange,
-      // largest possible CBOR value
-      // note: this slightly over-estimates by a few bytes
-      await BigNum.from_str((0x100000000).toString()),
-    ),
-  )).to_str()
-  const minimumNeededForChange = new BigNumber(feeForChange).plus(
-    await protocolParams.minimumUtxoVal.to_str(),
+  const minimumAda = await min_ada_required(
+    value,
+    protocolParams.minimumUtxoVal,
   )
-  return minimumNeededForChange
+  // we may have to increase the value used up to the minimum ADA required
+  const baseValue = await (async () => {
+    if ((await (await value.coin()).compare(minimumAda)) < 0) {
+      const newVal = await Value.new(minimumAda)
+      const assets = await value.multiasset()
+      if (assets) {
+        await newVal.set_multiasset(assets)
+      }
+      return newVal
+    }
+    return value
+  })()
+  const minRequired = await (await txBuilder.fee_for_output(
+    await TransactionOutput.new(wasmChange, baseValue),
+  )).checked_add(minimumAda)
+  return minRequired
 }
 
 export const signTransaction = async (
-  signRequest:
-    | BaseSignRequest<TransactionBuilder>
-    | BaseSignRequest<TransactionBody>,
+  senderUtxos: Array<AddressedUtxo>,
+  unsignedTx: TransactionBuilder | TransactionBody,
   keyLevel: number,
   signingKey: Bip32PrivateKey,
   stakingKeyWits: Set<string>,
@@ -495,7 +675,7 @@ export const signTransaction = async (
   const seenByronKeys: Set<string> = new Set()
   const seenKeyHashes: Set<string> = new Set()
   const deduped: Array<AddressedUtxo> = []
-  for (const senderUtxo of signRequest.senderUtxos) {
+  for (const senderUtxo of senderUtxos) {
     const wasmAddr = await normalizeToAddress(senderUtxo.receiver)
     if (wasmAddr == null) {
       throw new Error('signTransaction:: utxo not a valid Shelley address')
@@ -522,9 +702,9 @@ export const signTransaction = async (
   }
 
   const txBody =
-    signRequest.unsignedTx instanceof TransactionBuilder
-      ? await signRequest.unsignedTx.build()
-      : signRequest.unsignedTx
+    unsignedTx instanceof TransactionBuilder
+      ? await unsignedTx.build()
+      : unsignedTx
   const txHash = await hash_transaction(txBody)
 
   const vkeyWits = await Vkeywitnesses.new()
@@ -559,7 +739,7 @@ export const signTransaction = async (
   return await Transaction.new(txBody, witnessSet, metadata)
 }
 
-async function utxoToTxInput(utxo: RawUtxo): TransactionInput {
+async function utxoToTxInput(utxo: RawUtxo): Promise<TransactionInput> {
   return await TransactionInput.new(
     await TransactionHash.from_bytes(Buffer.from(utxo.tx_hash, 'hex')),
     utxo.tx_index,

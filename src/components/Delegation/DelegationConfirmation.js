@@ -11,12 +11,9 @@ import {
   easyConfirmationSelector,
   isHWSelector,
   hwDeviceInfoSelector,
+  defaultNetworkAssetSelector,
 } from '../../selectors'
-import {
-  showErrorDialog,
-  submitDelegationTx,
-  submitSignedTx,
-} from '../../actions'
+import {showErrorDialog, submitTransaction, submitSignedTx} from '../../actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {CONFIG} from '../../config/config'
@@ -33,8 +30,9 @@ import globalMessages, {
   errorMessages,
   txLabels,
 } from '../../i18n/global-messages'
-import {formatAdaWithText, formatAda} from '../../utils/format'
+import {formatTokenWithText, formatTokenAmount} from '../../utils/format'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
+import {Logger} from '../../utils/logging'
 import {
   SEND_ROUTES,
   WALLET_ROOT_ROUTES,
@@ -49,10 +47,11 @@ import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
 import LedgerConnect from '../Ledger/LedgerConnect'
 import HWInstructions from '../Ledger/HWInstructions'
 import LocalizableError from '../../i18n/LocalizableError'
+import {MultiToken} from '../../crypto/MultiToken'
+import {ISignRequest} from '../../crypto/ISignRequest'
 
 import styles from './styles/DelegationConfirmation.style'
 
-import type {BaseSignRequest} from '../../crypto/types'
 import type {IntlShape} from 'react-intl'
 import type {ComponentType} from 'react'
 import type {Navigation} from '../../types/navigation'
@@ -100,7 +99,7 @@ const handleOnConfirm = async (
   isHW,
   isEasyConfirmationEnabled,
   password,
-  submitDelegationTx,
+  submitTransaction,
   submitSignedTx,
   setSendingTransaction,
   setProcessingTx,
@@ -108,18 +107,19 @@ const handleOnConfirm = async (
   useUSB,
   setErrorData,
 ) => {
-  const transactionData = route.params?.transactionData
+  const transactionData: CreateDelegationTxResponse =
+    route.params?.transactionData
   if (transactionData == null) throw new Error('DelegationConfirmation:txData')
-  const signRequest = transactionData.signTxRequest.signRequest
+  const signRequest = transactionData.signRequest
 
   const submitTx = async <T>(
-    tx: string | BaseSignRequest<T>,
+    tx: string | ISignRequest<T>,
     decryptedKey: ?string,
   ) => {
     try {
       setSendingTransaction(true)
       if (decryptedKey != null) {
-        await submitDelegationTx(decryptedKey, tx)
+        await submitTransaction(tx, decryptedKey)
       } else {
         await submitSignedTx(tx)
       }
@@ -139,6 +139,7 @@ const handleOnConfirm = async (
           JSON.stringify(e.request),
         )
       } else {
+        Logger.error(`DelegationConfirmation::submitTx: ${e.message}`, e)
         throw e
       }
     } finally {
@@ -150,7 +151,7 @@ const handleOnConfirm = async (
     try {
       setProcessingTx(true)
       const signedTx = await walletManager.signTxWithLedger(
-        transactionData.signTxRequest,
+        transactionData.signRequest,
         useUSB,
       )
       await submitTx(Buffer.from(signedTx.encodedTx).toString('base64'))
@@ -168,7 +169,7 @@ const handleOnConfirm = async (
         setErrorData(
           true,
           intl.formatMessage(errorMessages.generalTxError.message),
-          String(e.message),
+          e.toString(),
         )
       }
     } finally {
@@ -200,7 +201,7 @@ const handleOnConfirm = async (
         setErrorData(
           true,
           intl.formatMessage(errorMessages.generalTxError.message),
-          String(e.message),
+          e.toString(),
         )
       }
     }
@@ -225,7 +226,7 @@ const handleOnConfirm = async (
       setErrorData(
         true,
         intl.formatMessage(errorMessages.generalTxError.message),
-        String(e.message),
+        e.toString(),
       )
     }
   }
@@ -248,6 +249,7 @@ const DelegationConfirmation = ({
   processingTx,
   doNothing,
   isHW,
+  defaultAsset,
   ledgerDialogStep,
   closeLedgerDialog,
   useUSB,
@@ -263,9 +265,9 @@ const DelegationConfirmation = ({
   const poolName = route.params.poolName
   const delegationTxData: CreateDelegationTxResponse =
     route.params.transactionData
-  const amountToDelegate = delegationTxData.totalAmountToDelegate
-  const transactionFee = route.params.transactionFee
-  const reward = approximateReward(amountToDelegate)
+  const amountToDelegate: MultiToken = delegationTxData.totalAmountToDelegate
+  const transactionFee: MultiToken = route.params.transactionFee
+  const reward = approximateReward(amountToDelegate.getDefault())
 
   const isConfirmationDisabled =
     (!isEasyConfirmationEnabled && !password && !isHW) || processingTx
@@ -289,14 +291,17 @@ const DelegationConfirmation = ({
         <View style={styles.input}>
           <Text small style={styles.fees}>
             {'+ '}
-            {formatAda(transactionFee)}
+            {formatTokenAmount(transactionFee.getDefault(), defaultAsset)}
             {` ${intl.formatMessage(messages.ofFees)}`}
           </Text>
           {/* requires a handler so we pass on a dummy function */}
           <ValidatedTextInput
             onChangeText={doNothing}
             editable={false}
-            value={formatAda(amountToDelegate)}
+            value={formatTokenAmount(
+              amountToDelegate.getDefault(),
+              defaultAsset,
+            )}
             label={intl.formatMessage(txLabels.amount)}
           />
         </View>
@@ -318,7 +323,9 @@ const DelegationConfirmation = ({
           <Text style={styles.itemTitle}>
             {intl.formatMessage(messages.rewardsExplanation)}
           </Text>
-          <Text style={styles.rewards}>{formatAdaWithText(reward)}</Text>
+          <Text style={styles.rewards}>
+            {formatTokenWithText(reward, defaultAsset)}
+          </Text>
         </View>
         {isHW && <HWInstructions useUSB={useUSB} addMargin />}
       </ScrollView>
@@ -390,9 +397,10 @@ export default injectIntl(
         isEasyConfirmationEnabled: easyConfirmationSelector(state),
         isHW: isHWSelector(state),
         hwDeviceInfo: hwDeviceInfoSelector(state),
+        defaultAsset: defaultNetworkAssetSelector(state),
       }),
       {
-        submitDelegationTx,
+        submitTransaction,
         submitSignedTx,
         setLedgerDeviceId,
         setLedgerDeviceObj,
@@ -467,7 +475,7 @@ export default injectIntl(
           isHW,
           isEasyConfirmationEnabled,
           password,
-          submitDelegationTx,
+          submitTransaction,
           submitSignedTx,
           setSendingTransaction,
           setProcessingTx,
@@ -481,7 +489,7 @@ export default injectIntl(
             isHW,
             isEasyConfirmationEnabled,
             password,
-            submitDelegationTx,
+            submitTransaction,
             submitSignedTx,
             setSendingTransaction,
             setProcessingTx,

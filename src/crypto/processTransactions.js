@@ -10,8 +10,19 @@ import {CONFIG} from '../config/config'
 import {Logger} from '../utils/logging'
 import assert from '../utils/assert'
 import {CERTIFICATE_KIND} from '../api/types'
+import {
+  MultiToken,
+  strToDefaultMultiAsset,
+  getDefaultNetworkTokenEntry,
+} from './MultiToken'
+import {multiTokenFromRemote} from './shelley/utils'
 
-import type {TransactionInfo, Transaction} from '../types/HistoryTransaction'
+import type {
+  TransactionInfo,
+  Transaction,
+  BaseAsset,
+} from '../types/HistoryTransaction'
+import type {NetworkId} from '../config/types'
 
 type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
 
@@ -32,10 +43,14 @@ export const getTransactionAssurance = (
   return 'HIGH'
 }
 
-const _sum = (a: Array<{address: string, amount: string}>): BigNumber =>
+const _sum = (
+  a: Array<{address: string, amount: string, assets: Array<BaseAsset>}>,
+  networkId: NetworkId,
+): MultiToken =>
   a.reduce(
-    (acc: BigNumber, x) => acc.plus(new BigNumber(x.amount, 10)),
-    new BigNumber(0),
+    (acc: MultiToken, x) =>
+      acc.joinAddMutable(multiTokenFromRemote(x, networkId)),
+    new MultiToken([], getDefaultNetworkTokenEntry(networkId)),
   )
 
 const _multiPartyWarningCache = {}
@@ -44,11 +59,19 @@ export const processTxHistoryData = (
   tx: Transaction,
   ownAddresses: Array<string>,
   confirmations: number,
+  networkId: NetworkId,
 ): TransactionInfo => {
+  const _strToDefaultMultiAsset = (amount: string) =>
+    strToDefaultMultiAsset(amount, networkId)
+
   // rename to match yoroi extension notation
   const utxoInputs = tx.inputs
   const utxoOutputs = tx.outputs
-  const accountingInputs = tx.withdrawals
+  const accountingInputs = tx.withdrawals.map((w) => ({
+    address: w.address,
+    amount: w.amount,
+    assets: [],
+  }))
   // const accountingOutpus // eventually
 
   const ownUtxoInputs = utxoInputs.filter(({address}) =>
@@ -58,8 +81,8 @@ export const processTxHistoryData = (
     ownAddresses.includes(address),
   )
 
-  const ownImplicitInput = new BigNumber(0)
-  const ownImplicitOutput = (() => {
+  const ownImplicitInput: MultiToken = _strToDefaultMultiAsset('0')
+  const ownImplicitOutput: MultiToken = (() => {
     if (tx.type === TRANSACTION_TYPE.SHELLEY) {
       let implicitOutputSum = new BigNumber(0)
       for (const cert of tx.certificates) {
@@ -74,9 +97,9 @@ export const processTxHistoryData = (
           }
         }
       }
-      return implicitOutputSum
+      return _strToDefaultMultiAsset(implicitOutputSum.toString())
     }
-    return new BigNumber(0)
+    return _strToDefaultMultiAsset('0')
   })()
 
   const unifiedInputs = [...utxoInputs, ...accountingInputs]
@@ -92,10 +115,10 @@ export const processTxHistoryData = (
     ownAddresses.includes(address),
   )
 
-  const totalIn = _sum(unifiedInputs)
-  const totalOut = _sum(unifiedOutputs)
-  const ownIn = _sum(ownInputs).plus(ownImplicitInput)
-  const ownOut = _sum(ownOutputs).plus(ownImplicitOutput)
+  const totalIn = _sum(unifiedInputs, networkId)
+  const totalOut = _sum(unifiedOutputs, networkId)
+  const ownIn = _sum(ownInputs, networkId).joinAddMutable(ownImplicitInput)
+  const ownOut = _sum(ownOutputs, networkId).joinAddMutable(ownImplicitOutput)
 
   const hasOnlyOwnInputs = ownInputs.length === unifiedInputs.length
   const hasOnlyOwnOutputs = ownOutputs.length === unifiedOutputs.length
@@ -144,8 +167,8 @@ export const processTxHistoryData = (
     that our wallet just failed to discover one of its own addresses.
     We will conservatively mark zero fee.
   */
-  const brutto = ownOut.minus(ownIn)
-  const totalFee = totalOut.minus(totalIn) // should be negative
+  const brutto = ownOut.joinSubtractMutable(ownIn)
+  const totalFee = totalOut.joinSubtractMutable(totalIn) // should be negative
 
   // note(v-almonacid): delta will be used to compute the wallet balance
   // and is defined as
@@ -154,15 +177,20 @@ export const processTxHistoryData = (
   //    balance = sum(delta)
   // recall: if the tx has withdrawals or refunds to this wallet, they are
   // included in own utxo outputs
-  const delta = _sum(ownUtxoOutputs).minus(_sum(ownUtxoInputs))
+  const delta = _sum(ownUtxoOutputs, networkId).joinSubtractMutable(
+    _sum(ownUtxoInputs, networkId),
+  )
 
   let amount
   let fee
-  const remoteFee = tx.fee != null ? new BigNumber(tx.fee).times(-1) : null
+  const remoteFee =
+    tx.fee != null
+      ? _strToDefaultMultiAsset(new BigNumber(tx.fee).times(-1).toString())
+      : null
   let direction
   if (isIntraWallet) {
     direction = TRANSACTION_DIRECTION.SELF
-    amount = new BigNumber(0)
+    amount = _strToDefaultMultiAsset('0')
     fee = remoteFee ?? totalFee
   } else if (isMultiParty) {
     direction = TRANSACTION_DIRECTION.MULTI
@@ -170,14 +198,13 @@ export const processTxHistoryData = (
     fee = null
   } else if (hasOnlyOwnInputs) {
     direction = TRANSACTION_DIRECTION.SENT
-    amount = brutto.minus(totalFee)
+    amount = brutto.joinSubtractMutable(totalFee)
     fee = remoteFee ?? totalFee
   } else {
     assert.assert(
       ownInputs.length === 0,
       'This cannot be receiving transaction',
     )
-    assert.assert(brutto.gte(0), 'Received negative funds')
     direction = TRANSACTION_DIRECTION.RECEIVED
     amount = brutto
     fee = null
@@ -185,14 +212,15 @@ export const processTxHistoryData = (
 
   const assurance = getTransactionAssurance(tx.status, confirmations)
 
+  // TODO(multi-asset): register token metadata of tokens observed in this tx
+  const tokens = {}
+
   return {
     id: tx.id,
     fromAddresses: tx.inputs.map(({address}) => address),
     toAddresses: tx.outputs.map(({address}) => address),
     amount,
     fee,
-    bruttoAmount: brutto,
-    bruttoFee: totalFee,
     delta,
     confirmations,
     direction,
@@ -200,5 +228,6 @@ export const processTxHistoryData = (
     lastUpdatedAt: tx.lastUpdatedAt,
     status: tx.status,
     assurance,
+    tokens,
   }
 }

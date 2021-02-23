@@ -5,13 +5,20 @@
  */
 import type {TransactionStatus} from '../types/HistoryTransaction'
 
+export type RemoteAsset = {
+  +amount: string,
+  +assetId: string,
+  +policyId: string,
+  +name: string,
+}
 // this is equivalent to yoroi-frontend's `RemoteUnspentOutput`
 export type RawUtxo = {|
-  amount: string,
-  receiver: string,
-  tx_hash: string,
-  tx_index: number,
-  utxo_id: string,
+  +amount: string,
+  +receiver: string,
+  +tx_hash: string,
+  +tx_index: number,
+  +utxo_id: string,
+  +assets: $ReadOnlyArray<RemoteAsset>,
 |}
 
 export const CERTIFICATE_KIND = {
@@ -23,37 +30,6 @@ export const CERTIFICATE_KIND = {
   MOVE_INSTANTANEOUS_REWARDS: 'MoveInstantaneousRewardsCert',
 }
 export type CertificateKind = $Values<typeof CERTIFICATE_KIND>
-
-// account state (jormun-era)
-
-// export type PoolTuples = [
-//   string, // PoolId
-//   number, // parts
-// ]
-//
-// export type AccountStateDelegation = {|
-//   pools: Array<PoolTuples>,
-// |}
-//
-// export type AccountState = {|
-//   delegation: AccountStateDelegation,
-//   value: number,
-//   counter: number,
-//   last_rewards: {
-//     epoch: number,
-//     reward: number,
-//   },
-// |}
-//
-// export type AccountStateFailure = {|
-//   error: string,
-//   comment: string,
-// |}
-//
-// export type AccountStateResponse = {
-//   [key: string]: AccountState | AccountStateFailure,
-// }
-//
 
 // getAccountState
 
@@ -150,6 +126,7 @@ export type TxHistoryRequest = {|
 export type RemoteTransactionInputBase = {|
   +address: string,
   +amount: string,
+  +assets: $ReadOnlyArray<RemoteAsset>,
 |}
 
 export type RemoteTransactionUtxoInput = {|
@@ -167,6 +144,7 @@ export type RemoteTransactionInput = {|
 export type RemoteTransactionOutput = {|
   +address: string,
   +amount: string,
+  +assets: $ReadOnlyArray<RemoteAsset>,
 |}
 
 /**

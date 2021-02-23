@@ -127,10 +127,22 @@ export const checkAndFacadeTransactionAsync = async (
     inputs: tx.inputs.map((i) => ({
       address: i.address,
       amount: i.amount,
+      assets: (i.assets ?? []).map((a) => ({
+        amount: a.amount,
+        assetId: a.assetId,
+        policyId: a.policyId,
+        name: a.name,
+      })),
     })),
     outputs: tx.outputs.map((o) => ({
       address: o.address,
       amount: o.amount,
+      assets: (o.assets ?? []).map((a) => ({
+        amount: a.amount,
+        assetId: a.assetId,
+        policyId: a.policyId,
+        name: a.name,
+      })),
     })),
     lastUpdatedAt: tx.last_update,
     // all of these can be null

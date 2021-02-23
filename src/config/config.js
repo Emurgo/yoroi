@@ -3,6 +3,7 @@ import {NUMBERS} from './numbers'
 import {
   NETWORKS,
   DEFAULT_ASSETS,
+  PRIMARY_ASSET_CONSTANTS,
   getNetworkConfigById,
   isHaskellShelleyNetwork,
 } from './networks'
@@ -10,7 +11,12 @@ import {WALLET_IMPLEMENTATION_REGISTRY, DERIVATION_TYPES} from './types'
 import {LogLevel} from '../utils/logging'
 import env from '../env'
 
-import type {WalletImplementation, WalletImplementationId} from './types'
+import type {
+  WalletImplementation,
+  WalletImplementationId,
+  NetworkId,
+} from './types'
+import type {DefaultAsset} from '../types/HistoryTransaction'
 
 const IS_DEBUG = __DEV__
 /** debugging flags
@@ -148,6 +154,7 @@ export const CONFIG = {
       ...NETWORKS,
       HASKELL_SHELLEY: NETWORKS.HASKELL_SHELLEY,
     },
+  PRIMARY_ASSET_CONSTANTS,
   HARDWARE_WALLETS,
   PIN_LENGTH: 6,
   APP_LOCK_TIMEOUT: 120 * 1000,
@@ -205,7 +212,25 @@ export const getCardanoBaseConfig = (): Array<{
   },
 ]
 
-export const getCardanoDefaultAsset = () => {
+const _asToken = (asset): DefaultAsset => ({
+  networkId: asset.NETWORK_ID,
+  identifier: asset.IDENTIFIER,
+  isDefault: asset.IS_DEFAULT,
+  metadata: {
+    type: asset.METADATA.TYPE,
+    policyId: asset.METADATA.POLICY_ID,
+    assetName: asset.METADATA.ASSET_NAME,
+    ticker: asset.METADATA.TICKER,
+    longName: asset.METADATA.LONG_NAME,
+    numberOfDecimals: asset.METADATA.NUMBER_OF_DECIMALS,
+    maxSupply: asset.METADATA.MAX_SUPPLY,
+  },
+})
+
+export const getDefaultAssets = (): Array<DefaultAsset> =>
+  DEFAULT_ASSETS.map((asset) => _asToken(asset))
+
+export const getCardanoDefaultAsset = (): DefaultAsset => {
   const assetData = DEFAULT_ASSETS.filter((network) => {
     const config = getNetworkConfigById(network.NETWORK_ID)
     return (
@@ -213,17 +238,21 @@ export const getCardanoDefaultAsset = () => {
       isHaskellShelleyNetwork(network.NETWORK_ID)
     )
   })[0]
-  return {
-    networkId: assetData.NETWORK_ID,
-    identifier: assetData.IDENTIFIER,
-    isDefault: assetData.IS_DEFAULT,
-    metadata: {
-      type: assetData.METADATA.TYPE,
-      policyId: assetData.METADATA.POLICY_ID,
-      assetName: assetData.METADATA.ASSET_NAME,
-      ticker: assetData.METADATA.TICKER,
-      longName: assetData.METADATA.LONG_NAME,
-      numberOfDecimals: assetData.METADATA.NUMBER_OF_DECIMALS,
-    },
+  return _asToken(assetData)
+}
+
+export const getDefaultAssetByNetworkId = (
+  networkId: NetworkId,
+): DefaultAsset => {
+  const defaultAssets = DEFAULT_ASSETS.filter(
+    (asset) => asset.NETWORK_ID === networkId,
+  )
+  if (defaultAssets.length === 0) {
+    throw new Error(`No default assset found for network id ${networkId}`)
   }
+  if (defaultAssets.length > 1) {
+    throw new Error('only one default assset currently supported')
+  }
+  const assetData = defaultAssets[0]
+  return _asToken(assetData)
 }
