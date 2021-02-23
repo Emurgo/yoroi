@@ -14,7 +14,7 @@ import walletManager, {
   KeysAreInvalid,
 } from '../../crypto/walletManager'
 import {InvalidState} from '../../crypto/errors'
-import WalletListItemAccordion from './WalletListItemAccordion'
+import WalletListItem from './WalletListItem'
 import Screen from '../Screen'
 import {Button, StatusBar, ScreenBackground} from '../UiKit'
 import {
@@ -62,7 +62,7 @@ const WalletListScreen = ({wallets, navigateInitWallet, openWallet, intl}) => (
         <ScrollView style={styles.wallets}>
           {wallets ? (
             _.sortBy(wallets, ({name}) => name).map((wallet) => (
-              <WalletListItemAccordion
+              <WalletListItem
                 key={wallet.id}
                 wallet={wallet}
                 onPress={openWallet}
