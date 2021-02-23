@@ -1,4 +1,9 @@
+# For production builds:
 app_identifier("com.emurgo.yoroi") # The bundle identifier of your app
+
+# For nightly:
+# app_identifier("com.emurgo.yoroi-nightly")
+
 apple_id("vicente@emurgo.io") # Your Apple email address
 
 itc_team_id("119491519") # App Store Connect Team ID
