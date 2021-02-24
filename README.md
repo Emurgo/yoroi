@@ -12,18 +12,18 @@ Looking for the Yoroi Extension? See [here](https://github.com/Emurgo/yoroi-fron
 
 ### Both platforms
 
+Make sure your Node.js version matches `v10.14.2`. If you have `nvm` installed, you can just `nvm use`
+
 ```
 # install rustup
 curl https://sh.rustup.rs -sSf | sh
 
-# use 1.38.0 version
-rustup toolchain install 1.38.0
-rustup install 1.38.0
-rustup target add wasm32-unknown-unknown --toolchain 1.38.0
+# use 1.41.0 version
+rustup toolchain install 1.41.0
+rustup install 1.41.0
+rustup target add wasm32-unknown-unknown --toolchain 1.41.0
 ```
-Make sure `rustc --version` outputs `1.38.0`, which is the stable version (and not nightly).
-
-Also, make sure your `nodeJS` verison matches `v10.14.2`. If you have `nvm` installed, you can just `nvm use`.
+Make sure `rustc --version` outputs `1.41.0`, which is the stable version (and not nightly).
 
 ### ios
 
@@ -161,6 +161,44 @@ To fix the issue, locate path where `automake` is installed (default `/usr/local
 file by running command:
 
 ```ln -sf /usr/local/share/automake-<version>/test-driver <path_to_repo>/third-party/glog-0.3.5/test-driver```
+
+# Troubleshooting
+
+## Checking that Rust is well setup (iOS & Android)
+
+After following the instructions for iOS and Android -- it is not required to install both, `rustup show` show return something like this:
+
+```
+rustup show
+Default host: x86_64-apple-darwin
+rustup home:  /Users/nijaar/.rustup
+
+installed toolchains
+--------------------
+
+stable-x86_64-apple-darwin
+1.41.0-x86_64-apple-darwin (default)
+
+installed targets for active toolchain
+--------------------------------------
+
+aarch64-apple-ios
+aarch64-linux-android
+armv7-apple-ios
+armv7-linux-androideabi
+armv7s-apple-ios
+i386-apple-ios
+i686-linux-android
+x86_64-apple-darwin
+x86_64-apple-ios
+x86_64-linux-android
+
+active toolchain
+----------------
+
+1.41.0-x86_64-apple-darwin (default)
+rustc 1.41.0 (5e1a79984 2020-01-27)
+```
 
 # Code style
 
