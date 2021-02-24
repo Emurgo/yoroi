@@ -432,5 +432,6 @@
   "global.txLabels.submittingTx": "Submitting transaction",
   "global.txLabels.withdrawals": "Withdrawals",
   "utils.format.today": "Today",
+  "utils.format.unknownAssetName": "[Unknown asset name]",
   "utils.format.yesterday": "Yesterday"
 }

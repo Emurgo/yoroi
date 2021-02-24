@@ -29,8 +29,8 @@ import {Text, Button, OfflineBanner, Banner, StatusBar} from '../UiKit'
 import Screen from '../../components/Screen'
 import {getNetworkConfigById} from '../../config/networks'
 import AddressModal from '../Receive/AddressModal'
-import AssetList from '../Common/assetList/AssetList'
-import AssetListStyle from '../Common/assetList/assetListTransaction.style'
+import AssetList from '../Common/MultiAsset/AssetList'
+import assetListStyle from '../Common/MultiAsset/styles/AssetListTransaction.style'
 
 import styles from './styles/TxDetails.style'
 
@@ -40,7 +40,7 @@ import arrowDown from '../../assets/img/chevron_down.png'
 import type {State} from '../../state'
 import type {Navigation} from '../../types/navigation'
 import type {ComponentType} from 'react'
-import {TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
+import {TRANSACTION_DIRECTION, type Token} from '../../types/HistoryTransaction'
 
 const txTypeMessages = defineMessages({
   SENT: {
@@ -252,6 +252,8 @@ const TxDetails = ({
 
   const defaultAsset = amountDefaultAsset || defaultNetworkAsset
 
+  const assets = transaction.delta.nonDefaultEntries()
+
   const [expandedIn, setExpandedIn] = useState(false)
   const [expandedOut, setExpandedOut] = useState(false)
 
@@ -265,7 +267,7 @@ const TxDetails = ({
     setExpandedOut(!expandedOut)
   }
 
-  const assets = [
+  const _assets = [
     {
       assetName: 'YROI',
       assetId: 'tokenhkjshdf',
@@ -322,7 +324,13 @@ const TxDetails = ({
             <Text style={styles.assetsTitle}> -3 assets </Text>
             <Image source={expandedIn ? arrowUp : arrowDown} />
           </TouchableOpacity>
-          {expandedIn && <AssetList styles={AssetListStyle} assets={assets} />}
+          {expandedIn && (
+            <AssetList
+              styles={assetListStyle}
+              assets={assets}
+              assetsMetadata={availableAssets}
+            />
+          )}
 
           <View style={styles.borderTop}>
             <Label>{intl.formatMessage(messages.toAddresses)}</Label>
@@ -339,15 +347,21 @@ const TxDetails = ({
               {intl.formatMessage(messages.omittedCount, {cnt: cntOmittedTo})}
             </Text>
           )}
-          <TouchableOpacity
+          {assets.length > 0 && (<TouchableOpacity
             style={styles.assetsExpandable}
             activeOpacity={0.5}
             onPress={() => toggleExpandOut()}
           >
             <Text style={styles.assetsTitle}> +3 assets </Text>
             <Image source={expandedOut ? arrowUp : arrowDown} />
-          </TouchableOpacity>
-          {expandedOut && <AssetList styles={AssetListStyle} assets={assets} />}
+          </TouchableOpacity>)}
+          {expandedOut && (
+            <AssetList
+              styles={assetListStyle}
+              assets={assets}
+              assetsMetadata={availableAssets}
+            />
+          )}
           <View style={styles.borderTop}>
             <Label>{intl.formatMessage(messages.txAssuranceLevel)}</Label>
           </View>

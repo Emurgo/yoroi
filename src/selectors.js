@@ -80,7 +80,13 @@ export const availableAssetsSelector: (
         },
       ]),
     )
-    ObjectValues(txs).forEach((tx) => Object.assign(tokens, tx.tokens))
+    ObjectValues(txs).forEach((tx) => {
+      ObjectValues(tx.tokens).forEach((token) => {
+        if (tokens[token.identifier] == null) {
+          tokens[token.identifier] = token
+        }
+      })
+    })
     return tokens
   },
 )

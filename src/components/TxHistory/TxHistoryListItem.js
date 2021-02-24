@@ -18,11 +18,12 @@ import {TX_HISTORY_ROUTES} from '../../RoutesList'
 import styles from './styles/TxHistoryListItem.style'
 
 import {
-  getAssetDenomination,
+  getAssetDenominationOrId,
   formatTokenAmount,
   formatTokenInteger,
   formatTokenFractional,
   formatTimeToSeconds,
+  ASSET_DENOMINATION,
 } from '../../utils/format'
 import {MultiToken} from '../../crypto/MultiToken'
 
@@ -155,7 +156,10 @@ class TxHistoryListItem extends Component<Props> {
 
     // if we don't have a symbol for this asset, default to ticker first and
     // then to identifier
-    const assetSymbol = getAssetDenomination(defaultAsset)
+    const assetSymbol = getAssetDenominationOrId(
+      defaultAsset,
+      ASSET_DENOMINATION.SYMBOL,
+    )
 
     const amountStyle = amount
       ? amount.gte(0)

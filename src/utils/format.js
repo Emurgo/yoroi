@@ -17,16 +17,56 @@ const messages = defineMessages({
     id: 'utils.format.yesterday',
     defaultMessage: '!!!Yesterday',
   },
+  unknownAssetName: {
+    id: 'utils.format.unknownAssetName',
+    defaultMessage: '!!![Unknown asset name]',
+  },
 })
 
-// if we don't have a symbol for this asset, default to ticker first and
-// then to identifier
-export const getAssetDenomination = (token: Token | DefaultAsset): string =>
-  token.metadata.ticker
-    ? utfSymbols.CURRENCIES[token.metadata.ticker]
-      ? utfSymbols.CURRENCIES[token.metadata.ticker]
-      : token.metadata.ticker
-    : token.identifier
+export const ASSET_DENOMINATION = {
+  TICKER: 'ticker',
+  SYMBOL: 'symbol',
+  NAME: 'name',
+  FINGERPRINT: 'fingerprint',
+}
+export type AssetDenomination = $Values<typeof ASSET_DENOMINATION>
+
+export const getAssetDenomination = (
+  token: Token | DefaultAsset,
+  denomination?: AssetDenomination = ASSET_DENOMINATION.SYMBOL
+): ?string => {
+  switch (denomination) {
+    case ASSET_DENOMINATION.TICKER:
+      return token.metadata.ticker
+    case ASSET_DENOMINATION.SYMBOL:
+    // if we don't have a symbol for this asset, default to ticker, though
+    // ticker can still be null
+      // prettier-ignore
+      return token.metadata.ticker
+        ? utfSymbols.CURRENCIES[token.metadata.ticker]
+        : token.metadata.ticker
+    case ASSET_DENOMINATION.NAME:
+      return token.metadata.assetName !== ''
+        ? token.metadata.assetName
+        : null
+    default:
+      return null
+  }
+}
+
+// TODO(multi-asset): should return fingerprint as default
+export const getAssetDenominationOrId = (
+  token: Token | DefaultAsset,
+  denomination: AssetDenomination,
+): string => getAssetDenomination(token, denomination) ?? token.identifier
+
+export const getAssetNameOrUnknown = (
+  token: Token | DefaultAsset,
+  intl: any,
+): string =>
+  getAssetDenomination(token, ASSET_DENOMINATION.TICKER) ?? intl.formatMessage(
+    messages.unknownAssetName,
+  )
 
 export const formatTokenAmount = (
   amount: BigNumber,
@@ -41,7 +81,10 @@ export const formatTokenWithSymbol = (
   amount: BigNumber,
   token: Token | DefaultAsset,
 ): string => {
-  const denomination = getAssetDenomination(token)
+  const denomination = getAssetDenominationOrId(
+    token,
+    ASSET_DENOMINATION.SYMBOL,
+  )
   return `${formatTokenAmount(amount, token)}${utfSymbols.NBSP}${denomination}`
 }
 

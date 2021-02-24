@@ -19,8 +19,8 @@ import {
   StatusBar,
   Banner,
   Checkbox,
-  AssetSelector,
 } from '../UiKit'
+import AssetSelector from '../Common/MultiAsset/AssetSelector'
 import {
   isFetchingUtxosSelector,
   lastUtxosFetchErrorSelector,
@@ -49,6 +49,7 @@ import {InsufficientFunds} from '../../crypto/errors'
 import {MultiToken} from '../../crypto/MultiToken'
 
 import styles from './styles/SendScreen.style'
+
 import type {Navigation} from '../../types/navigation'
 import type {Token, DefaultAsset} from '../../types/HistoryTransaction'
 import type {CreateUnsignedTxResponse} from '../../crypto/shelley/transactionUtils'
@@ -571,6 +572,8 @@ class SendScreen extends Component<Props, State> {
       isOnline,
       hasPendingOutgoingTransaction,
       defaultAsset,
+      availableAssets,
+      tokenBalance,
     } = this.props
 
     const {
@@ -656,7 +659,8 @@ class SendScreen extends Component<Props, State> {
             onSelect={this.onAssetSelect}
             selectedAsset={this.state.selectedAsset}
             label={'Asset'}
-            assets={assets}
+            assets={tokenBalance.nonDefaultEntries()}
+            assetsMetadata={availableAssets}
           />
         </ScrollView>
         <View style={styles.actions}>

@@ -8,67 +8,59 @@ import {
   LayoutAnimation,
 } from 'react-native'
 
-import {WALLET_IMPLEMENTATION_REGISTRY} from '../../config/types'
+import {isByron, isHaskellShelley} from '../../config/config'
 import WalletAccountIcon from '../Common/WalletAccountIcon'
 import arrowDown from '../../assets/img/arrow_down.png'
 import arrowUp from '../../assets/img/arrow_up.png'
 import AdaIcon from '../../assets/AdaIcon'
 
-import AssetList from '../Common/assetList/AssetList'
-import AssetListStyle from '../Common/assetList/base.style'
+import AssetList from '../Common/MultiAsset/AssetList'
 
 import styles from './styles/WalletListItem.style'
-import CardanoIcon from '../../assets/CardanoIcon'
+import assetListStyle from '../Common/MultiAsset/styles/Base.style'
 import {COLORS} from '../../styles/config'
 
 import type {WalletMeta} from '../../state'
 import type {Node} from 'react'
+import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
 type props = {
   wallet: WalletMeta,
   onPress: (WalletMeta) => any,
 }
 
-type WalletItemMeta = {
-  type: string,
-  iconName: string,
+type WrappedIconProps = {
   icon: Node,
+  style?: ViewStyleProp,
 }
-
-const adaIcon = (
-  <View style={styles.adaIconWrapper}>
-    <AdaIcon height={18} width={18} color={COLORS.WHITE} />
+const WrappedIcon = ({icon, style}: WrappedIconProps) => (
+  <View style={[styles.iconWrapper, style]}>
+    {icon}
   </View>
 )
 
+type WalletItemMeta = {
+  type: string,
+  icon: Node,
+}
 const getWalletItemMeta = (walletMeta: WalletMeta): WalletItemMeta => {
-  switch (walletMeta.walletImplementationId) {
-    case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
-      return {
-        type: 'Byron',
-        icon: <CardanoIcon height={16} width={16} color={COLORS.WHITE} />,
-        iconName: 'Cardano, ADA',
-      }
-    case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24:
-    case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
-      return {
-        type: 'Shelley',
-        icon: <CardanoIcon height={16} width={16} color={COLORS.WHITE} />,
-        iconName: 'Cardano, ADA',
-      }
-    case WALLET_IMPLEMENTATION_REGISTRY.JORMUNGANDR_ITN:
-      return {
-        type: 'ITN',
-        icon: <CardanoIcon height={16} width={16} color={COLORS.WHITE} />,
-        iconName: 'Testnet, ADA',
-      }
-    default:
-      throw new Error('getWalletItemMeta:: invalid wallet implementation id')
+  if (isByron(walletMeta.walletImplementationId)) {
+    return {
+      type: 'Byron',
+      icon: <AdaIcon height={18} width={18} color={COLORS.WHITE} />,
+    }
   }
+  if (isHaskellShelley(walletMeta.walletImplementationId)) {
+    return {
+      type: 'Shelley',
+      icon: <AdaIcon height={18} width={18} color={COLORS.WHITE} />,
+    }
+  }
+  throw new Error('getWalletItemMeta:: invalid wallet implementation id')
 }
 
 const WalletListItem: (props) => Node = ({wallet, onPress}) => {
-  const {type, icon, iconName} = getWalletItemMeta(wallet)
+  const {type, icon} = getWalletItemMeta(wallet)
   const [expanded, setExpanded] = useState(false)
 
   const toggleExpand = () => {
@@ -76,23 +68,26 @@ const WalletListItem: (props) => Node = ({wallet, onPress}) => {
     setExpanded(!expanded)
   }
 
-  const assets = [
-    {
-      assetName: 'YROI',
-      assetId: 'tokenhkjshdf',
-      balance: '2,000',
-    },
-    {
-      assetName: 'ERG',
-      assetId: 'tokenhkjshdf',
-      balance: '3,000',
-    },
-    {
-      assetName: 'YRG',
-      assetId: 'tokenhkjshdf',
-      balance: '4,000',
-    },
-  ]
+  // TODO(multi-asset): currently our Store only provides balance and asset
+  // info once a wallet is opened and synched. When this component is displayed
+  // no wallet is opened yet so we have no way to retrieve this info.
+  const assets = []
+  //   {
+  //     assetName: 'YROI',
+  //     assetId: 'tokenhkjshdf',
+  //     balance: '2,000',
+  //   },
+  //   {
+  //     assetName: 'ERG',
+  //     assetId: 'tokenhkjshdf',
+  //     balance: '3,000',
+  //   },
+  //   {
+  //     assetName: 'YRG',
+  //     assetId: 'tokenhkjshdf',
+  //     balance: '4,000',
+  //   },
+  // ]
 
   return (
     <View style={styles.itemContainer}>
@@ -113,23 +108,27 @@ const WalletListItem: (props) => Node = ({wallet, onPress}) => {
             </Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => toggleExpand()}
-          style={styles.rightSide}
-        >
-          <Image source={expanded ? arrowUp : arrowDown} />
-        </TouchableOpacity>
+        {assets.length > 0 && (
+          <TouchableOpacity
+            onPress={() => toggleExpand()}
+            style={styles.rightSide}
+          >
+            <Image source={expanded ? arrowUp : arrowDown} />
+          </TouchableOpacity>
+        )}
       </View>
       {expanded && (
         <View style={styles.expandableView}>
           <View style={styles.walletBalance}>
-            <View style={styles.walletAvatar}>{adaIcon}</View>
+            <View style={styles.walletAvatar}>
+              <WrappedIcon icon={icon} />
+            </View>
             <View style={styles.walletDetails}>
               <Text style={styles.walletName}>12.000000</Text>
               <Text style={styles.walletMeta}>Total ADA</Text>
             </View>
           </View>
-          <AssetList styles={AssetListStyle} assets={assets} />
+          <AssetList styles={assetListStyle} assets={assets} />
         </View>
       )}
     </View>

@@ -1,7 +1,7 @@
 // @flow
 import {StyleSheet} from 'react-native'
 
-import stylesConfig, {COLORS} from '../../../styles/config'
+import stylesConfig, {COLORS} from '../../../../styles/config'
 
 export default StyleSheet.create({
   assetHeading: {

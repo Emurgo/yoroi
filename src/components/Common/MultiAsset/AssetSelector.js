@@ -4,31 +4,37 @@ import React, {useState} from 'react'
 import type {Node} from 'react'
 import {View, Image, LayoutAnimation, TouchableOpacity} from 'react-native'
 
-import {Text} from '.'
-
-import AssetList from '../Common/assetList/AssetList'
-import AssetListStyle from '../Common/assetList/assetListSend.style'
+import {Text} from '../../UiKit'
+import AssetList from './AssetList'
+import {
+  getAssetDenominationOrId,
+  ASSET_DENOMINATION,
+} from '../../../utils/format'
 
 import styles from './styles/AssetSelector.style'
-import arrowUp from '../../assets/img/arrow_up_fill.png'
-import arrowDown from '../../assets/img/arrow_down_fill.png'
-import closeIcon from '../../assets/img/cross_fill.png'
+import assetListStyle from './styles/AssetListSend.style'
+import arrowUp from '../../../assets/img/arrow_up_fill.png'
+import arrowDown from '../../../assets/img/arrow_down_fill.png'
+import closeIcon from '../../../assets/img/cross_fill.png'
 
-// to be updated later
-type tokenType = {|
-  assetName: string,
-  assetId: string,
-  balance: string,
-|}
+import type {TokenEntry} from '../../../crypto/MultiToken'
+import type {Token} from '../../../types/HistoryTransaction'
 
 type ExternalProps = {
   label?: string,
-  assets: Array<any>,
-  onSelect: (tokenType | null) => any, // change to token type
-  selectedAsset: tokenType | null
+  assets: Array<TokenEntry>,
+  assetsMetadata: Dict<Token>,
+  onSelect: (TokenEntry | null) => any,
+  selectedAsset: TokenEntry | null
 }
 
-const AssetSelector: (ExternalProps) => Node = ({label, assets, onSelect, selectedAsset}) => {
+const AssetSelector: (ExternalProps) => Node = ({
+  label,
+  assets,
+  assetsMetadata,
+  onSelect,
+  selectedAsset,
+}) => {
   const [expanded, setExpanded] = useState(false)
 
   const toggleExpand = () => {
@@ -41,7 +47,10 @@ const AssetSelector: (ExternalProps) => Node = ({label, assets, onSelect, select
         {selectedAsset == null ? (
           <Text> Select a Token </Text>
         ) : (
-          <Text> {selectedAsset.assetName} </Text>
+          <Text> {getAssetDenominationOrId(
+            assetsMetadata[selectedAsset.identifier],
+            ASSET_DENOMINATION.TICKER,
+          )} </Text>
         )}
         <View style={styles.flexRow}>
           <TouchableOpacity style={styles.closeButton} onPress={() => onSelect(null)}>
@@ -63,7 +72,7 @@ const AssetSelector: (ExternalProps) => Node = ({label, assets, onSelect, select
             onSelect={(item) => {
               onSelect(item)
             }}
-            styles={AssetListStyle}
+            styles={assetListStyle}
             assets={assets}
           />
         </View>

@@ -46,15 +46,6 @@ export default StyleSheet.create({
     paddingLeft: 16,
   },
   iconWrapper: {
-    height: 25,
-    width: 25,
-    padding: 4,
-    borderRadius: 8,
-    marginBottom: 3,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  adaIconWrapper: {
     height: 32,
     width: 32,
     borderWidth: 1,
