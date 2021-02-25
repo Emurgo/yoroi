@@ -54,4 +54,7 @@ export default StyleSheet.create({
   rowColor2: {
     backgroundColor: '#FAFAFC',
   },
+  tokenMeta: {
+    width: '80%',
+  },
 })

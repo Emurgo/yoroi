@@ -223,7 +223,7 @@
   "components.txhistory.txdetails.confirmations": "{cnt} {cnt, plural, one {CONFIRMATION} other {CONFIRMATIONS}}",
   "components.txhistory.txdetails.fee": "Fee:",
   "components.txhistory.txdetails.fromAddresses": "From Addresses",
-  "components.txhistory.txdetails.omittedCount": "+ {cnt} omitted",
+  "components.txhistory.txdetails.omittedCount": "+ {cnt} omitted addresses",
   "components.txhistory.txdetails.toAddresses": "To Addresses",
   "components.txhistory.txdetails.transactionId": "Transaction ID",
   "components.txhistory.txdetails.txAssuranceLevel": "Transaction assurance level",
@@ -433,5 +433,7 @@
   "global.txLabels.withdrawals": "Withdrawals",
   "utils.format.today": "Today",
   "utils.format.unknownAssetName": "[Unknown asset name]",
-  "utils.format.yesterday": "Yesterday"
+  "utils.format.yesterday": "Yesterday",
+  "global.assets.assetsLabel": "Assets",
+  "components.ma.assetSelector.placeHolder": "Select a Token"
 }

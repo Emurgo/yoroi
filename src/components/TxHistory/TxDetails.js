@@ -41,6 +41,7 @@ import type {State} from '../../state'
 import type {Navigation} from '../../types/navigation'
 import type {ComponentType} from 'react'
 import {TRANSACTION_DIRECTION, type Token} from '../../types/HistoryTransaction'
+import globalMessages from '../../i18n/global-messages'
 
 const txTypeMessages = defineMessages({
   SENT: {
@@ -112,7 +113,7 @@ const messages = defineMessages({
   },
   omittedCount: {
     id: 'components.txhistory.txdetails.omittedCount',
-    defaultMessage: '!!!+ {cnt} omitted',
+    defaultMessage: '!!!+ {cnt} omitted addresses',
   },
 })
 
@@ -334,7 +335,7 @@ const TxDetails = ({
                   activeOpacity={0.5}
                   onPress={() => toggleExpandOut()}
                 >
-                  <Text style={styles.assetsTitle}> +{item.assets.length} assets </Text>
+                  <Text style={styles.assetsTitle}> +{item.assets.length} {intl.formatMessage(globalMessages.assetsLabel)} </Text>
                   <Image source={expandedOut ? arrowUp : arrowDown} />
                 </TouchableOpacity>
               )}

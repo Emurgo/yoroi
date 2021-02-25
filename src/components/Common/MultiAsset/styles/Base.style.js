@@ -46,4 +46,7 @@ export default StyleSheet.create({
   rowColor2: {
     backgroundColor: 'transparent',
   },
+  tokenMeta: {
+    width: '80%',
+  },
 })

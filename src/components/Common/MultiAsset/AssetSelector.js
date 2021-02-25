@@ -1,6 +1,8 @@
 // @flow
 
 import React, {useState} from 'react'
+import type {ComponentType} from 'react'
+import {injectIntl, defineMessages} from 'react-intl'
 import type {Node} from 'react'
 import {View, Image, LayoutAnimation, TouchableOpacity} from 'react-native'
 
@@ -20,12 +22,20 @@ import closeIcon from '../../../assets/img/cross_fill.png'
 import type {TokenEntry} from '../../../crypto/MultiToken'
 import type {Token} from '../../../types/HistoryTransaction'
 
+const messages = defineMessages({
+  placeHolder: {
+    id: 'components.ma.assetSelector.placeHolder',
+    defaultMessage: '!!!Select a Token',
+  },
+})
+
 type ExternalProps = {
   label?: string,
   assets: Array<TokenEntry>,
   assetsMetadata: Dict<Token>,
   onSelect: (TokenEntry | null) => any,
-  selectedAsset: TokenEntry | null
+  selectedAsset: TokenEntry | null,
+  intl: any,
 }
 
 const AssetSelector: (ExternalProps) => Node = ({
@@ -34,6 +44,7 @@ const AssetSelector: (ExternalProps) => Node = ({
   assetsMetadata,
   onSelect,
   selectedAsset,
+  intl,
 }) => {
   const [expanded, setExpanded] = useState(false)
 
@@ -43,9 +54,9 @@ const AssetSelector: (ExternalProps) => Node = ({
   }
   return (
     <View style={styles.container}>
-      <View style={styles.input} onPress={() => toggleExpand()}>
+      <View style={styles.input} >
         {selectedAsset == null ? (
-          <Text> Select a Token </Text>
+          <Text> {intl.formatMessage(messages.placeHolder)} </Text>
         ) : (
           <Text> {getAssetDenominationOrId(
             assetsMetadata[selectedAsset.identifier],
@@ -82,4 +93,4 @@ const AssetSelector: (ExternalProps) => Node = ({
   )
 }
 
-export default AssetSelector
+export default injectIntl((AssetSelector: ComponentType<ExternalProps>))

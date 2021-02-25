@@ -3,17 +3,21 @@
 import React from 'react'
 import {Text, View, FlatList, TouchableOpacity} from 'react-native'
 import {injectIntl} from 'react-intl'
+import type {Node, ComponentType} from 'react'
 
-import {getAssetNameOrUnknown, formatTokenAmount} from '../../../utils/format'
+import {getAssetNameOrUnknown, formatTokenAmount, getAssetDenomination} from '../../../utils/format'
 
 import baseStyle from './styles/Base.style'
 import assetListTransactionStyle from './styles/AssetListTransaction.style'
-
+import assetListSendStyle from './styles/AssetListSend.style'
+import globalMessages, {
+  txLabels,
+} from '../../../i18n/global-messages'
 import type {TokenEntry} from '../../../crypto/MultiToken'
 import type {Token} from '../../../types/HistoryTransaction'
-import type {Node, ComponentType} from 'react'
 
-type NodeStyle = typeof baseStyle | typeof assetListTransactionStyle
+
+type NodeStyle = typeof baseStyle | typeof assetListTransactionStyle | typeof assetListSendStyle
 
 type Props = {
   assets: Array<TokenEntry>,
@@ -34,14 +38,14 @@ const AssetRow: ({|
 |}) => Node = ({styles, asset, assetMetadata, backColor, onSelect, intl}) => {
   const item = (
     <>
-      <View>
+      <View style={styles.tokenMeta}>
         <Text style={styles.assetName}>
           {getAssetNameOrUnknown(
             assetMetadata,
             intl,
           )}
         </Text>
-        <Text style={styles.assetMeta}>{asset.identifier}</Text>
+        <Text style={styles.assetMeta}>{getAssetDenomination(assetMetadata, 'fingerprint')}</Text>
       </View>
       <View>
         <Text style={styles.assetBalance}>
@@ -81,8 +85,8 @@ const AssetList: (props: Props) => Node = ({
   return (
     <View>
       <View style={styles.assetTitle}>
-        <Text style={styles.assetHeading}>Assets</Text>
-        <Text style={styles.assetHeading}>Amount</Text>
+        <Text style={styles.assetHeading}>{intl.formatMessage(globalMessages.assetsLabel)}</Text>
+        <Text style={styles.assetHeading}>{intl.formatMessage(txLabels.amount)}</Text>
       </View>
       <View>
         <FlatList

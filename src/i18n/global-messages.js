@@ -524,4 +524,8 @@ export default defineMessages({
     defaultMessage:
       '!!!We are experiencing synchronization issues. Pull to refresh',
   },
+  assetsLabel: {
+    id: 'global.assets.assetsLabel',
+    defaultMessage: '!!!Assets',
+  }
 })
