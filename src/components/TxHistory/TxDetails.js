@@ -192,8 +192,9 @@ const getShownAddresses = (
   }[transaction.direction]
 
   // TODO(ppershing): decide on importance based on Tx direction
-  const fromAddresses = _.uniq(transaction.fromAddresses).map((address) => ({
+  const fromAddresses = _.uniq(transaction.inputs).map(({address, assets}) => ({
     address,
+    assets,
     path: getPath(address),
     isHighlighted: isHighlightedFrom(address),
   }))
@@ -202,8 +203,9 @@ const getShownAddresses = (
   )
   const cntOmittedFrom = fromAddresses.length - fromFiltered.length
 
-  const toAddresses = _.uniq(transaction.toAddresses).map((address) => ({
+  const toAddresses = _.uniq(transaction.outputs).map(({address, assets}) => ({
     address,
+    assets,
     path: getPath(address),
     isHighlighted: isHighlightedTo(address),
   }))
@@ -252,8 +254,6 @@ const TxDetails = ({
 
   const defaultAsset = amountDefaultAsset || defaultNetworkAsset
 
-  const assets = transaction.delta.nonDefaultEntries()
-
   const [expandedIn, setExpandedIn] = useState(false)
   const [expandedOut, setExpandedOut] = useState(false)
 
@@ -266,24 +266,6 @@ const TxDetails = ({
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setExpandedOut(!expandedOut)
   }
-
-  const _assets = [
-    {
-      assetName: 'YROI',
-      assetId: 'tokenhkjshdf',
-      balance: '2,000',
-    },
-    {
-      assetName: 'ERG',
-      assetId: 'tokenhkjshdf',
-      balance: '3,000',
-    },
-    {
-      assetName: 'YRG',
-      assetId: 'tokenhkjshdf',
-      balance: '4,000',
-    },
-  ]
 
   return (
     <View style={styles.container}>
@@ -305,62 +287,70 @@ const TxDetails = ({
         <View style={styles.content}>
           <Label>{intl.formatMessage(messages.fromAddresses)}</Label>
           {fromFiltered.map((item, i) => (
-            <AddressEntry
-              key={i}
-              {...item}
-              showModalForAddress={showModalForAddress}
-            />
+            <>
+              <AddressEntry
+                key={i}
+                {...item}
+                showModalForAddress={showModalForAddress}
+              />
+              {item.assets.length > 0 && (
+                <TouchableOpacity
+                  style={styles.assetsExpandable}
+                  activeOpacity={0.5}
+                  onPress={() => toggleExpandIn()}
+                >
+                  <Text style={styles.assetsTitle}> -{item.assets.length} assets </Text>
+                  <Image source={expandedIn ? arrowUp : arrowDown} />
+                </TouchableOpacity>
+              )}
+              {expandedIn && (
+                <AssetList
+                  styles={assetListStyle}
+                  assets={item.assets}
+                  assetsMetadata={availableAssets}
+                />
+              )}
+            </>
           ))}
           {cntOmittedFrom > 0 && (
             <Text>
               {intl.formatMessage(messages.omittedCount, {cnt: cntOmittedFrom})}
             </Text>
           )}
-          <TouchableOpacity
-            style={styles.assetsExpandable}
-            activeOpacity={0.5}
-            onPress={() => toggleExpandIn()}
-          >
-            <Text style={styles.assetsTitle}> -3 assets </Text>
-            <Image source={expandedIn ? arrowUp : arrowDown} />
-          </TouchableOpacity>
-          {expandedIn && (
-            <AssetList
-              styles={assetListStyle}
-              assets={assets}
-              assetsMetadata={availableAssets}
-            />
-          )}
 
           <View style={styles.borderTop}>
             <Label>{intl.formatMessage(messages.toAddresses)}</Label>
           </View>
           {toFiltered.map((item, i) => (
-            <AddressEntry
-              key={i}
-              {...item}
-              showModalForAddress={showModalForAddress}
-            />
+            <>
+              <AddressEntry
+                key={i}
+                {...item}
+                showModalForAddress={showModalForAddress}
+              />
+              {item.assets.length > 0 && (
+                <TouchableOpacity
+                  style={styles.assetsExpandable}
+                  activeOpacity={0.5}
+                  onPress={() => toggleExpandOut()}
+                >
+                  <Text style={styles.assetsTitle}> +{item.assets.length} assets </Text>
+                  <Image source={expandedOut ? arrowUp : arrowDown} />
+                </TouchableOpacity>
+              )}
+              {expandedOut && (
+                <AssetList
+                  styles={assetListStyle}
+                  assets={item.assets}
+                  assetsMetadata={availableAssets}
+                />
+              )}
+            </>
           ))}
           {cntOmittedTo > 0 && (
             <Text>
               {intl.formatMessage(messages.omittedCount, {cnt: cntOmittedTo})}
             </Text>
-          )}
-          {assets.length > 0 && (<TouchableOpacity
-            style={styles.assetsExpandable}
-            activeOpacity={0.5}
-            onPress={() => toggleExpandOut()}
-          >
-            <Text style={styles.assetsTitle}> +3 assets </Text>
-            <Image source={expandedOut ? arrowUp : arrowDown} />
-          </TouchableOpacity>)}
-          {expandedOut && (
-            <AssetList
-              styles={assetListStyle}
-              assets={assets}
-              assetsMetadata={availableAssets}
-            />
           )}
           <View style={styles.borderTop}>
             <Label>{intl.formatMessage(messages.txAssuranceLevel)}</Label>

@@ -247,10 +247,22 @@ export const processTxHistoryData = (
 
   const tokens = getTxTokens(tx, networkId)
 
+  const _remoteAssetAsTokenEntry = (asset: BaseAsset) => ({
+    identifier: asset.assetId,
+    amount: new BigNumber(asset.amount),
+    networkId,
+  })
+
   return {
     id: tx.id,
-    fromAddresses: tx.inputs.map(({address}) => address),
-    toAddresses: tx.outputs.map(({address}) => address),
+    inputs: tx.inputs.map(({address, assets}) => ({
+      address,
+      assets: assets.map(_remoteAssetAsTokenEntry),
+    })),
+    outputs: tx.outputs.map(({address, assets}) => ({
+      address,
+      assets: assets.map(_remoteAssetAsTokenEntry),
+    })),
     amount,
     fee,
     delta,
