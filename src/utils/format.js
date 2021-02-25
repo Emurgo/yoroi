@@ -3,7 +3,7 @@ import {BigNumber} from 'bignumber.js'
 import {defineMessages} from 'react-intl'
 import moment from 'moment'
 import utfSymbols from './utfSymbols'
-
+import AssetFingerprint from '@emurgo/cip14-js'
 import {getCardanoDefaultAsset} from '../config/config'
 
 import type {Token, DefaultAsset} from '../types/HistoryTransaction'
@@ -45,10 +45,23 @@ export const getAssetDenomination = (
       return token.metadata.ticker
         ? utfSymbols.CURRENCIES[token.metadata.ticker]
         : token.metadata.ticker
-    case ASSET_DENOMINATION.NAME:
-      return token.metadata.assetName !== ''
-        ? token.metadata.assetName
-        : null
+    case ASSET_DENOMINATION.NAME: {
+      if (token.metadata.assetName.length > 0) {
+        const bytes = [...Buffer.from(token.metadata.assetName, 'hex')]
+        if (bytes.filter((byte) => byte <= 32 || byte >= 127).length === 0) {
+          return String.fromCharCode(...bytes)
+        }
+      }
+      return null
+    }
+    case ASSET_DENOMINATION.FINGERPRINT: {
+      const {policyId, assetName} = token.metadata
+      const assetFingerprint = new AssetFingerprint(
+        Buffer.from(policyId, 'hex'),
+        Buffer.from(assetName, 'hex')
+      )
+      return assetFingerprint.fingerprint()
+    }
     default:
       return null
   }
@@ -64,7 +77,7 @@ export const getAssetNameOrUnknown = (
   token: Token | DefaultAsset,
   intl: any,
 ): string =>
-  getAssetDenomination(token, ASSET_DENOMINATION.TICKER) ?? intl.formatMessage(
+  getAssetDenomination(token, ASSET_DENOMINATION.NAME) ?? intl.formatMessage(
     messages.unknownAssetName,
   )
 
