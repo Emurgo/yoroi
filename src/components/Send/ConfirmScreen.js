@@ -38,7 +38,7 @@ import KeyStore from '../../crypto/KeyStore'
 import {showErrorDialog, submitTransaction, submitSignedTx} from '../../actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
 import {withNavigationTitle} from '../../utils/renderUtils'
-import {formatTokenWithSymbol, formatTokenWithText} from '../../utils/format'
+import {formatTokenWithSymbol, formatTokenWithText, formatTokenAmount} from '../../utils/format'
 import {NetworkError, ApiError} from '../../api/errors'
 import {WrongPassword} from '../../crypto/errors'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
@@ -49,6 +49,7 @@ import LocalizableError from '../../i18n/LocalizableError'
 import {ISignRequest} from '../../crypto/ISignRequest'
 
 import type {CreateUnsignedTxResponse} from '../../crypto/shelley/transactionUtils'
+import type {Token} from '../../types/HistoryTransaction'
 
 import styles from './styles/ConfirmScreen.style'
 
@@ -228,13 +229,17 @@ const ConfirmScreen = ({
   errorLogs,
 }) => {
   const {
-    amount,
+    defaultAssetAmount,
+    tokenAmount,
+    tokenMetadata,
     address,
     balanceAfterTx,
     availableAmount,
     fee,
   }: {|
-    amount: BigNumber,
+    defaultAssetAmount: BigNumber,
+    tokenAmount: ?BigNumber,
+    tokenMetadata: Token,
     address: string,
     balanceAfterTx: BigNumber,
     availableAmount: BigNumber,
@@ -273,7 +278,16 @@ const ConfirmScreen = ({
           <Text style={styles.heading} small>
             {intl.formatMessage(txLabels.amount)}
           </Text>
-          <Text>{formatTokenWithSymbol(amount, defaultAsset)}</Text>
+          <Text>{formatTokenWithSymbol(defaultAssetAmount, defaultAsset)}</Text>
+          {tokenAmount != null && (
+            <>
+              <Text style={styles.heading} small>
+                {/* intl.formatMessage(txLabels.amount) */}
+                Assets
+              </Text>
+              <Text>{formatTokenAmount(tokenAmount, tokenMetadata)}</Text>
+            </>
+          )}
 
           {/* eslint-disable indent */
           !isEasyConfirmationEnabled &&

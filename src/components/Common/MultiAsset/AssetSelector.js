@@ -24,8 +24,9 @@ type ExternalProps = {
   label?: string,
   assets: Array<TokenEntry>,
   assetsMetadata: Dict<Token>,
-  onSelect: (TokenEntry | null) => any,
-  selectedAsset: TokenEntry | null
+  onSelect: (TokenEntry | void) => any,
+  selectedAsset: TokenEntry | null,
+  unselectEnabled: boolean,
 }
 
 const AssetSelector: (ExternalProps) => Node = ({
@@ -34,6 +35,7 @@ const AssetSelector: (ExternalProps) => Node = ({
   assetsMetadata,
   onSelect,
   selectedAsset,
+  unselectEnabled,
 }) => {
   const [expanded, setExpanded] = useState(false)
 
@@ -53,9 +55,11 @@ const AssetSelector: (ExternalProps) => Node = ({
           )} </Text>
         )}
         <View style={styles.flexRow}>
-          <TouchableOpacity style={styles.closeButton} onPress={() => onSelect(null)}>
-            <Image source={closeIcon} />
-          </TouchableOpacity>
+          {unselectEnabled && (
+            <TouchableOpacity style={styles.closeButton} onPress={() => onSelect()}>
+              <Image source={closeIcon} />
+            </TouchableOpacity>
+          )}
           <TouchableOpacity style={styles.chevronButton} onPress={() => toggleExpand()}>
             <Image source={expanded ? arrowUp : arrowDown} />
           </TouchableOpacity>
