@@ -74,6 +74,7 @@ const AssetSelector: (ExternalProps) => Node = ({
             }}
             styles={assetListStyle}
             assets={assets}
+            assetsMetadata={assetsMetadata}
           />
         </View>
       )}
