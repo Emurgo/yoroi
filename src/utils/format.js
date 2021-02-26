@@ -23,7 +23,7 @@ const messages = defineMessages({
   },
 })
 
-const getTokenFingerprint = (token: TokenEntry | DefaultAsset) => {
+const getTokenFingerprint = (token: Token | DefaultAsset) => {
   const {policyId, assetName} = token.metadata
   const assetFingerprint = new AssetFingerprint(
     Buffer.from(policyId, 'hex'),
@@ -113,13 +113,8 @@ export const formatTokenWithText = (
   amount: BigNumber,
   token: Token | DefaultAsset,
 ) => {
-  const ticker = token.metadata.ticker
-  if (ticker != null) {
-    return `${formatTokenAmount(amount, token)}${utfSymbols.NBSP}${ticker}`
-  }
-  return `${formatTokenAmount(amount, token)}${utfSymbols.NBSP}${
-    token.identifier
-  }`
+  const tickerOrId = getAssetDenominationOrId(token, ASSET_DENOMINATION.TICKER)
+  return `${formatTokenAmount(amount, token)}${utfSymbols.NBSP}${tickerOrId}`
 }
 
 export const formatTokenInteger = (

@@ -38,11 +38,7 @@ import KeyStore from '../../crypto/KeyStore'
 import {showErrorDialog, submitTransaction, submitSignedTx} from '../../actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
 import {withNavigationTitle} from '../../utils/renderUtils'
-import {
-  formatTokenWithSymbol,
-  formatTokenWithText,
-  formatTokenAmount,
-} from '../../utils/format'
+import {formatTokenWithSymbol, formatTokenWithText} from '../../utils/format'
 import {NetworkError, ApiError} from '../../api/errors'
 import {WrongPassword} from '../../crypto/errors'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
@@ -275,22 +271,20 @@ const ConfirmScreen = ({
             {formatTokenWithSymbol(balanceAfterTx, defaultAsset)}
           </Text>
 
-          <Text style={styles.heading} small>
+          <Text style={styles.heading}>
             {intl.formatMessage(txLabels.receiver)}
           </Text>
           <Text>{address}</Text>
-          <Text style={styles.heading} small>
-            {intl.formatMessage(txLabels.amount)}
+          <Text style={styles.heading}>
+            {intl.formatMessage(globalMessages.total)}
           </Text>
-          <Text>{formatTokenWithSymbol(defaultAssetAmount, defaultAsset)}</Text>
+          <Text style={styles.amount}>
+            {formatTokenWithSymbol(defaultAssetAmount, defaultAsset)}
+          </Text>
           {tokenAmount != null && (
-            <>
-              <Text style={styles.heading} small>
-                {/* intl.formatMessage(txLabels.amount) */}
-                Assets
-              </Text>
-              <Text>{formatTokenAmount(tokenAmount, tokenMetadata)}</Text>
-            </>
+            <Text style={styles.amount}>
+              {formatTokenWithText(tokenAmount, tokenMetadata)}
+            </Text>
           )}
 
           {/* eslint-disable indent */

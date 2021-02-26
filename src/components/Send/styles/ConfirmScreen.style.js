@@ -29,4 +29,7 @@ export default StyleSheet.create({
   input: {
     marginTop: 16,
   },
+  amount: {
+    color: COLORS.POSITIVE_AMOUNT,
+  },
 })

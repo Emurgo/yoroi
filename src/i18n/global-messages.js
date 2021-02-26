@@ -503,6 +503,10 @@ export default defineMessages({
     id: 'global.notSupported',
     defaultMessage: '!!!Feature not supported',
   },
+  total: {
+    id: 'global.total',
+    defaultMessage: '!!!Total',
+  },
   totalAda: {
     id: 'global.totalAda',
     defaultMessage: '!!!Total ADA',

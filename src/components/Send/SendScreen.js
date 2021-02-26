@@ -31,7 +31,6 @@ import {
   utxosSelector,
   isOnlineSelector,
   hasPendingOutgoingTransactionSelector,
-  getUtxoBalance,
   availableAssetsSelector,
   defaultNetworkAssetSelector,
 } from '../../selectors'
@@ -256,6 +255,7 @@ const recomputeAll = async ({
   sendAll,
   defaultAsset,
   selectedTokenMeta,
+  tokenBalance,
 }) => {
   const amountErrors = validateAmount(amount, selectedTokenMeta)
   const addressErrors = await validateAddressAsync(address)
@@ -268,7 +268,7 @@ const recomputeAll = async ({
     try {
       let _fee: ?MultiToken
 
-      // we'll substract minAda if we are sending a token
+      // we'll substract minAda from ADA balance if we are sending a token
       const minAda =
         !selectedTokenMeta.isDefault &&
         isHaskellShelleyNetwork(selectedTokenMeta.networkId)
@@ -286,14 +286,28 @@ const recomputeAll = async ({
         )
         _fee = await unsignedTx.fee()
 
-        // TODO(multi-asset): format according to asset metadata
-        recomputedAmount = getUtxoBalance(utxos)
-          .minus(_fee.getDefault())
-          .minus(minAda)
-          .dividedBy(CONFIG.NUMBERS.LOVELACES_PER_ADA) // to ada
-          .decimalPlaces(CONFIG.NUMBERS.DECIMAL_PLACES_IN_ADA)
-          .toString()
-        balanceAfter = new BigNumber('0')
+        if (selectedTokenMeta.isDefault) {
+          recomputedAmount = formatTokenAmount(
+            tokenBalance.getDefault().minus(_fee.getDefault()),
+            selectedTokenMeta,
+          )
+          balanceAfter = new BigNumber('0')
+        } else {
+          const selectedTokenBalance = tokenBalance.get(
+            selectedTokenMeta.identifier,
+          )
+          if (selectedTokenBalance == null) {
+            throw new Error('selectedTokenBalance is null, shouldnt happen')
+          }
+          recomputedAmount = formatTokenAmount(
+            selectedTokenBalance,
+            selectedTokenMeta,
+          )
+          balanceAfter = tokenBalance
+            .getDefault()
+            .minus(_fee.getDefault())
+            .minus(minAda)
+        }
       } else if (_.isEmpty(amountErrors)) {
         const parsedAmount = selectedTokenMeta.isDefault
           ? parseAmountDecimal(amount)
@@ -307,7 +321,8 @@ const recomputeAll = async ({
           selectedTokenMeta,
         )
         _fee = await unsignedTx.fee()
-        balanceAfter = getUtxoBalance(utxos)
+        balanceAfter = tokenBalance
+          .getDefault()
           .minus(parsedAmount)
           .minus(minAda)
           .minus(_fee.getDefault())
@@ -438,7 +453,7 @@ class SendScreen extends Component<Props, State> {
   }
 
   async revalidate({utxos, address, amount, sendAll, selectedAsset}) {
-    const {defaultAsset, availableAssets} = this.props
+    const {defaultAsset, availableAssets, tokenBalance} = this.props
     if (availableAssets[selectedAsset.identifier] == null) {
       throw new Error(
         'revalidate: no asset metadata found for the asset selected',
@@ -451,6 +466,7 @@ class SendScreen extends Component<Props, State> {
       sendAll,
       defaultAsset,
       selectedTokenMeta: availableAssets[selectedAsset.identifier],
+      tokenBalance,
     })
 
     if (
@@ -509,6 +525,7 @@ class SendScreen extends Component<Props, State> {
       sendAll,
       defaultAsset,
       selectedTokenMeta,
+      tokenBalance,
     })
 
     // Note(ppershing): use this.props as they might have

@@ -357,7 +357,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     return stakingKey
   }
 
-  async getRewardAddress(): Address {
+  async getRewardAddress(): Promise<Address> {
     assert.assert(
       isHaskellShelley(this.walletImplementationId),
       'cannot get reward address from a byron-era wallet',

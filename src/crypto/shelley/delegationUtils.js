@@ -567,7 +567,7 @@ export const createWithdrawalTx = async (
               await (await make_vkey_witness(
                 await hash_transaction(body),
                 privateKey,
-              ).to_bytes()),
+              )).to_bytes(),
             ).toString('hex'),
           )
         }
