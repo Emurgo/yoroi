@@ -26,6 +26,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginBottom: 16,
   },
+  indicator: {
+    marginTop: 26,
+  },
 })
 
 export default styles

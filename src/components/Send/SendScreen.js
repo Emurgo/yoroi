@@ -176,6 +176,12 @@ const messages = defineMessages({
   },
 })
 
+const Indicator = () => (
+  <View style={styles.indicator}>
+    <ActivityIndicator size="large" />
+  </View>
+)
+
 const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset) => {
   const fakeAmount = new BigNumber('0') // amount doesn't matter for calculating min UTXO amount
   const fakeMultitoken = new MultiToken(
@@ -755,7 +761,7 @@ class SendScreen extends Component<Props, State> {
             unselectEnabled={false}
           />
           {this.state.fee == null &&
-            !!this.state.amount && <ActivityIndicator />}
+            !!this.state.amount && <Indicator />}
         </ScrollView>
         <View style={styles.actions}>
           <Button
