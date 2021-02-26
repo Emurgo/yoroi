@@ -71,7 +71,7 @@
   "components.ledger.ledgertransportswitchmodal.usbExplanation": "Elige esta opción si quieres conectarte a un Ledger Nano modelo X o S usando un adaptador de cable USB On-The-Go:",
   "components.login.appstartscreen.loginButton": "Acceder",
   "components.login.custompinlogin.title": "Ingresa tu PIN",
-  "components.ma.assetSelector.placeHolder": "Select an asset",
+  "components.ma.assetSelector.placeHolder": "Seleccionar un activo",
   "components.maintenancemodal.explanation": "Yoroi se encuentra en modo de mantenimiento. Aún puedes acceder a tus fondos a través de cualquier otro software de billetera.",
   "components.maintenancemodal.learnMore": "Conoce más",
   "components.maintenancemodal.title": "Mantenimiento Programado",
