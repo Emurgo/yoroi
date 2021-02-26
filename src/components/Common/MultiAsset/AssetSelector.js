@@ -76,9 +76,7 @@ const AssetSelector: (ExternalProps) => Node = ({
               <Image source={closeIcon} />
             </TouchableOpacity>
           )}
-          <View
-            style={styles.chevronButton}
-          >
+          <View style={styles.chevronButton}>
             <Image source={expanded ? arrowUp : arrowDown} />
           </View>
         </View>
