@@ -5,19 +5,25 @@ import {Text, View, FlatList, TouchableOpacity} from 'react-native'
 import {injectIntl} from 'react-intl'
 import type {Node, ComponentType} from 'react'
 
-import {getAssetNameOrUnknown, formatTokenAmount, getAssetDenomination} from '../../../utils/format'
+import {
+  getAssetDenominationOrUnknown,
+  formatTokenAmount,
+  getAssetDenomination,
+  ASSET_DENOMINATION,
+} from '../../../utils/format'
 
 import baseStyle from './styles/Base.style'
 import assetListTransactionStyle from './styles/AssetListTransaction.style'
 import assetListSendStyle from './styles/AssetListSend.style'
-import globalMessages, {
-  txLabels,
-} from '../../../i18n/global-messages'
+import globalMessages, {txLabels} from '../../../i18n/global-messages'
+
 import type {TokenEntry} from '../../../crypto/MultiToken'
 import type {Token} from '../../../types/HistoryTransaction'
 
-
-type NodeStyle = typeof baseStyle | typeof assetListTransactionStyle | typeof assetListSendStyle
+type NodeStyle =
+  | typeof baseStyle
+  | typeof assetListTransactionStyle
+  | typeof assetListSendStyle
 
 type Props = {
   assets: Array<TokenEntry>,
@@ -40,12 +46,32 @@ const AssetRow: ({|
     <>
       <View style={styles.tokenMeta}>
         <Text style={styles.assetName}>
-          {getAssetNameOrUnknown(
-            assetMetadata,
-            intl,
-          )}
+          {/* eslint-disable indent */
+          assetMetadata.isDefault
+            ? getAssetDenominationOrUnknown(
+                assetMetadata,
+                ASSET_DENOMINATION.TICKER,
+                intl,
+              )
+            : getAssetDenominationOrUnknown(
+                assetMetadata,
+                ASSET_DENOMINATION.NAME,
+                intl,
+              )
+          /* eslint-enable indent */
+          }
         </Text>
-        <Text style={styles.assetMeta}>{getAssetDenomination(assetMetadata, 'fingerprint')}</Text>
+        <Text style={styles.assetMeta} ellipsizeMode="middle" numberOfLines={1}>
+          {/* eslint-disable indent */
+          assetMetadata.isDefault
+            ? ''
+            : getAssetDenomination(
+                assetMetadata,
+                ASSET_DENOMINATION.FINGERPRINT,
+              )
+          /* eslint-enable indent */
+          }
+        </Text>
       </View>
       <View>
         <Text style={styles.assetBalance}>
@@ -85,8 +111,12 @@ const AssetList: (props: Props) => Node = ({
   return (
     <View>
       <View style={styles.assetTitle}>
-        <Text style={styles.assetHeading}>{intl.formatMessage(globalMessages.assetsLabel)}</Text>
-        <Text style={styles.assetHeading}>{intl.formatMessage(txLabels.amount)}</Text>
+        <Text style={styles.assetHeading}>
+          {intl.formatMessage(globalMessages.assetsLabel)}
+        </Text>
+        <Text style={styles.assetHeading}>
+          {intl.formatMessage(txLabels.amount)}
+        </Text>
       </View>
       <View>
         <FlatList
@@ -100,8 +130,8 @@ const AssetList: (props: Props) => Node = ({
               backColor={colors[index % colors.length]}
               onSelect={onSelect}
               intl={intl}
-            />)
-          }
+            />
+          )}
         />
       </View>
     </View>

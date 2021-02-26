@@ -44,10 +44,7 @@ export const getTransactionAssurance = (
   return 'HIGH'
 }
 
-const getTxTokens = (
-  tx: Transaction,
-  networkId: NetworkId,
-): Dict<Token> => {
+const getTxTokens = (tx: Transaction, networkId: NetworkId): Dict<Token> => {
   const tokens: Dict<Token> = {}
   const rawTokens: Array<BaseAsset> = []
   tx.inputs.forEach((i) => rawTokens.push(...i.assets))

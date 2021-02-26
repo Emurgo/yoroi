@@ -527,5 +527,5 @@ export default defineMessages({
   assetsLabel: {
     id: 'global.assets.assetsLabel',
     defaultMessage: '!!!Assets',
-  }
+  },
 })

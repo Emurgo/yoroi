@@ -24,7 +24,7 @@ import type {Node, ComponentType} from 'react'
 const messages = defineMessages({
   placeHolder: {
     id: 'components.ma.assetSelector.placeHolder',
-    defaultMessage: '!!!Select a Token',
+    defaultMessage: '!!!Select an asset',
   },
 })
 
@@ -55,22 +55,31 @@ const AssetSelector: (ExternalProps) => Node = ({
   }
   return (
     <View style={styles.container}>
-      <View style={styles.input} >
+      <View style={styles.input}>
         {selectedAsset == null ? (
           <Text> {intl.formatMessage(messages.placeHolder)} </Text>
         ) : (
-          <Text> {getAssetDenominationOrId(
-            assetsMetadata[selectedAsset.identifier],
-            ASSET_DENOMINATION.TICKER,
-          )} </Text>
+          <Text>
+            {' '}
+            {getAssetDenominationOrId(
+              assetsMetadata[selectedAsset.identifier],
+              ASSET_DENOMINATION.TICKER,
+            )}{' '}
+          </Text>
         )}
         <View style={styles.flexRow}>
           {unselectEnabled && (
-            <TouchableOpacity style={styles.closeButton} onPress={() => onSelect()}>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => onSelect()}
+            >
               <Image source={closeIcon} />
             </TouchableOpacity>
           )}
-          <TouchableOpacity style={styles.chevronButton} onPress={() => toggleExpand()}>
+          <TouchableOpacity
+            style={styles.chevronButton}
+            onPress={() => toggleExpand()}
+          >
             <Image source={expanded ? arrowUp : arrowDown} />
           </TouchableOpacity>
         </View>
@@ -85,6 +94,7 @@ const AssetSelector: (ExternalProps) => Node = ({
           <AssetList
             onSelect={(item) => {
               onSelect(item)
+              toggleExpand()
             }}
             styles={assetListStyle}
             assets={assets}

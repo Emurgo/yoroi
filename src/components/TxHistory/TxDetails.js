@@ -113,7 +113,8 @@ const messages = defineMessages({
   },
   omittedCount: {
     id: 'components.txhistory.txdetails.omittedCount',
-    defaultMessage: '!!!+ {cnt} omitted addresses',
+    defaultMessage:
+      '!!!+ {cnt} omitted {cnt, plural, one {address} other {addresses}}',
   },
 })
 
@@ -300,7 +301,10 @@ const TxDetails = ({
                   activeOpacity={0.5}
                   onPress={() => toggleExpandIn()}
                 >
-                  <Text style={styles.assetsTitle}> -{item.assets.length} assets </Text>
+                  <Text style={styles.assetsTitle}>
+                    {` -${item.assets.length} ` +
+                      `${intl.formatMessage(globalMessages.assetsLabel)} `}
+                  </Text>
                   <Image source={expandedIn ? arrowUp : arrowDown} />
                 </TouchableOpacity>
               )}
@@ -335,7 +339,10 @@ const TxDetails = ({
                   activeOpacity={0.5}
                   onPress={() => toggleExpandOut()}
                 >
-                  <Text style={styles.assetsTitle}> +{item.assets.length} {intl.formatMessage(globalMessages.assetsLabel)} </Text>
+                  <Text style={styles.assetsTitle}>
+                    {` +${item.assets.length} ` +
+                      `${intl.formatMessage(globalMessages.assetsLabel)} `}
+                  </Text>
                   <Image source={expandedOut ? arrowUp : arrowDown} />
                 </TouchableOpacity>
               )}

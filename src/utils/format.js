@@ -23,6 +23,15 @@ const messages = defineMessages({
   },
 })
 
+const getTokenFingerprint = (token: TokenEntry | DefaultAsset) => {
+  const {policyId, assetName} = token.metadata
+  const assetFingerprint = new AssetFingerprint(
+    Buffer.from(policyId, 'hex'),
+    Buffer.from(assetName, 'hex'),
+  )
+  return assetFingerprint.fingerprint()
+}
+
 export const ASSET_DENOMINATION = {
   TICKER: 'ticker',
   SYMBOL: 'symbol',
@@ -33,18 +42,20 @@ export type AssetDenomination = $Values<typeof ASSET_DENOMINATION>
 
 export const getAssetDenomination = (
   token: Token | DefaultAsset,
-  denomination?: AssetDenomination = ASSET_DENOMINATION.SYMBOL
+  denomination?: AssetDenomination = ASSET_DENOMINATION.SYMBOL,
 ): ?string => {
   switch (denomination) {
     case ASSET_DENOMINATION.TICKER:
       return token.metadata.ticker
     case ASSET_DENOMINATION.SYMBOL:
-    // if we don't have a symbol for this asset, default to ticker, though
-    // ticker can still be null
+      // if we don't have a symbol for this asset, default to ticker, though
+      // ticker can still be null
       // prettier-ignore
       return token.metadata.ticker
         ? utfSymbols.CURRENCIES[token.metadata.ticker]
-        : token.metadata.ticker
+          ? utfSymbols.CURRENCIES[token.metadata.ticker]
+          : token.metadata.ticker
+        : null
     case ASSET_DENOMINATION.NAME: {
       if (token.metadata.assetName.length > 0) {
         const bytes = [...Buffer.from(token.metadata.assetName, 'hex')]
@@ -55,31 +66,26 @@ export const getAssetDenomination = (
       return null
     }
     case ASSET_DENOMINATION.FINGERPRINT: {
-      const {policyId, assetName} = token.metadata
-      const assetFingerprint = new AssetFingerprint(
-        Buffer.from(policyId, 'hex'),
-        Buffer.from(assetName, 'hex')
-      )
-      return assetFingerprint.fingerprint()
+      return getTokenFingerprint(token)
     }
     default:
       return null
   }
 }
 
-// TODO(multi-asset): should return fingerprint as default
 export const getAssetDenominationOrId = (
   token: Token | DefaultAsset,
   denomination: AssetDenomination,
-): string => getAssetDenomination(token, denomination) ?? token.identifier
+): string =>
+  getAssetDenomination(token, denomination) ?? getTokenFingerprint(token)
 
-export const getAssetNameOrUnknown = (
+export const getAssetDenominationOrUnknown = (
   token: Token | DefaultAsset,
+  denomination: AssetDenomination,
   intl: any,
 ): string =>
-  getAssetDenomination(token, ASSET_DENOMINATION.NAME) ?? intl.formatMessage(
-    messages.unknownAssetName,
-  )
+  getAssetDenomination(token, denomination) ??
+  intl.formatMessage(messages.unknownAssetName)
 
 export const formatTokenAmount = (
   amount: BigNumber,

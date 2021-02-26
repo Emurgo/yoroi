@@ -34,9 +34,7 @@ type WrappedIconProps = {
   style?: ViewStyleProp,
 }
 const WrappedIcon = ({icon, style}: WrappedIconProps) => (
-  <View style={[styles.iconWrapper, style]}>
-    {icon}
-  </View>
+  <View style={[styles.iconWrapper, style]}>{icon}</View>
 )
 
 type WalletItemMeta = {

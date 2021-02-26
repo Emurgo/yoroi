@@ -38,7 +38,11 @@ import KeyStore from '../../crypto/KeyStore'
 import {showErrorDialog, submitTransaction, submitSignedTx} from '../../actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
 import {withNavigationTitle} from '../../utils/renderUtils'
-import {formatTokenWithSymbol, formatTokenWithText, formatTokenAmount} from '../../utils/format'
+import {
+  formatTokenWithSymbol,
+  formatTokenWithText,
+  formatTokenAmount,
+} from '../../utils/format'
 import {NetworkError, ApiError} from '../../api/errors'
 import {WrongPassword} from '../../crypto/errors'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'

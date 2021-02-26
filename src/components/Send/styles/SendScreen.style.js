@@ -26,7 +26,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginBottom: 16,
   },
-
 })
 
 export default styles

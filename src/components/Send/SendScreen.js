@@ -177,30 +177,29 @@ const messages = defineMessages({
   },
 })
 
-const getMinAda = async (
-  selectedToken: Token,
-  defaultAsset: DefaultAsset,
-) => {
+const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset) => {
   const fakeAmount = new BigNumber('0') // amount doesn't matter for calculating min UTXO amount
   const fakeMultitoken = new MultiToken(
-    [{
-      identifier: defaultAsset.identifier,
-      networkId: defaultAsset.networkId,
-      amount: fakeAmount,
-    },
-    {
-      identifier: selectedToken.identifier,
-      networkId: selectedToken.networkId,
-      amount: fakeAmount,
-    }],
+    [
+      {
+        identifier: defaultAsset.identifier,
+        networkId: defaultAsset.networkId,
+        amount: fakeAmount,
+      },
+      {
+        identifier: selectedToken.identifier,
+        networkId: selectedToken.networkId,
+        amount: fakeAmount,
+      },
+    ],
     {
       defaultNetworkId: defaultAsset.networkId,
       defaultIdentifier: defaultAsset.identifier,
-    }
+    },
   )
   const minAmount = await min_ada_required(
     await cardanoValueFromMultiToken(fakeMultitoken),
-    await BigNum.from_str(CONFIG.NETWORKS.HASKELL_SHELLEY.MINIMUM_UTXO_VAL)
+    await BigNum.from_str(CONFIG.NETWORKS.HASKELL_SHELLEY.MINIMUM_UTXO_VAL),
   )
   // if the user is sending a token, we need to make sure the resulting utxo
   // has at least the minimum amount of ADA in it
@@ -233,7 +232,10 @@ const getTransactionData = async (
       amount: amountBigNum.toString(),
     })
   }
-  if (!selectedToken.isDefault && isHaskellShelleyNetwork(selectedToken.networkId)) {
+  if (
+    !selectedToken.isDefault &&
+    isHaskellShelleyNetwork(selectedToken.networkId)
+  ) {
     sendTokenList.push({
       token: defaultAsset,
       amount: await getMinAda(selectedToken, defaultAsset),
@@ -267,10 +269,11 @@ const recomputeAll = async ({
       let _fee: ?MultiToken
 
       // we'll substract minAda if we are sending a token
-      const minAda = (!selectedTokenMeta.isDefault &&
-        isHaskellShelleyNetwork(selectedTokenMeta.networkId))
-        ? new BigNumber(await getMinAda(selectedTokenMeta, defaultAsset))
-        : new BigNumber('0')
+      const minAda =
+        !selectedTokenMeta.isDefault &&
+        isHaskellShelleyNetwork(selectedTokenMeta.networkId)
+          ? new BigNumber(await getMinAda(selectedTokenMeta, defaultAsset))
+          : new BigNumber('0')
 
       if (sendAll) {
         const unsignedTx = await getTransactionData(
@@ -279,7 +282,7 @@ const recomputeAll = async ({
           amount,
           sendAll,
           defaultAsset,
-          selectedTokenMeta
+          selectedTokenMeta,
         )
         _fee = await unsignedTx.fee()
 
@@ -437,7 +440,9 @@ class SendScreen extends Component<Props, State> {
   async revalidate({utxos, address, amount, sendAll, selectedAsset}) {
     const {defaultAsset, availableAssets} = this.props
     if (availableAssets[selectedAsset.identifier] == null) {
-      throw new Error('revalidate: no asset metadata found for the asset selected')
+      throw new Error(
+        'revalidate: no asset metadata found for the asset selected',
+      )
     }
     const newState = await recomputeAll({
       utxos,
@@ -476,13 +481,19 @@ class SendScreen extends Component<Props, State> {
     this.setState({sendAll})
 
   handleConfirm: () => Promise<void> = async () => {
-    const {navigation, utxos, tokenBalance, defaultAsset, availableAssets} = this.props
+    const {
+      navigation,
+      utxos,
+      tokenBalance,
+      defaultAsset,
+      availableAssets,
+    } = this.props
     const {address, amount, sendAll, selectedAsset} = this.state
 
     const selectedTokenMeta = availableAssets[selectedAsset.identifier]
     if (selectedTokenMeta == null) {
       throw new Error(
-        'SendScree::handleConfirm: no asset metadata found for the asset selected',
+        'SendScreen::handleConfirm: no asset metadata found for the asset selected',
       )
     }
 
@@ -526,7 +537,7 @@ class SendScreen extends Component<Props, State> {
         selectedTokenMeta,
       )
       const fee = (await transactionData.fee()).getDefault()
-
+      // prettier-ignore
       const defaultAssetAmount = selectedTokenMeta.isDefault
         ? parseAmountDecimal(amount, selectedTokenMeta)
         // note: inside this if balanceAfter shouldn't be null
