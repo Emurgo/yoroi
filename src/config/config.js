@@ -174,6 +174,9 @@ export const isHaskellShelley = (id: WalletImplementationId): boolean =>
   id === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY ||
   id === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24
 
+export const isJormun = (id: WalletImplementationId): boolean =>
+  id === WALLET_IMPLEMENTATION_REGISTRY.JORMUNGANDR_ITN
+
 export const getWalletConfigById = (
   id: WalletImplementationId,
 ): WalletImplementation => {

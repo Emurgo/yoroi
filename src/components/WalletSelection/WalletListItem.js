@@ -8,12 +8,11 @@ import {
   LayoutAnimation,
 } from 'react-native'
 
-import {isByron, isHaskellShelley} from '../../config/config'
+import {isByron, isHaskellShelley, isJormun} from '../../config/config'
 import WalletAccountIcon from '../Common/WalletAccountIcon'
 import arrowDown from '../../assets/img/arrow_down.png'
 import arrowUp from '../../assets/img/arrow_up.png'
 import AdaIcon from '../../assets/AdaIcon'
-
 import AssetList from '../Common/MultiAsset/AssetList'
 
 import styles from './styles/WalletListItem.style'
@@ -51,6 +50,12 @@ const getWalletItemMeta = (walletMeta: WalletMeta): WalletItemMeta => {
   if (isHaskellShelley(walletMeta.walletImplementationId)) {
     return {
       type: 'Shelley',
+      icon: <AdaIcon height={18} width={18} color={COLORS.WHITE} />,
+    }
+  }
+  if (isJormun(walletMeta.walletImplementationId)) {
+    return {
+      type: 'Jormungandr',
       icon: <AdaIcon height={18} width={18} color={COLORS.WHITE} />,
     }
   }
