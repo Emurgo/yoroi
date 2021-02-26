@@ -16,8 +16,9 @@ export default StyleSheet.create({
     flexWrap: 'wrap',
   },
   leftSide: {
-    borderRightWidth: 1,
-    borderColor: COLORS.DIVIDER,
+    // uncomment when adding support for dropdown
+    // borderRightWidth: 1,
+    // borderColor: COLORS.DIVIDER,
     flexGrow: 1,
     paddingHorizontal: 16,
     paddingVertical: 18,

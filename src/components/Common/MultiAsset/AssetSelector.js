@@ -55,7 +55,7 @@ const AssetSelector: (ExternalProps) => Node = ({
   }
   return (
     <View style={styles.container}>
-      <View style={styles.input}>
+      <TouchableOpacity style={styles.input} onPress={() => toggleExpand()}>
         {selectedAsset == null ? (
           <Text> {intl.formatMessage(messages.placeHolder)} </Text>
         ) : (
@@ -76,14 +76,11 @@ const AssetSelector: (ExternalProps) => Node = ({
               <Image source={closeIcon} />
             </TouchableOpacity>
           )}
-          <TouchableOpacity
-            style={styles.chevronButton}
-            onPress={() => toggleExpand()}
-          >
+          <View style={styles.chevronButton}>
             <Image source={expanded ? arrowUp : arrowDown} />
-          </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      </TouchableOpacity>
       {label != null && (
         <View style={styles.labelWrap}>
           <Text style={styles.label}>{label}</Text>
