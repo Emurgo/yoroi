@@ -166,7 +166,7 @@ file by running command:
 
 ## Checking that Rust is well setup (iOS & Android)
 
-After following the instructions for iOS and Android -- it is not required to install both, `rustup show` show return something like this:
+After following the instructions for iOS and Android -- it is not required to install both, `rustup show` should return something like this:
 
 ```
 rustup show
