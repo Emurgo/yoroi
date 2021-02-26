@@ -4,7 +4,7 @@ import React, {Component} from 'react'
 import {BigNumber} from 'bignumber.js'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {ScrollView, View} from 'react-native'
+import {ScrollView, View, ActivityIndicator} from 'react-native'
 import _ from 'lodash'
 import SafeAreaView from 'react-native-safe-area-view'
 import {injectIntl, defineMessages} from 'react-intl'
@@ -453,6 +453,10 @@ class SendScreen extends Component<Props, State> {
   }
 
   async revalidate({utxos, address, amount, sendAll, selectedAsset}) {
+    this.setState({
+      fee: null,
+      balanceAfter: null,
+    })
     const {defaultAsset, availableAssets, tokenBalance} = this.props
     if (availableAssets[selectedAsset.identifier] == null) {
       throw new Error(
@@ -750,12 +754,14 @@ class SendScreen extends Component<Props, State> {
             assetsMetadata={availableAssets}
             unselectEnabled={false}
           />
+          {this.state.fee == null &&
+            !!this.state.amount && <ActivityIndicator />}
         </ScrollView>
         <View style={styles.actions}>
           <Button
             onPress={this.handleConfirm}
             title={intl.formatMessage(messages.continueButton)}
-            disabled={!isValid}
+            disabled={!isValid || this.state.fee == null}
           />
         </View>
       </SafeAreaView>
