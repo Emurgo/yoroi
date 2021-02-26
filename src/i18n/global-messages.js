@@ -503,6 +503,10 @@ export default defineMessages({
     id: 'global.notSupported',
     defaultMessage: '!!!Feature not supported',
   },
+  total: {
+    id: 'global.total',
+    defaultMessage: '!!!Total',
+  },
   totalAda: {
     id: 'global.totalAda',
     defaultMessage: '!!!Total ADA',
@@ -523,5 +527,9 @@ export default defineMessages({
     id: 'global.network.syncErrorBannerTextWithRefresh',
     defaultMessage:
       '!!!We are experiencing synchronization issues. Pull to refresh',
+  },
+  assetsLabel: {
+    id: 'global.assets.assetsLabel',
+    defaultMessage: '!!!Assets',
   },
 })

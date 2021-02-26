@@ -3,7 +3,7 @@ import {BigNumber} from 'bignumber.js'
 import {defineMessages} from 'react-intl'
 import moment from 'moment'
 import utfSymbols from './utfSymbols'
-
+import AssetFingerprint from '@emurgo/cip14-js'
 import {getCardanoDefaultAsset} from '../config/config'
 
 import type {Token, DefaultAsset} from '../types/HistoryTransaction'
@@ -17,16 +17,75 @@ const messages = defineMessages({
     id: 'utils.format.yesterday',
     defaultMessage: '!!!Yesterday',
   },
+  unknownAssetName: {
+    id: 'utils.format.unknownAssetName',
+    defaultMessage: '!!![Unknown asset name]',
+  },
 })
 
-// if we don't have a symbol for this asset, default to ticker first and
-// then to identifier
-export const getAssetDenomination = (token: Token | DefaultAsset): string =>
-  token.metadata.ticker
-    ? utfSymbols.CURRENCIES[token.metadata.ticker]
-      ? utfSymbols.CURRENCIES[token.metadata.ticker]
-      : token.metadata.ticker
-    : token.identifier
+const getTokenFingerprint = (token: Token | DefaultAsset) => {
+  const {policyId, assetName} = token.metadata
+  const assetFingerprint = new AssetFingerprint(
+    Buffer.from(policyId, 'hex'),
+    Buffer.from(assetName, 'hex'),
+  )
+  return assetFingerprint.fingerprint()
+}
+
+export const ASSET_DENOMINATION = {
+  TICKER: 'ticker',
+  SYMBOL: 'symbol',
+  NAME: 'name',
+  FINGERPRINT: 'fingerprint',
+}
+export type AssetDenomination = $Values<typeof ASSET_DENOMINATION>
+
+export const getAssetDenomination = (
+  token: Token | DefaultAsset,
+  denomination?: AssetDenomination = ASSET_DENOMINATION.SYMBOL,
+): ?string => {
+  switch (denomination) {
+    case ASSET_DENOMINATION.TICKER:
+      return token.metadata.ticker
+    case ASSET_DENOMINATION.SYMBOL:
+      // if we don't have a symbol for this asset, default to ticker, though
+      // ticker can still be null
+      // prettier-ignore
+      return token.metadata.ticker
+        ? utfSymbols.CURRENCIES[token.metadata.ticker]
+          ? utfSymbols.CURRENCIES[token.metadata.ticker]
+          : token.metadata.ticker
+        : null
+    case ASSET_DENOMINATION.NAME: {
+      if (token.metadata.assetName.length > 0) {
+        const bytes = [...Buffer.from(token.metadata.assetName, 'hex')]
+        if (bytes.filter((byte) => byte <= 32 || byte >= 127).length === 0) {
+          return String.fromCharCode(...bytes)
+        }
+      }
+      return null
+    }
+    case ASSET_DENOMINATION.FINGERPRINT: {
+      return getTokenFingerprint(token)
+    }
+    default:
+      return null
+  }
+}
+
+export const getAssetDenominationOrId = (
+  token: Token | DefaultAsset,
+  denomination: AssetDenomination,
+): string =>
+  getAssetDenomination(token, denomination) ?? getTokenFingerprint(token)
+
+export const getAssetDenominationOrUnknown = (
+  token: Token | DefaultAsset,
+  denomination: AssetDenomination,
+  intl: any,
+): string =>
+  getAssetDenomination(token, denomination) ??
+  intl.formatMessage(messages.unknownAssetName)
 
 export const formatTokenAmount = (
   amount: BigNumber,
@@ -41,7 +100,10 @@ export const formatTokenWithSymbol = (
   amount: BigNumber,
   token: Token | DefaultAsset,
 ): string => {
-  const denomination = getAssetDenomination(token)
+  const denomination = getAssetDenominationOrId(
+    token,
+    ASSET_DENOMINATION.SYMBOL,
+  )
   return `${formatTokenAmount(amount, token)}${utfSymbols.NBSP}${denomination}`
 }
 
@@ -51,13 +113,8 @@ export const formatTokenWithText = (
   amount: BigNumber,
   token: Token | DefaultAsset,
 ) => {
-  const ticker = token.metadata.ticker
-  if (ticker != null) {
-    return `${formatTokenAmount(amount, token)}${utfSymbols.NBSP}${ticker}`
-  }
-  return `${formatTokenAmount(amount, token)}${utfSymbols.NBSP}${
-    token.identifier
-  }`
+  const tickerOrId = getAssetDenominationOrId(token, ASSET_DENOMINATION.TICKER)
+  return `${formatTokenAmount(amount, token)}${utfSymbols.NBSP}${tickerOrId}`
 }
 
 export const formatTokenInteger = (

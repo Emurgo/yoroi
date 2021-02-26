@@ -1,104 +1,136 @@
 // @flow
-import React from 'react'
-import {TouchableOpacity, Text, View} from 'react-native'
-import {compose, withHandlers} from 'recompose'
-import LinearGradient from 'react-native-linear-gradient'
+import React, {useState} from 'react'
+import {
+  TouchableOpacity,
+  Text,
+  View,
+  Image,
+  LayoutAnimation,
+} from 'react-native'
 
-import {isJormungandr} from '../../config/networks'
-import {WALLET_IMPLEMENTATION_REGISTRY} from '../../config/types'
+import {isByron, isHaskellShelley} from '../../config/config'
 import WalletAccountIcon from '../Common/WalletAccountIcon'
+import arrowDown from '../../assets/img/arrow_down.png'
+import arrowUp from '../../assets/img/arrow_up.png'
+import AdaIcon from '../../assets/AdaIcon'
+
+import AssetList from '../Common/MultiAsset/AssetList'
 
 import styles from './styles/WalletListItem.style'
-import CardanoIcon from '../../assets/CardanoIcon'
+import assetListStyle from '../Common/MultiAsset/styles/Base.style'
 import {COLORS} from '../../styles/config'
 
 import type {WalletMeta} from '../../state'
-import type {Node, ComponentType} from 'react'
+import type {Node} from 'react'
+import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
-type ExternalProps = {
+type props = {
   wallet: WalletMeta,
   onPress: (WalletMeta) => any,
 }
 
-type CustomIconProps = {
-  isJormungandr: boolean,
+type WrappedIconProps = {
   icon: Node,
+  style?: ViewStyleProp,
 }
+const WrappedIcon = ({icon, style}: WrappedIconProps) => (
+  <View style={[styles.iconWrapper, style]}>{icon}</View>
+)
 
 type WalletItemMeta = {
   type: string,
-  iconName: string,
   icon: Node,
 }
 const getWalletItemMeta = (walletMeta: WalletMeta): WalletItemMeta => {
-  switch (walletMeta.walletImplementationId) {
-    case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
-      return {
-        type: 'Byron',
-        icon: <CardanoIcon height={16} width={16} color={COLORS.WHITE} />,
-        iconName: 'Cardano, ADA',
-      }
-    case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24:
-    case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
-      return {
-        type: 'Shelley',
-        icon: <CardanoIcon height={16} width={16} color={COLORS.WHITE} />,
-        iconName: 'Cardano, ADA',
-      }
-    case WALLET_IMPLEMENTATION_REGISTRY.JORMUNGANDR_ITN:
-      return {
-        type: 'ITN',
-        icon: <CardanoIcon height={16} width={16} color={COLORS.WHITE} />,
-        iconName: 'Testnet, ADA',
-      }
-    default:
-      throw new Error('getWalletItemMeta:: invalid wallet implementation id')
+  if (isByron(walletMeta.walletImplementationId)) {
+    return {
+      type: 'Byron',
+      icon: <AdaIcon height={18} width={18} color={COLORS.WHITE} />,
+    }
   }
+  if (isHaskellShelley(walletMeta.walletImplementationId)) {
+    return {
+      type: 'Shelley',
+      icon: <AdaIcon height={18} width={18} color={COLORS.WHITE} />,
+    }
+  }
+  throw new Error('getWalletItemMeta:: invalid wallet implementation id')
 }
 
-const CustomCardanoIcon = ({isJormungandr, icon}: CustomIconProps) =>
-  isJormungandr ? (
-    <LinearGradient
-      start={{x: 0, y: 1}}
-      end={{x: 1, y: 0}}
-      colors={['#1A44B7', '#F14D78']}
-      style={styles.iconWrapper}
-    >
-      {icon}
-    </LinearGradient>
-  ) : (
-    <View style={[styles.iconWrapper, styles.blueBackground]}>{icon}</View>
-  )
+const WalletListItem: (props) => Node = ({wallet, onPress}) => {
+  const {type, icon} = getWalletItemMeta(wallet)
+  const [expanded, setExpanded] = useState(false)
 
-const WalletListItem = ({wallet, onPress}) => {
-  const {type, icon, iconName} = getWalletItemMeta(wallet)
+  const toggleExpand = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    setExpanded(!expanded)
+  }
+
+  // TODO(multi-asset): currently our Store only provides balance and asset
+  // info once a wallet is opened and synched. When this component is displayed
+  // no wallet is opened yet so we have no way to retrieve this info.
+  const assets = []
+  //   {
+  //     assetName: 'YROI',
+  //     assetId: 'tokenhkjshdf',
+  //     balance: '2,000',
+  //   },
+  //   {
+  //     assetName: 'ERG',
+  //     assetId: 'tokenhkjshdf',
+  //     balance: '3,000',
+  //   },
+  //   {
+  //     assetName: 'YRG',
+  //     assetId: 'tokenhkjshdf',
+  //     balance: '4,000',
+  //   },
+  // ]
+
   return (
-    <TouchableOpacity activeOpacity={0.5} onPress={onPress} style={styles.item}>
-      <View style={styles.leftSide}>
-        <WalletAccountIcon
-          iconSeed={wallet.checksum.ImagePart}
-          style={styles.walletAvatar}
-        />
-        <View>
-          <Text style={styles.walletName}>{wallet.name}</Text>
-          <Text style={styles.walletMeta}>
-            {wallet.checksum ? `${wallet.checksum.TextPart} | ${type}` : type}
-          </Text>
+    <View style={styles.itemContainer}>
+      <View style={styles.item}>
+        <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={() => onPress(wallet)}
+          style={styles.leftSide}
+        >
+          <WalletAccountIcon
+            iconSeed={wallet.checksum.ImagePart}
+            style={styles.walletAvatar}
+          />
+          <View style={styles.walletDetails}>
+            <Text style={styles.walletName}>{wallet.name}</Text>
+            <Text style={styles.walletMeta}>
+              {wallet.checksum ? `${wallet.checksum.TextPart} | ${type}` : type}
+            </Text>
+          </View>
+        </TouchableOpacity>
+        {assets.length > 0 && (
+          <TouchableOpacity
+            onPress={() => toggleExpand()}
+            style={styles.rightSide}
+          >
+            <Image source={expanded ? arrowUp : arrowDown} />
+          </TouchableOpacity>
+        )}
+      </View>
+      {expanded && (
+        <View style={styles.expandableView}>
+          <View style={styles.walletBalance}>
+            <View style={styles.walletAvatar}>
+              <WrappedIcon icon={icon} />
+            </View>
+            <View style={styles.walletDetails}>
+              <Text style={styles.walletName}>12.000000</Text>
+              <Text style={styles.walletMeta}>Total ADA</Text>
+            </View>
+          </View>
+          <AssetList styles={assetListStyle} assets={assets} />
         </View>
-      </View>
-      <View style={styles.rightSide}>
-        <CustomCardanoIcon
-          isJormungandr={isJormungandr(wallet.networkId)}
-          icon={icon}
-        />
-        <Text style={styles.iconText}>{iconName}</Text>
-      </View>
-    </TouchableOpacity>
+      )}
+    </View>
   )
 }
 
-export default (compose(
-  withHandlers({
-    onPress: ({onPress, wallet}) => () => onPress(wallet),
-  }),
-)(WalletListItem): ComponentType<ExternalProps>)
+export default WalletListItem

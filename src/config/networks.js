@@ -203,8 +203,7 @@ export const PRIMARY_ASSET_CONSTANTS = {
   // JORMUNGANDR: '',
 }
 
-// returns Array<Object>
-export const DEFAULT_ASSETS = flatten(
+export const DEFAULT_ASSETS: Array<Object> = flatten(
   Object.keys(NETWORKS)
     .map((key) => NETWORKS[key])
     .filter((network) => network.ENABLED)

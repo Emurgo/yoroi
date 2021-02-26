@@ -20,7 +20,6 @@ import {
   BootstrapWitness,
   BootstrapWitnesses,
   ByronAddress,
-  Certificate,
   Certificates,
   Ed25519Signature,
   MultiAsset,
@@ -34,7 +33,6 @@ import {
   Vkey,
   Vkeywitness,
   Vkeywitnesses,
-  Withdrawal,
   Withdrawals,
 } from '@emurgo/react-native-haskell-shelley'
 
@@ -59,6 +57,7 @@ import type {
 import type {
   AssetGroup,
   BIP32Path,
+  Certificate,
   GetVersionResponse,
   GetExtendedPublicKeyResponse,
   GetSerialResponse,
@@ -69,6 +68,7 @@ import type {
   StakingBlockchainPointer,
   Token as LedgerToken,
   Witness,
+  Withdrawal,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import type BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble'
 import type HIDTransport from '@v-almonacid/react-native-hid'
@@ -567,7 +567,7 @@ function _transformToLedgerInputs(
 }
 
 async function toLedgerTokenBundle(
-  assets: MultiAsset,
+  assets: ?MultiAsset,
 ): Promise<Array<AssetGroup>> {
   const assetGroup: Array<AssetGroup> = []
   if (assets == null) return assetGroup
@@ -629,7 +629,7 @@ async function _transformToLedgerOutputs(request: {|
         stakingPath: addressParams.stakingPath,
         amountStr: await (await (await output.amount()).coin()).to_str(),
         tokenBundle: await toLedgerTokenBundle(
-          await (await output.amount()).multiasset(), // FIXME
+          await (await output.amount()).multiasset(),
         ),
       })
     } else {
@@ -637,7 +637,7 @@ async function _transformToLedgerOutputs(request: {|
         addressHex: Buffer.from(await address.to_bytes()).toString('hex'),
         amountStr: await (await (await output.amount()).coin()).to_str(),
         tokenBundle: await toLedgerTokenBundle(
-          await (await output.amount()).multiasset(), // FIXME
+          await (await output.amount()).multiasset(),
         ),
       })
     }
@@ -708,6 +708,7 @@ async function formatLedgerCertificates(
         type: CertificateTypes.STAKE_REGISTRATION,
         path: await getPath(await registrationCert.stake_credential()),
         poolKeyHashHex: undefined,
+        poolRegistrationParams: undefined,
       })
       continue
     }
@@ -717,6 +718,7 @@ async function formatLedgerCertificates(
         type: CertificateTypes.STAKE_DEREGISTRATION,
         path: await getPath(await deregistrationCert.stake_credential()),
         poolKeyHashHex: undefined,
+        poolRegistrationParams: undefined,
       })
       continue
     }
@@ -728,6 +730,7 @@ async function formatLedgerCertificates(
         poolKeyHashHex: Buffer.from(
           await (await delegationCert.pool_keyhash()).to_bytes(),
         ).toString('hex'),
+        poolRegistrationParams: undefined,
       })
       continue
     }
@@ -848,7 +851,7 @@ export async function toLedgerAddressParameters(request: {|
     if (rewardAddr) {
       return {
         addressTypeNibble: AddressTypeNibbles.REWARD,
-        networkIdOrProtocolMagic: rewardAddr.to_address().network_id(),
+        networkIdOrProtocolMagic: await (await rewardAddr.to_address()).network_id(),
         spendingPath: request.path, // reward addresses use spending path
         stakingPath: undefined,
         stakingKeyHashHex: undefined,

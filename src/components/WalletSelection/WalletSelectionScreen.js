@@ -38,7 +38,7 @@ import type {NetworkId, WalletImplementationId} from '../../config/types'
 const messages = defineMessages({
   header: {
     id: 'components.walletselection.walletselectionscreen.header',
-    defaultMessage: '!!!Your wallets',
+    defaultMessage: '!!!My wallets',
   },
   addWalletButton: {
     id: 'components.walletselection.walletselectionscreen.addWalletButton',

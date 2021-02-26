@@ -49,6 +49,7 @@ import LocalizableError from '../../i18n/LocalizableError'
 import {ISignRequest} from '../../crypto/ISignRequest'
 
 import type {CreateUnsignedTxResponse} from '../../crypto/shelley/transactionUtils'
+import type {Token} from '../../types/HistoryTransaction'
 
 import styles from './styles/ConfirmScreen.style'
 
@@ -228,13 +229,17 @@ const ConfirmScreen = ({
   errorLogs,
 }) => {
   const {
-    amount,
+    defaultAssetAmount,
+    tokenAmount,
+    tokenMetadata,
     address,
     balanceAfterTx,
     availableAmount,
     fee,
   }: {|
-    amount: BigNumber,
+    defaultAssetAmount: BigNumber,
+    tokenAmount: ?BigNumber,
+    tokenMetadata: Token,
     address: string,
     balanceAfterTx: BigNumber,
     availableAmount: BigNumber,
@@ -266,14 +271,21 @@ const ConfirmScreen = ({
             {formatTokenWithSymbol(balanceAfterTx, defaultAsset)}
           </Text>
 
-          <Text style={styles.heading} small>
+          <Text style={styles.heading}>
             {intl.formatMessage(txLabels.receiver)}
           </Text>
           <Text>{address}</Text>
-          <Text style={styles.heading} small>
-            {intl.formatMessage(txLabels.amount)}
+          <Text style={styles.heading}>
+            {intl.formatMessage(globalMessages.total)}
           </Text>
-          <Text>{formatTokenWithSymbol(amount, defaultAsset)}</Text>
+          <Text style={styles.amount}>
+            {formatTokenWithSymbol(defaultAssetAmount, defaultAsset)}
+          </Text>
+          {tokenAmount != null && (
+            <Text style={styles.amount}>
+              {formatTokenWithText(tokenAmount, tokenMetadata)}
+            </Text>
+          )}
 
           {/* eslint-disable indent */
           !isEasyConfirmationEnabled &&

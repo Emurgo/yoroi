@@ -8,8 +8,11 @@ import {ScrollView, View} from 'react-native'
 import _ from 'lodash'
 import SafeAreaView from 'react-native-safe-area-view'
 import {injectIntl, defineMessages} from 'react-intl'
+/* eslint-disable-next-line camelcase */
+import {min_ada_required, BigNum} from '@emurgo/react-native-haskell-shelley'
 
 import {CONFIG} from '../../config/config'
+import {isHaskellShelleyNetwork} from '../../config/networks'
 import {SEND_ROUTES} from '../../RoutesList'
 import {
   Text,
@@ -20,6 +23,7 @@ import {
   Banner,
   Checkbox,
 } from '../UiKit'
+import AssetSelector from '../Common/MultiAsset/AssetSelector'
 import {
   isFetchingUtxosSelector,
   lastUtxosFetchErrorSelector,
@@ -27,7 +31,6 @@ import {
   utxosSelector,
   isOnlineSelector,
   hasPendingOutgoingTransactionSelector,
-  getUtxoBalance,
   availableAssetsSelector,
   defaultNetworkAssetSelector,
 } from '../../selectors'
@@ -46,11 +49,13 @@ import AmountField from './AmountField'
 import UtxoAutoRefresher from './UtxoAutoRefresher'
 import {InsufficientFunds} from '../../crypto/errors'
 import {MultiToken} from '../../crypto/MultiToken'
+import {cardanoValueFromMultiToken} from '../../crypto/shelley/utils'
 
 import styles from './styles/SendScreen.style'
 
 import type {Navigation} from '../../types/navigation'
 import type {Token, DefaultAsset} from '../../types/HistoryTransaction'
+import type {TokenEntry} from '../../crypto/MultiToken'
 import type {CreateUnsignedTxResponse} from '../../crypto/shelley/transactionUtils'
 import globalMessages from '../../i18n/global-messages'
 import type {RawUtxo} from '../../api/types'
@@ -171,44 +176,76 @@ const messages = defineMessages({
   },
 })
 
+const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset) => {
+  const fakeAmount = new BigNumber('0') // amount doesn't matter for calculating min UTXO amount
+  const fakeMultitoken = new MultiToken(
+    [
+      {
+        identifier: defaultAsset.identifier,
+        networkId: defaultAsset.networkId,
+        amount: fakeAmount,
+      },
+      {
+        identifier: selectedToken.identifier,
+        networkId: selectedToken.networkId,
+        amount: fakeAmount,
+      },
+    ],
+    {
+      defaultNetworkId: defaultAsset.networkId,
+      defaultIdentifier: defaultAsset.identifier,
+    },
+  )
+  const minAmount = await min_ada_required(
+    await cardanoValueFromMultiToken(fakeMultitoken),
+    await BigNum.from_str(CONFIG.NETWORKS.HASKELL_SHELLEY.MINIMUM_UTXO_VAL),
+  )
+  // if the user is sending a token, we need to make sure the resulting utxo
+  // has at least the minimum amount of ADA in it
+  return minAmount.to_str()
+}
+
 const getTransactionData = async (
   utxos: Array<RawUtxo>,
   address: string,
   amount: string,
   sendAll: boolean,
   defaultAsset: DefaultAsset,
+  selectedToken: Token,
 ): Promise<CreateUnsignedTxResponse> => {
   const defaultTokenEntry = {
     defaultNetworkId: defaultAsset.networkId,
     defaultIdentifier: defaultAsset.identifier,
   }
-  const token = defaultAsset
+  const sendTokenList = []
+
   if (sendAll) {
-    return await walletManager.createUnsignedTx(
-      utxos,
-      address,
-      [
-        {
-          token,
-          shouldSendAll: true,
-        },
-      ],
-      defaultTokenEntry,
-    )
+    sendTokenList.push({
+      token: selectedToken,
+      shouldSendAll: true,
+    })
   } else {
-    const amountBigNum = parseAmountDecimal(amount)
-    return await walletManager.createUnsignedTx(
-      utxos,
-      address,
-      [
-        {
-          token,
-          amount: amountBigNum.toString(),
-        },
-      ],
-      defaultTokenEntry,
-    )
+    const amountBigNum = parseAmountDecimal(amount, selectedToken)
+    sendTokenList.push({
+      token: selectedToken,
+      amount: amountBigNum.toString(),
+    })
   }
+  if (
+    !selectedToken.isDefault &&
+    isHaskellShelleyNetwork(selectedToken.networkId)
+  ) {
+    sendTokenList.push({
+      token: defaultAsset,
+      amount: await getMinAda(selectedToken, defaultAsset),
+    })
+  }
+  return await walletManager.createUnsignedTx(
+    utxos,
+    address,
+    sendTokenList,
+    defaultTokenEntry,
+  )
 }
 
 const recomputeAll = async ({
@@ -217,8 +254,10 @@ const recomputeAll = async ({
   utxos,
   sendAll,
   defaultAsset,
+  selectedTokenMeta,
+  tokenBalance,
 }) => {
-  const amountErrors = validateAmount(amount)
+  const amountErrors = validateAmount(amount, selectedTokenMeta)
   const addressErrors = await validateAddressAsync(address)
   let balanceErrors = Object.freeze({})
   let fee = null
@@ -228,6 +267,14 @@ const recomputeAll = async ({
   if (_.isEmpty(addressErrors) && utxos) {
     try {
       let _fee: ?MultiToken
+
+      // we'll substract minAda from ADA balance if we are sending a token
+      const minAda =
+        !selectedTokenMeta.isDefault &&
+        isHaskellShelleyNetwork(selectedTokenMeta.networkId)
+          ? new BigNumber(await getMinAda(selectedTokenMeta, defaultAsset))
+          : new BigNumber('0')
+
       if (sendAll) {
         const unsignedTx = await getTransactionData(
           utxos,
@@ -235,27 +282,49 @@ const recomputeAll = async ({
           amount,
           sendAll,
           defaultAsset,
+          selectedTokenMeta,
         )
         _fee = await unsignedTx.fee()
-        // TODO(multi-asset): format according to asset metadata
-        recomputedAmount = getUtxoBalance(utxos)
-          .minus(_fee.getDefault())
-          .dividedBy(CONFIG.NUMBERS.LOVELACES_PER_ADA) // to ada
-          .decimalPlaces(CONFIG.NUMBERS.DECIMAL_PLACES_IN_ADA)
-          .toString()
-        balanceAfter = new BigNumber('0')
+
+        if (selectedTokenMeta.isDefault) {
+          recomputedAmount = formatTokenAmount(
+            tokenBalance.getDefault().minus(_fee.getDefault()),
+            selectedTokenMeta,
+          )
+          balanceAfter = new BigNumber('0')
+        } else {
+          const selectedTokenBalance = tokenBalance.get(
+            selectedTokenMeta.identifier,
+          )
+          if (selectedTokenBalance == null) {
+            throw new Error('selectedTokenBalance is null, shouldnt happen')
+          }
+          recomputedAmount = formatTokenAmount(
+            selectedTokenBalance,
+            selectedTokenMeta,
+          )
+          balanceAfter = tokenBalance
+            .getDefault()
+            .minus(_fee.getDefault())
+            .minus(minAda)
+        }
       } else if (_.isEmpty(amountErrors)) {
-        const parsedAmount = parseAmountDecimal(amount)
+        const parsedAmount = selectedTokenMeta.isDefault
+          ? parseAmountDecimal(amount)
+          : new BigNumber('0')
         const unsignedTx = await getTransactionData(
           utxos,
           address,
           amount,
           false,
           defaultAsset,
+          selectedTokenMeta,
         )
         _fee = await unsignedTx.fee()
-        balanceAfter = getUtxoBalance(utxos)
+        balanceAfter = tokenBalance
+          .getDefault()
           .minus(parsedAmount)
+          .minus(minAda)
           .minus(_fee.getDefault())
       }
       // now we can update fee as well
@@ -334,6 +403,7 @@ type State = {
   fee: ?BigNumber,
   balanceAfter: ?BigNumber,
   sendAll: boolean,
+  selectedAsset: TokenEntry,
 }
 
 class SendScreen extends Component<Props, State> {
@@ -346,6 +416,7 @@ class SendScreen extends Component<Props, State> {
     balanceAfter: null,
     balanceErrors: Object.freeze({}),
     sendAll: false,
+    selectedAsset: this.props.tokenBalance.getDefaultEntry(),
   }
 
   componentDidMount() {
@@ -360,33 +431,42 @@ class SendScreen extends Component<Props, State> {
 
   async componentDidUpdate(prevProps, prevState) {
     const utxos = this.props.utxos
-    const {address, amount, sendAll} = this.state
+    const {address, amount, sendAll, selectedAsset} = this.state
 
     const prevUtxos = prevProps.utxos
     const {
       address: prevAddress,
       amount: prevAmount,
       sendAll: prevSendAll,
+      selectedAsset: prevSelectedAsset,
     } = prevState
 
     if (
       prevUtxos !== utxos ||
       prevAddress !== address ||
       prevAmount !== amount ||
-      prevSendAll !== sendAll
+      prevSendAll !== sendAll ||
+      prevSelectedAsset !== selectedAsset
     ) {
-      await this.revalidate({utxos, address, amount, sendAll})
+      await this.revalidate({utxos, address, amount, sendAll, selectedAsset})
     }
   }
 
-  async revalidate({utxos, address, amount, sendAll}) {
-    const {defaultAsset} = this.props
+  async revalidate({utxos, address, amount, sendAll, selectedAsset}) {
+    const {defaultAsset, availableAssets, tokenBalance} = this.props
+    if (availableAssets[selectedAsset.identifier] == null) {
+      throw new Error(
+        'revalidate: no asset metadata found for the asset selected',
+      )
+    }
     const newState = await recomputeAll({
       utxos,
       address,
       amount,
       sendAll,
       defaultAsset,
+      selectedTokenMeta: availableAssets[selectedAsset.identifier],
+      tokenBalance,
     })
 
     if (
@@ -403,14 +483,35 @@ class SendScreen extends Component<Props, State> {
 
   handleAddressChange: (string) => void = (address) => this.setState({address})
 
+  onAssetSelect: (TokenEntry | void) => void = (token) => {
+    if (token === undefined) {
+      this.setState({selectedAsset: this.props.tokenBalance.getDefaultEntry()})
+    } else {
+      this.setState({selectedAsset: token})
+    }
+  }
+
   handleAmountChange: (string) => void = (amount) => this.setState({amount})
 
   handleCheckBoxChange: (boolean) => void = (sendAll) =>
     this.setState({sendAll})
 
   handleConfirm: () => Promise<void> = async () => {
-    const {navigation, utxos, tokenBalance, defaultAsset} = this.props
-    const {address, amount, sendAll} = this.state
+    const {
+      navigation,
+      utxos,
+      tokenBalance,
+      defaultAsset,
+      availableAssets,
+    } = this.props
+    const {address, amount, sendAll, selectedAsset} = this.state
+
+    const selectedTokenMeta = availableAssets[selectedAsset.identifier]
+    if (selectedTokenMeta == null) {
+      throw new Error(
+        'SendScreen::handleConfirm: no asset metadata found for the asset selected',
+      )
+    }
 
     const {
       addressErrors,
@@ -423,6 +524,8 @@ class SendScreen extends Component<Props, State> {
       utxos,
       sendAll,
       defaultAsset,
+      selectedTokenMeta,
+      tokenBalance,
     })
 
     // Note(ppershing): use this.props as they might have
@@ -437,6 +540,7 @@ class SendScreen extends Component<Props, State> {
       _.isEmpty(balanceErrors) &&
       this.state.amount === amount &&
       this.state.address === address &&
+      this.state.selectedAsset === selectedAsset &&
       this.props.utxos === utxos
 
     if (isValid === true) {
@@ -447,13 +551,25 @@ class SendScreen extends Component<Props, State> {
         amount,
         sendAll,
         defaultAsset,
+        selectedTokenMeta,
       )
       const fee = (await transactionData.fee()).getDefault()
+      // prettier-ignore
+      const defaultAssetAmount = selectedTokenMeta.isDefault
+        ? parseAmountDecimal(amount, selectedTokenMeta)
+        // note: inside this if balanceAfter shouldn't be null
+        : tokenBalance.getDefault().minus(balanceAfter ?? 0)
+
+      const tokenAmount: BigNumber | null = !selectedTokenMeta.isDefault
+        ? parseAmountDecimal(amount, selectedTokenMeta)
+        : null
 
       navigation.navigate(SEND_ROUTES.CONFIRM, {
         availableAmount: tokenBalance.getDefault(),
         address,
-        amount: parseAmountDecimal(amount),
+        defaultAssetAmount,
+        tokenAmount,
+        tokenMetadata: selectedTokenMeta,
         transactionData,
         balanceAfterTx: balanceAfter,
         utxos,
@@ -559,6 +675,8 @@ class SendScreen extends Component<Props, State> {
       isOnline,
       hasPendingOutgoingTransaction,
       defaultAsset,
+      availableAssets,
+      tokenBalance,
     } = this.props
 
     const {
@@ -568,6 +686,7 @@ class SendScreen extends Component<Props, State> {
       addressErrors,
       balanceErrors,
       sendAll,
+      selectedAsset,
     } = this.state
 
     const isValid =
@@ -622,6 +741,14 @@ class SendScreen extends Component<Props, State> {
             checked={sendAll}
             onChange={this.handleCheckBoxChange}
             text={intl.formatMessage(messages.checkboxLabel)}
+          />
+          <AssetSelector
+            onSelect={this.onAssetSelect}
+            selectedAsset={selectedAsset}
+            label={'Asset'}
+            assets={tokenBalance.values}
+            assetsMetadata={availableAssets}
+            unselectEnabled={false}
           />
         </ScrollView>
         <View style={styles.actions}>

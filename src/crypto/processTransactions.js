@@ -21,6 +21,7 @@ import type {
   TransactionInfo,
   Transaction,
   BaseAsset,
+  Token,
 } from '../types/HistoryTransaction'
 import type {NetworkId} from '../config/types'
 
@@ -41,6 +42,35 @@ export const getTransactionAssurance = (
   if (confirmations < assuranceLevelCutoffs.LOW) return 'LOW'
   if (confirmations < assuranceLevelCutoffs.MEDIUM) return 'MEDIUM'
   return 'HIGH'
+}
+
+const getTxTokens = (tx: Transaction, networkId: NetworkId): Dict<Token> => {
+  const tokens: Dict<Token> = {}
+  const rawTokens: Array<BaseAsset> = []
+  tx.inputs.forEach((i) => rawTokens.push(...i.assets))
+  tx.outputs.forEach((o) => rawTokens.push(...o.assets))
+
+  rawTokens.forEach((t) => {
+    if (tokens[t.assetId] == null) {
+      tokens[t.assetId] = {
+        networkId,
+        isDefault: false,
+        identifier: t.assetId,
+        metadata: {
+          policyId: t.policyId,
+          assetName: t.name,
+          // no metadata for now
+          type: 'Cardano',
+          numberOfDecimals: 0,
+          ticker: null,
+          longName: null,
+          maxSupply: null,
+        },
+      }
+    }
+  })
+
+  return tokens
 }
 
 const _sum = (
@@ -212,13 +242,24 @@ export const processTxHistoryData = (
 
   const assurance = getTransactionAssurance(tx.status, confirmations)
 
-  // TODO(multi-asset): register token metadata of tokens observed in this tx
-  const tokens = {}
+  const tokens = getTxTokens(tx, networkId)
+
+  const _remoteAssetAsTokenEntry = (asset: BaseAsset) => ({
+    identifier: asset.assetId,
+    amount: new BigNumber(asset.amount),
+    networkId,
+  })
 
   return {
     id: tx.id,
-    fromAddresses: tx.inputs.map(({address}) => address),
-    toAddresses: tx.outputs.map(({address}) => address),
+    inputs: tx.inputs.map(({address, assets}) => ({
+      address,
+      assets: assets.map(_remoteAssetAsTokenEntry),
+    })),
+    outputs: tx.outputs.map(({address, assets}) => ({
+      address,
+      assets: assets.map(_remoteAssetAsTokenEntry),
+    })),
     amount,
     fee,
     delta,
