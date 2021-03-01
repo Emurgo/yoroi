@@ -110,7 +110,7 @@
   },
   "devDependencies": {
     "@emurgo/cardano-serialization-lib-nodejs": "6.0.0",
-    "@storybook/addon-actions": "^5.3.14",
+    "@storybook/addon-actions": "^6.1.20",
     "@storybook/addon-links": "^5.3.14",
     "@storybook/addons": "^5.3.14",
     "@storybook/react-native": "5.3.23",
