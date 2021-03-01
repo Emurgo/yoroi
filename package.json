@@ -78,7 +78,7 @@
     "react-native-crypto": "2.2.0",
     "react-native-device-info": "6.0.1",
     "react-native-easy-markdown": "1.4.1",
-    "react-native-gesture-handler": "1.9.0",
+    "react-native-gesture-handler": "1.10.3",
     "react-native-keychain": "3.0.0",
     "react-native-linear-gradient": "2.5.6",
     "react-native-local-resource": "^0.1.3",
