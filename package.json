@@ -36,7 +36,7 @@
     "@ledgerhq/react-native-hw-transport-ble": "5.41.0",
     "@react-native-async-storage/async-storage": "1.13.3",
     "@react-native-community/masked-view": "0.1.10",
-    "@react-native-community/netinfo": "5.9.9",
+    "@react-native-community/netinfo": "6.0.0",
     "@react-navigation/bottom-tabs": "5.11.7",
     "@react-navigation/drawer": "5.12.3",
     "@react-navigation/material-top-tabs": "5.3.10",
