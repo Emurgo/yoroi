@@ -28,7 +28,7 @@
     "@babel/cli": "7.12.8",
     "@babel/core": "7.12.10",
     "@babel/node": "7.12.6",
-    "@babel/runtime": "7.12.5",
+    "@babel/runtime": "7.13.8",
     "@cardano-foundation/ledgerjs-hw-app-cardano": "2.2.1",
     "@emurgo/cip14-js": "2.0.0",
     "@emurgo/cip4-js": "1.0.5",
