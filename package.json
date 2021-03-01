@@ -33,7 +33,7 @@
     "@emurgo/cip14-js": "2.0.0",
     "@emurgo/cip4-js": "1.0.5",
     "@emurgo/react-native-haskell-shelley": "emurgo/react-native-haskell-shelley",
-    "@ledgerhq/react-native-hw-transport-ble": "5.41.0",
+    "@ledgerhq/react-native-hw-transport-ble": "5.43.0",
     "@react-native-async-storage/async-storage": "1.13.3",
     "@react-native-community/masked-view": "0.1.10",
     "@react-native-community/netinfo": "5.9.9",
