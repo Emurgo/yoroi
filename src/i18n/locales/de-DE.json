@@ -224,7 +224,7 @@
   "components.txhistory.txdetails.confirmations": "{cnt} {cnt, plural, one {BESTÄTIGUNG} other {BESTÄTIGUNGEN}}",
   "components.txhistory.txdetails.fee": "Gebühr:",
   "components.txhistory.txdetails.fromAddresses": "Absender-Adressen",
-  "components.txhistory.txdetails.omittedCount": "+ {cnt} ausgelassene {cnt, plural, one {Adresse} other {Adressen}}",
+  "components.txhistory.txdetails.omittedCount": "+ {cnt} weggelassene {cnt, plural, one {Adresse} other {Adressen}}",
   "components.txhistory.txdetails.toAddresses": "Empfänger-Adressen",
   "components.txhistory.txdetails.transactionId": "Transaktions-ID",
   "components.txhistory.txdetails.txAssuranceLevel": "Transaktionssicherheitsstufe",
