@@ -47,7 +47,7 @@ import walletManager from '../../crypto/walletManager'
 import {validateAmount, validateAddressAsync} from '../../utils/validators'
 import AmountField from './AmountField'
 import UtxoAutoRefresher from './UtxoAutoRefresher'
-import {InsufficientFunds} from '../../crypto/errors'
+import {InsufficientFunds, AssetOverflowError} from '../../crypto/errors'
 import {MultiToken} from '../../crypto/MultiToken'
 import {cardanoValueFromMultiToken} from '../../crypto/shelley/utils'
 
@@ -101,6 +101,11 @@ const amountInputErrorMessages = defineMessages({
     id: 'components.send.sendscreen.amountInput.error.insufficientBalance',
     defaultMessage: '!!!Not enough money to make this transaction',
     description: 'some desc',
+  },
+  assetOverflow: {
+    id: 'components.send.sendscreen.amountInput.error.assetOverflow',
+    defaultMessage:
+      '!!!!Maximum value of a token inside a UTXO exceeded (overflow).',
   },
 })
 
@@ -338,6 +343,8 @@ const recomputeAll = async ({
     } catch (err) {
       if (err instanceof InsufficientFunds) {
         balanceErrors = {insufficientBalance: true}
+      } else if (err instanceof AssetOverflowError) {
+        balanceErrors = {assetOverflow: true}
       }
     }
   }
@@ -382,6 +389,9 @@ const getAmountErrorText = (
   }
   if (balanceErrors.insufficientBalance === true) {
     return intl.formatMessage(amountInputErrorMessages.insufficientBalance)
+  }
+  if (balanceErrors.assetOverflow === true) {
+    return intl.formatMessage(amountInputErrorMessages.assetOverflow)
   }
   return null
 }
@@ -699,17 +709,19 @@ class SendScreen extends Component<Props, State> {
       selectedAsset,
     } = this.state
 
+    const isErrorFree = _.isEmpty({
+      ...addressErrors,
+      ...amountErrors,
+      ...balanceErrors,
+    })
+
     const isValid =
       isOnline &&
       !hasPendingOutgoingTransaction &&
       !isFetchingBalance &&
       !lastFetchingError &&
       utxos &&
-      _.isEmpty({
-        ...addressErrors,
-        ...amountErrors,
-        ...balanceErrors,
-      })
+      isErrorFree
 
     return (
       <SafeAreaView style={styles.container}>
@@ -760,7 +772,9 @@ class SendScreen extends Component<Props, State> {
             assetsMetadata={availableAssets}
             unselectEnabled={false}
           />
-          {this.state.fee == null && !!this.state.amount && <Indicator />}
+          {this.state.fee == null &&
+            !!this.state.amount &&
+            isErrorFree && <Indicator />}
         </ScrollView>
         <View style={styles.actions}>
           <Button
