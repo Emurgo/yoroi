@@ -760,8 +760,7 @@ class SendScreen extends Component<Props, State> {
             assetsMetadata={availableAssets}
             unselectEnabled={false}
           />
-          {this.state.fee == null &&
-            !!this.state.amount && <Indicator />}
+          {this.state.fee == null && !!this.state.amount && <Indicator />}
         </ScrollView>
         <View style={styles.actions}>
           <Button
