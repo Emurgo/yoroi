@@ -709,19 +709,24 @@ class SendScreen extends Component<Props, State> {
       selectedAsset,
     } = this.state
 
-    const isErrorFree = _.isEmpty({
-      ...addressErrors,
-      ...amountErrors,
-      ...balanceErrors,
-    })
-
     const isValid =
       isOnline &&
       !hasPendingOutgoingTransaction &&
       !isFetchingBalance &&
       !lastFetchingError &&
       utxos &&
-      isErrorFree
+      _.isEmpty({
+        ...addressErrors,
+        ...amountErrors,
+        ...balanceErrors,
+      })
+
+    const amountErrorText = getAmountErrorText(
+      intl,
+      amountErrors,
+      balanceErrors,
+      defaultAsset,
+    )
 
     return (
       <SafeAreaView style={styles.container}>
@@ -750,12 +755,7 @@ class SendScreen extends Component<Props, State> {
           <AmountField
             amount={amount}
             setAmount={this.handleAmountChange}
-            error={getAmountErrorText(
-              intl,
-              amountErrors,
-              balanceErrors,
-              defaultAsset,
-            )}
+            error={amountErrorText}
             editable={!sendAll}
           />
           <Checkbox
@@ -774,7 +774,7 @@ class SendScreen extends Component<Props, State> {
           />
           {this.state.fee == null &&
             !!this.state.amount &&
-            isErrorFree && <Indicator />}
+            amountErrorText == null && <Indicator />}
         </ScrollView>
         <View style={styles.actions}>
           <Button
