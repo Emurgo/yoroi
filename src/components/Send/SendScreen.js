@@ -37,10 +37,14 @@ import {
 import {fetchUTXOs} from '../../actions/utxo'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {
+  normalizeTokenAmount,
   formatTokenAmount,
   formatTokenInteger,
   formatTokenWithText,
   formatTokenWithSymbol,
+  getAssetDenominationOrId,
+  ASSET_DENOMINATION,
+  truncateWithEllipsis,
 } from '../../utils/format'
 import {parseAmountDecimal, InvalidAssetAmount} from '../../utils/parsing'
 import walletManager from '../../crypto/walletManager'
@@ -155,9 +159,14 @@ const messages = defineMessages({
     defaultMessage: '!!!Address',
     description: 'some desc',
   },
-  checkboxLabel: {
-    id: 'components.send.sendscreen.checkboxLabel',
-    defaultMessage: '!!!Send full balance',
+  checkboxSendAllAssets: {
+    id: 'components.send.sendscreen.checkboxSendAllAssets',
+    defaultMessage: '!!!Send all assets (including all tokens)',
+    description: 'some desc',
+  },
+  checkboxSendAll: {
+    id: 'components.send.sendscreen.checkboxSendAll',
+    defaultMessage: '!!!Send all {assetId}',
     description: 'some desc',
   },
   continueButton: {
@@ -268,7 +277,7 @@ const recomputeAll = async ({
   selectedTokenMeta,
   tokenBalance,
 }) => {
-  const amountErrors = validateAmount(amount, selectedTokenMeta)
+  let amountErrors = validateAmount(amount, selectedTokenMeta)
   const addressErrors = await validateAddressAsync(address)
   let balanceErrors = Object.freeze({})
   let fee = null
@@ -298,10 +307,10 @@ const recomputeAll = async ({
         _fee = await unsignedTx.fee()
 
         if (selectedTokenMeta.isDefault) {
-          recomputedAmount = formatTokenAmount(
+          recomputedAmount = normalizeTokenAmount(
             tokenBalance.getDefault().minus(_fee.getDefault()),
             selectedTokenMeta,
-          )
+          ).toString()
           balanceAfter = new BigNumber('0')
         } else {
           const selectedTokenBalance = tokenBalance.get(
@@ -310,15 +319,18 @@ const recomputeAll = async ({
           if (selectedTokenBalance == null) {
             throw new Error('selectedTokenBalance is null, shouldnt happen')
           }
-          recomputedAmount = formatTokenAmount(
+          recomputedAmount = normalizeTokenAmount(
             selectedTokenBalance,
             selectedTokenMeta,
-          )
+          ).toString()
           balanceAfter = tokenBalance
             .getDefault()
             .minus(_fee.getDefault())
             .minus(minAda)
         }
+
+        // for sendAll we set the amount so the format is error-free
+        amountErrors = Object.freeze({})
       } else if (_.isEmpty(amountErrors)) {
         const parsedAmount = selectedTokenMeta.isDefault
           ? parseAmountDecimal(amount)
@@ -420,6 +432,7 @@ type State = {
   balanceAfter: ?BigNumber,
   sendAll: boolean,
   selectedAsset: TokenEntry,
+  recomputing: boolean,
 }
 
 class SendScreen extends Component<Props, State> {
@@ -433,6 +446,7 @@ class SendScreen extends Component<Props, State> {
     balanceErrors: Object.freeze({}),
     sendAll: false,
     selectedAsset: this.props.tokenBalance.getDefaultEntry(),
+    recomputing: false,
   }
 
   componentDidMount() {
@@ -472,6 +486,7 @@ class SendScreen extends Component<Props, State> {
     this.setState({
       fee: null,
       balanceAfter: null,
+      recomputing: true,
     })
     const {defaultAsset, availableAssets, tokenBalance} = this.props
     if (availableAssets[selectedAsset.identifier] == null) {
@@ -498,7 +513,10 @@ class SendScreen extends Component<Props, State> {
       return
     }
 
-    this.setState(newState)
+    this.setState({
+      ...newState,
+      recomputing: false,
+    })
   }
 
   handleAddressChange: (string) => void = (address) => this.setState({address})
@@ -728,6 +746,13 @@ class SendScreen extends Component<Props, State> {
       defaultAsset,
     )
 
+    const selectedAssetMeta = availableAssets[selectedAsset.identifier]
+
+    const assetDenomination = truncateWithEllipsis(
+      getAssetDenominationOrId(selectedAssetMeta, ASSET_DENOMINATION.TICKER),
+      20,
+    )
+
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar type="dark" />
@@ -762,7 +787,14 @@ class SendScreen extends Component<Props, State> {
             disabled={false}
             checked={sendAll}
             onChange={this.handleCheckBoxChange}
-            text={intl.formatMessage(messages.checkboxLabel)}
+            text={
+              // prettier-ignore
+              selectedAssetMeta.isDefault
+                ? intl.formatMessage(messages.checkboxSendAllAssets)
+                : intl.formatMessage(messages.checkboxSendAll,
+                  {assetId: assetDenomination},
+                )
+            }
           />
           <AssetSelector
             onSelect={this.onAssetSelect}
@@ -772,10 +804,7 @@ class SendScreen extends Component<Props, State> {
             assetsMetadata={availableAssets}
             unselectEnabled={false}
           />
-          {this.state.fee == null &&
-            !!this.state.amount &&
-            !!this.state.address &&
-            amountErrorText == null && <Indicator />}
+          {this.state.recomputing && <Indicator />}
         </ScrollView>
         <View style={styles.actions}>
           <Button

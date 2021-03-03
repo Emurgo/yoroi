@@ -128,6 +128,8 @@
   "components.send.sendscreen.errorBannerPendingOutgoingTransaction": "You cannot send a new transaction while an existing one is still pending",
   "components.send.sendscreen.feeLabel": "Fee",
   "components.send.sendscreen.feeNotAvailable": "-",
+  "components.send.sendscreen.checkboxSendAllAssets": "Send all assets (including all tokens)",
+  "components.send.sendscreen.checkboxSendAll": "Send all {assetId}",
   "components.send.sendscreen.title": "Send",
   "components.settings.applicationsettingsscreen.biometricsSignIn": "Sign in with your biometrics",
   "components.settings.applicationsettingsscreen.changePin": "Change PIN",
