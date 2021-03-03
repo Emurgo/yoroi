@@ -110,7 +110,7 @@
   "components.send.confirmscreen.title": "发送",
   "components.send.sendscreen.addressInputErrorInvalidAddress": "请输入有效地址。",
   "components.send.sendscreen.addressInputLabel": "地址",
-  "components.send.sendscreen.amountInput.error.assetOverflow": "!Maximum value of a token inside a UTXO exceeded (overflow).",
+  "components.send.sendscreen.amountInput.error.assetOverflow": "单个UTXO中的token数量超过最大值（溢出）。",
   "components.send.sendscreen.amountInput.error.INVALID_AMOUNT": "请输入有效金额。",
   "components.send.sendscreen.amountInput.error.LT_MIN_UTXO": "无法发送低于{minUtxo} 的{ticker}。",
   "components.send.sendscreen.amountInput.error.NEGATIVE": "金额必须为正",
