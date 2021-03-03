@@ -87,7 +87,6 @@ export const getAssetDenominationOrUnknown = (
   getAssetDenomination(token, denomination) ??
   intl.formatMessage(messages.unknownAssetName)
 
-
 export const normalizeTokenAmount = (
   amount: BigNumber,
   token: Token | DefaultAsset,
