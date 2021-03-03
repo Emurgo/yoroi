@@ -33,6 +33,7 @@ export type AmountValidationErrors = {|
 
 export type BalanceValidationErrors = {|
   insufficientBalance?: boolean,
+  assetOverflow?: boolean,
 |}
 
 export const INVALID_PHRASE_ERROR_CODES = {

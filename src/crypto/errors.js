@@ -34,6 +34,12 @@ export class NoOutputsError extends ExtendableError {
   }
 }
 
+export class AssetOverflowError extends ExtendableError {
+  constructor() {
+    super('AssetOverflowError')
+  }
+}
+
 export const _rethrow = <T>(x: Promise<T>): Promise<T> =>
   x.catch((e) => {
     throw new CardanoError(e.message)

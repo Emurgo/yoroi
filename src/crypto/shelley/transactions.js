@@ -35,7 +35,7 @@ import {
 } from '@emurgo/react-native-haskell-shelley'
 /* eslint-enable camelcase */
 import {CONFIG} from '../../config/config'
-import {InsufficientFunds, NoOutputsError} from '../errors'
+import {InsufficientFunds, NoOutputsError, AssetOverflowError} from '../errors'
 import {
   getCardanoAddrKeyHash,
   normalizeToAddress,
@@ -54,6 +54,16 @@ import type {
   TxOutput,
 } from '../types'
 import type {RawUtxo} from '../../api/types'
+
+const AddInputResult = Object.freeze({
+  VALID: 0,
+  // not worth the fee of adding it to input
+  TOO_SMALL: 1,
+  // token would overflow if added
+  OVERFLOW: 2,
+  // doesn't contribute to target
+  NO_NEED: 3,
+})
 
 const PRIMARY_ASSET_CONSTANTS = CONFIG.PRIMARY_ASSET_CONSTANTS
 /**
@@ -90,9 +100,16 @@ export const sendAllUnsignedTxFromUtxo = async (
   )
   await txBuilder.set_ttl(absSlotNumber.plus(defaultTtlOffset).toNumber())
   for (const input of allUtxos) {
-    await addUtxoInput(txBuilder, undefined, input, false, {
-      networkId: protocolParams.networkId,
-    })
+    if (
+      (await addUtxoInput(txBuilder, undefined, input, false, {
+        networkId: protocolParams.networkId,
+      })) === AddInputResult.OVERFLOW
+    ) {
+      // for the send all case, prefer to throw an error
+      // instead of skipping inputs that would cause an error
+      // otherwise leads to unexpected cases like wallet migration leaving some UTXO behind
+      throw new AssetOverflowError()
+    }
   }
 
   if (metadata !== undefined) {
@@ -212,7 +229,7 @@ async function addUtxoInput(
   protocolParams: {|
     networkId: number,
   |},
-): Promise<boolean> {
+): Promise<$Values<typeof AddInputResult>> {
   const wasmAddr = await normalizeToAddress(input.receiver)
   if (wasmAddr == null) {
     throw new Error('addUtxoInput:: input not a valid Shelley address')
@@ -221,8 +238,34 @@ async function addUtxoInput(
   const txInput = await utxoToTxInput(input)
   const wasmAmount = await cardanoValueFromRemoteFormat(input)
 
-  const skipInput = async () => {
-    if (remaining == null) return false
+  const skipOverflow: (void) => Promise<
+    $Values<typeof AddInputResult>,
+  > = async () => {
+    /**
+     * UTXOs can only contain at most u64 of a value
+     * so if the sum of UTXO inputs for a tx > u64
+     * it can cause the tx to fail (due to overflow) in the output / change
+     *
+     * This can be addressed by splitting up a tx to use multiple outputs / multiple change
+     * and this just requires more ADA to cover the min UTXO of these added inputs
+     * but as a simple solution for now, we just block > u64 inputs of any token
+     * This isn't a great workaround since it means features like sendAll may end up not sending all
+     */
+    const currentInputSum = await (await txBuilder.get_explicit_input()).checked_add(
+      await txBuilder.get_implicit_input(),
+    )
+    try {
+      await currentInputSum.checked_add(wasmAmount)
+    } catch (e) {
+      return AddInputResult.OVERFLOW
+    }
+    return AddInputResult.VALID
+  }
+
+  const skipInput: (void) => Promise<
+    $Values<typeof AddInputResult>,
+  > = async () => {
+    if (remaining == null) return await skipOverflow()
 
     const defaultEntry = {
       defaultNetworkId: protocolParams.networkId,
@@ -236,6 +279,7 @@ async function addUtxoInput(
     const includedTargets = remainingTokens
       .nonDefaultEntries()
       .filter((entry) => tokenSetInInput.has(entry.identifier))
+
     if (
       remainingTokens.getDefaultEntry().amount.gt(0) &&
       new BigNumber(input.amount).gt(0)
@@ -247,7 +291,7 @@ async function addUtxoInput(
     // due to refunds in Cardano
     // so we still want to add the input in this case even if we don't care about the coins in it
     if (includedTargets.length === 0 && remaining.hasInput) {
-      return true
+      return AddInputResult.NO_NEED
     }
 
     const onlyDefaultEntry =
@@ -263,18 +307,19 @@ async function addUtxoInput(
         )).to_str(),
       )
       if (feeForInput.gt(input.amount)) {
-        return true
+        return AddInputResult.TOO_SMALL
       }
     }
-    return false
+    return await skipOverflow()
   }
 
-  if (await skipInput()) {
-    return false
+  const skipResult = await skipInput()
+  if (skipResult !== AddInputResult.VALID) {
+    return skipResult
   }
 
   await txBuilder.add_input(wasmAddr, txInput, wasmAmount)
-  return true
+  return AddInputResult.VALID
 }
 
 /**
@@ -446,7 +491,7 @@ export const newAdaUnsignedTxFromUtxo = async (
         true,
         {networkId: protocolParams.networkId},
       )
-      if (!added) continue
+      if (added !== AddInputResult.VALID) continue
 
       usedUtxos.push(utxo)
     }
@@ -475,6 +520,9 @@ export const newAdaUnsignedTxFromUtxo = async (
 
       if (forceChange) {
         if (changeAdaAddr == null) throw new NoOutputsError()
+        if (!enoughInput) {
+          throw new InsufficientFunds()
+        }
         const difference = await currentInputSum.checked_sub(output)
         const minimumNeededForChange = await minRequiredForChange(
           txBuilder,
