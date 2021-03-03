@@ -598,20 +598,31 @@ class SendScreen extends Component<Props, State> {
         // note: inside this if balanceAfter shouldn't be null
         : tokenBalance.getDefault().minus(balanceAfter ?? 0)
 
-      const tokenAmount: BigNumber | null = !selectedTokenMeta.isDefault
-        ? parseAmountDecimal(amount, selectedTokenMeta)
-        : null
+      const tokens: Array<TokenEntry> = await (async () => {
+        if (sendAll) {
+          return (await transactionData.totalOutput()).nonDefaultEntries()
+        }
+        if (!selectedTokenMeta.isDefault) {
+          return [
+            {
+              identifier: selectedTokenMeta.identifier,
+              networkId: selectedTokenMeta.networkId,
+              amount: parseAmountDecimal(amount, selectedTokenMeta),
+            },
+          ]
+        }
+        return []
+      })()
 
       navigation.navigate(SEND_ROUTES.CONFIRM, {
         availableAmount: tokenBalance.getDefault(),
         address,
         defaultAssetAmount,
-        tokenAmount,
-        tokenMetadata: selectedTokenMeta,
         transactionData,
         balanceAfterTx: balanceAfter,
         utxos,
         fee,
+        tokens,
       })
     }
   }

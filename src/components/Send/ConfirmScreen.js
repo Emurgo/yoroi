@@ -25,6 +25,7 @@ import {
   isHWSelector,
   hwDeviceInfoSelector,
   defaultNetworkAssetSelector,
+  availableAssetsSelector,
 } from '../../selectors'
 import globalMessages, {
   errorMessages,
@@ -49,7 +50,7 @@ import LocalizableError from '../../i18n/LocalizableError'
 import {ISignRequest} from '../../crypto/ISignRequest'
 
 import type {CreateUnsignedTxResponse} from '../../crypto/shelley/transactionUtils'
-import type {Token} from '../../types/HistoryTransaction'
+import type {TokenEntry} from '../../crypto/MultiToken'
 
 import styles from './styles/ConfirmScreen.style'
 
@@ -215,6 +216,7 @@ const ConfirmScreen = ({
   isEasyConfirmationEnabled,
   isHW,
   defaultAsset,
+  availableAssets,
   sendingTransaction,
   buttonDisabled,
   ledgerDialogStep,
@@ -230,20 +232,18 @@ const ConfirmScreen = ({
 }) => {
   const {
     defaultAssetAmount,
-    tokenAmount,
-    tokenMetadata,
     address,
     balanceAfterTx,
     availableAmount,
     fee,
+    tokens,
   }: {|
     defaultAssetAmount: BigNumber,
-    tokenAmount: ?BigNumber,
-    tokenMetadata: Token,
     address: string,
     balanceAfterTx: BigNumber,
     availableAmount: BigNumber,
     fee: BigNumber,
+    tokens: Array<TokenEntry>,
   |} = route.params
 
   const isConfirmationDisabled =
@@ -281,11 +281,11 @@ const ConfirmScreen = ({
           <Text style={styles.amount}>
             {formatTokenWithSymbol(defaultAssetAmount, defaultAsset)}
           </Text>
-          {tokenAmount != null && (
-            <Text style={styles.amount}>
-              {formatTokenWithText(tokenAmount, tokenMetadata)}
+          {tokens.map((t, i) => (
+            <Text style={styles.amount} key={i}>
+              {formatTokenWithText(t.amount, availableAssets[t.identifier])}
             </Text>
-          )}
+          ))}
 
           {/* eslint-disable indent */
           !isEasyConfirmationEnabled &&
@@ -367,6 +367,7 @@ export default injectIntl(
         isHW: isHWSelector(state),
         hwDeviceInfo: hwDeviceInfoSelector(state),
         defaultAsset: defaultNetworkAssetSelector(state),
+        availableAssets: availableAssetsSelector(state),
       }),
       {
         submitTransaction,
