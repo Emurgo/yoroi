@@ -110,6 +110,7 @@
   "components.send.confirmscreen.title": "Kirim",
   "components.send.sendscreen.addressInputErrorInvalidAddress": "Please enter a valid address",
   "components.send.sendscreen.addressInputLabel": "Alamat",
+  "components.send.sendscreen.amountInput.error.assetOverflow": "!Maximum value of a token inside a UTXO exceeded (overflow).",
   "components.send.sendscreen.amountInput.error.INVALID_AMOUNT": "Please enter a valid amount",
   "components.send.sendscreen.amountInput.error.LT_MIN_UTXO": "Cannot send less than {minUtxo} {ticker}",
   "components.send.sendscreen.amountInput.error.NEGATIVE": "Jumlah harus angka positif",
