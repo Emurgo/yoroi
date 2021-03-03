@@ -774,6 +774,7 @@ class SendScreen extends Component<Props, State> {
           />
           {this.state.fee == null &&
             !!this.state.amount &&
+            !!this.state.address &&
             amountErrorText == null && <Indicator />}
         </ScrollView>
         <View style={styles.actions}>
