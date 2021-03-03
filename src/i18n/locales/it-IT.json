@@ -110,6 +110,7 @@
   "components.send.confirmscreen.title": "Invia",
   "components.send.sendscreen.addressInputErrorInvalidAddress": "Si prega di inserire un indirizzo valido",
   "components.send.sendscreen.addressInputLabel": "Indirizzo",
+  "components.send.sendscreen.amountInput.error.assetOverflow": "!Maximum value of a token inside a UTXO exceeded (overflow).",
   "components.send.sendscreen.amountInput.error.INVALID_AMOUNT": "Si prega di inserire un importo valido",
   "components.send.sendscreen.amountInput.error.LT_MIN_UTXO": "Non puoi inviare meno di {minUtxo} {ticker}",
   "components.send.sendscreen.amountInput.error.NEGATIVE": "L'importo deve essere positivo",
