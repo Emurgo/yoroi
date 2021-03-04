@@ -59,7 +59,7 @@ const AssetSelector: (ExternalProps) => Node = ({
         {selectedAsset == null ? (
           <Text> {intl.formatMessage(messages.placeHolder)} </Text>
         ) : (
-          <Text>
+          <Text numberOfLines={1} ellipsizeMode="middle">
             {' '}
             {getAssetDenominationOrId(
               assetsMetadata[selectedAsset.identifier],

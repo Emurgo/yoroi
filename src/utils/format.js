@@ -87,14 +87,21 @@ export const getAssetDenominationOrUnknown = (
   getAssetDenomination(token, denomination) ??
   intl.formatMessage(messages.unknownAssetName)
 
+export const normalizeTokenAmount = (
+  amount: BigNumber,
+  token: Token | DefaultAsset,
+): BigNumber => {
+  const normalizationFactor = Math.pow(10, token.metadata.numberOfDecimals)
+  return amount
+    .dividedBy(normalizationFactor)
+    .decimalPlaces(token.metadata.numberOfDecimals)
+}
+
 export const formatTokenAmount = (
   amount: BigNumber,
   token: Token | DefaultAsset,
-): string => {
-  const normalizationFactor = Math.pow(10, token.metadata.numberOfDecimals)
-  const num = amount.dividedBy(normalizationFactor)
-  return num.toFormat(token.metadata.numberOfDecimals)
-}
+): string =>
+  normalizeTokenAmount(amount, token).toFormat(token.metadata.numberOfDecimals)
 
 export const formatTokenWithSymbol = (
   amount: BigNumber,
@@ -142,6 +149,15 @@ export const formatTokenFractional = (
     .dividedBy(normalizationFactor)
   // remove leading '0'
   return fractional.toFormat(token.metadata.numberOfDecimals).substring(1)
+}
+
+export const truncateWithEllipsis = (s: string, n: number) => {
+  if (s.length > n) {
+    return `${s.substr(0, Math.floor(n / 2))}...${s.substr(
+      s.length - Math.floor(n / 2),
+    )}`
+  }
+  return s
 }
 
 // TODO(multi-asset): consider removing these
