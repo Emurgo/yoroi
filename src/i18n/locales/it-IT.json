@@ -129,7 +129,7 @@
   "components.send.sendscreen.feeLabel": "Commissione",
   "components.send.sendscreen.feeNotAvailable": "-",
   "components.send.sendscreen.checkboxSendAllAssets": "Invia tutte gli asset (inclusi tutti i token)",
-  "components.send.sendscreen.checkboxSendAll": "Invia tutti {idrisorsa}",
+  "components.send.sendscreen.checkboxSendAll": "Invia tutti {assetId}",
   "components.send.sendscreen.title": "Invia",
   "components.settings.applicationsettingsscreen.biometricsSignIn": "Accedi con i tuoi dati biometrici",
   "components.settings.applicationsettingsscreen.changePin": "Cambia PIN",
