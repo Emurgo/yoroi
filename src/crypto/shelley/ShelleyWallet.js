@@ -18,9 +18,12 @@ import {
   StakeCredential,
   Transaction,
   TransactionBuilder,
+  BigNum,
+  LinearFee,
 } from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 import {walletChecksum, legacyWalletChecksum} from '@emurgo/cip4-js'
+import ExtendableError from 'es6-error'
 
 import Wallet from '../Wallet'
 import {WalletInterface} from '../WalletInterface'
@@ -42,13 +45,14 @@ import {
   isHaskellShelleyNetwork,
   getCardanoByronConfig,
 } from '../../config/networks'
+
 import {NETWORK_REGISTRY} from '../../config/types'
 import assert from '../../utils/assert'
 import {Logger} from '../../utils/logging'
 import {ObjectValues} from '../../utils/flow'
-import {InvalidState} from '../errors'
+import {InvalidState, CardanoError} from '../errors'
 import {TransactionCache} from './transactionCache'
-import {signTransaction} from './transactions'
+import {signTransaction, newAdaUnsignedTx} from './transactions'
 import {createUnsignedTx} from './transactionUtils'
 import {genTimeToSlot} from '../../utils/timeUtils'
 import {
@@ -67,6 +71,7 @@ import {
   toHexOrBase58,
   deriveRewardAddressHex,
 } from './utils'
+import {createMetadata} from './metadataUtils'
 
 import type {
   RawUtxo,
@@ -87,6 +92,9 @@ import type {NetworkId, WalletImplementationId} from '../../config/types'
 import type {WalletMeta} from '../../state'
 import type {SignTransactionResponse} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import type {DefaultTokenEntry} from '../MultiToken'
+import type {JSONMetadata} from './metadataUtils'
+
+import LocalizableError from '../../i18n/LocalizableError'
 
 export default class ShelleyWallet extends Wallet implements WalletInterface {
   // =================== create =================== //
@@ -452,6 +460,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     tokens: SendTokenList,
     defaultToken: DefaultTokenEntry,
     serverTime: Date | void,
+    metadata: Array<JSONMetadata> | void,
   ): Promise<ISignRequest<TransactionBuilder>> {
     const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig())
     const time = serverTime !== undefined ? serverTime : new Date()
@@ -459,6 +468,8 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     const changeAddr = await this._getAddressedChangeAddress()
     const addressedUtxos = this.asAddressedUtxo(utxos)
 
+    const transactionMetadata =
+      metadata !== undefined ? createMetadata(metadata) : undefined
     return await createUnsignedTx({
       changeAddr,
       absSlotNumber,
@@ -466,7 +477,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       addressedUtxos,
       defaultToken,
       tokens,
-      metadata: undefined, // TODO(metadata)
+      metadata: transactionMetadata,
     })
   }
 
@@ -714,5 +725,66 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
 
   async fetchPoolInfo(request: PoolInfoRequest): Promise<PoolInfoResponse> {
     return await api.getPoolInfo(request)
+  }
+
+  async createVotingRegTx(
+    utxos: Array<RawUtxo>,
+  ): Promise<ISignRequest<TransactionBuilder>> {
+    Logger.debug('ShelleyWallet::createVotingRegTx called')
+    const timeToSlotFn = await genTimeToSlot(getCardanoBaseConfig())
+    const absSlotNumber = new BigNumber(timeToSlotFn({time: new Date()}).slot)
+    const changeAddr = await this._getAddressedChangeAddress()
+    const addressedUtxos = this.asAddressedUtxo(utxos)
+
+    try {
+      const config = CONFIG.NETWORKS.HASKELL_SHELLEY
+      const protocolParams = {
+        keyDeposit: await BigNum.from_str(config.KEY_DEPOSIT),
+        linearFee: await LinearFee.new(
+          await BigNum.from_str(config.LINEAR_FEE.COEFFICIENT),
+          await BigNum.from_str(config.LINEAR_FEE.CONSTANT),
+        ),
+        minimumUtxoVal: await BigNum.from_str(config.MINIMUM_UTXO_VAL),
+        poolDeposit: await BigNum.from_str(config.POOL_DEPOSIT),
+        networkId: config.NETWORK_ID,
+      }
+
+      const unsignedTx = await newAdaUnsignedTx(
+        [],
+        {
+          address: changeAddr.address,
+          addressing: changeAddr.addressing,
+        },
+        addressedUtxos,
+        absSlotNumber,
+        protocolParams,
+        [], // no delegations
+        [], // no withdrawals
+        false,
+        undefined, // metadata
+      )
+
+      const signRequest = new HaskellShelleyTxSignRequest(
+        unsignedTx.senderUtxos,
+        unsignedTx.txBuilder,
+        unsignedTx.changeAddr,
+        undefined, // metadata
+        {
+          NetworkId: config.NETWORK_ID,
+          ChainNetworkId: Number.parseInt(config.CHAIN_NETWORK_ID, 10),
+          KeyDeposit: new BigNumber(config.KEY_DEPOSIT),
+          PoolDeposit: new BigNumber(config.POOL_DEPOSIT),
+        },
+        {
+          neededHashes: new Set(),
+          wits: new Set(),
+        },
+      )
+      return signRequest
+    } catch (e) {
+      if (e instanceof LocalizableError || e instanceof ExtendableError) throw e
+      Logger.error(`shelley::createVotingRegTx:: ${e.message}`, e)
+      throw new CardanoError(e.message)
+    }
   }
 }

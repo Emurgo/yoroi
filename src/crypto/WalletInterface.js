@@ -27,6 +27,8 @@ import type {WalletMeta} from '../state'
 import type {Transaction, DefaultAsset} from '../types/HistoryTransaction'
 import type {Addresses} from './chain'
 import type {WalletChecksum} from '@emurgo/cip4-js'
+import type {JSONMetadata} from './shelley/metadataUtils'
+
 
 export interface WalletInterface {
   id: string;
@@ -157,6 +159,7 @@ export interface WalletInterface {
     tokens: SendTokenList,
     defaultToken: DefaultTokenEntry,
     serverTime: Date | void,
+    metadata: Array<JSONMetadata> | void,
   ): Promise<ISignRequest<T>>;
 
   signTx<T>(

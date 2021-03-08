@@ -29,6 +29,7 @@ import type {HWDeviceInfo} from './shelley/ledgerUtils'
 import type {NetworkId, WalletImplementationId} from '../config/types'
 import type {WalletChecksum} from '@emurgo/cip4-js'
 import type {DefaultTokenEntry} from './MultiToken'
+import type {JSONMetadata} from './shelley/metadataUtils'
 
 export class WalletClosed extends ExtendableError {}
 export class SystemAuthDisabled extends ExtendableError {}
@@ -683,6 +684,7 @@ class WalletManager {
     tokens: SendTokenList,
     defaultToken: DefaultTokenEntry,
     serverTime: Date | void,
+    metadata: Array<JSONMetadata> | void,
   ) {
     if (!this._wallet) throw new WalletClosed()
     return await this.abortWhenWalletCloses(
@@ -693,6 +695,7 @@ class WalletManager {
         tokens,
         defaultToken,
         serverTime,
+        metadata,
       ),
     )
   }

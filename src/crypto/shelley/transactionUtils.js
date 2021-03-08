@@ -28,7 +28,7 @@ export type CreateUnsignedTxRequest = {|
   addressedUtxos: Array<AddressedUtxo>,
   defaultToken: DefaultTokenEntry,
   tokens: SendTokenList,
-  metadata: Array<TransactionMetadata> | void,
+  metadata: TransactionMetadata | void,
 |}
 
 export type CreateUnsignedTxResponse = HaskellShelleyTxSignRequest
