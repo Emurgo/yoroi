@@ -32,7 +32,7 @@ const promisifyPbkdf2: (Uint8Array, Buffer) => Promise<Buffer> = (
       DIGEST,
       (err, key) => {
         if (err) return reject(err)
-        resolve(key)
+        return resolve(key)
       },
     )
   })
