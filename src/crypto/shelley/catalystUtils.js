@@ -10,7 +10,9 @@ import {
   GeneralTransactionMetadata,
   BigNum,
 } from '@emurgo/react-native-haskell-shelley'
-import {generateMnemonic, mnemonicToEntropy} from 'bip39'
+import {mnemonicToEntropy} from 'bip39'
+
+import {generateAdaMnemonic} from '../byron/util'
 
 export const CatalystLabels = Object.freeze({
   DATA: 61284,
@@ -72,7 +74,7 @@ export function generateRegistration(request: {|
 }
 
 export function generatePrivateKeyForCatalyst(): Bip32PrivateKey {
-  const mnemonic = generateMnemonic(160)
+  const mnemonic = generateAdaMnemonic()
   const bip39entropy = mnemonicToEntropy(mnemonic)
   const EMPTY_PASSWORD = Buffer.from('')
   const rootKey = Bip32PrivateKey.from_bip39_entropy(
