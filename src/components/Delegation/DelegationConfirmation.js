@@ -405,6 +405,11 @@ export default injectIntl(
         setLedgerDeviceId,
         setLedgerDeviceObj,
       },
+      (state, dispatchProps, ownProps) => ({
+        ...state,
+        ...dispatchProps,
+        ...ownProps,
+      }),
     ),
     withStateHandlers(
       {
