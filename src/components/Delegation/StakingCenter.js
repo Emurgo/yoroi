@@ -1,16 +1,18 @@
 // @flow
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import {View} from 'react-native'
 import {WebView} from 'react-native-webview'
+import {BigNumber} from 'bignumber.js'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
 
 import {STAKING_CENTER_ROUTES} from '../../RoutesList'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {CONFIG} from '../../config/config'
+import {withNavigationTitle} from '../../utils/renderUtils'
 import {Logger} from '../../utils/logging'
+import {formatTokenInteger} from '../../utils/format'
 import walletManager from '../../crypto/walletManager'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../actions'
@@ -22,6 +24,8 @@ import {
   utxosSelector,
   accountBalanceSelector,
   defaultNetworkAssetSelector,
+  poolOperatorSelector,
+  languageSelector,
 } from '../../selectors'
 import UtxoAutoRefresher from '../Send/UtxoAutoRefresher'
 import AccountAutoRefresher from './AccountAutoRefresher'
@@ -61,18 +65,27 @@ const noPoolDataDialog = defineMessages({
  * Prepares WebView's target staking URI
  * @param {*} poolList : Array of delegated pool hash
  */
-const prepareStakingURL = (poolList: ?Array<string>): null | string => {
+const prepareStakingURL = (
+  poolList: ?Array<string>,
+  amountToDelegate: ?string,
+  locale: string,
+): string => {
   // source=mobile is constant and already included
-  // TODO: add locale parameter
   let finalURL = CONFIG.NETWORKS.HASKELL_SHELLEY.POOL_EXPLORER
+
+  const lang = locale.slice(0, 2)
+  finalURL += `&lang=${lang}`
+
   if (poolList != null) {
     finalURL += `&delegated=${encodeURIComponent(JSON.stringify(poolList))}`
+  }
+  if (amountToDelegate != null) {
+    finalURL += `&totalAda=${amountToDelegate}`
   }
   return finalURL
 }
 
 const StakingCenter = ({
-  route,
   intl,
   handleOnMessage,
   navigateToDelegationConfirm,
@@ -80,16 +93,46 @@ const StakingCenter = ({
   showPoolWarning,
   setShowPoolWarning,
   reputationInfo,
+  poolOperator,
+  selectedPools,
+  utxos,
+  defaultAsset,
+  languageCode,
 }) => {
   // pools user is currently delegating to
-  const poolList: ?Array<string> = route.params?.poolList
+  const poolList = poolOperator != null ? [poolOperator] : null
+
+  const [amountToDelegate, setAmountToDelegate] = useState(null)
+
+  const getAmountToDelegate = async () => {
+    const utxosForKey =
+      utxos != null ? await walletManager.getAllUtxosForKey(utxos) : null
+    // prettier-ignore
+    const amountToDelegate =
+      utxosForKey != null
+        ? utxosForKey
+          .map((utxo) => utxo.amount)
+          .reduce(
+            (x: BigNumber, y) => x.plus(new BigNumber(y || 0)),
+            new BigNumber(0),
+          )
+        : BigNumber(0)
+    setAmountToDelegate(formatTokenInteger(amountToDelegate, defaultAsset))
+  }
+
+  useEffect(() => {
+    getAmountToDelegate()
+  })
+
   return (
     <>
       <View style={styles.container}>
         <UtxoAutoRefresher />
         <AccountAutoRefresher />
         <WebView
-          source={{uri: prepareStakingURL(poolList)}}
+          source={{
+            uri: prepareStakingURL(poolList, amountToDelegate, languageCode),
+          }}
           onMessage={(event) => handleOnMessage(event)}
         />
       </View>
@@ -97,11 +140,11 @@ const StakingCenter = ({
         visible={showPoolWarning}
         onPress={async () => {
           setShowPoolWarning(false)
-          await navigateToDelegationConfirm()
+          await navigateToDelegationConfirm(selectedPools)
         }}
         onRequestClose={async () => {
           setShowPoolWarning(false)
-          await navigateToDelegationConfirm()
+          await navigateToDelegationConfirm(selectedPools)
         }}
         reputationInfo={reputationInfo}
       />
@@ -133,6 +176,8 @@ export default injectIntl(
       accountBalance: accountBalanceSelector(state),
       isOnline: isOnlineSelector(state),
       defaultAsset: defaultNetworkAssetSelector(state),
+      poolOperator: poolOperatorSelector(state),
+      languageCode: languageSelector(state),
     })),
     withStateHandlers(
       {

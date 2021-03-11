@@ -69,7 +69,6 @@ import {NetworkError, ApiError} from '../../api/errors'
 import {WrongPassword} from '../../crypto/errors'
 import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
-import {formatAdaInteger} from '../../utils/format'
 import FlawedWalletScreen from './FlawedWalletScreen'
 import {CONFIG, getCardanoBaseConfig} from '../../config/config'
 import {WITHDRAWAL_DIALOG_STEPS, type WithdrawalDialogSteps} from './types'
@@ -213,33 +212,9 @@ class StakingDashboard extends React.Component<Props, State> {
     if (this._unsubscribe != null) this._unsubscribe()
   }
 
-  /**
-   * TODO(v-almonacid): prefer computing balance from tx cache instead of
-   * utxo set
-   */
-  navigateToStakingCenter: (void) => Promise<void> = async () => {
-    const {navigation, utxos, poolOperator, accountBalance} = this.props
-    /* eslint-disable indent */
-    const utxosForKey =
-      utxos != null ? await walletManager.getAllUtxosForKey(utxos) : null
-    const amountToDelegate =
-      utxosForKey != null
-        ? utxosForKey
-            .map((utxo) => utxo.amount)
-            .reduce(
-              (x: BigNumber, y) => x.plus(new BigNumber(y || 0)),
-              new BigNumber(0),
-            )
-        : BigNumber(0)
-    const poolList = poolOperator != null ? [poolOperator] : []
-    /* eslint-enable indent */
-    const approxAdaToDelegate = formatAdaInteger(amountToDelegate)
-    navigation.navigate(DELEGATION_ROUTES.STAKING_CENTER, {
-      approxAdaToDelegate,
-      poolList,
-      utxos,
-      valueInAccount: accountBalance,
-    })
+  navigateToStakingCenter: (void) => void = () => {
+    const {navigation} = this.props
+    navigation.navigate(DELEGATION_ROUTES.STAKING_CENTER)
   }
 
   handleDidFocus: (void) => void = () => {
