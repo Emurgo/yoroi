@@ -5,7 +5,6 @@ import {WebView} from 'react-native-webview'
 import {BigNumber} from 'bignumber.js'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
 
 import {STAKING_CENTER_ROUTES} from '../../RoutesList'
@@ -36,7 +35,9 @@ import styles from './styles/DelegationCenter.style'
 
 import type {IntlShape} from 'react-intl'
 import type {ComponentType} from 'react'
+import type {DefaultAsset} from '../../types/HistoryTransaction'
 import type {Navigation} from '../../types/navigation'
+import type {RawUtxo} from '../../api/types'
 
 const messages = defineMessages({
   title: {
@@ -60,6 +61,11 @@ const noPoolDataDialog = defineMessages({
       '!!!The data from the stake pool(s) you selected is invalid. Please try again',
   },
 })
+
+type SelectedPool = {|
+  +poolName: null | string,
+  +poolHash: string,
+|}
 
 /**
  * Prepares WebView's target staking URI
@@ -85,19 +91,117 @@ const prepareStakingURL = (
   return finalURL
 }
 
+const navigateToDelegationConfirm = async (
+  accountBalance: ?BigNumber,
+  utxos: Array<RawUtxo>,
+  selectedPools: Array<SelectedPool>,
+  defaultAsset: DefaultAsset,
+  intl: IntlShape,
+  navigation: Navigation,
+) => {
+  try {
+    const selectedPool = selectedPools[0]
+    if (accountBalance == null) return
+    const transactionData = await walletManager.createDelegationTx(
+      selectedPool.poolHash,
+      accountBalance,
+      utxos,
+      defaultAsset,
+    )
+    const transactionFee = await transactionData.signRequest.fee()
+    navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM, {
+      poolName: selectedPool.poolName,
+      poolHash: selectedPool.poolHash,
+      transactionData,
+      transactionFee,
+    })
+  } catch (e) {
+    if (e instanceof InsufficientFunds) {
+      await showErrorDialog(errorMessages.insufficientBalance, intl)
+    } else {
+      Logger.error(e)
+      await showErrorDialog(errorMessages.generalError, intl, {
+        message: e.message,
+      })
+    }
+  }
+}
+
+const _handleOnMessage = async (
+  selectedPoolHashes: Array<string>,
+  setSelectedPools: (selectedPools: Array<SelectedPool>) => void,
+  setReputationInfo: (reputationInfo: Object) => void,
+  setShowPoolWarning: (showPoolWarning: boolean) => void,
+  accountBalance: ?BigNumber,
+  utxos,
+  defaultAsset,
+  intl: IntlShape,
+  navigation: Navigation,
+) => {
+  try {
+    const poolInfoResponse = await walletManager.fetchPoolInfo({
+      poolIds: selectedPoolHashes,
+    })
+    const poolInfo = ObjectValues(poolInfoResponse)[0]
+    Logger.debug('StakingCenter::poolInfo', poolInfo)
+
+    // TODO: fetch reputation info once an endpoint is implemented
+    const poolsReputation: {[key: string]: mixed} = {}
+
+    if (poolInfo?.info != null) {
+      const selectedPools: Array<SelectedPool> = [
+        {
+          poolName: poolInfo.info.name,
+          poolHash: selectedPoolHashes[0],
+        },
+      ]
+      setSelectedPools(selectedPools)
+
+      // check if pool in blacklist
+      const poolsInBlackList = []
+      for (const pool of selectedPoolHashes) {
+        if (pool in poolsReputation) {
+          poolsInBlackList.push(pool)
+        }
+      }
+      if (poolsInBlackList.length > 0) {
+        setReputationInfo(poolsReputation[poolsInBlackList[0]])
+        setShowPoolWarning(true)
+      } else {
+        await navigateToDelegationConfirm(
+          accountBalance,
+          utxos,
+          selectedPools,
+          defaultAsset,
+          intl,
+          navigation,
+        )
+      }
+    } else {
+      await showErrorDialog(noPoolDataDialog, intl)
+    }
+  } catch (e) {
+    if (e instanceof NetworkError) {
+      await showErrorDialog(errorMessages.networkError, intl)
+    } else if (e instanceof ApiError) {
+      await showErrorDialog(noPoolDataDialog, intl)
+    } else {
+      Logger.error(e)
+      await showErrorDialog(errorMessages.generalError, intl, {
+        message: e.message,
+      })
+    }
+  }
+}
+
 const StakingCenter = ({
   intl,
-  handleOnMessage,
-  navigateToDelegationConfirm,
-  busy,
-  showPoolWarning,
-  setShowPoolWarning,
-  reputationInfo,
+  navigation,
   poolOperator,
-  selectedPools,
   utxos,
   defaultAsset,
   languageCode,
+  accountBalance,
 }) => {
   // pools user is currently delegating to
   const poolList = poolOperator != null ? [poolOperator] : null
@@ -120,6 +224,37 @@ const StakingCenter = ({
     setAmountToDelegate(formatTokenInteger(amountToDelegate, defaultAsset))
   }
 
+  const [selectedPools, setSelectedPools] = useState([])
+
+  const [reputationInfo, setReputationInfo] = useState({})
+
+  const [showPoolWarning, setShowPoolWarning] = useState(false)
+
+  const [busy, setBusy] = useState(false)
+
+  const handleOnMessage = async (event) => {
+    try {
+      setBusy(true)
+      const selectedPoolHashes: Array<string> = JSON.parse(
+        decodeURI(event.nativeEvent.data),
+      )
+      Logger.debug('selected pools from explorer:', selectedPoolHashes)
+      await _handleOnMessage(
+        selectedPoolHashes,
+        setSelectedPools,
+        setReputationInfo,
+        setShowPoolWarning,
+        accountBalance,
+        utxos,
+        defaultAsset,
+        intl,
+        navigation,
+      )
+    } finally {
+      setBusy(false)
+    }
+  }
+
   useEffect(() => {
     getAmountToDelegate()
   })
@@ -140,12 +275,16 @@ const StakingCenter = ({
         visible={showPoolWarning}
         onPress={async () => {
           setShowPoolWarning(false)
-          await navigateToDelegationConfirm(selectedPools)
+          await navigateToDelegationConfirm(
+            accountBalance,
+            utxos,
+            selectedPools,
+            defaultAsset,
+            intl,
+            navigation,
+          )
         }}
-        onRequestClose={async () => {
-          setShowPoolWarning(false)
-          await navigateToDelegationConfirm(selectedPools)
-        }}
+        onRequestClose={() => setShowPoolWarning(false)}
         reputationInfo={reputationInfo}
       />
       <PleaseWaitModal
@@ -156,11 +295,6 @@ const StakingCenter = ({
     </>
   )
 }
-
-type SelectedPool = {|
-  +poolName: null | string,
-  +poolHash: string,
-|}
 
 type ExternalProps = {|
   navigation: Navigation,
@@ -179,126 +313,5 @@ export default injectIntl(
       poolOperator: poolOperatorSelector(state),
       languageCode: languageSelector(state),
     })),
-    withStateHandlers(
-      {
-        busy: false,
-        showPoolWarning: false,
-        reputationInfo: {},
-        selectedPools: [],
-      },
-      {
-        setBusy: () => (busy) => ({busy}),
-        setShowPoolWarning: () => (showPoolWarning) => ({showPoolWarning}),
-        setReputationInfo: () => (reputationInfo) => ({reputationInfo}),
-        setSelectedPools: () => (selectedPools) => ({selectedPools}),
-      },
-    ),
-    withHandlers({
-      withPleaseWaitModal: ({setBusy}) => async (
-        func: () => Promise<void>,
-      ): Promise<void> => {
-        setBusy(true)
-        try {
-          await func()
-        } finally {
-          setBusy(false)
-        }
-      },
-    }),
-    withHandlers({
-      navigateToDelegationConfirm: ({
-        navigation,
-        accountBalance,
-        utxos,
-        intl,
-        defaultAsset,
-      }) => async (selectedPools: Array<SelectedPool>) => {
-        try {
-          const selectedPool = selectedPools[0]
-          const transactionData = await walletManager.createDelegationTx(
-            selectedPool.poolHash,
-            accountBalance,
-            utxos,
-            defaultAsset,
-          )
-          const transactionFee = await transactionData.signRequest.fee()
-          navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM, {
-            poolName: selectedPool.poolName,
-            poolHash: selectedPool.poolHash,
-            transactionData,
-            transactionFee,
-          })
-        } catch (e) {
-          if (e instanceof InsufficientFunds) {
-            await showErrorDialog(errorMessages.insufficientBalance, intl)
-          } else {
-            Logger.error(e)
-            await showErrorDialog(errorMessages.generalError, intl, {
-              message: e.message,
-            })
-          }
-        }
-      },
-    }),
-    withHandlers({
-      handleOnMessage: ({
-        navigateToDelegationConfirm,
-        setReputationInfo,
-        setSelectedPools,
-        setShowPoolWarning,
-        intl,
-      }) => async (event) => {
-        try {
-          const selectedPoolHashes: Array<string> = JSON.parse(
-            decodeURI(event.nativeEvent.data),
-          )
-          Logger.debug('selected pools from explorer:', selectedPoolHashes)
-
-          const poolInfoResponse = await walletManager.fetchPoolInfo({
-            poolIds: selectedPoolHashes,
-          })
-          const poolInfo = ObjectValues(poolInfoResponse)[0]
-          Logger.debug('poolInfo', poolInfo)
-
-          // TODO: fetch reputation info once an endpoint is implemented
-          const poolsReputation: {[key: string]: mixed} = {}
-          if (poolInfo?.info != null) {
-            const selectedPools: Array<SelectedPool> = [
-              {
-                poolName: poolInfo.info.name,
-                poolHash: selectedPoolHashes[0],
-              },
-            ]
-            setSelectedPools(selectedPools)
-            // check if pool in blacklist
-            const poolsInBlackList = []
-            for (const pool of selectedPoolHashes) {
-              if (pool in poolsReputation) {
-                poolsInBlackList.push(pool)
-              }
-            }
-            if (poolsInBlackList.length > 0) {
-              setReputationInfo(poolsReputation[poolsInBlackList[0]])
-              setShowPoolWarning(true)
-            } else {
-              await navigateToDelegationConfirm(selectedPools)
-            }
-          } else {
-            await showErrorDialog(noPoolDataDialog, intl)
-          }
-        } catch (e) {
-          if (e instanceof NetworkError) {
-            await showErrorDialog(errorMessages.networkError, intl)
-          } else if (e instanceof ApiError) {
-            await showErrorDialog(noPoolDataDialog, intl)
-          } else {
-            Logger.error(e)
-            await showErrorDialog(errorMessages.generalError, intl, {
-              message: e.message,
-            })
-          }
-        }
-      },
-    }),
   )(StakingCenter): ComponentType<ExternalProps>),
 )
