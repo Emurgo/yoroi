@@ -12,6 +12,8 @@ import CheckNanoXScreen from './ConnectNanoX/CheckNanoXScreen'
 import ConnectNanoXScreen from './ConnectNanoX/ConnectNanoXScreen'
 import SaveNanoXScreen from './ConnectNanoX/SaveNanoXScreen'
 import MnemonicShowScreen from './CreateWallet/MnemonicShowScreen'
+import CatalystStep1 from '../Catalyst/Step1'
+
 import {
   defaultNavigationOptions,
   jormunNavigationOptions,
@@ -20,7 +22,7 @@ import {
 import MnemonicCheckScreen from './CreateWallet/MnemonicCheckScreen'
 import VerifyRestoredWallet from './RestoreWallet/VerifyRestoredWallet'
 import WalletCredentialsScreen from './RestoreWallet/WalletCredentialsScreen'
-import {WALLET_INIT_ROUTES} from '../../RoutesList'
+import {WALLET_INIT_ROUTES, CATALYST_ROUTES} from '../../RoutesList'
 import {isJormungandr} from '../../config/networks'
 
 const Stack = createStackNavigator()
@@ -97,6 +99,10 @@ const WalletInitNavigator = () => (
     <Stack.Screen
       name={WALLET_INIT_ROUTES.WALLET_CREDENTIALS}
       component={WalletCredentialsScreen}
+    />
+    <Stack.Screen
+      name={CATALYST_ROUTES.STEP1}
+      component={CatalystStep1}
     />
   </Stack.Navigator>
 )
