@@ -2,6 +2,8 @@
 import {AppRegistry} from 'react-native'
 import {getStorybookUI, configure, addDecorator} from '@storybook/react-native'
 import {action} from '@storybook/addon-actions'
+
+import {withProvider} from './decorators'
 import {loadStories} from './storyLoader'
 
 import './rn-addons'
@@ -31,6 +33,7 @@ const navigation = {
 
 
 addDecorator((storyFn) => storyFn({navigation, route}))
+addDecorator(withProvider)
 
 // Refer to
 // https://github.com/storybookjs/storybook/tree/master/app/react-native#start-command-parameters
