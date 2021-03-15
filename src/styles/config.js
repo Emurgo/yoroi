@@ -72,8 +72,8 @@ const brand = {
     android: 'Rubik-Regular',
   }),
   bold: Platform.select({
-    ios: 'Rubik-Bold',
-    android: 'Rubik-Bold',
+    ios: 'Rubik-Medium',
+    android: 'Rubik-Medium',
   }),
 }
 
