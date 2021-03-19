@@ -520,10 +520,11 @@ class WalletManager {
 
   closeWallet(): Promise<void> {
     if (!this._wallet) return Promise.resolve()
+    Logger.debug('closing wallet...')
     assert.assert(this._closeReject, 'close: should have _closeReject')
     /* :: if (!this._closeReject) throw 'assert' */
     // Abort all async interactions with the wallet
-    // const reject = this._closeReject
+    const reject = this._closeReject
     this._closePromise = null
     this._closeReject = null
     this._wallet = null
@@ -533,9 +534,7 @@ class WalletManager {
     // closeWallet would throw if some rejection
     // handler does not catch
     return Promise.resolve().then(() => {
-      // TODO: Check why Shelley path crash when this is active
-      //  and figure out why this is actually necessary
-      // reject(new WalletClosed())
+      reject(new WalletClosed())
     })
   }
 
