@@ -338,7 +338,7 @@
   "components.walletselection.walletselectionscreen.addWalletButton": "添加钱包",
   "components.walletselection.walletselectionscreen.addWalletOnShelleyButton": "添加钱包(Jormungandr 测试网)",
   "components.walletselection.walletselectionscreen.header": "我的钱包",
-  "components.walletselection.walletselectionscreen.stakeDashboardButton": "质押仪表盘",
+  "components.walletselection.walletselectionscreen.stakeDashboardButton": "委托总览",
   "crypto.errors.rewardAddressEmpty": "奖励地址是空的。",
   "crypto.keystore.approveTransaction": "使用您的生物识别信息授权",
   "crypto.keystore.cancelButton": "取消",
