@@ -469,7 +469,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     const addressedUtxos = this.asAddressedUtxo(utxos)
 
     const transactionMetadata =
-      metadata !== undefined ? createMetadata(metadata) : undefined
+      metadata !== undefined ? await createMetadata(metadata) : undefined
     return await createUnsignedTx({
       changeAddr,
       absSlotNumber,
@@ -530,7 +530,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
       accountPvrKey,
       wits,
-      undefined, // TODO(metadata)
+      signRequest.txMetadata(),
     )
     const id = Buffer.from(
       await (await hash_transaction(await signedTx.body())).to_bytes(),

@@ -37,7 +37,7 @@ export const createUnsignedTx = async (
   request: CreateUnsignedTxRequest,
 ): Promise<CreateUnsignedTxResponse> => {
   Logger.debug('createUnsignedTx called', request)
-  const {changeAddr, receiver, addressedUtxos, absSlotNumber} = request
+  const {changeAddr, receiver, addressedUtxos, absSlotNumber, metadata} = request
   try {
     const NETWORK_CONFIG = CONFIG.NETWORKS.HASKELL_SHELLEY
 
@@ -59,11 +59,6 @@ export const createUnsignedTx = async (
       networkId: NETWORK_ID,
     }
 
-    // TODO(metadata)
-    if (request.metadata !== undefined) {
-      throw new Error('Metadata transactions not yet supported')
-    }
-
     let unsignedTxResponse
     if (hasSendAllDefault(request.tokens)) {
       assert.assert(receiver != null, 'sendAll requires a receiver address')
@@ -72,7 +67,7 @@ export const createUnsignedTx = async (
         addressedUtxos,
         absSlotNumber,
         protocolParams,
-        undefined, // // TODO(metadata)
+        metadata,
       )
     } else {
       assert.assert(
@@ -102,7 +97,7 @@ export const createUnsignedTx = async (
         [], // no certificates
         [], // no withdrawals
         false, // do not allow no outputs
-        undefined, // TODO(metadata)
+        metadata,
       )
     }
 
@@ -113,7 +108,7 @@ export const createUnsignedTx = async (
       unsignedTxResponse.senderUtxos,
       unsignedTxResponse.txBuilder,
       unsignedTxResponse.changeAddr,
-      undefined, // TODO(metadata)
+      metadata,
       {
         NetworkId: NETWORK_ID,
         ChainNetworkId: Number.parseInt(CHAIN_NETWORK_ID, 10),

@@ -32,7 +32,7 @@
     "@cardano-foundation/ledgerjs-hw-app-cardano": "2.2.1",
     "@emurgo/cip14-js": "2.0.0",
     "@emurgo/cip4-js": "1.0.5",
-    "@emurgo/react-native-haskell-shelley": "1.1.0",
+    "@emurgo/react-native-haskell-shelley": "1.1.1",
     "@ledgerhq/react-native-hw-transport-ble": "5.41.0",
     "@react-native-async-storage/async-storage": "1.13.3",
     "@react-native-community/masked-view": "0.1.10",

@@ -15,20 +15,20 @@ export type JSONMetadata = {|
   data: {...},
 |}
 
-export function createMetadata(
+export async function createMetadata(
   metadata: Array<JSONMetadata>
 ): TransactionMetadata {
-  const transactionMetadata = GeneralTransactionMetadata.new()
+  const transactionMetadata = await GeneralTransactionMetadata.new()
 
-  metadata.forEach((meta: JSONMetadata) => {
-    const metadatum = encode_json_str_to_metadatum(
+  for (const meta of metadata) {
+    const metadatum = await encode_json_str_to_metadatum(
       JSON.stringify(meta.data),
       MetadataJsonSchema.BasicConversions
     )
-    transactionMetadata.insert(BigNum.from_str(meta.label), metadatum)
-  })
+    await transactionMetadata.insert(await BigNum.from_str(meta.label), metadatum)
+  }
 
-  return TransactionMetadata.new(transactionMetadata)
+  return await TransactionMetadata.new(transactionMetadata)
 }
 
 export function parseMetadata(hex: string): any {

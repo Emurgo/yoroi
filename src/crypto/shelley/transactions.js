@@ -113,7 +113,7 @@ export const sendAllUnsignedTxFromUtxo = async (
   }
 
   if (metadata !== undefined) {
-    txBuilder.set_metadata(metadata)
+    await txBuilder.set_metadata(metadata)
   }
 
   if (totalBalance.lt(await (await txBuilder.min_fee()).to_str())) {
@@ -176,7 +176,7 @@ export const sendAllUnsignedTx = async (
     keyDeposit: BigNum,
     networkId: number,
   |},
-  _metadata: TransactionMetadata | void,
+  metadata: TransactionMetadata | void,
 ): Promise<V4UnsignedTxAddressedUtxoResponse> => {
   const addressingMap = new Map<RawUtxo, AddressedUtxo>()
   for (const utxo of allUtxos) {
@@ -197,6 +197,7 @@ export const sendAllUnsignedTx = async (
     Array.from(addressingMap.keys()),
     absSlotNumber,
     protocolParams,
+    metadata
   )
 
   const addressedUtxos = unsignedTxResponse.senderUtxos.map((utxo) => {
