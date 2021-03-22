@@ -120,7 +120,6 @@ const TxHistory = ({
   walletMeta,
   intl,
 }) => {
-
   const routes = useNavigationState((state) => state.routes)
 
   useEffect(
@@ -163,7 +162,10 @@ const TxHistory = ({
         {_.isEmpty(transactionsInfo) ? (
           <ScrollView
             refreshControl={
-              <RefreshControl onRefresh={updateHistory} refreshing={isSyncing} />
+              <RefreshControl
+                onRefresh={updateHistory}
+                refreshing={isSyncing}
+              />
             }
           >
             <NoTxHistory />
