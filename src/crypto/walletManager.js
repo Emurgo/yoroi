@@ -175,11 +175,13 @@ class WalletManager {
   }
 
   _notifyServerSync = (status: ServerStatusResponse) => {
-    this._serverSyncSubscribers.forEach((handler) => handler({
-      isServerOk: status.isServerOk,
-      isMaintenance: status.isMaintenance,
-      serverTime: new Date(status.serverTime),
-    }))
+    this._serverSyncSubscribers.forEach((handler) =>
+      handler({
+        isServerOk: status.isServerOk,
+        isMaintenance: status.isMaintenance,
+        serverTime: new Date(status.serverTime),
+      }),
+    )
   }
 
   subscribe(handler: () => any) {

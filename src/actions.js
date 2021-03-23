@@ -223,23 +223,26 @@ export const logout = () => async (dispatch: Dispatch<any>) => {
   dispatch(signout())
 }
 
-const _setServerStatus = (
-  serverStatus: ServerStatusCache,
-) => (dispatch: Dispatch<any>) => dispatch({
-  path: ['serverStatus'],
-  payload: serverStatus,
-  type: 'SET_SERVER_STATUS',
-  reducer: (state, payload) => payload,
-})
+const _setServerStatus = (serverStatus: ServerStatusCache) => (
+  dispatch: Dispatch<any>,
+) =>
+  dispatch({
+    path: ['serverStatus'],
+    payload: serverStatus,
+    type: 'SET_SERVER_STATUS',
+    reducer: (state, payload) => payload,
+  })
 
 export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   try {
     const status = await api.checkServerStatus()
-    dispatch(_setServerStatus({
-      isServerOk: status.isServerOk,
-      isMaintenance: status.isMaintenance,
-      serverTime: new Date(status.serverTime),
-    }))
+    dispatch(
+      _setServerStatus({
+        isServerOk: status.isServerOk,
+        isMaintenance: status.isMaintenance,
+        serverTime: new Date(status.serverTime),
+      }),
+    )
   } catch (e) {
     Logger.warn('actions::initApp could not retrieve server status', e)
   }
