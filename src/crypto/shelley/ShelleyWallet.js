@@ -680,9 +680,8 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
 
   // =================== backend API =================== //
 
-  checkServerStatus() {
-    // do not await on purpose
-    return api.checkServerStatus()
+  async checkServerStatus() {
+    return await api.checkServerStatus()
   }
 
   async getBestBlock() {
