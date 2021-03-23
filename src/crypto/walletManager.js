@@ -21,7 +21,7 @@ import {
   isSystemAuthSupported,
 } from '../helpers/deviceSettings'
 
-import type {WalletMeta} from '../state'
+import type {WalletMeta, ServerStatusCache} from '../state'
 import type {RawUtxo, TxBodiesRequest, ServerStatusResponse} from '../api/types'
 import type {EncryptionMethod, SendTokenList} from './types'
 import type {DefaultAsset} from '../types/HistoryTransaction'
@@ -39,7 +39,7 @@ class WalletManager {
   _id: string = ''
   _subscribers: Array<() => any> = []
   _syncErrorSubscribers: Array<(err: any) => any> = []
-  _serverSyncSubscribers: Array<(status: ServerStatusResponse) => any> = []
+  _serverSyncSubscribers: Array<(status: ServerStatusCache) => any> = []
   _closePromise: ?Promise<any> = null
   _closeReject: ?(Error) => void = null
 
@@ -175,7 +175,11 @@ class WalletManager {
   }
 
   _notifyServerSync = (status: ServerStatusResponse) => {
-    this._serverSyncSubscribers.forEach((handler) => handler(status))
+    this._serverSyncSubscribers.forEach((handler) => handler({
+      isServerOk: status.isServerOk,
+      isMaintenance: status.isMaintenance,
+      serverTime: new Date(status.serverTime),
+    }))
   }
 
   subscribe(handler: () => any) {
@@ -186,7 +190,7 @@ class WalletManager {
     this._syncErrorSubscribers.push(handler)
   }
 
-  subscribeServerSync(handler: (status: ServerStatusResponse) => any) {
+  subscribeServerSync(handler: (status: ServerStatusCache) => any) {
     this._serverSyncSubscribers.push(handler)
   }
 
@@ -401,10 +405,8 @@ class WalletManager {
         const wallet = this._wallet
         await wallet.tryDoFullSync()
         await this._saveState(wallet)
-        // we don't await on purpose
-        wallet.checkServerStatus().then((status) => this._notifyServerSync(
-          status.serverTime,
-        ))
+        const status = await wallet.checkServerStatus()
+        this._notifyServerSync(status)
       }
       this._notifySyncError(null)
     } catch (e) {
@@ -679,7 +681,7 @@ class WalletManager {
     receiver: string,
     tokens: SendTokenList,
     defaultToken: DefaultTokenEntry,
-    serverTime: number | void,
+    serverTime: Date | void,
   ) {
     if (!this._wallet) throw new WalletClosed()
     return await this.abortWhenWalletCloses(
@@ -706,6 +708,7 @@ class WalletManager {
     valueInAccount: BigNumber,
     utxos: Array<RawUtxo>,
     defaultAsset: DefaultAsset,
+    serverTime: Date | void,
   ) {
     if (!this._wallet) throw new WalletClosed()
     return await this.abortWhenWalletCloses(
@@ -714,14 +717,23 @@ class WalletManager {
         valueInAccount,
         utxos,
         defaultAsset,
+        serverTime,
       ),
     )
   }
 
-  async createWithdrawalTx(utxos: Array<RawUtxo>, shouldDeregister: boolean) {
+  async createWithdrawalTx(
+    utxos: Array<RawUtxo>,
+    shouldDeregister: boolean,
+    serverTime: Date | void,
+  ) {
     if (!this._wallet) throw new WalletClosed()
     return await this.abortWhenWalletCloses(
-      this._wallet.createWithdrawalTx<mixed>(utxos, shouldDeregister),
+      this._wallet.createWithdrawalTx<mixed>(
+        utxos,
+        shouldDeregister,
+        serverTime,
+      ),
     )
   }
 

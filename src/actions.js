@@ -47,7 +47,7 @@ import {ISignRequest} from './crypto/ISignRequest'
 import {CONFIG} from './config/config'
 
 import {type Dispatch} from 'redux'
-import {type State} from './state'
+import type {State, ServerStatusCache} from './state'
 import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
 import type {NetworkId, WalletImplementationId} from './config/types'
 
@@ -223,8 +223,9 @@ export const logout = () => async (dispatch: Dispatch<any>) => {
   dispatch(signout())
 }
 
-// TODO: type
-const _setServerStatus = (serverStatus: any) => (dispatch: Dispatch<any>) => dispatch({
+const _setServerStatus = (
+  serverStatus: ServerStatusCache,
+) => (dispatch: Dispatch<any>) => dispatch({
   path: ['serverStatus'],
   payload: serverStatus,
   type: 'SET_SERVER_STATUS',
@@ -234,7 +235,11 @@ const _setServerStatus = (serverStatus: any) => (dispatch: Dispatch<any>) => dis
 export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   try {
     const status = await api.checkServerStatus()
-    dispatch(_setServerStatus(status))
+    dispatch(_setServerStatus({
+      isServerOk: status.isServerOk,
+      isMaintenance: status.isMaintenance,
+      serverTime: new Date(status.serverTime),
+    }))
   } catch (e) {
     Logger.warn('actions::initApp could not retrieve server status', e)
   }

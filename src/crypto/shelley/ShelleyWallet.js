@@ -451,9 +451,9 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     receiver: string,
     tokens: SendTokenList,
     defaultToken: DefaultTokenEntry,
-    serverTime: number | void,
+    serverTime: Date | void,
   ): Promise<ISignRequest<TransactionBuilder>> {
-    const timeToSlotFn = await genTimeToSlot(getCardanoBaseConfig())
+    const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig())
     const time = serverTime !== undefined ? serverTime : new Date()
     const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
     const changeAddr = await this._getAddressedChangeAddress()
@@ -536,12 +536,14 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     valueInAccount: BigNumber,
     utxos: Array<RawUtxo>,
     defaultAsset: DefaultAsset,
+    serverTime: Date | void,
   ): Promise<{|
     signRequest: ISignRequest<TransactionBuilder>,
     totalAmountToDelegate: MultiToken,
   |}> {
-    const timeToSlotFn = await genTimeToSlot(getCardanoBaseConfig())
-    const absSlotNumber = new BigNumber(timeToSlotFn({time: new Date()}).slot)
+    const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig())
+    const time = serverTime !== undefined ? serverTime : new Date()
+    const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
     const changeAddr = await this._getAddressedChangeAddress()
     const addressedUtxos = this.asAddressedUtxo(utxos)
     const registrationStatus = (await this.getDelegationStatus()).isRegistered
@@ -562,11 +564,13 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
   async createWithdrawalTx(
     utxos: Array<RawUtxo>,
     shouldDeregister: boolean,
+    serverTime: Date | void,
   ): Promise<ISignRequest<TransactionBuilder>> {
     const {rewardAddressHex} = this
     if (rewardAddressHex == null) throw new Error('reward address is null')
-    const timeToSlotFn = await genTimeToSlot(getCardanoBaseConfig())
-    const absSlotNumber = new BigNumber(timeToSlotFn({time: new Date()}).slot)
+    const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig())
+    const time = serverTime !== undefined ? serverTime : new Date()
+    const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
     const changeAddr = await this._getAddressedChangeAddress()
     const addressedUtxos = this.asAddressedUtxo(utxos)
     const resp = await createWithdrawalTx({

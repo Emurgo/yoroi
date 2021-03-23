@@ -12,7 +12,7 @@ import {ObjectValues} from './utils/flow'
 import {MultiToken, getDefaultNetworkTokenEntry} from './crypto/MultiToken'
 import {getDefaultAssets, getDefaultAssetByNetworkId} from './config/config'
 
-import type {State, WalletMeta} from './state'
+import type {State, WalletMeta, ServerStatusCache} from './state'
 import type {
   TransactionInfo,
   Transaction,
@@ -288,12 +288,7 @@ export const isFlawedWalletSelector = (state: State): boolean =>
 export const isMaintenanceSelector = (state: State): boolean =>
   state.serverStatus.isMaintenance
 
-type ServerStatus = {
-  isServerOk: boolean,
-  isMaintenance: boolean,
-  serverTime: number | void, // in milliseconds
-}
-export const serverStatusSelector = (state: State): ServerStatus =>
+export const serverStatusSelector = (state: State): ServerStatusCache =>
   state.serverStatus
 
 /**

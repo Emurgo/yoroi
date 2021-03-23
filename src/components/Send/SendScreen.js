@@ -58,6 +58,7 @@ import {cardanoValueFromMultiToken} from '../../crypto/shelley/utils'
 
 import styles from './styles/SendScreen.style'
 
+import type {ServerStatusCache} from '../../state'
 import type {Navigation} from '../../types/navigation'
 import type {Token, DefaultAsset} from '../../types/HistoryTransaction'
 import type {TokenEntry} from '../../crypto/MultiToken'
@@ -233,7 +234,7 @@ const getTransactionData = async (
   sendAll: boolean,
   defaultAsset: DefaultAsset,
   selectedToken: Token,
-  serverTime: number | void,
+  serverTime: Date | void,
 ): Promise<CreateUnsignedTxResponse> => {
   const defaultTokenEntry = {
     defaultNetworkId: defaultAsset.networkId,
@@ -423,11 +424,7 @@ type Props = {
   isOnline: boolean,
   hasPendingOutgoingTransaction: boolean,
   fetchUTXOs: () => void,
-  serverStatus: {
-    isServerOk: boolean,
-    isMaintenance: boolean,
-    serverTime: number | void,
-  },
+  serverStatus: ServerStatusCache,
 }
 
 type State = {
