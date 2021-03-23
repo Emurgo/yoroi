@@ -33,6 +33,7 @@ import {
   hasPendingOutgoingTransactionSelector,
   availableAssetsSelector,
   defaultNetworkAssetSelector,
+  serverStatusSelector,
 } from '../../selectors'
 import {fetchUTXOs} from '../../actions/utxo'
 import {withNavigationTitle} from '../../utils/renderUtils'
@@ -232,6 +233,7 @@ const getTransactionData = async (
   sendAll: boolean,
   defaultAsset: DefaultAsset,
   selectedToken: Token,
+  serverTime: number | void,
 ): Promise<CreateUnsignedTxResponse> => {
   const defaultTokenEntry = {
     defaultNetworkId: defaultAsset.networkId,
@@ -265,6 +267,7 @@ const getTransactionData = async (
     address,
     sendTokenList,
     defaultTokenEntry,
+    serverTime,
   )
 }
 
@@ -420,6 +423,11 @@ type Props = {
   isOnline: boolean,
   hasPendingOutgoingTransaction: boolean,
   fetchUTXOs: () => void,
+  serverStatus: {
+    isServerOk: boolean,
+    isMaintenance: boolean,
+    serverTime: number | void,
+  },
 }
 
 type State = {
@@ -541,6 +549,7 @@ class SendScreen extends Component<Props, State> {
       tokenBalance,
       defaultAsset,
       availableAssets,
+      serverStatus,
     } = this.props
     const {address, amount, sendAll, selectedAsset} = this.state
 
@@ -590,6 +599,7 @@ class SendScreen extends Component<Props, State> {
         sendAll,
         defaultAsset,
         selectedTokenMeta,
+        serverStatus.serverTime,
       )
       const fee = (await transactionData.fee()).getDefault()
       // prettier-ignore
@@ -848,6 +858,7 @@ export default injectIntl(
           state,
         ),
         isOnline: isOnlineSelector(state),
+        serverStatus: serverStatusSelector(state),
       }),
       {
         fetchUTXOs,

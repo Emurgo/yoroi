@@ -286,7 +286,15 @@ export const isFlawedWalletSelector = (state: State): boolean =>
   state.isFlawedWallet
 
 export const isMaintenanceSelector = (state: State): boolean =>
-  state.isMaintenance
+  state.serverStatus.isMaintenance
+
+type ServerStatus = {
+  isServerOk: boolean,
+  isMaintenance: boolean,
+  serverTime: number | void, // in milliseconds
+}
+export const serverStatusSelector = (state: State): ServerStatus =>
+  state.serverStatus
 
 /**
  * Before users can actually create a wallet, 3 steps must be completed:

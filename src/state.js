@@ -83,7 +83,11 @@ export type State = {
   // need to add as a non-wallet-specific property to avoid conflict with other
   // actions that may override this property (otherwise more refactoring is needed)
   isFlawedWallet: boolean,
-  isMaintenance: boolean,
+  serverStatus: {
+    isServerOk: boolean,
+    isMaintenance: boolean,
+    serverTime: number | void,
+  },
 }
 
 export const getInitialState = (): State => ({
@@ -146,7 +150,11 @@ export const getInitialState = (): State => ({
     currentVersion: null,
   },
   isFlawedWallet: false,
-  isMaintenance: false,
+  serverStatus: {
+    isServerOk: true,
+    isMaintenance: false,
+    serverTime: undefined,
+  },
 })
 
 export const mockState = (): State => {

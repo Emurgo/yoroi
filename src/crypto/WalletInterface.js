@@ -156,6 +156,7 @@ export interface WalletInterface {
     receiver: string,
     tokens: SendTokenList,
     defaultToken: DefaultTokenEntry,
+    serverTime: number | void,
   ): Promise<ISignRequest<T>>;
 
   signTx<T>(
@@ -184,6 +185,8 @@ export interface WalletInterface {
   ): Promise<SignedTx>;
 
   // =================== backend API =================== //
+
+  checkServerStatus(): Promise<any>;
 
   submitTransaction(signedTx: string): Promise<any>;
 

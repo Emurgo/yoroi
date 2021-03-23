@@ -451,9 +451,11 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     receiver: string,
     tokens: SendTokenList,
     defaultToken: DefaultTokenEntry,
+    serverTime: number | void,
   ): Promise<ISignRequest<TransactionBuilder>> {
     const timeToSlotFn = await genTimeToSlot(getCardanoBaseConfig())
-    const absSlotNumber = new BigNumber(timeToSlotFn({time: new Date()}).slot)
+    const time = serverTime !== undefined ? serverTime : new Date()
+    const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
     const changeAddr = await this._getAddressedChangeAddress()
     const addressedUtxos = this.asAddressedUtxo(utxos)
 
@@ -673,6 +675,11 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   // =================== backend API =================== //
+
+  checkServerStatus() {
+    // do not await on purpose
+    return api.checkServerStatus()
+  }
 
   async getBestBlock() {
     return await api.getBestBlock()

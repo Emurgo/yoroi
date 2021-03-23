@@ -22,7 +22,7 @@ import {
 } from '../helpers/deviceSettings'
 
 import type {WalletMeta} from '../state'
-import type {RawUtxo, TxBodiesRequest} from '../api/types'
+import type {RawUtxo, TxBodiesRequest, ServerStatusResponse} from '../api/types'
 import type {EncryptionMethod, SendTokenList} from './types'
 import type {DefaultAsset} from '../types/HistoryTransaction'
 import type {HWDeviceInfo} from './shelley/ledgerUtils'
@@ -39,6 +39,7 @@ class WalletManager {
   _id: string = ''
   _subscribers: Array<() => any> = []
   _syncErrorSubscribers: Array<(err: any) => any> = []
+  _serverSyncSubscribers: Array<(status: ServerStatusResponse) => any> = []
   _closePromise: ?Promise<any> = null
   _closeReject: ?(Error) => void = null
 
@@ -173,12 +174,20 @@ class WalletManager {
     this._syncErrorSubscribers.forEach((handler) => handler(error))
   }
 
+  _notifyServerSync = (status: ServerStatusResponse) => {
+    this._serverSyncSubscribers.forEach((handler) => handler(status))
+  }
+
   subscribe(handler: () => any) {
     this._subscribers.push(handler)
   }
 
   subscribeBackgroundSyncError(handler: (err: any) => any) {
     this._syncErrorSubscribers.push(handler)
+  }
+
+  subscribeServerSync(handler: (status: ServerStatusResponse) => any) {
+    this._serverSyncSubscribers.push(handler)
   }
 
   /** ========== getters =============
@@ -392,6 +401,10 @@ class WalletManager {
         const wallet = this._wallet
         await wallet.tryDoFullSync()
         await this._saveState(wallet)
+        // we don't await on purpose
+        wallet.checkServerStatus().then((status) => this._notifyServerSync(
+          status.serverTime,
+        ))
       }
       this._notifySyncError(null)
     } catch (e) {
@@ -666,6 +679,7 @@ class WalletManager {
     receiver: string,
     tokens: SendTokenList,
     defaultToken: DefaultTokenEntry,
+    serverTime: number | void,
   ) {
     if (!this._wallet) throw new WalletClosed()
     return await this.abortWhenWalletCloses(
@@ -675,6 +689,7 @@ class WalletManager {
         receiver,
         tokens,
         defaultToken,
+        serverTime,
       ),
     )
   }
