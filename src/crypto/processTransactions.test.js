@@ -303,7 +303,6 @@ const txs: Array<RawTransaction> = [
 
 describe('processTxHistoryData', () => {
   it('regular, point-to-point ADA tx (received)', async () => {
-
     const tx = processTxHistoryData(
       await checkAndFacadeTransactionAsync(txs[0]),
       myAddresses,
@@ -318,7 +317,6 @@ describe('processTxHistoryData', () => {
   })
 
   it('regular, point-to-point ADA tx (sent)', async () => {
-
     const tx = processTxHistoryData(
       await checkAndFacadeTransactionAsync(txs[1]),
       myAddresses,
@@ -333,7 +331,6 @@ describe('processTxHistoryData', () => {
   })
 
   it('point-to-point ADA tx with tokens (received)', async () => {
-
     const tx = processTxHistoryData(
       await checkAndFacadeTransactionAsync(txs[2]),
       myAddresses,
@@ -348,12 +345,13 @@ describe('processTxHistoryData', () => {
 
     expect(netTokenBalance.length).toBe(1)
     expect(netTokenBalance[0].amount.toString()).toBe('2')
-    expect(netTokenBalance[0].identifier).toBe('6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.')
+    expect(netTokenBalance[0].identifier).toBe(
+      '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+    )
     expect(tx.direction).toBe(TRANSACTION_DIRECTION.RECEIVED)
   })
 
   it('intrawallet ADA tx with tokens', async () => {
-
     const tx = processTxHistoryData(
       await checkAndFacadeTransactionAsync(txs[3]),
       myAddresses,
@@ -368,8 +366,9 @@ describe('processTxHistoryData', () => {
 
     expect(netTokenBalance.length).toBe(1)
     expect(netTokenBalance[0].amount.toString()).toBe('0')
-    expect(netTokenBalance[0].identifier).toBe('6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.')
+    expect(netTokenBalance[0].identifier).toBe(
+      '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+    )
     expect(tx.direction).toBe(TRANSACTION_DIRECTION.SELF)
   })
-
 })
