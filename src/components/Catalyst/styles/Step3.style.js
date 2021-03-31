@@ -13,6 +13,5 @@ export default StyleSheet.create({
     paddingTop: 50,
     paddingHorizontal: 20,
     paddingBottom: 36,
-    justifyContent: 'space-between',
   },
 })

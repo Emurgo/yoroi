@@ -76,7 +76,7 @@ export const normalizeToAddress = async (
     return await Address.from_bytes(Buffer.from(addr, 'hex'))
   } catch (_e) {} // eslint-disable-line no-empty
 
-  // 3) Try converting from base32
+  // 3) Try converting from bech32
   try {
     return await Address.from_bech32(addr)
   } catch (_e) {} // eslint-disable-line no-empty

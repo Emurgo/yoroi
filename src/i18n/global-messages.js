@@ -532,4 +532,8 @@ export default defineMessages({
     id: 'global.assets.assetsLabel',
     defaultMessage: '!!!Assets',
   },
+  votingTitle: {
+    id: 'components.catalyst.title',
+    defaultMessage: '!!!Register to vote',
+  }
 })

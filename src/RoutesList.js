@@ -111,4 +111,6 @@ export const ROOT_ROUTES = {
 export const CATALYST_ROUTES = {
   STEP1: 'generate-pin-step1',
   STEP2: 'confirm-pin-step2',
+  STEP3: 'transaction-step3',
+  STEP4: 'transaction-step4',
 }

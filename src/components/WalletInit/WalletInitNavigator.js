@@ -13,6 +13,9 @@ import ConnectNanoXScreen from './ConnectNanoX/ConnectNanoXScreen'
 import SaveNanoXScreen from './ConnectNanoX/SaveNanoXScreen'
 import MnemonicShowScreen from './CreateWallet/MnemonicShowScreen'
 import CatalystStep1 from '../Catalyst/Step1'
+import CatalystStep2 from '../Catalyst/Step2'
+import CatalystStep3 from '../Catalyst/Step3'
+import CatalystStep4 from '../Catalyst/Step4'
 
 import {
   defaultNavigationOptions,
@@ -100,10 +103,10 @@ const WalletInitNavigator = () => (
       name={WALLET_INIT_ROUTES.WALLET_CREDENTIALS}
       component={WalletCredentialsScreen}
     />
-    <Stack.Screen
-      name={CATALYST_ROUTES.STEP1}
-      component={CatalystStep1}
-    />
+    <Stack.Screen name={CATALYST_ROUTES.STEP1} component={CatalystStep1} />
+    <Stack.Screen name={CATALYST_ROUTES.STEP2} component={CatalystStep2} />
+    <Stack.Screen name={CATALYST_ROUTES.STEP3} component={CatalystStep3} />
+    <Stack.Screen name={CATALYST_ROUTES.STEP4} component={CatalystStep4} />
   </Stack.Navigator>
 )
 

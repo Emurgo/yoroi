@@ -90,6 +90,12 @@ export type State = {
   // actions that may override this property (otherwise more refactoring is needed)
   isFlawedWallet: boolean,
   serverStatus: ServerStatusCache,
+  isMaintenance: boolean,
+  voting: {
+    pin: Array<number>,
+    encryptedKey: ?string,
+    catalystPrivateKey: ?string,
+  },
 }
 
 export const getInitialState = (): State => ({
@@ -156,6 +162,12 @@ export const getInitialState = (): State => ({
     isServerOk: true,
     isMaintenance: false,
     serverTime: undefined,
+  isMaintenance: false,
+  voting: {
+    pin: [],
+    encryptedKey: null,
+    catalystPrivateKey: undefined,
+    unSignedTx: null,
   },
 })
 
