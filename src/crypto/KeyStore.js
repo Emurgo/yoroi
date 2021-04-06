@@ -1,8 +1,7 @@
 // @flow
-/* eslint-disable-next-line */ // $FlowFixMe
-import {KeyStoreBridge} from 'NativeModules'
+/* eslint-disable-next-line */
 import * as Keychain from 'react-native-keychain'
-import {Platform} from 'react-native'
+import {Platform, NativeModules} from 'react-native'
 import {defineMessages} from 'react-intl'
 
 import storage from '../utils/storage'
@@ -10,6 +9,8 @@ import assert from '../utils/assert'
 import {decryptData, encryptData} from '../crypto/byron/util'
 
 import type {EncryptionMethod} from './types'
+
+const {KeyStoreBridge} = NativeModules
 
 const messages = defineMessages({
   approveTransaction: {

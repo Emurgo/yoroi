@@ -18,10 +18,11 @@ const _checkResponse = async (rawResponse: Object, requestPayload: Object) => {
   }
   const status = rawResponse.status
   if (status !== 200) {
+    const resp = responseBody.error?.response
     if (
-      responseBody.error?.response === 'REFERENCE_TX_NOT_FOUND' ||
-      responseBody.error?.response === 'REFERENCE_BLOCK_MISMATCH' ||
-      responseBody.error?.response === 'REFERENCE_BEST_BLOCK_MISMATCH'
+      resp === 'REFERENCE_TX_NOT_FOUND' ||
+      resp === 'REFERENCE_BLOCK_MISMATCH' ||
+      resp === 'REFERENCE_BEST_BLOCK_MISMATCH'
     ) {
       throw new ApiHistoryError(responseBody.error.response)
     }

@@ -105,10 +105,15 @@ export const withNavigationTitle = <Props: {navigation: any, route: any}>(
           : this.props.route?.params?.title ?? undefined
       }
 
-      setTitle = (value) => this.props.navigation.setOptions({
-        // future note: flow doesn't support computed keys
-        [paramName != null ? paramName : 'title']: value,
-      })
+      setTitle = (value) => {
+        const options = {}
+        if (paramName != null) {
+          options[paramName] = value
+        } else {
+          options.title = value
+        }
+        this.props.navigation.setOptions(options)
+      }
 
       render = () => <BaseComponent {...this.props} />
     }

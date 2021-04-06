@@ -37,7 +37,6 @@ const AssetRow: ({|
   styles: NodeStyle,
   asset: TokenEntry,
   assetMetadata: Token,
-  isLast: boolean,
   backColor: {|backgroundColor: string|},
   onSelect?: (TokenEntry) => any,
   intl: injectIntl,

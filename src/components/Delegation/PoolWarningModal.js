@@ -61,9 +61,9 @@ const getMessage = (reputationInfo, intl: intlShape): Array<string> => {
   return problems
 }
 
-const BulletPointItem = ({textRow}) => {
+const BulletPointItem = ({textRow, style}) => {
   return (
-    <Text>
+    <Text style={style}>
       {'\u2022'} {textRow}
     </Text>
   )
@@ -97,9 +97,9 @@ const PoolWarningModal = ({
           <Text style={styles.paragraph}>
             {intl.formatMessage(messages.header)}
           </Text>
-          <View style={styles.paragraph}>
+          <View style={styles.reputationInfoView}>
             {getMessage(reputationInfo, intl).map((issue, i) => (
-              <BulletPointItem key={i} textRow={issue} />
+              <BulletPointItem key={i} textRow={issue} style={styles.text} />
             ))}
           </View>
           <Text style={styles.paragraph}>

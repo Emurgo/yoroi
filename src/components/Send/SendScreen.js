@@ -751,11 +751,9 @@ class SendScreen extends Component<Props, State> {
       !isFetchingBalance &&
       !lastFetchingError &&
       utxos &&
-      _.isEmpty({
-        ...addressErrors,
-        ...amountErrors,
-        ...balanceErrors,
-      })
+      _.isEmpty(addressErrors) &&
+      _.isEmpty(amountErrors) &&
+      _.isEmpty(balanceErrors)
 
     const amountErrorText = getAmountErrorText(
       intl,

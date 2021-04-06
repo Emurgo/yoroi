@@ -91,10 +91,8 @@ export const fetchAccountState = () => async (
     const accountState = Object.keys(accountStateResp).map(
       (key) => accountStateResp[key],
     )[0]
-    const value =
-      accountState?.remainingAmount != null
-        ? accountState?.remainingAmount
-        : '0'
+    const value = accountState.remainingAmount || '0'
+
     const utxos = getState().balance.utxos
     if (utxos != null) {
       const utxosForKey = await walletManager.getAllUtxosForKey(utxos)

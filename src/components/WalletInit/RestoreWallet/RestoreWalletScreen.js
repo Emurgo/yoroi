@@ -94,7 +94,6 @@ const errorsVisibleWhileWriting = (errors) => {
     .map((error) => {
       if (error.code !== INVALID_PHRASE_ERROR_CODES.UNKNOWN_WORDS) return error
       if (!error.lastMightBeUnfinished) return error
-      // $FlowFixMe flow does not like null here
       if (error.words.length <= 1) return null
       return {
         code: error.code,

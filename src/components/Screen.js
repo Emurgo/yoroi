@@ -5,6 +5,8 @@ import type {Node} from 'react'
 import {StyleSheet, View, ScrollView} from 'react-native'
 import {COLORS} from '../styles/config'
 
+import type {ViewProps} from 'react-native/Libraries/Components/View/ViewPropTypes'
+
 export const screenPadding = 20
 
 const styles = StyleSheet.create({
@@ -14,12 +16,13 @@ const styles = StyleSheet.create({
   },
 })
 
-type Props = {
+type Props = {|
   children?: Node,
   scroll?: boolean,
   bgColor?: string,
   style?: Object,
-}
+  ...ViewProps,
+|}
 
 const Screen = ({
   children,

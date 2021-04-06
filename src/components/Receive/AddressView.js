@@ -146,7 +146,7 @@ const AddressView = ({
             {address}
           </Text>
         </View>
-        <Image source={infoIcon} width={24} />
+        <Image source={infoIcon} style={styles.image} />
       </View>
     </TouchableOpacity>
 

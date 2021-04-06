@@ -36,7 +36,7 @@ export const WarningBanner = ({
       </TouchableOpacity>
     )}
     <View style={styles.title}>
-      {icon !== null && <Image source={icon} width={18} style={styles.icon} />}
+      {icon !== null && <Image source={icon} style={styles.icon} />}
       <Text style={styles.titleText}>{title}</Text>
     </View>
     <View style={styles.body}>

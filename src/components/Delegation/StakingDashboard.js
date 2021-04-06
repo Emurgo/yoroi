@@ -630,9 +630,10 @@ class StakingDashboard extends React.Component<Props, State> {
             style={styles.inner}
             refreshControl={
               <RefreshControl
-                onRefresh={() =>
-                  Promise.all([fetchUTXOs(), fetchAccountState()])
-                }
+                onRefresh={() => {
+                  fetchUTXOs()
+                  fetchAccountState()
+                }}
                 refreshing={
                   isFetchingAccountState ||
                   isFetchingUtxos ||

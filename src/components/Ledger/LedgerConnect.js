@@ -320,7 +320,7 @@ class LedgerConnect extends React.Component<Props, State> {
           {((useUSB === false && devices.length === 0) ||
             (useUSB === true && deviceObj == null)) && (
             <View style={styles.instructionsBlock}>
-              <Text styles={styles.paragraphText}>
+              <Text style={styles.paragraphText}>
                 {intl.formatMessage(messages.introline)}
               </Text>
               {rows.map((row, i) => (

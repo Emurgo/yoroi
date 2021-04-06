@@ -17,6 +17,7 @@ export default StyleSheet.create({
   },
   icon: {
     marginRight: 10,
+    width: 18,
   },
   messageText: {
     color: '#353535',

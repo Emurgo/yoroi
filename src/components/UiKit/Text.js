@@ -4,6 +4,7 @@ import React from 'react'
 import type {Node} from 'react'
 import {StyleSheet, Text as RNText, Platform} from 'react-native'
 import type {TextStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
+import type {TextProps} from 'react-native/Libraries/Text/TextProps'
 
 import stylesConfig, {COLORS} from '../../styles/config'
 
@@ -38,7 +39,7 @@ const styles = StyleSheet.create({
   },
 })
 
-type Props = {
+type Props = {|
   children: Node,
   small?: boolean,
   secondary?: boolean,
@@ -48,7 +49,8 @@ type Props = {
   monospace?: boolean,
   error?: boolean,
   adjustsFontSizeToFit?: boolean,
-}
+  ...TextProps,
+|}
 
 type State = {
   fontSize: number,

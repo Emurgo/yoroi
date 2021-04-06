@@ -40,6 +40,7 @@ const FadeOutView = (props) => {
       toValue: 0,
       duration: 2000,
       delay: 3000,
+      useNativeDriver: true,
     }).start()
   }, [])
 
@@ -79,11 +80,11 @@ const WalletAddress = ({
         leading: true,
       })}
     >
-      <Image source={copyIcon} style={styles.copyIcon} width={22} height={22} />
+      <Image source={copyIcon} style={styles.copyIcon} />
     </TouchableOpacity>
     {showCopyNotif && (
       <FadeOutView>
-        <Text style={styles.copyIcon}>
+        <Text style={styles.notifView}>
           {intl.formatMessage(messages.copied)}
         </Text>
       </FadeOutView>
