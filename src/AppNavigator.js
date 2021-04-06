@@ -193,10 +193,7 @@ const NavigatorSwitch = compose(
 
 const StoryBook = () => (
   <Stack.Navigator>
-    <Stack.Screen
-      name={ROOT_ROUTES.STORYBOOK}
-      component={StorybookScreen}
-    />
+    <Stack.Screen name={ROOT_ROUTES.STORYBOOK} component={StorybookScreen} />
   </Stack.Navigator>
 )
 
