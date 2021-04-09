@@ -122,6 +122,7 @@ const WalletTabNavigator = injectIntl(
         activeTintColor: DEFAULT_THEME_COLORS.NAVIGATION_ACTIVE,
         inactiveTintColor: DEFAULT_THEME_COLORS.NAVIGATION_INACTIVE,
       }}
+      backBehavior="initialRoute"
     >
       <Tab.Screen
         name={WALLET_ROUTES.TX_HISTORY}

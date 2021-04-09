@@ -1,16 +1,17 @@
 // @flow
 
-import React from 'react'
+import React, {useEffect} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withStateHandlers} from 'recompose'
+import {useNavigationState} from '@react-navigation/native'
 import {View, RefreshControl, ScrollView, Image} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
+
 import {injectIntl, defineMessages} from 'react-intl'
 import {fetchUTXOs} from '../../actions/utxo'
-
 import {Text, Banner, OfflineBanner, StatusBar, WarningBanner} from '../UiKit'
 import infoIcon from '../../assets/img/icon/info-light-green.png'
 import {
@@ -25,6 +26,7 @@ import {
   isFlawedWalletSelector,
 } from '../../selectors'
 import TxHistoryList from './TxHistoryList'
+import walletManager from '../../crypto/walletManager'
 import {updateHistory} from '../../actions/history'
 import {checkForFlawedWallets} from '../../actions'
 import {
@@ -117,68 +119,86 @@ const TxHistory = ({
   setShowWarning,
   walletMeta,
   intl,
-}) => (
-  <SafeAreaView style={styles.scrollView}>
-    <StatusBar type="dark" />
-    <View style={styles.container}>
-      {isFlawedWallet === true && (
-        <FlawedWalletModal
-          visible={isFlawedWallet === true}
-          disableButtons={false}
-          onPress={() =>
-            navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-          }
-          onRequestClose={() =>
-            navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-          }
-        />
-      )}
+}) => {
+  const routes = useNavigationState((state) => state.routes)
 
-      <OfflineBanner />
-      {isOnline &&
-        lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
-
-      <AvailableAmountBanner
-        amount={tokenBalance.getDefault()}
-        amountAssetMetaData={availableAssets[tokenBalance.getDefaultId()]}
-      />
-
-      {_.isEmpty(transactionsInfo) ? (
-        <ScrollView
-          refreshControl={
-            <RefreshControl onRefresh={updateHistory} refreshing={isSyncing} />
-          }
-        >
-          <NoTxHistory />
-        </ScrollView>
-      ) : (
-        <TxHistoryList
-          refreshing={isSyncing}
-          onRefresh={updateHistory}
-          navigation={navigation}
-          transactions={transactionsInfo}
-        />
-      )}
-
-      {/* eslint-disable indent */
-      isByron(walletMeta.walletImplementationId) &&
-        showWarning && (
-          <WarningBanner
-            title={intl
-              .formatMessage(warningBannerMessages.title)
-              .toUpperCase()}
-            icon={infoIcon}
-            message={intl.formatMessage(warningBannerMessages.message)}
-            showCloseIcon
-            onRequestClose={() => setShowWarning(false)}
-            style={styles.warningNoteStyles}
+  useEffect(
+    () =>
+      navigation.addListener('beforeRemove', (e) => {
+        navigation.dispatch(e.data.action)
+        if (routes.length === 1) {
+          // this is the last and only route in the stack, wallet should close
+          walletManager.closeWallet()
+        }
+      }),
+    [navigation],
+  )
+  return (
+    <SafeAreaView style={styles.scrollView}>
+      <StatusBar type="dark" />
+      <View style={styles.container}>
+        {isFlawedWallet === true && (
+          <FlawedWalletModal
+            visible={isFlawedWallet === true}
+            disableButtons={false}
+            onPress={() =>
+              navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
+            }
+            onRequestClose={() =>
+              navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
+            }
           />
-        )
-      /* eslint-enable indent */
-      }
-    </View>
-  </SafeAreaView>
-)
+        )}
+
+        <OfflineBanner />
+        {isOnline &&
+          lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
+
+        <AvailableAmountBanner
+          amount={tokenBalance.getDefault()}
+          amountAssetMetaData={availableAssets[tokenBalance.getDefaultId()]}
+        />
+
+        {_.isEmpty(transactionsInfo) ? (
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                onRefresh={updateHistory}
+                refreshing={isSyncing}
+              />
+            }
+          >
+            <NoTxHistory />
+          </ScrollView>
+        ) : (
+          <TxHistoryList
+            refreshing={isSyncing}
+            onRefresh={updateHistory}
+            navigation={navigation}
+            transactions={transactionsInfo}
+          />
+        )}
+
+        {/* eslint-disable indent */
+        isByron(walletMeta.walletImplementationId) &&
+          showWarning && (
+            <WarningBanner
+              title={intl
+                .formatMessage(warningBannerMessages.title)
+                .toUpperCase()}
+              icon={infoIcon}
+              message={intl.formatMessage(warningBannerMessages.message)}
+              showCloseIcon
+              onRequestClose={() => setShowWarning(false)}
+              style={styles.warningNoteStyles}
+            />
+          )
+        /* eslint-enable indent */
+        }
+      </View>
+    </SafeAreaView>
+  )
+}
 
 type ExternalProps = {|
   navigation: Navigation,
