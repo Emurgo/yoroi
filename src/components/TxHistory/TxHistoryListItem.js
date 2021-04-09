@@ -124,6 +124,9 @@ class TxHistoryListItem extends Component<Props> {
     const tx = this.props.transaction
     const nextTx = nextProps.transaction
 
+    const fee = tx.fee != null ? MultiToken.fromArray(tx.fee) : null
+    const nextFee = nextTx.fee != null ? MultiToken.fromArray(nextTx.fee) : null
+
     const sameValue = (x: ?MultiToken, y: ?MultiToken) =>
       x && y ? x.isEqualTo(y) : x === y
     const sameTs = (x, y) => x === y
@@ -133,8 +136,11 @@ class TxHistoryListItem extends Component<Props> {
       tx.id !== nextTx.id ||
       tx.assurance !== nextTx.assurance ||
       tx.direction !== nextTx.direction ||
-      !sameValue(tx.amount, nextTx.amount) ||
-      !sameValue(tx.fee, nextTx.fee) ||
+      !sameValue(
+        MultiToken.fromArray(tx.amount),
+        MultiToken.fromArray(nextTx.amount),
+      ) ||
+      !sameValue(fee, nextFee) ||
       !sameTs(tx.submittedAt, nextTx.submittedAt)
     )
   }
@@ -148,9 +154,10 @@ class TxHistoryListItem extends Component<Props> {
   render() {
     const {transaction, availableAssets, defaultNetworkAsset, intl} = this.props
 
-    const amount: BigNumber = transaction.amount.getDefault()
+    const amountAsMT = MultiToken.fromArray(transaction.amount)
+    const amount: BigNumber = amountAsMT.getDefault()
     const amountDefaultAsset: ?Token =
-      availableAssets[transaction.amount.getDefaultId()]
+      availableAssets[amountAsMT.getDefaultId()]
 
     const defaultAsset = amountDefaultAsset || defaultNetworkAsset
 
@@ -176,7 +183,9 @@ class TxHistoryListItem extends Component<Props> {
       MULTI: messages.transactionTypeMulti,
     }
     const txFee: ?BigNumber =
-      transaction.fee != null ? transaction.fee.getDefault() : null
+      transaction.fee != null
+        ? MultiToken.fromArray(transaction.fee).getDefault()
+        : null
     const feeStr = txFee ? formatTokenAmount(txFee, defaultAsset) : '-'
 
     return (

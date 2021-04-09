@@ -252,17 +252,19 @@ export const processTxHistoryData = (
 
   return {
     id: tx.id,
-    inputs: tx.inputs.map(({address, assets}) => ({
+    inputs: tx.inputs.map(({address, assets, amount}) => ({
       address,
+      amount,
       assets: assets.map(_remoteAssetAsTokenEntry),
     })),
-    outputs: tx.outputs.map(({address, assets}) => ({
+    outputs: tx.outputs.map(({address, assets, amount}) => ({
       address,
+      amount,
       assets: assets.map(_remoteAssetAsTokenEntry),
     })),
-    amount,
-    fee,
-    delta,
+    amount: amount.asArray(),
+    fee: fee != null ? fee.asArray() : null,
+    delta: delta.asArray(),
     confirmations,
     direction,
     submittedAt: tx.submittedAt,
