@@ -14,6 +14,7 @@ import de from 'react-intl/locale-data/de'
 import fr from 'react-intl/locale-data/fr'
 import it from 'react-intl/locale-data/it'
 import nl from 'react-intl/locale-data/nl'
+import cs from 'react-intl/locale-data/cs'
 
 import {connect, Provider} from 'react-redux'
 
@@ -49,6 +50,7 @@ addLocaleData([
   ...fr,
   ...it,
   ...nl,
+  ...cs,
 ])
 
 /*
