@@ -31,6 +31,7 @@ import {getNetworkConfigById} from '../../config/networks'
 import AddressModal from '../Receive/AddressModal'
 import AssetList from '../Common/MultiAsset/AssetList'
 import assetListStyle from '../Common/MultiAsset/styles/AssetListTransaction.style'
+import {MultiToken} from '../../crypto/MultiToken'
 
 import styles from './styles/TxDetails.style'
 
@@ -40,7 +41,7 @@ import arrowDown from '../../assets/img/chevron_down.png'
 import type {State} from '../../state'
 import type {Navigation} from '../../types/navigation'
 import type {ComponentType} from 'react'
-import {TRANSACTION_DIRECTION, type Token} from '../../types/HistoryTransaction'
+import {TRANSACTION_DIRECTION, type Token, type TransactionInfo, type DefaultAsset} from '../../types/HistoryTransaction'
 import globalMessages from '../../i18n/global-messages'
 
 const txTypeMessages = defineMessages({
@@ -223,7 +224,18 @@ const getShownAddresses = (
     cntOmittedTo,
   }
 }
-
+type Props = {|
+  intl: any,
+  transaction: TransactionInfo,
+  internalAddressIndex: Dict<number>,
+  externalAddressIndex: Dict<number>,
+  availableAssets: Dict<Token>,
+  defaultNetworkAsset: DefaultAsset,
+  openInExplorer: () => void,
+  showModalForAddress: (string) => void,
+  addressDetail: string | null,
+  hideAddressModal: () => void,
+|}
 const TxDetails = ({
   intl,
   transaction,
@@ -235,7 +247,7 @@ const TxDetails = ({
   showModalForAddress,
   addressDetail,
   hideAddressModal,
-}) => {
+}: Props) => {
   const {
     fromFiltered,
     cntOmittedFrom,
@@ -248,11 +260,12 @@ const TxDetails = ({
     externalAddressIndex,
   )
   const txFee: ?BigNumber = transaction.fee
-    ? transaction.fee.getDefault()
+    ? MultiToken.fromArray(transaction.fee).getDefault()
     : null
-  const amount: BigNumber = transaction.amount.getDefault()
+  const amountAsMT = MultiToken.fromArray(transaction.amount)
+  const amount: BigNumber = amountAsMT.getDefault()
   const amountDefaultAsset: ?Token =
-    availableAssets[transaction.amount.getDefaultId()]
+    availableAssets[amountAsMT.getDefaultId()]
 
   const defaultAsset = amountDefaultAsset || defaultNetworkAsset
 
