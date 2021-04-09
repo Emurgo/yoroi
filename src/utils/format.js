@@ -100,8 +100,15 @@ export const normalizeTokenAmount = (
 export const formatTokenAmount = (
   amount: BigNumber,
   token: Token | DefaultAsset,
-): string =>
-  normalizeTokenAmount(amount, token).toFormat(token.metadata.numberOfDecimals)
+  maxLen: number | void,
+): string => {
+  const normalized = normalizeTokenAmount(amount, token)
+  const amountStr = normalized.toFormat(token.metadata.numberOfDecimals)
+  if (maxLen !== undefined && amountStr.length > maxLen) {
+    return normalized.toExponential(maxLen)
+  }
+  return amountStr
+}
 
 export const formatTokenWithSymbol = (
   amount: BigNumber,

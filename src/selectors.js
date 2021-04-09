@@ -147,7 +147,7 @@ export const tokenBalanceSelector: (
       (tx) => tx.status === TRANSACTION_STATUS.SUCCESSFUL,
     )
     const result = processed
-      .map((tx) => tx.delta)
+      .map((tx) => MultiToken.fromArray(tx.delta))
       .reduce(
         (acc, curr) => acc.joinAddMutable(curr),
         new MultiToken([], getDefaultNetworkTokenEntry(walletMeta.networkId)),
