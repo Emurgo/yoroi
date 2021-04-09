@@ -10,6 +10,12 @@ import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
 import type {NetworkId, WalletImplementationId} from './config/types'
 import type {WalletChecksum} from '@emurgo/cip4-js'
 
+export type ServerStatusCache = {|
+  +isServerOk: boolean,
+  +isMaintenance: boolean,
+  +serverTime: Date | void,
+|}
+
 export type WalletMeta = {
   id: string,
   name: string,
@@ -83,7 +89,7 @@ export type State = {
   // need to add as a non-wallet-specific property to avoid conflict with other
   // actions that may override this property (otherwise more refactoring is needed)
   isFlawedWallet: boolean,
-  isMaintenance: boolean,
+  serverStatus: ServerStatusCache,
 }
 
 export const getInitialState = (): State => ({
@@ -146,7 +152,11 @@ export const getInitialState = (): State => ({
     currentVersion: null,
   },
   isFlawedWallet: false,
-  isMaintenance: false,
+  serverStatus: {
+    isServerOk: true,
+    isMaintenance: false,
+    serverTime: undefined,
+  },
 })
 
 export const mockState = (): State => {

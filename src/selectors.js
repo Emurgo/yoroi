@@ -12,7 +12,7 @@ import {ObjectValues} from './utils/flow'
 import {MultiToken, getDefaultNetworkTokenEntry} from './crypto/MultiToken'
 import {getDefaultAssets, getDefaultAssetByNetworkId} from './config/config'
 
-import type {State, WalletMeta} from './state'
+import type {State, WalletMeta, ServerStatusCache} from './state'
 import type {
   TransactionInfo,
   Transaction,
@@ -286,7 +286,10 @@ export const isFlawedWalletSelector = (state: State): boolean =>
   state.isFlawedWallet
 
 export const isMaintenanceSelector = (state: State): boolean =>
-  state.isMaintenance
+  state.serverStatus.isMaintenance
+
+export const serverStatusSelector = (state: State): ServerStatusCache =>
+  state.serverStatus
 
 /**
  * Before users can actually create a wallet, 3 steps must be completed:

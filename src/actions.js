@@ -47,7 +47,7 @@ import {ISignRequest} from './crypto/ISignRequest'
 import {CONFIG} from './config/config'
 
 import {type Dispatch} from 'redux'
-import {type State} from './state'
+import type {State, ServerStatusCache} from './state'
 import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
 import type {NetworkId, WalletImplementationId} from './config/types'
 
@@ -223,15 +223,26 @@ export const logout = () => async (dispatch: Dispatch<any>) => {
   dispatch(signout())
 }
 
+const _setServerStatus = (serverStatus: ServerStatusCache) => (
+  dispatch: Dispatch<any>,
+) =>
+  dispatch({
+    path: ['serverStatus'],
+    payload: serverStatus,
+    type: 'SET_SERVER_STATUS',
+    reducer: (state, payload) => payload,
+  })
+
 export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   try {
     const status = await api.checkServerStatus()
-    dispatch({
-      path: ['isMaintenance'],
-      payload: status.isMaintenance != null ? status.isMaintenance : false,
-      type: 'SET_IS_MAINTENANCE',
-      reducer: (state, payload) => payload,
-    })
+    dispatch(
+      _setServerStatus({
+        isServerOk: status.isServerOk,
+        isMaintenance: status.isMaintenance,
+        serverTime: new Date(status.serverTime),
+      }),
+    )
   } catch (e) {
     Logger.warn('actions::initApp could not retrieve server status', e)
   }
@@ -331,6 +342,9 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
   walletManager.subscribe(() => dispatch(mirrorTxHistory()))
   walletManager.subscribeBackgroundSyncError((err) =>
     dispatch(setBackgroundSyncError(err)),
+  )
+  walletManager.subscribeServerSync((status) =>
+    dispatch(_setServerStatus(status)),
   )
 
   Logger.debug('setting up app lock')

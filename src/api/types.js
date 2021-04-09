@@ -101,6 +101,7 @@ export type ReputationResponse = {[poolId: string]: ReputationObject}
 export type ServerStatusResponse = {|
   isServerOk: boolean,
   isMaintenance: boolean,
+  serverTime: number, // in milliseconds
 |}
 
 // bestblock
