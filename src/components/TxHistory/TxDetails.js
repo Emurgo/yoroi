@@ -41,7 +41,12 @@ import arrowDown from '../../assets/img/chevron_down.png'
 import type {State} from '../../state'
 import type {Navigation} from '../../types/navigation'
 import type {ComponentType} from 'react'
-import {TRANSACTION_DIRECTION, type Token, type TransactionInfo, type DefaultAsset} from '../../types/HistoryTransaction'
+import {
+  TRANSACTION_DIRECTION,
+  type Token,
+  type TransactionInfo,
+  type DefaultAsset,
+} from '../../types/HistoryTransaction'
 import globalMessages from '../../i18n/global-messages'
 
 const txTypeMessages = defineMessages({
@@ -264,8 +269,7 @@ const TxDetails = ({
     : null
   const amountAsMT = MultiToken.fromArray(transaction.amount)
   const amount: BigNumber = amountAsMT.getDefault()
-  const amountDefaultAsset: ?Token =
-    availableAssets[amountAsMT.getDefaultId()]
+  const amountDefaultAsset: ?Token = availableAssets[amountAsMT.getDefaultId()]
 
   const defaultAsset = amountDefaultAsset || defaultNetworkAsset
 
