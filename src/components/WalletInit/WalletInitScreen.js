@@ -12,7 +12,7 @@ import WalletDescription from './WalletDescription'
 import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
 import {Modal, Button, StatusBar, ScreenBackground} from '../UiKit'
 import ExapandableItem from '../Common/ExpandableItem'
-import {WALLET_INIT_ROUTES, CATALYST_ROUTES} from '../../RoutesList'
+import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {isJormungandr} from '../../config/networks'
 import {CONFIG, isHaskellShelley} from '../../config/config'
@@ -100,7 +100,6 @@ const WalletInitScreen = ({
   route,
   modalState,
   setModalState,
-  navigation,
 }: Props) => {
   const networkId: NetworkId = route.params.networkId
   const implementationId: WalletImplementationId =
@@ -125,13 +124,6 @@ const WalletInitScreen = ({
           <View style={styles.content}>
             <WalletDescription />
           </View>
-          <Button
-            onPress={(event) =>
-              navigation.navigate(CATALYST_ROUTES.STEP1)
-            }
-            title={'catalyst'}
-            style={styles.createButton}
-          />
           <Button
             onPress={(event) =>
               navigateCreateWallet(event, networkId, implementationId)

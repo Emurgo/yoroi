@@ -10,7 +10,7 @@ import {injectIntl, defineMessages} from 'react-intl'
 
 import {walletMetaSelector, isReadOnlySelector} from '../selectors'
 import {isHaskellShelley} from '../config/config'
-import {WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../RoutesList'
+import {WALLET_ROOT_ROUTES, WALLET_ROUTES, CATALYST_ROUTES} from '../RoutesList'
 import {Button} from './UiKit'
 import WalletSelectionScreen from './WalletSelection/WalletSelectionScreen'
 import TxHistoryNavigator from './TxHistory/TxHistoryNavigator'
@@ -20,6 +20,7 @@ import SendScreenNavigator from './Send/SendScreenNavigator'
 import ReceiveScreenNavigator from './Receive/ReceiveScreenNavigator'
 import SettingsScreenNavigator from './Settings/SettingsScreenNavigator'
 import {defaultNavigationOptions} from '../navigationOptions'
+import CatalystNavigator from './Catalyst/CatalystNavigator'
 
 import {DEFAULT_THEME_COLORS} from '../styles/config'
 import styles from './TxHistory/styles/SettingsButton.style'
@@ -173,6 +174,14 @@ const WalletNavigator = () => (
       name={WALLET_ROOT_ROUTES.SETTINGS}
       component={SettingsScreenNavigator}
       screenOptions={{
+        headerShown: false,
+        ...defaultNavigationOptions,
+      }}
+    />
+    <Stack.Screen
+      name={CATALYST_ROUTES.ROOT}
+      component={CatalystNavigator}
+      options={{
         headerShown: false,
         ...defaultNavigationOptions,
       }}

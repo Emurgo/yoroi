@@ -57,15 +57,12 @@ export const generateVotingTransaction = (
 ) => async (dispatch: Dispatch<any>, getState: () => State) => {
   const catalystPrivateKey = getState().voting.catalystPrivateKey
 
-  Logger.debug('******got the c private key')
   if (catalystPrivateKey) {
-    Logger.debug('****** creating')
     const signRequest = await walletManager.createVotingRegTx(
       utxos,
       catalystPrivateKey,
       decryptedKey,
     )
-    Logger.debug('******dispatching event')
     dispatch(_setUnSignedTx(signRequest))
   } else {
     // should never happen

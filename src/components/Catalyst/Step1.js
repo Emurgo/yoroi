@@ -1,20 +1,24 @@
 // @flow
 
 /**
- * Step 1 for the Catalyst registration
- * Auto generate a PIN, catalyst private key
+ * Step 1 for the Catalyst registration - landing
  */
 
 import React, {useEffect} from 'react'
-import {View, SafeAreaView} from 'react-native'
+import {View, SafeAreaView, Image} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
 
 import {generateVotingKeys} from '../../actions/voting'
+import {fetchUTXOs} from '../../actions/utxo'
 import {Text, Button, ProgressStep} from '../UiKit'
 import {withTitle} from '../../utils/renderUtils'
 import {CATALYST_ROUTES} from '../../RoutesList'
 import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
+import AppDownload from '../../assets/img/pic-catalyst-step1.png'
+import playstoreBadge from '../../assets/img/google-play-badge.png'
+import appstoreBadge from '../../assets/img/app-store-badge.png'
+
 import styles from './styles/Step1.style'
 
 import type {ComponentType} from 'react'
@@ -24,57 +28,41 @@ import type {Navigation} from '../../types/navigation'
 
 const messages = defineMessages({
   subTitle: {
-    id: 'components.catalyst.step1.title',
-    defaultMessage: '!!!Write Down PIN',
-  },
-  description: {
-    id: 'components.catalyst.step1.description',
+    id: 'components.catalyst.step1.subTitle',
     defaultMessage:
-      '!!!Please write down this PIN as you will need it every time you want to access the Catalyst Voting app',
+      '!!!Before you begin, make sure to download the Catalyst Voting App.',
   },
 })
 
-const Step1 = ({intl, pin, generateVotingKeys, navigation}) => {
+const Step1 = ({intl, generateVotingKeys, navigation, fetchUTXOs}) => {
   useEffect(() => {
+    fetchUTXOs()
     generateVotingKeys()
   }, [])
 
-  const pinCards = (
-    <View style={styles.pinContainer}>
-      {pin.map((value, index) => {
-        // eslint-disable-next-line react/no-array-index-key
-        return (
-          <View
-            key={index}
-            style={[
-              styles.pin,
-              styles.pinNormal,
-              index < pin.length - 1 ? styles.mr10 : undefined,
-            ]}
-          >
-            <Text style={styles.pinNumber}>{value}</Text>
-          </View>
-        )
-      })}
-    </View>
-  )
-
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <ProgressStep currentStep={1} totalSteps={4} displayStepNumber />
+      <ProgressStep currentStep={1} totalSteps={6} />
       <View style={styles.container}>
-        <View>
-          <Text style={styles.subTitle}>
+        <View style={styles.description}>
+          <Text style={styles.text}>
             {intl.formatMessage(messages.subTitle)}
           </Text>
-          <Text style={styles.description}>
-            {intl.formatMessage(messages.description)}
-          </Text>
-          {pinCards}
+        </View>
+        <View style={styles.images}>
+          <View style={styles.mb40}>
+            <Image source={AppDownload} />
+          </View>
+          <View style={styles.buttons}>
+            <Image style={styles.iOS} source={appstoreBadge} />
+            <Image source={playstoreBadge} />
+          </View>
         </View>
         <Button
           onPress={() => navigation.navigate(CATALYST_ROUTES.STEP2)}
-          title={intl.formatMessage(confirmationMessages.commonButtons.continueButton)}
+          title={intl.formatMessage(
+            confirmationMessages.commonButtons.continueButton,
+          )}
         />
       </View>
     </SafeAreaView>
@@ -89,10 +77,11 @@ type ExternalProps = {|
 
 export default injectIntl(
   connect(
-    (state) => ({
-      pin: state.voting.pin,
-    }),
-    {generateVotingKeys},
+    (_state) => ({}),
+    {
+      generateVotingKeys,
+      fetchUTXOs,
+    },
   )(
     withTitle((Step1: ComponentType<ExternalProps>), ({intl}) =>
       intl.formatMessage(globalMessages.votingTitle),

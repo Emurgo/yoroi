@@ -15,24 +15,26 @@ export default StyleSheet.create({
     paddingBottom: 36,
     justifyContent: 'space-between',
   },
-  description: {
-    alignItems: 'center',
-  },
-  text: {
-    color: '#38393D',
-    fontSize: 18,
+  note: {
+    color: '#242838',
     fontWeight: 'bold',
-    textAlign: 'center',
-    width: '80%',
   },
-  images: {
-    alignItems: 'center',
-  },
-  buttons: {
+  qrCode: {
     flexDirection: 'row',
     justifyContent: 'center',
   },
-  iOS: {
-    marginRight: 16,
+  secretCode: {
+    backgroundColor: '#F0F3F5',
+    borderRadius: 8,
+    padding: 16,
+    flexDirection: 'row',
+  },
+  copyButton: {
+    padding: 16,
+    paddingRight: 0,
+    justifyContent: 'center',
+  },
+  key: {
+    flex: 1,
   },
 })

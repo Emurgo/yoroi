@@ -1,14 +1,14 @@
 // @flow
 
 /**
- * Step 4 for the Catalyst registration
- * Ask password used for signing metadata
- * generate registration trx
+ * Step 5 for the Catalyst registration
+ * Ask password used for signing transaction
+ * submit the transaction
  * ### HW is NOT supported yet - validation is done on first screen itself###
  */
 
 import _ from 'lodash'
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {View, SafeAreaView} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
@@ -18,8 +18,8 @@ import type {IntlShape} from 'react-intl'
 
 import {CONFIG} from '../../config/config'
 import KeyStore from '../../crypto/KeyStore'
-import {generateVotingTransaction} from '../../actions/voting'
-import {showErrorDialog} from '../../actions'
+import {formatTokenWithSymbol} from '../../utils/format'
+import {showErrorDialog, submitTransaction} from '../../actions'
 import {
   Text,
   ProgressStep,
@@ -27,6 +27,7 @@ import {
   OfflineBanner,
   ValidatedTextInput,
   StatusBar,
+  PleaseWaitModal,
 } from '../UiKit'
 import ErrorModal from '../Common/ErrorModal'
 import {withTitle} from '../../utils/renderUtils'
@@ -42,52 +43,60 @@ import globalMessages, {
   txLabels,
 } from '../../i18n/global-messages'
 import {WrongPassword} from '../../crypto/errors'
+
+import styles from './styles/Step5.style'
+
 import {
   easyConfirmationSelector,
-  utxosSelector,
+  defaultNetworkAssetSelector,
 } from '../../selectors'
-
-import styles from './styles/Step4.style'
-
 import type {Navigation} from '../../types/navigation'
 
 const messages = defineMessages({
   subTitle: {
-    id: 'components.catalyst.step4.subTitle',
-    defaultMessage: '!!!Enter Spending Password',
+    id: 'components.catalyst.step5.subTitle',
+    defaultMessage: '!!!Confirm Registration',
   },
   description: {
-    id: 'components.catalyst.step4.description',
+    id: 'components.catalyst.step5.description',
     defaultMessage:
-      '!!!Enter your spending password to be able to generate the required certificate for voting',
+      '!!!Enter the spending password to confirm voting registration and submit the certificate generated in previous step to blockchain',
   },
 })
 
-const Step4 = ({
+const Step5 = ({
   intl,
   isEasyConfirmationEnabled,
   navigation,
-  utxos,
-  generateVotingTransaction,
+  submitTransaction,
+  unSignedTx,
+  defaultAsset,
 }) => {
   const [password, setPassword] = useState(
     CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
   )
 
-  const [generatingTransaction, setGeneratingTransaction] = useState(false)
+  const [sendingTransaction, setSendingTransaction] = useState(false)
   const [errorData, setErrorData] = useState({
     showErrorDialog: false,
     errorMessage: '',
     errorLogs: '',
   })
+  const [fees, setFees] = useState(null)
+
+  useEffect(() => {
+    unSignedTx.fee().then((o) => {
+      setFees(o.getDefault())
+    })
+  }, [])
 
   const isConfirmationDisabled = !isEasyConfirmationEnabled && !password
 
-  const generateTransaction = async (decryptedKey) => {
-    setGeneratingTransaction(true)
-    await generateVotingTransaction(decryptedKey, utxos)
-    setGeneratingTransaction(false)
-    navigation.navigate(CATALYST_ROUTES.STEP5)
+  const submitTrx = async (decryptedKey) => {
+    setSendingTransaction(true)
+    await submitTransaction(unSignedTx, decryptedKey)
+    setSendingTransaction(false)
+    navigation.navigate(CATALYST_ROUTES.STEP6)
   }
 
   const onContinue = async (_event) => {
@@ -97,11 +106,12 @@ const Step4 = ({
         navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
           keyId: walletManager._id,
           onSuccess: async (decryptedKey) => {
-            await generateTransaction(decryptedKey)
+            await submitTrx(decryptedKey)
           },
           onFail: () => navigation.goBack(),
         })
       } catch (e) {
+        setSendingTransaction(false)
         if (e instanceof SystemAuthDisabled) {
           await walletManager.closeWallet()
           await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
@@ -110,12 +120,11 @@ const Step4 = ({
           return
         } else {
           setErrorData((_state) => ({
-            ..._state,
             showErrorDialog: true,
-            // errorMessage: intl.formatMessage(
-            //   errorMessages.generalError.message,
-            // ),
-            // errorLogs: String(e.message),
+            errorMessage: intl.formatMessage(
+              errorMessages.generalTxError.message,
+            ),
+            errorLogs: String(e.message),
           }))
         }
       }
@@ -129,12 +138,12 @@ const Step4 = ({
         intl,
       )
 
-      await generateTransaction(decryptedKey)
+      await submitTrx(decryptedKey)
     } catch (e) {
+      setSendingTransaction(false)
       if (e instanceof WrongPassword) {
         await showErrorDialog(errorMessages.incorrectPassword, intl)
       } else {
-        setGeneratingTransaction(false)
         setErrorData((_state) => ({
           showErrorDialog: true,
           errorMessage: intl.formatMessage(
@@ -145,9 +154,10 @@ const Step4 = ({
       }
     }
   }
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <ProgressStep currentStep={4} totalSteps={6} />
+      <ProgressStep currentStep={5} totalSteps={6} />
       <StatusBar type="dark" />
 
       <OfflineBanner />
@@ -158,6 +168,10 @@ const Step4 = ({
           </Text>
           <Text style={[styles.description, styles.mb70]}>
             {intl.formatMessage(messages.description)}
+          </Text>
+          <Text small>
+            {intl.formatMessage(txLabels.fees)}:{' '}
+            {fees ? formatTokenWithSymbol(fees, defaultAsset) : ''}
           </Text>
           {!isEasyConfirmationEnabled && (
             <View>
@@ -175,7 +189,7 @@ const Step4 = ({
           title={intl.formatMessage(
             confirmationMessages.commonButtons.confirmButton,
           )}
-          disabled={isConfirmationDisabled || generatingTransaction}
+          disabled={isConfirmationDisabled}
         />
       </View>
       <ErrorModal
@@ -189,6 +203,11 @@ const Step4 = ({
             showErrorDialog: false,
           }))
         }}
+      />
+      <PleaseWaitModal
+        title={intl.formatMessage(txLabels.submittingTx)}
+        spinnerText={intl.formatMessage(globalMessages.pleaseWait)}
+        visible={sendingTransaction}
       />
     </SafeAreaView>
   )
@@ -204,13 +223,12 @@ export default injectIntl(
   connect(
     (state) => ({
       isEasyConfirmationEnabled: easyConfirmationSelector(state),
-      utxos: utxosSelector(state),
+      unSignedTx: state.voting.unSignedTx,
+      defaultAsset: defaultNetworkAssetSelector(state),
     }),
-    {
-      generateVotingTransaction,
-    },
+    {submitTransaction},
   )(
-    withTitle((Step4: ComponentType<ExternalProps>), ({intl}) =>
+    withTitle((Step5: ComponentType<ExternalProps>), ({intl}) =>
       intl.formatMessage(globalMessages.votingTitle),
     ),
   ),

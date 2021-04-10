@@ -48,6 +48,10 @@ export const confirmationMessages = {
       id: 'global.actions.dialogs.commonbuttons.iUnderstandButton',
       defaultMessage: '!!!I understand',
     },
+    completeButton: {
+      id: 'global.actions.dialogs.commonbuttons.completeButton',
+      defaultMessage: '!!!Complete',
+    }
   }),
 }
 

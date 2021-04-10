@@ -10,9 +10,10 @@ export default StyleSheet.create({
   },
   description: {
     fontSize: 14,
+    color: '#242838',
   },
   pinContainer: {
-    marginTop: 30,
+    marginTop: 70,
     justifyContent: 'center',
     flexDirection: 'row',
   },
@@ -20,12 +21,13 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 6,
-    fontSize: 20,
     width: 60,
     height: 60,
   },
   pinNumber: {
-    color: '#242838',
+    fontSize: 20,
+    lineHeight: 0,
+    color: '#353535',
   },
   pinNormal: {
     borderWidth: 1,
@@ -36,5 +38,14 @@ export default StyleSheet.create({
   },
   mt16: {
     marginTop: 16,
+  },
+  mb70: {
+    marginBottom: 70,
+  },
+  mb40: {
+    marginBottom: 40,
+  },
+  mb16: {
+    marginBottom: 16,
   },
 })

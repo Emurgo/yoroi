@@ -12,7 +12,7 @@ import WalletDescription from './WalletDescription'
 import {Button, StatusBar, ScreenBackground} from '../UiKit'
 // uses same styles as WalletInitScreen
 import styles from './styles/WalletInitScreen.style'
-import {WALLET_INIT_ROUTES, CATALYST_ROUTES} from '../../RoutesList'
+import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {CONFIG} from '../../config/config'
 
 import type {State} from '../../state'
@@ -36,7 +36,7 @@ type Props = {|
   navigateInitWallet: (Object, NetworkId, WalletImplementationId) => mixed,
 |}
 
-const WalletInitScreen = ({intl, navigation, navigateInitWallet}: Props) => {
+const WalletInitScreen = ({intl, navigateInitWallet}: Props) => {
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <StatusBar type="dark" />
@@ -46,13 +46,6 @@ const WalletInitScreen = ({intl, navigation, navigateInitWallet}: Props) => {
           <View style={styles.content}>
             <WalletDescription />
           </View>
-          <Button
-            onPress={(event) =>
-              navigation.navigate(CATALYST_ROUTES.STEP1)
-            }
-            title={'catalyst'}
-            style={styles.topButton}
-          />
           <Button
             onPress={(event) =>
               // assume regular haskell shelley wallet. In next screen, user

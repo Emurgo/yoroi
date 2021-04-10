@@ -2,23 +2,18 @@
 
 /**
  * Step 2 for the Catalyst registration
- * Confirm PIN generated in previous step
+ * Auto generate a PIN, catalyst private key
  */
 
-import _ from 'lodash'
-import React, {useEffect, useState} from 'react'
+import React, {useEffect} from 'react'
 import {View, SafeAreaView} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
 
-import {generateVotingKeys} from '../../actions/voting'
-import {Text, ProgressStep} from '../UiKit'
+import {Text, Button, ProgressStep} from '../UiKit'
 import {withTitle} from '../../utils/renderUtils'
-import PinInputKeyboard from '../Common/PinInputKeyboard'
 import {CATALYST_ROUTES} from '../../RoutesList'
-import globalMessages, {errorMessages} from '../../i18n/global-messages'
-import {showErrorDialog} from '../../actions'
-
+import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
 import styles from './styles/Step2.style'
 
 import type {ComponentType} from 'react'
@@ -28,52 +23,31 @@ import type {Navigation} from '../../types/navigation'
 
 const messages = defineMessages({
   subTitle: {
-    id: 'components.catalyst.step2.title',
-    defaultMessage: '!!!Enter PIN',
+    id: 'components.catalyst.step2.subTitle',
+    defaultMessage: '!!!Write Down PIN',
   },
   description: {
     id: 'components.catalyst.step2.description',
     defaultMessage:
-      '!!!Please enter the PIN as you will need it every time you want to access the Catalyst Voting app',
+      '!!!Please write down this PIN as you will need it every time you want to access the Catalyst Voting app',
   },
 })
 
-const PIN_LENGTH = 4
-
 const Step2 = ({intl, pin, navigation}) => {
-  const [confirmPin, setPin] = useState('')
-
-  useEffect(() => {
-    generateVotingKeys()
-  }, [])
-
-  const pinChange = (enteredPin) => {
-    setPin(enteredPin)
-    if (enteredPin.length === 4) {
-      if (pin.join('') === enteredPin) {
-        navigation.navigate(CATALYST_ROUTES.STEP3)
-      } else {
-        showErrorDialog(errorMessages.incorrectPin, intl)
-      }
-    }
-  }
   const pinCards = (
     <View style={styles.pinContainer}>
-      {_.range(0, PIN_LENGTH).map((value, index) => {
+      {pin.map((value, index) => {
         // eslint-disable-next-line react/no-array-index-key
         return (
           <View
             key={index}
             style={[
               styles.pin,
-              index < PIN_LENGTH - 1 && styles.mr10,
-              index === confirmPin.length
-                ? styles.pinHighlight
-                : styles.pinNormal,
-              index > confirmPin.length && styles.pinInactive,
+              styles.pinNormal,
+              index < pin.length - 1 ? styles.mr10 : undefined,
             ]}
           >
-            <Text style={styles.pinNumber}>{confirmPin[index]}</Text>
+            <Text style={styles.pinNumber}>{value}</Text>
           </View>
         )
       })}
@@ -82,7 +56,7 @@ const Step2 = ({intl, pin, navigation}) => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <ProgressStep currentStep={2} totalSteps={4} displayStepNumber />
+      <ProgressStep currentStep={2} totalSteps={6} />
       <View style={styles.container}>
         <View>
           <Text style={styles.subTitle}>
@@ -91,10 +65,13 @@ const Step2 = ({intl, pin, navigation}) => {
           <Text style={styles.description}>
             {intl.formatMessage(messages.description)}
           </Text>
+          {pinCards}
         </View>
-        <View style={styles.pinContainer}>{pinCards}</View>
+        <Button
+          onPress={() => navigation.navigate(CATALYST_ROUTES.STEP6)}
+          title={intl.formatMessage(confirmationMessages.commonButtons.continueButton)}
+        />
       </View>
-      <PinInputKeyboard pinLength={PIN_LENGTH} onPinChange={pinChange} />
     </SafeAreaView>
   )
 }
@@ -110,7 +87,7 @@ export default injectIntl(
     (state) => ({
       pin: state.voting.pin,
     }),
-    {generateVotingKeys},
+    {},
   )(
     withTitle((Step2: ComponentType<ExternalProps>), ({intl}) =>
       intl.formatMessage(globalMessages.votingTitle),

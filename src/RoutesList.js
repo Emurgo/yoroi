@@ -109,8 +109,11 @@ export const ROOT_ROUTES = {
 }
 
 export const CATALYST_ROUTES = {
-  STEP1: 'generate-pin-step1',
-  STEP2: 'confirm-pin-step2',
-  STEP3: 'transaction-step3',
-  STEP4: 'transaction-step4',
+  ROOT: 'catalyst-router',
+  STEP1: 'catalyst-landing',
+  STEP2: 'catalyst-generate-pin',
+  STEP3: 'catalyst-confirm-pin',
+  STEP4: 'catalyst-generate-trx',
+  STEP5: 'catalyst-transaction',
+  STEP6: 'catalyst-qr-code',
 }

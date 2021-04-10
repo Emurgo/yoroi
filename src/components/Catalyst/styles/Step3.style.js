@@ -14,4 +14,14 @@ export default StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 36,
   },
+  mr10: {
+    marginRight: 10,
+  },
+  pinInactive: {
+    opacity: 0.5,
+  },
+  pinHighlight: {
+    borderWidth: 2,
+    borderColor: '#4A5065',
+  },
 })
