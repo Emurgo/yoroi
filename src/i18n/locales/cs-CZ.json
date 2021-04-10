@@ -85,7 +85,7 @@
   "components.receive.receivescreen.freshAddresses": "Fresh addresses",
   "components.receive.receivescreen.generateButton": "Generate another address",
   "components.receive.receivescreen.infoText": "Share this address to receive payments. To protect your privacy, new addresses are generated automatically once you use them.",
-  "components.receive.receivescreen.title": "Receive",
+  "components.receive.receivescreen.title": "Přijmout",
   "components.receive.receivescreen.usedAddresses": "Used addresses",
   "components.send.addressreaderqr.title": "Scan QR code address",
   "components.send.amountfield.label": "Amount",
