@@ -182,7 +182,7 @@
   "components.settings.settingsscreen.title": "Podpora",
   "components.settings.termsofservicescreen.title": "Podmínky užití",
   "components.settings.toggleeasyconfirmationscreen.disableButton": "Zakázat",
-  "components.settings.toggleeasyconfirmationscreen.disableHeading": "By disabling this option, you will be able to spend your assets only with your master password.",
+  "components.settings.toggleeasyconfirmationscreen.disableHeading": "Zakázáním této možnosti budete moci utrácet jen se zadáním hlavního hesla.",
   "components.settings.toggleeasyconfirmationscreen.enableButton": "Povolit",
   "components.settings.toggleeasyconfirmationscreen.enableHeading": "This option will allow you to send transactions from your wallet by simply confirming with fingerprint or facial recognition (with a standard system fallback option). This makes your wallet less secure. This is a compromise between UX and security!",
   "components.settings.toggleeasyconfirmationscreen.enableMasterPassword": "Hlavní heslo",
