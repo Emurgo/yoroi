@@ -356,7 +356,7 @@
   "global.actions.dialogs.disableEasyConfirmationFirst.title": "Akce selhala",
   "global.actions.dialogs.enableFingerprintsFirst.message": "Je nutné zapnout biometrické ověření, aby bylo možné propojit aplikaci",
   "global.actions.dialogs.enableFingerprintsFirst.title": "Akce selhala",
-  "global.actions.dialogs.enableSystemAuthFirst.message": "You probably disabled the lock screen on your phone. You need to disable easy transaction confirmation first. Please set up you lock screen (PIN / Password / Pattern) on your phone and then restart application. After this action you should be able to disable the lock screen on your phone and use this application",
+  "global.actions.dialogs.enableSystemAuthFirst.message": "Pravděpodobně jste vypnul lock screen na svém telefonu. Prvně musíte zrušit zjednodušené potvrzování transakcí. Nastavte prosím svůj lock screen (PIN / heslo) na vašem telefonu a restartujte aplikaci. Poté by mělo být možné vypnout lock screen a používat tuto aplikaci",
   "global.actions.dialogs.enableSystemAuthFirst.title": "Zamčená obrazovka zakázána",
   "global.actions.dialogs.generalError.message": "Požadovaná operace selhala. Toto je vše co víme: {message}",
   "global.actions.dialogs.generalError.title": "Neočekávaná chyba",
