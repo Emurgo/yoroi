@@ -68,8 +68,12 @@ export const spacing = {
 
 const brand = {
   defaultFont: Platform.select({
-    ios: 'Arial',
-    android: 'Roboto',
+    ios: 'Rubik-Regular',
+    android: 'Rubik-Regular',
+  }),
+  bold: Platform.select({
+    ios: 'Rubik-Medium',
+    android: 'Rubik-Medium',
   }),
 }
 

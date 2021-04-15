@@ -38,7 +38,6 @@ export default StyleSheet.create({
     flexWrap: 'nowrap',
   },
   timeBlock: {
-    width: 28,
     lineHeight: 24,
     fontSize: 16,
     color: COLORS.DARK_TEXT,
