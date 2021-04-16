@@ -77,7 +77,7 @@ PODS:
     - React-Core
   - react-native-config (0.12.0):
     - React
-  - react-native-haskell-shelley (1.0.3):
+  - react-native-haskell-shelley (1.1.0):
     - React
   - react-native-netinfo (5.9.9):
     - React-Core
@@ -113,7 +113,7 @@ PODS:
   - React-RCTWebSocket (0.60.0):
     - React-Core (= 0.60.0)
     - React-fishhook (= 0.60.0)
-  - RNCardano (0.2.3):
+  - RNCardano (0.2.4):
     - React
   - RNCAsyncStorage (1.13.3):
     - React-Core
@@ -306,7 +306,7 @@ SPEC CHECKSUMS:
   react-native-ble-plx: caac53ee98151ec81198239d591c203809a1ed6e
   react-native-camera: cf8a153d33138dcc457172fc3c33fdf4e5d288d2
   react-native-config: f2c2ae45625a068c35681a16b9bfb1ca58b0adc7
-  react-native-haskell-shelley: f80c5a34caf1b074d8fea6e47235b731f43f7966
+  react-native-haskell-shelley: 53258002beb78d46fd03ca50e63bbebb16f88274
   react-native-netinfo: 0212ce8604e88edf686f1481b925b17a42a52449
   react-native-randombytes: b6677f7d495c27e9ee0dbd77ebc97b3c59173729
   react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
@@ -322,7 +322,7 @@ SPEC CHECKSUMS:
   React-RCTText: 685fca2e13b024271048e7e247ef24476f28a41e
   React-RCTVibration: 4ee1cf208ab17a50fafb1c16ffe28fe594a64e4f
   React-RCTWebSocket: fca087d583724aa0e5fef7d911f0f2a28d0f2736
-  RNCardano: ffdd908e7dde81508914dbff2fbd739183b2bf34
+  RNCardano: 5a5f3e3bd63207b2c67fad283a528c41da648b32
   RNCAsyncStorage: da95b83e241a7f5efe3da1a949b3ec3175380be0
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
   RNDeviceInfo: 6dd5c07a482f2a5e4a29fe8a9d99eadd4277175a

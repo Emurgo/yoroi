@@ -38,6 +38,7 @@ import {
   easyConfirmationSelector,
   hwDeviceInfoSelector,
   defaultNetworkAssetSelector,
+  serverStatusSelector,
 } from '../../selectors'
 import DelegationNavigationButtons from './DelegationNavigationButtons'
 import UtxoAutoRefresher from '../Send/UtxoAutoRefresher'
@@ -79,6 +80,7 @@ import {ISignRequest} from '../../crypto/ISignRequest'
 
 import styles from './styles/DelegationSummary.style'
 
+import type {ServerStatusCache} from '../../state'
 import type {Navigation} from '../../types/navigation'
 import type {DefaultAsset} from '../../types/HistoryTransaction'
 import type {RemotePoolMetaSuccess, RawUtxo} from '../../api/types'
@@ -128,6 +130,7 @@ type Props = {|
   submitTransaction: <T>(ISignRequest<T>, string) => Promise<void>,
   submitSignedTx: (string) => Promise<void>,
   defaultAsset: DefaultAsset,
+  serverStatus: ServerStatusCache,
 |}
 
 type State = {|
@@ -256,13 +259,14 @@ class StakingDashboard extends React.Component<Props, State> {
 
   /* create withdrawal tx and move to confirm */
   createWithdrawalTx: () => Promise<void> = async () => {
-    const {intl, utxos, defaultAsset} = this.props
+    const {intl, utxos, defaultAsset, serverStatus} = this.props
     try {
       if (utxos == null) throw new Error('cannot get utxos') // should never happen
       this.setState({withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WAITING})
       const signTxRequest = await walletManager.createWithdrawalTx(
         utxos,
         this._shouldDeregister,
+        serverStatus.serverTime,
       )
       if (signTxRequest instanceof HaskellShelleyTxSignRequest) {
         const withdrawals = await signTxRequest.withdrawals()
@@ -705,6 +709,7 @@ export default injectIntl(
         isReadOnly: isReadOnlySelector(state),
         hwDeviceInfo: hwDeviceInfoSelector(state),
         defaultAsset: defaultNetworkAssetSelector(state),
+        serverStatus: serverStatusSelector(state),
       }),
       {
         fetchPoolInfo,

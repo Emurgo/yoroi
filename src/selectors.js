@@ -10,9 +10,14 @@ import {
 } from './types/HistoryTransaction'
 import {ObjectValues} from './utils/flow'
 import {MultiToken, getDefaultNetworkTokenEntry} from './crypto/MultiToken'
-import {getDefaultAssets, getDefaultAssetByNetworkId} from './config/config'
+import {
+  getDefaultAssets,
+  getDefaultAssetByNetworkId,
+  getCardanoDefaultAsset,
+} from './config/config'
+import {NETWORK_REGISTRY} from './config/types'
 
-import type {State, WalletMeta} from './state'
+import type {State, WalletMeta, ServerStatusCache} from './state'
 import type {
   TransactionInfo,
   Transaction,
@@ -68,6 +73,12 @@ export const availableAssetsSelector: (
   transactionsInfoSelector,
   (state) => state.wallet.networkId,
   (txs, networkId) => {
+    if (networkId === NETWORK_REGISTRY.UNDEFINED) {
+      const defaultAsset = getCardanoDefaultAsset()
+      return {
+        [defaultAsset.identifier]: defaultAsset,
+      }
+    }
     const tokens: Dict<Token> = fromPairs(
       ObjectValues(_initAssetsRegistry(networkId)).map((asset) => [
         asset.identifier,
@@ -95,7 +106,12 @@ export const defaultNetworkAssetSelector: (
   state: State,
 ) => DefaultAsset = createSelector(
   (state) => state.wallet.networkId,
-  (networkId) => getDefaultAssetByNetworkId(networkId),
+  (networkId) => {
+    if (networkId === NETWORK_REGISTRY.UNDEFINED) {
+      return getCardanoDefaultAsset()
+    }
+    return getDefaultAssetByNetworkId(networkId)
+  },
 )
 
 export const internalAddressIndexSelector: (
@@ -143,11 +159,18 @@ export const tokenBalanceSelector: (
   transactionsInfoSelector,
   walletMetaSelector,
   (transactions, walletMeta) => {
+    if (walletMeta.networkId === NETWORK_REGISTRY.UNDEFINED) {
+      const defaultAsset = getCardanoDefaultAsset()
+      return new MultiToken([], {
+        defaultNetworkId: defaultAsset.networkId,
+        defaultIdentifier: defaultAsset.identifier,
+      })
+    }
     const processed = ObjectValues(transactions).filter(
       (tx) => tx.status === TRANSACTION_STATUS.SUCCESSFUL,
     )
     const result = processed
-      .map((tx) => tx.delta)
+      .map((tx) => MultiToken.fromArray(tx.delta))
       .reduce(
         (acc, curr) => acc.joinAddMutable(curr),
         new MultiToken([], getDefaultNetworkTokenEntry(walletMeta.networkId)),
@@ -286,7 +309,10 @@ export const isFlawedWalletSelector = (state: State): boolean =>
   state.isFlawedWallet
 
 export const isMaintenanceSelector = (state: State): boolean =>
-  state.isMaintenance
+  state.serverStatus.isMaintenance
+
+export const serverStatusSelector = (state: State): ServerStatusCache =>
+  state.serverStatus
 
 /**
  * Before users can actually create a wallet, 3 steps must be completed:

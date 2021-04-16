@@ -2047,9 +2047,10 @@
     buffer-crc32 "0.2.13"
     fnv-plus "1.3.1"
 
-"@emurgo/react-native-haskell-shelley@emurgo/react-native-haskell-shelley":
-  version "1.0.3"
-  resolved "https://codeload.github.com/emurgo/react-native-haskell-shelley/tar.gz/2626efc87823db84d99ca78aefbab90d2260d614"
+"@emurgo/react-native-haskell-shelley@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/react-native-haskell-shelley/-/react-native-haskell-shelley-1.1.0.tgz#bed577c16a6a78d08398d5113e2d2f7952f8e6e3"
+  integrity sha512-EG1JYj6eiJXxJOd+nvnLfOCjqtTGmpW3evll9DqKlYI78W6je5PWW1C/P8kso2a3iPa5NeaqDScgAAF7A6Pevw==
   dependencies:
     base-64 "0.1.0"
 
@@ -12891,9 +12892,9 @@ react-native-camera@3.42.0:
   dependencies:
     prop-types "^15.6.2"
 
-react-native-cardano@Emurgo/react-native-cardano#0.2.3:
-  version "0.2.3"
-  resolved "https://codeload.github.com/Emurgo/react-native-cardano/tar.gz/a56794eaad23dd1ac73eeed182dc126218403bda"
+react-native-cardano@Emurgo/react-native-cardano#0.2.4:
+  version "0.2.4"
+  resolved "https://codeload.github.com/Emurgo/react-native-cardano/tar.gz/9ac86991c6de81515ef85765fdee8a62cc02eee8"
 
 react-native-config@0.12.0:
   version "0.12.0"
@@ -16087,9 +16088,9 @@ xtend@^4.0.0, xtend@^4.0.1, xtend@~4.0.1:
   integrity sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==
 
 y18n@^3.2.1:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/y18n/-/y18n-3.2.1.tgz#6d15fba884c08679c0d77e88e7759e811e07fa41"
-  integrity sha1-bRX7qITAhnnA136I53WegR4H+kE=
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/y18n/-/y18n-3.2.2.tgz#85c901bd6470ce71fc4bb723ad209b70f7f28696"
+  integrity sha512-uGZHXkHnhF0XeeAPgnKfPv1bgKAYyVvmNL1xlKsPYZPaIHxGti2hHqvOCQv71XMsLxu1QjergkqogUnms5D3YQ==
 
 "y18n@^3.2.1 || ^4.0.0", y18n@^4.0.0:
   version "4.0.0"

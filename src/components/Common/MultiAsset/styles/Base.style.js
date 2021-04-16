@@ -23,6 +23,11 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 10,
   },
+  assetBalanceView: {
+    flex: 1,
+    alignItems: 'flex-end',
+    justifyContent: 'flex-start',
+  },
   assetName: {
     fontFamily: stylesConfig.defaultFont,
     fontSize: 14,
@@ -46,7 +51,7 @@ export default StyleSheet.create({
   rowColor2: {
     backgroundColor: 'transparent',
   },
-  tokenMeta: {
-    width: '80%',
+  tokenMetaView: {
+    flex: 2,
   },
 })

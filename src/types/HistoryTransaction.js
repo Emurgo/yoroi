@@ -1,5 +1,5 @@
 // @flow
-import {MultiToken, type TokenEntry} from '../crypto/MultiToken'
+import {type TokenEntry, type TokenEntryPlain} from '../crypto/MultiToken'
 
 import type {RemoteCertificateMeta, RemoteAsset} from '../api/types'
 
@@ -78,15 +78,16 @@ export type DefaultAsset = {|
 export type IOData = {
   address: string,
   assets: Array<TokenEntry>,
+  amount: string,
 }
 
 export type TransactionInfo = {|
   id: string,
   inputs: Array<IOData>,
   outputs: Array<IOData>,
-  amount: MultiToken,
-  fee: ?MultiToken,
-  delta: MultiToken,
+  amount: Array<TokenEntryPlain>,
+  fee: ?Array<TokenEntryPlain>,
+  delta: Array<TokenEntryPlain>,
   direction: TransactionDirection,
   confirmations: number,
   submittedAt: ?string,

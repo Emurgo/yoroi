@@ -44,7 +44,7 @@ const AssetRow: ({|
 |}) => Node = ({styles, asset, assetMetadata, backColor, onSelect, intl}) => {
   const item = (
     <>
-      <View style={styles.tokenMeta}>
+      <View style={styles.tokenMetaView}>
         <Text style={styles.assetName}>
           {/* eslint-disable indent */
           assetMetadata.isDefault
@@ -73,9 +73,9 @@ const AssetRow: ({|
           }
         </Text>
       </View>
-      <View>
+      <View style={styles.assetBalanceView}>
         <Text style={styles.assetBalance}>
-          {formatTokenAmount(asset.amount, assetMetadata)}
+          {formatTokenAmount(asset.amount, assetMetadata, 15)}
         </Text>
       </View>
     </>

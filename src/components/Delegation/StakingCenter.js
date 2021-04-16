@@ -25,6 +25,7 @@ import {
   defaultNetworkAssetSelector,
   poolOperatorSelector,
   languageSelector,
+  serverStatusSelector,
 } from '../../selectors'
 import UtxoAutoRefresher from '../Send/UtxoAutoRefresher'
 import AccountAutoRefresher from './AccountAutoRefresher'
@@ -38,6 +39,7 @@ import type {ComponentType} from 'react'
 import type {DefaultAsset} from '../../types/HistoryTransaction'
 import type {Navigation} from '../../types/navigation'
 import type {RawUtxo} from '../../api/types'
+import type {ServerStatusCache} from '../../state'
 
 const messages = defineMessages({
   title: {
@@ -98,6 +100,7 @@ const navigateToDelegationConfirm = async (
   defaultAsset: DefaultAsset,
   intl: IntlShape,
   navigation: Navigation,
+  serverStatus: ServerStatusCache,
 ) => {
   try {
     const selectedPool = selectedPools[0]
@@ -107,6 +110,7 @@ const navigateToDelegationConfirm = async (
       accountBalance,
       utxos,
       defaultAsset,
+      serverStatus.serverTime,
     )
     const transactionFee = await transactionData.signRequest.fee()
     navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM, {
@@ -312,6 +316,7 @@ export default injectIntl(
       defaultAsset: defaultNetworkAssetSelector(state),
       poolOperator: poolOperatorSelector(state),
       languageCode: languageSelector(state),
+      serverStatus: serverStatusSelector(state),
     })),
   )(StakingCenter): ComponentType<ExternalProps>),
 )

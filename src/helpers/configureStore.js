@@ -3,11 +3,11 @@ import thunk from 'redux-thunk'
 import {createStore, applyMiddleware, compose} from 'redux'
 import {createLogger} from 'redux-logger'
 import rootReducer from './rootReducer'
-import getInitialState from '../state'
+import getInitialState, {mockState} from '../state'
 import type {State} from '../state'
 import type {GenericAction, Dispatch} from '../types/reduxTypes'
 
-export default () => {
+export default (useMockState: boolean = false) => {
   const logger = {
     log: (_message: string, _payload: Object) => null,
   }
@@ -28,7 +28,7 @@ export default () => {
 
   const store = createStore<State, GenericAction<State, any>, Dispatch>(
     rootReducer,
-    getInitialState(),
+    __DEV__ && useMockState ? mockState() : getInitialState(),
     composeEnhancers(applyMiddleware(...middlewares)),
   )
 

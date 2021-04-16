@@ -156,6 +156,7 @@ export interface WalletInterface {
     receiver: string,
     tokens: SendTokenList,
     defaultToken: DefaultTokenEntry,
+    serverTime: Date | void,
   ): Promise<ISignRequest<T>>;
 
   signTx<T>(
@@ -168,6 +169,7 @@ export interface WalletInterface {
     valueInAccount: BigNumber,
     utxos: Array<RawUtxo>,
     defaultAsset: DefaultAsset,
+    serverTime: Date | void,
   ): Promise<{
     signRequest: ISignRequest<T>,
     totalAmountToDelegate: MultiToken,
@@ -176,6 +178,7 @@ export interface WalletInterface {
   createWithdrawalTx<T>(
     utxos: Array<RawUtxo>,
     shouldDeregister: boolean,
+    serverTime: Date | void,
   ): Promise<ISignRequest<T>>;
 
   signTxWithLedger<T>(
@@ -184,6 +187,8 @@ export interface WalletInterface {
   ): Promise<SignedTx>;
 
   // =================== backend API =================== //
+
+  checkServerStatus(): Promise<any>;
 
   submitTransaction(signedTx: string): Promise<any>;
 

@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     color: '#FF1351',
   },
   bold: {
-    fontWeight: '700',
+    fontFamily: stylesConfig.bold,
   },
   monospace: {
     ...Platform.select({

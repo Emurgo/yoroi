@@ -22,6 +22,12 @@ export type TokenEntry = {|
   amount: BigNumber,
 |}
 
+export type TokenEntryPlain = {|
+  ...TokenLookupKey,
+  amount: string,
+  isDefault: boolean,
+|}
+
 export type DefaultTokenEntry = {|
   defaultNetworkId: number,
   defaultIdentifier: string,
@@ -167,6 +173,32 @@ export class MultiToken {
 
   isEmpty: (void) => boolean = () => {
     return this.values.filter((token) => token.amount.gt(0)).length === 0
+  }
+
+  asArray: (void) => Array<TokenEntryPlain> = () =>
+    this.values.map((value) => ({
+      identifier: value.identifier,
+      networkId: value.networkId,
+      amount: value.amount.toString(),
+      isDefault:
+        value.networkId === this.defaults.defaultNetworkId &&
+        value.identifier === this.defaults.defaultIdentifier,
+    }))
+
+  static fromArray(entries: Array<TokenEntryPlain>): MultiToken {
+    const _asTokenEntry = (value) => ({
+      identifier: value.identifier,
+      networkId: value.networkId,
+      amount: new BigNumber(value.amount),
+    })
+    const values = entries.map(_asTokenEntry)
+    const defaults = entries
+      .filter((value) => value.isDefault)
+      .map((value) => ({
+        defaultNetworkId: value.networkId,
+        defaultIdentifier: value.identifier,
+      }))[0]
+    return new MultiToken(values, defaults)
   }
 }
 

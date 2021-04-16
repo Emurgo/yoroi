@@ -33,6 +33,7 @@ import {
   hasPendingOutgoingTransactionSelector,
   availableAssetsSelector,
   defaultNetworkAssetSelector,
+  serverStatusSelector,
 } from '../../selectors'
 import {fetchUTXOs} from '../../actions/utxo'
 import {withNavigationTitle} from '../../utils/renderUtils'
@@ -57,6 +58,7 @@ import {cardanoValueFromMultiToken} from '../../crypto/shelley/utils'
 
 import styles from './styles/SendScreen.style'
 
+import type {ServerStatusCache} from '../../state'
 import type {Navigation} from '../../types/navigation'
 import type {Token, DefaultAsset} from '../../types/HistoryTransaction'
 import type {TokenEntry} from '../../crypto/MultiToken'
@@ -232,6 +234,7 @@ const getTransactionData = async (
   sendAll: boolean,
   defaultAsset: DefaultAsset,
   selectedToken: Token,
+  serverTime: Date | void,
 ): Promise<CreateUnsignedTxResponse> => {
   const defaultTokenEntry = {
     defaultNetworkId: defaultAsset.networkId,
@@ -265,6 +268,7 @@ const getTransactionData = async (
     address,
     sendTokenList,
     defaultTokenEntry,
+    serverTime,
   )
 }
 
@@ -420,6 +424,7 @@ type Props = {
   isOnline: boolean,
   hasPendingOutgoingTransaction: boolean,
   fetchUTXOs: () => void,
+  serverStatus: ServerStatusCache,
 }
 
 type State = {
@@ -541,6 +546,7 @@ class SendScreen extends Component<Props, State> {
       tokenBalance,
       defaultAsset,
       availableAssets,
+      serverStatus,
     } = this.props
     const {address, amount, sendAll, selectedAsset} = this.state
 
@@ -590,6 +596,7 @@ class SendScreen extends Component<Props, State> {
         sendAll,
         defaultAsset,
         selectedTokenMeta,
+        serverStatus.serverTime,
       )
       const fee = (await transactionData.fee()).getDefault()
       // prettier-ignore
@@ -848,6 +855,7 @@ export default injectIntl(
           state,
         ),
         isOnline: isOnlineSelector(state),
+        serverStatus: serverStatusSelector(state),
       }),
       {
         fetchUTXOs,

@@ -2,12 +2,19 @@
 import {BigNumber} from 'bignumber.js'
 
 import {NETWORK_REGISTRY} from './config/types'
+import {CONFIG} from './config/config'
 
 import type {RawUtxo, RemotePoolMetaSuccess} from './api/types'
 import type {Transaction} from './types/HistoryTransaction'
 import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
 import type {NetworkId, WalletImplementationId} from './config/types'
 import type {WalletChecksum} from '@emurgo/cip4-js'
+
+export type ServerStatusCache = {|
+  +isServerOk: boolean,
+  +isMaintenance: boolean,
+  +serverTime: Date | void,
+|}
 
 export type WalletMeta = {
   id: string,
@@ -82,7 +89,7 @@ export type State = {
   // need to add as a non-wallet-specific property to avoid conflict with other
   // actions that may override this property (otherwise more refactoring is needed)
   isFlawedWallet: boolean,
-  isMaintenance: boolean,
+  serverStatus: ServerStatusCache,
 }
 
 export const getInitialState = (): State => ({
@@ -145,7 +152,45 @@ export const getInitialState = (): State => ({
     currentVersion: null,
   },
   isFlawedWallet: false,
-  isMaintenance: false,
+  serverStatus: {
+    isServerOk: true,
+    isMaintenance: false,
+    serverTime: undefined,
+  },
 })
+
+export const mockState = (): State => {
+  if (!__DEV__) {
+    throw new Error('calling mockState in a production build')
+  }
+  return {
+    ...getInitialState(),
+    wallet: {
+      name: 'My wallet',
+      isInitialized: true,
+      networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
+      walletImplementationId:
+        CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+      isHW: false,
+      hwDeviceInfo: null,
+      isReadOnly: false,
+      isEasyConfirmationEnabled: false,
+      transactions: {},
+      internalAddresses: [],
+      externalAddresses: [],
+      rewardAddressHex: null,
+      confirmationCounts: {},
+      isUsedAddressIndex: {},
+      numReceiveAddresses: 0,
+      canGenerateNewReceiveAddress: false,
+      checksum: {
+        ImagePart:
+          '1deb1b34689642510afc68cdf6427fd8d24e87869d5be2c1294ded9d1155b47567e' +
+          '0825024bdf0c2ef704f52277fb020972d476425f5723270e4f05f70e58517',
+        TextPart: 'ZNXA-1056',
+      },
+    },
+  }
+}
 
 export default getInitialState
