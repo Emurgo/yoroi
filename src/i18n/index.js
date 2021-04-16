@@ -14,6 +14,7 @@ import 'moment/locale/de'
 import 'moment/locale/fr'
 import 'moment/locale/it'
 import 'moment/locale/nl'
+import 'moment/locale/cs'
 
 import assert from '../utils/assert'
 import {LANGUAGES} from './languages'
@@ -35,6 +36,7 @@ const momentLocales = {
   [LANGUAGES.FRENCH]: 'fr',
   [LANGUAGES.ITALIAN]: 'it',
   [LANGUAGES.DUTCH]: 'nl',
+  [LANGUAGES.CZECH]: 'cs',
 }
 
 // Add default custom formatting functions

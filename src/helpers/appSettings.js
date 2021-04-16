@@ -17,6 +17,7 @@ import DE_DE_TOS from '../i18n/locales/terms-of-use/ada/de-DE.md'
 import FR_FR_TOS from '../i18n/locales/terms-of-use/ada/fr-FR.md'
 import IT_IT_TOS from '../i18n/locales/terms-of-use/ada/it-IT.md'
 import NL_NL_TOS from '../i18n/locales/terms-of-use/ada/nl-NL.md'
+import CS_CZ_TOS from '../i18n/locales/terms-of-use/ada/cs-CZ.md'
 
 const tosByCode = {
   'en-US': EN_US_TOS,
@@ -31,6 +32,7 @@ const tosByCode = {
   'fr-FR': FR_FR_TOS,
   'it-IT': IT_IT_TOS,
   'nl-NL': NL_NL_TOS,
+  'cs-CZ': CS_CZ_TOS,
 }
 
 // Note(ppershing): following values have to be in sync with
