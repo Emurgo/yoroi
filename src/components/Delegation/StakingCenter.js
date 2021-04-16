@@ -141,6 +141,7 @@ const _handleOnMessage = async (
   defaultAsset,
   intl: IntlShape,
   navigation: Navigation,
+  serverStatus: ServerStatusCache,
 ) => {
   try {
     const poolInfoResponse = await walletManager.fetchPoolInfo({
@@ -179,6 +180,7 @@ const _handleOnMessage = async (
           defaultAsset,
           intl,
           navigation,
+          serverStatus,
         )
       }
     } else {
@@ -206,6 +208,7 @@ const StakingCenter = ({
   defaultAsset,
   languageCode,
   accountBalance,
+  serverStatus,
 }) => {
   // pools user is currently delegating to
   const poolList = poolOperator != null ? [poolOperator] : null
@@ -253,6 +256,7 @@ const StakingCenter = ({
         defaultAsset,
         intl,
         navigation,
+        serverStatus,
       )
     } finally {
       setBusy(false)
