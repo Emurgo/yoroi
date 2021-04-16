@@ -24,20 +24,22 @@ export const mapArrayToId = (
   data: Array<Object>,
   id: number | string,
   mapByProp?: string,
-) => ({
-  // future note: flow doesn't support computed keys
-  [id]: mappingFn(data, mapByProp),
-})
+) => {
+  const dict = {}
+  dict[id] = mappingFn(data, mapByProp)
+  return dict
+}
 
-export const mapObjToId = (data: Object, id: number | string) => ({
-  // future note: flow doesn't support computed keys
-  [id]: data,
-})
+export const mapObjToId = (data: Object, id: number | string) => {
+  const dict = {}
+  dict[id] = data
+  return dict
+}
 
-export const immutableSet = <S>(obj: S, path: ?Path, value: S): S =>
-  // prettier-ignore
+// prettier-ignore
+export const immutableSet = <S: {}>(obj: S, path: ?Path, value: S): S =>
   (path && path.length)
-    ? produce(
+    ? produce<S>(
       (obj): void => {
         set(obj, path, value)
       },
@@ -51,7 +53,7 @@ export const immutableSet = <S>(obj: S, path: ?Path, value: S): S =>
  * Does not create new state if the value did not change
  */
 // prettier-ignore
-export function forwardReducerTo<S, T>(
+export function forwardReducerTo<S: {}, T>(
   reducer: SegmentReducer<S, T | void>,
   path: ?Path,
 ): (

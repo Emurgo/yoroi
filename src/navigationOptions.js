@@ -1,7 +1,6 @@
 // @flow
 
 import React from 'react'
-import {StyleSheet} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {COLORS} from './styles/config'
 
@@ -10,7 +9,6 @@ const GradientHeader = () => (
     start={{x: 0, y: 0}}
     end={{x: 1, y: 0}}
     colors={['#1A44B7', '#F14D78']}
-    style={{...StyleSheet.absoluteFill}}
   />
 )
 

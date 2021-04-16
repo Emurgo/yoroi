@@ -8,62 +8,62 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* emurgoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* emurgoTests.m */; };
-		011D5B38195A43238A809C46 /* Rubik-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EEAC7603DDDA40B1A9A02F18 /* Rubik-SemiBold.ttf */; };
-		0925C9A4B3A241A394855DE8 /* Rubik-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 386446532B18489FA4C5831D /* Rubik-LightItalic.ttf */; };
+		0364225EA79340159305AC26 /* Rubik-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DB1534F401F64DFEB4584FD0 /* Rubik-MediumItalic.ttf */; };
+		087D95DB98A155D2B096DE3C /* libPods-emurgo-emurgo-nightly.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AAF71CA34AD7B12440AFCE21 /* libPods-emurgo-emurgo-nightly.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
-		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		13DEDE26CFE640F29358E4CE /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 760E4C50FBD648CAA6D1C093 /* Rubik-Medium.ttf */; };
+		237BDF69DA4AC362D0191EEE /* libPods-emurgo-emurgoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5D1D2320FE78AA7F5D9691D /* libPods-emurgo-emurgoTests.a */; };
 		2E3E7CD82298ACEA00D5C487 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2E3E7CD92298ACEA00D5C487 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2E3E7CF72298ACEA00D5C487 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2E3E7CF82298ACEA00D5C487 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E2FC0BFA21C7F02200DA195B /* InfoPlist.strings */; };
-		2E3E7CF92298ACEA00D5C487 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
-		2E4F1C95AC6C02C34BACC188 /* libPods-emurgoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FC5BB94532A4954BB77BB41 /* libPods-emurgoTests.a */; };
 		2EBA2AD022EA877F00BF8A5B /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
-		358320EAFECF451C8DA4D274 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C965FAAFEC8F4BB6A4F547FC /* Rubik-Regular.ttf */; };
-		4783B8E5A37245939EEBD419 /* Rubik-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 114DBD174CA149B9B315DC0F /* Rubik-BoldItalic.ttf */; };
-		780DD77481524E7BB870247B /* Rubik-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C6CECD3BDA284ABAB6C55F15 /* Rubik-Light.ttf */; };
-		8ADEFC6430E944D886DC9A0F /* Rubik-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FB60B54223C64E8A8A9ABEBB /* Rubik-Bold.ttf */; };
-		97DF96C6D762405AA2B76B68 /* Rubik-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D737E47BFF541099648BCFC /* Rubik-MediumItalic.ttf */; };
-		9BFE476FFB747F6055B203A4 /* libPods-emurgo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 88A95429FF52104866D7E49D /* libPods-emurgo.a */; };
-		AEC72D98A34A49EA9B93CFBC /* Rubik-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 48DCBBECF9664DA8B8E453EF /* Rubik-SemiBoldItalic.ttf */; };
-		B0C137C68DE95847EC884660 /* libPods-emurgo-emurgo-nightly.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B84F3B989285F57F66CF87E0 /* libPods-emurgo-emurgo-nightly.a */; };
-		B536838130B681A4B8A341AE /* libPods-emurgo-emurgo-staging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92EF314B8ECF261556A866AE /* libPods-emurgo-emurgo-staging.a */; };
+		30DB4190BE9641A9B41AF165 /* Rubik-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A00B690C22674DAA96AAB2EA /* Rubik-Italic.ttf */; };
+		3F14C44BF84249A49B2D0753 /* Rubik-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 35C201FCE37B4D5FA50878D8 /* Rubik-BoldItalic.ttf */; };
+		4F6EF78F0F96BF89BCE30BF4 /* libPods-emurgo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ACE00EEA1CFF0F233A7856D /* libPods-emurgo.a */; };
+		4FA268266BFA4DABB83358FA /* Rubik-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BD9F47B99BD74F5D9DFBEC2E /* Rubik-SemiBoldItalic.ttf */; };
+		84CE4FB9FCD740688BE3A3B4 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0C22B71BA107474D92284901 /* Rubik-Regular.ttf */; };
+		A1231BEBC967468B9B15BDD4 /* Rubik-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 03A9EED2823C4B07AD012E95 /* Rubik-Bold.ttf */; };
+		B3F0A669C9435000F769DE49 /* libPods-emurgo-emurgo-staging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 326E332CB478B869587486FE /* libPods-emurgo-emurgo-staging.a */; };
 		BA3D0647FB29475CA53128CF /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 16BAD3D7933540D184340C1B /* libresolv.tbd */; };
-		D603241977D74A4687777AFC /* Rubik-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8826477AFB5E4DE4BFAB9CFF /* Rubik-Italic.ttf */; };
+		CF57D4BA7BB647F589D16741 /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E3E804F8BFF4453CA534F039 /* Rubik-Medium.ttf */; };
+		CFA75AC3F695456B81D36593 /* Rubik-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2B49C39674D431A862F0FA9 /* Rubik-LightItalic.ttf */; };
 		E2FC0BF821C7F02200DA195B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E2FC0BFA21C7F02200DA195B /* InfoPlist.strings */; };
+		E693D5BD96704D11BAF6C3F3 /* Rubik-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2AA69FA7E098481FA0E71F88 /* Rubik-SemiBold.ttf */; };
+		E9204856261D020F00AF9D45 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E9204855261D020F00AF9D45 /* LaunchScreen.storyboard */; };
+		E9204857261D020F00AF9D45 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E9204855261D020F00AF9D45 /* LaunchScreen.storyboard */; };
+		E9204858261D020F00AF9D45 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E9204855261D020F00AF9D45 /* LaunchScreen.storyboard */; };
+		E99D542D2629F2AA008C6667 /* Rubik-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 03A9EED2823C4B07AD012E95 /* Rubik-Bold.ttf */; };
+		E99D542E2629F2AA008C6667 /* Rubik-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 35C201FCE37B4D5FA50878D8 /* Rubik-BoldItalic.ttf */; };
+		E99D542F2629F2AA008C6667 /* Rubik-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A00B690C22674DAA96AAB2EA /* Rubik-Italic.ttf */; };
+		E99D54302629F2AA008C6667 /* Rubik-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A5C9822288434E3D98A446D7 /* Rubik-Light.ttf */; };
+		E99D54312629F2AA008C6667 /* Rubik-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2B49C39674D431A862F0FA9 /* Rubik-LightItalic.ttf */; };
+		E99D54322629F2AA008C6667 /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E3E804F8BFF4453CA534F039 /* Rubik-Medium.ttf */; };
+		E99D54332629F2AA008C6667 /* Rubik-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DB1534F401F64DFEB4584FD0 /* Rubik-MediumItalic.ttf */; };
+		E99D54342629F2AA008C6667 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0C22B71BA107474D92284901 /* Rubik-Regular.ttf */; };
+		E99D54352629F2AA008C6667 /* Rubik-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2AA69FA7E098481FA0E71F88 /* Rubik-SemiBold.ttf */; };
+		E99D54362629F2AA008C6667 /* Rubik-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BD9F47B99BD74F5D9DFBEC2E /* Rubik-SemiBoldItalic.ttf */; };
+		E99D54372629F2B5008C6667 /* Rubik-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 03A9EED2823C4B07AD012E95 /* Rubik-Bold.ttf */; };
+		E99D54382629F2B5008C6667 /* Rubik-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 35C201FCE37B4D5FA50878D8 /* Rubik-BoldItalic.ttf */; };
+		E99D54392629F2B5008C6667 /* Rubik-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A00B690C22674DAA96AAB2EA /* Rubik-Italic.ttf */; };
+		E99D543A2629F2B5008C6667 /* Rubik-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A5C9822288434E3D98A446D7 /* Rubik-Light.ttf */; };
+		E99D543B2629F2B5008C6667 /* Rubik-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2B49C39674D431A862F0FA9 /* Rubik-LightItalic.ttf */; };
+		E99D543C2629F2B5008C6667 /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E3E804F8BFF4453CA534F039 /* Rubik-Medium.ttf */; };
+		E99D543D2629F2B5008C6667 /* Rubik-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DB1534F401F64DFEB4584FD0 /* Rubik-MediumItalic.ttf */; };
+		E99D543E2629F2B5008C6667 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0C22B71BA107474D92284901 /* Rubik-Regular.ttf */; };
+		E99D543F2629F2B5008C6667 /* Rubik-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2AA69FA7E098481FA0E71F88 /* Rubik-SemiBold.ttf */; };
+		E99D54402629F2B5008C6667 /* Rubik-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BD9F47B99BD74F5D9DFBEC2E /* Rubik-SemiBoldItalic.ttf */; };
 		E9A1C7DC24185CCA00151CFA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		E9A1C7DD24185CCA00151CFA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		E9A1C7E124185CCA00151CFA /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
 		E9A1C7FC24185CCA00151CFA /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 16BAD3D7933540D184340C1B /* libresolv.tbd */; };
 		E9A1C80024185CCA00151CFA /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		E9A1C80124185CCA00151CFA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E2FC0BFA21C7F02200DA195B /* InfoPlist.strings */; };
-		E9A1C80224185CCA00151CFA /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
-		E9DFE8D825FF7A8900EAFEB8 /* Rubik-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FB60B54223C64E8A8A9ABEBB /* Rubik-Bold.ttf */; };
-		E9DFE8D925FF7A8900EAFEB8 /* Rubik-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 114DBD174CA149B9B315DC0F /* Rubik-BoldItalic.ttf */; };
-		E9DFE8DA25FF7A8900EAFEB8 /* Rubik-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8826477AFB5E4DE4BFAB9CFF /* Rubik-Italic.ttf */; };
-		E9DFE8DB25FF7A8900EAFEB8 /* Rubik-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C6CECD3BDA284ABAB6C55F15 /* Rubik-Light.ttf */; };
-		E9DFE8DC25FF7A8900EAFEB8 /* Rubik-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 386446532B18489FA4C5831D /* Rubik-LightItalic.ttf */; };
-		E9DFE8DD25FF7A8900EAFEB8 /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 760E4C50FBD648CAA6D1C093 /* Rubik-Medium.ttf */; };
-		E9DFE8DE25FF7A8900EAFEB8 /* Rubik-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D737E47BFF541099648BCFC /* Rubik-MediumItalic.ttf */; };
-		E9DFE8DF25FF7A8900EAFEB8 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C965FAAFEC8F4BB6A4F547FC /* Rubik-Regular.ttf */; };
-		E9DFE8E025FF7A8900EAFEB8 /* Rubik-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EEAC7603DDDA40B1A9A02F18 /* Rubik-SemiBold.ttf */; };
-		E9DFE8E125FF7A8900EAFEB8 /* Rubik-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 48DCBBECF9664DA8B8E453EF /* Rubik-SemiBoldItalic.ttf */; };
-		E9DFE8E625FF7A9600EAFEB8 /* Rubik-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FB60B54223C64E8A8A9ABEBB /* Rubik-Bold.ttf */; };
-		E9DFE8E725FF7A9600EAFEB8 /* Rubik-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 114DBD174CA149B9B315DC0F /* Rubik-BoldItalic.ttf */; };
-		E9DFE8E825FF7A9600EAFEB8 /* Rubik-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8826477AFB5E4DE4BFAB9CFF /* Rubik-Italic.ttf */; };
-		E9DFE8E925FF7A9600EAFEB8 /* Rubik-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C6CECD3BDA284ABAB6C55F15 /* Rubik-Light.ttf */; };
-		E9DFE8EA25FF7A9600EAFEB8 /* Rubik-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 386446532B18489FA4C5831D /* Rubik-LightItalic.ttf */; };
-		E9DFE8EB25FF7A9600EAFEB8 /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 760E4C50FBD648CAA6D1C093 /* Rubik-Medium.ttf */; };
-		E9DFE8EC25FF7A9600EAFEB8 /* Rubik-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D737E47BFF541099648BCFC /* Rubik-MediumItalic.ttf */; };
-		E9DFE8ED25FF7A9600EAFEB8 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C965FAAFEC8F4BB6A4F547FC /* Rubik-Regular.ttf */; };
-		E9DFE8EE25FF7A9600EAFEB8 /* Rubik-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EEAC7603DDDA40B1A9A02F18 /* Rubik-SemiBold.ttf */; };
-		E9DFE8EF25FF7A9600EAFEB8 /* Rubik-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 48DCBBECF9664DA8B8E453EF /* Rubik-SemiBoldItalic.ttf */; };
 		E9EACF88245B42C40062ED1D /* dummy_ble.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9EACF87245B42C40062ED1D /* dummy_ble.swift */; };
 		E9EACF89245B42C40062ED1D /* dummy_ble.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9EACF87245B42C40062ED1D /* dummy_ble.swift */; };
 		E9EACF8A245B42C40062ED1D /* dummy_ble.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9EACF87245B42C40062ED1D /* dummy_ble.swift */; };
+		EA86609D5C6A43D284D28AEC /* Rubik-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A5C9822288434E3D98A446D7 /* Rubik-Light.ttf */; };
 		ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
 		ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
 /* End PBXBuildFile section */
@@ -83,78 +83,76 @@
 		00E356EE1AD99517003FC87E /* emurgoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = emurgoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* emurgoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = emurgoTests.m; sourceTree = "<group>"; };
-		08394544D6F78F99C9E0265E /* Pods-emurgo-emurgo-nightly.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-nightly.release.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-nightly/Pods-emurgo-emurgo-nightly.release.xcconfig"; sourceTree = "<group>"; };
+		03A9EED2823C4B07AD012E95 /* Rubik-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Bold.ttf"; path = "../src/assets/fonts/Rubik-Bold.ttf"; sourceTree = "<group>"; };
 		09D460C9C03E41CB9D785437 /* libRNBackgroundTimer.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNBackgroundTimer.a; sourceTree = "<group>"; };
+		0C22B71BA107474D92284901 /* Rubik-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Regular.ttf"; path = "../src/assets/fonts/Rubik-Regular.ttf"; sourceTree = "<group>"; };
+		10088553D6FEF53AA098E448 /* Pods-emurgo-emurgoTests.staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgoTests.staging.debug.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgoTests/Pods-emurgo-emurgoTests.staging.debug.xcconfig"; sourceTree = "<group>"; };
 		1103DA1A18D54C3EA133F4DC /* libRNCardano.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCardano.a; sourceTree = "<group>"; };
-		114DBD174CA149B9B315DC0F /* Rubik-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-BoldItalic.ttf"; path = "../src/assets/fonts/Rubik-BoldItalic.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* emurgo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = emurgo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = emurgo/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = emurgo/AppDelegate.m; sourceTree = "<group>"; };
-		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = emurgo/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = emurgo/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = emurgo/main.m; sourceTree = "<group>"; };
 		16BAD3D7933540D184340C1B /* libresolv.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
-		1FC5BB94532A4954BB77BB41 /* libPods-emurgoTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-emurgoTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		23B88DAA3A2991FEF13B984F /* Pods-emurgo.staging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo.staging.release.xcconfig"; path = "Target Support Files/Pods-emurgo/Pods-emurgo.staging.release.xcconfig"; sourceTree = "<group>"; };
 		29CDBB4B7FB64C0086FF65C6 /* libRNCamera.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCamera.a; sourceTree = "<group>"; };
+		2AA69FA7E098481FA0E71F88 /* Rubik-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-SemiBold.ttf"; path = "../src/assets/fonts/Rubik-SemiBold.ttf"; sourceTree = "<group>"; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E3E7D012298ACEA00D5C487 /* emurgo-staging.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "emurgo-staging.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E5B414122A8B26500BE1FC1 /* Staging-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Staging-Info.plist"; sourceTree = "<group>"; };
 		2EF1204722795CAD007BE6F5 /* libSentry.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSentry.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EF1204922795CAD007BE6F5 /* libSentryReactNative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSentryReactNative.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EF1208322795DE3007BE6F5 /* libSentryReactNative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSentryReactNative.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		326E332CB478B869587486FE /* libPods-emurgo-emurgo-staging.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-emurgo-emurgo-staging.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		359687B3464F4A7C89D45AF9 /* libRNRandomBytes-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNRandomBytes-tvOS.a"; sourceTree = "<group>"; };
-		386446532B18489FA4C5831D /* Rubik-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-LightItalic.ttf"; path = "../src/assets/fonts/Rubik-LightItalic.ttf"; sourceTree = "<group>"; };
-		38FA8332D0A8491079DD4CE6 /* Pods-emurgo-emurgo-staging.staging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-staging.staging.release.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-staging/Pods-emurgo-emurgo-staging.staging.release.xcconfig"; sourceTree = "<group>"; };
-		3EB7D285720EC3018253DCE8 /* Pods-emurgo-emurgo-staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-staging.debug.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-staging/Pods-emurgo-emurgo-staging.debug.xcconfig"; sourceTree = "<group>"; };
-		40208C83B2A34C816931818E /* Pods-emurgo-emurgo-nightly.staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-nightly.staging.debug.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-nightly/Pods-emurgo-emurgo-nightly.staging.debug.xcconfig"; sourceTree = "<group>"; };
-		48DCBBECF9664DA8B8E453EF /* Rubik-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-SemiBoldItalic.ttf"; path = "../src/assets/fonts/Rubik-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
-		5614626E94A9488458C3C847 /* Pods-emurgo-emurgo-staging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-staging.release.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-staging/Pods-emurgo-emurgo-staging.release.xcconfig"; sourceTree = "<group>"; };
-		57AEDE250E1257B118F9D5EE /* Pods-emurgoTests.staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgoTests.staging.debug.xcconfig"; path = "Target Support Files/Pods-emurgoTests/Pods-emurgoTests.staging.debug.xcconfig"; sourceTree = "<group>"; };
+		35C201FCE37B4D5FA50878D8 /* Rubik-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-BoldItalic.ttf"; path = "../src/assets/fonts/Rubik-BoldItalic.ttf"; sourceTree = "<group>"; };
 		5DBE1771E1614BCAB6A3665D /* libSplashScreen.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libSplashScreen.a; sourceTree = "<group>"; };
 		5DBF6642BF3B4B119153FD14 /* libRNFirebase.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFirebase.a; sourceTree = "<group>"; };
 		5F9F4B6BEEFC4DF6A66C1383 /* libRNRandomBytes.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNRandomBytes.a; sourceTree = "<group>"; };
-		6D737E47BFF541099648BCFC /* Rubik-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-MediumItalic.ttf"; path = "../src/assets/fonts/Rubik-MediumItalic.ttf"; sourceTree = "<group>"; };
 		746923B3D658412D94D241BD /* libRNSVG-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNSVG-tvOS.a"; sourceTree = "<group>"; };
-		760E4C50FBD648CAA6D1C093 /* Rubik-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Medium.ttf"; path = "../src/assets/fonts/Rubik-Medium.ttf"; sourceTree = "<group>"; };
-		77CF8607F90E508D57EAA5A2 /* Pods-emurgo.staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo.staging.debug.xcconfig"; path = "Target Support Files/Pods-emurgo/Pods-emurgo.staging.debug.xcconfig"; sourceTree = "<group>"; };
-		7C49D6020D63B9FB6BA277E6 /* Pods-emurgo-emurgo-staging.staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-staging.staging.debug.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-staging/Pods-emurgo-emurgo-staging.staging.debug.xcconfig"; sourceTree = "<group>"; };
-		80201ADDACC8F1043483092B /* Pods-emurgoTests.staging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgoTests.staging.release.xcconfig"; path = "Target Support Files/Pods-emurgoTests/Pods-emurgoTests.staging.release.xcconfig"; sourceTree = "<group>"; };
+		75787FFA6A7907D568DCE0A5 /* Pods-emurgo-emurgo-staging.staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-staging.staging.debug.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-staging/Pods-emurgo-emurgo-staging.staging.debug.xcconfig"; sourceTree = "<group>"; };
+		80CA5BC96447A41916506249 /* Pods-emurgo-emurgo-staging.staging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-staging.staging.release.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-staging/Pods-emurgo-emurgo-staging.staging.release.xcconfig"; sourceTree = "<group>"; };
 		8306E0AE63AA483DBF7F6BF0 /* libRNFS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFS.a; sourceTree = "<group>"; };
 		84D0E245B86E495693516CD7 /* libBVLinearGradient.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libBVLinearGradient.a; sourceTree = "<group>"; };
-		8826477AFB5E4DE4BFAB9CFF /* Rubik-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Italic.ttf"; path = "../src/assets/fonts/Rubik-Italic.ttf"; sourceTree = "<group>"; };
-		88A95429FF52104866D7E49D /* libPods-emurgo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-emurgo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		92EF314B8ECF261556A866AE /* libPods-emurgo-emurgo-staging.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-emurgo-emurgo-staging.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B84F3B989285F57F66CF87E0 /* libPods-emurgo-emurgo-nightly.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-emurgo-emurgo-nightly.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		BEBE63E4D9B94639A10A5296 /* Pods-emurgoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgoTests.debug.xcconfig"; path = "Target Support Files/Pods-emurgoTests/Pods-emurgoTests.debug.xcconfig"; sourceTree = "<group>"; };
-		C6CECD3BDA284ABAB6C55F15 /* Rubik-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Light.ttf"; path = "../src/assets/fonts/Rubik-Light.ttf"; sourceTree = "<group>"; };
-		C78E8C902DF33189DDE7D7E7 /* Pods-emurgo-emurgo-nightly.staging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-nightly.staging.release.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-nightly/Pods-emurgo-emurgo-nightly.staging.release.xcconfig"; sourceTree = "<group>"; };
+		866D5D886891EA72E3947230 /* Pods-emurgo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo.release.xcconfig"; path = "Target Support Files/Pods-emurgo/Pods-emurgo.release.xcconfig"; sourceTree = "<group>"; };
+		8ACE00EEA1CFF0F233A7856D /* libPods-emurgo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-emurgo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8C22E0982ABC181F5DF24F91 /* Pods-emurgo-emurgo-staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-staging.debug.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-staging/Pods-emurgo-emurgo-staging.debug.xcconfig"; sourceTree = "<group>"; };
+		8F0ED5EF0FEA115291B286EE /* Pods-emurgo-emurgo-nightly.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-nightly.debug.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-nightly/Pods-emurgo-emurgo-nightly.debug.xcconfig"; sourceTree = "<group>"; };
+		96DD03473FCE8A759879174E /* Pods-emurgo-emurgo-nightly.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-nightly.release.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-nightly/Pods-emurgo-emurgo-nightly.release.xcconfig"; sourceTree = "<group>"; };
+		A00B690C22674DAA96AAB2EA /* Rubik-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Italic.ttf"; path = "../src/assets/fonts/Rubik-Italic.ttf"; sourceTree = "<group>"; };
+		A5C9822288434E3D98A446D7 /* Rubik-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Light.ttf"; path = "../src/assets/fonts/Rubik-Light.ttf"; sourceTree = "<group>"; };
+		A97CBBC591AAD434B2585E0D /* Pods-emurgo.staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo.staging.debug.xcconfig"; path = "Target Support Files/Pods-emurgo/Pods-emurgo.staging.debug.xcconfig"; sourceTree = "<group>"; };
+		AABB2274214D12BF1ABB0CD6 /* Pods-emurgo-emurgo-nightly.staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-nightly.staging.debug.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-nightly/Pods-emurgo-emurgo-nightly.staging.debug.xcconfig"; sourceTree = "<group>"; };
+		AAF71CA34AD7B12440AFCE21 /* libPods-emurgo-emurgo-nightly.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-emurgo-emurgo-nightly.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BD9F47B99BD74F5D9DFBEC2E /* Rubik-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-SemiBoldItalic.ttf"; path = "../src/assets/fonts/Rubik-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
+		C584A65CAD3229697BE3EBD1 /* Pods-emurgo-emurgoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgoTests.debug.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgoTests/Pods-emurgo-emurgoTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C8259C93DE584FDAAFB4E9FF /* libReactNativePermissions.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativePermissions.a; sourceTree = "<group>"; };
+		C8E2B9EE858538451AC3DB34 /* Pods-emurgo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo.debug.xcconfig"; path = "Target Support Files/Pods-emurgo/Pods-emurgo.debug.xcconfig"; sourceTree = "<group>"; };
 		C9443C3481304C079FB7BE23 /* libRNSVG.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSVG.a; sourceTree = "<group>"; };
-		C965FAAFEC8F4BB6A4F547FC /* Rubik-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Regular.ttf"; path = "../src/assets/fonts/Rubik-Regular.ttf"; sourceTree = "<group>"; };
-		D31EC4BF5F423C5B121B442C /* Pods-emurgo-emurgo-nightly.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-nightly.debug.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-nightly/Pods-emurgo-emurgo-nightly.debug.xcconfig"; sourceTree = "<group>"; };
-		D4A1438C4E8C2E9A62EA27AA /* Pods-emurgo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo.debug.xcconfig"; path = "Target Support Files/Pods-emurgo/Pods-emurgo.debug.xcconfig"; sourceTree = "<group>"; };
+		CA438BD4EC0FAD9BC7C20459 /* Pods-emurgo-emurgoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgoTests.release.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgoTests/Pods-emurgo-emurgoTests.release.xcconfig"; sourceTree = "<group>"; };
+		CE22E15CEF06F8A33CE57512 /* Pods-emurgo-emurgo-nightly.staging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-nightly.staging.release.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-nightly/Pods-emurgo-emurgo-nightly.staging.release.xcconfig"; sourceTree = "<group>"; };
+		D4A65590CBB22514BACD29C8 /* Pods-emurgo.staging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo.staging.release.xcconfig"; path = "Target Support Files/Pods-emurgo/Pods-emurgo.staging.release.xcconfig"; sourceTree = "<group>"; };
 		DA9C2C759F984A23843777A9 /* libRNKeychain.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNKeychain.a; sourceTree = "<group>"; };
+		DB1534F401F64DFEB4584FD0 /* Rubik-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-MediumItalic.ttf"; path = "../src/assets/fonts/Rubik-MediumItalic.ttf"; sourceTree = "<group>"; };
+		E126233CC166877EE24730D5 /* Pods-emurgo-emurgoTests.staging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgoTests.staging.release.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgoTests/Pods-emurgo-emurgoTests.staging.release.xcconfig"; sourceTree = "<group>"; };
+		E2B49C39674D431A862F0FA9 /* Rubik-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-LightItalic.ttf"; path = "../src/assets/fonts/Rubik-LightItalic.ttf"; sourceTree = "<group>"; };
 		E2FC0BF921C7F02200DA195B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E2FC0C3421C7F26C00DA195B /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E2FC0C3621C7F29200DA195B /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E2FC0C3821C7F2D600DA195B /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E2FC0C3A21C7F30300DA195B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		E2FC0C3C21C7F32300DA195B /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
-		E9A1C61824183FB700151CFA /* emurgo copy2-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "emurgo copy2-Info.plist"; path = "/Users/vicente/dev/emurgo/yoroi-mobile/ios/emurgo copy2-Info.plist"; sourceTree = "<absolute>"; };
+		E3E804F8BFF4453CA534F039 /* Rubik-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Medium.ttf"; path = "../src/assets/fonts/Rubik-Medium.ttf"; sourceTree = "<group>"; };
+		E532A9572A34655080361779 /* Pods-emurgo-emurgo-staging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-staging.release.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-staging/Pods-emurgo-emurgo-staging.release.xcconfig"; sourceTree = "<group>"; };
+		E5D1D2320FE78AA7F5D9691D /* libPods-emurgo-emurgoTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-emurgo-emurgoTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E9204855261D020F00AF9D45 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = emurgo/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E9A1C80A24185CCA00151CFA /* Yoroi Nightly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Yoroi Nightly.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E9A1C80B24185CCA00151CFA /* emurgo copy3-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "emurgo copy3-Info.plist"; path = "/Users/vicente/dev/emurgo/yoroi-mobile/ios/emurgo copy3-Info.plist"; sourceTree = "<absolute>"; };
 		E9EACF84245B42C40062ED1D /* emurgo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "emurgo-Bridging-Header.h"; sourceTree = "<group>"; };
 		E9EACF85245B42C40062ED1D /* emurgo-staging-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "emurgo-staging-Bridging-Header.h"; sourceTree = "<group>"; };
 		E9EACF86245B42C40062ED1D /* emurgo-nightly-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "emurgo-nightly-Bridging-Header.h"; sourceTree = "<group>"; };
 		E9EACF87245B42C40062ED1D /* dummy_ble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dummy_ble.swift; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
-		EEAC7603DDDA40B1A9A02F18 /* Rubik-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-SemiBold.ttf"; path = "../src/assets/fonts/Rubik-SemiBold.ttf"; sourceTree = "<group>"; };
-		F877CE0888C912B225811E4A /* Pods-emurgoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgoTests.release.xcconfig"; path = "Target Support Files/Pods-emurgoTests/Pods-emurgoTests.release.xcconfig"; sourceTree = "<group>"; };
-		FB60B54223C64E8A8A9ABEBB /* Rubik-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Bold.ttf"; path = "../src/assets/fonts/Rubik-Bold.ttf"; sourceTree = "<group>"; };
-		FDF0786B941D893796AD19AB /* Pods-emurgo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo.release.xcconfig"; path = "Target Support Files/Pods-emurgo/Pods-emurgo.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,7 +161,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */,
-				2E4F1C95AC6C02C34BACC188 /* libPods-emurgoTests.a in Frameworks */,
+				237BDF69DA4AC362D0191EEE /* libPods-emurgo-emurgoTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -173,7 +171,7 @@
 			files = (
 				ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */,
 				BA3D0647FB29475CA53128CF /* libresolv.tbd in Frameworks */,
-				9BFE476FFB747F6055B203A4 /* libPods-emurgo.a in Frameworks */,
+				4F6EF78F0F96BF89BCE30BF4 /* libPods-emurgo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -182,7 +180,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2EBA2AD022EA877F00BF8A5B /* JavaScriptCore.framework in Frameworks */,
-				B536838130B681A4B8A341AE /* libPods-emurgo-emurgo-staging.a in Frameworks */,
+				B3F0A669C9435000F769DE49 /* libPods-emurgo-emurgo-staging.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -192,7 +190,7 @@
 			files = (
 				E9A1C7E124185CCA00151CFA /* JavaScriptCore.framework in Frameworks */,
 				E9A1C7FC24185CCA00151CFA /* libresolv.tbd in Frameworks */,
-				B0C137C68DE95847EC884660 /* libPods-emurgo-emurgo-nightly.a in Frameworks */,
+				087D95DB98A155D2B096DE3C /* libPods-emurgo-emurgo-nightly.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -219,13 +217,14 @@
 		13B07FAE1A68108700A75B9A /* emurgo */ = {
 			isa = PBXGroup;
 			children = (
+				E9204855261D020F00AF9D45 /* LaunchScreen.storyboard */,
+				E9EACF87245B42C40062ED1D /* dummy_ble.swift */,
 				2E5B414122A8B26500BE1FC1 /* Staging-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				E2FC0BFA21C7F02200DA195B /* InfoPlist.strings */,
 			);
@@ -242,27 +241,27 @@
 				2EF1204922795CAD007BE6F5 /* libSentryReactNative.a */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
 				16BAD3D7933540D184340C1B /* libresolv.tbd */,
-				88A95429FF52104866D7E49D /* libPods-emurgo.a */,
-				B84F3B989285F57F66CF87E0 /* libPods-emurgo-emurgo-nightly.a */,
-				1FC5BB94532A4954BB77BB41 /* libPods-emurgoTests.a */,
-				92EF314B8ECF261556A866AE /* libPods-emurgo-emurgo-staging.a */,
+				8ACE00EEA1CFF0F233A7856D /* libPods-emurgo.a */,
+				AAF71CA34AD7B12440AFCE21 /* libPods-emurgo-emurgo-nightly.a */,
+				326E332CB478B869587486FE /* libPods-emurgo-emurgo-staging.a */,
+				E5D1D2320FE78AA7F5D9691D /* libPods-emurgo-emurgoTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		64729FFE337649F8975031D6 /* Resources */ = {
+		4F13037E48544473B2104BB3 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				FB60B54223C64E8A8A9ABEBB /* Rubik-Bold.ttf */,
-				114DBD174CA149B9B315DC0F /* Rubik-BoldItalic.ttf */,
-				8826477AFB5E4DE4BFAB9CFF /* Rubik-Italic.ttf */,
-				C6CECD3BDA284ABAB6C55F15 /* Rubik-Light.ttf */,
-				386446532B18489FA4C5831D /* Rubik-LightItalic.ttf */,
-				760E4C50FBD648CAA6D1C093 /* Rubik-Medium.ttf */,
-				6D737E47BFF541099648BCFC /* Rubik-MediumItalic.ttf */,
-				C965FAAFEC8F4BB6A4F547FC /* Rubik-Regular.ttf */,
-				EEAC7603DDDA40B1A9A02F18 /* Rubik-SemiBold.ttf */,
-				48DCBBECF9664DA8B8E453EF /* Rubik-SemiBoldItalic.ttf */,
+				03A9EED2823C4B07AD012E95 /* Rubik-Bold.ttf */,
+				35C201FCE37B4D5FA50878D8 /* Rubik-BoldItalic.ttf */,
+				A00B690C22674DAA96AAB2EA /* Rubik-Italic.ttf */,
+				A5C9822288434E3D98A446D7 /* Rubik-Light.ttf */,
+				E2B49C39674D431A862F0FA9 /* Rubik-LightItalic.ttf */,
+				E3E804F8BFF4453CA534F039 /* Rubik-Medium.ttf */,
+				DB1534F401F64DFEB4584FD0 /* Rubik-MediumItalic.ttf */,
+				0C22B71BA107474D92284901 /* Rubik-Regular.ttf */,
+				2AA69FA7E098481FA0E71F88 /* Rubik-SemiBold.ttf */,
+				BD9F47B99BD74F5D9DFBEC2E /* Rubik-SemiBoldItalic.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -277,20 +276,17 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				E9EACF87245B42C40062ED1D /* dummy_ble.swift */,
 				13B07FAE1A68108700A75B9A /* emurgo */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* emurgoTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				F7FBD967219C5A6D003FE9E2 /* Recovered References */,
-				E9A1C61824183FB700151CFA /* emurgo copy2-Info.plist */,
-				E9A1C80B24185CCA00151CFA /* emurgo copy3-Info.plist */,
 				E9EACF84245B42C40062ED1D /* emurgo-Bridging-Header.h */,
 				E9EACF85245B42C40062ED1D /* emurgo-staging-Bridging-Header.h */,
 				E9EACF86245B42C40062ED1D /* emurgo-nightly-Bridging-Header.h */,
 				F6D0FE86B0BF1DC5E2A3BF13 /* Pods */,
-				64729FFE337649F8975031D6 /* Resources */,
+				4F13037E48544473B2104BB3 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -311,22 +307,22 @@
 		F6D0FE86B0BF1DC5E2A3BF13 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				D4A1438C4E8C2E9A62EA27AA /* Pods-emurgo.debug.xcconfig */,
-				77CF8607F90E508D57EAA5A2 /* Pods-emurgo.staging.debug.xcconfig */,
-				FDF0786B941D893796AD19AB /* Pods-emurgo.release.xcconfig */,
-				23B88DAA3A2991FEF13B984F /* Pods-emurgo.staging.release.xcconfig */,
-				D31EC4BF5F423C5B121B442C /* Pods-emurgo-emurgo-nightly.debug.xcconfig */,
-				40208C83B2A34C816931818E /* Pods-emurgo-emurgo-nightly.staging.debug.xcconfig */,
-				08394544D6F78F99C9E0265E /* Pods-emurgo-emurgo-nightly.release.xcconfig */,
-				C78E8C902DF33189DDE7D7E7 /* Pods-emurgo-emurgo-nightly.staging.release.xcconfig */,
-				BEBE63E4D9B94639A10A5296 /* Pods-emurgoTests.debug.xcconfig */,
-				57AEDE250E1257B118F9D5EE /* Pods-emurgoTests.staging.debug.xcconfig */,
-				F877CE0888C912B225811E4A /* Pods-emurgoTests.release.xcconfig */,
-				80201ADDACC8F1043483092B /* Pods-emurgoTests.staging.release.xcconfig */,
-				3EB7D285720EC3018253DCE8 /* Pods-emurgo-emurgo-staging.debug.xcconfig */,
-				7C49D6020D63B9FB6BA277E6 /* Pods-emurgo-emurgo-staging.staging.debug.xcconfig */,
-				5614626E94A9488458C3C847 /* Pods-emurgo-emurgo-staging.release.xcconfig */,
-				38FA8332D0A8491079DD4CE6 /* Pods-emurgo-emurgo-staging.staging.release.xcconfig */,
+				C8E2B9EE858538451AC3DB34 /* Pods-emurgo.debug.xcconfig */,
+				A97CBBC591AAD434B2585E0D /* Pods-emurgo.staging.debug.xcconfig */,
+				866D5D886891EA72E3947230 /* Pods-emurgo.release.xcconfig */,
+				D4A65590CBB22514BACD29C8 /* Pods-emurgo.staging.release.xcconfig */,
+				8F0ED5EF0FEA115291B286EE /* Pods-emurgo-emurgo-nightly.debug.xcconfig */,
+				AABB2274214D12BF1ABB0CD6 /* Pods-emurgo-emurgo-nightly.staging.debug.xcconfig */,
+				96DD03473FCE8A759879174E /* Pods-emurgo-emurgo-nightly.release.xcconfig */,
+				CE22E15CEF06F8A33CE57512 /* Pods-emurgo-emurgo-nightly.staging.release.xcconfig */,
+				8C22E0982ABC181F5DF24F91 /* Pods-emurgo-emurgo-staging.debug.xcconfig */,
+				75787FFA6A7907D568DCE0A5 /* Pods-emurgo-emurgo-staging.staging.debug.xcconfig */,
+				E532A9572A34655080361779 /* Pods-emurgo-emurgo-staging.release.xcconfig */,
+				80CA5BC96447A41916506249 /* Pods-emurgo-emurgo-staging.staging.release.xcconfig */,
+				C584A65CAD3229697BE3EBD1 /* Pods-emurgo-emurgoTests.debug.xcconfig */,
+				10088553D6FEF53AA098E448 /* Pods-emurgo-emurgoTests.staging.debug.xcconfig */,
+				CA438BD4EC0FAD9BC7C20459 /* Pods-emurgo-emurgoTests.release.xcconfig */,
+				E126233CC166877EE24730D5 /* Pods-emurgo-emurgoTests.staging.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -358,10 +354,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "emurgoTests" */;
 			buildPhases = (
-				EDF1B20BCD02A0D6ED2D79A7 /* [CP] Check Pods Manifest.lock */,
+				B3981E8E2551DCBB929727B9 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
+				226AFA2910D45B200EB23E8C /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -377,13 +374,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "emurgo" */;
 			buildPhases = (
-				6C8B7B6608A19809AEC03D8B /* [CP] Check Pods Manifest.lock */,
+				4D59A1AA27CEEE4D58B8191F /* [CP] Check Pods Manifest.lock */,
 				E911CC5C23FB1F2E00D560F8 /* Check env variables */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				DCD26C7DDA9C48ADAC5D4E1E /* Upload Debug Symbols to Sentry */,
+				9005554C4D7324327799B832 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -398,11 +396,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2E3E7CFC2298ACEA00D5C487 /* Build configuration list for PBXNativeTarget "emurgo-staging" */;
 			buildPhases = (
-				530EB74876CC05217B90CF1B /* [CP] Check Pods Manifest.lock */,
+				E62509B1261FB2681DB4DE91 /* [CP] Check Pods Manifest.lock */,
 				2E3E7CD72298ACEA00D5C487 /* Sources */,
 				2E3E7CDA2298ACEA00D5C487 /* Frameworks */,
 				2E3E7CF62298ACEA00D5C487 /* Resources */,
 				2E3E7CFA2298ACEA00D5C487 /* Bundle React Native code and images */,
+				43965AA0A5088B5CB3E68D00 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -417,12 +416,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E9A1C80524185CCA00151CFA /* Build configuration list for PBXNativeTarget "emurgo-nightly" */;
 			buildPhases = (
-				DB72587BF165FA1641CDC6B4 /* [CP] Check Pods Manifest.lock */,
+				FB9A6D54274640E039D9DBF6 /* [CP] Check Pods Manifest.lock */,
 				E9A1C7DA24185CCA00151CFA /* Check env variables */,
 				E9A1C7DB24185CCA00151CFA /* Sources */,
 				E9A1C7DE24185CCA00151CFA /* Frameworks */,
 				E9A1C7FF24185CCA00151CFA /* Resources */,
 				E9A1C80324185CCA00151CFA /* Bundle React Native code and images */,
+				EDA2533F12CEB073CB734C81 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -439,8 +439,8 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1010;
-				ORGANIZATIONNAME = Facebook;
+				LastUpgradeCheck = 1240;
+				ORGANIZATIONNAME = Emurgo;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
@@ -505,19 +505,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E9204856261D020F00AF9D45 /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				E2FC0BF821C7F02200DA195B /* InfoPlist.strings in Resources */,
-				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
-				8ADEFC6430E944D886DC9A0F /* Rubik-Bold.ttf in Resources */,
-				4783B8E5A37245939EEBD419 /* Rubik-BoldItalic.ttf in Resources */,
-				D603241977D74A4687777AFC /* Rubik-Italic.ttf in Resources */,
-				780DD77481524E7BB870247B /* Rubik-Light.ttf in Resources */,
-				0925C9A4B3A241A394855DE8 /* Rubik-LightItalic.ttf in Resources */,
-				13DEDE26CFE640F29358E4CE /* Rubik-Medium.ttf in Resources */,
-				97DF96C6D762405AA2B76B68 /* Rubik-MediumItalic.ttf in Resources */,
-				358320EAFECF451C8DA4D274 /* Rubik-Regular.ttf in Resources */,
-				011D5B38195A43238A809C46 /* Rubik-SemiBold.ttf in Resources */,
-				AEC72D98A34A49EA9B93CFBC /* Rubik-SemiBoldItalic.ttf in Resources */,
+				A1231BEBC967468B9B15BDD4 /* Rubik-Bold.ttf in Resources */,
+				3F14C44BF84249A49B2D0753 /* Rubik-BoldItalic.ttf in Resources */,
+				30DB4190BE9641A9B41AF165 /* Rubik-Italic.ttf in Resources */,
+				EA86609D5C6A43D284D28AEC /* Rubik-Light.ttf in Resources */,
+				CFA75AC3F695456B81D36593 /* Rubik-LightItalic.ttf in Resources */,
+				CF57D4BA7BB647F589D16741 /* Rubik-Medium.ttf in Resources */,
+				0364225EA79340159305AC26 /* Rubik-MediumItalic.ttf in Resources */,
+				84CE4FB9FCD740688BE3A3B4 /* Rubik-Regular.ttf in Resources */,
+				E693D5BD96704D11BAF6C3F3 /* Rubik-SemiBold.ttf in Resources */,
+				4FA268266BFA4DABB83358FA /* Rubik-SemiBoldItalic.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -525,19 +525,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E9DFE8D825FF7A8900EAFEB8 /* Rubik-Bold.ttf in Resources */,
-				E9DFE8D925FF7A8900EAFEB8 /* Rubik-BoldItalic.ttf in Resources */,
-				E9DFE8DA25FF7A8900EAFEB8 /* Rubik-Italic.ttf in Resources */,
-				E9DFE8DB25FF7A8900EAFEB8 /* Rubik-Light.ttf in Resources */,
-				E9DFE8DC25FF7A8900EAFEB8 /* Rubik-LightItalic.ttf in Resources */,
-				E9DFE8DD25FF7A8900EAFEB8 /* Rubik-Medium.ttf in Resources */,
-				E9DFE8DE25FF7A8900EAFEB8 /* Rubik-MediumItalic.ttf in Resources */,
-				E9DFE8DF25FF7A8900EAFEB8 /* Rubik-Regular.ttf in Resources */,
-				E9DFE8E025FF7A8900EAFEB8 /* Rubik-SemiBold.ttf in Resources */,
-				E9DFE8E125FF7A8900EAFEB8 /* Rubik-SemiBoldItalic.ttf in Resources */,
+				E99D542D2629F2AA008C6667 /* Rubik-Bold.ttf in Resources */,
+				E99D542E2629F2AA008C6667 /* Rubik-BoldItalic.ttf in Resources */,
+				E99D542F2629F2AA008C6667 /* Rubik-Italic.ttf in Resources */,
+				E99D54302629F2AA008C6667 /* Rubik-Light.ttf in Resources */,
+				E99D54312629F2AA008C6667 /* Rubik-LightItalic.ttf in Resources */,
+				E99D54322629F2AA008C6667 /* Rubik-Medium.ttf in Resources */,
+				E99D54332629F2AA008C6667 /* Rubik-MediumItalic.ttf in Resources */,
+				E99D54342629F2AA008C6667 /* Rubik-Regular.ttf in Resources */,
+				E99D54352629F2AA008C6667 /* Rubik-SemiBold.ttf in Resources */,
+				E99D54362629F2AA008C6667 /* Rubik-SemiBoldItalic.ttf in Resources */,
+				E9204857261D020F00AF9D45 /* LaunchScreen.storyboard in Resources */,
 				2E3E7CF72298ACEA00D5C487 /* Images.xcassets in Resources */,
 				2E3E7CF82298ACEA00D5C487 /* InfoPlist.strings in Resources */,
-				2E3E7CF92298ACEA00D5C487 /* LaunchScreen.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -545,19 +545,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E9DFE8E625FF7A9600EAFEB8 /* Rubik-Bold.ttf in Resources */,
-				E9DFE8E725FF7A9600EAFEB8 /* Rubik-BoldItalic.ttf in Resources */,
-				E9DFE8E825FF7A9600EAFEB8 /* Rubik-Italic.ttf in Resources */,
-				E9DFE8E925FF7A9600EAFEB8 /* Rubik-Light.ttf in Resources */,
-				E9DFE8EA25FF7A9600EAFEB8 /* Rubik-LightItalic.ttf in Resources */,
-				E9DFE8EB25FF7A9600EAFEB8 /* Rubik-Medium.ttf in Resources */,
-				E9DFE8EC25FF7A9600EAFEB8 /* Rubik-MediumItalic.ttf in Resources */,
-				E9DFE8ED25FF7A9600EAFEB8 /* Rubik-Regular.ttf in Resources */,
-				E9DFE8EE25FF7A9600EAFEB8 /* Rubik-SemiBold.ttf in Resources */,
-				E9DFE8EF25FF7A9600EAFEB8 /* Rubik-SemiBoldItalic.ttf in Resources */,
+				E99D54372629F2B5008C6667 /* Rubik-Bold.ttf in Resources */,
+				E99D54382629F2B5008C6667 /* Rubik-BoldItalic.ttf in Resources */,
+				E99D54392629F2B5008C6667 /* Rubik-Italic.ttf in Resources */,
+				E99D543A2629F2B5008C6667 /* Rubik-Light.ttf in Resources */,
+				E99D543B2629F2B5008C6667 /* Rubik-LightItalic.ttf in Resources */,
+				E99D543C2629F2B5008C6667 /* Rubik-Medium.ttf in Resources */,
+				E99D543D2629F2B5008C6667 /* Rubik-MediumItalic.ttf in Resources */,
+				E99D543E2629F2B5008C6667 /* Rubik-Regular.ttf in Resources */,
+				E99D543F2629F2B5008C6667 /* Rubik-SemiBold.ttf in Resources */,
+				E99D54402629F2B5008C6667 /* Rubik-SemiBoldItalic.ttf in Resources */,
+				E9204858261D020F00AF9D45 /* LaunchScreen.storyboard in Resources */,
 				E9A1C80024185CCA00151CFA /* Images.xcassets in Resources */,
 				E9A1C80124185CCA00151CFA /* InfoPlist.strings in Resources */,
-				E9A1C80224185CCA00151CFA /* LaunchScreen.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -578,6 +578,24 @@
 			shellPath = /bin/sh;
 			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(Staging.Debug|Debug)\"\nexport NODE_BINARY=node\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh\n";
 		};
+		226AFA2910D45B200EB23E8C /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-emurgo-emurgoTests/Pods-emurgo-emurgoTests-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-emurgo-emurgoTests/Pods-emurgo-emurgoTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		2E3E7CFA2298ACEA00D5C487 /* Bundle React Native code and images */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -592,29 +610,25 @@
 			shellPath = /bin/sh;
 			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(Staging.Debug|Debug)\"\nexport NODE_BINARY=node\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh\n";
 		};
-		530EB74876CC05217B90CF1B /* [CP] Check Pods Manifest.lock */ = {
+		43965AA0A5088B5CB3E68D00 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
+				"${PODS_ROOT}/Target Support Files/Pods-emurgo-emurgo-staging/Pods-emurgo-emurgo-staging-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
 			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-emurgo-emurgo-staging-checkManifestLockResult.txt",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-emurgo-emurgo-staging/Pods-emurgo-emurgo-staging-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		6C8B7B6608A19809AEC03D8B /* [CP] Check Pods Manifest.lock */ = {
+		4D59A1AA27CEEE4D58B8191F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -636,7 +650,25 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		DB72587BF165FA1641CDC6B4 /* [CP] Check Pods Manifest.lock */ = {
+		9005554C4D7324327799B832 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-emurgo/Pods-emurgo-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-emurgo/Pods-emurgo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B3981E8E2551DCBB929727B9 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -651,7 +683,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-emurgo-emurgo-nightly-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-emurgo-emurgoTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -671,6 +703,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export SENTRY_PROPERTIES=sentry.properties\n../node_modules/@sentry/cli/bin/sentry-cli upload-dsym\n";
+		};
+		E62509B1261FB2681DB4DE91 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-emurgo-emurgo-staging-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
 		};
 		E911CC5C23FB1F2E00D560F8 /* Check env variables */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -722,7 +776,25 @@
 			shellPath = /bin/sh;
 			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(Staging.Debug|Debug)\"\nexport NODE_BINARY=node\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh\n";
 		};
-		EDF1B20BCD02A0D6ED2D79A7 /* [CP] Check Pods Manifest.lock */ = {
+		EDA2533F12CEB073CB734C81 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-emurgo-emurgo-nightly/Pods-emurgo-emurgo-nightly-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-emurgo-emurgo-nightly/Pods-emurgo-emurgo-nightly-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FB9A6D54274640E039D9DBF6 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -737,7 +809,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-emurgoTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-emurgo-emurgo-nightly-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -796,15 +868,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		13B07FB11A68108700A75B9A /* LaunchScreen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				13B07FB21A68108700A75B9A /* Base */,
-			);
-			name = LaunchScreen.xib;
-			path = emurgo;
-			sourceTree = "<group>";
-		};
 		E2FC0BFA21C7F02200DA195B /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -823,7 +886,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BEBE63E4D9B94639A10A5296 /* Pods-emurgoTests.debug.xcconfig */;
+			baseConfigurationReference = C584A65CAD3229697BE3EBD1 /* Pods-emurgo-emurgoTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -864,7 +927,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F877CE0888C912B225811E4A /* Pods-emurgoTests.release.xcconfig */;
+			baseConfigurationReference = CA438BD4EC0FAD9BC7C20459 /* Pods-emurgo-emurgoTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -902,14 +965,14 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D4A1438C4E8C2E9A62EA27AA /* Pods-emurgo.debug.xcconfig */;
+			baseConfigurationReference = C8E2B9EE858538451AC3DB34 /* Pods-emurgo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = Yoroi;
 				BUNDLE_ID_SUFFIX = "";
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 220;
-				DEAD_CODE_STRIPPING = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
@@ -949,7 +1012,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FDF0786B941D893796AD19AB /* Pods-emurgo.release.xcconfig */;
+			baseConfigurationReference = 866D5D886891EA72E3947230 /* Pods-emurgo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = Yoroi;
@@ -997,14 +1060,14 @@
 		};
 		2E3E7CFD2298ACEA00D5C487 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3EB7D285720EC3018253DCE8 /* Pods-emurgo-emurgo-staging.debug.xcconfig */;
+			baseConfigurationReference = 8C22E0982ABC181F5DF24F91 /* Pods-emurgo-emurgo-staging.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = Yoroi;
 				BUNDLE_ID_SUFFIX = "";
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 220;
-				DEAD_CODE_STRIPPING = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
@@ -1048,14 +1111,14 @@
 		};
 		2E3E7CFE2298ACEA00D5C487 /* Staging.Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7C49D6020D63B9FB6BA277E6 /* Pods-emurgo-emurgo-staging.staging.debug.xcconfig */;
+			baseConfigurationReference = 75787FFA6A7907D568DCE0A5 /* Pods-emurgo-emurgo-staging.staging.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 220;
-				DEAD_CODE_STRIPPING = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
@@ -1099,7 +1162,7 @@
 		};
 		2E3E7CFF2298ACEA00D5C487 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5614626E94A9488458C3C847 /* Pods-emurgo-emurgo-staging.release.xcconfig */;
+			baseConfigurationReference = E532A9572A34655080361779 /* Pods-emurgo-emurgo-staging.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = Yoroi;
@@ -1151,7 +1214,7 @@
 		};
 		2E3E7D002298ACEA00D5C487 /* Staging.Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 38FA8332D0A8491079DD4CE6 /* Pods-emurgo-emurgo-staging.staging.release.xcconfig */;
+			baseConfigurationReference = 80CA5BC96447A41916506249 /* Pods-emurgo-emurgo-staging.staging.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
@@ -1201,6 +1264,7 @@
 		83CBBA201A601CBA00E9B192 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -1221,6 +1285,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1249,6 +1314,11 @@
 				INFOPLIST_PREFIX_HEADER = "${BUILD_DIR}/GeneratedInfoPlistDotEnv.h";
 				INFOPLIST_PREPROCESS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
+					"$(inherited)",
+				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1258,6 +1328,7 @@
 		83CBBA211A601CBA00E9B192 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -1278,6 +1349,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1299,8 +1371,14 @@
 				INFOPLIST_PREFIX_HEADER = "${BUILD_DIR}/GeneratedInfoPlistDotEnv.h";
 				INFOPLIST_PREPROCESS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
+					"$(inherited)",
+				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -1308,6 +1386,7 @@
 		E2373CB321CA4BB40003317D /* Staging.Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -1328,6 +1407,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1356,6 +1436,11 @@
 				INFOPLIST_PREFIX_HEADER = "${BUILD_DIR}/GeneratedInfoPlistDotEnv.h";
 				INFOPLIST_PREPROCESS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
+					"$(inherited)",
+				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1364,14 +1449,14 @@
 		};
 		E2373CB421CA4BB40003317D /* Staging.Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 77CF8607F90E508D57EAA5A2 /* Pods-emurgo.staging.debug.xcconfig */;
+			baseConfigurationReference = A97CBBC591AAD434B2585E0D /* Pods-emurgo.staging.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 220;
-				DEAD_CODE_STRIPPING = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
@@ -1411,7 +1496,7 @@
 		};
 		E2373CB521CA4BB40003317D /* Staging.Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 57AEDE250E1257B118F9D5EE /* Pods-emurgoTests.staging.debug.xcconfig */;
+			baseConfigurationReference = 10088553D6FEF53AA098E448 /* Pods-emurgo-emurgoTests.staging.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1453,6 +1538,7 @@
 		E2373CF021CA4BDC0003317D /* Staging.Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -1473,6 +1559,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1494,15 +1581,21 @@
 				INFOPLIST_PREFIX_HEADER = "${BUILD_DIR}/GeneratedInfoPlistDotEnv.h";
 				INFOPLIST_PREPROCESS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
+					"$(inherited)",
+				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Staging.Release;
 		};
 		E2373CF121CA4BDC0003317D /* Staging.Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 23B88DAA3A2991FEF13B984F /* Pods-emurgo.staging.release.xcconfig */;
+			baseConfigurationReference = D4A65590CBB22514BACD29C8 /* Pods-emurgo.staging.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
@@ -1547,7 +1640,7 @@
 		};
 		E2373CF221CA4BDC0003317D /* Staging.Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 80201ADDACC8F1043483092B /* Pods-emurgoTests.staging.release.xcconfig */;
+			baseConfigurationReference = E126233CC166877EE24730D5 /* Pods-emurgo-emurgoTests.staging.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1585,14 +1678,14 @@
 		};
 		E9A1C80624185CCA00151CFA /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D31EC4BF5F423C5B121B442C /* Pods-emurgo-emurgo-nightly.debug.xcconfig */;
+			baseConfigurationReference = 8F0ED5EF0FEA115291B286EE /* Pods-emurgo-emurgo-nightly.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
 				BUNDLE_DISPLAY_NAME = Yoroi;
 				BUNDLE_ID_SUFFIX = "";
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 220;
-				DEAD_CODE_STRIPPING = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
@@ -1632,14 +1725,14 @@
 		};
 		E9A1C80724185CCA00151CFA /* Staging.Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 40208C83B2A34C816931818E /* Pods-emurgo-emurgo-nightly.staging.debug.xcconfig */;
+			baseConfigurationReference = AABB2274214D12BF1ABB0CD6 /* Pods-emurgo-emurgo-nightly.staging.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 220;
-				DEAD_CODE_STRIPPING = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
@@ -1679,7 +1772,7 @@
 		};
 		E9A1C80824185CCA00151CFA /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 08394544D6F78F99C9E0265E /* Pods-emurgo-emurgo-nightly.release.xcconfig */;
+			baseConfigurationReference = 96DD03473FCE8A759879174E /* Pods-emurgo-emurgo-nightly.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
 				BUNDLE_DISPLAY_NAME = Yoroi;
@@ -1727,7 +1820,7 @@
 		};
 		E9A1C80924185CCA00151CFA /* Staging.Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C78E8C902DF33189DDE7D7E7 /* Pods-emurgo-emurgo-nightly.staging.release.xcconfig */;
+			baseConfigurationReference = CE22E15CEF06F8A33CE57512 /* Pods-emurgo-emurgo-nightly.staging.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";

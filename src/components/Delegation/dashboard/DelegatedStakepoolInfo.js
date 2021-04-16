@@ -67,6 +67,7 @@ const FadeOutView = (props) => {
       toValue: 0,
       duration: 2000,
       delay: 3000,
+      useNativeDriver: true,
     }).start()
   }, [])
 
@@ -121,7 +122,7 @@ const DelegatedStakepoolInfo = ({
             })}
             style={styles.spacedElem}
           >
-            <Image source={copyIcon} width={24} />
+            <Image source={copyIcon} style={styles.image} />
           </TouchableOpacity>
           {showCopyNotif && (
             <FadeOutView style={styles.spacedElem}>

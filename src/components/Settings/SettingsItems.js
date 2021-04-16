@@ -12,7 +12,7 @@ import type {ComponentType} from 'react'
 
 import styles from './styles/SettingsItems.style'
 
-const Touchable = (props: {}) => (
+const Touchable = <Props>(props: Props) => (
   <TouchableOpacity {...props} activeOpacity={0.5} />
 )
 

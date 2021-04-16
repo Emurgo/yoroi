@@ -57,9 +57,16 @@ const AssetSelector: (ExternalProps) => Node = ({
     <View style={styles.container}>
       <TouchableOpacity style={styles.input} onPress={() => toggleExpand()}>
         {selectedAsset == null ? (
-          <Text> {intl.formatMessage(messages.placeHolder)} </Text>
+          <Text style={styles.inputText}>
+            {' '}
+            {intl.formatMessage(messages.placeHolder)}{' '}
+          </Text>
         ) : (
-          <Text numberOfLines={1} ellipsizeMode="middle">
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="middle"
+            style={styles.inputText}
+          >
             {' '}
             {getAssetDenominationOrId(
               assetsMetadata[selectedAsset.identifier],

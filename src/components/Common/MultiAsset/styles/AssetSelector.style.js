@@ -12,13 +12,15 @@ export default StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     height: 48,
-    fontSize: 16,
     paddingLeft: 16,
     paddingRight: 16,
     paddingVertical: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  inputText: {
+    fontSize: 16,
   },
   labelWrap: {
     backgroundColor: '#fff',

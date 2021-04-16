@@ -47,8 +47,12 @@ export default StyleSheet.create({
   },
   copyIcon: {
     marginLeft: 4,
+    width: 22,
+    height: 22,
   },
-
+  notifView: {
+    marginLeft: 4,
+  },
   addressHash: {
     width: 280,
     color: '#9B9B9B',

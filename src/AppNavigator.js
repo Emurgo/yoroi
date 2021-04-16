@@ -40,7 +40,16 @@ import KeyStore from './crypto/KeyStore'
 import type {State} from './state'
 
 const hasAnyWalletSelector = (state: State): boolean => !isEmpty(state.wallets)
-
+type NavigatorSwitchProps = {|
+  isAppInitialized: boolean,
+  isMaintenance: boolean,
+  isSystemAuthEnabled: boolean,
+  isAuthenticated: boolean,
+  hasAnyWallet: boolean,
+  installationId: ?string,
+  isAppSetupComplete: boolean,
+  signin: () => void,
+|}
 const Stack = createStackNavigator()
 
 const NavigatorSwitch = compose(
@@ -66,7 +75,7 @@ const NavigatorSwitch = compose(
     installationId,
     signin,
     isAppSetupComplete,
-  }) => {
+  }: NavigatorSwitchProps) => {
     if (!isAppInitialized) {
       return (
         <Stack.Navigator>
@@ -141,7 +150,10 @@ const NavigatorSwitch = compose(
                 },
                 onFail: async (reason, intl) => {
                   if (reason === KeyStore.REJECTIONS.INVALID_KEY) {
-                    if (await canBiometricEncryptionBeEnabled()) {
+                    if (
+                      (await canBiometricEncryptionBeEnabled()) &&
+                      installationId
+                    ) {
                       await recreateAppSignInKeys(installationId)
                     } else {
                       await showErrorDialog(

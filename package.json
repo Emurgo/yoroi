@@ -64,10 +64,10 @@
     "net": "^1.0.2",
     "node-fetch": "^2.6.1",
     "p-limit": "3.1.0",
-    "react": "16.8.6",
+    "react": "16.13.1",
     "react-intl": "^2.8.0",
     "react-markdown": "4.3.1",
-    "react-native": "0.60.0",
+    "react-native": "0.63.4",
     "react-native-background-timer": "2.4.1",
     "react-native-ble-plx": "2.0.2",
     "react-native-blockies-svg": "Emurgo/react-native-blockies-svg",
@@ -115,7 +115,7 @@
     "@storybook/addons": "^5.3.14",
     "@storybook/react-native": "5.3.23",
     "@storybook/react-native-server": "^5.3.23",
-    "babel-jest": "^24.8.0",
+    "babel-jest": "25.1.0",
     "babel-loader": "8.2.2",
     "babel-plugin-react-intl": "^3.0.1",
     "babel-plugin-require-context-hook": "^1.0.0",
@@ -127,9 +127,9 @@
     "eslint-plugin-react": "7.21.5",
     "eslint-plugin-react-native": "3.10.0",
     "extract-react-intl-messages": "^0.14.0",
-    "flow-bin": "^0.98.0",
+    "flow-bin": "0.122.0",
     "flow-typed": "3.1.0",
-    "jest": "24.8.0",
+    "jest": "25.1.0",
     "metro-react-native-babel-preset": "0.59.0",
     "node-cardano-wallet": "https://github.com/Emurgo/node-cardano-wallet.git",
     "prettier": "1.14.3",
@@ -139,7 +139,7 @@
     "react-native-inhibit-warnings": "https://github.com/Emurgo/react-native-inhibit-warnings.git",
     "react-native-schemes-manager": "^1.0.5",
     "react-native-storybook-loader": "^1.8.1",
-    "react-test-renderer": "16.8.6"
+    "react-test-renderer": "16.13.1"
   },
   "jest": {
     "transform": {

@@ -5,7 +5,7 @@
 
 import {BigNumber} from 'bignumber.js'
 
-import {AddressChain} from './chain'
+import {AddressChain} from './shelley/chain'
 import {TransactionCache} from './shelley/transactionCache'
 import Wallet from './Wallet'
 import {ISignRequest} from './ISignRequest'

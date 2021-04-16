@@ -28,4 +28,7 @@ export default StyleSheet.create({
     paddingRight: 36,
     paddingLeft: 5,
   },
+  image: {
+    width: 24,
+  },
 })

@@ -7,7 +7,7 @@ import _ from 'lodash'
 import {defaultMemoize} from 'reselect'
 
 import KeyStore from './KeyStore'
-import {AddressChain} from './chain'
+import {AddressChain} from './shelley/chain'
 import * as api from '../api/shelley/api'
 import {CONFIG} from '../config/config'
 import {isJormungandr} from '../config/networks'

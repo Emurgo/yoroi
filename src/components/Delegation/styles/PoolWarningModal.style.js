@@ -7,6 +7,13 @@ export default StyleSheet.create({
   scrollView: {
     paddingRight: 10,
   },
+  text: {
+    fontSize: 14,
+    lineHeight: 22,
+  },
+  reputationInfoView: {
+    marginBottom: spacing.paragraphBottomMargin,
+  },
   paragraph: {
     marginBottom: spacing.paragraphBottomMargin,
     fontSize: 14,

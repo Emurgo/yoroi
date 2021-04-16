@@ -41,4 +41,7 @@ export default StyleSheet.create({
     fontSize: 12,
     lineHeight: 14,
   },
+  image: {
+    width: 24,
+  },
 })
