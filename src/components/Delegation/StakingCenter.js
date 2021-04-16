@@ -290,6 +290,7 @@ const StakingCenter = ({
             defaultAsset,
             intl,
             navigation,
+            serverStatus,
           )
         }}
         onRequestClose={() => setShowPoolWarning(false)}
