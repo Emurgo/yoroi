@@ -63,7 +63,7 @@ export type State = {
     lastFetchingError: any,
     totalDelegated: BigNumber,
     value: BigNumber,
-    poolOperator: any, // TODO: type
+    poolOperator: string | null,
   },
   poolInfo: {
     isFetching: boolean,

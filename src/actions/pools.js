@@ -62,6 +62,11 @@ export const fetchPoolInfo = () => async (
   dispatch(_startFetching())
   try {
     const poolOperator = getState().accountState.poolOperator
+    if (poolOperator == null) {
+      throw new Error(
+        'fetchPoolInfo::poolOperator is null, should never happen',
+      )
+    }
     const poolInfoResp: PoolInfoResponse = await walletManager.fetchPoolInfo(
       ({
         poolIds: [poolOperator],
