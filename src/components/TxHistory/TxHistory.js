@@ -13,7 +13,6 @@ import {BigNumber} from 'bignumber.js'
 import {injectIntl, defineMessages} from 'react-intl'
 import {fetchUTXOs} from '../../actions/utxo'
 import VotingBanner from '../Catalyst/VotingBanner'
-
 import {Text, Banner, OfflineBanner, StatusBar, WarningBanner} from '../UiKit'
 import infoIcon from '../../assets/img/icon/info-light-green.png'
 import {
@@ -121,47 +120,45 @@ const TxHistory = ({
   setShowWarning,
   walletMeta,
   intl,
-}) => (
-  <SafeAreaView style={styles.scrollView}>
-    <StatusBar type="dark" />
-    <View style={styles.container}>
-      <VotingBanner onPress={() => navigation.navigate(CATALYST_ROUTES.ROOT)} />
-      {isFlawedWallet === true && (
-        <FlawedWalletModal
-          visible={isFlawedWallet === true}
-          disableButtons={false}
-          onPress={() =>
-            navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-          }
-          onRequestClose={() =>
-            navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-          }
-        />
-      )}
+}) => {
+  const routes = useNavigationState((state) => state.routes)
 
-      <OfflineBanner />
-      {isOnline &&
-        lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
+  useEffect(
+    () =>
+      navigation.addListener('beforeRemove', (e) => {
+        navigation.dispatch(e.data.action)
+        if (routes.length === 1) {
+          // this is the last and only route in the stack, wallet should close
+          walletManager.closeWallet()
+        }
+      }),
+    [navigation],
+  )
+  return (
+    <SafeAreaView style={styles.scrollView}>
+      <StatusBar type="dark" />
+      <View style={styles.container}>
+        <VotingBanner onPress={() => navigation.navigate(CATALYST_ROUTES.ROOT)} />
+        {isFlawedWallet === true && (
+          <FlawedWalletModal
+            visible={isFlawedWallet === true}
+            disableButtons={false}
+            onPress={() =>
+              navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
+            }
+            onRequestClose={() =>
+              navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
+            }
+          />
+        )}
 
-      <AvailableAmountBanner
-        amount={tokenBalance.getDefault()}
-        amountAssetMetaData={availableAssets[tokenBalance.getDefaultId()]}
-      />
+        <OfflineBanner />
+        {isOnline &&
+          lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
 
-      {_.isEmpty(transactionsInfo) ? (
-        <ScrollView
-          refreshControl={
-            <RefreshControl onRefresh={updateHistory} refreshing={isSyncing} />
-          }
-        >
-          <NoTxHistory />
-        </ScrollView>
-      ) : (
-        <TxHistoryList
-          refreshing={isSyncing}
-          onRefresh={updateHistory}
-          navigation={navigation}
-          transactions={transactionsInfo}
+        <AvailableAmountBanner
+          amount={tokenBalance.getDefault()}
+          amountAssetMetaData={availableAssets[tokenBalance.getDefaultId()]}
         />
 
         {_.isEmpty(transactionsInfo) ? (

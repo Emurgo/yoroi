@@ -162,6 +162,7 @@ export const getInitialState = (): State => ({
     isServerOk: true,
     isMaintenance: false,
     serverTime: undefined,
+  },
   isMaintenance: false,
   voting: {
     pin: [],
