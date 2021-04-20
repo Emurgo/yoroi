@@ -23,21 +23,6 @@ const CatalystNavigator = () => (
     screenOptions={{...defaultStackNavigatorOptions}}
     initialRouteName={CATALYST_ROUTES.STEP1}
   >
-    {/* <Stack.Screen
-      name={TX_HISTORY_ROUTES.MAIN}
-      component={TxHistory}
-      options={({navigation, route}) => ({
-        ...defaultNavigationOptions,
-      })}
-    />
-    <Stack.Screen
-      name={TX_HISTORY_ROUTES.TX_DETAIL}
-      component={TxDetails}
-      options={({route}) => ({
-        ...defaultNavigationOptions,
-      })}
-    /> */}
-    {/* <Stack.Screen name={CATALYST_ROUTES.STEP1} component={CatalystStep1} /> */}
     <Stack.Screen
       name={CATALYST_ROUTES.STEP1}
       component={CatalystStep1}
@@ -86,7 +71,6 @@ const CatalystNavigator = () => (
         ...defaultNavigationOptions,
       })}
     />
-    {/* <Stack.Screen name={CATALYST_ROUTES.STEP5} component={CatalystStep5} /> */}
   </Stack.Navigator>
 )
 

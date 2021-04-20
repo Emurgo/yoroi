@@ -352,7 +352,7 @@
   "components.catalyst.step5.description": "Enter the spending password to confirm voting registration and submit the certificate generated in previous step to blockchain",
   "components.catalyst.step6.subTitle": "Backup Catalyst Code",
   "components.catalyst.step6.description": "Backup this QR code or catalyst secret code. This will be required to use the catalyst App.",
-  "components.catalyst.step6.note": "Keep it — you won’t be able to access this code after clicking Complete.",
+  "components.catalyst.step6.note": "Keep it — you won’t be able to access this code after tapping on Complete.",
   "components.catalyst.step6.secretCode": "Secret Code",
   "components.catalyst.banner.name": "Catalyst Voting",
   "crypto.errors.rewardAddressEmpty": "Reward address is empty.",

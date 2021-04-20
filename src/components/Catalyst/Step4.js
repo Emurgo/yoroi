@@ -13,9 +13,6 @@ import {View, SafeAreaView} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
 
-import type {ComponentType} from 'react'
-import type {IntlShape} from 'react-intl'
-
 import {CONFIG} from '../../config/config'
 import KeyStore from '../../crypto/KeyStore'
 import {generateVotingTransaction} from '../../actions/voting'
@@ -50,6 +47,8 @@ import {
 import styles from './styles/Step4.style'
 
 import type {Navigation} from '../../types/navigation'
+import type {ComponentType} from 'react'
+import type {IntlShape} from 'react-intl'
 
 const messages = defineMessages({
   subTitle: {
@@ -85,8 +84,13 @@ const Step4 = ({
 
   const generateTransaction = async (decryptedKey) => {
     setGeneratingTransaction(true)
-    await generateVotingTransaction(decryptedKey, utxos)
-    setGeneratingTransaction(false)
+    try {
+      await generateVotingTransaction(decryptedKey, utxos)
+    } catch (error) {
+      throw error
+    } finally {
+      setGeneratingTransaction(false)
+    }
     navigation.navigate(CATALYST_ROUTES.STEP5)
   }
 
@@ -112,10 +116,10 @@ const Step4 = ({
           setErrorData((_state) => ({
             ..._state,
             showErrorDialog: true,
-            // errorMessage: intl.formatMessage(
-            //   errorMessages.generalError.message,
-            // ),
-            // errorLogs: String(e.message),
+            errorMessage: intl.formatMessage(
+              errorMessages.generalError.message,
+            ),
+            errorLogs: String(e.message),
           }))
         }
       }
@@ -134,7 +138,6 @@ const Step4 = ({
       if (e instanceof WrongPassword) {
         await showErrorDialog(errorMessages.incorrectPassword, intl)
       } else {
-        setGeneratingTransaction(false)
         setErrorData((_state) => ({
           showErrorDialog: true,
           errorMessage: intl.formatMessage(

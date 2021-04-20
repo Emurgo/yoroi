@@ -60,7 +60,6 @@ const Step3 = ({intl, pin, navigation}) => {
   const pinCards = (
     <View style={styles.pinContainer}>
       {_.range(0, PIN_LENGTH).map((value, index) => {
-        // eslint-disable-next-line react/no-array-index-key
         return (
           <View
             key={index}

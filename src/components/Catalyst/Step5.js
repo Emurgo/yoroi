@@ -94,8 +94,14 @@ const Step5 = ({
 
   const submitTrx = async (decryptedKey) => {
     setSendingTransaction(true)
-    await submitTransaction(unSignedTx, decryptedKey)
-    setSendingTransaction(false)
+    try {
+      await submitTransaction(unSignedTx, decryptedKey)
+    } catch (error) {
+      // error is used where submitTx is used
+      throw error
+    } finally {
+      setSendingTransaction(false)
+    }
     navigation.navigate(CATALYST_ROUTES.STEP6)
   }
 
@@ -111,7 +117,6 @@ const Step5 = ({
           onFail: () => navigation.goBack(),
         })
       } catch (e) {
-        setSendingTransaction(false)
         if (e instanceof SystemAuthDisabled) {
           await walletManager.closeWallet()
           await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
@@ -140,7 +145,6 @@ const Step5 = ({
 
       await submitTrx(decryptedKey)
     } catch (e) {
-      setSendingTransaction(false)
       if (e instanceof WrongPassword) {
         await showErrorDialog(errorMessages.incorrectPassword, intl)
       } else {

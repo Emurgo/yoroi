@@ -43,7 +43,7 @@ const messages = defineMessages({
   note: {
     id: 'components.catalyst.step6.note',
     defaultMessage:
-      '!!!Keep it — you won’t be able to access this code after clicking Complete.',
+      '!!!Keep it — you won’t be able to access this code after tapping on Complete.',
   },
   secretCode: {
     id: 'components.catalyst.step6.secretCode',
@@ -52,6 +52,11 @@ const messages = defineMessages({
 })
 
 const Step1 = ({intl, navigation, encryptedKey}) => {
+  const [buttonDisabled, setButtonDisabled] = useState(true)
+
+  setTimeout(() => {
+    setButtonDisabled(false)
+  }, 5000)
 
   const _copyKey = () => {
     Clipboard.setString(encryptedKey)
@@ -102,6 +107,7 @@ const Step1 = ({intl, navigation, encryptedKey}) => {
           title={intl.formatMessage(
             confirmationMessages.commonButtons.completeButton,
           )}
+          disabled={buttonDisabled}
         />
       </View>
     </SafeAreaView>

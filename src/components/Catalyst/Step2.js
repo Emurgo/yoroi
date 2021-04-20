@@ -5,7 +5,7 @@
  * Auto generate a PIN, catalyst private key
  */
 
-import React, {useEffect} from 'react'
+import React, {useState} from 'react'
 import {View, SafeAreaView} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
@@ -34,6 +34,12 @@ const messages = defineMessages({
 })
 
 const Step2 = ({intl, pin, navigation}) => {
+  const [buttonDisabled, setButtonDisabled] = useState(true)
+
+  setTimeout(() => {
+    setButtonDisabled(false)
+  }, 5000)
+
   const pinCards = (
     <View style={styles.pinContainer}>
       {pin.map((value, index) => {
@@ -68,8 +74,11 @@ const Step2 = ({intl, pin, navigation}) => {
           {pinCards}
         </View>
         <Button
-          onPress={() => navigation.navigate(CATALYST_ROUTES.STEP6)}
-          title={intl.formatMessage(confirmationMessages.commonButtons.continueButton)}
+          onPress={() => navigation.navigate(CATALYST_ROUTES.STEP3)}
+          title={intl.formatMessage(
+            confirmationMessages.commonButtons.continueButton,
+          )}
+          disabled={buttonDisabled}
         />
       </View>
     </SafeAreaView>
