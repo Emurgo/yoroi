@@ -5,7 +5,13 @@
  */
 
 import React, {useEffect} from 'react'
-import {View, SafeAreaView, Image} from 'react-native'
+import {
+  View,
+  SafeAreaView,
+  Image,
+  TouchableOpacity,
+  Linking,
+} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
 
@@ -40,6 +46,17 @@ const Step1 = ({intl, generateVotingKeys, navigation, fetchUTXOs}) => {
     generateVotingKeys()
   }, [])
 
+  const openAndroidStore = () => {
+    Linking.openURL(
+      'https://play.google.com/store/apps/details?id=io.iohk.vitvoting',
+    )
+  }
+  const openAppStore = () => {
+    Linking.openURL(
+      'https://apps.apple.com/kg/app/catalyst-voting/id1517473397',
+    )
+  }
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <ProgressStep currentStep={1} totalSteps={6} />
@@ -54,8 +71,18 @@ const Step1 = ({intl, generateVotingKeys, navigation, fetchUTXOs}) => {
             <Image source={AppDownload} />
           </View>
           <View style={styles.buttons}>
-            <Image style={styles.iOS} source={appstoreBadge} />
-            <Image source={playstoreBadge} />
+            <TouchableOpacity onPress={() => openAppStore()}>
+              <Image style={styles.iOS} source={appstoreBadge} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => openAndroidStore()}>
+              <Image source={playstoreBadge} />
+            </TouchableOpacity>
+            <Button
+              onPress={() => openAndroidStore()}
+              title={intl.formatMessage(
+                confirmationMessages.commonButtons.continueButton,
+              )}
+            />
           </View>
         </View>
         <Button
