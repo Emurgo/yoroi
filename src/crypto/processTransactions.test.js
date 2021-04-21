@@ -5,9 +5,9 @@ import {TRANSACTION_DIRECTION} from '../types/HistoryTransaction'
 import jestSetup from '../jestSetup'
 import {processTxHistoryData} from './processTransactions'
 import {checkAndFacadeTransactionAsync} from '../api/shelley/facade'
+import {MultiToken} from './MultiToken'
 
 import type {RawTransaction} from '../api/types'
-// import {AddressChain, AddressGenerator} from './shelley/chain'
 
 jestSetup.setup()
 
@@ -310,9 +310,10 @@ describe('processTxHistoryData', () => {
       NETWORK_ID,
     )
 
-    const netBalance = tx.delta.getDefault()
+    const delta = MultiToken.fromArray(tx.delta)
+    const netBalance = delta.getDefault()
     expect(netBalance.toString()).toBe('50000000000')
-    expect(tx.delta.nonDefaultEntries().length).toBe(0)
+    expect(delta.nonDefaultEntries().length).toBe(0)
     expect(tx.direction).toBe(TRANSACTION_DIRECTION.RECEIVED)
   })
 
@@ -324,9 +325,10 @@ describe('processTxHistoryData', () => {
       NETWORK_ID,
     )
 
-    const netBalance = tx.delta.getDefault()
+    const delta = MultiToken.fromArray(tx.delta)
+    const netBalance = delta.getDefault()
     expect(netBalance.toString()).toBe((-1000000000 - 168449).toString())
-    expect(tx.delta.nonDefaultEntries().length).toBe(0)
+    expect(delta.nonDefaultEntries().length).toBe(0)
     expect(tx.direction).toBe(TRANSACTION_DIRECTION.SENT)
   })
 
@@ -338,10 +340,11 @@ describe('processTxHistoryData', () => {
       NETWORK_ID,
     )
 
-    const netBalance = tx.delta.getDefault()
+    const delta = MultiToken.fromArray(tx.delta)
+    const netBalance = delta.getDefault()
     expect(netBalance.toString()).toBe('1407406')
 
-    const netTokenBalance = tx.delta.nonDefaultEntries()
+    const netTokenBalance = delta.nonDefaultEntries()
 
     expect(netTokenBalance.length).toBe(1)
     expect(netTokenBalance[0].amount.toString()).toBe('2')
@@ -359,10 +362,11 @@ describe('processTxHistoryData', () => {
       NETWORK_ID,
     )
 
-    const netBalance = tx.delta.getDefault()
+    const delta = MultiToken.fromArray(tx.delta)
+    const netBalance = delta.getDefault()
     expect(netBalance.toString()).toBe('-177557')
 
-    const netTokenBalance = tx.delta.nonDefaultEntries()
+    const netTokenBalance = delta.nonDefaultEntries()
 
     expect(netTokenBalance.length).toBe(1)
     expect(netTokenBalance[0].amount.toString()).toBe('0')
