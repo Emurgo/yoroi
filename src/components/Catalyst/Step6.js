@@ -5,7 +5,7 @@
  * Option to download the QR code
  */
 
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {
   View,
   SafeAreaView,
@@ -52,11 +52,14 @@ const messages = defineMessages({
 })
 
 const Step1 = ({intl, navigation, encryptedKey}) => {
-  const [buttonDisabled, setButtonDisabled] = useState(true)
+  const [countDown, setCountDown] = useState(5)
 
-  setTimeout(() => {
-    setButtonDisabled(false)
-  }, 5000)
+  useEffect(
+    () => {
+      countDown > 0 && setTimeout(() => setCountDown(countDown - 1), 1000)
+    },
+    [countDown],
+  )
 
   const _copyKey = () => {
     Clipboard.setString(encryptedKey)
@@ -104,10 +107,12 @@ const Step1 = ({intl, navigation, encryptedKey}) => {
           onPress={() =>
             navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)
           }
-          title={intl.formatMessage(
-            confirmationMessages.commonButtons.completeButton,
-          )}
-          disabled={buttonDisabled}
+          title={
+            countDown !== 0
+              ? countDown.toString()
+              : intl.formatMessage(confirmationMessages.commonButtons.completeButton)
+          }
+          disabled={countDown !== 0}
         />
       </View>
     </SafeAreaView>
@@ -118,6 +123,7 @@ type ExternalProps = {|
   navigation: Navigation,
   route: Object, // TODO(navigation): type
   intl: IntlShape,
+  encryptedKey: string,
 |}
 
 export default injectIntl(

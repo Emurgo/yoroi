@@ -20,6 +20,7 @@ import {CONFIG} from '../../config/config'
 import KeyStore from '../../crypto/KeyStore'
 import {formatTokenWithSymbol} from '../../utils/format'
 import {showErrorDialog, submitTransaction} from '../../actions'
+import {ISignRequest} from '../../crypto/ISignRequest'
 import {
   Text,
   ProgressStep,
@@ -50,7 +51,9 @@ import {
   easyConfirmationSelector,
   defaultNetworkAssetSelector,
 } from '../../selectors'
+
 import type {Navigation} from '../../types/navigation'
+import type {DefaultAsset} from '../../types/HistoryTransaction'
 
 const messages = defineMessages({
   subTitle: {
@@ -221,6 +224,10 @@ type ExternalProps = {|
   navigation: Navigation,
   route: Object, // TODO(navigation): type
   intl: IntlShape,
+  isEasyConfirmationEnabled: boolean,
+  submitTransaction: (ISignRequest<any>, string) => void,
+  unSignedTx: ISignRequest<any>,
+  defaultAsset: DefaultAsset,
 |}
 
 export default injectIntl(

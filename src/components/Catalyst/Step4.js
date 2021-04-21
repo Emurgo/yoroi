@@ -49,6 +49,7 @@ import styles from './styles/Step4.style'
 import type {Navigation} from '../../types/navigation'
 import type {ComponentType} from 'react'
 import type {IntlShape} from 'react-intl'
+import type {RawUtxo} from '../../api/types'
 
 const messages = defineMessages({
   subTitle: {
@@ -201,6 +202,9 @@ type ExternalProps = {|
   navigation: Navigation,
   route: Object, // TODO(navigation): type
   intl: IntlShape,
+  isEasyConfirmationEnabled: boolean,
+  utxos: Array<RawUtxo>,
+  generateVotingTransaction: (string, Array<RawUtxo>) => void,
 |}
 
 export default injectIntl(

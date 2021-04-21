@@ -102,6 +102,7 @@ type ExternalProps = {|
   navigation: Navigation,
   route: Object, // TODO(navigation): type
   intl: IntlShape,
+  pin: Array<String>,
 |}
 
 export default injectIntl(

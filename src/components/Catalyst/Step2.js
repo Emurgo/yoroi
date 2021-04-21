@@ -5,7 +5,7 @@
  * Auto generate a PIN, catalyst private key
  */
 
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {View, SafeAreaView} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
@@ -34,11 +34,11 @@ const messages = defineMessages({
 })
 
 const Step2 = ({intl, pin, navigation}) => {
-  const [buttonDisabled, setButtonDisabled] = useState(true)
+  const [countDown, setCountDown] = useState(5)
 
-  setTimeout(() => {
-    setButtonDisabled(false)
-  }, 5000)
+  useEffect(() => {
+    countDown > 0 && setTimeout(() => setCountDown(countDown - 1), 1000)
+  }, [countDown])
 
   const pinCards = (
     <View style={styles.pinContainer}>
@@ -75,10 +75,12 @@ const Step2 = ({intl, pin, navigation}) => {
         </View>
         <Button
           onPress={() => navigation.navigate(CATALYST_ROUTES.STEP3)}
-          title={intl.formatMessage(
-            confirmationMessages.commonButtons.continueButton,
-          )}
-          disabled={buttonDisabled}
+          title={
+            countDown !== 0
+              ? countDown.toString()
+              : intl.formatMessage(confirmationMessages.commonButtons.continueButton)
+          }
+          disabled={countDown !== 0}
         />
       </View>
     </SafeAreaView>
@@ -89,6 +91,7 @@ type ExternalProps = {|
   navigation: Navigation,
   route: Object, // TODO(navigation): type
   intl: IntlShape,
+  pin: Array<String>,
 |}
 
 export default injectIntl(
