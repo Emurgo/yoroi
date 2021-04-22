@@ -29,6 +29,7 @@ public class MainApplication extends Application implements ReactApplication {
       // packages.add(new ChainLibsPackage());
       // packages.add(new CardanoPackage());
       packages.add(new KeyStorePackage());
+      packages.add(new FlagSecurePackage());
       return packages;
     }
 
