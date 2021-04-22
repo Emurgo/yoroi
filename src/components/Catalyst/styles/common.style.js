@@ -26,7 +26,7 @@ export default StyleSheet.create({
   },
   pinNumber: {
     fontSize: 20,
-    lineHeight: 0,
+    lineHeight: 22,
     color: '#353535',
   },
   pinNormal: {
