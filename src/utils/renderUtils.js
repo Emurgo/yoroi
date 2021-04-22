@@ -186,7 +186,7 @@ export const requireInitializedWallet: <Props>(
   ),
 )
 
-// HOC without compose, to get rid of compose soon
+// HOC without compose, to get rid of recompose soon
 export const withTitle: <Props: {navigation: any, route: any}>(
   ComponentType<{...Props}>,
   (Props) => string,
@@ -201,11 +201,15 @@ export const withTitle: <Props: {navigation: any, route: any}>(
         : props.route?.params?.title ?? undefined
     }
 
-    const setTitle = (value) =>
-      props.navigation.setOptions({
-        // future note: flow doesn't support computed keys
-        [paramName != null ? paramName : 'title']: value,
-      })
+    const setTitle = (value) => {
+      const options = {}
+      if (paramName != null) {
+        options[paramName] = value
+      } else {
+        options.title = value
+      }
+      props.navigation.setOptions(options)
+    }
 
     useEffect(() => {
       // Note(ppershing): At this place we would normally check

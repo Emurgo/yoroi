@@ -1,14 +1,18 @@
 // @flow
 
 import React from 'react'
-import {View, Text, Image, TouchableOpacity} from 'react-native'
+import {View, Image, TouchableOpacity} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
+
+import {Text} from '../UiKit'
+
 import type {ComponentType} from 'react'
 import type {IntlShape} from 'react-intl'
 
 import CatalystLogo from '../../assets/img/voting.png'
 
 import styles from './styles/VotingBanner.style'
+
 const messages = defineMessages({
   name: {
     id: 'components.catalyst.banner.name',
@@ -19,9 +23,13 @@ const messages = defineMessages({
 const VotingBanner = ({intl, onPress}) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.button} onPress={() => onPress()}>
-        <Image source={CatalystLogo} />
-        <Text>{intl.formatMessage(messages.name).toLocaleUpperCase()}</Text>
+      <TouchableOpacity onPress={() => onPress()}>
+        <View style={styles.button}>
+          <Image source={CatalystLogo} />
+          <Text style={styles.text}>
+            {intl.formatMessage(messages.name).toLocaleUpperCase()}
+          </Text>
+        </View>
       </TouchableOpacity>
     </View>
   )

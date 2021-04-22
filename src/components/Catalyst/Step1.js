@@ -95,7 +95,7 @@ type ExternalProps = {|
   route: Object, // TODO(navigation): type
   intl: IntlShape,
   generateVotingKeys: () => void,
-  fetchUTXOs: () => void,
+  fetchUTXOs: () => Promise<void>,
 |}
 
 export default injectIntl(

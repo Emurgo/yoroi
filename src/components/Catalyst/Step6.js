@@ -80,7 +80,9 @@ const Step1 = ({intl, navigation, encryptedKey}) => {
           <Text style={[styles.note, styles.mb40]}>
             {intl.formatMessage(messages.note)}
           </Text>
-          <View style={[styles.qrCode, styles.mb40]}>
+          {/* for some reason style arrays have issues in current flow version.
+             so a regular object spread has been used here */}
+          <View style={{...styles.qrCode, ...styles.mb40}}>
             <QRCode
               value={encryptedKey}
               size={140}

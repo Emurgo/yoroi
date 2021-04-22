@@ -1,6 +1,8 @@
 // @flow
 import {StyleSheet} from 'react-native'
 
+import {COLORS} from '../../../styles/config'
+
 export default StyleSheet.create({
   container: {
     paddingVertical: 16,
@@ -13,11 +15,13 @@ export default StyleSheet.create({
     alignItems: 'center',
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#15D1AA',
+    borderColor: COLORS.LIGHT_POSITIVE_GREEN,
     width: 206,
     height: 48,
     paddingVertical: 12,
     paddingHorizontal: 24,
-    color: '#15D1AA',
+  },
+  text: {
+    color: COLORS.LIGHT_POSITIVE_GREEN,
   },
 })
