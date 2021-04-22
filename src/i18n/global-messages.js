@@ -48,6 +48,10 @@ export const confirmationMessages = {
       id: 'global.actions.dialogs.commonbuttons.iUnderstandButton',
       defaultMessage: '!!!I understand',
     },
+    completeButton: {
+      id: 'global.actions.dialogs.commonbuttons.completeButton',
+      defaultMessage: '!!!Complete',
+    },
   }),
 }
 
@@ -531,5 +535,9 @@ export default defineMessages({
   assetsLabel: {
     id: 'global.assets.assetsLabel',
     defaultMessage: '!!!Assets',
+  },
+  votingTitle: {
+    id: 'components.catalyst.title',
+    defaultMessage: '!!!Register to vote',
   },
 })

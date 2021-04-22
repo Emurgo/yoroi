@@ -107,3 +107,13 @@ export const ROOT_ROUTES = {
   STORYBOOK: 'storybook',
   MAINTENANCE: 'maintenance',
 }
+
+export const CATALYST_ROUTES = {
+  ROOT: 'catalyst-router',
+  STEP1: 'catalyst-landing',
+  STEP2: 'catalyst-generate-pin',
+  STEP3: 'catalyst-confirm-pin',
+  STEP4: 'catalyst-generate-trx',
+  STEP5: 'catalyst-transaction',
+  STEP6: 'catalyst-qr-code',
+}

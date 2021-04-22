@@ -256,7 +256,7 @@ PODS:
     - React-Core
   - react-native-config (0.12.0):
     - React
-  - react-native-haskell-shelley (1.1.0):
+  - react-native-haskell-shelley (1.1.3):
     - React
   - react-native-netinfo (5.9.9):
     - React-Core
@@ -581,7 +581,7 @@ SPEC CHECKSUMS:
   react-native-ble-plx: caac53ee98151ec81198239d591c203809a1ed6e
   react-native-camera: cf8a153d33138dcc457172fc3c33fdf4e5d288d2
   react-native-config: f2c2ae45625a068c35681a16b9bfb1ca58b0adc7
-  react-native-haskell-shelley: 53258002beb78d46fd03ca50e63bbebb16f88274
+  react-native-haskell-shelley: 1d72c9f3d75c584294a30156131a568aba54bf60
   react-native-netinfo: 0212ce8604e88edf686f1481b925b17a42a52449
   react-native-randombytes: b6677f7d495c27e9ee0dbd77ebc97b3c59173729
   react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94

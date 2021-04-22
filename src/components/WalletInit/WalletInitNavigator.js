@@ -12,6 +12,7 @@ import CheckNanoXScreen from './ConnectNanoX/CheckNanoXScreen'
 import ConnectNanoXScreen from './ConnectNanoX/ConnectNanoXScreen'
 import SaveNanoXScreen from './ConnectNanoX/SaveNanoXScreen'
 import MnemonicShowScreen from './CreateWallet/MnemonicShowScreen'
+
 import {
   defaultNavigationOptions,
   jormunNavigationOptions,
