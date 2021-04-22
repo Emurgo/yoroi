@@ -77,12 +77,6 @@ const Step1 = ({intl, generateVotingKeys, navigation, fetchUTXOs}) => {
             <TouchableOpacity onPress={() => openAndroidStore()}>
               <Image source={playstoreBadge} />
             </TouchableOpacity>
-            <Button
-              onPress={() => openAndroidStore()}
-              title={intl.formatMessage(
-                confirmationMessages.commonButtons.continueButton,
-              )}
-            />
           </View>
         </View>
         <Button
