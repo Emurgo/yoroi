@@ -35,9 +35,12 @@ import {
   canBiometricEncryptionBeEnabled,
 } from './helpers/deviceSettings'
 import {errorMessages} from './i18n/global-messages'
+import env from './env'
 import KeyStore from './crypto/KeyStore'
 
 import type {State} from './state'
+
+const IS_STORYBOOK = env.getBoolean('IS_STORYBOOK', false)
 
 const hasAnyWalletSelector = (state: State): boolean => !isEmpty(state.wallets)
 type NavigatorSwitchProps = {|
@@ -200,10 +203,16 @@ const NavigatorSwitch = compose(
   },
 )
 
+const StoryBook = () => (
+  <Stack.Navigator>
+    <Stack.Screen name={ROOT_ROUTES.STORYBOOK} component={StorybookScreen} />
+  </Stack.Navigator>
+)
+
 const AppNavigator = () => {
   return (
     <NavigationContainer>
-      <NavigatorSwitch />
+      {IS_STORYBOOK ? <StoryBook /> : <NavigatorSwitch />}
     </NavigationContainer>
   )
 }
