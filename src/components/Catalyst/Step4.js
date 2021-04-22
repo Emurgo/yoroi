@@ -7,7 +7,6 @@
  * ### HW is NOT supported yet - validation is done on first screen itself###
  */
 
-import _ from 'lodash'
 import React, {useState} from 'react'
 import {View, SafeAreaView} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
@@ -39,10 +38,7 @@ import globalMessages, {
   txLabels,
 } from '../../i18n/global-messages'
 import {WrongPassword} from '../../crypto/errors'
-import {
-  easyConfirmationSelector,
-  utxosSelector,
-} from '../../selectors'
+import {easyConfirmationSelector, utxosSelector} from '../../selectors'
 
 import styles from './styles/Step4.style'
 

@@ -51,7 +51,7 @@ export const confirmationMessages = {
     completeButton: {
       id: 'global.actions.dialogs.commonbuttons.completeButton',
       defaultMessage: '!!!Complete',
-    }
+    },
   }),
 }
 
@@ -539,5 +539,5 @@ export default defineMessages({
   votingTitle: {
     id: 'components.catalyst.title',
     defaultMessage: '!!!Register to vote',
-  }
+  },
 })

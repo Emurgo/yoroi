@@ -197,7 +197,7 @@ export const sendAllUnsignedTx = async (
     Array.from(addressingMap.keys()),
     absSlotNumber,
     protocolParams,
-    metadata
+    metadata,
   )
 
   const addressedUtxos = unsignedTxResponse.senderUtxos.map((utxo) => {

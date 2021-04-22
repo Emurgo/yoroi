@@ -34,7 +34,8 @@ const messages = defineMessages({
   description: {
     id: 'components.catalyst.step3.description',
     defaultMessage:
-      '!!!Please enter the PIN as you will need it every time you want to access the Catalyst Voting app',
+      '!!!Please enter the PIN as you will need it every time you want to ' +
+      'access the Catalyst Voting app',
   },
 })
 

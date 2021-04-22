@@ -138,7 +138,9 @@ const TxHistory = ({
     <SafeAreaView style={styles.scrollView}>
       <StatusBar type="dark" />
       <View style={styles.container}>
-        <VotingBanner onPress={() => navigation.navigate(CATALYST_ROUTES.ROOT)} />
+        <VotingBanner
+          onPress={() => navigation.navigate(CATALYST_ROUTES.ROOT)}
+        />
         {isFlawedWallet === true && (
           <FlawedWalletModal
             visible={isFlawedWallet === true}

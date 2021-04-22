@@ -21,14 +21,12 @@ const VotingBanner = ({intl, onPress}) => {
     <View style={styles.container}>
       <TouchableOpacity style={styles.button} onPress={() => onPress()}>
         <Image source={CatalystLogo} />
-        <Text>
-          {intl.formatMessage(messages.name).toLocaleUpperCase()}
-        </Text>
+        <Text>{intl.formatMessage(messages.name).toLocaleUpperCase()}</Text>
       </TouchableOpacity>
     </View>
   )
 }
 
-type ExternalProps = {|intl: IntlShape, onPress: () => void |}
+type ExternalProps = {|intl: IntlShape, onPress: () => void|}
 
 export default injectIntl((VotingBanner: ComponentType<ExternalProps>))

@@ -60,11 +60,13 @@ export async function generateRegistration(request: {|
     registrationData,
   )
 
-  const hashedMetadata = blake2b(256 / 8).update(
-    await generalMetadata.to_bytes()
-  ).digest('binary')
+  const hashedMetadata = blake2b(256 / 8)
+    .update(await generalMetadata.to_bytes())
+    .digest('binary')
 
-  const catalystSignature = await (await request.stakePrivateKey.sign(hashedMetadata)).to_hex()
+  const catalystSignature = await (await request.stakePrivateKey.sign(
+    hashedMetadata,
+  )).to_hex()
 
   await generalMetadata.insert(
     await BigNum.from_str(CatalystLabels.SIG.toString()),

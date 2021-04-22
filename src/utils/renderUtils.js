@@ -190,10 +190,9 @@ export const requireInitializedWallet: <Props>(
 export const withTitle: <Props: {navigation: any, route: any}>(
   ComponentType<{...Props}>,
   (Props) => string,
-  ?string
+  ?string,
 ) => ComponentType<{...Props}> = (WrappedComponent, getTitle, paramName) => {
-  return (props: any) : Node => {
-
+  return (props: any): Node => {
     const getCurrentTitle = () => {
       return paramName != null
         ? props.route.params
@@ -224,7 +223,6 @@ export const withTitle: <Props: {navigation: any, route: any}>(
       }
     })
 
-
-    return (<WrappedComponent {...props} />)
+    return <WrappedComponent {...props} />
   }
 }

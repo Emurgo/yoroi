@@ -66,8 +66,6 @@ export const generateVotingTransaction = (
     dispatch(_setUnSignedTx(signRequest))
   } else {
     // should never happen
-    throw new Error(
-      'Catalyst private key empty, should never happen',
-    )
+    throw new Error('Catalyst private key empty, should never happen')
   }
 }

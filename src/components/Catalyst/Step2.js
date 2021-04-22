@@ -29,16 +29,20 @@ const messages = defineMessages({
   description: {
     id: 'components.catalyst.step2.description',
     defaultMessage:
-      '!!!Please write down this PIN as you will need it every time you want to access the Catalyst Voting app',
+      '!!!Please write down this PIN as you will need it every time you want ' +
+      'to access the Catalyst Voting app',
   },
 })
 
 const Step2 = ({intl, pin, navigation}) => {
   const [countDown, setCountDown] = useState(5)
 
-  useEffect(() => {
-    countDown > 0 && setTimeout(() => setCountDown(countDown - 1), 1000)
-  }, [countDown])
+  useEffect(
+    () => {
+      countDown > 0 && setTimeout(() => setCountDown(countDown - 1), 1000)
+    },
+    [countDown],
+  )
 
   const pinCards = (
     <View style={styles.pinContainer}>
@@ -76,9 +80,12 @@ const Step2 = ({intl, pin, navigation}) => {
         <Button
           onPress={() => navigation.navigate(CATALYST_ROUTES.STEP3)}
           title={
+            // prettier-ignore
             countDown !== 0
               ? countDown.toString()
-              : intl.formatMessage(confirmationMessages.commonButtons.continueButton)
+              : intl.formatMessage(
+                confirmationMessages.commonButtons.continueButton,
+              )
           }
           disabled={countDown !== 0}
         />

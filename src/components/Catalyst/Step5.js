@@ -7,7 +7,6 @@
  * ### HW is NOT supported yet - validation is done on first screen itself###
  */
 
-import _ from 'lodash'
 import React, {useEffect, useState} from 'react'
 import {View, SafeAreaView} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
@@ -63,7 +62,8 @@ const messages = defineMessages({
   description: {
     id: 'components.catalyst.step5.description',
     defaultMessage:
-      '!!!Enter the spending password to confirm voting registration and submit the certificate generated in previous step to blockchain',
+      '!!!Enter the spending password to confirm voting registration and ' +
+      'submit the certificate generated in previous step to blockchain',
   },
 })
 

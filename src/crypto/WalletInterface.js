@@ -29,7 +29,6 @@ import type {Addresses} from './chain'
 import type {WalletChecksum} from '@emurgo/cip4-js'
 import type {JSONMetadata} from './shelley/metadataUtils'
 
-
 export interface WalletInterface {
   id: string;
 

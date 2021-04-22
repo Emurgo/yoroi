@@ -20,7 +20,7 @@ const keyboard = [
   ['', '0', BACKSPACE],
 ]
 
-const processPin = async (pin, setPin, pinMaxLength, keyDown, onPinEnter) => {
+const processPin = (pin, setPin, pinMaxLength, keyDown) => {
   if (keyDown === BACKSPACE) {
     setPin(pin.substring(0, pin.length - 1))
   } else if (pin.length === pinMaxLength) {

@@ -38,7 +38,8 @@ const messages = defineMessages({
   description: {
     id: 'components.catalyst.step6.description',
     defaultMessage:
-      '!!!Backup this QR code or catalyst secret code. This will be required to use the catalyst App.',
+      '!!!Backup this QR code or catalyst secret code. This will be required ' +
+      'to use the catalyst App.',
   },
   note: {
     id: 'components.catalyst.step6.note',
@@ -108,9 +109,12 @@ const Step1 = ({intl, navigation, encryptedKey}) => {
             navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)
           }
           title={
+            // prettier-ignore
             countDown !== 0
               ? countDown.toString()
-              : intl.formatMessage(confirmationMessages.commonButtons.completeButton)
+              : intl.formatMessage(
+                confirmationMessages.commonButtons.completeButton,
+              )
           }
           disabled={countDown !== 0}
         />

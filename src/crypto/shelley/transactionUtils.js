@@ -37,7 +37,13 @@ export const createUnsignedTx = async (
   request: CreateUnsignedTxRequest,
 ): Promise<CreateUnsignedTxResponse> => {
   Logger.debug('createUnsignedTx called', request)
-  const {changeAddr, receiver, addressedUtxos, absSlotNumber, metadata} = request
+  const {
+    changeAddr,
+    receiver,
+    addressedUtxos,
+    absSlotNumber,
+    metadata,
+  } = request
   try {
     const NETWORK_CONFIG = CONFIG.NETWORKS.HASKELL_SHELLEY
 
