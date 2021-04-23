@@ -14,6 +14,7 @@ import {
   TouchableOpacity,
   Image,
   NativeModules,
+  Platform,
 } from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
@@ -67,19 +68,21 @@ const Step6 = ({intl, navigation, encryptedKey}) => {
     [countDown],
   )
 
-  useFocusEffect(
-    React.useCallback(() => {
-      // enable screenshots
-      FlagSecure.deactivate()
+  if (Platform.OS === 'android') {
+    useFocusEffect(
+      React.useCallback(() => {
+        // enable screenshots
+        FlagSecure.deactivate()
 
-      return () => {
-        // disable screenshots
-        // recall: this clean up function returned by useFocusEffect is run
-        // automatically by react on blur
-        FlagSecure.activate()
-      }
-    }, []),
-  )
+        return () => {
+          // disable screenshots
+          // recall: this clean up function returned by useFocusEffect is run
+          // automatically by react on blur
+          FlagSecure.activate()
+        }
+      }, []),
+    )
+  }
 
   const _copyKey = () => {
     Clipboard.setString(encryptedKey)
