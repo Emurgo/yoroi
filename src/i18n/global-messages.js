@@ -442,6 +442,18 @@ export const errorMessages = {
         'key. Please try again with a new one.',
     },
   }),
+  fetchError: defineMessages({
+    title: {
+      id: 'global.actions.dialogs.fetchError.title',
+      defaultMessage: '!!!Server error',
+    },
+    message: {
+      id: 'global.actions.dialogs.fetchError.message',
+      defaultMessage:
+        '!!!An error occurred when Yoroi tried to fetch your wallet state from ' +
+        'the server. Please try again later.',
+    },
+  }),
 }
 
 export default defineMessages({
