@@ -7,6 +7,7 @@
 import React, {useEffect} from 'react'
 import {
   View,
+  ScrollView,
   SafeAreaView,
   Image,
   TouchableOpacity,
@@ -61,24 +62,26 @@ const Step1 = ({intl, generateVotingKeys, navigation, fetchUTXOs}) => {
     <SafeAreaView style={styles.safeAreaView}>
       <ProgressStep currentStep={1} totalSteps={6} />
       <View style={styles.container}>
-        <View style={styles.description}>
-          <Text style={styles.text}>
-            {intl.formatMessage(messages.subTitle)}
-          </Text>
-        </View>
-        <View style={styles.images}>
-          <View style={styles.mb40}>
-            <Image source={AppDownload} />
+        <ScrollView contentContainerStyle={styles.scrollViewContentContainer}>
+          <View style={[styles.description, styles.mb40]}>
+            <Text style={styles.text}>
+              {intl.formatMessage(messages.subTitle)}
+            </Text>
           </View>
-          <View style={styles.buttons}>
-            <TouchableOpacity onPress={() => openAppStore()}>
-              <Image style={styles.iOS} source={appstoreBadge} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => openAndroidStore()}>
-              <Image source={playstoreBadge} />
-            </TouchableOpacity>
+          <View style={styles.images}>
+            <View style={styles.mb40}>
+              <Image source={AppDownload} />
+            </View>
+            <View style={styles.buttons}>
+              <TouchableOpacity onPress={() => openAppStore()}>
+                <Image style={styles.iOS} source={appstoreBadge} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => openAndroidStore()}>
+                <Image source={playstoreBadge} />
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        </ScrollView>
         <Button
           onPress={() => navigation.navigate(CATALYST_ROUTES.STEP2)}
           title={intl.formatMessage(

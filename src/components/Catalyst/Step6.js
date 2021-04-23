@@ -8,6 +8,7 @@
 import React, {useEffect, useState} from 'react'
 import {
   View,
+  ScrollView,
   SafeAreaView,
   Clipboard,
   TouchableOpacity,
@@ -88,7 +89,7 @@ const Step6 = ({intl, navigation, encryptedKey}) => {
     <SafeAreaView style={styles.safeAreaView}>
       <ProgressStep currentStep={6} totalSteps={6} />
       <View style={styles.container}>
-        <View>
+        <ScrollView contentContainerStyle={styles.scrollViewContentContainer}>
           <Text style={styles.subTitle}>
             {intl.formatMessage(messages.subTitle)}
           </Text>
@@ -123,7 +124,7 @@ const Step6 = ({intl, navigation, encryptedKey}) => {
               </View>
             </View>
           </View>
-        </View>
+        </ScrollView>
         <Button
           onPress={() =>
             navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)
