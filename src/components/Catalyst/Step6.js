@@ -12,9 +12,11 @@ import {
   Clipboard,
   TouchableOpacity,
   Image,
+  NativeModules,
 } from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
+import {useFocusEffect} from '@react-navigation/native'
 
 import {Text, Button, ProgressStep} from '../UiKit'
 import {withTitle} from '../../utils/renderUtils'
@@ -52,7 +54,9 @@ const messages = defineMessages({
   },
 })
 
-const Step1 = ({intl, navigation, encryptedKey}) => {
+const {FlagSecure} = NativeModules
+
+const Step6 = ({intl, navigation, encryptedKey}) => {
   const [countDown, setCountDown] = useState(5)
 
   useEffect(
@@ -60,6 +64,20 @@ const Step1 = ({intl, navigation, encryptedKey}) => {
       countDown > 0 && setTimeout(() => setCountDown(countDown - 1), 1000)
     },
     [countDown],
+  )
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // enable screenshots
+      FlagSecure.deactivate()
+
+      return () => {
+        // disable screenshots
+        // recall: this clean up function returned by useFocusEffect is run
+        // automatically by react on blur
+        FlagSecure.activate()
+      }
+    }, []),
   )
 
   const _copyKey = () => {
@@ -139,7 +157,7 @@ export default injectIntl(
     }),
     {},
   )(
-    withTitle((Step1: ComponentType<ExternalProps>), ({intl}) =>
+    withTitle((Step6: ComponentType<ExternalProps>), ({intl}) =>
       intl.formatMessage(globalMessages.votingTitle),
     ),
   ),
