@@ -4,10 +4,6 @@ import common from './common.style'
 
 export default StyleSheet.create({
   ...common,
-  safeAreaView: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
   container: {
     flex: 1,
     paddingTop: 50,

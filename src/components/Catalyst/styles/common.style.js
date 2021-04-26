@@ -2,6 +2,19 @@
 import {StyleSheet} from 'react-native'
 
 export default StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  container: {
+    flex: 1,
+    paddingTop: 50,
+    paddingHorizontal: 20,
+    paddingBottom: 36,
+  },
+  scrollViewContentContainer: {
+    paddingBottom: 36,
+  },
   subTitle: {
     fontSize: 18,
     fontWeight: '500',
