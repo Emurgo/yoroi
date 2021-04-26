@@ -375,6 +375,8 @@
   "global.actions.dialogs.enableFingerprintsFirst.title": "Action failed",
   "global.actions.dialogs.enableSystemAuthFirst.message": "You probably disabled the lock screen on your phone. You need to disable easy transaction confirmation first. Please set up you lock screen (PIN / Password / Pattern) on your phone and then restart application. After this action you should be able to disable the lock screen on your phone and use this application",
   "global.actions.dialogs.enableSystemAuthFirst.title": "Lock screen disabled",
+  "global.actions.dialogs.fetchError.message": "An error occurred when Yoroi tried to fetch your wallet state from the server. Please try again later.",
+  "global.actions.dialogs.fetchError.title": "Server error",
   "global.actions.dialogs.generalError.message": "Requested operation failed. This is all we know: {message}",
   "global.actions.dialogs.generalError.title": "Unexpected error",
   "global.actions.dialogs.generalLocalizableError.message": "Requested operation failed: {message}",
