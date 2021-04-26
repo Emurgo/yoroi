@@ -375,6 +375,8 @@
   "global.actions.dialogs.enableFingerprintsFirst.title": "A ação falhou",
   "global.actions.dialogs.enableSystemAuthFirst.message": "Você provavelmente desativou a tela de bloqueio do seu telefone. Você precisa desativar a confirmação fácil da transação primeiro. Configure sua tela de bloqueio (PIN / Senha / Padrão) no seu telefone e reinicie o aplicativo. Após essa ação, você poderá desativar a tela de bloqueio do telefone e usar este aplicativo",
   "global.actions.dialogs.enableSystemAuthFirst.title": "Trava de tela desativada",
+  "global.actions.dialogs.fetchError.message": "An error occurred when Yoroi tried to fetch your wallet state from the server. Please try again later.",
+  "global.actions.dialogs.fetchError.title": "Server error",
   "global.actions.dialogs.generalError.message": "Falha na operação solicitada. Isso é tudo o que sabemos: {message}",
   "global.actions.dialogs.generalError.title": "Erro inesperado",
   "global.actions.dialogs.generalLocalizableError.message": "Operação solicitada falhou:{message}",
