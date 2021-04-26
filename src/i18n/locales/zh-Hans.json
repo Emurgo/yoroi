@@ -375,6 +375,8 @@
   "global.actions.dialogs.enableFingerprintsFirst.title": "操作失败",
   "global.actions.dialogs.enableSystemAuthFirst.message": "您可能禁用了您手机的锁屏功能。您需要先禁用快速交易确认功能。请先在手机上重新设置锁屏功能（PIN码/密码/图案），然后重新启动应用程序。执行此操作后，您可以禁用您手机上的锁屏功能并正常使用此应用程序。",
   "global.actions.dialogs.enableSystemAuthFirst.title": "设备密码锁屏功能未启用",
+  "global.actions.dialogs.fetchError.message": "An error occurred when Yoroi tried to fetch your wallet state from the server. Please try again later.",
+  "global.actions.dialogs.fetchError.title": "Server error",
   "global.actions.dialogs.generalError.message": "请求操作失败。可能原因：{message}",
   "global.actions.dialogs.generalError.title": "未知错误",
   "global.actions.dialogs.generalLocalizableError.message": "请求的操作失败: {message}",
