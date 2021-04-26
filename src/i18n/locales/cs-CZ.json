@@ -375,6 +375,8 @@
   "global.actions.dialogs.enableFingerprintsFirst.title": "Akce selhala",
   "global.actions.dialogs.enableSystemAuthFirst.message": "Pravděpodobně jste vypnul lock screen na svém telefonu. Prvně musíte zrušit zjednodušené potvrzování transakcí. Nastavte prosím svůj lock screen (PIN / heslo) na vašem telefonu a restartujte aplikaci. Poté by mělo být možné vypnout lock screen a používat tuto aplikaci",
   "global.actions.dialogs.enableSystemAuthFirst.title": "Zamčená obrazovka zakázána",
+  "global.actions.dialogs.fetchError.message": "An error occurred when Yoroi tried to fetch your wallet state from the server. Please try again later.",
+  "global.actions.dialogs.fetchError.title": "Server error",
   "global.actions.dialogs.generalError.message": "Požadovaná operace selhala. Toto je vše co víme: {message}",
   "global.actions.dialogs.generalError.title": "Neočekávaná chyba",
   "global.actions.dialogs.generalLocalizableError.message": "Požadovaná operace selhala: {message}",
