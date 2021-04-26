@@ -375,6 +375,8 @@
   "global.actions.dialogs.enableFingerprintsFirst.title": "Echec de l'action",
   "global.actions.dialogs.enableSystemAuthFirst.message": "Vous avez probablement désactivé le verrouillage de l'écran de votre téléphone. Vous devez d'abord désactiver la confirmation de transaction facile. Veuillez configurer votre écran de verrouillage (PIN / Mot de passe / Motif) sur votre téléphone, puis redémarrez l'application. Après cette action, vous devriez pouvoir désactiver le verrouillage de l'écran de votre téléphone et utiliser cette application",
   "global.actions.dialogs.enableSystemAuthFirst.title": "Verrouillage de l'écran désactivé",
+  "global.actions.dialogs.fetchError.message": "An error occurred when Yoroi tried to fetch your wallet state from the server. Please try again later.",
+  "global.actions.dialogs.fetchError.title": "Server error",
   "global.actions.dialogs.generalError.message": "L'opération demandée a échoué. Voici tout ce que nous savons : {message}",
   "global.actions.dialogs.generalError.title": "Erreur inattendue",
   "global.actions.dialogs.generalLocalizableError.message": "L'opération demandée a échoué : {message}",
