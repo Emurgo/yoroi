@@ -72,7 +72,7 @@ const _ErrorView = ({
         {showErrorLogs && (
           <View style={styles.errorSectionView}>
             <View style={styles.errorSectionContent}>
-              <Text style={styles.paragraph}>{showErrorLogs}</Text>
+              <Text style={styles.paragraph}>{errorLogs}</Text>
             </View>
           </View>
         )}

@@ -59,6 +59,12 @@ const messages = defineMessages({
   },
 })
 
+type ErrorData = {|
+  showErrorDialog: boolean,
+  errorMessage: string,
+  errorLogs: ?string,
+|}
+
 const Step4 = ({
   intl,
   isEasyConfirmationEnabled,
@@ -71,10 +77,10 @@ const Step4 = ({
   )
 
   const [generatingTransaction, setGeneratingTransaction] = useState(false)
-  const [errorData, setErrorData] = useState({
+  const [errorData, setErrorData] = useState<ErrorData>({
     showErrorDialog: false,
     errorMessage: '',
-    errorLogs: '',
+    errorLogs: null,
   })
 
   const isConfirmationDisabled = !isEasyConfirmationEnabled && !password
@@ -92,6 +98,14 @@ const Step4 = ({
   }
 
   const onContinue = async (_event) => {
+    if (utxos == null) {
+      setErrorData({
+        showErrorDialog: true,
+        errorMessage: intl.formatMessage(errorMessages.fetchError.message),
+        errorLogs: null,
+      })
+      return
+    }
     if (isEasyConfirmationEnabled) {
       try {
         await walletManager.ensureKeysValidity()
@@ -110,14 +124,13 @@ const Step4 = ({
 
           return
         } else {
-          setErrorData((_state) => ({
-            ..._state,
+          setErrorData({
             showErrorDialog: true,
             errorMessage: intl.formatMessage(
               errorMessages.generalError.message,
             ),
             errorLogs: String(e.message),
-          }))
+          })
         }
       }
     }
@@ -135,13 +148,13 @@ const Step4 = ({
       if (e instanceof WrongPassword) {
         await showErrorDialog(errorMessages.incorrectPassword, intl)
       } else {
-        setErrorData((_state) => ({
+        setErrorData({
           showErrorDialog: true,
           errorMessage: intl.formatMessage(
             errorMessages.generalTxError.message,
           ),
           errorLogs: String(e.message),
-        }))
+        })
       }
     }
   }
