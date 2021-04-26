@@ -375,6 +375,8 @@
   "global.actions.dialogs.enableFingerprintsFirst.title": "Action failed",
   "global.actions.dialogs.enableSystemAuthFirst.message": "Vjerojatno ste isključili zaključavanje zaslona na vašem mobitelu. Morate najprije isključiti jednostavnu potvrdu transakcije. Molimo podesite zaslon za zaključavanje (PIN / lozinku / uzorak) na svom mobitelu i ponovno pokrenite aplikaciju. Nakon toga trebalo bi biti moguće isključiti zaslon za zaključavanje na mobitelu i koristiti ovu aplikaciju.",
   "global.actions.dialogs.enableSystemAuthFirst.title": "Lock screen disabled",
+  "global.actions.dialogs.fetchError.message": "An error occurred when Yoroi tried to fetch your wallet state from the server. Please try again later.",
+  "global.actions.dialogs.fetchError.title": "Server error",
   "global.actions.dialogs.generalError.message": "Requested operation failed. This is all we know: {message}",
   "global.actions.dialogs.generalError.title": "Unexpected error",
   "global.actions.dialogs.generalLocalizableError.message": "Requested operation failed: {message}",
