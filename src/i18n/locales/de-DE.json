@@ -375,6 +375,8 @@
   "global.actions.dialogs.enableFingerprintsFirst.title": "Aktion fehlgeschlagen",
   "global.actions.dialogs.enableSystemAuthFirst.message": "Du hast wahrscheinlich den Sperrbildschirm auf deinem Smartphone deaktiviert. Du musst zuerst die einfache Transaktionsbestätigung deaktivieren. Bitte richte den Sperrbildschirm (PIN / Passwort / Muster) auf deinem Telefon ein und starte dann die Anwendung neu. Nach dieser Aktion solltest Du den Sperrbildschirm auf dem Smartphone deaktivieren und diese Anwendung verwenden können",
   "global.actions.dialogs.enableSystemAuthFirst.title": "Sperrbildschirm deaktiviert",
+  "global.actions.dialogs.fetchError.message": "An error occurred when Yoroi tried to fetch your wallet state from the server. Please try again later.",
+  "global.actions.dialogs.fetchError.title": "Server error",
   "global.actions.dialogs.generalError.message": "Die angeforderte Operation ist fehlgeschlagen. Das ist alles, was wir wissen: {message}",
   "global.actions.dialogs.generalError.title": "Unerwarteter Fehler",
   "global.actions.dialogs.generalLocalizableError.message": "Gewünschte Operation fehlgeschlagen: {message}",
