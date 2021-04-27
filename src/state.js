@@ -30,7 +30,7 @@ export type WalletMeta = {
 export type State = {
   wallets: Dict<WalletMeta>,
   wallet: {
-    name: string,
+    name: string, // note: comes from WalletMeta, exposed by walletManager only
     isInitialized: boolean,
     networkId: NetworkId,
     walletImplementationId: WalletImplementationId,

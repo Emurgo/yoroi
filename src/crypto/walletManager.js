@@ -66,7 +66,7 @@ class WalletManager {
   // storage. Unfortunately, as new metadata is added over time (eg. networkId),
   // we need to infer some values for wallets created in older versions,
   // which may induce errors and leave us with this ugly method.
-  // The responsability to check data consistency is left to the each wallet
+  // The responsibility to check data consistency is left to the each wallet
   // implementation.
   async initialize() {
     const _wallets = await this._listWallets()
@@ -503,11 +503,15 @@ class WalletManager {
     this._wallet = wallet
     this._id = walletMeta.id
 
+    // wallet state might have changed after restore due to migrations, so we
+    // update the data in storage immediately
+    await this._saveState(wallet)
+
     wallet.subscribe(this._notify)
     this._closePromise = new Promise((resolve, reject) => {
       this._closeReject = reject
     })
-    this._notify()
+    this._notify() // update redux store
 
     if (wallet.isEasyConfirmationEnabled) {
       await this.ensureKeysValidity()
@@ -575,7 +579,7 @@ class WalletManager {
 
   // TODO(ppershing): how should we deal with race conditions?
   async _updateMetadata(id, newMeta) {
-    assert.assert(this._wallets[id], '_updateWalletInfo id')
+    assert.assert(this._wallets[id], '_updateMetadata id')
     const merged = {
       ...this._wallets[id],
       ...newMeta,
@@ -593,7 +597,7 @@ class WalletManager {
 
     await this._updateMetadata(id, {name: newName})
 
-    this._notify()
+    this._notify() // update redux Store
   }
 
   // =================== create =================== //

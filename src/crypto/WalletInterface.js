@@ -48,13 +48,18 @@ export interface WalletInterface {
 
   externalChain: AddressChain;
 
-  // note: currently not exposed to redux's state
+  // note: currently not exposed to redux's store
   publicKeyHex: string;
 
-  // note: exposed to redux's state but not in storage (as it can be derived)
+  // note: exposed to redux's store but not in storage (as it can be derived)
   rewardAddressHex: ?string;
 
-  // last known version the wallet has been created/restored
+  // last known version the wallet has been opened on
+  // note: Prior to v4.1.0, `version` was set upon wallet creation/restoration
+  // and was never updated. Starting from v4.1.0, we instead store the
+  // last version the wallet has been *opened* on, since this is the actual
+  // relevant information we need to decide on whether migrations are needed.
+  // Saved in storage but not exposed to redux's store.
   version: ?string;
 
   state: WalletState;
