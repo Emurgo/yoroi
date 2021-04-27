@@ -503,11 +503,15 @@ class WalletManager {
     this._wallet = wallet
     this._id = walletMeta.id
 
+    // wallet state might have changed after restore due to migrations, so we
+    // update the data in storage immediately
+    await this._saveState(wallet)
+
     wallet.subscribe(this._notify)
     this._closePromise = new Promise((resolve, reject) => {
       this._closeReject = reject
     })
-    this._notify()
+    this._notify() // update redux store
 
     if (wallet.isEasyConfirmationEnabled) {
       await this.ensureKeysValidity()

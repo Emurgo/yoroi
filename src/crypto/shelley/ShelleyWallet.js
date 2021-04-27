@@ -254,7 +254,12 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     this.isHW = data.isHW ?? false
     this.hwDeviceInfo = data.hwDeviceInfo
     this.isReadOnly = data.isReadOnly ?? false
+
     this.version = DeviceInfo.getVersion()
+    if (this.version !== lastSeenVersion) {
+      Logger.debug(`updated version from ${lastSeenVersion} to ${this.version}`)
+    }
+
     this.internalChain = AddressChain.fromJSON(data.internalChain)
     this.externalChain = AddressChain.fromJSON(data.externalChain)
     // can be null for versions < 3.0.2, in which case we can just retrieve
