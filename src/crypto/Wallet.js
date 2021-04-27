@@ -57,7 +57,7 @@ export default class Wallet {
 
   rewardAddressHex: ?string = null
 
-  // last known version the wallet has been created/restored
+  // last known version the wallet has been opened on
   version: ?string
 
   checksum: WalletChecksum

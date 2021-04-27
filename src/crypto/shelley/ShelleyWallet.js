@@ -50,12 +50,12 @@ import * as catalystUtils from './catalystUtils'
 import {NETWORK_REGISTRY} from '../../config/types'
 import assert from '../../utils/assert'
 import {Logger} from '../../utils/logging'
-import {ObjectValues} from '../../utils/flow'
 import {InvalidState, CardanoError} from '../errors'
 import {TransactionCache} from './transactionCache'
 import {signTransaction, newAdaUnsignedTx} from './transactions'
 import {createUnsignedTx} from './transactionUtils'
 import {genTimeToSlot} from '../../utils/timeUtils'
+import {versionCompare} from '../../utils/versioning'
 import {
   filterAddressesByStakingKey,
   getDelegationStatus,
@@ -223,6 +223,71 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
 
   // =================== persistence =================== //
 
+  async _runMigrations(data: any, walletMeta: WalletMeta): Promise<void> {
+    /**
+     * New versions of Yoroi may involve changes in the data structure used to
+     * store the wallet state. Hence, we need to check whether data migrations
+     * are needed every time we open a wallet.
+     * In some cases, we can determine that some data field needs to be
+     * re-accomodated to a new format just by inspecting the data structure in
+     * storage. In other cases, we may use the explicit version number, though
+     * it should only be available for versions >= 4.1.0
+     */
+
+    // recall: Prior to v4.1.0, `version` corresponded to the version on which
+    // the wallet was created/restored.
+    const lastSeenVersion = data.version
+
+    this.state = {
+      lastGeneratedAddressIndex: data.lastGeneratedAddressIndex,
+    }
+
+    // can be null for versions < 3.0.0
+    this.networkId =
+      data.networkId != null ? data.networkId : walletMeta.networkId
+    // can be null for versions < 3.0.2
+    this.walletImplementationId =
+      data.walletImplementationId != null
+        ? data.walletImplementationId
+        : walletMeta.walletImplementationId
+
+    this.isHW = data.isHW ?? false
+    this.hwDeviceInfo = data.hwDeviceInfo
+    this.isReadOnly = data.isReadOnly ?? false
+    this.version = DeviceInfo.getVersion()
+    this.internalChain = AddressChain.fromJSON(data.internalChain)
+    this.externalChain = AddressChain.fromJSON(data.externalChain)
+    // can be null for versions < 3.0.2, in which case we can just retrieve
+    // from address generator
+    this.publicKeyHex =
+      data.publicKeyHex != null
+        ? data.publicKeyHex
+        : this.internalChain.publicKey
+    this.rewardAddressHex = await deriveRewardAddressHex(this.publicKeyHex)
+    this.transactionCache = TransactionCache.fromJSON(data.transactionCache)
+    this.isEasyConfirmationEnabled = data.isEasyConfirmationEnabled
+
+    let shouldResync = false
+    if (lastSeenVersion == null) {
+      shouldResync = true
+    } else {
+      try {
+        if (versionCompare(lastSeenVersion, '4.1.0') === -1) {
+          // force resync for versions < 4.1.0 due to server sync issue
+          // this also covers versions < 4.0 (prior to Mary HF), which also
+          // need a resync because of the new fields introduced in the tx format
+          shouldResync = true
+        }
+      } catch (e) {
+        Logger.warn('some migrations might have not been applied', e)
+      }
+    }
+
+    if (shouldResync) {
+      this.transactionCache.resetState()
+    }
+  }
+
   _integrityCheck(): void {
     try {
       if (this.networkId === NETWORK_REGISTRY.BYRON_MAINNET) {
@@ -246,21 +311,6 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
           'no device info for hardware wallet',
         )
       }
-
-      /**
-       * Mary Hardfork
-       * The Mary HF adds additional fields in the tx format.
-       * Existing installs on versions <= 3.4.x don't include these, so once
-       * these builds are updated we need to resync the tx cache. We do this by
-       * simply deleting the tx cache state
-       */
-      const txs = this.transactions
-      for (const tx of ObjectValues(txs)) {
-        if (tx.inputs.length !== 0 && tx.inputs[0].assets == null) {
-          this.transactionCache.resetState()
-          break
-        }
-      }
     } catch (e) {
       Logger.error('wallet::_integrityCheck', e)
       throw new InvalidState(e.message)
@@ -271,34 +321,8 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
   async restore(data: any, walletMeta: WalletMeta) {
     Logger.info('restore wallet')
     assert.assert(!this.isInitialized, 'restoreWallet: !isInitialized')
-    this.state = {
-      lastGeneratedAddressIndex: data.lastGeneratedAddressIndex,
-    }
 
-    // can be null for versions < 3.0.0
-    this.networkId =
-      data.networkId != null ? data.networkId : walletMeta.networkId
-    // can be null for versions < 3.0.2
-    this.walletImplementationId =
-      data.walletImplementationId != null
-        ? data.walletImplementationId
-        : walletMeta.walletImplementationId
-
-    this.isHW = data.isHW ?? false
-    this.hwDeviceInfo = data.hwDeviceInfo
-    this.isReadOnly = data.isReadOnly ?? false
-    this.version = data.version
-    this.internalChain = AddressChain.fromJSON(data.internalChain)
-    this.externalChain = AddressChain.fromJSON(data.externalChain)
-    // can be null for versions < 3.0.2, in which case we can just retrieve
-    // from address generator
-    this.publicKeyHex =
-      data.publicKeyHex != null
-        ? data.publicKeyHex
-        : this.internalChain.publicKey
-    this.rewardAddressHex = await deriveRewardAddressHex(this.publicKeyHex)
-    this.transactionCache = TransactionCache.fromJSON(data.transactionCache)
-    this.isEasyConfirmationEnabled = data.isEasyConfirmationEnabled
+    await this._runMigrations(data, walletMeta)
 
     this._integrityCheck()
 
