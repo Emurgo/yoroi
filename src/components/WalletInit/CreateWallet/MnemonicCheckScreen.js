@@ -143,55 +143,64 @@ const MnemonicCheckScreen = ({
   const last = _.last(partialPhrase)
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
-      <View style={styles.container}>
-        <StatusBar type="dark" />
+    <SafeAreaView
+      edges={['left', 'right', 'bottom']}
+      style={styles.safeAreaView}
+    >
+      <StatusBar type="dark" />
+
+      <View style={styles.content}>
         <ScrollView
+          contentContainerStyle={styles.scrollViewContentContainer}
           automaticallyAdjustContentInsets={shouldScreenScroll()}
           bounces={shouldScreenScroll()}
         >
-          <View style={styles.content}>
+          <View style={styles.instructions}>
             <Text>{intl.formatMessage(messages.instructions)}</Text>
-            <View
-              style={[
-                styles.recoveryPhrase,
-                !isPhraseValid &&
-                  isPhraseComplete &&
-                  styles.recoveryPhraseError,
-              ]}
-            >
-              {initial.map((id) => (
-                <Text style={styles.wordText} key={id}>
-                  {words[id]}
-                </Text>
-              ))}
-              {last != null && (
-                <WordBadge
-                  value={last}
-                  selected={false}
-                  word={words[last]}
-                  onPress={deselectWord}
-                />
-              )}
-            </View>
-            {!(isPhraseValid || !isPhraseComplete) && (
-              <Text style={styles.error}>
+          </View>
+
+          <View
+            style={[
+              styles.recoveryPhrase,
+              !isPhraseValid && isPhraseComplete && styles.recoveryPhraseError,
+            ]}
+          >
+            {initial.map((id) => (
+              <Text style={styles.wordText} key={id}>
+                {words[id]}
+              </Text>
+            ))}
+            {last != null && (
+              <WordBadge
+                value={last}
+                selected={false}
+                word={words[last]}
+                onPress={deselectWord}
+              />
+            )}
+          </View>
+
+          {!(isPhraseValid || !isPhraseComplete) && (
+            <View style={styles.error}>
+              <Text style={styles.errorMessage}>
                 {intl.formatMessage(messages.mnemonicWordsInputInvalidPhrase)}
               </Text>
-            )}
-            <View style={styles.words}>
-              {words.map((word, index) => (
-                <WordBadge
-                  key={index}
-                  value={index}
-                  selected={partialPhrase.includes(index)}
-                  onPress={selectWord}
-                  word={word}
-                />
-              ))}
             </View>
+          )}
+
+          <View style={styles.words}>
+            {words.map((word, index) => (
+              <WordBadge
+                key={index}
+                value={index}
+                selected={partialPhrase.includes(index)}
+                onPress={selectWord}
+                word={word}
+              />
+            ))}
           </View>
         </ScrollView>
+
         <View style={styles.buttons}>
           <Button
             block

@@ -1,27 +1,29 @@
 // @flow
 import {StyleSheet} from 'react-native'
 
-import {screenPadding} from '../../../Screen'
-
 export default StyleSheet.create({
-  screen: {
-    padding: 0,
-  },
   safeAreaView: {
     backgroundColor: '#fff',
     flex: 1,
   },
-  mnemonicNoteContainer: {
-    padding: screenPadding,
+  content: {
+    flex: 1,
   },
-  mnemonicWordsContainer: {
+  scrollViewContentContainer: {
+    paddingTop: 32,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+  },
+  mnemonicNote: {
+    paddingBottom: 16,
+  },
+  mnemonicWords: {
     backgroundColor: '#fff',
     borderColor: '#9B9B9B',
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 16,
     paddingVertical: 8,
-    marginTop: 30,
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
@@ -29,13 +31,11 @@ export default StyleSheet.create({
     lineHeight: 30,
     marginRight: 24,
   },
-  contentContainer: {
-    flexGrow: 1,
-    padding: 16,
-    justifyContent: 'space-between',
-  },
   image: {
+    paddingTop: 24,
     alignItems: 'center',
-    marginBottom: 24,
+  },
+  button: {
+    padding: 16,
   },
 })

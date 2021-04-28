@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {View, Image, Dimensions} from 'react-native'
+import {View, Image, ScrollView, Dimensions} from 'react-native'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers, withProps} from 'recompose'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -49,12 +49,19 @@ const MnemonicShowScreen = ({
   showModal,
   hideModal,
 }) => (
-  <SafeAreaView style={styles.safeAreaView}>
+  <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
     <StatusBar type="dark" />
-    <View style={styles.contentContainer}>
-      <View>
-        <Text>{intl.formatMessage(messages.mnemonicNote)}</Text>
-        <View style={styles.mnemonicWordsContainer}>
+
+    <View style={styles.content}>
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContentContainer}
+        bounces={false}
+      >
+        <View style={styles.mnemonicNote}>
+          <Text>{intl.formatMessage(messages.mnemonicNote)}</Text>
+        </View>
+
+        <View style={styles.mnemonicWords}>
           {mnemonic.split(' ').map((word, index) => (
             <Text
               key={index}
@@ -65,29 +72,31 @@ const MnemonicShowScreen = ({
             </Text>
           ))}
         </View>
-      </View>
-      {/* If screen is small hide image */}
-      {Dimensions.get('window').height > 480 && (
-        <View style={styles.image}>
-          <Image source={recoveryPhrase} />
-        </View>
-      )}
-      <View>
+
+        {/* If screen is small hide image */}
+        {Dimensions.get('window').height > 480 && (
+          <View style={styles.image}>
+            <Image source={recoveryPhrase} />
+          </View>
+        )}
+      </ScrollView>
+
+      <View style={styles.button}>
         <Button
           onPress={showModal}
           title={intl.formatMessage(messages.confirmationButton)}
           testID="mnemonicShowScreen::confirm"
         />
       </View>
-    </View>
 
-    {modal && (
-      <MnemonicBackupImportanceModal
-        visible={modal}
-        onConfirm={navigateToMnemonicCheck}
-        onRequestClose={hideModal}
-      />
-    )}
+      {modal && (
+        <MnemonicBackupImportanceModal
+          visible={modal}
+          onConfirm={navigateToMnemonicCheck}
+          onRequestClose={hideModal}
+        />
+      )}
+    </View>
   </SafeAreaView>
 )
 

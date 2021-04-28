@@ -9,11 +9,19 @@ export default StyleSheet.create({
     flex: 1,
   },
   content: {
-    flexGrow: 1,
+    flex: 1,
+  },
+  scrollViewContentContainer: {
+    paddingTop: 32,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+  },
+  instructions: {
+    paddingBottom: 16,
   },
   buttons: {
     flexDirection: 'row',
-    marginTop: 12,
+    padding: 16,
   },
   clearButton: {
     marginRight: 12,
@@ -26,8 +34,10 @@ export default StyleSheet.create({
     padding: 16,
   },
   error: {
-    color: COLORS.RED,
     paddingLeft: 16,
+  },
+  errorMessage: {
+    color: COLORS.RED,
   },
   inputLabel: {
     color: COLORS.PRIMARY,
@@ -39,7 +49,6 @@ export default StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     paddingBottom: 0,
-    marginTop: 16,
     height: 26 * 6,
     paddingHorizontal: 6,
   },
@@ -65,9 +74,7 @@ export default StyleSheet.create({
   words: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginTop: 12,
-    marginBottom: 12,
-    height: 26 * 7,
+    paddingVertical: 12,
   },
   selected: {
     opacity: 0,
