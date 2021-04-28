@@ -124,7 +124,7 @@ const handleOnFocus = async ({route, setError, clearError, intl}) => {
     await showErrorDialog(globalErrorMessages.biometricsIsTurnedOff, intl)
     return
   }
-  handleOnConfirm(route, setError, clearError, false, intl)
+  await handleOnConfirm(route, setError, clearError, false, intl)
 }
 
 const BiometricAuthScreen = ({
@@ -148,10 +148,11 @@ const BiometricAuthScreen = ({
       previousAppState.match(/inactive|background/) &&
       nextAppState === 'active'
     ) {
+      await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
       await handleOnFocus({route, setError, clearError, intl})
     } else if (
       previousAppState === 'active' &&
-      nextAppState !== null &&
+      nextAppState != null &&
       nextAppState.match(/inactive|background/)
     ) {
       // we cancel the operation when the app goes to background otherwise
