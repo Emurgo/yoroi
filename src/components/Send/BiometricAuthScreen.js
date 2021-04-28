@@ -117,13 +117,20 @@ const handleOnConfirm = async (
   }
 }
 
-const BiometricAuthScreen = ({cancelScanning, useFallback, error, intl}) => (
+const BiometricAuthScreen = ({
+  cancelScanning,
+  useFallback,
+  error,
+  intl,
+  route,
+}) => (
   <FingerprintScreenBase
     onGoBack={cancelScanning}
     headings={[
       intl.formatMessage(messages.headings1),
       intl.formatMessage(messages.headings2),
     ]}
+    subHeadings={route.params?.instructions || undefined}
     buttons={[
       <Button
         key={'use-fallback'}
@@ -134,7 +141,7 @@ const BiometricAuthScreen = ({cancelScanning, useFallback, error, intl}) => (
       />,
     ]}
     error={error && intl.formatMessage(errorMessages[error])}
-    addWelcomeMessage
+    addWelcomeMessage={route.params?.addWelcomeMessage === true}
     intl={intl}
   />
 )
