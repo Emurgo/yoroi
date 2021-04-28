@@ -4,12 +4,13 @@ import React from 'react'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
+import {useFocusEffect} from '@react-navigation/native'
 
 import {Logger} from '../../utils/logging'
 import {Button} from '../UiKit'
 import FingerprintScreenBase from '../Common/FingerprintScreenBase'
 import KeyStore from '../../crypto/KeyStore'
-import {onDidMount, onWillUnmount} from '../../utils/renderUtils'
+import {onWillUnmount} from '../../utils/renderUtils'
 import {canBiometricEncryptionBeEnabled} from '../../helpers/deviceSettings'
 import {errorMessages as globalErrorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../actions'
@@ -117,34 +118,52 @@ const handleOnConfirm = async (
   }
 }
 
+const handleOnFocus = async ({route, setError, clearError, intl}) => {
+  if (!(await canBiometricEncryptionBeEnabled())) {
+    await showErrorDialog(globalErrorMessages.biometricsIsTurnedOff, intl)
+    return
+  }
+  handleOnConfirm(route, setError, clearError, false, intl)
+}
+
 const BiometricAuthScreen = ({
   cancelScanning,
   useFallback,
   error,
   intl,
   route,
-}) => (
-  <FingerprintScreenBase
-    onGoBack={cancelScanning}
-    headings={[
-      intl.formatMessage(messages.headings1),
-      intl.formatMessage(messages.headings2),
-    ]}
-    subHeadings={route.params?.instructions || undefined}
-    buttons={[
-      <Button
-        key={'use-fallback'}
-        outline
-        title={intl.formatMessage(messages.useFallbackButton)}
-        onPress={useFallback}
-        containerStyle={styles.useFallback}
-      />,
-    ]}
-    error={error && intl.formatMessage(errorMessages[error])}
-    addWelcomeMessage={route.params?.addWelcomeMessage === true}
-    intl={intl}
-  />
-)
+  setError,
+  clearError,
+}) => {
+  useFocusEffect(
+    React.useCallback(() => {
+      handleOnFocus({route, setError, clearError, intl})
+    }, []),
+  )
+
+  return (
+    <FingerprintScreenBase
+      onGoBack={cancelScanning}
+      headings={[
+        intl.formatMessage(messages.headings1),
+        intl.formatMessage(messages.headings2),
+      ]}
+      subHeadings={route.params?.instructions || undefined}
+      buttons={[
+        <Button
+          key={'use-fallback'}
+          outline
+          title={intl.formatMessage(messages.useFallbackButton)}
+          onPress={useFallback}
+          containerStyle={styles.useFallback}
+        />,
+      ]}
+      error={error && intl.formatMessage(errorMessages[error])}
+      addWelcomeMessage={route.params?.addWelcomeMessage === true}
+      intl={intl}
+    />
+  )
+}
 
 type ExternalProps = {|
   navigation: Navigation,
@@ -199,13 +218,6 @@ export default injectIntl(
     }),
     onWillUnmount(async () => {
       await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
-    }),
-    onDidMount(async ({route, setError, clearError, intl}) => {
-      if (!(await canBiometricEncryptionBeEnabled())) {
-        await showErrorDialog(globalErrorMessages.biometricsIsTurnedOff, intl)
-        return
-      }
-      handleOnConfirm(route, setError, clearError, false, intl)
     }),
   )(BiometricAuthScreen): ComponentType<ExternalProps>),
 )

@@ -114,6 +114,7 @@ const Step4 = ({
         navigation.navigate(CATALYST_ROUTES.BIOMETRICS_SIGNING, {
           keyId: walletManager._id,
           onSuccess: async (decryptedKey) => {
+            navigation.goBack() // goback to unmount biometrics screen
             await generateTransaction(decryptedKey)
           },
           onFail: () => navigation.goBack(),
