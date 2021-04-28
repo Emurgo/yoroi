@@ -1,6 +1,7 @@
 // @flow
 
-import React from 'react'
+import React, {useState, useEffect} from 'react'
+import {AppState} from 'react-native'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
@@ -135,11 +136,42 @@ const BiometricAuthScreen = ({
   setError,
   clearError,
 }) => {
+  const [appState, setAppState] = useState<?string>(AppState.currentState)
+
+  const handleAppStateChange: (?string) => Promise<void> = async (
+    nextAppState,
+  ) => {
+    const previousAppState = appState
+    setAppState(nextAppState)
+    if (
+      previousAppState != null &&
+      previousAppState.match(/inactive|background/) &&
+      nextAppState === 'active'
+    ) {
+      await handleOnFocus({route, setError, clearError, intl})
+    } else if (
+      previousAppState === 'active' &&
+      nextAppState !== null &&
+      nextAppState.match(/inactive|background/)
+    ) {
+      // we cancel the operation when the app goes to background otherwise
+      // the app may crash. This could happen when the app logs out, as reopening
+      // the app triggers a new biometric prompt; but may also be an issue for
+      // some specific Android versions
+      await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
+    }
+  }
   useFocusEffect(
     React.useCallback(() => {
       handleOnFocus({route, setError, clearError, intl})
     }, []),
   )
+
+  useEffect(() => {
+    AppState.addEventListener('change', handleAppStateChange)
+
+    return () => AppState.removeEventListener('change', handleAppStateChange)
+  }, [])
 
   return (
     <FingerprintScreenBase
