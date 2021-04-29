@@ -1,0 +1,99 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: monthly
+    timezone: PST8PDT
+  open-pull-requests-limit: 99
+  ignore:
+  - dependency-name: localized-strings
+    versions:
+    - "> 0.2.2"
+  - dependency-name: "@react-navigation/drawer"
+    versions:
+    - 5.12.4
+  - dependency-name: flow-bin
+    versions:
+    - 0.143.1
+    - 0.145.0
+  - dependency-name: "@react-navigation/stack"
+    versions:
+    - 5.12.8
+    - 5.14.3
+  - dependency-name: "@react-navigation/material-top-tabs"
+    versions:
+    - 5.3.10
+    - 5.3.13
+  - dependency-name: react-native-device-info
+    versions:
+    - 7.3.1
+    - 8.0.1
+  - dependency-name: react-native-webview
+    versions:
+    - 11.2.1
+  - dependency-name: "@sentry/react-native"
+    versions:
+    - 2.1.0
+    - 2.1.1
+  - dependency-name: metro-react-native-babel-preset
+    versions:
+    - 0.65.0
+  - dependency-name: "@storybook/addon-links"
+    versions:
+    - 6.1.11
+    - 6.1.15
+  - dependency-name: react-native-screens
+    versions:
+    - 2.17.1
+  - dependency-name: "@react-native-community/netinfo"
+    versions:
+    - 5.9.10
+    - 5.9.9
+  - dependency-name: "@storybook/addons"
+    versions:
+    - 6.1.11
+    - 6.1.15
+  - dependency-name: eslint
+    versions:
+    - 7.16.0
+    - 7.19.0
+  - dependency-name: react-intl
+    versions:
+    - 5.10.10
+    - 5.11.0
+  - dependency-name: "@storybook/addon-actions"
+    versions:
+    - 6.1.11
+    - 6.1.15
+  - dependency-name: "@react-navigation/native"
+    versions:
+    - 5.8.10
+  - dependency-name: "@babel/runtime"
+    versions:
+    - 7.12.5
+  - dependency-name: "@babel/core"
+    versions:
+    - 7.12.10
+  - dependency-name: babel-plugin-react-intl
+    versions:
+    - 8.2.23
+  - dependency-name: "@babel/cli"
+    versions:
+    - 7.12.10
+  - dependency-name: "@ledgerhq/react-native-hw-transport-ble"
+    versions:
+    - 5.36.0
+  - dependency-name: react-native-qrcode-scanner
+    versions:
+    - 1.5.1
+  - dependency-name: "@react-navigation/bottom-tabs"
+    versions:
+    - 5.11.2
+  - dependency-name: "@babel/node"
+    versions:
+    - 7.12.10
+  - dependency-name: eslint-plugin-flowtype
+    versions:
+    - 5.2.0
+  rebase-strategy: disabled
