@@ -120,7 +120,7 @@
     "babel-loader": "8.2.2",
     "babel-plugin-react-intl": "^3.0.1",
     "babel-plugin-require-context-hook": "^1.0.0",
-    "detox": "16.7.2",
+    "detox": "17.4.6",
     "eslint": "6.5.1",
     "eslint-config-vacuumlabs": "1.9.0",
     "eslint-plugin-flowtype": "3.12.1",
