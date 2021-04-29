@@ -166,6 +166,7 @@ const NavigatorSwitch = compose(
                     }
                   }
                 },
+                addWelcomeMessage: true,
               }}
             />
           )}

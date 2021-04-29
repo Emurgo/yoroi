@@ -31,11 +31,7 @@ import {
 } from '../UiKit'
 import ErrorModal from '../Common/ErrorModal'
 import {withTitle} from '../../utils/renderUtils'
-import {
-  CATALYST_ROUTES,
-  SEND_ROUTES,
-  WALLET_ROOT_ROUTES,
-} from '../../RoutesList'
+import {CATALYST_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
 import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
 import globalMessages, {
   errorMessages,
@@ -112,11 +108,12 @@ const Step5 = ({
     if (isEasyConfirmationEnabled) {
       try {
         await walletManager.ensureKeysValidity()
-        navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
+        navigation.navigate(CATALYST_ROUTES.BIOMETRICS_SIGNING, {
           keyId: walletManager._id,
           onSuccess: async (decryptedKey) => {
             await submitTrx(decryptedKey)
           },
+          addWelcomeMessage: false,
           onFail: () => navigation.goBack(),
         })
       } catch (e) {
@@ -136,7 +133,9 @@ const Step5 = ({
           }))
         }
       }
+      return
     }
+
     try {
       const decryptedKey = await KeyStore.getData(
         walletManager._id,

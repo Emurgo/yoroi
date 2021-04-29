@@ -284,12 +284,16 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
           shouldResync = true
         }
       } catch (e) {
-        Logger.warn('some migrations might have not been applied', e)
+        Logger.warn(
+          'runMigrations: some migrations might have not been applied',
+          e,
+        )
       }
     }
 
     if (shouldResync) {
       this.transactionCache.resetState()
+      Logger.info('runMigrations: the transaction cache has been reset')
     }
   }
 

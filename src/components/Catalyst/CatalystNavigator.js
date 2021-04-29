@@ -15,6 +15,7 @@ import CatalystStep3 from './Step3'
 import CatalystStep4 from './Step4'
 import CatalystStep5 from './Step5'
 import CatalystStep6 from './Step6'
+import BiometricAuthScreen from '../Send/BiometricAuthScreen'
 
 const Stack = createStackNavigator()
 
@@ -70,6 +71,11 @@ const CatalystNavigator = () => (
         title: route.params?.title ?? undefined,
         ...defaultNavigationOptions,
       })}
+    />
+    <Stack.Screen
+      name={CATALYST_ROUTES.BIOMETRICS_SIGNING}
+      component={BiometricAuthScreen}
+      options={{headerShown: false}}
     />
   </Stack.Navigator>
 )

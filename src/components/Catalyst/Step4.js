@@ -7,7 +7,7 @@
  * ### HW is NOT supported yet - validation is done on first screen itself###
  */
 
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {View, SafeAreaView} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
@@ -26,11 +26,7 @@ import {
 } from '../UiKit'
 import ErrorModal from '../Common/ErrorModal'
 import {withTitle} from '../../utils/renderUtils'
-import {
-  CATALYST_ROUTES,
-  SEND_ROUTES,
-  WALLET_ROOT_ROUTES,
-} from '../../RoutesList'
+import {CATALYST_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
 import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
 import globalMessages, {
   errorMessages,
@@ -56,6 +52,12 @@ const messages = defineMessages({
     id: 'components.catalyst.step4.description',
     defaultMessage:
       '!!!Enter your spending password to be able to generate the required certificate for voting',
+  },
+  bioAuthInstructions: {
+    id: 'components.catalyst.step4.bioAuthInstructions',
+    defaultMessage:
+      '!!!Please authenticate so that Yoroi can generate the required ' +
+      'certificate for voting',
   },
 })
 
@@ -109,12 +111,15 @@ const Step4 = ({
     if (isEasyConfirmationEnabled) {
       try {
         await walletManager.ensureKeysValidity()
-        navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
+        navigation.navigate(CATALYST_ROUTES.BIOMETRICS_SIGNING, {
           keyId: walletManager._id,
           onSuccess: async (decryptedKey) => {
+            navigation.goBack() // goback to unmount biometrics screen
             await generateTransaction(decryptedKey)
           },
           onFail: () => navigation.goBack(),
+          addWelcomeMessage: false,
+          instructions: [intl.formatMessage(messages.bioAuthInstructions)],
         })
       } catch (e) {
         if (e instanceof SystemAuthDisabled) {
@@ -133,6 +138,7 @@ const Step4 = ({
           })
         }
       }
+      return
     }
     try {
       const decryptedKey = await KeyStore.getData(
@@ -158,6 +164,15 @@ const Step4 = ({
       }
     }
   }
+
+  useEffect(() => {
+    // if easy confirmation is enabled we go directly to the authentication
+    // screen and then build the registration tx
+    if (isEasyConfirmationEnabled) {
+      onContinue()
+    }
+  }, [])
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <ProgressStep currentStep={4} totalSteps={6} />

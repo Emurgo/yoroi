@@ -15,6 +15,7 @@ function loadStories() {
 	require('../src/components/Ledger/LedgerConnect.stories');
 	require('../src/components/Ledger/LedgerTransportSwitchModal.stories');
 	require('../src/components/MaintenanceScreen.stories');
+	require('../src/components/Send/BiometricAuthScreen.stories');
 	require('../src/components/UiKit/Button.stories');
 	require('../src/components/WalletInit/ConnectNanoX/CheckNanoXScreen.stories');
 	require('../src/components/WalletInit/ConnectNanoX/ConnectNanoXScreen.stories');
@@ -44,6 +45,7 @@ const stories = [
 	'../src/components/Ledger/LedgerConnect.stories',
 	'../src/components/Ledger/LedgerTransportSwitchModal.stories',
 	'../src/components/MaintenanceScreen.stories',
+	'../src/components/Send/BiometricAuthScreen.stories',
 	'../src/components/UiKit/Button.stories',
 	'../src/components/WalletInit/ConnectNanoX/CheckNanoXScreen.stories',
 	'../src/components/WalletInit/ConnectNanoX/ConnectNanoXScreen.stories',

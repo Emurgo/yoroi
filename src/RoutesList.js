@@ -116,4 +116,5 @@ export const CATALYST_ROUTES = {
   STEP4: 'catalyst-generate-trx',
   STEP5: 'catalyst-transaction',
   STEP6: 'catalyst-qr-code',
+  BIOMETRICS_SIGNING: 'catalyst-biometrics-signing',
 }

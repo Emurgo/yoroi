@@ -1,15 +1,17 @@
 // @flow
 
-import React from 'react'
+import React, {useState, useEffect} from 'react'
+import {AppState} from 'react-native'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
+import {useFocusEffect} from '@react-navigation/native'
 
 import {Logger} from '../../utils/logging'
 import {Button} from '../UiKit'
 import FingerprintScreenBase from '../Common/FingerprintScreenBase'
 import KeyStore from '../../crypto/KeyStore'
-import {onDidMount, onWillUnmount} from '../../utils/renderUtils'
+import {onWillUnmount} from '../../utils/renderUtils'
 import {canBiometricEncryptionBeEnabled} from '../../helpers/deviceSettings'
 import {errorMessages as globalErrorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../actions'
@@ -117,27 +119,84 @@ const handleOnConfirm = async (
   }
 }
 
-const BiometricAuthScreen = ({cancelScanning, useFallback, error, intl}) => (
-  <FingerprintScreenBase
-    onGoBack={cancelScanning}
-    headings={[
-      intl.formatMessage(messages.headings1),
-      intl.formatMessage(messages.headings2),
-    ]}
-    buttons={[
-      <Button
-        key={'use-fallback'}
-        outline
-        title={intl.formatMessage(messages.useFallbackButton)}
-        onPress={useFallback}
-        containerStyle={styles.useFallback}
-      />,
-    ]}
-    error={error && intl.formatMessage(errorMessages[error])}
-    addWelcomeMessage
-    intl={intl}
-  />
-)
+const handleOnFocus = async ({route, setError, clearError, intl}) => {
+  if (!(await canBiometricEncryptionBeEnabled())) {
+    await showErrorDialog(globalErrorMessages.biometricsIsTurnedOff, intl)
+    return
+  }
+  await handleOnConfirm(route, setError, clearError, false, intl)
+}
+
+const BiometricAuthScreen = ({
+  cancelScanning,
+  useFallback,
+  error,
+  intl,
+  route,
+  setError,
+  clearError,
+}) => {
+  const [appState, setAppState] = useState<?string>(AppState.currentState)
+
+  const handleAppStateChange: (?string) => Promise<void> = async (
+    nextAppState,
+  ) => {
+    const previousAppState = appState
+    setAppState(nextAppState)
+    if (
+      previousAppState != null &&
+      previousAppState.match(/inactive|background/) &&
+      nextAppState === 'active'
+    ) {
+      await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
+      await handleOnFocus({route, setError, clearError, intl})
+    } else if (
+      previousAppState === 'active' &&
+      nextAppState != null &&
+      nextAppState.match(/inactive|background/)
+    ) {
+      // we cancel the operation when the app goes to background otherwise
+      // the app may crash. This could happen when the app logs out, as reopening
+      // the app triggers a new biometric prompt; but may also be an issue for
+      // some specific Android versions
+      await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
+    }
+  }
+  useFocusEffect(
+    React.useCallback(() => {
+      handleOnFocus({route, setError, clearError, intl})
+    }, []),
+  )
+
+  useEffect(() => {
+    AppState.addEventListener('change', handleAppStateChange)
+
+    return () => AppState.removeEventListener('change', handleAppStateChange)
+  }, [])
+
+  return (
+    <FingerprintScreenBase
+      onGoBack={cancelScanning}
+      headings={[
+        intl.formatMessage(messages.headings1),
+        intl.formatMessage(messages.headings2),
+      ]}
+      subHeadings={route.params?.instructions || undefined}
+      buttons={[
+        <Button
+          key={'use-fallback'}
+          outline
+          title={intl.formatMessage(messages.useFallbackButton)}
+          onPress={useFallback}
+          containerStyle={styles.useFallback}
+        />,
+      ]}
+      error={error && intl.formatMessage(errorMessages[error])}
+      addWelcomeMessage={route.params?.addWelcomeMessage === true}
+      intl={intl}
+    />
+  )
+}
 
 type ExternalProps = {|
   navigation: Navigation,
@@ -192,13 +251,6 @@ export default injectIntl(
     }),
     onWillUnmount(async () => {
       await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
-    }),
-    onDidMount(async ({route, setError, clearError, intl}) => {
-      if (!(await canBiometricEncryptionBeEnabled())) {
-        await showErrorDialog(globalErrorMessages.biometricsIsTurnedOff, intl)
-        return
-      }
-      handleOnConfirm(route, setError, clearError, false, intl)
     }),
   )(BiometricAuthScreen): ComponentType<ExternalProps>),
 )
