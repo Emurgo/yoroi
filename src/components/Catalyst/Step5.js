@@ -58,8 +58,16 @@ const messages = defineMessages({
   description: {
     id: 'components.catalyst.step5.description',
     defaultMessage:
-      '!!!Enter the spending password to confirm voting registration and ' +
-      'submit the certificate generated in previous step to blockchain',
+      '!!!Please enter your spending password again to confirm your voting ' +
+      'registration and submit the certificate generated in the previous ' +
+      'step.',
+  },
+  bioAuthDescription: {
+    id: 'components.catalyst.step5.bioAuthDescription',
+    defaultMessage:
+      '!!!Please confirm your voting registration. You will be asked to ' +
+      'authenticate once again to sign and submit the certificate generated ' +
+      'in the previous step.',
   },
 })
 
@@ -173,12 +181,16 @@ const Step5 = ({
             {intl.formatMessage(messages.subTitle)}
           </Text>
           <Text style={[styles.description, styles.mb70]}>
-            {intl.formatMessage(messages.description)}
+            {/* eslint-disable indent */
+            isEasyConfirmationEnabled
+              ? intl.formatMessage(messages.bioAuthDescription)
+              : intl.formatMessage(messages.description)}
           </Text>
-          <Text small>
-            {intl.formatMessage(txLabels.fees)}:{' '}
-            {fees ? formatTokenWithSymbol(fees, defaultAsset) : ''}
-          </Text>
+          <ValidatedTextInput
+            value={fees ? formatTokenWithSymbol(fees, defaultAsset) : ''}
+            label={`${intl.formatMessage(txLabels.fees)}`}
+            editable={false}
+          />
           {!isEasyConfirmationEnabled && (
             <View>
               <ValidatedTextInput
