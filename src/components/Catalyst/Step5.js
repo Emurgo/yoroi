@@ -190,6 +190,7 @@ const Step5 = ({
             value={fees ? formatTokenWithSymbol(fees, defaultAsset) : ''}
             label={`${intl.formatMessage(txLabels.fees)}`}
             editable={false}
+            onChangeText={() => ({})}
           />
           {!isEasyConfirmationEnabled && (
             <View>
