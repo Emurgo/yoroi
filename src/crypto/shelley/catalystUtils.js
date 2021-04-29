@@ -4,6 +4,7 @@
 // // @flow
 
 import {
+  Address,
   Bip32PrivateKey,
   encode_json_str_to_metadatum,
   MetadataJsonSchema,
@@ -23,7 +24,7 @@ export const CatalystLabels = Object.freeze({
 export async function generateRegistration(request: {|
   stakePrivateKey: Bip32PrivateKey,
   catalystPrivateKey: Bip32PrivateKey,
-  receiverAddress: Buffer,
+  rewardAddress: Address,
   absSlotNumber: number,
 |}): TransactionMetadata {
   /**
@@ -33,7 +34,7 @@ export async function generateRegistration(request: {|
    * {
    *   1: "pubkey generated for catalyst app",
    *   2: "stake key public key",
-   *   3: "address to receive rewards to"
+   *   3: "reward address to receive voting rewards"
    * }
    * label: 61285
    * {
@@ -49,7 +50,9 @@ export async function generateRegistration(request: {|
       '2': `0x${Buffer.from(
         await (await request.stakePrivateKey.to_public()).as_bytes(),
       ).toString('hex')}`,
-      '3': `0x${Buffer.from(request.receiverAddress).toString('hex')}`,
+      '3': `0x${Buffer.from(await request.rewardAddress.to_bytes()).toString(
+        'hex',
+      )}`,
       '4': request.absSlotNumber,
     }),
     MetadataJsonSchema.BasicConversions,

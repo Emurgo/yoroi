@@ -631,10 +631,12 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
     )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
 
+    const rewardAddress = await this.getRewardAddress()
+
     const metadata = await catalystUtils.generateRegistration({
       stakePrivateKey,
       catalystPrivateKey,
-      receiverAddress: Buffer.from(changeAddr.address, 'hex'),
+      rewardAddress,
       absSlotNumber: absSlotNumber.toNumber(),
     })
 
