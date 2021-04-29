@@ -135,7 +135,7 @@
     "node-cardano-wallet": "https://github.com/Emurgo/node-cardano-wallet.git",
     "prettier": "1.14.3",
     "prettylint": "1.0.0",
-    "react-dom": "16.8.3",
+    "react-dom": "16.13.1",
     "react-intl-translations-manager": "^5.0.3",
     "react-native-inhibit-warnings": "https://github.com/Emurgo/react-native-inhibit-warnings.git",
     "react-native-schemes-manager": "^1.0.5",
