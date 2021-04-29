@@ -110,7 +110,7 @@
     "vm-browserify": "1.1.2"
   },
   "devDependencies": {
-    "@emurgo/cardano-serialization-lib-nodejs": "6.0.0",
+    "@emurgo/cardano-serialization-lib-nodejs": "7.0.0",
     "@storybook/addon-actions": "^5.3.14",
     "@storybook/addon-links": "^5.3.14",
     "@storybook/addons": "^5.3.14",
