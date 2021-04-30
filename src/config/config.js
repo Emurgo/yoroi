@@ -97,6 +97,17 @@ const HARDWARE_WALLETS = {
   },
 }
 
+const CATALYST = {
+  MIN_ADA: NUMBERS.LOVELACES_PER_ADA.times(450),
+  VOTING_ROUNDS: [
+    {
+      NEXT_ROUND: 4,
+      START_DATE: '6 May 2021 19:00:00 GMT',
+      END_DATE: '13 May 2021 19:00:00 GMT',
+    },
+  ],
+}
+
 export const CONFIG = {
   DEBUG: {
     // WARNING: NEVER change these flags
@@ -156,6 +167,7 @@ export const CONFIG = {
     },
   PRIMARY_ASSET_CONSTANTS,
   HARDWARE_WALLETS,
+  CATALYST,
   PIN_LENGTH: 6,
   APP_LOCK_TIMEOUT: 120 * 1000,
   LOG_LEVEL: _LOG_LEVEL,

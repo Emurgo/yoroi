@@ -1,9 +1,8 @@
 // @flow
 
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {withStateHandlers} from 'recompose'
 import {useNavigationState} from '@react-navigation/native'
 import {View, RefreshControl, ScrollView, Image} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
@@ -28,6 +27,7 @@ import {
 } from '../../selectors'
 import TxHistoryList from './TxHistoryList'
 import walletManager from '../../crypto/walletManager'
+import {MultiToken} from '../../crypto/MultiToken'
 import {updateHistory} from '../../actions/history'
 import {checkForFlawedWallets} from '../../actions'
 import {
@@ -36,19 +36,20 @@ import {
   withNavigationTitle,
 } from '../../utils/renderUtils'
 import FlawedWalletModal from './FlawedWalletModal'
+import StandardModal from '../Common/StandardModal'
 import {WALLET_ROOT_ROUTES, CATALYST_ROUTES} from '../../RoutesList'
-import {isByron} from '../../config/config'
+import {CONFIG, isByron, isHaskellShelley} from '../../config/config'
 
 import {formatTokenWithText} from '../../utils/format'
 import image from '../../assets/img/no_transactions.png'
-import globalMessages from '../../i18n/global-messages'
+import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
 
 import styles from './styles/TxHistory.style'
 
 import type {ComponentType} from 'react'
 import type {Navigation} from '../../types/navigation'
 import type {State} from '../../state'
-import type {Token} from '../../types/HistoryTransaction'
+import type {TransactionInfo, Token} from '../../types/HistoryTransaction'
 
 const messages = defineMessages({
   noTransactions: {
@@ -68,6 +69,19 @@ const warningBannerMessages = defineMessages({
       '!!!The Shelley protocol upgrade adds a new Shelley wallet type which supports delegation.',
   },
 })
+
+const isRegistrationOpen = (() => {
+  const now = new Date()
+  const rounds = CONFIG.CATALYST.VOTING_ROUNDS
+  for (const round of rounds) {
+    const startDate = new Date(Date.parse(round.START_DATE))
+    const endDate = new Date(Date.parse(round.END_DATE))
+    if (now >= startDate && now <= endDate) {
+      return true
+    }
+  }
+  return false
+})()
 
 const NoTxHistory = injectIntl(({intl}) => (
   <View style={styles.empty}>
@@ -106,6 +120,19 @@ const AvailableAmountBanner = injectIntl(
   ),
 )
 
+type Props = {|
+  transactionsInfo: TransactionInfo,
+  navigation: Navigation,
+  isSyncing: boolean,
+  isOnline: boolean,
+  updateHistory: () => Promise<void>,
+  lastSyncError: any,
+  tokenBalance: MultiToken,
+  availableAssets: Dict<Token>,
+  isFlawedWallet: boolean,
+  walletMeta: ReturnType<typeof walletMetaSelector>,
+  intl: any,
+|}
 const TxHistory = ({
   transactionsInfo,
   navigation,
@@ -116,13 +143,28 @@ const TxHistory = ({
   tokenBalance,
   availableAssets,
   isFlawedWallet,
-  showWarning,
-  setShowWarning,
   walletMeta,
   intl,
-}) => {
+}: Props) => {
+  const [showWarning, setShowWarning] = useState<boolean>(
+    isByron(walletMeta.walletImplementationId),
+  )
+
+  const [showInsufficientFundsModal, setShowInsufficientFundsModal] = useState<
+    boolean,
+  >(false)
+
   const routes = useNavigationState((state) => state.routes)
 
+  const showCatalystVotingBanner =
+    (!walletMeta.isHW &&
+      isRegistrationOpen &&
+      isHaskellShelley(walletMeta.walletImplementationId)) ||
+    __DEV__
+
+  const assetMetaData = availableAssets[tokenBalance.getDefaultId()]
+
+  // TODO: move this to dashboard once it's set as default screen
   useEffect(
     () =>
       navigation.addListener('beforeRemove', (e) => {
@@ -138,9 +180,17 @@ const TxHistory = ({
     <SafeAreaView style={styles.scrollView}>
       <StatusBar type="dark" />
       <View style={styles.container}>
-        <VotingBanner
-          onPress={() => navigation.navigate(CATALYST_ROUTES.ROOT)}
-        />
+        {showCatalystVotingBanner && (
+          <VotingBanner
+            onPress={() => {
+              if (tokenBalance.getDefault().lt(CONFIG.CATALYST.MIN_ADA)) {
+                setShowInsufficientFundsModal(true)
+                return
+              }
+              navigation.navigate(CATALYST_ROUTES.ROOT)
+            }}
+          />
+        )}
         {isFlawedWallet === true && (
           <FlawedWalletModal
             visible={isFlawedWallet === true}
@@ -199,6 +249,35 @@ const TxHistory = ({
           )
         /* eslint-enable indent */
         }
+
+        <StandardModal
+          visible={showInsufficientFundsModal}
+          title={intl.formatMessage(globalMessages.attention)}
+          children={
+            <View>
+              <Text>
+                {intl.formatMessage(globalMessages.insufficientBalance, {
+                  requiredBalance: formatTokenWithText(
+                    CONFIG.CATALYST.MIN_ADA,
+                    assetMetaData,
+                  ),
+                  currentBalance: formatTokenWithText(
+                    tokenBalance.getDefault(),
+                    assetMetaData,
+                  ),
+                })}
+              </Text>
+            </View>
+          }
+          onRequestClose={() => setShowInsufficientFundsModal(false)}
+          primaryButton={{
+            label: intl.formatMessage(
+              confirmationMessages.commonButtons.backButton,
+            ),
+            onPress: () => setShowInsufficientFundsModal(false),
+          }}
+          showCloseIcon
+        />
       </View>
     </SafeAreaView>
   )
@@ -233,14 +312,6 @@ export default injectIntl(
       checkForFlawedWallets()
       updateHistory()
     }),
-    withStateHandlers(
-      {
-        showWarning: true,
-      },
-      {
-        setShowWarning: () => (showWarning: boolean) => ({showWarning}),
-      },
-    ),
     withNavigationTitle(({walletMeta}) => walletMeta.name),
   )(TxHistory): ComponentType<ExternalProps>),
 )

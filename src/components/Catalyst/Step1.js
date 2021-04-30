@@ -39,6 +39,12 @@ const messages = defineMessages({
     defaultMessage:
       '!!!Before you begin, make sure to download the Catalyst Voting App.',
   },
+  tip: {
+    id: 'components.catalyst.step1.tip',
+    defaultMessage:
+      '!!!Tip: Make sure you know how to take a screenshot with your device, ' +
+      'so that you can backup your catalyst QR code.',
+  },
 })
 
 const Step1 = ({intl, generateVotingKeys, navigation, fetchUTXOs}) => {
@@ -72,7 +78,7 @@ const Step1 = ({intl, generateVotingKeys, navigation, fetchUTXOs}) => {
             <View style={styles.mb40}>
               <Image source={AppDownload} />
             </View>
-            <View style={styles.buttons}>
+            <View style={[styles.buttons, styles.mb40]}>
               <TouchableOpacity onPress={() => openAppStore()}>
                 <Image style={styles.iOS} source={appstoreBadge} />
               </TouchableOpacity>
@@ -80,6 +86,9 @@ const Step1 = ({intl, generateVotingKeys, navigation, fetchUTXOs}) => {
                 <Image source={playstoreBadge} />
               </TouchableOpacity>
             </View>
+          </View>
+          <View style={styles.description}>
+            <Text style={styles.tip}>{intl.formatMessage(messages.tip)}</Text>
           </View>
         </ScrollView>
         <Button

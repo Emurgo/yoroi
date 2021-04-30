@@ -14,6 +14,9 @@ export default StyleSheet.create({
     textAlign: 'center',
     width: '80%',
   },
+  tip: {
+    width: '90%',
+  },
   images: {
     alignItems: 'center',
   },

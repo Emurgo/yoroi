@@ -552,4 +552,11 @@ export default defineMessages({
     id: 'components.catalyst.title',
     defaultMessage: '!!!Register to vote',
   },
+  insufficientBalance: {
+    id: 'components.catalyst.insufficientBalance',
+    defaultMessage:
+      '!!!Participating requires at least {requiredBalance},' +
+      'but you only have {currentBalance}. Unwithdrawn rewards are ' +
+      'not included in this amount',
+  },
 })
