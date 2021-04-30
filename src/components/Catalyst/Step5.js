@@ -184,7 +184,9 @@ const Step5 = ({
             {/* eslint-disable indent */
             isEasyConfirmationEnabled
               ? intl.formatMessage(messages.bioAuthDescription)
-              : intl.formatMessage(messages.description)}
+              : intl.formatMessage(messages.description)
+            /* eslint-enable indent */
+            }
           </Text>
           <ValidatedTextInput
             value={fees ? formatTokenWithSymbol(fees, defaultAsset) : ''}

@@ -37,7 +37,7 @@ import {
 } from '../../utils/renderUtils'
 import FlawedWalletModal from './FlawedWalletModal'
 import {WALLET_ROOT_ROUTES, CATALYST_ROUTES} from '../../RoutesList'
-import {isByron} from '../../config/config'
+import {isByron, isHaskellShelley} from '../../config/config'
 
 import {formatTokenWithText} from '../../utils/format'
 import image from '../../assets/img/no_transactions.png'
@@ -138,11 +138,15 @@ const TxHistory = ({
     <SafeAreaView style={styles.scrollView}>
       <StatusBar type="dark" />
       <View style={styles.container}>
-        {!walletMeta.isHW && (
-          <VotingBanner
-            onPress={() => navigation.navigate(CATALYST_ROUTES.ROOT)}
-          />
-        )}
+        {/* eslint-disable indent */
+        !walletMeta.isHW &&
+          isHaskellShelley(walletMeta.networkId) && (
+            <VotingBanner
+              onPress={() => navigation.navigate(CATALYST_ROUTES.ROOT)}
+            />
+          )
+        /* eslint-enable indent */
+        }
         {isFlawedWallet === true && (
           <FlawedWalletModal
             visible={isFlawedWallet === true}
