@@ -1,9 +1,8 @@
 // @flow
 
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {withStateHandlers} from 'recompose'
 import {useNavigationState} from '@react-navigation/native'
 import {View, RefreshControl, ScrollView, Image} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
@@ -28,6 +27,7 @@ import {
 } from '../../selectors'
 import TxHistoryList from './TxHistoryList'
 import walletManager from '../../crypto/walletManager'
+import {MultiToken} from '../../crypto/MultiToken'
 import {updateHistory} from '../../actions/history'
 import {checkForFlawedWallets} from '../../actions'
 import {
@@ -48,7 +48,7 @@ import styles from './styles/TxHistory.style'
 import type {ComponentType} from 'react'
 import type {Navigation} from '../../types/navigation'
 import type {State} from '../../state'
-import type {Token} from '../../types/HistoryTransaction'
+import type {TransactionInfo, Token} from '../../types/HistoryTransaction'
 
 const messages = defineMessages({
   noTransactions: {
@@ -106,6 +106,19 @@ const AvailableAmountBanner = injectIntl(
   ),
 )
 
+type Props = {|
+  transactionsInfo: TransactionInfo,
+  navigation: Navigation,
+  isSyncing: boolean,
+  isOnline: boolean,
+  updateHistory: () => Promise<void>,
+  lastSyncError: any,
+  tokenBalance: MultiToken,
+  availableAssets: Dict<Token>,
+  isFlawedWallet: boolean,
+  walletMeta: ReturnType<typeof walletMetaSelector>,
+  intl: any,
+|}
 const TxHistory = ({
   transactionsInfo,
   navigation,
@@ -116,13 +129,16 @@ const TxHistory = ({
   tokenBalance,
   availableAssets,
   isFlawedWallet,
-  showWarning,
-  setShowWarning,
   walletMeta,
   intl,
-}) => {
+}: Props) => {
+  const [showWarning, setShowWarning] = useState<boolean>(
+    isByron(walletMeta.walletImplementationId),
+  )
+
   const routes = useNavigationState((state) => state.routes)
 
+  // TODO: move this to dashboard when once it's set as default screen
   useEffect(
     () =>
       navigation.addListener('beforeRemove', (e) => {
@@ -140,7 +156,7 @@ const TxHistory = ({
       <View style={styles.container}>
         {/* eslint-disable indent */
         !walletMeta.isHW &&
-          isHaskellShelley(walletMeta.networkId) && (
+          isHaskellShelley(walletMeta.walletImplementationId) && (
             <VotingBanner
               onPress={() => navigation.navigate(CATALYST_ROUTES.ROOT)}
             />
@@ -239,14 +255,6 @@ export default injectIntl(
       checkForFlawedWallets()
       updateHistory()
     }),
-    withStateHandlers(
-      {
-        showWarning: true,
-      },
-      {
-        setShowWarning: () => (showWarning: boolean) => ({showWarning}),
-      },
-    ),
     withNavigationTitle(({walletMeta}) => walletMeta.name),
   )(TxHistory): ComponentType<ExternalProps>),
 )
