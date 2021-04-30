@@ -343,6 +343,7 @@
   "components.catalyst.banner.name": "Catalyst Voting",
   "components.catalyst.insufficientBalance": "Participating requires at least {requiredBalance}, but you only have {currentBalance}. Unwithdrawn rewards are not included in this amount",
   "components.catalyst.step1.subTitle": "Before you begin, make sure to download the Catalyst Voting App.",
+  "components.catalyst.step1.stakingKeyNotRegistered": "Catalyst voting rewards are sent to delegation accounts and your wallet does not seem to have a registered delegation certificate. If you want to receive voting rewards, you need to delegate your funds first.",
   "components.catalyst.step1.tip": "Tip: Make sure you know how to take a screenshot with your device, so that you can backup your catalyst QR code.",
   "components.catalyst.step2.subTitle": "Write Down PIN",
   "components.catalyst.step2.description": "Please write down this PIN as you will need it every time you want to access the Catalyst Voting app",
