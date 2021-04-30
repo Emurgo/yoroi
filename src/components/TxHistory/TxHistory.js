@@ -36,12 +36,13 @@ import {
   withNavigationTitle,
 } from '../../utils/renderUtils'
 import FlawedWalletModal from './FlawedWalletModal'
+import StandardModal from '../Common/StandardModal'
 import {WALLET_ROOT_ROUTES, CATALYST_ROUTES} from '../../RoutesList'
-import {isByron, isHaskellShelley} from '../../config/config'
+import {CONFIG, isByron, isHaskellShelley} from '../../config/config'
 
 import {formatTokenWithText} from '../../utils/format'
 import image from '../../assets/img/no_transactions.png'
-import globalMessages from '../../i18n/global-messages'
+import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
 
 import styles from './styles/TxHistory.style'
 
@@ -68,6 +69,19 @@ const warningBannerMessages = defineMessages({
       '!!!The Shelley protocol upgrade adds a new Shelley wallet type which supports delegation.',
   },
 })
+
+const isRegistrationOpen = (() => {
+  const now = new Date()
+  const rounds = CONFIG.CATALYST.VOTING_ROUNDS
+  for (const round of rounds) {
+    const startDate = new Date(Date.parse(round.START_DATE))
+    const endDate = new Date(Date.parse(round.END_DATE))
+    if (now >= startDate && now <= endDate) {
+      return true
+    }
+  }
+  return false
+})()
 
 const NoTxHistory = injectIntl(({intl}) => (
   <View style={styles.empty}>
@@ -136,9 +150,21 @@ const TxHistory = ({
     isByron(walletMeta.walletImplementationId),
   )
 
+  const [showInsufficientFundsModal, setShowInsufficientFundsModal] = useState<
+    boolean,
+  >(false)
+
   const routes = useNavigationState((state) => state.routes)
 
-  // TODO: move this to dashboard when once it's set as default screen
+  const showCatalystVotingBanner =
+    (!walletMeta.isHW &&
+      isRegistrationOpen &&
+      isHaskellShelley(walletMeta.walletImplementationId)) ||
+    __DEV__
+
+  const assetMetaData = availableAssets[tokenBalance.getDefaultId()]
+
+  // TODO: move this to dashboard once it's set as default screen
   useEffect(
     () =>
       navigation.addListener('beforeRemove', (e) => {
@@ -154,15 +180,17 @@ const TxHistory = ({
     <SafeAreaView style={styles.scrollView}>
       <StatusBar type="dark" />
       <View style={styles.container}>
-        {/* eslint-disable indent */
-        !walletMeta.isHW &&
-          isHaskellShelley(walletMeta.walletImplementationId) && (
-            <VotingBanner
-              onPress={() => navigation.navigate(CATALYST_ROUTES.ROOT)}
-            />
-          )
-        /* eslint-enable indent */
-        }
+        {showCatalystVotingBanner && (
+          <VotingBanner
+            onPress={() => {
+              if (tokenBalance.getDefault().lt(CONFIG.CATALYST.MIN_ADA)) {
+                setShowInsufficientFundsModal(true)
+                return
+              }
+              navigation.navigate(CATALYST_ROUTES.ROOT)
+            }}
+          />
+        )}
         {isFlawedWallet === true && (
           <FlawedWalletModal
             visible={isFlawedWallet === true}
@@ -221,6 +249,35 @@ const TxHistory = ({
           )
         /* eslint-enable indent */
         }
+
+        <StandardModal
+          visible={showInsufficientFundsModal}
+          title={intl.formatMessage(globalMessages.attention)}
+          children={
+            <View>
+              <Text>
+                {intl.formatMessage(globalMessages.insufficientBalance, {
+                  requiredBalance: formatTokenWithText(
+                    CONFIG.CATALYST.MIN_ADA,
+                    assetMetaData,
+                  ),
+                  currentBalance: formatTokenWithText(
+                    tokenBalance.getDefault(),
+                    assetMetaData,
+                  ),
+                })}
+              </Text>
+            </View>
+          }
+          onRequestClose={() => setShowInsufficientFundsModal(false)}
+          primaryButton={{
+            label: intl.formatMessage(
+              confirmationMessages.commonButtons.backButton,
+            ),
+            onPress: () => setShowInsufficientFundsModal(false),
+          }}
+          showCloseIcon
+        />
       </View>
     </SafeAreaView>
   )
