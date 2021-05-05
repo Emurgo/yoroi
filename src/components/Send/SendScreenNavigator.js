@@ -72,9 +72,15 @@ const SendScreenNavigator = () => (
                       }
                     } else {
                       setAddress(address, route)
+                      // note: after upgrading to react-navigation v5.x, the
+                      // send screen is not unmounted after a tx is sent. If a
+                      // new QR code without an amount field is scanned, the
+                      // previous value may still remain in state
+                      setAmount('', route)
                     }
                   } else {
                     setAddress(stringQR, route)
+                    setAmount('', route)
                   }
                   navigation.navigate(SEND_ROUTES.MAIN)
                 },
