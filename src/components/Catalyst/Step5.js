@@ -92,6 +92,10 @@ const Step5 = ({
   const [fees, setFees] = useState(null)
 
   useEffect(() => {
+    if (unSignedTx == null) {
+      // note: should never happen
+      throw new Error('Could not retrieve transaction data')
+    }
     unSignedTx.fee().then((o) => {
       setFees(o.getDefault())
     })
@@ -102,6 +106,10 @@ const Step5 = ({
   const submitTrx = async (decryptedKey) => {
     setSendingTransaction(true)
     try {
+      if (unSignedTx == null) {
+        // note: should never happen
+        throw new Error('Could not retrieve transaction data')
+      }
       await submitTransaction(unSignedTx, decryptedKey)
     } catch (error) {
       // error is used where submitTx is used
@@ -240,7 +248,7 @@ type ExternalProps = {|
   intl: IntlShape,
   isEasyConfirmationEnabled: boolean,
   submitTransaction: (ISignRequest<any>, string) => void,
-  unSignedTx: ISignRequest<any>,
+  unSignedTx: ?ISignRequest<any>,
   defaultAsset: DefaultAsset,
 |}
 

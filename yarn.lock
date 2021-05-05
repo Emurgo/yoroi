@@ -2234,10 +2234,10 @@
     buffer-crc32 "0.2.13"
     fnv-plus "1.3.1"
 
-"@emurgo/react-native-haskell-shelley@1.1.3":
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/@emurgo/react-native-haskell-shelley/-/react-native-haskell-shelley-1.1.3.tgz#6fe117df1c79498b714fa0bc9b6a106b3e544deb"
-  integrity sha512-jY9qHcf6EJl3OJg7703V1yUKG8CZC8RWCwkYMWdFzeJM5WGAmqmV7HKA8vziY6+giA6dSyYLGtGvWLpuDxP8Cw==
+"@emurgo/react-native-haskell-shelley@1.1.4":
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/@emurgo/react-native-haskell-shelley/-/react-native-haskell-shelley-1.1.4.tgz#90a1d71893a6d0cc59a553dfe3573696027e305f"
+  integrity sha512-mVw/PGJvmxEchVX4y6DUehncow8sMgpEkHhawGuTkBsNORLsEXcPoRgYtLcQXNQnCcvN2yDqfR1Ac5PdZgCS7Q==
   dependencies:
     base-64 "0.1.0"
 

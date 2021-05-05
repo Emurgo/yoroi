@@ -4,7 +4,7 @@
  * Step 1 for the Catalyst registration - landing
  */
 
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {
   View,
   ScrollView,
@@ -19,12 +19,14 @@ import {connect} from 'react-redux'
 import {generateVotingKeys} from '../../actions/voting'
 import {fetchUTXOs} from '../../actions/utxo'
 import {Text, Button, ProgressStep} from '../UiKit'
+import StandardModal from '../Common/StandardModal'
 import {withTitle} from '../../utils/renderUtils'
 import {CATALYST_ROUTES} from '../../RoutesList'
 import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
 import AppDownload from '../../assets/img/pic-catalyst-step1.png'
 import playstoreBadge from '../../assets/img/google-play-badge.png'
 import appstoreBadge from '../../assets/img/app-store-badge.png'
+import {isDelegatingSelector} from '../../selectors'
 
 import styles from './styles/Step1.style'
 
@@ -39,6 +41,13 @@ const messages = defineMessages({
     defaultMessage:
       '!!!Before you begin, make sure to download the Catalyst Voting App.',
   },
+  stakingKeyNotRegistered: {
+    id: 'components.catalyst.step1.stakingKeyNotRegistered',
+    defaultMessage:
+      '!!!Catalyst voting rewards are sent to delegation accounts and your ' +
+      'wallet does not seem to have a registered delegation certificate. If ' +
+      'you want to receive voting rewards, you need to delegate your funds first.',
+  },
   tip: {
     id: 'components.catalyst.step1.tip',
     defaultMessage:
@@ -47,7 +56,21 @@ const messages = defineMessages({
   },
 })
 
-const Step1 = ({intl, generateVotingKeys, navigation, fetchUTXOs}) => {
+const WarningModalBody = ({intl}) => (
+  <View>
+    <Text>{intl.formatMessage(messages.stakingKeyNotRegistered)}</Text>
+  </View>
+)
+
+const Step1 = ({
+  intl,
+  generateVotingKeys,
+  navigation,
+  fetchUTXOs,
+  isDelegating,
+}) => {
+  const [showModal, setShowModal] = useState<boolean>(!isDelegating)
+
   useEffect(() => {
     fetchUTXOs()
     generateVotingKeys()
@@ -98,27 +121,43 @@ const Step1 = ({intl, generateVotingKeys, navigation, fetchUTXOs}) => {
           )}
         />
       </View>
+      <StandardModal
+        visible={showModal}
+        title={intl.formatMessage(globalMessages.attention)}
+        children={<WarningModalBody intl={intl} />}
+        onRequestClose={() => setShowModal(false)}
+        primaryButton={{
+          label: intl.formatMessage(
+            confirmationMessages.commonButtons.iUnderstandButton,
+          ),
+          onPress: () => setShowModal(false),
+        }}
+        showCloseIcon
+      />
     </SafeAreaView>
   )
 }
 
-type ExternalProps = {|
+type Props = {|
   navigation: Navigation,
   route: Object, // TODO(navigation): type
   intl: IntlShape,
   generateVotingKeys: () => void,
   fetchUTXOs: () => Promise<void>,
+  isDelegating: boolean,
 |}
 
 export default injectIntl(
   connect(
-    (_state) => ({}),
+    (state) => ({
+      isDelegating: isDelegatingSelector(state),
+    }),
     {
       generateVotingKeys,
       fetchUTXOs,
     },
   )(
-    withTitle((Step1: ComponentType<ExternalProps>), ({intl}) =>
+    withTitle((Step1: ComponentType<Props>), ({intl}) =>
       intl.formatMessage(globalMessages.votingTitle),
     ),
   ),

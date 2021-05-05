@@ -186,6 +186,7 @@ export interface WalletInterface {
     utxos: Array<RawUtxo>,
     catalystPrivateKey: string,
     decryptedKey: string,
+    serverTime: Date | void,
   ): Promise<ISignRequest<T>>;
 
   createWithdrawalTx<T>(
