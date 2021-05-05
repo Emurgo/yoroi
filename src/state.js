@@ -7,6 +7,7 @@ import {CONFIG} from './config/config'
 import type {RawUtxo, RemotePoolMetaSuccess} from './api/types'
 import type {Transaction} from './types/HistoryTransaction'
 import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
+import {ISignRequest} from './crypto/ISignRequest'
 import type {NetworkId, WalletImplementationId} from './config/types'
 import type {WalletChecksum} from '@emurgo/cip4-js'
 
@@ -95,6 +96,8 @@ export type State = {
     pin: Array<number>,
     encryptedKey: ?string,
     catalystPrivateKey: ?string,
+    // TODO: it's in general not recommended to use non-plain objects in store
+    unSignedTx: ?ISignRequest<mixed>,
   },
 }
 

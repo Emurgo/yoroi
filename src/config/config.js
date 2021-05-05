@@ -139,6 +139,8 @@ export const CONFIG = {
     PUB_KEY:
       '42cfdc53da2220ba52ce62f8e20ab9bb99857a3fceacf43d676d7987ad909b53' +
       'ed75534e0d0ee8fce835eb2e7c67c5caec18a9c894388d9a046380edebbfc46d',
+    CATALYST_PIN: '1234',
+    CATALYST_NONCE: 1234,
   },
   E2E: {
     // WARNING: NEVER change these flags here, use .env.e2e

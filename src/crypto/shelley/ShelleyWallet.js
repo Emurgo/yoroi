@@ -14,6 +14,7 @@ import {
   make_vkey_witness,
   /* eslint-enable camelcase */
   PublicKey,
+  PrivateKey,
   RewardAddress,
   StakeCredential,
   Transaction,
@@ -608,17 +609,24 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
 
   async createVotingRegTx(
     utxos: Array<RawUtxo>,
-    catalystPrivateKey: string,
+    catalystKey: string,
     decryptedKey: string,
+    serverTime: Date | void,
   ): Promise<ISignRequest<TransactionBuilder>> {
     Logger.debug('ShelleyWallet::createVotingRegTx called')
     const timeToSlotFn = await genTimeToSlot(getCardanoBaseConfig())
-    const absSlotNumber = new BigNumber(timeToSlotFn({time: new Date()}).slot)
+    const time = serverTime !== undefined ? serverTime : new Date()
+    const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
+
     const changeAddr = await this._getAddressedChangeAddress()
     const addressedUtxos = this.asAddressedUtxo(utxos)
 
     const masterKey = await Bip32PrivateKey.from_bytes(
       Buffer.from(decryptedKey, 'hex'),
+    )
+
+    const catalystPrivateKey = await PrivateKey.from_extended_bytes(
+      Buffer.from(catalystKey, 'hex'),
     )
 
     const accountPvrKey: Bip32PrivateKey = await (await (await masterKey.derive(
@@ -627,7 +635,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       0 + CONFIG.NUMBERS.HARD_DERIVATION_START,
     )
 
-    const stakePrivateKey = await (await (await accountPvrKey.derive(
+    const stakePrivateKey: PrivateKey = await (await (await accountPvrKey.derive(
       CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
     )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
 
@@ -665,7 +673,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
         [], // no delegations
         [], // no withdrawals
         false,
-        metadata, // metadata
+        metadata,
       )
 
       const signRequest = new HaskellShelleyTxSignRequest(

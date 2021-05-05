@@ -5,6 +5,7 @@
 
 import {
   Address,
+  PrivateKey,
   Bip32PrivateKey,
   encode_json_str_to_metadatum,
   MetadataJsonSchema,
@@ -16,17 +17,19 @@ import {mnemonicToEntropy} from 'bip39'
 import blake2b from 'blake2b'
 
 import {generateAdaMnemonic} from '../byron/util'
+import {CONFIG} from '../../config/config'
+import {Logger} from '../../utils/logging'
 
 export const CatalystLabels = Object.freeze({
   DATA: 61284,
   SIG: 61285,
 })
 export async function generateRegistration(request: {|
-  stakePrivateKey: Bip32PrivateKey,
-  catalystPrivateKey: Bip32PrivateKey,
+  stakePrivateKey: PrivateKey,
+  catalystPrivateKey: PrivateKey,
   rewardAddress: Address,
   absSlotNumber: number,
-|}): TransactionMetadata {
+|}): Promise<TransactionMetadata> {
   /**
    * Catalyst follows a certain standard to prove the voting power
    * A transaction is submitted with following metadata format for the registration process
@@ -35,6 +38,7 @@ export async function generateRegistration(request: {|
    *   1: "pubkey generated for catalyst app",
    *   2: "stake key public key",
    *   3: "reward address to receive voting rewards"
+   *   4: nonce
    * }
    * label: 61285
    * {
@@ -42,21 +46,31 @@ export async function generateRegistration(request: {|
    * }
    */
 
+  let nonce
+  if (CONFIG.DEBUG.PREFILL_FORMS) {
+    if (!__DEV__) throw new Error('using debug data in non-dev env')
+    nonce = CONFIG.DEBUG.CATALYST_NONCE
+  } else {
+    nonce = request.absSlotNumber
+  }
+
+  const jsonMeta = JSON.stringify({
+    '1': `0x${Buffer.from(
+      await (await request.catalystPrivateKey.to_public()).as_bytes(),
+    ).toString('hex')}`,
+    '2': `0x${Buffer.from(
+      await (await request.stakePrivateKey.to_public()).as_bytes(),
+    ).toString('hex')}`,
+    '3': `0x${Buffer.from(await request.rewardAddress.to_bytes()).toString(
+      'hex',
+    )}`,
+    '4': nonce,
+  })
   const registrationData = await encode_json_str_to_metadatum(
-    JSON.stringify({
-      '1': `0x${Buffer.from(
-        await (await request.catalystPrivateKey.to_public()).as_bytes(),
-      ).toString('hex')}`,
-      '2': `0x${Buffer.from(
-        await (await request.stakePrivateKey.to_public()).as_bytes(),
-      ).toString('hex')}`,
-      '3': `0x${Buffer.from(await request.rewardAddress.to_bytes()).toString(
-        'hex',
-      )}`,
-      '4': request.absSlotNumber,
-    }),
+    jsonMeta,
     MetadataJsonSchema.BasicConversions,
   )
+  Logger.debug(jsonMeta)
   const generalMetadata = await GeneralTransactionMetadata.new()
   await generalMetadata.insert(
     await BigNum.from_str(CatalystLabels.DATA.toString()),
@@ -84,8 +98,15 @@ export async function generateRegistration(request: {|
   return trxMetadata
 }
 
-export async function generatePrivateKeyForCatalyst(): Bip32PrivateKey {
-  const mnemonic = generateAdaMnemonic()
+// prettier-ignore
+export async function generatePrivateKeyForCatalyst(): Promise<Bip32PrivateKey> {
+  let mnemonic
+  if (CONFIG.DEBUG.PREFILL_FORMS) {
+    if (!__DEV__) throw new Error('using debug data in non-dev env')
+    mnemonic = CONFIG.DEBUG.MNEMONIC3
+  } else {
+    mnemonic = generateAdaMnemonic()
+  }
   const bip39entropy = mnemonicToEntropy(mnemonic)
   const EMPTY_PASSWORD = Buffer.from('')
   const rootKey = await Bip32PrivateKey.from_bip39_entropy(

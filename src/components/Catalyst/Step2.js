@@ -14,6 +14,7 @@ import {Text, Button, ProgressStep} from '../UiKit'
 import {withTitle} from '../../utils/renderUtils'
 import {CATALYST_ROUTES} from '../../RoutesList'
 import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
+
 import styles from './styles/Step2.style'
 
 import type {ComponentType} from 'react'

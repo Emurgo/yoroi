@@ -734,6 +734,7 @@ class WalletManager {
     utxos: Array<RawUtxo>,
     catalystPrivateKey: string,
     decryptedKey: string,
+    serverTime: Date | void,
   ) {
     if (!this._wallet) throw new WalletClosed()
     return await this.abortWhenWalletCloses(
@@ -741,6 +742,7 @@ class WalletManager {
         utxos,
         catalystPrivateKey,
         decryptedKey,
+        serverTime,
       ),
     )
   }
