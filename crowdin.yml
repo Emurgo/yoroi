@@ -13,6 +13,10 @@ files:
         fr: fr-FR
         id: id-ID
         es: es-ES
+        pt: pt-BR
+        it: it-IT
+        nl: nl-NL
+        cz: cs-CZ
   - &ref_languages_mapping
     languages_mapping: []
     source: /src/i18n/locales/**/en-US.md
