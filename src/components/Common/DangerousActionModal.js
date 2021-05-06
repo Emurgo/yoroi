@@ -29,7 +29,7 @@ type Props = {
   |},
   +secondaryButton?: {|
     label?: string,
-    onPress: (void) => void,
+    onPress: (void) => PossiblyAsync<void>,
     primary?: boolean,
   |},
   +checkboxLabel?: string,
@@ -142,7 +142,7 @@ type ModalProps = {
   |},
   +secondaryButton?: {|
     label?: string,
-    onPress: (void) => void,
+    onPress: (void) => PossiblyAsync<void>,
     primary?: boolean,
   |},
   +checkboxLabel?: string,
