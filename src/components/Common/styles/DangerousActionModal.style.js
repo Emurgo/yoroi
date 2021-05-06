@@ -4,9 +4,6 @@ import {StyleSheet} from 'react-native'
 import {spacing, COLORS} from '../../../styles/config'
 
 export default StyleSheet.create({
-  scrollView: {
-    paddingRight: 10,
-  },
   paragraph: {
     marginBottom: spacing.paragraphBottomMargin,
     fontSize: 14,
@@ -14,7 +11,6 @@ export default StyleSheet.create({
   },
   content: {
     flex: 1,
-    marginBottom: 24,
   },
   heading: {
     alignItems: 'center',
@@ -28,23 +24,30 @@ export default StyleSheet.create({
     fontWeight: 'bold',
   },
   alertBlock: {
-    padding: 10,
+    marginTop: 32,
+    padding: 16,
     backgroundColor: COLORS.BACKGROUND_LIGHT_RED,
-    marginBottom: 5,
+    borderRadius: 8,
+  },
+  alertTitleText: {
+    color: COLORS.ERROR_TEXT_COLOR,
   },
   image: {
     marginRight: 5,
   },
   alertText: {
-    color: COLORS.ERROR_TEXT_COLOR,
+    color: COLORS.ERROR_TEXT_COLOR_DARK,
+  },
+  checkbox: {
+    marginTop: 24,
   },
   buttons: {
-    flexDirection: 'row',
-    marginTop: 12,
+    flexDirection: 'column',
+    marginTop: 32,
   },
   primaryButton: {},
   secondaryButton: {
-    marginLeft: 12,
+    marginTop: 16,
     backgroundColor: COLORS.BACKGROUND_RED,
   },
 })

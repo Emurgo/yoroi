@@ -4,6 +4,7 @@
 // https://github.com/elderfo/react-native-storybook-loader.git
 
 function loadStories() {
+	require('../src/components/Common/DangerousActionModal.stories');
 	require('../src/components/Delegation/DelegationConfirmation.stories');
 	require('../src/components/Delegation/FlawedWalletScreen.stories');
 	require('../src/components/Delegation/StakeByIdScreen.stories');
@@ -34,6 +35,7 @@ function loadStories() {
 }
 
 const stories = [
+	'../src/components/Common/DangerousActionModal.stories',
 	'../src/components/Delegation/DelegationConfirmation.stories',
 	'../src/components/Delegation/FlawedWalletScreen.stories',
 	'../src/components/Delegation/StakeByIdScreen.stories',
