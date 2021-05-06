@@ -103,6 +103,7 @@ const numberLocales = {
   [LANGUAGES.FRENCH]: defaultCommaDecimalSeparatorFmt,
   [LANGUAGES.ITALIAN]: defaultCommaDecimalSeparatorFmt,
   [LANGUAGES.DUTCH]: defaultNumberFmt,
+  [LANGUAGES.CZECH]: defaultCommaDecimalSeparatorFmt,
 }
 
 export const setLanguage = (code: string) => {
