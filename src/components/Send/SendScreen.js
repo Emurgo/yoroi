@@ -666,6 +666,8 @@ class SendScreen extends Component<Props, State> {
         return []
       })()
 
+      this.closeSendAllWarning()
+
       navigation.navigate(SEND_ROUTES.CONFIRM, {
         availableAmount: tokenBalance.getDefault(),
         address,
