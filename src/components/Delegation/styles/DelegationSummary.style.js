@@ -3,13 +3,27 @@ import {StyleSheet} from 'react-native'
 
 // TODO: Needs to be updated
 export default StyleSheet.create({
-  scrollView: {
+  safeAreaView: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   container: {
     flexDirection: 'column',
     flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  contentContainer: {
+    paddingTop: 16,
+    paddingHorizontal: 16,
+  },
+  row: {
+    flex: 1,
+    paddingVertical: 12,
+  },
+  activityIndicator: {
+    paddingVertical: 32,
   },
   empty: {
     justifyContent: 'center',

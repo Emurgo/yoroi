@@ -37,18 +37,55 @@ const poolInfo = {
   },
 }
 
-storiesOf('StakingDashboard', module).add('Default', ({navigation, route}) => (
-  <StakingDashboard
-    navigation={navigation}
-    route={route}
-    isOnline
-    lastAccountStateSyncError={false}
-    pools={[
-      ['6777ed5eac05ab8bf55d073424132e200935c8d3be62fb00f5252cd27a9fe6e5', 1],
-    ]}
-    poolInfo={poolInfo}
-    utxoBalance={new BigNumber(100000000)}
-    accountBalance={new BigNumber(1000000)}
-    totalDelegated={new BigNumber(100000000).plus(1000000)}
-  />
-))
+storiesOf('StakingDashboard', module)
+  .add('Default', ({navigation, route}) => (
+    <StakingDashboard
+      navigation={navigation}
+      route={route}
+      isOnline
+      lastAccountStateSyncError={false}
+      pools={[
+        ['6777ed5eac05ab8bf55d073424132e200935c8d3be62fb00f5252cd27a9fe6e5', 1],
+      ]}
+      poolInfo={poolInfo}
+      utxoBalance={new BigNumber(100000000)}
+      accountBalance={new BigNumber(1000000)}
+      totalDelegated={new BigNumber(100000000).plus(1000000)}
+    />
+  ))
+  .add('Loading', ({navigation, route}) => (
+    <StakingDashboard
+      navigation={navigation}
+      route={route}
+      isOnline
+      lastAccountStateSyncError={false}
+      pools={[
+        ['6777ed5eac05ab8bf55d073424132e200935c8d3be62fb00f5252cd27a9fe6e5', 1],
+      ]}
+      poolInfo={null}
+      poolOperator={'poolOperator'}
+      // UserSummary
+      utxoBalance={new BigNumber(100000000)}
+      accountBalance={new BigNumber(1000000)}
+      totalDelegated={new BigNumber(100000000).plus(1000000)}
+      isDelegating
+    />
+  ))
+  .add('Loaded', ({navigation, route}) => (
+    <StakingDashboard
+      navigation={navigation}
+      route={route}
+      isOnline
+      lastAccountStateSyncError={false}
+      pools={[
+        ['6777ed5eac05ab8bf55d073424132e200935c8d3be62fb00f5252cd27a9fe6e5', 1],
+      ]}
+      poolInfo={poolInfo}
+      poolOperator={'poolOperator'}
+      // UserSummary
+      utxoBalance={new BigNumber(100000000)}
+      accountBalance={new BigNumber(1000000)}
+      totalDelegated={new BigNumber(100000000).plus(1000000)}
+      isDelegating
+    />
+  ))
