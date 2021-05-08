@@ -5,11 +5,11 @@
   "scripts": {
     "flow": "flow --show-all-errors .",
     "flow:install": "flow-typed create-stub path-to-regexp --typescript",
-    "lint": "eslint --max-warnings=0 ./src && prettylint \"src/**/*.js\" --config src/.prettierrc",
+    "lint": "eslint --max-warnings=0 ./src && prettylint \"src/**/*.js\" --config .prettierrc",
     "start": "react-native start",
     "test": "jest",
     "babel": "babel src",
-    "prettify": "prettier --write \"src/**/*.js\" --config src/.prettierrc",
+    "prettify": "prettier --write \"src/**/*.js\" --config .prettierrc",
     "setup_configs": "react-native-schemes-manager all",
     "manage-translations": "node ./translations/translation-runner.js",
     "purge-translations": "rimraf ./translations/messages",
