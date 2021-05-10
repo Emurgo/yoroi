@@ -2,7 +2,6 @@
 
 import {AppState, Alert, Keyboard, Platform} from 'react-native'
 import uuid from 'uuid'
-import SplashScreen from 'react-native-splash-screen'
 import {intlShape} from 'react-intl'
 import DeviceInfo from 'react-native-device-info'
 
@@ -312,7 +311,6 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
     reducer: (state, value) => value,
     type: 'INITIALIZE_APP',
   })
-  SplashScreen.hide()
 }
 
 const _setOnline = (isOnline: boolean) => (dispatch, getState) => {
