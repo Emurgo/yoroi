@@ -29,7 +29,7 @@ type Props = {
   |},
   +secondaryButton?: {|
     label?: string,
-    onPress: (void) => void,
+    onPress: (void) => PossiblyAsync<void>,
     primary?: boolean,
   |},
   +checkboxLabel?: string,
@@ -49,7 +49,7 @@ const DangerousActionView = ({
   isChecked,
   toogleCheck,
 }: Props) => (
-  <ScrollView style={styles.scrollView}>
+  <ScrollView>
     <View style={styles.content}>
       <View style={styles.heading}>
         <Text style={styles.titleText}>{title}</Text>
@@ -61,10 +61,10 @@ const DangerousActionView = ({
         <View style={styles.alertBlock}>
           <View style={styles.heading}>
             <Image source={image} style={styles.image} />
-            <Text style={[styles.titleText, styles.alertText]}>
+            <Text style={[styles.titleText, styles.alertTitleText]}>
               {alertBox.title != null
                 ? alertBox.title
-                : intl.formatMessage(globalMessages.attention)}
+                : intl.formatMessage(globalMessages.attention).toUpperCase()}
             </Text>
           </View>
           {alertBox.content.map((line, i) => (
@@ -87,6 +87,7 @@ const DangerousActionView = ({
               )
           /* eslint-enable indent */
         }
+        style={styles.checkbox}
       />
     </View>
     <View style={styles.buttons}>
@@ -141,7 +142,7 @@ type ModalProps = {
   |},
   +secondaryButton?: {|
     label?: string,
-    onPress: (void) => void,
+    onPress: (void) => PossiblyAsync<void>,
     primary?: boolean,
   |},
   +checkboxLabel?: string,

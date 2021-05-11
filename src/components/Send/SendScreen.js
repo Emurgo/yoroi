@@ -24,6 +24,7 @@ import {
   Checkbox,
 } from '../UiKit'
 import AssetSelector from '../Common/MultiAsset/AssetSelector'
+import DangerousActionModal from '../Common/DangerousActionModal'
 import {
   isFetchingUtxosSelector,
   lastUtxosFetchErrorSelector,
@@ -63,7 +64,7 @@ import type {Navigation} from '../../types/navigation'
 import type {Token, DefaultAsset} from '../../types/HistoryTransaction'
 import type {TokenEntry} from '../../crypto/MultiToken'
 import type {CreateUnsignedTxResponse} from '../../crypto/shelley/transactionUtils'
-import globalMessages from '../../i18n/global-messages'
+import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
 import type {RawUtxo} from '../../api/types'
 import type {
   AddressValidationErrors,
@@ -170,6 +171,34 @@ const messages = defineMessages({
     id: 'components.send.sendscreen.checkboxSendAll',
     defaultMessage: '!!!Send all {assetId}',
     description: 'some desc',
+  },
+  sendAllWarningTitle: {
+    id: 'components.send.sendscreen.sendAllWarningTitle',
+    defaultMessage: '!!!Do you really want to send all?',
+  },
+  sendAllWarningText: {
+    id: 'components.send.sendscreen.sendAllWarningText',
+    defaultMessage:
+      '!!!You have selected the send all option. Please confirm ' +
+      'that you understand how this feature works.',
+  },
+  sendAllWarningAlert1: {
+    id: 'components.send.sendscreen.sendAllWarningAlert1',
+    defaultMessage:
+      '!!!All you {assetNameOrId} balance will be transferred ' +
+      'in this transaction.',
+  },
+  sendAllWarningAlert2: {
+    id: 'components.send.sendscreen.sendAllWarningAlert2',
+    defaultMessage:
+      '!!!All your tokens, including NFTs and any other native ' +
+      'assets in your wallet, will also be transferred in this transaction.',
+  },
+  sendAllWarningAlert3: {
+    id: 'components.send.sendscreen.sendAllWarningAlert3',
+    defaultMessage:
+      '!!!After you confirm the transaction in the next screen, ' +
+      'your wallet will be emptied.',
   },
   continueButton: {
     id: 'components.send.sendscreen.continueButton',
@@ -438,6 +467,7 @@ type State = {
   sendAll: boolean,
   selectedAsset: TokenEntry,
   recomputing: boolean,
+  showSendAllWarning: boolean,
 }
 
 class SendScreen extends Component<Props, State> {
@@ -452,6 +482,7 @@ class SendScreen extends Component<Props, State> {
     sendAll: false,
     selectedAsset: this.props.tokenBalance.getDefaultEntry(),
     recomputing: false,
+    showSendAllWarning: false,
   }
 
   componentDidMount() {
@@ -539,6 +570,20 @@ class SendScreen extends Component<Props, State> {
   handleCheckBoxChange: (boolean) => void = (sendAll) =>
     this.setState({sendAll})
 
+  openSendAllWarning: () => void = () =>
+    this.setState({showSendAllWarning: true})
+
+  closeSendAllWarning: () => void = () =>
+    this.setState({showSendAllWarning: false})
+
+  onConfirm: () => Promise<void> = async () => {
+    if (this.state.sendAll) {
+      this.openSendAllWarning()
+      return
+    }
+    await this.handleConfirm()
+  }
+
   handleConfirm: () => Promise<void> = async () => {
     const {
       navigation,
@@ -620,6 +665,8 @@ class SendScreen extends Component<Props, State> {
         }
         return []
       })()
+
+      this.closeSendAllWarning()
 
       navigation.navigate(SEND_ROUTES.CONFIRM, {
         availableAmount: tokenBalance.getDefault(),
@@ -720,6 +767,58 @@ class SendScreen extends Component<Props, State> {
     } else {
       return null
     }
+  }
+
+  renderSendAllWarning = () => {
+    const {intl, availableAssets} = this.props
+    const {showSendAllWarning, selectedAsset} = this.state
+
+    const selectedTokenMeta = availableAssets[selectedAsset.identifier]
+    const isDefault = selectedTokenMeta.isDefault
+    const assetNameOrId = truncateWithEllipsis(
+      getAssetDenominationOrId(selectedTokenMeta, ASSET_DENOMINATION.TICKER),
+      20,
+    )
+    /* eslint-disable indent */
+    const alertBoxContent = {
+      content: isDefault
+        ? [
+            intl.formatMessage(messages.sendAllWarningAlert1, {
+              assetNameOrId,
+            }),
+            intl.formatMessage(messages.sendAllWarningAlert2),
+            intl.formatMessage(messages.sendAllWarningAlert3),
+          ]
+        : [
+            intl.formatMessage(messages.sendAllWarningAlert1, {
+              assetNameOrId,
+            }),
+          ],
+    }
+    /* eslint-enable indent */
+    return (
+      <DangerousActionModal
+        visible={showSendAllWarning}
+        onRequestClose={this.closeSendAllWarning}
+        showCloseIcon
+        title={intl.formatMessage(messages.sendAllWarningTitle)}
+        primaryButton={{
+          label: intl.formatMessage(
+            confirmationMessages.commonButtons.backButton,
+          ),
+          onPress: this.closeSendAllWarning,
+        }}
+        secondaryButton={{
+          label: intl.formatMessage(
+            confirmationMessages.commonButtons.continueButton,
+          ),
+          onPress: this.handleConfirm,
+        }}
+        alertBox={alertBoxContent}
+      >
+        <Text>{intl.formatMessage(messages.sendAllWarningText)}</Text>
+      </DangerousActionModal>
+    )
   }
 
   render() {
@@ -824,11 +923,12 @@ class SendScreen extends Component<Props, State> {
         </ScrollView>
         <View style={styles.actions}>
           <Button
-            onPress={this.handleConfirm}
+            onPress={this.onConfirm}
             title={intl.formatMessage(messages.continueButton)}
             disabled={!isValid || this.state.fee == null}
           />
         </View>
+        {this.renderSendAllWarning()}
       </SafeAreaView>
     )
   }
