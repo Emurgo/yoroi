@@ -17,19 +17,13 @@ import {initApp} from './actions'
 enableScreens()
 
 const App = (_props, _context) => {
-
   const [appState, setAppState] = useState<?string>(AppState.currentState)
 
-  const handleAppStateChange: (?string) => void = (
-    nextAppState,
-  ) => {
+  const handleAppStateChange: (?string) => void = (nextAppState) => {
     const previousAppState = appState
 
     setAppState(nextAppState)
-    if (
-      previousAppState != null &&
-      nextAppState === 'active'
-    ) {
+    if (previousAppState != null && nextAppState === 'active') {
       RNBootSplash.hide()
     } else if (
       previousAppState === 'active' &&
@@ -39,7 +33,6 @@ const App = (_props, _context) => {
       RNBootSplash.show()
     }
   }
-
 
   // note: previously this was hanlded in the applicationDidEnterBackground
   // event in AppDelegate.m, but after moving to a .storyboard launch screen
