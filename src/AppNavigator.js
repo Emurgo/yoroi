@@ -5,6 +5,7 @@ import {connect} from 'react-redux'
 import {NavigationContainer} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {isEmpty} from 'lodash'
+import RNBootSplash from 'react-native-bootsplash'
 
 import {CONFIG} from './config/config'
 import {
@@ -196,7 +197,7 @@ const StoryBook = () => (
 
 const AppNavigator = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer onReady={() => RNBootSplash.hide()}>
       {IS_STORYBOOK ? <StoryBook /> : <NavigatorSwitch />}
     </NavigationContainer>
   )
