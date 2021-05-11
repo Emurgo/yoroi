@@ -9,6 +9,7 @@
     <!-- react-native-bootsplash -->
     <style name="BootTheme" parent="AppTheme">
       <item name="android:background">@drawable/bootsplash</item>
+      <item name="android:statusBarColor">@color/PRIMARY_BLUE</item>
     </style>
 
 </resources>

@@ -8,7 +8,6 @@ import {isEmpty} from 'lodash'
 
 import {CONFIG} from './config/config'
 import {
-  isAppInitializedSelector,
   isMaintenanceSelector,
   isSystemAuthEnabledSelector,
   isAuthenticatedSelector,
@@ -20,7 +19,6 @@ import WalletInitNavigator from './components/WalletInit/WalletInitNavigator'
 import FirstRunNavigator from './components/FirstRun/FirstRunNavigator'
 import IndexScreen from './components/IndexScreen'
 import StorybookScreen from './components/StorybookScreen'
-import SplashScreen from './components/SplashScreen'
 import MaintenanceScreen from './components/MaintenanceScreen'
 import {ROOT_ROUTES} from './RoutesList'
 import BiometricAuthScreen from './components/Send/BiometricAuthScreen'
@@ -44,7 +42,6 @@ const IS_STORYBOOK = env.getBoolean('IS_STORYBOOK', false)
 
 const hasAnyWalletSelector = (state: State): boolean => !isEmpty(state.wallets)
 type NavigatorSwitchProps = {|
-  isAppInitialized: boolean,
   isMaintenance: boolean,
   isSystemAuthEnabled: boolean,
   isAuthenticated: boolean,
@@ -58,7 +55,6 @@ const Stack = createStackNavigator()
 const NavigatorSwitch = compose(
   connect(
     (state) => ({
-      isAppInitialized: isAppInitializedSelector(state),
       isMaintenance: isMaintenanceSelector(state),
       isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
       isAuthenticated: isAuthenticatedSelector(state),
@@ -70,7 +66,6 @@ const NavigatorSwitch = compose(
   ),
 )(
   ({
-    isAppInitialized,
     isMaintenance,
     isSystemAuthEnabled,
     isAuthenticated,
@@ -79,17 +74,6 @@ const NavigatorSwitch = compose(
     signin,
     isAppSetupComplete,
   }: NavigatorSwitchProps) => {
-    if (!isAppInitialized) {
-      return (
-        <Stack.Navigator>
-          <Stack.Screen
-            name={ROOT_ROUTES.SPLASH}
-            component={SplashScreen}
-            options={{headerShown: false}}
-          />
-        </Stack.Navigator>
-      )
-    }
     if (isMaintenance) {
       return (
         <Stack.Navigator screenOptions={{headerShown: false}}>
