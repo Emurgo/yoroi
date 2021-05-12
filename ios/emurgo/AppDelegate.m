@@ -3,7 +3,7 @@
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
-#import "RNSplashScreen.h"
+#import "RNBootSplash.h"
 
 #ifdef FB_SONARKIT_ENABLED
 #import <FlipperKit/FlipperClient.h>
@@ -46,7 +46,7 @@ static void InitializeFlipper(UIApplication *application) {
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
 
-  [RNSplashScreen show];
+  [RNBootSplash initWithStoryboard:@"LaunchScreen" rootView:rootView];
 
   return YES;
 }
@@ -58,25 +58,6 @@ static void InitializeFlipper(UIApplication *application) {
 #else
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 #endif
-}
-
-// Implemented from: http://pinkstone.co.uk/how-to-control-the-preview-screenshot-in-the-ios-multitasking-switcher/
-// Use applicationDidEnterBackground, instead of applicationWillResignActive, so
-// we don't show switch screen when modal prompts, e.g. biometrics prompt, are in foreground
-- (void)applicationDidEnterBackground:(UIApplication *)application
-{
-  // get splash screen view
-  NSArray *objects = [[NSBundle mainBundle] loadNibNamed:@"LaunchScreen" owner:self options:nil];
-  UIView *switcherView = [objects objectAtIndex:0];
-
-  switcherView.alpha = 1.0;
-  switcherView.tag = 1234;
-  switcherView.frame = self.window.frame;
-
-  [self.window addSubview:switcherView];
-  [self.window bringSubviewToFront:switcherView];
-
-  [self.window snapshotViewAfterScreenUpdates:YES];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
