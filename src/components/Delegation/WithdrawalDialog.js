@@ -3,8 +3,9 @@
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import Markdown from 'react-native-easy-markdown'
 
-import {Text, Modal} from '../UiKit'
+import {Modal} from '../UiKit'
 import {DangerousAction} from '../Common/DangerousActionModal'
 import {ErrorView} from '../Common/ErrorModal'
 import {PleaseWaitView} from '../UiKit/PleaseWaitModal'
@@ -27,19 +28,19 @@ const messages = defineMessages({
   explanation1: {
     id: 'components.delegation.withdrawaldialog.explanation1',
     defaultMessage:
-      '!!!When withdrawing rewards, you also have the option to deregister ' +
+      '!!!When **withdrawing rewards**, you also have the option to deregister ' +
       'the staking key.',
   },
   explanation2: {
     id: 'components.delegation.withdrawaldialog.explanation2',
     defaultMessage:
-      '!!!Keeping the staking key will allow you to withdraw the rewards, ' +
+      '!!!**Keeping the staking key** will allow you to withdraw the rewards, ' +
       'but continue delegating to the same pool.',
   },
   explanation3: {
     id: 'components.delegation.withdrawaldialog.explanation3',
     defaultMessage:
-      '!!!Deregistering the staking key will give you back your deposit and ' +
+      '!!!**Deregistering the staking key** will give you back your deposit and ' +
       'undelegate the key from any pool.',
   },
   warning1: {
@@ -143,15 +144,15 @@ const WithdrawalDialog = ({
               onPress: onDeregisterKey,
             }}
           >
-            <Text style={styles.paragraph}>
-              {intl.formatMessage(messages.explanation1)}
-            </Text>
-            <Text style={styles.paragraph}>
-              {intl.formatMessage(messages.explanation2)}
-            </Text>
-            <Text style={styles.paragraph}>
-              {intl.formatMessage(messages.explanation3)}
-            </Text>
+            {[
+              messages.explanation1,
+              messages.explanation2,
+              messages.explanation3,
+            ].map((msg, i) => (
+              <Markdown key={i} style={styles.paragraph}>
+                {intl.formatMessage(msg)}
+              </Markdown>
+            ))}
           </DangerousAction>
         )
       case WITHDRAWAL_DIALOG_STEPS.CHOOSE_TRANSPORT:
