@@ -162,9 +162,7 @@ const NavigatorSwitch = compose(
     // following two cases, but that didn't work (probably bug in react-navigation)
     if (!hasAnyWallet) {
       return (
-        <Stack.Navigator
-          screenOptions={{headerShown: false}}
-        >
+        <Stack.Navigator screenOptions={{headerShown: false}}>
           <Stack.Screen
             name={ROOT_ROUTES.NEW_WALLET}
             component={WalletInitNavigator}
@@ -174,9 +172,7 @@ const NavigatorSwitch = compose(
       )
     }
     return (
-      <Stack.Navigator
-        screenOptions={{headerShown: false}}
-      >
+      <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen name={ROOT_ROUTES.WALLET} component={WalletNavigator} />
         <Stack.Screen
           name={ROOT_ROUTES.NEW_WALLET}
