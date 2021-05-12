@@ -163,7 +163,6 @@ const NavigatorSwitch = compose(
     if (!hasAnyWallet) {
       return (
         <Stack.Navigator
-          initialRouteName={ROOT_ROUTES.NEW_WALLET}
           screenOptions={{headerShown: false}}
         >
           <Stack.Screen
@@ -176,7 +175,6 @@ const NavigatorSwitch = compose(
     }
     return (
       <Stack.Navigator
-        initialRouteName={ROOT_ROUTES.WALLET}
         screenOptions={{headerShown: false}}
       >
         <Stack.Screen name={ROOT_ROUTES.WALLET} component={WalletNavigator} />
