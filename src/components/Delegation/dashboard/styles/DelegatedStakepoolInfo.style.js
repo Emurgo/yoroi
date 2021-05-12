@@ -6,11 +6,9 @@ import {COLORS} from '../../../../styles/config'
 
 export default StyleSheet.create({
   wrapper: {
-    marginTop: 24,
-    marginHorizontal: 16,
+    flex: 1,
   },
   topBlock: {
-    backgroundColor: COLORS.BACKGROUND_LIGHT_GRAY,
     paddingVertical: 10,
     paddingHorizontal: 16,
   },
@@ -20,7 +18,6 @@ export default StyleSheet.create({
   },
   poolHashBlock: {
     flexDirection: 'row',
-    marginTop: 6,
   },
   poolHash: {
     color: COLORS.LIGHT_GRAY_TEXT,
@@ -29,19 +26,23 @@ export default StyleSheet.create({
     width: 200,
   },
   spacedElem: {
-    marginLeft: 5,
+    paddingLeft: 5,
   },
+  image: {
+    width: 24,
+    height: 24,
+  },
+
   bottomBlock: {
     paddingHorizontal: 16,
     paddingVertical: 20,
   },
   warning: {
+    padding: 8,
+  },
+  warningText: {
     fontStyle: 'italic',
-    marginTop: 10,
     fontSize: 12,
     lineHeight: 14,
-  },
-  image: {
-    width: 24,
   },
 })

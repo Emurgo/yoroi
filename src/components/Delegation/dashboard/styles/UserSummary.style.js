@@ -6,9 +6,7 @@ import {COLORS} from '../../../../styles/config'
 
 export default StyleSheet.create({
   wrapper: {
-    height: 244,
-    marginTop: 24,
-    marginHorizontal: 16,
+    flex: 1,
   },
   stats: {
     flex: 1,
@@ -16,19 +14,19 @@ export default StyleSheet.create({
     justifyContent: 'space-around',
   },
   row: {
+    flex: 1,
+    paddingVertical: 8,
     flexDirection: 'row',
-    height: 46,
   },
   icon: {
-    marginLeft: 8,
-    marginRight: 18,
+    paddingLeft: 8,
+    paddingRight: 18,
   },
   amountBlock: {
     flexDirection: 'column',
   },
   label: {
     color: COLORS.DARK_TEXT,
-    marginRight: 12,
     lineHeight: 24,
     fontSize: 14,
   },

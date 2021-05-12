@@ -4,7 +4,13 @@ import React from 'react'
 import type {ComponentType} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {View, ScrollView, RefreshControl, Platform} from 'react-native'
+import {
+  ActivityIndicator,
+  View,
+  ScrollView,
+  RefreshControl,
+  Platform,
+} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import {BigNumber} from 'bignumber.js'
 import {injectIntl} from 'react-intl'
@@ -534,7 +540,6 @@ class StakingDashboard extends React.Component<Props, State> {
       accountBalance,
       poolOperator,
       poolInfo,
-      isFetchingPoolInfo,
       totalDelegated,
       fetchAccountState,
       isFetchingAccountState,
@@ -586,11 +591,13 @@ class StakingDashboard extends React.Component<Props, State> {
     }
 
     return (
-      <SafeAreaView style={styles.scrollView}>
+      <SafeAreaView style={styles.safeAreaView}>
         <StatusBar type="dark" />
+
         <UtxoAutoRefresher />
         <AccountAutoRefresher />
-        <View style={styles.container}>
+
+        <View style={[styles.container]}>
           <OfflineBanner />
           {/* eslint-disable indent */
           isOnline &&
@@ -601,59 +608,72 @@ class StakingDashboard extends React.Component<Props, State> {
             )
           /* eslint-enable indent */
           }
+
           <ScrollView
-            style={styles.inner}
+            style={styles.scrollView}
+            contentContainerStyle={styles.contentContainer}
             refreshControl={
               <RefreshControl
                 onRefresh={() => {
                   fetchUTXOs()
                   fetchAccountState()
                 }}
-                refreshing={
-                  isFetchingAccountState ||
-                  isFetchingUtxos ||
-                  isFetchingPoolInfo
-                }
+                refreshing={false}
               />
             }
           >
             {!isDelegating && <NotDelegatedInfo />}
-            <EpochProgress
-              percentage={Math.floor(
-                (100 * currentRelativeTime.slot) / epochLength,
-              )}
-              currentEpoch={currentRelativeTime.epoch}
-              endTime={{
-                d: leftPadDate(Math.floor(secondsLeftInEpoch / (3600 * 24))),
-                h: leftPadDate(timeLeftInEpoch.getUTCHours()),
-                m: leftPadDate(timeLeftInEpoch.getUTCMinutes()),
-                s: leftPadDate(timeLeftInEpoch.getUTCSeconds()),
-              }}
-            />
+
+            <View style={styles.row}>
+              <EpochProgress
+                percentage={Math.floor(
+                  (100 * currentRelativeTime.slot) / epochLength,
+                )}
+                currentEpoch={currentRelativeTime.epoch}
+                endTime={{
+                  d: leftPadDate(Math.floor(secondsLeftInEpoch / (3600 * 24))),
+                  h: leftPadDate(timeLeftInEpoch.getUTCHours()),
+                  m: leftPadDate(timeLeftInEpoch.getUTCMinutes()),
+                  s: leftPadDate(timeLeftInEpoch.getUTCSeconds()),
+                }}
+              />
+            </View>
             {
               // TODO(v-almonacid): prefer computing balance from tx cache
               // instead of utxo set
             }
-            <UserSummary
-              totalAdaSum={utxoBalance}
-              totalRewards={accountBalance}
-              totalDelegated={totalDelegated}
-              onWithdraw={this.openWithdrawalDialog}
-              disableWithdraw={this.props.isReadOnly}
-            />
+
+            <View style={styles.row}>
+              <UserSummary
+                totalAdaSum={utxoBalance}
+                totalRewards={accountBalance}
+                totalDelegated={totalDelegated}
+                onWithdraw={this.openWithdrawalDialog}
+                disableWithdraw={this.props.isReadOnly}
+              />
+            </View>
+
             {/* eslint-disable indent */
-            poolInfo != null &&
-              !!poolOperator && (
+
+            poolInfo != null && !!poolOperator ? (
+              <View style={styles.row}>
                 <DelegatedStakepoolInfo
                   poolTicker={poolInfo.info?.ticker}
                   poolName={poolInfo.info?.name}
                   poolHash={poolOperator != null ? poolOperator : ''}
                   poolURL={poolInfo.info?.homepage}
                 />
-              )
+              </View>
+            ) : isDelegating ? (
+              <View style={styles.activityIndicator}>
+                <ActivityIndicator size={'large'} color={'black'} />
+              </View>
+            ) : null
+
             /* eslint-enable indent */
             }
           </ScrollView>
+
           <DelegationNavigationButtons
             onPress={this.navigateToStakingCenter}
             disabled={this.props.isReadOnly}

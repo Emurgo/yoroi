@@ -5,15 +5,12 @@ import {StyleSheet} from 'react-native'
 import {COLORS} from '../../../../styles/config'
 
 export default StyleSheet.create({
-  wrapper: {
-    marginTop: 24,
-    marginHorizontal: 16,
-  },
+  wrapper: {},
   stats: {
     flex: 1,
     flexDirection: 'column',
-    marginLeft: 18,
-    marginBottom: 10,
+    paddingLeft: 18,
+    paddingBottom: 10,
     flexWrap: 'wrap',
   },
   row: {
@@ -24,7 +21,7 @@ export default StyleSheet.create({
   },
   label: {
     color: COLORS.GRAY,
-    marginRight: 12,
+    paddingRight: 12,
     lineHeight: 24,
     fontSize: 14,
   },

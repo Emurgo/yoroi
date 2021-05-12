@@ -106,6 +106,7 @@ const DelegatedStakepoolInfo = ({
         <Text bold style={styles.poolName}>
           {formatStakepoolNameWithTicker(poolTicker, poolName, intl)}
         </Text>
+
         <View style={styles.poolHashBlock}>
           <Text
             numberOfLines={1}
@@ -115,6 +116,7 @@ const DelegatedStakepoolInfo = ({
           >
             {poolHash}
           </Text>
+
           <TouchableOpacity
             activeOpacity={0.5}
             onPress={debounce(copyPoolHash, COPY_NOTIFICATION_TIME, {
@@ -124,6 +126,7 @@ const DelegatedStakepoolInfo = ({
           >
             <Image source={copyIcon} style={styles.image} />
           </TouchableOpacity>
+
           {showCopyNotif && (
             <FadeOutView style={styles.spacedElem}>
               <Text>{intl.formatMessage(messages.copied)}</Text>
@@ -131,6 +134,7 @@ const DelegatedStakepoolInfo = ({
           )}
         </View>
       </View>
+
       <View style={styles.bottomBlock}>
         <Button
           outlineOnLight
@@ -140,9 +144,12 @@ const DelegatedStakepoolInfo = ({
         />
       </View>
     </TitledCard>
-    <Text secondary style={styles.warning}>
-      {intl.formatMessage(messages.warning)}
-    </Text>
+
+    <View style={styles.warning}>
+      <Text secondary style={styles.warningText}>
+        {intl.formatMessage(messages.warning)}
+      </Text>
+    </View>
   </View>
 )
 
