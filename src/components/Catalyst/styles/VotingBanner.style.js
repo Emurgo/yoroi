@@ -16,7 +16,6 @@ export default StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: COLORS.LIGHT_POSITIVE_GREEN,
-    width: 206,
     height: 48,
     paddingVertical: 12,
     paddingHorizontal: 24,

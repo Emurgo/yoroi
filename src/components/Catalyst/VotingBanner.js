@@ -16,7 +16,7 @@ import styles from './styles/VotingBanner.style'
 const messages = defineMessages({
   name: {
     id: 'components.catalyst.banner.name',
-    defaultMessage: '!!!Catalyst Voting',
+    defaultMessage: '!!!Catalyst Voting Registration',
   },
 })
 
