@@ -188,7 +188,7 @@ export default injectIntl(
           })
           const poolInfo = ObjectValues(poolInfoResponse)[0]
           Logger.debug('handleOnContinue::poolInfo', poolInfo)
-          if (poolInfo?.info != null) {
+          if (poolInfo.info != null) {
             const selectedPool = {
               poolName: poolInfo.info.name,
               poolHash: poolId,

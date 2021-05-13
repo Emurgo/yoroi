@@ -20,6 +20,7 @@ import type {
   AccountStateResponse,
   PoolInfoRequest,
   PoolInfoResponse,
+  FundInfoResponse,
 } from '../types'
 
 const NETWORK_CONFIG = CONFIG.NETWORKS.HASKELL_SHELLEY.BACKEND
@@ -159,3 +160,6 @@ export const getPoolInfo = (
 ): Promise<PoolInfoResponse> => {
   return checkedFetch('getPoolInfo', request, NETWORK_CONFIG)
 }
+
+export const getFundInfo = (): Promise<FundInfoResponse> =>
+  checkedFetch('getFundInfo', null, NETWORK_CONFIG, 'GET')

@@ -28,6 +28,7 @@ import {
 import TxHistoryList from './TxHistoryList'
 import walletManager from '../../crypto/walletManager'
 import {MultiToken} from '../../crypto/MultiToken'
+import {isRegistrationOpen} from '../../crypto/shelley/catalystUtils'
 import {updateHistory} from '../../actions/history'
 import {checkForFlawedWallets} from '../../actions'
 import {
@@ -69,19 +70,6 @@ const warningBannerMessages = defineMessages({
       '!!!The Shelley protocol upgrade adds a new Shelley wallet type which supports delegation.',
   },
 })
-
-const isRegistrationOpen = (() => {
-  const now = new Date()
-  const rounds = CONFIG.CATALYST.VOTING_ROUNDS
-  for (const round of rounds) {
-    const startDate = new Date(Date.parse(round.START_DATE))
-    const endDate = new Date(Date.parse(round.END_DATE))
-    if (now >= startDate && now <= endDate) {
-      return true
-    }
-  }
-  return false
-})()
 
 const NoTxHistory = injectIntl(({intl}) => (
   <View style={styles.empty}>
@@ -158,7 +146,7 @@ const TxHistory = ({
 
   const showCatalystVotingBanner =
     (!walletMeta.isHW &&
-      isRegistrationOpen &&
+      isRegistrationOpen() &&
       isHaskellShelley(walletMeta.walletImplementationId)) ||
     __DEV__
 

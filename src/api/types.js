@@ -208,3 +208,18 @@ export type RawTransaction = {|
   ...WithNullableFields<RemoteTxBlockMeta>,
   ...RemoteTxInfo,
 |}
+
+// Catalyst
+type FundInfo = {|
+  +id: number,
+  +registrationStart: string,
+  +registrationEnd: string,
+  +votingStart?: string,
+  +votingEnd?: string,
+  +votingPowerThreshold: string, // in ada
+|}
+
+export type FundInfoResponse = {|
+  +currentFund: ?FundInfo,
+  +nextFund: ?FundInfo,
+|}

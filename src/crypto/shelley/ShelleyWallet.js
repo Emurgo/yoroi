@@ -79,8 +79,10 @@ import type {
   RawUtxo,
   TxBodiesRequest,
   TxBodiesResponse,
+  AccountStateResponse,
   PoolInfoRequest,
   PoolInfoResponse,
+  FundInfoResponse,
 } from '../../api/types'
 import type {
   Addressing,
@@ -846,12 +848,16 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     ])
   }
 
-  async fetchAccountState() {
+  async fetchAccountState(): Promise<AccountStateResponse> {
     if (this.rewardAddressHex == null) throw new Error('reward address is null')
     return await api.bulkGetAccountState([this.rewardAddressHex])
   }
 
   async fetchPoolInfo(request: PoolInfoRequest): Promise<PoolInfoResponse> {
     return await api.getPoolInfo(request)
+  }
+
+  async fetchFundInfo(): Promise<FundInfoResponse> {
+    return await api.getFundInfo()
   }
 }
