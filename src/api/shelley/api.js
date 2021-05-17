@@ -155,11 +155,18 @@ export const bulkGetAccountState = async (
   return Object.assign({}, ...responses)
 }
 
-export const getPoolInfo = (
+export const getPoolInfo = async (
   request: PoolInfoRequest,
 ): Promise<PoolInfoResponse> => {
-  return checkedFetch('getPoolInfo', request, NETWORK_CONFIG)
+  return await checkedFetch('getPoolInfo', request, NETWORK_CONFIG)
 }
 
-export const getFundInfo = (): Promise<FundInfoResponse> =>
-  checkedFetch('getFundInfo', null, NETWORK_CONFIG, 'GET')
+export const getFundInfo = async (): Promise<FundInfoResponse> => {
+  const prefix = CONFIG.NETWORKS.HASKELL_SHELLEY.IS_MAINNET ? '' : 'api/'
+  return await checkedFetch(
+    `${prefix}v0/catalyst/fundInfo`,
+    null,
+    NETWORK_CONFIG,
+    'GET',
+  )
+}

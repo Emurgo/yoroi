@@ -36,6 +36,7 @@ import {
   requireInitializedWallet,
   withNavigationTitle,
 } from '../../utils/renderUtils'
+import {Logger} from '../../utils/logging'
 import FlawedWalletModal from './FlawedWalletModal'
 import StandardModal from '../Common/StandardModal'
 import {WALLET_ROOT_ROUTES, CATALYST_ROUTES} from '../../RoutesList'
@@ -108,6 +109,11 @@ const AvailableAmountBanner = injectIntl(
   ),
 )
 
+type FundInfo = ?{|
+  +registrationStart: string,
+  +registrationEnd: string,
+|}
+
 type Props = {|
   transactionsInfo: TransactionInfo,
   navigation: Navigation,
@@ -134,23 +140,50 @@ const TxHistory = ({
   walletMeta,
   intl,
 }: Props) => {
+  // Byron warning banner
+
   const [showWarning, setShowWarning] = useState<boolean>(
     isByron(walletMeta.walletImplementationId),
   )
+
+  // InsufficientFundsModal (Catalyst)
 
   const [showInsufficientFundsModal, setShowInsufficientFundsModal] = useState<
     boolean,
   >(false)
 
+  // Catalyst voting registration banner
+
+  const canVote =
+    !walletMeta.isHW && isHaskellShelley(walletMeta.walletImplementationId)
+
+  const [showCatalystBanner, setShowCatalystBanner] = useState<boolean>(canVote)
+
+  const checkCatalystFundInfo = async () => {
+    let fundInfo: FundInfo = null
+    if (canVote) {
+      try {
+        const {currentFund} = await walletManager.fetchFundInfo()
+        if (currentFund != null) {
+          fundInfo = {
+            registrationStart: currentFund.registrationStart,
+            registrationEnd: currentFund.registrationEnd,
+          }
+        }
+      } catch (e) {
+        Logger.debug('Could not get Catalyst fund info from server', e)
+      }
+    }
+    setShowCatalystBanner((canVote && isRegistrationOpen(fundInfo)) || __DEV__)
+  }
+
+  useEffect(() => {
+    checkCatalystFundInfo()
+  }, [])
+
+  // handles back button (closes wallet)
+
   const routes = useNavigationState((state) => state.routes)
-
-  const showCatalystVotingBanner =
-    (!walletMeta.isHW &&
-      isRegistrationOpen() &&
-      isHaskellShelley(walletMeta.walletImplementationId)) ||
-    __DEV__
-
-  const assetMetaData = availableAssets[tokenBalance.getDefaultId()]
 
   // TODO: move this to dashboard once it's set as default screen
   useEffect(
@@ -164,6 +197,9 @@ const TxHistory = ({
       }),
     [navigation],
   )
+
+  const assetMetaData = availableAssets[tokenBalance.getDefaultId()]
+
   return (
     <SafeAreaView style={styles.scrollView}>
       <StatusBar type="dark" />
@@ -177,7 +213,7 @@ const TxHistory = ({
           amountAssetMetaData={availableAssets[tokenBalance.getDefaultId()]}
         />
 
-        {showCatalystVotingBanner && (
+        {showCatalystBanner && (
           <VotingBanner
             onPress={() => {
               if (tokenBalance.getDefault().lt(CONFIG.CATALYST.MIN_ADA)) {
