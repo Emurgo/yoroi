@@ -102,8 +102,8 @@ const CATALYST = {
   VOTING_ROUNDS: [
     {
       ROUND: 4,
-      START_DATE: '2021-05-20T19:00:00Z',
-      END_DATE: '2021-05-27T19:00:00Z',
+      START_DATE: '2021-05-27T19:00:00Z',
+      END_DATE: '2021-06-03T19:00:00Z',
     },
   ],
 }
