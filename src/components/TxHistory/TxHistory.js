@@ -180,6 +180,15 @@ const TxHistory = ({
     <SafeAreaView style={styles.scrollView}>
       <StatusBar type="dark" />
       <View style={styles.container}>
+        <OfflineBanner />
+        {isOnline &&
+          lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
+
+        <AvailableAmountBanner
+          amount={tokenBalance.getDefault()}
+          amountAssetMetaData={availableAssets[tokenBalance.getDefaultId()]}
+        />
+
         {showCatalystVotingBanner && (
           <VotingBanner
             onPress={() => {
@@ -203,15 +212,6 @@ const TxHistory = ({
             }
           />
         )}
-
-        <OfflineBanner />
-        {isOnline &&
-          lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
-
-        <AvailableAmountBanner
-          amount={tokenBalance.getDefault()}
-          amountAssetMetaData={availableAssets[tokenBalance.getDefaultId()]}
-        />
 
         {_.isEmpty(transactionsInfo) ? (
           <ScrollView

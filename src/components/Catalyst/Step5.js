@@ -260,6 +260,11 @@ export default injectIntl(
       defaultAsset: defaultNetworkAssetSelector(state),
     }),
     {submitTransaction},
+    (state, dispatchProps, ownProps) => ({
+      ...state,
+      ...dispatchProps,
+      ...ownProps,
+    }),
   )(
     withTitle((Step5: ComponentType<ExternalProps>), ({intl}) =>
       intl.formatMessage(globalMessages.votingTitle),

@@ -4,6 +4,7 @@
 // https://github.com/elderfo/react-native-storybook-loader.git
 
 function loadStories() {
+	require('../src/components/Catalyst/Catalyst.stories');
 	require('../src/components/Common/DangerousActionModal.stories');
 	require('../src/components/Delegation/DelegationConfirmation.stories');
 	require('../src/components/Delegation/FlawedWalletScreen.stories');
@@ -35,6 +36,7 @@ function loadStories() {
 }
 
 const stories = [
+	'../src/components/Catalyst/Catalyst.stories',
 	'../src/components/Common/DangerousActionModal.stories',
 	'../src/components/Delegation/DelegationConfirmation.stories',
 	'../src/components/Delegation/FlawedWalletScreen.stories',

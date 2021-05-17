@@ -12,6 +12,11 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
   },
+  qrCodeBackground: {
+    borderRadius: 8,
+    padding: 16,
+    backgroundColor: '#F0F3F5',
+  },
   secretCode: {
     backgroundColor: '#F0F3F5',
     borderRadius: 8,

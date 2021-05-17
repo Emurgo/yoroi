@@ -345,7 +345,7 @@
   "components.walletselection.walletselectionscreen.addWalletOnShelleyButton": "Add wallet (Jormungandr ITN)",
   "components.walletselection.walletselectionscreen.header": "My wallets",
   "components.walletselection.walletselectionscreen.stakeDashboardButton": "Stake Dashboard",
-  "components.catalyst.banner.name": "Catalyst Voting",
+  "components.catalyst.banner.name": "Catalyst Voting Registration",
   "components.catalyst.insufficientBalance": "Participating requires at least {requiredBalance}, but you only have {currentBalance}. Unwithdrawn rewards are not included in this amount",
   "components.catalyst.step1.subTitle": "Before you begin, make sure to download the Catalyst Voting App.",
   "components.catalyst.step1.stakingKeyNotRegistered": "Catalyst voting rewards are sent to delegation accounts and your wallet does not seem to have a registered delegation certificate. If you want to receive voting rewards, you need to delegate your funds first.",

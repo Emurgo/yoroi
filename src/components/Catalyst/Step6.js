@@ -105,12 +105,14 @@ const Step6 = ({intl, navigation, encryptedKey}) => {
           {/* for some reason style arrays have issues in current flow version.
              so a regular object spread has been used here */}
           <View style={{...styles.qrCode, ...styles.mb40}}>
-            <QRCode
-              value={encryptedKey}
-              size={140}
-              backgroundColor="white"
-              color="black"
-            />
+            <View style={styles.qrCodeBackground}>
+              <QRCode
+                value={encryptedKey}
+                size={140}
+                backgroundColor="white"
+                color="black"
+              />
+            </View>
           </View>
           <View>
             <Text style={[styles.description, styles.mb16]}>
@@ -160,6 +162,11 @@ export default injectIntl(
       encryptedKey: state.voting.encryptedKey,
     }),
     {},
+    (state, dispatchProps, ownProps) => ({
+      ...state,
+      ...dispatchProps,
+      ...ownProps,
+    }),
   )(
     withTitle((Step6: ComponentType<ExternalProps>), ({intl}) =>
       intl.formatMessage(globalMessages.votingTitle),
