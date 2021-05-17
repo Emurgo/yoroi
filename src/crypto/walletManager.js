@@ -22,7 +22,15 @@ import {
 } from '../helpers/deviceSettings'
 
 import type {WalletMeta, ServerStatusCache} from '../state'
-import type {RawUtxo, TxBodiesRequest, ServerStatusResponse} from '../api/types'
+import type {
+  RawUtxo,
+  TxBodiesRequest,
+  ServerStatusResponse,
+  PoolInfoRequest,
+  PoolInfoResponse,
+  FundInfoResponse,
+  AccountStateResponse,
+} from '../api/types'
 import type {EncryptionMethod, SendTokenList} from './types'
 import type {DefaultAsset} from '../types/HistoryTransaction'
 import type {HWDeviceInfo} from './shelley/ledgerUtils'
@@ -790,14 +798,19 @@ class WalletManager {
     return await this.abortWhenWalletCloses(this._wallet.fetchUTXOs())
   }
 
-  async fetchAccountState() {
+  async fetchAccountState(): Promise<AccountStateResponse> {
     if (this._wallet == null) throw new WalletClosed()
     return await this.abortWhenWalletCloses(this._wallet.fetchAccountState())
   }
 
-  async fetchPoolInfo(request: any) {
+  async fetchPoolInfo(request: PoolInfoRequest): Promise<PoolInfoResponse> {
     if (this._wallet == null) throw new WalletClosed()
     return await this._wallet.fetchPoolInfo(request)
+  }
+
+  async fetchFundInfo(): Promise<FundInfoResponse> {
+    if (this._wallet == null) throw new WalletClosed()
+    return await this._wallet.fetchFundInfo()
   }
 
   // =================== misc =================== //

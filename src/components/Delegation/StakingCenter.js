@@ -65,7 +65,7 @@ const noPoolDataDialog = defineMessages({
 })
 
 type SelectedPool = {|
-  +poolName: null | string,
+  +poolName: ?string,
   +poolHash: string,
 |}
 
@@ -153,7 +153,7 @@ const _handleOnMessage = async (
     // TODO: fetch reputation info once an endpoint is implemented
     const poolsReputation: {[key: string]: mixed} = {}
 
-    if (poolInfo?.info != null) {
+    if (poolInfo.info != null) {
       const selectedPools: Array<SelectedPool> = [
         {
           poolName: poolInfo.info.name,

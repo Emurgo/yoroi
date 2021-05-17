@@ -11,7 +11,16 @@ import Wallet from './Wallet'
 import {ISignRequest} from './ISignRequest'
 import {MultiToken} from './MultiToken'
 
-import type {RawUtxo, TxBodiesRequest, TxBodiesResponse} from '../api/types'
+import type {
+  RawUtxo,
+  TxBodiesRequest,
+  TxBodiesResponse,
+  ServerStatusResponse,
+  PoolInfoRequest,
+  PoolInfoResponse,
+  FundInfoResponse,
+  AccountStateResponse,
+} from '../api/types'
 import type {
   AddressedUtxo,
   EncryptionMethod,
@@ -202,15 +211,17 @@ export interface WalletInterface {
 
   // =================== backend API =================== //
 
-  checkServerStatus(): Promise<any>;
+  checkServerStatus(): Promise<ServerStatusResponse>;
 
-  submitTransaction(signedTx: string): Promise<any>;
+  submitTransaction(signedTx: string): Promise<[]>;
 
   getTxsBodiesForUTXOs(request: TxBodiesRequest): Promise<TxBodiesResponse>;
 
-  fetchUTXOs(): Promise<any>;
+  fetchUTXOs(): Promise<Array<RawUtxo>>;
 
-  fetchAccountState(): Promise<any>;
+  fetchAccountState(): Promise<AccountStateResponse>;
 
-  fetchPoolInfo(request: any): Promise<any>;
+  fetchPoolInfo(request: PoolInfoRequest): Promise<PoolInfoResponse>;
+
+  fetchFundInfo(): Promise<FundInfoResponse>;
 }

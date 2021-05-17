@@ -4,6 +4,7 @@ import {BigNumber} from 'bignumber.js'
 
 import walletManager from '../crypto/walletManager'
 import {Logger} from '../utils/logging'
+import {ObjectValues} from '../utils/flow'
 
 import type {State} from '../state'
 
@@ -88,10 +89,8 @@ export const fetchAccountState = () => async (
     dispatch(_setAccountDelegationStatus(status.isRegistered))
 
     const accountStateResp = await walletManager.fetchAccountState()
-    const accountState = Object.keys(accountStateResp).map(
-      (key) => accountStateResp[key],
-    )[0]
-    const value = accountState.remainingAmount || '0'
+    const accountState = ObjectValues(accountStateResp)[0]
+    const value = accountState?.remainingAmount || '0'
 
     const utxos = getState().balance.utxos
     if (utxos != null) {

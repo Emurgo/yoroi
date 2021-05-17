@@ -101,9 +101,9 @@ const CATALYST = {
   MIN_ADA: NUMBERS.LOVELACES_PER_ADA.times(450),
   VOTING_ROUNDS: [
     {
-      NEXT_ROUND: 4,
-      START_DATE: '6 May 2021 19:00:00 GMT',
-      END_DATE: '13 May 2021 19:00:00 GMT',
+      ROUND: 4,
+      START_DATE: '2021-05-27T19:00:00Z',
+      END_DATE: '2021-06-03T19:00:00Z',
     },
   ],
 }
