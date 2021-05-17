@@ -22,7 +22,7 @@ import SettingsScreenNavigator from './Settings/SettingsScreenNavigator'
 import {defaultNavigationOptions} from '../navigationOptions'
 import CatalystNavigator from './Catalyst/CatalystNavigator'
 
-import {DEFAULT_THEME_COLORS} from '../styles/config'
+import {theme} from '../styles/config'
 import styles from './TxHistory/styles/SettingsButton.style'
 import iconHistory from '../assets/img/icon/txhistory.png'
 import iconHistoryActive from '../assets/img/icon/txhistory-active.png'
@@ -120,8 +120,8 @@ const WalletTabNavigator = injectIntl(
         }
       }}
       tabBarOptions={{
-        activeTintColor: DEFAULT_THEME_COLORS.NAVIGATION_ACTIVE,
-        inactiveTintColor: DEFAULT_THEME_COLORS.NAVIGATION_INACTIVE,
+        activeTintColor: theme.COLORS.NAVIGATION_ACTIVE,
+        inactiveTintColor: theme.COLORS.NAVIGATION_INACTIVE,
       }}
       backBehavior="initialRoute"
     >

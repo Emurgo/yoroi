@@ -2,6 +2,10 @@
 
 import {Platform} from 'react-native'
 
+// TODO: need to homogenise the code style here. Only use upper case for color
+// constants. The rest should follow typical js object naming conventions.
+// All reusable styles should be included in the `theme` object
+
 export const COLORS = {
   TRANSPARENT: 'transparent',
   BACKGROUND: '#fff',
@@ -41,16 +45,33 @@ export const COLORS = {
   TEXT_GRAY2: '#9b9b9b',
 }
 
-export const DEFAULT_THEME_COLORS = {
+// TODO: use lowercase for key names. Eg navigationActive
+export const defaultColors = {
   NAVIGATION_ACTIVE: COLORS.LIGHT_POSITIVE_GREEN,
   NAVIGATION_INACTIVE: COLORS.SECONDARY_TEXT,
   BACKGROUND: COLORS.WHITE,
   CODE_STYLE_BACKGROUND: COLORS.LIGHT_GRAY,
 }
 
-export const THEME = {
-  COLORS: DEFAULT_THEME_COLORS,
-  // TEXT: ... // TODO
+export const defaultText = {
+  fontFamily: Platform.select({
+    ios: 'Rubik-Regular',
+    android: 'Rubik-Regular',
+  }),
+  color: COLORS.BLACK,
+  lineHeight: 18,
+  fontSize: 14,
+}
+
+export const spacing = {
+  paragraphBottomMargin: 15,
+}
+
+// TODO: use lowercase for key names
+export const theme = {
+  text: defaultText, // use this style
+  COLORS: defaultColors, // not this
+  spacing,
 }
 
 export const DEBUG_BORDERS = {
@@ -58,15 +79,13 @@ export const DEBUG_BORDERS = {
   borderWidth: 1,
 }
 
+// TODO: add these in default theme colors
 export const colors = {
   buttonBackground: '#17d1aa',
   buttonBackgroundBlue: '#3154cb',
 }
 
-export const spacing = {
-  paragraphBottomMargin: 15,
-}
-
+// TODO: remove, use theme instead.
 const brand = {
   defaultFont: Platform.select({
     ios: 'Rubik-Regular',
