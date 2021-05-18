@@ -2,8 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key/>
-	<string/>
+	<key></key>
+	<string></string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -23,7 +23,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>220</string>
+	<string>233</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
@@ -65,6 +65,19 @@
 	<string>Enable speech recognition</string>
 	<key>RCTAsyncStorageExcludeFromBackup</key>
 	<true/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Rubik-Bold.ttf</string>
+		<string>Rubik-BoldItalic.ttf</string>
+		<string>Rubik-Italic.ttf</string>
+		<string>Rubik-Light.ttf</string>
+		<string>Rubik-LightItalic.ttf</string>
+		<string>Rubik-Medium.ttf</string>
+		<string>Rubik-MediumItalic.ttf</string>
+		<string>Rubik-Regular.ttf</string>
+		<string>Rubik-SemiBold.ttf</string>
+		<string>Rubik-SemiBoldItalic.ttf</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -81,18 +94,5 @@
 	<string>Light</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>UIAppFonts</key>
-	<array>
-		<string>Rubik-Bold.ttf</string>
-		<string>Rubik-BoldItalic.ttf</string>
-		<string>Rubik-Italic.ttf</string>
-		<string>Rubik-Light.ttf</string>
-		<string>Rubik-LightItalic.ttf</string>
-		<string>Rubik-Medium.ttf</string>
-		<string>Rubik-MediumItalic.ttf</string>
-		<string>Rubik-Regular.ttf</string>
-		<string>Rubik-SemiBold.ttf</string>
-		<string>Rubik-SemiBoldItalic.ttf</string>
-	</array>
 </dict>
 </plist>
