@@ -4,6 +4,7 @@ import {AppState, Alert, Keyboard, Platform} from 'react-native'
 import uuid from 'uuid'
 import {intlShape} from 'react-intl'
 import DeviceInfo from 'react-native-device-info'
+import RNBootSplash from 'react-native-bootsplash'
 
 import crashReporting from './helpers/crashReporting'
 import globalMessages, {errorMessages} from './i18n/global-messages'
@@ -311,6 +312,8 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
     reducer: (state, value) => value,
     type: 'INITIALIZE_APP',
   })
+
+  RNBootSplash.hide({fade: true})
 }
 
 const _setOnline = (isOnline: boolean) => (dispatch, getState) => {
