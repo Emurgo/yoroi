@@ -53,6 +53,7 @@ import type {CreateUnsignedTxResponse} from '../../crypto/shelley/transactionUti
 import type {TokenEntry} from '../../crypto/MultiToken'
 
 import styles from './styles/ConfirmScreen.style'
+import {CommonActions} from '@react-navigation/routers'
 
 const messages = defineMessages({
   title: {
@@ -95,6 +96,13 @@ const handleOnConfirm = async (
           await submitSignedTx(tx)
         }
 
+        navigation.dispatch(
+          CommonActions.reset({
+            key: null,
+            index: 0,
+            routes: [{name: SEND_ROUTES.MAIN}],
+          }),
+        )
         navigation.navigate(WALLET_ROUTES.TX_HISTORY)
       } catch (e) {
         if (e instanceof NetworkError) {
