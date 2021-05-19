@@ -6,7 +6,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {ScrollView, View, ActivityIndicator} from 'react-native'
 import _ from 'lodash'
-import SafeAreaView from 'react-native-safe-area-view'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages} from 'react-intl'
 /* eslint-disable-next-line camelcase */
 import {min_ada_required, BigNum} from '@emurgo/react-native-haskell-shelley'
@@ -869,7 +869,7 @@ class SendScreen extends Component<Props, State> {
     )
 
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView edges={['left', 'right']} style={styles.container}>
         <StatusBar type="dark" />
 
         <UtxoAutoRefresher />
