@@ -3,14 +3,8 @@ import React, {useState} from 'react'
 import type {ComponentType} from 'react'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
-import {
-  View,
-  Image,
-  TouchableOpacity,
-  Clipboard,
-  Animated,
-  Linking,
-} from 'react-native'
+import {View, Image, TouchableOpacity, Animated, Linking} from 'react-native'
+import Clipboard from '@react-native-community/clipboard'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import {debounce} from 'lodash'
 
