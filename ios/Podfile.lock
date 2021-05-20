@@ -332,6 +332,8 @@ PODS:
     - React
   - RNCAsyncStorage (1.13.3):
     - React-Core
+  - RNCClipboard (1.5.1):
+    - React-Core
   - RNCMaskedView (0.1.10):
     - React
   - RNDeviceInfo (6.0.1):
@@ -419,6 +421,7 @@ DEPENDENCIES:
   - RNBootSplash (from `../node_modules/react-native-bootsplash`)
   - RNCardano (from `../node_modules/react-native-cardano`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
+  - "RNCClipboard (from `../node_modules/@react-native-community/clipboard`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
@@ -526,6 +529,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-cardano"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
+  RNCClipboard:
+    :path: "../node_modules/@react-native-community/clipboard"
   RNCMaskedView:
     :path: "../node_modules/@react-native-community/masked-view"
   RNDeviceInfo:
@@ -599,6 +604,7 @@ SPEC CHECKSUMS:
   RNBootSplash: 8ef5ffa03dadd35f66510b42960ce40f397c98bf
   RNCardano: 5a5f3e3bd63207b2c67fad283a528c41da648b32
   RNCAsyncStorage: da95b83e241a7f5efe3da1a949b3ec3175380be0
+  RNCClipboard: 41d8d918092ae8e676f18adada19104fa3e68495
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
   RNDeviceInfo: 6dd5c07a482f2a5e4a29fe8a9d99eadd4277175a
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211

@@ -10,12 +10,12 @@ import {
   View,
   ScrollView,
   SafeAreaView,
-  Clipboard,
   TouchableOpacity,
   Image,
   NativeModules,
   Platform,
 } from 'react-native'
+import Clipboard from '@react-native-community/clipboard'
 import {injectIntl, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
 import {useFocusEffect} from '@react-navigation/native'

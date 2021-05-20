@@ -8,9 +8,9 @@ import {
   Image,
   Linking,
   TouchableOpacity,
-  Clipboard,
   Animated,
 } from 'react-native'
+import Clipboard from '@react-native-community/clipboard'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 import {debounce} from 'lodash'
 

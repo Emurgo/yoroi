@@ -3,7 +3,8 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {Clipboard, View} from 'react-native'
+import {View} from 'react-native'
+import Clipboard from '@react-native-community/clipboard'
 import QRCode from 'react-native-qrcode-svg'
 import {injectIntl, defineMessages, intlShape} from 'react-intl'
 
