@@ -131,12 +131,22 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     // initialize address chains
     const _walletConfig = getWalletConfigById(implementationId)
     this.internalChain = new AddressChain(
-      new AddressGenerator(accountPubKeyHex, 'Internal', implementationId),
+      new AddressGenerator(
+        accountPubKeyHex,
+        'Internal',
+        implementationId,
+        networkId,
+      ),
       _walletConfig.DISCOVERY_BLOCK_SIZE,
       _walletConfig.DISCOVERY_GAP_SIZE,
     )
     this.externalChain = new AddressChain(
-      new AddressGenerator(accountPubKeyHex, 'External', implementationId),
+      new AddressGenerator(
+        accountPubKeyHex,
+        'External',
+        implementationId,
+        networkId,
+      ),
       _walletConfig.DISCOVERY_BLOCK_SIZE,
       _walletConfig.DISCOVERY_GAP_SIZE,
     )
@@ -380,7 +390,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   _getBackendConfig(): BackendConfig {
-    return this._getNetworkConfig.BACKEND
+    return this._getNetworkConfig().BACKEND
   }
 
   _getPurpose(): number {

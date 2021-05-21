@@ -29,6 +29,7 @@ import styles from './styles/SaveReadOnlyWalletScreen.style'
 
 import type {ComponentType} from 'react'
 import type {Navigation} from '../../../types/navigation'
+import type {NetworkId} from '../../../config/types'
 
 const messages = defineMessages({
   title: {
@@ -76,6 +77,7 @@ type WalletInfoProps = {|
   },
   normalizedPath: Array<number>,
   publicKeyHex: string,
+  networkId: NetworkId,
 |}
 
 const WalletInfoView = ({
@@ -83,6 +85,7 @@ const WalletInfoView = ({
   plate,
   normalizedPath,
   publicKeyHex,
+  networkId,
 }: WalletInfoProps) => (
   <View style={styles.walletInfoContainer}>
     <ScrollView style={styles.scrollView}>
@@ -104,7 +107,7 @@ const WalletInfoView = ({
           renderItem={({item}) => (
             <WalletAddress
               addressHash={item}
-              networkId={CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID}
+              networkId={networkId}
             />
           )}
         />
@@ -175,6 +178,7 @@ const SaveReadOnlyWalletScreen = ({onSubmit, isWaiting, route, intl}) => {
             plate={plate}
             normalizedPath={normalizedPath}
             publicKeyHex={publicKeyHex}
+            networkId={networkId}
           />
         }
         buttonStyle={styles.walletFormButtonStyle}

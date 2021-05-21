@@ -89,21 +89,6 @@ const WalletListScreen = ({wallets, navigateInitWallet, openWallet, intl}) => (
           style={styles.topButton}
         />
 
-        <Button
-          outline
-          onPress={(event) =>
-            navigateInitWallet(
-              event,
-              CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-              CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
-            )
-          }
-          title={`${intl.formatMessage(
-            messages.addWalletButton,
-          )} (Byron-era - ${intl.formatMessage(globalMessages.deprecated)})`}
-          style={styles.button}
-        />
-
         {isNightly() && (
           <Button
             onPress={(event) =>
@@ -118,9 +103,24 @@ const WalletListScreen = ({wallets, navigateInitWallet, openWallet, intl}) => (
             title={`${intl.formatMessage(
               messages.addWalletButton,
             )} on TESTNET (Shelley-era)`}
-            style={styles.topButton}
+            style={styles.button}
           />
         )}
+
+        <Button
+          outline
+          onPress={(event) =>
+            navigateInitWallet(
+              event,
+              CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
+              CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
+            )
+          }
+          title={`${intl.formatMessage(
+            messages.addWalletButton,
+          )} (Byron-era - ${intl.formatMessage(globalMessages.deprecated)})`}
+          style={styles.button}
+        />
 
         {CONFIG.NETWORKS.JORMUNGANDR.ENABLED && (
           <Button

@@ -249,6 +249,7 @@ const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset) => {
   )
   const minAmount = await min_ada_required(
     await cardanoValueFromMultiToken(fakeMultitoken),
+    // TODO
     await BigNum.from_str(CONFIG.NETWORKS.HASKELL_SHELLEY.MINIMUM_UTXO_VAL),
   )
   // if the user is sending a token, we need to make sure the resulting utxo
@@ -414,6 +415,7 @@ const getAmountErrorText = (
     if (
       amountErrors.invalidAmount === InvalidAssetAmount.ERROR_CODES.LT_MIN_UTXO
     ) {
+      // TODO
       const amount = new BigNumber(
         CONFIG.NETWORKS.HASKELL_SHELLEY.MINIMUM_UTXO_VAL,
       )

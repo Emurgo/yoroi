@@ -39,9 +39,8 @@ export class AddressGenerator {
   constructor(
     accountPubKeyHex: string,
     type: AddressType,
-    walletImplementationId: WalletImplementationId = CONFIG.WALLETS
-      .HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
-    networkId: NetworkId = CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
+    walletImplementationId: WalletImplementationId,
+    networkId: NetworkId,
   ) {
     this.accountPubKeyHex = accountPubKeyHex
     this.type = type
