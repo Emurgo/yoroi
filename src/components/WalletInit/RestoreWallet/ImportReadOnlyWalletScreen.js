@@ -58,6 +58,7 @@ let firstFocus = true
 const handleOnRead = async (
   event: Object,
   navigation: Navigation,
+  route: Object,
   intl: intlShape,
 ): Promise<void> => {
   try {
@@ -70,6 +71,8 @@ const handleOnRead = async (
       navigation.navigate(WALLET_INIT_ROUTES.SAVE_READ_ONLY_WALLET, {
         publicKeyHex,
         path,
+        networkId: route.params.networkId,
+        walletImplementationId: route.params.walletImplementationId,
       })
     } else {
       throw new Error('invalid QR code')
@@ -120,7 +123,7 @@ const ImportReadOnlyWalletScreen = ({intl, onRead}) => (
 export default injectIntl(
   (compose(
     withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
-    onDidMount(async ({navigation, intl}) => {
+    onDidMount(async ({navigation, route, intl}) => {
       navigation.addListener('focus', () => {
         // re-enable QR code scanning
         if (
@@ -138,12 +141,12 @@ export default injectIntl(
             CONFIG.DEBUG.PUB_KEY
           }", "path": [1852,1815,0]}`,
         }
-        await handleOnRead(event, navigation, intl)
+        await handleOnRead(event, navigation, route, intl)
       }
     }),
     withHandlers({
-      onRead: ({navigation, intl}) => async (event) => {
-        await handleOnRead(event, navigation, intl)
+      onRead: ({navigation, route, intl}) => async (event) => {
+        await handleOnRead(event, navigation, route, intl)
       },
     }),
   )(ImportReadOnlyWalletScreen): ComponentType<{

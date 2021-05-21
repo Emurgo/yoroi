@@ -22,7 +22,7 @@ import styles from './styles/VerifyRestoredWallet.style'
 
 import type {ComponentType} from 'react'
 import type {Navigation} from '../../../types/navigation'
-import type {WalletImplementationId} from '../../../config/types'
+import type {WalletImplementationId, NetworkId} from '../../../config/types'
 
 const messages = defineMessages({
   title: {
@@ -65,13 +65,14 @@ const messages = defineMessages({
 
 const _getPlate = async (
   walletImplId: WalletImplementationId,
+  networkId: NetworkId,
   phrase: string,
   count: number,
 ) => {
   switch (walletImplId) {
     case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
     case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24:
-      return await generateShelleyPlateFromMnemonics(phrase, count)
+      return await generateShelleyPlateFromMnemonics(phrase, count, networkId)
     case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
       return generateByronPlateFromMnemonics(phrase, count)
     default:
@@ -107,6 +108,7 @@ const VerifyWalletScreen = ({navigateToWalletCredentials, intl, route}) => {
   const generatePlates = async () => {
     const {addresses, accountPlate} = await _getPlate(
       walletImplementationId,
+      networkId,
       phrase,
       1,
     )

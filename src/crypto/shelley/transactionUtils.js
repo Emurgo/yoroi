@@ -10,12 +10,12 @@ import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
 import {sendAllUnsignedTx, newAdaUnsignedTx} from './transactions'
 import {hasSendAllDefault, builtSendTokenList} from '../commonUtils'
 import {multiTokenFromRemote} from './utils'
-import {CONFIG} from '../../config/config'
 import {CardanoError, InsufficientFunds, NoOutputsError} from '../errors'
 import {Logger} from '../../utils/logging'
 import assert from '../../utils/assert'
 
 import type {Addressing, AddressedUtxo, SendTokenList} from '../types'
+import type {CardanoHaskellShelleyNetwork} from '../../config/networks'
 import type {DefaultTokenEntry} from '../MultiToken'
 
 export type CreateUnsignedTxRequest = {|
@@ -29,6 +29,7 @@ export type CreateUnsignedTxRequest = {|
   defaultToken: DefaultTokenEntry,
   tokens: SendTokenList,
   metadata: TransactionMetadata | void,
+  networkConfig: CardanoHaskellShelleyNetwork,
 |}
 
 export type CreateUnsignedTxResponse = HaskellShelleyTxSignRequest
@@ -43,16 +44,15 @@ export const createUnsignedTx = async (
     addressedUtxos,
     absSlotNumber,
     metadata,
+    networkConfig,
   } = request
   try {
-    const NETWORK_CONFIG = CONFIG.NETWORKS.HASKELL_SHELLEY
-
-    const KEY_DEPOSIT = NETWORK_CONFIG.KEY_DEPOSIT
-    const POOL_DEPOSIT = NETWORK_CONFIG.POOL_DEPOSIT
-    const LINEAR_FEE = NETWORK_CONFIG.LINEAR_FEE
-    const MINIMUM_UTXO_VAL = NETWORK_CONFIG.MINIMUM_UTXO_VAL
-    const NETWORK_ID = NETWORK_CONFIG.NETWORK_ID
-    const CHAIN_NETWORK_ID = NETWORK_CONFIG.CHAIN_NETWORK_ID
+    const KEY_DEPOSIT = networkConfig.KEY_DEPOSIT
+    const POOL_DEPOSIT = networkConfig.POOL_DEPOSIT
+    const LINEAR_FEE = networkConfig.LINEAR_FEE
+    const MINIMUM_UTXO_VAL = networkConfig.MINIMUM_UTXO_VAL
+    const NETWORK_ID = networkConfig.NETWORK_ID
+    const CHAIN_NETWORK_ID = networkConfig.CHAIN_NETWORK_ID
 
     const protocolParams = {
       keyDeposit: await BigNum.from_str(KEY_DEPOSIT),

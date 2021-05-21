@@ -19,6 +19,7 @@ import {
   IsLockedError,
 } from '../utils/promise'
 import {TransactionCache} from './shelley/transactionCache'
+import {getNetworkConfig} from './shelley/utils'
 import {validatePassword} from '../utils/validators'
 
 import type {EncryptionMethod} from './types'
@@ -214,7 +215,8 @@ export default class Wallet {
   async _doFullSync() {
     Logger.info('Do full sync')
     assert.assert(this.isInitialized, 'doFullSync: isInitialized')
-    const filterFn = api.filterUsedAddresses
+    const backendConfig = getNetworkConfig(this.networkId).BACKEND
+    const filterFn = (addrs) => api.filterUsedAddresses(addrs, backendConfig)
     await Promise.all([
       this.internalChain.sync(filterFn),
       this.externalChain.sync(filterFn),
@@ -232,7 +234,10 @@ export default class Wallet {
       Logger.info('Discovery done, now syncing transactions')
       let keepGoing = true
       while (keepGoing) {
-        keepGoing = await this.transactionCache.doSyncStep(addresses)
+        keepGoing = await this.transactionCache.doSyncStep(
+          addresses,
+          this.networkId,
+        )
       }
     }
 

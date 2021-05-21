@@ -24,7 +24,6 @@ import ExtendableError from 'es6-error'
 
 import {newAdaUnsignedTx} from './transactions'
 import {normalizeToAddress} from './utils'
-import {CONFIG} from '../../config/config'
 import {Logger} from '../../utils/logging'
 import LocalizableError from '../../i18n/LocalizableError'
 import {
@@ -45,6 +44,8 @@ import type {
 import type {DefaultAsset} from '../../types/HistoryTransaction'
 import type {TimestampedCertMeta} from './transactionCache'
 import type {AccountStateRequest, AccountStateResponse} from '../../api/types'
+import type {BackendConfig} from '../../config/types'
+import type {CardanoHaskellShelleyNetwork} from '../../config/networks'
 
 const createCertificate = async (
   stakingKey: PublicKey,
@@ -288,6 +289,7 @@ export type CreateDelegationTxRequest = {|
   stakingKey: PublicKey,
   changeAddr: {address: string, ...Addressing},
   defaultAsset: DefaultAsset,
+  networkConfig: CardanoHaskellShelleyNetwork,
 |}
 
 export type CreateDelegationTxResponse = {|
@@ -308,18 +310,18 @@ export const createDelegationTx = async (
     poolRequest,
     valueInAccount,
     defaultAsset,
+    networkConfig,
   } = request
   try {
-    const config = CONFIG.NETWORKS.HASKELL_SHELLEY
     const protocolParams = {
-      keyDeposit: await BigNum.from_str(config.KEY_DEPOSIT),
+      keyDeposit: await BigNum.from_str(networkConfig.KEY_DEPOSIT),
       linearFee: await LinearFee.new(
-        await BigNum.from_str(config.LINEAR_FEE.COEFFICIENT),
-        await BigNum.from_str(config.LINEAR_FEE.CONSTANT),
+        await BigNum.from_str(networkConfig.LINEAR_FEE.COEFFICIENT),
+        await BigNum.from_str(networkConfig.LINEAR_FEE.CONSTANT),
       ),
-      minimumUtxoVal: await BigNum.from_str(config.MINIMUM_UTXO_VAL),
-      poolDeposit: await BigNum.from_str(config.POOL_DEPOSIT),
-      networkId: config.NETWORK_ID,
+      minimumUtxoVal: await BigNum.from_str(networkConfig.MINIMUM_UTXO_VAL),
+      poolDeposit: await BigNum.from_str(networkConfig.POOL_DEPOSIT),
+      networkId: networkConfig.NETWORK_ID,
     }
 
     const stakeDelegationCert = await createCertificate(
@@ -381,10 +383,10 @@ export const createDelegationTx = async (
       unsignedTx.changeAddr,
       undefined,
       {
-        NetworkId: config.NETWORK_ID,
-        ChainNetworkId: Number.parseInt(config.CHAIN_NETWORK_ID, 10),
-        KeyDeposit: new BigNumber(config.KEY_DEPOSIT),
-        PoolDeposit: new BigNumber(config.POOL_DEPOSIT),
+        NetworkId: networkConfig.NETWORK_ID,
+        ChainNetworkId: Number.parseInt(networkConfig.CHAIN_NETWORK_ID, 10),
+        KeyDeposit: new BigNumber(networkConfig.KEY_DEPOSIT),
+        PoolDeposit: new BigNumber(networkConfig.POOL_DEPOSIT),
       },
       {
         neededHashes: new Set([
@@ -410,7 +412,10 @@ export const createDelegationTx = async (
 
 export type CreateWithdrawalTxRequest = {|
   absSlotNumber: BigNumber,
-  getAccountState: (AccountStateRequest) => Promise<AccountStateResponse>,
+  getAccountState: (
+    AccountStateRequest,
+    BackendConfig,
+  ) => Promise<AccountStateResponse>,
   addressedUtxos: Array<AddressedUtxo>,
   withdrawals: Array<{|
     ...{|privateKey: PrivateKey|} | {|...Addressing|},
@@ -424,6 +429,7 @@ export type CreateWithdrawalTxRequest = {|
     shouldDeregister: boolean,
   |}>,
   changeAddr: {address: string, ...Addressing},
+  networkConfig: CardanoHaskellShelleyNetwork,
 |}
 export type CreateWithdrawalTxResponse = HaskellShelleyTxSignRequest
 
@@ -431,22 +437,17 @@ export const createWithdrawalTx = async (
   request: CreateWithdrawalTxRequest,
 ): Promise<CreateWithdrawalTxResponse> => {
   Logger.debug('delegationUtils::createWithdrawalTx called', request)
-  const {
-    changeAddr,
-    addressedUtxos,
-    // stakingKey,
-  } = request
+  const {changeAddr, addressedUtxos, networkConfig} = request
   try {
-    const config = CONFIG.NETWORKS.HASKELL_SHELLEY
     const protocolParams = {
-      keyDeposit: await BigNum.from_str(config.KEY_DEPOSIT),
+      keyDeposit: await BigNum.from_str(networkConfig.KEY_DEPOSIT),
       linearFee: await LinearFee.new(
-        await BigNum.from_str(config.LINEAR_FEE.COEFFICIENT),
-        await BigNum.from_str(config.LINEAR_FEE.CONSTANT),
+        await BigNum.from_str(networkConfig.LINEAR_FEE.COEFFICIENT),
+        await BigNum.from_str(networkConfig.LINEAR_FEE.CONSTANT),
       ),
-      minimumUtxoVal: await BigNum.from_str(config.MINIMUM_UTXO_VAL),
-      poolDeposit: await BigNum.from_str(config.POOL_DEPOSIT),
-      networkId: config.NETWORK_ID,
+      minimumUtxoVal: await BigNum.from_str(networkConfig.MINIMUM_UTXO_VAL),
+      poolDeposit: await BigNum.from_str(networkConfig.POOL_DEPOSIT),
+      networkId: networkConfig.NETWORK_ID,
     }
 
     const certificates = []
@@ -484,11 +485,14 @@ export const createWithdrawalTx = async (
         )
       }
     }
-    const accountStates = await request.getAccountState({
-      addresses: request.withdrawals.map(
-        (withdrawal) => withdrawal.rewardAddress,
-      ),
-    })
+    const accountStates = await request.getAccountState(
+      {
+        addresses: request.withdrawals.map(
+          (withdrawal) => withdrawal.rewardAddress,
+        ),
+      },
+      networkConfig.BACKEND,
+    )
 
     const finalWithdrawals: Array<{|
       address: RewardAddress,
@@ -579,10 +583,10 @@ export const createWithdrawalTx = async (
       unsignedTxResponse.changeAddr,
       undefined,
       {
-        NetworkId: config.NETWORK_ID,
-        ChainNetworkId: Number.parseInt(config.CHAIN_NETWORK_ID, 10),
-        KeyDeposit: new BigNumber(config.KEY_DEPOSIT),
-        PoolDeposit: new BigNumber(config.POOL_DEPOSIT),
+        NetworkId: networkConfig.NETWORK_ID,
+        ChainNetworkId: Number.parseInt(networkConfig.CHAIN_NETWORK_ID, 10),
+        KeyDeposit: new BigNumber(networkConfig.KEY_DEPOSIT),
+        PoolDeposit: new BigNumber(networkConfig.POOL_DEPOSIT),
       },
       neededKeys,
     )

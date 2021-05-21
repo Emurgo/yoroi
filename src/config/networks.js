@@ -183,6 +183,10 @@ export const isHaskellShelleyNetwork = (networkId: NetworkId): boolean =>
 
 export const getCardanoByronConfig = () => NETWORKS.BYRON_MAINNET
 
+export type CardanoHaskellShelleyNetwork =
+  | typeof NETWORKS.HASKELL_SHELLEY
+  | typeof NETWORKS.HASKELL_SHELLEY_TESTNET
+
 type NetworkConfig =
   | typeof NETWORKS.BYRON_MAINNET
   | typeof NETWORKS.HASKELL_SHELLEY

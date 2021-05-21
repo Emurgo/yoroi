@@ -21,14 +21,30 @@ import {
 } from '@emurgo/react-native-haskell-shelley'
 
 import {CONFIG} from '../../config/config'
+import {getNetworkConfigById, NETWORKS} from '../../config/networks'
 import {MultiToken} from '../MultiToken'
 
+import type {NetworkId} from '../../config/types'
+import type {CardanoHaskellShelleyNetwork} from '../../config/networks'
 import type {Addressing} from '../types'
 import type {BaseAsset} from '../../types/HistoryTransaction'
 import type {RawUtxo} from '../../api/types'
 import type {DefaultTokenEntry} from '../MultiToken'
 
 const PRIMARY_ASSET_CONSTANTS = CONFIG.PRIMARY_ASSET_CONSTANTS
+
+export const getNetworkConfig: (NetworkId) => CardanoHaskellShelleyNetwork = (
+  networkId,
+) => {
+  switch (networkId) {
+    case NETWORKS.HASKELL_SHELLEY.NETWORK_ID:
+      return NETWORKS.HASKELL_SHELLEY
+    case NETWORKS.HASKELL_SHELLEY_TESTNET.NETWORK_ID:
+      return NETWORKS.HASKELL_SHELLEY_TESTNET
+    default:
+      throw new Error('network id is not a valid Haskell Shelley id')
+  }
+}
 
 export const getCardanoAddrKeyHash = async (
   addr: Address,
@@ -158,6 +174,7 @@ export const verifyFromBip44Root = (
 
 export const deriveRewardAddressHex = async (
   accountPubKeyHex: string,
+  networkId: NetworkId,
 ): Promise<string> => {
   const accountPubKeyPtr = await Bip32PublicKey.from_bytes(
     Buffer.from(accountPubKeyHex, 'hex'),
@@ -169,8 +186,14 @@ export const deriveRewardAddressHex = async (
 
   const credential = await StakeCredential.from_keyhash(await stakingKey.hash())
 
+  let chainNetworkId = CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID
+  const config = getNetworkConfigById(networkId)
+  if (config.CHAIN_NETWORK_ID != null) {
+    chainNetworkId = config.CHAIN_NETWORK_ID
+  }
+
   const rewardAddr = await RewardAddress.new(
-    parseInt(CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID, 10),
+    parseInt(chainNetworkId, 10),
     credential,
   )
   const rewardAddrAsAddr = await rewardAddr.to_address()

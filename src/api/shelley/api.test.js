@@ -4,13 +4,18 @@ import jestSetup from '../../jestSetup'
 
 import * as api from './api'
 import {ApiError, ApiHistoryError} from '../errors'
+import {NETWORKS} from '../../config/networks'
+import {getNetworkConfig} from '../../crypto/shelley/utils'
 
 jestSetup.setup()
 jest.setTimeout(30 * 1000)
 
+const networkConfig = getNetworkConfig(NETWORKS.HASKELL_SHELLEY.NETWORK_ID)
+const backendConfig = networkConfig.BACKEND
+
 describe('History API', () => {
   it('can fetch history', async () => {
-    const bestBlock = await api.getBestBlock()
+    const bestBlock = await api.getBestBlock(backendConfig)
     const addresses = [
       'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
     ]
@@ -21,7 +26,7 @@ describe('History API', () => {
 
     // We are async
     expect.assertions(1)
-    const result = await api.fetchNewTxHistory(request)
+    const result = await api.fetchNewTxHistory(request, backendConfig)
 
     expect(result.transactions[0]).toMatchSnapshot({
       blockNum: expect.any(Number),
@@ -40,7 +45,9 @@ describe('History API', () => {
     // We are async
     expect.assertions(1)
 
-    await expect(api.fetchNewTxHistory(request)).rejects.toThrow(ApiError)
+    await expect(api.fetchNewTxHistory(request, backendConfig)).rejects.toThrow(
+      ApiError,
+    )
   })
 
   it('throws ApiHistoryError on bad request', async () => {
@@ -62,7 +69,7 @@ describe('History API', () => {
     // We are async
     expect.assertions(1)
 
-    await expect(api.fetchNewTxHistory(request)).rejects.toThrow(
+    await expect(api.fetchNewTxHistory(request, backendConfig)).rejects.toThrow(
       ApiHistoryError,
     )
   })
@@ -92,7 +99,7 @@ describe('History API', () => {
     ]
 
     expect.assertions(1)
-    const result = await api.filterUsedAddresses(addresses)
+    const result = await api.filterUsedAddresses(addresses, backendConfig)
     expect(result).toEqual(used)
   })
 
@@ -109,12 +116,12 @@ describe('History API', () => {
 
     expect.assertions(2)
 
-    const result1 = await api.filterUsedAddresses(addresses)
+    const result1 = await api.filterUsedAddresses(addresses, backendConfig)
     expect(result1).toEqual(addresses)
 
     addresses.reverse()
 
-    const result2 = await api.filterUsedAddresses(addresses)
+    const result2 = await api.filterUsedAddresses(addresses, backendConfig)
     expect(result2).toEqual(addresses)
   })
 })

@@ -140,7 +140,7 @@ const SaveReadOnlyWalletScreen = ({onSubmit, isWaiting, route, intl}) => {
     addresses: [],
   })
 
-  const {publicKeyHex, path} = route.params
+  const {publicKeyHex, path, networkId} = route.params
 
   const normalizedPath = path.map((i) => {
     if (i >= CONFIG.NUMBERS.HARD_DERIVATION_START) {
@@ -153,6 +153,7 @@ const SaveReadOnlyWalletScreen = ({onSubmit, isWaiting, route, intl}) => {
     const {addresses, accountPlate} = await generateShelleyPlateFromKey(
       publicKeyHex,
       1,
+      networkId,
     )
     setPlate({addresses, accountPlate})
   }
@@ -228,19 +229,25 @@ export default injectIntl(
           route,
         }) => async ({name}) => {
           try {
-            const {publicKeyHex} = route.params
+            const {
+              publicKeyHex,
+              networkId,
+              walletImplementationId,
+            } = route.params
             assert.assert(
               publicKeyHex != null,
               'SaveReadOnlyWalletScreen::onPress publicKeyHex',
             )
+            assert.assert(networkId != null, 'networkId')
+            assert.assert(!!walletImplementationId, 'walletImplementationId')
 
             await withActivityIndicator(
               async () =>
                 await createWalletWithBip44Account(
                   name,
                   publicKeyHex,
-                  CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-                  CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+                  networkId,
+                  walletImplementationId,
                   null,
                   true, // important: read-only flag
                 ),

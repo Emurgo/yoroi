@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# TODO: check variables for nightly builds too
+
 BASE_DIR="$(dirname ${BASH_SOURCE[0]})"
 cd $BASE_DIR
 PROD_ENV_FILE=".env.production"

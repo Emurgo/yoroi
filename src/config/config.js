@@ -16,18 +16,19 @@ import type {
   WalletImplementationId,
   NetworkId,
 } from './types'
+import type {CardanoHaskellShelleyNetwork} from './networks'
 import type {DefaultAsset} from '../types/HistoryTransaction'
 
 const IS_DEBUG = __DEV__
-/** debugging flags
+/** env variables & debugging flags
  *
  * WARNING: NEVER change these flags direclty here.
  * ALWAYS use the corresponding .env files.
  */
+const _BUILD_VARIANT = env.getString('BUILD_VARIANT')
 const _SHOW_INIT_DEBUG_SCREEN = env.getBoolean('SHOW_INIT_DEBUG_SCREEN', false)
 const _PREFILL_WALLET_INFO = env.getBoolean('PREFILL_WALLET_INFO', false)
-// e2e testing
-const _IS_TESTING = env.getBoolean('IS_TESTING', false)
+const _IS_TESTING = env.getBoolean('IS_TESTING', false) // e2e testing
 const _USE_TESTNET = env.getBoolean('USE_TESTNET', false)
 
 // TODO(v-almonacid): consider adding 'ENABLE' as an env variable
@@ -35,11 +36,10 @@ const _SENTRY = {
   DSN: env.getString('SENTRY'),
   ENABLE: false,
 }
+const _COMMIT = env.getString('COMMIT')
 
 const _LOG_LEVEL = IS_DEBUG ? LogLevel.Debug : LogLevel.Warn
 const _ASSURANCE_STRICT = false
-
-const _COMMIT = env.getString('COMMIT')
 
 export const ASSURANCE_LEVELS = {
   NORMAL: {
@@ -145,9 +145,10 @@ export const CONFIG = {
   E2E: {
     // WARNING: NEVER change these flags here, use .env.e2e
     // we test release configurations so we allow this flag when __DEV__=false
-    IS_TESTING: _IS_TESTING,
+    IS_TESTING: _IS_TESTING, // TODO: use BUILD_VARIANT instead (or wrapper around it)
   },
-  IS_TESTNET_BUILD: _USE_TESTNET,
+  BUILD_VARIANT: _BUILD_VARIANT,
+  IS_TESTNET_BUILD: _USE_TESTNET, // TODO: use BUILD_VARIANT instead
   MAX_CONCURRENT_REQUESTS: 5,
   SENTRY: _SENTRY,
   MNEMONIC_STRENGTH: 160,
@@ -206,26 +207,28 @@ export const getWalletConfigById = (
   throw new Error('invalid walletImplementationId')
 }
 
+export const isNightly = () => CONFIG.BUILD_VARIANT === 'NIGHTLY'
+
 // need to accomodate base config parameters as required by certain API shared
 // by yoroi extension and yoroi mobile
-export const getCardanoBaseConfig = (): Array<{
+export const getCardanoBaseConfig = (
+  networkConfig: CardanoHaskellShelleyNetwork,
+): Array<{
   StartAt?: number,
   GenesisDate?: string,
   SlotsPerEpoch?: number,
   SlotDuration?: number,
 }> => [
   {
-    StartAt: CONFIG.NETWORKS.HASKELL_SHELLEY.BASE_CONFIG[0].START_AT,
-    GenesisDate: CONFIG.NETWORKS.HASKELL_SHELLEY.BASE_CONFIG[0].GENESIS_DATE,
-    SlotsPerEpoch:
-      CONFIG.NETWORKS.HASKELL_SHELLEY.BASE_CONFIG[0].SLOTS_PER_EPOCH,
-    SlotDuration: CONFIG.NETWORKS.HASKELL_SHELLEY.BASE_CONFIG[0].SLOT_DURATION,
+    StartAt: networkConfig.BASE_CONFIG[0].START_AT,
+    GenesisDate: networkConfig.BASE_CONFIG[0].GENESIS_DATE,
+    SlotsPerEpoch: networkConfig.BASE_CONFIG[0].SLOTS_PER_EPOCH,
+    SlotDuration: networkConfig.BASE_CONFIG[0].SLOT_DURATION,
   },
   {
-    StartAt: CONFIG.NETWORKS.HASKELL_SHELLEY.BASE_CONFIG[1].START_AT,
-    SlotsPerEpoch:
-      CONFIG.NETWORKS.HASKELL_SHELLEY.BASE_CONFIG[1].SLOTS_PER_EPOCH,
-    SlotDuration: CONFIG.NETWORKS.HASKELL_SHELLEY.BASE_CONFIG[1].SLOT_DURATION,
+    StartAt: networkConfig.BASE_CONFIG[1].START_AT,
+    SlotsPerEpoch: networkConfig.BASE_CONFIG[1].SLOTS_PER_EPOCH,
+    SlotDuration: networkConfig.BASE_CONFIG[1].SLOT_DURATION,
   },
 ]
 

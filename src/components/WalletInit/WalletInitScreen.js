@@ -78,7 +78,11 @@ type ModalState = $Values<typeof MODAL_STATES>
 type Props = {
   navigateRestoreWallet: (Object, NetworkId, WalletImplementationId) => void,
   navigateCreateWallet: (Object, NetworkId, WalletImplementationId) => void,
-  navigateImportReadOnlyWallet: (Object) => void,
+  navigateImportReadOnlyWallet: (
+    Object,
+    NetworkId,
+    WalletImplementationId,
+  ) => void,
   navigateCheckNanoX: (
     Object,
     NetworkId,
@@ -212,7 +216,13 @@ const WalletInitScreen = ({
               />
               <Button
                 outlineOnLight
-                onPress={navigateImportReadOnlyWallet}
+                onPress={(event) =>
+                  navigateImportReadOnlyWallet(
+                    event,
+                    networkId,
+                    implementationId,
+                  )
+                }
                 title={intl.formatMessage(messages.importReadOnlyWalletLabel)}
                 style={styles.mnemonicDialogButton}
                 testID="importReadOnlyWalletButton"
@@ -274,8 +284,15 @@ export default injectIntl(
           walletImplementationId,
           useUSB,
         }),
-      navigateImportReadOnlyWallet: ({navigation}) => (_event: Object) =>
-        navigation.navigate(WALLET_INIT_ROUTES.IMPORT_READ_ONLY_WALLET),
+      navigateImportReadOnlyWallet: ({navigation}) => (
+        _event: Object,
+        networkId: NetworkId,
+        walletImplementationId: WalletImplementationId,
+      ) =>
+        navigation.navigate(WALLET_INIT_ROUTES.IMPORT_READ_ONLY_WALLET, {
+          networkId,
+          walletImplementationId,
+        }),
     }),
   )(WalletInitScreen),
 )

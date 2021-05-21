@@ -43,6 +43,8 @@ import {
 import assert from './utils/assert'
 import KeyStore from './crypto/KeyStore'
 import * as api from './api/shelley/api'
+import {getNetworkConfig} from './crypto/shelley/utils'
+
 import {ISignRequest} from './crypto/ISignRequest'
 import {CONFIG} from './config/config'
 
@@ -235,7 +237,11 @@ const _setServerStatus = (serverStatus: ServerStatusCache) => (
 
 export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   try {
-    const status = await api.checkServerStatus()
+    // check status of default network
+    const backendConfig = getNetworkConfig(
+      CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
+    ).BACKEND
+    const status = await api.checkServerStatus(backendConfig)
     dispatch(
       _setServerStatus({
         isServerOk: status.isServerOk,
