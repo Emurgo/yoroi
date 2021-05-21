@@ -4,7 +4,7 @@ import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 import {connect} from 'react-redux'
 import {ScrollView, StyleSheet, Switch} from 'react-native'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 import {confirmationMessages} from '../../i18n/global-messages'
@@ -242,6 +242,7 @@ export default injectIntl(
       onLogout: ignoreConcurrentAsyncHandler(
         ({logout, intl}) => async () => {
           const selection = await showConfirmationDialog(
+            // $FlowFixMe
             confirmationMessages.logout,
             intl,
           )
@@ -255,6 +256,6 @@ export default injectIntl(
     }),
   )(WalletSettingsScreen): ComponentType<{|
     navigation: Navigation,
-    intl: intlShape,
+    intl: IntlShape,
   |}>),
 )

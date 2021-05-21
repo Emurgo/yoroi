@@ -6,7 +6,7 @@ import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import WalletDescription from './WalletDescription'
 import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
@@ -89,7 +89,7 @@ type Props = {
     WalletImplementationId,
     boolean,
   ) => mixed,
-  intl: any,
+  intl: IntlShape,
   route: Object, // TODO(navigation): type
   modalState: ModalState,
   setModalState: (Object, ModalState) => void,

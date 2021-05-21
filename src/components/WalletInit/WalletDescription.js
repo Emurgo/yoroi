@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {View} from 'react-native'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import YoroiWalletIcon from '../../assets/YoroiWalletIcon'
 import {Text} from '../UiKit'
@@ -19,7 +19,7 @@ const messages = defineMessages({
 })
 
 type Props = {
-  intl: any,
+  intl: IntlShape,
 }
 
 const WalletDescription = ({intl}: Props) => (

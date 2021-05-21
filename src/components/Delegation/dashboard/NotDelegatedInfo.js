@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import {View, Image} from 'react-native'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {Text, Line} from '../../UiKit'
 import NotDelegatedImage from '../../../assets/img/testnet/no-transactions-yet.png'
@@ -21,7 +21,7 @@ const messages = defineMessages({
 })
 
 type ExternalProps = {|
-  +intl: intlShape,
+  +intl: IntlShape,
 |}
 
 const NotDelegatedInfo = ({intl}: ExternalProps) => (

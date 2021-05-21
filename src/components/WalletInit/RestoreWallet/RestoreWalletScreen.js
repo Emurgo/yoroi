@@ -6,7 +6,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import _ from 'lodash'
 
 import {Text, Button, ValidatedTextInput, StatusBar} from '../../UiKit'
@@ -78,7 +78,10 @@ const messages = defineMessages({
   },
 })
 
-const _translateInvalidPhraseError = (intl: any, error: InvalidPhraseError) => {
+const _translateInvalidPhraseError = (
+  intl: IntlShape,
+  error: InvalidPhraseError,
+) => {
   if (error.code === INVALID_PHRASE_ERROR_CODES.UNKNOWN_WORDS) {
     return intl.formatMessage(mnemonicInputErrorsMessages.UNKNOWN_WORDS, {
       cnt: error.words.length,
@@ -191,6 +194,6 @@ export default injectIntl(
   )(RestoreWalletScreen): ComponentType<{
     navigation: Navigation,
     route: Object, // TODO(navigation): type
-    intl: intlShape,
+    intl: IntlShape,
   }>),
 )

@@ -4,7 +4,7 @@ import React from 'react'
 import {View} from 'react-native'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
-import {injectIntl, intlShape} from 'react-intl'
+import {injectIntl, type IntlShape} from 'react-intl'
 
 import PinInput from './PinInput'
 import {CONFIG} from '../../config/config'
@@ -49,7 +49,7 @@ type PinRegistrationFormLabels = {
 type ExternalProps = {
   labels: PinRegistrationFormLabels,
   onPinEntered: (string) => any,
-  intl: intlShape,
+  intl: IntlShape,
   navigation: Navigation,
 }
 

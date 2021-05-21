@@ -42,6 +42,7 @@ storiesOf('DelegationConfirmation', module).add(
       ),
     }
     return (
+      // $FlowFixMe
       <DelegationConfirmation
         route={route}
         navigation={navigation}

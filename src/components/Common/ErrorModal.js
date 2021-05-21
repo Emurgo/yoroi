@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {Text, View, Image, TouchableOpacity, ScrollView} from 'react-native'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {compose} from 'redux'
 import {withStateHandlers} from 'recompose'
 
@@ -32,6 +32,7 @@ type Props = {
   errorMessage: string,
   errorLogs?: ?string,
   onDismiss: () => void,
+  intl: IntlShape,
 }
 
 const _ErrorView = ({

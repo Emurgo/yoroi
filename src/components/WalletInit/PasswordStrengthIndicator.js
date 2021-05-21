@@ -4,7 +4,7 @@ import React from 'react'
 import {View} from 'react-native'
 import {compose} from 'redux'
 import {withProps} from 'recompose'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {getPasswordStrength} from '../../utils/validators'
 import {Text} from '../UiKit'
@@ -47,7 +47,7 @@ const ValidationCheckIcon = ({
 }
 
 type Props = {|
-  intl: any,
+  intl: IntlShape,
   satisfiesPasswordRequirement?: boolean,
 |}
 

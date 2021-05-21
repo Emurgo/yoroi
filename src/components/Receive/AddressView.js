@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withStateHandlers, withHandlers} from 'recompose'
 import {View, TouchableOpacity, Image, Platform} from 'react-native'
-import {injectIntl, intlShape} from 'react-intl'
+import {injectIntl, type IntlShape} from 'react-intl'
 
 import {
   isUsedAddressIndexSelector,
@@ -41,7 +41,7 @@ import type {
 import type {WalletMeta} from '../../state'
 
 const _handleOnVerifyAddress = async (
-  intl: intlShape,
+  intl: IntlShape,
   address: string,
   index: number,
   hwDeviceInfo: HWDeviceInfo,
@@ -170,6 +170,7 @@ const AddressView = ({
       visible={addressDialogStep === ADDRESS_DIALOG_STEPS.LEDGER_CONNECT}
       onRequestClose={closeDetails}
     >
+      {/* $FlowFixMe */}
       <LedgerConnect
         onConnectBLE={onConnectBLE}
         onConnectUSB={onConnectUSB}
@@ -177,6 +178,7 @@ const AddressView = ({
       />
     </Modal>
 
+    {/* $FlowFixMe */}
     <AddressVerifyModal
       visible={addressDialogStep === ADDRESS_DIALOG_STEPS.ADDRESS_VERIFY}
       onRequestClose={closeDetails}

@@ -8,6 +8,7 @@ import SaveNanoXScreen from './SaveNanoXScreen'
 import {CONFIG} from '../../../config/config'
 
 storiesOf('SaveNanoXScreen', module).add('default', ({navigation}) => (
+  // $FlowFixMe
   <SaveNanoXScreen
     route={{
       params: {

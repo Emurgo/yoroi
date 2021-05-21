@@ -13,7 +13,7 @@ import {
 } from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import {BigNumber} from 'bignumber.js'
-import {injectIntl} from 'react-intl'
+import {injectIntl, type IntlShape} from 'react-intl'
 
 import {Banner, OfflineBanner, StatusBar} from '../UiKit'
 import {
@@ -98,19 +98,21 @@ import type {
   DeviceId,
 } from '../../crypto/shelley/ledgerUtils'
 
-const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
-  <Banner
-    error
-    text={
-      showRefresh
-        ? intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh)
-        : intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh)
-    }
-  />
-))
+const SyncErrorBanner = injectIntl(
+  ({intl, showRefresh}: {intl: IntlShape} & Object) => (
+    <Banner
+      error
+      text={
+        showRefresh
+          ? intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh)
+          : intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh)
+      }
+    />
+  ),
+)
 
 type Props = {|
-  intl: any,
+  intl: IntlShape,
   navigation: Navigation,
   isOnline: boolean,
   utxoBalance: ?BigNumber,
@@ -663,9 +665,12 @@ class StakingDashboard extends React.Component<Props, State> {
             poolInfo != null && !!poolOperator ? (
               <View style={styles.row}>
                 <DelegatedStakepoolInfo
+                  // $FlowFixMe
                   poolTicker={poolInfo.info?.ticker}
+                  // $FlowFixMe
                   poolName={poolInfo.info?.name}
                   poolHash={poolOperator != null ? poolOperator : ''}
+                  // $FlowFixMe
                   poolURL={poolInfo.info?.homepage}
                 />
               </View>
@@ -679,6 +684,7 @@ class StakingDashboard extends React.Component<Props, State> {
             }
           </ScrollView>
 
+          {/* $FlowFixMe */}
           <DelegationNavigationButtons
             onPress={this.navigateToStakingCenter}
             disabled={this.props.isReadOnly}
@@ -691,13 +697,18 @@ class StakingDashboard extends React.Component<Props, State> {
           onDeregisterKey={(event) => this.onKeepOrDeregisterKey(event, true)}
           onChooseTransport={this.onChooseTransport}
           useUSB={this.state.useUSB}
+          // $FlowFixMe
           onConnectBLE={this.onConnectBLE}
+          // $FlowFixMe
           onConnectUSB={this.onConnectUSB}
+          // $FlowFixMe
           withdrawals={this.state.withdrawals}
+          // $FlowFixMe
           deregistrations={this.state.deregistrations}
           balance={this.state.balance}
           finalBalance={this.state.finalBalance}
           fees={this.state.fees}
+          // $FlowFixMe
           onConfirm={this.onConfirm}
           onRequestClose={this.closeWithdrawalDialog}
           error={this.state.error}
@@ -709,7 +720,7 @@ class StakingDashboard extends React.Component<Props, State> {
 
 type ExternalProps = {|
   navigation: Navigation,
-  intl: any,
+  intl: IntlShape,
 |}
 
 export default injectIntl(

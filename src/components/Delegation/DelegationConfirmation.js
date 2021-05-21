@@ -103,7 +103,7 @@ const handleOnConfirm = async (
   submitSignedTx,
   setSendingTransaction,
   setProcessingTx,
-  intl,
+  intl: IntlShape,
   useUSB,
   setErrorData,
 ) => {
@@ -260,7 +260,7 @@ const DelegationConfirmation = ({
   showErrorModal,
   errorMessage,
   errorLogs,
-}) => {
+}: {intl: IntlShape} & Object) => {
   const poolHash = route.params.poolHash
   const poolName = route.params.poolName
   const delegationTxData: CreateDelegationTxResponse =
@@ -357,6 +357,7 @@ const DelegationConfirmation = ({
               visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.LEDGER_CONNECT}
               onRequestClose={closeLedgerDialog}
             >
+              {/* $FlowFixMe */}
               <LedgerConnect
                 onConnectBLE={onConnectBLE}
                 onConnectUSB={onConnectUSB}
@@ -501,6 +502,8 @@ export default injectIntl(
         1000,
       ),
     }),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
   )(DelegationConfirmation): ComponentType<ExternalProps>),
 )

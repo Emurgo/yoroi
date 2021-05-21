@@ -25,6 +25,7 @@ const route = {
 
 storiesOf('ConnectNanoXScreen', module)
   .add('default', ({navigation}) => (
+    // $FlowFixMe
     <ConnectNanoXScreen navigation={navigation} route={route} />
   ))
   .add('with one device', ({navigation}) => (

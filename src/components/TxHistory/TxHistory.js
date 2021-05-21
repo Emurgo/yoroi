@@ -9,7 +9,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
 
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {fetchUTXOs} from '../../actions/utxo'
 import VotingBanner from '../Catalyst/VotingBanner'
 import {Text, Banner, OfflineBanner, StatusBar, WarningBanner} from '../UiKit'
@@ -93,7 +93,7 @@ const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
 ))
 
 type AvailableAmountProps = {|
-  intl: any,
+  intl: IntlShape,
   amount: BigNumber,
   amountAssetMetaData: Token,
 |}
@@ -125,7 +125,7 @@ type Props = {|
   availableAssets: Dict<Token>,
   isFlawedWallet: boolean,
   walletMeta: ReturnType<typeof walletMetaSelector>,
-  intl: any,
+  intl: IntlShape,
 |}
 const TxHistory = ({
   transactionsInfo,
@@ -255,6 +255,7 @@ const TxHistory = ({
             refreshing={isSyncing}
             onRefresh={updateHistory}
             navigation={navigation}
+            // $FlowFixMe
             transactions={transactionsInfo}
           />
         )}

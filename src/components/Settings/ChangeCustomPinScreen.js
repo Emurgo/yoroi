@@ -4,7 +4,7 @@ import {View} from 'react-native'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers, withState} from 'recompose'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import PinInput from '../Common/PinInput'
 import PinRegistrationForm from '../Common/PinRegistrationForm'
@@ -144,6 +144,6 @@ export default injectIntl(
     }),
   )(ChangeCustomPinScreen): ComponentType<{|
     navigation: Navigation,
-    intl: intlShape,
+    intl: IntlShape,
   |}>),
 )

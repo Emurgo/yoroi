@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {View, ScrollView, ActivityIndicator} from 'react-native'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {Text, Button, Modal} from '../UiKit'
 import {confirmationMessages} from '../../i18n/global-messages'
@@ -27,7 +27,7 @@ const messages = defineMessages({
 })
 
 type Props = {|
-  intl: intlShape,
+  intl: IntlShape,
   visible: boolean,
   onConfirm: () => void,
   onRequestClose: () => any,

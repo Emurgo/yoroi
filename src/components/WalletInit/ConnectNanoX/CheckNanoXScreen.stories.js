@@ -8,6 +8,7 @@ import CheckNanoXScreen from './CheckNanoXScreen'
 import {CONFIG} from '../../../config/config'
 
 storiesOf('CheckNanoXScreen', module).add('default', ({navigation}) => (
+  // $FlowFixMe
   <CheckNanoXScreen
     navigation={navigation}
     route={{

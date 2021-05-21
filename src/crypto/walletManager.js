@@ -3,6 +3,7 @@ import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
 import {walletChecksum, legacyWalletChecksum} from '@emurgo/cip4-js'
+import {type IntlShape} from 'react-intl'
 
 import {WalletInterface} from './WalletInterface'
 import {ISignRequest} from './ISignRequest'
@@ -385,7 +386,7 @@ class WalletManager {
     this._notify()
   }
 
-  async enableEasyConfirmation(masterPassword: string, intl: any) {
+  async enableEasyConfirmation(masterPassword: string, intl: IntlShape) {
     if (!this._wallet) throw new WalletClosed()
     const wallet = this._wallet
 
@@ -398,7 +399,11 @@ class WalletManager {
     this._notify()
   }
 
-  async changePassword(masterPassword: string, newPassword: string, intl: any) {
+  async changePassword(
+    masterPassword: string,
+    newPassword: string,
+    intl: IntlShape,
+  ) {
     if (!this._wallet) throw new WalletClosed()
 
     await this._wallet.changePassword(masterPassword, newPassword, intl)

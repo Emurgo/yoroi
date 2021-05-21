@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import {View} from 'react-native'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import globalMessages from '../../../i18n/global-messages'
 import {Text, TitledCard, ProgressCircle} from '../../UiKit'
@@ -19,7 +19,7 @@ const messages = defineMessages({
 })
 
 type ExternalProps = {
-  +intl: intlShape,
+  +intl: IntlShape,
   +percentage: number,
   +currentEpoch: number,
   +endTime: {

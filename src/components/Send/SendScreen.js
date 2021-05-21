@@ -7,7 +7,7 @@ import {connect} from 'react-redux'
 import {ScrollView, View, ActivityIndicator} from 'react-native'
 import _ from 'lodash'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 /* eslint-disable-next-line camelcase */
 import {min_ada_required, BigNum} from '@emurgo/react-native-haskell-shelley'
 
@@ -446,7 +446,7 @@ const getAmountErrorText = (
 
 type Props = {
   navigation: Navigation,
-  intl: any,
+  intl: IntlShape,
   tokenBalance: MultiToken,
   isFetchingBalance: boolean,
   lastFetchingError: any,
@@ -939,7 +939,7 @@ class SendScreen extends Component<Props, State> {
 
 type ExternalProps = {|
   navigation: Navigation,
-  intl: any,
+  intl: IntlShape,
 |}
 
 export default injectIntl(

@@ -1,7 +1,7 @@
 // @flow
 
 import React, {useState} from 'react'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {View, Image, LayoutAnimation, TouchableOpacity} from 'react-native'
 
 import {Text} from '../../UiKit'
@@ -35,7 +35,7 @@ type ExternalProps = {
   onSelect: (TokenEntry | void) => any,
   selectedAsset: TokenEntry | null,
   unselectEnabled: boolean,
-  intl: any,
+  intl: IntlShape,
 }
 
 const AssetSelector: (ExternalProps) => Node = ({

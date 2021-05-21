@@ -5,7 +5,7 @@ import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {View, Image, TouchableOpacity, Animated, Linking} from 'react-native'
 import Clipboard from '@react-native-community/clipboard'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {debounce} from 'lodash'
 
 import {onWillUnmount} from '../../../utils/renderUtils'
@@ -50,7 +50,7 @@ const FadeOutView = (props) => {
 }
 
 type ExternalProps = {|
-  +intl: intlShape,
+  +intl: IntlShape,
   +addressHash: string,
   +networkId: NetworkId,
 |}

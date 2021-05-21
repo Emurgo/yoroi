@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {connect} from 'react-redux'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {isOnlineSelector} from '../../selectors'
 import Banner from './Banner'
@@ -14,7 +14,7 @@ const messages = defineMessages({
   },
 })
 
-const OfflineBanner = ({isOnline, intl}) =>
+const OfflineBanner = ({isOnline, intl}: {intl: IntlShape} & Object) =>
   isOnline ? null : <Banner error text={intl.formatMessage(messages.offline)} />
 
 export default injectIntl(

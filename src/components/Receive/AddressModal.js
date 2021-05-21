@@ -6,7 +6,7 @@ import {compose} from 'redux'
 import {View} from 'react-native'
 import Clipboard from '@react-native-community/clipboard'
 import QRCode from 'react-native-qrcode-svg'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {
   externalAddressIndexSelector,
@@ -52,7 +52,7 @@ const messages = defineMessages({
 type Props = {|
   address: ?string,
   index?: number,
-  intl: any,
+  intl: IntlShape,
   onRequestClose: () => any,
   visible: boolean,
   onAddressVerify: () => void,
@@ -150,7 +150,7 @@ type ExternalProps = {|
   address: ?string,
   onRequestClose: () => any,
   visible: boolean,
-  intl: intlShape,
+  intl: IntlShape,
   onAddressVerify: () => void,
 |}
 

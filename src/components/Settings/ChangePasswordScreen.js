@@ -6,7 +6,7 @@ import {View, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import _ from 'lodash'
 import {withHandlers} from 'recompose'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {Button, ValidatedTextInput, StatusBar} from '../UiKit'
 import {validatePassword} from '../../utils/validators'
@@ -86,7 +86,7 @@ type ComponentState = {
 type Props = {
   onSubmit: (string, string) => any,
   navigation: Navigation,
-  intl: intlShape,
+  intl: IntlShape,
 }
 
 class ChangePasswordScreen extends PureComponent<Props, ComponentState> {

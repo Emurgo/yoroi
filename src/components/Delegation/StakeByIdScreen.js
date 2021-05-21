@@ -85,7 +85,7 @@ const StakeByIdScreen = ({
   handleOnContinue,
   poolId,
   utxos,
-}) => {
+}: {intl: IntlShape} & Object) => {
   return (
     <>
       <View style={styles.container}>

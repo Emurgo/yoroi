@@ -4,7 +4,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers} from 'recompose'
 import {ScrollView, StyleSheet, Switch, Platform} from 'react-native'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {SETTINGS_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
@@ -293,6 +293,6 @@ export default injectIntl(
     }),
   )(ApplicationSettingsScreen): ComponentType<{
     navigation: Navigation,
-    intl: intlShape,
+    intl: IntlShape,
   }>),
 )

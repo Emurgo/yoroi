@@ -7,7 +7,7 @@ const messages = defineMessages({})
 // Base class to allow wrapping a localizable message into an ES6-error
 class LocalizableError extends ExtendableError {
   id: string
-  defaultMessage: string | null
+  defaultMessage: ?string
   values: Object
 
   constructor({
@@ -16,7 +16,7 @@ class LocalizableError extends ExtendableError {
     values = {},
   }: {
     id: string,
-    defaultMessage: string,
+    defaultMessage: ?string,
     values?: Object,
   }) {
     if (!id) throw new Error('id:string is required.')

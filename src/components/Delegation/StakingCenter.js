@@ -209,7 +209,7 @@ const StakingCenter = ({
   languageCode,
   accountBalance,
   serverStatus,
-}) => {
+}: {intl: IntlShape} & Object) => {
   // pools user is currently delegating to
   const poolList = poolOperator != null ? [poolOperator] : null
 
@@ -284,6 +284,7 @@ const StakingCenter = ({
       </View>
       <PoolWarningModal
         visible={showPoolWarning}
+        // $FlowFixMe
         onPress={async () => {
           setShowPoolWarning(false)
           await navigateToDelegationConfirm(

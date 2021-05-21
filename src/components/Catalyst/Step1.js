@@ -56,7 +56,7 @@ const messages = defineMessages({
   },
 })
 
-const WarningModalBody = ({intl}) => (
+const WarningModalBody = ({intl}: {intl: IntlShape}) => (
   <View>
     <Text>{intl.formatMessage(messages.stakingKeyNotRegistered)}</Text>
   </View>

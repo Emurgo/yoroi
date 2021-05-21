@@ -4,7 +4,7 @@ import React from 'react'
 import {View, ScrollView, Platform} from 'react-native'
 import {compose} from 'redux'
 import {withStateHandlers} from 'recompose'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import DeviceInfo from 'react-native-device-info'
 
 import {Text, Button, Modal} from '../UiKit'
@@ -51,7 +51,7 @@ const messages = defineMessages({
 })
 
 type Props = {
-  intl: intlShape,
+  intl: IntlShape,
   onSelectUSB: () => any,
   onSelectBLE: () => any,
   isUSBSupported: boolean,
@@ -150,6 +150,7 @@ const LedgerTransportSwitchModal = ({
     onRequestClose={onRequestClose}
     showCloseIcon={showCloseIcon === true}
   >
+    {/* $FlowFixMe */}
     <LedgerTransportSwitch
       onSelectUSB={onSelectUSB}
       onSelectBLE={onSelectBLE}

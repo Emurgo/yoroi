@@ -2,7 +2,7 @@
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import {View} from 'react-native'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {Text, TitledCard, Button} from '../../UiKit'
 import TotalAdaIcon from '../../../assets/staking/TotalAdaIcon'
@@ -34,7 +34,7 @@ const messages = defineMessages({
 const ICON_DIM = 44
 
 type ExternalProps = {|
-  +intl: intlShape,
+  +intl: IntlShape,
   +totalAdaSum: ?BigNumber,
   +totalRewards: ?BigNumber,
   +totalDelegated: ?BigNumber,

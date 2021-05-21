@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {injectIntl, intlShape, defineMessages} from 'react-intl'
+import {injectIntl, type IntlShape, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
@@ -27,9 +27,11 @@ const messages = defineMessages({
 })
 
 const SaveNanoXScreen = ({onSubmit}) => (
+  // $FlowFixMe
   <WalletNameForm
     onSubmit={onSubmit}
     defaultWalletName={CONFIG.HARDWARE_WALLETS.LEDGER_NANO.DEFAULT_WALLET_NAME}
+    // $FlowFixMe
     image={image}
     progress={{
       currentStep: 3,
@@ -39,7 +41,7 @@ const SaveNanoXScreen = ({onSubmit}) => (
 )
 
 type ExternalProps = {|
-  intl: intlShape,
+  intl: IntlShape,
   navigation: Navigation,
   route: Object, // TODO(navigation): type
 |}

@@ -11,7 +11,7 @@ import {
   RefreshControl,
   ActivityIndicator,
 } from 'react-native'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 import TransportHID from '@v-almonacid/react-native-hid'
 
@@ -64,7 +64,7 @@ const deviceAddition = (device) => ({devices}) => {
 }
 
 type Props = {|
-  intl: intlShape,
+  intl: IntlShape,
   defaultDevices: ?Array<Device>, // for storybook
   navigation: Navigation,
   onConnectUSB: (DeviceObj) => any,
@@ -273,6 +273,7 @@ class LedgerConnect extends React.Component<Props, State> {
       if (error instanceof LocalizableError) {
         errMsg = intl.formatMessage({
           id: error.id,
+          // $FlowFixMe
           defaultMessage: error.defaultMessage,
         })
       } else {
@@ -365,7 +366,7 @@ class LedgerConnect extends React.Component<Props, State> {
 
 type ExternalProps = {|
   navigation: Navigation,
-  intl: any,
+  intl: IntlShape,
   defaultDevices: ?Array<Device>,
   onWaitingMessage: string,
   onConnectUSB: (DeviceObj) => any,

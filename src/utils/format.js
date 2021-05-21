@@ -1,6 +1,6 @@
 // @flow
 import {BigNumber} from 'bignumber.js'
-import {defineMessages} from 'react-intl'
+import {defineMessages, type IntlShape} from 'react-intl'
 import moment from 'moment'
 import utfSymbols from './utfSymbols'
 import AssetFingerprint from '@emurgo/cip14-js'
@@ -82,7 +82,7 @@ export const getAssetDenominationOrId = (
 export const getAssetDenominationOrUnknown = (
   token: Token | DefaultAsset,
   denomination: AssetDenomination,
-  intl: any,
+  intl: IntlShape,
 ): string =>
   getAssetDenomination(token, denomination) ??
   intl.formatMessage(messages.unknownAssetName)
@@ -211,7 +211,7 @@ export const formatDateToSeconds = (ts: string | moment) => {
   return moment(ts).format(moment(0)._locale._format.dateToSeconds)
 }
 
-export const formatDateRelative = (ts: string | moment, intl: any) => {
+export const formatDateRelative = (ts: string | moment, intl: IntlShape) => {
   const config = {
     sameDay: `[${intl.formatMessage(messages.today)}]`,
     lastDay: `[${intl.formatMessage(messages.yesterday)}]`,

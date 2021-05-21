@@ -3,7 +3,7 @@
 import React from 'react'
 import {compose} from 'redux'
 import {withStateHandlers} from 'recompose'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {Text, Button, Checkbox, Modal} from '../../UiKit'
 import styles from './styles/MnemonicBackupImportanceModal.style'
@@ -39,7 +39,7 @@ const messages = defineMessages({
 
 type Props = {
   onConfirm: () => any,
-  intl: any,
+  intl: IntlShape,
   acceptedKeyStorage: boolean,
   acceptedNewDeviceRecovery: boolean,
   setAcceptedKeyStorage: (accepted: boolean) => any,

@@ -4,7 +4,7 @@ import React, {Component} from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {View, TouchableOpacity} from 'react-native'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {BigNumber} from 'bignumber.js'
 
 import {Text} from '../UiKit'
@@ -90,7 +90,7 @@ type Props = {
   availableAssets: Dict<Token>,
   defaultNetworkAsset: Token,
   navigation: any, // TODO: type
-  intl: any,
+  intl: IntlShape,
 }
 
 const _AssuranceLevel = ({transaction, intl}) => {

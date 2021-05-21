@@ -4,7 +4,7 @@ import React from 'react'
 import {compose} from 'redux'
 import {View, ScrollView, Dimensions} from 'react-native'
 import {withHandlers} from 'recompose'
-import {injectIntl, defineMessages, type intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 import DeviceInfo from 'react-native-device-info'
 
@@ -59,7 +59,7 @@ const handleOnRead = async (
   event: Object,
   navigation: Navigation,
   route: Object,
-  intl: intlShape,
+  intl: IntlShape,
 ): Promise<void> => {
   try {
     Logger.debug('ImportReadOnlyWalletScreen::handleOnRead::data', event.data)
@@ -151,7 +151,7 @@ export default injectIntl(
     }),
   )(ImportReadOnlyWalletScreen): ComponentType<{
     navigation: Navigation,
-    intl: intlShape,
+    intl: IntlShape,
     route: any,
   }>),
 )

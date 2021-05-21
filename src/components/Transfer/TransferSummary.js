@@ -6,7 +6,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withStateHandlers} from 'recompose'
 import {View} from 'react-native'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import TwoActionView from '../Common/TwoActionView'
 import AddressEntry from '../Common/AddressEntry'
@@ -48,7 +48,7 @@ const messages = defineMessages({
 })
 
 type Props = {
-  +intl: any,
+  +intl: IntlShape,
   password: string,
   +setPassword: (string) => void,
   +withdrawals?: Array<{|
@@ -90,9 +90,11 @@ const TransferSummary = ({
       label: intl.formatMessage(
         confirmationMessages.commonButtons.confirmButton,
       ),
+      // $FlowFixMe
       onPress: (event) => onConfirm(event, password),
     }}
     secondaryButton={{
+      // $FlowFixMe
       onPress: onCancel,
     }}
   >
@@ -173,6 +175,7 @@ const TransferSummary = ({
     /* eslint-enable indent */
     }
 
+    {/* $FlowFixMe */}
     {walletMeta.isHW && <HWInstructions useUSB={useUSB} addMargin />}
 
     {/* eslint-disable indent */
@@ -193,7 +196,7 @@ const TransferSummary = ({
 )
 
 type ExternalProps = {|
-  +intl: any,
+  +intl: IntlShape,
   +withdrawals?: Array<{|
     +address: string,
     +amount: MultiToken,

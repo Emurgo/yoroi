@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import {SafeAreaView} from 'react-native'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 
@@ -39,7 +39,7 @@ const _navigateToSave = async (
   deviceObj: ?DeviceObj,
   navigation: Navigation,
   route: Object,
-  intl: intlShape,
+  intl: IntlShape,
 ): Promise<void> => {
   try {
     Logger.debug('deviceId', deviceId)
@@ -82,7 +82,7 @@ const _navigateToSave = async (
 }
 
 type Props = {
-  intl: intlShape,
+  intl: IntlShape,
   defaultDevices: ?Array<Device>, // for storybook
   navigation: Navigation,
   route: Object, // TODO(navigation): type
@@ -117,7 +117,7 @@ const ConnectNanoXScreen = ({
 }
 
 type ExternalProps = {|
-  intl: intlShape,
+  intl: IntlShape,
   defaultDevices: ?Array<Device>,
   navigation: Navigation,
   route: Object, // TODO(navigation): type

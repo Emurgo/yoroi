@@ -4,7 +4,7 @@ import React from 'react'
 import {View, Image, ScrollView} from 'react-native'
 import {compose} from 'redux'
 import {withStateHandlers} from 'recompose'
-import {injectIntl, intlShape} from 'react-intl'
+import {injectIntl, type IntlShape} from 'react-intl'
 
 import {Text, Button, Modal, Checkbox} from '../UiKit'
 import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
@@ -15,7 +15,7 @@ import styles from './styles/DangerousActionModal.style'
 import type {ComponentType} from 'react'
 
 type Props = {
-  +intl: intlShape,
+  +intl: IntlShape,
   +title: string,
   +children: React$Node,
   +alertBox?: {
@@ -164,6 +164,7 @@ const DangerousActionModal = ({
     onRequestClose={onRequestClose}
     showCloseIcon={showCloseIcon === true}
   >
+    {/* $FlowFixMe */}
     <DangerousAction
       onRequestClose={onRequestClose}
       title={title}

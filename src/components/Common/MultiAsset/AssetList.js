@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {Text, View, FlatList, TouchableOpacity} from 'react-native'
-import {injectIntl} from 'react-intl'
+import {injectIntl, type IntlShape} from 'react-intl'
 import type {Node, ComponentType} from 'react'
 
 import {
@@ -30,7 +30,7 @@ type Props = {
   assetsMetadata: Dict<Token>,
   styles: NodeStyle,
   onSelect?: (TokenEntry) => any,
-  intl: any,
+  intl: IntlShape,
 }
 
 const AssetRow: ({|
@@ -39,7 +39,7 @@ const AssetRow: ({|
   assetMetadata: Token,
   backColor: {|backgroundColor: string|},
   onSelect?: (TokenEntry) => any,
-  intl: injectIntl,
+  intl: IntlShape,
 |}) => Node = ({styles, asset, assetMetadata, backColor, onSelect, intl}) => {
   const item = (
     <>

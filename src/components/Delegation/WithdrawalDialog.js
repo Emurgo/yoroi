@@ -2,7 +2,7 @@
 
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import Markdown from 'react-native-easy-markdown'
 
 import {Modal} from '../UiKit'
@@ -73,7 +73,7 @@ const messages = defineMessages({
 })
 
 type Props = {|
-  +intl: intlShape,
+  +intl: IntlShape,
   +step: WithdrawalDialogSteps,
   +onKeepKey: () => any,
   +onDeregisterKey: () => any,
@@ -125,6 +125,7 @@ const WithdrawalDialog = ({
         return null
       case WITHDRAWAL_DIALOG_STEPS.WARNING:
         return (
+          // $FlowFixMe
           <DangerousAction
             title={intl.formatMessage(messages.warningModalTitle)}
             alertBox={{
@@ -157,6 +158,7 @@ const WithdrawalDialog = ({
         )
       case WITHDRAWAL_DIALOG_STEPS.CHOOSE_TRANSPORT:
         return (
+          // $FlowFixMe
           <LedgerTransportSwitch
             onSelectUSB={(event) => onChooseTransport(event, true)}
             onSelectBLE={(event) => onChooseTransport(event, false)}
@@ -164,6 +166,7 @@ const WithdrawalDialog = ({
         )
       case WITHDRAWAL_DIALOG_STEPS.LEDGER_CONNECT:
         return (
+          // $FlowFixMe
           <LedgerConnect
             onConnectBLE={onConnectBLE}
             onConnectUSB={onConnectUSB}
@@ -172,8 +175,11 @@ const WithdrawalDialog = ({
         )
       case WITHDRAWAL_DIALOG_STEPS.CONFIRM:
         return (
+          // $FlowFixMe
           <TransferSummary
+            // $FlowFixMe
             withdrawals={withdrawals}
+            // $FlowFixMe
             deregistrations={deregistrations}
             balance={balance}
             finalBalance={finalBalance}
@@ -200,6 +206,7 @@ const WithdrawalDialog = ({
       case WITHDRAWAL_DIALOG_STEPS.ERROR:
         return (
           <ErrorView
+            // $FlowFixMe
             errorMessage={error.errorMessage}
             errorLogs={error.errorLogs}
             onDismiss={onRequestClose}

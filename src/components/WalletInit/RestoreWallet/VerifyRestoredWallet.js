@@ -6,7 +6,7 @@ import {connect} from 'react-redux'
 import {View, FlatList, ScrollView} from 'react-native'
 import {withHandlers} from 'recompose'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {Text, Button, StatusBar, BulletPointItem} from '../../UiKit'
 
@@ -179,6 +179,6 @@ export default injectIntl(
   )(VerifyWalletScreen): ComponentType<{
     navigation: Navigation,
     route: Object, // TODO(navigation): type
-    intl: intlShape,
+    intl: IntlShape,
   }>),
 )

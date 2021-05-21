@@ -4,7 +4,7 @@ import React, {useState, useEffect} from 'react'
 import {AppState} from 'react-native'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {Logger} from '../../utils/logging'
@@ -201,7 +201,7 @@ const BiometricAuthScreen = ({
 type ExternalProps = {|
   navigation: Navigation,
   route: any, // TODO: type
-  intl: any,
+  intl: IntlShape,
 |}
 
 type ErrorCode =

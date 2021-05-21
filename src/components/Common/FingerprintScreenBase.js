@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {View, Image, TouchableOpacity, Platform} from 'react-native'
-import {defineMessages} from 'react-intl'
+import {defineMessages, type IntlShape} from 'react-intl'
 import {compose} from 'redux'
 import {withStateHandlers} from 'recompose'
 import DeviceInfo from 'react-native-device-info'
@@ -31,7 +31,7 @@ type Props = {
   onGoBack?: () => any,
   error?: null | false | string,
   addWelcomeMessage?: boolean,
-  intl?: any,
+  intl?: IntlShape,
   showImage: boolean,
 }
 
@@ -105,7 +105,7 @@ type ExternalProps = {
   onGoBack?: () => any,
   error?: null | false | string,
   addWelcomeMessage?: boolean,
-  intl?: any,
+  intl?: IntlShape,
 }
 
 export default (compose(

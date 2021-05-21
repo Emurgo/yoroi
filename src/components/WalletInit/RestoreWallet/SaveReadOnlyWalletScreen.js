@@ -4,7 +4,7 @@ import React, {useState, useEffect} from 'react'
 // TODO: in the future, prefer SafeAreaView from react-native-safe-area-context,
 // current version however doesn't work well on iOS
 import {View, SafeAreaView, FlatList, ScrollView} from 'react-native'
-import {injectIntl, intlShape, defineMessages} from 'react-intl'
+import {injectIntl, type IntlShape, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
@@ -67,7 +67,7 @@ const CheckSumView = ({icon, checksum}) => (
 )
 
 type WalletInfoProps = {|
-  intl: any,
+  intl: IntlShape,
   plate: {
     accountPlate: {
       ImagePart: string,
@@ -165,6 +165,7 @@ const SaveReadOnlyWalletScreen = ({onSubmit, isWaiting, route, intl}) => {
   return (
     <SafeAreaView style={styles.container} testID="saveReadOnlyWalletContainer">
       <StatusBar type="dark" />
+      {/* $FlowFixMe */}
       <WalletNameForm
         onSubmit={onSubmit}
         defaultWalletName={intl.formatMessage(messages.defaultWalletName)}
@@ -186,7 +187,7 @@ const SaveReadOnlyWalletScreen = ({onSubmit, isWaiting, route, intl}) => {
 }
 
 type ExternalProps = {|
-  intl: intlShape,
+  intl: IntlShape,
   navigation: Navigation,
   route: Object, // TODO(navigation): type
 |}

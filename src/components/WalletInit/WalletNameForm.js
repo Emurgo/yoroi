@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {View, SafeAreaView, Image, ActivityIndicator} from 'react-native'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
@@ -93,7 +93,7 @@ const WalletNameForm = ({
 }
 
 type ExternalProps = {|
-  intl: intlShape,
+  intl: IntlShape,
   onSubmit: ({name: string}) => PossiblyAsync<void>,
   defaultName?: string,
   image: string,

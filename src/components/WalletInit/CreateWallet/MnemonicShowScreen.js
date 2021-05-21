@@ -5,7 +5,7 @@ import {View, Image, ScrollView, Dimensions} from 'react-native'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers, withProps} from 'recompose'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import assert from '../../../utils/assert'
 import {Text, Button, StatusBar} from '../../UiKit'
@@ -140,6 +140,6 @@ export default injectIntl(
   )(MnemonicShowScreen): ComponentType<{
     navigation: Navigation,
     route: Object, // TODO
-    intl: intlShape,
+    intl: IntlShape,
   }>),
 )
