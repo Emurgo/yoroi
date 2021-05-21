@@ -105,10 +105,7 @@ const WalletInfoView = ({
           data={plate.addresses}
           keyExtractor={(item) => item}
           renderItem={({item}) => (
-            <WalletAddress
-              addressHash={item}
-              networkId={networkId}
-            />
+            <WalletAddress addressHash={item} networkId={networkId} />
           )}
         />
       </View>
