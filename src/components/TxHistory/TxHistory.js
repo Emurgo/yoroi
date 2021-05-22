@@ -72,7 +72,7 @@ const warningBannerMessages = defineMessages({
   },
 })
 
-const NoTxHistory = injectIntl(({intl}) => (
+const NoTxHistory = injectIntl(({intl}: {intl: IntlShape}) => (
   <View style={styles.empty}>
     <Image source={image} />
     <Text style={styles.emptyText}>
@@ -81,16 +81,18 @@ const NoTxHistory = injectIntl(({intl}) => (
   </View>
 ))
 
-const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
-  <Banner
-    error
-    text={
-      showRefresh
-        ? intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh)
-        : intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh)
-    }
-  />
-))
+const SyncErrorBanner = injectIntl(
+  ({intl, showRefresh}: {intl: IntlShape, showRefresh: any}) => (
+    <Banner
+      error
+      text={
+        showRefresh
+          ? intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh)
+          : intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh)
+      }
+    />
+  ),
+)
 
 type AvailableAmountProps = {|
   intl: IntlShape,
