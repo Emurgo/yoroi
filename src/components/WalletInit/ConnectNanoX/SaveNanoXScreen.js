@@ -27,7 +27,6 @@ const messages = defineMessages({
 })
 
 const SaveNanoXScreen = ({onSubmit}) => (
-  // $FlowFixMe
   <WalletNameForm
     onSubmit={onSubmit}
     defaultWalletName={CONFIG.HARDWARE_WALLETS.LEDGER_NANO.DEFAULT_WALLET_NAME}

@@ -170,7 +170,6 @@ const SaveReadOnlyWalletScreen = ({
   return (
     <SafeAreaView style={styles.container} testID="saveReadOnlyWalletContainer">
       <StatusBar type="dark" />
-      {/* $FlowFixMe */}
       <WalletNameForm
         onSubmit={onSubmit}
         defaultWalletName={intl.formatMessage(messages.defaultWalletName)}

@@ -95,8 +95,8 @@ const WalletNameForm = ({
 type ExternalProps = {|
   intl: IntlShape,
   onSubmit: ({name: string}) => PossiblyAsync<void>,
-  defaultName?: string,
-  image: string,
+  defaultWalletName?: string,
+  image?: string,
   progress?: {
     currentStep: number,
     totalSteps: number,

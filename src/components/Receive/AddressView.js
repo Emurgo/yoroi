@@ -178,16 +178,13 @@ const AddressView = ({
       />
     </Modal>
 
-    {/* $FlowFixMe */}
     <AddressVerifyModal
       visible={addressDialogStep === ADDRESS_DIALOG_STEPS.ADDRESS_VERIFY}
       onRequestClose={closeDetails}
-      showCloseIcon
       onConfirm={onVerifyAddress}
       address={address}
       path={formatPath(0, 'External', index, walletMeta.walletImplementationId)}
       isWaiting={isWaiting}
-      disableButtons={isWaiting}
       useUSB={useUSB}
     />
   </>
