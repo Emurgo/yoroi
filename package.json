@@ -5,6 +5,7 @@
   "scripts": {
     "flow": "flow --show-all-errors .",
     "flow:install": "flow-typed create-stub path-to-regexp --typescript",
+    "flow:cover": "yarn flow-coverage-report -i 'src/**/*.js' -x '**/*.test.*' -x '**/*.stories*' -t html",
     "lint": "eslint --max-warnings=0 ./src && prettylint \"src/**/*.js\" --config .prettierrc",
     "start": "react-native start",
     "test": "jest",
