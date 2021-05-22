@@ -284,7 +284,6 @@ const StakingCenter = ({
       </View>
       <PoolWarningModal
         visible={showPoolWarning}
-        // $FlowFixMe
         onPress={async () => {
           setShowPoolWarning(false)
           await navigateToDelegationConfirm(

@@ -7,6 +7,5 @@ import {storiesOf} from '@storybook/react-native'
 import StakingByIdScreen from './StakeByIdScreen'
 
 storiesOf('StakingByIdScreen', module).add('Default', ({navigation}) => (
-  // $FlowFixMe
   <StakingByIdScreen navigation={navigation} />
 ))

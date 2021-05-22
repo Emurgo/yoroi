@@ -16,7 +16,6 @@ const messages = defineMessages({
 })
 
 type Props = {
-  navigation: any, // TODO: type
   intl: IntlShape,
   onPress: () => void,
   disabled?: ?boolean,

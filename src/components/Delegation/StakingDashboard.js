@@ -684,7 +684,6 @@ class StakingDashboard extends React.Component<Props, State> {
             }
           </ScrollView>
 
-          {/* $FlowFixMe */}
           <DelegationNavigationButtons
             onPress={this.navigateToStakingCenter}
             disabled={this.props.isReadOnly}
