@@ -158,4 +158,4 @@ const LedgerTransportSwitchModal = ({
   </Modal>
 )
 
-export default (LedgerTransportSwitchModal: ComponentType<ModalProps>)
+export default LedgerTransportSwitchModal

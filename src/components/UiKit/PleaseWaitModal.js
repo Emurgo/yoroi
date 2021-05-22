@@ -6,14 +6,11 @@ import {Text, ActivityIndicator, View} from 'react-native'
 import Modal from './Modal'
 
 import styles from './styles/PleaseWaitModal.style'
-
-import type {ComponentType} from 'react'
-
-type Props = {|
+type PleaseWaitViewProps = {|
   title: string,
   spinnerText: string,
 |}
-export const PleaseWaitView = ({title, spinnerText}: Props) => (
+export const PleaseWaitView = ({title, spinnerText}: PleaseWaitViewProps) => (
   <View style={styles.container}>
     <Text style={styles.title}>{title}</Text>
 
@@ -23,16 +20,15 @@ export const PleaseWaitView = ({title, spinnerText}: Props) => (
   </View>
 )
 
-const PleaseWaitModal = ({visible, title, spinnerText}) => (
+type Props = {|
+  visible: boolean,
+  title: string,
+  spinnerText: string,
+|}
+const PleaseWaitModal = ({visible, title, spinnerText}: Props) => (
   <Modal noPadding visible={visible} onRequestClose={() => null}>
     <PleaseWaitView title={title} spinnerText={spinnerText} />
   </Modal>
 )
 
-type ExternalProps = {|
-  visible: boolean,
-  title: string,
-  spinnerText: string,
-|}
-
-export default (PleaseWaitModal: ComponentType<ExternalProps>)
+export default PleaseWaitModal
