@@ -15,7 +15,6 @@ import styles from './styles/DangerousActionModal.style'
 import type {ComponentType} from 'react'
 
 type Props = {
-  +intl: IntlShape,
   +title: string,
   +children: React$Node,
   +alertBox?: {
@@ -33,6 +32,10 @@ type Props = {
     primary?: boolean,
   |},
   +checkboxLabel?: string,
+}
+
+type HOCProps = {
+  intl: IntlShape,
   isChecked: boolean,
   +toogleCheck: (accepted: boolean) => void,
 }
@@ -48,7 +51,7 @@ const DangerousActionView = ({
   checkboxLabel,
   isChecked,
   toogleCheck,
-}: Props) => (
+}: Props & HOCProps) => (
   <ScrollView>
     <View style={styles.content}>
       <View style={styles.heading}>
@@ -113,8 +116,8 @@ const DangerousActionView = ({
   </ScrollView>
 )
 
-export const DangerousAction = injectIntl(
-  (compose(
+export const DangerousAction = (injectIntl(
+  compose(
     withStateHandlers(
       {
         isChecked: false,
@@ -123,8 +126,8 @@ export const DangerousAction = injectIntl(
         toogleCheck: () => (isChecked) => ({isChecked}),
       },
     ),
-  )(DangerousActionView): ComponentType<Props>),
-)
+  )(DangerousActionView),
+): ComponentType<Props>)
 
 type ModalProps = {
   +visible: boolean,
@@ -164,7 +167,6 @@ const DangerousActionModal = ({
     onRequestClose={onRequestClose}
     showCloseIcon={showCloseIcon === true}
   >
-    {/* $FlowFixMe */}
     <DangerousAction
       onRequestClose={onRequestClose}
       title={title}
