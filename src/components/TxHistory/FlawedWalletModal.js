@@ -10,8 +10,6 @@ import {confirmationMessages} from '../../i18n/global-messages'
 import styles from './styles/FlawedWalletModal.style'
 import image from '../../assets/img/mnemonic_explanation.png'
 
-import type {ComponentType} from 'react'
-
 const messages = defineMessages({
   title: {
     id: 'components.txhistory.flawedwalletmodal.title',
@@ -81,4 +79,4 @@ const FlawedWalletModal = ({
   )
 }
 
-export default injectIntl((FlawedWalletModal: ComponentType<Props>))
+export default injectIntl(FlawedWalletModal)

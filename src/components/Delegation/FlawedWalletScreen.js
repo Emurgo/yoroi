@@ -10,8 +10,6 @@ import {confirmationMessages} from '../../i18n/global-messages'
 import styles from './styles/FlawedWalletScreen.style'
 import image from '../../assets/img/mnemonic_explanation.png'
 
-import type {ComponentType} from 'react'
-
 const messages = defineMessages({
   title: {
     id: 'components.txhistory.flawedwalletmodal.title',
@@ -69,4 +67,4 @@ const FlawedWalletScreen = ({intl, onPress, disableButtons}: Props) => {
   )
 }
 
-export default injectIntl((FlawedWalletScreen: ComponentType<Props>))
+export default injectIntl(FlawedWalletScreen)

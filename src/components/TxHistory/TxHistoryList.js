@@ -14,7 +14,6 @@ import styles from './styles/TxHistoryList.style'
 
 import type {TransactionInfo} from '../../types/HistoryTransaction'
 import type {Navigation} from '../../types/navigation'
-import type {ComponentType} from 'react'
 
 const DayHeader = ({ts, intl}) => (
   <View style={styles.dayHeader}>
@@ -32,13 +31,21 @@ const getTransactionsByDate = (transactions: Dict<TransactionInfo>) =>
     .map((data) => ({data}))
     .value()
 
+type Props = {
+  transactions: Dict<TransactionInfo>,
+  navigation: Navigation,
+  refreshing: boolean,
+  onRefresh: () => any,
+  intl: IntlShape,
+}
+
 const TxHistoryList = ({
   transactions,
   navigation,
   refreshing,
   onRefresh,
   intl,
-}) => {
+}: Props) => {
   // TODO(ppershing): add proper memoization here
   const groupedTransactions = getTransactionsByDate(transactions)
 
@@ -61,12 +68,4 @@ const TxHistoryList = ({
   )
 }
 
-type ExternalProps = {
-  transactions: Dict<TransactionInfo>,
-  navigation: Navigation,
-  refreshing: boolean,
-  onRefresh: () => any,
-  intl: IntlShape,
-}
-
-export default injectIntl((TxHistoryList: ComponentType<ExternalProps>))
+export default injectIntl(TxHistoryList)

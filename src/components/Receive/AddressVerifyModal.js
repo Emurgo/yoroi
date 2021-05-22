@@ -10,8 +10,6 @@ import HWInstructions from '../Ledger/HWInstructions'
 
 import styles from './styles/AddressVerifyModal.style'
 
-import type {ComponentType} from 'react'
-
 const messages = defineMessages({
   title: {
     id: 'components.receive.addressverifymodal.title',
@@ -77,4 +75,4 @@ const AddressVerifyModal = ({
   </Modal>
 )
 
-export default injectIntl((AddressVerifyModal: ComponentType<Props>))
+export default injectIntl(AddressVerifyModal)

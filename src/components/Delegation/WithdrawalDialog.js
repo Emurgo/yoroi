@@ -18,8 +18,6 @@ import {WITHDRAWAL_DIALOG_STEPS, type WithdrawalDialogSteps} from './types'
 
 import styles from './styles/WithdrawalDialog.style'
 
-import type {ComponentType} from 'react'
-
 const messages = defineMessages({
   warningModalTitle: {
     id: 'components.delegation.withdrawaldialog.warningModalTitle',
@@ -125,7 +123,6 @@ const WithdrawalDialog = ({
         return null
       case WITHDRAWAL_DIALOG_STEPS.WARNING:
         return (
-          // $FlowFixMe
           <DangerousAction
             title={intl.formatMessage(messages.warningModalTitle)}
             alertBox={{
@@ -231,4 +228,4 @@ const WithdrawalDialog = ({
   )
 }
 
-export default injectIntl((WithdrawalDialog: ComponentType<Props>))
+export default injectIntl(WithdrawalDialog)

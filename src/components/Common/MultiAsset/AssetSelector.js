@@ -19,7 +19,6 @@ import closeIcon from '../../../assets/img/cross_fill.png'
 
 import type {TokenEntry} from '../../../crypto/MultiToken'
 import type {Token} from '../../../types/HistoryTransaction'
-import type {Node, ComponentType} from 'react'
 
 const messages = defineMessages({
   placeHolder: {
@@ -28,7 +27,7 @@ const messages = defineMessages({
   },
 })
 
-type ExternalProps = {
+type Props = {
   label?: string,
   assets: Array<TokenEntry>,
   assetsMetadata: Dict<Token>,
@@ -38,7 +37,7 @@ type ExternalProps = {
   intl: IntlShape,
 }
 
-const AssetSelector: (ExternalProps) => Node = ({
+const AssetSelector = ({
   label,
   assets,
   assetsMetadata,
@@ -46,7 +45,7 @@ const AssetSelector: (ExternalProps) => Node = ({
   selectedAsset,
   unselectEnabled,
   intl,
-}) => {
+}: Props) => {
   const [expanded, setExpanded] = useState(false)
 
   const toggleExpand = () => {
@@ -110,4 +109,4 @@ const AssetSelector: (ExternalProps) => Node = ({
   )
 }
 
-export default injectIntl((AssetSelector: ComponentType<ExternalProps>))
+export default injectIntl(AssetSelector)

@@ -10,8 +10,6 @@ import {confirmationMessages} from '../../i18n/global-messages'
 import styles from './styles/PoolWarningModal.style'
 import image from '../../assets/img/mnemonic_explanation.png'
 
-import type {ComponentType} from 'react'
-
 const messages = defineMessages({
   title: {
     id: 'components.stakingcenter.poolwarningmodal.title',
@@ -122,4 +120,4 @@ const PoolWarningModal = ({
   )
 }
 
-export default injectIntl((PoolWarningModal: ComponentType<Props>))
+export default injectIntl(PoolWarningModal)

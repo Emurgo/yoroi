@@ -9,8 +9,6 @@ import {confirmationMessages} from '../../i18n/global-messages'
 
 import styles from './styles/TwoActionView.style'
 
-import type {ComponentType} from 'react'
-
 type Props = {|
   +intl: IntlShape,
   +title: string,
@@ -62,4 +60,4 @@ const TwoActionView = ({
   </ScrollView>
 )
 
-export default injectIntl((TwoActionView: ComponentType<Props>))
+export default injectIntl(TwoActionView)

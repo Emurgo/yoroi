@@ -6,8 +6,6 @@ import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {BulletPointItem} from '../UiKit'
 import {ledgerMessages} from '../../i18n/global-messages'
 
-import type {ComponentType} from 'react'
-
 const messages = defineMessages({
   beforeConfirm: {
     id: 'components.send.confirmscreen.beforeConfirm',
@@ -62,4 +60,4 @@ const HWInstructions = ({intl, useUSB, addMargin}: Props) => {
   )
 }
 
-export default injectIntl((HWInstructions: ComponentType<Props>))
+export default injectIntl(HWInstructions)
