@@ -131,7 +131,12 @@ const WalletInfoView = ({
   </View>
 )
 
-const SaveReadOnlyWalletScreen = ({onSubmit, isWaiting, route, intl}) => {
+const SaveReadOnlyWalletScreen = ({
+  onSubmit,
+  isWaiting,
+  route,
+  intl,
+}: {intl: IntlShape} & Object) => {
   const [plate, setPlate] = useState({
     accountPlate: {
       ImagePart: '',
@@ -200,7 +205,9 @@ export default injectIntl(
         createWalletWithBip44Account,
       },
     ),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withStateHandlers(
       {
         isWaiting: false,
@@ -229,7 +236,7 @@ export default injectIntl(
           navigation,
           intl,
           route,
-        }) => async ({name}) => {
+        }: {intl: IntlShape} & Object) => async ({name}) => {
           try {
             const {
               publicKeyHex,

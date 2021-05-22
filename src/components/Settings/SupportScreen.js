@@ -92,7 +92,9 @@ const SupportScreen = ({intl}: Props) => (
 )
 
 export default injectIntl(
-  compose(withNavigationTitle(({intl}) => intl.formatMessage(messages.title)))(
-    SupportScreen,
-  ),
+  compose(
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
+  )(SupportScreen),
 )

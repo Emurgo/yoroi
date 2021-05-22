@@ -55,7 +55,9 @@ export default injectIntl(
         saveHW,
       },
     ),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withHandlers({
       onSubmit: ({
         createWalletWithBip44Account,

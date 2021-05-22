@@ -157,7 +157,7 @@ export default injectIntl(
       fetchUTXOs,
     },
   )(
-    withTitle((Step1: ComponentType<Props>), ({intl}) =>
+    withTitle((Step1: ComponentType<Props>), ({intl}: {intl: IntlShape}) =>
       intl.formatMessage(globalMessages.votingTitle),
     ),
   ),

@@ -115,7 +115,7 @@ const RestoreWalletScreen = ({
   translateInvalidPhraseError,
   isKeyboardOpen,
   route,
-}) => {
+}: {intl: IntlShape} & Object) => {
   const implId: WalletImplementationId = route.params.walletImplementationId
   const walletConfig = getWalletConfigById(implId)
   const errors = validateRecoveryPhrase(phrase, walletConfig.MNEMONIC_LEN)
@@ -169,7 +169,9 @@ export default injectIntl(
     connect((state) => ({
       isKeyboardOpen: isKeyboardOpenSelector(state),
     })),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withStateHandlers(
       {
         phrase: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.MNEMONIC3 : '',
@@ -188,7 +190,7 @@ export default injectIntl(
           walletImplementationId: route.params.walletImplementationId,
         })
       },
-      translateInvalidPhraseError: ({intl}) => (error) =>
+      translateInvalidPhraseError: ({intl}: {intl: IntlShape}) => (error) =>
         _translateInvalidPhraseError(intl, error),
     }),
   )(RestoreWalletScreen): ComponentType<{

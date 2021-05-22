@@ -64,9 +64,19 @@ export default injectIntl(
       }),
       {signin},
     ),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withHandlers({
-      onPinEnter: ({customPinHash, intl, signin}) => async (pin) => {
+      onPinEnter: ({
+        customPinHash,
+        intl,
+        signin,
+      }: {
+        customPinHash: any,
+        intl: IntlShape,
+        signin: any,
+      }) => async (pin) => {
         if (customPinHash == null) {
           throw new Error('Custom pin is not setup')
         }

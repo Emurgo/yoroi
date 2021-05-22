@@ -88,7 +88,15 @@ export default injectIntl(
       {setSystemAuth},
     ),
     withHandlers({
-      linkBiometricsSignIn: ({navigation, setSystemAuth, intl}) => async () => {
+      linkBiometricsSignIn: ({
+        navigation,
+        setSystemAuth,
+        intl,
+      }: {
+        intl: IntlShape,
+        navigation: any,
+        setSystemAuth: any,
+      }) => async () => {
         if (await canBiometricEncryptionBeEnabled()) {
           setSystemAuth(true)
             .then(() => navigation.navigate(SETTINGS_ROUTES.MAIN))

@@ -93,7 +93,11 @@ const CheckSumView = ({icon, checksum}) => (
   </View>
 )
 
-const VerifyWalletScreen = ({navigateToWalletCredentials, intl, route}) => {
+const VerifyWalletScreen = ({
+  navigateToWalletCredentials,
+  intl,
+  route,
+}: {intl: IntlShape} & Object) => {
   const [plate, setPlate] = useState({
     accountPlate: {
       ImagePart: '',
@@ -166,7 +170,9 @@ const VerifyWalletScreen = ({navigateToWalletCredentials, intl, route}) => {
 export default injectIntl(
   (compose(
     connect((_state) => ({})),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withHandlers({
       navigateToWalletCredentials: ({navigation, route}) => (_event) => {
         navigation.navigate(WALLET_INIT_ROUTES.WALLET_CREDENTIALS, {

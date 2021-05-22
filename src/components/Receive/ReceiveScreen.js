@@ -74,7 +74,7 @@ const ReceiveScreen = ({
   generateNewReceiveAddress,
   intl,
   addressLimitReached,
-}) => {
+}: {intl: IntlShape} & Object) => {
   const currentAddress = _.last(receiveAddresses) || NO_ADDRESS
 
   return (
@@ -129,7 +129,9 @@ export default injectIntl(
         generateNewReceiveAddressIfNeeded,
       },
     ),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
 
     onDidMount(({generateNewReceiveAddressIfNeeded}) =>
       generateNewReceiveAddressIfNeeded(),

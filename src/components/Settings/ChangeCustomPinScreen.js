@@ -95,7 +95,7 @@ const ChangeCustomPinScreen = ({
   handleNewPinEnter,
   handleVerifyPin,
   navigation,
-}) => (
+}: {intl: IntlShape} & Object) => (
   <View style={styles.container}>
     <StatusBar type="dark" />
 
@@ -136,7 +136,9 @@ export default injectIntl(
         encryptAndStoreCustomPin,
       },
     ),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withState('isCurrentPinVerified', 'setIsCurrentPinVerified', false),
     withHandlers({
       handleVerifyPin,

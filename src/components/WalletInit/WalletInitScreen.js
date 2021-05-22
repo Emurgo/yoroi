@@ -243,7 +243,9 @@ const WalletInitScreen = ({
 export default injectIntl(
   compose(
     connect((_state: State) => ({})),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withStateHandlers(
       {
         modalState: MODAL_STATES.CLOSED,

@@ -43,7 +43,7 @@ const _ErrorView = ({
   onDismiss,
   showErrorLogs,
   setShowErrorLogs,
-}) => (
+}: {intl: IntlShape} & Object) => (
   <ScrollView style={styles.scrollView}>
     <View style={styles.headerView}>
       <Text style={styles.title}>

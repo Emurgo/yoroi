@@ -7,7 +7,7 @@ import {connect} from 'react-redux'
 import {ScrollView, View, Platform} from 'react-native'
 import {withHandlers, withStateHandlers} from 'recompose'
 import SafeAreaView from 'react-native-safe-area-view'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {
   Text,
@@ -237,7 +237,7 @@ const ConfirmScreen = ({
   showErrorModal,
   errorMessage,
   errorLogs,
-}) => {
+}: {intl: IntlShape} & Object) => {
   const {
     defaultAssetAmount,
     address,
@@ -417,7 +417,9 @@ export default injectIntl(
         }),
       },
     ),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withHandlers({
       withPleaseWaitModal: ({setSendingTransaction}) => async (
         func: () => Promise<void>,
@@ -482,7 +484,7 @@ export default injectIntl(
           intl,
           useUSB,
           setErrorData,
-        }) => async (_event) => {
+        }: {intl: IntlShape} & Object) => async (_event) => {
           await handleOnConfirm(
             navigation,
             route,

@@ -17,9 +17,17 @@ import type {ComponentType} from 'react'
 import type {PinInputLabels} from './PinInput'
 import type {Navigation} from '../../types/navigation'
 
-const handlePinEnter = ({pin, setPin, onPinEntered, intl}) => async (
-  pinConfirmation,
-) => {
+const handlePinEnter = ({
+  pin,
+  setPin,
+  onPinEntered,
+  intl,
+}: {
+  intl: IntlShape,
+  pin: any,
+  setPin: any,
+  onPinEntered: any,
+}) => async (pinConfirmation) => {
   if (pin !== pinConfirmation) {
     setPin('')
     await showErrorDialog(errorMessages.pinMismatch, intl)

@@ -123,7 +123,9 @@ type ExternalProps = {|
 
 export default injectIntl(
   (compose(
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     connect((state) => ({
       utxos: utxosSelector(state),
       accountBalance: accountBalanceSelector(state),
@@ -150,7 +152,7 @@ export default injectIntl(
         intl,
         defaultAsset,
         serverStatus,
-      }) => async (selectedPool) => {
+      }: {intl: IntlShape} & Object) => async (selectedPool) => {
         try {
           const transactionData = await walletManager.createDelegationTx(
             poolId,

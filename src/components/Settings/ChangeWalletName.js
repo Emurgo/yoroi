@@ -102,7 +102,9 @@ export default injectIntl(
       }),
       {changeWalletName},
     ),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withStateHandlers(
       ({oldName}) => ({
         walletName: oldName,

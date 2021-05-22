@@ -152,7 +152,9 @@ export default injectIntl(
         removeCurrentWallet,
       },
     ),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withStateHandlers(
       {
         hasMnemonicWrittenDown: false,

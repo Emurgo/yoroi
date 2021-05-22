@@ -113,8 +113,10 @@ export default injectIntl(
     }),
     {generateVotingKeys},
   )(
-    withTitle((Step3: ComponentType<ExternalProps>), ({intl}) =>
-      intl.formatMessage(globalMessages.votingTitle),
+    withTitle(
+      (Step3: ComponentType<ExternalProps>),
+      ({intl}: {intl: IntlShape}) =>
+        intl.formatMessage(globalMessages.votingTitle),
     ),
   ),
 )

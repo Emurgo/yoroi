@@ -27,7 +27,9 @@ const AddressReaderQR = ({onSuccess}) => <QRCodeScanner onRead={onSuccess} />
 
 export default injectIntl(
   (compose(
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withHandlers({
       onSuccess: ({route}) => (event) => {
         const onSuccess = route.params?.onSuccess

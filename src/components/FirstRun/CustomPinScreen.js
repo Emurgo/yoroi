@@ -40,7 +40,11 @@ const messages = defineMessages({
   },
 })
 
-const CustomPinScreen = ({handlePinEntered, intl, navigation}) => (
+const CustomPinScreen = ({
+  handlePinEntered,
+  intl,
+  navigation,
+}: {intl: IntlShape} & Object) => (
   <View style={styles.container} testID="customPinContainer">
     <StatusBar type="dark" />
 
@@ -68,7 +72,9 @@ type ExternalProps = {|
 
 export default injectIntl(
   (compose(
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     connect(
       (state) => ({
         isAuth: isAuthenticatedSelector(state),

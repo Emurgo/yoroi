@@ -48,7 +48,7 @@ const MnemonicShowScreen = ({
   modal,
   showModal,
   hideModal,
-}) => (
+}: {intl: IntlShape} & Object) => (
   <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
     <StatusBar type="dark" />
 
@@ -102,7 +102,9 @@ const MnemonicShowScreen = ({
 
 export default injectIntl(
   (compose(
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withProps((props) => ({mnemonic: props.route.params.mnemonic})),
     withStateHandlers(
       {

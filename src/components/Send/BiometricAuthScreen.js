@@ -119,7 +119,17 @@ const handleOnConfirm = async (
   }
 }
 
-const handleOnFocus = async ({route, setError, clearError, intl}) => {
+const handleOnFocus = async ({
+  route,
+  setError,
+  clearError,
+  intl,
+}: {
+  route: any,
+  setError: any,
+  clearError: any,
+  intl: IntlShape,
+}) => {
   if (!(await canBiometricEncryptionBeEnabled())) {
     await showErrorDialog(globalErrorMessages.biometricsIsTurnedOff, intl)
     return
@@ -135,7 +145,7 @@ const BiometricAuthScreen = ({
   route,
   setError,
   clearError,
-}) => {
+}: {intl: IntlShape} & Object) => {
   const [appState, setAppState] = useState<?string>(AppState.currentState)
 
   const handleAppStateChange: (?string) => Promise<void> = async (
@@ -230,7 +240,15 @@ export default injectIntl(
       // we have this handler because we need to let JAVA side know user
       // cancelled the scanning by either navigating out of this window
       // or using fallback
-      cancelScanning: ({clearError, route, intl}) => async () => {
+      cancelScanning: ({
+        clearError,
+        route,
+        intl,
+      }: {
+        intl: IntlShape,
+        route: any,
+        clearError: any,
+      }) => async () => {
         const wasScanningStarted = await KeyStore.cancelFingerprintScanning(
           KeyStore.REJECTIONS.CANCELED,
         )
@@ -242,7 +260,17 @@ export default injectIntl(
           onFail(KeyStore.REJECTIONS.CANCELED, intl)
         }
       },
-      useFallback: ({route, setError, clearError, intl}) => async () => {
+      useFallback: ({
+        route,
+        setError,
+        clearError,
+        intl,
+      }: {
+        route: any,
+        setError: any,
+        clearError: any,
+        intl: IntlShape,
+      }) => async () => {
         await KeyStore.cancelFingerprintScanning(
           KeyStore.REJECTIONS.SWAPPED_TO_FALLBACK,
         )

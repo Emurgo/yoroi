@@ -62,7 +62,7 @@ const LedgerTransportSwitchView = ({
   onSelectUSB,
   onSelectBLE,
   isUSBSupported,
-}) => {
+}: {intl: IntlShape} & Object) => {
   const getUsbButtonTitle = (): string => {
     if (Platform.OS === 'ios') {
       return intl.formatMessage(messages.usbButtonDisabled)

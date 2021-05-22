@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {View, ScrollView} from 'react-native'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {withNavigationTitle} from '../../utils/renderUtils'
 import walletManager from '../../crypto/walletManager'
@@ -97,7 +97,7 @@ const ToggleEasyConfirmationScreen = ({
   setMasterPassword,
   masterPassword,
   navigation,
-}) => {
+}: {intl: IntlShape} & Object) => {
   React.useEffect(
     () => {
       const unsubscribe = navigation.addListener('blur', () => {
@@ -172,6 +172,8 @@ export default injectIntl(
       enableEasyConfirmation,
       disableEasyConfirmation,
     }),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
   )(ToggleEasyConfirmationScreen),
 )

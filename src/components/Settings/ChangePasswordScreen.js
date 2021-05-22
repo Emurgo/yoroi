@@ -204,7 +204,9 @@ class ChangePasswordScreen extends PureComponent<Props, ComponentState> {
 
 export default injectIntl(
   compose(
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withHandlers({
       onSubmit: ({navigation, intl}) => async (oldPassword, newPassword) => {
         try {

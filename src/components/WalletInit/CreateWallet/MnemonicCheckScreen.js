@@ -135,7 +135,7 @@ const MnemonicCheckScreen = ({
   handleClear,
   selectWord,
   deselectWord,
-}) => {
+}: {intl: IntlShape} & Object) => {
   const isPhraseComplete = partialPhrase.length === words.length
   const isPhraseValid = validatePhrase(mnemonic, words, partialPhrase)
 
@@ -232,7 +232,9 @@ export default injectIntl(
         createWallet,
       },
     ),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withStateHandlers(
       {
         partialPhrase: [],

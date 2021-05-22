@@ -125,6 +125,8 @@ const _getWalletType = (implId: WalletImplementationId): ?MessageDescriptor => {
   else return null
 }
 
+type Props = {intl: IntlShape} & Object
+
 const WalletSettingsScreen = ({
   onToggleEasyConfirmation,
   isEasyConfirmationEnabled,
@@ -136,7 +138,7 @@ const WalletSettingsScreen = ({
   isHW,
   isReadOnly,
   walletMeta,
-}) => (
+}: Props) => (
   <ScrollView style={styles.scrollView}>
     <StatusBar type="dark" />
 
@@ -209,9 +211,11 @@ export default injectIntl(
       isEasyConfirmationEnabled: easyConfirmationSelector(state),
       key: languageSelector(state),
     })),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withNavigationTitle(
-      ({intl}) => intl.formatMessage(messages.tabTitle),
+      ({intl}: {intl: IntlShape}) => intl.formatMessage(messages.tabTitle),
       'walletTabTitle',
     ),
     connect(
@@ -240,7 +244,7 @@ export default injectIntl(
         1000,
       ),
       onLogout: ignoreConcurrentAsyncHandler(
-        ({logout, intl}) => async () => {
+        ({logout, intl}: {intl: IntlShape, logout: any}) => async () => {
           const selection = await showConfirmationDialog(
             // $FlowFixMe
             confirmationMessages.logout,

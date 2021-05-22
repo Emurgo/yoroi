@@ -172,7 +172,7 @@ const ApplicationSettingsScreen = ({
   sendCrashReports,
   setCrashReporting,
   navigation,
-}) => {
+}: {intl: IntlShape} & Object) => {
   React.useEffect(
     () => {
       const unsubscribe = navigation.addListener('focus', () => {
@@ -272,9 +272,11 @@ export default injectIntl(
       }),
       {setAppSettingField, setSystemAuth},
     ),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withNavigationTitle(
-      ({intl}) => intl.formatMessage(messages.tabTitle),
+      ({intl}: {intl: IntlShape}) => intl.formatMessage(messages.tabTitle),
       'applicationTabTitle',
     ),
     withHandlers({

@@ -962,6 +962,8 @@ export default injectIntl(
         fetchUTXOs,
       },
     ),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
   )(SendScreen): ComponentType<ExternalProps>),
 )

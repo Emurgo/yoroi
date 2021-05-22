@@ -43,7 +43,7 @@ const WalletNameForm = ({
   topContent,
   bottomContent,
   isWaiting = false,
-}) => {
+}: {intl: IntlShape} & Object) => {
   const validationErrors = validateForm()
   return (
     <SafeAreaView style={styles.safeAreaView}>

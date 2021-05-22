@@ -109,8 +109,10 @@ export default injectIntl(
     }),
     {},
   )(
-    withTitle((Step2: ComponentType<ExternalProps>), ({intl}) =>
-      intl.formatMessage(globalMessages.votingTitle),
+    withTitle(
+      (Step2: ComponentType<ExternalProps>),
+      ({intl}: {intl: IntlShape}) =>
+        intl.formatMessage(globalMessages.votingTitle),
     ),
   ),
 )

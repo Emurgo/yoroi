@@ -483,7 +483,7 @@ export default injectIntl(
           intl,
           useUSB,
           setErrorData,
-        }) => async (_event) => {
+        }: {intl: IntlShape} & Object) => async (_event) => {
           await handleOnConfirm(
             navigation,
             route,
