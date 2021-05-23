@@ -45,6 +45,7 @@ storiesOf('Catalyst', module)
       <Step5
         navigation={navigation}
         route={route}
+        //  $FlowFixMe
         unSignedTx={mockUnsignedTx}
       />
     )

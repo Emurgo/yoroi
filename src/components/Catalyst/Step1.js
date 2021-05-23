@@ -62,13 +62,25 @@ const WarningModalBody = ({intl}: {intl: IntlShape}) => (
   </View>
 )
 
+type Props = {|
+  navigation: Navigation,
+  route: Object, // TODO(navigation): type
+|}
+
+type HOCProps = {
+  intl: IntlShape,
+  generateVotingKeys: () => void,
+  fetchUTXOs: () => Promise<void>,
+  isDelegating: boolean,
+}
+
 const Step1 = ({
   intl,
   generateVotingKeys,
   navigation,
   fetchUTXOs,
   isDelegating,
-}) => {
+}: Props & HOCProps) => {
   const [showModal, setShowModal] = useState<boolean>(!isDelegating)
 
   useEffect(() => {
@@ -138,16 +150,7 @@ const Step1 = ({
   )
 }
 
-type Props = {|
-  navigation: Navigation,
-  route: Object, // TODO(navigation): type
-  intl: IntlShape,
-  generateVotingKeys: () => void,
-  fetchUTXOs: () => Promise<void>,
-  isDelegating: boolean,
-|}
-
-export default injectIntl(
+export default (injectIntl(
   connect(
     (state) => ({
       isDelegating: isDelegatingSelector(state),
@@ -157,8 +160,8 @@ export default injectIntl(
       fetchUTXOs,
     },
   )(
-    withTitle((Step1: ComponentType<Props>), ({intl}: {intl: IntlShape}) =>
+    withTitle(Step1, ({intl}: {intl: IntlShape}) =>
       intl.formatMessage(globalMessages.votingTitle),
     ),
   ),
-)
+): ComponentType<Props>)

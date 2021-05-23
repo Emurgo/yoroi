@@ -58,7 +58,18 @@ const messages = defineMessages({
 
 const {FlagSecure} = NativeModules
 
-const Step6 = ({intl, navigation, encryptedKey}) => {
+type Props = {|
+  navigation: Navigation,
+  route: Object, // TODO(navigation): type
+  encryptedKey?: string,
+|}
+
+type HOCProps = {
+  intl: IntlShape,
+  encryptedKey: string,
+}
+
+const Step6 = ({intl, navigation, encryptedKey}: Props & HOCProps) => {
   const [countDown, setCountDown] = useState(5)
 
   useEffect(
@@ -149,14 +160,7 @@ const Step6 = ({intl, navigation, encryptedKey}) => {
   )
 }
 
-type ExternalProps = {|
-  navigation: Navigation,
-  route: Object, // TODO(navigation): type
-  intl: IntlShape,
-  encryptedKey: string,
-|}
-
-export default injectIntl(
+export default (injectIntl(
   connect(
     (state) => ({
       encryptedKey: state.voting.encryptedKey,
@@ -168,10 +172,8 @@ export default injectIntl(
       ...ownProps,
     }),
   )(
-    withTitle(
-      (Step6: ComponentType<ExternalProps>),
-      ({intl}: {intl: IntlShape}) =>
-        intl.formatMessage(globalMessages.votingTitle),
+    withTitle(Step6, ({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(globalMessages.votingTitle),
     ),
   ),
-)
+): ComponentType<Props>)
