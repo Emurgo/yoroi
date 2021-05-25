@@ -133,7 +133,7 @@ export const validateAddressAsync = async (
 
 export const validateAmount = (
   value: string,
-  token: ?Token,
+  token: Token,
 ): AmountValidationErrors => {
   if (!value) {
     return {amountIsRequired: true}

@@ -79,9 +79,9 @@ import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import FlawedWalletScreen from './FlawedWalletScreen'
 import {CONFIG, getCardanoBaseConfig} from '../../config/config'
+import {getCardanoNetworkConfigById} from '../../config/networks'
 import {WITHDRAWAL_DIALOG_STEPS, type WithdrawalDialogSteps} from './types'
 import {HaskellShelleyTxSignRequest} from '../../crypto/shelley/HaskellShelleyTxSignRequest'
-import {getNetworkConfig} from '../../crypto/shelley/utils'
 import KeyStore from '../../crypto/KeyStore'
 import {MultiToken} from '../../crypto/MultiToken'
 import {ISignRequest} from '../../crypto/ISignRequest'
@@ -554,8 +554,9 @@ class StakingDashboard extends React.Component<Props, State> {
       walletMeta,
     } = this.props
 
-    // TODO: shouldn't be haskell-shelley specific
-    const config = getCardanoBaseConfig(getNetworkConfig(walletMeta.networkId))
+    const config = getCardanoBaseConfig(
+      getCardanoNetworkConfigById(walletMeta.networkId),
+    )
 
     const toRelativeSlotNumberFn = genToRelativeSlotNumber(config)
     const timeToSlotFn = genTimeToSlot(config)

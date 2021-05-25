@@ -307,8 +307,6 @@ export class AddressChain {
     )
   }
 
-  // TODO: consider removing the filterFn parameter (since it's called from
-  // a generic wallet class). Add filterFn as class member and pass it in constructor?
   async sync(filterFn: AsyncAddressFilter) {
     let keepSyncing = true
     while (keepSyncing) {

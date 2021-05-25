@@ -12,7 +12,10 @@ import {injectIntl, defineMessages} from 'react-intl'
 import {min_ada_required, BigNum} from '@emurgo/react-native-haskell-shelley'
 
 import {CONFIG} from '../../config/config'
-import {isHaskellShelleyNetwork} from '../../config/networks'
+import {
+  isHaskellShelleyNetwork,
+  getCardanoNetworkConfigById,
+} from '../../config/networks'
 import {SEND_ROUTES} from '../../RoutesList'
 import {
   Text,
@@ -228,6 +231,7 @@ const Indicator = () => (
 )
 
 const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset) => {
+  const networkConfig = getCardanoNetworkConfigById(defaultAsset.networkId)
   const fakeAmount = new BigNumber('0') // amount doesn't matter for calculating min UTXO amount
   const fakeMultitoken = new MultiToken(
     [
@@ -249,8 +253,7 @@ const getMinAda = async (selectedToken: Token, defaultAsset: DefaultAsset) => {
   )
   const minAmount = await min_ada_required(
     await cardanoValueFromMultiToken(fakeMultitoken),
-    // TODO
-    await BigNum.from_str(CONFIG.NETWORKS.HASKELL_SHELLEY.MINIMUM_UTXO_VAL),
+    await BigNum.from_str(networkConfig.MINIMUM_UTXO_VAL),
   )
   // if the user is sending a token, we need to make sure the resulting utxo
   // has at least the minimum amount of ADA in it
@@ -367,7 +370,7 @@ const recomputeAll = async ({
         amountErrors = Object.freeze({})
       } else if (_.isEmpty(amountErrors)) {
         const parsedAmount = selectedTokenMeta.isDefault
-          ? parseAmountDecimal(amount)
+          ? parseAmountDecimal(amount, selectedTokenMeta)
           : new BigNumber('0')
         const unsignedTx = await getTransactionData(
           utxos,
@@ -415,10 +418,8 @@ const getAmountErrorText = (
     if (
       amountErrors.invalidAmount === InvalidAssetAmount.ERROR_CODES.LT_MIN_UTXO
     ) {
-      // TODO
-      const amount = new BigNumber(
-        CONFIG.NETWORKS.HASKELL_SHELLEY.MINIMUM_UTXO_VAL,
-      )
+      const networkConfig = getCardanoNetworkConfigById(defaultAsset.networkId)
+      const amount = new BigNumber(networkConfig.MINIMUM_UTXO_VAL)
       // remove decimal part if it's equal to 0
       const decimalPart = amount.modulo(
         Math.pow(10, defaultAsset.metadata.numberOfDecimals),

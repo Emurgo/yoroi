@@ -25,10 +25,7 @@ export class InvalidAssetAmount extends ExtendableError {
 }
 
 // expects an amount in regular currency units (eg ADA, not Lovelace)
-export const parseAmountDecimal = (
-  amount: string,
-  token: ?Token,
-): BigNumber => {
+export const parseAmountDecimal = (amount: string, token: Token): BigNumber => {
   const assetMeta = token ?? getCardanoDefaultAsset()
 
   // note: maxSupply can be null

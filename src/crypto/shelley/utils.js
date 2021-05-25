@@ -21,30 +21,16 @@ import {
 } from '@emurgo/react-native-haskell-shelley'
 
 import {CONFIG} from '../../config/config'
-import {getNetworkConfigById, NETWORKS} from '../../config/networks'
+import {getNetworkConfigById} from '../../config/networks'
 import {MultiToken} from '../MultiToken'
 
 import type {NetworkId} from '../../config/types'
-import type {CardanoHaskellShelleyNetwork} from '../../config/networks'
 import type {Addressing} from '../types'
 import type {BaseAsset} from '../../types/HistoryTransaction'
 import type {RawUtxo} from '../../api/types'
 import type {DefaultTokenEntry} from '../MultiToken'
 
 const PRIMARY_ASSET_CONSTANTS = CONFIG.PRIMARY_ASSET_CONSTANTS
-
-export const getNetworkConfig: (NetworkId) => CardanoHaskellShelleyNetwork = (
-  networkId,
-) => {
-  switch (networkId) {
-    case NETWORKS.HASKELL_SHELLEY.NETWORK_ID:
-      return NETWORKS.HASKELL_SHELLEY
-    case NETWORKS.HASKELL_SHELLEY_TESTNET.NETWORK_ID:
-      return NETWORKS.HASKELL_SHELLEY_TESTNET
-    default:
-      throw new Error('network id is not a valid Haskell Shelley id')
-  }
-}
 
 export const getCardanoAddrKeyHash = async (
   addr: Address,

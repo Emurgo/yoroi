@@ -4,13 +4,14 @@ import jestSetup from '../../jestSetup'
 
 import * as api from './api'
 import {ApiError, ApiHistoryError} from '../errors'
-import {NETWORKS} from '../../config/networks'
-import {getNetworkConfig} from '../../crypto/shelley/utils'
+import {NETWORKS, getCardanoNetworkConfigById} from '../../config/networks'
 
 jestSetup.setup()
 jest.setTimeout(30 * 1000)
 
-const networkConfig = getNetworkConfig(NETWORKS.HASKELL_SHELLEY.NETWORK_ID)
+const networkConfig = getCardanoNetworkConfigById(
+  NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
+)
 const backendConfig = networkConfig.BACKEND
 
 describe('History API', () => {

@@ -10,7 +10,7 @@ import KeyStore from './KeyStore'
 import {AddressChain} from './shelley/chain'
 import * as api from '../api/shelley/api'
 import {CONFIG} from '../config/config'
-import {isJormungandr} from '../config/networks'
+import {isJormungandr, getCardanoNetworkConfigById} from '../config/networks'
 import assert from '../utils/assert'
 import {Logger} from '../utils/logging'
 import {
@@ -19,7 +19,6 @@ import {
   IsLockedError,
 } from '../utils/promise'
 import {TransactionCache} from './shelley/transactionCache'
-import {getNetworkConfig} from './shelley/utils'
 import {validatePassword} from '../utils/validators'
 
 import type {EncryptionMethod} from './types'
@@ -215,7 +214,8 @@ export default class Wallet {
   async _doFullSync() {
     Logger.info('Do full sync')
     assert.assert(this.isInitialized, 'doFullSync: isInitialized')
-    const backendConfig = getNetworkConfig(this.networkId).BACKEND
+    // TODO: multi-network support
+    const backendConfig = getCardanoNetworkConfigById(this.networkId).BACKEND
     const filterFn = (addrs) => api.filterUsedAddresses(addrs, backendConfig)
     await Promise.all([
       this.internalChain.sync(filterFn),

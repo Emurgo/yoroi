@@ -28,7 +28,6 @@ const IS_DEBUG = __DEV__
 const _BUILD_VARIANT = env.getString('BUILD_VARIANT')
 const _SHOW_INIT_DEBUG_SCREEN = env.getBoolean('SHOW_INIT_DEBUG_SCREEN', false)
 const _PREFILL_WALLET_INFO = env.getBoolean('PREFILL_WALLET_INFO', false)
-const _IS_TESTING = env.getBoolean('IS_TESTING', false) // e2e testing
 const _USE_TESTNET = env.getBoolean('USE_TESTNET', false)
 
 // TODO(v-almonacid): consider adding 'ENABLE' as an env variable
@@ -145,10 +144,10 @@ export const CONFIG = {
   E2E: {
     // WARNING: NEVER change these flags here, use .env.e2e
     // we test release configurations so we allow this flag when __DEV__=false
-    IS_TESTING: _IS_TESTING, // TODO: use BUILD_VARIANT instead (or wrapper around it)
+    IS_TESTING: _BUILD_VARIANT === 'E2E',
   },
   BUILD_VARIANT: _BUILD_VARIANT,
-  IS_TESTNET_BUILD: _USE_TESTNET, // TODO: use BUILD_VARIANT instead
+  IS_TESTNET_BUILD: _BUILD_VARIANT === 'STAGING',
   MAX_CONCURRENT_REQUESTS: 5,
   SENTRY: _SENTRY,
   MNEMONIC_STRENGTH: 160,
@@ -250,6 +249,10 @@ const _asToken = (asset): DefaultAsset => ({
 export const getDefaultAssets = (): Array<DefaultAsset> =>
   DEFAULT_ASSETS.map((asset) => _asToken(asset))
 
+/**
+ * note: this returns the default asset according to the build variant, ie.
+ * ADA for production builds, including nightly, and TADA for staing
+ */
 export const getCardanoDefaultAsset = (): DefaultAsset => {
   const assetData = DEFAULT_ASSETS.filter((network) => {
     const config = getNetworkConfigById(network.NETWORK_ID)

@@ -7,9 +7,9 @@ import {ObjectValues} from '../../utils/flow'
 import {limitConcurrency} from '../../utils/promise'
 import {Logger} from '../../utils/logging'
 import * as api from '../../api/shelley/api'
-import {getNetworkConfig} from '../../crypto/shelley/utils'
 import {ApiHistoryError} from '../../api/errors'
 import {CONFIG} from '../../config/config'
+import {getCardanoNetworkConfigById} from '../../config/networks'
 import {CERTIFICATE_KIND} from '../../api/types'
 
 import type {Transaction} from '../../types/HistoryTransaction'
@@ -309,7 +309,7 @@ export class TransactionCache {
     let wasPaginated = false
     const errors = []
     const currentBestBlock = await api.getBestBlock(
-      getNetworkConfig(networkId).BACKEND,
+      getCardanoNetworkConfigById(networkId).BACKEND,
     )
 
     const tasks = blocks.map((addrs) => {
@@ -324,7 +324,7 @@ export class TransactionCache {
         api
           .fetchNewTxHistory(
             historyRequest,
-            getNetworkConfig(networkId).BACKEND,
+            getCardanoNetworkConfigById(networkId).BACKEND,
           )
           .then((response) => [addrs, response])
     })
