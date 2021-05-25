@@ -331,7 +331,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
 
   // TODO(v-almonacid): move to parent class?
   async restore(data: any, walletMeta: WalletMeta) {
-    Logger.info('restore wallet')
+    Logger.info('restore wallet', walletMeta.name)
     assert.assert(!this.isInitialized, 'restoreWallet: !isInitialized')
 
     await this._runMigrations(data, walletMeta)
