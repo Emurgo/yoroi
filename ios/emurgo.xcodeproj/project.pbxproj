@@ -742,7 +742,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# check env variables\n${PROJECT_DIR}/../check_env_variables.sh\n";
+			shellScript = "# check env variables\n${PROJECT_DIR}/../check_env_variables.sh \".env.production\"\n";
 		};
 		E9A1C7DA24185CCA00151CFA /* Check env variables */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -760,7 +760,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# check env variables\n${PROJECT_DIR}/../check_env_variables.sh\n";
+			shellScript = "# check env variables\n${PROJECT_DIR}/../check_env_variables.sh \".env.nightly\"\n";
 		};
 		E9A1C80324185CCA00151CFA /* Bundle React Native code and images */ = {
 			isa = PBXShellScriptBuildPhase;
