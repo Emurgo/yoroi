@@ -62,3 +62,7 @@ export const fetchUTXOs = () => async (
     dispatch(_endFetching())
   }
 }
+
+export const clearUTXOs = () => (dispatch: Dispatch<any>) => {
+  dispatch(_clearUTXOs())
+}

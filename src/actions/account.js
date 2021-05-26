@@ -118,3 +118,7 @@ export const fetchAccountState = () => async (
     dispatch(_endFetching())
   }
 }
+
+export const clearAccountState = () => (dispatch: Dispatch<any>) => {
+  dispatch(_clearAccountState())
+}

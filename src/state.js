@@ -56,7 +56,7 @@ export type State = {
   balance: {
     isFetching: boolean,
     lastFetchingError: any,
-    utxos: ?Array<RawUtxo>, // TODO(multi-asset)
+    utxos: ?Array<RawUtxo>,
   },
   accountState: {
     isFetching: boolean,

@@ -49,6 +49,7 @@ class WalletManager {
   _subscribers: Array<() => any> = []
   _syncErrorSubscribers: Array<(err: any) => any> = []
   _serverSyncSubscribers: Array<(status: ServerStatusCache) => any> = []
+  _onCloseSubscribers: Array<() => any> = []
   _closePromise: ?Promise<any> = null
   _closeReject: ?(Error) => void = null
 
@@ -193,6 +194,10 @@ class WalletManager {
     )
   }
 
+  _notifyOnClose = () => {
+    this._onCloseSubscribers.forEach((handler) => handler())
+  }
+
   subscribe(handler: () => any) {
     this._subscribers.push(handler)
   }
@@ -203,6 +208,10 @@ class WalletManager {
 
   subscribeServerSync(handler: (status: ServerStatusCache) => any) {
     this._serverSyncSubscribers.push(handler)
+  }
+
+  subscribeOnClose(handler: () => any) {
+    this._onCloseSubscribers.push(handler)
   }
 
   /** ========== getters =============
@@ -560,6 +569,7 @@ class WalletManager {
     this._wallet = null
     this._id = ''
     this._notify()
+    this._notifyOnClose()
     // need to reject in next microtask otherwise
     // closeWallet would throw if some rejection
     // handler does not catch
