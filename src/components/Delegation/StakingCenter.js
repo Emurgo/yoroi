@@ -11,7 +11,7 @@ import {STAKING_CENTER_ROUTES} from '../../RoutesList'
 import {CONFIG} from '../../config/config'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {Logger} from '../../utils/logging'
-import {formatTokenInteger} from '../../utils/format'
+import {normalizeTokenAmount} from '../../utils/format'
 import walletManager from '../../crypto/walletManager'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../actions'
@@ -74,8 +74,8 @@ type SelectedPool = {|
  * @param {*} poolList : Array of delegated pool hash
  */
 const prepareStakingURL = (
-  poolList: ?Array<string>,
-  amountToDelegate: ?string,
+  poolList: Array<string> | null,
+  amountToDelegate: string | null,
   locale: string,
 ): string => {
   // source=mobile is constant and already included
@@ -213,22 +213,22 @@ const StakingCenter = ({
   // pools user is currently delegating to
   const poolList = poolOperator != null ? [poolOperator] : null
 
-  const [amountToDelegate, setAmountToDelegate] = useState(null)
+  const [amountToDelegate, setAmountToDelegate] = useState<string | null>(null)
 
-  const getAmountToDelegate = async () => {
-    const utxosForKey =
-      utxos != null ? await walletManager.getAllUtxosForKey(utxos) : null
-    // prettier-ignore
-    const amountToDelegate =
-      utxosForKey != null
-        ? utxosForKey
-          .map((utxo) => utxo.amount)
-          .reduce(
-            (x: BigNumber, y) => x.plus(new BigNumber(y || 0)),
-            new BigNumber(0),
-          )
-        : BigNumber(0)
-    setAmountToDelegate(formatTokenInteger(amountToDelegate, defaultAsset))
+  const getAmountToDelegate: () => Promise<void> = async () => {
+    if (utxos != null) {
+      const utxosForKey = await walletManager.getAllUtxosForKey(utxos)
+      // prettier-ignore
+      const _amountToDelegate = utxosForKey
+        .map((utxo) => utxo.amount)
+        .reduce(
+          (x: BigNumber, y) => x.plus(new BigNumber(y || 0)),
+          new BigNumber(0),
+        )
+      setAmountToDelegate(
+        normalizeTokenAmount(_amountToDelegate, defaultAsset).toString(),
+      )
+    }
   }
 
   const [selectedPools, setSelectedPools] = useState([])
@@ -263,9 +263,12 @@ const StakingCenter = ({
     }
   }
 
-  useEffect(() => {
-    getAmountToDelegate()
-  })
+  useEffect(
+    () => {
+      getAmountToDelegate()
+    },
+    [utxos],
+  )
 
   return (
     <>
