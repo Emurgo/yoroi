@@ -45,6 +45,7 @@ import {
   hwDeviceInfoSelector,
   defaultNetworkAssetSelector,
   serverStatusSelector,
+  walletMetaSelector,
 } from '../../selectors'
 import DelegationNavigationButtons from './DelegationNavigationButtons'
 import UtxoAutoRefresher from '../Send/UtxoAutoRefresher'
@@ -78,6 +79,7 @@ import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import FlawedWalletScreen from './FlawedWalletScreen'
 import {CONFIG, getCardanoBaseConfig} from '../../config/config'
+import {getCardanoNetworkConfigById} from '../../config/networks'
 import {WITHDRAWAL_DIALOG_STEPS, type WithdrawalDialogSteps} from './types'
 import {HaskellShelleyTxSignRequest} from '../../crypto/shelley/HaskellShelleyTxSignRequest'
 import KeyStore from '../../crypto/KeyStore'
@@ -86,7 +88,7 @@ import {ISignRequest} from '../../crypto/ISignRequest'
 
 import styles from './styles/DelegationSummary.style'
 
-import type {ServerStatusCache} from '../../state'
+import type {ServerStatusCache, WalletMeta} from '../../state'
 import type {Navigation} from '../../types/navigation'
 import type {DefaultAsset} from '../../types/HistoryTransaction'
 import type {RemotePoolMetaSuccess, RawUtxo} from '../../api/types'
@@ -137,6 +139,7 @@ type Props = {|
   submitSignedTx: (string) => Promise<void>,
   defaultAsset: DefaultAsset,
   serverStatus: ServerStatusCache,
+  walletMeta: $Diff<WalletMeta, {id: string}>,
 |}
 
 type State = {|
@@ -548,10 +551,12 @@ class StakingDashboard extends React.Component<Props, State> {
       isFetchingUtxos,
       isFlawedWallet,
       navigation,
+      walletMeta,
     } = this.props
 
-    // TODO: shouldn't be haskell-shelley specific
-    const config = getCardanoBaseConfig()
+    const config = getCardanoBaseConfig(
+      getCardanoNetworkConfigById(walletMeta.networkId),
+    )
 
     const toRelativeSlotNumberFn = genToRelativeSlotNumber(config)
     const timeToSlotFn = genTimeToSlot(config)
@@ -731,6 +736,7 @@ export default injectIntl(
         hwDeviceInfo: hwDeviceInfoSelector(state),
         defaultAsset: defaultNetworkAssetSelector(state),
         serverStatus: serverStatusSelector(state),
+        walletMeta: walletMetaSelector(state),
       }),
       {
         fetchPoolInfo,

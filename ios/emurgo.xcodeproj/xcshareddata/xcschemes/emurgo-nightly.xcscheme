@@ -10,7 +10,7 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "echo &quot;.env.production&quot; &gt; /tmp/envfile&#10;&#10;${PROJECT_DIR}/../get_commit.sh&#10;">
+               scriptText = "echo &quot;.env.nightly&quot; &gt; /tmp/envfile&#10;&#10;${PROJECT_DIR}/../get_commit.sh&#10;">
                <EnvironmentBuildable>
                   <BuildableReference
                      BuildableIdentifier = "primary"

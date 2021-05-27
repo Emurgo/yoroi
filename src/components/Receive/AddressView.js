@@ -58,6 +58,7 @@ const _handleOnVerifyAddress = async (
       }
       await verifyAddress(
         walletMeta.walletImplementationId,
+        walletMeta.networkId,
         address,
         addressingInfo,
         hwDeviceInfo,
@@ -99,7 +100,7 @@ type Props = {|
   index: number,
   address: string,
   isUsed: boolean,
-  walletMeta: WalletMeta,
+  walletMeta: $Diff<WalletMeta, {id: string}>,
   openDetails: () => void,
   closeDetails: () => void,
   onVerifyAddress: () => void,

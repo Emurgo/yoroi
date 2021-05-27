@@ -13,7 +13,7 @@ import {Button, StatusBar, ScreenBackground} from '../UiKit'
 // uses same styles as WalletInitScreen
 import styles from './styles/WalletInitScreen.style'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
-import {CONFIG} from '../../config/config'
+import {CONFIG, isNightly} from '../../config/config'
 
 import type {State} from '../../state'
 import type {Navigation} from '../../types/navigation'
@@ -62,6 +62,24 @@ const WalletInitScreen = ({intl, navigateInitWallet}: Props) => {
             style={styles.createButton}
             testID="addWalletOnHaskellShelleyButton"
           />
+
+          {isNightly() && (
+            <Button
+              onPress={(event) =>
+                // note: assume wallet implementation = yoroi haskell shelley
+                // (15 words), but user may choose 24 words in next screen
+                navigateInitWallet(
+                  event,
+                  CONFIG.NETWORKS.HASKELL_SHELLEY_TESTNET.NETWORK_ID,
+                  CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+                )
+              }
+              title={`${intl.formatMessage(
+                messages.addWalletButton,
+              )} on TESTNET (Shelley-era)`}
+              style={styles.createButton}
+            />
+          )}
 
           <Button
             onPress={(event) =>

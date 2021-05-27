@@ -40,7 +40,7 @@ import {Logger} from '../../utils/logging'
 import FlawedWalletModal from './FlawedWalletModal'
 import StandardModal from '../Common/StandardModal'
 import {WALLET_ROOT_ROUTES, CATALYST_ROUTES} from '../../RoutesList'
-import {CONFIG, isByron, isHaskellShelley} from '../../config/config'
+import {CONFIG, isByron, isHaskellShelley, isNightly} from '../../config/config'
 
 import {formatTokenWithText} from '../../utils/format'
 import image from '../../assets/img/no_transactions.png'
@@ -174,7 +174,9 @@ const TxHistory = ({
         Logger.debug('Could not get Catalyst fund info from server', e)
       }
     }
-    setShowCatalystBanner((canVote && isRegistrationOpen(fundInfo)) || __DEV__)
+    setShowCatalystBanner(
+      (canVote && isRegistrationOpen(fundInfo)) || isNightly() || __DEV__,
+    )
   }
 
   useEffect(() => {

@@ -85,7 +85,7 @@ project.ext.react = [
 project.ext.envConfigFiles = [
   dev: '.env.staging',
   main: '.env.production',
-  nightly: '.env.production',
+  nightly: '.env.nightly',
   storybook: '.env.storybook'
 ]
 

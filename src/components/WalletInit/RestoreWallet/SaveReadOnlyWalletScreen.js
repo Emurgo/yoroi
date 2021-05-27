@@ -29,6 +29,7 @@ import styles from './styles/SaveReadOnlyWalletScreen.style'
 
 import type {ComponentType} from 'react'
 import type {Navigation} from '../../../types/navigation'
+import type {NetworkId} from '../../../config/types'
 
 const messages = defineMessages({
   title: {
@@ -76,6 +77,7 @@ type WalletInfoProps = {|
   },
   normalizedPath: Array<number>,
   publicKeyHex: string,
+  networkId: NetworkId,
 |}
 
 const WalletInfoView = ({
@@ -83,6 +85,7 @@ const WalletInfoView = ({
   plate,
   normalizedPath,
   publicKeyHex,
+  networkId,
 }: WalletInfoProps) => (
   <View style={styles.walletInfoContainer}>
     <ScrollView style={styles.scrollView}>
@@ -102,10 +105,7 @@ const WalletInfoView = ({
           data={plate.addresses}
           keyExtractor={(item) => item}
           renderItem={({item}) => (
-            <WalletAddress
-              addressHash={item}
-              networkId={CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID}
-            />
+            <WalletAddress addressHash={item} networkId={networkId} />
           )}
         />
       </View>
@@ -140,7 +140,7 @@ const SaveReadOnlyWalletScreen = ({onSubmit, isWaiting, route, intl}) => {
     addresses: [],
   })
 
-  const {publicKeyHex, path} = route.params
+  const {publicKeyHex, path, networkId} = route.params
 
   const normalizedPath = path.map((i) => {
     if (i >= CONFIG.NUMBERS.HARD_DERIVATION_START) {
@@ -153,6 +153,7 @@ const SaveReadOnlyWalletScreen = ({onSubmit, isWaiting, route, intl}) => {
     const {addresses, accountPlate} = await generateShelleyPlateFromKey(
       publicKeyHex,
       1,
+      networkId,
     )
     setPlate({addresses, accountPlate})
   }
@@ -174,6 +175,7 @@ const SaveReadOnlyWalletScreen = ({onSubmit, isWaiting, route, intl}) => {
             plate={plate}
             normalizedPath={normalizedPath}
             publicKeyHex={publicKeyHex}
+            networkId={networkId}
           />
         }
         buttonStyle={styles.walletFormButtonStyle}
@@ -228,19 +230,25 @@ export default injectIntl(
           route,
         }) => async ({name}) => {
           try {
-            const {publicKeyHex} = route.params
+            const {
+              publicKeyHex,
+              networkId,
+              walletImplementationId,
+            } = route.params
             assert.assert(
               publicKeyHex != null,
               'SaveReadOnlyWalletScreen::onPress publicKeyHex',
             )
+            assert.assert(networkId != null, 'networkId')
+            assert.assert(!!walletImplementationId, 'walletImplementationId')
 
             await withActivityIndicator(
               async () =>
                 await createWalletWithBip44Account(
                   name,
                   publicKeyHex,
-                  CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-                  CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+                  networkId,
+                  walletImplementationId,
                   null,
                   true, // important: read-only flag
                 ),

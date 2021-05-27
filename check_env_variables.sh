@@ -2,7 +2,12 @@
 
 BASE_DIR="$(dirname ${BASH_SOURCE[0]})"
 cd $BASE_DIR
-PROD_ENV_FILE=".env.production"
+
+PROD_ENV_FILE=${1}
+if [ -z "$PROD_ENV_FILE" ]; then
+  echo "WARN: .env file name not provided, defaulting to .env.production"
+  PROD_ENV_FILE=".env.production"
+fi
 
 echo "Checking env variables in file $PROD_ENV_FILE"
 

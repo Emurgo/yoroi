@@ -38,6 +38,7 @@ import {
 
 import {Logger} from '../../utils/logging'
 import {CONFIG, isByron, isHaskellShelley} from '../../config/config'
+import {getNetworkConfigById} from '../../config/networks'
 import {NUMBERS} from '../../config/numbers'
 import {
   verifyFromBip44Root,
@@ -72,7 +73,7 @@ import type {
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import type BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble'
 import type HIDTransport from '@v-almonacid/react-native-hid'
-import type {WalletImplementationId} from '../../config/types'
+import type {WalletImplementationId, NetworkId} from '../../config/types'
 import type {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
 
 //
@@ -413,6 +414,7 @@ export const getHWDeviceInfo = async (
 
 export const verifyAddress = async (
   walletImplementationId: WalletImplementationId,
+  networkId: NetworkId,
   address: string,
   addressing: $PropertyType<Addressing, 'addressing'>,
   hwDeviceInfo: HWDeviceInfo,
@@ -431,12 +433,18 @@ export const verifyAddress = async (
 
     const addressPtr = await normalizeToAddress(address)
 
+    let chainNetworkId = CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID
+    const networkConfig = getNetworkConfigById(networkId)
+    if (networkConfig.CHAIN_NETWORK_ID != null) {
+      chainNetworkId = networkConfig.CHAIN_NETWORK_ID
+    }
+
     const stakingKeyAddressing = {}
     if (isHaskellShelley(walletImplementationId)) {
       const baseAddr = await BaseAddress.from_address(addressPtr)
       if (baseAddr) {
         const rewardAddr = await RewardAddress.new(
-          Number.parseInt(CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID, 10),
+          Number.parseInt(chainNetworkId, 10),
           await baseAddr.stake_cred(),
         )
         const addressPayload = Buffer.from(
@@ -456,10 +464,7 @@ export const verifyAddress = async (
     }
     const addressingMap = (address) => stakingKeyAddressing[address]
     const addressParams = await toLedgerAddressParameters({
-      networkId: Number.parseInt(
-        CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID,
-        10,
-      ),
+      networkId: Number.parseInt(chainNetworkId, 10),
       address: await normalizeToAddress(address),
       path: addressing.path,
       addressingMap,

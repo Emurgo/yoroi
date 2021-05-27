@@ -14,6 +14,7 @@ import {
 } from '@emurgo/react-native-haskell-shelley'
 
 import {CONFIG, isByron, isHaskellShelley} from '../../config/config'
+import {getNetworkConfigById} from '../../config/networks'
 import assert from '../../utils/assert'
 import {defaultMemoize} from 'reselect'
 import {Logger} from '../../utils/logging'
@@ -22,7 +23,7 @@ import {ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
 
 import type {CryptoAccount} from '../byron/util'
 import type {AddressType} from '../commonUtils'
-import type {WalletImplementationId} from '../../config/types'
+import type {WalletImplementationId, NetworkId} from '../../config/types'
 
 export type AddressBlock = [number, Moment, Array<string>]
 
@@ -30,6 +31,7 @@ export class AddressGenerator {
   accountPubKeyHex: string
   type: AddressType
   walletImplementationId: WalletImplementationId
+  networkId: NetworkId
 
   _accountPubKeyPtr: Bip32PublicKey
   _rewardAddressHex: string
@@ -37,12 +39,13 @@ export class AddressGenerator {
   constructor(
     accountPubKeyHex: string,
     type: AddressType,
-    walletImplementationId: WalletImplementationId = CONFIG.WALLETS
-      .HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+    walletImplementationId: WalletImplementationId,
+    networkId: NetworkId,
   ) {
     this.accountPubKeyHex = accountPubKeyHex
     this.type = type
     this.walletImplementationId = walletImplementationId
+    this.networkId = networkId
   }
 
   get byronAccount(): CryptoAccount {
@@ -60,6 +63,11 @@ export class AddressGenerator {
     if (!isHaskellShelley(this.walletImplementationId)) {
       return null
     }
+    let chainNetworkId = CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID
+    const config = getNetworkConfigById(this.networkId)
+    if (config.CHAIN_NETWORK_ID != null) {
+      chainNetworkId = config.CHAIN_NETWORK_ID
+    }
     if (this._rewardAddressHex != null) return this._rewardAddressHex
     // cache account public key
     if (this._accountPubKeyPtr == null) {
@@ -76,7 +84,7 @@ export class AddressGenerator {
       await stakingKey.hash(),
     )
     const rewardAddr = await RewardAddress.new(
-      parseInt(CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID, 10),
+      parseInt(chainNetworkId, 10),
       credential,
     )
     const rewardAddrAsAddr = await rewardAddr.to_address()
@@ -89,6 +97,12 @@ export class AddressGenerator {
 
   async generate(idxs: Array<number>): Promise<Array<string>> {
     if (isHaskellShelley(this.walletImplementationId)) {
+      // assume mainnet by default
+      let chainNetworkId = CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID
+      const config = getNetworkConfigById(this.networkId)
+      if (config.CHAIN_NETWORK_ID != null) {
+        chainNetworkId = config.CHAIN_NETWORK_ID
+      }
       // cache account public key
       if (this._accountPubKeyPtr == null) {
         this._accountPubKeyPtr = await Bip32PublicKey.from_bytes(
@@ -106,7 +120,7 @@ export class AddressGenerator {
         idxs.map(async (idx) => {
           const addrKey = await (await chainKey.derive(idx)).to_raw_key()
           const addr = await BaseAddress.new(
-            parseInt(CONFIG.NETWORKS.HASKELL_SHELLEY.CHAIN_NETWORK_ID, 10),
+            parseInt(chainNetworkId, 10),
             await StakeCredential.from_keyhash(await addrKey.hash()),
             await StakeCredential.from_keyhash(await stakingKey.hash()),
           )
@@ -129,7 +143,7 @@ export class AddressGenerator {
   // note: byron-era wallets (ie. wallets created before the shelley
   // hardfork), stored the account-level publick key as a CryptoAccount object.
   // From v3.0.2 on, we simply store it as a plain hex string)
-  static fromJSON(data: any) {
+  static fromJSON(data: any, networkId: NetworkId) {
     const {accountPubKeyHex, type, walletImplementationId} = data
 
     let _accountPubKeyHex
@@ -158,6 +172,7 @@ export class AddressGenerator {
       _accountPubKeyHex,
       type,
       _walletImplementationId,
+      networkId,
     )
   }
 }
@@ -201,10 +216,10 @@ export class AddressChain {
     }
   }
 
-  static fromJSON(data: any) {
+  static fromJSON(data: any, networkId: NetworkId) {
     const {gapLimit, blockSize, addresses, addressGenerator} = data
     const chain = new AddressChain(
-      AddressGenerator.fromJSON(addressGenerator),
+      AddressGenerator.fromJSON(addressGenerator, networkId),
       blockSize,
       gapLimit,
     )

@@ -83,6 +83,7 @@ describe('AddressChain', () => {
   })
 
   it('can continue after rehydrating', async () => {
+    const networkId = 1 // haskell shelley mainnet
     const account: CryptoAccount = {
       derivation_scheme: 'V2',
       root_cached_key:
@@ -94,6 +95,7 @@ describe('AddressChain', () => {
         account.root_cached_key,
         'Internal',
         'haskell-byron',
+        networkId,
       ),
       5,
       2,
@@ -104,7 +106,7 @@ describe('AddressChain', () => {
     await chain.initialize()
 
     const data = chain.toJSON()
-    const chain2 = AddressChain.fromJSON(data)
+    const chain2 = AddressChain.fromJSON(data, networkId)
 
     const used = [
       // '2cWKMJemoBaiAKW7iBFgK3prZAK3gAEgkndCUTkGpUAoRofmXJcbmie2qe6JTN44dQ2Ag', // byron testnet

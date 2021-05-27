@@ -9,11 +9,13 @@ import {Logger} from '../../utils/logging'
 import * as api from '../../api/shelley/api'
 import {ApiHistoryError} from '../../api/errors'
 import {CONFIG} from '../../config/config'
+import {getCardanoNetworkConfigById} from '../../config/networks'
 import {CERTIFICATE_KIND} from '../../api/types'
 
 import type {Transaction} from '../../types/HistoryTransaction'
 import type {TxHistoryRequest, RemoteCertificateMeta} from '../../api/types'
 import {TRANSACTION_STATUS} from '../../types/HistoryTransaction'
+import type {NetworkId} from '../../config/types'
 
 type SyncMetadata = {
   bestBlockNum: number,
@@ -299,11 +301,16 @@ export class TransactionCache {
     return sum(updated, (x) => (x ? 1 : 0))
   }
 
-  async doSyncStep(blocks: Array<Array<string>>): Promise<boolean> {
+  async doSyncStep(
+    blocks: Array<Array<string>>,
+    networkId: NetworkId,
+  ): Promise<boolean> {
     let count = 0
     let wasPaginated = false
     const errors = []
-    const currentBestBlock = await api.getBestBlock()
+    const currentBestBlock = await api.getBestBlock(
+      getCardanoNetworkConfigById(networkId).BACKEND,
+    )
 
     const tasks = blocks.map((addrs) => {
       const metadata = this._getBlockMetadata(addrs)
@@ -315,7 +322,10 @@ export class TransactionCache {
 
       return () =>
         api
-          .fetchNewTxHistory(historyRequest)
+          .fetchNewTxHistory(
+            historyRequest,
+            getCardanoNetworkConfigById(networkId).BACKEND,
+          )
           .then((response) => [addrs, response])
     })
 

@@ -26,7 +26,7 @@ import {showErrorDialog, updateVersion} from '../../actions'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {currentVersionSelector} from '../../selectors'
 import {onDidMount} from '../../utils/renderUtils'
-import {CONFIG} from '../../config/config'
+import {CONFIG, isNightly} from '../../config/config'
 import {isJormungandr} from '../../config/networks'
 
 import styles from './styles/WalletSelectionScreen.style'
@@ -88,6 +88,24 @@ const WalletListScreen = ({wallets, navigateInitWallet, openWallet, intl}) => (
           )} (Shelley-era)`}
           style={styles.topButton}
         />
+
+        {isNightly() && (
+          <Button
+            onPress={(event) =>
+              // note: assume wallet implementation = yoroi haskell shelley
+              // (15 words), but user may choose 24 words in next screen
+              navigateInitWallet(
+                event,
+                CONFIG.NETWORKS.HASKELL_SHELLEY_TESTNET.NETWORK_ID,
+                CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+              )
+            }
+            title={`${intl.formatMessage(
+              messages.addWalletButton,
+            )} on TESTNET (Shelley-era)`}
+            style={styles.button}
+          />
+        )}
 
         <Button
           outline

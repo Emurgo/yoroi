@@ -90,6 +90,7 @@ translations/messages
 android/app/src/main/assets/index.android.bundle
 .env.production
 .env.staging
+.env.nightly
 .env.e2e
 .env.storybook
 sentry.properties

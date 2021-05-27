@@ -47,6 +47,7 @@ import KeyStore from './crypto/KeyStore'
 import * as api from './api/shelley/api'
 import {ISignRequest} from './crypto/ISignRequest'
 import {CONFIG} from './config/config'
+import {getCardanoNetworkConfigById} from './config/networks'
 
 import {type Dispatch} from 'redux'
 import type {State, ServerStatusCache} from './state'
@@ -237,7 +238,11 @@ const _setServerStatus = (serverStatus: ServerStatusCache) => (
 
 export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   try {
-    const status = await api.checkServerStatus()
+    // check status of default network
+    const backendConfig = getCardanoNetworkConfigById(
+      CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
+    ).BACKEND
+    const status = await api.checkServerStatus(backendConfig)
     dispatch(
       _setServerStatus({
         isServerOk: status.isServerOk,
