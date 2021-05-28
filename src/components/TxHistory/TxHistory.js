@@ -284,7 +284,7 @@ const TxHistory = ({
               <Text>
                 {intl.formatMessage(globalMessages.insufficientBalance, {
                   requiredBalance: formatTokenWithText(
-                    CONFIG.CATALYST.MIN_ADA,
+                    CONFIG.CATALYST.DISPLAYED_MIN_ADA,
                     assetMetaData,
                   ),
                   currentBalance: formatTokenWithText(
