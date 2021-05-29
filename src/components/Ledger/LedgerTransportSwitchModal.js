@@ -54,7 +54,7 @@ type Props = {
   intl: IntlShape,
   onSelectUSB: () => any,
   onSelectBLE: () => any,
-  isUSBSupported: boolean,
+  isUSBSupported?: boolean,
 }
 
 const LedgerTransportSwitchView = ({
@@ -62,7 +62,7 @@ const LedgerTransportSwitchView = ({
   onSelectUSB,
   onSelectBLE,
   isUSBSupported,
-}: {intl: IntlShape} & Object) => {
+}: {intl: IntlShape}  & Object /* TODO: type */ ) => {
   const getUsbButtonTitle = (): string => {
     if (Platform.OS === 'ios') {
       return intl.formatMessage(messages.usbButtonDisabled)

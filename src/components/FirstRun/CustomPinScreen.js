@@ -44,7 +44,7 @@ const CustomPinScreen = ({
   handlePinEntered,
   intl,
   navigation,
-}: {intl: IntlShape} & Object) => (
+}: {intl: IntlShape}  & Object /* TODO: type */ ) => (
   <View style={styles.container} testID="customPinContainer">
     <StatusBar type="dark" />
 

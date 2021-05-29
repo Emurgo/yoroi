@@ -391,7 +391,7 @@ const TxDetails = ({
           </View>
         </View>
       </Screen>
-      {/* $FlowFixMe */}
+      {/* $FlowFixMe TODO: index does not exist in AddressModal props */}
       <AddressModal
         visible={!!addressDetail}
         onRequestClose={hideAddressModal}

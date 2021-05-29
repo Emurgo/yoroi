@@ -117,7 +117,7 @@ type FundInfo = ?{|
 |}
 
 type Props = {|
-  transactionsInfo: TransactionInfo,
+  transactionsInfo: Dict<TransactionInfo>,
   navigation: Navigation,
   isSyncing: boolean,
   isOnline: boolean,
@@ -257,7 +257,6 @@ const TxHistory = ({
             refreshing={isSyncing}
             onRefresh={updateHistory}
             navigation={navigation}
-            // $FlowFixMe
             transactions={transactionsInfo}
           />
         )}

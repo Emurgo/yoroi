@@ -56,7 +56,7 @@ const WalletListScreen = ({
   navigateInitWallet,
   openWallet,
   intl,
-}: {intl: IntlShape} & Object) => (
+}: {intl: IntlShape}  & Object /* TODO: type */ ) => (
   <SafeAreaView style={styles.safeAreaView}>
     <StatusBar type="dark" />
 

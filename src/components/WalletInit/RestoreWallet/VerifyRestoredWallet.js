@@ -97,7 +97,7 @@ const VerifyWalletScreen = ({
   navigateToWalletCredentials,
   intl,
   route,
-}: {intl: IntlShape} & Object) => {
+}: {intl: IntlShape}  & Object /* TODO: type */ ) => {
   const [plate, setPlate] = useState({
     accountPlate: {
       ImagePart: '',

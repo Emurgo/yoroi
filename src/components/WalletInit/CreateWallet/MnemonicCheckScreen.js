@@ -135,7 +135,7 @@ const MnemonicCheckScreen = ({
   handleClear,
   selectWord,
   deselectWord,
-}: {intl: IntlShape} & Object) => {
+}: {intl: IntlShape}  & Object /* TODO: type */ ) => {
   const isPhraseComplete = partialPhrase.length === words.length
   const isPhraseValid = validatePhrase(mnemonic, words, partialPhrase)
 

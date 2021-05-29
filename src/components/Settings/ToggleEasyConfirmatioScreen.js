@@ -97,7 +97,7 @@ const ToggleEasyConfirmationScreen = ({
   setMasterPassword,
   masterPassword,
   navigation,
-}: {intl: IntlShape} & Object) => {
+}: {intl: IntlShape}  & Object /* TODO: type */ ) => {
   React.useEffect(
     () => {
       const unsubscribe = navigation.addListener('blur', () => {

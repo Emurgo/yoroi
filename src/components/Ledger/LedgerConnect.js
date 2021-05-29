@@ -64,8 +64,7 @@ const deviceAddition = (device) => ({devices}) => {
 
 type Props = {|
   intl: IntlShape,
-  defaultDevices: ?Array<Device>, // for storybook
-  navigation: Navigation,
+  defaultDevices?: ?Array<Device>, // for storybook
   onConnectUSB: (DeviceObj) => any,
   onConnectBLE: (DeviceId) => any,
   useUSB?: boolean,
@@ -272,7 +271,6 @@ class LedgerConnect extends React.Component<Props, State> {
       if (error instanceof LocalizableError) {
         errMsg = intl.formatMessage({
           id: error.id,
-          // $FlowFixMe
           defaultMessage: error.defaultMessage,
         })
       } else {

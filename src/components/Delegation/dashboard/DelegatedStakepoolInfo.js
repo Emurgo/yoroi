@@ -93,7 +93,7 @@ const DelegatedStakepoolInfo = ({
   openExternalURL,
   copyPoolHash,
   showCopyNotif,
-}: {intl: IntlShape} & Object) => (
+}: {intl: IntlShape}  & Object /* TODO: type */ ) => (
   <View style={styles.wrapper}>
     <TitledCard title={intl.formatMessage(messages.title)} variant={'poolInfo'}>
       <View style={styles.topBlock}>

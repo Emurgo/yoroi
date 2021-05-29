@@ -36,7 +36,7 @@ const AmountField = ({
   intl,
   error,
   editable,
-}: {intl: IntlShape} & Object) => (
+}: {intl: IntlShape}  & Object /* TODO: type */ ) => (
   <ValidatedTextInput
     returnKeyType="done"
     keyboardType="numeric"

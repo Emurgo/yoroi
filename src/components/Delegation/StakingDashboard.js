@@ -99,7 +99,7 @@ import type {
 } from '../../crypto/shelley/ledgerUtils'
 
 const SyncErrorBanner = injectIntl(
-  ({intl, showRefresh}: {intl: IntlShape} & Object) => (
+  ({intl, showRefresh}: {intl: IntlShape}  & Object /* TODO: type */ ) => (
     <Banner
       error
       text={
@@ -665,12 +665,12 @@ class StakingDashboard extends React.Component<Props, State> {
             poolInfo != null && !!poolOperator ? (
               <View style={styles.row}>
                 <DelegatedStakepoolInfo
-                  // $FlowFixMe
+                  // $FlowFixMe TODO: null or undefined is not compatible with string
                   poolTicker={poolInfo.info?.ticker}
-                  // $FlowFixMe
+                  // $FlowFixMe TODO: null or undefined is not compatible with string
                   poolName={poolInfo.info?.name}
                   poolHash={poolOperator != null ? poolOperator : ''}
-                  // $FlowFixMe
+                  // $FlowFixMe TODO: null or undefined is not compatible with string
                   poolURL={poolInfo.info?.homepage}
                 />
               </View>

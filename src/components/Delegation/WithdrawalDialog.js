@@ -155,7 +155,6 @@ const WithdrawalDialog = ({
         )
       case WITHDRAWAL_DIALOG_STEPS.CHOOSE_TRANSPORT:
         return (
-          // $FlowFixMe
           <LedgerTransportSwitch
             onSelectUSB={(event) => onChooseTransport(event, true)}
             onSelectBLE={(event) => onChooseTransport(event, false)}
@@ -163,7 +162,6 @@ const WithdrawalDialog = ({
         )
       case WITHDRAWAL_DIALOG_STEPS.LEDGER_CONNECT:
         return (
-          // $FlowFixMe
           <LedgerConnect
             onConnectBLE={onConnectBLE}
             onConnectUSB={onConnectUSB}
@@ -172,7 +170,7 @@ const WithdrawalDialog = ({
         )
       case WITHDRAWAL_DIALOG_STEPS.CONFIRM:
         return (
-          // $FlowFixMe
+          // $FlowFixMe TODO: useUSB does not exist in TransferSummary props
           <TransferSummary
             // $FlowFixMe
             withdrawals={withdrawals}
@@ -203,7 +201,7 @@ const WithdrawalDialog = ({
       case WITHDRAWAL_DIALOG_STEPS.ERROR:
         return (
           <ErrorView
-            // $FlowFixMe
+            // $FlowFixMe TODO: null or undefined is not compatible with string
             errorMessage={error.errorMessage}
             errorLogs={error.errorLogs}
             onDismiss={onRequestClose}

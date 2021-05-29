@@ -209,7 +209,7 @@ const StakingCenter = ({
   languageCode,
   accountBalance,
   serverStatus,
-}: {intl: IntlShape} & Object) => {
+}: {intl: IntlShape} & Object /* TODO: type */) => {
   // pools user is currently delegating to
   const poolList = poolOperator != null ? [poolOperator] : null
 

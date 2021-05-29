@@ -125,7 +125,7 @@ const _getWalletType = (implId: WalletImplementationId): ?MessageDescriptor => {
   else return null
 }
 
-type Props = {intl: IntlShape} & Object
+type Props = {intl: IntlShape}  & Object /* TODO: type */ 
 
 const WalletSettingsScreen = ({
   onToggleEasyConfirmation,
