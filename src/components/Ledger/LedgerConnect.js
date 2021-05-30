@@ -30,7 +30,6 @@ import bleImage from '../../assets/img/bluetooth.png'
 import usbImage from '../../assets/img/ledger-nano-usb.png'
 
 import type {Device} from '@ledgerhq/react-native-hw-transport-ble'
-import type {Navigation} from '../../types/navigation'
 import type {DeviceId, DeviceObj} from '../../crypto/shelley/ledgerUtils'
 
 const messages = defineMessages({
