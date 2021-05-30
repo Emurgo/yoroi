@@ -95,7 +95,7 @@ const ChangeCustomPinScreen = ({
   handleNewPinEnter,
   handleVerifyPin,
   navigation,
-}: {intl: IntlShape}  & Object /* TODO: type */ ) => (
+}: {intl: IntlShape} & Object /* TODO: type */) => (
   <View style={styles.container}>
     <StatusBar type="dark" />
 

@@ -99,7 +99,7 @@ import type {
 } from '../../crypto/shelley/ledgerUtils'
 
 const SyncErrorBanner = injectIntl(
-  ({intl, showRefresh}: {intl: IntlShape}  & Object /* TODO: type */ ) => (
+  ({intl, showRefresh}: {intl: IntlShape} & Object /* TODO: type */) => (
     <Banner
       error
       text={

@@ -104,7 +104,7 @@ const getContent = (formatMessage) => (
 const ImportReadOnlyWalletScreen = ({
   intl,
   onRead,
-}: {intl: IntlShape}  & Object /* TODO: type */ ) => (
+}: {intl: IntlShape} & Object /* TODO: type */) => (
   <View style={styles.container}>
     <View style={styles.cameraContainer}>
       <QRCodeScanner

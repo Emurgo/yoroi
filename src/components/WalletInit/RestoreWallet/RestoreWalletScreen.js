@@ -115,7 +115,7 @@ const RestoreWalletScreen = ({
   translateInvalidPhraseError,
   isKeyboardOpen,
   route,
-}: {intl: IntlShape}  & Object /* TODO: type */ ) => {
+}: {intl: IntlShape} & Object /* TODO: type */) => {
   const implId: WalletImplementationId = route.params.walletImplementationId
   const walletConfig = getWalletConfigById(implId)
   const errors = validateRecoveryPhrase(phrase, walletConfig.MNEMONIC_LEN)

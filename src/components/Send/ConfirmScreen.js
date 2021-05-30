@@ -237,7 +237,7 @@ const ConfirmScreen = ({
   showErrorModal,
   errorMessage,
   errorLogs,
-}: {intl: IntlShape}  & Object /* TODO: type */ ) => {
+}: {intl: IntlShape} & Object /* TODO: type */) => {
   const {
     defaultAssetAmount,
     address,
@@ -484,7 +484,7 @@ export default injectIntl(
           intl,
           useUSB,
           setErrorData,
-        }: {intl: IntlShape}  & Object /* TODO: type */ ) => async (_event) => {
+        }: {intl: IntlShape} & Object /* TODO: type */) => async (_event) => {
           await handleOnConfirm(
             navigation,
             route,

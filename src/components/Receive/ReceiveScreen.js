@@ -74,7 +74,7 @@ const ReceiveScreen = ({
   generateNewReceiveAddress,
   intl,
   addressLimitReached,
-}: {intl: IntlShape}  & Object /* TODO: type */ ) => {
+}: {intl: IntlShape} & Object /* TODO: type */) => {
   const currentAddress = _.last(receiveAddresses) || NO_ADDRESS
 
   return (

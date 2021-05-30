@@ -136,7 +136,7 @@ const SaveReadOnlyWalletScreen = ({
   isWaiting,
   route,
   intl,
-}: {intl: IntlShape}  & Object /* TODO: type */ ) => {
+}: {intl: IntlShape} & Object /* TODO: type */) => {
   const [plate, setPlate] = useState({
     accountPlate: {
       ImagePart: '',
@@ -235,7 +235,7 @@ export default injectIntl(
           navigation,
           intl,
           route,
-        }: {intl: IntlShape}  & Object /* TODO: type */ ) => async ({name}) => {
+        }: {intl: IntlShape} & Object /* TODO: type */) => async ({name}) => {
           try {
             const {
               publicKeyHex,

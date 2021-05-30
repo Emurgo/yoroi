@@ -145,7 +145,7 @@ const BiometricAuthScreen = ({
   route,
   setError,
   clearError,
-}: {intl: IntlShape}  & Object /* TODO: type */ ) => {
+}: {intl: IntlShape} & Object /* TODO: type */) => {
   const [appState, setAppState] = useState<?string>(AppState.currentState)
 
   const handleAppStateChange: (?string) => Promise<void> = async (

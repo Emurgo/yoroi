@@ -172,7 +172,7 @@ const ApplicationSettingsScreen = ({
   sendCrashReports,
   setCrashReporting,
   navigation,
-}: {intl: IntlShape}  & Object /* TODO: type */ ) => {
+}: {intl: IntlShape} & Object /* TODO: type */) => {
   React.useEffect(
     () => {
       const unsubscribe = navigation.addListener('focus', () => {

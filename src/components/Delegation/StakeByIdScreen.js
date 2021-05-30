@@ -85,7 +85,7 @@ const StakeByIdScreen = ({
   handleOnContinue,
   poolId,
   utxos,
-}: {intl: IntlShape}  & Object /* TODO: type */ ) => {
+}: {intl: IntlShape} & Object /* TODO: type */) => {
   return (
     <>
       <View style={styles.container}>
@@ -151,7 +151,7 @@ export default injectIntl(
         intl,
         defaultAsset,
         serverStatus,
-      }: {intl: IntlShape}  & Object /* TODO: type */ ) => async (selectedPool) => {
+      }: {intl: IntlShape} & Object /* TODO: type */) => async (selectedPool) => {
         try {
           const transactionData = await walletManager.createDelegationTx(
             poolId,

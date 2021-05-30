@@ -48,7 +48,7 @@ const MnemonicShowScreen = ({
   modal,
   showModal,
   hideModal,
-}: {intl: IntlShape}  & Object /* TODO: type */ ) => (
+}: {intl: IntlShape} & Object /* TODO: type */) => (
   <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
     <StatusBar type="dark" />
 

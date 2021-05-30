@@ -61,7 +61,7 @@ const WalletAddress = ({
   onTapAddress,
   copyHash,
   showCopyNotif,
-}: {intl: IntlShape}  & Object /* TODO: type */ ) => (
+}: {intl: IntlShape} & Object /* TODO: type */) => (
   <View style={styles.addressRowStyles}>
     <TouchableOpacity activeOpacity={0.5} onPress={onTapAddress}>
       <Text numberOfLines={1} ellipsizeMode="middle" style={styles.addressHash}>
