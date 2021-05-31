@@ -85,7 +85,7 @@
   "components.receive.receivescreen.cannotGenerate": "You have to use some of your addresses",
   "components.receive.receivescreen.freshAddresses": "Új tárcacímek",
   "components.receive.receivescreen.generateButton": "Új tárcacím generálása",
-  "components.receive.receivescreen.infoText": "Osszd meg ezt a tárcacímet fizetés fogadásához. A magánélet védelme érdekében új tárcacímek jönnek létre automatikusan miután azok felhasználásra kerültek.",
+  "components.receive.receivescreen.infoText": "Osszd meg ezt a tárcacímet fizetés fogadásához. Adatvédelmi okok miatt, automatiksan új tárcacímek jönnek létre miután azok felhasználásra kerültek.",
   "components.receive.receivescreen.title": "Fogadás",
   "components.receive.receivescreen.usedAddresses": "Felhaszált tárcacímek",
   "components.send.addressreaderqr.title": "Tárca cím beolvasása QR kóddal",
