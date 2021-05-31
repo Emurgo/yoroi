@@ -340,7 +340,6 @@ const ConfirmScreen = ({
               visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.LEDGER_CONNECT}
               onRequestClose={closeLedgerDialog}
             >
-              {/* $FlowFixMe */}
               <LedgerConnect
                 onConnectBLE={onConnectBLE}
                 onConnectUSB={onConnectUSB}

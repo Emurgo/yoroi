@@ -150,7 +150,6 @@ const LedgerTransportSwitchModal = ({
     onRequestClose={onRequestClose}
     showCloseIcon={showCloseIcon === true}
   >
-    {/* $FlowFixMe */}
     <LedgerTransportSwitch
       onSelectUSB={onSelectUSB}
       onSelectBLE={onSelectBLE}

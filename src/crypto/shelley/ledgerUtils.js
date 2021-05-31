@@ -84,6 +84,7 @@ export class BluetoothDisabledError extends LocalizableError {
   constructor() {
     super({
       id: ledgerMessages.bluetoothDisabledError.id,
+      // $FlowFixMe undefined is not compatible with string
       defaultMessage: ledgerMessages.bluetoothDisabledError.defaultMessage,
     })
   }
@@ -93,6 +94,7 @@ export class GeneralConnectionError extends LocalizableError {
   constructor() {
     super({
       id: ledgerMessages.connectionError.id,
+      // $FlowFixMe undefined is not compatible with string
       defaultMessage: ledgerMessages.connectionError.defaultMessage,
     })
   }
@@ -103,6 +105,7 @@ export class LedgerUserError extends LocalizableError {
   constructor() {
     super({
       id: ledgerMessages.connectionError.id,
+      // $FlowFixMe undefined is not compatible with string
       defaultMessage: ledgerMessages.connectionError.defaultMessage,
     })
   }
@@ -112,6 +115,7 @@ export class RejectedByUserError extends LocalizableError {
   constructor() {
     super({
       id: ledgerMessages.rejectedByUserError.id,
+      // $FlowFixMe undefined is not compatible with string
       defaultMessage: ledgerMessages.rejectedByUserError.defaultMessage,
     })
   }
@@ -121,6 +125,7 @@ export class DeprecatedAdaAppError extends LocalizableError {
   constructor() {
     super({
       id: ledgerMessages.deprecatedAdaAppError.id,
+      // $FlowFixMe undefined is not compatible with string
       defaultMessage: ledgerMessages.deprecatedAdaAppError.defaultMessage,
       values: {
         version: `${CONFIG.HARDWARE_WALLETS.LEDGER_NANO.MIN_ADA_APP_VERSION}`,
@@ -133,6 +138,7 @@ export class NoDeviceInfoError extends LocalizableError {
   constructor() {
     super({
       id: ledgerMessages.noDeviceInfoError.id,
+      // $FlowFixMe undefined is not compatible with string
       defaultMessage: ledgerMessages.noDeviceInfoError.defaultMessage,
     })
   }

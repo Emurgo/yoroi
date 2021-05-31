@@ -84,7 +84,6 @@ const _navigateToSave = async (
 type Props = {
   intl: IntlShape,
   defaultDevices: ?Array<Device>, // for storybook
-  navigation: Navigation,
   route: Object, // TODO(navigation): type
   onConnectBLE: (DeviceId) => Promise<void>,
   onConnectUSB: (DeviceObj) => Promise<void>,
@@ -93,7 +92,6 @@ type Props = {
 const ConnectNanoXScreen = ({
   intl,
   defaultDevices,
-  navigation,
   route,
   onConnectBLE,
   onConnectUSB,
@@ -104,7 +102,6 @@ const ConnectNanoXScreen = ({
     <SafeAreaView style={styles.safeAreaView}>
       <ProgressStep currentStep={2} totalSteps={3} displayStepNumber />
       <LedgerConnect
-        navigation={navigation}
         onConnectBLE={onConnectBLE}
         onConnectUSB={onConnectUSB}
         useUSB={useUSB}

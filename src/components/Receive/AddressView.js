@@ -170,7 +170,6 @@ const AddressView = ({
       visible={addressDialogStep === ADDRESS_DIALOG_STEPS.LEDGER_CONNECT}
       onRequestClose={closeDetails}
     >
-      {/* $FlowFixMe */}
       <LedgerConnect
         onConnectBLE={onConnectBLE}
         onConnectUSB={onConnectUSB}
