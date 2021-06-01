@@ -107,7 +107,7 @@
     "stream-browserify": "3.0.0",
     "tinycolor2": "1.4.2",
     "url": "^0.11.0",
-    "util": "0.12.3",
+    "util": "0.12.4",
     "uuid": "^3.3.2",
     "vm-browserify": "1.1.2"
   },
