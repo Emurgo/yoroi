@@ -69,7 +69,7 @@ type HOCProps = {
   encryptedKey: string,
 }
 
-const Step6 = ({intl, navigation, encryptedKey}: Props & HOCProps) => {
+const Step6 = ({intl, navigation, encryptedKey}: HOCProps & Props) => {
   const [countDown, setCountDown] = useState(5)
 
   useEffect(
