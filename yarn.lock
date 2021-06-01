@@ -2978,10 +2978,10 @@
     prop-types "^15.6.1"
     react-lifecycles-compat "^3.0.4"
 
-"@react-native-async-storage/async-storage@1.13.3":
-  version "1.13.3"
-  resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.13.3.tgz#bba0c69541de4da12f3a47fe07698fda84b16135"
-  integrity sha512-s/7KyzFxS3WesYn5RrfRg1Pyz5EYDZAJxIxIuzmJZ1FlvpvaZGAZq9xJmVN2OG6S6NhfiY8Tszkau15hHreRag==
+"@react-native-async-storage/async-storage@1.15.5":
+  version "1.15.5"
+  resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.15.5.tgz#0d221a5ef1cd7a6494a42fcaad43136d68379afb"
+  integrity sha512-4AYehLH39B9a8UXCMf3ieOK+G61wGMP72ikx6/XSMA0DUnvx0PgaeaT2Wyt06kTrDTy8edewKnbrbeqwaM50TQ==
   dependencies:
     deep-assign "^3.0.0"
 
@@ -8708,7 +8708,7 @@ flow-bin@0.122.0:
   resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.122.0.tgz#c723a2b33b1a70bd10204704ae1dc776d5d89d79"
   integrity sha512-my8N5jgl/A+UVby9E7NDppHdhLgRbWgKbmFZSx2MSYMRh3d9YGnM2MM+wexpUpl0ftY1IM6ZcUwaAhrypLyvlA==
 
-flow-coverage-report@^0.8.0:
+flow-coverage-report@0.8.0:
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/flow-coverage-report/-/flow-coverage-report-0.8.0.tgz#da047269adb561e8bb563289fb0408830a091180"
   integrity sha512-hdFPjPUWVLUPa0EUKA6x/Uq0f2FE2E+/7jUEnfocFHqntt9eqCH66F+uTRtT0edWv0ss0xcfjkM8gJiOIETA+Q==
