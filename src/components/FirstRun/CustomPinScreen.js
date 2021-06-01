@@ -40,11 +40,13 @@ const messages = defineMessages({
   },
 })
 
-const CustomPinScreen = ({
-  handlePinEntered,
-  intl,
-  navigation,
-}: {intl: IntlShape} & Object /* TODO: type */) => (
+const CustomPinScreen = (
+  {
+    handlePinEntered,
+    intl,
+    navigation,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => (
   <View style={styles.container} testID="customPinContainer">
     <StatusBar type="dark" />
 

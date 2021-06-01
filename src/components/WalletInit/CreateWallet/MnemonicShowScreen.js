@@ -41,14 +41,16 @@ const messages = defineMessages({
   },
 })
 
-const MnemonicShowScreen = ({
-  navigateToMnemonicCheck,
-  intl,
-  mnemonic,
-  modal,
-  showModal,
-  hideModal,
-}: {intl: IntlShape} & Object /* TODO: type */) => (
+const MnemonicShowScreen = (
+  {
+    navigateToMnemonicCheck,
+    intl,
+    mnemonic,
+    modal,
+    showModal,
+    hideModal,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => (
   <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
     <StatusBar type="dark" />
 

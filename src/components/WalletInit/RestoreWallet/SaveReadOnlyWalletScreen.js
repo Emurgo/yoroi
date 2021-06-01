@@ -131,12 +131,14 @@ const WalletInfoView = ({
   </View>
 )
 
-const SaveReadOnlyWalletScreen = ({
-  onSubmit,
-  isWaiting,
-  route,
-  intl,
-}: {intl: IntlShape} & Object /* TODO: type */) => {
+const SaveReadOnlyWalletScreen = (
+  {
+    onSubmit,
+    isWaiting,
+    route,
+    intl,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => {
   const [plate, setPlate] = useState({
     accountPlate: {
       ImagePart: '',
@@ -229,13 +231,15 @@ export default injectIntl(
     }),
     withHandlers({
       onSubmit: ignoreConcurrentAsyncHandler(
-        ({
-          createWalletWithBip44Account,
-          withActivityIndicator,
-          navigation,
-          intl,
-          route,
-        }: {intl: IntlShape} & Object /* TODO: type */) => async ({name}) => {
+        (
+          {
+            createWalletWithBip44Account,
+            withActivityIndicator,
+            navigation,
+            intl,
+            route,
+          }: {intl: IntlShape} & Object /* TODO: type */,
+        ) => async ({name}) => {
           try {
             const {
               publicKeyHex,

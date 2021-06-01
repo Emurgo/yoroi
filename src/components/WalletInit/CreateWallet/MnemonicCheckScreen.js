@@ -126,16 +126,18 @@ const WordBadge: ComponentType<WordProps> = withHandlers({
 
 const shouldScreenScroll = () => Dimensions.get('window').height <= 520
 
-const MnemonicCheckScreen = ({
-  mnemonic,
-  partialPhrase,
-  intl,
-  words,
-  confirmWalletCreation,
-  handleClear,
-  selectWord,
-  deselectWord,
-}: {intl: IntlShape} & Object /* TODO: type */) => {
+const MnemonicCheckScreen = (
+  {
+    mnemonic,
+    partialPhrase,
+    intl,
+    words,
+    confirmWalletCreation,
+    handleClear,
+    selectWord,
+    deselectWord,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => {
   const isPhraseComplete = partialPhrase.length === words.length
   const isPhraseValid = validatePhrase(mnemonic, words, partialPhrase)
 

@@ -98,18 +98,18 @@ import type {
   DeviceId,
 } from '../../crypto/shelley/ledgerUtils'
 
-const SyncErrorBanner = injectIntl(
-  ({intl, showRefresh}: {intl: IntlShape} & Object /* TODO: type */) => (
-    <Banner
-      error
-      text={
-        showRefresh
-          ? intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh)
-          : intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh)
-      }
-    />
-  ),
-)
+const SyncErrorBanner = injectIntl((
+  {intl, showRefresh}: {intl: IntlShape} & Object /* TODO: type */,
+) => (
+  <Banner
+    error
+    text={
+      showRefresh
+        ? intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh)
+        : intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh)
+    }
+  />
+))
 
 type Props = {|
   intl: IntlShape,

@@ -30,20 +30,22 @@ const messages = defineMessages({
   },
 })
 
-const WalletNameForm = ({
-  intl,
-  onPress,
-  name,
-  image,
-  validateForm,
-  setName,
-  progress,
-  containerStyle,
-  buttonStyle,
-  topContent,
-  bottomContent,
-  isWaiting = false,
-}: {intl: IntlShape} & Object /* TODO: type */) => {
+const WalletNameForm = (
+  {
+    intl,
+    onPress,
+    name,
+    image,
+    validateForm,
+    setName,
+    progress,
+    containerStyle,
+    buttonStyle,
+    topContent,
+    bottomContent,
+    isWaiting = false,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => {
   const validationErrors = validateForm()
   return (
     <SafeAreaView style={styles.safeAreaView}>

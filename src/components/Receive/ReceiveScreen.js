@@ -69,12 +69,14 @@ const messages = defineMessages({
   },
 })
 
-const ReceiveScreen = ({
-  receiveAddresses,
-  generateNewReceiveAddress,
-  intl,
-  addressLimitReached,
-}: {intl: IntlShape} & Object /* TODO: type */) => {
+const ReceiveScreen = (
+  {
+    receiveAddresses,
+    generateNewReceiveAddress,
+    intl,
+    addressLimitReached,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => {
   const currentAddress = _.last(receiveAddresses) || NO_ADDRESS
 
   return (

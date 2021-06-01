@@ -101,10 +101,9 @@ const getContent = (formatMessage) => (
   </ScrollView>
 )
 
-const ImportReadOnlyWalletScreen = ({
-  intl,
-  onRead,
-}: {intl: IntlShape} & Object /* TODO: type */) => (
+const ImportReadOnlyWalletScreen = (
+  {intl, onRead}: {intl: IntlShape} & Object /* TODO: type */,
+) => (
   <View style={styles.container}>
     <View style={styles.cameraContainer}>
       <QRCodeScanner
@@ -129,7 +128,15 @@ export default injectIntl(
       intl.formatMessage(messages.title),
     ),
     onDidMount(
-      async ({navigation, route, intl}: {intl: IntlShape, route: any, navigation: any}) => {
+      async ({
+        navigation,
+        route,
+        intl,
+      }: {
+        intl: IntlShape,
+        route: any,
+        navigation: any,
+      }) => {
         navigation.addListener('focus', () => {
           // re-enable QR code scanning
           if (
@@ -152,7 +159,11 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      onRead: ({navigation, route, intl}: {
+      onRead: ({
+        navigation,
+        route,
+        intl,
+      }: {
         intl: IntlShape,
         route: any,
         navigation: any,

@@ -85,15 +85,17 @@ type ExternalProps = {|
   +poolURL: string,
 |}
 
-const DelegatedStakepoolInfo = ({
-  intl,
-  poolTicker,
-  poolName,
-  poolHash,
-  openExternalURL,
-  copyPoolHash,
-  showCopyNotif,
-}: {intl: IntlShape} & Object /* TODO: type */) => (
+const DelegatedStakepoolInfo = (
+  {
+    intl,
+    poolTicker,
+    poolName,
+    poolHash,
+    openExternalURL,
+    copyPoolHash,
+    showCopyNotif,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => (
   <View style={styles.wrapper}>
     <TitledCard title={intl.formatMessage(messages.title)} variant={'poolInfo'}>
       <View style={styles.topBlock}>

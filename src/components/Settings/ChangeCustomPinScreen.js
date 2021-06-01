@@ -89,13 +89,15 @@ const handleNewPinEnter = ({navigation, encryptAndStoreCustomPin}) => async (
   navigation.goBack()
 }
 
-const ChangeCustomPinScreen = ({
-  intl,
-  isCurrentPinVerified,
-  handleNewPinEnter,
-  handleVerifyPin,
-  navigation,
-}: {intl: IntlShape} & Object /* TODO: type */) => (
+const ChangeCustomPinScreen = (
+  {
+    intl,
+    isCurrentPinVerified,
+    handleNewPinEnter,
+    handleVerifyPin,
+    navigation,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => (
   <View style={styles.container}>
     <StatusBar type="dark" />
 

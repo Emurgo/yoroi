@@ -88,16 +88,18 @@ const disableEasyConfirmation = ({navigation}) => async () => {
   navigation.goBack()
 }
 
-const ToggleEasyConfirmationScreen = ({
-  intl,
-  isEasyConfirmationEnabled,
-  enableEasyConfirmation,
-  disableEasyConfirmation,
-  clearPassword,
-  setMasterPassword,
-  masterPassword,
-  navigation,
-}: {intl: IntlShape} & Object /* TODO: type */) => {
+const ToggleEasyConfirmationScreen = (
+  {
+    intl,
+    isEasyConfirmationEnabled,
+    enableEasyConfirmation,
+    disableEasyConfirmation,
+    clearPassword,
+    setMasterPassword,
+    masterPassword,
+    navigation,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => {
   React.useEffect(
     () => {
       const unsubscribe = navigation.addListener('blur', () => {

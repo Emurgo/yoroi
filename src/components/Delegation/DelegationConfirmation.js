@@ -238,29 +238,31 @@ const LEDGER_DIALOG_STEPS = {
   LEDGER_CONNECT: 'LEDGER_CONNECT',
 }
 
-const DelegationConfirmation = ({
-  intl,
-  route,
-  onDelegate,
-  isEasyConfirmationEnabled,
-  password,
-  setPassword,
-  sendingTransaction,
-  processingTx,
-  doNothing,
-  isHW,
-  defaultAsset,
-  ledgerDialogStep,
-  closeLedgerDialog,
-  useUSB,
-  onChooseTransport,
-  onConnectBLE,
-  onConnectUSB,
-  closeErrorModal,
-  showErrorModal,
-  errorMessage,
-  errorLogs,
-}: {intl: IntlShape} & Object /* TODO: type */) => {
+const DelegationConfirmation = (
+  {
+    intl,
+    route,
+    onDelegate,
+    isEasyConfirmationEnabled,
+    password,
+    setPassword,
+    sendingTransaction,
+    processingTx,
+    doNothing,
+    isHW,
+    defaultAsset,
+    ledgerDialogStep,
+    closeLedgerDialog,
+    useUSB,
+    onChooseTransport,
+    onConnectBLE,
+    onConnectUSB,
+    closeErrorModal,
+    showErrorModal,
+    errorMessage,
+    errorLogs,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => {
   const poolHash = route.params.poolHash
   const poolName = route.params.poolName
   const delegationTxData: CreateDelegationTxResponse =
@@ -469,20 +471,22 @@ export default injectIntl(
         closeLedgerDialog()
       },
       onDelegate: ignoreConcurrentAsyncHandler(
-        ({
-          navigation,
-          route,
-          isHW,
-          isEasyConfirmationEnabled,
-          password,
-          submitTransaction,
-          submitSignedTx,
-          setSendingTransaction,
-          setProcessingTx,
-          intl,
-          useUSB,
-          setErrorData,
-        }: {intl: IntlShape} & Object /* TODO: type */) => async (_event) => {
+        (
+          {
+            navigation,
+            route,
+            isHW,
+            isEasyConfirmationEnabled,
+            password,
+            submitTransaction,
+            submitSignedTx,
+            setSendingTransaction,
+            setProcessingTx,
+            intl,
+            useUSB,
+            setErrorData,
+          }: {intl: IntlShape} & Object /* TODO: type */,
+        ) => async (_event) => {
           await handleOnConfirm(
             navigation,
             route,

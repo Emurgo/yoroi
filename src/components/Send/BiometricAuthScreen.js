@@ -137,15 +137,17 @@ const handleOnFocus = async ({
   await handleOnConfirm(route, setError, clearError, false, intl)
 }
 
-const BiometricAuthScreen = ({
-  cancelScanning,
-  useFallback,
-  error,
-  intl,
-  route,
-  setError,
-  clearError,
-}: {intl: IntlShape} & Object /* TODO: type */) => {
+const BiometricAuthScreen = (
+  {
+    cancelScanning,
+    useFallback,
+    error,
+    intl,
+    route,
+    setError,
+    clearError,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => {
   const [appState, setAppState] = useState<?string>(AppState.currentState)
 
   const handleAppStateChange: (?string) => Promise<void> = async (

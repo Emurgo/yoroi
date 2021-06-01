@@ -30,13 +30,15 @@ const handleSetAmount = ({setAmount, amount}) => (text) => {
   setAmount(formatter(text))
 }
 
-const AmountField = ({
-  amount,
-  handleSetAmount,
-  intl,
-  error,
-  editable,
-}: {intl: IntlShape} & Object /* TODO: type */) => (
+const AmountField = (
+  {
+    amount,
+    handleSetAmount,
+    intl,
+    error,
+    editable,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => (
   <ValidatedTextInput
     returnKeyType="done"
     keyboardType="numeric"

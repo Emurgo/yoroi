@@ -163,16 +163,18 @@ const updateDeviceSettings = async ({setAppSettingField}) => {
 
 const version = DeviceInfo.getVersion()
 
-const ApplicationSettingsScreen = ({
-  onToggleBiometricsAuthIn,
-  intl,
-  updateDeviceSettings,
-  isBiometricHardwareSupported,
-  isSystemAuthEnabled,
-  sendCrashReports,
-  setCrashReporting,
-  navigation,
-}: {intl: IntlShape} & Object /* TODO: type */) => {
+const ApplicationSettingsScreen = (
+  {
+    onToggleBiometricsAuthIn,
+    intl,
+    updateDeviceSettings,
+    isBiometricHardwareSupported,
+    isSystemAuthEnabled,
+    sendCrashReports,
+    setCrashReporting,
+    navigation,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => {
   React.useEffect(
     () => {
       const unsubscribe = navigation.addListener('focus', () => {

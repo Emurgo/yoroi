@@ -55,13 +55,15 @@ type ExternalProps = {|
   +networkId: NetworkId,
 |}
 
-const WalletAddress = ({
-  intl,
-  addressHash,
-  onTapAddress,
-  copyHash,
-  showCopyNotif,
-}: {intl: IntlShape} & Object /* TODO: type */) => (
+const WalletAddress = (
+  {
+    intl,
+    addressHash,
+    onTapAddress,
+    copyHash,
+    showCopyNotif,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => (
   <View style={styles.addressRowStyles}>
     <TouchableOpacity activeOpacity={0.5} onPress={onTapAddress}>
       <Text numberOfLines={1} ellipsizeMode="middle" style={styles.addressHash}>

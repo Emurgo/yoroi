@@ -215,29 +215,31 @@ const LEDGER_DIALOG_STEPS = {
   LEDGER_CONNECT: 'LEDGER_CONNECT',
 }
 
-const ConfirmScreen = ({
-  onConfirm,
-  intl,
-  route,
-  password,
-  setPassword,
-  isEasyConfirmationEnabled,
-  isHW,
-  defaultAsset,
-  availableAssets,
-  sendingTransaction,
-  buttonDisabled,
-  ledgerDialogStep,
-  closeLedgerDialog,
-  useUSB,
-  onChooseTransport,
-  onConnectBLE,
-  onConnectUSB,
-  closeErrorModal,
-  showErrorModal,
-  errorMessage,
-  errorLogs,
-}: {intl: IntlShape} & Object /* TODO: type */) => {
+const ConfirmScreen = (
+  {
+    onConfirm,
+    intl,
+    route,
+    password,
+    setPassword,
+    isEasyConfirmationEnabled,
+    isHW,
+    defaultAsset,
+    availableAssets,
+    sendingTransaction,
+    buttonDisabled,
+    ledgerDialogStep,
+    closeLedgerDialog,
+    useUSB,
+    onChooseTransport,
+    onConnectBLE,
+    onConnectUSB,
+    closeErrorModal,
+    showErrorModal,
+    errorMessage,
+    errorLogs,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => {
   const {
     defaultAssetAmount,
     address,
@@ -469,21 +471,23 @@ export default injectIntl(
         closeLedgerDialog()
       },
       onConfirm: ignoreConcurrentAsyncHandler(
-        ({
-          navigation,
-          route,
-          isHW,
-          hwDeviceInfo,
-          isEasyConfirmationEnabled,
-          password,
-          submitTransaction,
-          submitSignedTx,
-          withPleaseWaitModal,
-          withDisabledButton,
-          intl,
-          useUSB,
-          setErrorData,
-        }: {intl: IntlShape} & Object /* TODO: type */) => async (_event) => {
+        (
+          {
+            navigation,
+            route,
+            isHW,
+            hwDeviceInfo,
+            isEasyConfirmationEnabled,
+            password,
+            submitTransaction,
+            submitSignedTx,
+            withPleaseWaitModal,
+            withDisabledButton,
+            intl,
+            useUSB,
+            setErrorData,
+          }: {intl: IntlShape} & Object /* TODO: type */,
+        ) => async (_event) => {
           await handleOnConfirm(
             navigation,
             route,

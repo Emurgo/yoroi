@@ -200,16 +200,18 @@ const _handleOnMessage = async (
   }
 }
 
-const StakingCenter = ({
-  intl,
-  navigation,
-  poolOperator,
-  utxos,
-  defaultAsset,
-  languageCode,
-  accountBalance,
-  serverStatus,
-}: {intl: IntlShape} & Object /* TODO: type */) => {
+const StakingCenter = (
+  {
+    intl,
+    navigation,
+    poolOperator,
+    utxos,
+    defaultAsset,
+    languageCode,
+    accountBalance,
+    serverStatus,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => {
   // pools user is currently delegating to
   const poolList = poolOperator != null ? [poolOperator] : null
 

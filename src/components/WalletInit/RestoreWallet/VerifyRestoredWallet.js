@@ -93,11 +93,13 @@ const CheckSumView = ({icon, checksum}) => (
   </View>
 )
 
-const VerifyWalletScreen = ({
-  navigateToWalletCredentials,
-  intl,
-  route,
-}: {intl: IntlShape} & Object /* TODO: type */) => {
+const VerifyWalletScreen = (
+  {
+    navigateToWalletCredentials,
+    intl,
+    route,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => {
   const [plate, setPlate] = useState({
     accountPlate: {
       ImagePart: '',
