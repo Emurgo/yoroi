@@ -7538,10 +7538,11 @@ elliptic@^6.0.0, elliptic@^6.5.2:
 
 emip3js@Emurgo/emip3js:
   version "0.0.1"
-  resolved "https://codeload.github.com/Emurgo/emip3js/tar.gz/a31b1aca3a9bead84c7084690cae15c126759512"
+  uid f13f1cc5ff354f8b9f2e3ccb3342104854ea3315
+  resolved "https://codeload.github.com/Emurgo/emip3js/tar.gz/f13f1cc5ff354f8b9f2e3ccb3342104854ea3315"
   dependencies:
     chacha "git+https://github.com/calvinmetcalf/chacha20poly1305.git"
-    pbkdf2 "3.1.1"
+    pbkdf2 "3.1.2"
 
 emoji-regex@^7.0.1:
   version "7.0.3"
@@ -8708,7 +8709,7 @@ flow-bin@0.122.0:
   resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.122.0.tgz#c723a2b33b1a70bd10204704ae1dc776d5d89d79"
   integrity sha512-my8N5jgl/A+UVby9E7NDppHdhLgRbWgKbmFZSx2MSYMRh3d9YGnM2MM+wexpUpl0ftY1IM6ZcUwaAhrypLyvlA==
 
-flow-coverage-report@^0.8.0:
+flow-coverage-report@0.8.0:
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/flow-coverage-report/-/flow-coverage-report-0.8.0.tgz#da047269adb561e8bb563289fb0408830a091180"
   integrity sha512-hdFPjPUWVLUPa0EUKA6x/Uq0f2FE2E+/7jUEnfocFHqntt9eqCH66F+uTRtT0edWv0ss0xcfjkM8gJiOIETA+Q==
@@ -13260,10 +13261,10 @@ pbkdf2@3.0.8:
   dependencies:
     create-hmac "^1.1.2"
 
-pbkdf2@3.1.1, pbkdf2@^3.0.3, pbkdf2@^3.0.9:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/pbkdf2/-/pbkdf2-3.1.1.tgz#cb8724b0fada984596856d1a6ebafd3584654b94"
-  integrity sha512-4Ejy1OPxi9f2tt1rRV7Go7zmfDQ+ZectEQz3VGUQhgq62HtIRPDyG/JtnwIxs6x3uNMwo2V7q1fMvKjb+Tnpqg==
+pbkdf2@3.1.2, pbkdf2@^3.0.3, pbkdf2@^3.0.9:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/pbkdf2/-/pbkdf2-3.1.2.tgz#dd822aa0887580e52f1a039dc3eda108efae3075"
+  integrity sha512-iuh7L6jA7JEGu2WxDwtQP1ddOpaJNC4KlDEFfdQajSGgGPNi4OyDc2R7QnbY2bR9QjBVGwgvTdNJZoE7RaxUMA==
   dependencies:
     create-hash "^1.1.2"
     create-hmac "^1.1.4"
