@@ -127,7 +127,7 @@
     "eslint-config-vacuumlabs": "1.9.0",
     "eslint-plugin-flowtype": "3.12.1",
     "eslint-plugin-import": "2.22.1",
-    "eslint-plugin-react": "7.21.5",
+    "eslint-plugin-react": "7.24.0",
     "eslint-plugin-react-native": "3.10.0",
     "extract-react-intl-messages": "^0.14.0",
     "flow-bin": "0.122.0",
