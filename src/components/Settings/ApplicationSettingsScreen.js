@@ -4,7 +4,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers} from 'recompose'
 import {ScrollView, StyleSheet, Switch, Platform} from 'react-native'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {SETTINGS_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
@@ -163,16 +163,18 @@ const updateDeviceSettings = async ({setAppSettingField}) => {
 
 const version = DeviceInfo.getVersion()
 
-const ApplicationSettingsScreen = ({
-  onToggleBiometricsAuthIn,
-  intl,
-  updateDeviceSettings,
-  isBiometricHardwareSupported,
-  isSystemAuthEnabled,
-  sendCrashReports,
-  setCrashReporting,
-  navigation,
-}) => {
+const ApplicationSettingsScreen = (
+  {
+    onToggleBiometricsAuthIn,
+    intl,
+    updateDeviceSettings,
+    isBiometricHardwareSupported,
+    isSystemAuthEnabled,
+    sendCrashReports,
+    setCrashReporting,
+    navigation,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => {
   React.useEffect(
     () => {
       const unsubscribe = navigation.addListener('focus', () => {
@@ -272,9 +274,11 @@ export default injectIntl(
       }),
       {setAppSettingField, setSystemAuth},
     ),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withNavigationTitle(
-      ({intl}) => intl.formatMessage(messages.tabTitle),
+      ({intl}: {intl: IntlShape}) => intl.formatMessage(messages.tabTitle),
       'applicationTabTitle',
     ),
     withHandlers({
@@ -293,6 +297,6 @@ export default injectIntl(
     }),
   )(ApplicationSettingsScreen): ComponentType<{
     navigation: Navigation,
-    intl: intlShape,
+    intl: IntlShape,
   }>),
 )

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import {SafeAreaView} from 'react-native'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 
@@ -39,7 +39,7 @@ const _navigateToSave = async (
   deviceObj: ?DeviceObj,
   navigation: Navigation,
   route: Object,
-  intl: intlShape,
+  intl: IntlShape,
 ): Promise<void> => {
   try {
     Logger.debug('deviceId', deviceId)
@@ -82,9 +82,8 @@ const _navigateToSave = async (
 }
 
 type Props = {
-  intl: intlShape,
+  intl: IntlShape,
   defaultDevices: ?Array<Device>, // for storybook
-  navigation: Navigation,
   route: Object, // TODO(navigation): type
   onConnectBLE: (DeviceId) => Promise<void>,
   onConnectUSB: (DeviceObj) => Promise<void>,
@@ -93,7 +92,6 @@ type Props = {
 const ConnectNanoXScreen = ({
   intl,
   defaultDevices,
-  navigation,
   route,
   onConnectBLE,
   onConnectUSB,
@@ -104,7 +102,6 @@ const ConnectNanoXScreen = ({
     <SafeAreaView style={styles.safeAreaView}>
       <ProgressStep currentStep={2} totalSteps={3} displayStepNumber />
       <LedgerConnect
-        navigation={navigation}
         onConnectBLE={onConnectBLE}
         onConnectUSB={onConnectUSB}
         useUSB={useUSB}
@@ -117,7 +114,7 @@ const ConnectNanoXScreen = ({
 }
 
 type ExternalProps = {|
-  intl: intlShape,
+  intl: IntlShape,
   defaultDevices: ?Array<Device>,
   navigation: Navigation,
   route: Object, // TODO(navigation): type
@@ -125,16 +122,30 @@ type ExternalProps = {|
 
 export default injectIntl(
   (compose(
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withHandlers({
-      onConnectBLE: ({navigation, route, intl}) => async (
-        deviceId: DeviceId,
-      ) => {
+      onConnectBLE: ({
+        navigation,
+        route,
+        intl,
+      }: {
+        intl: IntlShape,
+        navigation: any,
+        route: any,
+      }) => async (deviceId: DeviceId) => {
         await _navigateToSave(deviceId, null, navigation, route, intl)
       },
-      onConnectUSB: ({navigation, route, intl}) => async (
-        deviceObj: DeviceObj,
-      ) => {
+      onConnectUSB: ({
+        navigation,
+        route,
+        intl,
+      }: {
+        intl: IntlShape,
+        navigation: any,
+        route: any,
+      }) => async (deviceObj: DeviceObj) => {
         await _navigateToSave(null, deviceObj, navigation, route, intl)
       },
     }),

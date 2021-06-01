@@ -4,7 +4,7 @@ import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 import {connect} from 'react-redux'
 import {ScrollView, StyleSheet, Switch} from 'react-native'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 import {confirmationMessages} from '../../i18n/global-messages'
@@ -125,6 +125,8 @@ const _getWalletType = (implId: WalletImplementationId): ?MessageDescriptor => {
   else return null
 }
 
+type Props = {intl: IntlShape} & Object /* TODO: type */
+
 const WalletSettingsScreen = ({
   onToggleEasyConfirmation,
   isEasyConfirmationEnabled,
@@ -136,7 +138,7 @@ const WalletSettingsScreen = ({
   isHW,
   isReadOnly,
   walletMeta,
-}) => (
+}: Props) => (
   <ScrollView style={styles.scrollView}>
     <StatusBar type="dark" />
 
@@ -209,9 +211,11 @@ export default injectIntl(
       isEasyConfirmationEnabled: easyConfirmationSelector(state),
       key: languageSelector(state),
     })),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withNavigationTitle(
-      ({intl}) => intl.formatMessage(messages.tabTitle),
+      ({intl}: {intl: IntlShape}) => intl.formatMessage(messages.tabTitle),
       'walletTabTitle',
     ),
     connect(
@@ -240,8 +244,9 @@ export default injectIntl(
         1000,
       ),
       onLogout: ignoreConcurrentAsyncHandler(
-        ({logout, intl}) => async () => {
+        ({logout, intl}: {intl: IntlShape, logout: any}) => async () => {
           const selection = await showConfirmationDialog(
+            // $FlowFixMe
             confirmationMessages.logout,
             intl,
           )
@@ -255,6 +260,6 @@ export default injectIntl(
     }),
   )(WalletSettingsScreen): ComponentType<{|
     navigation: Navigation,
-    intl: intlShape,
+    intl: IntlShape,
   |}>),
 )

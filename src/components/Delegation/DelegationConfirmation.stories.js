@@ -42,6 +42,7 @@ storiesOf('DelegationConfirmation', module).add(
       ),
     }
     return (
+      // $FlowFixMe: defaultAsset is missing in Props
       <DelegationConfirmation
         route={route}
         navigation={navigation}

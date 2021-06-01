@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import {View, FlatList} from 'react-native'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import Markdown from 'react-native-easy-markdown'
 
 import styles from './styles/LanguagePicker.style'
@@ -187,7 +187,7 @@ type Props = {
   changeLanguage: (string) => any,
   handleContinue: () => mixed,
   languageCode: string,
-  intl: any,
+  intl: IntlShape,
 }
 
 export const LanguagePicker = ({

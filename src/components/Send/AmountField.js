@@ -3,7 +3,7 @@
 import React from 'react'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {pastedFormatter, editedFormatter} from './amountUtils'
 import {ValidatedTextInput} from '../UiKit'
@@ -30,7 +30,15 @@ const handleSetAmount = ({setAmount, amount}) => (text) => {
   setAmount(formatter(text))
 }
 
-const AmountField = ({amount, handleSetAmount, intl, error, editable}) => (
+const AmountField = (
+  {
+    amount,
+    handleSetAmount,
+    intl,
+    error,
+    editable,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => (
   <ValidatedTextInput
     returnKeyType="done"
     keyboardType="numeric"
@@ -46,7 +54,7 @@ type ExternalProps = {
   amount: string,
   setAmount: (amount: string) => mixed,
   error: ?string,
-  intl: intlShape,
+  intl: IntlShape,
   editable?: boolean,
 }
 

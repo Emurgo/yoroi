@@ -12,7 +12,7 @@ import {
 } from 'react-native'
 import _ from 'lodash'
 import {withHandlers, withStateHandlers} from 'recompose'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {BigNumber} from 'bignumber.js'
 
 import {
@@ -230,7 +230,7 @@ const getShownAddresses = (
   }
 }
 type Props = {|
-  intl: any,
+  intl: IntlShape,
   transaction: TransactionInfo,
   internalAddressIndex: Dict<number>,
   externalAddressIndex: Dict<number>,
@@ -391,6 +391,7 @@ const TxDetails = ({
           </View>
         </View>
       </Screen>
+      {/* $FlowFixMe TODO: index does not exist in AddressModal props */}
       <AddressModal
         visible={!!addressDetail}
         onRequestClose={hideAddressModal}
@@ -439,5 +440,5 @@ export default injectIntl(
         setAddressDetail(null)
       },
     }),
-  )(TxDetails): ComponentType<{|navigation: Navigation, intl: intlShape|}>),
+  )(TxDetails): ComponentType<{|navigation: Navigation, intl: IntlShape|}>),
 )

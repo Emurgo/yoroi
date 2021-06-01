@@ -6,7 +6,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withProps, withStateHandlers} from 'recompose'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {View, ScrollView, TouchableOpacity, Dimensions} from 'react-native'
 
 import assert from '../../../utils/assert'
@@ -126,16 +126,18 @@ const WordBadge: ComponentType<WordProps> = withHandlers({
 
 const shouldScreenScroll = () => Dimensions.get('window').height <= 520
 
-const MnemonicCheckScreen = ({
-  mnemonic,
-  partialPhrase,
-  intl,
-  words,
-  confirmWalletCreation,
-  handleClear,
-  selectWord,
-  deselectWord,
-}) => {
+const MnemonicCheckScreen = (
+  {
+    mnemonic,
+    partialPhrase,
+    intl,
+    words,
+    confirmWalletCreation,
+    handleClear,
+    selectWord,
+    deselectWord,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => {
   const isPhraseComplete = partialPhrase.length === words.length
   const isPhraseValid = validatePhrase(mnemonic, words, partialPhrase)
 
@@ -232,7 +234,9 @@ export default injectIntl(
         createWallet,
       },
     ),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withStateHandlers(
       {
         partialPhrase: [],
@@ -264,6 +268,6 @@ export default injectIntl(
     }),
   )(MnemonicCheckScreen): ComponentType<{|
     navigation: Navigation,
-    intl: intlShape,
+    intl: IntlShape,
   |}>),
 )

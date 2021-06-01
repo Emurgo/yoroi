@@ -6,7 +6,7 @@ import {compose} from 'redux'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {withStateHandlers, withHandlers} from 'recompose'
 import {ScrollView, Platform} from 'react-native'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import TermsOfService from '../Common/TermsOfService'
 import {withNavigationTitle} from '../../utils/renderUtils'
@@ -44,7 +44,7 @@ const messages = defineMessages({
 })
 
 type Props = {
-  intl: any,
+  intl: IntlShape,
   acceptedTos: boolean,
   setAcceptedTos: (accepted: boolean) => any,
   handleAccepted: () => any,
@@ -137,6 +137,8 @@ export default injectIntl(
         }
       },
     }),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
   )(AcceptTermsOfServiceScreen),
 )

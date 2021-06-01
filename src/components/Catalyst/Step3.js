@@ -41,7 +41,17 @@ const messages = defineMessages({
 
 const PIN_LENGTH = 4
 
-const Step3 = ({intl, pin, navigation}) => {
+type Props = {|
+  navigation: Navigation,
+  route: Object, // TODO(navigation): type
+|}
+
+type HOCProps = {
+  pin: Array<String>,
+  intl: IntlShape,
+}
+
+const Step3 = ({intl, pin, navigation}: Props & HOCProps) => {
   const [confirmPin, setPin] = useState('')
 
   useEffect(() => {
@@ -99,22 +109,15 @@ const Step3 = ({intl, pin, navigation}) => {
   )
 }
 
-type ExternalProps = {|
-  navigation: Navigation,
-  route: Object, // TODO(navigation): type
-  intl: IntlShape,
-  pin: Array<String>,
-|}
-
-export default injectIntl(
+export default (injectIntl(
   connect(
     (state) => ({
       pin: state.voting.pin,
     }),
     {generateVotingKeys},
   )(
-    withTitle((Step3: ComponentType<ExternalProps>), ({intl}) =>
+    withTitle(Step3, ({intl}: {intl: IntlShape}) =>
       intl.formatMessage(globalMessages.votingTitle),
     ),
   ),
-)
+): ComponentType<Props>)

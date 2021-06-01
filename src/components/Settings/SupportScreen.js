@@ -4,7 +4,7 @@ import React from 'react'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 import {View, TouchableOpacity, Linking, Image} from 'react-native'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {Text, StatusBar} from '../UiKit'
@@ -71,7 +71,7 @@ const LinkingItem = withHandlers({
 })(Item)
 
 type Props = {
-  intl: any,
+  intl: IntlShape,
 }
 
 const SupportScreen = ({intl}: Props) => (
@@ -92,7 +92,9 @@ const SupportScreen = ({intl}: Props) => (
 )
 
 export default injectIntl(
-  compose(withNavigationTitle(({intl}) => intl.formatMessage(messages.title)))(
-    SupportScreen,
-  ),
+  compose(
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
+  )(SupportScreen),
 )

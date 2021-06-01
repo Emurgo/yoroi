@@ -5,6 +5,7 @@
 
 import _ from 'lodash'
 import {defaultMemoize} from 'reselect'
+import {type IntlShape} from 'react-intl'
 
 import KeyStore from './KeyStore'
 import {AddressChain} from './shelley/chain'
@@ -118,7 +119,7 @@ export default class Wallet {
     await KeyStore.storeData(this.id, encryptionMethod, masterKey, password)
   }
 
-  async getDecryptedMasterKey(masterPassword: string, intl: any) {
+  async getDecryptedMasterKey(masterPassword: string, intl: IntlShape) {
     return await KeyStore.getData(
       this.id,
       'MASTER_PASSWORD',
@@ -128,7 +129,7 @@ export default class Wallet {
     )
   }
 
-  async enableEasyConfirmation(masterPassword: string, intl: any) {
+  async enableEasyConfirmation(masterPassword: string, intl: IntlShape) {
     const decryptedMasterKey = await this.getDecryptedMasterKey(
       masterPassword,
       intl,
@@ -140,7 +141,11 @@ export default class Wallet {
     this.isEasyConfirmationEnabled = true
   }
 
-  async changePassword(masterPassword: string, newPassword: string, intl: any) {
+  async changePassword(
+    masterPassword: string,
+    newPassword: string,
+    intl: IntlShape,
+  ) {
     const isNewPasswordValid = _.isEmpty(
       validatePassword(newPassword, newPassword),
     )

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import {View} from 'react-native'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {Text, TitledCard} from '../../UiKit'
 import styles from './styles/UpcomingRewardInfo.style'
@@ -25,7 +25,7 @@ const messages = defineMessages({
 })
 
 type ExternalProps = {|
-  +intl: intlShape,
+  +intl: IntlShape,
   +nextRewardText: ?string,
   +followingRewardText: ?string,
   +showDisclaimer: boolean,

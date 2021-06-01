@@ -1,12 +1,10 @@
 // @flow
 import React from 'react'
 import {Platform, Text, View, StyleSheet} from 'react-native'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {BulletPointItem} from '../UiKit'
 import {ledgerMessages} from '../../i18n/global-messages'
-
-import type {ComponentType} from 'react'
 
 const messages = defineMessages({
   beforeConfirm: {
@@ -17,7 +15,7 @@ const messages = defineMessages({
 })
 
 type Props = {|
-  intl: intlShape,
+  intl: IntlShape,
   useUSB: boolean,
   addMargin?: boolean,
 |}
@@ -62,4 +60,4 @@ const HWInstructions = ({intl, useUSB, addMargin}: Props) => {
   )
 }
 
-export default injectIntl((HWInstructions: ComponentType<Props>))
+export default injectIntl(HWInstructions)

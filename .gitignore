@@ -97,3 +97,5 @@ sentry.properties
 app-mainnet-release.apk
 output.json
 java_pid*
+
+flow-coverage

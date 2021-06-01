@@ -5,8 +5,6 @@ import React from 'react'
 import {Modal} from '../UiKit'
 import TwoActionView from './TwoActionView'
 
-import type {ComponentType} from 'react'
-
 type Props = {|
   +visible: boolean,
   +title: string,
@@ -47,4 +45,4 @@ const StandardModal = ({
   </Modal>
 )
 
-export default (StandardModal: ComponentType<Props>)
+export default StandardModal

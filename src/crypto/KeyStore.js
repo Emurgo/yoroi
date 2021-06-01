@@ -2,7 +2,7 @@
 /* eslint-disable-next-line */
 import * as Keychain from 'react-native-keychain'
 import {Platform, NativeModules} from 'react-native'
-import {defineMessages} from 'react-intl'
+import {defineMessages, type IntlShape} from 'react-intl'
 
 import storage from '../utils/storage'
 import assert from '../utils/assert'
@@ -35,7 +35,7 @@ class KeyStore {
     encryptionMethod: EncryptionMethod,
     message: string,
     password?: string,
-    intl: any,
+    intl: IntlShape,
   ) {
     const dataKey = KeyStore.getDataKey(keyId, encryptionMethod)
 

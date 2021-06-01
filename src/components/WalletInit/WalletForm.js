@@ -6,7 +6,7 @@ import {View, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import _ from 'lodash'
 import {withHandlers} from 'recompose'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {Button, ValidatedTextInput, StatusBar} from '../UiKit'
 import {
@@ -67,7 +67,7 @@ type ComponentState = {
 }
 
 type Props = {
-  intl: any,
+  intl: IntlShape,
   walletNames: Array<string>,
   onSubmit: ({
     name: string,

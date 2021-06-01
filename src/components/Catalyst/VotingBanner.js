@@ -6,7 +6,6 @@ import {injectIntl, defineMessages} from 'react-intl'
 
 import {Text} from '../UiKit'
 
-import type {ComponentType} from 'react'
 import type {IntlShape} from 'react-intl'
 
 import CatalystLogo from '../../assets/img/voting.png'
@@ -20,7 +19,11 @@ const messages = defineMessages({
   },
 })
 
-const VotingBanner = ({intl, onPress}) => {
+type Props = {|
+  intl: IntlShape,
+  onPress: () => void,
+|}
+const VotingBanner = ({intl, onPress}: Props) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => onPress()}>
@@ -35,6 +38,4 @@ const VotingBanner = ({intl, onPress}) => {
   )
 }
 
-type ExternalProps = {|intl: IntlShape, onPress: () => void|}
-
-export default injectIntl((VotingBanner: ComponentType<ExternalProps>))
+export default injectIntl(VotingBanner)

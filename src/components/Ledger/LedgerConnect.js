@@ -11,7 +11,7 @@ import {
   RefreshControl,
   ActivityIndicator,
 } from 'react-native'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 import TransportHID from '@v-almonacid/react-native-hid'
 
@@ -29,9 +29,7 @@ import styles from './styles/LedgerConnect.style'
 import bleImage from '../../assets/img/bluetooth.png'
 import usbImage from '../../assets/img/ledger-nano-usb.png'
 
-import type {ComponentType} from 'react'
 import type {Device} from '@ledgerhq/react-native-hw-transport-ble'
-import type {Navigation} from '../../types/navigation'
 import type {DeviceId, DeviceObj} from '../../crypto/shelley/ledgerUtils'
 
 const messages = defineMessages({
@@ -64,9 +62,8 @@ const deviceAddition = (device) => ({devices}) => {
 }
 
 type Props = {|
-  intl: intlShape,
-  defaultDevices: ?Array<Device>, // for storybook
-  navigation: Navigation,
+  intl: IntlShape,
+  defaultDevices?: ?Array<Device>, // for storybook
   onConnectUSB: (DeviceObj) => any,
   onConnectBLE: (DeviceId) => any,
   useUSB?: boolean,
@@ -363,16 +360,4 @@ class LedgerConnect extends React.Component<Props, State> {
   }
 }
 
-type ExternalProps = {|
-  navigation: Navigation,
-  intl: any,
-  defaultDevices: ?Array<Device>,
-  onWaitingMessage: string,
-  onConnectUSB: (DeviceObj) => any,
-  onConnectBLE: (DeviceId) => any,
-  useUSB?: boolean,
-  onWaitingMessage?: string,
-  fillSpace?: boolean,
-|}
-
-export default injectIntl((LedgerConnect: ComponentType<ExternalProps>))
+export default injectIntl(LedgerConnect)

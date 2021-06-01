@@ -2,7 +2,7 @@
 
 import {AppState, Alert, Keyboard, Platform} from 'react-native'
 import uuid from 'uuid'
-import {intlShape} from 'react-intl'
+import {type IntlShape} from 'react-intl'
 import DeviceInfo from 'react-native-device-info'
 import RNBootSplash from 'react-native-bootsplash'
 
@@ -470,7 +470,7 @@ const showDialog = (translations: DialogOptions): Promise<DialogButton> =>
 
 export const showErrorDialog = (
   dialog: {title: Object, message: Object},
-  intl: ?intlShape,
+  intl: ?IntlShape,
   msgOptions?: {message: string},
 ): Promise<DialogButton> => {
   let title, message, yesButton
@@ -479,7 +479,7 @@ export const showErrorDialog = (
     message = intl.formatMessage(dialog.message, msgOptions)
     yesButton = intl.formatMessage(globalMessages.ok)
   } else {
-    // in this case the function was called without providing the intlShape
+    // in this case the function was called without providing the IntlShape
     // object, so only an english dialog will be displayed
     title = dialog.title.defaultMessage
     // seems impossible to pass eslint check using a ternary operator here
@@ -498,12 +498,16 @@ export const showErrorDialog = (
 
 export const showConfirmationDialog = (
   dialog: DialogOptions,
-  intl: intlShape,
+  intl: IntlShape,
 ): Promise<DialogButton> =>
   showDialog({
+    // $FlowFixMe
     title: intl.formatMessage(dialog.title),
+    // $FlowFixMe
     message: intl.formatMessage(dialog.message),
+    // $FlowFixMe
     yesButton: intl.formatMessage(dialog.yesButton),
+    // $FlowFixMe
     noButton: intl.formatMessage(dialog.noButton),
   })
 
@@ -540,7 +544,7 @@ export const setSystemAuth = (enable: boolean) => async (
 export const handleGeneralError = async (
   message: string,
   e: Error,
-  intl: ?intlShape,
+  intl: ?IntlShape,
 ) => {
   Logger.error(`${message}: ${e.message}`, e)
   await showErrorDialog(errorMessages.generalError, intl, {message})

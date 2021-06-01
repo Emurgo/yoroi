@@ -6,7 +6,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import _ from 'lodash'
 
 import {Text, Button, ValidatedTextInput, StatusBar} from '../../UiKit'
@@ -78,7 +78,10 @@ const messages = defineMessages({
   },
 })
 
-const _translateInvalidPhraseError = (intl: any, error: InvalidPhraseError) => {
+const _translateInvalidPhraseError = (
+  intl: IntlShape,
+  error: InvalidPhraseError,
+) => {
   if (error.code === INVALID_PHRASE_ERROR_CODES.UNKNOWN_WORDS) {
     return intl.formatMessage(mnemonicInputErrorsMessages.UNKNOWN_WORDS, {
       cnt: error.words.length,
@@ -104,15 +107,17 @@ const errorsVisibleWhileWriting = (errors) => {
     .filter((error) => !!error)
 }
 
-const RestoreWalletScreen = ({
-  navigateToWalletCredentials,
-  intl,
-  phrase,
-  setPhrase,
-  translateInvalidPhraseError,
-  isKeyboardOpen,
-  route,
-}) => {
+const RestoreWalletScreen = (
+  {
+    navigateToWalletCredentials,
+    intl,
+    phrase,
+    setPhrase,
+    translateInvalidPhraseError,
+    isKeyboardOpen,
+    route,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => {
   const implId: WalletImplementationId = route.params.walletImplementationId
   const walletConfig = getWalletConfigById(implId)
   const errors = validateRecoveryPhrase(phrase, walletConfig.MNEMONIC_LEN)
@@ -166,7 +171,9 @@ export default injectIntl(
     connect((state) => ({
       isKeyboardOpen: isKeyboardOpenSelector(state),
     })),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withStateHandlers(
       {
         phrase: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.MNEMONIC3 : '',
@@ -185,12 +192,12 @@ export default injectIntl(
           walletImplementationId: route.params.walletImplementationId,
         })
       },
-      translateInvalidPhraseError: ({intl}) => (error) =>
+      translateInvalidPhraseError: ({intl}: {intl: IntlShape}) => (error) =>
         _translateInvalidPhraseError(intl, error),
     }),
   )(RestoreWalletScreen): ComponentType<{
     navigation: Navigation,
     route: Object, // TODO(navigation): type
-    intl: intlShape,
+    intl: IntlShape,
   }>),
 )

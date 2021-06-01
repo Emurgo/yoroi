@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withStateHandlers, withHandlers} from 'recompose'
 import {View, TouchableOpacity, Image, Platform} from 'react-native'
-import {injectIntl, intlShape} from 'react-intl'
+import {injectIntl, type IntlShape} from 'react-intl'
 
 import {
   isUsedAddressIndexSelector,
@@ -41,7 +41,7 @@ import type {
 import type {WalletMeta} from '../../state'
 
 const _handleOnVerifyAddress = async (
-  intl: intlShape,
+  intl: IntlShape,
   address: string,
   index: number,
   hwDeviceInfo: HWDeviceInfo,
@@ -180,12 +180,10 @@ const AddressView = ({
     <AddressVerifyModal
       visible={addressDialogStep === ADDRESS_DIALOG_STEPS.ADDRESS_VERIFY}
       onRequestClose={closeDetails}
-      showCloseIcon
       onConfirm={onVerifyAddress}
       address={address}
       path={formatPath(0, 'External', index, walletMeta.walletImplementationId)}
       isWaiting={isWaiting}
-      disableButtons={isWaiting}
       useUSB={useUSB}
     />
   </>

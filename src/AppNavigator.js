@@ -5,6 +5,7 @@ import {connect} from 'react-redux'
 import {NavigationContainer} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {isEmpty} from 'lodash'
+import {type IntlShape} from 'react-intl'
 
 import {CONFIG} from './config/config'
 import {
@@ -135,7 +136,7 @@ const NavigatorSwitch = compose(
                 onSuccess: () => {
                   signin()
                 },
-                onFail: async (reason, intl) => {
+                onFail: async (reason, intl: IntlShape) => {
                   if (reason === KeyStore.REJECTIONS.INVALID_KEY) {
                     if (
                       (await canBiometricEncryptionBeEnabled()) &&

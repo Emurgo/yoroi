@@ -4,7 +4,7 @@ import React from 'react'
 import {View} from 'react-native'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
-import {injectIntl, intlShape} from 'react-intl'
+import {injectIntl, type IntlShape} from 'react-intl'
 
 import PinInput from './PinInput'
 import {CONFIG} from '../../config/config'
@@ -17,9 +17,17 @@ import type {ComponentType} from 'react'
 import type {PinInputLabels} from './PinInput'
 import type {Navigation} from '../../types/navigation'
 
-const handlePinEnter = ({pin, setPin, onPinEntered, intl}) => async (
-  pinConfirmation,
-) => {
+const handlePinEnter = ({
+  pin,
+  setPin,
+  onPinEntered,
+  intl,
+}: {
+  intl: IntlShape,
+  pin: any,
+  setPin: any,
+  onPinEntered: any,
+}) => async (pinConfirmation) => {
   if (pin !== pinConfirmation) {
     setPin('')
     await showErrorDialog(errorMessages.pinMismatch, intl)
@@ -49,7 +57,7 @@ type PinRegistrationFormLabels = {
 type ExternalProps = {
   labels: PinRegistrationFormLabels,
   onPinEntered: (string) => any,
-  intl: intlShape,
+  intl: IntlShape,
   navigation: Navigation,
 }
 

@@ -6,7 +6,7 @@ import {connect} from 'react-redux'
 import {View, FlatList, ScrollView} from 'react-native'
 import {withHandlers} from 'recompose'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {Text, Button, StatusBar, BulletPointItem} from '../../UiKit'
 
@@ -93,7 +93,13 @@ const CheckSumView = ({icon, checksum}) => (
   </View>
 )
 
-const VerifyWalletScreen = ({navigateToWalletCredentials, intl, route}) => {
+const VerifyWalletScreen = (
+  {
+    navigateToWalletCredentials,
+    intl,
+    route,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => {
   const [plate, setPlate] = useState({
     accountPlate: {
       ImagePart: '',
@@ -166,7 +172,9 @@ const VerifyWalletScreen = ({navigateToWalletCredentials, intl, route}) => {
 export default injectIntl(
   (compose(
     connect((_state) => ({})),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withHandlers({
       navigateToWalletCredentials: ({navigation, route}) => (_event) => {
         navigation.navigate(WALLET_INIT_ROUTES.WALLET_CREDENTIALS, {
@@ -179,6 +187,6 @@ export default injectIntl(
   )(VerifyWalletScreen): ComponentType<{
     navigation: Navigation,
     route: Object, // TODO(navigation): type
-    intl: intlShape,
+    intl: IntlShape,
   }>),
 )

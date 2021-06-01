@@ -9,7 +9,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
 
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {fetchUTXOs} from '../../actions/utxo'
 import VotingBanner from '../Catalyst/VotingBanner'
 import {Text, Banner, OfflineBanner, StatusBar, WarningBanner} from '../UiKit'
@@ -72,7 +72,7 @@ const warningBannerMessages = defineMessages({
   },
 })
 
-const NoTxHistory = injectIntl(({intl}) => (
+const NoTxHistory = injectIntl(({intl}: {intl: IntlShape}) => (
   <View style={styles.empty}>
     <Image source={image} />
     <Text style={styles.emptyText}>
@@ -81,19 +81,21 @@ const NoTxHistory = injectIntl(({intl}) => (
   </View>
 ))
 
-const SyncErrorBanner = injectIntl(({intl, showRefresh}) => (
-  <Banner
-    error
-    text={
-      showRefresh
-        ? intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh)
-        : intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh)
-    }
-  />
-))
+const SyncErrorBanner = injectIntl(
+  ({intl, showRefresh}: {intl: IntlShape, showRefresh: any}) => (
+    <Banner
+      error
+      text={
+        showRefresh
+          ? intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh)
+          : intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh)
+      }
+    />
+  ),
+)
 
 type AvailableAmountProps = {|
-  intl: any,
+  intl: IntlShape,
   amount: BigNumber,
   amountAssetMetaData: Token,
 |}
@@ -115,7 +117,7 @@ type FundInfo = ?{|
 |}
 
 type Props = {|
-  transactionsInfo: TransactionInfo,
+  transactionsInfo: Dict<TransactionInfo>,
   navigation: Navigation,
   isSyncing: boolean,
   isOnline: boolean,
@@ -125,7 +127,7 @@ type Props = {|
   availableAssets: Dict<Token>,
   isFlawedWallet: boolean,
   walletMeta: ReturnType<typeof walletMetaSelector>,
-  intl: any,
+  intl: IntlShape,
 |}
 const TxHistory = ({
   transactionsInfo,

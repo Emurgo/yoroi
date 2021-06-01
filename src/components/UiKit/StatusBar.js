@@ -5,9 +5,11 @@ import {StatusBar as NativeStatusBar} from 'react-native'
 
 import {COLORS} from '../../styles/config'
 
-import type {ComponentType} from 'react'
+type Props = {
+  type: 'dark' | 'light',
+}
 
-const StatusBar = ({type}) => {
+const StatusBar = ({type}: Props) => {
   const backgroundColor =
     type === 'dark' ? COLORS.BACKGROUND_BLUE : COLORS.WHITE
   const barStyle = type === 'dark' ? 'light-content' : 'dark-content'
@@ -17,8 +19,4 @@ const StatusBar = ({type}) => {
   )
 }
 
-type ExternalProps = {
-  type: 'dark' | 'light',
-}
-
-export default (StatusBar: ComponentType<ExternalProps>)
+export default StatusBar

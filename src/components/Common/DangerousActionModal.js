@@ -4,7 +4,7 @@ import React from 'react'
 import {View, Image, ScrollView} from 'react-native'
 import {compose} from 'redux'
 import {withStateHandlers} from 'recompose'
-import {injectIntl, intlShape} from 'react-intl'
+import {injectIntl, type IntlShape} from 'react-intl'
 
 import {Text, Button, Modal, Checkbox} from '../UiKit'
 import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
@@ -15,7 +15,6 @@ import styles from './styles/DangerousActionModal.style'
 import type {ComponentType} from 'react'
 
 type Props = {
-  +intl: intlShape,
   +title: string,
   +children: React$Node,
   +alertBox?: {
@@ -33,6 +32,10 @@ type Props = {
     primary?: boolean,
   |},
   +checkboxLabel?: string,
+}
+
+type HOCProps = {
+  intl: IntlShape,
   isChecked: boolean,
   +toogleCheck: (accepted: boolean) => void,
 }
@@ -48,7 +51,7 @@ const DangerousActionView = ({
   checkboxLabel,
   isChecked,
   toogleCheck,
-}: Props) => (
+}: Props & HOCProps) => (
   <ScrollView>
     <View style={styles.content}>
       <View style={styles.heading}>
@@ -113,8 +116,8 @@ const DangerousActionView = ({
   </ScrollView>
 )
 
-export const DangerousAction = injectIntl(
-  (compose(
+export const DangerousAction = (injectIntl(
+  compose(
     withStateHandlers(
       {
         isChecked: false,
@@ -123,8 +126,8 @@ export const DangerousAction = injectIntl(
         toogleCheck: () => (isChecked) => ({isChecked}),
       },
     ),
-  )(DangerousActionView): ComponentType<Props>),
-)
+  )(DangerousActionView),
+): ComponentType<Props>)
 
 type ModalProps = {
   +visible: boolean,

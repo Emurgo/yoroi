@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import {AppRegistry, Text} from 'react-native'
-import {addLocaleData, IntlProvider} from 'react-intl'
+import {addLocaleData, IntlProvider, type IntlShape} from 'react-intl'
 import en from 'react-intl/locale-data/en'
 import ja from 'react-intl/locale-data/ja'
 import ko from 'react-intl/locale-data/ko'
@@ -65,7 +65,7 @@ const intlProvider = new IntlProvider({
   locale: 'en-US',
   messages: translations['en-US'],
 })
-const {intl} = intlProvider.getChildContext()
+const {intl}: {intl: IntlShape} = intlProvider.getChildContext()
 global.onunhandledrejection = (e) => handleGeneralError(e.message, e, intl)
 
 const store = getConfiguredStore()

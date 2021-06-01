@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {View, Image} from 'react-native'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import Markdown from 'react-native-easy-markdown'
 
 import {Button, Modal} from '../../UiKit'
@@ -41,7 +41,7 @@ type ExternalProps = {
   onConfirm: () => any,
   visible: boolean,
   onRequestClose: () => any,
-  intl: intlShape,
+  intl: IntlShape,
 }
 
 const MnemonicExplanationModal = ({

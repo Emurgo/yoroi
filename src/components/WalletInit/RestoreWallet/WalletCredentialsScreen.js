@@ -4,7 +4,7 @@ import {ActivityIndicator} from 'react-native'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withStateHandlers} from 'recompose'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import assert from '../../../utils/assert'
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
@@ -40,7 +40,9 @@ export default injectIntl(
         updateVersion,
       },
     ),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withStateHandlers(
       {
         waiting: false,
@@ -85,6 +87,6 @@ export default injectIntl(
     }),
   )(WalletCredentialsScreen): ComponentType<{
     navigation: Navigation,
-    intl: intlShape,
+    intl: IntlShape,
   }>),
 )

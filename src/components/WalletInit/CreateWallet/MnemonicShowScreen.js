@@ -5,7 +5,7 @@ import {View, Image, ScrollView, Dimensions} from 'react-native'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers, withProps} from 'recompose'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import assert from '../../../utils/assert'
 import {Text, Button, StatusBar} from '../../UiKit'
@@ -41,14 +41,16 @@ const messages = defineMessages({
   },
 })
 
-const MnemonicShowScreen = ({
-  navigateToMnemonicCheck,
-  intl,
-  mnemonic,
-  modal,
-  showModal,
-  hideModal,
-}) => (
+const MnemonicShowScreen = (
+  {
+    navigateToMnemonicCheck,
+    intl,
+    mnemonic,
+    modal,
+    showModal,
+    hideModal,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => (
   <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
     <StatusBar type="dark" />
 
@@ -102,7 +104,9 @@ const MnemonicShowScreen = ({
 
 export default injectIntl(
   (compose(
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withProps((props) => ({mnemonic: props.route.params.mnemonic})),
     withStateHandlers(
       {
@@ -140,6 +144,6 @@ export default injectIntl(
   )(MnemonicShowScreen): ComponentType<{
     navigation: Navigation,
     route: Object, // TODO
-    intl: intlShape,
+    intl: IntlShape,
   }>),
 )

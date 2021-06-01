@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {Text, View, Image, TouchableOpacity, ScrollView} from 'react-native'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {compose} from 'redux'
 import {withStateHandlers} from 'recompose'
 
@@ -27,11 +27,16 @@ const messages = defineMessages({
   },
 })
 
-type Props = {
+type ErrorViewProps = {
   title?: string,
   errorMessage: string,
   errorLogs?: ?string,
   onDismiss: () => void,
+}
+type HOCProps = {
+  showErrorLogs: any,
+  setShowErrorLogs: any,
+  intl: IntlShape,
 }
 
 const _ErrorView = ({
@@ -42,7 +47,7 @@ const _ErrorView = ({
   onDismiss,
   showErrorLogs,
   setShowErrorLogs,
-}) => (
+}: ErrorViewProps & HOCProps) => (
   <ScrollView style={styles.scrollView}>
     <View style={styles.headerView}>
       <Text style={styles.title}>
@@ -86,8 +91,8 @@ const _ErrorView = ({
   </ScrollView>
 )
 
-export const ErrorView = injectIntl(
-  (compose(
+export const ErrorView = (injectIntl(
+  compose(
     withStateHandlers(
       {
         showErrorLogs: false,
@@ -98,8 +103,16 @@ export const ErrorView = injectIntl(
         }),
       },
     ),
-  )(_ErrorView): ComponentType<Props>),
-)
+  )(_ErrorView),
+): ComponentType<ErrorViewProps>)
+
+type Props = {
+  visible: boolean,
+  title?: string,
+  errorMessage: string,
+  errorLogs?: ?string,
+  onRequestClose: () => void,
+}
 
 const ErrorModal = ({
   visible,
@@ -107,7 +120,7 @@ const ErrorModal = ({
   errorMessage,
   errorLogs,
   onRequestClose,
-}) => (
+}: Props) => (
   <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
     <ErrorView
       title={title}
@@ -118,12 +131,4 @@ const ErrorModal = ({
   </Modal>
 )
 
-type ExternalProps = {
-  visible: boolean,
-  title?: string,
-  errorMessage: string,
-  errorLogs?: ?string,
-  onRequestClose: () => void,
-}
-
-export default (ErrorModal: ComponentType<ExternalProps>)
+export default ErrorModal

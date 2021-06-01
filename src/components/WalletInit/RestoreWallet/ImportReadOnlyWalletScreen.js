@@ -4,7 +4,7 @@ import React from 'react'
 import {compose} from 'redux'
 import {View, ScrollView, Dimensions} from 'react-native'
 import {withHandlers} from 'recompose'
-import {injectIntl, defineMessages, type intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 import DeviceInfo from 'react-native-device-info'
 
@@ -59,7 +59,7 @@ const handleOnRead = async (
   event: Object,
   navigation: Navigation,
   route: Object,
-  intl: intlShape,
+  intl: IntlShape,
 ): Promise<void> => {
   try {
     Logger.debug('ImportReadOnlyWalletScreen::handleOnRead::data', event.data)
@@ -101,7 +101,9 @@ const getContent = (formatMessage) => (
   </ScrollView>
 )
 
-const ImportReadOnlyWalletScreen = ({intl, onRead}) => (
+const ImportReadOnlyWalletScreen = (
+  {intl, onRead}: {intl: IntlShape} & Object /* TODO: type */,
+) => (
   <View style={styles.container}>
     <View style={styles.cameraContainer}>
       <QRCodeScanner
@@ -122,36 +124,56 @@ const ImportReadOnlyWalletScreen = ({intl, onRead}) => (
 
 export default injectIntl(
   (compose(
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
-    onDidMount(async ({navigation, route, intl}) => {
-      navigation.addListener('focus', () => {
-        // re-enable QR code scanning
-        if (
-          firstFocus === false &&
-          scannerRef != null &&
-          scannerRef.reactivate != null
-        ) {
-          scannerRef.reactivate()
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
+    onDidMount(
+      async ({
+        navigation,
+        route,
+        intl,
+      }: {
+        intl: IntlShape,
+        route: any,
+        navigation: any,
+      }) => {
+        navigation.addListener('focus', () => {
+          // re-enable QR code scanning
+          if (
+            firstFocus === false &&
+            scannerRef != null &&
+            scannerRef.reactivate != null
+          ) {
+            scannerRef.reactivate()
+          }
+          if (firstFocus === true) firstFocus = false
+        })
+        if (CONFIG.E2E.IS_TESTING && (await DeviceInfo.isEmulator())) {
+          const event = {
+            data: `{"publicKeyHex": "${
+              CONFIG.DEBUG.PUB_KEY
+            }", "path": [1852,1815,0]}`,
+          }
+          await handleOnRead(event, navigation, route, intl)
         }
-        if (firstFocus === true) firstFocus = false
-      })
-      if (CONFIG.E2E.IS_TESTING && (await DeviceInfo.isEmulator())) {
-        const event = {
-          data: `{"publicKeyHex": "${
-            CONFIG.DEBUG.PUB_KEY
-          }", "path": [1852,1815,0]}`,
-        }
-        await handleOnRead(event, navigation, route, intl)
-      }
-    }),
+      },
+    ),
     withHandlers({
-      onRead: ({navigation, route, intl}) => async (event) => {
+      onRead: ({
+        navigation,
+        route,
+        intl,
+      }: {
+        intl: IntlShape,
+        route: any,
+        navigation: any,
+      }) => async (event) => {
         await handleOnRead(event, navigation, route, intl)
       },
     }),
   )(ImportReadOnlyWalletScreen): ComponentType<{
     navigation: Navigation,
-    intl: intlShape,
+    intl: IntlShape,
     route: any,
   }>),
 )

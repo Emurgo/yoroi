@@ -2,15 +2,13 @@
 
 import React from 'react'
 import {View, ScrollView, Image} from 'react-native'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {Text, Button, Modal} from '../UiKit'
 import {confirmationMessages} from '../../i18n/global-messages'
 
 import styles from './styles/PoolWarningModal.style'
 import image from '../../assets/img/mnemonic_explanation.png'
-
-import type {ComponentType} from 'react'
 
 const messages = defineMessages({
   title: {
@@ -44,7 +42,7 @@ const messages = defineMessages({
   },
 })
 
-const getMessage = (reputationInfo, intl: intlShape): Array<string> => {
+const getMessage = (reputationInfo, intl: IntlShape): Array<string> => {
   const problems = []
   const val = reputationInfo.node_flags != null ? reputationInfo.node_flags : 0
   // eslint-disable-next-line no-bitwise
@@ -70,9 +68,9 @@ const BulletPointItem = ({textRow, style}) => {
 }
 
 type Props = {
-  intl: intlShape,
+  intl: IntlShape,
   visible: boolean,
-  onPress: () => void,
+  onPress: () => mixed,
   onRequestClose: () => void,
   reputationInfo: {node_flags?: number},
 }
@@ -122,4 +120,4 @@ const PoolWarningModal = ({
   )
 }
 
-export default injectIntl((PoolWarningModal: ComponentType<Props>))
+export default injectIntl(PoolWarningModal)

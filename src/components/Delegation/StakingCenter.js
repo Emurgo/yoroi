@@ -200,16 +200,18 @@ const _handleOnMessage = async (
   }
 }
 
-const StakingCenter = ({
-  intl,
-  navigation,
-  poolOperator,
-  utxos,
-  defaultAsset,
-  languageCode,
-  accountBalance,
-  serverStatus,
-}) => {
+const StakingCenter = (
+  {
+    intl,
+    navigation,
+    poolOperator,
+    utxos,
+    defaultAsset,
+    languageCode,
+    accountBalance,
+    serverStatus,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => {
   // pools user is currently delegating to
   const poolList = poolOperator != null ? [poolOperator] : null
 
@@ -316,7 +318,9 @@ type ExternalProps = {|
 
 export default injectIntl(
   (compose(
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     connect((state) => ({
       utxos: utxosSelector(state),
       accountBalance: accountBalanceSelector(state),

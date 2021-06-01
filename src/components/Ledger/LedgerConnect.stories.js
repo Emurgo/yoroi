@@ -23,6 +23,7 @@ const LedgerConnectModal = ({
   useUSB,
 }) => (
   <Modal visible={visible} onRequestClose={onRequestClose}>
+    {/* $FlowFixMe */}
     <LedgerConnect
       navigation={navigation}
       onConnectBLE={() => ({})}

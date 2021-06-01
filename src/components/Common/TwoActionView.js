@@ -2,17 +2,15 @@
 
 import React from 'react'
 import {View, ScrollView} from 'react-native'
-import {injectIntl, intlShape} from 'react-intl'
+import {injectIntl, type IntlShape} from 'react-intl'
 
 import {Text, Button} from '../UiKit'
 import {confirmationMessages} from '../../i18n/global-messages'
 
 import styles from './styles/TwoActionView.style'
 
-import type {ComponentType} from 'react'
-
 type Props = {|
-  +intl: intlShape,
+  +intl: IntlShape,
   +title: string,
   +children: React$Node,
   +primaryButton: {|
@@ -62,4 +60,4 @@ const TwoActionView = ({
   </ScrollView>
 )
 
-export default injectIntl((TwoActionView: ComponentType<Props>))
+export default injectIntl(TwoActionView)

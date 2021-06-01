@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {View, SafeAreaView, Image, ActivityIndicator} from 'react-native'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
@@ -30,20 +30,22 @@ const messages = defineMessages({
   },
 })
 
-const WalletNameForm = ({
-  intl,
-  onPress,
-  name,
-  image,
-  validateForm,
-  setName,
-  progress,
-  containerStyle,
-  buttonStyle,
-  topContent,
-  bottomContent,
-  isWaiting = false,
-}) => {
+const WalletNameForm = (
+  {
+    intl,
+    onPress,
+    name,
+    image,
+    validateForm,
+    setName,
+    progress,
+    containerStyle,
+    buttonStyle,
+    topContent,
+    bottomContent,
+    isWaiting = false,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => {
   const validationErrors = validateForm()
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -93,10 +95,10 @@ const WalletNameForm = ({
 }
 
 type ExternalProps = {|
-  intl: intlShape,
+  intl: IntlShape,
   onSubmit: ({name: string}) => PossiblyAsync<void>,
-  defaultName?: string,
-  image: string,
+  defaultWalletName?: string,
+  image?: string,
   progress?: {
     currentStep: number,
     totalSteps: number,

@@ -3,7 +3,7 @@
 import React from 'react'
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
 import {createStackNavigator} from '@react-navigation/stack'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import WalletSettingsScreen from './WalletSettingsScreen'
 import ApplicationSettingsScreen from './ApplicationSettingsScreen'
@@ -38,7 +38,7 @@ const messages = defineMessages({
 })
 
 const Tab = createMaterialTopTabNavigator()
-const SettingsTabNavigator = injectIntl(({intl}) => (
+const SettingsTabNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
   <Tab.Navigator
     screenOptions={({route}) => ({
       tabBarLabel:

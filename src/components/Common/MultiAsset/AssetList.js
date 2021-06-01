@@ -2,8 +2,7 @@
 
 import React from 'react'
 import {Text, View, FlatList, TouchableOpacity} from 'react-native'
-import {injectIntl} from 'react-intl'
-import type {Node, ComponentType} from 'react'
+import {injectIntl, type IntlShape} from 'react-intl'
 
 import {
   getAssetDenominationOrUnknown,
@@ -25,22 +24,22 @@ type NodeStyle =
   | typeof assetListTransactionStyle
   | typeof assetListSendStyle
 
-type Props = {
-  assets: Array<TokenEntry>,
-  assetsMetadata: Dict<Token>,
-  styles: NodeStyle,
-  onSelect?: (TokenEntry) => any,
-  intl: any,
-}
-
-const AssetRow: ({|
+type AssetRowProps = {|
   styles: NodeStyle,
   asset: TokenEntry,
   assetMetadata: Token,
   backColor: {|backgroundColor: string|},
   onSelect?: (TokenEntry) => any,
-  intl: injectIntl,
-|}) => Node = ({styles, asset, assetMetadata, backColor, onSelect, intl}) => {
+  intl: IntlShape,
+|}
+const AssetRow = ({
+  styles,
+  asset,
+  assetMetadata,
+  backColor,
+  onSelect,
+  intl,
+}: AssetRowProps) => {
   const item = (
     <>
       <View style={styles.tokenMetaView}>
@@ -98,13 +97,21 @@ const AssetRow: ({|
   }
 }
 
-const AssetList: (props: Props) => Node = ({
+type AssetListProps = {
+  assets: Array<TokenEntry>,
+  assetsMetadata: Dict<Token>,
+  styles: NodeStyle,
+  onSelect?: (TokenEntry) => any,
+  intl: IntlShape,
+}
+
+const AssetList = ({
   assets,
   assetsMetadata,
   styles,
   onSelect,
   intl,
-}) => {
+}: AssetListProps) => {
   const colors = [styles.rowColor1, styles.rowColor2]
 
   return (
@@ -136,4 +143,4 @@ const AssetList: (props: Props) => Node = ({
     </View>
   )
 }
-export default injectIntl((AssetList: ComponentType<Props>))
+export default injectIntl(AssetList)

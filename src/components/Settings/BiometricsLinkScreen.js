@@ -4,7 +4,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {Button} from '../UiKit'
 import FingerprintScreenBase from '../Common/FingerprintScreenBase'
@@ -47,7 +47,7 @@ const messages = defineMessages({
 })
 
 type Props = {
-  intl: any,
+  intl: IntlShape,
   linkBiometricsSignIn: () => mixed,
   cancelLinking: () => mixed,
 }
@@ -88,7 +88,15 @@ export default injectIntl(
       {setSystemAuth},
     ),
     withHandlers({
-      linkBiometricsSignIn: ({navigation, setSystemAuth, intl}) => async () => {
+      linkBiometricsSignIn: ({
+        navigation,
+        setSystemAuth,
+        intl,
+      }: {
+        intl: IntlShape,
+        navigation: any,
+        setSystemAuth: any,
+      }) => async () => {
         if (await canBiometricEncryptionBeEnabled()) {
           setSystemAuth(true)
             .then(() => navigation.navigate(SETTINGS_ROUTES.MAIN))

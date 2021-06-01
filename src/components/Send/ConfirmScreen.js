@@ -7,7 +7,7 @@ import {connect} from 'react-redux'
 import {ScrollView, View, Platform} from 'react-native'
 import {withHandlers, withStateHandlers} from 'recompose'
 import SafeAreaView from 'react-native-safe-area-view'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {
   Text,
@@ -215,29 +215,31 @@ const LEDGER_DIALOG_STEPS = {
   LEDGER_CONNECT: 'LEDGER_CONNECT',
 }
 
-const ConfirmScreen = ({
-  onConfirm,
-  intl,
-  route,
-  password,
-  setPassword,
-  isEasyConfirmationEnabled,
-  isHW,
-  defaultAsset,
-  availableAssets,
-  sendingTransaction,
-  buttonDisabled,
-  ledgerDialogStep,
-  closeLedgerDialog,
-  useUSB,
-  onChooseTransport,
-  onConnectBLE,
-  onConnectUSB,
-  closeErrorModal,
-  showErrorModal,
-  errorMessage,
-  errorLogs,
-}) => {
+const ConfirmScreen = (
+  {
+    onConfirm,
+    intl,
+    route,
+    password,
+    setPassword,
+    isEasyConfirmationEnabled,
+    isHW,
+    defaultAsset,
+    availableAssets,
+    sendingTransaction,
+    buttonDisabled,
+    ledgerDialogStep,
+    closeLedgerDialog,
+    useUSB,
+    onChooseTransport,
+    onConnectBLE,
+    onConnectUSB,
+    closeErrorModal,
+    showErrorModal,
+    errorMessage,
+    errorLogs,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => {
   const {
     defaultAssetAmount,
     address,
@@ -416,7 +418,9 @@ export default injectIntl(
         }),
       },
     ),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withHandlers({
       withPleaseWaitModal: ({setSendingTransaction}) => async (
         func: () => Promise<void>,
@@ -467,21 +471,23 @@ export default injectIntl(
         closeLedgerDialog()
       },
       onConfirm: ignoreConcurrentAsyncHandler(
-        ({
-          navigation,
-          route,
-          isHW,
-          hwDeviceInfo,
-          isEasyConfirmationEnabled,
-          password,
-          submitTransaction,
-          submitSignedTx,
-          withPleaseWaitModal,
-          withDisabledButton,
-          intl,
-          useUSB,
-          setErrorData,
-        }) => async (_event) => {
+        (
+          {
+            navigation,
+            route,
+            isHW,
+            hwDeviceInfo,
+            isEasyConfirmationEnabled,
+            password,
+            submitTransaction,
+            submitSignedTx,
+            withPleaseWaitModal,
+            withDisabledButton,
+            intl,
+            useUSB,
+            setErrorData,
+          }: {intl: IntlShape} & Object /* TODO: type */,
+        ) => async (_event) => {
           await handleOnConfirm(
             navigation,
             route,

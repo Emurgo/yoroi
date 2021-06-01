@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View, ScrollView} from 'react-native'
 import {withHandlers, withStateHandlers} from 'recompose'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {Button, Text, Checkbox, ValidatedTextInput, StatusBar} from '../UiKit'
 import {withNavigationTitle} from '../../utils/renderUtils'
@@ -65,7 +65,7 @@ const handleRemoveWallet = ({navigation, removeCurrentWallet}) => async () => {
 }
 
 type Prop = {
-  intl: any,
+  intl: IntlShape,
   walletName: string,
   isHW: boolean,
   typedWalletName: string,
@@ -152,7 +152,9 @@ export default injectIntl(
         removeCurrentWallet,
       },
     ),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withStateHandlers(
       {
         hasMnemonicWrittenDown: false,

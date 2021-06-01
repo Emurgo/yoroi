@@ -5,7 +5,7 @@ import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {View, Image, TouchableOpacity, Animated, Linking} from 'react-native'
 import Clipboard from '@react-native-community/clipboard'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {debounce} from 'lodash'
 
 import {onWillUnmount} from '../../../utils/renderUtils'
@@ -50,18 +50,20 @@ const FadeOutView = (props) => {
 }
 
 type ExternalProps = {|
-  +intl: intlShape,
+  +intl: IntlShape,
   +addressHash: string,
   +networkId: NetworkId,
 |}
 
-const WalletAddress = ({
-  intl,
-  addressHash,
-  onTapAddress,
-  copyHash,
-  showCopyNotif,
-}) => (
+const WalletAddress = (
+  {
+    intl,
+    addressHash,
+    onTapAddress,
+    copyHash,
+    showCopyNotif,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => (
   <View style={styles.addressRowStyles}>
     <TouchableOpacity activeOpacity={0.5} onPress={onTapAddress}>
       <Text numberOfLines={1} ellipsizeMode="middle" style={styles.addressHash}>

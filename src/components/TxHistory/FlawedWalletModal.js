@@ -2,15 +2,13 @@
 
 import React from 'react'
 import {View, ScrollView, Image} from 'react-native'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {Text, Button, Modal} from '../UiKit'
 import {confirmationMessages} from '../../i18n/global-messages'
 
 import styles from './styles/FlawedWalletModal.style'
 import image from '../../assets/img/mnemonic_explanation.png'
-
-import type {ComponentType} from 'react'
 
 const messages = defineMessages({
   title: {
@@ -33,7 +31,7 @@ const messages = defineMessages({
 })
 
 type Props = {
-  intl: intlShape,
+  intl: IntlShape,
   visible: boolean,
   onPress: () => any,
   onRequestClose: () => any,
@@ -81,4 +79,4 @@ const FlawedWalletModal = ({
   )
 }
 
-export default injectIntl((FlawedWalletModal: ComponentType<Props>))
+export default injectIntl(FlawedWalletModal)

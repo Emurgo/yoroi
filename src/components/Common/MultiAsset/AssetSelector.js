@@ -1,7 +1,7 @@
 // @flow
 
 import React, {useState} from 'react'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {View, Image, LayoutAnimation, TouchableOpacity} from 'react-native'
 
 import {Text} from '../../UiKit'
@@ -19,7 +19,6 @@ import closeIcon from '../../../assets/img/cross_fill.png'
 
 import type {TokenEntry} from '../../../crypto/MultiToken'
 import type {Token} from '../../../types/HistoryTransaction'
-import type {Node, ComponentType} from 'react'
 
 const messages = defineMessages({
   placeHolder: {
@@ -28,17 +27,17 @@ const messages = defineMessages({
   },
 })
 
-type ExternalProps = {
+type Props = {
   label?: string,
   assets: Array<TokenEntry>,
   assetsMetadata: Dict<Token>,
   onSelect: (TokenEntry | void) => any,
   selectedAsset: TokenEntry | null,
   unselectEnabled: boolean,
-  intl: any,
+  intl: IntlShape,
 }
 
-const AssetSelector: (ExternalProps) => Node = ({
+const AssetSelector = ({
   label,
   assets,
   assetsMetadata,
@@ -46,7 +45,7 @@ const AssetSelector: (ExternalProps) => Node = ({
   selectedAsset,
   unselectEnabled,
   intl,
-}) => {
+}: Props) => {
   const [expanded, setExpanded] = useState(false)
 
   const toggleExpand = () => {
@@ -110,4 +109,4 @@ const AssetSelector: (ExternalProps) => Node = ({
   )
 }
 
-export default injectIntl((AssetSelector: ComponentType<ExternalProps>))
+export default injectIntl(AssetSelector)

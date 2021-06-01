@@ -4,6 +4,7 @@
 // Use an interface instead
 
 import {BigNumber} from 'bignumber.js'
+import {type IntlShape} from 'react-intl'
 
 import {AddressChain} from './shelley/chain'
 import {TransactionCache} from './shelley/transactionCache'
@@ -118,14 +119,20 @@ export interface WalletInterface {
     password?: string,
   ): Promise<void>;
 
-  getDecryptedMasterKey(masterPassword: string, intl: any): Promise<string>;
+  getDecryptedMasterKey(
+    masterPassword: string,
+    intl: IntlShape,
+  ): Promise<string>;
 
-  enableEasyConfirmation(masterPassword: string, intl: any): Promise<void>;
+  enableEasyConfirmation(
+    masterPassword: string,
+    intl: IntlShape,
+  ): Promise<void>;
 
   changePassword(
     masterPassword: string,
     newPassword: string,
-    intl: any,
+    intl: IntlShape,
   ): Promise<void>;
 
   // =================== subscriptions =================== //

@@ -9,8 +9,6 @@ import backspaceIcon from '../../assets/img/backspace.png'
 
 import styles from './styles/PinInputKeyboard.style'
 
-import type {ComponentType, Node} from 'react'
-
 const BACKSPACE = utfSymbols.ERASE_TO_LEFT
 
 const keyboard = [
@@ -53,15 +51,12 @@ const KeyboardKey = ({value, onKeyDown}) => {
   )
 }
 
-type ExternalProps = {
+type Props = {
   onPinChange: (string) => void,
   pinLength: number,
 }
 
-const PinInputKeyboard: (props: ExternalProps) => Node = ({
-  onPinChange,
-  pinLength,
-}) => {
+const PinInputKeyboard = ({onPinChange, pinLength}: Props) => {
   const [pin, setPin] = useState('')
 
   const updatePin = (newPin) => {
@@ -90,4 +85,4 @@ const PinInputKeyboard: (props: ExternalProps) => Node = ({
   )
 }
 
-export default (PinInputKeyboard: ComponentType<ExternalProps>)
+export default PinInputKeyboard

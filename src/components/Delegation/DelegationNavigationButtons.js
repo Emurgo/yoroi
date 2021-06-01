@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {View} from 'react-native'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {Button} from '../UiKit'
 
@@ -16,8 +16,7 @@ const messages = defineMessages({
 })
 
 type Props = {
-  navigation: any, // TODO: type
-  intl: any,
+  intl: IntlShape,
   onPress: () => void,
   disabled?: ?boolean,
 }

@@ -6,7 +6,7 @@ import {connect} from 'react-redux'
 import {withStateHandlers, withHandlers} from 'recompose'
 import {View, ScrollView, KeyboardAvoidingView, Platform} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import _ from 'lodash'
 
 import {Button, ValidatedTextInput, StatusBar} from '../UiKit'
@@ -41,7 +41,7 @@ type Props = {
   walletName: string,
   setWalletName: (string) => any,
   changeAndNavigate: () => any,
-  intl: any,
+  intl: IntlShape,
   validateWalletName: () => WalletNameValidationErrors,
 }
 
@@ -102,7 +102,9 @@ export default injectIntl(
       }),
       {changeWalletName},
     ),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withStateHandlers(
       ({oldName}) => ({
         walletName: oldName,
@@ -130,6 +132,6 @@ export default injectIntl(
     }),
   )(ChangeWalletName): ComponentType<{|
     navigation: Navigation,
-    intl: intlShape,
+    intl: IntlShape,
   |}>),
 )

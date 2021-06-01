@@ -71,6 +71,19 @@ const messages = defineMessages({
   },
 })
 
+type Props = {|
+  navigation: Navigation,
+  route: Object, // TODO(navigation): type
+  unSignedTx: ?ISignRequest<any>,
+|}
+
+type HOCProps = {
+  intl: IntlShape,
+  isEasyConfirmationEnabled: boolean,
+  submitTransaction: (ISignRequest<any>, string) => void,
+  defaultAsset: DefaultAsset,
+}
+
 const Step5 = ({
   intl,
   isEasyConfirmationEnabled,
@@ -78,7 +91,7 @@ const Step5 = ({
   submitTransaction,
   unSignedTx,
   defaultAsset,
-}) => {
+}: Props & HOCProps) => {
   const [password, setPassword] = useState(
     CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
   )
@@ -242,17 +255,7 @@ const Step5 = ({
   )
 }
 
-type ExternalProps = {|
-  navigation: Navigation,
-  route: Object, // TODO(navigation): type
-  intl: IntlShape,
-  isEasyConfirmationEnabled: boolean,
-  submitTransaction: (ISignRequest<any>, string) => void,
-  unSignedTx: ?ISignRequest<any>,
-  defaultAsset: DefaultAsset,
-|}
-
-export default injectIntl(
+export default (injectIntl(
   connect(
     (state) => ({
       isEasyConfirmationEnabled: easyConfirmationSelector(state),
@@ -266,8 +269,8 @@ export default injectIntl(
       ...ownProps,
     }),
   )(
-    withTitle((Step5: ComponentType<ExternalProps>), ({intl}) =>
+    withTitle(Step5, ({intl}: {intl: IntlShape}) =>
       intl.formatMessage(globalMessages.votingTitle),
     ),
   ),
-)
+): ComponentType<Props>)

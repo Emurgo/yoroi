@@ -4,7 +4,7 @@ import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {View} from 'react-native'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {CONFIG} from '../../config/config'
 import PinInput from '../Common/PinInput'
@@ -30,7 +30,7 @@ const messages = defineMessages({
 })
 
 type Props = {
-  intl: any,
+  intl: IntlShape,
   onPinEnter: (pin: string) => Promise<boolean>,
 }
 
@@ -53,7 +53,7 @@ const CustomPinLogin = injectIntl(({intl, onPinEnter}: Props) => (
 type ExternalProps = {|
   navigation: Navigation,
   customPinHash: ?string,
-  intl: intlShape,
+  intl: IntlShape,
 |}
 
 export default injectIntl(
@@ -64,9 +64,19 @@ export default injectIntl(
       }),
       {signin},
     ),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withHandlers({
-      onPinEnter: ({customPinHash, intl, signin}) => async (pin) => {
+      onPinEnter: ({
+        customPinHash,
+        intl,
+        signin,
+      }: {
+        customPinHash: any,
+        intl: IntlShape,
+        signin: any,
+      }) => async (pin) => {
         if (customPinHash == null) {
           throw new Error('Custom pin is not setup')
         }

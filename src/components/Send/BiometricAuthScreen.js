@@ -4,7 +4,7 @@ import React, {useState, useEffect} from 'react'
 import {AppState} from 'react-native'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {Logger} from '../../utils/logging'
@@ -119,7 +119,17 @@ const handleOnConfirm = async (
   }
 }
 
-const handleOnFocus = async ({route, setError, clearError, intl}) => {
+const handleOnFocus = async ({
+  route,
+  setError,
+  clearError,
+  intl,
+}: {
+  route: any,
+  setError: any,
+  clearError: any,
+  intl: IntlShape,
+}) => {
   if (!(await canBiometricEncryptionBeEnabled())) {
     await showErrorDialog(globalErrorMessages.biometricsIsTurnedOff, intl)
     return
@@ -127,15 +137,17 @@ const handleOnFocus = async ({route, setError, clearError, intl}) => {
   await handleOnConfirm(route, setError, clearError, false, intl)
 }
 
-const BiometricAuthScreen = ({
-  cancelScanning,
-  useFallback,
-  error,
-  intl,
-  route,
-  setError,
-  clearError,
-}) => {
+const BiometricAuthScreen = (
+  {
+    cancelScanning,
+    useFallback,
+    error,
+    intl,
+    route,
+    setError,
+    clearError,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => {
   const [appState, setAppState] = useState<?string>(AppState.currentState)
 
   const handleAppStateChange: (?string) => Promise<void> = async (
@@ -201,7 +213,7 @@ const BiometricAuthScreen = ({
 type ExternalProps = {|
   navigation: Navigation,
   route: any, // TODO: type
-  intl: any,
+  intl: IntlShape,
 |}
 
 type ErrorCode =
@@ -230,7 +242,15 @@ export default injectIntl(
       // we have this handler because we need to let JAVA side know user
       // cancelled the scanning by either navigating out of this window
       // or using fallback
-      cancelScanning: ({clearError, route, intl}) => async () => {
+      cancelScanning: ({
+        clearError,
+        route,
+        intl,
+      }: {
+        intl: IntlShape,
+        route: any,
+        clearError: any,
+      }) => async () => {
         const wasScanningStarted = await KeyStore.cancelFingerprintScanning(
           KeyStore.REJECTIONS.CANCELED,
         )
@@ -242,7 +262,17 @@ export default injectIntl(
           onFail(KeyStore.REJECTIONS.CANCELED, intl)
         }
       },
-      useFallback: ({route, setError, clearError, intl}) => async () => {
+      useFallback: ({
+        route,
+        setError,
+        clearError,
+        intl,
+      }: {
+        route: any,
+        setError: any,
+        clearError: any,
+        intl: IntlShape,
+      }) => async () => {
         await KeyStore.cancelFingerprintScanning(
           KeyStore.REJECTIONS.SWAPPED_TO_FALLBACK,
         )

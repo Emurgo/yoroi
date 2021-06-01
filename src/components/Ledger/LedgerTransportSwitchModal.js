@@ -4,7 +4,7 @@ import React from 'react'
 import {View, ScrollView, Platform} from 'react-native'
 import {compose} from 'redux'
 import {withStateHandlers} from 'recompose'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import DeviceInfo from 'react-native-device-info'
 
 import {Text, Button, Modal} from '../UiKit'
@@ -51,18 +51,20 @@ const messages = defineMessages({
 })
 
 type Props = {
-  intl: intlShape,
+  intl: IntlShape,
   onSelectUSB: () => any,
   onSelectBLE: () => any,
-  isUSBSupported: boolean,
+  isUSBSupported?: boolean,
 }
 
-const LedgerTransportSwitchView = ({
-  intl,
-  onSelectUSB,
-  onSelectBLE,
-  isUSBSupported,
-}) => {
+const LedgerTransportSwitchView = (
+  {
+    intl,
+    onSelectUSB,
+    onSelectBLE,
+    isUSBSupported,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => {
   const getUsbButtonTitle = (): string => {
     if (Platform.OS === 'ios') {
       return intl.formatMessage(messages.usbButtonDisabled)
@@ -157,4 +159,4 @@ const LedgerTransportSwitchModal = ({
   </Modal>
 )
 
-export default (LedgerTransportSwitchModal: ComponentType<ModalProps>)
+export default LedgerTransportSwitchModal

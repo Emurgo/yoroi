@@ -4,7 +4,7 @@ import React, {useState, useEffect} from 'react'
 // TODO: in the future, prefer SafeAreaView from react-native-safe-area-context,
 // current version however doesn't work well on iOS
 import {View, SafeAreaView, FlatList, ScrollView} from 'react-native'
-import {injectIntl, intlShape, defineMessages} from 'react-intl'
+import {injectIntl, type IntlShape, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
@@ -67,7 +67,7 @@ const CheckSumView = ({icon, checksum}) => (
 )
 
 type WalletInfoProps = {|
-  intl: any,
+  intl: IntlShape,
   plate: {
     accountPlate: {
       ImagePart: string,
@@ -131,7 +131,14 @@ const WalletInfoView = ({
   </View>
 )
 
-const SaveReadOnlyWalletScreen = ({onSubmit, isWaiting, route, intl}) => {
+const SaveReadOnlyWalletScreen = (
+  {
+    onSubmit,
+    isWaiting,
+    route,
+    intl,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => {
   const [plate, setPlate] = useState({
     accountPlate: {
       ImagePart: '',
@@ -186,7 +193,7 @@ const SaveReadOnlyWalletScreen = ({onSubmit, isWaiting, route, intl}) => {
 }
 
 type ExternalProps = {|
-  intl: intlShape,
+  intl: IntlShape,
   navigation: Navigation,
   route: Object, // TODO(navigation): type
 |}
@@ -199,7 +206,9 @@ export default injectIntl(
         createWalletWithBip44Account,
       },
     ),
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withStateHandlers(
       {
         isWaiting: false,
@@ -222,13 +231,15 @@ export default injectIntl(
     }),
     withHandlers({
       onSubmit: ignoreConcurrentAsyncHandler(
-        ({
-          createWalletWithBip44Account,
-          withActivityIndicator,
-          navigation,
-          intl,
-          route,
-        }) => async ({name}) => {
+        (
+          {
+            createWalletWithBip44Account,
+            withActivityIndicator,
+            navigation,
+            intl,
+            route,
+          }: {intl: IntlShape} & Object /* TODO: type */,
+        ) => async ({name}) => {
           try {
             const {
               publicKeyHex,

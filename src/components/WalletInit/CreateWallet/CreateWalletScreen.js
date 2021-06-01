@@ -3,7 +3,7 @@
 import React from 'react'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
-import {injectIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {generateAdaMnemonic} from '../../../crypto/byron/util'
@@ -39,7 +39,9 @@ const CreateWalletScreen = ({
 
 export default injectIntl(
   compose(
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     withStateHandlers(
       {
         visibleMnemonicExplanation: false,

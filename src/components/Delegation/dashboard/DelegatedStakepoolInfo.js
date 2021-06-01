@@ -5,7 +5,7 @@ import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {View, Image, Linking, TouchableOpacity, Animated} from 'react-native'
 import Clipboard from '@react-native-community/clipboard'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {debounce} from 'lodash'
 
 import {Text, TitledCard, Button} from '../../UiKit'
@@ -42,7 +42,7 @@ const messages = defineMessages({
 export const formatStakepoolNameWithTicker = (
   poolTicker: ?string,
   poolName: ?string,
-  intl: intlShape,
+  intl: IntlShape,
 ): string => {
   return poolTicker == null
     ? poolName ?? intl.formatMessage(messages.unknownPool)
@@ -78,22 +78,24 @@ const FadeOutView = (props) => {
 }
 
 type ExternalProps = {|
-  +intl: intlShape,
+  +intl: IntlShape,
   +poolTicker: string,
   +poolName: string,
   +poolHash: string,
   +poolURL: string,
 |}
 
-const DelegatedStakepoolInfo = ({
-  intl,
-  poolTicker,
-  poolName,
-  poolHash,
-  openExternalURL,
-  copyPoolHash,
-  showCopyNotif,
-}) => (
+const DelegatedStakepoolInfo = (
+  {
+    intl,
+    poolTicker,
+    poolName,
+    poolHash,
+    openExternalURL,
+    copyPoolHash,
+    showCopyNotif,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => (
   <View style={styles.wrapper}>
     <TitledCard title={intl.formatMessage(messages.title)} variant={'poolInfo'}>
       <View style={styles.topBlock}>

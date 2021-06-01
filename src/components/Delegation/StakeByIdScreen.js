@@ -78,14 +78,16 @@ const styles = StyleSheet.create({
   },
 })
 
-const StakeByIdScreen = ({
-  intl,
-  busy,
-  handleInputChange,
-  handleOnContinue,
-  poolId,
-  utxos,
-}) => {
+const StakeByIdScreen = (
+  {
+    intl,
+    busy,
+    handleInputChange,
+    handleOnContinue,
+    poolId,
+    utxos,
+  }: {intl: IntlShape} & Object /* TODO: type */,
+) => {
   return (
     <>
       <View style={styles.container}>
@@ -117,13 +119,14 @@ const StakeByIdScreen = ({
 
 type ExternalProps = {|
   navigation: Navigation,
-  route: Object, // TODO(navigation): type
   intl: IntlShape,
 |}
 
 export default injectIntl(
   (compose(
-    withNavigationTitle(({intl}) => intl.formatMessage(messages.title)),
+    withNavigationTitle(({intl}: {intl: IntlShape}) =>
+      intl.formatMessage(messages.title),
+    ),
     connect((state) => ({
       utxos: utxosSelector(state),
       accountBalance: accountBalanceSelector(state),
@@ -142,15 +145,17 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      navigateToDelegationConfirm: ({
-        poolId,
-        navigation,
-        accountBalance,
-        utxos,
-        intl,
-        defaultAsset,
-        serverStatus,
-      }) => async (selectedPool) => {
+      navigateToDelegationConfirm: (
+        {
+          poolId,
+          navigation,
+          accountBalance,
+          utxos,
+          intl,
+          defaultAsset,
+          serverStatus,
+        }: {intl: IntlShape} & Object /* TODO: type */,
+      ) => async (selectedPool) => {
         try {
           const transactionData = await walletManager.createDelegationTx(
             poolId,

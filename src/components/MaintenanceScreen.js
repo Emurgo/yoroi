@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {View, Image, BackHandler, AppState} from 'react-native'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 
@@ -35,7 +35,7 @@ const messages = defineMessages({
 const URL = 'https://twitter.com/YoroiWallet'
 
 type Props = {|
-  intl: intlShape,
+  intl: IntlShape,
   visible: boolean,
   onRequestClose: () => void,
   initApp: () => void,
@@ -102,7 +102,7 @@ class MaintenanceModal extends React.Component<Props, State> {
 }
 
 type ScreenProps = {|
-  intl: intlShape,
+  intl: IntlShape,
   initApp: () => void,
 |}
 
@@ -124,6 +124,6 @@ export default injectIntl(
       },
     ),
   )(MaintenanceScreen): ComponentType<{|
-    intl: intlShape,
+    intl: IntlShape,
   |}>),
 )

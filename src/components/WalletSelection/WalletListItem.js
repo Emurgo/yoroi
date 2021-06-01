@@ -131,6 +131,7 @@ const WalletListItem: (props) => Node = ({wallet, onPress}) => {
               <Text style={styles.walletMeta}>Total ADA</Text>
             </View>
           </View>
+          {/* $FlowFixMe */}
           <AssetList styles={assetListStyle} assets={assets} />
         </View>
       )}

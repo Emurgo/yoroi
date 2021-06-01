@@ -2,7 +2,7 @@
 
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
-import {injectIntl, defineMessages, intlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import Markdown from 'react-native-easy-markdown'
 
 import {Modal} from '../UiKit'
@@ -17,8 +17,6 @@ import {MultiToken} from '../../crypto/MultiToken'
 import {WITHDRAWAL_DIALOG_STEPS, type WithdrawalDialogSteps} from './types'
 
 import styles from './styles/WithdrawalDialog.style'
-
-import type {ComponentType} from 'react'
 
 const messages = defineMessages({
   warningModalTitle: {
@@ -73,7 +71,7 @@ const messages = defineMessages({
 })
 
 type Props = {|
-  +intl: intlShape,
+  +intl: IntlShape,
   +step: WithdrawalDialogSteps,
   +onKeepKey: () => any,
   +onDeregisterKey: () => any,
@@ -172,8 +170,11 @@ const WithdrawalDialog = ({
         )
       case WITHDRAWAL_DIALOG_STEPS.CONFIRM:
         return (
+          // $FlowFixMe TODO: useUSB does not exist in TransferSummary props
           <TransferSummary
+            // $FlowFixMe
             withdrawals={withdrawals}
+            // $FlowFixMe
             deregistrations={deregistrations}
             balance={balance}
             finalBalance={finalBalance}
@@ -200,6 +201,7 @@ const WithdrawalDialog = ({
       case WITHDRAWAL_DIALOG_STEPS.ERROR:
         return (
           <ErrorView
+            // $FlowFixMe TODO: null or undefined is not compatible with string
             errorMessage={error.errorMessage}
             errorLogs={error.errorLogs}
             onDismiss={onRequestClose}
@@ -224,4 +226,4 @@ const WithdrawalDialog = ({
   )
 }
 
-export default injectIntl((WithdrawalDialog: ComponentType<Props>))
+export default injectIntl(WithdrawalDialog)
