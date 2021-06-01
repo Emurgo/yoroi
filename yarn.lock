@@ -8708,7 +8708,7 @@ flow-bin@0.122.0:
   resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.122.0.tgz#c723a2b33b1a70bd10204704ae1dc776d5d89d79"
   integrity sha512-my8N5jgl/A+UVby9E7NDppHdhLgRbWgKbmFZSx2MSYMRh3d9YGnM2MM+wexpUpl0ftY1IM6ZcUwaAhrypLyvlA==
 
-flow-coverage-report@^0.8.0:
+flow-coverage-report@0.8.0:
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/flow-coverage-report/-/flow-coverage-report-0.8.0.tgz#da047269adb561e8bb563289fb0408830a091180"
   integrity sha512-hdFPjPUWVLUPa0EUKA6x/Uq0f2FE2E+/7jUEnfocFHqntt9eqCH66F+uTRtT0edWv0ss0xcfjkM8gJiOIETA+Q==
@@ -14272,10 +14272,10 @@ react-native-schemes-manager@^1.0.5:
     xcode "^0.9.1"
     yargs "^6.6.0"
 
-react-native-screens@2.11.0:
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-2.11.0.tgz#34b30b07c2d04aa100cba984b944b303bfa43ea6"
-  integrity sha512-vJzJE3zI1XUtqthrX3Dh2TBQWB+xFyaGhF52KBq9FjJUN5ws4xpLZJxBWa1KbGV3DilmcSZ4jmZR5LGordwE7w==
+react-native-screens@3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-3.3.0.tgz#d4464a96620b85d09e46bd6865b5f48456c244f0"
+  integrity sha512-ni11jC6I9cFVXdLIDwkgafDHw/STXUNzkR5Fx3w8Wikdzi8gfTEan2kiOm7aS42d2F/LXddZ6i74Z2em0L6LPQ==
 
 react-native-storybook-loader@^1.8.1:
   version "1.8.1"
