@@ -28,6 +28,7 @@ import {errorMessages} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
 import {Logger} from '../../utils/logging'
 import {CONFIG} from '../../config/config'
+import {getCardanoByronConfig} from '../../config/networks'
 
 import styles from './styles/AddressView.style'
 import infoIcon from '../../assets/img/icon/info.png'
@@ -59,6 +60,7 @@ const _handleOnVerifyAddress = async (
       await verifyAddress(
         walletMeta.walletImplementationId,
         walletMeta.networkId,
+        getCardanoByronConfig().PROTOCOL_MAGIC,
         address,
         addressingInfo,
         hwDeviceInfo,

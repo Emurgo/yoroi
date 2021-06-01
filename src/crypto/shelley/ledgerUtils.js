@@ -1,9 +1,11 @@
 // @flow
 
 import AppAda, {
-  DeviceErrorCodes,
-  AddressTypeNibbles,
-  CertificateTypes,
+  AddressType,
+  DeviceStatusCodes,
+  CertificateType,
+  TxOutputDestinationType,
+  TransactionSigningMode,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 // note(v-almonacid) we'll be using a fork of @ledgerhq/react-native-hid
@@ -60,16 +62,18 @@ import type {
   BIP32Path,
   Certificate,
   GetVersionResponse,
+  GetExtendedPublicKeyRequest,
   GetExtendedPublicKeyResponse,
   GetSerialResponse,
-  InputTypeUTxO,
-  TxOutputTypeAddress,
-  TxOutputTypeAddressParams,
   SignTransactionResponse,
-  StakingBlockchainPointer,
   Token as LedgerToken,
   Witness,
   Withdrawal,
+  // new types
+  DeviceOwnedAddress,
+  SignTransactionRequest,
+  TxInput,
+  TxOutput,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import type BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble'
 import type HIDTransport from '@v-almonacid/react-native-hid'
@@ -162,8 +166,8 @@ const _isConnectionError = (e: Error | TransportStatusError): boolean => {
 const _isUserError = (e: Error | TransportStatusError): boolean => {
   if (
     e &&
-    e.statusCode != null &&
-    e.statusCode === DeviceErrorCodes.ERR_CLA_NOT_SUPPORTED
+    e.code != null &&
+    e.code === DeviceStatusCodes.ERR_CLA_NOT_SUPPORTED
   ) {
     return true
   }
@@ -174,7 +178,7 @@ const _isRejectedError = (e: Error | TransportStatusError): boolean => {
   if (
     e &&
     e.statusCode != null &&
-    e.statusCode === DeviceErrorCodes.ERR_REJECTED_BY_USER
+    e.statusCode === DeviceStatusCodes.ERR_REJECTED_BY_USER
   ) {
     return true
   }
@@ -241,22 +245,6 @@ export type HWDeviceInfo = {|
   hwFeatures: HWFeatures,
 |}
 
-// tx API
-
-// from yoroi-extension-ledger-connect-handler
-export type SignTransactionRequest = {|
-  networkId: number,
-  protocolMagic: number,
-  inputs: Array<InputTypeUTxO>,
-  outputs: Array<TxOutputTypeAddress | TxOutputTypeAddressParams>,
-  feeStr: string,
-  ttlStr: string | void,
-  certificates: Array<Certificate>,
-  withdrawals: Array<Withdrawal>,
-  metadataHashHex: ?string,
-  validityIntervalStartStr: string | void,
-|}
-
 //
 // ============== General util ==================
 //
@@ -278,10 +266,15 @@ const getWalletType = (id: WalletImplementationId): WalletType => {
   }
 }
 
-const makeCardanoAccountBIP44Path = (
+const makeCardanoAccountBIP44Path: (
   walletType: WalletType,
   account: number,
-) => [WALLET_TYPE_PURPOSE[walletType], COIN_TYPE, HARDENED + account]
+) => GetExtendedPublicKeyRequest = (
+  walletType: WalletType,
+  account: number,
+) => ({
+  path: [WALLET_TYPE_PURPOSE[walletType], COIN_TYPE, HARDENED + account],
+})
 
 const validateHWResponse = (resp: LedgerConnectionResponse): boolean => {
   const {extendedPublicKeyResp, deviceId, deviceObj, serial} = resp
@@ -319,14 +312,24 @@ const normalizeHWResponse = (resp: LedgerConnectionResponse): HWDeviceInfo => {
   }
 }
 
-export const checkDeviceVersion = (version: GetVersionResponse): void => {
-  if (version.major == null || version.minor == null || version.patch == null) {
+export const checkDeviceVersion = (
+  versionResponse: GetVersionResponse,
+): void => {
+  if (
+    versionResponse.version.major == null ||
+    versionResponse.version.minor == null ||
+    versionResponse.version.patch == null
+  ) {
     Logger.warn(
       'ledgerUtils::checkDeviceVersion: incomplete version data from device',
     )
     return
   }
-  const deviceVersionArray = [version.major, version.minor, version.patch]
+  const deviceVersionArray = [
+    versionResponse.version.major,
+    versionResponse.version.minor,
+    versionResponse.version.patch,
+  ]
   const minVersionArray = CONFIG.HARDWARE_WALLETS.LEDGER_NANO.MIN_ADA_APP_VERSION.split(
     '.',
   )
@@ -421,6 +424,7 @@ export const getHWDeviceInfo = async (
 export const verifyAddress = async (
   walletImplementationId: WalletImplementationId,
   networkId: NetworkId,
+  byronNetworkMagic: number,
   address: string,
   addressing: $PropertyType<Addressing, 'addressing'>,
   hwDeviceInfo: HWDeviceInfo,
@@ -430,6 +434,7 @@ export const verifyAddress = async (
     Logger.debug('ledgerUtils::verifyAddress called')
     Logger.debug('hwDeviceInfo', hwDeviceInfo)
     Logger.debug('path', addressing.path)
+    Logger.debug('useUSB', useUSB)
 
     if (hwDeviceInfo == null) {
       throw new Error('ledgerUtils::verifyAddress: hwDeviceInfo is null')
@@ -485,14 +490,13 @@ export const verifyAddress = async (
 
     const appAda = new AppAda(transport)
 
-    await appAda.showAddress(
-      addressParams.addressTypeNibble,
-      addressParams.networkIdOrProtocolMagic,
-      addressParams.spendingPath,
-      addressParams.stakingPath,
-      addressParams.stakingKeyHashHex,
-      addressParams.stakingBlockchainPointer,
-    )
+    await appAda.showAddress({
+      network: {
+        protocolMagic: byronNetworkMagic,
+        networkId: Number.parseInt(chainNetworkId, 10),
+      },
+      address: addressParams,
+    })
     await transport.close()
   } catch (e) {
     throw mapLedgerError(e)
@@ -512,12 +516,24 @@ export const createLedgerSignTxPayload = async (request: {|
 |}): Promise<SignTransactionRequest> => {
   Logger.debug('ledgerUtils::createLedgerSignTxPayload called')
   Logger.debug('signRequest', JSON.stringify(request.signRequest))
+
+  const networkConfig = getNetworkConfigById(request.networkId)
+  if (networkConfig.CHAIN_NETWORK_ID == null) {
+    throw new Error('Could not retrieve chain network ID')
+  }
+  const chainNetworkId = networkConfig.CHAIN_NETWORK_ID
+
+  const network = {
+    protocolMagic: request.byronNetworkMagic,
+    networkId: Number.parseInt(chainNetworkId, 10),
+  }
+
   const txBody = await request.signRequest.self().build()
 
   // Inputs
   const ledgerInputs = _transformToLedgerInputs(request.signRequest.senderUtxos)
 
-  // Output
+  // Outputs
   const ledgerOutputs = await _transformToLedgerOutputs({
     networkId: request.networkId,
     txOutputs: await txBody.outputs(),
@@ -551,22 +567,24 @@ export const createLedgerSignTxPayload = async (request: {|
   const ttl = await txBody.ttl()
 
   return {
-    inputs: ledgerInputs,
-    outputs: ledgerOutputs,
-    feeStr: await (await txBody.fee()).to_str(),
-    ttlStr: ttl === undefined ? ttl : ttl.toString(),
-    protocolMagic: request.byronNetworkMagic,
-    withdrawals: ledgerWithdrawal,
-    certificates: ledgerCertificates,
-    metadataHashHex: undefined,
-    networkId: request.networkId,
-    validityIntervalStartStr: undefined,
+    signingMode: TransactionSigningMode.ORDINARY_TRANSACTION,
+    tx: {
+      network,
+      inputs: ledgerInputs,
+      outputs: ledgerOutputs,
+      fee: await (await txBody.fee()).to_str(),
+      ttl: ttl === undefined ? ttl : ttl.toString(),
+      certificates: ledgerCertificates,
+      withdrawals: ledgerWithdrawal,
+      auxiliaryData: undefined, // TODO
+      validityIntervalStart: undefined,
+    },
   }
 }
 
 function _transformToLedgerInputs(
   inputs: Array<AddressedUtxo>,
-): Array<InputTypeUTxO> {
+): Array<TxInput> {
   for (const input of inputs) {
     verifyFromBip44Root(input.addressing)
   }
@@ -597,7 +615,7 @@ async function toLedgerTokenBundle(
       if (amount == null) continue
 
       tokens.push({
-        amountStr: await amount.to_str(),
+        amount: await amount.to_str(),
         assetNameHex: Buffer.from(await assetName.name()).toString('hex'),
       })
     }
@@ -614,7 +632,7 @@ async function _transformToLedgerOutputs(request: {|
   txOutputs: TransactionOutputs,
   changeAddrs: Array<{|...JsAddress, ...Value, ...Addressing|}>,
   addressingMap: (string) => void | $PropertyType<Addressing, 'addressing'>,
-|}): Promise<Array<TxOutputTypeAddress | TxOutputTypeAddressParams>> {
+|}): Promise<Array<TxOutput>> {
   const result = []
   for (let i = 0; i < (await request.txOutputs.len()); i++) {
     const output = await request.txOutputs.get(i)
@@ -625,6 +643,7 @@ async function _transformToLedgerOutputs(request: {|
       (change) => jsAddr === change.address,
     )
     if (changeAddr != null) {
+      // in this case the address belongs to us
       verifyFromBip44Root(changeAddr.addressing)
       const addressParams = await toLedgerAddressParameters({
         networkId: request.networkId,
@@ -633,23 +652,27 @@ async function _transformToLedgerOutputs(request: {|
         addressingMap: request.addressingMap,
       })
       result.push({
-        addressTypeNibble: addressParams.addressTypeNibble,
-        spendingPath: addressParams.spendingPath,
-        stakingBlockchainPointer: addressParams.stakingBlockchainPointer,
-        stakingKeyHashHex: addressParams.stakingKeyHashHex,
-        stakingPath: addressParams.stakingPath,
-        amountStr: await (await (await output.amount()).coin()).to_str(),
+        amount: await (await (await output.amount()).coin()).to_str(),
         tokenBundle: await toLedgerTokenBundle(
           await (await output.amount()).multiasset(),
         ),
+        destination: {
+          type: TxOutputDestinationType.DEVICE_OWNED,
+          params: addressParams,
+        },
       })
     } else {
       result.push({
-        addressHex: Buffer.from(await address.to_bytes()).toString('hex'),
-        amountStr: await (await (await output.amount()).coin()).to_str(),
+        amount: await (await (await output.amount()).coin()).to_str(),
         tokenBundle: await toLedgerTokenBundle(
           await (await output.amount()).multiasset(),
         ),
+        destination: {
+          type: TxOutputDestinationType.THIRD_PARTY,
+          params: {
+            addressHex: Buffer.from(await address.to_bytes()).toString('hex'),
+          },
+        },
       })
     }
   }
@@ -682,12 +705,13 @@ async function formatLedgerWithdrawals(
       )
     }
     result.push({
-      amountStr: await withdrawalAmount.to_str(),
+      amount: await withdrawalAmount.to_str(),
       path: addressing.path,
     })
   }
   return result
 }
+
 async function formatLedgerCertificates(
   networkId: number,
   certificates: Certificates,
@@ -695,7 +719,7 @@ async function formatLedgerCertificates(
 ): Promise<Array<Certificate>> {
   const getPath = async (
     stakeCredential: StakeCredential,
-  ): Promise<Array<number>> => {
+  ): Promise<BIP32Path> => {
     const rewardAddr = await RewardAddress.new(networkId, stakeCredential)
     const addressPayload = Buffer.from(
       await (await rewardAddr.to_address()).to_bytes(),
@@ -716,32 +740,33 @@ async function formatLedgerCertificates(
     const registrationCert = await cert.as_stake_registration()
     if (registrationCert != null) {
       result.push({
-        type: CertificateTypes.STAKE_REGISTRATION,
-        path: await getPath(await registrationCert.stake_credential()),
-        poolKeyHashHex: undefined,
-        poolRegistrationParams: undefined,
+        type: CertificateType.STAKE_REGISTRATION,
+        params: {
+          path: await getPath(await registrationCert.stake_credential()),
+        },
       })
       continue
     }
     const deregistrationCert = await cert.as_stake_deregistration()
     if (deregistrationCert != null) {
       result.push({
-        type: CertificateTypes.STAKE_DEREGISTRATION,
-        path: await getPath(await deregistrationCert.stake_credential()),
-        poolKeyHashHex: undefined,
-        poolRegistrationParams: undefined,
+        type: CertificateType.STAKE_DEREGISTRATION,
+        params: {
+          path: await getPath(await registrationCert.stake_credential()),
+        },
       })
       continue
     }
     const delegationCert = await cert.as_stake_delegation()
     if (delegationCert != null) {
       result.push({
-        type: CertificateTypes.STAKE_DELEGATION,
-        path: await getPath(await delegationCert.stake_credential()),
-        poolKeyHashHex: Buffer.from(
-          await (await delegationCert.pool_keyhash()).to_bytes(),
-        ).toString('hex'),
-        poolRegistrationParams: undefined,
+        type: CertificateType.STAKE_DELEGATION,
+        params: {
+          path: await getPath(await registrationCert.stake_credential()),
+          poolKeyHashHex: Buffer.from(
+            await (await delegationCert.pool_keyhash()).to_bytes(),
+          ).toString('hex'),
+        },
       })
       continue
     }
@@ -757,24 +782,15 @@ export async function toLedgerAddressParameters(request: {|
   address: Address,
   path: Array<number>,
   addressingMap: (string) => void | $PropertyType<Addressing, 'addressing'>,
-|}): Promise<{|
-  addressTypeNibble: $Values<typeof AddressTypeNibbles>,
-  networkIdOrProtocolMagic: number,
-  spendingPath: BIP32Path,
-  stakingPath: ?BIP32Path,
-  stakingKeyHashHex: ?string,
-  stakingBlockchainPointer: ?StakingBlockchainPointer,
-|}> {
+|}): Promise<DeviceOwnedAddress> {
   {
     const byronAddr = await ByronAddress.from_address(request.address)
     if (byronAddr) {
       return {
-        addressTypeNibble: AddressTypeNibbles.BYRON,
-        networkIdOrProtocolMagic: await byronAddr.byron_protocol_magic(),
-        spendingPath: request.path,
-        stakingPath: undefined,
-        stakingKeyHashHex: undefined,
-        stakingBlockchainPointer: undefined,
+        type: AddressType.BYRON,
+        params: {
+          spendingPath: request.path,
+        },
       }
     }
   }
@@ -790,7 +806,6 @@ export async function toLedgerAddressParameters(request: {|
       ).toString('hex')
       const addressing = request.addressingMap(addressPayload)
 
-      let stakingKeyInfo
       if (addressing == null) {
         const stakeCred = await baseAddr.stake_cred()
         const wasmHash =
@@ -801,72 +816,40 @@ export async function toLedgerAddressParameters(request: {|
         const hashInAddress = Buffer.from(await wasmHash.to_bytes()).toString(
           'hex',
         )
-
-        stakingKeyInfo = {
-          stakingPath: undefined,
-          // can't always know staking key path since address may not belong to the wallet
-          // (mangled address)
-          stakingKeyHashHex: hashInAddress,
+        return {
+          type: AddressType.BASE,
+          params: {
+            spendingPath: request.path,
+            // can't always know staking key path since address may not belong to the wallet
+            // (mangled address)
+            stakingKeyHashHex: hashInAddress,
+          },
         }
       } else {
-        stakingKeyInfo = {
-          stakingPath: addressing.path,
-          stakingKeyHashHex: undefined,
+        return {
+          type: AddressType.BASE,
+          params: {
+            spendingPath: request.path,
+            // can't always know staking key path since address may not belong to the wallet
+            // (mangled address)
+            stakingPath: addressing.path,
+          },
         }
-      }
-      return {
-        addressTypeNibble: AddressTypeNibbles.BASE,
-        networkIdOrProtocolMagic: await (await baseAddr.to_address()).network_id(),
-        spendingPath: request.path,
-        ...stakingKeyInfo,
-        stakingBlockchainPointer: undefined,
       }
     }
   }
-  // TODO(v-almonacid): PointerAddress not yet implemented
-  // {
-  //   const ptrAddr = await PointerAddress.from_address(request.address)
-  //   if (ptrAddr) {
-  //     const pointer = await ptrAddr.stake_pointer()
-  //     return {
-  //       addressTypeNibble: AddressTypeNibbles.POINTER,
-  //       networkIdOrProtocolMagic: await (await ptrAddr.to_address()).network_id(),
-  //       spendingPath: request.path,
-  //       stakingPath: undefined,
-  //       stakingKeyHashHex: undefined,
-  //       stakingBlockchainPointer: {
-  //         blockIndex: await pointer.slot(),
-  //         txIndex: await pointer.tx_index(),
-  //         certificateIndex: await pointer.cert_index(),
-  //       },
-  //     }
-  //   }
-  // }
+  // TODO(v-almonacid): PointerAddress not yet implemented (bindings missing)
 
-  // TODO(v-almonacid): EnterpriseAddress not yet implemented
-  // {
-  //   const enterpriseAddr = await EnterpriseAddress.from_address(request.address)
-  //   if (enterpriseAddr) {
-  //     return {
-  //       addressTypeNibble: AddressTypeNibbles.ENTERPRISE,
-  //       networkIdOrProtocolMagic: await (await enterpriseAddr.to_address()).network_id(),
-  //       spendingPath: request.path,
-  //       stakingPath: undefined,
-  //       stakingKeyHashHex: undefined,
-  //       stakingBlockchainPointer: undefined,
-  //     }
-  //   }
-  // }
+  // TODO(v-almonacid): EnterpriseAddress not yet implemented (bindings missing)
+
   {
     const rewardAddr = await RewardAddress.from_address(request.address)
     if (rewardAddr) {
       return {
-        addressTypeNibble: AddressTypeNibbles.REWARD,
-        networkIdOrProtocolMagic: await (await rewardAddr.to_address()).network_id(),
-        spendingPath: request.path, // reward addresses use spending path
-        stakingPath: undefined,
-        stakingKeyHashHex: undefined,
-        stakingBlockchainPointer: undefined,
+        type: AddressType.REWARD,
+        params: {
+          stakingPath: request.path,
+        },
       }
     }
   }
@@ -874,7 +857,7 @@ export async function toLedgerAddressParameters(request: {|
 }
 
 export const signTxWithLedger = async (
-  payload: SignTransactionRequest,
+  signRequest: SignTransactionRequest,
   hwDeviceInfo: HWDeviceInfo,
   useUSB: boolean,
 ): Promise<SignTransactionResponse> => {
@@ -897,15 +880,7 @@ export const signTxWithLedger = async (
     Logger.debug('ledgerUtils::signTxWithLedger outputs', payload.outputs)
 
     const ledgerSignature: SignTransactionResponse = await appAda.signTransaction(
-      payload.networkId,
-      payload.protocolMagic,
-      payload.inputs,
-      payload.outputs,
-      payload.feeStr,
-      payload.ttlStr,
-      payload.certificates,
-      payload.withdrawals,
-      payload.metadataHashHex,
+      signRequest,
     )
 
     await transport.close()
