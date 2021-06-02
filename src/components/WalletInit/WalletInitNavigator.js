@@ -32,20 +32,16 @@ const WalletInitNavigator = () => (
     screenOptions={({route}) => {
       // note: jormun is currently not supported. If you want to add this
       // jormun style, make sure to pass the networkId as a route param
-      if (typeof route.params?.networkId !== 'number') {
-        throw new Error('Invalid networkId')
-      }
-      const extraOptions = isJormungandr(route.params.networkId)
+
+      // $FlowFixMe mixed is incompatible with number
+      const extraOptions = isJormungandr(route.params?.networkId)
         ? jormunNavigationOptions
         : {}
       return {
         cardStyle: {
           backgroundColor: 'transparent',
         },
-        title:
-          typeof route.params?.title === 'string'
-            ? route.params.title
-            : undefined,
+        title: route.params?.title ?? undefined,
         ...defaultNavigationOptions,
         ...defaultStackNavigatorOptions,
         ...extraOptions,

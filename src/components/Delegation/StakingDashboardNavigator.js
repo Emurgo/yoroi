@@ -26,20 +26,15 @@ const Stack = createStackNavigator()
 const DelegationNavigatorSummary = () => (
   <Stack.Navigator
     screenOptions={({route}) => {
-      if (typeof route.params?.networkId !== 'number') {
-        throw new Error('Invalid networkId')
-      }
-      const extraOptions = isJormungandr(route.params.networkId)
+      // $FlowFixMe mixed is incompatible with number
+      const extraOptions = isJormungandr(route.params?.networkId)
         ? jormunNavigationOptions
         : {}
       return {
         cardStyle: {
           backgroundColor: 'transparent',
         },
-        title:
-          typeof route.params?.title === 'string'
-            ? route.params.title
-            : undefined,
+        title: route.params?.title ?? undefined,
         ...defaultNavigationOptions,
         ...defaultStackNavigatorOptions,
         ...extraOptions,

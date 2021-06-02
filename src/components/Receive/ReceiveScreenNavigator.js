@@ -14,10 +14,8 @@ const Stack = createStackNavigator()
 const ReceiveScreenNavigator = () => (
   <Stack.Navigator
     screenOptions={({route}) => ({
-      title:
-        typeof route.params?.title === 'string'
-          ? typeof route.params.title
-          : undefined,
+      // $FlowFixMe mixed is incompatible with string
+      title: route.params?.title ?? undefined,
       ...defaultNavigationOptions,
       ...defaultStackNavigatorOptions,
     })}

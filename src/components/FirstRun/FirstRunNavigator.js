@@ -18,10 +18,8 @@ const FirstRunNavigator = () => (
     initialRouteName={FIRST_RUN_ROUTES.LANGUAGE}
     screenOptions={({route}) => {
       return {
-        title:
-          typeof route.params?.title === 'string'
-            ? route.params.title
-            : undefined,
+        // $FlowFixMe mixed is incompatible with string
+        title: route.params?.title ?? undefined,
         cardStyle: {
           backgroundColor: 'transparent',
         },
