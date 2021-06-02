@@ -3146,14 +3146,6 @@
     query-string "^6.13.6"
     react-is "^16.13.0"
 
-"@react-navigation/drawer@5.12.5":
-  version "5.12.5"
-  resolved "https://registry.yarnpkg.com/@react-navigation/drawer/-/drawer-5.12.5.tgz#463bd33b29bfcefaa474207b50c2bd3bac6dae79"
-  integrity sha512-WMfz/tKg/K7QBb5rhjXW/pho4zXh3OoHXnHETk5SuVzHlDPM7r84uvAeC5l+ySp5jmipLrJn3zL+kfv9+KKHZQ==
-  dependencies:
-    color "^3.1.3"
-    react-native-iphone-x-helper "^1.3.0"
-
 "@react-navigation/material-top-tabs@5.3.10":
   version "5.3.10"
   resolved "https://registry.yarnpkg.com/@react-navigation/material-top-tabs/-/material-top-tabs-5.3.10.tgz#158b694e87bff2eb9577e8142415de8ac3547412"

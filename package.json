@@ -40,7 +40,6 @@
     "@react-native-community/masked-view": "0.1.10",
     "@react-native-community/netinfo": "5.9.9",
     "@react-navigation/bottom-tabs": "5.11.8",
-    "@react-navigation/drawer": "5.12.5",
     "@react-navigation/material-top-tabs": "5.3.10",
     "@react-navigation/native": "5.9.3",
     "@react-navigation/stack": "5.14.5",
