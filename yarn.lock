@@ -6078,17 +6078,18 @@ caseless@^0.12.0, caseless@~0.12.0:
   integrity sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
 
 chacha-native@^2.0.0:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/chacha-native/-/chacha-native-2.0.2.tgz#fa0aebccecb04c49673d2a73d059462067f5bee4"
-  integrity sha1-+grrzOywTElnPSpz0FlGIGf1vuQ=
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/chacha-native/-/chacha-native-2.0.3.tgz#435259a015a46816d1bc11376bd4c09e35c4bf5f"
+  integrity sha512-93h+osfjhR2sMHAaapTLlL/COoBPEZ6upicPBQ4GfUyadoMb8t9/M0PKK8kC+F+DEA/Oy3Kg9w3HzY3J1foP3g==
   dependencies:
     bindings "^1.2.1"
     inherits "^2.0.1"
     nan "^2.4.0"
 
-"chacha@git+https://github.com/calvinmetcalf/chacha20poly1305.git":
+chacha@2.1.0:
   version "2.1.0"
-  resolved "git+https://github.com/calvinmetcalf/chacha20poly1305.git#f0bc660854f1cf6d32f336729e6fadb7423a4657"
+  resolved "https://registry.yarnpkg.com/chacha/-/chacha-2.1.0.tgz#f4d57c8768a1b4206e9967f858b48da7dd28eaa6"
+  integrity sha1-9NV8h2ihtCBumWf4WLSNp90o6qY=
   dependencies:
     inherits "^2.0.1"
     readable-stream "^1.0.33"
@@ -7535,13 +7536,6 @@ elliptic@^6.0.0, elliptic@^6.5.2:
     inherits "^2.0.4"
     minimalistic-assert "^1.0.1"
     minimalistic-crypto-utils "^1.0.1"
-
-emip3js@Emurgo/emip3js:
-  version "0.0.1"
-  resolved "https://codeload.github.com/Emurgo/emip3js/tar.gz/a31b1aca3a9bead84c7084690cae15c126759512"
-  dependencies:
-    chacha "git+https://github.com/calvinmetcalf/chacha20poly1305.git"
-    pbkdf2 "3.1.1"
 
 emoji-regex@^7.0.1:
   version "7.0.3"
@@ -12288,10 +12282,15 @@ nan@^2.12.1:
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.1.tgz#d7be34dfa3105b91494c3147089315eff8874b01"
   integrity sha512-isWHgVjnFjh2x2yuJ/tj3JbwoHu3UC2dX5G/88Cm24yB6YopVgxvBObDY7n5xW6ExmFhJpSEQqFPvq9zaXc8Jw==
 
-nan@^2.14.0, nan@^2.4.0:
+nan@^2.14.0:
   version "2.14.0"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.0.tgz#7818f722027b2459a86f0295d434d1fc2336c52c"
   integrity sha512-INOFj37C7k3AfaNTtX8RhsTw7qRy7eLET14cROi9+5HAVbbHuIWUHEauBv5qT4Av2tWasiTY1Jw6puUNqRJXQg==
+
+nan@^2.4.0:
+  version "2.14.2"
+  resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.2.tgz#f5376400695168f4cc694ac9393d0c9585eeea19"
+  integrity sha512-M2ufzIiINKCuDfBSAUr1vWQ+vuVcA9kqx8JJUsbQi6yf1uGRyb7HfpdfUr5qLXf3B/t8dPvcjhKMmlfnP47EzQ==
 
 nanoassert@^1.0.0:
   version "1.1.0"
@@ -13260,7 +13259,7 @@ pbkdf2@3.0.8:
   dependencies:
     create-hmac "^1.1.2"
 
-pbkdf2@3.1.1, pbkdf2@^3.0.3, pbkdf2@^3.0.9:
+pbkdf2@^3.0.3, pbkdf2@^3.0.9:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/pbkdf2/-/pbkdf2-3.1.1.tgz#cb8724b0fada984596856d1a6ebafd3584654b94"
   integrity sha512-4Ejy1OPxi9f2tt1rRV7Go7zmfDQ+ZectEQz3VGUQhgq62HtIRPDyG/JtnwIxs6x3uNMwo2V7q1fMvKjb+Tnpqg==
