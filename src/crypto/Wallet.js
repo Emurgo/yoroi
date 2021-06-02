@@ -240,6 +240,7 @@ export default class Wallet {
       let keepGoing = true
       while (keepGoing) {
         keepGoing = await this.transactionCache.doSyncStep(
+          // $FlowFixMe undefined or null is incompatible with string
           addresses,
           this.networkId,
         )

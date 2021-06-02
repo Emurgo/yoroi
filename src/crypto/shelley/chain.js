@@ -351,6 +351,7 @@ export class AddressChain {
   }
 
   getBlocks() {
+    // $FlowFixMe missing type annotation
     return _.chunk(this.addresses, this._blockSize)
   }
 

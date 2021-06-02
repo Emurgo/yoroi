@@ -46,7 +46,9 @@ export const formatMultiLangSeparator = (number: string) =>
   number.replace(/,/g, '.')
 
 export const pastedFormatter = compose(
+  // $FlowFixMe function is not compatible with array
   formatSeparatorWithoutDigits,
+  // $FlowFixMe function is not compatible with array
   stripExcessiveDecimals,
   stripAllButLastDecimalSeparators,
   stripCommas,
@@ -54,7 +56,9 @@ export const pastedFormatter = compose(
 )
 
 export const editedFormatter = compose(
+  // $FlowFixMe function is not compatible with array
   formatSeparatorWithoutDigits,
+  // $FlowFixMe function is not compatible with array
   stripExcessiveDecimals,
   stripAllButFirstDecimalSeparator,
   formatMultiLangSeparator,

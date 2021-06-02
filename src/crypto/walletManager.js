@@ -161,6 +161,7 @@ class WalletManager {
         'invalid walletImplementationId',
       )
     })
+    // $FlowFixMe missing type annotation
     this._wallets = _.fromPairs(wallets.map((w) => [w.id, w]))
     Logger.debug('WalletManager::initialize::wallets()', this._wallets)
   }
