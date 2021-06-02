@@ -252,6 +252,7 @@ export const getDelegationStatus = (
   )
   Logger.debug('txCertificatesForKey', sortedCerts)
 
+  // $FlowFixMe array is incompatible with object
   for (const certData of ObjectValues(sortedCerts)) {
     const certificates = certData.certificates
     for (const cert of certificates) {

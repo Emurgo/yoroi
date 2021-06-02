@@ -148,7 +148,7 @@ const confirmationCountsSelector = (state: TransactionCacheState) => {
         : 0
 
     const bestBlockNum = max([
-      state.bestBlockNum,
+      state.bestBlockNum || 0,
       ...tx.inputs.map(getBlockNum),
       ...tx.outputs.map(getBlockNum),
     ])
@@ -298,6 +298,7 @@ export class TransactionCache {
       transactions,
     )
     const updated = transactions.map((tx) => this._isUpdatedTransaction(tx))
+    // $FlowFixMe sum expects only 1 argument
     return sum(updated, (x) => (x ? 1 : 0))
   }
 
