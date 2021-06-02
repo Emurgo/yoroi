@@ -106,28 +106,18 @@ const WalletTabNavigator = injectIntl(
     }) => (
       <Tab.Navigator
         initialRouteName={WALLET_ROUTES.TX_HISTORY}
-        screenOptions={({navigation, route}) => {
+        screenOptions={({route}) => {
           const attributes = routeTabAttributes[route.name]
           if (attributes == null) throw new Error('unknown wallet route')
+
           return {
-            tabBarIcon: ({focused, _color, _size}) => {
+            tabBarIcon: ({focused}) => {
               const icon = focused
                 ? attributes.activeIcon
                 : attributes.normalIcon
               return <Image source={icon} />
             },
             tabBarLabel: intl.formatMessage(attributes.label),
-            title: route.params?.title ?? undefined,
-            headerRight: () => (
-              <Button
-                style={styles.settingsButton}
-                onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)}
-                iconImage={iconGear}
-                title=""
-                withoutBackground
-              />
-            ),
-            ...defaultNavigationOptions,
           }
         }}
         tabBarOptions={{
@@ -139,7 +129,6 @@ const WalletTabNavigator = injectIntl(
         <Tab.Screen
           name={WALLET_ROUTES.TX_HISTORY}
           component={TxHistoryNavigator}
-          options={{headerShown: false}}
         />
         {!isReadOnly && (
           <Tab.Screen
