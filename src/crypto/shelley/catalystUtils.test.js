@@ -12,7 +12,11 @@ import {
 } from '@emurgo/react-native-haskell-shelley'
 
 import jestSetup from '../../jestSetup'
-import {CatalystLabels, generateRegistration} from './catalystUtils'
+import {
+  CatalystLabels,
+  generateRegistration,
+  isRegistrationOpen,
+} from './catalystUtils'
 
 jestSetup.setup()
 
@@ -85,4 +89,16 @@ test('Generate Catalyst registration tx', async () => {
     [CatalystLabels.DATA]: JSON.parse(dataJson),
     [CatalystLabels.SIG]: JSON.parse(sigJson),
   }).toEqual(expectedResult)
+})
+
+test('Check if catalyst registration is open', () => {
+  const now = Date.now()
+  const yesterday = now - 24 * 60 * 60 * 1000
+  const yesterdayPlusAWeek = yesterday + 7 * 24 * 60 * 60 * 1000
+
+  const fundInfo = {
+    registrationStart: new Date(yesterday).toISOString(),
+    registrationEnd: new Date(yesterdayPlusAWeek).toISOString(),
+  }
+  expect(isRegistrationOpen(fundInfo)).toBe(true)
 })
