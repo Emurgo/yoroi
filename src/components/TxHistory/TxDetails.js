@@ -440,5 +440,5 @@ export default injectIntl(
         setAddressDetail(null)
       },
     }),
-  )(TxDetails): ComponentType<{|navigation: Navigation, intl: IntlShape|}>),
+  )(TxDetails): ComponentType<{navigation: Navigation, intl: IntlShape}>),
 )

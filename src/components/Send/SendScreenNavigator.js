@@ -43,7 +43,10 @@ const SendScreenNavigator = () => (
   <Stack.Navigator
     initialRouteName={SEND_ROUTES.MAIN}
     screenOptions={({route}) => ({
-      title: route.params?.title ?? undefined,
+      title:
+        typeof route.params?.title === 'string'
+          ? route.params.title
+          : undefined,
       ...defaultNavigationOptions,
       ...defaultStackNavigatorOptions,
     })}
@@ -52,7 +55,10 @@ const SendScreenNavigator = () => (
       name={SEND_ROUTES.MAIN}
       component={SendScreen}
       options={({navigation, route}) => ({
-        title: route.params?.title ?? undefined,
+        title:
+          typeof route.params?.title === 'string'
+            ? route.params.title
+            : undefined,
         headerRight: () => (
           <Button
             style={styles.qrButton}

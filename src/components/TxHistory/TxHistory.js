@@ -311,9 +311,9 @@ const TxHistory = ({
   )
 }
 
-type ExternalProps = {|
+type ExternalProps = {
   navigation: Navigation,
-|}
+}
 
 export default injectIntl(
   (compose(

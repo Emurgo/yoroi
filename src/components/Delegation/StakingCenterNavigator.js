@@ -25,7 +25,10 @@ const Stack = createStackNavigator()
 const StakingCenterNavigator = () => (
   <Stack.Navigator
     screenOptions={({route}) => ({
-      title: route.params?.title ?? undefined,
+      title:
+        typeof route.params?.title === 'string'
+          ? route.params.title
+          : undefined,
       ...defaultNavigationOptions,
       ...defaultStackNavigatorOptions,
     })}

@@ -14,7 +14,10 @@ const Stack = createStackNavigator()
 const ReceiveScreenNavigator = () => (
   <Stack.Navigator
     screenOptions={({route}) => ({
-      title: route.params?.title ?? undefined,
+      title:
+        typeof route.params?.title === 'string'
+          ? typeof route.params.title
+          : undefined,
       ...defaultNavigationOptions,
       ...defaultStackNavigatorOptions,
     })}

@@ -28,7 +28,10 @@ const CatalystNavigator = () => (
       name={CATALYST_ROUTES.STEP1}
       component={CatalystStep1}
       options={({route}) => ({
-        title: route.params?.title ?? undefined,
+        title:
+          typeof route.params?.title === 'string'
+            ? route.params.title
+            : undefined,
         ...defaultNavigationOptions,
       })}
     />
@@ -36,7 +39,10 @@ const CatalystNavigator = () => (
       name={CATALYST_ROUTES.STEP2}
       component={CatalystStep2}
       options={({route}) => ({
-        title: route.params?.title ?? undefined,
+        title:
+          typeof route.params?.title === 'string'
+            ? route.params.title
+            : undefined,
         ...defaultNavigationOptions,
       })}
     />
@@ -44,7 +50,10 @@ const CatalystNavigator = () => (
       name={CATALYST_ROUTES.STEP3}
       component={CatalystStep3}
       options={({route}) => ({
-        title: route.params?.title ?? undefined,
+        title:
+          typeof route.params?.title === 'string'
+            ? route.params.title
+            : undefined,
         ...defaultNavigationOptions,
       })}
     />
@@ -52,7 +61,10 @@ const CatalystNavigator = () => (
       name={CATALYST_ROUTES.STEP4}
       component={CatalystStep4}
       options={({route}) => ({
-        title: route.params?.title ?? undefined,
+        title:
+          typeof route.params?.title === 'string'
+            ? route.params.title
+            : undefined,
         ...defaultNavigationOptions,
       })}
     />
@@ -60,7 +72,10 @@ const CatalystNavigator = () => (
       name={CATALYST_ROUTES.STEP5}
       component={CatalystStep5}
       options={({route}) => ({
-        title: route.params?.title ?? undefined,
+        title:
+          typeof route.params?.title === 'string'
+            ? route.params.title
+            : undefined,
         ...defaultNavigationOptions,
       })}
     />
@@ -68,7 +83,10 @@ const CatalystNavigator = () => (
       name={CATALYST_ROUTES.STEP6}
       component={CatalystStep6}
       options={({route}) => ({
-        title: route.params?.title ?? undefined,
+        title:
+          typeof route.params?.title === 'string'
+            ? route.params.title
+            : undefined,
         ...defaultNavigationOptions,
       })}
     />

@@ -123,7 +123,7 @@ export default injectIntl(
         initApp,
       },
     ),
-  )(MaintenanceScreen): ComponentType<{|
+  )(MaintenanceScreen): ComponentType<{
     intl: IntlShape,
-  |}>),
+  }>),
 )

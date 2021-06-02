@@ -146,8 +146,8 @@ export default injectIntl(
       handleVerifyPin,
       handleNewPinEnter,
     }),
-  )(ChangeCustomPinScreen): ComponentType<{|
+  )(ChangeCustomPinScreen): ComponentType<{
     navigation: Navigation,
     intl: IntlShape,
-  |}>),
+  }>),
 )

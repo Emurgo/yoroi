@@ -177,10 +177,6 @@ const WalletNavigator = () => (
     <Stack.Screen
       name={WALLET_ROOT_ROUTES.SETTINGS}
       component={SettingsScreenNavigator}
-      screenOptions={{
-        headerShown: false,
-        ...defaultNavigationOptions,
-      }}
     />
     <Stack.Screen
       name={CATALYST_ROUTES.ROOT}

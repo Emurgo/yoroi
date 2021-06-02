@@ -113,12 +113,12 @@ const ConnectNanoXScreen = ({
   )
 }
 
-type ExternalProps = {|
+type ExternalProps = {
   intl: IntlShape,
   defaultDevices: ?Array<Device>,
   navigation: Navigation,
   route: Object, // TODO(navigation): type
-|}
+}
 
 export default injectIntl(
   (compose(

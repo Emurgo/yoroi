@@ -18,7 +18,10 @@ const FirstRunNavigator = () => (
     initialRouteName={FIRST_RUN_ROUTES.LANGUAGE}
     screenOptions={({route}) => {
       return {
-        title: route.params?.title ?? undefined,
+        title:
+          typeof route.params?.title === 'string'
+            ? route.params.title
+            : undefined,
         cardStyle: {
           backgroundColor: 'transparent',
         },

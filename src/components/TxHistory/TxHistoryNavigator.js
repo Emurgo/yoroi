@@ -26,7 +26,10 @@ const TxHistoryNavigator = () => (
       name={TX_HISTORY_ROUTES.MAIN}
       component={TxHistory}
       options={({navigation, route}) => ({
-        title: route.params?.title ?? undefined,
+        title:
+          typeof route.params?.title === 'string'
+            ? route.params.title
+            : undefined,
         headerRight: () => (
           <Button
             style={styles.settingsButton}
@@ -43,7 +46,10 @@ const TxHistoryNavigator = () => (
       name={TX_HISTORY_ROUTES.TX_DETAIL}
       component={TxDetails}
       options={({route}) => ({
-        title: route.params?.title ?? undefined,
+        title:
+          typeof route.params?.title === 'string'
+            ? route.params.title
+            : undefined,
         ...defaultNavigationOptions,
       })}
     />

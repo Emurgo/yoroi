@@ -32,14 +32,20 @@ const WalletInitNavigator = () => (
     screenOptions={({route}) => {
       // note: jormun is currently not supported. If you want to add this
       // jormun style, make sure to pass the networkId as a route param
-      const extraOptions = isJormungandr(route.params?.networkId)
+      if (typeof route.params?.networkId !== 'number') {
+        throw new Error('Invalid networkId')
+      }
+      const extraOptions = isJormungandr(route.params.networkId)
         ? jormunNavigationOptions
         : {}
       return {
         cardStyle: {
           backgroundColor: 'transparent',
         },
-        title: route.params?.title ?? undefined,
+        title:
+          typeof route.params?.title === 'string'
+            ? route.params.title
+            : undefined,
         ...defaultNavigationOptions,
         ...defaultStackNavigatorOptions,
         ...extraOptions,
@@ -75,10 +81,9 @@ const WalletInitNavigator = () => (
       name={WALLET_INIT_ROUTES.CHECK_NANO_X}
       component={CheckNanoXScreen}
     />
-    <Stack.Screen
-      name={WALLET_INIT_ROUTES.CONNECT_NANO_X}
-      component={ConnectNanoXScreen}
-    />
+    <Stack.Screen name={WALLET_INIT_ROUTES.CONNECT_NANO_X}>
+      {(props) => <ConnectNanoXScreen {...props} defaultDevices={null} />}
+    </Stack.Screen>
     <Stack.Screen
       name={WALLET_INIT_ROUTES.SAVE_NANO_X}
       component={SaveNanoXScreen}

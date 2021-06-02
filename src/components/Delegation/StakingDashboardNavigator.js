@@ -26,14 +26,20 @@ const Stack = createStackNavigator()
 const DelegationNavigatorSummary = () => (
   <Stack.Navigator
     screenOptions={({route}) => {
-      const extraOptions = isJormungandr(route.params?.networkId)
+      if (typeof route.params?.networkId !== 'number') {
+        throw new Error('Invalid networkId')
+      }
+      const extraOptions = isJormungandr(route.params.networkId)
         ? jormunNavigationOptions
         : {}
       return {
         cardStyle: {
           backgroundColor: 'transparent',
         },
-        title: route.params?.title ?? undefined,
+        title:
+          typeof route.params?.title === 'string'
+            ? route.params.title
+            : undefined,
         ...defaultNavigationOptions,
         ...defaultStackNavigatorOptions,
         ...extraOptions,

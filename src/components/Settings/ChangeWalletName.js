@@ -130,8 +130,8 @@ export default injectIntl(
         navigation.goBack()
       },
     }),
-  )(ChangeWalletName): ComponentType<{|
+  )(ChangeWalletName): ComponentType<{
     navigation: Navigation,
     intl: IntlShape,
-  |}>),
+  }>),
 )

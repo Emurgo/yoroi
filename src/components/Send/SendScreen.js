@@ -937,10 +937,10 @@ class SendScreen extends Component<Props, State> {
   }
 }
 
-type ExternalProps = {|
+type ExternalProps = {
   navigation: Navigation,
   intl: IntlShape,
-|}
+}
 
 export default injectIntl(
   (compose(

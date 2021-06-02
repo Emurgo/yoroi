@@ -74,7 +74,6 @@ const messages = defineMessages({
 type Props = {|
   navigation: Navigation,
   route: Object, // TODO(navigation): type
-  unSignedTx: ?ISignRequest<any>,
 |}
 
 type HOCProps = {
@@ -82,6 +81,7 @@ type HOCProps = {
   isEasyConfirmationEnabled: boolean,
   submitTransaction: (ISignRequest<any>, string) => void,
   defaultAsset: DefaultAsset,
+  unSignedTx?: ISignRequest<any>,
 }
 
 const Step5 = ({
