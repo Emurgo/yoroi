@@ -164,7 +164,14 @@ const WalletTabNavigator = injectIntl(
   ),
 )
 
-const Stack = createStackNavigator()
+type WalletStackRoute = {
+  'wallet-selection': any,
+  'main-wallet-routes': any,
+  settings: any,
+  'catalyst-router': any,
+}
+
+const Stack = createStackNavigator<any, WalletStackRoute, any>()
 const WalletNavigator = () => (
   <Stack.Navigator
     initialRouteName={WALLET_ROOT_ROUTES.WALLET_SELECTION}
