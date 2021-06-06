@@ -17,9 +17,10 @@ import type {ComponentType} from 'react'
 
 import styles from './styles/LanguagePickerScreen.style'
 
-type ExternalProps = {
+type ExternalProps = {|
   navigation: Navigation,
-}
+  route: any,
+|}
 
 const LanguagePickerScreen = ({
   navigation,
