@@ -37,7 +37,14 @@ const setAmount = (amount, route) => {
   handlerAmount && handlerAmount(pastedFormatter(amount))
 }
 
-const Stack = createStackNavigator()
+type SendScreenNavigatorRoutes = {
+  'send-ada': any,
+  'address-reader-qr': any,
+  'send-ada-confirm': any,
+  'biometrics-signing': any,
+}
+
+const Stack = createStackNavigator<any, SendScreenNavigatorRoutes, any>()
 
 const SendScreenNavigator = () => (
   <Stack.Navigator
