@@ -84,7 +84,15 @@ const routeTabAttributes = {
   },
 }
 
-const Tab = createBottomTabNavigator()
+type WalletTabRoutes = {
+  history: any,
+  'send-ada': any,
+  'receive-ada': any,
+  'staking-dashboard': any,
+  'staking-center': any,
+}
+
+const Tab = createBottomTabNavigator<any, WalletTabRoutes, any>()
 const WalletTabNavigator = injectIntl(
   compose(
     connect((state) => ({
