@@ -9,7 +9,11 @@ import {
   defaultStackNavigatorOptions,
 } from '../../navigationOptions'
 
-const Stack = createStackNavigator()
+type ReceiveScreenNavigatorRoute = {
+  'receive-ada': {title: string},
+}
+
+const Stack = createStackNavigator<any, ReceiveScreenNavigatorRoute, any>()
 
 const ReceiveScreenNavigator = () => (
   <Stack.Navigator
