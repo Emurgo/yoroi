@@ -123,7 +123,9 @@ export default injectIntl(
         initApp,
       },
     ),
-  )(MaintenanceScreen): ComponentType<{
+  )(MaintenanceScreen): ComponentType<{|
     intl: IntlShape,
-  }>),
+    navigation: any,
+    route: any,
+  |}>),
 )
