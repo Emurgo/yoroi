@@ -21,7 +21,13 @@ import {
 
 import styles from '../TxHistory/styles/SettingsButton.style'
 
-const Stack = createStackNavigator()
+type DelegationNavigatorRoutes = {
+  'staking-dashboard': any,
+  'staking-center': any,
+  'biometrics-signing': any,
+}
+
+const Stack = createStackNavigator<any, DelegationNavigatorRoutes, any>()
 
 const DelegationNavigatorSummary = () => (
   <Stack.Navigator
