@@ -39,6 +39,7 @@ const poolInfo = {
 
 storiesOf('StakingDashboard', module)
   .add('Default', ({navigation, route}) => (
+    // $FlowFixMe accountBalance is missing in ExternalProps
     <StakingDashboard
       navigation={navigation}
       route={route}
@@ -54,6 +55,7 @@ storiesOf('StakingDashboard', module)
     />
   ))
   .add('Loading', ({navigation, route}) => (
+    // $FlowFixMe accountBalance is missing in ExternalProps
     <StakingDashboard
       navigation={navigation}
       route={route}
@@ -72,6 +74,7 @@ storiesOf('StakingDashboard', module)
     />
   ))
   .add('Loaded', ({navigation, route}) => (
+    // $FlowFixMe accountBalance is missing in ExternalProps
     <StakingDashboard
       navigation={navigation}
       route={route}
