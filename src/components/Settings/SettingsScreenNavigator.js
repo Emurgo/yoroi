@@ -37,7 +37,12 @@ const messages = defineMessages({
   },
 })
 
-const Tab = createMaterialTopTabNavigator()
+type SettingsTabRoutes = {
+  'wallet-settings': any,
+  'app-settings': any,
+}
+
+const Tab = createMaterialTopTabNavigator<any, SettingsTabRoutes, any>()
 const SettingsTabNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
   <Tab.Navigator
     screenOptions={({route}) => ({
@@ -76,7 +81,22 @@ const SettingsTabNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
   </Tab.Navigator>
 ))
 
-const Stack = createStackNavigator()
+type SettingsStackNavigatorRoutes = {
+  settings: any,
+  'change-wallet-name': any,
+  'terms-of-use': any,
+  support: any,
+  'fingerprint-link': any,
+  'remove-wallet': any,
+  'change-language': any,
+  'easy-confirmation': any,
+  'change-password': any,
+  'change-custom-pin': any,
+  'bio-authenticate': any,
+  'setup-custom-pin': any,
+}
+
+const Stack = createStackNavigator<any, SettingsStackNavigatorRoutes, any>()
 const SettingsScreenNavigator = () => (
   <Stack.Navigator
     screenOptions={{
