@@ -10,7 +10,7 @@ import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
 
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
-import {fetchUTXOs} from '../../actions/utxo'
+import {fetchAccountState} from '../../actions/account'
 import VotingBanner from '../Catalyst/VotingBanner'
 import {Text, Banner, OfflineBanner, StatusBar, WarningBanner} from '../UiKit'
 import infoIcon from '../../assets/img/icon/info-light-green.png'
@@ -24,6 +24,7 @@ import {
   walletMetaSelector,
   languageSelector,
   isFlawedWalletSelector,
+  isFetchingAccountStateSelector,
 } from '../../selectors'
 import TxHistoryList from './TxHistoryList'
 import walletManager from '../../crypto/walletManager'
@@ -121,6 +122,8 @@ type Props = {|
   navigation: Navigation,
   isSyncing: boolean,
   isOnline: boolean,
+  fetchAccountState: () => Promise<void>,
+  isFetchingAccountState: boolean,
   updateHistory: () => Promise<void>,
   lastSyncError: any,
   tokenBalance: MultiToken,
@@ -134,6 +137,8 @@ const TxHistory = ({
   navigation,
   isSyncing,
   isOnline,
+  fetchAccountState,
+  isFetchingAccountState,
   updateHistory,
   lastSyncError,
   tokenBalance,
@@ -153,6 +158,12 @@ const TxHistory = ({
   const [showInsufficientFundsModal, setShowInsufficientFundsModal] = useState<
     boolean,
   >(false)
+
+  // fetch account state
+
+  useEffect(() => {
+    fetchAccountState()
+  }, [])
 
   // Catalyst voting registration banner
 
@@ -226,6 +237,7 @@ const TxHistory = ({
               }
               navigation.navigate(CATALYST_ROUTES.ROOT)
             }}
+            disabled={isFetchingAccountState}
           />
         )}
         {isFlawedWallet === true && (
@@ -329,11 +341,12 @@ export default injectIntl(
         key: languageSelector(state),
         isFlawedWallet: isFlawedWalletSelector(state),
         walletMeta: walletMetaSelector(state),
+        isFetchingAccountState: isFetchingAccountStateSelector(state),
       }),
       {
         updateHistory,
         checkForFlawedWallets,
-        fetchUTXOs,
+        fetchAccountState,
       },
     ),
     onDidMount(({updateHistory, checkForFlawedWallets}) => {
