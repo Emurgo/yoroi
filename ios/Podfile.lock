@@ -246,13 +246,13 @@ PODS:
   - react-native-ble-plx (2.0.2):
     - MultiplatformBleAdapter (= 0.1.7)
     - React
-  - react-native-camera (3.42.0):
+  - react-native-camera (3.44.0):
     - React-Core
-    - react-native-camera/RCT (= 3.42.0)
-    - react-native-camera/RN (= 3.42.0)
-  - react-native-camera/RCT (3.42.0):
+    - react-native-camera/RCT (= 3.44.0)
+    - react-native-camera/RN (= 3.44.0)
+  - react-native-camera/RCT (3.44.0):
     - React-Core
-  - react-native-camera/RN (3.42.0):
+  - react-native-camera/RN (3.44.0):
     - React-Core
   - react-native-config (0.12.0):
     - React
@@ -330,7 +330,7 @@ PODS:
     - React-Core
   - RNCardano (0.2.4):
     - React
-  - RNCAsyncStorage (1.13.3):
+  - RNCAsyncStorage (1.15.5):
     - React-Core
   - RNCClipboard (1.5.1):
     - React-Core
@@ -584,7 +584,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 58aef7155bc9a9683f5b60b35eccea8722a4f53a
   react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
   react-native-ble-plx: caac53ee98151ec81198239d591c203809a1ed6e
-  react-native-camera: cf8a153d33138dcc457172fc3c33fdf4e5d288d2
+  react-native-camera: e46c64f0d1212124c915bf83ee9b855ac6d35164
   react-native-config: f2c2ae45625a068c35681a16b9bfb1ca58b0adc7
   react-native-haskell-shelley: f425638227f531a10dc58313d28a9f6b45d3e163
   react-native-netinfo: 0212ce8604e88edf686f1481b925b17a42a52449
@@ -603,7 +603,7 @@ SPEC CHECKSUMS:
   ReactCommon: 73d79c7039f473b76db6ff7c6b159c478acbbb3b
   RNBootSplash: 8ef5ffa03dadd35f66510b42960ce40f397c98bf
   RNCardano: 5a5f3e3bd63207b2c67fad283a528c41da648b32
-  RNCAsyncStorage: da95b83e241a7f5efe3da1a949b3ec3175380be0
+  RNCAsyncStorage: 56a3355a10b5d660c48c6e37325ac85ebfd09885
   RNCClipboard: 41d8d918092ae8e676f18adada19104fa3e68495
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
   RNDeviceInfo: 6dd5c07a482f2a5e4a29fe8a9d99eadd4277175a
