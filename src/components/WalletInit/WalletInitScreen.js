@@ -15,7 +15,7 @@ import ExapandableItem from '../Common/ExpandableItem'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {isJormungandr} from '../../config/networks'
-import {CONFIG, isHaskellShelley} from '../../config/config'
+import {CONFIG, isHaskellShelley, isByron} from '../../config/config'
 import globalMessages from '../../i18n/global-messages'
 
 import styles from './styles/WalletInitScreen.style'
@@ -128,14 +128,16 @@ const WalletInitScreen = ({
           <View style={styles.content}>
             <WalletDescription />
           </View>
-          <Button
-            onPress={(event) =>
-              navigateCreateWallet(event, networkId, implementationId)
-            }
-            title={createWalletLabel}
-            style={styles.createButton}
-            testID="createWalletButton"
-          />
+          {!isByron(implementationId) && (
+            <Button
+              onPress={(event) =>
+                navigateCreateWallet(event, networkId, implementationId)
+              }
+              title={createWalletLabel}
+              style={styles.createButton}
+              testID="createWalletButton"
+            />
+          )}
           <Button
             outline
             onPress={(event) => {
