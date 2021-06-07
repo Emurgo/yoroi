@@ -342,7 +342,7 @@
   "components.walletinit.verifyrestoredwallet.walletAddressLabel": "Pénztárca címek",
   "components.walletinit.verifyrestoredwallet.buttonText": "FOLYTATÁS",
   "components.walletselection.walletselectionscreen.addWalletButton": "Pénztárca hozzáadása",
-  "components.walletselection.walletselectionscreen.addWalletOnShelleyButton": "Pénztárca hozzáadása (Shelly-korszak)",
+  "components.walletselection.walletselectionscreen.addWalletOnShelleyButton": "Pénztárca hozzáadása (Shelley-korszak)",
   "components.walletselection.walletselectionscreen.header": "Pénztárcáim",
   "components.walletselection.walletselectionscreen.stakeDashboardButton": "Stake Irányítópult",
   "components.catalyst.banner.name": "Catalyst Szavazás Regisztráció ",
