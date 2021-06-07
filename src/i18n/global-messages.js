@@ -483,6 +483,10 @@ export default defineMessages({
     defaultMessage: '!!!please wait ...',
     description: 'Common messages for time consuming actions',
   },
+  pleaseConfirm: {
+    id: 'global.pleaseConfirm',
+    defaultMessage: '!!!Please confirm',
+  },
   tos: {
     id: 'global.termsOfUse',
     defaultMessage: '!!!Terms of use',

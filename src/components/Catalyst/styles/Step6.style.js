@@ -1,5 +1,7 @@
 // @flow
 import {StyleSheet} from 'react-native'
+
+import {theme} from '../../../styles/config'
 import common from './common.style'
 
 export default StyleSheet.create({
@@ -30,5 +32,10 @@ export default StyleSheet.create({
   },
   key: {
     flex: 1,
+  },
+  alertBlock: {
+    padding: 16,
+    backgroundColor: theme.COLORS.backgroundAlert,
+    borderRadius: 8,
   },
 })

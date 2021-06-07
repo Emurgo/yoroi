@@ -16,15 +16,16 @@ import {
   Platform,
 } from 'react-native'
 import Clipboard from '@react-native-community/clipboard'
+import QRCode from 'react-native-qrcode-svg'
 import {injectIntl, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
 import {useFocusEffect} from '@react-navigation/native'
 
+import CatalystBackupCheckModal from './CatalystBackupCheckModal'
 import {Text, Button, ProgressStep} from '../UiKit'
 import {withTitle} from '../../utils/renderUtils'
 import {WALLET_ROOT_ROUTES} from '../../RoutesList'
 import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
-import QRCode from 'react-native-qrcode-svg'
 import copyImage from '../../assets/img/copyd.png'
 
 import styles from './styles/Step6.style'
@@ -41,9 +42,19 @@ const messages = defineMessages({
   },
   description: {
     id: 'components.catalyst.step6.description',
+    defaultMessage: '!!!Please take a screenshot of this QR code.',
+  },
+  description2: {
+    id: 'components.catalyst.step6.description2',
     defaultMessage:
-      '!!!Backup this QR code or catalyst secret code. This will be required ' +
-      'to use the catalyst App.',
+      '!!!We strongly recommend you to save your Catalyst secret code in ' +
+      'plain text too, so that you can re-create your QR code if necessary.',
+  },
+  description3: {
+    id: 'components.catalyst.step6.description3',
+    defaultMessage:
+      '!!!Then, send the QR code to an external device, as you will need to' +
+      'scan it with your phone using the Catalyst mobile app.',
   },
   note: {
     id: 'components.catalyst.step6.note',
@@ -70,13 +81,17 @@ type HOCProps = {
 }
 
 const Step6 = ({intl, navigation, encryptedKey}: HOCProps & Props) => {
-  const [countDown, setCountDown] = useState(5)
+  const [countDown, setCountDown] = useState<number>(5)
 
   useEffect(
     () => {
       countDown > 0 && setTimeout(() => setCountDown(countDown - 1), 1000)
     },
     [countDown],
+  )
+
+  const [showBackupWarningModal, setShowBackupWarningModal] = useState<boolean>(
+    false,
   )
 
   if (Platform.OS === 'android') {
@@ -107,8 +122,16 @@ const Step6 = ({intl, navigation, encryptedKey}: HOCProps & Props) => {
           <Text style={styles.subTitle}>
             {intl.formatMessage(messages.subTitle)}
           </Text>
-          <Text style={[styles.description, styles.mb40]}>
-            {intl.formatMessage(messages.description)}
+          <View style={[styles.alertBlock, styles.mb16]}>
+            <Text style={styles.description}>
+              {intl.formatMessage(messages.description)}
+            </Text>
+          </View>
+          <Text style={[styles.description, styles.mb16]}>
+            {intl.formatMessage(messages.description2)}
+          </Text>
+          <Text style={[styles.description, styles.mb16]}>
+            {intl.formatMessage(messages.description3)}
           </Text>
           <Text style={[styles.note, styles.mb40]}>
             {intl.formatMessage(messages.note)}
@@ -142,9 +165,7 @@ const Step6 = ({intl, navigation, encryptedKey}: HOCProps & Props) => {
           </View>
         </ScrollView>
         <Button
-          onPress={() =>
-            navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)
-          }
+          onPress={() => setShowBackupWarningModal(true)}
           title={
             // prettier-ignore
             countDown !== 0
@@ -154,6 +175,13 @@ const Step6 = ({intl, navigation, encryptedKey}: HOCProps & Props) => {
               )
           }
           disabled={countDown !== 0}
+        />
+        <CatalystBackupCheckModal
+          visible={showBackupWarningModal}
+          onRequestClose={() => setShowBackupWarningModal(false)}
+          onConfirm={() =>
+            navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)
+          }
         />
       </View>
     </SafeAreaView>
