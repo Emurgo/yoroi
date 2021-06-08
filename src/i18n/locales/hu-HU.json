@@ -142,7 +142,7 @@
   "components.settings.applicationsettingsscreen.commit": "Végrehajtás",
   "components.settings.applicationsettingsscreen.crashReporting": "Programhiba bejelentése",
   "components.settings.applicationsettingsscreen.crashReportingText": "Programhiba jelentése az EMURGO-nak. A beállítás  az alkalmazás újraindítását követően lép életbe.",
-  "components.settings.applicationsettingsscreen.currentLanguage": "Magyar",
+  "components.settings.applicationsettingsscreen.currentLanguage": "English",
   "components.settings.applicationsettingsscreen.language": "Nyelv",
   "components.settings.applicationsettingsscreen.network": "Hálózat:",
   "components.settings.applicationsettingsscreen.security": "Biztonság",
