@@ -28,7 +28,7 @@
   "components.delegation.withdrawaldialog.explanation3": "A **stake kucs megszüntetése** esetén a korábbi letét visszafizetésre kerül, és a stake kulcs pool-ba való delegálása megszűnik.",
   "components.delegation.withdrawaldialog.keepButton": "Delegálás megtartása",
   "components.delegation.withdrawaldialog.warning1": "Nincs szükség a stake kulcs megszüntetésére, ha másik pool-ba szeretnél delegálni. A delegálást bármikor módosíthatod.",
-  "components.delegation.withdrawaldialog.warning2": "Ne töröld a delegációt, ha az a stake pool jutalomszámlája delegácja, mivel akkor az összes pool üzemeltetői jutalom visszakerül a közösbe. ",
+  "components.delegation.withdrawaldialog.warning2": "Ne töröld a delegációt, ha a stake kulcs a stake pool jutalomtárcához tartozik, mert akkor az összes pool üzemeltetői jutalom visszakerül a közösbe. ",
   "components.delegation.withdrawaldialog.warning3": "Delegáció törlése, azt jelenti, hogy kilépsz a poolból és több jutalmat nem kapsz onnan, amíg nem delegálsz újra.",
   "components.delegation.withdrawaldialog.warningModalTitle": "A stake kulcsot is megszünteted?",
   "components.delegationsummary.delegatedStakepoolInfo.copied": "Másolva!",
