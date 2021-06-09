@@ -11,13 +11,20 @@ import {FIRST_RUN_ROUTES} from '../../RoutesList'
 import AcceptTermsOfServiceScreen from './AcceptTermsOfServiceScreen'
 import CustomPinScreen from './CustomPinScreen'
 
-const Stack = createStackNavigator()
+type FirstRunRoute = {
+  'language-pick': any,
+  'accept-terms-of-service': any,
+  'custom-pin': any,
+}
+
+const Stack = createStackNavigator<any, FirstRunRoute, any>()
 
 const FirstRunNavigator = () => (
   <Stack.Navigator
     initialRouteName={FIRST_RUN_ROUTES.LANGUAGE}
     screenOptions={({route}) => {
       return {
+        // $FlowFixMe mixed is incompatible with string
         title: route.params?.title ?? undefined,
         cardStyle: {
           backgroundColor: 'transparent',

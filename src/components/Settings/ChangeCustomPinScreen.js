@@ -148,6 +148,7 @@ export default injectIntl(
     }),
   )(ChangeCustomPinScreen): ComponentType<{|
     navigation: Navigation,
+    route: any,
     intl: IntlShape,
   |}>),
 )

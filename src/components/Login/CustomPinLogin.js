@@ -52,8 +52,7 @@ const CustomPinLogin = injectIntl(({intl, onPinEnter}: Props) => (
 
 type ExternalProps = {|
   navigation: Navigation,
-  customPinHash: ?string,
-  intl: IntlShape,
+  route: any,
 |}
 
 export default injectIntl(

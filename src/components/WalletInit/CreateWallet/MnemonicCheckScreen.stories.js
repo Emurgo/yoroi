@@ -14,7 +14,6 @@ storiesOf('MnemonicCheckScreen', module).add(
       password: CONFIG.DEBUG.PASSWORD,
       networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
     }
-    // $FlowFixMe
     return <MnemonicCheckScreen route={route} navigation={navigation} />
   },
 )

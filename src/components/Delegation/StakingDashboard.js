@@ -719,6 +719,7 @@ class StakingDashboard extends React.Component<Props, State> {
 
 type ExternalProps = {|
   navigation: Navigation,
+  route: any,
   intl: IntlShape,
 |}
 

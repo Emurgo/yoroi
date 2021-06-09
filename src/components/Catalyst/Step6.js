@@ -72,7 +72,6 @@ const {FlagSecure} = NativeModules
 type Props = {|
   navigation: Navigation,
   route: Object, // TODO(navigation): type
-  encryptedKey?: string,
 |}
 
 type HOCProps = {

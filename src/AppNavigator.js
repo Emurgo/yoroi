@@ -51,7 +51,18 @@ type NavigatorSwitchProps = {|
   isAppSetupComplete: boolean,
   signin: () => void,
 |}
-const Stack = createStackNavigator()
+
+type AppNavigatorRoutes = {
+  maintenance: any,
+  'screens-index': any,
+  storybook: any,
+  'new-wallet': any,
+  'app-root': any,
+  'custom-pin-auth': any,
+  'bio-auth': any,
+}
+
+const Stack = createStackNavigator<any, AppNavigatorRoutes, any>()
 
 const NavigatorSwitch = compose(
   connect(
@@ -115,6 +126,7 @@ const NavigatorSwitch = compose(
       return (
         <Stack.Navigator
           screenOptions={({route}) => ({
+            // $FlowFixMe mixed is incompatible with string
             title: route.params?.title ?? undefined,
             ...defaultNavigationOptions,
             ...defaultStackNavigatorOptions,

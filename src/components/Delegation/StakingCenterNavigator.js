@@ -20,11 +20,18 @@ import {
 
 import styles from '../TxHistory/styles/SettingsButton.style'
 
-const Stack = createStackNavigator()
+type StakingCenterRoutes = {
+  'staking-center': any,
+  'delegation-confirmation': any,
+  'biometrics-signing': any,
+}
+
+const Stack = createStackNavigator<any, StakingCenterRoutes, any>()
 
 const StakingCenterNavigator = () => (
   <Stack.Navigator
     screenOptions={({route}) => ({
+      // $FlowFixMe mixed is not compatible with string
       title: route.params?.title ?? undefined,
       ...defaultNavigationOptions,
       ...defaultStackNavigatorOptions,

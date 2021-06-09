@@ -260,6 +260,7 @@ export default injectIntl(
     }),
   )(WalletSettingsScreen): ComponentType<{|
     navigation: Navigation,
+    route: any,
     intl: IntlShape,
   |}>),
 )

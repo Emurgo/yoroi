@@ -125,5 +125,7 @@ export default injectIntl(
     ),
   )(MaintenanceScreen): ComponentType<{|
     intl: IntlShape,
+    navigation: any,
+    route: any,
   |}>),
 )

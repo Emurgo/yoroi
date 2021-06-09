@@ -15,7 +15,12 @@ import {
 
 import styles from './styles/SettingsButton.style'
 
-const Stack = createStackNavigator()
+type TxHistoryRoutes = {
+  'tx-history-list': any,
+  'tx-details': any,
+}
+
+const Stack = createStackNavigator<any, TxHistoryRoutes, any>()
 
 const TxHistoryNavigator = () => (
   <Stack.Navigator
