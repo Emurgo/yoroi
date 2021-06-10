@@ -12,7 +12,7 @@ import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 // so that we can keep minSdkVersion = 21
 // import TransportHID from '@ledgerhq/react-native-hid'
 import TransportHID from '@v-almonacid/react-native-hid'
-import Transport, {TransportStatusError} from '@ledgerhq/hw-transport'
+import {TransportStatusError} from '@ledgerhq/hw-transport'
 import {BleError} from 'react-native-ble-plx'
 import {Platform, PermissionsAndroid} from 'react-native'
 import {
@@ -75,8 +75,6 @@ import type {
   TxInput,
   TxOutput,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
-import type BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble'
-import type HIDTransport from '@v-almonacid/react-native-hid'
 import type {WalletImplementationId, NetworkId} from '../../config/types'
 import type {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
 
@@ -871,7 +869,10 @@ export const signTxWithLedger = async (
     const appAda = new AppAda(transport)
 
     Logger.debug('ledgerUtils::signTxWithLedger inputs', signRequest.tx.inputs)
-    Logger.debug('ledgerUtils::signTxWithLedger outputs', signRequest.tx.outputs)
+    Logger.debug(
+      'ledgerUtils::signTxWithLedger outputs',
+      signRequest.tx.outputs,
+    )
 
     const ledgerSignature: SignTransactionResponse = await appAda.signTransaction(
       signRequest,
