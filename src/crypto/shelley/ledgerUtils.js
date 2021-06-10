@@ -12,7 +12,7 @@ import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 // so that we can keep minSdkVersion = 21
 // import TransportHID from '@ledgerhq/react-native-hid'
 import TransportHID from '@v-almonacid/react-native-hid'
-import {TransportStatusError} from '@ledgerhq/hw-transport'
+import Transport, {TransportStatusError} from '@ledgerhq/hw-transport'
 import {BleError} from 'react-native-ble-plx'
 import {Platform, PermissionsAndroid} from 'react-native'
 import {
@@ -348,33 +348,31 @@ const connectionHandler = async (
   deviceId: ?DeviceId,
   deviceObj: ?DeviceObj,
   useUSB?: boolean = false,
-): Promise<BluetoothTransport | HIDTransport> => {
-  let descriptor
+): Promise<AppAda> => {
   let transport
   if (useUSB) {
-    descriptor = deviceObj
-    if (descriptor == null) {
+    if (deviceObj == null) {
       throw new Error('ledgerUtils::connectionHandler deviceObj is null')
     }
-    transport = await TransportHID.open(descriptor)
+    // $FlowFixMe not sure why flow fails to get the return type
+    transport = await TransportHID.open(deviceObj)
   } else {
+    if (deviceId == null) {
+      throw new Error('ledgerUtils::connectionHandler deviceId is null')
+    }
     // check for permissions just in case
     if (Platform.OS === 'android') {
       await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       )
     }
-    descriptor = deviceId
-    if (descriptor == null) {
-      throw new Error('ledgerUtils::connectionHandler deviceId is null')
-    }
-    transport = await TransportBLE.open(descriptor)
+    transport = await TransportBLE.open(deviceId)
   }
   const appAda = new AppAda(transport)
   const versionResp: GetVersionResponse = await appAda.getVersion()
   Logger.debug('ledgerUtils::connectionHandler: AppAda version', versionResp)
   checkDeviceVersion(versionResp)
-  return transport
+  return appAda
 }
 
 export const getHWDeviceInfo = async (
@@ -386,8 +384,7 @@ export const getHWDeviceInfo = async (
   try {
     Logger.debug('ledgerUtils::getHWDeviceInfo called')
 
-    const transport = await connectionHandler(deviceId, deviceObj, useUSB)
-    const appAda = new AppAda(transport)
+    const appAda = await connectionHandler(deviceId, deviceObj, useUSB)
 
     // assume single account in Yoroi
     const accountPath = makeCardanoAccountBIP44Path(
@@ -402,7 +399,6 @@ export const getHWDeviceInfo = async (
       accountPath,
     )
     Logger.debug('extended public key', extendedPublicKeyResp)
-    Logger.debug('transport.id', transport.id)
 
     const serial: GetSerialResponse = await appAda.getSerial()
 
@@ -414,7 +410,7 @@ export const getHWDeviceInfo = async (
     })
     Logger.info('ledgerUtils::getHWDeviceInfo: Ledger device OK')
     Logger.info('hwDeviceInfo', hwDeviceInfo)
-    await transport.close()
+    await appAda.transport.close()
     return hwDeviceInfo
   } catch (e) {
     throw mapLedgerError(e)
@@ -481,14 +477,11 @@ export const verifyAddress = async (
       addressingMap,
     })
 
-    const transport = await connectionHandler(
+    const appAda = await connectionHandler(
       hwDeviceInfo.hwFeatures.deviceId,
       hwDeviceInfo.hwFeatures.deviceObj,
       useUSB,
     )
-    Logger.debug('transport.id', transport.id)
-
-    const appAda = new AppAda(transport)
 
     await appAda.showAddress({
       network: {
@@ -497,7 +490,7 @@ export const verifyAddress = async (
       },
       address: addressParams,
     })
-    await transport.close()
+    await appAda.transport.close()
   } catch (e) {
     throw mapLedgerError(e)
   }
@@ -868,6 +861,7 @@ export const signTxWithLedger = async (
       throw new Error('ledgerUtils::signTxWithLedger: hwDeviceInfo is null')
     }
 
+    // $FlowFixMe
     const transport = await connectionHandler(
       hwDeviceInfo.hwFeatures.deviceId,
       hwDeviceInfo.hwFeatures.deviceObj,
@@ -876,8 +870,8 @@ export const signTxWithLedger = async (
     Logger.debug('transport.id', transport.id)
     const appAda = new AppAda(transport)
 
-    Logger.debug('ledgerUtils::signTxWithLedger inputs', payload.inputs)
-    Logger.debug('ledgerUtils::signTxWithLedger outputs', payload.outputs)
+    Logger.debug('ledgerUtils::signTxWithLedger inputs', signRequest.tx.inputs)
+    Logger.debug('ledgerUtils::signTxWithLedger outputs', signRequest.tx.outputs)
 
     const ledgerSignature: SignTransactionResponse = await appAda.signTransaction(
       signRequest,

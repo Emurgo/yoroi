@@ -22,8 +22,8 @@ node_modules/warning/.*
 .*/node_modules/@react-native-community/cli/.*/.*
 
 ; Ignore @ledgerhq/react-native-hw-transport-ble
-.*/node_modules/@ledgerhq/react-native-hw-transport-ble/src/BleTransport.js
-.*/node_modules/@ledgerhq/react-native-hw-transport-ble/lib/BleTransport.js.flow
+;.*/node_modules/@ledgerhq/react-native-hw-transport-ble/src/BleTransport.js
+;.*/node_modules/@ledgerhq/react-native-hw-transport-ble/lib/BleTransport.js.flow
 
 ; Ignore @emurgo/cardano-serialization-lib-nodejs
 .*/node_modules/@emurgo/cardano-serialization-lib-nodejs/cardano_serialization_lib.js.flow
