@@ -1,6 +1,6 @@
 {
   "components.common.errormodal.hideError": "Skryť chybovú hlášku",
-  "components.common.errormodal.showError": "Show error message",
+  "components.common.errormodal.showError": "Zobraziť chybovú hlášku",
   "components.common.fingerprintscreenbase.welcomeMessage": "Welcome Back",
   "components.common.languagepicker.brazilian": "Português brasileiro",
   "components.common.languagepicker.chinese": "简体中文",
