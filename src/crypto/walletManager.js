@@ -31,6 +31,8 @@ import type {
   PoolInfoResponse,
   FundInfoResponse,
   AccountStateResponse,
+  TokenInfoRequest,
+  TokenInfoResponse,
 } from '../api/types'
 import type {EncryptionMethod, SendTokenList} from './types'
 import type {DefaultAsset} from '../types/HistoryTransaction'
@@ -50,6 +52,7 @@ class WalletManager {
   _subscribers: Array<() => any> = []
   _syncErrorSubscribers: Array<(err: any) => any> = []
   _serverSyncSubscribers: Array<(status: ServerStatusCache) => any> = []
+  _onOpenSubscribers: Array<() => any> = []
   _onCloseSubscribers: Array<() => any> = []
   _closePromise: ?Promise<any> = null
   _closeReject: ?(Error) => void = null
@@ -196,6 +199,10 @@ class WalletManager {
     )
   }
 
+  _notifyOnOpen = () => {
+    this._onOpenSubscribers.forEach((handler) => handler())
+  }
+
   _notifyOnClose = () => {
     this._onCloseSubscribers.forEach((handler) => handler())
   }
@@ -210,6 +217,10 @@ class WalletManager {
 
   subscribeServerSync(handler: (status: ServerStatusCache) => any) {
     this._serverSyncSubscribers.push(handler)
+  }
+
+  subscribeOnOpen(handler: () => any) {
+    this._onOpenSubscribers.push(handler)
   }
 
   subscribeOnClose(handler: () => any) {
@@ -536,6 +547,8 @@ class WalletManager {
     })
     this._notify() // update redux store
 
+    this._notifyOnOpen()
+
     if (wallet.isEasyConfirmationEnabled) {
       await this.ensureKeysValidity()
     }
@@ -822,6 +835,11 @@ class WalletManager {
   async fetchPoolInfo(request: PoolInfoRequest): Promise<PoolInfoResponse> {
     if (this._wallet == null) throw new WalletClosed()
     return await this._wallet.fetchPoolInfo(request)
+  }
+
+  async fetchTokenInfo(request: TokenInfoRequest): Promise<TokenInfoResponse> {
+    if (this._wallet == null) throw new WalletClosed()
+    return await this._wallet.fetchTokenInfo(request)
   }
 
   async fetchFundInfo(): Promise<FundInfoResponse> {

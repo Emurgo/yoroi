@@ -19,6 +19,8 @@ import type {
   ServerStatusResponse,
   PoolInfoRequest,
   PoolInfoResponse,
+  TokenInfoRequest,
+  TokenInfoResponse,
   FundInfoResponse,
   AccountStateResponse,
 } from '../api/types'
@@ -229,6 +231,8 @@ export interface WalletInterface {
   fetchAccountState(): Promise<AccountStateResponse>;
 
   fetchPoolInfo(request: PoolInfoRequest): Promise<PoolInfoResponse>;
+
+  fetchTokenInfo(request: TokenInfoRequest): Promise<TokenInfoResponse>;
 
   fetchFundInfo(): Promise<FundInfoResponse>;
 }

@@ -2,7 +2,7 @@
 import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
 
-import checkedFetch from '../fetch'
+import fetchDefault, {checkedFetch} from '../fetch'
 import assert from '../../utils/assert'
 import {checkAndFacadeTransactionAsync} from './facade'
 
@@ -20,6 +20,8 @@ import type {
   AccountStateResponse,
   PoolInfoRequest,
   PoolInfoResponse,
+  TokenInfoRequest,
+  TokenInfoResponse,
   FundInfoResponse,
 } from '../types'
 
@@ -27,12 +29,12 @@ type Addresses = Array<string>
 
 export const checkServerStatus = (
   config: BackendConfig,
-): Promise<ServerStatusResponse> => checkedFetch('status', null, config, 'GET')
+): Promise<ServerStatusResponse> => fetchDefault('status', null, config, 'GET')
 
 export const getBestBlock = (
   config: BackendConfig,
 ): Promise<BestblockResponse> =>
-  checkedFetch('v2/bestblock', null, config, 'GET')
+  fetchDefault('v2/bestblock', null, config, 'GET')
 
 export const fetchNewTxHistory = async (
   request: TxHistoryRequest,
@@ -42,7 +44,7 @@ export const fetchNewTxHistory = async (
     request.addresses.length <= config.TX_HISTORY_MAX_ADDRESSES,
     'fetchNewTxHistory: too many addresses',
   )
-  const response = await checkedFetch('v2/txs/history', request, config)
+  const response = await fetchDefault('v2/txs/history', request, config)
   const transactions = await Promise.all(
     response.map(checkAndFacadeTransactionAsync),
   )
@@ -62,7 +64,7 @@ export const filterUsedAddresses = async (
   )
   // Take a copy in case underlying data mutates during await
   const copy = [...addresses]
-  const used = await checkedFetch(
+  const used = await fetchDefault(
     'v2/addresses/filterUsed',
     {addresses: copy},
     config,
@@ -79,7 +81,7 @@ export const fetchUTXOsForAddresses = (
     addresses.length <= config.FETCH_UTXOS_MAX_ADDRESSES,
     'fetchUTXOsForAddresses: too many addresses',
   )
-  return checkedFetch('txs/utxoForAddresses', {addresses}, config)
+  return fetchDefault('txs/utxoForAddresses', {addresses}, config)
 }
 
 export const bulkFetchUTXOsForAddresses = async (
@@ -95,7 +97,7 @@ export const bulkFetchUTXOsForAddresses = async (
 }
 
 export const submitTransaction = (signedTx: string, config: BackendConfig) => {
-  return checkedFetch('txs/signed', {signedTx}, config)
+  return fetchDefault('txs/signed', {signedTx}, config)
 }
 
 export const fetchUTXOSumForAddresses = (
@@ -106,7 +108,7 @@ export const fetchUTXOSumForAddresses = (
     addresses.length <= config.FETCH_UTXOS_MAX_ADDRESSES,
     'fetchUTXOSumForAddresses: too many addresses',
   )
-  return checkedFetch('txs/utxoSumForAddresses', {addresses}, config)
+  return fetchDefault('txs/utxoSumForAddresses', {addresses}, config)
 }
 
 export const bulkFetchUTXOSumForAddresses = async (
@@ -141,10 +143,10 @@ export const getTxsBodiesForUTXOs = (
   request: TxBodiesRequest,
   config: BackendConfig,
 ): Promise<TxBodiesResponse> => {
-  return checkedFetch('txs/txBodies', request, config)
+  return fetchDefault('txs/txBodies', request, config)
 }
 
-export const getAccountState = async (
+export const getAccountState = (
   request: AccountStateRequest,
   config: BackendConfig,
 ): Promise<AccountStateResponse> => {
@@ -152,7 +154,7 @@ export const getAccountState = async (
     request.addresses.length <= config.FETCH_UTXOS_MAX_ADDRESSES,
     'getAccountState: too many addresses',
   )
-  return await checkedFetch('getAccountState', request, config)
+  return fetchDefault('getAccountState', request, config)
 }
 
 export const bulkGetAccountState = async (
@@ -167,22 +169,52 @@ export const bulkGetAccountState = async (
   return Object.assign({}, ...responses)
 }
 
-export const getPoolInfo = async (
+export const getPoolInfo = (
   request: PoolInfoRequest,
   config: BackendConfig,
 ): Promise<PoolInfoResponse> => {
-  return await checkedFetch('getPoolInfo', request, config)
+  return fetchDefault('getPoolInfo', request, config)
 }
 
-export const getFundInfo = async (
+export const getTokenInfo = async (
+  request: TokenInfoRequest,
+  config: BackendConfig,
+): Promise<TokenInfoResponse> => {
+  const {tokenIds} = request
+  if (config.TOKEN_INFO_SERVICE == null) {
+    throw new Error('Cardano wallets should have a Token metadata provider')
+  }
+  const endpointRoot = `${config.TOKEN_INFO_SERVICE}/metadata`
+  const responses = await Promise.all(
+    tokenIds.map((tokenId) =>
+      checkedFetch({
+        endpoint: `${endpointRoot}/${tokenId}`,
+        method: 'GET',
+        payload: undefined,
+      }),
+    ),
+  )
+  return responses.reduce((res, resp) => {
+    if (resp && resp.subject) {
+      const v = {}
+      if (resp.name?.value) {
+        v.name = resp.name.value
+      }
+      if (resp.decimals?.value) {
+        v.decimals = resp.decimals.value
+      }
+      if (v.name || v.decimals) {
+        res[resp.subject] = v
+      }
+    }
+    return res
+  }, {})
+}
+
+export const getFundInfo = (
   config: BackendConfig,
   isMainnet: boolean,
 ): Promise<FundInfoResponse> => {
   const prefix = isMainnet ? '' : 'api/'
-  return await checkedFetch(
-    `${prefix}v0/catalyst/fundInfo/`,
-    null,
-    config,
-    'GET',
-  )
+  return fetchDefault(`${prefix}v0/catalyst/fundInfo/`, null, config, 'GET')
 }
