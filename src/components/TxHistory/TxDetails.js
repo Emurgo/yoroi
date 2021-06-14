@@ -20,7 +20,7 @@ import {
   internalAddressIndexSelector,
   externalAddressIndexSelector,
   walletMetaSelector,
-  availableAssetsSelector,
+  tokenInfoSelector,
   defaultNetworkAssetSelector,
 } from '../../selectors'
 import {withNavigationTitle} from '../../utils/renderUtils'
@@ -234,7 +234,7 @@ type Props = {|
   transaction: TransactionInfo,
   internalAddressIndex: Dict<number>,
   externalAddressIndex: Dict<number>,
-  availableAssets: Dict<Token>,
+  tokenMetadata: Dict<Token>,
   defaultNetworkAsset: DefaultAsset,
   openInExplorer: () => void,
   showModalForAddress: (string) => void,
@@ -246,7 +246,7 @@ const TxDetails = ({
   transaction,
   internalAddressIndex,
   externalAddressIndex,
-  availableAssets,
+  tokenMetadata,
   defaultNetworkAsset,
   openInExplorer,
   showModalForAddress,
@@ -269,7 +269,7 @@ const TxDetails = ({
     : null
   const amountAsMT = MultiToken.fromArray(transaction.amount)
   const amount: BigNumber = amountAsMT.getDefault()
-  const amountDefaultAsset: ?Token = availableAssets[amountAsMT.getDefaultId()]
+  const amountDefaultAsset: ?Token = tokenMetadata[amountAsMT.getDefaultId()]
 
   const defaultAsset = amountDefaultAsset || defaultNetworkAsset
 
@@ -329,7 +329,7 @@ const TxDetails = ({
                 <AssetList
                   styles={assetListStyle}
                   assets={item.assets}
-                  assetsMetadata={availableAssets}
+                  assetsMetadata={tokenMetadata}
                 />
               )}
             </>
@@ -367,7 +367,7 @@ const TxDetails = ({
                 <AssetList
                   styles={assetListStyle}
                   assets={item.assets}
-                  assetsMetadata={availableAssets}
+                  assetsMetadata={tokenMetadata}
                 />
               )}
             </>
@@ -410,7 +410,7 @@ export default injectIntl(
         internalAddressIndex: internalAddressIndexSelector(state),
         externalAddressIndex: externalAddressIndexSelector(state),
         walletMeta: walletMetaSelector(state),
-        availableAssets: availableAssetsSelector(state),
+        tokenMetadata: tokenInfoSelector(state),
         defaultNetworkAsset: defaultNetworkAssetSelector(state),
       }
     }),

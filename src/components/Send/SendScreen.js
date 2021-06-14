@@ -35,7 +35,7 @@ import {
   utxosSelector,
   isOnlineSelector,
   hasPendingOutgoingTransactionSelector,
-  availableAssetsSelector,
+  tokenInfoSelector,
   defaultNetworkAssetSelector,
   serverStatusSelector,
 } from '../../selectors'
@@ -450,7 +450,7 @@ type Props = {
   tokenBalance: MultiToken,
   isFetchingBalance: boolean,
   lastFetchingError: any,
-  availableAssets: Dict<Token>,
+  tokenMetadata: Dict<Token>,
   defaultAsset: DefaultAsset,
   utxos: ?Array<RawUtxo>,
   isOnline: boolean,
@@ -527,8 +527,8 @@ class SendScreen extends Component<Props, State> {
       balanceAfter: null,
       recomputing: true,
     })
-    const {defaultAsset, availableAssets, tokenBalance} = this.props
-    if (availableAssets[selectedAsset.identifier] == null) {
+    const {defaultAsset, tokenMetadata, tokenBalance} = this.props
+    if (tokenMetadata[selectedAsset.identifier] == null) {
       throw new Error(
         'revalidate: no asset metadata found for the asset selected',
       )
@@ -539,7 +539,7 @@ class SendScreen extends Component<Props, State> {
       amount,
       sendAll,
       defaultAsset,
-      selectedTokenMeta: availableAssets[selectedAsset.identifier],
+      selectedTokenMeta: tokenMetadata[selectedAsset.identifier],
       tokenBalance,
     })
 
@@ -593,12 +593,12 @@ class SendScreen extends Component<Props, State> {
       utxos,
       tokenBalance,
       defaultAsset,
-      availableAssets,
+      tokenMetadata,
       serverStatus,
     } = this.props
     const {address, amount, sendAll, selectedAsset} = this.state
 
-    const selectedTokenMeta = availableAssets[selectedAsset.identifier]
+    const selectedTokenMeta = tokenMetadata[selectedAsset.identifier]
     if (selectedTokenMeta == null) {
       throw new Error(
         'SendScreen::handleConfirm: no asset metadata found for the asset selected',
@@ -686,8 +686,8 @@ class SendScreen extends Component<Props, State> {
 
   renderBalanceAfterTransaction = () => {
     const {balanceAfter} = this.state
-    const {intl, availableAssets, tokenBalance} = this.props
-    const assetMetaData = availableAssets[tokenBalance.getDefaultId()]
+    const {intl, tokenMetadata, tokenBalance} = this.props
+    const assetMetaData = tokenMetadata[tokenBalance.getDefaultId()]
 
     const value = balanceAfter
       ? formatTokenWithSymbol(balanceAfter, assetMetaData)
@@ -720,8 +720,8 @@ class SendScreen extends Component<Props, State> {
   }
 
   renderAvailableAmountBanner = () => {
-    const {isFetchingBalance, tokenBalance, availableAssets, intl} = this.props
-    const assetMetaData = availableAssets[tokenBalance.getDefaultId()]
+    const {isFetchingBalance, tokenBalance, tokenMetadata, intl} = this.props
+    const assetMetaData = tokenMetadata[tokenBalance.getDefaultId()]
 
     return (
       <Banner
@@ -773,10 +773,10 @@ class SendScreen extends Component<Props, State> {
   }
 
   renderSendAllWarning = () => {
-    const {intl, availableAssets} = this.props
+    const {intl, tokenMetadata} = this.props
     const {showSendAllWarning, selectedAsset} = this.state
 
-    const selectedTokenMeta = availableAssets[selectedAsset.identifier]
+    const selectedTokenMeta = tokenMetadata[selectedAsset.identifier]
     const isDefault = selectedTokenMeta.isDefault
     const assetNameOrId = truncateWithEllipsis(
       getAssetDenominationOrId(selectedTokenMeta, ASSET_DENOMINATION.TICKER),
@@ -833,8 +833,8 @@ class SendScreen extends Component<Props, State> {
       isOnline,
       hasPendingOutgoingTransaction,
       defaultAsset,
-      availableAssets,
       tokenBalance,
+      tokenMetadata,
     } = this.props
 
     const {
@@ -864,7 +864,7 @@ class SendScreen extends Component<Props, State> {
       defaultAsset,
     )
 
-    const selectedAssetMeta = availableAssets[selectedAsset.identifier]
+    const selectedAssetMeta = tokenMetadata[selectedAsset.identifier]
 
     const assetDenomination = truncateWithEllipsis(
       getAssetDenominationOrId(selectedAssetMeta, ASSET_DENOMINATION.TICKER),
@@ -919,7 +919,7 @@ class SendScreen extends Component<Props, State> {
             selectedAsset={selectedAsset}
             label={'Asset'}
             assets={tokenBalance.values}
-            assetsMetadata={availableAssets}
+            assetsMetadata={tokenMetadata}
             unselectEnabled={false}
           />
           {this.state.recomputing && <Indicator />}
@@ -949,7 +949,7 @@ export default injectIntl(
         tokenBalance: tokenBalanceSelector(state),
         isFetchingBalance: isFetchingUtxosSelector(state),
         lastFetchingError: lastUtxosFetchErrorSelector(state),
-        availableAssets: availableAssetsSelector(state),
+        tokenMetadata: tokenInfoSelector(state),
         defaultAsset: defaultNetworkAssetSelector(state),
         utxos: utxosSelector(state),
         hasPendingOutgoingTransaction: hasPendingOutgoingTransactionSelector(

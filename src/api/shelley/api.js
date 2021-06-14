@@ -186,13 +186,17 @@ export const getTokenInfo = async (
   }
   const endpointRoot = `${config.TOKEN_INFO_SERVICE}/metadata`
   const responses = await Promise.all(
-    tokenIds.map((tokenId) =>
-      checkedFetch({
-        endpoint: `${endpointRoot}/${tokenId}`,
-        method: 'GET',
-        payload: undefined,
-      }),
-    ),
+    tokenIds.map(async (tokenId) => {
+      try {
+        return await checkedFetch({
+          endpoint: `${endpointRoot}/${tokenId}`,
+          method: 'GET',
+          payload: undefined,
+        })
+      } catch (_e) {
+        return {}
+      }
+    }),
   )
   return responses.reduce((res, resp) => {
     if (resp && resp.subject) {

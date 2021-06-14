@@ -169,13 +169,17 @@ export const tokenBalanceSelector: (
     const processed = ObjectValues(transactions).filter(
       (tx) => tx.status === TRANSACTION_STATUS.SUCCESSFUL,
     )
-    const result = processed
+    const rawBalance = processed
       .map((tx) => MultiToken.fromArray(tx.delta))
       .reduce(
         (acc, curr) => acc.joinAddMutable(curr),
         new MultiToken([], getDefaultNetworkTokenEntry(walletMeta.networkId)),
       )
-    return result
+    const positiveBalance = rawBalance.asArray().filter((value) => {
+      if (value.isDefault) return true // keep ADA or any other default asset
+      return new BigNumber(value.amount).gt(0)
+    })
+    return MultiToken.fromArray(positiveBalance)
   },
 )
 
@@ -239,6 +243,17 @@ export const lastPoolInfoErrorSelector = (state: State): any =>
 
 export const poolInfoSelector = (state: State) =>
   state.poolInfo.isFetching ? null : state.poolInfo.meta
+
+// TokenInfo
+
+export const isFetchingTokenInfoSelector = (state: State): boolean =>
+  state.tokenInfo.isFetching
+
+export const lastTokenInfoErrorSelector = (state: State): any =>
+  state.tokenInfo.lastFetchingError
+
+export const tokenInfoSelector = (state: State): Dict<Token> =>
+  state.tokenInfo.isFetching ? {} : state.tokenInfo.tokens
 
 export const walletIsInitializedSelector = (state: State): boolean =>
   state.wallet.isInitialized

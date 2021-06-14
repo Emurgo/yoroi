@@ -18,7 +18,7 @@ import {
 import {changeAndSaveLanguage} from './actions/language'
 import {clearUTXOs} from './actions/utxo'
 import {clearAccountState} from './actions/account'
-import {fetchTokenInfo, clearTokenInfo} from './actions/tokenInfo'
+import {fetchTokenInfo} from './actions/tokenInfo'
 import {
   canBiometricEncryptionBeEnabled,
   recreateAppSignInKeys,
@@ -360,7 +360,6 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
 
   walletManager.subscribeOnClose(() => dispatch(clearUTXOs()))
   walletManager.subscribeOnClose(() => dispatch(clearAccountState()))
-  walletManager.subscribeOnClose(() => dispatch(clearTokenInfo()))
 
   Logger.debug('setting up app lock')
   const onTimeoutAction = () => {

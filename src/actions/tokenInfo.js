@@ -70,7 +70,7 @@ export const fetchTokenInfo = () => async (
     const subjectDict = ObjectValues(availableAssets)
       .filter((asset) => {
         const assetValue = assetsBalance.get(asset.identifier)
-        return assetValue && assetValue.gte(0)
+        return assetValue && assetValue.gt(0)
       })
       .reduce((acc, curr: Token): Dict<string> => {
         if (curr.identifier === '') return acc
@@ -100,7 +100,7 @@ export const fetchTokenInfo = () => async (
         },
       }
     }
-    Logger.warn('saving token info in state....', tokens)
+    Logger.info('saving token info in state....', tokens)
     dispatch(_setTokenInfo(tokens))
     dispatch(_setLastError(null))
   } catch (err) {
