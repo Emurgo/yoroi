@@ -6,10 +6,7 @@ import {View, Image, LayoutAnimation, TouchableOpacity} from 'react-native'
 
 import {Text} from '../../UiKit'
 import AssetList from './AssetList'
-import {
-  getAssetDenominationOrId,
-  ASSET_DENOMINATION,
-} from '../../../utils/format'
+import {getAssetDenominationOrId} from '../../../utils/format'
 
 import styles from './styles/AssetSelector.style'
 import assetListStyle from './styles/AssetListSend.style'
@@ -69,7 +66,6 @@ const AssetSelector = ({
             {' '}
             {getAssetDenominationOrId(
               assetsMetadata[selectedAsset.identifier],
-              ASSET_DENOMINATION.TICKER,
             )}{' '}
           </Text>
         )}

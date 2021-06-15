@@ -43,7 +43,7 @@ const _clearPoolInfo = () => ({
 
 const _setLastError = (error) => ({
   type: 'SET_LAST_FETCHING_ERROR',
-  path: ['accountState', 'lastFetchingError'],
+  path: ['poolInfo', 'lastFetchingError'],
   payload: error,
   reducer: (state, error) => error,
 })

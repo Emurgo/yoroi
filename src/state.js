@@ -5,7 +5,7 @@ import {NETWORK_REGISTRY} from './config/types'
 import {CONFIG} from './config/config'
 
 import type {RawUtxo, RemotePoolMetaSuccess} from './api/types'
-import type {Transaction} from './types/HistoryTransaction'
+import type {Transaction, Token} from './types/HistoryTransaction'
 import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
 import {ISignRequest} from './crypto/ISignRequest'
 import type {NetworkId, WalletImplementationId} from './config/types'
@@ -70,6 +70,11 @@ export type State = {
     isFetching: boolean,
     lastFetchingError: any,
     meta: ?RemotePoolMetaSuccess,
+  },
+  tokenInfo: {
+    isFetching: boolean,
+    lastFetchingError: any,
+    tokens: Dict<Token>,
   },
   isOnline: boolean,
   isAppInitialized: boolean,
@@ -143,6 +148,11 @@ export const getInitialState = (): State => ({
     isFetching: false,
     lastFetchingError: null,
     meta: null,
+  },
+  tokenInfo: {
+    isFetching: false,
+    lastFetchingError: null,
+    tokens: {},
   },
   isOnline: true, // we are online by default
   isAppInitialized: false,

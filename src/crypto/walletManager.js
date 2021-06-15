@@ -31,6 +31,8 @@ import type {
   PoolInfoResponse,
   FundInfoResponse,
   AccountStateResponse,
+  TokenInfoRequest,
+  TokenInfoResponse,
 } from '../api/types'
 import type {EncryptionMethod, SendTokenList} from './types'
 import type {DefaultAsset} from '../types/HistoryTransaction'
@@ -50,7 +52,9 @@ class WalletManager {
   _subscribers: Array<() => any> = []
   _syncErrorSubscribers: Array<(err: any) => any> = []
   _serverSyncSubscribers: Array<(status: ServerStatusCache) => any> = []
+  _onOpenSubscribers: Array<() => any> = []
   _onCloseSubscribers: Array<() => any> = []
+  _onTxHistoryUpdateSubscribers: Array<() => any> = []
   _closePromise: ?Promise<any> = null
   _closeReject: ?(Error) => void = null
 
@@ -196,8 +200,16 @@ class WalletManager {
     )
   }
 
+  _notifyOnOpen = () => {
+    this._onOpenSubscribers.forEach((handler) => handler())
+  }
+
   _notifyOnClose = () => {
     this._onCloseSubscribers.forEach((handler) => handler())
+  }
+
+  _notifyOnTxHistoryUpdate = () => {
+    this._onTxHistoryUpdateSubscribers.forEach((handler) => handler())
   }
 
   subscribe(handler: () => any) {
@@ -212,8 +224,16 @@ class WalletManager {
     this._serverSyncSubscribers.push(handler)
   }
 
+  subscribeOnOpen(handler: () => any) {
+    this._onOpenSubscribers.push(handler)
+  }
+
   subscribeOnClose(handler: () => any) {
     this._onCloseSubscribers.push(handler)
+  }
+
+  subscribeOnTxHistoryUpdate(handler: () => any) {
+    this._onTxHistoryUpdateSubscribers.push(handler)
   }
 
   /** ========== getters =============
@@ -500,6 +520,7 @@ class WalletManager {
     this._wallet = wallet
     await this._saveState(wallet)
     wallet.subscribe(this._notify)
+    wallet.subscribeOnTxHistoryUpdate(this._notifyOnTxHistoryUpdate)
     await storage.write(`/wallet/${id}`, this._wallets[id])
     this._closePromise = new Promise((resolve, reject) => {
       this._closeReject = reject
@@ -531,10 +552,13 @@ class WalletManager {
     await this._saveState(wallet)
 
     wallet.subscribe(this._notify)
+    wallet.subscribeOnTxHistoryUpdate(this._notifyOnTxHistoryUpdate)
     this._closePromise = new Promise((resolve, reject) => {
       this._closeReject = reject
     })
     this._notify() // update redux store
+
+    this._notifyOnOpen()
 
     if (wallet.isEasyConfirmationEnabled) {
       await this.ensureKeysValidity()
@@ -822,6 +846,11 @@ class WalletManager {
   async fetchPoolInfo(request: PoolInfoRequest): Promise<PoolInfoResponse> {
     if (this._wallet == null) throw new WalletClosed()
     return await this._wallet.fetchPoolInfo(request)
+  }
+
+  async fetchTokenInfo(request: TokenInfoRequest): Promise<TokenInfoResponse> {
+    if (this._wallet == null) throw new WalletClosed()
+    return await this._wallet.fetchTokenInfo(request)
   }
 
   async fetchFundInfo(): Promise<FundInfoResponse> {

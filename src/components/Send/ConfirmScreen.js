@@ -25,7 +25,7 @@ import {
   isHWSelector,
   hwDeviceInfoSelector,
   defaultNetworkAssetSelector,
-  availableAssetsSelector,
+  tokenInfoSelector,
 } from '../../selectors'
 import globalMessages, {
   errorMessages,
@@ -225,7 +225,7 @@ const ConfirmScreen = (
     isEasyConfirmationEnabled,
     isHW,
     defaultAsset,
-    availableAssets,
+    tokenMetadata,
     sendingTransaction,
     buttonDisabled,
     ledgerDialogStep,
@@ -293,7 +293,7 @@ const ConfirmScreen = (
           </Text>
           {tokens.map((t, i) => (
             <Text style={styles.amount} key={i}>
-              {formatTokenWithText(t.amount, availableAssets[t.identifier])}
+              {formatTokenWithText(t.amount, tokenMetadata[t.identifier])}
             </Text>
           ))}
 
@@ -377,7 +377,7 @@ export default injectIntl(
         isHW: isHWSelector(state),
         hwDeviceInfo: hwDeviceInfoSelector(state),
         defaultAsset: defaultNetworkAssetSelector(state),
-        availableAssets: availableAssetsSelector(state),
+        tokenMetadata: tokenInfoSelector(state),
       }),
       {
         submitTransaction,
