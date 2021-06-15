@@ -48,7 +48,6 @@ import {
   formatTokenWithText,
   formatTokenWithSymbol,
   getAssetDenominationOrId,
-  ASSET_DENOMINATION,
   truncateWithEllipsis,
 } from '../../utils/format'
 import {parseAmountDecimal, InvalidAssetAmount} from '../../utils/parsing'

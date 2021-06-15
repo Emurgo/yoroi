@@ -361,6 +361,8 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
   walletManager.subscribeOnClose(() => dispatch(clearUTXOs()))
   walletManager.subscribeOnClose(() => dispatch(clearAccountState()))
 
+  walletManager.subscribeOnTxHistoryUpdate(() => dispatch(fetchTokenInfo()))
+
   Logger.debug('setting up app lock')
   const onTimeoutAction = () => {
     dispatch(logout())

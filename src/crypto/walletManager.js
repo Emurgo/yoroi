@@ -54,6 +54,7 @@ class WalletManager {
   _serverSyncSubscribers: Array<(status: ServerStatusCache) => any> = []
   _onOpenSubscribers: Array<() => any> = []
   _onCloseSubscribers: Array<() => any> = []
+  _onTxHistoryUpdateSubscribers: Array<() => any> = []
   _closePromise: ?Promise<any> = null
   _closeReject: ?(Error) => void = null
 
@@ -207,6 +208,10 @@ class WalletManager {
     this._onCloseSubscribers.forEach((handler) => handler())
   }
 
+  _notifyOnTxHistoryUpdate = () => {
+    this._onTxHistoryUpdateSubscribers.forEach((handler) => handler())
+  }
+
   subscribe(handler: () => any) {
     this._subscribers.push(handler)
   }
@@ -225,6 +230,10 @@ class WalletManager {
 
   subscribeOnClose(handler: () => any) {
     this._onCloseSubscribers.push(handler)
+  }
+
+  subscribeOnTxHistoryUpdate(handler: () => any) {
+    this._onTxHistoryUpdateSubscribers.push(handler)
   }
 
   /** ========== getters =============
@@ -511,6 +520,7 @@ class WalletManager {
     this._wallet = wallet
     await this._saveState(wallet)
     wallet.subscribe(this._notify)
+    wallet.subscribeOnTxHistoryUpdate(this._notifyOnTxHistoryUpdate)
     await storage.write(`/wallet/${id}`, this._wallets[id])
     this._closePromise = new Promise((resolve, reject) => {
       this._closeReject = reject
@@ -542,6 +552,7 @@ class WalletManager {
     await this._saveState(wallet)
 
     wallet.subscribe(this._notify)
+    wallet.subscribeOnTxHistoryUpdate(this._notifyOnTxHistoryUpdate)
     this._closePromise = new Promise((resolve, reject) => {
       this._closeReject = reject
     })

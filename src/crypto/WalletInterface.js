@@ -140,6 +140,7 @@ export interface WalletInterface {
   // =================== subscriptions =================== //
 
   subscribe(handler: (Wallet) => any): void;
+  subscribeOnTxHistoryUpdate(handler: () => any): void;
 
   // =================== synch =================== //
 
