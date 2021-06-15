@@ -140,7 +140,7 @@ export const formatTokenWithText = (
   amount: BigNumber,
   token: Token | DefaultAsset,
 ) => {
-  const tickerOrId = getAssetDenominationOrId(token, ASSET_DENOMINATION.TICKER)
+  const tickerOrId = getAssetDenominationOrId(token)
   return `${formatTokenAmount(amount, token)}${utfSymbols.NBSP}${tickerOrId}`
 }
 

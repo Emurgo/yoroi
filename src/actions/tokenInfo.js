@@ -32,19 +32,6 @@ const _setTokenInfo = (tokenInfo) => ({
   reducer: (state, value) => value,
 })
 
-const _clearTokenInfo = () => ({
-  type: 'CLEAR_TOKEN_INFO',
-  path: ['tokenInfo'],
-  payload: null,
-  reducer: (_state) => {
-    return {
-      isFetching: false,
-      lastFetchingError: null,
-      tokens: {},
-    }
-  },
-})
-
 const _setLastError = (error) => ({
   type: 'SET_LAST_FETCHING_ERROR',
   path: ['tokenInfo', 'lastFetchingError'],
@@ -60,7 +47,7 @@ export const fetchTokenInfo = () => async (
   if (state.tokenInfo.isFetching) {
     return
   }
-  dispatch(_clearTokenInfo())
+  dispatch(_setTokenInfo(availableAssetsSelector(state)))
   dispatch(_startFetching())
   try {
     const availableAssets: Dict<Token> = availableAssetsSelector(state)
@@ -86,7 +73,7 @@ export const fetchTokenInfo = () => async (
       }: TokenInfoRequest),
     )
 
-    const tokens = availableAssets
+    const tokens = {...availableAssets}
     for (const key of Object.keys(tokenInfo)) {
       const _token = tokens[subjectDict[key]]
       const newInfo = tokenInfo[key]
@@ -109,8 +96,4 @@ export const fetchTokenInfo = () => async (
   } finally {
     dispatch(_endFetching())
   }
-}
-
-export const clearTokenInfo = () => (dispatch: Dispatch<any>) => {
-  dispatch(_clearTokenInfo())
 }
