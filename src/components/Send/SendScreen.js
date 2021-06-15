@@ -867,7 +867,7 @@ class SendScreen extends Component<Props, State> {
     const selectedAssetMeta = tokenMetadata[selectedAsset.identifier]
 
     const assetDenomination = truncateWithEllipsis(
-      getAssetDenominationOrId(selectedAssetMeta, ASSET_DENOMINATION.TICKER),
+      getAssetDenominationOrId(selectedAssetMeta),
       20,
     )
 

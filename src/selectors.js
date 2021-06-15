@@ -253,7 +253,9 @@ export const lastTokenInfoErrorSelector = (state: State): any =>
   state.tokenInfo.lastFetchingError
 
 export const tokenInfoSelector = (state: State): Dict<Token> =>
-  state.tokenInfo.isFetching ? {} : state.tokenInfo.tokens
+  state.tokenInfo.isFetching
+    ? availableAssetsSelector(state)
+    : state.tokenInfo.tokens
 
 export const walletIsInitializedSelector = (state: State): boolean =>
   state.wallet.isInitialized

@@ -42,7 +42,7 @@ export type AssetDenomination = $Values<typeof ASSET_DENOMINATION>
 
 export const getAssetDenomination = (
   token: Token | DefaultAsset,
-  denomination?: AssetDenomination = ASSET_DENOMINATION.SYMBOL,
+  denomination: AssetDenomination,
 ): ?string => {
   switch (denomination) {
     case ASSET_DENOMINATION.TICKER:
@@ -57,6 +57,9 @@ export const getAssetDenomination = (
           : token.metadata.ticker
         : null
     case ASSET_DENOMINATION.NAME: {
+      if (token.metadata.longName !== null) {
+        return token.metadata.longName
+      }
       if (token.metadata.assetName.length > 0) {
         const bytes = [...Buffer.from(token.metadata.assetName, 'hex')]
         if (bytes.filter((byte) => byte <= 32 || byte >= 127).length === 0) {
@@ -75,9 +78,19 @@ export const getAssetDenomination = (
 
 export const getAssetDenominationOrId = (
   token: Token | DefaultAsset,
-  denomination: AssetDenomination,
-): string =>
-  getAssetDenomination(token, denomination) ?? getTokenFingerprint(token)
+  denomination?: AssetDenomination,
+): string => {
+  if (denomination !== undefined) {
+    return (
+      getAssetDenomination(token, denomination) ?? getTokenFingerprint(token)
+    )
+  }
+  return (
+    getAssetDenomination(token, ASSET_DENOMINATION.TICKER) ||
+    getAssetDenomination(token, ASSET_DENOMINATION.NAME) ||
+    getTokenFingerprint(token)
+  )
+}
 
 export const getAssetDenominationOrUnknown = (
   token: Token | DefaultAsset,
