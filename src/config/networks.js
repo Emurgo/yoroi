@@ -55,7 +55,7 @@ export const NETWORKS = {
     POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
     BACKEND: {
       API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
-      TOKEN_INFO_SERVICE: 'https://tokens.cardano.org',
+      TOKEN_INFO_SERVICE: 'https://cdn.yoroiwallet.com',
       ..._DEFAULT_BACKEND_RULES,
     },
     BASE_CONFIG: [
