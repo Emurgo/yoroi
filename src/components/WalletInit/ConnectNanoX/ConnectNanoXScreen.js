@@ -18,7 +18,7 @@ import LocalizableError from '../../../i18n/LocalizableError'
 import styles from './styles/ConnectNanoXScreen.style'
 
 import type {ComponentType} from 'react'
-import type {Device} from '@ledgerhq/react-native-hw-transport-ble'
+import type {Device} from '../../Ledger/types'
 import type {Navigation} from '../../../types/navigation'
 import type {DeviceId, DeviceObj} from '../../../crypto/shelley/ledgerUtils'
 
