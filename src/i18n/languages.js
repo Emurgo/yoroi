@@ -16,4 +16,5 @@ export const LANGUAGES = {
   DUTCH: 'nl-NL',
   CZECH: 'cs-CZ',
   HUNGARIAN: 'hu-HU',
+  SLOVAK: 'sk-SK',
 }

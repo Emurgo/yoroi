@@ -13,6 +13,7 @@ import itIT from './locales/it-IT'
 import nlNL from './locales/nl-NL'
 import csCZ from './locales/cs-CZ'
 import huHU from './locales/hu-HU'
+import skSK from './locales/sk-SK'
 // TODO: Add when chinese traditional is available
 // import zhHant from './locales/zh-Hant'
 
@@ -45,5 +46,6 @@ translations[LANGUAGES.ITALIAN] = Object.assign({}, defaultLocale, itIT)
 translations[LANGUAGES.DUTCH] = Object.assign({}, defaultLocale, nlNL)
 translations[LANGUAGES.CZECH] = Object.assign({}, defaultLocale, csCZ)
 translations[LANGUAGES.HUNGARIAN] = Object.assign({}, defaultLocale, huHU)
+translations[LANGUAGES.SLOVAK] = Object.assign({}, defaultLocale, skSK)
 
 export default translations
