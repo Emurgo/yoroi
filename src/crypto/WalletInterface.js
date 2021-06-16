@@ -19,6 +19,8 @@ import type {
   ServerStatusResponse,
   PoolInfoRequest,
   PoolInfoResponse,
+  TokenInfoRequest,
+  TokenInfoResponse,
   FundInfoResponse,
   AccountStateResponse,
 } from '../api/types'
@@ -138,6 +140,7 @@ export interface WalletInterface {
   // =================== subscriptions =================== //
 
   subscribe(handler: (Wallet) => any): void;
+  subscribeOnTxHistoryUpdate(handler: () => any): void;
 
   // =================== synch =================== //
 
@@ -229,6 +232,8 @@ export interface WalletInterface {
   fetchAccountState(): Promise<AccountStateResponse>;
 
   fetchPoolInfo(request: PoolInfoRequest): Promise<PoolInfoResponse>;
+
+  fetchTokenInfo(request: TokenInfoRequest): Promise<TokenInfoResponse>;
 
   fetchFundInfo(): Promise<FundInfoResponse>;
 }

@@ -7,6 +7,7 @@ import {
   formatTokenAmount,
   formatTokenInteger,
   formatTokenFractional,
+  ASSET_DENOMINATION,
 } from './format'
 import {getCardanoDefaultAsset} from '../config/config'
 
@@ -16,7 +17,9 @@ const defaultCardanoAsset = getCardanoDefaultAsset()
 
 describe('getAssetDenomination', () => {
   it('correctly represents ADA symbol', () => {
-    expect(getAssetDenomination(defaultCardanoAsset)).toEqual('₳')
+    expect(
+      getAssetDenomination(defaultCardanoAsset, ASSET_DENOMINATION.SYMBOL),
+    ).toEqual('₳')
   })
 })
 

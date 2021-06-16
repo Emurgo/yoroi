@@ -76,6 +76,8 @@ export default class Wallet {
 
   _subscriptions: Array<(Wallet) => any> = []
 
+  _onTxHistoryUpdateSubscriptions: Array<(Wallet) => any> = []
+
   _isUsedAddressIndexSelector = defaultMemoize((perAddressTxs) =>
     _.mapValues(perAddressTxs, (txs) => {
       assert.assert(!!txs, 'perAddressTxs cointains false-ish value')
@@ -174,8 +176,19 @@ export default class Wallet {
     this._subscriptions.push(handler)
   }
 
+  notifyOnTxHistoryUpdate = () => {
+    this._onTxHistoryUpdateSubscriptions.forEach((handler) => handler(this))
+  }
+
+  subscribeOnTxHistoryUpdate(handler: () => any) {
+    this._onTxHistoryUpdateSubscriptions.push(handler)
+  }
+
   setupSubscriptions() {
     this.transactionCache.subscribe(this.notify)
+    this.transactionCache.subscribeOnTxHistoryUpdate(
+      this.notifyOnTxHistoryUpdate,
+    )
     this.internalChain.addSubscriberToNewAddresses(this.notify)
     this.externalChain.addSubscriberToNewAddresses(this.notify)
   }

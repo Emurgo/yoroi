@@ -40,6 +40,7 @@ export type WalletImplementation = {
 
 export type BackendConfig = {
   API_ROOT: string,
+  TOKEN_INFO_SERVICE?: string,
   FETCH_UTXOS_MAX_ADDRESSES: number,
   TX_HISTORY_MAX_ADDRESSES: number,
   FILTER_USED_MAX_ADDRESSES: number,
