@@ -365,7 +365,7 @@
   "components.catalyst.step5.bioAuthDescription": "Potvrďte prosím vaší registraci do hlasování. Budete ještě jednou požádáni k přihlášení a odeslání vygenerovaného certifikátu.",
   "components.catalyst.step5.description": "Zadejte spending heslo k potvrzení registrace do hlasování a přiložte vygenerovaný certifikát z předchozího kroku",
   "components.catalyst.step6.subTitle": "Zálohovat Catalyst kód",
-  "components.catalyst.step6.description": "Please take a screenshot of this QR code.",
+  "components.catalyst.step6.description": "Udělejte si prosím snímek obrazovky QR kódu.",
   "components.catalyst.step6.description2": "We strongly recommend you to save your Catalyst secret code in plain text too, so that you can re-create your QR code if necessary.",
   "components.catalyst.step6.description3": "Then, send the QR code to an external device, as you will need to scan it with your phone using the Catalyst mobile app.",
   "components.catalyst.step6.note": "Ponechat - po kliknutí na Dokončit již nebudete mít možnost přistoupit k tomuto kódu.",
