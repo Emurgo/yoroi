@@ -1,5 +1,6 @@
 // @flow
-import {AppRegistry} from 'react-native'
+import {AppRegistry, Platform} from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 import {getStorybookUI, configure, addDecorator} from '@storybook/react-native'
 import {action} from '@storybook/addon-actions'
 
@@ -17,20 +18,15 @@ configure(() => {
 // mockup navigation prop
 // some stories may require specific navigation parameters to work; these should
 // be specified locally in the story file
-let route = {
+const route = {
   params: {},
 }
 const navigation = {
-  navigate: (route, _params) => {
-    action(`navigated to ${route}`)
-  },
-  setParams: (params) => {
-    action(params)
-  },
-  setOptions: (options) => {route = {...route, ...options}},
-  addListener: (_fn) => (() => ({})),
+  navigate: action('navigate'),
+  setParams: action('setParams'),
+  setOptions: action('setOptions'),
+  addListener: action('addListener'),
 }
-
 
 addDecorator((storyFn) => storyFn({navigation, route}))
 addDecorator(withProvider)
@@ -38,7 +34,10 @@ addDecorator(withProvider)
 // Refer to
 // https://github.com/storybookjs/storybook/tree/master/app/react-native#start-command-parameters
 // To find allowed options for getStorybookUI
-const StorybookUIRoot = getStorybookUI()
+const StorybookUIRoot = getStorybookUI({
+  host: Platform.OS === 'android' ? '10.0.2.2' : '0.0.0.0',
+  asyncStorage: AsyncStorage,
+})
 
 AppRegistry.registerComponent(appName, () => StorybookUIRoot)
 

@@ -11,8 +11,8 @@ const StatefulModal = StorybookModalWrapper(LedgerTransportSwitchModal)
 
 storiesOf('Ledger Transport Switch Modal', module).add('default', () => (
   <StatefulModal
-    onPress={(_e) => action('clicked')}
-    onSelectUSB={(_e) => action('USB selected')}
-    onSelectBLE={(_e) => action('BLE selected')}
+    onPress={() => action('clicked')()}
+    onSelectUSB={() => action('USB selected')()}
+    onSelectBLE={() => action('BLE selected')()}
   />
 ))
