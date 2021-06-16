@@ -830,7 +830,8 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     const ledgerSignTxPayload = await createLedgerSignTxPayload({
       signRequest: request,
       byronNetworkMagic: getCardanoByronConfig().PROTOCOL_MAGIC,
-      networkId: Number.parseInt(this._getChainNetworkId(), 10),
+      // to not confuse with wallet's network id
+      chainNetworkId: Number.parseInt(this._getChainNetworkId(), 10),
       addressingMap,
     })
 

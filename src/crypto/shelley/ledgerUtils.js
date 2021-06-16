@@ -502,21 +502,15 @@ export const verifyAddress = async (
 export const createLedgerSignTxPayload = async (request: {|
   signRequest: HaskellShelleyTxSignRequest,
   byronNetworkMagic: number,
-  networkId: number,
+  chainNetworkId: number,
   addressingMap: (string) => void | $PropertyType<Addressing, 'addressing'>,
 |}): Promise<SignTransactionRequest> => {
   Logger.debug('ledgerUtils::createLedgerSignTxPayload called')
   Logger.debug('signRequest', JSON.stringify(request.signRequest))
 
-  const networkConfig = getNetworkConfigById(request.networkId)
-  if (networkConfig.CHAIN_NETWORK_ID == null) {
-    throw new Error('Could not retrieve chain network ID')
-  }
-  const chainNetworkId = networkConfig.CHAIN_NETWORK_ID
-
   const network = {
     protocolMagic: request.byronNetworkMagic,
-    networkId: Number.parseInt(chainNetworkId, 10),
+    networkId: request.chainNetworkId,
   }
 
   const txBody = await request.signRequest.self().build()
@@ -526,7 +520,7 @@ export const createLedgerSignTxPayload = async (request: {|
 
   // Outputs
   const ledgerOutputs = await _transformToLedgerOutputs({
-    networkId: request.networkId,
+    networkId: request.chainNetworkId,
     txOutputs: await txBody.outputs(),
     changeAddrs: request.signRequest.changeAddr,
     addressingMap: request.addressingMap,
@@ -548,7 +542,7 @@ export const createLedgerSignTxPayload = async (request: {|
   if (certificates != null && (await certificates.len()) > 0) {
     ledgerCertificates.push(
       ...(await formatLedgerCertificates(
-        request.networkId,
+        request.chainNetworkId,
         certificates,
         request.addressingMap,
       )),
@@ -859,14 +853,11 @@ export const signTxWithLedger = async (
       throw new Error('ledgerUtils::signTxWithLedger: hwDeviceInfo is null')
     }
 
-    // $FlowFixMe
-    const transport = await connectionHandler(
+    const appAda = await connectionHandler(
       hwDeviceInfo.hwFeatures.deviceId,
       hwDeviceInfo.hwFeatures.deviceObj,
       useUSB,
     )
-    Logger.debug('transport.id', transport.id)
-    const appAda = new AppAda(transport)
 
     Logger.debug('ledgerUtils::signTxWithLedger inputs', signRequest.tx.inputs)
     Logger.debug(
@@ -878,7 +869,7 @@ export const signTxWithLedger = async (
       signRequest,
     )
 
-    await transport.close()
+    await appAda.transport.close()
 
     Logger.debug(
       'ledgerUtils::ledgerSignature',
