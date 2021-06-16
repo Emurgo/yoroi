@@ -167,12 +167,21 @@ export class TransactionCache {
   }
 
   _subscriptions: Array<() => any> = []
+  _onTxHistoryUpdateSubscriptions: Array<() => any> = []
   _perAddressTxsSelector = defaultMemoize(perAddressTxsSelector)
   _perAddressCertificates = defaultMemoize(perAddressCertificatesSelector)
   _confirmationCountsSelector = defaultMemoize(confirmationCountsSelector)
 
   subscribe(handler: () => any) {
     this._subscriptions.push(handler)
+  }
+
+  notifyOnTxHistoryUpdate = () => {
+    this._onTxHistoryUpdateSubscriptions.forEach((handler) => handler())
+  }
+
+  subscribeOnTxHistoryUpdate(handler: () => any) {
+    this._onTxHistoryUpdateSubscriptions.push(handler)
   }
 
   updateState(update: TransactionCacheState) {
@@ -363,6 +372,11 @@ export class TransactionCache {
         )
 
         count += this._checkUpdatedTransactions(response.transactions)
+
+        if (count > 0) {
+          Logger.info('TransactionCache: notifying subscribers on txs update')
+          this.notifyOnTxHistoryUpdate()
+        }
 
         this.updateState({
           transactions: {...this._state.transactions, ...transactionsUpdate},

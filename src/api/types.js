@@ -83,6 +83,21 @@ export type PoolInfoResponse = {
   [key: string]: RemotePoolMetaSuccess | RemotePoolMetaFailure,
 }
 
+// getTokenInfo
+
+export type TokenInfoRequest = {|
+  tokenIds: Array<string>,
+|}
+
+export type RemoteTokenInfo = {|
+  // from token metadata (off chain)
+  +name?: string,
+  +decimals?: number,
+|}
+export type TokenInfoResponse = {
+  [key: string]: RemoteTokenInfo | null,
+}
+
 // getTxsBodiesForUTXOs
 
 export type TxBodiesRequest = {|txsHashes: Array<string>|}

@@ -83,6 +83,8 @@ import type {
   AccountStateResponse,
   PoolInfoRequest,
   PoolInfoResponse,
+  TokenInfoRequest,
+  TokenInfoResponse,
   FundInfoResponse,
 } from '../../api/types'
 import type {
@@ -924,6 +926,10 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
 
   async fetchPoolInfo(request: PoolInfoRequest): Promise<PoolInfoResponse> {
     return await api.getPoolInfo(request, this._getBackendConfig())
+  }
+
+  fetchTokenInfo(request: TokenInfoRequest): Promise<TokenInfoResponse> {
+    return api.getTokenInfo(request, this._getBackendConfig())
   }
 
   async fetchFundInfo(): Promise<FundInfoResponse> {
