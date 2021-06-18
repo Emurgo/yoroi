@@ -217,22 +217,6 @@ const StakingCenter = (
 
   const [amountToDelegate, setAmountToDelegate] = useState<string | null>(null)
 
-  const getAmountToDelegate: () => Promise<void> = async () => {
-    if (utxos != null) {
-      const utxosForKey = await walletManager.getAllUtxosForKey(utxos)
-      // prettier-ignore
-      const _amountToDelegate = utxosForKey
-        .map((utxo) => utxo.amount)
-        .reduce(
-          (x: BigNumber, y) => x.plus(new BigNumber(y || 0)),
-          new BigNumber(0),
-        )
-      setAmountToDelegate(
-        normalizeTokenAmount(_amountToDelegate, defaultAsset).toString(),
-      )
-    }
-  }
-
   const [selectedPools, setSelectedPools] = useState([])
 
   const [reputationInfo, setReputationInfo] = useState({})
@@ -267,8 +251,24 @@ const StakingCenter = (
 
   useEffect(
     () => {
+      const getAmountToDelegate: () => Promise<void> = async () => {
+        if (utxos != null) {
+          const utxosForKey = await walletManager.getAllUtxosForKey(utxos)
+          const _amountToDelegate = utxosForKey
+            .map((utxo) => utxo.amount)
+            .reduce(
+              (x: BigNumber, y) => x.plus(new BigNumber(y || 0)),
+              new BigNumber(0),
+            )
+          setAmountToDelegate(
+            normalizeTokenAmount(_amountToDelegate, defaultAsset).toString(),
+          )
+        }
+      }
+
       getAmountToDelegate()
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [utxos],
   )
 
