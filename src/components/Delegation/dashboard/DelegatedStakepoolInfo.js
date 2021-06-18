@@ -25,8 +25,7 @@ const messages = defineMessages({
       ' take a couple of minutes for the network to process your request.',
   },
   fullDescriptionButtonLabel: {
-    id:
-      'components.delegationsummary.delegatedStakepoolInfo.fullDescriptionButtonLabel',
+    id: 'components.delegationsummary.delegatedStakepoolInfo.fullDescriptionButtonLabel',
     defaultMessage: '!!!Go to website',
   },
   copied: {
@@ -47,8 +46,8 @@ export const formatStakepoolNameWithTicker = (
   return poolTicker == null
     ? poolName ?? intl.formatMessage(messages.unknownPool)
     : poolName == null
-      ? `${poolTicker}`
-      : `(${poolTicker}) ${poolName}`
+    ? `${poolTicker}`
+    : `(${poolTicker}) ${poolName}`
 }
 
 const COPY_NOTIFICATION_TIME = 5000 // show 'copied' notification for 5 s
@@ -158,27 +157,33 @@ export default injectIntl(
       },
       {
         setShowCopyNotif: () => (showCopyNotif) => ({showCopyNotif}),
-        registerTimeout: ({timeoutIds}) => (id) => ({
-          timeoutIds: [...timeoutIds, id],
-        }),
+        registerTimeout:
+          ({timeoutIds}) =>
+          (id) => ({
+            timeoutIds: [...timeoutIds, id],
+          }),
       },
     ),
     withHandlers({
-      openExternalURL: ({poolURL}) => () => {
-        if (poolURL) {
-          // note: do not await on purpose
-          Linking.openURL(poolURL)
-        }
-      },
-      copyPoolHash: ({poolHash, setShowCopyNotif, registerTimeout}) => () => {
-        Clipboard.setString(poolHash)
-        setShowCopyNotif(true)
-        const t = setTimeout(
-          () => setShowCopyNotif(false),
-          COPY_NOTIFICATION_TIME,
-        )
-        registerTimeout(t)
-      },
+      openExternalURL:
+        ({poolURL}) =>
+        () => {
+          if (poolURL) {
+            // note: do not await on purpose
+            Linking.openURL(poolURL)
+          }
+        },
+      copyPoolHash:
+        ({poolHash, setShowCopyNotif, registerTimeout}) =>
+        () => {
+          Clipboard.setString(poolHash)
+          setShowCopyNotif(true)
+          const t = setTimeout(
+            () => setShowCopyNotif(false),
+            COPY_NOTIFICATION_TIME,
+          )
+          registerTimeout(t)
+        },
     }),
     onWillUnmount(({timeoutIds}) =>
       timeoutIds.forEach((id) => clearTimeout(id)),

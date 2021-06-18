@@ -48,8 +48,8 @@ const ValidatedTextInput = ({
           ? keyboardType !== 'visible-password'
             ? keyboardType
             : Platform.OS === 'android'
-              ? 'visible-password'
-              : 'default' // visible-password is Android-only
+            ? 'visible-password'
+            : 'default' // visible-password is Android-only
           : 'default'
       }
     />
@@ -78,8 +78,9 @@ const ValidatedTextInput = ({
       </TouchableOpacity>
     )}
 
-    {error != null &&
-      error !== false && <Text style={styles.error}>{error}</Text>}
+    {error != null && error !== false && (
+      <Text style={styles.error}>{error}</Text>
+    )}
   </View>
 )
 

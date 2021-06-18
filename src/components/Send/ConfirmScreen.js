@@ -297,9 +297,9 @@ const ConfirmScreen = (
             </Text>
           ))}
 
-          {/* eslint-disable indent */
-          !isEasyConfirmationEnabled &&
-            !isHW && (
+          {
+            /* eslint-disable indent */
+            !isEasyConfirmationEnabled && !isHW && (
               <View style={styles.input}>
                 <ValidatedTextInput
                   secureTextEntry
@@ -309,7 +309,7 @@ const ConfirmScreen = (
                 />
               </View>
             )
-          /* eslint-enable indent */
+            /* eslint-enable indent */
           }
           {isHW && <HWInstructions useUSB={useUSB} addMargin />}
         </ScrollView>
@@ -324,33 +324,36 @@ const ConfirmScreen = (
         </View>
       </View>
 
-      {/* eslint-disable indent */
-      isHW &&
-        Platform.OS === 'android' &&
-        CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT && (
-          <>
-            <LedgerTransportSwitchModal
-              visible={
-                ledgerDialogStep === LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT
-              }
-              onRequestClose={closeLedgerDialog}
-              onSelectUSB={(event) => onChooseTransport(event, true)}
-              onSelectBLE={(event) => onChooseTransport(event, false)}
-              showCloseIcon
-            />
-            <Modal
-              visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.LEDGER_CONNECT}
-              onRequestClose={closeLedgerDialog}
-            >
-              <LedgerConnect
-                onConnectBLE={onConnectBLE}
-                onConnectUSB={onConnectUSB}
-                useUSB={useUSB}
+      {
+        /* eslint-disable indent */
+        isHW &&
+          Platform.OS === 'android' &&
+          CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT && (
+            <>
+              <LedgerTransportSwitchModal
+                visible={
+                  ledgerDialogStep === LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT
+                }
+                onRequestClose={closeLedgerDialog}
+                onSelectUSB={(event) => onChooseTransport(event, true)}
+                onSelectBLE={(event) => onChooseTransport(event, false)}
+                showCloseIcon
               />
-            </Modal>
-          </>
-        )
-      /* eslint-enable indent */
+              <Modal
+                visible={
+                  ledgerDialogStep === LEDGER_DIALOG_STEPS.LEDGER_CONNECT
+                }
+                onRequestClose={closeLedgerDialog}
+              >
+                <LedgerConnect
+                  onConnectBLE={onConnectBLE}
+                  onConnectUSB={onConnectUSB}
+                  useUSB={useUSB}
+                />
+              </Modal>
+            </>
+          )
+        /* eslint-enable indent */
       }
       <ErrorModal
         visible={showErrorModal}
@@ -422,88 +425,88 @@ export default injectIntl(
       intl.formatMessage(messages.title),
     ),
     withHandlers({
-      withPleaseWaitModal: ({setSendingTransaction}) => async (
-        func: () => Promise<void>,
-      ): Promise<void> => {
-        setSendingTransaction(true)
-        try {
-          await func()
-        } finally {
-          setSendingTransaction(false)
-        }
-      },
-      withDisabledButton: ({setButtonDisabled}) => async (
-        func: () => Promise<void>,
-      ): Promise<void> => {
-        setButtonDisabled(true)
-        try {
-          await func()
-        } finally {
-          setButtonDisabled(false)
-        }
-      },
+      withPleaseWaitModal:
+        ({setSendingTransaction}) =>
+        async (func: () => Promise<void>): Promise<void> => {
+          setSendingTransaction(true)
+          try {
+            await func()
+          } finally {
+            setSendingTransaction(false)
+          }
+        },
+      withDisabledButton:
+        ({setButtonDisabled}) =>
+        async (func: () => Promise<void>): Promise<void> => {
+          setButtonDisabled(true)
+          try {
+            await func()
+          } finally {
+            setButtonDisabled(false)
+          }
+        },
     }),
     withHandlers({
-      onChooseTransport: ({
-        hwDeviceInfo,
-        setUseUSB,
-        openLedgerConnect,
-        closeLedgerDialog,
-      }) => (event, useUSB) => {
-        setUseUSB(useUSB)
-        if (
-          (useUSB && hwDeviceInfo.hwFeatures.deviceObj == null) ||
-          (!useUSB && hwDeviceInfo.hwFeatures.deviceId == null)
-        ) {
-          openLedgerConnect()
-        } else {
+      onChooseTransport:
+        ({hwDeviceInfo, setUseUSB, openLedgerConnect, closeLedgerDialog}) =>
+        (event, useUSB) => {
+          setUseUSB(useUSB)
+          if (
+            (useUSB && hwDeviceInfo.hwFeatures.deviceObj == null) ||
+            (!useUSB && hwDeviceInfo.hwFeatures.deviceId == null)
+          ) {
+            openLedgerConnect()
+          } else {
+            closeLedgerDialog()
+          }
+        },
+      onConnectUSB:
+        ({setLedgerDeviceObj, closeLedgerDialog}) =>
+        (deviceObj) => {
+          setLedgerDeviceObj(deviceObj)
           closeLedgerDialog()
-        }
-      },
-      onConnectUSB: ({setLedgerDeviceObj, closeLedgerDialog}) => (
-        deviceObj,
-      ) => {
-        setLedgerDeviceObj(deviceObj)
-        closeLedgerDialog()
-      },
-      onConnectBLE: ({setLedgerDeviceId, closeLedgerDialog}) => (deviceId) => {
-        setLedgerDeviceId(deviceId)
-        closeLedgerDialog()
-      },
+        },
+      onConnectBLE:
+        ({setLedgerDeviceId, closeLedgerDialog}) =>
+        (deviceId) => {
+          setLedgerDeviceId(deviceId)
+          closeLedgerDialog()
+        },
       onConfirm: ignoreConcurrentAsyncHandler(
         (
-          {
-            navigation,
-            route,
-            isHW,
-            hwDeviceInfo,
-            isEasyConfirmationEnabled,
-            password,
-            submitTransaction,
-            submitSignedTx,
-            withPleaseWaitModal,
-            withDisabledButton,
-            intl,
-            useUSB,
-            setErrorData,
-          }: {intl: IntlShape} & Object /* TODO: type */,
-        ) => async (_event) => {
-          await handleOnConfirm(
-            navigation,
-            route,
-            isHW,
-            hwDeviceInfo,
-            isEasyConfirmationEnabled,
-            password,
-            submitTransaction,
-            submitSignedTx,
-            withPleaseWaitModal,
-            withDisabledButton,
-            intl,
-            useUSB,
-            setErrorData,
-          )
-        },
+            {
+              navigation,
+              route,
+              isHW,
+              hwDeviceInfo,
+              isEasyConfirmationEnabled,
+              password,
+              submitTransaction,
+              submitSignedTx,
+              withPleaseWaitModal,
+              withDisabledButton,
+              intl,
+              useUSB,
+              setErrorData,
+            }: {intl: IntlShape} & Object /* TODO: type */,
+          ) =>
+          async (_event) => {
+            await handleOnConfirm(
+              navigation,
+              route,
+              isHW,
+              hwDeviceInfo,
+              isEasyConfirmationEnabled,
+              password,
+              submitTransaction,
+              submitSignedTx,
+              withPleaseWaitModal,
+              withDisabledButton,
+              intl,
+              useUSB,
+              setErrorData,
+            )
+          },
         1000,
       ),
     }),

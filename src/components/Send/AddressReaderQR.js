@@ -31,12 +31,14 @@ export default injectIntl(
       intl.formatMessage(messages.title),
     ),
     withHandlers({
-      onSuccess: ({route}) => (event) => {
-        const onSuccess = route.params?.onSuccess
-        if (onSuccess) {
-          onSuccess(event.data)
-        }
-      },
+      onSuccess:
+        ({route}) =>
+        (event) => {
+          const onSuccess = route.params?.onSuccess
+          if (onSuccess) {
+            onSuccess(event.data)
+          }
+        },
     }),
   )(AddressReaderQR): ComponentType<ExternalProps>),
 )

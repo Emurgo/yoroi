@@ -155,9 +155,8 @@ const TxHistory = ({
 
   // InsufficientFundsModal (Catalyst)
 
-  const [showInsufficientFundsModal, setShowInsufficientFundsModal] = useState<
-    boolean,
-  >(false)
+  const [showInsufficientFundsModal, setShowInsufficientFundsModal] =
+    useState<boolean>(false)
 
   // fetch account state
 
@@ -220,8 +219,9 @@ const TxHistory = ({
       <StatusBar type="dark" />
       <View style={styles.container}>
         <OfflineBanner />
-        {isOnline &&
-          lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
+        {isOnline && lastSyncError && (
+          <SyncErrorBanner showRefresh={!isSyncing} />
+        )}
 
         <AvailableAmountBanner
           amount={tokenBalance.getDefault()}
@@ -273,9 +273,9 @@ const TxHistory = ({
           />
         )}
 
-        {/* eslint-disable indent */
-        isByron(walletMeta.walletImplementationId) &&
-          showWarning && (
+        {
+          /* eslint-disable indent */
+          isByron(walletMeta.walletImplementationId) && showWarning && (
             <WarningBanner
               title={intl
                 .formatMessage(warningBannerMessages.title)
@@ -287,7 +287,7 @@ const TxHistory = ({
               style={styles.warningNoteStyles}
             />
           )
-        /* eslint-enable indent */
+          /* eslint-enable indent */
         }
 
         <StandardModal

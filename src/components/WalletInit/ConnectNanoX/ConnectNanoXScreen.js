@@ -126,28 +126,32 @@ export default injectIntl(
       intl.formatMessage(messages.title),
     ),
     withHandlers({
-      onConnectBLE: ({
-        navigation,
-        route,
-        intl,
-      }: {
-        intl: IntlShape,
-        navigation: any,
-        route: any,
-      }) => async (deviceId: DeviceId) => {
-        await _navigateToSave(deviceId, null, navigation, route, intl)
-      },
-      onConnectUSB: ({
-        navigation,
-        route,
-        intl,
-      }: {
-        intl: IntlShape,
-        navigation: any,
-        route: any,
-      }) => async (deviceObj: DeviceObj) => {
-        await _navigateToSave(null, deviceObj, navigation, route, intl)
-      },
+      onConnectBLE:
+        ({
+          navigation,
+          route,
+          intl,
+        }: {
+          intl: IntlShape,
+          navigation: any,
+          route: any,
+        }) =>
+        async (deviceId: DeviceId) => {
+          await _navigateToSave(deviceId, null, navigation, route, intl)
+        },
+      onConnectUSB:
+        ({
+          navigation,
+          route,
+          intl,
+        }: {
+          intl: IntlShape,
+          navigation: any,
+          route: any,
+        }) =>
+        async (deviceObj: DeviceObj) => {
+          await _navigateToSave(null, deviceObj, navigation, route, intl)
+        },
     }),
   )(ConnectNanoXScreen): ComponentType<ExternalProps>),
 )

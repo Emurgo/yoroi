@@ -33,6 +33,8 @@ type ExternalProps = {
 }
 
 export default (withHandlers({
-  handleSelectLanguage: ({selectLanguage, languageCode}) => () =>
-    selectLanguage(languageCode),
+  handleSelectLanguage:
+    ({selectLanguage, languageCode}) =>
+    () =>
+      selectLanguage(languageCode),
 })(LanguageListItem): ComponentType<ExternalProps>)

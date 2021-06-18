@@ -42,14 +42,12 @@ const messages = defineMessages({
     description: 'some desc',
   },
   mnemonicWordsInputLabel: {
-    id:
-      'components.walletinit.createwallet.mnemoniccheckscreen.mnemonicWordsInputLabel',
+    id: 'components.walletinit.createwallet.mnemoniccheckscreen.mnemonicWordsInputLabel',
     defaultMessage: '!!!Recovery phrase',
     description: 'some desc',
   },
   mnemonicWordsInputInvalidPhrase: {
-    id:
-      'components.walletinit.createwallet.mnemoniccheckscreen.mnemonicWordsInputInvalidPhrase',
+    id: 'components.walletinit.createwallet.mnemoniccheckscreen.mnemonicWordsInputInvalidPhrase',
     defaultMessage: '!!!Recovery phrase does not match',
     description: 'some desc',
   },
@@ -62,39 +60,32 @@ const validatePhrase = (mnemonic, words, partialPhrase) => {
   return isPhraseCorrect
 }
 
-const handleWalletConfirmation = ({
-  navigation,
-  route,
-  createWallet,
-}) => async () => {
-  const {
-    mnemonic,
-    password,
-    name,
-    networkId,
-    walletImplementationId,
-  } = route.params
-  assert.assert(!!mnemonic, 'handleWalletConfirmation:: mnemonic')
-  assert.assert(!!password, 'handleWalletConfirmation:: password')
-  assert.assert(!!name, 'handleWalletConfirmation:: name')
-  assert.assert(networkId != null, 'handleWalletConfirmation:: networkId')
-  assert.assert(
-    !!walletImplementationId,
-    'handleWalletConfirmation:: implementationId',
-  )
+const handleWalletConfirmation =
+  ({navigation, route, createWallet}) =>
+  async () => {
+    const {mnemonic, password, name, networkId, walletImplementationId} =
+      route.params
+    assert.assert(!!mnemonic, 'handleWalletConfirmation:: mnemonic')
+    assert.assert(!!password, 'handleWalletConfirmation:: password')
+    assert.assert(!!name, 'handleWalletConfirmation:: name')
+    assert.assert(networkId != null, 'handleWalletConfirmation:: networkId')
+    assert.assert(
+      !!walletImplementationId,
+      'handleWalletConfirmation:: implementationId',
+    )
 
-  await createWallet(
-    name,
-    mnemonic,
-    password,
-    networkId,
-    walletImplementationId,
-  )
+    await createWallet(
+      name,
+      mnemonic,
+      password,
+      networkId,
+      walletImplementationId,
+    )
 
-  navigation.navigate(ROOT_ROUTES.WALLET, {
-    screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
-  })
-}
+    navigation.navigate(ROOT_ROUTES.WALLET, {
+      screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
+    })
+  }
 
 type WordProps = {
   word: string,
@@ -121,7 +112,10 @@ const _WordBadge = ({word, handleOnPress, selected, hidden}) => (
 )
 
 const WordBadge: ComponentType<WordProps> = withHandlers({
-  handleOnPress: ({onPress, value}) => () => onPress(value),
+  handleOnPress:
+    ({onPress, value}) =>
+    () =>
+      onPress(value),
 })(_WordBadge)
 
 const shouldScreenScroll = () => Dimensions.get('window').height <= 520
@@ -228,12 +222,9 @@ const MnemonicCheckScreen = (
 
 export default injectIntl(
   (compose(
-    connect(
-      () => ({}),
-      {
-        createWallet,
-      },
-    ),
+    connect(() => ({}), {
+      createWallet,
+    }),
     withNavigationTitle(({intl}: {intl: IntlShape}) =>
       intl.formatMessage(messages.title),
     ),
@@ -242,12 +233,16 @@ export default injectIntl(
         partialPhrase: [],
       },
       {
-        deselectWord: ({partialPhrase}) => (wordIdx) => ({
-          partialPhrase: partialPhrase.filter((idx) => idx !== wordIdx),
-        }),
-        selectWord: ({partialPhrase}) => (wordIdx) => ({
-          partialPhrase: [...partialPhrase, wordIdx],
-        }),
+        deselectWord:
+          ({partialPhrase}) =>
+          (wordIdx) => ({
+            partialPhrase: partialPhrase.filter((idx) => idx !== wordIdx),
+          }),
+        selectWord:
+          ({partialPhrase}) =>
+          (wordIdx) => ({
+            partialPhrase: [...partialPhrase, wordIdx],
+          }),
         handleClear: () => () => ({
           partialPhrase: [],
         }),

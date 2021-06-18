@@ -150,12 +150,8 @@ class WalletForm extends PureComponent<Props, ComponentState> {
 
   render() {
     const {intl} = this.props
-    const {
-      name,
-      password,
-      passwordConfirmation,
-      showPasswordsDoNotMatchError,
-    } = this.state
+    const {name, password, passwordConfirmation, showPasswordsDoNotMatchError} =
+      this.state
 
     const validationErrors = this.validateForm()
 
@@ -234,8 +230,10 @@ export default injectIntl(
       {validateWalletName},
     ),
     withHandlers({
-      validateWalletName: ({walletNames}) => (walletName) =>
-        validateWalletName(walletName, null, walletNames),
+      validateWalletName:
+        ({walletNames}) =>
+        (walletName) =>
+          validateWalletName(walletName, null, walletNames),
     }),
   )(WalletForm),
 )

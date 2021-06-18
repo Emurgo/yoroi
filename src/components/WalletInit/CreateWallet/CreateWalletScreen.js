@@ -62,24 +62,21 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      navigateToMnemonicScreen: ({
-        formData,
-        clear,
-        navigation,
-        route,
-      }) => () => {
-        clear()
-        // TODO(v-almonacid): we need to generate mnemonics according to the
-        // target network.
-        const mnemonic = generateAdaMnemonic()
-        const {networkId, walletImplementationId} = route.params
-        navigation.navigate(WALLET_INIT_ROUTES.MNEMONIC_SHOW, {
-          mnemonic,
-          networkId,
-          walletImplementationId,
-          ...formData,
-        })
-      },
+      navigateToMnemonicScreen:
+        ({formData, clear, navigation, route}) =>
+        () => {
+          clear()
+          // TODO(v-almonacid): we need to generate mnemonics according to the
+          // target network.
+          const mnemonic = generateAdaMnemonic()
+          const {networkId, walletImplementationId} = route.params
+          navigation.navigate(WALLET_INIT_ROUTES.MNEMONIC_SHOW, {
+            mnemonic,
+            networkId,
+            walletImplementationId,
+            ...formData,
+          })
+        },
     }),
   )(CreateWalletScreen),
 )

@@ -239,9 +239,9 @@ export const LanguagePicker = ({
         )}
       />
 
-      {/* eslint-disable indent */
-      languageCode !== 'en-US' &&
-        languageCode !== 'ja-JP' && (
+      {
+        /* eslint-disable indent */
+        languageCode !== 'en-US' && languageCode !== 'ja-JP' && (
           <View style={styles.ackBlock}>
             {intl.formatMessage(messages.contributors) !== '_' ? (
               <Markdown>
@@ -256,7 +256,7 @@ export const LanguagePicker = ({
             )}
           </View>
         )
-      /* eslint-enable indent */
+        /* eslint-enable indent */
       }
 
       <Button

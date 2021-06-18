@@ -62,31 +62,30 @@ const messages = defineMessages({
   },
 })
 
-const enableEasyConfirmation = ({
-  navigation,
-  masterPassword,
-  setEasyConfirmation,
-  intl,
-}) => async () => {
-  try {
-    await walletManager.enableEasyConfirmation(masterPassword, intl)
-    setEasyConfirmation(true)
+const enableEasyConfirmation =
+  ({navigation, masterPassword, setEasyConfirmation, intl}) =>
+  async () => {
+    try {
+      await walletManager.enableEasyConfirmation(masterPassword, intl)
+      setEasyConfirmation(true)
 
-    navigation.goBack()
-  } catch (error) {
-    if (error instanceof WrongPassword) {
-      await showErrorDialog(errorMessages.incorrectPassword, intl)
-    } else {
-      throw error
+      navigation.goBack()
+    } catch (error) {
+      if (error instanceof WrongPassword) {
+        await showErrorDialog(errorMessages.incorrectPassword, intl)
+      } else {
+        throw error
+      }
     }
   }
-}
 
-const disableEasyConfirmation = ({navigation}) => async () => {
-  await walletManager.disableEasyConfirmation()
-  setEasyConfirmation(false)
-  navigation.goBack()
-}
+const disableEasyConfirmation =
+  ({navigation}) =>
+  async () => {
+    await walletManager.disableEasyConfirmation()
+    setEasyConfirmation(false)
+    navigation.goBack()
+  }
 
 const ToggleEasyConfirmationScreen = (
   {
@@ -100,15 +99,12 @@ const ToggleEasyConfirmationScreen = (
     navigation,
   }: {intl: IntlShape} & Object /* TODO: type */,
 ) => {
-  React.useEffect(
-    () => {
-      const unsubscribe = navigation.addListener('blur', () => {
-        clearPassword()
-      })
-      return unsubscribe
-    },
-    [navigation],
-  )
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      clearPassword()
+    })
+    return unsubscribe
+  }, [navigation])
 
   return (
     <View style={styles.root}>

@@ -71,7 +71,10 @@ const KeyboardKey = ({value, onKeyDown}) => {
 }
 
 const EnhancedKeyboardKey = withHandlers({
-  onKeyDown: ({value, onPress}) => () => onPress(value),
+  onKeyDown:
+    ({value, onPress}) =>
+    () =>
+      onPress(value),
 })(KeyboardKey)
 
 export type PinInputLabels = {
@@ -133,7 +136,9 @@ export default (compose(
     },
   ),
   withHandlers({
-    onKeyDown: ({pin, setPin, pinMaxLength, onPinEnter}) => (value) =>
-      processPin(pin, setPin, pinMaxLength, value, onPinEnter),
+    onKeyDown:
+      ({pin, setPin, pinMaxLength, onPinEnter}) =>
+      (value) =>
+        processPin(pin, setPin, pinMaxLength, value, onPinEnter),
   }),
 )(PinInput): ComponentType<ExternalProps>)

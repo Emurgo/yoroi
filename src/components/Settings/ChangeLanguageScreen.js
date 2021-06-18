@@ -35,15 +35,13 @@ export default (compose(
     languageActions,
   ),
   withHandlers({
-    handleContinue: ({
-      navigation,
-      changeAndSaveLanguage,
-      languageCode,
-    }) => async (_event) => {
-      await changeAndSaveLanguage(languageCode)
+    handleContinue:
+      ({navigation, changeAndSaveLanguage, languageCode}) =>
+      async (_event) => {
+        await changeAndSaveLanguage(languageCode)
 
-      navigation.goBack(null)
-    },
+        navigation.goBack(null)
+      },
   }),
 )(LanguagePickerScreen): ComponentType<{
   navigation: any, // TODO: type

@@ -55,8 +55,7 @@ const messages = defineMessages({
     defaultMessage: '!!!Read-only wallet',
   },
   importReadOnlyWalletExplanation: {
-    id:
-      'components.walletinit.walletinitscreen.importReadOnlyWalletExplanation',
+    id: 'components.walletinit.walletinitscreen.importReadOnlyWalletExplanation',
     defaultMessage:
       "!!!The Yoroi extension allows you to export any of your wallets' " +
       'public keys in a QR code. Choose this option to import a wallet from ' +
@@ -259,44 +258,52 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      navigateRestoreWallet: ({navigation}) => (
-        event: Object,
-        networkId: NetworkId,
-        walletImplementationId: WalletImplementationId,
-      ) =>
-        navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET, {
-          networkId,
-          walletImplementationId,
-        }),
-      navigateCreateWallet: ({navigation}) => (
-        event: Object,
-        networkId: NetworkId,
-        walletImplementationId: WalletImplementationId,
-      ) =>
-        navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET, {
-          networkId,
-          walletImplementationId,
-        }),
-      navigateCheckNanoX: ({navigation}) => (
-        event: Object,
-        networkId: NetworkId,
-        walletImplementationId: WalletImplementationId,
-        useUSB: boolean,
-      ) =>
-        navigation.navigate(WALLET_INIT_ROUTES.CHECK_NANO_X, {
-          networkId,
-          walletImplementationId,
-          useUSB,
-        }),
-      navigateImportReadOnlyWallet: ({navigation}) => (
-        _event: Object,
-        networkId: NetworkId,
-        walletImplementationId: WalletImplementationId,
-      ) =>
-        navigation.navigate(WALLET_INIT_ROUTES.IMPORT_READ_ONLY_WALLET, {
-          networkId,
-          walletImplementationId,
-        }),
+      navigateRestoreWallet:
+        ({navigation}) =>
+        (
+          event: Object,
+          networkId: NetworkId,
+          walletImplementationId: WalletImplementationId,
+        ) =>
+          navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET, {
+            networkId,
+            walletImplementationId,
+          }),
+      navigateCreateWallet:
+        ({navigation}) =>
+        (
+          event: Object,
+          networkId: NetworkId,
+          walletImplementationId: WalletImplementationId,
+        ) =>
+          navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET, {
+            networkId,
+            walletImplementationId,
+          }),
+      navigateCheckNanoX:
+        ({navigation}) =>
+        (
+          event: Object,
+          networkId: NetworkId,
+          walletImplementationId: WalletImplementationId,
+          useUSB: boolean,
+        ) =>
+          navigation.navigate(WALLET_INIT_ROUTES.CHECK_NANO_X, {
+            networkId,
+            walletImplementationId,
+            useUSB,
+          }),
+      navigateImportReadOnlyWallet:
+        ({navigation}) =>
+        (
+          _event: Object,
+          networkId: NetworkId,
+          walletImplementationId: WalletImplementationId,
+        ) =>
+          navigation.navigate(WALLET_INIT_ROUTES.IMPORT_READ_ONLY_WALLET, {
+            networkId,
+            walletImplementationId,
+          }),
     }),
   )(WalletInitScreen),
 )

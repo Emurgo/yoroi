@@ -22,8 +22,10 @@ type NavigateToProps = {
 }
 const NavigateTo = (compose(
   withHandlers({
-    onPress: ({to, navigation}: NavigateToProps) => () =>
-      navigation.navigate(to),
+    onPress:
+      ({to, navigation}: NavigateToProps) =>
+      () =>
+        navigation.navigate(to),
   }),
 )((props) => <Touchable {...props} />): ComponentType<NavigateToProps>)
 

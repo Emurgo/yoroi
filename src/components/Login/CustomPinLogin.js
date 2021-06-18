@@ -67,28 +67,30 @@ export default injectIntl(
       intl.formatMessage(messages.title),
     ),
     withHandlers({
-      onPinEnter: ({
-        customPinHash,
-        intl,
-        signin,
-      }: {
-        customPinHash: any,
-        intl: IntlShape,
-        signin: any,
-      }) => async (pin) => {
-        if (customPinHash == null) {
-          throw new Error('Custom pin is not setup')
-        }
+      onPinEnter:
+        ({
+          customPinHash,
+          intl,
+          signin,
+        }: {
+          customPinHash: any,
+          intl: IntlShape,
+          signin: any,
+        }) =>
+        async (pin) => {
+          if (customPinHash == null) {
+            throw new Error('Custom pin is not setup')
+          }
 
-        const isPinValid = await authenticateByCustomPin(customPinHash, pin)
-        if (isPinValid) {
-          signin()
-        } else {
-          await showErrorDialog(errorMessages.incorrectPin, intl)
-        }
+          const isPinValid = await authenticateByCustomPin(customPinHash, pin)
+          if (isPinValid) {
+            signin()
+          } else {
+            await showErrorDialog(errorMessages.incorrectPin, intl)
+          }
 
-        return !isPinValid
-      },
+          return !isPinValid
+        },
     }),
   )(CustomPinLogin): ComponentType<ExternalProps>),
 )

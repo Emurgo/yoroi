@@ -392,9 +392,9 @@ export const createDelegationTx = async (
       {
         neededHashes: new Set([
           Buffer.from(
-            await (await StakeCredential.from_keyhash(
-              await stakingKey.hash(),
-            )).to_bytes(),
+            await (
+              await StakeCredential.from_keyhash(await stakingKey.hash())
+            ).to_bytes(),
           ).toString('hex'),
         ]),
         wits: new Set(),

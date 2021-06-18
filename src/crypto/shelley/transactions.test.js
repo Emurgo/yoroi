@@ -92,9 +92,11 @@ const genSampleUtxos: (void) => Promise<Array<RawUtxo>> = async () => [
     amount: '30000000',
     // external addr 0, staking key 0
     receiver: Buffer.from(
-      await (await ShelleyAddress.from_bech32(
-        'addr1q8gpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqphf76y',
-      )).to_bytes(),
+      await (
+        await ShelleyAddress.from_bech32(
+          'addr1q8gpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqphf76y',
+        )
+      ).to_bytes(),
     ).toString('hex'),
     tx_hash: '86e36b6a65d82c9dcc0370b0ee3953aee579db0b837753306405c28a74de5550',
     tx_index: 0,
@@ -181,9 +183,11 @@ const genSampleAdaAddresses: (void) => Promise<
   },
   {
     address: Buffer.from(
-      await (await ShelleyAddress.from_bech32(
-        'addr1q8gpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqphf76y',
-      )).to_bytes(),
+      await (
+        await ShelleyAddress.from_bech32(
+          'addr1q8gpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqphf76y',
+        )
+      ).to_bytes(),
     ).toString('hex'),
     addressing: {
       path: [0, 0],
@@ -453,10 +457,14 @@ describe('Create unsigned TX from UTXO', () => {
     const expectedFee = new BigNumber('1166')
     expect(unsignedTxResponse.senderUtxos).toEqual([utxos[0], utxos[1]])
     expect(
-      await (await (await unsignedTxResponse.txBuilder.get_explicit_input()).coin()).to_str(),
+      await (
+        await (await unsignedTxResponse.txBuilder.get_explicit_input()).coin()
+      ).to_str(),
     ).toEqual('1000702')
     expect(
-      await (await (await unsignedTxResponse.txBuilder.get_explicit_output()).coin()).to_str(),
+      await (
+        await (await unsignedTxResponse.txBuilder.get_explicit_output()).coin()
+      ).to_str(),
     ).toEqual('999536')
     expect(
       await (await unsignedTxResponse.txBuilder.min_fee()).to_str(),
@@ -516,10 +524,14 @@ describe('Create unsigned TX from UTXO', () => {
     const expectedFee = new BigNumber('208994')
     expect(unsignedTxResponse.senderUtxos).toEqual([utxos[1]])
     expect(
-      await (await (await unsignedTxResponse.txBuilder.get_explicit_input()).coin()).to_str(),
+      await (
+        await (await unsignedTxResponse.txBuilder.get_explicit_input()).coin()
+      ).to_str(),
     ).toEqual('1000001')
     expect(
-      await (await (await unsignedTxResponse.txBuilder.get_explicit_output()).coin()).to_str(),
+      await (
+        await (await unsignedTxResponse.txBuilder.get_explicit_output()).coin()
+      ).to_str(),
     ).toEqual('791007')
     expect(
       await (await unsignedTxResponse.txBuilder.min_fee()).to_str(),
@@ -577,10 +589,14 @@ describe('Create unsigned TX from UTXO', () => {
       utxos[4],
     ])
     expect(
-      await (await (await unsignedTxResponse.txBuilder.get_explicit_input()).coin()).to_str(),
+      await (
+        await (await unsignedTxResponse.txBuilder.get_explicit_input()).coin()
+      ).to_str(),
     ).toEqual('2000703')
     expect(
-      await (await (await unsignedTxResponse.txBuilder.get_explicit_output()).coin()).to_str(),
+      await (
+        await (await unsignedTxResponse.txBuilder.get_explicit_output()).coin()
+      ).to_str(),
     ).toEqual('1999089')
     expect(
       await (await unsignedTxResponse.txBuilder.min_fee()).to_str(),
@@ -594,7 +610,9 @@ describe('Create unsigned TX from UTXO', () => {
     //   ?.get(assetInfo.name))
     //   ?.to_str()
     // ).toEqual('1234')
-    let _multiAsset = await (await unsignedTxResponse.txBuilder.get_explicit_input()).multiasset()
+    let _multiAsset = await (
+      await unsignedTxResponse.txBuilder.get_explicit_input()
+    ).multiasset()
     // prettier-ignore
     let _assetAmountStr =
       _multiAsset != null
@@ -611,9 +629,9 @@ describe('Create unsigned TX from UTXO', () => {
     expect(_assetAmountStr).toEqual('1234')
 
     const tx = await unsignedTxResponse.txBuilder.build()
-    _multiAsset = await (await (await (await tx.outputs()).get(
-      1,
-    )).amount()).multiasset()
+    _multiAsset = await (
+      await (await (await tx.outputs()).get(1)).amount()
+    ).multiasset()
     // prettier-ignore
     _assetAmountStr =
       _multiAsset != null
@@ -838,7 +856,9 @@ describe('Create unsigned TX from addresses', () => {
     ])
 
     expect(
-      await (await (await unsignedTxResponse.txBuilder.get_explicit_input()).coin()).to_str(),
+      await (
+        await (await unsignedTxResponse.txBuilder.get_explicit_input()).coin()
+      ).to_str(),
     ).toEqual('1000702')
     expect(
       await (await unsignedTxResponse.txBuilder.get_explicit_output())
@@ -850,9 +870,15 @@ describe('Create unsigned TX from addresses', () => {
     ).toEqual('1064')
     // burns remaining amount
     expect(
-      await (await (await (await unsignedTxResponse.txBuilder.get_explicit_input()).checked_sub(
-        await unsignedTxResponse.txBuilder.get_explicit_output(),
-      )).coin()).to_str(),
+      await (
+        await (
+          await (
+            await unsignedTxResponse.txBuilder.get_explicit_input()
+          ).checked_sub(
+            await unsignedTxResponse.txBuilder.get_explicit_output(),
+          )
+        ).coin()
+      ).to_str(),
     ).toEqual(
       await (await (await unsignedTxResponse.txBuilder.build()).fee()).to_str(),
     )
@@ -1059,9 +1085,11 @@ describe('Create signed transactions', () => {
         'hex',
       ),
     )
-    const stakingKey = await (await (await accountPrivateKey.derive(2)).derive(
-      NUMBERS.STAKING_KEY_INDEX,
-    )).to_raw_key()
+    const stakingKey = await (
+      await (
+        await accountPrivateKey.derive(2)
+      ).derive(NUMBERS.STAKING_KEY_INDEX)
+    ).to_raw_key()
 
     const addressedUtxos = await genAddressedUtxos()
 
@@ -1124,10 +1152,14 @@ describe('Create signed transactions', () => {
       accountPrivateKey,
       new Set([
         Buffer.from(
-          await (await make_vkey_witness(
-            await hash_transaction(await unsignedTxResponse.txBuilder.build()),
-            stakingKey,
-          )).to_bytes(),
+          await (
+            await make_vkey_witness(
+              await hash_transaction(
+                await unsignedTxResponse.txBuilder.build(),
+              ),
+              stakingKey,
+            )
+          ).to_bytes(),
         ).toString('hex'),
       ]),
       undefined,
@@ -1159,9 +1191,11 @@ describe('Create signed transactions', () => {
         'hex',
       ),
     )
-    const stakingKey = await (await (await accountPrivateKey.derive(2)).derive(
-      NUMBERS.STAKING_KEY_INDEX,
-    )).to_raw_key()
+    const stakingKey = await (
+      await (
+        await accountPrivateKey.derive(2)
+      ).derive(NUMBERS.STAKING_KEY_INDEX)
+    ).to_raw_key()
     const stakingKeyCredential = await StakeCredential.from_keyhash(
       await (await stakingKey.to_public()).hash(),
     )
@@ -1203,10 +1237,14 @@ describe('Create signed transactions', () => {
       accountPrivateKey,
       new Set([
         Buffer.from(
-          await (await make_vkey_witness(
-            await hash_transaction(await unsignedTxResponse.txBuilder.build()),
-            stakingKey,
-          )).to_bytes(),
+          await (
+            await make_vkey_witness(
+              await hash_transaction(
+                await unsignedTxResponse.txBuilder.build(),
+              ),
+              stakingKey,
+            )
+          ).to_bytes(),
         ).toString('hex'),
       ]),
       undefined,
@@ -1227,9 +1265,9 @@ describe('Create signed transactions', () => {
     expect(fee).toEqual('1302')
     expect(await (await txBody.outputs()).len()).toEqual(1)
     expect(
-      await (await (await (await (await txBody.outputs()).get(
-        0,
-      )).amount()).coin()).to_str(),
+      await (
+        await (await (await (await txBody.outputs()).get(0)).amount()).coin()
+      ).to_str(),
     ).toEqual(
       new BigNumber(addressedUtxos[3].amount)
         .minus(fee)
@@ -1270,19 +1308,27 @@ describe('Create sendAll unsigned TX from UTXO', () => {
 
     expect(sendAllResponse.senderUtxos).toEqual([utxos[0], utxos[1]])
     expect(
-      await (await (await sendAllResponse.txBuilder.get_explicit_input()).coin()).to_str(),
+      await (
+        await (await sendAllResponse.txBuilder.get_explicit_input()).coin()
+      ).to_str(),
     ).toEqual(expectedInput.toString())
     expect(
-      await (await (await sendAllResponse.txBuilder.get_explicit_output()).coin()).to_str(),
+      await (
+        await (await sendAllResponse.txBuilder.get_explicit_output()).coin()
+      ).to_str(),
     ).toEqual(expectedInput.minus(expectedFee).toString())
     expect(await (await sendAllResponse.txBuilder.min_fee()).to_str()).toEqual(
       expectedFee.toString(),
     )
     // make sure we don't accidentally burn a lot of coins
     expect(
-      await (await (await (await sendAllResponse.txBuilder.get_explicit_input()).checked_sub(
-        await sendAllResponse.txBuilder.get_explicit_output(),
-      )).coin()).to_str(),
+      await (
+        await (
+          await (
+            await sendAllResponse.txBuilder.get_explicit_input()
+          ).checked_sub(await sendAllResponse.txBuilder.get_explicit_output())
+        ).coin()
+      ).to_str(),
     ).toEqual(expectedFee.toString())
   })
 

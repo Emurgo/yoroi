@@ -18,8 +18,10 @@ type Props = {
 }
 
 const AddressEntry: ComponentType<handlerProps> = withHandlers({
-  onPress: ({address, explorerForAddress}) => () =>
-    Linking.openURL(explorerForAddress(address)),
+  onPress:
+    ({address, explorerForAddress}) =>
+    () =>
+      Linking.openURL(explorerForAddress(address)),
 })(({address, onPress}: Props) => {
   return (
     <TouchableOpacity activeOpacity={0.5} onPress={onPress}>

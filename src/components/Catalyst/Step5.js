@@ -202,11 +202,12 @@ const Step5 = ({
             {intl.formatMessage(messages.subTitle)}
           </Text>
           <Text style={[styles.description, styles.mb70]}>
-            {/* eslint-disable indent */
-            isEasyConfirmationEnabled
-              ? intl.formatMessage(messages.bioAuthDescription)
-              : intl.formatMessage(messages.description)
-            /* eslint-enable indent */
+            {
+              /* eslint-disable indent */
+              isEasyConfirmationEnabled
+                ? intl.formatMessage(messages.bioAuthDescription)
+                : intl.formatMessage(messages.description)
+              /* eslint-enable indent */
             }
           </Text>
           <ValidatedTextInput

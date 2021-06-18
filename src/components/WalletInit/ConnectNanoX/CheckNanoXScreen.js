@@ -110,17 +110,14 @@ export default injectIntl(
       intl.formatMessage(messages.title),
     ),
     withHandlers({
-      onPress: ({navigation}) => (
-        event,
-        networkId,
-        walletImplementationId,
-        useUSB,
-      ) =>
-        navigation.navigate(WALLET_INIT_ROUTES.CONNECT_NANO_X, {
-          networkId,
-          walletImplementationId,
-          useUSB,
-        }),
+      onPress:
+        ({navigation}) =>
+        (event, networkId, walletImplementationId, useUSB) =>
+          navigation.navigate(WALLET_INIT_ROUTES.CONNECT_NANO_X, {
+            networkId,
+            walletImplementationId,
+            useUSB,
+          }),
     }),
   )(CheckNanoXScreen): ComponentType<ExternalProps>),
 )

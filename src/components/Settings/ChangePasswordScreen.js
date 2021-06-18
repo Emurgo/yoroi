@@ -43,8 +43,7 @@ const messages = defineMessages({
     description: 'some desc',
   },
   repeatPasswordInputNotMatchError: {
-    id:
-      'components.settings.changepasswordscreen.repeatPasswordInputNotMatchError',
+    id: 'components.settings.changepasswordscreen.repeatPasswordInputNotMatchError',
     defaultMessage: 'Passwords do not match',
     description: 'some desc',
   },
@@ -208,18 +207,20 @@ export default injectIntl(
       intl.formatMessage(messages.title),
     ),
     withHandlers({
-      onSubmit: ({navigation, intl}) => async (oldPassword, newPassword) => {
-        try {
-          await walletManager.changePassword(oldPassword, newPassword, intl)
-          navigation.goBack(null)
-        } catch (e) {
-          if (e instanceof WrongPassword) {
-            await showErrorDialog(errorMessages.incorrectPassword, intl)
-          } else {
-            throw e
+      onSubmit:
+        ({navigation, intl}) =>
+        async (oldPassword, newPassword) => {
+          try {
+            await walletManager.changePassword(oldPassword, newPassword, intl)
+            navigation.goBack(null)
+          } catch (e) {
+            if (e instanceof WrongPassword) {
+              await showErrorDialog(errorMessages.incorrectPassword, intl)
+            } else {
+              throw e
+            }
           }
-        }
-      },
+        },
     }),
   )(ChangePasswordScreen),
 )

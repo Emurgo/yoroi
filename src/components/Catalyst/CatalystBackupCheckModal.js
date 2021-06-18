@@ -44,9 +44,8 @@ const CatalystBackupCheckModal = ({
 }: Props) => {
   const [acceptedPin, setAcceptedPin] = useState<boolean>(false)
   const [acceptedQrCode, setAcceptedQrCode] = useState<boolean>(false)
-  const [acceptedConsequences, setAcceptedConsequences] = useState<boolean>(
-    false,
-  )
+  const [acceptedConsequences, setAcceptedConsequences] =
+    useState<boolean>(false)
   return (
     <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
       <Text style={styles.title}>

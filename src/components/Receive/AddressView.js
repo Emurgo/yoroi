@@ -237,69 +237,58 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      withActivityIndicator: ({setIsWaiting}) => async (
-        func: () => Promise<void>,
-      ): Promise<void> => {
-        setIsWaiting(true)
-        try {
-          await func()
-        } finally {
-          setIsWaiting(false)
-        }
-      },
-      onToggleAddrVerifyDialog: ({
-        openTransportSwitch,
-        openAddressVerify,
-      }) => () => {
-        if (
-          Platform.OS === 'android' &&
-          CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT
-        ) {
-          openTransportSwitch()
-        } else {
-          openAddressVerify()
-        }
-      },
+      withActivityIndicator:
+        ({setIsWaiting}) =>
+        async (func: () => Promise<void>): Promise<void> => {
+          setIsWaiting(true)
+          try {
+            await func()
+          } finally {
+            setIsWaiting(false)
+          }
+        },
+      onToggleAddrVerifyDialog:
+        ({openTransportSwitch, openAddressVerify}) =>
+        () => {
+          if (
+            Platform.OS === 'android' &&
+            CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT
+          ) {
+            openTransportSwitch()
+          } else {
+            openAddressVerify()
+          }
+        },
     }),
     withHandlers({
-      onChooseTransport: ({
-        hwDeviceInfo,
-        setUseUSB,
-        openLedgerConnect,
-        openAddressVerify,
-      }) => (event, useUSB) => {
-        setUseUSB(useUSB)
-        Logger.debug('hwDeviceInfo', hwDeviceInfo)
-        if (
-          (useUSB && hwDeviceInfo.hwFeatures.deviceObj == null) ||
-          (!useUSB && hwDeviceInfo.hwFeatures.deviceId == null)
-        ) {
-          openLedgerConnect()
-        } else {
+      onChooseTransport:
+        ({hwDeviceInfo, setUseUSB, openLedgerConnect, openAddressVerify}) =>
+        (event, useUSB) => {
+          setUseUSB(useUSB)
+          Logger.debug('hwDeviceInfo', hwDeviceInfo)
+          if (
+            (useUSB && hwDeviceInfo.hwFeatures.deviceObj == null) ||
+            (!useUSB && hwDeviceInfo.hwFeatures.deviceId == null)
+          ) {
+            openLedgerConnect()
+          } else {
+            openAddressVerify()
+          }
+        },
+      onConnectUSB:
+        ({setLedgerDeviceObj, openAddressVerify}) =>
+        (deviceObj) => {
+          setLedgerDeviceObj(deviceObj)
           openAddressVerify()
-        }
-      },
-      onConnectUSB: ({setLedgerDeviceObj, openAddressVerify}) => (
-        deviceObj,
-      ) => {
-        setLedgerDeviceObj(deviceObj)
-        openAddressVerify()
-      },
-      onConnectBLE: ({setLedgerDeviceId, openAddressVerify}) => (deviceId) => {
-        setLedgerDeviceId(deviceId)
-        openAddressVerify()
-      },
-      onVerifyAddress: ({
-        intl,
-        address,
-        index,
-        hwDeviceInfo,
-        walletMeta,
-        useUSB,
-        closeDetails,
-        withActivityIndicator,
-      }) => async (_event) => {
-        await _handleOnVerifyAddress(
+        },
+      onConnectBLE:
+        ({setLedgerDeviceId, openAddressVerify}) =>
+        (deviceId) => {
+          setLedgerDeviceId(deviceId)
+          openAddressVerify()
+        },
+      onVerifyAddress:
+        ({
           intl,
           address,
           index,
@@ -308,8 +297,19 @@ export default injectIntl(
           useUSB,
           closeDetails,
           withActivityIndicator,
-        )
-      },
+        }) =>
+        async (_event) => {
+          await _handleOnVerifyAddress(
+            intl,
+            address,
+            index,
+            hwDeviceInfo,
+            walletMeta,
+            useUSB,
+            closeDetails,
+            withActivityIndicator,
+          )
+        },
     }),
   )(AddressView): ComponentType<ExternalProps>),
 )

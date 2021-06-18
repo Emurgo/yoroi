@@ -120,15 +120,17 @@ export default injectIntl(
   compose(
     connect((_state: State) => ({})),
     withHandlers({
-      navigateInitWallet: ({navigation}) => (
-        event: Object,
-        networkId: NetworkId,
-        walletImplementationId: WalletImplementationId,
-      ) =>
-        navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH, {
-          networkId,
-          walletImplementationId,
-        }),
+      navigateInitWallet:
+        ({navigation}) =>
+        (
+          event: Object,
+          networkId: NetworkId,
+          walletImplementationId: WalletImplementationId,
+        ) =>
+          navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH, {
+            networkId,
+            walletImplementationId,
+          }),
     }),
   )(WalletInitScreen),
 )

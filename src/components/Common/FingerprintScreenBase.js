@@ -71,16 +71,16 @@ const FingerprintScreenBase = ({
         </View>
       ) : null}
 
-      {/* eslint-disable indent */
-      addWelcomeMessage === true &&
-        intl != null && (
+      {
+        /* eslint-disable indent */
+        addWelcomeMessage === true && intl != null && (
           <View style={styles.welcomeMessageContainer}>
             <Text style={styles.welcomeMessageText}>
               {intl.formatMessage(messages.welcomeMessage)}
             </Text>
           </View>
         )
-      /* eslint-enable indent */
+        /* eslint-enable indent */
       }
 
       {showImage === true && (
@@ -114,12 +114,14 @@ export default (compose(
       showImage: false,
     },
     {
-      shouldShowImage: () => (sdk: number): {showImage: boolean} => {
-        // note(v-almonacid): the decrypt with biometrics prompt only appears
-        // for API level >= 28
-        const showImage = Platform.OS === 'android' && sdk < 28
-        return {showImage}
-      },
+      shouldShowImage:
+        () =>
+        (sdk: number): {showImage: boolean} => {
+          // note(v-almonacid): the decrypt with biometrics prompt only appears
+          // for API level >= 28
+          const showImage = Platform.OS === 'android' && sdk < 28
+          return {showImage}
+        },
     },
   ),
   onDidMount(({shouldShowImage}) =>

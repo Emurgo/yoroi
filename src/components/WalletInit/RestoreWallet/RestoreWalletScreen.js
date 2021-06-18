@@ -39,8 +39,7 @@ const mnemonicInputErrorsMessages = defineMessages({
     description: 'some desc',
   },
   INVALID_CHECKSUM: {
-    id:
-      'components.walletinit.restorewallet.restorewalletscreen.invalidchecksum',
+    id: 'components.walletinit.restorewallet.restorewalletscreen.invalidchecksum',
     defaultMessage: '!!!Please enter valid mnemonic.',
     description: 'some desc',
   },
@@ -58,8 +57,7 @@ const messages = defineMessages({
     description: 'some desc',
   },
   mnemonicInputLabel: {
-    id:
-      'components.walletinit.restorewallet.restorewalletscreen.mnemonicInputLabel',
+    id: 'components.walletinit.restorewallet.restorewalletscreen.mnemonicInputLabel',
     defaultMessage: '!!!Recovery phrase',
     description: 'some desc',
   },
@@ -183,17 +181,19 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      navigateToWalletCredentials: ({navigation, route, phrase}) => (
-        _event,
-      ) => {
-        navigation.navigate(WALLET_INIT_ROUTES.VERIFY_RESTORED_WALLET, {
-          phrase: cleanMnemonic(phrase),
-          networkId: route.params.networkId,
-          walletImplementationId: route.params.walletImplementationId,
-        })
-      },
-      translateInvalidPhraseError: ({intl}: {intl: IntlShape}) => (error) =>
-        _translateInvalidPhraseError(intl, error),
+      navigateToWalletCredentials:
+        ({navigation, route, phrase}) =>
+        (_event) => {
+          navigation.navigate(WALLET_INIT_ROUTES.VERIFY_RESTORED_WALLET, {
+            phrase: cleanMnemonic(phrase),
+            networkId: route.params.networkId,
+            walletImplementationId: route.params.walletImplementationId,
+          })
+        },
+      translateInvalidPhraseError:
+        ({intl}: {intl: IntlShape}) =>
+        (error) =>
+          _translateInvalidPhraseError(intl, error),
     }),
   )(RestoreWalletScreen): ComponentType<{
     navigation: Navigation,

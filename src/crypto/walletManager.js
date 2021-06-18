@@ -115,10 +115,8 @@ class WalletManager {
         const data = await storage.read(`/wallet/${w.id}/data`)
         if (w.checksum == null) {
           if (data != null && data.externalChain.addressGenerator != null) {
-            const {
-              account,
-              accountPubKeyHex,
-            } = data.externalChain.addressGenerator
+            const {account, accountPubKeyHex} =
+              data.externalChain.addressGenerator
             switch (walletImplementationId) {
               case WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID:
                 checksum = legacyWalletChecksum(

@@ -18,36 +18,32 @@ const _saveHW = (hwDeviceInfo) => ({
   type: 'SAVE_HW',
 })
 
-export const saveHW = (hwDeviceInfo: HWDeviceInfo) => (
-  dispatch: Dispatch<any>,
-) => {
-  dispatch(_saveHW(hwDeviceInfo))
-}
-
-export const setLedgerDeviceId = (deviceId: DeviceId) => (
-  dispatch: Dispatch<any>,
-  getState: () => State,
-) => {
-  Logger.debug('setting deviceId', deviceId)
-  const state = getState()
-  const hwDeviceInfo = hwDeviceInfoSelector(state)
-  if (hwDeviceInfo == null || hwDeviceInfo.hwFeatures == null) {
-    throw new NoDeviceInfoError()
+export const saveHW =
+  (hwDeviceInfo: HWDeviceInfo) => (dispatch: Dispatch<any>) => {
+    dispatch(_saveHW(hwDeviceInfo))
   }
-  hwDeviceInfo.hwFeatures.deviceId = deviceId
-  dispatch(_saveHW(hwDeviceInfo))
-}
 
-export const setLedgerDeviceObj = (deviceObj: DeviceObj) => (
-  dispatch: Dispatch<any>,
-  getState: () => State,
-) => {
-  Logger.debug('setting deviceObj', deviceObj)
-  const state = getState()
-  const hwDeviceInfo = hwDeviceInfoSelector(state)
-  if (hwDeviceInfo == null || hwDeviceInfo.hwFeatures == null) {
-    throw new NoDeviceInfoError()
+export const setLedgerDeviceId =
+  (deviceId: DeviceId) => (dispatch: Dispatch<any>, getState: () => State) => {
+    Logger.debug('setting deviceId', deviceId)
+    const state = getState()
+    const hwDeviceInfo = hwDeviceInfoSelector(state)
+    if (hwDeviceInfo == null || hwDeviceInfo.hwFeatures == null) {
+      throw new NoDeviceInfoError()
+    }
+    hwDeviceInfo.hwFeatures.deviceId = deviceId
+    dispatch(_saveHW(hwDeviceInfo))
   }
-  hwDeviceInfo.hwFeatures.deviceObj = deviceObj
-  dispatch(_saveHW(hwDeviceInfo))
-}
+
+export const setLedgerDeviceObj =
+  (deviceObj: DeviceObj) =>
+  (dispatch: Dispatch<any>, getState: () => State) => {
+    Logger.debug('setting deviceObj', deviceObj)
+    const state = getState()
+    const hwDeviceInfo = hwDeviceInfoSelector(state)
+    if (hwDeviceInfo == null || hwDeviceInfo.hwFeatures == null) {
+      throw new NoDeviceInfoError()
+    }
+    hwDeviceInfo.hwFeatures.deviceObj = deviceObj
+    dispatch(_saveHW(hwDeviceInfo))
+  }

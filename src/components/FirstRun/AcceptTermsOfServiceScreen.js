@@ -106,36 +106,38 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      handleAccepted: ({
-        navigation,
-        acceptAndSaveTos,
-        setSystemAuth,
-        setSavingConsent,
-        signin,
-      }) => async () => {
-        setSavingConsent(true)
-        await acceptAndSaveTos()
+      handleAccepted:
+        ({
+          navigation,
+          acceptAndSaveTos,
+          setSystemAuth,
+          setSavingConsent,
+          signin,
+        }) =>
+        async () => {
+          setSavingConsent(true)
+          await acceptAndSaveTos()
 
-        const canSystemAuthBeEnabled = await canBiometricEncryptionBeEnabled()
+          const canSystemAuthBeEnabled = await canBiometricEncryptionBeEnabled()
 
-        // temporary disable biometric auth for Android SDK >= 29
-        // TODO(v-almonacid): re-enable for Android SDK >= 29 once the module
-        // is updated
-        const shouldNotEnableBiometricAuth =
-          Platform.OS === 'android' &&
-          CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version)
+          // temporary disable biometric auth for Android SDK >= 29
+          // TODO(v-almonacid): re-enable for Android SDK >= 29 once the module
+          // is updated
+          const shouldNotEnableBiometricAuth =
+            Platform.OS === 'android' &&
+            CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version)
 
-        if (canSystemAuthBeEnabled && !shouldNotEnableBiometricAuth) {
-          await setSystemAuth(true)
-          // note(v-almonacid) here we don't setSavingConsent(false)
-          // because signin() will likely unmount the component before the
-          // update is dispatched
-          signin()
-        } else {
-          setSavingConsent(false)
-          navigation.navigate(FIRST_RUN_ROUTES.CUSTOM_PIN)
-        }
-      },
+          if (canSystemAuthBeEnabled && !shouldNotEnableBiometricAuth) {
+            await setSystemAuth(true)
+            // note(v-almonacid) here we don't setSavingConsent(false)
+            // because signin() will likely unmount the component before the
+            // update is dispatched
+            signin()
+          } else {
+            setSavingConsent(false)
+            navigation.navigate(FIRST_RUN_ROUTES.CUSTOM_PIN)
+          }
+        },
     }),
     withNavigationTitle(({intl}: {intl: IntlShape}) =>
       intl.formatMessage(messages.title),

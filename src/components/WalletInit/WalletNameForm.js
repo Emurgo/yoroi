@@ -128,17 +128,22 @@ export default injectIntl(
     ),
     withHandlers({
       onPress: ignoreConcurrentAsyncHandler(
-        ({onSubmit, name}) => async () => {
-          await onSubmit({name})
-        },
+        ({onSubmit, name}) =>
+          async () => {
+            await onSubmit({name})
+          },
         1000,
       ),
-      validateWalletName: ({walletNames}) => (walletName) =>
-        validateWalletName(walletName, null, walletNames),
+      validateWalletName:
+        ({walletNames}) =>
+        (walletName) =>
+          validateWalletName(walletName, null, walletNames),
     }),
     withHandlers({
-      validateForm: ({name, validateWalletName}) => () =>
-        validateWalletName(name),
+      validateForm:
+        ({name, validateWalletName}) =>
+        () =>
+          validateWalletName(name),
     }),
   )(WalletNameForm): ComponentType<ExternalProps>),
 )

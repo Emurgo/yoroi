@@ -265,12 +265,9 @@ const StakingCenter = (
     }
   }
 
-  useEffect(
-    () => {
-      getAmountToDelegate()
-    },
-    [utxos],
-  )
+  useEffect(() => {
+    getAmountToDelegate()
+  }, [utxos])
 
   return (
     <>

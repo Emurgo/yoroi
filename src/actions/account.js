@@ -73,30 +73,28 @@ const _setLastError = (error) => ({
   reducer: (state, error) => error,
 })
 
-export const fetchAccountState = () => async (
-  dispatch: Dispatch<any>,
-  getState: () => State,
-) => {
-  if (getState().accountState.isFetching) {
-    return
-  }
-  dispatch(_clearAccountState())
-  dispatch(_startFetching())
-  try {
-    const status = await walletManager.getDelegationStatus()
-    Logger.debug('account actions::getDelegationStatus', status)
-    dispatch(_setAccountPool(status.poolKeyHash))
-    dispatch(_setAccountDelegationStatus(status.isRegistered))
+export const fetchAccountState =
+  () => async (dispatch: Dispatch<any>, getState: () => State) => {
+    if (getState().accountState.isFetching) {
+      return
+    }
+    dispatch(_clearAccountState())
+    dispatch(_startFetching())
+    try {
+      const status = await walletManager.getDelegationStatus()
+      Logger.debug('account actions::getDelegationStatus', status)
+      dispatch(_setAccountPool(status.poolKeyHash))
+      dispatch(_setAccountDelegationStatus(status.isRegistered))
 
-    const accountStateResp = await walletManager.fetchAccountState()
-    const accountState = ObjectValues(accountStateResp)[0]
-    const value = accountState?.remainingAmount || '0'
+      const accountStateResp = await walletManager.fetchAccountState()
+      const accountState = ObjectValues(accountStateResp)[0]
+      const value = accountState?.remainingAmount || '0'
 
-    const utxos = getState().balance.utxos
-    if (utxos != null) {
-      const utxosForKey = await walletManager.getAllUtxosForKey(utxos)
-      // prettier-ignore
-      const amountToDelegate =
+      const utxos = getState().balance.utxos
+      if (utxos != null) {
+        const utxosForKey = await walletManager.getAllUtxosForKey(utxos)
+        // prettier-ignore
+        const amountToDelegate =
         (utxosForKey != null && status.isRegistered)
           ? utxosForKey
             .map((utxo) => utxo.amount)
@@ -105,19 +103,21 @@ export const fetchAccountState = () => async (
               new BigNumber(0),
             )
           : BigNumber(0)
-      dispatch(
-        _setAccountTotalDelegated(amountToDelegate.plus(new BigNumber(value))),
-      )
+        dispatch(
+          _setAccountTotalDelegated(
+            amountToDelegate.plus(new BigNumber(value)),
+          ),
+        )
+      }
+      dispatch(_setAccountValue(new BigNumber(value)))
+      dispatch(_setLastError(null))
+    } catch (err) {
+      Logger.warn(err)
+      dispatch(_setLastError(err))
+    } finally {
+      dispatch(_endFetching())
     }
-    dispatch(_setAccountValue(new BigNumber(value)))
-    dispatch(_setLastError(null))
-  } catch (err) {
-    Logger.warn(err)
-    dispatch(_setLastError(err))
-  } finally {
-    dispatch(_endFetching())
   }
-}
 
 export const clearAccountState = () => (dispatch: Dispatch<any>) => {
   dispatch(_clearAccountState())

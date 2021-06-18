@@ -65,13 +65,8 @@ class Modal extends React.Component<Props, State> {
   handleWillFocus = () => this.setState({isFocused: true})
 
   render() {
-    const {
-      visible,
-      showCloseIcon,
-      onRequestClose,
-      noPadding,
-      children,
-    } = this.props
+    const {visible, showCloseIcon, onRequestClose, noPadding, children} =
+      this.props
     const {isFocused} = this.state
 
     return (

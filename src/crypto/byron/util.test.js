@@ -261,8 +261,7 @@ describe('signTransaction', () => {
     const inputs = [
       {
         ptr: {
-          id:
-            '0cd1ec4dce33c7872c3e090c88e9af2fc56c4d7fba6745d15d4fce5e1d4620ba',
+          id: '0cd1ec4dce33c7872c3e090c88e9af2fc56c4d7fba6745d15d4fce5e1d4620ba',
           index: 0,
         },
         value: {

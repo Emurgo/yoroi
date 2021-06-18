@@ -604,20 +604,16 @@ class SendScreen extends Component<Props, State> {
       )
     }
 
-    const {
-      addressErrors,
-      amountErrors,
-      balanceErrors,
-      balanceAfter,
-    } = await recomputeAll({
-      amount,
-      address,
-      utxos,
-      sendAll,
-      defaultAsset,
-      selectedTokenMeta,
-      tokenBalance,
-    })
+    const {addressErrors, amountErrors, balanceErrors, balanceAfter} =
+      await recomputeAll({
+        amount,
+        address,
+        utxos,
+        sendAll,
+        defaultAsset,
+        selectedTokenMeta,
+        tokenBalance,
+      })
 
     // Note(ppershing): use this.props as they might have
     // changed during await
@@ -729,8 +725,8 @@ class SendScreen extends Component<Props, State> {
           isFetchingBalance
             ? intl.formatMessage(messages.availableFundsBannerIsFetching)
             : tokenBalance
-              ? formatTokenWithText(tokenBalance.getDefault(), assetMetaData)
-              : intl.formatMessage(messages.availableFundsBannerNotAvailable)
+            ? formatTokenWithText(tokenBalance.getDefault(), assetMetaData)
+            : intl.formatMessage(messages.availableFundsBannerNotAvailable)
         }
         boldText
       />
@@ -952,9 +948,8 @@ export default injectIntl(
         tokenMetadata: tokenInfoSelector(state),
         defaultAsset: defaultNetworkAssetSelector(state),
         utxos: utxosSelector(state),
-        hasPendingOutgoingTransaction: hasPendingOutgoingTransactionSelector(
-          state,
-        ),
+        hasPendingOutgoingTransaction:
+          hasPendingOutgoingTransactionSelector(state),
         isOnline: isOnlineSelector(state),
         serverStatus: serverStatusSelector(state),
       }),

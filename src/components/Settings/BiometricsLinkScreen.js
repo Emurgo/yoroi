@@ -83,32 +83,36 @@ const BiometricsLinkScreen = ({
 
 export default injectIntl(
   compose(
-    connect(
-      (_state) => ({}),
-      {setSystemAuth},
-    ),
+    connect((_state) => ({}), {setSystemAuth}),
     withHandlers({
-      linkBiometricsSignIn: ({
-        navigation,
-        setSystemAuth,
-        intl,
-      }: {
-        intl: IntlShape,
-        navigation: any,
-        setSystemAuth: any,
-      }) => async () => {
-        if (await canBiometricEncryptionBeEnabled()) {
-          setSystemAuth(true)
-            .then(() => navigation.navigate(SETTINGS_ROUTES.MAIN))
-            .catch(() =>
-              showErrorDialog(errorMessages.disableEasyConfirmationFirst, intl),
-            )
-        } else {
-          await showErrorDialog(errorMessages.enableFingerprintsFirst, intl)
-        }
-      },
-      cancelLinking: ({navigation}) => () =>
-        navigation.navigate(SETTINGS_ROUTES.MAIN),
+      linkBiometricsSignIn:
+        ({
+          navigation,
+          setSystemAuth,
+          intl,
+        }: {
+          intl: IntlShape,
+          navigation: any,
+          setSystemAuth: any,
+        }) =>
+        async () => {
+          if (await canBiometricEncryptionBeEnabled()) {
+            setSystemAuth(true)
+              .then(() => navigation.navigate(SETTINGS_ROUTES.MAIN))
+              .catch(() =>
+                showErrorDialog(
+                  errorMessages.disableEasyConfirmationFirst,
+                  intl,
+                ),
+              )
+          } else {
+            await showErrorDialog(errorMessages.enableFingerprintsFirst, intl)
+          }
+        },
+      cancelLinking:
+        ({navigation}) =>
+        () =>
+          navigation.navigate(SETTINGS_ROUTES.MAIN),
     }),
   )(BiometricsLinkScreen),
 )

@@ -166,9 +166,13 @@ export const deriveRewardAddressHex = async (
     Buffer.from(accountPubKeyHex, 'hex'),
   )
 
-  const stakingKey = await (await (await accountPubKeyPtr.derive(
-    CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-  )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+  const stakingKey = await (
+    await (
+      await accountPubKeyPtr.derive(
+        CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+      )
+    ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
+  ).to_raw_key()
 
   const credential = await StakeCredential.from_keyhash(await stakingKey.hash())
 

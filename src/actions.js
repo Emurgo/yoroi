@@ -70,33 +70,31 @@ const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
   handler && handler()
 }
 
-export const setAppSettingField = (
-  fieldName: AppSettingsKey,
-  value: any,
-) => async (dispatch: Dispatch<any>) => {
-  await writeAppSettings(fieldName, value)
+export const setAppSettingField =
+  (fieldName: AppSettingsKey, value: any) =>
+  async (dispatch: Dispatch<any>) => {
+    await writeAppSettings(fieldName, value)
 
-  dispatch({
-    path: ['appSettings', fieldName],
-    payload: value,
-    type: 'SET_APP_SETTING_FIELD',
-    reducer: (state, payload) => payload,
-  })
-  updateCrashlytics(fieldName, value)
-}
+    dispatch({
+      path: ['appSettings', fieldName],
+      payload: value,
+      type: 'SET_APP_SETTING_FIELD',
+      reducer: (state, payload) => payload,
+    })
+    updateCrashlytics(fieldName, value)
+  }
 
-export const clearAppSettingField = (fieldName: AppSettingsKey) => async (
-  dispatch: Dispatch<any>,
-) => {
-  await removeAppSettings(fieldName)
-  updateCrashlytics(fieldName, null)
-  dispatch({
-    path: ['appSettings', fieldName],
-    payload: null,
-    type: 'REMOVE_APP_SETTING_FIELD',
-    reducer: (state, payload) => payload,
-  })
-}
+export const clearAppSettingField =
+  (fieldName: AppSettingsKey) => async (dispatch: Dispatch<any>) => {
+    await removeAppSettings(fieldName)
+    updateCrashlytics(fieldName, null)
+    dispatch({
+      path: ['appSettings', fieldName],
+      payload: null,
+      type: 'REMOVE_APP_SETTING_FIELD',
+      reducer: (state, payload) => payload,
+    })
+  }
 
 export const setEasyConfirmation = (enable: boolean) => ({
   path: ['wallet', 'isEasyConfirmationEnabled'],
@@ -136,21 +134,19 @@ const reloadAppSettings = () => async (dispatch: Dispatch<any>) => {
   }
 }
 
-export const encryptAndStoreCustomPin = (pin: string) => async (
-  dispatch: Dispatch<any>,
-  getState: () => State,
-) => {
-  const state = getState()
-  const installationId = state.appSettings.installationId
-  if (installationId == null) {
-    throw new AppSettingsError(APP_SETTINGS_KEYS.INSTALLATION_ID)
-  }
+export const encryptAndStoreCustomPin =
+  (pin: string) => async (dispatch: Dispatch<any>, getState: () => State) => {
+    const state = getState()
+    const installationId = state.appSettings.installationId
+    if (installationId == null) {
+      throw new AppSettingsError(APP_SETTINGS_KEYS.INSTALLATION_ID)
+    }
 
-  const customPinHash = await encryptCustomPin(installationId, pin)
-  await dispatch(
-    setAppSettingField(APP_SETTINGS_KEYS.CUSTOM_PIN_HASH, customPinHash),
-  )
-}
+    const customPinHash = await encryptCustomPin(installationId, pin)
+    await dispatch(
+      setAppSettingField(APP_SETTINGS_KEYS.CUSTOM_PIN_HASH, customPinHash),
+    )
+  }
 
 export const removeCustomPin = () => async (dispatch: Dispatch<any>) => {
   await dispatch(clearAppSettingField(APP_SETTINGS_KEYS.CUSTOM_PIN_HASH))
@@ -160,42 +156,40 @@ export const acceptAndSaveTos = () => async (dispatch: Dispatch<any>) => {
   await dispatch(setAppSettingField(APP_SETTINGS_KEYS.ACCEPTED_TOS, true))
 }
 
-const initInstallationId = () => async (
-  dispatch: Dispatch<any>,
-  getState: any,
-): Promise<string> => {
-  let installationId = installationIdSelector(getState())
-  if (installationId != null) {
+const initInstallationId =
+  () =>
+  async (dispatch: Dispatch<any>, getState: any): Promise<string> => {
+    let installationId = installationIdSelector(getState())
+    if (installationId != null) {
+      return installationId
+    }
+
+    installationId = uuid.v4()
+
+    await dispatch(
+      setAppSettingField(APP_SETTINGS_KEYS.INSTALLATION_ID, installationId),
+    )
+
     return installationId
   }
 
-  installationId = uuid.v4()
+export const updateVersion =
+  () =>
+  async (dispatch: Dispatch<any>, getState: any): Promise<string> => {
+    let currentVersion = currentVersionSelector(getState())
+    Logger.debug('current version from state', currentVersion)
+    if (currentVersion != null && currentVersion === DeviceInfo.getVersion()) {
+      return currentVersion
+    }
 
-  await dispatch(
-    setAppSettingField(APP_SETTINGS_KEYS.INSTALLATION_ID, installationId),
-  )
+    currentVersion = DeviceInfo.getVersion()
 
-  return installationId
-}
-
-export const updateVersion = () => async (
-  dispatch: Dispatch<any>,
-  getState: any,
-): Promise<string> => {
-  let currentVersion = currentVersionSelector(getState())
-  Logger.debug('current version from state', currentVersion)
-  if (currentVersion != null && currentVersion === DeviceInfo.getVersion()) {
+    await dispatch(
+      setAppSettingField(APP_SETTINGS_KEYS.CURRENT_VERSION, currentVersion),
+    )
+    Logger.debug('updated version', currentVersion)
     return currentVersion
   }
-
-  currentVersion = DeviceInfo.getVersion()
-
-  await dispatch(
-    setAppSettingField(APP_SETTINGS_KEYS.CURRENT_VERSION, currentVersion),
-  )
-  Logger.debug('updated version', currentVersion)
-  return currentVersion
-}
 
 export const closeWallet = () => async (_dispatch: Dispatch<any>) => {
   await walletManager.closeWallet()
@@ -227,15 +221,14 @@ export const logout = () => async (dispatch: Dispatch<any>) => {
   dispatch(signout())
 }
 
-const _setServerStatus = (serverStatus: ServerStatusCache) => (
-  dispatch: Dispatch<any>,
-) =>
-  dispatch({
-    path: ['serverStatus'],
-    payload: serverStatus,
-    type: 'SET_SERVER_STATUS',
-    reducer: (state, payload) => payload,
-  })
+const _setServerStatus =
+  (serverStatus: ServerStatusCache) => (dispatch: Dispatch<any>) =>
+    dispatch({
+      path: ['serverStatus'],
+      payload: serverStatus,
+      type: 'SET_SERVER_STATUS',
+      reducer: (state, payload) => payload,
+    })
 
 export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   try {
@@ -381,60 +374,61 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
   )
 }
 
-export const generateNewReceiveAddress = () => async (
-  _dispatch: Dispatch<any>,
-) => {
-  return await walletManager.generateNewUiReceiveAddress()
-}
+export const generateNewReceiveAddress =
+  () => async (_dispatch: Dispatch<any>) => {
+    return await walletManager.generateNewUiReceiveAddress()
+  }
 
-export const generateNewReceiveAddressIfNeeded = () => async (
-  _dispatch: Dispatch<any>,
-) => {
-  return await walletManager.generateNewUiReceiveAddressIfNeeded()
-}
+export const generateNewReceiveAddressIfNeeded =
+  () => async (_dispatch: Dispatch<any>) => {
+    return await walletManager.generateNewUiReceiveAddressIfNeeded()
+  }
 
-export const changeWalletName = (newName: string) => async (
-  dispatch: Dispatch<any>,
-) => {
-  await walletManager.rename(newName)
-  dispatch(updateWallets())
-}
+export const changeWalletName =
+  (newName: string) => async (dispatch: Dispatch<any>) => {
+    await walletManager.rename(newName)
+    dispatch(updateWallets())
+  }
 
-export const createWallet = (
-  name: string,
-  mnemonic: string,
-  password: string,
-  networkId: NetworkId,
-  implementationId: WalletImplementationId,
-) => async (dispatch: Dispatch<any>) => {
-  await walletManager.createWallet(
-    name,
-    mnemonic,
-    password,
-    networkId,
-    implementationId,
-  )
-  dispatch(updateWallets())
-}
+export const createWallet =
+  (
+    name: string,
+    mnemonic: string,
+    password: string,
+    networkId: NetworkId,
+    implementationId: WalletImplementationId,
+  ) =>
+  async (dispatch: Dispatch<any>) => {
+    await walletManager.createWallet(
+      name,
+      mnemonic,
+      password,
+      networkId,
+      implementationId,
+    )
+    dispatch(updateWallets())
+  }
 
-export const createWalletWithBip44Account = (
-  name: string,
-  bip44AccountPublic: string,
-  networkId: NetworkId,
-  implementationId: WalletImplementationId,
-  hwDeviceInfo: ?HWDeviceInfo,
-  readOnly: boolean,
-) => async (dispatch: Dispatch<any>) => {
-  await walletManager.createWalletWithBip44Account(
-    name,
-    bip44AccountPublic,
-    networkId,
-    implementationId,
-    hwDeviceInfo,
-    readOnly,
-  )
-  dispatch(updateWallets())
-}
+export const createWalletWithBip44Account =
+  (
+    name: string,
+    bip44AccountPublic: string,
+    networkId: NetworkId,
+    implementationId: WalletImplementationId,
+    hwDeviceInfo: ?HWDeviceInfo,
+    readOnly: boolean,
+  ) =>
+  async (dispatch: Dispatch<any>) => {
+    await walletManager.createWalletWithBip44Account(
+      name,
+      bip44AccountPublic,
+      networkId,
+      implementationId,
+      hwDeviceInfo,
+      readOnly,
+    )
+    dispatch(updateWallets())
+  }
 
 export const removeCurrentWallet = () => async (dispatch: Dispatch<any>) => {
   await walletManager.removeCurrentWallet()
@@ -517,35 +511,33 @@ export const showConfirmationDialog = (
     noButton: intl.formatMessage(dialog.noButton),
   })
 
-export const setSystemAuth = (enable: boolean) => async (
-  dispatch: Dispatch<any>,
-  getState: any,
-) => {
-  const canBeDisabled = walletManager.canBiometricsSignInBeDisabled()
+export const setSystemAuth =
+  (enable: boolean) => async (dispatch: Dispatch<any>, getState: any) => {
+    const canBeDisabled = walletManager.canBiometricsSignInBeDisabled()
 
-  if (!enable && !canBeDisabled) {
-    throw new Error(
-      'Can not disable system auth without disabling easy confirmation.',
+    if (!enable && !canBeDisabled) {
+      throw new Error(
+        'Can not disable system auth without disabling easy confirmation.',
+      )
+    }
+
+    await dispatch(
+      setAppSettingField(APP_SETTINGS_KEYS.SYSTEM_AUTH_ENABLED, enable),
     )
+
+    const installationId = installationIdSelector(getState())
+    if (installationId == null) {
+      throw new Error('Installation id is not defined')
+    }
+
+    if (enable) {
+      await recreateAppSignInKeys(installationId)
+
+      await dispatch(removeCustomPin())
+    } else {
+      await removeAppSignInKeys(installationId)
+    }
   }
-
-  await dispatch(
-    setAppSettingField(APP_SETTINGS_KEYS.SYSTEM_AUTH_ENABLED, enable),
-  )
-
-  const installationId = installationIdSelector(getState())
-  if (installationId == null) {
-    throw new Error('Installation id is not defined')
-  }
-
-  if (enable) {
-    await recreateAppSignInKeys(installationId)
-
-    await dispatch(removeCustomPin())
-  } else {
-    await removeAppSignInKeys(installationId)
-  }
-}
 
 export const handleGeneralError = async (
   message: string,
@@ -556,29 +548,27 @@ export const handleGeneralError = async (
   await showErrorDialog(errorMessages.generalError, intl, {message})
 }
 
-export const submitSignedTx = (signedTx: string) => async (
-  dispatch: Dispatch<any>,
-) => {
-  Logger.info('submitting tx...')
-  await walletManager.submitTransaction(signedTx)
+export const submitSignedTx =
+  (signedTx: string) => async (dispatch: Dispatch<any>) => {
+    Logger.info('submitting tx...')
+    await walletManager.submitTransaction(signedTx)
 
-  dispatch(updateHistory())
-}
+    dispatch(updateHistory())
+  }
 
 // note: eslint doesn't like polymorphic types
 /* eslint-disable indent */
-export const submitTransaction = <T>(
-  signRequest: ISignRequest<T>,
-  decryptedKey: string,
-) => async (dispatch: Dispatch<any>) => {
-  const {encodedTx} = await walletManager.signTx(signRequest, decryptedKey)
-  Logger.info(
-    'submitTransaction::encodedTx',
-    Buffer.from(encodedTx).toString('hex'),
-  )
-  const signedTxBase64 = Buffer.from(encodedTx).toString('base64')
-  await dispatch(submitSignedTx(signedTxBase64))
-}
+export const submitTransaction =
+  <T>(signRequest: ISignRequest<T>, decryptedKey: string) =>
+  async (dispatch: Dispatch<any>) => {
+    const {encodedTx} = await walletManager.signTx(signRequest, decryptedKey)
+    Logger.info(
+      'submitTransaction::encodedTx',
+      Buffer.from(encodedTx).toString('hex'),
+    )
+    const signedTxBase64 = Buffer.from(encodedTx).toString('base64')
+    await dispatch(submitSignedTx(signedTxBase64))
+  }
 /* eslint-enable indent */
 
 export const checkForFlawedWallets = () => async (dispatch: Dispatch<any>) => {

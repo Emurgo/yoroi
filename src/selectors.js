@@ -28,34 +28,37 @@ import type {NetworkId} from './config/types'
 import type {RawUtxo} from './api/types'
 import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
 
-export const transactionsInfoSelector: (State) => Dict<
-  TransactionInfo,
-> = createSelector(
-  (state) => state.wallet.transactions,
-  (state) => state.wallet.internalAddresses,
-  (state) => state.wallet.externalAddresses,
-  (state) => state.wallet.rewardAddressHex,
-  (state) => state.wallet.confirmationCounts,
-  (state) => state.wallet.networkId,
-  (
-    transactions,
-    internalAddresses,
-    externalAddresses,
-    rewardAddressHex,
-    confirmationCounts,
-    networkId,
-  ) =>
-    mapValues(transactions, (tx: Transaction) =>
-      processTxHistoryData(
-        tx,
-        rewardAddressHex != null
-          ? [...internalAddresses, ...externalAddresses, ...[rewardAddressHex]]
-          : [...internalAddresses, ...externalAddresses],
-        confirmationCounts[tx.id] || 0,
-        networkId,
+export const transactionsInfoSelector: (State) => Dict<TransactionInfo> =
+  createSelector(
+    (state) => state.wallet.transactions,
+    (state) => state.wallet.internalAddresses,
+    (state) => state.wallet.externalAddresses,
+    (state) => state.wallet.rewardAddressHex,
+    (state) => state.wallet.confirmationCounts,
+    (state) => state.wallet.networkId,
+    (
+      transactions,
+      internalAddresses,
+      externalAddresses,
+      rewardAddressHex,
+      confirmationCounts,
+      networkId,
+    ) =>
+      mapValues(transactions, (tx: Transaction) =>
+        processTxHistoryData(
+          tx,
+          rewardAddressHex != null
+            ? [
+                ...internalAddresses,
+                ...externalAddresses,
+                ...[rewardAddressHex],
+              ]
+            : [...internalAddresses, ...externalAddresses],
+          confirmationCounts[tx.id] || 0,
+          networkId,
+        ),
       ),
-    ),
-)
+  )
 
 export const hasAnyTransaction = (state: State): boolean =>
   !isEmpty(state.wallet.transactions)
@@ -67,66 +70,62 @@ const _initAssetsRegistry = (networkId: NetworkId): Dict<DefaultAsset> =>
       .map((asset) => [asset.identifier, asset]),
   )
 
-export const availableAssetsSelector: (
-  state: State,
-) => Dict<Token> = createSelector(
-  transactionsInfoSelector,
-  (state) => state.wallet.networkId,
-  (txs, networkId) => {
-    if (networkId === NETWORK_REGISTRY.UNDEFINED) {
-      const defaultAsset = getCardanoDefaultAsset()
-      return {
-        [defaultAsset.identifier]: defaultAsset,
-      }
-    }
-    const tokens: Dict<Token> = fromPairs(
-      ObjectValues(_initAssetsRegistry(networkId)).map((asset) => [
-        asset.identifier,
-        {
-          ...asset,
-          metadata: {
-            ...asset.metadata,
-            ticker: asset.metadata.ticker,
-          },
-        },
-      ]),
-    )
-    ObjectValues(txs).forEach((tx) => {
-      ObjectValues(tx.tokens).forEach((token) => {
-        if (tokens[token.identifier] == null) {
-          tokens[token.identifier] = token
+export const availableAssetsSelector: (state: State) => Dict<Token> =
+  createSelector(
+    transactionsInfoSelector,
+    (state) => state.wallet.networkId,
+    (txs, networkId) => {
+      if (networkId === NETWORK_REGISTRY.UNDEFINED) {
+        const defaultAsset = getCardanoDefaultAsset()
+        return {
+          [defaultAsset.identifier]: defaultAsset,
         }
+      }
+      const tokens: Dict<Token> = fromPairs(
+        ObjectValues(_initAssetsRegistry(networkId)).map((asset) => [
+          asset.identifier,
+          {
+            ...asset,
+            metadata: {
+              ...asset.metadata,
+              ticker: asset.metadata.ticker,
+            },
+          },
+        ]),
+      )
+      ObjectValues(txs).forEach((tx) => {
+        ObjectValues(tx.tokens).forEach((token) => {
+          if (tokens[token.identifier] == null) {
+            tokens[token.identifier] = token
+          }
+        })
       })
-    })
-    return tokens
-  },
-)
+      return tokens
+    },
+  )
 
-export const defaultNetworkAssetSelector: (
-  state: State,
-) => DefaultAsset = createSelector(
-  (state) => state.wallet.networkId,
-  (networkId) => {
-    if (networkId === NETWORK_REGISTRY.UNDEFINED) {
-      return getCardanoDefaultAsset()
-    }
-    return getDefaultAssetByNetworkId(networkId)
-  },
-)
+export const defaultNetworkAssetSelector: (state: State) => DefaultAsset =
+  createSelector(
+    (state) => state.wallet.networkId,
+    (networkId) => {
+      if (networkId === NETWORK_REGISTRY.UNDEFINED) {
+        return getCardanoDefaultAsset()
+      }
+      return getDefaultAssetByNetworkId(networkId)
+    },
+  )
 
-export const internalAddressIndexSelector: (
-  state: State,
-) => Object = createSelector(
-  (state) => state.wallet.internalAddresses,
-  (addresses) => fromPairs(addresses.map((addr, i) => [addr, i])),
-)
+export const internalAddressIndexSelector: (state: State) => Object =
+  createSelector(
+    (state) => state.wallet.internalAddresses,
+    (addresses) => fromPairs(addresses.map((addr, i) => [addr, i])),
+  )
 
-export const externalAddressIndexSelector: (
-  state: State,
-) => Object = createSelector(
-  (state) => state.wallet.externalAddresses,
-  (addresses) => fromPairs(addresses.map((addr, i) => [addr, i])),
-)
+export const externalAddressIndexSelector: (state: State) => Object =
+  createSelector(
+    (state) => state.wallet.externalAddresses,
+    (addresses) => fromPairs(addresses.map((addr, i) => [addr, i])),
+  )
 
 export const isUsedAddressIndexSelector = (state: State) =>
   state.wallet.isUsedAddressIndex
@@ -153,43 +152,41 @@ export const walletMetaSelector = (
 const BigNumberSum = (data: Array<BigNumber | string>): BigNumber =>
   data.reduce((x: BigNumber, y) => x.plus(y), new BigNumber(0))
 
-export const tokenBalanceSelector: (
-  state: State,
-) => MultiToken = createSelector(
-  transactionsInfoSelector,
-  walletMetaSelector,
-  (transactions, walletMeta) => {
-    if (walletMeta.networkId === NETWORK_REGISTRY.UNDEFINED) {
-      const defaultAsset = getCardanoDefaultAsset()
-      return new MultiToken([], {
-        defaultNetworkId: defaultAsset.networkId,
-        defaultIdentifier: defaultAsset.identifier,
-      })
-    }
-    const processed = ObjectValues(transactions).filter(
-      (tx) => tx.status === TRANSACTION_STATUS.SUCCESSFUL,
-    )
-    const rawBalance = processed
-      .map((tx) => MultiToken.fromArray(tx.delta))
-      .reduce(
-        (acc, curr) => acc.joinAddMutable(curr),
-        new MultiToken([], getDefaultNetworkTokenEntry(walletMeta.networkId)),
+export const tokenBalanceSelector: (state: State) => MultiToken =
+  createSelector(
+    transactionsInfoSelector,
+    walletMetaSelector,
+    (transactions, walletMeta) => {
+      if (walletMeta.networkId === NETWORK_REGISTRY.UNDEFINED) {
+        const defaultAsset = getCardanoDefaultAsset()
+        return new MultiToken([], {
+          defaultNetworkId: defaultAsset.networkId,
+          defaultIdentifier: defaultAsset.identifier,
+        })
+      }
+      const processed = ObjectValues(transactions).filter(
+        (tx) => tx.status === TRANSACTION_STATUS.SUCCESSFUL,
       )
-    const positiveBalance = rawBalance.asArray().filter((value) => {
-      if (value.isDefault) return true // keep ADA or any other default asset
-      return new BigNumber(value.amount).gt(0)
-    })
-    return MultiToken.fromArray(positiveBalance)
-  },
-)
+      const rawBalance = processed
+        .map((tx) => MultiToken.fromArray(tx.delta))
+        .reduce(
+          (acc, curr) => acc.joinAddMutable(curr),
+          new MultiToken([], getDefaultNetworkTokenEntry(walletMeta.networkId)),
+        )
+      const positiveBalance = rawBalance.asArray().filter((value) => {
+        if (value.isDefault) return true // keep ADA or any other default asset
+        return new BigNumber(value.amount).gt(0)
+      })
+      return MultiToken.fromArray(positiveBalance)
+    },
+  )
 
-export const receiveAddressesSelector: (
-  state: State,
-) => Array<string> = createSelector(
-  (state) => state.wallet.externalAddresses,
-  (state) => state.wallet.numReceiveAddresses,
-  (addresses, count) => addresses.slice(0, count),
-)
+export const receiveAddressesSelector: (state: State) => Array<string> =
+  createSelector(
+    (state) => state.wallet.externalAddresses,
+    (state) => state.wallet.numReceiveAddresses,
+    (addresses, count) => addresses.slice(0, count),
+  )
 
 export const canGenerateNewReceiveAddressSelector = (state: State) =>
   state.wallet.canGenerateNewReceiveAddress
@@ -285,15 +282,14 @@ export const isSystemAuthEnabledSelector = (state: State): boolean =>
 export const sendCrashReportsSelector = (state: State): boolean =>
   state.appSettings.sendCrashReports
 
-export const hasPendingOutgoingTransactionSelector: (
-  state: State,
-) => boolean = createSelector(transactionsInfoSelector, (transactions) =>
-  ObjectValues(transactions).some(
-    (tx) =>
-      tx.status === TRANSACTION_STATUS.PENDING &&
-      tx.direction !== TRANSACTION_DIRECTION.RECEIVED,
-  ),
-)
+export const hasPendingOutgoingTransactionSelector: (state: State) => boolean =
+  createSelector(transactionsInfoSelector, (transactions) =>
+    ObjectValues(transactions).some(
+      (tx) =>
+        tx.status === TRANSACTION_STATUS.PENDING &&
+        tx.direction !== TRANSACTION_DIRECTION.RECEIVED,
+    ),
+  )
 
 export const easyConfirmationSelector = (state: State): boolean =>
   state.wallet.isEasyConfirmationEnabled
@@ -337,12 +333,11 @@ export const serverStatusSelector = (state: State): ServerStatusCache =>
  * - Terms of service acceptance
  * - Authentication system setup (based on pin or biometrics)
  */
-export const isAppSetupCompleteSelector: (
-  state: State,
-) => boolean = createSelector(
-  tosSelector,
-  isSystemAuthEnabledSelector,
-  customPinHashSelector,
-  (acceptedTos, isSystemAuthEnabled, customPinHash) =>
-    acceptedTos && (isSystemAuthEnabled || customPinHash != null),
-)
+export const isAppSetupCompleteSelector: (state: State) => boolean =
+  createSelector(
+    tosSelector,
+    isSystemAuthEnabledSelector,
+    customPinHashSelector,
+    (acceptedTos, isSystemAuthEnabled, customPinHash) =>
+      acceptedTos && (isSystemAuthEnabled || customPinHash != null),
+  )
