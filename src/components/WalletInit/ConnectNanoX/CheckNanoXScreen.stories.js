@@ -24,6 +24,6 @@ storiesOf('CheckNanoXScreen', module).add('default', ({navigation}) => (
         },
       },
     }}
-    onPress={(_e) => action('clicked')}
+    onPress={() => action('clicked')()}
   />
 ))

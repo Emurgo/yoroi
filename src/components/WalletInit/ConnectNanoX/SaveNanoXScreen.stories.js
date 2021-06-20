@@ -24,6 +24,6 @@ storiesOf('SaveNanoXScreen', module).add('default', ({navigation}) => (
       },
     }}
     navigation={navigation}
-    onPress={(_e) => action('clicked')}
+    onPress={() => action('clicked')()}
   />
 ))

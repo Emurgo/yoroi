@@ -23,7 +23,8 @@
     "e2e:build-android": "detox build -c android.emu.mainnet.release",
     "e2e:test-android-debug": "detox test -c android.emu.mainnet.debug",
     "e2e:build-android-debug": "detox build -c android.emu.mainnet.debug",
-    "prestorybook": "rnstl  --searchDir ./src/components --pattern '**/*.stories.js'"
+    "prestorybook": "rnstl  --searchDir ./src/components --pattern '**/*.stories.js'",
+    "storybook": "start-storybook"
   },
   "dependencies": {
     "@babel/cli": "7.12.8",
@@ -113,8 +114,11 @@
   },
   "devDependencies": {
     "@emurgo/cardano-serialization-lib-nodejs": "6.0.0",
-    "@storybook/addon-actions": "^5.3.14",
-    "@storybook/addon-links": "^5.3.14",
+    "@storybook/addon-actions": "5.3.14",
+    "@storybook/addon-knobs": "5.3.14",
+    "@storybook/addon-links": "5.3.14",
+    "@storybook/addon-ondevice-actions": "5.3.14",
+    "@storybook/addon-ondevice-knobs": "5.3.14",
     "@storybook/addons": "^5.3.14",
     "@storybook/react-native": "5.3.23",
     "@storybook/react-native-server": "^5.3.23",
