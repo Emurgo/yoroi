@@ -20,7 +20,6 @@ import {generateVotingKeys} from '../../actions/voting'
 import {fetchUTXOs} from '../../actions/utxo'
 import {Text, Button, ProgressStep} from '../UiKit'
 import StandardModal from '../Common/StandardModal'
-import {withTitle} from '../../utils/renderUtils'
 import {CATALYST_ROUTES} from '../../RoutesList'
 import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
 import AppDownload from '../../assets/img/pic-catalyst-step1.png'
@@ -160,9 +159,5 @@ export default (injectIntl(
       generateVotingKeys,
       fetchUTXOs,
     },
-  )(
-    withTitle(Step1, ({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(globalMessages.votingTitle),
-    ),
-  ),
+  )(Step1),
 ): ComponentType<Props>)
