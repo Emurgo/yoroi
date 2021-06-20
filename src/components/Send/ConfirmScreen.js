@@ -8,6 +8,7 @@ import {ScrollView, View, Platform} from 'react-native'
 import {withHandlers, withStateHandlers} from 'recompose'
 import SafeAreaView from 'react-native-safe-area-view'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {CommonActions} from '@react-navigation/routers'
 
 import {
   Text,
@@ -40,7 +41,6 @@ import {showErrorDialog, submitTransaction, submitSignedTx} from '../../actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
 import {withNavigationTitle} from '../../utils/renderUtils'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../utils/format'
-import {NetworkError, ApiError} from '../../api/errors'
 import {WrongPassword} from '../../crypto/errors'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
@@ -53,7 +53,6 @@ import type {CreateUnsignedTxResponse} from '../../crypto/shelley/transactionUti
 import type {TokenEntry} from '../../crypto/MultiToken'
 
 import styles from './styles/ConfirmScreen.style'
-import {CommonActions} from '@react-navigation/routers'
 
 const messages = defineMessages({
   title: {
@@ -89,121 +88,92 @@ const handleOnConfirm = async (
     decryptedKey: ?string,
   ) => {
     await withPleaseWaitModal(async () => {
-      try {
-        if (decryptedKey != null) {
-          await submitTransaction(tx, decryptedKey)
-        } else {
-          await submitSignedTx(tx)
-        }
-
-        navigation.dispatch(
-          CommonActions.reset({
-            key: null,
-            index: 0,
-            routes: [{name: SEND_ROUTES.MAIN}],
-          }),
-        )
-        navigation.navigate(WALLET_ROUTES.TX_HISTORY)
-      } catch (e) {
-        if (e instanceof NetworkError) {
-          // trigger error modal
-          setErrorData(
-            true,
-            intl.formatMessage(errorMessages.networkError.message),
-            null,
-          )
-        } else if (e instanceof ApiError) {
-          setErrorData(
-            true,
-            intl.formatMessage(errorMessages.apiError.message),
-            JSON.stringify(e.request),
-          )
-        } else {
-          throw e
-        }
+      if (decryptedKey != null) {
+        await submitTransaction(tx, decryptedKey)
+      } else {
+        await submitSignedTx(tx)
       }
+      navigation.dispatch(
+        CommonActions.reset({
+          key: null,
+          index: 0,
+          routes: [{name: SEND_ROUTES.MAIN}],
+        }),
+      )
+      navigation.navigate(WALLET_ROUTES.TX_HISTORY)
     })
   }
 
-  if (isHW) {
-    withDisabledButton(async () => {
-      try {
+  try {
+    if (isHW) {
+      await withDisabledButton(async () => {
         const signedTx = await walletManager.signTxWithLedger(
           signRequest,
           useUSB,
         )
         await submitTx(Buffer.from(signedTx.encodedTx).toString('base64'))
-      } catch (e) {
-        if (e instanceof LocalizableError) {
-          setErrorData(
-            true,
-            intl.formatMessage(
-              {id: e.id, defaultMessage: e.defaultMessage},
-              e.values,
-            ),
-            null,
-          )
-        } else {
-          setErrorData(
-            true,
-            intl.formatMessage(errorMessages.generalTxError.message),
-            String(e.message),
-          )
-        }
-      }
-    })
-    return
-  }
-
-  if (isEasyConfirmationEnabled) {
-    try {
-      await walletManager.ensureKeysValidity()
-      navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
-        keyId: walletManager._id,
-        onSuccess: async (decryptedKey) => {
-          navigation.navigate(SEND_ROUTES.CONFIRM)
-
-          await submitTx(signRequest, decryptedKey)
-        },
-        onFail: () => navigation.goBack(),
       })
-    } catch (e) {
-      if (e instanceof SystemAuthDisabled) {
-        await walletManager.closeWallet()
-        await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-        navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-
-        return
-      } else {
-        setErrorData(
-          true,
-          intl.formatMessage(errorMessages.generalTxError.message),
-          String(e.message),
-        )
-      }
+      return
     }
 
-    return
-  }
+    if (isEasyConfirmationEnabled) {
+      try {
+        await walletManager.ensureKeysValidity()
+        navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
+          keyId: walletManager._id,
+          onSuccess: async (decryptedKey) => {
+            navigation.navigate(SEND_ROUTES.CONFIRM)
 
-  try {
-    const decryptedData = await KeyStore.getData(
-      walletManager._id,
-      'MASTER_PASSWORD',
-      '',
-      password,
-      intl,
-    )
+            await submitTx(signRequest, decryptedKey)
+          },
+          onFail: () => navigation.goBack(),
+        })
+      } catch (e) {
+        if (e instanceof SystemAuthDisabled) {
+          await walletManager.closeWallet()
+          await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
+          navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
 
-    await submitTx(signRequest, decryptedData)
+          return
+        } else {
+          throw e
+        }
+      }
+      return
+    }
+
+    try {
+      const decryptedData = await KeyStore.getData(
+        walletManager._id,
+        'MASTER_PASSWORD',
+        '',
+        password,
+        intl,
+      )
+
+      await submitTx(signRequest, decryptedData)
+    } catch (e) {
+      if (e instanceof WrongPassword) {
+        await showErrorDialog(errorMessages.incorrectPassword, intl)
+      } else {
+        throw e
+      }
+    }
   } catch (e) {
-    if (e instanceof WrongPassword) {
-      await showErrorDialog(errorMessages.incorrectPassword, intl)
+    if (e instanceof LocalizableError) {
+      setErrorData(
+        true,
+        intl.formatMessage(
+          {id: e.id, defaultMessage: e.defaultMessage},
+          e.values,
+        ),
+        e.values.response || null, // API errors should include a response
+      )
     } else {
       setErrorData(
         true,
         intl.formatMessage(errorMessages.generalTxError.message),
-        String(e.message),
+        e.message || null,
       )
     }
   }

@@ -781,7 +781,7 @@ class WalletManager {
   async createVotingRegTx(
     utxos: Array<RawUtxo>,
     catalystPrivateKey: string,
-    decryptedKey: string,
+    decryptedKey: string | void,
     serverTime: Date | void,
   ) {
     if (!this._wallet) throw new WalletClosed()

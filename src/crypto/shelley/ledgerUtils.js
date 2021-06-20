@@ -6,6 +6,7 @@ import AppAda, {
   CertificateType,
   TxOutputDestinationType,
   TransactionSigningMode,
+  TxAuxiliaryDataType,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 // note(v-almonacid) we'll be using a fork of @ledgerhq/react-native-hid
@@ -175,8 +176,8 @@ const _isUserError = (e: Error | TransportStatusError): boolean => {
 const _isRejectedError = (e: Error | TransportStatusError): boolean => {
   if (
     e &&
-    e.statusCode != null &&
-    e.statusCode === DeviceStatusCodes.ERR_REJECTED_BY_USER
+    e.code != null &&
+    e.code === DeviceStatusCodes.ERR_REJECTED_BY_USER
   ) {
     return true
   }
@@ -551,6 +552,30 @@ export const createLedgerSignTxPayload = async (request: {|
 
   const ttl = await txBody.ttl()
 
+  let auxiliaryData
+  if (request.signRequest.ledgerNanoCatalystRegistrationTxSignData) {
+    const {
+      votingPublicKey,
+      stakingKeyPath,
+      nonce,
+    } = request.signRequest.ledgerNanoCatalystRegistrationTxSignData
+
+    auxiliaryData = {
+      type: TxAuxiliaryDataType.CATALYST_REGISTRATION,
+      params: {
+        votingPublicKeyHex: votingPublicKey,
+        stakingPath: stakingKeyPath,
+        rewardsDestination: {
+          type: AddressType.REWARD,
+          params: {
+            stakingPath: stakingKeyPath,
+          },
+        },
+        nonce,
+      },
+    }
+  }
+
   return {
     signingMode: TransactionSigningMode.ORDINARY_TRANSACTION,
     tx: {
@@ -561,7 +586,7 @@ export const createLedgerSignTxPayload = async (request: {|
       ttl: ttl === undefined ? ttl : ttl.toString(),
       certificates: ledgerCertificates,
       withdrawals: ledgerWithdrawal,
-      auxiliaryData: undefined, // TODO
+      auxiliaryData,
       validityIntervalStart: undefined,
     },
   }

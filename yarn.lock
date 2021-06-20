@@ -2259,10 +2259,10 @@
     buffer-crc32 "0.2.13"
     fnv-plus "1.3.1"
 
-"@emurgo/react-native-haskell-shelley@1.1.4":
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/@emurgo/react-native-haskell-shelley/-/react-native-haskell-shelley-1.1.4.tgz#90a1d71893a6d0cc59a553dfe3573696027e305f"
-  integrity sha512-mVw/PGJvmxEchVX4y6DUehncow8sMgpEkHhawGuTkBsNORLsEXcPoRgYtLcQXNQnCcvN2yDqfR1Ac5PdZgCS7Q==
+"@emurgo/react-native-haskell-shelley@1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/react-native-haskell-shelley/-/react-native-haskell-shelley-1.2.0.tgz#a2dbb9baf5cbf9ca1b0dcb540143f2c7d6639a0f"
+  integrity sha512-gIsnsAuFedO3Ohs+MgcuYXF5PClHofzXQ8CDt3fQIvLp1FuJmlGZRIE6KgiPWPOQ6NBDjP19RrasrT23KrWODg==
   dependencies:
     base-64 "0.1.0"
 
@@ -3229,7 +3229,7 @@
     escape-string-regexp "^4.0.0"
     nanoid "^3.1.15"
 
-"@react-navigation/routers@^5.7.2":
+"@react-navigation/routers@5.7.2", "@react-navigation/routers@^5.7.2":
   version "5.7.2"
   resolved "https://registry.yarnpkg.com/@react-navigation/routers/-/routers-5.7.2.tgz#069d0a707b30ba2e27a32b6482531d0ff7317136"
   integrity sha512-BxNSMLHpU+oS37Xok0ql6rc9U7IC8aUD4+U5ZPbjDJ0pwzZxGGh0YOEBzfV4k/Ig3cbPdvVWbc1C9HHbCVr2oQ==
