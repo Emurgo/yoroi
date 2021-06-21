@@ -13,7 +13,6 @@ import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
 import {Modal, Button, StatusBar, ScreenBackground} from '../UiKit'
 import ExapandableItem from '../Common/ExpandableItem'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {isJormungandr} from '../../config/networks'
 import {CONFIG, isHaskellShelley, isByron} from '../../config/config'
 import globalMessages from '../../i18n/global-messages'
@@ -24,10 +23,6 @@ import type {State} from '../../state'
 import type {NetworkId, WalletImplementationId} from '../../config/types'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.walletinit.walletinitscreen.title',
-    defaultMessage: '!!!Add wallet',
-  },
   createWalletButton: {
     id: 'components.walletinit.walletinitscreen.createWalletButton',
     defaultMessage: '!!!Create wallet',
@@ -245,9 +240,6 @@ const WalletInitScreen = ({
 export default injectIntl(
   compose(
     connect((_state: State) => ({})),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
     withStateHandlers(
       {
         modalState: MODAL_STATES.CLOSED,

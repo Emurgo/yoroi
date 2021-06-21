@@ -1,6 +1,7 @@
 // @flow
 import React from 'react'
 import {createStackNavigator} from '@react-navigation/stack'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import WalletFreshInitScreen from './WalletFreshInitScreen'
 import WalletInitScreen from './WalletInitScreen'
@@ -24,6 +25,13 @@ import WalletCredentialsScreen from './RestoreWallet/WalletCredentialsScreen'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {isJormungandr} from '../../config/networks'
 
+const messages = defineMessages({
+  addWalletTitle: {
+    id: 'components.walletinit.walletinitscreen.title',
+    defaultMessage: '!!!Add wallet',
+  },
+})
+
 type WalletInitRoutes = {
   'choose-create-restore': any,
   'initial-choose-create-restore': any,
@@ -42,7 +50,7 @@ type WalletInitRoutes = {
 
 const Stack = createStackNavigator<any, WalletInitRoutes, any>()
 
-const WalletInitNavigator = () => (
+const WalletInitNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
   <Stack.Navigator
     initialRouteName={WALLET_INIT_ROUTES.INITIAL_CREATE_RESTORE_SWITCH}
     screenOptions={({route}) => {
@@ -72,6 +80,7 @@ const WalletInitNavigator = () => (
     <Stack.Screen
       name={WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH}
       component={WalletInitScreen}
+      options={{title: intl.formatMessage(messages.addWalletTitle)}}
     />
     <Stack.Screen
       name={WALLET_INIT_ROUTES.CREATE_WALLET}
@@ -117,6 +126,6 @@ const WalletInitNavigator = () => (
       component={WalletCredentialsScreen}
     />
   </Stack.Navigator>
-)
+))
 
 export default WalletInitNavigator
