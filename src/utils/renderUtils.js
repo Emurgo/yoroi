@@ -185,3 +185,46 @@ export const requireInitializedWallet: <Props>(
     () => <Text>l10n Please wait while wallet is initialized...</Text>,
   ),
 )
+export const useNavigationTitle = <Props: {navigation: any, route: any}>({
+  getTitle,
+  paramName,
+  props,
+}: {
+  getTitle: (Props) => string,
+  paramName?: string,
+  props: Props,
+}) => {
+  const getCurrentTitle = () => {
+    return paramName != null
+      ? props.route.params
+        ? props.route.params[paramName]
+        : undefined
+      : props.route?.params?.title ?? undefined
+  }
+
+  const setTitle = (value) => {
+    const options = {}
+    if (paramName != null) {
+      options[paramName] = value
+    } else {
+      options.title = value
+    }
+    props.navigation.setOptions(options)
+  }
+
+  React.useEffect(() => {
+    // Note(ppershing): At this place we would normally check
+    // shallowCompare(props, prevProps) and only rerender
+    // if some prop changed.
+    // Unfortunately, setting navigation.setParams will update props
+    // and so we get into an infinity loop.
+    // The solution is to *assume* getTitle to be deterministic
+    // and diff on title instead
+    const current = getCurrentTitle()
+    const updated = getTitle(props)
+
+    if (current !== updated) {
+      setTitle(updated)
+    }
+  })
+}
