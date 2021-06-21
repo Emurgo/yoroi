@@ -131,6 +131,12 @@ const WalletTabNavigator = injectIntl(
         }}
         backBehavior="initialRoute"
       >
+        {isHaskellShelley(walletMeta.walletImplementationId) && (
+          <Tab.Screen
+            name={WALLET_ROUTES.DASHBOARD}
+            component={StakingDashboardNavigator}
+          />
+        )}
         <Tab.Screen
           name={WALLET_ROUTES.TX_HISTORY}
           component={TxHistoryNavigator}
@@ -147,10 +153,7 @@ const WalletTabNavigator = injectIntl(
         />
         {isHaskellShelley(walletMeta.walletImplementationId) && (
           <>
-            <Tab.Screen
-              name={WALLET_ROUTES.DASHBOARD}
-              component={StakingDashboardNavigator}
-            />
+            {/* VOTING should go here when implemented. */}
             {!isReadOnly && (
               <Tab.Screen
                 name={WALLET_ROUTES.DELEGATE}
