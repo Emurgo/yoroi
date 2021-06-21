@@ -110,7 +110,7 @@ const WalletTabNavigator = injectIntl(
       isReadOnly: any,
     }) => (
       <Tab.Navigator
-        initialRouteName={WALLET_ROUTES.TX_HISTORY}
+        initialRouteName={WALLET_ROUTES.DASHBOARD}
         screenOptions={({route}) => {
           const attributes = routeTabAttributes[route.name]
           if (attributes == null) throw new Error('unknown wallet route')
