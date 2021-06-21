@@ -7,7 +7,7 @@ import {connect} from 'react-redux'
 import {ScrollView, View, Platform} from 'react-native'
 import {withHandlers, withStateHandlers} from 'recompose'
 import SafeAreaView from 'react-native-safe-area-view'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {injectIntl, type IntlShape} from 'react-intl'
 import {CommonActions} from '@react-navigation/routers'
 
 import {
@@ -39,7 +39,6 @@ import {CONFIG} from '../../config/config'
 import KeyStore from '../../crypto/KeyStore'
 import {showErrorDialog, submitTransaction, submitSignedTx} from '../../actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../utils/format'
 import {WrongPassword} from '../../crypto/errors'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
@@ -53,18 +52,6 @@ import type {CreateUnsignedTxResponse} from '../../crypto/shelley/transactionUti
 import type {TokenEntry} from '../../crypto/MultiToken'
 
 import styles from './styles/ConfirmScreen.style'
-
-const messages = defineMessages({
-  title: {
-    id: 'components.send.confirmscreen.title',
-    defaultMessage: '!!!Send',
-    description: 'some desc',
-  },
-  confirmWithLedger: {
-    id: 'components.send.confirmscreen.confirmWithLedger',
-    defaultMessage: '!!!Confirm with Ledger',
-  },
-})
 
 const handleOnConfirm = async (
   navigation,
@@ -387,9 +374,6 @@ export default injectIntl(
           errorLogs,
         }),
       },
-    ),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
     ),
     withHandlers({
       withPleaseWaitModal: ({setSendingTransaction}) => async (
