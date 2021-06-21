@@ -1,6 +1,7 @@
 // @flow
 import React from 'react'
 import {createStackNavigator} from '@react-navigation/stack'
+import {injectIntl, defineMessages} from 'react-intl'
 
 import {Button} from '../UiKit'
 import StakingCenter from './StakingCenter'
@@ -20,15 +21,24 @@ import {
 
 import styles from '../TxHistory/styles/SettingsButton.style'
 
+import type {IntlShape} from 'react-intl'
+
 type StakingCenterRoutes = {
   'staking-center': any,
   'delegation-confirmation': any,
   'biometrics-signing': any,
 }
 
+const messages = defineMessages({
+  title: {
+    id: 'components.stakingcenter.title',
+    defaultMessage: '!!!Staking Center',
+  },
+})
+
 const Stack = createStackNavigator<any, StakingCenterRoutes, any>()
 
-const StakingCenterNavigator = () => (
+const StakingCenterNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
   <Stack.Navigator
     screenOptions={({route}) => ({
       // $FlowFixMe mixed is not compatible with string
@@ -41,6 +51,7 @@ const StakingCenterNavigator = () => (
       name={STAKING_CENTER_ROUTES.MAIN}
       component={StakingCenter}
       options={({navigation}) => ({
+        title: intl.formatMessage(messages.title),
         headerRight: () => (
           <Button
             style={styles.settingsButton}
@@ -62,6 +73,6 @@ const StakingCenterNavigator = () => (
       options={{headerShown: false}}
     />
   </Stack.Navigator>
-)
+))
 
 export default StakingCenterNavigator
