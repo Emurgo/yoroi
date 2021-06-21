@@ -24,6 +24,11 @@ const messages = defineMessages({
     id: 'components.send.sendscreen.title',
     defaultMessage: '!!!Send',
   },
+  qrScannerTitle: {
+    id: 'components.send.addressreaderqr.title',
+    defaultMessage: '!!!Scan QR code address',
+    description: 'some desc',
+  },
 })
 
 const getParams = (params) => {
@@ -114,6 +119,7 @@ const SendScreenNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
     <Stack.Screen
       name={SEND_ROUTES.ADDRESS_READER_QR}
       component={AddressReaderQR}
+      options={{title: intl.formatMessage(messages.qrScannerTitle)}}
     />
     <Stack.Screen name={SEND_ROUTES.CONFIRM} component={ConfirmScreen} />
     <Stack.Screen
