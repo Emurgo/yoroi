@@ -35,6 +35,10 @@ const messages = defineMessages({
     id: 'components.settings.applicationsettingsscreen.tabTitle',
     defaultMessage: 'Application',
   },
+  changeCustomPinTitle: {
+    id: 'components.settings.changecustompinscreen.title',
+    defaultMessage: 'Change PIN',
+  },
 })
 
 type SettingsTabRoutes = {
@@ -97,7 +101,7 @@ type SettingsStackNavigatorRoutes = {
 }
 
 const Stack = createStackNavigator<any, SettingsStackNavigatorRoutes, any>()
-const SettingsScreenNavigator = () => (
+const SettingsScreenNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
   <Stack.Navigator
     screenOptions={{
       ...defaultNavigationOptions,
@@ -144,6 +148,7 @@ const SettingsScreenNavigator = () => (
       name={SETTINGS_ROUTES.CHANGE_CUSTOM_PIN}
       component={ChangeCustomPinScreen}
       options={{
+        title: intl.formatMessage(messages.changeCustomPinTitle),
         headerStyle: {
           ...defaultNavigationOptions.headerStyle,
           elevation: 0, // turn off header shadows on Android
@@ -160,6 +165,6 @@ const SettingsScreenNavigator = () => (
       component={CustomPinScreen}
     />
   </Stack.Navigator>
-)
+))
 
 export default SettingsScreenNavigator

@@ -12,7 +12,6 @@ import {authenticateByCustomPin} from '../../crypto/customPin'
 import {encryptAndStoreCustomPin, showErrorDialog} from '../../actions'
 import {customPinHashSelector} from '../../selectors'
 import {CONFIG} from '../../config/config'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {StatusBar} from '../UiKit'
 import {errorMessages} from '../../i18n/global-messages'
 
@@ -48,11 +47,6 @@ const messages = defineMessages({
     id:
       'components.settings.changecustompinscreen.PinRegistrationForm.PinConfirmationInput.title',
     defaultMessage: 'Repeat PIN',
-    description: 'some desc',
-  },
-  title: {
-    id: 'components.settings.changecustompinscreen.title',
-    defaultMessage: 'Change PIN',
     description: 'some desc',
   },
 })
@@ -137,9 +131,6 @@ export default injectIntl(
       {
         encryptAndStoreCustomPin,
       },
-    ),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
     ),
     withState('isCurrentPinVerified', 'setIsCurrentPinVerified', false),
     withHandlers({
