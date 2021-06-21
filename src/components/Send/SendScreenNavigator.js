@@ -1,6 +1,8 @@
 // @flow
 import React from 'react'
 import {createStackNavigator} from '@react-navigation/stack'
+import {injectIntl, defineMessages} from 'react-intl'
+import type {IntlShape} from 'react-intl'
 
 import {Button} from '../UiKit'
 import SendScreen from './SendScreen'
@@ -16,6 +18,13 @@ import {
 import {SEND_ROUTES} from '../../RoutesList'
 
 import styles from './styles/QrButton.style'
+
+const messages = defineMessages({
+  sendTitle: {
+    id: 'components.send.sendscreen.title',
+    defaultMessage: '!!!Send',
+  },
+})
 
 const getParams = (params) => {
   const query = params.substr(1)
@@ -46,7 +55,7 @@ type SendScreenNavigatorRoutes = {
 
 const Stack = createStackNavigator<any, SendScreenNavigatorRoutes, any>()
 
-const SendScreenNavigator = () => (
+const SendScreenNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
   <Stack.Navigator
     initialRouteName={SEND_ROUTES.MAIN}
     screenOptions={({route}) => ({
@@ -60,7 +69,7 @@ const SendScreenNavigator = () => (
       name={SEND_ROUTES.MAIN}
       component={SendScreen}
       options={({navigation, route}) => ({
-        title: route.params?.title ?? undefined,
+        title: intl.formatMessage(messages.sendTitle),
         headerRight: () => (
           <Button
             style={styles.qrButton}
@@ -113,6 +122,6 @@ const SendScreenNavigator = () => (
       options={{headerShown: false}}
     />
   </Stack.Navigator>
-)
+))
 
 export default SendScreenNavigator
