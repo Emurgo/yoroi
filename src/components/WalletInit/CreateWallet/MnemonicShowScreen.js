@@ -15,15 +15,10 @@ import styles from './styles/MnemonicShowScreen.style'
 import MnemonicBackupImportanceModal from './MnemonicBackupImportanceModal'
 import recoveryPhrase from '../../../assets/img/recovery_phrase.png'
 
-import {withNavigationTitle} from '../../../utils/renderUtils'
 import type {Navigation} from '../../../types/navigation'
 import type {ComponentType} from 'react'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.walletinit.createwallet.mnemonicshowscreen.title',
-    defaultMessage: '!!!Recovery phrase',
-  },
   mnemonicNote: {
     id: 'components.walletinit.createwallet.mnemonicshowscreen.mnemonicNote',
     defaultMessage:
@@ -104,9 +99,6 @@ const MnemonicShowScreen = (
 
 export default injectIntl(
   (compose(
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
     withProps((props) => ({mnemonic: props.route.params.mnemonic})),
     withStateHandlers(
       {
