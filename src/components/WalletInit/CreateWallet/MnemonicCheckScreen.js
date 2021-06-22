@@ -14,7 +14,6 @@ import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
 import {Text, Button, StatusBar} from '../../UiKit'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import {createWallet} from '../../../actions'
-import {withNavigationTitle} from '../../../utils/renderUtils'
 
 import styles from './styles/MnemonicCheckScreen.style'
 
@@ -22,10 +21,6 @@ import type {ComponentType} from 'react'
 import type {Navigation} from '../../../types/navigation'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.walletinit.createwallet.mnemoniccheckscreen.title',
-    defaultMessage: '!!!Recovery phrase',
-  },
   instructions: {
     id: 'components.walletinit.createwallet.mnemoniccheckscreen.instructions',
     defaultMessage:
@@ -233,9 +228,6 @@ export default injectIntl(
       {
         createWallet,
       },
-    ),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
     ),
     withStateHandlers(
       {
