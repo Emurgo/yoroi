@@ -30,6 +30,10 @@ const messages = defineMessages({
     id: 'components.walletinit.walletinitscreen.title',
     defaultMessage: '!!!Add wallet',
   },
+  createWalletTitle: {
+    id: 'components.walletinit.createwallet.createwalletscreen.title',
+    defaultMessage: '!!!Create a new wallet',
+  },
 })
 
 type WalletInitRoutes = {
@@ -85,6 +89,7 @@ const WalletInitNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
     <Stack.Screen
       name={WALLET_INIT_ROUTES.CREATE_WALLET}
       component={CreateWalletScreen}
+      options={{title: intl.formatMessage(messages.createWalletTitle)}}
     />
     <Stack.Screen
       name={WALLET_INIT_ROUTES.RESTORE_WALLET}
