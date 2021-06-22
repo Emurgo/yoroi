@@ -1,23 +1,16 @@
 // @flow
 
 import React from 'react'
-import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 import {View, TouchableOpacity, Linking, Image} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {Text, StatusBar} from '../UiKit'
 import chevronRight from '../../assets/img/chevron_right.png'
 
 import styles from './styles/SupportScreen.style'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.settings.settingsscreen.title',
-    defaultMessage: 'Support',
-    description: 'some desc',
-  },
   faqLabel: {
     id: 'components.settings.settingsscreen.faqLabel',
     defaultMessage: 'See frequently asked questions',
@@ -91,10 +84,4 @@ const SupportScreen = ({intl}: Props) => (
   </View>
 )
 
-export default injectIntl(
-  compose(
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
-  )(SupportScreen),
-)
+export default injectIntl(SupportScreen)

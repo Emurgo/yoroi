@@ -55,6 +55,11 @@ const messages = defineMessages({
     id: 'components.settings.changewalletname.title',
     defaultMessage: 'Change wallet name',
   },
+  supportTitle: {
+    id: 'components.settings.settingsscreen.title',
+    defaultMessage: 'Support',
+    description: 'some desc',
+  },
 })
 
 type SettingsTabRoutes = {
@@ -139,7 +144,11 @@ const SettingsScreenNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
       component={TermsOfServiceScreen}
       options={{title: intl.formatMessage(messages.termsOfServiceTitle)}}
     />
-    <Stack.Screen name={SETTINGS_ROUTES.SUPPORT} component={SupportScreen} />
+    <Stack.Screen
+      name={SETTINGS_ROUTES.SUPPORT}
+      component={SupportScreen}
+      options={{title: intl.formatMessage(messages.supportTitle)}}
+    />
     <Stack.Screen
       name={SETTINGS_ROUTES.FINGERPRINT_LINK}
       component={BiometricsLinkScreen}
