@@ -39,6 +39,10 @@ const messages = defineMessages({
     id: 'components.settings.changecustompinscreen.title',
     defaultMessage: 'Change PIN',
   },
+  changePasswordTitle: {
+    id: 'components.settings.changepasswordscreen.title',
+    defaultMessage: 'Change spending password',
+  },
 })
 
 type SettingsTabRoutes = {
@@ -143,6 +147,7 @@ const SettingsScreenNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
     <Stack.Screen
       name={SETTINGS_ROUTES.CHANGE_PASSWORD}
       component={ChangePasswordScreen}
+      options={{title: intl.formatMessage(messages.changePasswordTitle)}}
     />
     <Stack.Screen
       name={SETTINGS_ROUTES.CHANGE_CUSTOM_PIN}
