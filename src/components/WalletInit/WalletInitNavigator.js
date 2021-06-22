@@ -38,6 +38,10 @@ const messages = defineMessages({
     id: 'components.walletinit.restorewallet.restorewalletscreen.title',
     defaultMessage: '!!!Restore wallet',
   },
+  importReadOnlyTitle: {
+    id: 'components.walletinit.importreadonlywalletscreen.title',
+    defaultMessage: '!!!Read-only Wallet',
+  },
 })
 
 type WalletInitRoutes = {
@@ -103,6 +107,7 @@ const WalletInitNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
     <Stack.Screen
       name={WALLET_INIT_ROUTES.IMPORT_READ_ONLY_WALLET}
       component={ImportReadOnlyWalletScreen}
+      options={{title: intl.formatMessage(messages.importReadOnlyTitle)}}
     />
     <Stack.Screen
       name={WALLET_INIT_ROUTES.SAVE_READ_ONLY_WALLET}
