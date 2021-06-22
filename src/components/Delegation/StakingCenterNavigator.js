@@ -34,6 +34,10 @@ const messages = defineMessages({
     id: 'components.stakingcenter.title',
     defaultMessage: '!!!Staking Center',
   },
+  delegationConfirmationTitle: {
+    id: 'components.stakingcenter.confirmDelegation.title',
+    defaultMessage: '!!!Confirm delegation',
+  },
 })
 
 const Stack = createStackNavigator<any, StakingCenterRoutes, any>()
@@ -66,6 +70,7 @@ const StakingCenterNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
     <Stack.Screen
       name={STAKING_CENTER_ROUTES.DELEGATION_CONFIRM}
       component={DelegationConfirmation}
+      options={{title: intl.formatMessage(messages.title)}}
     />
     <Stack.Screen
       name={SEND_ROUTES.BIOMETRICS_SIGNING}
