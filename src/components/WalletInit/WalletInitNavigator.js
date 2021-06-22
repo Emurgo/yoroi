@@ -63,6 +63,10 @@ const messages = defineMessages({
     id: 'components.walletinit.connectnanox.connectnanoxscreen.title',
     defaultMessage: '!!!Connect to Ledger Device',
   },
+  checkNanoXTitle: {
+    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
+    defaultMessage: '!!!Connect to Ledger Device',
+  },
 })
 
 type WalletInitRoutes = {
@@ -137,6 +141,7 @@ const WalletInitNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
     <Stack.Screen
       name={WALLET_INIT_ROUTES.CHECK_NANO_X}
       component={CheckNanoXScreen}
+      options={{title: intl.formatMessage(messages.checkNanoXTitle)}}
     />
     <Stack.Screen
       name={WALLET_INIT_ROUTES.CONNECT_NANO_X}
