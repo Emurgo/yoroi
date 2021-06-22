@@ -64,6 +64,10 @@ const messages = defineMessages({
     id: 'components.settings.toggleeasyconfirmationscreen.title',
     defaultMessage: 'Easy confirmation',
   },
+  customPinTitle: {
+    id: 'components.firstrun.custompinscreen.title',
+    defaultMessage: '!!!Set PIN',
+  },
 })
 
 type SettingsTabRoutes = {
@@ -199,6 +203,7 @@ const SettingsScreenNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
     <Stack.Screen
       name={SETTINGS_ROUTES.SETUP_CUSTOM_PIN}
       component={CustomPinScreen}
+      options={{title: intl.formatMessage(messages.customPinTitle)}}
     />
   </Stack.Navigator>
 ))
