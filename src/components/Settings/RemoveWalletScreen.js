@@ -7,7 +7,6 @@ import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {Button, Text, Checkbox, ValidatedTextInput, StatusBar} from '../UiKit'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {WALLET_ROOT_ROUTES} from '../../RoutesList'
 import {walletNameSelector, isHWSelector} from '../../selectors'
 import {removeCurrentWallet} from '../../actions'
@@ -18,11 +17,6 @@ import styles from './styles/RemoveWalletScreen.style'
 import type {State} from '../../state'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.settings.removewalletscreen.title',
-    defaultMessage: 'Remove wallet',
-    description: 'some desc',
-  },
   descriptionParagraph1: {
     id: 'components.settings.removewalletscreen.descriptionParagraph1',
     defaultMessage:
@@ -151,9 +145,6 @@ export default injectIntl(
       {
         removeCurrentWallet,
       },
-    ),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
     ),
     withStateHandlers(
       {

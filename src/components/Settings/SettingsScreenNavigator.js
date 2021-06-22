@@ -43,6 +43,10 @@ const messages = defineMessages({
     id: 'components.settings.changepasswordscreen.title',
     defaultMessage: 'Change spending password',
   },
+  removeWalletTitle: {
+    id: 'components.settings.removewalletscreen.title',
+    defaultMessage: 'Remove wallet',
+  },
 })
 
 type SettingsTabRoutes = {
@@ -134,6 +138,7 @@ const SettingsScreenNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
     <Stack.Screen
       name={SETTINGS_ROUTES.REMOVE_WALLET}
       component={RemoveWalletScreen}
+      options={{title: intl.formatMessage(messages.removeWalletTitle)}}
     />
     <Stack.Screen
       name={SETTINGS_ROUTES.CHANGE_LANGUAGE}
