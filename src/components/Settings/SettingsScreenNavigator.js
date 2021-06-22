@@ -51,6 +51,10 @@ const messages = defineMessages({
     id: 'components.settings.termsofservicescreen.title',
     defaultMessage: '!!!Terms of Service Agreement',
   },
+  changeWalletNameTitle: {
+    id: 'components.settings.changewalletname.title',
+    defaultMessage: 'Change wallet name',
+  },
 })
 
 type SettingsTabRoutes = {
@@ -128,6 +132,7 @@ const SettingsScreenNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
     <Stack.Screen
       name={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
       component={ChangeWalletName}
+      options={{title: intl.formatMessage(messages.changeWalletNameTitle)}}
     />
     <Stack.Screen
       name={SETTINGS_ROUTES.TERMS_OF_USE}
