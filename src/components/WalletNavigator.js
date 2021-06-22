@@ -126,6 +126,9 @@ const WalletTabNavigator = injectIntl(
           }
         }}
         tabBarOptions={{
+          labelStyle: {
+            fontSize: 11,
+          },
           activeTintColor: theme.COLORS.NAVIGATION_ACTIVE,
           inactiveTintColor: theme.COLORS.NAVIGATION_INACTIVE,
         }}
