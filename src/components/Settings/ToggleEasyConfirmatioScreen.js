@@ -7,7 +7,6 @@ import {withHandlers, withStateHandlers} from 'recompose'
 import {View, ScrollView} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
-import {withNavigationTitle} from '../../utils/renderUtils'
 import walletManager from '../../crypto/walletManager'
 import {Text, Button, ValidatedTextInput, StatusBar} from '../UiKit'
 import {setEasyConfirmation, showErrorDialog} from '../../actions'
@@ -18,11 +17,6 @@ import styles from './styles/ToggleEasyConfirmationScreen.style'
 import {errorMessages} from '../../i18n/global-messages'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.settings.toggleeasyconfirmationscreen.title',
-    defaultMessage: 'Easy confirmation',
-    description: 'some desc',
-  },
   enableHeading: {
     id: 'components.settings.toggleeasyconfirmationscreen.enableHeading',
     defaultMessage:
@@ -175,8 +169,5 @@ export default injectIntl(
       enableEasyConfirmation,
       disableEasyConfirmation,
     }),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
   )(ToggleEasyConfirmationScreen),
 )

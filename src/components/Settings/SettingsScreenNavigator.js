@@ -60,6 +60,10 @@ const messages = defineMessages({
     defaultMessage: 'Support',
     description: 'some desc',
   },
+  toggleEachConfirmationTitle: {
+    id: 'components.settings.toggleeasyconfirmationscreen.title',
+    defaultMessage: 'Easy confirmation',
+  },
 })
 
 type SettingsTabRoutes = {
@@ -167,6 +171,9 @@ const SettingsScreenNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
     <Stack.Screen
       name={SETTINGS_ROUTES.EASY_COMFIRMATION}
       component={ToggleEasyConfirmatioScreen}
+      options={{
+        title: intl.formatMessage(messages.toggleEachConfirmationTitle),
+      }}
     />
     <Stack.Screen
       name={SETTINGS_ROUTES.CHANGE_PASSWORD}
