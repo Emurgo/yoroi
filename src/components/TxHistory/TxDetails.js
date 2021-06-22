@@ -23,8 +23,7 @@ import {
   tokenInfoSelector,
   defaultNetworkAssetSelector,
 } from '../../selectors'
-import {withNavigationTitle} from '../../utils/renderUtils'
-import {formatTokenWithSymbol, formatDateToSeconds} from '../../utils/format'
+import {formatTokenWithSymbol} from '../../utils/format'
 import {Text, Button, OfflineBanner, Banner, StatusBar} from '../UiKit'
 import Screen from '../../components/Screen'
 import {getNetworkConfigById} from '../../config/networks'
@@ -414,9 +413,6 @@ export default injectIntl(
         defaultNetworkAsset: defaultNetworkAssetSelector(state),
       }
     }),
-    withNavigationTitle(({transaction}) =>
-      formatDateToSeconds(transaction.submittedAt),
-    ),
     withStateHandlers(
       {addressDetail: null},
       {

@@ -8,11 +8,12 @@ import TxHistory from './TxHistory'
 import TxDetails from './TxDetails'
 import {TX_HISTORY_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
 import iconGear from '../../assets/img/gear.png'
-import {walletMetaSelector} from '../../selectors'
+import {walletMetaSelector, transactionsInfoSelector} from '../../selectors'
 import {
   defaultNavigationOptions,
   defaultStackNavigatorOptions,
 } from '../../navigationOptions'
+import {formatDateToSeconds} from '../../utils/format'
 
 import styles from './styles/SettingsButton.style'
 
@@ -25,6 +26,7 @@ const Stack = createStackNavigator<any, TxHistoryRoutes, any>()
 
 const TxHistoryNavigator = () => {
   const walletMeta = useSelector(walletMetaSelector)
+  const transactionInfos = useSelector(transactionsInfoSelector)
 
   return (
     <Stack.Navigator
@@ -52,7 +54,9 @@ const TxHistoryNavigator = () => {
         name={TX_HISTORY_ROUTES.TX_DETAIL}
         component={TxDetails}
         options={({route}) => ({
-          title: route.params?.title ?? undefined,
+          title: formatDateToSeconds(
+            transactionInfos[(route.params?.id)].submittedAt,
+          ),
           ...defaultNavigationOptions,
         })}
       />
