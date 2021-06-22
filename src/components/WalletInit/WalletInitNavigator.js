@@ -50,6 +50,10 @@ const messages = defineMessages({
     id: 'components.walletinit.createwallet.mnemoniccheckscreen.title',
     defaultMessage: '!!!Recovery phrase',
   },
+  verifyRestoredWalletTitle: {
+    id: 'components.walletinit.verifyrestoredwallet.title',
+    defaultMessage: '!!!Verify restored wallet',
+  },
 })
 
 type WalletInitRoutes = {
@@ -145,6 +149,7 @@ const WalletInitNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
     <Stack.Screen
       name={WALLET_INIT_ROUTES.VERIFY_RESTORED_WALLET}
       component={VerifyRestoredWallet}
+      options={{title: intl.formatMessage(messages.verifyRestoredWalletTitle)}}
     />
     <Stack.Screen
       name={WALLET_INIT_ROUTES.WALLET_CREDENTIALS}
