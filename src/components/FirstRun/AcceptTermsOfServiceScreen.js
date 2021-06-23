@@ -9,7 +9,6 @@ import {ScrollView, Platform} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import TermsOfService from '../Common/TermsOfService'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {Checkbox, Button, StatusBar, PleaseWaitModal} from '../UiKit'
 import {FIRST_RUN_ROUTES} from '../../RoutesList'
 import {isSystemAuthEnabledSelector} from '../../selectors'
