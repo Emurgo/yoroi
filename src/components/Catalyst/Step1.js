@@ -86,6 +86,7 @@ const Step1 = ({
   useEffect(() => {
     fetchUTXOs()
     generateVotingKeys()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const openAndroidStore = () => {

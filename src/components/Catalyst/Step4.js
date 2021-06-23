@@ -99,91 +99,104 @@ const Step4 = ({
 
   const isConfirmationDisabled = !isEasyConfirmationEnabled && !password
 
-  const generateTransaction = async (decryptedKey) => {
-    setGeneratingTransaction(true)
-    try {
-      await generateVotingTransaction(decryptedKey, utxos)
-    } catch (error) {
-      throw error
-    } finally {
-      setGeneratingTransaction(false)
-    }
-    navigation.navigate(CATALYST_ROUTES.STEP5)
-  }
+  const onContinue = React.useCallback(
+    async (_event) => {
+      const generateTransaction = async (decryptedKey) => {
+        setGeneratingTransaction(true)
+        try {
+          await generateVotingTransaction(decryptedKey, utxos)
+        } catch (error) {
+          throw error
+        } finally {
+          setGeneratingTransaction(false)
+        }
+        navigation.navigate(CATALYST_ROUTES.STEP5)
+      }
 
-  const onContinue = async (_event) => {
-    if (utxos == null) {
-      setErrorData({
-        showErrorDialog: true,
-        errorMessage: intl.formatMessage(errorMessages.fetchError.message),
-        errorLogs: null,
-      })
-      return
-    }
-    if (isEasyConfirmationEnabled) {
-      try {
-        await walletManager.ensureKeysValidity()
-        navigation.navigate(CATALYST_ROUTES.BIOMETRICS_SIGNING, {
-          keyId: walletManager._id,
-          onSuccess: async (decryptedKey) => {
-            navigation.goBack() // goback to unmount biometrics screen
-            await generateTransaction(decryptedKey)
-          },
-          onFail: () => navigation.goBack(),
-          addWelcomeMessage: false,
-          instructions: [intl.formatMessage(messages.bioAuthInstructions)],
+      if (utxos == null) {
+        setErrorData({
+          showErrorDialog: true,
+          errorMessage: intl.formatMessage(errorMessages.fetchError.message),
+          errorLogs: null,
         })
-      } catch (e) {
-        if (e instanceof SystemAuthDisabled) {
-          await walletManager.closeWallet()
-          await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-          navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
+        return
+      }
+      if (isEasyConfirmationEnabled) {
+        try {
+          await walletManager.ensureKeysValidity()
+          navigation.navigate(CATALYST_ROUTES.BIOMETRICS_SIGNING, {
+            keyId: walletManager._id,
+            onSuccess: async (decryptedKey) => {
+              navigation.goBack() // goback to unmount biometrics screen
+              await generateTransaction(decryptedKey)
+            },
+            onFail: () => navigation.goBack(),
+            addWelcomeMessage: false,
+            instructions: [intl.formatMessage(messages.bioAuthInstructions)],
+          })
+        } catch (e) {
+          if (e instanceof SystemAuthDisabled) {
+            await walletManager.closeWallet()
+            await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
+            navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
 
-          return
+            return
+          } else {
+            setErrorData({
+              showErrorDialog: true,
+              errorMessage: intl.formatMessage(
+                errorMessages.generalError.message,
+              ),
+              errorLogs: String(e.message),
+            })
+          }
+        }
+        return
+      }
+      try {
+        const decryptedKey = await KeyStore.getData(
+          walletManager._id,
+          'MASTER_PASSWORD',
+          '',
+          password,
+          intl,
+        )
+
+        await generateTransaction(decryptedKey)
+      } catch (e) {
+        if (e instanceof WrongPassword) {
+          await showErrorDialog(errorMessages.incorrectPassword, intl)
         } else {
           setErrorData({
             showErrorDialog: true,
             errorMessage: intl.formatMessage(
-              errorMessages.generalError.message,
+              errorMessages.generalTxError.message,
             ),
             errorLogs: String(e.message),
           })
         }
       }
-      return
-    }
-    try {
-      const decryptedKey = await KeyStore.getData(
-        walletManager._id,
-        'MASTER_PASSWORD',
-        '',
-        password,
-        intl,
-      )
+    },
+    [
+      intl,
+      isEasyConfirmationEnabled,
+      navigation,
+      password,
+      utxos,
+      generateVotingTransaction,
+    ],
+  )
 
-      await generateTransaction(decryptedKey)
-    } catch (e) {
-      if (e instanceof WrongPassword) {
-        await showErrorDialog(errorMessages.incorrectPassword, intl)
-      } else {
-        setErrorData({
-          showErrorDialog: true,
-          errorMessage: intl.formatMessage(
-            errorMessages.generalTxError.message,
-          ),
-          errorLogs: String(e.message),
-        })
+  useEffect(
+    () => {
+      // if easy confirmation is enabled we go directly to the authentication
+      // screen and then build the registration tx
+      if (isEasyConfirmationEnabled) {
+        onContinue()
       }
-    }
-  }
-
-  useEffect(() => {
-    // if easy confirmation is enabled we go directly to the authentication
-    // screen and then build the registration tx
-    if (isEasyConfirmationEnabled) {
-      onContinue()
-    }
-  }, [])
+    },
+    [onContinue, isEasyConfirmationEnabled],
+  )
 
   return (
     <SafeAreaView style={styles.safeAreaView}>

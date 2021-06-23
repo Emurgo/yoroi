@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['vacuumlabs'],
+  extends: ['vacuumlabs', 'plugin:react-hooks/recommended'],
   plugins: ['react-native', 'flowtype'],
   env: {
     'react-native/react-native': true,
@@ -32,7 +32,7 @@ module.exports = {
     'no-duplicate-imports': 0,
     'import/no-duplicates': 1,
     'react-native/no-unused-styles': 2,
-    'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    'no-unused-vars': ['warn', {argsIgnorePattern: '^_'}],
     'react-native/split-platform-components': 0,
     'react-native/no-inline-styles': 2,
     'no-multiple-empty-lines': ['warn', {max: 2, maxEOF: 0}],
@@ -43,8 +43,8 @@ module.exports = {
       },
     ],
     'flowtype/require-valid-file-annotation': [2, 'always'],
-    "flowtype/define-flow-type": 1,
-    "flowtype/use-flow-type": 1,
+    'flowtype/define-flow-type': 1,
+    'flowtype/use-flow-type': 1,
   },
   globals: {
     Buffer: false,
@@ -60,4 +60,4 @@ module.exports = {
     beforeEach: false,
     React$Node: false,
   },
-};
+}

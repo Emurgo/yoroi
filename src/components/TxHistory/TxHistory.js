@@ -161,9 +161,12 @@ const TxHistory = ({
 
   // fetch account state
 
-  useEffect(() => {
-    fetchAccountState()
-  }, [])
+  useEffect(
+    () => {
+      fetchAccountState()
+    },
+    [fetchAccountState],
+  )
 
   // Catalyst voting registration banner
 
@@ -172,28 +175,29 @@ const TxHistory = ({
 
   const [showCatalystBanner, setShowCatalystBanner] = useState<boolean>(canVote)
 
-  const checkCatalystFundInfo = async () => {
-    let fundInfo: FundInfo = null
-    if (canVote) {
-      try {
-        const {currentFund} = await walletManager.fetchFundInfo()
-        if (currentFund != null) {
-          fundInfo = {
-            registrationStart: currentFund.registrationStart,
-            registrationEnd: currentFund.registrationEnd,
-          }
-        }
-      } catch (e) {
-        Logger.debug('Could not get Catalyst fund info from server', e)
-      }
-    }
-    setShowCatalystBanner(
-      (canVote && isRegistrationOpen(fundInfo)) || isNightly() || __DEV__,
-    )
-  }
-
   useEffect(() => {
+    const checkCatalystFundInfo = async () => {
+      let fundInfo: FundInfo = null
+      if (canVote) {
+        try {
+          const {currentFund} = await walletManager.fetchFundInfo()
+          if (currentFund != null) {
+            fundInfo = {
+              registrationStart: currentFund.registrationStart,
+              registrationEnd: currentFund.registrationEnd,
+            }
+          }
+        } catch (e) {
+          Logger.debug('Could not get Catalyst fund info from server', e)
+        }
+      }
+      setShowCatalystBanner(
+        (canVote && isRegistrationOpen(fundInfo)) || isNightly() || __DEV__,
+      )
+    }
+
     checkCatalystFundInfo()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // handles back button (closes wallet)
@@ -210,6 +214,7 @@ const TxHistory = ({
           walletManager.closeWallet()
         }
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [navigation],
   )
 

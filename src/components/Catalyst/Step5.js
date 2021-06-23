@@ -104,15 +104,18 @@ const Step5 = ({
   })
   const [fees, setFees] = useState(null)
 
-  useEffect(() => {
-    if (unSignedTx == null) {
-      // note: should never happen
-      throw new Error('Could not retrieve transaction data')
-    }
-    unSignedTx.fee().then((o) => {
-      setFees(o.getDefault())
-    })
-  }, [])
+  useEffect(
+    () => {
+      if (unSignedTx == null) {
+        // note: should never happen
+        throw new Error('Could not retrieve transaction data')
+      }
+      unSignedTx.fee().then((o) => {
+        setFees(o.getDefault())
+      })
+    },
+    [unSignedTx],
+  )
 
   const isConfirmationDisabled = !isEasyConfirmationEnabled && !password
 
