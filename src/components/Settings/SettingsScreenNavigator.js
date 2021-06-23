@@ -68,6 +68,10 @@ const messages = defineMessages({
     id: 'components.firstrun.custompinscreen.title',
     defaultMessage: '!!!Set PIN',
   },
+  settingsTitle: {
+    id: 'components.settings.applicationsettingsscreen.title',
+    defaultMessage: 'Settings',
+  },
 })
 
 type SettingsTabRoutes = {
@@ -141,6 +145,7 @@ const SettingsScreenNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
     <Stack.Screen
       name={SETTINGS_ROUTES.MAIN}
       component={SettingsTabNavigator}
+      options={{title: intl.formatMessage(messages.settingsTitle)}}
     />
     <Stack.Screen
       name={SETTINGS_ROUTES.CHANGE_WALLET_NAME}

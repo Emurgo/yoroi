@@ -7,7 +7,6 @@ import {ScrollView, StyleSheet, Switch, Platform} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {SETTINGS_ROUTES} from '../../RoutesList'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {errorMessages} from '../../i18n/global-messages'
 import {setAppSettingField, setSystemAuth, showErrorDialog} from '../../actions'
 import {APP_SETTINGS_KEYS} from '../../helpers/appSettings'
@@ -39,14 +38,6 @@ import type {Navigation} from '../../types/navigation'
 import DeviceInfo from 'react-native-device-info'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.settings.applicationsettingsscreen.title',
-    defaultMessage: 'Settings',
-  },
-  tabTitle: {
-    id: 'components.settings.applicationsettingsscreen.tabTitle',
-    defaultMessage: 'Application',
-  },
   language: {
     id: 'components.settings.applicationsettingsscreen.language',
     defaultMessage: 'Your language',
@@ -274,13 +265,6 @@ export default injectIntl(
         key: languageSelector(state),
       }),
       {setAppSettingField, setSystemAuth},
-    ),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
-    withNavigationTitle(
-      ({intl}: {intl: IntlShape}) => intl.formatMessage(messages.tabTitle),
-      'applicationTabTitle',
     ),
     withHandlers({
       disableBiometrics,
