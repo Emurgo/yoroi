@@ -1,7 +1,6 @@
 // @flow
 
 import React from 'react'
-import {withHandlers} from 'recompose'
 import {View, TouchableOpacity, Linking, Image} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
@@ -47,21 +46,26 @@ const messages = defineMessages({
   },
 })
 
-const Item = ({title, text, onPress}) => (
-  <TouchableOpacity onPress={onPress} style={styles.item}>
-    <View style={styles.itemWrap}>
-      <Text style={styles.title}>{title}</Text>
-      <Text secondary style={styles.text}>
-        {text}
-      </Text>
-    </View>
-    <Image source={chevronRight} />
-  </TouchableOpacity>
-)
+type LinkingItemProps = {
+  url: string,
+  title: string,
+  text: string,
+}
+const LinkingItem = ({title, text, url}: LinkingItemProps) => {
+  const onPress = () => Linking.openURL(url)
 
-const LinkingItem = withHandlers({
-  onPress: ({url}: {url: string}) => () => Linking.openURL(url),
-})(Item)
+  return (
+    <TouchableOpacity onPress={onPress} style={styles.item}>
+      <View style={styles.itemWrap}>
+        <Text style={styles.title}>{title}</Text>
+        <Text secondary style={styles.text}>
+          {text}
+        </Text>
+      </View>
+      <Image source={chevronRight} />
+    </TouchableOpacity>
+  )
+}
 
 type Props = {
   intl: IntlShape,
