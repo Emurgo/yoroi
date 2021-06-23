@@ -57,14 +57,19 @@ const messages = defineMessages({
     defaultMessage: '!!!You have to use some of your addresses',
     description: 'some desc',
   },
-  freshAddresses: {
-    id: 'components.receive.receivescreen.freshAddresses',
-    defaultMessage: '!!!Fresh addresses',
+  unusedAddresses: {
+    id: 'components.receive.receivescreen.unusedAddresses',
+    defaultMessage: '!!!Unused addresses',
     description: 'some desc',
   },
   usedAddresses: {
     id: 'components.receive.receivescreen.usedAddresses',
     defaultMessage: '!!!Used addresses',
+    description: 'some desc',
+  },
+  verifyAddress: {
+    id: 'components.receive.receivescreen.verifyAddress',
+    defaultMessage: '!!!Verify address',
     description: 'some desc',
   },
 })
@@ -102,13 +107,23 @@ const ReceiveScreen = (
       </View>
       <SafeAreaView style={styles.safeAreaView}>
         <Screen scroll>
-          <Text style={styles.heading}>
-            {intl.formatMessage(messages.freshAddresses)}
-          </Text>
+          <View style={styles.addressListHeader}>
+            <Text style={styles.heading}>
+              {intl.formatMessage(messages.unusedAddresses)}
+            </Text>
+            <Text style={styles.heading}>
+              {intl.formatMessage(messages.verifyAddress)}
+            </Text>
+          </View>
           <AddressesList showFresh addresses={receiveAddresses} />
-          <Text style={styles.heading}>
-            {intl.formatMessage(messages.usedAddresses)}
-          </Text>
+          <View style={styles.addressListHeader}>
+            <Text style={styles.heading}>
+              {intl.formatMessage(messages.usedAddresses)}
+            </Text>
+            <Text style={styles.heading}>
+              {intl.formatMessage(messages.verifyAddress)}
+            </Text>
+          </View>
           <AddressesList addresses={receiveAddresses} />
         </Screen>
       </SafeAreaView>
