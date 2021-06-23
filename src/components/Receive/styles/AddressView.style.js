@@ -19,17 +19,24 @@ export default StyleSheet.create({
   },
   addressContainer: {
     flexDirection: 'row',
-    flex: 1,
+    flex: 4,
+    alignItems: 'center',
   },
   index: {
     paddingRight: 8,
   },
   text: {
-    paddingRight: 36,
     paddingLeft: 5,
   },
   image: {
     width: 24,
     height: 24,
+  },
+  actionContainer: {
+    flex: 3,
+    alignItems: 'flex-end',
+  },
+  messageText: {
+    fontWeight: 'bold',
   },
 })

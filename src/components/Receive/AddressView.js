@@ -1,11 +1,12 @@
 // @flow
 
-import React from 'react'
+import React, {useEffect, useState, useCallback} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withStateHandlers, withHandlers} from 'recompose'
 import {View, TouchableOpacity, Image, Platform} from 'react-native'
-import {injectIntl, type IntlShape} from 'react-intl'
+import {injectIntl, type IntlShape, defineMessages} from 'react-intl'
+import Clipboard from '@react-native-community/clipboard'
 
 import {
   isUsedAddressIndexSelector,
@@ -31,7 +32,8 @@ import {CONFIG} from '../../config/config'
 import {getCardanoByronConfig} from '../../config/networks'
 
 import styles from './styles/AddressView.style'
-import infoIcon from '../../assets/img/icon/info.png'
+import copyIcon from '../../assets/img/icon/copy-ext.png'
+import verifyIcon from '../../assets/img/icon/verify-address.png'
 
 import type {ComponentType} from 'react'
 import type {
@@ -40,6 +42,24 @@ import type {
   DeviceObj,
 } from '../../crypto/shelley/ledgerUtils'
 import type {WalletMeta} from '../../state'
+
+const messages = defineMessages({
+  copyAddressLabel: {
+    id: 'components.receive.addressview.copyAddressLabel',
+    defaultMessage: '!!!Copy',
+    description: 'some desc',
+  },
+  copiedAddressLabel: {
+    id: 'components.receive.addressview.copiedAddressLabel',
+    defaultMessage: '!!!Copied',
+    description: 'some desc',
+  },
+  verifyAddressLabel: {
+    id: 'components.receive.addressview.verifyAddressLabel',
+    defaultMessage: '!!!Verify',
+    description: 'some desc',
+  },
+})
 
 const _handleOnVerifyAddress = async (
   intl: IntlShape,
@@ -89,6 +109,7 @@ const _handleOnVerifyAddress = async (
   })
 }
 
+const MESSAGE_TIMEOUT = 1000
 const ADDRESS_DIALOG_STEPS = {
   CLOSED: 'CLOSED',
   ADDRESS_DETAILS: 'ADDRESS_DETAILS',
@@ -115,6 +136,7 @@ type Props = {|
   isWaiting: boolean,
   onConnectBLE: (DeviceId) => void,
   onConnectUSB: (DeviceObj) => void,
+  intl: IntlShape,
 |}
 
 const AddressView = ({
@@ -132,64 +154,119 @@ const AddressView = ({
   isWaiting,
   onConnectUSB,
   onConnectBLE,
-}: Props) => (
-  <>
-    <TouchableOpacity activeOpacity={0.5} onPress={openDetails}>
+  intl,
+}: Props) => {
+  const [isCopying, setIsCopying] = useState<boolean>(false)
+
+  useEffect(
+    () => {
+      if (isCopying) {
+        const timeout = setTimeout(() => {
+          clearTimeout(timeout)
+          Clipboard.setString(address)
+          setIsCopying(false)
+        }, MESSAGE_TIMEOUT)
+      }
+    },
+    [isCopying, setIsCopying],
+  )
+
+  const _copyHandler = useCallback(
+    () => {
+      setIsCopying(true)
+    },
+    [setIsCopying],
+  )
+
+  return (
+    <>
       <View style={styles.container}>
         <View style={styles.addressContainer}>
-          <Text secondary={isUsed} small bold>{`/${index}`}</Text>
-          <Text
-            secondary={isUsed}
-            small
-            numberOfLines={1}
-            ellipsizeMode="middle"
-            monospace
-            style={styles.text}
-          >
-            {address}
-          </Text>
+          {isCopying && (
+            <Text small style={styles.messageText}>
+              {intl.formatMessage(messages.copiedAddressLabel)}
+            </Text>
+          )}
+          {!isCopying && (
+            <>
+              <Text secondary={isUsed} small bold>{`/${index}`}</Text>
+              <Text
+                secondary={isUsed}
+                small
+                numberOfLines={1}
+                ellipsizeMode="middle"
+                monospace
+                style={styles.text}
+              >
+                {address}
+              </Text>
+              <TouchableOpacity
+                accessibilityLabel={intl.formatMessage(
+                  messages.copyAddressLabel,
+                )}
+                accessibilityRole="button"
+                onPress={_copyHandler}
+                disabled={isCopying}
+              >
+                <Image source={copyIcon} />
+              </TouchableOpacity>
+            </>
+          )}
         </View>
-        <Image source={infoIcon} style={styles.image} />
+        <View style={styles.actionContainer}>
+          <TouchableOpacity
+            accessibilityLabel={intl.formatMessage(messages.verifyAddressLabel)}
+            accessibilityRole="button"
+            onPress={openDetails}
+          >
+            <Image source={verifyIcon} />
+          </TouchableOpacity>
+        </View>
       </View>
-    </TouchableOpacity>
 
-    <AddressModal
-      visible={addressDialogStep === ADDRESS_DIALOG_STEPS.ADDRESS_DETAILS}
-      address={address}
-      onRequestClose={closeDetails}
-      onAddressVerify={onToggleAddrVerifyDialog}
-    />
+      <AddressModal
+        visible={addressDialogStep === ADDRESS_DIALOG_STEPS.ADDRESS_DETAILS}
+        address={address}
+        onRequestClose={closeDetails}
+        onAddressVerify={onToggleAddrVerifyDialog}
+      />
 
-    <LedgerTransportSwitchModal
-      visible={addressDialogStep === ADDRESS_DIALOG_STEPS.CHOOSE_TRANSPORT}
-      onRequestClose={closeDetails}
-      onSelectUSB={(event) => onChooseTransport(event, true)}
-      onSelectBLE={(event) => onChooseTransport(event, false)}
-      showCloseIcon
-    />
+      <LedgerTransportSwitchModal
+        visible={addressDialogStep === ADDRESS_DIALOG_STEPS.CHOOSE_TRANSPORT}
+        onRequestClose={closeDetails}
+        onSelectUSB={(event) => onChooseTransport(event, true)}
+        onSelectBLE={(event) => onChooseTransport(event, false)}
+        showCloseIcon
+      />
 
-    <Modal
-      visible={addressDialogStep === ADDRESS_DIALOG_STEPS.LEDGER_CONNECT}
-      onRequestClose={closeDetails}
-    >
-      <LedgerConnect
-        onConnectBLE={onConnectBLE}
-        onConnectUSB={onConnectUSB}
+      <Modal
+        visible={addressDialogStep === ADDRESS_DIALOG_STEPS.LEDGER_CONNECT}
+        onRequestClose={closeDetails}
+      >
+        <LedgerConnect
+          onConnectBLE={onConnectBLE}
+          onConnectUSB={onConnectUSB}
+          useUSB={useUSB}
+        />
+      </Modal>
+
+      <AddressVerifyModal
+        visible={addressDialogStep === ADDRESS_DIALOG_STEPS.ADDRESS_VERIFY}
+        onRequestClose={closeDetails}
+        onConfirm={onVerifyAddress}
+        address={address}
+        path={formatPath(
+          0,
+          'External',
+          index,
+          walletMeta.walletImplementationId,
+        )}
+        isWaiting={isWaiting}
         useUSB={useUSB}
       />
-    </Modal>
-
-    <AddressVerifyModal
-      visible={addressDialogStep === ADDRESS_DIALOG_STEPS.ADDRESS_VERIFY}
-      onRequestClose={closeDetails}
-      onConfirm={onVerifyAddress}
-      address={address}
-      path={formatPath(0, 'External', index, walletMeta.walletImplementationId)}
-      isWaiting={isWaiting}
-      useUSB={useUSB}
-    />
-  </>
-)
+    </>
+  )
+}
 
 type ExternalProps = {|
   address: string,
