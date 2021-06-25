@@ -7,16 +7,20 @@ import {connect} from 'react-redux'
 
 import {isUsedAddressIndexSelector} from '../../selectors'
 import AddressView from './AddressView'
+import {AddressDTOCardano} from '../../crypto/Address.dto'
 
 import type {ComponentType} from 'react'
 
-const _keyExtractor = (address) => address
-const _renderItem = ({item: address}) => <AddressView address={address} />
+const _keyExtractor = (addressInfo) => addressInfo?.address
+const _renderItem = ({item: addressInfo}) => (
+  <AddressView addressInfo={addressInfo} />
+)
 
 const AddressesList = ({addresses, isUsedAddressIndex, showFresh}) => {
+  const toFilter = [...addresses.values()]
   const shownAddresses = showFresh
-    ? addresses.filter((addr) => !isUsedAddressIndex[addr])
-    : addresses.filter((addr) => isUsedAddressIndex[addr])
+    ? toFilter.filter((addrInfo) => !isUsedAddressIndex[addrInfo.address])
+    : toFilter.filter((addrInfo) => isUsedAddressIndex[addrInfo.address])
   // We want newest first
   shownAddresses.reverse()
 
@@ -30,7 +34,7 @@ const AddressesList = ({addresses, isUsedAddressIndex, showFresh}) => {
 }
 
 type ExternalProps = {|
-  addresses: Array<string>,
+  addresses: Map<string, AddressDTOCardano>,
   showFresh?: boolean,
 |}
 

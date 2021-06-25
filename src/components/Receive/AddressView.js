@@ -30,6 +30,7 @@ import LocalizableError from '../../i18n/LocalizableError'
 import {Logger} from '../../utils/logging'
 import {CONFIG} from '../../config/config'
 import {getCardanoByronConfig} from '../../config/networks'
+import {AddressDTOCardano} from '../../crypto/Address.dto'
 
 import styles from './styles/AddressView.style'
 import copyIcon from '../../assets/img/icon/copy-ext.png'
@@ -121,7 +122,7 @@ type AddressDialogSteps = $Values<typeof ADDRESS_DIALOG_STEPS>
 
 type Props = {|
   index: number,
-  address: string,
+  addressInfo: AddressDTOCardano,
   isUsed: boolean,
   walletMeta: $Diff<WalletMeta, {id: string}>,
   openDetails: () => void,
@@ -141,7 +142,7 @@ type Props = {|
 
 const AddressView = ({
   index,
-  address,
+  addressInfo,
   isUsed,
   walletMeta,
   openDetails,
@@ -163,7 +164,7 @@ const AddressView = ({
       if (isCopying) {
         const timeout = setTimeout(() => {
           clearTimeout(timeout)
-          Clipboard.setString(address)
+          Clipboard.setString(addressInfo.address)
           setIsCopying(false)
         }, MESSAGE_TIMEOUT)
       }
@@ -198,7 +199,7 @@ const AddressView = ({
                 monospace
                 style={styles.text}
               >
-                {address}
+                {addressInfo.address}
               </Text>
               <TouchableOpacity
                 accessibilityLabel={intl.formatMessage(
@@ -226,7 +227,7 @@ const AddressView = ({
 
       <AddressModal
         visible={addressDialogStep === ADDRESS_DIALOG_STEPS.ADDRESS_DETAILS}
-        address={address}
+        addressInfo={addressInfo}
         onRequestClose={closeDetails}
         onAddressVerify={onToggleAddrVerifyDialog}
       />
@@ -254,7 +255,7 @@ const AddressView = ({
         visible={addressDialogStep === ADDRESS_DIALOG_STEPS.ADDRESS_VERIFY}
         onRequestClose={closeDetails}
         onConfirm={onVerifyAddress}
-        address={address}
+        addressInfo={addressInfo}
         path={formatPath(
           0,
           'External',
@@ -269,15 +270,15 @@ const AddressView = ({
 }
 
 type ExternalProps = {|
-  address: string,
+  addressInfo: AddressDTOCardano,
 |}
 
 export default injectIntl(
   (compose(
     connect(
-      (state, {address}) => ({
-        index: externalAddressIndexSelector(state)[address],
-        isUsed: !!isUsedAddressIndexSelector(state)[address],
+      (state, {addressInfo}) => ({
+        index: externalAddressIndexSelector(state)[(addressInfo?.address)],
+        isUsed: !!isUsedAddressIndexSelector(state)[(addressInfo?.address)],
         hwDeviceInfo: hwDeviceInfoSelector(state),
         walletMeta: walletMetaSelector(state),
       }),

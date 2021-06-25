@@ -26,6 +26,7 @@ import {
   onDidUpdate,
   withNavigationTitle,
 } from '../../utils/renderUtils'
+import {AddressDTOCardano} from '../../crypto/Address.dto'
 
 import styles from './styles/ReceiveScreen.style'
 
@@ -83,6 +84,9 @@ const ReceiveScreen = (
   }: {intl: IntlShape} & Object /* TODO: type */,
 ) => {
   const currentAddress = _.last(receiveAddresses) || NO_ADDRESS
+  const addressesInfo: Map<string, AddressDTOCardano> = new Map(
+    receiveAddresses.map((addr) => [addr, new AddressDTOCardano(addr)]),
+  )
 
   return (
     <View style={styles.container}>
@@ -115,7 +119,7 @@ const ReceiveScreen = (
               {intl.formatMessage(messages.verifyAddress)}
             </Text>
           </View>
-          <AddressesList showFresh addresses={receiveAddresses} />
+          <AddressesList showFresh addresses={addressesInfo} />
           <View style={styles.addressListHeader}>
             <Text style={styles.heading}>
               {intl.formatMessage(messages.usedAddresses)}
@@ -124,7 +128,7 @@ const ReceiveScreen = (
               {intl.formatMessage(messages.verifyAddress)}
             </Text>
           </View>
-          <AddressesList addresses={receiveAddresses} />
+          <AddressesList addresses={addressesInfo} />
         </Screen>
       </SafeAreaView>
     </View>

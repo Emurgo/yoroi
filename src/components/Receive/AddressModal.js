@@ -14,11 +14,11 @@ import {
   walletMetaSelector,
 } from '../../selectors'
 import {formatPath} from '../../crypto/commonUtils'
-
 import {Text, Button, Modal} from '../UiKit'
 
 import styles from './styles/AddressModal.style'
 
+import type {AddressDTOCardano, KeyHashesCardano} from '../../crypto/Address.dto'
 import type {ComponentType} from 'react'
 import type {WalletMeta} from '../../state'
 
@@ -43,6 +43,21 @@ const messages = defineMessages({
     defaultMessage: '!!!Copied',
     description: 'some desc',
   },
+  spending: {
+    id: 'components.receive.addressmodal.spendingKeyHash',
+    defaultMessage: '!!!Spending',
+    description: 'some desc',
+  },
+  staking: {
+    id: 'components.receive.addressmodal.stakingKeyHash',
+    defaultMessage: '!!!Staking',
+    description: 'some desc',
+  },
+  title: {
+    id: 'components.receive.addressmodal.title',
+    defaultMessage: '!!!Title',
+    description: 'some desc',
+  },
   verifyLabel: {
     id: 'components.receive.addressverifymodal.title',
     defaultMessage: '!!!Verify Address on Ledger',
@@ -50,7 +65,7 @@ const messages = defineMessages({
 })
 
 type Props = {|
-  address: ?string,
+  addressInfo: ?AddressDTOCardano,
   index?: number,
   intl: IntlShape,
   onRequestClose: () => any,
@@ -62,21 +77,29 @@ type Props = {|
 
 type State = {
   isCopied: boolean,
+  keyHashes: KeyHashesCardano | null
 }
 
 class AddressModal extends React.Component<Props, State> {
-  state = {isCopied: false}
+  state = {isCopied: false, keyHashes: null}
 
   /* eslint-disable-next-line react/sort-comp */
   _hideModalTimeoutId = null
+
+  async componentDidMount(): Promise<void> {
+    const {addressInfo} = this.props
+    this.setState({
+      keyHashes: await addressInfo?.getKeyHashes(),
+    })
+  }
 
   componentWillUnmount() {
     if (this._hideModalTimeoutId) clearTimeout(this._hideModalTimeoutId)
   }
 
   _copyAddress = () => {
-    if (this.props.address == null) return
-    Clipboard.setString(this.props.address)
+    if (this.props.addressInfo == null) return
+    Clipboard.setString(this.props.addressInfo.address)
     this.setState({isCopied: true})
 
     // To avoid reading the clipboard, we simply reset state once the modal
@@ -88,9 +111,12 @@ class AddressModal extends React.Component<Props, State> {
   }
 
   render() {
-    const {isCopied} = this.state
     const {
-      address,
+      isCopied,
+      keyHashes,
+    } = this.state
+    const {
+      addressInfo,
       index,
       intl,
       onRequestClose,
@@ -102,28 +128,51 @@ class AddressModal extends React.Component<Props, State> {
 
     return (
       <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
-        <View style={styles.content}>
+        <View style={styles.container}>
+          <Text style={styles.title}>
+            {intl.formatMessage(messages.title).toUpperCase()}
+          </Text>
           <QRCode
-            value={address}
+            value={addressInfo?.address}
             size={140}
             backgroundColor="white"
             color="black"
           />
-
-          {index != null && (
-            <Text style={styles.address}>
-              {intl.formatMessage(messages.BIP32path)}{' '}
-              {formatPath(
-                0,
-                'External',
-                index,
-                walletMeta.walletImplementationId,
+          <View style={styles.info}>
+            <Text style={styles.subtitle}>
+              {intl.formatMessage(messages.walletAddress)}
+            </Text>
+            <Text secondary monospace>
+              {addressInfo?.address}
+            </Text>
+            <Text style={styles.subtitle}>
+              {intl.formatMessage(messages.BIP32path)}
+            </Text>
+            <Text secondary monospace>
+              {index != null && (
+                <>
+                  {formatPath(
+                    0,
+                    'External',
+                    index,
+                    walletMeta.walletImplementationId,
+                  )}
+                </>
               )}
             </Text>
-          )}
-          <Text monospace style={styles.address}>
-            {address !== undefined ? address : null}
-          </Text>
+            <Text style={styles.subtitle}>
+              {intl.formatMessage(messages.staking)}
+            </Text>
+            <Text secondary monospace>
+              {keyHashes?.staking}
+            </Text>
+            <Text style={styles.subtitle}>
+              {intl.formatMessage(messages.spending)}
+            </Text>
+            <Text secondary monospace>
+              {keyHashes?.spending}
+            </Text>
+          </View>
         </View>
 
         <Button
@@ -147,7 +196,7 @@ class AddressModal extends React.Component<Props, State> {
 }
 
 type ExternalProps = {|
-  address: ?string,
+  addressInfo: ?AddressDTOCardano,
   onRequestClose: () => any,
   visible: boolean,
   intl: IntlShape,
@@ -157,8 +206,8 @@ type ExternalProps = {|
 export default injectIntl(
   (compose(
     connect(
-      (state, {address}) => ({
-        index: externalAddressIndexSelector(state)[address],
+      (state, {addressInfo}) => ({
+        index: externalAddressIndexSelector(state)[(addressInfo?.address)],
         isHW: isHWSelector(state),
         walletMeta: walletMetaSelector(state),
       }),
