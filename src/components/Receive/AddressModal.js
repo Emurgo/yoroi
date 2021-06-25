@@ -131,7 +131,7 @@ class AddressModal extends React.Component<Props, State> {
       <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
         <View style={styles.container}>
           <Text style={styles.title}>
-            {intl.formatMessage(messages.title).toUpperCase()}
+            {intl.formatMessage(messages.title).toLocaleUpperCase()}
           </Text>
           <QRCode
             value={addressInfo?.address}

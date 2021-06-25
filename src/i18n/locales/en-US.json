@@ -90,7 +90,7 @@
   "components.receive.addressview.verifyAddressLabel": "Verify address",
   "components.receive.receivescreen.cannotGenerate": "You have to use some of your addresses",
   "components.receive.receivescreen.freshAddresses": "Fresh addresses",
-  "components.receive.receivescreen.generateButton": "Generate another address",
+  "components.receive.receivescreen.generateButton": "Generate new address",
   "components.receive.receivescreen.infoText": "Share this address to receive payments. To protect your privacy, new addresses are generated automatically once you use them.",
   "components.receive.receivescreen.title": "Receive",
   "components.receive.receivescreen.unusedAddresses": "Unused addresses",

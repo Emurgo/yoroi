@@ -99,6 +99,7 @@ const ReceiveScreen = (
           <AddressDetail address={currentAddress} />
         </View>
         <Button
+          outlineOnLight
           style={styles.button}
           onPress={generateNewReceiveAddress}
           disabled={addressLimitReached}
