@@ -46,12 +46,12 @@ import type {WalletMeta} from '../../state'
 
 const messages = defineMessages({
   copyAddressLabel: {
-    id: 'components.receive.addressview.copyAddressLabel',
+    id: 'components.receive.addressmodal.copyLabel',
     defaultMessage: '!!!Copy',
     description: 'some desc',
   },
   copiedAddressLabel: {
-    id: 'components.receive.addressview.copiedAddressLabel',
+    id: 'components.receive.addressmodal.copiedLabel',
     defaultMessage: '!!!Copied',
     description: 'some desc',
   },

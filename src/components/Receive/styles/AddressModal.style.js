@@ -16,8 +16,8 @@ export default StyleSheet.create({
   },
   subtitle: {
     textAlign: 'center',
-    marginTop: 18,
-    marginBottom: 6,
+    marginTop: 14,
+    marginBottom: 4,
   },
   button: {
     marginTop: 10,

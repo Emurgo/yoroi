@@ -87,8 +87,6 @@
   "components.receive.addressmodal.walletAddress": "Address",
   "components.receive.addressverifymodal.afterConfirm": "Once you tap on confirm, validate the address on your Ledger device, making sure both the path and the address match what is shown below:",
   "components.receive.addressverifymodal.title": "Verify Address on Ledger",
-  "components.receive.addressview.copiedAddressLabel": "Copied",
-  "components.receive.addressview.copyAddressLabel": "Copy address",
   "components.receive.addressview.verifyAddressLabel": "Verify address",
   "components.receive.receivescreen.cannotGenerate": "You have to use some of your addresses",
   "components.receive.receivescreen.freshAddresses": "Fresh addresses",

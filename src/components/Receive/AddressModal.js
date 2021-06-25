@@ -18,7 +18,10 @@ import {Text, Button, Modal} from '../UiKit'
 
 import styles from './styles/AddressModal.style'
 
-import type {AddressDTOCardano, KeyHashesCardano} from '../../crypto/Address.dto'
+import type {
+  AddressDTOCardano,
+  KeyHashesCardano,
+} from '../../crypto/Address.dto'
 import type {ComponentType} from 'react'
 import type {WalletMeta} from '../../state'
 
@@ -77,7 +80,7 @@ type Props = {|
 
 type State = {
   isCopied: boolean,
-  keyHashes: KeyHashesCardano | null
+  keyHashes: KeyHashesCardano | null,
 }
 
 class AddressModal extends React.Component<Props, State> {
@@ -86,7 +89,8 @@ class AddressModal extends React.Component<Props, State> {
   /* eslint-disable-next-line react/sort-comp */
   _hideModalTimeoutId = null
 
-  async componentDidMount(): Promise<void> {
+  /* eslint-disable-next-line camelcase */
+  async UNSAFE_componentWillMount(): Promise<void> {
     const {addressInfo} = this.props
     this.setState({
       keyHashes: await addressInfo?.getKeyHashes(),
@@ -111,10 +115,7 @@ class AddressModal extends React.Component<Props, State> {
   }
 
   render() {
-    const {
-      isCopied,
-      keyHashes,
-    } = this.state
+    const {isCopied, keyHashes} = this.state
     const {
       addressInfo,
       index,

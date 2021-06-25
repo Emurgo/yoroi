@@ -4,18 +4,17 @@ import {
   Address,
   ByronAddress,
   BaseAddress,
-  PointerAddress,
-  EnterpriseAddress,
+  // PointerAddress,
+  // EnterpriseAddress,
   RewardAddress,
 } from '@emurgo/react-native-haskell-shelley'
-import {Logger} from '../utils/logging'
 
 // NOTE: ** IMPORTANT ** The order matters
 const ADDRESS_TYPES = Object.freeze([
   ByronAddress,
   BaseAddress,
-  PointerAddress,
-  EnterpriseAddress,
+  // PointerAddress,
+  // EnterpriseAddress,
   RewardAddress,
 ])
 
@@ -26,17 +25,17 @@ export type KeyHashesCardano = {|
 
 /**
  * @description The resolver for the Cardano key hashes
- * @param {Address} wasmAddress A Cardano wallet Address
- * @returns KeyHashesCardano|null You don't need to test for Byron it will return null
+ * @param {any} wasmAddress A Cardano wallet Address
+ * @returns {Promise<KeyHashesCardano|null>} You don't need to test for Byron it will return null
  */
 export const getKeyHashesCardano = async (
-  wasmAddress: Address,
+  wasmAddress: any,
 ): Promise<KeyHashesCardano | null> => {
   let addr, pay, stake, paymentKeyHash, stakingKeyHash
   for (const [i, addressType] of ADDRESS_TYPES.entries()) {
     // First = Byron
     if (!i) {
-      const addr = addressType.from_address(wasmAddress)
+      addr = await addressType.from_address(wasmAddress)
       if (addr) return null
     } else {
       addr = await addressType.from_address(wasmAddress)
@@ -71,18 +70,18 @@ export interface YoroiAddressInfoInterface<KeyHashes> {
 export class AddressDTOCardano
 implements YoroiAddressInfoInterface<KeyHashesCardano> {
   _address: string
-  _wasmAddress: Address | null
+  _wasmAddress: any
   _keyHashes: KeyHashesCardano | null
 
-  constructor(addressBech32: string) {
-    this._address = addressBech32
+  constructor(addrBech32: string) {
+    this._address = addrBech32
   }
 
   get address() {
     return this._address
   }
 
-  async getWasmAddress(): Promise<Address> {
+  async getWasmAddress(): Promise<any> {
     if (!this._wasmAddress) {
       this._wasmAddress = await Address.from_bech32(this._address)
     }
