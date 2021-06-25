@@ -125,9 +125,6 @@ const ReceiveScreen = (
             <Text style={styles.heading}>
               {intl.formatMessage(messages.usedAddresses)}
             </Text>
-            <Text style={styles.heading}>
-              {intl.formatMessage(messages.verifyAddress)}
-            </Text>
           </View>
           <AddressesList addresses={addressesInfo} />
         </Screen>

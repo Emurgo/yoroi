@@ -7,7 +7,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: 16,
-    elevation: 3,
+    elevation: 2,
     shadowOffset: {width: 0, height: -2},
     shadowRadius: 10,
     shadowOpacity: 0.08,
