@@ -3,7 +3,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {View} from 'react-native'
+import {View, TouchableOpacity, Image} from 'react-native'
 import Clipboard from '@react-native-community/clipboard'
 import QRCode from 'react-native-qrcode-svg'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
@@ -17,6 +17,9 @@ import {formatPath} from '../../crypto/commonUtils'
 import {Text, Button, Modal} from '../UiKit'
 
 import styles from './styles/AddressModal.style'
+import copyIcon from '../../assets/img/icon/copy-ext.png'
+// TODO: replace to the right icon after getting it from UI department
+import copiedIcon from '../../assets/img/icon/verify-address.png'
 
 import type {
   AddressDTOCardano,
@@ -39,11 +42,6 @@ const messages = defineMessages({
   copyLabel: {
     id: 'components.receive.addressmodal.copyLabel',
     defaultMessage: '!!!Copy address',
-    description: 'some desc',
-  },
-  copiedLabel: {
-    id: 'components.receive.addressmodal.copiedLabel',
-    defaultMessage: '!!!Copied',
     description: 'some desc',
   },
   spending: {
@@ -143,9 +141,23 @@ class AddressModal extends React.Component<Props, State> {
             <Text style={styles.subtitle}>
               {intl.formatMessage(messages.walletAddress)}
             </Text>
-            <Text secondary monospace>
-              {addressInfo?.address}
-            </Text>
+            <View style={styles.dataContainer}>
+              <Text
+                secondary
+                monospace
+                numberOfLines={1}
+                ellipsizeMode="middle"
+              >
+                {addressInfo?.address}
+              </Text>
+              <TouchableOpacity
+                accessibilityLabel={intl.formatMessage(messages.copyLabel)}
+                accessibilityRole="button"
+                onPress={this._copyAddress}
+              >
+                <Image source={isCopied ? copiedIcon : copyIcon} />
+              </TouchableOpacity>
+            </View>
             <Text style={styles.subtitle}>
               {intl.formatMessage(messages.BIP32path)}
             </Text>
@@ -176,14 +188,6 @@ class AddressModal extends React.Component<Props, State> {
           </View>
         </View>
 
-        <Button
-          onPress={this._copyAddress}
-          title={
-            isCopied
-              ? intl.formatMessage(messages.copiedLabel)
-              : intl.formatMessage(messages.copyLabel)
-          }
-        />
         {isHW && (
           <Button
             onPress={onAddressVerify}

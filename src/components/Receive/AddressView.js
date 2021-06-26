@@ -45,17 +45,12 @@ import type {
 import type {WalletMeta} from '../../state'
 
 const messages = defineMessages({
-  copyAddressLabel: {
+  copyLabel: {
     id: 'components.receive.addressmodal.copyLabel',
     defaultMessage: '!!!Copy',
     description: 'some desc',
   },
-  copiedAddressLabel: {
-    id: 'components.receive.addressmodal.copiedLabel',
-    defaultMessage: '!!!Copied',
-    description: 'some desc',
-  },
-  verifyAddressLabel: {
+  verifyLabel: {
     id: 'components.receive.addressview.verifyAddressLabel',
     defaultMessage: '!!!Verify',
     description: 'some desc',
@@ -183,40 +178,32 @@ const AddressView = ({
     <>
       <View style={styles.container}>
         <View style={styles.addressContainer}>
-          {isCopying && (
-            <Text small style={styles.messageText}>
-              {intl.formatMessage(messages.copiedAddressLabel)}
+          <>
+            <Text secondary={isUsed} small bold>{`/${index}`}</Text>
+            <Text
+              secondary={isUsed}
+              small
+              numberOfLines={1}
+              ellipsizeMode="middle"
+              monospace
+              style={styles.text}
+            >
+              {addressInfo.address}
             </Text>
-          )}
-          {!isCopying && (
-            <>
-              <Text secondary={isUsed} small bold>{`/${index}`}</Text>
-              <Text
-                secondary={isUsed}
-                small
-                numberOfLines={1}
-                ellipsizeMode="middle"
-                monospace
-                style={styles.text}
-              >
-                {addressInfo.address}
-              </Text>
-              <TouchableOpacity
-                accessibilityLabel={intl.formatMessage(
-                  messages.copyAddressLabel,
-                )}
-                accessibilityRole="button"
-                onPress={_copyHandler}
-                disabled={isCopying}
-              >
-                <Image source={copyIcon} />
-              </TouchableOpacity>
-            </>
-          )}
+            <TouchableOpacity
+              accessibilityLabel={intl.formatMessage(messages.copyLabel)}
+              accessibilityRole="button"
+              onPress={_copyHandler}
+              disabled={isCopying}
+            >
+              {/* TODO: replace to the right icon after getting it from UI department */}
+              <Image source={isCopying ? verifyIcon : copyIcon} />
+            </TouchableOpacity>
+          </>
         </View>
         <View style={styles.actionContainer}>
           <TouchableOpacity
-            accessibilityLabel={intl.formatMessage(messages.verifyAddressLabel)}
+            accessibilityLabel={intl.formatMessage(messages.verifyLabel)}
             accessibilityRole="button"
             onPress={openDetails}
           >

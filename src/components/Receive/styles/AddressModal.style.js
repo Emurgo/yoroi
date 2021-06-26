@@ -22,4 +22,8 @@ export default StyleSheet.create({
   button: {
     marginTop: 10,
   },
+  dataContainer: {
+    flexDirection: 'row',
+    paddingRight: 70,
+  },
 })
