@@ -5,12 +5,13 @@ import {View} from 'react-native'
 
 import ReceivedIcon from '../../assets/ReceivedIcon'
 import SentIcon from '../../assets/SentIcon'
-// TODO: check with @vicente
+import TransactionIcon from '../../assets/TransactionIcon'
+// TODO: build the doc about how to identify all the tx types
 // import StakingKeyRegisteredIcon from '../../assets/StakingKeyRegisteredIcon'
 // import StakingKeyDeregisteredIcon from '../../assets/StakingKeyDeregisteredIcon'
 // import DelegatedIcon from '../../assets/DelegatedIcon'
 // import RewardWithdrawnIcon from '../../assets/RewardWithdrawnIcon'
-import RewardManuallyPayoutIcon from '../../assets/RewardManuallyPayoutIcon'
+// import RewardManuallyPayoutIcon from '../../assets/RewardManuallyPayoutIcon'
 
 import useStyles from './styles/TxIcon.style'
 
@@ -19,8 +20,8 @@ import type {TransactionInfo} from '../../types/HistoryTransaction'
 const ICON: $ReadOnly<Dict<any>> = Object.freeze({
   SENT: SentIcon,
   RECEIVED: ReceivedIcon,
-  SELF: RewardManuallyPayoutIcon,
-  MULTI: RewardManuallyPayoutIcon,
+  SELF: TransactionIcon,
+  MULTI: TransactionIcon,
 })
 
 const SIZE = 36
