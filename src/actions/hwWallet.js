@@ -1,4 +1,5 @@
 // @flow
+import walletManager from '../crypto/walletManager'
 import {hwDeviceInfoSelector} from '../selectors'
 import {Logger} from '../utils/logging'
 import {NoDeviceInfoError} from '../crypto/shelley/ledgerUtils'
@@ -24,7 +25,7 @@ export const saveHW = (hwDeviceInfo: HWDeviceInfo) => (
   dispatch(_saveHW(hwDeviceInfo))
 }
 
-export const setLedgerDeviceId = (deviceId: DeviceId) => (
+export const setLedgerDeviceId = (deviceId: DeviceId) => async (
   dispatch: Dispatch<any>,
   getState: () => State,
 ) => {
@@ -35,10 +36,19 @@ export const setLedgerDeviceId = (deviceId: DeviceId) => (
     throw new NoDeviceInfoError()
   }
   hwDeviceInfo.hwFeatures.deviceId = deviceId
-  dispatch(_saveHW(hwDeviceInfo))
+  const updatedInfo = {
+    ...hwDeviceInfo,
+    hwFeatures: {
+      ...hwDeviceInfo.hwFeatures,
+      deviceId,
+    },
+  }
+  Logger.debug('updating hwDeviceInfo', updatedInfo)
+  // saved in redux state internally through notify()
+  await walletManager.updateHWDeviceInfo(updatedInfo)
 }
 
-export const setLedgerDeviceObj = (deviceObj: DeviceObj) => (
+export const setLedgerDeviceObj = (deviceObj: DeviceObj) => async (
   dispatch: Dispatch<any>,
   getState: () => State,
 ) => {
@@ -48,6 +58,14 @@ export const setLedgerDeviceObj = (deviceObj: DeviceObj) => (
   if (hwDeviceInfo == null || hwDeviceInfo.hwFeatures == null) {
     throw new NoDeviceInfoError()
   }
-  hwDeviceInfo.hwFeatures.deviceObj = deviceObj
-  dispatch(_saveHW(hwDeviceInfo))
+  const updatedInfo = {
+    ...hwDeviceInfo,
+    hwFeatures: {
+      ...hwDeviceInfo.hwFeatures,
+      deviceObj,
+    },
+  }
+  Logger.debug('updating hwDeviceInfo', updatedInfo)
+  // saved in redux state internally through notify()
+  await walletManager.updateHWDeviceInfo(updatedInfo)
 }
