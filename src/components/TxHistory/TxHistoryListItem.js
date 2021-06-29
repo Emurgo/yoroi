@@ -7,7 +7,7 @@ import {View, TouchableOpacity} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {BigNumber} from 'bignumber.js'
 
-import {Text} from '../UiKit'
+import {Text, TxIcon} from '../UiKit'
 import utfSymbols from '../../utils/utfSymbols'
 import {
   transactionsInfoSelector,
@@ -19,7 +19,6 @@ import styles from './styles/TxHistoryListItem.style'
 
 import {
   getAssetDenominationOrId,
-  formatTokenAmount,
   formatTokenInteger,
   formatTokenFractional,
   formatTimeToSeconds,
@@ -85,6 +84,21 @@ const messages = defineMessages({
   },
 })
 
+const ASSURANCE_MESSAGES: $ReadOnly<Dict<any>> = Object.freeze({
+  LOW: messages.assuranceLevelLow,
+  MEDIUM: messages.assuranceLevelMedium,
+  HIGH: messages.assuranceLevelHigh,
+  PENDING: messages.assuranceLevelPending,
+  FAILED: messages.assuranceLevelFailed,
+})
+
+const DIRECTION_MESSAGES: $ReadOnly<Dict<any>> = Object.freeze({
+  SENT: messages.transactionTypeSent,
+  RECEIVED: messages.transactionTypeReceived,
+  SELF: messages.transactionTypeSelf,
+  MULTI: messages.transactionTypeMulti,
+})
+
 type Props = {
   transaction: TransactionInfo,
   availableAssets: Dict<Token>,
@@ -92,28 +106,6 @@ type Props = {
   navigation: any, // TODO: type
   intl: IntlShape,
 }
-
-const _AssuranceLevel = ({transaction, intl}) => {
-  const assuranceLevelMsgMap = {
-    LOW: messages.assuranceLevelLow,
-    MEDIUM: messages.assuranceLevelMedium,
-    HIGH: messages.assuranceLevelHigh,
-    PENDING: messages.assuranceLevelPending,
-    FAILED: messages.assuranceLevelFailed,
-  }
-  return (
-    <View style={[styles.assurance, styles[transaction.assurance]]}>
-      <Text adjustsFontSizeToFit style={styles.assuranceText}>
-        {intl
-          .formatMessage(assuranceLevelMsgMap[transaction.assurance])
-          .toLocaleUpperCase()}
-      </Text>
-    </View>
-  )
-}
-
-const AssuranceLevel = injectIntl(_AssuranceLevel)
-
 class TxHistoryListItem extends Component<Props> {
   shouldComponentUpdate(nextProps) {
     // Note: technically we should also verify
@@ -176,49 +168,42 @@ class TxHistoryListItem extends Component<Props> {
 
     const isPending = transaction.assurance === 'PENDING'
     const assuranceContainerStyle = styles[`${transaction.assurance}_CONTAINER`]
-    const txDirectionMsgMap = {
-      SENT: messages.transactionTypeSent,
-      RECEIVED: messages.transactionTypeReceived,
-      SELF: messages.transactionTypeSelf,
-      MULTI: messages.transactionTypeMulti,
-    }
-    const txFee: ?BigNumber =
-      transaction.fee != null
-        ? MultiToken.fromArray(transaction.fee).getDefault()
-        : null
-    const feeStr = txFee ? formatTokenAmount(txFee, defaultAsset) : '-'
 
     return (
       <TouchableOpacity onPress={this.showDetails} activeOpacity={0.5}>
         <View style={[styles.container, assuranceContainerStyle]}>
-          <View style={styles.meta}>
-            <Text small>{formatTimeToSeconds(transaction.submittedAt)}</Text>
-            {transaction.fee && (
-              <Text secondary={!isPending}>
-                {`${intl.formatMessage(messages.fee)} ${feeStr}`}
-              </Text>
-            )}
-            <Text secondary={!isPending}>
-              {intl.formatMessage(txDirectionMsgMap[transaction.direction])}
-            </Text>
+          <View style={styles.iconContainer}>
+            <TxIcon transaction={transaction} />
           </View>
-          <View style={styles.row}>
-            <AssuranceLevel transaction={transaction} />
-            {transaction.amount ? (
-              <View style={styles.amount}>
-                <Text style={amountStyle}>
-                  {formatTokenInteger(amount, defaultAsset)}
-                </Text>
-                <Text small style={amountStyle}>
-                  {formatTokenFractional(amount, defaultAsset)}
-                </Text>
-                <Text style={amountStyle}>{`${
-                  utfSymbols.NBSP
-                }${assetSymbol}`}</Text>
-              </View>
-            ) : (
-              <Text style={amountStyle}>- -</Text>
-            )}
+          <View style={styles.txContainer}>
+            <View style={styles.row}>
+              <Text small secondary={isPending}>
+                {intl.formatMessage(DIRECTION_MESSAGES[transaction.direction])}
+              </Text>
+              {transaction.amount ? (
+                <View style={styles.amount}>
+                  <Text style={amountStyle} secondary={isPending}>
+                    {formatTokenInteger(amount, defaultAsset)}
+                  </Text>
+                  <Text small style={amountStyle} secondary={isPending}>
+                    {formatTokenFractional(amount, defaultAsset)}
+                  </Text>
+                  <Text style={amountStyle}>{`${
+                    utfSymbols.NBSP
+                  }${assetSymbol}`}</Text>
+                </View>
+              ) : (
+                <Text style={amountStyle}>- -</Text>
+              )}
+            </View>
+            <View style={styles.last}>
+              <Text secondary small>
+                {formatTimeToSeconds(transaction.submittedAt)}
+              </Text>
+              <Text secondary small style={styles.assuranceText}>
+                {intl.formatMessage(ASSURANCE_MESSAGES[transaction.assurance])}
+              </Text>
+            </View>
           </View>
         </View>
       </TouchableOpacity>
