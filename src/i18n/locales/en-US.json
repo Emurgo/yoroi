@@ -466,6 +466,7 @@
   "global.totalAda": "Total ADA",
   "global.tryAgain": "Try again",
   "global.txLabels.amount": "Amount",
+  "global.txLabels.assets": "{cnt} {cnt, plural, one {asset} other {assets}}",
   "global.txLabels.balanceAfterTx": "Balance after transaction",
   "global.txLabels.confirmTx": "Confirm transaction",
   "global.txLabels.fees": "Fees",

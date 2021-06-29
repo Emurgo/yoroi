@@ -6,6 +6,7 @@ import {connect} from 'react-redux'
 import {View, TouchableOpacity} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {BigNumber} from 'bignumber.js'
+import _ from 'lodash'
 
 import {Text, TxIcon} from '../UiKit'
 import utfSymbols from '../../utils/utfSymbols'
@@ -13,6 +14,8 @@ import {
   transactionsInfoSelector,
   availableAssetsSelector,
   defaultNetworkAssetSelector,
+  internalAddressIndexSelector,
+  externalAddressIndexSelector,
 } from '../../selectors'
 import {TX_HISTORY_ROUTES} from '../../RoutesList'
 import styles from './styles/TxHistoryListItem.style'
@@ -26,7 +29,11 @@ import {
 } from '../../utils/format'
 import {MultiToken} from '../../crypto/MultiToken'
 
-import type {TransactionInfo, Token} from '../../types/HistoryTransaction'
+import type {
+  TransactionInfo,
+  Token,
+  IOData,
+} from '../../types/HistoryTransaction'
 
 const messages = defineMessages({
   fee: {
@@ -82,6 +89,11 @@ const messages = defineMessages({
     defaultMessage: '!!!Failed',
     description: 'some desc',
   },
+  assets: {
+    id: 'global.txLabels.assets',
+    defaultMessage: '!!!{cnt} assets',
+    description: 'The number of assets different assets, not the amount',
+  },
 })
 
 const ASSURANCE_MESSAGES: $ReadOnly<Dict<any>> = Object.freeze({
@@ -99,8 +111,37 @@ const DIRECTION_MESSAGES: $ReadOnly<Dict<any>> = Object.freeze({
   MULTI: messages.transactionTypeMulti,
 })
 
+const filtersTxIO = (address: string) => {
+  const isMyReceive = (extAddrIdx: Dict<number>) => extAddrIdx[address] != null
+  const isMyChange = (intAddrIdx: Dict<number>) => intAddrIdx[address] != null
+  const isMyAddress = (extAddrIdx: Dict<number>, intAddrIdx: Dict<number>) =>
+    isMyReceive(extAddrIdx) || isMyChange(intAddrIdx)
+  return {
+    isMyReceive,
+    isMyChange,
+    isMyAddress,
+  }
+}
+
+const getTxIOMyWallet = (
+  txIO: Array<IOData>,
+  extAddrIdx: Dict<number>,
+  intAddrIdx: Dict<number>,
+) => {
+  const io = _.uniq(txIO).map(({address, assets}) => ({
+    address,
+    assets,
+  }))
+  const filtered = io.filter(({address}) =>
+    filtersTxIO(address).isMyAddress(extAddrIdx, intAddrIdx),
+  )
+  return filtered || []
+}
+
 type Props = {
   transaction: TransactionInfo,
+  internalAddressIndex: Dict<number>,
+  externalAddressIndex: Dict<number>,
   availableAssets: Dict<Token>,
   defaultNetworkAsset: Token,
   navigation: any, // TODO: type
@@ -144,7 +185,14 @@ class TxHistoryListItem extends Component<Props> {
   }
 
   render() {
-    const {transaction, availableAssets, defaultNetworkAsset, intl} = this.props
+    const {
+      transaction,
+      availableAssets,
+      defaultNetworkAsset,
+      intl,
+      externalAddressIndex,
+      internalAddressIndex,
+    } = this.props
 
     const amountAsMT = MultiToken.fromArray(transaction.amount)
     const amount: BigNumber = amountAsMT.getDefault()
@@ -168,6 +216,22 @@ class TxHistoryListItem extends Component<Props> {
 
     const isPending = transaction.assurance === 'PENDING'
     const assuranceContainerStyle = styles[`${transaction.assurance}_CONTAINER`]
+
+    const isReceived = transaction.direction === 'RECEIVED'
+    const outputsToMyWallet =
+      (isReceived &&
+        getTxIOMyWallet(
+          transaction.outputs,
+          externalAddressIndex,
+          internalAddressIndex,
+        )) ||
+      []
+
+    const totalAssets =
+      outputsToMyWallet.reduce(
+        (acc, {assets}) => acc + Number(assets.length),
+        0,
+      ) || 0
 
     return (
       <TouchableOpacity onPress={this.showDetails} activeOpacity={0.5}>
@@ -196,9 +260,21 @@ class TxHistoryListItem extends Component<Props> {
                 <Text style={amountStyle}>- -</Text>
               )}
             </View>
+            {totalAssets !== 0 && (
+              <View style={styles.row}>
+                <Text secondary small>
+                  {formatTimeToSeconds(transaction.submittedAt)}
+                </Text>
+                <Text>
+                  {intl.formatMessage(messages.assets, {
+                    cnt: totalAssets,
+                  })}
+                </Text>
+              </View>
+            )}
             <View style={styles.last}>
               <Text secondary small>
-                {formatTimeToSeconds(transaction.submittedAt)}
+                {!totalAssets && formatTimeToSeconds(transaction.submittedAt)}
               </Text>
               <Text secondary small style={styles.assuranceText}>
                 {intl.formatMessage(ASSURANCE_MESSAGES[transaction.assurance])}
@@ -216,6 +292,8 @@ export default injectIntl(
     connect((state, {id}) => ({
       transaction: transactionsInfoSelector(state)[id],
       availableAssets: availableAssetsSelector(state),
+      internalAddressIndex: internalAddressIndexSelector(state),
+      externalAddressIndex: externalAddressIndexSelector(state),
       defaultNetworkAsset: defaultNetworkAssetSelector(state),
     })),
   )(TxHistoryListItem),
