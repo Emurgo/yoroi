@@ -327,7 +327,7 @@
   "components.walletinit.walletfreshinitscreen.addWalletOnShelleyButton": "Pénztárca hozzáadása (Shelley-korszak)",
   "components.walletinit.walletinitscreen.createWalletButton": "Tárca létrehozása",
   "components.walletinit.walletinitscreen.createWalletWithLedgerButton": "Csatlakozás Ledger Nano-hoz",
-  "components.walletinit.walletinitscreen.importReadOnlyWalletExplanation": "A Yoroi böngésző kiterjesztés lehetővé teszi a pénztárca bármely nyilvános kulcsának QR-kódba történő exportálását. Válaszd ezt a lehetőséget, ha csak olvasható tárcát szeretnél importálni QR-kóddal.",
+  "components.walletinit.walletinitscreen.importReadOnlyWalletExplanation": "A Yoroi böngésző kiterjesztés lehetővé teszi a pénztárca bármely nyilvános kulcsának QR-kódba történő exportálását. Válaszd ezt a lehetőséget, ha \"csak olvasható\" tárcát szeretnél importálni QR-kóddal.",
   "components.walletinit.walletinitscreen.importReadOnlyWalletLabel": "Csak olvasható tárca",
   "components.walletinit.walletinitscreen.restoreNormalWalletLabel": "15-szavas tárca",
   "components.walletinit.walletinitscreen.restoreNWordWalletExplanation": "Ha rendelkezel helyreállítási kulcsszóval, amely {mnemonicLength} szóból áll, válaszd ezt a lehetőséget a pénztárca visszaállításához. ",
