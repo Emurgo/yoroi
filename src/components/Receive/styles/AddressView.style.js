@@ -34,7 +34,10 @@ export default StyleSheet.create({
   },
   actionContainer: {
     flex: 3,
-    alignItems: 'flex-end',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingLeft: 20,
   },
   messageText: {
     fontWeight: 'bold',

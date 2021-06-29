@@ -190,18 +190,18 @@ const AddressView = ({
             >
               {addressInfo.address}
             </Text>
-            <TouchableOpacity
-              accessibilityLabel={intl.formatMessage(messages.copyLabel)}
-              accessibilityRole="button"
-              onPress={_copyHandler}
-              disabled={isCopying}
-            >
-              {/* TODO: replace to the right icon after getting it from UI department */}
-              <Image source={isCopying ? verifyIcon : copyIcon} />
-            </TouchableOpacity>
           </>
         </View>
         <View style={styles.actionContainer}>
+          <TouchableOpacity
+            accessibilityLabel={intl.formatMessage(messages.copyLabel)}
+            accessibilityRole="button"
+            onPress={_copyHandler}
+            disabled={isCopying}
+          >
+            {/* TODO: replace to the right icon after getting it from UI department */}
+            <Image source={isCopying ? verifyIcon : copyIcon} />
+          </TouchableOpacity>
           <TouchableOpacity
             accessibilityLabel={intl.formatMessage(messages.verifyLabel)}
             accessibilityRole="button"
