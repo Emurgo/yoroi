@@ -5,13 +5,15 @@
 
 import {
   Address,
-  PrivateKey,
+  PublicKey,
   Bip32PrivateKey,
   encode_json_str_to_metadatum,
   MetadataJsonSchema,
+  MetadataList,
   GeneralTransactionMetadata,
   BigNum,
   TransactionMetadata,
+  TransactionMetadatum,
 } from '@emurgo/react-native-haskell-shelley'
 import {mnemonicToEntropy} from 'bip39'
 import blake2b from 'blake2b'
@@ -25,10 +27,11 @@ export const CatalystLabels = Object.freeze({
   SIG: 61285,
 })
 export async function generateRegistration(request: {|
-  stakePrivateKey: PrivateKey,
-  catalystPrivateKey: PrivateKey,
+  stakePublicKey: PublicKey,
+  catalystPublicKey: PublicKey,
   rewardAddress: Address,
   absSlotNumber: number,
+  signer: (Uint8Array) => Promise<string>,
 |}): Promise<TransactionMetadata> {
   /**
    * Catalyst follows a certain standard to prove the voting power
@@ -46,25 +49,17 @@ export async function generateRegistration(request: {|
    * }
    */
 
-  let nonce
-  if (CONFIG.DEBUG.PREFILL_FORMS) {
-    if (!__DEV__) throw new Error('using debug data in non-dev env')
-    nonce = CONFIG.DEBUG.CATALYST_NONCE
-  } else {
-    nonce = request.absSlotNumber
-  }
-
   const jsonMeta = JSON.stringify({
-    '1': `0x${Buffer.from(
-      await (await request.catalystPrivateKey.to_public()).as_bytes(),
-    ).toString('hex')}`,
-    '2': `0x${Buffer.from(
-      await (await request.stakePrivateKey.to_public()).as_bytes(),
-    ).toString('hex')}`,
+    '1': `0x${Buffer.from(await request.catalystPublicKey.as_bytes()).toString(
+      'hex',
+    )}`,
+    '2': `0x${Buffer.from(await request.stakePublicKey.as_bytes()).toString(
+      'hex',
+    )}`,
     '3': `0x${Buffer.from(await request.rewardAddress.to_bytes()).toString(
       'hex',
     )}`,
-    '4': nonce,
+    '4': request.absSlotNumber,
   })
   const registrationData = await encode_json_str_to_metadatum(
     jsonMeta,
@@ -81,9 +76,7 @@ export async function generateRegistration(request: {|
     .update(await generalMetadata.to_bytes())
     .digest('binary')
 
-  const catalystSignature = await (await request.stakePrivateKey.sign(
-    hashedMetadata,
-  )).to_hex()
+  const catalystSignature = await request.signer(hashedMetadata)
 
   await generalMetadata.insert(
     await BigNum.from_str(CatalystLabels.SIG.toString()),
@@ -94,7 +87,17 @@ export async function generateRegistration(request: {|
       MetadataJsonSchema.BasicConversions,
     ),
   )
-  const trxMetadata = await TransactionMetadata.new(generalMetadata)
+  // This is how Ledger constructs the metadata. We must be consistent with it.
+  const metadataList = await MetadataList.new()
+  await metadataList.add(
+    await TransactionMetadatum.from_bytes(await generalMetadata.to_bytes()),
+  )
+  await metadataList.add(
+    await TransactionMetadatum.new_list(await MetadataList.new()),
+  )
+  const trxMetadata = await TransactionMetadata.from_bytes(
+    await metadataList.to_bytes(),
+  )
   return trxMetadata
 }
 

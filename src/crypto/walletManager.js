@@ -311,7 +311,7 @@ class WalletManager {
   }
 
   get hwDeviceInfo() {
-    if (!this._wallet) return {}
+    if (!this._wallet) return null
     return this._wallet.hwDeviceInfo
   }
 
@@ -473,7 +473,7 @@ class WalletManager {
     return
   }
 
-  // ========== state/UI ============= //
+  // ========== UI state ============= //
 
   async generateNewUiReceiveAddressIfNeeded() {
     if (!this._wallet) return
@@ -494,7 +494,7 @@ class WalletManager {
     return didGenerateNew
   }
 
-  // =================== persistence =================== //
+  // =================== state & persistence =================== //
 
   async saveWallet(
     id: string,
@@ -648,6 +648,15 @@ class WalletManager {
     this._notify() // update redux Store
   }
 
+  async updateHWDeviceInfo(hwDeviceInfo: HWDeviceInfo) {
+    if (!this._wallet) throw new WalletClosed()
+    const wallet = this._wallet
+
+    wallet.hwDeviceInfo = hwDeviceInfo
+    await this._saveState(wallet)
+    this._notify() // update redux Store
+  }
+
   // =================== create =================== //
 
   // returns the corresponding implementation of WalletInterface. Normally we
@@ -781,7 +790,7 @@ class WalletManager {
   async createVotingRegTx(
     utxos: Array<RawUtxo>,
     catalystPrivateKey: string,
-    decryptedKey: string,
+    decryptedKey: string | void,
     serverTime: Date | void,
   ) {
     if (!this._wallet) throw new WalletClosed()

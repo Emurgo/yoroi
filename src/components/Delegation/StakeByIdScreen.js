@@ -25,7 +25,7 @@ import {
 } from '../../selectors'
 import UtxoAutoRefresher from '../Send/UtxoAutoRefresher'
 import AccountAutoRefresher from './AccountAutoRefresher'
-import {NetworkError, ApiError} from '../../api/errors'
+import LocalizableError from '../../i18n/LocalizableError'
 import {InsufficientFunds} from '../../crypto/errors'
 
 import type {IntlShape} from 'react-intl'
@@ -203,10 +203,13 @@ export default injectIntl(
             await showErrorDialog(noPoolDataDialog, intl)
           }
         } catch (e) {
-          if (e instanceof NetworkError) {
-            await showErrorDialog(errorMessages.networkError, intl)
-          } else if (e instanceof ApiError) {
-            await showErrorDialog(noPoolDataDialog, intl)
+          if (e instanceof LocalizableError) {
+            await showErrorDialog(errorMessages.generalLocalizableError, intl, {
+              message: intl.formatMessage({
+                id: e.id,
+                defaultMessage: e.defaultMessage,
+              }),
+            })
           } else {
             Logger.error(e)
             throw e

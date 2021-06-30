@@ -34,7 +34,11 @@ import globalMessages, {
   txLabels,
 } from '../../i18n/global-messages'
 import {WrongPassword} from '../../crypto/errors'
-import {easyConfirmationSelector, utxosSelector} from '../../selectors'
+import {
+  easyConfirmationSelector,
+  utxosSelector,
+  isHWSelector,
+} from '../../selectors'
 
 import styles from './styles/Step4.style'
 
@@ -74,16 +78,17 @@ type Props = {|
 
 type HOCProps = {
   utxos: Array<RawUtxo>,
-  generateVotingTransaction: (string, Array<RawUtxo>) => void,
+  generateVotingTransaction: (string | void) => void,
   intl: IntlShape,
   isEasyConfirmationEnabled: boolean,
+  isHW: boolean,
 }
 
 const Step4 = ({
   intl,
   isEasyConfirmationEnabled,
+  isHW,
   navigation,
-  utxos,
   generateVotingTransaction,
 }: Props & HOCProps) => {
   const [password, setPassword] = useState(
@@ -97,30 +102,21 @@ const Step4 = ({
     errorLogs: null,
   })
 
-  const isConfirmationDisabled = !isEasyConfirmationEnabled && !password
+  const isConfirmationDisabled =
+    !isHW && !isEasyConfirmationEnabled && !password
 
   const onContinue = React.useCallback(
-    async (_event) => {
-      const generateTransaction = async (decryptedKey) => {
+    async () => {
+      const generateTransaction = async (decryptedKey: string) => {
         setGeneratingTransaction(true)
         try {
-          await generateVotingTransaction(decryptedKey, utxos)
-        } catch (error) {
-          throw error
+          await generateVotingTransaction(decryptedKey)
         } finally {
           setGeneratingTransaction(false)
         }
         navigation.navigate(CATALYST_ROUTES.STEP5)
       }
 
-      if (utxos == null) {
-        setErrorData({
-          showErrorDialog: true,
-          errorMessage: intl.formatMessage(errorMessages.fetchError.message),
-          errorLogs: null,
-        })
-        return
-      }
       if (isEasyConfirmationEnabled) {
         try {
           await walletManager.ensureKeysValidity()
@@ -177,14 +173,8 @@ const Step4 = ({
         }
       }
     },
-    [
-      intl,
-      isEasyConfirmationEnabled,
-      navigation,
-      password,
-      utxos,
-      generateVotingTransaction,
-    ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
   )
 
   useEffect(
@@ -252,6 +242,7 @@ export default (injectIntl(
     (state) => ({
       isEasyConfirmationEnabled: easyConfirmationSelector(state),
       utxos: utxosSelector(state),
+      isHW: isHWSelector(state),
     }),
     {
       generateVotingTransaction,

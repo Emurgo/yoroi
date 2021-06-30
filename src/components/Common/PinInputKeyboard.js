@@ -52,15 +52,15 @@ const KeyboardKey = ({value, onKeyDown}) => {
 }
 
 type Props = {
-  onPinChange: (string) => void,
+  onPinChange: (string) => PossiblyAsync<void>,
   pinLength: number,
 }
 
 const PinInputKeyboard = ({onPinChange, pinLength}: Props) => {
   const [pin, setPin] = useState('')
 
-  const updatePin = (newPin) => {
-    onPinChange(newPin)
+  const updatePin = async (newPin) => {
+    await onPinChange(newPin)
     setPin(newPin)
   }
 
