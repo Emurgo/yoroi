@@ -285,7 +285,9 @@ export default injectIntl(
         await setLedgerDeviceObj(deviceObj)
         openAddressVerify()
       },
-      onConnectBLE: ({setLedgerDeviceId, openAddressVerify}) => async (deviceId) => {
+      onConnectBLE: ({setLedgerDeviceId, openAddressVerify}) => async (
+        deviceId,
+      ) => {
         await setLedgerDeviceId(deviceId)
         openAddressVerify()
       },

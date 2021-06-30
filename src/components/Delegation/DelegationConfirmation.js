@@ -447,7 +447,9 @@ export default injectIntl(
         await setLedgerDeviceObj(deviceObj)
         closeLedgerDialog()
       },
-      onConnectBLE: ({setLedgerDeviceId, closeLedgerDialog}) => async (deviceId) => {
+      onConnectBLE: ({setLedgerDeviceId, closeLedgerDialog}) => async (
+        deviceId,
+      ) => {
         await setLedgerDeviceId(deviceId)
         closeLedgerDialog()
       },
