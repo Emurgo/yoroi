@@ -48,6 +48,15 @@ type NetworkSettingSnapshot = {|
   +PoolDeposit: BigNumber,
   +KeyDeposit: BigNumber,
 |}
+
+type LedgerNanoCatalystRegistrationTxSignData = {|
+  votingPublicKey: string,
+  stakingKeyPath: Array<number>,
+  stakingKey: string,
+  rewardAddress: string,
+  nonce: number,
+|}
+
 // prettier-ignore
 export class HaskellShelleyTxSignRequest
 implements ISignRequest<TransactionBuilder> {
@@ -62,23 +71,30 @@ implements ISignRequest<TransactionBuilder> {
     wits: Set<string>, // Vkeywitness
   |}
 
-  constructor(
-    senderUtxos: Array<AddressedUtxo>,
-    unsignedTx: TransactionBuilder,
-    changeAddr: Array<{| ...Address, ...Value, ...Addressing |}>,
-    metadata: void | TransactionMetadata,
-    networkSettingSnapshot: NetworkSettingSnapshot,
-    neededStakingKeyHashes: {|
-      neededHashes: Set<string>, // StakeCredential
-      wits: Set<string>, // Vkeywitness
-    |},
+  ledgerNanoCatalystRegistrationTxSignData: void | LedgerNanoCatalystRegistrationTxSignData;
+
+
+  constructor(data: {
+      senderUtxos: Array<AddressedUtxo>,
+      unsignedTx: TransactionBuilder,
+      changeAddr: Array<{| ...Address, ...Value, ...Addressing |}>,
+      metadata: void | TransactionMetadata,
+      networkSettingSnapshot: NetworkSettingSnapshot,
+      neededStakingKeyHashes: {|
+        neededHashes: Set<string>, // StakeCredential
+        wits: Set<string>, // Vkeywitness
+      |},
+      ledgerNanoCatalystRegistrationTxSignData?:
+        void | LedgerNanoCatalystRegistrationTxSignData,
+      }
   ) {
-    this.senderUtxos = senderUtxos
-    this.unsignedTx = unsignedTx
-    this.changeAddr = changeAddr
-    this.metadata = metadata
-    this.networkSettingSnapshot = networkSettingSnapshot
-    this.neededStakingKeyHashes = neededStakingKeyHashes
+    this.senderUtxos = data.senderUtxos
+    this.unsignedTx = data.unsignedTx
+    this.changeAddr = data.changeAddr
+    this.metadata = data.metadata
+    this.networkSettingSnapshot = data.networkSettingSnapshot
+    this.neededStakingKeyHashes = data.neededStakingKeyHashes
+    this.ledgerNanoCatalystRegistrationTxSignData = data.ledgerNanoCatalystRegistrationTxSignData
   }
 
   async txId(): Promise<string> {

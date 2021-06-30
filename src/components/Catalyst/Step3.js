@@ -11,7 +11,11 @@ import {View, SafeAreaView} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
 
-import {generateVotingKeys} from '../../actions/voting'
+import {
+  generateVotingKeys,
+  generateVotingTransaction,
+} from '../../actions/voting'
+import {isHWSelector} from '../../selectors'
 import {Text, ProgressStep} from '../UiKit'
 import {withTitle} from '../../utils/renderUtils'
 import PinInputKeyboard from '../Common/PinInputKeyboard'
@@ -48,21 +52,26 @@ type Props = {|
 
 type HOCProps = {
   pin: Array<String>,
+  isHW: boolean,
   intl: IntlShape,
 }
 
-const Step3 = ({intl, pin, navigation}: Props & HOCProps) => {
+const Step3 = ({intl, pin, isHW, navigation}: Props & HOCProps) => {
   const [confirmPin, setPin] = useState('')
 
   useEffect(() => {
     generateVotingKeys()
   }, [])
 
-  const pinChange = (enteredPin) => {
+  const pinChange = (enteredPin: string) => {
     setPin(enteredPin)
     if (enteredPin.length === 4) {
       if (pin.join('') === enteredPin) {
-        navigation.navigate(CATALYST_ROUTES.STEP4)
+        if (isHW) {
+          navigation.navigate(CATALYST_ROUTES.STEP5)
+        } else {
+          navigation.navigate(CATALYST_ROUTES.STEP4)
+        }
       } else {
         showErrorDialog(errorMessages.incorrectPin, intl)
       }
@@ -113,8 +122,12 @@ export default (injectIntl(
   connect(
     (state) => ({
       pin: state.voting.pin,
+      isHW: isHWSelector(state),
     }),
-    {generateVotingKeys},
+    {
+      generateVotingKeys,
+      generateVotingTransaction,
+    },
   )(
     withTitle(Step3, ({intl}: {intl: IntlShape}) =>
       intl.formatMessage(globalMessages.votingTitle),

@@ -56,14 +56,17 @@ const COPY_NOTIFICATION_TIME = 5000 // show 'copied' notification for 5 s
 const FadeOutView = (props) => {
   const [fadeAnim] = useState(new Animated.Value(1))
 
-  React.useEffect(() => {
-    Animated.timing(fadeAnim, {
-      toValue: 0,
-      duration: 2000,
-      delay: 3000,
-      useNativeDriver: true,
-    }).start()
-  }, [])
+  React.useEffect(
+    () => {
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 2000,
+        delay: 3000,
+        useNativeDriver: true,
+      }).start()
+    },
+    [fadeAnim],
+  )
 
   return (
     <Animated.View

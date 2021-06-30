@@ -150,41 +150,46 @@ const BiometricAuthScreen = (
 ) => {
   const [appState, setAppState] = useState<?string>(AppState.currentState)
 
-  const handleAppStateChange: (?string) => Promise<void> = async (
-    nextAppState,
-  ) => {
-    const previousAppState = appState
-    setAppState(nextAppState)
-    if (
-      previousAppState != null &&
-      previousAppState.match(/inactive|background/) &&
-      nextAppState === 'active'
-    ) {
-      await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
-      await handleOnFocus({route, setError, clearError, intl})
-    } else if (
-      previousAppState === 'active' &&
-      nextAppState != null &&
-      nextAppState.match(/inactive|background/)
-    ) {
-      // we cancel the operation when the app goes to background otherwise
-      // the app may crash. This could happen when the app logs out, as reopening
-      // the app triggers a new biometric prompt; but may also be an issue for
-      // some specific Android versions
-      await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
-    }
-  }
   useFocusEffect(
     React.useCallback(() => {
       handleOnFocus({route, setError, clearError, intl})
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []),
   )
 
-  useEffect(() => {
-    AppState.addEventListener('change', handleAppStateChange)
+  useEffect(
+    () => {
+      const handleAppStateChange: (?string) => Promise<void> = async (
+        nextAppState,
+      ) => {
+        const previousAppState = appState
+        setAppState(nextAppState)
+        if (
+          previousAppState != null &&
+          previousAppState.match(/inactive|background/) &&
+          nextAppState === 'active'
+        ) {
+          await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
+          await handleOnFocus({route, setError, clearError, intl})
+        } else if (
+          previousAppState === 'active' &&
+          nextAppState != null &&
+          nextAppState.match(/inactive|background/)
+        ) {
+          // we cancel the operation when the app goes to background otherwise
+          // the app may crash. This could happen when the app logs out, as reopening
+          // the app triggers a new biometric prompt; but may also be an issue for
+          // some specific Android versions
+          await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
+        }
+      }
 
-    return () => AppState.removeEventListener('change', handleAppStateChange)
-  }, [])
+      AppState.addEventListener('change', handleAppStateChange)
+
+      return () => AppState.removeEventListener('change', handleAppStateChange)
+    },
+    [appState, route, setError, clearError, intl],
+  )
 
   return (
     <FingerprintScreenBase

@@ -156,18 +156,21 @@ const SaveReadOnlyWalletScreen = (
     return i
   })
 
-  const generatePlates = async () => {
-    const {addresses, accountPlate} = await generateShelleyPlateFromKey(
-      publicKeyHex,
-      1,
-      networkId,
-    )
-    setPlate({addresses, accountPlate})
-  }
+  useEffect(
+    () => {
+      const generatePlates = async () => {
+        const {addresses, accountPlate} = await generateShelleyPlateFromKey(
+          publicKeyHex,
+          1,
+          networkId,
+        )
+        setPlate({addresses, accountPlate})
+      }
 
-  useEffect(() => {
-    generatePlates()
-  }, [])
+      generatePlates()
+    },
+    [networkId, publicKeyHex],
+  )
 
   return (
     <SafeAreaView style={styles.container} testID="saveReadOnlyWalletContainer">

@@ -86,7 +86,7 @@ const PinRegistrationForm = ({
       })
       return unsubscribe
     },
-    [navigation],
+    [navigation, pin, clearPin],
   )
 
   return (

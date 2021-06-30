@@ -34,7 +34,11 @@ import globalMessages, {
   txLabels,
 } from '../../i18n/global-messages'
 import {WrongPassword} from '../../crypto/errors'
-import {easyConfirmationSelector, utxosSelector} from '../../selectors'
+import {
+  easyConfirmationSelector,
+  utxosSelector,
+  isHWSelector,
+} from '../../selectors'
 
 import styles from './styles/Step4.style'
 
@@ -74,16 +78,17 @@ type Props = {|
 
 type HOCProps = {
   utxos: Array<RawUtxo>,
-  generateVotingTransaction: (string, Array<RawUtxo>) => void,
+  generateVotingTransaction: (string | void) => void,
   intl: IntlShape,
   isEasyConfirmationEnabled: boolean,
+  isHW: boolean,
 }
 
 const Step4 = ({
   intl,
   isEasyConfirmationEnabled,
+  isHW,
   navigation,
-  utxos,
   generateVotingTransaction,
 }: Props & HOCProps) => {
   const [password, setPassword] = useState(
@@ -97,93 +102,91 @@ const Step4 = ({
     errorLogs: null,
   })
 
-  const isConfirmationDisabled = !isEasyConfirmationEnabled && !password
+  const isConfirmationDisabled =
+    !isHW && !isEasyConfirmationEnabled && !password
 
-  const generateTransaction = async (decryptedKey) => {
-    setGeneratingTransaction(true)
-    try {
-      await generateVotingTransaction(decryptedKey, utxos)
-    } catch (error) {
-      throw error
-    } finally {
-      setGeneratingTransaction(false)
-    }
-    navigation.navigate(CATALYST_ROUTES.STEP5)
-  }
+  const onContinue = React.useCallback(
+    async () => {
+      const generateTransaction = async (decryptedKey: string) => {
+        setGeneratingTransaction(true)
+        try {
+          await generateVotingTransaction(decryptedKey)
+        } finally {
+          setGeneratingTransaction(false)
+        }
+        navigation.navigate(CATALYST_ROUTES.STEP5)
+      }
 
-  const onContinue = async (_event) => {
-    if (utxos == null) {
-      setErrorData({
-        showErrorDialog: true,
-        errorMessage: intl.formatMessage(errorMessages.fetchError.message),
-        errorLogs: null,
-      })
-      return
-    }
-    if (isEasyConfirmationEnabled) {
+      if (isEasyConfirmationEnabled) {
+        try {
+          await walletManager.ensureKeysValidity()
+          navigation.navigate(CATALYST_ROUTES.BIOMETRICS_SIGNING, {
+            keyId: walletManager._id,
+            onSuccess: async (decryptedKey) => {
+              navigation.goBack() // goback to unmount biometrics screen
+              await generateTransaction(decryptedKey)
+            },
+            onFail: () => navigation.goBack(),
+            addWelcomeMessage: false,
+            instructions: [intl.formatMessage(messages.bioAuthInstructions)],
+          })
+        } catch (e) {
+          if (e instanceof SystemAuthDisabled) {
+            await walletManager.closeWallet()
+            await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
+            navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
+
+            return
+          } else {
+            setErrorData({
+              showErrorDialog: true,
+              errorMessage: intl.formatMessage(
+                errorMessages.generalError.message,
+              ),
+              errorLogs: String(e.message),
+            })
+          }
+        }
+        return
+      }
       try {
-        await walletManager.ensureKeysValidity()
-        navigation.navigate(CATALYST_ROUTES.BIOMETRICS_SIGNING, {
-          keyId: walletManager._id,
-          onSuccess: async (decryptedKey) => {
-            navigation.goBack() // goback to unmount biometrics screen
-            await generateTransaction(decryptedKey)
-          },
-          onFail: () => navigation.goBack(),
-          addWelcomeMessage: false,
-          instructions: [intl.formatMessage(messages.bioAuthInstructions)],
-        })
-      } catch (e) {
-        if (e instanceof SystemAuthDisabled) {
-          await walletManager.closeWallet()
-          await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-          navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
+        const decryptedKey = await KeyStore.getData(
+          walletManager._id,
+          'MASTER_PASSWORD',
+          '',
+          password,
+          intl,
+        )
 
-          return
+        await generateTransaction(decryptedKey)
+      } catch (e) {
+        if (e instanceof WrongPassword) {
+          await showErrorDialog(errorMessages.incorrectPassword, intl)
         } else {
           setErrorData({
             showErrorDialog: true,
             errorMessage: intl.formatMessage(
-              errorMessages.generalError.message,
+              errorMessages.generalTxError.message,
             ),
             errorLogs: String(e.message),
           })
         }
       }
-      return
-    }
-    try {
-      const decryptedKey = await KeyStore.getData(
-        walletManager._id,
-        'MASTER_PASSWORD',
-        '',
-        password,
-        intl,
-      )
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  )
 
-      await generateTransaction(decryptedKey)
-    } catch (e) {
-      if (e instanceof WrongPassword) {
-        await showErrorDialog(errorMessages.incorrectPassword, intl)
-      } else {
-        setErrorData({
-          showErrorDialog: true,
-          errorMessage: intl.formatMessage(
-            errorMessages.generalTxError.message,
-          ),
-          errorLogs: String(e.message),
-        })
+  useEffect(
+    () => {
+      // if easy confirmation is enabled we go directly to the authentication
+      // screen and then build the registration tx
+      if (isEasyConfirmationEnabled) {
+        onContinue()
       }
-    }
-  }
-
-  useEffect(() => {
-    // if easy confirmation is enabled we go directly to the authentication
-    // screen and then build the registration tx
-    if (isEasyConfirmationEnabled) {
-      onContinue()
-    }
-  }, [])
+    },
+    [onContinue, isEasyConfirmationEnabled],
+  )
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -239,6 +242,7 @@ export default (injectIntl(
     (state) => ({
       isEasyConfirmationEnabled: easyConfirmationSelector(state),
       utxos: utxosSelector(state),
+      isHW: isHWSelector(state),
     }),
     {
       generateVotingTransaction,

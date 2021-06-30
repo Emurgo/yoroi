@@ -89,7 +89,7 @@ type Props = {|
   +balance: BigNumber,
   +finalBalance: BigNumber,
   +fees: BigNumber,
-  +onConfirm: (event: Object, password?: string) => mixed,
+  +onConfirm: (event: Object, password?: string | void) => mixed,
   +onRequestClose: () => any,
   +useUSB: boolean,
   +showCloseIcon?: boolean,

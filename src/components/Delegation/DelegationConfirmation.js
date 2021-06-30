@@ -6,6 +6,7 @@ import {connect} from 'react-redux'
 import {withStateHandlers, withHandlers} from 'recompose'
 import {injectIntl, defineMessages} from 'react-intl'
 import {BigNumber} from 'bignumber.js'
+import {CommonActions} from '@react-navigation/routers'
 
 import {
   easyConfirmationSelector,
@@ -32,14 +33,12 @@ import globalMessages, {
 } from '../../i18n/global-messages'
 import {formatTokenWithText, formatTokenAmount} from '../../utils/format'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
-import {Logger} from '../../utils/logging'
 import {
   SEND_ROUTES,
   WALLET_ROOT_ROUTES,
   STAKING_CENTER_ROUTES,
   WALLET_ROUTES,
 } from '../../RoutesList'
-import {NetworkError, ApiError} from '../../api/errors'
 import {WrongPassword} from '../../crypto/errors'
 import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
 import KeyStore from '../../crypto/KeyStore'
@@ -123,110 +122,92 @@ const handleOnConfirm = async (
       } else {
         await submitSignedTx(tx)
       }
+      navigation.dispatch(
+        CommonActions.reset({
+          key: null,
+          index: 0,
+          routes: [{name: STAKING_CENTER_ROUTES.MAIN}],
+        }),
+      )
       navigation.navigate(WALLET_ROUTES.TX_HISTORY)
-    } catch (e) {
-      if (e instanceof NetworkError) {
-        // trigger error modal
-        setErrorData(
-          true,
-          intl.formatMessage(errorMessages.networkError.message),
-          null,
-        )
-      } else if (e instanceof ApiError) {
-        setErrorData(
-          true,
-          intl.formatMessage(errorMessages.apiError.message),
-          JSON.stringify(e.request),
-        )
-      } else {
-        Logger.error(`DelegationConfirmation::submitTx: ${e.message}`, e)
-        throw e
-      }
     } finally {
       setSendingTransaction(false)
     }
   }
 
-  if (isHW) {
-    try {
-      setProcessingTx(true)
-      const signedTx = await walletManager.signTxWithLedger(
-        transactionData.signRequest,
-        useUSB,
-      )
-      await submitTx(Buffer.from(signedTx.encodedTx).toString('base64'))
-    } catch (e) {
-      if (e instanceof LocalizableError) {
-        setErrorData(
-          true,
-          intl.formatMessage(
-            {id: e.id, defaultMessage: e.defaultMessage},
-            e.values,
-          ),
-          null,
-        )
-      } else {
-        setErrorData(
-          true,
-          intl.formatMessage(errorMessages.generalTxError.message),
-          e.toString(),
-        )
-      }
-    } finally {
-      setProcessingTx(false)
-    }
-    return
-  }
-
-  if (isEasyConfirmationEnabled) {
-    try {
-      await walletManager.ensureKeysValidity()
-      navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
-        keyId: walletManager._id,
-        onSuccess: async (decryptedKey) => {
-          navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM)
-
-          await submitTx(signRequest, decryptedKey)
-        },
-        onFail: () => navigation.goBack(),
-      })
-    } catch (e) {
-      if (e instanceof SystemAuthDisabled) {
-        await walletManager.closeWallet()
-        await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-        navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-
-        return
-      } else {
-        setErrorData(
-          true,
-          intl.formatMessage(errorMessages.generalTxError.message),
-          e.toString(),
-        )
-      }
-    }
-
-    return
-  }
-
   try {
-    const decryptedData = await KeyStore.getData(
-      walletManager._id,
-      'MASTER_PASSWORD',
-      '',
-      password,
-      intl,
-    )
+    if (isHW) {
+      try {
+        setProcessingTx(true)
+        const signedTx = await walletManager.signTxWithLedger(
+          transactionData.signRequest,
+          useUSB,
+        )
+        await submitTx(Buffer.from(signedTx.encodedTx).toString('base64'))
+      } finally {
+        setProcessingTx(false)
+      }
+      return
+    }
 
-    await submitTx(signRequest, decryptedData)
+    if (isEasyConfirmationEnabled) {
+      try {
+        await walletManager.ensureKeysValidity()
+        navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
+          keyId: walletManager._id,
+          onSuccess: async (decryptedKey) => {
+            navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM)
+
+            await submitTx(signRequest, decryptedKey)
+          },
+          onFail: () => navigation.goBack(),
+        })
+      } catch (e) {
+        if (e instanceof SystemAuthDisabled) {
+          await walletManager.closeWallet()
+          await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
+          navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
+
+          return
+        } else {
+          throw e
+        }
+      }
+      return
+    }
+
+    try {
+      const decryptedData = await KeyStore.getData(
+        walletManager._id,
+        'MASTER_PASSWORD',
+        '',
+        password,
+        intl,
+      )
+
+      await submitTx(signRequest, decryptedData)
+    } catch (e) {
+      if (e instanceof WrongPassword) {
+        await showErrorDialog(errorMessages.incorrectPassword, intl)
+      } else {
+        throw e
+      }
+    }
   } catch (e) {
-    if (e instanceof WrongPassword) {
-      await showErrorDialog(errorMessages.incorrectPassword, intl)
+    if (e instanceof LocalizableError) {
+      setErrorData(
+        true,
+        intl.formatMessage(
+          {id: e.id, defaultMessage: e.defaultMessage},
+          e.values,
+        ),
+        e.values.response || null, // API errors should include a response
+      )
     } else {
       setErrorData(
         true,
         intl.formatMessage(errorMessages.generalTxError.message),
-        e.toString(),
+        e.message || null,
       )
     }
   }
@@ -460,14 +441,16 @@ export default injectIntl(
           closeLedgerDialog()
         }
       },
-      onConnectUSB: ({setLedgerDeviceObj, closeLedgerDialog}) => (
+      onConnectUSB: ({setLedgerDeviceObj, closeLedgerDialog}) => async (
         deviceObj,
       ) => {
-        setLedgerDeviceObj(deviceObj)
+        await setLedgerDeviceObj(deviceObj)
         closeLedgerDialog()
       },
-      onConnectBLE: ({setLedgerDeviceId, closeLedgerDialog}) => (deviceId) => {
-        setLedgerDeviceId(deviceId)
+      onConnectBLE: ({setLedgerDeviceId, closeLedgerDialog}) => async (
+        deviceId,
+      ) => {
+        await setLedgerDeviceId(deviceId)
         closeLedgerDialog()
       },
       onDelegate: ignoreConcurrentAsyncHandler(

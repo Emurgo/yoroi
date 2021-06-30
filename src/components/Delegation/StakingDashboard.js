@@ -73,7 +73,6 @@ import {
   WALLET_ROOT_ROUTES,
   WALLET_ROUTES,
 } from '../../RoutesList'
-import {NetworkError, ApiError} from '../../api/errors'
 import {WrongPassword} from '../../crypto/errors'
 import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
@@ -374,7 +373,10 @@ class StakingDashboard extends React.Component<Props, State> {
   // TODO: this code has been copy-pasted from the tx confirmation page.
   // Ideally, all this logic should be moved away and perhaps written as a
   // redux action that can be reused in all components with tx signing and sending
-  onConfirm: (Object, string) => Promise<void> = async (event, password) => {
+  onConfirm: (Object, string | void) => Promise<void> = async (
+    event,
+    password,
+  ) => {
     const {signTxRequest, useUSB} = this.state
     const {
       intl,
@@ -390,40 +392,19 @@ class StakingDashboard extends React.Component<Props, State> {
       tx: string | ISignRequest<T>,
       decryptedKey: ?string,
     ) => {
-      try {
-        if (decryptedKey == null && typeof tx === 'string') {
-          await submitSignedTx(tx)
-        } else if (
-          decryptedKey != null &&
-          !(typeof tx === 'string' || tx instanceof String)
-        ) {
-          await submitTransaction(tx, decryptedKey)
-        }
-        navigation.navigate(WALLET_ROUTES.TX_HISTORY)
-      } catch (e) {
-        if (e instanceof NetworkError) {
-          this.setState({
-            error: {
-              errorMessage: intl.formatMessage(
-                errorMessages.networkError.message,
-              ),
-            },
-          })
-        } else if (e instanceof ApiError) {
-          this.setState({
-            error: {
-              errorMessage: intl.formatMessage(errorMessages.apiError.message),
-              errorLogs: JSON.stringify(e.request),
-            },
-          })
-        } else {
-          throw e
-        }
+      if (decryptedKey == null && typeof tx === 'string') {
+        await submitSignedTx(tx)
+      } else if (
+        decryptedKey != null &&
+        !(typeof tx === 'string' || tx instanceof String)
+      ) {
+        await submitTransaction(tx, decryptedKey)
       }
+      navigation.navigate(WALLET_ROUTES.TX_HISTORY)
     }
 
-    if (isHW) {
-      try {
+    try {
+      if (isHW) {
         this.setState({
           withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WAITING_HW_RESPONSE,
         })
@@ -435,87 +416,73 @@ class StakingDashboard extends React.Component<Props, State> {
         this.setState({withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WAITING})
         await submitTx(Buffer.from(signedTx.encodedTx).toString('base64'))
         this.closeWithdrawalDialog()
-      } catch (e) {
-        if (e instanceof LocalizableError) {
-          this.setState({
-            withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
-            error: {
-              errorMessage: intl.formatMessage({
-                id: e.id,
-                defaultMessage: e.defaultMessage,
-              }),
-            },
-          })
-        } else {
-          this.setState({
-            withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
-            error: {
-              errorMessage: intl.formatMessage(
-                errorMessages.generalTxError.message,
-              ),
-              errorLogs: String(e.message),
-            },
-          })
-        }
+        return
       }
-      return
-    }
 
-    if (isEasyConfirmationEnabled) {
+      if (isEasyConfirmationEnabled) {
+        try {
+          await walletManager.ensureKeysValidity()
+          navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
+            keyId: walletManager._id,
+            onSuccess: async (decryptedKey) => {
+              navigation.navigate(DELEGATION_ROUTES.STAKING_DASHBOARD)
+
+              await submitTx(signTxRequest, decryptedKey)
+            },
+            onFail: () => navigation.goBack(),
+          })
+        } catch (e) {
+          if (e instanceof SystemAuthDisabled) {
+            this.closeWithdrawalDialog()
+            await walletManager.closeWallet()
+            await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
+            navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
+
+            return
+          } else {
+            throw e
+          }
+        }
+        return
+      }
+
       try {
-        await walletManager.ensureKeysValidity()
-        navigation.navigate(SEND_ROUTES.BIOMETRICS_SIGNING, {
-          keyId: walletManager._id,
-          onSuccess: async (decryptedKey) => {
-            navigation.navigate(DELEGATION_ROUTES.STAKING_DASHBOARD)
+        this.setState({withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WAITING})
+        const decryptedData = await KeyStore.getData(
+          walletManager._id,
+          'MASTER_PASSWORD',
+          '',
+          password,
+          intl,
+        )
 
-            await submitTx(signTxRequest, decryptedKey)
-          },
-          onFail: () => navigation.goBack(),
-        })
+        await submitTx(signTxRequest, decryptedData)
+        this.closeWithdrawalDialog()
       } catch (e) {
-        if (e instanceof SystemAuthDisabled) {
-          this.closeWithdrawalDialog()
-          await walletManager.closeWallet()
-          await showErrorDialog(errorMessages.enableSystemAuthFirst, intl)
-          navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-
-          return
-        } else {
+        if (e instanceof WrongPassword) {
           this.setState({
             withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
             error: {
               errorMessage: intl.formatMessage(
-                errorMessages.generalTxError.message,
+                errorMessages.incorrectPassword.message,
               ),
-              errorLogs: String(e.message),
+              errorLogs: null,
             },
           })
+        } else {
+          throw e
         }
       }
-      return
-    }
-
-    try {
-      this.setState({withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WAITING})
-      const decryptedData = await KeyStore.getData(
-        walletManager._id,
-        'MASTER_PASSWORD',
-        '',
-        password,
-        intl,
-      )
-
-      await submitTx(signTxRequest, decryptedData)
-      this.closeWithdrawalDialog()
     } catch (e) {
-      if (e instanceof WrongPassword) {
+      if (e instanceof LocalizableError) {
         this.setState({
           withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
           error: {
             errorMessage: intl.formatMessage(
-              errorMessages.incorrectPassword.message,
+              {id: e.id, defaultMessage: e.defaultMessage},
+              e.values,
             ),
+            errorLogs: e.values.response || null,
           },
         })
       } else {
@@ -525,7 +492,7 @@ class StakingDashboard extends React.Component<Props, State> {
             errorMessage: intl.formatMessage(
               errorMessages.generalTxError.message,
             ),
-            errorLogs: String(e.message),
+            errorLogs: e.message || null,
           },
         })
       }
@@ -707,7 +674,6 @@ class StakingDashboard extends React.Component<Props, State> {
           balance={this.state.balance}
           finalBalance={this.state.finalBalance}
           fees={this.state.fees}
-          // $FlowFixMe
           onConfirm={this.onConfirm}
           onRequestClose={this.closeWithdrawalDialog}
           error={this.state.error}

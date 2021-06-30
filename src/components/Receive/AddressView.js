@@ -344,14 +344,16 @@ export default injectIntl(
           openAddressVerify()
         }
       },
-      onConnectUSB: ({setLedgerDeviceObj, openAddressVerify}) => (
+      onConnectUSB: ({setLedgerDeviceObj, openAddressVerify}) => async (
         deviceObj,
       ) => {
-        setLedgerDeviceObj(deviceObj)
+        await setLedgerDeviceObj(deviceObj)
         openAddressVerify()
       },
-      onConnectBLE: ({setLedgerDeviceId, openAddressVerify}) => (deviceId) => {
-        setLedgerDeviceId(deviceId)
+      onConnectBLE: ({setLedgerDeviceId, openAddressVerify}) => async (
+        deviceId,
+      ) => {
+        await setLedgerDeviceId(deviceId)
         openAddressVerify()
       },
       onVerifyAddress: ({

@@ -111,18 +111,19 @@ const VerifyWalletScreen = (
   const {formatMessage} = intl
   const {phrase, networkId, walletImplementationId} = route.params
 
-  const generatePlates = async () => {
-    const {addresses, accountPlate} = await _getPlate(
-      walletImplementationId,
-      networkId,
-      phrase,
-      1,
-    )
-    setPlate({addresses, accountPlate})
-  }
-
   useEffect(() => {
+    const generatePlates = async () => {
+      const {addresses, accountPlate} = await _getPlate(
+        walletImplementationId,
+        networkId,
+        phrase,
+        1,
+      )
+      setPlate({addresses, accountPlate})
+    }
+
     generatePlates()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
