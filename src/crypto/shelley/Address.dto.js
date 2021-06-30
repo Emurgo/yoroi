@@ -9,6 +9,8 @@ import {
   RewardAddress,
 } from '@emurgo/react-native-haskell-shelley'
 
+import type {YoroiAddressInfoInterface} from '../AddressInterface'
+
 // NOTE: ** IMPORTANT ** The order matters
 const ADDRESS_TYPES = Object.freeze([
   ByronAddress,
@@ -59,11 +61,6 @@ export const getKeyHashesCardano = async (
   }
   // Something went wrong
   throw new Error('getSpendingKeyHash unknown address type')
-}
-
-export interface YoroiAddressInfoInterface<KeyHashes> {
-  +address: string;
-  +getKeyHashes: () => Promise<KeyHashes | null>;
 }
 
 // prettier-ignore

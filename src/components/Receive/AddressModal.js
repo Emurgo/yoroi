@@ -23,7 +23,7 @@ import copiedIcon from '../../assets/img/icon/copied.png'
 import type {
   AddressDTOCardano,
   KeyHashesCardano,
-} from '../../crypto/Address.dto'
+} from '../../crypto/shelley/Address.dto'
 import type {ComponentType} from 'react'
 import type {WalletMeta} from '../../state'
 

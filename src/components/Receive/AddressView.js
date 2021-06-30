@@ -30,7 +30,7 @@ import LocalizableError from '../../i18n/LocalizableError'
 import {Logger} from '../../utils/logging'
 import {CONFIG} from '../../config/config'
 import {getCardanoByronConfig} from '../../config/networks'
-import {AddressDTOCardano} from '../../crypto/Address.dto'
+import {AddressDTOCardano} from '../../crypto/shelley/Address.dto'
 
 import styles from './styles/AddressView.style'
 import copyIcon from '../../assets/img/icon/copy-ext.png'

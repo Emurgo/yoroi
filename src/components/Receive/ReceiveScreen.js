@@ -26,7 +26,7 @@ import {
   onDidUpdate,
   withNavigationTitle,
 } from '../../utils/renderUtils'
-import {AddressDTOCardano} from '../../crypto/Address.dto'
+import {AddressDTOCardano} from '../../crypto/shelley/Address.dto'
 
 import styles from './styles/ReceiveScreen.style'
 

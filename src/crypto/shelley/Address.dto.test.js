@@ -1,6 +1,6 @@
 // @flow
 
-import jestSetup from '../jestSetup'
+import jestSetup from '../../jestSetup'
 import {AddressDTOCardano} from './Address.dto'
 
 jestSetup.setup()

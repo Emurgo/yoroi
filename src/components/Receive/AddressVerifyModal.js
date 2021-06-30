@@ -7,7 +7,7 @@ import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {Text, Button, Modal} from '../UiKit'
 import {confirmationMessages} from '../../i18n/global-messages'
 import HWInstructions from '../Ledger/HWInstructions'
-import {AddressDTOCardano} from '../../crypto/Address.dto'
+import {AddressDTOCardano} from '../../crypto/shelley/Address.dto'
 
 import styles from './styles/AddressVerifyModal.style'
 

@@ -7,7 +7,7 @@ import {connect} from 'react-redux'
 
 import {isUsedAddressIndexSelector} from '../../selectors'
 import AddressView from './AddressView'
-import {AddressDTOCardano} from '../../crypto/Address.dto'
+import {AddressDTOCardano} from '../../crypto/shelley/Address.dto'
 
 import type {ComponentType} from 'react'
 
