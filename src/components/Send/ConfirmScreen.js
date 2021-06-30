@@ -430,14 +430,16 @@ export default injectIntl(
           closeLedgerDialog()
         }
       },
-      onConnectUSB: ({setLedgerDeviceObj, closeLedgerDialog}) => (
+      onConnectUSB: ({setLedgerDeviceObj, closeLedgerDialog}) => async (
         deviceObj,
       ) => {
-        setLedgerDeviceObj(deviceObj)
+        await setLedgerDeviceObj(deviceObj)
         closeLedgerDialog()
       },
-      onConnectBLE: ({setLedgerDeviceId, closeLedgerDialog}) => (deviceId) => {
-        setLedgerDeviceId(deviceId)
+      onConnectBLE: ({setLedgerDeviceId, closeLedgerDialog}) => async (
+        deviceId,
+      ) => {
+        await setLedgerDeviceId(deviceId)
         closeLedgerDialog()
       },
       onConfirm: ignoreConcurrentAsyncHandler(

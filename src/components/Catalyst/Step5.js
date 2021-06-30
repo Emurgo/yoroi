@@ -254,13 +254,13 @@ const Step5 = ({
     }
   }
 
-  const onConnectUSB = (deviceObj: DeviceObj) => {
-    setLedgerDeviceObj(deviceObj)
+  const onConnectUSB = async (deviceObj: DeviceObj) => {
+    await setLedgerDeviceObj(deviceObj)
     setDialogStep(DIALOG_STEPS.CLOSED)
   }
 
-  const onConnectBLE = (deviceId: DeviceId) => {
-    setLedgerDeviceId(deviceId)
+  const onConnectBLE = async (deviceId: DeviceId) => {
+    await setLedgerDeviceId(deviceId)
     setDialogStep(DIALOG_STEPS.CLOSED)
   }
 

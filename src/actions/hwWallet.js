@@ -35,7 +35,6 @@ export const setLedgerDeviceId = (deviceId: DeviceId) => async (
   if (hwDeviceInfo == null || hwDeviceInfo.hwFeatures == null) {
     throw new NoDeviceInfoError()
   }
-  hwDeviceInfo.hwFeatures.deviceId = deviceId
   const updatedInfo = {
     ...hwDeviceInfo,
     hwFeatures: {
