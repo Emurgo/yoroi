@@ -1,5 +1,4 @@
 // @flow
-import type {Dispatch} from 'redux'
 import cryptoRandomString from 'crypto-random-string'
 
 import {encryptWithPassword} from '../crypto/catalystCipher'
@@ -7,9 +6,11 @@ import {generatePrivateKeyForCatalyst} from '../crypto/shelley/catalystUtils'
 import walletManager from '../crypto/walletManager'
 import {Logger} from '../utils/logging'
 import {CONFIG} from '../config/config'
+import {fetchUTXOs} from '../actions/utxo'
+import {utxosSelector} from '../selectors'
 
-import type {RawUtxo} from '../api/types'
 import type {State} from '../state'
+import type {Dispatch} from 'redux'
 
 const _setCatalystKeys = (voting) => ({
   type: 'SET_CATALYST_KEYS',
@@ -18,10 +19,10 @@ const _setCatalystKeys = (voting) => ({
   reducer: (state, value) => value,
 })
 
-const _setUnSignedTx = (unSignedTx) => ({
+const _setUnsignedTx = (unsignedTx) => ({
   type: 'SET_CATALYST_TX',
-  path: ['voting', 'unSignedTx'],
-  payload: unSignedTx,
+  path: ['voting', 'unsignedTx'],
+  payload: unsignedTx,
   reducer: (state, value) => value,
 })
 
@@ -56,15 +57,33 @@ export const generateVotingKeys = () => async (
       ).toString('hex'),
     }),
   )
+  Logger.debug('voting actions::generateVotingKeys: success')
 }
 
 export const generateVotingTransaction = (
-  decryptedKey: string,
-  utxos: Array<RawUtxo>,
+  decryptedKey: string | void,
 ) => async (dispatch: Dispatch<any>, getState: () => State) => {
   Logger.debug('voting actions::generateVotingTransaction')
   const catalystPrivateKey: ?string = getState().voting.catalystPrivateKey
   const serverTime: Date | void = getState().serverStatus.serverTime
+  let utxos = utxosSelector(getState())
+  if (utxos == null) {
+    try {
+      await dispatch(fetchUTXOs())
+      utxos = utxosSelector(getState())
+    } catch (_e) {
+      Logger.debug(
+        'voting actions::generateVotingTransaction: could not get utxos',
+      )
+      dispatch(_setUnsignedTx(null))
+    }
+  }
+  utxos = utxosSelector(getState())
+  if (utxos == null) {
+    throw new Error(
+      'voting actions::generateVotingTransaction: failed to fetch utxos',
+    )
+  }
 
   if (catalystPrivateKey) {
     const signRequest = await walletManager.createVotingRegTx(
@@ -73,7 +92,8 @@ export const generateVotingTransaction = (
       decryptedKey,
       serverTime,
     )
-    dispatch(_setUnSignedTx(signRequest))
+    dispatch(_setUnsignedTx(signRequest))
+    Logger.debug('voting actions::generateVotingTransaction: success')
   } else {
     // should never happen
     throw new Error('Catalyst private key empty, should never happen')

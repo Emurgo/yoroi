@@ -170,8 +170,7 @@ const TxHistory = ({
 
   // Catalyst voting registration banner
 
-  const canVote =
-    !walletMeta.isHW && isHaskellShelley(walletMeta.walletImplementationId)
+  const canVote = isHaskellShelley(walletMeta.walletImplementationId)
 
   const [showCatalystBanner, setShowCatalystBanner] = useState<boolean>(canVote)
 

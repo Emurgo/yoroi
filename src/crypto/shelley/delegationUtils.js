@@ -378,18 +378,18 @@ export const createDelegationTx = async (
       },
     )
 
-    const signRequest = new HaskellShelleyTxSignRequest(
-      unsignedTx.senderUtxos,
-      unsignedTx.txBuilder,
-      unsignedTx.changeAddr,
-      undefined,
-      {
+    const signRequest = new HaskellShelleyTxSignRequest({
+      senderUtxos: unsignedTx.senderUtxos,
+      unsignedTx: unsignedTx.txBuilder,
+      changeAddr: unsignedTx.changeAddr,
+      metadata: undefined,
+      networkSettingSnapshot: {
         NetworkId: networkConfig.NETWORK_ID,
         ChainNetworkId: Number.parseInt(networkConfig.CHAIN_NETWORK_ID, 10),
         KeyDeposit: new BigNumber(networkConfig.KEY_DEPOSIT),
         PoolDeposit: new BigNumber(networkConfig.POOL_DEPOSIT),
       },
-      {
+      neededStakingKeyHashes: {
         neededHashes: new Set([
           Buffer.from(
             await (await StakeCredential.from_keyhash(
@@ -399,7 +399,7 @@ export const createDelegationTx = async (
         ]),
         wits: new Set(),
       },
-    )
+    })
     return {
       signRequest,
       totalAmountToDelegate,
@@ -578,19 +578,19 @@ export const createWithdrawalTx = async (
         }
       }
     }
-    return new HaskellShelleyTxSignRequest(
-      unsignedTxResponse.senderUtxos,
-      unsignedTxResponse.txBuilder,
-      unsignedTxResponse.changeAddr,
-      undefined,
-      {
+    return new HaskellShelleyTxSignRequest({
+      senderUtxos: unsignedTxResponse.senderUtxos,
+      unsignedTx: unsignedTxResponse.txBuilder,
+      changeAddr: unsignedTxResponse.changeAddr,
+      metadata: undefined,
+      networkSettingSnapshot: {
         NetworkId: networkConfig.NETWORK_ID,
         ChainNetworkId: Number.parseInt(networkConfig.CHAIN_NETWORK_ID, 10),
         KeyDeposit: new BigNumber(networkConfig.KEY_DEPOSIT),
         PoolDeposit: new BigNumber(networkConfig.POOL_DEPOSIT),
       },
-      neededKeys,
-    )
+      neededStakingKeyHashes: neededKeys,
+    })
   } catch (e) {
     if (e instanceof LocalizableError || e instanceof ExtendableError) throw e
     Logger.error(

@@ -8,6 +8,8 @@ import {
   StakeCredential,
   NetworkInfo,
   MetadataJsonSchema,
+  MetadataList,
+  GeneralTransactionMetadata,
   decode_metadatum_to_json_str,
 } from '@emurgo/react-native-haskell-shelley'
 
@@ -43,15 +45,24 @@ test('Generate Catalyst registration tx', async () => {
     ),
   )
 
+  const signer = async (hashedMetadata) => {
+    return await (await stakePrivateKey.sign(hashedMetadata)).to_hex()
+  }
+
   const nonce = 1234
   const txMetaData = await generateRegistration({
-    stakePrivateKey,
-    catalystPrivateKey,
+    stakePublicKey: await stakePrivateKey.to_public(),
+    catalystPublicKey: await catalystPrivateKey.to_public(),
     rewardAddress: await address.to_address(),
     absSlotNumber: nonce,
+    signer,
   })
 
-  const result = await txMetaData.general()
+  const result = await GeneralTransactionMetadata.from_bytes(
+    await (await (await MetadataList.from_bytes(
+      await txMetaData.to_bytes(),
+    )).get(0)).to_bytes(),
+  )
 
   const data = await result.get(
     await BigNum.from_str(CatalystLabels.DATA.toString()),
