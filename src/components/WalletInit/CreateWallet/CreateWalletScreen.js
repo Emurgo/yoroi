@@ -6,7 +6,7 @@ import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
-import {generateAdaMnemonic} from '../../../crypto/byron/util'
+import {generateAdaMnemonic} from '../../../crypto/commonUtils'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import WalletForm from '../WalletForm'
 

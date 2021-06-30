@@ -37,7 +37,7 @@ import type {DelegationStatus} from './shelley/delegationUtils'
 import type {NetworkId, WalletImplementationId} from '../config/types'
 import type {WalletMeta} from '../state'
 import type {Transaction, DefaultAsset} from '../types/HistoryTransaction'
-import type {Addresses} from './chain'
+import type {Addresses} from './shelley/chain'
 import type {WalletChecksum} from '@emurgo/cip4-js'
 import type {JSONMetadata} from './shelley/metadataUtils'
 

@@ -581,11 +581,11 @@ export const submitTransaction = <T>(
 }
 /* eslint-enable indent */
 
-export const checkForFlawedWallets = () => async (dispatch: Dispatch<any>) => {
+export const checkForFlawedWallets = () => (dispatch: Dispatch<any>) => {
   let isFlawed = false
   Logger.debug('actions::checkForFlawedWallets:: checking wallet...')
   try {
-    isFlawed = await walletManager.checkForFlawedWallets()
+    isFlawed = walletManager.checkForFlawedWallets()
     Logger.debug('actions::checkForFlawedWallets::isFlawed', isFlawed)
     dispatch({
       path: ['isFlawedWallet'],
