@@ -35,6 +35,7 @@ import {AddressDTOCardano} from '../../crypto/Address.dto'
 import styles from './styles/AddressView.style'
 import copyIcon from '../../assets/img/icon/copy-ext.png'
 import verifyIcon from '../../assets/img/icon/verify-address.png'
+import copiedIcon from '../../assets/img/icon/copied.png'
 
 import type {ComponentType} from 'react'
 import type {
@@ -199,8 +200,7 @@ const AddressView = ({
             onPress={_copyHandler}
             disabled={isCopying}
           >
-            {/* TODO: replace to the right icon after getting it from UI department */}
-            <Image source={isCopying ? verifyIcon : copyIcon} />
+            <Image source={isCopying ? copiedIcon : copyIcon} />
           </TouchableOpacity>
           <TouchableOpacity
             accessibilityLabel={intl.formatMessage(messages.verifyLabel)}

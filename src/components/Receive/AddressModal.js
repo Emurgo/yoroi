@@ -19,7 +19,7 @@ import {Text, Button, Modal} from '../UiKit'
 import styles from './styles/AddressModal.style'
 import copyIcon from '../../assets/img/icon/copy-ext.png'
 // TODO: replace to the right icon after getting it from UI department
-import copiedIcon from '../../assets/img/icon/verify-address.png'
+import copiedIcon from '../../assets/img/icon/copied.png'
 
 import type {
   AddressDTOCardano,
