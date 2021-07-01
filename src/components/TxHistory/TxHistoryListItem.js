@@ -7,6 +7,7 @@ import {View, TouchableOpacity} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
+import type {MessageDescriptor} from 'react-intl'
 
 import {Text, TxIcon} from '../UiKit'
 import utfSymbols from '../../utils/utfSymbols'
@@ -96,7 +97,7 @@ const messages = defineMessages({
   },
 })
 
-const ASSURANCE_MESSAGES: $ReadOnly<Dict<any>> = Object.freeze({
+const ASSURANCE_MESSAGES: $ReadOnly<Dict<MessageDescriptor>> = Object.freeze({
   LOW: messages.assuranceLevelLow,
   MEDIUM: messages.assuranceLevelMedium,
   HIGH: messages.assuranceLevelHigh,
@@ -104,7 +105,7 @@ const ASSURANCE_MESSAGES: $ReadOnly<Dict<any>> = Object.freeze({
   FAILED: messages.assuranceLevelFailed,
 })
 
-const DIRECTION_MESSAGES: $ReadOnly<Dict<any>> = Object.freeze({
+const DIRECTION_MESSAGES: $ReadOnly<Dict<MessageDescriptor>> = Object.freeze({
   SENT: messages.transactionTypeSent,
   RECEIVED: messages.transactionTypeReceived,
   SELF: messages.transactionTypeSelf,
