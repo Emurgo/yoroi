@@ -14505,10 +14505,10 @@ react-native-blockies-svg@Emurgo/react-native-blockies-svg:
   dependencies:
     react-native-svg "^7.2.0"
 
-react-native-bootsplash@3.2.3:
-  version "3.2.3"
-  resolved "https://registry.yarnpkg.com/react-native-bootsplash/-/react-native-bootsplash-3.2.3.tgz#5f985a492696e14c73dc3b8475be5385b7436593"
-  integrity sha512-JNuDZ1sL9kppFrZ4OcK/ZM6gf9h5NmM6VfsLJEfa/lSPlD5wXoOyXIaeBn/6odaIPxSp31WIryeaNiZZIltu7g==
+react-native-bootsplash@3.2.4:
+  version "3.2.4"
+  resolved "https://registry.yarnpkg.com/react-native-bootsplash/-/react-native-bootsplash-3.2.4.tgz#73d3b38606ddc7e1d489012f007c1fbd26fc68d1"
+  integrity sha512-xilF68y/UmypcFuEvt/QYuP03YklbIxp+42DWcU+M0wTVko+oswy+yboTh4JB5YN7zRGpqhbSGnIeIkx0xd98Q==
   dependencies:
     chalk "^4.1.0"
     fs-extra "^9.1.0"
