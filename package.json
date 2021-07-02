@@ -119,7 +119,7 @@
     "@storybook/addon-links": "5.3.14",
     "@storybook/addon-ondevice-actions": "5.3.14",
     "@storybook/addon-ondevice-knobs": "5.3.14",
-    "@storybook/addons": "^5.3.14",
+    "@storybook/addons": "^6.3.2",
     "@storybook/react-native": "5.3.23",
     "@storybook/react-native-server": "^5.3.23",
     "babel-jest": "25.1.0",
