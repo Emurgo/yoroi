@@ -3,7 +3,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View, ScrollView} from 'react-native'
-import {withHandlers, withStateHandlers} from 'recompose'
+import {withHandlers} from 'recompose'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {Button, Text, Checkbox, ValidatedTextInput, StatusBar} from '../UiKit'
@@ -74,11 +74,12 @@ const RemoveWalletScreen = ({
   walletName,
   isHW,
   handleRemoveWallet,
-  hasMnemonicWrittenDown,
-  setHasMnemonicWrittenDown,
-  typedWalletName,
-  setTypedWalletName,
 }: Prop) => {
+  const [hasMnemonicWrittenDown, setHasMnemonicWrittenDown] = React.useState(
+    false,
+  )
+  const [typedWalletName, setTypedWalletName] = React.useState('')
+
   const disabled =
     (!isHW && !hasMnemonicWrittenDown) || walletName !== typedWalletName
 
@@ -144,18 +145,6 @@ export default injectIntl(
       }),
       {
         removeCurrentWallet,
-      },
-    ),
-    withStateHandlers(
-      {
-        hasMnemonicWrittenDown: false,
-        typedWalletName: '',
-      },
-      {
-        setHasMnemonicWrittenDown: () => (value) => ({
-          hasMnemonicWrittenDown: value,
-        }),
-        setTypedWalletName: () => (value) => ({typedWalletName: value}),
       },
     ),
     withHandlers({
