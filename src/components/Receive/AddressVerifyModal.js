@@ -7,6 +7,7 @@ import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {Text, Button, Modal} from '../UiKit'
 import {confirmationMessages} from '../../i18n/global-messages'
 import HWInstructions from '../Ledger/HWInstructions'
+import {AddressDTOCardano} from '../../crypto/shelley/Address.dto'
 
 import styles from './styles/AddressVerifyModal.style'
 
@@ -29,7 +30,7 @@ type Props = {|
   visible: boolean,
   onConfirm: () => void,
   onRequestClose: () => any,
-  address: string,
+  addressInfo: AddressDTOCardano,
   path: string,
   isWaiting: boolean,
   useUSB: boolean,
@@ -40,7 +41,7 @@ const AddressVerifyModal = ({
   visible,
   onConfirm,
   onRequestClose,
-  address,
+  addressInfo,
   path,
   isWaiting,
   useUSB,
@@ -56,7 +57,7 @@ const AddressVerifyModal = ({
       </Text>
       <View style={styles.addressDetailsView}>
         <Text secondary style={styles.paragraph}>
-          {address}
+          {addressInfo.address}
         </Text>
         <Text secondary style={styles.paragraph}>
           {path}
