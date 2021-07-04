@@ -17,6 +17,7 @@ export default StyleSheet.create({
   heading: {
     paddingHorizontal: 28,
     marginTop: 16,
+    fontWeight: 'bold',
   },
   button: {
     marginTop: 24,
@@ -24,5 +25,10 @@ export default StyleSheet.create({
   },
   safeAreaView: {
     flex: 1,
+  },
+  addressListHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8,
   },
 })
