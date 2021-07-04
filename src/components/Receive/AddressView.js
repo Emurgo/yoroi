@@ -155,17 +155,18 @@ const AddressView = ({
 }: Props) => {
   const [isCopying, setIsCopying] = useState<boolean>(false)
 
+  const address = addressInfo.address
   useEffect(
     () => {
       if (isCopying) {
         const timeout = setTimeout(() => {
           clearTimeout(timeout)
-          Clipboard.setString(addressInfo.address)
+          Clipboard.setString(address)
           setIsCopying(false)
         }, MESSAGE_TIMEOUT)
       }
     },
-    [isCopying, setIsCopying],
+    [isCopying, setIsCopying, address],
   )
 
   const _copyHandler = useCallback(
