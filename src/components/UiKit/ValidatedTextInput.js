@@ -7,8 +7,8 @@ import {withStateHandlers} from 'recompose'
 import {Text} from '../UiKit'
 
 import styles from './styles/ValidatedTextInput.style'
-import openedEyeIcon from '../../assets/img/eye-opened.png'
-import closedEyeIcon from '../../assets/img/eye-closed.png'
+import openedEyeIcon from '../../assets/img/icon/visibility-opened.png'
+import closedEyeIcon from '../../assets/img/icon/visibility-closed.png'
 
 import type {ComponentType} from 'react'
 
@@ -73,7 +73,7 @@ const ValidatedTextInput = ({
       >
         <Image
           style={styles.showPassword}
-          source={showPassword ? closedEyeIcon : openedEyeIcon}
+          source={showPassword ? openedEyeIcon : closedEyeIcon}
         />
       </TouchableOpacity>
     )}
