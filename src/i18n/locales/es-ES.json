@@ -265,7 +265,7 @@
   "components.txhistory.txhistorylistitem.transactionTypeMulti": "Multi-parte",
   "components.txhistory.txhistorylistitem.transactionTypeReceived": "Recibidos",
   "components.txhistory.txhistorylistitem.transactionTypeSelf": "Intra-billetera",
-  "components.txhistory.txhistorylistitem.transactionTypeSent": "Sent",
+  "components.txhistory.txhistorylistitem.transactionTypeSent": "Enviados",
   "components.txhistory.txnavigationbuttons.receiveButton": "Recibir",
   "components.txhistory.txnavigationbuttons.sendButton": "Enviar",
   "components.uikit.offlinebanner.offline": "Sin conexión. Por favor, revisa los ajustes de tu dispositivo.",
