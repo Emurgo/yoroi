@@ -78,7 +78,7 @@
   "components.maintenancemodal.explanation": "A Yoroi karbantartási módban van. A tárcádban levő összeghez továbbra is hozzáférhetsz bármely más pénztárca szoftveren keresztül. ",
   "components.maintenancemodal.learnMore": "Több információ",
   "components.maintenancemodal.title": "Átmeneti karbantartás",
-  "components.receive.addressmodal.BIP32path": "Derivation path",
+  "components.receive.addressmodal.BIP32path": "Deriválási útvonal",
   "components.receive.addressmodal.copiedLabel": "Másolva",
   "components.receive.addressmodal.copyLabel": "Cím másolása",
   "components.receive.addressmodal.spendingKeyHash": "Spending key hash",
