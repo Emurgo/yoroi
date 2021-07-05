@@ -880,12 +880,9 @@ class WalletManager {
         'aqc6cgpcds86z06psxczmnuk7txsajs4jdt4nqlhj8aa',
     ]
     const externalChain = this._wallet.externalChain
-    const match = addrs.indexOf(externalChain.addresses[0])
-    if (match !== -1) {
-      Logger.debug(
-        'WalletManager::checkForFlawedWallets: address match',
-        addrs[match],
-      )
+    let address = externalChain.addresses[0];
+    if (addrs.includes(address)) {
+      Logger.debug('WalletManager::checkForFlawedWallets: address match', address)
       return true
     }
     Logger.debug('WalletManager::checkForFlawedWallets:: no match')
