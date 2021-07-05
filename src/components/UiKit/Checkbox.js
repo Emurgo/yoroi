@@ -31,5 +31,8 @@ type ExternalProps = {
 }
 
 export default (withHandlers({
-  handleChange: ({onChange, checked}) => () => onChange(!checked),
+  handleChange:
+    ({onChange, checked}) =>
+    () =>
+      onChange(!checked),
 })(Checkbox): ComponentType<ExternalProps>)

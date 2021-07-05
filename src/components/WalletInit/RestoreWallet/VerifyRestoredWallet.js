@@ -177,13 +177,15 @@ export default injectIntl(
       intl.formatMessage(messages.title),
     ),
     withHandlers({
-      navigateToWalletCredentials: ({navigation, route}) => (_event) => {
-        navigation.navigate(WALLET_INIT_ROUTES.WALLET_CREDENTIALS, {
-          phrase: route.params.phrase,
-          networkId: route.params.networkId,
-          walletImplementationId: route.params.walletImplementationId,
-        })
-      },
+      navigateToWalletCredentials:
+        ({navigation, route}) =>
+        (_event) => {
+          navigation.navigate(WALLET_INIT_ROUTES.WALLET_CREDENTIALS, {
+            phrase: route.params.phrase,
+            networkId: route.params.networkId,
+            walletImplementationId: route.params.walletImplementationId,
+          })
+        },
     }),
   )(VerifyWalletScreen): ComponentType<{
     navigation: Navigation,

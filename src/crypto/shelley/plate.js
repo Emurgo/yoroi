@@ -40,11 +40,11 @@ export const generateShelleyPlateFromMnemonics = async (
   const masterKeyPtr = await Bip32PrivateKey.from_bytes(
     Buffer.from(masterKey, 'hex'),
   )
-  const accountKey = await (await (await masterKeyPtr.derive(
-    CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
-  )).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)).derive(
-    0 + CONFIG.NUMBERS.HARD_DERIVATION_START,
-  )
+  const accountKey = await (
+    await (
+      await masterKeyPtr.derive(CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852)
+    ).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)
+  ).derive(0 + CONFIG.NUMBERS.HARD_DERIVATION_START)
   const accountPubKey = await accountKey.to_public()
   const accountPubKeyHex = Buffer.from(await accountPubKey.as_bytes()).toString(
     'hex',

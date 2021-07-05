@@ -48,12 +48,9 @@ type HOCProps = {
 const Step2 = ({intl, pin, navigation}: Props & HOCProps) => {
   const [countDown, setCountDown] = useState(5)
 
-  useEffect(
-    () => {
-      countDown > 0 && setTimeout(() => setCountDown(countDown - 1), 1000)
-    },
-    [countDown],
-  )
+  useEffect(() => {
+    countDown > 0 && setTimeout(() => setCountDown(countDown - 1), 1000)
+  }, [countDown])
 
   const pinCards = (
     <View style={styles.pinContainer}>

@@ -9,7 +9,9 @@ describe('Import a read-only wallet', () => {
   })
 
   it('should import a read-only wallet', async () => {
-    await expect(element(by.id('addWalletOnHaskellShelleyButton'))).toBeVisible()
+    await expect(
+      element(by.id('addWalletOnHaskellShelleyButton')),
+    ).toBeVisible()
     await element(by.id('addWalletOnHaskellShelleyButton')).tap()
     await element(by.id('restoreWalletButton')).tap()
     await element(by.id('importReadOnlyWalletButton')).tap()

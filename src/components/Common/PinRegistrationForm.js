@@ -17,37 +17,39 @@ import type {ComponentType} from 'react'
 import type {PinInputLabels} from './PinInput'
 import type {Navigation} from '../../types/navigation'
 
-const handlePinEnter = ({
-  pin,
-  setPin,
-  onPinEntered,
-  intl,
-}: {
-  intl: IntlShape,
-  pin: any,
-  setPin: any,
-  onPinEntered: any,
-}) => async (pinConfirmation) => {
-  if (pin !== pinConfirmation) {
-    setPin('')
-    await showErrorDialog(errorMessages.pinMismatch, intl)
+const handlePinEnter =
+  ({
+    pin,
+    setPin,
+    onPinEntered,
+    intl,
+  }: {
+    intl: IntlShape,
+    pin: any,
+    setPin: any,
+    onPinEntered: any,
+  }) =>
+  async (pinConfirmation) => {
+    if (pin !== pinConfirmation) {
+      setPin('')
+      await showErrorDialog(errorMessages.pinMismatch, intl)
 
-    return true
+      return true
+    }
+
+    try {
+      await onPinEntered(pin)
+
+      return false
+    } catch (err) {
+      setPin('')
+      await showErrorDialog(errorMessages.generalError, intl, {
+        message: err.message,
+      })
+
+      return true
+    }
   }
-
-  try {
-    await onPinEntered(pin)
-
-    return false
-  } catch (err) {
-    setPin('')
-    await showErrorDialog(errorMessages.generalError, intl, {
-      message: err.message,
-    })
-
-    return true
-  }
-}
 
 type PinRegistrationFormLabels = {
   PinInput: PinInputLabels,
@@ -79,15 +81,12 @@ const PinRegistrationForm = ({
 }: Props) => {
   const inputLabels = !pin ? labels.PinInput : labels.PinConfirmationInput
 
-  React.useEffect(
-    () => {
-      const unsubscribe = navigation.addListener('blur', () => {
-        clearPin()
-      })
-      return unsubscribe
-    },
-    [navigation, pin, clearPin],
-  )
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      clearPin()
+    })
+    return unsubscribe
+  }, [navigation, pin, clearPin])
 
   return (
     <View style={styles.container}>
@@ -113,11 +112,13 @@ export default injectIntl(
     ),
     withHandlers({
       handlePinEnter,
-      handleSetPin: ({setPin}) => (pin) => {
-        setPin(pin)
+      handleSetPin:
+        ({setPin}) =>
+        (pin) => {
+          setPin(pin)
 
-        return Promise.resolve(true)
-      },
+          return Promise.resolve(true)
+        },
     }),
   )(PinRegistrationForm): ComponentType<ExternalProps>),
 )

@@ -90,16 +90,13 @@ export default injectIntl(
       onSuccess: route.params?.onSuccess,
     })),
     withHandlers({
-      handlePinEntered: ({
-        onSuccess,
-        encryptAndStoreCustomPin,
-        isAuth,
-        signin,
-      }) => async (pin) => {
-        await encryptAndStoreCustomPin(pin)
-        if (!isAuth) signin() // because in first run user is not authenticated
-        if (onSuccess !== undefined) onSuccess()
-      },
+      handlePinEntered:
+        ({onSuccess, encryptAndStoreCustomPin, isAuth, signin}) =>
+        async (pin) => {
+          await encryptAndStoreCustomPin(pin)
+          if (!isAuth) signin() // because in first run user is not authenticated
+          if (onSuccess !== undefined) onSuccess()
+        },
     }),
   )(CustomPinScreen): ComponentType<ExternalProps>),
 )

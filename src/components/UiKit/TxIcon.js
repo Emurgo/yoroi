@@ -54,8 +54,8 @@ const TxIcon = ({transaction}: Props) => {
   const theme: Status = isPending
     ? 'PENDING'
     : isDirectCredit
-      ? 'DIRECT_CREDIT'
-      : 'NORMAL'
+    ? 'DIRECT_CREDIT'
+    : 'NORMAL'
   const color = COLORS[theme]
   const styles = useStyles({size: SIZE, color: color.background})
   return (

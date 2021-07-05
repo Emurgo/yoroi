@@ -34,8 +34,7 @@ const messages = defineMessages({
     description: 'some desc',
   },
   confirmationButton: {
-    id:
-      'components.walletinit.createwallet.mnemonicshowscreen.confirmationButton',
+    id: 'components.walletinit.createwallet.mnemonicshowscreen.confirmationButton',
     defaultMessage: '!!!Yes, I have written it down',
     description: 'some desc',
   },
@@ -118,28 +117,29 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      navigateToMnemonicCheck: ({
-        navigation,
-        route,
-        hideModal,
-        mnemonic,
-      }) => () => {
-        const {name, password, networkId, walletImplementationId} = route.params
-        assert.assert(!!mnemonic, 'navigateToMnemonicCheck:: mnemonic')
-        assert.assert(!!password, 'navigateToMnemonicCheck:: password')
-        assert.assert(!!name, 'navigateToMnemonicCheck:: name')
-        assert.assert(networkId != null, 'navigateToMnemonicCheck:: networkId')
-        assert.assert(!!walletImplementationId, 'walletImplementationId')
+      navigateToMnemonicCheck:
+        ({navigation, route, hideModal, mnemonic}) =>
+        () => {
+          const {name, password, networkId, walletImplementationId} =
+            route.params
+          assert.assert(!!mnemonic, 'navigateToMnemonicCheck:: mnemonic')
+          assert.assert(!!password, 'navigateToMnemonicCheck:: password')
+          assert.assert(!!name, 'navigateToMnemonicCheck:: name')
+          assert.assert(
+            networkId != null,
+            'navigateToMnemonicCheck:: networkId',
+          )
+          assert.assert(!!walletImplementationId, 'walletImplementationId')
 
-        navigation.navigate(WALLET_INIT_ROUTES.MNEMONIC_CHECK, {
-          mnemonic,
-          password,
-          name,
-          networkId,
-          walletImplementationId,
-        })
-        hideModal()
-      },
+          navigation.navigate(WALLET_INIT_ROUTES.MNEMONIC_CHECK, {
+            mnemonic,
+            password,
+            name,
+            networkId,
+            walletImplementationId,
+          })
+          hideModal()
+        },
     }),
   )(MnemonicShowScreen): ComponentType<{
     navigation: Navigation,

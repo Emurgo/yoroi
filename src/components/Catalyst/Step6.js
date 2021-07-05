@@ -82,16 +82,12 @@ type HOCProps = {
 const Step6 = ({intl, navigation, encryptedKey}: HOCProps & Props) => {
   const [countDown, setCountDown] = useState<number>(5)
 
-  useEffect(
-    () => {
-      countDown > 0 && setTimeout(() => setCountDown(countDown - 1), 1000)
-    },
-    [countDown],
-  )
+  useEffect(() => {
+    countDown > 0 && setTimeout(() => setCountDown(countDown - 1), 1000)
+  }, [countDown])
 
-  const [showBackupWarningModal, setShowBackupWarningModal] = useState<boolean>(
-    false,
-  )
+  const [showBackupWarningModal, setShowBackupWarningModal] =
+    useState<boolean>(false)
 
   useFocusEffect(
     // eslint-disable-next-line consistent-return

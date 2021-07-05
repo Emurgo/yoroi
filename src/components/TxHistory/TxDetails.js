@@ -135,8 +135,10 @@ const AdaAmount = ({amount, token}: {amount: BigNumber, token: Token}) => {
 }
 
 const AddressEntry = withHandlers({
-  onPress: ({address, showModalForAddress}) => () =>
-    showModalForAddress(address),
+  onPress:
+    ({address, showModalForAddress}) =>
+    () =>
+      showModalForAddress(address),
 })(({address, onPress, path, isHighlighted}) => {
   return (
     <TouchableOpacity activeOpacity={0.5} onPress={onPress}>
@@ -206,8 +208,8 @@ const getShownAddresses = (
     path: getPath(address),
     isHighlighted: isHighlightedFrom(address),
   }))
-  const fromFiltered = fromAddresses.filter(
-    ({address}) => (filterFrom ? filterFrom(address) : true),
+  const fromFiltered = fromAddresses.filter(({address}) =>
+    filterFrom ? filterFrom(address) : true,
   )
   const cntOmittedFrom = fromAddresses.length - fromFiltered.length
 
@@ -217,8 +219,8 @@ const getShownAddresses = (
     path: getPath(address),
     isHighlighted: isHighlightedTo(address),
   }))
-  const toFiltered = toAddresses.filter(
-    ({address}) => (filterTo ? filterTo(address) : true),
+  const toFiltered = toAddresses.filter(({address}) =>
+    filterTo ? filterTo(address) : true,
   )
   const cntOmittedTo = toAddresses.length - toFiltered.length
 
@@ -253,17 +255,13 @@ const TxDetails = ({
   addressDetail,
   hideAddressModal,
 }: Props) => {
-  const {
-    fromFiltered,
-    cntOmittedFrom,
-    toFiltered,
-    cntOmittedTo,
-  } = getShownAddresses(
-    intl,
-    transaction,
-    internalAddressIndex,
-    externalAddressIndex,
-  )
+  const {fromFiltered, cntOmittedFrom, toFiltered, cntOmittedTo} =
+    getShownAddresses(
+      intl,
+      transaction,
+      internalAddressIndex,
+      externalAddressIndex,
+    )
   const txFee: ?BigNumber = transaction.fee
     ? MultiToken.fromArray(transaction.fee).getDefault()
     : null
@@ -426,19 +424,25 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      openInExplorer: ({transaction, walletMeta}) => () => {
-        if (transaction) {
-          const networkConfig = getNetworkConfigById(walletMeta.networkId)
-          // note: don't await on purpose
-          Linking.openURL(networkConfig.EXPLORER_URL_FOR_TX(transaction.id))
-        }
-      },
-      showModalForAddress: ({setAddressDetail}) => (address) => {
-        setAddressDetail(address)
-      },
-      hideAddressModal: ({setAddressDetail}) => () => {
-        setAddressDetail(null)
-      },
+      openInExplorer:
+        ({transaction, walletMeta}) =>
+        () => {
+          if (transaction) {
+            const networkConfig = getNetworkConfigById(walletMeta.networkId)
+            // note: don't await on purpose
+            Linking.openURL(networkConfig.EXPLORER_URL_FOR_TX(transaction.id))
+          }
+        },
+      showModalForAddress:
+        ({setAddressDetail}) =>
+        (address) => {
+          setAddressDetail(address)
+        },
+      hideAddressModal:
+        ({setAddressDetail}) =>
+        () => {
+          setAddressDetail(null)
+        },
     }),
   )(TxDetails): ComponentType<{|
     navigation: Navigation,

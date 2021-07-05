@@ -53,13 +53,15 @@ const messages = defineMessages({
   },
 })
 
-const deviceAddition = (device) => ({devices}) => {
-  return {
-    devices: devices.some((i) => i.id === device.id)
-      ? devices
-      : devices.concat(device),
+const deviceAddition =
+  (device) =>
+  ({devices}) => {
+    return {
+      devices: devices.some((i) => i.id === device.id)
+        ? devices
+        : devices.concat(device),
+    }
   }
-}
 
 type Props = {|
   intl: IntlShape,
@@ -288,14 +290,8 @@ class LedgerConnect extends React.Component<Props, State> {
 
   render() {
     const {intl, useUSB, fillSpace} = this.props
-    const {
-      error,
-      devices,
-      refreshing,
-      deviceId,
-      deviceObj,
-      waiting,
-    } = this.state
+    const {error, devices, refreshing, deviceId, deviceObj, waiting} =
+      this.state
 
     const rows = [
       intl.formatMessage(ledgerMessages.enterPin),

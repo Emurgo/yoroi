@@ -253,9 +253,9 @@ class TxHistoryListItem extends Component<Props> {
                   <Text small style={amountStyle} secondary={isPending}>
                     {formatTokenFractional(amount, defaultAsset)}
                   </Text>
-                  <Text style={amountStyle}>{`${
-                    utfSymbols.NBSP
-                  }${assetSymbol}`}</Text>
+                  <Text
+                    style={amountStyle}
+                  >{`${utfSymbols.NBSP}${assetSymbol}`}</Text>
                 </View>
               ) : (
                 <Text style={amountStyle}>- -</Text>

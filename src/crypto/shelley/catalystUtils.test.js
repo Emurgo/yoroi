@@ -59,9 +59,9 @@ test('Generate Catalyst registration tx', async () => {
   })
 
   const result = await GeneralTransactionMetadata.from_bytes(
-    await (await (await MetadataList.from_bytes(
-      await txMetaData.to_bytes(),
-    )).get(0)).to_bytes(),
+    await (
+      await (await MetadataList.from_bytes(await txMetaData.to_bytes())).get(0)
+    ).to_bytes(),
   )
 
   const data = await result.get(
@@ -92,8 +92,7 @@ test('Generate Catalyst registration tx', async () => {
       '4': nonce,
     },
     '61285': {
-      '1':
-        '0x6c2312cd49067ecf0920df7e067199c55b3faef4ec0bce1bd2cfb99793972478c45876af2bc271ac759c5ce40ace5a398b9fdb0e359f3c333fe856648804780e',
+      '1': '0x6c2312cd49067ecf0920df7e067199c55b3faef4ec0bce1bd2cfb99793972478c45876af2bc271ac759c5ce40ace5a398b9fdb0e359f3c333fe856648804780e',
     },
   }
   expect({

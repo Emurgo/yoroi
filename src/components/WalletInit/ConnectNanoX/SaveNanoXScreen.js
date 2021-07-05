@@ -47,41 +47,35 @@ type ExternalProps = {|
 
 export default injectIntl(
   (compose(
-    connect(
-      (_state) => ({}),
-      {
-        createWalletWithBip44Account,
-        saveHW,
-      },
-    ),
+    connect((_state) => ({}), {
+      createWalletWithBip44Account,
+      saveHW,
+    }),
     withNavigationTitle(({intl}: {intl: IntlShape}) =>
       intl.formatMessage(messages.title),
     ),
     withHandlers({
-      onSubmit: ({
-        createWalletWithBip44Account,
-        saveHW,
-        navigation,
-        route,
-      }) => async ({name}) => {
-        const {networkId, walletImplementationId, hwDeviceInfo} = route.params
-        assert.assert(
-          hwDeviceInfo != null,
-          'SaveNanoXScreen::onPress hwDeviceInfo',
-        )
-        await createWalletWithBip44Account(
-          name,
-          hwDeviceInfo.bip44AccountPublic,
-          networkId,
-          walletImplementationId,
-          hwDeviceInfo,
-          false,
-        )
-        saveHW(hwDeviceInfo)
-        navigation.navigate(ROOT_ROUTES.WALLET, {
-          screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
-        })
-      },
+      onSubmit:
+        ({createWalletWithBip44Account, saveHW, navigation, route}) =>
+        async ({name}) => {
+          const {networkId, walletImplementationId, hwDeviceInfo} = route.params
+          assert.assert(
+            hwDeviceInfo != null,
+            'SaveNanoXScreen::onPress hwDeviceInfo',
+          )
+          await createWalletWithBip44Account(
+            name,
+            hwDeviceInfo.bip44AccountPublic,
+            networkId,
+            walletImplementationId,
+            hwDeviceInfo,
+            false,
+          )
+          saveHW(hwDeviceInfo)
+          navigation.navigate(ROOT_ROUTES.WALLET, {
+            screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
+          })
+        },
     }),
   )(SaveNanoXScreen): ComponentType<ExternalProps>),
 )

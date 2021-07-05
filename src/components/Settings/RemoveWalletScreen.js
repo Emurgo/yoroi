@@ -59,10 +59,12 @@ const messages = defineMessages({
   },
 })
 
-const handleRemoveWallet = ({navigation, removeCurrentWallet}) => async () => {
-  await removeCurrentWallet()
-  navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-}
+const handleRemoveWallet =
+  ({navigation, removeCurrentWallet}) =>
+  async () => {
+    await removeCurrentWallet()
+    navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
+  }
 
 type Prop = {
   intl: IntlShape,

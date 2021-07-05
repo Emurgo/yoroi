@@ -13,8 +13,7 @@ import image from '../../../assets/img/mnemonic_explanation.png'
 
 const messages = defineMessages({
   paragraph1: {
-    id:
-      'components.walletinit.createwallet.mnemonicexplanationmodal.paragraph1',
+    id: 'components.walletinit.createwallet.mnemonicexplanationmodal.paragraph1',
     defaultMessage:
       '!!!On the following screen, you will see a set of 15 random words. ' +
       'This is your **wallet recovery phrase**. It can be entered in any version ' +
@@ -22,16 +21,14 @@ const messages = defineMessages({
     description: 'some desc',
   },
   paragraph2: {
-    id:
-      'components.walletinit.createwallet.mnemonicexplanationmodal.paragraph2',
+    id: 'components.walletinit.createwallet.mnemonicexplanationmodal.paragraph2',
     defaultMessage:
       '!!!Make sure **nobody looks into your screen** ' +
       'unless you want them to have access to your funds.',
     description: 'some desc',
   },
   nextButton: {
-    id:
-      'components.walletinit.createwallet.mnemonicexplanationmodal.nextButton',
+    id: 'components.walletinit.createwallet.mnemonicexplanationmodal.nextButton',
     defaultMessage: '!!!I understand',
     description: 'some desc',
   },

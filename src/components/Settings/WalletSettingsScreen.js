@@ -231,30 +231,34 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      onToggleEasyConfirmation: ({navigation}) => () => {
-        navigation.navigate(SETTINGS_ROUTES.EASY_COMFIRMATION)
-      },
+      onToggleEasyConfirmation:
+        ({navigation}) =>
+        () => {
+          navigation.navigate(SETTINGS_ROUTES.EASY_COMFIRMATION)
+        },
     }),
     withHandlers({
       onSwitchWallet: ignoreConcurrentAsyncHandler(
-        ({navigation, closeWallet}) => async () => {
-          await closeWallet()
-          navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-        },
+        ({navigation, closeWallet}) =>
+          async () => {
+            await closeWallet()
+            navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
+          },
         1000,
       ),
       onLogout: ignoreConcurrentAsyncHandler(
-        ({logout, intl}: {intl: IntlShape, logout: any}) => async () => {
-          const selection = await showConfirmationDialog(
-            // $FlowFixMe
-            confirmationMessages.logout,
-            intl,
-          )
+        ({logout, intl}: {intl: IntlShape, logout: any}) =>
+          async () => {
+            const selection = await showConfirmationDialog(
+              // $FlowFixMe
+              confirmationMessages.logout,
+              intl,
+            )
 
-          if (selection === DIALOG_BUTTONS.YES) {
-            await logout()
-          }
-        },
+            if (selection === DIALOG_BUTTONS.YES) {
+              await logout()
+            }
+          },
         500,
       ),
     }),

@@ -177,16 +177,13 @@ const Step4 = ({
     [],
   )
 
-  useEffect(
-    () => {
-      // if easy confirmation is enabled we go directly to the authentication
-      // screen and then build the registration tx
-      if (isEasyConfirmationEnabled) {
-        onContinue()
-      }
-    },
-    [onContinue, isEasyConfirmationEnabled],
-  )
+  useEffect(() => {
+    // if easy confirmation is enabled we go directly to the authentication
+    // screen and then build the registration tx
+    if (isEasyConfirmationEnabled) {
+      onContinue()
+    }
+  }, [onContinue, isEasyConfirmationEnabled])
 
   return (
     <SafeAreaView style={styles.safeAreaView}>

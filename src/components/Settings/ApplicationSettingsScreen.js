@@ -104,44 +104,48 @@ const styles = StyleSheet.create({
   },
 })
 
-const disableBiometrics = ({navigation, setSystemAuth}) => async () => {
-  await setSystemAuth(false)
+const disableBiometrics =
+  ({navigation, setSystemAuth}) =>
+  async () => {
+    await setSystemAuth(false)
 
-  navigation.navigate(SETTINGS_ROUTES.MAIN)
-}
-
-const onToggleBiometricsAuthIn = ({
-  isSystemAuthEnabled,
-  navigation,
-  intl,
-  installationId,
-  disableBiometrics,
-}) => async () => {
-  if (isSystemAuthEnabled) {
-    if (!walletManager.canBiometricsSignInBeDisabled()) {
-      await showErrorDialog(errorMessages.disableEasyConfirmationFirst, intl)
-
-      return
-    }
-
-    navigation.navigate(SETTINGS_ROUTES.BIO_AUTHENTICATE, {
-      keyId: installationId,
-      onSuccess: () =>
-        navigation.navigate(SETTINGS_ROUTES.SETUP_CUSTOM_PIN, {
-          onSuccess: disableBiometrics,
-        }),
-      onFail: (reason) => {
-        if (reason === KeyStore.REJECTIONS.CANCELED) {
-          navigation.navigate(SETTINGS_ROUTES.MAIN)
-        } else {
-          throw new Error(`Could not authenticate user: ${reason}`)
-        }
-      },
-    })
-  } else {
-    navigation.navigate(SETTINGS_ROUTES.FINGERPRINT_LINK)
+    navigation.navigate(SETTINGS_ROUTES.MAIN)
   }
-}
+
+const onToggleBiometricsAuthIn =
+  ({
+    isSystemAuthEnabled,
+    navigation,
+    intl,
+    installationId,
+    disableBiometrics,
+  }) =>
+  async () => {
+    if (isSystemAuthEnabled) {
+      if (!walletManager.canBiometricsSignInBeDisabled()) {
+        await showErrorDialog(errorMessages.disableEasyConfirmationFirst, intl)
+
+        return
+      }
+
+      navigation.navigate(SETTINGS_ROUTES.BIO_AUTHENTICATE, {
+        keyId: installationId,
+        onSuccess: () =>
+          navigation.navigate(SETTINGS_ROUTES.SETUP_CUSTOM_PIN, {
+            onSuccess: disableBiometrics,
+          }),
+        onFail: (reason) => {
+          if (reason === KeyStore.REJECTIONS.CANCELED) {
+            navigation.navigate(SETTINGS_ROUTES.MAIN)
+          } else {
+            throw new Error(`Could not authenticate user: ${reason}`)
+          }
+        },
+      })
+    } else {
+      navigation.navigate(SETTINGS_ROUTES.FINGERPRINT_LINK)
+    }
+  }
 
 const updateDeviceSettings = async ({setAppSettingField}) => {
   // prettier-ignore
@@ -287,14 +291,18 @@ export default injectIntl(
     }),
     withHandlers({
       onToggleBiometricsAuthIn,
-      updateDeviceSettings: ({setAppSettingField}) => () => {
-        // Runaway promise. This is needed because
-        // onWillFocus accepts only ()=>void
-        updateDeviceSettings({setAppSettingField})
-      },
-      setCrashReporting: ({setAppSettingField}) => (value: boolean) => {
-        setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value)
-      },
+      updateDeviceSettings:
+        ({setAppSettingField}) =>
+        () => {
+          // Runaway promise. This is needed because
+          // onWillFocus accepts only ()=>void
+          updateDeviceSettings({setAppSettingField})
+        },
+      setCrashReporting:
+        ({setAppSettingField}) =>
+        (value: boolean) => {
+          setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value)
+        },
     }),
   )(ApplicationSettingsScreen): ComponentType<{
     navigation: Navigation,

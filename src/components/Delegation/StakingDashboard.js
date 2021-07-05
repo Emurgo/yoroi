@@ -97,18 +97,18 @@ import type {
   DeviceId,
 } from '../../crypto/shelley/ledgerUtils'
 
-const SyncErrorBanner = injectIntl((
-  {intl, showRefresh}: {intl: IntlShape} & Object /* TODO: type */,
-) => (
-  <Banner
-    error
-    text={
-      showRefresh
-        ? intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh)
-        : intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh)
-    }
-  />
-))
+const SyncErrorBanner = injectIntl(
+  ({intl, showRefresh}: {intl: IntlShape} & Object /* TODO: type */) => (
+    <Banner
+      error
+      text={
+        showRefresh
+          ? intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh)
+          : intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh)
+      }
+    />
+  ),
+)
 
 type Props = {|
   intl: IntlShape,
@@ -573,14 +573,14 @@ class StakingDashboard extends React.Component<Props, State> {
 
         <View style={[styles.container]}>
           <OfflineBanner />
-          {/* eslint-disable indent */
-          isOnline &&
-            lastAccountStateSyncError && (
+          {
+            /* eslint-disable indent */
+            isOnline && lastAccountStateSyncError && (
               <SyncErrorBanner
                 showRefresh={!(isFetchingAccountState || isFetchingUtxos)}
               />
             )
-          /* eslint-enable indent */
+            /* eslint-enable indent */
           }
 
           <ScrollView
@@ -627,27 +627,28 @@ class StakingDashboard extends React.Component<Props, State> {
               />
             </View>
 
-            {/* eslint-disable indent */
+            {
+              /* eslint-disable indent */
 
-            poolInfo != null && !!poolOperator ? (
-              <View style={styles.row}>
-                <DelegatedStakepoolInfo
-                  // $FlowFixMe TODO: null or undefined is not compatible with string
-                  poolTicker={poolInfo.info?.ticker}
-                  // $FlowFixMe TODO: null or undefined is not compatible with string
-                  poolName={poolInfo.info?.name}
-                  poolHash={poolOperator != null ? poolOperator : ''}
-                  // $FlowFixMe TODO: null or undefined is not compatible with string
-                  poolURL={poolInfo.info?.homepage}
-                />
-              </View>
-            ) : isDelegating ? (
-              <View style={styles.activityIndicator}>
-                <ActivityIndicator size={'large'} color={'black'} />
-              </View>
-            ) : null
+              poolInfo != null && !!poolOperator ? (
+                <View style={styles.row}>
+                  <DelegatedStakepoolInfo
+                    // $FlowFixMe TODO: null or undefined is not compatible with string
+                    poolTicker={poolInfo.info?.ticker}
+                    // $FlowFixMe TODO: null or undefined is not compatible with string
+                    poolName={poolInfo.info?.name}
+                    poolHash={poolOperator != null ? poolOperator : ''}
+                    // $FlowFixMe TODO: null or undefined is not compatible with string
+                    poolURL={poolInfo.info?.homepage}
+                  />
+                </View>
+              ) : isDelegating ? (
+                <View style={styles.activityIndicator}>
+                  <ActivityIndicator size={'large'} color={'black'} />
+                </View>
+              ) : null
 
-            /* eslint-enable indent */
+              /* eslint-enable indent */
             }
           </ScrollView>
 

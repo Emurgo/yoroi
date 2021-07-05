@@ -329,9 +329,8 @@ export const checkDeviceVersion = (
     versionResponse.version.minor,
     versionResponse.version.patch,
   ]
-  const minVersionArray = CONFIG.HARDWARE_WALLETS.LEDGER_NANO.MIN_ADA_APP_VERSION.split(
-    '.',
-  )
+  const minVersionArray =
+    CONFIG.HARDWARE_WALLETS.LEDGER_NANO.MIN_ADA_APP_VERSION.split('.')
   if (minVersionArray.length !== deviceVersionArray.length) {
     Logger.warn('ledgerUtils::checkDeviceVersion: version formats mismatch')
     return
@@ -394,9 +393,8 @@ export const getHWDeviceInfo = async (
 
     // get Cardano's first account
     // i.e hdPath = [2147483692, 2147485463, 2147483648]
-    const extendedPublicKeyResp: GetExtendedPublicKeyResponse = await appAda.getExtendedPublicKey(
-      accountPath,
-    )
+    const extendedPublicKeyResp: GetExtendedPublicKeyResponse =
+      await appAda.getExtendedPublicKey(accountPath)
     Logger.debug('extended public key', extendedPublicKeyResp)
 
     const serial: GetSerialResponse = await appAda.getSerial()
@@ -554,11 +552,8 @@ export const createLedgerSignTxPayload = async (request: {|
 
   let auxiliaryData
   if (request.signRequest.ledgerNanoCatalystRegistrationTxSignData) {
-    const {
-      votingPublicKey,
-      stakingKeyPath,
-      nonce,
-    } = request.signRequest.ledgerNanoCatalystRegistrationTxSignData
+    const {votingPublicKey, stakingKeyPath, nonce} =
+      request.signRequest.ledgerNanoCatalystRegistrationTxSignData
 
     auxiliaryData = {
       type: TxAuxiliaryDataType.CATALYST_REGISTRATION,
@@ -890,9 +885,8 @@ export const signTxWithLedger = async (
       signRequest.tx.outputs,
     )
 
-    const ledgerSignature: SignTransactionResponse = await appAda.signTransaction(
-      signRequest,
-    )
+    const ledgerSignature: SignTransactionResponse =
+      await appAda.signTransaction(signRequest)
 
     await appAda.transport.close()
 

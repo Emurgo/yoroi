@@ -205,9 +205,11 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     const masterKeyPtr = await Bip32PrivateKey.from_bytes(
       Buffer.from(masterKey, 'hex'),
     )
-    const accountKey = await (await (await masterKeyPtr.derive(purpose)).derive(
-      CONFIG.NUMBERS.COIN_TYPES.CARDANO,
-    )).derive(
+    const accountKey = await (
+      await (
+        await masterKeyPtr.derive(purpose)
+      ).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)
+    ).derive(
       CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START,
     )
     const accountPubKey = await accountKey.to_public()
@@ -448,9 +450,13 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     const accountPubKey = await Bip32PublicKey.from_bytes(
       Buffer.from(this.publicKeyHex, 'hex'),
     )
-    const stakingKey = await (await (await accountPubKey.derive(
-      CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-    )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+    const stakingKey = await (
+      await (
+        await accountPubKey.derive(
+          CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+        )
+      ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
+    ).to_raw_key()
     Logger.info(
       `getStakingKey: ${Buffer.from(await stakingKey.as_bytes()).toString(
         'hex',
@@ -537,26 +543,23 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   asAddressedUtxo(utxos: Array<RawUtxo>): Array<AddressedUtxo> {
-    const addressedUtxos = utxos.map(
-      (utxo: RawUtxo): AddressedUtxo => {
-        const addressInfo = this.getAddressingInfo(utxo.receiver)
-        if (addressInfo == null) {
-          throw new Error(`Address not found for utxo: ${utxo.receiver}`)
-        }
-        return {
-          ...utxo,
-          addressing: addressInfo,
-        }
-      },
-    )
+    const addressedUtxos = utxos.map((utxo: RawUtxo): AddressedUtxo => {
+      const addressInfo = this.getAddressingInfo(utxo.receiver)
+      if (addressInfo == null) {
+        throw new Error(`Address not found for utxo: ${utxo.receiver}`)
+      }
+      return {
+        ...utxo,
+        addressing: addressInfo,
+      }
+    })
     return addressedUtxos
   }
 
   getDelegationStatus() {
     if (this.rewardAddressHex == null) throw new Error('reward address is null')
-    const certsForKey = this.transactionCache.perRewardAddressCertificates[
-      this.rewardAddressHex
-    ]
+    const certsForKey =
+      this.transactionCache.perRewardAddressCertificates[this.rewardAddressHex]
     return Promise.resolve(
       getDelegationStatus(this.rewardAddressHex, certsForKey),
     )
@@ -601,11 +604,11 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     const masterKey = await Bip32PrivateKey.from_bytes(
       Buffer.from(decryptedMasterKey, 'hex'),
     )
-    const accountPvrKey: Bip32PrivateKey = await (await (await masterKey.derive(
-      this._getPurpose(),
-    )).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)).derive(
-      0 + CONFIG.NUMBERS.HARD_DERIVATION_START,
-    )
+    const accountPvrKey: Bip32PrivateKey = await (
+      await (
+        await masterKey.derive(this._getPurpose())
+      ).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)
+    ).derive(0 + CONFIG.NUMBERS.HARD_DERIVATION_START)
     const wits = new Set()
 
     if (!(signRequest instanceof HaskellShelleyTxSignRequest)) {
@@ -620,9 +623,13 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       )
       const txBuilder = signRequest.unsignedTx
 
-      const stakingKey = await (await (await accountPvrKey.derive(
-        CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-      )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+      const stakingKey = await (
+        await (
+          await accountPvrKey.derive(
+            CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+          )
+        ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
+      ).to_raw_key()
 
       // prettier-ignore
       wits.add(
@@ -716,15 +723,19 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
           Buffer.from(decryptedKey, 'hex'),
         )
 
-        const accountPvrKey: Bip32PrivateKey = await (await (await masterKey.derive(
-          this._getPurpose(),
-        )).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)).derive(
-          0 + CONFIG.NUMBERS.HARD_DERIVATION_START,
-        )
+        const accountPvrKey: Bip32PrivateKey = await (
+          await (
+            await masterKey.derive(this._getPurpose())
+          ).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)
+        ).derive(0 + CONFIG.NUMBERS.HARD_DERIVATION_START)
 
-        const stakePrivateKey: PrivateKey = await (await (await accountPvrKey.derive(
-          CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-        )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+        const stakePrivateKey: PrivateKey = await (
+          await (
+            await accountPvrKey.derive(
+              CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+            )
+          ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
+        ).to_raw_key()
 
         signer = async (hashedMetadata) => {
           return await (await stakePrivateKey.sign(hashedMetadata)).to_hex()
@@ -737,9 +748,9 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
         signer = (_hashedMetadata) => Promise.resolve('0'.repeat(64 * 2))
       }
 
-      const catalystPublicKey = await (await PrivateKey.from_extended_bytes(
-        Buffer.from(catalystKey, 'hex'),
-      )).to_public()
+      const catalystPublicKey = await (
+        await PrivateKey.from_extended_bytes(Buffer.from(catalystKey, 'hex'))
+      ).to_public()
       const votingPublicKey = Buffer.from(
         await catalystPublicKey.as_bytes(),
       ).toString('hex')
@@ -875,9 +886,9 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       const addressing = isByron(this.walletImplementationId)
         ? this.getAddressingInfo(change.address)
         : this.getAddressingInfo(
-            await (await Address.from_bytes(
-              Buffer.from(change.address, 'hex'),
-            )).to_bech32(),
+            await (
+              await Address.from_bytes(Buffer.from(change.address, 'hex'))
+            ).to_bech32(),
           )
       /* eslint-enable indent */
       if (addressing != null) addressingInfo[change.address] = addressing
@@ -914,10 +925,8 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
 
     let metadata
     if (request.ledgerNanoCatalystRegistrationTxSignData) {
-      const {
-        votingPublicKey,
-        nonce,
-      } = request.ledgerNanoCatalystRegistrationTxSignData
+      const {votingPublicKey, nonce} =
+        request.ledgerNanoCatalystRegistrationTxSignData
 
       if (
         !ledgerSignTxResp.auxiliaryDataSupplement ||
@@ -928,9 +937,8 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
           'ShelleyWallet::signTxWithLedger unexpected Ledger sign transaction response',
         )
       }
-      const {
-        catalystRegistrationSignatureHex,
-      } = ledgerSignTxResp.auxiliaryDataSupplement
+      const {catalystRegistrationSignatureHex} =
+        ledgerSignTxResp.auxiliaryDataSupplement
 
       Logger.debug(
         'ShelleyWallet::signTxWithLedger::catalystRegistrationSignatureHex',

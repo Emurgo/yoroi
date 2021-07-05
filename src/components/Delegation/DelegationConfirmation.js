@@ -288,9 +288,9 @@ const DelegationConfirmation = (
             label={intl.formatMessage(txLabels.amount)}
           />
         </View>
-        {/* eslint-disable indent */
-        !isEasyConfirmationEnabled &&
-          !isHW && (
+        {
+          /* eslint-disable indent */
+          !isEasyConfirmationEnabled && !isHW && (
             <View style={styles.input}>
               <ValidatedTextInput
                 secureTextEntry
@@ -300,7 +300,7 @@ const DelegationConfirmation = (
               />
             </View>
           )
-        /* eslint-enable indent */
+          /* eslint-enable indent */
         }
         <View style={styles.itemBlock}>
           <Text style={styles.itemTitle}>
@@ -322,33 +322,36 @@ const DelegationConfirmation = (
         />
       </View>
 
-      {/* eslint-disable indent */
-      isHW &&
-        Platform.OS === 'android' &&
-        CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT && (
-          <>
-            <LedgerTransportSwitchModal
-              visible={
-                ledgerDialogStep === LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT
-              }
-              onRequestClose={closeLedgerDialog}
-              onSelectUSB={(event) => onChooseTransport(event, true)}
-              onSelectBLE={(event) => onChooseTransport(event, false)}
-              showCloseIcon
-            />
-            <Modal
-              visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.LEDGER_CONNECT}
-              onRequestClose={closeLedgerDialog}
-            >
-              <LedgerConnect
-                onConnectBLE={onConnectBLE}
-                onConnectUSB={onConnectUSB}
-                useUSB={useUSB}
+      {
+        /* eslint-disable indent */
+        isHW &&
+          Platform.OS === 'android' &&
+          CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT && (
+            <>
+              <LedgerTransportSwitchModal
+                visible={
+                  ledgerDialogStep === LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT
+                }
+                onRequestClose={closeLedgerDialog}
+                onSelectUSB={(event) => onChooseTransport(event, true)}
+                onSelectBLE={(event) => onChooseTransport(event, false)}
+                showCloseIcon
               />
-            </Modal>
-          </>
-        )
-      /* eslint-enable indent */
+              <Modal
+                visible={
+                  ledgerDialogStep === LEDGER_DIALOG_STEPS.LEDGER_CONNECT
+                }
+                onRequestClose={closeLedgerDialog}
+              >
+                <LedgerConnect
+                  onConnectBLE={onConnectBLE}
+                  onConnectUSB={onConnectUSB}
+                  useUSB={useUSB}
+                />
+              </Modal>
+            </>
+          )
+        /* eslint-enable indent */
       }
       <ErrorModal
         visible={showErrorModal}
@@ -425,66 +428,64 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      onChooseTransport: ({
-        hwDeviceInfo,
-        setUseUSB,
-        openLedgerConnect,
-        closeLedgerDialog,
-      }) => (event, useUSB) => {
-        setUseUSB(useUSB)
-        if (
-          (useUSB && hwDeviceInfo.hwFeatures.deviceObj == null) ||
-          (!useUSB && hwDeviceInfo.hwFeatures.deviceId == null)
-        ) {
-          openLedgerConnect()
-        } else {
+      onChooseTransport:
+        ({hwDeviceInfo, setUseUSB, openLedgerConnect, closeLedgerDialog}) =>
+        (event, useUSB) => {
+          setUseUSB(useUSB)
+          if (
+            (useUSB && hwDeviceInfo.hwFeatures.deviceObj == null) ||
+            (!useUSB && hwDeviceInfo.hwFeatures.deviceId == null)
+          ) {
+            openLedgerConnect()
+          } else {
+            closeLedgerDialog()
+          }
+        },
+      onConnectUSB:
+        ({setLedgerDeviceObj, closeLedgerDialog}) =>
+        async (deviceObj) => {
+          await setLedgerDeviceObj(deviceObj)
           closeLedgerDialog()
-        }
-      },
-      onConnectUSB: ({setLedgerDeviceObj, closeLedgerDialog}) => async (
-        deviceObj,
-      ) => {
-        await setLedgerDeviceObj(deviceObj)
-        closeLedgerDialog()
-      },
-      onConnectBLE: ({setLedgerDeviceId, closeLedgerDialog}) => async (
-        deviceId,
-      ) => {
-        await setLedgerDeviceId(deviceId)
-        closeLedgerDialog()
-      },
+        },
+      onConnectBLE:
+        ({setLedgerDeviceId, closeLedgerDialog}) =>
+        async (deviceId) => {
+          await setLedgerDeviceId(deviceId)
+          closeLedgerDialog()
+        },
       onDelegate: ignoreConcurrentAsyncHandler(
         (
-          {
-            navigation,
-            route,
-            isHW,
-            isEasyConfirmationEnabled,
-            password,
-            submitTransaction,
-            submitSignedTx,
-            setSendingTransaction,
-            setProcessingTx,
-            intl,
-            useUSB,
-            setErrorData,
-          }: {intl: IntlShape} & Object /* TODO: type */,
-        ) => async (_event) => {
-          await handleOnConfirm(
-            navigation,
-            route,
-            isHW,
-            isEasyConfirmationEnabled,
-            password,
-            submitTransaction,
-            submitSignedTx,
-            setSendingTransaction,
-            setProcessingTx,
-            intl,
-            useUSB,
-            setErrorData,
-          )
-        },
+            {
+              navigation,
+              route,
+              isHW,
+              isEasyConfirmationEnabled,
+              password,
+              submitTransaction,
+              submitSignedTx,
+              setSendingTransaction,
+              setProcessingTx,
+              intl,
+              useUSB,
+              setErrorData,
+            }: {intl: IntlShape} & Object /* TODO: type */,
+          ) =>
+          async (_event) => {
+            await handleOnConfirm(
+              navigation,
+              route,
+              isHW,
+              isEasyConfirmationEnabled,
+              password,
+              submitTransaction,
+              submitSignedTx,
+              setSendingTransaction,
+              setProcessingTx,
+              intl,
+              useUSB,
+              setErrorData,
+            )
+          },
         1000,
       ),
     }),

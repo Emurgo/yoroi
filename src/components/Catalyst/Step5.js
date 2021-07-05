@@ -264,35 +264,29 @@ const Step5 = ({
     setDialogStep(DIALOG_STEPS.CLOSED)
   }
 
-  useEffect(
-    () => {
-      const generateTx = async () => {
-        await generateVotingTransaction()
-      }
+  useEffect(() => {
+    const generateTx = async () => {
+      await generateVotingTransaction()
+    }
 
-      if (unsignedTx != null) {
-        unsignedTx.fee().then((o) => {
-          setFees(o.getDefault())
-        })
-      } else if (isHW) {
-        generateTx()
-      }
-    },
-    [unsignedTx, generateVotingTransaction, isHW],
-  )
+    if (unsignedTx != null) {
+      unsignedTx.fee().then((o) => {
+        setFees(o.getDefault())
+      })
+    } else if (isHW) {
+      generateTx()
+    }
+  }, [unsignedTx, generateVotingTransaction, isHW])
 
-  useEffect(
-    () => {
-      if (
-        isHW &&
-        Platform.OS === 'android' &&
-        CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT
-      ) {
-        setDialogStep(DIALOG_STEPS.CHOOSE_TRANSPORT)
-      }
-    },
-    [isHW],
-  )
+  useEffect(() => {
+    if (
+      isHW &&
+      Platform.OS === 'android' &&
+      CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT
+    ) {
+      setDialogStep(DIALOG_STEPS.CHOOSE_TRANSPORT)
+    }
+  }, [isHW])
 
   const isConfirmationDisabled =
     !isEasyConfirmationEnabled && !isHW && !password
@@ -419,9 +413,9 @@ const Step5 = ({
             editable={false}
             onChangeText={() => ({})}
           />
-          {/* eslint-disable indent */
-          !isEasyConfirmationEnabled &&
-            !isHW && (
+          {
+            /* eslint-disable indent */
+            !isEasyConfirmationEnabled && !isHW && (
               <View>
                 <ValidatedTextInput
                   secureTextEntry
@@ -431,7 +425,7 @@ const Step5 = ({
                 />
               </View>
             )
-          /* eslint-enable indent */
+            /* eslint-enable indent */
           }
         </View>
         <Button

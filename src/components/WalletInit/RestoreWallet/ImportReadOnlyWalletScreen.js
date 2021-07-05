@@ -150,26 +150,26 @@ export default injectIntl(
         })
         if (CONFIG.E2E.IS_TESTING && (await DeviceInfo.isEmulator())) {
           const event = {
-            data: `{"publicKeyHex": "${
-              CONFIG.DEBUG.PUB_KEY
-            }", "path": [1852,1815,0]}`,
+            data: `{"publicKeyHex": "${CONFIG.DEBUG.PUB_KEY}", "path": [1852,1815,0]}`,
           }
           await handleOnRead(event, navigation, route, intl)
         }
       },
     ),
     withHandlers({
-      onRead: ({
-        navigation,
-        route,
-        intl,
-      }: {
-        intl: IntlShape,
-        route: any,
-        navigation: any,
-      }) => async (event) => {
-        await handleOnRead(event, navigation, route, intl)
-      },
+      onRead:
+        ({
+          navigation,
+          route,
+          intl,
+        }: {
+          intl: IntlShape,
+          route: any,
+          navigation: any,
+        }) =>
+        async (event) => {
+          await handleOnRead(event, navigation, route, intl)
+        },
     }),
   )(ImportReadOnlyWalletScreen): ComponentType<{
     navigation: Navigation,

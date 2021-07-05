@@ -58,12 +58,9 @@ const App = (_props, _context) => {
 
 export default injectIntl(
   compose(
-    connect(
-      () => ({}),
-      {
-        initApp,
-      },
-    ),
+    connect(() => ({}), {
+      initApp,
+    }),
     onDidMount(({initApp}) => initApp()),
   )(App),
 )

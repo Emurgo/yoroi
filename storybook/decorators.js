@@ -9,7 +9,5 @@ import type {Node} from 'react'
 const store = configureStore(true)
 
 export const withProvider = (story: () => Node) => (
-  <Provider store={store}>
-    {story()}
-  </Provider>
+  <Provider store={store}>{story()}</Provider>
 )

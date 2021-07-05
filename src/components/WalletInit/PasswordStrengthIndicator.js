@@ -15,8 +15,7 @@ import {COLORS} from '../../styles/config'
 
 const messages = defineMessages({
   passwordRequirementsNote: {
-    id:
-      'components.walletinit.passwordstrengthindicator.passwordRequirementsNote',
+    id: 'components.walletinit.passwordstrengthindicator.passwordRequirementsNote',
     defaultMessage: '!!!The password needs to contain at least:',
     description: 'some desc',
   },

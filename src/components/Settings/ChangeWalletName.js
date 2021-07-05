@@ -114,21 +114,20 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      validateWalletName: ({walletName, oldName, walletNames}) => () =>
-        validateWalletName(walletName, oldName, walletNames),
+      validateWalletName:
+        ({walletName, oldName, walletNames}) =>
+        () =>
+          validateWalletName(walletName, oldName, walletNames),
     }),
     withHandlers({
-      changeAndNavigate: ({
-        navigation,
-        walletName,
-        changeWalletName,
-        validateWalletName,
-      }) => async () => {
-        if (!_.isEmpty(validateWalletName())) return
+      changeAndNavigate:
+        ({navigation, walletName, changeWalletName, validateWalletName}) =>
+        async () => {
+          if (!_.isEmpty(validateWalletName())) return
 
-        await changeWalletName(walletName)
-        navigation.goBack()
-      },
+          await changeWalletName(walletName)
+          navigation.goBack()
+        },
     }),
   )(ChangeWalletName): ComponentType<{|
     navigation: Navigation,

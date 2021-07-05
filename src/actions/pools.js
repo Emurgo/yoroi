@@ -48,40 +48,38 @@ const _setLastError = (error) => ({
   reducer: (state, error) => error,
 })
 
-export const fetchPoolInfo = () => async (
-  dispatch: Dispatch<any>,
-  getState: () => State,
-) => {
-  if (getState().poolInfo.isFetching) {
-    return
-  } else if (getState().accountState.poolOperator == null) {
-    dispatch(_clearPoolInfo())
-    return
-  }
-  dispatch(_clearPoolInfo())
-  dispatch(_startFetching())
-  try {
-    const poolOperator = getState().accountState.poolOperator
-    if (poolOperator == null) {
-      throw new Error(
-        'fetchPoolInfo::poolOperator is null, should never happen',
-      )
+export const fetchPoolInfo =
+  () => async (dispatch: Dispatch<any>, getState: () => State) => {
+    if (getState().poolInfo.isFetching) {
+      return
+    } else if (getState().accountState.poolOperator == null) {
+      dispatch(_clearPoolInfo())
+      return
     }
-    const poolInfoResp: PoolInfoResponse = await walletManager.fetchPoolInfo(
-      ({
-        poolIds: [poolOperator],
-      }: PoolInfoRequest),
-    )
-    const poolInfo = Object.keys(poolInfoResp).map(
-      (key) => poolInfoResp[key],
-    )[0]
-    if (poolInfo.error != null) throw new Error(poolInfo.error)
-    dispatch(_setPoolInfo(poolInfo))
-    dispatch(_setLastError(null))
-  } catch (err) {
-    Logger.warn(err)
-    dispatch(_setLastError(err))
-  } finally {
-    dispatch(_endFetching())
+    dispatch(_clearPoolInfo())
+    dispatch(_startFetching())
+    try {
+      const poolOperator = getState().accountState.poolOperator
+      if (poolOperator == null) {
+        throw new Error(
+          'fetchPoolInfo::poolOperator is null, should never happen',
+        )
+      }
+      const poolInfoResp: PoolInfoResponse = await walletManager.fetchPoolInfo(
+        ({
+          poolIds: [poolOperator],
+        }: PoolInfoRequest),
+      )
+      const poolInfo = Object.keys(poolInfoResp).map(
+        (key) => poolInfoResp[key],
+      )[0]
+      if (poolInfo.error != null) throw new Error(poolInfo.error)
+      dispatch(_setPoolInfo(poolInfo))
+      dispatch(_setLastError(null))
+    } catch (err) {
+      Logger.warn(err)
+      dispatch(_setLastError(err))
+    } finally {
+      dispatch(_endFetching())
+    }
   }
-}

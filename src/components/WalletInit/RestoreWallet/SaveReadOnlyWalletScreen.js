@@ -156,21 +156,18 @@ const SaveReadOnlyWalletScreen = (
     return i
   })
 
-  useEffect(
-    () => {
-      const generatePlates = async () => {
-        const {addresses, accountPlate} = await generateShelleyPlateFromKey(
-          publicKeyHex,
-          1,
-          networkId,
-        )
-        setPlate({addresses, accountPlate})
-      }
+  useEffect(() => {
+    const generatePlates = async () => {
+      const {addresses, accountPlate} = await generateShelleyPlateFromKey(
+        publicKeyHex,
+        1,
+        networkId,
+      )
+      setPlate({addresses, accountPlate})
+    }
 
-      generatePlates()
-    },
-    [networkId, publicKeyHex],
-  )
+    generatePlates()
+  }, [networkId, publicKeyHex])
 
   return (
     <SafeAreaView style={styles.container} testID="saveReadOnlyWalletContainer">
@@ -203,12 +200,9 @@ type ExternalProps = {|
 
 export default injectIntl(
   (compose(
-    connect(
-      (_state) => ({}),
-      {
-        createWalletWithBip44Account,
-      },
-    ),
+    connect((_state) => ({}), {
+      createWalletWithBip44Account,
+    }),
     withNavigationTitle(({intl}: {intl: IntlShape}) =>
       intl.formatMessage(messages.title),
     ),
@@ -221,61 +215,59 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      withActivityIndicator: ({setWaiting}) => async (
-        func: () => Promise<void>,
-      ): Promise<void> => {
-        setWaiting(true)
-        try {
-          await func()
-        } finally {
-          setWaiting(false)
-        }
-      },
+      withActivityIndicator:
+        ({setWaiting}) =>
+        async (func: () => Promise<void>): Promise<void> => {
+          setWaiting(true)
+          try {
+            await func()
+          } finally {
+            setWaiting(false)
+          }
+        },
     }),
     withHandlers({
       onSubmit: ignoreConcurrentAsyncHandler(
         (
-          {
-            createWalletWithBip44Account,
-            withActivityIndicator,
-            navigation,
-            intl,
-            route,
-          }: {intl: IntlShape} & Object /* TODO: type */,
-        ) => async ({name}) => {
-          try {
-            const {
-              publicKeyHex,
-              networkId,
-              walletImplementationId,
-            } = route.params
-            assert.assert(
-              publicKeyHex != null,
-              'SaveReadOnlyWalletScreen::onPress publicKeyHex',
-            )
-            assert.assert(networkId != null, 'networkId')
-            assert.assert(!!walletImplementationId, 'walletImplementationId')
+            {
+              createWalletWithBip44Account,
+              withActivityIndicator,
+              navigation,
+              intl,
+              route,
+            }: {intl: IntlShape} & Object /* TODO: type */,
+          ) =>
+          async ({name}) => {
+            try {
+              const {publicKeyHex, networkId, walletImplementationId} =
+                route.params
+              assert.assert(
+                publicKeyHex != null,
+                'SaveReadOnlyWalletScreen::onPress publicKeyHex',
+              )
+              assert.assert(networkId != null, 'networkId')
+              assert.assert(!!walletImplementationId, 'walletImplementationId')
 
-            await withActivityIndicator(
-              async () =>
-                await createWalletWithBip44Account(
-                  name,
-                  publicKeyHex,
-                  networkId,
-                  walletImplementationId,
-                  null,
-                  true, // important: read-only flag
-                ),
-            )
+              await withActivityIndicator(
+                async () =>
+                  await createWalletWithBip44Account(
+                    name,
+                    publicKeyHex,
+                    networkId,
+                    walletImplementationId,
+                    null,
+                    true, // important: read-only flag
+                  ),
+              )
 
-            navigation.navigate(ROOT_ROUTES.WALLET, {
-              screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
-            })
-          } catch (e) {
-            Logger.error('SaveReadOnlyWalletScreen::onSubmit', e)
-            await handleGeneralError(e.message, e, intl)
-          }
-        },
+              navigation.navigate(ROOT_ROUTES.WALLET, {
+                screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
+              })
+            } catch (e) {
+              Logger.error('SaveReadOnlyWalletScreen::onSubmit', e)
+              await handleGeneralError(e.message, e, intl)
+            }
+          },
         1000,
       ),
     }),

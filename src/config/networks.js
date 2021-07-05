@@ -202,18 +202,17 @@ export const getNetworkConfigById = (id: NetworkId): NetworkConfig => {
 export type CardanoHaskellShelleyNetwork =
   | typeof NETWORKS.HASKELL_SHELLEY
   | typeof NETWORKS.HASKELL_SHELLEY_TESTNET
-export const getCardanoNetworkConfigById: (NetworkId) => CardanoHaskellShelleyNetwork = (
-  networkId,
-) => {
-  switch (networkId) {
-    case NETWORKS.HASKELL_SHELLEY.NETWORK_ID:
-      return NETWORKS.HASKELL_SHELLEY
-    case NETWORKS.HASKELL_SHELLEY_TESTNET.NETWORK_ID:
-      return NETWORKS.HASKELL_SHELLEY_TESTNET
-    default:
-      throw new Error('network id is not a valid Haskell Shelley id')
+export const getCardanoNetworkConfigById: (NetworkId) => CardanoHaskellShelleyNetwork =
+  (networkId) => {
+    switch (networkId) {
+      case NETWORKS.HASKELL_SHELLEY.NETWORK_ID:
+        return NETWORKS.HASKELL_SHELLEY
+      case NETWORKS.HASKELL_SHELLEY_TESTNET.NETWORK_ID:
+        return NETWORKS.HASKELL_SHELLEY_TESTNET
+      default:
+        throw new Error('network id is not a valid Haskell Shelley id')
+    }
   }
-}
 
 export const PRIMARY_ASSET_CONSTANTS = {
   CARDANO: '',

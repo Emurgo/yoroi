@@ -239,80 +239,78 @@ async function addUtxoInput(
   const txInput = await utxoToTxInput(input)
   const wasmAmount = await cardanoValueFromRemoteFormat(input)
 
-  const skipOverflow: (void) => Promise<
-    $Values<typeof AddInputResult>,
-  > = async () => {
-    /**
-     * UTXOs can only contain at most u64 of a value
-     * so if the sum of UTXO inputs for a tx > u64
-     * it can cause the tx to fail (due to overflow) in the output / change
-     *
-     * This can be addressed by splitting up a tx to use multiple outputs / multiple change
-     * and this just requires more ADA to cover the min UTXO of these added inputs
-     * but as a simple solution for now, we just block > u64 inputs of any token
-     * This isn't a great workaround since it means features like sendAll may end up not sending all
-     */
-    const currentInputSum = await (await txBuilder.get_explicit_input()).checked_add(
-      await txBuilder.get_implicit_input(),
-    )
-    try {
-      await currentInputSum.checked_add(wasmAmount)
-    } catch (e) {
-      return AddInputResult.OVERFLOW
-    }
-    return AddInputResult.VALID
-  }
-
-  const skipInput: (void) => Promise<
-    $Values<typeof AddInputResult>,
-  > = async () => {
-    if (remaining == null) return await skipOverflow()
-
-    const defaultEntry = {
-      defaultNetworkId: protocolParams.networkId,
-      defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
-    }
-    const tokenSetInInput = new Set(input.assets.map((asset) => asset.assetId))
-    const remainingTokens = await multiTokenFromCardanoValue(
-      remaining.value,
-      defaultEntry,
-    )
-    const includedTargets = remainingTokens
-      .nonDefaultEntries()
-      .filter((entry) => tokenSetInInput.has(entry.identifier))
-
-    if (
-      remainingTokens.getDefaultEntry().amount.gt(0) &&
-      new BigNumber(input.amount).gt(0)
-    ) {
-      includedTargets.push(remainingTokens.getDefaultEntry())
-    }
-
-    // it's possible to have no target left and yet have no input added yet
-    // due to refunds in Cardano
-    // so we still want to add the input in this case even if we don't care about the coins in it
-    if (includedTargets.length === 0 && remaining.hasInput) {
-      return AddInputResult.NO_NEED
-    }
-
-    const onlyDefaultEntry =
-      includedTargets.length === 1 &&
-      includedTargets[0].identifier === defaultEntry.defaultIdentifier
-    // ignore UTXO that contribute less than their fee if they also don't contribute a token
-    if (onlyDefaultEntry && excludeIfSmall) {
-      const feeForInput = new BigNumber(
-        await (await txBuilder.fee_for_input(
-          wasmAddr,
-          txInput,
-          wasmAmount,
-        )).to_str(),
-      )
-      if (feeForInput.gt(input.amount)) {
-        return AddInputResult.TOO_SMALL
+  const skipOverflow: (void) => Promise<$Values<typeof AddInputResult>> =
+    async () => {
+      /**
+       * UTXOs can only contain at most u64 of a value
+       * so if the sum of UTXO inputs for a tx > u64
+       * it can cause the tx to fail (due to overflow) in the output / change
+       *
+       * This can be addressed by splitting up a tx to use multiple outputs / multiple change
+       * and this just requires more ADA to cover the min UTXO of these added inputs
+       * but as a simple solution for now, we just block > u64 inputs of any token
+       * This isn't a great workaround since it means features like sendAll may end up not sending all
+       */
+      const currentInputSum = await (
+        await txBuilder.get_explicit_input()
+      ).checked_add(await txBuilder.get_implicit_input())
+      try {
+        await currentInputSum.checked_add(wasmAmount)
+      } catch (e) {
+        return AddInputResult.OVERFLOW
       }
+      return AddInputResult.VALID
     }
-    return await skipOverflow()
-  }
+
+  const skipInput: (void) => Promise<$Values<typeof AddInputResult>> =
+    async () => {
+      if (remaining == null) return await skipOverflow()
+
+      const defaultEntry = {
+        defaultNetworkId: protocolParams.networkId,
+        defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
+      }
+      const tokenSetInInput = new Set(
+        input.assets.map((asset) => asset.assetId),
+      )
+      const remainingTokens = await multiTokenFromCardanoValue(
+        remaining.value,
+        defaultEntry,
+      )
+      const includedTargets = remainingTokens
+        .nonDefaultEntries()
+        .filter((entry) => tokenSetInInput.has(entry.identifier))
+
+      if (
+        remainingTokens.getDefaultEntry().amount.gt(0) &&
+        new BigNumber(input.amount).gt(0)
+      ) {
+        includedTargets.push(remainingTokens.getDefaultEntry())
+      }
+
+      // it's possible to have no target left and yet have no input added yet
+      // due to refunds in Cardano
+      // so we still want to add the input in this case even if we don't care about the coins in it
+      if (includedTargets.length === 0 && remaining.hasInput) {
+        return AddInputResult.NO_NEED
+      }
+
+      const onlyDefaultEntry =
+        includedTargets.length === 1 &&
+        includedTargets[0].identifier === defaultEntry.defaultIdentifier
+      // ignore UTXO that contribute less than their fee if they also don't contribute a token
+      if (onlyDefaultEntry && excludeIfSmall) {
+        const feeForInput = new BigNumber(
+          await (
+            await txBuilder.fee_for_input(wasmAddr, txInput, wasmAmount)
+          ).to_str(),
+        )
+        if (feeForInput.gt(input.amount)) {
+          return AddInputResult.TOO_SMALL
+        }
+      }
+      return await skipOverflow()
+    }
 
   const skipResult = await skipInput()
   if (skipResult !== AddInputResult.VALID) {
@@ -420,9 +418,9 @@ export const newAdaUnsignedTxFromUtxo = async (
   }
 
   // output excluding fee
-  const targetOutput = await (await txBuilder.get_explicit_output()).checked_add(
-    await Value.new(await txBuilder.get_deposit()),
-  )
+  const targetOutput = await (
+    await txBuilder.get_explicit_output()
+  ).checked_add(await Value.new(await txBuilder.get_deposit()))
 
   // pick inputs
   const usedUtxos: Array<RawUtxo> = []
@@ -432,9 +430,9 @@ export const newAdaUnsignedTxFromUtxo = async (
 
     // add utxos until we have enough to send the transaction
     for (const utxo of utxos) {
-      const currentInputSum = await (await txBuilder.get_explicit_input()).checked_add(
-        implicitSum,
-      )
+      const currentInputSum = await (
+        await txBuilder.get_explicit_input()
+      ).checked_add(implicitSum)
       const output = await targetOutput.checked_add(
         await Value.new(await txBuilder.min_fee()),
       )
@@ -461,9 +459,9 @@ export const newAdaUnsignedTxFromUtxo = async (
           await difference.coin(),
         )
         if (
-          (await (await remainingNeeded.coin()).compare(
-            adaNeededLeftForChange,
-          )) < 0
+          (await (
+            await remainingNeeded.coin()
+          ).compare(adaNeededLeftForChange)) < 0
         ) {
           await remainingNeeded.set_coin(adaNeededLeftForChange)
         }
@@ -472,9 +470,9 @@ export const newAdaUnsignedTxFromUtxo = async (
       {
         const remainingAssets = await remainingNeeded.multiasset()
         if (
-          (await (await remainingNeeded.coin()).compare(
-            await BigNum.from_str('0'),
-          )) === 0 &&
+          (await (
+            await remainingNeeded.coin()
+          ).compare(await BigNum.from_str('0'))) === 0 &&
           (remainingAssets == null || (await remainingAssets.len()) === 0) &&
           usedUtxos.length > 0
         ) {
@@ -498,9 +496,9 @@ export const newAdaUnsignedTxFromUtxo = async (
     }
     // check to see if we have enough balance in the wallet to cover the transaction
     {
-      const currentInputSum = await (await txBuilder.get_explicit_input()).checked_add(
-        implicitSum,
-      )
+      const currentInputSum = await (
+        await txBuilder.get_explicit_input()
+      ).checked_add(implicitSum)
 
       // need to recalculate each time because fee changes
       const output = await targetOutput.checked_add(
@@ -544,9 +542,9 @@ export const newAdaUnsignedTxFromUtxo = async (
   }
 
   const changeAddr = await (async () => {
-    const totalInput = await (await txBuilder.get_explicit_input()).checked_add(
-      await txBuilder.get_implicit_input(),
-    )
+    const totalInput = await (
+      await txBuilder.get_explicit_input()
+    ).checked_add(await txBuilder.get_implicit_input())
     const difference = await totalInput.checked_sub(targetOutput)
 
     const forceChange = await shouldForceChange(
@@ -583,9 +581,9 @@ export const newAdaUnsignedTxFromUtxo = async (
     const output = await multiTokenFromCardanoValue(
       // since the change is added as an output
       // the amount of change is the new output minus what the output was before we added the change
-      await (await txBuilder.get_explicit_output()).checked_sub(
-        outputBeforeChange,
-      ),
+      await (
+        await txBuilder.get_explicit_output()
+      ).checked_sub(outputBeforeChange),
       {
         defaultNetworkId: protocolParams.networkId,
         defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
@@ -707,9 +705,11 @@ async function minRequiredForChange(
     }
     return value
   })()
-  const minRequired = await (await txBuilder.fee_for_output(
-    await TransactionOutput.new(wasmChange, baseValue),
-  )).checked_add(minimumAda)
+  const minRequired = await (
+    await txBuilder.fee_for_output(
+      await TransactionOutput.new(wasmChange, baseValue),
+    )
+  ).checked_add(minimumAda)
   return minRequired
 }
 
@@ -805,24 +805,22 @@ async function addWitnesses(
 ): Promise<void> {
   // get private keys
   const privateKeys = await Promise.all(
-    uniqueUtxos.map(
-      async (utxo): Promise<Bip32PrivateKey> => {
-        const lastLevelSpecified =
-          utxo.addressing.startLevel + utxo.addressing.path.length - 1
-        if (
-          lastLevelSpecified !== CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ADDRESS
-        ) {
-          throw new Error('addWitnesses:: incorrect addressing size')
-        }
-        return await derivePrivateByAddressing({
-          addressing: utxo.addressing,
-          startingFrom: {
-            level: keyLevel,
-            key: signingKey,
-          },
-        })
-      },
-    ),
+    uniqueUtxos.map(async (utxo): Promise<Bip32PrivateKey> => {
+      const lastLevelSpecified =
+        utxo.addressing.startLevel + utxo.addressing.path.length - 1
+      if (
+        lastLevelSpecified !== CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ADDRESS
+      ) {
+        throw new Error('addWitnesses:: incorrect addressing size')
+      }
+      return await derivePrivateByAddressing({
+        addressing: utxo.addressing,
+        startingFrom: {
+          level: keyLevel,
+          key: signingKey,
+        },
+      })
+    }),
   )
 
   // sign the transaction

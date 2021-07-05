@@ -60,13 +60,15 @@ export default (compose(
     },
   ),
   withHandlers({
-    onPress: ({setPending, onSelect, device}) => () => {
-      setPending(true)
-      try {
-        onSelect(device)
-      } finally {
-        setPending(false)
-      }
-    },
+    onPress:
+      ({setPending, onSelect, device}) =>
+      () => {
+        setPending(true)
+        try {
+          onSelect(device)
+        } finally {
+          setPending(false)
+        }
+      },
   }),
 )(DeviceItem): ComponentType<Props>)

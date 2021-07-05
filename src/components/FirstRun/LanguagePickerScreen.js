@@ -43,14 +43,12 @@ export default (compose(
     languageActions,
   ),
   withHandlers({
-    handleContinue: ({
-      navigation,
-      changeAndSaveLanguage,
-      languageCode,
-    }) => async (_event) => {
-      await changeAndSaveLanguage(languageCode)
+    handleContinue:
+      ({navigation, changeAndSaveLanguage, languageCode}) =>
+      async (_event) => {
+        await changeAndSaveLanguage(languageCode)
 
-      navigation.navigate(FIRST_RUN_ROUTES.ACCEPT_TERMS_OF_SERVICE)
-    },
+        navigation.navigate(FIRST_RUN_ROUTES.ACCEPT_TERMS_OF_SERVICE)
+      },
   }),
 )(LanguagePickerScreen): ComponentType<ExternalProps>)

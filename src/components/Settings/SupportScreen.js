@@ -67,7 +67,10 @@ const Item = ({title, text, onPress}) => (
 )
 
 const LinkingItem = withHandlers({
-  onPress: ({url}: {url: string}) => () => Linking.openURL(url),
+  onPress:
+    ({url}: {url: string}) =>
+    () =>
+      Linking.openURL(url),
 })(Item)
 
 type Props = {

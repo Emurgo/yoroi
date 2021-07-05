@@ -18,17 +18,19 @@ export const messages = defineMessages({
   },
 })
 
-const handleSetAmount = ({setAmount, amount}) => (text) => {
-  const shorterStringLength = Math.min(text.length, amount.length)
-  const wasPasted =
-    Math.abs(amount.length - text.length) > 1 ||
-    amount.substring(0, shorterStringLength) !==
-      text.substring(0, shorterStringLength)
+const handleSetAmount =
+  ({setAmount, amount}) =>
+  (text) => {
+    const shorterStringLength = Math.min(text.length, amount.length)
+    const wasPasted =
+      Math.abs(amount.length - text.length) > 1 ||
+      amount.substring(0, shorterStringLength) !==
+        text.substring(0, shorterStringLength)
 
-  const formatter = wasPasted ? pastedFormatter : editedFormatter
+    const formatter = wasPasted ? pastedFormatter : editedFormatter
 
-  setAmount(formatter(text))
-}
+    setAmount(formatter(text))
+  }
 
 const AmountField = (
   {

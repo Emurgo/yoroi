@@ -19,52 +19,49 @@ const _saveHW = (hwDeviceInfo) => ({
   type: 'SAVE_HW',
 })
 
-export const saveHW = (hwDeviceInfo: HWDeviceInfo) => (
-  dispatch: Dispatch<any>,
-) => {
-  dispatch(_saveHW(hwDeviceInfo))
-}
+export const saveHW =
+  (hwDeviceInfo: HWDeviceInfo) => (dispatch: Dispatch<any>) => {
+    dispatch(_saveHW(hwDeviceInfo))
+  }
 
-export const setLedgerDeviceId = (deviceId: DeviceId) => async (
-  dispatch: Dispatch<any>,
-  getState: () => State,
-) => {
-  Logger.debug('setting deviceId', deviceId)
-  const state = getState()
-  const hwDeviceInfo = hwDeviceInfoSelector(state)
-  if (hwDeviceInfo == null || hwDeviceInfo.hwFeatures == null) {
-    throw new NoDeviceInfoError()
+export const setLedgerDeviceId =
+  (deviceId: DeviceId) =>
+  async (dispatch: Dispatch<any>, getState: () => State) => {
+    Logger.debug('setting deviceId', deviceId)
+    const state = getState()
+    const hwDeviceInfo = hwDeviceInfoSelector(state)
+    if (hwDeviceInfo == null || hwDeviceInfo.hwFeatures == null) {
+      throw new NoDeviceInfoError()
+    }
+    const updatedInfo = {
+      ...hwDeviceInfo,
+      hwFeatures: {
+        ...hwDeviceInfo.hwFeatures,
+        deviceId,
+      },
+    }
+    Logger.debug('updating hwDeviceInfo', updatedInfo)
+    // saved in redux state internally through notify()
+    await walletManager.updateHWDeviceInfo(updatedInfo)
   }
-  const updatedInfo = {
-    ...hwDeviceInfo,
-    hwFeatures: {
-      ...hwDeviceInfo.hwFeatures,
-      deviceId,
-    },
-  }
-  Logger.debug('updating hwDeviceInfo', updatedInfo)
-  // saved in redux state internally through notify()
-  await walletManager.updateHWDeviceInfo(updatedInfo)
-}
 
-export const setLedgerDeviceObj = (deviceObj: DeviceObj) => async (
-  dispatch: Dispatch<any>,
-  getState: () => State,
-) => {
-  Logger.debug('setting deviceObj', deviceObj)
-  const state = getState()
-  const hwDeviceInfo = hwDeviceInfoSelector(state)
-  if (hwDeviceInfo == null || hwDeviceInfo.hwFeatures == null) {
-    throw new NoDeviceInfoError()
+export const setLedgerDeviceObj =
+  (deviceObj: DeviceObj) =>
+  async (dispatch: Dispatch<any>, getState: () => State) => {
+    Logger.debug('setting deviceObj', deviceObj)
+    const state = getState()
+    const hwDeviceInfo = hwDeviceInfoSelector(state)
+    if (hwDeviceInfo == null || hwDeviceInfo.hwFeatures == null) {
+      throw new NoDeviceInfoError()
+    }
+    const updatedInfo = {
+      ...hwDeviceInfo,
+      hwFeatures: {
+        ...hwDeviceInfo.hwFeatures,
+        deviceObj,
+      },
+    }
+    Logger.debug('updating hwDeviceInfo', updatedInfo)
+    // saved in redux state internally through notify()
+    await walletManager.updateHWDeviceInfo(updatedInfo)
   }
-  const updatedInfo = {
-    ...hwDeviceInfo,
-    hwFeatures: {
-      ...hwDeviceInfo.hwFeatures,
-      deviceObj,
-    },
-  }
-  Logger.debug('updating hwDeviceInfo', updatedInfo)
-  // saved in redux state internally through notify()
-  await walletManager.updateHWDeviceInfo(updatedInfo)
-}

@@ -44,30 +44,32 @@ const AssetRow = ({
     <>
       <View style={styles.tokenMetaView}>
         <Text style={styles.assetName}>
-          {/* eslint-disable indent */
-          assetMetadata.isDefault
-            ? getAssetDenominationOrUnknown(
-                assetMetadata,
-                ASSET_DENOMINATION.TICKER,
-                intl,
-              )
-            : getAssetDenominationOrUnknown(
-                assetMetadata,
-                ASSET_DENOMINATION.NAME,
-                intl,
-              )
-          /* eslint-enable indent */
+          {
+            /* eslint-disable indent */
+            assetMetadata.isDefault
+              ? getAssetDenominationOrUnknown(
+                  assetMetadata,
+                  ASSET_DENOMINATION.TICKER,
+                  intl,
+                )
+              : getAssetDenominationOrUnknown(
+                  assetMetadata,
+                  ASSET_DENOMINATION.NAME,
+                  intl,
+                )
+            /* eslint-enable indent */
           }
         </Text>
         <Text style={styles.assetMeta} ellipsizeMode="middle" numberOfLines={1}>
-          {/* eslint-disable indent */
-          assetMetadata.isDefault
-            ? ''
-            : getAssetDenomination(
-                assetMetadata,
-                ASSET_DENOMINATION.FINGERPRINT,
-              )
-          /* eslint-enable indent */
+          {
+            /* eslint-disable indent */
+            assetMetadata.isDefault
+              ? ''
+              : getAssetDenomination(
+                  assetMetadata,
+                  ASSET_DENOMINATION.FINGERPRINT,
+                )
+            /* eslint-enable indent */
           }
         </Text>
       </View>

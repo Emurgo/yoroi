@@ -211,7 +211,7 @@ export default injectIntl(
   (compose(
     connect(
       (state, {addressInfo}) => ({
-        index: externalAddressIndexSelector(state)[(addressInfo?.address)],
+        index: externalAddressIndexSelector(state)[addressInfo?.address],
         isHW: isHWSelector(state),
         walletMeta: walletMetaSelector(state),
       }),
