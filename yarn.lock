@@ -2266,6 +2266,12 @@
   dependencies:
     base-64 "0.1.0"
 
+"@emurgo/react-native-haskell-shelley@https://github.com/Emurgo/react-native-haskell-shelley#alonzo-test":
+  version "1.4.0"
+  resolved "https://github.com/Emurgo/react-native-haskell-shelley#6bbb994d3e644d42884999d2fc4c0da238f0a035"
+  dependencies:
+    base-64 "0.1.0"
+
 "@eslint/eslintrc@^0.4.2":
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-0.4.2.tgz#f63d0ef06f5c0c57d76c4ab5f63d3835c51b0179"
