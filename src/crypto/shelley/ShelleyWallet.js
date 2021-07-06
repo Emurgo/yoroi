@@ -71,7 +71,7 @@ import {
   toHexOrBase58,
   deriveRewardAddressHex,
 } from './utils'
-import {createMetadata} from './metadataUtils'
+import {createAuxiliaryData} from './metadataUtils'
 
 import type {
   RawUtxo,
@@ -570,7 +570,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     tokens: SendTokenList,
     defaultToken: DefaultTokenEntry,
     serverTime: Date | void,
-    metadata: Array<JSONMetadata> | void,
+    auxiliaryData: Array<JSONMetadata> | void,
   ): Promise<ISignRequest<TransactionBuilder>> {
     const timeToSlotFn = genTimeToSlot(
       getCardanoBaseConfig(this._getNetworkConfig()),
@@ -580,8 +580,8 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     const changeAddr = await this._getAddressedChangeAddress()
     const addressedUtxos = this.asAddressedUtxo(utxos)
 
-    const transactionMetadata =
-      metadata !== undefined ? await createMetadata(metadata) : undefined
+    const auxiliary =
+      auxiliaryData !== undefined ? await createAuxiliaryData(auxiliaryData) : undefined
     return await createUnsignedTx({
       changeAddr,
       absSlotNumber,
@@ -589,7 +589,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       addressedUtxos,
       defaultToken,
       tokens,
-      metadata: transactionMetadata,
+      auxiliaryData: auxiliary,
       networkConfig: this._getNetworkConfig(),
     })
   }

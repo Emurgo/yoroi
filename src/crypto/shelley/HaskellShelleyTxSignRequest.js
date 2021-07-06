@@ -6,7 +6,7 @@ import {ISignRequest} from '../ISignRequest'
 import {
   RewardAddress,
   TransactionBuilder,
-  TransactionMetadata, // TODO: rust bindings not yet available
+  AuxiliaryData, // TODO: rust bindings not yet available
   hash_transaction,
 } from '@emurgo/react-native-haskell-shelley'
 
@@ -63,7 +63,7 @@ implements ISignRequest<TransactionBuilder> {
   senderUtxos: Array<AddressedUtxo>
   unsignedTx: TransactionBuilder
   changeAddr: Array<{| ...Address, ...Value, ...Addressing |}>
-  metadata: void | TransactionMetadata
+  auxiliaryData: void | AuxiliaryData
   networkSettingSnapshot: NetworkSettingSnapshot
   // TODO: this should be provided by WASM in some SignedTxBuilder interface of some kind
   neededStakingKeyHashes: {|
@@ -73,12 +73,11 @@ implements ISignRequest<TransactionBuilder> {
 
   ledgerNanoCatalystRegistrationTxSignData: void | LedgerNanoCatalystRegistrationTxSignData;
 
-
   constructor(data: {
       senderUtxos: Array<AddressedUtxo>,
       unsignedTx: TransactionBuilder,
       changeAddr: Array<{| ...Address, ...Value, ...Addressing |}>,
-      metadata: void | TransactionMetadata,
+      auxiliaryData: void | AuxiliaryData,
       networkSettingSnapshot: NetworkSettingSnapshot,
       neededStakingKeyHashes: {|
         neededHashes: Set<string>, // StakeCredential
@@ -91,7 +90,7 @@ implements ISignRequest<TransactionBuilder> {
     this.senderUtxos = data.senderUtxos
     this.unsignedTx = data.unsignedTx
     this.changeAddr = data.changeAddr
-    this.metadata = data.metadata
+    this.auxiliaryData = data.auxiliaryData
     this.networkSettingSnapshot = data.networkSettingSnapshot
     this.neededStakingKeyHashes = data.neededStakingKeyHashes
     this.ledgerNanoCatalystRegistrationTxSignData = data.ledgerNanoCatalystRegistrationTxSignData
@@ -105,8 +104,8 @@ implements ISignRequest<TransactionBuilder> {
     ).toString('hex')
   }
 
-  txMetadata(): void | TransactionMetadata {
-    return this.metadata
+  auxiliary(): void | AuxiliaryData {
+    return this.auxiliaryData
   }
 
   async totalInput(): Promise<MultiToken> {
