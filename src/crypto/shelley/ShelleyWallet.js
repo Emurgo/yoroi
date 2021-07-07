@@ -52,7 +52,7 @@ import {Logger} from '../../utils/logging'
 import {InvalidState, CardanoError} from '../errors'
 import {TransactionCache} from './transactionCache'
 import {signTransaction, newAdaUnsignedTx} from './transactions'
-import {createUnsignedTx} from './transactionUtils'
+import {createUnsignedTx as utilsCreateUnsignedTx} from './transactionUtils'
 import {genTimeToSlot} from '../../utils/timeUtils'
 import {versionCompare} from '../../utils/versioning'
 import {
@@ -581,8 +581,10 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     const addressedUtxos = this.asAddressedUtxo(utxos)
 
     const auxiliary =
-      auxiliaryData !== undefined ? await createAuxiliaryData(auxiliaryData) : undefined
-    return await createUnsignedTx({
+      auxiliaryData !== undefined
+        ? await createAuxiliaryData(auxiliaryData)
+        : undefined
+    return await utilsCreateUnsignedTx({
       changeAddr,
       absSlotNumber,
       receiver,
@@ -643,7 +645,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
       accountPvrKey,
       wits,
-      signRequest.txMetadata(),
+      signRequest.auxiliary(),
     )
     const id = Buffer.from(
       await (await hash_transaction(await signedTx.body())).to_bytes(),
@@ -755,7 +757,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
         nonce = absSlotNumber.toNumber()
       }
 
-      const metadata = await catalystUtils.generateRegistration({
+      const auxiliaryData = await catalystUtils.generateRegistration({
         stakePublicKey,
         catalystPublicKey,
         rewardAddress,
@@ -787,7 +789,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
         [], // no delegations
         [], // no withdrawals
         false,
-        metadata,
+        auxiliaryData,
       )
 
       // prettier-ignore
@@ -795,7 +797,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
         senderUtxos: unsignedTx.senderUtxos,
         unsignedTx: unsignedTx.txBuilder,
         changeAddr: unsignedTx.changeAddr,
-        metadata,
+        auxiliaryData,
         networkSettingSnapshot: {
           NetworkId: config.NETWORK_ID,
           ChainNetworkId: Number.parseInt(config.CHAIN_NETWORK_ID, 10),
@@ -912,7 +914,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       useUSB,
     )
 
-    let metadata
+    let auxiliaryData
     if (request.ledgerNanoCatalystRegistrationTxSignData) {
       const {
         votingPublicKey,
@@ -942,7 +944,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
         request.ledgerNanoCatalystRegistrationTxSignData,
       )
 
-      metadata = await catalystUtils.generateRegistration({
+      auxiliaryData = await catalystUtils.generateRegistration({
         stakePublicKey: await this.getStakingKey(),
         catalystPublicKey: await PublicKey.from_bytes(
           Buffer.from(votingPublicKey, 'hex'),
@@ -959,11 +961,11 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       //  ).toString('hex') ===
       // ledgerSignTxResp.auxiliaryDataSupplement.auxiliaryDataHashaHex
     } else {
-      metadata = request.metadata
+      auxiliaryData = request.auxiliaryData
     }
 
-    if (metadata) {
-      await request.self().set_metadata(metadata)
+    if (auxiliaryData) {
+      await request.self().set_auxiliary_data(auxiliaryData)
     }
 
     const txBody = await request.self().build()
@@ -988,7 +990,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
         addressing,
         key,
       },
-      metadata,
+      auxiliaryData,
     )
     const id = Buffer.from(
       await (await hash_transaction(await signedTx.body())).to_bytes(),

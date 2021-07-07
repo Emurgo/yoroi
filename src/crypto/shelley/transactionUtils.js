@@ -3,7 +3,7 @@ import {BigNumber} from 'bignumber.js'
 import {
   BigNum,
   LinearFee,
-  TransactionMetadata,
+  AuxiliaryData,
 } from '@emurgo/react-native-haskell-shelley'
 
 import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
@@ -28,7 +28,7 @@ export type CreateUnsignedTxRequest = {|
   addressedUtxos: Array<AddressedUtxo>,
   defaultToken: DefaultTokenEntry,
   tokens: SendTokenList,
-  metadata: TransactionMetadata | void,
+  auxiliaryData: AuxiliaryData | void,
   networkConfig: CardanoHaskellShelleyNetwork,
 |}
 
@@ -43,7 +43,7 @@ export const createUnsignedTx = async (
     receiver,
     addressedUtxos,
     absSlotNumber,
-    metadata,
+    auxiliaryData,
     networkConfig,
   } = request
   try {
@@ -73,7 +73,7 @@ export const createUnsignedTx = async (
         addressedUtxos,
         absSlotNumber,
         protocolParams,
-        metadata,
+        auxiliaryData,
       )
     } else {
       assert.assert(
@@ -103,7 +103,7 @@ export const createUnsignedTx = async (
         [], // no certificates
         [], // no withdrawals
         false, // do not allow no outputs
-        metadata,
+        auxiliaryData,
       )
     }
 
@@ -114,7 +114,7 @@ export const createUnsignedTx = async (
       senderUtxos: unsignedTxResponse.senderUtxos,
       unsignedTx: unsignedTxResponse.txBuilder,
       changeAddr: unsignedTxResponse.changeAddr,
-      metadata,
+      auxiliaryData,
       networkSettingSnapshot: {
         NetworkId: NETWORK_ID,
         ChainNetworkId: Number.parseInt(CHAIN_NETWORK_ID, 10),

@@ -12,7 +12,7 @@ import {
   MetadataList,
   GeneralTransactionMetadata,
   BigNum,
-  TransactionMetadata,
+  AuxiliaryData,
   TransactionMetadatum,
 } from '@emurgo/react-native-haskell-shelley'
 import {mnemonicToEntropy} from 'bip39'
@@ -32,7 +32,7 @@ export async function generateRegistration(request: {|
   rewardAddress: Address,
   absSlotNumber: number,
   signer: (Uint8Array) => Promise<string>,
-|}): Promise<TransactionMetadata> {
+|}): Promise<AuxiliaryData> {
   /**
    * Catalyst follows a certain standard to prove the voting power
    * A transaction is submitted with following metadata format for the registration process
@@ -66,19 +66,19 @@ export async function generateRegistration(request: {|
     MetadataJsonSchema.BasicConversions,
   )
   Logger.debug(jsonMeta)
-  const generalMetadata = await GeneralTransactionMetadata.new()
-  await generalMetadata.insert(
+  const metadata = await GeneralTransactionMetadata.new()
+  await metadata.insert(
     await BigNum.from_str(CatalystLabels.DATA.toString()),
     registrationData,
   )
 
   const hashedMetadata = blake2b(256 / 8)
-    .update(await generalMetadata.to_bytes())
+    .update(await metadata.to_bytes())
     .digest('binary')
 
   const catalystSignature = await request.signer(hashedMetadata)
 
-  await generalMetadata.insert(
+  await metadata.insert(
     await BigNum.from_str(CatalystLabels.SIG.toString()),
     await encode_json_str_to_metadatum(
       JSON.stringify({
@@ -90,15 +90,15 @@ export async function generateRegistration(request: {|
   // This is how Ledger constructs the metadata. We must be consistent with it.
   const metadataList = await MetadataList.new()
   await metadataList.add(
-    await TransactionMetadatum.from_bytes(await generalMetadata.to_bytes()),
+    await TransactionMetadatum.from_bytes(await metadata.to_bytes()),
   )
   await metadataList.add(
     await TransactionMetadatum.new_list(await MetadataList.new()),
   )
-  const trxMetadata = await TransactionMetadata.from_bytes(
+  const auxiliary = await AuxiliaryData.from_bytes(
     await metadataList.to_bytes(),
   )
-  return trxMetadata
+  return auxiliary
 }
 
 // prettier-ignore

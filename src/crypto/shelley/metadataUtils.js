@@ -25,10 +25,7 @@ export async function createAuxiliaryData(
       JSON.stringify(meta.data),
       MetadataJsonSchema.BasicConversions,
     )
-    await metadata.insert(
-      await BigNum.from_str(meta.label),
-      metadatum,
-    )
+    await metadata.insert(await BigNum.from_str(meta.label), metadatum)
   }
 
   return await AuxiliaryData.new(metadata)

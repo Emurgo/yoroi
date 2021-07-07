@@ -7,6 +7,7 @@
 import {BigNumber} from 'bignumber.js'
 /* eslint-disable camelcase */
 import {
+  AuxiliaryData,
   BigNum,
   Bip32PrivateKey,
   BootstrapWitnesses,
@@ -25,7 +26,6 @@ import {
   TransactionBuilder,
   TransactionHash,
   TransactionInput,
-  TransactionMetadata,
   TransactionOutput,
   TransactionWitnessSet,
   Value,
@@ -83,7 +83,7 @@ export const sendAllUnsignedTxFromUtxo = async (
     keyDeposit: BigNum,
     networkId: number,
   |},
-  metadata: TransactionMetadata | void,
+  auxiliaryData: AuxiliaryData | void,
 ): Promise<V4UnsignedTxUtxoResponse> => {
   const totalBalance = allUtxos
     .map((utxo) => new BigNumber(utxo.amount))
@@ -112,8 +112,8 @@ export const sendAllUnsignedTxFromUtxo = async (
     }
   }
 
-  if (metadata !== undefined) {
-    await txBuilder.set_metadata(metadata)
+  if (auxiliaryData !== undefined) {
+    await txBuilder.set_auxiliary_data(auxiliaryData)
   }
 
   if (totalBalance.lt(await (await txBuilder.min_fee()).to_str())) {
@@ -176,7 +176,7 @@ export const sendAllUnsignedTx = async (
     keyDeposit: BigNum,
     networkId: number,
   |},
-  metadata: TransactionMetadata | void,
+  auxiliaryData: AuxiliaryData | void,
 ): Promise<V4UnsignedTxAddressedUtxoResponse> => {
   const addressingMap = new Map<RawUtxo, AddressedUtxo>()
   for (const utxo of allUtxos) {
@@ -197,7 +197,7 @@ export const sendAllUnsignedTx = async (
     Array.from(addressingMap.keys()),
     absSlotNumber,
     protocolParams,
-    metadata,
+    auxiliaryData,
   )
 
   const addressedUtxos = unsignedTxResponse.senderUtxos.map((utxo) => {
@@ -347,7 +347,7 @@ export const newAdaUnsignedTxFromUtxo = async (
     amount: BigNum,
   |}>,
   allowNoOutputs: boolean,
-  metadata: TransactionMetadata | void,
+  auxiliaryData: AuxiliaryData | void,
 ): Promise<V4UnsignedTxUtxoResponse> => {
   /**
    * Shelley supports transactions with no outputs by simply burning any leftover ADA as fee
@@ -390,8 +390,8 @@ export const newAdaUnsignedTxFromUtxo = async (
     }
     await txBuilder.set_certs(certsNative)
   }
-  if (metadata !== undefined) {
-    await txBuilder.set_metadata(metadata)
+  if (auxiliaryData !== undefined) {
+    await txBuilder.set_auxiliary_data(auxiliaryData)
   }
   if (withdrawals.length > 0) {
     const withdrawalsNative = await Withdrawals.new()
@@ -628,7 +628,7 @@ export const newAdaUnsignedTx = async (
     amount: BigNum,
   |}>,
   allowNoOutputs: boolean,
-  metadata: TransactionMetadata | void,
+  auxiliaryData: AuxiliaryData | void,
 ): Promise<V4UnsignedTxAddressedUtxoResponse> => {
   const addressingMap = new Map<RawUtxo, AddressedUtxo>()
   for (const utxo of allUtxos) {
@@ -653,7 +653,7 @@ export const newAdaUnsignedTx = async (
     certificates,
     withdrawals,
     allowNoOutputs,
-    metadata,
+    auxiliaryData,
   )
 
   const addressedUtxos = unsignedTxResponse.senderUtxos.map((utxo) => {
@@ -719,7 +719,7 @@ export const signTransaction = async (
   keyLevel: number,
   signingKey: Bip32PrivateKey,
   stakingKeyWits: Set<string>,
-  metadata: void | TransactionMetadata,
+  auxiliaryData: void | AuxiliaryData,
 ): Promise<Transaction> => {
   const seenByronKeys: Set<string> = new Set()
   const seenKeyHashes: Set<string> = new Set()
@@ -785,7 +785,7 @@ export const signTransaction = async (
   }
   if ((await vkeyWits.len()) > 0) await witnessSet.set_vkeys(vkeyWits)
 
-  return await Transaction.new(txBody, witnessSet, metadata)
+  return await Transaction.new(txBody, witnessSet, auxiliaryData)
 }
 
 async function utxoToTxInput(utxo: RawUtxo): Promise<TransactionInput> {

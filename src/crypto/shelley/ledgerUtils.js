@@ -18,6 +18,7 @@ import {BleError} from 'react-native-ble-plx'
 import {Platform, PermissionsAndroid} from 'react-native'
 import {
   Address,
+  AuxiliaryData,
   BaseAddress,
   Bip32PublicKey,
   BootstrapWitness,
@@ -30,7 +31,6 @@ import {
   StakeCredential,
   Transaction,
   TransactionBody,
-  TransactionMetadata,
   TransactionOutputs,
   TransactionWitnessSet,
   Vkey,
@@ -914,7 +914,7 @@ export const buildSignedTransaction = async (
     ...Addressing,
     key: Bip32PublicKey,
   |},
-  metadata: TransactionMetadata | void,
+  auxiliaryData: AuxiliaryData | void,
 ): Promise<Transaction> => {
   const isSameArray = (array1: Array<number>, array2: Array<number>) =>
     array1.length === array2.length &&
@@ -1033,5 +1033,5 @@ export const buildSignedTransaction = async (
     await witSet.set_vkeys(vkeyWitWasm)
   }
   // TODO: handle script witnesses
-  return await Transaction.new(txBody, witSet, metadata)
+  return await Transaction.new(txBody, witSet, auxiliaryData)
 }

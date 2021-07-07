@@ -50,7 +50,7 @@ test('Generate Catalyst registration tx', async () => {
   }
 
   const nonce = 1234
-  const txMetaData = await generateRegistration({
+  const metadata = await generateRegistration({
     stakePublicKey: await stakePrivateKey.to_public(),
     catalystPublicKey: await catalystPrivateKey.to_public(),
     rewardAddress: await address.to_address(),
@@ -59,9 +59,9 @@ test('Generate Catalyst registration tx', async () => {
   })
 
   const result = await GeneralTransactionMetadata.from_bytes(
-    await (await (await MetadataList.from_bytes(
-      await txMetaData.to_bytes(),
-    )).get(0)).to_bytes(),
+    await (await (await MetadataList.from_bytes(await metadata.to_bytes())).get(
+      0,
+    )).to_bytes(),
   )
 
   const data = await result.get(
