@@ -342,6 +342,7 @@ export const createDelegationTx = async (
       stakeDelegationCert,
       [], // no withdrawals
       false,
+      // no auxiliaryData
     )
 
     const allUtxosForKey = await filterAddressesByStakingKey(
