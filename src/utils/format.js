@@ -46,21 +46,21 @@ export const getAssetDenomination = (
 ): ?string => {
   switch (denomination) {
     case ASSET_DENOMINATION.TICKER:
-      return token.metadata.ticker
+      return token?.metadata?.ticker
     case ASSET_DENOMINATION.SYMBOL:
       // if we don't have a symbol for this asset, default to ticker, though
       // ticker can still be null
       // prettier-ignore
-      return token.metadata.ticker
+      return token?.metadata?.ticker
         ? utfSymbols.CURRENCIES[token.metadata.ticker]
           ? utfSymbols.CURRENCIES[token.metadata.ticker]
           : token.metadata.ticker
         : null
     case ASSET_DENOMINATION.NAME: {
-      if (token.metadata.longName !== null) {
+      if (token?.metadata?.longName !== null) {
         return token.metadata.longName
       }
-      if (token.metadata.assetName.length > 0) {
+      if (token?.metadata?.assetName?.length > 0) {
         const bytes = [...Buffer.from(token.metadata.assetName, 'hex')]
         if (bytes.filter((byte) => byte <= 32 || byte >= 127).length === 0) {
           return String.fromCharCode(...bytes)

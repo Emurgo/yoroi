@@ -174,7 +174,7 @@ const Step4 = ({
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
+    [password],
   )
 
   useEffect(
