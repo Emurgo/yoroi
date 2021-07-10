@@ -1,4 +1,5 @@
 # Yoroi Mobile Wallet: A Guide on How to Register to Vote for Cardano Blockchain’s Catalyst Fund5
+[Lea el artículo traducido al español](https://forum.cardano.org/t/catalyst-5to-fondo-guia-sobre-como-registrarse-desde-yoroi-en-las-votaciones-del-5to-fondo-de-catalyst/66620?u=napoles)
 
 Cardano blockchain’s - [Project Catalyst](https://iohk.io/en/blog/posts/2021/02/12/our-million-dollar-baby-project-catalyst/) - a community fund dedicated to investing and supporting developers looking to build on top of the Cardano network through the votes of ADA holders is gearing up for [Catalyst Fund5](https://iohk.zendesk.com/hc/en-us/articles/900006490763-Catalyst-Fund4-FAQ) and [Yoroi Wallet’s](https://yoroi-wallet.com/) mobile users.
 
