@@ -3,7 +3,7 @@
 import React from 'react'
 
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
-import {generateAdaMnemonic} from '../../../crypto/byron/util'
+import {generateAdaMnemonic} from '../../../crypto/commonUtils'
 import WalletForm from '../WalletForm'
 import Screen from '../../Screen'
 

@@ -33,8 +33,7 @@ import {ISignRequest} from '../ISignRequest'
 import {MultiToken} from '../MultiToken'
 import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
 import {AddressChain, AddressGenerator} from './chain'
-import * as byronUtil from '../byron/util'
-import {ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
+import {generateWalletRootKey, ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
 import * as api from '../../api/shelley/api'
 import {
   CONFIG,
@@ -45,11 +44,11 @@ import {
 } from '../../config/config'
 import {NETWORKS, isHaskellShelleyNetwork} from '../../config/networks'
 import * as catalystUtils from './catalystUtils'
-
 import {NETWORK_REGISTRY} from '../../config/types'
 import assert from '../../utils/assert'
 import {Logger} from '../../utils/logging'
 import {InvalidState, CardanoError} from '../errors'
+import LocalizableError from '../../i18n/LocalizableError'
 import {TransactionCache} from './transactionCache'
 import {signTransaction, newAdaUnsignedTx} from './transactions'
 import {createUnsignedTx} from './transactionUtils'
@@ -102,8 +101,6 @@ import type {WalletMeta} from '../../state'
 import type {SignTransactionResponse} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import type {DefaultTokenEntry} from '../MultiToken'
 import type {JSONMetadata} from './metadataUtils'
-
-import LocalizableError from '../../i18n/LocalizableError'
 
 export default class ShelleyWallet extends Wallet implements WalletInterface {
   // =================== create =================== //
@@ -192,7 +189,8 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       isByron(implementationId) || isHaskellShelley(implementationId),
       'ShelleyWallet::create: invalid walletImplementationId',
     )
-    const masterKey = await byronUtil.getMasterKeyFromMnemonic(mnemonic)
+    const masterKeyPtr = await generateWalletRootKey(mnemonic)
+    const masterKey = Buffer.from(await masterKeyPtr.as_bytes()).toString('hex')
     await this.encryptAndSaveMasterKey(
       'MASTER_PASSWORD',
       masterKey,
@@ -202,9 +200,6 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       ? CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
       : CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
 
-    const masterKeyPtr = await Bip32PrivateKey.from_bytes(
-      Buffer.from(masterKey, 'hex'),
-    )
     const accountKey = await (await (await masterKeyPtr.derive(purpose)).derive(
       CONFIG.NUMBERS.COIN_TYPES.CARDANO,
     )).derive(

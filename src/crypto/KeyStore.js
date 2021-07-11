@@ -6,7 +6,7 @@ import {defineMessages, type IntlShape} from 'react-intl'
 
 import storage from '../utils/storage'
 import assert from '../utils/assert'
-import {decryptData, encryptData} from '../crypto/byron/util'
+import {decryptData, encryptData} from '../crypto/commonUtils'
 
 import type {EncryptionMethod} from './types'
 

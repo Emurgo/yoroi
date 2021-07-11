@@ -18,7 +18,7 @@ import {
 import {mnemonicToEntropy} from 'bip39'
 import blake2b from 'blake2b'
 
-import {generateAdaMnemonic} from '../byron/util'
+import {generateAdaMnemonic} from '../commonUtils'
 import {CONFIG} from '../../config/config'
 import {Logger} from '../../utils/logging'
 

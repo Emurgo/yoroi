@@ -10,7 +10,6 @@ import {ISignRequest} from './ISignRequest'
 import ShelleyWallet from './shelley/ShelleyWallet'
 import storage from '../utils/storage'
 import KeyStore from './KeyStore'
-import * as util from './byron/util'
 import {CONFIG, WALLETS} from '../config/config'
 import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../config/types'
 import {isJormungandr} from '../config/networks'
@@ -869,38 +868,28 @@ class WalletManager {
 
   // =================== misc =================== //
 
-  async checkForFlawedWallets(): Promise<boolean> {
-    assert.assert(
-      !this.isJormungandr,
-      'walletManager::checkForFlawedWallets::!isJormungandr',
-    )
-    const mnemonics = [CONFIG.DEBUG.MNEMONIC1, CONFIG.DEBUG.MNEMONIC2]
-    let affected = false
-    for (const mnemonic of mnemonics) {
-      Logger.debug('WalletManager::checkForFlawedWallets mnemonic:', mnemonic)
-      const flawedAddresses = await util.getAddressesFromMnemonics(
-        mnemonic,
-        'External',
-        [0],
-      )
-      if (this._wallet == null) throw new WalletClosed()
-      const externalChain = this._wallet.externalChain
+  checkForFlawedWallets(): boolean {
+    if (CONFIG.IS_TESTNET_BUILD) return false
+    if (this._wallet == null) throw new WalletClosed()
+    const addrs = [
+      'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
+      'Ae2tdPwUPEZAghGCdQykbGxc991wdoA8bXmSn7eCGuUKXF4EsRhWj4PJitn',
+      'addr1qynqc23tpx4dqps6xgqy9s2l3xz5fxu734wwmzj9uddn0h2z6epfcu' +
+        'kqmswgwwfruxh7gaddv9x0d5awccwahnhwleqqc4zkh4',
+      'addr1q9tr0a0feutyhdj34gxnasv8vef699fcry5avyrt6hn4n540f7le3l' +
+        'aqc6cgpcds86z06psxczmnuk7txsajs4jdt4nqlhj8aa',
+    ]
+    const externalChain = this._wallet.externalChain
+    const address = externalChain.addresses[0]
+    if (addrs.includes(address)) {
       Logger.debug(
-        'WalletManager::checkForFlawedWallets wallet addresses [0]:',
-        externalChain.addresses[0],
+        'WalletManager::checkForFlawedWallets: address match',
+        address,
       )
-      Logger.debug(
-        'WalletManager::checkForFlawedWallets flawedAddresses [0]:',
-        flawedAddresses,
-      )
-      if (externalChain.isMyAddress(flawedAddresses[0])) {
-        Logger.debug('WalletManager::checkForFlawedWallets: address match')
-        affected = true
-        return affected
-      }
+      return true
     }
     Logger.debug('WalletManager::checkForFlawedWallets:: no match')
-    return affected
+    return false
   }
 }
 

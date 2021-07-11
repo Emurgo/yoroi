@@ -7,11 +7,22 @@
  */
 
 import {BigNumber} from 'bignumber.js'
+import {mnemonicToEntropy, generateMnemonic} from 'bip39'
+/* eslint-disable camelcase */
+import {
+  Bip32PrivateKey,
+  encrypt_with_password,
+  decrypt_with_password,
+} from '@emurgo/react-native-haskell-shelley'
+/* eslint-enable camelcase */
+import {randomBytes} from 'react-native-randombytes'
+import cryptoRandomString from 'crypto-random-string'
 
-import {Wallet} from 'react-native-cardano'
 import {CONFIG, getWalletConfigById} from '../config/config'
 import {DERIVATION_TYPES} from '../config/types'
 import {MultiToken, type DefaultTokenEntry} from './MultiToken'
+import assert from '../utils/assert'
+import {WrongPassword, CardanoError} from './errors'
 
 import type {WalletImplementationId} from '../config/types'
 import type {SendTokenList} from './types'
@@ -23,30 +34,61 @@ export const ADDRESS_TYPE_TO_CHANGE: {[AddressType]: number} = {
   Internal: 1,
 }
 
-export const isValidAddress = async (
-  address: string,
-  isJormungandr: boolean,
-): Promise<boolean> => {
-  if (isJormungandr) {
-    throw new Error('cannot validate jormungandr addresses')
-  } else {
-    try {
-      return await Wallet.checkAddress(address)
-    } catch (e) {
-      return false
-    }
-  }
+/**
+ * wallet key generation
+ */
+
+export const generateAdaMnemonic = () =>
+  generateMnemonic(CONFIG.MNEMONIC_STRENGTH, randomBytes)
+
+export const generateWalletRootKey: (
+  mnemonic: string,
+) => Promise<Bip32PrivateKey> = async (mnemonic: string) => {
+  const bip39entropy = mnemonicToEntropy(mnemonic)
+  const EMPTY_PASSWORD = Buffer.from('')
+  const rootKey = await Bip32PrivateKey.from_bip39_entropy(
+    Buffer.from(bip39entropy, 'hex'),
+    EMPTY_PASSWORD,
+  )
+  return rootKey
 }
 
-export const addressToDisplayString = async (
-  address: string,
+/**
+ * encryption/decryption
+ */
+
+export const encryptData = async (
+  plaintextHex: string,
+  secretKey: string,
 ): Promise<string> => {
-  // Need to try parsing as a legacy address first
-  // Since parsing as bech32 directly may give a wrong result if the address contains a 1
-  if (await isValidAddress(address, false)) {
-    return address
-  } else {
-    throw new Error('cannot display jormungandr addresses')
+  assert.assert(!!plaintextHex, 'encrypt:: !!plaintextHex')
+  assert.assert(!!secretKey, 'encrypt:: !!secretKey')
+  const secretKeyHex = Buffer.from(secretKey, 'utf8').toString('hex')
+  const saltHex = cryptoRandomString({length: 2 * 32})
+  const nonceHex = cryptoRandomString({length: 2 * 12})
+  return await encrypt_with_password(
+    secretKeyHex,
+    saltHex,
+    nonceHex,
+    plaintextHex,
+  )
+}
+
+export const decryptData = async (
+  ciphertext: string,
+  secretKey: string,
+): Promise<string> => {
+  assert.assert(!!ciphertext, 'decrypt:: !!cyphertext')
+  assert.assert(!!secretKey, 'decrypt:: !!secretKey')
+  const secretKeyHex = Buffer.from(secretKey, 'utf8').toString('hex')
+  try {
+    return await decrypt_with_password(secretKeyHex, ciphertext)
+  } catch (e) {
+    if (String(e) === 'Decryption error') {
+      throw new WrongPassword()
+    }
+    // note: JS error from rust doesn't set e.message
+    throw new CardanoError(String(e))
   }
 }
 
