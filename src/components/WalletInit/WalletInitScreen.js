@@ -1,11 +1,8 @@
 // @flow
 
 import React from 'react'
-import {connect} from 'react-redux'
 import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {compose} from 'redux'
-import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import WalletDescription from './WalletDescription'
@@ -13,21 +10,15 @@ import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
 import {Modal, Button, StatusBar, ScreenBackground} from '../UiKit'
 import ExapandableItem from '../Common/ExpandableItem'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {isJormungandr} from '../../config/networks'
 import {CONFIG, isHaskellShelley, isByron} from '../../config/config'
 import globalMessages from '../../i18n/global-messages'
 
 import styles from './styles/WalletInitScreen.style'
 
-import type {State} from '../../state'
 import type {NetworkId, WalletImplementationId} from '../../config/types'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.walletinit.walletinitscreen.title',
-    defaultMessage: '!!!Add wallet',
-  },
   createWalletButton: {
     id: 'components.walletinit.walletinitscreen.createWalletButton',
     defaultMessage: '!!!Create wallet',
@@ -76,35 +67,55 @@ const MODAL_STATES = {
 type ModalState = $Values<typeof MODAL_STATES>
 
 type Props = {
-  navigateRestoreWallet: (Object, NetworkId, WalletImplementationId) => void,
-  navigateCreateWallet: (Object, NetworkId, WalletImplementationId) => void,
-  navigateImportReadOnlyWallet: (
-    Object,
-    NetworkId,
-    WalletImplementationId,
-  ) => void,
-  navigateCheckNanoX: (
-    Object,
-    NetworkId,
-    WalletImplementationId,
-    boolean,
-  ) => mixed,
   intl: IntlShape,
   route: Object, // TODO(navigation): type
-  modalState: ModalState,
-  setModalState: (Object, ModalState) => void,
+  navigation: Object, // TODO(navigation): type
 }
 
-const WalletInitScreen = ({
-  navigateCreateWallet,
-  navigateRestoreWallet,
-  navigateImportReadOnlyWallet,
-  navigateCheckNanoX,
-  intl,
-  route,
-  modalState,
-  setModalState,
-}: Props) => {
+const WalletInitScreen = ({intl, route, navigation}: Props) => {
+  const [modalState, _setModalState] = React.useState(MODAL_STATES.CLOSED)
+  const setModalState = (event: Object, modalState: ModalState) =>
+    _setModalState(modalState)
+
+  const navigateRestoreWallet = (
+    event: Object,
+    networkId: NetworkId,
+    walletImplementationId: WalletImplementationId,
+  ) =>
+    navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET, {
+      networkId,
+      walletImplementationId,
+    })
+  const navigateCreateWallet = (
+    event: Object,
+    networkId: NetworkId,
+    walletImplementationId: WalletImplementationId,
+  ) =>
+    navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET, {
+      networkId,
+      walletImplementationId,
+    })
+  const navigateCheckNanoX = (
+    event: Object,
+    networkId: NetworkId,
+    walletImplementationId: WalletImplementationId,
+    useUSB: boolean,
+  ) =>
+    navigation.navigate(WALLET_INIT_ROUTES.CHECK_NANO_X, {
+      networkId,
+      walletImplementationId,
+      useUSB,
+    })
+  const navigateImportReadOnlyWallet = (
+    _event: Object,
+    networkId: NetworkId,
+    walletImplementationId: WalletImplementationId,
+  ) =>
+    navigation.navigate(WALLET_INIT_ROUTES.IMPORT_READ_ONLY_WALLET, {
+      networkId,
+      walletImplementationId,
+    })
+
   const networkId: NetworkId = route.params.networkId
   const implementationId: WalletImplementationId =
     route.params.walletImplementationId
@@ -242,61 +253,4 @@ const WalletInitScreen = ({
     </SafeAreaView>
   )
 }
-export default injectIntl(
-  compose(
-    connect((_state: State) => ({})),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
-    withStateHandlers(
-      {
-        modalState: MODAL_STATES.CLOSED,
-      },
-      {
-        setModalState: () => (event: Object, modalState: ModalState) => ({
-          modalState,
-        }),
-      },
-    ),
-    withHandlers({
-      navigateRestoreWallet: ({navigation}) => (
-        event: Object,
-        networkId: NetworkId,
-        walletImplementationId: WalletImplementationId,
-      ) =>
-        navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET, {
-          networkId,
-          walletImplementationId,
-        }),
-      navigateCreateWallet: ({navigation}) => (
-        event: Object,
-        networkId: NetworkId,
-        walletImplementationId: WalletImplementationId,
-      ) =>
-        navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET, {
-          networkId,
-          walletImplementationId,
-        }),
-      navigateCheckNanoX: ({navigation}) => (
-        event: Object,
-        networkId: NetworkId,
-        walletImplementationId: WalletImplementationId,
-        useUSB: boolean,
-      ) =>
-        navigation.navigate(WALLET_INIT_ROUTES.CHECK_NANO_X, {
-          networkId,
-          walletImplementationId,
-          useUSB,
-        }),
-      navigateImportReadOnlyWallet: ({navigation}) => (
-        _event: Object,
-        networkId: NetworkId,
-        walletImplementationId: WalletImplementationId,
-      ) =>
-        navigation.navigate(WALLET_INIT_ROUTES.IMPORT_READ_ONLY_WALLET, {
-          networkId,
-          walletImplementationId,
-        }),
-    }),
-  )(WalletInitScreen),
-)
+export default injectIntl(WalletInitScreen)

@@ -10,7 +10,6 @@ import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {Button, ValidatedTextInput, StatusBar} from '../UiKit'
 import {validatePassword} from '../../utils/validators'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {errorMessages} from '../../i18n/global-messages'
 import PasswordStrengthIndicator from '../WalletInit/PasswordStrengthIndicator'
 import {showErrorDialog} from '../../actions'
@@ -23,10 +22,6 @@ import type {PasswordValidationErrors} from '../../utils/validators'
 import type {Navigation} from '../../types/navigation'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.settings.changepasswordscreen.title',
-    defaultMessage: 'Change spending password',
-  },
   oldPasswordInputLabel: {
     id: 'components.settings.changepasswordscreen.oldPasswordInputLabel',
     defaultMessage: 'Current password',
@@ -204,9 +199,6 @@ class ChangePasswordScreen extends PureComponent<Props, ComponentState> {
 
 export default injectIntl(
   compose(
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
     withHandlers({
       onSubmit: ({navigation, intl}) => async (oldPassword, newPassword) => {
         try {

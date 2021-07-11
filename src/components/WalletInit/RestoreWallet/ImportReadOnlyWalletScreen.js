@@ -11,7 +11,7 @@ import DeviceInfo from 'react-native-device-info'
 import {Text, BulletPointItem} from '../../UiKit'
 import {CONFIG} from '../../../config/config'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
-import {withNavigationTitle, onDidMount} from '../../../utils/renderUtils'
+import {onDidMount} from '../../../utils/renderUtils'
 import {Logger} from '../../../utils/logging'
 import {errorMessages} from '../../../i18n/global-messages'
 import {showErrorDialog} from '../../../actions'
@@ -26,10 +26,6 @@ import type {ComponentType} from 'react'
 import type {Navigation} from '../../../types/navigation'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.walletinit.importreadonlywalletscreen.title',
-    defaultMessage: '!!!Read-only Wallet',
-  },
   paragraph: {
     id: 'components.walletinit.importreadonlywalletscreen.paragraph',
     defaultMessage:
@@ -124,9 +120,6 @@ const ImportReadOnlyWalletScreen = (
 
 export default injectIntl(
   (compose(
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
     onDidMount(
       async ({
         navigation,

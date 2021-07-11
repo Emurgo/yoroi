@@ -9,7 +9,6 @@ import {injectIntl, defineMessages} from 'react-intl'
 
 import {STAKING_CENTER_ROUTES} from '../../RoutesList'
 import {CONFIG} from '../../config/config'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {Logger} from '../../utils/logging'
 import {normalizeTokenAmount} from '../../utils/format'
 import walletManager from '../../crypto/walletManager'
@@ -40,17 +39,6 @@ import type {DefaultAsset} from '../../types/HistoryTransaction'
 import type {Navigation} from '../../types/navigation'
 import type {RawUtxo} from '../../api/types'
 import type {ServerStatusCache} from '../../state'
-
-const messages = defineMessages({
-  title: {
-    id: 'components.stakingcenter.title',
-    defaultMessage: '!!!Staking Center',
-  },
-  delegationTxBuildError: {
-    id: 'components.stakingcenter.delegationTxBuildError',
-    defaultMessage: '!!!Error while building delegation transaction',
-  },
-})
 
 const noPoolDataDialog = defineMessages({
   title: {
@@ -318,9 +306,6 @@ type ExternalProps = {|
 
 export default injectIntl(
   (compose(
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
     connect((state) => ({
       utxos: utxosSelector(state),
       accountBalance: accountBalanceSelector(state),
