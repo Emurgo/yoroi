@@ -25,10 +25,9 @@ import {
   StatusBar,
 } from '../UiKit'
 import ErrorModal from '../Common/ErrorModal'
-import {withTitle} from '../../utils/renderUtils'
 import {CATALYST_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
 import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
-import globalMessages, {
+import {
   errorMessages,
   confirmationMessages,
   txLabels,
@@ -174,7 +173,7 @@ const Step4 = ({
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
+    [password],
   )
 
   useEffect(
@@ -247,9 +246,5 @@ export default (injectIntl(
     {
       generateVotingTransaction,
     },
-  )(
-    withTitle(Step4, ({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(globalMessages.votingTitle),
-    ),
-  ),
+  )(Step4),
 ): ComponentType<Props>)

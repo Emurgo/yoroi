@@ -40,7 +40,6 @@ import LedgerConnect from '../Ledger/LedgerConnect'
 import HWInstructions from '../Ledger/HWInstructions'
 import {ErrorView} from '../Common/ErrorModal'
 import LocalizableError from '../../i18n/LocalizableError'
-import {withTitle} from '../../utils/renderUtils'
 import {CATALYST_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
 import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
 import globalMessages, {
@@ -478,9 +477,5 @@ export default (injectIntl(
       ...dispatchProps,
       ...ownProps,
     }),
-  )(
-    withTitle(Step5, ({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(globalMessages.votingTitle),
-    ),
-  ),
+  )(Step5),
 ): ComponentType<Props>)

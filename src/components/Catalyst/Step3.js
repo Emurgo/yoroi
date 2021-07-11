@@ -17,10 +17,9 @@ import {
 } from '../../actions/voting'
 import {isHWSelector} from '../../selectors'
 import {Text, ProgressStep} from '../UiKit'
-import {withTitle} from '../../utils/renderUtils'
 import PinInputKeyboard from '../Common/PinInputKeyboard'
 import {CATALYST_ROUTES} from '../../RoutesList'
-import globalMessages, {errorMessages} from '../../i18n/global-messages'
+import {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../actions'
 
 import styles from './styles/Step3.style'
@@ -128,9 +127,5 @@ export default (injectIntl(
       generateVotingKeys,
       generateVotingTransaction,
     },
-  )(
-    withTitle(Step3, ({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(globalMessages.votingTitle),
-    ),
-  ),
+  )(Step3),
 ): ComponentType<Props>)

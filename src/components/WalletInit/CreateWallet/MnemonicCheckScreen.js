@@ -4,7 +4,7 @@ import React from 'react'
 import _ from 'lodash'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {withHandlers, withProps, withStateHandlers} from 'recompose'
+import {withHandlers} from 'recompose'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {View, ScrollView, TouchableOpacity, Dimensions} from 'react-native'
@@ -14,7 +14,6 @@ import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
 import {Text, Button, StatusBar} from '../../UiKit'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import {createWallet} from '../../../actions'
-import {withNavigationTitle} from '../../../utils/renderUtils'
 
 import styles from './styles/MnemonicCheckScreen.style'
 
@@ -22,10 +21,6 @@ import type {ComponentType} from 'react'
 import type {Navigation} from '../../../types/navigation'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.walletinit.createwallet.mnemoniccheckscreen.title',
-    defaultMessage: '!!!Recovery phrase',
-  },
   instructions: {
     id: 'components.walletinit.createwallet.mnemoniccheckscreen.instructions',
     defaultMessage:
@@ -104,10 +99,10 @@ type WordProps = {
   value: number,
 }
 
-const _WordBadge = ({word, handleOnPress, selected, hidden}) => (
+const WordBadge = ({word, onPress, value, selected, hidden}: WordProps) => (
   <TouchableOpacity
     activeOpacity={0.5}
-    onPress={handleOnPress}
+    onPress={() => onPress(value)}
     disabled={selected}
     style={[
       styles.wordBadge,
@@ -120,24 +115,23 @@ const _WordBadge = ({word, handleOnPress, selected, hidden}) => (
   </TouchableOpacity>
 )
 
-const WordBadge: ComponentType<WordProps> = withHandlers({
-  handleOnPress: ({onPress, value}) => () => onPress(value),
-})(_WordBadge)
-
 const shouldScreenScroll = () => Dimensions.get('window').height <= 520
 
 const MnemonicCheckScreen = (
   {
-    mnemonic,
-    partialPhrase,
     intl,
-    words,
     confirmWalletCreation,
-    handleClear,
-    selectWord,
-    deselectWord,
+    route,
   }: {intl: IntlShape} & Object /* TODO: type */,
 ) => {
+  const mnemonic = route.params.mnemonic
+  const words = mnemonic.split(' ').sort()
+  const [partialPhrase, setPartialPhrase] = React.useState([])
+  const deselectWord = (wordIdx) =>
+    setPartialPhrase(partialPhrase.filter((idx) => idx !== wordIdx))
+  const selectWord = (wordIdx) => setPartialPhrase([...partialPhrase, wordIdx])
+  const handleClear = () => setPartialPhrase([])
+
   const isPhraseComplete = partialPhrase.length === words.length
   const isPhraseValid = validatePhrase(mnemonic, words, partialPhrase)
 
@@ -234,32 +228,6 @@ export default injectIntl(
         createWallet,
       },
     ),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
-    withStateHandlers(
-      {
-        partialPhrase: [],
-      },
-      {
-        deselectWord: ({partialPhrase}) => (wordIdx) => ({
-          partialPhrase: partialPhrase.filter((idx) => idx !== wordIdx),
-        }),
-        selectWord: ({partialPhrase}) => (wordIdx) => ({
-          partialPhrase: [...partialPhrase, wordIdx],
-        }),
-        handleClear: () => () => ({
-          partialPhrase: [],
-        }),
-      },
-    ),
-    withProps(({route}) => {
-      const {mnemonic} = route.params
-      return {
-        mnemonic,
-        words: mnemonic.split(' ').sort(),
-      }
-    }),
     withHandlers({
       confirmWalletCreation: ignoreConcurrentAsyncHandler(
         handleWalletConfirmation,

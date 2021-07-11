@@ -7,7 +7,6 @@ import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 
 import {Text, Button, Link, BulletPointItem, ProgressStep} from '../../UiKit'
-import {withNavigationTitle} from '../../../utils/renderUtils'
 import {
   confirmationMessages,
   ledgerMessages,
@@ -22,10 +21,6 @@ import type {IntlShape} from 'react-intl'
 import type {Navigation} from '../../../types/navigation'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
-    defaultMessage: '!!!Connect to Ledger Device',
-  },
   introline: {
     id: 'components.walletinit.connectnanox.checknanoxscreen.introline',
     defaultMessage: '!!!Before continuing, please make sure that:',
@@ -106,9 +101,6 @@ type ExternalProps = {|
 
 export default injectIntl(
   (compose(
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
     withHandlers({
       onPress: ({navigation}) => (
         event,

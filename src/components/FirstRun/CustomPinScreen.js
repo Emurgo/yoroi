@@ -9,7 +9,6 @@ import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import PinRegistrationForm from '../Common/PinRegistrationForm'
 import {encryptAndStoreCustomPin, signin} from '../../actions'
 import {isAuthenticatedSelector} from '../../selectors'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {StatusBar} from '../UiKit'
 
 import styles from './styles/CustomPinScreen.style'
@@ -18,11 +17,6 @@ import type {ComponentType} from 'react'
 import type {Navigation} from '../../types/navigation'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.firstrun.custompinscreen.title',
-    defaultMessage: '!!!Set PIN',
-    description: 'some desc',
-  },
   pinInputTitle: {
     id: 'components.firstrun.custompinscreen.pinInputTitle',
     defaultMessage: '!!!Enter the PIN',
@@ -74,9 +68,6 @@ type ExternalProps = {|
 
 export default injectIntl(
   (compose(
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
     connect(
       (state) => ({
         isAuth: isAuthenticatedSelector(state),

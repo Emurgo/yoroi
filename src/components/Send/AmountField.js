@@ -1,14 +1,10 @@
 // @flow
 
 import React from 'react'
-import {compose} from 'redux'
-import {withHandlers} from 'recompose'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {pastedFormatter, editedFormatter} from './amountUtils'
 import {ValidatedTextInput} from '../UiKit'
-
-import type {ComponentType} from 'react'
 
 export const messages = defineMessages({
   label: {
@@ -18,50 +14,38 @@ export const messages = defineMessages({
   },
 })
 
-const handleSetAmount = ({setAmount, amount}) => (text) => {
-  const shorterStringLength = Math.min(text.length, amount.length)
-  const wasPasted =
-    Math.abs(amount.length - text.length) > 1 ||
-    amount.substring(0, shorterStringLength) !==
-      text.substring(0, shorterStringLength)
-
-  const formatter = wasPasted ? pastedFormatter : editedFormatter
-
-  setAmount(formatter(text))
-}
-
-const AmountField = (
-  {
-    amount,
-    handleSetAmount,
-    intl,
-    error,
-    editable,
-  }: {intl: IntlShape} & Object /* TODO: type */,
-) => (
-  <ValidatedTextInput
-    returnKeyType="done"
-    keyboardType="numeric"
-    label={intl.formatMessage(messages.label)}
-    value={amount}
-    onChangeText={handleSetAmount}
-    error={error}
-    editable={editable != null ? editable : true}
-  />
-)
-
-type ExternalProps = {
+type Props = {
   amount: string,
   setAmount: (amount: string) => mixed,
   error: ?string,
-  intl: IntlShape,
   editable?: boolean,
+  intl: IntlShape,
 }
 
-export default injectIntl(
-  (compose(
-    withHandlers({
-      handleSetAmount,
-    }),
-  )(AmountField): ComponentType<ExternalProps>),
-)
+const AmountField = ({amount, intl, error, editable, setAmount}: Props) => {
+  const handleSetAmount = (text) => {
+    const shorterStringLength = Math.min(text.length, amount.length)
+    const wasPasted =
+      Math.abs(amount.length - text.length) > 1 ||
+      amount.substring(0, shorterStringLength) !==
+        text.substring(0, shorterStringLength)
+
+    const formatter = wasPasted ? pastedFormatter : editedFormatter
+
+    setAmount(formatter(text))
+  }
+
+  return (
+    <ValidatedTextInput
+      returnKeyType="done"
+      keyboardType="numeric"
+      label={intl.formatMessage(messages.label)}
+      value={amount}
+      onChangeText={handleSetAmount}
+      error={error}
+      editable={editable != null ? editable : true}
+    />
+  )
+}
+
+export default injectIntl(AmountField)

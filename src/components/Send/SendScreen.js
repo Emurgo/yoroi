@@ -40,7 +40,6 @@ import {
   serverStatusSelector,
 } from '../../selectors'
 import {fetchUTXOs} from '../../actions/utxo'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {
   normalizeTokenAmount,
   formatTokenAmount,
@@ -119,11 +118,6 @@ const amountInputErrorMessages = defineMessages({
 })
 
 const messages = defineMessages({
-  title: {
-    id: 'components.send.sendscreen.title',
-    defaultMessage: '!!!Send',
-    description: 'some desc',
-  },
   feeLabel: {
     id: 'components.send.sendscreen.feeLabel',
     defaultMessage: '!!!Fee',
@@ -961,9 +955,6 @@ export default injectIntl(
       {
         fetchUTXOs,
       },
-    ),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
     ),
   )(SendScreen): ComponentType<ExternalProps>),
 )

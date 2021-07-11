@@ -9,7 +9,6 @@ import {ScrollView, Platform} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import TermsOfService from '../Common/TermsOfService'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {Checkbox, Button, StatusBar, PleaseWaitModal} from '../UiKit'
 import {FIRST_RUN_ROUTES} from '../../RoutesList'
 import {isSystemAuthEnabledSelector} from '../../selectors'
@@ -21,11 +20,6 @@ import styles from './styles/AcceptTermsOfServiceScreen.styles'
 import globalMessages from '../../i18n/global-messages'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.firstrun.acepttermsofservicescreen.title',
-    defaultMessage: '!!!Terms of Service Agreement',
-    description: 'some desc',
-  },
   aggreeClause: {
     id: 'components.firstrun.acepttermsofservicescreen.aggreeClause',
     defaultMessage: '!!!I agree with terms of service',
@@ -137,8 +131,5 @@ export default injectIntl(
         }
       },
     }),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
   )(AcceptTermsOfServiceScreen),
 )
