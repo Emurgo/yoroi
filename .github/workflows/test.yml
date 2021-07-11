@@ -5,7 +5,7 @@ on:
     types: [ submitted ]
 
 jobs:
-  flow:
+  test:
     if: github.event.review && (github.event.review.state == 'approved' || contains(github.event.review.body, '/check'))
     runs-on: ubuntu-latest
     steps:
