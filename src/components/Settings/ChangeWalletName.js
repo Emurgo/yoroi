@@ -12,7 +12,6 @@ import _ from 'lodash'
 import {Button, ValidatedTextInput, StatusBar} from '../UiKit'
 import {walletNameSelector, walletNamesSelector} from '../../selectors'
 import {changeWalletName} from '../../actions'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {getWalletNameError, validateWalletName} from '../../utils/validators'
 import globalMessages from '../../i18n/global-messages'
 
@@ -23,10 +22,6 @@ import type {ComponentType} from 'react'
 import type {Navigation} from '../../types/navigation'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.settings.changewalletname.title',
-    defaultMessage: 'Change wallet name',
-  },
   changeButton: {
     id: 'components.settings.changewalletname.changeButton',
     defaultMessage: 'Change name',
@@ -101,9 +96,6 @@ export default injectIntl(
         walletNames: walletNamesSelector(state),
       }),
       {changeWalletName},
-    ),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
     ),
     withStateHandlers(
       ({oldName}) => ({

@@ -346,3 +346,8 @@ export const isAppSetupCompleteSelector: (
   (acceptedTos, isSystemAuthEnabled, customPinHash) =>
     acceptedTos && (isSystemAuthEnabled || customPinHash != null),
 )
+
+export const walletsListSelector = (state: State) =>
+  (Object.keys(state.wallets).map((key) => state.wallets[key]): Array<
+    WalletMeta,
+  >)

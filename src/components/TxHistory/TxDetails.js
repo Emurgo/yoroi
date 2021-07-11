@@ -1,8 +1,7 @@
 // @flow
 
 import React, {useState} from 'react'
-import {compose} from 'redux'
-import {connect} from 'react-redux'
+import {useSelector} from 'react-redux'
 import {
   View,
   Linking,
@@ -11,7 +10,6 @@ import {
   Image,
 } from 'react-native'
 import _ from 'lodash'
-import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {BigNumber} from 'bignumber.js'
 
@@ -23,8 +21,7 @@ import {
   tokenInfoSelector,
   defaultNetworkAssetSelector,
 } from '../../selectors'
-import {withNavigationTitle} from '../../utils/renderUtils'
-import {formatTokenWithSymbol, formatDateToSeconds} from '../../utils/format'
+import {formatTokenWithSymbol} from '../../utils/format'
 import {Text, Button, OfflineBanner, Banner, StatusBar} from '../UiKit'
 import Screen from '../../components/Screen'
 import {getNetworkConfigById} from '../../config/networks'
@@ -38,15 +35,7 @@ import styles from './styles/TxDetails.style'
 import arrowUp from '../../assets/img/chevron_up.png'
 import arrowDown from '../../assets/img/chevron_down.png'
 
-import type {State} from '../../state'
-import type {Navigation} from '../../types/navigation'
-import type {ComponentType} from 'react'
-import {
-  TRANSACTION_DIRECTION,
-  type Token,
-  type TransactionInfo,
-  type DefaultAsset,
-} from '../../types/HistoryTransaction'
+import {TRANSACTION_DIRECTION, type Token} from '../../types/HistoryTransaction'
 import globalMessages from '../../i18n/global-messages'
 
 const txTypeMessages = defineMessages({
@@ -134,19 +123,18 @@ const AdaAmount = ({amount, token}: {amount: BigNumber, token: Token}) => {
   return <Text style={amountStyle}>{formatTokenWithSymbol(amount, token)}</Text>
 }
 
-const AddressEntry = withHandlers({
-  onPress: ({address, showModalForAddress}) => () =>
-    showModalForAddress(address),
-})(({address, onPress, path, isHighlighted}) => {
+const AddressEntry = ({address, path, isHighlighted, showModalForAddress}) => {
   return (
-    <TouchableOpacity activeOpacity={0.5} onPress={onPress}>
-      {/* eslint-disable-next-line react-native/no-inline-styles */}
+    <TouchableOpacity
+      activeOpacity={0.5}
+      onPress={() => showModalForAddress(address)}
+    >
       <Text secondary bold={isHighlighted}>
         ({path}) {address}
       </Text>
     </TouchableOpacity>
   )
-})
+}
 
 const getShownAddresses = (
   intl,
@@ -229,30 +217,40 @@ const getShownAddresses = (
     cntOmittedTo,
   }
 }
+
+type RouterProps = {|
+  navigation: any,
+  route: any,
+|}
 type Props = {|
   intl: IntlShape,
-  transaction: TransactionInfo,
-  internalAddressIndex: Dict<number>,
-  externalAddressIndex: Dict<number>,
-  tokenMetadata: Dict<Token>,
-  defaultNetworkAsset: DefaultAsset,
-  openInExplorer: () => void,
-  showModalForAddress: (string) => void,
-  addressDetail: string | null,
-  hideAddressModal: () => void,
 |}
-const TxDetails = ({
-  intl,
-  transaction,
-  internalAddressIndex,
-  externalAddressIndex,
-  tokenMetadata,
-  defaultNetworkAsset,
-  openInExplorer,
-  showModalForAddress,
-  addressDetail,
-  hideAddressModal,
-}: Props) => {
+const TxDetails = ({intl, route}: Props & RouterProps) => {
+  const transaction = useSelector(transactionsInfoSelector)[route.params.id]
+  const internalAddressIndex = useSelector(internalAddressIndexSelector)
+  const externalAddressIndex = useSelector(externalAddressIndexSelector)
+  const walletMeta = useSelector(walletMetaSelector)
+  const tokenMetadata = useSelector(tokenInfoSelector)
+  const defaultNetworkAsset = useSelector(defaultNetworkAssetSelector)
+
+  const [addressDetail, setAddressDetail] = React.useState(null)
+
+  const openInExplorer = () => {
+    if (transaction) {
+      const networkConfig = getNetworkConfigById(walletMeta.networkId)
+      // note: don't await on purpose
+      Linking.openURL(networkConfig.EXPLORER_URL_FOR_TX(transaction.id))
+    }
+  }
+
+  const showModalForAddress = (address) => {
+    setAddressDetail(address)
+  }
+
+  const hideAddressModal = () => {
+    setAddressDetail(null)
+  }
+
   const {
     fromFiltered,
     cntOmittedFrom,
@@ -402,47 +400,4 @@ const TxDetails = ({
   )
 }
 
-export default injectIntl(
-  (compose(
-    connect((state: State, {route}) => {
-      return {
-        transaction: transactionsInfoSelector(state)[route.params.id],
-        internalAddressIndex: internalAddressIndexSelector(state),
-        externalAddressIndex: externalAddressIndexSelector(state),
-        walletMeta: walletMetaSelector(state),
-        tokenMetadata: tokenInfoSelector(state),
-        defaultNetworkAsset: defaultNetworkAssetSelector(state),
-      }
-    }),
-    withNavigationTitle(({transaction}) =>
-      formatDateToSeconds(transaction.submittedAt),
-    ),
-    withStateHandlers(
-      {addressDetail: null},
-      {
-        setAddressDetail: () => (address) => ({
-          addressDetail: address,
-        }),
-      },
-    ),
-    withHandlers({
-      openInExplorer: ({transaction, walletMeta}) => () => {
-        if (transaction) {
-          const networkConfig = getNetworkConfigById(walletMeta.networkId)
-          // note: don't await on purpose
-          Linking.openURL(networkConfig.EXPLORER_URL_FOR_TX(transaction.id))
-        }
-      },
-      showModalForAddress: ({setAddressDetail}) => (address) => {
-        setAddressDetail(address)
-      },
-      hideAddressModal: ({setAddressDetail}) => () => {
-        setAddressDetail(null)
-      },
-    }),
-  )(TxDetails): ComponentType<{|
-    navigation: Navigation,
-    route: any,
-    intl: IntlShape,
-  |}>),
-)
+export default injectIntl(TxDetails)

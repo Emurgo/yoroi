@@ -1,13 +1,10 @@
 // @flow
 import React from 'react'
-import {compose} from 'redux'
-import {connect} from 'react-redux'
-import {withHandlers} from 'recompose'
+import {useSelector, useDispatch} from 'react-redux'
 import {ScrollView, StyleSheet, Switch, Platform} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {SETTINGS_ROUTES} from '../../RoutesList'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {errorMessages} from '../../i18n/global-messages'
 import {setAppSettingField, setSystemAuth, showErrorDialog} from '../../actions'
 import {APP_SETTINGS_KEYS} from '../../helpers/appSettings'
@@ -27,26 +24,16 @@ import {
   isSystemAuthEnabledSelector,
   installationIdSelector,
   sendCrashReportsSelector,
-  languageSelector,
 } from '../../selectors'
 import walletManager from '../../crypto/walletManager'
 import KeyStore from '../../crypto/KeyStore'
 import {StatusBar} from '../UiKit'
 
-import type {ComponentType} from 'react'
 import type {Navigation} from '../../types/navigation'
 
 import DeviceInfo from 'react-native-device-info'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.settings.applicationsettingsscreen.title',
-    defaultMessage: 'Settings',
-  },
-  tabTitle: {
-    id: 'components.settings.applicationsettingsscreen.tabTitle',
-    defaultMessage: 'Application',
-  },
   language: {
     id: 'components.settings.applicationsettingsscreen.language',
     defaultMessage: 'Your language',
@@ -104,86 +91,83 @@ const styles = StyleSheet.create({
   },
 })
 
-const disableBiometrics = ({navigation, setSystemAuth}) => async () => {
-  await setSystemAuth(false)
-
-  navigation.navigate(SETTINGS_ROUTES.MAIN)
-}
-
-const onToggleBiometricsAuthIn = ({
-  isSystemAuthEnabled,
-  navigation,
-  intl,
-  installationId,
-  disableBiometrics,
-}) => async () => {
-  if (isSystemAuthEnabled) {
-    if (!walletManager.canBiometricsSignInBeDisabled()) {
-      await showErrorDialog(errorMessages.disableEasyConfirmationFirst, intl)
-
-      return
-    }
-
-    navigation.navigate(SETTINGS_ROUTES.BIO_AUTHENTICATE, {
-      keyId: installationId,
-      onSuccess: () =>
-        navigation.navigate(SETTINGS_ROUTES.SETUP_CUSTOM_PIN, {
-          onSuccess: disableBiometrics,
-        }),
-      onFail: (reason) => {
-        if (reason === KeyStore.REJECTIONS.CANCELED) {
-          navigation.navigate(SETTINGS_ROUTES.MAIN)
-        } else {
-          throw new Error(`Could not authenticate user: ${reason}`)
-        }
-      },
-    })
-  } else {
-    navigation.navigate(SETTINGS_ROUTES.FINGERPRINT_LINK)
-  }
-}
-
-const updateDeviceSettings = async ({setAppSettingField}) => {
-  // prettier-ignore
-  const isHardwareSupported =
-    await isBiometricEncryptionHardwareSupported()
-  // prettier-ignore
-  const canEnableBiometricEncryption =
-    await canBiometricEncryptionBeEnabled()
-
-  await setAppSettingField(
-    APP_SETTINGS_KEYS.BIOMETRIC_HW_SUPPORT,
-    isHardwareSupported,
-  )
-  await setAppSettingField(
-    APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION,
-    canEnableBiometricEncryption,
-  )
-}
-
 const version = DeviceInfo.getVersion()
 
-const ApplicationSettingsScreen = (
-  {
-    onToggleBiometricsAuthIn,
-    intl,
-    updateDeviceSettings,
-    isBiometricHardwareSupported,
-    isSystemAuthEnabled,
-    sendCrashReports,
-    setCrashReporting,
-    navigation,
-  }: {intl: IntlShape} & Object /* TODO: type */,
-) => {
+type RouterProps = {
+  navigation: Navigation,
+  route: any,
+}
+
+type Props = {
+  intl: IntlShape,
+}
+
+const ApplicationSettingsScreen = ({intl, navigation}: Props & RouterProps) => {
+  const isBiometricHardwareSupported = useSelector(biometricHwSupportSelector)
+  const sendCrashReports = useSelector(sendCrashReportsSelector)
+  const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
+  const installationId = useSelector(installationIdSelector)
+  const dispatch = useDispatch()
+
+  const setCrashReporting = (value: boolean) =>
+    dispatch(setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value))
+
+  const onToggleBiometricsAuthIn = async () => {
+    if (isSystemAuthEnabled) {
+      if (!walletManager.canBiometricsSignInBeDisabled()) {
+        await showErrorDialog(errorMessages.disableEasyConfirmationFirst, intl)
+
+        return
+      }
+
+      navigation.navigate(SETTINGS_ROUTES.BIO_AUTHENTICATE, {
+        keyId: installationId,
+        onSuccess: () =>
+          navigation.navigate(SETTINGS_ROUTES.SETUP_CUSTOM_PIN, {
+            onSuccess: async () => {
+              await setSystemAuth(false)
+
+              navigation.navigate(SETTINGS_ROUTES.MAIN)
+            },
+          }),
+        onFail: (reason) => {
+          if (reason === KeyStore.REJECTIONS.CANCELED) {
+            navigation.navigate(SETTINGS_ROUTES.MAIN)
+          } else {
+            throw new Error(`Could not authenticate user: ${reason}`)
+          }
+        },
+      })
+    } else {
+      navigation.navigate(SETTINGS_ROUTES.FINGERPRINT_LINK)
+    }
+  }
+
   React.useEffect(
     () => {
       const unsubscribe = navigation.addListener('focus', () => {
+        const updateDeviceSettings = async () => {
+          const isHardwareSupported = await isBiometricEncryptionHardwareSupported()
+          const canEnableBiometricEncryption = await canBiometricEncryptionBeEnabled()
+          await dispatch(
+            setAppSettingField(
+              APP_SETTINGS_KEYS.BIOMETRIC_HW_SUPPORT,
+              isHardwareSupported,
+            ),
+          )
+          await dispatch(
+            setAppSettingField(
+              APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION,
+              canEnableBiometricEncryption,
+            ),
+          )
+        }
+
         updateDeviceSettings()
       })
       return unsubscribe
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [navigation],
+    [navigation, dispatch],
   )
 
   // it's better if we prevent users who:
@@ -263,41 +247,4 @@ const ApplicationSettingsScreen = (
     </ScrollView>
   )
 }
-export default injectIntl(
-  (compose(
-    connect(
-      (state) => ({
-        isBiometricHardwareSupported: biometricHwSupportSelector(state),
-        sendCrashReports: sendCrashReportsSelector(state),
-        isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
-        installationId: installationIdSelector(state),
-        key: languageSelector(state),
-      }),
-      {setAppSettingField, setSystemAuth},
-    ),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
-    withNavigationTitle(
-      ({intl}: {intl: IntlShape}) => intl.formatMessage(messages.tabTitle),
-      'applicationTabTitle',
-    ),
-    withHandlers({
-      disableBiometrics,
-    }),
-    withHandlers({
-      onToggleBiometricsAuthIn,
-      updateDeviceSettings: ({setAppSettingField}) => () => {
-        // Runaway promise. This is needed because
-        // onWillFocus accepts only ()=>void
-        updateDeviceSettings({setAppSettingField})
-      },
-      setCrashReporting: ({setAppSettingField}) => (value: boolean) => {
-        setAppSettingField(APP_SETTINGS_KEYS.SEND_CRASH_REPORTS, value)
-      },
-    }),
-  )(ApplicationSettingsScreen): ComponentType<{
-    navigation: Navigation,
-    intl: IntlShape,
-  }>),
-)
+export default injectIntl(ApplicationSettingsScreen)

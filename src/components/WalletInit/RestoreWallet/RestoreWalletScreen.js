@@ -17,7 +17,6 @@ import {
   INVALID_PHRASE_ERROR_CODES,
   cleanMnemonic,
 } from '../../../utils/validators'
-import {withNavigationTitle} from '../../../utils/renderUtils'
 import {isKeyboardOpenSelector} from '../../../selectors'
 
 import styles from './styles/RestoreWalletScreen.style'
@@ -52,11 +51,6 @@ const mnemonicInputErrorsMessages = defineMessages({
 })
 
 const messages = defineMessages({
-  title: {
-    id: 'components.walletinit.restorewallet.restorewalletscreen.title',
-    defaultMessage: '!!!Restore wallet',
-    description: 'some desc',
-  },
   mnemonicInputLabel: {
     id:
       'components.walletinit.restorewallet.restorewalletscreen.mnemonicInputLabel',
@@ -171,9 +165,6 @@ export default injectIntl(
     connect((state) => ({
       isKeyboardOpen: isKeyboardOpenSelector(state),
     })),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
     withStateHandlers(
       {
         phrase: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.MNEMONIC3 : '',

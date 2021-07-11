@@ -16,7 +16,6 @@ import {
 } from '../../selectors'
 import {showErrorDialog, submitTransaction, submitSignedTx} from '../../actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {CONFIG} from '../../config/config'
 import {
   Button,
@@ -57,10 +56,6 @@ import type {Navigation} from '../../types/navigation'
 import type {CreateDelegationTxResponse} from '../../crypto/shelley/delegationUtils'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.stakingcenter.confirmDelegation.title',
-    defaultMessage: '!!!Confirm delegation',
-  },
   delegateButtonLabel: {
     id: 'components.stakingcenter.confirmDelegation.delegateButtonLabel',
     defaultMessage: '!!!Delegate',
@@ -488,8 +483,5 @@ export default injectIntl(
         1000,
       ),
     }),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
   )(DelegationConfirmation): ComponentType<ExternalProps>),
 )

@@ -11,9 +11,8 @@ import {injectIntl, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
 
 import {Text, Button, ProgressStep} from '../UiKit'
-import {withTitle} from '../../utils/renderUtils'
 import {CATALYST_ROUTES} from '../../RoutesList'
-import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
+import {confirmationMessages} from '../../i18n/global-messages'
 
 import styles from './styles/Step2.style'
 
@@ -111,9 +110,5 @@ export default (injectIntl(
       pin: state.voting.pin,
     }),
     {},
-  )(
-    withTitle(Step2, ({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(globalMessages.votingTitle),
-    ),
-  ),
+  )(Step2),
 ): ComponentType<Props>)
