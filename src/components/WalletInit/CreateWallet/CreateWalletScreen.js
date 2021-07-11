@@ -4,7 +4,6 @@ import React from 'react'
 
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {generateAdaMnemonic} from '../../../crypto/commonUtils'
-import {withNavigationTitle} from '../../../utils/renderUtils'
 import WalletForm from '../WalletForm'
 import Screen from '../../Screen'
 
