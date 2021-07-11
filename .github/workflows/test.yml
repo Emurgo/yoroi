@@ -1,4 +1,4 @@
-name: Flow
+name: Test
 
 on:
   pull_request_review:

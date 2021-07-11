@@ -1,4 +1,4 @@
-name: Flow
+name: Lint
 
 on:
   pull_request_review:
