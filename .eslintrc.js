@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['vacuumlabs', 'plugin:react-hooks/recommended'],
+  extends: ['vacuumlabs', 'plugin:react-hooks/recommended', 'prettier'],
   plugins: ['react-native', 'flowtype'],
   env: {
     'react-native/react-native': true,
@@ -14,15 +14,6 @@ module.exports = {
   rules: {
     'array-callback-return': 2,
     'lines-between-class-members': [1, 'always', {exceptAfterSingleLine: true}],
-    'max-len': [
-      1,
-      {
-        code: 100,
-        tabWidth: 2,
-        ignoreStrings: false,
-        ignoreTemplateLiterals: false,
-      },
-    ],
     'spaced-comment': 1,
     'react/no-access-state-in-setstate': 2,
     'react/no-multi-comp': 0,
