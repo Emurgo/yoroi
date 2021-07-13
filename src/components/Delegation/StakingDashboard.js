@@ -50,7 +50,6 @@ import {
 import DelegationNavigationButtons from './DelegationNavigationButtons'
 import UtxoAutoRefresher from '../Send/UtxoAutoRefresher'
 import AccountAutoRefresher from './AccountAutoRefresher'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {
   genToRelativeSlotNumber,
   genCurrentEpochLength,
@@ -731,6 +730,5 @@ export default injectIntl(
         ...ownProps,
       }),
     ),
-    withNavigationTitle(({walletName}) => walletName),
   )(StakingDashboard): ComponentType<ExternalProps>),
 )

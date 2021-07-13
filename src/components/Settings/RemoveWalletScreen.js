@@ -3,11 +3,10 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View, ScrollView} from 'react-native'
-import {withHandlers, withStateHandlers} from 'recompose'
+import {withHandlers} from 'recompose'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {Button, Text, Checkbox, ValidatedTextInput, StatusBar} from '../UiKit'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {WALLET_ROOT_ROUTES} from '../../RoutesList'
 import {walletNameSelector, isHWSelector} from '../../selectors'
 import {removeCurrentWallet} from '../../actions'
@@ -18,11 +17,6 @@ import styles from './styles/RemoveWalletScreen.style'
 import type {State} from '../../state'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.settings.removewalletscreen.title',
-    defaultMessage: 'Remove wallet',
-    description: 'some desc',
-  },
   descriptionParagraph1: {
     id: 'components.settings.removewalletscreen.descriptionParagraph1',
     defaultMessage:
@@ -80,11 +74,12 @@ const RemoveWalletScreen = ({
   walletName,
   isHW,
   handleRemoveWallet,
-  hasMnemonicWrittenDown,
-  setHasMnemonicWrittenDown,
-  typedWalletName,
-  setTypedWalletName,
 }: Prop) => {
+  const [hasMnemonicWrittenDown, setHasMnemonicWrittenDown] = React.useState(
+    false,
+  )
+  const [typedWalletName, setTypedWalletName] = React.useState('')
+
   const disabled =
     (!isHW && !hasMnemonicWrittenDown) || walletName !== typedWalletName
 
@@ -150,21 +145,6 @@ export default injectIntl(
       }),
       {
         removeCurrentWallet,
-      },
-    ),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
-    withStateHandlers(
-      {
-        hasMnemonicWrittenDown: false,
-        typedWalletName: '',
-      },
-      {
-        setHasMnemonicWrittenDown: () => (value) => ({
-          hasMnemonicWrittenDown: value,
-        }),
-        setTypedWalletName: () => (value) => ({typedWalletName: value}),
       },
     ),
     withHandlers({

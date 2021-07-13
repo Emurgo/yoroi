@@ -8,7 +8,6 @@ import {withHandlers} from 'recompose'
 import LedgerConnect from '../../Ledger/LedgerConnect'
 import {getHWDeviceInfo} from '../../../crypto/shelley/ledgerUtils'
 import {ProgressStep} from '../../UiKit'
-import {withNavigationTitle} from '../../../utils/renderUtils'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {Logger} from '../../../utils/logging'
 import {errorMessages} from '../../../i18n/global-messages'
@@ -23,10 +22,6 @@ import type {Navigation} from '../../../types/navigation'
 import type {DeviceId, DeviceObj} from '../../../crypto/shelley/ledgerUtils'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.walletinit.connectnanox.connectnanoxscreen.title',
-    defaultMessage: '!!!Connect to Ledger Device',
-  },
   exportKey: {
     id: 'components.walletinit.connectnanox.connectnanoxscreen.exportKey',
     defaultMessage:
@@ -122,9 +117,6 @@ type ExternalProps = {|
 
 export default injectIntl(
   (compose(
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
     withHandlers({
       onConnectBLE: ({
         navigation,

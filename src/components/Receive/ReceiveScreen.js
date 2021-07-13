@@ -21,11 +21,7 @@ import {
   canGenerateNewReceiveAddressSelector,
   isUsedAddressIndexSelector,
 } from '../../selectors'
-import {
-  onDidMount,
-  onDidUpdate,
-  withNavigationTitle,
-} from '../../utils/renderUtils'
+import {onDidMount, onDidUpdate} from '../../utils/renderUtils'
 import {AddressDTOCardano} from '../../crypto/shelley/Address.dto'
 
 import styles from './styles/ReceiveScreen.style'
@@ -35,11 +31,6 @@ import type {Navigation} from '../../types/navigation'
 
 const NO_ADDRESS = 'IT IS A BUG TO SEE THIS TEXT'
 const messages = defineMessages({
-  title: {
-    id: 'components.receive.receivescreen.title',
-    defaultMessage: '!!!Receive',
-    description: 'some desc',
-  },
   infoText: {
     id: 'components.receive.receivescreen.infoText',
     defaultMessage:
@@ -148,10 +139,6 @@ export default injectIntl(
         generateNewReceiveAddressIfNeeded,
       },
     ),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
-
     onDidMount(({generateNewReceiveAddressIfNeeded}) =>
       generateNewReceiveAddressIfNeeded(),
     ),

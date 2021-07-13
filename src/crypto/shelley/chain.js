@@ -179,7 +179,7 @@ export class AddressGenerator {
 
 type AsyncAddressFilter = (addresses: Array<string>) => Promise<Array<string>>
 
-type Addresses = Array<string>
+export type Addresses = Array<string>
 
 const _addressToIdxSelector = (addresses: Array<string>) =>
   _.fromPairs(addresses.map((addr, i) => [addr, i]))

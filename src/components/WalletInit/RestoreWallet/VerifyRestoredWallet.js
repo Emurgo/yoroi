@@ -13,7 +13,6 @@ import {Text, Button, StatusBar, BulletPointItem} from '../../UiKit'
 import {generateByronPlateFromMnemonics} from '../../../crypto/byron/plate'
 import {generateShelleyPlateFromMnemonics} from '../../../crypto/shelley/plate'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
-import {withNavigationTitle} from '../../../utils/renderUtils'
 import WalletAddress from './WalletAddress'
 import WalletAccountIcon from '../../Common/WalletAccountIcon'
 import {WALLET_IMPLEMENTATION_REGISTRY} from '../../../config/types'
@@ -25,10 +24,6 @@ import type {Navigation} from '../../../types/navigation'
 import type {WalletImplementationId, NetworkId} from '../../../config/types'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.walletinit.verifyrestoredwallet.title',
-    defaultMessage: '!!!Verify restored wallet',
-  },
   checksumLabel: {
     id: 'components.walletinit.verifyrestoredwallet.checksumLabel',
     defaultMessage: '!!!Chacksum label',
@@ -173,9 +168,6 @@ const VerifyWalletScreen = (
 export default injectIntl(
   (compose(
     connect((_state) => ({})),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
     withHandlers({
       navigateToWalletCredentials: ({navigation, route}) => (_event) => {
         navigation.navigate(WALLET_INIT_ROUTES.WALLET_CREDENTIALS, {

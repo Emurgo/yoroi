@@ -32,11 +32,7 @@ import {MultiToken} from '../../crypto/MultiToken'
 import {isRegistrationOpen} from '../../crypto/shelley/catalystUtils'
 import {updateHistory} from '../../actions/history'
 import {checkForFlawedWallets} from '../../actions'
-import {
-  onDidMount,
-  requireInitializedWallet,
-  withNavigationTitle,
-} from '../../utils/renderUtils'
+import {onDidMount, requireInitializedWallet} from '../../utils/renderUtils'
 import {Logger} from '../../utils/logging'
 import FlawedWalletModal from './FlawedWalletModal'
 import StandardModal from '../Common/StandardModal'
@@ -358,6 +354,5 @@ export default injectIntl(
       checkForFlawedWallets()
       updateHistory()
     }),
-    withNavigationTitle(({walletMeta}) => walletMeta.name),
   )(TxHistory): ComponentType<ExternalProps>),
 )

@@ -16,7 +16,6 @@ import {
   DIALOG_BUTTONS,
 } from '../../actions'
 import {WALLET_ROOT_ROUTES, SETTINGS_ROUTES} from '../../RoutesList'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {
   isSystemAuthEnabledSelector,
   easyConfirmationSelector,
@@ -43,14 +42,6 @@ import type {NetworkId, WalletImplementationId} from '../../config/types'
 import type {MessageDescriptor} from 'react-intl'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.settings.walletsettingscreen.title',
-    defaultMessage: 'Settings',
-  },
-  tabTitle: {
-    id: 'components.settings.walletsettingscreen.tabTitle',
-    defaultMessage: 'Wallet',
-  },
   switchWallet: {
     id: 'components.settings.walletsettingscreen.switchWallet',
     defaultMessage: 'Switch wallet',
@@ -211,13 +202,6 @@ export default injectIntl(
       isEasyConfirmationEnabled: easyConfirmationSelector(state),
       key: languageSelector(state),
     })),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
-    withNavigationTitle(
-      ({intl}: {intl: IntlShape}) => intl.formatMessage(messages.tabTitle),
-      'walletTabTitle',
-    ),
     connect(
       (state) => ({
         walletName: walletNameSelector(state),
