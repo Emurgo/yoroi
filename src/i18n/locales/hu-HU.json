@@ -37,7 +37,7 @@
   "components.delegationsummary.delegatedStakepoolInfo.fullDescriptionButtonLabel": "Weboldalra ugrás",
   "components.delegationsummary.delegatedStakepoolInfo.title": "Delegálva",
   "components.delegationsummary.delegatedStakepoolInfo.unknownPool": "Ismeretlen pool",
-  "components.delegationsummary.delegatedStakepoolInfo.warning": "Ha most delegáltál egy új pool-ba, eltarthat négány percig, amíg a hálózat feldolgozza.",
+  "components.delegationsummary.delegatedStakepoolInfo.warning": "Ha most delegáltál egy új pool-ba, eltarthat néhány percig, amíg a hálózat feldolgozza.",
   "components.delegationsummary.epochProgress.endsIn": "Vége",
   "components.delegationsummary.epochProgress.title": "Aktuális epoch",
   "components.delegationsummary.failedwalletupgrademodal.title": "Figyelem!",
