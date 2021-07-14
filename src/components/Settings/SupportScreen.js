@@ -17,9 +17,7 @@ const messages = defineMessages({
   },
   faqDescription: {
     id: 'components.settings.settingsscreen.faqDescription',
-    defaultMessage:
-      'If you are experiencing issues, please see the FAQ ' +
-      'on Yoroi website for quidance on known issues.',
+    defaultMessage: 'If you are experiencing issues, please see the FAQ on Yoroi website for quidance on known issues.',
     description: 'some desc',
   },
   faqUrl: {
@@ -34,9 +32,7 @@ const messages = defineMessages({
   },
   reportDescription: {
     id: 'components.settings.settingsscreen.reportDescription',
-    defaultMessage:
-      'If the FAQ does not solve the issue you are ' +
-      'experiencing, please use our Support request feature.',
+    defaultMessage: 'If the FAQ does not solve the issue you are experiencing, please use our Support request feature.',
     description: 'some desc',
   },
   reportUrl: {

@@ -29,8 +29,7 @@ const messages = defineMessages({
   description: {
     id: 'components.catalyst.step2.description',
     defaultMessage:
-      '!!!Please write down this PIN as you will need it every time you want ' +
-      'to access the Catalyst Voting app',
+      '!!!Please write down this PIN as you will need it every time you want to access the Catalyst Voting app',
   },
 })
 
@@ -47,26 +46,16 @@ type HOCProps = {
 const Step2 = ({intl, pin, navigation}: Props & HOCProps) => {
   const [countDown, setCountDown] = useState(5)
 
-  useEffect(
-    () => {
-      countDown > 0 && setTimeout(() => setCountDown(countDown - 1), 1000)
-    },
-    [countDown],
-  )
+  useEffect(() => {
+    countDown > 0 && setTimeout(() => setCountDown(countDown - 1), 1000)
+  }, [countDown])
 
   const pinCards = (
     <View style={styles.pinContainer}>
       {pin.map((value, index) => {
         // eslint-disable-next-line react/no-array-index-key
         return (
-          <View
-            key={index}
-            style={[
-              styles.pin,
-              styles.pinNormal,
-              index < pin.length - 1 ? styles.mr10 : undefined,
-            ]}
-          >
+          <View key={index} style={[styles.pin, styles.pinNormal, index < pin.length - 1 ? styles.mr10 : undefined]}>
             <Text style={styles.pinNumber}>{value}</Text>
           </View>
         )
@@ -79,12 +68,8 @@ const Step2 = ({intl, pin, navigation}: Props & HOCProps) => {
       <ProgressStep currentStep={2} totalSteps={6} />
       <View style={styles.container}>
         <View>
-          <Text style={styles.subTitle}>
-            {intl.formatMessage(messages.subTitle)}
-          </Text>
-          <Text style={styles.description}>
-            {intl.formatMessage(messages.description)}
-          </Text>
+          <Text style={styles.subTitle}>{intl.formatMessage(messages.subTitle)}</Text>
+          <Text style={styles.description}>{intl.formatMessage(messages.description)}</Text>
           {pinCards}
         </View>
         <Button

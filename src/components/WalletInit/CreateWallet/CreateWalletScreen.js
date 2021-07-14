@@ -15,10 +15,7 @@ type Props = {|
 |}
 
 const CreateWalletScreen = ({navigation, route}: Props) => {
-  const [
-    visibleMnemonicExplanation,
-    setVisibleMnemonicExplanation,
-  ] = React.useState(false)
+  const [visibleMnemonicExplanation, setVisibleMnemonicExplanation] = React.useState(false)
   const [formData, _setFormData] = React.useState(null)
 
   const setFormData = (formData: any) => {

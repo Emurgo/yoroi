@@ -27,10 +27,7 @@ export class SubscriptionManager<T> {
   }
 
   unsubscribe(handler: (data: T) => any) {
-    assert.assert(
-      this._subscriptions.includes(handler),
-      'Handler is not subscribed',
-    )
+    assert.assert(this._subscriptions.includes(handler), 'Handler is not subscribed')
     this._subscriptions = this._subscriptions.filter((h) => h !== handler)
   }
 

@@ -3,10 +3,7 @@ import type {State} from '../state'
 
 export type Path = Array<string>
 
-export type SegmentReducer<Segment, Payload> = (
-  state: Segment,
-  payload: Payload | void,
-) => Segment
+export type SegmentReducer<Segment, Payload> = (state: Segment, payload: Payload | void) => Segment
 
 export type GenericAction<Segment, Payload> = {
   +type: string,
@@ -24,8 +21,4 @@ export type ThunkExtra = {
     log: (args: any) => null,
   },
 }
-export type Thunk = (
-  dispatch: Dispatch,
-  getState: GetState,
-  extra: ThunkExtra,
-) => Promise<void> | void
+export type Thunk = (dispatch: Dispatch, getState: GetState, extra: ThunkExtra) => Promise<void> | void

@@ -1,12 +1,7 @@
 // @flow
 import jestSetup from '../../jestSetup'
 
-import {
-  getMasterKeyFromMnemonic,
-  getAccountFromMasterKey,
-  getExternalAddresses,
-  getAddressInHex,
-} from './util'
+import {getMasterKeyFromMnemonic, getAccountFromMasterKey, getExternalAddresses, getAddressInHex} from './util'
 
 import {CONFIG} from '../../config/config'
 import {getCardanoByronConfig} from '../../config/networks'
@@ -31,15 +26,8 @@ test('Can generate external addresses', async () => {
   expect.assertions(1)
 
   const masterKey = await getMasterKeyFromMnemonic(mnemonic)
-  const account = await getAccountFromMasterKey(
-    masterKey,
-    CONFIG.NUMBERS.ACCOUNT_INDEX,
-  )
-  const addresses = await getExternalAddresses(
-    account,
-    [0, 1],
-    BYRON_PROTOCOL_MAGIC,
-  )
+  const account = await getAccountFromMasterKey(masterKey, CONFIG.NUMBERS.ACCOUNT_INDEX)
+  const addresses = await getExternalAddresses(account, [0, 1], BYRON_PROTOCOL_MAGIC)
 
   expect(addresses).toEqual(externalAddresses)
 })

@@ -11,10 +11,7 @@ import AddressReaderQR from './AddressReaderQR'
 import BiometricAuthScreen from './BiometricAuthScreen'
 import iconQR from '../../assets/img/qr_code.png'
 import {pastedFormatter} from './amountUtils'
-import {
-  defaultNavigationOptions,
-  defaultStackNavigatorOptions,
-} from '../../navigationOptions'
+import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
 import {SEND_ROUTES} from '../../RoutesList'
 
 import styles from './styles/QrButton.style'

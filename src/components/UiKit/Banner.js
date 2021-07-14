@@ -22,11 +22,7 @@ const Banner = ({error, text, boldText, label, children}: Props) => (
       </Text>
     )}
     {text != null && (
-      <Text
-        small={error}
-        bold={boldText}
-        style={[error != null && styles.textError]}
-      >
+      <Text small={error} bold={boldText} style={[error != null && styles.textError]}>
         {text}
       </Text>
     )}
@@ -41,10 +37,7 @@ type ClickableProps = {|
 
 const ClickableBanner = ({onPress, ...rest}: ClickableProps) =>
   onPress ? (
-    <TouchableOpacity
-      onPress={onPress}
-      hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}
-    >
+    <TouchableOpacity onPress={onPress} hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}>
       <Banner {...rest} />
     </TouchableOpacity>
   ) : (

@@ -38,13 +38,7 @@ type Props = {|
 |}
 
 const Step = ({currentStep, displayStepNumber, todoStep}) => (
-  <View
-    style={[
-      styles.step,
-      todoStep && styles.todoStep,
-      displayStepNumber === true && styles.markedStep,
-    ]}
-  >
+  <View style={[styles.step, todoStep && styles.todoStep, displayStepNumber === true && styles.markedStep]}>
     {displayStepNumber === true && (
       <Text small style={styles.stepNumber}>
         {currentStep}
@@ -57,12 +51,7 @@ const ProgressStep = ({currentStep, totalSteps, displayStepNumber}: Props) => {
   const steps = []
   for (let i = 0; i < totalSteps; i++) {
     steps.push(
-      <Step
-        currentStep={i + 1}
-        displayStepNumber={displayStepNumber}
-        todoStep={i + 1 > currentStep}
-        key={i}
-      />,
+      <Step currentStep={i + 1} displayStepNumber={displayStepNumber} todoStep={i + 1 > currentStep} key={i} />,
     )
   }
   return <View style={[styles.bar]}>{steps}</View>

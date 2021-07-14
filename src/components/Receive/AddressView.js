@@ -38,11 +38,7 @@ import verifyIcon from '../../assets/img/icon/verify-address.png'
 import copiedIcon from '../../assets/img/icon/copied.png'
 
 import type {ComponentType} from 'react'
-import type {
-  HWDeviceInfo,
-  DeviceId,
-  DeviceObj,
-} from '../../crypto/shelley/ledgerUtils'
+import type {HWDeviceInfo, DeviceId, DeviceObj} from '../../crypto/shelley/ledgerUtils'
 import type {WalletMeta} from '../../state'
 
 const messages = defineMessages({
@@ -156,25 +152,19 @@ const AddressView = ({
   const [isCopying, setIsCopying] = useState<boolean>(false)
 
   const address = addressInfo.address
-  useEffect(
-    () => {
-      if (isCopying) {
-        const timeout = setTimeout(() => {
-          clearTimeout(timeout)
-          Clipboard.setString(address)
-          setIsCopying(false)
-        }, MESSAGE_TIMEOUT)
-      }
-    },
-    [isCopying, setIsCopying, address],
-  )
+  useEffect(() => {
+    if (isCopying) {
+      const timeout = setTimeout(() => {
+        clearTimeout(timeout)
+        Clipboard.setString(address)
+        setIsCopying(false)
+      }, MESSAGE_TIMEOUT)
+    }
+  }, [isCopying, setIsCopying, address])
 
-  const _copyHandler = useCallback(
-    () => {
-      setIsCopying(true)
-    },
-    [setIsCopying],
-  )
+  const _copyHandler = useCallback(() => {
+    setIsCopying(true)
+  }, [setIsCopying])
 
   return (
     <>
@@ -182,14 +172,7 @@ const AddressView = ({
         <View style={styles.addressContainer}>
           <>
             <Text secondary={isUsed} small bold>{`/${index}`}</Text>
-            <Text
-              secondary={isUsed}
-              small
-              numberOfLines={1}
-              ellipsizeMode="middle"
-              monospace
-              style={styles.text}
-            >
+            <Text secondary={isUsed} small numberOfLines={1} ellipsizeMode="middle" monospace style={styles.text}>
               {addressInfo.address}
             </Text>
           </>
@@ -228,15 +211,8 @@ const AddressView = ({
         showCloseIcon
       />
 
-      <Modal
-        visible={addressDialogStep === ADDRESS_DIALOG_STEPS.LEDGER_CONNECT}
-        onRequestClose={closeDetails}
-      >
-        <LedgerConnect
-          onConnectBLE={onConnectBLE}
-          onConnectUSB={onConnectUSB}
-          useUSB={useUSB}
-        />
+      <Modal visible={addressDialogStep === ADDRESS_DIALOG_STEPS.LEDGER_CONNECT} onRequestClose={closeDetails}>
+        <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={useUSB} />
       </Modal>
 
       <AddressVerifyModal
@@ -244,12 +220,7 @@ const AddressView = ({
         onRequestClose={closeDetails}
         onConfirm={onVerifyAddress}
         addressInfo={addressInfo}
-        path={formatPath(
-          0,
-          'External',
-          index,
-          walletMeta.walletImplementationId,
-        )}
+        path={formatPath(0, 'External', index, walletMeta.walletImplementationId)}
         isWaiting={isWaiting}
         useUSB={useUSB}
       />
@@ -265,8 +236,8 @@ export default injectIntl(
   (compose(
     connect(
       (state, {addressInfo}) => ({
-        index: externalAddressIndexSelector(state)[(addressInfo?.address)],
-        isUsed: !!isUsedAddressIndexSelector(state)[(addressInfo?.address)],
+        index: externalAddressIndexSelector(state)[addressInfo?.address],
+        isUsed: !!isUsedAddressIndexSelector(state)[addressInfo?.address],
         hwDeviceInfo: hwDeviceInfoSelector(state),
         walletMeta: walletMetaSelector(state),
       }),
@@ -303,81 +274,67 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      withActivityIndicator: ({setIsWaiting}) => async (
-        func: () => Promise<void>,
-      ): Promise<void> => {
-        setIsWaiting(true)
-        try {
-          await func()
-        } finally {
-          setIsWaiting(false)
-        }
-      },
-      onToggleAddrVerifyDialog: ({
-        openTransportSwitch,
-        openAddressVerify,
-      }) => () => {
-        if (
-          Platform.OS === 'android' &&
-          CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT
-        ) {
-          openTransportSwitch()
-        } else {
-          openAddressVerify()
-        }
-      },
+      withActivityIndicator:
+        ({setIsWaiting}) =>
+        async (func: () => Promise<void>): Promise<void> => {
+          setIsWaiting(true)
+          try {
+            await func()
+          } finally {
+            setIsWaiting(false)
+          }
+        },
+      onToggleAddrVerifyDialog:
+        ({openTransportSwitch, openAddressVerify}) =>
+        () => {
+          if (Platform.OS === 'android' && CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT) {
+            openTransportSwitch()
+          } else {
+            openAddressVerify()
+          }
+        },
     }),
     withHandlers({
-      onChooseTransport: ({
-        hwDeviceInfo,
-        setUseUSB,
-        openLedgerConnect,
-        openAddressVerify,
-      }) => (event, useUSB) => {
-        setUseUSB(useUSB)
-        Logger.debug('hwDeviceInfo', hwDeviceInfo)
-        if (
-          (useUSB && hwDeviceInfo.hwFeatures.deviceObj == null) ||
-          (!useUSB && hwDeviceInfo.hwFeatures.deviceId == null)
-        ) {
-          openLedgerConnect()
-        } else {
+      onChooseTransport:
+        ({hwDeviceInfo, setUseUSB, openLedgerConnect, openAddressVerify}) =>
+        (event, useUSB) => {
+          setUseUSB(useUSB)
+          Logger.debug('hwDeviceInfo', hwDeviceInfo)
+          if (
+            (useUSB && hwDeviceInfo.hwFeatures.deviceObj == null) ||
+            (!useUSB && hwDeviceInfo.hwFeatures.deviceId == null)
+          ) {
+            openLedgerConnect()
+          } else {
+            openAddressVerify()
+          }
+        },
+      onConnectUSB:
+        ({setLedgerDeviceObj, openAddressVerify}) =>
+        async (deviceObj) => {
+          await setLedgerDeviceObj(deviceObj)
           openAddressVerify()
-        }
-      },
-      onConnectUSB: ({setLedgerDeviceObj, openAddressVerify}) => async (
-        deviceObj,
-      ) => {
-        await setLedgerDeviceObj(deviceObj)
-        openAddressVerify()
-      },
-      onConnectBLE: ({setLedgerDeviceId, openAddressVerify}) => async (
-        deviceId,
-      ) => {
-        await setLedgerDeviceId(deviceId)
-        openAddressVerify()
-      },
-      onVerifyAddress: ({
-        intl,
-        address,
-        index,
-        hwDeviceInfo,
-        walletMeta,
-        useUSB,
-        closeDetails,
-        withActivityIndicator,
-      }) => async (_event) => {
-        await _handleOnVerifyAddress(
-          intl,
-          address,
-          index,
-          hwDeviceInfo,
-          walletMeta,
-          useUSB,
-          closeDetails,
-          withActivityIndicator,
-        )
-      },
+        },
+      onConnectBLE:
+        ({setLedgerDeviceId, openAddressVerify}) =>
+        async (deviceId) => {
+          await setLedgerDeviceId(deviceId)
+          openAddressVerify()
+        },
+      onVerifyAddress:
+        ({intl, address, index, hwDeviceInfo, walletMeta, useUSB, closeDetails, withActivityIndicator}) =>
+        async (_event) => {
+          await _handleOnVerifyAddress(
+            intl,
+            address,
+            index,
+            hwDeviceInfo,
+            walletMeta,
+            useUSB,
+            closeDetails,
+            withActivityIndicator,
+          )
+        },
     }),
   )(AddressView): ComponentType<ExternalProps>),
 )

@@ -12,8 +12,7 @@ const getAddr = (i) => `Addr${i}`
 describe('AddressChain', () => {
   let chain
   let used
-  const filterFn = (addrs) =>
-    Promise.resolve(addrs.filter((addr) => used.map(getAddr).includes(addr)))
+  const filterFn = (addrs) => Promise.resolve(addrs.filter((addr) => used.map(getAddr).includes(addr)))
 
   beforeEach(() => {
     used = []
@@ -91,12 +90,7 @@ describe('AddressChain', () => {
         'b5bafb0b1fc6c8040cc8f69f7c1948dfb4dcadec4acd09730c0efb39c6159362',
     }
     chain = new AddressChain(
-      new AddressGenerator(
-        account.root_cached_key,
-        'Internal',
-        'haskell-byron',
-        networkId,
-      ),
+      new AddressGenerator(account.root_cached_key, 'Internal', 'haskell-byron', networkId),
       5,
       2,
     )

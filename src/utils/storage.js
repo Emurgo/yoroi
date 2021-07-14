@@ -7,11 +7,9 @@ import _ from 'lodash'
 
 export class StorageError extends ExtendableError {}
 
-const checkPathFormat = (path: string) =>
-  path.startsWith('/') && !path.endsWith('/')
+const checkPathFormat = (path: string) => path.startsWith('/') && !path.endsWith('/')
 
-const parseJson = (json: string) =>
-  json !== null ? JSON.parse(json) : undefined
+const parseJson = (json: string) => (json !== null ? JSON.parse(json) : undefined)
 
 export const read: (string) => Promise<void | any> = async (path) => {
   assert.preconditionCheck(checkPathFormat(path), 'Wrong storage key path')
@@ -24,10 +22,7 @@ export const read: (string) => Promise<void | any> = async (path) => {
 }
 
 export const readMany = async (paths: Array<string>) => {
-  assert.preconditionCheck(
-    _.every(paths, checkPathFormat),
-    'Wrong storage key path',
-  )
+  assert.preconditionCheck(_.every(paths, checkPathFormat), 'Wrong storage key path')
 
   try {
     const items = await AsyncStorage.multiGet(paths)
@@ -72,13 +67,9 @@ export const clearAll = async () => {
 export const keys = async (path: string, includeSubdirs?: boolean) => {
   try {
     const all = await AsyncStorage.getAllKeys()
-    const matched = all
-      .filter((key) => key.startsWith(path))
-      .map((key) => key.substring(path.length))
+    const matched = all.filter((key) => key.startsWith(path)).map((key) => key.substring(path.length))
 
-    return includeSubdirs === true
-      ? matched
-      : matched.filter((key) => !key.includes('/'))
+    return includeSubdirs === true ? matched : matched.filter((key) => !key.includes('/'))
   } catch (error) {
     throw new StorageError(error.message)
   }

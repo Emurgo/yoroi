@@ -36,11 +36,7 @@ const ValidatedTextInput = ({
   <View style={styles.container}>
     <TextInput
       {...restProps}
-      style={[
-        styles.input,
-        error != null && error !== false && styles.inputError,
-        style,
-      ]}
+      style={[styles.input, error != null && error !== false && styles.inputError, style]}
       secureTextEntry={secureTextEntry === true && !showPassword}
       autoCorrect={!secureTextEntry}
       keyboardType={
@@ -48,38 +44,24 @@ const ValidatedTextInput = ({
           ? keyboardType !== 'visible-password'
             ? keyboardType
             : Platform.OS === 'android'
-              ? 'visible-password'
-              : 'default' // visible-password is Android-only
+            ? 'visible-password'
+            : 'default' // visible-password is Android-only
           : 'default'
       }
     />
     {label != null && (
       <View style={styles.labelWrap}>
-        <Text
-          style={[
-            styles.label,
-            error != null && error !== false && styles.labelError,
-          ]}
-        >
-          {label}
-        </Text>
+        <Text style={[styles.label, error != null && error !== false && styles.labelError]}>{label}</Text>
       </View>
     )}
 
     {secureTextEntry === true && (
-      <TouchableOpacity
-        style={styles.showPasswordContainer}
-        onPress={toggleShowPassword}
-      >
-        <Image
-          style={styles.showPassword}
-          source={showPassword ? openedEyeIcon : closedEyeIcon}
-        />
+      <TouchableOpacity style={styles.showPasswordContainer} onPress={toggleShowPassword}>
+        <Image style={styles.showPassword} source={showPassword ? openedEyeIcon : closedEyeIcon} />
       </TouchableOpacity>
     )}
 
-    {error != null &&
-      error !== false && <Text style={styles.error}>{error}</Text>}
+    {error != null && error !== false && <Text style={styles.error}>{error}</Text>}
   </View>
 )
 

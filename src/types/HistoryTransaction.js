@@ -19,12 +19,7 @@ export const TRANSACTION_STATUS = {
 }
 
 export type TransactionStatus = $Values<typeof TRANSACTION_STATUS>
-export type TransactionAssurance =
-  | 'PENDING'
-  | 'FAILED'
-  | 'LOW'
-  | 'MEDIUM'
-  | 'HIGH'
+export type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
 
 export type CommonMetadata = {|
   +numberOfDecimals: number,

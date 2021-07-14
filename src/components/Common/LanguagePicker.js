@@ -212,12 +212,7 @@ type Props = {
   intl: IntlShape,
 }
 
-export const LanguagePicker = ({
-  changeLanguage,
-  languageCode,
-  handleContinue,
-  intl,
-}: Props) => {
+export const LanguagePicker = ({changeLanguage, languageCode, handleContinue, intl}: Props) => {
   return (
     <View style={styles.container}>
       <StatusBar type="light" />
@@ -239,31 +234,23 @@ export const LanguagePicker = ({
         )}
       />
 
-      {/* eslint-disable indent */
-      languageCode !== 'en-US' &&
-        languageCode !== 'ja-JP' && (
+      {
+        /* eslint-disable indent */
+        languageCode !== 'en-US' && languageCode !== 'ja-JP' && (
           <View style={styles.ackBlock}>
             {intl.formatMessage(messages.contributors) !== '_' ? (
               <Markdown>
-                {`${intl.formatMessage(
-                  messages.acknowledgement,
-                )}: **${intl.formatMessage(messages.contributors)}**`}
+                {`${intl.formatMessage(messages.acknowledgement)}: **${intl.formatMessage(messages.contributors)}**`}
               </Markdown>
             ) : (
-              <Markdown>{`${intl.formatMessage(
-                messages.acknowledgement,
-              )}.`}</Markdown>
+              <Markdown>{`${intl.formatMessage(messages.acknowledgement)}.`}</Markdown>
             )}
           </View>
         )
-      /* eslint-enable indent */
+        /* eslint-enable indent */
       }
 
-      <Button
-        onPress={handleContinue}
-        title={intl.formatMessage(messages.continueButton)}
-        testID="chooseLangButton"
-      />
+      <Button onPress={handleContinue} title={intl.formatMessage(messages.continueButton)} testID="chooseLangButton" />
     </View>
   )
 }

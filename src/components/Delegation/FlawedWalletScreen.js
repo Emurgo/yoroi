@@ -44,21 +44,15 @@ const FlawedWalletScreen = ({intl, onPress, disableButtons}: Props) => {
           <Text style={styles.title}>{intl.formatMessage(messages.title)}</Text>
           <Image source={image} />
         </View>
-        <Text style={styles.paragraph}>
-          {intl.formatMessage(messages.explanation1)}
-        </Text>
-        <Text style={styles.paragraph}>
-          {intl.formatMessage(messages.explanation2)}
-        </Text>
+        <Text style={styles.paragraph}>{intl.formatMessage(messages.explanation1)}</Text>
+        <Text style={styles.paragraph}>{intl.formatMessage(messages.explanation2)}</Text>
       </View>
       <View style={styles.buttons}>
         <Button
           block
           outlineShelley
           onPress={onPress}
-          title={intl.formatMessage(
-            confirmationMessages.commonButtons.iUnderstandButton,
-          )}
+          title={intl.formatMessage(confirmationMessages.commonButtons.iUnderstandButton)}
           style={styles.button}
           disabled={disableButtons}
         />

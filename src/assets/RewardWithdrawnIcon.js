@@ -10,17 +10,8 @@ type Props = {|
   color?: string,
 |}
 
-const RewardWithdrawnIcon = ({
-  width = 36,
-  height = 36,
-  color = '#6B7384',
-}: Props) => (
-  <Svg
-    viewBox="0 0 36 36"
-    version="1.1"
-    xmlns="http://www.w3.org/2000/svg"
-    {...{width, height}}
-  >
+const RewardWithdrawnIcon = ({width = 36, height = 36, color = '#6B7384'}: Props) => (
+  <Svg viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" {...{width, height}}>
     <G stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
       <G transform="translate(-760.000000, -425.000000)" fill={color}>
         <G transform="translate(760.000000, 425.000000)">

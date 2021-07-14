@@ -50,27 +50,15 @@ export async function generateRegistration(request: {|
    */
 
   const jsonMeta = JSON.stringify({
-    '1': `0x${Buffer.from(await request.catalystPublicKey.as_bytes()).toString(
-      'hex',
-    )}`,
-    '2': `0x${Buffer.from(await request.stakePublicKey.as_bytes()).toString(
-      'hex',
-    )}`,
-    '3': `0x${Buffer.from(await request.rewardAddress.to_bytes()).toString(
-      'hex',
-    )}`,
+    '1': `0x${Buffer.from(await request.catalystPublicKey.as_bytes()).toString('hex')}`,
+    '2': `0x${Buffer.from(await request.stakePublicKey.as_bytes()).toString('hex')}`,
+    '3': `0x${Buffer.from(await request.rewardAddress.to_bytes()).toString('hex')}`,
     '4': request.absSlotNumber,
   })
-  const registrationData = await encode_json_str_to_metadatum(
-    jsonMeta,
-    MetadataJsonSchema.BasicConversions,
-  )
+  const registrationData = await encode_json_str_to_metadatum(jsonMeta, MetadataJsonSchema.BasicConversions)
   Logger.debug(jsonMeta)
   const generalMetadata = await GeneralTransactionMetadata.new()
-  await generalMetadata.insert(
-    await BigNum.from_str(CatalystLabels.DATA.toString()),
-    registrationData,
-  )
+  await generalMetadata.insert(await BigNum.from_str(CatalystLabels.DATA.toString()), registrationData)
 
   const hashedMetadata = blake2b(256 / 8)
     .update(await generalMetadata.to_bytes())
@@ -89,15 +77,9 @@ export async function generateRegistration(request: {|
   )
   // This is how Ledger constructs the metadata. We must be consistent with it.
   const metadataList = await MetadataList.new()
-  await metadataList.add(
-    await TransactionMetadatum.from_bytes(await generalMetadata.to_bytes()),
-  )
-  await metadataList.add(
-    await TransactionMetadatum.new_list(await MetadataList.new()),
-  )
-  const trxMetadata = await TransactionMetadata.from_bytes(
-    await metadataList.to_bytes(),
-  )
+  await metadataList.add(await TransactionMetadatum.from_bytes(await generalMetadata.to_bytes()))
+  await metadataList.add(await TransactionMetadatum.new_list(await MetadataList.new()))
+  const trxMetadata = await TransactionMetadata.from_bytes(await metadataList.to_bytes())
   return trxMetadata
 }
 

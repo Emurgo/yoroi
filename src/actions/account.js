@@ -73,10 +73,7 @@ const _setLastError = (error) => ({
   reducer: (state, error) => error,
 })
 
-export const fetchAccountState = () => async (
-  dispatch: Dispatch<any>,
-  getState: () => State,
-) => {
+export const fetchAccountState = () => async (dispatch: Dispatch<any>, getState: () => State) => {
   if (getState().accountState.isFetching) {
     return
   }
@@ -105,9 +102,7 @@ export const fetchAccountState = () => async (
               new BigNumber(0),
             )
           : BigNumber(0)
-      dispatch(
-        _setAccountTotalDelegated(amountToDelegate.plus(new BigNumber(value))),
-      )
+      dispatch(_setAccountTotalDelegated(amountToDelegate.plus(new BigNumber(value))))
     }
     dispatch(_setAccountValue(new BigNumber(value)))
     dispatch(_setLastError(null))

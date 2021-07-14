@@ -29,12 +29,8 @@ const NotDelegatedInfo = ({intl}: ExternalProps) => (
     <View style={styles.imageWrap}>
       <Image source={NotDelegatedImage} />
     </View>
-    <Text style={[styles.text, styles.textFirstLine]}>
-      {intl.formatMessage(messages.firstLine)}
-    </Text>
-    <Text style={[styles.text, styles.textSecondLine]}>
-      {intl.formatMessage(messages.secondLine)}
-    </Text>
+    <Text style={[styles.text, styles.textFirstLine]}>{intl.formatMessage(messages.firstLine)}</Text>
+    <Text style={[styles.text, styles.textSecondLine]}>{intl.formatMessage(messages.secondLine)}</Text>
     <Line />
   </View>
 )

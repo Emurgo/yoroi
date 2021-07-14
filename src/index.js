@@ -39,23 +39,7 @@ bluebird.config({
 })
 
 // https://github.com/yahoo/react-intl/wiki#loading-locale-data
-addLocaleData([
-  ...en,
-  ...ja,
-  ...ko,
-  ...ru,
-  ...es,
-  ...zh,
-  ...id,
-  ...pt,
-  ...de,
-  ...fr,
-  ...it,
-  ...nl,
-  ...cs,
-  ...hu,
-  ...sk,
-])
+addLocaleData([...en, ...ja, ...ko, ...ru, ...es, ...zh, ...id, ...pt, ...de, ...fr, ...it, ...nl, ...cs, ...hu, ...sk])
 
 /*
   Warning(ppershing): DO NOT EVER REMOVE FOLLOWING LINE!

@@ -68,8 +68,7 @@ const txs: Array<RawTransaction> = [
     tx_state: 'Successful',
     last_update: '2021-01-15T12:22:31.000Z',
     block_num: 2229379,
-    block_hash:
-      '9add65678c26f19fc9e1094e9a0ee21febc973486771438fd2cd62ccd60918b7',
+    block_hash: '9add65678c26f19fc9e1094e9a0ee21febc973486771438fd2cd62ccd60918b7',
     time: '2021-01-15T12:22:31.000Z',
     epoch: 108,
     slot: 57735,
@@ -80,8 +79,7 @@ const txs: Array<RawTransaction> = [
         amount: '999797657118',
         id: '1be680db0e5361ded2cf5b0d1689223dc61b7a8cf0485254b12c3b1ca64b61cc1',
         index: 1,
-        txHash:
-          '1be680db0e5361ded2cf5b0d1689223dc61b7a8cf0485254b12c3b1ca64b61cc',
+        txHash: '1be680db0e5361ded2cf5b0d1689223dc61b7a8cf0485254b12c3b1ca64b61cc',
         assets: [],
       },
     ],
@@ -110,8 +108,7 @@ const txs: Array<RawTransaction> = [
     tx_state: 'Successful',
     last_update: '2021-01-27T18:06:56.000Z',
     block_num: 2265695,
-    block_hash:
-      '8a7f636928df18b88f321a859c9430bb6dcc50d4dc1aa5f2c7adaa6f0e087868',
+    block_hash: '8a7f636928df18b88f321a859c9430bb6dcc50d4dc1aa5f2c7adaa6f0e087868',
     time: '2021-01-27T18:06:56.000Z',
     epoch: 110,
     slot: 251200,
@@ -122,8 +119,7 @@ const txs: Array<RawTransaction> = [
         amount: '50000000000',
         id: '4a3167e746d45c2737dc5150cd822f18d3ef3a1315a3edc21a3aa2b376d1e3780',
         index: 0,
-        txHash:
-          '4a3167e746d45c2737dc5150cd822f18d3ef3a1315a3edc21a3aa2b376d1e378',
+        txHash: '4a3167e746d45c2737dc5150cd822f18d3ef3a1315a3edc21a3aa2b376d1e378',
         assets: [],
       },
     ],
@@ -152,8 +148,7 @@ const txs: Array<RawTransaction> = [
     tx_state: 'Successful',
     last_update: '2021-02-19T15:53:36.000Z',
     block_num: 2335831,
-    block_hash:
-      '7d495a78597a10539d54f4c4dc5bfd2324cceb80520c712caa93e0fa0dd7c1c0',
+    block_hash: '7d495a78597a10539d54f4c4dc5bfd2324cceb80520c712caa93e0fa0dd7c1c0',
     time: '2021-02-19T15:53:36.000Z',
     epoch: 115,
     slot: 70400,
@@ -164,14 +159,11 @@ const txs: Array<RawTransaction> = [
         amount: '481040108',
         id: '3393cf9c82f674db5d45a72c3c054dc3c0012bb7de13283add23002194327d451',
         index: 1,
-        txHash:
-          '3393cf9c82f674db5d45a72c3c054dc3c0012bb7de13283add23002194327d45',
+        txHash: '3393cf9c82f674db5d45a72c3c054dc3c0012bb7de13283add23002194327d45',
         assets: [
           {
-            assetId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
-            policyId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            assetId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+            policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             name: '',
             amount: '76',
           },
@@ -185,10 +177,8 @@ const txs: Array<RawTransaction> = [
         amount: '1407406',
         assets: [
           {
-            assetId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
-            policyId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            assetId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+            policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             name: '',
             amount: '2',
           },
@@ -200,10 +190,8 @@ const txs: Array<RawTransaction> = [
         amount: '479460117',
         assets: [
           {
-            assetId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
-            policyId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            assetId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+            policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             name: '',
             amount: '74',
           },
@@ -221,8 +209,7 @@ const txs: Array<RawTransaction> = [
     tx_state: 'Successful',
     last_update: '2021-02-26T12:46:49.000Z',
     block_num: 2357434,
-    block_hash:
-      '6ee1c0789faff99304916e2bee37b274d136492e1059b186ee8ec9cdde0bfba3',
+    block_hash: '6ee1c0789faff99304916e2bee37b274d136492e1059b186ee8ec9cdde0bfba3',
     time: '2021-02-26T12:46:49.000Z',
     epoch: 116,
     slot: 231993,
@@ -233,14 +220,11 @@ const txs: Array<RawTransaction> = [
         amount: '1407406',
         id: '33ae3456581ab8dc0a9ddb265c53d08e4df0c7d16786f5932ed525c092894a8f0',
         index: 0,
-        txHash:
-          '33ae3456581ab8dc0a9ddb265c53d08e4df0c7d16786f5932ed525c092894a8f',
+        txHash: '33ae3456581ab8dc0a9ddb265c53d08e4df0c7d16786f5932ed525c092894a8f',
         assets: [
           {
-            assetId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
-            policyId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            assetId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+            policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             name: '',
             amount: '2',
           },
@@ -252,14 +236,11 @@ const txs: Array<RawTransaction> = [
         amount: '48499317096',
         id: '5152eaa7bf59c5d4b6af44ffa14ad2616b90bb9304c311e6137072f54306fac41',
         index: 1,
-        txHash:
-          '5152eaa7bf59c5d4b6af44ffa14ad2616b90bb9304c311e6137072f54306fac4',
+        txHash: '5152eaa7bf59c5d4b6af44ffa14ad2616b90bb9304c311e6137072f54306fac4',
         assets: [
           {
-            assetId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
-            policyId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            assetId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+            policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             name: '',
             amount: '1',
           },
@@ -273,10 +254,8 @@ const txs: Array<RawTransaction> = [
         amount: '1407406',
         assets: [
           {
-            assetId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
-            policyId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            assetId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+            policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             name: '',
             amount: '2',
           },
@@ -288,10 +267,8 @@ const txs: Array<RawTransaction> = [
         amount: '48499139539',
         assets: [
           {
-            assetId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
-            policyId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            assetId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+            policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             name: '',
             amount: '1',
           },
@@ -348,9 +325,7 @@ describe('processTxHistoryData', () => {
 
     expect(netTokenBalance.length).toBe(1)
     expect(netTokenBalance[0].amount.toString()).toBe('2')
-    expect(netTokenBalance[0].identifier).toBe(
-      '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
-    )
+    expect(netTokenBalance[0].identifier).toBe('6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.')
     expect(tx.direction).toBe(TRANSACTION_DIRECTION.RECEIVED)
   })
 
@@ -370,9 +345,7 @@ describe('processTxHistoryData', () => {
 
     expect(netTokenBalance.length).toBe(1)
     expect(netTokenBalance[0].amount.toString()).toBe('0')
-    expect(netTokenBalance[0].identifier).toBe(
-      '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
-    )
+    expect(netTokenBalance[0].identifier).toBe('6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.')
     expect(tx.direction).toBe(TRANSACTION_DIRECTION.SELF)
   })
 })

@@ -48,10 +48,8 @@ export const NETWORKS = {
     ENABLED: true,
     CHAIN_NETWORK_ID: '1',
     IS_MAINNET: true,
-    EXPLORER_URL_FOR_ADDRESS: (address: string) =>
-      `https://explorer.cardano.org/en/address?address=${address}`,
-    EXPLORER_URL_FOR_TX: (tx: string) =>
-      `https://explorer.cardano.org/tx/${tx}`,
+    EXPLORER_URL_FOR_ADDRESS: (address: string) => `https://explorer.cardano.org/en/address?address=${address}`,
+    EXPLORER_URL_FOR_TX: (tx: string) => `https://explorer.cardano.org/tx/${tx}`,
     POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
     BACKEND: {
       API_ROOT: 'https://iohk-mainnet.yoroiwallet.com/api',
@@ -141,8 +139,7 @@ export const NETWORKS = {
     SEIZA_STAKING_SIMPLE: (ADA: string) =>
       // eslint-disable-next-line max-len
       `https://testnet.seiza-website.emurgo.io/staking-simple/list?sortBy=RANDOM&searchText=&performance[]=0&performance[]=100&source=mobile&userAda=${ADA}`,
-    EXPLORER_URL_FOR_ADDRESS: (address: string) =>
-      `https://shelleyexplorer.cardano.org/address/?id=${address}`,
+    EXPLORER_URL_FOR_ADDRESS: (address: string) => `https://shelleyexplorer.cardano.org/address/?id=${address}`,
     EXPLORER_URL_FOR_TX: (_tx: string) => {
       throw new Error('non supported network')
     },
@@ -159,8 +156,7 @@ export const NETWORKS = {
       PRODUCTION: '0',
       TEST: '1',
     },
-    GENESISHASH:
-      '8e4d2a343f3dcf9330ad9035b3e8d168e6728904262f2c434a4f8f934ec7b676',
+    GENESISHASH: '8e4d2a343f3dcf9330ad9035b3e8d168e6728904262f2c434a4f8f934ec7b676',
     BLOCK0_DATE: 1576264417000,
     SLOTS_PER_EPOCH: 43200,
     SLOT_DURATION: 2,
@@ -176,12 +172,10 @@ export const NETWORKS = {
  */
 
 // TODO: perhaps rename as isJormungandrNetwork for better naming consistency
-export const isJormungandr = (networkId: NetworkId): boolean =>
-  networkId === NETWORK_REGISTRY.JORMUNGANDR
+export const isJormungandr = (networkId: NetworkId): boolean => networkId === NETWORK_REGISTRY.JORMUNGANDR
 
 export const isHaskellShelleyNetwork = (networkId: NetworkId): boolean =>
-  networkId === NETWORK_REGISTRY.HASKELL_SHELLEY ||
-  networkId === NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET
+  networkId === NETWORK_REGISTRY.HASKELL_SHELLEY || networkId === NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET
 
 export const getCardanoByronConfig = () => NETWORKS.BYRON_MAINNET
 
@@ -199,12 +193,8 @@ export const getNetworkConfigById = (id: NetworkId): NetworkConfig => {
   throw new Error('invalid networkId')
 }
 
-export type CardanoHaskellShelleyNetwork =
-  | typeof NETWORKS.HASKELL_SHELLEY
-  | typeof NETWORKS.HASKELL_SHELLEY_TESTNET
-export const getCardanoNetworkConfigById: (NetworkId) => CardanoHaskellShelleyNetwork = (
-  networkId,
-) => {
+export type CardanoHaskellShelleyNetwork = typeof NETWORKS.HASKELL_SHELLEY | typeof NETWORKS.HASKELL_SHELLEY_TESTNET
+export const getCardanoNetworkConfigById: (NetworkId) => CardanoHaskellShelleyNetwork = (networkId) => {
   switch (networkId) {
     case NETWORKS.HASKELL_SHELLEY.NETWORK_ID:
       return NETWORKS.HASKELL_SHELLEY
@@ -244,8 +234,6 @@ export const DEFAULT_ASSETS: Array<Object> = flatten(
           },
         ]
       }
-      throw new Error(
-        `Missing default asset for network type ${JSON.stringify(network)}`,
-      )
+      throw new Error(`Missing default asset for network type ${JSON.stringify(network)}`)
     }),
 )

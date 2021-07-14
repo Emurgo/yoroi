@@ -68,21 +68,14 @@ class KeyStore {
             intl.formatMessage(messages.cancelButton),
           )
         } else {
-          decryptedKey = await KeyStoreBridge.decryptDataWithFingerprint(
-            data,
-            dataKey,
-          )
+          decryptedKey = await KeyStoreBridge.decryptDataWithFingerprint(data, dataKey)
         }
 
         return decryptedKey
       }
 
       case 'SYSTEM_PIN': {
-        const decryptedKey = await KeyStoreBridge.decryptDataWithSystemPin(
-          data,
-          dataKey,
-          message,
-        )
+        const decryptedKey = await KeyStoreBridge.decryptDataWithSystemPin(data, dataKey, message)
         return decryptedKey
       }
 
@@ -105,12 +98,7 @@ class KeyStore {
     return false
   }
 
-  static async storeData(
-    keyId: string,
-    encryptionMethod: EncryptionMethod,
-    data: string,
-    password?: string,
-  ) {
+  static async storeData(keyId: string, encryptionMethod: EncryptionMethod, data: string, password?: string) {
     const dataKey = KeyStore.getDataKey(keyId, encryptionMethod)
 
     let encryptedData = ''
@@ -148,10 +136,7 @@ class KeyStore {
     if (Platform.OS === 'android') {
       await KeyStoreBridge.initFingerprintKeys(dataKey)
 
-      const fingerprintEncryptedMasterKey = await KeyStoreBridge.encryptData(
-        masterKey,
-        dataKey,
-      )
+      const fingerprintEncryptedMasterKey = await KeyStoreBridge.encryptData(masterKey, dataKey)
 
       return fingerprintEncryptedMasterKey
     }
@@ -172,10 +157,7 @@ class KeyStore {
     if (Platform.OS === 'android') {
       await KeyStoreBridge.initSystemPinKeys(dataKey)
 
-      const systemPinEncryptedMasterKey = await KeyStoreBridge.encryptData(
-        masterKey,
-        dataKey,
-      )
+      const systemPinEncryptedMasterKey = await KeyStoreBridge.encryptData(masterKey, dataKey)
 
       return systemPinEncryptedMasterKey
     }
@@ -192,11 +174,7 @@ class KeyStore {
     throw new Error('Unsupported platform')
   }
 
-  static async encryptByMasterPassword(
-    dataKey: string,
-    masterKey: string,
-    masterPassword: string,
-  ) {
+  static async encryptByMasterPassword(dataKey: string, masterKey: string, masterPassword: string) {
     assert.assert(masterPassword, 'Password is provided')
 
     const encryptedMasterKey = await encryptData(masterKey, masterPassword)
@@ -271,18 +249,12 @@ class KeyStore {
   // Android rejections
   static REJECTIONS = {
     ENCRYPTION_FAILED: KeyStore._getRejectionMessage('ENCRYPTION_FAILED'),
-    ALREADY_DECRYPTING_DATA: KeyStore._getRejectionMessage(
-      'ALREADY_DECRYPTING_DATA',
-    ),
+    ALREADY_DECRYPTING_DATA: KeyStore._getRejectionMessage('ALREADY_DECRYPTING_DATA'),
     SENSOR_LOCKOUT: KeyStore._getRejectionMessage('SENSOR_LOCKOUT'),
-    SENSOR_LOCKOUT_PERMANENT: KeyStore._getRejectionMessage(
-      'SENSOR_LOCKOUT_PERMANENT',
-    ),
+    SENSOR_LOCKOUT_PERMANENT: KeyStore._getRejectionMessage('SENSOR_LOCKOUT_PERMANENT'),
     NOT_RECOGNIZED: KeyStore._getRejectionMessage('NOT_RECOGNIZED'),
     DECRYPTION_FAILED: KeyStore._getRejectionMessage('DECRYPTION_FAILED'),
-    SYSTEM_AUTH_NOT_SUPPORTED: KeyStore._getRejectionMessage(
-      'SYSTEM_AUTH_NOT_SUPPORTED',
-    ),
+    SYSTEM_AUTH_NOT_SUPPORTED: KeyStore._getRejectionMessage('SYSTEM_AUTH_NOT_SUPPORTED'),
     FAILED_UNKNOWN_ERROR: KeyStore._getRejectionMessage('FAILED_UNKNOWN_ERROR'),
     CANCELED: KeyStore._getRejectionMessage('CANCELED'),
     FAILED: KeyStore._getRejectionMessage('FAILED'),

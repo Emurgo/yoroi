@@ -18,16 +18,9 @@ import type {Address, AddressedUtxo, Addressing, Value} from '../types'
 
 const PRIMARY_ASSET_CONSTANTS = CONFIG.PRIMARY_ASSET_CONSTANTS
 
-export const shelleyTxEqual = async (
-  req1: TransactionBuilder,
-  req2: TransactionBuilder,
-): Promise<boolean> => {
-  const tx1Hex = Buffer.from(await (await req1.build()).to_bytes()).toString(
-    'hex',
-  )
-  const tx2Hex = Buffer.from(await (await req2.build()).to_bytes()).toString(
-    'hex',
-  )
+export const shelleyTxEqual = async (req1: TransactionBuilder, req2: TransactionBuilder): Promise<boolean> => {
+  const tx1Hex = Buffer.from(await (await req1.build()).to_bytes()).toString('hex')
+  const tx2Hex = Buffer.from(await (await req2.build()).to_bytes()).toString('hex')
   return tx1Hex === tx2Hex
 }
 

@@ -195,8 +195,7 @@ export const mockState = (): State => {
       name: 'My wallet',
       isInitialized: true,
       networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-      walletImplementationId:
-        CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+      walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
       isHW: false,
       hwDeviceInfo: null,
       isReadOnly: false,

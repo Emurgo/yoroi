@@ -27,12 +27,7 @@ import {
   hash_transaction,
 } from '@emurgo/react-native-haskell-shelley'
 
-import {
-  newAdaUnsignedTx,
-  newAdaUnsignedTxFromUtxo,
-  sendAllUnsignedTxFromUtxo,
-  signTransaction,
-} from './transactions'
+import {newAdaUnsignedTx, newAdaUnsignedTxFromUtxo, sendAllUnsignedTxFromUtxo, signTransaction} from './transactions'
 import {InsufficientFunds, NoOutputsError, AssetOverflowError} from '../errors'
 import {byronAddrToHex, identifierToCardanoAsset} from './utils'
 import {CONFIG, getDefaultAssets} from '../../config/config'
@@ -47,59 +42,48 @@ jestSetup.setup()
 const NUMBERS = CONFIG.NUMBERS
 const NETWORK = NETWORKS.HASKELL_SHELLEY
 
-const defaultIdentifier = getDefaultAssets().filter(
-  (asset) => asset.networkId === NETWORK.NETWORK_ID,
-)[0].identifier
+const defaultIdentifier = getDefaultAssets().filter((asset) => asset.networkId === NETWORK.NETWORK_ID)[0].identifier
 
-const testAssetId =
-  'd27197682d71905c087c5c3b61b10e6d746db0b9bef351014d75bb26.6e69636f696e'
+const testAssetId = 'd27197682d71905c087c5c3b61b10e6d746db0b9bef351014d75bb26.6e69636f696e'
 
 const genSampleUtxos: (void) => Promise<Array<RawUtxo>> = async () => [
   {
     amount: '701',
-    receiver: await byronAddrToHex(
-      'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-    ),
+    receiver: await byronAddrToHex('Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4'),
     tx_hash: '05ec4a4a7f4645fa66886cef2e34706907a3a7f9d88e0d48b313ad2cdf76fb5f',
     tx_index: 0,
-    utxo_id:
-      '05ec4a4a7f4645fa66886cef2e34706907a3a7f9d88e0d48b313ad2cdf76fb5f0',
+    utxo_id: '05ec4a4a7f4645fa66886cef2e34706907a3a7f9d88e0d48b313ad2cdf76fb5f0',
     assets: [],
   },
   {
     amount: '1000001',
-    receiver: await byronAddrToHex(
-      'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-    ),
+    receiver: await byronAddrToHex('Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4'),
     tx_hash: '6930f123df83e4178b0324ae617b2028c0b38c6ff4660583a2abf1f7b08195fe',
     tx_index: 0,
-    utxo_id:
-      '6930f123df83e4178b0324ae617b2028c0b38c6ff4660583a2abf1f7b08195fe0',
+    utxo_id: '6930f123df83e4178b0324ae617b2028c0b38c6ff4660583a2abf1f7b08195fe0',
     assets: [],
   },
   {
     amount: '10000001',
-    receiver: await byronAddrToHex(
-      'Ae2tdPwUPEZ4xAL3nxLq4Py7BfS1D2tJ3u2rxZGnrAXC8TNkWhTaz41J3FN',
-    ),
+    receiver: await byronAddrToHex('Ae2tdPwUPEZ4xAL3nxLq4Py7BfS1D2tJ3u2rxZGnrAXC8TNkWhTaz41J3FN'),
     tx_hash: '0df0273e382739f8b4ae3783d81168093e78e0b48ec2c5430ff03d444806a173',
     tx_index: 0,
-    utxo_id:
-      '0df0273e382739f8b4ae3783d81168093e78e0b48ec2c5430ff03d444806a1730',
+    utxo_id: '0df0273e382739f8b4ae3783d81168093e78e0b48ec2c5430ff03d444806a1730',
     assets: [],
   },
   {
     amount: '30000000',
     // external addr 0, staking key 0
     receiver: Buffer.from(
-      await (await ShelleyAddress.from_bech32(
-        'addr1q8gpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqphf76y',
-      )).to_bytes(),
+      await (
+        await ShelleyAddress.from_bech32(
+          'addr1q8gpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqphf76y',
+        )
+      ).to_bytes(),
     ).toString('hex'),
     tx_hash: '86e36b6a65d82c9dcc0370b0ee3953aee579db0b837753306405c28a74de5550',
     tx_index: 0,
-    utxo_id:
-      '86e36b6a65d82c9dcc0370b0ee3953aee579db0b837753306405c28a74de55500',
+    utxo_id: '86e36b6a65d82c9dcc0370b0ee3953aee579db0b837753306405c28a74de55500',
     assets: [],
   },
   {
@@ -112,8 +96,7 @@ const genSampleUtxos: (void) => Promise<Array<RawUtxo>> = async () => [
     ).toString('hex'),
     tx_hash: '86e36b6a65d82c9dcc0370b0ee3953aee579db0b837753306405c28a74de5550',
     tx_index: 0,
-    utxo_id:
-      '86e36b6a65d82c9dcc0370b0ee3953aee579db0b837753306405c28a74de55500',
+    utxo_id: '86e36b6a65d82c9dcc0370b0ee3953aee579db0b837753306405c28a74de55500',
     assets: [
       {
         amount: '1234',
@@ -133,8 +116,7 @@ const genSampleUtxos: (void) => Promise<Array<RawUtxo>> = async () => [
     ).toString('hex'),
     tx_hash: '86e36b6a65d82c9dcc0370b0ee3953aee579db0b837753306405c28a74de5550',
     tx_index: 0,
-    utxo_id:
-      '86e36b6a65d82c9dcc0370b0ee3953aee579db0b837753306405c28a74de55500',
+    utxo_id: '86e36b6a65d82c9dcc0370b0ee3953aee579db0b837753306405c28a74de55500',
     assets: [
       {
         amount: '18446744073709551615', // max u64
@@ -153,27 +135,21 @@ const genSampleAdaAddresses: (void) => Promise<
   |}>,
 > = async () => [
   {
-    address: await byronAddrToHex(
-      'Ae2tdPwUPEZEtwz7LKtJn9ub8y7ireuj3sq2yUCZ57ccj6ZkJKn7xEiApV9',
-    ),
+    address: await byronAddrToHex('Ae2tdPwUPEZEtwz7LKtJn9ub8y7ireuj3sq2yUCZ57ccj6ZkJKn7xEiApV9'),
     addressing: {
       path: [1, 11],
       startLevel: NUMBERS.BIP44_DERIVATION_LEVELS.CHAIN,
     },
   },
   {
-    address: await byronAddrToHex(
-      'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-    ),
+    address: await byronAddrToHex('Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4'),
     addressing: {
       path: [0, 135],
       startLevel: NUMBERS.BIP44_DERIVATION_LEVELS.CHAIN,
     },
   },
   {
-    address: await byronAddrToHex(
-      'Ae2tdPwUPEZ4xAL3nxLq4Py7BfS1D2tJ3u2rxZGnrAXC8TNkWhTaz41J3FN',
-    ),
+    address: await byronAddrToHex('Ae2tdPwUPEZ4xAL3nxLq4Py7BfS1D2tJ3u2rxZGnrAXC8TNkWhTaz41J3FN'),
     addressing: {
       path: [0, 134],
       startLevel: NUMBERS.BIP44_DERIVATION_LEVELS.CHAIN,
@@ -181,9 +157,11 @@ const genSampleAdaAddresses: (void) => Promise<
   },
   {
     address: Buffer.from(
-      await (await ShelleyAddress.from_bech32(
-        'addr1q8gpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqphf76y',
-      )).to_bytes(),
+      await (
+        await ShelleyAddress.from_bech32(
+          'addr1q8gpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqphf76y',
+        )
+      ).to_bytes(),
     ).toString('hex'),
     addressing: {
       path: [0, 0],
@@ -214,10 +192,7 @@ const getProtocolParams: () => Promise<{|
   networkId: number,
 |}> = async () => {
   return {
-    linearFee: await LinearFee.new(
-      await BigNum.from_str('2'),
-      await BigNum.from_str('500'),
-    ),
+    linearFee: await LinearFee.new(await BigNum.from_str('2'), await BigNum.from_str('500')),
     minimumUtxoVal: await BigNum.from_str('1'),
     poolDeposit: await BigNum.from_str('500'),
     keyDeposit: await BigNum.from_str('500'),
@@ -246,9 +221,7 @@ describe('Create unsigned TX from UTXO', () => {
     const promise = newAdaUnsignedTxFromUtxo(
       [
         {
-          address: await byronAddrToHex(
-            'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-          ),
+          address: await byronAddrToHex('Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4'),
           amount: output,
         },
       ],
@@ -281,9 +254,7 @@ describe('Create unsigned TX from UTXO', () => {
     const promise = newAdaUnsignedTxFromUtxo(
       [
         {
-          address: await byronAddrToHex(
-            'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-          ),
+          address: await byronAddrToHex('Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4'),
           amount: output,
         },
       ],
@@ -318,9 +289,7 @@ describe('Create unsigned TX from UTXO', () => {
     const promise = newAdaUnsignedTxFromUtxo(
       [
         {
-          address: await byronAddrToHex(
-            'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-          ),
+          address: await byronAddrToHex('Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4'),
           amount: output,
         },
       ],
@@ -399,16 +368,7 @@ describe('Create unsigned TX from UTXO', () => {
     const utxos: Array<RawUtxo> = [sampleUtxos[1]]
     await expect(
       (async () =>
-        newAdaUnsignedTxFromUtxo(
-          [],
-          undefined,
-          utxos,
-          new BigNumber(0),
-          await getProtocolParams(),
-          [],
-          [],
-          false,
-        ))(),
+        newAdaUnsignedTxFromUtxo([], undefined, utxos, new BigNumber(0), await getProtocolParams(), [], [], false))(),
     ).rejects.toThrow(NoOutputsError)
   })
 
@@ -434,9 +394,7 @@ describe('Create unsigned TX from UTXO', () => {
     const unsignedTxResponse = await newAdaUnsignedTxFromUtxo(
       [
         {
-          address: await byronAddrToHex(
-            'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-          ),
+          address: await byronAddrToHex('Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4'),
           amount: output,
         },
       ],
@@ -452,15 +410,9 @@ describe('Create unsigned TX from UTXO', () => {
     // it takes 2 inputs because input selection algorithm
     const expectedFee = new BigNumber('1166')
     expect(unsignedTxResponse.senderUtxos).toEqual([utxos[0], utxos[1]])
-    expect(
-      await (await (await unsignedTxResponse.txBuilder.get_explicit_input()).coin()).to_str(),
-    ).toEqual('1000702')
-    expect(
-      await (await (await unsignedTxResponse.txBuilder.get_explicit_output()).coin()).to_str(),
-    ).toEqual('999536')
-    expect(
-      await (await unsignedTxResponse.txBuilder.min_fee()).to_str(),
-    ).toEqual(expectedFee.toString())
+    expect(await (await (await unsignedTxResponse.txBuilder.get_explicit_input()).coin()).to_str()).toEqual('1000702')
+    expect(await (await (await unsignedTxResponse.txBuilder.get_explicit_output()).coin()).to_str()).toEqual('999536')
+    expect(await (await unsignedTxResponse.txBuilder.min_fee()).to_str()).toEqual(expectedFee.toString())
   })
 
   it('Should exclude ada-only inputs smaller than fee to include them', async () => {
@@ -485,9 +437,7 @@ describe('Create unsigned TX from UTXO', () => {
     const unsignedTxResponse = await newAdaUnsignedTxFromUtxo(
       [
         {
-          address: await byronAddrToHex(
-            'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-          ),
+          address: await byronAddrToHex('Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4'),
           amount: output,
         },
       ],
@@ -497,9 +447,7 @@ describe('Create unsigned TX from UTXO', () => {
       {
         linearFee: await LinearFee.new(
           // make sure the 1st utxo is excluded since it's too small
-          await BigNum.from_str(
-            new BigNumber(utxos[0].amount).plus(1).toString(),
-          ),
+          await BigNum.from_str(new BigNumber(utxos[0].amount).plus(1).toString()),
           await BigNum.from_str('500'),
         ),
         minimumUtxoVal: await BigNum.from_str('1'),
@@ -515,15 +463,9 @@ describe('Create unsigned TX from UTXO', () => {
     // it takes 2 inputs because input selection algorithm
     const expectedFee = new BigNumber('208994')
     expect(unsignedTxResponse.senderUtxos).toEqual([utxos[1]])
-    expect(
-      await (await (await unsignedTxResponse.txBuilder.get_explicit_input()).coin()).to_str(),
-    ).toEqual('1000001')
-    expect(
-      await (await (await unsignedTxResponse.txBuilder.get_explicit_output()).coin()).to_str(),
-    ).toEqual('791007')
-    expect(
-      await (await unsignedTxResponse.txBuilder.min_fee()).to_str(),
-    ).toEqual(expectedFee.toString())
+    expect(await (await (await unsignedTxResponse.txBuilder.get_explicit_input()).coin()).to_str()).toEqual('1000001')
+    expect(await (await (await unsignedTxResponse.txBuilder.get_explicit_output()).coin()).to_str()).toEqual('791007')
+    expect(await (await unsignedTxResponse.txBuilder.min_fee()).to_str()).toEqual(expectedFee.toString())
   })
 
   it('Should pick inputs with tokens when using input selection', async () => {
@@ -553,9 +495,7 @@ describe('Create unsigned TX from UTXO', () => {
     const unsignedTxResponse = await newAdaUnsignedTxFromUtxo(
       [
         {
-          address: await byronAddrToHex(
-            'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-          ),
+          address: await byronAddrToHex('Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4'),
           amount: output,
         },
       ],
@@ -571,20 +511,10 @@ describe('Create unsigned TX from UTXO', () => {
     // it takes 2 inputs after which the ADA amount is satisfied
     // then it skips inputs until it found an input  containing the desired token
     const expectedFee = new BigNumber('1614')
-    expect(unsignedTxResponse.senderUtxos).toEqual([
-      utxos[0],
-      utxos[1],
-      utxos[4],
-    ])
-    expect(
-      await (await (await unsignedTxResponse.txBuilder.get_explicit_input()).coin()).to_str(),
-    ).toEqual('2000703')
-    expect(
-      await (await (await unsignedTxResponse.txBuilder.get_explicit_output()).coin()).to_str(),
-    ).toEqual('1999089')
-    expect(
-      await (await unsignedTxResponse.txBuilder.min_fee()).to_str(),
-    ).toEqual(expectedFee.toString())
+    expect(unsignedTxResponse.senderUtxos).toEqual([utxos[0], utxos[1], utxos[4]])
+    expect(await (await (await unsignedTxResponse.txBuilder.get_explicit_input()).coin()).to_str()).toEqual('2000703')
+    expect(await (await (await unsignedTxResponse.txBuilder.get_explicit_output()).coin()).to_str()).toEqual('1999089')
+    expect(await (await unsignedTxResponse.txBuilder.min_fee()).to_str()).toEqual(expectedFee.toString())
 
     const assetInfo = await identifierToCardanoAsset(testAssetId)
 
@@ -611,9 +541,7 @@ describe('Create unsigned TX from UTXO', () => {
     expect(_assetAmountStr).toEqual('1234')
 
     const tx = await unsignedTxResponse.txBuilder.build()
-    _multiAsset = await (await (await (await tx.outputs()).get(
-      1,
-    )).amount()).multiasset()
+    _multiAsset = await (await (await (await tx.outputs()).get(1)).amount()).multiasset()
     // prettier-ignore
     _assetAmountStr =
       _multiAsset != null
@@ -660,9 +588,7 @@ describe('Create unsigned TX from UTXO', () => {
       newAdaUnsignedTxFromUtxo(
         [
           {
-            address: await byronAddrToHex(
-              'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-            ),
+            address: await byronAddrToHex('Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4'),
             amount: output,
           },
         ],
@@ -686,9 +612,7 @@ describe('Create unsigned TX from UTXO', () => {
     await expect(
       sendAllUnsignedTxFromUtxo(
         {
-          address: await byronAddrToHex(
-            'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-          ),
+          address: await byronAddrToHex('Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4'),
         },
         [utxos[4]],
         new BigNumber(0),
@@ -724,9 +648,7 @@ describe('Create unsigned TX from UTXO', () => {
       newAdaUnsignedTxFromUtxo(
         [
           {
-            address: await byronAddrToHex(
-              'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-            ),
+            address: await byronAddrToHex('Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4'),
             amount: output,
           },
         ],
@@ -747,9 +669,7 @@ describe('Create unsigned TX from UTXO', () => {
     await expect(
       sendAllUnsignedTxFromUtxo(
         {
-          address: await byronAddrToHex(
-            'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-          ),
+          address: await byronAddrToHex('Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4'),
         },
         [sampleUtxos[4], sampleUtxos[5]],
         new BigNumber(0),
@@ -779,9 +699,7 @@ describe('Create unsigned TX from UTXO', () => {
     const result = await newAdaUnsignedTxFromUtxo(
       [
         {
-          address: await byronAddrToHex(
-            'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-          ),
+          address: await byronAddrToHex('Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4'),
           amount: output,
         },
       ],
@@ -818,9 +736,7 @@ describe('Create unsigned TX from addresses', () => {
     const unsignedTxResponse = await newAdaUnsignedTx(
       [
         {
-          address: await byronAddrToHex(
-            'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-          ),
+          address: await byronAddrToHex('Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4'),
           amount: output,
         },
       ],
@@ -832,30 +748,21 @@ describe('Create unsigned TX from addresses', () => {
       [],
       true,
     )
-    expect(unsignedTxResponse.senderUtxos).toEqual([
-      addressedUtxos[0],
-      addressedUtxos[1],
-    ])
+    expect(unsignedTxResponse.senderUtxos).toEqual([addressedUtxos[0], addressedUtxos[1]])
 
-    expect(
-      await (await (await unsignedTxResponse.txBuilder.get_explicit_input()).coin()).to_str(),
-    ).toEqual('1000702')
-    expect(
-      await (await unsignedTxResponse.txBuilder.get_explicit_output())
-        .coin()
-        .to_str(),
-    ).toEqual('5001')
-    expect(
-      await (await unsignedTxResponse.txBuilder.min_fee()).to_str(),
-    ).toEqual('1064')
+    expect(await (await (await unsignedTxResponse.txBuilder.get_explicit_input()).coin()).to_str()).toEqual('1000702')
+    expect(await (await unsignedTxResponse.txBuilder.get_explicit_output()).coin().to_str()).toEqual('5001')
+    expect(await (await unsignedTxResponse.txBuilder.min_fee()).to_str()).toEqual('1064')
     // burns remaining amount
     expect(
-      await (await (await (await unsignedTxResponse.txBuilder.get_explicit_input()).checked_sub(
-        await unsignedTxResponse.txBuilder.get_explicit_output(),
-      )).coin()).to_str(),
-    ).toEqual(
-      await (await (await unsignedTxResponse.txBuilder.build()).fee()).to_str(),
-    )
+      await (
+        await (
+          await (
+            await unsignedTxResponse.txBuilder.get_explicit_input()
+          ).checked_sub(await unsignedTxResponse.txBuilder.get_explicit_output())
+        ).coin()
+      ).to_str(),
+    ).toEqual(await (await (await unsignedTxResponse.txBuilder.build()).fee()).to_str())
   })
 })
 
@@ -880,9 +787,7 @@ describe('Create signed transactions', () => {
     const unsignedTxResponse = await newAdaUnsignedTx(
       [
         {
-          address: await byronAddrToHex(
-            'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-          ),
+          address: await byronAddrToHex('Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4'),
           amount: output,
         },
       ],
@@ -919,11 +824,7 @@ describe('Create signed transactions', () => {
     }
     expect(await bootstrapWits.len()).toEqual(1)
 
-    expect(
-      Buffer.from(await (await bootstrapWits.get(0)).to_bytes()).toString(
-        'hex',
-      ),
-    ).toEqual(
+    expect(Buffer.from(await (await bootstrapWits.get(0)).to_bytes()).toString('hex')).toEqual(
       '8458208fb03c3aa052f51c086c54bd4059ead2d2e426ac89fa4b3ce41cbfd8800b51c05840d4da0fe3615f90581926281be0510df5f6616ebed5a6d6831cceab4dd9935f7f5b6150d43b918d79e8db7cd3e17b9de91fdfbaed7cdab18818331942852fd10b58202623fceb96b07408531a5cb259f53845a38d6b68928e7c0c7e390f07545d0e6241a0',
     )
   })
@@ -939,10 +840,7 @@ describe('Create signed transactions', () => {
     await inputs.add(
       await TransactionInput.new(
         await TransactionHash.from_bytes(
-          Buffer.from(
-            '05ec4a4a7f4645fa66886cef2e34706907a3a7f9d88e0d48b313ad2cdf76fb5f',
-            'hex',
-          ),
+          Buffer.from('05ec4a4a7f4645fa66886cef2e34706907a3a7f9d88e0d48b313ad2cdf76fb5f', 'hex'),
         ),
         0,
       ),
@@ -950,10 +848,7 @@ describe('Create signed transactions', () => {
     await inputs.add(
       await TransactionInput.new(
         await TransactionHash.from_bytes(
-          Buffer.from(
-            '6930f123df83e4178b0324ae617b2028c0b38c6ff4660583a2abf1f7b08195fe',
-            'hex',
-          ),
+          Buffer.from('6930f123df83e4178b0324ae617b2028c0b38c6ff4660583a2abf1f7b08195fe', 'hex'),
         ),
         0,
       ),
@@ -962,34 +857,20 @@ describe('Create signed transactions', () => {
     await outputs.add(
       await TransactionOutput.new(
         await ShelleyAddress.from_bytes(
-          Buffer.from(
-            await byronAddrToHex(
-              'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-            ),
-            'hex',
-          ),
+          Buffer.from(await byronAddrToHex('Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4'), 'hex'),
         ),
         await Value.new(await BigNum.from_str('5001')),
       ),
     )
-    const txBody = await TransactionBody.new(
-      inputs,
-      outputs,
-      await BigNum.from_str('1000'),
-      0,
-    )
+    const txBody = await TransactionBody.new(inputs, outputs, await BigNum.from_str('1000'), 0)
     const signedTx = await signTransaction(
       [
         {
           amount: '7001',
-          receiver: await byronAddrToHex(
-            'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-          ),
-          tx_hash:
-            '05ec4a4a7f4645fa66886cef2e34706907a3a7f9d88e0d48b313ad2cdf76fb5f',
+          receiver: await byronAddrToHex('Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4'),
+          tx_hash: '05ec4a4a7f4645fa66886cef2e34706907a3a7f9d88e0d48b313ad2cdf76fb5f',
           tx_index: 0,
-          utxo_id:
-            '05ec4a4a7f4645fa66886cef2e34706907a3a7f9d88e0d48b313ad2cdf76fb5f0',
+          utxo_id: '05ec4a4a7f4645fa66886cef2e34706907a3a7f9d88e0d48b313ad2cdf76fb5f0',
           addressing: {
             path: [
               NUMBERS.WALLET_TYPE_PURPOSE.BIP44,
@@ -1004,14 +885,10 @@ describe('Create signed transactions', () => {
         },
         {
           amount: '1000001',
-          receiver: await byronAddrToHex(
-            'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-          ),
-          tx_hash:
-            '6930f123df83e4178b0324ae617b2028c0b38c6ff4660583a2abf1f7b08195fe',
+          receiver: await byronAddrToHex('Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4'),
+          tx_hash: '6930f123df83e4178b0324ae617b2028c0b38c6ff4660583a2abf1f7b08195fe',
           tx_index: 0,
-          utxo_id:
-            '6930f123df83e4178b0324ae617b2028c0b38c6ff4660583a2abf1f7b08195fe0',
+          utxo_id: '6930f123df83e4178b0324ae617b2028c0b38c6ff4660583a2abf1f7b08195fe0',
           addressing: {
             path: [
               NUMBERS.WALLET_TYPE_PURPOSE.BIP44,
@@ -1043,11 +920,7 @@ describe('Create signed transactions', () => {
     // note: only one witness since we got rid of duplicates
     expect(await bootstrapWits.len()).toEqual(1)
 
-    expect(
-      Buffer.from(await (await bootstrapWits.get(0)).to_bytes()).toString(
-        'hex',
-      ),
-    ).toEqual(
+    expect(Buffer.from(await (await bootstrapWits.get(0)).to_bytes()).toString('hex')).toEqual(
       '8458208fb03c3aa052f51c086c54bd4059ead2d2e426ac89fa4b3ce41cbfd8800b51c058401edebb108c74a991bef5b28458778fc0713499349d77fb98acc63e4219cfcd1b51321ccaccdf2ce2e80d7c2687f3d79feea32daedcfbc19792dff0358af5950358202623fceb96b07408531a5cb259f53845a38d6b68928e7c0c7e390f07545d0e6241a0',
     )
   })
@@ -1059,9 +932,7 @@ describe('Create signed transactions', () => {
         'hex',
       ),
     )
-    const stakingKey = await (await (await accountPrivateKey.derive(2)).derive(
-      NUMBERS.STAKING_KEY_INDEX,
-    )).to_raw_key()
+    const stakingKey = await (await (await accountPrivateKey.derive(2)).derive(NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
 
     const addressedUtxos = await genAddressedUtxos()
 
@@ -1082,9 +953,7 @@ describe('Create signed transactions', () => {
     const unsignedTxResponse = await newAdaUnsignedTx(
       [
         {
-          address: await byronAddrToHex(
-            'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-          ),
+          address: await byronAddrToHex('Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4'),
           amount: output,
         },
       ],
@@ -1094,22 +963,13 @@ describe('Create signed transactions', () => {
       await getProtocolParams(),
       [
         await Certificate.new_stake_registration(
-          await StakeRegistration.new(
-            await StakeCredential.from_keyhash(
-              await (await stakingKey.to_public()).hash(),
-            ),
-          ),
+          await StakeRegistration.new(await StakeCredential.from_keyhash(await (await stakingKey.to_public()).hash())),
         ),
         await Certificate.new_stake_delegation(
           await StakeDelegation.new(
-            await StakeCredential.from_keyhash(
-              await (await stakingKey.to_public()).hash(),
-            ),
+            await StakeCredential.from_keyhash(await (await stakingKey.to_public()).hash()),
             await Ed25519KeyHash.from_bytes(
-              Buffer.from(
-                '1b268f4cba3faa7e36d8a0cc4adca2096fb856119412ee7330f692b5',
-                'hex',
-              ),
+              Buffer.from('1b268f4cba3faa7e36d8a0cc4adca2096fb856119412ee7330f692b5', 'hex'),
             ),
           ),
         ),
@@ -1124,10 +984,9 @@ describe('Create signed transactions', () => {
       accountPrivateKey,
       new Set([
         Buffer.from(
-          await (await make_vkey_witness(
-            await hash_transaction(await unsignedTxResponse.txBuilder.build()),
-            stakingKey,
-          )).to_bytes(),
+          await (
+            await make_vkey_witness(await hash_transaction(await unsignedTxResponse.txBuilder.build()), stakingKey)
+          ).to_bytes(),
         ).toString('hex'),
       ]),
       undefined,
@@ -1159,12 +1018,8 @@ describe('Create signed transactions', () => {
         'hex',
       ),
     )
-    const stakingKey = await (await (await accountPrivateKey.derive(2)).derive(
-      NUMBERS.STAKING_KEY_INDEX,
-    )).to_raw_key()
-    const stakingKeyCredential = await StakeCredential.from_keyhash(
-      await (await stakingKey.to_public()).hash(),
-    )
+    const stakingKey = await (await (await accountPrivateKey.derive(2)).derive(NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+    const stakingKeyCredential = await StakeCredential.from_keyhash(await (await stakingKey.to_public()).hash())
 
     if (NETWORK.CHAIN_NETWORK_ID == null) {
       throw new Error('missing network id')
@@ -1180,17 +1035,10 @@ describe('Create signed transactions', () => {
       [addressedUtxos[3]],
       new BigNumber(0),
       protocolParams,
-      [
-        await Certificate.new_stake_deregistration(
-          await StakeDeregistration.new(stakingKeyCredential),
-        ),
-      ],
+      [await Certificate.new_stake_deregistration(await StakeDeregistration.new(stakingKeyCredential))],
       [
         {
-          address: await RewardAddress.new(
-            Number.parseInt(NETWORK.CHAIN_NETWORK_ID, 10),
-            stakingKeyCredential,
-          ),
+          address: await RewardAddress.new(Number.parseInt(NETWORK.CHAIN_NETWORK_ID, 10), stakingKeyCredential),
           amount: await BigNum.from_str(withdrawAmount),
         },
       ],
@@ -1203,10 +1051,9 @@ describe('Create signed transactions', () => {
       accountPrivateKey,
       new Set([
         Buffer.from(
-          await (await make_vkey_witness(
-            await hash_transaction(await unsignedTxResponse.txBuilder.build()),
-            stakingKey,
-          )).to_bytes(),
+          await (
+            await make_vkey_witness(await hash_transaction(await unsignedTxResponse.txBuilder.build()), stakingKey)
+          ).to_bytes(),
         ).toString('hex'),
       ]),
       undefined,
@@ -1226,11 +1073,7 @@ describe('Create signed transactions', () => {
     const fee = await (await txBody.fee()).to_str()
     expect(fee).toEqual('1302')
     expect(await (await txBody.outputs()).len()).toEqual(1)
-    expect(
-      await (await (await (await (await txBody.outputs()).get(
-        0,
-      )).amount()).coin()).to_str(),
-    ).toEqual(
+    expect(await (await (await (await (await txBody.outputs()).get(0)).amount()).coin()).to_str()).toEqual(
       new BigNumber(addressedUtxos[3].amount)
         .minus(fee)
         .plus(withdrawAmount)
@@ -1257,9 +1100,7 @@ describe('Create sendAll unsigned TX from UTXO', () => {
     const utxos: Array<RawUtxo> = [sampleUtxos[1], sampleUtxos[2]]
     const sendAllResponse = await sendAllUnsignedTxFromUtxo(
       {
-        address: await byronAddrToHex(
-          'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-        ),
+        address: await byronAddrToHex('Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4'),
       },
       utxos,
       new BigNumber(0),
@@ -1269,29 +1110,29 @@ describe('Create sendAll unsigned TX from UTXO', () => {
     const expectedInput = new BigNumber('11000002')
 
     expect(sendAllResponse.senderUtxos).toEqual([utxos[0], utxos[1]])
-    expect(
-      await (await (await sendAllResponse.txBuilder.get_explicit_input()).coin()).to_str(),
-    ).toEqual(expectedInput.toString())
-    expect(
-      await (await (await sendAllResponse.txBuilder.get_explicit_output()).coin()).to_str(),
-    ).toEqual(expectedInput.minus(expectedFee).toString())
-    expect(await (await sendAllResponse.txBuilder.min_fee()).to_str()).toEqual(
-      expectedFee.toString(),
+    expect(await (await (await sendAllResponse.txBuilder.get_explicit_input()).coin()).to_str()).toEqual(
+      expectedInput.toString(),
     )
+    expect(await (await (await sendAllResponse.txBuilder.get_explicit_output()).coin()).to_str()).toEqual(
+      expectedInput.minus(expectedFee).toString(),
+    )
+    expect(await (await sendAllResponse.txBuilder.min_fee()).to_str()).toEqual(expectedFee.toString())
     // make sure we don't accidentally burn a lot of coins
     expect(
-      await (await (await (await sendAllResponse.txBuilder.get_explicit_input()).checked_sub(
-        await sendAllResponse.txBuilder.get_explicit_output(),
-      )).coin()).to_str(),
+      await (
+        await (
+          await (
+            await sendAllResponse.txBuilder.get_explicit_input()
+          ).checked_sub(await sendAllResponse.txBuilder.get_explicit_output())
+        ).coin()
+      ).to_str(),
     ).toEqual(expectedFee.toString())
   })
 
   it('Should fail due to insufficient funds (no inputs)', async () => {
     const promise = sendAllUnsignedTxFromUtxo(
       {
-        address: await byronAddrToHex(
-          'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-        ),
+        address: await byronAddrToHex('Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4'),
       },
       [],
       new BigNumber(0),
@@ -1305,9 +1146,7 @@ describe('Create sendAll unsigned TX from UTXO', () => {
     const utxos: Array<RawUtxo> = [sampleUtxos[0]]
     const promise = sendAllUnsignedTxFromUtxo(
       {
-        address: await byronAddrToHex(
-          'Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4',
-        ),
+        address: await byronAddrToHex('Ae2tdPwUPEZKX8N2TjzBXLy5qrecnQUniTd2yxE8mWyrh2djNpUkbAtXtP4'),
       },
       utxos,
       new BigNumber(0),

@@ -27,8 +27,7 @@ const AmountField = ({amount, intl, error, editable, setAmount}: Props) => {
     const shorterStringLength = Math.min(text.length, amount.length)
     const wasPasted =
       Math.abs(amount.length - text.length) > 1 ||
-      amount.substring(0, shorterStringLength) !==
-        text.substring(0, shorterStringLength)
+      amount.substring(0, shorterStringLength) !== text.substring(0, shorterStringLength)
 
     const formatter = wasPasted ? pastedFormatter : editedFormatter
 

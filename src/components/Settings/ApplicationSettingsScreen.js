@@ -9,16 +9,8 @@ import {errorMessages} from '../../i18n/global-messages'
 import {setAppSettingField, setSystemAuth, showErrorDialog} from '../../actions'
 import {APP_SETTINGS_KEYS} from '../../helpers/appSettings'
 import {CONFIG} from '../../config/config'
-import {
-  isBiometricEncryptionHardwareSupported,
-  canBiometricEncryptionBeEnabled,
-} from '../../helpers/deviceSettings'
-import {
-  SettingsItem,
-  SettingsBuildItem,
-  NavigatedSettingsItem,
-  SettingsSection,
-} from './SettingsItems'
+import {isBiometricEncryptionHardwareSupported, canBiometricEncryptionBeEnabled} from '../../helpers/deviceSettings'
+import {SettingsItem, SettingsBuildItem, NavigatedSettingsItem, SettingsSection} from './SettingsItems'
 import {
   biometricHwSupportSelector,
   isSystemAuthEnabledSelector,
@@ -143,32 +135,21 @@ const ApplicationSettingsScreen = ({intl, navigation}: Props & RouterProps) => {
     }
   }
 
-  React.useEffect(
-    () => {
-      const unsubscribe = navigation.addListener('focus', () => {
-        const updateDeviceSettings = async () => {
-          const isHardwareSupported = await isBiometricEncryptionHardwareSupported()
-          const canEnableBiometricEncryption = await canBiometricEncryptionBeEnabled()
-          await dispatch(
-            setAppSettingField(
-              APP_SETTINGS_KEYS.BIOMETRIC_HW_SUPPORT,
-              isHardwareSupported,
-            ),
-          )
-          await dispatch(
-            setAppSettingField(
-              APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION,
-              canEnableBiometricEncryption,
-            ),
-          )
-        }
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      const updateDeviceSettings = async () => {
+        const isHardwareSupported = await isBiometricEncryptionHardwareSupported()
+        const canEnableBiometricEncryption = await canBiometricEncryptionBeEnabled()
+        await dispatch(setAppSettingField(APP_SETTINGS_KEYS.BIOMETRIC_HW_SUPPORT, isHardwareSupported))
+        await dispatch(
+          setAppSettingField(APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION, canEnableBiometricEncryption),
+        )
+      }
 
-        updateDeviceSettings()
-      })
-      return unsubscribe
-    },
-    [navigation, dispatch],
-  )
+      updateDeviceSettings()
+    })
+    return unsubscribe
+  }, [navigation, dispatch])
 
   // it's better if we prevent users who:
   //   1. are not using biometric auth yet
@@ -176,9 +157,7 @@ const ApplicationSettingsScreen = ({intl, navigation}: Props & RouterProps) => {
   // from enabling this feature since they can encounter issues (and may not be
   // able to access their wallets eventually, neither rollback this!)
   const shouldNotEnableBiometricAuth =
-    Platform.OS === 'android' &&
-    CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version) &&
-    !isSystemAuthEnabled
+    Platform.OS === 'android' && CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version) && !isSystemAuthEnabled
 
   return (
     <ScrollView style={styles.scrollView}>
@@ -200,17 +179,12 @@ const ApplicationSettingsScreen = ({intl, navigation}: Props & RouterProps) => {
 
         <SettingsItem
           label={intl.formatMessage(messages.biometricsSignIn)}
-          disabled={
-            !isBiometricEncryptionHardwareSupported ||
-            shouldNotEnableBiometricAuth
-          }
+          disabled={!isBiometricEncryptionHardwareSupported || shouldNotEnableBiometricAuth}
         >
           <Switch
             value={isSystemAuthEnabled}
             onValueChange={onToggleBiometricsAuthIn}
-            disabled={
-              !isBiometricHardwareSupported || shouldNotEnableBiometricAuth
-            }
+            disabled={!isBiometricHardwareSupported || shouldNotEnableBiometricAuth}
           />
         </SettingsItem>
       </SettingsSection>
@@ -227,22 +201,13 @@ const ApplicationSettingsScreen = ({intl, navigation}: Props & RouterProps) => {
           navigateTo={SETTINGS_ROUTES.TERMS_OF_USE}
         />
 
-        <NavigatedSettingsItem
-          label={intl.formatMessage(messages.support)}
-          navigateTo={SETTINGS_ROUTES.SUPPORT}
-        />
+        <NavigatedSettingsItem label={intl.formatMessage(messages.support)} navigateTo={SETTINGS_ROUTES.SUPPORT} />
       </SettingsSection>
 
       <SettingsSection title="About">
-        <SettingsBuildItem
-          label={intl.formatMessage(messages.version)}
-          value={version}
-        />
+        <SettingsBuildItem label={intl.formatMessage(messages.version)} value={version} />
 
-        <SettingsBuildItem
-          label={intl.formatMessage(messages.commit)}
-          value={CONFIG.COMMIT}
-        />
+        <SettingsBuildItem label={intl.formatMessage(messages.commit)} value={CONFIG.COMMIT} />
       </SettingsSection>
     </ScrollView>
   )

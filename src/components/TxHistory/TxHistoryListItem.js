@@ -30,11 +30,7 @@ import {
 } from '../../utils/format'
 import {MultiToken} from '../../crypto/MultiToken'
 
-import type {
-  TransactionInfo,
-  Token,
-  IOData,
-} from '../../types/HistoryTransaction'
+import type {TransactionInfo, Token, IOData} from '../../types/HistoryTransaction'
 
 const messages = defineMessages({
   fee: {
@@ -124,18 +120,12 @@ const filtersTxIO = (address: string) => {
   }
 }
 
-const getTxIOMyWallet = (
-  txIO: Array<IOData>,
-  extAddrIdx: Dict<number>,
-  intAddrIdx: Dict<number>,
-) => {
+const getTxIOMyWallet = (txIO: Array<IOData>, extAddrIdx: Dict<number>, intAddrIdx: Dict<number>) => {
   const io = _.uniq(txIO).map(({address, assets}) => ({
     address,
     assets,
   }))
-  const filtered = io.filter(({address}) =>
-    filtersTxIO(address).isMyAddress(extAddrIdx, intAddrIdx),
-  )
+  const filtered = io.filter(({address}) => filtersTxIO(address).isMyAddress(extAddrIdx, intAddrIdx))
   return filtered || []
 }
 
@@ -161,8 +151,7 @@ class TxHistoryListItem extends Component<Props> {
     const fee = tx.fee != null ? MultiToken.fromArray(tx.fee) : null
     const nextFee = nextTx.fee != null ? MultiToken.fromArray(nextTx.fee) : null
 
-    const sameValue = (x: ?MultiToken, y: ?MultiToken) =>
-      x && y ? x.isEqualTo(y) : x === y
+    const sameValue = (x: ?MultiToken, y: ?MultiToken) => (x && y ? x.isEqualTo(y) : x === y)
     const sameTs = (x, y) => x === y
 
     return (
@@ -170,10 +159,7 @@ class TxHistoryListItem extends Component<Props> {
       tx.id !== nextTx.id ||
       tx.assurance !== nextTx.assurance ||
       tx.direction !== nextTx.direction ||
-      !sameValue(
-        MultiToken.fromArray(tx.amount),
-        MultiToken.fromArray(nextTx.amount),
-      ) ||
+      !sameValue(MultiToken.fromArray(tx.amount), MultiToken.fromArray(nextTx.amount)) ||
       !sameValue(fee, nextFee) ||
       !sameTs(tx.submittedAt, nextTx.submittedAt)
     )
@@ -186,53 +172,29 @@ class TxHistoryListItem extends Component<Props> {
   }
 
   render() {
-    const {
-      transaction,
-      availableAssets,
-      defaultNetworkAsset,
-      intl,
-      externalAddressIndex,
-      internalAddressIndex,
-    } = this.props
+    const {transaction, availableAssets, defaultNetworkAsset, intl, externalAddressIndex, internalAddressIndex} =
+      this.props
 
     const amountAsMT = MultiToken.fromArray(transaction.amount)
     const amount: BigNumber = amountAsMT.getDefault()
-    const amountDefaultAsset: ?Token =
-      availableAssets[amountAsMT.getDefaultId()]
+    const amountDefaultAsset: ?Token = availableAssets[amountAsMT.getDefaultId()]
 
     const defaultAsset = amountDefaultAsset || defaultNetworkAsset
 
     // if we don't have a symbol for this asset, default to ticker first and
     // then to identifier
-    const assetSymbol = getAssetDenominationOrId(
-      defaultAsset,
-      ASSET_DENOMINATION.SYMBOL,
-    )
+    const assetSymbol = getAssetDenominationOrId(defaultAsset, ASSET_DENOMINATION.SYMBOL)
 
-    const amountStyle = amount
-      ? amount.gte(0)
-        ? styles.positiveAmount
-        : styles.negativeAmount
-      : styles.neutralAmount
+    const amountStyle = amount ? (amount.gte(0) ? styles.positiveAmount : styles.negativeAmount) : styles.neutralAmount
 
     const isPending = transaction.assurance === 'PENDING'
     const assuranceContainerStyle = styles[`${transaction.assurance}_CONTAINER`]
 
     const isReceived = transaction.direction === 'RECEIVED'
     const outputsToMyWallet =
-      (isReceived &&
-        getTxIOMyWallet(
-          transaction.outputs,
-          externalAddressIndex,
-          internalAddressIndex,
-        )) ||
-      []
+      (isReceived && getTxIOMyWallet(transaction.outputs, externalAddressIndex, internalAddressIndex)) || []
 
-    const totalAssets =
-      outputsToMyWallet.reduce(
-        (acc, {assets}) => acc + Number(assets.length),
-        0,
-      ) || 0
+    const totalAssets = outputsToMyWallet.reduce((acc, {assets}) => acc + Number(assets.length), 0) || 0
 
     return (
       <TouchableOpacity onPress={this.showDetails} activeOpacity={0.5}>
@@ -253,9 +215,7 @@ class TxHistoryListItem extends Component<Props> {
                   <Text small style={amountStyle} secondary={isPending}>
                     {formatTokenFractional(amount, defaultAsset)}
                   </Text>
-                  <Text style={amountStyle}>{`${
-                    utfSymbols.NBSP
-                  }${assetSymbol}`}</Text>
+                  <Text style={amountStyle}>{`${utfSymbols.NBSP}${assetSymbol}`}</Text>
                 </View>
               ) : (
                 <Text style={amountStyle}>- -</Text>

@@ -10,17 +10,8 @@ type Props = {|
   color?: string,
 |}
 
-const StakingKeyRegisteredIcon = ({
-  width = 36,
-  height = 36,
-  color = '#6B7384',
-}: Props) => (
-  <Svg
-    viewBox="0 0 36 36"
-    version="1.1"
-    xmlns="http://www.w3.org/2000/svg"
-    {...{width, height}}
-  >
+const StakingKeyRegisteredIcon = ({width = 36, height = 36, color = '#6B7384'}: Props) => (
+  <Svg viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" {...{width, height}}>
     <G stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
       <G transform="translate(-760.000000, -245.000000)">
         <G transform="translate(760.000000, 245.000000)">
@@ -34,12 +25,7 @@ const StakingKeyRegisteredIcon = ({
               stroke-width="1.5"
             >
               <Polyline points="5.33333333 8.88888889 11.8790765 2.34314575 15.3777778 5.95555556" />
-              <Line
-                x1="8.88888889"
-                y1="12.4444444"
-                x2="15.1742825"
-                y2="6.15905083"
-              />
+              <Line x1="8.88888889" y1="12.4444444" x2="15.1742825" y2="6.15905083" />
               <Polyline points="5.33333333 8.88888889 5.33333333 12.4444444 8.88888889 12.4444444" />
               <Path d="M9.77777778,0 L0,0 L0,14.2222222 C1.77777778,14.2222222 2.66666667,14.2222222 2.66666667,14.2222222" />
             </G>

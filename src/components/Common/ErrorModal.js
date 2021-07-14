@@ -50,26 +50,17 @@ const _ErrorView = ({
 }: ErrorViewProps & HOCProps) => (
   <ScrollView style={styles.scrollView}>
     <View style={styles.headerView}>
-      <Text style={styles.title}>
-        {title ??
-          intl.formatMessage(errorMessages.generalLocalizableError.title)}
-      </Text>
+      <Text style={styles.title}>{title ?? intl.formatMessage(errorMessages.generalLocalizableError.title)}</Text>
       <Image source={image} style={styles.image} />
     </View>
     <Text style={styles.paragraph}>{errorMessage}</Text>
 
     {errorLogs != null && (
       <View style={styles.errorSection}>
-        <TouchableOpacity
-          accessibilityRole="button"
-          onPress={setShowErrorLogs}
-          activeOpacity={0.5}
-        >
+        <TouchableOpacity accessibilityRole="button" onPress={setShowErrorLogs} activeOpacity={0.5}>
           <View style={styles.errorSectionHeader}>
             <Text style={styles.showErrorTrigger}>
-              {showErrorLogs
-                ? intl.formatMessage(messages.hideError)
-                : intl.formatMessage(messages.showError)}
+              {showErrorLogs ? intl.formatMessage(messages.hideError) : intl.formatMessage(messages.showError)}
             </Text>
             <Image source={showErrorLogs ? chevronLeft : chevronRight} />
           </View>
@@ -83,11 +74,7 @@ const _ErrorView = ({
         )}
       </View>
     )}
-    <Button
-      block
-      onPress={onDismiss}
-      title={intl.formatMessage(globalMessages.close)}
-    />
+    <Button block onPress={onDismiss} title={intl.formatMessage(globalMessages.close)} />
   </ScrollView>
 )
 
@@ -114,20 +101,9 @@ type Props = {
   onRequestClose: () => void,
 }
 
-const ErrorModal = ({
-  visible,
-  title,
-  errorMessage,
-  errorLogs,
-  onRequestClose,
-}: Props) => (
+const ErrorModal = ({visible, title, errorMessage, errorLogs, onRequestClose}: Props) => (
   <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
-    <ErrorView
-      title={title}
-      errorMessage={errorMessage}
-      errorLogs={errorLogs}
-      onDismiss={onRequestClose}
-    />
+    <ErrorView title={title} errorMessage={errorMessage} errorLogs={errorLogs} onDismiss={onRequestClose} />
   </Modal>
 )
 

@@ -11,14 +11,11 @@ import styles from './styles/CatalystBackupCheckModal.style'
 const messages = defineMessages({
   pinCheckbox: {
     id: 'components.catalyst.catalystbackupcheckmodal.pinCheckbox',
-    defaultMessage:
-      '!!!I have written down my Catalyst PIN which I obtained in previous steps.',
+    defaultMessage: '!!!I have written down my Catalyst PIN which I obtained in previous steps.',
   },
   qrCodeCheckbox: {
     id: 'components.catalyst.catalystbackupcheckmodal.qrCodeCheckbox',
-    defaultMessage:
-      '!!!I have taken a screenshot of my QR code and saved my ' +
-      'Catalyst secret code as a fallback.',
+    defaultMessage: '!!!I have taken a screenshot of my QR code and saved my Catalyst secret code as a fallback.',
   },
   consequencesCheckbox: {
     id: 'components.catalyst.catalystbackupcheckmodal.consequencesCheckbox',
@@ -36,22 +33,13 @@ type Props = {|
   onRequestClose: () => void,
 |}
 
-const CatalystBackupCheckModal = ({
-  onConfirm,
-  intl,
-  visible,
-  onRequestClose,
-}: Props) => {
+const CatalystBackupCheckModal = ({onConfirm, intl, visible, onRequestClose}: Props) => {
   const [acceptedPin, setAcceptedPin] = useState<boolean>(false)
   const [acceptedQrCode, setAcceptedQrCode] = useState<boolean>(false)
-  const [acceptedConsequences, setAcceptedConsequences] = useState<boolean>(
-    false,
-  )
+  const [acceptedConsequences, setAcceptedConsequences] = useState<boolean>(false)
   return (
     <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
-      <Text style={styles.title}>
-        {intl.formatMessage(globalMessages.pleaseConfirm)}
-      </Text>
+      <Text style={styles.title}>{intl.formatMessage(globalMessages.pleaseConfirm)}</Text>
       <Checkbox
         style={styles.checkbox}
         onChange={(value) => setAcceptedPin(value)}
@@ -73,9 +61,7 @@ const CatalystBackupCheckModal = ({
       <Button
         disabled={!acceptedPin || !acceptedQrCode || !acceptedConsequences}
         onPress={onConfirm}
-        title={intl.formatMessage(
-          confirmationMessages.commonButtons.continueButton,
-        )}
+        title={intl.formatMessage(confirmationMessages.commonButtons.continueButton)}
       />
     </Modal>
   )

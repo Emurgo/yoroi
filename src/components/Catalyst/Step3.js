@@ -11,10 +11,7 @@ import {View, SafeAreaView} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
 
-import {
-  generateVotingKeys,
-  generateVotingTransaction,
-} from '../../actions/voting'
+import {generateVotingKeys, generateVotingTransaction} from '../../actions/voting'
 import {isHWSelector} from '../../selectors'
 import {Text, ProgressStep} from '../UiKit'
 import PinInputKeyboard from '../Common/PinInputKeyboard'
@@ -36,9 +33,7 @@ const messages = defineMessages({
   },
   description: {
     id: 'components.catalyst.step3.description',
-    defaultMessage:
-      '!!!Please enter the PIN as you will need it every time you want to ' +
-      'access the Catalyst Voting app',
+    defaultMessage: '!!!Please enter the PIN as you will need it every time you want to access the Catalyst Voting app',
   },
 })
 
@@ -85,9 +80,7 @@ const Step3 = ({intl, pin, isHW, navigation}: Props & HOCProps) => {
             style={[
               styles.pin,
               index < PIN_LENGTH - 1 && styles.mr10,
-              index === confirmPin.length
-                ? styles.pinHighlight
-                : styles.pinNormal,
+              index === confirmPin.length ? styles.pinHighlight : styles.pinNormal,
               index > confirmPin.length && styles.pinInactive,
             ]}
           >
@@ -103,12 +96,8 @@ const Step3 = ({intl, pin, isHW, navigation}: Props & HOCProps) => {
       <ProgressStep currentStep={3} totalSteps={6} />
       <View style={styles.container}>
         <View>
-          <Text style={styles.subTitle}>
-            {intl.formatMessage(messages.subTitle)}
-          </Text>
-          <Text style={styles.description}>
-            {intl.formatMessage(messages.description)}
-          </Text>
+          <Text style={styles.subTitle}>{intl.formatMessage(messages.subTitle)}</Text>
+          <Text style={styles.description}>{intl.formatMessage(messages.description)}</Text>
         </View>
         {pinCards}
       </View>

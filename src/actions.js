@@ -10,20 +10,12 @@ import crashReporting from './helpers/crashReporting'
 import globalMessages, {errorMessages} from './i18n/global-messages'
 import {Logger} from './utils/logging'
 import walletManager from './crypto/walletManager'
-import {
-  mirrorTxHistory,
-  setBackgroundSyncError,
-  updateHistory,
-} from './actions/history'
+import {mirrorTxHistory, setBackgroundSyncError, updateHistory} from './actions/history'
 import {changeAndSaveLanguage} from './actions/language'
 import {clearUTXOs} from './actions/utxo'
 import {clearAccountState} from './actions/account'
 import {fetchTokenInfo} from './actions/tokenInfo'
-import {
-  canBiometricEncryptionBeEnabled,
-  recreateAppSignInKeys,
-  removeAppSignInKeys,
-} from './helpers/deviceSettings'
+import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys, removeAppSignInKeys} from './helpers/deviceSettings'
 
 import {backgroundLockListener} from './helpers/backgroundLockHelper'
 import {encryptCustomPin} from './crypto/customPin'
@@ -57,10 +49,8 @@ import type {NetworkId, WalletImplementationId} from './config/types'
 
 const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
   const handlers = {
-    [APP_SETTINGS_KEYS.LANG]: () =>
-      crashReporting.setStringValue('language_code', value),
-    [APP_SETTINGS_KEYS.BIOMETRIC_HW_SUPPORT]: () =>
-      crashReporting.setBoolValue('biometric_hw_support', value),
+    [APP_SETTINGS_KEYS.LANG]: () => crashReporting.setStringValue('language_code', value),
+    [APP_SETTINGS_KEYS.BIOMETRIC_HW_SUPPORT]: () => crashReporting.setBoolValue('biometric_hw_support', value),
     [APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION]: () =>
       crashReporting.setBoolValue('can_enable_biometric_encryption', value),
   }
@@ -70,10 +60,7 @@ const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
   handler && handler()
 }
 
-export const setAppSettingField = (
-  fieldName: AppSettingsKey,
-  value: any,
-) => async (dispatch: Dispatch<any>) => {
+export const setAppSettingField = (fieldName: AppSettingsKey, value: any) => async (dispatch: Dispatch<any>) => {
   await writeAppSettings(fieldName, value)
 
   dispatch({
@@ -85,9 +72,7 @@ export const setAppSettingField = (
   updateCrashlytics(fieldName, value)
 }
 
-export const clearAppSettingField = (fieldName: AppSettingsKey) => async (
-  dispatch: Dispatch<any>,
-) => {
+export const clearAppSettingField = (fieldName: AppSettingsKey) => async (dispatch: Dispatch<any>) => {
   await removeAppSettings(fieldName)
   updateCrashlytics(fieldName, null)
   dispatch({
@@ -136,10 +121,7 @@ const reloadAppSettings = () => async (dispatch: Dispatch<any>) => {
   }
 }
 
-export const encryptAndStoreCustomPin = (pin: string) => async (
-  dispatch: Dispatch<any>,
-  getState: () => State,
-) => {
+export const encryptAndStoreCustomPin = (pin: string) => async (dispatch: Dispatch<any>, getState: () => State) => {
   const state = getState()
   const installationId = state.appSettings.installationId
   if (installationId == null) {
@@ -147,9 +129,7 @@ export const encryptAndStoreCustomPin = (pin: string) => async (
   }
 
   const customPinHash = await encryptCustomPin(installationId, pin)
-  await dispatch(
-    setAppSettingField(APP_SETTINGS_KEYS.CUSTOM_PIN_HASH, customPinHash),
-  )
+  await dispatch(setAppSettingField(APP_SETTINGS_KEYS.CUSTOM_PIN_HASH, customPinHash))
 }
 
 export const removeCustomPin = () => async (dispatch: Dispatch<any>) => {
@@ -160,42 +140,36 @@ export const acceptAndSaveTos = () => async (dispatch: Dispatch<any>) => {
   await dispatch(setAppSettingField(APP_SETTINGS_KEYS.ACCEPTED_TOS, true))
 }
 
-const initInstallationId = () => async (
-  dispatch: Dispatch<any>,
-  getState: any,
-): Promise<string> => {
-  let installationId = installationIdSelector(getState())
-  if (installationId != null) {
+const initInstallationId =
+  () =>
+  async (dispatch: Dispatch<any>, getState: any): Promise<string> => {
+    let installationId = installationIdSelector(getState())
+    if (installationId != null) {
+      return installationId
+    }
+
+    installationId = uuid.v4()
+
+    await dispatch(setAppSettingField(APP_SETTINGS_KEYS.INSTALLATION_ID, installationId))
+
     return installationId
   }
 
-  installationId = uuid.v4()
+export const updateVersion =
+  () =>
+  async (dispatch: Dispatch<any>, getState: any): Promise<string> => {
+    let currentVersion = currentVersionSelector(getState())
+    Logger.debug('current version from state', currentVersion)
+    if (currentVersion != null && currentVersion === DeviceInfo.getVersion()) {
+      return currentVersion
+    }
 
-  await dispatch(
-    setAppSettingField(APP_SETTINGS_KEYS.INSTALLATION_ID, installationId),
-  )
+    currentVersion = DeviceInfo.getVersion()
 
-  return installationId
-}
-
-export const updateVersion = () => async (
-  dispatch: Dispatch<any>,
-  getState: any,
-): Promise<string> => {
-  let currentVersion = currentVersionSelector(getState())
-  Logger.debug('current version from state', currentVersion)
-  if (currentVersion != null && currentVersion === DeviceInfo.getVersion()) {
+    await dispatch(setAppSettingField(APP_SETTINGS_KEYS.CURRENT_VERSION, currentVersion))
+    Logger.debug('updated version', currentVersion)
     return currentVersion
   }
-
-  currentVersion = DeviceInfo.getVersion()
-
-  await dispatch(
-    setAppSettingField(APP_SETTINGS_KEYS.CURRENT_VERSION, currentVersion),
-  )
-  Logger.debug('updated version', currentVersion)
-  return currentVersion
-}
 
 export const closeWallet = () => async (_dispatch: Dispatch<any>) => {
   await walletManager.closeWallet()
@@ -227,9 +201,7 @@ export const logout = () => async (dispatch: Dispatch<any>) => {
   dispatch(signout())
 }
 
-const _setServerStatus = (serverStatus: ServerStatusCache) => (
-  dispatch: Dispatch<any>,
-) =>
+const _setServerStatus = (serverStatus: ServerStatusCache) => (dispatch: Dispatch<any>) =>
   dispatch({
     path: ['serverStatus'],
     payload: serverStatus,
@@ -240,9 +212,7 @@ const _setServerStatus = (serverStatus: ServerStatusCache) => (
 export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   try {
     // check status of default network
-    const backendConfig = getCardanoNetworkConfigById(
-      CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-    ).BACKEND
+    const backendConfig = getCardanoNetworkConfigById(CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID).BACKEND
     const status = await api.checkServerStatus(backendConfig)
     dispatch(
       _setServerStatus({
@@ -288,12 +258,7 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   const canEnableBiometricEncryption =
     (await canBiometricEncryptionBeEnabled()) && !shouldNotEnableBiometricAuth
 
-  await dispatch(
-    setAppSettingField(
-      APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION,
-      canEnableBiometricEncryption,
-    ),
-  )
+  await dispatch(setAppSettingField(APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION, canEnableBiometricEncryption))
 
   await walletManager.initialize()
   await dispatch(updateWallets())
@@ -349,12 +314,8 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
 
   Logger.debug('setting wallet manager hook')
   walletManager.subscribe(() => dispatch(mirrorTxHistory()))
-  walletManager.subscribeBackgroundSyncError((err) =>
-    dispatch(setBackgroundSyncError(err)),
-  )
-  walletManager.subscribeServerSync((status) =>
-    dispatch(_setServerStatus(status)),
-  )
+  walletManager.subscribeBackgroundSyncError((err) => dispatch(setBackgroundSyncError(err)))
+  walletManager.subscribeServerSync((status) => dispatch(_setServerStatus(status)))
 
   walletManager.subscribeOnOpen(() => dispatch(fetchTokenInfo()))
 
@@ -373,68 +334,50 @@ export const setupHooks = () => (dispatch: Dispatch<any>) => {
   })
 
   Logger.debug('setting up keyboard manager')
-  Keyboard.addListener('keyboardDidShow', () =>
-    dispatch(setIsKeyboardOpen(true)),
-  )
-  Keyboard.addListener('keyboardDidHide', () =>
-    dispatch(setIsKeyboardOpen(false)),
-  )
+  Keyboard.addListener('keyboardDidShow', () => dispatch(setIsKeyboardOpen(true)))
+  Keyboard.addListener('keyboardDidHide', () => dispatch(setIsKeyboardOpen(false)))
 }
 
-export const generateNewReceiveAddress = () => async (
-  _dispatch: Dispatch<any>,
-) => {
+export const generateNewReceiveAddress = () => async (_dispatch: Dispatch<any>) => {
   return await walletManager.generateNewUiReceiveAddress()
 }
 
-export const generateNewReceiveAddressIfNeeded = () => async (
-  _dispatch: Dispatch<any>,
-) => {
+export const generateNewReceiveAddressIfNeeded = () => async (_dispatch: Dispatch<any>) => {
   return await walletManager.generateNewUiReceiveAddressIfNeeded()
 }
 
-export const changeWalletName = (newName: string) => async (
-  dispatch: Dispatch<any>,
-) => {
+export const changeWalletName = (newName: string) => async (dispatch: Dispatch<any>) => {
   await walletManager.rename(newName)
   dispatch(updateWallets())
 }
 
-export const createWallet = (
-  name: string,
-  mnemonic: string,
-  password: string,
-  networkId: NetworkId,
-  implementationId: WalletImplementationId,
-) => async (dispatch: Dispatch<any>) => {
-  await walletManager.createWallet(
-    name,
-    mnemonic,
-    password,
-    networkId,
-    implementationId,
-  )
-  dispatch(updateWallets())
-}
+export const createWallet =
+  (name: string, mnemonic: string, password: string, networkId: NetworkId, implementationId: WalletImplementationId) =>
+  async (dispatch: Dispatch<any>) => {
+    await walletManager.createWallet(name, mnemonic, password, networkId, implementationId)
+    dispatch(updateWallets())
+  }
 
-export const createWalletWithBip44Account = (
-  name: string,
-  bip44AccountPublic: string,
-  networkId: NetworkId,
-  implementationId: WalletImplementationId,
-  hwDeviceInfo: ?HWDeviceInfo,
-  readOnly: boolean,
-) => async (dispatch: Dispatch<any>) => {
-  await walletManager.createWalletWithBip44Account(
-    name,
-    bip44AccountPublic,
-    networkId,
-    implementationId,
-    hwDeviceInfo,
-    readOnly,
-  )
-  dispatch(updateWallets())
-}
+export const createWalletWithBip44Account =
+  (
+    name: string,
+    bip44AccountPublic: string,
+    networkId: NetworkId,
+    implementationId: WalletImplementationId,
+    hwDeviceInfo: ?HWDeviceInfo,
+    readOnly: boolean,
+  ) =>
+  async (dispatch: Dispatch<any>) => {
+    await walletManager.createWalletWithBip44Account(
+      name,
+      bip44AccountPublic,
+      networkId,
+      implementationId,
+      hwDeviceInfo,
+      readOnly,
+    )
+    dispatch(updateWallets())
+  }
 
 export const removeCurrentWallet = () => async (dispatch: Dispatch<any>) => {
   await walletManager.removeCurrentWallet()
@@ -490,10 +433,7 @@ export const showErrorDialog = (
     title = dialog.title.defaultMessage
     // seems impossible to pass eslint check using a ternary operator here
     if (msgOptions != null && 'message' in msgOptions) {
-      message = dialog.message.defaultMessage.replace(
-        new RegExp('{message}', 'gi'),
-        msgOptions.message,
-      )
+      message = dialog.message.defaultMessage.replace(new RegExp('{message}', 'gi'), msgOptions.message)
     } else {
       message = 'unknown error'
     }
@@ -502,10 +442,7 @@ export const showErrorDialog = (
   return showDialog({title, message, yesButton})
 }
 
-export const showConfirmationDialog = (
-  dialog: DialogOptions,
-  intl: IntlShape,
-): Promise<DialogButton> =>
+export const showConfirmationDialog = (dialog: DialogOptions, intl: IntlShape): Promise<DialogButton> =>
   showDialog({
     // $FlowFixMe
     title: intl.formatMessage(dialog.title),
@@ -517,21 +454,14 @@ export const showConfirmationDialog = (
     noButton: intl.formatMessage(dialog.noButton),
   })
 
-export const setSystemAuth = (enable: boolean) => async (
-  dispatch: Dispatch<any>,
-  getState: any,
-) => {
+export const setSystemAuth = (enable: boolean) => async (dispatch: Dispatch<any>, getState: any) => {
   const canBeDisabled = walletManager.canBiometricsSignInBeDisabled()
 
   if (!enable && !canBeDisabled) {
-    throw new Error(
-      'Can not disable system auth without disabling easy confirmation.',
-    )
+    throw new Error('Can not disable system auth without disabling easy confirmation.')
   }
 
-  await dispatch(
-    setAppSettingField(APP_SETTINGS_KEYS.SYSTEM_AUTH_ENABLED, enable),
-  )
+  await dispatch(setAppSettingField(APP_SETTINGS_KEYS.SYSTEM_AUTH_ENABLED, enable))
 
   const installationId = installationIdSelector(getState())
   if (installationId == null) {
@@ -547,18 +477,12 @@ export const setSystemAuth = (enable: boolean) => async (
   }
 }
 
-export const handleGeneralError = async (
-  message: string,
-  e: Error,
-  intl: ?IntlShape,
-) => {
+export const handleGeneralError = async (message: string, e: Error, intl: ?IntlShape) => {
   Logger.error(`${message}: ${e.message}`, e)
   await showErrorDialog(errorMessages.generalError, intl, {message})
 }
 
-export const submitSignedTx = (signedTx: string) => async (
-  dispatch: Dispatch<any>,
-) => {
+export const submitSignedTx = (signedTx: string) => async (dispatch: Dispatch<any>) => {
   Logger.info('submitting tx...')
   await walletManager.submitTransaction(signedTx)
 
@@ -567,18 +491,14 @@ export const submitSignedTx = (signedTx: string) => async (
 
 // note: eslint doesn't like polymorphic types
 /* eslint-disable indent */
-export const submitTransaction = <T>(
-  signRequest: ISignRequest<T>,
-  decryptedKey: string,
-) => async (dispatch: Dispatch<any>) => {
-  const {encodedTx} = await walletManager.signTx(signRequest, decryptedKey)
-  Logger.info(
-    'submitTransaction::encodedTx',
-    Buffer.from(encodedTx).toString('hex'),
-  )
-  const signedTxBase64 = Buffer.from(encodedTx).toString('base64')
-  await dispatch(submitSignedTx(signedTxBase64))
-}
+export const submitTransaction =
+  <T>(signRequest: ISignRequest<T>, decryptedKey: string) =>
+  async (dispatch: Dispatch<any>) => {
+    const {encodedTx} = await walletManager.signTx(signRequest, decryptedKey)
+    Logger.info('submitTransaction::encodedTx', Buffer.from(encodedTx).toString('hex'))
+    const signedTxBase64 = Buffer.from(encodedTx).toString('base64')
+    await dispatch(submitSignedTx(signedTxBase64))
+  }
 /* eslint-enable indent */
 
 export const checkForFlawedWallets = () => (dispatch: Dispatch<any>) => {

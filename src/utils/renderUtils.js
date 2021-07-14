@@ -173,9 +173,7 @@ export const requireLoaded = <
       }
     }
 
-export const requireInitializedWallet: <Props>(
-  Component: ComponentType<Props>,
-) => ComponentType<Props> = compose(
+export const requireInitializedWallet: <Props>(Component: ComponentType<Props>) => ComponentType<Props> = compose(
   connect<{}, {_walletIsInitialized: boolean}, _, _, _, _>((state: State) => ({
     _walletIsInitialized: walletIsInitializedSelector(state),
   })),

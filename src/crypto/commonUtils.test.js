@@ -1,13 +1,7 @@
 // @flow
 import jestSetup from '../jestSetup'
 
-import {
-  formatPath,
-  generateAdaMnemonic,
-  generateWalletRootKey,
-  encryptData,
-  decryptData,
-} from './commonUtils'
+import {formatPath, generateAdaMnemonic, generateWalletRootKey, encryptData, decryptData} from './commonUtils'
 import {WrongPassword} from './errors'
 import {WALLET_IMPLEMENTATION_REGISTRY} from '../config/types'
 
@@ -32,9 +26,7 @@ describe('BIP39', () => {
 
   it('correctly derives wallet root key', async () => {
     const rootKey = await generateWalletRootKey(mnemonic)
-    expect(Buffer.from(await rootKey.as_bytes()).toString('hex')).toEqual(
-      expectedKey,
-    )
+    expect(Buffer.from(await rootKey.as_bytes()).toString('hex')).toEqual(expectedKey)
   })
 })
 
@@ -50,13 +42,8 @@ describe('encryption/decryption', () => {
 
   it('Throws on wrong password', async () => {
     expect.assertions(1)
-    const encryptedData = await encryptData(
-      '308f9977d04e7f3a45abd148905c628e2bb2621360a585f352',
-      'password',
-    )
-    await expect(decryptData(encryptedData, 'wrong-password')).rejects.toThrow(
-      WrongPassword,
-    )
+    const encryptedData = await encryptData('308f9977d04e7f3a45abd148905c628e2bb2621360a585f352', 'password')
+    await expect(decryptData(encryptedData, 'wrong-password')).rejects.toThrow(WrongPassword)
   })
 
   it('Can decrypt data encrypted with rust v2 library', async () => {
@@ -68,8 +55,7 @@ describe('encryption/decryption', () => {
     // https://github.com/Emurgo/cardano-serialization-lib/blob/0e89deadf9183a129b9a25c0568eed177d6c6d7c/rust/src/emip3.rs#L34
     // and the following salt, nonce and password
     let ciphertextHex = ''
-    const salt =
-      '50515253c0c1c2c3c4c5c6c750515253c0c1c2c3c4c5c6c750515253c0c1c2c3'
+    const salt = '50515253c0c1c2c3c4c5c6c750515253c0c1c2c3c4c5c6c750515253c0c1c2c3'
     const nonce = '50515253c0c1c2c3c4c5c6c7'
     const payload = '308f9977d04e7f3a45abd148905c628e2bb2621360a585f352'
     const password = 'password'
@@ -81,28 +67,9 @@ describe('encryption/decryption', () => {
 })
 
 test('Can format address', () => {
-  expect(
-    formatPath(
-      42,
-      'Internal',
-      47,
-      WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
-    ),
-  ).toBe("m/44'/1815'/42'/1/47")
-  expect(
-    formatPath(
-      42,
-      'Internal',
-      47,
-      WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY,
-    ),
-  ).toBe("m/1852'/1815'/42'/1/47")
-  expect(
-    formatPath(
-      42,
-      'Internal',
-      47,
-      WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24,
-    ),
-  ).toBe("m/1852'/1815'/42'/1/47")
+  expect(formatPath(42, 'Internal', 47, WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON)).toBe("m/44'/1815'/42'/1/47")
+  expect(formatPath(42, 'Internal', 47, WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY)).toBe("m/1852'/1815'/42'/1/47")
+  expect(formatPath(42, 'Internal', 47, WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24)).toBe(
+    "m/1852'/1815'/42'/1/47",
+  )
 })

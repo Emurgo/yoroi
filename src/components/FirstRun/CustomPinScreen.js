@@ -34,13 +34,7 @@ const messages = defineMessages({
   },
 })
 
-const CustomPinScreen = (
-  {
-    handlePinEntered,
-    intl,
-    navigation,
-  }: {intl: IntlShape} & Object /* TODO: type */,
-) => (
+const CustomPinScreen = ({handlePinEntered, intl, navigation}: {intl: IntlShape} & Object /* TODO: type */) => (
   <View style={styles.container} testID="customPinContainer">
     <StatusBar type="dark" />
 
@@ -81,16 +75,13 @@ export default injectIntl(
       onSuccess: route.params?.onSuccess,
     })),
     withHandlers({
-      handlePinEntered: ({
-        onSuccess,
-        encryptAndStoreCustomPin,
-        isAuth,
-        signin,
-      }) => async (pin) => {
-        await encryptAndStoreCustomPin(pin)
-        if (!isAuth) signin() // because in first run user is not authenticated
-        if (onSuccess !== undefined) onSuccess()
-      },
+      handlePinEntered:
+        ({onSuccess, encryptAndStoreCustomPin, isAuth, signin}) =>
+        async (pin) => {
+          await encryptAndStoreCustomPin(pin)
+          if (!isAuth) signin() // because in first run user is not authenticated
+          if (onSuccess !== undefined) onSuccess()
+        },
     }),
   )(CustomPinScreen): ComponentType<ExternalProps>),
 )

@@ -66,18 +66,8 @@ class Text extends React.Component<Props, State> {
   }
 
   render() {
-    const {
-      small,
-      secondary,
-      light,
-      bold,
-      monospace,
-      error,
-      style,
-      children,
-      adjustsFontSizeToFit,
-      ...restProps
-    } = this.props
+    const {small, secondary, light, bold, monospace, error, style, children, adjustsFontSizeToFit, ...restProps} =
+      this.props
 
     const textStyle = [
       styles.text,
@@ -111,15 +101,9 @@ class Text extends React.Component<Props, State> {
               return
             }
             const {width} = event.nativeEvent.layout
-            const fixedFontSize = androidAdjustsFontSizeToFitFix(
-              width,
-              children.length,
-            )
-            const styleFontSize: any =
-              style != null && style.fontSize != null && style.fontSize
-            const fontSize = styleFontSize
-              ? Math.min(styleFontSize, fixedFontSize)
-              : fixedFontSize
+            const fixedFontSize = androidAdjustsFontSizeToFitFix(width, children.length)
+            const styleFontSize: any = style != null && style.fontSize != null && style.fontSize
+            const fontSize = styleFontSize ? Math.min(styleFontSize, fixedFontSize) : fixedFontSize
 
             this.setState({fontSize})
           }}
