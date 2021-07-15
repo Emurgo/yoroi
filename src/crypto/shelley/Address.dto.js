@@ -57,9 +57,7 @@ export const getKeyHashesCardano = async (wasmAddress: any): Promise<KeyHashesCa
   throw new Error('getSpendingKeyHash unknown address type')
 }
 
-// prettier-ignore
-export class AddressDTOCardano
-implements YoroiAddressInfoInterface<KeyHashesCardano> {
+export class AddressDTOCardano implements YoroiAddressInfoInterface<KeyHashesCardano> {
   _address: string
   _wasmAddress: any
   _keyHashes: KeyHashesCardano | null

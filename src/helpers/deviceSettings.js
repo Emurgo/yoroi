@@ -23,9 +23,7 @@ export const canBiometricEncryptionBeEnabled = async () => {
   if (Platform.OS === 'android') {
     return await KeyStoreBridge.canFingerprintEncryptionBeEnabled()
   } else if (Platform.OS === 'ios') {
-    // prettier-ignore
-    const hasBiometricHardware =
-      await isBiometricEncryptionHardwareSupported()
+    const hasBiometricHardware = await isBiometricEncryptionHardwareSupported()
     const supportedBiometrics = await Keychain.canImplyAuthentication({
       authenticationType: Keychain.AUTHENTICATION_TYPE.BIOMETRICS,
     })

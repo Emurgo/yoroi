@@ -535,11 +535,11 @@ class SendScreen extends Component<Props, State> {
         serverStatus.serverTime,
       )
       const fee = (await transactionData.fee()).getDefault()
-      // prettier-ignore
+
       const defaultAssetAmount = selectedTokenMeta.isDefault
         ? parseAmountDecimal(amount, selectedTokenMeta)
-        // note: inside this if balanceAfter shouldn't be null
-        : tokenBalance.getDefault().minus(balanceAfter ?? 0)
+        : // note: inside this if balanceAfter shouldn't be null
+          tokenBalance.getDefault().minus(balanceAfter ?? 0)
 
       const tokens: Array<TokenEntry> = await (async () => {
         if (sendAll) {
@@ -748,12 +748,9 @@ class SendScreen extends Component<Props, State> {
             checked={sendAll}
             onChange={this.handleCheckBoxChange}
             text={
-              // prettier-ignore
               selectedAssetMeta.isDefault
                 ? intl.formatMessage(messages.checkboxSendAllAssets)
-                : intl.formatMessage(messages.checkboxSendAll,
-                  {assetId: assetDenomination},
-                )
+                : intl.formatMessage(messages.checkboxSendAll, {assetId: assetDenomination})
             }
           />
           <AssetSelector

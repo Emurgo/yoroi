@@ -254,9 +254,7 @@ export const initApp = () => async (dispatch: Dispatch<any>, getState: any) => {
   Logger.debug('shouldDisableBiometricAuth:', shouldNotEnableBiometricAuth)
   Logger.debug('isSystemAuthEnabled:', isSystemAuthEnabledSelector(state))
 
-  // prettier-ignore
-  const canEnableBiometricEncryption =
-    (await canBiometricEncryptionBeEnabled()) && !shouldNotEnableBiometricAuth
+  const canEnableBiometricEncryption = (await canBiometricEncryptionBeEnabled()) && !shouldNotEnableBiometricAuth
 
   await dispatch(setAppSettingField(APP_SETTINGS_KEYS.CAN_ENABLE_BIOMETRIC_ENCRYPTION, canEnableBiometricEncryption))
 

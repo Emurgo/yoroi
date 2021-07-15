@@ -44,7 +44,7 @@ export const getAssetDenomination = (token: Token | DefaultAsset, denomination: 
     case ASSET_DENOMINATION.SYMBOL:
       // if we don't have a symbol for this asset, default to ticker, though
       // ticker can still be null
-      // prettier-ignore
+
       return token?.metadata?.ticker
         ? utfSymbols.CURRENCIES[token.metadata.ticker]
           ? utfSymbols.CURRENCIES[token.metadata.ticker]

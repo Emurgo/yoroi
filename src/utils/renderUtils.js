@@ -12,15 +12,9 @@ import {walletIsInitializedSelector} from '../selectors'
 import type {ComponentType} from 'react'
 import type {HOC} from 'recompose'
 
-// prettier-ignore
-export const onDidMount = <
-  Props: {},
-  Callback: $Shape<Props> => mixed,
->(
-    didMount: Callback,
-  ): HOC<Props, Props> => (
-    BaseComponent: ComponentType<Props>,
-  ): ComponentType<{ ...Props }> =>
+export const onDidMount =
+  <Props: {}, Callback: ($Shape<Props>) => mixed>(didMount: Callback): HOC<Props, Props> =>
+  (BaseComponent: ComponentType<Props>): ComponentType<{...Props}> =>
     class OnDidMount extends React.Component<Props> {
       componentDidMount = () => {
         didMount(this.props)
@@ -31,15 +25,9 @@ export const onDidMount = <
       }
     }
 
-// prettier-ignore
-export const onWillUnmount = <
-  Props: {},
-  Callback: $Shape<Props> => mixed,
->(
-    willUnmount: Callback,
-  ): HOC<Props, Props> => (
-    BaseComponent: ComponentType<Props>,
-  ): ComponentType<{ ...Props }> =>
+export const onWillUnmount =
+  <Props: {}, Callback: ($Shape<Props>) => mixed>(willUnmount: Callback): HOC<Props, Props> =>
+  (BaseComponent: ComponentType<Props>): ComponentType<{...Props}> =>
     class OnWillUnmount extends React.Component<Props> {
       componentWillUnmount = () => {
         willUnmount(this.props)
@@ -50,15 +38,9 @@ export const onWillUnmount = <
       }
     }
 
-// prettier-ignore
-export const onDidUpdate = <
-  Props: {},
-  Callback: ($Shape<Props>, $Shape<Props>) => mixed,
->(
-    didUpdate: Callback,
-  ): HOC<Props, Props> => (
-    BaseComponent: ComponentType<Props>,
-  ): ComponentType<{ ...Props }> =>
+export const onDidUpdate =
+  <Props: {}, Callback: ($Shape<Props>, $Shape<Props>) => mixed>(didUpdate: Callback): HOC<Props, Props> =>
+  (BaseComponent: ComponentType<Props>): ComponentType<{...Props}> =>
     class OnDidMount extends React.Component<Props> {
       componentDidUpdate = (prevProps: Props) => {
         didUpdate(this.props, prevProps)
@@ -69,13 +51,9 @@ export const onDidUpdate = <
       }
     }
 
-// prettier-ignore
-export const withNavigationTitle = <Props: {navigation: any, route: any}>(
-  getTitle: (Props) => string,
-  paramName?: string
-): HOC<Props, Props> => (
-    BaseComponent: ComponentType<Props>,
-  ): ComponentType<{ ...Props }> =>
+export const withNavigationTitle =
+  <Props: {navigation: any, route: any}>(getTitle: (Props) => string, paramName?: string): HOC<Props, Props> =>
+  (BaseComponent: ComponentType<Props>): ComponentType<{...Props}> =>
     class WithScreenTitle extends React.Component<Props> {
       componentDidMount = () => {
         this.setTitle(getTitle(this.props))
@@ -127,12 +105,9 @@ export class RenderCount extends React.Component<{}> {
   }
 }
 
-// prettier-ignore
-export const measureRenderTime = <Props: {}>(
-  name: string,
-): HOC<Props, Props> => (
-    BaseComponent: ComponentType<Props>,
-  ): ComponentType<{...Props}> =>
+export const measureRenderTime =
+  <Props: {}>(name: string): HOC<Props, Props> =>
+  (BaseComponent: ComponentType<Props>): ComponentType<{...Props}> =>
     class MeasureRenderTime extends React.Component<Props> {
       logProfile = (id, phase, actualTime, baseTime, startTime, commitTime) => {
         Logger.debug('Render time measurement results')
@@ -152,24 +127,15 @@ export const measureRenderTime = <Props: {}>(
       }
     }
 
-// prettier-ignore
-export const requireLoaded = <
-  BaseProps: {},
-  HoCProps: {},
-  Callback: { ...BaseProps, ...HoCProps } => mixed,
->(
+export const requireLoaded =
+  <BaseProps: {}, HoCProps: {}, Callback: ({...BaseProps, ...HoCProps}) => mixed>(
     isLoaded: Callback,
-    Loading: ComponentType<{}> = () => null
-  ): HOC<BaseProps, { ...BaseProps, ...HoCProps }> => (
-    BaseComponent: ComponentType<{ ...BaseProps }>,
-  ): ComponentType<{ ...BaseProps }> =>
-    class BaseOrLoading extends React.Component<{ ...BaseProps, ...HoCProps }> {
+    Loading: ComponentType<{}> = () => null,
+  ): HOC<BaseProps, {...BaseProps, ...HoCProps}> =>
+  (BaseComponent: ComponentType<{...BaseProps}>): ComponentType<{...BaseProps}> =>
+    class BaseOrLoading extends React.Component<{...BaseProps, ...HoCProps}> {
       render() {
-        return (
-          isLoaded(this.props)
-            ? <BaseComponent {...this.props} />
-            : <Loading />
-        )
+        return isLoaded(this.props) ? <BaseComponent {...this.props} /> : <Loading />
       }
     }
 

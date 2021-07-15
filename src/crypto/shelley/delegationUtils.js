@@ -467,13 +467,9 @@ export const createWithdrawalTx = async (request: CreateWithdrawalTxRequest): Pr
         if (withdrawal.privateKey != null) {
           const {privateKey} = withdrawal
           neededKeys.wits.add(
-            // prettier-ignore
-            Buffer.from(
-              await (await make_vkey_witness(
-                await hash_transaction(body),
-                privateKey,
-              )).to_bytes(),
-            ).toString('hex'),
+            Buffer.from(await (await make_vkey_witness(await hash_transaction(body), privateKey)).to_bytes()).toString(
+              'hex',
+            ),
           )
         }
       }

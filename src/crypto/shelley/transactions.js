@@ -404,12 +404,10 @@ export const newAdaUnsignedTxFromUtxo = async (
       const remainingNeeded = await output.clamped_sub(currentInputSum)
 
       // update amount required to make sure we have ADA required for change UTXO entry
-      // prettier-ignore
+
       const _assetsForChange =
         (await currentInputSum.multiasset()) != null
-          ? await (await currentInputSum.multiasset()).sub(
-            (await output.multiasset()) ?? emptyAsset,
-          )
+          ? await (await currentInputSum.multiasset()).sub((await output.multiasset()) ?? emptyAsset)
           : undefined
       if (await shouldForceChange(_assetsForChange)) {
         if (changeAdaAddr == null) throw new NoOutputsError()
@@ -456,12 +454,9 @@ export const newAdaUnsignedTxFromUtxo = async (
       const compare = await currentInputSum.compare(output)
       const enoughInput = compare != null && compare >= 0
 
-      // prettier-ignore
       const _assetsForChange =
         (await currentInputSum.multiasset()) != null
-          ? await (await currentInputSum.multiasset()).sub(
-            (await output.multiasset()) ?? emptyAsset,
-          )
+          ? await (await currentInputSum.multiasset()).sub((await output.multiasset()) ?? emptyAsset)
           : undefined
       const forceChange = await shouldForceChange(_assetsForChange)
 
@@ -520,12 +515,14 @@ export const newAdaUnsignedTxFromUtxo = async (
         defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
       },
     )
-    // prettier-ignore
+
     return changeWasAdded
-      ? [{
-        ...changeAdaAddr,
-        values: output,
-      }]
+      ? [
+          {
+            ...changeAdaAddr,
+            values: output,
+          },
+        ]
       : []
   })()
 

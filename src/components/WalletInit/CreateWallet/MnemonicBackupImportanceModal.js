@@ -19,7 +19,7 @@ const messages = defineMessages({
       '!!!I understand that my secret keys are held securely on this device only, not on the company`s servers',
   },
   newDeviceRecoveryCheckbox: {
-    /* eslint-disable max-len */
+    /* eslint-disable  */
     id: 'components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox',
     defaultMessage:
       '!!!I understand that if this application is moved to another device ' +

@@ -135,12 +135,9 @@ const Step6 = ({intl, navigation, encryptedKey}: HOCProps & Props) => {
         <Button
           onPress={() => setShowBackupWarningModal(true)}
           title={
-            // prettier-ignore
             countDown !== 0
               ? countDown.toString()
-              : intl.formatMessage(
-                confirmationMessages.commonButtons.completeButton,
-              )
+              : intl.formatMessage(confirmationMessages.commonButtons.completeButton)
           }
           disabled={countDown !== 0}
         />

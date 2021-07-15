@@ -137,7 +137,7 @@ export const NETWORKS = {
       ..._DEFAULT_BACKEND_RULES,
     },
     SEIZA_STAKING_SIMPLE: (ADA: string) =>
-      // eslint-disable-next-line max-len
+      // eslint-disable-next-line
       `https://testnet.seiza-website.emurgo.io/staking-simple/list?sortBy=RANDOM&searchText=&performance[]=0&performance[]=100&source=mobile&userAda=${ADA}`,
     EXPLORER_URL_FOR_ADDRESS: (address: string) => `https://shelleyexplorer.cardano.org/address/?id=${address}`,
     EXPLORER_URL_FOR_TX: (_tx: string) => {

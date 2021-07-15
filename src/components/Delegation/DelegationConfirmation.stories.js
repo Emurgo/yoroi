@@ -1,5 +1,5 @@
 // @flow
-/* eslint-disable max-len */
+/* eslint-disable  */
 import React from 'react'
 import {BigNumber} from 'bignumber.js'
 import {storiesOf} from '@storybook/react-native'

@@ -75,12 +75,9 @@ const Step2 = ({intl, pin, navigation}: Props & HOCProps) => {
         <Button
           onPress={() => navigation.navigate(CATALYST_ROUTES.STEP3)}
           title={
-            // prettier-ignore
             countDown !== 0
               ? countDown.toString()
-              : intl.formatMessage(
-                confirmationMessages.commonButtons.continueButton,
-              )
+              : intl.formatMessage(confirmationMessages.commonButtons.continueButton)
           }
           disabled={countDown !== 0}
         />

@@ -495,15 +495,9 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
         ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
       ).to_raw_key()
 
-      // prettier-ignore
       wits.add(
         Buffer.from(
-          await (await make_vkey_witness(
-            await hash_transaction(
-              await txBuilder.build(),
-            ),
-            stakingKey,
-          )).to_bytes(),
+          await (await make_vkey_witness(await hash_transaction(await txBuilder.build()), stakingKey)).to_bytes(),
         ).toString('hex'),
       )
     }
@@ -645,7 +639,6 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
         metadata,
       )
 
-      // prettier-ignore
       const signRequest = new HaskellShelleyTxSignRequest({
         senderUtxos: unsignedTx.senderUtxos,
         unsignedTx: unsignedTx.txBuilder,
@@ -663,16 +656,12 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
         },
         ledgerNanoCatalystRegistrationTxSignData: this.isHW
           ? {
-            votingPublicKey,
-            stakingKeyPath: this.getStakingKeyPath(),
-            stakingKey: Buffer.from(await stakePublicKey.as_bytes()).toString(
-              'hex',
-            ),
-            rewardAddress: Buffer.from(await rewardAddress.to_bytes()).toString(
-              'hex',
-            ),
-            nonce,
-          }
+              votingPublicKey,
+              stakingKeyPath: this.getStakingKeyPath(),
+              stakingKey: Buffer.from(await stakePublicKey.as_bytes()).toString('hex'),
+              rewardAddress: Buffer.from(await rewardAddress.to_bytes()).toString('hex'),
+              nonce,
+            }
           : undefined,
       })
       return signRequest

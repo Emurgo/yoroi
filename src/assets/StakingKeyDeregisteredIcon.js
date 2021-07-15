@@ -1,5 +1,5 @@
 // @flow
-/* eslint-disable max-len */
+/* eslint-disable  */
 
 import React, {memo} from 'react'
 import Svg, {G, Circle, Line, Path, Rect} from 'react-native-svg'

@@ -83,7 +83,6 @@ export async function generateRegistration(request: {|
   return trxMetadata
 }
 
-// prettier-ignore
 export async function generatePrivateKeyForCatalyst(): Promise<Bip32PrivateKey> {
   let mnemonic
   if (CONFIG.DEBUG.PREFILL_FORMS) {
@@ -94,10 +93,7 @@ export async function generatePrivateKeyForCatalyst(): Promise<Bip32PrivateKey> 
   }
   const bip39entropy = mnemonicToEntropy(mnemonic)
   const EMPTY_PASSWORD = Buffer.from('')
-  const rootKey = await Bip32PrivateKey.from_bip39_entropy(
-    Buffer.from(bip39entropy, 'hex'),
-    EMPTY_PASSWORD,
-  )
+  const rootKey = await Bip32PrivateKey.from_bip39_entropy(Buffer.from(bip39entropy, 'hex'), EMPTY_PASSWORD)
 
   return rootKey
 }

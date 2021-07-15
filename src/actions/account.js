@@ -92,15 +92,12 @@ export const fetchAccountState = () => async (dispatch: Dispatch<any>, getState:
     const utxos = getState().balance.utxos
     if (utxos != null) {
       const utxosForKey = await walletManager.getAllUtxosForKey(utxos)
-      // prettier-ignore
+
       const amountToDelegate =
-        (utxosForKey != null && status.isRegistered)
+        utxosForKey != null && status.isRegistered
           ? utxosForKey
-            .map((utxo) => utxo.amount)
-            .reduce(
-              (x: BigNumber, y) => x.plus(new BigNumber(y || 0)),
-              new BigNumber(0),
-            )
+              .map((utxo) => utxo.amount)
+              .reduce((x: BigNumber, y) => x.plus(new BigNumber(y || 0)), new BigNumber(0))
           : BigNumber(0)
       dispatch(_setAccountTotalDelegated(amountToDelegate.plus(new BigNumber(value))))
     }

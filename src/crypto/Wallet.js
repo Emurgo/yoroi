@@ -202,14 +202,10 @@ export default class Wallet {
     const backendConfig = getCardanoNetworkConfigById(this.networkId).BACKEND
     const filterFn = (addrs) => api.filterUsedAddresses(addrs, backendConfig)
     await Promise.all([this.internalChain.sync(filterFn), this.externalChain.sync(filterFn)])
-    // prettier-ignore
+
     const addresses =
       this.rewardAddressHex != null
-        ? [
-          ...this.internalChain.getBlocks(),
-          ...this.externalChain.getBlocks(),
-          ...[[this.rewardAddressHex]],
-        ]
+        ? [...this.internalChain.getBlocks(), ...this.externalChain.getBlocks(), ...[[this.rewardAddressHex]]]
         : [...this.internalChain.getBlocks(), ...this.externalChain.getBlocks()]
     if (!isJormungandr(this.networkId)) {
       Logger.info('Discovery done, now syncing transactions')

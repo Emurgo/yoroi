@@ -1,6 +1,6 @@
 // @flow
 /* eslint-disable camelcase */
-/* eslint-disable max-len */
+/* eslint-disable  */
 import {
   BigNum,
   RewardAddress,
@@ -29,7 +29,7 @@ test('Generate Catalyst registration tx', async () => {
     ),
   )
 
-  // eslint-disable-next-line max-len
+  // eslint-disable-next-line
   // addr1qx0srp4ptag9j2e3rdtesrsxe708j80uhxv2r7utl4jaqm4rhf28yg7fkl6dd329cuxq7tqahhujtt5cmdmp9pa2t2zsp2vc6a (019f0186a15f50592b311b57980e06cf9e791dfcb998a1fb8bfd65d06ea3ba547223c9b7f4d6c545c70c0f2c1dbdf925ae98db761287aa5a85)
   const address = await RewardAddress.new(
     await NetworkInfo.testnet().network_id(),

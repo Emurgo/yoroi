@@ -1,5 +1,5 @@
 // @flow
-/* eslint-disable max-len */
+/* eslint-disable  */
 /* eslint-disable camelcase */
 import jestSetup from '../../jestSetup'
 
@@ -525,16 +525,12 @@ describe('Create unsigned TX from UTXO', () => {
     //   ?.to_str()
     // ).toEqual('1234')
     let _multiAsset = await (await unsignedTxResponse.txBuilder.get_explicit_input()).multiasset()
-    // prettier-ignore
+
     let _assetAmountStr =
       _multiAsset != null
         ? (await _multiAsset.get(assetInfo.policyId)) != null
-          ? (await (await _multiAsset.get(assetInfo.policyId)).get(
-            assetInfo.name,
-          )) != null
-            ? await (await (await _multiAsset.get(assetInfo.policyId)).get(
-              assetInfo.name,
-            )).to_str()
+          ? (await (await _multiAsset.get(assetInfo.policyId)).get(assetInfo.name)) != null
+            ? await (await (await _multiAsset.get(assetInfo.policyId)).get(assetInfo.name)).to_str()
             : null
           : null
         : null
@@ -542,16 +538,12 @@ describe('Create unsigned TX from UTXO', () => {
 
     const tx = await unsignedTxResponse.txBuilder.build()
     _multiAsset = await (await (await (await tx.outputs()).get(1)).amount()).multiasset()
-    // prettier-ignore
+
     _assetAmountStr =
       _multiAsset != null
         ? (await _multiAsset.get(assetInfo.policyId)) != null
-          ? (await (await _multiAsset.get(assetInfo.policyId)).get(
-            assetInfo.name,
-          )) != null
-            ? await (await (await _multiAsset.get(assetInfo.policyId)).get(
-              assetInfo.name,
-            )).to_str()
+          ? (await (await _multiAsset.get(assetInfo.policyId)).get(assetInfo.name)) != null
+            ? await (await (await _multiAsset.get(assetInfo.policyId)).get(assetInfo.name)).to_str()
             : null
           : null
         : null

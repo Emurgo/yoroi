@@ -1,5 +1,5 @@
 // @flow
-/* eslint-disable max-len */
+/* eslint-disable  */
 import {fromPairs} from 'lodash'
 import jestSetup from './jestSetup'
 import {tokenBalanceSelector, availableAssetsSelector} from './selectors'

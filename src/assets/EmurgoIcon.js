@@ -1,5 +1,5 @@
 // @flow
-/* eslint-disable max-len */
+/* eslint-disable  */
 
 import React from 'react'
 import Svg, {Path, G} from 'react-native-svg'
