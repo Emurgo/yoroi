@@ -30,7 +30,6 @@ const SaveNanoXScreen = ({onSubmit}) => (
   <WalletNameForm
     onSubmit={onSubmit}
     defaultWalletName={CONFIG.HARDWARE_WALLETS.LEDGER_NANO.DEFAULT_WALLET_NAME}
-    // $FlowFixMe
     image={image}
     progress={{
       currentStep: 3,
