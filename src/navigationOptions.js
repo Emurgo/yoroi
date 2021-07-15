@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react'
+import {Platform} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {COLORS} from './styles/config'
 
@@ -18,6 +19,9 @@ export const defaultNavigationOptions = {
 export const defaultStackNavigatorOptions = {
   headerTitleAlign: 'center',
   headerBackTitleVisible: false,
+  headerLeftContainerStyle: {
+    paddingLeft: Platform.OS === 'ios' ? 8 : undefined,
+  },
 }
 
 export const jormunNavigationOptions: Object = {

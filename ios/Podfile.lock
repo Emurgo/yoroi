@@ -265,7 +265,7 @@ PODS:
     - React-Core
   - react-native-config (0.12.0):
     - React
-  - react-native-haskell-shelley (1.3.0):
+  - react-native-haskell-shelley (1.4.0):
     - React
   - react-native-netinfo (5.9.9):
     - React-Core
@@ -337,8 +337,6 @@ PODS:
     - React-jsi (= 0.63.4)
   - RNBootSplash (3.2.3):
     - React-Core
-  - RNCardano (0.2.4):
-    - React
   - RNCAsyncStorage (1.15.5):
     - React-Core
   - RNCClipboard (1.5.1):
@@ -428,7 +426,6 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RNBootSplash (from `../node_modules/react-native-bootsplash`)
-  - RNCardano (from `../node_modules/react-native-cardano`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-community/clipboard`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
@@ -534,8 +531,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNBootSplash:
     :path: "../node_modules/react-native-bootsplash"
-  RNCardano:
-    :path: "../node_modules/react-native-cardano"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCClipboard:
@@ -595,7 +590,7 @@ SPEC CHECKSUMS:
   react-native-ble-plx: caac53ee98151ec81198239d591c203809a1ed6e
   react-native-camera: e46c64f0d1212124c915bf83ee9b855ac6d35164
   react-native-config: f2c2ae45625a068c35681a16b9bfb1ca58b0adc7
-  react-native-haskell-shelley: 9f3e347d3f41263285e853c794c39d6222e72521
+  react-native-haskell-shelley: 6feb02a9fdfcd95ee4c0755cdf1e78d95592d218
   react-native-netinfo: 0212ce8604e88edf686f1481b925b17a42a52449
   react-native-randombytes: b6677f7d495c27e9ee0dbd77ebc97b3c59173729
   react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
@@ -611,7 +606,6 @@ SPEC CHECKSUMS:
   React-RCTVibration: ae4f914cfe8de7d4de95ae1ea6cc8f6315d73d9d
   ReactCommon: 73d79c7039f473b76db6ff7c6b159c478acbbb3b
   RNBootSplash: 8ef5ffa03dadd35f66510b42960ce40f397c98bf
-  RNCardano: 5a5f3e3bd63207b2c67fad283a528c41da648b32
   RNCAsyncStorage: 56a3355a10b5d660c48c6e37325ac85ebfd09885
   RNCClipboard: 41d8d918092ae8e676f18adada19104fa3e68495
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
