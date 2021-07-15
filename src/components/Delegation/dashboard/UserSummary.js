@@ -42,14 +42,7 @@ type ExternalProps = {|
   +disableWithdraw: boolean,
 |}
 
-const UserSummary = ({
-  intl,
-  totalAdaSum,
-  totalRewards,
-  totalDelegated,
-  onWithdraw,
-  disableWithdraw,
-}: ExternalProps) => (
+const UserSummary = ({intl, totalAdaSum, totalRewards, totalDelegated, onWithdraw, disableWithdraw}: ExternalProps) => (
   <View style={styles.wrapper}>
     <TitledCard title={intl.formatMessage(messages.title)}>
       <View style={styles.stats}>
@@ -58,9 +51,7 @@ const UserSummary = ({
             <TotalAdaIcon width={ICON_DIM} height={ICON_DIM} />
           </View>
           <View style={styles.amountBlock}>
-            <Text style={styles.label}>
-              {intl.formatMessage(globalMessages.availableFunds)}:
-            </Text>
+            <Text style={styles.label}>{intl.formatMessage(globalMessages.availableFunds)}:</Text>
             <Text bold style={styles.value}>
               {totalAdaSum != null ? formatAdaWithText(totalAdaSum) : '-'}
             </Text>
@@ -71,9 +62,7 @@ const UserSummary = ({
             <TotalRewardIcon width={ICON_DIM} height={ICON_DIM} />
           </View>
           <View style={styles.amountBlock}>
-            <Text style={styles.label}>
-              {intl.formatMessage(messages.rewardsLabel)}:
-            </Text>
+            <Text style={styles.label}>{intl.formatMessage(messages.rewardsLabel)}:</Text>
             <Text bold style={styles.value}>
               {totalRewards != null ? formatAdaWithText(totalRewards) : '-'}
             </Text>
@@ -100,9 +89,7 @@ const UserSummary = ({
             <TotalDelegatedIcon width={ICON_DIM} height={ICON_DIM} />
           </View>
           <View style={styles.amountBlock}>
-            <Text style={styles.label}>
-              {intl.formatMessage(messages.delegatedLabel)}:
-            </Text>
+            <Text style={styles.label}>{intl.formatMessage(messages.delegatedLabel)}:</Text>
             <Text bold style={styles.value}>
               {totalDelegated != null ? formatAdaWithText(totalDelegated) : '-'}
             </Text>

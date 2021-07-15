@@ -14,9 +14,7 @@ const messages = defineMessages({
   },
 })
 
-const OfflineBanner = (
-  {isOnline, intl}: {intl: IntlShape} & Object /* TODO: type */,
-) =>
+const OfflineBanner = ({isOnline, intl}: {intl: IntlShape} & Object /* TODO: type */) =>
   isOnline ? null : <Banner error text={intl.formatMessage(messages.offline)} />
 
 export default injectIntl(

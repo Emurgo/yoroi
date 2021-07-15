@@ -9,21 +9,14 @@ import {withHandlers} from 'recompose'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {Button, ValidatedTextInput, StatusBar} from '../UiKit'
-import {
-  validatePassword,
-  getWalletNameError,
-  validateWalletName,
-} from '../../utils/validators'
+import {validatePassword, getWalletNameError, validateWalletName} from '../../utils/validators'
 import {CONFIG} from '../../config/config'
 import PasswordStrengthIndicator from './PasswordStrengthIndicator'
 import styles from './styles/WalletForm.style'
 import {walletNamesSelector} from '../../selectors'
 import globalMessages from '../../i18n/global-messages'
 
-import type {
-  PasswordValidationErrors,
-  WalletNameValidationErrors,
-} from '../../utils/validators'
+import type {PasswordValidationErrors, WalletNameValidationErrors} from '../../utils/validators'
 import type {Navigation} from '../../types/navigation'
 
 const messages = defineMessages({
@@ -97,15 +90,12 @@ class WalletForm extends PureComponent<Props, ComponentState> {
 
   debouncedHandlePasswordMatchValidation = _.debounce(() => {
     this.setState(({password, passwordConfirmation}) => ({
-      showPasswordsDoNotMatchError:
-        !!passwordConfirmation && password !== passwordConfirmation,
+      showPasswordsDoNotMatchError: !!passwordConfirmation && password !== passwordConfirmation,
     }))
   }, 300)
 
   componentDidMount = () => {
-    this._unsubscribe = this.props.navigation.addListener('blur', () =>
-      this.handleOnWillBlur(),
-    )
+    this._unsubscribe = this.props.navigation.addListener('blur', () => this.handleOnWillBlur())
   }
 
   componentWillUnmount = () => {
@@ -150,12 +140,7 @@ class WalletForm extends PureComponent<Props, ComponentState> {
 
   render() {
     const {intl} = this.props
-    const {
-      name,
-      password,
-      passwordConfirmation,
-      showPasswordsDoNotMatchError,
-    } = this.state
+    const {name, password, passwordConfirmation, showPasswordsDoNotMatchError} = this.state
 
     const validationErrors = this.validateForm()
 
@@ -171,12 +156,8 @@ class WalletForm extends PureComponent<Props, ComponentState> {
               onChangeText={this.handleSetName}
               error={getWalletNameError(
                 {
-                  tooLong: intl.formatMessage(
-                    globalMessages.walletNameErrorTooLong,
-                  ),
-                  nameAlreadyTaken: intl.formatMessage(
-                    globalMessages.walletNameErrorNameAlreadyTaken,
-                  ),
+                  tooLong: intl.formatMessage(globalMessages.walletNameErrorTooLong),
+                  nameAlreadyTaken: intl.formatMessage(globalMessages.walletNameErrorNameAlreadyTaken),
                 },
                 validationErrors.nameErrors,
               )}
@@ -196,10 +177,7 @@ class WalletForm extends PureComponent<Props, ComponentState> {
               label={intl.formatMessage(messages.repeatPasswordInputLabel)}
               value={passwordConfirmation}
               onChangeText={this.handleSetPasswordConfirmation}
-              error={
-                showPasswordsDoNotMatchError &&
-                intl.formatMessage(messages.repeatPasswordInputError)
-              }
+              error={showPasswordsDoNotMatchError && intl.formatMessage(messages.repeatPasswordInputError)}
               testID="walletRepeatPasswordInput"
             />
 
@@ -234,8 +212,10 @@ export default injectIntl(
       {validateWalletName},
     ),
     withHandlers({
-      validateWalletName: ({walletNames}) => (walletName) =>
-        validateWalletName(walletName, null, walletNames),
+      validateWalletName:
+        ({walletNames}) =>
+        (walletName) =>
+          validateWalletName(walletName, null, walletNames),
     }),
   )(WalletForm),
 )

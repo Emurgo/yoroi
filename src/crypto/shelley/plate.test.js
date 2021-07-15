@@ -1,5 +1,5 @@
 // @flow
-/* eslint-disable max-len */
+/* eslint-disable  */
 import jestSetup from '../../jestSetup'
 
 import {generateShelleyPlateFromMnemonics} from './plate'

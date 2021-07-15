@@ -15,10 +15,7 @@ import {onDidMount} from '../../../utils/renderUtils'
 import {Logger} from '../../../utils/logging'
 import {errorMessages} from '../../../i18n/global-messages'
 import {showErrorDialog} from '../../../actions'
-import {
-  isValidPublicKey,
-  isCIP1852AccountPath,
-} from '../../../utils/bip44Validators'
+import {isValidPublicKey, isCIP1852AccountPath} from '../../../utils/bip44Validators'
 
 import styles from './styles/ImportReadOnlyWalletScreen.style'
 
@@ -28,9 +25,7 @@ import type {Navigation} from '../../../types/navigation'
 const messages = defineMessages({
   paragraph: {
     id: 'components.walletinit.importreadonlywalletscreen.paragraph',
-    defaultMessage:
-      '!!!To import a read-only wallet from the Yoroi ' +
-      'extension, you will need to:',
+    defaultMessage: '!!!To import a read-only wallet from the Yoroi extension, you will need to:',
   },
   line1: {
     id: 'components.walletinit.importreadonlywalletscreen.line1',
@@ -38,9 +33,7 @@ const messages = defineMessages({
   },
   line2: {
     id: 'components.walletinit.importreadonlywalletscreen.line2',
-    defaultMessage:
-      '!!!Look for the {buttonType} for the wallet you want to ' +
-      'import in the mobile app.',
+    defaultMessage: '!!!Look for the {buttonType} for the wallet you want to import in the mobile app.',
   },
   buttonType: {
     id: 'components.walletinit.importreadonlywalletscreen.buttonType',
@@ -51,12 +44,7 @@ const messages = defineMessages({
 let scannerRef // reference to QR code sanner to re-activate if required
 let firstFocus = true
 
-const handleOnRead = async (
-  event: Object,
-  navigation: Navigation,
-  route: Object,
-  intl: IntlShape,
-): Promise<void> => {
+const handleOnRead = async (event: Object, navigation: Navigation, route: Object, intl: IntlShape): Promise<void> => {
   try {
     Logger.debug('ImportReadOnlyWalletScreen::handleOnRead::data', event.data)
     const dataObj = JSON.parse(event.data)
@@ -97,9 +85,7 @@ const getContent = (formatMessage) => (
   </ScrollView>
 )
 
-const ImportReadOnlyWalletScreen = (
-  {intl, onRead}: {intl: IntlShape} & Object /* TODO: type */,
-) => (
+const ImportReadOnlyWalletScreen = ({intl, onRead}: {intl: IntlShape} & Object /* TODO: type */) => (
   <View style={styles.container}>
     <View style={styles.cameraContainer}>
       <QRCodeScanner
@@ -120,49 +106,27 @@ const ImportReadOnlyWalletScreen = (
 
 export default injectIntl(
   (compose(
-    onDidMount(
-      async ({
-        navigation,
-        route,
-        intl,
-      }: {
-        intl: IntlShape,
-        route: any,
-        navigation: any,
-      }) => {
-        navigation.addListener('focus', () => {
-          // re-enable QR code scanning
-          if (
-            firstFocus === false &&
-            scannerRef != null &&
-            scannerRef.reactivate != null
-          ) {
-            scannerRef.reactivate()
-          }
-          if (firstFocus === true) firstFocus = false
-        })
-        if (CONFIG.E2E.IS_TESTING && (await DeviceInfo.isEmulator())) {
-          const event = {
-            data: `{"publicKeyHex": "${
-              CONFIG.DEBUG.PUB_KEY
-            }", "path": [1852,1815,0]}`,
-          }
-          await handleOnRead(event, navigation, route, intl)
+    onDidMount(async ({navigation, route, intl}: {intl: IntlShape, route: any, navigation: any}) => {
+      navigation.addListener('focus', () => {
+        // re-enable QR code scanning
+        if (firstFocus === false && scannerRef != null && scannerRef.reactivate != null) {
+          scannerRef.reactivate()
         }
-      },
-    ),
-    withHandlers({
-      onRead: ({
-        navigation,
-        route,
-        intl,
-      }: {
-        intl: IntlShape,
-        route: any,
-        navigation: any,
-      }) => async (event) => {
+        if (firstFocus === true) firstFocus = false
+      })
+      if (CONFIG.E2E.IS_TESTING && (await DeviceInfo.isEmulator())) {
+        const event = {
+          data: `{"publicKeyHex": "${CONFIG.DEBUG.PUB_KEY}", "path": [1852,1815,0]}`,
+        }
         await handleOnRead(event, navigation, route, intl)
-      },
+      }
+    }),
+    withHandlers({
+      onRead:
+        ({navigation, route, intl}: {intl: IntlShape, route: any, navigation: any}) =>
+        async (event) => {
+          await handleOnRead(event, navigation, route, intl)
+        },
     }),
   )(ImportReadOnlyWalletScreen): ComponentType<{
     navigation: Navigation,

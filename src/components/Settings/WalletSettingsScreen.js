@@ -9,12 +9,7 @@ import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 import {confirmationMessages} from '../../i18n/global-messages'
 
-import {
-  closeWallet,
-  logout,
-  showConfirmationDialog,
-  DIALOG_BUTTONS,
-} from '../../actions'
+import {closeWallet, logout, showConfirmationDialog, DIALOG_BUTTONS} from '../../actions'
 import {WALLET_ROOT_ROUTES, SETTINGS_ROUTES} from '../../RoutesList'
 import {
   isSystemAuthEnabledSelector,
@@ -134,22 +129,13 @@ const WalletSettingsScreen = ({
     <StatusBar type="dark" />
 
     <SettingsSection>
-      <PressableSettingsItem
-        label={intl.formatMessage(messages.switchWallet)}
-        onPress={onSwitchWallet}
-      />
+      <PressableSettingsItem label={intl.formatMessage(messages.switchWallet)} onPress={onSwitchWallet} />
 
-      <PressableSettingsItem
-        label={intl.formatMessage(messages.logout)}
-        onPress={onLogout}
-      />
+      <PressableSettingsItem label={intl.formatMessage(messages.logout)} onPress={onLogout} />
     </SettingsSection>
 
     <SettingsSection title={intl.formatMessage(messages.walletName)}>
-      <NavigatedSettingsItem
-        label={walletName}
-        navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
-      />
+      <NavigatedSettingsItem label={walletName} navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME} />
     </SettingsSection>
 
     <SettingsSection title={intl.formatMessage(messages.security)}>
@@ -179,16 +165,11 @@ const WalletSettingsScreen = ({
     </SettingsSection>
 
     <SettingsSection title="About">
-      <SettingsBuildItem
-        label={intl.formatMessage(messages.network)}
-        value={_getNetworkName(walletMeta.networkId)}
-      />
+      <SettingsBuildItem label={intl.formatMessage(messages.network)} value={_getNetworkName(walletMeta.networkId)} />
       {_getWalletType(walletMeta.walletImplementationId) != null && (
         <SettingsBuildItem
           label={intl.formatMessage(messages.walletType)}
-          value={intl.formatMessage(
-            _getWalletType(walletMeta.walletImplementationId),
-          )}
+          value={intl.formatMessage(_getWalletType(walletMeta.walletImplementationId))}
         />
       )}
     </SettingsSection>
@@ -215,30 +196,34 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      onToggleEasyConfirmation: ({navigation}) => () => {
-        navigation.navigate(SETTINGS_ROUTES.EASY_COMFIRMATION)
-      },
+      onToggleEasyConfirmation:
+        ({navigation}) =>
+        () => {
+          navigation.navigate(SETTINGS_ROUTES.EASY_COMFIRMATION)
+        },
     }),
     withHandlers({
       onSwitchWallet: ignoreConcurrentAsyncHandler(
-        ({navigation, closeWallet}) => async () => {
-          await closeWallet()
-          navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-        },
+        ({navigation, closeWallet}) =>
+          async () => {
+            await closeWallet()
+            navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
+          },
         1000,
       ),
       onLogout: ignoreConcurrentAsyncHandler(
-        ({logout, intl}: {intl: IntlShape, logout: any}) => async () => {
-          const selection = await showConfirmationDialog(
-            // $FlowFixMe
-            confirmationMessages.logout,
-            intl,
-          )
+        ({logout, intl}: {intl: IntlShape, logout: any}) =>
+          async () => {
+            const selection = await showConfirmationDialog(
+              // $FlowFixMe
+              confirmationMessages.logout,
+              intl,
+            )
 
-          if (selection === DIALOG_BUTTONS.YES) {
-            await logout()
-          }
-        },
+            if (selection === DIALOG_BUTTONS.YES) {
+              await logout()
+            }
+          },
         500,
       ),
     }),

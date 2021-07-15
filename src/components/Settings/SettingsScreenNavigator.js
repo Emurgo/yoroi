@@ -19,10 +19,7 @@ import ChangeCustomPinScreen from './ChangeCustomPinScreen'
 import CustomPinScreen from '../FirstRun/CustomPinScreen'
 import BiometricAuthScreen from '../Send/BiometricAuthScreen'
 import {SETTINGS_ROUTES, SETTINGS_TABS} from '../../RoutesList'
-import {
-  defaultNavigationOptions,
-  defaultStackNavigatorOptions,
-} from '../../navigationOptions'
+import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
 
 import {COLORS} from '../../styles/config'
 
@@ -107,14 +104,8 @@ const SettingsTabNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
       },
     }}
   >
-    <Tab.Screen
-      name={SETTINGS_TABS.WALLET_SETTINGS}
-      component={WalletSettingsScreen}
-    />
-    <Tab.Screen
-      name={SETTINGS_TABS.APP_SETTINGS}
-      component={ApplicationSettingsScreen}
-    />
+    <Tab.Screen name={SETTINGS_TABS.WALLET_SETTINGS} component={WalletSettingsScreen} />
+    <Tab.Screen name={SETTINGS_TABS.APP_SETTINGS} component={ApplicationSettingsScreen} />
   </Tab.Navigator>
 ))
 

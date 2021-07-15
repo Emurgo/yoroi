@@ -14,11 +14,7 @@ import ConnectNanoXScreen from './ConnectNanoX/ConnectNanoXScreen'
 import SaveNanoXScreen from './ConnectNanoX/SaveNanoXScreen'
 import MnemonicShowScreen from './CreateWallet/MnemonicShowScreen'
 
-import {
-  defaultNavigationOptions,
-  jormunNavigationOptions,
-  defaultStackNavigatorOptions,
-} from '../../navigationOptions'
+import {defaultNavigationOptions, jormunNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
 import MnemonicCheckScreen from './CreateWallet/MnemonicCheckScreen'
 import VerifyRestoredWallet from './RestoreWallet/VerifyRestoredWallet'
 import WalletCredentialsScreen from './RestoreWallet/WalletCredentialsScreen'
@@ -95,9 +91,7 @@ const WalletInitNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
       // jormun style, make sure to pass the networkId as a route param
 
       // $FlowFixMe mixed is incompatible with number
-      const extraOptions = isJormungandr(route.params?.networkId)
-        ? jormunNavigationOptions
-        : {}
+      const extraOptions = isJormungandr(route.params?.networkId) ? jormunNavigationOptions : {}
       return {
         cardStyle: {
           backgroundColor: 'transparent',
@@ -134,10 +128,7 @@ const WalletInitNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
       component={ImportReadOnlyWalletScreen}
       options={{title: intl.formatMessage(messages.importReadOnlyTitle)}}
     />
-    <Stack.Screen
-      name={WALLET_INIT_ROUTES.SAVE_READ_ONLY_WALLET}
-      component={SaveReadOnlyWalletScreen}
-    />
+    <Stack.Screen name={WALLET_INIT_ROUTES.SAVE_READ_ONLY_WALLET} component={SaveReadOnlyWalletScreen} />
     <Stack.Screen
       name={WALLET_INIT_ROUTES.CHECK_NANO_X}
       component={CheckNanoXScreen}
@@ -149,10 +140,7 @@ const WalletInitNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
     >
       {(props) => <ConnectNanoXScreen {...props} defaultDevices={null} />}
     </Stack.Screen>
-    <Stack.Screen
-      name={WALLET_INIT_ROUTES.SAVE_NANO_X}
-      component={SaveNanoXScreen}
-    />
+    <Stack.Screen name={WALLET_INIT_ROUTES.SAVE_NANO_X} component={SaveNanoXScreen} />
     <Stack.Screen
       name={WALLET_INIT_ROUTES.MNEMONIC_SHOW}
       component={MnemonicShowScreen}

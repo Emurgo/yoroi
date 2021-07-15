@@ -1,5 +1,5 @@
 // @flow
-/* eslint-disable max-len */
+/* eslint-disable  */
 import {fromPairs} from 'lodash'
 import jestSetup from './jestSetup'
 import {tokenBalanceSelector, availableAssetsSelector} from './selectors'
@@ -21,8 +21,7 @@ const txs: Array<RawTransaction> = [
     tx_state: 'Successful',
     last_update: '2021-01-15T12:22:31.000Z',
     block_num: 2229379,
-    block_hash:
-      '9add65678c26f19fc9e1094e9a0ee21febc973486771438fd2cd62ccd60918b7',
+    block_hash: '9add65678c26f19fc9e1094e9a0ee21febc973486771438fd2cd62ccd60918b7',
     time: '2021-01-15T12:22:31.000Z',
     epoch: 108,
     slot: 57735,
@@ -33,8 +32,7 @@ const txs: Array<RawTransaction> = [
         amount: '999797657118',
         id: '1be680db0e5361ded2cf5b0d1689223dc61b7a8cf0485254b12c3b1ca64b61cc1',
         index: 1,
-        txHash:
-          '1be680db0e5361ded2cf5b0d1689223dc61b7a8cf0485254b12c3b1ca64b61cc',
+        txHash: '1be680db0e5361ded2cf5b0d1689223dc61b7a8cf0485254b12c3b1ca64b61cc',
         assets: [],
       },
     ],
@@ -63,8 +61,7 @@ const txs: Array<RawTransaction> = [
     tx_state: 'Successful',
     last_update: '2021-01-27T18:06:56.000Z',
     block_num: 2265695,
-    block_hash:
-      '8a7f636928df18b88f321a859c9430bb6dcc50d4dc1aa5f2c7adaa6f0e087868',
+    block_hash: '8a7f636928df18b88f321a859c9430bb6dcc50d4dc1aa5f2c7adaa6f0e087868',
     time: '2021-01-27T18:06:56.000Z',
     epoch: 110,
     slot: 251200,
@@ -75,8 +72,7 @@ const txs: Array<RawTransaction> = [
         amount: '50000000000',
         id: '4a3167e746d45c2737dc5150cd822f18d3ef3a1315a3edc21a3aa2b376d1e3780',
         index: 0,
-        txHash:
-          '4a3167e746d45c2737dc5150cd822f18d3ef3a1315a3edc21a3aa2b376d1e378',
+        txHash: '4a3167e746d45c2737dc5150cd822f18d3ef3a1315a3edc21a3aa2b376d1e378',
         assets: [],
       },
     ],
@@ -105,8 +101,7 @@ const txs: Array<RawTransaction> = [
     tx_state: 'Successful',
     last_update: '2021-02-19T15:53:36.000Z',
     block_num: 2335831,
-    block_hash:
-      '7d495a78597a10539d54f4c4dc5bfd2324cceb80520c712caa93e0fa0dd7c1c0',
+    block_hash: '7d495a78597a10539d54f4c4dc5bfd2324cceb80520c712caa93e0fa0dd7c1c0',
     time: '2021-02-19T15:53:36.000Z',
     epoch: 115,
     slot: 70400,
@@ -117,14 +112,11 @@ const txs: Array<RawTransaction> = [
         amount: '481040108',
         id: '3393cf9c82f674db5d45a72c3c054dc3c0012bb7de13283add23002194327d451',
         index: 1,
-        txHash:
-          '3393cf9c82f674db5d45a72c3c054dc3c0012bb7de13283add23002194327d45',
+        txHash: '3393cf9c82f674db5d45a72c3c054dc3c0012bb7de13283add23002194327d45',
         assets: [
           {
-            assetId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
-            policyId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            assetId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+            policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             name: '',
             amount: '76',
           },
@@ -138,10 +130,8 @@ const txs: Array<RawTransaction> = [
         amount: '1407406',
         assets: [
           {
-            assetId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
-            policyId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            assetId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+            policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             name: '',
             amount: '2',
           },
@@ -153,10 +143,8 @@ const txs: Array<RawTransaction> = [
         amount: '479460117',
         assets: [
           {
-            assetId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
-            policyId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            assetId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+            policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             name: '',
             amount: '74',
           },
@@ -174,8 +162,7 @@ const txs: Array<RawTransaction> = [
     tx_state: 'Successful',
     last_update: '2021-02-25T15:15:42.000Z',
     block_num: 2354714,
-    block_hash:
-      '96de5b3990dd37b132865b27f908219cdabfd6ef1789719792a5fe18f970b6ec',
+    block_hash: '96de5b3990dd37b132865b27f908219cdabfd6ef1789719792a5fe18f970b6ec',
     time: '2021-02-25T15:15:42.000Z',
     epoch: 116,
     slot: 154526,
@@ -186,14 +173,11 @@ const txs: Array<RawTransaction> = [
         amount: '471562626',
         id: '113b497c62283c5a1ac109e38061044163a114483d8cbae69893e1c69b9ed9921',
         index: 1,
-        txHash:
-          '113b497c62283c5a1ac109e38061044163a114483d8cbae69893e1c69b9ed992',
+        txHash: '113b497c62283c5a1ac109e38061044163a114483d8cbae69893e1c69b9ed992',
         assets: [
           {
-            assetId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
-            policyId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            assetId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+            policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             name: '',
             amount: '64',
           },
@@ -207,10 +191,8 @@ const txs: Array<RawTransaction> = [
         amount: '1407406',
         assets: [
           {
-            assetId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
-            policyId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            assetId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+            policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             name: '',
             amount: '2',
           },
@@ -222,10 +204,8 @@ const txs: Array<RawTransaction> = [
         amount: '469982635',
         assets: [
           {
-            assetId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
-            policyId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            assetId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+            policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             name: '',
             amount: '62',
           },
@@ -243,8 +223,7 @@ const txs: Array<RawTransaction> = [
     tx_state: 'Successful',
     last_update: '2021-02-25T15:41:36.000Z',
     block_num: 2354774,
-    block_hash:
-      '939256d58bbc3997b49577cf24fa2c5fc38a483d43e9df72eda538c73d767052',
+    block_hash: '939256d58bbc3997b49577cf24fa2c5fc38a483d43e9df72eda538c73d767052',
     time: '2021-02-25T15:41:36.000Z',
     epoch: 116,
     slot: 156080,
@@ -255,14 +234,11 @@ const txs: Array<RawTransaction> = [
         amount: '49000000',
         id: 'd25732b7b50c7f08d5d3e938d55fbe02fc60184277b76e3591a982902477b8ad0',
         index: 0,
-        txHash:
-          'd25732b7b50c7f08d5d3e938d55fbe02fc60184277b76e3591a982902477b8ad',
+        txHash: 'd25732b7b50c7f08d5d3e938d55fbe02fc60184277b76e3591a982902477b8ad',
         assets: [
           {
-            assetId:
-              'edcb58cae6fcb5def9f23663237c1d95bd54e51c3c40369e538661bc.637264',
-            policyId:
-              'edcb58cae6fcb5def9f23663237c1d95bd54e51c3c40369e538661bc',
+            assetId: 'edcb58cae6fcb5def9f23663237c1d95bd54e51c3c40369e538661bc.637264',
+            policyId: 'edcb58cae6fcb5def9f23663237c1d95bd54e51c3c40369e538661bc',
             name: '637264',
             amount: '1',
           },
@@ -282,10 +258,8 @@ const txs: Array<RawTransaction> = [
         amount: '2000000',
         assets: [
           {
-            assetId:
-              'edcb58cae6fcb5def9f23663237c1d95bd54e51c3c40369e538661bc.637264',
-            policyId:
-              'edcb58cae6fcb5def9f23663237c1d95bd54e51c3c40369e538661bc',
+            assetId: 'edcb58cae6fcb5def9f23663237c1d95bd54e51c3c40369e538661bc.637264',
+            policyId: 'edcb58cae6fcb5def9f23663237c1d95bd54e51c3c40369e538661bc',
             name: '637264',
             amount: '1',
           },
@@ -303,8 +277,7 @@ const txs: Array<RawTransaction> = [
     tx_state: 'Successful',
     last_update: '2021-02-26T12:46:49.000Z',
     block_num: 2357434,
-    block_hash:
-      '6ee1c0789faff99304916e2bee37b274d136492e1059b186ee8ec9cdde0bfba3',
+    block_hash: '6ee1c0789faff99304916e2bee37b274d136492e1059b186ee8ec9cdde0bfba3',
     time: '2021-02-26T12:46:49.000Z',
     epoch: 116,
     slot: 231993,
@@ -315,14 +288,11 @@ const txs: Array<RawTransaction> = [
         amount: '1407406',
         id: '33ae3456581ab8dc0a9ddb265c53d08e4df0c7d16786f5932ed525c092894a8f0',
         index: 0,
-        txHash:
-          '33ae3456581ab8dc0a9ddb265c53d08e4df0c7d16786f5932ed525c092894a8f',
+        txHash: '33ae3456581ab8dc0a9ddb265c53d08e4df0c7d16786f5932ed525c092894a8f',
         assets: [
           {
-            assetId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
-            policyId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            assetId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+            policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             name: '',
             amount: '2',
           },
@@ -334,14 +304,11 @@ const txs: Array<RawTransaction> = [
         amount: '48499317096',
         id: '5152eaa7bf59c5d4b6af44ffa14ad2616b90bb9304c311e6137072f54306fac41',
         index: 1,
-        txHash:
-          '5152eaa7bf59c5d4b6af44ffa14ad2616b90bb9304c311e6137072f54306fac4',
+        txHash: '5152eaa7bf59c5d4b6af44ffa14ad2616b90bb9304c311e6137072f54306fac4',
         assets: [
           {
-            assetId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
-            policyId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            assetId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+            policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             name: '',
             amount: '1',
           },
@@ -355,10 +322,8 @@ const txs: Array<RawTransaction> = [
         amount: '1407406',
         assets: [
           {
-            assetId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
-            policyId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            assetId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+            policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             name: '',
             amount: '2',
           },
@@ -370,10 +335,8 @@ const txs: Array<RawTransaction> = [
         amount: '48499139539',
         assets: [
           {
-            assetId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
-            policyId:
-              '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
+            assetId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+            policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             name: '',
             amount: '1',
           },
@@ -407,8 +370,7 @@ const externalAddresses = [
   'addr_test1qz78an2j9ftm9hwwvfhlth9ksh2l3zwvfhulujc9dppee0r2g903x9u62zuk8tae8u5357kzj5f667ztj2xkx7kwse2q53sfkr',
   'addr_test1qzd4ks0kvc889wd0ns0xgq7n8h5zrcjfeqreyjgynyz7xfr2g903x9u62zuk8tae8u5357kzj5f667ztj2xkx7kwse2qxat5hx',
 ]
-const rewardAddressHex =
-  'e06a415f13179a50b963afb93f291a7ac29513ad784b928d637ace8654'
+const rewardAddressHex = 'e06a415f13179a50b963afb93f291a7ac29513ad784b928d637ace8654'
 
 let state
 
@@ -418,12 +380,7 @@ beforeEach(async () => {
     wallet: {
       ...mockState().wallet,
       transactions: fromPairs(
-        await Promise.all(
-          txs.map(async (tx) => [
-            tx.hash,
-            await checkAndFacadeTransactionAsync(tx),
-          ]),
-        ),
+        await Promise.all(txs.map(async (tx) => [tx.hash, await checkAndFacadeTransactionAsync(tx)])),
       ),
       internalAddresses,
       externalAddresses,
@@ -443,16 +400,12 @@ describe('token balance', () => {
     const tokenBalance = tokenBalanceSelector(state)
 
     const tokenEntry1 = tokenBalance.values.filter(
-      (token) =>
-        token.identifier ===
-        '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+      (token) => token.identifier === '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
     )[0]
     expect(tokenEntry1.amount.toString()).toBe('4')
 
     const tokenEntry2 = tokenBalance.values.filter(
-      (token) =>
-        token.identifier ===
-        'edcb58cae6fcb5def9f23663237c1d95bd54e51c3c40369e538661bc.637264',
+      (token) => token.identifier === 'edcb58cae6fcb5def9f23663237c1d95bd54e51c3c40369e538661bc.637264',
     )[0]
     expect(tokenEntry2.amount.toString()).toBe('1')
 
@@ -470,8 +423,7 @@ describe('token balance', () => {
         numberOfDecimals: 0,
       },
       {
-        identifier:
-          'edcb58cae6fcb5def9f23663237c1d95bd54e51c3c40369e538661bc.637264',
+        identifier: 'edcb58cae6fcb5def9f23663237c1d95bd54e51c3c40369e538661bc.637264',
         policyId: 'edcb58cae6fcb5def9f23663237c1d95bd54e51c3c40369e538661bc',
         assetName: '637264',
         numberOfDecimals: 0,
@@ -482,9 +434,7 @@ describe('token balance', () => {
       expect(token).not.toBe(undefined)
       expect(token.metadata.policyId).toBe(expectedAssets[i].policyId)
       expect(token.metadata.assetName).toBe(expectedAssets[i].assetName)
-      expect(token.metadata.numberOfDecimals).toBe(
-        expectedAssets[i].numberOfDecimals,
-      )
+      expect(token.metadata.numberOfDecimals).toBe(expectedAssets[i].numberOfDecimals)
     }
   })
 })

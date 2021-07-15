@@ -14,12 +14,7 @@ type Props = {
 
 const AddressDetail = ({address}: Props) => (
   <View style={styles.container}>
-    <QRCode
-      value={address}
-      size={140}
-      backgroundColor={COLORS.LIGHT_GRAY}
-      color="black"
-    />
+    <QRCode value={address} size={140} backgroundColor={COLORS.LIGHT_GRAY} color="black" />
   </View>
 )
 

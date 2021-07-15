@@ -29,14 +29,10 @@ export const setLogLevel = (level: $Values<typeof LogLevel>) => {
 }
 
 export const Logger = {
-  debug: (message: string, ...args: any) =>
-    LogLevel.Debug >= _logLevel && _logger.debug(message, ...args),
-  info: (message: string, ...args: any) =>
-    LogLevel.Info >= _logLevel && _logger.info(message, ...args),
-  warn: (message: string, ...args: any) =>
-    LogLevel.Warn >= _logLevel && _logger.warn(message, ...args),
-  error: (message: string, ...args: any) =>
-    LogLevel.Error >= _logLevel && _logger.error(message, ...args),
+  debug: (message: string, ...args: any) => LogLevel.Debug >= _logLevel && _logger.debug(message, ...args),
+  info: (message: string, ...args: any) => LogLevel.Info >= _logLevel && _logger.info(message, ...args),
+  warn: (message: string, ...args: any) => LogLevel.Warn >= _logLevel && _logger.warn(message, ...args),
+  error: (message: string, ...args: any) => LogLevel.Error >= _logLevel && _logger.error(message, ...args),
   setLogLevel,
   setLogger,
 }

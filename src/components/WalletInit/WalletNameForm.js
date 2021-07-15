@@ -50,16 +50,10 @@ const WalletNameForm = (
   return (
     <SafeAreaView style={styles.safeAreaView}>
       {progress != null && (
-        <ProgressStep
-          currentStep={progress.currentStep}
-          totalSteps={progress.totalSteps}
-          displayStepNumber
-        />
+        <ProgressStep currentStep={progress.currentStep} totalSteps={progress.totalSteps} displayStepNumber />
       )}
       <View style={[styles.container, containerStyle]}>
-        <View style={styles.heading}>
-          {image != null && <Image source={image} />}
-        </View>
+        <View style={styles.heading}>{image != null && <Image source={image} />}</View>
         {topContent}
         <ValidatedTextInput
           label={intl.formatMessage(messages.walletNameInputLabel)}
@@ -67,12 +61,8 @@ const WalletNameForm = (
           onChangeText={setName}
           error={getWalletNameError(
             {
-              tooLong: intl.formatMessage(
-                globalMessages.walletNameErrorTooLong,
-              ),
-              nameAlreadyTaken: intl.formatMessage(
-                globalMessages.walletNameErrorNameAlreadyTaken,
-              ),
+              tooLong: intl.formatMessage(globalMessages.walletNameErrorTooLong),
+              nameAlreadyTaken: intl.formatMessage(globalMessages.walletNameErrorNameAlreadyTaken),
             },
             validationErrors,
           )}
@@ -120,25 +110,27 @@ export default injectIntl(
         validateWalletName,
       },
     ),
-    withStateHandlers(
-      ({defaultWalletName = ''}) => ({name: defaultWalletName}),
-      {
-        setName: () => (name) => ({name}),
-      },
-    ),
-    withHandlers({
-      onPress: ignoreConcurrentAsyncHandler(
-        ({onSubmit, name}) => async () => {
-          await onSubmit({name})
-        },
-        1000,
-      ),
-      validateWalletName: ({walletNames}) => (walletName) =>
-        validateWalletName(walletName, null, walletNames),
+    withStateHandlers(({defaultWalletName = ''}) => ({name: defaultWalletName}), {
+      setName: () => (name) => ({name}),
     }),
     withHandlers({
-      validateForm: ({name, validateWalletName}) => () =>
-        validateWalletName(name),
+      onPress: ignoreConcurrentAsyncHandler(
+        ({onSubmit, name}) =>
+          async () => {
+            await onSubmit({name})
+          },
+        1000,
+      ),
+      validateWalletName:
+        ({walletNames}) =>
+        (walletName) =>
+          validateWalletName(walletName, null, walletNames),
+    }),
+    withHandlers({
+      validateForm:
+        ({name, validateWalletName}) =>
+        () =>
+          validateWalletName(name),
     }),
   )(WalletNameForm): ComponentType<ExternalProps>),
 )

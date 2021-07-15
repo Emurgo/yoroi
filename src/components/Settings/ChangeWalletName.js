@@ -40,21 +40,11 @@ type Props = {
   validateWalletName: () => WalletNameValidationErrors,
 }
 
-const ChangeWalletName = ({
-  walletName,
-  setWalletName,
-  changeAndNavigate,
-  intl,
-  validateWalletName,
-}: Props) => {
+const ChangeWalletName = ({walletName, setWalletName, changeAndNavigate, intl, validateWalletName}: Props) => {
   const validationErrors = validateWalletName()
 
   return (
-    <KeyboardAvoidingView
-      enabled={Platform.OS === 'ios'}
-      behavior="padding"
-      style={styles.keyboardAvoidingView}
-    >
+    <KeyboardAvoidingView enabled={Platform.OS === 'ios'} behavior="padding" style={styles.keyboardAvoidingView}>
       <StatusBar type="dark" />
 
       <SafeAreaView style={styles.safeAreaView}>
@@ -65,12 +55,8 @@ const ChangeWalletName = ({
             onChangeText={setWalletName}
             error={getWalletNameError(
               {
-                tooLong: intl.formatMessage(
-                  globalMessages.walletNameErrorTooLong,
-                ),
-                nameAlreadyTaken: intl.formatMessage(
-                  globalMessages.walletNameErrorNameAlreadyTaken,
-                ),
+                tooLong: intl.formatMessage(globalMessages.walletNameErrorTooLong),
+                nameAlreadyTaken: intl.formatMessage(globalMessages.walletNameErrorNameAlreadyTaken),
               },
               validationErrors,
             )}
@@ -106,21 +92,20 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      validateWalletName: ({walletName, oldName, walletNames}) => () =>
-        validateWalletName(walletName, oldName, walletNames),
+      validateWalletName:
+        ({walletName, oldName, walletNames}) =>
+        () =>
+          validateWalletName(walletName, oldName, walletNames),
     }),
     withHandlers({
-      changeAndNavigate: ({
-        navigation,
-        walletName,
-        changeWalletName,
-        validateWalletName,
-      }) => async () => {
-        if (!_.isEmpty(validateWalletName())) return
+      changeAndNavigate:
+        ({navigation, walletName, changeWalletName, validateWalletName}) =>
+        async () => {
+          if (!_.isEmpty(validateWalletName())) return
 
-        await changeWalletName(walletName)
-        navigation.goBack()
-      },
+          await changeWalletName(walletName)
+          navigation.goBack()
+        },
     }),
   )(ChangeWalletName): ComponentType<{|
     navigation: Navigation,

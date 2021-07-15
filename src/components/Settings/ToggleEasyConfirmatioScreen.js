@@ -46,9 +46,7 @@ const messages = defineMessages({
   },
   disableHeading: {
     id: 'components.settings.toggleeasyconfirmationscreen.disableHeading',
-    defaultMessage:
-      'By disabling this option you will be able to spend your assets ' +
-      'only with your master password.',
+    defaultMessage: 'By disabling this option you will be able to spend your assets only with your master password.',
   },
   disableButton: {
     id: 'components.settings.toggleeasyconfirmationscreen.disableButton',
@@ -56,31 +54,30 @@ const messages = defineMessages({
   },
 })
 
-const enableEasyConfirmation = ({
-  navigation,
-  masterPassword,
-  setEasyConfirmation,
-  intl,
-}) => async () => {
-  try {
-    await walletManager.enableEasyConfirmation(masterPassword, intl)
-    setEasyConfirmation(true)
+const enableEasyConfirmation =
+  ({navigation, masterPassword, setEasyConfirmation, intl}) =>
+  async () => {
+    try {
+      await walletManager.enableEasyConfirmation(masterPassword, intl)
+      setEasyConfirmation(true)
 
-    navigation.goBack()
-  } catch (error) {
-    if (error instanceof WrongPassword) {
-      await showErrorDialog(errorMessages.incorrectPassword, intl)
-    } else {
-      throw error
+      navigation.goBack()
+    } catch (error) {
+      if (error instanceof WrongPassword) {
+        await showErrorDialog(errorMessages.incorrectPassword, intl)
+      } else {
+        throw error
+      }
     }
   }
-}
 
-const disableEasyConfirmation = ({navigation}) => async () => {
-  await walletManager.disableEasyConfirmation()
-  setEasyConfirmation(false)
-  navigation.goBack()
-}
+const disableEasyConfirmation =
+  ({navigation}) =>
+  async () => {
+    await walletManager.disableEasyConfirmation()
+    setEasyConfirmation(false)
+    navigation.goBack()
+  }
 
 const ToggleEasyConfirmationScreen = (
   {
@@ -111,12 +108,8 @@ const ToggleEasyConfirmationScreen = (
 
       {!isEasyConfirmationEnabled ? (
         <ScrollView keyboardDismissMode="on-drag">
-          <Text style={styles.heading}>
-            {intl.formatMessage(messages.enableHeading)}
-          </Text>
-          <Text style={styles.warning}>
-            {intl.formatMessage(messages.enableWarning)}
-          </Text>
+          <Text style={styles.heading}>{intl.formatMessage(messages.enableHeading)}</Text>
+          <Text style={styles.warning}>{intl.formatMessage(messages.enableWarning)}</Text>
 
           <ValidatedTextInput
             secureTextEntry
@@ -127,9 +120,7 @@ const ToggleEasyConfirmationScreen = (
         </ScrollView>
       ) : (
         <View style={[styles.main, styles.mainCentered]}>
-          <Text style={styles.heading}>
-            {intl.formatMessage(messages.disableHeading)}
-          </Text>
+          <Text style={styles.heading}>{intl.formatMessage(messages.disableHeading)}</Text>
         </View>
       )}
 
@@ -139,11 +130,7 @@ const ToggleEasyConfirmationScreen = (
             ? intl.formatMessage(messages.disableButton)
             : intl.formatMessage(messages.enableButton)
         }
-        onPress={
-          isEasyConfirmationEnabled
-            ? disableEasyConfirmation
-            : enableEasyConfirmation
-        }
+        onPress={isEasyConfirmationEnabled ? disableEasyConfirmation : enableEasyConfirmation}
         disabled={!masterPassword && !isEasyConfirmationEnabled}
       />
     </View>

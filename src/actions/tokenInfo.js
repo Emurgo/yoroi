@@ -39,10 +39,7 @@ const _setLastError = (error) => ({
   reducer: (state, error) => error,
 })
 
-export const fetchTokenInfo = () => async (
-  dispatch: Dispatch<any>,
-  getState: () => State,
-) => {
+export const fetchTokenInfo = () => async (dispatch: Dispatch<any>, getState: () => State) => {
   const state = getState()
   if (state.tokenInfo.isFetching) {
     return
@@ -61,8 +58,7 @@ export const fetchTokenInfo = () => async (
       })
       .reduce((acc, curr: Token): Dict<string> => {
         if (curr.identifier === '') return acc
-        acc[`${curr.metadata.policyId}${curr.metadata.assetName}`] =
-          curr.identifier
+        acc[`${curr.metadata.policyId}${curr.metadata.assetName}`] = curr.identifier
         return acc
       }, ({}: Dict<string>))
 

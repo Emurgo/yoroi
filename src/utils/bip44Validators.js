@@ -30,9 +30,7 @@ export const isCIP1852AccountPath = (path: Array<number>): boolean => {
   )
 }
 
-export const canParsePublicKey = async (
-  publicKeyHex: string,
-): Promise<boolean> => {
+export const canParsePublicKey = async (publicKeyHex: string): Promise<boolean> => {
   try {
     await Bip32PublicKey.from_bytes(Buffer.from(publicKeyHex, 'hex'))
     return true

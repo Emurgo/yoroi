@@ -79,8 +79,7 @@ export const fetchDefault = (
   method?: RequestMethod = 'POST',
 ) => {
   const fullPath = `${networkConfig.API_ROOT}/${path}`
-  const platform =
-    Platform.OS === 'android' || Platform.OS === 'ios' ? Platform.OS : '-'
+  const platform = Platform.OS === 'android' || Platform.OS === 'ios' ? Platform.OS : '-'
   const yoroiVersion = `${platform} / ${DeviceInfo.getVersion()}`
   const headers = {
     'Content-Type': 'application/json; charset=utf-8',

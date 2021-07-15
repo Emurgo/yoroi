@@ -24,13 +24,20 @@ export const ignoreConcurrentAsync = <T, R>(
 
 // Turns handler working like this: handler = (props) => (...args) => result
 // Into  handler working like this: handler = (props, ...args) => result
-// $FlowFixMe
-const curry = (fn) => (arg, ...rest) => fn(arg)(...rest)
+const curry =
+  (fn) =>
+  (arg, ...rest) =>
+    // $FlowFixMe
+    fn(arg)(...rest)
 
 // Turns handler working like this: handler = (props, ...args) => result
 // Into  handler working like this: handler = (props) => (...args) => result
-// $FlowFixMe
-const uncurry = (fn) => (arg) => (...rest) => fn(arg, ...rest)
+const uncurry =
+  (fn) =>
+  (arg) =>
+  (...rest) =>
+    // $FlowFixMe
+    fn(arg, ...rest)
 
 // For use in withHandlers.
 // Warning: This keeps one concurrent instance

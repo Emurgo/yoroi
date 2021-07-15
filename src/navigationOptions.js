@@ -5,13 +5,7 @@ import {Platform} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {COLORS} from './styles/config'
 
-const GradientHeader = () => (
-  <LinearGradient
-    start={{x: 0, y: 0}}
-    end={{x: 1, y: 0}}
-    colors={['#1A44B7', '#F14D78']}
-  />
-)
+const GradientHeader = () => <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#1A44B7', '#F14D78']} />
 
 export const defaultNavigationOptions = {
   headerStyle: {
