@@ -1,6 +1,6 @@
 module.exports = {
-  extends: ['vacuumlabs', 'plugin:react-hooks/recommended', 'prettier'],
-  plugins: ['react-native', 'flowtype'],
+  extends: ['vacuumlabs', 'plugin:react/recommended', 'plugin:react-hooks/recommended', 'prettier'],
+  plugins: ['react', 'react-native', 'flowtype'],
   env: {
     'react-native/react-native': true,
   },
@@ -17,6 +17,7 @@ module.exports = {
     'spaced-comment': 1,
     'react/no-access-state-in-setstate': 2,
     'react/no-multi-comp': 0,
+    'react/display-name': 0,
     'no-multi-str': 0,
     'no-lone-blocks': 0,
     'react/no-typos': 2,
