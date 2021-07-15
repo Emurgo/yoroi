@@ -66,6 +66,7 @@ const WalletNameForm = ({
   }
   const walletNameErrorText = getWalletNameError(errorMessages, validationErrors) || undefined
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const submit = React.useCallback(ignoreConcurrentAsyncHandler(() => () => onSubmit({name}), 1000)(), [onSubmit, name])
 
   return (
