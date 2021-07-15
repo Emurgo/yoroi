@@ -14,7 +14,12 @@ import {createWallet, updateVersion} from '../../../actions'
 import type {Navigation} from '../../../types/navigation'
 import type {ComponentType} from 'react'
 
-const WalletCredentialsScreen = ({navigateToWallet, waiting, navigation}) => (
+type Props = {
+  navigateToWallet: any,
+  waiting: boolean,
+  navigation: Navigation,
+}
+const WalletCredentialsScreen = ({navigateToWallet, waiting, navigation}: Props) => (
   <>
     <WalletForm onSubmit={navigateToWallet} navigation={navigation} />
     {waiting && <ActivityIndicator />}

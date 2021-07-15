@@ -15,7 +15,11 @@ import styles from './styles/TxHistoryList.style'
 import type {TransactionInfo} from '../../types/HistoryTransaction'
 import type {Navigation} from '../../types/navigation'
 
-const DayHeader = ({ts, intl}) => (
+type DayHeaderProps = {
+  ts: any,
+  intl: IntlShape,
+}
+const DayHeader = ({ts, intl}: DayHeaderProps) => (
   <View style={styles.dayHeader}>
     <Text>{formatDateRelative(ts, intl)}</Text>
   </View>

@@ -12,17 +12,7 @@ import closedEyeIcon from '../../assets/img/icon/visibility-closed.png'
 
 import type {ComponentType} from 'react'
 
-type ExternalProps = {
-  label?: string,
-  onChangeText: (text: string) => mixed,
-  value: string,
-  secureTextEntry?: boolean,
-  error?: null | false | string,
-  keyboardType?: 'default' | 'numeric' | 'visible-password',
-  style?: Object,
-  returnKeyType?: 'none' | 'done',
-}
-
+type Props = any
 const ValidatedTextInput = ({
   label,
   error,
@@ -32,7 +22,7 @@ const ValidatedTextInput = ({
   toggleShowPassword,
   keyboardType,
   ...restProps
-}) => (
+}: Props) => (
   <View style={styles.container}>
     <TextInput
       {...restProps}
@@ -64,6 +54,17 @@ const ValidatedTextInput = ({
     {error != null && error !== false && <Text style={styles.error}>{error}</Text>}
   </View>
 )
+
+type ExternalProps = {
+  label?: string,
+  onChangeText: (text: string) => mixed,
+  value: string,
+  secureTextEntry?: boolean,
+  error?: null | false | string,
+  keyboardType?: 'default' | 'numeric' | 'visible-password',
+  style?: Object,
+  returnKeyType?: 'none' | 'done',
+}
 
 export default (withStateHandlers(
   {showPassword: false},

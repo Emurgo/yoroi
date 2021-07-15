@@ -9,6 +9,8 @@ import {Text, TitledCard, Button} from '../../UiKit'
 import copyIcon from '../../../assets/img/icon/copy.png'
 import styles from './styles/DelegatedStakepoolInfo.style'
 
+import type {ViewProps} from 'react-native/Libraries/Components/View/ViewPropTypes'
+
 const messages = defineMessages({
   title: {
     id: 'components.delegationsummary.delegatedStakepoolInfo.title',
@@ -44,7 +46,7 @@ export const formatStakepoolNameWithTicker = (poolTicker: ?string, poolName: ?st
 
 const COPY_NOTIFICATION_TIME = 5000 // show 'copied' notification for 5 s
 
-const FadeOutView = (props) => {
+const FadeOutView = (props: ViewProps) => {
   const [fadeAnim] = useState(new Animated.Value(1))
 
   React.useEffect(() => {
@@ -56,16 +58,7 @@ const FadeOutView = (props) => {
     }).start()
   }, [fadeAnim])
 
-  return (
-    <Animated.View
-      style={{
-        ...props.style,
-        opacity: fadeAnim,
-      }}
-    >
-      {props.children}
-    </Animated.View>
-  )
+  return <Animated.View style={[props.style, {opacity: fadeAnim}]}>{props.children}</Animated.View>
 }
 
 type Props = {|

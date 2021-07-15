@@ -17,9 +17,9 @@ import type {WalletMeta} from '../../state'
 import type {Node} from 'react'
 import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
-type props = {
+type Props = {
   wallet: WalletMeta,
-  onPress: (WalletMeta) => any,
+  onPress: (walletMeta: WalletMeta) => any,
 }
 
 type WrappedIconProps = {
@@ -54,7 +54,7 @@ const getWalletItemMeta = (walletMeta: WalletMeta): WalletItemMeta => {
   throw new Error('getWalletItemMeta:: invalid wallet implementation id')
 }
 
-const WalletListItem: (props) => Node = ({wallet, onPress}) => {
+const WalletListItem = ({wallet, onPress}: Props) => {
   const {type, icon} = getWalletItemMeta(wallet)
   const [expanded, setExpanded] = useState(false)
 

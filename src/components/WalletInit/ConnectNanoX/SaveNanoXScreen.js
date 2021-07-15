@@ -26,7 +26,10 @@ const messages = defineMessages({
   },
 })
 
-const SaveNanoXScreen = ({onSubmit}) => (
+type Props = {
+  onSubmit: any,
+}
+const SaveNanoXScreen = ({onSubmit}: Props) => (
   <WalletNameForm
     onSubmit={onSubmit}
     defaultWalletName={CONFIG.HARDWARE_WALLETS.LEDGER_NANO.DEFAULT_WALLET_NAME}

@@ -114,14 +114,15 @@ const Step1 = ({intl, generateVotingKeys, navigation, fetchUTXOs, isDelegating}:
       <StandardModal
         visible={showModal}
         title={intl.formatMessage(globalMessages.attention)}
-        children={<WarningModalBody intl={intl} />}
         onRequestClose={() => setShowModal(false)}
         primaryButton={{
           label: intl.formatMessage(confirmationMessages.commonButtons.iUnderstandButton),
           onPress: () => setShowModal(false),
         }}
         showCloseIcon
-      />
+      >
+        <WarningModalBody intl={intl} />
+      </StandardModal>
     </SafeAreaView>
   )
 }
