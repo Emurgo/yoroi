@@ -20,8 +20,6 @@ describe('encryption/decryption', () => {
       // $FlowFixMe this is just a mock
       compatibility: {},
     }
-    expect(() => checkDeviceVersion(mockResponse)).toThrow(
-      DeprecatedAdaAppError,
-    )
+    expect(() => checkDeviceVersion(mockResponse)).toThrow(DeprecatedAdaAppError)
   })
 })

@@ -12,11 +12,7 @@ import _ from 'lodash'
 import {Text, Button, ValidatedTextInput, StatusBar} from '../../UiKit'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {CONFIG, getWalletConfigById} from '../../../config/config'
-import {
-  validateRecoveryPhrase,
-  INVALID_PHRASE_ERROR_CODES,
-  cleanMnemonic,
-} from '../../../utils/validators'
+import {validateRecoveryPhrase, INVALID_PHRASE_ERROR_CODES, cleanMnemonic} from '../../../utils/validators'
 import {isKeyboardOpenSelector} from '../../../selectors'
 
 import styles from './styles/RestoreWalletScreen.style'
@@ -38,8 +34,7 @@ const mnemonicInputErrorsMessages = defineMessages({
     description: 'some desc',
   },
   INVALID_CHECKSUM: {
-    id:
-      'components.walletinit.restorewallet.restorewalletscreen.invalidchecksum',
+    id: 'components.walletinit.restorewallet.restorewalletscreen.invalidchecksum',
     defaultMessage: '!!!Please enter valid mnemonic.',
     description: 'some desc',
   },
@@ -52,8 +47,7 @@ const mnemonicInputErrorsMessages = defineMessages({
 
 const messages = defineMessages({
   mnemonicInputLabel: {
-    id:
-      'components.walletinit.restorewallet.restorewalletscreen.mnemonicInputLabel',
+    id: 'components.walletinit.restorewallet.restorewalletscreen.mnemonicInputLabel',
     defaultMessage: '!!!Recovery phrase',
     description: 'some desc',
   },
@@ -72,10 +66,7 @@ const messages = defineMessages({
   },
 })
 
-const _translateInvalidPhraseError = (
-  intl: IntlShape,
-  error: InvalidPhraseError,
-) => {
+const _translateInvalidPhraseError = (intl: IntlShape, error: InvalidPhraseError) => {
   if (error.code === INVALID_PHRASE_ERROR_CODES.UNKNOWN_WORDS) {
     return intl.formatMessage(mnemonicInputErrorsMessages.UNKNOWN_WORDS, {
       cnt: error.words.length,
@@ -119,9 +110,7 @@ const RestoreWalletScreen = (
     ? errorsVisibleWhileWriting(errors.invalidPhrase || [])
     : errors.invalidPhrase || []
 
-  const errorText = visibleErrors
-    .map((error) => translateInvalidPhraseError(error))
-    .join(' ')
+  const errorText = visibleErrors.map((error) => translateInvalidPhraseError(error)).join(' ')
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -174,17 +163,19 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      navigateToWalletCredentials: ({navigation, route, phrase}) => (
-        _event,
-      ) => {
-        navigation.navigate(WALLET_INIT_ROUTES.VERIFY_RESTORED_WALLET, {
-          phrase: cleanMnemonic(phrase),
-          networkId: route.params.networkId,
-          walletImplementationId: route.params.walletImplementationId,
-        })
-      },
-      translateInvalidPhraseError: ({intl}: {intl: IntlShape}) => (error) =>
-        _translateInvalidPhraseError(intl, error),
+      navigateToWalletCredentials:
+        ({navigation, route, phrase}) =>
+        (_event) => {
+          navigation.navigate(WALLET_INIT_ROUTES.VERIFY_RESTORED_WALLET, {
+            phrase: cleanMnemonic(phrase),
+            networkId: route.params.networkId,
+            walletImplementationId: route.params.walletImplementationId,
+          })
+        },
+      translateInvalidPhraseError:
+        ({intl}: {intl: IntlShape}) =>
+        (error) =>
+          _translateInvalidPhraseError(intl, error),
     }),
   )(RestoreWalletScreen): ComponentType<{
     navigation: Navigation,

@@ -51,11 +51,7 @@ const TxIcon = ({transaction}: Props) => {
   const isPending = assurance === 'PENDING' || status === 'PENDING'
   const isReceived = direction === 'RECEIVED'
   const isDirectCredit = isReceived
-  const theme: Status = isPending
-    ? 'PENDING'
-    : isDirectCredit
-      ? 'DIRECT_CREDIT'
-      : 'NORMAL'
+  const theme: Status = isPending ? 'PENDING' : isDirectCredit ? 'DIRECT_CREDIT' : 'NORMAL'
   const color = COLORS[theme]
   const styles = useStyles({size: SIZE, color: color.background})
   return (

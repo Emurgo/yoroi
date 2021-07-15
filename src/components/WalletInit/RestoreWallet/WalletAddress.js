@@ -29,17 +29,14 @@ const COPY_NOTIFICATION_TIME = 5000 // show 'copied' notification for 5 s
 const FadeOutView = (props) => {
   const [fadeAnim] = useState(new Animated.Value(1))
 
-  React.useEffect(
-    () => {
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 2000,
-        delay: 3000,
-        useNativeDriver: true,
-      }).start()
-    },
-    [fadeAnim],
-  )
+  React.useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 2000,
+      delay: 3000,
+      useNativeDriver: true,
+    }).start()
+  }, [fadeAnim])
 
   return (
     <Animated.View
@@ -59,13 +56,7 @@ type ExternalProps = {|
 |}
 
 const WalletAddress = (
-  {
-    intl,
-    addressHash,
-    onTapAddress,
-    copyHash,
-    showCopyNotif,
-  }: {intl: IntlShape} & Object /* TODO: type */,
+  {intl, addressHash, onTapAddress, copyHash, showCopyNotif}: {intl: IntlShape} & Object /* TODO: type */,
 ) => (
   <View style={styles.addressRowStyles}>
     <TouchableOpacity activeOpacity={0.5} onPress={onTapAddress}>
@@ -83,9 +74,7 @@ const WalletAddress = (
     </TouchableOpacity>
     {showCopyNotif && (
       <FadeOutView>
-        <Text style={styles.notifView}>
-          {intl.formatMessage(messages.copied)}
-        </Text>
+        <Text style={styles.notifView}>{intl.formatMessage(messages.copied)}</Text>
       </FadeOutView>
     )}
   </View>
@@ -100,28 +89,29 @@ export default injectIntl(
       },
       {
         setShowCopyNotif: () => (showCopyNotif) => ({showCopyNotif}),
-        registerTimeout: ({timeoutIds}) => (id) => ({
-          timeoutIds: [...timeoutIds, id],
-        }),
+        registerTimeout:
+          ({timeoutIds}) =>
+          (id) => ({
+            timeoutIds: [...timeoutIds, id],
+          }),
       },
     ),
     withHandlers({
-      onTapAddress: ({addressHash, networkId}) => () => {
-        const config = getNetworkConfigById(networkId)
-        Linking.openURL(config.EXPLORER_URL_FOR_ADDRESS(addressHash))
-      },
-      copyHash: ({addressHash, setShowCopyNotif, registerTimeout}) => () => {
-        Clipboard.setString(addressHash)
-        setShowCopyNotif(true)
-        const t = setTimeout(
-          () => setShowCopyNotif(false),
-          COPY_NOTIFICATION_TIME,
-        )
-        registerTimeout(t)
-      },
+      onTapAddress:
+        ({addressHash, networkId}) =>
+        () => {
+          const config = getNetworkConfigById(networkId)
+          Linking.openURL(config.EXPLORER_URL_FOR_ADDRESS(addressHash))
+        },
+      copyHash:
+        ({addressHash, setShowCopyNotif, registerTimeout}) =>
+        () => {
+          Clipboard.setString(addressHash)
+          setShowCopyNotif(true)
+          const t = setTimeout(() => setShowCopyNotif(false), COPY_NOTIFICATION_TIME)
+          registerTimeout(t)
+        },
     }),
-    onWillUnmount(({timeoutIds}) =>
-      timeoutIds.forEach((id) => clearTimeout(id)),
-    ),
+    onWillUnmount(({timeoutIds}) => timeoutIds.forEach((id) => clearTimeout(id))),
   )(WalletAddress): ComponentType<ExternalProps>),
 )

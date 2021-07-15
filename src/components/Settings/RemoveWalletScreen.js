@@ -21,9 +21,7 @@ import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 const messages = defineMessages({
   descriptionParagraph1: {
     id: 'components.settings.removewalletscreen.descriptionParagraph1',
-    defaultMessage:
-      'If you really wish to permanently delete the wallet ' +
-      'make sure you have written down the mnemonic.',
+    defaultMessage: 'If you really wish to permanently delete the wallet make sure you have written down the mnemonic.',
   },
   descriptionParagraph2: {
     id: 'components.settings.removewalletscreen.descriptionParagraph2',
@@ -48,15 +46,16 @@ const messages = defineMessages({
   hasWrittenDownMnemonic: {
     id: 'components.settings.removewalletscreen.hasWrittenDownMnemonic',
     defaultMessage:
-      'I have written down mnemonic of this wallet and understand ' +
-      'that I cannot recover the wallet without it.',
+      'I have written down mnemonic of this wallet and understand that I cannot recover the wallet without it.',
   },
 })
 
-const handleRemoveWallet = ({navigation, removeCurrentWallet}) => async () => {
-  await removeCurrentWallet()
-  navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-}
+const handleRemoveWallet =
+  ({navigation, removeCurrentWallet}) =>
+  async () => {
+    await removeCurrentWallet()
+    navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
+  }
 
 type Prop = {
   intl: IntlShape,
@@ -69,43 +68,24 @@ type Prop = {
   hasMnemonicWrittenDown: boolean,
 }
 
-const RemoveWalletScreen = ({
-  intl,
-  walletName,
-  isHW,
-  handleRemoveWallet,
-}: Prop) => {
-  const [hasMnemonicWrittenDown, setHasMnemonicWrittenDown] = React.useState(
-    false,
-  )
+const RemoveWalletScreen = ({intl, walletName, isHW, handleRemoveWallet}: Prop) => {
+  const [hasMnemonicWrittenDown, setHasMnemonicWrittenDown] = React.useState(false)
   const [typedWalletName, setTypedWalletName] = React.useState('')
 
-  const disabled =
-    (!isHW && !hasMnemonicWrittenDown) || walletName !== typedWalletName
+  const disabled = (!isHW && !hasMnemonicWrittenDown) || walletName !== typedWalletName
 
   return (
     <View style={styles.container}>
       <StatusBar type="dark" />
 
       <View style={styles.descriptionContainer}>
-        {!isHW && (
-          <Text style={styles.description}>
-            {intl.formatMessage(messages.descriptionParagraph1)}
-          </Text>
-        )}
-        <Text style={styles.description}>
-          {intl.formatMessage(messages.descriptionParagraph2)}
-        </Text>
+        {!isHW && <Text style={styles.description}>{intl.formatMessage(messages.descriptionParagraph1)}</Text>}
+        <Text style={styles.description}>{intl.formatMessage(messages.descriptionParagraph2)}</Text>
       </View>
 
-      <ScrollView
-        contentContainerStyle={styles.screenContainer}
-        keyboardDismissMode="on-drag"
-      >
+      <ScrollView contentContainerStyle={styles.screenContainer} keyboardDismissMode="on-drag">
         <View style={styles.walletInfo}>
-          <Text style={styles.walletNameLabel}>
-            {intl.formatMessage(messages.walletName)}
-          </Text>
+          <Text style={styles.walletNameLabel}>{intl.formatMessage(messages.walletName)}</Text>
           <Text style={styles.walletName}>{walletName}</Text>
 
           <Spacer />
@@ -118,9 +98,7 @@ const RemoveWalletScreen = ({
             onChangeText={setTypedWalletName}
             right={typedWalletName === walletName ? <Checkmark /> : undefined}
             errorText={
-              typedWalletName !== walletName
-                ? intl.formatMessage(messages.walletNameMismatchError)
-                : undefined
+              typedWalletName !== walletName ? intl.formatMessage(messages.walletNameMismatchError) : undefined
             }
           />
         </View>
@@ -158,18 +136,9 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      handleRemoveWallet: ignoreConcurrentAsyncHandler(
-        handleRemoveWallet,
-        1000,
-      ),
+      handleRemoveWallet: ignoreConcurrentAsyncHandler(handleRemoveWallet, 1000),
     }),
   )(RemoveWalletScreen),
 )
 
-const Spacer = ({
-  height = 16,
-  style,
-}: {
-  height?: number,
-  style?: ViewStyleProp,
-}) => <View style={[{height}, style]} />
+const Spacer = ({height = 16, style}: {height?: number, style?: ViewStyleProp}) => <View style={[{height}, style]} />

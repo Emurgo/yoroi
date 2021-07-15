@@ -16,9 +16,7 @@ storiesOf('BiometricAuthScreen', module)
   .add('With custom instructions', ({route, navigation}) => {
     route.params = {
       onSuccess: () => ({}),
-      instructions: [
-        'Please authenticate so that Yoroi can build your transaction',
-      ],
+      instructions: ['Please authenticate so that Yoroi can build your transaction'],
     }
     return <BiometricAuthScreen navigation={navigation} route={route} />
   })

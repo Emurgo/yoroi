@@ -47,8 +47,7 @@ const noPoolDataDialog = defineMessages({
   },
   message: {
     id: 'components.stakingcenter.noPoolDataDialog.message',
-    defaultMessage:
-      '!!!The data from the stake pool(s) you selected is invalid. Please try again',
+    defaultMessage: '!!!The data from the stake pool(s) you selected is invalid. Please try again',
   },
 })
 
@@ -61,11 +60,7 @@ type SelectedPool = {|
  * Prepares WebView's target staking URI
  * @param {*} poolList : Array of delegated pool hash
  */
-const prepareStakingURL = (
-  poolList: Array<string> | null,
-  amountToDelegate: string | null,
-  locale: string,
-): string => {
+const prepareStakingURL = (poolList: Array<string> | null, amountToDelegate: string | null, locale: string): string => {
   // source=mobile is constant and already included
   let finalURL = CONFIG.NETWORKS.HASKELL_SHELLEY.POOL_EXPLORER
 
@@ -216,9 +211,7 @@ const StakingCenter = (
   const handleOnMessage = async (event) => {
     try {
       setBusy(true)
-      const selectedPoolHashes: Array<string> = JSON.parse(
-        decodeURI(event.nativeEvent.data),
-      )
+      const selectedPoolHashes: Array<string> = JSON.parse(decodeURI(event.nativeEvent.data))
       Logger.debug('selected pools from explorer:', selectedPoolHashes)
       await _handleOnMessage(
         selectedPoolHashes,
@@ -244,13 +237,8 @@ const StakingCenter = (
           const utxosForKey = await walletManager.getAllUtxosForKey(utxos)
           const _amountToDelegate = utxosForKey
             .map((utxo) => utxo.amount)
-            .reduce(
-              (x: BigNumber, y) => x.plus(new BigNumber(y || 0)),
-              new BigNumber(0),
-            )
-          setAmountToDelegate(
-            normalizeTokenAmount(_amountToDelegate, defaultAsset).toString(),
-          )
+            .reduce((x: BigNumber, y) => x.plus(new BigNumber(y || 0)), new BigNumber(0))
+          setAmountToDelegate(normalizeTokenAmount(_amountToDelegate, defaultAsset).toString())
         }
       }
 
@@ -289,11 +277,7 @@ const StakingCenter = (
         onRequestClose={() => setShowPoolWarning(false)}
         reputationInfo={reputationInfo}
       />
-      <PleaseWaitModal
-        title={''}
-        spinnerText={intl.formatMessage(globalMessages.pleaseWait)}
-        visible={busy}
-      />
+      <PleaseWaitModal title={''} spinnerText={intl.formatMessage(globalMessages.pleaseWait)} visible={busy} />
     </>
   )
 }

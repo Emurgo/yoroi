@@ -5,10 +5,7 @@ import {injectIntl} from 'react-intl'
 
 import {CATALYST_ROUTES} from '../../RoutesList'
 import globalMessages from '../../i18n/global-messages'
-import {
-  defaultNavigationOptions,
-  defaultStackNavigatorOptions,
-} from '../../navigationOptions'
+import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
 
 import CatalystStep1 from './Step1'
 import CatalystStep2 from './Step2'
@@ -39,36 +36,12 @@ const CatalystNavigator = injectIntl(({intl}) => (
     }}
     initialRouteName={CATALYST_ROUTES.STEP1}
   >
-    <Stack.Screen
-      name={CATALYST_ROUTES.STEP1}
-      component={CatalystStep1}
-      options={defaultNavigationOptions}
-    />
-    <Stack.Screen
-      name={CATALYST_ROUTES.STEP2}
-      component={CatalystStep2}
-      options={defaultNavigationOptions}
-    />
-    <Stack.Screen
-      name={CATALYST_ROUTES.STEP3}
-      component={CatalystStep3}
-      options={defaultNavigationOptions}
-    />
-    <Stack.Screen
-      name={CATALYST_ROUTES.STEP4}
-      component={CatalystStep4}
-      options={defaultNavigationOptions}
-    />
-    <Stack.Screen
-      name={CATALYST_ROUTES.STEP5}
-      component={CatalystStep5}
-      options={defaultNavigationOptions}
-    />
-    <Stack.Screen
-      name={CATALYST_ROUTES.STEP6}
-      component={CatalystStep6}
-      options={defaultNavigationOptions}
-    />
+    <Stack.Screen name={CATALYST_ROUTES.STEP1} component={CatalystStep1} options={defaultNavigationOptions} />
+    <Stack.Screen name={CATALYST_ROUTES.STEP2} component={CatalystStep2} options={defaultNavigationOptions} />
+    <Stack.Screen name={CATALYST_ROUTES.STEP3} component={CatalystStep3} options={defaultNavigationOptions} />
+    <Stack.Screen name={CATALYST_ROUTES.STEP4} component={CatalystStep4} options={defaultNavigationOptions} />
+    <Stack.Screen name={CATALYST_ROUTES.STEP5} component={CatalystStep5} options={defaultNavigationOptions} />
+    <Stack.Screen name={CATALYST_ROUTES.STEP6} component={CatalystStep6} options={defaultNavigationOptions} />
     <Stack.Screen
       name={CATALYST_ROUTES.BIOMETRICS_SIGNING}
       component={BiometricAuthScreen}

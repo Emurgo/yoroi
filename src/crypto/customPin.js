@@ -8,10 +8,7 @@ export const encryptCustomPin = async (installationId: string, pin: string) => {
   return pinHash
 }
 
-export const authenticateByCustomPin = async (
-  customPinHash: string,
-  pinCandidate: string,
-): Promise<boolean> => {
+export const authenticateByCustomPin = async (customPinHash: string, pinCandidate: string): Promise<boolean> => {
   try {
     await decryptData(customPinHash, pinCandidate)
     return true

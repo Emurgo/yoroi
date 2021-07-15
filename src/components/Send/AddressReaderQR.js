@@ -18,12 +18,14 @@ const AddressReaderQR = ({onSuccess}) => <QRCodeScanner onRead={onSuccess} />
 export default injectIntl(
   (compose(
     withHandlers({
-      onSuccess: ({route}) => (event) => {
-        const onSuccess = route.params?.onSuccess
-        if (onSuccess) {
-          onSuccess(event.data)
-        }
-      },
+      onSuccess:
+        ({route}) =>
+        (event) => {
+          const onSuccess = route.params?.onSuccess
+          if (onSuccess) {
+            onSuccess(event.data)
+          }
+        },
     }),
   )(AddressReaderQR): ComponentType<ExternalProps>),
 )

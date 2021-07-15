@@ -26,21 +26,13 @@ import {newAdaUnsignedTx} from './transactions'
 import {normalizeToAddress} from './utils'
 import {Logger} from '../../utils/logging'
 import LocalizableError from '../../i18n/LocalizableError'
-import {
-  CardanoError,
-  InsufficientFunds,
-  RewardAddressEmptyError,
-} from '../errors'
+import {CardanoError, InsufficientFunds, RewardAddressEmptyError} from '../errors'
 import {ObjectValues} from '../../utils/flow'
 import assert from '../../utils/assert'
 import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
 import {MultiToken} from '../MultiToken'
 
-import type {
-  Addressing,
-  AddressedUtxo,
-  V4UnsignedTxAddressedUtxoResponse,
-} from '../types'
+import type {Addressing, AddressedUtxo, V4UnsignedTxAddressedUtxoResponse} from '../types'
 import type {DefaultAsset} from '../../types/HistoryTransaction'
 import type {TimestampedCertMeta} from './transactionCache'
 import type {AccountStateRequest, AccountStateResponse} from '../../api/types'
@@ -55,29 +47,18 @@ const createCertificate = async (
   const credential = await StakeCredential.from_keyhash(await stakingKey.hash())
   if (poolRequest == null) {
     if (isRegistered) {
-      return [
-        await Certificate.new_stake_deregistration(
-          await StakeDeregistration.new(credential),
-        ),
-      ]
+      return [await Certificate.new_stake_deregistration(await StakeDeregistration.new(credential))]
     }
     return [] // no need to undelegate if no staking key registered
   }
   const result = []
   if (!isRegistered) {
     // if unregistered, need to register first
-    result.push(
-      await Certificate.new_stake_registration(
-        await StakeRegistration.new(credential),
-      ),
-    )
+    result.push(await Certificate.new_stake_registration(await StakeRegistration.new(credential)))
   }
   result.push(
     await Certificate.new_stake_delegation(
-      await StakeDelegation.new(
-        credential,
-        await Ed25519KeyHash.from_bytes(Buffer.from(poolRequest, 'hex')),
-      ),
+      await StakeDelegation.new(credential, await Ed25519KeyHash.from_bytes(Buffer.from(poolRequest, 'hex'))),
     ),
   )
   return result
@@ -92,17 +73,11 @@ const addrContainsAccountKey = async (
   if (wasmAddr == null) {
     throw new Error(`addrContainsAccountKey: invalid address ${address}`)
   }
-  const accountKeyString = Buffer.from(
-    await targetAccountKey.to_bytes(),
-  ).toString('hex')
+  const accountKeyString = Buffer.from(await targetAccountKey.to_bytes()).toString('hex')
 
   const asBase = await BaseAddress.from_address(wasmAddr)
   if (asBase != null) {
-    if (
-      Buffer.from(await (await asBase.stake_cred()).to_bytes()).toString(
-        'hex',
-      ) === accountKeyString
-    ) {
+    if (Buffer.from(await (await asBase.stake_cred()).to_bytes()).toString('hex') === accountKeyString) {
       return true
     }
   }
@@ -121,13 +96,7 @@ export const filterAddressesByStakingKey = async (
 ): Promise<$ReadOnlyArray<$ReadOnly<AddressedUtxo>>> => {
   const result = []
   for (const utxo of utxos) {
-    if (
-      await addrContainsAccountKey(
-        utxo.receiver,
-        stakingKey,
-        acceptTypeMismatch,
-      )
-    ) {
+    if (await addrContainsAccountKey(utxo.receiver, stakingKey, acceptTypeMismatch)) {
       result.push(utxo)
     }
   }
@@ -146,9 +115,7 @@ const getDifferenceAfterTx = async (
   allUtxos: Array<AddressedUtxo>,
   stakingKey: PublicKey,
 ): Promise<BigNumber> => {
-  const stakeCredential = await StakeCredential.from_keyhash(
-    await stakingKey.hash(),
-  )
+  const stakeCredential = await StakeCredential.from_keyhash(await stakingKey.hash())
 
   let sumInForKey = new BigNumber(0)
   {
@@ -157,14 +124,10 @@ const getDifferenceAfterTx = async (
     // so this for loop is faster than building a map
     for (const senderUtxo of utxoResponse.senderUtxos) {
       const match = allUtxos.find(
-        (utxo) =>
-          utxo.tx_hash === senderUtxo.tx_hash &&
-          utxo.tx_index === senderUtxo.tx_index,
+        (utxo) => utxo.tx_hash === senderUtxo.tx_hash && utxo.tx_index === senderUtxo.tx_index,
       )
       if (match == null) {
-        throw new Error(
-          'getDifferenceAfterTx: utxo not found. Should not happen',
-        )
+        throw new Error('getDifferenceAfterTx: utxo not found. Should not happen')
       }
       const address = match.receiver
       if (await addrContainsAccountKey(address, stakeCredential, true)) {
@@ -179,13 +142,9 @@ const getDifferenceAfterTx = async (
     const outputs = await txBody.outputs()
     for (let i = 0; i < (await outputs.len()); i++) {
       const output = await outputs.get(i)
-      const address = Buffer.from(
-        await (await output.address()).to_bytes(),
-      ).toString('hex')
+      const address = Buffer.from(await (await output.address()).to_bytes()).toString('hex')
       if (await addrContainsAccountKey(address, stakeCredential, true)) {
-        const value = new BigNumber(
-          await (await (await output.amount()).coin()).to_str(),
-        )
+        const value = new BigNumber(await (await (await output.amount()).coin()).to_str())
         sumOutForKey = sumOutForKey.plus(value)
       }
     }
@@ -194,12 +153,8 @@ const getDifferenceAfterTx = async (
   return sumOutForKey.minus(sumInForKey)
 }
 
-export const unwrapStakingKey = async (
-  stakingAddress: string,
-): Promise<StakeCredential> => {
-  const accountAddress = await RewardAddress.from_address(
-    await Address.from_bytes(Buffer.from(stakingAddress, 'hex')),
-  )
+export const unwrapStakingKey = async (stakingAddress: string): Promise<StakeCredential> => {
+  const accountAddress = await RewardAddress.from_address(await Address.from_bytes(Buffer.from(stakingAddress, 'hex')))
   if (accountAddress == null) {
     throw new Error('unwrapStakingKe: staking key invalid')
   }
@@ -216,15 +171,8 @@ export const getUtxoDelegatedBalance = async (
   // can get most recent pointer from getCurrentDelegation result
 
   const stakingKey = await unwrapStakingKey(stakingAddress)
-  const allUtxosForKey = await filterAddressesByStakingKey(
-    stakingKey,
-    allUtxo,
-    false,
-  )
-  const utxoSum = allUtxosForKey.reduce(
-    (sum, utxo) => sum.plus(new BigNumber(utxo.amount)),
-    new BigNumber(0),
-  )
+  const allUtxosForKey = await filterAddressesByStakingKey(stakingKey, allUtxo, false)
+  const utxoSum = allUtxosForKey.reduce((sum, utxo) => sum.plus(new BigNumber(utxo.amount)), new BigNumber(0))
 
   return utxoSum
 }
@@ -246,10 +194,7 @@ export const getDelegationStatus = (
     }
   }
   // start with older certificate
-  const sortedCerts = sortBy(
-    txCertificatesForKey,
-    (txCerts) => txCerts.submittedAt,
-  )
+  const sortedCerts = sortBy(txCertificatesForKey, (txCerts) => txCerts.submittedAt)
   Logger.debug('txCertificatesForKey', sortedCerts)
 
   // $FlowFixMe array is incompatible with object
@@ -258,16 +203,10 @@ export const getDelegationStatus = (
     for (const cert of certificates) {
       if (cert.rewardAddress !== rewardAddress) continue
       if (cert.kind === 'StakeDelegation') {
-        assert.assert(
-          cert.poolKeyHash != null,
-          'getDelegationStatus:: StakeDelegation certificate without poolKeyHash',
-        )
+        assert.assert(cert.poolKeyHash != null, 'getDelegationStatus:: StakeDelegation certificate without poolKeyHash')
         poolKeyHash = cert.poolKeyHash
         isRegistered = true
-      } else if (
-        cert.kind === 'StakeRegistration' ||
-        cert.kind === 'MoveInstantaneousRewardsCert'
-      ) {
+      } else if (cert.kind === 'StakeRegistration' || cert.kind === 'MoveInstantaneousRewardsCert') {
         isRegistered = true
       } else if (cert.kind === 'StakeDeregistration') {
         poolKeyHash = null
@@ -298,9 +237,7 @@ export type CreateDelegationTxResponse = {|
   totalAmountToDelegate: MultiToken,
 |}
 
-export const createDelegationTx = async (
-  request: CreateDelegationTxRequest,
-): Promise<CreateDelegationTxResponse> => {
+export const createDelegationTx = async (request: CreateDelegationTxRequest): Promise<CreateDelegationTxResponse> => {
   Logger.debug('delegationUtils::createDelegationTx called', request)
   const {
     changeAddr,
@@ -325,11 +262,7 @@ export const createDelegationTx = async (
       networkId: networkConfig.NETWORK_ID,
     }
 
-    const stakeDelegationCert = await createCertificate(
-      stakingKey,
-      registrationStatus,
-      poolRequest,
-    )
+    const stakeDelegationCert = await createCertificate(stakingKey, registrationStatus, poolRequest)
     const unsignedTx = await newAdaUnsignedTx(
       [],
       {
@@ -349,16 +282,9 @@ export const createDelegationTx = async (
       addressedUtxos,
       false,
     )
-    const utxoSum = allUtxosForKey.reduce(
-      (sum, utxo) => sum.plus(new BigNumber(utxo.amount)),
-      new BigNumber(0),
-    )
+    const utxoSum = allUtxosForKey.reduce((sum, utxo) => sum.plus(new BigNumber(utxo.amount)), new BigNumber(0))
 
-    const differenceAfterTx = await getDifferenceAfterTx(
-      unsignedTx,
-      addressedUtxos,
-      stakingKey,
-    )
+    const differenceAfterTx = await getDifferenceAfterTx(unsignedTx, addressedUtxos, stakingKey)
 
     const totalAmountToDelegateBigNum = utxoSum
       .plus(differenceAfterTx) // subtract any part of the fee that comes from UTXO
@@ -391,11 +317,7 @@ export const createDelegationTx = async (
       },
       neededStakingKeyHashes: {
         neededHashes: new Set([
-          Buffer.from(
-            await (await StakeCredential.from_keyhash(
-              await stakingKey.hash(),
-            )).to_bytes(),
-          ).toString('hex'),
+          Buffer.from(await (await StakeCredential.from_keyhash(await stakingKey.hash())).to_bytes()).toString('hex'),
         ]),
         wits: new Set(),
       },
@@ -413,10 +335,7 @@ export const createDelegationTx = async (
 
 export type CreateWithdrawalTxRequest = {|
   absSlotNumber: BigNumber,
-  getAccountState: (
-    AccountStateRequest,
-    BackendConfig,
-  ) => Promise<AccountStateResponse>,
+  getAccountState: (AccountStateRequest, BackendConfig) => Promise<AccountStateResponse>,
   addressedUtxos: Array<AddressedUtxo>,
   withdrawals: Array<{|
     ...{|privateKey: PrivateKey|} | {|...Addressing|},
@@ -434,9 +353,7 @@ export type CreateWithdrawalTxRequest = {|
 |}
 export type CreateWithdrawalTxResponse = HaskellShelleyTxSignRequest
 
-export const createWithdrawalTx = async (
-  request: CreateWithdrawalTxRequest,
-): Promise<CreateWithdrawalTxResponse> => {
+export const createWithdrawalTx = async (request: CreateWithdrawalTxRequest): Promise<CreateWithdrawalTxResponse> => {
   Logger.debug('delegationUtils::createWithdrawalTx called', request)
   const {changeAddr, addressedUtxos, networkConfig} = request
   try {
@@ -463,9 +380,7 @@ export const createWithdrawalTx = async (
         await Address.from_bytes(Buffer.from(withdrawal.rewardAddress, 'hex')),
       )
       if (wasmAddr == null) {
-        throw new Error(
-          'delegationUtils::createWithdrawalTx withdrawal not a reward address',
-        )
+        throw new Error('delegationUtils::createWithdrawalTx withdrawal not a reward address')
       }
       const paymentCred = await wasmAddr.payment_cred()
 
@@ -476,21 +391,13 @@ export const createWithdrawalTx = async (
       requiredWits.push(keyHash)
 
       if (withdrawal.shouldDeregister) {
-        certificates.push(
-          await Certificate.new_stake_deregistration(
-            await StakeDeregistration.new(paymentCred),
-          ),
-        )
-        neededKeys.neededHashes.add(
-          Buffer.from(await paymentCred.to_bytes()).toString('hex'),
-        )
+        certificates.push(await Certificate.new_stake_deregistration(await StakeDeregistration.new(paymentCred)))
+        neededKeys.neededHashes.add(Buffer.from(await paymentCred.to_bytes()).toString('hex'))
       }
     }
     const accountStates = await request.getAccountState(
       {
-        addresses: request.withdrawals.map(
-          (withdrawal) => withdrawal.rewardAddress,
-        ),
+        addresses: request.withdrawals.map((withdrawal) => withdrawal.rewardAddress),
       },
       networkConfig.BACKEND,
     )
@@ -516,17 +423,13 @@ export const createWithdrawalTx = async (
         continue
       }
 
-      const rewardAddress = await RewardAddress.from_address(
-        await Address.from_bytes(Buffer.from(address, 'hex')),
-      )
+      const rewardAddress = await RewardAddress.from_address(await Address.from_bytes(Buffer.from(address, 'hex')))
       if (rewardAddress == null) {
         throw new Error('withdrawal not a reward address')
       }
       {
         const stakeCredential = await rewardAddress.payment_cred()
-        neededKeys.neededHashes.add(
-          Buffer.from(await stakeCredential.to_bytes()).toString('hex'),
-        )
+        neededKeys.neededHashes.add(Buffer.from(await stakeCredential.to_bytes()).toString('hex'))
       }
       finalWithdrawals.push({
         address: rewardAddress,
@@ -556,10 +459,7 @@ export const createWithdrawalTx = async (
     if (unsignedTxResponse.changeAddr.length === 0) {
       throw new InsufficientFunds()
     }
-    Logger.debug(
-      'delegationUtils::createWithdrawalTx success',
-      JSON.stringify(unsignedTxResponse),
-    )
+    Logger.debug('delegationUtils::createWithdrawalTx success', JSON.stringify(unsignedTxResponse))
 
     {
       const body = await unsignedTxResponse.txBuilder.build()
@@ -567,13 +467,9 @@ export const createWithdrawalTx = async (
         if (withdrawal.privateKey != null) {
           const {privateKey} = withdrawal
           neededKeys.wits.add(
-            // prettier-ignore
-            Buffer.from(
-              await (await make_vkey_witness(
-                await hash_transaction(body),
-                privateKey,
-              )).to_bytes(),
-            ).toString('hex'),
+            Buffer.from(await (await make_vkey_witness(await hash_transaction(body), privateKey)).to_bytes()).toString(
+              'hex',
+            ),
           )
         }
       }
@@ -593,10 +489,7 @@ export const createWithdrawalTx = async (
     })
   } catch (e) {
     if (e instanceof LocalizableError || e instanceof ExtendableError) throw e
-    Logger.error(
-      'delegationUtils::createWithdrawalTx error:',
-      JSON.stringify(e),
-    )
+    Logger.error('delegationUtils::createWithdrawalTx error:', JSON.stringify(e))
     throw e
   }
 }

@@ -5,11 +5,7 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import type {ComponentType} from 'react'
 
-import {
-  hasPendingOutgoingTransactionSelector,
-  isFetchingUtxosSelector,
-  isOnlineSelector,
-} from '../../selectors'
+import {hasPendingOutgoingTransactionSelector, isFetchingUtxosSelector, isOnlineSelector} from '../../selectors'
 import {fetchUTXOs} from '../../actions/utxo'
 
 class UtxoAutoRefresher extends React.Component<{
@@ -23,9 +19,7 @@ class UtxoAutoRefresher extends React.Component<{
   _unsubscribe: void | (() => mixed) = undefined
 
   componentDidMount = () => {
-    this._unsubscribe = this.props.navigation.addListener('focus', () =>
-      this.handleDidFocus(),
-    )
+    this._unsubscribe = this.props.navigation.addListener('focus', () => this.handleDidFocus())
     this.refetch()
   }
 

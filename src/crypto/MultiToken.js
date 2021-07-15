@@ -54,9 +54,7 @@ export class MultiToken {
   _checkNetworkId: (number) => void = (networkId) => {
     const ownNetworkId = this.defaults.defaultNetworkId
     if (ownNetworkId !== networkId) {
-      throw new Error(
-        `MultiToken:: network mismatch ${ownNetworkId} - ${networkId}`,
-      )
+      throw new Error(`MultiToken:: network mismatch ${ownNetworkId} - ${networkId}`)
     }
   }
 
@@ -66,9 +64,7 @@ export class MultiToken {
 
   add: (TokenEntry) => MultiToken = (entry) => {
     this._checkNetworkId(entry.networkId)
-    const existingEntry = this.values.find(
-      (value) => value.identifier === entry.identifier,
-    )
+    const existingEntry = this.values.find((value) => value.identifier === entry.identifier)
     if (existingEntry == null) {
       this.values.push(entry)
       return this
@@ -133,8 +129,7 @@ export class MultiToken {
   getDefaultEntry: (void) => TokenEntry = () => {
     return this.values.filter(
       (value) =>
-        value.networkId === this.defaults.defaultNetworkId &&
-        value.identifier === this.defaults.defaultIdentifier,
+        value.networkId === this.defaults.defaultNetworkId && value.identifier === this.defaults.defaultIdentifier,
     )[0]
   }
 
@@ -143,10 +138,7 @@ export class MultiToken {
   nonDefaultEntries: (void) => Array<TokenEntry> = () => {
     return this.values.filter(
       (value) =>
-        !(
-          value.networkId === this.defaults.defaultNetworkId &&
-          value.identifier === this.defaults.defaultIdentifier
-        ),
+        !(value.networkId === this.defaults.defaultNetworkId && value.identifier === this.defaults.defaultIdentifier),
     )
   }
 
@@ -181,8 +173,7 @@ export class MultiToken {
       networkId: value.networkId,
       amount: value.amount.toString(),
       isDefault:
-        value.networkId === this.defaults.defaultNetworkId &&
-        value.identifier === this.defaults.defaultIdentifier,
+        value.networkId === this.defaults.defaultNetworkId && value.identifier === this.defaults.defaultIdentifier,
     }))
 
   static fromArray(entries: Array<TokenEntryPlain>): MultiToken {
@@ -206,9 +197,7 @@ export class MultiToken {
  * Utility functions
  */
 
-export const getDefaultNetworkTokenEntry = (
-  networkId: NetworkId,
-): DefaultTokenEntry => {
+export const getDefaultNetworkTokenEntry = (networkId: NetworkId): DefaultTokenEntry => {
   const defaultAsset = getDefaultAssetByNetworkId(networkId)
   return {
     defaultNetworkId: defaultAsset.networkId,
@@ -216,10 +205,7 @@ export const getDefaultNetworkTokenEntry = (
   }
 }
 
-export const strToDefaultMultiAsset = (
-  amount: string,
-  networkId: NetworkId,
-) => {
+export const strToDefaultMultiAsset = (amount: string, networkId: NetworkId) => {
   const defaultTokenEntry = getDefaultNetworkTokenEntry(networkId)
   return new MultiToken(
     [

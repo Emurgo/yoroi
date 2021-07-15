@@ -1,12 +1,7 @@
 // @flow
 
 import React from 'react'
-import {
-  View,
-  TouchableOpacity,
-  Image,
-  TextInput as RNTextInput,
-} from 'react-native'
+import {View, TouchableOpacity, Image, TextInput as RNTextInput} from 'react-native'
 import {HelperText, TextInput as RNPTextInput} from 'react-native-paper'
 import styles from './styles/TextInput.style'
 import openedEyeIcon from '../../assets/img/icon/visibility-opened.png'
@@ -32,36 +27,23 @@ type Props = {|
 
 const useDebounced = (callback, value, delay = 1000) => {
   const first = React.useRef(true)
-  React.useEffect(
-    () => {
-      if (first.current) {
-        first.current = false
-        return () => {
-          return
-        }
+  React.useEffect(() => {
+    if (first.current) {
+      first.current = false
+      return () => {
+        return
       }
+    }
 
-      const handler = setTimeout(() => callback(), delay)
+    const handler = setTimeout(() => callback(), delay)
 
-      return () => clearTimeout(handler)
-    },
-    [callback, delay, value],
-  )
+    return () => clearTimeout(handler)
+  }, [callback, delay, value])
 }
 
 const TextInput = React.forwardRef<Props, {focus: () => void}>(
   (
-    {
-      value,
-      containerStyle,
-      secureTextEntry,
-      helperText,
-      errorText,
-      errorOnMount,
-      errorDelay,
-      right,
-      ...restProps
-    },
+    {value, containerStyle, secureTextEntry, helperText, errorText, errorOnMount, errorDelay, right, ...restProps},
     ref,
   ) => {
     const [showPassword, setShowPassword] = React.useState(false)
@@ -96,27 +78,17 @@ const TextInput = React.forwardRef<Props, {focus: () => void}>(
             <InputContainer>
               <RNTextInput {...inputProps} />
 
-              {right ? (
-                <AdornmentContainer style={styles.checkmarkContainer}>
-                  {right}
-                </AdornmentContainer>
-              ) : null}
+              {right ? <AdornmentContainer style={styles.checkmarkContainer}>{right}</AdornmentContainer> : null}
 
               {secureTextEntry ? (
-                <SecureTextEntryToggle
-                  showPassword={showPassword}
-                  onPress={() => setShowPassword(!showPassword)}
-                />
+                <SecureTextEntryToggle showPassword={showPassword} onPress={() => setShowPassword(!showPassword)} />
               ) : null}
             </InputContainer>
           )}
           {...restProps}
         />
 
-        <HelperText
-          type={errorTextEnabled && !!errorText ? 'error' : 'info'}
-          visible
-        >
+        <HelperText type={errorTextEnabled && !!errorText ? 'error' : 'info'} visible>
           {errorTextEnabled && !!errorText ? errorText : helperText}
         </HelperText>
       </View>
@@ -124,34 +96,18 @@ const TextInput = React.forwardRef<Props, {focus: () => void}>(
   },
 )
 
-export const Checkmark = () => (
-  <CheckIcon height={24} width={24} color={COLORS.LIGHT_POSITIVE_GREEN} />
-)
+export const Checkmark = () => <CheckIcon height={24} width={24} color={COLORS.LIGHT_POSITIVE_GREEN} />
 
-const SecureTextEntryToggle = ({
-  showPassword,
-  onPress,
-}: {
-  showPassword: boolean,
-  onPress: () => any,
-}) => (
+const SecureTextEntryToggle = ({showPassword, onPress}: {showPassword: boolean, onPress: () => any}) => (
   <AdornmentContainer style={styles.secureTextEntryToggleContainer}>
     <TouchableOpacity onPress={onPress}>
-      {showPassword ? (
-        <Image source={closedEyeIcon} />
-      ) : (
-        <Image source={openedEyeIcon} />
-      )}
+      {showPassword ? <Image source={closedEyeIcon} /> : <Image source={openedEyeIcon} />}
     </TouchableOpacity>
   </AdornmentContainer>
 )
 
-const InputContainer = ({children}) => (
-  <View style={styles.inputContainer}>{children}</View>
-)
+const InputContainer = ({children}) => <View style={styles.inputContainer}>{children}</View>
 
-const AdornmentContainer = ({style, children}) => (
-  <View style={[styles.adornmentContainer, style]}>{children}</View>
-)
+const AdornmentContainer = ({style, children}) => <View style={[styles.adornmentContainer, style]}>{children}</View>
 
 export default TextInput

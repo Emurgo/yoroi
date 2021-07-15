@@ -1,12 +1,6 @@
 // @flow
 import React, {useState} from 'react'
-import {
-  TouchableOpacity,
-  Text,
-  View,
-  Image,
-  LayoutAnimation,
-} from 'react-native'
+import {TouchableOpacity, Text, View, Image, LayoutAnimation} from 'react-native'
 
 import {isByron, isHaskellShelley, isJormun} from '../../config/config'
 import WalletAccountIcon from '../Common/WalletAccountIcon'
@@ -32,9 +26,7 @@ type WrappedIconProps = {
   icon: Node,
   style?: ViewStyleProp,
 }
-const WrappedIcon = ({icon, style}: WrappedIconProps) => (
-  <View style={[styles.iconWrapper, style]}>{icon}</View>
-)
+const WrappedIcon = ({icon, style}: WrappedIconProps) => <View style={[styles.iconWrapper, style]}>{icon}</View>
 
 type WalletItemMeta = {
   type: string,
@@ -95,27 +87,15 @@ const WalletListItem: (props) => Node = ({wallet, onPress}) => {
   return (
     <View style={styles.itemContainer}>
       <View style={styles.item}>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          onPress={() => onPress(wallet)}
-          style={styles.leftSide}
-        >
-          <WalletAccountIcon
-            iconSeed={wallet.checksum.ImagePart}
-            style={styles.walletAvatar}
-          />
+        <TouchableOpacity activeOpacity={0.5} onPress={() => onPress(wallet)} style={styles.leftSide}>
+          <WalletAccountIcon iconSeed={wallet.checksum.ImagePart} style={styles.walletAvatar} />
           <View style={styles.walletDetails}>
             <Text style={styles.walletName}>{wallet.name}</Text>
-            <Text style={styles.walletMeta}>
-              {wallet.checksum ? `${wallet.checksum.TextPart} | ${type}` : type}
-            </Text>
+            <Text style={styles.walletMeta}>{wallet.checksum ? `${wallet.checksum.TextPart} | ${type}` : type}</Text>
           </View>
         </TouchableOpacity>
         {assets.length > 0 && (
-          <TouchableOpacity
-            onPress={() => toggleExpand()}
-            style={styles.rightSide}
-          >
+          <TouchableOpacity onPress={() => toggleExpand()} style={styles.rightSide}>
             <Image source={expanded ? arrowUp : arrowDown} />
           </TouchableOpacity>
         )}

@@ -54,8 +54,7 @@ const noPoolDataDialog = defineMessages({
   },
   message: {
     id: 'components.stakingcenter.noPoolDataDialog.message',
-    defaultMessage:
-      '!!!The data from the stake pool(s) you selected is invalid. Please try again',
+    defaultMessage: '!!!The data from the stake pool(s) you selected is invalid. Please try again',
   },
 })
 
@@ -79,14 +78,7 @@ const styles = StyleSheet.create({
 })
 
 const StakeByIdScreen = (
-  {
-    intl,
-    busy,
-    handleInputChange,
-    handleOnContinue,
-    poolId,
-    utxos,
-  }: {intl: IntlShape} & Object /* TODO: type */,
+  {intl, busy, handleInputChange, handleOnContinue, poolId, utxos}: {intl: IntlShape} & Object /* TODO: type */,
 ) => {
   return (
     <>
@@ -105,9 +97,7 @@ const StakeByIdScreen = (
           <Button
             shelleyTheme
             onPress={handleOnContinue}
-            title={intl.formatMessage(
-              confirmationMessages.commonButtons.continueButton,
-            )}
+            title={intl.formatMessage(confirmationMessages.commonButtons.continueButton)}
             disabled={!poolId || utxos == null || busy}
           />
         </View>
@@ -124,9 +114,7 @@ type ExternalProps = {|
 
 export default injectIntl(
   (compose(
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
+    withNavigationTitle(({intl}: {intl: IntlShape}) => intl.formatMessage(messages.title)),
     connect((state) => ({
       utxos: utxosSelector(state),
       accountBalance: accountBalanceSelector(state),
@@ -145,77 +133,82 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      navigateToDelegationConfirm: (
-        {
-          poolId,
-          navigation,
-          accountBalance,
-          utxos,
-          intl,
-          defaultAsset,
-          serverStatus,
-        }: {intl: IntlShape} & Object /* TODO: type */,
-      ) => async (selectedPool) => {
-        try {
-          const transactionData = await walletManager.createDelegationTx(
+      navigateToDelegationConfirm:
+        (
+          {
             poolId,
+            navigation,
             accountBalance,
             utxos,
+            intl,
             defaultAsset,
-            serverStatus.serverTime,
-          )
-          const transactionFee = await transactionData.signRequest.fee()
+            serverStatus,
+          }: {intl: IntlShape} & Object /* TODO: type */,
+        ) =>
+        async (selectedPool) => {
+          try {
+            const transactionData = await walletManager.createDelegationTx(
+              poolId,
+              accountBalance,
+              utxos,
+              defaultAsset,
+              serverStatus.serverTime,
+            )
+            const transactionFee = await transactionData.signRequest.fee()
 
-          navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM, {
-            poolName: selectedPool.poolName,
-            poolHash: selectedPool.poolHash,
-            transactionData,
-            transactionFee,
-          })
-        } catch (e) {
-          if (e instanceof InsufficientFunds) {
-            await showErrorDialog(errorMessages.insufficientBalance, intl)
-          } else {
-            Logger.error(e)
-            throw e
+            navigation.navigate(STAKING_CENTER_ROUTES.DELEGATION_CONFIRM, {
+              poolName: selectedPool.poolName,
+              poolHash: selectedPool.poolHash,
+              transactionData,
+              transactionFee,
+            })
+          } catch (e) {
+            if (e instanceof InsufficientFunds) {
+              await showErrorDialog(errorMessages.insufficientBalance, intl)
+            } else {
+              Logger.error(e)
+              throw e
+            }
           }
-        }
-      },
+        },
     }),
     withHandlers({
-      handleInputChange: ({setPoolId}) => (poolId) => setPoolId(poolId),
-      handleOnContinue: ({navigateToDelegationConfirm, intl, poolId}) => async (
-        _event,
-      ) => {
-        try {
-          const poolInfoResponse = await walletManager.fetchPoolInfo({
-            poolIds: [poolId],
-          })
-          const poolInfo = ObjectValues(poolInfoResponse)[0]
-          Logger.debug('handleOnContinue::poolInfo', poolInfo)
-          if (poolInfo.info != null) {
-            const selectedPool = {
-              poolName: poolInfo.info.name,
-              poolHash: poolId,
-            }
-            navigateToDelegationConfirm(selectedPool)
-          } else {
-            await showErrorDialog(noPoolDataDialog, intl)
-          }
-        } catch (e) {
-          if (e instanceof LocalizableError) {
-            await showErrorDialog(errorMessages.generalLocalizableError, intl, {
-              message: intl.formatMessage({
-                id: e.id,
-                defaultMessage: e.defaultMessage,
-              }),
+      handleInputChange:
+        ({setPoolId}) =>
+        (poolId) =>
+          setPoolId(poolId),
+      handleOnContinue:
+        ({navigateToDelegationConfirm, intl, poolId}) =>
+        async (_event) => {
+          try {
+            const poolInfoResponse = await walletManager.fetchPoolInfo({
+              poolIds: [poolId],
             })
-          } else {
-            Logger.error(e)
-            throw e
+            const poolInfo = ObjectValues(poolInfoResponse)[0]
+            Logger.debug('handleOnContinue::poolInfo', poolInfo)
+            if (poolInfo.info != null) {
+              const selectedPool = {
+                poolName: poolInfo.info.name,
+                poolHash: poolId,
+              }
+              navigateToDelegationConfirm(selectedPool)
+            } else {
+              await showErrorDialog(noPoolDataDialog, intl)
+            }
+          } catch (e) {
+            if (e instanceof LocalizableError) {
+              await showErrorDialog(errorMessages.generalLocalizableError, intl, {
+                message: intl.formatMessage({
+                  id: e.id,
+                  defaultMessage: e.defaultMessage,
+                }),
+              })
+            } else {
+              Logger.error(e)
+              throw e
+            }
           }
-        }
-      },
+        },
     }),
   )(StakeByIdScreen): ComponentType<ExternalProps>),
 )

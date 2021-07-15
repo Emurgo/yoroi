@@ -1,9 +1,5 @@
 // @flow
-import {
-  ByronAddress,
-  Bip32PrivateKey,
-  Bip32PublicKey,
-} from '@emurgo/react-native-haskell-shelley'
+import {ByronAddress, Bip32PrivateKey, Bip32PublicKey} from '@emurgo/react-native-haskell-shelley'
 import bs58 from 'bs58'
 
 import {generateWalletRootKey, ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
@@ -48,21 +44,16 @@ export const getAccountFromMasterKey = async (
   masterKey: string,
   accountIndex?: number = CONFIG.NUMBERS.ACCOUNT_INDEX,
 ): Promise<CryptoAccount> => {
-  const masterKeyPtr = await Bip32PrivateKey.from_bytes(
-    Buffer.from(masterKey, 'hex'),
-  )
-  const accountKey = await (await (await masterKeyPtr.derive(
-    CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44,
-  )).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)).derive(
-    accountIndex + CONFIG.NUMBERS.HARD_DERIVATION_START,
-  )
+  const masterKeyPtr = await Bip32PrivateKey.from_bytes(Buffer.from(masterKey, 'hex'))
+  const accountKey = await (
+    await (
+      await masterKeyPtr.derive(CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44)
+    ).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)
+  ).derive(accountIndex + CONFIG.NUMBERS.HARD_DERIVATION_START)
   const accountPubKey = await accountKey.to_public()
   // match old byron CryptoAccount type
   return {
-    root_cached_key: Buffer.from(
-      await accountPubKey.as_bytes(),
-      'hex',
-    ).toString('hex'),
+    root_cached_key: Buffer.from(await accountPubKey.as_bytes(), 'hex').toString('hex'),
     derivation_scheme: 'V2',
   }
 }
@@ -79,14 +70,11 @@ export const getAddresses = async (
   protocolMagic?: number = BYRON_PROTOCOL_MAGIC,
 ): Promise<Array<string>> => {
   const addrs = []
-  const chainKeyPtr = await (await Bip32PublicKey.from_bytes(
-    Buffer.from(account.root_cached_key, 'hex'),
-  )).derive(ADDRESS_TYPE_TO_CHANGE[type])
+  const chainKeyPtr = await (
+    await Bip32PublicKey.from_bytes(Buffer.from(account.root_cached_key, 'hex'))
+  ).derive(ADDRESS_TYPE_TO_CHANGE[type])
   for (const i of indexes) {
-    const byronAddr = await ByronAddress.icarus_from_key(
-      await chainKeyPtr.derive(i),
-      protocolMagic,
-    )
+    const byronAddr = await ByronAddress.icarus_from_key(await chainKeyPtr.derive(i), protocolMagic)
     const byronAddrBs58 = await byronAddr.to_base58()
     addrs.push(byronAddrBs58)
   }
@@ -107,15 +95,13 @@ export const getExternalAddresses = (
   account: CryptoAccount,
   indexes: Array<number>,
   protocolMagic?: number = BYRON_PROTOCOL_MAGIC,
-): Promise<Array<string>> =>
-  getAddresses(account, 'External', indexes, protocolMagic)
+): Promise<Array<string>> => getAddresses(account, 'External', indexes, protocolMagic)
 
 export const getInternalAddresses = (
   account: CryptoAccount,
   indexes: Array<number>,
   protocolMagic?: number = BYRON_PROTOCOL_MAGIC,
-): Promise<Array<string>> =>
-  getAddresses(account, 'Internal', indexes, protocolMagic)
+): Promise<Array<string>> => getAddresses(account, 'Internal', indexes, protocolMagic)
 
 export const getAddressInHex = (address: string): string => {
   try {

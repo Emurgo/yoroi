@@ -23,8 +23,7 @@ const messages = defineMessages({
   explanation: {
     id: 'components.maintenancemodal.explanation',
     defaultMessage:
-      '!!!Yoroi is on maintenance mode. You can still access your funds ' +
-      'through any other wallet software.',
+      '!!!Yoroi is on maintenance mode. You can still access your funds through any other wallet software.',
   },
   learnMore: {
     id: 'components.maintenancemodal.learnMore',
@@ -59,11 +58,7 @@ class MaintenanceModal extends React.Component<Props, State> {
   _handleAppStateChange: (?string) => void = (nextAppState) => {
     const {appState} = this.state
     this.setState({appState: nextAppState})
-    if (
-      appState != null &&
-      appState.match(/inactive|background/) &&
-      nextAppState === 'active'
-    ) {
+    if (appState != null && appState.match(/inactive|background/) && nextAppState === 'active') {
       this.props.initApp()
     }
   }
@@ -73,29 +68,17 @@ class MaintenanceModal extends React.Component<Props, State> {
     return (
       <Modal visible={visible} onRequestClose={onRequestClose} noPadding>
         <View style={styles.title}>
-          <Text style={styles.titleText}>
-            {intl.formatMessage(messages.title)}
-          </Text>
+          <Text style={styles.titleText}>{intl.formatMessage(messages.title)}</Text>
         </View>
         <View style={styles.content}>
           <Image source={image} style={styles.image} />
           <Text style={[styles.paragraph, styles.attention]}>
             {`${intl.formatMessage(globalMessages.attention).toUpperCase()}:`}
           </Text>
-          <Text style={styles.paragraph}>
-            {intl.formatMessage(messages.explanation)}
-          </Text>
-          <Link
-            url={URL}
-            text={intl.formatMessage(messages.learnMore)}
-            style={styles.paragraph}
-          />
+          <Text style={styles.paragraph}>{intl.formatMessage(messages.explanation)}</Text>
+          <Link url={URL} text={intl.formatMessage(messages.learnMore)} style={styles.paragraph} />
         </View>
-        <Button
-          onPress={initApp}
-          title={intl.formatMessage(globalMessages.tryAgain)}
-          style={styles.button}
-        />
+        <Button onPress={initApp} title={intl.formatMessage(globalMessages.tryAgain)} style={styles.button} />
       </Modal>
     )
   }
@@ -107,22 +90,14 @@ type ScreenProps = {|
 |}
 
 const MaintenanceScreen = ({intl, initApp}: ScreenProps) => (
-  <MaintenanceModal
-    visible
-    onRequestClose={() => BackHandler.exitApp()}
-    intl={intl}
-    initApp={initApp}
-  />
+  <MaintenanceModal visible onRequestClose={() => BackHandler.exitApp()} intl={intl} initApp={initApp} />
 )
 
 export default injectIntl(
   (compose(
-    connect(
-      () => ({}),
-      {
-        initApp,
-      },
-    ),
+    connect(() => ({}), {
+      initApp,
+    }),
   )(MaintenanceScreen): ComponentType<{|
     intl: IntlShape,
     navigation: any,

@@ -21,24 +21,14 @@ type Props = {
   style?: Object,
 }
 
-export const ExpandableItem = ({
-  label,
-  content,
-  disabled,
-  onPress,
-  expanded,
-  style,
-}: Props) => (
+export const ExpandableItem = ({label, content, disabled, onPress, expanded, style}: Props) => (
   <TouchableOpacity onPress={onPress} activeOpacity={0.5}>
     <View style={style}>
       <View style={styles.labelWrapper}>
         <Text secondary style={[disabled === true && styles.disabled]}>
           {label}
         </Text>
-        <Image
-          style={styles.icon}
-          source={expanded ? chevronUp : chevronDown}
-        />
+        <Image style={styles.icon} source={expanded ? chevronUp : chevronDown} />
       </View>
       {expanded && (
         <View style={styles.contentWrapper}>

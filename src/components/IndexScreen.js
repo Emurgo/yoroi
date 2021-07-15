@@ -1,12 +1,7 @@
 // @flow
 
 import React from 'react'
-import {
-  ScrollView,
-  StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
-} from 'react-native'
+import {ScrollView, StyleSheet, SafeAreaView, TouchableOpacity} from 'react-native'
 
 import {Text, Button, StatusBar} from './UiKit'
 import {ROOT_ROUTES} from '../RoutesList'

@@ -39,13 +39,7 @@ type Props = {
   intl: IntlShape,
 }
 
-const TxHistoryList = ({
-  transactions,
-  navigation,
-  refreshing,
-  onRefresh,
-  intl,
-}: Props) => {
+const TxHistoryList = ({transactions, navigation, refreshing, onRefresh, intl}: Props) => {
   // TODO(ppershing): add proper memoization here
   const groupedTransactions = getTransactionsByDate(transactions)
 
@@ -54,12 +48,8 @@ const TxHistoryList = ({
       <SectionList
         onRefresh={onRefresh}
         refreshing={refreshing}
-        renderItem={({item}) => (
-          <TxHistoryListItem navigation={navigation} id={item.id} />
-        )}
-        renderSectionHeader={({section: {data}}) => (
-          <DayHeader ts={data[0].submittedAt} intl={intl} />
-        )}
+        renderItem={({item}) => <TxHistoryListItem navigation={navigation} id={item.id} />}
+        renderSectionHeader={({section: {data}}) => <DayHeader ts={data[0].submittedAt} intl={intl} />}
         sections={groupedTransactions}
         keyExtractor={(item) => item.id}
         stickySectionHeadersEnabled={false}

@@ -12,10 +12,7 @@ import Step6 from './Step6'
 import {CONFIG} from '../../config/config'
 import {strToDefaultMultiAsset} from '../../crypto/MultiToken'
 
-const fee = strToDefaultMultiAsset(
-  '173921',
-  CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-)
+const fee = strToDefaultMultiAsset('173921', CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID)
 
 const encryptedKey =
   '0100af1a78621391225073b608d100878c472c1bfd2edf9993bd1d1' +
@@ -43,31 +40,18 @@ storiesOf('Catalyst', module)
   .add('Step 5', ({route, navigation}) => {
     return (
       // $FlowFixMe
-      <Step5
-        navigation={navigation}
-        route={route}
-        unsignedTx={mockUnsignedTx}
-      />
+      <Step5 navigation={navigation} route={route} unsignedTx={mockUnsignedTx} />
     )
   })
   .add('Step 5 - HW wallet', ({route, navigation}) => {
     return (
       // $FlowFixMe
-      <Step5
-        navigation={navigation}
-        route={route}
-        unsignedTx={mockUnsignedTx}
-        isHW
-      />
+      <Step5 navigation={navigation} route={route} unsignedTx={mockUnsignedTx} isHW />
     )
   })
   .add('Step 6', ({route, navigation}) => {
     return (
       // $FlowFixMe
-      <Step6
-        navigation={navigation}
-        route={route}
-        encryptedKey={encryptedKey}
-      />
+      <Step6 navigation={navigation} route={route} encryptedKey={encryptedKey} />
     )
   })

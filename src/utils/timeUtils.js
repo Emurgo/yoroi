@@ -5,9 +5,7 @@ export type ToAbsoluteSlotNumberRequest = {|
   slot: number,
 |}
 export type ToAbsoluteSlotNumberResponse = number
-export type ToAbsoluteSlotNumberFunc = (
-  request: ToAbsoluteSlotNumberRequest,
-) => ToAbsoluteSlotNumberResponse
+export type ToAbsoluteSlotNumberFunc = (request: ToAbsoluteSlotNumberRequest) => ToAbsoluteSlotNumberResponse
 
 export function genToAbsoluteSlotNumber(
   config: $ReadOnlyArray<
@@ -63,9 +61,7 @@ export function genToAbsoluteSlotNumber(
 
 export type ToRelativeSlotNumberRequest = ToAbsoluteSlotNumberResponse
 export type ToRelativeSlotNumberResponse = ToAbsoluteSlotNumberRequest
-export type ToRelativeSlotNumberFunc = (
-  request: ToRelativeSlotNumberRequest,
-) => ToRelativeSlotNumberResponse
+export type ToRelativeSlotNumberFunc = (request: ToRelativeSlotNumberRequest) => ToRelativeSlotNumberResponse
 export function genToRelativeSlotNumber(
   config: $ReadOnlyArray<
     $ReadOnly<{
@@ -129,9 +125,7 @@ export type TimeToAbsoluteSlotResponse = {|
   slot: number,
   msIntoSlot: number,
 |}
-export type TimeToAbsoluteSlotFunc = (
-  request: TimeToAbsoluteSlotRequest,
-) => TimeToAbsoluteSlotResponse
+export type TimeToAbsoluteSlotFunc = (request: TimeToAbsoluteSlotRequest) => TimeToAbsoluteSlotResponse
 
 export function genTimeToSlot(
   config: $ReadOnlyArray<
@@ -150,9 +144,7 @@ export function genTimeToSlot(
     }
     let SlotDuration = config[0].SlotDuration
     let SlotsPerEpoch = config[0].SlotsPerEpoch
-    let timeLeftToTip =
-      request.time.getTime() -
-      new Date(Number.parseInt(GenesisDate, 10)).getTime()
+    let timeLeftToTip = request.time.getTime() - new Date(Number.parseInt(GenesisDate, 10)).getTime()
     let slotCount = 0
 
     // for pairs of config changes (x, x+1), get the time between these pairs
@@ -203,9 +195,7 @@ export function genTimeToSlot(
 export type CurrentEpochLengthRequest = void
 /** slots per epoch */
 export type CurrentEpochLengthResponse = number
-export type CurrentEpochLengthFunc = (
-  request: CurrentEpochLengthRequest,
-) => CurrentEpochLengthResponse
+export type CurrentEpochLengthFunc = (request: CurrentEpochLengthRequest) => CurrentEpochLengthResponse
 export function genCurrentEpochLength(
   config: $ReadOnlyArray<
     $ReadOnly<{
@@ -214,19 +204,14 @@ export function genCurrentEpochLength(
   >,
 ): CurrentEpochLengthFunc {
   return (_request: CurrentEpochLengthRequest) => {
-    const finalConfig = config.reduce(
-      (acc, next) => Object.assign(acc, next),
-      {},
-    )
+    const finalConfig = config.reduce((acc, next) => Object.assign(acc, next), {})
     return finalConfig.SlotsPerEpoch
   }
 }
 
 export type CurrentSlotLengthRequest = void
 export type CurrentSlotLengthResponse = number
-export type CurrentSlotLengthFunc = (
-  request: CurrentSlotLengthRequest,
-) => CurrentSlotLengthResponse
+export type CurrentSlotLengthFunc = (request: CurrentSlotLengthRequest) => CurrentSlotLengthResponse
 export function genCurrentSlotLength(
   config: $ReadOnlyArray<
     $ReadOnly<{
@@ -235,10 +220,7 @@ export function genCurrentSlotLength(
   >,
 ): CurrentSlotLengthFunc {
   return (_request: CurrentSlotLengthRequest) => {
-    const finalConfig = config.reduce(
-      (acc, next) => Object.assign(acc, next),
-      {},
-    )
+    const finalConfig = config.reduce((acc, next) => Object.assign(acc, next), {})
     return finalConfig.SlotDuration
   }
 }
@@ -247,9 +229,7 @@ export type TimeSinceGenesisRequest = {|
   absoluteSlotNum: number,
 |}
 export type TimeSinceGenesisResponse = number /* seconds */
-export type TimeSinceGenesisFunc = (
-  request: TimeSinceGenesisRequest,
-) => TimeSinceGenesisResponse
+export type TimeSinceGenesisFunc = (request: TimeSinceGenesisRequest) => TimeSinceGenesisResponse
 export function genTimeSinceGenesis(
   config: $ReadOnlyArray<
     $ReadOnly<{
@@ -328,9 +308,7 @@ export function genToRealTime(
     const timeSinceGenesis = request.timeSinceGenesisFunc({
       absoluteSlotNum: request.absoluteSlotNum,
     })
-    const time =
-      new Date(Number.parseInt(GenesisDate, 10)).getTime() +
-      1000 * timeSinceGenesis
+    const time = new Date(Number.parseInt(GenesisDate, 10)).getTime() + 1000 * timeSinceGenesis
     return new Date(time)
   }
 }

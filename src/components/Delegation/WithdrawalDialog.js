@@ -25,9 +25,7 @@ const messages = defineMessages({
   },
   explanation1: {
     id: 'components.delegation.withdrawaldialog.explanation1',
-    defaultMessage:
-      '!!!When **withdrawing rewards**, you also have the option to deregister ' +
-      'the staking key.',
+    defaultMessage: '!!!When **withdrawing rewards**, you also have the option to deregister the staking key.',
   },
   explanation2: {
     id: 'components.delegation.withdrawaldialog.explanation2',
@@ -38,8 +36,7 @@ const messages = defineMessages({
   explanation3: {
     id: 'components.delegation.withdrawaldialog.explanation3',
     defaultMessage:
-      '!!!**Deregistering the staking key** will give you back your deposit and ' +
-      'undelegate the key from any pool.',
+      '!!!**Deregistering the staking key** will give you back your deposit and undelegate the key from any pool.',
   },
   warning1: {
     id: 'components.delegation.withdrawaldialog.warning1',
@@ -142,11 +139,7 @@ const WithdrawalDialog = ({
               onPress: onDeregisterKey,
             }}
           >
-            {[
-              messages.explanation1,
-              messages.explanation2,
-              messages.explanation3,
-            ].map((msg, i) => (
+            {[messages.explanation1, messages.explanation2, messages.explanation3].map((msg, i) => (
               <Markdown key={i} style={styles.paragraph}>
                 {intl.formatMessage(msg)}
               </Markdown>
@@ -161,13 +154,7 @@ const WithdrawalDialog = ({
           />
         )
       case WITHDRAWAL_DIALOG_STEPS.LEDGER_CONNECT:
-        return (
-          <LedgerConnect
-            onConnectBLE={onConnectBLE}
-            onConnectUSB={onConnectUSB}
-            useUSB={useUSB}
-          />
-        )
+        return <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={useUSB} />
       case WITHDRAWAL_DIALOG_STEPS.CONFIRM:
         return (
           // $FlowFixMe TODO: useUSB does not exist in TransferSummary props
@@ -185,19 +172,9 @@ const WithdrawalDialog = ({
           />
         )
       case WITHDRAWAL_DIALOG_STEPS.WAITING_HW_RESPONSE:
-        return (
-          <PleaseWaitView
-            title={''}
-            spinnerText={intl.formatMessage(ledgerMessages.followSteps)}
-          />
-        )
+        return <PleaseWaitView title={''} spinnerText={intl.formatMessage(ledgerMessages.followSteps)} />
       case WITHDRAWAL_DIALOG_STEPS.WAITING:
-        return (
-          <PleaseWaitView
-            title={''}
-            spinnerText={intl.formatMessage(globalMessages.pleaseWait)}
-          />
-        )
+        return <PleaseWaitView title={''} spinnerText={intl.formatMessage(globalMessages.pleaseWait)} />
       case WITHDRAWAL_DIALOG_STEPS.ERROR:
         return (
           <ErrorView
@@ -216,10 +193,7 @@ const WithdrawalDialog = ({
     <Modal
       visible
       onRequestClose={onRequestClose}
-      showCloseIcon={
-        step !== WITHDRAWAL_DIALOG_STEPS.WAITING_HW_RESPONSE &&
-        step !== WITHDRAWAL_DIALOG_STEPS.WAITING
-      }
+      showCloseIcon={step !== WITHDRAWAL_DIALOG_STEPS.WAITING_HW_RESPONSE && step !== WITHDRAWAL_DIALOG_STEPS.WAITING}
     >
       {getModalBody()}
     </Modal>

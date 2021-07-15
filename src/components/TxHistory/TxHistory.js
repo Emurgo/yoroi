@@ -64,49 +64,40 @@ const warningBannerMessages = defineMessages({
   },
   message: {
     id: 'components.txhistory.txhistory.warningbanner.message',
-    defaultMessage:
-      '!!!The Shelley protocol upgrade adds a new Shelley wallet type which supports delegation.',
+    defaultMessage: '!!!The Shelley protocol upgrade adds a new Shelley wallet type which supports delegation.',
   },
 })
 
 const NoTxHistory = injectIntl(({intl}: {intl: IntlShape}) => (
   <View style={styles.empty}>
     <Image source={image} />
-    <Text style={styles.emptyText}>
-      {intl.formatMessage(messages.noTransactions)}
-    </Text>
+    <Text style={styles.emptyText}>{intl.formatMessage(messages.noTransactions)}</Text>
   </View>
 ))
 
-const SyncErrorBanner = injectIntl(
-  ({intl, showRefresh}: {intl: IntlShape, showRefresh: any}) => (
-    <Banner
-      error
-      text={
-        showRefresh
-          ? intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh)
-          : intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh)
-      }
-    />
-  ),
-)
+const SyncErrorBanner = injectIntl(({intl, showRefresh}: {intl: IntlShape, showRefresh: any}) => (
+  <Banner
+    error
+    text={
+      showRefresh
+        ? intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh)
+        : intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh)
+    }
+  />
+))
 
 type AvailableAmountProps = {|
   intl: IntlShape,
   amount: BigNumber,
   amountAssetMetaData: Token,
 |}
-const AvailableAmountBanner = injectIntl(
-  ({intl, amount, amountAssetMetaData}: AvailableAmountProps) => (
-    <Banner
-      label={intl.formatMessage(globalMessages.availableFunds)}
-      text={
-        amount != null ? formatTokenWithText(amount, amountAssetMetaData) : '-'
-      }
-      boldText
-    />
-  ),
-)
+const AvailableAmountBanner = injectIntl(({intl, amount, amountAssetMetaData}: AvailableAmountProps) => (
+  <Banner
+    label={intl.formatMessage(globalMessages.availableFunds)}
+    text={amount != null ? formatTokenWithText(amount, amountAssetMetaData) : '-'}
+    boldText
+  />
+))
 
 type FundInfo = ?{|
   +registrationStart: string,
@@ -145,24 +136,17 @@ const TxHistory = ({
 }: Props) => {
   // Byron warning banner
 
-  const [showWarning, setShowWarning] = useState<boolean>(
-    isByron(walletMeta.walletImplementationId),
-  )
+  const [showWarning, setShowWarning] = useState<boolean>(isByron(walletMeta.walletImplementationId))
 
   // InsufficientFundsModal (Catalyst)
 
-  const [showInsufficientFundsModal, setShowInsufficientFundsModal] = useState<
-    boolean,
-  >(false)
+  const [showInsufficientFundsModal, setShowInsufficientFundsModal] = useState<boolean>(false)
 
   // fetch account state
 
-  useEffect(
-    () => {
-      fetchAccountState()
-    },
-    [fetchAccountState],
-  )
+  useEffect(() => {
+    fetchAccountState()
+  }, [fetchAccountState])
 
   // Catalyst voting registration banner
 
@@ -186,9 +170,7 @@ const TxHistory = ({
           Logger.debug('Could not get Catalyst fund info from server', e)
         }
       }
-      setShowCatalystBanner(
-        (canVote && isRegistrationOpen(fundInfo)) || isNightly() || __DEV__,
-      )
+      setShowCatalystBanner((canVote && isRegistrationOpen(fundInfo)) || isNightly() || __DEV__)
     }
 
     checkCatalystFundInfo()
@@ -220,8 +202,7 @@ const TxHistory = ({
       <StatusBar type="dark" />
       <View style={styles.container}>
         <OfflineBanner />
-        {isOnline &&
-          lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
+        {isOnline && lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
 
         <AvailableAmountBanner
           amount={tokenBalance.getDefault()}
@@ -244,24 +225,13 @@ const TxHistory = ({
           <FlawedWalletModal
             visible={isFlawedWallet === true}
             disableButtons={false}
-            onPress={() =>
-              navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-            }
-            onRequestClose={() =>
-              navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-            }
+            onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)}
+            onRequestClose={() => navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)}
           />
         )}
 
         {_.isEmpty(transactionsInfo) ? (
-          <ScrollView
-            refreshControl={
-              <RefreshControl
-                onRefresh={updateHistory}
-                refreshing={isSyncing}
-              />
-            }
-          >
+          <ScrollView refreshControl={<RefreshControl onRefresh={updateHistory} refreshing={isSyncing} />}>
             <NoTxHistory />
           </ScrollView>
         ) : (
@@ -273,13 +243,11 @@ const TxHistory = ({
           />
         )}
 
-        {/* eslint-disable indent */
-        isByron(walletMeta.walletImplementationId) &&
-          showWarning && (
+        {
+          /* eslint-disable indent */
+          isByron(walletMeta.walletImplementationId) && showWarning && (
             <WarningBanner
-              title={intl
-                .formatMessage(warningBannerMessages.title)
-                .toUpperCase()}
+              title={intl.formatMessage(warningBannerMessages.title).toUpperCase()}
               icon={infoIcon}
               message={intl.formatMessage(warningBannerMessages.message)}
               showCloseIcon
@@ -287,7 +255,7 @@ const TxHistory = ({
               style={styles.warningNoteStyles}
             />
           )
-        /* eslint-enable indent */
+          /* eslint-enable indent */
         }
 
         <StandardModal
@@ -297,23 +265,15 @@ const TxHistory = ({
             <View>
               <Text>
                 {intl.formatMessage(globalMessages.insufficientBalance, {
-                  requiredBalance: formatTokenWithText(
-                    CONFIG.CATALYST.DISPLAYED_MIN_ADA,
-                    assetMetaData,
-                  ),
-                  currentBalance: formatTokenWithText(
-                    tokenBalance.getDefault(),
-                    assetMetaData,
-                  ),
+                  requiredBalance: formatTokenWithText(CONFIG.CATALYST.DISPLAYED_MIN_ADA, assetMetaData),
+                  currentBalance: formatTokenWithText(tokenBalance.getDefault(), assetMetaData),
                 })}
               </Text>
             </View>
           }
           onRequestClose={() => setShowInsufficientFundsModal(false)}
           primaryButton={{
-            label: intl.formatMessage(
-              confirmationMessages.commonButtons.backButton,
-            ),
+            label: intl.formatMessage(confirmationMessages.commonButtons.backButton),
             onPress: () => setShowInsufficientFundsModal(false),
           }}
           showCloseIcon

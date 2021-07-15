@@ -65,9 +65,7 @@ const DangerousActionView = ({
           <View style={styles.heading}>
             <Image source={image} style={styles.image} />
             <Text style={[styles.titleText, styles.alertTitleText]}>
-              {alertBox.title != null
-                ? alertBox.title
-                : intl.formatMessage(globalMessages.attention).toUpperCase()}
+              {alertBox.title != null ? alertBox.title : intl.formatMessage(globalMessages.attention).toUpperCase()}
             </Text>
           </View>
           {alertBox.content.map((line, i) => (
@@ -85,31 +83,19 @@ const DangerousActionView = ({
           /* eslint-disable indent */
           checkboxLabel != null
             ? checkboxLabel
-            : intl.formatMessage(
-                confirmationMessages.commonButtons.iUnderstandButton,
-              )
+            : intl.formatMessage(confirmationMessages.commonButtons.iUnderstandButton)
           /* eslint-enable indent */
         }
         style={styles.checkbox}
       />
     </View>
     <View style={styles.buttons}>
-      <Button
-        block
-        onPress={primaryButton.onPress}
-        title={primaryButton.label}
-        style={styles.primaryButton}
-      />
+      <Button block onPress={primaryButton.onPress} title={primaryButton.label} style={styles.primaryButton} />
       <Button
         block
         disabled={!isChecked}
-        onPress={
-          secondaryButton != null ? secondaryButton.onPress : onRequestClose
-        }
-        title={
-          secondaryButton?.label ??
-          intl.formatMessage(confirmationMessages.commonButtons.cancelButton)
-        }
+        onPress={secondaryButton != null ? secondaryButton.onPress : onRequestClose}
+        title={secondaryButton?.label ?? intl.formatMessage(confirmationMessages.commonButtons.cancelButton)}
         style={styles.secondaryButton}
       />
     </View>
@@ -162,11 +148,7 @@ const DangerousActionModal = ({
   secondaryButton,
   checkboxLabel,
 }: ModalProps) => (
-  <Modal
-    visible={visible}
-    onRequestClose={onRequestClose}
-    showCloseIcon={showCloseIcon === true}
-  >
+  <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon={showCloseIcon === true}>
     <DangerousAction
       onRequestClose={onRequestClose}
       title={title}

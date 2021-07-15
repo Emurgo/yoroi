@@ -16,10 +16,7 @@ import {isJormungandr} from '../config/networks'
 import assert from '../utils/assert'
 import {ObjectValues} from '../utils/flow'
 import {Logger} from '../utils/logging'
-import {
-  canBiometricEncryptionBeEnabled,
-  isSystemAuthSupported,
-} from '../helpers/deviceSettings'
+import {canBiometricEncryptionBeEnabled, isSystemAuthSupported} from '../helpers/deviceSettings'
 
 import type {WalletMeta, ServerStatusCache} from '../state'
 import type {
@@ -66,9 +63,7 @@ class WalletManager {
 
   async _listWallets() {
     const keys = await storage.keys('/wallet/')
-    const result = await Promise.all(
-      keys.map((key) => storage.read(`/wallet/${key}`)),
-    )
+    const result = await Promise.all(keys.map((key) => storage.read(`/wallet/${key}`)))
 
     Logger.debug('result::_listWallets', result)
 
@@ -90,18 +85,14 @@ class WalletManager {
         let networkId
         let walletImplementationId
         if (w.networkId == null && w.isShelley != null) {
-          networkId = w.isShelley
-            ? NETWORK_REGISTRY.JORMUNGANDR
-            : NETWORK_REGISTRY.HASKELL_SHELLEY
+          networkId = w.isShelley ? NETWORK_REGISTRY.JORMUNGANDR : NETWORK_REGISTRY.HASKELL_SHELLEY
           walletImplementationId = w.isShelley
             ? WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID
             : WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID
         } else {
           // if wallet implementation/network is not defined, assume Byron
           walletImplementationId =
-            w.walletImplementationId != null
-              ? w.walletImplementationId
-              : WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID
+            w.walletImplementationId != null ? w.walletImplementationId : WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID
           networkId =
             w.networkId != null
               ? w.networkId === NETWORK_REGISTRY.BYRON_MAINNET
@@ -114,15 +105,10 @@ class WalletManager {
         const data = await storage.read(`/wallet/${w.id}/data`)
         if (w.checksum == null) {
           if (data != null && data.externalChain.addressGenerator != null) {
-            const {
-              account,
-              accountPubKeyHex,
-            } = data.externalChain.addressGenerator
+            const {account, accountPubKeyHex} = data.externalChain.addressGenerator
             switch (walletImplementationId) {
               case WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID:
-                checksum = legacyWalletChecksum(
-                  accountPubKeyHex || account.root_cached_key,
-                )
+                checksum = legacyWalletChecksum(accountPubKeyHex || account.root_cached_key)
                 break
               case WALLETS.HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID:
               case WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID:
@@ -153,14 +139,9 @@ class WalletManager {
     // integrity check
     wallets.forEach((w) => {
       assert.assert(w.networkId != null, 'wallet should have networkId')
+      assert.assert(!!w.walletImplementationId, 'wallet should have walletImplementationId')
       assert.assert(
-        !!w.walletImplementationId,
-        'wallet should have walletImplementationId',
-      )
-      assert.assert(
-        Object.values(WALLET_IMPLEMENTATION_REGISTRY).indexOf(
-          w.walletImplementationId,
-        ) > -1,
+        Object.values(WALLET_IMPLEMENTATION_REGISTRY).indexOf(w.walletImplementationId) > -1,
         'invalid walletImplementationId',
       )
     })
@@ -347,10 +328,7 @@ class WalletManager {
       const isDeviceSecure = await isSystemAuthSupported()
       // On android 8.0 we are able to delete keys
       // after re-enabling Lock screen
-      if (
-        error.code === KeyStore.REJECTIONS.KEY_NOT_DELETED &&
-        !isDeviceSecure
-      ) {
+      if (error.code === KeyStore.REJECTIONS.KEY_NOT_DELETED && !isDeviceSecure) {
         throw new SystemAuthDisabled()
       } else {
         // We cannot delete keys directly on android 8.1, but it is possible
@@ -419,11 +397,7 @@ class WalletManager {
     this._notify()
   }
 
-  async changePassword(
-    masterPassword: string,
-    newPassword: string,
-    intl: IntlShape,
-  ) {
+  async changePassword(masterPassword: string, newPassword: string, intl: IntlShape) {
     if (!this._wallet) throw new WalletClosed()
 
     await this._wallet.changePassword(masterPassword, newPassword, intl)
@@ -434,9 +408,7 @@ class WalletManager {
       throw new Error('Wallet list is not initialized')
     }
 
-    return ObjectValues(this._wallets).every(
-      (wallet) => !wallet.isEasyConfirmationEnabled,
-    )
+    return ObjectValues(this._wallets).every((wallet) => !wallet.isEasyConfirmationEnabled)
   }
 
   // =================== synch =================== //
@@ -476,9 +448,7 @@ class WalletManager {
 
   async generateNewUiReceiveAddressIfNeeded() {
     if (!this._wallet) return
-    await this.abortWhenWalletCloses(
-      Promise.resolve(this._wallet.generateNewUiReceiveAddressIfNeeded()),
-    )
+    await this.abortWhenWalletCloses(Promise.resolve(this._wallet.generateNewUiReceiveAddressIfNeeded()))
   }
 
   generateNewUiReceiveAddress() {
@@ -537,9 +507,7 @@ class WalletManager {
     Logger.debug('openWallet::data', data)
     if (!data) throw new Error('Cannot read saved data')
 
-    const wallet: WalletInterface = this._getWalletImplementation(
-      walletMeta.walletImplementationId,
-    )
+    const wallet: WalletInterface = this._getWalletImplementation(walletMeta.walletImplementationId)
 
     await wallet.restore(data, walletMeta)
     wallet.id = walletMeta.id
@@ -580,9 +548,7 @@ class WalletManager {
 
   async listWallets() {
     const keys = await storage.keys('/wallet/')
-    const result = await Promise.all(
-      keys.map((key) => storage.read(`/wallet/${key}`)),
-    )
+    const result = await Promise.all(keys.map((key) => storage.read(`/wallet/${key}`)))
     return result
   }
 
@@ -661,9 +627,7 @@ class WalletManager {
   // returns the corresponding implementation of WalletInterface. Normally we
   // should expect that each blockchain network has 1 wallet implementation.
   // In the case of Cardano, there are two: Byron-era and Shelley-era.
-  _getWalletImplementation(
-    walletImplementationId: WalletImplementationId,
-  ): WalletInterface {
+  _getWalletImplementation(walletImplementationId: WalletImplementationId): WalletInterface {
     switch (walletImplementationId) {
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
       case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
@@ -685,12 +649,7 @@ class WalletManager {
     implementationId: WalletImplementationId,
   ): Promise<WalletInterface> {
     const wallet = this._getWalletImplementation(implementationId)
-    const id = await wallet.create(
-      mnemonic,
-      password,
-      networkId,
-      implementationId,
-    )
+    const id = await wallet.create(mnemonic, password, networkId, implementationId)
 
     return this.saveWallet(id, name, wallet, networkId, implementationId)
   }
@@ -749,22 +708,13 @@ class WalletManager {
     if (!this._wallet) throw new WalletClosed()
     return await this.abortWhenWalletCloses(
       // TODO(v-almonacid): maybe there is a better way instead of mixed
-      this._wallet.createUnsignedTx<mixed>(
-        utxos,
-        receiver,
-        tokens,
-        defaultToken,
-        serverTime,
-        metadata,
-      ),
+      this._wallet.createUnsignedTx<mixed>(utxos, receiver, tokens, defaultToken, serverTime, metadata),
     )
   }
 
   async signTx<T>(signRequest: ISignRequest<T>, decryptedKey: string) {
     if (!this._wallet) throw new WalletClosed()
-    return await this.abortWhenWalletCloses(
-      this._wallet.signTx(signRequest, decryptedKey),
-    )
+    return await this.abortWhenWalletCloses(this._wallet.signTx(signRequest, decryptedKey))
   }
 
   async createDelegationTx(
@@ -776,13 +726,7 @@ class WalletManager {
   ) {
     if (!this._wallet) throw new WalletClosed()
     return await this.abortWhenWalletCloses(
-      this._wallet.createDelegationTx<mixed>(
-        poolRequest,
-        valueInAccount,
-        utxos,
-        defaultAsset,
-        serverTime,
-      ),
+      this._wallet.createDelegationTx<mixed>(poolRequest, valueInAccount, utxos, defaultAsset, serverTime),
     )
   }
 
@@ -794,51 +738,30 @@ class WalletManager {
   ) {
     if (!this._wallet) throw new WalletClosed()
     return await this.abortWhenWalletCloses(
-      this._wallet.createVotingRegTx<mixed>(
-        utxos,
-        catalystPrivateKey,
-        decryptedKey,
-        serverTime,
-      ),
+      this._wallet.createVotingRegTx<mixed>(utxos, catalystPrivateKey, decryptedKey, serverTime),
     )
   }
 
-  async createWithdrawalTx(
-    utxos: Array<RawUtxo>,
-    shouldDeregister: boolean,
-    serverTime: Date | void,
-  ) {
+  async createWithdrawalTx(utxos: Array<RawUtxo>, shouldDeregister: boolean, serverTime: Date | void) {
     if (!this._wallet) throw new WalletClosed()
-    return await this.abortWhenWalletCloses(
-      this._wallet.createWithdrawalTx<mixed>(
-        utxos,
-        shouldDeregister,
-        serverTime,
-      ),
-    )
+    return await this.abortWhenWalletCloses(this._wallet.createWithdrawalTx<mixed>(utxos, shouldDeregister, serverTime))
   }
 
   async signTxWithLedger<T>(request: ISignRequest<T>, useUSB: boolean) {
     if (!this._wallet) throw new WalletClosed()
-    return await this.abortWhenWalletCloses(
-      this._wallet.signTxWithLedger<T>(request, useUSB),
-    )
+    return await this.abortWhenWalletCloses(this._wallet.signTxWithLedger<T>(request, useUSB))
   }
 
   // =================== backend API =================== //
 
   async submitTransaction(signedTx: string) {
     if (!this._wallet) throw new WalletClosed()
-    return await this.abortWhenWalletCloses(
-      this._wallet.submitTransaction(signedTx),
-    )
+    return await this.abortWhenWalletCloses(this._wallet.submitTransaction(signedTx))
   }
 
   async getTxsBodiesForUTXOs(request: TxBodiesRequest) {
     if (!this._wallet) throw new WalletClosed()
-    return await this.abortWhenWalletCloses(
-      this._wallet.getTxsBodiesForUTXOs(request),
-    )
+    return await this.abortWhenWalletCloses(this._wallet.getTxsBodiesForUTXOs(request))
   }
 
   async fetchUTXOs() {
@@ -874,18 +797,13 @@ class WalletManager {
     const addrs = [
       'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
       'Ae2tdPwUPEZAghGCdQykbGxc991wdoA8bXmSn7eCGuUKXF4EsRhWj4PJitn',
-      'addr1qynqc23tpx4dqps6xgqy9s2l3xz5fxu734wwmzj9uddn0h2z6epfcu' +
-        'kqmswgwwfruxh7gaddv9x0d5awccwahnhwleqqc4zkh4',
-      'addr1q9tr0a0feutyhdj34gxnasv8vef699fcry5avyrt6hn4n540f7le3l' +
-        'aqc6cgpcds86z06psxczmnuk7txsajs4jdt4nqlhj8aa',
+      'addr1qynqc23tpx4dqps6xgqy9s2l3xz5fxu734wwmzj9uddn0h2z6epfcukqmswgwwfruxh7gaddv9x0d5awccwahnhwleqqc4zkh4',
+      'addr1q9tr0a0feutyhdj34gxnasv8vef699fcry5avyrt6hn4n540f7le3laqc6cgpcds86z06psxczmnuk7txsajs4jdt4nqlhj8aa',
     ]
     const externalChain = this._wallet.externalChain
     const address = externalChain.addresses[0]
     if (addrs.includes(address)) {
-      Logger.debug(
-        'WalletManager::checkForFlawedWallets: address match',
-        address,
-      )
+      Logger.debug('WalletManager::checkForFlawedWallets: address match', address)
       return true
     }
     Logger.debug('WalletManager::checkForFlawedWallets:: no match')

@@ -22,16 +22,9 @@ type ExternalProps = {|
   route: any,
 |}
 
-const LanguagePickerScreen = ({
-  navigation,
-  languageCode,
-  changeLanguage,
-  handleContinue,
-}) => (
+const LanguagePickerScreen = ({navigation, languageCode, changeLanguage, handleContinue}) => (
   <SafeAreaView style={styles.safeAreaView}>
-    <LanguagePicker
-      {...{navigation, languageCode, changeLanguage, handleContinue}}
-    />
+    <LanguagePicker {...{navigation, languageCode, changeLanguage, handleContinue}} />
   </SafeAreaView>
 )
 
@@ -43,14 +36,12 @@ export default (compose(
     languageActions,
   ),
   withHandlers({
-    handleContinue: ({
-      navigation,
-      changeAndSaveLanguage,
-      languageCode,
-    }) => async (_event) => {
-      await changeAndSaveLanguage(languageCode)
+    handleContinue:
+      ({navigation, changeAndSaveLanguage, languageCode}) =>
+      async (_event) => {
+        await changeAndSaveLanguage(languageCode)
 
-      navigation.navigate(FIRST_RUN_ROUTES.ACCEPT_TERMS_OF_SERVICE)
-    },
+        navigation.navigate(FIRST_RUN_ROUTES.ACCEPT_TERMS_OF_SERVICE)
+      },
   }),
 )(LanguagePickerScreen): ComponentType<ExternalProps>)

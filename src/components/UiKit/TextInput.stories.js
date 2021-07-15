@@ -17,9 +17,7 @@ const styles = StyleSheet.create({
 
 storiesOf('TextInput', module)
   .addDecorator((story) => <View style={styles.container}>{story()}</View>)
-  .add('with label', () => (
-    <TextInput autoFocus label={'This is a label'} onChangeText={action()} />
-  ))
+  .add('with label', () => <TextInput autoFocus label={'This is a label'} onChangeText={action()} />)
   .add('secure entry', () => (
     <TextInput
       autoFocus
@@ -48,37 +46,14 @@ storiesOf('TextInput', module)
     />
   ))
   .add('with error, with label', () => (
-    <TextInput
-      autoFocus
-      label={'with error, with label'}
-      onChangeText={action()}
-      errorText={'error text'}
-    />
+    <TextInput autoFocus label={'with error, with label'} onChangeText={action()} errorText={'error text'} />
   ))
   .add('numeric entry', () => (
-    <TextInput
-      autoFocus
-      label={'numeric input'}
-      keyboardType={'numeric'}
-      onChangeText={action()}
-    />
+    <TextInput autoFocus label={'numeric input'} keyboardType={'numeric'} onChangeText={action()} />
   ))
-  .add('prefilled', () => (
-    <TextInput
-      autoFocus
-      label={'prefilled'}
-      value={'prefilled'}
-      onChangeText={action()}
-    />
-  ))
+  .add('prefilled', () => <TextInput autoFocus label={'prefilled'} value={'prefilled'} onChangeText={action()} />)
   .add('disabled', () => (
-    <TextInput
-      autoFocus
-      label={'disabled'}
-      value={'prefilled value'}
-      disabled
-      onChangeText={action()}
-    />
+    <TextInput autoFocus label={'disabled'} value={'prefilled value'} disabled onChangeText={action()} />
   ))
   .add('with helper text', () => (
     <TextInput

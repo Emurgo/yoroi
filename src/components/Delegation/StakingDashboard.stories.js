@@ -1,5 +1,5 @@
 // @flow
-/* eslint-disable max-len */
+/* eslint-disable  */
 import React from 'react'
 import {BigNumber} from 'bignumber.js'
 
@@ -31,8 +31,7 @@ const poolInfo = {
   ],
   owners: {
     '6eab602ca57a3c92a8d2074170ba2aed43b30f9f14f9074def24330e30bc874d': {
-      pledgeAddress:
-        'addr1s4h2kcpv54arey4g6gr5zu969tk58vc0nu20jp6daujrxr3shjr56mq8vq9',
+      pledgeAddress: 'addr1s4h2kcpv54arey4g6gr5zu969tk58vc0nu20jp6daujrxr3shjr56mq8vq9',
     },
   },
 }
@@ -45,9 +44,7 @@ storiesOf('StakingDashboard', module)
       route={route}
       isOnline
       lastAccountStateSyncError={false}
-      pools={[
-        ['6777ed5eac05ab8bf55d073424132e200935c8d3be62fb00f5252cd27a9fe6e5', 1],
-      ]}
+      pools={[['6777ed5eac05ab8bf55d073424132e200935c8d3be62fb00f5252cd27a9fe6e5', 1]]}
       poolInfo={poolInfo}
       utxoBalance={new BigNumber(100000000)}
       accountBalance={new BigNumber(1000000)}
@@ -61,9 +58,7 @@ storiesOf('StakingDashboard', module)
       route={route}
       isOnline
       lastAccountStateSyncError={false}
-      pools={[
-        ['6777ed5eac05ab8bf55d073424132e200935c8d3be62fb00f5252cd27a9fe6e5', 1],
-      ]}
+      pools={[['6777ed5eac05ab8bf55d073424132e200935c8d3be62fb00f5252cd27a9fe6e5', 1]]}
       poolInfo={null}
       poolOperator={'poolOperator'}
       // UserSummary
@@ -80,9 +75,7 @@ storiesOf('StakingDashboard', module)
       route={route}
       isOnline
       lastAccountStateSyncError={false}
-      pools={[
-        ['6777ed5eac05ab8bf55d073424132e200935c8d3be62fb00f5252cd27a9fe6e5', 1],
-      ]}
+      pools={[['6777ed5eac05ab8bf55d073424132e200935c8d3be62fb00f5252cd27a9fe6e5', 1]]}
       poolInfo={poolInfo}
       poolOperator={'poolOperator'}
       // UserSummary

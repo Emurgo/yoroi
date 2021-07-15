@@ -42,11 +42,7 @@ const KeyboardKey = ({value, onKeyDown}) => {
       disabled={isEmpty}
       testID={`pinKey${value}`}
     >
-      {isBackspace ? (
-        <Image source={backspaceIcon} />
-      ) : (
-        <Text style={styles.keyboardKeyText}>{value}</Text>
-      )}
+      {isBackspace ? <Image source={backspaceIcon} /> : <Text style={styles.keyboardKeyText}>{value}</Text>}
     </TouchableHighlight>
   )
 }
