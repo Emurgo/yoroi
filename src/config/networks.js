@@ -1,4 +1,5 @@
 // @flow
+
 import {flatten} from 'lodash'
 
 import {NETWORK_REGISTRY} from './types'

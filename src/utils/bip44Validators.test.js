@@ -1,4 +1,5 @@
 // @flow
+
 import jestSetup from '../jestSetup'
 
 import {isCIP1852AccountPath, isValidPath} from './bip44Validators'

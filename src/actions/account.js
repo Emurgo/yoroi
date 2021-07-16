@@ -1,4 +1,5 @@
 // @flow
+
 import type {Dispatch} from 'redux'
 import {BigNumber} from 'bignumber.js'
 

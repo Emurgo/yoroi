@@ -1,4 +1,5 @@
 // @flow
+
 import assert from './assert'
 
 import ExtendableError from 'es6-error'

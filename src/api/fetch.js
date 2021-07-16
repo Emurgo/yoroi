@@ -1,4 +1,5 @@
 // @flow
+
 import DeviceInfo from 'react-native-device-info'
 import {Platform} from 'react-native'
 

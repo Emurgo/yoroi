@@ -1,4 +1,5 @@
 // @flow
+
 import {legacyWalletChecksum} from '@emurgo/cip4-js'
 
 import {getAccountFromMasterKey, getAddresses} from './util'

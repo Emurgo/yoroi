@@ -1,4 +1,5 @@
 // @flow
+
 import {BigNumber} from 'bignumber.js'
 import {defineMessages, type IntlShape} from 'react-intl'
 import moment from 'moment'

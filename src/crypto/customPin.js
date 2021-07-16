@@ -1,4 +1,5 @@
 // @flow
+
 import {encryptData, decryptData} from './commonUtils'
 import {WrongPassword} from './errors'
 

@@ -1,4 +1,5 @@
 // @flow
+
 import walletManager from '../crypto/walletManager'
 import {hwDeviceInfoSelector} from '../selectors'
 import {Logger} from '../utils/logging'

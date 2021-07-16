@@ -1,4 +1,5 @@
 // @flow
+
 import {compose} from 'lodash/fp'
 
 import {insertAt} from '../../utils/string'

@@ -1,4 +1,5 @@
 // @flow
+
 import {delay} from './promise'
 
 // Ignores any concurrent calls to this function

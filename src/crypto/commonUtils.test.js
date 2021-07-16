@@ -1,4 +1,5 @@
 // @flow
+
 import jestSetup from '../jestSetup'
 
 import {formatPath, generateAdaMnemonic, generateWalletRootKey, encryptData, decryptData} from './commonUtils'

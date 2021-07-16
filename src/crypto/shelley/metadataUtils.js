@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 // // @flow
+
 import {
   TransactionMetadatum,
   encode_json_str_to_metadatum,

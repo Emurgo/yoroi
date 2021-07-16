@@ -1,4 +1,5 @@
 // @flow
+
 import {Bip32PublicKey} from '@emurgo/react-native-haskell-shelley'
 
 import {NUMBERS} from '../config/numbers'

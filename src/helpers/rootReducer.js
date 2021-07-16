@@ -1,4 +1,5 @@
 // @flow
+
 import {forwardReducerTo} from './utils'
 import getInitialState from '../state'
 

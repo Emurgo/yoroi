@@ -1,4 +1,5 @@
 // @flow
+
 /* eslint-disable camelcase */
 
 import {BigNumber} from 'bignumber.js'

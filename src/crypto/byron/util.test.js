@@ -1,4 +1,5 @@
 // @flow
+
 import jestSetup from '../../jestSetup'
 
 import {getMasterKeyFromMnemonic, getAccountFromMasterKey, getExternalAddresses, getAddressInHex} from './util'

@@ -1,5 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 // @flow
+
 import React from 'react'
 import {compose} from 'redux'
 import {View, ScrollView, Dimensions} from 'react-native'

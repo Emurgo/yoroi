@@ -1,4 +1,5 @@
 // @flow
+
 import {MultiToken} from './MultiToken'
 
 export interface ISignRequest<T> {
