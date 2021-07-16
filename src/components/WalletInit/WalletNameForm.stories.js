@@ -26,14 +26,9 @@ const styles = StyleSheet.create({
 storiesOf('WalletNameForm', module)
   .addDecorator((story) => <View style={styles.container}>{story()}</View>)
   .add('default', () => <WalletNameForm onSubmit={action('submit')} />)
-  .add('with image', () => (
-    <WalletNameForm onSubmit={action('submit')} image={image} />
-  ))
+  .add('with image', () => <WalletNameForm onSubmit={action('submit')} image={image} />)
   .add('with containerStyle', () => (
-    <WalletNameForm
-      onSubmit={action('submit')}
-      containerStyle={styles.containerStyle}
-    />
+    <WalletNameForm onSubmit={action('submit')} containerStyle={styles.containerStyle} />
   ))
   .add('with topContent', () => (
     <WalletNameForm
