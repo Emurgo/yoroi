@@ -26,6 +26,7 @@ import {
   onDidUpdate,
   withNavigationTitle,
 } from '../../utils/renderUtils'
+import {AddressDTOCardano} from '../../crypto/shelley/Address.dto'
 
 import styles from './styles/ReceiveScreen.style'
 
@@ -57,14 +58,19 @@ const messages = defineMessages({
     defaultMessage: '!!!You have to use some of your addresses',
     description: 'some desc',
   },
-  freshAddresses: {
-    id: 'components.receive.receivescreen.freshAddresses',
-    defaultMessage: '!!!Fresh addresses',
+  unusedAddresses: {
+    id: 'components.receive.receivescreen.unusedAddresses',
+    defaultMessage: '!!!Unused addresses',
     description: 'some desc',
   },
   usedAddresses: {
     id: 'components.receive.receivescreen.usedAddresses',
     defaultMessage: '!!!Used addresses',
+    description: 'some desc',
+  },
+  verifyAddress: {
+    id: 'components.receive.receivescreen.verifyAddress',
+    defaultMessage: '!!!Verify address',
     description: 'some desc',
   },
 })
@@ -78,6 +84,9 @@ const ReceiveScreen = (
   }: {intl: IntlShape} & Object /* TODO: type */,
 ) => {
   const currentAddress = _.last(receiveAddresses) || NO_ADDRESS
+  const addressesInfo: Map<string, AddressDTOCardano> = new Map(
+    receiveAddresses.map((addr) => [addr, new AddressDTOCardano(addr)]),
+  )
 
   return (
     <View style={styles.container}>
@@ -90,6 +99,7 @@ const ReceiveScreen = (
           <AddressDetail address={currentAddress} />
         </View>
         <Button
+          outlineOnLight
           style={styles.button}
           onPress={generateNewReceiveAddress}
           disabled={addressLimitReached}
@@ -102,14 +112,21 @@ const ReceiveScreen = (
       </View>
       <SafeAreaView style={styles.safeAreaView}>
         <Screen scroll>
-          <Text style={styles.heading}>
-            {intl.formatMessage(messages.freshAddresses)}
-          </Text>
-          <AddressesList showFresh addresses={receiveAddresses} />
-          <Text style={styles.heading}>
-            {intl.formatMessage(messages.usedAddresses)}
-          </Text>
-          <AddressesList addresses={receiveAddresses} />
+          <View style={styles.addressListHeader}>
+            <Text style={styles.heading}>
+              {intl.formatMessage(messages.unusedAddresses)}
+            </Text>
+            <Text style={styles.heading}>
+              {intl.formatMessage(messages.verifyAddress)}
+            </Text>
+          </View>
+          <AddressesList showFresh addresses={addressesInfo} />
+          <View style={styles.addressListHeader}>
+            <Text style={styles.heading}>
+              {intl.formatMessage(messages.usedAddresses)}
+            </Text>
+          </View>
+          <AddressesList addresses={addressesInfo} />
         </Screen>
       </SafeAreaView>
     </View>

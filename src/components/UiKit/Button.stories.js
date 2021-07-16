@@ -19,8 +19,13 @@ const styles = StyleSheet.create({
 storiesOf('Button', module)
   .addDecorator((getStory) => <View style={styles.button}>{getStory()}</View>)
   .add('with Shelley theme', () => (
-    <Button block shelleyTheme onPress={action('clicked')} title="Okay" />
+    <Button
+      block
+      shelleyTheme
+      onPress={() => action('clicked')()}
+      title="Okay"
+    />
   ))
   .add('with Byron theme', () => (
-    <Button block onPress={(_e) => action('clicked')} title="Okay" />
+    <Button block onPress={() => action('clicked')()} title="Okay" />
   ))

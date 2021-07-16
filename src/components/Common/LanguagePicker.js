@@ -18,6 +18,8 @@ import frenchFlagIcon from '../../assets/img/flags/french.png'
 import italianFlagIcon from '../../assets/img/flags/italian.png'
 import dutchFlagIcon from '../../assets/img/flags/dutch.png'
 import czechFlagIcon from '../../assets/img/flags/czech.png'
+import hungarianFlagIcon from '../../assets/img/flags/hungarian.png'
+import slovakFlagIcon from '../../assets/img/flags/slovak.png'
 import LanguageListItem from './LanguageListItem'
 import {LANGUAGES} from '../../i18n/languages'
 import {Button, StatusBar} from '../UiKit'
@@ -86,6 +88,16 @@ const messages = defineMessages({
   czech: {
     id: 'components.common.languagepicker.czech',
     defaultMessage: 'Čeština',
+    description: 'some desc',
+  },
+  hungarian: {
+    id: 'components.common.languagepicker.hungarian',
+    defaultMessage: 'Magyar',
+    description: 'some desc',
+  },
+  slovak: {
+    id: 'components.common.languagepicker.slovak',
+    defaultMessage: 'Slovenčina',
     description: 'some desc',
   },
   continueButton: {
@@ -173,6 +185,16 @@ const supportedLanguages = (intl) => {
       label: intl.formatMessage(messages.czech),
       code: LANGUAGES.CZECH,
       icon: czechFlagIcon,
+    },
+    {
+      label: intl.formatMessage(messages.hungarian),
+      code: LANGUAGES.HUNGARIAN,
+      icon: hungarianFlagIcon,
+    },
+    {
+      label: intl.formatMessage(messages.slovak),
+      code: LANGUAGES.SLOVAK,
+      icon: slovakFlagIcon,
     },
     // TODO: Add back when chinese traditional is available
     // {

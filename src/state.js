@@ -102,7 +102,7 @@ export type State = {
     encryptedKey: ?string,
     catalystPrivateKey: ?string,
     // TODO: it's in general not recommended to use non-plain objects in store
-    unSignedTx: ?ISignRequest<mixed>,
+    unsignedTx: ?ISignRequest<mixed>,
   },
 }
 
@@ -181,7 +181,7 @@ export const getInitialState = (): State => ({
     pin: [],
     encryptedKey: null,
     catalystPrivateKey: undefined,
-    unSignedTx: null,
+    unsignedTx: null,
   },
 })
 

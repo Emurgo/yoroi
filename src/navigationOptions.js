@@ -26,6 +26,6 @@ export const defaultStackNavigatorOptions = {
   headerBackTitleVisible: false,
 }
 
-export const jormunNavigationOptions = {
+export const jormunNavigationOptions: Object = {
   headerBackground: () => <GradientHeader />,
 }

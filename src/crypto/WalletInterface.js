@@ -204,7 +204,7 @@ export interface WalletInterface {
   createVotingRegTx<T>(
     utxos: Array<RawUtxo>,
     catalystPrivateKey: string,
-    decryptedKey: string,
+    decryptedKey: string | void,
     serverTime: Date | void,
   ): Promise<ISignRequest<T>>;
 

@@ -11,7 +11,6 @@ import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {walletMetaSelector, isReadOnlySelector} from '../selectors'
 import {isHaskellShelley} from '../config/config'
 import {WALLET_ROOT_ROUTES, WALLET_ROUTES, CATALYST_ROUTES} from '../RoutesList'
-import {Button} from './UiKit'
 import WalletSelectionScreen from './WalletSelection/WalletSelectionScreen'
 import TxHistoryNavigator from './TxHistory/TxHistoryNavigator'
 import StakingCenterNavigator from './Delegation/StakingCenterNavigator'
@@ -23,7 +22,6 @@ import {defaultNavigationOptions} from '../navigationOptions'
 import CatalystNavigator from './Catalyst/CatalystNavigator'
 
 import {theme} from '../styles/config'
-import styles from './TxHistory/styles/SettingsButton.style'
 import iconHistory from '../assets/img/icon/txhistory.png'
 import iconHistoryActive from '../assets/img/icon/txhistory-active.png'
 import iconSend from '../assets/img/icon/send.png'
@@ -34,7 +32,6 @@ import iconDashboard from '../assets/img/icon/dashboard.png'
 import iconDashboardActive from '../assets/img/icon/dashboard-active.png'
 import iconDelegate from '../assets/img/icon/delegation.png'
 import iconDelegateActive from '../assets/img/icon/delegation-active.png'
-import iconGear from '../assets/img/gear.png'
 
 const messages = defineMessages({
   transactionsButton: {
@@ -87,7 +84,15 @@ const routeTabAttributes = {
   },
 }
 
-const Tab = createBottomTabNavigator()
+type WalletTabRoutes = {
+  history: any,
+  'send-ada': any,
+  'receive-ada': any,
+  'staking-dashboard': any,
+  'staking-center': any,
+}
+
+const Tab = createBottomTabNavigator<any, WalletTabRoutes, any>()
 const WalletTabNavigator = injectIntl(
   compose(
     connect((state) => ({
@@ -103,74 +108,82 @@ const WalletTabNavigator = injectIntl(
       intl: IntlShape,
       walletMeta: any,
       isReadOnly: any,
-    }) => (
-      <Tab.Navigator
-        initialRouteName={WALLET_ROUTES.TX_HISTORY}
-        screenOptions={({navigation, route}) => {
-          const attributes = routeTabAttributes[route.name]
-          if (attributes == null) throw new Error('unknown wallet route')
-          return {
-            tabBarIcon: ({focused, _color, _size}) => {
-              const icon = focused
-                ? attributes.activeIcon
-                : attributes.normalIcon
-              return <Image source={icon} />
+    }) => {
+      const {walletImplementationId} = walletMeta
+      const initialRoute = isHaskellShelley(walletImplementationId)
+        ? WALLET_ROUTES.DASHBOARD
+        : WALLET_ROUTES.TX_HISTORY
+      return (
+        <Tab.Navigator
+          initialRouteName={initialRoute}
+          screenOptions={({route}) => {
+            const attributes = routeTabAttributes[route.name]
+            if (attributes == null) throw new Error('unknown wallet route')
+
+            return {
+              tabBarIcon: ({focused}) => {
+                const icon = focused
+                  ? attributes.activeIcon
+                  : attributes.normalIcon
+                return <Image source={icon} />
+              },
+              tabBarLabel: intl.formatMessage(attributes.label),
+            }
+          }}
+          tabBarOptions={{
+            labelStyle: {
+              fontSize: 11,
             },
-            tabBarLabel: intl.formatMessage(attributes.label),
-            title: route.params?.title ?? undefined,
-            headerRight: () => (
-              <Button
-                style={styles.settingsButton}
-                onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)}
-                iconImage={iconGear}
-                title=""
-                withoutBackground
-              />
-            ),
-            ...defaultNavigationOptions,
-          }
-        }}
-        tabBarOptions={{
-          activeTintColor: theme.COLORS.NAVIGATION_ACTIVE,
-          inactiveTintColor: theme.COLORS.NAVIGATION_INACTIVE,
-        }}
-        backBehavior="initialRoute"
-      >
-        <Tab.Screen
-          name={WALLET_ROUTES.TX_HISTORY}
-          component={TxHistoryNavigator}
-          options={{headerShown: false}}
-        />
-        {!isReadOnly && (
-          <Tab.Screen
-            name={WALLET_ROUTES.SEND}
-            component={SendScreenNavigator}
-          />
-        )}
-        <Tab.Screen
-          name={WALLET_ROUTES.RECEIVE}
-          component={ReceiveScreenNavigator}
-        />
-        {isHaskellShelley(walletMeta.walletImplementationId) && (
-          <>
+            activeTintColor: theme.COLORS.NAVIGATION_ACTIVE,
+            inactiveTintColor: theme.COLORS.NAVIGATION_INACTIVE,
+          }}
+          backBehavior="initialRoute"
+        >
+          {isHaskellShelley(walletImplementationId) && (
             <Tab.Screen
               name={WALLET_ROUTES.DASHBOARD}
               component={StakingDashboardNavigator}
             />
-            {!isReadOnly && (
-              <Tab.Screen
-                name={WALLET_ROUTES.DELEGATE}
-                component={StakingCenterNavigator}
-              />
-            )}
-          </>
-        )}
-      </Tab.Navigator>
-    ),
+          )}
+          <Tab.Screen
+            name={WALLET_ROUTES.TX_HISTORY}
+            component={TxHistoryNavigator}
+          />
+          {!isReadOnly && (
+            <Tab.Screen
+              name={WALLET_ROUTES.SEND}
+              component={SendScreenNavigator}
+            />
+          )}
+          <Tab.Screen
+            name={WALLET_ROUTES.RECEIVE}
+            component={ReceiveScreenNavigator}
+          />
+          {isHaskellShelley(walletImplementationId) && (
+            <>
+              {/* VOTING should go here when implemented. */}
+              {!isReadOnly && (
+                <Tab.Screen
+                  name={WALLET_ROUTES.DELEGATE}
+                  component={StakingCenterNavigator}
+                />
+              )}
+            </>
+          )}
+        </Tab.Navigator>
+      )
+    },
   ),
 )
 
-const Stack = createStackNavigator()
+type WalletStackRoute = {
+  'wallet-selection': any,
+  'main-wallet-routes': any,
+  settings: any,
+  'catalyst-router': any,
+}
+
+const Stack = createStackNavigator<any, WalletStackRoute, any>()
 const WalletNavigator = () => (
   <Stack.Navigator
     initialRouteName={WALLET_ROOT_ROUTES.WALLET_SELECTION}
@@ -188,10 +201,6 @@ const WalletNavigator = () => (
     <Stack.Screen
       name={WALLET_ROOT_ROUTES.SETTINGS}
       component={SettingsScreenNavigator}
-      screenOptions={{
-        headerShown: false,
-        ...defaultNavigationOptions,
-      }}
     />
     <Stack.Screen
       name={CATALYST_ROUTES.ROOT}

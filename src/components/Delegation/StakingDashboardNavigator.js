@@ -21,11 +21,18 @@ import {
 
 import styles from '../TxHistory/styles/SettingsButton.style'
 
-const Stack = createStackNavigator()
+type DelegationNavigatorRoutes = {
+  'staking-dashboard': any,
+  'staking-center': any,
+  'biometrics-signing': any,
+}
+
+const Stack = createStackNavigator<any, DelegationNavigatorRoutes, any>()
 
 const DelegationNavigatorSummary = () => (
   <Stack.Navigator
     screenOptions={({route}) => {
+      // $FlowFixMe mixed is incompatible with number
       const extraOptions = isJormungandr(route.params?.networkId)
         ? jormunNavigationOptions
         : {}

@@ -268,7 +268,7 @@ export default class Wallet {
     return this.transactionCache.transactions
   }
 
-  // ========== state/UI ============= //
+  // ========== UI state ============= //
 
   /* global $Shape */
   updateState(update: $Shape<WalletState>) {

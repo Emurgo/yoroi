@@ -42,16 +42,28 @@ storiesOf('Catalyst', module)
   })
   .add('Step 5', ({route, navigation}) => {
     return (
+      // $FlowFixMe
       <Step5
         navigation={navigation}
         route={route}
-        //  $FlowFixMe
-        unSignedTx={mockUnsignedTx}
+        unsignedTx={mockUnsignedTx}
+      />
+    )
+  })
+  .add('Step 5 - HW wallet', ({route, navigation}) => {
+    return (
+      // $FlowFixMe
+      <Step5
+        navigation={navigation}
+        route={route}
+        unsignedTx={mockUnsignedTx}
+        isHW
       />
     )
   })
   .add('Step 6', ({route, navigation}) => {
     return (
+      // $FlowFixMe
       <Step6
         navigation={navigation}
         route={route}

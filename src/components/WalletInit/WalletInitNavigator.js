@@ -24,7 +24,23 @@ import WalletCredentialsScreen from './RestoreWallet/WalletCredentialsScreen'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import {isJormungandr} from '../../config/networks'
 
-const Stack = createStackNavigator()
+type WalletInitRoutes = {
+  'choose-create-restore': any,
+  'initial-choose-create-restore': any,
+  'create-wallet-form': any,
+  'restore-wallet-form': any,
+  'import-read-only': any,
+  'save-read-only': any,
+  'check-nano-x': any,
+  'connect-nano-x': any,
+  'save-nano-x': any,
+  'mnemoinc-show': any,
+  'mnemonic-check': any,
+  'wallet-account-checksum': any,
+  'wallet-credentials': any,
+}
+
+const Stack = createStackNavigator<any, WalletInitRoutes, any>()
 
 const WalletInitNavigator = () => (
   <Stack.Navigator
@@ -32,6 +48,8 @@ const WalletInitNavigator = () => (
     screenOptions={({route}) => {
       // note: jormun is currently not supported. If you want to add this
       // jormun style, make sure to pass the networkId as a route param
+
+      // $FlowFixMe mixed is incompatible with number
       const extraOptions = isJormungandr(route.params?.networkId)
         ? jormunNavigationOptions
         : {}
@@ -75,10 +93,9 @@ const WalletInitNavigator = () => (
       name={WALLET_INIT_ROUTES.CHECK_NANO_X}
       component={CheckNanoXScreen}
     />
-    <Stack.Screen
-      name={WALLET_INIT_ROUTES.CONNECT_NANO_X}
-      component={ConnectNanoXScreen}
-    />
+    <Stack.Screen name={WALLET_INIT_ROUTES.CONNECT_NANO_X}>
+      {(props) => <ConnectNanoXScreen {...props} defaultDevices={null} />}
+    </Stack.Screen>
     <Stack.Screen
       name={WALLET_INIT_ROUTES.SAVE_NANO_X}
       component={SaveNanoXScreen}

@@ -62,7 +62,7 @@ type Props = {
   +balance: BigNumber,
   +finalBalance: BigNumber,
   +fees: BigNumber,
-  +onConfirm: (event: Object, password?: string) => mixed,
+  +onConfirm: (event: Object, password?: string | void) => mixed,
   +onCancel: () => mixed,
   +walletMeta: $Diff<WalletMeta, {id: string}>,
   +defaultAsset: DefaultAsset,
@@ -90,12 +90,14 @@ const TransferSummary = ({
       label: intl.formatMessage(
         confirmationMessages.commonButtons.confirmButton,
       ),
-      // $FlowFixMe
-      onPress: (event) => onConfirm(event, password),
+      onPress: async (event) => {
+        await onConfirm(event, password)
+      },
     }}
     secondaryButton={{
-      // $FlowFixMe
-      onPress: onCancel,
+      onPress: () => {
+        onCancel()
+      },
     }}
   >
     <View style={styles.item}>

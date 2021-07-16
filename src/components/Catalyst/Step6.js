@@ -72,7 +72,6 @@ const {FlagSecure} = NativeModules
 type Props = {|
   navigation: Navigation,
   route: Object, // TODO(navigation): type
-  encryptedKey?: string,
 |}
 
 type HOCProps = {
@@ -94,9 +93,10 @@ const Step6 = ({intl, navigation, encryptedKey}: HOCProps & Props) => {
     false,
   )
 
-  if (Platform.OS === 'android') {
-    useFocusEffect(
-      React.useCallback(() => {
+  useFocusEffect(
+    // eslint-disable-next-line consistent-return
+    React.useCallback(() => {
+      if (Platform.OS === 'android') {
         // enable screenshots
         FlagSecure.deactivate()
 
@@ -106,9 +106,9 @@ const Step6 = ({intl, navigation, encryptedKey}: HOCProps & Props) => {
           // automatically by react on blur
           FlagSecure.activate()
         }
-      }, []),
-    )
-  }
+      }
+    }, []),
+  )
 
   const _copyKey = () => {
     Clipboard.setString(encryptedKey)

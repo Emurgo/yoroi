@@ -132,6 +132,7 @@ export default injectIntl(
     }),
   )(ChangeWalletName): ComponentType<{|
     navigation: Navigation,
+    route: any,
     intl: IntlShape,
   |}>),
 )

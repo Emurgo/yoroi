@@ -268,6 +268,7 @@ export default injectIntl(
     }),
   )(MnemonicCheckScreen): ComponentType<{|
     navigation: Navigation,
+    route: any,
     intl: IntlShape,
   |}>),
 )

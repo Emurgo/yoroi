@@ -19,6 +19,7 @@ import styles from './styles/LanguagePickerScreen.style'
 
 type ExternalProps = {|
   navigation: Navigation,
+  route: any,
 |}
 
 const LanguagePickerScreen = ({

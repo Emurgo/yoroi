@@ -19,33 +19,35 @@ enableScreens()
 const App = (_props, _context) => {
   const [appState, setAppState] = useState<?string>(AppState.currentState)
 
-  const handleAppStateChange: (?string) => void = (nextAppState) => {
-    const previousAppState = appState
-
-    setAppState(nextAppState)
-    if (previousAppState != null && nextAppState === 'active') {
-      RNBootSplash.hide()
-    } else if (
-      previousAppState === 'active' &&
-      nextAppState != null &&
-      nextAppState.match(/inactive|background/)
-    ) {
-      RNBootSplash.show()
-    }
-  }
-
   // note: previously this was hanlded in the applicationDidEnterBackground
   // event in AppDelegate.m, but after moving to a .storyboard launch screen
   // that solution didn't seem feasible anymore.
-  if (Platform.OS === 'ios') {
-    useEffect(() => {
-      AppState.addEventListener('change', handleAppStateChange)
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState: ?string): void => {
+      if (Platform.OS === 'ios') {
+        const previousAppState = appState
 
-      return () => {
-        AppState.removeEventListener('change', handleAppStateChange)
+        setAppState(nextAppState)
+        if (previousAppState != null && nextAppState === 'active') {
+          RNBootSplash.hide()
+        } else if (
+          previousAppState === 'active' &&
+          nextAppState != null &&
+          nextAppState.match(/inactive|background/)
+        ) {
+          RNBootSplash.show()
+        }
       }
-    }, [])
-  }
+    }
+
+    AppState.addEventListener('change', handleAppStateChange)
+
+    return () => {
+      AppState.removeEventListener('change', handleAppStateChange)
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <SafeAreaProvider>

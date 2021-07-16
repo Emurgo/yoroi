@@ -8,7 +8,7 @@ import FlawedWalletScreen from './FlawedWalletScreen'
 
 storiesOf('Flawed Wallet Screen', module).add('default', () => (
   <FlawedWalletScreen
-    onPress={(_e) => action('clicked')}
+    onPress={() => action('clicked')()}
     disableButtons={false}
   />
 ))

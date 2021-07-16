@@ -938,6 +938,7 @@ class SendScreen extends Component<Props, State> {
 
 type ExternalProps = {|
   navigation: Navigation,
+  route: any,
   intl: IntlShape,
 |}
 

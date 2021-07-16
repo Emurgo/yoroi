@@ -17,7 +17,18 @@ import CatalystStep5 from './Step5'
 import CatalystStep6 from './Step6'
 import BiometricAuthScreen from '../Send/BiometricAuthScreen'
 
-const Stack = createStackNavigator()
+type CatalystNavigatorRoutes = {
+  'catalyst-router': any,
+  'catalyst-landing': any,
+  'catalyst-generate-pin': any,
+  'catalyst-confirm-pin': any,
+  'catalyst-generate-trx': any,
+  'catalyst-transaction': any,
+  'catalyst-qr-code': any,
+  'catalyst-biometrics-signing': any,
+}
+
+const Stack = createStackNavigator<any, CatalystNavigatorRoutes, any>()
 
 const CatalystNavigator = () => (
   <Stack.Navigator
