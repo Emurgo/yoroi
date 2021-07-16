@@ -1,4 +1,5 @@
 // @flow
+
 import jestSetup from '../../jestSetup'
 import {checkDeviceVersion, DeprecatedAdaAppError} from './ledgerUtils'
 

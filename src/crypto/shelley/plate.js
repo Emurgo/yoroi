@@ -1,4 +1,5 @@
 // @flow
+
 import {Bip32PrivateKey} from '@emurgo/react-native-haskell-shelley'
 import {walletChecksum, legacyWalletChecksum} from '@emurgo/cip4-js'
 

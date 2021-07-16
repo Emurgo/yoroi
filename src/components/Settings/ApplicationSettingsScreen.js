@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import {ScrollView, StyleSheet, Switch, Platform} from 'react-native'

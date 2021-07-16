@@ -1,5 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 // @flow
+
 import React, {useState, useEffect} from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'

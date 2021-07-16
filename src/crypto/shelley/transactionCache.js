@@ -1,4 +1,5 @@
 // @flow
+
 import {defaultMemoize} from 'reselect'
 import {uniq, fromPairs, max, mapValues, sum} from 'lodash'
 import assert from '../../utils/assert'

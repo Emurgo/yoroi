@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react'
 import {View, StyleSheet, ActivityIndicator} from 'react-native'
 import {connect} from 'react-redux'

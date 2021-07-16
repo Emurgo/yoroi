@@ -1,4 +1,5 @@
 // @flow
+
 import type {State} from '../state'
 
 export type Path = Array<string>

@@ -1,4 +1,5 @@
 // @flow
+
 import {StyleSheet, Dimensions} from 'react-native'
 
 import {theme} from '../../../../styles/config'

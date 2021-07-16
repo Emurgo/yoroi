@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react'
 import {AppRegistry, Text} from 'react-native'
 import {addLocaleData, IntlProvider, type IntlShape} from 'react-intl'

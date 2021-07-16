@@ -1,4 +1,5 @@
 // @flow
+
 import ExtendableError from 'es6-error'
 import loadLocalResource from 'react-native-local-resource'
 import _ from 'lodash'

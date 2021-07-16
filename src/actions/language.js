@@ -1,4 +1,5 @@
 // @flow
+
 import {writeAppSettings, APP_SETTINGS_KEYS, loadTOS} from '../helpers/appSettings'
 
 import {type Dispatch} from 'redux'

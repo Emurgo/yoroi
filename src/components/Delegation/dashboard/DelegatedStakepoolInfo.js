@@ -1,4 +1,5 @@
 // @flow
+
 import React, {useState} from 'react'
 import {View, Image, Linking, TouchableOpacity, Animated} from 'react-native'
 import Clipboard from '@react-native-community/clipboard'

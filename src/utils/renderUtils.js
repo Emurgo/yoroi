@@ -1,4 +1,5 @@
 // @flow
+
 // $FlowFixMe unstable_Profiler is missing fron react annotation
 import React, {unstable_Profiler as Profiler} from 'react'
 import {connect} from 'react-redux'

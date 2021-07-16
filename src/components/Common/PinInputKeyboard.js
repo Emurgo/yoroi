@@ -1,4 +1,5 @@
 // @flow
+
 import React, {useState} from 'react'
 import {Image, View, TouchableHighlight} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'

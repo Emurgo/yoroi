@@ -1,4 +1,5 @@
 // @flow
+
 /* eslint-env jest */
 /* This module sets up Jest */
 import fetch from 'node-fetch'

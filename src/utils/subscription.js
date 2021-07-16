@@ -1,4 +1,5 @@
 // @flow
+
 import assert from './assert'
 // simple subscription implementation
 // Note(ppershing): RxJS overvables are probably too much overkill
