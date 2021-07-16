@@ -1,4 +1,5 @@
 // @flow
+
 import {BigNumber} from 'bignumber.js'
 import {BigNum, LinearFee, TransactionMetadata} from '@emurgo/react-native-haskell-shelley'
 

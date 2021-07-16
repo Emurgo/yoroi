@@ -1,4 +1,5 @@
 // @flow
+
 import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'

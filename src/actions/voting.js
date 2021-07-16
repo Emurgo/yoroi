@@ -1,4 +1,5 @@
 // @flow
+
 import cryptoRandomString from 'crypto-random-string'
 
 import {encryptWithPassword} from '../crypto/catalystCipher'

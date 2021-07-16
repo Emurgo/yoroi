@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react'
 import {Text, TouchableOpacity, StyleSheet, ActivityIndicator} from 'react-native'
 import {compose, withHandlers, withStateHandlers} from 'recompose'

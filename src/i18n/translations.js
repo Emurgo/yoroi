@@ -1,4 +1,5 @@
 // @flow
+
 import enUS from './locales/en-US'
 import jaJP from './locales/ja-JP'
 import koKR from './locales/ko-KR'

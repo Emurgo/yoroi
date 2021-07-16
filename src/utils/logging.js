@@ -1,4 +1,5 @@
 // @flow
+
 export const LogLevel = {
   Debug: 0,
   Info: 1,

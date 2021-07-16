@@ -1,4 +1,5 @@
 // @flow
+
 import {spacing} from '../../../../styles/config'
 
 const style = {

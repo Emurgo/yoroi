@@ -1,4 +1,5 @@
 // @flow
+
 import {type TokenEntry, type TokenEntryPlain} from '../crypto/MultiToken'
 
 import type {RemoteCertificateMeta, RemoteAsset} from '../api/types'

@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react'
 import {View, FlatList} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'

@@ -1,4 +1,5 @@
 // @flow
+
 import {ByronAddress, Bip32PrivateKey, Bip32PublicKey} from '@emurgo/react-native-haskell-shelley'
 import bs58 from 'bs58'
 

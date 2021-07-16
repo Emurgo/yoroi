@@ -1,4 +1,5 @@
 // @flow
+
 import {validateMnemonic, wordlists} from 'bip39'
 import _ from 'lodash'
 

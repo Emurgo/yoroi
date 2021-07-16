@@ -1,4 +1,5 @@
 // @flow
+
 import {BigNumber} from 'bignumber.js'
 
 import {NETWORK_REGISTRY} from './config/types'

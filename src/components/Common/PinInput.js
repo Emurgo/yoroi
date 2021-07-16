@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react'
 import _ from 'lodash'
 import {Image, View, TouchableHighlight} from 'react-native'

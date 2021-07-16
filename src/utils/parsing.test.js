@@ -1,4 +1,5 @@
 // @flow
+
 import jestSetup from '../jestSetup'
 
 import {parseAmountDecimal, InvalidAssetAmount} from './parsing'

@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react'
 import {View, ScrollView, Platform} from 'react-native'
 import {compose} from 'redux'

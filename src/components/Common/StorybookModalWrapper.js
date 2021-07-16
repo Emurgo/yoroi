@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react'
 
 import type {ComponentType} from 'react'

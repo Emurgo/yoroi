@@ -1,4 +1,5 @@
 // @flow
+
 import moment from 'moment'
 
 import assert from '../../utils/assert'
