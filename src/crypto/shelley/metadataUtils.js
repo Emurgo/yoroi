@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-// // @flow
+// @flow
 
 import {
   TransactionMetadatum,
