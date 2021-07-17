@@ -1,7 +1,7 @@
 # Download
 
-| Android | iOS |
-|---|----|
+| Android                                                                                                                                                          | iOS                                                                                                                                                                             |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [<img src="https://pbs.twimg.com/profile_images/1164525925242986497/N5_DCXYQ_400x400.jpg" width="48">](https://play.google.com/store/apps/details?id=com.emurgo) | [<img src="https://pbs.twimg.com/profile_images/1283958620359516160/p7zz5dxZ_400x400.jpg" width="48">](https://apps.apple.com/us/app/emurgos-yoroi-cardano-wallet/id1447326389) |
 
 Looking for the Yoroi Extension? See [here](https://github.com/Emurgo/yoroi-frontend)
@@ -12,7 +12,7 @@ Looking for the Yoroi Extension? See [here](https://github.com/Emurgo/yoroi-fron
 
 ### Both platforms
 
-Make sure your Node.js version matches `v10.14.2`. If you have `nvm` installed, you can just `nvm use`
+Make sure your Node.js version matches `v16.5.0`. If you have `nvm` installed, you can just `nvm use`
 
 ```
 # install rustup
@@ -23,6 +23,7 @@ rustup toolchain install 1.41.0
 rustup install 1.41.0
 rustup target add wasm32-unknown-unknown --toolchain 1.41.0
 ```
+
 Make sure `rustc --version` outputs `1.41.0`, which is the stable version (and not nightly).
 
 ### ios
@@ -49,21 +50,24 @@ This requires a physical Android phone & USB cable
 
 1. Download [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 1. Expose the USB to VirtualBox [guide here](https://www.wikihow.tech/Connect-a-USB-to-Virtualbox)
-    **Note**: You MUST expose USB 2.0 for Android devices. Exposing 3.0 will not work
+   **Note**: You MUST expose USB 2.0 for Android devices. Exposing 3.0 will not work
 1. If your devices still doesn't appear, follow [these steps](https://android.stackexchange.com/a/144967)
-    **Note**: The format for these steps have changed over the years so be careful if you need this.
+   **Note**: The format for these steps have changed over the years so be careful if you need this.
 
 #### Windows (Virtual Device)
 
 On Host (Setup Android device)
+
 1. Run Virtual Device from Android Studio
 
 On VM (Detect VirtualDevice from VirtualBox)
+
 1. `adb tcpip 5555`
 1. `adb kill-server`
 1. `adb connect 10.0.2.2:5555`
 
 On Host (allow app to connect to packaged bundle after build)
+
 1. Open VirtualBox
 1. VM Settings > Network >> Advanced > Port Forwarding
 1. Enter `8081` as Host Port and Guest Port (leave everything else blank)
@@ -81,6 +85,7 @@ follow https://facebook.github.io/react-native/docs/getting-started.html (tab Bu
 1. Install Rust for Android `rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android`
 
 ### First time
+
 Make sure the rust targets for the platform you will work on (android/iOS) have been correctly installed with `rustup show`. Then:
 
 1. `yarn install`
@@ -103,37 +108,46 @@ If these steps fail, try looking at the [android CLI](https://github.com/Emurgo/
 ## Unit Testing
 
 To run all unit tests:
+
 ```bash
 $ yarn test
 ```
 
 You can also run single test files, e.g.:
+
 ```bash
 $ jest wallet.test.js
 ```
 
 ## End-to-end Testing
+
 For E2E tsting we use the [detox](https://github.com/wix/Detox) framework.
 
 ### Requirements
+
 - **iOS**: MacOS 10.13 (High Sierra) or higher, Xcode 10.1 or higher.
 - **Android**: Tested on Android Studio 3.5.1. Simulator: Android >= 9, API >= 28 (but prior versions may work too).
 
 ### Setup (applies to iOS only)
+
 You only need to follow the instructions listed in the Step 1 of Detox's official [docs](https://github.com/wix/Detox/blob/master/docs/Introduction.GettingStarted.md#step-1-install-dependencies):
+
 ```bash
 $ brew tap wix/brew
 $ brew install applesimutils
 $ npm install -g detox-cli
 ```
+
 ### Building and Running
+
 Important: You need to build the app not only the first time you run the tests but also anytime you modify the code.
 
 ```bash
 $ yarn e2e:build-android # for ios just replace "android" by "ios"
 $ yarn e2e:test-android
 ```
-This will build and test a *release* version of the app.
+
+This will build and test a _release_ version of the app.
 
 # Debugging
 
@@ -147,7 +161,6 @@ This will allow you to put breakpoints and everything else you would ever need.
 1. While app is running, open debug menu
 1. Select `Debug JS remotely`
 
-
 # Releasing
 
 1. Follow [Signed Android APK](https://facebook.github.io/react-native/docs/signed-apk-android) to generate and setup signing certificate for Android
@@ -155,12 +168,12 @@ This will allow you to put breakpoints and everything else you would ever need.
 2. `cd android`
 3. `./gradlew assembleMainRelease`
 
-*Important*: You may run into `Could not follow symbolic link third-party/glog-0.3.5/test-driver` error
+_Important_: You may run into `Could not follow symbolic link third-party/glog-0.3.5/test-driver` error
 if you try to build Android release on Mac. This is caused by incorrect linking in react-native/npm.
 To fix the issue, locate path where `automake` is installed (default `/usr/local/share`) and re-link
 file by running command:
 
-```ln -sf /usr/local/share/automake-<version>/test-driver <path_to_repo>/third-party/glog-0.3.5/test-driver```
+`ln -sf /usr/local/share/automake-<version>/test-driver <path_to_repo>/third-party/glog-0.3.5/test-driver`
 
 # Troubleshooting
 
