@@ -261,23 +261,22 @@ const TxHistory = ({
         <StandardModal
           visible={showInsufficientFundsModal}
           title={intl.formatMessage(globalMessages.attention)}
-          children={
-            <View>
-              <Text>
-                {intl.formatMessage(globalMessages.insufficientBalance, {
-                  requiredBalance: formatTokenWithText(CONFIG.CATALYST.DISPLAYED_MIN_ADA, assetMetaData),
-                  currentBalance: formatTokenWithText(tokenBalance.getDefault(), assetMetaData),
-                })}
-              </Text>
-            </View>
-          }
           onRequestClose={() => setShowInsufficientFundsModal(false)}
           primaryButton={{
             label: intl.formatMessage(confirmationMessages.commonButtons.backButton),
             onPress: () => setShowInsufficientFundsModal(false),
           }}
           showCloseIcon
-        />
+        >
+          <View>
+            <Text>
+              {intl.formatMessage(globalMessages.insufficientBalance, {
+                requiredBalance: formatTokenWithText(CONFIG.CATALYST.DISPLAYED_MIN_ADA, assetMetaData),
+                currentBalance: formatTokenWithText(tokenBalance.getDefault(), assetMetaData),
+              })}
+            </Text>
+          </View>
+        </StandardModal>
       </View>
     </SafeAreaView>
   )

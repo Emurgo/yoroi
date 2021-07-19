@@ -32,13 +32,12 @@ const styles = StyleSheet.create({
   },
 })
 
-type Props = {|
+type StepProps = {|
   currentStep: number,
-  totalSteps: number,
+  todoStep: boolean,
   displayStepNumber?: boolean,
 |}
-
-const Step = ({currentStep, displayStepNumber, todoStep}) => (
+const Step = ({currentStep, displayStepNumber, todoStep}: StepProps) => (
   <View style={[styles.step, todoStep && styles.todoStep, displayStepNumber === true && styles.markedStep]}>
     {displayStepNumber === true && (
       <Text small style={styles.stepNumber}>
@@ -48,7 +47,12 @@ const Step = ({currentStep, displayStepNumber, todoStep}) => (
   </View>
 )
 
-const ProgressStep = ({currentStep, totalSteps, displayStepNumber}: Props) => {
+type ProgressStepProps = {|
+  currentStep: number,
+  totalSteps: number,
+  displayStepNumber?: boolean,
+|}
+const ProgressStep = ({currentStep, totalSteps, displayStepNumber}: ProgressStepProps) => {
   const steps = []
   for (let i = 0; i < totalSteps; i++) {
     steps.push(

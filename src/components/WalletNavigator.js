@@ -110,7 +110,7 @@ const WalletTabNavigator = injectIntl(
           if (attributes == null) throw new Error('unknown wallet route')
 
           return {
-            tabBarIcon: ({focused}) => {
+            tabBarIcon: ({focused}: {focused: boolean}) => {
               const icon = focused ? attributes.activeIcon : attributes.normalIcon
               return <Image source={icon} />
             },

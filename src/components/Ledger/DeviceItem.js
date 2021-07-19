@@ -30,17 +30,23 @@ const styles = StyleSheet.create({
   },
 })
 
-type Props = {|
-  onSelect: (device: Device) => any,
-  device: Device,
-|}
+type Props = {
+  device: any,
+  pending: boolean,
+  onPress: () => any,
+}
 
-const DeviceItem = ({device, pending, onPress}) => (
+const DeviceItem = ({device, pending, onPress}: Props) => (
   <TouchableOpacity style={styles.deviceItem} onPress={onPress} disabled={pending}>
     <Text style={styles.deviceName}>{device.name}</Text>
     {pending ? <ActivityIndicator /> : null}
   </TouchableOpacity>
 )
+
+type ExternalProps = {|
+  onSelect: (device: Device) => any,
+  device: Device,
+|}
 
 export default (compose(
   withStateHandlers(
@@ -63,4 +69,4 @@ export default (compose(
         }
       },
   }),
-)(DeviceItem): ComponentType<Props>)
+)(DeviceItem): ComponentType<ExternalProps>)

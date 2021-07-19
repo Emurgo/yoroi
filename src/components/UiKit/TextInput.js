@@ -11,7 +11,7 @@ import {COLORS} from '../../styles/config'
 
 import type {Props as TextInputProps} from 'react-native/Libraries/Components/TextInput/TextInput'
 import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
-import type {Element} from 'react'
+import type {Element, Node} from 'react'
 
 type Props = {|
   ...TextInputProps,
@@ -41,60 +41,60 @@ const useDebounced = (callback, value, delay = 1000) => {
   }, [callback, delay, value])
 }
 
-const TextInput = React.forwardRef<Props, {focus: () => void}>(
-  (
-    {value, containerStyle, secureTextEntry, helperText, errorText, errorOnMount, errorDelay, right, ...restProps},
-    ref,
-  ) => {
-    const [showPassword, setShowPassword] = React.useState(false)
-    const [errorTextEnabled, setErrorTextEnabled] = React.useState(errorOnMount)
-    useDebounced(
-      React.useCallback(() => setErrorTextEnabled(true), []),
-      value,
-      errorDelay,
-    )
+const TextInputWithRef = (
+  {value, containerStyle, secureTextEntry, helperText, errorText, errorOnMount, errorDelay, right, ...restProps}: Props,
+  ref,
+) => {
+  const [showPassword, setShowPassword] = React.useState(false)
+  const [errorTextEnabled, setErrorTextEnabled] = React.useState(errorOnMount)
+  useDebounced(
+    React.useCallback(() => setErrorTextEnabled(true), []),
+    value,
+    errorDelay,
+  )
 
-    return (
-      <View style={containerStyle}>
-        <RNPTextInput
-          ref={ref}
-          value={value}
-          onChange={() => setErrorTextEnabled(false)}
-          autoCorrect={false}
-          autoCompleteType={'off'}
-          theme={{
-            roundness: 8,
-            colors: {
-              background: COLORS.BACKGROUND,
-              placeholder: COLORS.TEXT_INPUT,
-              primary: COLORS.BLACK,
-              error: COLORS.ERROR_TEXT_COLOR,
-            },
-          }}
-          secureTextEntry={secureTextEntry && !showPassword}
-          mode={'outlined'}
-          error={errorTextEnabled && !!errorText}
-          render={(inputProps) => (
-            <InputContainer>
-              <RNTextInput {...inputProps} />
+  return (
+    <View style={containerStyle}>
+      <RNPTextInput
+        ref={ref}
+        value={value}
+        onChange={() => setErrorTextEnabled(false)}
+        autoCorrect={false}
+        autoCompleteType={'off'}
+        theme={{
+          roundness: 8,
+          colors: {
+            background: COLORS.BACKGROUND,
+            placeholder: COLORS.TEXT_INPUT,
+            primary: COLORS.BLACK,
+            error: COLORS.ERROR_TEXT_COLOR,
+          },
+        }}
+        secureTextEntry={secureTextEntry && !showPassword}
+        mode={'outlined'}
+        error={errorTextEnabled && !!errorText}
+        render={(inputProps) => (
+          <InputContainer>
+            <RNTextInput {...inputProps} />
 
-              {right ? <AdornmentContainer style={styles.checkmarkContainer}>{right}</AdornmentContainer> : null}
+            {right ? <AdornmentContainer style={styles.checkmarkContainer}>{right}</AdornmentContainer> : null}
 
-              {secureTextEntry ? (
-                <SecureTextEntryToggle showPassword={showPassword} onPress={() => setShowPassword(!showPassword)} />
-              ) : null}
-            </InputContainer>
-          )}
-          {...restProps}
-        />
+            {secureTextEntry ? (
+              <SecureTextEntryToggle showPassword={showPassword} onPress={() => setShowPassword(!showPassword)} />
+            ) : null}
+          </InputContainer>
+        )}
+        {...restProps}
+      />
 
-        <HelperText type={errorTextEnabled && !!errorText ? 'error' : 'info'} visible>
-          {errorTextEnabled && !!errorText ? errorText : helperText}
-        </HelperText>
-      </View>
-    )
-  },
-)
+      <HelperText type={errorTextEnabled && !!errorText ? 'error' : 'info'} visible>
+        {errorTextEnabled && !!errorText ? errorText : helperText}
+      </HelperText>
+    </View>
+  )
+}
+
+const TextInput = React.forwardRef<Props, {focus: () => void}>(TextInputWithRef)
 
 export const Checkmark = () => <CheckIcon height={24} width={24} color={COLORS.LIGHT_POSITIVE_GREEN} />
 
@@ -106,8 +106,10 @@ const SecureTextEntryToggle = ({showPassword, onPress}: {showPassword: boolean, 
   </AdornmentContainer>
 )
 
-const InputContainer = ({children}) => <View style={styles.inputContainer}>{children}</View>
+const InputContainer = ({children}: {children: Node}) => <View style={styles.inputContainer}>{children}</View>
 
-const AdornmentContainer = ({style, children}) => <View style={[styles.adornmentContainer, style]}>{children}</View>
+const AdornmentContainer = ({style, children}: {style: ViewStyleProp, children: Node}) => (
+  <View style={[styles.adornmentContainer, style]}>{children}</View>
+)
 
 export default TextInput

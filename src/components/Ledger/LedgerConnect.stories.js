@@ -15,7 +15,14 @@ const devices = [
   {name: 'NANO X 9F42', id: 5},
 ]
 
-const LedgerConnectModal = ({visible, onRequestClose, navigation, defaultDevices, useUSB}) => (
+type Props = {
+  visible: any,
+  onRequestClose: any,
+  navigation: any,
+  defaultDevices: any,
+  useUSB: any,
+}
+const LedgerConnectModal = ({visible, onRequestClose, navigation, defaultDevices, useUSB}: Props) => (
   <Modal visible={visible} onRequestClose={onRequestClose}>
     {/* $FlowFixMe */}
     <LedgerConnect

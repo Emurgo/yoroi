@@ -41,9 +41,18 @@ const processPin = async (pin, setPin, pinMaxLength, keyDown, onPinEnter) => {
   }
 }
 
-const PinPlaceholder = ({isActive}) => <View style={[styles.pin, !isActive && styles.pinInactive]} />
+type PinPlaceholderProps = {
+  isActive: boolean,
+}
+const PinPlaceholder = ({isActive}: PinPlaceholderProps) => (
+  <View style={[styles.pin, !isActive && styles.pinInactive]} />
+)
 
-const KeyboardKey = ({value, onPress}) => {
+type KeyboardKeyProps = {
+  value: string,
+  onPress: (value: string) => any,
+}
+const KeyboardKey = ({value, onPress}: KeyboardKeyProps) => {
   const isEmpty = value === ''
   const isBackspace = value === BACKSPACE
   const isDigit = !isEmpty && !isBackspace

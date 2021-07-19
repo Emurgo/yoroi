@@ -56,7 +56,7 @@ const messages = defineMessages({
   },
 })
 
-const CheckSumView = ({icon, checksum}) => (
+const CheckSumView = ({icon, checksum}: {icon: string, checksum: string}) => (
   <View style={styles.checksumView}>
     <WalletAccountIcon iconSeed={icon} />
     <Text style={styles.checksumText}>{checksum}</Text>

@@ -10,6 +10,8 @@ import {confirmationMessages} from '../../i18n/global-messages'
 import styles from './styles/PoolWarningModal.style'
 import image from '../../assets/img/mnemonic_explanation.png'
 
+import type {TextStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
+
 const messages = defineMessages({
   title: {
     id: 'components.stakingcenter.poolwarningmodal.title',
@@ -57,7 +59,12 @@ const getMessage = (reputationInfo, intl: IntlShape): Array<string> => {
   return problems
 }
 
-const BulletPointItem = ({textRow, style}) => {
+type BulletPointProps = {
+  textRow: string,
+  style: TextStyleProp,
+}
+
+const BulletPointItem = ({textRow, style}: BulletPointProps) => {
   return (
     <Text style={style}>
       {'\u2022'} {textRow}

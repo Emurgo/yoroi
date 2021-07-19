@@ -17,16 +17,23 @@ import type {ComponentType} from 'react'
 
 import styles from './styles/LanguagePickerScreen.style'
 
-type ExternalProps = {|
+type Props = {
   navigation: Navigation,
-  route: any,
-|}
+  languageCode: string,
+  changeLanguage: (languageCode: string) => void,
+  handleContinue: () => void,
+}
 
-const LanguagePickerScreen = ({navigation, languageCode, changeLanguage, handleContinue}) => (
+const LanguagePickerScreen = ({navigation, languageCode, changeLanguage, handleContinue}: Props) => (
   <SafeAreaView style={styles.safeAreaView}>
     <LanguagePicker {...{navigation, languageCode, changeLanguage, handleContinue}} />
   </SafeAreaView>
 )
+
+type ExternalProps = {|
+  navigation: Navigation,
+  route: any,
+|}
 
 export default (compose(
   connect(

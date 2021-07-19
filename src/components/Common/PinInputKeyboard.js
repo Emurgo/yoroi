@@ -30,7 +30,11 @@ const processPin = (pin, setPin, pinMaxLength, keyDown) => {
   }
 }
 
-const KeyboardKey = ({value, onKeyDown}) => {
+type KeyboardKeyProps = {
+  value: string,
+  onKeyDown: (value: string) => any,
+}
+const KeyboardKey = ({value, onKeyDown}: KeyboardKeyProps) => {
   const isEmpty = value === ''
   const isBackspace = value === BACKSPACE
   const isDigit = !isEmpty && !isBackspace

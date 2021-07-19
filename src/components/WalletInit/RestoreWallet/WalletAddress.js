@@ -1,7 +1,6 @@
 // @flow
 
 import React, {useState} from 'react'
-import type {ComponentType} from 'react'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {View, Image, TouchableOpacity, Animated, Linking} from 'react-native'
@@ -17,6 +16,7 @@ import {getNetworkConfigById} from '../../../config/networks'
 import styles from './styles/VerifyRestoredWallet.style'
 
 import type {NetworkId} from '../../../config/types'
+import type {ComponentType, Node} from 'react'
 
 const messages = defineMessages({
   copied: {
@@ -27,7 +27,7 @@ const messages = defineMessages({
 
 const COPY_NOTIFICATION_TIME = 5000 // show 'copied' notification for 5 s
 
-const FadeOutView = (props) => {
+const FadeOutView = (props: {children: Node}) => {
   const [fadeAnim] = useState(new Animated.Value(1))
 
   React.useEffect(() => {

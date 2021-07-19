@@ -105,7 +105,7 @@ const messages = defineMessages({
   },
 })
 
-const Label = ({children}) => <Text style={styles.label}>{children}</Text>
+const Label = ({children}: {children: string}) => <Text style={styles.label}>{children}</Text>
 
 const AdaAmount = ({amount, token}: {amount: BigNumber, token: Token}) => {
   const amountStyle = amount.gte(0) ? styles.positiveAmount : styles.negativeAmount
@@ -113,7 +113,13 @@ const AdaAmount = ({amount, token}: {amount: BigNumber, token: Token}) => {
   return <Text style={amountStyle}>{formatTokenWithSymbol(amount, token)}</Text>
 }
 
-const AddressEntry = ({address, path, isHighlighted, showModalForAddress}) => {
+type AddressEntryProps = {
+  address: any,
+  path: any,
+  isHighlighted: any,
+  showModalForAddress: any,
+}
+const AddressEntry = ({address, path, isHighlighted, showModalForAddress}: AddressEntryProps) => {
   return (
     <TouchableOpacity activeOpacity={0.5} onPress={() => showModalForAddress(address)}>
       <Text secondary bold={isHighlighted}>
