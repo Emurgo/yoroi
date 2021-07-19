@@ -1,5 +1,5 @@
 // @flow
-/* eslint-disable max-len */
+/* eslint-disable  */
 
 import React from 'react'
 import Svg, {Path} from 'react-native-svg'
@@ -8,11 +8,7 @@ import {COLORS} from '../styles/config'
 type Props = {width: number, height: number, color?: string}
 
 const AdaIcon = ({width, height, color}: Props) => (
-  <Svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 36.993 44"
-    {...{width, height}}
-  >
+  <Svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36.993 44" {...{width, height}}>
     <Path
       fill={color != null ? color : COLORS.BLACK}
       d="M36.991 26.538c-.053-1.006-.952-1.773-1.984-1.773h-5.61l-1.534-3.89h3.466c1.005 0

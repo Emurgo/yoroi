@@ -1,13 +1,14 @@
 // @flow
+
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {View, ScrollView} from 'react-native'
-import {withHandlers, withStateHandlers} from 'recompose'
+import {withHandlers} from 'recompose'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
-import {Button, Text, Checkbox, ValidatedTextInput, StatusBar} from '../UiKit'
-import {withNavigationTitle} from '../../utils/renderUtils'
+import {Button, Text, Checkbox, TextInput, StatusBar} from '../UiKit'
+import {Checkmark} from '../UiKit/TextInput'
 import {WALLET_ROOT_ROUTES} from '../../RoutesList'
 import {walletNameSelector, isHWSelector} from '../../selectors'
 import {removeCurrentWallet} from '../../actions'
@@ -16,53 +17,46 @@ import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 import styles from './styles/RemoveWalletScreen.style'
 
 import type {State} from '../../state'
+import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.settings.removewalletscreen.title',
-    defaultMessage: 'Remove wallet',
-    description: 'some desc',
-  },
   descriptionParagraph1: {
     id: 'components.settings.removewalletscreen.descriptionParagraph1',
-    defaultMessage:
-      'If you really wish to permanently delete the wallet ' +
-      'make sure you have written down the mnemonic.',
-    description: 'some desc',
+    defaultMessage: 'If you really wish to permanently delete the wallet make sure you have written down the mnemonic.',
   },
   descriptionParagraph2: {
     id: 'components.settings.removewalletscreen.descriptionParagraph2',
     defaultMessage: '!!!To confirm this operation type the wallet name below.',
-    description: 'some desc',
   },
   walletName: {
     id: 'components.settings.removewalletscreen.walletName',
     defaultMessage: 'Wallet name',
-    description: 'some desc',
   },
   walletNameInput: {
     id: 'components.settings.removewalletscreen.walletNameInput',
     defaultMessage: 'Wallet name',
-    description: 'some desc',
+  },
+  walletNameMismatchError: {
+    id: 'components.settings.removewalletscreen.walletNameMismatchError',
+    defaultMessage: 'Wallet name does not match',
   },
   remove: {
     id: 'components.settings.removewalletscreen.remove',
     defaultMessage: 'Remove wallet',
-    description: 'some desc',
   },
   hasWrittenDownMnemonic: {
     id: 'components.settings.removewalletscreen.hasWrittenDownMnemonic',
     defaultMessage:
-      'I have written down mnemonic of this wallet and understand ' +
-      'that I cannot recover the wallet without it.',
-    description: 'some desc',
+      'I have written down mnemonic of this wallet and understand that I cannot recover the wallet without it.',
   },
 })
 
-const handleRemoveWallet = ({navigation, removeCurrentWallet}) => async () => {
-  await removeCurrentWallet()
-  navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-}
+const handleRemoveWallet =
+  ({navigation, removeCurrentWallet}) =>
+  async () => {
+    await removeCurrentWallet()
+    navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
+  }
 
 type Prop = {
   intl: IntlShape,
@@ -75,48 +69,38 @@ type Prop = {
   hasMnemonicWrittenDown: boolean,
 }
 
-const RemoveWalletScreen = ({
-  intl,
-  walletName,
-  isHW,
-  handleRemoveWallet,
-  hasMnemonicWrittenDown,
-  setHasMnemonicWrittenDown,
-  typedWalletName,
-  setTypedWalletName,
-}: Prop) => {
-  const disabled =
-    (!isHW && !hasMnemonicWrittenDown) || walletName !== typedWalletName
+const RemoveWalletScreen = ({intl, walletName, isHW, handleRemoveWallet}: Prop) => {
+  const [hasMnemonicWrittenDown, setHasMnemonicWrittenDown] = React.useState(false)
+  const [typedWalletName, setTypedWalletName] = React.useState('')
+
+  const disabled = (!isHW && !hasMnemonicWrittenDown) || walletName !== typedWalletName
 
   return (
     <View style={styles.container}>
       <StatusBar type="dark" />
 
       <View style={styles.descriptionContainer}>
-        {!isHW && (
-          <Text style={styles.description}>
-            {intl.formatMessage(messages.descriptionParagraph1)}
-          </Text>
-        )}
-        <Text style={styles.description}>
-          {intl.formatMessage(messages.descriptionParagraph2)}
-        </Text>
+        {!isHW && <Text style={styles.description}>{intl.formatMessage(messages.descriptionParagraph1)}</Text>}
+        <Text style={styles.description}>{intl.formatMessage(messages.descriptionParagraph2)}</Text>
       </View>
 
-      <ScrollView
-        contentContainerStyle={styles.screenContainer}
-        keyboardDismissMode="on-drag"
-      >
+      <ScrollView contentContainerStyle={styles.screenContainer} keyboardDismissMode="on-drag">
         <View style={styles.walletInfo}>
-          <Text style={styles.walletNameLabel}>
-            {intl.formatMessage(messages.walletName)}
-          </Text>
+          <Text style={styles.walletNameLabel}>{intl.formatMessage(messages.walletName)}</Text>
           <Text style={styles.walletName}>{walletName}</Text>
 
-          <ValidatedTextInput
+          <Spacer />
+
+          <TextInput
+            autoFocus
+            enablesReturnKeyAutomatically
             label={intl.formatMessage(messages.walletNameInput)}
             value={typedWalletName}
             onChangeText={setTypedWalletName}
+            right={typedWalletName === walletName ? <Checkmark /> : undefined}
+            errorText={
+              typedWalletName !== walletName ? intl.formatMessage(messages.walletNameMismatchError) : undefined
+            }
           />
         </View>
       </ScrollView>
@@ -152,26 +136,10 @@ export default injectIntl(
         removeCurrentWallet,
       },
     ),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
-    withStateHandlers(
-      {
-        hasMnemonicWrittenDown: false,
-        typedWalletName: '',
-      },
-      {
-        setHasMnemonicWrittenDown: () => (value) => ({
-          hasMnemonicWrittenDown: value,
-        }),
-        setTypedWalletName: () => (value) => ({typedWalletName: value}),
-      },
-    ),
     withHandlers({
-      handleRemoveWallet: ignoreConcurrentAsyncHandler(
-        handleRemoveWallet,
-        1000,
-      ),
+      handleRemoveWallet: ignoreConcurrentAsyncHandler(handleRemoveWallet, 1000),
     }),
   )(RemoveWalletScreen),
 )
+
+const Spacer = ({height = 16, style}: {height?: number, style?: ViewStyleProp}) => <View style={[{height}, style]} />

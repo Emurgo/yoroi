@@ -1,4 +1,5 @@
 // @flow
+
 /* eslint-env jest */
 import jestSetup from '../../jestSetup'
 
@@ -9,17 +10,13 @@ import {NETWORKS, getCardanoNetworkConfigById} from '../../config/networks'
 jestSetup.setup()
 jest.setTimeout(30 * 1000)
 
-const networkConfig = getCardanoNetworkConfigById(
-  NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-)
+const networkConfig = getCardanoNetworkConfigById(NETWORKS.HASKELL_SHELLEY.NETWORK_ID)
 const backendConfig = networkConfig.BACKEND
 
 describe('History API', () => {
   it('can fetch history', async () => {
     const bestBlock = await api.getBestBlock(backendConfig)
-    const addresses = [
-      'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
-    ]
+    const addresses = ['Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7']
     const request = {
       addresses,
       untilBlock: bestBlock.hash != null ? bestBlock.hash : '',
@@ -46,23 +43,17 @@ describe('History API', () => {
     // We are async
     expect.assertions(1)
 
-    await expect(api.fetchNewTxHistory(request, backendConfig)).rejects.toThrow(
-      ApiError,
-    )
+    await expect(api.fetchNewTxHistory(request, backendConfig)).rejects.toThrow(ApiError)
   })
 
   it('throws ApiHistoryError on bad request', async () => {
-    const addresses = [
-      'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
-    ]
+    const addresses = ['Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7']
     const request = {
       addresses,
-      untilBlock:
-        '6ac8fc52c0a9587357c7a1e91bbe8c744127cc107947c05616635ccc7c7701fc',
+      untilBlock: '6ac8fc52c0a9587357c7a1e91bbe8c744127cc107947c05616635ccc7c7701fc',
       after: {
         // should give REFERENCE_BLOCK_MISMATCH
-        block:
-          '0000000000000000000000000000000000000000000000000000000000000000',
+        block: '0000000000000000000000000000000000000000000000000000000000000000',
         tx: 'ea2b2abb9bf440a8ab89685e359e88399802c002383a21e4d09a7d636a9514d2',
       },
     }
@@ -70,9 +61,7 @@ describe('History API', () => {
     // We are async
     expect.assertions(1)
 
-    await expect(api.fetchNewTxHistory(request, backendConfig)).rejects.toThrow(
-      ApiHistoryError,
-    )
+    await expect(api.fetchNewTxHistory(request, backendConfig)).rejects.toThrow(ApiHistoryError)
   })
 
   it('filters used addresses', async () => {

@@ -3,12 +3,10 @@
 import React from 'react'
 import {View, SafeAreaView, Image, ActivityIndicator} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
-import {connect} from 'react-redux'
-import {compose} from 'redux'
-import {withHandlers, withStateHandlers} from 'recompose'
-import {isEmpty} from 'lodash'
+import {useSelector} from 'react-redux'
+import {CONFIG} from '../../config/config'
 
-import {Button, ValidatedTextInput, ProgressStep} from '../UiKit'
+import {Button, TextInput, ProgressStep} from '../UiKit'
 import {getWalletNameError, validateWalletName} from '../../utils/validators'
 import globalMessages from '../../../src/i18n/global-messages'
 import {walletNamesSelector} from '../../selectors'
@@ -16,8 +14,8 @@ import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 
 import styles from './styles/WalletNameForm.style'
 
-import type {ComponentType} from 'react'
-import type {TextStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
+import type {TextStyleProp, ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
+import type {ImageSource} from 'react-native/Libraries/Image/ImageSource'
 
 const messages = defineMessages({
   walletNameInputLabel: {
@@ -30,115 +28,84 @@ const messages = defineMessages({
   },
 })
 
-const WalletNameForm = (
-  {
-    intl,
-    onPress,
-    name,
-    image,
-    validateForm,
-    setName,
-    progress,
-    containerStyle,
-    buttonStyle,
-    topContent,
-    bottomContent,
-    isWaiting = false,
-  }: {intl: IntlShape} & Object /* TODO: type */,
-) => {
-  const validationErrors = validateForm()
-  return (
-    <SafeAreaView style={styles.safeAreaView}>
-      {progress != null && (
-        <ProgressStep
-          currentStep={progress.currentStep}
-          totalSteps={progress.totalSteps}
-          displayStepNumber
-        />
-      )}
-      <View style={[styles.container, containerStyle]}>
-        <View style={styles.heading}>
-          {image != null && <Image source={image} />}
-        </View>
-        {topContent}
-        <ValidatedTextInput
-          label={intl.formatMessage(messages.walletNameInputLabel)}
-          value={name}
-          onChangeText={setName}
-          error={getWalletNameError(
-            {
-              tooLong: intl.formatMessage(
-                globalMessages.walletNameErrorTooLong,
-              ),
-              nameAlreadyTaken: intl.formatMessage(
-                globalMessages.walletNameErrorNameAlreadyTaken,
-              ),
-            },
-            validationErrors,
-          )}
-        />
-        {bottomContent}
-      </View>
-      <View style={styles.buttonContainer}>
-        <Button
-          block
-          onPress={onPress}
-          title={intl.formatMessage(messages.save)}
-          style={[styles.button, buttonStyle]}
-          disabled={!isEmpty(validationErrors)}
-          testID="saveWalletButton"
-        />
-      </View>
-      {isWaiting === true && <ActivityIndicator />}
-    </SafeAreaView>
-  )
-}
-
-type ExternalProps = {|
+type Props = {|
   intl: IntlShape,
-  onSubmit: ({name: string}) => PossiblyAsync<void>,
+  onSubmit: ({name: string}) => any,
   defaultWalletName?: string,
-  image?: string,
+  image?: ImageSource,
   progress?: {
     currentStep: number,
     totalSteps: number,
   },
-  containerStyle?: TextStyleProp,
+  containerStyle?: ViewStyleProp,
   buttonStyle?: TextStyleProp,
   topContent?: React$Node,
   bottomContent?: React$Node,
   isWaiting?: boolean,
 |}
 
-export default injectIntl(
-  (compose(
-    connect(
-      (state) => ({
-        walletNames: walletNamesSelector(state),
-      }),
-      {
-        validateWalletName,
-      },
-    ),
-    withStateHandlers(
-      ({defaultWalletName = ''}) => ({name: defaultWalletName}),
-      {
-        setName: () => (name) => ({name}),
-      },
-    ),
-    withHandlers({
-      onPress: ignoreConcurrentAsyncHandler(
-        ({onSubmit, name}) => async () => {
-          await onSubmit({name})
-        },
-        1000,
-      ),
-      validateWalletName: ({walletNames}) => (walletName) =>
-        validateWalletName(walletName, null, walletNames),
-    }),
-    withHandlers({
-      validateForm: ({name, validateWalletName}) => () =>
-        validateWalletName(name),
-    }),
-  )(WalletNameForm): ComponentType<ExternalProps>),
-)
+const WalletNameForm = ({
+  intl,
+  onSubmit,
+  image,
+  progress,
+  containerStyle,
+  buttonStyle,
+  topContent,
+  bottomContent,
+  isWaiting = false,
+}: Props) => {
+  const [name, setName] = React.useState(CONFIG.HARDWARE_WALLETS.LEDGER_NANO.DEFAULT_WALLET_NAME || '')
+  const walletNames = useSelector(walletNamesSelector)
+  const validationErrors = validateWalletName(name, null, walletNames)
+  const hasErrors = Object.keys(validationErrors).length > 0
+  const errorMessages = {
+    tooLong: intl.formatMessage(globalMessages.walletNameErrorTooLong),
+    nameAlreadyTaken: intl.formatMessage(globalMessages.walletNameErrorNameAlreadyTaken),
+    mustBeFilled: intl.formatMessage(globalMessages.walletNameErrorMustBeFilled),
+  }
+  const walletNameErrorText = getWalletNameError(errorMessages, validationErrors) || undefined
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const submit = React.useCallback(ignoreConcurrentAsyncHandler(() => () => onSubmit({name}), 1000)(), [onSubmit, name])
+
+  return (
+    <SafeAreaView style={styles.safeAreaView}>
+      {progress != null && (
+        <ProgressStep currentStep={progress.currentStep} totalSteps={progress.totalSteps} displayStepNumber />
+      )}
+
+      <View style={[styles.container, containerStyle]}>
+        <View style={styles.heading}>{image != null && <Image source={image} />}</View>
+
+        {topContent}
+
+        <TextInput
+          autoFocus
+          label={intl.formatMessage(messages.walletNameInputLabel)}
+          value={name}
+          onChangeText={setName}
+          errorText={walletNameErrorText}
+          disabled={isWaiting}
+        />
+
+        {bottomContent}
+      </View>
+
+      <View style={styles.buttonContainer}>
+        <Button
+          block
+          onPress={submit}
+          title={intl.formatMessage(messages.save)}
+          style={[styles.button, buttonStyle]}
+          disabled={hasErrors || isWaiting}
+          testID="saveWalletButton"
+        />
+      </View>
+
+      {isWaiting ? <ActivityIndicator /> : null}
+    </SafeAreaView>
+  )
+}
+
+export default injectIntl(WalletNameForm)

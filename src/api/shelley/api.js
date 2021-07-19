@@ -1,4 +1,5 @@
 // @flow
+
 import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
 
@@ -27,13 +28,10 @@ import type {
 
 type Addresses = Array<string>
 
-export const checkServerStatus = (
-  config: BackendConfig,
-): Promise<ServerStatusResponse> => fetchDefault('status', null, config, 'GET')
+export const checkServerStatus = (config: BackendConfig): Promise<ServerStatusResponse> =>
+  fetchDefault('status', null, config, 'GET')
 
-export const getBestBlock = (
-  config: BackendConfig,
-): Promise<BestblockResponse> =>
+export const getBestBlock = (config: BackendConfig): Promise<BestblockResponse> =>
   fetchDefault('v2/bestblock', null, config, 'GET')
 
 export const fetchNewTxHistory = async (
@@ -45,38 +43,26 @@ export const fetchNewTxHistory = async (
     'fetchNewTxHistory: too many addresses',
   )
   const response = await fetchDefault('v2/txs/history', request, config)
-  const transactions = await Promise.all(
-    response.map(checkAndFacadeTransactionAsync),
-  )
+  const transactions = await Promise.all(response.map(checkAndFacadeTransactionAsync))
   return {
     transactions,
     isLast: response.length < config.TX_HISTORY_RESPONSE_LIMIT,
   }
 }
 
-export const filterUsedAddresses = async (
-  addresses: Addresses,
-  config: BackendConfig,
-): Promise<Addresses> => {
+export const filterUsedAddresses = async (addresses: Addresses, config: BackendConfig): Promise<Addresses> => {
   assert.preconditionCheck(
     addresses.length <= config.FILTER_USED_MAX_ADDRESSES,
     'filterUsedAddresses: too many addresses',
   )
   // Take a copy in case underlying data mutates during await
   const copy = [...addresses]
-  const used = await fetchDefault(
-    'v2/addresses/filterUsed',
-    {addresses: copy},
-    config,
-  )
+  const used = await fetchDefault('v2/addresses/filterUsed', {addresses: copy}, config)
   // We need to do this so that we keep original order of addresses
   return copy.filter((addr) => used.includes(addr))
 }
 
-export const fetchUTXOsForAddresses = (
-  addresses: Addresses,
-  config: BackendConfig,
-) => {
+export const fetchUTXOsForAddresses = (addresses: Addresses, config: BackendConfig) => {
   assert.preconditionCheck(
     addresses.length <= config.FETCH_UTXOS_MAX_ADDRESSES,
     'fetchUTXOsForAddresses: too many addresses',
@@ -90,9 +76,7 @@ export const bulkFetchUTXOsForAddresses = async (
 ): Promise<Array<RawUtxo>> => {
   const chunks = _.chunk(addresses, config.FETCH_UTXOS_MAX_ADDRESSES)
 
-  const responses = await Promise.all(
-    chunks.map((addrs) => fetchUTXOsForAddresses(addrs, config)),
-  )
+  const responses = await Promise.all(chunks.map((addrs) => fetchUTXOsForAddresses(addrs, config)))
   return _.flatten(responses)
 }
 
@@ -100,10 +84,7 @@ export const submitTransaction = (signedTx: string, config: BackendConfig) => {
   return fetchDefault('txs/signed', {signedTx}, config)
 }
 
-export const fetchUTXOSumForAddresses = (
-  addresses: Addresses,
-  config: BackendConfig,
-): Promise<{sum: string}> => {
+export const fetchUTXOSumForAddresses = (addresses: Addresses, config: BackendConfig): Promise<{sum: string}> => {
   assert.preconditionCheck(
     addresses.length <= config.FETCH_UTXOS_MAX_ADDRESSES,
     'fetchUTXOSumForAddresses: too many addresses',
@@ -117,21 +98,12 @@ export const bulkFetchUTXOSumForAddresses = async (
 ): Promise<{fundedAddresses: Array<string>, sum: BigNumber}> => {
   const chunks = _.chunk(addresses, config.FETCH_UTXOS_MAX_ADDRESSES)
 
-  const responses = await Promise.all(
-    chunks.map((addrs) => fetchUTXOSumForAddresses(addrs, config)),
-  )
-  const sum = responses.reduce(
-    (x: BigNumber, y) => x.plus(new BigNumber(y.sum || 0)),
-    new BigNumber(0),
-  )
+  const responses = await Promise.all(chunks.map((addrs) => fetchUTXOSumForAddresses(addrs, config)))
+  const sum = responses.reduce((x: BigNumber, y) => x.plus(new BigNumber(y.sum || 0)), new BigNumber(0))
 
-  const responseUTXOAddresses = await Promise.all(
-    chunks.map((addrs) => fetchUTXOsForAddresses(addrs, config)),
-  )
+  const responseUTXOAddresses = await Promise.all(chunks.map((addrs) => fetchUTXOsForAddresses(addrs, config)))
 
-  const fundedAddresses = _.flatten(responseUTXOAddresses).map(
-    (address: any) => address.receiver,
-  )
+  const fundedAddresses = _.flatten(responseUTXOAddresses).map((address: any) => address.receiver)
 
   return {
     fundedAddresses: _.uniq(fundedAddresses),
@@ -139,17 +111,11 @@ export const bulkFetchUTXOSumForAddresses = async (
   }
 }
 
-export const getTxsBodiesForUTXOs = (
-  request: TxBodiesRequest,
-  config: BackendConfig,
-): Promise<TxBodiesResponse> => {
+export const getTxsBodiesForUTXOs = (request: TxBodiesRequest, config: BackendConfig): Promise<TxBodiesResponse> => {
   return fetchDefault('txs/txBodies', request, config)
 }
 
-export const getAccountState = (
-  request: AccountStateRequest,
-  config: BackendConfig,
-): Promise<AccountStateResponse> => {
+export const getAccountState = (request: AccountStateRequest, config: BackendConfig): Promise<AccountStateResponse> => {
   assert.preconditionCheck(
     request.addresses.length <= config.FETCH_UTXOS_MAX_ADDRESSES,
     'getAccountState: too many addresses',
@@ -163,23 +129,15 @@ export const bulkGetAccountState = async (
 ): Promise<AccountStateResponse> => {
   const chunks = _.chunk(addresses, config.FETCH_UTXOS_MAX_ADDRESSES)
 
-  const responses = await Promise.all(
-    chunks.map((addrs) => getAccountState({addresses: addrs}, config)),
-  )
+  const responses = await Promise.all(chunks.map((addrs) => getAccountState({addresses: addrs}, config)))
   return Object.assign({}, ...responses)
 }
 
-export const getPoolInfo = (
-  request: PoolInfoRequest,
-  config: BackendConfig,
-): Promise<PoolInfoResponse> => {
+export const getPoolInfo = (request: PoolInfoRequest, config: BackendConfig): Promise<PoolInfoResponse> => {
   return fetchDefault('getPoolInfo', request, config)
 }
 
-export const getTokenInfo = async (
-  request: TokenInfoRequest,
-  config: BackendConfig,
-): Promise<TokenInfoResponse> => {
+export const getTokenInfo = async (request: TokenInfoRequest, config: BackendConfig): Promise<TokenInfoResponse> => {
   const {tokenIds} = request
   if (config.TOKEN_INFO_SERVICE == null) {
     throw new Error('Cardano wallets should have a Token metadata provider')
@@ -215,10 +173,7 @@ export const getTokenInfo = async (
   }, {})
 }
 
-export const getFundInfo = (
-  config: BackendConfig,
-  isMainnet: boolean,
-): Promise<FundInfoResponse> => {
+export const getFundInfo = (config: BackendConfig, isMainnet: boolean): Promise<FundInfoResponse> => {
   const prefix = isMainnet ? '' : 'api/'
   return fetchDefault(`${prefix}v0/catalyst/fundInfo/`, null, config, 'GET')
 }

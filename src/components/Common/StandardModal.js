@@ -30,16 +30,8 @@ const StandardModal = ({
   secondaryButton,
   showCloseIcon,
 }: Props) => (
-  <Modal
-    visible={visible}
-    onRequestClose={onRequestClose}
-    showCloseIcon={showCloseIcon === true}
-  >
-    <TwoActionView
-      title={title}
-      primaryButton={primaryButton}
-      secondaryButton={secondaryButton}
-    >
+  <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon={showCloseIcon === true}>
+    <TwoActionView title={title} primaryButton={primaryButton} secondaryButton={secondaryButton}>
       {children}
     </TwoActionView>
   </Modal>

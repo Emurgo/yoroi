@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react'
 import {View} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
@@ -30,26 +31,17 @@ type ExternalProps = {
   },
 }
 
-const EpochProgress = ({
-  intl,
-  percentage,
-  currentEpoch,
-  endTime,
-}: ExternalProps) => (
+const EpochProgress = ({intl, percentage, currentEpoch, endTime}: ExternalProps) => (
   <View style={styles.wrapper}>
     <TitledCard title={intl.formatMessage(messages.epochProgressTitle)}>
       <ProgressCircle percentage={percentage} />
       <View style={styles.stats}>
         <View style={styles.row}>
-          <Text style={styles.label}>
-            {intl.formatMessage(globalMessages.epochLabel)}:
-          </Text>
+          <Text style={styles.label}>{intl.formatMessage(globalMessages.epochLabel)}:</Text>
           <Text style={styles.value}>{currentEpoch}</Text>
         </View>
         <View style={styles.row}>
-          <Text style={styles.label}>
-            {intl.formatMessage(messages.endsInLabel)}:
-          </Text>
+          <Text style={styles.label}>{intl.formatMessage(messages.endsInLabel)}:</Text>
           <View style={styles.timeWrapper}>
             {endTime.d && <Text style={styles.timeBlock}>{endTime.d}</Text>}
             <Text style={styles.timeBlock}>{endTime.h}</Text>

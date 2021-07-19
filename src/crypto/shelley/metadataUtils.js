@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 // @flow
+
 import {
   TransactionMetadatum,
   encode_json_str_to_metadatum,
@@ -33,18 +34,12 @@ export async function createAuxiliaryData(
 
 export function parseMetadata(hex: string): any {
   const metadatum = TransactionMetadatum.from_bytes(Buffer.from(hex, 'hex'))
-  const metadataString = decode_metadatum_to_json_str(
-    metadatum,
-    MetadataJsonSchema.BasicConversions,
-  )
+  const metadataString = decode_metadatum_to_json_str(metadatum, MetadataJsonSchema.BasicConversions)
   return metadataString
 }
 
 export function parseMetadataDetailed(hex: string): any {
   const metadatum = TransactionMetadatum.from_bytes(Buffer.from(hex, 'hex'))
-  const metadataString = decode_metadatum_to_json_str(
-    metadatum,
-    MetadataJsonSchema.DetailedSchema,
-  )
+  const metadataString = decode_metadatum_to_json_str(metadatum, MetadataJsonSchema.DetailedSchema)
   return metadataString
 }

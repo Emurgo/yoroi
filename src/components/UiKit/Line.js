@@ -17,8 +17,7 @@ const Line = ({backgroundColor}: Props) => (
   <View
     style={{
       ...styles.container,
-      backgroundColor:
-        backgroundColor != null ? backgroundColor : COLORS.SECONDARY_TEXT,
+      backgroundColor: backgroundColor != null ? backgroundColor : COLORS.SECONDARY_TEXT,
     }}
   />
 )

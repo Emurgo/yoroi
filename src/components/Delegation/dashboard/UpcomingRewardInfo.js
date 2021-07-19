@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react'
 import {View} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
@@ -31,32 +32,18 @@ type ExternalProps = {|
   +showDisclaimer: boolean,
 |}
 
-const UpcomingRewardInfo = ({
-  intl,
-  nextRewardText,
-  followingRewardText,
-  showDisclaimer,
-}: ExternalProps) => {
+const UpcomingRewardInfo = ({intl, nextRewardText, followingRewardText, showDisclaimer}: ExternalProps) => {
   if (nextRewardText != null && followingRewardText != null) {
     return (
-      <View
-        style={[
-          styles.wrapper,
-          showDisclaimer ? styles.wrapperWithDisclaimer : undefined,
-        ]}
-      >
+      <View style={[styles.wrapper, showDisclaimer ? styles.wrapperWithDisclaimer : undefined]}>
         <TitledCard>
           <View style={styles.stats}>
             <View style={styles.row}>
-              <Text style={styles.label}>
-                {intl.formatMessage(messages.nextRewardLabel)}:
-              </Text>
+              <Text style={styles.label}>{intl.formatMessage(messages.nextRewardLabel)}:</Text>
               <Text style={styles.value}>{nextRewardText}</Text>
             </View>
             <View style={styles.row}>
-              <Text style={styles.label}>
-                {intl.formatMessage(messages.followingRewardLable)}:
-              </Text>
+              <Text style={styles.label}>{intl.formatMessage(messages.followingRewardLable)}:</Text>
               <Text style={styles.value}>{followingRewardText}</Text>
             </View>
           </View>

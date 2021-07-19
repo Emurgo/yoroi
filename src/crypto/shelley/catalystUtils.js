@@ -18,7 +18,7 @@ import {
 import {mnemonicToEntropy} from 'bip39'
 import blake2b from 'blake2b'
 
-import {generateAdaMnemonic} from '../byron/util'
+import {generateAdaMnemonic} from '../commonUtils'
 import {CONFIG} from '../../config/config'
 import {Logger} from '../../utils/logging'
 
@@ -50,21 +50,12 @@ export async function generateRegistration(request: {|
    */
 
   const jsonMeta = JSON.stringify({
-    '1': `0x${Buffer.from(await request.catalystPublicKey.as_bytes()).toString(
-      'hex',
-    )}`,
-    '2': `0x${Buffer.from(await request.stakePublicKey.as_bytes()).toString(
-      'hex',
-    )}`,
-    '3': `0x${Buffer.from(await request.rewardAddress.to_bytes()).toString(
-      'hex',
-    )}`,
+    '1': `0x${Buffer.from(await request.catalystPublicKey.as_bytes()).toString('hex')}`,
+    '2': `0x${Buffer.from(await request.stakePublicKey.as_bytes()).toString('hex')}`,
+    '3': `0x${Buffer.from(await request.rewardAddress.to_bytes()).toString('hex')}`,
     '4': request.absSlotNumber,
   })
-  const registrationData = await encode_json_str_to_metadatum(
-    jsonMeta,
-    MetadataJsonSchema.BasicConversions,
-  )
+  const registrationData = await encode_json_str_to_metadatum(jsonMeta, MetadataJsonSchema.BasicConversions)
   Logger.debug(jsonMeta)
   const metadata = await GeneralTransactionMetadata.new()
   await metadata.insert(
@@ -101,7 +92,6 @@ export async function generateRegistration(request: {|
   return auxiliary
 }
 
-// prettier-ignore
 export async function generatePrivateKeyForCatalyst(): Promise<Bip32PrivateKey> {
   let mnemonic
   if (CONFIG.DEBUG.PREFILL_FORMS) {
@@ -112,10 +102,7 @@ export async function generatePrivateKeyForCatalyst(): Promise<Bip32PrivateKey> 
   }
   const bip39entropy = mnemonicToEntropy(mnemonic)
   const EMPTY_PASSWORD = Buffer.from('')
-  const rootKey = await Bip32PrivateKey.from_bip39_entropy(
-    Buffer.from(bip39entropy, 'hex'),
-    EMPTY_PASSWORD,
-  )
+  const rootKey = await Bip32PrivateKey.from_bip39_entropy(Buffer.from(bip39entropy, 'hex'), EMPTY_PASSWORD)
 
   return rootKey
 }

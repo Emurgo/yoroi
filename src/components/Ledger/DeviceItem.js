@@ -1,11 +1,7 @@
 // @flow
+
 import React from 'react'
-import {
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ActivityIndicator,
-} from 'react-native'
+import {Text, TouchableOpacity, StyleSheet, ActivityIndicator} from 'react-native'
 import {compose, withHandlers, withStateHandlers} from 'recompose'
 
 import {COLORS} from '../../styles/config'
@@ -34,21 +30,23 @@ const styles = StyleSheet.create({
   },
 })
 
-type Props = {|
-  onSelect: (device: Device) => any,
-  device: Device,
-|}
+type Props = {
+  device: any,
+  pending: boolean,
+  onPress: () => any,
+}
 
-const DeviceItem = ({device, pending, onPress}) => (
-  <TouchableOpacity
-    style={styles.deviceItem}
-    onPress={onPress}
-    disabled={pending}
-  >
+const DeviceItem = ({device, pending, onPress}: Props) => (
+  <TouchableOpacity style={styles.deviceItem} onPress={onPress} disabled={pending}>
     <Text style={styles.deviceName}>{device.name}</Text>
     {pending ? <ActivityIndicator /> : null}
   </TouchableOpacity>
 )
+
+type ExternalProps = {|
+  onSelect: (device: Device) => any,
+  device: Device,
+|}
 
 export default (compose(
   withStateHandlers(
@@ -60,13 +58,15 @@ export default (compose(
     },
   ),
   withHandlers({
-    onPress: ({setPending, onSelect, device}) => () => {
-      setPending(true)
-      try {
-        onSelect(device)
-      } finally {
-        setPending(false)
-      }
-    },
+    onPress:
+      ({setPending, onSelect, device}) =>
+      () => {
+        setPending(true)
+        try {
+          onSelect(device)
+        } finally {
+          setPending(false)
+        }
+      },
   }),
-)(DeviceItem): ComponentType<Props>)
+)(DeviceItem): ComponentType<ExternalProps>)

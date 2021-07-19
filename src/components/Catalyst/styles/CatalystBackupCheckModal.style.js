@@ -1,4 +1,5 @@
 // @flow
+
 import {theme} from '../../../styles/config'
 
 const style = {

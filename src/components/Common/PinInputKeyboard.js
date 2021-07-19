@@ -1,4 +1,5 @@
 // @flow
+
 import React, {useState} from 'react'
 import {Image, View, TouchableHighlight} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
@@ -29,7 +30,11 @@ const processPin = (pin, setPin, pinMaxLength, keyDown) => {
   }
 }
 
-const KeyboardKey = ({value, onKeyDown}) => {
+type KeyboardKeyProps = {
+  value: string,
+  onKeyDown: (value: string) => any,
+}
+const KeyboardKey = ({value, onKeyDown}: KeyboardKeyProps) => {
   const isEmpty = value === ''
   const isBackspace = value === BACKSPACE
   const isDigit = !isEmpty && !isBackspace
@@ -42,11 +47,7 @@ const KeyboardKey = ({value, onKeyDown}) => {
       disabled={isEmpty}
       testID={`pinKey${value}`}
     >
-      {isBackspace ? (
-        <Image source={backspaceIcon} />
-      ) : (
-        <Text style={styles.keyboardKeyText}>{value}</Text>
-      )}
+      {isBackspace ? <Image source={backspaceIcon} /> : <Text style={styles.keyboardKeyText}>{value}</Text>}
     </TouchableHighlight>
   )
 }

@@ -1,4 +1,5 @@
 // @flow
+
 import jestSetup from '../jestSetup'
 
 import {isCIP1852AccountPath, isValidPath} from './bip44Validators'
@@ -26,13 +27,7 @@ describe('Check BIP44/CIP1852 paths', () => {
   })
 
   it('invalid BIP44 paths', () => {
-    const paths = [
-      undefined,
-      '',
-      [],
-      {},
-      [2147483692, 2147485463, 2147483648, 2147483692, 2147483692, 2147483692],
-    ]
+    const paths = [undefined, '', [], {}, [2147483692, 2147485463, 2147483648, 2147483692, 2147483692, 2147483692]]
     for (const path of paths) {
       expect(isValidPath(path)).toEqual(false)
     }

@@ -1,6 +1,6 @@
 // @flow
 /* eslint-disable camelcase */
-/* eslint-disable max-len */
+/* eslint-disable  */
 import {
   BigNum,
   RewardAddress,
@@ -14,20 +14,13 @@ import {
 } from '@emurgo/react-native-haskell-shelley'
 
 import jestSetup from '../../jestSetup'
-import {
-  CatalystLabels,
-  generateRegistration,
-  isRegistrationOpen,
-} from './catalystUtils'
+import {CatalystLabels, generateRegistration, isRegistrationOpen} from './catalystUtils'
 
 jestSetup.setup()
 
 test('Generate Catalyst registration tx', async () => {
   const stakePrivateKey = await PrivateKey.from_normal_bytes(
-    Buffer.from(
-      'f5beaeff7932a4164d270afde7716067582412e8977e67986cd9b456fc082e3a',
-      'hex',
-    ),
+    Buffer.from('f5beaeff7932a4164d270afde7716067582412e8977e67986cd9b456fc082e3a', 'hex'),
   )
   const catalystPrivateKey = await PrivateKey.from_extended_bytes(
     Buffer.from(
@@ -36,13 +29,11 @@ test('Generate Catalyst registration tx', async () => {
     ),
   )
 
-  // eslint-disable-next-line max-len
+  // eslint-disable-next-line
   // addr1qx0srp4ptag9j2e3rdtesrsxe708j80uhxv2r7utl4jaqm4rhf28yg7fkl6dd329cuxq7tqahhujtt5cmdmp9pa2t2zsp2vc6a (019f0186a15f50592b311b57980e06cf9e791dfcb998a1fb8bfd65d06ea3ba547223c9b7f4d6c545c70c0f2c1dbdf925ae98db761287aa5a85)
   const address = await RewardAddress.new(
     await NetworkInfo.testnet().network_id(),
-    await StakeCredential.from_keyhash(
-      await (await stakePrivateKey.to_public()).hash(),
-    ),
+    await StakeCredential.from_keyhash(await (await stakePrivateKey.to_public()).hash()),
   )
 
   const signer = async (hashedMetadata) => {
@@ -64,24 +55,14 @@ test('Generate Catalyst registration tx', async () => {
     )).to_bytes(),
   )
 
-  const data = await result.get(
-    await BigNum.from_str(CatalystLabels.DATA.toString()),
-  )
+  const data = await result.get(await BigNum.from_str(CatalystLabels.DATA.toString()))
   if (data == null) throw new Error('Should never happen')
 
-  const sig = await result.get(
-    await BigNum.from_str(CatalystLabels.SIG.toString()),
-  )
+  const sig = await result.get(await BigNum.from_str(CatalystLabels.SIG.toString()))
   if (sig == null) throw new Error('Should never happen')
 
-  const dataJson = await decode_metadatum_to_json_str(
-    data,
-    await MetadataJsonSchema.BasicConversions,
-  )
-  const sigJson = await decode_metadatum_to_json_str(
-    sig,
-    await MetadataJsonSchema.BasicConversions,
-  )
+  const dataJson = await decode_metadatum_to_json_str(data, await MetadataJsonSchema.BasicConversions)
+  const sigJson = await decode_metadatum_to_json_str(sig, await MetadataJsonSchema.BasicConversions)
 
   /* eslint-disable quote-props */
   const expectedResult = {
@@ -92,8 +73,7 @@ test('Generate Catalyst registration tx', async () => {
       '4': nonce,
     },
     '61285': {
-      '1':
-        '0x6c2312cd49067ecf0920df7e067199c55b3faef4ec0bce1bd2cfb99793972478c45876af2bc271ac759c5ce40ace5a398b9fdb0e359f3c333fe856648804780e',
+      '1': '0x6c2312cd49067ecf0920df7e067199c55b3faef4ec0bce1bd2cfb99793972478c45876af2bc271ac759c5ce40ace5a398b9fdb0e359f3c333fe856648804780e',
     },
   }
   expect({

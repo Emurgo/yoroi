@@ -6,7 +6,7 @@ import {defineMessages} from 'react-intl'
  * Some messages need to be used in multiple components
  * In order to avoid componenets depending on each other just to resuse translation messages
  * We instead store the shared messages in this file
-*/
+ */
 
 export const confirmationMessages = {
   logout: defineMessages({
@@ -477,6 +477,10 @@ export default defineMessages({
   walletNameErrorNameAlreadyTaken: {
     id: 'global.error.walletNameAlreadyTaken',
     defaultMessage: 'You already have a wallet with this name',
+  },
+  walletNameErrorMustBeFilled: {
+    id: 'global.error.walletNameMustBeFilled',
+    defaultMessage: '!!!Must be filled',
   },
   pleaseWait: {
     id: 'global.pleaseWait',

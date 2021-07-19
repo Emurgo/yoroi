@@ -7,19 +7,10 @@ import {connect} from 'react-redux'
 import {ScrollView, View, Platform} from 'react-native'
 import {withHandlers, withStateHandlers} from 'recompose'
 import SafeAreaView from 'react-native-safe-area-view'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {injectIntl, type IntlShape} from 'react-intl'
 import {CommonActions} from '@react-navigation/routers'
 
-import {
-  Text,
-  Button,
-  OfflineBanner,
-  ValidatedTextInput,
-  StatusBar,
-  Banner,
-  PleaseWaitModal,
-  Modal,
-} from '../UiKit'
+import {Text, Button, OfflineBanner, ValidatedTextInput, StatusBar, Banner, PleaseWaitModal, Modal} from '../UiKit'
 import ErrorModal from '../Common/ErrorModal'
 import {
   easyConfirmationSelector,
@@ -28,18 +19,13 @@ import {
   defaultNetworkAssetSelector,
   tokenInfoSelector,
 } from '../../selectors'
-import globalMessages, {
-  errorMessages,
-  txLabels,
-  confirmationMessages,
-} from '../../i18n/global-messages'
+import globalMessages, {errorMessages, txLabels, confirmationMessages} from '../../i18n/global-messages'
 import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
 import {SEND_ROUTES, WALLET_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
 import {CONFIG} from '../../config/config'
 import KeyStore from '../../crypto/KeyStore'
 import {showErrorDialog, submitTransaction, submitSignedTx} from '../../actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../utils/format'
 import {WrongPassword} from '../../crypto/errors'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
@@ -53,18 +39,6 @@ import type {CreateUnsignedTxResponse} from '../../crypto/shelley/transactionUti
 import type {TokenEntry} from '../../crypto/MultiToken'
 
 import styles from './styles/ConfirmScreen.style'
-
-const messages = defineMessages({
-  title: {
-    id: 'components.send.confirmscreen.title',
-    defaultMessage: '!!!Send',
-    description: 'some desc',
-  },
-  confirmWithLedger: {
-    id: 'components.send.confirmscreen.confirmWithLedger',
-    defaultMessage: '!!!Confirm with Ledger',
-  },
-})
 
 const handleOnConfirm = async (
   navigation,
@@ -83,10 +57,7 @@ const handleOnConfirm = async (
 ) => {
   const signRequest: CreateUnsignedTxResponse = route.params.transactionData
 
-  const submitTx = async <T>(
-    tx: string | ISignRequest<T>,
-    decryptedKey: ?string,
-  ) => {
+  const submitTx = async <T>(tx: string | ISignRequest<T>, decryptedKey: ?string) => {
     await withPleaseWaitModal(async () => {
       if (decryptedKey != null) {
         await submitTransaction(tx, decryptedKey)
@@ -107,10 +78,7 @@ const handleOnConfirm = async (
   try {
     if (isHW) {
       await withDisabledButton(async () => {
-        const signedTx = await walletManager.signTxWithLedger(
-          signRequest,
-          useUSB,
-        )
+        const signedTx = await walletManager.signTxWithLedger(signRequest, useUSB)
         await submitTx(Buffer.from(signedTx.encodedTx).toString('base64'))
       })
       return
@@ -143,13 +111,7 @@ const handleOnConfirm = async (
     }
 
     try {
-      const decryptedData = await KeyStore.getData(
-        walletManager._id,
-        'MASTER_PASSWORD',
-        '',
-        password,
-        intl,
-      )
+      const decryptedData = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
 
       await submitTx(signRequest, decryptedData)
     } catch (e) {
@@ -163,18 +125,11 @@ const handleOnConfirm = async (
     if (e instanceof LocalizableError) {
       setErrorData(
         true,
-        intl.formatMessage(
-          {id: e.id, defaultMessage: e.defaultMessage},
-          e.values,
-        ),
+        intl.formatMessage({id: e.id, defaultMessage: e.defaultMessage}, e.values),
         e.values.response || null, // API errors should include a response
       )
     } else {
-      setErrorData(
-        true,
-        intl.formatMessage(errorMessages.generalTxError.message),
-        e.message || null,
-      )
+      setErrorData(true, intl.formatMessage(errorMessages.generalTxError.message), e.message || null)
     }
   }
 }
@@ -226,8 +181,7 @@ const ConfirmScreen = (
     tokens: Array<TokenEntry>,
   |} = route.params
 
-  const isConfirmationDisabled =
-    !isEasyConfirmationEnabled && !password && !isHW
+  const isConfirmationDisabled = !isEasyConfirmationEnabled && !password && !isHW
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -243,33 +197,25 @@ const ConfirmScreen = (
 
         <ScrollView style={styles.container}>
           <Text small>
-            {intl.formatMessage(txLabels.fees)}:{' '}
-            {formatTokenWithSymbol(fee, defaultAsset)}
+            {intl.formatMessage(txLabels.fees)}: {formatTokenWithSymbol(fee, defaultAsset)}
           </Text>
           <Text small>
-            {intl.formatMessage(txLabels.balanceAfterTx)}:{' '}
-            {formatTokenWithSymbol(balanceAfterTx, defaultAsset)}
+            {intl.formatMessage(txLabels.balanceAfterTx)}: {formatTokenWithSymbol(balanceAfterTx, defaultAsset)}
           </Text>
 
-          <Text style={styles.heading}>
-            {intl.formatMessage(txLabels.receiver)}
-          </Text>
+          <Text style={styles.heading}>{intl.formatMessage(txLabels.receiver)}</Text>
           <Text>{address}</Text>
-          <Text style={styles.heading}>
-            {intl.formatMessage(globalMessages.total)}
-          </Text>
-          <Text style={styles.amount}>
-            {formatTokenWithSymbol(defaultAssetAmount, defaultAsset)}
-          </Text>
+          <Text style={styles.heading}>{intl.formatMessage(globalMessages.total)}</Text>
+          <Text style={styles.amount}>{formatTokenWithSymbol(defaultAssetAmount, defaultAsset)}</Text>
           {tokens.map((t, i) => (
             <Text style={styles.amount} key={i}>
               {formatTokenWithText(t.amount, tokenMetadata[t.identifier])}
             </Text>
           ))}
 
-          {/* eslint-disable indent */
-          !isEasyConfirmationEnabled &&
-            !isHW && (
+          {
+            /* eslint-disable indent */
+            !isEasyConfirmationEnabled && !isHW && (
               <View style={styles.input}>
                 <ValidatedTextInput
                   secureTextEntry
@@ -279,48 +225,36 @@ const ConfirmScreen = (
                 />
               </View>
             )
-          /* eslint-enable indent */
+            /* eslint-enable indent */
           }
           {isHW && <HWInstructions useUSB={useUSB} addMargin />}
         </ScrollView>
         <View style={styles.actions}>
           <Button
             onPress={onConfirm}
-            title={intl.formatMessage(
-              confirmationMessages.commonButtons.confirmButton,
-            )}
+            title={intl.formatMessage(confirmationMessages.commonButtons.confirmButton)}
             disabled={isConfirmationDisabled || buttonDisabled}
           />
         </View>
       </View>
 
-      {/* eslint-disable indent */
-      isHW &&
-        Platform.OS === 'android' &&
-        CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT && (
+      {
+        /* eslint-disable indent */
+        isHW && Platform.OS === 'android' && CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT && (
           <>
             <LedgerTransportSwitchModal
-              visible={
-                ledgerDialogStep === LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT
-              }
+              visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT}
               onRequestClose={closeLedgerDialog}
               onSelectUSB={(event) => onChooseTransport(event, true)}
               onSelectBLE={(event) => onChooseTransport(event, false)}
               showCloseIcon
             />
-            <Modal
-              visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.LEDGER_CONNECT}
-              onRequestClose={closeLedgerDialog}
-            >
-              <LedgerConnect
-                onConnectBLE={onConnectBLE}
-                onConnectUSB={onConnectUSB}
-                useUSB={useUSB}
-              />
+            <Modal visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.LEDGER_CONNECT} onRequestClose={closeLedgerDialog}>
+              <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={useUSB} />
             </Modal>
           </>
         )
-      /* eslint-enable indent */
+        /* eslint-enable indent */
       }
       <ErrorModal
         visible={showErrorModal}
@@ -388,94 +322,89 @@ export default injectIntl(
         }),
       },
     ),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
     withHandlers({
-      withPleaseWaitModal: ({setSendingTransaction}) => async (
-        func: () => Promise<void>,
-      ): Promise<void> => {
-        setSendingTransaction(true)
-        try {
-          await func()
-        } finally {
-          setSendingTransaction(false)
-        }
-      },
-      withDisabledButton: ({setButtonDisabled}) => async (
-        func: () => Promise<void>,
-      ): Promise<void> => {
-        setButtonDisabled(true)
-        try {
-          await func()
-        } finally {
-          setButtonDisabled(false)
-        }
-      },
+      withPleaseWaitModal:
+        ({setSendingTransaction}) =>
+        async (func: () => Promise<void>): Promise<void> => {
+          setSendingTransaction(true)
+          try {
+            await func()
+          } finally {
+            setSendingTransaction(false)
+          }
+        },
+      withDisabledButton:
+        ({setButtonDisabled}) =>
+        async (func: () => Promise<void>): Promise<void> => {
+          setButtonDisabled(true)
+          try {
+            await func()
+          } finally {
+            setButtonDisabled(false)
+          }
+        },
     }),
     withHandlers({
-      onChooseTransport: ({
-        hwDeviceInfo,
-        setUseUSB,
-        openLedgerConnect,
-        closeLedgerDialog,
-      }) => (event, useUSB) => {
-        setUseUSB(useUSB)
-        if (
-          (useUSB && hwDeviceInfo.hwFeatures.deviceObj == null) ||
-          (!useUSB && hwDeviceInfo.hwFeatures.deviceId == null)
-        ) {
-          openLedgerConnect()
-        } else {
+      onChooseTransport:
+        ({hwDeviceInfo, setUseUSB, openLedgerConnect, closeLedgerDialog}) =>
+        (event, useUSB) => {
+          setUseUSB(useUSB)
+          if (
+            (useUSB && hwDeviceInfo.hwFeatures.deviceObj == null) ||
+            (!useUSB && hwDeviceInfo.hwFeatures.deviceId == null)
+          ) {
+            openLedgerConnect()
+          } else {
+            closeLedgerDialog()
+          }
+        },
+      onConnectUSB:
+        ({setLedgerDeviceObj, closeLedgerDialog}) =>
+        async (deviceObj) => {
+          await setLedgerDeviceObj(deviceObj)
           closeLedgerDialog()
-        }
-      },
-      onConnectUSB: ({setLedgerDeviceObj, closeLedgerDialog}) => async (
-        deviceObj,
-      ) => {
-        await setLedgerDeviceObj(deviceObj)
-        closeLedgerDialog()
-      },
-      onConnectBLE: ({setLedgerDeviceId, closeLedgerDialog}) => async (
-        deviceId,
-      ) => {
-        await setLedgerDeviceId(deviceId)
-        closeLedgerDialog()
-      },
+        },
+      onConnectBLE:
+        ({setLedgerDeviceId, closeLedgerDialog}) =>
+        async (deviceId) => {
+          await setLedgerDeviceId(deviceId)
+          closeLedgerDialog()
+        },
       onConfirm: ignoreConcurrentAsyncHandler(
         (
-          {
-            navigation,
-            route,
-            isHW,
-            hwDeviceInfo,
-            isEasyConfirmationEnabled,
-            password,
-            submitTransaction,
-            submitSignedTx,
-            withPleaseWaitModal,
-            withDisabledButton,
-            intl,
-            useUSB,
-            setErrorData,
-          }: {intl: IntlShape} & Object /* TODO: type */,
-        ) => async (_event) => {
-          await handleOnConfirm(
-            navigation,
-            route,
-            isHW,
-            hwDeviceInfo,
-            isEasyConfirmationEnabled,
-            password,
-            submitTransaction,
-            submitSignedTx,
-            withPleaseWaitModal,
-            withDisabledButton,
-            intl,
-            useUSB,
-            setErrorData,
-          )
-        },
+            {
+              navigation,
+              route,
+              isHW,
+              hwDeviceInfo,
+              isEasyConfirmationEnabled,
+              password,
+              submitTransaction,
+              submitSignedTx,
+              withPleaseWaitModal,
+              withDisabledButton,
+              intl,
+              useUSB,
+              setErrorData,
+            }: {intl: IntlShape} & Object /* TODO: type */,
+          ) =>
+          async (_event) => {
+            await handleOnConfirm(
+              navigation,
+              route,
+              isHW,
+              hwDeviceInfo,
+              isEasyConfirmationEnabled,
+              password,
+              submitTransaction,
+              submitSignedTx,
+              withPleaseWaitModal,
+              withDisabledButton,
+              intl,
+              useUSB,
+              setErrorData,
+            )
+          },
         1000,
       ),
     }),

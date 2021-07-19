@@ -18,16 +18,9 @@ import type {Address, AddressedUtxo, Addressing, Value} from '../types'
 
 const PRIMARY_ASSET_CONSTANTS = CONFIG.PRIMARY_ASSET_CONSTANTS
 
-export const shelleyTxEqual = async (
-  req1: TransactionBuilder,
-  req2: TransactionBuilder,
-): Promise<boolean> => {
-  const tx1Hex = Buffer.from(await (await req1.build()).to_bytes()).toString(
-    'hex',
-  )
-  const tx2Hex = Buffer.from(await (await req2.build()).to_bytes()).toString(
-    'hex',
-  )
+export const shelleyTxEqual = async (req1: TransactionBuilder, req2: TransactionBuilder): Promise<boolean> => {
+  const tx1Hex = Buffer.from(await (await req1.build()).to_bytes()).toString('hex')
+  const tx2Hex = Buffer.from(await (await req2.build()).to_bytes()).toString('hex')
   return tx1Hex === tx2Hex
 }
 
@@ -57,9 +50,7 @@ type LedgerNanoCatalystRegistrationTxSignData = {|
   nonce: number,
 |}
 
-// prettier-ignore
-export class HaskellShelleyTxSignRequest
-implements ISignRequest<TransactionBuilder> {
+export class HaskellShelleyTxSignRequest implements ISignRequest<TransactionBuilder> {
   senderUtxos: Array<AddressedUtxo>
   unsignedTx: TransactionBuilder
   changeAddr: Array<{| ...Address, ...Value, ...Addressing |}>
@@ -71,7 +62,7 @@ implements ISignRequest<TransactionBuilder> {
     wits: Set<string>, // Vkeywitness
   |}
 
-  ledgerNanoCatalystRegistrationTxSignData: void | LedgerNanoCatalystRegistrationTxSignData;
+  ledgerNanoCatalystRegistrationTxSignData: void | LedgerNanoCatalystRegistrationTxSignData
 
   constructor(data: {
       senderUtxos: Array<AddressedUtxo>,
@@ -97,11 +88,7 @@ implements ISignRequest<TransactionBuilder> {
   }
 
   async txId(): Promise<string> {
-    return Buffer.from(
-      await (await hash_transaction(
-        await this.unsignedTx.build(),
-      )).to_bytes(),
-    ).toString('hex')
+    return Buffer.from(await (await hash_transaction(await this.unsignedTx.build())).to_bytes()).toString('hex')
   }
 
   auxiliary(): void | AuxiliaryData {
@@ -110,9 +97,7 @@ implements ISignRequest<TransactionBuilder> {
 
   async totalInput(): Promise<MultiToken> {
     const values = await multiTokenFromCardanoValue(
-      await (await this.unsignedTx.get_implicit_input()).checked_add(
-        await this.unsignedTx.get_explicit_input()
-      ),
+      await (await this.unsignedTx.get_implicit_input()).checked_add(await this.unsignedTx.get_explicit_input()),
       {
         defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
         defaultNetworkId: this.networkSettingSnapshot.NetworkId,
@@ -124,27 +109,21 @@ implements ISignRequest<TransactionBuilder> {
   }
 
   async totalOutput(): Promise<MultiToken> {
-    return multiTokenFromCardanoValue(
-      await this.unsignedTx.get_explicit_output(),
-      {
-        defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
-        defaultNetworkId: this.networkSettingSnapshot.NetworkId,
-      },
-    )
+    return multiTokenFromCardanoValue(await this.unsignedTx.get_explicit_output(), {
+      defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
+      defaultNetworkId: this.networkSettingSnapshot.NetworkId,
+    })
   }
 
   async fee(): Promise<MultiToken> {
-    const values = new MultiToken(
-      [],
-      {
-        defaultNetworkId: this.networkSettingSnapshot.NetworkId,
-        defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
-      }
-    )
+    const values = new MultiToken([], {
+      defaultNetworkId: this.networkSettingSnapshot.NetworkId,
+      defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
+    })
     const _fee = await this.unsignedTx.get_fee_if_set()
-    const fee = new BigNumber(
-      _fee != null ? await _fee.to_str() : '0',
-    ).plus(await (await this.unsignedTx.get_deposit()).to_str())
+    const fee = new BigNumber(_fee != null ? await _fee.to_str() : '0').plus(
+      await (await this.unsignedTx.get_deposit()).to_str(),
+    )
 
     values.add({
       identifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
@@ -155,10 +134,7 @@ implements ISignRequest<TransactionBuilder> {
   }
 
   async withdrawals(): Promise<Array<{|address: string, amount: MultiToken|}>> {
-    // prettier-ignore
-    const withdrawals = await (await this.unsignedTx
-      .build())
-      .withdrawals()
+    const withdrawals = await (await this.unsignedTx.build()).withdrawals()
     if (withdrawals == null) return []
 
     const withdrawalKeys = await withdrawals.keys()
@@ -170,20 +146,20 @@ implements ISignRequest<TransactionBuilder> {
       const withdrawalAmount = await withdrawalAmountPtr.to_str()
 
       const amount = new MultiToken(
-        [{
-          identifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
-          amount: new BigNumber(withdrawalAmount),
-          networkId: this.networkSettingSnapshot.NetworkId,
-        }],
+        [
+          {
+            identifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
+            amount: new BigNumber(withdrawalAmount),
+            networkId: this.networkSettingSnapshot.NetworkId,
+          },
+        ],
         {
           defaultNetworkId: this.networkSettingSnapshot.NetworkId,
           defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
-        }
+        },
       )
       result.push({
-        address: Buffer.from(
-          await (await rewardAddress.to_address()).to_bytes(),
-        ).toString('hex'),
+        address: Buffer.from(await (await rewardAddress.to_address()).to_bytes()).toString('hex'),
         amount,
       })
     }
@@ -194,7 +170,8 @@ implements ISignRequest<TransactionBuilder> {
     Array<{|
       rewardAddress: string,
       refund: MultiToken,
-    |}>> {
+    |}>,
+  > {
     const certs = await (await this.unsignedTx.build()).certs()
     if (certs == null) return []
 
@@ -203,25 +180,22 @@ implements ISignRequest<TransactionBuilder> {
       const cert = await (await certs.get(i)).as_stake_deregistration()
       if (cert == null) continue
 
-      const address = await RewardAddress.new(
-        this.networkSettingSnapshot.ChainNetworkId,
-        await cert.stake_credential(),
-      )
+      const address = await RewardAddress.new(this.networkSettingSnapshot.ChainNetworkId, await cert.stake_credential())
       result.push({
-        rewardAddress: Buffer.from(
-          await (await address.to_address()).to_bytes(),
-        ).toString('hex'),
+        rewardAddress: Buffer.from(await (await address.to_address()).to_bytes()).toString('hex'),
         // recall: for now you get the full deposit back. May change in the future
         refund: new MultiToken(
-          [{
-            identifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
-            amount: this.networkSettingSnapshot.KeyDeposit,
-            networkId: this.networkSettingSnapshot.NetworkId,
-          }],
+          [
+            {
+              identifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
+              amount: this.networkSettingSnapshot.KeyDeposit,
+              networkId: this.networkSettingSnapshot.NetworkId,
+            },
+          ],
           {
             defaultNetworkId: this.networkSettingSnapshot.NetworkId,
             defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
-          }
+          },
         ),
       })
     }
@@ -233,24 +207,18 @@ implements ISignRequest<TransactionBuilder> {
 
     const outputStrings = []
     for (let i = 0; i < (await outputs.len()); i++) {
-      outputStrings.push(
-        await toHexOrBase58(await (await outputs.get(i)).address()),
-      )
+      outputStrings.push(await toHexOrBase58(await (await outputs.get(i)).address()))
     }
 
     if (!includeChange) {
-      const changeAddrs = this.changeAddr.map(
-        (change) => change.address,
-      )
+      const changeAddrs = this.changeAddr.map((change) => change.address)
       return outputStrings.filter((addr) => !changeAddrs.includes(addr))
     }
     return outputStrings
   }
 
   uniqueSenderAddresses(): Array<string> {
-    return Array.from(
-      new Set(this.senderUtxos.map((utxo) => utxo.receiver)),
-    )
+    return Array.from(new Set(this.senderUtxos.map((utxo) => utxo.receiver)))
   }
 
   async isEqual(tx: ?(mixed | TransactionBuilder)): Promise<boolean> {

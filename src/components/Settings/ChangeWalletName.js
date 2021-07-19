@@ -12,7 +12,6 @@ import _ from 'lodash'
 import {Button, ValidatedTextInput, StatusBar} from '../UiKit'
 import {walletNameSelector, walletNamesSelector} from '../../selectors'
 import {changeWalletName} from '../../actions'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {getWalletNameError, validateWalletName} from '../../utils/validators'
 import globalMessages from '../../i18n/global-messages'
 
@@ -23,10 +22,6 @@ import type {ComponentType} from 'react'
 import type {Navigation} from '../../types/navigation'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.settings.changewalletname.title',
-    defaultMessage: 'Change wallet name',
-  },
   changeButton: {
     id: 'components.settings.changewalletname.changeButton',
     defaultMessage: 'Change name',
@@ -45,21 +40,11 @@ type Props = {
   validateWalletName: () => WalletNameValidationErrors,
 }
 
-const ChangeWalletName = ({
-  walletName,
-  setWalletName,
-  changeAndNavigate,
-  intl,
-  validateWalletName,
-}: Props) => {
+const ChangeWalletName = ({walletName, setWalletName, changeAndNavigate, intl, validateWalletName}: Props) => {
   const validationErrors = validateWalletName()
 
   return (
-    <KeyboardAvoidingView
-      enabled={Platform.OS === 'ios'}
-      behavior="padding"
-      style={styles.keyboardAvoidingView}
-    >
+    <KeyboardAvoidingView enabled={Platform.OS === 'ios'} behavior="padding" style={styles.keyboardAvoidingView}>
       <StatusBar type="dark" />
 
       <SafeAreaView style={styles.safeAreaView}>
@@ -70,12 +55,8 @@ const ChangeWalletName = ({
             onChangeText={setWalletName}
             error={getWalletNameError(
               {
-                tooLong: intl.formatMessage(
-                  globalMessages.walletNameErrorTooLong,
-                ),
-                nameAlreadyTaken: intl.formatMessage(
-                  globalMessages.walletNameErrorNameAlreadyTaken,
-                ),
+                tooLong: intl.formatMessage(globalMessages.walletNameErrorTooLong),
+                nameAlreadyTaken: intl.formatMessage(globalMessages.walletNameErrorNameAlreadyTaken),
               },
               validationErrors,
             )}
@@ -102,9 +83,6 @@ export default injectIntl(
       }),
       {changeWalletName},
     ),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
     withStateHandlers(
       ({oldName}) => ({
         walletName: oldName,
@@ -114,21 +92,20 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      validateWalletName: ({walletName, oldName, walletNames}) => () =>
-        validateWalletName(walletName, oldName, walletNames),
+      validateWalletName:
+        ({walletName, oldName, walletNames}) =>
+        () =>
+          validateWalletName(walletName, oldName, walletNames),
     }),
     withHandlers({
-      changeAndNavigate: ({
-        navigation,
-        walletName,
-        changeWalletName,
-        validateWalletName,
-      }) => async () => {
-        if (!_.isEmpty(validateWalletName())) return
+      changeAndNavigate:
+        ({navigation, walletName, changeWalletName, validateWalletName}) =>
+        async () => {
+          if (!_.isEmpty(validateWalletName())) return
 
-        await changeWalletName(walletName)
-        navigation.goBack()
-      },
+          await changeWalletName(walletName)
+          navigation.goBack()
+        },
     }),
   )(ChangeWalletName): ComponentType<{|
     navigation: Navigation,

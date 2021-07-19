@@ -1,7 +1,7 @@
 {
   "components.common.errormodal.hideError": "Cacher le message d'erreur",
   "components.common.errormodal.showError": "Montrer le message d'erreur",
-  "components.common.fingerprintscreenbase.welcomeMessage": "Bienvenue",
+  "components.common.fingerprintscreenbase.welcomeMessage": "Content de vous revoir",
   "components.common.languagepicker.brazilian": "Português brasileiro",
   "components.common.languagepicker.chinese": "简体中文",
   "components.common.languagepicker.continueButton": "Choisissez votre langue",

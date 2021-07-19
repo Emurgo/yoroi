@@ -1,23 +1,13 @@
 // @flow
 
-import {BigNumber} from 'bignumber.js'
-import {mnemonicToEntropy, generateMnemonic} from 'bip39'
-import {HdWallet, Wallet, PasswordProtect} from 'react-native-cardano'
-import {randomBytes} from 'react-native-randombytes'
+import {ByronAddress, Bip32PrivateKey, Bip32PublicKey} from '@emurgo/react-native-haskell-shelley'
 import bs58 from 'bs58'
-import cryptoRandomString from 'crypto-random-string'
 
-import assert from '../../utils/assert'
+import {generateWalletRootKey, ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
 import {CONFIG} from '../../config/config'
-import {
-  _rethrow,
-  InsufficientFunds,
-  WrongPassword,
-  CardanoError,
-} from '../errors'
+import {CardanoError} from '../errors'
 import {getCardanoByronConfig} from '../../config/networks'
 
-import type {TransactionInput, TransactionOutput, V1SignedTx} from '../types'
 import type {AddressType} from '../commonUtils'
 
 const BYRON_PROTOCOL_MAGIC = getCardanoByronConfig().PROTOCOL_MAGIC
@@ -39,63 +29,58 @@ export const KNOWN_ERROR_MSG = {
   AMOUNT_SUM_OVERFLOW: /CoinError\(OutOfBound/,
 }
 
+/**
+ * returns a root key for HD wallets
+ */
 export const getMasterKeyFromMnemonic = async (mnemonic: string) => {
-  const entropy = mnemonicToEntropy(mnemonic)
-  const masterKey = await _rethrow(HdWallet.fromEnhancedEntropy(entropy, ''))
-  return masterKey
+  const masterKeyPtr = await generateWalletRootKey(mnemonic)
+  return Buffer.from(await masterKeyPtr.as_bytes()).toString('hex')
 }
 
+/**
+ * returns an account-level public key in the legacy Byron path and in the
+ * old CryptoAccount format
+ */
 export const getAccountFromMasterKey = async (
-  masterKey: Buffer,
+  masterKey: string,
   accountIndex?: number = CONFIG.NUMBERS.ACCOUNT_INDEX,
-  protocolMagic?: number = BYRON_PROTOCOL_MAGIC,
 ): Promise<CryptoAccount> => {
-  const wallet = await _rethrow(Wallet.fromMasterKey(masterKey))
-  wallet.config.protocol_magic = protocolMagic
-  return _rethrow(Wallet.newAccount(wallet, accountIndex))
-}
-
-export const encryptData = async (
-  plaintextHex: string,
-  secretKey: string,
-): Promise<string> => {
-  assert.assert(!!plaintextHex, 'encrypt:: !!plaintextHex')
-  assert.assert(!!secretKey, 'encrypt:: !!secretKey')
-  const secretKeyHex = Buffer.from(secretKey, 'utf8').toString('hex')
-  const saltHex = cryptoRandomString({length: 2 * 32})
-  const nonceHex = cryptoRandomString({length: 2 * 12})
-  return await PasswordProtect.encryptWithPassword(
-    secretKeyHex,
-    saltHex,
-    nonceHex,
-    plaintextHex,
-  )
-}
-
-export const decryptData = async (
-  ciphertext: string,
-  secretKey: string,
-): Promise<string> => {
-  assert.assert(!!ciphertext, 'decrypt:: !!cyphertext')
-  assert.assert(!!secretKey, 'decrypt:: !!secretKey')
-  const secretKeyHex = Buffer.from(secretKey, 'utf8').toString('hex')
-  try {
-    return await PasswordProtect.decryptWithPassword(secretKeyHex, ciphertext)
-  } catch (e) {
-    if (e.message === KNOWN_ERROR_MSG.DECRYPT_FAILED) {
-      throw new WrongPassword()
-    }
-    throw new CardanoError(e.message)
+  const masterKeyPtr = await Bip32PrivateKey.from_bytes(Buffer.from(masterKey, 'hex'))
+  const accountKey = await (
+    await (
+      await masterKeyPtr.derive(CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44)
+    ).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)
+  ).derive(accountIndex + CONFIG.NUMBERS.HARD_DERIVATION_START)
+  const accountPubKey = await accountKey.to_public()
+  // match old byron CryptoAccount type
+  return {
+    root_cached_key: Buffer.from(await accountPubKey.as_bytes(), 'hex').toString('hex'),
+    derivation_scheme: 'V2',
   }
 }
 
-export const getAddresses = (
+/**
+ * Generates Byron-era (aka Icarus) addresses from an account-level
+ * BIP32 public key. This key should have been generated following the
+ * Byron-era path (ie. using the BIP44 purpose)
+ */
+export const getAddresses = async (
   account: CryptoAccount,
   type: AddressType,
   indexes: Array<number>,
   protocolMagic?: number = BYRON_PROTOCOL_MAGIC,
-): Promise<Array<string>> =>
-  _rethrow(Wallet.generateAddresses(account, type, indexes, protocolMagic))
+): Promise<Array<string>> => {
+  const addrs = []
+  const chainKeyPtr = await (
+    await Bip32PublicKey.from_bytes(Buffer.from(account.root_cached_key, 'hex'))
+  ).derive(ADDRESS_TYPE_TO_CHANGE[type])
+  for (const i of indexes) {
+    const byronAddr = await ByronAddress.icarus_from_key(await chainKeyPtr.derive(i), protocolMagic)
+    const byronAddrBs58 = await byronAddr.to_base58()
+    addrs.push(byronAddrBs58)
+  }
+  return addrs
+}
 
 export const getAddressesFromMnemonics = async (
   mnemonic: string,
@@ -111,78 +96,18 @@ export const getExternalAddresses = (
   account: CryptoAccount,
   indexes: Array<number>,
   protocolMagic?: number = BYRON_PROTOCOL_MAGIC,
-) => getAddresses(account, 'External', indexes, protocolMagic)
+): Promise<Array<string>> => getAddresses(account, 'External', indexes, protocolMagic)
 
 export const getInternalAddresses = (
   account: CryptoAccount,
   indexes: Array<number>,
   protocolMagic?: number = BYRON_PROTOCOL_MAGIC,
-) => getAddresses(account, 'Internal', indexes, protocolMagic)
+): Promise<Array<string>> => getAddresses(account, 'Internal', indexes, protocolMagic)
 
 export const getAddressInHex = (address: string): string => {
   try {
     return bs58.decode(address).toString('hex')
   } catch (err) {
     throw new CardanoError(err.message)
-  }
-}
-
-export const isValidAddress = async (address: string): Promise<boolean> => {
-  try {
-    return await Wallet.checkAddress(address)
-  } catch (e) {
-    return false
-  }
-}
-
-export const generateAdaMnemonic = () =>
-  generateMnemonic(CONFIG.MNEMONIC_STRENGTH, randomBytes)
-
-export const generateFakeWallet = async () => {
-  const fakeMnemonic = generateAdaMnemonic()
-  const fakeMasterKey = await getMasterKeyFromMnemonic(fakeMnemonic)
-  const wallet = await _rethrow(Wallet.fromMasterKey(fakeMasterKey))
-  return wallet
-}
-
-export const getWalletFromMasterKey = async (
-  masterKeyHex: string,
-  protocolMagic?: number = BYRON_PROTOCOL_MAGIC,
-) => {
-  const wallet = await _rethrow(Wallet.fromMasterKey(masterKeyHex))
-  wallet.config.protocol_magic = protocolMagic
-  return wallet
-}
-
-export const signTransaction = async (
-  wallet: any,
-  inputs: Array<TransactionInput>,
-  outputs: Array<TransactionOutput>,
-  changeAddress: string,
-): Promise<V1SignedTx> => {
-  try {
-    const result = await Wallet.spend(wallet, inputs, outputs, changeAddress)
-
-    return {
-      ...result,
-      fee: new BigNumber(result.fee, 10),
-    }
-  } catch (e) {
-    if (KNOWN_ERROR_MSG.INSUFFICIENT_FUNDS_RE.test(e.message)) {
-      throw new InsufficientFunds()
-    }
-    if (KNOWN_ERROR_MSG.SIGN_TX_BUG.test(e.message)) {
-      throw new InsufficientFunds()
-    }
-    // TODO(ppershing): these should be probably tested as a precondition
-    // before calling Wallet.spend but I expect some additional corner cases
-    if (
-      KNOWN_ERROR_MSG.AMOUNT_OVERFLOW1.test(e.message) ||
-      KNOWN_ERROR_MSG.AMOUNT_OVERFLOW2.test(e.message) ||
-      KNOWN_ERROR_MSG.AMOUNT_SUM_OVERFLOW.test(e.message)
-    ) {
-      throw new InsufficientFunds()
-    }
-    throw new CardanoError(e.message)
   }
 }

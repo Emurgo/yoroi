@@ -10,6 +10,8 @@ import {confirmationMessages} from '../../i18n/global-messages'
 import styles from './styles/PoolWarningModal.style'
 import image from '../../assets/img/mnemonic_explanation.png'
 
+import type {TextStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
+
 const messages = defineMessages({
   title: {
     id: 'components.stakingcenter.poolwarningmodal.title',
@@ -21,13 +23,11 @@ const messages = defineMessages({
   },
   multiBlock: {
     id: 'components.stakingcenter.poolwarningmodal.multiBlock',
-    defaultMessage:
-      '!!!Creates multiple blocks in the same slot (purposely causing forks)',
+    defaultMessage: '!!!Creates multiple blocks in the same slot (purposely causing forks)',
   },
   censoringTxs: {
     id: 'components.stakingcenter.poolwarningmodal.censoringTxs',
-    defaultMessage:
-      '!!!Purposely excludes transactions from blocks (censoring the network)',
+    defaultMessage: '!!!Purposely excludes transactions from blocks (censoring the network)',
   },
   suggested: {
     id: 'components.stakingcenter.poolwarningmodal.suggested',
@@ -59,7 +59,12 @@ const getMessage = (reputationInfo, intl: IntlShape): Array<string> => {
   return problems
 }
 
-const BulletPointItem = ({textRow, style}) => {
+type BulletPointProps = {
+  textRow: string,
+  style: TextStyleProp,
+}
+
+const BulletPointItem = ({textRow, style}: BulletPointProps) => {
   return (
     <Text style={style}>
       {'\u2022'} {textRow}
@@ -75,43 +80,29 @@ type Props = {
   reputationInfo: {node_flags?: number},
 }
 
-const PoolWarningModal = ({
-  intl,
-  visible,
-  onPress,
-  onRequestClose,
-  reputationInfo,
-}: Props) => {
+const PoolWarningModal = ({intl, visible, onPress, onRequestClose, reputationInfo}: Props) => {
   return (
     <Modal visible={visible} onRequestClose={onRequestClose}>
       <ScrollView style={styles.scrollView}>
         <View style={styles.content}>
           <View style={styles.heading}>
-            <Text style={styles.title}>
-              {intl.formatMessage(messages.title)}
-            </Text>
+            <Text style={styles.title}>{intl.formatMessage(messages.title)}</Text>
             <Image source={image} />
           </View>
-          <Text style={styles.paragraph}>
-            {intl.formatMessage(messages.header)}
-          </Text>
+          <Text style={styles.paragraph}>{intl.formatMessage(messages.header)}</Text>
           <View style={styles.reputationInfoView}>
             {getMessage(reputationInfo, intl).map((issue, i) => (
               <BulletPointItem key={i} textRow={issue} style={styles.text} />
             ))}
           </View>
-          <Text style={styles.paragraph}>
-            {intl.formatMessage(messages.suggested)}
-          </Text>
+          <Text style={styles.paragraph}>{intl.formatMessage(messages.suggested)}</Text>
         </View>
         <View style={styles.buttons}>
           <Button
             block
             outlineShelley
             onPress={onPress}
-            title={intl.formatMessage(
-              confirmationMessages.commonButtons.iUnderstandButton,
-            )}
+            title={intl.formatMessage(confirmationMessages.commonButtons.iUnderstandButton)}
             style={styles.button}
           />
         </View>

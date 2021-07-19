@@ -1,4 +1,5 @@
 // @flow
+
 import {StyleSheet} from 'react-native'
 
 import {spacing} from '../../../styles/config'

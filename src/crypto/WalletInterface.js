@@ -24,20 +24,14 @@ import type {
   FundInfoResponse,
   AccountStateResponse,
 } from '../api/types'
-import type {
-  AddressedUtxo,
-  EncryptionMethod,
-  SendTokenList,
-  SignedTx,
-  WalletState,
-} from './types'
+import type {AddressedUtxo, EncryptionMethod, SendTokenList, SignedTx, WalletState} from './types'
 import type {DefaultTokenEntry} from './MultiToken'
 import type {HWDeviceInfo} from './shelley/ledgerUtils'
 import type {DelegationStatus} from './shelley/delegationUtils'
 import type {NetworkId, WalletImplementationId} from '../config/types'
 import type {WalletMeta} from '../state'
 import type {Transaction, DefaultAsset} from '../types/HistoryTransaction'
-import type {Addresses} from './chain'
+import type {Addresses} from './shelley/chain'
 import type {WalletChecksum} from '@emurgo/cip4-js'
 import type {JSONMetadata} from './shelley/metadataUtils'
 
@@ -115,27 +109,13 @@ export interface WalletInterface {
 
   // ============ security & key management ============ //
 
-  encryptAndSaveMasterKey(
-    encryptionMethod: EncryptionMethod,
-    masterKey: string,
-    password?: string,
-  ): Promise<void>;
+  encryptAndSaveMasterKey(encryptionMethod: EncryptionMethod, masterKey: string, password?: string): Promise<void>;
 
-  getDecryptedMasterKey(
-    masterPassword: string,
-    intl: IntlShape,
-  ): Promise<string>;
+  getDecryptedMasterKey(masterPassword: string, intl: IntlShape): Promise<string>;
 
-  enableEasyConfirmation(
-    masterPassword: string,
-    intl: IntlShape,
-  ): Promise<void>;
+  enableEasyConfirmation(masterPassword: string, intl: IntlShape): Promise<void>;
 
-  changePassword(
-    masterPassword: string,
-    newPassword: string,
-    intl: IntlShape,
-  ): Promise<void>;
+  changePassword(masterPassword: string, newPassword: string, intl: IntlShape): Promise<void>;
 
   // =================== subscriptions =================== //
 
@@ -185,10 +165,7 @@ export interface WalletInterface {
     metadata: Array<JSONMetadata> | void,
   ): Promise<ISignRequest<T>>;
 
-  signTx<T>(
-    signRequest: ISignRequest<T>,
-    decryptedMasterKey: string,
-  ): Promise<SignedTx>;
+  signTx<T>(signRequest: ISignRequest<T>, decryptedMasterKey: string): Promise<SignedTx>;
 
   createDelegationTx<T>(
     poolRequest: void | string,
@@ -214,10 +191,7 @@ export interface WalletInterface {
     serverTime: Date | void,
   ): Promise<ISignRequest<T>>;
 
-  signTxWithLedger<T>(
-    request: ISignRequest<T>,
-    useUSB: boolean,
-  ): Promise<SignedTx>;
+  signTxWithLedger<T>(request: ISignRequest<T>, useUSB: boolean): Promise<SignedTx>;
 
   // =================== backend API =================== //
 

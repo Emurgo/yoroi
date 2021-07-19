@@ -15,8 +15,7 @@ import {COLORS} from '../../styles/config'
 
 const messages = defineMessages({
   passwordRequirementsNote: {
-    id:
-      'components.walletinit.passwordstrengthindicator.passwordRequirementsNote',
+    id: 'components.walletinit.passwordstrengthindicator.passwordRequirementsNote',
     defaultMessage: '!!!The password needs to contain at least:',
     description: 'some desc',
   },
@@ -32,12 +31,8 @@ type ValidationCheckIconProps = {|
   label: string,
 |}
 
-const ValidationCheckIcon = ({
-  isSatisfied,
-  label,
-}: ValidationCheckIconProps) => {
-  const iconColor =
-    isSatisfied === true ? COLORS.LIGHT_POSITIVE_GREEN : COLORS.SECONDARY_TEXT
+const ValidationCheckIcon = ({isSatisfied, label}: ValidationCheckIconProps) => {
+  const iconColor = isSatisfied === true ? COLORS.LIGHT_POSITIVE_GREEN : COLORS.SECONDARY_TEXT
   return (
     <View style={styles.row}>
       <CheckIcon width={16} height={16} color={iconColor} />
@@ -51,23 +46,19 @@ type Props = {|
   satisfiesPasswordRequirement?: boolean,
 |}
 
-const LongPasswordStrengthIndicator = injectIntl(
-  ({satisfiesPasswordRequirement, intl}: Props) => (
-    <View>
-      <Text>{intl.formatMessage(messages.passwordRequirementsNote)}</Text>
+const LongPasswordStrengthIndicator = injectIntl(({satisfiesPasswordRequirement, intl}: Props) => (
+  <View>
+    <Text>{intl.formatMessage(messages.passwordRequirementsNote)}</Text>
 
-      <View style={styles.container}>
-        <ValidationCheckIcon
-          isSatisfied={satisfiesPasswordRequirement}
-          label={intl.formatMessage(messages.passwordBigLength)}
-        />
-      </View>
+    <View style={styles.container}>
+      <ValidationCheckIcon
+        isSatisfied={satisfiesPasswordRequirement}
+        label={intl.formatMessage(messages.passwordBigLength)}
+      />
     </View>
-  ),
-)
+  </View>
+))
 
 export default injectIntl(
-  compose(withProps(({password}) => getPasswordStrength(password)))(
-    LongPasswordStrengthIndicator,
-  ),
+  compose(withProps(({password}) => getPasswordStrength(password)))(LongPasswordStrengthIndicator),
 )

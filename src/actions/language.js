@@ -1,17 +1,12 @@
 // @flow
-import {
-  writeAppSettings,
-  APP_SETTINGS_KEYS,
-  loadTOS,
-} from '../helpers/appSettings'
+
+import {writeAppSettings, APP_SETTINGS_KEYS, loadTOS} from '../helpers/appSettings'
 
 import {type Dispatch} from 'redux'
 
 import {setLanguage} from '../i18n'
 
-export const changeLanguage = (languageCode: string) => (
-  dispatch: Dispatch<any>,
-) => {
+export const changeLanguage = (languageCode: string) => (dispatch: Dispatch<any>) => {
   setLanguage(languageCode)
   dispatch({
     path: ['appSettings', 'languageCode'],
@@ -30,9 +25,7 @@ export const changeTOSLanguage = (tos: string) => (dispatch: Dispatch<any>) => {
   })
 }
 
-export const changeAndSaveLanguage = (languageCode: string) => async (
-  dispatch: Dispatch<any>,
-) => {
+export const changeAndSaveLanguage = (languageCode: string) => async (dispatch: Dispatch<any>) => {
   await writeAppSettings(APP_SETTINGS_KEYS.LANG, languageCode)
   const tos = await loadTOS(languageCode)
 

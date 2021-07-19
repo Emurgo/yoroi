@@ -12,20 +12,13 @@ import Screen from '../../components/Screen'
 import {Text, Button, OfflineBanner, Banner, StatusBar} from '../UiKit'
 import AddressDetail from './AddressDetail'
 import AddressesList from './AddressesList'
-import {
-  generateNewReceiveAddress,
-  generateNewReceiveAddressIfNeeded,
-} from '../../actions'
+import {generateNewReceiveAddress, generateNewReceiveAddressIfNeeded} from '../../actions'
 import {
   receiveAddressesSelector,
   canGenerateNewReceiveAddressSelector,
   isUsedAddressIndexSelector,
 } from '../../selectors'
-import {
-  onDidMount,
-  onDidUpdate,
-  withNavigationTitle,
-} from '../../utils/renderUtils'
+import {onDidMount, onDidUpdate} from '../../utils/renderUtils'
 import {AddressDTOCardano} from '../../crypto/shelley/Address.dto'
 
 import styles from './styles/ReceiveScreen.style'
@@ -35,11 +28,6 @@ import type {Navigation} from '../../types/navigation'
 
 const NO_ADDRESS = 'IT IS A BUG TO SEE THIS TEXT'
 const messages = defineMessages({
-  title: {
-    id: 'components.receive.receivescreen.title',
-    defaultMessage: '!!!Receive',
-    description: 'some desc',
-  },
   infoText: {
     id: 'components.receive.receivescreen.infoText',
     defaultMessage:
@@ -76,12 +64,7 @@ const messages = defineMessages({
 })
 
 const ReceiveScreen = (
-  {
-    receiveAddresses,
-    generateNewReceiveAddress,
-    intl,
-    addressLimitReached,
-  }: {intl: IntlShape} & Object /* TODO: type */,
+  {receiveAddresses, generateNewReceiveAddress, intl, addressLimitReached}: {intl: IntlShape} & Object /* TODO: type */,
 ) => {
   const currentAddress = _.last(receiveAddresses) || NO_ADDRESS
   const addressesInfo: Map<string, AddressDTOCardano> = new Map(
@@ -113,18 +96,12 @@ const ReceiveScreen = (
       <SafeAreaView style={styles.safeAreaView}>
         <Screen scroll>
           <View style={styles.addressListHeader}>
-            <Text style={styles.heading}>
-              {intl.formatMessage(messages.unusedAddresses)}
-            </Text>
-            <Text style={styles.heading}>
-              {intl.formatMessage(messages.verifyAddress)}
-            </Text>
+            <Text style={styles.heading}>{intl.formatMessage(messages.unusedAddresses)}</Text>
+            <Text style={styles.heading}>{intl.formatMessage(messages.verifyAddress)}</Text>
           </View>
           <AddressesList showFresh addresses={addressesInfo} />
           <View style={styles.addressListHeader}>
-            <Text style={styles.heading}>
-              {intl.formatMessage(messages.usedAddresses)}
-            </Text>
+            <Text style={styles.heading}>{intl.formatMessage(messages.usedAddresses)}</Text>
           </View>
           <AddressesList addresses={addressesInfo} />
         </Screen>
@@ -148,15 +125,7 @@ export default injectIntl(
         generateNewReceiveAddressIfNeeded,
       },
     ),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
-
-    onDidMount(({generateNewReceiveAddressIfNeeded}) =>
-      generateNewReceiveAddressIfNeeded(),
-    ),
-    onDidUpdate(({generateNewReceiveAddressIfNeeded}, _prevProps) =>
-      generateNewReceiveAddressIfNeeded(),
-    ),
+    onDidMount(({generateNewReceiveAddressIfNeeded}) => generateNewReceiveAddressIfNeeded()),
+    onDidUpdate(({generateNewReceiveAddressIfNeeded}, _prevProps) => generateNewReceiveAddressIfNeeded()),
   )(ReceiveScreen): ComponentType<{navigation: Navigation, intl: IntlShape}>),
 )

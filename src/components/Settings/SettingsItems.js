@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
@@ -12,9 +13,7 @@ import type {ComponentType} from 'react'
 
 import styles from './styles/SettingsItems.style'
 
-const Touchable = <Props>(props: Props) => (
-  <TouchableOpacity {...props} activeOpacity={0.5} />
-)
+const Touchable = <Props>(props: Props) => <TouchableOpacity {...props} activeOpacity={0.5} />
 
 type NavigateToProps = {
   to: string,
@@ -22,8 +21,10 @@ type NavigateToProps = {
 }
 const NavigateTo = (compose(
   withHandlers({
-    onPress: ({to, navigation}: NavigateToProps) => () =>
-      navigation.navigate(to),
+    onPress:
+      ({to, navigation}: NavigateToProps) =>
+      () =>
+        navigation.navigate(to),
   }),
 )((props) => <Touchable {...props} />): ComponentType<NavigateToProps>)
 
@@ -49,15 +50,9 @@ type SettingsItemProps = {|
   disabled?: boolean,
 |}
 
-export const SettingsItem = ({
-  label,
-  children,
-  disabled,
-}: SettingsItemProps) => (
+export const SettingsItem = ({label, children, disabled}: SettingsItemProps) => (
   <View style={styles.item}>
-    <Text style={[styles.label, disabled === true && styles.disabled]}>
-      {label}
-    </Text>
+    <Text style={[styles.label, disabled === true && styles.disabled]}>{label}</Text>
     <View>{children}</View>
   </View>
 )
@@ -81,11 +76,7 @@ type NavigatedSettingsItemProps = {|
   disabled?: boolean,
 |}
 
-export const NavigatedSettingsItem = ({
-  label,
-  navigateTo,
-  disabled,
-}: NavigatedSettingsItemProps) => {
+export const NavigatedSettingsItem = ({label, navigateTo, disabled}: NavigatedSettingsItemProps) => {
   const navigation = useNavigation()
   return (
     <NavigateTo to={navigateTo} navigation={navigation} disabled={disabled}>
@@ -101,10 +92,7 @@ type PressableSettingsItemProps = {|
   onPress: () => any,
 |}
 
-export const PressableSettingsItem = ({
-  label,
-  onPress,
-}: PressableSettingsItemProps) => (
+export const PressableSettingsItem = ({label, onPress}: PressableSettingsItemProps) => (
   <Touchable onPress={onPress}>
     <SettingsItem label={label}>
       <Image source={chevronRight} />

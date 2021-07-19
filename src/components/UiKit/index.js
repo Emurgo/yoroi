@@ -1,4 +1,5 @@
 // @flow
+
 export {default as Banner} from './Banner'
 export {default as BulletPointItem} from './BulletPointItem'
 export {default as Button} from './Button'
@@ -17,3 +18,4 @@ export {default as Line} from './Line'
 export {default as Link} from './Link'
 export {default as WarningBanner} from './WarningBanner'
 export {default as TxIcon} from './TxIcon'
+export {default as TextInput} from './TextInput'

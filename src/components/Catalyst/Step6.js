@@ -6,15 +6,7 @@
  */
 
 import React, {useEffect, useState} from 'react'
-import {
-  View,
-  ScrollView,
-  SafeAreaView,
-  TouchableOpacity,
-  Image,
-  NativeModules,
-  Platform,
-} from 'react-native'
+import {View, ScrollView, SafeAreaView, TouchableOpacity, Image, NativeModules, Platform} from 'react-native'
 import Clipboard from '@react-native-community/clipboard'
 import QRCode from 'react-native-qrcode-svg'
 import {injectIntl, defineMessages} from 'react-intl'
@@ -23,9 +15,8 @@ import {useFocusEffect} from '@react-navigation/native'
 
 import CatalystBackupCheckModal from './CatalystBackupCheckModal'
 import {Text, Button, ProgressStep} from '../UiKit'
-import {withTitle} from '../../utils/renderUtils'
 import {WALLET_ROOT_ROUTES} from '../../RoutesList'
-import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
+import {confirmationMessages} from '../../i18n/global-messages'
 import copyImage from '../../assets/img/copyd.png'
 
 import styles from './styles/Step6.style'
@@ -58,8 +49,7 @@ const messages = defineMessages({
   },
   note: {
     id: 'components.catalyst.step6.note',
-    defaultMessage:
-      '!!!Keep it — you won’t be able to access this code after tapping on Complete.',
+    defaultMessage: '!!!Keep it — you won’t be able to access this code after tapping on Complete.',
   },
   secretCode: {
     id: 'components.catalyst.step6.secretCode',
@@ -82,16 +72,11 @@ type HOCProps = {
 const Step6 = ({intl, navigation, encryptedKey}: HOCProps & Props) => {
   const [countDown, setCountDown] = useState<number>(5)
 
-  useEffect(
-    () => {
-      countDown > 0 && setTimeout(() => setCountDown(countDown - 1), 1000)
-    },
-    [countDown],
-  )
+  useEffect(() => {
+    countDown > 0 && setTimeout(() => setCountDown(countDown - 1), 1000)
+  }, [countDown])
 
-  const [showBackupWarningModal, setShowBackupWarningModal] = useState<boolean>(
-    false,
-  )
+  const [showBackupWarningModal, setShowBackupWarningModal] = useState<boolean>(false)
 
   useFocusEffect(
     // eslint-disable-next-line consistent-return
@@ -119,39 +104,22 @@ const Step6 = ({intl, navigation, encryptedKey}: HOCProps & Props) => {
       <ProgressStep currentStep={6} totalSteps={6} />
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollViewContentContainer}>
-          <Text style={styles.subTitle}>
-            {intl.formatMessage(messages.subTitle)}
-          </Text>
+          <Text style={styles.subTitle}>{intl.formatMessage(messages.subTitle)}</Text>
           <View style={[styles.alertBlock, styles.mb16]}>
-            <Text style={styles.description}>
-              {intl.formatMessage(messages.description)}
-            </Text>
+            <Text style={styles.description}>{intl.formatMessage(messages.description)}</Text>
           </View>
-          <Text style={[styles.description, styles.mb16]}>
-            {intl.formatMessage(messages.description2)}
-          </Text>
-          <Text style={[styles.description, styles.mb16]}>
-            {intl.formatMessage(messages.description3)}
-          </Text>
-          <Text style={[styles.note, styles.mb40]}>
-            {intl.formatMessage(messages.note)}
-          </Text>
+          <Text style={[styles.description, styles.mb16]}>{intl.formatMessage(messages.description2)}</Text>
+          <Text style={[styles.description, styles.mb16]}>{intl.formatMessage(messages.description3)}</Text>
+          <Text style={[styles.note, styles.mb40]}>{intl.formatMessage(messages.note)}</Text>
           {/* for some reason style arrays have issues in current flow version.
              so a regular object spread has been used here */}
           <View style={{...styles.qrCode, ...styles.mb40}}>
             <View style={styles.qrCodeBackground}>
-              <QRCode
-                value={encryptedKey}
-                size={140}
-                backgroundColor="white"
-                color="black"
-              />
+              <QRCode value={encryptedKey} size={140} backgroundColor="white" color="black" />
             </View>
           </View>
           <View>
-            <Text style={[styles.description, styles.mb16]}>
-              {intl.formatMessage(messages.secretCode)}
-            </Text>
+            <Text style={[styles.description, styles.mb16]}>{intl.formatMessage(messages.secretCode)}</Text>
             <View style={styles.secretCode}>
               <View style={styles.key}>
                 <Text>{encryptedKey}</Text>
@@ -167,21 +135,16 @@ const Step6 = ({intl, navigation, encryptedKey}: HOCProps & Props) => {
         <Button
           onPress={() => setShowBackupWarningModal(true)}
           title={
-            // prettier-ignore
             countDown !== 0
               ? countDown.toString()
-              : intl.formatMessage(
-                confirmationMessages.commonButtons.completeButton,
-              )
+              : intl.formatMessage(confirmationMessages.commonButtons.completeButton)
           }
           disabled={countDown !== 0}
         />
         <CatalystBackupCheckModal
           visible={showBackupWarningModal}
           onRequestClose={() => setShowBackupWarningModal(false)}
-          onConfirm={() =>
-            navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)
-          }
+          onConfirm={() => navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)}
         />
       </View>
     </SafeAreaView>
@@ -199,9 +162,5 @@ export default (injectIntl(
       ...dispatchProps,
       ...ownProps,
     }),
-  )(
-    withTitle(Step6, ({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(globalMessages.votingTitle),
-    ),
-  ),
+  )(Step6),
 ): ComponentType<Props>)

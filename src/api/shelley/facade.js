@@ -1,14 +1,12 @@
 // @flow
+
 import moment from 'moment'
 
 import assert from '../../utils/assert'
 import {TRANSACTION_STATUS} from '../../types/HistoryTransaction'
 import {normalizeToAddress} from '../../crypto/shelley/utils'
 
-import type {
-  Transaction,
-  TransactionStatus,
-} from '../../types/HistoryTransaction'
+import type {Transaction, TransactionStatus} from '../../types/HistoryTransaction'
 import type {RawTransaction} from '../../api/types'
 
 const checkAndFacadeStatus = (status: string): TransactionStatus => {
@@ -46,50 +44,28 @@ export const checkValidHash = (data: ?string) => {
   return regex.test(data)
 }
 
-export const checkAndFacadeTransactionAsync = async (
-  tx: RawTransaction,
-): Promise<Transaction> => {
+export const checkAndFacadeTransactionAsync = async (tx: RawTransaction): Promise<Transaction> => {
   tx.inputs.forEach((i) => {
-    assert.assert(
-      checkNonNegativeInt(i.amount),
-      'Invalid input amount',
-      i.amount,
-    )
+    assert.assert(checkNonNegativeInt(i.amount), 'Invalid input amount', i.amount)
   })
 
   tx.outputs.forEach((o) => {
-    assert.assert(
-      checkNonNegativeInt(o.amount),
-      'Invalid output amount',
-      o.amount,
-    )
+    assert.assert(checkNonNegativeInt(o.amount), 'Invalid output amount', o.amount)
   })
 
   await Promise.all(
     tx.inputs.map(async (input) => {
-      assert.assert(
-        (await normalizeToAddress(input.address)) != null,
-        'Invalid input address',
-        input.address,
-      )
+      assert.assert((await normalizeToAddress(input.address)) != null, 'Invalid input address', input.address)
     }),
   )
 
   await Promise.all(
     tx.outputs.map(async (output) => {
-      assert.assert(
-        (await normalizeToAddress(output.address)) != null,
-        'Invalid output address',
-        output.address,
-      )
+      assert.assert((await normalizeToAddress(output.address)) != null, 'Invalid output address', output.address)
     }),
   )
 
-  assert.assert(
-    checkISO8601Date(tx.last_update),
-    'Invalid last_update',
-    tx.last_update,
-  )
+  assert.assert(checkISO8601Date(tx.last_update), 'Invalid last_update', tx.last_update)
 
   assert.assert(checkValidHash(tx.hash), 'Invalid hash', tx.hash)
 
@@ -97,24 +73,13 @@ export const checkAndFacadeTransactionAsync = async (
    * all of the following parameters must exist if the tx was successful
    */
 
-  assert.assert(
-    tx.tx_state !== 'Successful' || checkISO8601Date(tx.time),
-    'Invalid time',
-    tx.time,
-  )
+  assert.assert(tx.tx_state !== 'Successful' || checkISO8601Date(tx.time), 'Invalid time', tx.time)
 
-  assert.assert(
-    tx.tx_state !== 'Successful' || checkValidHash(tx.block_hash),
-    'Invalid block_hash',
-    tx.block_hash,
-  )
+  assert.assert(tx.tx_state !== 'Successful' || checkValidHash(tx.block_hash), 'Invalid block_hash', tx.block_hash)
 
   assert.assert(
     tx.tx_state !== 'Successful' ||
-      (tx.block_num != null &&
-        tx.tx_ordinal != null &&
-        tx.epoch != null &&
-        tx.slot != null),
+      (tx.block_num != null && tx.tx_ordinal != null && tx.epoch != null && tx.slot != null),
     'Successful tx must include full metadata',
     tx.time,
   )

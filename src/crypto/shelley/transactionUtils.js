@@ -1,4 +1,5 @@
 // @flow
+
 import {BigNumber} from 'bignumber.js'
 import {
   BigNum,
@@ -34,9 +35,7 @@ export type CreateUnsignedTxRequest = {|
 
 export type CreateUnsignedTxResponse = HaskellShelleyTxSignRequest
 
-export const createUnsignedTx = async (
-  request: CreateUnsignedTxRequest,
-): Promise<CreateUnsignedTxResponse> => {
+export const createUnsignedTx = async (request: CreateUnsignedTxRequest): Promise<CreateUnsignedTxResponse> => {
   Logger.debug('createUnsignedTx called', request)
   const {
     changeAddr,
@@ -87,9 +86,7 @@ export const createUnsignedTx = async (
             amount: builtSendTokenList(
               request.defaultToken,
               request.tokens,
-              addressedUtxos.map((utxo) =>
-                multiTokenFromRemote(utxo, protocolParams.networkId),
-              ),
+              addressedUtxos.map((utxo) => multiTokenFromRemote(utxo, protocolParams.networkId)),
             ),
           },
         ],
@@ -107,9 +104,7 @@ export const createUnsignedTx = async (
       )
     }
 
-    Logger.debug(
-      `createUnsignedTx success: ${JSON.stringify(unsignedTxResponse)}`,
-    )
+    Logger.debug(`createUnsignedTx success: ${JSON.stringify(unsignedTxResponse)}`)
     return new HaskellShelleyTxSignRequest({
       senderUtxos: unsignedTxResponse.senderUtxos,
       unsignedTx: unsignedTxResponse.txBuilder,

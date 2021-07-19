@@ -23,13 +23,7 @@ type Props = {|
   |},
 |}
 
-const TwoActionView = ({
-  intl,
-  title,
-  children,
-  primaryButton,
-  secondaryButton,
-}: Props) => (
+const TwoActionView = ({intl, title, children, primaryButton, secondaryButton}: Props) => (
   <ScrollView style={styles.scrollView}>
     <View style={styles.content}>
       <View style={styles.heading}>
@@ -43,19 +37,11 @@ const TwoActionView = ({
           outlineOnLight
           block
           onPress={secondaryButton.onPress}
-          title={
-            secondaryButton.label ??
-            intl.formatMessage(confirmationMessages.commonButtons.cancelButton)
-          }
+          title={secondaryButton.label ?? intl.formatMessage(confirmationMessages.commonButtons.cancelButton)}
           style={styles.secondaryButton}
         />
       )}
-      <Button
-        block
-        onPress={primaryButton.onPress}
-        title={primaryButton.label}
-        style={styles.primaryButton}
-      />
+      <Button block onPress={primaryButton.onPress} title={primaryButton.label} style={styles.primaryButton} />
     </View>
   </ScrollView>
 )

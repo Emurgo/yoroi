@@ -12,11 +12,14 @@ import {AddressDTOCardano} from '../../crypto/shelley/Address.dto'
 import type {ComponentType} from 'react'
 
 const _keyExtractor = (addressInfo) => addressInfo?.address
-const _renderItem = ({item: addressInfo}) => (
-  <AddressView addressInfo={addressInfo} />
-)
+const _renderItem = ({item: addressInfo}: {item: any}) => <AddressView addressInfo={addressInfo} />
 
-const AddressesList = ({addresses, isUsedAddressIndex, showFresh}) => {
+type AddressesListProps = {
+  addresses: Map<string, AddressDTOCardano>,
+  isUsedAddressIndex: Dict<boolean>,
+  showFresh?: boolean,
+}
+const AddressesList = ({addresses, isUsedAddressIndex, showFresh}: AddressesListProps) => {
   const toFilter = [...addresses.values()]
   const shownAddresses = showFresh
     ? toFilter.filter((addrInfo) => !isUsedAddressIndex[addrInfo.address])
@@ -24,13 +27,7 @@ const AddressesList = ({addresses, isUsedAddressIndex, showFresh}) => {
   // We want newest first
   shownAddresses.reverse()
 
-  return (
-    <FlatList
-      data={shownAddresses}
-      keyExtractor={_keyExtractor}
-      renderItem={_renderItem}
-    />
-  )
+  return <FlatList data={shownAddresses} keyExtractor={_keyExtractor} renderItem={_renderItem} />
 }
 
 type ExternalProps = {|

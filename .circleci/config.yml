@@ -19,8 +19,8 @@ jobs:
       # install rustup
       - run: curl https://sh.rustup.rs -sSf | sh -s -- -y
       - run: echo 'export PATH=$HOME/.cargo/bin/:$PATH' >> $BASH_ENV
-      # use 1.32.0 version.
-      - run: rustup install 1.32.0
+      # use 1.41.0 version.
+      - run: rustup install 1.41.0
       - run: rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
       - run: cargo install cargo-lipo
 
@@ -89,8 +89,8 @@ jobs:
       # install rustup
       - run: curl https://sh.rustup.rs -sSf | sh -s -- -y
       - run: echo 'export PATH=$HOME/.cargo/bin/:$PATH' >> $BASH_ENV
-      # use 1.32.0 version.
-      - run: rustup install 1.32.0
+      # use 1.41.0 version.
+      - run: rustup install 1.41.0
       - run: rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
       - run: cargo install cargo-lipo
       - run: export

@@ -1,14 +1,13 @@
 // @flow
+
 import React from 'react'
 import {createStackNavigator} from '@react-navigation/stack'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {Button} from '../UiKit'
 import ReceiveScreen from './ReceiveScreen'
 import {RECEIVE_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
-import {
-  defaultNavigationOptions,
-  defaultStackNavigatorOptions,
-} from '../../navigationOptions'
+import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
 import iconGear from '../../assets/img/gear.png'
 
 import styles from './styles/SettingsButton.style'
@@ -17,24 +16,30 @@ type ReceiveScreenNavigatorRoute = {
   'receive-ada': {title: string},
 }
 
+const messages = defineMessages({
+  receiveTitle: {
+    id: 'components.receive.receivescreen.title',
+    defaultMessage: '!!!Receive',
+    description: 'some desc',
+  },
+})
+
 const Stack = createStackNavigator<any, ReceiveScreenNavigatorRoute, any>()
 
-const ReceiveScreenNavigator = () => (
+const ReceiveScreenNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
   <Stack.Navigator
-    screenOptions={({route}) => ({
-      // $FlowFixMe mixed is incompatible with string
-      title: route.params?.title ?? undefined,
+    screenOptions={{
       ...defaultNavigationOptions,
       ...defaultStackNavigatorOptions,
-    })}
+    }}
     initialRouteName={RECEIVE_ROUTES.MAIN}
   >
     <Stack.Screen
       name={RECEIVE_ROUTES.MAIN}
       component={ReceiveScreen}
-      options={({navigation, route}) => ({
+      options={({navigation}) => ({
         // $FlowFixMe it says optional chain is not required but it is
-        title: route.params?.title ?? undefined,
+        title: intl.formatMessage(messages.receiveTitle),
         headerRight: () => (
           <Button
             style={styles.settingsButton}
@@ -48,6 +53,6 @@ const ReceiveScreenNavigator = () => (
       })}
     />
   </Stack.Navigator>
-)
+))
 
 export default ReceiveScreenNavigator

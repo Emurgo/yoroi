@@ -15,7 +15,11 @@ import styles from './styles/TxHistoryList.style'
 import type {TransactionInfo} from '../../types/HistoryTransaction'
 import type {Navigation} from '../../types/navigation'
 
-const DayHeader = ({ts, intl}) => (
+type DayHeaderProps = {
+  ts: any,
+  intl: IntlShape,
+}
+const DayHeader = ({ts, intl}: DayHeaderProps) => (
   <View style={styles.dayHeader}>
     <Text>{formatDateRelative(ts, intl)}</Text>
   </View>
@@ -39,13 +43,7 @@ type Props = {
   intl: IntlShape,
 }
 
-const TxHistoryList = ({
-  transactions,
-  navigation,
-  refreshing,
-  onRefresh,
-  intl,
-}: Props) => {
+const TxHistoryList = ({transactions, navigation, refreshing, onRefresh, intl}: Props) => {
   // TODO(ppershing): add proper memoization here
   const groupedTransactions = getTransactionsByDate(transactions)
 
@@ -54,12 +52,8 @@ const TxHistoryList = ({
       <SectionList
         onRefresh={onRefresh}
         refreshing={refreshing}
-        renderItem={({item}) => (
-          <TxHistoryListItem navigation={navigation} id={item.id} />
-        )}
-        renderSectionHeader={({section: {data}}) => (
-          <DayHeader ts={data[0].submittedAt} intl={intl} />
-        )}
+        renderItem={({item}) => <TxHistoryListItem navigation={navigation} id={item.id} />}
+        renderSectionHeader={({section: {data}}) => <DayHeader ts={data[0].submittedAt} intl={intl} />}
         sections={groupedTransactions}
         keyExtractor={(item) => item.id}
         stickySectionHeadersEnabled={false}

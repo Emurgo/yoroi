@@ -1,4 +1,5 @@
 // @flow
+
 import ExtendableError from 'es6-error'
 import pLimit from 'p-limit'
 
@@ -20,10 +21,7 @@ export const delay = (duration: number): Promise<void> => {
 }
 
 // Try locking mutex, waits if cannot be locked
-export const synchronize = <T>(
-  mutex: Mutex,
-  factory: () => Promise<T>,
-): Promise<T> => {
+export const synchronize = <T>(mutex: Mutex, factory: () => Promise<T>): Promise<T> => {
   Logger.debug('Synchronize on', mutex)
   if (!mutex.lock) {
     Logger.debug('Synchronize lock fastpath')
@@ -70,10 +68,7 @@ export const synchronize = <T>(
   }
 }
 
-export const nonblockingSynchronize = <T>(
-  mutex: Mutex,
-  factory: () => Promise<T>,
-): Promise<T> => {
+export const nonblockingSynchronize = <T>(mutex: Mutex, factory: () => Promise<T>): Promise<T> => {
   if (mutex.lock) throw new IsLockedError()
   return synchronize(mutex, factory)
 }

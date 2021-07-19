@@ -16,29 +16,13 @@ import {CONFIG} from '../../config/config'
 import KeyStore from '../../crypto/KeyStore'
 import {generateVotingTransaction} from '../../actions/voting'
 import {showErrorDialog} from '../../actions'
-import {
-  Text,
-  ProgressStep,
-  Button,
-  OfflineBanner,
-  ValidatedTextInput,
-  StatusBar,
-} from '../UiKit'
+import {Text, ProgressStep, Button, OfflineBanner, ValidatedTextInput, StatusBar} from '../UiKit'
 import ErrorModal from '../Common/ErrorModal'
-import {withTitle} from '../../utils/renderUtils'
 import {CATALYST_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
 import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
-import globalMessages, {
-  errorMessages,
-  confirmationMessages,
-  txLabels,
-} from '../../i18n/global-messages'
+import {errorMessages, confirmationMessages, txLabels} from '../../i18n/global-messages'
 import {WrongPassword} from '../../crypto/errors'
-import {
-  easyConfirmationSelector,
-  utxosSelector,
-  isHWSelector,
-} from '../../selectors'
+import {easyConfirmationSelector, utxosSelector, isHWSelector} from '../../selectors'
 
 import styles from './styles/Step4.style'
 
@@ -54,14 +38,11 @@ const messages = defineMessages({
   },
   description: {
     id: 'components.catalyst.step4.description',
-    defaultMessage:
-      '!!!Enter your spending password to be able to generate the required certificate for voting',
+    defaultMessage: '!!!Enter your spending password to be able to generate the required certificate for voting',
   },
   bioAuthInstructions: {
     id: 'components.catalyst.step4.bioAuthInstructions',
-    defaultMessage:
-      '!!!Please authenticate so that Yoroi can generate the required ' +
-      'certificate for voting',
+    defaultMessage: '!!!Please authenticate so that Yoroi can generate the required certificate for voting',
   },
 })
 
@@ -84,16 +65,8 @@ type HOCProps = {
   isHW: boolean,
 }
 
-const Step4 = ({
-  intl,
-  isEasyConfirmationEnabled,
-  isHW,
-  navigation,
-  generateVotingTransaction,
-}: Props & HOCProps) => {
-  const [password, setPassword] = useState(
-    CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
-  )
+const Step4 = ({intl, isEasyConfirmationEnabled, isHW, navigation, generateVotingTransaction}: Props & HOCProps) => {
+  const [password, setPassword] = useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
 
   const [generatingTransaction, setGeneratingTransaction] = useState(false)
   const [errorData, setErrorData] = useState<ErrorData>({
@@ -102,8 +75,7 @@ const Step4 = ({
     errorLogs: null,
   })
 
-  const isConfirmationDisabled =
-    !isHW && !isEasyConfirmationEnabled && !password
+  const isConfirmationDisabled = !isHW && !isEasyConfirmationEnabled && !password
 
   const onContinue = React.useCallback(
     async () => {
@@ -140,9 +112,7 @@ const Step4 = ({
           } else {
             setErrorData({
               showErrorDialog: true,
-              errorMessage: intl.formatMessage(
-                errorMessages.generalError.message,
-              ),
+              errorMessage: intl.formatMessage(errorMessages.generalError.message),
               errorLogs: String(e.message),
             })
           }
@@ -150,13 +120,7 @@ const Step4 = ({
         return
       }
       try {
-        const decryptedKey = await KeyStore.getData(
-          walletManager._id,
-          'MASTER_PASSWORD',
-          '',
-          password,
-          intl,
-        )
+        const decryptedKey = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
 
         await generateTransaction(decryptedKey)
       } catch (e) {
@@ -165,9 +129,7 @@ const Step4 = ({
         } else {
           setErrorData({
             showErrorDialog: true,
-            errorMessage: intl.formatMessage(
-              errorMessages.generalTxError.message,
-            ),
+            errorMessage: intl.formatMessage(errorMessages.generalTxError.message),
             errorLogs: String(e.message),
           })
         }
@@ -177,16 +139,13 @@ const Step4 = ({
     [password],
   )
 
-  useEffect(
-    () => {
-      // if easy confirmation is enabled we go directly to the authentication
-      // screen and then build the registration tx
-      if (isEasyConfirmationEnabled) {
-        onContinue()
-      }
-    },
-    [onContinue, isEasyConfirmationEnabled],
-  )
+  useEffect(() => {
+    // if easy confirmation is enabled we go directly to the authentication
+    // screen and then build the registration tx
+    if (isEasyConfirmationEnabled) {
+      onContinue()
+    }
+  }, [onContinue, isEasyConfirmationEnabled])
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -196,12 +155,8 @@ const Step4 = ({
       <OfflineBanner />
       <View style={styles.container}>
         <View>
-          <Text style={styles.subTitle}>
-            {intl.formatMessage(messages.subTitle)}
-          </Text>
-          <Text style={[styles.description, styles.mb70]}>
-            {intl.formatMessage(messages.description)}
-          </Text>
+          <Text style={styles.subTitle}>{intl.formatMessage(messages.subTitle)}</Text>
+          <Text style={[styles.description, styles.mb70]}>{intl.formatMessage(messages.description)}</Text>
           {!isEasyConfirmationEnabled && (
             <View>
               <ValidatedTextInput
@@ -215,9 +170,7 @@ const Step4 = ({
         </View>
         <Button
           onPress={onContinue}
-          title={intl.formatMessage(
-            confirmationMessages.commonButtons.confirmButton,
-          )}
+          title={intl.formatMessage(confirmationMessages.commonButtons.confirmButton)}
           disabled={isConfirmationDisabled || generatingTransaction}
         />
       </View>
@@ -247,9 +200,5 @@ export default (injectIntl(
     {
       generateVotingTransaction,
     },
-  )(
-    withTitle(Step4, ({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(globalMessages.votingTitle),
-    ),
-  ),
+  )(Step4),
 ): ComponentType<Props>)
