@@ -40,6 +40,9 @@ jobs:
       - attach_workspace:
           at: ~/project
       - run: yarn test
+      - run:
+          command: cat /sys/fs/cgroup/memory/memory.max_usage_in_bytes
+          when: always
 
   lint:
     <<: *rn_defaults
@@ -56,5 +59,8 @@ workflows:
           requires:
             - install-dependencies
       - flow:
+          requires:
+            - install-dependencies
+      - test:
           requires:
             - install-dependencies
