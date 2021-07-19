@@ -439,6 +439,7 @@
   "global.comingSoon": "업데이트 예정",
   "global.error.walletNameAlreadyTaken": "이미 사용하고 있는 지갑명입니다.",
   "global.error.walletNameTooLong": "지갑 이름은 40자를 초과할 수 없습니다",
+  "global.error.walletNameMustBeFilled": "Must be filled",
   "global.ledgerMessages.appInstalled": "Cardano ADA app is installed on your Ledger device.",
   "global.ledgerMessages.appOpened": "Cardano ADA app must remain open on your Ledger device.",
   "global.ledgerMessages.bluetoothEnabled": "사용자의 스마트폰의 블루투스가 활성화되었습니다.",
