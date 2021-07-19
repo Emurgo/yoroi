@@ -439,6 +439,7 @@
   "global.comingSoon": "Coming soon",
   "global.error.walletNameAlreadyTaken": "Kamu sudah mempunyai wallet dengan nama ini",
   "global.error.walletNameTooLong": "Nama wallet tidak boleh melebihi dari 40 huruf",
+  "global.error.walletNameMustBeFilled": "Must be filled",
   "global.ledgerMessages.appInstalled": "Cardano ADA app is installed on your Ledger device.",
   "global.ledgerMessages.appOpened": "Cardano ADA app must remain open on your Ledger device.",
   "global.ledgerMessages.bluetoothEnabled": "Bluetooth is enabled on your smartphone.",
