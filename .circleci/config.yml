@@ -1,9 +1,9 @@
-version: 2
+version: 2.1
 
 rn_defaults: &rn_defaults
   working_directory: ~/project
   docker:
-    - image: circleci/node:10.14.2
+    - image: cimg/node:16.5.0
 
 jobs:
   install-dependencies:
@@ -14,20 +14,7 @@ jobs:
           at: ~/project
       - restore_cache:
           keys:
-          - v1-0-dependencies-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
-
-      # install rustup
-      - run: curl https://sh.rustup.rs -sSf | sh -s -- -y
-      - run: echo 'export PATH=$HOME/.cargo/bin/:$PATH' >> $BASH_ENV
-      # use 1.41.0 version.
-      - run: rustup install 1.41.0
-      - run: rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
-      - run: cargo install cargo-lipo
-
-      - run:
-          name: Match bitrise's yarn version
-          command: sudo npm install -g yarn@${BITRISE_YARN_VER}
-
+            - v1-0-dependencies-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
       - run:
           name: Install Dependencies
           command: yarn install --network-concurrency 1
@@ -36,20 +23,15 @@ jobs:
           paths:
             - node_modules
             - yarn.lock
-
-
       - persist_to_workspace:
           root: .
-          paths: .
+          paths: [.]
 
   flow:
     <<: *rn_defaults
     steps:
       - attach_workspace:
           at: ~/project
-      - run:
-          name: Match bitrise's yarn version
-          command: sudo npm install -g yarn@${BITRISE_YARN_VER}
       - run: yarn flow
 
   test:
@@ -57,59 +39,16 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/project
-      - run:
-          name: Match bitrise's yarn version
-          command: sudo npm install -g yarn@${BITRISE_YARN_VER}
       - run: yarn test
 
   lint:
     <<: *rn_defaults
     steps:
       - attach_workspace:
-         at: ~/project
-
-      - run:
-          name: Match bitrise's yarn version
-          command: sudo npm install -g yarn@${BITRISE_YARN_VER}
-      # Because npm link will write in this path
-      - run: sudo chown -R "$(whoami):$(whoami)" /usr/local/lib/node_modules
-      - run: npm link rust-cardano-crypto
+          at: ~/project
       - run: yarn lint
 
-  android:
-    working_directory: ~/project/android
-    docker:
-      - image: circleci/android:api-27-node8-alpha
-    steps:
-      - attach_workspace:
-          at: ~/project
-      - run:
-          name: Install Android NDK
-          command: source ./get_android_ndk.sh
-      # install rustup
-      - run: curl https://sh.rustup.rs -sSf | sh -s -- -y
-      - run: echo 'export PATH=$HOME/.cargo/bin/:$PATH' >> $BASH_ENV
-      # use 1.41.0 version.
-      - run: rustup install 1.41.0
-      - run: rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
-      - run: cargo install cargo-lipo
-      - run: export
-      - run: cargo
-      - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-      - run:
-          name: Download Dependencies
-          command: ./gradlew androidDependencies
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-      - run:
-          name: Android build
-          command: ./gradlew assembleRelease
-
 workflows:
-  version: 2
   main:
     jobs:
       - install-dependencies
@@ -119,11 +58,3 @@ workflows:
       - flow:
           requires:
             - install-dependencies
-      - test:
-          requires:
-            - install-dependencies
-#      - android:
-#          requires:
-#            - install-dependencies
-#            - lint
-#            - flow
