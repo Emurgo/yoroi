@@ -439,6 +439,7 @@
   "global.comingSoon": "間もなくリリース",
   "global.error.walletNameAlreadyTaken": "同じ名前のウォレットが存在します。",
   "global.error.walletNameTooLong": "ウォレット名が40文字を超えています。",
+  "global.error.walletNameMustBeFilled": "Must be filled",
   "global.ledgerMessages.appInstalled": "Cardano ADA app is installed on your Ledger device.",
   "global.ledgerMessages.appOpened": "Cardano ADA app must remain open on your Ledger device.",
   "global.ledgerMessages.bluetoothEnabled": "スマートフォンでBluetoothが有効になっています。",
