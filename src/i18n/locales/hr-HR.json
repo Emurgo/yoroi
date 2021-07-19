@@ -439,6 +439,7 @@
   "global.comingSoon": "Dolazi uskoro",
   "global.error.walletNameAlreadyTaken": "You already have a wallet with this name",
   "global.error.walletNameTooLong": "Wallet name cannot exceed 40 letters",
+  "global.error.walletNameMustBeFilled": "Must be filled",
   "global.ledgerMessages.appInstalled": "Cardano ADA app is installed on your Ledger device.",
   "global.ledgerMessages.appOpened": "Cardano ADA app must remain open on your Ledger device.",
   "global.ledgerMessages.bluetoothEnabled": "Bluetooth is enabled on your smartphone.",
