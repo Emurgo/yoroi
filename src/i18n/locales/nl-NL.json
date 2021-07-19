@@ -439,6 +439,7 @@
   "global.comingSoon": "Binnenkort verwacht",
   "global.error.walletNameAlreadyTaken": "U heeft al een portemonnee met deze naam",
   "global.error.walletNameTooLong": "Portemonneenaam kan niet langer zijn dan 40 karakters",
+  "global.error.walletNameMustBeFilled": "Must be filled",
   "global.ledgerMessages.appInstalled": "De Cardano ADA app is geïnstalleerd op uw Ledgerapparaat.",
   "global.ledgerMessages.appOpened": "De Cardano ADA app dient geopend te zijn op uw Ledgerapparaat",
   "global.ledgerMessages.bluetoothEnabled": "Bluetooth is ingeschakeld op uw Smartphone.",
