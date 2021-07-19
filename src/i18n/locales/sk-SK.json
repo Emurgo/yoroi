@@ -439,6 +439,7 @@
   "global.comingSoon": "Čoskoro",
   "global.error.walletNameAlreadyTaken": "Peňaženka s týmto názvom už existuje",
   "global.error.walletNameTooLong": "Názov peňaženky nesmie byť dlhší než 40 písmen",
+  "global.error.walletNameMustBeFilled": "Must be filled",
   "global.ledgerMessages.appInstalled": "Aplikácia Cardano ADA je nainštalovaná na vaše Ledger zariadenie.",
   "global.ledgerMessages.appOpened": "Aplikácia Cardano ADA musí zostať otvorená na vašom Ledger zariadení.",
   "global.ledgerMessages.bluetoothEnabled": "Bluetooth je zapnutý.",
