@@ -4,6 +4,7 @@ rn_defaults: &rn_defaults
   working_directory: ~/project
   docker:
     - image: cimg/node:16.5.0
+  resource_class: medium+
 
 jobs:
   install-dependencies:
