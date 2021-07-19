@@ -439,6 +439,7 @@
   "global.comingSoon": "Prossimamente in arrivo",
   "global.error.walletNameAlreadyTaken": "Hai già un portafoglio con questo nome",
   "global.error.walletNameTooLong": "Il nome del portafoglio non può superare le 40 lettere",
+  "global.error.walletNameMustBeFilled": "Must be filled",
   "global.ledgerMessages.appInstalled": "L'applicazione Cardano ADA è installata sul vostro dispositivo Ledger.",
   "global.ledgerMessages.appOpened": "L'applicazione di ADA Cardano deve rimanere aperta sul dispositivo Ledger.",
   "global.ledgerMessages.bluetoothEnabled": "Il Bluetooth è abilitato sul vostro smartphone.",
