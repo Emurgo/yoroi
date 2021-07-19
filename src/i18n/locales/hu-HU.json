@@ -439,6 +439,7 @@
   "global.comingSoon": "Hamarosan",
   "global.error.walletNameAlreadyTaken": "Már van ilyen nevű pénztárca.",
   "global.error.walletNameTooLong": "Tárca név nem haladhatja meg a 40 karaktert",
+  "global.error.walletNameMustBeFilled": "Must be filled",
   "global.ledgerMessages.appInstalled": "A Cardano ADA alkalmazás telepítve van a Ledger eszközön.",
   "global.ledgerMessages.appOpened": "A Cardano ADA alkalmazásnak futnia kell  a Ledger eszközön.",
   "global.ledgerMessages.bluetoothEnabled": "Az okostelefonon engedélyezve van a Bluetooth. ",
