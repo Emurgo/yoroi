@@ -439,6 +439,7 @@
   "global.comingSoon": "即将到来",
   "global.error.walletNameAlreadyTaken": "您已经有一个使用此名称的钱包",
   "global.error.walletNameTooLong": "钱包名称不能超过40个字符",
+  "global.error.walletNameMustBeFilled": "Must be filled",
   "global.ledgerMessages.appInstalled": "Cardano ADA应用程序已安装在您的Ledger设备上。",
   "global.ledgerMessages.appOpened": "Cardano ADA应用必须在Ledger设备上保持打开状态。",
   "global.ledgerMessages.bluetoothEnabled": "您智能手机上的蓝牙已启动。",
