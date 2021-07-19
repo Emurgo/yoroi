@@ -26,6 +26,9 @@ jobs:
       - persist_to_workspace:
           root: .
           paths: [.]
+      - run:
+          command: cat /sys/fs/cgroup/memory/memory.max_usage_in_bytes
+          when: always
 
   flow:
     <<: *rn_defaults
@@ -33,6 +36,9 @@ jobs:
       - attach_workspace:
           at: ~/project
       - run: yarn flow
+      - run:
+          command: cat /sys/fs/cgroup/memory/memory.max_usage_in_bytes
+          when: always
 
   test:
     <<: *rn_defaults
