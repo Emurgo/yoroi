@@ -102,15 +102,18 @@ export const getWalletNameError = (
   translations: {
     tooLong: string,
     nameAlreadyTaken: string,
+    mustBeFilled?: string,
   },
   validationErrors: WalletNameValidationErrors,
 ) => {
-  const {tooLong, nameAlreadyTaken} = translations
+  const {tooLong, nameAlreadyTaken, mustBeFilled} = translations
 
   if (validationErrors.tooLong != null) {
     return tooLong
   } else if (validationErrors.nameAlreadyTaken != null) {
     return nameAlreadyTaken
+  } else if (validationErrors.mustBeFilled != null) {
+    return mustBeFilled
   } else {
     return null
   }
