@@ -1,23 +1,22 @@
 // @flow
 
 import React from 'react'
-import {connect} from 'react-redux'
-import {compose} from 'redux'
+import {useDispatch} from 'react-redux'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {withStateHandlers, withHandlers} from 'recompose'
-import {ScrollView, Platform} from 'react-native'
+import {ScrollView, Platform, View} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import TermsOfService from '../Common/TermsOfService'
 import {Checkbox, Button, StatusBar, PleaseWaitModal} from '../UiKit'
 import {FIRST_RUN_ROUTES} from '../../RoutesList'
-import {isSystemAuthEnabledSelector} from '../../selectors'
 import {acceptAndSaveTos, setSystemAuth, signin} from '../../actions'
 import {canBiometricEncryptionBeEnabled} from '../../helpers/deviceSettings'
 import {CONFIG} from '../../config/config'
 
 import styles from './styles/AcceptTermsOfServiceScreen.styles'
 import globalMessages from '../../i18n/global-messages'
+
+import type {Navigation} from '../../types/navigation'
 
 const messages = defineMessages({
   aggreeClause: {
@@ -39,86 +38,75 @@ const messages = defineMessages({
 
 type Props = {
   intl: IntlShape,
-  acceptedTos: boolean,
-  setAcceptedTos: (accepted: boolean) => any,
-  handleAccepted: () => any,
-  savingConsent: boolean,
+  navigation: Navigation,
 }
 
-const AcceptTermsOfServiceScreen = ({intl, acceptedTos, setAcceptedTos, handleAccepted, savingConsent}: Props) => (
-  <SafeAreaView style={styles.safeAreaView}>
-    <StatusBar type="dark" />
+const AcceptTermsOfServiceScreen = ({intl, navigation}: Props) => {
+  const [acceptedTos, setAcceptedTos] = React.useState(false)
+  const [savingConsent, setSavingConsent] = React.useState(false)
 
-    <ScrollView>
-      <TermsOfService />
-    </ScrollView>
+  const dispatch = useDispatch()
+  const handleAccepted = async () => {
+    setSavingConsent(true)
+    await dispatch(acceptAndSaveTos())
 
-    <Checkbox
-      style={styles.checkbox}
-      checked={acceptedTos}
-      text={intl.formatMessage(messages.aggreeClause)}
-      onChange={setAcceptedTos}
-      testID="acceptTosCheckbox"
-    />
-    <Button
-      onPress={handleAccepted}
-      disabled={!acceptedTos}
-      title={intl.formatMessage(messages.continueButton)}
-      testID="acceptTosButton"
-    />
+    const canSystemAuthBeEnabled = await canBiometricEncryptionBeEnabled()
 
-    <PleaseWaitModal
-      title={intl.formatMessage(messages.savingConsentModalTitle)}
-      spinnerText={intl.formatMessage(globalMessages.pleaseWait)}
-      visible={savingConsent}
-    />
-  </SafeAreaView>
-)
+    // temporary disable biometric auth for Android SDK >= 29
+    // TODO(v-almonacid): re-enable for Android SDK >= 29 once the module
+    // is updated
+    const shouldNotEnableBiometricAuth =
+      Platform.OS === 'android' && CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version)
 
-export default injectIntl(
-  compose(
-    connect(
-      (state) => ({
-        isSystemAuthEnabled: isSystemAuthEnabledSelector(state),
-      }),
-      {acceptAndSaveTos, setSystemAuth, signin},
-    ),
-    withStateHandlers(
-      {
-        acceptedTos: false,
-        savingConsent: false,
-      },
-      {
-        setAcceptedTos: () => (acceptedTos) => ({acceptedTos}),
-        setSavingConsent: () => (savingConsent) => ({savingConsent}),
-      },
-    ),
-    withHandlers({
-      handleAccepted:
-        ({navigation, acceptAndSaveTos, setSystemAuth, setSavingConsent, signin}) =>
-        async () => {
-          setSavingConsent(true)
-          await acceptAndSaveTos()
+    if (canSystemAuthBeEnabled && !shouldNotEnableBiometricAuth) {
+      await dispatch(setSystemAuth(true))
+      // note(v-almonacid) here we don't setSavingConsent(false)
+      // because signin() will likely unmount the component before the
+      // update is dispatched
+      dispatch(signin())
+    } else {
+      setSavingConsent(false)
+      navigation.navigate(FIRST_RUN_ROUTES.CUSTOM_PIN)
+    }
+  }
 
-          const canSystemAuthBeEnabled = await canBiometricEncryptionBeEnabled()
+  return (
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
+      <StatusBar type="dark" />
 
-          // temporary disable biometric auth for Android SDK >= 29
-          // TODO(v-almonacid): re-enable for Android SDK >= 29 once the module
-          // is updated
-          const shouldNotEnableBiometricAuth =
-            Platform.OS === 'android' && CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version)
+      <ScrollView contentContainerStyle={styles.contentContainer}>
+        <TermsOfService />
+      </ScrollView>
 
-          if (canSystemAuthBeEnabled && !shouldNotEnableBiometricAuth) {
-            await setSystemAuth(true)
-            // note(v-almonacid) here we don't setSavingConsent(false)
-            // because signin() will likely unmount the component before the
-            // update is dispatched
-            signin()
-          } else {
-            setSavingConsent(false)
-            navigation.navigate(FIRST_RUN_ROUTES.CUSTOM_PIN)
-          }
-        },
-    }),
-  )(AcceptTermsOfServiceScreen),
-)
+      <Spacer />
+
+      <Footer>
+        <Checkbox
+          checked={acceptedTos}
+          text={intl.formatMessage(messages.aggreeClause)}
+          onChange={setAcceptedTos}
+          testID="acceptTosCheckbox"
+        />
+
+        <Spacer />
+
+        <Button
+          onPress={handleAccepted}
+          disabled={!acceptedTos}
+          title={intl.formatMessage(messages.continueButton)}
+          testID="acceptTosButton"
+        />
+      </Footer>
+
+      <PleaseWaitModal
+        title={intl.formatMessage(messages.savingConsentModalTitle)}
+        spinnerText={intl.formatMessage(globalMessages.pleaseWait)}
+        visible={savingConsent}
+      />
+    </SafeAreaView>
+  )
+}
+export default injectIntl(AcceptTermsOfServiceScreen)
+
+const Footer = ({children}: {children: React$Node}) => <View style={styles.footer}>{children}</View>
+const Spacer = () => <View style={styles.spacer} />

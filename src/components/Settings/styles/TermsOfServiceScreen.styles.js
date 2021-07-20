@@ -6,6 +6,8 @@ export default StyleSheet.create({
   safeAreaView: {
     backgroundColor: '#fff',
     flex: 1,
+  },
+  contentContainer: {
     padding: 16,
   },
 })
