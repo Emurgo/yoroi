@@ -71,7 +71,7 @@
     "react": "16.13.1",
     "react-intl": "^2.8.0",
     "react-markdown": "4.3.1",
-    "react-native": "0.63.4",
+    "react-native": "0.64.1",
     "react-native-background-timer": "2.4.1",
     "react-native-ble-plx": "2.0.2",
     "react-native-blockies-svg": "Emurgo/react-native-blockies-svg",
