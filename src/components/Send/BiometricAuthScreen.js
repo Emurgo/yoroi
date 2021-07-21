@@ -25,27 +25,22 @@ const errorMessages = defineMessages({
   NOT_RECOGNIZED: {
     id: 'components.send.biometricauthscreen.NOT_RECOGNIZED',
     defaultMessage: '!!!Biometrics were not recognized. Try again',
-    description: 'some desc',
   },
   SENSOR_LOCKOUT: {
     id: 'components.send.biometricauthscreen.SENSOR_LOCKOUT',
     defaultMessage: '!!!Too many failed attempts. The sensor is now disabled',
-    description: 'some desc',
   },
   SENSOR_LOCKOUT_PERMANENT: {
     id: 'components.send.biometricauthscreen.SENSOR_LOCKOUT_PERMANENT',
     defaultMessage: '!!!Your biometrics sensor has been permanently locked. Use an alternate login method.',
-    description: 'some desc',
   },
   DECRYPTION_FAILED: {
     id: 'components.send.biometricauthscreen.DECRYPTION_FAILED',
     defaultMessage: '!!!Biometrics login failed. Please use an alternate login method.',
-    description: 'some desc',
   },
   UNKNOWN_ERROR: {
     id: 'components.send.biometricauthscreen.UNKNOWN_ERROR',
     defaultMessage: '!!!Unknown error',
-    description: 'some desc',
   },
 })
 
@@ -53,27 +48,22 @@ const messages = defineMessages({
   authorizeOperation: {
     id: 'components.send.biometricauthscreen.authorizeOperation',
     defaultMessage: '!!!Authorize operation',
-    description: 'some desc',
   },
   useFallbackButton: {
     id: 'components.send.biometricauthscreen.useFallbackButton',
     defaultMessage: '!!!Use fallback',
-    description: 'some desc',
   },
   headings1: {
     id: 'components.send.biometricauthscreen.headings1',
     defaultMessage: '!!!Authorize with your',
-    description: 'some desc',
   },
   headings2: {
     id: 'components.send.biometricauthscreen.headings2',
     defaultMessage: '!!!biometrics',
-    description: 'some desc',
   },
   cancelButton: {
     id: 'components.send.biometricauthscreen.cancelButton',
     defaultMessage: '!!!Cancel',
-    description: 'some desc',
   },
 })
 

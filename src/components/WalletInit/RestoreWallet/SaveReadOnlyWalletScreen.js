@@ -32,7 +32,6 @@ const messages = defineMessages({
   title: {
     id: 'components.walletinit.savereadonlywalletscreen.title',
     defaultMessage: '!!!Verify read-only wallet',
-    description: 'some desc',
   },
   defaultWalletName: {
     id: 'components.walletinit.savereadonlywalletscreen.defaultWalletName',

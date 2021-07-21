@@ -24,32 +24,26 @@ const messages = defineMessages({
   walletAddress: {
     id: 'components.receive.addressmodal.walletAddress',
     defaultMessage: '!!!Your wallet address',
-    description: 'some desc',
   },
   BIP32path: {
     id: 'components.receive.addressmodal.BIP32path',
     defaultMessage: '!!!BIP32 path:',
-    description: 'some desc',
   },
   copyLabel: {
     id: 'components.receive.addressmodal.copyLabel',
     defaultMessage: '!!!Copy address',
-    description: 'some desc',
   },
   spending: {
     id: 'components.receive.addressmodal.spendingKeyHash',
     defaultMessage: '!!!Spending',
-    description: 'some desc',
   },
   staking: {
     id: 'components.receive.addressmodal.stakingKeyHash',
     defaultMessage: '!!!Staking',
-    description: 'some desc',
   },
   title: {
     id: 'components.receive.addressmodal.title',
     defaultMessage: '!!!Title',
-    description: 'some desc',
   },
   verifyLabel: {
     id: 'components.receive.addressverifymodal.title',

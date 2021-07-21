@@ -21,12 +21,10 @@ const messages = defineMessages({
       'recovery phrase somewhere safe. ' +
       'You will need this phrase to use and restore your wallet. ' +
       'Phrase is case sensitive.',
-    description: 'some desc',
   },
   confirmationButton: {
     id: 'components.walletinit.createwallet.mnemonicshowscreen.confirmationButton',
     defaultMessage: '!!!Yes, I have written it down',
-    description: 'some desc',
   },
 })
 

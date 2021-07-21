@@ -55,7 +55,6 @@ const messages = defineMessages({
   supportTitle: {
     id: 'components.settings.settingsscreen.title',
     defaultMessage: 'Support',
-    description: 'some desc',
   },
   toggleEachConfirmationTitle: {
     id: 'components.settings.toggleeasyconfirmationscreen.title',

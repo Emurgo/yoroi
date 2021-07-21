@@ -40,7 +40,6 @@ const messages = defineMessages({
   transactionTypeSent: {
     id: 'components.txhistory.txhistorylistitem.transactionTypeSent',
     defaultMessage: '!!!ADA sent',
-    description: 'some desc',
   },
   transactionTypeReceived: {
     id: 'components.txhistory.txhistorylistitem.transactionTypeReceived',
@@ -49,42 +48,34 @@ const messages = defineMessages({
   transactionTypeSelf: {
     id: 'components.txhistory.txhistorylistitem.transactionTypeSelf',
     defaultMessage: '!!!Intrawallet',
-    description: 'some desc',
   },
   transactionTypeMulti: {
     id: 'components.txhistory.txhistorylistitem.transactionTypeMulti',
     defaultMessage: '!!!Multiparty',
-    description: 'some desc',
   },
   assuranceLevelHeader: {
     id: 'components.txhistory.txhistorylistitem.assuranceLevelHeader',
     defaultMessage: '!!!Assurance level:',
-    description: 'some desc',
   },
   assuranceLevelLow: {
     id: 'components.txhistory.txhistorylistitem.assuranceLevelLow',
     defaultMessage: '!!!Low',
-    description: 'some desc',
   },
   assuranceLevelMedium: {
     id: 'components.txhistory.txhistorylistitem.assuranceLevelMedium',
     defaultMessage: '!!!Medium',
-    description: 'some desc',
   },
   assuranceLevelHigh: {
     id: 'components.txhistory.txhistorylistitem.assuranceLevelHigh',
     defaultMessage: '!!!High',
-    description: 'some desc',
   },
   assuranceLevelPending: {
     id: 'components.txhistory.txhistorylistitem.assuranceLevelPending',
     defaultMessage: '!!!Pending',
-    description: 'some desc',
   },
   assuranceLevelFailed: {
     id: 'components.txhistory.txhistorylistitem.assuranceLevelFailed',
     defaultMessage: '!!!Failed',
-    description: 'some desc',
   },
   assets: {
     id: 'global.txLabels.assets',

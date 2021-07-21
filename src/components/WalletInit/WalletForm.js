@@ -24,27 +24,22 @@ const messages = defineMessages({
   walletNameInputLabel: {
     id: 'components.walletinit.walletform.walletNameInputLabel',
     defaultMessage: '!!!Wallet name',
-    description: 'some desc',
   },
   newPasswordInput: {
     id: 'components.walletinit.walletform.newPasswordInput',
     defaultMessage: '!!!Spending password',
-    description: 'some desc',
   },
   continueButton: {
     id: 'components.walletinit.walletform.continueButton',
     defaultMessage: '!!!Continue',
-    description: 'some desc',
   },
   repeatPasswordInputLabel: {
     id: 'components.walletinit.walletform.repeatPasswordInputLabel',
     defaultMessage: '!!!Repeat password',
-    description: 'some desc',
   },
   repeatPasswordInputError: {
     id: 'components.walletinit.walletform.repeatPasswordInputError',
     defaultMessage: '!!!Passwords do not match',
-    description: 'some desc',
   },
 })
 
