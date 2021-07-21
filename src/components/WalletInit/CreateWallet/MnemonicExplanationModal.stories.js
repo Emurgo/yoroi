@@ -20,6 +20,4 @@ const ModalWrapper = compose(
   ),
 )(MnemonicExplanationModal)
 
-storiesOf('MnemonicExplanationModal', module).add('Default', () => (
-  <ModalWrapper />
-))
+storiesOf('MnemonicExplanationModal', module).add('Default', () => <ModalWrapper />)

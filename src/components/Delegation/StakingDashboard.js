@@ -4,24 +4,13 @@ import React from 'react'
 import type {ComponentType} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {
-  ActivityIndicator,
-  View,
-  ScrollView,
-  RefreshControl,
-  Platform,
-} from 'react-native'
+import {ActivityIndicator, View, ScrollView, RefreshControl, Platform} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import {BigNumber} from 'bignumber.js'
 import {injectIntl, type IntlShape} from 'react-intl'
 
 import {Banner, OfflineBanner, StatusBar} from '../UiKit'
-import {
-  EpochProgress,
-  UserSummary,
-  DelegatedStakepoolInfo,
-  NotDelegatedInfo,
-} from './dashboard'
+import {EpochProgress, UserSummary, DelegatedStakepoolInfo, NotDelegatedInfo} from './dashboard'
 import WithdrawalDialog from './WithdrawalDialog'
 import LocalizableError from '../../i18n/LocalizableError'
 import {
@@ -50,7 +39,6 @@ import {
 import DelegationNavigationButtons from './DelegationNavigationButtons'
 import UtxoAutoRefresher from '../Send/UtxoAutoRefresher'
 import AccountAutoRefresher from './AccountAutoRefresher'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {
   genToRelativeSlotNumber,
   genCurrentEpochLength,
@@ -61,18 +49,8 @@ import {fetchAccountState} from '../../actions/account'
 import {fetchUTXOs} from '../../actions/utxo'
 import {fetchPoolInfo} from '../../actions/pools'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
-import {
-  checkForFlawedWallets,
-  submitTransaction,
-  submitSignedTx,
-  showErrorDialog,
-} from '../../actions'
-import {
-  DELEGATION_ROUTES,
-  SEND_ROUTES,
-  WALLET_ROOT_ROUTES,
-  WALLET_ROUTES,
-} from '../../RoutesList'
+import {checkForFlawedWallets, submitTransaction, submitSignedTx, showErrorDialog} from '../../actions'
+import {DELEGATION_ROUTES, SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../RoutesList'
 import {WrongPassword} from '../../crypto/errors'
 import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
@@ -91,15 +69,9 @@ import type {ServerStatusCache, WalletMeta} from '../../state'
 import type {Navigation} from '../../types/navigation'
 import type {DefaultAsset} from '../../types/HistoryTransaction'
 import type {RemotePoolMetaSuccess, RawUtxo} from '../../api/types'
-import type {
-  HWDeviceInfo,
-  DeviceObj,
-  DeviceId,
-} from '../../crypto/shelley/ledgerUtils'
+import type {HWDeviceInfo, DeviceObj, DeviceId} from '../../crypto/shelley/ledgerUtils'
 
-const SyncErrorBanner = injectIntl((
-  {intl, showRefresh}: {intl: IntlShape} & Object /* TODO: type */,
-) => (
+const SyncErrorBanner = injectIntl(({intl, showRefresh}: {intl: IntlShape} & Object /* TODO: type */) => (
   <Banner
     error
     text={
@@ -199,9 +171,7 @@ class StakingDashboard extends React.Component<Props, State> {
       1000,
     )
     this.props.checkForFlawedWallets()
-    this._unsubscribe = this.props.navigation.addListener('focus', () =>
-      this.handleDidFocus(),
-    )
+    this._unsubscribe = this.props.navigation.addListener('focus', () => this.handleDidFocus())
   }
 
   async componentDidUpdate(prevProps) {
@@ -212,10 +182,7 @@ class StakingDashboard extends React.Component<Props, State> {
     //     fetch detailed pool info
 
     // update pool info only when pool list gets updated
-    if (
-      prevProps.poolOperator !== this.props.poolOperator &&
-      this.props.poolOperator != null
-    ) {
+    if (prevProps.poolOperator !== this.props.poolOperator && this.props.poolOperator != null) {
       await this.props.fetchPoolInfo()
     }
   }
@@ -248,16 +215,9 @@ class StakingDashboard extends React.Component<Props, State> {
       withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WARNING,
     })
 
-  onKeepOrDeregisterKey: (Object, boolean) => Promise<void> = async (
-    event,
-    shouldDeregister,
-  ) => {
+  onKeepOrDeregisterKey: (Object, boolean) => Promise<void> = async (event, shouldDeregister) => {
     this._shouldDeregister = shouldDeregister
-    if (
-      this.props.isHW &&
-      Platform.OS === 'android' &&
-      CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT
-    ) {
+    if (this.props.isHW && Platform.OS === 'android' && CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT) {
       // toggle ledger transport switch modal
       this.setState({
         withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.CHOOSE_TRANSPORT,
@@ -282,8 +242,7 @@ class StakingDashboard extends React.Component<Props, State> {
         const withdrawals = await signTxRequest.withdrawals()
         const deregistrations = await signTxRequest.keyDeregistrations()
         const balance = withdrawals.reduce(
-          (sum, curr) =>
-            curr.amount == null ? sum : sum.joinAddCopy(curr.amount),
+          (sum, curr) => (curr.amount == null ? sum : sum.joinAddCopy(curr.amount)),
           new MultiToken([], {
             defaultNetworkId: defaultAsset.networkId,
             defaultIdentifier: defaultAsset.identifier,
@@ -293,8 +252,7 @@ class StakingDashboard extends React.Component<Props, State> {
         const finalBalance = balance
           .joinAddMutable(
             deregistrations.reduce(
-              (sum, curr) =>
-                curr.refund == null ? sum : sum.joinAddCopy(curr.refund),
+              (sum, curr) => (curr.refund == null ? sum : sum.joinAddCopy(curr.refund)),
               new MultiToken([], {
                 defaultNetworkId: defaultAsset.networkId,
                 defaultIdentifier: defaultAsset.identifier,
@@ -329,10 +287,7 @@ class StakingDashboard extends React.Component<Props, State> {
         this.setState({
           withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
           error: {
-            errorMessage: intl.formatMessage(
-              errorMessages.generalError.message,
-              {message: e.message},
-            ),
+            errorMessage: intl.formatMessage(errorMessages.generalError.message, {message: e.message}),
           },
         })
       }
@@ -344,10 +299,7 @@ class StakingDashboard extends React.Component<Props, State> {
       withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.LEDGER_CONNECT,
     })
 
-  onChooseTransport: (Object, boolean) => Promise<void> = async (
-    event,
-    useUSB,
-  ) => {
+  onChooseTransport: (Object, boolean) => Promise<void> = async (event, useUSB) => {
     const {hwDeviceInfo} = this.props
     this.setState({useUSB})
     if (
@@ -373,31 +325,15 @@ class StakingDashboard extends React.Component<Props, State> {
   // TODO: this code has been copy-pasted from the tx confirmation page.
   // Ideally, all this logic should be moved away and perhaps written as a
   // redux action that can be reused in all components with tx signing and sending
-  onConfirm: (Object, string | void) => Promise<void> = async (
-    event,
-    password,
-  ) => {
+  onConfirm: (Object, string | void) => Promise<void> = async (event, password) => {
     const {signTxRequest, useUSB} = this.state
-    const {
-      intl,
-      navigation,
-      isHW,
-      isEasyConfirmationEnabled,
-      submitTransaction,
-      submitSignedTx,
-    } = this.props
+    const {intl, navigation, isHW, isEasyConfirmationEnabled, submitTransaction, submitSignedTx} = this.props
     if (signTxRequest == null) throw new Error('no tx data')
 
-    const submitTx = async <T>(
-      tx: string | ISignRequest<T>,
-      decryptedKey: ?string,
-    ) => {
+    const submitTx = async <T>(tx: string | ISignRequest<T>, decryptedKey: ?string) => {
       if (decryptedKey == null && typeof tx === 'string') {
         await submitSignedTx(tx)
-      } else if (
-        decryptedKey != null &&
-        !(typeof tx === 'string' || tx instanceof String)
-      ) {
+      } else if (decryptedKey != null && !(typeof tx === 'string' || tx instanceof String)) {
         await submitTransaction(tx, decryptedKey)
       }
       navigation.navigate(WALLET_ROUTES.TX_HISTORY)
@@ -409,10 +345,7 @@ class StakingDashboard extends React.Component<Props, State> {
           withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WAITING_HW_RESPONSE,
         })
         if (signTxRequest == null) throw new Error('no tx data')
-        const signedTx = await walletManager.signTxWithLedger(
-          signTxRequest,
-          useUSB,
-        )
+        const signedTx = await walletManager.signTxWithLedger(signTxRequest, useUSB)
         this.setState({withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WAITING})
         await submitTx(Buffer.from(signedTx.encodedTx).toString('base64'))
         this.closeWithdrawalDialog()
@@ -448,13 +381,7 @@ class StakingDashboard extends React.Component<Props, State> {
 
       try {
         this.setState({withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.WAITING})
-        const decryptedData = await KeyStore.getData(
-          walletManager._id,
-          'MASTER_PASSWORD',
-          '',
-          password,
-          intl,
-        )
+        const decryptedData = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
 
         await submitTx(signTxRequest, decryptedData)
         this.closeWithdrawalDialog()
@@ -463,9 +390,7 @@ class StakingDashboard extends React.Component<Props, State> {
           this.setState({
             withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
             error: {
-              errorMessage: intl.formatMessage(
-                errorMessages.incorrectPassword.message,
-              ),
+              errorMessage: intl.formatMessage(errorMessages.incorrectPassword.message),
               errorLogs: null,
             },
           })
@@ -478,10 +403,7 @@ class StakingDashboard extends React.Component<Props, State> {
         this.setState({
           withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
           error: {
-            errorMessage: intl.formatMessage(
-              {id: e.id, defaultMessage: e.defaultMessage},
-              e.values,
-            ),
+            errorMessage: intl.formatMessage({id: e.id, defaultMessage: e.defaultMessage}, e.values),
             errorLogs: e.values.response || null,
           },
         })
@@ -489,9 +411,7 @@ class StakingDashboard extends React.Component<Props, State> {
         this.setState({
           withdrawalDialogStep: WITHDRAWAL_DIALOG_STEPS.ERROR,
           error: {
-            errorMessage: intl.formatMessage(
-              errorMessages.generalTxError.message,
-            ),
+            errorMessage: intl.formatMessage(errorMessages.generalTxError.message),
             errorLogs: e.message || null,
           },
         })
@@ -523,9 +443,7 @@ class StakingDashboard extends React.Component<Props, State> {
       walletMeta,
     } = this.props
 
-    const config = getCardanoBaseConfig(
-      getCardanoNetworkConfigById(walletMeta.networkId),
-    )
+    const config = getCardanoBaseConfig(getCardanoNetworkConfigById(walletMeta.networkId))
 
     const toRelativeSlotNumberFn = genToRelativeSlotNumber(config)
     const timeToSlotFn = genTimeToSlot(config)
@@ -542,11 +460,8 @@ class StakingDashboard extends React.Component<Props, State> {
     const epochLength = genCurrentEpochLength(config)()
     const slotLength = genCurrentSlotLength(config)()
 
-    const secondsLeftInEpoch =
-      (epochLength - currentRelativeTime.slot) * slotLength
-    const timeLeftInEpoch = new Date(
-      1000 * secondsLeftInEpoch - currentAbsoluteSlot.msIntoSlot,
-    )
+    const secondsLeftInEpoch = (epochLength - currentRelativeTime.slot) * slotLength
+    const timeLeftInEpoch = new Date(1000 * secondsLeftInEpoch - currentAbsoluteSlot.msIntoSlot)
 
     const leftPadDate: (number) => string = (num) => {
       if (num < 10) return `0${num}`
@@ -557,9 +472,7 @@ class StakingDashboard extends React.Component<Props, State> {
       return (
         <FlawedWalletScreen
           disableButtons={false}
-          onPress={() =>
-            navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-          }
+          onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)}
         />
       )
     }
@@ -573,14 +486,12 @@ class StakingDashboard extends React.Component<Props, State> {
 
         <View style={[styles.container]}>
           <OfflineBanner />
-          {/* eslint-disable indent */
-          isOnline &&
-            lastAccountStateSyncError && (
-              <SyncErrorBanner
-                showRefresh={!(isFetchingAccountState || isFetchingUtxos)}
-              />
+          {
+            /* eslint-disable indent */
+            isOnline && lastAccountStateSyncError && (
+              <SyncErrorBanner showRefresh={!(isFetchingAccountState || isFetchingUtxos)} />
             )
-          /* eslint-enable indent */
+            /* eslint-enable indent */
           }
 
           <ScrollView
@@ -600,9 +511,7 @@ class StakingDashboard extends React.Component<Props, State> {
 
             <View style={styles.row}>
               <EpochProgress
-                percentage={Math.floor(
-                  (100 * currentRelativeTime.slot) / epochLength,
-                )}
+                percentage={Math.floor((100 * currentRelativeTime.slot) / epochLength)}
                 currentEpoch={currentRelativeTime.epoch}
                 endTime={{
                   d: leftPadDate(Math.floor(secondsLeftInEpoch / (3600 * 24))),
@@ -627,34 +536,32 @@ class StakingDashboard extends React.Component<Props, State> {
               />
             </View>
 
-            {/* eslint-disable indent */
+            {
+              /* eslint-disable indent */
 
-            poolInfo != null && !!poolOperator ? (
-              <View style={styles.row}>
-                <DelegatedStakepoolInfo
-                  // $FlowFixMe TODO: null or undefined is not compatible with string
-                  poolTicker={poolInfo.info?.ticker}
-                  // $FlowFixMe TODO: null or undefined is not compatible with string
-                  poolName={poolInfo.info?.name}
-                  poolHash={poolOperator != null ? poolOperator : ''}
-                  // $FlowFixMe TODO: null or undefined is not compatible with string
-                  poolURL={poolInfo.info?.homepage}
-                />
-              </View>
-            ) : isDelegating ? (
-              <View style={styles.activityIndicator}>
-                <ActivityIndicator size={'large'} color={'black'} />
-              </View>
-            ) : null
+              poolInfo != null && !!poolOperator ? (
+                <View style={styles.row}>
+                  <DelegatedStakepoolInfo
+                    // $FlowFixMe TODO: null or undefined is not compatible with string
+                    poolTicker={poolInfo.info?.ticker}
+                    // $FlowFixMe TODO: null or undefined is not compatible with string
+                    poolName={poolInfo.info?.name}
+                    poolHash={poolOperator != null ? poolOperator : ''}
+                    // $FlowFixMe TODO: null or undefined is not compatible with string
+                    poolURL={poolInfo.info?.homepage}
+                  />
+                </View>
+              ) : isDelegating ? (
+                <View style={styles.activityIndicator}>
+                  <ActivityIndicator size={'large'} color={'black'} />
+                </View>
+              ) : null
 
-            /* eslint-enable indent */
+              /* eslint-enable indent */
             }
           </ScrollView>
 
-          <DelegationNavigationButtons
-            onPress={this.navigateToStakingCenter}
-            disabled={this.props.isReadOnly}
-          />
+          <DelegationNavigationButtons onPress={this.navigateToStakingCenter} disabled={this.props.isReadOnly} />
         </View>
 
         <WithdrawalDialog
@@ -731,6 +638,5 @@ export default injectIntl(
         ...ownProps,
       }),
     ),
-    withNavigationTitle(({walletName}) => walletName),
   )(StakingDashboard): ComponentType<ExternalProps>),
 )

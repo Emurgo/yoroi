@@ -9,7 +9,6 @@ import {ScrollView, Platform} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import TermsOfService from '../Common/TermsOfService'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {Checkbox, Button, StatusBar, PleaseWaitModal} from '../UiKit'
 import {FIRST_RUN_ROUTES} from '../../RoutesList'
 import {isSystemAuthEnabledSelector} from '../../selectors'
@@ -21,11 +20,6 @@ import styles from './styles/AcceptTermsOfServiceScreen.styles'
 import globalMessages from '../../i18n/global-messages'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.firstrun.acepttermsofservicescreen.title',
-    defaultMessage: '!!!Terms of Service Agreement',
-    description: 'some desc',
-  },
   aggreeClause: {
     id: 'components.firstrun.acepttermsofservicescreen.aggreeClause',
     defaultMessage: '!!!I agree with terms of service',
@@ -51,13 +45,7 @@ type Props = {
   savingConsent: boolean,
 }
 
-const AcceptTermsOfServiceScreen = ({
-  intl,
-  acceptedTos,
-  setAcceptedTos,
-  handleAccepted,
-  savingConsent,
-}: Props) => (
+const AcceptTermsOfServiceScreen = ({intl, acceptedTos, setAcceptedTos, handleAccepted, savingConsent}: Props) => (
   <SafeAreaView style={styles.safeAreaView}>
     <StatusBar type="dark" />
 
@@ -106,39 +94,31 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      handleAccepted: ({
-        navigation,
-        acceptAndSaveTos,
-        setSystemAuth,
-        setSavingConsent,
-        signin,
-      }) => async () => {
-        setSavingConsent(true)
-        await acceptAndSaveTos()
+      handleAccepted:
+        ({navigation, acceptAndSaveTos, setSystemAuth, setSavingConsent, signin}) =>
+        async () => {
+          setSavingConsent(true)
+          await acceptAndSaveTos()
 
-        const canSystemAuthBeEnabled = await canBiometricEncryptionBeEnabled()
+          const canSystemAuthBeEnabled = await canBiometricEncryptionBeEnabled()
 
-        // temporary disable biometric auth for Android SDK >= 29
-        // TODO(v-almonacid): re-enable for Android SDK >= 29 once the module
-        // is updated
-        const shouldNotEnableBiometricAuth =
-          Platform.OS === 'android' &&
-          CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version)
+          // temporary disable biometric auth for Android SDK >= 29
+          // TODO(v-almonacid): re-enable for Android SDK >= 29 once the module
+          // is updated
+          const shouldNotEnableBiometricAuth =
+            Platform.OS === 'android' && CONFIG.ANDROID_BIO_AUTH_EXCLUDED_SDK.includes(Platform.Version)
 
-        if (canSystemAuthBeEnabled && !shouldNotEnableBiometricAuth) {
-          await setSystemAuth(true)
-          // note(v-almonacid) here we don't setSavingConsent(false)
-          // because signin() will likely unmount the component before the
-          // update is dispatched
-          signin()
-        } else {
-          setSavingConsent(false)
-          navigation.navigate(FIRST_RUN_ROUTES.CUSTOM_PIN)
-        }
-      },
+          if (canSystemAuthBeEnabled && !shouldNotEnableBiometricAuth) {
+            await setSystemAuth(true)
+            // note(v-almonacid) here we don't setSavingConsent(false)
+            // because signin() will likely unmount the component before the
+            // update is dispatched
+            signin()
+          } else {
+            setSavingConsent(false)
+            navigation.navigate(FIRST_RUN_ROUTES.CUSTOM_PIN)
+          }
+        },
     }),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
   )(AcceptTermsOfServiceScreen),
 )

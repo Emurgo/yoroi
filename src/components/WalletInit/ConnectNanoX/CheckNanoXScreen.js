@@ -7,11 +7,7 @@ import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 
 import {Text, Button, Link, BulletPointItem, ProgressStep} from '../../UiKit'
-import {withNavigationTitle} from '../../../utils/renderUtils'
-import {
-  confirmationMessages,
-  ledgerMessages,
-} from '../../../../src/i18n/global-messages'
+import {confirmationMessages, ledgerMessages} from '../../../../src/i18n/global-messages'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 
 import styles from './styles/CheckNanoXScreen.style'
@@ -22,10 +18,6 @@ import type {IntlShape} from 'react-intl'
 import type {Navigation} from '../../../types/navigation'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
-    defaultMessage: '!!!Connect to Ledger Device',
-  },
   introline: {
     id: 'components.walletinit.connectnanox.checknanoxscreen.introline',
     defaultMessage: '!!!Before continuing, please make sure that:',
@@ -39,15 +31,7 @@ const messages = defineMessages({
 // TODO
 const url = '' // 'https://yoroi-wallet.com/...'
 
-const CheckNanoXScreen = ({
-  intl,
-  onPress,
-  route,
-}: {
-  intl: IntlShape,
-  onPress: any,
-  route: any,
-}) => {
+const CheckNanoXScreen = ({intl, onPress, route}: {intl: IntlShape, onPress: any, route: any}) => {
   const {networkId, walletImplementationId, useUSB} = route.params
   const requirements: Array<string> = []
   if (useUSB) {
@@ -59,10 +43,7 @@ const CheckNanoXScreen = ({
       requirements.push(intl.formatMessage(ledgerMessages.locationEnabled))
     }
   }
-  requirements.push(
-    intl.formatMessage(ledgerMessages.appInstalled),
-    intl.formatMessage(ledgerMessages.appOpened),
-  )
+  requirements.push(intl.formatMessage(ledgerMessages.appInstalled), intl.formatMessage(ledgerMessages.appOpened))
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -71,9 +52,7 @@ const CheckNanoXScreen = ({
         <View style={styles.heading}>
           <Image source={image} />
         </View>
-        <Text style={styles.item}>
-          {intl.formatMessage(messages.introline)}
-        </Text>
+        <Text style={styles.item}>{intl.formatMessage(messages.introline)}</Text>
         <ScrollView style={styles.scrollView}>
           {requirements.map((row, i) => (
             <BulletPointItem textRow={row} key={i} style={styles.item} />
@@ -86,12 +65,8 @@ const CheckNanoXScreen = ({
         )}
       </View>
       <Button
-        onPress={(event) =>
-          onPress(event, networkId, walletImplementationId, useUSB)
-        }
-        title={intl.formatMessage(
-          confirmationMessages.commonButtons.continueButton,
-        )}
+        onPress={(event) => onPress(event, networkId, walletImplementationId, useUSB)}
+        title={intl.formatMessage(confirmationMessages.commonButtons.continueButton)}
         style={styles.button}
       />
     </SafeAreaView>
@@ -106,21 +81,15 @@ type ExternalProps = {|
 
 export default injectIntl(
   (compose(
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
     withHandlers({
-      onPress: ({navigation}) => (
-        event,
-        networkId,
-        walletImplementationId,
-        useUSB,
-      ) =>
-        navigation.navigate(WALLET_INIT_ROUTES.CONNECT_NANO_X, {
-          networkId,
-          walletImplementationId,
-          useUSB,
-        }),
+      onPress:
+        ({navigation}) =>
+        (event, networkId, walletImplementationId, useUSB) =>
+          navigation.navigate(WALLET_INIT_ROUTES.CONNECT_NANO_X, {
+            networkId,
+            walletImplementationId,
+            useUSB,
+          }),
     }),
   )(CheckNanoXScreen): ComponentType<ExternalProps>),
 )

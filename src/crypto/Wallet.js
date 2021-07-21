@@ -14,22 +14,14 @@ import {CONFIG} from '../config/config'
 import {isJormungandr, getCardanoNetworkConfigById} from '../config/networks'
 import assert from '../utils/assert'
 import {Logger} from '../utils/logging'
-import {
-  synchronize,
-  nonblockingSynchronize,
-  IsLockedError,
-} from '../utils/promise'
+import {synchronize, nonblockingSynchronize, IsLockedError} from '../utils/promise'
 import {TransactionCache} from './shelley/transactionCache'
 import {validatePassword} from '../utils/validators'
 
 import type {EncryptionMethod} from './types'
 import type {Mutex} from '../utils/promise'
 import type {HWDeviceInfo} from './shelley/ledgerUtils'
-import type {
-  NetworkId,
-  WalletImplementationId,
-  YoroiProvider,
-} from '../config/types'
+import type {NetworkId, WalletImplementationId, YoroiProvider} from '../config/types'
 import type {WalletChecksum} from '@emurgo/cip4-js'
 
 type WalletState = {|
@@ -119,29 +111,16 @@ export default class Wallet {
 
   // ============ security & key management ============ //
 
-  async encryptAndSaveMasterKey(
-    encryptionMethod: EncryptionMethod,
-    masterKey: string,
-    password?: string,
-  ) {
+  async encryptAndSaveMasterKey(encryptionMethod: EncryptionMethod, masterKey: string, password?: string) {
     await KeyStore.storeData(this.id, encryptionMethod, masterKey, password)
   }
 
   async getDecryptedMasterKey(masterPassword: string, intl: IntlShape) {
-    return await KeyStore.getData(
-      this.id,
-      'MASTER_PASSWORD',
-      '',
-      masterPassword,
-      intl,
-    )
+    return await KeyStore.getData(this.id, 'MASTER_PASSWORD', '', masterPassword, intl)
   }
 
   async enableEasyConfirmation(masterPassword: string, intl: IntlShape) {
-    const decryptedMasterKey = await this.getDecryptedMasterKey(
-      masterPassword,
-      intl,
-    )
+    const decryptedMasterKey = await this.getDecryptedMasterKey(masterPassword, intl)
 
     await this.encryptAndSaveMasterKey('BIOMETRICS', decryptedMasterKey)
     await this.encryptAndSaveMasterKey('SYSTEM_PIN', decryptedMasterKey)
@@ -149,14 +128,8 @@ export default class Wallet {
     this.isEasyConfirmationEnabled = true
   }
 
-  async changePassword(
-    masterPassword: string,
-    newPassword: string,
-    intl: IntlShape,
-  ) {
-    const isNewPasswordValid = _.isEmpty(
-      validatePassword(newPassword, newPassword),
-    )
+  async changePassword(masterPassword: string, newPassword: string, intl: IntlShape) {
+    const isNewPasswordValid = _.isEmpty(validatePassword(newPassword, newPassword))
 
     if (!isNewPasswordValid) {
       throw new Error('New password is not valid')
@@ -164,11 +137,7 @@ export default class Wallet {
 
     const masterKey = await this.getDecryptedMasterKey(masterPassword, intl)
 
-    await this.encryptAndSaveMasterKey(
-      'MASTER_PASSWORD',
-      masterKey,
-      newPassword,
-    )
+    await this.encryptAndSaveMasterKey('MASTER_PASSWORD', masterKey, newPassword)
   }
 
   // =================== subscriptions =================== //
@@ -192,9 +161,7 @@ export default class Wallet {
 
   setupSubscriptions() {
     this.transactionCache.subscribe(this.notify)
-    this.transactionCache.subscribeOnTxHistoryUpdate(
-      this.notifyOnTxHistoryUpdate,
-    )
+    this.transactionCache.subscribeOnTxHistoryUpdate(this.notifyOnTxHistoryUpdate)
     this.internalChain.addSubscriberToNewAddresses(this.notify)
     this.externalChain.addSubscriberToNewAddresses(this.notify)
   }
@@ -207,9 +174,7 @@ export default class Wallet {
 
   async tryDoFullSync() {
     try {
-      return await nonblockingSynchronize(this._doFullSyncMutex, () =>
-        this._doFullSync(),
-      )
+      return await nonblockingSynchronize(this._doFullSyncMutex, () => this._doFullSync())
     } catch (e) {
       if (e instanceof IsLockedError) {
         return null
@@ -220,10 +185,7 @@ export default class Wallet {
   }
 
   isUsedAddress(address: string) {
-    return (
-      !!this.transactionCache.perAddressTxs[address] &&
-      this.transactionCache.perAddressTxs[address].length > 0
-    )
+    return !!this.transactionCache.perAddressTxs[address] && this.transactionCache.perAddressTxs[address].length > 0
   }
 
   getLastUsedIndex(chain: AddressChain): number {
@@ -241,18 +203,11 @@ export default class Wallet {
     // TODO: multi-network support
     const backendConfig = getCardanoNetworkConfigById(this.networkId).BACKEND
     const filterFn = (addrs) => api.filterUsedAddresses(addrs, backendConfig)
-    await Promise.all([
-      this.internalChain.sync(filterFn),
-      this.externalChain.sync(filterFn),
-    ])
-    // prettier-ignore
+    await Promise.all([this.internalChain.sync(filterFn), this.externalChain.sync(filterFn)])
+
     const addresses =
       this.rewardAddressHex != null
-        ? [
-          ...this.internalChain.getBlocks(),
-          ...this.externalChain.getBlocks(),
-          ...[[this.rewardAddressHex]],
-        ]
+        ? [...this.internalChain.getBlocks(), ...this.externalChain.getBlocks(), ...[[this.rewardAddressHex]]]
         : [...this.internalChain.getBlocks(), ...this.externalChain.getBlocks()]
     if (!isJormungandr(this.networkId)) {
       Logger.info('Discovery done, now syncing transactions')
@@ -291,8 +246,7 @@ export default class Wallet {
   canGenerateNewReceiveAddress() {
     const lastUsedIndex = this.getLastUsedIndex(this.externalChain)
     // TODO: should use specific wallet config
-    const maxIndex =
-      lastUsedIndex + CONFIG.WALLETS.HASKELL_SHELLEY.MAX_GENERATED_UNUSED
+    const maxIndex = lastUsedIndex + CONFIG.WALLETS.HASKELL_SHELLEY.MAX_GENERATED_UNUSED
     if (this.state.lastGeneratedAddressIndex >= maxIndex) {
       return false
     }
@@ -301,9 +255,7 @@ export default class Wallet {
 
   generateNewUiReceiveAddressIfNeeded() {
     /* new address is automatically generated when you use the latest unused */
-    const lastGeneratedAddress = this.externalChain.addresses[
-      this.state.lastGeneratedAddressIndex
-    ]
+    const lastGeneratedAddress = this.externalChain.addresses[this.state.lastGeneratedAddressIndex]
     if (!this.isUsedAddress(lastGeneratedAddress)) {
       return false
     }

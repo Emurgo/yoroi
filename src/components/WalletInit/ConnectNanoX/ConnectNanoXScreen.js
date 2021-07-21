@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react'
 import {SafeAreaView} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
@@ -8,7 +9,6 @@ import {withHandlers} from 'recompose'
 import LedgerConnect from '../../Ledger/LedgerConnect'
 import {getHWDeviceInfo} from '../../../crypto/shelley/ledgerUtils'
 import {ProgressStep} from '../../UiKit'
-import {withNavigationTitle} from '../../../utils/renderUtils'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {Logger} from '../../../utils/logging'
 import {errorMessages} from '../../../i18n/global-messages'
@@ -23,14 +23,9 @@ import type {Navigation} from '../../../types/navigation'
 import type {DeviceId, DeviceObj} from '../../../crypto/shelley/ledgerUtils'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.walletinit.connectnanox.connectnanoxscreen.title',
-    defaultMessage: '!!!Connect to Ledger Device',
-  },
   exportKey: {
     id: 'components.walletinit.connectnanox.connectnanoxscreen.exportKey',
-    defaultMessage:
-      '!!!Action needed: Please, export public key from your Ledger device.',
+    defaultMessage: '!!!Action needed: Please, export public key from your Ledger device.',
   },
 })
 
@@ -50,12 +45,7 @@ const _navigateToSave = async (
     if (deviceId == null && deviceObj == null) {
       throw new Error('null descriptor, should never happen')
     }
-    const hwDeviceInfo = await getHWDeviceInfo(
-      walletImplementationId,
-      deviceId,
-      deviceObj,
-      useUSB,
-    )
+    const hwDeviceInfo = await getHWDeviceInfo(walletImplementationId, deviceId, deviceObj, useUSB)
     navigation.navigate(WALLET_INIT_ROUTES.SAVE_NANO_X, {
       hwDeviceInfo,
       networkId,
@@ -89,13 +79,7 @@ type Props = {
   onConnectUSB: (DeviceObj) => Promise<void>,
 }
 
-const ConnectNanoXScreen = ({
-  intl,
-  defaultDevices,
-  route,
-  onConnectBLE,
-  onConnectUSB,
-}: Props) => {
+const ConnectNanoXScreen = ({intl, defaultDevices, route, onConnectBLE, onConnectUSB}: Props) => {
   const useUSB = route.params?.useUSB === true
 
   return (
@@ -122,32 +106,17 @@ type ExternalProps = {|
 
 export default injectIntl(
   (compose(
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
     withHandlers({
-      onConnectBLE: ({
-        navigation,
-        route,
-        intl,
-      }: {
-        intl: IntlShape,
-        navigation: any,
-        route: any,
-      }) => async (deviceId: DeviceId) => {
-        await _navigateToSave(deviceId, null, navigation, route, intl)
-      },
-      onConnectUSB: ({
-        navigation,
-        route,
-        intl,
-      }: {
-        intl: IntlShape,
-        navigation: any,
-        route: any,
-      }) => async (deviceObj: DeviceObj) => {
-        await _navigateToSave(null, deviceObj, navigation, route, intl)
-      },
+      onConnectBLE:
+        ({navigation, route, intl}: {intl: IntlShape, navigation: any, route: any}) =>
+        async (deviceId: DeviceId) => {
+          await _navigateToSave(deviceId, null, navigation, route, intl)
+        },
+      onConnectUSB:
+        ({navigation, route, intl}: {intl: IntlShape, navigation: any, route: any}) =>
+        async (deviceObj: DeviceObj) => {
+          await _navigateToSave(null, deviceObj, navigation, route, intl)
+        },
     }),
   )(ConnectNanoXScreen): ComponentType<ExternalProps>),
 )

@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react'
 import {View} from 'react-native'
 import {compose} from 'redux'
@@ -9,7 +10,6 @@ import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import PinRegistrationForm from '../Common/PinRegistrationForm'
 import {encryptAndStoreCustomPin, signin} from '../../actions'
 import {isAuthenticatedSelector} from '../../selectors'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {StatusBar} from '../UiKit'
 
 import styles from './styles/CustomPinScreen.style'
@@ -18,11 +18,6 @@ import type {ComponentType} from 'react'
 import type {Navigation} from '../../types/navigation'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.firstrun.custompinscreen.title',
-    defaultMessage: '!!!Set PIN',
-    description: 'some desc',
-  },
   pinInputTitle: {
     id: 'components.firstrun.custompinscreen.pinInputTitle',
     defaultMessage: '!!!Enter the PIN',
@@ -40,13 +35,7 @@ const messages = defineMessages({
   },
 })
 
-const CustomPinScreen = (
-  {
-    handlePinEntered,
-    intl,
-    navigation,
-  }: {intl: IntlShape} & Object /* TODO: type */,
-) => (
+const CustomPinScreen = ({handlePinEntered, intl, navigation}: {intl: IntlShape} & Object /* TODO: type */) => (
   <View style={styles.container} testID="customPinContainer">
     <StatusBar type="dark" />
 
@@ -74,9 +63,6 @@ type ExternalProps = {|
 
 export default injectIntl(
   (compose(
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
     connect(
       (state) => ({
         isAuth: isAuthenticatedSelector(state),
@@ -90,16 +76,13 @@ export default injectIntl(
       onSuccess: route.params?.onSuccess,
     })),
     withHandlers({
-      handlePinEntered: ({
-        onSuccess,
-        encryptAndStoreCustomPin,
-        isAuth,
-        signin,
-      }) => async (pin) => {
-        await encryptAndStoreCustomPin(pin)
-        if (!isAuth) signin() // because in first run user is not authenticated
-        if (onSuccess !== undefined) onSuccess()
-      },
+      handlePinEntered:
+        ({onSuccess, encryptAndStoreCustomPin, isAuth, signin}) =>
+        async (pin) => {
+          await encryptAndStoreCustomPin(pin)
+          if (!isAuth) signin() // because in first run user is not authenticated
+          if (onSuccess !== undefined) onSuccess()
+        },
     }),
   )(CustomPinScreen): ComponentType<ExternalProps>),
 )

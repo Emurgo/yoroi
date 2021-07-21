@@ -8,11 +8,7 @@ import Clipboard from '@react-native-community/clipboard'
 import QRCode from 'react-native-qrcode-svg'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
-import {
-  externalAddressIndexSelector,
-  isHWSelector,
-  walletMetaSelector,
-} from '../../selectors'
+import {externalAddressIndexSelector, isHWSelector, walletMetaSelector} from '../../selectors'
 import {formatPath} from '../../crypto/commonUtils'
 import {Text, Button, Modal} from '../UiKit'
 
@@ -20,10 +16,7 @@ import styles from './styles/AddressModal.style'
 import copyIcon from '../../assets/img/icon/copy-ext.png'
 import copiedIcon from '../../assets/img/icon/copied.png'
 
-import type {
-  AddressDTOCardano,
-  KeyHashesCardano,
-} from '../../crypto/shelley/Address.dto'
+import type {AddressDTOCardano, KeyHashesCardano} from '../../crypto/shelley/Address.dto'
 import type {ComponentType} from 'react'
 import type {WalletMeta} from '../../state'
 
@@ -113,40 +106,17 @@ class AddressModal extends React.Component<Props, State> {
 
   render() {
     const {isCopied, keyHashes} = this.state
-    const {
-      addressInfo,
-      index,
-      intl,
-      onRequestClose,
-      visible,
-      onAddressVerify,
-      isHW,
-      walletMeta,
-    } = this.props
+    const {addressInfo, index, intl, onRequestClose, visible, onAddressVerify, isHW, walletMeta} = this.props
 
     return (
       <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
         <View style={styles.container}>
-          <Text style={styles.title}>
-            {intl.formatMessage(messages.title).toLocaleUpperCase()}
-          </Text>
-          <QRCode
-            value={addressInfo?.address}
-            size={140}
-            backgroundColor="white"
-            color="black"
-          />
+          <Text style={styles.title}>{intl.formatMessage(messages.title).toLocaleUpperCase()}</Text>
+          <QRCode value={addressInfo?.address} size={140} backgroundColor="white" color="black" />
           <View style={styles.info}>
-            <Text style={styles.subtitle}>
-              {intl.formatMessage(messages.walletAddress)}
-            </Text>
+            <Text style={styles.subtitle}>{intl.formatMessage(messages.walletAddress)}</Text>
             <View style={styles.dataContainer}>
-              <Text
-                secondary
-                monospace
-                numberOfLines={1}
-                ellipsizeMode="middle"
-              >
+              <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">
                 {addressInfo?.address}
               </Text>
               <TouchableOpacity
@@ -157,30 +127,15 @@ class AddressModal extends React.Component<Props, State> {
                 <Image source={isCopied ? copiedIcon : copyIcon} />
               </TouchableOpacity>
             </View>
-            <Text style={styles.subtitle}>
-              {intl.formatMessage(messages.BIP32path)}
-            </Text>
+            <Text style={styles.subtitle}>{intl.formatMessage(messages.BIP32path)}</Text>
             <Text secondary monospace>
-              {index != null && (
-                <>
-                  {formatPath(
-                    0,
-                    'External',
-                    index,
-                    walletMeta.walletImplementationId,
-                  )}
-                </>
-              )}
+              {index != null && <>{formatPath(0, 'External', index, walletMeta.walletImplementationId)}</>}
             </Text>
-            <Text style={styles.subtitle}>
-              {intl.formatMessage(messages.staking)}
-            </Text>
+            <Text style={styles.subtitle}>{intl.formatMessage(messages.staking)}</Text>
             <Text secondary monospace>
               {keyHashes?.staking}
             </Text>
-            <Text style={styles.subtitle}>
-              {intl.formatMessage(messages.spending)}
-            </Text>
+            <Text style={styles.subtitle}>{intl.formatMessage(messages.spending)}</Text>
             <Text secondary monospace>
               {keyHashes?.spending}
             </Text>
@@ -188,11 +143,7 @@ class AddressModal extends React.Component<Props, State> {
         </View>
 
         {isHW && (
-          <Button
-            onPress={onAddressVerify}
-            title={intl.formatMessage(messages.verifyLabel)}
-            style={styles.button}
-          />
+          <Button onPress={onAddressVerify} title={intl.formatMessage(messages.verifyLabel)} style={styles.button} />
         )}
       </Modal>
     )
@@ -211,7 +162,7 @@ export default injectIntl(
   (compose(
     connect(
       (state, {addressInfo}) => ({
-        index: externalAddressIndexSelector(state)[(addressInfo?.address)],
+        index: externalAddressIndexSelector(state)[addressInfo?.address],
         isHW: isHWSelector(state),
         walletMeta: walletMetaSelector(state),
       }),

@@ -42,10 +42,7 @@ const _setLastError = (error) => ({
   reducer: (state, error) => error,
 })
 
-export const fetchUTXOs = () => async (
-  dispatch: Dispatch<any>,
-  getState: () => State,
-) => {
+export const fetchUTXOs = () => async (dispatch: Dispatch<any>, getState: () => State) => {
   if (getState().balance.isFetching) {
     return
   }

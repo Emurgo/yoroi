@@ -5,14 +5,7 @@
  */
 
 import React, {useEffect, useState} from 'react'
-import {
-  View,
-  ScrollView,
-  SafeAreaView,
-  Image,
-  TouchableOpacity,
-  Linking,
-} from 'react-native'
+import {View, ScrollView, SafeAreaView, Image, TouchableOpacity, Linking} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
 
@@ -20,7 +13,6 @@ import {generateVotingKeys} from '../../actions/voting'
 import {fetchUTXOs} from '../../actions/utxo'
 import {Text, Button, ProgressStep} from '../UiKit'
 import StandardModal from '../Common/StandardModal'
-import {withTitle} from '../../utils/renderUtils'
 import {CATALYST_ROUTES} from '../../RoutesList'
 import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
 import AppDownload from '../../assets/img/pic-catalyst-step1.png'
@@ -38,8 +30,7 @@ import type {Navigation} from '../../types/navigation'
 const messages = defineMessages({
   subTitle: {
     id: 'components.catalyst.step1.subTitle',
-    defaultMessage:
-      '!!!Before you begin, make sure to download the Catalyst Voting App.',
+    defaultMessage: '!!!Before you begin, make sure to download the Catalyst Voting App.',
   },
   stakingKeyNotRegistered: {
     id: 'components.catalyst.step1.stakingKeyNotRegistered',
@@ -74,13 +65,7 @@ type HOCProps = {
   isDelegating: boolean,
 }
 
-const Step1 = ({
-  intl,
-  generateVotingKeys,
-  navigation,
-  fetchUTXOs,
-  isDelegating,
-}: Props & HOCProps) => {
+const Step1 = ({intl, generateVotingKeys, navigation, fetchUTXOs, isDelegating}: Props & HOCProps) => {
   const [showModal, setShowModal] = useState<boolean>(!isDelegating)
 
   useEffect(() => {
@@ -90,14 +75,10 @@ const Step1 = ({
   }, [])
 
   const openAndroidStore = () => {
-    Linking.openURL(
-      'https://play.google.com/store/apps/details?id=io.iohk.vitvoting',
-    )
+    Linking.openURL('https://play.google.com/store/apps/details?id=io.iohk.vitvoting')
   }
   const openAppStore = () => {
-    Linking.openURL(
-      'https://apps.apple.com/kg/app/catalyst-voting/id1517473397',
-    )
+    Linking.openURL('https://apps.apple.com/kg/app/catalyst-voting/id1517473397')
   }
 
   return (
@@ -106,9 +87,7 @@ const Step1 = ({
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollViewContentContainer}>
           <View style={[styles.description, styles.mb40]}>
-            <Text style={styles.text}>
-              {intl.formatMessage(messages.subTitle)}
-            </Text>
+            <Text style={styles.text}>{intl.formatMessage(messages.subTitle)}</Text>
           </View>
           <View style={styles.images}>
             <View style={styles.mb40}>
@@ -129,24 +108,21 @@ const Step1 = ({
         </ScrollView>
         <Button
           onPress={() => navigation.navigate(CATALYST_ROUTES.STEP2)}
-          title={intl.formatMessage(
-            confirmationMessages.commonButtons.continueButton,
-          )}
+          title={intl.formatMessage(confirmationMessages.commonButtons.continueButton)}
         />
       </View>
       <StandardModal
         visible={showModal}
         title={intl.formatMessage(globalMessages.attention)}
-        children={<WarningModalBody intl={intl} />}
         onRequestClose={() => setShowModal(false)}
         primaryButton={{
-          label: intl.formatMessage(
-            confirmationMessages.commonButtons.iUnderstandButton,
-          ),
+          label: intl.formatMessage(confirmationMessages.commonButtons.iUnderstandButton),
           onPress: () => setShowModal(false),
         }}
         showCloseIcon
-      />
+      >
+        <WarningModalBody intl={intl} />
+      </StandardModal>
     </SafeAreaView>
   )
 }
@@ -160,9 +136,5 @@ export default (injectIntl(
       generateVotingKeys,
       fetchUTXOs,
     },
-  )(
-    withTitle(Step1, ({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(globalMessages.votingTitle),
-    ),
-  ),
+  )(Step1),
 ): ComponentType<Props>)

@@ -25,7 +25,10 @@ const styles = StyleSheet.create({
 
 const Link = (compose(
   withHandlers({
-    onPress: ({url}: {url: string}) => () => Linking.openURL(url),
+    onPress:
+      ({url}: {url: string}) =>
+      () =>
+        Linking.openURL(url),
   }),
 )(({onPress, text, style}) => (
   <TouchableOpacity onPress={onPress}>

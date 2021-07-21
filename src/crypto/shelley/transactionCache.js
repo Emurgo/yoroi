@@ -1,4 +1,5 @@
 // @flow
+
 import {defaultMemoize} from 'reselect'
 import {uniq, fromPairs, max, mapValues, sum} from 'lodash'
 import assert from '../../utils/assert'
@@ -36,9 +37,7 @@ export type TimeForTx = {|
   txOrdinal: number,
 |}
 
-const getLatestTransaction: (Array<Transaction>) => void | TimeForTx = (
-  txs,
-) => {
+const getLatestTransaction: (Array<Transaction>) => void | TimeForTx = (txs) => {
   const blockInfo: Array<TimeForTx> = []
   for (const tx of txs) {
     if (tx.blockHash != null && tx.txOrdinal != null && tx.blockNum != null) {
@@ -95,9 +94,7 @@ export type TimestampedCertMeta = {
   certificates: Array<RemoteCertificateMeta>,
 }
 type PerAddressCertificatesDict = Dict<Dict<TimestampedCertMeta>>
-const perAddressCertificatesSelector = (
-  state: TransactionCacheState,
-): PerAddressCertificatesDict => {
+const perAddressCertificatesSelector = (state: TransactionCacheState): PerAddressCertificatesDict => {
   const transactions = state.transactions
   const addressToPerTxCerts = {}
 
@@ -143,15 +140,9 @@ const confirmationCountsSelector = (state: TransactionCacheState) => {
     }
 
     const getBlockNum = ({address}) =>
-      perAddressSyncMetadata[address]
-        ? perAddressSyncMetadata[address].bestBlockNum
-        : 0
+      perAddressSyncMetadata[address] ? perAddressSyncMetadata[address].bestBlockNum : 0
 
-    const bestBlockNum = max([
-      state.bestBlockNum || 0,
-      ...tx.inputs.map(getBlockNum),
-      ...tx.outputs.map(getBlockNum),
-    ])
+    const bestBlockNum = max([state.bestBlockNum || 0, ...tx.inputs.map(getBlockNum), ...tx.outputs.map(getBlockNum)])
 
     assert.assert(tx.blockNum, 'Successfull tx should have blockNum')
     /* :: if (tx.blockNum == null) throw 'assert' */
@@ -223,9 +214,7 @@ export class TransactionCache {
 
   _getBlockMetadata(addrs: Array<string>) {
     assert.assert(addrs.length, 'getBlockMetadata: addrs not empty')
-    const metadata = addrs.map(
-      (addr) => this._state.perAddressSyncMetadata[addr],
-    )
+    const metadata = addrs.map((addr) => this._state.perAddressSyncMetadata[addr])
 
     const first = metadata[0]
 
@@ -260,10 +249,7 @@ export class TransactionCache {
     metadata: SyncMetadata,
     currentBestBlockHash: ?string,
   ): TxHistoryRequest {
-    assert.assert(
-      currentBestBlockHash != null,
-      'buildTxHistoryRequest: bestBlock not null',
-    )
+    assert.assert(currentBestBlockHash != null, 'buildTxHistoryRequest: bestBlock not null')
     /* :: if (currentBestBlockHash == null) throw 'assert' */
     const request = {
       addresses,
@@ -284,10 +270,7 @@ export class TransactionCache {
   _isUpdatedTransaction(tx: Transaction): boolean {
     const id = tx.id
     // We have this transaction and it did not change
-    if (
-      this._state.transactions[id] &&
-      this._state.transactions[id].lastUpdatedAt === tx.lastUpdatedAt
-    ) {
+    if (this._state.transactions[id] && this._state.transactions[id].lastUpdatedAt === tx.lastUpdatedAt) {
       return false
     }
     if (this._state.transactions[id]) {
@@ -311,31 +294,19 @@ export class TransactionCache {
     return sum(updated, (x) => (x ? 1 : 0))
   }
 
-  async doSyncStep(
-    blocks: Array<Array<string>>,
-    networkId: NetworkId,
-  ): Promise<boolean> {
+  async doSyncStep(blocks: Array<Array<string>>, networkId: NetworkId): Promise<boolean> {
     let count = 0
     let wasPaginated = false
     const errors = []
-    const currentBestBlock = await api.getBestBlock(
-      getCardanoNetworkConfigById(networkId).BACKEND,
-    )
+    const currentBestBlock = await api.getBestBlock(getCardanoNetworkConfigById(networkId).BACKEND)
 
     const tasks = blocks.map((addrs) => {
       const metadata = this._getBlockMetadata(addrs)
-      const historyRequest = this._buildTxHistoryRequest(
-        addrs,
-        metadata,
-        currentBestBlock.hash,
-      )
+      const historyRequest = this._buildTxHistoryRequest(addrs, metadata, currentBestBlock.hash)
 
       return () =>
         api
-          .fetchNewTxHistory(
-            historyRequest,
-            getCardanoNetworkConfigById(networkId).BACKEND,
-          )
+          .fetchNewTxHistory(historyRequest, getCardanoNetworkConfigById(networkId).BACKEND)
           .then((response) => [addrs, response])
     })
 
@@ -354,9 +325,7 @@ export class TransactionCache {
         // Note: we can update best block number only if we are processing
         // the last page of the history request, see design doc for details
         const newBestBlockNum =
-          response.isLast && response.transactions.length
-            ? currentBestBlock.height
-            : metadata.bestBlockNum
+          response.isLast && response.transactions.length ? currentBestBlock.height : metadata.bestBlockNum
 
         const newMetadata = {
           bestBlockNum: newBestBlockNum,
@@ -364,12 +333,8 @@ export class TransactionCache {
           bestTxHash: bestTx?.txHash,
         }
 
-        const transactionsUpdate = fromPairs(
-          response.transactions.map((tx) => [tx.id, tx]),
-        )
-        const metadataUpdate = fromPairs(
-          addrs.map((addr) => [addr, newMetadata]),
-        )
+        const transactionsUpdate = fromPairs(response.transactions.map((tx) => [tx.id, tx]))
+        const metadataUpdate = fromPairs(addrs.map((addr) => [addr, newMetadata]))
 
         count += this._checkUpdatedTransactions(response.transactions)
 
@@ -420,15 +385,11 @@ export class TransactionCache {
     // similarly, the haskell shelley endpoint introduces withdrawals & certs.
     // versions < 3.0.1 need resync
     const txs = ObjectValues(data.transactions)
-    const lacksShelleyTxData = txs
-      ? txs.some((tx) => tx.withdrawals == null || tx.certificates == null)
-      : false
+    const lacksShelleyTxData = txs ? txs.some((tx) => tx.withdrawals == null || tx.certificates == null) : false
     if (!isDeprecatedCache && !lacksShelleyTxData) {
       cache.updateState(data)
     } else {
-      Logger.info(
-        'TransactionCache: deprecated tx. Restoring from empty object',
-      )
+      Logger.info('TransactionCache: deprecated tx. Restoring from empty object')
     }
     return cache
   }

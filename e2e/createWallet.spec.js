@@ -9,7 +9,6 @@ describe('Setup a fresh wallet on Byron network', () => {
   })
 
   it('should create a new wallet called "test wallet"', async () => {
-
     await expect(element(by.id('addWalletOnByronButton'))).toBeVisible()
     await element(by.id('addWalletOnByronButton')).tap()
 

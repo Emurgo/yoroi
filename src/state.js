@@ -1,4 +1,5 @@
 // @flow
+
 import {BigNumber} from 'bignumber.js'
 
 import {NETWORK_REGISTRY} from './config/types'
@@ -8,11 +9,7 @@ import type {RawUtxo, RemotePoolMetaSuccess} from './api/types'
 import type {Transaction, Token} from './types/HistoryTransaction'
 import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
 import {ISignRequest} from './crypto/ISignRequest'
-import type {
-  NetworkId,
-  WalletImplementationId,
-  YoroiProvider,
-} from './config/types'
+import type {NetworkId, WalletImplementationId, YoroiProvider} from './config/types'
 import type {WalletChecksum} from '@emurgo/cip4-js'
 
 export type ServerStatusCache = {|
@@ -202,8 +199,7 @@ export const mockState = (): State => {
       name: 'My wallet',
       isInitialized: true,
       networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-      walletImplementationId:
-        CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+      walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
       provider: null,
       isHW: false,
       hwDeviceInfo: null,

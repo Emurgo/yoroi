@@ -15,13 +15,14 @@ const devices = [
   {name: 'NANO X 9F42', id: 5},
 ]
 
-const LedgerConnectModal = ({
-  visible,
-  onRequestClose,
-  navigation,
-  defaultDevices,
-  useUSB,
-}) => (
+type Props = {
+  visible: any,
+  onRequestClose: any,
+  navigation: any,
+  defaultDevices: any,
+  useUSB: any,
+}
+const LedgerConnectModal = ({visible, onRequestClose, navigation, defaultDevices, useUSB}: Props) => (
   <Modal visible={visible} onRequestClose={onRequestClose}>
     {/* $FlowFixMe */}
     <LedgerConnect
@@ -39,16 +40,8 @@ const LedgerConnectModal = ({
 const StatefulModal = StorybookModalWrapper(LedgerConnectModal)
 
 storiesOf('Ledger connect', module)
-  .add('Using BLE', ({navigation}) => (
-    <StatefulModal navigation={navigation} useUSB={false} />
-  ))
-  .add('Using USB', ({navigation}) => (
-    <StatefulModal navigation={navigation} useUSB />
-  ))
+  .add('Using BLE', ({navigation}) => <StatefulModal navigation={navigation} useUSB={false} />)
+  .add('Using USB', ({navigation}) => <StatefulModal navigation={navigation} useUSB />)
   .add('BLE with many devices', ({navigation}) => (
-    <StatefulModal
-      navigation={navigation}
-      defaultDevices={devices}
-      useUSB={false}
-    />
+    <StatefulModal navigation={navigation} defaultDevices={devices} useUSB={false} />
   ))

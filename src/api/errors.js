@@ -1,4 +1,5 @@
 // @flow
+
 import LocalizableError from '../i18n/LocalizableError'
 import {errorMessages} from '../i18n/global-messages'
 

@@ -1,4 +1,5 @@
 // @flow
+
 import {flatten} from 'lodash'
 
 import {NETWORK_REGISTRY, YOROI_PROVIDER_IDS} from './types'
@@ -49,8 +50,7 @@ const HASKELL_SHELLEY = {
   ENABLED: true,
   CHAIN_NETWORK_ID: '1',
   IS_MAINNET: true,
-  EXPLORER_URL_FOR_ADDRESS: (address: string) =>
-    `https://explorer.cardano.org/en/address?address=${address}`,
+  EXPLORER_URL_FOR_ADDRESS: (address: string) => `https://explorer.cardano.org/en/address?address=${address}`,
   EXPLORER_URL_FOR_TX: (tx: string) => `https://explorer.cardano.org/tx/${tx}`,
   POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
   BACKEND: {
@@ -138,10 +138,8 @@ const JORMUNGANDR = {
     ..._DEFAULT_BACKEND_RULES,
   },
   SEIZA_STAKING_SIMPLE: (ADA: string) =>
-    // eslint-disable-next-line max-len
     `https://testnet.seiza-website.emurgo.io/staking-simple/list?sortBy=RANDOM&searchText=&performance[]=0&performance[]=100&source=mobile&userAda=${ADA}`,
-  EXPLORER_URL_FOR_ADDRESS: (address: string) =>
-    `https://shelleyexplorer.cardano.org/address/?id=${address}`,
+  EXPLORER_URL_FOR_ADDRESS: (address: string) => `https://shelleyexplorer.cardano.org/address/?id=${address}`,
   EXPLORER_URL_FOR_TX: (_tx: string) => {
     throw new Error('non supported network')
   },
@@ -158,8 +156,7 @@ const JORMUNGANDR = {
     PRODUCTION: '0',
     TEST: '1',
   },
-  GENESISHASH:
-    '8e4d2a343f3dcf9330ad9035b3e8d168e6728904262f2c434a4f8f934ec7b676',
+  GENESISHASH: '8e4d2a343f3dcf9330ad9035b3e8d168e6728904262f2c434a4f8f934ec7b676',
   BLOCK0_DATE: 1576264417000,
   SLOTS_PER_EPOCH: 43200,
   SLOT_DURATION: 2,
@@ -220,16 +217,11 @@ export type YoroiProviderConfig =
   | typeof ALONZO_TESTNET
   | typeof JORMUNGANDR
 
-export const getYoroiProvider = (
-  networkConfig: NetworkConfig,
-  provider: ?YoroiProvider,
-): YoroiProviderConfig => {
+export const getYoroiProvider = (networkConfig: NetworkConfig, provider: ?YoroiProvider): YoroiProviderConfig => {
   if (provider === 'emurgo-alonzo') {
     if (networkConfig.NETWORK_ID === NETWORK_REGISTRY.HASKELL_SHELLEY) {
       return PROVIDERS.ALONZO_MAINNET
-    } else if (
-      networkConfig.NETWORK_ID === NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET
-    ) {
+    } else if (networkConfig.NETWORK_ID === NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET) {
       return PROVIDERS.ALONZO_TESTNET
     }
   }
@@ -241,19 +233,14 @@ export const getYoroiProvider = (
  */
 
 // TODO: perhaps rename as isJormungandrNetwork for better naming consistency
-export const isJormungandr = (networkId: NetworkId): boolean =>
-  networkId === NETWORK_REGISTRY.JORMUNGANDR
+export const isJormungandr = (networkId: NetworkId): boolean => networkId === NETWORK_REGISTRY.JORMUNGANDR
 
 export const isHaskellShelleyNetwork = (networkId: NetworkId): boolean =>
-  networkId === NETWORK_REGISTRY.HASKELL_SHELLEY ||
-  networkId === NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET
+  networkId === NETWORK_REGISTRY.HASKELL_SHELLEY || networkId === NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET
 
 export const getCardanoByronConfig = () => NETWORKS.BYRON_MAINNET
 
-export const getNetworkConfigById = (
-  id: NetworkId,
-  provider?: YoroiProvider,
-): NetworkConfig => {
+export const getNetworkConfigById = (id: NetworkId, provider?: YoroiProvider): NetworkConfig => {
   const idx = Object.values(NETWORK_REGISTRY).indexOf(id)
   const network = Object.keys(NETWORK_REGISTRY)[idx]
   if (network != null && network !== 'UNDEFINED' && NETWORKS[network] != null) {
@@ -262,14 +249,12 @@ export const getNetworkConfigById = (
   throw new Error('invalid networkId')
 }
 
-export type CardanoHaskellShelleyNetwork =
-  | typeof NETWORKS.HASKELL_SHELLEY
-  | typeof NETWORKS.HASKELL_SHELLEY_TESTNET
+export type CardanoHaskellShelleyNetwork = typeof NETWORKS.HASKELL_SHELLEY | typeof NETWORKS.HASKELL_SHELLEY_TESTNET
 
-export const getCardanoNetworkConfigById: (
-  NetworkId,
-  ?YoroiProvider,
-) => CardanoHaskellShelleyNetwork = (networkId, provider) => {
+export const getCardanoNetworkConfigById: (NetworkId, ?YoroiProvider) => CardanoHaskellShelleyNetwork = (
+  networkId,
+  provider,
+) => {
   switch (networkId) {
     case NETWORKS.HASKELL_SHELLEY.NETWORK_ID:
       if (provider === 'emurgo-alonzo') {
@@ -315,8 +300,6 @@ export const DEFAULT_ASSETS: Array<Object> = flatten(
           },
         ]
       }
-      throw new Error(
-        `Missing default asset for network type ${JSON.stringify(network)}`,
-      )
+      throw new Error(`Missing default asset for network type ${JSON.stringify(network)}`)
     }),
 )

@@ -1,4 +1,5 @@
 // @flow
+
 import assert from './assert'
 // simple subscription implementation
 // Note(ppershing): RxJS overvables are probably too much overkill
@@ -9,7 +10,7 @@ export class SubscriptionManager<T> {
   _subscriptions: Array<(T) => any> = []
 
   // We cannot use arrow property initializers because of Flow, see
-  // eslint-disable-next-line max-len
+  // eslint-disable-next-line
   // https://stackoverflow.com/questions/49170385/flow-generics-incompatible-types
 
   constructor() {
@@ -27,10 +28,7 @@ export class SubscriptionManager<T> {
   }
 
   unsubscribe(handler: (data: T) => any) {
-    assert.assert(
-      this._subscriptions.includes(handler),
-      'Handler is not subscribed',
-    )
+    assert.assert(this._subscriptions.includes(handler), 'Handler is not subscribed')
     this._subscriptions = this._subscriptions.filter((h) => h !== handler)
   }
 

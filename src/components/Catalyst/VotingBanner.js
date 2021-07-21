@@ -30,9 +30,7 @@ const VotingBanner = ({intl, onPress, disabled}: Props) => {
       <TouchableOpacity onPress={() => onPress()} disabled={disabled}>
         <View style={styles.button}>
           <Image source={CatalystLogo} />
-          <Text style={styles.text}>
-            {intl.formatMessage(messages.name).toLocaleUpperCase()}
-          </Text>
+          <Text style={styles.text}>{intl.formatMessage(messages.name).toLocaleUpperCase()}</Text>
         </View>
       </TouchableOpacity>
     </View>

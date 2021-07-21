@@ -1,4 +1,5 @@
 // @flow
+
 export const AUSTRAL = '₳'
 export const ERASE_TO_LEFT = '⌫'
 export const GEAR = '⚙'

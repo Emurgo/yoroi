@@ -56,9 +56,7 @@ const WalletInitScreen = ({intl, navigateInitWallet}: Props) => {
                 CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
               )
             }
-            title={`${intl.formatMessage(
-              messages.addWalletButton,
-            )} (Shelley-era)`}
+            title={`${intl.formatMessage(messages.addWalletButton)} (Shelley-era)`}
             style={styles.createButton}
             testID="addWalletOnHaskellShelleyButton"
           />
@@ -74,9 +72,7 @@ const WalletInitScreen = ({intl, navigateInitWallet}: Props) => {
                   CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
                 )
               }
-              title={`${intl.formatMessage(
-                messages.addWalletButton,
-              )} on TESTNET (Shelley-era)`}
+              title={`${intl.formatMessage(messages.addWalletButton)} on TESTNET (Shelley-era)`}
               style={styles.createButton}
             />
           )}
@@ -89,9 +85,7 @@ const WalletInitScreen = ({intl, navigateInitWallet}: Props) => {
                 CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
               )
             }
-            title={`${intl.formatMessage(
-              messages.addWalletButton,
-            )} (Byron-era)`}
+            title={`${intl.formatMessage(messages.addWalletButton)} (Byron-era)`}
             outline
             style={styles.createButton}
             testID="addWalletOnByronButton"
@@ -120,15 +114,13 @@ export default injectIntl(
   compose(
     connect((_state: State) => ({})),
     withHandlers({
-      navigateInitWallet: ({navigation}) => (
-        event: Object,
-        networkId: NetworkId,
-        walletImplementationId: WalletImplementationId,
-      ) =>
-        navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH, {
-          networkId,
-          walletImplementationId,
-        }),
+      navigateInitWallet:
+        ({navigation}) =>
+        (event: Object, networkId: NetworkId, walletImplementationId: WalletImplementationId) =>
+          navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH, {
+            networkId,
+            walletImplementationId,
+          }),
     }),
   )(WalletInitScreen),
 )

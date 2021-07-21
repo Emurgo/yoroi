@@ -10,13 +10,17 @@ import checkIcon from '../../assets/img/check.png'
 import checkEmptyIcon from '../../assets/img/check-empty.png'
 
 import type {ComponentType} from 'react'
+import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
-const Checkbox = ({checked, text, handleChange, style, testID}) => (
-  <TouchableOpacity
-    style={[styles.container, style]}
-    onPress={handleChange}
-    testID={testID}
-  >
+type Props = {
+  checked: boolean,
+  text: string,
+  handleChange: () => void,
+  style?: ViewStyleProp,
+  testID?: string,
+}
+const Checkbox = ({checked, text, handleChange, style, testID}: Props) => (
+  <TouchableOpacity style={[styles.container, style]} onPress={handleChange} testID={testID}>
     <Image source={checked ? checkIcon : checkEmptyIcon} />
     <Text style={styles.text}>{text}</Text>
   </TouchableOpacity>
@@ -31,5 +35,8 @@ type ExternalProps = {
 }
 
 export default (withHandlers({
-  handleChange: ({onChange, checked}) => () => onChange(!checked),
+  handleChange:
+    ({onChange, checked}) =>
+    () =>
+      onChange(!checked),
 })(Checkbox): ComponentType<ExternalProps>)

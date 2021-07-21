@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react'
 
 import type {ComponentType} from 'react'
@@ -12,26 +13,20 @@ type ModalProps = {|
 type State = {
   showModal: boolean,
 }
-// prettier-ignore
+
 const StorybookModalWrapper = <Props: {}>(
   WrappedModal: ComponentType<{...$Exact<Props>, ...ModalProps}>,
 ): ComponentType<{|...$Exact<Props>, ...ModalProps|}> =>
-    class extends React.Component<{|...$Exact<Props>, ...ModalProps|}, State> {
-      state = {
-        showModal: true,
-      }
-
-      closeModal: (void) => void = () => this.setState({showModal: false})
-
-      render() {
-        return (
-          <WrappedModal
-            visible={this.state.showModal}
-            onRequestClose={this.closeModal}
-            {...this.props}
-          />
-        )
-      }
+  class extends React.Component<{|...$Exact<Props>, ...ModalProps|}, State> {
+    state = {
+      showModal: true,
     }
+
+    closeModal: (void) => void = () => this.setState({showModal: false})
+
+    render() {
+      return <WrappedModal visible={this.state.showModal} onRequestClose={this.closeModal} {...this.props} />
+    }
+  }
 
 export default StorybookModalWrapper

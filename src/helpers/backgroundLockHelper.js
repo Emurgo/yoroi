@@ -1,4 +1,5 @@
 // @flow
+
 import {AppState} from 'react-native'
 
 import BackgroundTimer from 'react-native-background-timer'

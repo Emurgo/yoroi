@@ -1,21 +1,12 @@
 // @flow
+
 import React from 'react'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
 import QRCodeScanner from 'react-native-qrcode-scanner'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
-
-import {withNavigationTitle} from '../../utils/renderUtils'
+import {injectIntl, type IntlShape} from 'react-intl'
 
 import type {ComponentType} from 'react'
-
-const messages = defineMessages({
-  title: {
-    id: 'components.send.addressreaderqr.title',
-    defaultMessage: '!!!Scan QR code address',
-    description: 'some desc',
-  },
-})
 
 type ExternalProps = {|
   route: Object, // TODO(navigation): type
@@ -23,20 +14,22 @@ type ExternalProps = {|
   intl: IntlShape,
 |}
 
-const AddressReaderQR = ({onSuccess}) => <QRCodeScanner onRead={onSuccess} />
+type Props = {
+  onSuccess: (event: {data: string}) => void,
+}
+const AddressReaderQR = ({onSuccess}: Props) => <QRCodeScanner onRead={onSuccess} />
 
 export default injectIntl(
   (compose(
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
     withHandlers({
-      onSuccess: ({route}) => (event) => {
-        const onSuccess = route.params?.onSuccess
-        if (onSuccess) {
-          onSuccess(event.data)
-        }
-      },
+      onSuccess:
+        ({route}) =>
+        (event) => {
+          const onSuccess = route.params?.onSuccess
+          if (onSuccess) {
+            onSuccess(event.data)
+          }
+        },
     }),
   )(AddressReaderQR): ComponentType<ExternalProps>),
 )

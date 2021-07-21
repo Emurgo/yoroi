@@ -15,10 +15,7 @@ import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 import TransportHID from '@v-almonacid/react-native-hid'
 
-import {
-  BluetoothDisabledError,
-  RejectedByUserError,
-} from '../../crypto/shelley/ledgerUtils'
+import {BluetoothDisabledError, RejectedByUserError} from '../../crypto/shelley/ledgerUtils'
 import {Text, BulletPointItem, Button} from '../UiKit'
 import DeviceItem from './DeviceItem'
 import {ledgerMessages, confirmationMessages} from '../../i18n/global-messages'
@@ -43,23 +40,21 @@ const messages = defineMessages({
   },
   usbDeviceReady: {
     id: 'components.ledger.ledgerconnect.usbDeviceReady',
-    defaultMessage:
-      '!!!USB device is ready, please tap on Confirm to continue.',
+    defaultMessage: '!!!USB device is ready, please tap on Confirm to continue.',
   },
   error: {
     id: 'components.walletinit.connectnanox.connectnanoxscreen.error',
-    defaultMessage:
-      '!!!An error occurred while trying to connect with your hardware wallet:',
+    defaultMessage: '!!!An error occurred while trying to connect with your hardware wallet:',
   },
 })
 
-const deviceAddition = (device) => ({devices}) => {
-  return {
-    devices: devices.some((i) => i.id === device.id)
-      ? devices
-      : devices.concat(device),
+const deviceAddition =
+  (device) =>
+  ({devices}) => {
+    return {
+      devices: devices.some((i) => i.id === device.id) ? devices : devices.concat(device),
+    }
   }
-}
 
 type Props = {|
   intl: IntlShape,
@@ -101,9 +96,7 @@ class LedgerConnect extends React.Component<Props, State> {
     this._isMounted = true
     if (useUSB === false) {
       if (Platform.OS === 'android') {
-        await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        )
+        await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
       }
       // check if bluetooth is available
       // no need to save a reference to this subscription's unsubscribe func
@@ -248,9 +241,7 @@ class LedgerConnect extends React.Component<Props, State> {
     }
   }
 
-  renderItem = ({item}: {item: Device}) => (
-    <DeviceItem device={item} onSelect={() => this._onSelectDevice(item)} />
-  )
+  renderItem = ({item}: {item: Device}) => <DeviceItem device={item} onSelect={() => this._onSelectDevice(item)} />
 
   ListHeader = () => {
     const {error, waiting, deviceObj} = this.state
@@ -259,9 +250,7 @@ class LedgerConnect extends React.Component<Props, State> {
     const ListHeaderWrapper = ({msg, err}: {msg: string, err: ?string}) => (
       <View style={styles.listHeader}>
         <Text style={[styles.paragraph, styles.paragraphText]}>{msg}</Text>
-        {err != null && (
-          <Text style={[styles.error, styles.paragraphText]}>{err}</Text>
-        )}
+        {err != null && <Text style={[styles.error, styles.paragraphText]}>{err}</Text>}
       </View>
     )
     let msg, errMsg
@@ -288,24 +277,12 @@ class LedgerConnect extends React.Component<Props, State> {
 
   render() {
     const {intl, useUSB, fillSpace} = this.props
-    const {
-      error,
-      devices,
-      refreshing,
-      deviceId,
-      deviceObj,
-      waiting,
-    } = this.state
+    const {error, devices, refreshing, deviceId, deviceObj, waiting} = this.state
 
-    const rows = [
-      intl.formatMessage(ledgerMessages.enterPin),
-      intl.formatMessage(ledgerMessages.openApp),
-    ]
+    const rows = [intl.formatMessage(ledgerMessages.enterPin), intl.formatMessage(ledgerMessages.openApp)]
     return (
       <>
-        <View
-          style={[styles.container, fillSpace === true && styles.fillSpace]}
-        >
+        <View style={[styles.container, fillSpace === true && styles.fillSpace]}>
           <View style={styles.heading}>
             <Image source={useUSB === true ? usbImage : bleImage} />
             {useUSB === false && (
@@ -314,12 +291,9 @@ class LedgerConnect extends React.Component<Props, State> {
               </Text>
             )}
           </View>
-          {((useUSB === false && devices.length === 0) ||
-            (useUSB === true && deviceObj == null)) && (
+          {((useUSB === false && devices.length === 0) || (useUSB === true && deviceObj == null)) && (
             <View style={styles.instructionsBlock}>
-              <Text style={styles.paragraphText}>
-                {intl.formatMessage(messages.introline)}
-              </Text>
+              <Text style={styles.paragraphText}>{intl.formatMessage(messages.introline)}</Text>
               {rows.map((row, i) => (
                 <BulletPointItem textRow={row} key={i} style={styles.item} />
               ))}
@@ -347,9 +321,7 @@ class LedgerConnect extends React.Component<Props, State> {
         {useUSB === true && (
           <Button
             onPress={() => this._onConfirm(deviceObj)}
-            title={intl.formatMessage(
-              confirmationMessages.commonButtons.confirmButton,
-            )}
+            title={intl.formatMessage(confirmationMessages.commonButtons.confirmButton)}
             style={styles.button}
             disabled={refreshing || deviceObj == null || waiting}
           />

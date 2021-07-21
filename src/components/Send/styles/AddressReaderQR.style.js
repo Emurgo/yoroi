@@ -1,4 +1,5 @@
 // @flow
+
 import {COLORS} from '../../../styles/config'
 
 const styles = {

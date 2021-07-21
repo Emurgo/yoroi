@@ -12,10 +12,7 @@ import {withHandlers, withStateHandlers} from 'recompose'
 import {withNavigationTitle} from '../../../utils/renderUtils'
 import {Text, StatusBar, Line} from '../../UiKit'
 import WalletNameForm from '../WalletNameForm'
-import {
-  createWalletWithBip44Account,
-  handleGeneralError,
-} from '../../../actions'
+import {createWalletWithBip44Account, handleGeneralError} from '../../../actions'
 import {generateShelleyPlateFromKey} from '../../../crypto/shelley/plate'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import {CONFIG} from '../../../config/config'
@@ -59,7 +56,7 @@ const messages = defineMessages({
   },
 })
 
-const CheckSumView = ({icon, checksum}) => (
+const CheckSumView = ({icon, checksum}: {icon: string, checksum: string}) => (
   <View style={styles.checksumView}>
     <WalletAccountIcon iconSeed={icon} />
     <Text style={styles.checksumText}>{checksum}</Text>
@@ -80,22 +77,13 @@ type WalletInfoProps = {|
   networkId: NetworkId,
 |}
 
-const WalletInfoView = ({
-  intl,
-  plate,
-  normalizedPath,
-  publicKeyHex,
-  networkId,
-}: WalletInfoProps) => (
+const WalletInfoView = ({intl, plate, normalizedPath, publicKeyHex, networkId}: WalletInfoProps) => (
   <View style={styles.walletInfoContainer}>
     <ScrollView style={styles.scrollView}>
       <View style={styles.checksumContainer}>
         <Text>{intl.formatMessage(messages.checksumLabel)}</Text>
         {!!plate.accountPlate.ImagePart && (
-          <CheckSumView
-            icon={plate.accountPlate.ImagePart}
-            checksum={plate.accountPlate.TextPart}
-          />
+          <CheckSumView icon={plate.accountPlate.ImagePart} checksum={plate.accountPlate.TextPart} />
         )}
       </View>
 
@@ -104,9 +92,7 @@ const WalletInfoView = ({
         <FlatList
           data={plate.addresses}
           keyExtractor={(item) => item}
-          renderItem={({item}) => (
-            <WalletAddress addressHash={item} networkId={networkId} />
-          )}
+          renderItem={({item}) => <WalletAddress addressHash={item} networkId={networkId} />}
         />
       </View>
 
@@ -120,9 +106,7 @@ const WalletInfoView = ({
           </Text>
         </View>
 
-        <Text style={styles.label}>
-          {intl.formatMessage(messages.derivationPath)}
-        </Text>
+        <Text style={styles.label}>{intl.formatMessage(messages.derivationPath)}</Text>
         <Text secondary monospace>
           {`m/${normalizedPath[0]}'/${normalizedPath[1]}'/${normalizedPath[2]}`}
         </Text>
@@ -131,14 +115,7 @@ const WalletInfoView = ({
   </View>
 )
 
-const SaveReadOnlyWalletScreen = (
-  {
-    onSubmit,
-    isWaiting,
-    route,
-    intl,
-  }: {intl: IntlShape} & Object /* TODO: type */,
-) => {
+const SaveReadOnlyWalletScreen = ({onSubmit, isWaiting, route, intl}: {intl: IntlShape} & Object /* TODO: type */) => {
   const [plate, setPlate] = useState({
     accountPlate: {
       ImagePart: '',
@@ -156,21 +133,14 @@ const SaveReadOnlyWalletScreen = (
     return i
   })
 
-  useEffect(
-    () => {
-      const generatePlates = async () => {
-        const {addresses, accountPlate} = await generateShelleyPlateFromKey(
-          publicKeyHex,
-          1,
-          networkId,
-        )
-        setPlate({addresses, accountPlate})
-      }
+  useEffect(() => {
+    const generatePlates = async () => {
+      const {addresses, accountPlate} = await generateShelleyPlateFromKey(publicKeyHex, 1, networkId)
+      setPlate({addresses, accountPlate})
+    }
 
-      generatePlates()
-    },
-    [networkId, publicKeyHex],
-  )
+    generatePlates()
+  }, [networkId, publicKeyHex])
 
   return (
     <SafeAreaView style={styles.container} testID="saveReadOnlyWalletContainer">
@@ -203,15 +173,10 @@ type ExternalProps = {|
 
 export default injectIntl(
   (compose(
-    connect(
-      (_state) => ({}),
-      {
-        createWalletWithBip44Account,
-      },
-    ),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
+    connect((_state) => ({}), {
+      createWalletWithBip44Account,
+    }),
+    withNavigationTitle(({intl}: {intl: IntlShape}) => intl.formatMessage(messages.title)),
     withStateHandlers(
       {
         isWaiting: false,
@@ -221,61 +186,55 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      withActivityIndicator: ({setWaiting}) => async (
-        func: () => Promise<void>,
-      ): Promise<void> => {
-        setWaiting(true)
-        try {
-          await func()
-        } finally {
-          setWaiting(false)
-        }
-      },
+      withActivityIndicator:
+        ({setWaiting}) =>
+        async (func: () => Promise<void>): Promise<void> => {
+          setWaiting(true)
+          try {
+            await func()
+          } finally {
+            setWaiting(false)
+          }
+        },
     }),
     withHandlers({
       onSubmit: ignoreConcurrentAsyncHandler(
         (
-          {
-            createWalletWithBip44Account,
-            withActivityIndicator,
-            navigation,
-            intl,
-            route,
-          }: {intl: IntlShape} & Object /* TODO: type */,
-        ) => async ({name}) => {
-          try {
-            const {
-              publicKeyHex,
-              networkId,
-              walletImplementationId,
-            } = route.params
-            assert.assert(
-              publicKeyHex != null,
-              'SaveReadOnlyWalletScreen::onPress publicKeyHex',
-            )
-            assert.assert(networkId != null, 'networkId')
-            assert.assert(!!walletImplementationId, 'walletImplementationId')
+            {
+              createWalletWithBip44Account,
+              withActivityIndicator,
+              navigation,
+              intl,
+              route,
+            }: {intl: IntlShape} & Object /* TODO: type */,
+          ) =>
+          async ({name}) => {
+            try {
+              const {publicKeyHex, networkId, walletImplementationId} = route.params
+              assert.assert(publicKeyHex != null, 'SaveReadOnlyWalletScreen::onPress publicKeyHex')
+              assert.assert(networkId != null, 'networkId')
+              assert.assert(!!walletImplementationId, 'walletImplementationId')
 
-            await withActivityIndicator(
-              async () =>
-                await createWalletWithBip44Account(
-                  name,
-                  publicKeyHex,
-                  networkId,
-                  walletImplementationId,
-                  null,
-                  true, // important: read-only flag
-                ),
-            )
+              await withActivityIndicator(
+                async () =>
+                  await createWalletWithBip44Account(
+                    name,
+                    publicKeyHex,
+                    networkId,
+                    walletImplementationId,
+                    null,
+                    true, // important: read-only flag
+                  ),
+              )
 
-            navigation.navigate(ROOT_ROUTES.WALLET, {
-              screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
-            })
-          } catch (e) {
-            Logger.error('SaveReadOnlyWalletScreen::onSubmit', e)
-            await handleGeneralError(e.message, e, intl)
-          }
-        },
+              navigation.navigate(ROOT_ROUTES.WALLET, {
+                screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
+              })
+            } catch (e) {
+              Logger.error('SaveReadOnlyWalletScreen::onSubmit', e)
+              await handleGeneralError(e.message, e, intl)
+            }
+          },
         1000,
       ),
     }),

@@ -34,14 +34,12 @@ const errorMessages = defineMessages({
   },
   SENSOR_LOCKOUT_PERMANENT: {
     id: 'components.send.biometricauthscreen.SENSOR_LOCKOUT_PERMANENT',
-    defaultMessage:
-      '!!!Your biometrics sensor has been permanently locked. Use an alternate login method.',
+    defaultMessage: '!!!Your biometrics sensor has been permanently locked. Use an alternate login method.',
     description: 'some desc',
   },
   DECRYPTION_FAILED: {
     id: 'components.send.biometricauthscreen.DECRYPTION_FAILED',
-    defaultMessage:
-      '!!!Biometrics login failed. Please use an alternate login method.',
+    defaultMessage: '!!!Biometrics login failed. Please use an alternate login method.',
     description: 'some desc',
   },
   UNKNOWN_ERROR: {
@@ -79,13 +77,7 @@ const messages = defineMessages({
   },
 })
 
-const handleOnConfirm = async (
-  route,
-  setError,
-  clearError,
-  useFallback = false,
-  intl,
-) => {
+const handleOnConfirm = async (route, setError, clearError, useFallback = false, intl) => {
   const {keyId, onSuccess, onFail} = route.params
 
   try {
@@ -138,15 +130,7 @@ const handleOnFocus = async ({
 }
 
 const BiometricAuthScreen = (
-  {
-    cancelScanning,
-    useFallback,
-    error,
-    intl,
-    route,
-    setError,
-    clearError,
-  }: {intl: IntlShape} & Object /* TODO: type */,
+  {cancelScanning, useFallback, error, intl, route, setError, clearError}: {intl: IntlShape} & Object /* TODO: type */,
 ) => {
   const [appState, setAppState] = useState<?string>(AppState.currentState)
 
@@ -157,47 +141,31 @@ const BiometricAuthScreen = (
     }, []),
   )
 
-  useEffect(
-    () => {
-      const handleAppStateChange: (?string) => Promise<void> = async (
-        nextAppState,
-      ) => {
-        const previousAppState = appState
-        setAppState(nextAppState)
-        if (
-          previousAppState != null &&
-          previousAppState.match(/inactive|background/) &&
-          nextAppState === 'active'
-        ) {
-          await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
-          await handleOnFocus({route, setError, clearError, intl})
-        } else if (
-          previousAppState === 'active' &&
-          nextAppState != null &&
-          nextAppState.match(/inactive|background/)
-        ) {
-          // we cancel the operation when the app goes to background otherwise
-          // the app may crash. This could happen when the app logs out, as reopening
-          // the app triggers a new biometric prompt; but may also be an issue for
-          // some specific Android versions
-          await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
-        }
+  useEffect(() => {
+    const handleAppStateChange: (?string) => Promise<void> = async (nextAppState) => {
+      const previousAppState = appState
+      setAppState(nextAppState)
+      if (previousAppState != null && previousAppState.match(/inactive|background/) && nextAppState === 'active') {
+        await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
+        await handleOnFocus({route, setError, clearError, intl})
+      } else if (previousAppState === 'active' && nextAppState != null && nextAppState.match(/inactive|background/)) {
+        // we cancel the operation when the app goes to background otherwise
+        // the app may crash. This could happen when the app logs out, as reopening
+        // the app triggers a new biometric prompt; but may also be an issue for
+        // some specific Android versions
+        await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
       }
+    }
 
-      AppState.addEventListener('change', handleAppStateChange)
+    AppState.addEventListener('change', handleAppStateChange)
 
-      return () => AppState.removeEventListener('change', handleAppStateChange)
-    },
-    [appState, route, setError, clearError, intl],
-  )
+    return () => AppState.removeEventListener('change', handleAppStateChange)
+  }, [appState, route, setError, clearError, intl])
 
   return (
     <FingerprintScreenBase
       onGoBack={cancelScanning}
-      headings={[
-        intl.formatMessage(messages.headings1),
-        intl.formatMessage(messages.headings2),
-      ]}
+      headings={[intl.formatMessage(messages.headings1), intl.formatMessage(messages.headings2)]}
       subHeadings={route.params?.instructions || undefined}
       buttons={[
         <Button
@@ -247,42 +215,24 @@ export default injectIntl(
       // we have this handler because we need to let JAVA side know user
       // cancelled the scanning by either navigating out of this window
       // or using fallback
-      cancelScanning: ({
-        clearError,
-        route,
-        intl,
-      }: {
-        intl: IntlShape,
-        route: any,
-        clearError: any,
-      }) => async () => {
-        const wasScanningStarted = await KeyStore.cancelFingerprintScanning(
-          KeyStore.REJECTIONS.CANCELED,
-        )
+      cancelScanning:
+        ({clearError, route, intl}: {intl: IntlShape, route: any, clearError: any}) =>
+        async () => {
+          const wasScanningStarted = await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)
 
-        if (!wasScanningStarted) {
-          clearError()
-          const {onFail} = route.params
-          if (onFail == null) throw new Error('BiometricAuthScreen::onFail')
-          onFail(KeyStore.REJECTIONS.CANCELED, intl)
-        }
-      },
-      useFallback: ({
-        route,
-        setError,
-        clearError,
-        intl,
-      }: {
-        route: any,
-        setError: any,
-        clearError: any,
-        intl: IntlShape,
-      }) => async () => {
-        await KeyStore.cancelFingerprintScanning(
-          KeyStore.REJECTIONS.SWAPPED_TO_FALLBACK,
-        )
-        await handleOnConfirm(route, setError, clearError, true, intl)
-      },
+          if (!wasScanningStarted) {
+            clearError()
+            const {onFail} = route.params
+            if (onFail == null) throw new Error('BiometricAuthScreen::onFail')
+            onFail(KeyStore.REJECTIONS.CANCELED, intl)
+          }
+        },
+      useFallback:
+        ({route, setError, clearError, intl}: {route: any, setError: any, clearError: any, intl: IntlShape}) =>
+        async () => {
+          await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.SWAPPED_TO_FALLBACK)
+          await handleOnConfirm(route, setError, clearError, true, intl)
+        },
     }),
     onWillUnmount(async () => {
       await KeyStore.cancelFingerprintScanning(KeyStore.REJECTIONS.CANCELED)

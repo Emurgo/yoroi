@@ -17,23 +17,23 @@ import type {ComponentType} from 'react'
 
 import styles from './styles/LanguagePickerScreen.style'
 
+type Props = {
+  navigation: Navigation,
+  languageCode: string,
+  changeLanguage: (languageCode: string) => void,
+  handleContinue: () => void,
+}
+
+const LanguagePickerScreen = ({navigation, languageCode, changeLanguage, handleContinue}: Props) => (
+  <SafeAreaView style={styles.safeAreaView}>
+    <LanguagePicker {...{navigation, languageCode, changeLanguage, handleContinue}} />
+  </SafeAreaView>
+)
+
 type ExternalProps = {|
   navigation: Navigation,
   route: any,
 |}
-
-const LanguagePickerScreen = ({
-  navigation,
-  languageCode,
-  changeLanguage,
-  handleContinue,
-}) => (
-  <SafeAreaView style={styles.safeAreaView}>
-    <LanguagePicker
-      {...{navigation, languageCode, changeLanguage, handleContinue}}
-    />
-  </SafeAreaView>
-)
 
 export default (compose(
   connect(
@@ -43,14 +43,12 @@ export default (compose(
     languageActions,
   ),
   withHandlers({
-    handleContinue: ({
-      navigation,
-      changeAndSaveLanguage,
-      languageCode,
-    }) => async (_event) => {
-      await changeAndSaveLanguage(languageCode)
+    handleContinue:
+      ({navigation, changeAndSaveLanguage, languageCode}) =>
+      async (_event) => {
+        await changeAndSaveLanguage(languageCode)
 
-      navigation.navigate(FIRST_RUN_ROUTES.ACCEPT_TERMS_OF_SERVICE)
-    },
+        navigation.navigate(FIRST_RUN_ROUTES.ACCEPT_TERMS_OF_SERVICE)
+      },
   }),
 )(LanguagePickerScreen): ComponentType<ExternalProps>)

@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react'
 import {View, Image} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
@@ -15,7 +16,7 @@ const messages = defineMessages({
   secondLine: {
     id: 'components.delegationsummary.notDelegatedInfo.secondLine',
     defaultMessage:
-      // eslint-disable-next-line max-len
+      // eslint-disable-next-line
       '!!!Go to Staking center to choose which stake pool you want to delegate in. Note, you may delegate only to one stake pool in this Tesnnet.',
   },
 })
@@ -29,12 +30,8 @@ const NotDelegatedInfo = ({intl}: ExternalProps) => (
     <View style={styles.imageWrap}>
       <Image source={NotDelegatedImage} />
     </View>
-    <Text style={[styles.text, styles.textFirstLine]}>
-      {intl.formatMessage(messages.firstLine)}
-    </Text>
-    <Text style={[styles.text, styles.textSecondLine]}>
-      {intl.formatMessage(messages.secondLine)}
-    </Text>
+    <Text style={[styles.text, styles.textFirstLine]}>{intl.formatMessage(messages.firstLine)}</Text>
+    <Text style={[styles.text, styles.textSecondLine]}>{intl.formatMessage(messages.secondLine)}</Text>
     <Line />
   </View>
 )

@@ -52,9 +52,7 @@ const AddressVerifyModal = ({
         <Text style={styles.title}>{intl.formatMessage(messages.title)}</Text>
       </View>
       <HWInstructions useUSB={useUSB} />
-      <Text style={styles.paragraph}>
-        {intl.formatMessage(messages.afterConfirm)}
-      </Text>
+      <Text style={styles.paragraph}>{intl.formatMessage(messages.afterConfirm)}</Text>
       <View style={styles.addressDetailsView}>
         <Text secondary style={styles.paragraph}>
           {addressInfo.address}
@@ -65,9 +63,7 @@ const AddressVerifyModal = ({
       </View>
       <Button
         onPress={onConfirm}
-        title={intl.formatMessage(
-          confirmationMessages.commonButtons.confirmButton,
-        )}
+        title={intl.formatMessage(confirmationMessages.commonButtons.confirmButton)}
         style={styles.button}
         disabled={isWaiting}
       />

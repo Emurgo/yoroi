@@ -1,5 +1,5 @@
 // @flow
-/* eslint-disable max-len */
+/* eslint-disable  */
 
 import React, {memo} from 'react'
 import Svg, {G, Circle, Line, Path, Rect} from 'react-native-svg'
@@ -10,27 +10,14 @@ type Props = {|
   color?: string,
 |}
 
-const StakingKeyDeregisteredIcon = ({
-  width = 36,
-  height = 36,
-  color = '#6B7384',
-}: Props) => (
-  <Svg
-    viewBox="0 0 36 36"
-    version="1.1"
-    xmlns="http://www.w3.org/2000/svg"
-    {...{width, height}}
-  >
+const StakingKeyDeregisteredIcon = ({width = 36, height = 36, color = '#6B7384'}: Props) => (
+  <Svg viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" {...{width, height}}>
     <G stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
       <G transform="translate(-760.000000, -305.000000)">
         <G transform="translate(760.000000, 305.000000)">
           <G transform="translate(6.000000, 6.000000)">
             <Rect x="0" y="0" width="24" height="24" />
-            <G
-              transform="translate(5.000000, 5.000000)"
-              stroke={color}
-              stroke-width="1.5"
-            >
+            <G transform="translate(5.000000, 5.000000)" stroke={color} stroke-width="1.5">
               <Circle cx="9.70588235" cy="9.70588235" r="5.29411765" />
               <Line
                 x1="6.17647059"

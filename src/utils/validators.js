@@ -1,4 +1,5 @@
 // @flow
+
 import {validateMnemonic, wordlists} from 'bip39'
 import _ from 'lodash'
 
@@ -78,10 +79,7 @@ export const getPasswordStrength = (password: string): PasswordStrength => {
   return {isStrong: false}
 }
 
-export const validatePassword = (
-  password: string,
-  passwordConfirmation: string,
-): PasswordValidationErrors =>
+export const validatePassword = (password: string, passwordConfirmation: string): PasswordValidationErrors =>
   pickOnlyFailingValidations({
     passwordReq: !password,
     passwordConfirmationReq: !passwordConfirmation,
@@ -97,32 +95,31 @@ export const validateWalletName = (
   pickOnlyFailingValidations({
     mustBeFilled: !newWalletName,
     tooLong: newWalletName.length > 40,
-    nameAlreadyTaken:
-      newWalletName !== oldWalletName &&
-      walletNames.some((x) => newWalletName === x),
+    nameAlreadyTaken: newWalletName !== oldWalletName && walletNames.some((x) => newWalletName === x),
   })
 
 export const getWalletNameError = (
   translations: {
     tooLong: string,
     nameAlreadyTaken: string,
+    mustBeFilled?: string,
   },
   validationErrors: WalletNameValidationErrors,
 ) => {
-  const {tooLong, nameAlreadyTaken} = translations
+  const {tooLong, nameAlreadyTaken, mustBeFilled} = translations
 
   if (validationErrors.tooLong != null) {
     return tooLong
   } else if (validationErrors.nameAlreadyTaken != null) {
     return nameAlreadyTaken
+  } else if (validationErrors.mustBeFilled != null) {
+    return mustBeFilled
   } else {
     return null
   }
 }
 
-export const validateAddressAsync = async (
-  address: string,
-): Promise<AddressValidationErrors> => {
+export const validateAddressAsync = async (address: string): Promise<AddressValidationErrors> => {
   if (!address) {
     return {addressIsRequired: true}
   }
@@ -131,10 +128,7 @@ export const validateAddressAsync = async (
   return isValid != null ? Object.freeze({}) : {invalidAddress: true}
 }
 
-export const validateAmount = (
-  value: string,
-  token: Token,
-): AmountValidationErrors => {
+export const validateAmount = (value: string, token: Token): AmountValidationErrors => {
   if (!value) {
     return {amountIsRequired: true}
   }
@@ -151,10 +145,7 @@ export const validateAmount = (
 }
 
 wordlists.EN.forEach((word) => {
-  assert.assert(
-    word === word.toLowerCase(),
-    'we expect wordlist to contain only lowercase words',
-  )
+  assert.assert(word === word.toLowerCase(), 'we expect wordlist to contain only lowercase words')
 })
 
 export const cleanMnemonic = (mnemonic: string) => {
@@ -168,10 +159,7 @@ export const cleanMnemonic = (mnemonic: string) => {
   return mnemonic.trim()
 }
 
-export const validateRecoveryPhrase = (
-  mnemonic: string,
-  mnemonicLength: number,
-) => {
+export const validateRecoveryPhrase = (mnemonic: string, mnemonicLength: number) => {
   const cleaned = cleanMnemonic(mnemonic)
   // Deal with edge case ''.split(' ') -> ['']
   const words = cleaned ? cleaned.split(' ') : []
@@ -196,8 +184,7 @@ export const validateRecoveryPhrase = (
     invalidPhraseErrors.push({
       code: INVALID_PHRASE_ERROR_CODES.UNKNOWN_WORDS,
       words: unknownWords,
-      lastMightBeUnfinished:
-        isUnknown(_.last(words)) && !mnemonic.endsWith(' '),
+      lastMightBeUnfinished: isUnknown(_.last(words)) && !mnemonic.endsWith(' '),
     })
   }
 

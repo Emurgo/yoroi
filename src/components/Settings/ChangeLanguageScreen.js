@@ -2,49 +2,36 @@
 
 import React from 'react'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {withHandlers} from 'recompose'
-import {compose} from 'redux'
-import {connect} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 
-import type {ComponentType} from 'react'
-
-import languageActions from '../../actions/language'
+import {changeAndSaveLanguage, changeLanguage} from '../../actions/language'
 import LanguagePicker from '../Common/LanguagePicker'
 import {languageSelector} from '../../selectors'
 
 import styles from './styles/ChangeLanguageScreen.style'
 
-const LanguagePickerScreen = ({
-  navigation,
-  languageCode,
-  changeLanguage,
-  handleContinue,
-}) => (
-  <SafeAreaView style={styles.safeAreaView}>
-    <LanguagePicker
-      {...{navigation, languageCode, changeLanguage, handleContinue}}
-    />
-  </SafeAreaView>
-)
+type Props = {|
+  navigation: any,
+  route: any,
+|}
 
-export default (compose(
-  connect(
-    (state) => ({
-      languageCode: languageSelector(state),
-    }),
-    languageActions,
-  ),
-  withHandlers({
-    handleContinue: ({
-      navigation,
-      changeAndSaveLanguage,
-      languageCode,
-    }) => async (_event) => {
-      await changeAndSaveLanguage(languageCode)
+const LanguagePickerScreen = ({navigation}: Props) => {
+  const languageCode = useSelector(languageSelector)
+  const dispatch = useDispatch()
+  const handleContinue = async (_event) => {
+    await dispatch(changeAndSaveLanguage(languageCode))
 
-      navigation.goBack(null)
-    },
-  }),
-)(LanguagePickerScreen): ComponentType<{
-  navigation: any, // TODO: type
-}>)
+    navigation.goBack(null)
+  }
+
+  return (
+    <SafeAreaView style={styles.safeAreaView}>
+      <LanguagePicker
+        {...{navigation, languageCode, handleContinue}}
+        changeLanguage={(languageCode) => dispatch(changeLanguage(languageCode))}
+      />
+    </SafeAreaView>
+  )
+}
+
+export default LanguagePickerScreen
