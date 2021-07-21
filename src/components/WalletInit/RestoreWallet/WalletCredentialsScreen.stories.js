@@ -6,6 +6,6 @@ import {storiesOf} from '@storybook/react-native'
 
 import WalletCredentialsScreen from './WalletCredentialsScreen'
 
-storiesOf('WalletCredentialsScreen', module).add('Default', ({navigation}) => {
-  return <WalletCredentialsScreen navigation={navigation} />
+storiesOf('WalletCredentialsScreen', module).add('Default', ({navigation, route}) => {
+  return <WalletCredentialsScreen navigation={navigation} route={route} />
 })
