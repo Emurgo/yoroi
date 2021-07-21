@@ -34,7 +34,11 @@ import type {
 import type {DefaultTokenEntry} from './MultiToken'
 import type {HWDeviceInfo} from './shelley/ledgerUtils'
 import type {DelegationStatus} from './shelley/delegationUtils'
-import type {NetworkId, WalletImplementationId} from '../config/types'
+import type {
+  NetworkId,
+  WalletImplementationId,
+  YoroiProvider,
+} from '../config/types'
 import type {WalletMeta} from '../state'
 import type {Transaction, DefaultAsset} from '../types/HistoryTransaction'
 import type {Addresses} from './chain'
@@ -53,6 +57,8 @@ export interface WalletInterface {
   hwDeviceInfo: ?HWDeviceInfo;
 
   isReadOnly: boolean;
+
+  provider: ?YoroiProvider;
 
   isEasyConfirmationEnabled: boolean;
 
@@ -103,6 +109,7 @@ export interface WalletInterface {
     newPassword: string,
     networkId: NetworkId,
     implementationId: WalletImplementationId,
+    provider: ?YoroiProvider,
   ): Promise<string>;
 
   createWithBip44Account(

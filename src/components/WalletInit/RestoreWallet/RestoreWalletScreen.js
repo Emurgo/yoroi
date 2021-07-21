@@ -190,6 +190,7 @@ export default injectIntl(
           phrase: cleanMnemonic(phrase),
           networkId: route.params.networkId,
           walletImplementationId: route.params.walletImplementationId,
+          provider: route.params.provider,
         })
       },
       translateInvalidPhraseError: ({intl}: {intl: IntlShape}) => (error) =>

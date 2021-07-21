@@ -145,6 +145,7 @@ export const walletMetaSelector = (
   name: state.wallet.name,
   networkId: state.wallet.networkId,
   walletImplementationId: state.wallet.walletImplementationId,
+  provider: state.wallet.provider,
   isHW: state.wallet.isHW,
   isEasyConfirmationEnabled: state.wallet.isEasyConfirmationEnabled,
   checksum: state.wallet.checksum,

@@ -33,7 +33,11 @@ import styles from './styles/WalletSelectionScreen.style'
 
 import type {State} from '../../state'
 import type {ComponentType} from 'react'
-import type {NetworkId, WalletImplementationId} from '../../config/types'
+import type {
+  NetworkId,
+  WalletImplementationId,
+  YoroiProvider,
+} from '../../config/types'
 
 const messages = defineMessages({
   header: {
@@ -95,6 +99,25 @@ const WalletListScreen = (
           )} (Shelley-era)`}
           style={styles.topButton}
         />
+
+        {(isNightly() || CONFIG.IS_TESTNET_BUILD) && (
+          <Button
+            onPress={(event) =>
+              // note: assume wallet implementation = yoroi haskell shelley
+              // (15 words), but user may choose 24 words in next screen
+              navigateInitWallet(
+                event,
+                CONFIG.NETWORKS.HASKELL_SHELLEY_TESTNET.NETWORK_ID,
+                CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+                'emurgo-alonzo',
+              )
+            }
+            title={`${intl.formatMessage(
+              messages.addWalletButton,
+            )} on TESTNET (Alonzo-era)`}
+            style={styles.button}
+          />
+        )}
 
         {isNightly() && (
           <Button
@@ -166,12 +189,14 @@ export default injectIntl(
         event: Object,
         networkId: NetworkId,
         walletImplementationId: WalletImplementationId,
+        provider: YoroiProvider,
       ) =>
         navigation.navigate(ROOT_ROUTES.NEW_WALLET, {
           screen: WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH,
           params: {
             networkId,
             walletImplementationId,
+            provider,
           },
         }),
       openWallet: ({navigation, intl}) => async (wallet) => {

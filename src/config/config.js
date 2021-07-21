@@ -265,6 +265,7 @@ export const getCardanoDefaultAsset = (): DefaultAsset => {
   return _asToken(assetData)
 }
 
+// For assets will pick the first network id and it won't throw anymore
 export const getDefaultAssetByNetworkId = (
   networkId: NetworkId,
 ): DefaultAsset => {

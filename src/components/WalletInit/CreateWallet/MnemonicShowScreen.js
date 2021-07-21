@@ -124,7 +124,13 @@ export default injectIntl(
         hideModal,
         mnemonic,
       }) => () => {
-        const {name, password, networkId, walletImplementationId} = route.params
+        const {
+          name,
+          password,
+          networkId,
+          walletImplementationId,
+          provider,
+        } = route.params
         assert.assert(!!mnemonic, 'navigateToMnemonicCheck:: mnemonic')
         assert.assert(!!password, 'navigateToMnemonicCheck:: password')
         assert.assert(!!name, 'navigateToMnemonicCheck:: name')
@@ -137,6 +143,7 @@ export default injectIntl(
           name,
           networkId,
           walletImplementationId,
+          provider,
         })
         hideModal()
       },

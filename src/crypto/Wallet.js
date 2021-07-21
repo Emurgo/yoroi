@@ -25,7 +25,11 @@ import {validatePassword} from '../utils/validators'
 import type {EncryptionMethod} from './types'
 import type {Mutex} from '../utils/promise'
 import type {HWDeviceInfo} from './shelley/ledgerUtils'
-import type {NetworkId, WalletImplementationId} from '../config/types'
+import type {
+  NetworkId,
+  WalletImplementationId,
+  YoroiProvider,
+} from '../config/types'
 import type {WalletChecksum} from '@emurgo/cip4-js'
 
 type WalletState = {|
@@ -45,6 +49,8 @@ export default class Wallet {
   hwDeviceInfo: ?HWDeviceInfo
 
   isReadOnly: boolean
+
+  provider: ?YoroiProvider
 
   isEasyConfirmationEnabled: boolean = false
 
@@ -331,6 +337,7 @@ export default class Wallet {
       hwDeviceInfo: this.hwDeviceInfo,
       isReadOnly: this.isReadOnly,
       isEasyConfirmationEnabled: this.isEasyConfirmationEnabled,
+      provider: this.provider,
     }
   }
 }

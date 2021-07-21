@@ -21,7 +21,11 @@ import globalMessages from '../../i18n/global-messages'
 import styles from './styles/WalletInitScreen.style'
 
 import type {State} from '../../state'
-import type {NetworkId, WalletImplementationId} from '../../config/types'
+import type {
+  NetworkId,
+  WalletImplementationId,
+  YoroiProvider,
+} from '../../config/types'
 
 const messages = defineMessages({
   title: {
@@ -76,8 +80,18 @@ const MODAL_STATES = {
 type ModalState = $Values<typeof MODAL_STATES>
 
 type Props = {
-  navigateRestoreWallet: (Object, NetworkId, WalletImplementationId) => void,
-  navigateCreateWallet: (Object, NetworkId, WalletImplementationId) => void,
+  navigateRestoreWallet: (
+    Object,
+    NetworkId,
+    WalletImplementationId,
+    YoroiProvider,
+  ) => void,
+  navigateCreateWallet: (
+    Object,
+    NetworkId,
+    WalletImplementationId,
+    YoroiProvider,
+  ) => void,
   navigateImportReadOnlyWallet: (
     Object,
     NetworkId,
@@ -106,6 +120,7 @@ const WalletInitScreen = ({
   setModalState,
 }: Props) => {
   const networkId: NetworkId = route.params.networkId
+  const provider = route.params.provider
   const implementationId: WalletImplementationId =
     route.params.walletImplementationId
   let createWalletLabel = intl.formatMessage(messages.createWalletButton)
@@ -131,7 +146,12 @@ const WalletInitScreen = ({
           {!isByron(implementationId) && (
             <Button
               onPress={(event) =>
-                navigateCreateWallet(event, networkId, implementationId)
+                navigateCreateWallet(
+                  event,
+                  networkId,
+                  implementationId,
+                  provider,
+                )
               }
               title={createWalletLabel}
               style={styles.createButton}
@@ -141,9 +161,15 @@ const WalletInitScreen = ({
           <Button
             outline
             onPress={(event) => {
+              // prettier-ignore
               isHaskellShelley(implementationId)
                 ? setModalState(event, MODAL_STATES.CHOOSE_MNEMONICS_LEN)
-                : navigateRestoreWallet(event, networkId, implementationId)
+                : navigateRestoreWallet(
+                  event,
+                  networkId,
+                  implementationId,
+                  provider,
+                )
             }}
             title={restoreWalletLabel}
             style={styles.createButton}
@@ -185,7 +211,12 @@ const WalletInitScreen = ({
             >
               <Button
                 onPress={(event) =>
-                  navigateRestoreWallet(event, networkId, implementationId)
+                  navigateRestoreWallet(
+                    event,
+                    networkId,
+                    implementationId,
+                    provider,
+                  )
                 }
                 title={intl.formatMessage(messages.restoreNormalWalletLabel)}
                 style={styles.mnemonicDialogButton}
@@ -204,6 +235,7 @@ const WalletInitScreen = ({
                     event,
                     networkId,
                     CONFIG.WALLETS.HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID,
+                    provider,
                   )
                 }
                 title={intl.formatMessage(messages.restore24WordWalletLabel)}
@@ -263,19 +295,23 @@ export default injectIntl(
         event: Object,
         networkId: NetworkId,
         walletImplementationId: WalletImplementationId,
+        provider: ?YoroiProvider,
       ) =>
         navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET, {
           networkId,
           walletImplementationId,
+          provider,
         }),
       navigateCreateWallet: ({navigation}) => (
         event: Object,
         networkId: NetworkId,
         walletImplementationId: WalletImplementationId,
+        provider: ?YoroiProvider,
       ) =>
         navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET, {
           networkId,
           walletImplementationId,
+          provider,
         }),
       navigateCheckNanoX: ({navigation}) => (
         event: Object,

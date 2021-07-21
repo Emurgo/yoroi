@@ -61,7 +61,12 @@ export default injectIntl(
           setWaiting,
         }) => async ({name, password}) => {
           setWaiting(true)
-          const {phrase, networkId, walletImplementationId} = route.params
+          const {
+            phrase,
+            networkId,
+            walletImplementationId,
+            provider,
+          } = route.params
           assert.assert(!!phrase, 'mnemonic')
           assert.assert(networkId != null, 'networkId')
           assert.assert(!!walletImplementationId, 'walletImplementationId')
@@ -72,6 +77,7 @@ export default injectIntl(
               password,
               networkId,
               walletImplementationId,
+              provider,
             )
             await updateVersion()
           } finally {

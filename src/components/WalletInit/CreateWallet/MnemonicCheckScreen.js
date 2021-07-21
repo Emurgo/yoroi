@@ -73,6 +73,7 @@ const handleWalletConfirmation = ({
     name,
     networkId,
     walletImplementationId,
+    provider,
   } = route.params
   assert.assert(!!mnemonic, 'handleWalletConfirmation:: mnemonic')
   assert.assert(!!password, 'handleWalletConfirmation:: password')
@@ -89,6 +90,7 @@ const handleWalletConfirmation = ({
     password,
     networkId,
     walletImplementationId,
+    provider,
   )
 
   navigation.navigate(ROOT_ROUTES.WALLET, {

@@ -8,7 +8,13 @@ import {
   LayoutAnimation,
 } from 'react-native'
 
-import {isByron, isHaskellShelley, isJormun} from '../../config/config'
+import {
+  isByron,
+  isHaskellShelley,
+  isJormun,
+  isNightly,
+  CONFIG,
+} from '../../config/config'
 import WalletAccountIcon from '../Common/WalletAccountIcon'
 import arrowDown from '../../assets/img/arrow_down.png'
 import arrowUp from '../../assets/img/arrow_up.png'
@@ -110,6 +116,13 @@ const WalletListItem: (props) => Node = ({wallet, onPress}) => {
               {wallet.checksum ? `${wallet.checksum.TextPart} | ${type}` : type}
             </Text>
           </View>
+          {(isNightly() || CONFIG.IS_TESTNET_BUILD) && (
+            <View style={styles.providerContainer}>
+              <Text style={[styles.walletMeta, styles.providerText]}>
+                {wallet.provider}
+              </Text>
+            </View>
+          )}
         </TouchableOpacity>
         {assets.length > 0 && (
           <TouchableOpacity

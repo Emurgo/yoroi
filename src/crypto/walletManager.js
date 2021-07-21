@@ -37,7 +37,11 @@ import type {
 import type {EncryptionMethod, SendTokenList} from './types'
 import type {DefaultAsset} from '../types/HistoryTransaction'
 import type {HWDeviceInfo} from './shelley/ledgerUtils'
-import type {NetworkId, WalletImplementationId} from '../config/types'
+import type {
+  NetworkId,
+  WalletImplementationId,
+  YoroiProvider,
+} from '../config/types'
 import type {WalletChecksum} from '@emurgo/cip4-js'
 import type {DefaultTokenEntry} from './MultiToken'
 import type {JSONMetadata} from './shelley/metadataUtils'
@@ -502,6 +506,7 @@ class WalletManager {
     wallet: WalletInterface,
     networkId: NetworkId,
     walletImplementationId: WalletImplementationId,
+    provider: ?YoroiProvider,
   ) {
     this._id = id
     this._wallets = {
@@ -514,6 +519,7 @@ class WalletManager {
         isHW: wallet.isHW,
         checksum: wallet.checksum,
         isEasyConfirmationEnabled: false,
+        provider,
       }: WalletMeta),
     }
 
@@ -684,6 +690,7 @@ class WalletManager {
     password: string,
     networkId: NetworkId,
     implementationId: WalletImplementationId,
+    provider: ?YoroiProvider,
   ): Promise<WalletInterface> {
     const wallet = this._getWalletImplementation(implementationId)
     const id = await wallet.create(
@@ -691,9 +698,17 @@ class WalletManager {
       password,
       networkId,
       implementationId,
+      provider,
     )
 
-    return this.saveWallet(id, name, wallet, networkId, implementationId)
+    return this.saveWallet(
+      id,
+      name,
+      wallet,
+      networkId,
+      implementationId,
+      provider,
+    )
   }
 
   async createWalletWithBip44Account(

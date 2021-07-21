@@ -75,4 +75,10 @@ export default StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 36,
   },
+  providerContainer: {
+    flex: 1,
+  },
+  providerText: {
+    alignSelf: 'flex-end',
+  },
 })

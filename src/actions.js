@@ -53,7 +53,11 @@ import {getCardanoNetworkConfigById} from './config/networks'
 import {type Dispatch} from 'redux'
 import type {State, ServerStatusCache} from './state'
 import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
-import type {NetworkId, WalletImplementationId} from './config/types'
+import type {
+  NetworkId,
+  WalletImplementationId,
+  YoroiProvider,
+} from './config/types'
 
 const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
   const handlers = {
@@ -406,6 +410,7 @@ export const createWallet = (
   password: string,
   networkId: NetworkId,
   implementationId: WalletImplementationId,
+  provider: YoroiProvider,
 ) => async (dispatch: Dispatch<any>) => {
   await walletManager.createWallet(
     name,
@@ -413,6 +418,7 @@ export const createWallet = (
     password,
     networkId,
     implementationId,
+    provider,
   )
   dispatch(updateWallets())
 }

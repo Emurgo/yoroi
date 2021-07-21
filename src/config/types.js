@@ -10,6 +10,17 @@ export const NETWORK_REGISTRY = {
 }
 export type NetworkId = $Values<typeof NETWORK_REGISTRY>
 
+// PROVIDERS
+export const ALONZO_FACTOR = 1000
+
+export const YOROI_PROVIDER_IDS = {
+  ...NETWORK_REGISTRY,
+  ALONZO_MAINNET: ALONZO_FACTOR + NETWORK_REGISTRY.HASKELL_SHELLEY,
+  ALONZO_TESTNET: ALONZO_FACTOR + NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET,
+}
+
+export type YoroiProvider = 'emurgo-shelley' | 'emurgo-alonzo'
+
 export const DERIVATION_TYPES = {
   BIP44: 'bip44',
   CIP1852: 'cip1852',
