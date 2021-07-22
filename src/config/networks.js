@@ -92,8 +92,8 @@ const HASKELL_SHELLEY_TESTNET = {
   ENABLED: true,
   CHAIN_NETWORK_ID: '0',
   IS_MAINNET: false,
-  EXPLORER_URL_FOR_ADDRESS: (_address: string) => '',
-  EXPLORER_URL_FOR_TX: (_tx: string) => '',
+  EXPLORER_URL_FOR_ADDRESS: (address: string) => `https://explorer.cardano.org/en/address?address=${address}`,
+  EXPLORER_URL_FOR_TX: (tx: string) => `https://explorer.cardano.org/tx/${tx}`,
   POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
   BACKEND: {
     API_ROOT: 'https://testnet-backend.yoroiwallet.com',
@@ -240,7 +240,7 @@ export const isHaskellShelleyNetwork = (networkId: NetworkId): boolean =>
 
 export const getCardanoByronConfig = () => NETWORKS.BYRON_MAINNET
 
-export const getNetworkConfigById = (id: NetworkId, provider?: YoroiProvider): NetworkConfig => {
+export const getNetworkConfigById = (id: NetworkId, provider: ?YoroiProvider): NetworkConfig => {
   const idx = Object.values(NETWORK_REGISTRY).indexOf(id)
   const network = Object.keys(NETWORK_REGISTRY)[idx]
   if (network != null && network !== 'UNDEFINED' && NETWORKS[network] != null) {
