@@ -278,8 +278,8 @@ const TxDetails = ({intl, route}: Props & RouterProps) => {
         <View style={styles.content}>
           <Label>{intl.formatMessage(messages.fromAddresses)}</Label>
           {fromFiltered.map((item, i) => (
-            <>
-              <AddressEntry key={i} {...item} showModalForAddress={showModalForAddress} />
+            <View key={i}>
+              <AddressEntry {...item} showModalForAddress={showModalForAddress} />
               {item.assets.length > 0 && (
                 <TouchableOpacity style={styles.assetsExpandable} activeOpacity={0.5} onPress={() => toggleExpandIn()}>
                   <Text style={styles.assetsTitle}>
@@ -289,7 +289,7 @@ const TxDetails = ({intl, route}: Props & RouterProps) => {
                 </TouchableOpacity>
               )}
               {expandedIn && <AssetList styles={assetListStyle} assets={item.assets} assetsMetadata={tokenMetadata} />}
-            </>
+            </View>
           ))}
           {cntOmittedFrom > 0 && <Text>{intl.formatMessage(messages.omittedCount, {cnt: cntOmittedFrom})}</Text>}
 
