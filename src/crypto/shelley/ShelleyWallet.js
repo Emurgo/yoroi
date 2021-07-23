@@ -21,6 +21,7 @@ import {
   TransactionBuilder,
   BigNum,
   LinearFee,
+  AuxiliaryData,
 } from '@emurgo/react-native-haskell-shelley'
 import {TxAuxiliaryDataSupplementType} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {BigNumber} from 'bignumber.js'
@@ -744,7 +745,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       useUSB,
     )
 
-    let auxiliaryData
+    let auxiliaryData: AuxiliaryData
     if (request.ledgerNanoCatalystRegistrationTxSignData) {
       const {votingPublicKey, nonce} = request.ledgerNanoCatalystRegistrationTxSignData
 
