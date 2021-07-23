@@ -54,16 +54,8 @@ import {
   createWithdrawalTx,
   createDelegationTx,
 } from './delegationUtils'
-import {
-  createLedgerSignTxPayload,
-  signTxWithLedger,
-  buildSignedTransaction,
-} from './ledgerUtils'
-import {
-  normalizeToAddress,
-  toHexOrBase58,
-  deriveRewardAddressHex,
-} from './utils'
+import {createLedgerSignTxPayload, signTxWithLedger, buildSignedTransaction} from './ledgerUtils'
+import {normalizeToAddress, toHexOrBase58, deriveRewardAddressHex} from './utils'
 import {createAuxiliaryData} from './metadataUtils'
 
 import type {
@@ -465,10 +457,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     const changeAddr = await this._getAddressedChangeAddress()
     const addressedUtxos = this.asAddressedUtxo(utxos)
 
-    const auxiliary =
-      auxiliaryData !== undefined
-        ? await createAuxiliaryData(auxiliaryData)
-        : undefined
+    const auxiliary = auxiliaryData !== undefined ? await createAuxiliaryData(auxiliaryData) : undefined
     return await utilsCreateUnsignedTx({
       changeAddr,
       absSlotNumber,

@@ -1,11 +1,7 @@
 // @flow
 
 import {BigNumber} from 'bignumber.js'
-import {
-  BigNum,
-  LinearFee,
-  AuxiliaryData,
-} from '@emurgo/react-native-haskell-shelley'
+import {BigNum, LinearFee, AuxiliaryData} from '@emurgo/react-native-haskell-shelley'
 
 import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
 import {sendAllUnsignedTx, newAdaUnsignedTx} from './transactions'
@@ -37,14 +33,7 @@ export type CreateUnsignedTxResponse = HaskellShelleyTxSignRequest
 
 export const createUnsignedTx = async (request: CreateUnsignedTxRequest): Promise<CreateUnsignedTxResponse> => {
   Logger.debug('createUnsignedTx called', request)
-  const {
-    changeAddr,
-    receiver,
-    addressedUtxos,
-    absSlotNumber,
-    auxiliaryData,
-    networkConfig,
-  } = request
+  const {changeAddr, receiver, addressedUtxos, absSlotNumber, auxiliaryData, networkConfig} = request
   try {
     const KEY_DEPOSIT = networkConfig.KEY_DEPOSIT
     const POOL_DEPOSIT = networkConfig.POOL_DEPOSIT

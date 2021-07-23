@@ -50,9 +50,7 @@ test('Generate Catalyst registration tx', async () => {
   })
 
   const result = await GeneralTransactionMetadata.from_bytes(
-    await (await (await MetadataList.from_bytes(await metadata.to_bytes())).get(
-      0,
-    )).to_bytes(),
+    await (await (await MetadataList.from_bytes(await metadata.to_bytes())).get(0)).to_bytes(),
   )
 
   const data = await result.get(await BigNum.from_str(CatalystLabels.DATA.toString()))

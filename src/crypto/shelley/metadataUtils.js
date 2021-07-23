@@ -16,16 +16,11 @@ export type JSONMetadata = {|
   data: {},
 |}
 
-export async function createAuxiliaryData(
-  auxiliary: Array<JSONMetadata>,
-): AuxiliaryData {
+export async function createAuxiliaryData(auxiliary: Array<JSONMetadata>): AuxiliaryData {
   const metadata = await GeneralTransactionMetadata.new()
 
   for (const meta of auxiliary) {
-    const metadatum = await encode_json_str_to_metadatum(
-      JSON.stringify(meta.data),
-      MetadataJsonSchema.BasicConversions,
-    )
+    const metadatum = await encode_json_str_to_metadatum(JSON.stringify(meta.data), MetadataJsonSchema.BasicConversions)
     await metadata.insert(await BigNum.from_str(meta.label), metadatum)
   }
 

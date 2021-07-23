@@ -53,7 +53,7 @@ type LedgerNanoCatalystRegistrationTxSignData = {|
 export class HaskellShelleyTxSignRequest implements ISignRequest<TransactionBuilder> {
   senderUtxos: Array<AddressedUtxo>
   unsignedTx: TransactionBuilder
-  changeAddr: Array<{| ...Address, ...Value, ...Addressing |}>
+  changeAddr: Array<{|...Address, ...Value, ...Addressing|}>
   auxiliaryData: void | AuxiliaryData
   networkSettingSnapshot: NetworkSettingSnapshot
   // TODO: this should be provided by WASM in some SignedTxBuilder interface of some kind
@@ -65,19 +65,17 @@ export class HaskellShelleyTxSignRequest implements ISignRequest<TransactionBuil
   ledgerNanoCatalystRegistrationTxSignData: void | LedgerNanoCatalystRegistrationTxSignData
 
   constructor(data: {
-      senderUtxos: Array<AddressedUtxo>,
-      unsignedTx: TransactionBuilder,
-      changeAddr: Array<{| ...Address, ...Value, ...Addressing |}>,
-      auxiliaryData: void | AuxiliaryData,
-      networkSettingSnapshot: NetworkSettingSnapshot,
-      neededStakingKeyHashes: {|
-        neededHashes: Set<string>, // StakeCredential
-        wits: Set<string>, // Vkeywitness
-      |},
-      ledgerNanoCatalystRegistrationTxSignData?:
-        void | LedgerNanoCatalystRegistrationTxSignData,
-      }
-  ) {
+    senderUtxos: Array<AddressedUtxo>,
+    unsignedTx: TransactionBuilder,
+    changeAddr: Array<{|...Address, ...Value, ...Addressing|}>,
+    auxiliaryData: void | AuxiliaryData,
+    networkSettingSnapshot: NetworkSettingSnapshot,
+    neededStakingKeyHashes: {|
+      neededHashes: Set<string>, // StakeCredential
+      wits: Set<string>, // Vkeywitness
+    |},
+    ledgerNanoCatalystRegistrationTxSignData?: void | LedgerNanoCatalystRegistrationTxSignData,
+  }) {
     this.senderUtxos = data.senderUtxos
     this.unsignedTx = data.unsignedTx
     this.changeAddr = data.changeAddr

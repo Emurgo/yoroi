@@ -58,10 +58,7 @@ export async function generateRegistration(request: {|
   const registrationData = await encode_json_str_to_metadatum(jsonMeta, MetadataJsonSchema.BasicConversions)
   Logger.debug(jsonMeta)
   const metadata = await GeneralTransactionMetadata.new()
-  await metadata.insert(
-    await BigNum.from_str(CatalystLabels.DATA.toString()),
-    registrationData,
-  )
+  await metadata.insert(await BigNum.from_str(CatalystLabels.DATA.toString()), registrationData)
 
   const hashedMetadata = blake2b(256 / 8)
     .update(await metadata.to_bytes())
@@ -80,15 +77,9 @@ export async function generateRegistration(request: {|
   )
   // This is how Ledger constructs the metadata. We must be consistent with it.
   const metadataList = await MetadataList.new()
-  await metadataList.add(
-    await TransactionMetadatum.from_bytes(await metadata.to_bytes()),
-  )
-  await metadataList.add(
-    await TransactionMetadatum.new_list(await MetadataList.new()),
-  )
-  const auxiliary = await AuxiliaryData.from_bytes(
-    await metadataList.to_bytes(),
-  )
+  await metadataList.add(await TransactionMetadatum.from_bytes(await metadata.to_bytes()))
+  await metadataList.add(await TransactionMetadatum.new_list(await MetadataList.new()))
+  const auxiliary = await AuxiliaryData.from_bytes(await metadataList.to_bytes())
   return auxiliary
 }
 
