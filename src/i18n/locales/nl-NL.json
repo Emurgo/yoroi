@@ -280,6 +280,7 @@
   "components.walletinit.connectnanox.savenanoxscreen.save": "Bewaren",
   "components.walletinit.connectnanox.savenanoxscreen.title": "Bewaar Portemonnee",
   "components.walletinit.createwallet.createwalletscreen.title": "Maak een nieuwe portemonnee aan",
+  "components.walletinit.createwallet.createwalletscreen.passwordLengthRequirement": "Minimum {requiredPasswordLength} characters",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.confirmationButton": "Ik begrijp het",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.keysStorageCheckbox": "Ik begrijp dat mijn geheime sleutels alleen veilig op mijn computer worden bewaard en niet op de computers van het bedrijf",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox": "Ik begrijp dat als deze toepassing naar een ander apparaat wordt verplaatst of wordt verwijderd, mijn kapitaal alleen kan    worden alleen hersteld met de herstelzin die ik heb opgeschreven en op een veilige plaats bewaar.",
