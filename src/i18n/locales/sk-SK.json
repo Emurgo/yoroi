@@ -280,6 +280,7 @@
   "components.walletinit.connectnanox.savenanoxscreen.save": "Uložiť",
   "components.walletinit.connectnanox.savenanoxscreen.title": "Uložiť peňaženku",
   "components.walletinit.createwallet.createwalletscreen.title": "Vytvoriť novú peňaženku",
+  "components.walletinit.createwallet.createwalletscreen.passwordLengthRequirement": "Minimum {requiredPasswordLength} characters",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.confirmationButton": "Rozumiem",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.keysStorageCheckbox": "Berem na vedomie, že moje tajné kľúče sú držané bezpečne len na tomto zariadení, nie na serveroch spoločnosti",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox": "Berem na vedomie, že ak by táto aplikácia bola zmazaná, alebo presunutá na iné zariadenie, moje prostriedky možu byť obnovené len za pomoci práve poznamenanej fráze, ktorú som si uschoval/a na bezpečné miesto.",
