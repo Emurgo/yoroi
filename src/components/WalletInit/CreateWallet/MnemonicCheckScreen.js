@@ -28,22 +28,18 @@ const messages = defineMessages({
   clearButton: {
     id: 'components.walletinit.createwallet.mnemoniccheckscreen.clearButton',
     defaultMessage: '!!!Clear',
-    description: 'some desc',
   },
   confirmButton: {
     id: 'components.walletinit.createwallet.mnemoniccheckscreen.confirmButton',
     defaultMessage: '!!!Confirm',
-    description: 'some desc',
   },
   mnemonicWordsInputLabel: {
     id: 'components.walletinit.createwallet.mnemoniccheckscreen.mnemonicWordsInputLabel',
     defaultMessage: '!!!Recovery phrase',
-    description: 'some desc',
   },
   mnemonicWordsInputInvalidPhrase: {
     id: 'components.walletinit.createwallet.mnemoniccheckscreen.mnemonicWordsInputInvalidPhrase',
     defaultMessage: '!!!Recovery phrase does not match',
-    description: 'some desc',
   },
 })
 
