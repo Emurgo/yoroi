@@ -280,6 +280,7 @@
   "components.walletinit.connectnanox.savenanoxscreen.save": "Save",
   "components.walletinit.connectnanox.savenanoxscreen.title": "Save wallet",
   "components.walletinit.createwallet.createwalletscreen.title": "Create a new wallet",
+  "components.walletinit.createwallet.createwalletscreen.passwordLengthRequirement": "Minimum {requiredPasswordLength} characters",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.confirmationButton": "I understand",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.keysStorageCheckbox": "I understand that my secret keys are held securely on this device only, not on the company`s servers",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox": "I understand that if this application is moved to another device or deleted, my funds can be only recovered with the backup phrase that I have written down and saved in a secure place.",

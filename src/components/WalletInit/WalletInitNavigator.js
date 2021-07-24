@@ -54,7 +54,6 @@ const messages = defineMessages({
   walletCredentialsTitle: {
     id: 'components.walletinit.restorewallet.walletcredentialsscreen.title',
     defaultMessage: '!!!Wallet credentials',
-    description: 'some desc',
   },
   connectNanoXTitle: {
     id: 'components.walletinit.connectnanox.connectnanoxscreen.title',

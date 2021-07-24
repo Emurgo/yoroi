@@ -20,7 +20,6 @@ const messages = defineMessages({
   receiveTitle: {
     id: 'components.receive.receivescreen.title',
     defaultMessage: '!!!Receive',
-    description: 'some desc',
   },
 })
 
@@ -38,7 +37,6 @@ const ReceiveScreenNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
       name={RECEIVE_ROUTES.MAIN}
       component={ReceiveScreen}
       options={({navigation}) => ({
-        // $FlowFixMe it says optional chain is not required but it is
         title: intl.formatMessage(messages.receiveTitle),
         headerRight: () => (
           <Button

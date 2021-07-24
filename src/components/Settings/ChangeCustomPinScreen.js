@@ -26,22 +26,18 @@ const messages = defineMessages({
   currentPinInputSubtitle: {
     id: 'components.settings.changecustompinscreen.CurrentPinInput.subtitle',
     defaultMessage: 'Enter your current PIN',
-    description: 'some desc',
   },
   pinInputTitle: {
     id: 'components.settings.changecustompinscreen.PinRegistrationForm.PinInput.title',
     defaultMessage: 'Enter PIN',
-    description: 'some desc',
   },
   pinInputSubtitle: {
     id: 'components.settings.changecustompinscreen.PinRegistrationForm.PinInput.subtitle',
     defaultMessage: 'Choose new PIN for quick access to wallet.',
-    description: 'some desc',
   },
   pinConfirmationTitle: {
     id: 'components.settings.changecustompinscreen.PinRegistrationForm.PinConfirmationInput.title',
     defaultMessage: 'Repeat PIN',
-    description: 'some desc',
   },
 })
 
