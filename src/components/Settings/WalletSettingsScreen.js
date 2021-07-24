@@ -45,27 +45,22 @@ const messages = defineMessages({
   logout: {
     id: 'components.settings.walletsettingscreen.logout',
     defaultMessage: 'Logout',
-    description: 'some desc',
   },
   walletName: {
     id: 'components.settings.walletsettingscreen.walletName',
     defaultMessage: 'Wallet name',
-    description: 'some desc',
   },
   security: {
     id: 'components.settings.walletsettingscreen.security',
     defaultMessage: 'Security',
-    description: 'some desc',
   },
   changePassword: {
     id: 'components.settings.walletsettingscreen.changePassword',
     defaultMessage: 'Change password',
-    description: 'some desc',
   },
   easyConfirmation: {
     id: 'components.settings.walletsettingscreen.easyConfirmation',
     defaultMessage: '!!!Easy transaction confirmation',
-    description: 'some desc',
   },
   removeWallet: {
     id: 'components.settings.walletsettingscreen.removeWallet',

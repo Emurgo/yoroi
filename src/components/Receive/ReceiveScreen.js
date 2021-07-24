@@ -34,32 +34,26 @@ const messages = defineMessages({
       '!!!Share this address to receive payments. ' +
       'To protect your privacy, new addresses are ' +
       'generated automatically once you use them.',
-    description: 'some desc',
   },
   generateButton: {
     id: 'components.receive.receivescreen.generateButton',
     defaultMessage: '!!!Generate another address',
-    description: 'some desc',
   },
   cannotGenerate: {
     id: 'components.receive.receivescreen.cannotGenerate',
     defaultMessage: '!!!You have to use some of your addresses',
-    description: 'some desc',
   },
   unusedAddresses: {
     id: 'components.receive.receivescreen.unusedAddresses',
     defaultMessage: '!!!Unused addresses',
-    description: 'some desc',
   },
   usedAddresses: {
     id: 'components.receive.receivescreen.usedAddresses',
     defaultMessage: '!!!Used addresses',
-    description: 'some desc',
   },
   verifyAddress: {
     id: 'components.receive.receivescreen.verifyAddress',
     defaultMessage: '!!!Verify address',
-    description: 'some desc',
   },
 })
 
