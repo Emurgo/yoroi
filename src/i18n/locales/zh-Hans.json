@@ -280,6 +280,7 @@
   "components.walletinit.connectnanox.savenanoxscreen.save": "保存",
   "components.walletinit.connectnanox.savenanoxscreen.title": "保存钱包",
   "components.walletinit.createwallet.createwalletscreen.title": "创建新钱包",
+  "components.walletinit.createwallet.createwalletscreen.passwordLengthRequirement": "Minimum {requiredPasswordLength} characters",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.confirmationButton": "我了解",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.keysStorageCheckbox": "我了解，我的密钥仅安全地保存在此设备上，而不是公司的服务器上",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox": "我了解，如果将此应用程序移至另一台设备或删除，则只能使用我写下并保存在安全位置的助记词来恢复我的钱包。",
