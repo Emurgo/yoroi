@@ -10,13 +10,14 @@ export const useCopy = () => {
 
   useEffect(() => {
     const isCopying = !!copying
+    let timeout
     if (isCopying) {
-      const timeout = setTimeout(() => {
-        clearTimeout(timeout)
-        Clipboard.setString(copying)
+      Clipboard.setString(copying)
+      timeout = setTimeout(() => {
         setCopying('')
       }, MESSAGE_TIMEOUT)
     }
+    return () => clearTimeout(timeout)
   }, [copying, setCopying])
 
   return [!!copying, setCopying]

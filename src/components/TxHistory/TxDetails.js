@@ -240,12 +240,8 @@ const TxDetails = ({intl, route}: Props & RouterProps) => {
     setAddressDetail(null)
   }
 
-  const {fromFiltered, cntOmittedFrom, toFiltered, cntOmittedTo} = getShownAddresses(
-    intl,
-    transaction,
-    internalAddressIndex,
-    externalAddressIndex,
-  )
+  const {fromFiltered, cntOmittedFrom, toFiltered, cntOmittedTo} =
+    transaction && getShownAddresses(intl, transaction, internalAddressIndex, externalAddressIndex)
   const txFee: ?BigNumber = transaction.fee ? MultiToken.fromArray(transaction.fee).getDefault() : null
   const amountAsMT = MultiToken.fromArray(transaction.amount)
   const amount: BigNumber = amountAsMT.getDefault()
@@ -282,9 +278,8 @@ const TxDetails = ({intl, route}: Props & RouterProps) => {
         </Banner>
         <View style={styles.content}>
           <Label>{intl.formatMessage(messages.fromAddresses)}</Label>
-          {fromFiltered.map((item, i) => (
-            // TODO: replace the idx
-            <View key={i}>
+          {fromFiltered.map((item) => (
+            <View key={item.address}>
               <AddressEntry {...item} showModalForAddress={showModalForAddress} />
               {item.assets.length > 0 && (
                 <TouchableOpacity style={styles.assetsExpandable} activeOpacity={0.5} onPress={() => toggleExpandIn()}>
@@ -302,9 +297,8 @@ const TxDetails = ({intl, route}: Props & RouterProps) => {
           <View style={styles.borderTop}>
             <Label>{intl.formatMessage(messages.toAddresses)}</Label>
           </View>
-          {toFiltered.map((item, i) => (
-            // TODO: replace the idx
-            <View key={i}>
+          {toFiltered.map((item) => (
+            <View key={item.address}>
               <AddressEntry {...item} showModalForAddress={showModalForAddress} />
               {item.assets.length > 0 && (
                 <TouchableOpacity style={styles.assetsExpandable} activeOpacity={0.5} onPress={() => toggleExpandOut()}>

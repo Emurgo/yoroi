@@ -7,20 +7,20 @@ import {useCopy} from '../../utils/useCopy'
 import copyIcon from '../../assets/img/icon/copy-ext.png'
 import copiedIcon from '../../assets/img/icon/copied.png'
 
-export type CopyProps = {|
+export type CopyButtonProps = {|
   value: string,
 |}
 
-export const CopyView = ({value}: CopyProps) => {
+export const CopyButton = ({value}: CopyButtonProps) => {
   const [isCopying, copy] = useCopy()
-  const _copyHandler = useCallback(() => {
+  const copyHandler = useCallback(() => {
     copy(value)
   }, [copy, value])
   return (
-    <TouchableOpacity accessibilityRole="button" onPress={_copyHandler} disabled={isCopying}>
+    <TouchableOpacity accessibilityRole="button" onPress={copyHandler} disabled={isCopying}>
       <Image source={isCopying ? copiedIcon : copyIcon} />
     </TouchableOpacity>
   )
 }
 
-export default CopyView
+export default CopyButton
