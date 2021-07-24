@@ -280,6 +280,7 @@
   "components.walletinit.connectnanox.savenanoxscreen.save": "Save",
   "components.walletinit.connectnanox.savenanoxscreen.title": "Save wallet",
   "components.walletinit.createwallet.createwalletscreen.title": "Новый кошелек",
+  "components.walletinit.createwallet.createwalletscreen.passwordLengthRequirement": "Minimum {requiredPasswordLength} characters",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.confirmationButton": "Мне понятно",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.keysStorageCheckbox": "Я понимаю, что мои секретные ключи безопасным образом хранятся только на данном устройстве, а не на серверах компании",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox": "I understand that if this application is moved to another device or deleted, my funds can be only recovered with the backup phrase that I have written down and saved in a secure place.",
