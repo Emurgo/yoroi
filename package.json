@@ -24,7 +24,26 @@
     "e2e:test-android-debug": "detox test -c android.emu.mainnet.debug",
     "e2e:build-android-debug": "detox build -c android.emu.mainnet.debug",
     "prestorybook": "rnstl  --searchDir ./src/components --pattern '**/*.stories.js'",
-    "storybook": "start-storybook"
+    "storybook": "start-storybook",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "eslint --cache --fix --max-warnings=0",
+      "prettier --write",
+      "flow focus-check"
+    ],
+    "*.{md,json}": "prettier --write"
+  },
+  "jest": {
+    "preset": "react-native",
+    "testMatch": [
+      "**/__tests__/**/*.[jt]s?(x)",
+      "**/?(*.)+(test).[jt]s?(x)"
+    ],
+    "transform": {
+      "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js"
+    }
   },
   "dependencies": {
     "@babel/cli": "7.12.8",
@@ -139,9 +158,12 @@
     "flow-bin": "0.126.0",
     "flow-coverage-report": "0.8.0",
     "flow-typed": "3.1.0",
+    "husky": ">=6",
     "jest": "25.1.0",
+    "lint-staged": ">=10",
     "metro-react-native-babel-preset": "0.59.0",
     "prettier": "2.3.2",
+    "prettier-plugin-packagejson": "^2.2.11",
     "prettylint": "1.0.0",
     "react-dom": "16.8.3",
     "react-intl-translations-manager": "^5.0.3",
@@ -150,29 +172,7 @@
     "react-native-storybook-loader": "^1.8.1",
     "react-test-renderer": "16.13.1"
   },
-  "jest": {
-    "transform": {
-      "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js"
-    },
-    "preset": "react-native",
-    "testMatch": [
-      "**/__tests__/**/*.[jt]s?(x)",
-      "**/?(*.)+(test).[jt]s?(x)"
-    ]
-  },
-  "xcodeSchemes": {
-    "Debug": [
-      "Staging.Debug"
-    ],
-    "Release": [
-      "Staging.Release"
-    ]
-  },
   "engineStrict": true,
-  "engine": {
-    "node": "~10.14.2",
-    "npm": "~6.4.1"
-  },
   "detox": {
     "test-runner": "jest",
     "configurations": {
@@ -199,5 +199,17 @@
         }
       }
     }
+  },
+  "engine": {
+    "node": "~16.5.0",
+    "npm": "~7.19.1"
+  },
+  "xcodeSchemes": {
+    "Debug": [
+      "Staging.Debug"
+    ],
+    "Release": [
+      "Staging.Release"
+    ]
   }
 }

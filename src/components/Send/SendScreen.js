@@ -63,37 +63,30 @@ const amountInputErrorMessages = defineMessages({
   INVALID_AMOUNT: {
     id: 'components.send.sendscreen.amountInput.error.INVALID_AMOUNT',
     defaultMessage: '!!!Please enter valid amount',
-    description: 'some desc',
   },
   TOO_MANY_DECIMAL_PLACES: {
     id: 'components.send.sendscreen.amountInput.error.TOO_MANY_DECIMAL_PLACES',
     defaultMessage: '!!!Please enter valid amount',
-    description: 'some desc',
   },
   TOO_LARGE: {
     id: 'components.send.sendscreen.amountInput.error.TOO_LARGE',
     defaultMessage: '!!!Amount too large',
-    description: 'some desc',
   },
   TOO_LOW: {
     id: 'components.send.sendscreen.amountInput.error.TOO_LOW',
     defaultMessage: '!!!Amount is too low',
-    description: 'some desc',
   },
   LT_MIN_UTXO: {
     id: 'components.send.sendscreen.amountInput.error.LT_MIN_UTXO',
     defaultMessage: '!!!Cannot send less than {minUtxo} {ticker}',
-    description: 'some desc',
   },
   NEGATIVE: {
     id: 'components.send.sendscreen.amountInput.error.NEGATIVE',
     defaultMessage: '!!!Amount must be positive',
-    description: 'some desc',
   },
   insufficientBalance: {
     id: 'components.send.sendscreen.amountInput.error.insufficientBalance',
     defaultMessage: '!!!Not enough money to make this transaction',
-    description: 'some desc',
   },
   assetOverflow: {
     id: 'components.send.sendscreen.amountInput.error.assetOverflow',
@@ -105,52 +98,42 @@ const messages = defineMessages({
   feeLabel: {
     id: 'components.send.sendscreen.feeLabel',
     defaultMessage: '!!!Fee',
-    description: 'some desc',
   },
   feeNotAvailable: {
     id: 'components.send.sendscreen.feeNotAvailable',
     defaultMessage: '!!!-',
-    description: 'some desc',
   },
   balanceAfterLabel: {
     id: 'components.send.sendscreen.balanceAfterLabel',
     defaultMessage: '!!!Balance after',
-    description: 'some desc',
   },
   balanceAfterNotAvailable: {
     id: 'components.send.sendscreen.balanceAfterNotAvailable',
     defaultMessage: '!!!-',
-    description: 'some desc',
   },
   availableFundsBannerIsFetching: {
     id: 'components.send.sendscreen.availableFundsBannerIsFetching',
     defaultMessage: '!!!Checking balance...',
-    description: 'some desc',
   },
   availableFundsBannerNotAvailable: {
     id: 'components.send.sendscreen.availableFundsBannerNotAvailable',
     defaultMessage: '!!!-',
-    description: 'some desc',
   },
   addressInputErrorInvalidAddress: {
     id: 'components.send.sendscreen.addressInputErrorInvalidAddress',
     defaultMessage: '!!!Please enter valid address',
-    description: 'some desc',
   },
   addressInputLabel: {
     id: 'components.send.sendscreen.addressInputLabel',
     defaultMessage: '!!!Address',
-    description: 'some desc',
   },
   checkboxSendAllAssets: {
     id: 'components.send.sendscreen.checkboxSendAllAssets',
     defaultMessage: '!!!Send all assets (including all tokens)',
-    description: 'some desc',
   },
   checkboxSendAll: {
     id: 'components.send.sendscreen.checkboxSendAll',
     defaultMessage: '!!!Send all {assetId}',
-    description: 'some desc',
   },
   sendAllWarningTitle: {
     id: 'components.send.sendscreen.sendAllWarningTitle',
@@ -178,17 +161,14 @@ const messages = defineMessages({
   continueButton: {
     id: 'components.send.sendscreen.continueButton',
     defaultMessage: '!!!Continue',
-    description: 'some desc',
   },
   errorBannerNetworkError: {
     id: 'components.send.sendscreen.errorBannerNetworkError',
     defaultMessage: '!!!We are experiencing issues with fetching your current balance. Click to retry.',
-    description: 'some desc',
   },
   errorBannerPendingOutgoingTransaction: {
     id: 'components.send.sendscreen.errorBannerPendingOutgoingTransaction',
     defaultMessage: 'You cannot send a new transaction while an existing one is still pending',
-    description: 'some desc',
   },
 })
 

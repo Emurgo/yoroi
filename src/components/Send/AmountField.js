@@ -10,7 +10,6 @@ export const messages = defineMessages({
   label: {
     id: 'components.send.amountfield.label',
     defaultMessage: '!!!Amount',
-    description: 'some desc',
   },
 })
 
