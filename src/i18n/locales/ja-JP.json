@@ -280,6 +280,7 @@
   "components.walletinit.connectnanox.savenanoxscreen.save": "保存",
   "components.walletinit.connectnanox.savenanoxscreen.title": "ウォレットを保存",
   "components.walletinit.createwallet.createwalletscreen.title": "新しいウォレットを作成してください。",
+  "components.walletinit.createwallet.createwalletscreen.passwordLengthRequirement": "Minimum {requiredPasswordLength} characters",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.confirmationButton": "はい",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.keysStorageCheckbox": "秘密鍵は、会社のサーバーではなく、このデバイス上にのみ保存されることを理解しました。",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox": "I understand that if this application is moved to another device or deleted, my funds can be only recovered with the backup phrase that I have written down and saved in a secure place.",
