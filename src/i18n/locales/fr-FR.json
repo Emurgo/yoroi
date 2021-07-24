@@ -280,7 +280,7 @@
   "components.walletinit.connectnanox.savenanoxscreen.save": "Enregistrer",
   "components.walletinit.connectnanox.savenanoxscreen.title": "Enregistrer votre portefeuille",
   "components.walletinit.createwallet.createwalletscreen.title": "Créer un nouveau wallet",
-  "components.walletinit.createwallet.createwalletscreen.passwordLengthRequirement": "Minimum {requiredPasswordLength} characters",
+  "components.walletinit.createwallet.createwalletscreen.passwordLengthRequirement": "Un minimum de {requiredPasswordLength} lettres",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.confirmationButton": "J'ai compris",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.keysStorageCheckbox": "J'ai compris que mes clés secrètes sont uniquement conservées sur cet appareil, et non sur les serveurs de Emurgo",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox": "J'ai compris que si l'application est déplacée vers un autre appareil ou bien effacée, mes fonds ne peuvent être récupérés qu'avec la phrase de secours que j'ai notée de manière manuscrite et mise de coté.",
