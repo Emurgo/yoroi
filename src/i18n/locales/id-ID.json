@@ -280,6 +280,7 @@
   "components.walletinit.connectnanox.savenanoxscreen.save": "Save",
   "components.walletinit.connectnanox.savenanoxscreen.title": "Save wallet",
   "components.walletinit.createwallet.createwalletscreen.title": "Buat wallet baru",
+  "components.walletinit.createwallet.createwalletscreen.passwordLengthRequirement": "Minimum {requiredPasswordLength} characters",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.confirmationButton": "Saya mengerti",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.keysStorageCheckbox": "Saya mengerti bahwa secret key saya disimpan dengan aman hanya pada perangkat ini, tidak pada server lain",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox": "I understand that if this application is moved to another device or deleted, my funds can be only recovered with the backup phrase that I have written down and saved in a secure place.",
