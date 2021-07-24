@@ -17,12 +17,10 @@ const messages = defineMessages({
   passwordRequirementsNote: {
     id: 'components.walletinit.passwordstrengthindicator.passwordRequirementsNote',
     defaultMessage: '!!!The password needs to contain at least:',
-    description: 'some desc',
   },
   passwordBigLength: {
     id: 'components.walletinit.passwordstrengthindicator.passwordBigLength',
     defaultMessage: '!!!10 characters',
-    description: 'some desc',
   },
 })
 

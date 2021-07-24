@@ -45,12 +45,10 @@ const messages = defineMessages({
   copyLabel: {
     id: 'components.receive.addressmodal.copyLabel',
     defaultMessage: '!!!Copy',
-    description: 'some desc',
   },
   verifyLabel: {
     id: 'components.receive.addressview.verifyAddressLabel',
     defaultMessage: '!!!Verify',
-    description: 'some desc',
   },
 })
 
