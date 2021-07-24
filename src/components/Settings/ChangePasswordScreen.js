@@ -25,27 +25,22 @@ const messages = defineMessages({
   oldPasswordInputLabel: {
     id: 'components.settings.changepasswordscreen.oldPasswordInputLabel',
     defaultMessage: 'Current password',
-    description: 'some desc',
   },
   newPasswordInputLabel: {
     id: 'components.settings.changepasswordscreen.newPasswordInputLabel',
     defaultMessage: 'New password',
-    description: 'some desc',
   },
   repeatPasswordInputLabel: {
     id: 'components.settings.changepasswordscreen.repeatPasswordInputLabel',
     defaultMessage: 'Repeat new password',
-    description: 'some desc',
   },
   repeatPasswordInputNotMatchError: {
     id: 'components.settings.changepasswordscreen.repeatPasswordInputNotMatchError',
     defaultMessage: 'Passwords do not match',
-    description: 'some desc',
   },
   continueButton: {
     id: 'components.settings.changepasswordscreen.continueButton',
     defaultMessage: 'Change password',
-    description: 'some desc',
   },
 })
 

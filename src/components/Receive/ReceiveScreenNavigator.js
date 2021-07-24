@@ -20,7 +20,6 @@ const messages = defineMessages({
   receiveTitle: {
     id: 'components.receive.receivescreen.title',
     defaultMessage: '!!!Receive',
-    description: 'some desc',
   },
 })
 

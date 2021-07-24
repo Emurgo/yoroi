@@ -13,32 +13,26 @@ const messages = defineMessages({
   faqLabel: {
     id: 'components.settings.settingsscreen.faqLabel',
     defaultMessage: 'See frequently asked questions',
-    description: 'some desc',
   },
   faqDescription: {
     id: 'components.settings.settingsscreen.faqDescription',
     defaultMessage: 'If you are experiencing issues, please see the FAQ on Yoroi website for quidance on known issues.',
-    description: 'some desc',
   },
   faqUrl: {
     id: 'components.settings.settingsscreen.faqUrl',
     defaultMessage: 'https://yoroi-wallet.com/faq/',
-    description: 'some desc',
   },
   reportLabel: {
     id: 'components.settings.settingsscreen.reportLabel',
     defaultMessage: 'Report a problem',
-    description: 'some desc',
   },
   reportDescription: {
     id: 'components.settings.settingsscreen.reportDescription',
     defaultMessage: 'If the FAQ does not solve the issue you are experiencing, please use our Support request feature.',
-    description: 'some desc',
   },
   reportUrl: {
     id: 'components.settings.settingsscreen.reportUrl',
     defaultMessage: 'https://yoroi-wallet.com/support/',
-    description: 'some desc',
   },
 })
 
