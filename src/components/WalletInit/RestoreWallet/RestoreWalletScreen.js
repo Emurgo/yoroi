@@ -26,22 +26,18 @@ const mnemonicInputErrorsMessages = defineMessages({
   TOO_LONG: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.toolong',
     defaultMessage: '!!!Phrase is too long. ',
-    description: 'some desc',
   },
   TOO_SHORT: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.tooshort',
     defaultMessage: '!!!Phrase is too short. ',
-    description: 'some desc',
   },
   INVALID_CHECKSUM: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.invalidchecksum',
     defaultMessage: '!!!Please enter valid mnemonic.',
-    description: 'some desc',
   },
   UNKNOWN_WORDS: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.unknowwords',
     defaultMessage: '!!!{wordlist} {cnt, plural, one {is} other {are}} invalid',
-    description: 'some desc',
   },
 })
 
@@ -49,12 +45,10 @@ const messages = defineMessages({
   mnemonicInputLabel: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.mnemonicInputLabel',
     defaultMessage: '!!!Recovery phrase',
-    description: 'some desc',
   },
   restoreButton: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.restoreButton',
     defaultMessage: '!!!Restore wallet',
-    description: 'some desc',
   },
   instructions: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.instructions',
@@ -62,7 +56,6 @@ const messages = defineMessages({
       '!!!To restore your wallet please provide the {mnemonicLength}-word ' +
       'recovery phrase you received when you created your wallet for the ' +
       'first time.',
-    description: 'some desc',
   },
 })
 

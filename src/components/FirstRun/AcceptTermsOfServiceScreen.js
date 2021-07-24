@@ -22,17 +22,14 @@ const messages = defineMessages({
   aggreeClause: {
     id: 'components.firstrun.acepttermsofservicescreen.aggreeClause',
     defaultMessage: '!!!I agree with terms of service',
-    description: 'some desc',
   },
   continueButton: {
     id: 'components.firstrun.acepttermsofservicescreen.continueButton',
     defaultMessage: '!!!Accept',
-    description: 'some desc',
   },
   savingConsentModalTitle: {
     id: 'components.firstrun.acepttermsofservicescreen.savingConsentModalTitle',
     defaultMessage: '!!!Initializing',
-    description: 'some desc',
   },
 })
 
