@@ -46,12 +46,10 @@ const messages = defineMessages({
   biometricsSignIn: {
     id: 'components.settings.applicationsettingsscreen.biometricsSignIn',
     defaultMessage: '!!!Sign in with your biometrics',
-    description: 'some desc',
   },
   crashReporting: {
     id: 'components.settings.applicationsettingsscreen.crashReporting',
     defaultMessage: '!!!Crash reporting',
-    description: 'some desc',
   },
   crashReportingText: {
     id: 'components.settings.applicationsettingsscreen.crashReportingText',
