@@ -280,6 +280,7 @@
   "components.walletinit.connectnanox.savenanoxscreen.save": "Guardar",
   "components.walletinit.connectnanox.savenanoxscreen.title": "Guardar la billetera",
   "components.walletinit.createwallet.createwalletscreen.title": "Crear una nueva billetera",
+  "components.walletinit.createwallet.createwalletscreen.passwordLengthRequirement": "Minimum {requiredPasswordLength} characters",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.confirmationButton": "Comprendo",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.keysStorageCheckbox": "Comprendo que mis claves secretas están almacenadas, de forma segura, solamente en este dispositivo, y no en los servidores de la empresa",
   "components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox": "Comprendo que si esta aplicación se mueve a otro dispositivo o se elimina, mis fondos sólo podrán ser recuperados con la frase de recuperación que he escrito y guardado en un lugar seguro.",
