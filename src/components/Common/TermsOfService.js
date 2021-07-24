@@ -1,24 +1,21 @@
 // @flow
 
 import React from 'react'
-import {connect} from 'react-redux'
-import {compose} from 'redux'
+import {useSelector} from 'react-redux'
 import Markdown from 'react-native-easy-markdown'
+import {loadTOS} from '../../helpers/appSettings'
+import {ActivityIndicator} from 'react-native'
+import {languageSelector} from '../../selectors'
 
-import type {ComponentType} from 'react'
+const TermsOfService = () => {
+  const [tos, setTos] = React.useState()
+  const languageCode = useSelector(languageSelector)
 
-type Props = {
-  tos: string,
+  React.useEffect(() => {
+    loadTOS(languageCode).then(setTos)
+  }, [languageCode])
+
+  return tos ? <Markdown>{tos}</Markdown> : <ActivityIndicator size={'large'} color={'black'} />
 }
 
-const TermsOfService = ({tos}: Props) => {
-  return <Markdown>{tos}</Markdown>
-}
-
-export default (compose(
-  connect((state) => {
-    return {
-      tos: state.tos,
-    }
-  }),
-)(TermsOfService): ComponentType<any>)
+export default TermsOfService
