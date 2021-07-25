@@ -24,23 +24,23 @@ import type {Navigation} from '../../types/navigation'
 const messages = defineMessages({
   oldPasswordInputLabel: {
     id: 'components.settings.changepasswordscreen.oldPasswordInputLabel',
-    defaultMessage: 'Current password',
+    defaultMessage: '!!!Current password',
   },
   newPasswordInputLabel: {
     id: 'components.settings.changepasswordscreen.newPasswordInputLabel',
-    defaultMessage: 'New password',
+    defaultMessage: '!!!New password',
   },
   repeatPasswordInputLabel: {
     id: 'components.settings.changepasswordscreen.repeatPasswordInputLabel',
-    defaultMessage: 'Repeat new password',
+    defaultMessage: '!!!Repeat new password',
   },
   repeatPasswordInputNotMatchError: {
     id: 'components.settings.changepasswordscreen.repeatPasswordInputNotMatchError',
-    defaultMessage: 'Passwords do not match',
+    defaultMessage: '!!!Passwords do not match',
   },
   continueButton: {
     id: 'components.settings.changepasswordscreen.continueButton',
-    defaultMessage: 'Change password',
+    defaultMessage: '!!!Change password',
   },
 })
 
