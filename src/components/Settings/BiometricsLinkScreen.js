@@ -18,7 +18,7 @@ import styles from './styles/BiometricsLinkScreen.style'
 const messages = defineMessages({
   enableFingerprintsMessage: {
     id: 'components.settings.biometricslinkscreen.enableFingerprintsMessage',
-    defaultMessage: 'Enable use of fingerprints in device settings first!',
+    defaultMessage: '!!!Enable use of fingerprints in device settings first!',
   },
   notNowButton: {
     id: 'components.settings.biometricslinkscreen.notNowButton',
