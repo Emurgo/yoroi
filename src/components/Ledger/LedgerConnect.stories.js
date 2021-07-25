@@ -3,7 +3,7 @@
 import React from 'react'
 import {storiesOf} from '@storybook/react-native'
 
-import StorybookModalWrapper from '../Common/StorybookModalWrapper'
+import {withModalProps} from '../../../storybook/decorators'
 import LedgerConnect from './LedgerConnect'
 import {Modal} from '../UiKit'
 
@@ -18,18 +18,14 @@ const devices = [
 type Props = {
   visible: any,
   onRequestClose: any,
-  navigation: any,
   defaultDevices: any,
   useUSB: any,
 }
-const LedgerConnectModal = ({visible, onRequestClose, navigation, defaultDevices, useUSB}: Props) => (
-  <Modal visible={visible} onRequestClose={onRequestClose}>
-    {/* $FlowFixMe */}
+const LedgerConnectModal = ({visible, onRequestClose, defaultDevices, useUSB}: Props) => (
+  <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
     <LedgerConnect
-      navigation={navigation}
       onConnectBLE={() => ({})}
       onConnectUSB={() => ({})}
-      onComplete={() => ({})}
       useUSB={useUSB}
       onWaitingMessage={''}
       defaultDevices={defaultDevices}
@@ -37,11 +33,14 @@ const LedgerConnectModal = ({visible, onRequestClose, navigation, defaultDevices
   </Modal>
 )
 
-const StatefulModal = StorybookModalWrapper(LedgerConnectModal)
-
 storiesOf('Ledger connect', module)
-  .add('Using BLE', ({navigation}) => <StatefulModal navigation={navigation} useUSB={false} />)
-  .add('Using USB', ({navigation}) => <StatefulModal navigation={navigation} useUSB />)
-  .add('BLE with many devices', ({navigation}) => (
-    <StatefulModal navigation={navigation} defaultDevices={devices} useUSB={false} />
+  .addDecorator(withModalProps)
+  .add('Using BLE', ({visible, onRequestClose}) => (
+    <LedgerConnectModal onRequestClose={onRequestClose} visible={visible} useUSB={false} defaultDevices={undefined} />
+  ))
+  .add('Using USB', ({visible, onRequestClose}) => (
+    <LedgerConnectModal onRequestClose={onRequestClose} visible={visible} useUSB defaultDevices={undefined} />
+  ))
+  .add('BLE with many devices', ({visible, onRequestClose}) => (
+    <LedgerConnectModal onRequestClose={onRequestClose} visible={visible} defaultDevices={devices} useUSB={false} />
   ))
