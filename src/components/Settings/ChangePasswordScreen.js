@@ -29,7 +29,7 @@ const messages = defineMessages({
   },
   passwordStrengthRequirement: {
     id: 'components.walletinit.createwallet.createwalletscreen.passwordLengthRequirement',
-    defaultMessage: '!!!Minimum characters',
+    defaultMessage: '!!!Minimum {requirePasswordLength} characters',
   },
   repeatPasswordInputLabel: {
     id: 'components.settings.changepasswordscreen.repeatPasswordInputLabel',
