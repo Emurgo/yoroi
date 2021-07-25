@@ -187,7 +187,7 @@
   "components.settings.removewalletscreen.title": "Eliminar billetera",
   "components.settings.removewalletscreen.walletName": "Nombre de la billetera",
   "components.settings.removewalletscreen.walletNameInput": "Nombre de la billetera",
-  "components.settings.removewalletscreen.walletNameMismatchError": "Wallet name does not match",
+  "components.settings.removewalletscreen.walletNameMismatchError": "El nombre del wallet no coincide",
   "components.settings.settingsscreen.faqDescription": "Si estás experimentando problemas, las preguntas frecuentes (FAQ) del sitio web de Yoroi podrían ser útiles para guiarte en problemas conocidos.",
   "components.settings.settingsscreen.faqLabel": "Ver preguntas frecuentes (FAQ)",
   "components.settings.settingsscreen.faqUrl": "https://yoroi-wallet.com/faq/",
