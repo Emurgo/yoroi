@@ -187,6 +187,7 @@
   "components.settings.removewalletscreen.title": "Remove wallet",
   "components.settings.removewalletscreen.walletName": "Wallet name",
   "components.settings.removewalletscreen.walletNameInput": "Wallet name",
+  "components.settings.removewalletscreen.walletNameMismatchError": "Wallet name does not match",
   "components.settings.settingsscreen.faqDescription": "Ukoliko imate problema, molimo vas pogledajte često postavljana pitanja (FAQ) na Yoroi web stranicama za upute o poznatim problemima.",
   "components.settings.settingsscreen.faqLabel": "See frequently asked questions",
   "components.settings.settingsscreen.faqUrl": "https://yoroi-wallet.com/faq/",
