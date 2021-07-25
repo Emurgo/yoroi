@@ -187,6 +187,7 @@
   "components.settings.removewalletscreen.title": "Delete carteira",
   "components.settings.removewalletscreen.walletName": "Nome da carteira",
   "components.settings.removewalletscreen.walletNameInput": "Nome da carteira",
+  "components.settings.removewalletscreen.walletNameMismatchError": "Wallet name does not match",
   "components.settings.settingsscreen.faqDescription": "Se você está tendo problemas , por favor leia às Perguntas frequentes no site da Yoroi ",
   "components.settings.settingsscreen.faqLabel": "Veja as dúvidas mais frequêntes",
   "components.settings.settingsscreen.faqUrl": "https://yoroi-wallet.com/faq/",
