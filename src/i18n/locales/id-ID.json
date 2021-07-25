@@ -187,6 +187,7 @@
   "components.settings.removewalletscreen.title": "Hapus wallet",
   "components.settings.removewalletscreen.walletName": "Nama wallet",
   "components.settings.removewalletscreen.walletNameInput": "Nama wallet",
+  "components.settings.removewalletscreen.walletNameMismatchError": "Wallet name does not match",
   "components.settings.settingsscreen.faqDescription": "If you are experiencing issues, please see the FAQ on Yoroi website for guidance on known issues.",
   "components.settings.settingsscreen.faqLabel": "Lihat pertanyaan umum",
   "components.settings.settingsscreen.faqUrl": "https://yoroi-wallet.com/faq/",
