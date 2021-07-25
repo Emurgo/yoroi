@@ -15,15 +15,15 @@ const {KeyStoreBridge} = NativeModules
 const messages = defineMessages({
   approveTransaction: {
     id: 'crypto.keystore.approveTransaction',
-    defaultMessage: 'Authorize with your biometrics',
+    defaultMessage: '!!!Authorize with your biometrics',
   },
   subtitle: {
     id: 'crypto.keystore.subtitle',
-    defaultMessage: 'You can disable this feature at any time in the settings',
+    defaultMessage: '!!!You can disable this feature at any time in the settings',
   },
   cancelButton: {
     id: 'crypto.keystore.cancelButton',
-    defaultMessage: 'Cancel',
+    defaultMessage: '!!!Cancel',
   },
 })
 
