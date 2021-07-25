@@ -187,6 +187,7 @@
   "components.settings.removewalletscreen.title": "Tárca törlése",
   "components.settings.removewalletscreen.walletName": "Tárca neve",
   "components.settings.removewalletscreen.walletNameInput": "Tárca neve",
+  "components.settings.removewalletscreen.walletNameMismatchError": "Wallet name does not match",
   "components.settings.settingsscreen.faqDescription": "Ha problémákat tapasztalsz, kérjük, olvasd el a Yoroi weboldalán található GYIK-et az ismert problémákkal kapcsolatban. ",
   "components.settings.settingsscreen.faqLabel": "Gyakori kérdések",
   "components.settings.settingsscreen.faqUrl": "https://yoroi-wallet.com/faq/",
