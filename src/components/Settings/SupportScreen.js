@@ -12,27 +12,29 @@ import styles from './styles/SupportScreen.style'
 const messages = defineMessages({
   faqLabel: {
     id: 'components.settings.settingsscreen.faqLabel',
-    defaultMessage: 'See frequently asked questions',
+    defaultMessage: '!!!See frequently asked questions',
   },
   faqDescription: {
     id: 'components.settings.settingsscreen.faqDescription',
-    defaultMessage: 'If you are experiencing issues, please see the FAQ on Yoroi website for quidance on known issues.',
+    defaultMessage:
+      '!!!If you are experiencing issues, please see the FAQ on Yoroi website for quidance on known issues.',
   },
   faqUrl: {
     id: 'components.settings.settingsscreen.faqUrl',
-    defaultMessage: 'https://yoroi-wallet.com/faq/',
+    defaultMessage: '!!!https://yoroi-wallet.com/faq/',
   },
   reportLabel: {
     id: 'components.settings.settingsscreen.reportLabel',
-    defaultMessage: 'Report a problem',
+    defaultMessage: '!!!Report a problem',
   },
   reportDescription: {
     id: 'components.settings.settingsscreen.reportDescription',
-    defaultMessage: 'If the FAQ does not solve the issue you are experiencing, please use our Support request feature.',
+    defaultMessage:
+      '!!!If the FAQ does not solve the issue you are experiencing, please use our Support request feature.',
   },
   reportUrl: {
     id: 'components.settings.settingsscreen.reportUrl',
-    defaultMessage: 'https://yoroi-wallet.com/support/',
+    defaultMessage: '!!!https://yoroi-wallet.com/support/',
   },
 })
 

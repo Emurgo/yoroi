@@ -22,7 +22,8 @@ import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 const messages = defineMessages({
   descriptionParagraph1: {
     id: 'components.settings.removewalletscreen.descriptionParagraph1',
-    defaultMessage: 'If you really wish to permanently delete the wallet make sure you have written down the mnemonic.',
+    defaultMessage:
+      '!!!If you really wish to permanently delete the wallet make sure you have written down the mnemonic.',
   },
   descriptionParagraph2: {
     id: 'components.settings.removewalletscreen.descriptionParagraph2',
@@ -30,24 +31,24 @@ const messages = defineMessages({
   },
   walletName: {
     id: 'components.settings.removewalletscreen.walletName',
-    defaultMessage: 'Wallet name',
+    defaultMessage: '!!!Wallet name',
   },
   walletNameInput: {
     id: 'components.settings.removewalletscreen.walletNameInput',
-    defaultMessage: 'Wallet name',
+    defaultMessage: '!!!Wallet name',
   },
   walletNameMismatchError: {
     id: 'components.settings.removewalletscreen.walletNameMismatchError',
-    defaultMessage: 'Wallet name does not match',
+    defaultMessage: '!!!Wallet name does not match',
   },
   remove: {
     id: 'components.settings.removewalletscreen.remove',
-    defaultMessage: 'Remove wallet',
+    defaultMessage: '!!!Remove wallet',
   },
   hasWrittenDownMnemonic: {
     id: 'components.settings.removewalletscreen.hasWrittenDownMnemonic',
     defaultMessage:
-      'I have written down mnemonic of this wallet and understand that I cannot recover the wallet without it.',
+      '!!!I have written down mnemonic of this wallet and understand that I cannot recover the wallet without it.',
   },
 })
 
