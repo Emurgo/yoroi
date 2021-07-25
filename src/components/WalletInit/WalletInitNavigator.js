@@ -39,6 +39,10 @@ const messages = defineMessages({
     id: 'components.walletinit.importreadonlywalletscreen.title',
     defaultMessage: '!!!Read-only Wallet',
   },
+  saveReadOnlyWalletTitle: {
+    id: 'components.walletinit.savereadonlywalletscreen.title',
+    defaultMessage: '!!!Verify read-only wallet',
+  },
   mnemonicShowTitle: {
     id: 'components.walletinit.createwallet.mnemonicshowscreen.title',
     defaultMessage: '!!!Recovery phrase',
@@ -128,7 +132,11 @@ const WalletInitNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
       component={ImportReadOnlyWalletScreen}
       options={{title: intl.formatMessage(messages.importReadOnlyTitle)}}
     />
-    <Stack.Screen name={WALLET_INIT_ROUTES.SAVE_READ_ONLY_WALLET} component={SaveReadOnlyWalletScreen} />
+    <Stack.Screen
+      name={WALLET_INIT_ROUTES.SAVE_READ_ONLY_WALLET}
+      component={SaveReadOnlyWalletScreen}
+      options={{title: intl.formatMessage(messages.saveReadOnlyWalletTitle)}}
+    />
     <Stack.Screen
       name={WALLET_INIT_ROUTES.CHECK_NANO_X}
       component={CheckNanoXScreen}
