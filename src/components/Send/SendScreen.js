@@ -168,7 +168,7 @@ const messages = defineMessages({
   },
   errorBannerPendingOutgoingTransaction: {
     id: 'components.send.sendscreen.errorBannerPendingOutgoingTransaction',
-    defaultMessage: 'You cannot send a new transaction while an existing one is still pending',
+    defaultMessage: '!!!You cannot send a new transaction while an existing one is still pending',
   },
 })
 
