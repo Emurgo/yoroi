@@ -21,17 +21,14 @@ const messages = defineMessages({
   pinInputTitle: {
     id: 'components.firstrun.custompinscreen.pinInputTitle',
     defaultMessage: '!!!Enter the PIN',
-    description: 'some desc',
   },
   pinInputSubtitle: {
     id: 'components.firstrun.custompinscreen.pinInputSubtitle',
     defaultMessage: '!!!Choose new PIN for quick access to wallet.',
-    description: 'some desc',
   },
   pinConfirmationTitle: {
     id: 'components.firstrun.custompinscreen.pinConfirmationTitle',
     defaultMessage: '!!!Repeat PIN',
-    description: 'some desc',
   },
 })
 

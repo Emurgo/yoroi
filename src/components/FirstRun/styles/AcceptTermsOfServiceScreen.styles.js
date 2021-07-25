@@ -6,9 +6,14 @@ export default StyleSheet.create({
   safeAreaView: {
     backgroundColor: '#fff',
     flex: 1,
+  },
+  contentContainer: {
     padding: 16,
   },
-  checkbox: {
-    marginVertical: 15,
+  footer: {
+    paddingHorizontal: 16,
+  },
+  spacer: {
+    height: 16,
   },
 })

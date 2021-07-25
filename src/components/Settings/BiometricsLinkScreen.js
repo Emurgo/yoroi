@@ -27,22 +27,18 @@ const messages = defineMessages({
   linkButton: {
     id: 'components.settings.biometricslinkscreen.linkButton',
     defaultMessage: '!!!Link',
-    description: 'some desc',
   },
   heading: {
     id: 'components.settings.biometricslinkscreen.heading',
     defaultMessage: '!!!Use your fingerprint',
-    description: 'some desc',
   },
   subHeading1: {
     id: 'components.settings.biometricslinkscreen.subHeading1',
     defaultMessage: '!!!for faster, easier access',
-    description: 'some desc',
   },
   subHeading2: {
     id: 'components.settings.biometricslinkscreen.subHeading2',
     defaultMessage: '!!!to your Yoroi wallet',
-    description: 'some desc',
   },
 })
 

@@ -14,7 +14,6 @@ const messages = defineMessages({
   slogan: {
     id: 'components.walletinit.walletdescription.slogan',
     defaultMessage: '!!!Your gateway to the financial world',
-    description: 'some desc',
   },
 })
 

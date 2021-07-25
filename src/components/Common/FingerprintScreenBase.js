@@ -20,7 +20,6 @@ const messages = defineMessages({
   welcomeMessage: {
     id: 'components.common.fingerprintscreenbase.welcomeMessage',
     defaultMessage: '!!!Welcome Back',
-    description: 'some desc',
   },
 })
 
