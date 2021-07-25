@@ -29,24 +29,24 @@ const messages = defineMessages({
   enableWarning: {
     id: 'components.settings.toggleeasyconfirmationscreen.enableWarning',
     defaultMessage:
-      'Please remember your master password, as you may need it ' +
+      '!!!Please remember your master password, as you may need it ' +
       'in case your biometrics data are removed from the device.',
   },
   enableMasterPassword: {
     id: 'components.settings.toggleeasyconfirmationscreen.enableMasterPassword',
-    defaultMessage: 'Master password',
+    defaultMessage: '!!!Master password',
   },
   enableButton: {
     id: 'components.settings.toggleeasyconfirmationscreen.enableButton',
-    defaultMessage: 'Enable',
+    defaultMessage: '!!!Enable',
   },
   disableHeading: {
     id: 'components.settings.toggleeasyconfirmationscreen.disableHeading',
-    defaultMessage: 'By disabling this option you will be able to spend your assets only with your master password.',
+    defaultMessage: '!!!By disabling this option you will be able to spend your assets only with your master password.',
   },
   disableButton: {
     id: 'components.settings.toggleeasyconfirmationscreen.disableButton',
-    defaultMessage: 'Disable',
+    defaultMessage: '!!!Disable',
   },
 })
 

@@ -24,11 +24,11 @@ import type {Navigation} from '../../types/navigation'
 const messages = defineMessages({
   changeButton: {
     id: 'components.settings.changewalletname.changeButton',
-    defaultMessage: 'Change name',
+    defaultMessage: '!!!Change name',
   },
   walletNameInputLabel: {
     id: 'components.settings.changewalletname.walletNameInputLabel',
-    defaultMessage: 'Wallet name',
+    defaultMessage: '!!!Wallet name',
   },
 })
 
