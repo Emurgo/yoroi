@@ -6,17 +6,20 @@ export default StyleSheet.create({
   safeAreaView: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 16,
+    paddingHorizontal: 16,
   },
   container: {
     flex: 1,
-    justifyContent: 'space-between',
     backgroundColor: '#fff',
   },
   phrase: {
     lineHeight: 24,
-    height: 'auto',
-    marginTop: 32,
-    borderColor: '#9b9b9b',
+  },
+  instructions: {
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  spacer: {
+    height: 24,
   },
 })
