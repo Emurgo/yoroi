@@ -187,6 +187,7 @@
   "components.settings.removewalletscreen.title": "Smazat peněženku",
   "components.settings.removewalletscreen.walletName": "Název peněženky",
   "components.settings.removewalletscreen.walletNameInput": "Název peněženky",
+  "components.settings.removewalletscreen.walletNameMismatchError": "Wallet name does not match",
   "components.settings.settingsscreen.faqDescription": "Pokud máte jakékoliv problémy, koukněte prosím na FAQ na Yoroi webu pro vyřešení těch nejčastějších.",
   "components.settings.settingsscreen.faqLabel": "Ukázat FAQ - Často kladené dotazy",
   "components.settings.settingsscreen.faqUrl": "https://yoroi-wallet.com/faq/",
