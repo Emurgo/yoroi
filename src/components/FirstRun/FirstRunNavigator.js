@@ -16,7 +16,6 @@ const messages = defineMessages({
   acceptTermsTitle: {
     id: 'components.firstrun.acepttermsofservicescreen.title',
     defaultMessage: '!!!Terms of Service Agreement',
-    description: 'some desc',
   },
 })
 
