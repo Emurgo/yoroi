@@ -187,6 +187,7 @@
   "components.settings.removewalletscreen.title": "Verwijder portemonnee",
   "components.settings.removewalletscreen.walletName": "Portemonnee naam",
   "components.settings.removewalletscreen.walletNameInput": "Portemonnee naam",
+  "components.settings.removewalletscreen.walletNameMismatchError": "Wallet name does not match",
   "components.settings.settingsscreen.faqDescription": "Als u problemen ondervindt, raadpleeg dan de FAQ op de Yoroi-website voor hulp bij bekende problemen",
   "components.settings.settingsscreen.faqLabel": "Bekijk \"Veel gestelde vragen \"F.A.Q.\"",
   "components.settings.settingsscreen.faqUrl": "https://yoroi-wallet.com/faq/",
