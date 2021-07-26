@@ -26,7 +26,7 @@ export const CatalystLabels = Object.freeze({
   DATA: 61284,
   SIG: 61285,
 })
-export async function generateRegistration(request: {|
+export async function auxiliaryDataWithRegistrationMetadata(request: {|
   stakePublicKey: PublicKey,
   catalystPublicKey: PublicKey,
   rewardAddress: Address,

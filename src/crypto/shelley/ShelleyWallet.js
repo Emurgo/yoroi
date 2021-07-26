@@ -605,7 +605,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
         nonce = absSlotNumber.toNumber()
       }
 
-      const auxiliaryData = await catalystUtils.generateRegistration({
+      const auxiliaryData = await catalystUtils.auxiliaryDataWithRegistrationMetadata({
         stakePublicKey,
         catalystPublicKey,
         rewardAddress,
@@ -767,7 +767,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
         request.ledgerNanoCatalystRegistrationTxSignData,
       )
 
-      auxiliaryData = await catalystUtils.generateRegistration({
+      auxiliaryData = await catalystUtils.auxiliaryDataWithRegistrationMetadata({
         stakePublicKey: await this.getStakingKey(),
         catalystPublicKey: await PublicKey.from_bytes(Buffer.from(votingPublicKey, 'hex')),
         rewardAddress: await this.getRewardAddress(),
