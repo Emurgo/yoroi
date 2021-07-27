@@ -1,10 +1,8 @@
 // @flow
 
 import React from 'react'
-import {connect} from 'react-redux'
-import {compose} from 'redux'
+import {useSelector, useDispatch} from 'react-redux'
 import {View, ScrollView} from 'react-native'
-import {withHandlers} from 'recompose'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {Button, Text, Checkbox, TextInput, StatusBar} from '../UiKit'
@@ -16,7 +14,6 @@ import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 
 import styles from './styles/RemoveWalletScreen.style'
 
-import type {State} from '../../state'
 import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
 const messages = defineMessages({
@@ -52,25 +49,26 @@ const messages = defineMessages({
   },
 })
 
-const handleRemoveWallet =
-  ({navigation, removeCurrentWallet}) =>
-  async () => {
-    await removeCurrentWallet()
-    navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-  }
-
-type Prop = {
+type Props = {
   intl: IntlShape,
-  walletName: string,
-  isHW: boolean,
-  typedWalletName: string,
-  setTypedWalletName: (string) => any,
-  handleRemoveWallet: () => any,
-  setHasMnemonicWrittenDown: (boolean) => any,
-  hasMnemonicWrittenDown: boolean,
+  navigation: any,
 }
 
-const RemoveWalletScreen = ({intl, walletName, isHW, handleRemoveWallet}: Prop) => {
+const RemoveWalletScreen = ({intl, navigation}: Props) => {
+  const walletName = useSelector(walletNameSelector)
+  const isHW = useSelector(isHWSelector)
+  const dispatch = useDispatch()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const handleRemoveWallet = React.useCallback(
+    ignoreConcurrentAsyncHandler(
+      () => async () => {
+        await dispatch(removeCurrentWallet())
+        navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
+      },
+      1000,
+    )(),
+    [],
+  )
   const [hasMnemonicWrittenDown, setHasMnemonicWrittenDown] = React.useState(false)
   const [typedWalletName, setTypedWalletName] = React.useState('')
 
@@ -78,19 +76,20 @@ const RemoveWalletScreen = ({intl, walletName, isHW, handleRemoveWallet}: Prop) 
 
   return (
     <View style={styles.container}>
-      <StatusBar type="dark" />
+      <StatusBar type={'dark'} />
 
       <View style={styles.descriptionContainer}>
         {!isHW && <Text style={styles.description}>{intl.formatMessage(messages.descriptionParagraph1)}</Text>}
         <Text style={styles.description}>{intl.formatMessage(messages.descriptionParagraph2)}</Text>
       </View>
 
-      <ScrollView contentContainerStyle={styles.screenContainer} keyboardDismissMode="on-drag">
+      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer} keyboardDismissMode="on-drag">
         <View style={styles.walletInfo}>
           <Text style={styles.walletNameLabel}>{intl.formatMessage(messages.walletName)}</Text>
+          <Spacer height={8} />
           <Text style={styles.walletName}>{walletName}</Text>
 
-          <Spacer />
+          <Spacer height={24} />
 
           <TextInput
             autoFocus
@@ -102,6 +101,7 @@ const RemoveWalletScreen = ({intl, walletName, isHW, handleRemoveWallet}: Prop) 
             errorText={
               typedWalletName !== walletName ? intl.formatMessage(messages.walletNameMismatchError) : undefined
             }
+            returnKeyType={'done'}
           />
         </View>
       </ScrollView>
@@ -115,6 +115,8 @@ const RemoveWalletScreen = ({intl, walletName, isHW, handleRemoveWallet}: Prop) 
           />
         )}
 
+        <Spacer height={16} />
+
         <Button
           onPress={handleRemoveWallet}
           title={intl.formatMessage(messages.remove)}
@@ -126,21 +128,6 @@ const RemoveWalletScreen = ({intl, walletName, isHW, handleRemoveWallet}: Prop) 
   )
 }
 
-export default injectIntl(
-  compose(
-    connect(
-      (state: State) => ({
-        walletName: walletNameSelector(state),
-        isHW: isHWSelector(state),
-      }),
-      {
-        removeCurrentWallet,
-      },
-    ),
-    withHandlers({
-      handleRemoveWallet: ignoreConcurrentAsyncHandler(handleRemoveWallet, 1000),
-    }),
-  )(RemoveWalletScreen),
-)
+export default injectIntl(RemoveWalletScreen)
 
 const Spacer = ({height = 16, style}: {height?: number, style?: ViewStyleProp}) => <View style={[{height}, style]} />
