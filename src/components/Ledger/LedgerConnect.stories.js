@@ -15,32 +15,38 @@ const devices = [
   {name: 'NANO X 9F42', id: 5},
 ]
 
-type Props = {
-  visible: any,
-  onRequestClose: any,
-  defaultDevices: any,
-  useUSB: any,
-}
-const LedgerConnectModal = ({visible, onRequestClose, defaultDevices, useUSB}: Props) => (
-  <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
-    <LedgerConnect
-      onConnectBLE={() => ({})}
-      onConnectUSB={() => ({})}
-      useUSB={useUSB}
-      onWaitingMessage={''}
-      defaultDevices={defaultDevices}
-    />
-  </Modal>
-)
-
 storiesOf('Ledger connect', module)
   .addDecorator(withModalProps)
-  .add('Using BLE', ({visible, onRequestClose}) => (
-    <LedgerConnectModal onRequestClose={onRequestClose} visible={visible} useUSB={false} defaultDevices={undefined} />
+  .add('Using BLE', ({visible, onRequestClose, onPress}) => (
+    <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
+      <LedgerConnect
+        onConnectBLE={onPress('onConnectBLE')}
+        onConnectUSB={onPress('onConnectUSB')}
+        useUSB={false}
+        onWaitingMessage={''}
+        defaultDevices={devices}
+      />
+    </Modal>
   ))
-  .add('Using USB', ({visible, onRequestClose}) => (
-    <LedgerConnectModal onRequestClose={onRequestClose} visible={visible} useUSB defaultDevices={undefined} />
+  .add('Using USB', ({visible, onRequestClose, onPress}) => (
+    <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
+      <LedgerConnect
+        onConnectBLE={onPress('onConnectBLE')}
+        onConnectUSB={onPress('onConnectUSB')}
+        useUSB
+        onWaitingMessage={''}
+        defaultDevices={devices}
+      />
+    </Modal>
   ))
-  .add('BLE with many devices', ({visible, onRequestClose}) => (
-    <LedgerConnectModal onRequestClose={onRequestClose} visible={visible} defaultDevices={devices} useUSB={false} />
+  .add('BLE with many devices', ({visible, onRequestClose, onPress}) => (
+    <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
+      <LedgerConnect
+        onConnectBLE={onPress('onConnectBLE')}
+        onConnectUSB={onPress('onConnectUSB')}
+        useUSB={false}
+        onWaitingMessage={''}
+        defaultDevices={devices}
+      />
+    </Modal>
   ))
