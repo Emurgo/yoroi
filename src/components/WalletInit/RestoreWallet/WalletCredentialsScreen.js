@@ -2,9 +2,7 @@
 
 import React from 'react'
 import {ActivityIndicator} from 'react-native'
-import {compose} from 'redux'
-import {connect} from 'react-redux'
-import {withHandlers, withStateHandlers} from 'recompose'
+import {useDispatch} from 'react-redux'
 
 import assert from '../../../utils/assert'
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
@@ -13,36 +11,19 @@ import WalletForm from '../WalletForm'
 import {createWallet, updateVersion} from '../../../actions'
 
 import type {Navigation} from '../../../types/navigation'
-import type {ComponentType} from 'react'
 
 type Props = {
-  navigateToWallet: any,
-  waiting: boolean,
   navigation: Navigation,
+  route: any,
 }
-const WalletCredentialsScreen = ({navigateToWallet, waiting, navigation}: Props) => (
-  <>
-    <WalletForm onSubmit={navigateToWallet} navigation={navigation} />
-    {waiting && <ActivityIndicator />}
-  </>
-)
+const WalletCredentialsScreen = ({navigation, route}: Props) => {
+  const [waiting, setWaiting] = React.useState(false)
+  const dispatch = useDispatch()
 
-export default (compose(
-  connect(() => ({}), {
-    createWallet,
-    updateVersion,
-  }),
-  withStateHandlers(
-    {
-      waiting: false,
-    },
-    {
-      setWaiting: () => (waiting: boolean) => ({waiting}),
-    },
-  ),
-  withHandlers({
-    navigateToWallet: ignoreConcurrentAsyncHandler(
-      ({navigation, route, createWallet, updateVersion, setWaiting}) =>
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const navigateToWallet = React.useCallback(
+    ignoreConcurrentAsyncHandler(
+      () =>
         async ({name, password}) => {
           setWaiting(true)
           const {phrase, networkId, walletImplementationId} = route.params
@@ -50,8 +31,8 @@ export default (compose(
           assert.assert(networkId != null, 'networkId')
           assert.assert(!!walletImplementationId, 'walletImplementationId')
           try {
-            await createWallet(name, phrase, password, networkId, walletImplementationId)
-            await updateVersion()
+            await dispatch(createWallet(name, phrase, password, networkId, walletImplementationId))
+            await dispatch(updateVersion())
           } finally {
             setWaiting(false)
           }
@@ -61,8 +42,16 @@ export default (compose(
           })
         },
       1000,
-    ),
-  }),
-)(WalletCredentialsScreen): ComponentType<{
-  navigation: Navigation,
-}>)
+    )(),
+    [],
+  )
+
+  return (
+    <>
+      <WalletForm onSubmit={navigateToWallet} navigation={navigation} />
+      {waiting && <ActivityIndicator />}
+    </>
+  )
+}
+
+export default WalletCredentialsScreen

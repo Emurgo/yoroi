@@ -11,7 +11,7 @@ import ChangeWalletName from './ChangeWalletName'
 import SupportScreen from './SupportScreen'
 import LanguagePickerScreen from './ChangeLanguageScreen'
 import BiometricsLinkScreen from './BiometricsLinkScreen'
-import ToggleEasyConfirmatioScreen from './ToggleEasyConfirmatioScreen'
+import ToggleEasyConfirmationScreen from './ToggleEasyConfirmationScreen'
 import TermsOfServiceScreen from './TermsOfServiceScreen'
 import RemoveWalletScreen from './RemoveWalletScreen'
 import ChangePasswordScreen from './ChangePasswordScreen'
@@ -169,7 +169,7 @@ const SettingsScreenNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
     />
     <Stack.Screen
       name={SETTINGS_ROUTES.EASY_COMFIRMATION}
-      component={ToggleEasyConfirmatioScreen}
+      component={ToggleEasyConfirmationScreen}
       options={{
         title: intl.formatMessage(messages.toggleEachConfirmationTitle),
       }}
