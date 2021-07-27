@@ -9,9 +9,6 @@ export default StyleSheet.create({
     backgroundColor: COLORS.WHITE,
     flex: 1,
   },
-  content: {
-    flex: 1,
-  },
   scrollViewContentContainer: {
     paddingTop: 32,
     paddingHorizontal: 16,
@@ -19,29 +16,6 @@ export default StyleSheet.create({
   },
   instructions: {
     paddingBottom: 16,
-  },
-  buttons: {
-    flexDirection: 'row',
-    padding: 16,
-  },
-  clearButton: {
-    marginRight: 12,
-  },
-  confirmButton: {
-    marginLeft: 12,
-  },
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  error: {
-    paddingLeft: 16,
-  },
-  errorMessage: {
-    color: COLORS.RED,
-  },
-  inputLabel: {
-    color: COLORS.PRIMARY,
   },
   recoveryPhrase: {
     borderRadius: 8,
@@ -58,24 +32,39 @@ export default StyleSheet.create({
   },
   wordText: {
     borderRadius: 8,
-    height: 26,
-    lineHeight: 26,
-    marginVertical: 6,
-    marginHorizontal: 6,
+    paddingVertical: 4,
+    paddingHorizontal: 6,
   },
-  wordBadge: {
-    backgroundColor: COLORS.LIGHT_GRAY,
-    borderRadius: 8,
-    height: 26,
-    marginVertical: 6,
-    marginHorizontal: 6,
-    paddingHorizontal: 16,
-    justifyContent: 'center',
+  error: {
+    paddingLeft: 16,
+  },
+  errorMessage: {
+    color: COLORS.RED,
   },
   words: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     paddingVertical: 12,
+  },
+  buttons: {
+    flexDirection: 'row',
+    padding: 16,
+  },
+  clearButton: {
+    paddingRight: 12,
+  },
+  confirmButton: {
+    paddingLeft: 12,
+  },
+  wordBadgeContainer: {
+    padding: 4,
+  },
+  wordBadge: {
+    backgroundColor: COLORS.LIGHT_GRAY,
+    borderRadius: 8,
+    paddingVertical: 4,
+    paddingHorizontal: 6,
+    justifyContent: 'center',
   },
   selected: {
     opacity: 0,
