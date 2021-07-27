@@ -2,17 +2,18 @@
 
 import React from 'react'
 import {storiesOf} from '@storybook/react-native'
-import {action} from '@storybook/addon-actions'
-import StorybookModalWrapper from '../Common/StorybookModalWrapper'
 
+import {withModalProps} from '../../../storybook/decorators'
 import LedgerTransportSwitchModal from './LedgerTransportSwitchModal'
 
-const StatefulModal = StorybookModalWrapper(LedgerTransportSwitchModal)
-
-storiesOf('Ledger Transport Switch Modal', module).add('default', () => (
-  <StatefulModal
-    onPress={() => action('clicked')()}
-    onSelectUSB={() => action('USB selected')()}
-    onSelectBLE={() => action('BLE selected')()}
-  />
-))
+storiesOf('Ledger Transport Switch Modal', module)
+  .addDecorator(withModalProps)
+  .add('default', ({visible, onRequestClose, onPress}) => (
+    <LedgerTransportSwitchModal
+      visible={visible}
+      showCloseIcon
+      onRequestClose={onRequestClose}
+      onSelectUSB={onPress('USB selected')}
+      onSelectBLE={onPress('BLE selected')}
+    />
+  ))
