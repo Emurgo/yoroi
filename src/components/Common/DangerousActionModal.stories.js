@@ -16,12 +16,12 @@ storiesOf('DangerousActionModal', module)
       showCloseIcon
       title="Attention"
       primaryButton={{
-        label: 'Cancel',
-        onPress: () => onPress('primary'),
+        label: 'Confirm',
+        onPress: onPress('primary'),
       }}
       secondaryButton={{
         label: 'Cancel',
-        onPress: () => onPress('secondary'),
+        onPress: onPress('secondary'),
       }}
       alertBox={{
         content: [
