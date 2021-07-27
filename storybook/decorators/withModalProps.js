@@ -6,7 +6,11 @@ import {action} from '@storybook/addon-actions'
 
 import type {Node} from 'react'
 export const ModalStoryWrapper = ({children}: {children: ({visible: boolean, onRequestClose: () => any}) => Node}) => {
-  const [visible, setVisible] = React.useState(false)
+  const [visible, setVisible] = React.useState(false) // weird behavior when starting with visible: true
+
+  React.useEffect(() => {
+    setTimeout(() => setVisible(true), 500) // weird behavior when starting with visible: true
+  }, [])
 
   return (
     // eslint-disable-next-line react-native/no-inline-styles
@@ -19,7 +23,7 @@ export const ModalStoryWrapper = ({children}: {children: ({visible: boolean, onR
           action('onRequestClose')()
           setVisible(false)
         },
-        onPress: (name: string) => action(name),
+        onPress: action,
       })}
     </View>
   )
