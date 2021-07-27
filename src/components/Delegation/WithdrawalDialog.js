@@ -5,7 +5,7 @@ import React from 'react'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import Markdown from 'react-native-easy-markdown'
 
-import {Modal} from '../UiKit'
+import {Modal, Spacer} from '../UiKit'
 import {DangerousAction} from '../Common/DangerousActionModal'
 import {ErrorView} from '../Common/ErrorModal'
 import {PleaseWaitView} from '../UiKit/PleaseWaitModal'
@@ -129,7 +129,6 @@ const WithdrawalDialog = ({
                 intl.formatMessage(messages.warning3),
               ],
             }}
-            onRequestClose={onRequestClose}
             primaryButton={{
               label: intl.formatMessage(messages.keepButton),
               onPress: onKeepKey,
@@ -139,11 +138,11 @@ const WithdrawalDialog = ({
               onPress: onDeregisterKey,
             }}
           >
-            {[messages.explanation1, messages.explanation2, messages.explanation3].map((msg, i) => (
-              <Markdown key={i} style={styles.paragraph}>
-                {intl.formatMessage(msg)}
-              </Markdown>
-            ))}
+            <Markdown style={styles.paragraph}>{intl.formatMessage(messages.explanation1)}</Markdown>
+            <Spacer height={8} />
+            <Markdown style={styles.paragraph}>{intl.formatMessage(messages.explanation2)}</Markdown>
+            <Spacer height={8} />
+            <Markdown style={styles.paragraph}>{intl.formatMessage(messages.explanation3)}</Markdown>
           </DangerousAction>
         )
       case WITHDRAWAL_DIALOG_STEPS.CHOOSE_TRANSPORT:

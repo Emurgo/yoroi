@@ -37,4 +37,4 @@ const Modal = () => {
   )
 }
 
-storiesOf('DangerousAction', module).add('As modal', () => <Modal />)
+storiesOf('DangerousActionModal', module).add('Default', () => <Modal />)
