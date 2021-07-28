@@ -53,7 +53,12 @@ const WalletAddress = ({
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity activeOpacity={0.5} onPress={copyHash} disabled={showCopyNotification}>
+      <TouchableOpacity
+        activeOpacity={0.5}
+        onPress={copyHash}
+        disabled={showCopyNotification}
+        style={styles.copyButton}
+      >
         <Image source={copyIcon} style={styles.copyIcon} />
       </TouchableOpacity>
 
