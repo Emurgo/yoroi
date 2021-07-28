@@ -9,58 +9,61 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     backgroundColor: COLORS.WHITE,
+  },
+  scrollView: {},
+  contentContainer: {
     paddingHorizontal: 16,
-    paddingVertical: 20,
   },
-  scrollView: {
-    paddingRight: 10,
+  plateContainer: {
+    minHeight: 72,
   },
-  textStyles: {
+  checksumLabel: {
     fontSize: 14,
+    paddingVertical: 24,
+    color: COLORS.DARK_TEXT,
   },
-  checkSumView: {
+  instructionsLabel: {
+    lineHeight: 32,
+    color: COLORS.DARK_TEXT,
+  },
+  bulletPoint: {
+    lineHeight: 24,
+    color: COLORS.DARK_TEXT,
+  },
+  addresses: {},
+  addressesLabel: {
+    color: COLORS.DARK_TEXT,
+  },
+  checksum: {
+    fontWeight: 'bold',
+  },
+  action: {
+    padding: 16,
+  },
+
+  plate: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 12,
-    marginBottom: 32,
-    borderColor: 'red',
   },
-  checksumText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    paddingLeft: 12,
-  },
-  titleStyles: {
-    marginBottom: 8,
-  },
-  instructionStyles: {
-    lineHeight: 27,
-  },
-  addressesStyles: {
-    marginTop: 32,
-    marginBottom: 32,
-  },
+
   addressRowStyles: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingBottom: 10,
     flexWrap: 'wrap',
   },
+  copyButton: {
+    padding: 4,
+  },
   copyIcon: {
-    marginLeft: 4,
     width: 22,
     height: 22,
   },
   notifView: {
-    marginLeft: 4,
+    paddingLeft: 4,
   },
   addressHash: {
     width: 280,
     color: '#9B9B9B',
     lineHeight: 30,
-  },
-  walletIcon: {
-    width: 60,
-    height: 60,
   },
 })
