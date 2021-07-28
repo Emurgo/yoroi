@@ -10,36 +10,33 @@ export default StyleSheet.create({
     flex: 1,
   },
   scrollViewContentContainer: {
-    paddingTop: 32,
     paddingHorizontal: 16,
     paddingBottom: 16,
   },
   instructions: {
-    paddingBottom: 16,
+    paddingHorizontal: 16,
   },
   recoveryPhrase: {
+    height: 26 * 6,
+    paddingHorizontal: 16,
+  },
+  recoveryPhraseOutline: {
+    flex: 1,
     borderRadius: 8,
-    borderColor: '#4A4A4A',
+    borderColor: COLORS.DARK_GRAY,
     borderWidth: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingBottom: 0,
-    height: 26 * 6,
-    paddingHorizontal: 6,
+    padding: 8,
   },
   recoveryPhraseError: {
     borderColor: COLORS.RED,
   },
-  wordText: {
-    borderRadius: 8,
-    paddingVertical: 4,
-    paddingHorizontal: 6,
-  },
   error: {
-    paddingLeft: 16,
+    paddingHorizontal: 16,
   },
   errorMessage: {
-    color: COLORS.RED,
+    color: COLORS.ERROR_TEXT_COLOR,
   },
   words: {
     flexDirection: 'row',
@@ -49,9 +46,6 @@ export default StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     padding: 16,
-  },
-  clearButton: {
-    paddingRight: 12,
   },
   confirmButton: {
     paddingLeft: 12,
@@ -63,14 +57,14 @@ export default StyleSheet.create({
     backgroundColor: COLORS.LIGHT_GRAY,
     borderRadius: 8,
     paddingVertical: 4,
-    paddingHorizontal: 6,
+    paddingHorizontal: 8,
     justifyContent: 'center',
   },
-  selected: {
-    opacity: 0,
+  wordBadgeText: {
+    color: COLORS.WORD_BADGE_TEXT,
   },
-  selectedText: {
-    opacity: 0.4,
+  selected: {
+    opacity: 0.5,
   },
   hidden: {
     opacity: 0,
