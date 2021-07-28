@@ -3,7 +3,7 @@
 import React from 'react'
 import {storiesOf} from '@storybook/react-native'
 
-import StorybookModalWrapper from '../Common/StorybookModalWrapper'
+import {withModalProps} from '../../../storybook/decorators'
 import LedgerConnect from './LedgerConnect'
 import {Modal} from '../UiKit'
 
@@ -15,33 +15,38 @@ const devices = [
   {name: 'NANO X 9F42', id: 5},
 ]
 
-type Props = {
-  visible: any,
-  onRequestClose: any,
-  navigation: any,
-  defaultDevices: any,
-  useUSB: any,
-}
-const LedgerConnectModal = ({visible, onRequestClose, navigation, defaultDevices, useUSB}: Props) => (
-  <Modal visible={visible} onRequestClose={onRequestClose}>
-    {/* $FlowFixMe */}
-    <LedgerConnect
-      navigation={navigation}
-      onConnectBLE={() => ({})}
-      onConnectUSB={() => ({})}
-      onComplete={() => ({})}
-      useUSB={useUSB}
-      onWaitingMessage={''}
-      defaultDevices={defaultDevices}
-    />
-  </Modal>
-)
-
-const StatefulModal = StorybookModalWrapper(LedgerConnectModal)
-
 storiesOf('Ledger connect', module)
-  .add('Using BLE', ({navigation}) => <StatefulModal navigation={navigation} useUSB={false} />)
-  .add('Using USB', ({navigation}) => <StatefulModal navigation={navigation} useUSB />)
-  .add('BLE with many devices', ({navigation}) => (
-    <StatefulModal navigation={navigation} defaultDevices={devices} useUSB={false} />
+  .addDecorator(withModalProps)
+  .add('Using BLE', ({visible, onRequestClose, onPress}) => (
+    <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
+      <LedgerConnect
+        onConnectBLE={onPress('onConnectBLE')}
+        onConnectUSB={onPress('onConnectUSB')}
+        useUSB={false}
+        onWaitingMessage={''}
+        defaultDevices={devices}
+      />
+    </Modal>
+  ))
+  .add('Using USB', ({visible, onRequestClose, onPress}) => (
+    <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
+      <LedgerConnect
+        onConnectBLE={onPress('onConnectBLE')}
+        onConnectUSB={onPress('onConnectUSB')}
+        useUSB
+        onWaitingMessage={''}
+        defaultDevices={devices}
+      />
+    </Modal>
+  ))
+  .add('BLE with many devices', ({visible, onRequestClose, onPress}) => (
+    <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
+      <LedgerConnect
+        onConnectBLE={onPress('onConnectBLE')}
+        onConnectUSB={onPress('onConnectUSB')}
+        useUSB={false}
+        onWaitingMessage={''}
+        defaultDevices={devices}
+      />
+    </Modal>
   ))
