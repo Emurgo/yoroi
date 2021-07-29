@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import _ from 'lodash'
 
-import {Text, TextInput, Button, StatusBar} from '../../UiKit'
+import {Text, TextInput, Button, Spacer, StatusBar} from '../../UiKit'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {CONFIG, getWalletConfigById} from '../../../config/config'
 import {validateRecoveryPhrase, INVALID_PHRASE_ERROR_CODES, cleanMnemonic} from '../../../utils/validators'
@@ -108,20 +108,21 @@ const RestoreWalletScreen = (
   }
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <StatusBar type="dark" />
 
-      <ScrollView keyboardDismissMode="on-drag" contentContainerStyle={styles.container}>
+      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
+        <Spacer height={24} />
+
         <Text style={styles.instructions}>
-          {intl.formatMessage(messages.instructions, {
-            mnemonicLength: walletConfig.MNEMONIC_LEN,
-          })}
+          {intl.formatMessage(messages.instructions, {mnemonicLength: walletConfig.MNEMONIC_LEN})}
         </Text>
 
-        <Spacer />
+        <Spacer height={32} />
 
         <TextInput
           autoFocus
+          enablesReturnKeyAutomatically
           onChangeText={setPhrase}
           errorText={errorText}
           label={intl.formatMessage(messages.mnemonicInputLabel)}
@@ -135,15 +136,15 @@ const RestoreWalletScreen = (
         />
       </ScrollView>
 
-      <Button
-        onPress={navigateToWalletCredentials}
-        title={intl.formatMessage(messages.restoreButton)}
-        disabled={hasErrors}
-      />
+      <View style={styles.actions}>
+        <Button
+          onPress={navigateToWalletCredentials}
+          title={intl.formatMessage(messages.restoreButton)}
+          disabled={hasErrors}
+        />
+      </View>
     </SafeAreaView>
   )
 }
 
 export default injectIntl(RestoreWalletScreen)
-
-const Spacer = () => <View style={styles.spacer} />
