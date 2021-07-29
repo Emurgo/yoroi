@@ -12,7 +12,6 @@ const styles = StyleSheet.create({
 
   descriptionContainer: {
     backgroundColor: COLORS.BACKGROUND,
-    padding: 16,
   },
   description: {
     fontSize: 16,

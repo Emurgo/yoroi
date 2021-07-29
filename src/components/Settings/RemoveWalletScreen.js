@@ -78,12 +78,12 @@ const RemoveWalletScreen = ({intl, navigation}: Props) => {
     <View style={styles.container}>
       <StatusBar type={'dark'} />
 
-      <View style={styles.descriptionContainer}>
-        {!isHW && <Text style={styles.description}>{intl.formatMessage(messages.descriptionParagraph1)}</Text>}
-        <Text style={styles.description}>{intl.formatMessage(messages.descriptionParagraph2)}</Text>
-      </View>
+      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
+        <View style={styles.descriptionContainer}>
+          {!isHW && <Text style={styles.description}>{intl.formatMessage(messages.descriptionParagraph1)}</Text>}
+          <Text style={styles.description}>{intl.formatMessage(messages.descriptionParagraph2)}</Text>
+        </View>
 
-      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer} keyboardDismissMode="on-drag">
         <View style={styles.walletInfo}>
           <Text style={styles.walletNameLabel}>{intl.formatMessage(messages.walletName)}</Text>
           <Spacer height={8} />
