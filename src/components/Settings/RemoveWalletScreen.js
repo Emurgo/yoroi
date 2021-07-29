@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector, useDispatch} from 'react-redux'
 import {View, ScrollView} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
@@ -75,7 +76,7 @@ const RemoveWalletScreen = ({intl, navigation}: Props) => {
   const disabled = (!isHW && !hasMnemonicWrittenDown) || walletName !== typedWalletName
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
       <StatusBar type={'dark'} />
 
       <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
@@ -83,6 +84,8 @@ const RemoveWalletScreen = ({intl, navigation}: Props) => {
           {!isHW && <Text style={styles.description}>{intl.formatMessage(messages.descriptionParagraph1)}</Text>}
           <Text style={styles.description}>{intl.formatMessage(messages.descriptionParagraph2)}</Text>
         </View>
+
+        <Spacer height={32} />
 
         <View style={styles.walletInfo}>
           <Text style={styles.walletNameLabel}>{intl.formatMessage(messages.walletName)}</Text>
@@ -124,7 +127,7 @@ const RemoveWalletScreen = ({intl, navigation}: Props) => {
           disabled={disabled}
         />
       </View>
-    </View>
+    </SafeAreaView>
   )
 }
 

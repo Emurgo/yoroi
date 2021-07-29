@@ -19,9 +19,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  walletInfo: {
-    flex: 1,
-  },
+  walletInfo: {},
   walletNameLabel: {
     fontSize: 16,
   },
@@ -31,9 +29,7 @@ const styles = StyleSheet.create({
   },
 
   contentContainer: {
-    paddingTop: 8,
     padding: 16,
-    flexGrow: 1,
   },
 
   actions: {
