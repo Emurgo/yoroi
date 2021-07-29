@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withHandlers, withProps} from 'recompose'
@@ -33,7 +33,7 @@ const messages = defineMessages({
 })
 
 const CustomPinScreen = ({handlePinEntered, intl, navigation}: {intl: IntlShape} & Object /* TODO: type */) => (
-  <View style={styles.container} testID="customPinContainer">
+  <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container} testID="customPinContainer">
     <StatusBar type="dark" />
 
     <PinRegistrationForm
@@ -49,7 +49,7 @@ const CustomPinScreen = ({handlePinEntered, intl, navigation}: {intl: IntlShape}
       }}
       navigation={navigation}
     />
-  </View>
+  </SafeAreaView>
 )
 
 type ExternalProps = {|
