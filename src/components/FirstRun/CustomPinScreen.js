@@ -2,10 +2,9 @@
 
 import React from 'react'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {compose} from 'redux'
-import {connect} from 'react-redux'
-import {withHandlers, withProps} from 'recompose'
+import {useSelector, useDispatch} from 'react-redux'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useNavigation, useRoute} from '@react-navigation/native'
 
 import PinRegistrationForm from '../Common/PinRegistrationForm'
 import {encryptAndStoreCustomPin, signin} from '../../actions'
@@ -13,9 +12,6 @@ import {isAuthenticatedSelector} from '../../selectors'
 import {StatusBar} from '../UiKit'
 
 import styles from './styles/CustomPinScreen.style'
-
-import type {ComponentType} from 'react'
-import type {Navigation} from '../../types/navigation'
 
 const messages = defineMessages({
   pinInputTitle: {
@@ -32,54 +28,41 @@ const messages = defineMessages({
   },
 })
 
-const CustomPinScreen = ({handlePinEntered, intl, navigation}: {intl: IntlShape} & Object /* TODO: type */) => (
-  <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container} testID="customPinContainer">
-    <StatusBar type="dark" />
-
-    <PinRegistrationForm
-      onPinEntered={handlePinEntered}
-      labels={{
-        PinInput: {
-          title: intl.formatMessage(messages.pinInputTitle),
-          subtitle: intl.formatMessage(messages.pinInputSubtitle),
-        },
-        PinConfirmationInput: {
-          title: intl.formatMessage(messages.pinConfirmationTitle),
-        },
-      }}
-      navigation={navigation}
-    />
-  </SafeAreaView>
-)
-
-type ExternalProps = {|
-  navigation: Navigation,
-  route: Object, // TODO(navigation): type
+type Props = {
   intl: IntlShape,
-|}
+}
 
-export default injectIntl(
-  (compose(
-    connect(
-      (state) => ({
-        isAuth: isAuthenticatedSelector(state),
-      }),
-      {
-        encryptAndStoreCustomPin,
-        signin,
-      },
-    ),
-    withProps(({route}) => ({
-      onSuccess: route.params?.onSuccess,
-    })),
-    withHandlers({
-      handlePinEntered:
-        ({onSuccess, encryptAndStoreCustomPin, isAuth, signin}) =>
-        async (pin) => {
-          await encryptAndStoreCustomPin(pin)
-          if (!isAuth) signin() // because in first run user is not authenticated
-          if (onSuccess !== undefined) onSuccess()
-        },
-    }),
-  )(CustomPinScreen): ComponentType<ExternalProps>),
-)
+const CustomPinScreen = ({intl}: Props) => {
+  const isAuth = useSelector(isAuthenticatedSelector)
+  const navigation = useNavigation()
+  const route = useRoute()
+  const onSuccess: () => any = (route.params?.onSuccess: any)
+  const dispatch = useDispatch()
+  const handlePinEntered = async (pin) => {
+    await dispatch(encryptAndStoreCustomPin(pin))
+    if (!isAuth) dispatch(signin()) // because in first run user is not authenticated
+    if (onSuccess !== undefined) onSuccess()
+  }
+
+  return (
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container} testID="customPinContainer">
+      <StatusBar type="dark" />
+
+      <PinRegistrationForm
+        onPinEntered={handlePinEntered}
+        labels={{
+          PinInput: {
+            title: intl.formatMessage(messages.pinInputTitle),
+            subtitle: intl.formatMessage(messages.pinInputSubtitle),
+          },
+          PinConfirmationInput: {
+            title: intl.formatMessage(messages.pinConfirmationTitle),
+          },
+        }}
+        navigation={navigation}
+      />
+    </SafeAreaView>
+  )
+}
+
+export default injectIntl(CustomPinScreen)
