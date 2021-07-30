@@ -23,7 +23,7 @@
     "e2e:build-android": "detox build -c android.emu.mainnet.release",
     "e2e:test-android-debug": "detox test -c android.emu.mainnet.debug",
     "e2e:build-android-debug": "detox build -c android.emu.mainnet.debug",
-    "prestorybook": "rnstl  --searchDir ./src/components --pattern '**/*.stories.js'",
+    "prestorybook": "rnstl  --searchDir ./src ./storybook --pattern '**/*.stories.js'",
     "storybook": "start-storybook",
     "prepare": "husky install"
   },
