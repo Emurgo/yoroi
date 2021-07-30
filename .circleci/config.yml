@@ -23,11 +23,6 @@ jobs:
       - run: rustup install 1.41.0
       - run: rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
       - run: cargo install cargo-lipo
-
-      - run:
-          name: Match bitrise's yarn version
-          command: sudo npm install -g yarn@${BITRISE_YARN_VER}
-
       - run:
           name: Install Dependencies
           command: yarn install --network-concurrency 1
@@ -37,19 +32,16 @@ jobs:
             - node_modules
             - yarn.lock
 
-
       - persist_to_workspace:
           root: .
-          paths: .
+          paths: 
+            - .
 
   flow:
     <<: *rn_defaults
     steps:
       - attach_workspace:
           at: ~/project
-      - run:
-          name: Match bitrise's yarn version
-          command: sudo npm install -g yarn@${BITRISE_YARN_VER}
       - run: yarn flow
 
   test:
@@ -57,9 +49,6 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/project
-      - run:
-          name: Match bitrise's yarn version
-          command: sudo npm install -g yarn@${BITRISE_YARN_VER}
       - run: yarn test
 
   lint:
@@ -68,9 +57,6 @@ jobs:
       - attach_workspace:
          at: ~/project
 
-      - run:
-          name: Match bitrise's yarn version
-          command: sudo npm install -g yarn@${BITRISE_YARN_VER}
       # Because npm link will write in this path
       - run: sudo chown -R "$(whoami):$(whoami)" /usr/local/lib/node_modules
       - run: npm link rust-cardano-crypto
@@ -122,8 +108,3 @@ workflows:
       - test:
           requires:
             - install-dependencies
-#      - android:
-#          requires:
-#            - install-dependencies
-#            - lint
-#            - flow
