@@ -1,23 +1,27 @@
 // @flow
 
-import React, {useState} from 'react'
-
+import React from 'react'
 import {Text} from '../UiKit'
 import {storiesOf} from '@storybook/react-native'
 
+import {withModalProps} from '../../../storybook/decorators'
 import DangerousActionModal from './DangerousActionModal'
 
-const Modal = () => {
-  const [visible, setIsVisible] = useState(true)
-  return (
+storiesOf('DangerousActionModal', module)
+  .addDecorator(withModalProps)
+  .add('Default', ({visible, onPress, onRequestClose}) => (
     <DangerousActionModal
       visible={visible}
-      onRequestClose={() => setIsVisible(false)}
+      onRequestClose={onRequestClose}
       showCloseIcon
       title="Attention"
       primaryButton={{
+        label: 'Confirm',
+        onPress: onPress('primary'),
+      }}
+      secondaryButton={{
         label: 'Cancel',
-        onPress: () => setIsVisible(false),
+        onPress: onPress('secondary'),
       }}
       alertBox={{
         content: [
@@ -34,7 +38,4 @@ const Modal = () => {
         qui officia deserunt mollit anim id est laborum.
       </Text>
     </DangerousActionModal>
-  )
-}
-
-storiesOf('DangerousAction', module).add('As modal', () => <Modal />)
+  ))

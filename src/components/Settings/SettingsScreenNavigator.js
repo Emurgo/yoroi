@@ -11,7 +11,7 @@ import ChangeWalletName from './ChangeWalletName'
 import SupportScreen from './SupportScreen'
 import LanguagePickerScreen from './ChangeLanguageScreen'
 import BiometricsLinkScreen from './BiometricsLinkScreen'
-import ToggleEasyConfirmatioScreen from './ToggleEasyConfirmatioScreen'
+import ToggleEasyConfirmationScreen from './ToggleEasyConfirmationScreen'
 import TermsOfServiceScreen from './TermsOfServiceScreen'
 import RemoveWalletScreen from './RemoveWalletScreen'
 import ChangePasswordScreen from './ChangePasswordScreen'
@@ -26,23 +26,23 @@ import {COLORS} from '../../styles/config'
 const messages = defineMessages({
   walletTabTitle: {
     id: 'components.settings.walletsettingscreen.tabTitle',
-    defaultMessage: 'Wallet',
+    defaultMessage: '!!!Wallet',
   },
   appTabTitle: {
     id: 'components.settings.applicationsettingsscreen.tabTitle',
-    defaultMessage: 'Application',
+    defaultMessage: '!!!Application',
   },
   changeCustomPinTitle: {
     id: 'components.settings.changecustompinscreen.title',
-    defaultMessage: 'Change PIN',
+    defaultMessage: '!!!Change PIN',
   },
   changePasswordTitle: {
     id: 'components.settings.changepasswordscreen.title',
-    defaultMessage: 'Change spending password',
+    defaultMessage: '!!!Change spending password',
   },
   removeWalletTitle: {
     id: 'components.settings.removewalletscreen.title',
-    defaultMessage: 'Remove wallet',
+    defaultMessage: '!!!Remove wallet',
   },
   termsOfServiceTitle: {
     id: 'components.settings.termsofservicescreen.title',
@@ -50,15 +50,15 @@ const messages = defineMessages({
   },
   changeWalletNameTitle: {
     id: 'components.settings.changewalletname.title',
-    defaultMessage: 'Change wallet name',
+    defaultMessage: '!!!Change wallet name',
   },
   supportTitle: {
     id: 'components.settings.settingsscreen.title',
-    defaultMessage: 'Support',
+    defaultMessage: '!!!Support',
   },
   toggleEachConfirmationTitle: {
     id: 'components.settings.toggleeasyconfirmationscreen.title',
-    defaultMessage: 'Easy confirmation',
+    defaultMessage: '!!!Easy confirmation',
   },
   customPinTitle: {
     id: 'components.firstrun.custompinscreen.title',
@@ -66,7 +66,7 @@ const messages = defineMessages({
   },
   settingsTitle: {
     id: 'components.settings.applicationsettingsscreen.title',
-    defaultMessage: 'Settings',
+    defaultMessage: '!!!Settings',
   },
 })
 
@@ -169,7 +169,7 @@ const SettingsScreenNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
     />
     <Stack.Screen
       name={SETTINGS_ROUTES.EASY_COMFIRMATION}
-      component={ToggleEasyConfirmatioScreen}
+      component={ToggleEasyConfirmationScreen}
       options={{
         title: intl.formatMessage(messages.toggleEachConfirmationTitle),
       }}

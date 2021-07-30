@@ -1,14 +1,12 @@
 // @flow
 
 import React from 'react'
-import {connect} from 'react-redux'
-import {compose} from 'redux'
-import {withHandlers, withStateHandlers} from 'recompose'
+import {useDispatch, useSelector} from 'react-redux'
 import {View, ScrollView} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import walletManager from '../../crypto/walletManager'
-import {Text, Button, ValidatedTextInput, StatusBar} from '../UiKit'
+import {Text, Button, TextInput, StatusBar} from '../UiKit'
 import {setEasyConfirmation, showErrorDialog} from '../../actions'
 import {easyConfirmationSelector} from '../../selectors'
 import {WrongPassword} from '../../crypto/errors'
@@ -29,33 +27,36 @@ const messages = defineMessages({
   enableWarning: {
     id: 'components.settings.toggleeasyconfirmationscreen.enableWarning',
     defaultMessage:
-      'Please remember your master password, as you may need it ' +
+      '!!!Please remember your master password, as you may need it ' +
       'in case your biometrics data are removed from the device.',
   },
   enableMasterPassword: {
     id: 'components.settings.toggleeasyconfirmationscreen.enableMasterPassword',
-    defaultMessage: 'Master password',
+    defaultMessage: '!!!Master password',
   },
   enableButton: {
     id: 'components.settings.toggleeasyconfirmationscreen.enableButton',
-    defaultMessage: 'Enable',
+    defaultMessage: '!!!Enable',
   },
   disableHeading: {
     id: 'components.settings.toggleeasyconfirmationscreen.disableHeading',
-    defaultMessage: 'By disabling this option you will be able to spend your assets only with your master password.',
+    defaultMessage: '!!!By disabling this option you will be able to spend your assets only with your master password.',
   },
   disableButton: {
     id: 'components.settings.toggleeasyconfirmationscreen.disableButton',
-    defaultMessage: 'Disable',
+    defaultMessage: '!!!Disable',
   },
 })
 
-const enableEasyConfirmation =
-  ({navigation, masterPassword, setEasyConfirmation, intl}) =>
-  async () => {
+const ToggleEasyConfirmationScreen = ({intl, navigation}: {intl: IntlShape} & Object /* TODO: type */) => {
+  const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
+  const dispatch = useDispatch()
+  const [masterPassword, setMasterPassword] = React.useState('')
+  const clearPassword = () => setMasterPassword('')
+  const enableEasyConfirmation = async () => {
     try {
       await walletManager.enableEasyConfirmation(masterPassword, intl)
-      setEasyConfirmation(true)
+      dispatch(setEasyConfirmation(true))
 
       navigation.goBack()
     } catch (error) {
@@ -67,47 +68,36 @@ const enableEasyConfirmation =
     }
   }
 
-const disableEasyConfirmation =
-  ({navigation}) =>
-  async () => {
+  const disableEasyConfirmation = async () => {
     await walletManager.disableEasyConfirmation()
-    setEasyConfirmation(false)
+    dispatch(setEasyConfirmation(false))
     navigation.goBack()
   }
 
-const ToggleEasyConfirmationScreen = (
-  {
-    intl,
-    isEasyConfirmationEnabled,
-    enableEasyConfirmation,
-    disableEasyConfirmation,
-    clearPassword,
-    setMasterPassword,
-    masterPassword,
-    navigation,
-  }: {intl: IntlShape} & Object /* TODO: type */,
-) => {
-  React.useEffect(
-    () => {
-      const unsubscribe = navigation.addListener('blur', () => {
-        clearPassword()
-      })
-      return unsubscribe
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [navigation],
-  )
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      clearPassword()
+    })
+    return unsubscribe
+  }, [navigation])
 
   return (
-    <View style={styles.root}>
+    <View style={styles.container}>
       <StatusBar type="dark" />
 
       {!isEasyConfirmationEnabled ? (
-        <ScrollView keyboardDismissMode="on-drag">
+        <ScrollView
+          // bounces={false}
+          keyboardShouldPersistTaps={'always'}
+          contentContainerStyle={styles.contentContainer}
+        >
           <Text style={styles.heading}>{intl.formatMessage(messages.enableHeading)}</Text>
           <Text style={styles.warning}>{intl.formatMessage(messages.enableWarning)}</Text>
 
-          <ValidatedTextInput
+          <TextInput
+            autoFocus
+            enablesReturnKeyAutomatically
+            returnKeyType={'done'}
             secureTextEntry
             label={intl.formatMessage(messages.enableMasterPassword)}
             onChangeText={setMasterPassword}
@@ -115,42 +105,24 @@ const ToggleEasyConfirmationScreen = (
           />
         </ScrollView>
       ) : (
-        <View style={[styles.main, styles.mainCentered]}>
+        <View style={[styles.disableSection]}>
           <Text style={styles.heading}>{intl.formatMessage(messages.disableHeading)}</Text>
         </View>
       )}
 
-      <Button
-        title={
-          isEasyConfirmationEnabled
-            ? intl.formatMessage(messages.disableButton)
-            : intl.formatMessage(messages.enableButton)
-        }
-        onPress={isEasyConfirmationEnabled ? disableEasyConfirmation : enableEasyConfirmation}
-        disabled={!masterPassword && !isEasyConfirmationEnabled}
-      />
+      <View style={styles.actions}>
+        <Button
+          title={
+            isEasyConfirmationEnabled
+              ? intl.formatMessage(messages.disableButton)
+              : intl.formatMessage(messages.enableButton)
+          }
+          onPress={isEasyConfirmationEnabled ? disableEasyConfirmation : enableEasyConfirmation}
+          disabled={!masterPassword && !isEasyConfirmationEnabled}
+        />
+      </View>
     </View>
   )
 }
 
-export default injectIntl(
-  compose(
-    connect(
-      (state) => ({
-        isEasyConfirmationEnabled: easyConfirmationSelector(state),
-      }),
-      {setEasyConfirmation},
-    ),
-    withStateHandlers(
-      {masterPassword: ''},
-      {
-        setMasterPassword: () => (masterPassword) => ({masterPassword}),
-        clearPassword: () => () => ({masterPassword: ''}),
-      },
-    ),
-    withHandlers({
-      enableEasyConfirmation,
-      disableEasyConfirmation,
-    }),
-  )(ToggleEasyConfirmationScreen),
-)
+export default injectIntl(ToggleEasyConfirmationScreen)
