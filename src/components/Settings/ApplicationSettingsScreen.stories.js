@@ -6,7 +6,7 @@ import {StyleSheet, View} from 'react-native'
 import {storiesOf} from '@storybook/react-native'
 
 import ApplicationSettingsScreen from './ApplicationSettingsScreen'
-import {withNavigationProps} from '../../../storybook/decorators'
+import {withNavigationProps} from '../../../storybook'
 
 const styles = StyleSheet.create({
   applicationSettingsScreen: {

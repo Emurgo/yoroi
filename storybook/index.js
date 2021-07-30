@@ -22,3 +22,5 @@ const StorybookUIRoot = getStorybookUI({
 })
 
 export default StorybookUIRoot
+
+export * from './decorators'
