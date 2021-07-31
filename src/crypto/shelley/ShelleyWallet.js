@@ -21,6 +21,7 @@ import {
   TransactionBuilder,
   BigNum,
   LinearFee,
+  AuxiliaryData,
 } from '@emurgo/react-native-haskell-shelley'
 import {TxAuxiliaryDataSupplementType} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {BigNumber} from 'bignumber.js'
@@ -45,7 +46,7 @@ import {InvalidState, CardanoError} from '../errors'
 import LocalizableError from '../../i18n/LocalizableError'
 import {TransactionCache} from './transactionCache'
 import {signTransaction, newAdaUnsignedTx} from './transactions'
-import {createUnsignedTx} from './transactionUtils'
+import {createUnsignedTx as utilsCreateUnsignedTx} from './transactionUtils'
 import {genTimeToSlot} from '../../utils/timeUtils'
 import {versionCompare} from '../../utils/versioning'
 import {
@@ -56,7 +57,7 @@ import {
 } from './delegationUtils'
 import {createLedgerSignTxPayload, signTxWithLedger, buildSignedTransaction} from './ledgerUtils'
 import {normalizeToAddress, toHexOrBase58, deriveRewardAddressHex} from './utils'
-import {createMetadata} from './metadataUtils'
+import {createAuxiliaryData} from './metadataUtils'
 
 import type {
   RawUtxo,
@@ -467,7 +468,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     tokens: SendTokenList,
     defaultToken: DefaultTokenEntry,
     serverTime: Date | void,
-    metadata: Array<JSONMetadata> | void,
+    auxiliaryData: Array<JSONMetadata> | void,
   ): Promise<ISignRequest<TransactionBuilder>> {
     const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this._getNetworkConfig()))
     const time = serverTime !== undefined ? serverTime : new Date()
@@ -475,15 +476,15 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     const changeAddr = await this._getAddressedChangeAddress()
     const addressedUtxos = this.asAddressedUtxo(utxos)
 
-    const transactionMetadata = metadata !== undefined ? await createMetadata(metadata) : undefined
-    return await createUnsignedTx({
+    const auxiliary = auxiliaryData !== undefined ? await createAuxiliaryData(auxiliaryData) : undefined
+    return await utilsCreateUnsignedTx({
       changeAddr,
       absSlotNumber,
       receiver,
       addressedUtxos,
       defaultToken,
       tokens,
-      metadata: transactionMetadata,
+      auxiliaryData: auxiliary,
       networkConfig: this._getNetworkConfig(),
     })
   }
@@ -526,7 +527,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       CONFIG.NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
       accountPvrKey,
       wits,
-      signRequest.txMetadata(),
+      signRequest.auxiliary(),
     )
     const id = Buffer.from(await (await hash_transaction(await signedTx.body())).to_bytes()).toString('hex')
     const encodedTx = await signedTx.to_bytes()
@@ -622,7 +623,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
         nonce = absSlotNumber.toNumber()
       }
 
-      const metadata = await catalystUtils.generateRegistration({
+      const auxiliaryData = await catalystUtils.auxiliaryDataWithRegistrationMetadata({
         stakePublicKey,
         catalystPublicKey,
         rewardAddress,
@@ -654,14 +655,14 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
         [], // no delegations
         [], // no withdrawals
         false,
-        metadata,
+        auxiliaryData,
       )
 
       const signRequest = new HaskellShelleyTxSignRequest({
         senderUtxos: unsignedTx.senderUtxos,
         unsignedTx: unsignedTx.txBuilder,
         changeAddr: unsignedTx.changeAddr,
-        metadata,
+        auxiliaryData,
         networkSettingSnapshot: {
           NetworkId: config.NETWORK_ID,
           ChainNetworkId: Number.parseInt(config.CHAIN_NETWORK_ID, 10),
@@ -762,7 +763,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       useUSB,
     )
 
-    let metadata
+    let auxiliaryData: AuxiliaryData
     if (request.ledgerNanoCatalystRegistrationTxSignData) {
       const {votingPublicKey, nonce} = request.ledgerNanoCatalystRegistrationTxSignData
 
@@ -784,7 +785,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
         request.ledgerNanoCatalystRegistrationTxSignData,
       )
 
-      metadata = await catalystUtils.generateRegistration({
+      auxiliaryData = await catalystUtils.auxiliaryDataWithRegistrationMetadata({
         stakePublicKey: await this.getStakingKey(),
         catalystPublicKey: await PublicKey.from_bytes(Buffer.from(votingPublicKey, 'hex')),
         rewardAddress: await this.getRewardAddress(),
@@ -799,11 +800,11 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       //  ).toString('hex') ===
       // ledgerSignTxResp.auxiliaryDataSupplement.auxiliaryDataHashaHex
     } else {
-      metadata = request.metadata
+      auxiliaryData = request.auxiliaryData
     }
 
-    if (metadata) {
-      await request.self().set_metadata(metadata)
+    if (auxiliaryData) {
+      await request.self().set_auxiliary_data(auxiliaryData)
     }
 
     const txBody = await request.self().build()
@@ -826,7 +827,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
         addressing,
         key,
       },
-      metadata,
+      auxiliaryData,
     )
     const id = Buffer.from(await (await hash_transaction(await signedTx.body())).to_bytes()).toString('hex')
     const encodedTx = await signedTx.to_bytes()

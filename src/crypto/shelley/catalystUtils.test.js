@@ -14,7 +14,7 @@ import {
 } from '@emurgo/react-native-haskell-shelley'
 
 import jestSetup from '../../jestSetup'
-import {CatalystLabels, generateRegistration, isRegistrationOpen} from './catalystUtils'
+import {CatalystLabels, auxiliaryDataWithRegistrationMetadata, isRegistrationOpen} from './catalystUtils'
 
 jestSetup.setup()
 
@@ -41,7 +41,7 @@ test('Generate Catalyst registration tx', async () => {
   }
 
   const nonce = 1234
-  const txMetaData = await generateRegistration({
+  const auxiliaryData = await auxiliaryDataWithRegistrationMetadata({
     stakePublicKey: await stakePrivateKey.to_public(),
     catalystPublicKey: await catalystPrivateKey.to_public(),
     rewardAddress: await address.to_address(),
@@ -50,7 +50,7 @@ test('Generate Catalyst registration tx', async () => {
   })
 
   const result = await GeneralTransactionMetadata.from_bytes(
-    await (await (await MetadataList.from_bytes(await txMetaData.to_bytes())).get(0)).to_bytes(),
+    await (await (await MetadataList.from_bytes(await (await auxiliaryData.metadata()).to_bytes())).get(0)).to_bytes(),
   )
 
   const data = await result.get(await BigNum.from_str(CatalystLabels.DATA.toString()))

@@ -6,7 +6,7 @@ import {ISignRequest} from '../ISignRequest'
 import {
   RewardAddress,
   TransactionBuilder,
-  TransactionMetadata, // TODO: rust bindings not yet available
+  AuxiliaryData, // TODO: rust bindings not yet available
   hash_transaction,
 } from '@emurgo/react-native-haskell-shelley'
 
@@ -54,7 +54,7 @@ export class HaskellShelleyTxSignRequest implements ISignRequest<TransactionBuil
   senderUtxos: Array<AddressedUtxo>
   unsignedTx: TransactionBuilder
   changeAddr: Array<{|...Address, ...Value, ...Addressing|}>
-  metadata: void | TransactionMetadata
+  auxiliaryData: void | AuxiliaryData
   networkSettingSnapshot: NetworkSettingSnapshot
   // TODO: this should be provided by WASM in some SignedTxBuilder interface of some kind
   neededStakingKeyHashes: {|
@@ -68,7 +68,7 @@ export class HaskellShelleyTxSignRequest implements ISignRequest<TransactionBuil
     senderUtxos: Array<AddressedUtxo>,
     unsignedTx: TransactionBuilder,
     changeAddr: Array<{|...Address, ...Value, ...Addressing|}>,
-    metadata: void | TransactionMetadata,
+    auxiliaryData: void | AuxiliaryData,
     networkSettingSnapshot: NetworkSettingSnapshot,
     neededStakingKeyHashes: {|
       neededHashes: Set<string>, // StakeCredential
@@ -79,7 +79,7 @@ export class HaskellShelleyTxSignRequest implements ISignRequest<TransactionBuil
     this.senderUtxos = data.senderUtxos
     this.unsignedTx = data.unsignedTx
     this.changeAddr = data.changeAddr
-    this.metadata = data.metadata
+    this.auxiliaryData = data.auxiliaryData
     this.networkSettingSnapshot = data.networkSettingSnapshot
     this.neededStakingKeyHashes = data.neededStakingKeyHashes
     this.ledgerNanoCatalystRegistrationTxSignData = data.ledgerNanoCatalystRegistrationTxSignData
@@ -89,8 +89,8 @@ export class HaskellShelleyTxSignRequest implements ISignRequest<TransactionBuil
     return Buffer.from(await (await hash_transaction(await this.unsignedTx.build())).to_bytes()).toString('hex')
   }
 
-  txMetadata(): void | TransactionMetadata {
-    return this.metadata
+  auxiliary(): void | AuxiliaryData {
+    return this.auxiliaryData
   }
 
   async totalInput(): Promise<MultiToken> {
