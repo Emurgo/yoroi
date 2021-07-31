@@ -238,20 +238,16 @@ const DelegationConfirmation = (
             label={intl.formatMessage(txLabels.amount)}
           />
         </View>
-        {
-          /* eslint-disable indent */
-          !isEasyConfirmationEnabled && !isHW && (
-            <View style={styles.input}>
-              <ValidatedTextInput
-                secureTextEntry
-                value={password}
-                label={intl.formatMessage(txLabels.password)}
-                onChangeText={setPassword}
-              />
-            </View>
-          )
-          /* eslint-enable indent */
-        }
+        {!isEasyConfirmationEnabled && !isHW && (
+          <View style={styles.input}>
+            <ValidatedTextInput
+              secureTextEntry
+              value={password}
+              label={intl.formatMessage(txLabels.password)}
+              onChangeText={setPassword}
+            />
+          </View>
+        )}
         <View style={styles.itemBlock}>
           <Text style={styles.itemTitle}>{intl.formatMessage(messages.rewardsExplanation)}</Text>
           <Text style={styles.rewards}>{formatTokenWithText(reward, defaultAsset)}</Text>
@@ -268,24 +264,20 @@ const DelegationConfirmation = (
         />
       </View>
 
-      {
-        /* eslint-disable indent */
-        isHW && Platform.OS === 'android' && CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT && (
-          <>
-            <LedgerTransportSwitchModal
-              visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT}
-              onRequestClose={closeLedgerDialog}
-              onSelectUSB={(event) => onChooseTransport(event, true)}
-              onSelectBLE={(event) => onChooseTransport(event, false)}
-              showCloseIcon
-            />
-            <Modal visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.LEDGER_CONNECT} onRequestClose={closeLedgerDialog}>
-              <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={useUSB} />
-            </Modal>
-          </>
-        )
-        /* eslint-enable indent */
-      }
+      {isHW && Platform.OS === 'android' && CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT && (
+        <>
+          <LedgerTransportSwitchModal
+            visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT}
+            onRequestClose={closeLedgerDialog}
+            onSelectUSB={(event) => onChooseTransport(event, true)}
+            onSelectBLE={(event) => onChooseTransport(event, false)}
+            showCloseIcon
+          />
+          <Modal visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.LEDGER_CONNECT} onRequestClose={closeLedgerDialog}>
+            <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={useUSB} />
+          </Modal>
+        </>
+      )}
       <ErrorModal
         visible={showErrorModal}
         title={intl.formatMessage(errorMessages.generalTxError.title)}

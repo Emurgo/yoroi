@@ -625,7 +625,6 @@ class SendScreen extends Component<Props, State> {
     const selectedTokenMeta = tokenMetadata[selectedAsset.identifier]
     const isDefault = selectedTokenMeta.isDefault
     const assetNameOrId = truncateWithEllipsis(getAssetDenominationOrId(selectedTokenMeta), 20)
-    /* eslint-disable indent */
     const alertBoxContent = {
       content: isDefault
         ? [
@@ -641,7 +640,6 @@ class SendScreen extends Component<Props, State> {
             }),
           ],
     }
-    /* eslint-enable indent */
     return (
       <DangerousActionModal
         visible={showSendAllWarning}

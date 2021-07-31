@@ -21,7 +21,7 @@ import type {Navigation} from '../../types/navigation'
 const messages = defineMessages({
   currentPinInputTitle: {
     id: 'components.settings.changecustompinscreen.CurrentPinInput.title',
-    defaultMessage: '!!!Login',
+    defaultMessage: '!!!Enter PIN',
   },
   currentPinInputSubtitle: {
     id: 'components.settings.changecustompinscreen.CurrentPinInput.subtitle',
