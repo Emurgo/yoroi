@@ -5,7 +5,7 @@ import React from 'react'
 import {storiesOf} from '@storybook/react-native'
 
 import MnemonicExplanationModal from './MnemonicExplanationModal'
-import {withModalProps} from '../../../../storybook/decorators'
+import {withModalProps} from '../../../../storybook'
 
 storiesOf('MnemonicExplanationModal', module)
   .addDecorator(withModalProps)

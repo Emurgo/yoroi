@@ -22,7 +22,11 @@ const navigation = {
   setParams: action('setParams'),
   setOptions: action('setOptions'),
 
-  addListener: action('addListener'),
+  addListener: (event: string) => {
+    action('addListener')(event)
+
+    return () => action('unsubscribe')(event)
+  },
   removeListener: action('removeListener'),
 
   isFocused: action('isFocused'),
