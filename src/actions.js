@@ -488,7 +488,6 @@ export const submitSignedTx = (signedTx: string) => async (dispatch: Dispatch<an
 }
 
 // note: eslint doesn't like polymorphic types
-/* eslint-disable indent */
 export const submitTransaction =
   <T>(signRequest: ISignRequest<T>, decryptedKey: string) =>
   async (dispatch: Dispatch<any>) => {
@@ -497,7 +496,6 @@ export const submitTransaction =
     const signedTxBase64 = Buffer.from(encodedTx).toString('base64')
     await dispatch(submitSignedTx(signedTxBase64))
   }
-/* eslint-enable indent */
 
 export const checkForFlawedWallets = () => (dispatch: Dispatch<any>) => {
   let isFlawed = false

@@ -1,6 +1,5 @@
 // @flow
-/* eslint-disable  */
-/* eslint-disable camelcase */
+
 import jestSetup from '../../jestSetup'
 
 import {BigNumber} from 'bignumber.js'
@@ -23,7 +22,9 @@ import {
   TransactionOutput,
   TransactionOutputs,
   Value,
+  /* eslint-disable-next-line camelcase */
   make_vkey_witness,
+  /* eslint-disable-next-line camelcase */
   hash_transaction,
 } from '@emurgo/react-native-haskell-shelley'
 

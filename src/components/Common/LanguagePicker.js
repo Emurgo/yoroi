@@ -217,21 +217,17 @@ export const LanguagePicker = ({changeLanguage, languageCode, handleContinue, in
         )}
       />
 
-      {
-        /* eslint-disable indent */
-        languageCode !== 'en-US' && languageCode !== 'ja-JP' && (
-          <View style={styles.ackBlock}>
-            {intl.formatMessage(messages.contributors) !== '_' ? (
-              <Markdown>
-                {`${intl.formatMessage(messages.acknowledgement)}: **${intl.formatMessage(messages.contributors)}**`}
-              </Markdown>
-            ) : (
-              <Markdown>{`${intl.formatMessage(messages.acknowledgement)}.`}</Markdown>
-            )}
-          </View>
-        )
-        /* eslint-enable indent */
-      }
+      {languageCode !== 'en-US' && languageCode !== 'ja-JP' && (
+        <View style={styles.ackBlock}>
+          {intl.formatMessage(messages.contributors) !== '_' ? (
+            <Markdown>
+              {`${intl.formatMessage(messages.acknowledgement)}: **${intl.formatMessage(messages.contributors)}**`}
+            </Markdown>
+          ) : (
+            <Markdown>{`${intl.formatMessage(messages.acknowledgement)}.`}</Markdown>
+          )}
+        </View>
+      )}
 
       <Button onPress={handleContinue} title={intl.formatMessage(messages.continueButton)} testID="chooseLangButton" />
     </View>
