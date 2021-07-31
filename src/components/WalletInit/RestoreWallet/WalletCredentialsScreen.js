@@ -45,12 +45,12 @@ export default (compose(
       ({navigation, route, createWallet, updateVersion, setWaiting}) =>
         async ({name, password}) => {
           setWaiting(true)
-          const {phrase, networkId, walletImplementationId} = route.params
+          const {phrase, networkId, walletImplementationId, provider} = route.params
           assert.assert(!!phrase, 'mnemonic')
           assert.assert(networkId != null, 'networkId')
           assert.assert(!!walletImplementationId, 'walletImplementationId')
           try {
-            await createWallet(name, phrase, password, networkId, walletImplementationId)
+            await createWallet(name, phrase, password, networkId, walletImplementationId, provider)
             await updateVersion()
           } finally {
             setWaiting(false)

@@ -21,7 +21,7 @@ import {validatePassword} from '../utils/validators'
 import type {EncryptionMethod} from './types'
 import type {Mutex} from '../utils/promise'
 import type {HWDeviceInfo} from './shelley/ledgerUtils'
-import type {NetworkId, WalletImplementationId} from '../config/types'
+import type {NetworkId, WalletImplementationId, YoroiProvider} from '../config/types'
 import type {WalletChecksum} from '@emurgo/cip4-js'
 
 type WalletState = {|
@@ -41,6 +41,8 @@ export default class Wallet {
   hwDeviceInfo: ?HWDeviceInfo
 
   isReadOnly: boolean
+
+  provider: ?YoroiProvider
 
   isEasyConfirmationEnabled: boolean = false
 
@@ -196,10 +198,10 @@ export default class Wallet {
   }
 
   async _doFullSync() {
-    Logger.info('Do full sync')
+    Logger.info(`Do full sync provider =`, this.provider)
     assert.assert(this.isInitialized, 'doFullSync: isInitialized')
     // TODO: multi-network support
-    const backendConfig = getCardanoNetworkConfigById(this.networkId).BACKEND
+    const backendConfig = getCardanoNetworkConfigById(this.networkId, this.provider).BACKEND
     const filterFn = (addrs) => api.filterUsedAddresses(addrs, backendConfig)
     await Promise.all([this.internalChain.sync(filterFn), this.externalChain.sync(filterFn)])
 
@@ -215,6 +217,7 @@ export default class Wallet {
           // $FlowFixMe undefined or null is incompatible with string
           addresses,
           this.networkId,
+          this.provider,
         )
       }
     }
@@ -287,6 +290,7 @@ export default class Wallet {
       hwDeviceInfo: this.hwDeviceInfo,
       isReadOnly: this.isReadOnly,
       isEasyConfirmationEnabled: this.isEasyConfirmationEnabled,
+      provider: this.provider,
     }
   }
 }

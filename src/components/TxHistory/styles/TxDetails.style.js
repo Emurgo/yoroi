@@ -58,4 +58,9 @@ export default StyleSheet.create({
     borderTopWidth: 1,
     borderColor: 'rgba(173, 174, 182, 0.3)',
   },
+  dataContainer: {
+    flexDirection: 'row',
+    paddingRight: 70,
+    marginBottom: 20,
+  },
 })

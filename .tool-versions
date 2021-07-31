@@ -1,4 +1,4 @@
-nodejs 10.14.2
+nodejs 16.5.0
 rust 1.41.0
 java adoptopenjdk-8.0.292+10
 python 2.7.18

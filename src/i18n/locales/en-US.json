@@ -463,6 +463,7 @@
   "global.notSupported": "Feature not supported",
   "global.deprecated": "Deprecated",
   "global.ok": "OK",
+  "global.openInExplorer": "Open in explorer",
   "global.pleaseConfirm": "Please confirm",
   "global.pleaseWait": "please wait ...",
   "global.staking.epochLabel": "Epoch",

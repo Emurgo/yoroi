@@ -37,6 +37,7 @@ type RouterProps = {
 
 const MnemonicShowScreen = ({intl, route, navigation}: {|intl: IntlShape|} & RouterProps /* TODO: type */) => {
   const mnemonic = route.params.mnemonic
+  const provider = route.params.provider
   const [modal, setModal] = React.useState(false)
   const showModal = () => setModal(true)
   const hideModal = () => setModal(false)
@@ -54,6 +55,7 @@ const MnemonicShowScreen = ({intl, route, navigation}: {|intl: IntlShape|} & Rou
       name,
       networkId,
       walletImplementationId,
+      provider,
     })
     hideModal()
   }

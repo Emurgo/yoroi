@@ -145,6 +145,7 @@ export default injectIntl(
             phrase: route.params.phrase,
             networkId: route.params.networkId,
             walletImplementationId: route.params.walletImplementationId,
+            provider: route.params.provider,
           })
         },
     }),

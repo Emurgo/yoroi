@@ -23,6 +23,7 @@ import AddressModal from '../Receive/AddressModal'
 import AssetList from '../Common/MultiAsset/AssetList'
 import assetListStyle from '../Common/MultiAsset/styles/AssetListTransaction.style'
 import {MultiToken} from '../../crypto/MultiToken'
+import Copy from '../../components/UiKit/Copy'
 
 import styles from './styles/TxDetails.style'
 
@@ -102,6 +103,10 @@ const messages = defineMessages({
   omittedCount: {
     id: 'components.txhistory.txdetails.omittedCount',
     defaultMessage: '!!!+ {cnt} omitted {cnt, plural, one {address} other {addresses}}',
+  },
+  openInExplorer: {
+    id: 'global.openInExplorer',
+    defaultMessage: '!!!Open in explorer',
   },
 })
 
@@ -221,7 +226,7 @@ const TxDetails = ({intl, route}: Props & RouterProps) => {
 
   const openInExplorer = () => {
     if (transaction) {
-      const networkConfig = getNetworkConfigById(walletMeta.networkId)
+      const networkConfig = getNetworkConfigById(walletMeta.networkId, walletMeta.provider)
       // note: don't await on purpose
       Linking.openURL(networkConfig.EXPLORER_URL_FOR_TX(transaction.id))
     }
@@ -235,12 +240,8 @@ const TxDetails = ({intl, route}: Props & RouterProps) => {
     setAddressDetail(null)
   }
 
-  const {fromFiltered, cntOmittedFrom, toFiltered, cntOmittedTo} = getShownAddresses(
-    intl,
-    transaction,
-    internalAddressIndex,
-    externalAddressIndex,
-  )
+  const {fromFiltered, cntOmittedFrom, toFiltered, cntOmittedTo} =
+    transaction && getShownAddresses(intl, transaction, internalAddressIndex, externalAddressIndex)
   const txFee: ?BigNumber = transaction.fee ? MultiToken.fromArray(transaction.fee).getDefault() : null
   const amountAsMT = MultiToken.fromArray(transaction.amount)
   const amount: BigNumber = amountAsMT.getDefault()
@@ -277,9 +278,9 @@ const TxDetails = ({intl, route}: Props & RouterProps) => {
         </Banner>
         <View style={styles.content}>
           <Label>{intl.formatMessage(messages.fromAddresses)}</Label>
-          {fromFiltered.map((item, i) => (
-            <>
-              <AddressEntry key={i} {...item} showModalForAddress={showModalForAddress} />
+          {fromFiltered.map((item) => (
+            <View key={item.address}>
+              <AddressEntry {...item} showModalForAddress={showModalForAddress} />
               {item.assets.length > 0 && (
                 <TouchableOpacity style={styles.assetsExpandable} activeOpacity={0.5} onPress={() => toggleExpandIn()}>
                   <Text style={styles.assetsTitle}>
@@ -289,16 +290,16 @@ const TxDetails = ({intl, route}: Props & RouterProps) => {
                 </TouchableOpacity>
               )}
               {expandedIn && <AssetList styles={assetListStyle} assets={item.assets} assetsMetadata={tokenMetadata} />}
-            </>
+            </View>
           ))}
           {cntOmittedFrom > 0 && <Text>{intl.formatMessage(messages.omittedCount, {cnt: cntOmittedFrom})}</Text>}
 
           <View style={styles.borderTop}>
             <Label>{intl.formatMessage(messages.toAddresses)}</Label>
           </View>
-          {toFiltered.map((item, i) => (
-            <>
-              <AddressEntry key={i} {...item} showModalForAddress={showModalForAddress} />
+          {toFiltered.map((item) => (
+            <View key={item.address}>
+              <AddressEntry {...item} showModalForAddress={showModalForAddress} />
               {item.assets.length > 0 && (
                 <TouchableOpacity style={styles.assetsExpandable} activeOpacity={0.5} onPress={() => toggleExpandOut()}>
                   <Text style={styles.assetsTitle}>
@@ -308,7 +309,7 @@ const TxDetails = ({intl, route}: Props & RouterProps) => {
                 </TouchableOpacity>
               )}
               {expandedOut && <AssetList styles={assetListStyle} assets={item.assets} assetsMetadata={tokenMetadata} />}
-            </>
+            </View>
           ))}
           {cntOmittedTo > 0 && <Text>{intl.formatMessage(messages.omittedCount, {cnt: cntOmittedTo})}</Text>}
           <View style={styles.borderTop}>
@@ -321,7 +322,13 @@ const TxDetails = ({intl, route}: Props & RouterProps) => {
               })}
             </Text>
             <Label>{intl.formatMessage(messages.transactionId)}</Label>
-            <Button onPress={openInExplorer} title={transaction.id} />
+            <View style={styles.dataContainer}>
+              <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">
+                {transaction.id}
+              </Text>
+              <Copy value={transaction.id} />
+            </View>
+            <Button onPress={openInExplorer} title={intl.formatMessage(messages.openInExplorer)} />
           </View>
         </View>
       </Screen>
