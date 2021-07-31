@@ -19,7 +19,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  walletInfo: {},
   walletNameLabel: {
     fontSize: 16,
   },

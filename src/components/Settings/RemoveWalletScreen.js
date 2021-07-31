@@ -6,7 +6,7 @@ import {useSelector, useDispatch} from 'react-redux'
 import {View, ScrollView} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
-import {Button, Text, Checkbox, TextInput, StatusBar} from '../UiKit'
+import {Button, Text, Checkbox, TextInput, Spacer, StatusBar} from '../UiKit'
 import {Checkmark} from '../UiKit/TextInput'
 import {WALLET_ROOT_ROUTES} from '../../RoutesList'
 import {walletNameSelector, isHWSelector} from '../../selectors'
@@ -14,8 +14,6 @@ import {removeCurrentWallet} from '../../actions'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 
 import styles from './styles/RemoveWalletScreen.style'
-
-import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
 const messages = defineMessages({
   descriptionParagraph1: {
@@ -80,23 +78,21 @@ const RemoveWalletScreen = ({intl, navigation}: Props) => {
       <StatusBar type={'dark'} />
 
       <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
-        <View style={styles.descriptionContainer}>
+        <Description>
           {!isHW && <Text style={styles.description}>{intl.formatMessage(messages.descriptionParagraph1)}</Text>}
           <Text style={styles.description}>{intl.formatMessage(messages.descriptionParagraph2)}</Text>
-        </View>
+        </Description>
 
         <Spacer height={32} />
 
-        <View style={styles.walletInfo}>
+        <WalletInfo>
           <Text style={styles.walletNameLabel}>{intl.formatMessage(messages.walletName)}</Text>
           <Spacer height={8} />
           <Text style={styles.walletName}>{walletName}</Text>
 
           <Spacer height={24} />
 
-          <TextInput
-            autoFocus
-            enablesReturnKeyAutomatically
+          <WalletNameInput
             label={intl.formatMessage(messages.walletNameInput)}
             value={typedWalletName}
             onChangeText={setTypedWalletName}
@@ -104,12 +100,11 @@ const RemoveWalletScreen = ({intl, navigation}: Props) => {
             errorText={
               typedWalletName !== walletName ? intl.formatMessage(messages.walletNameMismatchError) : undefined
             }
-            returnKeyType={'done'}
           />
-        </View>
+        </WalletInfo>
       </ScrollView>
 
-      <View style={styles.actions}>
+      <Actions>
         {!isHW && (
           <Checkbox
             checked={hasMnemonicWrittenDown}
@@ -126,11 +121,22 @@ const RemoveWalletScreen = ({intl, navigation}: Props) => {
           style={styles.removeButton}
           disabled={disabled}
         />
-      </View>
+      </Actions>
     </SafeAreaView>
   )
 }
 
 export default injectIntl(RemoveWalletScreen)
 
-const Spacer = ({height = 16, style}: {height?: number, style?: ViewStyleProp}) => <View style={[{height}, style]} />
+const Description = (props) => {
+  return <View {...props} />
+}
+const WalletInfo = (props) => {
+  return <View {...props} style={styles.descriptionContainer} />
+}
+const WalletNameInput = (props) => {
+  return <TextInput {...props} autoFocus enablesReturnKeyAutomatically returnKeyType={'done'} />
+}
+const Actions = (props) => {
+  return <View {...props} style={styles.actions} />
+}
