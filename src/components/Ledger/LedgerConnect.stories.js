@@ -3,7 +3,7 @@
 import React from 'react'
 import {storiesOf} from '@storybook/react-native'
 
-import {withModalProps} from '../../../storybook/decorators'
+import {withModalProps} from '../../../storybook'
 import LedgerConnect from './LedgerConnect'
 import {Modal} from '../UiKit'
 
