@@ -36,7 +36,7 @@ import {AddressChain, AddressGenerator} from './chain'
 import {generateWalletRootKey, ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
 import * as api from '../../api/shelley/api'
 import {CONFIG, isByron, isHaskellShelley, getCardanoBaseConfig, getWalletConfigById} from '../../config/config'
-import {NETWORKS, isHaskellShelleyNetwork} from '../../config/networks'
+import {isHaskellShelleyNetwork, PROVIDERS} from '../../config/networks'
 import * as catalystUtils from './catalystUtils'
 import {NETWORK_REGISTRY} from '../../config/types'
 import assert from '../../utils/assert'
@@ -72,7 +72,7 @@ import type {
 import type {Addressing, AddressedUtxo, SendTokenList, SignedTx} from './../types'
 import type {DefaultAsset} from '../../types/HistoryTransaction'
 import type {HWDeviceInfo} from '../shelley/ledgerUtils'
-import type {NetworkId, WalletImplementationId, BackendConfig} from '../../config/types'
+import type {NetworkId, WalletImplementationId, BackendConfig, YoroiProvider} from '../../config/types'
 import type {CardanoHaskellShelleyNetwork} from '../../config/networks'
 import type {WalletMeta} from '../../state'
 import type {SignTransactionResponse} from '@cardano-foundation/ledgerjs-hw-app-cardano'
@@ -88,6 +88,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     accountPubKeyHex: string,
     hwDeviceInfo: ?HWDeviceInfo,
     readOnly: boolean,
+    provider: ?YoroiProvider,
   ) {
     this.networkId = networkId
 
@@ -98,6 +99,8 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     this.hwDeviceInfo = hwDeviceInfo
 
     this.isReadOnly = readOnly
+
+    this.provider = provider
 
     this.transactionCache = new TransactionCache()
 
@@ -135,9 +138,16 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     return this.id
   }
 
-  async create(mnemonic: string, newPassword: string, networkId: NetworkId, implementationId: WalletImplementationId) {
+  async create(
+    mnemonic: string,
+    newPassword: string,
+    networkId: NetworkId,
+    implementationId: WalletImplementationId,
+    provider: ?YoroiProvider,
+  ) {
     Logger.info(`create wallet (networkId=${String(networkId)})`)
     Logger.info(`create wallet (implementationId=${String(implementationId)})`)
+    Logger.info(`create wallet (provider=${String(provider)})`)
     this.id = uuid.v4()
     assert.assert(!this.isInitialized, 'ShelleyWallet::create: !isInitialized')
     assert.assert(isHaskellShelleyNetwork(networkId), 'ShelleyWallet::create: invalid networkId')
@@ -164,6 +174,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       accountPubKeyHex,
       null, // this is not a HW
       false, // not a read-only wallet
+      provider,
     )
   }
 
@@ -211,6 +222,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     this.isHW = data.isHW ?? false
     this.hwDeviceInfo = data.hwDeviceInfo
     this.isReadOnly = data.isReadOnly ?? false
+    this.provider = data.provider
 
     this.version = DeviceInfo.getVersion()
     if (this.version !== lastSeenVersion) {
@@ -289,10 +301,16 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
 
   _getNetworkConfig(): CardanoHaskellShelleyNetwork {
     switch (this.networkId) {
-      case NETWORKS.HASKELL_SHELLEY.NETWORK_ID:
-        return NETWORKS.HASKELL_SHELLEY
-      case NETWORKS.HASKELL_SHELLEY_TESTNET.NETWORK_ID:
-        return NETWORKS.HASKELL_SHELLEY_TESTNET
+      case PROVIDERS.HASKELL_SHELLEY.NETWORK_ID:
+        if (this.provider === 'emurgo-alonzo') {
+          return PROVIDERS.ALONZO_MAINNET
+        }
+        return PROVIDERS.HASKELL_SHELLEY
+      case PROVIDERS.HASKELL_SHELLEY_TESTNET.NETWORK_ID:
+        if (this.provider === 'emurgo-alonzo') {
+          return PROVIDERS.ALONZO_TESTNET
+        }
+        return PROVIDERS.HASKELL_SHELLEY_TESTNET
       default:
         throw new Error('network id is not valid')
     }
