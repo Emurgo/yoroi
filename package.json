@@ -93,7 +93,7 @@
     "react-native": "0.63.4",
     "react-native-background-timer": "2.4.1",
     "react-native-ble-plx": "2.0.2",
-    "react-native-blockies-svg": "Emurgo/react-native-blockies-svg",
+    "react-native-blockies-svg": "git+https://github.com/Emurgo/react-native-blockies-svg",
     "react-native-bootsplash": "3.2.3",
     "react-native-camera": "3.44.0",
     "react-native-config": "0.12.0",
@@ -167,7 +167,7 @@
     "prettylint": "1.0.0",
     "react-dom": "16.8.3",
     "react-intl-translations-manager": "^5.0.3",
-    "react-native-inhibit-warnings": "https://github.com/Emurgo/react-native-inhibit-warnings.git",
+    "react-native-inhibit-warnings": "git+https://github.com/Emurgo/react-native-inhibit-warnings.git",
     "react-native-schemes-manager": "^1.0.5",
     "react-native-storybook-loader": "^1.8.1",
     "react-test-renderer": "16.13.1"
