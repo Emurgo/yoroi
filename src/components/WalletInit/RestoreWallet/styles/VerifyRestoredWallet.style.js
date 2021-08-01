@@ -10,16 +10,12 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: COLORS.WHITE,
   },
-  scrollView: {},
   contentContainer: {
+    paddingTop: 24,
     paddingHorizontal: 16,
-  },
-  plateContainer: {
-    minHeight: 72,
   },
   checksumLabel: {
     fontSize: 14,
-    paddingVertical: 24,
     color: COLORS.DARK_TEXT,
   },
   instructionsLabel: {
@@ -30,20 +26,19 @@ export default StyleSheet.create({
     lineHeight: 24,
     color: COLORS.DARK_TEXT,
   },
-  addresses: {},
   addressesLabel: {
     color: COLORS.DARK_TEXT,
   },
   checksum: {
     fontWeight: 'bold',
   },
-  action: {
-    padding: 16,
-  },
 
   plate: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  actions: {
+    padding: 16,
   },
 
   addressRowStyles: {
