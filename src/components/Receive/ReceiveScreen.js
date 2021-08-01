@@ -12,10 +12,7 @@ import Screen from '../../components/Screen'
 import {Text, Button, OfflineBanner, Banner, StatusBar} from '../UiKit'
 import AddressDetail from './AddressDetail'
 import AddressesList from './AddressesList'
-import {
-  generateNewReceiveAddress,
-  generateNewReceiveAddressIfNeeded,
-} from '../../actions'
+import {generateNewReceiveAddress, generateNewReceiveAddressIfNeeded} from '../../actions'
 import {
   receiveAddressesSelector,
   canGenerateNewReceiveAddressSelector,
@@ -37,42 +34,31 @@ const messages = defineMessages({
       '!!!Share this address to receive payments. ' +
       'To protect your privacy, new addresses are ' +
       'generated automatically once you use them.',
-    description: 'some desc',
   },
   generateButton: {
     id: 'components.receive.receivescreen.generateButton',
     defaultMessage: '!!!Generate another address',
-    description: 'some desc',
   },
   cannotGenerate: {
     id: 'components.receive.receivescreen.cannotGenerate',
     defaultMessage: '!!!You have to use some of your addresses',
-    description: 'some desc',
   },
   unusedAddresses: {
     id: 'components.receive.receivescreen.unusedAddresses',
     defaultMessage: '!!!Unused addresses',
-    description: 'some desc',
   },
   usedAddresses: {
     id: 'components.receive.receivescreen.usedAddresses',
     defaultMessage: '!!!Used addresses',
-    description: 'some desc',
   },
   verifyAddress: {
     id: 'components.receive.receivescreen.verifyAddress',
     defaultMessage: '!!!Verify address',
-    description: 'some desc',
   },
 })
 
 const ReceiveScreen = (
-  {
-    receiveAddresses,
-    generateNewReceiveAddress,
-    intl,
-    addressLimitReached,
-  }: {intl: IntlShape} & Object /* TODO: type */,
+  {receiveAddresses, generateNewReceiveAddress, intl, addressLimitReached}: {intl: IntlShape} & Object /* TODO: type */,
 ) => {
   const currentAddress = _.last(receiveAddresses) || NO_ADDRESS
   const addressesInfo: Map<string, AddressDTOCardano> = new Map(
@@ -104,18 +90,12 @@ const ReceiveScreen = (
       <SafeAreaView style={styles.safeAreaView}>
         <Screen scroll>
           <View style={styles.addressListHeader}>
-            <Text style={styles.heading}>
-              {intl.formatMessage(messages.unusedAddresses)}
-            </Text>
-            <Text style={styles.heading}>
-              {intl.formatMessage(messages.verifyAddress)}
-            </Text>
+            <Text style={styles.heading}>{intl.formatMessage(messages.unusedAddresses)}</Text>
+            <Text style={styles.heading}>{intl.formatMessage(messages.verifyAddress)}</Text>
           </View>
           <AddressesList showFresh addresses={addressesInfo} />
           <View style={styles.addressListHeader}>
-            <Text style={styles.heading}>
-              {intl.formatMessage(messages.usedAddresses)}
-            </Text>
+            <Text style={styles.heading}>{intl.formatMessage(messages.usedAddresses)}</Text>
           </View>
           <AddressesList addresses={addressesInfo} />
         </Screen>
@@ -139,11 +119,7 @@ export default injectIntl(
         generateNewReceiveAddressIfNeeded,
       },
     ),
-    onDidMount(({generateNewReceiveAddressIfNeeded}) =>
-      generateNewReceiveAddressIfNeeded(),
-    ),
-    onDidUpdate(({generateNewReceiveAddressIfNeeded}, _prevProps) =>
-      generateNewReceiveAddressIfNeeded(),
-    ),
+    onDidMount(({generateNewReceiveAddressIfNeeded}) => generateNewReceiveAddressIfNeeded()),
+    onDidUpdate(({generateNewReceiveAddressIfNeeded}, _prevProps) => generateNewReceiveAddressIfNeeded()),
   )(ReceiveScreen): ComponentType<{navigation: Navigation, intl: IntlShape}>),
 )

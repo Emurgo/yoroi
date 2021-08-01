@@ -7,10 +7,7 @@ import {Logger} from '../utils/logging'
 
 let _enabled = false
 
-const addLog = (
-  message: string,
-  level: SentrySeverity = SentrySeverity.Error,
-) => {
+const addLog = (message: string, level: SentrySeverity = SentrySeverity.Error) => {
   _enabled && Sentry.captureMessage(message, {level})
 }
 

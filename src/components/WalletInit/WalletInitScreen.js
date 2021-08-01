@@ -46,8 +46,7 @@ const messages = defineMessages({
     defaultMessage: '!!!Read-only wallet',
   },
   importReadOnlyWalletExplanation: {
-    id:
-      'components.walletinit.walletinitscreen.importReadOnlyWalletExplanation',
+    id: 'components.walletinit.walletinitscreen.importReadOnlyWalletExplanation',
     defaultMessage:
       "!!!The Yoroi extension allows you to export any of your wallets' " +
       'public keys in a QR code. Choose this option to import a wallet from ' +
@@ -74,23 +73,14 @@ type Props = {
 
 const WalletInitScreen = ({intl, route, navigation}: Props) => {
   const [modalState, _setModalState] = React.useState(MODAL_STATES.CLOSED)
-  const setModalState = (event: Object, modalState: ModalState) =>
-    _setModalState(modalState)
+  const setModalState = (event: Object, modalState: ModalState) => _setModalState(modalState)
 
-  const navigateRestoreWallet = (
-    event: Object,
-    networkId: NetworkId,
-    walletImplementationId: WalletImplementationId,
-  ) =>
+  const navigateRestoreWallet = (event: Object, networkId: NetworkId, walletImplementationId: WalletImplementationId) =>
     navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET, {
       networkId,
       walletImplementationId,
     })
-  const navigateCreateWallet = (
-    event: Object,
-    networkId: NetworkId,
-    walletImplementationId: WalletImplementationId,
-  ) =>
+  const navigateCreateWallet = (event: Object, networkId: NetworkId, walletImplementationId: WalletImplementationId) =>
     navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET, {
       networkId,
       walletImplementationId,
@@ -117,13 +107,10 @@ const WalletInitScreen = ({intl, route, navigation}: Props) => {
     })
 
   const networkId: NetworkId = route.params.networkId
-  const implementationId: WalletImplementationId =
-    route.params.walletImplementationId
+  const implementationId: WalletImplementationId = route.params.walletImplementationId
   let createWalletLabel = intl.formatMessage(messages.createWalletButton)
   let restoreWalletLabel = intl.formatMessage(messages.restoreWalletButton)
-  let createWalletWithLedgerLabel = intl.formatMessage(
-    messages.createWalletWithLedgerButton,
-  )
+  let createWalletWithLedgerLabel = intl.formatMessage(messages.createWalletWithLedgerButton)
   if (isJormungandr(networkId)) {
     createWalletLabel += ' (ITN)'
     restoreWalletLabel += ' (ITN)'
@@ -141,9 +128,7 @@ const WalletInitScreen = ({intl, route, navigation}: Props) => {
           </View>
           {!isByron(implementationId) && (
             <Button
-              onPress={(event) =>
-                navigateCreateWallet(event, networkId, implementationId)
-              }
+              onPress={(event) => navigateCreateWallet(event, networkId, implementationId)}
               title={createWalletLabel}
               style={styles.createButton}
               testID="createWalletButton"
@@ -165,23 +150,15 @@ const WalletInitScreen = ({intl, route, navigation}: Props) => {
               <Button
                 disabled={!CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLED}
                 outline
-                onPress={(event) =>
-                  setModalState(event, MODAL_STATES.LEDGER_TRANSPORT_SWITCH)
-                }
+                onPress={(event) => setModalState(event, MODAL_STATES.LEDGER_TRANSPORT_SWITCH)}
                 title={createWalletWithLedgerLabel}
                 style={styles.createButton}
               />
               <LedgerTransportSwitchModal
                 visible={modalState === MODAL_STATES.LEDGER_TRANSPORT_SWITCH}
-                onRequestClose={(event) =>
-                  setModalState(event, MODAL_STATES.CLOSED)
-                }
-                onSelectUSB={(event) =>
-                  navigateCheckNanoX(event, networkId, implementationId, true)
-                }
-                onSelectBLE={(event) =>
-                  navigateCheckNanoX(event, networkId, implementationId, false)
-                }
+                onRequestClose={(event) => setModalState(event, MODAL_STATES.CLOSED)}
+                onSelectUSB={(event) => navigateCheckNanoX(event, networkId, implementationId, true)}
+                onSelectBLE={(event) => navigateCheckNanoX(event, networkId, implementationId, false)}
                 showCloseIcon
               />
             </>
@@ -189,62 +166,40 @@ const WalletInitScreen = ({intl, route, navigation}: Props) => {
           {isHaskellShelley(implementationId) && (
             <Modal
               visible={modalState === MODAL_STATES.CHOOSE_MNEMONICS_LEN}
-              onRequestClose={(event) =>
-                setModalState(event, MODAL_STATES.CLOSED)
-              }
+              onRequestClose={(event) => setModalState(event, MODAL_STATES.CLOSED)}
               showCloseIcon
             >
               <Button
-                onPress={(event) =>
-                  navigateRestoreWallet(event, networkId, implementationId)
-                }
+                onPress={(event) => navigateRestoreWallet(event, networkId, implementationId)}
                 title={intl.formatMessage(messages.restoreNormalWalletLabel)}
                 style={styles.mnemonicDialogButton}
               />
               <ExapandableItem
                 label={intl.formatMessage(globalMessages.learnMore)}
-                content={intl.formatMessage(
-                  messages.restoreNWordWalletExplanation,
-                  {mnemonicLength: 15},
-                )}
+                content={intl.formatMessage(messages.restoreNWordWalletExplanation, {mnemonicLength: 15})}
               />
               <Button
                 outlineOnLight
                 onPress={(event) =>
-                  navigateRestoreWallet(
-                    event,
-                    networkId,
-                    CONFIG.WALLETS.HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID,
-                  )
+                  navigateRestoreWallet(event, networkId, CONFIG.WALLETS.HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID)
                 }
                 title={intl.formatMessage(messages.restore24WordWalletLabel)}
                 style={styles.mnemonicDialogButton}
               />
               <ExapandableItem
                 label={intl.formatMessage(globalMessages.learnMore)}
-                content={intl.formatMessage(
-                  messages.restoreNWordWalletExplanation,
-                  {mnemonicLength: 24},
-                )}
+                content={intl.formatMessage(messages.restoreNWordWalletExplanation, {mnemonicLength: 24})}
               />
               <Button
                 outlineOnLight
-                onPress={(event) =>
-                  navigateImportReadOnlyWallet(
-                    event,
-                    networkId,
-                    implementationId,
-                  )
-                }
+                onPress={(event) => navigateImportReadOnlyWallet(event, networkId, implementationId)}
                 title={intl.formatMessage(messages.importReadOnlyWalletLabel)}
                 style={styles.mnemonicDialogButton}
                 testID="importReadOnlyWalletButton"
               />
               <ExapandableItem
                 label={intl.formatMessage(globalMessages.learnMore)}
-                content={intl.formatMessage(
-                  messages.importReadOnlyWalletExplanation,
-                )}
+                content={intl.formatMessage(messages.importReadOnlyWalletExplanation)}
               />
             </Modal>
           )}

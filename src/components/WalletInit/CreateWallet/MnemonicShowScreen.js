@@ -21,13 +21,10 @@ const messages = defineMessages({
       'recovery phrase somewhere safe. ' +
       'You will need this phrase to use and restore your wallet. ' +
       'Phrase is case sensitive.',
-    description: 'some desc',
   },
   confirmationButton: {
-    id:
-      'components.walletinit.createwallet.mnemonicshowscreen.confirmationButton',
+    id: 'components.walletinit.createwallet.mnemonicshowscreen.confirmationButton',
     defaultMessage: '!!!Yes, I have written it down',
-    description: 'some desc',
   },
 })
 
@@ -36,9 +33,7 @@ type RouterProps = {
   navigation: any,
 }
 
-const MnemonicShowScreen = (
-  {intl, route, navigation}: {|intl: IntlShape|} & RouterProps /* TODO: type */,
-) => {
+const MnemonicShowScreen = ({intl, route, navigation}: {|intl: IntlShape|} & RouterProps /* TODO: type */) => {
   const mnemonic = route.params.mnemonic
   const [modal, setModal] = React.useState(false)
   const showModal = () => setModal(true)
@@ -62,28 +57,18 @@ const MnemonicShowScreen = (
   }
 
   return (
-    <SafeAreaView
-      edges={['left', 'right', 'bottom']}
-      style={styles.safeAreaView}
-    >
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <StatusBar type="dark" />
 
       <View style={styles.content}>
-        <ScrollView
-          contentContainerStyle={styles.scrollViewContentContainer}
-          bounces={false}
-        >
+        <ScrollView contentContainerStyle={styles.scrollViewContentContainer} bounces={false}>
           <View style={styles.mnemonicNote}>
             <Text>{intl.formatMessage(messages.mnemonicNote)}</Text>
           </View>
 
           <View style={styles.mnemonicWords}>
             {mnemonic.split(' ').map((word, index) => (
-              <Text
-                key={index}
-                style={styles.mnemonicText}
-                testID={`mnemonic-${index}`}
-              >
+              <Text key={index} style={styles.mnemonicText} testID={`mnemonic-${index}`}>
                 {word}
               </Text>
             ))}

@@ -1,4 +1,5 @@
 // @flow
+
 import ExtendableError from 'es6-error'
 import loadLocalResource from 'react-native-local-resource'
 import _ from 'lodash'
@@ -74,9 +75,7 @@ export const removeAppSettings = async (setting: AppSettingsKey) => {
 }
 
 export const readAppSettings = async () => {
-  const appSettingsKeys = Object.keys(APP_SETTINGS_KEYS).map((key) =>
-    getAppSettingsStoragePath(APP_SETTINGS_KEYS[key]),
-  )
+  const appSettingsKeys = Object.keys(APP_SETTINGS_KEYS).map((key) => getAppSettingsStoragePath(APP_SETTINGS_KEYS[key]))
 
   const appSettings = await storage.readMany(appSettingsKeys)
   return appSettings.reduce((acc, [key, value]) => {

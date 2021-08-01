@@ -1,4 +1,5 @@
 // @flow
+
 import type {Dispatch} from 'redux'
 
 import walletManager from '../crypto/walletManager'
@@ -48,10 +49,7 @@ const _setLastError = (error) => ({
   reducer: (state, error) => error,
 })
 
-export const fetchPoolInfo = () => async (
-  dispatch: Dispatch<any>,
-  getState: () => State,
-) => {
+export const fetchPoolInfo = () => async (dispatch: Dispatch<any>, getState: () => State) => {
   if (getState().poolInfo.isFetching) {
     return
   } else if (getState().accountState.poolOperator == null) {
@@ -63,18 +61,14 @@ export const fetchPoolInfo = () => async (
   try {
     const poolOperator = getState().accountState.poolOperator
     if (poolOperator == null) {
-      throw new Error(
-        'fetchPoolInfo::poolOperator is null, should never happen',
-      )
+      throw new Error('fetchPoolInfo::poolOperator is null, should never happen')
     }
     const poolInfoResp: PoolInfoResponse = await walletManager.fetchPoolInfo(
       ({
         poolIds: [poolOperator],
       }: PoolInfoRequest),
     )
-    const poolInfo = Object.keys(poolInfoResp).map(
-      (key) => poolInfoResp[key],
-    )[0]
+    const poolInfo = Object.keys(poolInfoResp).map((key) => poolInfoResp[key])[0]
     if (poolInfo.error != null) throw new Error(poolInfo.error)
     dispatch(_setPoolInfo(poolInfo))
     dispatch(_setLastError(null))

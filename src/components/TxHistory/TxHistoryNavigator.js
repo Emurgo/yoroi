@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react'
 import {createStackNavigator} from '@react-navigation/stack'
 import {useSelector} from 'react-redux'
@@ -9,10 +10,7 @@ import TxDetails from './TxDetails'
 import {TX_HISTORY_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
 import iconGear from '../../assets/img/gear.png'
 import {walletMetaSelector, transactionsInfoSelector} from '../../selectors'
-import {
-  defaultNavigationOptions,
-  defaultStackNavigatorOptions,
-} from '../../navigationOptions'
+import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
 import {formatDateToSeconds} from '../../utils/format'
 
 import styles from './styles/SettingsButton.style'
@@ -29,10 +27,7 @@ const TxHistoryNavigator = () => {
   const transactionInfos = useSelector(transactionsInfoSelector)
 
   return (
-    <Stack.Navigator
-      screenOptions={{...defaultStackNavigatorOptions}}
-      initialRouteName={TX_HISTORY_ROUTES.MAIN}
-    >
+    <Stack.Navigator screenOptions={{...defaultStackNavigatorOptions}} initialRouteName={TX_HISTORY_ROUTES.MAIN}>
       <Stack.Screen
         name={TX_HISTORY_ROUTES.MAIN}
         component={TxHistory}
@@ -54,9 +49,7 @@ const TxHistoryNavigator = () => {
         name={TX_HISTORY_ROUTES.TX_DETAIL}
         component={TxDetails}
         options={({route}) => ({
-          title: formatDateToSeconds(
-            transactionInfos[(route.params?.id)].submittedAt,
-          ),
+          title: formatDateToSeconds(transactionInfos[route.params?.id].submittedAt),
           ...defaultNavigationOptions,
         })}
       />

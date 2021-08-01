@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react'
 import {compose} from 'redux'
 import {withHandlers} from 'recompose'
@@ -13,17 +14,22 @@ type ExternalProps = {|
   intl: IntlShape,
 |}
 
-const AddressReaderQR = ({onSuccess}) => <QRCodeScanner onRead={onSuccess} />
+type Props = {
+  onSuccess: (event: {data: string}) => void,
+}
+const AddressReaderQR = ({onSuccess}: Props) => <QRCodeScanner onRead={onSuccess} />
 
 export default injectIntl(
   (compose(
     withHandlers({
-      onSuccess: ({route}) => (event) => {
-        const onSuccess = route.params?.onSuccess
-        if (onSuccess) {
-          onSuccess(event.data)
-        }
-      },
+      onSuccess:
+        ({route}) =>
+        (event) => {
+          const onSuccess = route.params?.onSuccess
+          if (onSuccess) {
+            onSuccess(event.data)
+          }
+        },
     }),
   )(AddressReaderQR): ComponentType<ExternalProps>),
 )

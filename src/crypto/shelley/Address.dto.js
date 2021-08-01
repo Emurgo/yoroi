@@ -30,9 +30,7 @@ export type KeyHashesCardano = {|
  * @param {any} wasmAddress A Cardano wallet Address
  * @returns {Promise<KeyHashesCardano|null>} You don't need to test for Byron it will return null
  */
-export const getKeyHashesCardano = async (
-  wasmAddress: any,
-): Promise<KeyHashesCardano | null> => {
+export const getKeyHashesCardano = async (wasmAddress: any): Promise<KeyHashesCardano | null> => {
   let addr, pay, stake, paymentKeyHash, stakingKeyHash
   for (const [i, addressType] of ADDRESS_TYPES.entries()) {
     // First = Byron
@@ -49,12 +47,8 @@ export const getKeyHashesCardano = async (
         stakingKeyHash = await stake.to_keyhash()
         if (!paymentKeyHash || !stakingKeyHash) break
         return {
-          spending: Buffer.from(await paymentKeyHash.to_bytes())?.toString(
-            'hex',
-          ),
-          staking: Buffer.from(await stakingKeyHash.to_bytes())?.toString(
-            'hex',
-          ),
+          spending: Buffer.from(await paymentKeyHash.to_bytes())?.toString('hex'),
+          staking: Buffer.from(await stakingKeyHash.to_bytes())?.toString('hex'),
         }
       }
     }
@@ -63,9 +57,7 @@ export const getKeyHashesCardano = async (
   throw new Error('getSpendingKeyHash unknown address type')
 }
 
-// prettier-ignore
-export class AddressDTOCardano
-implements YoroiAddressInfoInterface<KeyHashesCardano> {
+export class AddressDTOCardano implements YoroiAddressInfoInterface<KeyHashesCardano> {
   _address: string
   _wasmAddress: any
   _keyHashes: KeyHashesCardano | null

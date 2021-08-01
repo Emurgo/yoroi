@@ -18,7 +18,7 @@ import styles from './styles/BiometricsLinkScreen.style'
 const messages = defineMessages({
   enableFingerprintsMessage: {
     id: 'components.settings.biometricslinkscreen.enableFingerprintsMessage',
-    defaultMessage: 'Enable use of fingerprints in device settings first!',
+    defaultMessage: '!!!Enable use of fingerprints in device settings first!',
   },
   notNowButton: {
     id: 'components.settings.biometricslinkscreen.notNowButton',
@@ -27,22 +27,18 @@ const messages = defineMessages({
   linkButton: {
     id: 'components.settings.biometricslinkscreen.linkButton',
     defaultMessage: '!!!Link',
-    description: 'some desc',
   },
   heading: {
     id: 'components.settings.biometricslinkscreen.heading',
     defaultMessage: '!!!Use your fingerprint',
-    description: 'some desc',
   },
   subHeading1: {
     id: 'components.settings.biometricslinkscreen.subHeading1',
     defaultMessage: '!!!for faster, easier access',
-    description: 'some desc',
   },
   subHeading2: {
     id: 'components.settings.biometricslinkscreen.subHeading2',
     defaultMessage: '!!!to your Yoroi wallet',
-    description: 'some desc',
   },
 })
 
@@ -52,17 +48,10 @@ type Props = {
   cancelLinking: () => mixed,
 }
 
-const BiometricsLinkScreen = ({
-  intl,
-  linkBiometricsSignIn,
-  cancelLinking,
-}: Props) => (
+const BiometricsLinkScreen = ({intl, linkBiometricsSignIn, cancelLinking}: Props) => (
   <FingerprintScreenBase
     headings={[intl.formatMessage(messages.heading)]}
-    subHeadings={[
-      intl.formatMessage(messages.subHeading1),
-      intl.formatMessage(messages.subHeading2),
-    ]}
+    subHeadings={[intl.formatMessage(messages.subHeading1), intl.formatMessage(messages.subHeading2)]}
     buttons={[
       <Button
         key={'cancel'}
@@ -83,32 +72,23 @@ const BiometricsLinkScreen = ({
 
 export default injectIntl(
   compose(
-    connect(
-      (_state) => ({}),
-      {setSystemAuth},
-    ),
+    connect((_state) => ({}), {setSystemAuth}),
     withHandlers({
-      linkBiometricsSignIn: ({
-        navigation,
-        setSystemAuth,
-        intl,
-      }: {
-        intl: IntlShape,
-        navigation: any,
-        setSystemAuth: any,
-      }) => async () => {
-        if (await canBiometricEncryptionBeEnabled()) {
-          setSystemAuth(true)
-            .then(() => navigation.navigate(SETTINGS_ROUTES.MAIN))
-            .catch(() =>
-              showErrorDialog(errorMessages.disableEasyConfirmationFirst, intl),
-            )
-        } else {
-          await showErrorDialog(errorMessages.enableFingerprintsFirst, intl)
-        }
-      },
-      cancelLinking: ({navigation}) => () =>
-        navigation.navigate(SETTINGS_ROUTES.MAIN),
+      linkBiometricsSignIn:
+        ({navigation, setSystemAuth, intl}: {intl: IntlShape, navigation: any, setSystemAuth: any}) =>
+        async () => {
+          if (await canBiometricEncryptionBeEnabled()) {
+            setSystemAuth(true)
+              .then(() => navigation.navigate(SETTINGS_ROUTES.MAIN))
+              .catch(() => showErrorDialog(errorMessages.disableEasyConfirmationFirst, intl))
+          } else {
+            await showErrorDialog(errorMessages.enableFingerprintsFirst, intl)
+          }
+        },
+      cancelLinking:
+        ({navigation}) =>
+        () =>
+          navigation.navigate(SETTINGS_ROUTES.MAIN),
     }),
   )(BiometricsLinkScreen),
 )

@@ -43,21 +43,11 @@ import {Logger} from '../../utils/logging'
 import {CONFIG, isByron, isHaskellShelley} from '../../config/config'
 import {getNetworkConfigById} from '../../config/networks'
 import {NUMBERS} from '../../config/numbers'
-import {
-  verifyFromBip44Root,
-  toHexOrBase58,
-  normalizeToAddress,
-  derivePublicByAddressing,
-} from './utils'
+import {verifyFromBip44Root, toHexOrBase58, normalizeToAddress, derivePublicByAddressing} from './utils'
 import {ledgerMessages} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
 
-import type {
-  Address as JsAddress,
-  Addressing,
-  AddressedUtxo,
-  Value,
-} from '../../crypto/types'
+import type {Address as JsAddress, Addressing, AddressedUtxo, Value} from '../../crypto/types'
 import type {
   AssetGroup,
   BIP32Path,
@@ -163,30 +153,20 @@ const _isConnectionError = (e: Error | TransportStatusError): boolean => {
 // note: e.statusCode === DeviceErrorCodes.ERR_CLA_NOT_SUPPORTED is more probably due
 // to user not having ADA app opened instead of having the wrong app opened
 const _isUserError = (e: Error | TransportStatusError): boolean => {
-  if (
-    e &&
-    e.code != null &&
-    e.code === DeviceStatusCodes.ERR_CLA_NOT_SUPPORTED
-  ) {
+  if (e && e.code != null && e.code === DeviceStatusCodes.ERR_CLA_NOT_SUPPORTED) {
     return true
   }
   return false
 }
 
 const _isRejectedError = (e: Error | TransportStatusError): boolean => {
-  if (
-    e &&
-    e.code != null &&
-    e.code === DeviceStatusCodes.ERR_REJECTED_BY_USER
-  ) {
+  if (e && e.code != null && e.code === DeviceStatusCodes.ERR_REJECTED_BY_USER) {
     return true
   }
   return false
 }
 
-export const mapLedgerError = (
-  e: Error | TransportStatusError,
-): Error | LocalizableError => {
+export const mapLedgerError = (e: Error | TransportStatusError): Error | LocalizableError => {
   if (_isUserError(e)) {
     Logger.info('ledgerUtils::mapLedgerError: User-side error', e)
     return new LedgerUserError()
@@ -265,10 +245,7 @@ const getWalletType = (id: WalletImplementationId): WalletType => {
   }
 }
 
-const makeCardanoAccountBIP44Path: (
-  walletType: WalletType,
-  account: number,
-) => GetExtendedPublicKeyRequest = (
+const makeCardanoAccountBIP44Path: (walletType: WalletType, account: number) => GetExtendedPublicKeyRequest = (
   walletType: WalletType,
   account: number,
 ) => ({
@@ -278,19 +255,13 @@ const makeCardanoAccountBIP44Path: (
 const validateHWResponse = (resp: LedgerConnectionResponse): boolean => {
   const {extendedPublicKeyResp, deviceId, deviceObj, serial} = resp
   if (deviceId == null && deviceObj == null) {
-    throw new Error(
-      'LedgerUtils::validateHWResponse: a non-null descriptor is required',
-    )
+    throw new Error('LedgerUtils::validateHWResponse: a non-null descriptor is required')
   }
   if (extendedPublicKeyResp == null) {
-    throw new Error(
-      'LedgerUtils::validateHWResponse: extended public key is undefined',
-    )
+    throw new Error('LedgerUtils::validateHWResponse: extended public key is undefined')
   }
   if (serial == null) {
-    throw new Error(
-      'LedgerUtils::validateHWResponse: device serial number is undefined',
-    )
+    throw new Error('LedgerUtils::validateHWResponse: device serial number is undefined')
   }
   return true
 }
@@ -299,8 +270,7 @@ const normalizeHWResponse = (resp: LedgerConnectionResponse): HWDeviceInfo => {
   validateHWResponse(resp)
   const {extendedPublicKeyResp, deviceId, deviceObj, serial} = resp
   return {
-    bip44AccountPublic:
-      extendedPublicKeyResp.publicKeyHex + extendedPublicKeyResp.chainCodeHex,
+    bip44AccountPublic: extendedPublicKeyResp.publicKeyHex + extendedPublicKeyResp.chainCodeHex,
     hwFeatures: {
       vendor: VENDOR,
       model: MODEL,
@@ -311,17 +281,13 @@ const normalizeHWResponse = (resp: LedgerConnectionResponse): HWDeviceInfo => {
   }
 }
 
-export const checkDeviceVersion = (
-  versionResponse: GetVersionResponse,
-): void => {
+export const checkDeviceVersion = (versionResponse: GetVersionResponse): void => {
   if (
     versionResponse.version.major == null ||
     versionResponse.version.minor == null ||
     versionResponse.version.patch == null
   ) {
-    Logger.warn(
-      'ledgerUtils::checkDeviceVersion: incomplete version data from device',
-    )
+    Logger.warn('ledgerUtils::checkDeviceVersion: incomplete version data from device')
     return
   }
   const deviceVersionArray = [
@@ -329,9 +295,7 @@ export const checkDeviceVersion = (
     versionResponse.version.minor,
     versionResponse.version.patch,
   ]
-  const minVersionArray = CONFIG.HARDWARE_WALLETS.LEDGER_NANO.MIN_ADA_APP_VERSION.split(
-    '.',
-  )
+  const minVersionArray = CONFIG.HARDWARE_WALLETS.LEDGER_NANO.MIN_ADA_APP_VERSION.split('.')
   if (minVersionArray.length !== deviceVersionArray.length) {
     Logger.warn('ledgerUtils::checkDeviceVersion: version formats mismatch')
     return
@@ -361,9 +325,7 @@ const connectionHandler = async (
     }
     // check for permissions just in case
     if (Platform.OS === 'android') {
-      await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      )
+      await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
     }
     transport = await TransportBLE.open(deviceId)
   }
@@ -386,17 +348,12 @@ export const getHWDeviceInfo = async (
     const appAda = await connectionHandler(deviceId, deviceObj, useUSB)
 
     // assume single account in Yoroi
-    const accountPath = makeCardanoAccountBIP44Path(
-      getWalletType(walletImplementationId),
-      CONFIG.NUMBERS.ACCOUNT_INDEX,
-    )
+    const accountPath = makeCardanoAccountBIP44Path(getWalletType(walletImplementationId), CONFIG.NUMBERS.ACCOUNT_INDEX)
     Logger.debug('bip44 account path', accountPath)
 
     // get Cardano's first account
     // i.e hdPath = [2147483692, 2147485463, 2147483648]
-    const extendedPublicKeyResp: GetExtendedPublicKeyResponse = await appAda.getExtendedPublicKey(
-      accountPath,
-    )
+    const extendedPublicKeyResp: GetExtendedPublicKeyResponse = await appAda.getExtendedPublicKey(accountPath)
     Logger.debug('extended public key', extendedPublicKeyResp)
 
     const serial: GetSerialResponse = await appAda.getSerial()
@@ -449,13 +406,8 @@ export const verifyAddress = async (
     if (isHaskellShelley(walletImplementationId)) {
       const baseAddr = await BaseAddress.from_address(addressPtr)
       if (baseAddr) {
-        const rewardAddr = await RewardAddress.new(
-          Number.parseInt(chainNetworkId, 10),
-          await baseAddr.stake_cred(),
-        )
-        const addressPayload = Buffer.from(
-          await (await rewardAddr.to_address()).to_bytes(),
-        ).toString('hex')
+        const rewardAddr = await RewardAddress.new(Number.parseInt(chainNetworkId, 10), await baseAddr.stake_cred())
+        const addressPayload = Buffer.from(await (await rewardAddr.to_address()).to_bytes()).toString('hex')
         stakingKeyAddressing[addressPayload] = {
           path: [
             CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.CIP1852,
@@ -476,11 +428,7 @@ export const verifyAddress = async (
       addressingMap,
     })
 
-    const appAda = await connectionHandler(
-      hwDeviceInfo.hwFeatures.deviceId,
-      hwDeviceInfo.hwFeatures.deviceObj,
-      useUSB,
-    )
+    const appAda = await connectionHandler(hwDeviceInfo.hwFeatures.deviceId, hwDeviceInfo.hwFeatures.deviceObj, useUSB)
 
     await appAda.showAddress({
       network: {
@@ -534,19 +482,13 @@ export const createLedgerSignTxPayload = async (request: {|
 
   const ledgerWithdrawal = []
   if (withdrawals != null && (await withdrawals.len()) > 0) {
-    ledgerWithdrawal.push(
-      ...(await formatLedgerWithdrawals(withdrawals, request.addressingMap)),
-    )
+    ledgerWithdrawal.push(...(await formatLedgerWithdrawals(withdrawals, request.addressingMap)))
   }
 
   const ledgerCertificates = []
   if (certificates != null && (await certificates.len()) > 0) {
     ledgerCertificates.push(
-      ...(await formatLedgerCertificates(
-        request.chainNetworkId,
-        certificates,
-        request.addressingMap,
-      )),
+      ...(await formatLedgerCertificates(request.chainNetworkId, certificates, request.addressingMap)),
     )
   }
 
@@ -554,11 +496,7 @@ export const createLedgerSignTxPayload = async (request: {|
 
   let auxiliaryData
   if (request.signRequest.ledgerNanoCatalystRegistrationTxSignData) {
-    const {
-      votingPublicKey,
-      stakingKeyPath,
-      nonce,
-    } = request.signRequest.ledgerNanoCatalystRegistrationTxSignData
+    const {votingPublicKey, stakingKeyPath, nonce} = request.signRequest.ledgerNanoCatalystRegistrationTxSignData
 
     auxiliaryData = {
       type: TxAuxiliaryDataType.CATALYST_REGISTRATION,
@@ -592,9 +530,7 @@ export const createLedgerSignTxPayload = async (request: {|
   }
 }
 
-function _transformToLedgerInputs(
-  inputs: Array<AddressedUtxo>,
-): Array<TxInput> {
+function _transformToLedgerInputs(inputs: Array<AddressedUtxo>): Array<TxInput> {
   for (const input of inputs) {
     verifyFromBip44Root(input.addressing)
   }
@@ -605,9 +541,7 @@ function _transformToLedgerInputs(
   }))
 }
 
-async function toLedgerTokenBundle(
-  assets: ?MultiAsset,
-): Promise<Array<AssetGroup>> {
+async function toLedgerTokenBundle(assets: ?MultiAsset): Promise<Array<AssetGroup>> {
   const assetGroup: Array<AssetGroup> = []
   if (assets == null) return assetGroup
 
@@ -649,9 +583,7 @@ async function _transformToLedgerOutputs(request: {|
     const address = await output.address()
     const jsAddr = await toHexOrBase58(address)
 
-    const changeAddr = request.changeAddrs.find(
-      (change) => jsAddr === change.address,
-    )
+    const changeAddr = request.changeAddrs.find((change) => jsAddr === change.address)
     if (changeAddr != null) {
       // in this case the address belongs to us
       verifyFromBip44Root(changeAddr.addressing)
@@ -663,9 +595,7 @@ async function _transformToLedgerOutputs(request: {|
       })
       result.push({
         amount: await (await (await output.amount()).coin()).to_str(),
-        tokenBundle: await toLedgerTokenBundle(
-          await (await output.amount()).multiasset(),
-        ),
+        tokenBundle: await toLedgerTokenBundle(await (await output.amount()).multiasset()),
         destination: {
           type: TxOutputDestinationType.DEVICE_OWNED,
           params: addressParams,
@@ -674,9 +604,7 @@ async function _transformToLedgerOutputs(request: {|
     } else {
       result.push({
         amount: await (await (await output.amount()).coin()).to_str(),
-        tokenBundle: await toLedgerTokenBundle(
-          await (await output.amount()).multiasset(),
-        ),
+        tokenBundle: await toLedgerTokenBundle(await (await output.amount()).multiasset()),
         destination: {
           type: TxOutputDestinationType.THIRD_PARTY,
           params: {
@@ -700,19 +628,13 @@ async function formatLedgerWithdrawals(
     const rewardAddress = await withdrawalKeys.get(i) // RewardAddresses
     const withdrawalAmount = await withdrawals.get(rewardAddress) // BigNum
     if (withdrawalAmount == null) {
-      throw new Error(
-        'formatLedgerWithdrawals: null withdrawal amount, should never happen',
-      )
+      throw new Error('formatLedgerWithdrawals: null withdrawal amount, should never happen')
     }
 
-    const rewardAddressPayload = Buffer.from(
-      await (await rewardAddress.to_address()).to_bytes(),
-    ).toString('hex')
+    const rewardAddressPayload = Buffer.from(await (await rewardAddress.to_address()).to_bytes()).toString('hex')
     const addressing = addressingMap(rewardAddressPayload)
     if (addressing == null) {
-      throw new Error(
-        `formatLedgerWithdrawals Ledger can only withdraw from own address ${rewardAddressPayload}`,
-      )
+      throw new Error(`formatLedgerWithdrawals Ledger can only withdraw from own address ${rewardAddressPayload}`)
     }
     result.push({
       amount: await withdrawalAmount.to_str(),
@@ -727,18 +649,12 @@ async function formatLedgerCertificates(
   certificates: Certificates,
   addressingMap: (string) => void | $PropertyType<Addressing, 'addressing'>,
 ): Promise<Array<Certificate>> {
-  const getPath = async (
-    stakeCredential: StakeCredential,
-  ): Promise<BIP32Path> => {
+  const getPath = async (stakeCredential: StakeCredential): Promise<BIP32Path> => {
     const rewardAddr = await RewardAddress.new(networkId, stakeCredential)
-    const addressPayload = Buffer.from(
-      await (await rewardAddr.to_address()).to_bytes(),
-    ).toString('hex')
+    const addressPayload = Buffer.from(await (await rewardAddr.to_address()).to_bytes()).toString('hex')
     const addressing = addressingMap(addressPayload)
     if (addressing == null) {
-      throw new Error(
-        `getPath: Ledger only supports certificates from own address ${addressPayload}`,
-      )
+      throw new Error(`getPath: Ledger only supports certificates from own address ${addressPayload}`)
     }
     return addressing.path
   }
@@ -773,16 +689,12 @@ async function formatLedgerCertificates(
         type: CertificateType.STAKE_DELEGATION,
         params: {
           path: await getPath(await registrationCert.stake_credential()),
-          poolKeyHashHex: Buffer.from(
-            await (await delegationCert.pool_keyhash()).to_bytes(),
-          ).toString('hex'),
+          poolKeyHashHex: Buffer.from(await (await delegationCert.pool_keyhash()).to_bytes()).toString('hex'),
         },
       })
       continue
     }
-    throw new Error(
-      "formatLedgerCertificates: Ledger doesn't support this certificate type",
-    )
+    throw new Error("formatLedgerCertificates: Ledger doesn't support this certificate type")
   }
   return result
 }
@@ -807,25 +719,17 @@ export async function toLedgerAddressParameters(request: {|
   {
     const baseAddr = await BaseAddress.from_address(request.address)
     if (baseAddr) {
-      const rewardAddr = await RewardAddress.new(
-        request.networkId,
-        await baseAddr.stake_cred(),
-      )
-      const addressPayload = Buffer.from(
-        await (await rewardAddr.to_address()).to_bytes(),
-      ).toString('hex')
+      const rewardAddr = await RewardAddress.new(request.networkId, await baseAddr.stake_cred())
+      const addressPayload = Buffer.from(await (await rewardAddr.to_address()).to_bytes()).toString('hex')
       const addressing = request.addressingMap(addressPayload)
 
       if (addressing == null) {
         const stakeCred = await baseAddr.stake_cred()
-        const wasmHash =
-          (await stakeCred.to_keyhash()) ?? (await stakeCred.to_scripthash())
+        const wasmHash = (await stakeCred.to_keyhash()) ?? (await stakeCred.to_scripthash())
         if (wasmHash == null) {
           throw new Error('toLedgerAddressParameters unknown hash type')
         }
-        const hashInAddress = Buffer.from(await wasmHash.to_bytes()).toString(
-          'hex',
-        )
+        const hashInAddress = Buffer.from(await wasmHash.to_bytes()).toString('hex')
         return {
           type: AddressType.BASE,
           params: {
@@ -878,28 +782,16 @@ export const signTxWithLedger = async (
       throw new Error('ledgerUtils::signTxWithLedger: hwDeviceInfo is null')
     }
 
-    const appAda = await connectionHandler(
-      hwDeviceInfo.hwFeatures.deviceId,
-      hwDeviceInfo.hwFeatures.deviceObj,
-      useUSB,
-    )
+    const appAda = await connectionHandler(hwDeviceInfo.hwFeatures.deviceId, hwDeviceInfo.hwFeatures.deviceObj, useUSB)
 
     Logger.debug('ledgerUtils::signTxWithLedger inputs', signRequest.tx.inputs)
-    Logger.debug(
-      'ledgerUtils::signTxWithLedger outputs',
-      signRequest.tx.outputs,
-    )
+    Logger.debug('ledgerUtils::signTxWithLedger outputs', signRequest.tx.outputs)
 
-    const ledgerSignature: SignTransactionResponse = await appAda.signTransaction(
-      signRequest,
-    )
+    const ledgerSignature: SignTransactionResponse = await appAda.signTransaction(signRequest)
 
     await appAda.transport.close()
 
-    Logger.debug(
-      'ledgerUtils::ledgerSignature',
-      JSON.stringify(ledgerSignature),
-    )
+    Logger.debug('ledgerUtils::ledgerSignature', JSON.stringify(ledgerSignature))
     return ledgerSignature
   } catch (e) {
     throw mapLedgerError(e)
@@ -917,21 +809,17 @@ export const buildSignedTransaction = async (
   metadata: TransactionMetadata | void,
 ): Promise<Transaction> => {
   const isSameArray = (array1: Array<number>, array2: Array<number>) =>
-    array1.length === array2.length &&
-    array1.every((value, index) => value === array2[index])
+    array1.length === array2.length && array1.every((value, index) => value === array2[index])
   const findWitness = (path: Array<number>) => {
     for (const witness of witnesses) {
       if (isSameArray(witness.path, path)) {
         return witness.witnessSignatureHex
       }
     }
-    throw new Error(
-      `buildSignedTransaction no witness for ${JSON.stringify(path)}`,
-    )
+    throw new Error(`buildSignedTransaction no witness for ${JSON.stringify(path)}`)
   }
 
-  const keyLevel =
-    publicKey.addressing.startLevel + publicKey.addressing.path.length - 1
+  const keyLevel = publicKey.addressing.startLevel + publicKey.addressing.path.length - 1
 
   const witSet = await TransactionWitnessSet.new()
   const bootstrapWitnesses: Array<BootstrapWitness> = []
@@ -963,9 +851,7 @@ export const buildSignedTransaction = async (
         await addressKey.chaincode(),
         await byronAddr.attributes(),
       )
-      const asString = Buffer.from(await bootstrapWit.to_bytes()).toString(
-        'hex',
-      )
+      const asString = Buffer.from(await bootstrapWit.to_bytes()).toString('hex')
       if (seenBootstrapWit.has(asString)) {
         continue
       }
@@ -993,10 +879,7 @@ export const buildSignedTransaction = async (
       startLevel: 1,
     }
     verifyFromBip44Root(addressing)
-    if (
-      witness.path[NUMBERS.BIP44_DERIVATION_LEVELS.CHAIN - 1] ===
-      NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT
-    ) {
+    if (witness.path[NUMBERS.BIP44_DERIVATION_LEVELS.CHAIN - 1] === NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT) {
       const stakingKey = await derivePublicByAddressing({
         addressing,
         startingFrom: {
@@ -1006,9 +889,7 @@ export const buildSignedTransaction = async (
       })
       const vkeyWit = await Vkeywitness.new(
         await Vkey.new(await stakingKey.to_raw_key()),
-        await Ed25519Signature.from_bytes(
-          Buffer.from(witness.witnessSignatureHex, 'hex'),
-        ),
+        await Ed25519Signature.from_bytes(Buffer.from(witness.witnessSignatureHex, 'hex')),
       )
       const asString = Buffer.from(await vkeyWit.to_bytes()).toString('hex')
       if (seenVKeyWit.has(asString)) {

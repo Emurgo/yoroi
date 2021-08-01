@@ -10,7 +10,6 @@ export const messages = defineMessages({
   label: {
     id: 'components.send.amountfield.label',
     defaultMessage: '!!!Amount',
-    description: 'some desc',
   },
 })
 
@@ -27,8 +26,7 @@ const AmountField = ({amount, intl, error, editable, setAmount}: Props) => {
     const shorterStringLength = Math.min(text.length, amount.length)
     const wasPasted =
       Math.abs(amount.length - text.length) > 1 ||
-      amount.substring(0, shorterStringLength) !==
-        text.substring(0, shorterStringLength)
+      amount.substring(0, shorterStringLength) !== text.substring(0, shorterStringLength)
 
     const formatter = wasPasted ? pastedFormatter : editedFormatter
 

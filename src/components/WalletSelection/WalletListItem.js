@@ -1,12 +1,7 @@
 // @flow
+
 import React, {useState} from 'react'
-import {
-  TouchableOpacity,
-  Text,
-  View,
-  Image,
-  LayoutAnimation,
-} from 'react-native'
+import {TouchableOpacity, Text, View, Image, LayoutAnimation} from 'react-native'
 
 import {isByron, isHaskellShelley, isJormun} from '../../config/config'
 import WalletAccountIcon from '../Common/WalletAccountIcon'
@@ -23,18 +18,16 @@ import type {WalletMeta} from '../../state'
 import type {Node} from 'react'
 import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
-type props = {
+type Props = {
   wallet: WalletMeta,
-  onPress: (WalletMeta) => any,
+  onPress: (walletMeta: WalletMeta) => any,
 }
 
 type WrappedIconProps = {
   icon: Node,
   style?: ViewStyleProp,
 }
-const WrappedIcon = ({icon, style}: WrappedIconProps) => (
-  <View style={[styles.iconWrapper, style]}>{icon}</View>
-)
+const WrappedIcon = ({icon, style}: WrappedIconProps) => <View style={[styles.iconWrapper, style]}>{icon}</View>
 
 type WalletItemMeta = {
   type: string,
@@ -62,7 +55,7 @@ const getWalletItemMeta = (walletMeta: WalletMeta): WalletItemMeta => {
   throw new Error('getWalletItemMeta:: invalid wallet implementation id')
 }
 
-const WalletListItem: (props) => Node = ({wallet, onPress}) => {
+const WalletListItem = ({wallet, onPress}: Props) => {
   const {type, icon} = getWalletItemMeta(wallet)
   const [expanded, setExpanded] = useState(false)
 
@@ -95,27 +88,15 @@ const WalletListItem: (props) => Node = ({wallet, onPress}) => {
   return (
     <View style={styles.itemContainer}>
       <View style={styles.item}>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          onPress={() => onPress(wallet)}
-          style={styles.leftSide}
-        >
-          <WalletAccountIcon
-            iconSeed={wallet.checksum.ImagePart}
-            style={styles.walletAvatar}
-          />
+        <TouchableOpacity activeOpacity={0.5} onPress={() => onPress(wallet)} style={styles.leftSide}>
+          <WalletAccountIcon iconSeed={wallet.checksum.ImagePart} style={styles.walletAvatar} />
           <View style={styles.walletDetails}>
             <Text style={styles.walletName}>{wallet.name}</Text>
-            <Text style={styles.walletMeta}>
-              {wallet.checksum ? `${wallet.checksum.TextPart} | ${type}` : type}
-            </Text>
+            <Text style={styles.walletMeta}>{wallet.checksum ? `${wallet.checksum.TextPart} | ${type}` : type}</Text>
           </View>
         </TouchableOpacity>
         {assets.length > 0 && (
-          <TouchableOpacity
-            onPress={() => toggleExpand()}
-            style={styles.rightSide}
-          >
+          <TouchableOpacity onPress={() => toggleExpand()} style={styles.rightSide}>
             <Image source={expanded ? arrowUp : arrowDown} />
           </TouchableOpacity>
         )}

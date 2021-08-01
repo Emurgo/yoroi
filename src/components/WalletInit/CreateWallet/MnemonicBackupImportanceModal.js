@@ -1,8 +1,6 @@
 // @flow
 
 import React from 'react'
-import {compose} from 'redux'
-import {withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {Text, Button, Checkbox, Modal} from '../../UiKit'
@@ -10,29 +8,23 @@ import styles from './styles/MnemonicBackupImportanceModal.style'
 
 const messages = defineMessages({
   title: {
-    id:
-      'components.walletinit.createwallet.mnemonicbackupimportancemodal.title',
+    id: 'components.walletinit.createwallet.mnemonicbackupimportancemodal.title',
     defaultMessage: '!!!Recovery phrase',
   },
   keysStorageCheckbox: {
-    id:
-      'components.walletinit.createwallet.mnemonicbackupimportancemodal.keysStorageCheckbox',
+    id: 'components.walletinit.createwallet.mnemonicbackupimportancemodal.keysStorageCheckbox',
     defaultMessage:
-      '!!!I understand that my secret keys are held securely ' +
-      'on this device only, not on the company`s servers',
+      '!!!I understand that my secret keys are held securely on this device only, not on the company`s servers',
   },
   newDeviceRecoveryCheckbox: {
-    /* eslint-disable max-len */
-    id:
-      'components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox',
+    id: 'components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox',
     defaultMessage:
       '!!!I understand that if this application is moved to another device ' +
       'or deleted, my money can be only recovered with the backup phrase that ' +
       'I have written down and saved in a secure place.',
   },
   confirmationButton: {
-    id:
-      'components.walletinit.createwallet.mnemonicbackupimportancemodal.confirmationButton',
+    id: 'components.walletinit.createwallet.mnemonicbackupimportancemodal.confirmationButton',
     defaultMessage: '!!!I understand',
   },
 })
@@ -40,64 +32,39 @@ const messages = defineMessages({
 type Props = {
   onConfirm: () => any,
   intl: IntlShape,
-  acceptedKeyStorage: boolean,
-  acceptedNewDeviceRecovery: boolean,
-  setAcceptedKeyStorage: (accepted: boolean) => any,
-  setAcceptedNewDeviceRecovery: (accepted: boolean) => any,
   visible: boolean,
   onRequestClose: () => any,
 }
 
-const MnemonicBackupImportanceModal = ({
-  onConfirm,
-  intl,
-  acceptedKeyStorage,
-  setAcceptedKeyStorage,
-  acceptedNewDeviceRecovery,
-  setAcceptedNewDeviceRecovery,
-  visible,
-  onRequestClose,
-}: Props) => (
-  <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
-    <Text style={styles.title}>{intl.formatMessage(messages.title)}</Text>
-    <Checkbox
-      style={styles.checkbox}
-      onChange={setAcceptedKeyStorage}
-      checked={acceptedKeyStorage}
-      text={intl.formatMessage(messages.keysStorageCheckbox)}
-      testID="mnemonicBackupImportanceModal::checkBox1"
-    />
-    <Checkbox
-      style={styles.checkbox}
-      onChange={setAcceptedNewDeviceRecovery}
-      checked={acceptedNewDeviceRecovery}
-      text={intl.formatMessage(messages.newDeviceRecoveryCheckbox)}
-      testID="mnemonicBackupImportanceModal::checkBox2"
-    />
-    <Button
-      disabled={!acceptedKeyStorage || !acceptedNewDeviceRecovery}
-      onPress={onConfirm}
-      title={intl.formatMessage(messages.confirmationButton)}
-      testID="mnemonicBackupImportanceModal::confirm"
-    />
-  </Modal>
-)
+const MnemonicBackupImportanceModal = ({onConfirm, intl, visible, onRequestClose}: Props) => {
+  const [acceptedKeyStorage, setAcceptedKeyStorage] = React.useState(false)
+  const [acceptedNewDeviceRecovery, setAcceptedNewDeviceRecovery] = React.useState(false)
 
-export default injectIntl(
-  compose(
-    withStateHandlers(
-      {
-        acceptedKeyStorage: false,
-        acceptedNewDeviceRecovery: false,
-      },
-      {
-        setAcceptedKeyStorage: () => (value) => ({
-          acceptedKeyStorage: value,
-        }),
-        setAcceptedNewDeviceRecovery: () => (value) => ({
-          acceptedNewDeviceRecovery: value,
-        }),
-      },
-    ),
-  )(MnemonicBackupImportanceModal),
-)
+  return (
+    <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
+      <Text style={styles.title}>{intl.formatMessage(messages.title)}</Text>
+      <Checkbox
+        style={styles.checkbox}
+        onChange={setAcceptedKeyStorage}
+        checked={acceptedKeyStorage}
+        text={intl.formatMessage(messages.keysStorageCheckbox)}
+        testID="mnemonicBackupImportanceModal::checkBox1"
+      />
+      <Checkbox
+        style={styles.checkbox}
+        onChange={setAcceptedNewDeviceRecovery}
+        checked={acceptedNewDeviceRecovery}
+        text={intl.formatMessage(messages.newDeviceRecoveryCheckbox)}
+        testID="mnemonicBackupImportanceModal::checkBox2"
+      />
+      <Button
+        disabled={!acceptedKeyStorage || !acceptedNewDeviceRecovery}
+        onPress={onConfirm}
+        title={intl.formatMessage(messages.confirmationButton)}
+        testID="mnemonicBackupImportanceModal::confirm"
+      />
+    </Modal>
+  )
+}
+
+export default injectIntl(MnemonicBackupImportanceModal)

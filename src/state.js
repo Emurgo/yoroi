@@ -1,4 +1,5 @@
 // @flow
+
 import {BigNumber} from 'bignumber.js'
 
 import {NETWORK_REGISTRY} from './config/types'
@@ -80,7 +81,6 @@ export type State = {
   isAppInitialized: boolean,
   isAuthenticated: boolean,
   isKeyboardOpen: boolean,
-  tos: string,
   appSettings: {
     acceptedTos: boolean,
     installationId: ?string,
@@ -158,7 +158,6 @@ export const getInitialState = (): State => ({
   isAppInitialized: false,
   isAuthenticated: false,
   isKeyboardOpen: false,
-  tos: '',
   appSettings: {
     acceptedTos: false,
     languageCode: 'en-US',
@@ -195,8 +194,7 @@ export const mockState = (): State => {
       name: 'My wallet',
       isInitialized: true,
       networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-      walletImplementationId:
-        CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+      walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
       isHW: false,
       hwDeviceInfo: null,
       isReadOnly: false,

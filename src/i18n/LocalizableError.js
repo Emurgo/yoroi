@@ -1,4 +1,5 @@
 // @flow
+
 import ExtendableError from 'es6-error'
 import {defineMessages} from 'react-intl'
 

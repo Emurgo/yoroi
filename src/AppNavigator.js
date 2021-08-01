@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
@@ -25,15 +26,9 @@ import MaintenanceScreen from './components/MaintenanceScreen'
 import {ROOT_ROUTES} from './RoutesList'
 import BiometricAuthScreen from './components/Send/BiometricAuthScreen'
 import CustomPinLogin from './components/Login/CustomPinLogin'
-import {
-  defaultNavigationOptions,
-  defaultStackNavigatorOptions,
-} from './navigationOptions'
+import {defaultNavigationOptions, defaultStackNavigatorOptions} from './navigationOptions'
 import {signin, showErrorDialog} from './actions'
-import {
-  recreateAppSignInKeys,
-  canBiometricEncryptionBeEnabled,
-} from './helpers/deviceSettings'
+import {recreateAppSignInKeys, canBiometricEncryptionBeEnabled} from './helpers/deviceSettings'
 import {errorMessages} from './i18n/global-messages'
 import env from './env'
 import KeyStore from './crypto/KeyStore'
@@ -101,10 +96,7 @@ const NavigatorSwitch = injectIntl(
       if (isMaintenance) {
         return (
           <Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Screen
-              name={ROOT_ROUTES.MAINTENANCE}
-              component={MaintenanceScreen}
-            />
+            <Stack.Screen name={ROOT_ROUTES.MAINTENANCE} component={MaintenanceScreen} />
           </Stack.Navigator>
         )
       }
@@ -113,27 +105,11 @@ const NavigatorSwitch = injectIntl(
       }
       if (CONFIG.DEBUG.START_WITH_INDEX_SCREEN) {
         return (
-          <Stack.Navigator
-            initialRouteName={ROOT_ROUTES.INIT}
-            screenOptions={{headerShown: false}}
-          >
-            <Stack.Screen
-              name={ROOT_ROUTES.INDEX}
-              component={IndexScreen}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name={ROOT_ROUTES.STORYBOOK}
-              component={StorybookScreen}
-            />
-            <Stack.Screen
-              name={ROOT_ROUTES.NEW_WALLET}
-              component={WalletInitNavigator}
-            />
-            <Stack.Screen
-              name={ROOT_ROUTES.WALLET}
-              component={WalletNavigator}
-            />
+          <Stack.Navigator initialRouteName={ROOT_ROUTES.INIT} screenOptions={{headerShown: false}}>
+            <Stack.Screen name={ROOT_ROUTES.INDEX} component={IndexScreen} options={{headerShown: false}} />
+            <Stack.Screen name={ROOT_ROUTES.STORYBOOK} component={StorybookScreen} />
+            <Stack.Screen name={ROOT_ROUTES.NEW_WALLET} component={WalletInitNavigator} />
+            <Stack.Screen name={ROOT_ROUTES.WALLET} component={WalletNavigator} />
           </Stack.Navigator>
         )
       }
@@ -166,16 +142,10 @@ const NavigatorSwitch = injectIntl(
                   },
                   onFail: async (reason, intl: IntlShape) => {
                     if (reason === KeyStore.REJECTIONS.INVALID_KEY) {
-                      if (
-                        (await canBiometricEncryptionBeEnabled()) &&
-                        installationId
-                      ) {
+                      if ((await canBiometricEncryptionBeEnabled()) && installationId) {
                         await recreateAppSignInKeys(installationId)
                       } else {
-                        await showErrorDialog(
-                          errorMessages.biometricsIsTurnedOff,
-                          intl,
-                        )
+                        await showErrorDialog(errorMessages.biometricsIsTurnedOff, intl)
                       }
                     }
                   },
@@ -191,24 +161,15 @@ const NavigatorSwitch = injectIntl(
       if (!hasAnyWallet) {
         return (
           <Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Screen
-              name={ROOT_ROUTES.NEW_WALLET}
-              component={WalletInitNavigator}
-            />
-            <Stack.Screen
-              name={ROOT_ROUTES.WALLET}
-              component={WalletNavigator}
-            />
+            <Stack.Screen name={ROOT_ROUTES.NEW_WALLET} component={WalletInitNavigator} />
+            <Stack.Screen name={ROOT_ROUTES.WALLET} component={WalletNavigator} />
           </Stack.Navigator>
         )
       }
       return (
         <Stack.Navigator screenOptions={{headerShown: false}}>
           <Stack.Screen name={ROOT_ROUTES.WALLET} component={WalletNavigator} />
-          <Stack.Screen
-            name={ROOT_ROUTES.NEW_WALLET}
-            component={WalletInitNavigator}
-          />
+          <Stack.Screen name={ROOT_ROUTES.NEW_WALLET} component={WalletInitNavigator} />
         </Stack.Navigator>
       )
     },
@@ -222,11 +183,7 @@ const StoryBook = () => (
 )
 
 const AppNavigator = () => {
-  return (
-    <NavigationContainer>
-      {IS_STORYBOOK ? <StoryBook /> : <NavigatorSwitch />}
-    </NavigationContainer>
-  )
+  return <NavigationContainer>{IS_STORYBOOK ? <StoryBook /> : <NavigatorSwitch />}</NavigationContainer>
 }
 
 export default AppNavigator

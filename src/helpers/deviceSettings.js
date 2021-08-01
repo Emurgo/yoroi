@@ -12,8 +12,7 @@ export const isBiometricEncryptionHardwareSupported = async () => {
   } else if (Platform.OS === 'ios') {
     const supportedBiometrics = await Keychain.getSupportedBiometryType()
     return (
-      supportedBiometrics === Keychain.BIOMETRY_TYPE.TOUCH_ID ||
-      supportedBiometrics === Keychain.BIOMETRY_TYPE.FACE_ID
+      supportedBiometrics === Keychain.BIOMETRY_TYPE.TOUCH_ID || supportedBiometrics === Keychain.BIOMETRY_TYPE.FACE_ID
     )
   }
 
@@ -24,9 +23,7 @@ export const canBiometricEncryptionBeEnabled = async () => {
   if (Platform.OS === 'android') {
     return await KeyStoreBridge.canFingerprintEncryptionBeEnabled()
   } else if (Platform.OS === 'ios') {
-    // prettier-ignore
-    const hasBiometricHardware =
-      await isBiometricEncryptionHardwareSupported()
+    const hasBiometricHardware = await isBiometricEncryptionHardwareSupported()
     const supportedBiometrics = await Keychain.canImplyAuthentication({
       authenticationType: Keychain.AUTHENTICATION_TYPE.BIOMETRICS,
     })
@@ -41,8 +38,7 @@ export const isSystemAuthSupported = async () => {
     return await KeyStoreBridge.isSystemAuthSupported()
   } else if (Platform.OS === 'ios') {
     const supportedSystemAuth = await Keychain.canImplyAuthentication({
-      authenticationType:
-        Keychain.AUTHENTICATION_TYPE.DEVICE_PASSCODE_OR_BIOMETRICS,
+      authenticationType: Keychain.AUTHENTICATION_TYPE.DEVICE_PASSCODE_OR_BIOMETRICS,
     })
     return supportedSystemAuth
   }

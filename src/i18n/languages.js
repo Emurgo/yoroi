@@ -1,4 +1,5 @@
 // @flow
+
 export const LANGUAGES = {
   CHINESE_SIMPLIFIED: 'zh-Hans',
   // TODO: Add when chinese traditional is available

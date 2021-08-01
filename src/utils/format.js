@@ -1,4 +1,5 @@
 // @flow
+
 import {BigNumber} from 'bignumber.js'
 import {defineMessages, type IntlShape} from 'react-intl'
 import moment from 'moment'
@@ -25,10 +26,7 @@ const messages = defineMessages({
 
 const getTokenFingerprint = (token: Token | DefaultAsset) => {
   const {policyId, assetName} = token.metadata
-  const assetFingerprint = new AssetFingerprint(
-    Buffer.from(policyId, 'hex'),
-    Buffer.from(assetName, 'hex'),
-  )
+  const assetFingerprint = new AssetFingerprint(Buffer.from(policyId, 'hex'), Buffer.from(assetName, 'hex'))
   return assetFingerprint.fingerprint()
 }
 
@@ -40,17 +38,14 @@ export const ASSET_DENOMINATION = {
 }
 export type AssetDenomination = $Values<typeof ASSET_DENOMINATION>
 
-export const getAssetDenomination = (
-  token: Token | DefaultAsset,
-  denomination: AssetDenomination,
-): ?string => {
+export const getAssetDenomination = (token: Token | DefaultAsset, denomination: AssetDenomination): ?string => {
   switch (denomination) {
     case ASSET_DENOMINATION.TICKER:
       return token?.metadata?.ticker
     case ASSET_DENOMINATION.SYMBOL:
       // if we don't have a symbol for this asset, default to ticker, though
       // ticker can still be null
-      // prettier-ignore
+
       return token?.metadata?.ticker
         ? utfSymbols.CURRENCIES[token.metadata.ticker]
           ? utfSymbols.CURRENCIES[token.metadata.ticker]
@@ -76,14 +71,9 @@ export const getAssetDenomination = (
   }
 }
 
-export const getAssetDenominationOrId = (
-  token: Token | DefaultAsset,
-  denomination?: AssetDenomination,
-): string => {
+export const getAssetDenominationOrId = (token: Token | DefaultAsset, denomination?: AssetDenomination): string => {
   if (denomination !== undefined) {
-    return (
-      getAssetDenomination(token, denomination) ?? getTokenFingerprint(token)
-    )
+    return getAssetDenomination(token, denomination) ?? getTokenFingerprint(token)
   }
   return (
     getAssetDenomination(token, ASSET_DENOMINATION.TICKER) ||
@@ -96,25 +86,14 @@ export const getAssetDenominationOrUnknown = (
   token: Token | DefaultAsset,
   denomination: AssetDenomination,
   intl: IntlShape,
-): string =>
-  getAssetDenomination(token, denomination) ??
-  intl.formatMessage(messages.unknownAssetName)
+): string => getAssetDenomination(token, denomination) ?? intl.formatMessage(messages.unknownAssetName)
 
-export const normalizeTokenAmount = (
-  amount: BigNumber,
-  token: Token | DefaultAsset,
-): BigNumber => {
+export const normalizeTokenAmount = (amount: BigNumber, token: Token | DefaultAsset): BigNumber => {
   const normalizationFactor = Math.pow(10, token.metadata.numberOfDecimals)
-  return amount
-    .dividedBy(normalizationFactor)
-    .decimalPlaces(token.metadata.numberOfDecimals)
+  return amount.dividedBy(normalizationFactor).decimalPlaces(token.metadata.numberOfDecimals)
 }
 
-export const formatTokenAmount = (
-  amount: BigNumber,
-  token: Token | DefaultAsset,
-  maxLen: number | void,
-): string => {
+export const formatTokenAmount = (amount: BigNumber, token: Token | DefaultAsset, maxLen: number | void): string => {
   const normalized = normalizeTokenAmount(amount, token)
   const amountStr = normalized.toFormat(token.metadata.numberOfDecimals)
   if (maxLen !== undefined && amountStr.length > maxLen) {
@@ -123,31 +102,19 @@ export const formatTokenAmount = (
   return amountStr
 }
 
-export const formatTokenWithSymbol = (
-  amount: BigNumber,
-  token: Token | DefaultAsset,
-): string => {
-  const denomination = getAssetDenominationOrId(
-    token,
-    ASSET_DENOMINATION.SYMBOL,
-  )
+export const formatTokenWithSymbol = (amount: BigNumber, token: Token | DefaultAsset): string => {
+  const denomination = getAssetDenominationOrId(token, ASSET_DENOMINATION.SYMBOL)
   return `${formatTokenAmount(amount, token)}${utfSymbols.NBSP}${denomination}`
 }
 
 // We assume that tickers are non-localized. If ticker doesn't exist, default
 // to identifier
-export const formatTokenWithText = (
-  amount: BigNumber,
-  token: Token | DefaultAsset,
-) => {
+export const formatTokenWithText = (amount: BigNumber, token: Token | DefaultAsset) => {
   const tickerOrId = getAssetDenominationOrId(token)
   return `${formatTokenAmount(amount, token)}${utfSymbols.NBSP}${tickerOrId}`
 }
 
-export const formatTokenInteger = (
-  amount: BigNumber,
-  token: Token | DefaultAsset,
-) => {
+export const formatTokenInteger = (amount: BigNumber, token: Token | DefaultAsset) => {
   const normalizationFactor = Math.pow(10, token.metadata.numberOfDecimals)
   const num = amount.dividedToIntegerBy(normalizationFactor)
   if (amount.lt(0) && amount.gt(-normalizationFactor)) {
@@ -158,24 +125,16 @@ export const formatTokenInteger = (
   }
 }
 
-export const formatTokenFractional = (
-  amount: BigNumber,
-  token: Token | DefaultAsset,
-) => {
+export const formatTokenFractional = (amount: BigNumber, token: Token | DefaultAsset) => {
   const normalizationFactor = Math.pow(10, token.metadata.numberOfDecimals)
-  const fractional = amount
-    .abs()
-    .modulo(normalizationFactor)
-    .dividedBy(normalizationFactor)
+  const fractional = amount.abs().modulo(normalizationFactor).dividedBy(normalizationFactor)
   // remove leading '0'
   return fractional.toFormat(token.metadata.numberOfDecimals).substring(1)
 }
 
 export const truncateWithEllipsis = (s: string, n: number) => {
   if (s.length > n) {
-    return `${s.substr(0, Math.floor(n / 2))}...${s.substr(
-      s.length - Math.floor(n / 2),
-    )}`
+    return `${s.substr(0, Math.floor(n / 2))}...${s.substr(s.length - Math.floor(n / 2))}`
   }
   return s
 }
@@ -208,10 +167,7 @@ export const formatAdaInteger = (amount: BigNumber) => {
 }
 
 export const formatAdaFractional = (amount: BigNumber) => {
-  const fractional = amount
-    .abs()
-    .modulo(normalizationFactor)
-    .dividedBy(normalizationFactor)
+  const fractional = amount.abs().modulo(normalizationFactor).dividedBy(normalizationFactor)
   // remove leading '0'
   return fractional.toFormat(6).substring(1)
 }

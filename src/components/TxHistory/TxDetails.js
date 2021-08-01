@@ -2,13 +2,7 @@
 
 import React, {useState} from 'react'
 import {useSelector} from 'react-redux'
-import {
-  View,
-  Linking,
-  TouchableOpacity,
-  LayoutAnimation,
-  Image,
-} from 'react-native'
+import {View, Linking, TouchableOpacity, LayoutAnimation, Image} from 'react-native'
 import _ from 'lodash'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {BigNumber} from 'bignumber.js'
@@ -50,12 +44,10 @@ const txTypeMessages = defineMessages({
   SELF: {
     id: 'components.txhistory.txdetails.txTypeSelf',
     defaultMessage: '!!!Intrawallet transaction',
-    description: 'some desc',
   },
   MULTI: {
     id: 'components.txhistory.txdetails.txTypeMulti',
     defaultMessage: '!!!Multi-party transaction',
-    description: 'some desc',
   },
 })
 
@@ -63,72 +55,62 @@ const messages = defineMessages({
   addressPrefixReceive: {
     id: 'components.txhistory.txdetails.addressPrefixReceive',
     defaultMessage: '!!!/{idx}',
-    description: 'some desc',
   },
   addressPrefixChange: {
     id: 'components.txhistory.txdetails.addressPrefixChange',
     defaultMessage: '!!!/change',
-    description: 'some desc',
   },
   addressPrefixNotMine: {
     id: 'components.txhistory.txdetails.addressPrefixNotMine',
     defaultMessage: '!!!not mine',
-    description: 'some desc',
   },
   fee: {
     id: 'components.txhistory.txdetails.fee',
     defaultMessage: '!!!Fee: ',
-    description: 'some desc',
   },
   fromAddresses: {
     id: 'components.txhistory.txdetails.fromAddresses',
     defaultMessage: '!!!From Addresses',
-    description: 'some desc',
   },
   toAddresses: {
     id: 'components.txhistory.txdetails.toAddresses',
     defaultMessage: '!!!To Addresses',
-    description: 'some desc',
   },
   transactionId: {
     id: 'components.txhistory.txdetails.transactionId',
     defaultMessage: '!!!Transaction ID',
-    description: 'some desc',
   },
   txAssuranceLevel: {
     id: 'components.txhistory.txdetails.txAssuranceLevel',
     defaultMessage: '!!!Transaction assurance level',
-    description: 'some desc',
   },
   confirmations: {
     id: 'components.txhistory.txdetails.confirmations',
-    defaultMessage:
-      '!!!{cnt} {cnt, plural, one {CONFIRMATION} other {CONFIRMATIONS}}',
-    description: 'some desc',
+    defaultMessage: '!!!{cnt} {cnt, plural, one {CONFIRMATION} other {CONFIRMATIONS}}',
   },
   omittedCount: {
     id: 'components.txhistory.txdetails.omittedCount',
-    defaultMessage:
-      '!!!+ {cnt} omitted {cnt, plural, one {address} other {addresses}}',
+    defaultMessage: '!!!+ {cnt} omitted {cnt, plural, one {address} other {addresses}}',
   },
 })
 
-const Label = ({children}) => <Text style={styles.label}>{children}</Text>
+const Label = ({children}: {children: string}) => <Text style={styles.label}>{children}</Text>
 
 const AdaAmount = ({amount, token}: {amount: BigNumber, token: Token}) => {
-  const amountStyle = amount.gte(0)
-    ? styles.positiveAmount
-    : styles.negativeAmount
+  const amountStyle = amount.gte(0) ? styles.positiveAmount : styles.negativeAmount
 
   return <Text style={amountStyle}>{formatTokenWithSymbol(amount, token)}</Text>
 }
 
-const AddressEntry = ({address, path, isHighlighted, showModalForAddress}) => {
+type AddressEntryProps = {
+  address: any,
+  path: any,
+  isHighlighted: any,
+  showModalForAddress: any,
+}
+const AddressEntry = ({address, path, isHighlighted, showModalForAddress}: AddressEntryProps) => {
   return (
-    <TouchableOpacity
-      activeOpacity={0.5}
-      onPress={() => showModalForAddress(address)}
-    >
+    <TouchableOpacity activeOpacity={0.5} onPress={() => showModalForAddress(address)}>
       <Text secondary bold={isHighlighted}>
         ({path}) {address}
       </Text>
@@ -136,12 +118,7 @@ const AddressEntry = ({address, path, isHighlighted, showModalForAddress}) => {
   )
 }
 
-const getShownAddresses = (
-  intl,
-  transaction,
-  internalAddressIndex,
-  externalAddressIndex,
-) => {
+const getShownAddresses = (intl, transaction, internalAddressIndex, externalAddressIndex) => {
   const isMyReceive = (address) => externalAddressIndex[address] != null
   const isMyChange = (address) => internalAddressIndex[address] != null
   const isMyAddress = (address) => isMyReceive(address) || isMyChange(address)
@@ -194,9 +171,7 @@ const getShownAddresses = (
     path: getPath(address),
     isHighlighted: isHighlightedFrom(address),
   }))
-  const fromFiltered = fromAddresses.filter(
-    ({address}) => (filterFrom ? filterFrom(address) : true),
-  )
+  const fromFiltered = fromAddresses.filter(({address}) => (filterFrom ? filterFrom(address) : true))
   const cntOmittedFrom = fromAddresses.length - fromFiltered.length
 
   const toAddresses = _.uniq(transaction.outputs).map(({address, assets}) => ({
@@ -205,9 +180,7 @@ const getShownAddresses = (
     path: getPath(address),
     isHighlighted: isHighlightedTo(address),
   }))
-  const toFiltered = toAddresses.filter(
-    ({address}) => (filterTo ? filterTo(address) : true),
-  )
+  const toFiltered = toAddresses.filter(({address}) => (filterTo ? filterTo(address) : true))
   const cntOmittedTo = toAddresses.length - toFiltered.length
 
   return {
@@ -251,20 +224,13 @@ const TxDetails = ({intl, route}: Props & RouterProps) => {
     setAddressDetail(null)
   }
 
-  const {
-    fromFiltered,
-    cntOmittedFrom,
-    toFiltered,
-    cntOmittedTo,
-  } = getShownAddresses(
+  const {fromFiltered, cntOmittedFrom, toFiltered, cntOmittedTo} = getShownAddresses(
     intl,
     transaction,
     internalAddressIndex,
     externalAddressIndex,
   )
-  const txFee: ?BigNumber = transaction.fee
-    ? MultiToken.fromArray(transaction.fee).getDefault()
-    : null
+  const txFee: ?BigNumber = transaction.fee ? MultiToken.fromArray(transaction.fee).getDefault() : null
   const amountAsMT = MultiToken.fromArray(transaction.amount)
   const amount: BigNumber = amountAsMT.getDefault()
   const amountDefaultAsset: ?Token = tokenMetadata[amountAsMT.getDefaultId()]
@@ -290,14 +256,11 @@ const TxDetails = ({intl, route}: Props & RouterProps) => {
 
       <OfflineBanner />
       <Screen scroll>
-        <Banner
-          label={intl.formatMessage(txTypeMessages[transaction.direction])}
-        >
+        <Banner label={intl.formatMessage(txTypeMessages[transaction.direction])}>
           <AdaAmount amount={amount} token={defaultAsset} />
           {txFee && (
             <Text small>
-              {intl.formatMessage(messages.fee)}{' '}
-              {formatTokenWithSymbol(txFee, defaultAsset)}
+              {intl.formatMessage(messages.fee)} {formatTokenWithSymbol(txFee, defaultAsset)}
             </Text>
           )}
         </Banner>
@@ -305,76 +268,38 @@ const TxDetails = ({intl, route}: Props & RouterProps) => {
           <Label>{intl.formatMessage(messages.fromAddresses)}</Label>
           {fromFiltered.map((item, i) => (
             <>
-              <AddressEntry
-                key={i}
-                {...item}
-                showModalForAddress={showModalForAddress}
-              />
+              <AddressEntry key={i} {...item} showModalForAddress={showModalForAddress} />
               {item.assets.length > 0 && (
-                <TouchableOpacity
-                  style={styles.assetsExpandable}
-                  activeOpacity={0.5}
-                  onPress={() => toggleExpandIn()}
-                >
+                <TouchableOpacity style={styles.assetsExpandable} activeOpacity={0.5} onPress={() => toggleExpandIn()}>
                   <Text style={styles.assetsTitle}>
-                    {` -${item.assets.length} ` +
-                      `${intl.formatMessage(globalMessages.assetsLabel)} `}
+                    {` -${item.assets.length} ${intl.formatMessage(globalMessages.assetsLabel)} `}
                   </Text>
                   <Image source={expandedIn ? arrowUp : arrowDown} />
                 </TouchableOpacity>
               )}
-              {expandedIn && (
-                <AssetList
-                  styles={assetListStyle}
-                  assets={item.assets}
-                  assetsMetadata={tokenMetadata}
-                />
-              )}
+              {expandedIn && <AssetList styles={assetListStyle} assets={item.assets} assetsMetadata={tokenMetadata} />}
             </>
           ))}
-          {cntOmittedFrom > 0 && (
-            <Text>
-              {intl.formatMessage(messages.omittedCount, {cnt: cntOmittedFrom})}
-            </Text>
-          )}
+          {cntOmittedFrom > 0 && <Text>{intl.formatMessage(messages.omittedCount, {cnt: cntOmittedFrom})}</Text>}
 
           <View style={styles.borderTop}>
             <Label>{intl.formatMessage(messages.toAddresses)}</Label>
           </View>
           {toFiltered.map((item, i) => (
             <>
-              <AddressEntry
-                key={i}
-                {...item}
-                showModalForAddress={showModalForAddress}
-              />
+              <AddressEntry key={i} {...item} showModalForAddress={showModalForAddress} />
               {item.assets.length > 0 && (
-                <TouchableOpacity
-                  style={styles.assetsExpandable}
-                  activeOpacity={0.5}
-                  onPress={() => toggleExpandOut()}
-                >
+                <TouchableOpacity style={styles.assetsExpandable} activeOpacity={0.5} onPress={() => toggleExpandOut()}>
                   <Text style={styles.assetsTitle}>
-                    {` +${item.assets.length} ` +
-                      `${intl.formatMessage(globalMessages.assetsLabel)} `}
+                    {` +${item.assets.length} ${intl.formatMessage(globalMessages.assetsLabel)} `}
                   </Text>
                   <Image source={expandedOut ? arrowUp : arrowDown} />
                 </TouchableOpacity>
               )}
-              {expandedOut && (
-                <AssetList
-                  styles={assetListStyle}
-                  assets={item.assets}
-                  assetsMetadata={tokenMetadata}
-                />
-              )}
+              {expandedOut && <AssetList styles={assetListStyle} assets={item.assets} assetsMetadata={tokenMetadata} />}
             </>
           ))}
-          {cntOmittedTo > 0 && (
-            <Text>
-              {intl.formatMessage(messages.omittedCount, {cnt: cntOmittedTo})}
-            </Text>
-          )}
+          {cntOmittedTo > 0 && <Text>{intl.formatMessage(messages.omittedCount, {cnt: cntOmittedTo})}</Text>}
           <View style={styles.borderTop}>
             <Label>{intl.formatMessage(messages.txAssuranceLevel)}</Label>
           </View>
@@ -390,12 +315,7 @@ const TxDetails = ({intl, route}: Props & RouterProps) => {
         </View>
       </Screen>
       {/* $FlowFixMe TODO: index does not exist in AddressModal props */}
-      <AddressModal
-        visible={!!addressDetail}
-        onRequestClose={hideAddressModal}
-        address={addressDetail}
-        index={null}
-      />
+      <AddressModal visible={!!addressDetail} onRequestClose={hideAddressModal} address={addressDetail} index={null} />
     </View>
   )
 }

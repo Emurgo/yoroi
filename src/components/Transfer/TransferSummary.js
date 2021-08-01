@@ -35,8 +35,7 @@ const messages = defineMessages({
     defaultMessage: '!!!Recovered balance',
   },
   finalBalanceLabel: {
-    id:
-      'components.walletinit.restorewallet.upgradeconfirmmodal.finalBalanceLabel',
+    id: 'components.walletinit.restorewallet.upgradeconfirmmodal.finalBalanceLabel',
     defaultMessage: '!!!Final balance',
   },
   unregisterExplanation: {
@@ -87,9 +86,7 @@ const TransferSummary = ({
   <TwoActionView
     title={intl.formatMessage(txLabels.confirmTx)}
     primaryButton={{
-      label: intl.formatMessage(
-        confirmationMessages.commonButtons.confirmButton,
-      ),
+      label: intl.formatMessage(confirmationMessages.commonButtons.confirmButton),
       onPress: async (event) => {
         await onConfirm(event, password)
       },
@@ -102,98 +99,74 @@ const TransferSummary = ({
   >
     <View style={styles.item}>
       <Text>{intl.formatMessage(messages.balanceLabel)}</Text>
-      <Text style={styles.balanceAmount}>
-        {formatTokenWithText(balance, defaultAsset)}
-      </Text>
+      <Text style={styles.balanceAmount}>{formatTokenWithText(balance, defaultAsset)}</Text>
     </View>
     <View style={styles.item}>
       <Text>{intl.formatMessage(txLabels.fees)}</Text>
-      <Text style={styles.balanceAmount}>
-        {formatTokenWithText(fees, defaultAsset)}
-      </Text>
+      <Text style={styles.balanceAmount}>{formatTokenWithText(fees, defaultAsset)}</Text>
     </View>
     <View style={styles.item}>
       <Text>{intl.formatMessage(messages.finalBalanceLabel)}</Text>
-      <Text style={styles.balanceAmount}>
-        {formatTokenWithText(finalBalance, defaultAsset)}
-      </Text>
+      <Text style={styles.balanceAmount}>{formatTokenWithText(finalBalance, defaultAsset)}</Text>
     </View>
-    {/* eslint-disable indent */
-    withdrawals != null &&
-      withdrawals.length > 0 && (
+    {withdrawals != null && withdrawals.length > 0 && (
+      <View style={styles.item}>
+        <Text>{intl.formatMessage(txLabels.withdrawals)}</Text>
+        {withdrawals.map((withdrawal, i) => (
+          <AddressEntry
+            key={i}
+            address={withdrawal.address}
+            explorerForAddress={getNetworkConfigById(walletMeta.networkId).EXPLORER_URL_FOR_ADDRESS}
+          />
+        ))}
+      </View>
+    )}
+    {deregistrations != null && deregistrations.length > 0 && (
+      <>
         <View style={styles.item}>
-          <Text>{intl.formatMessage(txLabels.withdrawals)}</Text>
-          {withdrawals.map((withdrawal, i) => (
+          <Text>{intl.formatMessage(txLabels.stakeDeregistration)}</Text>
+          {deregistrations.map((deregistration, i) => (
             <AddressEntry
               key={i}
-              address={withdrawal.address}
-              explorerForAddress={
-                getNetworkConfigById(walletMeta.networkId)
-                  .EXPLORER_URL_FOR_ADDRESS
-              }
+              address={deregistration.rewardAddress}
+              explorerForAddress={getNetworkConfigById(walletMeta.networkId).EXPLORER_URL_FOR_ADDRESS}
             />
           ))}
         </View>
-      )}
-    {deregistrations != null &&
-      deregistrations.length > 0 && (
-        <>
-          <View style={styles.item}>
-            <Text>{intl.formatMessage(txLabels.stakeDeregistration)}</Text>
-            {deregistrations.map((deregistration, i) => (
-              <AddressEntry
-                key={i}
-                address={deregistration.rewardAddress}
-                explorerForAddress={
-                  getNetworkConfigById(walletMeta.networkId)
-                    .EXPLORER_URL_FOR_ADDRESS
-                }
-              />
-            ))}
-          </View>
-          <View style={styles.item}>
-            <Text>
-              {intl.formatMessage(messages.unregisterExplanation, {
-                refundAmount: formatTokenWithText(
-                  deregistrations
-                    .reduce(
-                      (sum, curr) =>
-                        curr.refund == null
-                          ? sum
-                          : sum.joinAddCopy(curr.refund),
-                      new MultiToken([], {
-                        defaultNetworkId: defaultAsset.networkId,
-                        defaultIdentifier: defaultAsset.identifier,
-                      }),
-                    )
-                    .getDefault(),
-                  defaultAsset,
-                ).toString(),
-              })}
-            </Text>
-          </View>
-        </>
-      )
-    /* eslint-enable indent */
-    }
+        <View style={styles.item}>
+          <Text>
+            {intl.formatMessage(messages.unregisterExplanation, {
+              refundAmount: formatTokenWithText(
+                deregistrations
+                  .reduce(
+                    (sum, curr) => (curr.refund == null ? sum : sum.joinAddCopy(curr.refund)),
+                    new MultiToken([], {
+                      defaultNetworkId: defaultAsset.networkId,
+                      defaultIdentifier: defaultAsset.identifier,
+                    }),
+                  )
+                  .getDefault(),
+                defaultAsset,
+              ).toString(),
+            })}
+          </Text>
+        </View>
+      </>
+    )}
 
     {/* $FlowFixMe */}
     {walletMeta.isHW && <HWInstructions useUSB={useUSB} addMargin />}
 
-    {/* eslint-disable indent */
-    !walletMeta.isEasyConfirmationEnabled &&
-      !walletMeta.isHW && (
-        <View style={styles.input}>
-          <ValidatedTextInput
-            secureTextEntry
-            value={password}
-            label={intl.formatMessage(txLabels.password)}
-            onChangeText={setPassword}
-          />
-        </View>
-      )
-    /* eslint-enable indent */
-    }
+    {!walletMeta.isEasyConfirmationEnabled && !walletMeta.isHW && (
+      <View style={styles.input}>
+        <ValidatedTextInput
+          secureTextEntry
+          value={password}
+          label={intl.formatMessage(txLabels.password)}
+          onChangeText={setPassword}
+        />
+      </View>
+    )}
   </TwoActionView>
 )
 

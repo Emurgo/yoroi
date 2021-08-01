@@ -28,9 +28,7 @@ const LanguagePickerScreen = ({navigation}: Props) => {
     <SafeAreaView style={styles.safeAreaView}>
       <LanguagePicker
         {...{navigation, languageCode, handleContinue}}
-        changeLanguage={(languageCode) =>
-          dispatch(changeLanguage(languageCode))
-        }
+        changeLanguage={(languageCode) => dispatch(changeLanguage(languageCode))}
       />
     </SafeAreaView>
   )

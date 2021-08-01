@@ -6,12 +6,7 @@
 
 import _ from 'lodash'
 import type {Moment} from 'moment'
-import {
-  BaseAddress,
-  Bip32PublicKey,
-  StakeCredential,
-  RewardAddress,
-} from '@emurgo/react-native-haskell-shelley'
+import {BaseAddress, Bip32PublicKey, StakeCredential, RewardAddress} from '@emurgo/react-native-haskell-shelley'
 
 import {CONFIG, isByron, isHaskellShelley} from '../../config/config'
 import {getNetworkConfigById} from '../../config/networks'
@@ -49,10 +44,7 @@ export class AddressGenerator {
   }
 
   get byronAccount(): CryptoAccount {
-    assert.assert(
-      isByron(this.walletImplementationId),
-      'chain::get::byronAccount: not a byron wallet',
-    )
+    assert.assert(isByron(this.walletImplementationId), 'chain::get::byronAccount: not a byron wallet')
     return {
       derivation_scheme: 'V2',
       root_cached_key: this.accountPubKeyHex,
@@ -71,27 +63,19 @@ export class AddressGenerator {
     if (this._rewardAddressHex != null) return this._rewardAddressHex
     // cache account public key
     if (this._accountPubKeyPtr == null) {
-      this._accountPubKeyPtr = await Bip32PublicKey.from_bytes(
-        Buffer.from(this.accountPubKeyHex, 'hex'),
-      )
+      this._accountPubKeyPtr = await Bip32PublicKey.from_bytes(Buffer.from(this.accountPubKeyHex, 'hex'))
     }
-    const stakingKey = await (await (await this._accountPubKeyPtr.derive(
-      CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-    )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+    const stakingKey = await (
+      await (
+        await this._accountPubKeyPtr.derive(CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
+      ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
+    ).to_raw_key()
 
     // cache reward address
-    const credential = await StakeCredential.from_keyhash(
-      await stakingKey.hash(),
-    )
-    const rewardAddr = await RewardAddress.new(
-      parseInt(chainNetworkId, 10),
-      credential,
-    )
+    const credential = await StakeCredential.from_keyhash(await stakingKey.hash())
+    const rewardAddr = await RewardAddress.new(parseInt(chainNetworkId, 10), credential)
     const rewardAddrAsAddr = await rewardAddr.to_address()
-    this._rewardAddressHex = Buffer.from(
-      await rewardAddrAsAddr.to_bytes(),
-      'hex',
-    ).toString('hex')
+    this._rewardAddressHex = Buffer.from(await rewardAddrAsAddr.to_bytes(), 'hex').toString('hex')
     return this._rewardAddressHex
   }
 
@@ -105,16 +89,14 @@ export class AddressGenerator {
       }
       // cache account public key
       if (this._accountPubKeyPtr == null) {
-        this._accountPubKeyPtr = await Bip32PublicKey.from_bytes(
-          Buffer.from(this.accountPubKeyHex, 'hex'),
-        )
+        this._accountPubKeyPtr = await Bip32PublicKey.from_bytes(Buffer.from(this.accountPubKeyHex, 'hex'))
       }
-      const chainKey = await this._accountPubKeyPtr.derive(
-        ADDRESS_TYPE_TO_CHANGE[this.type],
-      )
-      const stakingKey = await (await (await this._accountPubKeyPtr.derive(
-        CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-      )).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)).to_raw_key()
+      const chainKey = await this._accountPubKeyPtr.derive(ADDRESS_TYPE_TO_CHANGE[this.type])
+      const stakingKey = await (
+        await (
+          await this._accountPubKeyPtr.derive(CONFIG.NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)
+        ).derive(CONFIG.NUMBERS.STAKING_KEY_INDEX)
+      ).to_raw_key()
 
       return await Promise.all(
         idxs.map(async (idx) => {
@@ -163,17 +145,11 @@ export class AddressGenerator {
 
     let _walletImplementationId
     if (walletImplementationId == null) {
-      _walletImplementationId =
-        CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID
+      _walletImplementationId = CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID
     } else {
       _walletImplementationId = walletImplementationId
     }
-    return new AddressGenerator(
-      _accountPubKeyHex,
-      type,
-      _walletImplementationId,
-      networkId,
-    )
+    return new AddressGenerator(_accountPubKeyHex, type, _walletImplementationId, networkId)
   }
 }
 
@@ -181,8 +157,7 @@ type AsyncAddressFilter = (addresses: Array<string>) => Promise<Array<string>>
 
 export type Addresses = Array<string>
 
-const _addressToIdxSelector = (addresses: Array<string>) =>
-  _.fromPairs(addresses.map((addr, i) => [addr, i]))
+const _addressToIdxSelector = (addresses: Array<string>) => _.fromPairs(addresses.map((addr, i) => [addr, i]))
 
 export class AddressChain {
   _addresses: Addresses = []
@@ -191,9 +166,7 @@ export class AddressChain {
   _gapLimit: number
   _isInitialized: boolean = false
   _subscriptions: Array<(Addresses) => mixed> = []
-  _addressToIdxSelector: (Addresses) => Dict<number> = defaultMemoize(
-    _addressToIdxSelector,
-  )
+  _addressToIdxSelector: (Addresses) => Dict<number> = defaultMemoize(_addressToIdxSelector)
 
   constructor(
     addressGenerator: AddressGenerator,
@@ -218,11 +191,7 @@ export class AddressChain {
 
   static fromJSON(data: any, networkId: NetworkId) {
     const {gapLimit, blockSize, addresses, addressGenerator} = data
-    const chain = new AddressChain(
-      AddressGenerator.fromJSON(addressGenerator, networkId),
-      blockSize,
-      gapLimit,
-    )
+    const chain = new AddressChain(AddressGenerator.fromJSON(addressGenerator, networkId), blockSize, gapLimit)
     // is initialized && addresses
     chain._extendAddresses(addresses)
     chain._isInitialized = true
@@ -276,35 +245,20 @@ export class AddressChain {
   _getLastBlock() {
     this._selfCheck()
     const block = _.takeRight(this.addresses, this._blockSize)
-    assert.assert(
-      block.length === this._blockSize,
-      'AddressChain::_getLastBlock(): block length',
-    )
+    assert.assert(block.length === this._blockSize, 'AddressChain::_getLastBlock(): block length')
     return block
   }
 
   async initialize() {
-    assert.assert(
-      !this._isInitialized,
-      'AddressChain::initialize(): !isInitialized',
-    )
+    assert.assert(!this._isInitialized, 'AddressChain::initialize(): !isInitialized')
     await this._discoverNewBlock()
-    assert.assert(
-      !this._isInitialized,
-      'AddressChain::initialized(): Concurrent modification',
-    )
+    assert.assert(!this._isInitialized, 'AddressChain::initialized(): Concurrent modification')
     this._isInitialized = true
   }
 
   _selfCheck() {
-    assert.assert(
-      this._isInitialized,
-      'AddressChain::_selfCheck(): isInitialized',
-    )
-    assert.assert(
-      this._addresses.length % this._blockSize === 0,
-      'AddressChain::_selfCheck(): lengths',
-    )
+    assert.assert(this._isInitialized, 'AddressChain::_selfCheck(): isInitialized')
+    assert.assert(this._addresses.length % this._blockSize === 0, 'AddressChain::_selfCheck(): lengths')
   }
 
   async sync(filterFn: AsyncAddressFilter) {
@@ -342,10 +296,7 @@ export class AddressChain {
   }
 
   getIndexOfAddress(address: string): number {
-    assert.assert(
-      this.isMyAddress(address),
-      'getIndexOfAddress:: is not my address',
-    )
+    assert.assert(this.isMyAddress(address), 'getIndexOfAddress:: is not my address')
     const idx = this.addressToIdxMap[address]
     return idx
   }
@@ -363,9 +314,7 @@ export class AddressChain {
     const block = this._getLastBlock()
     const used = await filterFn(block)
     const lastUsedRelIdx = used.length > 0 ? block.indexOf(_.last(used)) : -1
-    return totalGenerated > this._blockSize
-      ? totalGenerated - this._blockSize + lastUsedRelIdx
-      : lastUsedRelIdx
+    return totalGenerated > this._blockSize ? totalGenerated - this._blockSize + lastUsedRelIdx : lastUsedRelIdx
   }
 
   async getNextUnused(filterFn: AsyncAddressFilter) {

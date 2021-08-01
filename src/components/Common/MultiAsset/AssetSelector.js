@@ -34,15 +34,7 @@ type Props = {
   intl: IntlShape,
 }
 
-const AssetSelector = ({
-  label,
-  assets,
-  assetsMetadata,
-  onSelect,
-  selectedAsset,
-  unselectEnabled,
-  intl,
-}: Props) => {
+const AssetSelector = ({label, assets, assetsMetadata, onSelect, selectedAsset, unselectEnabled, intl}: Props) => {
   const [expanded, setExpanded] = useState(false)
 
   const toggleExpand = () => {
@@ -53,28 +45,16 @@ const AssetSelector = ({
     <View style={styles.container}>
       <TouchableOpacity style={styles.input} onPress={() => toggleExpand()}>
         {selectedAsset == null ? (
-          <Text style={styles.inputText}>
-            {' '}
-            {intl.formatMessage(messages.placeHolder)}{' '}
-          </Text>
+          <Text style={styles.inputText}> {intl.formatMessage(messages.placeHolder)} </Text>
         ) : (
-          <Text
-            numberOfLines={1}
-            ellipsizeMode="middle"
-            style={styles.inputText}
-          >
+          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.inputText}>
             {' '}
-            {getAssetDenominationOrId(
-              assetsMetadata[selectedAsset.identifier],
-            )}{' '}
+            {getAssetDenominationOrId(assetsMetadata[selectedAsset.identifier])}{' '}
           </Text>
         )}
         <View style={styles.flexRow}>
           {unselectEnabled && (
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => onSelect()}
-            >
+            <TouchableOpacity style={styles.closeButton} onPress={() => onSelect()}>
               <Image source={closeIcon} />
             </TouchableOpacity>
           )}

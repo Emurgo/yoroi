@@ -9,11 +9,7 @@
 import {BigNumber} from 'bignumber.js'
 import {mnemonicToEntropy, generateMnemonic} from 'bip39'
 /* eslint-disable camelcase */
-import {
-  Bip32PrivateKey,
-  encrypt_with_password,
-  decrypt_with_password,
-} from '@emurgo/react-native-haskell-shelley'
+import {Bip32PrivateKey, encrypt_with_password, decrypt_with_password} from '@emurgo/react-native-haskell-shelley'
 /* eslint-enable camelcase */
 import {randomBytes} from 'react-native-randombytes'
 import cryptoRandomString from 'crypto-random-string'
@@ -38,18 +34,12 @@ export const ADDRESS_TYPE_TO_CHANGE: {[AddressType]: number} = {
  * wallet key generation
  */
 
-export const generateAdaMnemonic = () =>
-  generateMnemonic(CONFIG.MNEMONIC_STRENGTH, randomBytes)
+export const generateAdaMnemonic = () => generateMnemonic(CONFIG.MNEMONIC_STRENGTH, randomBytes)
 
-export const generateWalletRootKey: (
-  mnemonic: string,
-) => Promise<Bip32PrivateKey> = async (mnemonic: string) => {
+export const generateWalletRootKey: (mnemonic: string) => Promise<Bip32PrivateKey> = async (mnemonic: string) => {
   const bip39entropy = mnemonicToEntropy(mnemonic)
   const EMPTY_PASSWORD = Buffer.from('')
-  const rootKey = await Bip32PrivateKey.from_bip39_entropy(
-    Buffer.from(bip39entropy, 'hex'),
-    EMPTY_PASSWORD,
-  )
+  const rootKey = await Bip32PrivateKey.from_bip39_entropy(Buffer.from(bip39entropy, 'hex'), EMPTY_PASSWORD)
   return rootKey
 }
 
@@ -57,27 +47,16 @@ export const generateWalletRootKey: (
  * encryption/decryption
  */
 
-export const encryptData = async (
-  plaintextHex: string,
-  secretKey: string,
-): Promise<string> => {
+export const encryptData = async (plaintextHex: string, secretKey: string): Promise<string> => {
   assert.assert(!!plaintextHex, 'encrypt:: !!plaintextHex')
   assert.assert(!!secretKey, 'encrypt:: !!secretKey')
   const secretKeyHex = Buffer.from(secretKey, 'utf8').toString('hex')
   const saltHex = cryptoRandomString({length: 2 * 32})
   const nonceHex = cryptoRandomString({length: 2 * 12})
-  return await encrypt_with_password(
-    secretKeyHex,
-    saltHex,
-    nonceHex,
-    plaintextHex,
-  )
+  return await encrypt_with_password(secretKeyHex, saltHex, nonceHex, plaintextHex)
 }
 
-export const decryptData = async (
-  ciphertext: string,
-  secretKey: string,
-): Promise<string> => {
+export const decryptData = async (ciphertext: string, secretKey: string): Promise<string> => {
   assert.assert(!!ciphertext, 'decrypt:: !!cyphertext')
   assert.assert(!!secretKey, 'decrypt:: !!secretKey')
   const secretKeyHex = Buffer.from(secretKey, 'utf8').toString('hex')
@@ -112,9 +91,7 @@ export const formatPath = (
 
   const COIN = CONFIG.NUMBERS.COIN_TYPES.CARDANO - HARD_DERIVATION_START
 
-  return `m/${purpose}'/${COIN}'/${account}'/${
-    ADDRESS_TYPE_TO_CHANGE[type]
-  }/${index}`
+  return `m/${purpose}'/${COIN}'/${account}'/${ADDRESS_TYPE_TO_CHANGE[type]}/${index}`
 }
 
 export const hasSendAllDefault = (tokens: SendTokenList): boolean => {
@@ -146,10 +123,7 @@ export const builtSendTokenList = (
     } else if (token.token.isDefault) {
       // if we add a non-specific amount of the default token
       // sum amount values in the UTXO
-      const relatedUtxoSum = utxos.reduce(
-        (value, next) => value.plus(next.getDefaultEntry().amount),
-        new BigNumber(0),
-      )
+      const relatedUtxoSum = utxos.reduce((value, next) => value.plus(next.getDefaultEntry().amount), new BigNumber(0))
       amount.add({
         amount: relatedUtxoSum,
         identifier: token.token.identifier,
@@ -159,9 +133,7 @@ export const builtSendTokenList = (
       // if we add a non-specific amount of a given token
       // sum up the value of all our UTXOs with this token
       const relatedUtxoSum = utxos.reduce((value, next) => {
-        const assetEntry = next
-          .nonDefaultEntries()
-          .find((entry) => entry.identifier === token.token.identifier)
+        const assetEntry = next.nonDefaultEntries().find((entry) => entry.identifier === token.token.identifier)
         if (assetEntry != null) {
           return value.plus(assetEntry.amount)
         }

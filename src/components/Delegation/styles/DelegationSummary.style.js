@@ -1,4 +1,5 @@
 // @flow
+
 import {StyleSheet} from 'react-native'
 
 // TODO: Needs to be updated

@@ -1,12 +1,10 @@
 // @flow
+
 import type {State} from '../state'
 
 export type Path = Array<string>
 
-export type SegmentReducer<Segment, Payload> = (
-  state: Segment,
-  payload: Payload | void,
-) => Segment
+export type SegmentReducer<Segment, Payload> = (state: Segment, payload: Payload | void) => Segment
 
 export type GenericAction<Segment, Payload> = {
   +type: string,
@@ -17,15 +15,11 @@ export type GenericAction<Segment, Payload> = {
 }
 
 export type GetState = () => State
-// eslint-disable-next-line
+// eslint-disable-next-line no-use-before-define
 export type Dispatch = (action: GenericAction<State, any> | Thunk) => null
 export type ThunkExtra = {
   logger: {
     log: (args: any) => null,
   },
 }
-export type Thunk = (
-  dispatch: Dispatch,
-  getState: GetState,
-  extra: ThunkExtra,
-) => Promise<void> | void
+export type Thunk = (dispatch: Dispatch, getState: GetState, extra: ThunkExtra) => Promise<void> | void

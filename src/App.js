@@ -30,11 +30,7 @@ const App = (_props, _context) => {
         setAppState(nextAppState)
         if (previousAppState != null && nextAppState === 'active') {
           RNBootSplash.hide()
-        } else if (
-          previousAppState === 'active' &&
-          nextAppState != null &&
-          nextAppState.match(/inactive|background/)
-        ) {
+        } else if (previousAppState === 'active' && nextAppState != null && nextAppState.match(/inactive|background/)) {
           RNBootSplash.show()
         }
       }
@@ -58,12 +54,9 @@ const App = (_props, _context) => {
 
 export default injectIntl(
   compose(
-    connect(
-      () => ({}),
-      {
-        initApp,
-      },
-    ),
+    connect(() => ({}), {
+      initApp,
+    }),
     onDidMount(({initApp}) => initApp()),
   )(App),
 )

@@ -1,6 +1,14 @@
+// @flow
+
 module.exports = {
-  extends: ['vacuumlabs', 'plugin:react-hooks/recommended'],
-  plugins: ['react-native', 'flowtype'],
+  extends: [
+    'vacuumlabs',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+    'plugin:flowtype/recommended',
+    'prettier',
+  ],
+  plugins: ['react', 'react-native', 'flowtype'],
   env: {
     'react-native/react-native': true,
   },
@@ -14,18 +22,10 @@ module.exports = {
   rules: {
     'array-callback-return': 2,
     'lines-between-class-members': [1, 'always', {exceptAfterSingleLine: true}],
-    'max-len': [
-      1,
-      {
-        code: 100,
-        tabWidth: 2,
-        ignoreStrings: false,
-        ignoreTemplateLiterals: false,
-      },
-    ],
     'spaced-comment': 1,
     'react/no-access-state-in-setstate': 2,
     'react/no-multi-comp': 0,
+    'react/display-name': 0,
     'no-multi-str': 0,
     'no-lone-blocks': 0,
     'react/no-typos': 2,
@@ -43,8 +43,7 @@ module.exports = {
       },
     ],
     'flowtype/require-valid-file-annotation': [2, 'always'],
-    'flowtype/define-flow-type': 1,
-    'flowtype/use-flow-type': 1,
+    'flowtype/newline-after-flow-annotation': [2, 'always'],
   },
   globals: {
     Buffer: false,

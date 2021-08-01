@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react'
 import _ from 'lodash'
 import {Image, View, TouchableHighlight} from 'react-native'
@@ -40,11 +41,18 @@ const processPin = async (pin, setPin, pinMaxLength, keyDown, onPinEnter) => {
   }
 }
 
-const PinPlaceholder = ({isActive}) => (
+type PinPlaceholderProps = {
+  isActive: boolean,
+}
+const PinPlaceholder = ({isActive}: PinPlaceholderProps) => (
   <View style={[styles.pin, !isActive && styles.pinInactive]} />
 )
 
-const KeyboardKey = ({value, onPress}) => {
+type KeyboardKeyProps = {
+  value: string,
+  onPress: (value: string) => any,
+}
+const KeyboardKey = ({value, onPress}: KeyboardKeyProps) => {
   const isEmpty = value === ''
   const isBackspace = value === BACKSPACE
   const isDigit = !isEmpty && !isBackspace
@@ -57,11 +65,7 @@ const KeyboardKey = ({value, onPress}) => {
       disabled={isEmpty}
       testID={`pinKey${value}`}
     >
-      {isBackspace ? (
-        <Image source={backspaceIcon} />
-      ) : (
-        <Text style={styles.keyboardKeyText}>{value}</Text>
-      )}
+      {isBackspace ? <Image source={backspaceIcon} /> : <Text style={styles.keyboardKeyText}>{value}</Text>}
     </TouchableHighlight>
   )
 }
@@ -80,20 +84,15 @@ type Props = {
 
 const PinInput = ({pinMaxLength, labels, onPinEnter}: Props) => {
   const [pin, setPin] = React.useState('')
-  const onKeyDown = (value) =>
-    processPin(pin, setPin, pinMaxLength, value, onPinEnter)
+  const onKeyDown = (value) => processPin(pin, setPin, pinMaxLength, value, onPinEnter)
 
   return (
     <ScreenBackground style={styles.root}>
       <View style={styles.infoContainer}>
         <Text style={styles.title}>{labels.title}</Text>
 
-        <Text style={styles.subtitle}>
-          {labels.subtitle == null ? null : labels.subtitle}
-        </Text>
-        <Text style={styles.subtitle}>
-          {labels.subtitle2 == null ? null : labels.subtitle2}
-        </Text>
+        <Text style={styles.subtitle}>{labels.subtitle == null ? null : labels.subtitle}</Text>
+        <Text style={styles.subtitle}>{labels.subtitle2 == null ? null : labels.subtitle2}</Text>
 
         <View style={styles.pinContainer}>
           {_.range(0, pinMaxLength).map((index) => (

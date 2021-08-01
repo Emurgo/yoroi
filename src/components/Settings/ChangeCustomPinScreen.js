@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react'
 import {View} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
@@ -20,30 +21,23 @@ import type {Navigation} from '../../types/navigation'
 const messages = defineMessages({
   currentPinInputTitle: {
     id: 'components.settings.changecustompinscreen.CurrentPinInput.title',
-    defaultMessage: 'Login',
+    defaultMessage: '!!!Enter PIN',
   },
   currentPinInputSubtitle: {
     id: 'components.settings.changecustompinscreen.CurrentPinInput.subtitle',
-    defaultMessage: 'Enter your current PIN',
-    description: 'some desc',
+    defaultMessage: '!!!Enter your current PIN',
   },
   pinInputTitle: {
-    id:
-      'components.settings.changecustompinscreen.PinRegistrationForm.PinInput.title',
-    defaultMessage: 'Enter PIN',
-    description: 'some desc',
+    id: 'components.settings.changecustompinscreen.PinRegistrationForm.PinInput.title',
+    defaultMessage: '!!!Enter PIN',
   },
   pinInputSubtitle: {
-    id:
-      'components.settings.changecustompinscreen.PinRegistrationForm.PinInput.subtitle',
-    defaultMessage: 'Choose new PIN for quick access to wallet.',
-    description: 'some desc',
+    id: 'components.settings.changecustompinscreen.PinRegistrationForm.PinInput.subtitle',
+    defaultMessage: '!!!Choose new PIN for quick access to wallet.',
   },
   pinConfirmationTitle: {
-    id:
-      'components.settings.changecustompinscreen.PinRegistrationForm.PinConfirmationInput.title',
-    defaultMessage: 'Repeat PIN',
-    description: 'some desc',
+    id: 'components.settings.changecustompinscreen.PinRegistrationForm.PinConfirmationInput.title',
+    defaultMessage: '!!!Repeat PIN',
   },
 })
 

@@ -24,23 +24,13 @@ type Props = {|
   ...ViewProps,
 |}
 
-const Screen = ({
-  children,
-  scroll,
-  bgColor,
-  style = {},
-  ...restProps
-}: Props) => {
+const Screen = ({children, scroll, bgColor, style = {}, ...restProps}: Props) => {
   const Container = scroll === true ? ScrollView : View
 
   return (
     <Container
       {...restProps}
-      style={[
-        styles.container,
-        {backgroundColor: bgColor != null ? bgColor : COLORS.WHITE},
-        style,
-      ]}
+      style={[styles.container, {backgroundColor: bgColor != null ? bgColor : COLORS.WHITE}, style]}
     >
       {children}
     </Container>

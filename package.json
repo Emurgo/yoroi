@@ -10,7 +10,7 @@
     "start": "react-native start",
     "test": "jest",
     "babel": "babel src",
-    "prettify": "prettier --write \"src/**/*.js\" --config .prettierrc",
+    "prettify": "prettier --write ./src ./e2e ./storybook ./translations --config .prettierrc",
     "setup_configs": "react-native-schemes-manager all",
     "manage-translations": "node ./translations/translation-runner.js",
     "purge-translations": "rimraf ./translations/messages",
@@ -23,8 +23,27 @@
     "e2e:build-android": "detox build -c android.emu.mainnet.release",
     "e2e:test-android-debug": "detox test -c android.emu.mainnet.debug",
     "e2e:build-android-debug": "detox build -c android.emu.mainnet.debug",
-    "prestorybook": "rnstl  --searchDir ./src/components --pattern '**/*.stories.js'",
-    "storybook": "start-storybook"
+    "prestorybook": "rnstl  --searchDir ./src/components ./storybook --pattern '**/*.stories.js'",
+    "storybook": "start-storybook",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "eslint --cache --fix --max-warnings=0",
+      "prettier --write",
+      "flow focus-check"
+    ],
+    "*.{md,json}": "prettier --write"
+  },
+  "jest": {
+    "preset": "react-native",
+    "testMatch": [
+      "**/__tests__/**/*.[jt]s?(x)",
+      "**/?(*.)+(test).[jt]s?(x)"
+    ],
+    "transform": {
+      "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js"
+    }
   },
   "dependencies": {
     "@babel/cli": "7.12.8",
@@ -74,7 +93,7 @@
     "react-native": "0.63.4",
     "react-native-background-timer": "2.4.1",
     "react-native-ble-plx": "2.0.2",
-    "react-native-blockies-svg": "Emurgo/react-native-blockies-svg",
+    "react-native-blockies-svg": "git+https://github.com/Emurgo/react-native-blockies-svg",
     "react-native-bootsplash": "3.2.3",
     "react-native-camera": "3.44.0",
     "react-native-config": "0.12.0",
@@ -86,6 +105,7 @@
     "react-native-linear-gradient": "2.5.6",
     "react-native-local-resource": "^0.1.3",
     "react-native-markdown-renderer": "^3.2.8",
+    "react-native-paper": "4.9.2",
     "react-native-permissions": "2.2.2",
     "react-native-qrcode-scanner": "1.4.1",
     "react-native-qrcode-svg": "6.0.6",
@@ -127,6 +147,7 @@
     "babel-plugin-require-context-hook": "^1.0.0",
     "detox": "16.7.2",
     "eslint": "7.29.0",
+    "eslint-config-prettier": "8.3.0",
     "eslint-config-vacuumlabs": "1.9.0",
     "eslint-plugin-flowtype": "5.7.2",
     "eslint-plugin-import": "2.23.4",
@@ -137,40 +158,21 @@
     "flow-bin": "0.126.0",
     "flow-coverage-report": "0.8.0",
     "flow-typed": "3.1.0",
+    "husky": ">=6",
     "jest": "25.1.0",
+    "lint-staged": ">=10",
     "metro-react-native-babel-preset": "0.59.0",
-    "prettier": "1.14.3",
+    "prettier": "2.3.2",
+    "prettier-plugin-packagejson": "^2.2.11",
     "prettylint": "1.0.0",
     "react-dom": "16.8.3",
     "react-intl-translations-manager": "^5.0.3",
-    "react-native-inhibit-warnings": "https://github.com/Emurgo/react-native-inhibit-warnings.git",
+    "react-native-inhibit-warnings": "git+https://github.com/Emurgo/react-native-inhibit-warnings.git",
     "react-native-schemes-manager": "^1.0.5",
     "react-native-storybook-loader": "^1.8.1",
     "react-test-renderer": "16.13.1"
   },
-  "jest": {
-    "transform": {
-      "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js"
-    },
-    "preset": "react-native",
-    "testMatch": [
-      "**/__tests__/**/*.[jt]s?(x)",
-      "**/?(*.)+(test).[jt]s?(x)"
-    ]
-  },
-  "xcodeSchemes": {
-    "Debug": [
-      "Staging.Debug"
-    ],
-    "Release": [
-      "Staging.Release"
-    ]
-  },
   "engineStrict": true,
-  "engine": {
-    "node": "~10.14.2",
-    "npm": "~6.4.1"
-  },
   "detox": {
     "test-runner": "jest",
     "configurations": {
@@ -197,5 +199,17 @@
         }
       }
     }
+  },
+  "engine": {
+    "node": "~16.5.0",
+    "npm": "~7.19.1"
+  },
+  "xcodeSchemes": {
+    "Debug": [
+      "Staging.Debug"
+    ],
+    "Release": [
+      "Staging.Release"
+    ]
   }
 }

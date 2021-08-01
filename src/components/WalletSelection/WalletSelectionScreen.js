@@ -8,19 +8,12 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages} from 'react-intl'
 import type {IntlShape} from 'react-intl'
 
-import walletManager, {
-  SystemAuthDisabled,
-  KeysAreInvalid,
-} from '../../crypto/walletManager'
+import walletManager, {SystemAuthDisabled, KeysAreInvalid} from '../../crypto/walletManager'
 import {InvalidState} from '../../crypto/errors'
 import WalletListItem from './WalletListItem'
 import Screen from '../Screen'
 import {Button, StatusBar, ScreenBackground} from '../UiKit'
-import {
-  WALLET_ROOT_ROUTES,
-  WALLET_INIT_ROUTES,
-  ROOT_ROUTES,
-} from '../../RoutesList'
+import {WALLET_ROOT_ROUTES, WALLET_INIT_ROUTES, ROOT_ROUTES} from '../../RoutesList'
 import {showErrorDialog, updateVersion} from '../../actions'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {walletsListSelector} from '../../selectors'
@@ -41,15 +34,12 @@ const messages = defineMessages({
     defaultMessage: '!!!Add wallet',
   },
   addWalletOnShelleyButton: {
-    id:
-      'components.walletselection.walletselectionscreen.addWalletOnShelleyButton',
+    id: 'components.walletselection.walletselectionscreen.addWalletOnShelleyButton',
     defaultMessage: '!!!Add wallet (Jormungandr ITN)',
   },
 })
 
-const WalletListScreen = (
-  {intl, navigation}: {intl: IntlShape} & Object /* TODO: type */,
-) => {
+const WalletListScreen = ({intl, navigation}: {intl: IntlShape} & Object /* TODO: type */) => {
   const wallets = useSelector(walletsListSelector)
 
   const openWallet = async (wallet) => {
@@ -79,11 +69,7 @@ const WalletListScreen = (
     }
   }
 
-  const navigateInitWallet = (
-    event: Object,
-    networkId: NetworkId,
-    walletImplementationId: WalletImplementationId,
-  ) =>
+  const navigateInitWallet = (event: Object, networkId: NetworkId, walletImplementationId: WalletImplementationId) =>
     navigation.navigate(ROOT_ROUTES.NEW_WALLET, {
       screen: WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH,
       params: {
@@ -93,12 +79,9 @@ const WalletListScreen = (
     })
 
   const dispatch = useDispatch()
-  React.useEffect(
-    () => {
-      dispatch(updateVersion())
-    },
-    [dispatch],
-  )
+  React.useEffect(() => {
+    dispatch(updateVersion())
+  }, [dispatch])
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -106,18 +89,12 @@ const WalletListScreen = (
 
       <Screen style={styles.container}>
         <ScreenBackground>
-          <Text style={styles.title}>
-            {intl.formatMessage(messages.header)}
-          </Text>
+          <Text style={styles.title}>{intl.formatMessage(messages.header)}</Text>
 
           <ScrollView style={styles.wallets}>
             {wallets ? (
               _.sortBy(wallets, ({name}) => name).map((wallet) => (
-                <WalletListItem
-                  key={wallet.id}
-                  wallet={wallet}
-                  onPress={openWallet}
-                />
+                <WalletListItem key={wallet.id} wallet={wallet} onPress={openWallet} />
               ))
             ) : (
               <ActivityIndicator />
@@ -134,9 +111,7 @@ const WalletListScreen = (
                 CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
               )
             }
-            title={`${intl.formatMessage(
-              messages.addWalletButton,
-            )} (Shelley-era)`}
+            title={`${intl.formatMessage(messages.addWalletButton)} (Shelley-era)`}
             style={styles.topButton}
           />
 
@@ -151,9 +126,7 @@ const WalletListScreen = (
                   CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
                 )
               }
-              title={`${intl.formatMessage(
-                messages.addWalletButton,
-              )} on TESTNET (Shelley-era)`}
+              title={`${intl.formatMessage(messages.addWalletButton)} on TESTNET (Shelley-era)`}
               style={styles.button}
             />
           )}
@@ -167,9 +140,9 @@ const WalletListScreen = (
                 CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
               )
             }
-            title={`${intl.formatMessage(
-              messages.addWalletButton,
-            )} (Byron-era - ${intl.formatMessage(globalMessages.deprecated)})`}
+            title={`${intl.formatMessage(messages.addWalletButton)} (Byron-era - ${intl.formatMessage(
+              globalMessages.deprecated,
+            )})`}
             style={styles.button}
           />
 

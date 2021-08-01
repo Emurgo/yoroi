@@ -14,8 +14,7 @@ storiesOf('WalletInitScreen', module)
       route={{
         params: {
           networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-          walletImplementationId:
-            CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
+          walletImplementationId: CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
         },
       }}
     />
@@ -26,8 +25,7 @@ storiesOf('WalletInitScreen', module)
       route={{
         params: {
           networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-          walletImplementationId:
-            CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+          walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
         },
       }}
     />

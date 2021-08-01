@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react'
 import {useNavigation} from '@react-navigation/native'
 import {compose} from 'redux'
@@ -27,9 +28,7 @@ class AccountAutoRefresher extends React.Component<{
   _unsubscribe: void | (() => mixed) = undefined
 
   componentDidMount = async () => {
-    this._unsubscribe = this.props.navigation.addListener('focus', () =>
-      this.handleDidFocus(),
-    )
+    this._unsubscribe = this.props.navigation.addListener('focus', () => this.handleDidFocus())
     await this.refetch()
   }
 

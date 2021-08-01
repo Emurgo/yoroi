@@ -49,12 +49,8 @@ class Modal extends React.Component<Props, State> {
 
   componentDidMount = () => {
     const {navigation} = this.props
-    this._subscriptions.push(
-      navigation.addListener('focus', () => this.handleWillFocus()),
-    )
-    this._subscriptions.push(
-      navigation.addListener('blur', () => this.handleWillBlur()),
-    )
+    this._subscriptions.push(navigation.addListener('focus', () => this.handleWillFocus()))
+    this._subscriptions.push(navigation.addListener('blur', () => this.handleWillBlur()))
   }
 
   componentWillUnmount = () => {
@@ -65,41 +61,22 @@ class Modal extends React.Component<Props, State> {
   handleWillFocus = () => this.setState({isFocused: true})
 
   render() {
-    const {
-      visible,
-      showCloseIcon,
-      onRequestClose,
-      noPadding,
-      children,
-    } = this.props
+    const {visible, showCloseIcon, onRequestClose, noPadding, children} = this.props
     const {isFocused} = this.state
 
     return (
-      <>
-        <RNModal
-          transparent
-          animationType="fade"
-          visible={visible && isFocused}
-          onRequestClose={onRequestClose}
-        >
-          <View style={styles.backdrop}>
-            <View
-              style={[styles.container, noPadding === true && styles.noPadding]}
-            >
-              {showCloseIcon === true && (
-                <TouchableOpacity style={styles.close} onPress={onRequestClose}>
-                  <Image source={closeIcon} />
-                </TouchableOpacity>
-              )}
-              <View
-                style={[styles.content, noPadding === true && styles.noPadding]}
-              >
-                {children}
-              </View>
-            </View>
+      <RNModal transparent animationType="fade" visible={visible && isFocused} onRequestClose={onRequestClose}>
+        <View style={styles.backdrop}>
+          <View style={[styles.container, noPadding === true && styles.noPadding]}>
+            <View style={[styles.content, noPadding === true && styles.noPadding]}>{children}</View>
+            {showCloseIcon === true && (
+              <TouchableOpacity style={styles.close} onPress={onRequestClose}>
+                <Image source={closeIcon} />
+              </TouchableOpacity>
+            )}
           </View>
-        </RNModal>
-      </>
+        </View>
+      </RNModal>
     )
   }
 }

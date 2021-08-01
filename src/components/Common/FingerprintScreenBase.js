@@ -3,24 +3,18 @@
 import React from 'react'
 import {View, Image, TouchableOpacity, Platform} from 'react-native'
 import {defineMessages, type IntlShape} from 'react-intl'
-import {compose} from 'redux'
-import {withStateHandlers} from 'recompose'
 import DeviceInfo from 'react-native-device-info'
 
 import {Text, StatusBar, ScreenBackground} from '../UiKit'
 import fingerprintImage from '../../assets/img/fingerprint.png'
 import chevronLeft from '../../assets/img/chevron_left.png'
-import {onDidMount} from '../../utils/renderUtils'
 
 import styles from './styles/FingerprintScreenBase.style'
-
-import type {ComponentType} from 'react'
 
 const messages = defineMessages({
   welcomeMessage: {
     id: 'components.common.fingerprintscreenbase.welcomeMessage',
     defaultMessage: '!!!Welcome Back',
-    description: 'some desc',
   },
 })
 
@@ -32,97 +26,62 @@ type Props = {
   error?: null | false | string,
   addWelcomeMessage?: boolean,
   intl?: IntlShape,
-  showImage: boolean,
 }
 
-const FingerprintScreenBase = ({
-  headings,
-  subHeadings,
-  buttons,
-  onGoBack,
-  error,
-  addWelcomeMessage,
-  intl,
-  showImage,
-}: Props) => (
-  <ScreenBackground style={styles.container}>
-    <StatusBar type="dark" />
+const FingerprintScreenBase = ({headings, subHeadings, buttons, onGoBack, error, addWelcomeMessage, intl}: Props) => {
+  const [showImage, setShowImage] = React.useState(false)
 
-    <View style={[styles.main, onGoBack ? null : styles.mainPadded]}>
-      {onGoBack && (
-        <TouchableOpacity onPress={onGoBack} style={styles.goBack}>
-          <Image source={chevronLeft} style={styles.chevron} />
-        </TouchableOpacity>
-      )}
+  React.useEffect(() => {
+    DeviceInfo.getApiLevel().then((sdk) => {
+      setShowImage(Platform.OS === 'android' && sdk < 28)
+    })
+  }, [])
 
-      {headings.map((txt) => (
-        <Text key={txt} style={styles.heading}>
-          {txt}
-        </Text>
-      ))}
+  return (
+    <ScreenBackground style={styles.container}>
+      <StatusBar type="dark" />
 
-      {subHeadings && subHeadings.length > 0 ? (
-        <View style={styles.subHeadingContainer}>
-          {subHeadings.map((txt) => (
-            <Text key={txt} style={styles.subHeading}>
-              {txt}
-            </Text>
-          ))}
-        </View>
-      ) : null}
+      <View style={[styles.main, onGoBack ? null : styles.mainPadded]}>
+        {onGoBack && (
+          <TouchableOpacity onPress={onGoBack} style={styles.goBack}>
+            <Image source={chevronLeft} style={styles.chevron} />
+          </TouchableOpacity>
+        )}
 
-      {/* eslint-disable indent */
-      addWelcomeMessage === true &&
-        intl != null && (
-          <View style={styles.welcomeMessageContainer}>
-            <Text style={styles.welcomeMessageText}>
-              {intl.formatMessage(messages.welcomeMessage)}
-            </Text>
+        {headings.map((txt) => (
+          <Text key={txt} style={styles.heading}>
+            {txt}
+          </Text>
+        ))}
+
+        {subHeadings && subHeadings.length > 0 ? (
+          <View style={styles.subHeadingContainer}>
+            {subHeadings.map((txt) => (
+              <Text key={txt} style={styles.subHeading}>
+                {txt}
+              </Text>
+            ))}
           </View>
-        )
-      /* eslint-enable indent */
-      }
+        ) : null}
 
-      {showImage === true && (
-        <View style={styles.imageContainer}>
-          <Image source={fingerprintImage} style={styles.image} />
-        </View>
-      )}
-    </View>
+        {addWelcomeMessage === true && intl != null && (
+          <View style={styles.welcomeMessageContainer}>
+            <Text style={styles.welcomeMessageText}>{intl.formatMessage(messages.welcomeMessage)}</Text>
+          </View>
+        )}
 
-    {error != null && error !== false ? (
-      <Text style={styles.error}>{error}</Text>
-    ) : null}
+        {showImage === true && (
+          <View style={styles.imageContainer}>
+            <Image source={fingerprintImage} style={styles.image} />
+          </View>
+        )}
+      </View>
 
-    <View style={styles.controls}>{buttons}</View>
-  </ScreenBackground>
-)
+      {error != null && error !== false ? <Text style={styles.error}>{error}</Text> : null}
 
-type ExternalProps = {
-  headings: Array<string>,
-  subHeadings?: Array<string>,
-  buttons: Array<any>,
-  onGoBack?: () => any,
-  error?: null | false | string,
-  addWelcomeMessage?: boolean,
-  intl?: IntlShape,
+      <View style={styles.controls}>{buttons}</View>
+    </ScreenBackground>
+  )
 }
 
-export default (compose(
-  withStateHandlers(
-    {
-      showImage: false,
-    },
-    {
-      shouldShowImage: () => (sdk: number): {showImage: boolean} => {
-        // note(v-almonacid): the decrypt with biometrics prompt only appears
-        // for API level >= 28
-        const showImage = Platform.OS === 'android' && sdk < 28
-        return {showImage}
-      },
-    },
-  ),
-  onDidMount(({shouldShowImage}) =>
-    DeviceInfo.getApiLevel().then((sdk) => shouldShowImage(sdk)),
-  ),
-)(FingerprintScreenBase): ComponentType<ExternalProps>)
+export default FingerprintScreenBase

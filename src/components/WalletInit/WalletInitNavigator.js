@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react'
 import {createStackNavigator} from '@react-navigation/stack'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
@@ -14,11 +15,7 @@ import ConnectNanoXScreen from './ConnectNanoX/ConnectNanoXScreen'
 import SaveNanoXScreen from './ConnectNanoX/SaveNanoXScreen'
 import MnemonicShowScreen from './CreateWallet/MnemonicShowScreen'
 
-import {
-  defaultNavigationOptions,
-  jormunNavigationOptions,
-  defaultStackNavigatorOptions,
-} from '../../navigationOptions'
+import {defaultNavigationOptions, jormunNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
 import MnemonicCheckScreen from './CreateWallet/MnemonicCheckScreen'
 import VerifyRestoredWallet from './RestoreWallet/VerifyRestoredWallet'
 import WalletCredentialsScreen from './RestoreWallet/WalletCredentialsScreen'
@@ -42,6 +39,10 @@ const messages = defineMessages({
     id: 'components.walletinit.importreadonlywalletscreen.title',
     defaultMessage: '!!!Read-only Wallet',
   },
+  saveReadOnlyWalletTitle: {
+    id: 'components.walletinit.savereadonlywalletscreen.title',
+    defaultMessage: '!!!Verify read-only wallet',
+  },
   mnemonicShowTitle: {
     id: 'components.walletinit.createwallet.mnemonicshowscreen.title',
     defaultMessage: '!!!Recovery phrase',
@@ -57,7 +58,6 @@ const messages = defineMessages({
   walletCredentialsTitle: {
     id: 'components.walletinit.restorewallet.walletcredentialsscreen.title',
     defaultMessage: '!!!Wallet credentials',
-    description: 'some desc',
   },
   connectNanoXTitle: {
     id: 'components.walletinit.connectnanox.connectnanoxscreen.title',
@@ -95,9 +95,7 @@ const WalletInitNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
       // jormun style, make sure to pass the networkId as a route param
 
       // $FlowFixMe mixed is incompatible with number
-      const extraOptions = isJormungandr(route.params?.networkId)
-        ? jormunNavigationOptions
-        : {}
+      const extraOptions = isJormungandr(route.params?.networkId) ? jormunNavigationOptions : {}
       return {
         cardStyle: {
           backgroundColor: 'transparent',
@@ -137,6 +135,7 @@ const WalletInitNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
     <Stack.Screen
       name={WALLET_INIT_ROUTES.SAVE_READ_ONLY_WALLET}
       component={SaveReadOnlyWalletScreen}
+      options={{title: intl.formatMessage(messages.saveReadOnlyWalletTitle)}}
     />
     <Stack.Screen
       name={WALLET_INIT_ROUTES.CHECK_NANO_X}
@@ -149,10 +148,7 @@ const WalletInitNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
     >
       {(props) => <ConnectNanoXScreen {...props} defaultDevices={null} />}
     </Stack.Screen>
-    <Stack.Screen
-      name={WALLET_INIT_ROUTES.SAVE_NANO_X}
-      component={SaveNanoXScreen}
-    />
+    <Stack.Screen name={WALLET_INIT_ROUTES.SAVE_NANO_X} component={SaveNanoXScreen} />
     <Stack.Screen
       name={WALLET_INIT_ROUTES.MNEMONIC_SHOW}
       component={MnemonicShowScreen}

@@ -1,4 +1,5 @@
 // @flow
+
 import {compose} from 'lodash/fp'
 
 import {insertAt} from '../../utils/string'
@@ -6,9 +7,7 @@ import {insertAt} from '../../utils/string'
 export const stripExcessiveDecimals = (number: string) => {
   const separatorIndex = number.indexOf('.')
 
-  return separatorIndex === -1
-    ? number
-    : number.substring(0, separatorIndex + 1 + 6)
+  return separatorIndex === -1 ? number : number.substring(0, separatorIndex + 1 + 6)
 }
 
 export const stripAllButLastDecimalSeparators = (number: string) => {
@@ -36,14 +35,11 @@ export const stripAllButFirstDecimalSeparator = (number: string) => {
 
 export const stripCommas = (number: string) => number.replace(/,/g, '')
 
-export const stripInvalidCharacters = (number: string) =>
-  number.replace(/[^0-9.,]/g, '')
+export const stripInvalidCharacters = (number: string) => number.replace(/[^0-9.,]/g, '')
 
-export const formatSeparatorWithoutDigits = (number: string) =>
-  number === '.' ? '0.' : number
+export const formatSeparatorWithoutDigits = (number: string) => (number === '.' ? '0.' : number)
 
-export const formatMultiLangSeparator = (number: string) =>
-  number.replace(/,/g, '.')
+export const formatMultiLangSeparator = (number: string) => number.replace(/,/g, '.')
 
 export const pastedFormatter = compose(
   // $FlowFixMe function is not compatible with array

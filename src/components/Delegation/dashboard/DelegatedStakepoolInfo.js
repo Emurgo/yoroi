@@ -1,4 +1,5 @@
 // @flow
+
 import React, {useState} from 'react'
 import {View, Image, Linking, TouchableOpacity, Animated} from 'react-native'
 import Clipboard from '@react-native-community/clipboard'
@@ -8,6 +9,8 @@ import {debounce} from 'lodash'
 import {Text, TitledCard, Button} from '../../UiKit'
 import copyIcon from '../../../assets/img/icon/copy.png'
 import styles from './styles/DelegatedStakepoolInfo.style'
+
+import type {ViewProps} from 'react-native/Libraries/Components/View/ViewPropTypes'
 
 const messages = defineMessages({
   title: {
@@ -21,8 +24,7 @@ const messages = defineMessages({
       ' take a couple of minutes for the network to process your request.',
   },
   fullDescriptionButtonLabel: {
-    id:
-      'components.delegationsummary.delegatedStakepoolInfo.fullDescriptionButtonLabel',
+    id: 'components.delegationsummary.delegatedStakepoolInfo.fullDescriptionButtonLabel',
     defaultMessage: '!!!Go to website',
   },
   copied: {
@@ -35,45 +37,29 @@ const messages = defineMessages({
   },
 })
 
-export const formatStakepoolNameWithTicker = (
-  poolTicker: ?string,
-  poolName: ?string,
-  intl: IntlShape,
-): string => {
+export const formatStakepoolNameWithTicker = (poolTicker: ?string, poolName: ?string, intl: IntlShape): string => {
   return poolTicker == null
     ? poolName ?? intl.formatMessage(messages.unknownPool)
     : poolName == null
-      ? `${poolTicker}`
-      : `(${poolTicker}) ${poolName}`
+    ? `${poolTicker}`
+    : `(${poolTicker}) ${poolName}`
 }
 
 const COPY_NOTIFICATION_TIME = 5000 // show 'copied' notification for 5 s
 
-const FadeOutView = (props) => {
+const FadeOutView = (props: ViewProps) => {
   const [fadeAnim] = useState(new Animated.Value(1))
 
-  React.useEffect(
-    () => {
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 2000,
-        delay: 3000,
-        useNativeDriver: true,
-      }).start()
-    },
-    [fadeAnim],
-  )
+  React.useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 2000,
+      delay: 3000,
+      useNativeDriver: true,
+    }).start()
+  }, [fadeAnim])
 
-  return (
-    <Animated.View
-      style={{
-        ...props.style,
-        opacity: fadeAnim,
-      }}
-    >
-      {props.children}
-    </Animated.View>
-  )
+  return <Animated.View style={[props.style, {opacity: fadeAnim}]}>{props.children}</Animated.View>
 }
 
 type Props = {|
@@ -84,13 +70,7 @@ type Props = {|
   +poolURL: string,
 |}
 
-const DelegatedStakepoolInfo = ({
-  intl,
-  poolTicker,
-  poolName,
-  poolHash,
-  poolURL,
-}: Props) => {
+const DelegatedStakepoolInfo = ({intl, poolTicker, poolName, poolHash, poolURL}: Props) => {
   const openExternalURL = () => {
     if (poolURL) {
       // note: do not await on purpose
@@ -110,31 +90,20 @@ const DelegatedStakepoolInfo = ({
     registerTimeout(t)
   }
 
-  React.useEffect(
-    () => {
-      return () => timeoutIds.forEach((id) => clearTimeout(id))
-    },
-    [timeoutIds],
-  )
+  React.useEffect(() => {
+    return () => timeoutIds.forEach((id) => clearTimeout(id))
+  }, [timeoutIds])
 
   return (
     <View style={styles.wrapper}>
-      <TitledCard
-        title={intl.formatMessage(messages.title)}
-        variant={'poolInfo'}
-      >
+      <TitledCard title={intl.formatMessage(messages.title)} variant={'poolInfo'}>
         <View style={styles.topBlock}>
           <Text bold style={styles.poolName}>
             {formatStakepoolNameWithTicker(poolTicker, poolName, intl)}
           </Text>
 
           <View style={styles.poolHashBlock}>
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="middle"
-              monospace
-              style={styles.poolHash}
-            >
+            <Text numberOfLines={1} ellipsizeMode="middle" monospace style={styles.poolHash}>
               {poolHash}
             </Text>
 

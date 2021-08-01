@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react'
 import {Button} from '../UiKit'
 import {createStackNavigator} from '@react-navigation/stack'
@@ -7,19 +8,11 @@ import {useSelector} from 'react-redux'
 import {walletNameSelector} from '../../selectors'
 import StakingDashboard from './StakingDashboard'
 import BiometricAuthScreen from '../Send/BiometricAuthScreen'
-import {
-  STAKING_DASHBOARD_ROUTES,
-  WALLET_ROOT_ROUTES,
-  SEND_ROUTES,
-} from '../../RoutesList'
+import {STAKING_DASHBOARD_ROUTES, WALLET_ROOT_ROUTES, SEND_ROUTES} from '../../RoutesList'
 import iconGear from '../../assets/img/gear.png'
 import {isJormungandr} from '../../config/networks'
 
-import {
-  defaultNavigationOptions,
-  defaultStackNavigatorOptions,
-  jormunNavigationOptions,
-} from '../../navigationOptions'
+import {defaultNavigationOptions, defaultStackNavigatorOptions, jormunNavigationOptions} from '../../navigationOptions'
 
 import styles from '../TxHistory/styles/SettingsButton.style'
 
@@ -38,9 +31,7 @@ const DelegationNavigatorSummary = () => {
     <Stack.Navigator
       screenOptions={({route}) => {
         // $FlowFixMe mixed is incompatible with number
-        const extraOptions = isJormungandr(route.params?.networkId)
-          ? jormunNavigationOptions
-          : {}
+        const extraOptions = isJormungandr(route.params?.networkId) ? jormunNavigationOptions : {}
         return {
           cardStyle: {
             backgroundColor: 'transparent',

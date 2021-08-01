@@ -15,13 +15,7 @@ type Props = {
   languageCode: string,
 }
 
-const LanguageListItem = ({
-  label,
-  iconSource,
-  isSelected,
-  selectLanguage,
-  languageCode,
-}: Props) => {
+const LanguageListItem = ({label, iconSource, isSelected, selectLanguage, languageCode}: Props) => {
   const handleSelectLanguage = () => selectLanguage(languageCode)
 
   return (
