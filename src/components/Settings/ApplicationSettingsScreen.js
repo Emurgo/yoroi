@@ -114,7 +114,7 @@ const ApplicationSettingsScreen = ({intl, navigation}: Props & RouterProps) => {
         onSuccess: () =>
           navigation.navigate(SETTINGS_ROUTES.SETUP_CUSTOM_PIN, {
             onSuccess: async () => {
-              await setSystemAuth(false)
+              await dispatch(setSystemAuth(false))
 
               navigation.navigate(SETTINGS_ROUTES.MAIN)
             },
