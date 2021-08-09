@@ -9,7 +9,7 @@ import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import TwoActionView from '../Common/TwoActionView'
 import AddressEntry from '../Common/AddressEntry'
 import HWInstructions from '../Ledger/HWInstructions'
-import {Text, ValidatedTextInput} from '../UiKit'
+import {Text, TextInput} from '../UiKit'
 import {walletMetaSelector, defaultNetworkAssetSelector} from '../../selectors'
 import {formatTokenWithText} from '../../utils/format'
 import {confirmationMessages, txLabels} from '../../i18n/global-messages'
@@ -164,4 +164,4 @@ const TransferSummary = ({
 export default injectIntl(TransferSummary)
 
 const Item = (props) => <View {...props} style={styles.item} />
-const PasswordInput = ValidatedTextInput
+const PasswordInput = TextInput
