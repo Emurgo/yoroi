@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ENDPOINT=https://faucet.alonzo-white.dev.cardano.org/send-money/
+ENDPOINT=https://faucet.alonzo-purple.dev.cardano.org/send-money/
 
 if [ -z "$1" ]
   then

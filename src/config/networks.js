@@ -183,8 +183,8 @@ const ALONZO_TESTNET = {
   },
   MARKETING_NAME: 'Alonzo Test Net',
   EXPLORER_URL_FOR_ADDRESS: (address: string) =>
-    `https://explorer.alonzo-white.dev.cardano.org/address?address=${address}`,
-  EXPLORER_URL_FOR_TX: (tx: string) => `https://explorer.alonzo-white.dev.cardano.org/tx/${tx}`,
+    `https://explorer.alonzo-purple.dev.cardano.org/address?address=${address}`,
+  EXPLORER_URL_FOR_TX: (tx: string) => `https://explorer.alonzo-purple.dev.cardano.org/tx/${tx}`,
 }
 
 export const NETWORKS = {
