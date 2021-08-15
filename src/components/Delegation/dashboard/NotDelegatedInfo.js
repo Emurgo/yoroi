@@ -16,7 +16,6 @@ const messages = defineMessages({
   secondLine: {
     id: 'components.delegationsummary.notDelegatedInfo.secondLine',
     defaultMessage:
-      // eslint-disable-next-line
       '!!!Go to Staking center to choose which stake pool you want to delegate in. Note, you may delegate only to one stake pool in this Tesnnet.',
   },
 })

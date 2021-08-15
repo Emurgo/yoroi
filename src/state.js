@@ -83,7 +83,6 @@ export type State = {
   isAppInitialized: boolean,
   isAuthenticated: boolean,
   isKeyboardOpen: boolean,
-  tos: string,
   appSettings: {
     acceptedTos: boolean,
     installationId: ?string,
@@ -162,7 +161,6 @@ export const getInitialState = (): State => ({
   isAppInitialized: false,
   isAuthenticated: false,
   isKeyboardOpen: false,
-  tos: '',
   appSettings: {
     acceptedTos: false,
     languageCode: 'en-US',

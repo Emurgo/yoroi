@@ -729,11 +729,9 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
 
     const addressingInfo = {}
     for (const change of await request.changeAddr) {
-      /* eslint-disable indent */
       const addressing = isByron(this.walletImplementationId)
         ? this.getAddressingInfo(change.address)
         : this.getAddressingInfo(await (await Address.from_bytes(Buffer.from(change.address, 'hex'))).to_bech32())
-      /* eslint-enable indent */
       if (addressing != null) addressingInfo[change.address] = addressing
     }
 

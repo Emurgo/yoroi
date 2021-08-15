@@ -40,32 +40,27 @@ import type {MessageDescriptor} from 'react-intl'
 const messages = defineMessages({
   switchWallet: {
     id: 'components.settings.walletsettingscreen.switchWallet',
-    defaultMessage: 'Switch wallet',
+    defaultMessage: '!!!Switch wallet',
   },
   logout: {
     id: 'components.settings.walletsettingscreen.logout',
-    defaultMessage: 'Logout',
-    description: 'some desc',
+    defaultMessage: '!!!Logout',
   },
   walletName: {
     id: 'components.settings.walletsettingscreen.walletName',
-    defaultMessage: 'Wallet name',
-    description: 'some desc',
+    defaultMessage: '!!!Wallet name',
   },
   security: {
     id: 'components.settings.walletsettingscreen.security',
-    defaultMessage: 'Security',
-    description: 'some desc',
+    defaultMessage: '!!!Security',
   },
   changePassword: {
     id: 'components.settings.walletsettingscreen.changePassword',
-    defaultMessage: 'Change password',
-    description: 'some desc',
+    defaultMessage: '!!!Change password',
   },
   easyConfirmation: {
     id: 'components.settings.walletsettingscreen.easyConfirmation',
     defaultMessage: '!!!Easy transaction confirmation',
-    description: 'some desc',
   },
   removeWallet: {
     id: 'components.settings.walletsettingscreen.removeWallet',

@@ -342,20 +342,16 @@ const Step5 = ({
             editable={false}
             onChangeText={() => ({})}
           />
-          {
-            /* eslint-disable indent */
-            !isEasyConfirmationEnabled && !isHW && (
-              <View>
-                <ValidatedTextInput
-                  secureTextEntry
-                  value={password}
-                  label={intl.formatMessage(txLabels.password)}
-                  onChangeText={setPassword}
-                />
-              </View>
-            )
-            /* eslint-enable indent */
-          }
+          {!isEasyConfirmationEnabled && !isHW && (
+            <View>
+              <ValidatedTextInput
+                secureTextEntry
+                value={password}
+                label={intl.formatMessage(txLabels.password)}
+                onChangeText={setPassword}
+              />
+            </View>
+          )}
         </View>
         <Button
           onPress={onContinue}

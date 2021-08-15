@@ -1,5 +1,5 @@
 // @flow
-/* eslint-disable  */
+
 import React from 'react'
 import {BigNumber} from 'bignumber.js'
 

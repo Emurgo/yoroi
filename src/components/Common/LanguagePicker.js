@@ -29,94 +29,76 @@ const messages = defineMessages({
   english: {
     id: 'components.common.languagepicker.english',
     defaultMessage: 'English',
-    description: 'some desc',
   },
   japanese: {
     id: 'components.common.languagepicker.japanese',
     defaultMessage: '日本語',
-    description: 'some desc',
   },
   korean: {
     id: 'components.common.languagepicker.korean',
     defaultMessage: '한국어',
-    description: 'some desc',
   },
   russian: {
     id: 'components.common.languagepicker.russian',
     defaultMessage: 'Русский',
-    description: 'some desc',
   },
   spanish: {
     id: 'components.common.languagepicker.spanish',
     defaultMessage: 'Español',
-    description: 'some desc',
   },
   chinese: {
     id: 'components.common.languagepicker.chinese',
     defaultMessage: '简体中文',
-    description: 'some desc',
   },
   indonesian: {
     id: 'components.common.languagepicker.indonesian',
     defaultMessage: 'Bahasa Indonesia',
-    description: 'some desc',
   },
   brazilian: {
     id: 'components.common.languagepicker.brazilian',
     defaultMessage: 'Português brasileiro',
-    description: 'some desc',
   },
   german: {
     id: 'components.common.languagepicker.german',
     defaultMessage: 'Deutsch',
-    description: 'some desc',
   },
   french: {
     id: 'components.common.languagepicker.french',
     defaultMessage: 'Français',
-    description: 'some desc',
   },
   italian: {
     id: 'components.common.languagepicker.italian',
     defaultMessage: 'Italiano',
-    description: 'some desc',
   },
   dutch: {
     id: 'components.common.languagepicker.dutch',
     defaultMessage: 'Nederlands',
-    description: 'some desc',
   },
   czech: {
     id: 'components.common.languagepicker.czech',
     defaultMessage: 'Čeština',
-    description: 'some desc',
   },
   hungarian: {
     id: 'components.common.languagepicker.hungarian',
     defaultMessage: 'Magyar',
-    description: 'some desc',
   },
   slovak: {
     id: 'components.common.languagepicker.slovak',
     defaultMessage: 'Slovenčina',
-    description: 'some desc',
   },
   continueButton: {
     id: 'components.common.languagepicker.continueButton',
     defaultMessage: '!!!Choose language',
-    description: 'some desc',
   },
   acknowledgement: {
     id: 'components.common.languagepicker.acknowledgement',
     defaultMessage:
       '!!!**The selected language translation is fully provided by the community**. ' +
       'EMURGO is grateful to all those who have contributed',
-    description: 'some desc',
   },
   contributors: {
     id: 'components.common.languagepicker.contributors',
     defaultMessage: '_',
-    description: 'some desc',
   },
 })
 
@@ -235,21 +217,17 @@ export const LanguagePicker = ({changeLanguage, languageCode, handleContinue, in
         )}
       />
 
-      {
-        /* eslint-disable indent */
-        languageCode !== 'en-US' && languageCode !== 'ja-JP' && (
-          <View style={styles.ackBlock}>
-            {intl.formatMessage(messages.contributors) !== '_' ? (
-              <Markdown>
-                {`${intl.formatMessage(messages.acknowledgement)}: **${intl.formatMessage(messages.contributors)}**`}
-              </Markdown>
-            ) : (
-              <Markdown>{`${intl.formatMessage(messages.acknowledgement)}.`}</Markdown>
-            )}
-          </View>
-        )
-        /* eslint-enable indent */
-      }
+      {languageCode !== 'en-US' && languageCode !== 'ja-JP' && (
+        <View style={styles.ackBlock}>
+          {intl.formatMessage(messages.contributors) !== '_' ? (
+            <Markdown>
+              {`${intl.formatMessage(messages.acknowledgement)}: **${intl.formatMessage(messages.contributors)}**`}
+            </Markdown>
+          ) : (
+            <Markdown>{`${intl.formatMessage(messages.acknowledgement)}.`}</Markdown>
+          )}
+        </View>
+      )}
 
       <Button onPress={handleContinue} title={intl.formatMessage(messages.continueButton)} testID="chooseLangButton" />
     </View>

@@ -1,5 +1,5 @@
 // @flow
-/* eslint-disable-next-line */
+
 import * as Keychain from 'react-native-keychain'
 import {Platform, NativeModules} from 'react-native'
 import {defineMessages, type IntlShape} from 'react-intl'
@@ -15,15 +15,15 @@ const {KeyStoreBridge} = NativeModules
 const messages = defineMessages({
   approveTransaction: {
     id: 'crypto.keystore.approveTransaction',
-    defaultMessage: 'Authorize with your biometrics',
+    defaultMessage: '!!!Authorize with your biometrics',
   },
   subtitle: {
     id: 'crypto.keystore.subtitle',
-    defaultMessage: 'You can disable this feature at any time in the settings',
+    defaultMessage: '!!!You can disable this feature at any time in the settings',
   },
   cancelButton: {
     id: 'crypto.keystore.cancelButton',
-    defaultMessage: 'Cancel',
+    defaultMessage: '!!!Cancel',
   },
 })
 
@@ -216,7 +216,6 @@ class KeyStore {
       return KeyStoreBridge.REJECTION_MESSAGES[key]
     }
 
-    // eslint-disable-next-line
     // from https://opensource.apple.com/source/Security/Security-55471/sec/Security/SecBase.h.auto.html
     if (Platform.OS === 'ios') {
       switch (key) {

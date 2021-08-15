@@ -12,6 +12,7 @@ storiesOf('MnemonicCheckScreen', module).add('Default', ({navigation, route}) =>
     name: CONFIG.DEBUG.WALLET_NAME,
     password: CONFIG.DEBUG.PASSWORD,
     networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
+    walletImplementationId: 'haskell-shelley',
   }
   return <MnemonicCheckScreen route={route} navigation={navigation} />
 })

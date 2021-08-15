@@ -2,8 +2,6 @@
 
 import React from 'react'
 import {View} from 'react-native'
-import {compose} from 'redux'
-import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, type IntlShape} from 'react-intl'
 
 import PinInput from './PinInput'
@@ -13,13 +11,32 @@ import {errorMessages} from '../../i18n/global-messages'
 
 import styles from './styles/PinRegistrationForm.style'
 
-import type {ComponentType} from 'react'
 import type {PinInputLabels} from './PinInput'
 import type {Navigation} from '../../types/navigation'
 
-const handlePinEnter =
-  ({pin, setPin, onPinEntered, intl}: {intl: IntlShape, pin: any, setPin: any, onPinEntered: any}) =>
-  async (pinConfirmation) => {
+type PinRegistrationFormLabels = {
+  PinInput: PinInputLabels,
+  PinConfirmationInput: PinInputLabels,
+}
+
+type Props = {
+  labels: PinRegistrationFormLabels,
+  onPinEntered: (string) => any,
+  intl: IntlShape,
+  navigation: Navigation,
+}
+
+const PinRegistrationForm = ({labels, onPinEntered, navigation, intl}: Props) => {
+  const [pin, setPin] = React.useState('')
+  const clearPin = React.useCallback(() => setPin(''), [])
+
+  const handleSetPin = (pin) => {
+    setPin(pin)
+
+    return Promise.resolve(true)
+  }
+
+  const handlePinEnter = async (pinConfirmation) => {
     if (pin !== pinConfirmation) {
       setPin('')
       await showErrorDialog(errorMessages.pinMismatch, intl)
@@ -41,27 +58,6 @@ const handlePinEnter =
     }
   }
 
-type PinRegistrationFormLabels = {
-  PinInput: PinInputLabels,
-  PinConfirmationInput: PinInputLabels,
-}
-
-type ExternalProps = {
-  labels: PinRegistrationFormLabels,
-  onPinEntered: (string) => any,
-  intl: IntlShape,
-  navigation: Navigation,
-}
-
-type Props = ExternalProps & {
-  pin: string,
-  setPin: (string) => void,
-  handleSetPin: (string) => Promise<boolean>,
-  handlePinEnter: (string) => Promise<boolean>,
-  clearPin: () => void,
-}
-
-const PinRegistrationForm = ({pin, handleSetPin, labels, handlePinEnter, clearPin, navigation}: Props) => {
   const inputLabels = !pin ? labels.PinInput : labels.PinConfirmationInput
 
   React.useEffect(() => {
@@ -82,26 +78,4 @@ const PinRegistrationForm = ({pin, handleSetPin, labels, handlePinEnter, clearPi
   )
 }
 
-export default injectIntl(
-  (compose(
-    withStateHandlers(
-      {
-        pin: '',
-      },
-      {
-        setPin: () => (pin: string) => ({pin}),
-        clearPin: () => () => ({pin: ''}),
-      },
-    ),
-    withHandlers({
-      handlePinEnter,
-      handleSetPin:
-        ({setPin}) =>
-        (pin) => {
-          setPin(pin)
-
-          return Promise.resolve(true)
-        },
-    }),
-  )(PinRegistrationForm): ComponentType<ExternalProps>),
-)
+export default injectIntl(PinRegistrationForm)

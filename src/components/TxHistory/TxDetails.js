@@ -45,12 +45,10 @@ const txTypeMessages = defineMessages({
   SELF: {
     id: 'components.txhistory.txdetails.txTypeSelf',
     defaultMessage: '!!!Intrawallet transaction',
-    description: 'some desc',
   },
   MULTI: {
     id: 'components.txhistory.txdetails.txTypeMulti',
     defaultMessage: '!!!Multi-party transaction',
-    description: 'some desc',
   },
 })
 
@@ -58,47 +56,38 @@ const messages = defineMessages({
   addressPrefixReceive: {
     id: 'components.txhistory.txdetails.addressPrefixReceive',
     defaultMessage: '!!!/{idx}',
-    description: 'some desc',
   },
   addressPrefixChange: {
     id: 'components.txhistory.txdetails.addressPrefixChange',
     defaultMessage: '!!!/change',
-    description: 'some desc',
   },
   addressPrefixNotMine: {
     id: 'components.txhistory.txdetails.addressPrefixNotMine',
     defaultMessage: '!!!not mine',
-    description: 'some desc',
   },
   fee: {
     id: 'components.txhistory.txdetails.fee',
     defaultMessage: '!!!Fee: ',
-    description: 'some desc',
   },
   fromAddresses: {
     id: 'components.txhistory.txdetails.fromAddresses',
     defaultMessage: '!!!From Addresses',
-    description: 'some desc',
   },
   toAddresses: {
     id: 'components.txhistory.txdetails.toAddresses',
     defaultMessage: '!!!To Addresses',
-    description: 'some desc',
   },
   transactionId: {
     id: 'components.txhistory.txdetails.transactionId',
     defaultMessage: '!!!Transaction ID',
-    description: 'some desc',
   },
   txAssuranceLevel: {
     id: 'components.txhistory.txdetails.txAssuranceLevel',
     defaultMessage: '!!!Transaction assurance level',
-    description: 'some desc',
   },
   confirmations: {
     id: 'components.txhistory.txdetails.confirmations',
     defaultMessage: '!!!{cnt} {cnt, plural, one {CONFIRMATION} other {CONFIRMATIONS}}',
-    description: 'some desc',
   },
   omittedCount: {
     id: 'components.txhistory.txdetails.omittedCount',

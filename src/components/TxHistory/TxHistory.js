@@ -243,20 +243,16 @@ const TxHistory = ({
           />
         )}
 
-        {
-          /* eslint-disable indent */
-          isByron(walletMeta.walletImplementationId) && showWarning && (
-            <WarningBanner
-              title={intl.formatMessage(warningBannerMessages.title).toUpperCase()}
-              icon={infoIcon}
-              message={intl.formatMessage(warningBannerMessages.message)}
-              showCloseIcon
-              onRequestClose={() => setShowWarning(false)}
-              style={styles.warningNoteStyles}
-            />
-          )
-          /* eslint-enable indent */
-        }
+        {isByron(walletMeta.walletImplementationId) && showWarning && (
+          <WarningBanner
+            title={intl.formatMessage(warningBannerMessages.title).toUpperCase()}
+            icon={infoIcon}
+            message={intl.formatMessage(warningBannerMessages.message)}
+            showCloseIcon
+            onRequestClose={() => setShowWarning(false)}
+            style={styles.warningNoteStyles}
+          />
+        )}
 
         <StandardModal
           visible={showInsufficientFundsModal}

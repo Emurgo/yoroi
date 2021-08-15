@@ -678,7 +678,7 @@ async function formatLedgerCertificates(
       result.push({
         type: CertificateType.STAKE_DEREGISTRATION,
         params: {
-          path: await getPath(await registrationCert.stake_credential()),
+          path: await getPath(await deregistrationCert.stake_credential()),
         },
       })
       continue
@@ -688,7 +688,7 @@ async function formatLedgerCertificates(
       result.push({
         type: CertificateType.STAKE_DELEGATION,
         params: {
-          path: await getPath(await registrationCert.stake_credential()),
+          path: await getPath(await delegationCert.stake_credential()),
           poolKeyHashHex: Buffer.from(await (await delegationCert.pool_keyhash()).to_bytes()).toString('hex'),
         },
       })

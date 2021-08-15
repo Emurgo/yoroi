@@ -18,7 +18,7 @@ import styles from './styles/BiometricsLinkScreen.style'
 const messages = defineMessages({
   enableFingerprintsMessage: {
     id: 'components.settings.biometricslinkscreen.enableFingerprintsMessage',
-    defaultMessage: 'Enable use of fingerprints in device settings first!',
+    defaultMessage: '!!!Enable use of fingerprints in device settings first!',
   },
   notNowButton: {
     id: 'components.settings.biometricslinkscreen.notNowButton',
@@ -27,22 +27,18 @@ const messages = defineMessages({
   linkButton: {
     id: 'components.settings.biometricslinkscreen.linkButton',
     defaultMessage: '!!!Link',
-    description: 'some desc',
   },
   heading: {
     id: 'components.settings.biometricslinkscreen.heading',
     defaultMessage: '!!!Use your fingerprint',
-    description: 'some desc',
   },
   subHeading1: {
     id: 'components.settings.biometricslinkscreen.subHeading1',
     defaultMessage: '!!!for faster, easier access',
-    description: 'some desc',
   },
   subHeading2: {
     id: 'components.settings.biometricslinkscreen.subHeading2',
     defaultMessage: '!!!to your Yoroi wallet',
-    description: 'some desc',
   },
 })
 

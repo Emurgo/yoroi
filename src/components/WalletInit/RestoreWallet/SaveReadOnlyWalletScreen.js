@@ -5,11 +5,8 @@ import React, {useState, useEffect} from 'react'
 // current version however doesn't work well on iOS
 import {View, SafeAreaView, FlatList, ScrollView} from 'react-native'
 import {injectIntl, type IntlShape, defineMessages} from 'react-intl'
-import {connect} from 'react-redux'
-import {compose} from 'redux'
-import {withHandlers, withStateHandlers} from 'recompose'
+import {useDispatch} from 'react-redux'
 
-import {withNavigationTitle} from '../../../utils/renderUtils'
 import {Text, StatusBar, Line} from '../../UiKit'
 import WalletNameForm from '../WalletNameForm'
 import {createWalletWithBip44Account, handleGeneralError} from '../../../actions'
@@ -24,16 +21,10 @@ import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
 
 import styles from './styles/SaveReadOnlyWalletScreen.style'
 
-import type {ComponentType} from 'react'
 import type {Navigation} from '../../../types/navigation'
 import type {NetworkId} from '../../../config/types'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.walletinit.savereadonlywalletscreen.title',
-    defaultMessage: '!!!Verify read-only wallet',
-    description: 'some desc',
-  },
   defaultWalletName: {
     id: 'components.walletinit.savereadonlywalletscreen.defaultWalletName',
     defaultMessage: '!!!My read-only wallet',
@@ -115,7 +106,15 @@ const WalletInfoView = ({intl, plate, normalizedPath, publicKeyHex, networkId}: 
   </View>
 )
 
-const SaveReadOnlyWalletScreen = ({onSubmit, isWaiting, route, intl}: {intl: IntlShape} & Object /* TODO: type */) => {
+type Props = {|
+  intl: IntlShape,
+  navigation: Navigation,
+  route: Object, // TODO(navigation): type
+|}
+
+const SaveReadOnlyWalletScreen = ({route, intl, navigation}: Props) => {
+  const [isWaiting, setIsWaiting] = React.useState(false)
+  const dispatch = useDispatch()
   const [plate, setPlate] = useState({
     accountPlate: {
       ImagePart: '',
@@ -124,7 +123,7 @@ const SaveReadOnlyWalletScreen = ({onSubmit, isWaiting, route, intl}: {intl: Int
     addresses: [],
   })
 
-  const {publicKeyHex, path, networkId} = route.params
+  const {publicKeyHex, path, networkId, walletImplementationId} = route.params
 
   const normalizedPath = path.map((i) => {
     if (i >= CONFIG.NUMBERS.HARD_DERIVATION_START) {
@@ -132,6 +131,53 @@ const SaveReadOnlyWalletScreen = ({onSubmit, isWaiting, route, intl}: {intl: Int
     }
     return i
   })
+
+  const withActivityIndicator = async (func: () => Promise<void>): Promise<void> => {
+    setIsWaiting(true)
+    try {
+      await func()
+    } finally {
+      setIsWaiting(false)
+    }
+  }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const onSubmit = React.useCallback(
+    ignoreConcurrentAsyncHandler(
+      () =>
+        async ({name}) => {
+          try {
+            assert.assert(publicKeyHex != null, 'SaveReadOnlyWalletScreen::onPress publicKeyHex')
+            assert.assert(networkId != null, 'networkId')
+            assert.assert(!!walletImplementationId, 'walletImplementationId')
+
+            withActivityIndicator(
+              async () =>
+                await dispatch(
+                  createWalletWithBip44Account(
+                    name,
+                    publicKeyHex,
+                    networkId,
+                    walletImplementationId,
+                    null,
+                    true, // important: read-only flag
+                  ),
+                ),
+            )
+
+            navigation.navigate(ROOT_ROUTES.WALLET, {
+              screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
+            })
+          } catch (e) {
+            setIsWaiting(false)
+            Logger.error('SaveReadOnlyWalletScreen::onSubmit', e)
+            await handleGeneralError(e.message, e, intl)
+          }
+        },
+      1000,
+    )(),
+    [publicKeyHex, networkId, walletImplementationId, navigation, route],
+  )
 
   useEffect(() => {
     const generatePlates = async () => {
@@ -165,78 +211,4 @@ const SaveReadOnlyWalletScreen = ({onSubmit, isWaiting, route, intl}: {intl: Int
   )
 }
 
-type ExternalProps = {|
-  intl: IntlShape,
-  navigation: Navigation,
-  route: Object, // TODO(navigation): type
-|}
-
-export default injectIntl(
-  (compose(
-    connect((_state) => ({}), {
-      createWalletWithBip44Account,
-    }),
-    withNavigationTitle(({intl}: {intl: IntlShape}) => intl.formatMessage(messages.title)),
-    withStateHandlers(
-      {
-        isWaiting: false,
-      },
-      {
-        setWaiting: () => (isWaiting: boolean) => ({isWaiting}),
-      },
-    ),
-    withHandlers({
-      withActivityIndicator:
-        ({setWaiting}) =>
-        async (func: () => Promise<void>): Promise<void> => {
-          setWaiting(true)
-          try {
-            await func()
-          } finally {
-            setWaiting(false)
-          }
-        },
-    }),
-    withHandlers({
-      onSubmit: ignoreConcurrentAsyncHandler(
-        (
-            {
-              createWalletWithBip44Account,
-              withActivityIndicator,
-              navigation,
-              intl,
-              route,
-            }: {intl: IntlShape} & Object /* TODO: type */,
-          ) =>
-          async ({name}) => {
-            try {
-              const {publicKeyHex, networkId, walletImplementationId} = route.params
-              assert.assert(publicKeyHex != null, 'SaveReadOnlyWalletScreen::onPress publicKeyHex')
-              assert.assert(networkId != null, 'networkId')
-              assert.assert(!!walletImplementationId, 'walletImplementationId')
-
-              await withActivityIndicator(
-                async () =>
-                  await createWalletWithBip44Account(
-                    name,
-                    publicKeyHex,
-                    networkId,
-                    walletImplementationId,
-                    null,
-                    true, // important: read-only flag
-                  ),
-              )
-
-              navigation.navigate(ROOT_ROUTES.WALLET, {
-                screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
-              })
-            } catch (e) {
-              Logger.error('SaveReadOnlyWalletScreen::onSubmit', e)
-              await handleGeneralError(e.message, e, intl)
-            }
-          },
-        1000,
-      ),
-    }),
-  )(SaveReadOnlyWalletScreen): ComponentType<ExternalProps>),
-)
+export default injectIntl(SaveReadOnlyWalletScreen)

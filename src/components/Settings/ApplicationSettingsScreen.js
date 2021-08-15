@@ -29,7 +29,7 @@ import DeviceInfo from 'react-native-device-info'
 const messages = defineMessages({
   language: {
     id: 'components.settings.applicationsettingsscreen.language',
-    defaultMessage: 'Your language',
+    defaultMessage: '!!!Your language',
   },
   currentLanguage: {
     id: 'components.settings.applicationsettingsscreen.currentLanguage',
@@ -37,32 +37,28 @@ const messages = defineMessages({
   },
   security: {
     id: 'components.settings.applicationsettingsscreen.security',
-    defaultMessage: 'Security',
+    defaultMessage: '!!!Security',
   },
   changePin: {
     id: 'components.settings.applicationsettingsscreen.changePin',
-    defaultMessage: 'Change PIN',
+    defaultMessage: '!!!Change PIN',
   },
   biometricsSignIn: {
     id: 'components.settings.applicationsettingsscreen.biometricsSignIn',
     defaultMessage: '!!!Sign in with your biometrics',
-    description: 'some desc',
   },
   crashReporting: {
     id: 'components.settings.applicationsettingsscreen.crashReporting',
     defaultMessage: '!!!Crash reporting',
-    description: 'some desc',
   },
   crashReportingText: {
     id: 'components.settings.applicationsettingsscreen.crashReportingText',
     defaultMessage:
-      'Send crash reports to Emurgo. ' +
-      'Changes to this option will be reflected ' +
-      ' after restarting the application.',
+      '!!!Send crash reports to Emurgo. Changes to this option will be reflected after restarting the application.',
   },
   termsOfUse: {
     id: 'components.settings.applicationsettingsscreen.termsOfUse',
-    defaultMessage: 'Terms of Use',
+    defaultMessage: '!!!Terms of Use',
   },
   support: {
     id: 'components.settings.applicationsettingsscreen.support',
@@ -118,7 +114,7 @@ const ApplicationSettingsScreen = ({intl, navigation}: Props & RouterProps) => {
         onSuccess: () =>
           navigation.navigate(SETTINGS_ROUTES.SETUP_CUSTOM_PIN, {
             onSuccess: async () => {
-              await setSystemAuth(false)
+              await dispatch(setSystemAuth(false))
 
               navigation.navigate(SETTINGS_ROUTES.MAIN)
             },

@@ -1,15 +1,13 @@
 // @flow
 
 import React from 'react'
-import {View, ScrollView} from 'react-native'
-import {compose} from 'redux'
-import {connect} from 'react-redux'
-import {withHandlers, withStateHandlers} from 'recompose'
+import {View, ScrollView, Platform} from 'react-native'
+import {useSelector} from 'react-redux'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import _ from 'lodash'
 
-import {Text, Button, ValidatedTextInput, StatusBar} from '../../UiKit'
+import {Text, TextInput, Button, Spacer, StatusBar} from '../../UiKit'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {CONFIG, getWalletConfigById} from '../../../config/config'
 import {validateRecoveryPhrase, INVALID_PHRASE_ERROR_CODES, cleanMnemonic} from '../../../utils/validators'
@@ -18,7 +16,6 @@ import {isKeyboardOpenSelector} from '../../../selectors'
 import styles from './styles/RestoreWalletScreen.style'
 
 import type {InvalidPhraseError} from '../../../utils/validators'
-import type {ComponentType} from 'react'
 import type {Navigation} from '../../../types/navigation'
 import type {WalletImplementationId} from '../../../config/types'
 
@@ -26,22 +23,18 @@ const mnemonicInputErrorsMessages = defineMessages({
   TOO_LONG: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.toolong',
     defaultMessage: '!!!Phrase is too long. ',
-    description: 'some desc',
   },
   TOO_SHORT: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.tooshort',
     defaultMessage: '!!!Phrase is too short. ',
-    description: 'some desc',
   },
   INVALID_CHECKSUM: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.invalidchecksum',
     defaultMessage: '!!!Please enter valid mnemonic.',
-    description: 'some desc',
   },
   UNKNOWN_WORDS: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.unknowwords',
     defaultMessage: '!!!{wordlist} {cnt, plural, one {is} other {are}} invalid',
-    description: 'some desc',
   },
 })
 
@@ -49,12 +42,10 @@ const messages = defineMessages({
   mnemonicInputLabel: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.mnemonicInputLabel',
     defaultMessage: '!!!Recovery phrase',
-    description: 'some desc',
   },
   restoreButton: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.restoreButton',
     defaultMessage: '!!!Restore wallet',
-    description: 'some desc',
   },
   instructions: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.instructions',
@@ -62,11 +53,10 @@ const messages = defineMessages({
       '!!!To restore your wallet please provide the {mnemonicLength}-word ' +
       'recovery phrase you received when you created your wallet for the ' +
       'first time.',
-    description: 'some desc',
   },
 })
 
-const _translateInvalidPhraseError = (intl: IntlShape, error: InvalidPhraseError) => {
+const translateInvalidPhraseError = (intl: IntlShape, error: InvalidPhraseError) => {
   if (error.code === INVALID_PHRASE_ERROR_CODES.UNKNOWN_WORDS) {
     return intl.formatMessage(mnemonicInputErrorsMessages.UNKNOWN_WORDS, {
       cnt: error.words.length,
@@ -93,94 +83,69 @@ const errorsVisibleWhileWriting = (errors) => {
 }
 
 const RestoreWalletScreen = (
-  {
-    navigateToWalletCredentials,
-    intl,
-    phrase,
-    setPhrase,
-    translateInvalidPhraseError,
-    isKeyboardOpen,
-    route,
-  }: {intl: IntlShape} & Object /* TODO: type */,
+  {intl, route, navigation}: {intl: IntlShape, navigation: Navigation} & Object /* TODO: type */,
 ) => {
   const implId: WalletImplementationId = route.params.walletImplementationId
+  const [phrase, setPhrase] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.MNEMONIC3 : '')
+
   const walletConfig = getWalletConfigById(implId)
   const errors = validateRecoveryPhrase(phrase, walletConfig.MNEMONIC_LEN)
-  const visibleErrors = isKeyboardOpen
+  const hasErrors = Object.keys(errors).length > 0
+  const visibleErrors = useSelector(isKeyboardOpenSelector)
     ? errorsVisibleWhileWriting(errors.invalidPhrase || [])
     : errors.invalidPhrase || []
 
-  const errorText = visibleErrors.map((error) => translateInvalidPhraseError(error)).join(' ')
+  const errorText = visibleErrors.map((error) => translateInvalidPhraseError(intl, (error: any))).join(' ')
+
+  const navigateToWalletCredentials = () => {
+    if (hasErrors) return
+
+    navigation.navigate(WALLET_INIT_ROUTES.VERIFY_RESTORED_WALLET, {
+      phrase: cleanMnemonic(phrase),
+      networkId: route.params.networkId,
+      walletImplementationId: route.params.walletImplementationId,
+      provider: route.params.provider,
+    })
+  }
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <StatusBar type="dark" />
 
-      <ScrollView keyboardDismissMode="on-drag">
-        <View style={styles.container}>
-          <Text>
-            {intl.formatMessage(messages.instructions, {
-              mnemonicLength: walletConfig.MNEMONIC_LEN,
-            })}
-          </Text>
-          <ValidatedTextInput
-            multiline
-            numberOfLines={3}
-            style={styles.phrase}
-            value={phrase}
-            onChangeText={setPhrase}
-            placeholder={intl.formatMessage(messages.mnemonicInputLabel)}
-            blurOnSubmit
-            error={errorText}
-            autoCapitalize="none"
-            keyboardType="visible-password"
-            // hopefully this prevents keyboard from learning the mnemonic
-            autoCorrect={false}
-          />
-        </View>
+      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
+        <Spacer height={24} />
+
+        <Text style={styles.instructions}>
+          {intl.formatMessage(messages.instructions, {mnemonicLength: walletConfig.MNEMONIC_LEN})}
+        </Text>
+
+        <Spacer height={32} />
+
+        <TextInput
+          autoFocus
+          enablesReturnKeyAutomatically
+          onChangeText={setPhrase}
+          errorText={errorText}
+          label={intl.formatMessage(messages.mnemonicInputLabel)}
+          returnKeyLabel={'done'}
+          multiline
+          value={phrase}
+          placeholder={intl.formatMessage(messages.mnemonicInputLabel)}
+          blurOnSubmit
+          autoCapitalize="none"
+          keyboardType={Platform.OS === 'ios' ? 'default' : 'visible-password'}
+        />
       </ScrollView>
 
-      <Button
-        onPress={navigateToWalletCredentials}
-        title={intl.formatMessage(messages.restoreButton)}
-        disabled={!_.isEmpty(errors)}
-      />
+      <View style={styles.actions}>
+        <Button
+          onPress={navigateToWalletCredentials}
+          title={intl.formatMessage(messages.restoreButton)}
+          disabled={hasErrors}
+        />
+      </View>
     </SafeAreaView>
   )
 }
 
-export default injectIntl(
-  (compose(
-    connect((state) => ({
-      isKeyboardOpen: isKeyboardOpenSelector(state),
-    })),
-    withStateHandlers(
-      {
-        phrase: CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.MNEMONIC3 : '',
-      },
-      {
-        setPhrase: () => (value) => ({phrase: value}),
-      },
-    ),
-    withHandlers({
-      navigateToWalletCredentials:
-        ({navigation, route, phrase}) =>
-        (_event) => {
-          navigation.navigate(WALLET_INIT_ROUTES.VERIFY_RESTORED_WALLET, {
-            phrase: cleanMnemonic(phrase),
-            networkId: route.params.networkId,
-            walletImplementationId: route.params.walletImplementationId,
-            provider: route.params.provider,
-          })
-        },
-      translateInvalidPhraseError:
-        ({intl}: {intl: IntlShape}) =>
-        (error) =>
-          _translateInvalidPhraseError(intl, error),
-    }),
-  )(RestoreWalletScreen): ComponentType<{
-    navigation: Navigation,
-    route: Object, // TODO(navigation): type
-    intl: IntlShape,
-  }>),
-)
+export default injectIntl(RestoreWalletScreen)

@@ -1,32 +1,26 @@
 // @flow
 
 import React from 'react'
-import {compose} from 'redux'
-import {withHandlers} from 'recompose'
 import {TouchableOpacity, View, Image} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 
 import chevronRight from '../../assets/img/chevron_right.png'
 import {Text} from '../UiKit'
 
-import type {ComponentType} from 'react'
-
 import styles from './styles/SettingsItems.style'
 
 const Touchable = <Props>(props: Props) => <TouchableOpacity {...props} activeOpacity={0.5} />
 
-type NavigateToProps = {
+type NavigateToProps = {|
   to: string,
   navigation: any,
+  children: React$Node,
+  disabled?: boolean,
+|}
+
+const NavigateTo = ({navigation, to, ...props}: NavigateToProps) => {
+  return <Touchable onPress={() => navigation.navigate(to)} {...props} />
 }
-const NavigateTo = (compose(
-  withHandlers({
-    onPress:
-      ({to, navigation}: NavigateToProps) =>
-      () =>
-        navigation.navigate(to),
-  }),
-)((props) => <Touchable {...props} />): ComponentType<NavigateToProps>)
 
 type SettingsSectionProps = {
   title?: string,
