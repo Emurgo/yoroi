@@ -200,18 +200,15 @@ const StakingCenter = (
   const poolList = poolOperator != null ? [poolOperator] : null
 
   const [amountToDelegate, setAmountToDelegate] = useState<string | null>(null)
-
   const [selectedPools, setSelectedPools] = useState([])
-
   const [reputationInfo, setReputationInfo] = useState({})
-
   const [showPoolWarning, setShowPoolWarning] = useState(false)
-
   const [busy, setBusy] = useState(false)
 
   const handleOnMessage = async (event) => {
     try {
       setBusy(true)
+      // const selectedPoolHashes: Array<string> = true ? ['03868bffac073e46cfeca68486ce8c8cdb5e3bf2677f63f2954e9cae'] : JSON.parse(decodeURI(event.nativeEvent.data))
       const selectedPoolHashes: Array<string> = JSON.parse(decodeURI(event.nativeEvent.data))
       Logger.debug('selected pools from explorer:', selectedPoolHashes)
       await _handleOnMessage(
