@@ -1,7 +1,7 @@
 // @flow
 
 import React, {useState, useEffect} from 'react'
-import {AppState} from 'react-native'
+import {AppState, Platform} from 'react-native'
 import {compose} from 'redux'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
@@ -133,6 +133,8 @@ const BiometricAuthScreen = (
 
   useEffect(() => {
     const handleAppStateChange: (?string) => Promise<void> = async (nextAppState) => {
+      if (Platform.OS !== 'android') return
+
       const previousAppState = appState
       setAppState(nextAppState)
       if (previousAppState != null && previousAppState.match(/inactive|background/) && nextAppState === 'active') {
