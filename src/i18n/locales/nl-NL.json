@@ -66,7 +66,7 @@
   "components.firstrun.custompinscreen.title": "Bepaal de pincode",
   "components.ledger.ledgerconnect.usbDeviceReady": "USB apparaat is klaar, druk op \"Bevestigen\" om door te gaan",
   "components.ledger.ledgertransportswitchmodal.bluetoothButton": "Verbindt met Bluetooth",
-  "components.ledger.ledgertransportswitchmodal.bluetoothExaplanation": "Kies deze optie als je wilt verbinden met een Ledger Nano Model X via Bluetooth:",
+  "components.ledger.ledgertransportswitchmodal.bluetoothExplanation": "Kies deze optie als je wilt verbinden met een Ledger Nano Model X via Bluetooth:",
   "components.ledger.ledgertransportswitchmodal.title": "Kies een verbindingsmethode",
   "components.ledger.ledgertransportswitchmodal.usbButton": "Verbindt via USB",
   "components.ledger.ledgertransportswitchmodal.usbButtonDisabled": "Verbindt via USB (door Apple geblokkeerd voor IOS)",
