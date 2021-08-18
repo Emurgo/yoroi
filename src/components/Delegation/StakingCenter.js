@@ -1,7 +1,7 @@
 // @flow
 
 import React, {useState, useEffect} from 'react'
-import {View} from 'react-native'
+import {Alert, View} from 'react-native'
 import {WebView} from 'react-native-webview'
 import {BigNumber} from 'bignumber.js'
 import {connect} from 'react-redux'
@@ -9,7 +9,7 @@ import {compose} from 'redux'
 import {injectIntl, defineMessages} from 'react-intl'
 
 import {STAKING_CENTER_ROUTES} from '../../RoutesList'
-import {CONFIG} from '../../config/config'
+import {CONFIG, isNightly, SHOW_PROD_POOLS_IN_DEV} from '../../config/config'
 import {Logger} from '../../utils/logging'
 import {normalizeTokenAmount} from '../../utils/format'
 import walletManager from '../../crypto/walletManager'
@@ -26,6 +26,7 @@ import {
   poolOperatorSelector,
   languageSelector,
   serverStatusSelector,
+  walletMetaSelector,
 } from '../../selectors'
 import UtxoAutoRefresher from '../Send/UtxoAutoRefresher'
 import AccountAutoRefresher from './AccountAutoRefresher'
@@ -40,6 +41,9 @@ import type {DefaultAsset} from '../../types/HistoryTransaction'
 import type {Navigation} from '../../types/navigation'
 import type {RawUtxo} from '../../api/types'
 import type {ServerStatusCache} from '../../state'
+import PoolDetailScreen from './PoolDetailScreen'
+
+const IS_STAKING_ON_TEST_BUILD = isNightly() || CONFIG.IS_TESTNET_BUILD
 
 const noPoolDataDialog = defineMessages({
   title: {
@@ -194,6 +198,7 @@ const StakingCenter = (
     languageCode,
     accountBalance,
     serverStatus,
+    walletMeta,
   }: {intl: IntlShape} & Object /* TODO: type */,
 ) => {
   // pools user is currently delegating to
@@ -248,34 +253,47 @@ const StakingCenter = (
 
   return (
     <>
-      <View style={styles.container}>
-        <UtxoAutoRefresher />
-        <AccountAutoRefresher />
-        <WebView
-          source={{
-            uri: prepareStakingURL(poolList, amountToDelegate, languageCode),
-          }}
-          onMessage={(event) => handleOnMessage(event)}
-        />
-      </View>
-      <PoolWarningModal
-        visible={showPoolWarning}
-        onPress={async () => {
-          setShowPoolWarning(false)
-          await navigateToDelegationConfirm(
-            accountBalance,
-            utxos,
-            selectedPools,
-            defaultAsset,
-            intl,
-            navigation,
-            serverStatus,
-          )
-        }}
-        onRequestClose={() => setShowPoolWarning(false)}
-        reputationInfo={reputationInfo}
-      />
-      <PleaseWaitModal title={''} spinnerText={intl.formatMessage(globalMessages.pleaseWait)} visible={busy} />
+      {IS_STAKING_ON_TEST_BUILD && (
+        <View style={styles.container}>
+          <PoolDetailScreen
+            onPressDelegate={() => Alert.alert(`${walletMeta.networkId}-${walletMeta.provider}`)}
+            isDisabled={false}
+          />
+        </View>
+      )}
+      {!IS_STAKING_ON_TEST_BUILD ||
+        (SHOW_PROD_POOLS_IN_DEV && (
+          <>
+            <View style={styles.container}>
+              <UtxoAutoRefresher />
+              <AccountAutoRefresher />
+              <WebView
+                source={{
+                  uri: prepareStakingURL(poolList, amountToDelegate, languageCode),
+                }}
+                onMessage={(event) => handleOnMessage(event)}
+              />
+            </View>
+            <PoolWarningModal
+              visible={showPoolWarning}
+              onPress={async () => {
+                setShowPoolWarning(false)
+                await navigateToDelegationConfirm(
+                  accountBalance,
+                  utxos,
+                  selectedPools,
+                  defaultAsset,
+                  intl,
+                  navigation,
+                  serverStatus,
+                )
+              }}
+              onRequestClose={() => setShowPoolWarning(false)}
+              reputationInfo={reputationInfo}
+            />
+            <PleaseWaitModal title={''} spinnerText={intl.formatMessage(globalMessages.pleaseWait)} visible={busy} />
+          </>
+        ))}
     </>
   )
 }
@@ -296,6 +314,7 @@ export default injectIntl(
       poolOperator: poolOperatorSelector(state),
       languageCode: languageSelector(state),
       serverStatus: serverStatusSelector(state),
+      walletMeta: walletMetaSelector(state),
     })),
   )(StakingCenter): ComponentType<ExternalProps>),
 )

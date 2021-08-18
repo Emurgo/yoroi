@@ -19,10 +19,10 @@ const messages = defineMessages({
 type Props = {|
   intl: IntlShape,
   onPressDelegate: () => any,
-  isDisabled: boolean,
+  isDisabled: ?boolean,
 |}
 
-const PoolDetailScreen = ({intl, onPressDelegate, isDisabled}: Props) => {
+const PoolDetailScreen = ({intl, onPressDelegate, isDisabled = false}: Props) => {
   const delegateButtonTitle = intl.formatMessage(messages.delegate)
 
   return (
@@ -33,8 +33,7 @@ const PoolDetailScreen = ({intl, onPressDelegate, isDisabled}: Props) => {
       <View style={styles.buttons}>
         <Button
           outlineOnLight
-          block
-          outlineShelley
+          outline
           onPress={onPressDelegate}
           title={delegateButtonTitle}
           style={styles.button}

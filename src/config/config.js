@@ -26,6 +26,7 @@ const _BUILD_VARIANT = env.getString('BUILD_VARIANT')
 const _SHOW_INIT_DEBUG_SCREEN = env.getBoolean('SHOW_INIT_DEBUG_SCREEN', false)
 const _PREFILL_WALLET_INFO = env.getBoolean('PREFILL_WALLET_INFO', false)
 const _USE_TESTNET = env.getBoolean('USE_TESTNET', false)
+export const SHOW_PROD_POOLS_IN_DEV = env.getBoolean('SHOW_PROD_POOLS_IN_DEV', false)
 
 // TODO(v-almonacid): consider adding 'ENABLE' as an env variable
 const _SENTRY = {

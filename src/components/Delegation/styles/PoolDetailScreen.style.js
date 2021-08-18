@@ -7,7 +7,7 @@ import {spacing, COLORS} from '../../../styles/config'
 export default StyleSheet.create({
   content: {
     flex: 1,
-    paddingBottom: 24,
+    paddingTop: 32,
   },
   heading: {
     alignItems: 'center',
@@ -15,18 +15,16 @@ export default StyleSheet.create({
     marginBottom: spacing.paragraphBottomMargin,
   },
   title: {
-    fontSize: 20,
-    lineHeight: 22,
-    fontWeight: 'bold',
+    fontSize: 16,
     color: COLORS.SHELLEY_BLUE,
     marginBottom: spacing.paragraphBottomMargin,
   },
   button: {
-    paddingTop: 24,
+    paddingVertical: 16,
     paddingHorizontal: 16,
   },
   buttons: {
+    justifyContent: 'space-around',
     flexDirection: 'row',
-    paddingTop: 12,
   },
 })
