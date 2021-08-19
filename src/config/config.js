@@ -176,7 +176,7 @@ const TESTNET_STAKING_POOLS_BY_PROVIDER = new Map<YoroiProvider, Array<string>>(
   ['emurgo-alonzo', ['03868bffac073e46cfeca68486ce8c8cdb5e3bf2677f63f2954e9cae']],
 ])
 const TESTNET_STAKING_POOLS_BY_NETWORK = new Map<NetworkId, Array<string>>([
-  [NETWORKS.HASKELL_SHELLEY_TESTNET.NETWORK_ID, ['']],
+  [NETWORKS.HASKELL_SHELLEY_TESTNET.NETWORK_ID, []],
 ])
 
 /**
@@ -271,7 +271,7 @@ export const getDefaultAssetByNetworkId = (networkId: NetworkId): DefaultAsset =
  * @param  {YoroiProvider} provider
  * @returns  Array<string>
  */
-export const getTestStakingPool = (networkId: NetworkId, provider: YoroiProvider): Array<string> => {
+export const getTestStakingPool = (networkId: NetworkId, provider: ?YoroiProvider): Array<string> => {
   if (isHaskellShelleyNetwork(networkId)) {
     if (provider) {
       return TESTNET_STAKING_POOLS_BY_PROVIDER.get(provider) || []

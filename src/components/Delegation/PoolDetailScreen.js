@@ -28,7 +28,7 @@ const PoolDetailScreen = ({intl, onPressDelegate, isDisabled = false}: Props) =>
   return (
     <View style={styles.content}>
       <View style={styles.heading}>
-        <Text style={styles.title}>Nightly POOL</Text>
+        <Text style={styles.title}>Nightly TESTING POOL</Text>
       </View>
       <View style={styles.buttons}>
         <Button
