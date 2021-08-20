@@ -4,6 +4,7 @@ import React from 'react'
 
 import {Modal} from '../UiKit'
 import TwoActionView from './TwoActionView'
+import {type PressEvent} from 'react-native/Libraries/Types/CoreEventTypes'
 
 type Props = {|
   +visible: boolean,
@@ -12,11 +13,11 @@ type Props = {|
   +onRequestClose: () => void,
   +primaryButton: {|
     +label: string,
-    +onPress: (void) => PossiblyAsync<void>,
+    +onPress: (event: PressEvent) => PossiblyAsync<void>,
   |},
   +secondaryButton?: {|
     label?: string,
-    onPress: (void) => void,
+    onPress: (event: PressEvent) => void,
   |},
   +showCloseIcon?: boolean,
 |}
