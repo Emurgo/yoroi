@@ -2,18 +2,14 @@
 
 import React from 'react'
 import {View, ScrollView, Platform} from 'react-native'
-import {compose} from 'redux'
-import {withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import DeviceInfo from 'react-native-device-info'
 
 import {Text, Button, Modal} from '../UiKit'
 import {CONFIG} from '../../config/config'
-import {onDidMount} from '../../utils/renderUtils'
+import {type PressEvent} from 'react-native/Libraries/Types/CoreEventTypes'
 
 import styles from './styles/LedgerTransportSwitchModal.style'
-
-import type {ComponentType} from 'react'
 
 const messages = defineMessages({
   title: {
@@ -38,8 +34,8 @@ const messages = defineMessages({
     id: 'components.ledger.ledgertransportswitchmodal.usbButtonDisabled',
     defaultMessage: '!!!Connect with USB\n(Blocked by Apple for iOS)',
   },
-  bluetoothExaplanation: {
-    id: 'components.ledger.ledgertransportswitchmodal.bluetoothExaplanation',
+  bluetoothExplanation: {
+    id: 'components.ledger.ledgertransportswitchmodal.bluetoothExplanation',
     defaultMessage: '!!!Choose this option if you want to connect to a Ledger Nano model X through Bluetooth:',
   },
   bluetoothButton: {
@@ -48,16 +44,25 @@ const messages = defineMessages({
   },
 })
 
-type Props = {
-  intl: IntlShape,
-  onSelectUSB: () => any,
-  onSelectBLE: () => any,
-  isUSBSupported?: boolean,
+type Props = {|
+  onSelectUSB: (event: PressEvent) => any,
+  onSelectBLE: (event: PressEvent) => any,
+|}
+
+const useIsUsbSupported = () => {
+  const [isUSBSupported, setUSBSupported] = React.useState(false)
+  React.useEffect(() => {
+    DeviceInfo.getApiLevel().then((sdk) =>
+      setUSBSupported(Platform.OS === 'android' && sdk >= CONFIG.HARDWARE_WALLETS.LEDGER_NANO.USB_MIN_SDK),
+    )
+  }, [])
+
+  return isUSBSupported
 }
 
-const LedgerTransportSwitchView = (
-  {intl, onSelectUSB, onSelectBLE, isUSBSupported}: {intl: IntlShape} & Object /* TODO: type */,
-) => {
+const LedgerTransportSwitchView = ({intl, onSelectUSB, onSelectBLE}: {...Props, intl: IntlShape}) => {
+  const isUSBSupported = useIsUsbSupported()
+
   const getUsbButtonTitle = (): string => {
     if (Platform.OS === 'ios') {
       return intl.formatMessage(messages.usbButtonDisabled)
@@ -67,6 +72,7 @@ const LedgerTransportSwitchView = (
       return intl.formatMessage(messages.usbButton)
     }
   }
+
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.content}>
@@ -78,12 +84,10 @@ const LedgerTransportSwitchView = (
           block
           onPress={onSelectUSB}
           title={getUsbButtonTitle()}
-          disabled={
-            Platform.OS === 'ios' || !isUSBSupported || !CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT
-          }
+          disabled={!isUSBSupported || !CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT}
           style={styles.button}
         />
-        <Text style={styles.paragraph}>{intl.formatMessage(messages.bluetoothExaplanation)}</Text>
+        <Text style={styles.paragraph}>{intl.formatMessage(messages.bluetoothExplanation)}</Text>
         <Button
           block
           onPress={onSelectBLE}
@@ -95,33 +99,17 @@ const LedgerTransportSwitchView = (
   )
 }
 
-export const LedgerTransportSwitch = injectIntl(
-  (compose(
-    withStateHandlers(
-      {
-        isUSBSupported: true, // assume true by default
-      },
-      {
-        checkUSBSupport: () => (sdk) => {
-          const isUSBSupported = Platform.OS === 'android' && sdk >= CONFIG.HARDWARE_WALLETS.LEDGER_NANO.USB_MIN_SDK
-          return {isUSBSupported}
-        },
-      },
-    ),
-    onDidMount(({checkUSBSupport}) => DeviceInfo.getApiLevel().then((sdk) => checkUSBSupport(sdk))),
-  )(LedgerTransportSwitchView): ComponentType<Props>),
-)
+export const LedgerTransportSwitch = injectIntl(LedgerTransportSwitchView)
 
 type ModalProps = {|
   visible: boolean,
-  onSelectUSB: () => any,
-  onSelectBLE: () => any,
   onRequestClose: () => any,
   showCloseIcon?: boolean,
+  ...Props,
 |}
 
 const LedgerTransportSwitchModal = ({visible, onSelectUSB, onSelectBLE, onRequestClose, showCloseIcon}: ModalProps) => (
-  <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon={showCloseIcon === true}>
+  <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon={showCloseIcon}>
     <LedgerTransportSwitch onSelectUSB={onSelectUSB} onSelectBLE={onSelectBLE} />
   </Modal>
 )
