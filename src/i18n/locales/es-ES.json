@@ -66,7 +66,7 @@
   "components.firstrun.custompinscreen.title": "Establece un PIN",
   "components.ledger.ledgerconnect.usbDeviceReady": "El dispositivo USB está listo, por favor pulse en Confirmar para continuar.",
   "components.ledger.ledgertransportswitchmodal.bluetoothButton": "Conectar mediante Bluetooth",
-  "components.ledger.ledgertransportswitchmodal.bluetoothExaplanation": "Elige esta opción si quieres conectarte a un Ledger Nano modelo X usando bluetooth:",
+  "components.ledger.ledgertransportswitchmodal.bluetoothExplanation": "Elige esta opción si quieres conectarte a un Ledger Nano modelo X usando bluetooth:",
   "components.ledger.ledgertransportswitchmodal.title": "Selecciona el Método de Conexión",
   "components.ledger.ledgertransportswitchmodal.usbButton": "Conectar mediante USB",
   "components.ledger.ledgertransportswitchmodal.usbButtonDisabled": "Conectar mediante USB\n(Bloqueado en iOS por Apple)",
