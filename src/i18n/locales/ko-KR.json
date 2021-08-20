@@ -66,7 +66,7 @@
   "components.firstrun.custompinscreen.title": "PIN 변경",
   "components.ledger.ledgerconnect.usbDeviceReady": "USB device is ready, please tap on Confirm to continue.",
   "components.ledger.ledgertransportswitchmodal.bluetoothButton": "블루투스로 연결하기",
-  "components.ledger.ledgertransportswitchmodal.bluetoothExplanation": "만일 Ledger Nano X 모델을 블루투스를 통해 연결하고자 한다면 이 옵션을 선택하세요.",
+  "components.ledger.ledgertransportswitchmodal.bluetoothExplanation": "Choose this option if you want to connect to a Ledger Nano model X through Bluetooth:",
   "components.ledger.ledgertransportswitchmodal.title": "연결 방법 선택하기",
   "components.ledger.ledgertransportswitchmodal.usbButton": "USB를 통해 연결",
   "components.ledger.ledgertransportswitchmodal.usbButtonDisabled": "USB를 통해 연결\n(iOS에서는 불가능)",
