@@ -15,7 +15,9 @@ enableScreens()
 
 const useInitializeApp = () => {
   const dispatch = useDispatch()
-  useEffect(() => dispatch(initApp()), [dispatch])
+  useEffect(() => {
+    dispatch(initApp())
+  }, [dispatch])
 }
 
 const useHideScreenInAppSwitcher = () => {
