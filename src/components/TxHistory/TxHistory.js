@@ -1,8 +1,7 @@
 // @flow
 
 import React, {useEffect, useState} from 'react'
-import {connect} from 'react-redux'
-import {compose} from 'redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {useNavigationState} from '@react-navigation/native'
 import {View, RefreshControl, ScrollView, Image} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
@@ -22,17 +21,15 @@ import {
   tokenBalanceSelector,
   availableAssetsSelector,
   walletMetaSelector,
-  languageSelector,
   isFlawedWalletSelector,
   isFetchingAccountStateSelector,
+  walletIsInitializedSelector,
 } from '../../selectors'
 import TxHistoryList from './TxHistoryList'
 import walletManager from '../../crypto/walletManager'
-import {MultiToken} from '../../crypto/MultiToken'
 import {isRegistrationOpen} from '../../crypto/shelley/catalystUtils'
 import {updateHistory} from '../../actions/history'
 import {checkForFlawedWallets} from '../../actions'
-import {onDidMount, requireInitializedWallet} from '../../utils/renderUtils'
 import {Logger} from '../../utils/logging'
 import FlawedWalletModal from './FlawedWalletModal'
 import StandardModal from '../Common/StandardModal'
@@ -45,10 +42,8 @@ import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
 
 import styles from './styles/TxHistory.style'
 
-import type {ComponentType} from 'react'
 import type {Navigation} from '../../types/navigation'
-import type {State} from '../../state'
-import type {TransactionInfo, Token} from '../../types/HistoryTransaction'
+import type {Token} from '../../types/HistoryTransaction'
 
 const messages = defineMessages({
   noTransactions: {
@@ -105,57 +100,43 @@ type FundInfo = ?{|
 |}
 
 type Props = {|
-  transactionsInfo: Dict<TransactionInfo>,
   navigation: Navigation,
-  isSyncing: boolean,
-  isOnline: boolean,
-  fetchAccountState: () => Promise<void>,
-  isFetchingAccountState: boolean,
-  updateHistory: () => Promise<void>,
-  lastSyncError: any,
-  tokenBalance: MultiToken,
-  availableAssets: Dict<Token>,
-  isFlawedWallet: boolean,
-  walletMeta: ReturnType<typeof walletMetaSelector>,
+  route: any,
   intl: IntlShape,
 |}
-const TxHistory = ({
-  transactionsInfo,
-  navigation,
-  isSyncing,
-  isOnline,
-  fetchAccountState,
-  isFetchingAccountState,
-  updateHistory,
-  lastSyncError,
-  tokenBalance,
-  availableAssets,
-  isFlawedWallet,
-  walletMeta,
-  intl,
-}: Props) => {
-  // Byron warning banner
 
+const TxHistory = ({navigation, intl}: Props) => {
+  const dispatch = useDispatch()
+
+  const transactionsInfo = useSelector(transactionsInfoSelector)
+  const isSyncing = useSelector(isSynchronizingHistorySelector)
+  const lastSyncError = useSelector(lastHistorySyncErrorSelector)
+  const isOnline = useSelector(isOnlineSelector)
+  const tokenBalance = useSelector(tokenBalanceSelector)
+  const availableAssets = useSelector(availableAssetsSelector)
+  const isFlawedWallet = useSelector(isFlawedWalletSelector)
+  const walletMeta = useSelector(walletMetaSelector)
+  const isFetchingAccountState = useSelector(isFetchingAccountStateSelector)
+  const isWalletInitialized = useSelector(walletIsInitializedSelector)
+
+  // Byron warning banner
   const [showWarning, setShowWarning] = useState<boolean>(isByron(walletMeta.walletImplementationId))
 
   // InsufficientFundsModal (Catalyst)
-
   const [showInsufficientFundsModal, setShowInsufficientFundsModal] = useState<boolean>(false)
 
-  // fetch account state
-
-  useEffect(() => {
-    fetchAccountState()
-  }, [fetchAccountState])
-
   // Catalyst voting registration banner
-
   const canVote = isHaskellShelley(walletMeta.walletImplementationId)
-
   const [showCatalystBanner, setShowCatalystBanner] = useState<boolean>(canVote)
 
   useEffect(() => {
-    const checkCatalystFundInfo = async () => {
+    const run = async () => {
+      // TODO: create actions
+      await dispatch(fetchAccountState())
+      await dispatch(updateHistory())
+      dispatch(checkForFlawedWallets())
+
+      // check catalyst fund info
       let fundInfo: FundInfo = null
       if (canVote) {
         try {
@@ -173,12 +154,11 @@ const TxHistory = ({
       setShowCatalystBanner((canVote && isRegistrationOpen(fundInfo)) || isNightly() || __DEV__)
     }
 
-    checkCatalystFundInfo()
+    run()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // handles back button (closes wallet)
-
   const routes = useNavigationState((state) => state.routes)
 
   // TODO: move this to dashboard once it's set as default screen
@@ -196,6 +176,14 @@ const TxHistory = ({
   )
 
   const assetMetaData = availableAssets[tokenBalance.getDefaultId()]
+
+  if (!isWalletInitialized) {
+    return (
+      <View>
+        <Text>loading...</Text>
+      </View>
+    )
+  }
 
   return (
     <SafeAreaView style={styles.scrollView}>
@@ -231,13 +219,17 @@ const TxHistory = ({
         )}
 
         {_.isEmpty(transactionsInfo) ? (
-          <ScrollView refreshControl={<RefreshControl onRefresh={updateHistory} refreshing={isSyncing} />}>
+          <ScrollView
+            refreshControl={
+              <RefreshControl onRefresh={async () => await dispatch(updateHistory())} refreshing={isSyncing} />
+            }
+          >
             <NoTxHistory />
           </ScrollView>
         ) : (
           <TxHistoryList
             refreshing={isSyncing}
-            onRefresh={updateHistory}
+            onRefresh={async () => await dispatch(updateHistory())}
             navigation={navigation}
             transactions={transactionsInfo}
           />
@@ -278,36 +270,33 @@ const TxHistory = ({
   )
 }
 
-type ExternalProps = {|
-  navigation: Navigation,
-  route: any,
-|}
+// export default injectIntl(
+//   (compose(
+//     requireInitializedWallet,
+//     connect(
+//       (state: State) => ({
+//         transactionsInfo: transactionsInfoSelector(state),
+//         isSyncing: isSynchronizingHistorySelector(state),
+//         lastSyncError: lastHistorySyncErrorSelector(state),
+//         isOnline: isOnlineSelector(state),
+//         tokenBalance: tokenBalanceSelector(state),
+//         availableAssets: availableAssetsSelector(state),
+//         key: languageSelector(state),
+//         isFlawedWallet: isFlawedWalletSelector(state),
+//         walletMeta: walletMetaSelector(state),
+//         isFetchingAccountState: isFetchingAccountStateSelector(state),
+//       }),
+//       {
+//         updateHistory,
+//         checkForFlawedWallets,
+//         fetchAccountState,
+//       },
+//     ),
+//     onDidMount(({updateHistory, checkForFlawedWallets}) => {
+//       checkForFlawedWallets()
+//       updateHistory()
+//     }),
+//   )(TxHistory): ComponentType<ExternalProps>),
+// )
 
-export default injectIntl(
-  (compose(
-    requireInitializedWallet,
-    connect(
-      (state: State) => ({
-        transactionsInfo: transactionsInfoSelector(state),
-        isSyncing: isSynchronizingHistorySelector(state),
-        lastSyncError: lastHistorySyncErrorSelector(state),
-        isOnline: isOnlineSelector(state),
-        tokenBalance: tokenBalanceSelector(state),
-        availableAssets: availableAssetsSelector(state),
-        key: languageSelector(state),
-        isFlawedWallet: isFlawedWalletSelector(state),
-        walletMeta: walletMetaSelector(state),
-        isFetchingAccountState: isFetchingAccountStateSelector(state),
-      }),
-      {
-        updateHistory,
-        checkForFlawedWallets,
-        fetchAccountState,
-      },
-    ),
-    onDidMount(({updateHistory, checkForFlawedWallets}) => {
-      checkForFlawedWallets()
-      updateHistory()
-    }),
-  )(TxHistory): ComponentType<ExternalProps>),
-)
+export default injectIntl(TxHistory)
