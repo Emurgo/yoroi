@@ -66,7 +66,7 @@
   "components.firstrun.custompinscreen.title": "设置PIN码",
   "components.ledger.ledgerconnect.usbDeviceReady": "USB设备已准备就绪，请点击“确认”以继续。",
   "components.ledger.ledgertransportswitchmodal.bluetoothButton": "蓝牙连接",
-  "components.ledger.ledgertransportswitchmodal.bluetoothExplanation": "如果你想用Ledger Nano model X蓝牙连接，请选择这个选项",
+  "components.ledger.ledgertransportswitchmodal.bluetoothExplanation": "Choose this option if you want to connect to a Ledger Nano model X through Bluetooth:",
   "components.ledger.ledgertransportswitchmodal.title": "选择连接方式",
   "components.ledger.ledgertransportswitchmodal.usbButton": "以USB连接",
   "components.ledger.ledgertransportswitchmodal.usbButtonDisabled": "以蓝牙连接（iOS被Apple阻止）",
