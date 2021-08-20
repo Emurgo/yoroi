@@ -25,7 +25,7 @@ type Props = {|
 |}
 
 const TwoActionView = ({intl, title, children, primaryButton, secondaryButton}: Props) => (
-  <ScrollView style={styles.scrollView}>
+  <ScrollView style={styles.scrollView} keyboardShouldPersistTaps={'always'}>
     <View style={styles.content}>
       <View style={styles.heading}>
         <Text style={styles.titleText}>{title}</Text>
