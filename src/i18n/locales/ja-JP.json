@@ -66,7 +66,7 @@
   "components.firstrun.custompinscreen.title": "PINを設定する",
   "components.ledger.ledgerconnect.usbDeviceReady": "USB device is ready, please tap on Confirm to continue.",
   "components.ledger.ledgertransportswitchmodal.bluetoothButton": "Bluetoothで接続",
-  "components.ledger.ledgertransportswitchmodal.bluetoothExplanation": "Ledger NanoモデルXにBluetoothで接続する場合は、このオプションを選択してください：",
+  "components.ledger.ledgertransportswitchmodal.bluetoothExplanation": "Choose this option if you want to connect to a Ledger Nano model X through Bluetooth:",
   "components.ledger.ledgertransportswitchmodal.title": "接続方式を選択します",
   "components.ledger.ledgertransportswitchmodal.usbButton": "USBで接続",
   "components.ledger.ledgertransportswitchmodal.usbButtonDisabled": "USBで接続\n（iOSについてはAppleによりブロックされています）",
