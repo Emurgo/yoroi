@@ -17,7 +17,7 @@ import TransportHID from '@v-almonacid/react-native-hid'
 
 import {BluetoothDisabledError, RejectedByUserError} from '../../crypto/shelley/ledgerUtils'
 import {Text, BulletPointItem, Button} from '../UiKit'
-import DeviceItem from './DeviceItem'
+import {DeviceItem} from './DeviceItem'
 import {ledgerMessages, confirmationMessages} from '../../i18n/global-messages'
 import {Logger} from '../../utils/logging'
 import LocalizableError from '../../i18n/LocalizableError'
@@ -241,8 +241,6 @@ class LedgerConnect extends React.Component<Props, State> {
     }
   }
 
-  renderItem = ({item}: {item: Device}) => <DeviceItem device={item} onSelect={() => this._onSelectDevice(item)} />
-
   ListHeader = () => {
     const {error, waiting, deviceObj} = this.state
     const {intl, onWaitingMessage} = this.props
@@ -305,7 +303,9 @@ class LedgerConnect extends React.Component<Props, State> {
               style={styles.flatList}
               contentContainerStyle={styles.flatListContentContainer}
               data={devices}
-              renderItem={this.renderItem}
+              renderItem={({item}: {item: Device}) => (
+                <DeviceItem device={item} onSelect={() => this._onSelectDevice(item)} />
+              )}
               ListHeaderComponent={this.ListHeader}
               keyExtractor={(item) => item.id.toString()}
               refreshControl={

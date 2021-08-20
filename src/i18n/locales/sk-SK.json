@@ -66,7 +66,7 @@
   "components.firstrun.custompinscreen.title": "Nastaviť PIN",
   "components.ledger.ledgerconnect.usbDeviceReady": "USB zariadenie je pripravené, kliknite na Potvrdiť k pokračovaniu.",
   "components.ledger.ledgertransportswitchmodal.bluetoothButton": "Pripojiť cez Bluetooth",
-  "components.ledger.ledgertransportswitchmodal.bluetoothExaplanation": "Vyberte tuto možnosť, ak chcete pripojiť Ledger Nano X pomocou Bluetooth:",
+  "components.ledger.ledgertransportswitchmodal.bluetoothExplanation": "Vyberte tuto možnosť, ak chcete pripojiť Ledger Nano X pomocou Bluetooth:",
   "components.ledger.ledgertransportswitchmodal.title": "Vyberte metodu pripojenia.",
   "components.ledger.ledgertransportswitchmodal.usbButton": "Pripojiť cez USB",
   "components.ledger.ledgertransportswitchmodal.usbButtonDisabled": "Pripojiť cez USB (Blokované spoločnosťou Apple pre iOS)",
