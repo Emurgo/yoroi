@@ -176,7 +176,7 @@ const TESTNET_STAKING_POOLS_BY_PROVIDER = new Map<YoroiProvider, Array<string>>(
   ['emurgo-alonzo', ['03868bffac073e46cfeca68486ce8c8cdb5e3bf2677f63f2954e9cae']],
 ])
 const TESTNET_STAKING_POOLS_BY_NETWORK = new Map<NetworkId, Array<string>>([
-  [NETWORKS.HASKELL_SHELLEY_TESTNET.NETWORK_ID, []],
+  [NETWORKS.HASKELL_SHELLEY_TESTNET.NETWORK_ID, ['26b17b78de4f035dc0bfce60d1d3c3a8085c38dcce5fb8767e518bed']],
 ])
 
 /**
