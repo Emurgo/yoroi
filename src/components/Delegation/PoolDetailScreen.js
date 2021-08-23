@@ -14,7 +14,7 @@ const messages = defineMessages({
     id: 'components.stakingcenter.confirmDelegation.delegateButtonLabel',
     defaultMessage: '!!!Attention',
   },
-  delegateTestTitle: {
+  title: {
     id: 'components.stakingcenter.pooldetailscreen.title',
     defaultMessage: '!!!Attention',
   },
@@ -28,7 +28,7 @@ type Props = {|
 
 const PoolDetailScreen = ({intl, onPressDelegate, disabled = false}: Props) => {
   const delegateButtonTitle = intl.formatMessage(messages.delegate)
-  const title = intl.formatMessage(messages.delegateTestTitle)
+  const title = intl.formatMessage(messages.title)
 
   return (
     <View style={styles.content}>
