@@ -265,7 +265,7 @@ const StakingCenter = ({intl, navigation}: Props) => {
     <>
       {IS_STAKING_ON_TEST_BUILD && (
         <View style={styles.container}>
-          <PoolDetailScreen onPressDelegate={() => handleOnMessage()} isDisabled={!nightlyAndDevPoolHashes.length} />
+          <PoolDetailScreen onPressDelegate={() => handleOnMessage()} disabled={!nightlyAndDevPoolHashes.length} />
         </View>
       )}
       {(!IS_STAKING_ON_TEST_BUILD || SHOW_PROD_POOLS_IN_DEV) && (

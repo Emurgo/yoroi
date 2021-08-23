@@ -14,21 +14,26 @@ const messages = defineMessages({
     id: 'components.stakingcenter.confirmDelegation.delegateButtonLabel',
     defaultMessage: '!!!Attention',
   },
+  delegateTestTitle: {
+    id: 'components.stakingcenter.pooldetailscreen.title',
+    defaultMessage: '!!!Attention',
+  },
 })
 
 type Props = {|
   intl: IntlShape,
   onPressDelegate: () => any,
-  isDisabled: ?boolean,
+  disabled: ?boolean,
 |}
 
-const PoolDetailScreen = ({intl, onPressDelegate, isDisabled = false}: Props) => {
+const PoolDetailScreen = ({intl, onPressDelegate, disabled = false}: Props) => {
   const delegateButtonTitle = intl.formatMessage(messages.delegate)
+  const title = intl.formatMessage(messages.delegateTestTitle)
 
   return (
     <View style={styles.content}>
       <View style={styles.heading}>
-        <Text style={styles.title}>Nightly TESTING POOL</Text>
+        <Text style={styles.title}>{title}</Text>
       </View>
       <View style={styles.buttons}>
         <Button
@@ -37,7 +42,7 @@ const PoolDetailScreen = ({intl, onPressDelegate, isDisabled = false}: Props) =>
           onPress={onPressDelegate}
           title={delegateButtonTitle}
           style={styles.button}
-          disabled={isDisabled}
+          disabled={disabled}
         />
       </View>
     </View>

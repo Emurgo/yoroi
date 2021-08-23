@@ -12,16 +12,15 @@ export default StyleSheet.create({
   heading: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: spacing.paragraphBottomMargin,
+    paddingBottom: spacing.paragraphBottomMargin,
   },
   title: {
     fontSize: 16,
     color: COLORS.SHELLEY_BLUE,
-    marginBottom: spacing.paragraphBottomMargin,
+    paddingBottom: spacing.paragraphBottomMargin,
   },
   button: {
-    paddingVertical: 16,
-    paddingHorizontal: 16,
+    padding: 16,
   },
   buttons: {
     justifyContent: 'space-around',

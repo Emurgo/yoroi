@@ -7,5 +7,5 @@ import {action} from '@storybook/addon-actions'
 import PoolDetailScreen from './PoolDetailScreen'
 
 storiesOf('Pool Detail Screen', module).add('Default', () => (
-  <PoolDetailScreen onPressDelegate={() => action('clicked')()} isDisabled={false} />
+  <PoolDetailScreen onPressDelegate={action('clicked')} disabled={false} />
 ))
