@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {useDispatch, useSelector} from 'react-redux'
-import {View} from 'react-native'
+import {ActivityIndicator, View} from 'react-native'
 import _ from 'lodash'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -21,7 +21,6 @@ import {AddressDTOCardano} from '../../crypto/shelley/Address.dto'
 
 import styles from './styles/ReceiveScreen.style'
 
-const NO_ADDRESS = 'IT IS A BUG TO SEE THIS TEXT'
 const messages = defineMessages({
   infoText: {
     id: 'components.receive.receivescreen.infoText',
@@ -57,7 +56,6 @@ const ReceiveScreen = ({intl}: {intl: IntlShape}) => {
   const addressLimitReached = !useSelector(canGenerateNewReceiveAddressSelector)
 
   const currentAddress = _.last(receiveAddresses)
-  if (!currentAddress) throw new Error(NO_ADDRESS)
 
   const addressesInfo: Map<string, AddressDTOCardano> = new Map(
     receiveAddresses.map((addr) => [addr, new AddressDTOCardano(addr)]),
@@ -86,7 +84,11 @@ const ReceiveScreen = ({intl}: {intl: IntlShape}) => {
 
       <Content>
         <View style={styles.address}>
-          <AddressDetail address={currentAddress} />
+          {currentAddress ? (
+            <AddressDetail address={currentAddress} />
+          ) : (
+            <ActivityIndicator size={'large'} color={'black'} />
+          )}
         </View>
 
         <Spacer height={24} />

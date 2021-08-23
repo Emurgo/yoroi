@@ -168,7 +168,7 @@ const SettingsScreenNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
       options={{headerShown: false}}
     />
     <Stack.Screen
-      name={SETTINGS_ROUTES.EASY_COMFIRMATION}
+      name={SETTINGS_ROUTES.EASY_CONFIRMATION}
       component={ToggleEasyConfirmationScreen}
       options={{
         title: intl.formatMessage(messages.toggleEachConfirmationTitle),
