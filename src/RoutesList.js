@@ -48,7 +48,7 @@ export const SETTINGS_ROUTES = {
   FINGERPRINT_LINK: 'fingerprint-link',
   REMOVE_WALLET: 'remove-wallet',
   CHANGE_LANGUAGE: 'change-language',
-  EASY_COMFIRMATION: 'easy-confirmation',
+  EASY_CONFIRMATION: 'easy-confirmation',
   CHANGE_PASSWORD: 'change-password',
   CHANGE_CUSTOM_PIN: 'change-custom-pin',
   BIO_AUTHENTICATE: 'bio-authenticate',

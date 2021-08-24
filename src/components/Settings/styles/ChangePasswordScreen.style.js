@@ -11,7 +11,7 @@ export default StyleSheet.create({
   contentContainer: {
     padding: 16,
   },
-  action: {
+  actions: {
     padding: 16,
     backgroundColor: COLORS.BACKGROUND,
   },
