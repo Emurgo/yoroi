@@ -5,31 +5,27 @@ import {StyleSheet} from 'react-native'
 import {COLORS} from '../../../styles/config'
 
 export default StyleSheet.create({
-  container: {
+  safeAreaView: {
     flex: 1,
     backgroundColor: COLORS.WHITE,
   },
   content: {
-    paddingVertical: 24,
+    paddingHorizontal: 16,
   },
   address: {
     alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 180,
   },
-  heading: {
-    paddingHorizontal: 28,
-    marginTop: 16,
-    fontWeight: 'bold',
-  },
-  button: {
-    marginTop: 24,
-    marginHorizontal: 16,
-  },
-  safeAreaView: {
+  lists: {
     flex: 1,
   },
   addressListHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    paddingHorizontal: 24,
+  },
+  heading: {
+    fontWeight: 'bold',
   },
 })
