@@ -13,11 +13,8 @@ export default StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 40,
   },
-  action: {
+  actions: {
     padding: 16,
     backgroundColor: COLORS.BACKGROUND,
-  },
-  spacer: {
-    height: 16,
   },
 })
