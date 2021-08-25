@@ -16,7 +16,10 @@ enableScreens()
 const useInitializeApp = () => {
   const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(initApp())
+    const run = async () => {
+      await dispatch(initApp())
+    }
+    run()
   }, [dispatch])
 }
 

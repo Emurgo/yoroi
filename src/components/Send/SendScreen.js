@@ -386,6 +386,7 @@ class SendScreen extends Component<Props, State> {
       this.handleAddressChange(CONFIG.DEBUG.SEND_ADDRESS)
       this.handleAmountChange(CONFIG.DEBUG.SEND_AMOUNT)
     }
+    // TODO: fix it, setParams needs to be serializable use setOptions instead (can break the persist/hydrate)
     this.props.navigation.setParams({onScanAddress: this.handleAddressChange})
     this.props.navigation.setParams({onScanAmount: this.handleAmountChange})
   }
