@@ -8,12 +8,11 @@ import {View, ScrollView, TouchableOpacity} from 'react-native'
 
 import assert from '../../../utils/assert'
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
-import {Text, Button, StatusBar} from '../../UiKit'
+import {Text, Button, Spacer, StatusBar} from '../../UiKit'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import {createWallet} from '../../../actions'
 
 import type {Navigation} from '../../../types/navigation'
-import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
 import styles from './styles/MnemonicCheckScreen.style'
 
@@ -184,5 +183,3 @@ const WordBadge = ({word, onPress, disabled}: {word: string, disabled?: boolean,
     <Text style={styles.wordBadgeText}>{word} x</Text>
   </TouchableOpacity>
 )
-
-const Spacer = ({height = 16, style}: {height?: number, style?: ViewStyleProp}) => <View style={[{height}, style]} />

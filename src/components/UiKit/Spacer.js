@@ -6,8 +6,8 @@ import {View} from 'react-native'
 import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
 export const Spacer = ({
-  height,
-  width,
+  height = 16,
+  width = 16,
   style,
   debug,
 }: {
@@ -16,6 +16,6 @@ export const Spacer = ({
   style?: ViewStyleProp,
   debug?: boolean,
   // eslint-disable-next-line react-native/no-inline-styles
-}) => <View style={[{height, width}, style, debug && {borderColor: 'red', borderWidth: 1}]} />
+}) => <View style={[{height, width}, style, debug && {backgroundColor: 'red', opacity: 0.2}]} />
 
 export default Spacer

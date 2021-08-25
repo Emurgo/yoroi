@@ -8,12 +8,9 @@ export default StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    padding: 16,
-  },
-  footer: {
     paddingHorizontal: 16,
   },
-  spacer: {
-    height: 16,
+  footer: {
+    padding: 16,
   },
 })

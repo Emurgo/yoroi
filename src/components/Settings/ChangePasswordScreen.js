@@ -5,7 +5,7 @@ import {View, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
-import {Button, TextInput} from '../UiKit'
+import {Button, Spacer, TextInput} from '../UiKit'
 import {validatePassword, REQUIRED_PASSWORD_LENGTH} from '../../utils/validators'
 import {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../actions'
@@ -16,7 +16,6 @@ import {Checkmark} from '../UiKit/TextInput'
 import styles from './styles/ChangePasswordScreen.style'
 
 import type {Navigation} from '../../types/navigation'
-import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
 const messages = defineMessages({
   oldPasswordInputLabel: {
@@ -79,7 +78,7 @@ const ChangePasswordScreen = ({navigation, intl}: Props) => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <ScrollView bounces={false} keyboardDismissMode="on-drag" contentContainerStyle={styles.contentContainer}>
-        <TextInput
+        <CurrentPasswordInput
           enablesReturnKeyAutomatically
           autoFocus
           secureTextEntry
@@ -90,9 +89,9 @@ const ChangePasswordScreen = ({navigation, intl}: Props) => {
           onSubmitEditing={() => newPasswordRef.current?.focus()}
         />
 
-        <Spacer height={16} />
+        <Spacer />
 
-        <TextInput
+        <PasswordInput
           ref={newPasswordRef}
           enablesReturnKeyAutomatically
           secureTextEntry
@@ -114,9 +113,9 @@ const ChangePasswordScreen = ({navigation, intl}: Props) => {
           right={!newPasswordErrors.passwordIsWeak ? <Checkmark /> : undefined}
         />
 
-        <Spacer height={16} />
+        <Spacer />
 
-        <TextInput
+        <PasswordConfirmationInput
           ref={newPasswordConfirmationRef}
           enablesReturnKeyAutomatically
           secureTextEntry
@@ -137,28 +136,20 @@ const ChangePasswordScreen = ({navigation, intl}: Props) => {
         />
       </ScrollView>
 
-      <View style={styles.action}>
+      <Actions>
         <Button
           onPress={() => onSubmit(currentPassword, newPassword)}
           disabled={hasErrors}
           title={intl.formatMessage(messages.continueButton)}
         />
-      </View>
+      </Actions>
     </SafeAreaView>
   )
 }
 
 export default injectIntl(ChangePasswordScreen)
 
-export const Spacer = ({
-  height,
-  width,
-  style,
-  debug,
-}: {
-  height?: number,
-  width?: number,
-  style?: ViewStyleProp,
-  debug?: boolean,
-  // eslint-disable-next-line react-native/no-inline-styles
-}) => <View style={[{height, width}, style, debug && {borderColor: 'red', borderWidth: 1}]} />
+const CurrentPasswordInput = TextInput
+const PasswordInput = TextInput
+const PasswordConfirmationInput = TextInput
+const Actions = (props) => <View {...props} style={styles.actions} />
