@@ -1,41 +1,34 @@
 // @flow
 
-import type {ComponentType} from 'react'
 import React from 'react'
 import {FlatList} from 'react-native'
-import {connect} from 'react-redux'
-import {compose} from 'redux'
+import {useSelector} from 'react-redux'
 
 import {AddressDTOCardano} from '../../crypto/shelley/Address.dto'
 import {isUsedAddressIndexSelector} from '../../selectors'
+import {Spacer} from '../UiKit'
 import AddressView from './AddressView'
-
-const _keyExtractor = (addressInfo) => addressInfo?.address
-const _renderItem = ({item: addressInfo}: {item: any}) => <AddressView addressInfo={addressInfo} />
 
 type AddressesListProps = {
   addresses: Map<string, AddressDTOCardano>,
-  isUsedAddressIndex: Dict<boolean>,
   showFresh?: boolean,
 }
-const AddressesList = ({addresses, isUsedAddressIndex, showFresh}: AddressesListProps) => {
-  const toFilter = [...addresses.values()]
-  const shownAddresses = showFresh
-    ? toFilter.filter((addrInfo) => !isUsedAddressIndex[addrInfo.address])
-    : toFilter.filter((addrInfo) => isUsedAddressIndex[addrInfo.address])
-  // We want newest first
-  shownAddresses.reverse()
 
-  return <FlatList data={shownAddresses} keyExtractor={_keyExtractor} renderItem={_renderItem} />
+const AddressesList = ({addresses, showFresh}: AddressesListProps) => {
+  const isUsedAddressIndex = useSelector(isUsedAddressIndexSelector)
+  const allAddresses = [...addresses.values()]
+  const shownAddresses: AddressDTOCardano[] = showFresh
+    ? allAddresses.filter((addrInfo) => !isUsedAddressIndex[addrInfo.address]).reverse()
+    : allAddresses.filter((addrInfo) => isUsedAddressIndex[addrInfo.address]).reverse()
+
+  return (
+    <FlatList
+      data={shownAddresses}
+      keyExtractor={(addressInfo) => addressInfo.address}
+      renderItem={({item: addressInfo}) => <AddressView addressInfo={addressInfo} />}
+      ItemSeparatorComponent={() => <Spacer height={16} />}
+    />
+  )
 }
 
-type ExternalProps = {|
-  addresses: Map<string, AddressDTOCardano>,
-  showFresh?: boolean,
-|}
-
-export default (compose(
-  connect((state) => ({
-    isUsedAddressIndex: isUsedAddressIndexSelector(state),
-  })),
-)(AddressesList): ComponentType<ExternalProps>)
+export default AddressesList

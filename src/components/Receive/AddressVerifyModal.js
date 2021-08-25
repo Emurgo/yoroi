@@ -27,7 +27,7 @@ const messages = defineMessages({
 type Props = {|
   intl: IntlShape,
   visible: boolean,
-  onConfirm: () => void,
+  onConfirm: () => mixed,
   onRequestClose: () => any,
   addressInfo: AddressDTOCardano,
   path: string,
