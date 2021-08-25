@@ -50,14 +50,15 @@ const messages = defineMessages({
     id: 'components.txhistory.txhistory.noTransactions',
     defaultMessage: '!!!No transactions to show yet',
   },
-})
-
-const warningBannerMessages = defineMessages({
-  title: {
+  pleaseWait: {
+    id: 'global.pleaseWait',
+    defaultMessage: '!!!Wait',
+  },
+  bannerTitle: {
     id: 'components.txhistory.txhistory.warningbanner.title',
     defaultMessage: '!!!Note:',
   },
-  message: {
+  bannerMessage: {
     id: 'components.txhistory.txhistory.warningbanner.message',
     defaultMessage: '!!!The Shelley protocol upgrade adds a new Shelley wallet type which supports delegation.',
   },
@@ -179,8 +180,8 @@ const TxHistory = ({navigation, intl}: Props) => {
 
   if (!isWalletInitialized) {
     return (
-      <View>
-        <Text>loading...</Text>
+      <View style={styles.empty}>
+        <Text>{intl.formatMessage(messages.pleaseWait)}</Text>
       </View>
     )
   }
@@ -209,6 +210,7 @@ const TxHistory = ({navigation, intl}: Props) => {
             disabled={isFetchingAccountState}
           />
         )}
+
         {isFlawedWallet === true && (
           <FlawedWalletModal
             visible={isFlawedWallet === true}
@@ -237,9 +239,9 @@ const TxHistory = ({navigation, intl}: Props) => {
 
         {isByron(walletMeta.walletImplementationId) && showWarning && (
           <WarningBanner
-            title={intl.formatMessage(warningBannerMessages.title).toUpperCase()}
+            title={intl.formatMessage(messages.bannerTitle).toUpperCase()}
             icon={infoIcon}
-            message={intl.formatMessage(warningBannerMessages.message)}
+            message={intl.formatMessage(messages.bannerMessage)}
             showCloseIcon
             onRequestClose={() => setShowWarning(false)}
             style={styles.warningNoteStyles}
@@ -269,34 +271,5 @@ const TxHistory = ({navigation, intl}: Props) => {
     </SafeAreaView>
   )
 }
-
-// export default injectIntl(
-//   (compose(
-//     requireInitializedWallet,
-//     connect(
-//       (state: State) => ({
-//         transactionsInfo: transactionsInfoSelector(state),
-//         isSyncing: isSynchronizingHistorySelector(state),
-//         lastSyncError: lastHistorySyncErrorSelector(state),
-//         isOnline: isOnlineSelector(state),
-//         tokenBalance: tokenBalanceSelector(state),
-//         availableAssets: availableAssetsSelector(state),
-//         key: languageSelector(state),
-//         isFlawedWallet: isFlawedWalletSelector(state),
-//         walletMeta: walletMetaSelector(state),
-//         isFetchingAccountState: isFetchingAccountStateSelector(state),
-//       }),
-//       {
-//         updateHistory,
-//         checkForFlawedWallets,
-//         fetchAccountState,
-//       },
-//     ),
-//     onDidMount(({updateHistory, checkForFlawedWallets}) => {
-//       checkForFlawedWallets()
-//       updateHistory()
-//     }),
-//   )(TxHistory): ComponentType<ExternalProps>),
-// )
 
 export default injectIntl(TxHistory)
