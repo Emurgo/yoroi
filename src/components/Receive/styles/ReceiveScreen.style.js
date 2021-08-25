@@ -14,6 +14,8 @@ export default StyleSheet.create({
   },
   address: {
     alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 180,
   },
   lists: {
     flex: 1,
