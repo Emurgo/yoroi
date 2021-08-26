@@ -2,6 +2,7 @@
 
 import React from 'react'
 import {storiesOf} from '@storybook/react-native'
+import {action} from '@storybook/addon-actions'
 
 import AddressView from './AddressView'
 import {AddressDTOCardano} from '../../crypto/shelley/Address.dto'
@@ -28,5 +29,14 @@ const usedAddressInfo: AddressDTOCardano = ({
 }: any)
 
 storiesOf('AddressView', module)
-  .add('unused', () => <AddressView addressInfo={freshAddressInfo} />)
-  .add('used', () => <AddressView addressInfo={usedAddressInfo} />)
+  .add('unused', () => (
+    <AddressView
+      address={freshAddressInfo.address}
+      isUsed={false}
+      index={1}
+      onPressDetails={action('onPressDetails')}
+    />
+  ))
+  .add('used', () => (
+    <AddressView address={usedAddressInfo.address} isUsed index={1} onPressDetails={action('onPressDetails')} />
+  ))
