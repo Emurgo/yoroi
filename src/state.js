@@ -9,7 +9,7 @@ import type {RawUtxo, RemotePoolMetaSuccess} from './api/types'
 import type {Transaction, Token} from './types/HistoryTransaction'
 import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
 import {ISignRequest} from './crypto/ISignRequest'
-import type {NetworkId, WalletImplementationId} from './config/types'
+import type {NetworkId, WalletImplementationId, YoroiProvider} from './config/types'
 import type {WalletChecksum} from '@emurgo/cip4-js'
 
 export type ServerStatusCache = {|
@@ -27,6 +27,7 @@ export type WalletMeta = {
   isShelley?: ?boolean, // legacy jormungandr
   isEasyConfirmationEnabled: boolean,
   checksum: WalletChecksum,
+  provider: ?YoroiProvider,
 }
 
 export type State = {
@@ -36,6 +37,7 @@ export type State = {
     isInitialized: boolean,
     networkId: NetworkId,
     walletImplementationId: WalletImplementationId,
+    provider: ?YoroiProvider,
     isHW: boolean,
     hwDeviceInfo: ?HWDeviceInfo,
     isReadOnly: boolean,
@@ -113,6 +115,7 @@ export const getInitialState = (): State => ({
     isInitialized: false,
     networkId: NETWORK_REGISTRY.UNDEFINED,
     walletImplementationId: '',
+    provider: null,
     isHW: false,
     hwDeviceInfo: null,
     isReadOnly: false,
@@ -195,6 +198,7 @@ export const mockState = (): State => {
       isInitialized: true,
       networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
       walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+      provider: null,
       isHW: false,
       hwDeviceInfo: null,
       isReadOnly: false,
