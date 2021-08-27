@@ -443,7 +443,7 @@ class StakingDashboard extends React.Component<Props, State> {
       walletMeta,
     } = this.props
 
-    const config = getCardanoBaseConfig(getCardanoNetworkConfigById(walletMeta.networkId))
+    const config = getCardanoBaseConfig(getCardanoNetworkConfigById(walletMeta.networkId, walletMeta.provider))
 
     const toRelativeSlotNumberFn = genToRelativeSlotNumber(config)
     const timeToSlotFn = genTimeToSlot(config)
