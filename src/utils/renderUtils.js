@@ -34,19 +34,6 @@ export const onWillUnmount =
       }
     }
 
-export const onDidUpdate =
-  <Props: {}, Callback: ($Shape<Props>, $Shape<Props>) => mixed>(didUpdate: Callback): HOC<Props, Props> =>
-  (BaseComponent: ComponentType<Props>): ComponentType<{...Props}> =>
-    class OnDidMount extends React.Component<Props> {
-      componentDidUpdate = (prevProps: Props) => {
-        didUpdate(this.props, prevProps)
-      }
-
-      render = () => {
-        return <BaseComponent {...this.props} />
-      }
-    }
-
 export const withNavigationTitle =
   <Props: {navigation: any, route: any}>(getTitle: (Props) => string, paramName?: string): HOC<Props, Props> =>
   (BaseComponent: ComponentType<Props>): ComponentType<{...Props}> =>
