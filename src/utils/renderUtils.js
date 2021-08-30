@@ -2,13 +2,8 @@
 
 // $FlowFixMe unstable_Profiler is missing fron react annotation
 import React, {unstable_Profiler as Profiler} from 'react'
-import {connect} from 'react-redux'
 import {Text} from 'react-native'
-import {compose} from 'redux'
 import {Logger} from './logging'
-
-import type {State} from '../state'
-import {walletIsInitializedSelector} from '../selectors'
 
 import type {ComponentType} from 'react'
 import type {HOC} from 'recompose'
@@ -128,28 +123,6 @@ export const measureRenderTime =
       }
     }
 
-export const requireLoaded =
-  <BaseProps: {}, HoCProps: {}, Callback: ({...BaseProps, ...HoCProps}) => mixed>(
-    isLoaded: Callback,
-    Loading: ComponentType<{}> = () => null,
-  ): HOC<BaseProps, {...BaseProps, ...HoCProps}> =>
-  (BaseComponent: ComponentType<{...BaseProps}>): ComponentType<{...BaseProps}> =>
-    class BaseOrLoading extends React.Component<{...BaseProps, ...HoCProps}> {
-      render() {
-        return isLoaded(this.props) ? <BaseComponent {...this.props} /> : <Loading />
-      }
-    }
-
-export const requireInitializedWallet: <Props>(Component: ComponentType<Props>) => ComponentType<Props> = compose(
-  connect<{}, {_walletIsInitialized: boolean}, _, _, _, _>((state: State) => ({
-    _walletIsInitialized: walletIsInitializedSelector(state),
-  })),
-  requireLoaded<_, {_walletIsInitialized: boolean}, _>(
-    ({_walletIsInitialized}) => _walletIsInitialized,
-    // TODO hardcoded string
-    () => <Text>l10n Please wait while wallet is initialized...</Text>,
-  ),
-)
 export const useNavigationTitle = <Props: {navigation: any, route: any}>({
   getTitle,
   paramName,
