@@ -3,7 +3,7 @@
 import React, {useState} from 'react'
 import {TouchableOpacity, Text, View, Image, LayoutAnimation} from 'react-native'
 
-import {isByron, isHaskellShelley, isJormun} from '../../config/config'
+import {isByron, isHaskellShelley, isJormun, isNightly, CONFIG} from '../../config/config'
 import WalletAccountIcon from '../Common/WalletAccountIcon'
 import arrowDown from '../../assets/img/arrow_down.png'
 import arrowUp from '../../assets/img/arrow_up.png'
@@ -94,6 +94,11 @@ const WalletListItem = ({wallet, onPress}: Props) => {
             <Text style={styles.walletName}>{wallet.name}</Text>
             <Text style={styles.walletMeta}>{wallet.checksum ? `${wallet.checksum.TextPart} | ${type}` : type}</Text>
           </View>
+          {(isNightly() || CONFIG.IS_TESTNET_BUILD) && (
+            <View style={styles.providerContainer}>
+              <Text style={[styles.walletMeta, styles.providerText]}>{wallet.provider}</Text>
+            </View>
+          )}
         </TouchableOpacity>
         {assets.length > 0 && (
           <TouchableOpacity onPress={() => toggleExpand()} style={styles.rightSide}>

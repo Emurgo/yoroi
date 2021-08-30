@@ -276,6 +276,7 @@ export const createDelegationTx = async (request: CreateDelegationTxRequest): Pr
       stakeDelegationCert,
       [], // no withdrawals
       false,
+      // no auxiliaryData
     )
 
     const allUtxosForKey = await filterAddressesByStakingKey(
@@ -309,7 +310,7 @@ export const createDelegationTx = async (request: CreateDelegationTxRequest): Pr
       senderUtxos: unsignedTx.senderUtxos,
       unsignedTx: unsignedTx.txBuilder,
       changeAddr: unsignedTx.changeAddr,
-      metadata: undefined,
+      auxiliaryData: undefined,
       networkSettingSnapshot: {
         NetworkId: networkConfig.NETWORK_ID,
         ChainNetworkId: Number.parseInt(networkConfig.CHAIN_NETWORK_ID, 10),
@@ -479,7 +480,7 @@ export const createWithdrawalTx = async (request: CreateWithdrawalTxRequest): Pr
       senderUtxos: unsignedTxResponse.senderUtxos,
       unsignedTx: unsignedTxResponse.txBuilder,
       changeAddr: unsignedTxResponse.changeAddr,
-      metadata: undefined,
+      auxiliaryData: undefined,
       networkSettingSnapshot: {
         NetworkId: networkConfig.NETWORK_ID,
         ChainNetworkId: Number.parseInt(networkConfig.CHAIN_NETWORK_ID, 10),

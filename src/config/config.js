@@ -12,23 +12,25 @@ import {WALLET_IMPLEMENTATION_REGISTRY, DERIVATION_TYPES} from './types'
 import {LogLevel} from '../utils/logging'
 import env from '../env'
 
-import type {WalletImplementation, WalletImplementationId, NetworkId} from './types'
+import type {WalletImplementation, WalletImplementationId, NetworkId, YoroiProvider} from './types'
 import type {CardanoHaskellShelleyNetwork} from './networks'
 import type {DefaultAsset} from '../types/HistoryTransaction'
 
 const IS_DEBUG = __DEV__
+
 /** env variables & debugging flags
  *
  * WARNING: NEVER change these flags direclty here.
  * ALWAYS use the corresponding .env files.
  */
-const _BUILD_VARIANT = env.getString('BUILD_VARIANT')
-const _SHOW_INIT_DEBUG_SCREEN = env.getBoolean('SHOW_INIT_DEBUG_SCREEN', false)
-const _PREFILL_WALLET_INFO = env.getBoolean('PREFILL_WALLET_INFO', false)
-const _USE_TESTNET = env.getBoolean('USE_TESTNET', false)
+const BUILD_VARIANT = env.getString('BUILD_VARIANT')
+const SHOW_INIT_DEBUG_SCREEN = env.getBoolean('SHOW_INIT_DEBUG_SCREEN', false)
+const PREFILL_WALLET_INFO = env.getBoolean('PREFILL_WALLET_INFO', false)
+const USE_TESTNET = env.getBoolean('USE_TESTNET', false)
+export const SHOW_PROD_POOLS_IN_DEV = env.getBoolean('SHOW_PROD_POOLS_IN_DEV', false)
 
 // TODO(v-almonacid): consider adding 'ENABLE' as an env variable
-const _SENTRY = {
+const SENTRY = {
   DSN: env.getString('SENTRY'),
   ENABLE: false,
 }
@@ -108,8 +110,8 @@ const CATALYST = {
 export const CONFIG = {
   DEBUG: {
     // WARNING: NEVER change these flags
-    START_WITH_INDEX_SCREEN: __DEV__ ? _SHOW_INIT_DEBUG_SCREEN : false,
-    PREFILL_FORMS: __DEV__ ? _PREFILL_WALLET_INFO : false,
+    START_WITH_INDEX_SCREEN: __DEV__ ? SHOW_INIT_DEBUG_SCREEN : false,
+    PREFILL_FORMS: __DEV__ ? PREFILL_WALLET_INFO : false,
     WALLET_NAME: 'My wallet',
     PASSWORD: 'aeg?eP3M:)(:',
     MNEMONIC1: ['dry balcony arctic what garbage sort', 'cart shine egg lamp manual bottom', 'slide assault bus'].join(
@@ -139,19 +141,19 @@ export const CONFIG = {
   E2E: {
     // WARNING: NEVER change these flags here, use .env.e2e
     // we test release configurations so we allow this flag when __DEV__=false
-    IS_TESTING: _BUILD_VARIANT === 'E2E',
+    IS_TESTING: BUILD_VARIANT === 'E2E',
   },
-  BUILD_VARIANT: _BUILD_VARIANT,
-  IS_TESTNET_BUILD: _BUILD_VARIANT === 'STAGING',
+  BUILD_VARIANT,
+  IS_TESTNET_BUILD: BUILD_VARIANT === 'STAGING',
   MAX_CONCURRENT_REQUESTS: 5,
-  SENTRY: _SENTRY,
+  SENTRY,
   MNEMONIC_STRENGTH: 160,
   ASSURANCE_LEVELS: _ASSURANCE_STRICT ? ASSURANCE_LEVELS.STRICT : ASSURANCE_LEVELS.NORMAL,
   HISTORY_REFRESH_TIME: 10 * 1000,
   NUMBERS,
   WALLETS,
 
-  NETWORKS: _USE_TESTNET
+  NETWORKS: USE_TESTNET
     ? {
         ...NETWORKS,
         HASKELL_SHELLEY: NETWORKS.HASKELL_SHELLEY_TESTNET,
@@ -169,6 +171,14 @@ export const CONFIG = {
   COMMIT: _COMMIT,
   ANDROID_BIO_AUTH_EXCLUDED_SDK: [29, 30],
 }
+
+// Staking pools for testing/nightly deploys
+const TESTNET_STAKING_POOLS_BY_PROVIDER = new Map<YoroiProvider, Array<string>>([
+  ['emurgo-alonzo', ['03868bffac073e46cfeca68486ce8c8cdb5e3bf2677f63f2954e9cae']],
+])
+const TESTNET_STAKING_POOLS_BY_NETWORK = new Map<NetworkId, Array<string>>([
+  [NETWORKS.HASKELL_SHELLEY_TESTNET.NETWORK_ID, ['26b17b78de4f035dc0bfce60d1d3c3a8085c38dcce5fb8767e518bed']],
+])
 
 /**
  * queries related to wallet parameters
@@ -254,4 +264,20 @@ export const getDefaultAssetByNetworkId = (networkId: NetworkId): DefaultAsset =
   }
   const assetData = defaultAssets[0]
   return _asToken(assetData)
+}
+
+/**
+ * @description It will search for the staking pools of the testnets
+ * @param  {NetworkId} networkId
+ * @param  {YoroiProvider} provider
+ * @returns  Array<string>
+ */
+export const getTestStakingPool = (networkId: NetworkId, provider: ?YoroiProvider): Array<string> => {
+  if (isHaskellShelleyNetwork(networkId)) {
+    if (provider) {
+      return TESTNET_STAKING_POOLS_BY_PROVIDER.get(provider) || []
+    }
+    return TESTNET_STAKING_POOLS_BY_NETWORK.get(networkId) || []
+  }
+  return []
 }

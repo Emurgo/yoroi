@@ -26,12 +26,12 @@ const WalletCredentialsScreen = ({navigation, route}: Props) => {
       () =>
         async ({name, password}) => {
           setWaiting(true)
-          const {phrase, networkId, walletImplementationId} = route.params
+          const {phrase, networkId, walletImplementationId, provider} = route.params
           assert.assert(!!phrase, 'mnemonic')
           assert.assert(networkId != null, 'networkId')
           assert.assert(!!walletImplementationId, 'walletImplementationId')
           try {
-            await dispatch(createWallet(name, phrase, password, networkId, walletImplementationId))
+            await dispatch(createWallet(name, phrase, password, networkId, walletImplementationId, provider))
             await dispatch(updateVersion())
           } finally {
             setWaiting(false)
