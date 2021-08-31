@@ -51,7 +51,7 @@ const MnemonicCheckScreen = ({intl, navigation, route}: {intl: IntlShape, naviga
 
   const dispatch = useDispatch()
   const handleWalletConfirmation = async () => {
-    const {mnemonic, password, name, networkId, walletImplementationId} = route.params
+    const {mnemonic, password, name, networkId, walletImplementationId, provider} = route.params
 
     assert.assert(!!mnemonic, 'handleWalletConfirmation:: mnemonic')
     assert.assert(!!password, 'handleWalletConfirmation:: password')
@@ -59,7 +59,7 @@ const MnemonicCheckScreen = ({intl, navigation, route}: {intl: IntlShape, naviga
     assert.assert(networkId != null, 'handleWalletConfirmation:: networkId')
     assert.assert(!!walletImplementationId, 'handleWalletConfirmation:: implementationId')
 
-    await dispatch(createWallet(name, mnemonic, password, networkId, walletImplementationId))
+    await dispatch(createWallet(name, mnemonic, password, networkId, walletImplementationId, provider))
 
     navigation.navigate(ROOT_ROUTES.WALLET, {
       screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
