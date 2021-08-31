@@ -1,10 +1,9 @@
 // @flow
 
 import React from 'react'
-import {SafeAreaView} from 'react-native'
+import {StyleSheet} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
-import {compose} from 'redux'
-import {withHandlers} from 'recompose'
 
 import LedgerConnect from '../../Ledger/LedgerConnect'
 import {getHWDeviceInfo} from '../../../crypto/shelley/ledgerUtils'
@@ -15,12 +14,10 @@ import {errorMessages} from '../../../i18n/global-messages'
 import {showErrorDialog} from '../../../actions'
 import LocalizableError from '../../../i18n/LocalizableError'
 
-import styles from './styles/ConnectNanoXScreen.style'
-
-import type {ComponentType} from 'react'
 import type {Device} from '../../Ledger/types'
-import type {Navigation} from '../../../types/navigation'
 import type {DeviceId, DeviceObj} from '../../../crypto/shelley/ledgerUtils'
+import {useNavigation, useRoute} from '@react-navigation/native'
+import type {WalletImplementationId} from '../../../config/types'
 
 const messages = defineMessages({
   exportKey: {
@@ -29,61 +26,54 @@ const messages = defineMessages({
   },
 })
 
-const _navigateToSave = async (
-  deviceId: ?DeviceId,
-  deviceObj: ?DeviceObj,
-  navigation: Navigation,
-  route: Object,
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+})
+
+type Props = {
   intl: IntlShape,
-): Promise<void> => {
-  try {
-    Logger.debug('deviceId', deviceId)
-    Logger.debug('deviceObj', deviceObj)
-    const useUSB = route.params?.useUSB === true
-    const networkId = route.params?.networkId
-    const walletImplementationId = route.params?.walletImplementationId
-    if (deviceId == null && deviceObj == null) {
-      throw new Error('null descriptor, should never happen')
-    }
-    const hwDeviceInfo = await getHWDeviceInfo(walletImplementationId, deviceId, deviceObj, useUSB)
+  defaultDevices: ?Array<Device>, // for storybook
+}
+
+const ConnectNanoXScreen = ({intl, defaultDevices}: Props) => {
+  const navigation = useNavigation()
+  const route = useRoute()
+  const walletImplementationId: WalletImplementationId = (route.params?.walletImplementationId: any)
+  const useUSB = route.params?.useUSB === true
+  const networkId = route.params?.networkId
+
+  const onSuccess = (hwDeviceInfo) =>
     navigation.navigate(WALLET_INIT_ROUTES.SAVE_NANO_X, {
       hwDeviceInfo,
       networkId,
       walletImplementationId,
     })
-  } catch (e) {
-    if (e instanceof LocalizableError) {
-      await showErrorDialog(errorMessages.generalLocalizableError, intl, {
-        message: intl.formatMessage(
-          {
-            id: e.id,
-            defaultMessage: e.defaultMessage,
-          },
-          e.values,
-        ),
+
+  const onError = (error) => {
+    if (error instanceof LocalizableError) {
+      showErrorDialog(errorMessages.generalLocalizableError, intl, {
+        message: intl.formatMessage({id: error.id, defaultMessage: error.defaultMessage}, error.values),
       })
     } else {
-      Logger.info(e)
-      await showErrorDialog(errorMessages.hwConnectionError, intl, {
-        message: String(e.message),
-      })
+      showErrorDialog(errorMessages.hwConnectionError, intl, {message: String(error.message)})
     }
   }
-}
 
-type Props = {
-  intl: IntlShape,
-  defaultDevices: ?Array<Device>, // for storybook
-  route: Object, // TODO(navigation): type
-  onConnectBLE: (DeviceId) => Promise<void>,
-  onConnectUSB: (DeviceObj) => Promise<void>,
-}
+  const onConnectBLE = (deviceId: DeviceId) => {
+    Logger.debug('deviceId', deviceId)
+    getHWDeviceInfo(walletImplementationId, deviceId, null, useUSB).then(onSuccess).catch(onError)
+  }
 
-const ConnectNanoXScreen = ({intl, defaultDevices, route, onConnectBLE, onConnectUSB}: Props) => {
-  const useUSB = route.params?.useUSB === true
+  const onConnectUSB = (deviceObj: DeviceObj) => {
+    Logger.debug('deviceObj', deviceObj)
+    getHWDeviceInfo(walletImplementationId, null, deviceObj, useUSB).then(onSuccess).catch(onError)
+  }
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <ProgressStep currentStep={2} totalSteps={3} displayStepNumber />
       <LedgerConnect
         onConnectBLE={onConnectBLE}
@@ -97,26 +87,4 @@ const ConnectNanoXScreen = ({intl, defaultDevices, route, onConnectBLE, onConnec
   )
 }
 
-type ExternalProps = {|
-  intl: IntlShape,
-  defaultDevices: ?Array<Device>,
-  navigation: Navigation,
-  route: Object, // TODO(navigation): type
-|}
-
-export default injectIntl(
-  (compose(
-    withHandlers({
-      onConnectBLE:
-        ({navigation, route, intl}: {intl: IntlShape, navigation: any, route: any}) =>
-        async (deviceId: DeviceId) => {
-          await _navigateToSave(deviceId, null, navigation, route, intl)
-        },
-      onConnectUSB:
-        ({navigation, route, intl}: {intl: IntlShape, navigation: any, route: any}) =>
-        async (deviceObj: DeviceObj) => {
-          await _navigateToSave(null, deviceObj, navigation, route, intl)
-        },
-    }),
-  )(ConnectNanoXScreen): ComponentType<ExternalProps>),
-)
+export default injectIntl(ConnectNanoXScreen)
