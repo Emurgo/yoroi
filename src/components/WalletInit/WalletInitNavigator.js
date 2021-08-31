@@ -130,7 +130,10 @@ const WalletInitNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
     <Stack.Screen
       name={WALLET_INIT_ROUTES.IMPORT_READ_ONLY_WALLET}
       component={ImportReadOnlyWalletScreen}
-      options={{title: intl.formatMessage(messages.importReadOnlyTitle)}}
+      options={{
+        title: intl.formatMessage(messages.importReadOnlyTitle),
+        headerTransparent: true,
+      }}
     />
     <Stack.Screen
       name={WALLET_INIT_ROUTES.SAVE_READ_ONLY_WALLET}
