@@ -104,6 +104,7 @@ const RestoreWalletScreen = (
       phrase: cleanMnemonic(phrase),
       networkId: route.params.networkId,
       walletImplementationId: route.params.walletImplementationId,
+      provider: route.params.provider,
     })
   }
 

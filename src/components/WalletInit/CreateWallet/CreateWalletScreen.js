@@ -35,11 +35,12 @@ const CreateWalletScreen = ({navigation, route}: Props) => {
     // TODO(v-almonacid): we need to generate mnemonics according to the
     // target network.
     const mnemonic = generateAdaMnemonic()
-    const {networkId, walletImplementationId} = route.params
+    const {networkId, walletImplementationId, provider} = route.params
     navigation.navigate(WALLET_INIT_ROUTES.MNEMONIC_SHOW, {
       mnemonic,
       networkId,
       walletImplementationId,
+      provider,
       ...formData,
     })
   }
