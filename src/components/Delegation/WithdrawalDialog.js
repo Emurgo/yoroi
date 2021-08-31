@@ -156,7 +156,6 @@ const WithdrawalDialog = ({
         return <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={useUSB} />
       case WITHDRAWAL_DIALOG_STEPS.CONFIRM:
         return (
-          // $FlowFixMe TODO: useUSB does not exist in TransferSummary props
           <TransferSummary
             // $FlowFixMe
             withdrawals={withdrawals}
