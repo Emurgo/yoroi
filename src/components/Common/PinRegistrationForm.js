@@ -3,6 +3,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {injectIntl, type IntlShape} from 'react-intl'
+import {useNavigation} from '@react-navigation/native'
 
 import PinInput from './PinInput'
 import {CONFIG} from '../../config/config'
@@ -12,7 +13,6 @@ import {errorMessages} from '../../i18n/global-messages'
 import styles from './styles/PinRegistrationForm.style'
 
 import type {PinInputLabels} from './PinInput'
-import type {Navigation} from '../../types/navigation'
 
 type PinRegistrationFormLabels = {
   PinInput: PinInputLabels,
@@ -23,10 +23,10 @@ type Props = {
   labels: PinRegistrationFormLabels,
   onPinEntered: (string) => any,
   intl: IntlShape,
-  navigation: Navigation,
 }
 
-const PinRegistrationForm = ({labels, onPinEntered, navigation, intl}: Props) => {
+const PinRegistrationForm = ({labels, onPinEntered, intl}: Props) => {
+  const navigation = useNavigation()
   const [pin, setPin] = React.useState('')
   const clearPin = React.useCallback(() => setPin(''), [])
 
