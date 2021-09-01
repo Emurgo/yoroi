@@ -4,6 +4,7 @@ import React from 'react'
 import {View} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useNavigation} from '@react-navigation/native'
 
 import PinInput from '../Common/PinInput'
 import PinRegistrationForm from '../Common/PinRegistrationForm'
@@ -15,8 +16,6 @@ import {StatusBar} from '../UiKit'
 import {errorMessages} from '../../i18n/global-messages'
 
 import styles from './styles/ChangeCustomPinScreen.style'
-
-import type {Navigation} from '../../types/navigation'
 
 const messages = defineMessages({
   currentPinInputTitle: {
@@ -41,9 +40,10 @@ const messages = defineMessages({
   },
 })
 
-type Props = {intl: IntlShape, navigation: Navigation}
+type Props = {intl: IntlShape}
 
-const ChangeCustomPinScreen = ({intl, navigation}: Props) => {
+const ChangeCustomPinScreen = ({intl}: Props) => {
+  const navigation = useNavigation()
   const dispatch = useDispatch()
   const currentPinHash = useSelector(customPinHashSelector)
   const [isCurrentPinVerified, setIsCurrentPinVerified] = React.useState(false)
@@ -92,7 +92,6 @@ const ChangeCustomPinScreen = ({intl, navigation}: Props) => {
               title: intl.formatMessage(messages.pinConfirmationTitle),
             },
           }}
-          navigation={navigation}
         />
       ) : (
         <PinInput
