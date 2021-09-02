@@ -6,4 +6,4 @@ import {storiesOf} from '@storybook/react-native'
 
 import ChangeWalletName from './ChangeWalletName'
 
-storiesOf('ChangeWalletName', module).add('Default', ({navigation}) => <ChangeWalletName navigation={navigation} />)
+storiesOf('ChangeWalletName', module).add('Default', () => <ChangeWalletName />)

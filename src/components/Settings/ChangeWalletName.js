@@ -5,6 +5,7 @@ import {useSelector, useDispatch} from 'react-redux'
 import {View, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useNavigation} from '@react-navigation/native'
 
 import {Button, TextInput} from '../UiKit'
 import {walletNameSelector, walletNamesSelector} from '../../selectors'
@@ -13,8 +14,6 @@ import {getWalletNameError, validateWalletName} from '../../utils/validators'
 import globalMessages from '../../i18n/global-messages'
 
 import styles from './styles/ChangeWalletName.style'
-
-import type {Navigation} from '../../types/navigation'
 
 const WalletNameInput = TextInput
 
@@ -31,10 +30,10 @@ const messages = defineMessages({
 
 type Props = {
   intl: IntlShape,
-  navigation: Navigation,
 }
 
-const ChangeWalletName = ({intl, navigation}: Props) => {
+const ChangeWalletName = ({intl}: Props) => {
+  const navigation = useNavigation()
   const oldWalletName = useSelector(walletNameSelector)
   const walletNames = useSelector(walletNamesSelector)
   const [newWalletName, setNewWalletName] = React.useState(oldWalletName)

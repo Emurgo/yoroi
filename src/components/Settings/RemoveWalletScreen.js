@@ -5,6 +5,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector, useDispatch} from 'react-redux'
 import {View, ScrollView} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useNavigation} from '@react-navigation/native'
 
 import {Button, Text, Checkbox, TextInput, Spacer, StatusBar} from '../UiKit'
 import {Checkmark} from '../UiKit/TextInput'
@@ -50,10 +51,10 @@ const messages = defineMessages({
 
 type Props = {
   intl: IntlShape,
-  navigation: any,
 }
 
-const RemoveWalletScreen = ({intl, navigation}: Props) => {
+const RemoveWalletScreen = ({intl}: Props) => {
+  const navigation = useNavigation()
   const walletName = useSelector(walletNameSelector)
   const isHW = useSelector(isHWSelector)
   const dispatch = useDispatch()

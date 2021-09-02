@@ -15,4 +15,4 @@ const styles = StyleSheet.create({
 
 storiesOf('WalletSettingsScreen', module)
   .addDecorator((getStory) => <View style={styles.walletSettingsScreen}>{getStory()}</View>)
-  .add('Default', ({navigation, route}) => <WalletSettingsScreen navigation={navigation} route={route} />)
+  .add('Default', () => <WalletSettingsScreen />)
