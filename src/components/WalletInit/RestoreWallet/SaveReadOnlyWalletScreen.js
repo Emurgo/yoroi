@@ -6,6 +6,7 @@ import React, {useState, useEffect} from 'react'
 import {View, SafeAreaView, FlatList, ScrollView} from 'react-native'
 import {injectIntl, type IntlShape, defineMessages} from 'react-intl'
 import {useDispatch} from 'react-redux'
+import {useNavigation, useRoute} from '@react-navigation/native'
 
 import {Text, StatusBar, Line} from '../../UiKit'
 import WalletNameForm from '../WalletNameForm'
@@ -21,7 +22,6 @@ import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
 
 import styles from './styles/SaveReadOnlyWalletScreen.style'
 
-import type {Navigation} from '../../../types/navigation'
 import type {NetworkId} from '../../../config/types'
 
 const messages = defineMessages({
@@ -106,13 +106,13 @@ const WalletInfoView = ({intl, plate, normalizedPath, publicKeyHex, networkId}: 
   </View>
 )
 
-type Props = {|
+type Props = {
   intl: IntlShape,
-  navigation: Navigation,
-  route: Object, // TODO(navigation): type
-|}
+}
 
-const SaveReadOnlyWalletScreen = ({route, intl, navigation}: Props) => {
+const SaveReadOnlyWalletScreen = ({intl}: Props) => {
+  const navigation = useNavigation()
+  const route: any = useRoute()
   const [isWaiting, setIsWaiting] = React.useState(false)
   const dispatch = useDispatch()
   const [plate, setPlate] = useState({

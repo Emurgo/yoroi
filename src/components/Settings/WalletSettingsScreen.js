@@ -4,6 +4,7 @@ import React from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import {ScrollView, StyleSheet, Switch} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useNavigation} from '@react-navigation/native'
 
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
 import {confirmationMessages} from '../../i18n/global-messages'
@@ -29,7 +30,6 @@ import {StatusBar} from '../UiKit'
 import {isByron, isHaskellShelley} from '../../config/config'
 import {getNetworkConfigById} from '../../config/networks'
 
-import type {Navigation} from '../../types/navigation'
 import type {NetworkId, WalletImplementationId} from '../../config/types'
 import type {MessageDescriptor} from 'react-intl'
 
@@ -112,9 +112,12 @@ const getWalletType = (implementationId: WalletImplementationId): MessageDescrip
   return messages.unknownWalletType
 }
 
-type Props = {|intl: IntlShape, navigation: Navigation, route: any, intl: IntlShape|}
+type Props = {
+  intl: IntlShape,
+}
 
-const WalletSettingsScreen = ({intl, navigation}: Props) => {
+const WalletSettingsScreen = ({intl}: Props) => {
+  const navigation = useNavigation()
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
   const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
   const walletName = useSelector(walletNameSelector)

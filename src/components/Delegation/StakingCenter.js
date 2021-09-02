@@ -6,6 +6,7 @@ import {WebView} from 'react-native-webview'
 import {BigNumber} from 'bignumber.js'
 import {useSelector} from 'react-redux'
 import {injectIntl, defineMessages} from 'react-intl'
+import {useNavigation} from '@react-navigation/native'
 
 import {STAKING_CENTER_ROUTES} from '../../RoutesList'
 import {CONFIG, isNightly, SHOW_PROD_POOLS_IN_DEV, getTestStakingPool} from '../../config/config'
@@ -35,7 +36,6 @@ import styles from './styles/DelegationCenter.style'
 
 import type {IntlShape} from 'react-intl'
 import type {DefaultAsset} from '../../types/HistoryTransaction'
-import type {Navigation} from '../../types/navigation'
 import type {RawUtxo} from '../../api/types'
 import type {ServerStatusCache} from '../../state'
 import PoolDetailScreen from './PoolDetailScreen'
@@ -84,7 +84,7 @@ const navigateToDelegationConfirm = async (
   selectedPools: Array<SelectedPool>,
   defaultAsset: DefaultAsset,
   intl: IntlShape,
-  navigation: Navigation,
+  navigation,
   serverStatus: ServerStatusCache,
 ) => {
   try {
@@ -125,7 +125,7 @@ const _handleOnMessage = async (
   utxos: Array<RawUtxo>,
   defaultAsset,
   intl: IntlShape,
-  navigation: Navigation,
+  navigation,
   serverStatus: ServerStatusCache,
 ) => {
   try {
@@ -185,13 +185,12 @@ const _handleOnMessage = async (
   }
 }
 
-type Props = {|
-  navigation: Navigation,
+type Props = {
   intl: IntlShape,
-  route: Object,
-|}
+}
 
-const StakingCenter = ({intl, navigation}: Props) => {
+const StakingCenter = ({intl}: Props) => {
+  const navigation = useNavigation()
   const [amountToDelegate, setAmountToDelegate] = useState<string | null>(null)
   const [selectedPools, setSelectedPools] = useState([])
   const [reputationInfo, setReputationInfo] = useState({})

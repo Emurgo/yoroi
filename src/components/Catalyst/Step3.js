@@ -10,6 +10,7 @@ import React, {useEffect, useState} from 'react'
 import {View, SafeAreaView} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
+import {useNavigation} from '@react-navigation/native'
 
 import {generateVotingKeys, generateVotingTransaction} from '../../actions/voting'
 import {isHWSelector} from '../../selectors'
@@ -24,8 +25,6 @@ import styles from './styles/Step3.style'
 import type {ComponentType} from 'react'
 import type {IntlShape} from 'react-intl'
 
-import type {Navigation} from '../../types/navigation'
-
 const messages = defineMessages({
   subTitle: {
     id: 'components.catalyst.step3.subTitle',
@@ -39,18 +38,14 @@ const messages = defineMessages({
 
 const PIN_LENGTH = 4
 
-type Props = {|
-  navigation: Navigation,
-  route: Object, // TODO(navigation): type
-|}
-
-type HOCProps = {
+type Props = {
   pin: Array<String>,
   isHW: boolean,
   intl: IntlShape,
 }
 
-const Step3 = ({intl, pin, isHW, navigation}: Props & HOCProps) => {
+const Step3 = ({intl, pin, isHW}: Props) => {
+  const navigation = useNavigation()
   const [confirmPin, setPin] = useState('')
 
   useEffect(() => {
@@ -117,4 +112,4 @@ export default (injectIntl(
       generateVotingTransaction,
     },
   )(Step3),
-): ComponentType<Props>)
+): ComponentType<{}>)

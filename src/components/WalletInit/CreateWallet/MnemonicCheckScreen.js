@@ -5,14 +5,13 @@ import {useDispatch} from 'react-redux'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {View, ScrollView, TouchableOpacity} from 'react-native'
+import {useNavigation, useRoute} from '@react-navigation/native'
 
 import assert from '../../../utils/assert'
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
 import {Text, Button, Spacer, StatusBar} from '../../UiKit'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import {createWallet} from '../../../actions'
-
-import type {Navigation} from '../../../types/navigation'
 
 import styles from './styles/MnemonicCheckScreen.style'
 
@@ -39,7 +38,9 @@ const messages = defineMessages({
   },
 })
 
-const MnemonicCheckScreen = ({intl, navigation, route}: {intl: IntlShape, navigation: Navigation, route: any}) => {
+const MnemonicCheckScreen = ({intl}: {intl: IntlShape}) => {
+  const navigation = useNavigation()
+  const route = (useRoute(): any)
   const mnemonic: string = route.params.mnemonic
   const sortedWords = mnemonic.split(' ').sort()
   const [partialPhrase, setPartialPhrase] = React.useState<Array<string>>([])

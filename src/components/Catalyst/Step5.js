@@ -10,6 +10,7 @@ import React, {useEffect, useState} from 'react'
 import {View, SafeAreaView, Platform} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
+import {useNavigation} from '@react-navigation/native'
 
 import {CONFIG} from '../../config/config'
 import KeyStore from '../../crypto/KeyStore'
@@ -39,7 +40,6 @@ import {WrongPassword} from '../../crypto/errors'
 
 import styles from './styles/Step5.style'
 
-import type {Navigation} from '../../types/navigation'
 import type {DefaultAsset} from '../../types/HistoryTransaction'
 import type {ComponentType} from 'react'
 import type {IntlShape} from 'react-intl'
@@ -156,12 +156,7 @@ const renderInstructions = (isEasyConfirmationEnabled: boolean, isHW: boolean, u
   }
 }
 
-type Props = {|
-  navigation: Navigation,
-  route: Object, // TODO(navigation): type
-|}
-
-type HOCProps = {
+type Props = {
   intl: IntlShape,
   isEasyConfirmationEnabled: boolean,
   isHW: boolean,
@@ -187,8 +182,8 @@ const Step5 = ({
   setLedgerDeviceObj,
   defaultAsset,
   unsignedTx,
-  navigation,
-}: Props & HOCProps) => {
+}: Props) => {
+  const navigation = useNavigation()
   const [password, setPassword] = useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
 
   const [dialogStep, setDialogStep] = useState<DialogStep>(DIALOG_STEPS.CLOSED)
@@ -396,4 +391,4 @@ export default (injectIntl(
       ...ownProps,
     }),
   )(Step5),
-): ComponentType<Props>)
+): ComponentType<{}>)

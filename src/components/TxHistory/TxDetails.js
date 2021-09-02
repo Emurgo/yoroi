@@ -6,6 +6,7 @@ import {View, Linking, TouchableOpacity, LayoutAnimation, Image} from 'react-nat
 import _ from 'lodash'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {BigNumber} from 'bignumber.js'
+import {useRoute} from '@react-navigation/native'
 
 import {
   transactionsInfoSelector,
@@ -196,14 +197,11 @@ const getShownAddresses = (intl, transaction, internalAddressIndex, externalAddr
   }
 }
 
-type RouterProps = {|
-  navigation: any,
-  route: any,
-|}
-type Props = {|
+type Props = {
   intl: IntlShape,
-|}
-const TxDetails = ({intl, route}: Props & RouterProps) => {
+}
+const TxDetails = ({intl}: Props) => {
+  const route = (useRoute(): any)
   const transaction = useSelector(transactionsInfoSelector)[route.params.id]
   const internalAddressIndex = useSelector(internalAddressIndexSelector)
   const externalAddressIndex = useSelector(externalAddressIndexSelector)

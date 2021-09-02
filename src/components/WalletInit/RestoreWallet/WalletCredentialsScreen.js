@@ -3,6 +3,7 @@
 import React from 'react'
 import {ActivityIndicator} from 'react-native'
 import {useDispatch} from 'react-redux'
+import {useNavigation, useRoute} from '@react-navigation/native'
 
 import assert from '../../../utils/assert'
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
@@ -10,13 +11,9 @@ import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import WalletForm from '../WalletForm'
 import {createWallet, updateVersion} from '../../../actions'
 
-import type {Navigation} from '../../../types/navigation'
-
-type Props = {
-  navigation: Navigation,
-  route: any,
-}
-const WalletCredentialsScreen = ({navigation, route}: Props) => {
+const WalletCredentialsScreen = () => {
+  const navigation = useNavigation()
+  const route: any = useRoute()
   const [waiting, setWaiting] = React.useState(false)
   const dispatch = useDispatch()
 

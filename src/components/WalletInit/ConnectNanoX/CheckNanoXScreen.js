@@ -12,8 +12,7 @@ import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import image from '../../../assets/img/ledger_1.png'
 
 import type {IntlShape} from 'react-intl'
-import {useNavigation} from '@react-navigation/core'
-import {useRoute} from '@react-navigation/native'
+import {useNavigation, useRoute} from '@react-navigation/native'
 
 import type {NetworkId, WalletImplementationId} from '../../../config/types'
 

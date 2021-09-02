@@ -4,6 +4,7 @@ import React from 'react'
 import {View, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useNavigation} from '@react-navigation/native'
 
 import {Button, Spacer, TextInput} from '../UiKit'
 import {validatePassword, REQUIRED_PASSWORD_LENGTH} from '../../utils/validators'
@@ -14,8 +15,6 @@ import {WrongPassword} from '../../crypto/errors'
 import {Checkmark} from '../UiKit/TextInput'
 
 import styles from './styles/ChangePasswordScreen.style'
-
-import type {Navigation} from '../../types/navigation'
 
 const messages = defineMessages({
   oldPasswordInputLabel: {
@@ -45,15 +44,15 @@ const messages = defineMessages({
 })
 
 type Props = {
-  navigation: Navigation,
   intl: IntlShape,
 }
 
-const ChangePasswordScreen = ({navigation, intl}: Props) => {
+const ChangePasswordScreen = ({intl}: Props) => {
+  const navigation = useNavigation()
   const onSubmit = async (oldPassword, newPassword) => {
     try {
       await walletManager.changePassword(oldPassword, newPassword, intl)
-      navigation.goBack(null)
+      navigation.goBack()
     } catch (error) {
       if (error instanceof WrongPassword) {
         await showErrorDialog(errorMessages.incorrectPassword, intl)

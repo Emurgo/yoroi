@@ -8,6 +8,7 @@ import React, {useEffect, useState} from 'react'
 import {View, ScrollView, SafeAreaView, Image, TouchableOpacity, Linking} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
+import {useNavigation} from '@react-navigation/native'
 
 import {generateVotingKeys} from '../../actions/voting'
 import {fetchUTXOs} from '../../actions/utxo'
@@ -24,8 +25,6 @@ import styles from './styles/Step1.style'
 
 import type {ComponentType} from 'react'
 import type {IntlShape} from 'react-intl'
-
-import type {Navigation} from '../../types/navigation'
 
 const messages = defineMessages({
   subTitle: {
@@ -53,19 +52,15 @@ const WarningModalBody = ({intl}: {intl: IntlShape}) => (
   </View>
 )
 
-type Props = {|
-  navigation: Navigation,
-  route: Object, // TODO(navigation): type
-|}
-
-type HOCProps = {
+type Props = {
   intl: IntlShape,
   generateVotingKeys: () => void,
   fetchUTXOs: () => Promise<void>,
   isDelegating: boolean,
 }
 
-const Step1 = ({intl, generateVotingKeys, navigation, fetchUTXOs, isDelegating}: Props & HOCProps) => {
+const Step1 = ({intl, generateVotingKeys, fetchUTXOs, isDelegating}: Props) => {
+  const navigation = useNavigation()
   const [showModal, setShowModal] = useState<boolean>(!isDelegating)
 
   useEffect(() => {
@@ -137,4 +132,4 @@ export default (injectIntl(
       fetchUTXOs,
     },
   )(Step1),
-): ComponentType<Props>)
+): ComponentType<{}>)

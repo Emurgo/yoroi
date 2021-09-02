@@ -33,6 +33,7 @@ import HWInstructions from '../Ledger/HWInstructions'
 import LocalizableError from '../../i18n/LocalizableError'
 import {MultiToken} from '../../crypto/MultiToken'
 import {ISignRequest} from '../../crypto/ISignRequest'
+import {useParams} from '../../navigation'
 
 import styles from './styles/DelegationConfirmation.style'
 
@@ -178,10 +179,16 @@ const LEDGER_DIALOG_STEPS = {
   LEDGER_CONNECT: 'LEDGER_CONNECT',
 }
 
+export type Params = {
+  poolHash: string,
+  poolName: string,
+  transactionData: CreateDelegationTxResponse,
+  transactionFee: MultiToken,
+}
+
 const DelegationConfirmation = (
   {
     intl,
-    route,
     onDelegate,
     isEasyConfirmationEnabled,
     password,
@@ -203,11 +210,9 @@ const DelegationConfirmation = (
     errorLogs,
   }: {intl: IntlShape} & Object /* TODO: type */,
 ) => {
-  const poolHash = route.params.poolHash
-  const poolName = route.params.poolName
-  const delegationTxData: CreateDelegationTxResponse = route.params.transactionData
+  const {poolHash, poolName, transactionData: delegationTxData, transactionFee} = useParams<Params>()
+
   const amountToDelegate: MultiToken = delegationTxData.totalAmountToDelegate
-  const transactionFee: MultiToken = route.params.transactionFee
   const reward = approximateReward(amountToDelegate.getDefault())
 
   const isConfirmationDisabled = (!isEasyConfirmationEnabled && !password && !isHW) || processingTx

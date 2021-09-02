@@ -5,6 +5,7 @@ import {useDispatch} from 'react-redux'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {ScrollView, Platform, View} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useNavigation} from '@react-navigation/native'
 
 import TermsOfService from '../Common/TermsOfService'
 import {Checkbox, Button, StatusBar, PleaseWaitModal, Spacer} from '../UiKit'
@@ -15,8 +16,6 @@ import {CONFIG} from '../../config/config'
 
 import styles from './styles/AcceptTermsOfServiceScreen.styles'
 import globalMessages from '../../i18n/global-messages'
-
-import type {Navigation} from '../../types/navigation'
 
 const messages = defineMessages({
   aggreeClause: {
@@ -35,10 +34,10 @@ const messages = defineMessages({
 
 type Props = {
   intl: IntlShape,
-  navigation: Navigation,
 }
 
-const AcceptTermsOfServiceScreen = ({intl, navigation}: Props) => {
+const AcceptTermsOfServiceScreen = ({intl}: Props) => {
+  const navigation = useNavigation()
   const [acceptedTos, setAcceptedTos] = React.useState(false)
   const [savingConsent, setSavingConsent] = React.useState(false)
 

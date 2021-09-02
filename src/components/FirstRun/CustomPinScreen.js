@@ -4,7 +4,7 @@ import React from 'react'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector, useDispatch} from 'react-redux'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
-import {useNavigation, useRoute} from '@react-navigation/native'
+import {useRoute} from '@react-navigation/native'
 
 import PinRegistrationForm from '../Common/PinRegistrationForm'
 import {encryptAndStoreCustomPin, signin} from '../../actions'
@@ -34,7 +34,6 @@ type Props = {
 
 const CustomPinScreen = ({intl}: Props) => {
   const isAuth = useSelector(isAuthenticatedSelector)
-  const navigation = useNavigation()
   const route = useRoute()
   const onSuccess: () => any = (route.params?.onSuccess: any)
   const dispatch = useDispatch()
@@ -59,7 +58,6 @@ const CustomPinScreen = ({intl}: Props) => {
             title: intl.formatMessage(messages.pinConfirmationTitle),
           },
         }}
-        navigation={navigation}
       />
     </SafeAreaView>
   )

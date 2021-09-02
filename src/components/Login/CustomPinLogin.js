@@ -23,16 +23,11 @@ const messages = defineMessages({
   },
 })
 
-type RouterProps = {|
-  navigation: any,
-  route: any,
-|}
-
-type Props = {|
+type Props = {
   intl: IntlShape,
-|}
+}
 
-const CustomPinLogin = injectIntl(({intl}: Props & RouterProps) => {
+const CustomPinLogin = injectIntl(({intl}: Props) => {
   const dispatch = useDispatch()
   const customPinHash = useSelector(customPinHashSelector)
   const onPinEnter = async (pin: string) => {
