@@ -9032,10 +9032,10 @@ flow-annotation-check@^1.8.1:
     glob "7.1.6"
     load-pkg "^4.0.0"
 
-flow-bin@0.126.0:
-  version "0.126.0"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.126.0.tgz#df06d1c6bf2cb770b71c38a76e8e4491cc57d624"
-  integrity sha512-91nCLt3B0drolW9bXmTssNxhshkkGDwokVyuquBA7TeHMCajbMNxm77JI0JydzHEv9xa6nMbBJXYyM6XW8Jzgg==
+flow-bin@0.159.0:
+  version "0.159.0"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.159.0.tgz#f788480d54db6da021e3440648c1dbb5dbc8aee8"
+  integrity sha512-5SugX7mOdfruzn2/+42DF74bxJO2SGmSEzCvTH9wOoBi98Ie87D5Hmb9OoGfwAE5SnXJmB6OCwN2WDiJe4lI+w==
 
 flow-coverage-report@0.8.0:
   version "0.8.0"
