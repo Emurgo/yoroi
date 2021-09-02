@@ -4,6 +4,7 @@ import React from 'react'
 import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useNavigation, useRoute} from '@react-navigation/native'
 
 import WalletDescription from './WalletDescription'
 import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
@@ -67,11 +68,11 @@ type ModalState = $Values<typeof MODAL_STATES>
 
 type Props = {
   intl: IntlShape,
-  route: Object, // TODO(navigation): type
-  navigation: Object, // TODO(navigation): type
 }
 
-const WalletInitScreen = ({intl, route, navigation}: Props) => {
+const WalletInitScreen = ({intl}: Props) => {
+  const navigation = useNavigation()
+  const route = (useRoute(): any)
   const [modalState, _setModalState] = React.useState(MODAL_STATES.CLOSED)
   const setModalState = (event: Object, modalState: ModalState) => _setModalState(modalState)
 
