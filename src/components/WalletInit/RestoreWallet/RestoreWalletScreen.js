@@ -6,6 +6,7 @@ import {useSelector} from 'react-redux'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import _ from 'lodash'
+import {useNavigation, useRoute} from '@react-navigation/native'
 
 import {Text, TextInput, Button, Spacer, StatusBar} from '../../UiKit'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
@@ -16,7 +17,6 @@ import {isKeyboardOpenSelector} from '../../../selectors'
 import styles from './styles/RestoreWalletScreen.style'
 
 import type {InvalidPhraseError} from '../../../utils/validators'
-import type {Navigation} from '../../../types/navigation'
 import type {WalletImplementationId} from '../../../config/types'
 
 const mnemonicInputErrorsMessages = defineMessages({
@@ -82,9 +82,9 @@ const errorsVisibleWhileWriting = (errors) => {
     .filter((error) => !!error)
 }
 
-const RestoreWalletScreen = (
-  {intl, route, navigation}: {intl: IntlShape, navigation: Navigation} & Object /* TODO: type */,
-) => {
+const RestoreWalletScreen = ({intl}: {intl: IntlShape}) => {
+  const navigation = useNavigation()
+  const route: any = useRoute()
   const implId: WalletImplementationId = route.params.walletImplementationId
   const [phrase, setPhrase] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.MNEMONIC3 : '')
 
@@ -104,6 +104,7 @@ const RestoreWalletScreen = (
       phrase: cleanMnemonic(phrase),
       networkId: route.params.networkId,
       walletImplementationId: route.params.walletImplementationId,
+      provider: route.params.provider,
     })
   }
 

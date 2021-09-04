@@ -9,6 +9,7 @@ import React, {useEffect, useState} from 'react'
 import {View, SafeAreaView} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
+import {useNavigation} from '@react-navigation/native'
 
 import {Text, Button, ProgressStep} from '../UiKit'
 import {CATALYST_ROUTES} from '../../RoutesList'
@@ -18,8 +19,6 @@ import styles from './styles/Step2.style'
 
 import type {ComponentType} from 'react'
 import type {IntlShape} from 'react-intl'
-
-import type {Navigation} from '../../types/navigation'
 
 const messages = defineMessages({
   subTitle: {
@@ -33,17 +32,13 @@ const messages = defineMessages({
   },
 })
 
-type Props = {|
-  route: Object, // TODO(navigation): type
-  navigation: Navigation,
-|}
-
-type HOCProps = {
+type Props = {
   intl: IntlShape,
   pin: Array<String>,
 }
 
-const Step2 = ({intl, pin, navigation}: Props & HOCProps) => {
+const Step2 = ({intl, pin}: Props) => {
+  const navigation = useNavigation()
   const [countDown, setCountDown] = useState(5)
 
   useEffect(() => {
@@ -93,4 +88,4 @@ export default (injectIntl(
     }),
     {},
   )(Step2),
-): ComponentType<Props>)
+): ComponentType<{}>)

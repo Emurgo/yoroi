@@ -18,6 +18,7 @@ import {BleError} from 'react-native-ble-plx'
 import {Platform, PermissionsAndroid} from 'react-native'
 import {
   Address,
+  AuxiliaryData,
   BaseAddress,
   Bip32PublicKey,
   BootstrapWitness,
@@ -30,7 +31,6 @@ import {
   StakeCredential,
   Transaction,
   TransactionBody,
-  TransactionMetadata,
   TransactionOutputs,
   TransactionWitnessSet,
   Vkey,
@@ -678,7 +678,7 @@ async function formatLedgerCertificates(
       result.push({
         type: CertificateType.STAKE_DEREGISTRATION,
         params: {
-          path: await getPath(await registrationCert.stake_credential()),
+          path: await getPath(await deregistrationCert.stake_credential()),
         },
       })
       continue
@@ -688,7 +688,7 @@ async function formatLedgerCertificates(
       result.push({
         type: CertificateType.STAKE_DELEGATION,
         params: {
-          path: await getPath(await registrationCert.stake_credential()),
+          path: await getPath(await delegationCert.stake_credential()),
           poolKeyHashHex: Buffer.from(await (await delegationCert.pool_keyhash()).to_bytes()).toString('hex'),
         },
       })
@@ -806,7 +806,7 @@ export const buildSignedTransaction = async (
     ...Addressing,
     key: Bip32PublicKey,
   |},
-  metadata: TransactionMetadata | void,
+  auxiliaryData: AuxiliaryData | void,
 ): Promise<Transaction> => {
   const isSameArray = (array1: Array<number>, array2: Array<number>) =>
     array1.length === array2.length && array1.every((value, index) => value === array2[index])
@@ -914,5 +914,5 @@ export const buildSignedTransaction = async (
     await witSet.set_vkeys(vkeyWitWasm)
   }
   // TODO: handle script witnesses
-  return await Transaction.new(txBody, witSet, metadata)
+  return await Transaction.new(txBody, witSet, auxiliaryData)
 }

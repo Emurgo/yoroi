@@ -5,6 +5,8 @@ import {StyleSheet, TouchableOpacity, View, Image} from 'react-native'
 import {colors} from '../../styles/config'
 import Text from './Text'
 
+import {type PressEvent} from 'react-native/Libraries/Types/CoreEventTypes'
+
 const buttonOutline = {
   borderWidth: 1,
   borderColor: '#fff',
@@ -69,7 +71,7 @@ const styles = StyleSheet.create({
 
 type ButtonProps = {
   title: string,
-  onPress: (event?: any) => mixed,
+  onPress: (event: PressEvent) => mixed,
   color?: ?string,
   accessibilityLabel?: ?string,
   disabled?: ?boolean,

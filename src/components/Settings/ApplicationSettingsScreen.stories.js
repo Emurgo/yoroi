@@ -6,7 +6,6 @@ import {StyleSheet, View} from 'react-native'
 import {storiesOf} from '@storybook/react-native'
 
 import ApplicationSettingsScreen from './ApplicationSettingsScreen'
-import {withNavigationProps} from '../../../storybook/decorators'
 
 const styles = StyleSheet.create({
   applicationSettingsScreen: {
@@ -16,5 +15,4 @@ const styles = StyleSheet.create({
 
 storiesOf('ApplicationSettingsScreen', module)
   .addDecorator((getStory) => <View style={styles.applicationSettingsScreen}>{getStory()}</View>)
-  .addDecorator(withNavigationProps)
-  .add('Default', ({navigation, route}) => <ApplicationSettingsScreen navigation={navigation} route={route} />)
+  .add('Default', () => <ApplicationSettingsScreen />)

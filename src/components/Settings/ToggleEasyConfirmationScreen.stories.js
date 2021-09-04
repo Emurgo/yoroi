@@ -15,4 +15,4 @@ const styles = StyleSheet.create({
 
 storiesOf('ToggleEasyConfirmationScreen', module)
   .addDecorator((getStory) => <View style={styles.toggleEasyConfirmationScreen}>{getStory()}</View>)
-  .add('Default', ({navigation}) => <ToggleEasyConfirmationScreen navigation={navigation} />)
+  .add('Default', () => <ToggleEasyConfirmationScreen />)

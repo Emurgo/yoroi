@@ -4,6 +4,7 @@ import React from 'react'
 import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useNavigation, useRoute} from '@react-navigation/native'
 
 import WalletDescription from './WalletDescription'
 import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
@@ -16,7 +17,7 @@ import globalMessages from '../../i18n/global-messages'
 
 import styles from './styles/WalletInitScreen.style'
 
-import type {NetworkId, WalletImplementationId} from '../../config/types'
+import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../config/types'
 
 const messages = defineMessages({
   createWalletButton: {
@@ -67,23 +68,35 @@ type ModalState = $Values<typeof MODAL_STATES>
 
 type Props = {
   intl: IntlShape,
-  route: Object, // TODO(navigation): type
-  navigation: Object, // TODO(navigation): type
 }
 
-const WalletInitScreen = ({intl, route, navigation}: Props) => {
+const WalletInitScreen = ({intl}: Props) => {
+  const navigation = useNavigation()
+  const route = (useRoute(): any)
   const [modalState, _setModalState] = React.useState(MODAL_STATES.CLOSED)
   const setModalState = (event: Object, modalState: ModalState) => _setModalState(modalState)
 
-  const navigateRestoreWallet = (event: Object, networkId: NetworkId, walletImplementationId: WalletImplementationId) =>
+  const navigateRestoreWallet = (
+    event: Object,
+    networkId: NetworkId,
+    walletImplementationId: WalletImplementationId,
+    provider: ?YoroiProvider,
+  ) =>
     navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET, {
       networkId,
       walletImplementationId,
+      provider,
     })
-  const navigateCreateWallet = (event: Object, networkId: NetworkId, walletImplementationId: WalletImplementationId) =>
+  const navigateCreateWallet = (
+    event: Object,
+    networkId: NetworkId,
+    walletImplementationId: WalletImplementationId,
+    provider: ?YoroiProvider,
+  ) =>
     navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET, {
       networkId,
       walletImplementationId,
+      provider,
     })
   const navigateCheckNanoX = (
     event: Object,
@@ -107,6 +120,7 @@ const WalletInitScreen = ({intl, route, navigation}: Props) => {
     })
 
   const networkId: NetworkId = route.params.networkId
+  const provider = route.params.provider
   const implementationId: WalletImplementationId = route.params.walletImplementationId
   let createWalletLabel = intl.formatMessage(messages.createWalletButton)
   let restoreWalletLabel = intl.formatMessage(messages.restoreWalletButton)
@@ -128,7 +142,7 @@ const WalletInitScreen = ({intl, route, navigation}: Props) => {
           </View>
           {!isByron(implementationId) && (
             <Button
-              onPress={(event) => navigateCreateWallet(event, networkId, implementationId)}
+              onPress={(event) => navigateCreateWallet(event, networkId, implementationId, provider)}
               title={createWalletLabel}
               style={styles.createButton}
               testID="createWalletButton"
@@ -137,9 +151,15 @@ const WalletInitScreen = ({intl, route, navigation}: Props) => {
           <Button
             outline
             onPress={(event) => {
+              // prettier-ignore
               isHaskellShelley(implementationId)
                 ? setModalState(event, MODAL_STATES.CHOOSE_MNEMONICS_LEN)
-                : navigateRestoreWallet(event, networkId, implementationId)
+                : navigateRestoreWallet(
+                  event,
+                  networkId,
+                  implementationId,
+                  provider,
+                )
             }}
             title={restoreWalletLabel}
             style={styles.createButton}
@@ -170,7 +190,7 @@ const WalletInitScreen = ({intl, route, navigation}: Props) => {
               showCloseIcon
             >
               <Button
-                onPress={(event) => navigateRestoreWallet(event, networkId, implementationId)}
+                onPress={(event) => navigateRestoreWallet(event, networkId, implementationId, provider)}
                 title={intl.formatMessage(messages.restoreNormalWalletLabel)}
                 style={styles.mnemonicDialogButton}
               />
@@ -181,7 +201,12 @@ const WalletInitScreen = ({intl, route, navigation}: Props) => {
               <Button
                 outlineOnLight
                 onPress={(event) =>
-                  navigateRestoreWallet(event, networkId, CONFIG.WALLETS.HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID)
+                  navigateRestoreWallet(
+                    event,
+                    networkId,
+                    CONFIG.WALLETS.HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID,
+                    provider,
+                  )
                 }
                 title={intl.formatMessage(messages.restore24WordWalletLabel)}
                 style={styles.mnemonicDialogButton}

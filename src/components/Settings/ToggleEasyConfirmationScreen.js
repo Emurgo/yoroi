@@ -4,6 +4,7 @@ import React from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {View, ScrollView} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useNavigation} from '@react-navigation/native'
 
 import walletManager from '../../crypto/walletManager'
 import {Text, Button, TextInput, StatusBar} from '../UiKit'
@@ -48,7 +49,8 @@ const messages = defineMessages({
   },
 })
 
-const ToggleEasyConfirmationScreen = ({intl, navigation}: {intl: IntlShape} & Object /* TODO: type */) => {
+const ToggleEasyConfirmationScreen = ({intl}: {intl: IntlShape} & Object /* TODO: type */) => {
+  const navigation = useNavigation()
   const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
   const dispatch = useDispatch()
   const [masterPassword, setMasterPassword] = React.useState('')

@@ -33,6 +33,7 @@ import HWInstructions from '../Ledger/HWInstructions'
 import LocalizableError from '../../i18n/LocalizableError'
 import {MultiToken} from '../../crypto/MultiToken'
 import {ISignRequest} from '../../crypto/ISignRequest'
+import {useParams} from '../../navigation'
 
 import styles from './styles/DelegationConfirmation.style'
 
@@ -178,10 +179,16 @@ const LEDGER_DIALOG_STEPS = {
   LEDGER_CONNECT: 'LEDGER_CONNECT',
 }
 
+export type Params = {
+  poolHash: string,
+  poolName: string,
+  transactionData: CreateDelegationTxResponse,
+  transactionFee: MultiToken,
+}
+
 const DelegationConfirmation = (
   {
     intl,
-    route,
     onDelegate,
     isEasyConfirmationEnabled,
     password,
@@ -203,11 +210,9 @@ const DelegationConfirmation = (
     errorLogs,
   }: {intl: IntlShape} & Object /* TODO: type */,
 ) => {
-  const poolHash = route.params.poolHash
-  const poolName = route.params.poolName
-  const delegationTxData: CreateDelegationTxResponse = route.params.transactionData
+  const {poolHash, poolName, transactionData: delegationTxData, transactionFee} = useParams<Params>()
+
   const amountToDelegate: MultiToken = delegationTxData.totalAmountToDelegate
-  const transactionFee: MultiToken = route.params.transactionFee
   const reward = approximateReward(amountToDelegate.getDefault())
 
   const isConfirmationDisabled = (!isEasyConfirmationEnabled && !password && !isHW) || processingTx
@@ -238,20 +243,16 @@ const DelegationConfirmation = (
             label={intl.formatMessage(txLabels.amount)}
           />
         </View>
-        {
-          /* eslint-disable indent */
-          !isEasyConfirmationEnabled && !isHW && (
-            <View style={styles.input}>
-              <ValidatedTextInput
-                secureTextEntry
-                value={password}
-                label={intl.formatMessage(txLabels.password)}
-                onChangeText={setPassword}
-              />
-            </View>
-          )
-          /* eslint-enable indent */
-        }
+        {!isEasyConfirmationEnabled && !isHW && (
+          <View style={styles.input}>
+            <ValidatedTextInput
+              secureTextEntry
+              value={password}
+              label={intl.formatMessage(txLabels.password)}
+              onChangeText={setPassword}
+            />
+          </View>
+        )}
         <View style={styles.itemBlock}>
           <Text style={styles.itemTitle}>{intl.formatMessage(messages.rewardsExplanation)}</Text>
           <Text style={styles.rewards}>{formatTokenWithText(reward, defaultAsset)}</Text>
@@ -268,24 +269,20 @@ const DelegationConfirmation = (
         />
       </View>
 
-      {
-        /* eslint-disable indent */
-        isHW && Platform.OS === 'android' && CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT && (
-          <>
-            <LedgerTransportSwitchModal
-              visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT}
-              onRequestClose={closeLedgerDialog}
-              onSelectUSB={(event) => onChooseTransport(event, true)}
-              onSelectBLE={(event) => onChooseTransport(event, false)}
-              showCloseIcon
-            />
-            <Modal visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.LEDGER_CONNECT} onRequestClose={closeLedgerDialog}>
-              <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={useUSB} />
-            </Modal>
-          </>
-        )
-        /* eslint-enable indent */
-      }
+      {isHW && Platform.OS === 'android' && CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT && (
+        <>
+          <LedgerTransportSwitchModal
+            visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT}
+            onRequestClose={closeLedgerDialog}
+            onSelectUSB={(event) => onChooseTransport(event, true)}
+            onSelectBLE={(event) => onChooseTransport(event, false)}
+            showCloseIcon
+          />
+          <Modal visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.LEDGER_CONNECT} onRequestClose={closeLedgerDialog}>
+            <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={useUSB} />
+          </Modal>
+        </>
+      )}
       <ErrorModal
         visible={showErrorModal}
         title={intl.formatMessage(errorMessages.generalTxError.title)}

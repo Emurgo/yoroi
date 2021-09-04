@@ -2,6 +2,7 @@
 
 import React from 'react'
 import {storiesOf} from '@storybook/react-native'
+import {NavigationRouteContext} from '@react-navigation/native'
 
 import ConnectNanoXScreen from './ConnectNanoXScreen'
 import {CONFIG} from '../../../config/config'
@@ -14,7 +15,9 @@ const devices = [
   {name: 'NANO X 9F42', id: 5},
 ]
 
-const route = {
+const bleRoute = {
+  key: 'key',
+  name: 'name',
   params: {
     useUSB: false,
     networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
@@ -22,17 +25,34 @@ const route = {
   },
 }
 
+const usbRoute = {
+  key: 'key',
+  name: 'name',
+  params: {
+    useUSB: true,
+    networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
+    walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+  },
+}
+
 storiesOf('ConnectNanoXScreen', module)
-  .add('default', ({navigation}) => (
-    // $FlowFixMe
-    <ConnectNanoXScreen navigation={navigation} route={route} />
+  .add('BLE - with one device', () => (
+    <NavigationRouteContext.Provider value={bleRoute}>
+      <ConnectNanoXScreen defaultDevices={[devices[0]]} />
+    </NavigationRouteContext.Provider>
   ))
-  .add('with one device', ({navigation}) => (
-    <ConnectNanoXScreen navigation={navigation} route={route} defaultDevices={[devices[0]]} />
+  .add('BLE - with many devices', () => (
+    <NavigationRouteContext.Provider value={bleRoute}>
+      <ConnectNanoXScreen defaultDevices={devices} />
+    </NavigationRouteContext.Provider>
   ))
-  .add('with two devices', ({navigation}) => (
-    <ConnectNanoXScreen navigation={navigation} defaultDevices={[devices[0], devices[1]]} route={route} />
+  .add('USB - with one device', () => (
+    <NavigationRouteContext.Provider value={usbRoute}>
+      <ConnectNanoXScreen defaultDevices={[devices[0]]} />
+    </NavigationRouteContext.Provider>
   ))
-  .add('with many devices', ({navigation}) => (
-    <ConnectNanoXScreen navigation={navigation} route={route} defaultDevices={devices} />
+  .add('USB - with many devices', () => (
+    <NavigationRouteContext.Provider value={usbRoute}>
+      <ConnectNanoXScreen defaultDevices={devices} />
+    </NavigationRouteContext.Provider>
   ))

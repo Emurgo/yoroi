@@ -15,7 +15,7 @@ export type GenericAction<Segment, Payload> = {
 }
 
 export type GetState = () => State
-// eslint-disable-next-line
+// eslint-disable-next-line no-use-before-define
 export type Dispatch = (action: GenericAction<State, any> | Thunk) => null
 export type ThunkExtra = {
   logger: {

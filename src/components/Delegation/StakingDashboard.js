@@ -443,7 +443,7 @@ class StakingDashboard extends React.Component<Props, State> {
       walletMeta,
     } = this.props
 
-    const config = getCardanoBaseConfig(getCardanoNetworkConfigById(walletMeta.networkId))
+    const config = getCardanoBaseConfig(getCardanoNetworkConfigById(walletMeta.networkId, walletMeta.provider))
 
     const toRelativeSlotNumberFn = genToRelativeSlotNumber(config)
     const timeToSlotFn = genTimeToSlot(config)
@@ -486,13 +486,9 @@ class StakingDashboard extends React.Component<Props, State> {
 
         <View style={[styles.container]}>
           <OfflineBanner />
-          {
-            /* eslint-disable indent */
-            isOnline && lastAccountStateSyncError && (
-              <SyncErrorBanner showRefresh={!(isFetchingAccountState || isFetchingUtxos)} />
-            )
-            /* eslint-enable indent */
-          }
+          {isOnline && lastAccountStateSyncError && (
+            <SyncErrorBanner showRefresh={!(isFetchingAccountState || isFetchingUtxos)} />
+          )}
 
           <ScrollView
             style={styles.scrollView}
@@ -536,29 +532,23 @@ class StakingDashboard extends React.Component<Props, State> {
               />
             </View>
 
-            {
-              /* eslint-disable indent */
-
-              poolInfo != null && !!poolOperator ? (
-                <View style={styles.row}>
-                  <DelegatedStakepoolInfo
-                    // $FlowFixMe TODO: null or undefined is not compatible with string
-                    poolTicker={poolInfo.info?.ticker}
-                    // $FlowFixMe TODO: null or undefined is not compatible with string
-                    poolName={poolInfo.info?.name}
-                    poolHash={poolOperator != null ? poolOperator : ''}
-                    // $FlowFixMe TODO: null or undefined is not compatible with string
-                    poolURL={poolInfo.info?.homepage}
-                  />
-                </View>
-              ) : isDelegating ? (
-                <View style={styles.activityIndicator}>
-                  <ActivityIndicator size={'large'} color={'black'} />
-                </View>
-              ) : null
-
-              /* eslint-enable indent */
-            }
+            {poolInfo != null && !!poolOperator ? (
+              <View style={styles.row}>
+                <DelegatedStakepoolInfo
+                  // $FlowFixMe TODO: null or undefined is not compatible with string
+                  poolTicker={poolInfo.info?.ticker}
+                  // $FlowFixMe TODO: null or undefined is not compatible with string
+                  poolName={poolInfo.info?.name}
+                  poolHash={poolOperator != null ? poolOperator : ''}
+                  // $FlowFixMe TODO: null or undefined is not compatible with string
+                  poolURL={poolInfo.info?.homepage}
+                />
+              </View>
+            ) : isDelegating ? (
+              <View style={styles.activityIndicator}>
+                <ActivityIndicator size={'large'} color={'black'} />
+              </View>
+            ) : null}
           </ScrollView>
 
           <DelegationNavigationButtons onPress={this.navigateToStakingCenter} disabled={this.props.isReadOnly} />

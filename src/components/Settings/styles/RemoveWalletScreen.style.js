@@ -12,7 +12,6 @@ const styles = StyleSheet.create({
 
   descriptionContainer: {
     backgroundColor: COLORS.BACKGROUND,
-    padding: 16,
   },
   description: {
     fontSize: 16,
@@ -20,9 +19,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  walletInfo: {
-    flex: 1,
-  },
   walletNameLabel: {
     fontSize: 16,
   },
@@ -32,9 +28,7 @@ const styles = StyleSheet.create({
   },
 
   contentContainer: {
-    paddingTop: 8,
     padding: 16,
-    flexGrow: 1,
   },
 
   actions: {
@@ -42,7 +36,6 @@ const styles = StyleSheet.create({
   },
   removeButton: {
     backgroundColor: COLORS.RED,
-    paddingTop: 10,
   },
 })
 

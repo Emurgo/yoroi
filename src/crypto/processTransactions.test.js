@@ -1,5 +1,5 @@
 // @flow
-/* eslint-disable  */
+
 import {CONFIG} from '../config/config'
 import {TRANSACTION_DIRECTION} from '../types/HistoryTransaction'
 import jestSetup from '../jestSetup'

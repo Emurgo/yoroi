@@ -4,6 +4,7 @@ import React from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import {ScrollView, StyleSheet, Switch, Platform} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useNavigation} from '@react-navigation/native'
 
 import {SETTINGS_ROUTES} from '../../RoutesList'
 import {errorMessages} from '../../i18n/global-messages'
@@ -21,8 +22,6 @@ import {
 import walletManager from '../../crypto/walletManager'
 import KeyStore from '../../crypto/KeyStore'
 import {StatusBar} from '../UiKit'
-
-import type {Navigation} from '../../types/navigation'
 
 import DeviceInfo from 'react-native-device-info'
 
@@ -82,16 +81,12 @@ const styles = StyleSheet.create({
 
 const version = DeviceInfo.getVersion()
 
-type RouterProps = {
-  navigation: Navigation,
-  route: any,
-}
-
 type Props = {
   intl: IntlShape,
 }
 
-const ApplicationSettingsScreen = ({intl, navigation}: Props & RouterProps) => {
+const ApplicationSettingsScreen = ({intl}: Props) => {
+  const navigation = useNavigation()
   const isBiometricHardwareSupported = useSelector(biometricHwSupportSelector)
   const sendCrashReports = useSelector(sendCrashReportsSelector)
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
@@ -114,7 +109,7 @@ const ApplicationSettingsScreen = ({intl, navigation}: Props & RouterProps) => {
         onSuccess: () =>
           navigation.navigate(SETTINGS_ROUTES.SETUP_CUSTOM_PIN, {
             onSuccess: async () => {
-              await setSystemAuth(false)
+              await dispatch(setSystemAuth(false))
 
               navigation.navigate(SETTINGS_ROUTES.MAIN)
             },

@@ -1,12 +1,24 @@
-/* eslint-disable react-native/no-inline-styles */
 // @flow
 
 import React from 'react'
 import {storiesOf} from '@storybook/react-native'
 
-import {withNavigationProps} from '../../../storybook/decorators'
 import CustomPinScreen from './CustomPinScreen'
+import {NavigationRouteContext} from '@react-navigation/native'
+import {action} from '@storybook/addon-actions'
 
-storiesOf('CustomPinScreen', module)
-  .addDecorator(withNavigationProps)
-  .add('Default', ({navigation, route}) => <CustomPinScreen navigation={navigation} route={route} />)
+storiesOf('CustomPinScreen', module).add('Default', () => {
+  const route = {
+    key: 'key',
+    name: 'name',
+    params: {
+      onSuccess: action('onSuccess'),
+    },
+  }
+
+  return (
+    <NavigationRouteContext.Provider value={route}>
+      <CustomPinScreen />
+    </NavigationRouteContext.Provider>
+  )
+})

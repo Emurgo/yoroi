@@ -1,5 +1,5 @@
 // @flow
-/* eslint-disable-next-line */
+
 import * as Keychain from 'react-native-keychain'
 import {Platform, NativeModules} from 'react-native'
 import {defineMessages, type IntlShape} from 'react-intl'
@@ -216,7 +216,6 @@ class KeyStore {
       return KeyStoreBridge.REJECTION_MESSAGES[key]
     }
 
-    // eslint-disable-next-line
     // from https://opensource.apple.com/source/Security/Security-55471/sec/Security/SecBase.h.auto.html
     if (Platform.OS === 'ios') {
       switch (key) {

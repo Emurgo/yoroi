@@ -6,7 +6,7 @@ import {View, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
-import {Button, TextInput} from '../UiKit'
+import {Button, TextInput, Spacer} from '../UiKit'
 import {
   validatePassword,
   getWalletNameError,
@@ -134,21 +134,21 @@ const WalletForm = ({intl, onSubmit}: Props) => {
         />
       </ScrollView>
 
-      <View style={styles.action}>
+      <Actions>
         <Button
           onPress={() => onSubmit({name, password})}
           disabled={Object.keys(passwordErrors).length > 0 || Object.keys(nameErrors).length > 0}
           title={intl.formatMessage(messages.continueButton)}
           testID="walletFormContinueButton"
         />
-      </View>
+      </Actions>
     </SafeAreaView>
   )
 }
 
 export default injectIntl(WalletForm)
 
-const Spacer = () => <View style={styles.spacer} />
 const WalletNameInput = TextInput
 const PasswordInput = TextInput
 const PasswordConfirmationInput = TextInput
+const Actions = (props) => <View {...props} style={styles.actions} />

@@ -25,33 +25,10 @@ const mockUnsignedTx = {
 }
 
 storiesOf('Catalyst', module)
-  .add('Step 1', ({route, navigation}) => {
-    return <Step1 navigation={navigation} route={route} />
-  })
-  .add('Step 2', ({route, navigation}) => {
-    return <Step2 navigation={navigation} route={route} />
-  })
-  .add('Step 3', ({route, navigation}) => {
-    return <Step3 navigation={navigation} route={route} />
-  })
-  .add('Step 4', ({route, navigation}) => {
-    return <Step4 navigation={navigation} route={route} />
-  })
-  .add('Step 5', ({route, navigation}) => {
-    return (
-      // $FlowFixMe
-      <Step5 navigation={navigation} route={route} unsignedTx={mockUnsignedTx} />
-    )
-  })
-  .add('Step 5 - HW wallet', ({route, navigation}) => {
-    return (
-      // $FlowFixMe
-      <Step5 navigation={navigation} route={route} unsignedTx={mockUnsignedTx} isHW />
-    )
-  })
-  .add('Step 6', ({route, navigation}) => {
-    return (
-      // $FlowFixMe
-      <Step6 navigation={navigation} route={route} encryptedKey={encryptedKey} />
-    )
-  })
+  .add('Step 1', () => <Step1 />)
+  .add('Step 2', () => <Step2 />)
+  .add('Step 3', () => <Step3 />)
+  .add('Step 4', () => <Step4 />)
+  .add('Step 5', () => <Step5 unsignedTx={mockUnsignedTx} />)
+  .add('Step 5 - HW wallet', () => <Step5 unsignedTx={mockUnsignedTx} isHW />)
+  .add('Step 6', () => <Step6 encryptedKey={encryptedKey} />)

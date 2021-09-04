@@ -11,7 +11,7 @@ import Clipboard from '@react-native-community/clipboard'
 import QRCode from 'react-native-qrcode-svg'
 import {injectIntl, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
-import {useFocusEffect} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
 import CatalystBackupCheckModal from './CatalystBackupCheckModal'
 import {Text, Button, ProgressStep} from '../UiKit'
@@ -23,8 +23,6 @@ import styles from './styles/Step6.style'
 
 import type {ComponentType} from 'react'
 import type {IntlShape} from 'react-intl'
-
-import type {Navigation} from '../../types/navigation'
 
 const messages = defineMessages({
   subTitle: {
@@ -59,17 +57,13 @@ const messages = defineMessages({
 
 const {FlagSecure} = NativeModules
 
-type Props = {|
-  navigation: Navigation,
-  route: Object, // TODO(navigation): type
-|}
-
-type HOCProps = {
+type Props = {
   intl: IntlShape,
   encryptedKey: string,
 }
 
-const Step6 = ({intl, navigation, encryptedKey}: HOCProps & Props) => {
+const Step6 = ({intl, encryptedKey}: Props) => {
+  const navigation = useNavigation()
   const [countDown, setCountDown] = useState<number>(5)
 
   useEffect(() => {
@@ -163,4 +157,4 @@ export default (injectIntl(
       ...ownProps,
     }),
   )(Step6),
-): ComponentType<Props>)
+): ComponentType<{}>)

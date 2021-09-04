@@ -5,15 +5,13 @@ import {useDispatch} from 'react-redux'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {View, ScrollView, TouchableOpacity} from 'react-native'
+import {useNavigation, useRoute} from '@react-navigation/native'
 
 import assert from '../../../utils/assert'
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
-import {Text, Button, StatusBar} from '../../UiKit'
+import {Text, Button, Spacer, StatusBar} from '../../UiKit'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import {createWallet} from '../../../actions'
-
-import type {Navigation} from '../../../types/navigation'
-import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
 import styles from './styles/MnemonicCheckScreen.style'
 
@@ -40,7 +38,9 @@ const messages = defineMessages({
   },
 })
 
-const MnemonicCheckScreen = ({intl, navigation, route}: {intl: IntlShape, navigation: Navigation, route: any}) => {
+const MnemonicCheckScreen = ({intl}: {intl: IntlShape}) => {
+  const navigation = useNavigation()
+  const route = (useRoute(): any)
   const mnemonic: string = route.params.mnemonic
   const sortedWords = mnemonic.split(' ').sort()
   const [partialPhrase, setPartialPhrase] = React.useState<Array<string>>([])
@@ -52,7 +52,7 @@ const MnemonicCheckScreen = ({intl, navigation, route}: {intl: IntlShape, naviga
 
   const dispatch = useDispatch()
   const handleWalletConfirmation = async () => {
-    const {mnemonic, password, name, networkId, walletImplementationId} = route.params
+    const {mnemonic, password, name, networkId, walletImplementationId, provider} = route.params
 
     assert.assert(!!mnemonic, 'handleWalletConfirmation:: mnemonic')
     assert.assert(!!password, 'handleWalletConfirmation:: password')
@@ -60,7 +60,7 @@ const MnemonicCheckScreen = ({intl, navigation, route}: {intl: IntlShape, naviga
     assert.assert(networkId != null, 'handleWalletConfirmation:: networkId')
     assert.assert(!!walletImplementationId, 'handleWalletConfirmation:: implementationId')
 
-    await dispatch(createWallet(name, mnemonic, password, networkId, walletImplementationId))
+    await dispatch(createWallet(name, mnemonic, password, networkId, walletImplementationId, provider))
 
     navigation.navigate(ROOT_ROUTES.WALLET, {
       screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
@@ -184,5 +184,3 @@ const WordBadge = ({word, onPress, disabled}: {word: string, disabled?: boolean,
     <Text style={styles.wordBadgeText}>{word} x</Text>
   </TouchableOpacity>
 )
-
-const Spacer = ({height = 16, style}: {height?: number, style?: ViewStyleProp}) => <View style={[{height}, style]} />

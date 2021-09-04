@@ -2,11 +2,11 @@
 // @flow
 
 import React, {useState, useEffect} from 'react'
-import {View, ScrollView} from 'react-native'
+import {ActivityIndicator, View, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
-import {Text, Button, StatusBar, BulletPointItem} from '../../UiKit'
+import {Text, Button, StatusBar, BulletPointItem, Spacer} from '../../UiKit'
 
 import {generateByronPlateFromMnemonics} from '../../../crypto/byron/plate'
 import {generateShelleyPlateFromMnemonics} from '../../../crypto/shelley/plate'
@@ -22,7 +22,7 @@ import type {WalletImplementationId, NetworkId} from '../../../config/types'
 const messages = defineMessages({
   checksumLabel: {
     id: 'components.walletinit.verifyrestoredwallet.checksumLabel',
-    defaultMessage: '!!!Chacksum label',
+    defaultMessage: '!!!Checksum label',
   },
   instructionLabel: {
     id: 'components.walletinit.verifyrestoredwallet.instructionLabel',
@@ -105,6 +105,7 @@ const VerifyWalletScreen = ({navigation, intl, route}: {intl: IntlShape} & Objec
       phrase: route.params.phrase,
       networkId: route.params.networkId,
       walletImplementationId: route.params.walletImplementationId,
+      provider: route.params.provider,
     })
   }
 
@@ -112,42 +113,59 @@ const VerifyWalletScreen = ({navigation, intl, route}: {intl: IntlShape} & Objec
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <StatusBar type="dark" />
 
-      <ScrollView bounces={false} style={styles.scrollView} contentContainerStyle={styles.contentContainer}>
-        <Text style={styles.checksumLabel}>{formatMessage(messages.checksumLabel)}</Text>
-        <View style={styles.plateContainer}>{plate && <Plate icon={plate.ImagePart} checksum={plate.TextPart} />}</View>
+      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
+        <WalletInfo>
+          <Text style={styles.checksumLabel}>{formatMessage(messages.checksumLabel)}</Text>
+        </WalletInfo>
 
-        <Text style={styles.instructionsLabel}>{formatMessage(messages.instructionLabel)}</Text>
-        <BulletPointItem textRow={formatMessage(messages.instructions1)} style={styles.bulletPoint} />
-        <Spacer height={8} />
-        <BulletPointItem textRow={formatMessage(messages.instructions2)} style={styles.bulletPoint} />
-        <Spacer height={8} />
-        <BulletPointItem textRow={formatMessage(messages.instructions3)} style={styles.bulletPoint} />
+        <Spacer height={24} />
+
+        <Plate>
+          {plate ? (
+            <>
+              <WalletAccountIcon iconSeed={plate.ImagePart} />
+              <Spacer />
+              <Text style={styles.checksum}>{plate.TextPart}</Text>
+            </>
+          ) : (
+            <ActivityIndicator style={{flex: 1}} size={'large'} color={'black'} />
+          )}
+        </Plate>
+
+        <Spacer height={40} />
+
+        <Instructions>
+          <Text style={styles.instructionsLabel}>{formatMessage(messages.instructionLabel)}</Text>
+          <BulletPointItem textRow={formatMessage(messages.instructions1)} style={styles.bulletPoint} />
+          <Spacer height={8} />
+          <BulletPointItem textRow={formatMessage(messages.instructions2)} style={styles.bulletPoint} />
+          <Spacer height={8} />
+          <BulletPointItem textRow={formatMessage(messages.instructions3)} style={styles.bulletPoint} />
+        </Instructions>
 
         <Spacer height={32} />
 
-        <View style={styles.addresses}>
+        <Addresses>
           <Text style={styles.addressesLabel}>{formatMessage(messages.walletAddressLabel)}</Text>
-          {addresses && <WalletAddress addressHash={addresses[0]} networkId={networkId} />}
-        </View>
+          {addresses ? (
+            <WalletAddress addressHash={addresses[0]} networkId={networkId} />
+          ) : (
+            <ActivityIndicator size={'small'} color={'black'} />
+          )}
+        </Addresses>
       </ScrollView>
 
-      <View style={styles.action}>
+      <Actions>
         <Button onPress={navigateToWalletCredentials} title={formatMessage(messages.buttonText)} />
-      </View>
+      </Actions>
     </SafeAreaView>
   )
 }
 
 export default injectIntl(VerifyWalletScreen)
 
-const Plate = ({icon, checksum}: {icon: string, checksum: string}) => (
-  <View style={styles.plate}>
-    <WalletAccountIcon iconSeed={icon} />
-
-    <Spacer />
-
-    <Text style={styles.checksum}>{checksum}</Text>
-  </View>
-)
-
-const Spacer = ({height = 16}: {height?: number}) => <View style={{height, width: 16}} />
+const WalletInfo = (props) => <View {...props} />
+const Plate = (props) => <View {...props} style={styles.plate} />
+const Instructions = (props) => <View {...props} />
+const Addresses = (props) => <View {...props} />
+const Actions = (props) => <View {...props} style={styles.actions} />

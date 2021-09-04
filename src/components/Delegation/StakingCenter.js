@@ -4,12 +4,12 @@ import React, {useState, useEffect} from 'react'
 import {View} from 'react-native'
 import {WebView} from 'react-native-webview'
 import {BigNumber} from 'bignumber.js'
-import {connect} from 'react-redux'
-import {compose} from 'redux'
+import {useSelector} from 'react-redux'
 import {injectIntl, defineMessages} from 'react-intl'
+import {useNavigation} from '@react-navigation/native'
 
 import {STAKING_CENTER_ROUTES} from '../../RoutesList'
-import {CONFIG} from '../../config/config'
+import {CONFIG, isNightly, SHOW_PROD_POOLS_IN_DEV, getTestStakingPool} from '../../config/config'
 import {Logger} from '../../utils/logging'
 import {normalizeTokenAmount} from '../../utils/format'
 import walletManager from '../../crypto/walletManager'
@@ -19,13 +19,13 @@ import {PleaseWaitModal} from '../UiKit'
 import PoolWarningModal from './PoolWarningModal'
 import {ObjectValues} from '../../utils/flow'
 import {
-  isOnlineSelector,
   utxosSelector,
   accountBalanceSelector,
   defaultNetworkAssetSelector,
   poolOperatorSelector,
   languageSelector,
   serverStatusSelector,
+  walletMetaSelector,
 } from '../../selectors'
 import UtxoAutoRefresher from '../Send/UtxoAutoRefresher'
 import AccountAutoRefresher from './AccountAutoRefresher'
@@ -35,11 +35,12 @@ import {InsufficientFunds} from '../../crypto/errors'
 import styles from './styles/DelegationCenter.style'
 
 import type {IntlShape} from 'react-intl'
-import type {ComponentType} from 'react'
 import type {DefaultAsset} from '../../types/HistoryTransaction'
-import type {Navigation} from '../../types/navigation'
 import type {RawUtxo} from '../../api/types'
 import type {ServerStatusCache} from '../../state'
+import PoolDetailScreen from './PoolDetailScreen'
+
+const IS_STAKING_ON_TEST_BUILD = isNightly() || CONFIG.IS_TESTNET_BUILD
 
 const noPoolDataDialog = defineMessages({
   title: {
@@ -83,7 +84,7 @@ const navigateToDelegationConfirm = async (
   selectedPools: Array<SelectedPool>,
   defaultAsset: DefaultAsset,
   intl: IntlShape,
-  navigation: Navigation,
+  navigation,
   serverStatus: ServerStatusCache,
 ) => {
   try {
@@ -121,10 +122,10 @@ const _handleOnMessage = async (
   setReputationInfo: (reputationInfo: Object) => void,
   setShowPoolWarning: (showPoolWarning: boolean) => void,
   accountBalance: ?BigNumber,
-  utxos,
+  utxos: Array<RawUtxo>,
   defaultAsset,
   intl: IntlShape,
-  navigation: Navigation,
+  navigation,
   serverStatus: ServerStatusCache,
 ) => {
   try {
@@ -184,48 +185,58 @@ const _handleOnMessage = async (
   }
 }
 
-const StakingCenter = (
-  {
-    intl,
-    navigation,
-    poolOperator,
-    utxos,
-    defaultAsset,
-    languageCode,
-    accountBalance,
-    serverStatus,
-  }: {intl: IntlShape} & Object /* TODO: type */,
-) => {
+type Props = {
+  intl: IntlShape,
+}
+
+const StakingCenter = ({intl}: Props) => {
+  const navigation = useNavigation()
+  const [amountToDelegate, setAmountToDelegate] = useState<string | null>(null)
+  const [selectedPools, setSelectedPools] = useState([])
+  const [reputationInfo, setReputationInfo] = useState({})
+  const [showPoolWarning, setShowPoolWarning] = useState(false)
+  const [busy, setBusy] = useState(false)
+
+  const utxos = useSelector(utxosSelector)
+  const accountBalance = useSelector(accountBalanceSelector)
+  const defaultAsset = useSelector(defaultNetworkAssetSelector)
+  const poolOperator = useSelector(poolOperatorSelector)
+  const languageCode = useSelector(languageSelector)
+  const serverStatus = useSelector(serverStatusSelector)
+  const walletMeta = useSelector(walletMetaSelector)
+
+  const {networkId, provider} = walletMeta
+  const nightlyAndDevPoolHashes = getTestStakingPool(networkId, provider)
+
   // pools user is currently delegating to
   const poolList = poolOperator != null ? [poolOperator] : null
 
-  const [amountToDelegate, setAmountToDelegate] = useState<string | null>(null)
-
-  const [selectedPools, setSelectedPools] = useState([])
-
-  const [reputationInfo, setReputationInfo] = useState({})
-
-  const [showPoolWarning, setShowPoolWarning] = useState(false)
-
-  const [busy, setBusy] = useState(false)
-
   const handleOnMessage = async (event) => {
+    const selectedPoolHashes: Array<string> = !event
+      ? nightlyAndDevPoolHashes
+      : JSON.parse(decodeURI(event.nativeEvent.data))
+
     try {
       setBusy(true)
-      const selectedPoolHashes: Array<string> = JSON.parse(decodeURI(event.nativeEvent.data))
-      Logger.debug('selected pools from explorer:', selectedPoolHashes)
-      await _handleOnMessage(
-        selectedPoolHashes,
-        setSelectedPools,
-        setReputationInfo,
-        setShowPoolWarning,
-        accountBalance,
-        utxos,
-        defaultAsset,
-        intl,
-        navigation,
-        serverStatus,
-      )
+
+      if (selectedPoolHashes.length) {
+        Logger.debug('selected pools from explorer:', selectedPoolHashes)
+
+        await _handleOnMessage(
+          selectedPoolHashes,
+          setSelectedPools,
+          setReputationInfo,
+          setShowPoolWarning,
+          accountBalance,
+          utxos || [],
+          defaultAsset,
+          intl,
+          navigation,
+          serverStatus,
+        )
+      } else {
+        await showErrorDialog(noPoolDataDialog, intl)
+      }
     } finally {
       setBusy(false)
     }
@@ -251,54 +262,45 @@ const StakingCenter = (
 
   return (
     <>
-      <View style={styles.container}>
-        <UtxoAutoRefresher />
-        <AccountAutoRefresher />
-        <WebView
-          source={{
-            uri: prepareStakingURL(poolList, amountToDelegate, languageCode),
-          }}
-          onMessage={(event) => handleOnMessage(event)}
-        />
-      </View>
-      <PoolWarningModal
-        visible={showPoolWarning}
-        onPress={async () => {
-          setShowPoolWarning(false)
-          await navigateToDelegationConfirm(
-            accountBalance,
-            utxos,
-            selectedPools,
-            defaultAsset,
-            intl,
-            navigation,
-            serverStatus,
-          )
-        }}
-        onRequestClose={() => setShowPoolWarning(false)}
-        reputationInfo={reputationInfo}
-      />
-      <PleaseWaitModal title={''} spinnerText={intl.formatMessage(globalMessages.pleaseWait)} visible={busy} />
+      {IS_STAKING_ON_TEST_BUILD && (
+        <View style={styles.container}>
+          <PoolDetailScreen onPressDelegate={() => handleOnMessage()} disabled={!nightlyAndDevPoolHashes.length} />
+        </View>
+      )}
+      {(!IS_STAKING_ON_TEST_BUILD || SHOW_PROD_POOLS_IN_DEV) && (
+        <>
+          <View style={styles.container}>
+            <UtxoAutoRefresher />
+            <AccountAutoRefresher />
+            <WebView
+              source={{
+                uri: prepareStakingURL(poolList, amountToDelegate, languageCode),
+              }}
+              onMessage={(event) => handleOnMessage(event)}
+            />
+          </View>
+          <PoolWarningModal
+            visible={showPoolWarning}
+            onPress={async () => {
+              setShowPoolWarning(false)
+              await navigateToDelegationConfirm(
+                accountBalance,
+                utxos || [],
+                selectedPools,
+                defaultAsset,
+                intl,
+                navigation,
+                serverStatus,
+              )
+            }}
+            onRequestClose={() => setShowPoolWarning(false)}
+            reputationInfo={reputationInfo}
+          />
+          <PleaseWaitModal title={''} spinnerText={intl.formatMessage(globalMessages.pleaseWait)} visible={busy} />
+        </>
+      )}
     </>
   )
 }
 
-type ExternalProps = {|
-  navigation: Navigation,
-  route: Object, // TODO(navigation): type
-  intl: IntlShape,
-|}
-
-export default injectIntl(
-  (compose(
-    connect((state) => ({
-      utxos: utxosSelector(state),
-      accountBalance: accountBalanceSelector(state),
-      isOnline: isOnlineSelector(state),
-      defaultAsset: defaultNetworkAssetSelector(state),
-      poolOperator: poolOperatorSelector(state),
-      languageCode: languageSelector(state),
-      serverStatus: serverStatusSelector(state),
-    })),
-  )(StakingCenter): ComponentType<ExternalProps>),
-)
+export default injectIntl(StakingCenter)

@@ -11,6 +11,7 @@ import React, {useState, useEffect} from 'react'
 import {View, SafeAreaView} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
+import {useNavigation} from '@react-navigation/native'
 
 import {CONFIG} from '../../config/config'
 import KeyStore from '../../crypto/KeyStore'
@@ -26,7 +27,6 @@ import {easyConfirmationSelector, utxosSelector, isHWSelector} from '../../selec
 
 import styles from './styles/Step4.style'
 
-import type {Navigation} from '../../types/navigation'
 import type {ComponentType} from 'react'
 import type {IntlShape} from 'react-intl'
 import type {RawUtxo} from '../../api/types'
@@ -52,12 +52,7 @@ type ErrorData = {|
   errorLogs: ?string,
 |}
 
-type Props = {|
-  navigation: Navigation,
-  route: Object, // TODO(navigation): type
-|}
-
-type HOCProps = {
+type Props = {
   utxos: Array<RawUtxo>,
   generateVotingTransaction: (string | void) => void,
   intl: IntlShape,
@@ -65,7 +60,8 @@ type HOCProps = {
   isHW: boolean,
 }
 
-const Step4 = ({intl, isEasyConfirmationEnabled, isHW, navigation, generateVotingTransaction}: Props & HOCProps) => {
+const Step4 = ({intl, isEasyConfirmationEnabled, isHW, generateVotingTransaction}: Props) => {
+  const navigation = useNavigation()
   const [password, setPassword] = useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
 
   const [generatingTransaction, setGeneratingTransaction] = useState(false)
@@ -201,4 +197,4 @@ export default (injectIntl(
       generateVotingTransaction,
     },
   )(Step4),
-): ComponentType<Props>)
+): ComponentType<{}>)

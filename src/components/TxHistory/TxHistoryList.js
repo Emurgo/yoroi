@@ -5,6 +5,7 @@ import {View, SectionList} from 'react-native'
 import {injectIntl} from 'react-intl'
 import type {IntlShape} from 'react-intl'
 import _ from 'lodash'
+import {useNavigation} from '@react-navigation/native'
 
 import {Text} from '../UiKit'
 import TxHistoryListItem from './TxHistoryListItem'
@@ -13,7 +14,6 @@ import {formatDateRelative} from '../../utils/format'
 import styles from './styles/TxHistoryList.style'
 
 import type {TransactionInfo} from '../../types/HistoryTransaction'
-import type {Navigation} from '../../types/navigation'
 
 type DayHeaderProps = {
   ts: any,
@@ -37,13 +37,13 @@ const getTransactionsByDate = (transactions: Dict<TransactionInfo>) =>
 
 type Props = {
   transactions: Dict<TransactionInfo>,
-  navigation: Navigation,
   refreshing: boolean,
   onRefresh: () => any,
   intl: IntlShape,
 }
 
-const TxHistoryList = ({transactions, navigation, refreshing, onRefresh, intl}: Props) => {
+const TxHistoryList = ({transactions, refreshing, onRefresh, intl}: Props) => {
+  const navigation = useNavigation()
   // TODO(ppershing): add proper memoization here
   const groupedTransactions = getTransactionsByDate(transactions)
 

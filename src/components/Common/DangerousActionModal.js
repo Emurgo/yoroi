@@ -9,7 +9,7 @@ import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
 import alertCircle from '../../assets/img/alert-circle.png'
 
 import styles, {alertStyles} from './styles/DangerousActionModal.style'
-
+import {type PressEvent} from 'react-native/Libraries/Types/CoreEventTypes'
 type DangerousActionProps = {|
   +title: string,
   +children: React$Node,
@@ -19,11 +19,11 @@ type DangerousActionProps = {|
   },
   +primaryButton: {|
     +label: string,
-    +onPress: (void) => PossiblyAsync<void>,
+    +onPress: (event: PressEvent) => PossiblyAsync<void>,
   |},
   +secondaryButton?: {|
     label?: string,
-    onPress: (void) => PossiblyAsync<void>,
+    onPress: (event: PressEvent) => PossiblyAsync<void>,
     primary?: boolean,
   |},
   +checkboxLabel?: string,
@@ -94,11 +94,11 @@ type Props = {
   },
   +primaryButton: {|
     +label: string,
-    +onPress: (void) => PossiblyAsync<void>,
+    +onPress: (event: PressEvent) => PossiblyAsync<void>,
   |},
   +secondaryButton?: {|
     label?: string,
-    onPress: (void) => PossiblyAsync<void>,
+    onPress: (event: PressEvent) => PossiblyAsync<void>,
     primary?: boolean,
   |},
   +checkboxLabel?: string,

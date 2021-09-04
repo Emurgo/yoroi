@@ -15,8 +15,11 @@ type Props = {
 const BulletPointItem = ({textRow, style}: Props) => {
   return (
     <View style={{flexDirection: 'row'}}>
-      <Text style={[{paddingRight: 8}, style]}>{'\u2022'}</Text>
-      <Text style={style}>{textRow}</Text>
+      <Text style={style}>{'\u2022'}</Text>
+
+      <View style={{flex: 1, flexDirection: 'row', flexWrap: 'wrap', paddingLeft: 8}}>
+        <Text style={style}>{textRow}</Text>
+      </View>
     </View>
   )
 }
