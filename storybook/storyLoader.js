@@ -21,17 +21,23 @@ function loadStories() {
   require('../src/components/FirstRun/AcceptTermsOfService.stories')
   require('../src/components/FirstRun/CustomPinScreen.stories')
   require('../src/components/FirstRun/LanguagePickerScreen.stories')
+  require('../src/components/Ledger/DeviceItem/DeviceItem.stories')
   require('../src/components/Ledger/LedgerConnect.stories')
   require('../src/components/Ledger/LedgerTransportSwitchModal.stories')
   require('../src/components/MaintenanceScreen.stories')
+  require('../src/components/Receive/ReceiveScreen.stories')
+  require('../src/components/Send/AddressReaderQR.stories')
   require('../src/components/Send/BiometricAuthScreen.stories')
   require('../src/components/Settings/ApplicationSettingsScreen.stories')
+  require('../src/components/Settings/BiometricsLinkScreen.stories')
   require('../src/components/Settings/ChangePasswordScreen.stories')
   require('../src/components/Settings/ChangeWalletName.stories')
   require('../src/components/Settings/RemoveWalletScreen.stories')
   require('../src/components/Settings/TermsOfServiceScreen.stories')
   require('../src/components/Settings/ToggleEasyConfirmationScreen.stories')
   require('../src/components/Settings/WalletSettingsScreen.stories')
+  require('../src/components/Transfer/TransferSummary.stories')
+  require('../src/components/TxHistoryV2/TxHistory.stories')
   require('../src/components/UiKit/Button.stories')
   require('../src/components/UiKit/Checkbox.stories')
   require('../src/components/UiKit/Link.stories')
@@ -50,6 +56,7 @@ function loadStories() {
   require('../src/components/WalletInit/RestoreWallet/VerifyRestoredWallet.stories')
   require('../src/components/WalletInit/RestoreWallet/WalletAddress.stories')
   require('../src/components/WalletInit/RestoreWallet/WalletCredentialsScreen.stories')
+  require('../src/components/WalletInit/WalletFreshInitScreen.stories')
   require('../src/components/WalletInit/WalletInitScreen.stories')
   require('../src/components/WalletInit/WalletNameForm.stories')
   require('../src/components/WalletSelection/WalletSelectionScreen.stories')
@@ -72,17 +79,23 @@ const stories = [
   '../src/components/FirstRun/AcceptTermsOfService.stories',
   '../src/components/FirstRun/CustomPinScreen.stories',
   '../src/components/FirstRun/LanguagePickerScreen.stories',
+  '../src/components/Ledger/DeviceItem/DeviceItem.stories',
   '../src/components/Ledger/LedgerConnect.stories',
   '../src/components/Ledger/LedgerTransportSwitchModal.stories',
   '../src/components/MaintenanceScreen.stories',
+  '../src/components/Receive/ReceiveScreen.stories',
+  '../src/components/Send/AddressReaderQR.stories',
   '../src/components/Send/BiometricAuthScreen.stories',
   '../src/components/Settings/ApplicationSettingsScreen.stories',
+  '../src/components/Settings/BiometricsLinkScreen.stories',
   '../src/components/Settings/ChangePasswordScreen.stories',
   '../src/components/Settings/ChangeWalletName.stories',
   '../src/components/Settings/RemoveWalletScreen.stories',
   '../src/components/Settings/TermsOfServiceScreen.stories',
   '../src/components/Settings/ToggleEasyConfirmationScreen.stories',
   '../src/components/Settings/WalletSettingsScreen.stories',
+  '../src/components/Transfer/TransferSummary.stories',
+  '../src/components/TxHistoryV2/TxHistory.stories',
   '../src/components/UiKit/Button.stories',
   '../src/components/UiKit/Checkbox.stories',
   '../src/components/UiKit/Link.stories',
@@ -101,6 +114,7 @@ const stories = [
   '../src/components/WalletInit/RestoreWallet/VerifyRestoredWallet.stories',
   '../src/components/WalletInit/RestoreWallet/WalletAddress.stories',
   '../src/components/WalletInit/RestoreWallet/WalletCredentialsScreen.stories',
+  '../src/components/WalletInit/WalletFreshInitScreen.stories',
   '../src/components/WalletInit/WalletInitScreen.stories',
   '../src/components/WalletInit/WalletNameForm.stories',
   '../src/components/WalletSelection/WalletSelectionScreen.stories',
