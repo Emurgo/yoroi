@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 // @flow
 
 import React from 'react'
@@ -23,6 +24,10 @@ type Props = {|
   errorOnMount?: boolean,
   errorDelay?: number,
   right?: Element<any>,
+  noErrors?: boolean,
+  dense?: boolean,
+  textAlign?: 'left' | 'center' | 'right',
+  render?: (props: TextInputProps) => Element<any>,
 |}
 
 const useDebounced = (callback, value, delay = 1000) => {
@@ -42,7 +47,19 @@ const useDebounced = (callback, value, delay = 1000) => {
 }
 
 const TextInputWithRef = (
-  {value, containerStyle, secureTextEntry, helperText, errorText, errorOnMount, errorDelay, right, ...restProps}: Props,
+  {
+    value,
+    containerStyle,
+    secureTextEntry,
+    helperText,
+    errorText,
+    errorOnMount,
+    errorDelay,
+    right,
+    noErrors,
+    textAlign,
+    ...restProps
+  }: Props,
   ref,
 ) => {
   const [showPassword, setShowPassword] = React.useState(false)
@@ -57,10 +74,12 @@ const TextInputWithRef = (
     <View style={containerStyle}>
       <RNPTextInput
         ref={ref}
+        style={{textAlign}}
         value={value}
         onChange={() => setErrorTextEnabled(false)}
         autoCorrect={false}
         autoCompleteType={'off'}
+        autoCapitalize={'none'}
         theme={{
           roundness: 8,
           colors: {
@@ -73,10 +92,9 @@ const TextInputWithRef = (
         secureTextEntry={secureTextEntry && !showPassword}
         mode={'outlined'}
         error={errorTextEnabled && !!errorText}
-        render={(inputProps) => (
+        render={({style, ...inputProps}) => (
           <InputContainer>
-            <RNTextInput {...inputProps} />
-
+            <RNTextInput {...inputProps} style={[style, {color: COLORS.BLACK}]} />
             {right ? <AdornmentContainer style={styles.checkmarkContainer}>{right}</AdornmentContainer> : null}
 
             {secureTextEntry ? (
@@ -87,9 +105,11 @@ const TextInputWithRef = (
         {...restProps}
       />
 
-      <HelperText type={errorTextEnabled && !!errorText ? 'error' : 'info'} visible>
-        {errorTextEnabled && !!errorText ? errorText : helperText}
-      </HelperText>
+      {!noErrors && (
+        <HelperText type={errorTextEnabled && !!errorText ? 'error' : 'info'} visible>
+          {errorTextEnabled && !!errorText ? errorText : helperText}
+        </HelperText>
+      )}
     </View>
   )
 }
