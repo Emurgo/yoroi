@@ -51,7 +51,8 @@ function loadStories() {
   require('../src/components/WalletInit/CreateWallet/MnemonicExplanationModal.stories')
   require('../src/components/WalletInit/CreateWallet/MnemonicShowScreen.stories')
   require('../src/components/WalletInit/RestoreWallet/ImportReadOnlyWalletScreen.stories')
-  require('../src/components/WalletInit/RestoreWallet/RestoreWalletScreen.stories')
+  require('../src/components/WalletInit/RestoreWallet/RestoreWalletScreen/MnemonicInput.stories')
+  require('../src/components/WalletInit/RestoreWallet/RestoreWalletScreen/RestoreWalletScreen.stories')
   require('../src/components/WalletInit/RestoreWallet/SaveReadOnlyWalletScreen.stories')
   require('../src/components/WalletInit/RestoreWallet/VerifyRestoredWallet.stories')
   require('../src/components/WalletInit/RestoreWallet/WalletAddress.stories')
@@ -109,7 +110,8 @@ const stories = [
   '../src/components/WalletInit/CreateWallet/MnemonicExplanationModal.stories',
   '../src/components/WalletInit/CreateWallet/MnemonicShowScreen.stories',
   '../src/components/WalletInit/RestoreWallet/ImportReadOnlyWalletScreen.stories',
-  '../src/components/WalletInit/RestoreWallet/RestoreWalletScreen.stories',
+  '../src/components/WalletInit/RestoreWallet/RestoreWalletScreen/MnemonicInput.stories',
+  '../src/components/WalletInit/RestoreWallet/RestoreWalletScreen/RestoreWalletScreen.stories',
   '../src/components/WalletInit/RestoreWallet/SaveReadOnlyWalletScreen.stories',
   '../src/components/WalletInit/RestoreWallet/VerifyRestoredWallet.stories',
   '../src/components/WalletInit/RestoreWallet/WalletAddress.stories',
