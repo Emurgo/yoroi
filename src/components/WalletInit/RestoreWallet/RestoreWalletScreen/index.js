@@ -1,3 +1,3 @@
 // @flow
 
-export {default} from './RestoreWalletScreen'
+export * from './RestoreWalletScreen'

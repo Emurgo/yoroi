@@ -49,7 +49,7 @@ type Params = {
   provider: string,
 }
 
-const RestoreWalletScreen = ({intl}: {intl: IntlShape}) => {
+export const RestoreWalletScreen = injectIntl(({intl}: {intl: IntlShape}) => {
   const navigation = useNavigation()
   const {networkId, walletImplementationId, provider} = useParams<Params>()
   const {MNEMONIC_LEN: mnemonicLength} = getWalletConfigById(walletImplementationId)
@@ -88,9 +88,7 @@ const RestoreWalletScreen = ({intl}: {intl: IntlShape}) => {
       </Actions>
     </SafeAreaView>
   )
-}
-
-export default injectIntl(RestoreWalletScreen)
+})
 
 const Instructions = (props) => <Text {...props} style={{fontSize: 16, lineHeight: 24}} />
 const Actions = (props) => <View {...props} style={{padding: 16}} />

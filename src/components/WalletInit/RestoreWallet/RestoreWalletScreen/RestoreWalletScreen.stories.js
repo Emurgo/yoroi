@@ -4,8 +4,8 @@ import React from 'react'
 
 import {storiesOf} from '@storybook/react-native'
 
-import RestoreWalletScreen from './RestoreWalletScreen'
-import {CONFIG} from '../../../config/config'
+import {RestoreWalletScreen} from '.'
+import {CONFIG} from '../../../../config/config'
 import {NavigationRouteContext} from '@react-navigation/native'
 
 storiesOf('RestoreWalletScreen', module).add('Default', () => {
