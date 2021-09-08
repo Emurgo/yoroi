@@ -6,6 +6,7 @@ import 'intl'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {enableScreens} from 'react-native-screens'
 import RNBootSplash from 'react-native-bootsplash'
+import * as RNP from 'react-native-paper'
 
 import AppNavigator from './AppNavigator'
 import {useDispatch} from 'react-redux'
@@ -50,7 +51,9 @@ const App = () => {
 
   return (
     <SafeAreaProvider>
-      <AppNavigator />
+      <RNP.Provider>
+        <AppNavigator />
+      </RNP.Provider>
     </SafeAreaProvider>
   )
 }
