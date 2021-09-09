@@ -15,7 +15,6 @@ function loadStories() {
   require('../src/components/Delegation/DelegationConfirmation.stories')
   require('../src/components/Delegation/FlawedWalletScreen.stories')
   require('../src/components/Delegation/PoolDetailScreen.stories')
-  require('../src/components/Delegation/StakeByIdScreen.stories')
   require('../src/components/Delegation/StakingCenter.stories')
   require('../src/components/Delegation/StakingDashboard.stories')
   require('../src/components/FirstRun/AcceptTermsOfService.stories')
@@ -74,7 +73,6 @@ const stories = [
   '../src/components/Delegation/DelegationConfirmation.stories',
   '../src/components/Delegation/FlawedWalletScreen.stories',
   '../src/components/Delegation/PoolDetailScreen.stories',
-  '../src/components/Delegation/StakeByIdScreen.stories',
   '../src/components/Delegation/StakingCenter.stories',
   '../src/components/Delegation/StakingDashboard.stories',
   '../src/components/FirstRun/AcceptTermsOfService.stories',
