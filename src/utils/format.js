@@ -118,6 +118,11 @@ export const formatTokenWithText = (amount: BigNumber, token: Token | DefaultAss
   return `${formatTokenAmount(amount, token)}${utfSymbols.NBSP}${tickerOrId}`
 }
 
+export const formatTokenWithTextWhenHidden = (text: string, token: Token | DefaultAsset) => {
+  const tickerOrId = getAssetDenominationOrId(token)
+  return `${text}${utfSymbols.NBSP}${tickerOrId}`
+}
+
 export const formatTokenInteger = (amount: BigNumber, token: Token | DefaultAsset) => {
   const normalizationFactor = Math.pow(10, token.metadata.numberOfDecimals)
   const num = amount.dividedToIntegerBy(normalizationFactor)
