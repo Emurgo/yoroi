@@ -6,7 +6,6 @@ import {useNavigation, useNavigationState} from '@react-navigation/native'
 import {View, RefreshControl, ScrollView, Image} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import _ from 'lodash'
-import {BigNumber} from 'bignumber.js'
 
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {fetchAccountState} from '../../actions/account'
@@ -39,10 +38,8 @@ import {CONFIG, isByron, isHaskellShelley, isNightly} from '../../config/config'
 import {formatTokenWithText} from '../../utils/format'
 import image from '../../assets/img/no_transactions.png'
 import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
-
 import styles from './styles/TxHistory.style'
-
-import type {Token} from '../../types/HistoryTransaction'
+import BalanceBanner from './TxHistory/BalanceBanner'
 
 const messages = defineMessages({
   noTransactions: {
@@ -77,19 +74,6 @@ const SyncErrorBanner = injectIntl(({intl, showRefresh}: {intl: IntlShape, showR
         ? intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh)
         : intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh)
     }
-  />
-))
-
-type AvailableAmountProps = {|
-  intl: IntlShape,
-  amount: BigNumber,
-  amountAssetMetaData: Token,
-|}
-const AvailableAmountBanner = injectIntl(({intl, amount, amountAssetMetaData}: AvailableAmountProps) => (
-  <Banner
-    label={intl.formatMessage(globalMessages.availableFunds)}
-    text={amount != null ? formatTokenWithText(amount, amountAssetMetaData) : '-'}
-    boldText
   />
 ))
 
@@ -182,10 +166,7 @@ const TxHistory = ({intl}: Props) => {
         <OfflineBanner />
         {isOnline && lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
 
-        <AvailableAmountBanner
-          amount={tokenBalance.getDefault()}
-          amountAssetMetaData={availableAssets[tokenBalance.getDefaultId()]}
-        />
+        <BalanceBanner />
 
         {showCatalystBanner && (
           <VotingBanner
