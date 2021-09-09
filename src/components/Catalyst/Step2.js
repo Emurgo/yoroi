@@ -6,17 +6,78 @@
  */
 
 import {useNavigation} from '@react-navigation/native'
-import type {ComponentType} from 'react'
 import React, {useEffect, useState} from 'react'
-import type {IntlShape} from 'react-intl'
-import {defineMessages, injectIntl} from 'react-intl'
-import {SafeAreaView, View} from 'react-native'
-import {connect} from 'react-redux'
+import {useIntl} from 'react-intl'
+import {defineMessages} from 'react-intl'
+import {ScrollView, StyleSheet} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
+import {useSelector} from 'react-redux'
 
 import {confirmationMessages} from '../../i18n/global-messages'
 import {CATALYST_ROUTES} from '../../RoutesList'
-import {Button, ProgressStep, Text} from '../UiKit'
-import styles from './styles/Step2.style'
+import {type State} from '../../state'
+import {Button, ProgressStep, Spacer} from '../UiKit'
+import {Actions, Description, PinBox, Row, Title} from './components'
+
+const Step2 = () => {
+  const intl = useIntl()
+  const navigation = useNavigation()
+  const pin = useSelector((state: State) => state.voting.pin)
+  const [countDown, setCountDown] = useState(5)
+
+  useEffect(() => {
+    let timeout
+    if (countDown > 0) {
+      timeout = setTimeout(() => setCountDown(countDown - 1), 1000)
+    }
+
+    return () => clearTimeout(timeout)
+  }, [countDown])
+
+  return (
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
+      <ProgressStep currentStep={2} totalSteps={6} />
+
+      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
+        <Spacer height={48} />
+
+        <Title>{intl.formatMessage(messages.subTitle)}</Title>
+
+        <Spacer height={16} />
+
+        <Description>{intl.formatMessage(messages.description)}</Description>
+
+        <Spacer height={48} />
+
+        <Row style={{justifyContent: 'center'}}>
+          <PinBox>{pin[0]}</PinBox>
+          <Spacer width={10} />
+          <PinBox>{pin[1]}</PinBox>
+          <Spacer width={10} />
+          <PinBox>{pin[2]}</PinBox>
+          <Spacer width={10} />
+          <PinBox>{pin[3]}</PinBox>
+        </Row>
+      </ScrollView>
+
+      <Spacer fill />
+
+      <Actions>
+        <Button
+          onPress={() => navigation.navigate(CATALYST_ROUTES.STEP3)}
+          title={
+            countDown !== 0
+              ? countDown.toString()
+              : intl.formatMessage(confirmationMessages.commonButtons.continueButton)
+          }
+          disabled={countDown !== 0}
+        />
+      </Actions>
+    </SafeAreaView>
+  )
+}
+
+export default Step2
 
 const messages = defineMessages({
   subTitle: {
@@ -30,60 +91,12 @@ const messages = defineMessages({
   },
 })
 
-type Props = {
-  intl: IntlShape,
-  pin: Array<String>,
-}
-
-const Step2 = ({intl, pin}: Props) => {
-  const navigation = useNavigation()
-  const [countDown, setCountDown] = useState(5)
-
-  useEffect(() => {
-    countDown > 0 && setTimeout(() => setCountDown(countDown - 1), 1000)
-  }, [countDown])
-
-  const pinCards = (
-    <View style={styles.pinContainer}>
-      {pin.map((value, index) => {
-        // eslint-disable-next-line react/no-array-index-key
-        return (
-          <View key={index} style={[styles.pin, styles.pinNormal, index < pin.length - 1 ? styles.mr10 : undefined]}>
-            <Text style={styles.pinNumber}>{value}</Text>
-          </View>
-        )
-      })}
-    </View>
-  )
-
-  return (
-    <SafeAreaView style={styles.safeAreaView}>
-      <ProgressStep currentStep={2} totalSteps={6} />
-      <View style={styles.container}>
-        <View>
-          <Text style={styles.subTitle}>{intl.formatMessage(messages.subTitle)}</Text>
-          <Text style={styles.description}>{intl.formatMessage(messages.description)}</Text>
-          {pinCards}
-        </View>
-        <Button
-          onPress={() => navigation.navigate(CATALYST_ROUTES.STEP3)}
-          title={
-            countDown !== 0
-              ? countDown.toString()
-              : intl.formatMessage(confirmationMessages.commonButtons.continueButton)
-          }
-          disabled={countDown !== 0}
-        />
-      </View>
-    </SafeAreaView>
-  )
-}
-
-export default (injectIntl(
-  connect(
-    (state) => ({
-      pin: state.voting.pin,
-    }),
-    {},
-  )(Step2),
-): ComponentType<{}>)
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  contentContainer: {
+    paddingHorizontal: 16,
+  },
+})

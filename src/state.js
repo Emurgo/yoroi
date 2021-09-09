@@ -191,6 +191,18 @@ export const mockState = (): State => {
   }
   return {
     ...getInitialState(),
+    voting: {
+      pin: [1, 2, 3, 4],
+      catalystPrivateKey: 'catalystPrivateKey',
+      encryptedKey:
+        'encryptedKey-' +
+        '29ct472073n40t2nc0tyxin347ytco127iy3n4cotimxy3' +
+        '29ct472073n40t2nc0tyxin347ytco127iy3n4cotimxy3' +
+        '29ct472073n40t2nc0tyxin347ytco127iy3n4cotimxy3' +
+        '29ct472073n40t2nc0tyxin347ytco127iy3n4cotimxy3' +
+        '-encryptedKey',
+      unsignedTx: undefined,
+    },
     wallet: {
       name: 'My wallet',
       isInitialized: true,
