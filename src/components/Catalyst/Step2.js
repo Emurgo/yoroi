@@ -6,20 +6,20 @@
  */
 
 import React, {useEffect, useState} from 'react'
-import {View, SafeAreaView} from 'react-native'
+import {ScrollView, StyleSheet} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
-import {connect} from 'react-redux'
+import {useSelector} from 'react-redux'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Text, Button, ProgressStep} from '../UiKit'
+import {Button, ProgressStep, Spacer} from '../UiKit'
 import {CATALYST_ROUTES} from '../../RoutesList'
 import {confirmationMessages} from '../../i18n/global-messages'
+import {Actions, Description, Title, Row, PinBox} from './components'
 
-import styles from './styles/Step2.style'
-
-import type {ComponentType} from 'react'
 import type {IntlShape} from 'react-intl'
 
-import type {Navigation} from '../../types/navigation'
+import {type State} from '../../state'
+import {useNavigation} from '@react-navigation/native'
 
 const messages = defineMessages({
   subTitle: {
@@ -33,45 +33,63 @@ const messages = defineMessages({
   },
 })
 
-type Props = {|
-  route: Object, // TODO(navigation): type
-  navigation: Navigation,
-|}
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  contentContainer: {
+    paddingHorizontal: 16,
+  },
+})
 
-type HOCProps = {
+type Props = {
   intl: IntlShape,
-  pin: Array<String>,
 }
 
-const Step2 = ({intl, pin, navigation}: Props & HOCProps) => {
+const Step2 = ({intl}: Props) => {
+  const navigation = useNavigation()
+  const pin = useSelector((state: State) => state.voting.pin)
   const [countDown, setCountDown] = useState(5)
 
   useEffect(() => {
-    countDown > 0 && setTimeout(() => setCountDown(countDown - 1), 1000)
+    let timeout
+    if (countDown > 0) {
+      timeout = setTimeout(() => setCountDown(countDown - 1), 1000)
+    }
+
+    return () => clearTimeout(timeout)
   }, [countDown])
 
-  const pinCards = (
-    <View style={styles.pinContainer}>
-      {pin.map((value, index) => {
-        // eslint-disable-next-line react/no-array-index-key
-        return (
-          <View key={index} style={[styles.pin, styles.pinNormal, index < pin.length - 1 ? styles.mr10 : undefined]}>
-            <Text style={styles.pinNumber}>{value}</Text>
-          </View>
-        )
-      })}
-    </View>
-  )
-
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <ProgressStep currentStep={2} totalSteps={6} />
-      <View style={styles.container}>
-        <View>
-          <Text style={styles.subTitle}>{intl.formatMessage(messages.subTitle)}</Text>
-          <Text style={styles.description}>{intl.formatMessage(messages.description)}</Text>
-          {pinCards}
-        </View>
+
+      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
+        <Spacer height={48} />
+
+        <Title>{intl.formatMessage(messages.subTitle)}</Title>
+
+        <Spacer height={16} />
+
+        <Description>{intl.formatMessage(messages.description)}</Description>
+
+        <Spacer height={48} />
+
+        <Row style={{justifyContent: 'center'}}>
+          <PinBox>{pin[0]}</PinBox>
+          <Spacer width={10} />
+          <PinBox>{pin[1]}</PinBox>
+          <Spacer width={10} />
+          <PinBox>{pin[2]}</PinBox>
+          <Spacer width={10} />
+          <PinBox>{pin[3]}</PinBox>
+        </Row>
+      </ScrollView>
+
+      <Spacer fill />
+
+      <Actions>
         <Button
           onPress={() => navigation.navigate(CATALYST_ROUTES.STEP3)}
           title={
@@ -81,16 +99,9 @@ const Step2 = ({intl, pin, navigation}: Props & HOCProps) => {
           }
           disabled={countDown !== 0}
         />
-      </View>
+      </Actions>
     </SafeAreaView>
   )
 }
 
-export default (injectIntl(
-  connect(
-    (state) => ({
-      pin: state.voting.pin,
-    }),
-    {},
-  )(Step2),
-): ComponentType<Props>)
+export default injectIntl(Step2)

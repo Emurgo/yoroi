@@ -2,6 +2,9 @@
 
 import React from 'react'
 import {storiesOf} from '@storybook/react-native'
+import {action} from '@storybook/addon-actions'
+
+import {WithModalProps} from '../../../storybook/decorators'
 
 import Step1 from './Step1'
 import Step2 from './Step2'
@@ -11,6 +14,8 @@ import Step5 from './Step5'
 import Step6 from './Step6'
 import {CONFIG} from '../../config/config'
 import {strToDefaultMultiAsset} from '../../crypto/MultiToken'
+import CatalystBackupCheckModal from './CatalystBackupCheckModal'
+import Dialog, {DIALOG_STEPS} from './Dialog'
 
 const fee = strToDefaultMultiAsset('173921', CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID)
 
@@ -25,33 +30,123 @@ const mockUnsignedTx = {
 }
 
 storiesOf('Catalyst', module)
-  .add('Step 1', ({route, navigation}) => {
-    return <Step1 navigation={navigation} route={route} />
-  })
-  .add('Step 2', ({route, navigation}) => {
-    return <Step2 navigation={navigation} route={route} />
-  })
-  .add('Step 3', ({route, navigation}) => {
-    return <Step3 navigation={navigation} route={route} />
-  })
-  .add('Step 4', ({route, navigation}) => {
-    return <Step4 navigation={navigation} route={route} />
-  })
-  .add('Step 5', ({route, navigation}) => {
-    return (
-      // $FlowFixMe
-      <Step5 navigation={navigation} route={route} unsignedTx={mockUnsignedTx} />
-    )
-  })
-  .add('Step 5 - HW wallet', ({route, navigation}) => {
-    return (
-      // $FlowFixMe
-      <Step5 navigation={navigation} route={route} unsignedTx={mockUnsignedTx} isHW />
-    )
-  })
-  .add('Step 6', ({route, navigation}) => {
-    return (
-      // $FlowFixMe
-      <Step6 navigation={navigation} route={route} encryptedKey={encryptedKey} />
-    )
-  })
+  .add('Step 1', () => <Step1 />)
+  .add('Step 2', () => <Step2 />)
+  .add('Step 3', () => <Step3 />)
+  .add('Step 4', () => <Step4 />)
+  .add('Step 5', () => <Step5 unsignedTx={mockUnsignedTx} />)
+  .add('Step 5 - HW wallet', () => <Step5 unsignedTx={mockUnsignedTx} isHW />)
+  .add('Step 6', () => <Step6 encryptedKey={encryptedKey} />)
+  .add('Dialog - USB - CLOSED', () => (
+    <WithModalProps>
+      {(modalProps) => (
+        <Dialog
+          {...modalProps}
+          step={DIALOG_STEPS.CLOSED}
+          onChooseTransport={action('onChooseTransport')}
+          onConnectBLE={action('onConnectBLE')}
+          onConnectUSB={action('onConnectUSB')}
+          useUSB
+          errorData={{
+            errorMessage: 'errorMessage',
+            errorLogs: 'errorLogs',
+          }}
+        />
+      )}
+    </WithModalProps>
+  ))
+  .add('Dialog - USB - CHOOSE_TRANSPORT', () => (
+    <WithModalProps>
+      {(modalProps) => (
+        <Dialog
+          {...modalProps}
+          step={DIALOG_STEPS.CHOOSE_TRANSPORT}
+          onChooseTransport={action('onChooseTransport')}
+          onConnectBLE={action('onConnectBLE')}
+          onConnectUSB={action('onConnectUSB')}
+          useUSB
+          errorData={{
+            errorMessage: 'errorMessage',
+            errorLogs: 'errorLogs',
+          }}
+        />
+      )}
+    </WithModalProps>
+  ))
+  .add('Dialog - USB - LEDGER_CONNECT', () => (
+    <WithModalProps>
+      {(modalProps) => (
+        <Dialog
+          {...modalProps}
+          step={DIALOG_STEPS.LEDGER_CONNECT}
+          onChooseTransport={action('onChooseTransport')}
+          onConnectBLE={action('onConnectBLE')}
+          onConnectUSB={action('onConnectUSB')}
+          useUSB
+          errorData={{
+            errorMessage: 'errorMessage',
+            errorLogs: 'errorLogs',
+          }}
+        />
+      )}
+    </WithModalProps>
+  ))
+  .add('Dialog - USB - ERROR', () => (
+    <WithModalProps>
+      {(modalProps) => (
+        <Dialog
+          {...modalProps}
+          step={DIALOG_STEPS.ERROR}
+          onChooseTransport={action('onChooseTransport')}
+          onConnectBLE={action('onConnectBLE')}
+          onConnectUSB={action('onConnectUSB')}
+          useUSB
+          errorData={{
+            errorMessage: 'errorMessage',
+            errorLogs: 'errorLogs',
+          }}
+        />
+      )}
+    </WithModalProps>
+  ))
+  .add('Dialog - USB - SUBMITTING', () => (
+    <WithModalProps>
+      {(modalProps) => (
+        <Dialog
+          {...modalProps}
+          step={DIALOG_STEPS.SUBMITTING}
+          onChooseTransport={action('onChooseTransport')}
+          onConnectBLE={action('onConnectBLE')}
+          onConnectUSB={action('onConnectUSB')}
+          useUSB
+          errorData={{
+            errorMessage: 'errorMessage',
+            errorLogs: 'errorLogs',
+          }}
+        />
+      )}
+    </WithModalProps>
+  ))
+  .add('Dialog - USB - WAITING_HW_RESPONSE', () => (
+    <WithModalProps>
+      {(modalProps) => (
+        <Dialog
+          {...modalProps}
+          step={DIALOG_STEPS.WAITING_HW_RESPONSE}
+          onChooseTransport={action('onChooseTransport')}
+          onConnectBLE={action('onConnectBLE')}
+          onConnectUSB={action('onConnectUSB')}
+          useUSB
+          errorData={{
+            errorMessage: 'errorMessage',
+            errorLogs: 'errorLogs',
+          }}
+        />
+      )}
+    </WithModalProps>
+  ))
+  .add('CatalystBackupCheckModal', () => (
+    <WithModalProps>
+      {(modalProps) => <CatalystBackupCheckModal {...modalProps} onConfirm={action('onConfirm')} />}
+    </WithModalProps>
+  ))

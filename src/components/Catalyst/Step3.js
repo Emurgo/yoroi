@@ -5,26 +5,23 @@
  * Confirm PIN generated in previous step
  */
 
-import _ from 'lodash'
 import React, {useEffect, useState} from 'react'
-import {View, SafeAreaView} from 'react-native'
+import {ScrollView, View, StyleSheet} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages} from 'react-intl'
-import {connect} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 
-import {generateVotingKeys, generateVotingTransaction} from '../../actions/voting'
+import {generateVotingKeys} from '../../actions/voting'
 import {isHWSelector} from '../../selectors'
-import {Text, ProgressStep} from '../UiKit'
+import {ProgressStep, Spacer} from '../UiKit'
 import PinInputKeyboard from '../Common/PinInputKeyboard'
 import {CATALYST_ROUTES} from '../../RoutesList'
 import {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../actions'
+import {Description, Row, Title, PinBox} from './components'
 
-import styles from './styles/Step3.style'
-
-import type {ComponentType} from 'react'
 import type {IntlShape} from 'react-intl'
-
-import type {Navigation} from '../../types/navigation'
+import {useNavigation} from '@react-navigation/native'
 
 const messages = defineMessages({
   subTitle: {
@@ -37,25 +34,32 @@ const messages = defineMessages({
   },
 })
 
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  contentContainer: {
+    paddingHorizontal: 16,
+  },
+})
+
 const PIN_LENGTH = 4
 
-type Props = {|
-  navigation: Navigation,
-  route: Object, // TODO(navigation): type
-|}
-
-type HOCProps = {
-  pin: Array<String>,
-  isHW: boolean,
+type Props = {
   intl: IntlShape,
 }
 
-const Step3 = ({intl, pin, isHW, navigation}: Props & HOCProps) => {
+const Step3 = ({intl}: Props) => {
+  const navigation = useNavigation()
+  const pin = useSelector((state) => state.voting.pin)
+  const isHW = useSelector(isHWSelector)
   const [confirmPin, setPin] = useState('')
 
+  const dispatch = useDispatch()
   useEffect(() => {
-    generateVotingKeys()
-  }, [])
+    dispatch(generateVotingKeys())
+  }, [dispatch])
 
   const pinChange = (enteredPin: string) => {
     setPin(enteredPin)
@@ -71,50 +75,40 @@ const Step3 = ({intl, pin, isHW, navigation}: Props & HOCProps) => {
       }
     }
   }
-  const pinCards = (
-    <View style={styles.pinContainer}>
-      {_.range(0, PIN_LENGTH).map((value, index) => {
-        return (
-          <View
-            key={index}
-            style={[
-              styles.pin,
-              index < PIN_LENGTH - 1 && styles.mr10,
-              index === confirmPin.length ? styles.pinHighlight : styles.pinNormal,
-              index > confirmPin.length && styles.pinInactive,
-            ]}
-          >
-            <Text style={styles.pinNumber}>{confirmPin[index]}</Text>
-          </View>
-        )
-      })}
-    </View>
-  )
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaView edges={['left', 'right']} style={styles.safeAreaView}>
       <ProgressStep currentStep={3} totalSteps={6} />
-      <View style={styles.container}>
-        <View>
-          <Text style={styles.subTitle}>{intl.formatMessage(messages.subTitle)}</Text>
-          <Text style={styles.description}>{intl.formatMessage(messages.description)}</Text>
-        </View>
-        {pinCards}
+
+      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
+        <Spacer height={48} />
+
+        <Title>{intl.formatMessage(messages.subTitle)}</Title>
+
+        <Spacer height={16} />
+
+        <Description>{intl.formatMessage(messages.description)}</Description>
+
+        <Spacer height={48} />
+
+        <Row style={{justifyContent: 'center'}}>
+          <PinBox selected={confirmPin.length === 0}>{confirmPin[0]}</PinBox>
+          <Spacer width={16} />
+          <PinBox selected={confirmPin.length === 1}>{confirmPin[1]}</PinBox>
+          <Spacer width={16} />
+          <PinBox selected={confirmPin.length === 2}>{confirmPin[2]}</PinBox>
+          <Spacer width={16} />
+          <PinBox selected={confirmPin.length === 3}>{confirmPin[3]}</PinBox>
+        </Row>
+      </ScrollView>
+
+      <Spacer fill />
+
+      <View style={{height: 250}}>
+        <PinInputKeyboard pinLength={PIN_LENGTH} onPinChange={pinChange} />
       </View>
-      <PinInputKeyboard pinLength={PIN_LENGTH} onPinChange={pinChange} />
     </SafeAreaView>
   )
 }
 
-export default (injectIntl(
-  connect(
-    (state) => ({
-      pin: state.voting.pin,
-      isHW: isHWSelector(state),
-    }),
-    {
-      generateVotingKeys,
-      generateVotingTransaction,
-    },
-  )(Step3),
-): ComponentType<Props>)
+export default injectIntl(Step3)

@@ -34,8 +34,9 @@ module.exports = {
     'react-native/no-unused-styles': 2,
     'no-unused-vars': ['warn', {argsIgnorePattern: '^_'}],
     'react-native/split-platform-components': 0,
-    'react-native/no-inline-styles': 2,
+    'react-native/no-inline-styles': 0,
     'no-multiple-empty-lines': ['warn', {max: 2, maxEOF: 0}],
+    'react/no-array-index-key': 2,
     'react/sort-comp': [
       2,
       {

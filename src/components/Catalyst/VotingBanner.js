@@ -1,16 +1,15 @@
 // @flow
 
 import React from 'react'
-import {View, Image, TouchableOpacity} from 'react-native'
+import {View, Image, TouchableOpacity, StyleSheet} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 
 import {Text} from '../UiKit'
+import {COLORS} from '../../styles/config'
 
 import type {IntlShape} from 'react-intl'
 
 import CatalystLogo from '../../assets/img/voting.png'
-
-import styles from './styles/VotingBanner.style'
 
 const messages = defineMessages({
   name: {
@@ -19,11 +18,30 @@ const messages = defineMessages({
   },
 })
 
+const styles = StyleSheet.create({
+  container: {
+    paddingVertical: 16,
+    alignItems: 'center',
+  },
+  button: {
+    flexDirection: 'row',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: COLORS.LIGHT_POSITIVE_GREEN,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+  },
+  text: {
+    color: COLORS.LIGHT_POSITIVE_GREEN,
+  },
+})
+
 type Props = {|
   intl: IntlShape,
   onPress: () => void,
   disabled: boolean,
 |}
+
 const VotingBanner = ({intl, onPress, disabled}: Props) => {
   return (
     <View style={styles.container}>

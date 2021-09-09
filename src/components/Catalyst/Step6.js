@@ -6,25 +6,33 @@
  */
 
 import React, {useEffect, useState} from 'react'
-import {View, ScrollView, SafeAreaView, TouchableOpacity, Image, NativeModules, Platform} from 'react-native'
+import {
+  View,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  NativeModules,
+  Platform,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import Clipboard from '@react-native-community/clipboard'
-import QRCode from 'react-native-qrcode-svg'
+import QRCodeSVG from 'react-native-qrcode-svg'
 import {injectIntl, defineMessages} from 'react-intl'
-import {connect} from 'react-redux'
-import {useFocusEffect} from '@react-navigation/native'
+import {useSelector} from 'react-redux'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
+import {encryptedKeySelector} from '../../selectors'
 import CatalystBackupCheckModal from './CatalystBackupCheckModal'
-import {Text, Button, ProgressStep} from '../UiKit'
+import {Text, Button, ProgressStep, Spacer} from '../UiKit'
 import {WALLET_ROOT_ROUTES} from '../../RoutesList'
 import {confirmationMessages} from '../../i18n/global-messages'
 import copyImage from '../../assets/img/copyd.png'
+import {COLORS} from '../../styles/config'
+import {Actions, Description, Title} from './components'
 
-import styles from './styles/Step6.style'
-
-import type {ComponentType} from 'react'
 import type {IntlShape} from 'react-intl'
-
-import type {Navigation} from '../../types/navigation'
 
 const messages = defineMessages({
   subTitle: {
@@ -57,19 +65,43 @@ const messages = defineMessages({
   },
 })
 
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  alertBox: {
+    padding: 16,
+    backgroundColor: COLORS.BACKGROUND_LIGHT_RED,
+    borderRadius: 8,
+  },
+  contentContainer: {
+    paddingHorizontal: 16,
+  },
+  note: {
+    color: '#242838',
+    fontWeight: 'bold',
+  },
+  qrCodeBackground: {
+    borderRadius: 8,
+    padding: 16,
+    backgroundColor: '#F0F3F5',
+    alignSelf: 'center',
+  },
+  secretCodeBox: {
+    backgroundColor: '#F0F3F5',
+    borderRadius: 8,
+    padding: 16,
+    flexDirection: 'row',
+  },
+})
+
 const {FlagSecure} = NativeModules
 
-type Props = {|
-  navigation: Navigation,
-  route: Object, // TODO(navigation): type
-|}
-
-type HOCProps = {
-  intl: IntlShape,
-  encryptedKey: string,
-}
-
-const Step6 = ({intl, navigation, encryptedKey}: HOCProps & Props) => {
+type Props = {intl: IntlShape}
+const Step6 = ({intl}: Props) => {
+  const encryptedKey = useSelector(encryptedKeySelector)
+  const navigation = useNavigation()
   const [countDown, setCountDown] = useState<number>(5)
 
   useEffect(() => {
@@ -82,56 +114,58 @@ const Step6 = ({intl, navigation, encryptedKey}: HOCProps & Props) => {
     // eslint-disable-next-line consistent-return
     React.useCallback(() => {
       if (Platform.OS === 'android') {
-        // enable screenshots
         FlagSecure.deactivate()
 
         return () => {
-          // disable screenshots
-          // recall: this clean up function returned by useFocusEffect is run
-          // automatically by react on blur
           FlagSecure.activate()
         }
       }
     }, []),
   )
 
-  const _copyKey = () => {
-    Clipboard.setString(encryptedKey)
-  }
-
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <ProgressStep currentStep={6} totalSteps={6} />
-      <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollViewContentContainer}>
-          <Text style={styles.subTitle}>{intl.formatMessage(messages.subTitle)}</Text>
-          <View style={[styles.alertBlock, styles.mb16]}>
-            <Text style={styles.description}>{intl.formatMessage(messages.description)}</Text>
-          </View>
-          <Text style={[styles.description, styles.mb16]}>{intl.formatMessage(messages.description2)}</Text>
-          <Text style={[styles.description, styles.mb16]}>{intl.formatMessage(messages.description3)}</Text>
-          <Text style={[styles.note, styles.mb40]}>{intl.formatMessage(messages.note)}</Text>
-          {/* for some reason style arrays have issues in current flow version.
-             so a regular object spread has been used here */}
-          <View style={{...styles.qrCode, ...styles.mb40}}>
-            <View style={styles.qrCodeBackground}>
-              <QRCode value={encryptedKey} size={140} backgroundColor="white" color="black" />
-            </View>
-          </View>
-          <View>
-            <Text style={[styles.description, styles.mb16]}>{intl.formatMessage(messages.secretCode)}</Text>
-            <View style={styles.secretCode}>
-              <View style={styles.key}>
-                <Text>{encryptedKey}</Text>
-              </View>
-              <View style={styles.copyButton}>
-                <TouchableOpacity onPress={_copyKey}>
-                  <Image source={copyImage} />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </ScrollView>
+
+      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
+        <Spacer height={48} />
+
+        <Title>{intl.formatMessage(messages.subTitle)}</Title>
+
+        <Spacer height={16} />
+
+        <AlertBox>
+          <Text>{intl.formatMessage(messages.description)}</Text>
+        </AlertBox>
+
+        <Spacer height={16} />
+
+        <Description>{intl.formatMessage(messages.description2)}</Description>
+
+        <Spacer height={16} />
+
+        <Description>{intl.formatMessage(messages.description3)}</Description>
+
+        <Spacer height={16} />
+
+        <Text style={styles.note}>{intl.formatMessage(messages.note)}</Text>
+
+        <Spacer height={32} />
+
+        {encryptedKey ? <QRCode text={encryptedKey} /> : <ActivityIndicator size={'large'} color={'black'} />}
+
+        <Spacer height={32} />
+
+        <Text>{intl.formatMessage(messages.secretCode)}</Text>
+
+        <SecretCodeBox>
+          <Text style={{flex: 1}}>{encryptedKey}</Text>
+          <Spacer width={16} />
+          <CopyButton text={encryptedKey || ''} />
+        </SecretCodeBox>
+      </ScrollView>
+
+      <Actions>
         <Button
           onPress={() => setShowBackupWarningModal(true)}
           title={
@@ -141,26 +175,28 @@ const Step6 = ({intl, navigation, encryptedKey}: HOCProps & Props) => {
           }
           disabled={countDown !== 0}
         />
-        <CatalystBackupCheckModal
-          visible={showBackupWarningModal}
-          onRequestClose={() => setShowBackupWarningModal(false)}
-          onConfirm={() => navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)}
-        />
-      </View>
+      </Actions>
+
+      <CatalystBackupCheckModal
+        visible={showBackupWarningModal}
+        onRequestClose={() => setShowBackupWarningModal(false)}
+        onConfirm={() => navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)}
+      />
     </SafeAreaView>
   )
 }
 
-export default (injectIntl(
-  connect(
-    (state) => ({
-      encryptedKey: state.voting.encryptedKey,
-    }),
-    {},
-    (state, dispatchProps, ownProps) => ({
-      ...state,
-      ...dispatchProps,
-      ...ownProps,
-    }),
-  )(Step6),
-): ComponentType<Props>)
+export default injectIntl(Step6)
+
+const AlertBox = (props) => <View {...props} style={styles.alertBox} />
+const QRCode = ({text}: {text: string}) => (
+  <View style={styles.qrCodeBackground}>
+    <QRCodeSVG value={text} size={140} backgroundColor="white" color="black" />
+  </View>
+)
+const SecretCodeBox = (props) => <View {...props} style={styles.secretCodeBox} />
+const CopyButton = ({text}: {text: string}) => (
+  <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center'}} onPress={() => Clipboard.setString(text)}>
+    <Image source={copyImage} />
+  </TouchableOpacity>
+)
