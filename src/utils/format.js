@@ -41,20 +41,24 @@ export type AssetDenomination = $Values<typeof ASSET_DENOMINATION>
 export const getAssetDenomination = (token: Token | DefaultAsset, denomination: AssetDenomination): ?string => {
   switch (denomination) {
     case ASSET_DENOMINATION.TICKER:
+      // $FlowFixMe
       return token?.metadata?.ticker
     case ASSET_DENOMINATION.SYMBOL:
       // if we don't have a symbol for this asset, default to ticker, though
       // ticker can still be null
 
+      // $FlowFixMe
       return token?.metadata?.ticker
         ? utfSymbols.CURRENCIES[token.metadata.ticker]
           ? utfSymbols.CURRENCIES[token.metadata.ticker]
           : token.metadata.ticker
         : null
     case ASSET_DENOMINATION.NAME: {
+      // $FlowFixMe
       if (token?.metadata?.longName !== null) {
         return token.metadata.longName
       }
+      // $FlowFixMe
       if (token?.metadata?.assetName?.length > 0) {
         const bytes = [...Buffer.from(token.metadata.assetName, 'hex')]
         if (bytes.filter((byte) => byte <= 32 || byte >= 127).length === 0) {
