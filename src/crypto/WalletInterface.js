@@ -68,7 +68,7 @@ export interface WalletInterface {
   // last version the wallet has been *opened* on, since this is the actual
   // relevant information we need to decide on whether migrations are needed.
   // Saved in storage but not exposed to redux's store.
-  version: ?string;
+  version: string;
 
   state: WalletState;
 

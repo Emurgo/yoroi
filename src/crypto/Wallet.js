@@ -8,14 +8,14 @@ import {defaultMemoize} from 'reselect'
 import {type IntlShape} from 'react-intl'
 
 import KeyStore from './KeyStore'
-import {AddressChain} from './shelley/chain'
+import {AddressChain, type AddressChainJSON} from './shelley/chain'
 import * as api from '../api/shelley/api'
 import {CONFIG} from '../config/config'
 import {isJormungandr, getCardanoNetworkConfigById} from '../config/networks'
 import assert from '../utils/assert'
 import {Logger} from '../utils/logging'
 import {synchronize, nonblockingSynchronize, IsLockedError} from '../utils/promise'
-import {TransactionCache} from './shelley/transactionCache'
+import {TransactionCache, type TransactionCacheJSON} from './shelley/transactionCache'
 import {validatePassword} from '../utils/validators'
 
 import type {EncryptionMethod} from './types'
@@ -27,6 +27,31 @@ import type {WalletChecksum} from '@emurgo/cip4-js'
 type WalletState = {|
   lastGeneratedAddressIndex: number,
 |}
+
+export type ShelleyWalletJSON = {
+  version: string,
+
+  networkId: NetworkId,
+  walletImplementationId: WalletImplementationId,
+  provider: ?YoroiProvider,
+
+  isHW: boolean,
+  hwDeviceInfo: ?HWDeviceInfo,
+  isReadOnly: boolean,
+  isEasyConfirmationEnabled: boolean,
+
+  publicKeyHex?: string,
+
+  lastGeneratedAddressIndex: number,
+  internalChain: AddressChainJSON,
+  externalChain: AddressChainJSON,
+
+  transactionCache: TransactionCacheJSON,
+}
+
+export type ByronWalletJSON = $Diff<ShelleyWalletJSON, {|account: any|}>
+
+export type WalletJSON = ShelleyWalletJSON | ByronWalletJSON
 
 export default class Wallet {
   // $FlowFixMe null
@@ -57,7 +82,7 @@ export default class Wallet {
   rewardAddressHex: ?string = null
 
   // last known version the wallet has been opened on
-  version: ?string
+  version: string
 
   checksum: WalletChecksum
 
@@ -276,7 +301,7 @@ export default class Wallet {
   // ========== persistence ============= //
 
   // TODO: move to specific child class?
-  toJSON() {
+  toJSON(): WalletJSON {
     return {
       lastGeneratedAddressIndex: this.state.lastGeneratedAddressIndex,
       publicKeyHex: this.publicKeyHex,
