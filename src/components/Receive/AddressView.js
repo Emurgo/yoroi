@@ -1,14 +1,11 @@
 // @flow
 
-import Clipboard from '@react-native-community/clipboard'
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {type ViewProps} from 'react-native/Libraries/Components/View/ViewPropTypes'
 
-import copiedIcon from '../../assets/img/icon/copied.png'
-import copyIcon from '../../assets/img/icon/copy-ext.png'
 import verifyIcon from '../../assets/img/icon/verify-address.png'
-import {Text} from '../UiKit'
+import {CopyButton, Text} from '../UiKit'
 
 type Props = {|
   isUsed: boolean,
@@ -28,7 +25,7 @@ const AddressView = ({isUsed, index, address, onPressDetails}: Props) => {
       </Address>
 
       <Actions>
-        <CopyButton text={address} />
+        <CopyButton value={address} />
         <VerifyButton onPress={() => onPressDetails()} />
       </Actions>
     </Row>
@@ -40,26 +37,7 @@ export default AddressView
 const Row = (props: ViewProps) => <View {...props} style={styles.container} />
 const Address = (props) => <View {...props} style={styles.addressContainer} />
 const Actions = (props) => <View {...props} style={styles.actionContainer} />
-const CopyButton = ({text}: {text: string}) => {
-  const MESSAGE_TIMEOUT = 1000
-  const [isCopying, setIsCopying] = useState<boolean>(false)
 
-  useEffect(() => {
-    if (isCopying) {
-      const timeout = setTimeout(() => {
-        clearTimeout(timeout)
-        Clipboard.setString(text)
-        setIsCopying(false)
-      }, MESSAGE_TIMEOUT)
-    }
-  }, [isCopying, setIsCopying, text])
-
-  return (
-    <TouchableOpacity onPress={() => setIsCopying(true)} disabled={isCopying}>
-      <Image source={isCopying ? copiedIcon : copyIcon} />
-    </TouchableOpacity>
-  )
-}
 const VerifyButton = (props) => (
   <TouchableOpacity {...props}>
     <Image source={verifyIcon} />

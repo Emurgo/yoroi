@@ -6,19 +6,19 @@ import {useEffect, useState} from 'react'
 const MESSAGE_TIMEOUT = 1500
 
 export const useCopy = () => {
-  const [copying, setCopying] = useState<string>('')
+  const [text, setText] = useState<string>('')
 
   useEffect(() => {
-    const isCopying = !!copying
+    const isCopying = !!text
+
     let timeout
     if (isCopying) {
-      Clipboard.setString(copying)
-      timeout = setTimeout(() => {
-        setCopying('')
-      }, MESSAGE_TIMEOUT)
+      Clipboard.setString(text)
+      timeout = setTimeout(() => setText(''), MESSAGE_TIMEOUT)
     }
-    return () => clearTimeout(timeout)
-  }, [copying, setCopying])
 
-  return [!!copying, setCopying]
+    return () => clearTimeout(timeout)
+  }, [text])
+
+  return [!!text, setText, text]
 }
