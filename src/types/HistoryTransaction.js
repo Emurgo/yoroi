@@ -122,5 +122,5 @@ export type Transaction = {|
   certificates: Array<RemoteCertificateMeta>,
   +validContract?: boolean,
   +scriptSize?: number,
-  +collateralInputs: Array<{address: string, amount: string, assets: Array<BaseAsset>}>,
+  +collateralInputs?: Array<{address: string, amount: string, assets: Array<BaseAsset>}>,
 |}
