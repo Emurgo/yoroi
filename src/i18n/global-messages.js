@@ -4,7 +4,7 @@ import {defineMessages} from 'react-intl'
 
 /*
  * Some messages need to be used in multiple components
- * In order to avoid componenets depending on each other just to resuse translation messages
+ * In order to avoid components depending on each other just to reuse translation messages
  * We instead store the shared messages in this file
  */
 
@@ -455,6 +455,25 @@ export const errorMessages = {
     },
   }),
 }
+
+export const actionMessages = defineMessages({
+  send: {
+    id: 'global.send',
+    defaultMessage: '!!!Send'
+  },
+  receive: {
+    id: 'global.receive',
+    defaultMessage: '!!!Receive'
+  },
+  buy: {
+    id: 'global.buy',
+    defaultMessage: '!!!Buy'
+  },
+  soon: {
+    id: 'global.comingSoon',
+    defaultMessage: '!!!Coming soon'
+  }
+})
 
 export default defineMessages({
   allDone: {

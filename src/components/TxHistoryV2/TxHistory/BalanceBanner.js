@@ -100,7 +100,6 @@ const BalanceBanner = () => {
           {showValues ? <Image source={closedEyeIcon} /> : <Image source={openedEyeIcon} />}
         </TouchableOpacity>
       </View>
-      <Spacer height={25} />
     </View>
   )
 }

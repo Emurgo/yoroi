@@ -44,9 +44,11 @@ export const COLORS = {
   DIVIDER: '#536ee9',
   TEXT_GRAY: '#353535',
   TEXT_GRAY2: '#9b9b9b',
+  TEXT_GRAY3: '#A7AFC0',
   TEXT_INPUT: '#6B7384',
   MODAL_HEADING: '#6B7384',
   WORD_BADGE_TEXT: '#6B7384',
+  BORDER_GRAY: '#DCE0E9',
 }
 
 // TODO: use lowercase for key names. Eg navigationActive

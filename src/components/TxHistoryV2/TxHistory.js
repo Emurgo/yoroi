@@ -40,6 +40,7 @@ import image from '../../assets/img/no_transactions.png'
 import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
 import styles from './styles/TxHistory.style'
 import BalanceBanner from './TxHistory/BalanceBanner'
+import ActionsBanner from './TxHistory/ActionsBanner'
 
 const messages = defineMessages({
   noTransactions: {
@@ -167,6 +168,7 @@ const TxHistory = ({intl}: Props) => {
         {isOnline && lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
 
         <BalanceBanner />
+        <ActionsBanner />
 
         {showCatalystBanner && (
           <VotingBanner
