@@ -119,5 +119,17 @@ export const checkAndFacadeTransactionAsync = async (tx: RawTransaction): Promis
     slot: tx.slot,
     withdrawals: tx.withdrawals,
     certificates: tx.certificates,
+    validContract: tx.validContract,
+    scriptSize: tx.scriptSize,
+    collateralInputs: (tx.collateralInputs ?? []).map((i) => ({
+      address: i.address,
+      amount: i.amount,
+      assets: (i.assets ?? []).map((a) => ({
+        amount: a.amount,
+        assetId: a.assetId,
+        policyId: a.policyId,
+        name: a.name,
+      })),
+    })),
   }
 }

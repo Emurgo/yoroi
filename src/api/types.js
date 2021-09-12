@@ -217,6 +217,9 @@ export type RemoteTxInfo = {|
     amount: string,
   |}>,
   +certificates: Array<RemoteCertificateMeta>,
+  +validContract?: boolean,
+  +scriptSize?: number,
+  +collateralInputs?: Array<RemoteTransactionInput>,
 |}
 
 export type RawTransaction = {|

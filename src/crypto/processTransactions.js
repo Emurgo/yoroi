@@ -80,15 +80,23 @@ export const processTxHistoryData = (
 ): TransactionInfo => {
   const _strToDefaultMultiAsset = (amount: string) => strToDefaultMultiAsset(amount, networkId)
 
-  // rename to match yoroi extension notation
-  const utxoInputs = tx.inputs
-  const utxoOutputs = tx.outputs
-  const accountingInputs = tx.withdrawals.map((w) => ({
-    address: w.address,
-    amount: w.amount,
-    assets: [],
-  }))
-  // const accountingOutpus // eventually
+  // collateral
+  const collateral = tx.collateralInputs || []
+  const isNonNativeScriptExecution = Number(tx.scriptSize) > 0 || collateral.length > 0
+  const isInvalidScriptExecution = isNonNativeScriptExecution && !tx.validContract
+  // TODO: check if is it possible to have not owned address in collateral inputs
+  const ownUtxoCollateralInputs = collateral.filter(({address}) => ownAddresses.includes(address))
+
+  // NOTE: will ignore the inputs and outputs if the tx script execution failed
+  const utxoInputs = isInvalidScriptExecution ? [] : tx.inputs
+  const utxoOutputs = isInvalidScriptExecution ? [] : tx.outputs
+  const accountingInputs = isInvalidScriptExecution
+    ? []
+    : tx.withdrawals.map((w) => ({
+        address: w.address,
+        amount: w.amount,
+        assets: [],
+      }))
 
   const ownUtxoInputs = utxoInputs.filter(({address}) => ownAddresses.includes(address))
   const ownUtxoOutputs = utxoOutputs.filter(({address}) => ownAddresses.includes(address))
@@ -114,7 +122,7 @@ export const processTxHistoryData = (
     return _strToDefaultMultiAsset('0')
   })()
 
-  const unifiedInputs = [...utxoInputs, ...accountingInputs]
+  const unifiedInputs = [...utxoInputs, ...accountingInputs, ...ownUtxoCollateralInputs]
   const unifiedOutputs = [
     ...utxoOutputs,
     // ...accountingOutpus,
@@ -188,7 +196,12 @@ export const processTxHistoryData = (
   let fee
   const remoteFee = tx.fee != null ? _strToDefaultMultiAsset(new BigNumber(tx.fee).times(-1).toString()) : null
   let direction
-  if (isIntraWallet) {
+  if (isInvalidScriptExecution) {
+    direction = TRANSACTION_DIRECTION.SELF
+    amount = brutto
+    // NOTE: the collateral is the fee when it has failed
+    fee = null
+  } else if (isIntraWallet) {
     direction = TRANSACTION_DIRECTION.SELF
     amount = _strToDefaultMultiAsset('0')
     fee = remoteFee ?? totalFee
