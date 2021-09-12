@@ -36,6 +36,12 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: COLORS.LIGHT_POSITIVE_GREEN,
   },
+  buyButton: {
+    textAlignVertical: 'center',
+    lineHeight: 40,
+    fontSize: 32,
+    color: COLORS.TEXT_GRAY2,
+  },
   cta: {
     borderWidth: 1,
     borderColor: COLORS.BORDER_GRAY,
@@ -103,7 +109,7 @@ const ActionsBanner = ({intl}: ActionBannerProps) => {
           <View style={styles.centralized}>
             <TouchableOpacity style={{...styles.actionIcon, ...styles.cta}} onPress={onBuy}>
               {/* TODO: request buy icon to the design team */}
-              <SentIcon color={COLORS.TEXT_GRAY2} />
+              <Text style={styles.buyButton}>+</Text>
             </TouchableOpacity>
             <Text style={styles.actionLabel}>{buyLabel}</Text>
           </View>
