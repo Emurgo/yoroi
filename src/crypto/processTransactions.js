@@ -85,7 +85,10 @@ export const processTxHistoryData = (
   const isNonNativeScriptExecution = Number(tx.scriptSize) > 0 || collateral.length > 0
   const isInvalidScriptExecution = isNonNativeScriptExecution && !tx.validContract
   // TODO: check if is it possible to have not owned address in collateral inputs
-  const ownUtxoCollateralInputs = collateral.filter(({address}) => ownAddresses.includes(address))
+  // NOTE: only add the tx inputs to account it if the execution has failed
+  const ownUtxoCollateralInputs = isInvalidScriptExecution
+    ? collateral.filter(({address}) => ownAddresses.includes(address))
+    : []
 
   // NOTE: will ignore the inputs and outputs if the tx script execution failed
   const utxoInputs = isInvalidScriptExecution ? [] : tx.inputs
