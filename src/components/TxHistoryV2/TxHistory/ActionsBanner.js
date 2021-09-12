@@ -1,6 +1,6 @@
 // @flow
 
-import React, {memo} from 'react'
+import React, {memo, useCallback} from 'react'
 import {useSelector} from 'react-redux'
 import {StyleSheet, View, Text, TouchableOpacity} from 'react-native'
 import {injectIntl, type IntlShape} from 'react-intl'
@@ -68,43 +68,46 @@ const ActionsBanner = ({intl}: ActionBannerProps) => {
   const messageBuy = intl.formatMessage(actionMessages.soon)
 
   // TODO: adjust navigation for the next wallet tab navigator
-  const onSend = () => navigation.navigate(WALLET_ROUTES.SEND)
-  const onReceive = () => navigation.navigate(WALLET_ROUTES.RECEIVE)
-
-  // eslint-disable-next-line no-alert
-  const onBuy = () => alert(messageBuy)
-
-  const actions = [
-    isReadOnly ? null : (
-      <View key="ab-on-send" style={styles.centralized}>
-        <TouchableOpacity style={styles.actionIcon} onPress={onSend}>
-          <SentIcon {...ACTION_PROPS} />
-        </TouchableOpacity>
-        <Text style={styles.actionLabel}>{sendLabel}</Text>
-      </View>
-    ),
-    isReadOnly ? null : <Spacer key="ab-spacer-1" width={32} />,
-    <View key="ab-on-receive" style={styles.centralized}>
-      <TouchableOpacity style={styles.actionIcon} onPress={onReceive}>
-        <ReceivedIcon {...ACTION_PROPS} />
-      </TouchableOpacity>
-      <Text style={styles.actionLabel}>{receiveLabel}</Text>
-    </View>,
-    <Spacer key="ab-spacer-2" width={32} />,
-    <View key="ab-on-buy" style={styles.centralized}>
-      <TouchableOpacity style={{...styles.actionIcon, ...styles.cta}} onPress={onBuy}>
-        {/* TODO: request buy icon to the design team */}
-        <SentIcon color={COLORS.TEXT_GRAY2} />
-      </TouchableOpacity>
-      <Text style={styles.actionLabel}>{buyLabel}</Text>
-    </View>,
-  ]
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const onSend = useCallback(() => navigation.navigate(WALLET_ROUTES.SEND), [])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const onReceive = useCallback(() => navigation.navigate(WALLET_ROUTES.RECEIVE), [])
+  // eslint-disable-next-line no-alert,react-hooks/exhaustive-deps
+  const onBuy = useCallback(() => alert(messageBuy), [])
 
   return (
     <View style={styles.banner}>
       <Spacer height={16} />
       <View style={styles.centralized}>
-        <View style={styles.row}>{actions}</View>
+        <View style={styles.row}>
+          {!isReadOnly && (
+            <View style={styles.centralized}>
+              <TouchableOpacity style={styles.actionIcon} onPress={onSend}>
+                <SentIcon {...ACTION_PROPS} />
+              </TouchableOpacity>
+              <Text style={styles.actionLabel}>{sendLabel}</Text>
+            </View>
+          )}
+
+          {!isReadOnly && <Spacer width={32} />}
+
+          <View style={styles.centralized}>
+            <TouchableOpacity style={styles.actionIcon} onPress={onReceive}>
+              <ReceivedIcon {...ACTION_PROPS} />
+            </TouchableOpacity>
+            <Text style={styles.actionLabel}>{receiveLabel}</Text>
+          </View>
+
+          <Spacer width={32} />
+
+          <View style={styles.centralized}>
+            <TouchableOpacity style={{...styles.actionIcon, ...styles.cta}} onPress={onBuy}>
+              {/* TODO: request buy icon to the design team */}
+              <SentIcon color={COLORS.TEXT_GRAY2} />
+            </TouchableOpacity>
+            <Text style={styles.actionLabel}>{buyLabel}</Text>
+          </View>
+        </View>
       </View>
       <Spacer height={21} />
     </View>
