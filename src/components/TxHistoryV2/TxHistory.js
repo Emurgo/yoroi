@@ -10,7 +10,7 @@ import _ from 'lodash'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {fetchAccountState} from '../../actions/account'
 import VotingBanner from '../Catalyst/VotingBanner'
-import {Text, Banner, OfflineBanner, StatusBar, WarningBanner} from '../UiKit'
+import {Text, Banner, OfflineBanner, WarningBanner} from '../UiKit'
 import infoIcon from '../../assets/img/icon/info-light-green.png'
 import {
   transactionsInfoSelector,
@@ -162,7 +162,6 @@ const TxHistory = ({intl}: Props) => {
 
   return (
     <SafeAreaView style={styles.scrollView}>
-      <StatusBar type="dark" />
       <View style={styles.container}>
         <OfflineBanner />
         {isOnline && lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
