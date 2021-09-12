@@ -9,7 +9,6 @@ import {checkAndFacadeTransactionAsync} from './facade'
 
 import type {Transaction} from '../../types/HistoryTransaction'
 import type {BackendConfig} from '../../config/types'
-import {Logger} from '../../utils/logging'
 
 import type {
   RawUtxo,
@@ -98,10 +97,8 @@ export const bulkFetchUTXOSumForAddresses = async (
   config: BackendConfig,
 ): Promise<{fundedAddresses: Array<string>, sum: BigNumber}> => {
   const chunks = _.chunk(addresses, config.FETCH_UTXOS_MAX_ADDRESSES)
-  Logger.debug(`addresses to query ---------> `, addresses)
 
   const responses = await Promise.all(chunks.map((addrs) => fetchUTXOSumForAddresses(addrs, config)))
-  Logger.debug(`responses from utxo sum ---->  `, responses)
   const sum = responses.reduce((x: BigNumber, y) => x.plus(new BigNumber(y.sum || 0)), new BigNumber(0))
 
   const responseUTXOAddresses = await Promise.all(chunks.map((addrs) => fetchUTXOsForAddresses(addrs, config)))
