@@ -184,6 +184,8 @@ export const totalDelegatedSelector = (state: State): ?BigNumber =>
 export const poolOperatorSelector = (state: State) =>
   state.accountState.isFetching ? null : state.accountState.poolOperator
 
+export const isRewardsOffSelector = (state: State): boolean => Boolean(state.accountState.isRewardsOff)
+
 // PoolInfo
 
 export const isFetchingPoolInfoSelector = (state: State): boolean => state.poolInfo.isFetching

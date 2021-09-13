@@ -52,6 +52,13 @@ const _setAccountTotalDelegated = (value) => ({
   reducer: (state, value) => value,
 })
 
+const _setIsRewardsDisabled = (isRewardsOff: boolean) => ({
+  type: 'SET_ACCOUNT_TOTAL_DELEGATED',
+  path: ['accountState', 'isRewardsOff'],
+  payload: isRewardsOff,
+  reducer: (state, isRewardsOff) => isRewardsOff,
+})
+
 const _clearAccountState = () => ({
   type: 'CLEAR_ACCOUNT_STATE',
   path: ['accountState'],
@@ -63,6 +70,7 @@ const _clearAccountState = () => ({
       totalDelegated: new BigNumber(0),
       value: new BigNumber(0),
       poolOperator: null,
+      isRewardsDisabled: false,
     }
   },
 })
@@ -89,6 +97,7 @@ export const fetchAccountState = () => async (dispatch: Dispatch<any>, getState:
     const accountStateResp = await walletManager.fetchAccountState()
     const accountState = ObjectValues(accountStateResp)[0]
     const value = accountState?.remainingAmount || '0'
+    const isRewardsOff = Boolean(accountState?.isRewardsOff)
 
     const utxos = getState().balance.utxos
     if (utxos != null) {
@@ -103,6 +112,7 @@ export const fetchAccountState = () => async (dispatch: Dispatch<any>, getState:
       dispatch(_setAccountTotalDelegated(amountToDelegate.plus(new BigNumber(value))))
     }
     dispatch(_setAccountValue(new BigNumber(value)))
+    dispatch(_setIsRewardsDisabled(isRewardsOff))
     dispatch(_setLastError(null))
   } catch (err) {
     Logger.warn(err)

@@ -68,6 +68,7 @@ export type State = {
     totalDelegated: BigNumber,
     value: BigNumber,
     poolOperator: string | null,
+    isRewardsOff?: boolean,
   },
   poolInfo: {
     isFetching: boolean,

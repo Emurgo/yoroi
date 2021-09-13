@@ -44,4 +44,12 @@ export default StyleSheet.create({
   withdrawButton: {
     minHeight: 18,
   },
+  warningView: {
+    padding: 16,
+  },
+  warningText: {
+    lineHeight: 24,
+    fontSize: 14,
+    color: COLORS.LIGHT_POSITIVE_GREEN,
+  },
 })

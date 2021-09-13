@@ -41,6 +41,7 @@ export type RemoteAccountState = {|
   remainingAmount: string, // current remaining awards
   rewards: string, // all the rewards every added
   withdrawals: string, // all the withdrawals that have ever happened
+  isRewardsOff: boolean, // temporary circuit breaker for db sync 11 issue
 |}
 export type AccountStateResponse = {|
   [key: string]: null | RemoteAccountState,

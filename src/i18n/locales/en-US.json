@@ -49,6 +49,7 @@
   "components.delegationsummary.upcomingReward.followingLabel": "Following reward",
   "components.delegationsummary.upcomingReward.nextLabel": "Next reward",
   "components.delegationsummary.upcomingReward.rewardDisclaimerText": "Note that after you delegate to a stake pool, you will need to wait until the end of the current epoch, plus two additional epochs, before you start receiving rewards.",
+  "components.delegationsummary.userSummary.isRewardsOff": "Due to protocol update, the rewards are being recalculated.",
   "components.delegationsummary.userSummary.title": "Your summary",
   "components.delegationsummary.userSummary.totalDelegated": "Total Delegated",
   "components.delegationsummary.userSummary.totalRewards": "Total Rewards",

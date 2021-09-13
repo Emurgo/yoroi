@@ -35,6 +35,7 @@ import {
   defaultNetworkAssetSelector,
   serverStatusSelector,
   walletMetaSelector,
+  isRewardsOffSelector,
 } from '../../selectors'
 import DelegationNavigationButtons from './DelegationNavigationButtons'
 import UtxoAutoRefresher from '../Send/UtxoAutoRefresher'
@@ -113,6 +114,7 @@ type Props = {|
   defaultAsset: DefaultAsset,
   serverStatus: ServerStatusCache,
   walletMeta: $Diff<WalletMeta, {id: string}>,
+  +isRewardsOff: boolean,
 |}
 
 type State = {|
@@ -522,15 +524,18 @@ class StakingDashboard extends React.Component<Props, State> {
               // instead of utxo set
             }
 
-            <View style={styles.row}>
-              <UserSummary
-                totalAdaSum={utxoBalance}
-                totalRewards={accountBalance}
-                totalDelegated={totalDelegated}
-                onWithdraw={this.openWithdrawalDialog}
-                disableWithdraw={this.props.isReadOnly}
-              />
-            </View>
+            {!isFetchingAccountState && (
+              <View style={styles.row}>
+                <UserSummary
+                  totalAdaSum={utxoBalance}
+                  totalRewards={accountBalance}
+                  totalDelegated={totalDelegated}
+                  onWithdraw={this.openWithdrawalDialog}
+                  disableWithdraw={this.props.isReadOnly}
+                  isRewardsOff={this.props.isRewardsOff}
+                />
+              </View>
+            )}
 
             {poolInfo != null && !!poolOperator ? (
               <View style={styles.row}>
@@ -611,6 +616,7 @@ export default injectIntl(
         defaultAsset: defaultNetworkAssetSelector(state),
         serverStatus: serverStatusSelector(state),
         walletMeta: walletMetaSelector(state),
+        isRewardsOff: isRewardsOffSelector(state),
       }),
       {
         fetchPoolInfo,
