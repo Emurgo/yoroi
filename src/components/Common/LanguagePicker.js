@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {View, FlatList} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useIntl, defineMessages} from 'react-intl'
 import Markdown from 'react-native-easy-markdown'
 
 import styles from './styles/LanguagePicker.style'
@@ -192,10 +192,11 @@ type Props = {
   changeLanguage: (string) => any,
   handleContinue: () => mixed,
   languageCode: string,
-  intl: IntlShape,
 }
 
-export const LanguagePicker = ({changeLanguage, languageCode, handleContinue, intl}: Props) => {
+export const LanguagePicker = ({changeLanguage, languageCode, handleContinue}: Props) => {
+  const intl = useIntl()
+
   return (
     <View style={styles.container}>
       <StatusBar type="light" />
@@ -234,4 +235,4 @@ export const LanguagePicker = ({changeLanguage, languageCode, handleContinue, in
   )
 }
 
-export default injectIntl(LanguagePicker)
+export default LanguagePicker
