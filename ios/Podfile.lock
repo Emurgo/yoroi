@@ -265,7 +265,7 @@ PODS:
     - React-Core
   - react-native-config (0.12.0):
     - React
-  - react-native-haskell-shelley (1.4.0):
+  - react-native-haskell-shelley (2.0.0):
     - React
   - react-native-netinfo (5.9.9):
     - React-Core
@@ -347,8 +347,8 @@ PODS:
     - React
   - RNGestureHandler (1.10.3):
     - React-Core
-  - RNKeychain (3.0.0):
-    - React
+  - RNKeychain (7.0.0):
+    - React-Core
   - RNPermissions (2.2.2):
     - React-Core
   - RNReanimated (1.13.2):
@@ -560,7 +560,7 @@ SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
-  DoubleConversion: cde416483dac037923206447da6e1454df403714
+  DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: 3bb422f41b18121b71783a905c10e58606f7dc3e
   FBReactNativeSpec: f2c97f2529dd79c083355182cc158c9f98f4bd6e
   Flipper: 1bd2db48dcc31e4b167b9a33ec1df01c2ded4893
@@ -571,7 +571,7 @@ SPEC CHECKSUMS:
   Flipper-RSocket: 127954abe8b162fcaf68d2134d34dc2bd7076154
   FlipperKit: 651f50a42eb95c01b3e89a60996dd6aded529eeb
   Folly: b73c3869541e86821df3c387eb0af5f65addfab4
-  glog: 40a13f7840415b9a77023fbcae0f1e6f43192af3
+  glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   MultiplatformBleAdapter: 975cfb2a333b2c42b7a11628bd100ccb61872da2
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
@@ -590,7 +590,7 @@ SPEC CHECKSUMS:
   react-native-ble-plx: caac53ee98151ec81198239d591c203809a1ed6e
   react-native-camera: e46c64f0d1212124c915bf83ee9b855ac6d35164
   react-native-config: f2c2ae45625a068c35681a16b9bfb1ca58b0adc7
-  react-native-haskell-shelley: 6feb02a9fdfcd95ee4c0755cdf1e78d95592d218
+  react-native-haskell-shelley: c12427288526b417e52fdbeea5e92d921352d276
   react-native-netinfo: 0212ce8604e88edf686f1481b925b17a42a52449
   react-native-randombytes: b6677f7d495c27e9ee0dbd77ebc97b3c59173729
   react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
@@ -611,7 +611,7 @@ SPEC CHECKSUMS:
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
   RNDeviceInfo: 6dd5c07a482f2a5e4a29fe8a9d99eadd4277175a
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
-  RNKeychain: 3aa3cf891a09a0d18d306862ab2bb9e106079b24
+  RNKeychain: f75b8c8b2f17d3b2aa1f25b4a0ac5b83d947ff8f
   RNPermissions: 5df468064df661a4c8c017e2791ce90d7695eea5
   RNReanimated: e03f7425cb7a38dcf1b644d680d1bfc91c3337ad
   RNScreens: 0e91da98ab26d5d04c7b59a9b6bd694124caf88c
@@ -623,4 +623,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 2a03d8f59ad7847fa9d6d7d5a862e4f5b84f242b
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.10.2
