@@ -5,7 +5,7 @@ import {Image} from 'react-native'
 import {useSelector} from 'react-redux'
 import {createStackNavigator} from '@react-navigation/stack'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useIntl, defineMessages} from 'react-intl'
 
 import {walletMetaSelector, isReadOnlySelector} from '../selectors'
 import {isHaskellShelley} from '../config/config'
@@ -92,7 +92,8 @@ type WalletTabRoutes = {
 }
 
 const Tab = createBottomTabNavigator<any, WalletTabRoutes, any>()
-const WalletTabNavigator = injectIntl(({intl}: {intl: IntlShape}) => {
+const WalletTabNavigator = () => {
+  const intl = useIntl()
   const walletMeta = useSelector(walletMetaSelector)
   const isReadOnly = useSelector(isReadOnlySelector)
 
@@ -138,7 +139,7 @@ const WalletTabNavigator = injectIntl(({intl}: {intl: IntlShape}) => {
       )}
     </Tab.Navigator>
   )
-})
+}
 
 type WalletStackRoute = {
   'wallet-selection': any,
