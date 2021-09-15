@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {View} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useIntl, defineMessages} from 'react-intl'
 
 import {Text, TitledCard} from '../../UiKit'
 import styles from './styles/UpcomingRewardInfo.style'
@@ -26,13 +26,14 @@ const messages = defineMessages({
 })
 
 type ExternalProps = {|
-  +intl: IntlShape,
   +nextRewardText: ?string,
   +followingRewardText: ?string,
   +showDisclaimer: boolean,
 |}
 
-const UpcomingRewardInfo = ({intl, nextRewardText, followingRewardText, showDisclaimer}: ExternalProps) => {
+const UpcomingRewardInfo = ({nextRewardText, followingRewardText, showDisclaimer}: ExternalProps) => {
+  const intl = useIntl()
+
   if (nextRewardText != null && followingRewardText != null) {
     return (
       <View style={[styles.wrapper, showDisclaimer ? styles.wrapperWithDisclaimer : undefined]}>
@@ -66,4 +67,4 @@ const UpcomingRewardInfo = ({intl, nextRewardText, followingRewardText, showDisc
   }
 }
 
-export default injectIntl(UpcomingRewardInfo)
+export default UpcomingRewardInfo

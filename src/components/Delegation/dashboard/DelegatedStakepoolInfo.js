@@ -3,7 +3,7 @@
 import React, {useState} from 'react'
 import {View, Image, Linking, TouchableOpacity, Animated} from 'react-native'
 import Clipboard from '@react-native-community/clipboard'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useIntl, defineMessages, type IntlShape} from 'react-intl'
 import {debounce} from 'lodash'
 
 import {Text, TitledCard, Button} from '../../UiKit'
@@ -63,14 +63,14 @@ const FadeOutView = (props: ViewProps) => {
 }
 
 type Props = {|
-  +intl: IntlShape,
   +poolTicker: string,
   +poolName: string,
   +poolHash: string,
   +poolURL: string,
 |}
 
-const DelegatedStakepoolInfo = ({intl, poolTicker, poolName, poolHash, poolURL}: Props) => {
+const DelegatedStakepoolInfo = ({poolTicker, poolName, poolHash, poolURL}: Props) => {
+  const intl = useIntl()
   const openExternalURL = () => {
     if (poolURL) {
       // note: do not await on purpose
@@ -144,4 +144,4 @@ const DelegatedStakepoolInfo = ({intl, poolTicker, poolName, poolHash, poolURL}:
   )
 }
 
-export default injectIntl(DelegatedStakepoolInfo)
+export default DelegatedStakepoolInfo

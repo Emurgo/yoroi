@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {View, Image} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useIntl, defineMessages} from 'react-intl'
 
 import {Text, Line} from '../../UiKit'
 import NotDelegatedImage from '../../../assets/img/testnet/no-transactions-yet.png'
@@ -20,19 +20,19 @@ const messages = defineMessages({
   },
 })
 
-type ExternalProps = {|
-  +intl: IntlShape,
-|}
+const NotDelegatedInfo = () => {
+  const intl = useIntl()
 
-const NotDelegatedInfo = ({intl}: ExternalProps) => (
-  <View style={styles.wrapper}>
-    <View style={styles.imageWrap}>
-      <Image source={NotDelegatedImage} />
+  return (
+    <View style={styles.wrapper}>
+      <View style={styles.imageWrap}>
+        <Image source={NotDelegatedImage} />
+      </View>
+      <Text style={[styles.text, styles.textFirstLine]}>{intl.formatMessage(messages.firstLine)}</Text>
+      <Text style={[styles.text, styles.textSecondLine]}>{intl.formatMessage(messages.secondLine)}</Text>
+      <Line />
     </View>
-    <Text style={[styles.text, styles.textFirstLine]}>{intl.formatMessage(messages.firstLine)}</Text>
-    <Text style={[styles.text, styles.textSecondLine]}>{intl.formatMessage(messages.secondLine)}</Text>
-    <Line />
-  </View>
-)
+  )
+}
 
-export default injectIntl(NotDelegatedInfo)
+export default NotDelegatedInfo

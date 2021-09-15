@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {View} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useIntl, defineMessages} from 'react-intl'
 
 import {Button} from '../UiKit'
 
@@ -16,21 +16,24 @@ const messages = defineMessages({
 })
 
 type Props = {
-  intl: IntlShape,
   onPress: () => void,
   disabled?: ?boolean,
 }
 
-const DelegationNavigationButtons = ({intl, onPress, disabled}: Props) => (
-  <View style={styles.container}>
-    <Button
-      block
-      shelleyTheme
-      onPress={onPress}
-      title={intl.formatMessage(messages.stakingCenterButton)}
-      disabled={disabled}
-    />
-  </View>
-)
+const DelegationNavigationButtons = ({onPress, disabled}: Props) => {
+  const intl = useIntl()
 
-export default injectIntl(DelegationNavigationButtons)
+  return (
+    <View style={styles.container}>
+      <Button
+        block
+        shelleyTheme
+        onPress={onPress}
+        title={intl.formatMessage(messages.stakingCenterButton)}
+        disabled={disabled}
+      />
+    </View>
+  )
+}
+
+export default DelegationNavigationButtons
