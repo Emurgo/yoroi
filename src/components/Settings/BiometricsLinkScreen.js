@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {useDispatch} from 'react-redux'
 import {Button} from '../UiKit'
 import FingerprintScreenBase from '../Common/FingerprintScreenBase'
@@ -40,11 +40,8 @@ const messages = defineMessages({
   },
 })
 
-type Props = {
-  intl: IntlShape,
-}
-
-const BiometricsLinkScreen = ({intl}: Props) => {
+const BiometricsLinkScreen = () => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const dispatch = useDispatch()
   const linkBiometricsSignIn = async () => {
@@ -81,4 +78,4 @@ const BiometricsLinkScreen = ({intl}: Props) => {
   )
 }
 
-export default injectIntl(BiometricsLinkScreen)
+export default BiometricsLinkScreen

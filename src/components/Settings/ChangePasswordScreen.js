@@ -3,7 +3,7 @@
 import React from 'react'
 import {View, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useIntl, defineMessages} from 'react-intl'
 import {useNavigation} from '@react-navigation/native'
 
 import {Button, Spacer, TextInput} from '../UiKit'
@@ -43,11 +43,8 @@ const messages = defineMessages({
   },
 })
 
-type Props = {
-  intl: IntlShape,
-}
-
-const ChangePasswordScreen = ({intl}: Props) => {
+const ChangePasswordScreen = () => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const onSubmit = async (oldPassword, newPassword) => {
     try {
@@ -146,7 +143,7 @@ const ChangePasswordScreen = ({intl}: Props) => {
   )
 }
 
-export default injectIntl(ChangePasswordScreen)
+export default ChangePasswordScreen
 
 const CurrentPasswordInput = TextInput
 const PasswordInput = TextInput

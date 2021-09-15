@@ -3,7 +3,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {useNavigation} from '@react-navigation/native'
 
 import PinInput from '../Common/PinInput'
@@ -40,9 +40,8 @@ const messages = defineMessages({
   },
 })
 
-type Props = {intl: IntlShape}
-
-const ChangeCustomPinScreen = ({intl}: Props) => {
+const ChangeCustomPinScreen = () => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const dispatch = useDispatch()
   const currentPinHash = useSelector(customPinHashSelector)
@@ -107,4 +106,4 @@ const ChangeCustomPinScreen = ({intl}: Props) => {
   )
 }
 
-export default injectIntl(ChangeCustomPinScreen)
+export default ChangeCustomPinScreen

@@ -3,7 +3,7 @@
 import React from 'react'
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
 import {createStackNavigator} from '@react-navigation/stack'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useIntl, defineMessages} from 'react-intl'
 
 import WalletSettingsScreen from './WalletSettingsScreen'
 import ApplicationSettingsScreen from './ApplicationSettingsScreen'
@@ -76,37 +76,41 @@ type SettingsTabRoutes = {
 }
 
 const Tab = createMaterialTopTabNavigator<any, SettingsTabRoutes, any>()
-const SettingsTabNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
-  <Tab.Navigator
-    screenOptions={({route}) => ({
-      tabBarLabel:
-        route.name === SETTINGS_TABS.WALLET_SETTINGS
-          ? intl.formatMessage(messages.walletTabTitle)
-          : intl.formatMessage(messages.appTabTitle),
-    })}
-    tabBarOptions={{
-      style: {
-        backgroundColor: COLORS.BACKGROUND_BLUE,
-        elevation: 0,
-        shadowOpacity: 0,
-      },
-      tabStyle: {
-        elevation: 0,
-        shadowOpacity: 0,
-      },
-      labelStyle: {
-        color: COLORS.WHITE,
-      },
-      indicatorStyle: {
-        backgroundColor: '#fff',
-        height: 2,
-      },
-    }}
-  >
-    <Tab.Screen name={SETTINGS_TABS.WALLET_SETTINGS} component={WalletSettingsScreen} />
-    <Tab.Screen name={SETTINGS_TABS.APP_SETTINGS} component={ApplicationSettingsScreen} />
-  </Tab.Navigator>
-))
+const SettingsTabNavigator = () => {
+  const intl = useIntl()
+
+  return (
+    <Tab.Navigator
+      screenOptions={({route}) => ({
+        tabBarLabel:
+          route.name === SETTINGS_TABS.WALLET_SETTINGS
+            ? intl.formatMessage(messages.walletTabTitle)
+            : intl.formatMessage(messages.appTabTitle),
+      })}
+      tabBarOptions={{
+        style: {
+          backgroundColor: COLORS.BACKGROUND_BLUE,
+          elevation: 0,
+          shadowOpacity: 0,
+        },
+        tabStyle: {
+          elevation: 0,
+          shadowOpacity: 0,
+        },
+        labelStyle: {
+          color: COLORS.WHITE,
+        },
+        indicatorStyle: {
+          backgroundColor: '#fff',
+          height: 2,
+        },
+      }}
+    >
+      <Tab.Screen name={SETTINGS_TABS.WALLET_SETTINGS} component={WalletSettingsScreen} />
+      <Tab.Screen name={SETTINGS_TABS.APP_SETTINGS} component={ApplicationSettingsScreen} />
+    </Tab.Navigator>
+  )
+}
 
 type SettingsStackNavigatorRoutes = {
   settings: any,
@@ -124,83 +128,87 @@ type SettingsStackNavigatorRoutes = {
 }
 
 const Stack = createStackNavigator<any, SettingsStackNavigatorRoutes, any>()
-const SettingsScreenNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
-  <Stack.Navigator
-    screenOptions={{
-      ...defaultNavigationOptions,
-      ...defaultStackNavigatorOptions,
-    }}
-    initialRouteName={SETTINGS_ROUTES.MAIN}
-  >
-    <Stack.Screen
-      name={SETTINGS_ROUTES.MAIN}
-      component={SettingsTabNavigator}
-      options={{title: intl.formatMessage(messages.settingsTitle)}}
-    />
-    <Stack.Screen
-      name={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
-      component={ChangeWalletName}
-      options={{title: intl.formatMessage(messages.changeWalletNameTitle)}}
-    />
-    <Stack.Screen
-      name={SETTINGS_ROUTES.TERMS_OF_USE}
-      component={TermsOfServiceScreen}
-      options={{title: intl.formatMessage(messages.termsOfServiceTitle)}}
-    />
-    <Stack.Screen
-      name={SETTINGS_ROUTES.SUPPORT}
-      component={SupportScreen}
-      options={{title: intl.formatMessage(messages.supportTitle)}}
-    />
-    <Stack.Screen
-      name={SETTINGS_ROUTES.FINGERPRINT_LINK}
-      component={BiometricsLinkScreen}
-      options={{headerShown: false}}
-    />
-    <Stack.Screen
-      name={SETTINGS_ROUTES.REMOVE_WALLET}
-      component={RemoveWalletScreen}
-      options={{title: intl.formatMessage(messages.removeWalletTitle)}}
-    />
-    <Stack.Screen
-      name={SETTINGS_ROUTES.CHANGE_LANGUAGE}
-      component={LanguagePickerScreen}
-      options={{headerShown: false}}
-    />
-    <Stack.Screen
-      name={SETTINGS_ROUTES.EASY_CONFIRMATION}
-      component={ToggleEasyConfirmationScreen}
-      options={{
-        title: intl.formatMessage(messages.toggleEachConfirmationTitle),
+const SettingsScreenNavigator = () => {
+  const intl = useIntl()
+
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        ...defaultNavigationOptions,
+        ...defaultStackNavigatorOptions,
       }}
-    />
-    <Stack.Screen
-      name={SETTINGS_ROUTES.CHANGE_PASSWORD}
-      component={ChangePasswordScreen}
-      options={{title: intl.formatMessage(messages.changePasswordTitle)}}
-    />
-    <Stack.Screen
-      name={SETTINGS_ROUTES.CHANGE_CUSTOM_PIN}
-      component={ChangeCustomPinScreen}
-      options={{
-        title: intl.formatMessage(messages.changeCustomPinTitle),
-        headerStyle: {
-          ...defaultNavigationOptions.headerStyle,
-          elevation: 0, // turn off header shadows on Android
-        },
-      }}
-    />
-    <Stack.Screen
-      name={SETTINGS_ROUTES.BIO_AUTHENTICATE}
-      component={BiometricAuthScreen}
-      options={{headerShown: false}}
-    />
-    <Stack.Screen
-      name={SETTINGS_ROUTES.SETUP_CUSTOM_PIN}
-      component={CustomPinScreen}
-      options={{title: intl.formatMessage(messages.customPinTitle)}}
-    />
-  </Stack.Navigator>
-))
+      initialRouteName={SETTINGS_ROUTES.MAIN}
+    >
+      <Stack.Screen
+        name={SETTINGS_ROUTES.MAIN}
+        component={SettingsTabNavigator}
+        options={{title: intl.formatMessage(messages.settingsTitle)}}
+      />
+      <Stack.Screen
+        name={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
+        component={ChangeWalletName}
+        options={{title: intl.formatMessage(messages.changeWalletNameTitle)}}
+      />
+      <Stack.Screen
+        name={SETTINGS_ROUTES.TERMS_OF_USE}
+        component={TermsOfServiceScreen}
+        options={{title: intl.formatMessage(messages.termsOfServiceTitle)}}
+      />
+      <Stack.Screen
+        name={SETTINGS_ROUTES.SUPPORT}
+        component={SupportScreen}
+        options={{title: intl.formatMessage(messages.supportTitle)}}
+      />
+      <Stack.Screen
+        name={SETTINGS_ROUTES.FINGERPRINT_LINK}
+        component={BiometricsLinkScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={SETTINGS_ROUTES.REMOVE_WALLET}
+        component={RemoveWalletScreen}
+        options={{title: intl.formatMessage(messages.removeWalletTitle)}}
+      />
+      <Stack.Screen
+        name={SETTINGS_ROUTES.CHANGE_LANGUAGE}
+        component={LanguagePickerScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={SETTINGS_ROUTES.EASY_CONFIRMATION}
+        component={ToggleEasyConfirmationScreen}
+        options={{
+          title: intl.formatMessage(messages.toggleEachConfirmationTitle),
+        }}
+      />
+      <Stack.Screen
+        name={SETTINGS_ROUTES.CHANGE_PASSWORD}
+        component={ChangePasswordScreen}
+        options={{title: intl.formatMessage(messages.changePasswordTitle)}}
+      />
+      <Stack.Screen
+        name={SETTINGS_ROUTES.CHANGE_CUSTOM_PIN}
+        component={ChangeCustomPinScreen}
+        options={{
+          title: intl.formatMessage(messages.changeCustomPinTitle),
+          headerStyle: {
+            ...defaultNavigationOptions.headerStyle,
+            elevation: 0, // turn off header shadows on Android
+          },
+        }}
+      />
+      <Stack.Screen
+        name={SETTINGS_ROUTES.BIO_AUTHENTICATE}
+        component={BiometricAuthScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={SETTINGS_ROUTES.SETUP_CUSTOM_PIN}
+        component={CustomPinScreen}
+        options={{title: intl.formatMessage(messages.customPinTitle)}}
+      />
+    </Stack.Navigator>
+  )
+}
 
 export default SettingsScreenNavigator
