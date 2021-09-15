@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {View, ScrollView, Image} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useIntl, defineMessages} from 'react-intl'
 
 import {Text, Button} from '../UiKit'
 import {confirmationMessages} from '../../i18n/global-messages'
@@ -31,12 +31,13 @@ const messages = defineMessages({
 })
 
 type Props = {|
-  intl: IntlShape,
   onPress: () => any,
   disableButtons: boolean,
 |}
 
-const FlawedWalletScreen = ({intl, onPress, disableButtons}: Props) => {
+const FlawedWalletScreen = ({onPress, disableButtons}: Props) => {
+  const intl = useIntl()
+
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.content}>
@@ -61,4 +62,4 @@ const FlawedWalletScreen = ({intl, onPress, disableButtons}: Props) => {
   )
 }
 
-export default injectIntl(FlawedWalletScreen)
+export default FlawedWalletScreen
