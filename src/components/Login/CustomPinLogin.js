@@ -3,7 +3,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {useSelector, useDispatch} from 'react-redux'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useIntl, defineMessages} from 'react-intl'
 
 import {CONFIG} from '../../config/config'
 import PinInput from '../Common/PinInput'
@@ -23,11 +23,8 @@ const messages = defineMessages({
   },
 })
 
-type Props = {
-  intl: IntlShape,
-}
-
-const CustomPinLogin = injectIntl(({intl}: Props) => {
+const CustomPinLogin = () => {
+  const intl = useIntl()
   const dispatch = useDispatch()
   const customPinHash = useSelector(customPinHashSelector)
   const onPinEnter = async (pin: string) => {
@@ -60,6 +57,6 @@ const CustomPinLogin = injectIntl(({intl}: Props) => {
       />
     </View>
   )
-})
+}
 
-export default injectIntl(CustomPinLogin)
+export default CustomPinLogin
