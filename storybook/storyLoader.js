@@ -36,7 +36,6 @@ function loadStories() {
   require('../src/components/Settings/ToggleEasyConfirmationScreen.stories')
   require('../src/components/Settings/WalletSettingsScreen.stories')
   require('../src/components/Transfer/TransferSummary.stories')
-  require('../src/components/TxHistoryV2/TxHistory.stories')
   require('../src/components/UiKit/Button.stories')
   require('../src/components/UiKit/Checkbox.stories')
   require('../src/components/UiKit/Link.stories')
@@ -94,7 +93,6 @@ const stories = [
   '../src/components/Settings/ToggleEasyConfirmationScreen.stories',
   '../src/components/Settings/WalletSettingsScreen.stories',
   '../src/components/Transfer/TransferSummary.stories',
-  '../src/components/TxHistoryV2/TxHistory.stories',
   '../src/components/UiKit/Button.stories',
   '../src/components/UiKit/Checkbox.stories',
   '../src/components/UiKit/Link.stories',

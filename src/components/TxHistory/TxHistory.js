@@ -34,7 +34,10 @@ import {Logger} from '../../utils/logging'
 import FlawedWalletModal from './FlawedWalletModal'
 import StandardModal from '../Common/StandardModal'
 import {WALLET_ROOT_ROUTES, CATALYST_ROUTES} from '../../RoutesList'
-import {CONFIG, isByron, isHaskellShelley, isNightly} from '../../config/config'
+import {CONFIG, isByron, isHaskellShelley, isNightly, UI_V2} from '../../config/config'
+import ActionsBanner from './components/ActionsBanner'
+import BalanceBanner from './components/BalanceBanner'
+import TabNavigator from './components/TabNavigator'
 
 import {formatTokenWithText} from '../../utils/format'
 import image from '../../assets/img/no_transactions.png'
@@ -173,6 +176,100 @@ const TxHistory = ({intl}: Props) => {
 
   if (!walletIsInitialized) {
     return <Text>l10n Please wait while wallet is initialized...</Text>
+  }
+
+  if (UI_V2) {
+    return (
+      <SafeAreaView style={styles.scrollView}>
+        <View style={styles.container}>
+          <OfflineBanner />
+          {isOnline && lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
+
+          <BalanceBanner />
+          <ActionsBanner />
+          <TabNavigator
+            tabs={['Transactions', 'Assets']}
+            render={({active}) => {
+              if (active === 0) {
+                return (
+                  <>
+                    {_.isEmpty(transactionsInfo) ? (
+                      <ScrollView
+                        refreshControl={
+                          <RefreshControl onRefresh={() => dispatch(updateHistory())} refreshing={isSyncing} />
+                        }
+                      >
+                        <NoTxHistory />
+                      </ScrollView>
+                    ) : (
+                      <TxHistoryList
+                        refreshing={isSyncing}
+                        onRefresh={() => dispatch(updateHistory())}
+                        navigation={navigation}
+                        transactions={transactionsInfo}
+                      />
+                    )}
+                  </>
+                )
+              }
+              return <></>
+            }}
+          />
+
+          {showCatalystBanner && (
+            <VotingBanner
+              onPress={() => {
+                if (tokenBalance.getDefault().lt(CONFIG.CATALYST.MIN_ADA)) {
+                  setShowInsufficientFundsModal(true)
+                  return
+                }
+                navigation.navigate(CATALYST_ROUTES.ROOT)
+              }}
+              disabled={isFetchingAccountState}
+            />
+          )}
+          {isFlawedWallet === true && (
+            <FlawedWalletModal
+              visible={isFlawedWallet === true}
+              disableButtons={false}
+              onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)}
+              onRequestClose={() => navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)}
+            />
+          )}
+
+          {isByron(walletMeta.walletImplementationId) && showWarning && (
+            <WarningBanner
+              title={intl.formatMessage(warningBannerMessages.title).toUpperCase()}
+              icon={infoIcon}
+              message={intl.formatMessage(warningBannerMessages.message)}
+              showCloseIcon
+              onRequestClose={() => setShowWarning(false)}
+              style={styles.warningNoteStyles}
+            />
+          )}
+
+          <StandardModal
+            visible={showInsufficientFundsModal}
+            title={intl.formatMessage(globalMessages.attention)}
+            onRequestClose={() => setShowInsufficientFundsModal(false)}
+            primaryButton={{
+              label: intl.formatMessage(confirmationMessages.commonButtons.backButton),
+              onPress: () => setShowInsufficientFundsModal(false),
+            }}
+            showCloseIcon
+          >
+            <View>
+              <Text>
+                {intl.formatMessage(globalMessages.insufficientBalance, {
+                  requiredBalance: formatTokenWithText(CONFIG.CATALYST.DISPLAYED_MIN_ADA, assetMetaData),
+                  currentBalance: formatTokenWithText(tokenBalance.getDefault(), assetMetaData),
+                })}
+              </Text>
+            </View>
+          </StandardModal>
+        </View>
+      </SafeAreaView>
+    )
   }
 
   return (
