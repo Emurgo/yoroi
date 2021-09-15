@@ -4,7 +4,7 @@ import React from 'react'
 import {useDispatch} from 'react-redux'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {ScrollView, Platform, View} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useIntl, defineMessages} from 'react-intl'
 import {useNavigation} from '@react-navigation/native'
 
 import TermsOfService from '../Common/TermsOfService'
@@ -32,11 +32,8 @@ const messages = defineMessages({
   },
 })
 
-type Props = {
-  intl: IntlShape,
-}
-
-const AcceptTermsOfServiceScreen = ({intl}: Props) => {
+const AcceptTermsOfServiceScreen = () => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const [acceptedTos, setAcceptedTos] = React.useState(false)
   const [savingConsent, setSavingConsent] = React.useState(false)
@@ -100,6 +97,6 @@ const AcceptTermsOfServiceScreen = ({intl}: Props) => {
     </SafeAreaView>
   )
 }
-export default injectIntl(AcceptTermsOfServiceScreen)
+export default AcceptTermsOfServiceScreen
 
 const Footer = ({children}: {children: React$Node}) => <View style={styles.footer}>{children}</View>
