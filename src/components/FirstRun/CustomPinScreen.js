@@ -3,7 +3,7 @@
 import React from 'react'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector, useDispatch} from 'react-redux'
-import {useIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {useRoute} from '@react-navigation/native'
 
 import PinRegistrationForm from '../Common/PinRegistrationForm'
@@ -28,8 +28,11 @@ const messages = defineMessages({
   },
 })
 
-const CustomPinScreen = () => {
-  const intl = useIntl()
+type Props = {
+  intl: IntlShape,
+}
+
+const CustomPinScreen = ({intl}: Props) => {
   const isAuth = useSelector(isAuthenticatedSelector)
   const route = useRoute()
   const onSuccess: () => any = (route.params?.onSuccess: any)
@@ -60,4 +63,4 @@ const CustomPinScreen = () => {
   )
 }
 
-export default CustomPinScreen
+export default injectIntl(CustomPinScreen)

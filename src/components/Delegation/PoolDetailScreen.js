@@ -3,7 +3,7 @@
 import React from 'react'
 
 import {View} from 'react-native'
-import {useIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {Text, Button} from '../UiKit'
 
@@ -21,12 +21,12 @@ const messages = defineMessages({
 })
 
 type Props = {|
+  intl: IntlShape,
   onPressDelegate: () => any,
   disabled: ?boolean,
 |}
 
-const PoolDetailScreen = ({onPressDelegate, disabled = false}: Props) => {
-  const intl = useIntl()
+const PoolDetailScreen = ({intl, onPressDelegate, disabled = false}: Props) => {
   const delegateButtonTitle = intl.formatMessage(messages.delegate)
   const title = intl.formatMessage(messages.title)
 
@@ -49,4 +49,4 @@ const PoolDetailScreen = ({onPressDelegate, disabled = false}: Props) => {
   )
 }
 
-export default PoolDetailScreen
+export default injectIntl(PoolDetailScreen)

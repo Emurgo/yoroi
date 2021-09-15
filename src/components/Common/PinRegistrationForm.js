@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {View} from 'react-native'
-import {useIntl} from 'react-intl'
+import {injectIntl, type IntlShape} from 'react-intl'
 import {useNavigation} from '@react-navigation/native'
 
 import PinInput from './PinInput'
@@ -22,10 +22,10 @@ type PinRegistrationFormLabels = {
 type Props = {
   labels: PinRegistrationFormLabels,
   onPinEntered: (string) => any,
+  intl: IntlShape,
 }
 
-const PinRegistrationForm = ({labels, onPinEntered}: Props) => {
-  const intl = useIntl()
+const PinRegistrationForm = ({labels, onPinEntered, intl}: Props) => {
   const navigation = useNavigation()
   const [pin, setPin] = React.useState('')
   const clearPin = React.useCallback(() => setPin(''), [])
@@ -78,4 +78,4 @@ const PinRegistrationForm = ({labels, onPinEntered}: Props) => {
   )
 }
 
-export default PinRegistrationForm
+export default injectIntl(PinRegistrationForm)

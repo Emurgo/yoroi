@@ -2,7 +2,7 @@
 
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
-import {useIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import Markdown from 'react-native-easy-markdown'
 
 import {Modal, Spacer} from '../UiKit'
@@ -68,6 +68,7 @@ const messages = defineMessages({
 })
 
 type Props = {|
+  +intl: IntlShape,
   +step: WithdrawalDialogSteps,
   +onKeepKey: () => any,
   +onDeregisterKey: () => any,
@@ -96,6 +97,7 @@ type Props = {|
 |}
 
 const WithdrawalDialog = ({
+  intl,
   step,
   onKeepKey,
   onDeregisterKey,
@@ -112,7 +114,6 @@ const WithdrawalDialog = ({
   onRequestClose,
   error,
 }: Props) => {
-  const intl = useIntl()
   const getModalBody = () => {
     switch (step) {
       case WITHDRAWAL_DIALOG_STEPS.CLOSED:
@@ -197,4 +198,4 @@ const WithdrawalDialog = ({
   )
 }
 
-export default WithdrawalDialog
+export default injectIntl(WithdrawalDialog)

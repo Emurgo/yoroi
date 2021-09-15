@@ -5,7 +5,7 @@ import {View} from 'react-native'
 import {WebView} from 'react-native-webview'
 import {BigNumber} from 'bignumber.js'
 import {useSelector} from 'react-redux'
-import {useIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages} from 'react-intl'
 import {useNavigation} from '@react-navigation/native'
 
 import {STAKING_CENTER_ROUTES} from '../../RoutesList'
@@ -185,8 +185,11 @@ const _handleOnMessage = async (
   }
 }
 
-const StakingCenter = () => {
-  const intl = useIntl()
+type Props = {
+  intl: IntlShape,
+}
+
+const StakingCenter = ({intl}: Props) => {
   const navigation = useNavigation()
   const [amountToDelegate, setAmountToDelegate] = useState<string | null>(null)
   const [selectedPools, setSelectedPools] = useState([])
@@ -300,4 +303,4 @@ const StakingCenter = () => {
   )
 }
 
-export default StakingCenter
+export default injectIntl(StakingCenter)
