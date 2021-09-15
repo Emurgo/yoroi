@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {View} from 'react-native'
-import {useIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import globalMessages from '../../../i18n/global-messages'
 import {Text, TitledCard, ProgressCircle} from '../../UiKit'
@@ -20,6 +20,7 @@ const messages = defineMessages({
 })
 
 type ExternalProps = {
+  +intl: IntlShape,
   +percentage: number,
   +currentEpoch: number,
   +endTime: {
@@ -30,33 +31,29 @@ type ExternalProps = {
   },
 }
 
-const EpochProgress = ({percentage, currentEpoch, endTime}: ExternalProps) => {
-  const intl = useIntl()
-
-  return (
-    <View style={styles.wrapper}>
-      <TitledCard title={intl.formatMessage(messages.epochProgressTitle)}>
-        <ProgressCircle percentage={percentage} />
-        <View style={styles.stats}>
-          <View style={styles.row}>
-            <Text style={styles.label}>{intl.formatMessage(globalMessages.epochLabel)}:</Text>
-            <Text style={styles.value}>{currentEpoch}</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.label}>{intl.formatMessage(messages.endsInLabel)}:</Text>
-            <View style={styles.timeWrapper}>
-              {endTime.d && <Text style={styles.timeBlock}>{endTime.d}</Text>}
-              <Text style={styles.timeBlock}>{endTime.h}</Text>
-              <Text>:</Text>
-              <Text style={styles.timeBlock}>{endTime.m}</Text>
-              <Text>:</Text>
-              <Text style={styles.timeBlock}>{endTime.s}</Text>
-            </View>
+const EpochProgress = ({intl, percentage, currentEpoch, endTime}: ExternalProps) => (
+  <View style={styles.wrapper}>
+    <TitledCard title={intl.formatMessage(messages.epochProgressTitle)}>
+      <ProgressCircle percentage={percentage} />
+      <View style={styles.stats}>
+        <View style={styles.row}>
+          <Text style={styles.label}>{intl.formatMessage(globalMessages.epochLabel)}:</Text>
+          <Text style={styles.value}>{currentEpoch}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>{intl.formatMessage(messages.endsInLabel)}:</Text>
+          <View style={styles.timeWrapper}>
+            {endTime.d && <Text style={styles.timeBlock}>{endTime.d}</Text>}
+            <Text style={styles.timeBlock}>{endTime.h}</Text>
+            <Text>:</Text>
+            <Text style={styles.timeBlock}>{endTime.m}</Text>
+            <Text>:</Text>
+            <Text style={styles.timeBlock}>{endTime.s}</Text>
           </View>
         </View>
-      </TitledCard>
-    </View>
-  )
-}
+      </View>
+    </TitledCard>
+  </View>
+)
 
-export default EpochProgress
+export default injectIntl(EpochProgress)

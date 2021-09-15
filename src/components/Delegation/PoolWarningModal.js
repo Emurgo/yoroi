@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {View, ScrollView, Image} from 'react-native'
-import {useIntl, defineMessages, type IntlShape} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {Text, Button, Modal} from '../UiKit'
 import {confirmationMessages} from '../../i18n/global-messages'
@@ -73,15 +73,14 @@ const BulletPointItem = ({textRow, style}: BulletPointProps) => {
 }
 
 type Props = {
+  intl: IntlShape,
   visible: boolean,
   onPress: () => mixed,
   onRequestClose: () => void,
   reputationInfo: {node_flags?: number},
 }
 
-const PoolWarningModal = ({visible, onPress, onRequestClose, reputationInfo}: Props) => {
-  const intl = useIntl()
-
+const PoolWarningModal = ({intl, visible, onPress, onRequestClose, reputationInfo}: Props) => {
   return (
     <Modal visible={visible} onRequestClose={onRequestClose}>
       <ScrollView style={styles.scrollView}>
@@ -112,4 +111,4 @@ const PoolWarningModal = ({visible, onPress, onRequestClose, reputationInfo}: Pr
   )
 }
 
-export default PoolWarningModal
+export default injectIntl(PoolWarningModal)

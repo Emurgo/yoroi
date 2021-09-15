@@ -1,7 +1,7 @@
 // @flow
 
 import React, {useState} from 'react'
-import {useIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {View, Image, LayoutAnimation, TouchableOpacity} from 'react-native'
 
 import {Text} from '../../UiKit'
@@ -31,10 +31,10 @@ type Props = {
   onSelect: (TokenEntry | void) => any,
   selectedAsset: TokenEntry | null,
   unselectEnabled: boolean,
+  intl: IntlShape,
 }
 
-const AssetSelector = ({label, assets, assetsMetadata, onSelect, selectedAsset, unselectEnabled}: Props) => {
-  const intl = useIntl()
+const AssetSelector = ({label, assets, assetsMetadata, onSelect, selectedAsset, unselectEnabled, intl}: Props) => {
   const [expanded, setExpanded] = useState(false)
 
   const toggleExpand = () => {
@@ -85,4 +85,4 @@ const AssetSelector = ({label, assets, assetsMetadata, onSelect, selectedAsset, 
   )
 }
 
-export default AssetSelector
+export default injectIntl(AssetSelector)

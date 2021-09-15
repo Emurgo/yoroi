@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {Text, View, Image, TouchableOpacity, ScrollView} from 'react-native'
-import {useIntl, defineMessages} from 'react-intl'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {Modal, Button} from '../UiKit'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
@@ -29,9 +29,11 @@ type ErrorViewProps = {
   errorLogs?: ?string,
   onDismiss: () => void,
 }
+type HOCProps = {
+  intl: IntlShape,
+}
 
-export const ErrorView = ({title, errorMessage, errorLogs, onDismiss}: ErrorViewProps) => {
-  const intl = useIntl()
+const _ErrorView = ({intl, title, errorMessage, errorLogs, onDismiss}: ErrorViewProps & HOCProps) => {
   const [showErrorLogs, setShowErrorLogs] = React.useState(false)
   const toggleShowErrorlogs = () => setShowErrorLogs(!showErrorLogs)
 
@@ -68,6 +70,8 @@ export const ErrorView = ({title, errorMessage, errorLogs, onDismiss}: ErrorView
     </ScrollView>
   )
 }
+
+export const ErrorView = injectIntl(_ErrorView)
 
 type Props = {
   visible: boolean,

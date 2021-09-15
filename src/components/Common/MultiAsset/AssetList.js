@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {Text, View, FlatList, TouchableOpacity} from 'react-native'
-import {useIntl} from 'react-intl'
+import {injectIntl, type IntlShape} from 'react-intl'
 
 import {
   getAssetDenominationOrUnknown,
@@ -27,9 +27,9 @@ type AssetRowProps = {|
   assetMetadata: Token,
   backColor: {|backgroundColor: string|},
   onSelect?: (TokenEntry) => any,
+  intl: IntlShape,
 |}
-const AssetRow = ({styles, asset, assetMetadata, backColor, onSelect}: AssetRowProps) => {
-  const intl = useIntl()
+const AssetRow = ({styles, asset, assetMetadata, backColor, onSelect, intl}: AssetRowProps) => {
   const item = (
     <>
       <View style={styles.tokenMetaView}>
@@ -64,10 +64,10 @@ type AssetListProps = {
   assetsMetadata: Dict<Token>,
   styles: NodeStyle,
   onSelect?: (TokenEntry) => any,
+  intl: IntlShape,
 }
 
-const AssetList = ({assets, assetsMetadata, styles, onSelect}: AssetListProps) => {
-  const intl = useIntl()
+const AssetList = ({assets, assetsMetadata, styles, onSelect, intl}: AssetListProps) => {
   const colors = [styles.rowColor1, styles.rowColor2]
 
   return (
@@ -87,6 +87,7 @@ const AssetList = ({assets, assetsMetadata, styles, onSelect}: AssetListProps) =
               styles={styles}
               backColor={colors[index % colors.length]}
               onSelect={onSelect}
+              intl={intl}
             />
           )}
         />
@@ -94,4 +95,4 @@ const AssetList = ({assets, assetsMetadata, styles, onSelect}: AssetListProps) =
     </View>
   )
 }
-export default AssetList
+export default injectIntl(AssetList)
