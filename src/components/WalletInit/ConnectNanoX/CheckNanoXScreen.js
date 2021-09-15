@@ -3,7 +3,7 @@
 import React from 'react'
 import {View, ScrollView, Image, Platform, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages} from 'react-intl'
+import {useIntl, defineMessages} from 'react-intl'
 
 import {Text, Button, BulletPointItem, ProgressStep, Spacer} from '../../UiKit'
 import {confirmationMessages, ledgerMessages} from '../../../../src/i18n/global-messages'
@@ -11,7 +11,6 @@ import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 
 import image from '../../../assets/img/ledger_1.png'
 
-import type {IntlShape} from 'react-intl'
 import {useNavigation, useRoute} from '@react-navigation/native'
 
 import type {NetworkId, WalletImplementationId} from '../../../config/types'
@@ -52,7 +51,8 @@ export type Params = {
   useUSB: boolean,
 }
 
-const CheckNanoXScreen = ({intl}: {intl: IntlShape}) => {
+const CheckNanoXScreen = () => {
+  const intl = useIntl()
   const route = useRoute()
   const {networkId, walletImplementationId, useUSB} = ((route.params: any): Params)
 
@@ -104,6 +104,6 @@ const CheckNanoXScreen = ({intl}: {intl: IntlShape}) => {
   )
 }
 
-export default injectIntl(CheckNanoXScreen)
+export default CheckNanoXScreen
 
 const Actions = (props) => <View {...props} style={styles.actions} />

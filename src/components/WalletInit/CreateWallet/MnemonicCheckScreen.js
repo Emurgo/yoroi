@@ -3,7 +3,7 @@
 import React from 'react'
 import {useDispatch} from 'react-redux'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useIntl, defineMessages} from 'react-intl'
 import {View, ScrollView, TouchableOpacity} from 'react-native'
 import {useNavigation, useRoute} from '@react-navigation/native'
 
@@ -38,7 +38,8 @@ const messages = defineMessages({
   },
 })
 
-const MnemonicCheckScreen = ({intl}: {intl: IntlShape}) => {
+const MnemonicCheckScreen = () => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const route = (useRoute(): any)
   const mnemonic: string = route.params.mnemonic
@@ -112,7 +113,7 @@ const MnemonicCheckScreen = ({intl}: {intl: IntlShape}) => {
   )
 }
 
-export default injectIntl(MnemonicCheckScreen)
+export default MnemonicCheckScreen
 
 const MnemonicInput = ({
   partialPhrase,
@@ -140,19 +141,25 @@ const MnemonicInput = ({
   )
 }
 
-const Instructions = injectIntl(({intl}: {intl: IntlShape}) => (
-  <View style={styles.instructions}>
-    <Text>{intl.formatMessage(messages.instructions)}</Text>
-  </View>
-))
+const Instructions = () => {
+  const intl = useIntl()
 
-const ErrorMessage = injectIntl(({intl, visible}: {intl: IntlShape, visible: boolean}) => {
+  return (
+    <View style={styles.instructions}>
+      <Text>{intl.formatMessage(messages.instructions)}</Text>
+    </View>
+  )
+}
+
+const ErrorMessage = ({visible}: {visible: boolean}) => {
+  const intl = useIntl()
+
   return (
     <View style={[styles.error, !visible && styles.hidden]}>
       <Text style={styles.errorMessage}>{intl.formatMessage(messages.mnemonicWordsInputInvalidPhrase)}</Text>
     </View>
   )
-})
+}
 
 const WordBadges = ({
   words,

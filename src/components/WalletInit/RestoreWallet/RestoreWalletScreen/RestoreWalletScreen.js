@@ -5,7 +5,7 @@
 import React from 'react'
 import {View, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useIntl, defineMessages} from 'react-intl'
 import {useNavigation} from '@react-navigation/native'
 
 import {useParams} from '../../../../navigation'
@@ -49,7 +49,8 @@ type Params = {
   provider: string,
 }
 
-export const RestoreWalletScreen = injectIntl(({intl}: {intl: IntlShape}) => {
+export const RestoreWalletScreen = () => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const {networkId, walletImplementationId, provider} = useParams<Params>()
   const {MNEMONIC_LEN: mnemonicLength} = getWalletConfigById(walletImplementationId)
@@ -88,7 +89,7 @@ export const RestoreWalletScreen = injectIntl(({intl}: {intl: IntlShape}) => {
       </Actions>
     </SafeAreaView>
   )
-})
+}
 
 const Instructions = (props) => <Text {...props} style={{fontSize: 16, lineHeight: 24}} />
 const Actions = (props) => <View {...props} style={{padding: 16}} />

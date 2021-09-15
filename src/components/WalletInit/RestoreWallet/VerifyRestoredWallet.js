@@ -4,7 +4,8 @@
 import React, {useState, useEffect} from 'react'
 import {ActivityIndicator, View, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useIntl, defineMessages} from 'react-intl'
+import {useNavigation, useRoute} from '@react-navigation/native'
 
 import {Text, Button, StatusBar, BulletPointItem, Spacer} from '../../UiKit'
 
@@ -95,7 +96,10 @@ const usePlateFromMnemonic = ({
   return [plate, addresses]
 }
 
-const VerifyWalletScreen = ({navigation, intl, route}: {intl: IntlShape} & Object /* TODO: type */) => {
+const VerifyWalletScreen = () => {
+  const intl = useIntl()
+  const navigation = useNavigation()
+  const route = (useRoute(): any)
   const {formatMessage} = intl
   const {phrase, networkId, walletImplementationId} = route.params
   const [plate, addresses] = usePlateFromMnemonic({mnemonic: phrase, networkId, walletImplementationId})
@@ -162,7 +166,7 @@ const VerifyWalletScreen = ({navigation, intl, route}: {intl: IntlShape} & Objec
   )
 }
 
-export default injectIntl(VerifyWalletScreen)
+export default VerifyWalletScreen
 
 const WalletInfo = (props) => <View {...props} />
 const Plate = (props) => <View {...props} style={styles.plate} />
