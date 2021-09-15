@@ -28,7 +28,7 @@ import {BigNumber} from 'bignumber.js'
 import {walletChecksum, legacyWalletChecksum} from '@emurgo/cip4-js'
 import ExtendableError from 'es6-error'
 
-import Wallet from '../Wallet'
+import Wallet, {type WalletJSON} from '../Wallet'
 import {WalletInterface} from '../WalletInterface'
 import {ISignRequest} from '../ISignRequest'
 import {MultiToken} from '../MultiToken'
@@ -157,7 +157,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       'ShelleyWallet::create: invalid walletImplementationId',
     )
     const masterKeyPtr = await generateWalletRootKey(mnemonic)
-    const masterKey = Buffer.from(await masterKeyPtr.as_bytes()).toString('hex')
+    const masterKey: string = Buffer.from(await masterKeyPtr.as_bytes()).toString('hex')
     await this.encryptAndSaveMasterKey('MASTER_PASSWORD', masterKey, newPassword)
     const purpose = isByron(implementationId)
       ? CONFIG.NUMBERS.WALLET_TYPE_PURPOSE.BIP44
@@ -167,7 +167,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
       await (await masterKeyPtr.derive(purpose)).derive(CONFIG.NUMBERS.COIN_TYPES.CARDANO)
     ).derive(CONFIG.NUMBERS.ACCOUNT_INDEX + CONFIG.NUMBERS.HARD_DERIVATION_START)
     const accountPubKey = await accountKey.to_public()
-    const accountPubKeyHex = Buffer.from(await accountPubKey.as_bytes()).toString('hex')
+    const accountPubKeyHex: string = Buffer.from(await accountPubKey.as_bytes()).toString('hex')
 
     return await this._initialize(
       networkId,
@@ -195,7 +195,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
 
   // =================== persistence =================== //
 
-  async _runMigrations(data: any, walletMeta: WalletMeta): Promise<void> {
+  async _runMigrations(data: WalletJSON, walletMeta: WalletMeta): Promise<void> {
     /**
      * New versions of Yoroi may involve changes in the data structure used to
      * store the wallet state. Hence, we need to check whether data migrations
@@ -284,7 +284,7 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
   }
 
   // TODO(v-almonacid): move to parent class?
-  async restore(data: any, walletMeta: WalletMeta) {
+  async restore(data: WalletJSON, walletMeta: WalletMeta) {
     Logger.info('restore wallet', walletMeta.name)
     assert.assert(!this.isInitialized, 'restoreWallet: !isInitialized')
 

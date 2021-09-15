@@ -150,6 +150,8 @@ const confirmationCountsSelector = (state: TransactionCacheState) => {
   })
 }
 
+export type TransactionCacheJSON = TransactionCacheState
+
 export class TransactionCache {
   _state: TransactionCacheState = {
     perAddressSyncMetadata: {},
@@ -369,11 +371,11 @@ export class TransactionCache {
     return wasPaginated || count > 0
   }
 
-  toJSON() {
+  toJSON(): TransactionCacheJSON {
     return this._state
   }
 
-  static fromJSON(data: TransactionCacheState) {
+  static fromJSON(data: TransactionCacheJSON) {
     const cache = new TransactionCache()
     // if cache is deprecated it means it was obtained when the old history
     // endpoint was still being used (in versions <= 2.2.1)
