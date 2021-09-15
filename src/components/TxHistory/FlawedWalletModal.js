@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {View, ScrollView, Image} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useIntl, defineMessages} from 'react-intl'
 
 import {Text, Button, Modal} from '../UiKit'
 import {confirmationMessages} from '../../i18n/global-messages'
@@ -31,14 +31,15 @@ const messages = defineMessages({
 })
 
 type Props = {
-  intl: IntlShape,
   visible: boolean,
   onPress: () => any,
   onRequestClose: () => any,
   disableButtons: boolean,
 }
 
-const FlawedWalletModal = ({intl, visible, onPress, onRequestClose, disableButtons}: Props) => {
+const FlawedWalletModal = ({visible, onPress, onRequestClose, disableButtons}: Props) => {
+  const intl = useIntl()
+
   return (
     <Modal visible={visible} onRequestClose={onRequestClose}>
       <ScrollView style={styles.scrollView}>
@@ -65,4 +66,4 @@ const FlawedWalletModal = ({intl, visible, onPress, onRequestClose, disableButto
   )
 }
 
-export default injectIntl(FlawedWalletModal)
+export default FlawedWalletModal
