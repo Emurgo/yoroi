@@ -1,15 +1,14 @@
 // @flow
 
+import type {ComponentType} from 'react'
 import React from 'react'
-import {compose} from 'redux'
 import {FlatList} from 'react-native'
 import {connect} from 'react-redux'
+import {compose} from 'redux'
 
+import {AddressDTOCardano} from '../../crypto/shelley/Address.dto'
 import {isUsedAddressIndexSelector} from '../../selectors'
 import AddressView from './AddressView'
-import {AddressDTOCardano} from '../../crypto/shelley/Address.dto'
-
-import type {ComponentType} from 'react'
 
 const _keyExtractor = (addressInfo) => addressInfo?.address
 const _renderItem = ({item: addressInfo}: {item: any}) => <AddressView addressInfo={addressInfo} />

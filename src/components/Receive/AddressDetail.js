@@ -1,11 +1,10 @@
 // @flow
 
 import React from 'react'
-import QRCode from 'react-native-qrcode-svg'
 import {View} from 'react-native'
+import QRCode from 'react-native-qrcode-svg'
 
 import {COLORS} from '../../styles/config'
-
 import styles from './styles/AddressDetail.style'
 
 type Props = {

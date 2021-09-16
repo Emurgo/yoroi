@@ -1,11 +1,11 @@
 // @flow
 
-import React from 'react'
-import {storiesOf} from '@storybook/react-native'
 import {NavigationRouteContext} from '@react-navigation/native'
+import {storiesOf} from '@storybook/react-native'
+import React from 'react'
 
-import ConnectNanoXScreen from './ConnectNanoXScreen'
 import {CONFIG} from '../../../config/config'
+import ConnectNanoXScreen from './ConnectNanoXScreen'
 
 const devices = [
   {name: 'NANO X 08E4', id: 1},

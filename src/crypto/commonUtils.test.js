@@ -1,10 +1,9 @@
 // @flow
 
-import jestSetup from '../jestSetup'
-
-import {formatPath, generateAdaMnemonic, generateWalletRootKey, encryptData, decryptData} from './commonUtils'
-import {WrongPassword} from './errors'
 import {WALLET_IMPLEMENTATION_REGISTRY} from '../config/types'
+import jestSetup from '../jestSetup'
+import {decryptData, encryptData, formatPath, generateAdaMnemonic, generateWalletRootKey} from './commonUtils'
+import {WrongPassword} from './errors'
 
 jestSetup.setup()
 

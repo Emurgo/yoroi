@@ -5,21 +5,20 @@
  * Shelley- & Byron-compatible address generator
  */
 
+import {BaseAddress, Bip32PublicKey, RewardAddress, StakeCredential} from '@emurgo/react-native-haskell-shelley'
 import _ from 'lodash'
 import type {Moment} from 'moment'
-import {BaseAddress, Bip32PublicKey, StakeCredential, RewardAddress} from '@emurgo/react-native-haskell-shelley'
+import {defaultMemoize} from 'reselect'
 
 import {CONFIG, isByron, isHaskellShelley} from '../../config/config'
 import {getNetworkConfigById} from '../../config/networks'
+import type {NetworkId, WalletImplementationId} from '../../config/types'
 import assert from '../../utils/assert'
-import {defaultMemoize} from 'reselect'
 import {Logger} from '../../utils/logging'
-import * as util from '../byron/util'
-import {ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
-
 import type {CryptoAccount} from '../byron/util'
+import * as util from '../byron/util'
 import type {AddressType} from '../commonUtils'
-import type {WalletImplementationId, NetworkId} from '../../config/types'
+import {ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
 
 export type AddressBlock = [number, Moment, Array<string>]
 

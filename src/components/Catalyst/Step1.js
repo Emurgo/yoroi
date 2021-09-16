@@ -4,27 +4,25 @@
  * Step 1 for the Catalyst registration - landing
  */
 
-import React, {useEffect, useState} from 'react'
-import {View, ScrollView, SafeAreaView, Image, TouchableOpacity, Linking} from 'react-native'
-import {injectIntl, defineMessages} from 'react-intl'
-import {connect} from 'react-redux'
 import {useNavigation} from '@react-navigation/native'
-
-import {generateVotingKeys} from '../../actions/voting'
-import {fetchUTXOs} from '../../actions/utxo'
-import {Text, Button, ProgressStep} from '../UiKit'
-import StandardModal from '../Common/StandardModal'
-import {CATALYST_ROUTES} from '../../RoutesList'
-import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
-import AppDownload from '../../assets/img/pic-catalyst-step1.png'
-import playstoreBadge from '../../assets/img/google-play-badge.png'
-import appstoreBadge from '../../assets/img/app-store-badge.png'
-import {isDelegatingSelector} from '../../selectors'
-
-import styles from './styles/Step1.style'
-
 import type {ComponentType} from 'react'
+import React, {useEffect, useState} from 'react'
 import type {IntlShape} from 'react-intl'
+import {defineMessages, injectIntl} from 'react-intl'
+import {Image, Linking, SafeAreaView, ScrollView, TouchableOpacity, View} from 'react-native'
+import {connect} from 'react-redux'
+
+import {fetchUTXOs} from '../../actions/utxo'
+import {generateVotingKeys} from '../../actions/voting'
+import appstoreBadge from '../../assets/img/app-store-badge.png'
+import playstoreBadge from '../../assets/img/google-play-badge.png'
+import AppDownload from '../../assets/img/pic-catalyst-step1.png'
+import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
+import {CATALYST_ROUTES} from '../../RoutesList'
+import {isDelegatingSelector} from '../../selectors'
+import StandardModal from '../Common/StandardModal'
+import {Button, ProgressStep, Text} from '../UiKit'
+import styles from './styles/Step1.style'
 
 const messages = defineMessages({
   subTitle: {

@@ -3,7 +3,7 @@
 import produce from 'immer'
 import {get, set} from 'lodash'
 
-import type {SegmentReducer, Path} from '../types/reduxTypes'
+import type {Path, SegmentReducer} from '../types/reduxTypes'
 
 const normalizeObjBeforeMap = (data: Array<Object> | Object): Array<Object> => (Array.isArray(data) ? data : [data])
 

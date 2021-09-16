@@ -1,8 +1,8 @@
 // @flow
 
-import React from 'react'
 import type {Node} from 'react'
-import {StyleSheet, Text as RNText, Platform} from 'react-native'
+import React from 'react'
+import {Platform, StyleSheet, Text as RNText} from 'react-native'
 import type {TextStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 import type {TextProps} from 'react-native/Libraries/Text/TextProps'
 

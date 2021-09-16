@@ -1,37 +1,35 @@
 // @flow
 
-import React from 'react'
-import {useSelector, useDispatch} from 'react-redux'
-import {ScrollView, StyleSheet, Switch} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {useNavigation} from '@react-navigation/native'
+import React from 'react'
+import type {MessageDescriptor} from 'react-intl'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {ScrollView, StyleSheet, Switch} from 'react-native'
+import {useDispatch, useSelector} from 'react-redux'
 
-import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
-import {confirmationMessages} from '../../i18n/global-messages'
-
-import {closeWallet, logout, showConfirmationDialog, DIALOG_BUTTONS} from '../../actions'
-import {WALLET_ROOT_ROUTES, SETTINGS_ROUTES} from '../../RoutesList'
-import {
-  isSystemAuthEnabledSelector,
-  easyConfirmationSelector,
-  walletNameSelector,
-  isHWSelector,
-  isReadOnlySelector,
-  walletMetaSelector,
-} from '../../selectors'
-import {
-  SettingsItem,
-  SettingsBuildItem,
-  NavigatedSettingsItem,
-  SettingsSection,
-  PressableSettingsItem,
-} from './SettingsItems'
-import {StatusBar} from '../UiKit'
+import {closeWallet, DIALOG_BUTTONS, logout, showConfirmationDialog} from '../../actions'
 import {isByron, isHaskellShelley} from '../../config/config'
 import {getNetworkConfigById} from '../../config/networks'
-
 import type {NetworkId, WalletImplementationId} from '../../config/types'
-import type {MessageDescriptor} from 'react-intl'
+import {confirmationMessages} from '../../i18n/global-messages'
+import {SETTINGS_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
+import {
+  easyConfirmationSelector,
+  isHWSelector,
+  isReadOnlySelector,
+  isSystemAuthEnabledSelector,
+  walletMetaSelector,
+  walletNameSelector,
+} from '../../selectors'
+import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
+import {StatusBar} from '../UiKit'
+import {
+  NavigatedSettingsItem,
+  PressableSettingsItem,
+  SettingsBuildItem,
+  SettingsItem,
+  SettingsSection,
+} from './SettingsItems'
 
 const messages = defineMessages({
   switchWallet: {

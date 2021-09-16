@@ -1,13 +1,12 @@
 // @flow
 
 import React from 'react'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
 import {View} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import YoroiWalletIcon from '../../assets/YoroiWalletIcon'
-import {Text} from '../UiKit'
-
 import {COLORS} from '../../styles/config'
+import {Text} from '../UiKit'
 import styles from './styles/WalletInitScreen.style'
 
 const messages = defineMessages({

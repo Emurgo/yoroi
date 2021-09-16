@@ -1,10 +1,9 @@
 // @flow
 
+import {action} from '@storybook/addon-actions'
+import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-
-import {storiesOf} from '@storybook/react-native'
-import {action} from '@storybook/addon-actions'
 
 import Checkbox from './Checkbox'
 

@@ -1,12 +1,11 @@
 // @flow
 
 import React from 'react'
-import {SafeAreaView} from 'react-native-safe-area-context'
 import {ScrollView} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {StatusBar} from '../UiKit'
 import TermsOfService from '../Common/TermsOfService'
-
+import {StatusBar} from '../UiKit'
 import styles from './styles/TermsOfServiceScreen.styles'
 
 const TermsOfServiceScreen = () => (

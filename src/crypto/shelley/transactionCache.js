@@ -1,22 +1,21 @@
 // @flow
 
+import {fromPairs, mapValues, max, sum, uniq} from 'lodash'
 import {defaultMemoize} from 'reselect'
-import {uniq, fromPairs, max, mapValues, sum} from 'lodash'
-import assert from '../../utils/assert'
 
-import {ObjectValues} from '../../utils/flow'
-import {limitConcurrency} from '../../utils/promise'
-import {Logger} from '../../utils/logging'
-import * as api from '../../api/shelley/api'
 import {ApiHistoryError} from '../../api/errors'
+import * as api from '../../api/shelley/api'
+import type {RemoteCertificateMeta, TxHistoryRequest} from '../../api/types'
+import {CERTIFICATE_KIND} from '../../api/types'
 import {CONFIG} from '../../config/config'
 import {getCardanoNetworkConfigById} from '../../config/networks'
-import {CERTIFICATE_KIND} from '../../api/types'
-
-import type {Transaction} from '../../types/HistoryTransaction'
-import type {TxHistoryRequest, RemoteCertificateMeta} from '../../api/types'
-import {TRANSACTION_STATUS} from '../../types/HistoryTransaction'
 import type {NetworkId, YoroiProvider} from '../../config/types'
+import type {Transaction} from '../../types/HistoryTransaction'
+import {TRANSACTION_STATUS} from '../../types/HistoryTransaction'
+import assert from '../../utils/assert'
+import {ObjectValues} from '../../utils/flow'
+import {Logger} from '../../utils/logging'
+import {limitConcurrency} from '../../utils/promise'
 
 type SyncMetadata = {
   bestBlockNum: number,

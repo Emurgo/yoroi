@@ -1,14 +1,13 @@
 // @flow
 
 import React from 'react'
-import {View, ScrollView, Platform} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {Platform, ScrollView, View} from 'react-native'
+import {type PressEvent} from 'react-native/Libraries/Types/CoreEventTypes'
 import DeviceInfo from 'react-native-device-info'
 
-import {Text, Button, Modal} from '../UiKit'
 import {CONFIG} from '../../config/config'
-import {type PressEvent} from 'react-native/Libraries/Types/CoreEventTypes'
-
+import {Button, Modal, Text} from '../UiKit'
 import styles from './styles/LedgerTransportSwitchModal.style'
 
 const messages = defineMessages({

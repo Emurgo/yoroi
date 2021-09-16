@@ -1,11 +1,11 @@
 // @flow
 
-import React from 'react'
 import type {Node} from 'react'
+import React from 'react'
 import {View} from 'react-native'
 
-import Text from './Text'
 import styles from './styles/TitledCard.style'
+import Text from './Text'
 
 type ExternalProps = {|
   title?: string,

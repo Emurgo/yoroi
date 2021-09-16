@@ -2,10 +2,10 @@
 /* eslint-disable react-native/no-inline-styles */
 // @flow
 
-import React from 'react'
-import {View, Keyboard} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {validateMnemonic, wordlists} from 'bip39'
+import React from 'react'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {Keyboard, View} from 'react-native'
 
 import {Menu, TextInput} from '../../../UiKit'
 

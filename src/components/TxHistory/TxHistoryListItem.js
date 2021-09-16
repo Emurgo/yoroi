@@ -1,36 +1,34 @@
 // @flow
 
-import React, {Component} from 'react'
-import {compose} from 'redux'
-import {connect} from 'react-redux'
-import {View, TouchableOpacity} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
+import React, {Component} from 'react'
 import type {MessageDescriptor} from 'react-intl'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {TouchableOpacity, View} from 'react-native'
+import {connect} from 'react-redux'
+import {compose} from 'redux'
 
-import {Text, TxIcon} from '../UiKit'
-import utfSymbols from '../../utils/utfSymbols'
+import {MultiToken} from '../../crypto/MultiToken'
+import {TX_HISTORY_ROUTES} from '../../RoutesList'
 import {
-  transactionsInfoSelector,
   availableAssetsSelector,
   defaultNetworkAssetSelector,
-  internalAddressIndexSelector,
   externalAddressIndexSelector,
+  internalAddressIndexSelector,
+  transactionsInfoSelector,
 } from '../../selectors'
-import {TX_HISTORY_ROUTES} from '../../RoutesList'
-import styles from './styles/TxHistoryListItem.style'
-
+import type {IOData, Token, TransactionInfo} from '../../types/HistoryTransaction'
 import {
-  getAssetDenominationOrId,
-  formatTokenInteger,
-  formatTokenFractional,
-  formatTimeToSeconds,
   ASSET_DENOMINATION,
+  formatTimeToSeconds,
+  formatTokenFractional,
+  formatTokenInteger,
+  getAssetDenominationOrId,
 } from '../../utils/format'
-import {MultiToken} from '../../crypto/MultiToken'
-
-import type {TransactionInfo, Token, IOData} from '../../types/HistoryTransaction'
+import utfSymbols from '../../utils/utfSymbols'
+import {Text, TxIcon} from '../UiKit'
+import styles from './styles/TxHistoryListItem.style'
 
 const messages = defineMessages({
   fee: {

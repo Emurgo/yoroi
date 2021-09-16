@@ -1,44 +1,42 @@
 // @flow
 
-import React, {useState, useEffect} from 'react'
+import {useNavigation} from '@react-navigation/native'
+import {BigNumber} from 'bignumber.js'
+import React, {useEffect, useState} from 'react'
+import type {IntlShape} from 'react-intl'
+import {defineMessages, injectIntl} from 'react-intl'
 import {View} from 'react-native'
 import {WebView} from 'react-native-webview'
-import {BigNumber} from 'bignumber.js'
 import {useSelector} from 'react-redux'
-import {injectIntl, defineMessages} from 'react-intl'
-import {useNavigation} from '@react-navigation/native'
 
-import {STAKING_CENTER_ROUTES} from '../../RoutesList'
-import {CONFIG, isNightly, SHOW_PROD_POOLS_IN_DEV, getTestStakingPool} from '../../config/config'
-import {Logger} from '../../utils/logging'
-import {normalizeTokenAmount} from '../../utils/format'
+import {showErrorDialog} from '../../actions'
+import {ApiError, NetworkError} from '../../api/errors'
+import type {RawUtxo} from '../../api/types'
+import {CONFIG, getTestStakingPool, isNightly, SHOW_PROD_POOLS_IN_DEV} from '../../config/config'
+import {InsufficientFunds} from '../../crypto/errors'
 import walletManager from '../../crypto/walletManager'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
-import {showErrorDialog} from '../../actions'
-import {PleaseWaitModal} from '../UiKit'
-import PoolWarningModal from './PoolWarningModal'
-import {ObjectValues} from '../../utils/flow'
+import {STAKING_CENTER_ROUTES} from '../../RoutesList'
 import {
-  utxosSelector,
   accountBalanceSelector,
   defaultNetworkAssetSelector,
-  poolOperatorSelector,
   languageSelector,
+  poolOperatorSelector,
   serverStatusSelector,
+  utxosSelector,
   walletMetaSelector,
 } from '../../selectors'
-import UtxoAutoRefresher from '../Send/UtxoAutoRefresher'
-import AccountAutoRefresher from './AccountAutoRefresher'
-import {NetworkError, ApiError} from '../../api/errors'
-import {InsufficientFunds} from '../../crypto/errors'
-
-import styles from './styles/DelegationCenter.style'
-
-import type {IntlShape} from 'react-intl'
-import type {DefaultAsset} from '../../types/HistoryTransaction'
-import type {RawUtxo} from '../../api/types'
 import type {ServerStatusCache} from '../../state'
+import type {DefaultAsset} from '../../types/HistoryTransaction'
+import {ObjectValues} from '../../utils/flow'
+import {normalizeTokenAmount} from '../../utils/format'
+import {Logger} from '../../utils/logging'
+import UtxoAutoRefresher from '../Send/UtxoAutoRefresher'
+import {PleaseWaitModal} from '../UiKit'
+import AccountAutoRefresher from './AccountAutoRefresher'
 import PoolDetailScreen from './PoolDetailScreen'
+import PoolWarningModal from './PoolWarningModal'
+import styles from './styles/DelegationCenter.style'
 
 const IS_STAKING_ON_TEST_BUILD = isNightly() || CONFIG.IS_TESTNET_BUILD
 

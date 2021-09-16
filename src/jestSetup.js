@@ -3,6 +3,7 @@
 /* eslint-env jest */
 /* This module sets up Jest */
 import fetch from 'node-fetch'
+
 import {Logger, LogLevel} from './utils/logging'
 
 jest.mock('react-native-device-info', () => {

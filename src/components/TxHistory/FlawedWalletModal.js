@@ -1,14 +1,13 @@
 // @flow
 
 import React from 'react'
-import {View, ScrollView, Image} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {Image, ScrollView, View} from 'react-native'
 
-import {Text, Button, Modal} from '../UiKit'
-import {confirmationMessages} from '../../i18n/global-messages'
-
-import styles from './styles/FlawedWalletModal.style'
 import image from '../../assets/img/mnemonic_explanation.png'
+import {confirmationMessages} from '../../i18n/global-messages'
+import {Button, Modal, Text} from '../UiKit'
+import styles from './styles/FlawedWalletModal.style'
 
 const messages = defineMessages({
   title: {

@@ -9,7 +9,7 @@ module.exports = {
     'plugin:react-prefer-function-component/recommended',
     'prettier', // keep this last
   ],
-  plugins: ['react', 'react-native', 'flowtype', 'react-prefer-function-component'],
+  plugins: ['react', 'react-native', 'flowtype', 'react-prefer-function-component', 'eslint-plugin-simple-import-sort'],
   env: {'react-native/react-native': true},
   settings: {
     'import/resolver': {node: {extensions: ['.js', '.android.js', '.ios.js', '.json']}},
@@ -28,6 +28,8 @@ module.exports = {
     'react/no-access-state-in-setstate': 2,
     'react/no-typos': 2,
     'react/sort-comp': [2, {order: ['instance-variables', 'lifecycle', 'everything-else', 'render']}],
+    'simple-import-sort/exports': 'error',
+    'simple-import-sort/imports': 'error',
     'spaced-comment': 1,
   },
   globals: {

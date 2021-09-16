@@ -1,26 +1,25 @@
 // @flow
 
-import React from 'react'
 import {createStackNavigator} from '@react-navigation/stack'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import React from 'react'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
 
-import WalletFreshInitScreen from './WalletFreshInitScreen'
-import WalletInitScreen from './WalletInitScreen'
-import CreateWalletScreen from './CreateWallet/CreateWalletScreen'
-import {RestoreWalletScreen} from './RestoreWallet/RestoreWalletScreen'
-import ImportReadOnlyWalletScreen from './RestoreWallet/ImportReadOnlyWalletScreen'
-import SaveReadOnlyWalletScreen from './RestoreWallet/SaveReadOnlyWalletScreen'
+import {isJormungandr} from '../../config/networks'
+import {defaultNavigationOptions, defaultStackNavigatorOptions, jormunNavigationOptions} from '../../navigationOptions'
+import {WALLET_INIT_ROUTES} from '../../RoutesList'
 import CheckNanoXScreen from './ConnectNanoX/CheckNanoXScreen'
 import ConnectNanoXScreen from './ConnectNanoX/ConnectNanoXScreen'
 import SaveNanoXScreen from './ConnectNanoX/SaveNanoXScreen'
-import MnemonicShowScreen from './CreateWallet/MnemonicShowScreen'
-
-import {defaultNavigationOptions, jormunNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
+import CreateWalletScreen from './CreateWallet/CreateWalletScreen'
 import MnemonicCheckScreen from './CreateWallet/MnemonicCheckScreen'
+import MnemonicShowScreen from './CreateWallet/MnemonicShowScreen'
+import ImportReadOnlyWalletScreen from './RestoreWallet/ImportReadOnlyWalletScreen'
+import {RestoreWalletScreen} from './RestoreWallet/RestoreWalletScreen'
+import SaveReadOnlyWalletScreen from './RestoreWallet/SaveReadOnlyWalletScreen'
 import VerifyRestoredWallet from './RestoreWallet/VerifyRestoredWallet'
 import WalletCredentialsScreen from './RestoreWallet/WalletCredentialsScreen'
-import {WALLET_INIT_ROUTES} from '../../RoutesList'
-import {isJormungandr} from '../../config/networks'
+import WalletFreshInitScreen from './WalletFreshInitScreen'
+import WalletInitScreen from './WalletInitScreen'
 
 const messages = defineMessages({
   addWalletTitle: {

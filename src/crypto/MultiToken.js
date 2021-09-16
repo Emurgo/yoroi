@@ -5,7 +5,6 @@
 import {BigNumber} from 'bignumber.js'
 
 import {getDefaultAssetByNetworkId} from '../config/config'
-
 import type {NetworkId} from '../config/types'
 
 export type TokenLookupKey = {|

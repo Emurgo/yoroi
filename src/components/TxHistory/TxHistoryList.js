@@ -1,19 +1,17 @@
 // @flow
 
-import React from 'react'
-import {View, SectionList} from 'react-native'
-import {injectIntl} from 'react-intl'
-import type {IntlShape} from 'react-intl'
-import _ from 'lodash'
 import {useNavigation} from '@react-navigation/native'
-
-import {Text} from '../UiKit'
-import TxHistoryListItem from './TxHistoryListItem'
-import {formatDateRelative} from '../../utils/format'
-
-import styles from './styles/TxHistoryList.style'
+import _ from 'lodash'
+import React from 'react'
+import type {IntlShape} from 'react-intl'
+import {injectIntl} from 'react-intl'
+import {SectionList, View} from 'react-native'
 
 import type {TransactionInfo} from '../../types/HistoryTransaction'
+import {formatDateRelative} from '../../utils/format'
+import {Text} from '../UiKit'
+import styles from './styles/TxHistoryList.style'
+import TxHistoryListItem from './TxHistoryListItem'
 
 type DayHeaderProps = {
   ts: any,

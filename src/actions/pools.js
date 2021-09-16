@@ -2,11 +2,10 @@
 
 import type {Dispatch} from 'redux'
 
-import walletManager from '../crypto/walletManager'
-import {Logger} from '../utils/logging'
-
-import type {State} from '../state'
 import type {PoolInfoRequest, PoolInfoResponse} from '../api/types'
+import walletManager from '../crypto/walletManager'
+import type {State} from '../state'
+import {Logger} from '../utils/logging'
 
 const _startFetching = () => ({
   type: 'START_FETCHING_POOL_INFO',

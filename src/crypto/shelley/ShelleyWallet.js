@@ -2,83 +2,82 @@
 
 // implements Shelley-era wallets. Also supports legacy Byron wallets
 
-import _ from 'lodash'
-import uuid from 'uuid'
-import DeviceInfo from 'react-native-device-info'
+import type {SignTransactionResponse} from '@cardano-foundation/ledgerjs-hw-app-cardano'
+import {TxAuxiliaryDataSupplementType} from '@cardano-foundation/ledgerjs-hw-app-cardano'
+import {legacyWalletChecksum, walletChecksum} from '@emurgo/cip4-js'
 import {
   Address,
+  AuxiliaryData,
+  BigNum,
   Bip32PrivateKey,
   Bip32PublicKey,
   /* eslint-disable camelcase */
   hash_transaction,
+  LinearFee,
   make_vkey_witness,
+  PrivateKey,
   /* eslint-enable camelcase */
   PublicKey,
-  PrivateKey,
   RewardAddress,
   StakeCredential,
   Transaction,
   TransactionBuilder,
-  BigNum,
-  LinearFee,
-  AuxiliaryData,
 } from '@emurgo/react-native-haskell-shelley'
-import {TxAuxiliaryDataSupplementType} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {BigNumber} from 'bignumber.js'
-import {walletChecksum, legacyWalletChecksum} from '@emurgo/cip4-js'
 import ExtendableError from 'es6-error'
+import _ from 'lodash'
+import DeviceInfo from 'react-native-device-info'
+import uuid from 'uuid'
 
-import Wallet, {type WalletJSON} from '../Wallet'
-import {WalletInterface} from '../WalletInterface'
-import {ISignRequest} from '../ISignRequest'
-import {MultiToken} from '../MultiToken'
-import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
-import {AddressChain, AddressGenerator} from './chain'
-import {generateWalletRootKey, ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
 import * as api from '../../api/shelley/api'
-import {CONFIG, isByron, isHaskellShelley, getCardanoBaseConfig, getWalletConfigById} from '../../config/config'
-import {isHaskellShelleyNetwork, PROVIDERS} from '../../config/networks'
-import * as catalystUtils from './catalystUtils'
-import {NETWORK_REGISTRY} from '../../config/types'
-import assert from '../../utils/assert'
-import {Logger} from '../../utils/logging'
-import {InvalidState, CardanoError} from '../errors'
-import LocalizableError from '../../i18n/LocalizableError'
-import {TransactionCache} from './transactionCache'
-import {signTransaction, newAdaUnsignedTx} from './transactions'
-import {createUnsignedTx as utilsCreateUnsignedTx} from './transactionUtils'
-import {genTimeToSlot} from '../../utils/timeUtils'
-import {versionCompare} from '../../utils/versioning'
-import {
-  filterAddressesByStakingKey,
-  getDelegationStatus,
-  createWithdrawalTx,
-  createDelegationTx,
-} from './delegationUtils'
-import {createLedgerSignTxPayload, signTxWithLedger, buildSignedTransaction} from './ledgerUtils'
-import {normalizeToAddress, toHexOrBase58, deriveRewardAddressHex} from './utils'
-import {createAuxiliaryData} from './metadataUtils'
-
 import type {
-  RawUtxo,
-  TxBodiesRequest,
-  TxBodiesResponse,
   AccountStateResponse,
+  FundInfoResponse,
   PoolInfoRequest,
   PoolInfoResponse,
+  RawUtxo,
   TokenInfoRequest,
   TokenInfoResponse,
-  FundInfoResponse,
+  TxBodiesRequest,
+  TxBodiesResponse,
 } from '../../api/types'
-import type {Addressing, AddressedUtxo, SendTokenList, SignedTx} from './../types'
-import type {DefaultAsset} from '../../types/HistoryTransaction'
-import type {HWDeviceInfo} from '../shelley/ledgerUtils'
-import type {NetworkId, WalletImplementationId, BackendConfig, YoroiProvider} from '../../config/types'
+import {CONFIG, getCardanoBaseConfig, getWalletConfigById, isByron, isHaskellShelley} from '../../config/config'
 import type {CardanoHaskellShelleyNetwork} from '../../config/networks'
+import {isHaskellShelleyNetwork, PROVIDERS} from '../../config/networks'
+import type {BackendConfig, NetworkId, WalletImplementationId, YoroiProvider} from '../../config/types'
+import {NETWORK_REGISTRY} from '../../config/types'
+import LocalizableError from '../../i18n/LocalizableError'
 import type {WalletMeta} from '../../state'
-import type {SignTransactionResponse} from '@cardano-foundation/ledgerjs-hw-app-cardano'
+import type {DefaultAsset} from '../../types/HistoryTransaction'
+import assert from '../../utils/assert'
+import {Logger} from '../../utils/logging'
+import {genTimeToSlot} from '../../utils/timeUtils'
+import {versionCompare} from '../../utils/versioning'
+import {ADDRESS_TYPE_TO_CHANGE, generateWalletRootKey} from '../commonUtils'
+import {CardanoError, InvalidState} from '../errors'
+import {ISignRequest} from '../ISignRequest'
 import type {DefaultTokenEntry} from '../MultiToken'
+import {MultiToken} from '../MultiToken'
+import type {HWDeviceInfo} from '../shelley/ledgerUtils'
+import Wallet, {type WalletJSON} from '../Wallet'
+import {WalletInterface} from '../WalletInterface'
+import type {AddressedUtxo, Addressing, SendTokenList, SignedTx} from './../types'
+import * as catalystUtils from './catalystUtils'
+import {AddressChain, AddressGenerator} from './chain'
+import {
+  createDelegationTx,
+  createWithdrawalTx,
+  filterAddressesByStakingKey,
+  getDelegationStatus,
+} from './delegationUtils'
+import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
+import {buildSignedTransaction, createLedgerSignTxPayload, signTxWithLedger} from './ledgerUtils'
 import type {JSONMetadata} from './metadataUtils'
+import {createAuxiliaryData} from './metadataUtils'
+import {TransactionCache} from './transactionCache'
+import {newAdaUnsignedTx, signTransaction} from './transactions'
+import {createUnsignedTx as utilsCreateUnsignedTx} from './transactionUtils'
+import {deriveRewardAddressHex, normalizeToAddress, toHexOrBase58} from './utils'
 
 export default class ShelleyWallet extends Wallet implements WalletInterface {
   // =================== create =================== //

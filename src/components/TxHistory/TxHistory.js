@@ -1,48 +1,45 @@
 // @flow
 
-import React, {useEffect, useState} from 'react'
-import {useDispatch, useSelector} from 'react-redux'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
-import {View, RefreshControl, ScrollView, Image} from 'react-native'
-import SafeAreaView from 'react-native-safe-area-view'
-import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
+import _ from 'lodash'
+import React, {useEffect, useState} from 'react'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {Image, RefreshControl, ScrollView, View} from 'react-native'
+import SafeAreaView from 'react-native-safe-area-view'
+import {useDispatch, useSelector} from 'react-redux'
 
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {checkForFlawedWallets} from '../../actions'
 import {fetchAccountState} from '../../actions/account'
-import VotingBanner from '../Catalyst/VotingBanner'
-import {Text, Banner, OfflineBanner, StatusBar, WarningBanner} from '../UiKit'
+import {updateHistory} from '../../actions/history'
 import infoIcon from '../../assets/img/icon/info-light-green.png'
+import image from '../../assets/img/no_transactions.png'
+import {CONFIG, isByron, isHaskellShelley, isNightly} from '../../config/config'
+import {isRegistrationOpen} from '../../crypto/shelley/catalystUtils'
+import walletManager from '../../crypto/walletManager'
+import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
+import {CATALYST_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
 import {
-  transactionsInfoSelector,
+  availableAssetsSelector,
+  isFetchingAccountStateSelector,
+  isFlawedWalletSelector,
+  isOnlineSelector,
   isSynchronizingHistorySelector,
   lastHistorySyncErrorSelector,
-  isOnlineSelector,
   tokenBalanceSelector,
-  availableAssetsSelector,
-  walletMetaSelector,
+  transactionsInfoSelector,
   walletIsInitializedSelector,
-  isFlawedWalletSelector,
-  isFetchingAccountStateSelector,
+  walletMetaSelector,
 } from '../../selectors'
-import TxHistoryList from './TxHistoryList'
-import walletManager from '../../crypto/walletManager'
-import {isRegistrationOpen} from '../../crypto/shelley/catalystUtils'
-import {updateHistory} from '../../actions/history'
-import {checkForFlawedWallets} from '../../actions'
-import {Logger} from '../../utils/logging'
-import FlawedWalletModal from './FlawedWalletModal'
-import StandardModal from '../Common/StandardModal'
-import {WALLET_ROOT_ROUTES, CATALYST_ROUTES} from '../../RoutesList'
-import {CONFIG, isByron, isHaskellShelley, isNightly} from '../../config/config'
-
-import {formatTokenWithText} from '../../utils/format'
-import image from '../../assets/img/no_transactions.png'
-import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
-
-import styles from './styles/TxHistory.style'
-
 import type {Token} from '../../types/HistoryTransaction'
+import {formatTokenWithText} from '../../utils/format'
+import {Logger} from '../../utils/logging'
+import VotingBanner from '../Catalyst/VotingBanner'
+import StandardModal from '../Common/StandardModal'
+import {Banner, OfflineBanner, StatusBar, Text, WarningBanner} from '../UiKit'
+import FlawedWalletModal from './FlawedWalletModal'
+import styles from './styles/TxHistory.style'
+import TxHistoryList from './TxHistoryList'
 
 const messages = defineMessages({
   noTransactions: {

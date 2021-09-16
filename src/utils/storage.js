@@ -1,10 +1,10 @@
 // @flow
 
-import assert from './assert'
-
-import ExtendableError from 'es6-error'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import ExtendableError from 'es6-error'
 import _ from 'lodash'
+
+import assert from './assert'
 
 export class StorageError extends ExtendableError {}
 

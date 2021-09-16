@@ -13,14 +13,13 @@
  * - avoid mixing modals with Alert.alert() as this may freeze the UI
  * on iOS. See https://github.com/facebook/react-native/issues/10471
  */
-import React from 'react'
-import {View, Modal as RNModal, TouchableOpacity, Image} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
-
-import styles from './styles/Modal.style'
-import closeIcon from '../../assets/img/close.png'
-
 import type {Node} from 'react'
+import React from 'react'
+import {Image, Modal as RNModal, TouchableOpacity, View} from 'react-native'
+
+import closeIcon from '../../assets/img/close.png'
+import styles from './styles/Modal.style'
 
 type Props = {
   onRequestClose: () => any,

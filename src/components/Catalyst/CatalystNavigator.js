@@ -1,20 +1,19 @@
 // @flow
 
-import React from 'react'
 import {createStackNavigator} from '@react-navigation/stack'
+import React from 'react'
 import {injectIntl} from 'react-intl'
 
-import {CATALYST_ROUTES} from '../../RoutesList'
 import globalMessages from '../../i18n/global-messages'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
-
+import {CATALYST_ROUTES} from '../../RoutesList'
+import BiometricAuthScreen from '../Send/BiometricAuthScreen'
 import CatalystStep1 from './Step1'
 import CatalystStep2 from './Step2'
 import CatalystStep3 from './Step3'
 import CatalystStep4 from './Step4'
 import CatalystStep5 from './Step5'
 import CatalystStep6 from './Step6'
-import BiometricAuthScreen from '../Send/BiometricAuthScreen'
 
 type CatalystNavigatorRoutes = {
   'catalyst-router': any,

@@ -1,17 +1,16 @@
 // @flow
 
 import React from 'react'
-import {View, Image, ScrollView, Dimensions} from 'react-native'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {Dimensions, Image, ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
-import assert from '../../../utils/assert'
-import {Text, Button, StatusBar} from '../../UiKit'
-import {WALLET_INIT_ROUTES} from '../../../RoutesList'
-
-import styles from './styles/MnemonicShowScreen.style'
-import MnemonicBackupImportanceModal from './MnemonicBackupImportanceModal'
 import recoveryPhrase from '../../../assets/img/recovery_phrase.png'
+import {WALLET_INIT_ROUTES} from '../../../RoutesList'
+import assert from '../../../utils/assert'
+import {Button, StatusBar, Text} from '../../UiKit'
+import MnemonicBackupImportanceModal from './MnemonicBackupImportanceModal'
+import styles from './styles/MnemonicShowScreen.style'
 
 const messages = defineMessages({
   mnemonicNote: {

@@ -1,28 +1,26 @@
 // @flow
 
-import React from 'react'
-import {Text, ScrollView, ActivityIndicator} from 'react-native'
-import {useDispatch, useSelector} from 'react-redux'
 import _ from 'lodash'
-import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages} from 'react-intl'
+import React from 'react'
 import type {IntlShape} from 'react-intl'
+import {defineMessages, injectIntl} from 'react-intl'
+import {ActivityIndicator, ScrollView, Text} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
+import {useDispatch, useSelector} from 'react-redux'
 
-import walletManager, {SystemAuthDisabled, KeysAreInvalid} from '../../crypto/walletManager'
-import {InvalidState} from '../../crypto/errors'
-import WalletListItem from './WalletListItem'
-import Screen from '../Screen'
-import {Button, StatusBar, ScreenBackground} from '../UiKit'
-import {WALLET_ROOT_ROUTES, WALLET_INIT_ROUTES, ROOT_ROUTES} from '../../RoutesList'
 import {showErrorDialog, updateVersion} from '../../actions'
-import globalMessages, {errorMessages} from '../../i18n/global-messages'
-import {walletsListSelector} from '../../selectors'
 import {CONFIG, isNightly} from '../../config/config'
 import {isJormungandr} from '../../config/networks'
-
-import styles from './styles/WalletSelectionScreen.style'
-
 import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../config/types'
+import {InvalidState} from '../../crypto/errors'
+import walletManager, {KeysAreInvalid, SystemAuthDisabled} from '../../crypto/walletManager'
+import globalMessages, {errorMessages} from '../../i18n/global-messages'
+import {ROOT_ROUTES, WALLET_INIT_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
+import {walletsListSelector} from '../../selectors'
+import Screen from '../Screen'
+import {Button, ScreenBackground, StatusBar} from '../UiKit'
+import styles from './styles/WalletSelectionScreen.style'
+import WalletListItem from './WalletListItem'
 
 const messages = defineMessages({
   header: {

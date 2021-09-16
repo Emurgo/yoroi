@@ -1,24 +1,23 @@
 // @flow
 
 import React from 'react'
-import {useSelector} from 'react-redux'
-import {View, ScrollView} from 'react-native'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useSelector} from 'react-redux'
 
-import {Button, TextInput, Spacer} from '../UiKit'
-import {
-  validatePassword,
-  getWalletNameError,
-  validateWalletName,
-  REQUIRED_PASSWORD_LENGTH,
-} from '../../utils/validators'
 import {CONFIG} from '../../config/config'
-import styles from './styles/WalletForm.style'
-import {walletNamesSelector} from '../../selectors'
 import globalMessages from '../../i18n/global-messages'
-
+import {walletNamesSelector} from '../../selectors'
+import {
+  getWalletNameError,
+  REQUIRED_PASSWORD_LENGTH,
+  validatePassword,
+  validateWalletName,
+} from '../../utils/validators'
+import {Button, Spacer, TextInput} from '../UiKit'
 import {Checkmark} from '../UiKit/TextInput'
+import styles from './styles/WalletForm.style'
 
 const messages = defineMessages({
   walletNameInputLabel: {

@@ -2,7 +2,6 @@
 
 import React from 'react'
 import {View} from 'react-native'
-
 import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
 export const Spacer = ({

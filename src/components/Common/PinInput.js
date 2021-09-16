@@ -1,14 +1,13 @@
 // @flow
 
-import React from 'react'
 import _ from 'lodash'
-import {Image, View, TouchableHighlight} from 'react-native'
+import React from 'react'
+import {Image, TouchableHighlight, View} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 
-import utfSymbols from '../../utils/utfSymbols'
-import {Text, ScreenBackground} from '../UiKit'
 import backspaceIcon from '../../assets/img/backspace.png'
-
+import utfSymbols from '../../utils/utfSymbols'
+import {ScreenBackground, Text} from '../UiKit'
 import styles from './styles/PinInput.style'
 
 const BACKSPACE = utfSymbols.ERASE_TO_LEFT

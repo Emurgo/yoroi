@@ -1,23 +1,21 @@
 // @flow
 
 import React from 'react'
-import {Text, View, FlatList, TouchableOpacity} from 'react-native'
-import {injectIntl, type IntlShape} from 'react-intl'
-
-import {
-  getAssetDenominationOrUnknown,
-  formatTokenAmount,
-  getAssetDenomination,
-  ASSET_DENOMINATION,
-} from '../../../utils/format'
-
-import baseStyle from './styles/Base.style'
-import assetListTransactionStyle from './styles/AssetListTransaction.style'
-import assetListSendStyle from './styles/AssetListSend.style'
-import globalMessages, {txLabels} from '../../../i18n/global-messages'
+import {type IntlShape, injectIntl} from 'react-intl'
+import {FlatList, Text, TouchableOpacity, View} from 'react-native'
 
 import type {TokenEntry} from '../../../crypto/MultiToken'
+import globalMessages, {txLabels} from '../../../i18n/global-messages'
 import type {Token} from '../../../types/HistoryTransaction'
+import {
+  ASSET_DENOMINATION,
+  formatTokenAmount,
+  getAssetDenomination,
+  getAssetDenominationOrUnknown,
+} from '../../../utils/format'
+import assetListSendStyle from './styles/AssetListSend.style'
+import assetListTransactionStyle from './styles/AssetListTransaction.style'
+import baseStyle from './styles/Base.style'
 
 type NodeStyle = typeof baseStyle | typeof assetListTransactionStyle | typeof assetListSendStyle
 

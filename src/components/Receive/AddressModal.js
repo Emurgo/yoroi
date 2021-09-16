@@ -1,24 +1,22 @@
 // @flow
 
+import Clipboard from '@react-native-community/clipboard'
+import type {ComponentType} from 'react'
 import React from 'react'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {Image, TouchableOpacity, View} from 'react-native'
+import QRCode from 'react-native-qrcode-svg'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {View, TouchableOpacity, Image} from 'react-native'
-import Clipboard from '@react-native-community/clipboard'
-import QRCode from 'react-native-qrcode-svg'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
-import {externalAddressIndexSelector, isHWSelector, walletMetaSelector} from '../../selectors'
-import {formatPath} from '../../crypto/commonUtils'
-import {Text, Button, Modal} from '../UiKit'
-
-import styles from './styles/AddressModal.style'
-import copyIcon from '../../assets/img/icon/copy-ext.png'
 import copiedIcon from '../../assets/img/icon/copied.png'
-
+import copyIcon from '../../assets/img/icon/copy-ext.png'
+import {formatPath} from '../../crypto/commonUtils'
 import type {AddressDTOCardano, KeyHashesCardano} from '../../crypto/shelley/Address.dto'
-import type {ComponentType} from 'react'
+import {externalAddressIndexSelector, isHWSelector, walletMetaSelector} from '../../selectors'
 import type {WalletMeta} from '../../state'
+import {Button, Modal, Text} from '../UiKit'
+import styles from './styles/AddressModal.style'
 
 const messages = defineMessages({
   walletAddress: {

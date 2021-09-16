@@ -1,43 +1,42 @@
 // @flow
 
-import _ from 'lodash'
+import type {WalletChecksum} from '@emurgo/cip4-js'
+import {legacyWalletChecksum, walletChecksum} from '@emurgo/cip4-js'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
-import {walletChecksum, legacyWalletChecksum} from '@emurgo/cip4-js'
+import _ from 'lodash'
 import {type IntlShape} from 'react-intl'
 
-import {WalletInterface} from './WalletInterface'
-import {ISignRequest} from './ISignRequest'
-import ShelleyWallet from './shelley/ShelleyWallet'
-import storage from '../utils/storage'
-import KeyStore from './KeyStore'
+import type {
+  AccountStateResponse,
+  FundInfoResponse,
+  PoolInfoRequest,
+  PoolInfoResponse,
+  RawUtxo,
+  ServerStatusResponse,
+  TokenInfoRequest,
+  TokenInfoResponse,
+  TxBodiesRequest,
+} from '../api/types'
 import {CONFIG, WALLETS} from '../config/config'
-import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../config/types'
 import {isJormungandr} from '../config/networks'
+import type {NetworkId, WalletImplementationId, YoroiProvider} from '../config/types'
+import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../config/types'
+import {canBiometricEncryptionBeEnabled, isSystemAuthSupported} from '../helpers/deviceSettings'
+import type {ServerStatusCache, WalletMeta} from '../state'
+import type {DefaultAsset} from '../types/HistoryTransaction'
 import assert from '../utils/assert'
 import {ObjectValues} from '../utils/flow'
 import {Logger} from '../utils/logging'
-import {canBiometricEncryptionBeEnabled, isSystemAuthSupported} from '../helpers/deviceSettings'
-
-import type {WalletMeta, ServerStatusCache} from '../state'
-import type {
-  RawUtxo,
-  TxBodiesRequest,
-  ServerStatusResponse,
-  PoolInfoRequest,
-  PoolInfoResponse,
-  FundInfoResponse,
-  AccountStateResponse,
-  TokenInfoRequest,
-  TokenInfoResponse,
-} from '../api/types'
-import type {EncryptionMethod, SendTokenList} from './types'
-import type {DefaultAsset} from '../types/HistoryTransaction'
-import type {HWDeviceInfo} from './shelley/ledgerUtils'
-import type {NetworkId, WalletImplementationId, YoroiProvider} from '../config/types'
-import type {WalletChecksum} from '@emurgo/cip4-js'
+import storage from '../utils/storage'
+import {ISignRequest} from './ISignRequest'
+import KeyStore from './KeyStore'
 import type {DefaultTokenEntry} from './MultiToken'
+import type {HWDeviceInfo} from './shelley/ledgerUtils'
 import type {JSONMetadata} from './shelley/metadataUtils'
+import ShelleyWallet from './shelley/ShelleyWallet'
+import type {EncryptionMethod, SendTokenList} from './types'
+import {WalletInterface} from './WalletInterface'
 
 export class WalletClosed extends ExtendableError {}
 export class SystemAuthDisabled extends ExtendableError {}

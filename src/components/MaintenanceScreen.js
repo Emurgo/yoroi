@@ -1,19 +1,17 @@
 // @flow
 
-import React from 'react'
-import {View, Image, BackHandler, AppState} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
-import {compose} from 'redux'
-import {connect} from 'react-redux'
-
-import {Text, Modal, Link, Button} from './UiKit'
-import globalMessages from '../i18n/global-messages'
-import {initApp} from '../actions'
-
-import styles from './styles/MaintenanceScreen.styles'
-import image from '../assets/img/error.png'
-
 import type {ComponentType} from 'react'
+import React from 'react'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {AppState, BackHandler, Image, View} from 'react-native'
+import {connect} from 'react-redux'
+import {compose} from 'redux'
+
+import {initApp} from '../actions'
+import image from '../assets/img/error.png'
+import globalMessages from '../i18n/global-messages'
+import styles from './styles/MaintenanceScreen.styles'
+import {Button, Link, Modal, Text} from './UiKit'
 
 const messages = defineMessages({
   title: {

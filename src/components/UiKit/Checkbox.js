@@ -1,14 +1,13 @@
 // @flow
 
 import React from 'react'
-import {TouchableOpacity, Image} from 'react-native'
+import {Image, TouchableOpacity} from 'react-native'
+import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
-import styles from './styles/Checkbox.style'
-import Text from './Text'
 import checkIcon from '../../assets/img/check.png'
 import checkEmptyIcon from '../../assets/img/check-empty.png'
-
-import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
+import styles from './styles/Checkbox.style'
+import Text from './Text'
 
 type Props = {
   checked: boolean,

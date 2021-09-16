@@ -1,22 +1,20 @@
 // @flow
 
+import type {Node} from 'react'
 import React, {useState} from 'react'
-import {TouchableOpacity, Text, View, Image, LayoutAnimation} from 'react-native'
+import {Image, LayoutAnimation, Text, TouchableOpacity, View} from 'react-native'
+import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
-import {isByron, isHaskellShelley, isJormun, isNightly, CONFIG} from '../../config/config'
-import WalletAccountIcon from '../Common/WalletAccountIcon'
+import AdaIcon from '../../assets/AdaIcon'
 import arrowDown from '../../assets/img/arrow_down.png'
 import arrowUp from '../../assets/img/arrow_up.png'
-import AdaIcon from '../../assets/AdaIcon'
-import AssetList from '../Common/MultiAsset/AssetList'
-
-import styles from './styles/WalletListItem.style'
-import assetListStyle from '../Common/MultiAsset/styles/Base.style'
-import {COLORS} from '../../styles/config'
-
+import {CONFIG, isByron, isHaskellShelley, isJormun, isNightly} from '../../config/config'
 import type {WalletMeta} from '../../state'
-import type {Node} from 'react'
-import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
+import {COLORS} from '../../styles/config'
+import AssetList from '../Common/MultiAsset/AssetList'
+import assetListStyle from '../Common/MultiAsset/styles/Base.style'
+import WalletAccountIcon from '../Common/WalletAccountIcon'
+import styles from './styles/WalletListItem.style'
 
 type Props = {
   wallet: WalletMeta,

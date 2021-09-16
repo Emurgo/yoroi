@@ -1,10 +1,10 @@
 // @flow
 
+import {type Dispatch} from 'redux'
+
+import {ApiHistoryError} from '../api/errors'
 import walletManager, {WalletClosed} from '../crypto/walletManager'
 import {Logger} from '../utils/logging'
-import {ApiHistoryError} from '../api/errors'
-
-import {type Dispatch} from 'redux'
 
 const _startFetch = () => ({
   type: 'Fetch transaction history',

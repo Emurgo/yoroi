@@ -1,10 +1,10 @@
 // @flow
 
 import React from 'react'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
 
-import {pastedFormatter, editedFormatter} from './amountUtils'
 import {ValidatedTextInput} from '../UiKit'
+import {editedFormatter, pastedFormatter} from './amountUtils'
 
 export const messages = defineMessages({
   label: {

@@ -1,15 +1,15 @@
 // @flow
 
-import React from 'react'
+import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import {BigNumber} from 'bignumber.js'
+import React from 'react'
 
+import {withModalProps} from '../../../storybook'
+import {NETWORKS, PRIMARY_ASSET_CONSTANTS} from '../../config/networks'
+import {MultiToken} from '../../crypto/MultiToken'
 import {Modal} from '../UiKit'
 import TransferSummary from './TransferSummary'
-import {action} from '@storybook/addon-actions'
-import {MultiToken} from '../../crypto/MultiToken'
-import {NETWORKS, PRIMARY_ASSET_CONSTANTS} from '../../config/networks'
-import {withModalProps} from '../../../storybook'
 
 const other = {
   // arbitrary values controlled by parent

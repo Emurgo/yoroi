@@ -1,9 +1,8 @@
 // @flow
 
-import React from 'react'
-import {BigNumber} from 'bignumber.js'
-
 import {storiesOf} from '@storybook/react-native'
+import {BigNumber} from 'bignumber.js'
+import React from 'react'
 
 import StakingDashboard from './StakingDashboard'
 

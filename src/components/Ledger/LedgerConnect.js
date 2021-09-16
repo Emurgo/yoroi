@@ -1,33 +1,31 @@
 // @flow
 
-import React from 'react'
-import {
-  View,
-  ScrollView,
-  FlatList,
-  Image,
-  Platform,
-  PermissionsAndroid,
-  RefreshControl,
-  ActivityIndicator,
-} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 import TransportHID from '@v-almonacid/react-native-hid'
+import React from 'react'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  PermissionsAndroid,
+  Platform,
+  RefreshControl,
+  ScrollView,
+  View,
+} from 'react-native'
 
-import {BluetoothDisabledError, RejectedByUserError} from '../../crypto/shelley/ledgerUtils'
-import {Text, BulletPointItem, Button} from '../UiKit'
-import {DeviceItem} from './DeviceItem'
-import {ledgerMessages, confirmationMessages} from '../../i18n/global-messages'
-import {Logger} from '../../utils/logging'
-import LocalizableError from '../../i18n/LocalizableError'
-
-import styles from './styles/LedgerConnect.style'
 import bleImage from '../../assets/img/bluetooth.png'
 import usbImage from '../../assets/img/ledger-nano-usb.png'
-
-import type {Device} from './types'
 import type {DeviceId, DeviceObj} from '../../crypto/shelley/ledgerUtils'
+import {BluetoothDisabledError, RejectedByUserError} from '../../crypto/shelley/ledgerUtils'
+import {confirmationMessages, ledgerMessages} from '../../i18n/global-messages'
+import LocalizableError from '../../i18n/LocalizableError'
+import {Logger} from '../../utils/logging'
+import {BulletPointItem, Button, Text} from '../UiKit'
+import {DeviceItem} from './DeviceItem'
+import styles from './styles/LedgerConnect.style'
+import type {Device} from './types'
 
 const messages = defineMessages({
   caption: {

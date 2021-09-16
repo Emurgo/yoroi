@@ -1,15 +1,14 @@
 // @flow
 
 import React from 'react'
-import {View, Image, ScrollView} from 'react-native'
-import {injectIntl, type IntlShape} from 'react-intl'
-
-import {Text, Button, Modal, Checkbox, Spacer} from '../UiKit'
-import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
-import alertCircle from '../../assets/img/alert-circle.png'
-
-import styles, {alertStyles} from './styles/DangerousActionModal.style'
+import {type IntlShape, injectIntl} from 'react-intl'
+import {Image, ScrollView, View} from 'react-native'
 import {type PressEvent} from 'react-native/Libraries/Types/CoreEventTypes'
+
+import alertCircle from '../../assets/img/alert-circle.png'
+import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
+import {Button, Checkbox, Modal, Spacer, Text} from '../UiKit'
+import styles, {alertStyles} from './styles/DangerousActionModal.style'
 type DangerousActionProps = {|
   +title: string,
   +children: React$Node,

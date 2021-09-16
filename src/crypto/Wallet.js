@@ -3,26 +3,25 @@
 // TODO(v-almonacid): transactionCache should be decoupled from this class.
 // Use an interface instead
 
+import type {WalletChecksum} from '@emurgo/cip4-js'
 import _ from 'lodash'
-import {defaultMemoize} from 'reselect'
 import {type IntlShape} from 'react-intl'
+import {defaultMemoize} from 'reselect'
 
-import KeyStore from './KeyStore'
-import {AddressChain, type AddressChainJSON} from './shelley/chain'
 import * as api from '../api/shelley/api'
 import {CONFIG} from '../config/config'
-import {isJormungandr, getCardanoNetworkConfigById} from '../config/networks'
+import {getCardanoNetworkConfigById, isJormungandr} from '../config/networks'
+import type {NetworkId, WalletImplementationId, YoroiProvider} from '../config/types'
 import assert from '../utils/assert'
 import {Logger} from '../utils/logging'
-import {synchronize, nonblockingSynchronize, IsLockedError} from '../utils/promise'
-import {TransactionCache, type TransactionCacheJSON} from './shelley/transactionCache'
-import {validatePassword} from '../utils/validators'
-
-import type {EncryptionMethod} from './types'
 import type {Mutex} from '../utils/promise'
+import {IsLockedError, nonblockingSynchronize, synchronize} from '../utils/promise'
+import {validatePassword} from '../utils/validators'
+import KeyStore from './KeyStore'
+import {type AddressChainJSON, AddressChain} from './shelley/chain'
 import type {HWDeviceInfo} from './shelley/ledgerUtils'
-import type {NetworkId, WalletImplementationId, YoroiProvider} from '../config/types'
-import type {WalletChecksum} from '@emurgo/cip4-js'
+import {type TransactionCacheJSON, TransactionCache} from './shelley/transactionCache'
+import type {EncryptionMethod} from './types'
 
 type WalletState = {|
   lastGeneratedAddressIndex: number,

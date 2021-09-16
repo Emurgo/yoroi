@@ -1,15 +1,14 @@
 // @flow
 
-import React from 'react'
 import {createStackNavigator} from '@react-navigation/stack'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import React from 'react'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
 
+import iconGear from '../../assets/img/gear.png'
+import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
+import {RECEIVE_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
 import {Button} from '../UiKit'
 import ReceiveScreen from './ReceiveScreen'
-import {RECEIVE_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
-import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
-import iconGear from '../../assets/img/gear.png'
-
 import styles from './styles/SettingsButton.style'
 
 type ReceiveScreenNavigatorRoute = {

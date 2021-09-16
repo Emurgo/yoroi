@@ -1,11 +1,10 @@
 // @flow
 
 /* eslint-env jest */
+import {getCardanoNetworkConfigById, NETWORKS} from '../../config/networks'
 import jestSetup from '../../jestSetup'
-
-import * as api from './api'
 import {ApiError, ApiHistoryError} from '../errors'
-import {NETWORKS, getCardanoNetworkConfigById} from '../../config/networks'
+import * as api from './api'
 
 jestSetup.setup()
 jest.setTimeout(30 * 1000)

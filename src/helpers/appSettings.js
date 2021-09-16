@@ -1,26 +1,25 @@
 // @flow
 
 import ExtendableError from 'es6-error'
-import loadLocalResource from 'react-native-local-resource'
 import _ from 'lodash'
+import loadLocalResource from 'react-native-local-resource'
 
-import storage from '../utils/storage'
-
+import CS_CZ_TOS from '../i18n/locales/terms-of-use/ada/cs-CZ.md'
+import DE_DE_TOS from '../i18n/locales/terms-of-use/ada/de-DE.md'
 import EN_US_TOS from '../i18n/locales/terms-of-use/ada/en-US.md'
+import ES_ES_TOS from '../i18n/locales/terms-of-use/ada/es-ES.md'
+import FR_FR_TOS from '../i18n/locales/terms-of-use/ada/fr-FR.md'
+import HU_HU_TOS from '../i18n/locales/terms-of-use/ada/hu-HU.md'
+import ID_ID_TOS from '../i18n/locales/terms-of-use/ada/id-ID.md'
+import IT_IT_TOS from '../i18n/locales/terms-of-use/ada/it-IT.md'
 import JA_JP_TOS from '../i18n/locales/terms-of-use/ada/ja-JP.md'
 import KO_KR_TOS from '../i18n/locales/terms-of-use/ada/ko-KR.md'
-import RU_RU_TOS from '../i18n/locales/terms-of-use/ada/ru-RU.md'
-import ES_ES_TOS from '../i18n/locales/terms-of-use/ada/es-ES.md'
-import ZH_CN_TOS from '../i18n/locales/terms-of-use/ada/zh-CN.md'
-import ID_ID_TOS from '../i18n/locales/terms-of-use/ada/id-ID.md'
-import PT_BR_TOS from '../i18n/locales/terms-of-use/ada/pt-BR.md'
-import DE_DE_TOS from '../i18n/locales/terms-of-use/ada/de-DE.md'
-import FR_FR_TOS from '../i18n/locales/terms-of-use/ada/fr-FR.md'
-import IT_IT_TOS from '../i18n/locales/terms-of-use/ada/it-IT.md'
 import NL_NL_TOS from '../i18n/locales/terms-of-use/ada/nl-NL.md'
-import CS_CZ_TOS from '../i18n/locales/terms-of-use/ada/cs-CZ.md'
-import HU_HU_TOS from '../i18n/locales/terms-of-use/ada/hu-HU.md'
+import PT_BR_TOS from '../i18n/locales/terms-of-use/ada/pt-BR.md'
+import RU_RU_TOS from '../i18n/locales/terms-of-use/ada/ru-RU.md'
 import SK_SK_TOS from '../i18n/locales/terms-of-use/ada/sk-SK.md'
+import ZH_CN_TOS from '../i18n/locales/terms-of-use/ada/zh-CN.md'
+import storage from '../utils/storage'
 
 const tosByCode = {
   'en-US': EN_US_TOS,

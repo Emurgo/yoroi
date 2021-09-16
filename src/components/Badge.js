@@ -1,7 +1,8 @@
 // @flow
 
 import React from 'react'
-import {StyleSheet, View, Text} from 'react-native'
+import {StyleSheet, Text, View} from 'react-native'
+
 import stylesConfig, {COLORS} from '../styles/config'
 
 const styles = StyleSheet.create({

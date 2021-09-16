@@ -1,13 +1,12 @@
 // @flow
 
-import {CONFIG} from '../config/config'
-import {TRANSACTION_DIRECTION} from '../types/HistoryTransaction'
-import jestSetup from '../jestSetup'
-import {processTxHistoryData} from './processTransactions'
 import {checkAndFacadeTransactionAsync} from '../api/shelley/facade'
-import {MultiToken} from './MultiToken'
-
 import type {RawTransaction} from '../api/types'
+import {CONFIG} from '../config/config'
+import jestSetup from '../jestSetup'
+import {TRANSACTION_DIRECTION} from '../types/HistoryTransaction'
+import {MultiToken} from './MultiToken'
+import {processTxHistoryData} from './processTransactions'
 
 jestSetup.setup()
 

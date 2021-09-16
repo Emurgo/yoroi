@@ -3,9 +3,9 @@
 
 import React from 'react'
 import {View} from 'react-native'
-import {Text} from '.'
-
 import type {TextStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
+
+import {Text} from '.'
 
 type Props = {
   textRow: string,
