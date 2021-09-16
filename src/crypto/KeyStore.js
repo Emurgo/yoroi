@@ -44,6 +44,9 @@ class KeyStore {
         service: dataKey,
         authenticationPrompt: message,
       })
+
+      if (!credentials) throw new Error('credentials not found')
+
       return credentials.password
     }
 
