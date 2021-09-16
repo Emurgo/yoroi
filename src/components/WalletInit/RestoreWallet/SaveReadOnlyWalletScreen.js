@@ -2,7 +2,7 @@
 
 import {useNavigation, useRoute} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 // TODO: in the future, prefer SafeAreaView from react-native-safe-area-context,
 // current version however doesn't work well on iOS
 import {FlatList, SafeAreaView, ScrollView, View} from 'react-native'
@@ -53,7 +53,6 @@ const CheckSumView = ({icon, checksum}: {icon: string, checksum: string}) => (
 )
 
 type WalletInfoProps = {|
-  intl: IntlShape,
   plate: {
     accountPlate: {
       ImagePart: string,
@@ -66,49 +65,50 @@ type WalletInfoProps = {|
   networkId: NetworkId,
 |}
 
-const WalletInfoView = ({intl, plate, normalizedPath, publicKeyHex, networkId}: WalletInfoProps) => (
-  <View style={styles.walletInfoContainer}>
-    <ScrollView style={styles.scrollView}>
-      <View style={styles.checksumContainer}>
-        <Text>{intl.formatMessage(messages.checksumLabel)}</Text>
-        {!!plate.accountPlate.ImagePart && (
-          <CheckSumView icon={plate.accountPlate.ImagePart} checksum={plate.accountPlate.TextPart} />
-        )}
-      </View>
+const WalletInfoView = ({plate, normalizedPath, publicKeyHex, networkId}: WalletInfoProps) => {
+  const intl = useIntl()
 
-      <View style={styles.addressesContainer}>
-        <Text>{intl.formatMessage(messages.walletAddressLabel)}</Text>
-        <FlatList
-          data={plate.addresses}
-          keyExtractor={(item) => item}
-          renderItem={({item}) => <WalletAddress addressHash={item} networkId={networkId} />}
-        />
-      </View>
-
-      <Line />
-
-      <View style={styles.keyAttributesContainer}>
-        <Text style={styles.label}>{intl.formatMessage(messages.key)}</Text>
-        <View style={styles.keyView}>
-          <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">
-            {publicKeyHex}
-          </Text>
+  return (
+    <View style={styles.walletInfoContainer}>
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.checksumContainer}>
+          <Text>{intl.formatMessage(messages.checksumLabel)}</Text>
+          {!!plate.accountPlate.ImagePart && (
+            <CheckSumView icon={plate.accountPlate.ImagePart} checksum={plate.accountPlate.TextPart} />
+          )}
         </View>
 
-        <Text style={styles.label}>{intl.formatMessage(messages.derivationPath)}</Text>
-        <Text secondary monospace>
-          {`m/${normalizedPath[0]}'/${normalizedPath[1]}'/${normalizedPath[2]}`}
-        </Text>
-      </View>
-    </ScrollView>
-  </View>
-)
+        <View style={styles.addressesContainer}>
+          <Text>{intl.formatMessage(messages.walletAddressLabel)}</Text>
+          <FlatList
+            data={plate.addresses}
+            keyExtractor={(item) => item}
+            renderItem={({item}) => <WalletAddress addressHash={item} networkId={networkId} />}
+          />
+        </View>
 
-type Props = {
-  intl: IntlShape,
+        <Line />
+
+        <View style={styles.keyAttributesContainer}>
+          <Text style={styles.label}>{intl.formatMessage(messages.key)}</Text>
+          <View style={styles.keyView}>
+            <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">
+              {publicKeyHex}
+            </Text>
+          </View>
+
+          <Text style={styles.label}>{intl.formatMessage(messages.derivationPath)}</Text>
+          <Text secondary monospace>
+            {`m/${normalizedPath[0]}'/${normalizedPath[1]}'/${normalizedPath[2]}`}
+          </Text>
+        </View>
+      </ScrollView>
+    </View>
+  )
 }
 
-const SaveReadOnlyWalletScreen = ({intl}: Props) => {
+const SaveReadOnlyWalletScreen = () => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const route: any = useRoute()
   const [isWaiting, setIsWaiting] = React.useState(false)
@@ -195,7 +195,6 @@ const SaveReadOnlyWalletScreen = ({intl}: Props) => {
         containerStyle={styles.walletFormStyle}
         bottomContent={
           <WalletInfoView
-            intl={intl}
             plate={plate}
             normalizedPath={normalizedPath}
             publicKeyHex={publicKeyHex}
@@ -209,4 +208,4 @@ const SaveReadOnlyWalletScreen = ({intl}: Props) => {
   )
 }
 
-export default injectIntl(SaveReadOnlyWalletScreen)
+export default SaveReadOnlyWalletScreen

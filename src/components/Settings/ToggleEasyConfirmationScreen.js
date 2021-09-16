@@ -2,7 +2,7 @@
 
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, View} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
@@ -48,7 +48,8 @@ const messages = defineMessages({
   },
 })
 
-const ToggleEasyConfirmationScreen = ({intl}: {intl: IntlShape} & Object /* TODO: type */) => {
+const ToggleEasyConfirmationScreen = () => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
   const dispatch = useDispatch()
@@ -126,4 +127,4 @@ const ToggleEasyConfirmationScreen = ({intl}: {intl: IntlShape} & Object /* TODO
   )
 }
 
-export default injectIntl(ToggleEasyConfirmationScreen)
+export default ToggleEasyConfirmationScreen

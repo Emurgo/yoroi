@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {Image, ScrollView, View} from 'react-native'
 
 import image from '../../assets/img/mnemonic_explanation.png'
@@ -30,14 +30,15 @@ const messages = defineMessages({
 })
 
 type Props = {
-  intl: IntlShape,
   visible: boolean,
   onPress: () => any,
   onRequestClose: () => any,
   disableButtons: boolean,
 }
 
-const FlawedWalletModal = ({intl, visible, onPress, onRequestClose, disableButtons}: Props) => {
+const FlawedWalletModal = ({visible, onPress, onRequestClose, disableButtons}: Props) => {
+  const intl = useIntl()
+
   return (
     <Modal visible={visible} onRequestClose={onRequestClose}>
       <ScrollView style={styles.scrollView}>
@@ -64,4 +65,4 @@ const FlawedWalletModal = ({intl, visible, onPress, onRequestClose, disableButto
   )
 }
 
-export default injectIntl(FlawedWalletModal)
+export default FlawedWalletModal

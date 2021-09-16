@@ -2,7 +2,7 @@
 
 import _ from 'lodash'
 import React from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
@@ -50,7 +50,8 @@ const messages = defineMessages({
   },
 })
 
-const ReceiveScreen = ({intl}: {intl: IntlShape}) => {
+const ReceiveScreen = () => {
+  const intl = useIntl()
   const receiveAddresses = useSelector(receiveAddressesSelector)
   const addressLimitReached = !useSelector(canGenerateNewReceiveAddressSelector)
 
@@ -124,7 +125,7 @@ const ReceiveScreen = ({intl}: {intl: IntlShape}) => {
   )
 }
 
-export default injectIntl(ReceiveScreen)
+export default ReceiveScreen
 
 const Content = (props) => <View {...props} style={styles.content} />
 const Lists = (props) => <View {...props} style={styles.lists} />

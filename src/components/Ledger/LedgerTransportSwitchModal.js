@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView, View} from 'react-native'
 import {type PressEvent} from 'react-native/Libraries/Types/CoreEventTypes'
 import DeviceInfo from 'react-native-device-info'
@@ -59,7 +59,8 @@ const useIsUsbSupported = () => {
   return isUSBSupported
 }
 
-const LedgerTransportSwitchView = ({intl, onSelectUSB, onSelectBLE}: {...Props, intl: IntlShape}) => {
+const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {
+  const intl = useIntl()
   const isUSBSupported = useIsUsbSupported()
 
   const getUsbButtonTitle = (): string => {
@@ -98,7 +99,7 @@ const LedgerTransportSwitchView = ({intl, onSelectUSB, onSelectBLE}: {...Props, 
   )
 }
 
-export const LedgerTransportSwitch = injectIntl(LedgerTransportSwitchView)
+export const LedgerTransportSwitch = LedgerTransportSwitchView
 
 type ModalProps = {|
   visible: boolean,

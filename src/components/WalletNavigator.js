@@ -3,7 +3,7 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {Image} from 'react-native'
 import {useSelector} from 'react-redux'
 
@@ -91,7 +91,8 @@ type WalletTabRoutes = {
 }
 
 const Tab = createBottomTabNavigator<any, WalletTabRoutes, any>()
-const WalletTabNavigator = injectIntl(({intl}: {intl: IntlShape}) => {
+const WalletTabNavigator = () => {
+  const intl = useIntl()
   const walletMeta = useSelector(walletMetaSelector)
   const isReadOnly = useSelector(isReadOnlySelector)
 
@@ -137,7 +138,7 @@ const WalletTabNavigator = injectIntl(({intl}: {intl: IntlShape}) => {
       )}
     </Tab.Navigator>
   )
-})
+}
 
 type WalletStackRoute = {
   'wallet-selection': any,

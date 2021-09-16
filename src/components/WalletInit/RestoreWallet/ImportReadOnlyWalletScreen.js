@@ -3,7 +3,7 @@
 
 import {useFocusEffect, useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StatusBar, StyleSheet, View} from 'react-native'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 
@@ -75,7 +75,8 @@ export type Params = {
   walletImplementationId: string,
 }
 
-const ImportReadOnlyWalletScreen = ({intl}: {intl: IntlShape}) => {
+const ImportReadOnlyWalletScreen = () => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const route = useRoute()
   const {networkId, walletImplementationId}: Params = (route.params: any)
@@ -127,7 +128,7 @@ const ImportReadOnlyWalletScreen = ({intl}: {intl: IntlShape}) => {
   )
 }
 
-export default injectIntl(ImportReadOnlyWalletScreen)
+export default ImportReadOnlyWalletScreen
 
 const CameraOverlay = () => (
   <View

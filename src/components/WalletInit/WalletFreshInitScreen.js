@@ -2,7 +2,7 @@
 
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -38,11 +38,9 @@ const styles = StyleSheet.create({
     padding: 16,
   },
 })
-type Props = {
-  intl: IntlShape,
-}
 
-const WalletInitScreen = ({intl}: Props) => {
+const WalletInitScreen = () => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const navigateInitWallet = (networkId: NetworkId, walletImplementationId: WalletImplementationId) =>
     navigation.navigate(WALLET_INIT_ROUTES.CREATE_RESTORE_SWITCH, {
@@ -110,7 +108,7 @@ const WalletInitScreen = ({intl}: Props) => {
     </SafeAreaView>
   )
 }
-export default injectIntl(WalletInitScreen)
+export default WalletInitScreen
 
 const Actions = (props) => <View {...props} style={styles.actions} />
 

@@ -4,7 +4,7 @@ import {useNavigation, useNavigationState} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 import React, {useEffect, useState} from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {Image, RefreshControl, ScrollView, View} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import {useDispatch, useSelector} from 'react-redux'
@@ -59,44 +59,55 @@ const warningBannerMessages = defineMessages({
   },
 })
 
-const NoTxHistory = injectIntl(({intl}: {intl: IntlShape}) => (
-  <View style={styles.empty}>
-    <Image source={image} />
-    <Text style={styles.emptyText}>{intl.formatMessage(messages.noTransactions)}</Text>
-  </View>
-))
+const NoTxHistory = () => {
+  const intl = useIntl()
 
-const SyncErrorBanner = injectIntl(({intl, showRefresh}: {intl: IntlShape, showRefresh: any}) => (
-  <Banner
-    error
-    text={
-      showRefresh
-        ? intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh)
-        : intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh)
-    }
-  />
-))
+  return (
+    <View style={styles.empty}>
+      <Image source={image} />
+      <Text style={styles.emptyText}>{intl.formatMessage(messages.noTransactions)}</Text>
+    </View>
+  )
+}
+
+const SyncErrorBanner = ({showRefresh}: {showRefresh: any}) => {
+  const intl = useIntl()
+
+  return (
+    <Banner
+      error
+      text={
+        showRefresh
+          ? intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh)
+          : intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh)
+      }
+    />
+  )
+}
 
 type AvailableAmountProps = {|
-  intl: IntlShape,
   amount: BigNumber,
   amountAssetMetaData: Token,
 |}
-const AvailableAmountBanner = injectIntl(({intl, amount, amountAssetMetaData}: AvailableAmountProps) => (
-  <Banner
-    label={intl.formatMessage(globalMessages.availableFunds)}
-    text={amount != null ? formatTokenWithText(amount, amountAssetMetaData) : '-'}
-    boldText
-  />
-))
+const AvailableAmountBanner = ({amount, amountAssetMetaData}: AvailableAmountProps) => {
+  const intl = useIntl()
+
+  return (
+    <Banner
+      label={intl.formatMessage(globalMessages.availableFunds)}
+      text={amount != null ? formatTokenWithText(amount, amountAssetMetaData) : '-'}
+      boldText
+    />
+  )
+}
 
 type FundInfo = ?{|
   +registrationStart: string,
   +registrationEnd: string,
 |}
 
-type Props = {intl: IntlShape}
-const TxHistory = ({intl}: Props) => {
+const TxHistory = () => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const transactionsInfo = useSelector(transactionsInfoSelector)
   const isSyncing = useSelector(isSynchronizingHistorySelector)
@@ -255,4 +266,4 @@ const TxHistory = ({intl}: Props) => {
   )
 }
 
-export default injectIntl(TxHistory)
+export default TxHistory

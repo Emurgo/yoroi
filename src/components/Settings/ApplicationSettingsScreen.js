@@ -2,7 +2,7 @@
 
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet, Switch} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import {useDispatch, useSelector} from 'react-redux'
@@ -80,11 +80,8 @@ const styles = StyleSheet.create({
 
 const version = DeviceInfo.getVersion()
 
-type Props = {
-  intl: IntlShape,
-}
-
-const ApplicationSettingsScreen = ({intl}: Props) => {
+const ApplicationSettingsScreen = () => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const isBiometricHardwareSupported = useSelector(biometricHwSupportSelector)
   const sendCrashReports = useSelector(sendCrashReportsSelector)
@@ -203,4 +200,4 @@ const ApplicationSettingsScreen = ({intl}: Props) => {
     </ScrollView>
   )
 }
-export default injectIntl(ApplicationSettingsScreen)
+export default ApplicationSettingsScreen

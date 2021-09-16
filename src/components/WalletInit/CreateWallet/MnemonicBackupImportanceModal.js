@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 
 import {Button, Checkbox, Modal, Text} from '../../UiKit'
 import styles from './styles/MnemonicBackupImportanceModal.style'
@@ -31,12 +31,12 @@ const messages = defineMessages({
 
 type Props = {
   onConfirm: () => any,
-  intl: IntlShape,
   visible: boolean,
   onRequestClose: () => any,
 }
 
-const MnemonicBackupImportanceModal = ({onConfirm, intl, visible, onRequestClose}: Props) => {
+const MnemonicBackupImportanceModal = ({onConfirm, visible, onRequestClose}: Props) => {
+  const intl = useIntl()
   const [acceptedKeyStorage, setAcceptedKeyStorage] = React.useState(false)
   const [acceptedNewDeviceRecovery, setAcceptedNewDeviceRecovery] = React.useState(false)
 
@@ -67,4 +67,4 @@ const MnemonicBackupImportanceModal = ({onConfirm, intl, visible, onRequestClose
   )
 }
 
-export default injectIntl(MnemonicBackupImportanceModal)
+export default MnemonicBackupImportanceModal

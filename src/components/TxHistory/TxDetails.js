@@ -4,7 +4,7 @@ import {useRoute} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 import React, {useState} from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {Image, LayoutAnimation, Linking, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
@@ -194,10 +194,8 @@ const getShownAddresses = (intl, transaction, internalAddressIndex, externalAddr
   }
 }
 
-type Props = {
-  intl: IntlShape,
-}
-const TxDetails = ({intl}: Props) => {
+const TxDetails = () => {
+  const intl = useIntl()
   const route = (useRoute(): any)
   const transaction = useSelector(transactionsInfoSelector)[route.params.id]
   const internalAddressIndex = useSelector(internalAddressIndexSelector)
@@ -322,4 +320,4 @@ const TxDetails = ({intl}: Props) => {
   )
 }
 
-export default injectIntl(TxDetails)
+export default TxDetails

@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector} from 'react-redux'
@@ -47,11 +47,11 @@ const messages = defineMessages({
 })
 
 type Props = {
-  intl: IntlShape,
   onSubmit: ({name: string, password: string}) => mixed,
 }
 
-const WalletForm = ({intl, onSubmit}: Props) => {
+const WalletForm = ({onSubmit}: Props) => {
+  const intl = useIntl()
   const walletNames = useSelector(walletNamesSelector)
   const [name, setName] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.WALLET_NAME : '')
   const nameErrors = validateWalletName(name, null, walletNames)
@@ -145,7 +145,7 @@ const WalletForm = ({intl, onSubmit}: Props) => {
   )
 }
 
-export default injectIntl(WalletForm)
+export default WalletForm
 
 const WalletNameInput = TextInput
 const PasswordInput = TextInput

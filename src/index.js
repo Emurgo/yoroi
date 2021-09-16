@@ -2,7 +2,7 @@
 
 import bluebird from 'bluebird'
 import React from 'react'
-import {IntlProvider, createIntl, createIntlCache} from 'react-intl'
+import {createIntl, createIntlCache, IntlProvider} from 'react-intl'
 import {AppRegistry, Text} from 'react-native'
 import {Provider, useSelector} from 'react-redux'
 

@@ -1,7 +1,8 @@
 // @flow
 
+import {useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {Dimensions, Image, ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -27,12 +28,10 @@ const messages = defineMessages({
   },
 })
 
-type RouterProps = {
-  route: any,
-  navigation: any,
-}
-
-const MnemonicShowScreen = ({intl, route, navigation}: {|intl: IntlShape|} & RouterProps /* TODO: type */) => {
+const MnemonicShowScreen = () => {
+  const navigation = useNavigation()
+  const route = (useRoute(): any)
+  const intl = useIntl()
   const mnemonic = route.params.mnemonic
   const provider = route.params.provider
   const [modal, setModal] = React.useState(false)
@@ -103,4 +102,4 @@ const MnemonicShowScreen = ({intl, route, navigation}: {|intl: IntlShape|} & Rou
   )
 }
 
-export default injectIntl(MnemonicShowScreen)
+export default MnemonicShowScreen

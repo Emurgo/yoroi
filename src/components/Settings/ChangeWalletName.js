@@ -2,7 +2,7 @@
 
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
@@ -27,11 +27,8 @@ const messages = defineMessages({
   },
 })
 
-type Props = {
-  intl: IntlShape,
-}
-
-const ChangeWalletName = ({intl}: Props) => {
+const ChangeWalletName = () => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const oldWalletName = useSelector(walletNameSelector)
   const walletNames = useSelector(walletNamesSelector)
@@ -83,4 +80,4 @@ const ChangeWalletName = ({intl}: Props) => {
   )
 }
 
-export default injectIntl(ChangeWalletName)
+export default ChangeWalletName

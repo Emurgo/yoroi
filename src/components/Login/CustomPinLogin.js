@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
@@ -21,11 +21,8 @@ const messages = defineMessages({
   },
 })
 
-type Props = {
-  intl: IntlShape,
-}
-
-const CustomPinLogin = injectIntl(({intl}: Props) => {
+const CustomPinLogin = () => {
+  const intl = useIntl()
   const dispatch = useDispatch()
   const customPinHash = useSelector(customPinHashSelector)
   const onPinEnter = async (pin: string) => {
@@ -58,6 +55,6 @@ const CustomPinLogin = injectIntl(({intl}: Props) => {
       />
     </View>
   )
-})
+}
 
-export default injectIntl(CustomPinLogin)
+export default CustomPinLogin
