@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {View, SafeAreaView, Image, ActivityIndicator} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {useSelector} from 'react-redux'
 import {CONFIG} from '../../config/config'
 
@@ -29,7 +29,6 @@ const messages = defineMessages({
 })
 
 type Props = {|
-  intl: IntlShape,
   onSubmit: ({name: string}) => any,
   defaultWalletName?: string,
   image?: ImageSource,
@@ -45,7 +44,6 @@ type Props = {|
 |}
 
 const WalletNameForm = ({
-  intl,
   onSubmit,
   image,
   progress,
@@ -55,6 +53,7 @@ const WalletNameForm = ({
   bottomContent,
   isWaiting = false,
 }: Props) => {
+  const intl = useIntl()
   const [name, setName] = React.useState(CONFIG.HARDWARE_WALLETS.LEDGER_NANO.DEFAULT_WALLET_NAME || '')
   const walletNames = useSelector(walletNamesSelector)
   const validationErrors = validateWalletName(name, null, walletNames)
@@ -108,4 +107,4 @@ const WalletNameForm = ({
   )
 }
 
-export default injectIntl(WalletNameForm)
+export default WalletNameForm

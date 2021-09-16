@@ -2,8 +2,7 @@
 
 import React from 'react'
 import {createStackNavigator} from '@react-navigation/stack'
-import {injectIntl, defineMessages} from 'react-intl'
-import type {IntlShape} from 'react-intl'
+import {useIntl, defineMessages} from 'react-intl'
 
 import {Button} from '../UiKit'
 import SendScreen from './SendScreen'
@@ -61,78 +60,82 @@ type SendScreenNavigatorRoutes = {
 
 const Stack = createStackNavigator<any, SendScreenNavigatorRoutes, any>()
 
-const SendScreenNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
-  <Stack.Navigator
-    initialRouteName={SEND_ROUTES.MAIN}
-    screenOptions={({route}) => ({
-      // $FlowFixMe mixed is incompatible with string
-      title: route.params?.title ?? undefined,
-      ...defaultNavigationOptions,
-      ...defaultStackNavigatorOptions,
-    })}
-  >
-    <Stack.Screen
-      name={SEND_ROUTES.MAIN}
-      component={SendScreen}
-      options={({navigation, route}) => ({
-        title: intl.formatMessage(messages.sendTitle),
-        headerRight: () => (
-          <Button
-            style={styles.qrButton}
-            onPress={() =>
-              navigation.navigate(SEND_ROUTES.ADDRESS_READER_QR, {
-                onSuccess: (stringQR) => {
-                  const regex = /(cardano):([a-zA-Z1-9]\w+)\??/
+const SendScreenNavigator = () => {
+  const intl = useIntl()
 
-                  if (regex.test(stringQR)) {
-                    const address = stringQR.match(regex)[2]
-                    if (stringQR.indexOf('?') !== -1) {
-                      const index = stringQR.indexOf('?')
-                      const params = getParams(stringQR.substr(index))
-                      if ('amount' in params) {
+  return (
+    <Stack.Navigator
+      initialRouteName={SEND_ROUTES.MAIN}
+      screenOptions={({route}) => ({
+        // $FlowFixMe mixed is incompatible with string
+        title: route.params?.title ?? undefined,
+        ...defaultNavigationOptions,
+        ...defaultStackNavigatorOptions,
+      })}
+    >
+      <Stack.Screen
+        name={SEND_ROUTES.MAIN}
+        component={SendScreen}
+        options={({navigation, route}) => ({
+          title: intl.formatMessage(messages.sendTitle),
+          headerRight: () => (
+            <Button
+              style={styles.qrButton}
+              onPress={() =>
+                navigation.navigate(SEND_ROUTES.ADDRESS_READER_QR, {
+                  onSuccess: (stringQR) => {
+                    const regex = /(cardano):([a-zA-Z1-9]\w+)\??/
+
+                    if (regex.test(stringQR)) {
+                      const address = stringQR.match(regex)[2]
+                      if (stringQR.indexOf('?') !== -1) {
+                        const index = stringQR.indexOf('?')
+                        const params = getParams(stringQR.substr(index))
+                        if ('amount' in params) {
+                          setAddress(address, route)
+                          setAmount(params.amount, route)
+                        }
+                      } else {
                         setAddress(address, route)
-                        setAmount(params.amount, route)
+                        // note: after upgrading to react-navigation v5.x, the
+                        // send screen is not unmounted after a tx is sent. If a
+                        // new QR code without an amount field is scanned, the
+                        // previous value may still remain in state
+                        setAmount('', route)
                       }
                     } else {
-                      setAddress(address, route)
-                      // note: after upgrading to react-navigation v5.x, the
-                      // send screen is not unmounted after a tx is sent. If a
-                      // new QR code without an amount field is scanned, the
-                      // previous value may still remain in state
+                      setAddress(stringQR, route)
                       setAmount('', route)
                     }
-                  } else {
-                    setAddress(stringQR, route)
-                    setAmount('', route)
-                  }
-                  navigation.navigate(SEND_ROUTES.MAIN)
-                },
-              })
-            }
-            iconImage={iconQR}
-            title=""
-            withoutBackground
-          />
-        ),
-        ...defaultNavigationOptions,
-      })}
-    />
-    <Stack.Screen
-      name={SEND_ROUTES.ADDRESS_READER_QR}
-      component={AddressReaderQR}
-      options={{title: intl.formatMessage(messages.qrScannerTitle)}}
-    />
-    <Stack.Screen
-      name={SEND_ROUTES.CONFIRM}
-      component={ConfirmScreen}
-      options={{title: intl.formatMessage(messages.confirmTitle)}}
-    />
-    <Stack.Screen
-      name={SEND_ROUTES.BIOMETRICS_SIGNING}
-      component={BiometricAuthScreen}
-      options={{headerShown: false}}
-    />
-  </Stack.Navigator>
-))
+                    navigation.navigate(SEND_ROUTES.MAIN)
+                  },
+                })
+              }
+              iconImage={iconQR}
+              title=""
+              withoutBackground
+            />
+          ),
+          ...defaultNavigationOptions,
+        })}
+      />
+      <Stack.Screen
+        name={SEND_ROUTES.ADDRESS_READER_QR}
+        component={AddressReaderQR}
+        options={{title: intl.formatMessage(messages.qrScannerTitle)}}
+      />
+      <Stack.Screen
+        name={SEND_ROUTES.CONFIRM}
+        component={ConfirmScreen}
+        options={{title: intl.formatMessage(messages.confirmTitle)}}
+      />
+      <Stack.Screen
+        name={SEND_ROUTES.BIOMETRICS_SIGNING}
+        component={BiometricAuthScreen}
+        options={{headerShown: false}}
+      />
+    </Stack.Navigator>
+  )
+}
 
 export default SendScreenNavigator

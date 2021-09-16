@@ -3,7 +3,7 @@
 import React from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {View, ScrollView} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useIntl, defineMessages} from 'react-intl'
 import {useNavigation} from '@react-navigation/native'
 
 import walletManager from '../../crypto/walletManager'
@@ -49,7 +49,8 @@ const messages = defineMessages({
   },
 })
 
-const ToggleEasyConfirmationScreen = ({intl}: {intl: IntlShape} & Object /* TODO: type */) => {
+const ToggleEasyConfirmationScreen = () => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
   const dispatch = useDispatch()
@@ -127,4 +128,4 @@ const ToggleEasyConfirmationScreen = ({intl}: {intl: IntlShape} & Object /* TODO
   )
 }
 
-export default injectIntl(ToggleEasyConfirmationScreen)
+export default ToggleEasyConfirmationScreen

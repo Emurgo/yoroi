@@ -3,7 +3,7 @@
 import React from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import {ScrollView, StyleSheet, Switch} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useIntl, defineMessages} from 'react-intl'
 import {useNavigation} from '@react-navigation/native'
 
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
@@ -112,11 +112,8 @@ const getWalletType = (implementationId: WalletImplementationId): MessageDescrip
   return messages.unknownWalletType
 }
 
-type Props = {
-  intl: IntlShape,
-}
-
-const WalletSettingsScreen = ({intl}: Props) => {
+const WalletSettingsScreen = () => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
   const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
@@ -212,4 +209,4 @@ const WalletSettingsScreen = ({intl}: Props) => {
   )
 }
 
-export default injectIntl(WalletSettingsScreen)
+export default WalletSettingsScreen

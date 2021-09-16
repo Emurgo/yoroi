@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {View, SectionList} from 'react-native'
-import {injectIntl} from 'react-intl'
+import {useIntl} from 'react-intl'
 import type {IntlShape} from 'react-intl'
 import _ from 'lodash'
 import {useNavigation} from '@react-navigation/native'
@@ -39,10 +39,10 @@ type Props = {
   transactions: Dict<TransactionInfo>,
   refreshing: boolean,
   onRefresh: () => any,
-  intl: IntlShape,
 }
 
-const TxHistoryList = ({transactions, refreshing, onRefresh, intl}: Props) => {
+const TxHistoryList = ({transactions, refreshing, onRefresh}: Props) => {
+  const intl = useIntl()
   const navigation = useNavigation()
   // TODO(ppershing): add proper memoization here
   const groupedTransactions = getTransactionsByDate(transactions)
@@ -62,4 +62,4 @@ const TxHistoryList = ({transactions, refreshing, onRefresh, intl}: Props) => {
   )
 }
 
-export default injectIntl(TxHistoryList)
+export default TxHistoryList

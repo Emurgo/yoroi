@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {View, Image} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useIntl, defineMessages} from 'react-intl'
 import Markdown from 'react-native-easy-markdown'
 
 import {Button, Modal} from '../../UiKit'
@@ -29,29 +29,32 @@ const messages = defineMessages({
   },
 })
 
-type ExternalProps = {
+type Props = {
   onConfirm: () => any,
   visible: boolean,
   onRequestClose: () => any,
-  intl: IntlShape,
 }
 
-const MnemonicExplanationModal = ({onConfirm, intl, onRequestClose, visible}: ExternalProps) => (
-  <Modal onRequestClose={onRequestClose} visible={visible} showCloseIcon>
-    <View style={styles.imageContainer}>
-      <Image source={image} />
-    </View>
+const MnemonicExplanationModal = ({onConfirm, onRequestClose, visible}: Props) => {
+  const intl = useIntl()
 
-    <View style={styles.paragraph}>
-      <Markdown>{intl.formatMessage(messages.paragraph1)}</Markdown>
-    </View>
+  return (
+    <Modal onRequestClose={onRequestClose} visible={visible} showCloseIcon>
+      <View style={styles.imageContainer}>
+        <Image source={image} />
+      </View>
 
-    <View style={styles.paragraph}>
-      <Markdown>{intl.formatMessage(messages.paragraph2)}</Markdown>
-    </View>
+      <View style={styles.paragraph}>
+        <Markdown>{intl.formatMessage(messages.paragraph1)}</Markdown>
+      </View>
 
-    <Button onPress={onConfirm} title={intl.formatMessage(messages.nextButton)} testID="mnemonicExplanationModal" />
-  </Modal>
-)
+      <View style={styles.paragraph}>
+        <Markdown>{intl.formatMessage(messages.paragraph2)}</Markdown>
+      </View>
 
-export default injectIntl(MnemonicExplanationModal)
+      <Button onPress={onConfirm} title={intl.formatMessage(messages.nextButton)} testID="mnemonicExplanationModal" />
+    </Modal>
+  )
+}
+
+export default MnemonicExplanationModal

@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {View, TouchableOpacity, Linking, Image} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useIntl, defineMessages} from 'react-intl'
 
 import {Text, StatusBar} from '../UiKit'
 import chevronRight from '../../assets/img/chevron_right.png'
@@ -59,25 +59,25 @@ const LinkingItem = ({title, text, url}: LinkingItemProps) => {
   )
 }
 
-type Props = {
-  intl: IntlShape,
+const SupportScreen = () => {
+  const intl = useIntl()
+
+  return (
+    <View style={styles.container}>
+      <StatusBar type="dark" />
+
+      <LinkingItem
+        url={intl.formatMessage(messages.faqUrl)}
+        title={intl.formatMessage(messages.faqLabel)}
+        text={intl.formatMessage(messages.faqDescription)}
+      />
+      <LinkingItem
+        url={intl.formatMessage(messages.reportUrl)}
+        title={intl.formatMessage(messages.reportLabel)}
+        text={intl.formatMessage(messages.reportDescription)}
+      />
+    </View>
+  )
 }
 
-const SupportScreen = ({intl}: Props) => (
-  <View style={styles.container}>
-    <StatusBar type="dark" />
-
-    <LinkingItem
-      url={intl.formatMessage(messages.faqUrl)}
-      title={intl.formatMessage(messages.faqLabel)}
-      text={intl.formatMessage(messages.faqDescription)}
-    />
-    <LinkingItem
-      url={intl.formatMessage(messages.reportUrl)}
-      title={intl.formatMessage(messages.reportLabel)}
-      text={intl.formatMessage(messages.reportDescription)}
-    />
-  </View>
-)
-
-export default injectIntl(SupportScreen)
+export default SupportScreen

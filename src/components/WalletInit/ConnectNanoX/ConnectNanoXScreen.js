@@ -3,7 +3,7 @@
 import React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useIntl, defineMessages} from 'react-intl'
 
 import LedgerConnect from '../../Ledger/LedgerConnect'
 import {getHWDeviceInfo} from '../../../crypto/shelley/ledgerUtils'
@@ -34,11 +34,11 @@ const styles = StyleSheet.create({
 })
 
 type Props = {
-  intl: IntlShape,
   defaultDevices: ?Array<Device>, // for storybook
 }
 
-const ConnectNanoXScreen = ({intl, defaultDevices}: Props) => {
+const ConnectNanoXScreen = ({defaultDevices}: Props) => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const route = useRoute()
   const walletImplementationId: WalletImplementationId = (route.params?.walletImplementationId: any)
@@ -87,4 +87,4 @@ const ConnectNanoXScreen = ({intl, defaultDevices}: Props) => {
   )
 }
 
-export default injectIntl(ConnectNanoXScreen)
+export default ConnectNanoXScreen

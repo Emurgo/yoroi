@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useIntl, defineMessages} from 'react-intl'
 
 import {pastedFormatter, editedFormatter} from './amountUtils'
 import {ValidatedTextInput} from '../UiKit'
@@ -18,10 +18,10 @@ type Props = {
   setAmount: (amount: string) => mixed,
   error: ?string,
   editable?: boolean,
-  intl: IntlShape,
 }
 
-const AmountField = ({amount, intl, error, editable, setAmount}: Props) => {
+const AmountField = ({amount, error, editable, setAmount}: Props) => {
+  const intl = useIntl()
   const handleSetAmount = (text) => {
     const shorterStringLength = Math.min(text.length, amount.length)
     const wasPasted =
@@ -46,4 +46,4 @@ const AmountField = ({amount, intl, error, editable, setAmount}: Props) => {
   )
 }
 
-export default injectIntl(AmountField)
+export default AmountField

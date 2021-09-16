@@ -5,8 +5,8 @@ import {Text, ScrollView, ActivityIndicator} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 import _ from 'lodash'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages} from 'react-intl'
-import type {IntlShape} from 'react-intl'
+import {useIntl, defineMessages} from 'react-intl'
+import {useNavigation} from '@react-navigation/native'
 
 import walletManager, {SystemAuthDisabled, KeysAreInvalid} from '../../crypto/walletManager'
 import {InvalidState} from '../../crypto/errors'
@@ -39,7 +39,9 @@ const messages = defineMessages({
   },
 })
 
-const WalletListScreen = ({intl, navigation}: {intl: IntlShape} & Object /* TODO: type */) => {
+const WalletListScreen = () => {
+  const intl = useIntl()
+  const navigation = useNavigation()
   const wallets = useSelector(walletsListSelector)
 
   const openWallet = async (wallet) => {
@@ -189,4 +191,4 @@ const WalletListScreen = ({intl, navigation}: {intl: IntlShape} & Object /* TODO
   )
 }
 
-export default injectIntl(WalletListScreen)
+export default WalletListScreen

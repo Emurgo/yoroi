@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {View} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useIntl, defineMessages} from 'react-intl'
 
 import YoroiWalletIcon from '../../assets/YoroiWalletIcon'
 import {Text} from '../UiKit'
@@ -17,17 +17,17 @@ const messages = defineMessages({
   },
 })
 
-type Props = {
-  intl: IntlShape,
+const WalletDescription = () => {
+  const intl = useIntl()
+
+  return (
+    <View style={styles.description}>
+      <YoroiWalletIcon color={COLORS.WHITE} width={208} height={60} />
+      <View style={styles.emurgoCreditsContainer}>
+        <Text light>{intl.formatMessage(messages.slogan)}</Text>
+      </View>
+    </View>
+  )
 }
 
-const WalletDescription = ({intl}: Props) => (
-  <View style={styles.description}>
-    <YoroiWalletIcon color={COLORS.WHITE} width={208} height={60} />
-    <View style={styles.emurgoCreditsContainer}>
-      <Text light>{intl.formatMessage(messages.slogan)}</Text>
-    </View>
-  </View>
-)
-
-export default injectIntl(WalletDescription)
+export default WalletDescription

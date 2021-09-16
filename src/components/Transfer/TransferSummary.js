@@ -4,7 +4,7 @@ import React from 'react'
 import {BigNumber} from 'bignumber.js'
 import {useSelector} from 'react-redux'
 import {View} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useIntl, defineMessages} from 'react-intl'
 
 import TwoActionView from '../Common/TwoActionView'
 import AddressEntry from '../Common/AddressEntry'
@@ -41,7 +41,6 @@ const messages = defineMessages({
 })
 
 type Props = {
-  +intl: IntlShape,
   +withdrawals?: Array<{|
     +address: string,
     +amount: MultiToken,
@@ -59,7 +58,6 @@ type Props = {
 }
 
 const TransferSummary = ({
-  intl,
   withdrawals,
   deregistrations,
   balance,
@@ -69,6 +67,7 @@ const TransferSummary = ({
   onCancel,
   useUSB,
 }: Props) => {
+  const intl = useIntl()
   const walletMeta = useSelector(walletMetaSelector)
   const defaultAsset = useSelector(defaultNetworkAssetSelector)
   const [password, setPassword] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
@@ -161,7 +160,7 @@ const TransferSummary = ({
   )
 }
 
-export default injectIntl(TransferSummary)
+export default TransferSummary
 
 const Item = (props) => <View {...props} style={styles.item} />
 const PasswordInput = TextInput
