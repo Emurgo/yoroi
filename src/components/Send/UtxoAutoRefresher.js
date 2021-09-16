@@ -9,6 +9,7 @@ import type {ComponentType} from 'react'
 import {hasPendingOutgoingTransactionSelector, isFetchingUtxosSelector, isOnlineSelector} from '../../selectors'
 import {fetchUTXOs} from '../../actions/utxo'
 
+// eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
 class UtxoAutoRefresher extends React.Component<{
   isFetching: boolean,
   isOnline: boolean,

@@ -67,6 +67,7 @@ type State = {
   keyHashes: KeyHashesCardano | null,
 }
 
+// eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
 class AddressModal extends React.Component<Props, State> {
   state = {isCopied: false, keyHashes: null}
 

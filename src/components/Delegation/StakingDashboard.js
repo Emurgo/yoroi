@@ -137,6 +137,7 @@ type State = {|
   },
 |}
 
+// eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
 class StakingDashboard extends React.Component<Props, State> {
   state = {
     currentTime: new Date(),

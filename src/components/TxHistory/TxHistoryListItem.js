@@ -129,6 +129,7 @@ type Props = {
   navigation: any, // TODO: type
   intl: IntlShape,
 }
+// eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
 class TxHistoryListItem extends Component<Props> {
   shouldComponentUpdate(nextProps) {
     // Note: technically we should also verify

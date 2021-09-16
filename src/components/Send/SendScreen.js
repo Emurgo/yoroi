@@ -365,6 +365,7 @@ type State = {
   showSendAllWarning: boolean,
 }
 
+// eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
 class SendScreen extends Component<Props, State> {
   state = {
     address: '',

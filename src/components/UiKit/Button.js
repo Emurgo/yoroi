@@ -87,6 +87,7 @@ type ButtonProps = {
   testID?: string,
 }
 
+// eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
 class Button extends React.Component<ButtonProps> {
   render() {
     const {

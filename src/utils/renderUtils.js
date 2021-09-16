@@ -1,3 +1,4 @@
+/* eslint-disable react-prefer-function-component/react-prefer-function-component */
 // @flow
 
 // $FlowFixMe unstable_Profiler is missing fron react annotation

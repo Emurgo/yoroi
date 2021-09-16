@@ -16,6 +16,7 @@ import {fetchAccountState} from '../../actions/account'
 
 import type {RawUtxo} from '../../api/types'
 
+// eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
 class AccountAutoRefresher extends React.Component<{
   isFetching: boolean,
   isOnline: boolean,

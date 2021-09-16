@@ -75,6 +75,7 @@ type State = {|
   waiting: boolean,
 |}
 
+// eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
 class LedgerConnect extends React.Component<Props, State> {
   state = {
     devices: this.props.defaultDevices ? this.props.defaultDevices : [],

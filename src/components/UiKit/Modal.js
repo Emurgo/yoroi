@@ -40,6 +40,7 @@ type State = {
 // Warning: This means that children components are unmounted
 // while on different screen and therefore should not keep any
 // important state!
+// eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
 class Modal extends React.Component<Props, State> {
   state = {
     isFocused: true,

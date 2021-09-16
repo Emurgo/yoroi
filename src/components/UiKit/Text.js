@@ -60,6 +60,7 @@ const androidAdjustsFontSizeToFitFix = (width, childrenLength) => {
   return Math.floor(1.4 * (width / childrenLength))
 }
 
+// eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
 class Text extends React.Component<Props, State> {
   state = {
     fontSize: 0,
