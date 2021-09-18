@@ -1,12 +1,11 @@
 // @flow
 
+import {NavigationRouteContext} from '@react-navigation/native'
+import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {storiesOf} from '@storybook/react-native'
-
-import {RestoreWalletScreen} from '.'
 import {CONFIG} from '../../../../config/config'
-import {NavigationRouteContext} from '@react-navigation/native'
+import {RestoreWalletScreen} from '.'
 
 storiesOf('RestoreWalletScreen', module).add('Default', () => {
   const route = {

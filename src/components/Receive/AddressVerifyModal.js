@@ -1,14 +1,13 @@
 // @flow
 
 import React from 'react'
-import {View, ScrollView, ActivityIndicator} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {ActivityIndicator, ScrollView, View} from 'react-native'
 
-import {Text, Button, Modal} from '../UiKit'
+import {AddressDTOCardano} from '../../crypto/shelley/Address.dto'
 import {confirmationMessages} from '../../i18n/global-messages'
 import HWInstructions from '../Ledger/HWInstructions'
-import {AddressDTOCardano} from '../../crypto/shelley/Address.dto'
-
+import {Button, Modal, Text} from '../UiKit'
 import styles from './styles/AddressVerifyModal.style'
 
 const messages = defineMessages({

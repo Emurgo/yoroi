@@ -1,9 +1,9 @@
 // @flow
 
-import React from 'react'
-import {Alert} from 'react-native'
 import {NavigationRouteContext} from '@react-navigation/native'
 import {storiesOf} from '@storybook/react-native'
+import React from 'react'
+import {Alert} from 'react-native'
 
 import AddressReaderQR from './AddressReaderQR'
 

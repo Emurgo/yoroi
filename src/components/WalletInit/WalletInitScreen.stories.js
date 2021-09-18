@@ -1,12 +1,11 @@
 // @flow
 
+import {NavigationRouteContext} from '@react-navigation/native'
+import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {storiesOf} from '@storybook/react-native'
-
-import WalletInitScreen from './WalletInitScreen'
 import {CONFIG} from '../../config/config'
-import {NavigationRouteContext} from '@react-navigation/native'
+import WalletInitScreen from './WalletInitScreen'
 
 storiesOf('WalletInitScreen', module)
   .add('Byron', () => (

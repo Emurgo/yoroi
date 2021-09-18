@@ -1,15 +1,13 @@
 // @flow
 
 import React from 'react'
-import {View, Image} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {Image, View} from 'react-native'
 import Markdown from 'react-native-easy-markdown'
 
-import {Button, Modal} from '../../UiKit'
-
-import styles from './styles/MnemonicExplanationModal.style'
-
 import image from '../../../assets/img/mnemonic_explanation.png'
+import {Button, Modal} from '../../UiKit'
+import styles from './styles/MnemonicExplanationModal.style'
 
 const messages = defineMessages({
   paragraph1: {

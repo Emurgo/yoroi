@@ -2,15 +2,15 @@
 
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
 import {View} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
-import {Text, TitledCard, Button} from '../../UiKit'
 import TotalAdaIcon from '../../../assets/staking/TotalAdaIcon'
-import TotalRewardIcon from '../../../assets/staking/TotalRewardIcon'
 import TotalDelegatedIcon from '../../../assets/staking/TotalDelegatedIcon'
-import {formatAdaWithText} from '../../../utils/format'
+import TotalRewardIcon from '../../../assets/staking/TotalRewardIcon'
 import globalMessages from '../../../i18n/global-messages'
+import {formatAdaWithText} from '../../../utils/format'
+import {Button, Text, TitledCard} from '../../UiKit'
 import styles from './styles/UserSummary.style'
 
 const messages = defineMessages({

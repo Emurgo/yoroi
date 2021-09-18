@@ -1,17 +1,16 @@
 // @flow
 
 import cryptoRandomString from 'crypto-random-string'
+import type {Dispatch} from 'redux'
 
+import {fetchUTXOs} from '../actions/utxo'
+import {CONFIG} from '../config/config'
 import {encryptWithPassword} from '../crypto/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../crypto/shelley/catalystUtils'
 import walletManager from '../crypto/walletManager'
-import {Logger} from '../utils/logging'
-import {CONFIG} from '../config/config'
-import {fetchUTXOs} from '../actions/utxo'
 import {utxosSelector} from '../selectors'
-
 import type {State} from '../state'
-import type {Dispatch} from 'redux'
+import {Logger} from '../utils/logging'
 
 const _setCatalystKeys = (voting) => ({
   type: 'SET_CATALYST_KEYS',

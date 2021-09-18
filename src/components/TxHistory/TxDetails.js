@@ -1,38 +1,35 @@
 // @flow
 
-import React, {useState} from 'react'
-import {useSelector} from 'react-redux'
-import {View, Linking, TouchableOpacity, LayoutAnimation, Image} from 'react-native'
-import _ from 'lodash'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
-import {BigNumber} from 'bignumber.js'
 import {useRoute} from '@react-navigation/native'
+import {BigNumber} from 'bignumber.js'
+import _ from 'lodash'
+import React, {useState} from 'react'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {Image, LayoutAnimation, Linking, TouchableOpacity, View} from 'react-native'
+import {useSelector} from 'react-redux'
 
-import {
-  transactionsInfoSelector,
-  internalAddressIndexSelector,
-  externalAddressIndexSelector,
-  walletMetaSelector,
-  tokenInfoSelector,
-  defaultNetworkAssetSelector,
-} from '../../selectors'
-import {formatTokenWithSymbol} from '../../utils/format'
-import {Text, Button, OfflineBanner, Banner, StatusBar} from '../UiKit'
+import arrowDown from '../../assets/img/chevron_down.png'
+import arrowUp from '../../assets/img/chevron_up.png'
 import Screen from '../../components/Screen'
+import Copy from '../../components/UiKit/Copy'
 import {getNetworkConfigById} from '../../config/networks'
-import AddressModal from '../Receive/AddressModal'
+import {MultiToken} from '../../crypto/MultiToken'
+import globalMessages from '../../i18n/global-messages'
+import {
+  defaultNetworkAssetSelector,
+  externalAddressIndexSelector,
+  internalAddressIndexSelector,
+  tokenInfoSelector,
+  transactionsInfoSelector,
+  walletMetaSelector,
+} from '../../selectors'
+import {type Token, TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
+import {formatTokenWithSymbol} from '../../utils/format'
 import AssetList from '../Common/MultiAsset/AssetList'
 import assetListStyle from '../Common/MultiAsset/styles/AssetListTransaction.style'
-import {MultiToken} from '../../crypto/MultiToken'
-import Copy from '../../components/UiKit/Copy'
-
+import AddressModal from '../Receive/AddressModal'
+import {Banner, Button, OfflineBanner, StatusBar, Text} from '../UiKit'
 import styles from './styles/TxDetails.style'
-
-import arrowUp from '../../assets/img/chevron_up.png'
-import arrowDown from '../../assets/img/chevron_down.png'
-
-import {TRANSACTION_DIRECTION, type Token} from '../../types/HistoryTransaction'
-import globalMessages from '../../i18n/global-messages'
 
 const txTypeMessages = defineMessages({
   SENT: {

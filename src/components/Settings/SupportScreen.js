@@ -1,12 +1,11 @@
 // @flow
 
 import React from 'react'
-import {View, TouchableOpacity, Linking, Image} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {Image, Linking, TouchableOpacity, View} from 'react-native'
 
-import {Text, StatusBar} from '../UiKit'
 import chevronRight from '../../assets/img/chevron_right.png'
-
+import {StatusBar, Text} from '../UiKit'
 import styles from './styles/SupportScreen.style'
 
 const messages = defineMessages({

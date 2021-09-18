@@ -1,10 +1,10 @@
 // @flow
 
-import React from 'react'
-import {Text} from '../UiKit'
 import {storiesOf} from '@storybook/react-native'
+import React from 'react'
 
 import {withModalProps} from '../../../storybook'
+import {Text} from '../UiKit'
 import DangerousActionModal from './DangerousActionModal'
 
 storiesOf('DangerousActionModal', module)

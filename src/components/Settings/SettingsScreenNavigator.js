@@ -1,27 +1,26 @@
 // @flow
 
-import React from 'react'
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
 import {createStackNavigator} from '@react-navigation/stack'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import React from 'react'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
 
-import WalletSettingsScreen from './WalletSettingsScreen'
-import ApplicationSettingsScreen from './ApplicationSettingsScreen'
-import ChangeWalletName from './ChangeWalletName'
-import SupportScreen from './SupportScreen'
-import LanguagePickerScreen from './ChangeLanguageScreen'
-import BiometricsLinkScreen from './BiometricsLinkScreen'
-import ToggleEasyConfirmationScreen from './ToggleEasyConfirmationScreen'
-import TermsOfServiceScreen from './TermsOfServiceScreen'
-import RemoveWalletScreen from './RemoveWalletScreen'
-import ChangePasswordScreen from './ChangePasswordScreen'
-import ChangeCustomPinScreen from './ChangeCustomPinScreen'
+import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
+import {SETTINGS_ROUTES, SETTINGS_TABS} from '../../RoutesList'
+import {COLORS} from '../../styles/config'
 import CustomPinScreen from '../FirstRun/CustomPinScreen'
 import BiometricAuthScreen from '../Send/BiometricAuthScreen'
-import {SETTINGS_ROUTES, SETTINGS_TABS} from '../../RoutesList'
-import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
-
-import {COLORS} from '../../styles/config'
+import ApplicationSettingsScreen from './ApplicationSettingsScreen'
+import BiometricsLinkScreen from './BiometricsLinkScreen'
+import ChangeCustomPinScreen from './ChangeCustomPinScreen'
+import LanguagePickerScreen from './ChangeLanguageScreen'
+import ChangePasswordScreen from './ChangePasswordScreen'
+import ChangeWalletName from './ChangeWalletName'
+import RemoveWalletScreen from './RemoveWalletScreen'
+import SupportScreen from './SupportScreen'
+import TermsOfServiceScreen from './TermsOfServiceScreen'
+import ToggleEasyConfirmationScreen from './ToggleEasyConfirmationScreen'
+import WalletSettingsScreen from './WalletSettingsScreen'
 
 const messages = defineMessages({
   walletTabTitle: {

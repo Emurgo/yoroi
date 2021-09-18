@@ -1,20 +1,18 @@
 // @flow
 
-import React from 'react'
-import {Button} from '../UiKit'
 import {createStackNavigator} from '@react-navigation/stack'
+import React from 'react'
 import {useSelector} from 'react-redux'
 
-import {walletNameSelector} from '../../selectors'
-import StakingDashboard from './StakingDashboard'
-import BiometricAuthScreen from '../Send/BiometricAuthScreen'
-import {STAKING_DASHBOARD_ROUTES, WALLET_ROOT_ROUTES, SEND_ROUTES} from '../../RoutesList'
 import iconGear from '../../assets/img/gear.png'
 import {isJormungandr} from '../../config/networks'
-
 import {defaultNavigationOptions, defaultStackNavigatorOptions, jormunNavigationOptions} from '../../navigationOptions'
-
+import {SEND_ROUTES, STAKING_DASHBOARD_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
+import {walletNameSelector} from '../../selectors'
+import BiometricAuthScreen from '../Send/BiometricAuthScreen'
 import styles from '../TxHistory/styles/SettingsButton.style'
+import {Button} from '../UiKit'
+import StakingDashboard from './StakingDashboard'
 
 type DelegationNavigatorRoutes = {
   'staking-dashboard': any,

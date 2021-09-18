@@ -1,18 +1,17 @@
 // @flow
 
-import React from 'react'
-import {useSelector, useDispatch} from 'react-redux'
-import {View, ScrollView} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {useNavigation} from '@react-navigation/native'
+import React from 'react'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {ScrollView, View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
+import {useDispatch, useSelector} from 'react-redux'
 
-import {Button, TextInput} from '../UiKit'
-import {walletNameSelector, walletNamesSelector} from '../../selectors'
 import {changeWalletName} from '../../actions'
-import {getWalletNameError, validateWalletName} from '../../utils/validators'
 import globalMessages from '../../i18n/global-messages'
-
+import {walletNameSelector, walletNamesSelector} from '../../selectors'
+import {getWalletNameError, validateWalletName} from '../../utils/validators'
+import {Button, TextInput} from '../UiKit'
 import styles from './styles/ChangeWalletName.style'
 
 const WalletNameInput = TextInput

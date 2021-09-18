@@ -2,15 +2,14 @@
 
 /* eslint-disable camelcase */
 
-import {BigNumber} from 'bignumber.js'
 import {
   Address,
   BaseAddress,
   BigNum,
   Certificate,
   Ed25519KeyHash,
-  LinearFee,
   hash_transaction,
+  LinearFee,
   make_vkey_witness,
   PrivateKey,
   PublicKey,
@@ -20,25 +19,25 @@ import {
   StakeDeregistration,
   StakeRegistration,
 } from '@emurgo/react-native-haskell-shelley'
-import {sortBy} from 'lodash'
+import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
+import {sortBy} from 'lodash'
 
+import type {AccountStateRequest, AccountStateResponse} from '../../api/types'
+import type {CardanoHaskellShelleyNetwork} from '../../config/networks'
+import type {BackendConfig} from '../../config/types'
+import LocalizableError from '../../i18n/LocalizableError'
+import type {DefaultAsset} from '../../types/HistoryTransaction'
+import assert from '../../utils/assert'
+import {ObjectValues} from '../../utils/flow'
+import {Logger} from '../../utils/logging'
+import {CardanoError, InsufficientFunds, RewardAddressEmptyError} from '../errors'
+import {MultiToken} from '../MultiToken'
+import type {AddressedUtxo, Addressing, V4UnsignedTxAddressedUtxoResponse} from '../types'
+import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
+import type {TimestampedCertMeta} from './transactionCache'
 import {newAdaUnsignedTx} from './transactions'
 import {normalizeToAddress} from './utils'
-import {Logger} from '../../utils/logging'
-import LocalizableError from '../../i18n/LocalizableError'
-import {CardanoError, InsufficientFunds, RewardAddressEmptyError} from '../errors'
-import {ObjectValues} from '../../utils/flow'
-import assert from '../../utils/assert'
-import {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
-import {MultiToken} from '../MultiToken'
-
-import type {Addressing, AddressedUtxo, V4UnsignedTxAddressedUtxoResponse} from '../types'
-import type {DefaultAsset} from '../../types/HistoryTransaction'
-import type {TimestampedCertMeta} from './transactionCache'
-import type {AccountStateRequest, AccountStateResponse} from '../../api/types'
-import type {BackendConfig} from '../../config/types'
-import type {CardanoHaskellShelleyNetwork} from '../../config/networks'
 
 const createCertificate = async (
   stakingKey: PublicKey,

@@ -1,11 +1,11 @@
 // @flow
 
-import React from 'react'
-import {storiesOf} from '@storybook/react-native'
 import {action} from '@storybook/addon-actions'
+import {storiesOf} from '@storybook/react-native'
+import React from 'react'
 
-import DeviceItem from './DeviceItem'
 import type {Device} from '../types'
+import DeviceItem from './DeviceItem'
 
 const device: Device = {
   id: 123,

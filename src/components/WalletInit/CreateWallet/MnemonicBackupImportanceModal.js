@@ -1,9 +1,9 @@
 // @flow
 
 import React from 'react'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
 
-import {Text, Button, Checkbox, Modal} from '../../UiKit'
+import {Button, Checkbox, Modal, Text} from '../../UiKit'
 import styles from './styles/MnemonicBackupImportanceModal.style'
 
 const messages = defineMessages({

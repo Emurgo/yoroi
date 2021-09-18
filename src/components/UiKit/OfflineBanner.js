@@ -1,8 +1,8 @@
 // @flow
 
 import React from 'react'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
 import {useSelector} from 'react-redux'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {isOnlineSelector} from '../../selectors'
 import Banner from './Banner'

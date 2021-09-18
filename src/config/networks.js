@@ -2,10 +2,9 @@
 
 import {flatten} from 'lodash'
 
-import {NETWORK_REGISTRY, YOROI_PROVIDER_IDS} from './types'
 import {NUMBERS} from './numbers'
-
 import type {NetworkId, YoroiProvider} from './types'
+import {NETWORK_REGISTRY, YOROI_PROVIDER_IDS} from './types'
 
 const _DEFAULT_BACKEND_RULES = {
   FETCH_UTXOS_MAX_ADDRESSES: 50,

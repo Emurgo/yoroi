@@ -1,20 +1,19 @@
 // @flow
 
-import {NUMBERS} from './numbers'
+import env from '../env'
+import type {DefaultAsset} from '../types/HistoryTransaction'
+import {LogLevel} from '../utils/logging'
+import type {CardanoHaskellShelleyNetwork} from './networks'
 import {
-  NETWORKS,
   DEFAULT_ASSETS,
-  PRIMARY_ASSET_CONSTANTS,
   getNetworkConfigById,
   isHaskellShelleyNetwork,
+  NETWORKS,
+  PRIMARY_ASSET_CONSTANTS,
 } from './networks'
-import {WALLET_IMPLEMENTATION_REGISTRY, DERIVATION_TYPES} from './types'
-import {LogLevel} from '../utils/logging'
-import env from '../env'
-
-import type {WalletImplementation, WalletImplementationId, NetworkId, YoroiProvider} from './types'
-import type {CardanoHaskellShelleyNetwork} from './networks'
-import type {DefaultAsset} from '../types/HistoryTransaction'
+import {NUMBERS} from './numbers'
+import type {NetworkId, WalletImplementation, WalletImplementationId, YoroiProvider} from './types'
+import {DERIVATION_TYPES, WALLET_IMPLEMENTATION_REGISTRY} from './types'
 
 const IS_DEBUG = __DEV__
 

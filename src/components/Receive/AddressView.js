@@ -1,45 +1,42 @@
 // @flow
 
-import React, {useEffect, useState, useCallback} from 'react'
-import {connect} from 'react-redux'
-import {compose} from 'redux'
-import {withStateHandlers, withHandlers} from 'recompose'
-import {View, TouchableOpacity, Image, Platform} from 'react-native'
-import {injectIntl, type IntlShape, defineMessages} from 'react-intl'
 import Clipboard from '@react-native-community/clipboard'
+import type {ComponentType} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {Image, Platform, TouchableOpacity, View} from 'react-native'
+import {connect} from 'react-redux'
+import {withHandlers, withStateHandlers} from 'recompose'
+import {compose} from 'redux'
 
-import {
-  isUsedAddressIndexSelector,
-  externalAddressIndexSelector,
-  hwDeviceInfoSelector,
-  walletMetaSelector,
-} from '../../selectors'
 import {showErrorDialog} from '../../actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
-
-import {Text, Modal} from '../UiKit'
-import AddressModal from './AddressModal'
-import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
-import LedgerConnect from '../Ledger/LedgerConnect'
-import AddressVerifyModal from './AddressVerifyModal'
-import {verifyAddress} from '../../crypto/shelley/ledgerUtils'
-import walletManager from '../../crypto/walletManager'
-import {formatPath} from '../../crypto/commonUtils'
-import {errorMessages} from '../../i18n/global-messages'
-import LocalizableError from '../../i18n/LocalizableError'
-import {Logger} from '../../utils/logging'
-import {CONFIG} from '../../config/config'
-import {getCardanoByronConfig} from '../../config/networks'
-import {AddressDTOCardano} from '../../crypto/shelley/Address.dto'
-
-import styles from './styles/AddressView.style'
+import copiedIcon from '../../assets/img/icon/copied.png'
 import copyIcon from '../../assets/img/icon/copy-ext.png'
 import verifyIcon from '../../assets/img/icon/verify-address.png'
-import copiedIcon from '../../assets/img/icon/copied.png'
-
-import type {ComponentType} from 'react'
-import type {HWDeviceInfo, DeviceId, DeviceObj} from '../../crypto/shelley/ledgerUtils'
+import {CONFIG} from '../../config/config'
+import {getCardanoByronConfig} from '../../config/networks'
+import {formatPath} from '../../crypto/commonUtils'
+import {AddressDTOCardano} from '../../crypto/shelley/Address.dto'
+import type {DeviceId, DeviceObj, HWDeviceInfo} from '../../crypto/shelley/ledgerUtils'
+import {verifyAddress} from '../../crypto/shelley/ledgerUtils'
+import walletManager from '../../crypto/walletManager'
+import {errorMessages} from '../../i18n/global-messages'
+import LocalizableError from '../../i18n/LocalizableError'
+import {
+  externalAddressIndexSelector,
+  hwDeviceInfoSelector,
+  isUsedAddressIndexSelector,
+  walletMetaSelector,
+} from '../../selectors'
 import type {WalletMeta} from '../../state'
+import {Logger} from '../../utils/logging'
+import LedgerConnect from '../Ledger/LedgerConnect'
+import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
+import {Modal, Text} from '../UiKit'
+import AddressModal from './AddressModal'
+import AddressVerifyModal from './AddressVerifyModal'
+import styles from './styles/AddressView.style'
 
 const messages = defineMessages({
   copyLabel: {

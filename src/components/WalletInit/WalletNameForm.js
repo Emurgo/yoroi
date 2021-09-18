@@ -1,21 +1,19 @@
 // @flow
 
 import React from 'react'
-import {View, SafeAreaView, Image, ActivityIndicator} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {ActivityIndicator, Image, SafeAreaView, View} from 'react-native'
+import type {ImageSource} from 'react-native/Libraries/Image/ImageSource'
+import type {TextStyleProp, ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 import {useSelector} from 'react-redux'
-import {CONFIG} from '../../config/config'
 
-import {Button, TextInput, ProgressStep} from '../UiKit'
-import {getWalletNameError, validateWalletName} from '../../utils/validators'
 import globalMessages from '../../../src/i18n/global-messages'
+import {CONFIG} from '../../config/config'
 import {walletNamesSelector} from '../../selectors'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
-
+import {getWalletNameError, validateWalletName} from '../../utils/validators'
+import {Button, ProgressStep, TextInput} from '../UiKit'
 import styles from './styles/WalletNameForm.style'
-
-import type {TextStyleProp, ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
-import type {ImageSource} from 'react-native/Libraries/Image/ImageSource'
 
 const messages = defineMessages({
   walletNameInputLabel: {

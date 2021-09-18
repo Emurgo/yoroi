@@ -1,11 +1,11 @@
 // @flow
 
-import React from 'react'
 import type {Node} from 'react'
-import {StyleSheet, View, ScrollView} from 'react-native'
-import {COLORS} from '../styles/config'
-
+import React from 'react'
+import {ScrollView, StyleSheet, View} from 'react-native'
 import type {ViewProps} from 'react-native/Libraries/Components/View/ViewPropTypes'
+
+import {COLORS} from '../styles/config'
 
 export const screenPadding = 20
 

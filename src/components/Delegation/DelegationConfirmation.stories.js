@@ -1,13 +1,13 @@
 // @flow
 
-import React from 'react'
-import {BigNumber} from 'bignumber.js'
-import {storiesOf} from '@storybook/react-native'
-
-import DelegationConfirmation from './DelegationConfirmation'
-import {getDefaultAssets} from '../../config/config'
-import {MultiToken, getDefaultNetworkTokenEntry} from '../../crypto/MultiToken'
 import {NavigationRouteContext} from '@react-navigation/native'
+import {storiesOf} from '@storybook/react-native'
+import {BigNumber} from 'bignumber.js'
+import React from 'react'
+
+import {getDefaultAssets} from '../../config/config'
+import {getDefaultNetworkTokenEntry, MultiToken} from '../../crypto/MultiToken'
+import DelegationConfirmation from './DelegationConfirmation'
 
 const defaultNetworkId = getDefaultAssets()[0].networkId
 

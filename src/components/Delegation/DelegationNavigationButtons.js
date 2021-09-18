@@ -1,11 +1,10 @@
 // @flow
 
 import React from 'react'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
 import {View} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import {Button} from '../UiKit'
-
 import styles from './styles/DelegationNavigator.style'
 
 const messages = defineMessages({

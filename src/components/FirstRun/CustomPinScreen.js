@@ -1,16 +1,15 @@
 // @flow
 
-import React from 'react'
-import {SafeAreaView} from 'react-native-safe-area-context'
-import {useSelector, useDispatch} from 'react-redux'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {useRoute} from '@react-navigation/native'
+import React from 'react'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {SafeAreaView} from 'react-native-safe-area-context'
+import {useDispatch, useSelector} from 'react-redux'
 
-import PinRegistrationForm from '../Common/PinRegistrationForm'
 import {encryptAndStoreCustomPin, signin} from '../../actions'
 import {isAuthenticatedSelector} from '../../selectors'
+import PinRegistrationForm from '../Common/PinRegistrationForm'
 import {StatusBar} from '../UiKit'
-
 import styles from './styles/CustomPinScreen.style'
 
 const messages = defineMessages({

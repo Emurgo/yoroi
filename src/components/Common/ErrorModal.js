@@ -1,15 +1,14 @@
 // @flow
 
 import React from 'react'
-import {Text, View, Image, TouchableOpacity, ScrollView} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {Image, ScrollView, Text, TouchableOpacity, View} from 'react-native'
 
-import {Modal, Button} from '../UiKit'
-import globalMessages, {errorMessages} from '../../i18n/global-messages'
-import chevronRight from '../../assets/img/chevron_right.png'
 import chevronLeft from '../../assets/img/chevron_left.png'
+import chevronRight from '../../assets/img/chevron_right.png'
 import image from '../../assets/img/error.png'
-
+import globalMessages, {errorMessages} from '../../i18n/global-messages'
+import {Button, Modal} from '../UiKit'
 import styles from './styles/ErrorModal.style'
 
 const messages = defineMessages({

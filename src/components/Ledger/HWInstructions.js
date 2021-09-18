@@ -1,11 +1,11 @@
 // @flow
 
 import React from 'react'
-import {Platform, Text, View, StyleSheet} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {Platform, StyleSheet, Text, View} from 'react-native'
 
-import {BulletPointItem} from '../UiKit'
 import {ledgerMessages} from '../../i18n/global-messages'
+import {BulletPointItem} from '../UiKit'
 
 const messages = defineMessages({
   beforeConfirm: {

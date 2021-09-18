@@ -1,28 +1,26 @@
 // @flow
 
-import React, {useState, useEffect} from 'react'
+import {useNavigation, useRoute} from '@react-navigation/native'
+import React, {useEffect, useState} from 'react'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
 // TODO: in the future, prefer SafeAreaView from react-native-safe-area-context,
 // current version however doesn't work well on iOS
-import {View, SafeAreaView, FlatList, ScrollView} from 'react-native'
-import {injectIntl, type IntlShape, defineMessages} from 'react-intl'
+import {FlatList, SafeAreaView, ScrollView, View} from 'react-native'
 import {useDispatch} from 'react-redux'
-import {useNavigation, useRoute} from '@react-navigation/native'
 
-import {Text, StatusBar, Line} from '../../UiKit'
-import WalletNameForm from '../WalletNameForm'
 import {createWalletWithBip44Account, handleGeneralError} from '../../../actions'
+import {CONFIG} from '../../../config/config'
+import type {NetworkId} from '../../../config/types'
 import {generateShelleyPlateFromKey} from '../../../crypto/shelley/plate'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
-import {CONFIG} from '../../../config/config'
 import assert from '../../../utils/assert'
-import WalletAddress from './WalletAddress'
-import WalletAccountIcon from '../../Common/WalletAccountIcon'
 import {Logger} from '../../../utils/logging'
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
-
+import WalletAccountIcon from '../../Common/WalletAccountIcon'
+import {Line, StatusBar, Text} from '../../UiKit'
+import WalletNameForm from '../WalletNameForm'
 import styles from './styles/SaveReadOnlyWalletScreen.style'
-
-import type {NetworkId} from '../../../config/types'
+import WalletAddress from './WalletAddress'
 
 const messages = defineMessages({
   defaultWalletName: {

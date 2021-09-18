@@ -1,18 +1,16 @@
 // @flow
 
-import React from 'react'
-import {View} from 'react-native'
-import {injectIntl, type IntlShape} from 'react-intl'
 import {useNavigation} from '@react-navigation/native'
+import React from 'react'
+import {type IntlShape, injectIntl} from 'react-intl'
+import {View} from 'react-native'
 
-import PinInput from './PinInput'
-import {CONFIG} from '../../config/config'
 import {showErrorDialog} from '../../actions'
+import {CONFIG} from '../../config/config'
 import {errorMessages} from '../../i18n/global-messages'
-
-import styles from './styles/PinRegistrationForm.style'
-
 import type {PinInputLabels} from './PinInput'
+import PinInput from './PinInput'
+import styles from './styles/PinRegistrationForm.style'
 
 type PinRegistrationFormLabels = {
   PinInput: PinInputLabels,

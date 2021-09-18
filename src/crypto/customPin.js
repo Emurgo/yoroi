@@ -1,6 +1,6 @@
 // @flow
 
-import {encryptData, decryptData} from './commonUtils'
+import {decryptData, encryptData} from './commonUtils'
 import {WrongPassword} from './errors'
 
 export const encryptCustomPin = async (installationId: string, pin: string) => {

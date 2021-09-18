@@ -1,11 +1,10 @@
 // @flow
 
 import React from 'react'
-import {Linking, TouchableOpacity, Text, StyleSheet} from 'react-native'
+import {Linking, StyleSheet, Text, TouchableOpacity} from 'react-native'
+import type {TextStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
 import {COLORS} from '../../styles/config'
-
-import type {TextStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
 const styles = StyleSheet.create({
   text: {

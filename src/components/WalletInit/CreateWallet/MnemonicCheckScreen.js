@@ -1,18 +1,17 @@
 // @flow
 
-import React from 'react'
-import {useDispatch} from 'react-redux'
-import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
-import {View, ScrollView, TouchableOpacity} from 'react-native'
 import {useNavigation, useRoute} from '@react-navigation/native'
+import React from 'react'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {ScrollView, TouchableOpacity, View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
+import {useDispatch} from 'react-redux'
 
+import {createWallet} from '../../../actions'
+import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import assert from '../../../utils/assert'
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
-import {Text, Button, Spacer, StatusBar} from '../../UiKit'
-import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
-import {createWallet} from '../../../actions'
-
+import {Button, Spacer, StatusBar, Text} from '../../UiKit'
 import styles from './styles/MnemonicCheckScreen.style'
 
 const messages = defineMessages({

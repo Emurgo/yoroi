@@ -1,51 +1,49 @@
 // @flow
 
-import {AppState, Alert, Keyboard, Platform} from 'react-native'
-import uuid from 'uuid'
 import {type IntlShape} from 'react-intl'
-import DeviceInfo from 'react-native-device-info'
+import {Alert, AppState, Keyboard, Platform} from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
+import DeviceInfo from 'react-native-device-info'
+import {type Dispatch} from 'redux'
+import uuid from 'uuid'
 
-import crashReporting from './helpers/crashReporting'
-import globalMessages, {errorMessages} from './i18n/global-messages'
-import {Logger} from './utils/logging'
-import walletManager from './crypto/walletManager'
+import {clearAccountState} from './actions/account'
 import {mirrorTxHistory, setBackgroundSyncError, updateHistory} from './actions/history'
 import {changeAndSaveLanguage} from './actions/language'
-import {clearUTXOs} from './actions/utxo'
-import {clearAccountState} from './actions/account'
 import {fetchTokenInfo} from './actions/tokenInfo'
-import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys, removeAppSignInKeys} from './helpers/deviceSettings'
-
-import {backgroundLockListener} from './helpers/backgroundLockHelper'
-import {encryptCustomPin} from './crypto/customPin'
-import {
-  readAppSettings,
-  writeAppSettings,
-  removeAppSettings,
-  AppSettingsError,
-  APP_SETTINGS_KEYS,
-  type AppSettingsKey,
-} from './helpers/appSettings'
-import networkInfo from './utils/networkInfo'
-import {
-  installationIdSelector,
-  isSystemAuthEnabledSelector,
-  sendCrashReportsSelector,
-  currentVersionSelector,
-  isAppSetupCompleteSelector,
-} from './selectors'
-import assert from './utils/assert'
-import KeyStore from './crypto/KeyStore'
+import {clearUTXOs} from './actions/utxo'
 import * as api from './api/shelley/api'
-import {ISignRequest} from './crypto/ISignRequest'
 import {CONFIG} from './config/config'
 import {getCardanoNetworkConfigById} from './config/networks'
-
-import {type Dispatch} from 'redux'
-import type {State, ServerStatusCache} from './state'
-import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from './config/types'
+import {encryptCustomPin} from './crypto/customPin'
+import {ISignRequest} from './crypto/ISignRequest'
+import KeyStore from './crypto/KeyStore'
+import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
+import walletManager from './crypto/walletManager'
+import {
+  type AppSettingsKey,
+  APP_SETTINGS_KEYS,
+  AppSettingsError,
+  readAppSettings,
+  removeAppSettings,
+  writeAppSettings,
+} from './helpers/appSettings'
+import {backgroundLockListener} from './helpers/backgroundLockHelper'
+import crashReporting from './helpers/crashReporting'
+import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys, removeAppSignInKeys} from './helpers/deviceSettings'
+import globalMessages, {errorMessages} from './i18n/global-messages'
+import {
+  currentVersionSelector,
+  installationIdSelector,
+  isAppSetupCompleteSelector,
+  isSystemAuthEnabledSelector,
+  sendCrashReportsSelector,
+} from './selectors'
+import type {ServerStatusCache, State} from './state'
+import assert from './utils/assert'
+import {Logger} from './utils/logging'
+import networkInfo from './utils/networkInfo'
 
 const updateCrashlytics = (fieldName: AppSettingsKey, value: any) => {
   const handlers = {

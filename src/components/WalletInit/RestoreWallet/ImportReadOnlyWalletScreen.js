@@ -1,19 +1,19 @@
 /* eslint-disable react-native/no-inline-styles */
 // @flow
 
+import {useFocusEffect, useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
-import {View, ScrollView, StyleSheet, StatusBar} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
-import {useNavigation, useRoute, useFocusEffect} from '@react-navigation/native'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {ScrollView, StatusBar, StyleSheet, View} from 'react-native'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 
-import {theme} from '../../../styles/config'
-import {Text, BulletPointItem, Spacer} from '../../UiKit'
-import {WALLET_INIT_ROUTES} from '../../../RoutesList'
-import {Logger} from '../../../utils/logging'
-import {errorMessages} from '../../../i18n/global-messages'
 import {showErrorDialog} from '../../../actions'
-import {isValidPublicKey, isCIP1852AccountPath} from '../../../utils/bip44Validators'
+import {errorMessages} from '../../../i18n/global-messages'
+import {WALLET_INIT_ROUTES} from '../../../RoutesList'
+import {theme} from '../../../styles/config'
+import {isCIP1852AccountPath, isValidPublicKey} from '../../../utils/bip44Validators'
+import {Logger} from '../../../utils/logging'
+import {BulletPointItem, Spacer, Text} from '../../UiKit'
 
 const messages = defineMessages({
   paragraph: {

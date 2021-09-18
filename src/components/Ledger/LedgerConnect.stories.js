@@ -1,11 +1,11 @@
 // @flow
 
-import React from 'react'
 import {storiesOf} from '@storybook/react-native'
+import React from 'react'
 
 import {withModalProps} from '../../../storybook'
-import LedgerConnect from './LedgerConnect'
 import {Modal} from '../UiKit'
+import LedgerConnect from './LedgerConnect'
 
 const devices = [
   {name: 'NANO X 08E4', id: 1},

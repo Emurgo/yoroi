@@ -1,11 +1,10 @@
 // @flow
 
+import {NavigationRouteContext} from '@react-navigation/native'
+import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {storiesOf} from '@storybook/react-native'
-
 import ImportReadOnlyWalletScreen from './ImportReadOnlyWalletScreen'
-import {NavigationRouteContext} from '@react-navigation/native'
 
 storiesOf('ImportReadOnlyWalletScreen', module).add('Default', () => (
   <NavigationRouteContext.Provider

@@ -1,13 +1,12 @@
 // @flow
 
 import React from 'react'
-import {ScrollView, StyleSheet, SafeAreaView, TouchableOpacity} from 'react-native'
+import {SafeAreaView, ScrollView, StyleSheet, TouchableOpacity} from 'react-native'
 
-import {Text, Button, StatusBar} from './UiKit'
 import {ROOT_ROUTES} from '../RoutesList'
-import storage from '../utils/storage'
-
 import type {Navigation} from '../types/navigation'
+import storage from '../utils/storage'
+import {Button, StatusBar, Text} from './UiKit'
 
 const routes = [
   {label: 'Storybook', path: ROOT_ROUTES.STORYBOOK},

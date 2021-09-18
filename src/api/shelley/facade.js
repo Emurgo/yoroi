@@ -2,12 +2,11 @@
 
 import moment from 'moment'
 
-import assert from '../../utils/assert'
-import {TRANSACTION_STATUS} from '../../types/HistoryTransaction'
-import {normalizeToAddress} from '../../crypto/shelley/utils'
-
-import type {Transaction, TransactionStatus} from '../../types/HistoryTransaction'
 import type {RawTransaction} from '../../api/types'
+import {normalizeToAddress} from '../../crypto/shelley/utils'
+import type {Transaction, TransactionStatus} from '../../types/HistoryTransaction'
+import {TRANSACTION_STATUS} from '../../types/HistoryTransaction'
+import assert from '../../utils/assert'
 
 const checkAndFacadeStatus = (status: string): TransactionStatus => {
   const mapping = {

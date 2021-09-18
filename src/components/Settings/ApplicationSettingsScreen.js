@@ -1,29 +1,28 @@
 // @flow
 
-import React from 'react'
-import {useSelector, useDispatch} from 'react-redux'
-import {ScrollView, StyleSheet, Switch, Platform} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {useNavigation} from '@react-navigation/native'
+import React from 'react'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {Platform, ScrollView, StyleSheet, Switch} from 'react-native'
+import DeviceInfo from 'react-native-device-info'
+import {useDispatch, useSelector} from 'react-redux'
 
-import {SETTINGS_ROUTES} from '../../RoutesList'
-import {errorMessages} from '../../i18n/global-messages'
 import {setAppSettingField, setSystemAuth, showErrorDialog} from '../../actions'
-import {APP_SETTINGS_KEYS} from '../../helpers/appSettings'
 import {CONFIG} from '../../config/config'
-import {isBiometricEncryptionHardwareSupported, canBiometricEncryptionBeEnabled} from '../../helpers/deviceSettings'
-import {SettingsItem, SettingsBuildItem, NavigatedSettingsItem, SettingsSection} from './SettingsItems'
+import KeyStore from '../../crypto/KeyStore'
+import walletManager from '../../crypto/walletManager'
+import {APP_SETTINGS_KEYS} from '../../helpers/appSettings'
+import {canBiometricEncryptionBeEnabled, isBiometricEncryptionHardwareSupported} from '../../helpers/deviceSettings'
+import {errorMessages} from '../../i18n/global-messages'
+import {SETTINGS_ROUTES} from '../../RoutesList'
 import {
   biometricHwSupportSelector,
-  isSystemAuthEnabledSelector,
   installationIdSelector,
+  isSystemAuthEnabledSelector,
   sendCrashReportsSelector,
 } from '../../selectors'
-import walletManager from '../../crypto/walletManager'
-import KeyStore from '../../crypto/KeyStore'
 import {StatusBar} from '../UiKit'
-
-import DeviceInfo from 'react-native-device-info'
+import {NavigatedSettingsItem, SettingsBuildItem, SettingsItem, SettingsSection} from './SettingsItems'
 
 const messages = defineMessages({
   language: {

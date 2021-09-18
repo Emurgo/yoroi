@@ -1,11 +1,10 @@
 // @flow
 
+import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {storiesOf} from '@storybook/react-native'
-
-import MnemonicExplanationModal from './MnemonicExplanationModal'
 import {withModalProps} from '../../../../storybook'
+import MnemonicExplanationModal from './MnemonicExplanationModal'
 
 storiesOf('MnemonicExplanationModal', module)
   .addDecorator(withModalProps)

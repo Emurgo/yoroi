@@ -1,11 +1,9 @@
 // @flow
 
-import jestSetup from '../../jestSetup'
-
-import {getMasterKeyFromMnemonic, getAccountFromMasterKey, getExternalAddresses, getAddressInHex} from './util'
-
 import {CONFIG} from '../../config/config'
 import {getCardanoByronConfig} from '../../config/networks'
+import jestSetup from '../../jestSetup'
+import {getAccountFromMasterKey, getAddressInHex, getExternalAddresses, getMasterKeyFromMnemonic} from './util'
 
 const BYRON_PROTOCOL_MAGIC = getCardanoByronConfig().PROTOCOL_MAGIC
 

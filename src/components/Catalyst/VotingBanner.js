@@ -1,15 +1,12 @@
 // @flow
 
 import React from 'react'
-import {View, Image, TouchableOpacity} from 'react-native'
-import {injectIntl, defineMessages} from 'react-intl'
-
-import {Text} from '../UiKit'
-
 import type {IntlShape} from 'react-intl'
+import {defineMessages, injectIntl} from 'react-intl'
+import {Image, TouchableOpacity, View} from 'react-native'
 
 import CatalystLogo from '../../assets/img/voting.png'
-
+import {Text} from '../UiKit'
 import styles from './styles/VotingBanner.style'
 
 const messages = defineMessages({

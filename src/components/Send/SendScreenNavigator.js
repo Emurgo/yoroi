@@ -1,20 +1,19 @@
 // @flow
 
-import React from 'react'
 import {createStackNavigator} from '@react-navigation/stack'
-import {injectIntl, defineMessages} from 'react-intl'
+import React from 'react'
 import type {IntlShape} from 'react-intl'
+import {defineMessages, injectIntl} from 'react-intl'
 
-import {Button} from '../UiKit'
-import SendScreen from './SendScreen'
-import ConfirmScreen from './ConfirmScreen'
-import AddressReaderQR from './AddressReaderQR'
-import BiometricAuthScreen from './BiometricAuthScreen'
 import iconQR from '../../assets/img/qr_code.png'
-import {pastedFormatter} from './amountUtils'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
 import {SEND_ROUTES} from '../../RoutesList'
-
+import {Button} from '../UiKit'
+import AddressReaderQR from './AddressReaderQR'
+import {pastedFormatter} from './amountUtils'
+import BiometricAuthScreen from './BiometricAuthScreen'
+import ConfirmScreen from './ConfirmScreen'
+import SendScreen from './SendScreen'
 import styles from './styles/QrButton.style'
 
 const messages = defineMessages({

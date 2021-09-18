@@ -1,19 +1,18 @@
 // @flow
 
+import {useNavigation} from '@react-navigation/native'
 import React from 'react'
-import {View, StyleSheet} from 'react-native'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
-import WalletDescription from './WalletDescription'
-import {Button, Spacer, StatusBar} from '../UiKit'
+import {CONFIG, isNightly} from '../../config/config'
+import type {NetworkId, WalletImplementationId} from '../../config/types'
 // uses same styles as WalletInitScreen
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
-import {CONFIG, isNightly} from '../../config/config'
 import {COLORS} from '../../styles/config'
-
-import type {NetworkId, WalletImplementationId} from '../../config/types'
-import {useNavigation} from '@react-navigation/native'
+import {Button, Spacer, StatusBar} from '../UiKit'
+import WalletDescription from './WalletDescription'
 
 const messages = defineMessages({
   addWalletButton: {

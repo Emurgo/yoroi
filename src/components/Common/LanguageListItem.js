@@ -1,10 +1,9 @@
 // @flow
 
 import React from 'react'
-import {View, TouchableOpacity, Image} from 'react-native'
+import {Image, TouchableOpacity, View} from 'react-native'
 
 import {Text} from '../UiKit'
-
 import styles from './styles/LanguageListItem.style'
 
 type Props = {

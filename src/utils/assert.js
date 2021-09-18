@@ -1,6 +1,7 @@
 // @flow
 
 import ExtendableError from 'es6-error'
+
 import {Logger} from './logging'
 
 export class AssertionFailed extends ExtendableError {}

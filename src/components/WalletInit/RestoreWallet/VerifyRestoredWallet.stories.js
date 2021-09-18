@@ -1,12 +1,11 @@
 // @flow
 
+import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {storiesOf} from '@storybook/react-native'
-
-import VerifyRestoredWallet from './VerifyRestoredWallet'
-import {cleanMnemonic} from '../../../utils/validators'
 import {CONFIG} from '../../../config/config'
+import {cleanMnemonic} from '../../../utils/validators'
+import VerifyRestoredWallet from './VerifyRestoredWallet'
 
 storiesOf('VefifyRestoredWallet', module).add('Default', ({navigation}) => (
   <VerifyRestoredWallet

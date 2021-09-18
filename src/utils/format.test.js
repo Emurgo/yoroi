@@ -1,16 +1,16 @@
 // @flow
 
-import jestSetup from '../jestSetup'
-
 import {BigNumber} from 'bignumber.js'
-import {
-  getAssetDenomination,
-  formatTokenAmount,
-  formatTokenInteger,
-  formatTokenFractional,
-  ASSET_DENOMINATION,
-} from './format'
+
 import {getCardanoDefaultAsset} from '../config/config'
+import jestSetup from '../jestSetup'
+import {
+  ASSET_DENOMINATION,
+  formatTokenAmount,
+  formatTokenFractional,
+  formatTokenInteger,
+  getAssetDenomination,
+} from './format'
 
 jestSetup.setup()
 

@@ -1,23 +1,20 @@
 /* eslint-disable react-native/no-inline-styles */
 // @flow
 
-import React, {useState, useEffect} from 'react'
-import {ActivityIndicator, View, ScrollView} from 'react-native'
+import React, {useEffect, useState} from 'react'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {ActivityIndicator, ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
-import {Text, Button, StatusBar, BulletPointItem, Spacer} from '../../UiKit'
-
+import type {NetworkId, WalletImplementationId} from '../../../config/types'
+import {WALLET_IMPLEMENTATION_REGISTRY} from '../../../config/types'
 import {generateByronPlateFromMnemonics} from '../../../crypto/byron/plate'
 import {generateShelleyPlateFromMnemonics} from '../../../crypto/shelley/plate'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
-import WalletAddress from './WalletAddress'
 import WalletAccountIcon from '../../Common/WalletAccountIcon'
-import {WALLET_IMPLEMENTATION_REGISTRY} from '../../../config/types'
-
+import {BulletPointItem, Button, Spacer, StatusBar, Text} from '../../UiKit'
 import styles from './styles/VerifyRestoredWallet.style'
-
-import type {WalletImplementationId, NetworkId} from '../../../config/types'
+import WalletAddress from './WalletAddress'
 
 const messages = defineMessages({
   checksumLabel: {

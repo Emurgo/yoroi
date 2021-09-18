@@ -2,11 +2,10 @@
 
 import React from 'react'
 
-import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {generateAdaMnemonic} from '../../../crypto/commonUtils'
-import WalletForm from '../WalletForm'
+import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import Screen from '../../Screen'
-
+import WalletForm from '../WalletForm'
 import MnemonicExplanationModal from './MnemonicExplanationModal'
 
 type Props = {|

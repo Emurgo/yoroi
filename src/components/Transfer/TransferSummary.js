@@ -1,22 +1,21 @@
 // @flow
 
-import React from 'react'
 import {BigNumber} from 'bignumber.js'
-import {useSelector} from 'react-redux'
+import React from 'react'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
 import {View} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useSelector} from 'react-redux'
 
-import TwoActionView from '../Common/TwoActionView'
-import AddressEntry from '../Common/AddressEntry'
-import HWInstructions from '../Ledger/HWInstructions'
-import {Text, TextInput} from '../UiKit'
-import {walletMetaSelector, defaultNetworkAssetSelector} from '../../selectors'
-import {formatTokenWithText} from '../../utils/format'
-import {confirmationMessages, txLabels} from '../../i18n/global-messages'
 import {CONFIG} from '../../config/config'
 import {getNetworkConfigById} from '../../config/networks'
 import {MultiToken} from '../../crypto/MultiToken'
-
+import {confirmationMessages, txLabels} from '../../i18n/global-messages'
+import {defaultNetworkAssetSelector, walletMetaSelector} from '../../selectors'
+import {formatTokenWithText} from '../../utils/format'
+import AddressEntry from '../Common/AddressEntry'
+import TwoActionView from '../Common/TwoActionView'
+import HWInstructions from '../Ledger/HWInstructions'
+import {Text, TextInput} from '../UiKit'
 import styles from './styles/TransferSummary.style'
 
 const messages = defineMessages({

@@ -2,12 +2,11 @@
 
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import tinycolor from 'tinycolor2'
+import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 import Blockies from 'react-native-blockies-svg'
+import tinycolor from 'tinycolor2'
 
 import {COLORS as APP_COLORS} from '../../styles/config'
-
-import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
 const mkcolor = (primary, secondary, spots) => ({primary, secondary, spots})
 const COLORS = [

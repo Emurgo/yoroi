@@ -1,17 +1,17 @@
 // @flow
 
+import {useNavigation} from '@react-navigation/native'
 import React from 'react'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
 import {useDispatch} from 'react-redux'
-import {Button} from '../UiKit'
-import FingerprintScreenBase from '../Common/FingerprintScreenBase'
+
 import {setSystemAuth, showErrorDialog} from '../../actions'
-import {SETTINGS_ROUTES} from '../../RoutesList'
 import {canBiometricEncryptionBeEnabled} from '../../helpers/deviceSettings'
 import {errorMessages} from '../../i18n/global-messages'
-
+import {SETTINGS_ROUTES} from '../../RoutesList'
+import FingerprintScreenBase from '../Common/FingerprintScreenBase'
+import {Button} from '../UiKit'
 import styles from './styles/BiometricsLinkScreen.style'
-import {useNavigation} from '@react-navigation/native'
 
 const messages = defineMessages({
   enableFingerprintsMessage: {
