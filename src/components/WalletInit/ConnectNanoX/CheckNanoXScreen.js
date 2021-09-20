@@ -2,8 +2,7 @@
 
 import {useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
-import type {IntlShape} from 'react-intl'
-import {defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {Image, Platform, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -49,7 +48,8 @@ export type Params = {
   useUSB: boolean,
 }
 
-const CheckNanoXScreen = ({intl}: {intl: IntlShape}) => {
+const CheckNanoXScreen = () => {
+  const intl = useIntl()
   const route = useRoute()
   const {networkId, walletImplementationId, useUSB} = ((route.params: any): Params)
 
@@ -101,6 +101,6 @@ const CheckNanoXScreen = ({intl}: {intl: IntlShape}) => {
   )
 }
 
-export default injectIntl(CheckNanoXScreen)
+export default CheckNanoXScreen
 
 const Actions = (props) => <View {...props} style={styles.actions} />

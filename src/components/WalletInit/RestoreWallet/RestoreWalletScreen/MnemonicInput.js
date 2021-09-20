@@ -4,7 +4,7 @@
 
 import {validateMnemonic, wordlists} from 'bip39'
 import React from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {Keyboard, View} from 'react-native'
 
 import {Menu, TextInput} from '../../../UiKit'
@@ -35,40 +35,39 @@ const messages = defineMessages({
   },
 })
 
-export const MnemonicInput = injectIntl(
-  ({intl, length, onDone}: {intl: IntlShape, length: number, onDone: (phrase: string) => mixed}) => {
-    const [mnemonicWords, setMnemonicWords] = React.useState<Array<string>>((Array.from({length}).map(() => ''): any))
+export const MnemonicInput = ({length, onDone}: {length: number, onDone: (phrase: string) => mixed}) => {
+  const intl = useIntl()
+  const [mnemonicWords, setMnemonicWords] = React.useState<Array<string>>((Array.from({length}).map(() => ''): any))
 
-    const mnemonicWordsComplete = mnemonicWords.every(Boolean)
-    const isValid: boolean = mnemonicWordsComplete ? validateMnemonic(mnemonicWords.join(' ')) : false
-    const errorText = !isValid && mnemonicWordsComplete ? intl.formatMessage(messages.invalidChecksum) : ''
+  const mnemonicWordsComplete = mnemonicWords.every(Boolean)
+  const isValid: boolean = mnemonicWordsComplete ? validateMnemonic(mnemonicWords.join(' ')) : false
+  const errorText = !isValid && mnemonicWordsComplete ? intl.formatMessage(messages.invalidChecksum) : ''
 
-    const onSelect = (index: number, word: string) =>
-      setMnemonicWords((words) => {
-        const newWords = [...words]
-        newWords[index] = word
+  const onSelect = (index: number, word: string) =>
+    setMnemonicWords((words) => {
+      const newWords = [...words]
+      newWords[index] = word
 
-        return newWords
-      })
+      return newWords
+    })
 
-    React.useEffect(() => {
-      if (mnemonicWordsComplete && isValid) {
-        Keyboard.dismiss()
-        onDone(mnemonicWords.join(' '))
-      }
-    }, [mnemonicWordsComplete, isValid, mnemonicWords, onDone])
+  React.useEffect(() => {
+    if (mnemonicWordsComplete && isValid) {
+      Keyboard.dismiss()
+      onDone(mnemonicWords.join(' '))
+    }
+  }, [mnemonicWordsComplete, isValid, mnemonicWords, onDone])
 
-    return (
-      <TextInput
-        value={mnemonicWords.join(' ')}
-        errorText={errorText}
-        render={({ref: _ref, ...inputProps}: any) => (
-          <MnemonicWordsInput onSelect={onSelect} words={mnemonicWords} {...inputProps} />
-        )}
-      />
-    )
-  },
-)
+  return (
+    <TextInput
+      value={mnemonicWords.join(' ')}
+      errorText={errorText}
+      render={({ref: _ref, ...inputProps}: any) => (
+        <MnemonicWordsInput onSelect={onSelect} words={mnemonicWords} {...inputProps} />
+      )}
+    />
+  )
+}
 
 type MnemonicWordsInputProps = {
   words: Array<string>,

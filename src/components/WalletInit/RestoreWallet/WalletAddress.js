@@ -2,7 +2,7 @@
 
 import Clipboard from '@react-native-community/clipboard'
 import React from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {Image, Linking, TouchableOpacity, View} from 'react-native'
 import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
@@ -21,16 +21,15 @@ const messages = defineMessages({
 })
 
 const WalletAddress = ({
-  intl,
   addressHash,
   networkId,
   style,
 }: {
-  intl: IntlShape,
   addressHash: string,
   networkId: NetworkId,
   style?: ViewStyleProp,
 }) => {
+  const intl = useIntl()
   const [showCopyNotification, setShowCopyNotification] = React.useState(false)
 
   const onTapAddress = () => {
@@ -67,4 +66,4 @@ const WalletAddress = ({
   )
 }
 
-export default injectIntl(WalletAddress)
+export default WalletAddress

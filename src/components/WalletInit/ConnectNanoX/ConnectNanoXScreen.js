@@ -2,7 +2,7 @@
 
 import {useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -33,11 +33,11 @@ const styles = StyleSheet.create({
 })
 
 type Props = {
-  intl: IntlShape,
   defaultDevices: ?Array<Device>, // for storybook
 }
 
-const ConnectNanoXScreen = ({intl, defaultDevices}: Props) => {
+const ConnectNanoXScreen = ({defaultDevices}: Props) => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const route = useRoute()
   const walletImplementationId: WalletImplementationId = (route.params?.walletImplementationId: any)
@@ -86,4 +86,4 @@ const ConnectNanoXScreen = ({intl, defaultDevices}: Props) => {
   )
 }
 
-export default injectIntl(ConnectNanoXScreen)
+export default ConnectNanoXScreen

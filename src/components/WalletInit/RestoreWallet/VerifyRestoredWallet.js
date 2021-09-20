@@ -1,8 +1,9 @@
 /* eslint-disable react-native/no-inline-styles */
 // @flow
 
+import {useNavigation, useRoute} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -92,7 +93,10 @@ const usePlateFromMnemonic = ({
   return [plate, addresses]
 }
 
-const VerifyWalletScreen = ({navigation, intl, route}: {intl: IntlShape} & Object /* TODO: type */) => {
+const VerifyWalletScreen = () => {
+  const intl = useIntl()
+  const navigation = useNavigation()
+  const route = (useRoute(): any)
   const {formatMessage} = intl
   const {phrase, networkId, walletImplementationId} = route.params
   const [plate, addresses] = usePlateFromMnemonic({mnemonic: phrase, networkId, walletImplementationId})
@@ -159,7 +163,7 @@ const VerifyWalletScreen = ({navigation, intl, route}: {intl: IntlShape} & Objec
   )
 }
 
-export default injectIntl(VerifyWalletScreen)
+export default VerifyWalletScreen
 
 const WalletInfo = (props) => <View {...props} />
 const Plate = (props) => <View {...props} style={styles.plate} />

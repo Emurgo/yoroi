@@ -2,7 +2,7 @@
 
 import {useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -64,11 +64,8 @@ const MODAL_STATES = {
 }
 type ModalState = $Values<typeof MODAL_STATES>
 
-type Props = {
-  intl: IntlShape,
-}
-
-const WalletInitScreen = ({intl}: Props) => {
+const WalletInitScreen = () => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const route = (useRoute(): any)
   const [modalState, _setModalState] = React.useState(MODAL_STATES.CLOSED)
@@ -231,4 +228,4 @@ const WalletInitScreen = ({intl}: Props) => {
     </SafeAreaView>
   )
 }
-export default injectIntl(WalletInitScreen)
+export default WalletInitScreen

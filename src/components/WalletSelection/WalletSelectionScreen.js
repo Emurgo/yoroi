@@ -1,9 +1,9 @@
 // @flow
 
+import {useNavigation} from '@react-navigation/native'
 import _ from 'lodash'
 import React from 'react'
-import type {IntlShape} from 'react-intl'
-import {defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, Text} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
@@ -37,7 +37,9 @@ const messages = defineMessages({
   },
 })
 
-const WalletListScreen = ({intl, navigation}: {intl: IntlShape} & Object /* TODO: type */) => {
+const WalletListScreen = () => {
+  const intl = useIntl()
+  const navigation = useNavigation()
   const wallets = useSelector(walletsListSelector)
 
   const openWallet = async (wallet) => {
@@ -187,4 +189,4 @@ const WalletListScreen = ({intl, navigation}: {intl: IntlShape} & Object /* TODO
   )
 }
 
-export default injectIntl(WalletListScreen)
+export default WalletListScreen

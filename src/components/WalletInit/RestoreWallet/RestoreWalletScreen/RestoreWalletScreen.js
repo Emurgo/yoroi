@@ -4,7 +4,7 @@
 
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -47,7 +47,8 @@ type Params = {
   provider: string,
 }
 
-export const RestoreWalletScreen = injectIntl(({intl}: {intl: IntlShape}) => {
+export const RestoreWalletScreen = () => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const {networkId, walletImplementationId, provider} = useParams<Params>()
   const {MNEMONIC_LEN: mnemonicLength} = getWalletConfigById(walletImplementationId)
@@ -86,7 +87,7 @@ export const RestoreWalletScreen = injectIntl(({intl}: {intl: IntlShape}) => {
       </Actions>
     </SafeAreaView>
   )
-})
+}
 
 const Instructions = (props) => <Text {...props} style={{fontSize: 16, lineHeight: 24}} />
 const Actions = (props) => <View {...props} style={{padding: 16}} />

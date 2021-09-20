@@ -2,7 +2,7 @@
 
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
@@ -48,11 +48,8 @@ const messages = defineMessages({
   },
 })
 
-type Props = {
-  intl: IntlShape,
-}
-
-const RemoveWalletScreen = ({intl}: Props) => {
+const RemoveWalletScreen = () => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const walletName = useSelector(walletNameSelector)
   const isHW = useSelector(isHWSelector)
@@ -126,7 +123,7 @@ const RemoveWalletScreen = ({intl}: Props) => {
   )
 }
 
-export default injectIntl(RemoveWalletScreen)
+export default RemoveWalletScreen
 
 const Description = (props) => {
   return <View {...props} />

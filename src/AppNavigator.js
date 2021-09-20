@@ -4,8 +4,7 @@ import {NavigationContainer} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {isEmpty} from 'lodash'
 import React from 'react'
-import type {IntlShape} from 'react-intl'
-import {defineMessages, injectIntl} from 'react-intl'
+import {type IntlShape, defineMessages, useIntl} from 'react-intl'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {showErrorDialog, signin} from './actions'
@@ -56,10 +55,8 @@ type AppNavigatorRoutes = {
 
 const Stack = createStackNavigator<any, AppNavigatorRoutes, any>()
 
-type NavigatorSwitchProps = {|
-  intl: IntlShape,
-|}
-const NavigatorSwitch = injectIntl(({intl}: NavigatorSwitchProps) => {
+const NavigatorSwitch = () => {
+  const intl = useIntl()
   const isMaintenance = useSelector(isMaintenanceSelector)
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
   const isAuthenticated = useSelector(isAuthenticatedSelector)
@@ -147,7 +144,7 @@ const NavigatorSwitch = injectIntl(({intl}: NavigatorSwitchProps) => {
       <Stack.Screen name={ROOT_ROUTES.NEW_WALLET} component={WalletInitNavigator} />
     </Stack.Navigator>
   )
-})
+}
 
 const StoryBook = () => (
   <Stack.Navigator>
