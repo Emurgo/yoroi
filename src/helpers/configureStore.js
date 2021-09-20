@@ -1,14 +1,14 @@
 // @flow
 
-import thunk from 'redux-thunk'
-import {createStore, applyMiddleware, compose} from 'redux'
-import {createLogger} from 'redux-logger'
 import {action as storybookAction} from '@storybook/addon-actions'
+import {applyMiddleware, compose, createStore} from 'redux'
+import {createLogger} from 'redux-logger'
+import thunk from 'redux-thunk'
 
-import rootReducer from './rootReducer'
-import getInitialState, {mockState} from '../state'
 import type {State} from '../state'
-import type {GenericAction, Dispatch} from '../types/reduxTypes'
+import getInitialState, {mockState} from '../state'
+import type {Dispatch, GenericAction} from '../types/reduxTypes'
+import rootReducer from './rootReducer'
 
 export default (useMockState: boolean = false, storybook: boolean = false, mockedState: ?State) => {
   const logger = {

@@ -1,9 +1,8 @@
 // @flow
 
-import jestSetup from '../jestSetup'
-
-import {parseAmountDecimal, InvalidAssetAmount} from './parsing'
 import {CONFIG, getCardanoDefaultAsset} from '../config/config'
+import jestSetup from '../jestSetup'
+import {InvalidAssetAmount, parseAmountDecimal} from './parsing'
 
 jestSetup.setup()
 

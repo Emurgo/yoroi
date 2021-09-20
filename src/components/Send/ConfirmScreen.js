@@ -1,43 +1,41 @@
 // @flow
 
-import React from 'react'
-import {BigNumber} from 'bignumber.js'
-import {compose} from 'redux'
-import {connect} from 'react-redux'
-import {ScrollView, View, Platform} from 'react-native'
-import {withHandlers, withStateHandlers} from 'recompose'
-import SafeAreaView from 'react-native-safe-area-view'
-import {injectIntl, type IntlShape} from 'react-intl'
 import {CommonActions} from '@react-navigation/routers'
+import {BigNumber} from 'bignumber.js'
+import React from 'react'
+import {type IntlShape, injectIntl} from 'react-intl'
+import {Platform, ScrollView, View} from 'react-native'
+import SafeAreaView from 'react-native-safe-area-view'
+import {connect} from 'react-redux'
+import {withHandlers, withStateHandlers} from 'recompose'
+import {compose} from 'redux'
 
-import {Text, Button, OfflineBanner, ValidatedTextInput, StatusBar, Banner, PleaseWaitModal, Modal} from '../UiKit'
-import ErrorModal from '../Common/ErrorModal'
+import {showErrorDialog, submitSignedTx, submitTransaction} from '../../actions'
+import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
+import {CONFIG} from '../../config/config'
+import {WrongPassword} from '../../crypto/errors'
+import {ISignRequest} from '../../crypto/ISignRequest'
+import KeyStore from '../../crypto/KeyStore'
+import type {TokenEntry} from '../../crypto/MultiToken'
+import type {CreateUnsignedTxResponse} from '../../crypto/shelley/transactionUtils'
+import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
+import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
+import LocalizableError from '../../i18n/LocalizableError'
+import {SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../RoutesList'
 import {
-  easyConfirmationSelector,
-  isHWSelector,
-  hwDeviceInfoSelector,
   defaultNetworkAssetSelector,
+  easyConfirmationSelector,
+  hwDeviceInfoSelector,
+  isHWSelector,
   tokenInfoSelector,
 } from '../../selectors'
-import globalMessages, {errorMessages, txLabels, confirmationMessages} from '../../i18n/global-messages'
-import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
-import {SEND_ROUTES, WALLET_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
-import {CONFIG} from '../../config/config'
-import KeyStore from '../../crypto/KeyStore'
-import {showErrorDialog, submitTransaction, submitSignedTx} from '../../actions'
-import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
 import {formatTokenWithSymbol, formatTokenWithText} from '../../utils/format'
-import {WrongPassword} from '../../crypto/errors'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
-import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
-import LedgerConnect from '../Ledger/LedgerConnect'
+import ErrorModal from '../Common/ErrorModal'
 import HWInstructions from '../Ledger/HWInstructions'
-import LocalizableError from '../../i18n/LocalizableError'
-import {ISignRequest} from '../../crypto/ISignRequest'
-
-import type {CreateUnsignedTxResponse} from '../../crypto/shelley/transactionUtils'
-import type {TokenEntry} from '../../crypto/MultiToken'
-
+import LedgerConnect from '../Ledger/LedgerConnect'
+import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
+import {Banner, Button, Modal, OfflineBanner, PleaseWaitModal, StatusBar, Text, ValidatedTextInput} from '../UiKit'
 import styles from './styles/ConfirmScreen.style'
 
 const handleOnConfirm = async (

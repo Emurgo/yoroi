@@ -1,7 +1,7 @@
 // @flow
 
-import React, {useMemo, memo, useState} from 'react'
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native'
+import React, {memo, useMemo, useState} from 'react'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {COLORS} from '../../../styles/config'
 import {Spacer} from '../../UiKit'

@@ -2,7 +2,7 @@
 
 import {StyleSheet} from 'react-native'
 
-import {spacing, COLORS} from '../../../styles/config'
+import {COLORS, spacing} from '../../../styles/config'
 
 export default StyleSheet.create({
   content: {

@@ -1,14 +1,14 @@
 // @flow
 
 import React, {type Node} from 'react'
+import {TouchableOpacity} from 'react-native-gesture-handler'
 import {Provider} from 'react-redux'
 
-import {TouchableOpacity} from 'react-native-gesture-handler'
-import {defaultNavigationOptions} from '../navigationOptions'
-import {Button} from '../components/UiKit'
 import iconGear from '../assets/img/gear.png'
 import StakeIcon from '../assets/StakingKeyRegisteredIcon'
+import {Button} from '../components/UiKit'
 import configureStore from '../helpers/configureStore'
+import {defaultNavigationOptions} from '../navigationOptions'
 import type {State} from '../state'
 
 type Props = {|

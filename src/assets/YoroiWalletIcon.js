@@ -1,7 +1,8 @@
 // @flow
 
 import React from 'react'
-import Svg, {Path, G, Polygon} from 'react-native-svg'
+import Svg, {G, Path, Polygon} from 'react-native-svg'
+
 import {COLORS} from '../styles/config'
 
 type Props = {width?: number, height?: number, color?: string}

@@ -1,14 +1,15 @@
 // @flow
 
-import React from 'react'
 import {useNavigation} from '@react-navigation/native'
-import {compose} from 'redux'
-import {connect} from 'react-redux'
 import type {ComponentType} from 'react'
+import React from 'react'
+import {connect} from 'react-redux'
+import {compose} from 'redux'
 
-import {hasPendingOutgoingTransactionSelector, isFetchingUtxosSelector, isOnlineSelector} from '../../selectors'
 import {fetchUTXOs} from '../../actions/utxo'
+import {hasPendingOutgoingTransactionSelector, isFetchingUtxosSelector, isOnlineSelector} from '../../selectors'
 
+// eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
 class UtxoAutoRefresher extends React.Component<{
   isFetching: boolean,
   isOnline: boolean,

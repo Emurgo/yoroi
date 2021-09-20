@@ -1,13 +1,12 @@
 // @flow
 
 import React, {useState} from 'react'
-import {Image, View, TouchableHighlight} from 'react-native'
+import {Image, TouchableHighlight, View} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 
+import backspaceIcon from '../../assets/img/backspace.png'
 import utfSymbols from '../../utils/utfSymbols'
 import {Text} from '../UiKit'
-import backspaceIcon from '../../assets/img/backspace.png'
-
 import styles from './styles/PinInputKeyboard.style'
 
 const BACKSPACE = utfSymbols.ERASE_TO_LEFT

@@ -1,13 +1,12 @@
 // @flow
 
-import type {Dispatch} from 'redux'
 import {BigNumber} from 'bignumber.js'
+import type {Dispatch} from 'redux'
 
 import walletManager from '../crypto/walletManager'
-import {Logger} from '../utils/logging'
-import {ObjectValues} from '../utils/flow'
-
 import type {State} from '../state'
+import {ObjectValues} from '../utils/flow'
+import {Logger} from '../utils/logging'
 
 // start fetching account balance
 const _startFetching = () => ({

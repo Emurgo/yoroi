@@ -1,12 +1,11 @@
 // @flow
 
-import React from 'react'
-import {TouchableOpacity, View, Image} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
+import React from 'react'
+import {Image, TouchableOpacity, View} from 'react-native'
 
 import chevronRight from '../../assets/img/chevron_right.png'
 import {Text} from '../UiKit'
-
 import styles from './styles/SettingsItems.style'
 
 const Touchable = <Props>(props: Props) => <TouchableOpacity {...props} activeOpacity={0.5} />

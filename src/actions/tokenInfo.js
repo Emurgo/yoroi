@@ -2,15 +2,14 @@
 
 import type {Dispatch} from 'redux'
 
+import type {TokenInfoRequest, TokenInfoResponse} from '../api/types'
+import type {MultiToken} from '../crypto/MultiToken'
 import walletManager from '../crypto/walletManager'
 import {availableAssetsSelector, tokenBalanceSelector} from '../selectors'
-import {ObjectValues} from '../utils/flow'
-import {Logger} from '../utils/logging'
-
 import type {State} from '../state'
 import type {Token} from '../types/HistoryTransaction'
-import type {MultiToken} from '../crypto/MultiToken'
-import type {TokenInfoRequest, TokenInfoResponse} from '../api/types'
+import {ObjectValues} from '../utils/flow'
+import {Logger} from '../utils/logging'
 
 const _startFetching = () => ({
   type: 'START_FETCHING_TOKEN_INFO',

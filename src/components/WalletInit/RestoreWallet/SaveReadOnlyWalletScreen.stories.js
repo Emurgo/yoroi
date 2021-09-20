@@ -1,11 +1,10 @@
 // @flow
 
+import {NavigationRouteContext} from '@react-navigation/native'
+import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {storiesOf} from '@storybook/react-native'
-
 import SaveReadOnlyWalletScreen from './SaveReadOnlyWalletScreen'
-import {NavigationRouteContext} from '@react-navigation/native'
 
 storiesOf('SaveReadOnlyWalletScreen', module).add('Default', () => {
   const route = {

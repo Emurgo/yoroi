@@ -1,16 +1,15 @@
 // @flow
 
+import type {WalletChecksum} from '@emurgo/cip4-js'
 import {BigNumber} from 'bignumber.js'
 
-import {NETWORK_REGISTRY} from './config/types'
-import {CONFIG} from './config/config'
-
 import type {RawUtxo, RemotePoolMetaSuccess} from './api/types'
-import type {Transaction, Token} from './types/HistoryTransaction'
-import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
-import {ISignRequest} from './crypto/ISignRequest'
+import {CONFIG} from './config/config'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from './config/types'
-import type {WalletChecksum} from '@emurgo/cip4-js'
+import {NETWORK_REGISTRY} from './config/types'
+import {ISignRequest} from './crypto/ISignRequest'
+import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
+import type {Token, Transaction} from './types/HistoryTransaction'
 
 export type ServerStatusCache = {|
   +isServerOk: boolean,

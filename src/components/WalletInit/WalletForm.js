@@ -1,24 +1,23 @@
 // @flow
 
 import React from 'react'
-import {useSelector} from 'react-redux'
-import {View, ScrollView} from 'react-native'
+import {defineMessages, useIntl} from 'react-intl'
+import {ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useSelector} from 'react-redux'
 
-import {Button, TextInput, Spacer} from '../UiKit'
-import {
-  validatePassword,
-  getWalletNameError,
-  validateWalletName,
-  REQUIRED_PASSWORD_LENGTH,
-} from '../../utils/validators'
 import {CONFIG} from '../../config/config'
-import styles from './styles/WalletForm.style'
-import {walletNamesSelector} from '../../selectors'
 import globalMessages from '../../i18n/global-messages'
-
+import {walletNamesSelector} from '../../selectors'
+import {
+  getWalletNameError,
+  REQUIRED_PASSWORD_LENGTH,
+  validatePassword,
+  validateWalletName,
+} from '../../utils/validators'
+import {Button, Spacer, TextInput} from '../UiKit'
 import {Checkmark} from '../UiKit/TextInput'
+import styles from './styles/WalletForm.style'
 
 const messages = defineMessages({
   walletNameInputLabel: {
@@ -48,11 +47,11 @@ const messages = defineMessages({
 })
 
 type Props = {
-  intl: IntlShape,
   onSubmit: ({name: string, password: string}) => mixed,
 }
 
-const WalletForm = ({intl, onSubmit}: Props) => {
+const WalletForm = ({onSubmit}: Props) => {
+  const intl = useIntl()
   const walletNames = useSelector(walletNamesSelector)
   const [name, setName] = React.useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.WALLET_NAME : '')
   const nameErrors = validateWalletName(name, null, walletNames)
@@ -146,7 +145,7 @@ const WalletForm = ({intl, onSubmit}: Props) => {
   )
 }
 
-export default injectIntl(WalletForm)
+export default WalletForm
 
 const WalletNameInput = TextInput
 const PasswordInput = TextInput

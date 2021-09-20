@@ -2,21 +2,20 @@
 
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
 import Markdown from 'react-native-easy-markdown'
 
-import {Modal, Spacer} from '../UiKit'
+import {MultiToken} from '../../crypto/MultiToken'
+import globalMessages, {ledgerMessages} from '../../i18n/global-messages'
 import {DangerousAction} from '../Common/DangerousActionModal'
 import {ErrorView} from '../Common/ErrorModal'
-import {PleaseWaitView} from '../UiKit/PleaseWaitModal'
-import TransferSummary from '../Transfer/TransferSummary'
-import {LedgerTransportSwitch} from '../Ledger/LedgerTransportSwitchModal'
 import LedgerConnect from '../Ledger/LedgerConnect'
-import globalMessages, {ledgerMessages} from '../../i18n/global-messages'
-import {MultiToken} from '../../crypto/MultiToken'
-import {WITHDRAWAL_DIALOG_STEPS, type WithdrawalDialogSteps} from './types'
-
+import {LedgerTransportSwitch} from '../Ledger/LedgerTransportSwitchModal'
+import TransferSummary from '../Transfer/TransferSummary'
+import {Modal, Spacer} from '../UiKit'
+import {PleaseWaitView} from '../UiKit/PleaseWaitModal'
 import styles from './styles/WithdrawalDialog.style'
+import {type WithdrawalDialogSteps, WITHDRAWAL_DIALOG_STEPS} from './types'
 
 const messages = defineMessages({
   warningModalTitle: {

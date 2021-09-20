@@ -1,7 +1,7 @@
 // @flow
 
 import React, {memo} from 'react'
-import Svg, {G, Circle, Line, Path, Rect} from 'react-native-svg'
+import Svg, {Circle, G, Line, Path, Rect} from 'react-native-svg'
 
 type Props = {|
   width?: number,

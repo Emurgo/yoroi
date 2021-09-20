@@ -1,15 +1,15 @@
 // @flow
 
-import React, {useEffect, useState, useCallback, memo} from 'react'
-import {StyleSheet, View, Text, TouchableOpacity, Image} from 'react-native'
+import React, {memo, useCallback, useEffect, useState} from 'react'
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import {tokenBalanceSelector, availableAssetsSelector, walletMetaSelector} from '../../../selectors'
-import openedEyeIcon from '../../../assets/img/icon/visibility-opened.png'
 import closedEyeIcon from '../../../assets/img/icon/visibility-closed.png'
-import WalletAccountIcon from '../../Common/WalletAccountIcon'
-import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../../../utils/format'
+import openedEyeIcon from '../../../assets/img/icon/visibility-opened.png'
+import {availableAssetsSelector, tokenBalanceSelector, walletMetaSelector} from '../../../selectors'
 import {COLORS} from '../../../styles/config'
+import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../../../utils/format'
+import WalletAccountIcon from '../../Common/WalletAccountIcon'
 import {Spacer} from '../../UiKit'
 
 const BALANCE_WHEN_HIDDEN = '*.******'

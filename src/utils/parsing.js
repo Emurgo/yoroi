@@ -5,7 +5,6 @@ import ExtendableError from 'es6-error'
 
 import {CONFIG, getCardanoDefaultAsset} from '../config/config'
 import {isHaskellShelleyNetwork} from '../config/networks'
-
 import type {Token} from '../types/HistoryTransaction'
 
 export class InvalidAssetAmount extends ExtendableError {

@@ -1,14 +1,13 @@
 // @flow
 
+import {createStackNavigator} from '@react-navigation/stack'
+import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {storiesOf} from '@storybook/react-native'
-import {createStackNavigator} from '@react-navigation/stack'
-
-import TxHistoryScreen from './TxHistory'
-import {MockAppStateWrapper, mockV2NavigatorOptions} from '../../utils/mocks'
 import {defaultStackNavigatorOptions} from '../../navigationOptions'
 import {COLORS} from '../../styles/config'
+import {MockAppStateWrapper, mockV2NavigatorOptions} from '../../utils/mocks'
+import TxHistoryScreen from './TxHistory'
 
 storiesOf('@Revamp/TxHistory', module).add('Default', () => {
   const Stack = createStackNavigator<any, any, any>()

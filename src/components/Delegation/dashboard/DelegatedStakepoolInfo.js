@@ -1,16 +1,15 @@
 // @flow
 
-import React, {useState} from 'react'
-import {View, Image, Linking, TouchableOpacity, Animated} from 'react-native'
 import Clipboard from '@react-native-community/clipboard'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {debounce} from 'lodash'
-
-import {Text, TitledCard, Button} from '../../UiKit'
-import copyIcon from '../../../assets/img/icon/copy.png'
-import styles from './styles/DelegatedStakepoolInfo.style'
-
+import React, {useState} from 'react'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {Animated, Image, Linking, TouchableOpacity, View} from 'react-native'
 import type {ViewProps} from 'react-native/Libraries/Components/View/ViewPropTypes'
+
+import copyIcon from '../../../assets/img/icon/copy.png'
+import {Button, Text, TitledCard} from '../../UiKit'
+import styles from './styles/DelegatedStakepoolInfo.style'
 
 const messages = defineMessages({
   title: {

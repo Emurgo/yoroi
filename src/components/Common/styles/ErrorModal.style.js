@@ -2,7 +2,7 @@
 
 import {StyleSheet} from 'react-native'
 
-import stylesConfig, {spacing, COLORS} from '../../../styles/config'
+import stylesConfig, {COLORS, spacing} from '../../../styles/config'
 
 const text = {
   fontFamily: stylesConfig.defaultFont,

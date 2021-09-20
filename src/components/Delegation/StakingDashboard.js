@@ -1,75 +1,73 @@
 // @flow
 
-import React from 'react'
+import {BigNumber} from 'bignumber.js'
 import type {ComponentType} from 'react'
+import React from 'react'
+import {type IntlShape, injectIntl} from 'react-intl'
+import {ActivityIndicator, Platform, RefreshControl, ScrollView, View} from 'react-native'
+import SafeAreaView from 'react-native-safe-area-view'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {ActivityIndicator, View, ScrollView, RefreshControl, Platform} from 'react-native'
-import SafeAreaView from 'react-native-safe-area-view'
-import {BigNumber} from 'bignumber.js'
-import {injectIntl, type IntlShape} from 'react-intl'
 
-import {Banner, OfflineBanner, StatusBar} from '../UiKit'
-import {EpochProgress, UserSummary, DelegatedStakepoolInfo, NotDelegatedInfo} from './dashboard'
-import WithdrawalDialog from './WithdrawalDialog'
+import {checkForFlawedWallets, showErrorDialog, submitSignedTx, submitTransaction} from '../../actions'
+import {fetchAccountState} from '../../actions/account'
+import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
+import {fetchPoolInfo} from '../../actions/pools'
+import {fetchUTXOs} from '../../actions/utxo'
+import type {RawUtxo, RemotePoolMetaSuccess} from '../../api/types'
+import {CONFIG, getCardanoBaseConfig} from '../../config/config'
+import {getCardanoNetworkConfigById} from '../../config/networks'
+import {WrongPassword} from '../../crypto/errors'
+import {ISignRequest} from '../../crypto/ISignRequest'
+import KeyStore from '../../crypto/KeyStore'
+import {MultiToken} from '../../crypto/MultiToken'
+import {HaskellShelleyTxSignRequest} from '../../crypto/shelley/HaskellShelleyTxSignRequest'
+import type {DeviceId, DeviceObj, HWDeviceInfo} from '../../crypto/shelley/ledgerUtils'
+import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
+import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
+import {DELEGATION_ROUTES, SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../RoutesList'
 import {
-  isOnlineSelector,
-  walletNameSelector,
-  utxoBalanceSelector,
-  utxosSelector,
   accountBalanceSelector,
-  isDelegatingSelector,
-  isFetchingAccountStateSelector,
-  isFetchingUtxosSelector,
-  poolOperatorSelector,
-  poolInfoSelector,
-  isFetchingPoolInfoSelector,
-  totalDelegatedSelector,
-  lastAccountStateFetchErrorSelector,
-  isFlawedWalletSelector,
-  isHWSelector,
-  isReadOnlySelector,
+  defaultNetworkAssetSelector,
   easyConfirmationSelector,
   hwDeviceInfoSelector,
-  defaultNetworkAssetSelector,
+  isDelegatingSelector,
+  isFetchingAccountStateSelector,
+  isFetchingPoolInfoSelector,
+  isFetchingUtxosSelector,
+  isFlawedWalletSelector,
+  isHWSelector,
+  isOnlineSelector,
+  isReadOnlySelector,
+  lastAccountStateFetchErrorSelector,
+  poolInfoSelector,
+  poolOperatorSelector,
   serverStatusSelector,
+  totalDelegatedSelector,
+  utxoBalanceSelector,
+  utxosSelector,
   walletMetaSelector,
+  walletNameSelector,
 } from '../../selectors'
-import DelegationNavigationButtons from './DelegationNavigationButtons'
-import UtxoAutoRefresher from '../Send/UtxoAutoRefresher'
-import AccountAutoRefresher from './AccountAutoRefresher'
+import type {ServerStatusCache, WalletMeta} from '../../state'
+import type {DefaultAsset} from '../../types/HistoryTransaction'
+import type {Navigation} from '../../types/navigation'
 import {
-  genToRelativeSlotNumber,
   genCurrentEpochLength,
   genCurrentSlotLength,
   genTimeToSlot,
+  genToRelativeSlotNumber,
 } from '../../utils/timeUtils'
-import {fetchAccountState} from '../../actions/account'
-import {fetchUTXOs} from '../../actions/utxo'
-import {fetchPoolInfo} from '../../actions/pools'
-import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
-import {checkForFlawedWallets, submitTransaction, submitSignedTx, showErrorDialog} from '../../actions'
-import {DELEGATION_ROUTES, SEND_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../RoutesList'
-import {WrongPassword} from '../../crypto/errors'
-import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
-import globalMessages, {errorMessages} from '../../i18n/global-messages'
+import UtxoAutoRefresher from '../Send/UtxoAutoRefresher'
+import {Banner, OfflineBanner, StatusBar} from '../UiKit'
+import AccountAutoRefresher from './AccountAutoRefresher'
+import {DelegatedStakepoolInfo, EpochProgress, NotDelegatedInfo, UserSummary} from './dashboard'
+import DelegationNavigationButtons from './DelegationNavigationButtons'
 import FlawedWalletScreen from './FlawedWalletScreen'
-import {CONFIG, getCardanoBaseConfig} from '../../config/config'
-import {getCardanoNetworkConfigById} from '../../config/networks'
-import {WITHDRAWAL_DIALOG_STEPS, type WithdrawalDialogSteps} from './types'
-import {HaskellShelleyTxSignRequest} from '../../crypto/shelley/HaskellShelleyTxSignRequest'
-import KeyStore from '../../crypto/KeyStore'
-import {MultiToken} from '../../crypto/MultiToken'
-import {ISignRequest} from '../../crypto/ISignRequest'
-
 import styles from './styles/DelegationSummary.style'
-
-import type {ServerStatusCache, WalletMeta} from '../../state'
-import type {Navigation} from '../../types/navigation'
-import type {DefaultAsset} from '../../types/HistoryTransaction'
-import type {RemotePoolMetaSuccess, RawUtxo} from '../../api/types'
-import type {HWDeviceInfo, DeviceObj, DeviceId} from '../../crypto/shelley/ledgerUtils'
+import {type WithdrawalDialogSteps, WITHDRAWAL_DIALOG_STEPS} from './types'
+import WithdrawalDialog from './WithdrawalDialog'
 
 const SyncErrorBanner = injectIntl(({intl, showRefresh}: {intl: IntlShape} & Object /* TODO: type */) => (
   <Banner
@@ -137,6 +135,7 @@ type State = {|
   },
 |}
 
+// eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
 class StakingDashboard extends React.Component<Props, State> {
   state = {
     currentTime: new Date(),

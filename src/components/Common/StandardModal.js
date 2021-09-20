@@ -1,10 +1,10 @@
 // @flow
 
 import React from 'react'
+import {type PressEvent} from 'react-native/Libraries/Types/CoreEventTypes'
 
 import {Modal} from '../UiKit'
 import TwoActionView from './TwoActionView'
-import {type PressEvent} from 'react-native/Libraries/Types/CoreEventTypes'
 
 type Props = {|
   +visible: boolean,

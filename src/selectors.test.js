@@ -1,12 +1,12 @@
 // @flow
 
 import {fromPairs} from 'lodash'
-import jestSetup from './jestSetup'
-import {tokenBalanceSelector, availableAssetsSelector} from './selectors'
-import {checkAndFacadeTransactionAsync} from './api/shelley/facade'
-import {mockState} from './state'
 
+import {checkAndFacadeTransactionAsync} from './api/shelley/facade'
 import type {RawTransaction} from './api/types'
+import jestSetup from './jestSetup'
+import {availableAssetsSelector, tokenBalanceSelector} from './selectors'
+import {mockState} from './state'
 
 jestSetup.setup()
 

@@ -1,11 +1,11 @@
 // @flow
 
 import React from 'react'
-import {View, Image} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {Image, View} from 'react-native'
 
-import {Text, Line} from '../../UiKit'
 import NotDelegatedImage from '../../../assets/img/testnet/no-transactions-yet.png'
+import {Line, Text} from '../../UiKit'
 import styles from './styles/NotDelegatedInfo.style'
 
 const messages = defineMessages({

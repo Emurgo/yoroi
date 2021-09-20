@@ -1,14 +1,13 @@
 // @flow
 
-import {ByronAddress, Bip32PrivateKey, Bip32PublicKey} from '@emurgo/react-native-haskell-shelley'
+import {Bip32PrivateKey, Bip32PublicKey, ByronAddress} from '@emurgo/react-native-haskell-shelley'
 import bs58 from 'bs58'
 
-import {generateWalletRootKey, ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
 import {CONFIG} from '../../config/config'
-import {CardanoError} from '../errors'
 import {getCardanoByronConfig} from '../../config/networks'
-
 import type {AddressType} from '../commonUtils'
+import {ADDRESS_TYPE_TO_CHANGE, generateWalletRootKey} from '../commonUtils'
+import {CardanoError} from '../errors'
 
 const BYRON_PROTOCOL_MAGIC = getCardanoByronConfig().PROTOCOL_MAGIC
 

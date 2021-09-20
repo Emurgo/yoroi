@@ -1,17 +1,17 @@
 // @flow
 
+import {useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
-import {View, Image, ScrollView, Dimensions} from 'react-native'
+import {defineMessages, useIntl} from 'react-intl'
+import {Dimensions, Image, ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
-import assert from '../../../utils/assert'
-import {Text, Button, StatusBar} from '../../UiKit'
-import {WALLET_INIT_ROUTES} from '../../../RoutesList'
-
-import styles from './styles/MnemonicShowScreen.style'
-import MnemonicBackupImportanceModal from './MnemonicBackupImportanceModal'
 import recoveryPhrase from '../../../assets/img/recovery_phrase.png'
+import {WALLET_INIT_ROUTES} from '../../../RoutesList'
+import assert from '../../../utils/assert'
+import {Button, StatusBar, Text} from '../../UiKit'
+import MnemonicBackupImportanceModal from './MnemonicBackupImportanceModal'
+import styles from './styles/MnemonicShowScreen.style'
 
 const messages = defineMessages({
   mnemonicNote: {
@@ -28,12 +28,10 @@ const messages = defineMessages({
   },
 })
 
-type RouterProps = {
-  route: any,
-  navigation: any,
-}
-
-const MnemonicShowScreen = ({intl, route, navigation}: {|intl: IntlShape|} & RouterProps /* TODO: type */) => {
+const MnemonicShowScreen = () => {
+  const navigation = useNavigation()
+  const route = (useRoute(): any)
+  const intl = useIntl()
   const mnemonic = route.params.mnemonic
   const provider = route.params.provider
   const [modal, setModal] = React.useState(false)
@@ -104,4 +102,4 @@ const MnemonicShowScreen = ({intl, route, navigation}: {|intl: IntlShape|} & Rou
   )
 }
 
-export default injectIntl(MnemonicShowScreen)
+export default MnemonicShowScreen

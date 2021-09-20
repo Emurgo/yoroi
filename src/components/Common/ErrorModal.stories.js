@@ -1,7 +1,7 @@
 // @flow
 
-import React from 'react'
 import {storiesOf} from '@storybook/react-native'
+import React from 'react'
 
 import {withModalProps} from '../../../storybook'
 import ErrorModal from './ErrorModal'

@@ -1,11 +1,11 @@
 // @flow
 
 import React from 'react'
-import {TouchableOpacity, Image} from 'react-native'
+import {Image, TouchableOpacity} from 'react-native'
 
-import {useCopy} from '../../utils/useCopy'
-import copyIcon from '../../assets/img/icon/copy-ext.png'
 import copiedIcon from '../../assets/img/icon/copied.png'
+import copyIcon from '../../assets/img/icon/copy-ext.png'
+import {useCopy} from '../../utils/useCopy'
 
 export type CopyButtonProps = {|
   value: string,

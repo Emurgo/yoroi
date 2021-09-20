@@ -2,6 +2,7 @@
 
 import React from 'react'
 import Svg, {Path} from 'react-native-svg'
+
 import {COLORS} from '../styles/config'
 
 type Props = {width: number, height: number, color?: string}

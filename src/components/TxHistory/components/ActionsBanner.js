@@ -1,16 +1,16 @@
 // @flow
 
-import React, {memo, useCallback} from 'react'
-import {useSelector} from 'react-redux'
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native'
-import {injectIntl, type IntlShape} from 'react-intl'
 import {useNavigation} from '@react-navigation/native'
+import React, {memo, useCallback} from 'react'
+import {type IntlShape, injectIntl} from 'react-intl'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {useSelector} from 'react-redux'
 
-import {actionMessages} from '../../../i18n/global-messages'
-import {isReadOnlySelector} from '../../../selectors'
-import {WALLET_ROUTES} from '../../../RoutesList'
-import SentIcon from '../../../assets/SentIcon'
 import ReceivedIcon from '../../../assets/ReceivedIcon'
+import SentIcon from '../../../assets/SentIcon'
+import {actionMessages} from '../../../i18n/global-messages'
+import {WALLET_ROUTES} from '../../../RoutesList'
+import {isReadOnlySelector} from '../../../selectors'
 import {COLORS} from '../../../styles/config'
 import {Spacer} from '../../UiKit'
 

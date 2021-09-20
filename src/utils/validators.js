@@ -4,10 +4,9 @@ import {validateMnemonic, wordlists} from 'bip39'
 import _ from 'lodash'
 
 import {normalizeToAddress} from '../crypto/shelley/utils'
-import assert from '../utils/assert'
-import {parseAmountDecimal, InvalidAssetAmount} from '../utils/parsing'
-
 import type {Token} from '../types/HistoryTransaction'
+import assert from '../utils/assert'
+import {InvalidAssetAmount, parseAmountDecimal} from '../utils/parsing'
 
 export type PasswordValidationErrors = {|
   passwordReq?: boolean,

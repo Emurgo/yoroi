@@ -1,7 +1,6 @@
 // @flow
 
 import jestSetup from '../../jestSetup'
-
 import {generateByronPlateFromMnemonics} from './plate'
 
 jestSetup.setup()

@@ -1,10 +1,11 @@
 // @flow
 
 import React from 'react'
-import {useSelector} from 'react-redux'
-import Markdown from 'react-native-easy-markdown'
-import {loadTOS} from '../../helpers/appSettings'
 import {ActivityIndicator} from 'react-native'
+import Markdown from 'react-native-easy-markdown'
+import {useSelector} from 'react-redux'
+
+import {loadTOS} from '../../helpers/appSettings'
 import {languageSelector} from '../../selectors'
 
 const TermsOfService = () => {

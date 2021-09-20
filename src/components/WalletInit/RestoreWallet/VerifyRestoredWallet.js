@@ -1,23 +1,21 @@
 /* eslint-disable react-native/no-inline-styles */
 // @flow
 
-import React, {useState, useEffect} from 'react'
-import {ActivityIndicator, View, ScrollView} from 'react-native'
+import {useNavigation, useRoute} from '@react-navigation/native'
+import React, {useEffect, useState} from 'react'
+import {defineMessages, useIntl} from 'react-intl'
+import {ActivityIndicator, ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
-import {Text, Button, StatusBar, BulletPointItem, Spacer} from '../../UiKit'
-
+import type {NetworkId, WalletImplementationId} from '../../../config/types'
+import {WALLET_IMPLEMENTATION_REGISTRY} from '../../../config/types'
 import {generateByronPlateFromMnemonics} from '../../../crypto/byron/plate'
 import {generateShelleyPlateFromMnemonics} from '../../../crypto/shelley/plate'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
-import WalletAddress from './WalletAddress'
 import WalletAccountIcon from '../../Common/WalletAccountIcon'
-import {WALLET_IMPLEMENTATION_REGISTRY} from '../../../config/types'
-
+import {BulletPointItem, Button, Spacer, StatusBar, Text} from '../../UiKit'
 import styles from './styles/VerifyRestoredWallet.style'
-
-import type {WalletImplementationId, NetworkId} from '../../../config/types'
+import WalletAddress from './WalletAddress'
 
 const messages = defineMessages({
   checksumLabel: {
@@ -95,7 +93,10 @@ const usePlateFromMnemonic = ({
   return [plate, addresses]
 }
 
-const VerifyWalletScreen = ({navigation, intl, route}: {intl: IntlShape} & Object /* TODO: type */) => {
+const VerifyWalletScreen = () => {
+  const intl = useIntl()
+  const navigation = useNavigation()
+  const route = (useRoute(): any)
   const {formatMessage} = intl
   const {phrase, networkId, walletImplementationId} = route.params
   const [plate, addresses] = usePlateFromMnemonic({mnemonic: phrase, networkId, walletImplementationId})
@@ -162,7 +163,7 @@ const VerifyWalletScreen = ({navigation, intl, route}: {intl: IntlShape} & Objec
   )
 }
 
-export default injectIntl(VerifyWalletScreen)
+export default VerifyWalletScreen
 
 const WalletInfo = (props) => <View {...props} />
 const Plate = (props) => <View {...props} style={styles.plate} />

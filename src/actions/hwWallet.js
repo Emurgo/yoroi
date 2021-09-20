@@ -1,13 +1,13 @@
 // @flow
 
+import type {Dispatch} from 'redux'
+
+import type {DeviceId, DeviceObj, HWDeviceInfo} from '../crypto/shelley/ledgerUtils'
+import {NoDeviceInfoError} from '../crypto/shelley/ledgerUtils'
 import walletManager from '../crypto/walletManager'
 import {hwDeviceInfoSelector} from '../selectors'
-import {Logger} from '../utils/logging'
-import {NoDeviceInfoError} from '../crypto/shelley/ledgerUtils'
-
-import type {Dispatch} from 'redux'
-import type {HWDeviceInfo, DeviceId, DeviceObj} from '../crypto/shelley/ledgerUtils'
 import type {State} from '../state'
+import {Logger} from '../utils/logging'
 
 const _saveHW = (hwDeviceInfo) => ({
   path: ['wallet', 'hwDeviceInfo'],

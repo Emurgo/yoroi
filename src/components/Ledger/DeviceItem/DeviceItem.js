@@ -1,10 +1,10 @@
 // @flow
 
 import React from 'react'
-import {Text, TouchableOpacity, ActivityIndicator} from 'react-native'
+import {ActivityIndicator, Text, TouchableOpacity} from 'react-native'
 
-import {styles} from './styles'
 import type {Device} from '../types'
+import {styles} from './styles'
 
 type Props = {
   device: Device,

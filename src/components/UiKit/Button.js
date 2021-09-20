@@ -1,11 +1,11 @@
 // @flow
 
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View, Image} from 'react-native'
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {type PressEvent} from 'react-native/Libraries/Types/CoreEventTypes'
+
 import {colors} from '../../styles/config'
 import Text from './Text'
-
-import {type PressEvent} from 'react-native/Libraries/Types/CoreEventTypes'
 
 const buttonOutline = {
   borderWidth: 1,
@@ -87,6 +87,7 @@ type ButtonProps = {
   testID?: string,
 }
 
+// eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
 class Button extends React.Component<ButtonProps> {
   render() {
     const {

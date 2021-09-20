@@ -1,16 +1,15 @@
 // @flow
 
-import React from 'react'
 import {createStackNavigator} from '@react-navigation/stack'
+import React from 'react'
+import type {IntlShape} from 'react-intl'
 import {defineMessages, injectIntl} from 'react-intl'
 
-import LanguagePickerScreen from './LanguagePickerScreen'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
 import {FIRST_RUN_ROUTES} from '../../RoutesList'
 import AcceptTermsOfServiceScreen from './AcceptTermsOfServiceScreen'
 import CustomPinScreen from './CustomPinScreen'
-
-import type {IntlShape} from 'react-intl'
+import LanguagePickerScreen from './LanguagePickerScreen'
 
 const messages = defineMessages({
   acceptTermsTitle: {

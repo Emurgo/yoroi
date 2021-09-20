@@ -1,11 +1,10 @@
 // @flow
 
 import React from 'react'
-import {View, TouchableOpacity, Image} from 'react-native'
+import {Image, TouchableOpacity, View} from 'react-native'
 
-import {Text, Button} from '.'
 import closeIcon from '../../assets/img/close.png'
-
+import {Button, Text} from '.'
 import styles from './styles/WarningBanner.style'
 
 type Props = {|

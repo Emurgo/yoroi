@@ -1,9 +1,8 @@
 // @flow
 
-import {writeAppSettings, APP_SETTINGS_KEYS} from '../helpers/appSettings'
-
 import {type Dispatch} from 'redux'
 
+import {APP_SETTINGS_KEYS, writeAppSettings} from '../helpers/appSettings'
 import {setLanguage} from '../i18n'
 
 export const changeLanguage = (languageCode: string) => (dispatch: Dispatch<any>) => {

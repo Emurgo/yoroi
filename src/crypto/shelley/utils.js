@@ -1,35 +1,34 @@
 // @flow
 
-import {BigNumber} from 'bignumber.js'
 import {
   Address,
   AssetName,
+  Assets,
   BaseAddress,
-  Bip32PublicKey,
-  Bip32PrivateKey,
-  ByronAddress,
-  Ed25519KeyHash,
-  RewardAddress,
-  ScriptHash,
-  StakeCredential,
   // TODO(v-almonacid): these bindings are not yet implemented
   // PointerAddress,
   // EnterpriseAddress,
   BigNum,
-  Value,
-  Assets,
+  Bip32PrivateKey,
+  Bip32PublicKey,
+  ByronAddress,
+  Ed25519KeyHash,
   MultiAsset,
+  RewardAddress,
+  ScriptHash,
+  StakeCredential,
+  Value,
 } from '@emurgo/react-native-haskell-shelley'
+import {BigNumber} from 'bignumber.js'
 
+import type {RawUtxo} from '../../api/types'
 import {CONFIG} from '../../config/config'
 import {getNetworkConfigById} from '../../config/networks'
-import {MultiToken} from '../MultiToken'
-
 import type {NetworkId} from '../../config/types'
-import type {Addressing} from '../types'
 import type {BaseAsset} from '../../types/HistoryTransaction'
-import type {RawUtxo} from '../../api/types'
 import type {DefaultTokenEntry} from '../MultiToken'
+import {MultiToken} from '../MultiToken'
+import type {Addressing} from '../types'
 
 const PRIMARY_ASSET_CONSTANTS = CONFIG.PRIMARY_ASSET_CONSTANTS
 

@@ -1,11 +1,10 @@
 // @flow
 
 import * as React from 'react'
-import {View, TouchableOpacity} from 'react-native'
-
-import Text from './Text'
+import {TouchableOpacity, View} from 'react-native'
 
 import styles from './styles/Banner.style'
+import Text from './Text'
 
 type Props = {|
   text?: string,
