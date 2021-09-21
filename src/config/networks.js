@@ -307,3 +307,7 @@ export const DEFAULT_ASSETS: Array<Object> = flatten(
       throw new Error(`Missing default asset for network type ${JSON.stringify(network)}`)
     }),
 )
+
+// Same as serialization-lib
+export const MAX_OUTPUT_SIZE = 4000
+export const MAX_TX_SIZE = 8000
