@@ -5,6 +5,7 @@ import {
   Certificate as V4Certificate,
   TransactionBuilder as V4TransactionBuilder,
 } from '@emurgo/react-native-haskell-shelley'
+import {LinearFee} from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 
 import type {RawUtxo} from '../api/types'
@@ -157,4 +158,14 @@ export type EncryptionMethod = 'BIOMETRICS' | 'SYSTEM_PIN' | 'MASTER_PASSWORD'
 export type PlateResponse = {|
   addresses: Array<string>,
   accountPlate: WalletChecksum,
+|}
+
+export type ProtocolParameters = {|
+  +linearFee: LinearFee,
+  +minimumUtxoVal: BigNumber,
+  +poolDeposit: BigNumber,
+  +keyDeposit: BigNumber,
+  +networkId: number,
+  +maxOutputSize?: number,
+  +maxTxSize?: number,
 |}
