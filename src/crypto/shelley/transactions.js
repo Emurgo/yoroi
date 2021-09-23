@@ -44,7 +44,8 @@ import {
   cardanoValueFromMultiToken,
 } from './utils'
 
-import {MAX_OUTPUT_SIZE, MAX_TX_SIZE} from '../../config/networks'
+import {MAX_TX_SIZE} from '../../config/networks'
+import {MAX_VALUE_BYTES} from '../../config/networks'
 import {AssetOverflowError, InsufficientFunds, NoOutputsError} from '../errors'
 import type {
   Address,
@@ -94,9 +95,9 @@ export const sendAllUnsignedTxFromUtxo = async (
     protocolParams.poolDeposit,
     protocolParams.keyDeposit,
     // $FlowFixMe sketchy-null-number
-    protocolParams.maxOutputSize || MAX_OUTPUT_SIZE,
+    protocolParams.maxValueBytes || MAX_VALUE_BYTES,
     // $FlowFixMe sketchy-null-number
-    protocolParams.maxTxSize || MAX_TX_SIZE,
+    protocolParams.maxTxBytes || MAX_TX_BYTES,
   )
   await txBuilder.set_ttl(absSlotNumber.plus(defaultTtlOffset).toNumber())
   for (const input of allUtxos) {
@@ -349,9 +350,9 @@ export const newAdaUnsignedTxFromUtxo = async (
     protocolParams.poolDeposit,
     protocolParams.keyDeposit,
     // $FlowFixMe sketchy-null-number
-    protocolParams.maxOutputSize || MAX_OUTPUT_SIZE,
+    protocolParams.maxValueBytes || MAX_VALUE_BYTES,
     // $FlowFixMe sketchy-null-number
-    protocolParams.maxTxSize || MAX_TX_SIZE,
+    protocolParams.maxTxBytes || MAX_TX_BYTES,
   )
   if (certificates.length > 0) {
     const certsNative = await Certificates.new()

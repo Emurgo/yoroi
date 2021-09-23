@@ -308,6 +308,5 @@ export const DEFAULT_ASSETS: Array<Object> = flatten(
     }),
 )
 
-// Same as serialization-lib
-export const MAX_OUTPUT_SIZE = 4000
-export const MAX_TX_SIZE = 8000
+export const MAX_VALUE_BYTES = 5000
+export const MAX_TX_BYTES = 16 * 1024

@@ -167,6 +167,6 @@ export type ProtocolParameters = {|
   +poolDeposit: BigNumber,
   +keyDeposit: BigNumber,
   +networkId: number,
-  +maxOutputSize?: number,
-  +maxTxSize?: number,
+  +maxValueBytes?: number,
+  +maxTxBytes?: number,
 |}
