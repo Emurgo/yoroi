@@ -1,29 +1,30 @@
 // @flow
 
-import React from 'react'
-import {View, SectionList} from 'react-native'
-import {injectIntl} from 'react-intl'
-import type {IntlShape} from 'react-intl'
-import _ from 'lodash'
 import {useNavigation} from '@react-navigation/native'
-
-import {Text} from '../UiKit'
-import TxHistoryListItem from './TxHistoryListItem'
-import {formatDateRelative} from '../../utils/format'
-
-import styles from './styles/TxHistoryList.style'
+import _ from 'lodash'
+import React from 'react'
+import {useIntl} from 'react-intl'
+import {SectionList, View} from 'react-native'
 
 import type {TransactionInfo} from '../../types/HistoryTransaction'
+import {formatDateRelative} from '../../utils/format'
+import {Text} from '../UiKit'
+import styles from './styles/TxHistoryList.style'
+import TxHistoryListItem from './TxHistoryListItem'
 
 type DayHeaderProps = {
   ts: any,
-  intl: IntlShape,
 }
-const DayHeader = ({ts, intl}: DayHeaderProps) => (
-  <View style={styles.dayHeader}>
-    <Text>{formatDateRelative(ts, intl)}</Text>
-  </View>
-)
+
+const DayHeader = ({ts}: DayHeaderProps) => {
+  const intl = useIntl()
+
+  return (
+    <View style={styles.dayHeader}>
+      <Text>{formatDateRelative(ts, intl)}</Text>
+    </View>
+  )
+}
 
 const getTransactionsByDate = (transactions: Dict<TransactionInfo>) =>
   _(transactions)
@@ -39,10 +40,10 @@ type Props = {
   transactions: Dict<TransactionInfo>,
   refreshing: boolean,
   onRefresh: () => any,
-  intl: IntlShape,
 }
 
-const TxHistoryList = ({transactions, refreshing, onRefresh, intl}: Props) => {
+const TxHistoryList = ({transactions, refreshing, onRefresh}: Props) => {
+  const intl = useIntl()
   const navigation = useNavigation()
   // TODO(ppershing): add proper memoization here
   const groupedTransactions = getTransactionsByDate(transactions)
@@ -62,4 +63,4 @@ const TxHistoryList = ({transactions, refreshing, onRefresh, intl}: Props) => {
   )
 }
 
-export default injectIntl(TxHistoryList)
+export default TxHistoryList

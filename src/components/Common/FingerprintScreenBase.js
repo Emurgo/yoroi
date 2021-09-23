@@ -1,14 +1,13 @@
 // @flow
 
 import React from 'react'
-import {View, Image, TouchableOpacity, Platform} from 'react-native'
-import {defineMessages, type IntlShape} from 'react-intl'
+import {type IntlShape, defineMessages} from 'react-intl'
+import {Image, Platform, TouchableOpacity, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import {Text, StatusBar, ScreenBackground} from '../UiKit'
-import fingerprintImage from '../../assets/img/fingerprint.png'
 import chevronLeft from '../../assets/img/chevron_left.png'
-
+import fingerprintImage from '../../assets/img/fingerprint.png'
+import {ScreenBackground, StatusBar, Text} from '../UiKit'
 import styles from './styles/FingerprintScreenBase.style'
 
 const messages = defineMessages({

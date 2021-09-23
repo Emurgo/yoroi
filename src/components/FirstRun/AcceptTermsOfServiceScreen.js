@@ -1,21 +1,20 @@
 // @flow
 
-import React from 'react'
-import {useDispatch} from 'react-redux'
-import {SafeAreaView} from 'react-native-safe-area-context'
-import {ScrollView, Platform, View} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {useNavigation} from '@react-navigation/native'
+import React from 'react'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {Platform, ScrollView, View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
+import {useDispatch} from 'react-redux'
 
-import TermsOfService from '../Common/TermsOfService'
-import {Checkbox, Button, StatusBar, PleaseWaitModal, Spacer} from '../UiKit'
-import {FIRST_RUN_ROUTES} from '../../RoutesList'
 import {acceptAndSaveTos, setSystemAuth, signin} from '../../actions'
-import {canBiometricEncryptionBeEnabled} from '../../helpers/deviceSettings'
 import {CONFIG} from '../../config/config'
-
-import styles from './styles/AcceptTermsOfServiceScreen.styles'
+import {canBiometricEncryptionBeEnabled} from '../../helpers/deviceSettings'
 import globalMessages from '../../i18n/global-messages'
+import {FIRST_RUN_ROUTES} from '../../RoutesList'
+import TermsOfService from '../Common/TermsOfService'
+import {Button, Checkbox, PleaseWaitModal, Spacer, StatusBar} from '../UiKit'
+import styles from './styles/AcceptTermsOfServiceScreen.styles'
 
 const messages = defineMessages({
   aggreeClause: {

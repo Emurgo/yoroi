@@ -1,9 +1,8 @@
 // @flow
 
-import walletManager from '../crypto/walletManager'
-
 import type {Dispatch} from 'redux'
 
+import walletManager from '../crypto/walletManager'
 import type {State} from '../state'
 
 // start fetching utxo

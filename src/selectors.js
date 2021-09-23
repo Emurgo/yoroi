@@ -1,21 +1,20 @@
 // @flow
 
-import {mapValues, isEmpty, fromPairs} from 'lodash'
 import {BigNumber} from 'bignumber.js'
+import {fromPairs, isEmpty, mapValues} from 'lodash'
 import {createSelector} from 'reselect'
 
-import {processTxHistoryData} from './crypto/processTransactions'
-import {TRANSACTION_STATUS, TRANSACTION_DIRECTION} from './types/HistoryTransaction'
-import {ObjectValues} from './utils/flow'
-import {MultiToken, getDefaultNetworkTokenEntry} from './crypto/MultiToken'
-import {getDefaultAssets, getDefaultAssetByNetworkId, getCardanoDefaultAsset} from './config/config'
-import {NETWORK_REGISTRY} from './config/types'
-
-import type {State, WalletMeta, ServerStatusCache} from './state'
-import type {TransactionInfo, Transaction, Token, DefaultAsset} from './types/HistoryTransaction'
-import type {NetworkId} from './config/types'
 import type {RawUtxo} from './api/types'
+import {getCardanoDefaultAsset, getDefaultAssetByNetworkId, getDefaultAssets} from './config/config'
+import type {NetworkId} from './config/types'
+import {NETWORK_REGISTRY} from './config/types'
+import {getDefaultNetworkTokenEntry, MultiToken} from './crypto/MultiToken'
+import {processTxHistoryData} from './crypto/processTransactions'
 import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
+import type {ServerStatusCache, State, WalletMeta} from './state'
+import type {DefaultAsset, Token, Transaction, TransactionInfo} from './types/HistoryTransaction'
+import {TRANSACTION_DIRECTION, TRANSACTION_STATUS} from './types/HistoryTransaction'
+import {ObjectValues} from './utils/flow'
 
 export const transactionsInfoSelector: (State) => Dict<TransactionInfo> = createSelector(
   (state) => state.wallet.transactions,

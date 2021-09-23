@@ -1,17 +1,16 @@
 // @flow
 
 import jestSetup from '../../jestSetup'
-
 import {
-  stripCommas,
-  stripInvalidCharacters,
+  editedFormatter,
   formatMultiLangSeparator,
   formatSeparatorWithoutDigits,
-  stripExcessiveDecimals,
+  pastedFormatter,
   stripAllButFirstDecimalSeparator,
   stripAllButLastDecimalSeparators,
-  editedFormatter,
-  pastedFormatter,
+  stripCommas,
+  stripExcessiveDecimals,
+  stripInvalidCharacters,
 } from './amountUtils'
 
 jestSetup.setup()

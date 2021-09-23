@@ -1,11 +1,11 @@
 // @flow
 
 import React from 'react'
-import {Platform, Text, View, StyleSheet} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
+import {Platform, StyleSheet, Text, View} from 'react-native'
 
-import {BulletPointItem} from '../UiKit'
 import {ledgerMessages} from '../../i18n/global-messages'
+import {BulletPointItem} from '../UiKit'
 
 const messages = defineMessages({
   beforeConfirm: {
@@ -15,7 +15,6 @@ const messages = defineMessages({
 })
 
 type Props = {|
-  intl: IntlShape,
   useUSB: boolean,
   addMargin?: boolean,
 |}
@@ -31,7 +30,8 @@ const styles = StyleSheet.create({
   },
 })
 
-const HWInstructions = ({intl, useUSB, addMargin}: Props) => {
+const HWInstructions = ({useUSB, addMargin}: Props) => {
+  const intl = useIntl()
   const rows = []
   if (useUSB) {
     rows.push(intl.formatMessage(ledgerMessages.connectUsb), intl.formatMessage(ledgerMessages.keepUsbConnected))
@@ -52,4 +52,4 @@ const HWInstructions = ({intl, useUSB, addMargin}: Props) => {
   )
 }
 
-export default injectIntl(HWInstructions)
+export default HWInstructions

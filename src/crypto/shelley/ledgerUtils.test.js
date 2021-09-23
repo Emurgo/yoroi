@@ -1,9 +1,9 @@
 // @flow
 
+import type {GetVersionResponse} from '@cardano-foundation/ledgerjs-hw-app-cardano'
+
 import jestSetup from '../../jestSetup'
 import {checkDeviceVersion, DeprecatedAdaAppError} from './ledgerUtils'
-
-import type {GetVersionResponse} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 
 jestSetup.setup()
 

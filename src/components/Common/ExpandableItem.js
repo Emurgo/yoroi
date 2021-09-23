@@ -1,12 +1,11 @@
 // @flow
 
 import React from 'react'
-import {TouchableOpacity, View, Image} from 'react-native'
+import {Image, TouchableOpacity, View} from 'react-native'
 
-import {Text} from '../UiKit'
 import chevronDown from '../../assets/img/chevron_down.png'
 import chevronUp from '../../assets/img/chevron_up.png'
-
+import {Text} from '../UiKit'
 import styles from './styles/ExpandableItem.style'
 
 type Props = {

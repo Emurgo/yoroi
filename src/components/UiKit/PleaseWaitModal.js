@@ -1,10 +1,9 @@
 // @flow
 
 import React from 'react'
-import {Text, ActivityIndicator, View} from 'react-native'
+import {ActivityIndicator, Text, View} from 'react-native'
 
 import Modal from './Modal'
-
 import styles from './styles/PleaseWaitModal.style'
 type PleaseWaitViewProps = {|
   title: string,

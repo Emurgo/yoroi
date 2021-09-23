@@ -1,20 +1,19 @@
 // @flow
 
+import {useNavigation} from '@react-navigation/native'
 import React from 'react'
+import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
-import {useNavigation} from '@react-navigation/native'
 
+import {encryptAndStoreCustomPin, showErrorDialog} from '../../actions'
+import {CONFIG} from '../../config/config'
+import {authenticateByCustomPin} from '../../crypto/customPin'
+import {errorMessages} from '../../i18n/global-messages'
+import {customPinHashSelector} from '../../selectors'
 import PinInput from '../Common/PinInput'
 import PinRegistrationForm from '../Common/PinRegistrationForm'
-import {authenticateByCustomPin} from '../../crypto/customPin'
-import {encryptAndStoreCustomPin, showErrorDialog} from '../../actions'
-import {customPinHashSelector} from '../../selectors'
-import {CONFIG} from '../../config/config'
 import {StatusBar} from '../UiKit'
-import {errorMessages} from '../../i18n/global-messages'
-
 import styles from './styles/ChangeCustomPinScreen.style'
 
 const messages = defineMessages({
@@ -40,9 +39,8 @@ const messages = defineMessages({
   },
 })
 
-type Props = {intl: IntlShape}
-
-const ChangeCustomPinScreen = ({intl}: Props) => {
+const ChangeCustomPinScreen = () => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const dispatch = useDispatch()
   const currentPinHash = useSelector(customPinHashSelector)
@@ -107,4 +105,4 @@ const ChangeCustomPinScreen = ({intl}: Props) => {
   )
 }
 
-export default injectIntl(ChangeCustomPinScreen)
+export default ChangeCustomPinScreen

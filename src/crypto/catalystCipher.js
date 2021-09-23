@@ -1,8 +1,8 @@
 // @flow
 
-import pbkdf2 from 'pbkdf2'
 import chacha from 'chacha'
 import cryptoRandomString from 'crypto-random-string'
+import pbkdf2 from 'pbkdf2'
 
 const PBKDF_ITERATIONS = 12983
 const SALT_SIZE = 16

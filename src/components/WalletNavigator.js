@@ -1,36 +1,35 @@
 // @flow
 
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
+import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
+import {defineMessages, useIntl} from 'react-intl'
 import {Image} from 'react-native'
 import {useSelector} from 'react-redux'
-import {createStackNavigator} from '@react-navigation/stack'
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
-import {walletMetaSelector, isReadOnlySelector} from '../selectors'
-import {isHaskellShelley} from '../config/config'
-import {WALLET_ROOT_ROUTES, WALLET_ROUTES, CATALYST_ROUTES} from '../RoutesList'
-import WalletSelectionScreen from './WalletSelection/WalletSelectionScreen'
-import TxHistoryNavigator from './TxHistory/TxHistoryNavigator'
-import StakingCenterNavigator from './Delegation/StakingCenterNavigator'
-import StakingDashboardNavigator from './Delegation/StakingDashboardNavigator'
-import SendScreenNavigator from './Send/SendScreenNavigator'
-import ReceiveScreenNavigator from './Receive/ReceiveScreenNavigator'
-import SettingsScreenNavigator from './Settings/SettingsScreenNavigator'
-import {defaultNavigationOptions} from '../navigationOptions'
-import CatalystNavigator from './Catalyst/CatalystNavigator'
-
-import {theme} from '../styles/config'
-import iconHistory from '../assets/img/icon/txhistory.png'
-import iconHistoryActive from '../assets/img/icon/txhistory-active.png'
-import iconSend from '../assets/img/icon/send.png'
-import iconSendActive from '../assets/img/icon/send-active.png'
-import iconReceive from '../assets/img/icon/receive.png'
-import iconReceiveActive from '../assets/img/icon/receive-active.png'
 import iconDashboard from '../assets/img/icon/dashboard.png'
 import iconDashboardActive from '../assets/img/icon/dashboard-active.png'
 import iconDelegate from '../assets/img/icon/delegation.png'
 import iconDelegateActive from '../assets/img/icon/delegation-active.png'
+import iconReceive from '../assets/img/icon/receive.png'
+import iconReceiveActive from '../assets/img/icon/receive-active.png'
+import iconSend from '../assets/img/icon/send.png'
+import iconSendActive from '../assets/img/icon/send-active.png'
+import iconHistory from '../assets/img/icon/txhistory.png'
+import iconHistoryActive from '../assets/img/icon/txhistory-active.png'
+import {isHaskellShelley} from '../config/config'
+import {defaultNavigationOptions} from '../navigationOptions'
+import {CATALYST_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../RoutesList'
+import {isReadOnlySelector, walletMetaSelector} from '../selectors'
+import {theme} from '../styles/config'
+import CatalystNavigator from './Catalyst/CatalystNavigator'
+import StakingCenterNavigator from './Delegation/StakingCenterNavigator'
+import StakingDashboardNavigator from './Delegation/StakingDashboardNavigator'
+import ReceiveScreenNavigator from './Receive/ReceiveScreenNavigator'
+import SendScreenNavigator from './Send/SendScreenNavigator'
+import SettingsScreenNavigator from './Settings/SettingsScreenNavigator'
+import TxHistoryNavigator from './TxHistory/TxHistoryNavigator'
+import WalletSelectionScreen from './WalletSelection/WalletSelectionScreen'
 
 const messages = defineMessages({
   transactionsButton: {
@@ -92,7 +91,8 @@ type WalletTabRoutes = {
 }
 
 const Tab = createBottomTabNavigator<any, WalletTabRoutes, any>()
-const WalletTabNavigator = injectIntl(({intl}: {intl: IntlShape}) => {
+const WalletTabNavigator = () => {
+  const intl = useIntl()
   const walletMeta = useSelector(walletMetaSelector)
   const isReadOnly = useSelector(isReadOnlySelector)
 
@@ -138,7 +138,7 @@ const WalletTabNavigator = injectIntl(({intl}: {intl: IntlShape}) => {
       )}
     </Tab.Navigator>
   )
-})
+}
 
 type WalletStackRoute = {
   'wallet-selection': any,

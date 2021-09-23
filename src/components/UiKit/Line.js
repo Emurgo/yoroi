@@ -2,6 +2,7 @@
 
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
+
 import {COLORS} from '../../styles/config'
 
 const styles = StyleSheet.create({

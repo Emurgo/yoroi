@@ -4,7 +4,6 @@
 // Note: All this code was taken from the Yoroi Extension and adapted for
 // compatibility with Yoroi mobile's types and async operation
 
-import {BigNumber} from 'bignumber.js'
 /* eslint-disable camelcase */
 import {
   AuxiliaryData,
@@ -14,8 +13,8 @@ import {
   ByronAddress,
   Certificate,
   Certificates,
-  LinearFee,
   hash_transaction,
+  LinearFee,
   make_icarus_bootstrap_witness,
   make_vkey_witness,
   min_ada_required,
@@ -33,27 +32,30 @@ import {
   Vkeywitnesses,
   Withdrawals,
 } from '@emurgo/react-native-haskell-shelley'
+import {BigNumber} from 'bignumber.js'
+
+import type {RawUtxo} from '../../api/types'
 /* eslint-enable camelcase */
 import {CONFIG} from '../../config/config'
-import {InsufficientFunds, NoOutputsError, AssetOverflowError} from '../errors'
-import {
-  getCardanoAddrKeyHash,
-  normalizeToAddress,
-  derivePrivateByAddressing,
-  cardanoValueFromRemoteFormat,
-  multiTokenFromCardanoValue,
-  cardanoValueFromMultiToken,
-} from './utils'
-
+import {MAX_OUTPUT_SIZE, MAX_TX_SIZE} from '../../config/networks'
+import {AssetOverflowError, InsufficientFunds, NoOutputsError} from '../errors'
 import type {
   Address,
-  Addressing,
-  V4UnsignedTxUtxoResponse,
-  V4UnsignedTxAddressedUtxoResponse,
   AddressedUtxo,
+  Addressing,
+  ProtocolParameters,
   TxOutput,
+  V4UnsignedTxAddressedUtxoResponse,
+  V4UnsignedTxUtxoResponse,
 } from '../types'
-import type {RawUtxo} from '../../api/types'
+import {
+  cardanoValueFromMultiToken,
+  cardanoValueFromRemoteFormat,
+  derivePrivateByAddressing,
+  getCardanoAddrKeyHash,
+  multiTokenFromCardanoValue,
+  normalizeToAddress,
+} from './utils'
 
 const AddInputResult = Object.freeze({
   VALID: 0,
@@ -76,13 +78,7 @@ export const sendAllUnsignedTxFromUtxo = async (
   receiver: {|...Address, ...InexactSubset<Addressing>|},
   allUtxos: Array<RawUtxo>,
   absSlotNumber: BigNumber,
-  protocolParams: {|
-    linearFee: LinearFee,
-    minimumUtxoVal: BigNum,
-    poolDeposit: BigNum,
-    keyDeposit: BigNum,
-    networkId: number,
-  |},
+  protocolParams: ProtocolParameters,
   auxiliaryData: AuxiliaryData | void,
 ): Promise<V4UnsignedTxUtxoResponse> => {
   const totalBalance = allUtxos
@@ -97,6 +93,10 @@ export const sendAllUnsignedTxFromUtxo = async (
     protocolParams.minimumUtxoVal,
     protocolParams.poolDeposit,
     protocolParams.keyDeposit,
+    // $FlowFixMe sketchy-null-number
+    protocolParams.maxOutputSize || MAX_OUTPUT_SIZE,
+    // $FlowFixMe sketchy-null-number
+    protocolParams.maxTxSize || MAX_TX_SIZE,
   )
   await txBuilder.set_ttl(absSlotNumber.plus(defaultTtlOffset).toNumber())
   for (const input of allUtxos) {
@@ -308,13 +308,7 @@ export const newAdaUnsignedTxFromUtxo = async (
   changeAdaAddr: void | {|...Address, ...Addressing|},
   utxos: Array<RawUtxo>,
   absSlotNumber: BigNumber,
-  protocolParams: {|
-    linearFee: LinearFee,
-    minimumUtxoVal: BigNum,
-    poolDeposit: BigNum,
-    keyDeposit: BigNum,
-    networkId: number,
-  |},
+  protocolParams: ProtocolParameters,
   certificates: $ReadOnlyArray<Certificate>,
   withdrawals: $ReadOnlyArray<{|
     address: RewardAddress,
@@ -354,6 +348,10 @@ export const newAdaUnsignedTxFromUtxo = async (
     protocolParams.minimumUtxoVal,
     protocolParams.poolDeposit,
     protocolParams.keyDeposit,
+    // $FlowFixMe sketchy-null-number
+    protocolParams.maxOutputSize || MAX_OUTPUT_SIZE,
+    // $FlowFixMe sketchy-null-number
+    protocolParams.maxTxSize || MAX_TX_SIZE,
   )
   if (certificates.length > 0) {
     const certsNative = await Certificates.new()
@@ -603,10 +601,7 @@ async function minRequiredForChange(
   txBuilder: TransactionBuilder,
   changeAdaAddr: {|...Address, ...Addressing|},
   value: Value,
-  protocolParams: {
-    linearFee: LinearFee,
-    minimumUtxoVal: BigNum,
-  },
+  protocolParams: $Shape<ProtocolParameters>,
 ): Promise<BigNum> {
   if (changeAdaAddr == null) throw new NoOutputsError()
   const wasmChange = await normalizeToAddress(changeAdaAddr.address)

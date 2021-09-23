@@ -1,7 +1,6 @@
 // @flow
 
 import jestSetup from '../jestSetup'
-
 import {versionCompare} from './versioning'
 
 jestSetup.setup()

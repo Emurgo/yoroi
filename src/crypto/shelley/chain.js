@@ -1,27 +1,40 @@
+/* eslint-disable no-use-before-define */
 // @flow
 
 /**
  * Shelley- & Byron-compatible address generator
  */
 
+import {BaseAddress, Bip32PublicKey, RewardAddress, StakeCredential} from '@emurgo/react-native-haskell-shelley'
 import _ from 'lodash'
 import type {Moment} from 'moment'
-import {BaseAddress, Bip32PublicKey, StakeCredential, RewardAddress} from '@emurgo/react-native-haskell-shelley'
+import {defaultMemoize} from 'reselect'
 
 import {CONFIG, isByron, isHaskellShelley} from '../../config/config'
 import {getNetworkConfigById} from '../../config/networks'
+import type {NetworkId, WalletImplementationId} from '../../config/types'
 import assert from '../../utils/assert'
-import {defaultMemoize} from 'reselect'
 import {Logger} from '../../utils/logging'
-import * as util from '../byron/util'
-import {ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
-
 import type {CryptoAccount} from '../byron/util'
+import * as util from '../byron/util'
 import type {AddressType} from '../commonUtils'
-import type {WalletImplementationId, NetworkId} from '../../config/types'
+import {ADDRESS_TYPE_TO_CHANGE} from '../commonUtils'
 
 export type AddressBlock = [number, Moment, Array<string>]
 
+type ShelleyAddressGeneratorJSON = {|
+  accountPubKeyHex: string,
+  walletImplementationId: WalletImplementationId,
+  type: AddressType,
+|}
+
+type ByronAddressGeneratorJSON = {|
+  account: CryptoAccount,
+  walletImplementationId: WalletImplementationId,
+  type: AddressType,
+|}
+
+type AddressGeneratorJSON = ShelleyAddressGeneratorJSON | ByronAddressGeneratorJSON
 export class AddressGenerator {
   accountPubKeyHex: string
   type: AddressType
@@ -114,7 +127,7 @@ export class AddressGenerator {
     return await util.getAddresses(this.byronAccount, this.type, idxs)
   }
 
-  toJSON() {
+  toJSON(): AddressGeneratorJSON {
     return {
       accountPubKeyHex: this.accountPubKeyHex,
       walletImplementationId: this.walletImplementationId,
@@ -122,34 +135,27 @@ export class AddressGenerator {
     }
   }
 
-  // note: byron-era wallets (ie. wallets created before the shelley
-  // hardfork), stored the account-level publick key as a CryptoAccount object.
-  // From v3.0.2 on, we simply store it as a plain hex string)
-  static fromJSON(data: any, networkId: NetworkId) {
-    const {accountPubKeyHex, type, walletImplementationId} = data
+  static fromJSON(data: AddressGeneratorJSON, networkId: NetworkId) {
+    const {type, walletImplementationId} = data
 
-    let _accountPubKeyHex
-    if (accountPubKeyHex == null) {
-      // this should be a wallet created in Byron
-      const {account} = data
-      if (account?.root_cached_key != null) {
-        // byron-era wallet
-        _accountPubKeyHex = account.root_cached_key
-      } else {
-        throw new Error('cannot retrieve account public key.')
-      }
-    } else {
-      // shelley-era wallet
-      _accountPubKeyHex = accountPubKeyHex
+    return new AddressGenerator(getPublicAddressHex(data), type, walletImplementationId, networkId)
+  }
+}
+
+// note: byron-era wallets (ie. wallets created before the shelley
+// hardfork), stored the account-level public key as a CryptoAccount object.
+// From v3.0.2 on, we simply store it as a plain hex string)
+const getPublicAddressHex = (data: AddressGeneratorJSON) => {
+  if (data.accountPubKeyHex == null) {
+    // byron-era wallet
+    if ((data: any).account?.root_cached_key == null) {
+      throw new Error('cannot retrieve account public key.')
     }
 
-    let _walletImplementationId
-    if (walletImplementationId == null) {
-      _walletImplementationId = CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID
-    } else {
-      _walletImplementationId = walletImplementationId
-    }
-    return new AddressGenerator(_accountPubKeyHex, type, _walletImplementationId, networkId)
+    return ((data: any): ByronAddressGeneratorJSON).account.root_cached_key
+  } else {
+    // shelley-era wallet
+    return ((data: any): ShelleyAddressGeneratorJSON).accountPubKeyHex
   }
 }
 
@@ -158,6 +164,13 @@ type AsyncAddressFilter = (addresses: Array<string>) => Promise<Array<string>>
 export type Addresses = Array<string>
 
 const _addressToIdxSelector = (addresses: Array<string>) => _.fromPairs(addresses.map((addr, i) => [addr, i]))
+
+export type AddressChainJSON = {
+  gapLimit: number,
+  blockSize: number,
+  addresses: Addresses,
+  addressGenerator: AddressGeneratorJSON,
+}
 
 export class AddressChain {
   _addresses: Addresses = []
@@ -180,7 +193,7 @@ export class AddressChain {
     this._gapLimit = gapLimit
   }
 
-  toJSON() {
+  toJSON(): AddressChainJSON {
     return {
       gapLimit: this._gapLimit,
       blockSize: this._blockSize,
@@ -189,7 +202,7 @@ export class AddressChain {
     }
   }
 
-  static fromJSON(data: any, networkId: NetworkId) {
+  static fromJSON(data: AddressChainJSON, networkId: NetworkId) {
     const {gapLimit, blockSize, addresses, addressGenerator} = data
     const chain = new AddressChain(AddressGenerator.fromJSON(addressGenerator, networkId), blockSize, gapLimit)
     // is initialized && addresses

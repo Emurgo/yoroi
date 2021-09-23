@@ -5,22 +5,22 @@
 
 import {
   Address,
-  PublicKey,
+  AuxiliaryData,
+  BigNum,
   Bip32PrivateKey,
   encode_json_str_to_metadatum,
+  GeneralTransactionMetadata,
   MetadataJsonSchema,
   MetadataList,
-  GeneralTransactionMetadata,
-  BigNum,
-  AuxiliaryData,
+  PublicKey,
   TransactionMetadatum,
 } from '@emurgo/react-native-haskell-shelley'
 import {mnemonicToEntropy} from 'bip39'
 import blake2b from 'blake2b'
 
-import {generateAdaMnemonic} from '../commonUtils'
 import {CONFIG} from '../../config/config'
 import {Logger} from '../../utils/logging'
+import {generateAdaMnemonic} from '../commonUtils'
 
 export const CatalystLabels = Object.freeze({
   DATA: 61284,

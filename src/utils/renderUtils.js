@@ -1,12 +1,13 @@
+/* eslint-disable react-prefer-function-component/react-prefer-function-component */
 // @flow
 
+import type {ComponentType} from 'react'
 // $FlowFixMe unstable_Profiler is missing fron react annotation
 import React, {unstable_Profiler as Profiler} from 'react'
 import {Text} from 'react-native'
-import {Logger} from './logging'
-
-import type {ComponentType} from 'react'
 import type {HOC} from 'recompose'
+
+import {Logger} from './logging'
 
 export const onDidMount =
   <Props: {}, Callback: ($Shape<Props>) => mixed>(didMount: Callback): HOC<Props, Props> =>

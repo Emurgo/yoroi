@@ -2,19 +2,19 @@
 
 import {
   BigNum,
-  RewardAddress,
-  PrivateKey,
-  StakeCredential,
-  NetworkInfo,
-  MetadataJsonSchema,
-  MetadataList,
-  GeneralTransactionMetadata,
   /* eslint-disable-next-line camelcase */
   decode_metadatum_to_json_str,
+  GeneralTransactionMetadata,
+  MetadataJsonSchema,
+  MetadataList,
+  NetworkInfo,
+  PrivateKey,
+  RewardAddress,
+  StakeCredential,
 } from '@emurgo/react-native-haskell-shelley'
 
 import jestSetup from '../../jestSetup'
-import {CatalystLabels, auxiliaryDataWithRegistrationMetadata, isRegistrationOpen} from './catalystUtils'
+import {auxiliaryDataWithRegistrationMetadata, CatalystLabels, isRegistrationOpen} from './catalystUtils'
 
 jestSetup.setup()
 

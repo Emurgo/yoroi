@@ -1,8 +1,8 @@
 // @flow
 
+import type {Node} from 'react'
 import React from 'react'
 import {Animated} from 'react-native'
-import type {Node} from 'react'
 import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
 type FadeOutViewProps = {

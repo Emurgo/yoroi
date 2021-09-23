@@ -1,12 +1,10 @@
 // @flow
 
 import React from 'react'
-
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
 import {View} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
-import {Text, Button} from '../UiKit'
-
+import {Button, Text} from '../UiKit'
 import styles from './styles/PoolDetailScreen.style'
 
 const messages = defineMessages({

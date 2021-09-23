@@ -1,13 +1,12 @@
 // @flow
 
+import {type IntlShape, defineMessages} from 'react-intl'
+import {NativeModules, Platform} from 'react-native'
 import * as Keychain from 'react-native-keychain'
-import {Platform, NativeModules} from 'react-native'
-import {defineMessages, type IntlShape} from 'react-intl'
 
-import storage from '../utils/storage'
-import assert from '../utils/assert'
 import {decryptData, encryptData} from '../crypto/commonUtils'
-
+import assert from '../utils/assert'
+import storage from '../utils/storage'
 import type {EncryptionMethod} from './types'
 
 const {KeyStoreBridge} = NativeModules
@@ -44,6 +43,9 @@ class KeyStore {
         service: dataKey,
         authenticationPrompt: message,
       })
+
+      if (!credentials) throw new Error('credentials not found')
+
       return credentials.password
     }
 

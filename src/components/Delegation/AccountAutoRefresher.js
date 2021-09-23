@@ -1,21 +1,21 @@
 // @flow
 
-import React from 'react'
 import {useNavigation} from '@react-navigation/native'
-import {compose} from 'redux'
-import {connect} from 'react-redux'
 import type {ComponentType} from 'react'
+import React from 'react'
+import {connect} from 'react-redux'
+import {compose} from 'redux'
 
+import {fetchAccountState} from '../../actions/account'
+import type {RawUtxo} from '../../api/types'
 import {
   hasPendingOutgoingTransactionSelector,
   isFetchingAccountStateSelector,
   isOnlineSelector,
   utxosSelector,
 } from '../../selectors'
-import {fetchAccountState} from '../../actions/account'
 
-import type {RawUtxo} from '../../api/types'
-
+// eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
 class AccountAutoRefresher extends React.Component<{
   isFetching: boolean,
   isOnline: boolean,

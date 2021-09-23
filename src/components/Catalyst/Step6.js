@@ -5,24 +5,22 @@
  * Option to download the QR code
  */
 
-import React, {useEffect, useState} from 'react'
-import {View, ScrollView, SafeAreaView, TouchableOpacity, Image, NativeModules, Platform} from 'react-native'
 import Clipboard from '@react-native-community/clipboard'
-import QRCode from 'react-native-qrcode-svg'
-import {injectIntl, defineMessages} from 'react-intl'
-import {connect} from 'react-redux'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
-
-import CatalystBackupCheckModal from './CatalystBackupCheckModal'
-import {Text, Button, ProgressStep} from '../UiKit'
-import {WALLET_ROOT_ROUTES} from '../../RoutesList'
-import {confirmationMessages} from '../../i18n/global-messages'
-import copyImage from '../../assets/img/copyd.png'
-
-import styles from './styles/Step6.style'
-
 import type {ComponentType} from 'react'
+import React, {useEffect, useState} from 'react'
 import type {IntlShape} from 'react-intl'
+import {defineMessages, injectIntl} from 'react-intl'
+import {Image, NativeModules, Platform, SafeAreaView, ScrollView, TouchableOpacity, View} from 'react-native'
+import QRCode from 'react-native-qrcode-svg'
+import {connect} from 'react-redux'
+
+import copyImage from '../../assets/img/copyd.png'
+import {confirmationMessages} from '../../i18n/global-messages'
+import {WALLET_ROOT_ROUTES} from '../../RoutesList'
+import {Button, ProgressStep, Text} from '../UiKit'
+import CatalystBackupCheckModal from './CatalystBackupCheckModal'
+import styles from './styles/Step6.style'
 
 const messages = defineMessages({
   subTitle: {

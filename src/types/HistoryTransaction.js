@@ -1,8 +1,7 @@
 // @flow
 
+import type {RemoteAsset, RemoteCertificateMeta} from '../api/types'
 import {type TokenEntry, type TokenEntryPlain} from '../crypto/MultiToken'
-
-import type {RemoteCertificateMeta, RemoteAsset} from '../api/types'
 
 export const TRANSACTION_DIRECTION = {
   SENT: 'SENT',

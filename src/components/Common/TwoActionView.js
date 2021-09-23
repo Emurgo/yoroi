@@ -1,14 +1,13 @@
 // @flow
 
 import React from 'react'
-import {View, ScrollView} from 'react-native'
-import {injectIntl, type IntlShape} from 'react-intl'
-
-import {Text, Button} from '../UiKit'
-import {confirmationMessages} from '../../i18n/global-messages'
-
-import styles from './styles/TwoActionView.style'
+import {type IntlShape, injectIntl} from 'react-intl'
+import {ScrollView, View} from 'react-native'
 import {type PressEvent} from 'react-native/Libraries/Types/CoreEventTypes'
+
+import {confirmationMessages} from '../../i18n/global-messages'
+import {Button, Text} from '../UiKit'
+import styles from './styles/TwoActionView.style'
 
 type Props = {|
   +intl: IntlShape,

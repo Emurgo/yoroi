@@ -1,10 +1,8 @@
 // @flow
 
 import jestSetup from '../../jestSetup'
-
-import {AddressChain, AddressGenerator} from './chain'
-
 import type {CryptoAccount} from '../byron/util'
+import {AddressChain, AddressGenerator} from './chain'
 
 jestSetup.setup()
 

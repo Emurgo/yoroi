@@ -1,19 +1,17 @@
 // @flow
 
 import React from 'react'
+import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
-import {useSelector, useDispatch} from 'react-redux'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useDispatch, useSelector} from 'react-redux'
 
-import {CONFIG} from '../../config/config'
-import PinInput from '../Common/PinInput'
-import {authenticateByCustomPin} from '../../crypto/customPin'
-import {customPinHashSelector} from '../../selectors'
 import {showErrorDialog, signin} from '../../actions'
+import {CONFIG} from '../../config/config'
+import {authenticateByCustomPin} from '../../crypto/customPin'
 import {errorMessages} from '../../i18n/global-messages'
-
+import {customPinHashSelector} from '../../selectors'
+import PinInput from '../Common/PinInput'
 import {StatusBar} from '../UiKit'
-
 import styles from './styles/CustomPinLogin.style'
 
 const messages = defineMessages({
@@ -23,11 +21,8 @@ const messages = defineMessages({
   },
 })
 
-type Props = {
-  intl: IntlShape,
-}
-
-const CustomPinLogin = injectIntl(({intl}: Props) => {
+const CustomPinLogin = () => {
+  const intl = useIntl()
   const dispatch = useDispatch()
   const customPinHash = useSelector(customPinHashSelector)
   const onPinEnter = async (pin: string) => {
@@ -60,6 +55,6 @@ const CustomPinLogin = injectIntl(({intl}: Props) => {
       />
     </View>
   )
-})
+}
 
-export default injectIntl(CustomPinLogin)
+export default CustomPinLogin

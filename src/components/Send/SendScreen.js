@@ -1,63 +1,61 @@
 // @flow
 
-import React, {Component} from 'react'
-import {BigNumber} from 'bignumber.js'
-import {compose} from 'redux'
-import {connect} from 'react-redux'
-import {ScrollView, View, ActivityIndicator} from 'react-native'
-import _ from 'lodash'
-import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 /* eslint-disable-next-line camelcase */
-import {min_ada_required, BigNum} from '@emurgo/react-native-haskell-shelley'
+import {BigNum, min_ada_required} from '@emurgo/react-native-haskell-shelley'
+import {BigNumber} from 'bignumber.js'
+import _ from 'lodash'
+import type {ComponentType} from 'react'
+import React, {Component} from 'react'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {ActivityIndicator, ScrollView, View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
+import {connect} from 'react-redux'
+import {compose} from 'redux'
 
-import {CONFIG} from '../../config/config'
-import {isHaskellShelleyNetwork, getCardanoNetworkConfigById} from '../../config/networks'
-import {SEND_ROUTES} from '../../RoutesList'
-import {Text, Button, OfflineBanner, ValidatedTextInput, StatusBar, Banner, Checkbox} from '../UiKit'
-import AssetSelector from '../Common/MultiAsset/AssetSelector'
-import DangerousActionModal from '../Common/DangerousActionModal'
-import {
-  isFetchingUtxosSelector,
-  lastUtxosFetchErrorSelector,
-  tokenBalanceSelector,
-  utxosSelector,
-  isOnlineSelector,
-  hasPendingOutgoingTransactionSelector,
-  tokenInfoSelector,
-  defaultNetworkAssetSelector,
-  serverStatusSelector,
-} from '../../selectors'
 import {fetchUTXOs} from '../../actions/utxo'
+import type {RawUtxo} from '../../api/types'
+import {CONFIG} from '../../config/config'
+import {getCardanoNetworkConfigById, isHaskellShelleyNetwork} from '../../config/networks'
+import {AssetOverflowError, InsufficientFunds} from '../../crypto/errors'
+import type {TokenEntry} from '../../crypto/MultiToken'
+import {MultiToken} from '../../crypto/MultiToken'
+import type {CreateUnsignedTxResponse} from '../../crypto/shelley/transactionUtils'
+import {cardanoValueFromMultiToken} from '../../crypto/shelley/utils'
+import walletManager from '../../crypto/walletManager'
+import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
+import {SEND_ROUTES} from '../../RoutesList'
 import {
-  normalizeTokenAmount,
+  defaultNetworkAssetSelector,
+  hasPendingOutgoingTransactionSelector,
+  isFetchingUtxosSelector,
+  isOnlineSelector,
+  lastUtxosFetchErrorSelector,
+  serverStatusSelector,
+  tokenBalanceSelector,
+  tokenInfoSelector,
+  utxosSelector,
+} from '../../selectors'
+import type {ServerStatusCache} from '../../state'
+import type {DefaultAsset, Token} from '../../types/HistoryTransaction'
+import type {Navigation} from '../../types/navigation'
+import {
   formatTokenAmount,
   formatTokenInteger,
-  formatTokenWithText,
   formatTokenWithSymbol,
+  formatTokenWithText,
   getAssetDenominationOrId,
+  normalizeTokenAmount,
   truncateWithEllipsis,
 } from '../../utils/format'
-import {parseAmountDecimal, InvalidAssetAmount} from '../../utils/parsing'
-import walletManager from '../../crypto/walletManager'
-import {validateAmount, validateAddressAsync} from '../../utils/validators'
-import AmountField from './AmountField'
-import UtxoAutoRefresher from './UtxoAutoRefresher'
-import {InsufficientFunds, AssetOverflowError} from '../../crypto/errors'
-import {MultiToken} from '../../crypto/MultiToken'
-import {cardanoValueFromMultiToken} from '../../crypto/shelley/utils'
-
-import styles from './styles/SendScreen.style'
-
-import type {ServerStatusCache} from '../../state'
-import type {Navigation} from '../../types/navigation'
-import type {Token, DefaultAsset} from '../../types/HistoryTransaction'
-import type {TokenEntry} from '../../crypto/MultiToken'
-import type {CreateUnsignedTxResponse} from '../../crypto/shelley/transactionUtils'
-import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
-import type {RawUtxo} from '../../api/types'
+import {InvalidAssetAmount, parseAmountDecimal} from '../../utils/parsing'
 import type {AddressValidationErrors, AmountValidationErrors, BalanceValidationErrors} from '../../utils/validators'
-import type {ComponentType} from 'react'
+import {validateAddressAsync, validateAmount} from '../../utils/validators'
+import DangerousActionModal from '../Common/DangerousActionModal'
+import AssetSelector from '../Common/MultiAsset/AssetSelector'
+import {Banner, Button, Checkbox, OfflineBanner, StatusBar, Text, ValidatedTextInput} from '../UiKit'
+import AmountField from './AmountField'
+import styles from './styles/SendScreen.style'
+import UtxoAutoRefresher from './UtxoAutoRefresher'
 
 const amountInputErrorMessages = defineMessages({
   INVALID_AMOUNT: {
@@ -365,6 +363,7 @@ type State = {
   showSendAllWarning: boolean,
 }
 
+// eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
 class SendScreen extends Component<Props, State> {
   state = {
     address: '',

@@ -2,10 +2,9 @@
 
 import {flatten} from 'lodash'
 
-import {NETWORK_REGISTRY, YOROI_PROVIDER_IDS} from './types'
 import {NUMBERS} from './numbers'
-
 import type {NetworkId, YoroiProvider} from './types'
+import {NETWORK_REGISTRY, YOROI_PROVIDER_IDS} from './types'
 
 const _DEFAULT_BACKEND_RULES = {
   FETCH_UTXOS_MAX_ADDRESSES: 50,
@@ -307,3 +306,7 @@ export const DEFAULT_ASSETS: Array<Object> = flatten(
       throw new Error(`Missing default asset for network type ${JSON.stringify(network)}`)
     }),
 )
+
+// Same as serialization-lib
+export const MAX_OUTPUT_SIZE = 4000
+export const MAX_TX_SIZE = 8000

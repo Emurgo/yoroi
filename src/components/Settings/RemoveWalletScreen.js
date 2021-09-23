@@ -1,19 +1,18 @@
 // @flow
 
-import React from 'react'
-import {SafeAreaView} from 'react-native-safe-area-context'
-import {useSelector, useDispatch} from 'react-redux'
-import {View, ScrollView} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {useNavigation} from '@react-navigation/native'
+import React from 'react'
+import {defineMessages, useIntl} from 'react-intl'
+import {ScrollView, View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
+import {useDispatch, useSelector} from 'react-redux'
 
-import {Button, Text, Checkbox, TextInput, Spacer, StatusBar} from '../UiKit'
-import {Checkmark} from '../UiKit/TextInput'
-import {WALLET_ROOT_ROUTES} from '../../RoutesList'
-import {walletNameSelector, isHWSelector} from '../../selectors'
 import {removeCurrentWallet} from '../../actions'
+import {WALLET_ROOT_ROUTES} from '../../RoutesList'
+import {isHWSelector, walletNameSelector} from '../../selectors'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
-
+import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../UiKit'
+import {Checkmark} from '../UiKit/TextInput'
 import styles from './styles/RemoveWalletScreen.style'
 
 const messages = defineMessages({
@@ -49,11 +48,8 @@ const messages = defineMessages({
   },
 })
 
-type Props = {
-  intl: IntlShape,
-}
-
-const RemoveWalletScreen = ({intl}: Props) => {
+const RemoveWalletScreen = () => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const walletName = useSelector(walletNameSelector)
   const isHW = useSelector(isHWSelector)
@@ -127,7 +123,7 @@ const RemoveWalletScreen = ({intl}: Props) => {
   )
 }
 
-export default injectIntl(RemoveWalletScreen)
+export default RemoveWalletScreen
 
 const Description = (props) => {
   return <View {...props} />

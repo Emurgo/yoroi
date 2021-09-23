@@ -1,30 +1,28 @@
 // @flow
 
-import _ from 'lodash'
 import {BigNumber} from 'bignumber.js'
+import _ from 'lodash'
 
-import fetchDefault, {checkedFetch} from '../fetch'
-import assert from '../../utils/assert'
-import {checkAndFacadeTransactionAsync} from './facade'
-
-import type {Transaction} from '../../types/HistoryTransaction'
 import type {BackendConfig} from '../../config/types'
-
+import type {Transaction} from '../../types/HistoryTransaction'
+import assert from '../../utils/assert'
+import fetchDefault, {checkedFetch} from '../fetch'
 import type {
-  RawUtxo,
-  TxBodiesRequest,
-  TxBodiesResponse,
-  ServerStatusResponse,
-  BestblockResponse,
-  TxHistoryRequest,
   AccountStateRequest,
   AccountStateResponse,
+  BestblockResponse,
+  FundInfoResponse,
   PoolInfoRequest,
   PoolInfoResponse,
+  RawUtxo,
+  ServerStatusResponse,
   TokenInfoRequest,
   TokenInfoResponse,
-  FundInfoResponse,
+  TxBodiesRequest,
+  TxBodiesResponse,
+  TxHistoryRequest,
 } from '../types'
+import {checkAndFacadeTransactionAsync} from './facade'
 
 type Addresses = Array<string>
 

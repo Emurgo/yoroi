@@ -1,12 +1,11 @@
 // @flow
 
-import DeviceInfo from 'react-native-device-info'
 import {Platform} from 'react-native'
-
-import {Logger} from '../utils/logging'
-import {NetworkError, ApiError, ApiHistoryError} from './errors'
+import DeviceInfo from 'react-native-device-info'
 
 import type {BackendConfig} from '../config/types'
+import {Logger} from '../utils/logging'
+import {ApiError, ApiHistoryError, NetworkError} from './errors'
 
 type RequestMethod = 'POST' | 'GET'
 

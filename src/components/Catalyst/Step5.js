@@ -6,44 +6,42 @@
  * submit the transaction
  */
 
-import React, {useEffect, useState} from 'react'
-import {View, SafeAreaView, Platform} from 'react-native'
-import {injectIntl, defineMessages} from 'react-intl'
-import {connect} from 'react-redux'
 import {useNavigation} from '@react-navigation/native'
+import type {ComponentType} from 'react'
+import React, {useEffect, useState} from 'react'
+import type {IntlShape} from 'react-intl'
+import {defineMessages, injectIntl} from 'react-intl'
+import {Platform, SafeAreaView, View} from 'react-native'
+import {connect} from 'react-redux'
 
-import {CONFIG} from '../../config/config'
-import KeyStore from '../../crypto/KeyStore'
-import {formatTokenWithSymbol} from '../../utils/format'
-import assert from '../../utils/assert'
-import {showErrorDialog, submitTransaction, submitSignedTx} from '../../actions'
-import {generateVotingTransaction} from '../../actions/voting'
+import {showErrorDialog, submitSignedTx, submitTransaction} from '../../actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
-import {
-  easyConfirmationSelector,
-  defaultNetworkAssetSelector,
-  isHWSelector,
-  hwDeviceInfoSelector,
-} from '../../selectors'
+import {generateVotingTransaction} from '../../actions/voting'
+import {CONFIG} from '../../config/config'
+import {WrongPassword} from '../../crypto/errors'
 import {ISignRequest} from '../../crypto/ISignRequest'
-import {Text, ProgressStep, Button, OfflineBanner, ValidatedTextInput, StatusBar, Modal} from '../UiKit'
-import {LedgerTransportSwitch} from '../Ledger/LedgerTransportSwitchModal'
-import {PleaseWaitView} from '../UiKit/PleaseWaitModal'
-import LedgerConnect from '../Ledger/LedgerConnect'
-import HWInstructions from '../Ledger/HWInstructions'
-import {ErrorView} from '../Common/ErrorModal'
+import KeyStore from '../../crypto/KeyStore'
+import type {DeviceId, DeviceObj, HWDeviceInfo} from '../../crypto/shelley/ledgerUtils'
+import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
+import globalMessages, {confirmationMessages, errorMessages, ledgerMessages, txLabels} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
 import {CATALYST_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
-import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
-import globalMessages, {errorMessages, confirmationMessages, txLabels, ledgerMessages} from '../../i18n/global-messages'
-import {WrongPassword} from '../../crypto/errors'
-
-import styles from './styles/Step5.style'
-
+import {
+  defaultNetworkAssetSelector,
+  easyConfirmationSelector,
+  hwDeviceInfoSelector,
+  isHWSelector,
+} from '../../selectors'
 import type {DefaultAsset} from '../../types/HistoryTransaction'
-import type {ComponentType} from 'react'
-import type {IntlShape} from 'react-intl'
-import type {HWDeviceInfo, DeviceId, DeviceObj} from '../../crypto/shelley/ledgerUtils'
+import assert from '../../utils/assert'
+import {formatTokenWithSymbol} from '../../utils/format'
+import {ErrorView} from '../Common/ErrorModal'
+import HWInstructions from '../Ledger/HWInstructions'
+import LedgerConnect from '../Ledger/LedgerConnect'
+import {LedgerTransportSwitch} from '../Ledger/LedgerTransportSwitchModal'
+import {Button, Modal, OfflineBanner, ProgressStep, StatusBar, Text, ValidatedTextInput} from '../UiKit'
+import {PleaseWaitView} from '../UiKit/PleaseWaitModal'
+import styles from './styles/Step5.style'
 
 const messages = defineMessages({
   subTitle: {
