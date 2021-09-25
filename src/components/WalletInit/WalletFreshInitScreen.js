@@ -61,7 +61,7 @@ const WalletInitScreen = ({intl}: Props) => {
 
       <Actions>
         <ShelleyButton
-          title={`${intl.formatMessage(messages.addWalletButton)} (Shelley-era)`}
+          title={`${intl.formatMessage(messages.addWalletButton)}`}
           onPress={() =>
             navigateInitWallet(
               CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
@@ -73,7 +73,7 @@ const WalletInitScreen = ({intl}: Props) => {
         <Spacer height={16} />
 
         <ByronButton
-          title={`${intl.formatMessage(messages.addWalletButton)} (Byron-era)`}
+          title={`${intl.formatMessage(messages.addWalletButton)} (Byron-era - deprecated)`}
           onPress={() =>
             navigateInitWallet(
               CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,

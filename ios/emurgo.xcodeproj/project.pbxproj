@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* emurgoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* emurgoTests.m */; };
 		0364225EA79340159305AC26 /* Rubik-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DB1534F401F64DFEB4584FD0 /* Rubik-MediumItalic.ttf */; };
@@ -580,7 +579,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(Staging.Debug|Debug)\"\nexport NODE_BINARY=node\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh\n";
+			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(Staging.Debug|Debug)\"\nexport NODE_BINARY=node\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh";
 		};
 		226AFA2910D45B200EB23E8C /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1048,7 +1047,7 @@
 				BUNDLE_ID_SUFFIX = "";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CURRENT_PROJECT_VERSION = 297;
+				CURRENT_PROJECT_VERSION = 303;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -1072,7 +1071,7 @@
 				INFOPLIST_PREPROCESS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 4.3.0;
+				MARKETING_VERSION = 4.4.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1098,7 +1097,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 297;
+				CURRENT_PROJECT_VERSION = 303;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
@@ -1121,7 +1120,7 @@
 				INFOPLIST_PREPROCESS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 4.3.0;
+				MARKETING_VERSION = 4.4.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1144,7 +1143,7 @@
 				BUNDLE_DISPLAY_NAME = Yoroi;
 				BUNDLE_ID_SUFFIX = "";
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 297;
+				CURRENT_PROJECT_VERSION = 303;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -1172,7 +1171,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
-				MARKETING_VERSION = 4.3.0;
+				MARKETING_VERSION = 4.4.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1195,7 +1194,7 @@
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 297;
+				CURRENT_PROJECT_VERSION = 303;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -1223,7 +1222,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
-				MARKETING_VERSION = 4.3.0;
+				MARKETING_VERSION = 4.4.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1247,8 +1246,8 @@
 				BUNDLE_ID_SUFFIX = "";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 297;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 303;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
@@ -1275,7 +1274,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
-				MARKETING_VERSION = 4.3.0;
+				MARKETING_VERSION = 4.4.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1298,7 +1297,7 @@
 				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
 				BUNDLE_ID_SUFFIX = .staging;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 297;
+				CURRENT_PROJECT_VERSION = 303;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
@@ -1325,7 +1324,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
-				MARKETING_VERSION = 4.3.0;
+				MARKETING_VERSION = 4.4.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1534,7 +1533,7 @@
 				BUNDLE_ID_SUFFIX = .staging;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CURRENT_PROJECT_VERSION = 297;
+				CURRENT_PROJECT_VERSION = 303;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -1558,7 +1557,7 @@
 				INFOPLIST_PREPROCESS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 4.3.0;
+				MARKETING_VERSION = 4.4.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1682,7 +1681,7 @@
 				BUNDLE_ID_SUFFIX = .staging;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CURRENT_PROJECT_VERSION = 297;
+				CURRENT_PROJECT_VERSION = 303;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
@@ -1705,7 +1704,7 @@
 				INFOPLIST_PREPROCESS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 4.3.0;
+				MARKETING_VERSION = 4.4.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1767,7 +1766,7 @@
 				BUNDLE_ID_SUFFIX = "";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CURRENT_PROJECT_VERSION = 297;
+				CURRENT_PROJECT_VERSION = 303;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -1791,7 +1790,7 @@
 				INFOPLIST_PREPROCESS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 4.3.0;
+				MARKETING_VERSION = 4.4.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1816,7 +1815,7 @@
 				BUNDLE_ID_SUFFIX = .staging;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CURRENT_PROJECT_VERSION = 297;
+				CURRENT_PROJECT_VERSION = 303;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -1840,7 +1839,7 @@
 				INFOPLIST_PREPROCESS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 4.3.0;
+				MARKETING_VERSION = 4.4.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1866,7 +1865,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 297;
+				CURRENT_PROJECT_VERSION = 303;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
@@ -1889,7 +1888,7 @@
 				INFOPLIST_PREPROCESS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 4.3.0;
+				MARKETING_VERSION = 4.4.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1913,7 +1912,7 @@
 				BUNDLE_ID_SUFFIX = .staging;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CURRENT_PROJECT_VERSION = 297;
+				CURRENT_PROJECT_VERSION = 303;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
@@ -1936,7 +1935,7 @@
 				INFOPLIST_PREPROCESS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 4.3.0;
+				MARKETING_VERSION = 4.4.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

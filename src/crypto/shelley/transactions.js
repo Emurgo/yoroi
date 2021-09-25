@@ -44,8 +44,7 @@ import {
   cardanoValueFromMultiToken,
 } from './utils'
 
-import {MAX_TX_SIZE} from '../../config/networks'
-import {MAX_VALUE_BYTES} from '../../config/networks'
+import { MAX_VALUE_BYTES, MAX_TX_BYTES } from '../../config/networks'
 import {AssetOverflowError, InsufficientFunds, NoOutputsError} from '../errors'
 import type {
   Address,
