@@ -1,25 +1,14 @@
 // @flow
 
 import React from 'react'
-import {compose} from 'redux'
-import {withStateHandlers} from 'recompose'
 
 import {storiesOf} from '@storybook/react-native'
 
 import MnemonicExplanationModal from './MnemonicExplanationModal'
+import {withModalProps} from '../../../../storybook'
 
-const ModalWrapper = compose(
-  withStateHandlers(
-    {
-      visible: true,
-    },
-    {
-      onRequestClose: () => () => ({visible: false}),
-      onConfirm: () => () => ({visible: false}),
-    },
-  ),
-)(MnemonicExplanationModal)
-
-storiesOf('MnemonicExplanationModal', module).add('Default', () => (
-  <ModalWrapper />
-))
+storiesOf('MnemonicExplanationModal', module)
+  .addDecorator(withModalProps)
+  .add('Default', ({visible, onPress, onRequestClose}) => (
+    <MnemonicExplanationModal visible={visible} onConfirm={onPress('onConfirm')} onRequestClose={onRequestClose} />
+  ))

@@ -9,8 +9,8 @@ else
   curl https://sh.rustup.rs -sSf | sh -s -- -y
   source $HOME/.cargo/env
 
-  # use 1.32.0 version. 
-  rustup install 1.32.0
+  # use 1.41.0 version.
+  rustup install 1.41.0
 
   # cargo-lipo required only for ios build
   if [ -z "$YOROI_ANDROID_BUILD" ]

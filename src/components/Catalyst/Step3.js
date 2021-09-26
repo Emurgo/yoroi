@@ -10,25 +10,20 @@ import React, {useEffect, useState} from 'react'
 import {View, SafeAreaView} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
+import {useNavigation} from '@react-navigation/native'
 
-import {
-  generateVotingKeys,
-  generateVotingTransaction,
-} from '../../actions/voting'
+import {generateVotingKeys, generateVotingTransaction} from '../../actions/voting'
 import {isHWSelector} from '../../selectors'
 import {Text, ProgressStep} from '../UiKit'
-import {withTitle} from '../../utils/renderUtils'
 import PinInputKeyboard from '../Common/PinInputKeyboard'
 import {CATALYST_ROUTES} from '../../RoutesList'
-import globalMessages, {errorMessages} from '../../i18n/global-messages'
+import {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../actions'
 
 import styles from './styles/Step3.style'
 
 import type {ComponentType} from 'react'
 import type {IntlShape} from 'react-intl'
-
-import type {Navigation} from '../../types/navigation'
 
 const messages = defineMessages({
   subTitle: {
@@ -37,26 +32,20 @@ const messages = defineMessages({
   },
   description: {
     id: 'components.catalyst.step3.description',
-    defaultMessage:
-      '!!!Please enter the PIN as you will need it every time you want to ' +
-      'access the Catalyst Voting app',
+    defaultMessage: '!!!Please enter the PIN as you will need it every time you want to access the Catalyst Voting app',
   },
 })
 
 const PIN_LENGTH = 4
 
-type Props = {|
-  navigation: Navigation,
-  route: Object, // TODO(navigation): type
-|}
-
-type HOCProps = {
+type Props = {
   pin: Array<String>,
   isHW: boolean,
   intl: IntlShape,
 }
 
-const Step3 = ({intl, pin, isHW, navigation}: Props & HOCProps) => {
+const Step3 = ({intl, pin, isHW}: Props) => {
+  const navigation = useNavigation()
   const [confirmPin, setPin] = useState('')
 
   useEffect(() => {
@@ -86,9 +75,7 @@ const Step3 = ({intl, pin, isHW, navigation}: Props & HOCProps) => {
             style={[
               styles.pin,
               index < PIN_LENGTH - 1 && styles.mr10,
-              index === confirmPin.length
-                ? styles.pinHighlight
-                : styles.pinNormal,
+              index === confirmPin.length ? styles.pinHighlight : styles.pinNormal,
               index > confirmPin.length && styles.pinInactive,
             ]}
           >
@@ -104,12 +91,8 @@ const Step3 = ({intl, pin, isHW, navigation}: Props & HOCProps) => {
       <ProgressStep currentStep={3} totalSteps={6} />
       <View style={styles.container}>
         <View>
-          <Text style={styles.subTitle}>
-            {intl.formatMessage(messages.subTitle)}
-          </Text>
-          <Text style={styles.description}>
-            {intl.formatMessage(messages.description)}
-          </Text>
+          <Text style={styles.subTitle}>{intl.formatMessage(messages.subTitle)}</Text>
+          <Text style={styles.description}>{intl.formatMessage(messages.description)}</Text>
         </View>
         {pinCards}
       </View>
@@ -128,9 +111,5 @@ export default (injectIntl(
       generateVotingKeys,
       generateVotingTransaction,
     },
-  )(
-    withTitle(Step3, ({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(globalMessages.votingTitle),
-    ),
-  ),
-): ComponentType<Props>)
+  )(Step3),
+): ComponentType<{}>)

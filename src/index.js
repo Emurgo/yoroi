@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react'
 import {AppRegistry, Text} from 'react-native'
 import {addLocaleData, IntlProvider, type IntlShape} from 'react-intl'
@@ -18,7 +19,7 @@ import cs from 'react-intl/locale-data/cs'
 import hu from 'react-intl/locale-data/hu'
 import sk from 'react-intl/locale-data/sk'
 
-import {connect, Provider} from 'react-redux'
+import {Provider, useSelector} from 'react-redux'
 
 import App from './App'
 import {name as appName} from './app.json'
@@ -39,23 +40,7 @@ bluebird.config({
 })
 
 // https://github.com/yahoo/react-intl/wiki#loading-locale-data
-addLocaleData([
-  ...en,
-  ...ja,
-  ...ko,
-  ...ru,
-  ...es,
-  ...zh,
-  ...id,
-  ...pt,
-  ...de,
-  ...fr,
-  ...it,
-  ...nl,
-  ...cs,
-  ...hu,
-  ...sk,
-])
+addLocaleData([...en, ...ja, ...ko, ...ru, ...es, ...zh, ...id, ...pt, ...de, ...fr, ...it, ...nl, ...cs, ...hu, ...sk])
 
 /*
   Warning(ppershing): DO NOT EVER REMOVE FOLLOWING LINE!
@@ -77,14 +62,11 @@ const store = getConfiguredStore()
 store.dispatch(setupHooks())
 // TODO: this is async action, we should wait for it in future
 
-const IntlProviderWrapper = connect((state) => {
-  const locale = languageSelector(state) || 'en-US'
-  return {
-    locale,
-    messages: translations[locale],
-    textComponent: Text,
-  }
-})(IntlProvider)
+const IntlProviderWrapper = (props) => {
+  const locale = useSelector(languageSelector) || 'en-US'
+
+  return <IntlProvider {...props} locale={locale} messages={translations[locale]} textComponent={Text} />
+}
 
 const AppWithProviders = () => {
   return (

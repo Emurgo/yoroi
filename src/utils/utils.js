@@ -1,4 +1,5 @@
 // @flow
+
 import {delay} from './promise'
 
 // Ignores any concurrent calls to this function
@@ -24,13 +25,20 @@ export const ignoreConcurrentAsync = <T, R>(
 
 // Turns handler working like this: handler = (props) => (...args) => result
 // Into  handler working like this: handler = (props, ...args) => result
-// $FlowFixMe
-const curry = (fn) => (arg, ...rest) => fn(arg)(...rest)
+const curry =
+  (fn) =>
+  (arg, ...rest) =>
+    // $FlowFixMe
+    fn(arg)(...rest)
 
 // Turns handler working like this: handler = (props, ...args) => result
 // Into  handler working like this: handler = (props) => (...args) => result
-// $FlowFixMe
-const uncurry = (fn) => (arg) => (...rest) => fn(arg, ...rest)
+const uncurry =
+  (fn) =>
+  (arg) =>
+  (...rest) =>
+    // $FlowFixMe
+    fn(arg, ...rest)
 
 // For use in withHandlers.
 // Warning: This keeps one concurrent instance
@@ -45,7 +53,6 @@ export const ignoreConcurrentAsyncHandler = <Props, T, R>(
 }
 
 // Extracted from
-// eslint-disable-next-line
 // https://stackoverflow.com/questions/44700904/how-to-get-a-functions-return-type-in-flow
 type _ExtractFunctionReturnType<B, F: (...args: any[]) => B> = B // eslint-disable-line
 export type ExtractFunctionReturnType<F> = _ExtractFunctionReturnType<any, F>

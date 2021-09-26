@@ -36,6 +36,7 @@ export const COLORS = {
   WARNING: '#FFD303',
   WARNING_TEXT_COLOR: '#9E5B0A',
   ERROR_TEXT_COLOR: '#FF1351',
+  ALERT_TEXT_COLOR: '#FF1351',
   ERROR_TEXT_COLOR_DARK: '#242838',
   DISABLED: '#999',
   SHADOW_COLOR: 'rgba(0, 0, 0, 0.06)',
@@ -43,6 +44,9 @@ export const COLORS = {
   DIVIDER: '#536ee9',
   TEXT_GRAY: '#353535',
   TEXT_GRAY2: '#9b9b9b',
+  TEXT_INPUT: '#6B7384',
+  MODAL_HEADING: '#6B7384',
+  WORD_BADGE_TEXT: '#6B7384',
 }
 
 // TODO: use lowercase for key names. Eg navigationActive

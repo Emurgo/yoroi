@@ -1,5 +1,5 @@
 // @flow
-/* eslint-disable max-len */
+
 import React from 'react'
 import {BigNumber} from 'bignumber.js'
 import {storiesOf} from '@storybook/react-native'
@@ -7,17 +7,17 @@ import {storiesOf} from '@storybook/react-native'
 import DelegationConfirmation from './DelegationConfirmation'
 import {getDefaultAssets} from '../../config/config'
 import {MultiToken, getDefaultNetworkTokenEntry} from '../../crypto/MultiToken'
+import {NavigationRouteContext} from '@react-navigation/native'
 
 const defaultNetworkId = getDefaultAssets()[0].networkId
 
-storiesOf('DelegationConfirmation', module).add(
-  'Default',
-  ({navigation, route}) => {
-    route.params = {
+storiesOf('DelegationConfirmation', module).add('Default', ({navigation}) => {
+  const route = {
+    key: 'key',
+    name: 'name',
+    params: {
       poolName: 'EMURGO’ STAKEPOOL',
-      poolHash: [
-        '6777ed5eac05ab8bf55d073424132e200935c8d3be62fb00f5252cd27a9fe6e5',
-      ],
+      poolHash: ['6777ed5eac05ab8bf55d073424132e200935c8d3be62fb00f5252cd27a9fe6e5'],
       transactionData: {
         totalAmountToDelegate: new MultiToken(
           [
@@ -40,14 +40,13 @@ storiesOf('DelegationConfirmation', module).add(
         ],
         getDefaultNetworkTokenEntry(defaultNetworkId),
       ),
-    }
-    return (
-      // $FlowFixMe: defaultAsset is missing in Props
-      <DelegationConfirmation
-        route={route}
-        navigation={navigation}
-        defaultAsset={getDefaultAssets()[0]}
-      />
-    )
-  },
-)
+    },
+  }
+
+  return (
+    <NavigationRouteContext.Provider value={route}>
+      {/* $FlowFixMe: defaultAsset is missing in Props */}
+      <DelegationConfirmation navigation={navigation} defaultAsset={getDefaultAssets()[0]} />
+    </NavigationRouteContext.Provider>
+  )
+})

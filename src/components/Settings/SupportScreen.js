@@ -1,74 +1,63 @@
 // @flow
 
 import React from 'react'
-import {compose} from 'redux'
-import {withHandlers} from 'recompose'
 import {View, TouchableOpacity, Linking, Image} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {Text, StatusBar} from '../UiKit'
 import chevronRight from '../../assets/img/chevron_right.png'
 
 import styles from './styles/SupportScreen.style'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.settings.settingsscreen.title',
-    defaultMessage: 'Support',
-    description: 'some desc',
-  },
   faqLabel: {
     id: 'components.settings.settingsscreen.faqLabel',
-    defaultMessage: 'See frequently asked questions',
-    description: 'some desc',
+    defaultMessage: '!!!See frequently asked questions',
   },
   faqDescription: {
     id: 'components.settings.settingsscreen.faqDescription',
     defaultMessage:
-      'If you are experiencing issues, please see the FAQ ' +
-      'on Yoroi website for quidance on known issues.',
-    description: 'some desc',
+      '!!!If you are experiencing issues, please see the FAQ on Yoroi website for quidance on known issues.',
   },
   faqUrl: {
     id: 'components.settings.settingsscreen.faqUrl',
-    defaultMessage: 'https://yoroi-wallet.com/faq/',
-    description: 'some desc',
+    defaultMessage: '!!!https://yoroi-wallet.com/faq/',
   },
   reportLabel: {
     id: 'components.settings.settingsscreen.reportLabel',
-    defaultMessage: 'Report a problem',
-    description: 'some desc',
+    defaultMessage: '!!!Report a problem',
   },
   reportDescription: {
     id: 'components.settings.settingsscreen.reportDescription',
     defaultMessage:
-      'If the FAQ does not solve the issue you are ' +
-      'experiencing, please use our Support request feature.',
-    description: 'some desc',
+      '!!!If the FAQ does not solve the issue you are experiencing, please use our Support request feature.',
   },
   reportUrl: {
     id: 'components.settings.settingsscreen.reportUrl',
-    defaultMessage: 'https://yoroi-wallet.com/support/',
-    description: 'some desc',
+    defaultMessage: '!!!https://yoroi-wallet.com/support/',
   },
 })
 
-const Item = ({title, text, onPress}) => (
-  <TouchableOpacity onPress={onPress} style={styles.item}>
-    <View style={styles.itemWrap}>
-      <Text style={styles.title}>{title}</Text>
-      <Text secondary style={styles.text}>
-        {text}
-      </Text>
-    </View>
-    <Image source={chevronRight} />
-  </TouchableOpacity>
-)
+type LinkingItemProps = {
+  url: string,
+  title: string,
+  text: string,
+}
+const LinkingItem = ({title, text, url}: LinkingItemProps) => {
+  const onPress = () => Linking.openURL(url)
 
-const LinkingItem = withHandlers({
-  onPress: ({url}: {url: string}) => () => Linking.openURL(url),
-})(Item)
+  return (
+    <TouchableOpacity onPress={onPress} style={styles.item}>
+      <View style={styles.itemWrap}>
+        <Text style={styles.title}>{title}</Text>
+        <Text secondary style={styles.text}>
+          {text}
+        </Text>
+      </View>
+      <Image source={chevronRight} />
+    </TouchableOpacity>
+  )
+}
 
 type Props = {
   intl: IntlShape,
@@ -91,10 +80,4 @@ const SupportScreen = ({intl}: Props) => (
   </View>
 )
 
-export default injectIntl(
-  compose(
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
-  )(SupportScreen),
-)
+export default injectIntl(SupportScreen)

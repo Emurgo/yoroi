@@ -5,6 +5,8 @@ import {StyleSheet, TouchableOpacity, View, Image} from 'react-native'
 import {colors} from '../../styles/config'
 import Text from './Text'
 
+import {type PressEvent} from 'react-native/Libraries/Types/CoreEventTypes'
+
 const buttonOutline = {
   borderWidth: 1,
   borderColor: '#fff',
@@ -69,7 +71,7 @@ const styles = StyleSheet.create({
 
 type ButtonProps = {
   title: string,
-  onPress: (event?: any) => mixed,
+  onPress: (event: PressEvent) => mixed,
   color?: ?string,
   accessibilityLabel?: ?string,
   disabled?: ?boolean,
@@ -125,9 +127,7 @@ class Button extends React.Component<ButtonProps> {
             withoutBackground === true && styles.buttonTransparent,
             outlineShelley === true && styles.buttonOutlineShelley,
             shelleyTheme === true && styles.shelleyTheme,
-            outlineOnLight === true &&
-              shelleyTheme === true &&
-              styles.shelleyOutlineOnLight,
+            outlineOnLight === true && shelleyTheme === true && styles.shelleyOutlineOnLight,
             style,
           ]}
         >
@@ -136,9 +136,7 @@ class Button extends React.Component<ButtonProps> {
             style={[
               styles.text,
               outlineOnLight === true && styles.textOutlineOnLight,
-              outlineOnLight === true &&
-                shelleyTheme === true &&
-                styles.textShelleyOutlineOnLight,
+              outlineOnLight === true && shelleyTheme === true && styles.textShelleyOutlineOnLight,
               outlineShelley === true && styles.textOutlineShelley,
             ]}
           >

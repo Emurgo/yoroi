@@ -12,13 +12,13 @@ import {
   MetadataList,
   GeneralTransactionMetadata,
   BigNum,
-  TransactionMetadata,
+  AuxiliaryData,
   TransactionMetadatum,
 } from '@emurgo/react-native-haskell-shelley'
 import {mnemonicToEntropy} from 'bip39'
 import blake2b from 'blake2b'
 
-import {generateAdaMnemonic} from '../byron/util'
+import {generateAdaMnemonic} from '../commonUtils'
 import {CONFIG} from '../../config/config'
 import {Logger} from '../../utils/logging'
 
@@ -26,13 +26,13 @@ export const CatalystLabels = Object.freeze({
   DATA: 61284,
   SIG: 61285,
 })
-export async function generateRegistration(request: {|
+export async function auxiliaryDataWithRegistrationMetadata(request: {|
   stakePublicKey: PublicKey,
   catalystPublicKey: PublicKey,
   rewardAddress: Address,
   absSlotNumber: number,
   signer: (Uint8Array) => Promise<string>,
-|}): Promise<TransactionMetadata> {
+|}): Promise<AuxiliaryData> {
   /**
    * Catalyst follows a certain standard to prove the voting power
    * A transaction is submitted with following metadata format for the registration process
@@ -50,35 +50,23 @@ export async function generateRegistration(request: {|
    */
 
   const jsonMeta = JSON.stringify({
-    '1': `0x${Buffer.from(await request.catalystPublicKey.as_bytes()).toString(
-      'hex',
-    )}`,
-    '2': `0x${Buffer.from(await request.stakePublicKey.as_bytes()).toString(
-      'hex',
-    )}`,
-    '3': `0x${Buffer.from(await request.rewardAddress.to_bytes()).toString(
-      'hex',
-    )}`,
+    '1': `0x${Buffer.from(await request.catalystPublicKey.as_bytes()).toString('hex')}`,
+    '2': `0x${Buffer.from(await request.stakePublicKey.as_bytes()).toString('hex')}`,
+    '3': `0x${Buffer.from(await request.rewardAddress.to_bytes()).toString('hex')}`,
     '4': request.absSlotNumber,
   })
-  const registrationData = await encode_json_str_to_metadatum(
-    jsonMeta,
-    MetadataJsonSchema.BasicConversions,
-  )
+  const registrationData = await encode_json_str_to_metadatum(jsonMeta, MetadataJsonSchema.BasicConversions)
   Logger.debug(jsonMeta)
-  const generalMetadata = await GeneralTransactionMetadata.new()
-  await generalMetadata.insert(
-    await BigNum.from_str(CatalystLabels.DATA.toString()),
-    registrationData,
-  )
+  const metadata = await GeneralTransactionMetadata.new()
+  await metadata.insert(await BigNum.from_str(CatalystLabels.DATA.toString()), registrationData)
 
   const hashedMetadata = blake2b(256 / 8)
-    .update(await generalMetadata.to_bytes())
+    .update(await metadata.to_bytes())
     .digest('binary')
 
   const catalystSignature = await request.signer(hashedMetadata)
 
-  await generalMetadata.insert(
+  await metadata.insert(
     await BigNum.from_str(CatalystLabels.SIG.toString()),
     await encode_json_str_to_metadatum(
       JSON.stringify({
@@ -89,19 +77,12 @@ export async function generateRegistration(request: {|
   )
   // This is how Ledger constructs the metadata. We must be consistent with it.
   const metadataList = await MetadataList.new()
-  await metadataList.add(
-    await TransactionMetadatum.from_bytes(await generalMetadata.to_bytes()),
-  )
-  await metadataList.add(
-    await TransactionMetadatum.new_list(await MetadataList.new()),
-  )
-  const trxMetadata = await TransactionMetadata.from_bytes(
-    await metadataList.to_bytes(),
-  )
-  return trxMetadata
+  await metadataList.add(await TransactionMetadatum.from_bytes(await metadata.to_bytes()))
+  await metadataList.add(await TransactionMetadatum.new_list(await MetadataList.new()))
+  const auxiliary = await AuxiliaryData.from_bytes(await metadataList.to_bytes())
+  return auxiliary
 }
 
-// prettier-ignore
 export async function generatePrivateKeyForCatalyst(): Promise<Bip32PrivateKey> {
   let mnemonic
   if (CONFIG.DEBUG.PREFILL_FORMS) {
@@ -112,10 +93,7 @@ export async function generatePrivateKeyForCatalyst(): Promise<Bip32PrivateKey> 
   }
   const bip39entropy = mnemonicToEntropy(mnemonic)
   const EMPTY_PASSWORD = Buffer.from('')
-  const rootKey = await Bip32PrivateKey.from_bip39_entropy(
-    Buffer.from(bip39entropy, 'hex'),
-    EMPTY_PASSWORD,
-  )
+  const rootKey = await Bip32PrivateKey.from_bip39_entropy(Buffer.from(bip39entropy, 'hex'), EMPTY_PASSWORD)
 
   return rootKey
 }

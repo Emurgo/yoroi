@@ -1,6 +1,0 @@
-{
-  "derivation_scheme": "V2",
-  "selection_policy": "FirstMatchFirst",
-  "config": {"protocol_magic": 764824073},
-  "root_cached_key": "10be4df444be48af3ea3310e45e38a4d53c82400db7a3b91e1a868994db7354de05b7bdfda74bee59f69319aa0b7dd361ddd2e99a6749c123f6872de79bb50bd0cb6c81ecc17963e2e8eb81abf86ca3e7921d44c1992a32493b1a25e6f55e5dd"
-}

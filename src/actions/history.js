@@ -1,4 +1,5 @@
 // @flow
+
 import walletManager, {WalletClosed} from '../crypto/walletManager'
 import {Logger} from '../utils/logging'
 import {ApiHistoryError} from '../api/errors'
@@ -79,6 +80,7 @@ export const mirrorTxHistory = () => (dispatch: Dispatch<any>) => {
     canGenerateNewReceiveAddress,
     isEasyConfirmationEnabled,
     checksum,
+    provider,
   } = walletManager
 
   dispatch({
@@ -102,6 +104,7 @@ export const mirrorTxHistory = () => (dispatch: Dispatch<any>) => {
       numReceiveAddresses,
       canGenerateNewReceiveAddress,
       checksum,
+      provider,
     },
     reducer: (state, payload) => payload,
   })

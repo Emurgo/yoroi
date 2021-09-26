@@ -2,28 +2,33 @@
 
 import React from 'react'
 import {storiesOf} from '@storybook/react-native'
-import {action} from '@storybook/addon-actions'
 
-import SaveNanoXScreen from './SaveNanoXScreen'
+import SaveNanoXScreen, {type Params} from './SaveNanoXScreen'
 import {CONFIG} from '../../../config/config'
+import {NavigationRouteContext} from '@react-navigation/native'
 
-storiesOf('SaveNanoXScreen', module).add('default', ({navigation}) => (
-  // $FlowFixMe
-  <SaveNanoXScreen
-    route={{
-      params: {
-        networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-        walletImplementationId:
-          CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
-        hwDeviceInfo: {
-          bip44AccountPublic: '0x1',
-          hwFeatures: {
-            deviceId: '0x1',
-          },
-        },
-      },
+const params: Params = {
+  networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
+  walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
+  hwDeviceInfo: {
+    bip44AccountPublic: '0x1',
+    hwFeatures: {
+      deviceId: '0x1',
+      deviceObj: undefined,
+      model: ' model',
+      vendor: 'vendor',
+    },
+  },
+}
+
+storiesOf('SaveNanoXScreen', module).add('default', () => (
+  <NavigationRouteContext.Provider
+    value={{
+      key: 'key',
+      name: 'name',
+      params,
     }}
-    navigation={navigation}
-    onPress={() => action('clicked')()}
-  />
+  >
+    <SaveNanoXScreen />
+  </NavigationRouteContext.Provider>
 ))

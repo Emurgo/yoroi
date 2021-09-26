@@ -1,4 +1,5 @@
 // @flow
+
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
 
@@ -29,10 +30,7 @@ export const parseAmountDecimal = (amount: string, token: Token): BigNumber => {
   const assetMeta = token ?? getCardanoDefaultAsset()
 
   // note: maxSupply can be null
-  const maxSupply =
-    assetMeta.metadata.maxSupply != null
-      ? new BigNumber(assetMeta.metadata.maxSupply, 10)
-      : null
+  const maxSupply = assetMeta.metadata.maxSupply != null ? new BigNumber(assetMeta.metadata.maxSupply, 10) : null
   const numberOfDecimals: number = assetMeta.metadata.numberOfDecimals
   const normalizationFactor = Math.pow(10, numberOfDecimals)
 
@@ -42,9 +40,7 @@ export const parseAmountDecimal = (amount: string, token: Token): BigNumber => {
   }
 
   if (parsed.decimalPlaces() > numberOfDecimals) {
-    throw new InvalidAssetAmount(
-      InvalidAssetAmount.ERROR_CODES.TOO_MANY_DECIMAL_PLACES,
-    )
+    throw new InvalidAssetAmount(InvalidAssetAmount.ERROR_CODES.TOO_MANY_DECIMAL_PLACES)
   }
 
   const value = parsed.times(normalizationFactor)

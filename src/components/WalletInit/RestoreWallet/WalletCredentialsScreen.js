@@ -1,79 +1,35 @@
 // @flow
+
 import React from 'react'
 import {ActivityIndicator} from 'react-native'
-import {compose} from 'redux'
-import {connect} from 'react-redux'
-import {withHandlers, withStateHandlers} from 'recompose'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useDispatch} from 'react-redux'
+import {useNavigation, useRoute} from '@react-navigation/native'
 
 import assert from '../../../utils/assert'
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
-import {withNavigationTitle} from '../../../utils/renderUtils'
 import WalletForm from '../WalletForm'
 import {createWallet, updateVersion} from '../../../actions'
 
-import type {Navigation} from '../../../types/navigation'
-import type {ComponentType} from 'react'
+const WalletCredentialsScreen = () => {
+  const navigation = useNavigation()
+  const route: any = useRoute()
+  const [waiting, setWaiting] = React.useState(false)
+  const dispatch = useDispatch()
 
-const messages = defineMessages({
-  title: {
-    id: 'components.walletinit.restorewallet.walletcredentialsscreen.title',
-    defaultMessage: '!!!Wallet credentials',
-    description: 'some desc',
-  },
-})
-
-const WalletCredentialsScreen = ({navigateToWallet, waiting, navigation}) => (
-  <>
-    <WalletForm onSubmit={navigateToWallet} navigation={navigation} />
-    {waiting && <ActivityIndicator />}
-  </>
-)
-
-export default injectIntl(
-  (compose(
-    connect(
-      () => ({}),
-      {
-        createWallet,
-        updateVersion,
-      },
-    ),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
-    withStateHandlers(
-      {
-        waiting: false,
-      },
-      {
-        setWaiting: () => (waiting: boolean) => ({waiting}),
-      },
-    ),
-    withHandlers({
-      navigateToWallet: ignoreConcurrentAsyncHandler(
-        ({
-          navigation,
-          route,
-          createWallet,
-          updateVersion,
-          setWaiting,
-        }) => async ({name, password}) => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const navigateToWallet = React.useCallback(
+    ignoreConcurrentAsyncHandler(
+      () =>
+        async ({name, password}) => {
           setWaiting(true)
-          const {phrase, networkId, walletImplementationId} = route.params
+          const {phrase, networkId, walletImplementationId, provider} = route.params
           assert.assert(!!phrase, 'mnemonic')
           assert.assert(networkId != null, 'networkId')
           assert.assert(!!walletImplementationId, 'walletImplementationId')
           try {
-            await createWallet(
-              name,
-              phrase,
-              password,
-              networkId,
-              walletImplementationId,
-            )
-            await updateVersion()
+            await dispatch(createWallet(name, phrase, password, networkId, walletImplementationId, provider))
+            await dispatch(updateVersion())
           } finally {
             setWaiting(false)
           }
@@ -82,11 +38,17 @@ export default injectIntl(
             screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
           })
         },
-        1000,
-      ),
-    }),
-  )(WalletCredentialsScreen): ComponentType<{
-    navigation: Navigation,
-    intl: IntlShape,
-  }>),
-)
+      1000,
+    )(),
+    [],
+  )
+
+  return (
+    <>
+      <WalletForm onSubmit={navigateToWallet} navigation={navigation} />
+      {waiting && <ActivityIndicator />}
+    </>
+  )
+}
+
+export default WalletCredentialsScreen

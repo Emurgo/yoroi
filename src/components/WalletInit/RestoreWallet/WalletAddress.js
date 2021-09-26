@@ -1,21 +1,19 @@
 // @flow
-import React, {useState} from 'react'
-import type {ComponentType} from 'react'
-import {compose} from 'redux'
-import {withHandlers, withStateHandlers} from 'recompose'
-import {View, Image, TouchableOpacity, Animated, Linking} from 'react-native'
+
+import React from 'react'
+import {View, Image, TouchableOpacity, Linking} from 'react-native'
 import Clipboard from '@react-native-community/clipboard'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
-import {debounce} from 'lodash'
 
-import {onWillUnmount} from '../../../utils/renderUtils'
 import copyIcon from '../../../assets/img/icon/copy.png'
 import {Text} from '../../UiKit'
 import {getNetworkConfigById} from '../../../config/networks'
-
+import {FadeOutView} from '../../Common/FadeOutView'
 import styles from './styles/VerifyRestoredWallet.style'
 
 import type {NetworkId} from '../../../config/types'
+
+import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
 const messages = defineMessages({
   copied: {
@@ -24,104 +22,51 @@ const messages = defineMessages({
   },
 })
 
-const COPY_NOTIFICATION_TIME = 5000 // show 'copied' notification for 5 s
+const WalletAddress = ({
+  intl,
+  addressHash,
+  networkId,
+  style,
+}: {
+  intl: IntlShape,
+  addressHash: string,
+  networkId: NetworkId,
+  style?: ViewStyleProp,
+}) => {
+  const [showCopyNotification, setShowCopyNotification] = React.useState(false)
 
-const FadeOutView = (props) => {
-  const [fadeAnim] = useState(new Animated.Value(1))
+  const onTapAddress = () => {
+    const config = getNetworkConfigById(networkId)
+    Linking.openURL(config.EXPLORER_URL_FOR_ADDRESS(addressHash))
+  }
 
-  React.useEffect(
-    () => {
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 2000,
-        delay: 3000,
-        useNativeDriver: true,
-      }).start()
-    },
-    [fadeAnim],
-  )
+  const copyHash = () => {
+    Clipboard.setString(addressHash)
+    setShowCopyNotification(true)
+  }
 
   return (
-    <Animated.View
-      style={{
-        opacity: fadeAnim,
-      }}
-    >
-      {props.children}
-    </Animated.View>
+    <View style={[styles.addressRowStyles, style]}>
+      <TouchableOpacity activeOpacity={0.5} onPress={onTapAddress}>
+        <Text numberOfLines={1} ellipsizeMode="middle" style={styles.addressHash}>
+          {addressHash}
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        activeOpacity={0.5}
+        onPress={copyHash}
+        disabled={showCopyNotification}
+        style={styles.copyButton}
+      >
+        <Image source={copyIcon} style={styles.copyIcon} />
+      </TouchableOpacity>
+
+      <FadeOutView visible={showCopyNotification} onEnd={() => setShowCopyNotification(false)}>
+        <Text style={styles.notifView}>{intl.formatMessage(messages.copied)}</Text>
+      </FadeOutView>
+    </View>
   )
 }
 
-type ExternalProps = {|
-  +intl: IntlShape,
-  +addressHash: string,
-  +networkId: NetworkId,
-|}
-
-const WalletAddress = (
-  {
-    intl,
-    addressHash,
-    onTapAddress,
-    copyHash,
-    showCopyNotif,
-  }: {intl: IntlShape} & Object /* TODO: type */,
-) => (
-  <View style={styles.addressRowStyles}>
-    <TouchableOpacity activeOpacity={0.5} onPress={onTapAddress}>
-      <Text numberOfLines={1} ellipsizeMode="middle" style={styles.addressHash}>
-        {addressHash}
-      </Text>
-    </TouchableOpacity>
-    <TouchableOpacity
-      activeOpacity={0.5}
-      onPress={debounce(copyHash, COPY_NOTIFICATION_TIME, {
-        leading: true,
-      })}
-    >
-      <Image source={copyIcon} style={styles.copyIcon} />
-    </TouchableOpacity>
-    {showCopyNotif && (
-      <FadeOutView>
-        <Text style={styles.notifView}>
-          {intl.formatMessage(messages.copied)}
-        </Text>
-      </FadeOutView>
-    )}
-  </View>
-)
-
-export default injectIntl(
-  (compose(
-    withStateHandlers(
-      {
-        showCopyNotif: false,
-        timeoutIds: [],
-      },
-      {
-        setShowCopyNotif: () => (showCopyNotif) => ({showCopyNotif}),
-        registerTimeout: ({timeoutIds}) => (id) => ({
-          timeoutIds: [...timeoutIds, id],
-        }),
-      },
-    ),
-    withHandlers({
-      onTapAddress: ({addressHash, networkId}) => () => {
-        const config = getNetworkConfigById(networkId)
-        Linking.openURL(config.EXPLORER_URL_FOR_ADDRESS(addressHash))
-      },
-      copyHash: ({addressHash, setShowCopyNotif, registerTimeout}) => () => {
-        Clipboard.setString(addressHash)
-        setShowCopyNotif(true)
-        const t = setTimeout(
-          () => setShowCopyNotif(false),
-          COPY_NOTIFICATION_TIME,
-        )
-        registerTimeout(t)
-      },
-    }),
-    onWillUnmount(({timeoutIds}) =>
-      timeoutIds.forEach((id) => clearTimeout(id)),
-    ),
-  )(WalletAddress): ComponentType<ExternalProps>),
-)
+export default injectIntl(WalletAddress)

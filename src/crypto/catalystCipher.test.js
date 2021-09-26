@@ -44,8 +44,6 @@ describe('invalid decryption', () => {
     const ciphertext = await encryptWithPassword(pinBuff, dataBuff)
     const corruptedCiphertext = ciphertext.slice(0, 32 + 12 + 16) // includes only metadata
     const promise = decryptWithPassword(pinBuff, corruptedCiphertext)
-    await expect(promise).rejects.toThrow(
-      new Error('not enough data to decrypt'),
-    )
+    await expect(promise).rejects.toThrow(new Error('not enough data to decrypt'))
   })
 })

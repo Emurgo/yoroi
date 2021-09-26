@@ -10,6 +10,7 @@ import React, {useEffect, useState} from 'react'
 import {View, SafeAreaView, Platform} from 'react-native'
 import {injectIntl, defineMessages} from 'react-intl'
 import {connect} from 'react-redux'
+import {useNavigation} from '@react-navigation/native'
 
 import {CONFIG} from '../../config/config'
 import KeyStore from '../../crypto/KeyStore'
@@ -25,43 +26,24 @@ import {
   hwDeviceInfoSelector,
 } from '../../selectors'
 import {ISignRequest} from '../../crypto/ISignRequest'
-import {
-  Text,
-  ProgressStep,
-  Button,
-  OfflineBanner,
-  ValidatedTextInput,
-  StatusBar,
-  Modal,
-} from '../UiKit'
+import {Text, ProgressStep, Button, OfflineBanner, ValidatedTextInput, StatusBar, Modal} from '../UiKit'
 import {LedgerTransportSwitch} from '../Ledger/LedgerTransportSwitchModal'
 import {PleaseWaitView} from '../UiKit/PleaseWaitModal'
 import LedgerConnect from '../Ledger/LedgerConnect'
 import HWInstructions from '../Ledger/HWInstructions'
 import {ErrorView} from '../Common/ErrorModal'
 import LocalizableError from '../../i18n/LocalizableError'
-import {withTitle} from '../../utils/renderUtils'
 import {CATALYST_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
 import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
-import globalMessages, {
-  errorMessages,
-  confirmationMessages,
-  txLabels,
-  ledgerMessages,
-} from '../../i18n/global-messages'
+import globalMessages, {errorMessages, confirmationMessages, txLabels, ledgerMessages} from '../../i18n/global-messages'
 import {WrongPassword} from '../../crypto/errors'
 
 import styles from './styles/Step5.style'
 
-import type {Navigation} from '../../types/navigation'
 import type {DefaultAsset} from '../../types/HistoryTransaction'
 import type {ComponentType} from 'react'
 import type {IntlShape} from 'react-intl'
-import type {
-  HWDeviceInfo,
-  DeviceId,
-  DeviceObj,
-} from '../../crypto/shelley/ledgerUtils'
+import type {HWDeviceInfo, DeviceId, DeviceObj} from '../../crypto/shelley/ledgerUtils'
 
 const messages = defineMessages({
   subTitle: {
@@ -131,20 +113,9 @@ const Dialog = ({
           />
         )
       case DIALOG_STEPS.LEDGER_CONNECT:
-        return (
-          <LedgerConnect
-            onConnectBLE={onConnectBLE}
-            onConnectUSB={onConnectUSB}
-            useUSB={useUSB}
-          />
-        )
+        return <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={useUSB} />
       case DIALOG_STEPS.WAITING_HW_RESPONSE:
-        return (
-          <PleaseWaitView
-            title={''}
-            spinnerText={intl.formatMessage(ledgerMessages.followSteps)}
-          />
-        )
+        return <PleaseWaitView title={''} spinnerText={intl.formatMessage(ledgerMessages.followSteps)} />
       case DIALOG_STEPS.SUBMITTING:
         return (
           <PleaseWaitView
@@ -154,11 +125,7 @@ const Dialog = ({
         )
       case DIALOG_STEPS.ERROR:
         return (
-          <ErrorView
-            errorMessage={errorData.errorMessage}
-            errorLogs={errorData.errorLogs}
-            onDismiss={onRequestClose}
-          />
+          <ErrorView errorMessage={errorData.errorMessage} errorLogs={errorData.errorLogs} onDismiss={onRequestClose} />
         )
       default:
         return null
@@ -168,22 +135,14 @@ const Dialog = ({
     <Modal
       visible={step !== DIALOG_STEPS.CLOSED}
       onRequestClose={onRequestClose}
-      showCloseIcon={
-        step !== DIALOG_STEPS.WAITING_HW_RESPONSE &&
-        step !== DIALOG_STEPS.SUBMITTING
-      }
+      showCloseIcon={step !== DIALOG_STEPS.WAITING_HW_RESPONSE && step !== DIALOG_STEPS.SUBMITTING}
     >
       {getBody()}
     </Modal>
   )
 }
 
-const renderInstructions = (
-  isEasyConfirmationEnabled: boolean,
-  isHW: boolean,
-  useUSB: boolean,
-  intl: IntlShape,
-) => {
+const renderInstructions = (isEasyConfirmationEnabled: boolean, isHW: boolean, useUSB: boolean, intl: IntlShape) => {
   if (isHW) {
     return <HWInstructions useUSB={useUSB} />
   } else {
@@ -197,12 +156,7 @@ const renderInstructions = (
   }
 }
 
-type Props = {|
-  navigation: Navigation,
-  route: Object, // TODO(navigation): type
-|}
-
-type HOCProps = {
+type Props = {
   intl: IntlShape,
   isEasyConfirmationEnabled: boolean,
   isHW: boolean,
@@ -228,11 +182,9 @@ const Step5 = ({
   setLedgerDeviceObj,
   defaultAsset,
   unsignedTx,
-  navigation,
-}: Props & HOCProps) => {
-  const [password, setPassword] = useState(
-    CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '',
-  )
+}: Props) => {
+  const navigation = useNavigation()
+  const [password, setPassword] = useState(CONFIG.DEBUG.PREFILL_FORMS ? CONFIG.DEBUG.PASSWORD : '')
 
   const [dialogStep, setDialogStep] = useState<DialogStep>(DIALOG_STEPS.CLOSED)
   const [errorData, setErrorData] = useState<ErrorData>({
@@ -264,62 +216,43 @@ const Step5 = ({
     setDialogStep(DIALOG_STEPS.CLOSED)
   }
 
-  useEffect(
-    () => {
-      const generateTx = async () => {
-        await generateVotingTransaction()
-      }
+  useEffect(() => {
+    const generateTx = async () => {
+      await generateVotingTransaction()
+    }
 
-      if (unsignedTx != null) {
-        unsignedTx.fee().then((o) => {
-          setFees(o.getDefault())
-        })
-      } else if (isHW) {
-        generateTx()
-      }
-    },
-    [unsignedTx, generateVotingTransaction, isHW],
-  )
+    if (unsignedTx != null) {
+      unsignedTx.fee().then((o) => {
+        setFees(o.getDefault())
+      })
+    } else if (isHW) {
+      generateTx()
+    }
+  }, [unsignedTx, generateVotingTransaction, isHW])
 
-  useEffect(
-    () => {
-      if (
-        isHW &&
-        Platform.OS === 'android' &&
-        CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT
-      ) {
-        setDialogStep(DIALOG_STEPS.CHOOSE_TRANSPORT)
-      }
-    },
-    [isHW],
-  )
+  useEffect(() => {
+    if (isHW && Platform.OS === 'android' && CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT) {
+      setDialogStep(DIALOG_STEPS.CHOOSE_TRANSPORT)
+    }
+  }, [isHW])
 
-  const isConfirmationDisabled =
-    !isEasyConfirmationEnabled && !isHW && !password
+  const isConfirmationDisabled = !isEasyConfirmationEnabled && !isHW && !password
 
   const submitTx = async (decryptedKey: string | void) => {
     try {
       if (unsignedTx == null) {
         // note: should never happen
-        throw new Error(
-          'Catalyst::submitTx: Could not retrieve transaction data',
-        )
+        throw new Error('Catalyst::submitTx: Could not retrieve transaction data')
       }
       if (decryptedKey !== undefined) {
-        assert.assert(
-          typeof decryptedKey === 'string',
-          'Catalyst::submitTx: Invalid decryption key',
-        )
+        assert.assert(typeof decryptedKey === 'string', 'Catalyst::submitTx: Invalid decryption key')
         setDialogStep(DIALOG_STEPS.SUBMITTING)
         await submitTransaction(unsignedTx, decryptedKey)
       } else {
         // if no decryption key is given, we are signing with a HW
         assert.assert(isHW, 'Catalyst::submitTx: expected a HW wallet')
         setDialogStep(DIALOG_STEPS.WAITING_HW_RESPONSE)
-        const signedTx = await walletManager.signTxWithLedger(
-          unsignedTx,
-          useUSB,
-        )
+        const signedTx = await walletManager.signTxWithLedger(unsignedTx, useUSB)
         setDialogStep(DIALOG_STEPS.SUBMITTING)
         await submitSignedTx(Buffer.from(signedTx.encodedTx).toString('base64'))
       }
@@ -362,13 +295,7 @@ const Step5 = ({
       }
 
       try {
-        const decryptedKey = await KeyStore.getData(
-          walletManager._id,
-          'MASTER_PASSWORD',
-          '',
-          password,
-          intl,
-        )
+        const decryptedKey = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
 
         await submitTx(decryptedKey)
       } catch (e) {
@@ -381,17 +308,12 @@ const Step5 = ({
     } catch (e) {
       if (e instanceof LocalizableError) {
         setErrorData({
-          errorMessage: intl.formatMessage(
-            {id: e.id, defaultMessage: e.defaultMessage},
-            e.values,
-          ),
+          errorMessage: intl.formatMessage({id: e.id, defaultMessage: e.defaultMessage}, e.values),
           errorLogs: e.values.response || null,
         })
       } else {
         setErrorData({
-          errorMessage: intl.formatMessage(
-            errorMessages.generalTxError.message,
-          ),
+          errorMessage: intl.formatMessage(errorMessages.generalTxError.message),
           errorLogs: e.message || null,
         })
       }
@@ -407,38 +329,28 @@ const Step5 = ({
       <OfflineBanner />
       <View style={styles.container}>
         <View>
-          <Text style={styles.subTitle}>
-            {intl.formatMessage(messages.subTitle)}
-          </Text>
-          <View style={[styles.mb70]}>
-            {renderInstructions(isEasyConfirmationEnabled, isHW, useUSB, intl)}
-          </View>
+          <Text style={styles.subTitle}>{intl.formatMessage(messages.subTitle)}</Text>
+          <View style={[styles.mb70]}>{renderInstructions(isEasyConfirmationEnabled, isHW, useUSB, intl)}</View>
           <ValidatedTextInput
             value={fees ? formatTokenWithSymbol(fees, defaultAsset) : ''}
             label={`${intl.formatMessage(txLabels.fees)}`}
             editable={false}
             onChangeText={() => ({})}
           />
-          {/* eslint-disable indent */
-          !isEasyConfirmationEnabled &&
-            !isHW && (
-              <View>
-                <ValidatedTextInput
-                  secureTextEntry
-                  value={password}
-                  label={intl.formatMessage(txLabels.password)}
-                  onChangeText={setPassword}
-                />
-              </View>
-            )
-          /* eslint-enable indent */
-          }
+          {!isEasyConfirmationEnabled && !isHW && (
+            <View>
+              <ValidatedTextInput
+                secureTextEntry
+                value={password}
+                label={intl.formatMessage(txLabels.password)}
+                onChangeText={setPassword}
+              />
+            </View>
+          )}
         </View>
         <Button
           onPress={onContinue}
-          title={intl.formatMessage(
-            confirmationMessages.commonButtons.confirmButton,
-          )}
+          title={intl.formatMessage(confirmationMessages.commonButtons.confirmButton)}
           disabled={isConfirmationDisabled}
         />
       </View>
@@ -478,9 +390,5 @@ export default (injectIntl(
       ...dispatchProps,
       ...ownProps,
     }),
-  )(
-    withTitle(Step5, ({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(globalMessages.votingTitle),
-    ),
-  ),
-): ComponentType<Props>)
+  )(Step5),
+): ComponentType<{}>)

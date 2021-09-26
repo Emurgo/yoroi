@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react'
 import {View, ScrollView, Platform} from 'react-native'
 import {compose} from 'redux'
@@ -16,29 +17,13 @@ import {
 } from '../../selectors'
 import {showErrorDialog, submitTransaction, submitSignedTx} from '../../actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {CONFIG} from '../../config/config'
-import {
-  Button,
-  OfflineBanner,
-  ValidatedTextInput,
-  Text,
-  PleaseWaitModal,
-  Modal,
-} from '../UiKit'
+import {Button, OfflineBanner, ValidatedTextInput, Text, PleaseWaitModal, Modal} from '../UiKit'
 import ErrorModal from '../Common/ErrorModal'
-import globalMessages, {
-  errorMessages,
-  txLabels,
-} from '../../i18n/global-messages'
+import globalMessages, {errorMessages, txLabels} from '../../i18n/global-messages'
 import {formatTokenWithText, formatTokenAmount} from '../../utils/format'
 import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
-import {
-  SEND_ROUTES,
-  WALLET_ROOT_ROUTES,
-  STAKING_CENTER_ROUTES,
-  WALLET_ROUTES,
-} from '../../RoutesList'
+import {SEND_ROUTES, WALLET_ROOT_ROUTES, STAKING_CENTER_ROUTES, WALLET_ROUTES} from '../../RoutesList'
 import {WrongPassword} from '../../crypto/errors'
 import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
 import KeyStore from '../../crypto/KeyStore'
@@ -48,6 +33,7 @@ import HWInstructions from '../Ledger/HWInstructions'
 import LocalizableError from '../../i18n/LocalizableError'
 import {MultiToken} from '../../crypto/MultiToken'
 import {ISignRequest} from '../../crypto/ISignRequest'
+import {useParams} from '../../navigation'
 
 import styles from './styles/DelegationConfirmation.style'
 
@@ -57,10 +43,6 @@ import type {Navigation} from '../../types/navigation'
 import type {CreateDelegationTxResponse} from '../../crypto/shelley/delegationUtils'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.stakingcenter.confirmDelegation.title',
-    defaultMessage: '!!!Confirm delegation',
-  },
   delegateButtonLabel: {
     id: 'components.stakingcenter.confirmDelegation.delegateButtonLabel',
     defaultMessage: '!!!Delegate',
@@ -71,9 +53,7 @@ const messages = defineMessages({
   },
   rewardsExplanation: {
     id: 'components.stakingcenter.confirmDelegation.rewardsExplanation',
-    defaultMessage:
-      '!!!Current approximation of rewards that you will ' +
-      'receive per epoch:',
+    defaultMessage: '!!!Current approximation of rewards that you will receive per epoch:',
   },
 })
 
@@ -106,15 +86,11 @@ const handleOnConfirm = async (
   useUSB,
   setErrorData,
 ) => {
-  const transactionData: CreateDelegationTxResponse =
-    route.params?.transactionData
+  const transactionData: CreateDelegationTxResponse = route.params?.transactionData
   if (transactionData == null) throw new Error('DelegationConfirmation:txData')
   const signRequest = transactionData.signRequest
 
-  const submitTx = async <T>(
-    tx: string | ISignRequest<T>,
-    decryptedKey: ?string,
-  ) => {
+  const submitTx = async <T>(tx: string | ISignRequest<T>, decryptedKey: ?string) => {
     try {
       setSendingTransaction(true)
       if (decryptedKey != null) {
@@ -139,10 +115,7 @@ const handleOnConfirm = async (
     if (isHW) {
       try {
         setProcessingTx(true)
-        const signedTx = await walletManager.signTxWithLedger(
-          transactionData.signRequest,
-          useUSB,
-        )
+        const signedTx = await walletManager.signTxWithLedger(transactionData.signRequest, useUSB)
         await submitTx(Buffer.from(signedTx.encodedTx).toString('base64'))
       } finally {
         setProcessingTx(false)
@@ -177,13 +150,7 @@ const handleOnConfirm = async (
     }
 
     try {
-      const decryptedData = await KeyStore.getData(
-        walletManager._id,
-        'MASTER_PASSWORD',
-        '',
-        password,
-        intl,
-      )
+      const decryptedData = await KeyStore.getData(walletManager._id, 'MASTER_PASSWORD', '', password, intl)
 
       await submitTx(signRequest, decryptedData)
     } catch (e) {
@@ -197,18 +164,11 @@ const handleOnConfirm = async (
     if (e instanceof LocalizableError) {
       setErrorData(
         true,
-        intl.formatMessage(
-          {id: e.id, defaultMessage: e.defaultMessage},
-          e.values,
-        ),
+        intl.formatMessage({id: e.id, defaultMessage: e.defaultMessage}, e.values),
         e.values.response || null, // API errors should include a response
       )
     } else {
-      setErrorData(
-        true,
-        intl.formatMessage(errorMessages.generalTxError.message),
-        e.message || null,
-      )
+      setErrorData(true, intl.formatMessage(errorMessages.generalTxError.message), e.message || null)
     }
   }
 }
@@ -219,10 +179,16 @@ const LEDGER_DIALOG_STEPS = {
   LEDGER_CONNECT: 'LEDGER_CONNECT',
 }
 
+export type Params = {
+  poolHash: string,
+  poolName: string,
+  transactionData: CreateDelegationTxResponse,
+  transactionFee: MultiToken,
+}
+
 const DelegationConfirmation = (
   {
     intl,
-    route,
     onDelegate,
     isEasyConfirmationEnabled,
     password,
@@ -244,31 +210,23 @@ const DelegationConfirmation = (
     errorLogs,
   }: {intl: IntlShape} & Object /* TODO: type */,
 ) => {
-  const poolHash = route.params.poolHash
-  const poolName = route.params.poolName
-  const delegationTxData: CreateDelegationTxResponse =
-    route.params.transactionData
+  const {poolHash, poolName, transactionData: delegationTxData, transactionFee} = useParams<Params>()
+
   const amountToDelegate: MultiToken = delegationTxData.totalAmountToDelegate
-  const transactionFee: MultiToken = route.params.transactionFee
   const reward = approximateReward(amountToDelegate.getDefault())
 
-  const isConfirmationDisabled =
-    (!isEasyConfirmationEnabled && !password && !isHW) || processingTx
+  const isConfirmationDisabled = (!isEasyConfirmationEnabled && !password && !isHW) || processingTx
 
   return (
     <View style={styles.container}>
       <OfflineBanner />
       <ScrollView style={styles.scrollView}>
         <View style={styles.itemBlock}>
-          <Text style={styles.itemTitle}>
-            {intl.formatMessage(globalMessages.stakePoolName)}
-          </Text>
+          <Text style={styles.itemTitle}>{intl.formatMessage(globalMessages.stakePoolName)}</Text>
           <Text>{poolName}</Text>
         </View>
         <View style={styles.itemBlock}>
-          <Text style={styles.itemTitle}>
-            {intl.formatMessage(globalMessages.stakePoolHash)}
-          </Text>
+          <Text style={styles.itemTitle}>{intl.formatMessage(globalMessages.stakePoolHash)}</Text>
           <Text>{poolHash}</Text>
         </View>
         <View style={styles.input}>
@@ -281,34 +239,23 @@ const DelegationConfirmation = (
           <ValidatedTextInput
             onChangeText={doNothing}
             editable={false}
-            value={formatTokenAmount(
-              amountToDelegate.getDefault(),
-              defaultAsset,
-            )}
+            value={formatTokenAmount(amountToDelegate.getDefault(), defaultAsset)}
             label={intl.formatMessage(txLabels.amount)}
           />
         </View>
-        {/* eslint-disable indent */
-        !isEasyConfirmationEnabled &&
-          !isHW && (
-            <View style={styles.input}>
-              <ValidatedTextInput
-                secureTextEntry
-                value={password}
-                label={intl.formatMessage(txLabels.password)}
-                onChangeText={setPassword}
-              />
-            </View>
-          )
-        /* eslint-enable indent */
-        }
+        {!isEasyConfirmationEnabled && !isHW && (
+          <View style={styles.input}>
+            <ValidatedTextInput
+              secureTextEntry
+              value={password}
+              label={intl.formatMessage(txLabels.password)}
+              onChangeText={setPassword}
+            />
+          </View>
+        )}
         <View style={styles.itemBlock}>
-          <Text style={styles.itemTitle}>
-            {intl.formatMessage(messages.rewardsExplanation)}
-          </Text>
-          <Text style={styles.rewards}>
-            {formatTokenWithText(reward, defaultAsset)}
-          </Text>
+          <Text style={styles.itemTitle}>{intl.formatMessage(messages.rewardsExplanation)}</Text>
+          <Text style={styles.rewards}>{formatTokenWithText(reward, defaultAsset)}</Text>
         </View>
         {isHW && <HWInstructions useUSB={useUSB} addMargin />}
       </ScrollView>
@@ -322,34 +269,20 @@ const DelegationConfirmation = (
         />
       </View>
 
-      {/* eslint-disable indent */
-      isHW &&
-        Platform.OS === 'android' &&
-        CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT && (
-          <>
-            <LedgerTransportSwitchModal
-              visible={
-                ledgerDialogStep === LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT
-              }
-              onRequestClose={closeLedgerDialog}
-              onSelectUSB={(event) => onChooseTransport(event, true)}
-              onSelectBLE={(event) => onChooseTransport(event, false)}
-              showCloseIcon
-            />
-            <Modal
-              visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.LEDGER_CONNECT}
-              onRequestClose={closeLedgerDialog}
-            >
-              <LedgerConnect
-                onConnectBLE={onConnectBLE}
-                onConnectUSB={onConnectUSB}
-                useUSB={useUSB}
-              />
-            </Modal>
-          </>
-        )
-      /* eslint-enable indent */
-      }
+      {isHW && Platform.OS === 'android' && CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT && (
+        <>
+          <LedgerTransportSwitchModal
+            visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.CHOOSE_TRANSPORT}
+            onRequestClose={closeLedgerDialog}
+            onSelectUSB={(event) => onChooseTransport(event, true)}
+            onSelectBLE={(event) => onChooseTransport(event, false)}
+            showCloseIcon
+          />
+          <Modal visible={ledgerDialogStep === LEDGER_DIALOG_STEPS.LEDGER_CONNECT} onRequestClose={closeLedgerDialog}>
+            <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={useUSB} />
+          </Modal>
+        </>
+      )}
       <ErrorModal
         visible={showErrorModal}
         title={intl.formatMessage(errorMessages.generalTxError.title)}
@@ -425,71 +358,66 @@ export default injectIntl(
       },
     ),
     withHandlers({
-      onChooseTransport: ({
-        hwDeviceInfo,
-        setUseUSB,
-        openLedgerConnect,
-        closeLedgerDialog,
-      }) => (event, useUSB) => {
-        setUseUSB(useUSB)
-        if (
-          (useUSB && hwDeviceInfo.hwFeatures.deviceObj == null) ||
-          (!useUSB && hwDeviceInfo.hwFeatures.deviceId == null)
-        ) {
-          openLedgerConnect()
-        } else {
+      onChooseTransport:
+        ({hwDeviceInfo, setUseUSB, openLedgerConnect, closeLedgerDialog}) =>
+        (event, useUSB) => {
+          setUseUSB(useUSB)
+          if (
+            (useUSB && hwDeviceInfo.hwFeatures.deviceObj == null) ||
+            (!useUSB && hwDeviceInfo.hwFeatures.deviceId == null)
+          ) {
+            openLedgerConnect()
+          } else {
+            closeLedgerDialog()
+          }
+        },
+      onConnectUSB:
+        ({setLedgerDeviceObj, closeLedgerDialog}) =>
+        async (deviceObj) => {
+          await setLedgerDeviceObj(deviceObj)
           closeLedgerDialog()
-        }
-      },
-      onConnectUSB: ({setLedgerDeviceObj, closeLedgerDialog}) => async (
-        deviceObj,
-      ) => {
-        await setLedgerDeviceObj(deviceObj)
-        closeLedgerDialog()
-      },
-      onConnectBLE: ({setLedgerDeviceId, closeLedgerDialog}) => async (
-        deviceId,
-      ) => {
-        await setLedgerDeviceId(deviceId)
-        closeLedgerDialog()
-      },
+        },
+      onConnectBLE:
+        ({setLedgerDeviceId, closeLedgerDialog}) =>
+        async (deviceId) => {
+          await setLedgerDeviceId(deviceId)
+          closeLedgerDialog()
+        },
       onDelegate: ignoreConcurrentAsyncHandler(
         (
-          {
-            navigation,
-            route,
-            isHW,
-            isEasyConfirmationEnabled,
-            password,
-            submitTransaction,
-            submitSignedTx,
-            setSendingTransaction,
-            setProcessingTx,
-            intl,
-            useUSB,
-            setErrorData,
-          }: {intl: IntlShape} & Object /* TODO: type */,
-        ) => async (_event) => {
-          await handleOnConfirm(
-            navigation,
-            route,
-            isHW,
-            isEasyConfirmationEnabled,
-            password,
-            submitTransaction,
-            submitSignedTx,
-            setSendingTransaction,
-            setProcessingTx,
-            intl,
-            useUSB,
-            setErrorData,
-          )
-        },
+            {
+              navigation,
+              route,
+              isHW,
+              isEasyConfirmationEnabled,
+              password,
+              submitTransaction,
+              submitSignedTx,
+              setSendingTransaction,
+              setProcessingTx,
+              intl,
+              useUSB,
+              setErrorData,
+            }: {intl: IntlShape} & Object /* TODO: type */,
+          ) =>
+          async (_event) => {
+            await handleOnConfirm(
+              navigation,
+              route,
+              isHW,
+              isEasyConfirmationEnabled,
+              password,
+              submitTransaction,
+              submitSignedTx,
+              setSendingTransaction,
+              setProcessingTx,
+              intl,
+              useUSB,
+              setErrorData,
+            )
+          },
         1000,
       ),
     }),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
   )(DelegationConfirmation): ComponentType<ExternalProps>),
 )

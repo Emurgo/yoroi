@@ -1,43 +1,40 @@
 // @flow
 
-import React, {useState, useEffect} from 'react'
+import React, {useEffect} from 'react'
 import {AppState, Platform} from 'react-native'
 import 'intl'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {enableScreens} from 'react-native-screens'
 import RNBootSplash from 'react-native-bootsplash'
-import {injectIntl} from 'react-intl'
+import * as RNP from 'react-native-paper'
 
 import AppNavigator from './AppNavigator'
-import {onDidMount} from './utils/renderUtils'
-import {compose} from 'recompose'
-import {connect} from 'react-redux'
+import {useDispatch} from 'react-redux'
 import {initApp} from './actions'
 
 enableScreens()
 
-const App = (_props, _context) => {
-  const [appState, setAppState] = useState<?string>(AppState.currentState)
-
-  // note: previously this was hanlded in the applicationDidEnterBackground
-  // event in AppDelegate.m, but after moving to a .storyboard launch screen
-  // that solution didn't seem feasible anymore.
+const useInitializeApp = () => {
+  const dispatch = useDispatch()
   useEffect(() => {
-    const handleAppStateChange = (nextAppState: ?string): void => {
-      if (Platform.OS === 'ios') {
-        const previousAppState = appState
+    dispatch(initApp())
+  }, [dispatch])
+}
 
-        setAppState(nextAppState)
-        if (previousAppState != null && nextAppState === 'active') {
-          RNBootSplash.hide()
-        } else if (
-          previousAppState === 'active' &&
-          nextAppState != null &&
-          nextAppState.match(/inactive|background/)
-        ) {
-          RNBootSplash.show()
-        }
-      }
+const useHideScreenInAppSwitcher = () => {
+  const appStateRef = React.useRef(AppState.currentState)
+
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState: string): void => {
+      if (Platform.OS !== 'ios') return
+
+      const isFocused = (appState: ?string) => appState?.match(/active/)
+      const isBlurred = (appState: ?string) => appState?.match(/inactive|background/)
+
+      if (isBlurred(appStateRef.current) && isFocused(nextAppState)) RNBootSplash.hide({fade: true})
+      if (isFocused(appStateRef.current) && isBlurred(nextAppState)) RNBootSplash.show({fade: true})
+
+      appStateRef.current = nextAppState
     }
 
     AppState.addEventListener('change', handleAppStateChange)
@@ -45,25 +42,20 @@ const App = (_props, _context) => {
     return () => {
       AppState.removeEventListener('change', handleAppStateChange)
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+}
+
+const App = () => {
+  useHideScreenInAppSwitcher()
+  useInitializeApp()
 
   return (
     <SafeAreaProvider>
-      <AppNavigator />
+      <RNP.Provider>
+        <AppNavigator />
+      </RNP.Provider>
     </SafeAreaProvider>
   )
 }
 
-export default injectIntl(
-  compose(
-    connect(
-      () => ({}),
-      {
-        initApp,
-      },
-    ),
-    onDidMount(({initApp}) => initApp()),
-  )(App),
-)
+export default App

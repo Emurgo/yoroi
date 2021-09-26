@@ -1,33 +1,25 @@
 // @flow
 
 import React from 'react'
-import {connect} from 'react-redux'
 import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {compose} from 'redux'
-import {withHandlers, withStateHandlers} from 'recompose'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useNavigation, useRoute} from '@react-navigation/native'
 
 import WalletDescription from './WalletDescription'
 import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
 import {Modal, Button, StatusBar, ScreenBackground} from '../UiKit'
 import ExapandableItem from '../Common/ExpandableItem'
 import {WALLET_INIT_ROUTES} from '../../RoutesList'
-import {withNavigationTitle} from '../../utils/renderUtils'
 import {isJormungandr} from '../../config/networks'
 import {CONFIG, isHaskellShelley, isByron} from '../../config/config'
 import globalMessages from '../../i18n/global-messages'
 
 import styles from './styles/WalletInitScreen.style'
 
-import type {State} from '../../state'
-import type {NetworkId, WalletImplementationId} from '../../config/types'
+import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../config/types'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.walletinit.walletinitscreen.title',
-    defaultMessage: '!!!Add wallet',
-  },
   createWalletButton: {
     id: 'components.walletinit.walletinitscreen.createWalletButton',
     defaultMessage: '!!!Create wallet',
@@ -55,8 +47,7 @@ const messages = defineMessages({
     defaultMessage: '!!!Read-only wallet',
   },
   importReadOnlyWalletExplanation: {
-    id:
-      'components.walletinit.walletinitscreen.importReadOnlyWalletExplanation',
+    id: 'components.walletinit.walletinitscreen.importReadOnlyWalletExplanation',
     defaultMessage:
       "!!!The Yoroi extension allows you to export any of your wallets' " +
       'public keys in a QR code. Choose this option to import a wallet from ' +
@@ -76,43 +67,64 @@ const MODAL_STATES = {
 type ModalState = $Values<typeof MODAL_STATES>
 
 type Props = {
-  navigateRestoreWallet: (Object, NetworkId, WalletImplementationId) => void,
-  navigateCreateWallet: (Object, NetworkId, WalletImplementationId) => void,
-  navigateImportReadOnlyWallet: (
-    Object,
-    NetworkId,
-    WalletImplementationId,
-  ) => void,
-  navigateCheckNanoX: (
-    Object,
-    NetworkId,
-    WalletImplementationId,
-    boolean,
-  ) => mixed,
   intl: IntlShape,
-  route: Object, // TODO(navigation): type
-  modalState: ModalState,
-  setModalState: (Object, ModalState) => void,
 }
 
-const WalletInitScreen = ({
-  navigateCreateWallet,
-  navigateRestoreWallet,
-  navigateImportReadOnlyWallet,
-  navigateCheckNanoX,
-  intl,
-  route,
-  modalState,
-  setModalState,
-}: Props) => {
+const WalletInitScreen = ({intl}: Props) => {
+  const navigation = useNavigation()
+  const route = (useRoute(): any)
+  const [modalState, _setModalState] = React.useState(MODAL_STATES.CLOSED)
+  const setModalState = (event: Object, modalState: ModalState) => _setModalState(modalState)
+
+  const navigateRestoreWallet = (
+    event: Object,
+    networkId: NetworkId,
+    walletImplementationId: WalletImplementationId,
+    provider: ?YoroiProvider,
+  ) =>
+    navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET, {
+      networkId,
+      walletImplementationId,
+      provider,
+    })
+  const navigateCreateWallet = (
+    event: Object,
+    networkId: NetworkId,
+    walletImplementationId: WalletImplementationId,
+    provider: ?YoroiProvider,
+  ) =>
+    navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET, {
+      networkId,
+      walletImplementationId,
+      provider,
+    })
+  const navigateCheckNanoX = (
+    event: Object,
+    networkId: NetworkId,
+    walletImplementationId: WalletImplementationId,
+    useUSB: boolean,
+  ) =>
+    navigation.navigate(WALLET_INIT_ROUTES.CHECK_NANO_X, {
+      networkId,
+      walletImplementationId,
+      useUSB,
+    })
+  const navigateImportReadOnlyWallet = (
+    _event: Object,
+    networkId: NetworkId,
+    walletImplementationId: WalletImplementationId,
+  ) =>
+    navigation.navigate(WALLET_INIT_ROUTES.IMPORT_READ_ONLY_WALLET, {
+      networkId,
+      walletImplementationId,
+    })
+
   const networkId: NetworkId = route.params.networkId
-  const implementationId: WalletImplementationId =
-    route.params.walletImplementationId
+  const provider = route.params.provider
+  const implementationId: WalletImplementationId = route.params.walletImplementationId
   let createWalletLabel = intl.formatMessage(messages.createWalletButton)
   let restoreWalletLabel = intl.formatMessage(messages.restoreWalletButton)
-  let createWalletWithLedgerLabel = intl.formatMessage(
-    messages.createWalletWithLedgerButton,
-  )
+  let createWalletWithLedgerLabel = intl.formatMessage(messages.createWalletWithLedgerButton)
   if (isJormungandr(networkId)) {
     createWalletLabel += ' (ITN)'
     restoreWalletLabel += ' (ITN)'
@@ -130,9 +142,7 @@ const WalletInitScreen = ({
           </View>
           {!isByron(implementationId) && (
             <Button
-              onPress={(event) =>
-                navigateCreateWallet(event, networkId, implementationId)
-              }
+              onPress={(event) => navigateCreateWallet(event, networkId, implementationId, provider)}
               title={createWalletLabel}
               style={styles.createButton}
               testID="createWalletButton"
@@ -141,9 +151,15 @@ const WalletInitScreen = ({
           <Button
             outline
             onPress={(event) => {
+              // prettier-ignore
               isHaskellShelley(implementationId)
                 ? setModalState(event, MODAL_STATES.CHOOSE_MNEMONICS_LEN)
-                : navigateRestoreWallet(event, networkId, implementationId)
+                : navigateRestoreWallet(
+                  event,
+                  networkId,
+                  implementationId,
+                  provider,
+                )
             }}
             title={restoreWalletLabel}
             style={styles.createButton}
@@ -154,23 +170,15 @@ const WalletInitScreen = ({
               <Button
                 disabled={!CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLED}
                 outline
-                onPress={(event) =>
-                  setModalState(event, MODAL_STATES.LEDGER_TRANSPORT_SWITCH)
-                }
+                onPress={(event) => setModalState(event, MODAL_STATES.LEDGER_TRANSPORT_SWITCH)}
                 title={createWalletWithLedgerLabel}
                 style={styles.createButton}
               />
               <LedgerTransportSwitchModal
                 visible={modalState === MODAL_STATES.LEDGER_TRANSPORT_SWITCH}
-                onRequestClose={(event) =>
-                  setModalState(event, MODAL_STATES.CLOSED)
-                }
-                onSelectUSB={(event) =>
-                  navigateCheckNanoX(event, networkId, implementationId, true)
-                }
-                onSelectBLE={(event) =>
-                  navigateCheckNanoX(event, networkId, implementationId, false)
-                }
+                onRequestClose={(event) => setModalState(event, MODAL_STATES.CLOSED)}
+                onSelectUSB={(event) => navigateCheckNanoX(event, networkId, implementationId, true)}
+                onSelectBLE={(event) => navigateCheckNanoX(event, networkId, implementationId, false)}
                 showCloseIcon
               />
             </>
@@ -178,24 +186,17 @@ const WalletInitScreen = ({
           {isHaskellShelley(implementationId) && (
             <Modal
               visible={modalState === MODAL_STATES.CHOOSE_MNEMONICS_LEN}
-              onRequestClose={(event) =>
-                setModalState(event, MODAL_STATES.CLOSED)
-              }
+              onRequestClose={(event) => setModalState(event, MODAL_STATES.CLOSED)}
               showCloseIcon
             >
               <Button
-                onPress={(event) =>
-                  navigateRestoreWallet(event, networkId, implementationId)
-                }
+                onPress={(event) => navigateRestoreWallet(event, networkId, implementationId, provider)}
                 title={intl.formatMessage(messages.restoreNormalWalletLabel)}
                 style={styles.mnemonicDialogButton}
               />
               <ExapandableItem
                 label={intl.formatMessage(globalMessages.learnMore)}
-                content={intl.formatMessage(
-                  messages.restoreNWordWalletExplanation,
-                  {mnemonicLength: 15},
-                )}
+                content={intl.formatMessage(messages.restoreNWordWalletExplanation, {mnemonicLength: 15})}
               />
               <Button
                 outlineOnLight
@@ -204,6 +205,7 @@ const WalletInitScreen = ({
                     event,
                     networkId,
                     CONFIG.WALLETS.HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID,
+                    provider,
                   )
                 }
                 title={intl.formatMessage(messages.restore24WordWalletLabel)}
@@ -211,29 +213,18 @@ const WalletInitScreen = ({
               />
               <ExapandableItem
                 label={intl.formatMessage(globalMessages.learnMore)}
-                content={intl.formatMessage(
-                  messages.restoreNWordWalletExplanation,
-                  {mnemonicLength: 24},
-                )}
+                content={intl.formatMessage(messages.restoreNWordWalletExplanation, {mnemonicLength: 24})}
               />
               <Button
                 outlineOnLight
-                onPress={(event) =>
-                  navigateImportReadOnlyWallet(
-                    event,
-                    networkId,
-                    implementationId,
-                  )
-                }
+                onPress={(event) => navigateImportReadOnlyWallet(event, networkId, implementationId)}
                 title={intl.formatMessage(messages.importReadOnlyWalletLabel)}
                 style={styles.mnemonicDialogButton}
                 testID="importReadOnlyWalletButton"
               />
               <ExapandableItem
                 label={intl.formatMessage(globalMessages.learnMore)}
-                content={intl.formatMessage(
-                  messages.importReadOnlyWalletExplanation,
-                )}
+                content={intl.formatMessage(messages.importReadOnlyWalletExplanation)}
               />
             </Modal>
           )}
@@ -242,61 +233,4 @@ const WalletInitScreen = ({
     </SafeAreaView>
   )
 }
-export default injectIntl(
-  compose(
-    connect((_state: State) => ({})),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
-    withStateHandlers(
-      {
-        modalState: MODAL_STATES.CLOSED,
-      },
-      {
-        setModalState: () => (event: Object, modalState: ModalState) => ({
-          modalState,
-        }),
-      },
-    ),
-    withHandlers({
-      navigateRestoreWallet: ({navigation}) => (
-        event: Object,
-        networkId: NetworkId,
-        walletImplementationId: WalletImplementationId,
-      ) =>
-        navigation.navigate(WALLET_INIT_ROUTES.RESTORE_WALLET, {
-          networkId,
-          walletImplementationId,
-        }),
-      navigateCreateWallet: ({navigation}) => (
-        event: Object,
-        networkId: NetworkId,
-        walletImplementationId: WalletImplementationId,
-      ) =>
-        navigation.navigate(WALLET_INIT_ROUTES.CREATE_WALLET, {
-          networkId,
-          walletImplementationId,
-        }),
-      navigateCheckNanoX: ({navigation}) => (
-        event: Object,
-        networkId: NetworkId,
-        walletImplementationId: WalletImplementationId,
-        useUSB: boolean,
-      ) =>
-        navigation.navigate(WALLET_INIT_ROUTES.CHECK_NANO_X, {
-          networkId,
-          walletImplementationId,
-          useUSB,
-        }),
-      navigateImportReadOnlyWallet: ({navigation}) => (
-        _event: Object,
-        networkId: NetworkId,
-        walletImplementationId: WalletImplementationId,
-      ) =>
-        navigation.navigate(WALLET_INIT_ROUTES.IMPORT_READ_ONLY_WALLET, {
-          networkId,
-          walletImplementationId,
-        }),
-    }),
-  )(WalletInitScreen),
-)
+export default injectIntl(WalletInitScreen)

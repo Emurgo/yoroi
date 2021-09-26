@@ -1,37 +1,28 @@
 /* eslint-disable react-native/no-inline-styles */
 // @flow
+
 import React, {useState, useEffect} from 'react'
-import {compose} from 'redux'
-import {connect} from 'react-redux'
-import {View, FlatList, ScrollView} from 'react-native'
-import {withHandlers} from 'recompose'
+import {ActivityIndicator, View, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
-import {Text, Button, StatusBar, BulletPointItem} from '../../UiKit'
+import {Text, Button, StatusBar, BulletPointItem, Spacer} from '../../UiKit'
 
 import {generateByronPlateFromMnemonics} from '../../../crypto/byron/plate'
 import {generateShelleyPlateFromMnemonics} from '../../../crypto/shelley/plate'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
-import {withNavigationTitle} from '../../../utils/renderUtils'
 import WalletAddress from './WalletAddress'
 import WalletAccountIcon from '../../Common/WalletAccountIcon'
 import {WALLET_IMPLEMENTATION_REGISTRY} from '../../../config/types'
 
 import styles from './styles/VerifyRestoredWallet.style'
 
-import type {ComponentType} from 'react'
-import type {Navigation} from '../../../types/navigation'
 import type {WalletImplementationId, NetworkId} from '../../../config/types'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.walletinit.verifyrestoredwallet.title',
-    defaultMessage: '!!!Verify restored wallet',
-  },
   checksumLabel: {
     id: 'components.walletinit.verifyrestoredwallet.checksumLabel',
-    defaultMessage: '!!!Chacksum label',
+    defaultMessage: '!!!Checksum label',
   },
   instructionLabel: {
     id: 'components.walletinit.verifyrestoredwallet.instructionLabel',
@@ -39,9 +30,7 @@ const messages = defineMessages({
   },
   instructions1: {
     id: 'components.walletinit.verifyrestoredwallet.instructionLabel-1',
-    defaultMessage:
-      '!!!Make sure your wallet account checksum and icon ' +
-      'match what you remember.',
+    defaultMessage: '!!!Make sure your wallet account checksum and icon match what you remember.',
   },
   instructions2: {
     id: 'components.walletinit.verifyrestoredwallet.instructionLabel-2',
@@ -63,131 +52,120 @@ const messages = defineMessages({
   },
 })
 
-const _getPlate = async (
-  walletImplId: WalletImplementationId,
-  networkId: NetworkId,
-  phrase: string,
-  count: number,
-) => {
-  switch (walletImplId) {
-    case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
-    case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24:
-      return await generateShelleyPlateFromMnemonics(phrase, count, networkId)
-    case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
-      return generateByronPlateFromMnemonics(phrase, count)
-    default:
-      throw new Error('wallet implementation id is not valid')
-  }
-}
-
-const walletRestaurationIntruction = (formatMessage) => [
-  formatMessage(messages.instructions1),
-  formatMessage(messages.instructions2),
-  formatMessage(messages.instructions3),
-]
-
-const CheckSumView = ({icon, checksum}) => (
-  <View style={styles.checkSumView}>
-    <WalletAccountIcon iconSeed={icon} />
-    <Text style={styles.checksumText}>{checksum}</Text>
-  </View>
-)
-
-const VerifyWalletScreen = (
-  {
-    navigateToWalletCredentials,
-    intl,
-    route,
-  }: {intl: IntlShape} & Object /* TODO: type */,
-) => {
-  const [plate, setPlate] = useState({
-    accountPlate: {
-      ImagePart: '',
-      TextPart: '',
-    },
-    addresses: [],
-  })
-
-  const {formatMessage} = intl
-  const {phrase, networkId, walletImplementationId} = route.params
+const usePlateFromMnemonic = ({
+  mnemonic,
+  networkId,
+  walletImplementationId,
+}: {
+  mnemonic: string,
+  networkId: number,
+  walletImplementationId: string,
+}) => {
+  const [addresses, setAddresses] = useState()
+  const [plate, setPlate] = useState()
 
   useEffect(() => {
+    const getPlate = async (
+      walletImplId: WalletImplementationId,
+      networkId: NetworkId,
+      mnemonic: string,
+      count: number,
+    ) => {
+      switch (walletImplId) {
+        case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY:
+        case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_SHELLEY_24:
+          return await generateShelleyPlateFromMnemonics(mnemonic, count, networkId)
+        case WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON:
+          return generateByronPlateFromMnemonics(mnemonic, count)
+        default:
+          throw new Error('wallet implementation id is not valid')
+      }
+    }
+
     const generatePlates = async () => {
-      const {addresses, accountPlate} = await _getPlate(
-        walletImplementationId,
-        networkId,
-        phrase,
-        1,
-      )
-      setPlate({addresses, accountPlate})
+      const {addresses, accountPlate} = await getPlate(walletImplementationId, networkId, mnemonic, 1)
+      setAddresses(addresses)
+      setPlate(accountPlate)
     }
 
     generatePlates()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  return [plate, addresses]
+}
+
+const VerifyWalletScreen = ({navigation, intl, route}: {intl: IntlShape} & Object /* TODO: type */) => {
+  const {formatMessage} = intl
+  const {phrase, networkId, walletImplementationId} = route.params
+  const [plate, addresses] = usePlateFromMnemonic({mnemonic: phrase, networkId, walletImplementationId})
+
+  const navigateToWalletCredentials = () => {
+    navigation.navigate(WALLET_INIT_ROUTES.WALLET_CREDENTIALS, {
+      phrase: route.params.phrase,
+      networkId: route.params.networkId,
+      walletImplementationId: route.params.walletImplementationId,
+      provider: route.params.provider,
+    })
+  }
+
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <StatusBar type="dark" />
-      <ScrollView style={styles.scrollView}>
-        <Text style={styles.textStyles}>
-          {formatMessage(messages.checksumLabel)}
-        </Text>
-        {!!plate.accountPlate.ImagePart && (
-          <CheckSumView
-            icon={plate.accountPlate.ImagePart}
-            checksum={plate.accountPlate.TextPart}
-          />
-        )}
-        <Text style={styles.titleStyles}>
-          {formatMessage(messages.instructionLabel)}
-        </Text>
-        <FlatList
-          data={walletRestaurationIntruction(formatMessage)}
-          keyExtractor={(item) => item}
-          renderItem={({item}) => (
-            <BulletPointItem textRow={item} style={styles.instructionStyles} />
+
+      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
+        <WalletInfo>
+          <Text style={styles.checksumLabel}>{formatMessage(messages.checksumLabel)}</Text>
+        </WalletInfo>
+
+        <Spacer height={24} />
+
+        <Plate>
+          {plate ? (
+            <>
+              <WalletAccountIcon iconSeed={plate.ImagePart} />
+              <Spacer />
+              <Text style={styles.checksum}>{plate.TextPart}</Text>
+            </>
+          ) : (
+            <ActivityIndicator style={{flex: 1}} size={'large'} color={'black'} />
           )}
-        />
-        <View style={styles.addressesStyles}>
-          <Text style={styles.titleStyles}>
-            {formatMessage(messages.walletAddressLabel)}
-          </Text>
-          <FlatList
-            data={plate.addresses}
-            keyExtractor={(item) => item}
-            renderItem={({item}) => (
-              <WalletAddress addressHash={item} networkId={networkId} />
-            )}
-          />
-        </View>
+        </Plate>
+
+        <Spacer height={40} />
+
+        <Instructions>
+          <Text style={styles.instructionsLabel}>{formatMessage(messages.instructionLabel)}</Text>
+          <BulletPointItem textRow={formatMessage(messages.instructions1)} style={styles.bulletPoint} />
+          <Spacer height={8} />
+          <BulletPointItem textRow={formatMessage(messages.instructions2)} style={styles.bulletPoint} />
+          <Spacer height={8} />
+          <BulletPointItem textRow={formatMessage(messages.instructions3)} style={styles.bulletPoint} />
+        </Instructions>
+
+        <Spacer height={32} />
+
+        <Addresses>
+          <Text style={styles.addressesLabel}>{formatMessage(messages.walletAddressLabel)}</Text>
+          {addresses ? (
+            <WalletAddress addressHash={addresses[0]} networkId={networkId} />
+          ) : (
+            <ActivityIndicator size={'small'} color={'black'} />
+          )}
+        </Addresses>
       </ScrollView>
-      <Button
-        onPress={navigateToWalletCredentials}
-        title={formatMessage(messages.buttonText)}
-      />
+
+      <Actions>
+        <Button onPress={navigateToWalletCredentials} title={formatMessage(messages.buttonText)} />
+      </Actions>
     </SafeAreaView>
   )
 }
 
-export default injectIntl(
-  (compose(
-    connect((_state) => ({})),
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
-    withHandlers({
-      navigateToWalletCredentials: ({navigation, route}) => (_event) => {
-        navigation.navigate(WALLET_INIT_ROUTES.WALLET_CREDENTIALS, {
-          phrase: route.params.phrase,
-          networkId: route.params.networkId,
-          walletImplementationId: route.params.walletImplementationId,
-        })
-      },
-    }),
-  )(VerifyWalletScreen): ComponentType<{
-    navigation: Navigation,
-    route: Object, // TODO(navigation): type
-    intl: IntlShape,
-  }>),
-)
+export default injectIntl(VerifyWalletScreen)
+
+const WalletInfo = (props) => <View {...props} />
+const Plate = (props) => <View {...props} style={styles.plate} />
+const Instructions = (props) => <View {...props} />
+const Addresses = (props) => <View {...props} />
+const Actions = (props) => <View {...props} style={styles.actions} />

@@ -8,6 +8,7 @@ import {Text, Button} from '../UiKit'
 import {confirmationMessages} from '../../i18n/global-messages'
 
 import styles from './styles/TwoActionView.style'
+import {type PressEvent} from 'react-native/Libraries/Types/CoreEventTypes'
 
 type Props = {|
   +intl: IntlShape,
@@ -15,22 +16,16 @@ type Props = {|
   +children: React$Node,
   +primaryButton: {|
     +label: string,
-    +onPress: (void) => PossiblyAsync<void>,
+    +onPress: (event: PressEvent) => PossiblyAsync<void>,
   |},
   +secondaryButton?: {|
     label?: string,
-    onPress: (void) => void,
+    onPress: (event: PressEvent) => void,
   |},
 |}
 
-const TwoActionView = ({
-  intl,
-  title,
-  children,
-  primaryButton,
-  secondaryButton,
-}: Props) => (
-  <ScrollView style={styles.scrollView}>
+const TwoActionView = ({intl, title, children, primaryButton, secondaryButton}: Props) => (
+  <ScrollView style={styles.scrollView} keyboardShouldPersistTaps={'always'}>
     <View style={styles.content}>
       <View style={styles.heading}>
         <Text style={styles.titleText}>{title}</Text>
@@ -43,19 +38,11 @@ const TwoActionView = ({
           outlineOnLight
           block
           onPress={secondaryButton.onPress}
-          title={
-            secondaryButton.label ??
-            intl.formatMessage(confirmationMessages.commonButtons.cancelButton)
-          }
+          title={secondaryButton.label ?? intl.formatMessage(confirmationMessages.commonButtons.cancelButton)}
           style={styles.secondaryButton}
         />
       )}
-      <Button
-        block
-        onPress={primaryButton.onPress}
-        title={primaryButton.label}
-        style={styles.primaryButton}
-      />
+      <Button block onPress={primaryButton.onPress} title={primaryButton.label} style={styles.primaryButton} />
     </View>
   </ScrollView>
 )

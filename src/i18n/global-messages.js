@@ -6,7 +6,7 @@ import {defineMessages} from 'react-intl'
  * Some messages need to be used in multiple components
  * In order to avoid componenets depending on each other just to resuse translation messages
  * We instead store the shared messages in this file
-*/
+ */
 
 export const confirmationMessages = {
   logout: defineMessages({
@@ -67,7 +67,7 @@ export const txLabels = defineMessages({
   },
   confirmTx: {
     id: 'global.txLabels.confirmTx',
-    defaultMessage: 'Confirm transaction',
+    defaultMessage: '!!!Confirm transaction',
   },
   fees: {
     id: 'global.txLabels.fees',
@@ -75,7 +75,7 @@ export const txLabels = defineMessages({
   },
   from: {
     id: 'components.walletinit.restorewallet.upgradeconfirmmodal.fromLabel',
-    defaultMessage: 'From',
+    defaultMessage: '!!!From',
   },
   password: {
     id: 'global.txLabels.password',
@@ -91,15 +91,15 @@ export const txLabels = defineMessages({
   },
   submittingTx: {
     id: 'global.txLabels.submittingTx',
-    defaultMessage: 'Submitting transaction',
+    defaultMessage: '!!!Submitting transaction',
   },
   to: {
     id: 'components.walletinit.restorewallet.upgradeconfirmmodal.toLabel',
-    defaultMessage: 'To',
+    defaultMessage: '!!!To',
   },
   txId: {
     id: 'components.walletinit.restorewallet.upgradeconfirmmodal.txIdLabel',
-    defaultMessage: 'Transaction ID',
+    defaultMessage: '!!!Transaction ID',
   },
   withdrawals: {
     id: 'global.txLabels.withdrawals',
@@ -330,7 +330,7 @@ export const errorMessages = {
     message: {
       id: 'global.actions.dialogs.disableEasyConfirmationFirst.message',
       defaultMessage:
-        '!!Please disable easy confirmation function in all ' +
+        '!!!Please disable easy confirmation function in all ' +
         'your wallets first',
     },
   }),
@@ -460,23 +460,27 @@ export default defineMessages({
   allDone: {
     id:
       'components.walletinit.restorewallet.upgradeconfirmmodal.noUpgradeLabel',
-    defaultMessage: 'All done!',
+    defaultMessage: '!!!All done!',
   },
   attention: {
     id: 'components.stakingcenter.poolwarningmodal.title',
-    defaultMessage: 'Attention',
+    defaultMessage: '!!!Attention',
   },
   tryAgain: {
     id: 'global.tryAgain',
-    defaultMessage: 'Try again',
+    defaultMessage: '!!!Try again',
   },
   walletNameErrorTooLong: {
     id: 'global.error.walletNameTooLong',
-    defaultMessage: 'Wallet name cannot exceed 40 letters',
+    defaultMessage: '!!!Wallet name cannot exceed 40 letters',
   },
   walletNameErrorNameAlreadyTaken: {
     id: 'global.error.walletNameAlreadyTaken',
-    defaultMessage: 'You already have a wallet with this name',
+    defaultMessage: '!!!You already have a wallet with this name',
+  },
+  walletNameErrorMustBeFilled: {
+    id: 'global.error.walletNameMustBeFilled',
+    defaultMessage: '!!!Must be filled',
   },
   pleaseWait: {
     id: 'global.pleaseWait',

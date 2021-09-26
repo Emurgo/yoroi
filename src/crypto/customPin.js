@@ -1,5 +1,6 @@
 // @flow
-import {encryptData, decryptData} from './byron/util'
+
+import {encryptData, decryptData} from './commonUtils'
 import {WrongPassword} from './errors'
 
 export const encryptCustomPin = async (installationId: string, pin: string) => {
@@ -8,10 +9,7 @@ export const encryptCustomPin = async (installationId: string, pin: string) => {
   return pinHash
 }
 
-export const authenticateByCustomPin = async (
-  customPinHash: string,
-  pinCandidate: string,
-): Promise<boolean> => {
+export const authenticateByCustomPin = async (customPinHash: string, pinCandidate: string): Promise<boolean> => {
   try {
     await decryptData(customPinHash, pinCandidate)
     return true

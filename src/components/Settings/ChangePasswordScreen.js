@@ -1,225 +1,154 @@
 // @flow
 
-import React, {PureComponent} from 'react'
-import {compose} from 'redux'
+import React from 'react'
 import {View, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import _ from 'lodash'
-import {withHandlers} from 'recompose'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useNavigation} from '@react-navigation/native'
 
-import {Button, ValidatedTextInput, StatusBar} from '../UiKit'
-import {validatePassword} from '../../utils/validators'
-import {withNavigationTitle} from '../../utils/renderUtils'
+import {Button, Spacer, TextInput} from '../UiKit'
+import {validatePassword, REQUIRED_PASSWORD_LENGTH} from '../../utils/validators'
 import {errorMessages} from '../../i18n/global-messages'
-import PasswordStrengthIndicator from '../WalletInit/PasswordStrengthIndicator'
 import {showErrorDialog} from '../../actions'
 import walletManager from '../../crypto/walletManager'
 import {WrongPassword} from '../../crypto/errors'
+import {Checkmark} from '../UiKit/TextInput'
 
 import styles from './styles/ChangePasswordScreen.style'
 
-import type {PasswordValidationErrors} from '../../utils/validators'
-import type {Navigation} from '../../types/navigation'
-
 const messages = defineMessages({
-  title: {
-    id: 'components.settings.changepasswordscreen.title',
-    defaultMessage: 'Change spending password',
-  },
   oldPasswordInputLabel: {
     id: 'components.settings.changepasswordscreen.oldPasswordInputLabel',
-    defaultMessage: 'Current password',
-    description: 'some desc',
+    defaultMessage: '!!!Current password',
   },
   newPasswordInputLabel: {
     id: 'components.settings.changepasswordscreen.newPasswordInputLabel',
-    defaultMessage: 'New password',
-    description: 'some desc',
+    defaultMessage: '!!!New password',
+  },
+  passwordStrengthRequirement: {
+    id: 'components.walletinit.createwallet.createwalletscreen.passwordLengthRequirement',
+    defaultMessage: '!!!Minimum {requirePasswordLength} characters',
   },
   repeatPasswordInputLabel: {
     id: 'components.settings.changepasswordscreen.repeatPasswordInputLabel',
-    defaultMessage: 'Repeat new password',
-    description: 'some desc',
+    defaultMessage: '!!!Repeat new password',
   },
   repeatPasswordInputNotMatchError: {
-    id:
-      'components.settings.changepasswordscreen.repeatPasswordInputNotMatchError',
-    defaultMessage: 'Passwords do not match',
-    description: 'some desc',
+    id: 'components.settings.changepasswordscreen.repeatPasswordInputNotMatchError',
+    defaultMessage: '!!!Passwords do not match',
   },
   continueButton: {
     id: 'components.settings.changepasswordscreen.continueButton',
-    defaultMessage: 'Change password',
-    description: 'some desc',
+    defaultMessage: '!!!Change password',
   },
 })
 
-// type FormValidationErrors = PasswordValidationErrors & {
-//   oldPasswordRequired?: boolean,
-// }
-type FormValidationErrors = {
-  ...PasswordValidationErrors,
-  oldPasswordRequired?: boolean,
-}
-
-const validateForm = ({
-  oldPassword,
-  password,
-  passwordConfirmation,
-}): FormValidationErrors => {
-  const passwordErrors = validatePassword(password, passwordConfirmation)
-
-  const oldPasswordErrors =
-    oldPassword.length === 0 ? {oldPasswordRequired: true} : {}
-
-  return {...oldPasswordErrors, ...passwordErrors}
-}
-
-type ComponentState = {
-  oldPassword: string,
-  password: string,
-  passwordConfirmation: string,
-  showPasswordsDoNotMatchError: boolean,
-}
-
 type Props = {
-  onSubmit: (string, string) => any,
-  navigation: Navigation,
   intl: IntlShape,
 }
 
-class ChangePasswordScreen extends PureComponent<Props, ComponentState> {
-  state = {
-    oldPassword: '',
-    password: '',
-    passwordConfirmation: '',
-    showPasswordsDoNotMatchError: false,
+const ChangePasswordScreen = ({intl}: Props) => {
+  const navigation = useNavigation()
+  const onSubmit = async (oldPassword, newPassword) => {
+    try {
+      await walletManager.changePassword(oldPassword, newPassword, intl)
+      navigation.goBack()
+    } catch (error) {
+      if (error instanceof WrongPassword) {
+        await showErrorDialog(errorMessages.incorrectPassword, intl)
+      } else {
+        throw error
+      }
+    }
   }
 
-  _unsubscribe: void | (() => mixed) = undefined
+  const [currentPassword, setCurrentPassword] = React.useState('')
+  const currentPasswordErrors = currentPassword.length === 0 ? {currentPasswordRequired: true} : {}
 
-  debouncedHandlePasswordMatchValidation = _.debounce(() => {
-    this.setState(({password, passwordConfirmation}) => ({
-      showPasswordsDoNotMatchError:
-        !!passwordConfirmation && password !== passwordConfirmation,
-    }))
-  }, 300)
+  const newPasswordRef = React.useRef<{focus: () => void} | null>(null)
+  const [newPassword, setNewPassword] = React.useState('')
 
-  componentDidMount = () => {
-    this._unsubscribe = this.props.navigation.addListener('blur', () =>
-      this.handleOnWillBlur(),
-    )
-  }
+  const newPasswordConfirmationRef = React.useRef<{focus: () => void} | null>(null)
+  const [newPasswordConfirmation, setNewPasswordConfirmation] = React.useState('')
+  const newPasswordErrors = validatePassword(newPassword, newPasswordConfirmation)
 
-  componentWillUnmount = () => {
-    if (this._unsubscribe != null) this._unsubscribe()
-  }
+  const hasErrors = Object.keys(currentPasswordErrors).length > 0 || Object.keys(newPasswordErrors).length > 0
 
-  handleSetOldPassword = (oldPassword) => this.setState({oldPassword})
+  return (
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
+      <ScrollView bounces={false} keyboardDismissMode="on-drag" contentContainerStyle={styles.contentContainer}>
+        <CurrentPasswordInput
+          enablesReturnKeyAutomatically
+          autoFocus
+          secureTextEntry
+          label={intl.formatMessage(messages.oldPasswordInputLabel)}
+          value={currentPassword}
+          onChangeText={setCurrentPassword}
+          returnKeyType={'next'}
+          onSubmitEditing={() => newPasswordRef.current?.focus()}
+        />
 
-  handleSetPassword = (password) => {
-    this.debouncedHandlePasswordMatchValidation()
-    this.setState({password})
-  }
+        <Spacer />
 
-  handleSetPasswordConfirmation = (passwordConfirmation) => {
-    this.debouncedHandlePasswordMatchValidation()
-    this.setState({passwordConfirmation})
-  }
+        <PasswordInput
+          ref={newPasswordRef}
+          enablesReturnKeyAutomatically
+          secureTextEntry
+          label={intl.formatMessage(messages.newPasswordInputLabel)}
+          value={newPassword}
+          onChangeText={setNewPassword}
+          errorText={
+            newPasswordErrors.passwordIsWeak
+              ? intl.formatMessage(messages.passwordStrengthRequirement, {
+                  requiredPasswordLength: REQUIRED_PASSWORD_LENGTH,
+                })
+              : undefined
+          }
+          helperText={intl.formatMessage(messages.passwordStrengthRequirement, {
+            requiredPasswordLength: REQUIRED_PASSWORD_LENGTH,
+          })}
+          returnKeyType={'next'}
+          onSubmitEditing={() => newPasswordConfirmationRef.current?.focus()}
+          right={!newPasswordErrors.passwordIsWeak ? <Checkmark /> : undefined}
+        />
 
-  handleOnWillBlur = () =>
-    this.setState({password: '', passwordConfirmation: ''})
+        <Spacer />
 
-  handleSubmit = () => {
-    const {oldPassword, password} = this.state
+        <PasswordConfirmationInput
+          ref={newPasswordConfirmationRef}
+          enablesReturnKeyAutomatically
+          secureTextEntry
+          label={intl.formatMessage(messages.repeatPasswordInputLabel)}
+          value={newPasswordConfirmation}
+          onChangeText={setNewPasswordConfirmation}
+          errorText={
+            newPasswordErrors.matchesConfirmation
+              ? intl.formatMessage(messages.repeatPasswordInputNotMatchError)
+              : undefined
+          }
+          returnKeyType={'done'}
+          right={
+            !newPasswordErrors.matchesConfirmation && !newPasswordErrors.passwordConfirmationReq ? (
+              <Checkmark />
+            ) : undefined
+          }
+        />
+      </ScrollView>
 
-    this.props.onSubmit(oldPassword, password)
-  }
-
-  render() {
-    const {intl} = this.props
-    const {
-      oldPassword,
-      password,
-      passwordConfirmation,
-      showPasswordsDoNotMatchError,
-    } = this.state
-
-    const errors = validateForm({
-      oldPassword,
-      password,
-      passwordConfirmation,
-    })
-
-    return (
-      <SafeAreaView style={styles.safeAreaView}>
-        <StatusBar type="dark" />
-
-        <View style={styles.container}>
-          <ScrollView
-            keyboardDismissMode="on-drag"
-            contentContainerStyle={styles.content}
-          >
-            <ValidatedTextInput
-              secureTextEntry
-              label={intl.formatMessage(messages.oldPasswordInputLabel)}
-              value={oldPassword}
-              onChangeText={this.handleSetOldPassword}
-            />
-
-            <ValidatedTextInput
-              secureTextEntry
-              label={intl.formatMessage(messages.newPasswordInputLabel)}
-              value={password}
-              onChangeText={this.handleSetPassword}
-            />
-
-            <ValidatedTextInput
-              secureTextEntry
-              label={intl.formatMessage(messages.repeatPasswordInputLabel)}
-              value={passwordConfirmation}
-              onChangeText={this.handleSetPasswordConfirmation}
-              error={
-                showPasswordsDoNotMatchError &&
-                intl.formatMessage(messages.repeatPasswordInputNotMatchError)
-              }
-            />
-
-            <PasswordStrengthIndicator password={password} />
-          </ScrollView>
-
-          <View style={styles.action}>
-            <Button
-              onPress={this.handleSubmit}
-              disabled={!_.isEmpty(errors)}
-              title={intl.formatMessage(messages.continueButton)}
-            />
-          </View>
-        </View>
-      </SafeAreaView>
-    )
-  }
+      <Actions>
+        <Button
+          onPress={() => onSubmit(currentPassword, newPassword)}
+          disabled={hasErrors}
+          title={intl.formatMessage(messages.continueButton)}
+        />
+      </Actions>
+    </SafeAreaView>
+  )
 }
 
-export default injectIntl(
-  compose(
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
-    withHandlers({
-      onSubmit: ({navigation, intl}) => async (oldPassword, newPassword) => {
-        try {
-          await walletManager.changePassword(oldPassword, newPassword, intl)
-          navigation.goBack(null)
-        } catch (e) {
-          if (e instanceof WrongPassword) {
-            await showErrorDialog(errorMessages.incorrectPassword, intl)
-          } else {
-            throw e
-          }
-        }
-      },
-    }),
-  )(ChangePasswordScreen),
-)
+export default injectIntl(ChangePasswordScreen)
+
+const CurrentPasswordInput = TextInput
+const PasswordInput = TextInput
+const PasswordConfirmationInput = TextInput
+const Actions = (props) => <View {...props} style={styles.actions} />

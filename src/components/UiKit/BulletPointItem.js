@@ -1,5 +1,8 @@
+/* eslint-disable react-native/no-inline-styles */
 // @flow
+
 import React from 'react'
+import {View} from 'react-native'
 import {Text} from '.'
 
 import type {TextStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
@@ -11,9 +14,13 @@ type Props = {
 
 const BulletPointItem = ({textRow, style}: Props) => {
   return (
-    <Text style={style}>
-      {'\u2022'} {textRow}
-    </Text>
+    <View style={{flexDirection: 'row'}}>
+      <Text style={style}>{'\u2022'}</Text>
+
+      <View style={{flex: 1, flexDirection: 'row', flexWrap: 'wrap', paddingLeft: 8}}>
+        <Text style={style}>{textRow}</Text>
+      </View>
+    </View>
   )
 }
 

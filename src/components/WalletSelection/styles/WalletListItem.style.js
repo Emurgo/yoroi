@@ -1,4 +1,5 @@
 // @flow
+
 import {StyleSheet} from 'react-native'
 
 import stylesConfig, {COLORS} from '../../../styles/config'
@@ -74,5 +75,11 @@ export default StyleSheet.create({
   walletBalance: {
     flexDirection: 'row',
     marginBottom: 36,
+  },
+  providerContainer: {
+    flex: 1,
+  },
+  providerText: {
+    alignSelf: 'flex-end',
   },
 })

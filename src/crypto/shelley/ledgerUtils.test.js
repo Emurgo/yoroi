@@ -1,4 +1,5 @@
 // @flow
+
 import jestSetup from '../../jestSetup'
 import {checkDeviceVersion, DeprecatedAdaAppError} from './ledgerUtils'
 
@@ -20,8 +21,6 @@ describe('encryption/decryption', () => {
       // $FlowFixMe this is just a mock
       compatibility: {},
     }
-    expect(() => checkDeviceVersion(mockResponse)).toThrow(
-      DeprecatedAdaAppError,
-    )
+    expect(() => checkDeviceVersion(mockResponse)).toThrow(DeprecatedAdaAppError)
   })
 })

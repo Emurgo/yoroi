@@ -48,7 +48,7 @@ export const SETTINGS_ROUTES = {
   FINGERPRINT_LINK: 'fingerprint-link',
   REMOVE_WALLET: 'remove-wallet',
   CHANGE_LANGUAGE: 'change-language',
-  EASY_COMFIRMATION: 'easy-confirmation',
+  EASY_CONFIRMATION: 'easy-confirmation',
   CHANGE_PASSWORD: 'change-password',
   CHANGE_CUSTOM_PIN: 'change-custom-pin',
   BIO_AUTHENTICATE: 'bio-authenticate',
@@ -90,9 +90,7 @@ export const WALLET_ROOT_ROUTES = {
 
 const INDEX_SCREEN = 'screens-index'
 const LOGIN_SCREEN = 'login'
-const INIT_SCREEN = CONFIG.DEBUG.START_WITH_INDEX_SCREEN
-  ? INDEX_SCREEN
-  : LOGIN_SCREEN
+const INIT_SCREEN = CONFIG.DEBUG.START_WITH_INDEX_SCREEN ? INDEX_SCREEN : LOGIN_SCREEN
 
 export const ROOT_ROUTES = {
   SPLASH: 'splash',

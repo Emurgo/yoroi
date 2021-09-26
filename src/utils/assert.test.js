@@ -1,4 +1,5 @@
 // @flow
+
 import assert from './assert'
 import {Logger, LogLevel} from './logging'
 

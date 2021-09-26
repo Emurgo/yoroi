@@ -1,13 +1,12 @@
 // @flow
+
 import React from 'react'
 import {createStackNavigator} from '@react-navigation/stack'
+import {injectIntl} from 'react-intl'
 
 import {CATALYST_ROUTES} from '../../RoutesList'
-
-import {
-  defaultNavigationOptions,
-  defaultStackNavigatorOptions,
-} from '../../navigationOptions'
+import globalMessages from '../../i18n/global-messages'
+import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
 
 import CatalystStep1 from './Step1'
 import CatalystStep2 from './Step2'
@@ -30,65 +29,26 @@ type CatalystNavigatorRoutes = {
 
 const Stack = createStackNavigator<any, CatalystNavigatorRoutes, any>()
 
-const CatalystNavigator = () => (
+const CatalystNavigator = injectIntl(({intl}) => (
   <Stack.Navigator
-    screenOptions={{...defaultStackNavigatorOptions}}
+    screenOptions={{
+      ...defaultStackNavigatorOptions,
+      title: intl.formatMessage(globalMessages.votingTitle),
+    }}
     initialRouteName={CATALYST_ROUTES.STEP1}
   >
-    <Stack.Screen
-      name={CATALYST_ROUTES.STEP1}
-      component={CatalystStep1}
-      options={({route}) => ({
-        title: route.params?.title ?? undefined,
-        ...defaultNavigationOptions,
-      })}
-    />
-    <Stack.Screen
-      name={CATALYST_ROUTES.STEP2}
-      component={CatalystStep2}
-      options={({route}) => ({
-        title: route.params?.title ?? undefined,
-        ...defaultNavigationOptions,
-      })}
-    />
-    <Stack.Screen
-      name={CATALYST_ROUTES.STEP3}
-      component={CatalystStep3}
-      options={({route}) => ({
-        title: route.params?.title ?? undefined,
-        ...defaultNavigationOptions,
-      })}
-    />
-    <Stack.Screen
-      name={CATALYST_ROUTES.STEP4}
-      component={CatalystStep4}
-      options={({route}) => ({
-        title: route.params?.title ?? undefined,
-        ...defaultNavigationOptions,
-      })}
-    />
-    <Stack.Screen
-      name={CATALYST_ROUTES.STEP5}
-      component={CatalystStep5}
-      options={({route}) => ({
-        title: route.params?.title ?? undefined,
-        ...defaultNavigationOptions,
-      })}
-    />
-    <Stack.Screen
-      name={CATALYST_ROUTES.STEP6}
-      component={CatalystStep6}
-      options={({route}) => ({
-        title: route.params?.title ?? undefined,
-        ...defaultNavigationOptions,
-      })}
-    />
+    <Stack.Screen name={CATALYST_ROUTES.STEP1} component={CatalystStep1} options={defaultNavigationOptions} />
+    <Stack.Screen name={CATALYST_ROUTES.STEP2} component={CatalystStep2} options={defaultNavigationOptions} />
+    <Stack.Screen name={CATALYST_ROUTES.STEP3} component={CatalystStep3} options={defaultNavigationOptions} />
+    <Stack.Screen name={CATALYST_ROUTES.STEP4} component={CatalystStep4} options={defaultNavigationOptions} />
+    <Stack.Screen name={CATALYST_ROUTES.STEP5} component={CatalystStep5} options={defaultNavigationOptions} />
+    <Stack.Screen name={CATALYST_ROUTES.STEP6} component={CatalystStep6} options={defaultNavigationOptions} />
     <Stack.Screen
       name={CATALYST_ROUTES.BIOMETRICS_SIGNING}
       component={BiometricAuthScreen}
       options={{headerShown: false}}
     />
   </Stack.Navigator>
-)
+))
 
 export default CatalystNavigator

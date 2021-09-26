@@ -1,40 +1,24 @@
 /* eslint-disable react-native/no-inline-styles */
 // @flow
-import React from 'react'
-import {compose} from 'redux'
-import {View, ScrollView, Dimensions} from 'react-native'
-import {withHandlers} from 'recompose'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
-import QRCodeScanner from 'react-native-qrcode-scanner'
-import DeviceInfo from 'react-native-device-info'
 
-import {Text, BulletPointItem} from '../../UiKit'
-import {CONFIG} from '../../../config/config'
+import React from 'react'
+import {View, ScrollView, StyleSheet, StatusBar} from 'react-native'
+import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {useNavigation, useRoute, useFocusEffect} from '@react-navigation/native'
+import QRCodeScanner from 'react-native-qrcode-scanner'
+
+import {theme} from '../../../styles/config'
+import {Text, BulletPointItem, Spacer} from '../../UiKit'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
-import {withNavigationTitle, onDidMount} from '../../../utils/renderUtils'
 import {Logger} from '../../../utils/logging'
 import {errorMessages} from '../../../i18n/global-messages'
 import {showErrorDialog} from '../../../actions'
-import {
-  isValidPublicKey,
-  isCIP1852AccountPath,
-} from '../../../utils/bip44Validators'
-
-import styles from './styles/ImportReadOnlyWalletScreen.style'
-
-import type {ComponentType} from 'react'
-import type {Navigation} from '../../../types/navigation'
+import {isValidPublicKey, isCIP1852AccountPath} from '../../../utils/bip44Validators'
 
 const messages = defineMessages({
-  title: {
-    id: 'components.walletinit.importreadonlywalletscreen.title',
-    defaultMessage: '!!!Read-only Wallet',
-  },
   paragraph: {
     id: 'components.walletinit.importreadonlywalletscreen.paragraph',
-    defaultMessage:
-      '!!!To import a read-only wallet from the Yoroi ' +
-      'extension, you will need to:',
+    defaultMessage: '!!!To import a read-only wallet from the Yoroi extension, you will need to:',
   },
   line1: {
     id: 'components.walletinit.importreadonlywalletscreen.line1',
@@ -42,9 +26,7 @@ const messages = defineMessages({
   },
   line2: {
     id: 'components.walletinit.importreadonlywalletscreen.line2',
-    defaultMessage:
-      '!!!Look for the {buttonType} for the wallet you want to ' +
-      'import in the mobile app.',
+    defaultMessage: '!!!Look for the {buttonType} for the wallet you want to import in the mobile app.',
   },
   buttonType: {
     id: 'components.walletinit.importreadonlywalletscreen.buttonType',
@@ -52,128 +34,111 @@ const messages = defineMessages({
   },
 })
 
-let scannerRef // reference to QR code sanner to re-activate if required
-let firstFocus = true
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: theme.COLORS.BACKGROUND,
+  },
+  cameraContainer: {
+    flex: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'black',
+  },
+  scrollView: {
+    flex: 1,
+    paddingTop: 24,
+    paddingHorizontal: 16,
+  },
+  paragraph: {
+    fontSize: 14,
+    lineHeight: 22,
+  },
+})
 
-const handleOnRead = async (
-  event: Object,
-  navigation: Navigation,
-  route: Object,
-  intl: IntlShape,
-): Promise<void> => {
-  try {
-    Logger.debug('ImportReadOnlyWalletScreen::handleOnRead::data', event.data)
-    const dataObj = JSON.parse(event.data)
-    const {publicKeyHex, path} = dataObj
-    if (isCIP1852AccountPath(path) && (await isValidPublicKey(publicKeyHex))) {
-      Logger.debug('ImportReadOnlyWalletScreen::publicKeyHex', publicKeyHex)
-      Logger.debug('ImportReadOnlyWalletScreen::path', path)
-      navigation.navigate(WALLET_INIT_ROUTES.SAVE_READ_ONLY_WALLET, {
-        publicKeyHex,
-        path,
-        networkId: route.params.networkId,
-        walletImplementationId: route.params.walletImplementationId,
-      })
-    } else {
-      throw new Error('invalid QR code')
-    }
-  } catch (e) {
-    Logger.debug('ImportReadOnlyWalletScreen::handleOnRead::error', e)
-    await showErrorDialog(errorMessages.invalidQRCode, intl)
-    // re-enable QR code scanning
-    if (scannerRef && scannerRef.reactivate != null) scannerRef.reactivate()
+const parseReadOnlyWalletKey = async (text: string) => {
+  Logger.debug('ImportReadOnlyWalletScreen::handleOnRead::data', text)
+  const dataObj = JSON.parse(text)
+  const {publicKeyHex, path} = dataObj
+  if (isCIP1852AccountPath(path) && (await isValidPublicKey(publicKeyHex))) {
+    Logger.debug('ImportReadOnlyWalletScreen::publicKeyHex', publicKeyHex)
+    Logger.debug('ImportReadOnlyWalletScreen::path', path)
+  } else {
+    throw new Error('invalid QR code')
   }
+
+  return {publicKeyHex, path}
 }
 
-const getInstructions = (formatMessage) => [
-  formatMessage(messages.line1),
-  formatMessage(messages.line2, {
-    buttonType: formatMessage(messages.buttonType),
-  }),
-]
+export type Params = {
+  networkId: string,
+  walletImplementationId: string,
+}
 
-const getContent = (formatMessage) => (
-  <ScrollView style={styles.bottomView}>
-    <Text style={styles.paragraph}>{formatMessage(messages.paragraph)}</Text>
-    {getInstructions(formatMessage).map((row, i) => (
-      <BulletPointItem textRow={row} key={i} style={styles.paragraph} />
-    ))}
-  </ScrollView>
-)
+const ImportReadOnlyWalletScreen = ({intl}: {intl: IntlShape}) => {
+  const navigation = useNavigation()
+  const route = useRoute()
+  const {networkId, walletImplementationId}: Params = (route.params: any)
+  const scannerRef = React.useRef<{reactivate: () => mixed} | null>(null)
 
-const ImportReadOnlyWalletScreen = (
-  {intl, onRead}: {intl: IntlShape} & Object /* TODO: type */,
-) => (
-  <View style={styles.container}>
-    <View style={styles.cameraContainer}>
-      <QRCodeScanner
-        cameraProps={{
-          ratio: '1:1',
-          height: Dimensions.get('screen').height / 2,
-        }}
-        cameraStyle={{overflow: 'hidden'}}
-        onRead={onRead}
-        ref={(node) => {
-          scannerRef = node
-        }}
-      />
+  const onRead = (event: {data: string}) => {
+    parseReadOnlyWalletKey(event.data)
+      .then(({publicKeyHex, path}: {publicKeyHex: string, path: string}) =>
+        navigation.navigate(WALLET_INIT_ROUTES.SAVE_READ_ONLY_WALLET, {
+          publicKeyHex,
+          path,
+          networkId,
+          walletImplementationId,
+        }),
+      )
+      .catch((error: Error) => {
+        Logger.debug('ImportReadOnlyWalletScreen::onRead::error', error)
+        showErrorDialog(errorMessages.invalidQRCode, intl)
+      })
+  }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      scannerRef.current?.reactivate()
+    }, []),
+  )
+
+  return (
+    <View style={styles.container}>
+      <StatusBar translucent backgroundColor={'transparent'} />
+
+      <View style={styles.cameraContainer}>
+        <QRCodeScanner ref={scannerRef} fadeIn onRead={onRead} showMarker customMarker={<CameraOverlay />} />
+      </View>
+
+      <ScrollView style={styles.scrollView}>
+        <Text style={styles.paragraph}>{intl.formatMessage(messages.paragraph)}</Text>
+        <Spacer height={16} />
+        <BulletPointItem textRow={intl.formatMessage(messages.line1)} style={styles.paragraph} />
+        <Spacer height={16} />
+        <BulletPointItem
+          textRow={intl.formatMessage(messages.line2, {
+            buttonType: intl.formatMessage(messages.buttonType),
+          })}
+          style={styles.paragraph}
+        />
+      </ScrollView>
     </View>
-    {getContent(intl.formatMessage)}
-  </View>
-)
+  )
+}
 
-export default injectIntl(
-  (compose(
-    withNavigationTitle(({intl}: {intl: IntlShape}) =>
-      intl.formatMessage(messages.title),
-    ),
-    onDidMount(
-      async ({
-        navigation,
-        route,
-        intl,
-      }: {
-        intl: IntlShape,
-        route: any,
-        navigation: any,
-      }) => {
-        navigation.addListener('focus', () => {
-          // re-enable QR code scanning
-          if (
-            firstFocus === false &&
-            scannerRef != null &&
-            scannerRef.reactivate != null
-          ) {
-            scannerRef.reactivate()
-          }
-          if (firstFocus === true) firstFocus = false
-        })
-        if (CONFIG.E2E.IS_TESTING && (await DeviceInfo.isEmulator())) {
-          const event = {
-            data: `{"publicKeyHex": "${
-              CONFIG.DEBUG.PUB_KEY
-            }", "path": [1852,1815,0]}`,
-          }
-          await handleOnRead(event, navigation, route, intl)
-        }
-      },
-    ),
-    withHandlers({
-      onRead: ({
-        navigation,
-        route,
-        intl,
-      }: {
-        intl: IntlShape,
-        route: any,
-        navigation: any,
-      }) => async (event) => {
-        await handleOnRead(event, navigation, route, intl)
-      },
-    }),
-  )(ImportReadOnlyWalletScreen): ComponentType<{
-    navigation: Navigation,
-    intl: IntlShape,
-    route: any,
-  }>),
+export default injectIntl(ImportReadOnlyWalletScreen)
+
+const CameraOverlay = () => (
+  <View
+    // eslint-disable-next-line react-native/no-inline-styles
+    style={{
+      height: '75%',
+      width: '75%',
+      borderWidth: 2,
+      borderColor: 'white',
+      borderRadius: 24,
+      marginTop: 100,
+    }}
+  />
 )

@@ -5,6 +5,7 @@ import {View, SectionList} from 'react-native'
 import {injectIntl} from 'react-intl'
 import type {IntlShape} from 'react-intl'
 import _ from 'lodash'
+import {useNavigation} from '@react-navigation/native'
 
 import {Text} from '../UiKit'
 import TxHistoryListItem from './TxHistoryListItem'
@@ -13,9 +14,12 @@ import {formatDateRelative} from '../../utils/format'
 import styles from './styles/TxHistoryList.style'
 
 import type {TransactionInfo} from '../../types/HistoryTransaction'
-import type {Navigation} from '../../types/navigation'
 
-const DayHeader = ({ts, intl}) => (
+type DayHeaderProps = {
+  ts: any,
+  intl: IntlShape,
+}
+const DayHeader = ({ts, intl}: DayHeaderProps) => (
   <View style={styles.dayHeader}>
     <Text>{formatDateRelative(ts, intl)}</Text>
   </View>
@@ -33,19 +37,13 @@ const getTransactionsByDate = (transactions: Dict<TransactionInfo>) =>
 
 type Props = {
   transactions: Dict<TransactionInfo>,
-  navigation: Navigation,
   refreshing: boolean,
   onRefresh: () => any,
   intl: IntlShape,
 }
 
-const TxHistoryList = ({
-  transactions,
-  navigation,
-  refreshing,
-  onRefresh,
-  intl,
-}: Props) => {
+const TxHistoryList = ({transactions, refreshing, onRefresh, intl}: Props) => {
+  const navigation = useNavigation()
   // TODO(ppershing): add proper memoization here
   const groupedTransactions = getTransactionsByDate(transactions)
 
@@ -54,12 +52,8 @@ const TxHistoryList = ({
       <SectionList
         onRefresh={onRefresh}
         refreshing={refreshing}
-        renderItem={({item}) => (
-          <TxHistoryListItem navigation={navigation} id={item.id} />
-        )}
-        renderSectionHeader={({section: {data}}) => (
-          <DayHeader ts={data[0].submittedAt} intl={intl} />
-        )}
+        renderItem={({item}) => <TxHistoryListItem navigation={navigation} id={item.id} />}
+        renderSectionHeader={({section: {data}}) => <DayHeader ts={data[0].submittedAt} intl={intl} />}
         sections={groupedTransactions}
         keyExtractor={(item) => item.id}
         stickySectionHeadersEnabled={false}

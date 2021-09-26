@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
-// // @flow
+// @flow
+
 import {
   TransactionMetadatum,
   encode_json_str_to_metadatum,
@@ -7,7 +8,7 @@ import {
   MetadataJsonSchema,
   GeneralTransactionMetadata,
   BigNum,
-  TransactionMetadata,
+  AuxiliaryData,
 } from '@emurgo/react-native-haskell-shelley'
 
 export type JSONMetadata = {|
@@ -15,39 +16,25 @@ export type JSONMetadata = {|
   data: {},
 |}
 
-export async function createMetadata(
-  metadata: Array<JSONMetadata>,
-): TransactionMetadata {
-  const transactionMetadata = await GeneralTransactionMetadata.new()
+export async function createAuxiliaryData(auxiliary: Array<JSONMetadata>): AuxiliaryData {
+  const metadata = await GeneralTransactionMetadata.new()
 
-  for (const meta of metadata) {
-    const metadatum = await encode_json_str_to_metadatum(
-      JSON.stringify(meta.data),
-      MetadataJsonSchema.BasicConversions,
-    )
-    await transactionMetadata.insert(
-      await BigNum.from_str(meta.label),
-      metadatum,
-    )
+  for (const meta of auxiliary) {
+    const metadatum = await encode_json_str_to_metadatum(JSON.stringify(meta.data), MetadataJsonSchema.BasicConversions)
+    await metadata.insert(await BigNum.from_str(meta.label), metadatum)
   }
 
-  return await TransactionMetadata.new(transactionMetadata)
+  return await AuxiliaryData.new(metadata)
 }
 
 export function parseMetadata(hex: string): any {
   const metadatum = TransactionMetadatum.from_bytes(Buffer.from(hex, 'hex'))
-  const metadataString = decode_metadatum_to_json_str(
-    metadatum,
-    MetadataJsonSchema.BasicConversions,
-  )
+  const metadataString = decode_metadatum_to_json_str(metadatum, MetadataJsonSchema.BasicConversions)
   return metadataString
 }
 
 export function parseMetadataDetailed(hex: string): any {
   const metadatum = TransactionMetadatum.from_bytes(Buffer.from(hex, 'hex'))
-  const metadataString = decode_metadatum_to_json_str(
-    metadatum,
-    MetadataJsonSchema.DetailedSchema,
-  )
+  const metadataString = decode_metadatum_to_json_str(metadatum, MetadataJsonSchema.DetailedSchema)
   return metadataString
 }

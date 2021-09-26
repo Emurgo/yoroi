@@ -1,53 +1,58 @@
 // @flow
+
 import {StyleSheet} from 'react-native'
 
-import {spacing, COLORS} from '../../../styles/config'
+import {COLORS} from '../../../styles/config'
 
 export default StyleSheet.create({
-  paragraph: {
-    marginBottom: spacing.paragraphBottomMargin,
-    fontSize: 14,
-    lineHeight: 22,
+  contentContainer: {
+    padding: 24,
   },
-  content: {
-    flex: 1,
+  header: {
+    alignItems: 'center',
   },
   heading: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    marginBottom: spacing.paragraphBottomMargin,
-  },
-  titleText: {
     fontSize: 20,
     lineHeight: 22,
     fontWeight: 'bold',
   },
-  alertBlock: {
-    marginTop: 32,
-    padding: 16,
-    backgroundColor: COLORS.BACKGROUND_LIGHT_RED,
-    borderRadius: 8,
-  },
-  alertTitleText: {
-    color: COLORS.ERROR_TEXT_COLOR,
-  },
-  image: {
-    marginRight: 5,
-  },
-  alertText: {
-    color: COLORS.ERROR_TEXT_COLOR_DARK,
-  },
   checkbox: {
-    marginTop: 24,
+    paddingLeft: 4,
   },
-  buttons: {
-    flexDirection: 'column',
-    marginTop: 32,
-  },
+  actions: {},
   primaryButton: {},
   secondaryButton: {
-    marginTop: 16,
     backgroundColor: COLORS.BACKGROUND_RED,
+  },
+})
+
+export const alertStyles = StyleSheet.create({
+  container: {
+    backgroundColor: COLORS.BACKGROUND_LIGHT_RED,
+    borderRadius: 8,
+    padding: 16,
+  },
+  header: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    paddingRight: 16,
+  },
+  title: {
+    color: COLORS.ALERT_TEXT_COLOR,
+    fontSize: 20,
+    lineHeight: 22,
+    fontWeight: 'bold',
+  },
+  headingText: {
+    color: COLORS.ERROR_TEXT_COLOR,
+  },
+  image: {},
+  paragraph: {
+    fontSize: 14,
+    lineHeight: 22,
+  },
+  text: {
+    color: COLORS.ERROR_TEXT_COLOR_DARK,
   },
 })
