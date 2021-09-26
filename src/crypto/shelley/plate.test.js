@@ -1,7 +1,6 @@
 // @flow
 
 import jestSetup from '../../jestSetup'
-
 import {generateShelleyPlateFromMnemonics} from './plate'
 
 jestSetup.setup()

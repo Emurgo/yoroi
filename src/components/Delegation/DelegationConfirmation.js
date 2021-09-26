@@ -1,46 +1,44 @@
 // @flow
 
-import React from 'react'
-import {View, ScrollView, Platform} from 'react-native'
-import {compose} from 'redux'
-import {connect} from 'react-redux'
-import {withStateHandlers, withHandlers} from 'recompose'
-import {injectIntl, defineMessages} from 'react-intl'
-import {BigNumber} from 'bignumber.js'
 import {CommonActions} from '@react-navigation/routers'
+import {BigNumber} from 'bignumber.js'
+import type {ComponentType} from 'react'
+import React from 'react'
+import type {IntlShape} from 'react-intl'
+import {defineMessages, injectIntl} from 'react-intl'
+import {Platform, ScrollView, View} from 'react-native'
+import {connect} from 'react-redux'
+import {withHandlers, withStateHandlers} from 'recompose'
+import {compose} from 'redux'
 
-import {
-  easyConfirmationSelector,
-  isHWSelector,
-  hwDeviceInfoSelector,
-  defaultNetworkAssetSelector,
-} from '../../selectors'
-import {showErrorDialog, submitTransaction, submitSignedTx} from '../../actions'
+import {showErrorDialog, submitSignedTx, submitTransaction} from '../../actions'
 import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
 import {CONFIG} from '../../config/config'
-import {Button, OfflineBanner, ValidatedTextInput, Text, PleaseWaitModal, Modal} from '../UiKit'
-import ErrorModal from '../Common/ErrorModal'
-import globalMessages, {errorMessages, txLabels} from '../../i18n/global-messages'
-import {formatTokenWithText, formatTokenAmount} from '../../utils/format'
-import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
-import {SEND_ROUTES, WALLET_ROOT_ROUTES, STAKING_CENTER_ROUTES, WALLET_ROUTES} from '../../RoutesList'
 import {WrongPassword} from '../../crypto/errors'
-import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
-import KeyStore from '../../crypto/KeyStore'
-import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
-import LedgerConnect from '../Ledger/LedgerConnect'
-import HWInstructions from '../Ledger/HWInstructions'
-import LocalizableError from '../../i18n/LocalizableError'
-import {MultiToken} from '../../crypto/MultiToken'
 import {ISignRequest} from '../../crypto/ISignRequest'
-import {useParams} from '../../navigation'
-
-import styles from './styles/DelegationConfirmation.style'
-
-import type {IntlShape} from 'react-intl'
-import type {ComponentType} from 'react'
-import type {Navigation} from '../../types/navigation'
+import KeyStore from '../../crypto/KeyStore'
+import {MultiToken} from '../../crypto/MultiToken'
 import type {CreateDelegationTxResponse} from '../../crypto/shelley/delegationUtils'
+import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
+import globalMessages, {errorMessages, txLabels} from '../../i18n/global-messages'
+import LocalizableError from '../../i18n/LocalizableError'
+import {useParams} from '../../navigation'
+import {SEND_ROUTES, STAKING_CENTER_ROUTES, WALLET_ROOT_ROUTES, WALLET_ROUTES} from '../../RoutesList'
+import {
+  defaultNetworkAssetSelector,
+  easyConfirmationSelector,
+  hwDeviceInfoSelector,
+  isHWSelector,
+} from '../../selectors'
+import type {Navigation} from '../../types/navigation'
+import {formatTokenAmount, formatTokenWithText} from '../../utils/format'
+import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
+import ErrorModal from '../Common/ErrorModal'
+import HWInstructions from '../Ledger/HWInstructions'
+import LedgerConnect from '../Ledger/LedgerConnect'
+import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
+import {Button, Modal, OfflineBanner, PleaseWaitModal, Text, ValidatedTextInput} from '../UiKit'
+import styles from './styles/DelegationConfirmation.style'
 
 const messages = defineMessages({
   delegateButtonLabel: {

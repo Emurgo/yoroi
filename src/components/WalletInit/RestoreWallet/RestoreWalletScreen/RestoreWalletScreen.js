@@ -2,19 +2,17 @@
 /* eslint-disable react-native/no-inline-styles */
 // @flow
 
-import React from 'react'
-import {View, ScrollView} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {useNavigation} from '@react-navigation/native'
+import React from 'react'
+import {defineMessages, useIntl} from 'react-intl'
+import {ScrollView, View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useParams} from '../../../../navigation'
-import {KeyboardSpacer, Text, Button, Spacer, StatusBar} from '../../../UiKit'
-import {WALLET_INIT_ROUTES} from '../../../../RoutesList'
 import {getWalletConfigById} from '../../../../config/config'
-
-import type {WalletImplementationId, NetworkId} from '../../../../config/types'
-
+import type {NetworkId, WalletImplementationId} from '../../../../config/types'
+import {useParams} from '../../../../navigation'
+import {WALLET_INIT_ROUTES} from '../../../../RoutesList'
+import {Button, KeyboardSpacer, Spacer, StatusBar, Text} from '../../../UiKit'
 import {MnemonicInput} from './MnemonicInput'
 
 const messages = defineMessages({
@@ -49,7 +47,8 @@ type Params = {
   provider: string,
 }
 
-export const RestoreWalletScreen = injectIntl(({intl}: {intl: IntlShape}) => {
+export const RestoreWalletScreen = () => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const {networkId, walletImplementationId, provider} = useParams<Params>()
   const {MNEMONIC_LEN: mnemonicLength} = getWalletConfigById(walletImplementationId)
@@ -88,7 +87,7 @@ export const RestoreWalletScreen = injectIntl(({intl}: {intl: IntlShape}) => {
       </Actions>
     </SafeAreaView>
   )
-})
+}
 
 const Instructions = (props) => <Text {...props} style={{fontSize: 16, lineHeight: 24}} />
 const Actions = (props) => <View {...props} style={{padding: 16}} />

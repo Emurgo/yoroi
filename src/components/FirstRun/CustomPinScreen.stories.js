@@ -1,11 +1,11 @@
 // @flow
 
-import React from 'react'
-import {storiesOf} from '@storybook/react-native'
-
-import CustomPinScreen from './CustomPinScreen'
 import {NavigationRouteContext} from '@react-navigation/native'
 import {action} from '@storybook/addon-actions'
+import {storiesOf} from '@storybook/react-native'
+import React from 'react'
+
+import CustomPinScreen from './CustomPinScreen'
 
 storiesOf('CustomPinScreen', module).add('Default', () => {
   const route = {

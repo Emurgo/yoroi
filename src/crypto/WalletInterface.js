@@ -3,37 +3,36 @@
 // TODO(v-almonacid): transactionCache should be decoupled from this class.
 // Use an interface instead
 
+import type {WalletChecksum} from '@emurgo/cip4-js'
 import {BigNumber} from 'bignumber.js'
 import {type IntlShape} from 'react-intl'
 
-import {AddressChain} from './shelley/chain'
-import {TransactionCache} from './shelley/transactionCache'
-import Wallet from './Wallet'
-import {ISignRequest} from './ISignRequest'
-import {MultiToken} from './MultiToken'
-
 import type {
-  RawUtxo,
-  TxBodiesRequest,
-  TxBodiesResponse,
-  ServerStatusResponse,
+  AccountStateResponse,
+  FundInfoResponse,
   PoolInfoRequest,
   PoolInfoResponse,
+  RawUtxo,
+  ServerStatusResponse,
   TokenInfoRequest,
   TokenInfoResponse,
-  FundInfoResponse,
-  AccountStateResponse,
+  TxBodiesRequest,
+  TxBodiesResponse,
 } from '../api/types'
-import type {AddressedUtxo, EncryptionMethod, SendTokenList, SignedTx, WalletState} from './types'
-import type {DefaultTokenEntry} from './MultiToken'
-import type {HWDeviceInfo} from './shelley/ledgerUtils'
-import type {DelegationStatus} from './shelley/delegationUtils'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from '../config/types'
 import type {WalletMeta} from '../state'
-import type {Transaction, DefaultAsset} from '../types/HistoryTransaction'
+import type {DefaultAsset, Transaction} from '../types/HistoryTransaction'
+import {ISignRequest} from './ISignRequest'
+import type {DefaultTokenEntry} from './MultiToken'
+import {MultiToken} from './MultiToken'
 import type {Addresses} from './shelley/chain'
-import type {WalletChecksum} from '@emurgo/cip4-js'
+import {AddressChain} from './shelley/chain'
+import type {DelegationStatus} from './shelley/delegationUtils'
+import type {HWDeviceInfo} from './shelley/ledgerUtils'
 import type {JSONMetadata} from './shelley/metadataUtils'
+import {TransactionCache} from './shelley/transactionCache'
+import type {AddressedUtxo, EncryptionMethod, SendTokenList, SignedTx, WalletState} from './types'
+import Wallet from './Wallet'
 
 export interface WalletInterface {
   id: string;
@@ -68,7 +67,7 @@ export interface WalletInterface {
   // last version the wallet has been *opened* on, since this is the actual
   // relevant information we need to decide on whether migrations are needed.
   // Saved in storage but not exposed to redux's store.
-  version: ?string;
+  version: string;
 
   state: WalletState;
 

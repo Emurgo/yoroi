@@ -1,8 +1,5 @@
 // @flow
 
-import moment from 'moment'
-import BigNumber from 'bignumber.js'
-
 import 'moment/locale/ko'
 import 'moment/locale/ja'
 import 'moment/locale/zh-cn'
@@ -17,6 +14,9 @@ import 'moment/locale/nl'
 import 'moment/locale/cs'
 import 'moment/locale/hu'
 import 'moment/locale/sk'
+
+import BigNumber from 'bignumber.js'
+import moment from 'moment'
 
 import assert from '../utils/assert'
 import {LANGUAGES} from './languages'

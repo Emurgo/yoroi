@@ -1,12 +1,11 @@
 // @flow
 
+import {text} from '@storybook/addon-knobs'
+import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {storiesOf} from '@storybook/react-native'
-
 import Link from './Link'
-import {text} from '@storybook/addon-knobs'
 
 const styles = StyleSheet.create({
   container: {

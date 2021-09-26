@@ -1,23 +1,21 @@
 // @flow
 
+import {useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
+import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
-import {useNavigation, useRoute} from '@react-navigation/native'
 
-import WalletDescription from './WalletDescription'
-import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
-import {Modal, Button, StatusBar, ScreenBackground} from '../UiKit'
-import ExapandableItem from '../Common/ExpandableItem'
-import {WALLET_INIT_ROUTES} from '../../RoutesList'
+import {CONFIG, isByron, isHaskellShelley} from '../../config/config'
 import {isJormungandr} from '../../config/networks'
-import {CONFIG, isHaskellShelley, isByron} from '../../config/config'
-import globalMessages from '../../i18n/global-messages'
-
-import styles from './styles/WalletInitScreen.style'
-
 import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../config/types'
+import globalMessages from '../../i18n/global-messages'
+import {WALLET_INIT_ROUTES} from '../../RoutesList'
+import ExapandableItem from '../Common/ExpandableItem'
+import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
+import {Button, Modal, ScreenBackground, StatusBar} from '../UiKit'
+import styles from './styles/WalletInitScreen.style'
+import WalletDescription from './WalletDescription'
 
 const messages = defineMessages({
   createWalletButton: {
@@ -66,11 +64,8 @@ const MODAL_STATES = {
 }
 type ModalState = $Values<typeof MODAL_STATES>
 
-type Props = {
-  intl: IntlShape,
-}
-
-const WalletInitScreen = ({intl}: Props) => {
+const WalletInitScreen = () => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const route = (useRoute(): any)
   const [modalState, _setModalState] = React.useState(MODAL_STATES.CLOSED)
@@ -233,4 +228,4 @@ const WalletInitScreen = ({intl}: Props) => {
     </SafeAreaView>
   )
 }
-export default injectIntl(WalletInitScreen)
+export default WalletInitScreen

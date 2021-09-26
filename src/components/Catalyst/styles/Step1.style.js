@@ -1,6 +1,7 @@
 // @flow
 
 import {StyleSheet} from 'react-native'
+
 import common from './common.style'
 
 export default StyleSheet.create({

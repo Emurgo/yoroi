@@ -1,20 +1,19 @@
 // @flow
 
-import {BigNumber} from 'bignumber.js'
-import {ISignRequest} from '../ISignRequest'
 /* eslint-disable camelcase */
 import {
-  RewardAddress,
-  TransactionBuilder,
   AuxiliaryData, // TODO: rust bindings not yet available
   hash_transaction,
+  RewardAddress,
+  TransactionBuilder,
 } from '@emurgo/react-native-haskell-shelley'
+import {BigNumber} from 'bignumber.js'
 
 import {CONFIG} from '../../config/config'
-import {multiTokenFromCardanoValue, toHexOrBase58} from './utils'
+import {ISignRequest} from '../ISignRequest'
 import {MultiToken} from '../MultiToken'
-
 import type {Address, AddressedUtxo, Addressing, Value} from '../types'
+import {multiTokenFromCardanoValue, toHexOrBase58} from './utils'
 
 const PRIMARY_ASSET_CONSTANTS = CONFIG.PRIMARY_ASSET_CONSTANTS
 

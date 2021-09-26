@@ -1,13 +1,13 @@
 // @flow
 
-import {BigNumber} from 'bignumber.js'
-import {defineMessages, type IntlShape} from 'react-intl'
-import moment from 'moment'
-import utfSymbols from './utfSymbols'
 import AssetFingerprint from '@emurgo/cip14-js'
-import {getCardanoDefaultAsset} from '../config/config'
+import {BigNumber} from 'bignumber.js'
+import moment from 'moment'
+import {type IntlShape, defineMessages} from 'react-intl'
 
-import type {Token, DefaultAsset} from '../types/HistoryTransaction'
+import {getCardanoDefaultAsset} from '../config/config'
+import type {DefaultAsset, Token} from '../types/HistoryTransaction'
+import utfSymbols from './utfSymbols'
 
 const messages = defineMessages({
   today: {

@@ -1,7 +1,7 @@
 // @flow
 
 import jestSetup from '../jestSetup'
-import {encryptWithPassword, decryptWithPassword} from './catalystCipher'
+import {decryptWithPassword, encryptWithPassword} from './catalystCipher'
 
 jestSetup.setup()
 

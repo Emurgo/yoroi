@@ -1,21 +1,31 @@
 // @flow
 
+import type {
+  AssetGroup,
+  BIP32Path,
+  Certificate,
+  // new types
+  DeviceOwnedAddress,
+  GetExtendedPublicKeyRequest,
+  GetExtendedPublicKeyResponse,
+  GetSerialResponse,
+  GetVersionResponse,
+  SignTransactionRequest,
+  SignTransactionResponse,
+  Token as LedgerToken,
+  TxInput,
+  TxOutput,
+  Withdrawal,
+  Witness,
+} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import AppAda, {
   AddressType,
-  DeviceStatusCodes,
   CertificateType,
-  TxOutputDestinationType,
+  DeviceStatusCodes,
   TransactionSigningMode,
   TxAuxiliaryDataType,
+  TxOutputDestinationType,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
-import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
-// note(v-almonacid) we'll be using a fork of @ledgerhq/react-native-hid
-// so that we can keep minSdkVersion = 21
-// import TransportHID from '@ledgerhq/react-native-hid'
-import TransportHID from '@v-almonacid/react-native-hid'
-import {TransportStatusError} from '@ledgerhq/hw-transport'
-import {BleError} from 'react-native-ble-plx'
-import {Platform, PermissionsAndroid} from 'react-native'
 import {
   Address,
   AuxiliaryData,
@@ -38,36 +48,25 @@ import {
   Vkeywitnesses,
   Withdrawals,
 } from '@emurgo/react-native-haskell-shelley'
+import {TransportStatusError} from '@ledgerhq/hw-transport'
+import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
+// note(v-almonacid) we'll be using a fork of @ledgerhq/react-native-hid
+// so that we can keep minSdkVersion = 21
+// import TransportHID from '@ledgerhq/react-native-hid'
+import TransportHID from '@v-almonacid/react-native-hid'
+import {PermissionsAndroid, Platform} from 'react-native'
+import {BleError} from 'react-native-ble-plx'
 
-import {Logger} from '../../utils/logging'
 import {CONFIG, isByron, isHaskellShelley} from '../../config/config'
 import {getNetworkConfigById} from '../../config/networks'
 import {NUMBERS} from '../../config/numbers'
-import {verifyFromBip44Root, toHexOrBase58, normalizeToAddress, derivePublicByAddressing} from './utils'
+import type {NetworkId, WalletImplementationId} from '../../config/types'
+import type {Address as JsAddress, AddressedUtxo, Addressing, Value} from '../../crypto/types'
 import {ledgerMessages} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
-
-import type {Address as JsAddress, Addressing, AddressedUtxo, Value} from '../../crypto/types'
-import type {
-  AssetGroup,
-  BIP32Path,
-  Certificate,
-  GetVersionResponse,
-  GetExtendedPublicKeyRequest,
-  GetExtendedPublicKeyResponse,
-  GetSerialResponse,
-  SignTransactionResponse,
-  Token as LedgerToken,
-  Witness,
-  Withdrawal,
-  // new types
-  DeviceOwnedAddress,
-  SignTransactionRequest,
-  TxInput,
-  TxOutput,
-} from '@cardano-foundation/ledgerjs-hw-app-cardano'
-import type {WalletImplementationId, NetworkId} from '../../config/types'
+import {Logger} from '../../utils/logging'
 import type {HaskellShelleyTxSignRequest} from './HaskellShelleyTxSignRequest'
+import {derivePublicByAddressing, normalizeToAddress, toHexOrBase58, verifyFromBip44Root} from './utils'
 
 //
 // ============== Errors ==================

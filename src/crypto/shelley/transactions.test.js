@@ -1,20 +1,21 @@
 // @flow
 
-import jestSetup from '../../jestSetup'
-
-import {BigNumber} from 'bignumber.js'
 import {
   Address as ShelleyAddress,
   BigNum,
   Bip32PrivateKey,
   Certificate,
   Ed25519KeyHash,
+  /* eslint-disable-next-line camelcase */
+  hash_transaction,
   LinearFee,
+  /* eslint-disable-next-line camelcase */
+  make_vkey_witness,
   RewardAddress,
   StakeCredential,
   StakeDelegation,
-  StakeRegistration,
   StakeDeregistration,
+  StakeRegistration,
   TransactionBody,
   TransactionHash,
   TransactionInput,
@@ -22,21 +23,18 @@ import {
   TransactionOutput,
   TransactionOutputs,
   Value,
-  /* eslint-disable-next-line camelcase */
-  make_vkey_witness,
-  /* eslint-disable-next-line camelcase */
-  hash_transaction,
 } from '@emurgo/react-native-haskell-shelley'
+import {BigNumber} from 'bignumber.js'
 
-import {newAdaUnsignedTx, newAdaUnsignedTxFromUtxo, sendAllUnsignedTxFromUtxo, signTransaction} from './transactions'
-import {InsufficientFunds, NoOutputsError, AssetOverflowError} from '../errors'
-import {byronAddrToHex, identifierToCardanoAsset} from './utils'
+import type {RawUtxo} from '../../api/types'
 import {CONFIG, getDefaultAssets} from '../../config/config'
 import {NETWORKS} from '../../config/networks'
+import jestSetup from '../../jestSetup'
+import {AssetOverflowError, InsufficientFunds, NoOutputsError} from '../errors'
 import {MultiToken} from '../MultiToken'
-
-import type {Address, Addressing, AddressedUtxo} from '../types'
-import type {RawUtxo} from '../../api/types'
+import type {Address, AddressedUtxo, Addressing} from '../types'
+import {newAdaUnsignedTx, newAdaUnsignedTxFromUtxo, sendAllUnsignedTxFromUtxo, signTransaction} from './transactions'
+import {byronAddrToHex, identifierToCardanoAsset} from './utils'
 
 jestSetup.setup()
 

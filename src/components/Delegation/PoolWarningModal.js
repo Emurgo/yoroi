@@ -1,16 +1,14 @@
 // @flow
 
 import React from 'react'
-import {View, ScrollView, Image} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
-
-import {Text, Button, Modal} from '../UiKit'
-import {confirmationMessages} from '../../i18n/global-messages'
-
-import styles from './styles/PoolWarningModal.style'
-import image from '../../assets/img/mnemonic_explanation.png'
-
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {Image, ScrollView, View} from 'react-native'
 import type {TextStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
+
+import image from '../../assets/img/mnemonic_explanation.png'
+import {confirmationMessages} from '../../i18n/global-messages'
+import {Button, Modal, Text} from '../UiKit'
+import styles from './styles/PoolWarningModal.style'
 
 const messages = defineMessages({
   title: {

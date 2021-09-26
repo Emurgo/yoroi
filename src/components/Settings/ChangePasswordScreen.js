@@ -1,19 +1,18 @@
 // @flow
 
-import React from 'react'
-import {View, ScrollView} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {useNavigation} from '@react-navigation/native'
+import React from 'react'
+import {defineMessages, useIntl} from 'react-intl'
+import {ScrollView, View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Spacer, TextInput} from '../UiKit'
-import {validatePassword, REQUIRED_PASSWORD_LENGTH} from '../../utils/validators'
-import {errorMessages} from '../../i18n/global-messages'
 import {showErrorDialog} from '../../actions'
-import walletManager from '../../crypto/walletManager'
 import {WrongPassword} from '../../crypto/errors'
+import walletManager from '../../crypto/walletManager'
+import {errorMessages} from '../../i18n/global-messages'
+import {REQUIRED_PASSWORD_LENGTH, validatePassword} from '../../utils/validators'
+import {Button, Spacer, TextInput} from '../UiKit'
 import {Checkmark} from '../UiKit/TextInput'
-
 import styles from './styles/ChangePasswordScreen.style'
 
 const messages = defineMessages({
@@ -43,11 +42,8 @@ const messages = defineMessages({
   },
 })
 
-type Props = {
-  intl: IntlShape,
-}
-
-const ChangePasswordScreen = ({intl}: Props) => {
+const ChangePasswordScreen = () => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const onSubmit = async (oldPassword, newPassword) => {
     try {
@@ -146,7 +142,7 @@ const ChangePasswordScreen = ({intl}: Props) => {
   )
 }
 
-export default injectIntl(ChangePasswordScreen)
+export default ChangePasswordScreen
 
 const CurrentPasswordInput = TextInput
 const PasswordInput = TextInput

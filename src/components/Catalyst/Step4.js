@@ -7,29 +7,27 @@
  * ### HW is NOT supported yet - validation is done on first screen itself###
  */
 
-import React, {useState, useEffect} from 'react'
-import {View, SafeAreaView} from 'react-native'
-import {injectIntl, defineMessages} from 'react-intl'
-import {connect} from 'react-redux'
 import {useNavigation} from '@react-navigation/native'
-
-import {CONFIG} from '../../config/config'
-import KeyStore from '../../crypto/KeyStore'
-import {generateVotingTransaction} from '../../actions/voting'
-import {showErrorDialog} from '../../actions'
-import {Text, ProgressStep, Button, OfflineBanner, ValidatedTextInput, StatusBar} from '../UiKit'
-import ErrorModal from '../Common/ErrorModal'
-import {CATALYST_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
-import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
-import {errorMessages, confirmationMessages, txLabels} from '../../i18n/global-messages'
-import {WrongPassword} from '../../crypto/errors'
-import {easyConfirmationSelector, utxosSelector, isHWSelector} from '../../selectors'
-
-import styles from './styles/Step4.style'
-
 import type {ComponentType} from 'react'
+import React, {useEffect, useState} from 'react'
 import type {IntlShape} from 'react-intl'
+import {defineMessages, injectIntl} from 'react-intl'
+import {SafeAreaView, View} from 'react-native'
+import {connect} from 'react-redux'
+
+import {showErrorDialog} from '../../actions'
+import {generateVotingTransaction} from '../../actions/voting'
 import type {RawUtxo} from '../../api/types'
+import {CONFIG} from '../../config/config'
+import {WrongPassword} from '../../crypto/errors'
+import KeyStore from '../../crypto/KeyStore'
+import walletManager, {SystemAuthDisabled} from '../../crypto/walletManager'
+import {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
+import {CATALYST_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
+import {easyConfirmationSelector, isHWSelector, utxosSelector} from '../../selectors'
+import ErrorModal from '../Common/ErrorModal'
+import {Button, OfflineBanner, ProgressStep, StatusBar, Text, ValidatedTextInput} from '../UiKit'
+import styles from './styles/Step4.style'
 
 const messages = defineMessages({
   subTitle: {

@@ -4,7 +4,6 @@
 // Note: All this code was taken from the Yoroi Extension and adapted for
 // compatibility with Yoroi mobile's types and async operation
 
-import {BigNumber} from 'bignumber.js'
 /* eslint-disable camelcase */
 import {
   AuxiliaryData,
@@ -14,8 +13,8 @@ import {
   ByronAddress,
   Certificate,
   Certificates,
-  LinearFee,
   hash_transaction,
+  LinearFee,
   make_icarus_bootstrap_witness,
   make_vkey_witness,
   min_ada_required,
@@ -33,6 +32,9 @@ import {
   Vkeywitnesses,
   Withdrawals,
 } from '@emurgo/react-native-haskell-shelley'
+import {BigNumber} from 'bignumber.js'
+
+import type {RawUtxo} from '../../api/types'
 /* eslint-enable camelcase */
 import {CONFIG} from '../../config/config'
 import {
@@ -53,9 +55,20 @@ import type {
   V4UnsignedTxAddressedUtxoResponse,
   V4UnsignedTxUtxoResponse,
   AddressedUtxo,
+  Addressing,
+  ProtocolParameters,
   TxOutput,
+  V4UnsignedTxAddressedUtxoResponse,
+  V4UnsignedTxUtxoResponse,
 } from '../types'
-import type {RawUtxo} from '../../api/types'
+import {
+  cardanoValueFromMultiToken,
+  cardanoValueFromRemoteFormat,
+  derivePrivateByAddressing,
+  getCardanoAddrKeyHash,
+  multiTokenFromCardanoValue,
+  normalizeToAddress,
+} from './utils'
 
 const AddInputResult = Object.freeze({
   VALID: 0,

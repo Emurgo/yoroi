@@ -5,25 +5,23 @@
  * Confirm PIN generated in previous step
  */
 
-import _ from 'lodash'
-import React, {useEffect, useState} from 'react'
-import {View, SafeAreaView} from 'react-native'
-import {injectIntl, defineMessages} from 'react-intl'
-import {connect} from 'react-redux'
 import {useNavigation} from '@react-navigation/native'
-
-import {generateVotingKeys, generateVotingTransaction} from '../../actions/voting'
-import {isHWSelector} from '../../selectors'
-import {Text, ProgressStep} from '../UiKit'
-import PinInputKeyboard from '../Common/PinInputKeyboard'
-import {CATALYST_ROUTES} from '../../RoutesList'
-import {errorMessages} from '../../i18n/global-messages'
-import {showErrorDialog} from '../../actions'
-
-import styles from './styles/Step3.style'
-
+import _ from 'lodash'
 import type {ComponentType} from 'react'
+import React, {useEffect, useState} from 'react'
 import type {IntlShape} from 'react-intl'
+import {defineMessages, injectIntl} from 'react-intl'
+import {SafeAreaView, View} from 'react-native'
+import {connect} from 'react-redux'
+
+import {showErrorDialog} from '../../actions'
+import {generateVotingKeys, generateVotingTransaction} from '../../actions/voting'
+import {errorMessages} from '../../i18n/global-messages'
+import {CATALYST_ROUTES} from '../../RoutesList'
+import {isHWSelector} from '../../selectors'
+import PinInputKeyboard from '../Common/PinInputKeyboard'
+import {ProgressStep, Text} from '../UiKit'
+import styles from './styles/Step3.style'
 
 const messages = defineMessages({
   subTitle: {

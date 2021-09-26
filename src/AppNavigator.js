@@ -1,37 +1,35 @@
 // @flow
 
-import React from 'react'
-import {useDispatch, useSelector} from 'react-redux'
 import {NavigationContainer} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {isEmpty} from 'lodash'
-import {injectIntl, defineMessages} from 'react-intl'
-import type {IntlShape} from 'react-intl'
+import React from 'react'
+import {type IntlShape, defineMessages, useIntl} from 'react-intl'
+import {useDispatch, useSelector} from 'react-redux'
 
-import {CONFIG} from './config/config'
-import {
-  isMaintenanceSelector,
-  isSystemAuthEnabledSelector,
-  isAuthenticatedSelector,
-  installationIdSelector,
-  isAppSetupCompleteSelector,
-} from './selectors'
-import WalletNavigator from './components/WalletNavigator'
-import WalletInitNavigator from './components/WalletInit/WalletInitNavigator'
+import {showErrorDialog, signin} from './actions'
 import FirstRunNavigator from './components/FirstRun/FirstRunNavigator'
 import IndexScreen from './components/IndexScreen'
-import StorybookScreen from './components/StorybookScreen'
-import MaintenanceScreen from './components/MaintenanceScreen'
-import {ROOT_ROUTES} from './RoutesList'
-import BiometricAuthScreen from './components/Send/BiometricAuthScreen'
 import CustomPinLogin from './components/Login/CustomPinLogin'
-import {defaultNavigationOptions, defaultStackNavigatorOptions} from './navigationOptions'
-import {signin, showErrorDialog} from './actions'
-import {recreateAppSignInKeys, canBiometricEncryptionBeEnabled} from './helpers/deviceSettings'
-import {errorMessages} from './i18n/global-messages'
-import env from './env'
+import MaintenanceScreen from './components/MaintenanceScreen'
+import BiometricAuthScreen from './components/Send/BiometricAuthScreen'
+import StorybookScreen from './components/StorybookScreen'
+import WalletInitNavigator from './components/WalletInit/WalletInitNavigator'
+import WalletNavigator from './components/WalletNavigator'
+import {CONFIG} from './config/config'
 import KeyStore from './crypto/KeyStore'
-
+import env from './env'
+import {canBiometricEncryptionBeEnabled, recreateAppSignInKeys} from './helpers/deviceSettings'
+import {errorMessages} from './i18n/global-messages'
+import {defaultNavigationOptions, defaultStackNavigatorOptions} from './navigationOptions'
+import {ROOT_ROUTES} from './RoutesList'
+import {
+  installationIdSelector,
+  isAppSetupCompleteSelector,
+  isAuthenticatedSelector,
+  isMaintenanceSelector,
+  isSystemAuthEnabledSelector,
+} from './selectors'
 import type {State} from './state'
 
 const IS_STORYBOOK = env.getBoolean('IS_STORYBOOK', false)
@@ -57,10 +55,8 @@ type AppNavigatorRoutes = {
 
 const Stack = createStackNavigator<any, AppNavigatorRoutes, any>()
 
-type NavigatorSwitchProps = {|
-  intl: IntlShape,
-|}
-const NavigatorSwitch = injectIntl(({intl}: NavigatorSwitchProps) => {
+const NavigatorSwitch = () => {
+  const intl = useIntl()
   const isMaintenance = useSelector(isMaintenanceSelector)
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
   const isAuthenticated = useSelector(isAuthenticatedSelector)
@@ -148,7 +144,7 @@ const NavigatorSwitch = injectIntl(({intl}: NavigatorSwitchProps) => {
       <Stack.Screen name={ROOT_ROUTES.NEW_WALLET} component={WalletInitNavigator} />
     </Stack.Navigator>
   )
-})
+}
 
 const StoryBook = () => (
   <Stack.Navigator>

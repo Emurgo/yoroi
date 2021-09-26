@@ -1,19 +1,18 @@
 // @flow
 
+import {useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {useDispatch} from 'react-redux'
-import {useNavigation, useRoute} from '@react-navigation/native'
 
-import WalletNameForm from '../WalletNameForm'
 import {createWalletWithBip44Account} from '../../../actions'
 import {saveHW} from '../../../actions/hwWallet'
-import {WALLET_ROOT_ROUTES, ROOT_ROUTES} from '../../../RoutesList'
-import {CONFIG} from '../../../config/config'
-import assert from '../../../utils/assert'
 import image from '../../../assets/img/ledger_2.png'
-
-import type {WalletImplementationId, NetworkId} from '../../../config/types'
+import {CONFIG} from '../../../config/config'
+import type {NetworkId, WalletImplementationId} from '../../../config/types'
 import type {HWDeviceInfo} from '../../../crypto/shelley/ledgerUtils'
+import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
+import assert from '../../../utils/assert'
+import WalletNameForm from '../WalletNameForm'
 
 export type Params = {
   networkId: NetworkId,

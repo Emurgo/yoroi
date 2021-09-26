@@ -1,17 +1,16 @@
 // @flow
 
+import type {WalletChecksum} from '@emurgo/cip4-js'
 import {
-  TransactionBuilder as V4TransactionBuilder,
   Certificate as V4Certificate,
+  TransactionBuilder as V4TransactionBuilder,
 } from '@emurgo/react-native-haskell-shelley'
 import {LinearFee} from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 
-import {MultiToken} from './MultiToken'
-
-import type {WalletChecksum} from '@emurgo/cip4-js'
 import type {RawUtxo} from '../api/types'
 import type {Token} from '../types/HistoryTransaction'
+import {MultiToken} from './MultiToken'
 
 export type Address = {|
   +address: string,

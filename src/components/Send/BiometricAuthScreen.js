@@ -1,25 +1,23 @@
 // @flow
 
-import React, {useState, useEffect} from 'react'
-import {AppState} from 'react-native'
-import {compose} from 'redux'
-import {withHandlers, withStateHandlers} from 'recompose'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {useFocusEffect} from '@react-navigation/native'
+import type {ComponentType} from 'react'
+import React, {useEffect, useState} from 'react'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {AppState} from 'react-native'
+import {withHandlers, withStateHandlers} from 'recompose'
+import {compose} from 'redux'
 
-import {Logger} from '../../utils/logging'
-import {Button} from '../UiKit'
-import FingerprintScreenBase from '../Common/FingerprintScreenBase'
+import {showErrorDialog} from '../../actions'
 import KeyStore from '../../crypto/KeyStore'
-import {onWillUnmount} from '../../utils/renderUtils'
 import {canBiometricEncryptionBeEnabled} from '../../helpers/deviceSettings'
 import {errorMessages as globalErrorMessages} from '../../i18n/global-messages'
-import {showErrorDialog} from '../../actions'
-
-import styles from './styles/BiometricAuthScreen.style'
-
-import type {ComponentType} from 'react'
 import type {Navigation} from '../../types/navigation'
+import {Logger} from '../../utils/logging'
+import {onWillUnmount} from '../../utils/renderUtils'
+import FingerprintScreenBase from '../Common/FingerprintScreenBase'
+import {Button} from '../UiKit'
+import styles from './styles/BiometricAuthScreen.style'
 
 const errorMessages = defineMessages({
   NOT_RECOGNIZED: {

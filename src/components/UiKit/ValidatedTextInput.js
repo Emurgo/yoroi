@@ -1,16 +1,14 @@
 // @flow
 
+import type {ComponentType} from 'react'
 import React from 'react'
-import {View, TextInput, TouchableOpacity, Image, Platform} from 'react-native'
+import {Image, Platform, TextInput, TouchableOpacity, View} from 'react-native'
 import {withStateHandlers} from 'recompose'
 
-import {Text} from '../UiKit'
-
-import styles from './styles/ValidatedTextInput.style'
-import openedEyeIcon from '../../assets/img/icon/visibility-opened.png'
 import closedEyeIcon from '../../assets/img/icon/visibility-closed.png'
-
-import type {ComponentType} from 'react'
+import openedEyeIcon from '../../assets/img/icon/visibility-opened.png'
+import {Text} from '../UiKit'
+import styles from './styles/ValidatedTextInput.style'
 
 type Props = any
 const ValidatedTextInput = ({

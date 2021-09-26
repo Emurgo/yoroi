@@ -1,19 +1,18 @@
 // @flow
 
-import React from 'react'
-import {useDispatch, useSelector} from 'react-redux'
-import {View, ScrollView} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {useNavigation} from '@react-navigation/native'
+import React from 'react'
+import {defineMessages, useIntl} from 'react-intl'
+import {ScrollView, View} from 'react-native'
+import {useDispatch, useSelector} from 'react-redux'
 
-import walletManager from '../../crypto/walletManager'
-import {Text, Button, TextInput, StatusBar} from '../UiKit'
 import {setEasyConfirmation, showErrorDialog} from '../../actions'
-import {easyConfirmationSelector} from '../../selectors'
 import {WrongPassword} from '../../crypto/errors'
-
-import styles from './styles/ToggleEasyConfirmationScreen.style'
+import walletManager from '../../crypto/walletManager'
 import {errorMessages} from '../../i18n/global-messages'
+import {easyConfirmationSelector} from '../../selectors'
+import {Button, StatusBar, Text, TextInput} from '../UiKit'
+import styles from './styles/ToggleEasyConfirmationScreen.style'
 
 const messages = defineMessages({
   enableHeading: {
@@ -49,7 +48,8 @@ const messages = defineMessages({
   },
 })
 
-const ToggleEasyConfirmationScreen = ({intl}: {intl: IntlShape} & Object /* TODO: type */) => {
+const ToggleEasyConfirmationScreen = () => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
   const dispatch = useDispatch()
@@ -127,4 +127,4 @@ const ToggleEasyConfirmationScreen = ({intl}: {intl: IntlShape} & Object /* TODO
   )
 }
 
-export default injectIntl(ToggleEasyConfirmationScreen)
+export default ToggleEasyConfirmationScreen

@@ -3,8 +3,9 @@
 import React from 'react'
 import {View} from 'react-native'
 import Svg, {Path} from 'react-native-svg'
-import Text from './Text'
+
 import styles from './styles/ProgressCircle.style'
+import Text from './Text'
 
 type ExternalProps = {|
   +percentage: number,

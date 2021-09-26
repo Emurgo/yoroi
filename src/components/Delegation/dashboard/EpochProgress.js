@@ -1,11 +1,11 @@
 // @flow
 
 import React from 'react'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
 import {View} from 'react-native'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
 import globalMessages from '../../../i18n/global-messages'
-import {Text, TitledCard, ProgressCircle} from '../../UiKit'
+import {ProgressCircle, Text, TitledCard} from '../../UiKit'
 import styles from './styles/EpochProgress.style'
 
 const messages = defineMessages({

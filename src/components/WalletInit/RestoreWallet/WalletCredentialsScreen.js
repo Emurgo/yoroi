@@ -1,15 +1,15 @@
 // @flow
 
+import {useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {ActivityIndicator} from 'react-native'
 import {useDispatch} from 'react-redux'
-import {useNavigation, useRoute} from '@react-navigation/native'
 
+import {createWallet, updateVersion} from '../../../actions'
+import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import assert from '../../../utils/assert'
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
-import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import WalletForm from '../WalletForm'
-import {createWallet, updateVersion} from '../../../actions'
 
 const WalletCredentialsScreen = () => {
   const navigation = useNavigation()

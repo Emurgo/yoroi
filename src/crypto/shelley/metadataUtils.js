@@ -2,13 +2,13 @@
 // @flow
 
 import {
-  TransactionMetadatum,
-  encode_json_str_to_metadatum,
-  decode_metadatum_to_json_str,
-  MetadataJsonSchema,
-  GeneralTransactionMetadata,
-  BigNum,
   AuxiliaryData,
+  BigNum,
+  decode_metadatum_to_json_str,
+  encode_json_str_to_metadatum,
+  GeneralTransactionMetadata,
+  MetadataJsonSchema,
+  TransactionMetadatum,
 } from '@emurgo/react-native-haskell-shelley'
 
 export type JSONMetadata = {|

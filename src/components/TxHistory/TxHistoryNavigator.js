@@ -1,19 +1,18 @@
 // @flow
 
-import React from 'react'
 import {createStackNavigator} from '@react-navigation/stack'
+import React from 'react'
 import {useSelector} from 'react-redux'
 
-import {Button} from '../UiKit'
-import TxHistory from './TxHistory'
-import TxDetails from './TxDetails'
-import {TX_HISTORY_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
 import iconGear from '../../assets/img/gear.png'
-import {walletMetaSelector, transactionsInfoSelector} from '../../selectors'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
+import {TX_HISTORY_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
+import {transactionsInfoSelector, walletMetaSelector} from '../../selectors'
 import {formatDateToSeconds} from '../../utils/format'
-
+import {Button} from '../UiKit'
 import styles from './styles/SettingsButton.style'
+import TxDetails from './TxDetails'
+import TxHistory from './TxHistory'
 
 type TxHistoryRoutes = {
   'tx-history-list': any,

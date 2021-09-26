@@ -1,11 +1,10 @@
 // @flow
 
 import React, {useState} from 'react'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
 
-import {Text, Button, Checkbox, Modal} from '../UiKit'
 import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
-
+import {Button, Checkbox, Modal, Text} from '../UiKit'
 import styles from './styles/CatalystBackupCheckModal.style'
 
 const messages = defineMessages({

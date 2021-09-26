@@ -1,23 +1,22 @@
 // @flow
 
+import {useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
+import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 
-import LedgerConnect from '../../Ledger/LedgerConnect'
+import {showErrorDialog} from '../../../actions'
+import type {WalletImplementationId} from '../../../config/types'
+import type {DeviceId, DeviceObj} from '../../../crypto/shelley/ledgerUtils'
 import {getHWDeviceInfo} from '../../../crypto/shelley/ledgerUtils'
-import {ProgressStep} from '../../UiKit'
+import {errorMessages} from '../../../i18n/global-messages'
+import LocalizableError from '../../../i18n/LocalizableError'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
 import {Logger} from '../../../utils/logging'
-import {errorMessages} from '../../../i18n/global-messages'
-import {showErrorDialog} from '../../../actions'
-import LocalizableError from '../../../i18n/LocalizableError'
-
+import LedgerConnect from '../../Ledger/LedgerConnect'
 import type {Device} from '../../Ledger/types'
-import type {DeviceId, DeviceObj} from '../../../crypto/shelley/ledgerUtils'
-import {useNavigation, useRoute} from '@react-navigation/native'
-import type {WalletImplementationId} from '../../../config/types'
+import {ProgressStep} from '../../UiKit'
 
 const messages = defineMessages({
   exportKey: {
@@ -34,11 +33,11 @@ const styles = StyleSheet.create({
 })
 
 type Props = {
-  intl: IntlShape,
   defaultDevices: ?Array<Device>, // for storybook
 }
 
-const ConnectNanoXScreen = ({intl, defaultDevices}: Props) => {
+const ConnectNanoXScreen = ({defaultDevices}: Props) => {
+  const intl = useIntl()
   const navigation = useNavigation()
   const route = useRoute()
   const walletImplementationId: WalletImplementationId = (route.params?.walletImplementationId: any)
@@ -87,4 +86,4 @@ const ConnectNanoXScreen = ({intl, defaultDevices}: Props) => {
   )
 }
 
-export default injectIntl(ConnectNanoXScreen)
+export default ConnectNanoXScreen

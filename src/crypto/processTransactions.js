@@ -2,16 +2,15 @@
 
 import {BigNumber} from 'bignumber.js'
 
-import {TRANSACTION_DIRECTION, TRANSACTION_STATUS, TRANSACTION_TYPE} from '../types/HistoryTransaction'
-import {CONFIG} from '../config/config'
-import {Logger} from '../utils/logging'
-import assert from '../utils/assert'
 import {CERTIFICATE_KIND} from '../api/types'
-import {MultiToken, strToDefaultMultiAsset, getDefaultNetworkTokenEntry} from './MultiToken'
-import {multiTokenFromRemote} from './shelley/utils'
-
-import type {TransactionInfo, Transaction, BaseAsset, Token} from '../types/HistoryTransaction'
+import {CONFIG} from '../config/config'
 import type {NetworkId} from '../config/types'
+import type {BaseAsset, Token, Transaction, TransactionInfo} from '../types/HistoryTransaction'
+import {TRANSACTION_DIRECTION, TRANSACTION_STATUS, TRANSACTION_TYPE} from '../types/HistoryTransaction'
+import assert from '../utils/assert'
+import {Logger} from '../utils/logging'
+import {getDefaultNetworkTokenEntry, MultiToken, strToDefaultMultiAsset} from './MultiToken'
+import {multiTokenFromRemote} from './shelley/utils'
 
 type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
 

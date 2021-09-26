@@ -1,18 +1,18 @@
 /* eslint-disable react-native/no-inline-styles */
 // @flow
 
+import type {Element, Node} from 'react'
 import React from 'react'
-import {View, TouchableOpacity, Image, TextInput as RNTextInput} from 'react-native'
-import {HelperText, TextInput as RNPTextInput} from 'react-native-paper'
-import styles from './styles/TextInput.style'
-import openedEyeIcon from '../../assets/img/icon/visibility-opened.png'
-import closedEyeIcon from '../../assets/img/icon/visibility-closed.png'
-import CheckIcon from '../../assets/CheckIcon'
-import {COLORS} from '../../styles/config'
-
+import {Image, TextInput as RNTextInput, TouchableOpacity, View} from 'react-native'
 import type {Props as TextInputProps} from 'react-native/Libraries/Components/TextInput/TextInput'
 import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
-import type {Element, Node} from 'react'
+import {HelperText, TextInput as RNPTextInput} from 'react-native-paper'
+
+import CheckIcon from '../../assets/CheckIcon'
+import closedEyeIcon from '../../assets/img/icon/visibility-closed.png'
+import openedEyeIcon from '../../assets/img/icon/visibility-opened.png'
+import {COLORS} from '../../styles/config'
+import styles from './styles/TextInput.style'
 
 type Props = {|
   ...TextInputProps,

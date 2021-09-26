@@ -1,21 +1,19 @@
 // @flow
 
 import React, {useState} from 'react'
-import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
-import {View, Image, LayoutAnimation, TouchableOpacity} from 'react-native'
+import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {Image, LayoutAnimation, TouchableOpacity, View} from 'react-native'
 
-import {Text} from '../../UiKit'
-import AssetList from './AssetList'
-import {getAssetDenominationOrId} from '../../../utils/format'
-
-import styles from './styles/AssetSelector.style'
-import assetListStyle from './styles/AssetListSend.style'
-import arrowUp from '../../../assets/img/arrow_up_fill.png'
 import arrowDown from '../../../assets/img/arrow_down_fill.png'
+import arrowUp from '../../../assets/img/arrow_up_fill.png'
 import closeIcon from '../../../assets/img/cross_fill.png'
-
 import type {TokenEntry} from '../../../crypto/MultiToken'
 import type {Token} from '../../../types/HistoryTransaction'
+import {getAssetDenominationOrId} from '../../../utils/format'
+import {Text} from '../../UiKit'
+import AssetList from './AssetList'
+import assetListStyle from './styles/AssetListSend.style'
+import styles from './styles/AssetSelector.style'
 
 const messages = defineMessages({
   placeHolder: {

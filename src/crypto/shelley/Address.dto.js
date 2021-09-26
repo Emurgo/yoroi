@@ -2,8 +2,8 @@
 
 import {
   Address,
-  ByronAddress,
   BaseAddress,
+  ByronAddress,
   // PointerAddress,
   // EnterpriseAddress,
   RewardAddress,

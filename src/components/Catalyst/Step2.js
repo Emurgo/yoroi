@@ -5,20 +5,18 @@
  * Auto generate a PIN, catalyst private key
  */
 
-import React, {useEffect, useState} from 'react'
-import {View, SafeAreaView} from 'react-native'
-import {injectIntl, defineMessages} from 'react-intl'
-import {connect} from 'react-redux'
 import {useNavigation} from '@react-navigation/native'
-
-import {Text, Button, ProgressStep} from '../UiKit'
-import {CATALYST_ROUTES} from '../../RoutesList'
-import {confirmationMessages} from '../../i18n/global-messages'
-
-import styles from './styles/Step2.style'
-
 import type {ComponentType} from 'react'
+import React, {useEffect, useState} from 'react'
 import type {IntlShape} from 'react-intl'
+import {defineMessages, injectIntl} from 'react-intl'
+import {SafeAreaView, View} from 'react-native'
+import {connect} from 'react-redux'
+
+import {confirmationMessages} from '../../i18n/global-messages'
+import {CATALYST_ROUTES} from '../../RoutesList'
+import {Button, ProgressStep, Text} from '../UiKit'
+import styles from './styles/Step2.style'
 
 const messages = defineMessages({
   subTitle: {

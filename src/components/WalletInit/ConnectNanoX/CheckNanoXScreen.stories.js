@@ -1,12 +1,12 @@
 // @flow
 
-import React from 'react'
-import {storiesOf} from '@storybook/react-native'
-import {action} from '@storybook/addon-actions'
-
-import CheckNanoXScreen from './CheckNanoXScreen'
-import {CONFIG} from '../../../config/config'
 import {NavigationRouteContext} from '@react-navigation/native'
+import {action} from '@storybook/addon-actions'
+import {storiesOf} from '@storybook/react-native'
+import React from 'react'
+
+import {CONFIG} from '../../../config/config'
+import CheckNanoXScreen from './CheckNanoXScreen'
 
 storiesOf('CheckNanoXScreen', module)
   .add('ble', () => (
