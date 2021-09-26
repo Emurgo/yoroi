@@ -3,7 +3,7 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {ValidatedTextInput} from '../UiKit'
+import {TextInput} from '../UiKit'
 import {editedFormatter, pastedFormatter} from './amountUtils'
 
 export const messages = defineMessages({
@@ -34,13 +34,13 @@ const AmountField = ({amount, error, editable, setAmount}: Props) => {
   }
 
   return (
-    <ValidatedTextInput
+    <TextInput
       returnKeyType="done"
       keyboardType="numeric"
       label={intl.formatMessage(messages.label)}
       value={amount}
       onChangeText={handleSetAmount}
-      error={error}
+      errorText={error || undefined}
       editable={editable != null ? editable : true}
     />
   )
