@@ -28,6 +28,10 @@ const messages = defineMessages({
     id: 'components.send.addressreaderqr.title',
     defaultMessage: '!!!Scan QR code address',
   },
+  selectAssetTitle: {
+    id: 'components.send.selectasset.title',
+    defaultMessage: '!!!Select asset',
+  },
   confirmTitle: {
     id: 'components.send.confirmscreen.title',
     defaultMessage: '!!!Send',
@@ -130,7 +134,7 @@ const SendScreenNavigator = () => {
         {() => <SendScreen selectedAsset={selectedAsset} onSendAll={setSendAll} sendAll={sendAll} />}
       </Stack.Screen>
 
-      <Stack.Screen name={'select-asset'} options={{title: 'Select Asset'}}>
+      <Stack.Screen name={'select-asset'} options={{title: intl.formatMessage(messages.selectAssetTitle)}}>
         {({navigation}) => (
           <AssetSelectorScreen
             assetTokens={tokenBalance.values}
