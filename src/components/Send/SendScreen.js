@@ -34,8 +34,9 @@ import {
   tokenBalanceSelector,
   tokenInfoSelector,
   utxosSelector,
+  walletMetaSelector,
 } from '../../selectors'
-import type {ServerStatusCache} from '../../state'
+import type {ServerStatusCache, WalletMeta} from '../../state'
 import type {DefaultAsset, Token} from '../../types/HistoryTransaction'
 import type {Navigation} from '../../types/navigation'
 import {
@@ -49,7 +50,7 @@ import {
 } from '../../utils/format'
 import {InvalidAssetAmount, parseAmountDecimal} from '../../utils/parsing'
 import type {AddressValidationErrors, AmountValidationErrors, BalanceValidationErrors} from '../../utils/validators'
-import {validateAddressAsync, validateAmount} from '../../utils/validators'
+import {isReceiverAddressValid, validateAmount} from '../../utils/validators'
 import DangerousActionModal from '../Common/DangerousActionModal'
 import AssetSelector from '../Common/MultiAsset/AssetSelector'
 import {Banner, Button, Checkbox, OfflineBanner, StatusBar, Text, ValidatedTextInput} from '../UiKit'
@@ -242,9 +243,19 @@ const getTransactionData = async (
   return await walletManager.createUnsignedTx(utxos, address, sendTokenList, defaultTokenEntry, serverTime)
 }
 
-const recomputeAll = async ({amount, address, utxos, sendAll, defaultAsset, selectedTokenMeta, tokenBalance}) => {
+const recomputeAll = async ({
+  amount,
+  address,
+  utxos,
+  sendAll,
+  defaultAsset,
+  selectedTokenMeta,
+  tokenBalance,
+  walletNetworkId,
+}) => {
   let amountErrors = validateAmount(amount, selectedTokenMeta)
-  const addressErrors = await validateAddressAsync(address)
+  // NOTE: empty object will make flow complain, and it will be refactored soon
+  const addressErrors = (await isReceiverAddressValid(address, walletNetworkId)) || Object.freeze({})
   let balanceErrors = Object.freeze({})
   let fee = null
   let balanceAfter = null
@@ -347,6 +358,7 @@ type Props = {
   hasPendingOutgoingTransaction: boolean,
   fetchUTXOs: () => void,
   serverStatus: ServerStatusCache,
+  walletMetadata: WalletMeta,
 }
 
 type State = {
@@ -417,6 +429,8 @@ class SendScreen extends Component<Props, State> {
     if (tokenMetadata[selectedAsset.identifier] == null) {
       throw new Error('revalidate: no asset metadata found for the asset selected')
     }
+    const {walletMetadata} = this.props
+    const {networkId: walletNetworkId} = walletMetadata
     const newState = await recomputeAll({
       utxos,
       address,
@@ -425,6 +439,7 @@ class SendScreen extends Component<Props, State> {
       defaultAsset,
       selectedTokenMeta: tokenMetadata[selectedAsset.identifier],
       tokenBalance,
+      walletNetworkId,
     })
 
     if (
@@ -469,8 +484,9 @@ class SendScreen extends Component<Props, State> {
   }
 
   handleConfirm: () => Promise<void> = async () => {
-    const {navigation, utxos, tokenBalance, defaultAsset, tokenMetadata, serverStatus} = this.props
+    const {navigation, utxos, tokenBalance, defaultAsset, tokenMetadata, serverStatus, walletMetadata} = this.props
     const {address, amount, sendAll, selectedAsset} = this.state
+    const {networkId: walletNetworkId} = walletMetadata
 
     const selectedTokenMeta = tokenMetadata[selectedAsset.identifier]
     if (selectedTokenMeta == null) {
@@ -485,6 +501,7 @@ class SendScreen extends Component<Props, State> {
       defaultAsset,
       selectedTokenMeta,
       tokenBalance,
+      walletNetworkId,
     })
 
     // Note(ppershing): use this.props as they might have
@@ -772,6 +789,7 @@ export default injectIntl(
         hasPendingOutgoingTransaction: hasPendingOutgoingTransactionSelector(state),
         isOnline: isOnlineSelector(state),
         serverStatus: serverStatusSelector(state),
+        walletMetadata: walletMetaSelector(state),
       }),
       {
         fetchUTXOs,
