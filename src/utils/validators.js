@@ -139,7 +139,7 @@ export const isReceiverAddressValid = async (
       const networkConfig = getNetworkConfigById(walletNetworkId)
       const configNetworkId = networkConfig.CHAIN_NETWORK_ID && Number(networkConfig.CHAIN_NETWORK_ID)
       const addressNetworkId = await address.network_id()
-      if (addressNetworkId !== configNetworkId) {
+      if (addressNetworkId !== configNetworkId && !isNaN(configNetworkId)) {
         return {invalidAddress: true}
       }
       // eslint-disable-next-line no-empty
