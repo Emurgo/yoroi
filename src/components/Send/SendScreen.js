@@ -2,15 +2,15 @@
 
 /* eslint-disable-next-line camelcase */
 import {BigNum, min_ada_required} from '@emurgo/react-native-haskell-shelley'
+import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
-import type {ComponentType} from 'react'
 import React, {Component} from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
-import {ActivityIndicator, ScrollView, View} from 'react-native'
+import {type IntlShape, defineMessages, useIntl} from 'react-intl'
+import {ActivityIndicator, Image, ScrollView, View} from 'react-native'
+import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {connect} from 'react-redux'
-import {compose} from 'redux'
+import {useDispatch, useSelector} from 'react-redux'
 
 import {fetchUTXOs} from '../../actions/utxo'
 import type {RawUtxo} from '../../api/types'
@@ -51,124 +51,485 @@ import {InvalidAssetAmount, parseAmountDecimal} from '../../utils/parsing'
 import type {AddressValidationErrors, AmountValidationErrors, BalanceValidationErrors} from '../../utils/validators'
 import {validateAddressAsync, validateAmount} from '../../utils/validators'
 import DangerousActionModal from '../Common/DangerousActionModal'
-import AssetSelector from '../Common/MultiAsset/AssetSelector'
-import {Banner, Button, Checkbox, OfflineBanner, StatusBar, Text, ValidatedTextInput} from '../UiKit'
+import {Banner, Button, Checkbox, OfflineBanner, Spacer, StatusBar, Text, TextInput} from '../UiKit'
 import AmountField from './AmountField'
 import styles from './styles/SendScreen.style'
 import UtxoAutoRefresher from './UtxoAutoRefresher'
 
-const amountInputErrorMessages = defineMessages({
-  INVALID_AMOUNT: {
-    id: 'components.send.sendscreen.amountInput.error.INVALID_AMOUNT',
-    defaultMessage: '!!!Please enter valid amount',
-  },
-  TOO_MANY_DECIMAL_PLACES: {
-    id: 'components.send.sendscreen.amountInput.error.TOO_MANY_DECIMAL_PLACES',
-    defaultMessage: '!!!Please enter valid amount',
-  },
-  TOO_LARGE: {
-    id: 'components.send.sendscreen.amountInput.error.TOO_LARGE',
-    defaultMessage: '!!!Amount too large',
-  },
-  TOO_LOW: {
-    id: 'components.send.sendscreen.amountInput.error.TOO_LOW',
-    defaultMessage: '!!!Amount is too low',
-  },
-  LT_MIN_UTXO: {
-    id: 'components.send.sendscreen.amountInput.error.LT_MIN_UTXO',
-    defaultMessage: '!!!Cannot send less than {minUtxo} {ticker}',
-  },
-  NEGATIVE: {
-    id: 'components.send.sendscreen.amountInput.error.NEGATIVE',
-    defaultMessage: '!!!Amount must be positive',
-  },
-  insufficientBalance: {
-    id: 'components.send.sendscreen.amountInput.error.insufficientBalance',
-    defaultMessage: '!!!Not enough money to make this transaction',
-  },
-  assetOverflow: {
-    id: 'components.send.sendscreen.amountInput.error.assetOverflow',
-    defaultMessage: '!!!!Maximum value of a token inside a UTXO exceeded (overflow).',
-  },
-})
+type LegacyProps = {|
+  intl: IntlShape,
+  navigation: Navigation,
+  selectedAsset: TokenEntry,
+  sendAll: boolean,
+  tokenBalance: MultiToken,
+  isFetchingBalance: boolean,
+  lastFetchingError: any,
+  tokenMetadata: Dict<Token>,
+  defaultAsset: DefaultAsset,
+  utxos: ?Array<RawUtxo>,
+  isOnline: boolean,
+  hasPendingOutgoingTransaction: boolean,
+  fetchUTXOs: () => void,
+  serverStatus: ServerStatusCache,
+  selectedAsset: TokenEntry,
+  fetchUTXOs: () => void,
+  onSendAll: (boolean) => mixed,
+|}
 
-const messages = defineMessages({
-  feeLabel: {
-    id: 'components.send.sendscreen.feeLabel',
-    defaultMessage: '!!!Fee',
-  },
-  feeNotAvailable: {
-    id: 'components.send.sendscreen.feeNotAvailable',
-    defaultMessage: '!!!-',
-  },
-  balanceAfterLabel: {
-    id: 'components.send.sendscreen.balanceAfterLabel',
-    defaultMessage: '!!!Balance after',
-  },
-  balanceAfterNotAvailable: {
-    id: 'components.send.sendscreen.balanceAfterNotAvailable',
-    defaultMessage: '!!!-',
-  },
-  availableFundsBannerIsFetching: {
-    id: 'components.send.sendscreen.availableFundsBannerIsFetching',
-    defaultMessage: '!!!Checking balance...',
-  },
-  availableFundsBannerNotAvailable: {
-    id: 'components.send.sendscreen.availableFundsBannerNotAvailable',
-    defaultMessage: '!!!-',
-  },
-  addressInputErrorInvalidAddress: {
-    id: 'components.send.sendscreen.addressInputErrorInvalidAddress',
-    defaultMessage: '!!!Please enter valid address',
-  },
-  addressInputLabel: {
-    id: 'components.send.sendscreen.addressInputLabel',
-    defaultMessage: '!!!Address',
-  },
-  checkboxSendAllAssets: {
-    id: 'components.send.sendscreen.checkboxSendAllAssets',
-    defaultMessage: '!!!Send all assets (including all tokens)',
-  },
-  checkboxSendAll: {
-    id: 'components.send.sendscreen.checkboxSendAll',
-    defaultMessage: '!!!Send all {assetId}',
-  },
-  sendAllWarningTitle: {
-    id: 'components.send.sendscreen.sendAllWarningTitle',
-    defaultMessage: '!!!Do you really want to send all?',
-  },
-  sendAllWarningText: {
-    id: 'components.send.sendscreen.sendAllWarningText',
-    defaultMessage:
-      '!!!You have selected the send all option. Please confirm that you understand how this feature works.',
-  },
-  sendAllWarningAlert1: {
-    id: 'components.send.sendscreen.sendAllWarningAlert1',
-    defaultMessage: '!!!All you {assetNameOrId} balance will be transferred in this transaction.',
-  },
-  sendAllWarningAlert2: {
-    id: 'components.send.sendscreen.sendAllWarningAlert2',
-    defaultMessage:
-      '!!!All your tokens, including NFTs and any other native ' +
-      'assets in your wallet, will also be transferred in this transaction.',
-  },
-  sendAllWarningAlert3: {
-    id: 'components.send.sendscreen.sendAllWarningAlert3',
-    defaultMessage: '!!!After you confirm the transaction in the next screen, your wallet will be emptied.',
-  },
-  continueButton: {
-    id: 'components.send.sendscreen.continueButton',
-    defaultMessage: '!!!Continue',
-  },
-  errorBannerNetworkError: {
-    id: 'components.send.sendscreen.errorBannerNetworkError',
-    defaultMessage: '!!!We are experiencing issues with fetching your current balance. Click to retry.',
-  },
-  errorBannerPendingOutgoingTransaction: {
-    id: 'components.send.sendscreen.errorBannerPendingOutgoingTransaction',
-    defaultMessage: '!!!You cannot send a new transaction while an existing one is still pending',
-  },
-})
+type State = {
+  address: string,
+  addressErrors: AddressValidationErrors,
+  amount: string,
+  amountErrors: AmountValidationErrors,
+  balanceErrors: BalanceValidationErrors,
+  fee: ?BigNumber,
+  balanceAfter: ?BigNumber,
+  recomputing: boolean,
+  showSendAllWarning: boolean,
+}
+
+// eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
+class SendScreenLegacy extends Component<LegacyProps, State> {
+  state = {
+    address: '',
+    addressErrors: {addressIsRequired: true},
+    amount: '',
+    amountErrors: {amountIsRequired: true},
+    fee: null,
+    balanceAfter: null,
+    balanceErrors: Object.freeze({}),
+    recomputing: false,
+    showSendAllWarning: false,
+  }
+
+  componentDidMount() {
+    if (CONFIG.DEBUG.PREFILL_FORMS) {
+      if (!__DEV__) throw new Error('using debug data in non-dev env')
+      this.handleAddressChange(CONFIG.DEBUG.SEND_ADDRESS)
+      this.handleAmountChange(CONFIG.DEBUG.SEND_AMOUNT)
+    }
+    this.props.navigation.setParams({onScanAddress: this.handleAddressChange})
+    this.props.navigation.setParams({onScanAmount: this.handleAmountChange})
+  }
+
+  async componentDidUpdate(prevProps: LegacyProps, prevState: State) {
+    const {selectedAsset, utxos, sendAll} = this.props
+    const {address, amount} = this.state
+
+    const {address: prevAddress, amount: prevAmount} = prevState
+
+    if (
+      prevProps.utxos !== utxos ||
+      prevAddress !== address ||
+      prevAmount !== amount ||
+      prevProps.sendAll !== sendAll ||
+      prevProps.selectedAsset !== selectedAsset
+    ) {
+      await this.revalidate({utxos, address, amount, sendAll, selectedAsset})
+    }
+  }
+
+  async revalidate({
+    utxos,
+    address,
+    amount,
+    sendAll,
+    selectedAsset,
+  }: {
+    utxos: ?Array<RawUtxo>,
+    address: string,
+    amount: string,
+    sendAll: boolean,
+    selectedAsset: TokenEntry,
+  }) {
+    this.setState({
+      fee: null,
+      balanceAfter: null,
+      recomputing: true,
+    })
+    const {defaultAsset, tokenMetadata, tokenBalance} = this.props
+    if (tokenMetadata[selectedAsset.identifier] == null) {
+      throw new Error('revalidate: no asset metadata found for the asset selected')
+    }
+    const newState = await recomputeAll({
+      utxos,
+      address,
+      amount,
+      sendAll,
+      defaultAsset,
+      selectedTokenMeta: tokenMetadata[selectedAsset.identifier],
+      tokenBalance,
+    })
+
+    if (
+      this.state.address !== address ||
+      this.state.amount !== amount ||
+      this.props.sendAll !== sendAll ||
+      this.props.utxos !== utxos
+    ) {
+      return
+    }
+
+    this.setState({
+      ...newState,
+      recomputing: false,
+    })
+  }
+
+  handleAddressChange: (string) => void = (address) => this.setState({address})
+
+  handleAmountChange: (string) => void = (amount) => this.setState({amount})
+
+  openSendAllWarning: () => void = () => this.setState({showSendAllWarning: true})
+
+  closeSendAllWarning: () => void = () => this.setState({showSendAllWarning: false})
+
+  onConfirm: () => Promise<void> = async () => {
+    if (this.props.sendAll) {
+      this.openSendAllWarning()
+      return
+    }
+    await this.handleConfirm()
+  }
+
+  handleConfirm: () => Promise<void> = async () => {
+    const {navigation, utxos, tokenBalance, defaultAsset, tokenMetadata, serverStatus, sendAll, selectedAsset} =
+      this.props
+    const {address, amount} = this.state
+
+    const selectedTokenMeta = tokenMetadata[selectedAsset.identifier]
+    if (selectedTokenMeta == null) {
+      throw new Error('SendScreen::handleConfirm: no asset metadata found for the asset selected')
+    }
+
+    const {addressErrors, amountErrors, balanceErrors, balanceAfter} = await recomputeAll({
+      amount,
+      address,
+      utxos,
+      sendAll,
+      defaultAsset,
+      selectedTokenMeta,
+      tokenBalance,
+    })
+
+    // Note(ppershing): use this.props as they might have
+    // changed during await
+    const isValid =
+      this.props.isOnline &&
+      !this.props.hasPendingOutgoingTransaction &&
+      !this.props.isFetchingBalance &&
+      utxos &&
+      _.isEmpty(addressErrors) &&
+      _.isEmpty(amountErrors) &&
+      _.isEmpty(balanceErrors) &&
+      this.state.amount === amount &&
+      this.state.address === address &&
+      this.props.selectedAsset === selectedAsset &&
+      this.props.utxos === utxos
+
+    if (isValid === true) {
+      /* :: if (!utxos) throw 'assert' */
+      const transactionData = await getTransactionData(
+        utxos,
+        address,
+        amount,
+        sendAll,
+        defaultAsset,
+        selectedTokenMeta,
+        serverStatus.serverTime,
+      )
+
+      const fee = (await transactionData.fee()).getDefault()
+
+      const defaultAssetAmount = selectedTokenMeta.isDefault
+        ? parseAmountDecimal(amount, selectedTokenMeta)
+        : // note: inside this if balanceAfter shouldn't be null
+          tokenBalance.getDefault().minus(balanceAfter ?? 0)
+
+      const tokens: Array<TokenEntry> = await (async () => {
+        if (sendAll) {
+          return (await transactionData.totalOutput()).nonDefaultEntries()
+        }
+        if (!selectedTokenMeta.isDefault) {
+          return [
+            {
+              identifier: selectedTokenMeta.identifier,
+              networkId: selectedTokenMeta.networkId,
+              amount: parseAmountDecimal(amount, selectedTokenMeta),
+            },
+          ]
+        }
+        return []
+      })()
+
+      this.closeSendAllWarning()
+
+      navigation.navigate(SEND_ROUTES.CONFIRM, {
+        availableAmount: tokenBalance.getDefault(),
+        address,
+        defaultAssetAmount,
+        transactionData,
+        balanceAfterTx: balanceAfter,
+        utxos,
+        fee,
+        tokens,
+      })
+    }
+  }
+
+  renderBalanceAfterTransaction = () => {
+    const {balanceAfter} = this.state
+    const {intl, tokenMetadata, tokenBalance} = this.props
+    const assetMetaData = tokenMetadata[tokenBalance.getDefaultId()]
+
+    const value = balanceAfter
+      ? formatTokenWithSymbol(balanceAfter, assetMetaData)
+      : intl.formatMessage(messages.balanceAfterNotAvailable)
+
+    return (
+      <Text small>
+        {intl.formatMessage(messages.balanceAfterLabel)}
+        {': '}
+        {value}
+      </Text>
+    )
+  }
+
+  renderFee = () => {
+    const {fee} = this.state
+    const {intl, defaultAsset} = this.props
+
+    const value = fee ? formatTokenWithSymbol(fee, defaultAsset) : intl.formatMessage(messages.feeNotAvailable)
+
+    return (
+      <Text small>
+        {intl.formatMessage(messages.feeLabel)}
+        {': '}
+        {value}
+      </Text>
+    )
+  }
+
+  renderAvailableAmountBanner = () => {
+    const {isFetchingBalance, tokenBalance, tokenMetadata, intl} = this.props
+    const assetMetaData = tokenMetadata[tokenBalance.getDefaultId()]
+
+    return (
+      <Banner
+        label={intl.formatMessage(globalMessages.availableFunds)}
+        text={
+          isFetchingBalance
+            ? intl.formatMessage(messages.availableFundsBannerIsFetching)
+            : tokenBalance
+            ? formatTokenWithText(tokenBalance.getDefault(), assetMetaData)
+            : intl.formatMessage(messages.availableFundsBannerNotAvailable)
+        }
+        boldText
+      />
+    )
+  }
+
+  renderErrorBanners = () => {
+    const {intl, isOnline, lastFetchingError, isFetchingBalance, hasPendingOutgoingTransaction, fetchUTXOs} = this.props
+
+    if (!isOnline) {
+      return <OfflineBanner />
+    } else if (lastFetchingError && !isFetchingBalance) {
+      return <Banner error onPress={fetchUTXOs} text={intl.formatMessage(messages.errorBannerNetworkError)} />
+    } else if (hasPendingOutgoingTransaction) {
+      return <Banner error text={intl.formatMessage(messages.errorBannerPendingOutgoingTransaction)} />
+    } else {
+      return null
+    }
+  }
+
+  renderSendAllWarning = () => {
+    const {intl, tokenMetadata, selectedAsset} = this.props
+    const {showSendAllWarning} = this.state
+
+    const selectedTokenMeta = tokenMetadata[selectedAsset.identifier]
+    const isDefault = selectedTokenMeta.isDefault
+    const assetNameOrId = truncateWithEllipsis(getAssetDenominationOrId(selectedTokenMeta), 20)
+    const alertBoxContent = {
+      content: isDefault
+        ? [
+            intl.formatMessage(messages.sendAllWarningAlert1, {
+              assetNameOrId,
+            }),
+            intl.formatMessage(messages.sendAllWarningAlert2),
+            intl.formatMessage(messages.sendAllWarningAlert3),
+          ]
+        : [
+            intl.formatMessage(messages.sendAllWarningAlert1, {
+              assetNameOrId,
+            }),
+          ],
+    }
+    return (
+      <DangerousActionModal
+        visible={showSendAllWarning}
+        onRequestClose={this.closeSendAllWarning}
+        showCloseIcon
+        title={intl.formatMessage(messages.sendAllWarningTitle)}
+        primaryButton={{
+          label: intl.formatMessage(confirmationMessages.commonButtons.backButton),
+          onPress: this.closeSendAllWarning,
+        }}
+        secondaryButton={{
+          label: intl.formatMessage(confirmationMessages.commonButtons.continueButton),
+          onPress: this.handleConfirm,
+        }}
+        alertBox={alertBoxContent}
+      >
+        <Text>{intl.formatMessage(messages.sendAllWarningText)}</Text>
+      </DangerousActionModal>
+    )
+  }
+
+  render() {
+    const {
+      intl,
+      isFetchingBalance,
+      lastFetchingError,
+      utxos,
+      isOnline,
+      hasPendingOutgoingTransaction,
+      defaultAsset,
+      tokenMetadata,
+      selectedAsset,
+      navigation,
+      sendAll,
+    } = this.props
+
+    const {amount, amountErrors, addressErrors, balanceErrors} = this.state
+
+    const isValid =
+      isOnline &&
+      !hasPendingOutgoingTransaction &&
+      !isFetchingBalance &&
+      !lastFetchingError &&
+      utxos &&
+      _.isEmpty(addressErrors) &&
+      _.isEmpty(amountErrors) &&
+      _.isEmpty(balanceErrors)
+
+    const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, defaultAsset)
+
+    const selectedAssetMeta = tokenMetadata[selectedAsset.identifier]
+
+    const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(selectedAssetMeta), 20)
+
+    return (
+      <SafeAreaView edges={['left', 'right']} style={styles.container}>
+        <StatusBar type="dark" />
+
+        <UtxoAutoRefresher />
+        {this.renderErrorBanners()}
+        {this.renderAvailableAmountBanner()}
+
+        <ScrollView style={styles.content} keyboardDismissMode="on-drag">
+          {this.renderBalanceAfterTransaction()}
+          {this.renderFee()}
+
+          <Spacer height={16} />
+
+          <TouchableOpacity onPress={() => navigation.navigate('select-asset')}>
+            <TextInput
+              right={<Image source={require('../../assets/img/arrow_down_fill.png')} />}
+              editable={false}
+              label={'Select Asset'}
+              value={`${assetDenomination}: ${String(selectedAsset.amount)}`}
+            />
+          </TouchableOpacity>
+
+          <TextInput
+            value={this.state.address || ''}
+            multiline
+            errorOnMount
+            onChangeText={this.handleAddressChange}
+            label={intl.formatMessage(messages.addressInputLabel)}
+            errorText={
+              addressErrors.invalidAddress ? intl.formatMessage(messages.addressInputErrorInvalidAddress) : undefined
+            }
+          />
+
+          <AmountField
+            amount={amount}
+            setAmount={this.handleAmountChange}
+            error={amountErrorText}
+            editable={!sendAll}
+          />
+
+          <Checkbox
+            checked={sendAll}
+            onChange={(sendAll) => {
+              this.props.onSendAll(sendAll)
+            }}
+            text={
+              selectedAssetMeta.isDefault
+                ? intl.formatMessage(messages.checkboxSendAllAssets)
+                : intl.formatMessage(messages.checkboxSendAll, {assetId: assetDenomination})
+            }
+          />
+
+          {this.state.recomputing && <Indicator />}
+        </ScrollView>
+
+        <View style={styles.actions}>
+          <Button
+            onPress={this.onConfirm}
+            title={intl.formatMessage(messages.continueButton)}
+            disabled={!isValid || this.state.fee == null}
+          />
+        </View>
+
+        {this.renderSendAllWarning()}
+      </SafeAreaView>
+    )
+  }
+}
+
+type Props = {|
+  selectedAsset: TokenEntry,
+  sendAll: boolean,
+  onSendAll: (boolean) => mixed,
+|}
+export const SendScreen = (props: Props) => {
+  const intl = useIntl()
+  const navigation = useNavigation()
+
+  const tokenBalance = useSelector(tokenBalanceSelector)
+  const isFetchingBalance = useSelector(isFetchingUtxosSelector)
+  const lastFetchingError = useSelector(lastUtxosFetchErrorSelector)
+  const tokenMetadata = useSelector(tokenInfoSelector)
+  const defaultAsset = useSelector(defaultNetworkAssetSelector)
+  const utxos = useSelector(utxosSelector)
+  const hasPendingOutgoingTransaction = useSelector(hasPendingOutgoingTransactionSelector)
+  const isOnline = useSelector(isOnlineSelector)
+  const serverStatus = useSelector(serverStatusSelector)
+
+  const dispatch = useDispatch()
+
+  return (
+    <SendScreenLegacy
+      intl={intl}
+      navigation={navigation}
+      fetchUTXOs={() => dispatch(fetchUTXOs())}
+      tokenBalance={tokenBalance}
+      isFetchingBalance={isFetchingBalance}
+      lastFetchingError={lastFetchingError}
+      defaultAsset={defaultAsset}
+      tokenMetadata={tokenMetadata}
+      utxos={utxos}
+      hasPendingOutgoingTransaction={hasPendingOutgoingTransaction}
+      isOnline={isOnline}
+      serverStatus={serverStatus}
+      {...props}
+    />
+  )
+}
+
+export default SendScreen
 
 const Indicator = () => (
   <View style={styles.indicator}>
@@ -334,448 +695,115 @@ const getAmountErrorText = (intl, amountErrors, balanceErrors, defaultAsset) => 
   return null
 }
 
-type Props = {
-  navigation: Navigation,
-  intl: IntlShape,
-  tokenBalance: MultiToken,
-  isFetchingBalance: boolean,
-  lastFetchingError: any,
-  tokenMetadata: Dict<Token>,
-  defaultAsset: DefaultAsset,
-  utxos: ?Array<RawUtxo>,
-  isOnline: boolean,
-  hasPendingOutgoingTransaction: boolean,
-  fetchUTXOs: () => void,
-  serverStatus: ServerStatusCache,
-}
+const amountInputErrorMessages = defineMessages({
+  INVALID_AMOUNT: {
+    id: 'components.send.sendscreen.amountInput.error.INVALID_AMOUNT',
+    defaultMessage: '!!!Please enter valid amount',
+  },
+  TOO_MANY_DECIMAL_PLACES: {
+    id: 'components.send.sendscreen.amountInput.error.TOO_MANY_DECIMAL_PLACES',
+    defaultMessage: '!!!Please enter valid amount',
+  },
+  TOO_LARGE: {
+    id: 'components.send.sendscreen.amountInput.error.TOO_LARGE',
+    defaultMessage: '!!!Amount too large',
+  },
+  TOO_LOW: {
+    id: 'components.send.sendscreen.amountInput.error.TOO_LOW',
+    defaultMessage: '!!!Amount is too low',
+  },
+  LT_MIN_UTXO: {
+    id: 'components.send.sendscreen.amountInput.error.LT_MIN_UTXO',
+    defaultMessage: '!!!Cannot send less than {minUtxo} {ticker}',
+  },
+  NEGATIVE: {
+    id: 'components.send.sendscreen.amountInput.error.NEGATIVE',
+    defaultMessage: '!!!Amount must be positive',
+  },
+  insufficientBalance: {
+    id: 'components.send.sendscreen.amountInput.error.insufficientBalance',
+    defaultMessage: '!!!Not enough money to make this transaction',
+  },
+  assetOverflow: {
+    id: 'components.send.sendscreen.amountInput.error.assetOverflow',
+    defaultMessage: '!!!!Maximum value of a token inside a UTXO exceeded (overflow).',
+  },
+})
 
-type State = {
-  address: string,
-  addressErrors: AddressValidationErrors,
-  amount: string,
-  amountErrors: AmountValidationErrors,
-  balanceErrors: BalanceValidationErrors,
-  fee: ?BigNumber,
-  balanceAfter: ?BigNumber,
-  sendAll: boolean,
-  selectedAsset: TokenEntry,
-  recomputing: boolean,
-  showSendAllWarning: boolean,
-}
-
-// eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
-class SendScreen extends Component<Props, State> {
-  state = {
-    address: '',
-    addressErrors: {addressIsRequired: true},
-    amount: '',
-    amountErrors: {amountIsRequired: true},
-    fee: null,
-    balanceAfter: null,
-    balanceErrors: Object.freeze({}),
-    sendAll: false,
-    selectedAsset: this.props.tokenBalance.getDefaultEntry(),
-    recomputing: false,
-    showSendAllWarning: false,
-  }
-
-  componentDidMount() {
-    if (CONFIG.DEBUG.PREFILL_FORMS) {
-      if (!__DEV__) throw new Error('using debug data in non-dev env')
-      this.handleAddressChange(CONFIG.DEBUG.SEND_ADDRESS)
-      this.handleAmountChange(CONFIG.DEBUG.SEND_AMOUNT)
-    }
-    this.props.navigation.setParams({onScanAddress: this.handleAddressChange})
-    this.props.navigation.setParams({onScanAmount: this.handleAmountChange})
-  }
-
-  async componentDidUpdate(prevProps, prevState) {
-    const utxos = this.props.utxos
-    const {address, amount, sendAll, selectedAsset} = this.state
-
-    const prevUtxos = prevProps.utxos
-    const {address: prevAddress, amount: prevAmount, sendAll: prevSendAll, selectedAsset: prevSelectedAsset} = prevState
-
-    if (
-      prevUtxos !== utxos ||
-      prevAddress !== address ||
-      prevAmount !== amount ||
-      prevSendAll !== sendAll ||
-      prevSelectedAsset !== selectedAsset
-    ) {
-      await this.revalidate({utxos, address, amount, sendAll, selectedAsset})
-    }
-  }
-
-  async revalidate({utxos, address, amount, sendAll, selectedAsset}) {
-    this.setState({
-      fee: null,
-      balanceAfter: null,
-      recomputing: true,
-    })
-    const {defaultAsset, tokenMetadata, tokenBalance} = this.props
-    if (tokenMetadata[selectedAsset.identifier] == null) {
-      throw new Error('revalidate: no asset metadata found for the asset selected')
-    }
-    const newState = await recomputeAll({
-      utxos,
-      address,
-      amount,
-      sendAll,
-      defaultAsset,
-      selectedTokenMeta: tokenMetadata[selectedAsset.identifier],
-      tokenBalance,
-    })
-
-    if (
-      this.state.address !== address ||
-      this.state.amount !== amount ||
-      this.state.sendAll !== sendAll ||
-      this.props.utxos !== utxos
-    ) {
-      return
-    }
-
-    this.setState({
-      ...newState,
-      recomputing: false,
-    })
-  }
-
-  handleAddressChange: (string) => void = (address) => this.setState({address})
-
-  onAssetSelect: (TokenEntry | void) => void = (token) => {
-    if (token === undefined) {
-      this.setState({selectedAsset: this.props.tokenBalance.getDefaultEntry()})
-    } else {
-      this.setState({selectedAsset: token})
-    }
-  }
-
-  handleAmountChange: (string) => void = (amount) => this.setState({amount})
-
-  handleCheckBoxChange: (boolean) => void = (sendAll) => this.setState({sendAll})
-
-  openSendAllWarning: () => void = () => this.setState({showSendAllWarning: true})
-
-  closeSendAllWarning: () => void = () => this.setState({showSendAllWarning: false})
-
-  onConfirm: () => Promise<void> = async () => {
-    if (this.state.sendAll) {
-      this.openSendAllWarning()
-      return
-    }
-    await this.handleConfirm()
-  }
-
-  handleConfirm: () => Promise<void> = async () => {
-    const {navigation, utxos, tokenBalance, defaultAsset, tokenMetadata, serverStatus} = this.props
-    const {address, amount, sendAll, selectedAsset} = this.state
-
-    const selectedTokenMeta = tokenMetadata[selectedAsset.identifier]
-    if (selectedTokenMeta == null) {
-      throw new Error('SendScreen::handleConfirm: no asset metadata found for the asset selected')
-    }
-
-    const {addressErrors, amountErrors, balanceErrors, balanceAfter} = await recomputeAll({
-      amount,
-      address,
-      utxos,
-      sendAll,
-      defaultAsset,
-      selectedTokenMeta,
-      tokenBalance,
-    })
-
-    // Note(ppershing): use this.props as they might have
-    // changed during await
-    const isValid =
-      this.props.isOnline &&
-      !this.props.hasPendingOutgoingTransaction &&
-      !this.props.isFetchingBalance &&
-      utxos &&
-      _.isEmpty(addressErrors) &&
-      _.isEmpty(amountErrors) &&
-      _.isEmpty(balanceErrors) &&
-      this.state.amount === amount &&
-      this.state.address === address &&
-      this.state.selectedAsset === selectedAsset &&
-      this.props.utxos === utxos
-
-    if (isValid === true) {
-      /* :: if (!utxos) throw 'assert' */
-      const transactionData = await getTransactionData(
-        utxos,
-        address,
-        amount,
-        sendAll,
-        defaultAsset,
-        selectedTokenMeta,
-        serverStatus.serverTime,
-      )
-      const fee = (await transactionData.fee()).getDefault()
-
-      const defaultAssetAmount = selectedTokenMeta.isDefault
-        ? parseAmountDecimal(amount, selectedTokenMeta)
-        : // note: inside this if balanceAfter shouldn't be null
-          tokenBalance.getDefault().minus(balanceAfter ?? 0)
-
-      const tokens: Array<TokenEntry> = await (async () => {
-        if (sendAll) {
-          return (await transactionData.totalOutput()).nonDefaultEntries()
-        }
-        if (!selectedTokenMeta.isDefault) {
-          return [
-            {
-              identifier: selectedTokenMeta.identifier,
-              networkId: selectedTokenMeta.networkId,
-              amount: parseAmountDecimal(amount, selectedTokenMeta),
-            },
-          ]
-        }
-        return []
-      })()
-
-      this.closeSendAllWarning()
-
-      navigation.navigate(SEND_ROUTES.CONFIRM, {
-        availableAmount: tokenBalance.getDefault(),
-        address,
-        defaultAssetAmount,
-        transactionData,
-        balanceAfterTx: balanceAfter,
-        utxos,
-        fee,
-        tokens,
-      })
-    }
-  }
-
-  renderBalanceAfterTransaction = () => {
-    const {balanceAfter} = this.state
-    const {intl, tokenMetadata, tokenBalance} = this.props
-    const assetMetaData = tokenMetadata[tokenBalance.getDefaultId()]
-
-    const value = balanceAfter
-      ? formatTokenWithSymbol(balanceAfter, assetMetaData)
-      : intl.formatMessage(messages.balanceAfterNotAvailable)
-
-    return (
-      <Text small>
-        {intl.formatMessage(messages.balanceAfterLabel)}
-        {': '}
-        {value}
-      </Text>
-    )
-  }
-
-  renderFee = () => {
-    const {fee} = this.state
-    const {intl, defaultAsset} = this.props
-
-    const value = fee ? formatTokenWithSymbol(fee, defaultAsset) : intl.formatMessage(messages.feeNotAvailable)
-
-    return (
-      <Text small>
-        {intl.formatMessage(messages.feeLabel)}
-        {': '}
-        {value}
-      </Text>
-    )
-  }
-
-  renderAvailableAmountBanner = () => {
-    const {isFetchingBalance, tokenBalance, tokenMetadata, intl} = this.props
-    const assetMetaData = tokenMetadata[tokenBalance.getDefaultId()]
-
-    return (
-      <Banner
-        label={intl.formatMessage(globalMessages.availableFunds)}
-        text={
-          isFetchingBalance
-            ? intl.formatMessage(messages.availableFundsBannerIsFetching)
-            : tokenBalance
-            ? formatTokenWithText(tokenBalance.getDefault(), assetMetaData)
-            : intl.formatMessage(messages.availableFundsBannerNotAvailable)
-        }
-        boldText
-      />
-    )
-  }
-
-  renderErrorBanners = () => {
-    const {intl, isOnline, lastFetchingError, isFetchingBalance, hasPendingOutgoingTransaction, fetchUTXOs} = this.props
-
-    if (!isOnline) {
-      return <OfflineBanner />
-    } else if (lastFetchingError && !isFetchingBalance) {
-      return <Banner error onPress={fetchUTXOs} text={intl.formatMessage(messages.errorBannerNetworkError)} />
-    } else if (hasPendingOutgoingTransaction) {
-      return <Banner error text={intl.formatMessage(messages.errorBannerPendingOutgoingTransaction)} />
-    } else {
-      return null
-    }
-  }
-
-  renderSendAllWarning = () => {
-    const {intl, tokenMetadata} = this.props
-    const {showSendAllWarning, selectedAsset} = this.state
-
-    const selectedTokenMeta = tokenMetadata[selectedAsset.identifier]
-    const isDefault = selectedTokenMeta.isDefault
-    const assetNameOrId = truncateWithEllipsis(getAssetDenominationOrId(selectedTokenMeta), 20)
-    const alertBoxContent = {
-      content: isDefault
-        ? [
-            intl.formatMessage(messages.sendAllWarningAlert1, {
-              assetNameOrId,
-            }),
-            intl.formatMessage(messages.sendAllWarningAlert2),
-            intl.formatMessage(messages.sendAllWarningAlert3),
-          ]
-        : [
-            intl.formatMessage(messages.sendAllWarningAlert1, {
-              assetNameOrId,
-            }),
-          ],
-    }
-    return (
-      <DangerousActionModal
-        visible={showSendAllWarning}
-        onRequestClose={this.closeSendAllWarning}
-        showCloseIcon
-        title={intl.formatMessage(messages.sendAllWarningTitle)}
-        primaryButton={{
-          label: intl.formatMessage(confirmationMessages.commonButtons.backButton),
-          onPress: this.closeSendAllWarning,
-        }}
-        secondaryButton={{
-          label: intl.formatMessage(confirmationMessages.commonButtons.continueButton),
-          onPress: this.handleConfirm,
-        }}
-        alertBox={alertBoxContent}
-      >
-        <Text>{intl.formatMessage(messages.sendAllWarningText)}</Text>
-      </DangerousActionModal>
-    )
-  }
-
-  render() {
-    const {
-      intl,
-      isFetchingBalance,
-      lastFetchingError,
-      utxos,
-      isOnline,
-      hasPendingOutgoingTransaction,
-      defaultAsset,
-      tokenBalance,
-      tokenMetadata,
-    } = this.props
-
-    const {address, amount, amountErrors, addressErrors, balanceErrors, sendAll, selectedAsset} = this.state
-
-    const isValid =
-      isOnline &&
-      !hasPendingOutgoingTransaction &&
-      !isFetchingBalance &&
-      !lastFetchingError &&
-      utxos &&
-      _.isEmpty(addressErrors) &&
-      _.isEmpty(amountErrors) &&
-      _.isEmpty(balanceErrors)
-
-    const amountErrorText = getAmountErrorText(intl, amountErrors, balanceErrors, defaultAsset)
-
-    const selectedAssetMeta = tokenMetadata[selectedAsset.identifier]
-
-    const assetDenomination = truncateWithEllipsis(getAssetDenominationOrId(selectedAssetMeta), 20)
-
-    return (
-      <SafeAreaView edges={['left', 'right']} style={styles.container}>
-        <StatusBar type="dark" />
-
-        <UtxoAutoRefresher />
-        {this.renderErrorBanners()}
-        {this.renderAvailableAmountBanner()}
-
-        <ScrollView style={styles.content} keyboardDismissMode="on-drag">
-          {this.renderBalanceAfterTransaction()}
-          {this.renderFee()}
-
-          <ValidatedTextInput
-            multiline
-            style={styles.address}
-            value={address}
-            label={intl.formatMessage(messages.addressInputLabel)}
-            onChangeText={this.handleAddressChange}
-            blurOnSubmit
-            error={
-              addressErrors.invalidAddress === true && intl.formatMessage(messages.addressInputErrorInvalidAddress)
-            }
-          />
-          <AmountField
-            amount={amount}
-            setAmount={this.handleAmountChange}
-            error={amountErrorText}
-            editable={!sendAll}
-          />
-          <Checkbox
-            disabled={false}
-            checked={sendAll}
-            onChange={this.handleCheckBoxChange}
-            text={
-              selectedAssetMeta.isDefault
-                ? intl.formatMessage(messages.checkboxSendAllAssets)
-                : intl.formatMessage(messages.checkboxSendAll, {assetId: assetDenomination})
-            }
-          />
-          <AssetSelector
-            onSelect={this.onAssetSelect}
-            selectedAsset={selectedAsset}
-            label={'Asset'}
-            assets={tokenBalance.values}
-            assetsMetadata={tokenMetadata}
-            unselectEnabled={false}
-          />
-          {this.state.recomputing && <Indicator />}
-        </ScrollView>
-        <View style={styles.actions}>
-          <Button
-            onPress={this.onConfirm}
-            title={intl.formatMessage(messages.continueButton)}
-            disabled={!isValid || this.state.fee == null}
-          />
-        </View>
-        {this.renderSendAllWarning()}
-      </SafeAreaView>
-    )
-  }
-}
-
-type ExternalProps = {|
-  navigation: Navigation,
-  route: any,
-  intl: IntlShape,
-|}
-
-export default injectIntl(
-  (compose(
-    connect(
-      (state) => ({
-        tokenBalance: tokenBalanceSelector(state),
-        isFetchingBalance: isFetchingUtxosSelector(state),
-        lastFetchingError: lastUtxosFetchErrorSelector(state),
-        tokenMetadata: tokenInfoSelector(state),
-        defaultAsset: defaultNetworkAssetSelector(state),
-        utxos: utxosSelector(state),
-        hasPendingOutgoingTransaction: hasPendingOutgoingTransactionSelector(state),
-        isOnline: isOnlineSelector(state),
-        serverStatus: serverStatusSelector(state),
-      }),
-      {
-        fetchUTXOs,
-      },
-    ),
-  )(SendScreen): ComponentType<ExternalProps>),
-)
+const messages = defineMessages({
+  feeLabel: {
+    id: 'components.send.sendscreen.feeLabel',
+    defaultMessage: '!!!Fee',
+  },
+  feeNotAvailable: {
+    id: 'components.send.sendscreen.feeNotAvailable',
+    defaultMessage: '!!!-',
+  },
+  balanceAfterLabel: {
+    id: 'components.send.sendscreen.balanceAfterLabel',
+    defaultMessage: '!!!Balance after',
+  },
+  balanceAfterNotAvailable: {
+    id: 'components.send.sendscreen.balanceAfterNotAvailable',
+    defaultMessage: '!!!-',
+  },
+  availableFundsBannerIsFetching: {
+    id: 'components.send.sendscreen.availableFundsBannerIsFetching',
+    defaultMessage: '!!!Checking balance...',
+  },
+  availableFundsBannerNotAvailable: {
+    id: 'components.send.sendscreen.availableFundsBannerNotAvailable',
+    defaultMessage: '!!!-',
+  },
+  addressInputErrorInvalidAddress: {
+    id: 'components.send.sendscreen.addressInputErrorInvalidAddress',
+    defaultMessage: '!!!Please enter valid address',
+  },
+  addressInputLabel: {
+    id: 'components.send.sendscreen.addressInputLabel',
+    defaultMessage: '!!!Address',
+  },
+  checkboxSendAllAssets: {
+    id: 'components.send.sendscreen.checkboxSendAllAssets',
+    defaultMessage: '!!!Send all assets (including all tokens)',
+  },
+  checkboxSendAll: {
+    id: 'components.send.sendscreen.checkboxSendAll',
+    defaultMessage: '!!!Send all {assetId}',
+  },
+  sendAllWarningTitle: {
+    id: 'components.send.sendscreen.sendAllWarningTitle',
+    defaultMessage: '!!!Do you really want to send all?',
+  },
+  sendAllWarningText: {
+    id: 'components.send.sendscreen.sendAllWarningText',
+    defaultMessage:
+      '!!!You have selected the send all option. Please confirm that you understand how this feature works.',
+  },
+  sendAllWarningAlert1: {
+    id: 'components.send.sendscreen.sendAllWarningAlert1',
+    defaultMessage: '!!!All you {assetNameOrId} balance will be transferred in this transaction.',
+  },
+  sendAllWarningAlert2: {
+    id: 'components.send.sendscreen.sendAllWarningAlert2',
+    defaultMessage:
+      '!!!All your tokens, including NFTs and any other native ' +
+      'assets in your wallet, will also be transferred in this transaction.',
+  },
+  sendAllWarningAlert3: {
+    id: 'components.send.sendscreen.sendAllWarningAlert3',
+    defaultMessage: '!!!After you confirm the transaction in the next screen, your wallet will be emptied.',
+  },
+  continueButton: {
+    id: 'components.send.sendscreen.continueButton',
+    defaultMessage: '!!!Continue',
+  },
+  errorBannerNetworkError: {
+    id: 'components.send.sendscreen.errorBannerNetworkError',
+    defaultMessage: '!!!We are experiencing issues with fetching your current balance. Click to retry.',
+  },
+  errorBannerPendingOutgoingTransaction: {
+    id: 'components.send.sendscreen.errorBannerPendingOutgoingTransaction',
+    defaultMessage: '!!!You cannot send a new transaction while an existing one is still pending',
+  },
+})

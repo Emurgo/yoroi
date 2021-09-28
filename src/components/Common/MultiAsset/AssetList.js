@@ -1,18 +1,13 @@
 // @flow
 
 import React from 'react'
-import {type IntlShape, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, Text, TouchableOpacity, View} from 'react-native'
 
 import type {TokenEntry} from '../../../crypto/MultiToken'
 import globalMessages, {txLabels} from '../../../i18n/global-messages'
 import type {Token} from '../../../types/HistoryTransaction'
-import {
-  ASSET_DENOMINATION,
-  formatTokenAmount,
-  getAssetDenomination,
-  getAssetDenominationOrUnknown,
-} from '../../../utils/format'
+import {formatTokenAmount, getName, getTicker, getTokenFingerprint} from '../../../utils/format'
 import assetListSendStyle from './styles/AssetListSend.style'
 import assetListTransactionStyle from './styles/AssetListTransaction.style'
 import baseStyle from './styles/Base.style'
@@ -25,21 +20,23 @@ type AssetRowProps = {|
   assetMetadata: Token,
   backColor: {|backgroundColor: string|},
   onSelect?: (TokenEntry) => any,
-  intl: IntlShape,
 |}
-const AssetRow = ({styles, asset, assetMetadata, backColor, onSelect, intl}: AssetRowProps) => {
+const AssetRow = ({styles, asset, assetMetadata, backColor, onSelect}: AssetRowProps) => {
+  const intl = useIntl()
   const item = (
     <>
       <View style={styles.tokenMetaView}>
         <Text style={styles.assetName}>
           {assetMetadata.isDefault
-            ? getAssetDenominationOrUnknown(assetMetadata, ASSET_DENOMINATION.TICKER, intl)
-            : getAssetDenominationOrUnknown(assetMetadata, ASSET_DENOMINATION.NAME, intl)}
+            ? getTicker(assetMetadata) || intl.formatMessage(messages.unknownAssetName)
+            : getName(assetMetadata) || intl.formatMessage(messages.unknownAssetName)}
         </Text>
+
         <Text style={styles.assetMeta} ellipsizeMode="middle" numberOfLines={1}>
-          {assetMetadata.isDefault ? '' : getAssetDenomination(assetMetadata, ASSET_DENOMINATION.FINGERPRINT)}
+          {assetMetadata.isDefault ? '' : getTokenFingerprint(assetMetadata)}
         </Text>
       </View>
+
       <View style={styles.assetBalanceView}>
         <Text style={styles.assetBalance}>{formatTokenAmount(asset.amount, assetMetadata, 15)}</Text>
       </View>
@@ -62,10 +59,9 @@ type AssetListProps = {
   assetsMetadata: Dict<Token>,
   styles: NodeStyle,
   onSelect?: (TokenEntry) => any,
-  intl: IntlShape,
 }
-
-const AssetList = ({assets, assetsMetadata, styles, onSelect, intl}: AssetListProps) => {
+const AssetList = ({assets, assetsMetadata, styles, onSelect}: AssetListProps) => {
+  const intl = useIntl()
   const colors = [styles.rowColor1, styles.rowColor2]
 
   return (
@@ -74,10 +70,11 @@ const AssetList = ({assets, assetsMetadata, styles, onSelect, intl}: AssetListPr
         <Text style={styles.assetHeading}>{intl.formatMessage(globalMessages.assetsLabel)}</Text>
         <Text style={styles.assetHeading}>{intl.formatMessage(txLabels.amount)}</Text>
       </View>
+
       <View>
         <FlatList
-          data={assets}
-          keyExtractor={(item, index) => index.toString()}
+          data={assets.sort((a) => (assetsMetadata[a.identifier].isDefault ? -1 : 1))}
+          keyExtractor={(item) => item.identifier}
           renderItem={({item, index}) => (
             <AssetRow
               asset={item}
@@ -85,7 +82,6 @@ const AssetList = ({assets, assetsMetadata, styles, onSelect, intl}: AssetListPr
               styles={styles}
               backColor={colors[index % colors.length]}
               onSelect={onSelect}
-              intl={intl}
             />
           )}
         />
@@ -93,4 +89,11 @@ const AssetList = ({assets, assetsMetadata, styles, onSelect, intl}: AssetListPr
     </View>
   )
 }
-export default injectIntl(AssetList)
+export default AssetList
+
+const messages = defineMessages({
+  unknownAssetName: {
+    id: 'utils.format.unknownAssetName',
+    defaultMessage: '!!![Unknown asset name]',
+  },
+})
