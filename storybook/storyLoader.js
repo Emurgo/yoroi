@@ -11,6 +11,7 @@ function loadStories() {
   require('../src/components/Common/ErrorModal.stories')
   require('../src/components/Common/ExpandableItem.stories')
   require('../src/components/Common/FingerprinScreenBase.stories')
+  require('../src/components/Common/MultiAsset/AssetList.stories')
   require('../src/components/Common/PinRegistrationForm.stories')
   require('../src/components/Delegation/DelegationConfirmation.stories')
   require('../src/components/Delegation/FlawedWalletScreen.stories')
@@ -26,7 +27,9 @@ function loadStories() {
   require('../src/components/MaintenanceScreen.stories')
   require('../src/components/Receive/ReceiveScreen.stories')
   require('../src/components/Send/AddressReaderQR.stories')
+  require('../src/components/Send/AssetSelectorScreen/AssetSelectorScreen.stories')
   require('../src/components/Send/BiometricAuthScreen.stories')
+  require('../src/components/Send/SendScreen.stories')
   require('../src/components/Settings/ApplicationSettingsScreen.stories')
   require('../src/components/Settings/BiometricsLinkScreen.stories')
   require('../src/components/Settings/ChangePasswordScreen.stories')
@@ -68,6 +71,7 @@ const stories = [
   '../src/components/Common/ErrorModal.stories',
   '../src/components/Common/ExpandableItem.stories',
   '../src/components/Common/FingerprinScreenBase.stories',
+  '../src/components/Common/MultiAsset/AssetList.stories',
   '../src/components/Common/PinRegistrationForm.stories',
   '../src/components/Delegation/DelegationConfirmation.stories',
   '../src/components/Delegation/FlawedWalletScreen.stories',
@@ -83,7 +87,9 @@ const stories = [
   '../src/components/MaintenanceScreen.stories',
   '../src/components/Receive/ReceiveScreen.stories',
   '../src/components/Send/AddressReaderQR.stories',
+  '../src/components/Send/AssetSelectorScreen/AssetSelectorScreen.stories',
   '../src/components/Send/BiometricAuthScreen.stories',
+  '../src/components/Send/SendScreen.stories',
   '../src/components/Settings/ApplicationSettingsScreen.stories',
   '../src/components/Settings/BiometricsLinkScreen.stories',
   '../src/components/Settings/ChangePasswordScreen.stories',

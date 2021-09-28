@@ -119,4 +119,7 @@ export type Transaction = {|
     amount: string,
   |}>,
   certificates: Array<RemoteCertificateMeta>,
+  +validContract?: boolean,
+  +scriptSize?: number,
+  +collateralInputs?: Array<{address: string, amount: string, assets: Array<BaseAsset>}>,
 |}

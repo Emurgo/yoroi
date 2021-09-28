@@ -142,9 +142,9 @@ export const isReceiverAddressValid = async (
       if (addressNetworkId !== configNetworkId && !isNaN(configNetworkId)) {
         return {invalidAddress: true}
       }
-      // eslint-disable-next-line no-empty
     } catch (e) {
-      // NOTE: old unsupported addresses will be deprecated soon
+      // NOTE: should not happen
+      return {invalidAddress: true}
     }
   }
 }
