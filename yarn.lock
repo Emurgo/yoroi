@@ -2942,10 +2942,10 @@
     webpack "^4.33.0"
     ws "^7.1.2"
 
-"@storybook/react-native@5.3.23":
-  version "5.3.23"
-  resolved "https://registry.yarnpkg.com/@storybook/react-native/-/react-native-5.3.23.tgz#cd1f795d5248e7e55dfb2ad59ebef2a7b2b3cdf9"
-  integrity sha512-0PE/EbmrNb7Pl3ry0pLZKjdqyslPP6Aq4+quTv2udxD94yYGvcWIBShNrMB+xmJAirlVz5p/uEXOPobjgzDxEg==
+"@storybook/react-native@^5.3.25":
+  version "5.3.25"
+  resolved "https://registry.yarnpkg.com/@storybook/react-native/-/react-native-5.3.25.tgz#681c9cdcadba7eda88716f5d383ea47558367825"
+  integrity sha512-KPctJdk1++k4byblqTwULmxKDADsRAMat9BgMTx3Gewk4PjMbsbKCvRK7+AlJeNjz/kEsf9L6Y25y8lrw3rPXA==
   dependencies:
     "@emotion/core" "^10.0.20"
     "@emotion/native" "^10.0.14"
