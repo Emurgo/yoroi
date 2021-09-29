@@ -37,16 +37,7 @@ import {BigNumber} from 'bignumber.js'
 import type {RawUtxo} from '../../api/types'
 /* eslint-enable camelcase */
 import {CONFIG} from '../../config/config'
-import {
-  getCardanoAddrKeyHash,
-  normalizeToAddress,
-  derivePrivateByAddressing,
-  cardanoValueFromRemoteFormat,
-  multiTokenFromCardanoValue,
-  cardanoValueFromMultiToken,
-} from './utils'
-
-import { MAX_VALUE_BYTES, MAX_TX_BYTES } from '../../config/networks'
+import {MAX_TX_BYTES, MAX_VALUE_BYTES} from '../../config/networks'
 import {AssetOverflowError, InsufficientFunds, NoOutputsError} from '../errors'
 import type {
   Address,
