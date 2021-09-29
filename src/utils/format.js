@@ -24,7 +24,7 @@ const messages = defineMessages({
   },
 })
 
-const getTokenFingerprint = (token: Token | DefaultAsset) => {
+export const getTokenFingerprint = (token: Token | DefaultAsset) => {
   const {policyId, assetName} = token.metadata
   const assetFingerprint = new AssetFingerprint(Buffer.from(policyId, 'hex'), Buffer.from(assetName, 'hex'))
   return assetFingerprint.fingerprint()
@@ -38,39 +38,34 @@ export const ASSET_DENOMINATION = {
 }
 export type AssetDenomination = $Values<typeof ASSET_DENOMINATION>
 
+export const decodeHexAscii = (text: string) => {
+  const bytes = [...Buffer.from(text, 'hex')]
+  const isAscii = bytes.every((byte) => byte > 32 && byte < 127)
+
+  return isAscii ? String.fromCharCode(...bytes) : undefined
+}
+
+export const getTicker = (token: Token | DefaultAsset) => token.metadata.ticker
+export const getSymbol = (token: Token | DefaultAsset) =>
+  token.metadata.ticker
+    ? utfSymbols.CURRENCIES[token.metadata.ticker]
+      ? utfSymbols.CURRENCIES[token.metadata.ticker]
+      : token.metadata.ticker
+    : null
+export const getName = (token: Token | DefaultAsset) =>
+  token.metadata.longName || decodeHexAscii(token.metadata.assetName) || getTokenFingerprint(token) || undefined
+
 // NOTE: There is a bug when starting fresh, the metadata is empty
 export const getAssetDenomination = (token: Token | DefaultAsset, denomination: AssetDenomination): ?string => {
   switch (denomination) {
     case ASSET_DENOMINATION.TICKER:
-      // $FlowFixMe
-      return token?.metadata?.ticker
+      return getTicker(token)
     case ASSET_DENOMINATION.SYMBOL:
-      // if we don't have a symbol for this asset, default to ticker, though
-      // ticker can still be null
-
-      // $FlowFixMe
-      return token?.metadata?.ticker
-        ? utfSymbols.CURRENCIES[token.metadata.ticker]
-          ? utfSymbols.CURRENCIES[token.metadata.ticker]
-          : token.metadata.ticker
-        : null
-    case ASSET_DENOMINATION.NAME: {
-      // $FlowFixMe
-      if (token?.metadata?.longName !== null) {
-        return token.metadata.longName
-      }
-      // $FlowFixMe
-      if (token?.metadata?.assetName?.length > 0) {
-        const bytes = [...Buffer.from(token.metadata.assetName, 'hex')]
-        if (bytes.filter((byte) => byte <= 32 || byte >= 127).length === 0) {
-          return String.fromCharCode(...bytes)
-        }
-      }
-      return null
-    }
-    case ASSET_DENOMINATION.FINGERPRINT: {
+      return getSymbol(token)
+    case ASSET_DENOMINATION.NAME:
+      return getName(token)
+    case ASSET_DENOMINATION.FINGERPRINT:
       return getTokenFingerprint(token)
-    }
     default:
       return null
   }

@@ -126,7 +126,6 @@ export const bulkGetAccountState = async (
   config: BackendConfig,
 ): Promise<AccountStateResponse> => {
   const chunks = _.chunk(addresses, config.FETCH_UTXOS_MAX_ADDRESSES)
-
   const responses = await Promise.all(chunks.map((addrs) => getAccountState({addresses: addrs}, config)))
   return Object.assign({}, ...responses)
 }

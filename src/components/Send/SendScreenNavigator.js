@@ -3,13 +3,17 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
+import {useSelector} from 'react-redux'
 
 import iconQR from '../../assets/img/qr_code.png'
+import type {TokenEntry} from '../../crypto/MultiToken'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
 import {SEND_ROUTES} from '../../RoutesList'
+import {tokenBalanceSelector, tokenInfoSelector} from '../../selectors'
 import {Button} from '../UiKit'
 import AddressReaderQR from './AddressReaderQR'
 import {pastedFormatter} from './amountUtils'
+import AssetSelectorScreen from './AssetSelectorScreen/AssetSelectorScreen'
 import BiometricAuthScreen from './BiometricAuthScreen'
 import ConfirmScreen from './ConfirmScreen'
 import SendScreen from './SendScreen'
@@ -23,6 +27,10 @@ const messages = defineMessages({
   qrScannerTitle: {
     id: 'components.send.addressreaderqr.title',
     defaultMessage: '!!!Scan QR code address',
+  },
+  selectAssetTitle: {
+    id: 'components.send.selectasset.title',
+    defaultMessage: '!!!Select asset',
   },
   confirmTitle: {
     id: 'components.send.confirmscreen.title',
@@ -52,6 +60,7 @@ const setAmount = (amount, route) => {
 
 type SendScreenNavigatorRoutes = {
   'send-ada': any,
+  'select-asset': any,
   'address-reader-qr': any,
   'send-ada-confirm': any,
   'biometrics-signing': any,
@@ -61,6 +70,11 @@ const Stack = createStackNavigator<any, SendScreenNavigatorRoutes, any>()
 
 const SendScreenNavigator = () => {
   const intl = useIntl()
+
+  const tokenBalance = useSelector(tokenBalanceSelector)
+  const [selectedAsset, setSelectedAsset] = React.useState<TokenEntry>(tokenBalance.getDefaultEntry())
+  const tokenInfos = useSelector(tokenInfoSelector)
+  const [sendAll, setSendAll] = React.useState(false)
 
   return (
     <Stack.Navigator
@@ -74,7 +88,6 @@ const SendScreenNavigator = () => {
     >
       <Stack.Screen
         name={SEND_ROUTES.MAIN}
-        component={SendScreen}
         options={({navigation, route}) => ({
           title: intl.formatMessage(messages.sendTitle),
           headerRight: () => (
@@ -117,17 +130,41 @@ const SendScreenNavigator = () => {
           ),
           ...defaultNavigationOptions,
         })}
-      />
+      >
+        {() => <SendScreen selectedAsset={selectedAsset} onSendAll={setSendAll} sendAll={sendAll} />}
+      </Stack.Screen>
+
+      <Stack.Screen name={'select-asset'} options={{title: intl.formatMessage(messages.selectAssetTitle)}}>
+        {({navigation}) => (
+          <AssetSelectorScreen
+            assetTokens={tokenBalance.values}
+            assetTokenInfos={tokenInfos}
+            onSelect={(token) => {
+              setSendAll(false)
+              setSelectedAsset(token)
+              navigation.navigate('send-ada')
+            }}
+            onSelectAll={() => {
+              setSendAll(true)
+              setSelectedAsset(tokenBalance.getDefaultEntry())
+              navigation.navigate('send-ada')
+            }}
+          />
+        )}
+      </Stack.Screen>
+
       <Stack.Screen
         name={SEND_ROUTES.ADDRESS_READER_QR}
         component={AddressReaderQR}
         options={{title: intl.formatMessage(messages.qrScannerTitle)}}
       />
+
       <Stack.Screen
         name={SEND_ROUTES.CONFIRM}
         component={ConfirmScreen}
         options={{title: intl.formatMessage(messages.confirmTitle)}}
       />
+
       <Stack.Screen
         name={SEND_ROUTES.BIOMETRICS_SIGNING}
         component={BiometricAuthScreen}
