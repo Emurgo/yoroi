@@ -50,10 +50,6 @@ import { MAX_VALUE_BYTES, MAX_TX_BYTES } from '../../config/networks'
 import {AssetOverflowError, InsufficientFunds, NoOutputsError} from '../errors'
 import type {
   Address,
-  Addressing,
-  ProtocolParameters,
-  V4UnsignedTxAddressedUtxoResponse,
-  V4UnsignedTxUtxoResponse,
   AddressedUtxo,
   Addressing,
   ProtocolParameters,
