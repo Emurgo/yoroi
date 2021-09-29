@@ -3,6 +3,7 @@
 import {validateMnemonic, wordlists} from 'bip39'
 import _ from 'lodash'
 
+import {getNetworkConfigById} from '../config/networks'
 import {normalizeToAddress} from '../crypto/shelley/utils'
 import type {Token} from '../types/HistoryTransaction'
 import assert from '../utils/assert'
@@ -120,13 +121,32 @@ export const getWalletNameError = (
   }
 }
 
-export const validateAddressAsync = async (address: string): Promise<AddressValidationErrors> => {
-  if (!address) {
+export const isReceiverAddressValid = async (
+  receiverAddress: string,
+  walletNetworkId: number,
+): Promise<AddressValidationErrors | void> => {
+  if (!receiverAddress) {
     return {addressIsRequired: true}
   }
 
-  const isValid = await normalizeToAddress(address)
-  return isValid != null ? Object.freeze({}) : {invalidAddress: true}
+  const address = await normalizeToAddress(receiverAddress)
+  if (!address) {
+    return {invalidAddress: true}
+  }
+
+  if (walletNetworkId) {
+    try {
+      const networkConfig = getNetworkConfigById(walletNetworkId)
+      const configNetworkId = networkConfig.CHAIN_NETWORK_ID && Number(networkConfig.CHAIN_NETWORK_ID)
+      const addressNetworkId = await address.network_id()
+      if (addressNetworkId !== configNetworkId && !isNaN(configNetworkId)) {
+        return {invalidAddress: true}
+      }
+    } catch (e) {
+      // NOTE: should not happen
+      return {invalidAddress: true}
+    }
+  }
 }
 
 export const validateAmount = (value: string, token: Token): AmountValidationErrors => {

@@ -34,8 +34,9 @@ import {
   tokenBalanceSelector,
   tokenInfoSelector,
   utxosSelector,
+  walletMetaSelector,
 } from '../../selectors'
-import type {ServerStatusCache} from '../../state'
+import type {ServerStatusCache, WalletMeta} from '../../state'
 import type {DefaultAsset, Token} from '../../types/HistoryTransaction'
 import type {Navigation} from '../../types/navigation'
 import {
@@ -49,7 +50,7 @@ import {
 } from '../../utils/format'
 import {InvalidAssetAmount, parseAmountDecimal} from '../../utils/parsing'
 import type {AddressValidationErrors, AmountValidationErrors, BalanceValidationErrors} from '../../utils/validators'
-import {validateAddressAsync, validateAmount} from '../../utils/validators'
+import {isReceiverAddressValid, validateAmount} from '../../utils/validators'
 import DangerousActionModal from '../Common/DangerousActionModal'
 import {Banner, Button, Checkbox, OfflineBanner, Spacer, StatusBar, Text, TextInput} from '../UiKit'
 import AmountField from './AmountField'
@@ -74,6 +75,12 @@ type LegacyProps = {|
   selectedAsset: TokenEntry,
   fetchUTXOs: () => void,
   onSendAll: (boolean) => mixed,
+  walletMetadata: $Diff<
+    WalletMeta,
+    {
+      id: string,
+    },
+  >,
 |}
 
 type State = {
@@ -147,7 +154,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
       balanceAfter: null,
       recomputing: true,
     })
-    const {defaultAsset, tokenMetadata, tokenBalance} = this.props
+    const {defaultAsset, tokenMetadata, tokenBalance, walletMetadata} = this.props
     if (tokenMetadata[selectedAsset.identifier] == null) {
       throw new Error('revalidate: no asset metadata found for the asset selected')
     }
@@ -159,6 +166,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
       defaultAsset,
       selectedTokenMeta: tokenMetadata[selectedAsset.identifier],
       tokenBalance,
+      walletMetadata,
     })
 
     if (
@@ -193,8 +201,17 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
   }
 
   handleConfirm: () => Promise<void> = async () => {
-    const {navigation, utxos, tokenBalance, defaultAsset, tokenMetadata, serverStatus, sendAll, selectedAsset} =
-      this.props
+    const {
+      navigation,
+      utxos,
+      tokenBalance,
+      defaultAsset,
+      tokenMetadata,
+      serverStatus,
+      sendAll,
+      selectedAsset,
+      walletMetadata,
+    } = this.props
     const {address, amount} = this.state
 
     const selectedTokenMeta = tokenMetadata[selectedAsset.identifier]
@@ -210,6 +227,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
       defaultAsset,
       selectedTokenMeta,
       tokenBalance,
+      walletMetadata,
     })
 
     // Note(ppershing): use this.props as they might have
@@ -507,6 +525,7 @@ export const SendScreen = (props: Props) => {
   const hasPendingOutgoingTransaction = useSelector(hasPendingOutgoingTransactionSelector)
   const isOnline = useSelector(isOnlineSelector)
   const serverStatus = useSelector(serverStatusSelector)
+  const walletMetadata = useSelector(walletMetaSelector)
 
   const dispatch = useDispatch()
 
@@ -524,6 +543,7 @@ export const SendScreen = (props: Props) => {
       hasPendingOutgoingTransaction={hasPendingOutgoingTransaction}
       isOnline={isOnline}
       serverStatus={serverStatus}
+      walletMetadata={walletMetadata}
       {...props}
     />
   )
@@ -603,9 +623,19 @@ const getTransactionData = async (
   return await walletManager.createUnsignedTx(utxos, address, sendTokenList, defaultTokenEntry, serverTime)
 }
 
-const recomputeAll = async ({amount, address, utxos, sendAll, defaultAsset, selectedTokenMeta, tokenBalance}) => {
+const recomputeAll = async ({
+  amount,
+  address,
+  utxos,
+  sendAll,
+  defaultAsset,
+  selectedTokenMeta,
+  tokenBalance,
+  walletMetadata,
+}) => {
+  const {networkId} = walletMetadata
   let amountErrors = validateAmount(amount, selectedTokenMeta)
-  const addressErrors = await validateAddressAsync(address)
+  const addressErrors = (await isReceiverAddressValid(address, networkId)) || Object.freeze({})
   let balanceErrors = Object.freeze({})
   let fee = null
   let balanceAfter = null
