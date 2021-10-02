@@ -70,9 +70,7 @@ type LegacyProps = {|
   utxos: ?Array<RawUtxo>,
   isOnline: boolean,
   hasPendingOutgoingTransaction: boolean,
-  fetchUTXOs: () => void,
   serverStatus: ServerStatusCache,
-  selectedAsset: TokenEntry,
   fetchUTXOs: () => void,
   onSendAll: (boolean) => mixed,
   walletMetadata: $Diff<
