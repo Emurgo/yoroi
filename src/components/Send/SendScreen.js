@@ -454,7 +454,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
               right={<Image source={require('../../assets/img/arrow_down_fill.png')} />}
               editable={false}
               label={'Select Asset'}
-              value={`${assetDenomination}: ${String(selectedAsset.amount)}`}
+              value={`${assetDenomination}: ${formatTokenAmount(selectedAsset.amount, selectedAssetMeta, 15)}`}
             />
           </TouchableOpacity>
 
@@ -506,11 +506,11 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
 }
 
 type Props = {|
-  selectedAsset: TokenEntry,
+  selectedTokenIdentifier: string,
   sendAll: boolean,
   onSendAll: (boolean) => mixed,
 |}
-export const SendScreen = (props: Props) => {
+export const SendScreen = ({selectedTokenIdentifier, sendAll, onSendAll}: Props) => {
   const intl = useIntl()
   const navigation = useNavigation()
 
@@ -524,6 +524,11 @@ export const SendScreen = (props: Props) => {
   const isOnline = useSelector(isOnlineSelector)
   const serverStatus = useSelector(serverStatusSelector)
   const walletMetadata = useSelector(walletMetaSelector)
+  const selectedAsset = tokenBalance.values.find(({identifier}) => identifier === selectedTokenIdentifier)
+
+  if (!selectedAsset) {
+    throw new Error('Invalid token')
+  }
 
   const dispatch = useDispatch()
 
@@ -542,7 +547,9 @@ export const SendScreen = (props: Props) => {
       isOnline={isOnline}
       serverStatus={serverStatus}
       walletMetadata={walletMetadata}
-      {...props}
+      selectedAsset={selectedAsset}
+      sendAll={sendAll}
+      onSendAll={onSendAll}
     />
   )
 }
