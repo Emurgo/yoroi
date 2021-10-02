@@ -12989,10 +12989,10 @@ react-native-color-picker@^0.4.0:
     prop-types "^15.5.10"
     tinycolor2 "^1.4.1"
 
-react-native-config@0.12.0:
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/react-native-config/-/react-native-config-0.12.0.tgz#910e52226b60e0c9f2b648772eea2a93f8701751"
-  integrity sha512-lC8QOZCGCXgFh74uWSVGMaChg+Qf2BScWzVd9C4yrFnfxrHSFyIekqOOq/sjE8Uu2ifgxZmSiK1Z8EEi78AmQA==
+react-native-config@1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/react-native-config/-/react-native-config-1.4.4.tgz#e0e10802d1e61ef051040c84dfd19f85a5984620"
+  integrity sha512-bu47sJHn/HrB7COAWBI8DieAhrbFLINHFE2HBCcVkDu0Y5ScrMs6vL+jhIm+pMSgxouseLhXG8h7xYYpxE38PA==
 
 react-native-crypto@2.2.0:
   version "2.2.0"
