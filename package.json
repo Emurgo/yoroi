@@ -164,7 +164,7 @@
     "eslint-plugin-react-prefer-function-component": "^0.0.7",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "extract-react-intl-messages": "^0.14.0",
-    "flow-bin": "0.126.0",
+    "flow-bin": "0.161.0",
     "flow-coverage-report": "0.8.0",
     "flow-typed": "3.1.0",
     "husky": ">=6",
