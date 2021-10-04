@@ -1272,10 +1272,10 @@
     buffer-crc32 "0.2.13"
     fnv-plus "1.3.1"
 
-"@emurgo/react-native-haskell-shelley@3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/react-native-haskell-shelley/-/react-native-haskell-shelley-3.0.0.tgz#3a545b83edd3a1e2582553c4217fc82ceafd3ec9"
-  integrity sha512-p/AQSHASu2+GlXVI2wq7A54HF7p4boprIVLB9NDM2an7EAaRyDixJYLyxnlsdVykf9dHWXijBLuqLMZPVGHSUg==
+"@emurgo/react-native-haskell-shelley@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/react-native-haskell-shelley/-/react-native-haskell-shelley-2.0.0.tgz#7d1591c6ca9d904a68e7e7edcb700ac6660c5864"
+  integrity sha512-vs5TX6Bv4cPxtyXQlxxoA8oThouaBNzqamJ34Tog5Gy3rtf24g4xCWxhdD2coIGid80Mi9qfV5NE38NYIOOlag==
   dependencies:
     base-64 "0.1.0"
 
@@ -7803,10 +7803,10 @@ flow-annotation-check@^1.8.1:
     glob "7.1.6"
     load-pkg "^4.0.0"
 
-flow-bin@0.126.0:
-  version "0.126.0"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.126.0.tgz#df06d1c6bf2cb770b71c38a76e8e4491cc57d624"
-  integrity sha512-91nCLt3B0drolW9bXmTssNxhshkkGDwokVyuquBA7TeHMCajbMNxm77JI0JydzHEv9xa6nMbBJXYyM6XW8Jzgg==
+flow-bin@0.131.0:
+  version "0.131.0"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.131.0.tgz#d4228b6070afdf3b2a76acdee77a7f3f8e8f5133"
+  integrity sha512-fZmoIBcDrtLhy/NNMxwJysSYzMr1ksRcAOMi3AHSoYXfcuQqTvhGJx+wqjlIOqIwz8RRYm8J4V4JrSJbIKP+Xg==
 
 flow-coverage-report@0.8.0:
   version "0.8.0"
