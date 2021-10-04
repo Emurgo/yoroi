@@ -85,17 +85,19 @@ const BalanceBanner = () => {
         <WalletAccountIcon style={styles.walletIcon} iconSeed={walletMeta.checksum.ImagePart} />
       </View>
       <Spacer height={12} />
-      <View style={styles.row}>
-        <View style={styles.column}>
-          <Text style={styles.balanceText}>{balanceToShow}</Text>
-          <Text style={styles.totalText}>
-            {totalToShow} {QUOTE_PAIR_CURRENCY}
-          </Text>
+      <TouchableOpacity onPress={onSwitchShowValues}>
+        <View style={styles.row}>
+          <View style={styles.column}>
+            <Text style={styles.balanceText}>{balanceToShow}</Text>
+            <Text style={styles.totalText}>
+              {totalToShow} {QUOTE_PAIR_CURRENCY}
+            </Text>
+          </View>
+          <View style={styles.showIcon}>
+            {showValues ? <Image source={closedEyeIcon} /> : <Image source={openedEyeIcon} />}
+          </View>
         </View>
-        <TouchableOpacity style={styles.showIcon} onPress={onSwitchShowValues}>
-          {showValues ? <Image source={closedEyeIcon} /> : <Image source={openedEyeIcon} />}
-        </TouchableOpacity>
-      </View>
+      </TouchableOpacity>
     </View>
   )
 }

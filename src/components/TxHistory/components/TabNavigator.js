@@ -74,7 +74,10 @@ const TabNavigator = ({tabs, render}: TabNavigatorProps) => {
       <View style={styles.grid}>
         <View style={styles.row}>
           {tabs.map((label, i) => {
-            const indicatorStyle = {...styles.indicator, ...(active === i ? styles.indicatorActive : styles.indicatorInactive)}
+            const indicatorStyle = {
+              ...styles.indicator,
+              ...(active === i ? styles.indicatorActive : styles.indicatorInactive),
+            }
             return (
               <TouchableOpacity key={`tab-navigator-${i}`} style={styles.tabPanel} onPress={() => setActive(i)}>
                 <View style={styles.centralized}>
