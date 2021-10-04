@@ -3,7 +3,7 @@
 import 'intl'
 
 import React, {useEffect} from 'react'
-import {AppState, Platform} from 'react-native'
+import {AppState, AppStateStatus, Platform} from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
 import * as RNP from 'react-native-paper'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
@@ -26,11 +26,11 @@ const useHideScreenInAppSwitcher = () => {
   const appStateRef = React.useRef(AppState.currentState)
 
   useEffect(() => {
-    const handleAppStateChange = (nextAppState: string): void => {
+    const handleAppStateChange = (nextAppState: AppStateStatus): void => {
       if (Platform.OS !== 'ios') return
 
-      const isFocused = (appState: ?string) => appState?.match(/active/)
-      const isBlurred = (appState: ?string) => appState?.match(/inactive|background/)
+      const isFocused = (appState: string | void) => appState?.match(/active/)
+      const isBlurred = (appState: string | void) => appState?.match(/inactive|background/)
 
       if (isBlurred(appStateRef.current) && isFocused(nextAppState)) RNBootSplash.hide({fade: true})
       if (isFocused(appStateRef.current) && isBlurred(nextAppState)) RNBootSplash.show({fade: true})
