@@ -72,7 +72,9 @@ const SendScreenNavigator = () => {
   const intl = useIntl()
 
   const tokenBalance = useSelector(tokenBalanceSelector)
-  const [selectedAsset, setSelectedAsset] = React.useState<TokenEntry>(tokenBalance.getDefaultEntry())
+  const [selectedTokenIdentifier, setSelectedTokenIdentifier] = React.useState<string>(
+    tokenBalance.getDefaultEntry().identifier,
+  )
   const tokenInfos = useSelector(tokenInfoSelector)
   const [sendAll, setSendAll] = React.useState(false)
 
@@ -131,7 +133,9 @@ const SendScreenNavigator = () => {
           ...defaultNavigationOptions,
         })}
       >
-        {() => <SendScreen selectedAsset={selectedAsset} onSendAll={setSendAll} sendAll={sendAll} />}
+        {() => (
+          <SendScreen selectedTokenIdentifier={selectedTokenIdentifier} onSendAll={setSendAll} sendAll={sendAll} />
+        )}
       </Stack.Screen>
 
       <Stack.Screen name={'select-asset'} options={{title: intl.formatMessage(messages.selectAssetTitle)}}>
@@ -141,12 +145,12 @@ const SendScreenNavigator = () => {
             assetTokenInfos={tokenInfos}
             onSelect={(token) => {
               setSendAll(false)
-              setSelectedAsset(token)
+              setSelectedTokenIdentifier(token.identifier)
               navigation.navigate('send-ada')
             }}
             onSelectAll={() => {
               setSendAll(true)
-              setSelectedAsset(tokenBalance.getDefaultEntry())
+              setSelectedTokenIdentifier(tokenBalance.getDefaultEntry().identifier)
               navigation.navigate('send-ada')
             }}
           />
