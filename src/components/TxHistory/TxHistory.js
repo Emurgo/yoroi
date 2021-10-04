@@ -5,7 +5,7 @@ import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {RefreshControl, ScrollView, View} from 'react-native'
+import {RefreshControl, ScrollView, StyleSheet, View} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import {useDispatch, useSelector} from 'react-redux'
 
@@ -42,7 +42,6 @@ import EmptyHistory from './components/EmptyHistory'
 import SyncErrorBanner from './components/SyncErrorBanner'
 import TabNavigator from './components/TabNavigator'
 import FlawedWalletModal from './FlawedWalletModal'
-import styles from './styles/TxHistory.style'
 import TxHistoryList from './TxHistoryList'
 
 const warningBannerMessages = defineMessages({
@@ -71,6 +70,25 @@ const AvailableAmountBanner = ({amount, amountAssetMetaData}: AvailableAmountPro
     />
   )
 }
+
+const styles = StyleSheet.create({
+  tabNavigatorRoot: {
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  container: {
+    flexDirection: 'column',
+    flex: 1,
+  },
+  warningNoteStyles: {
+    position: 'absolute',
+    zIndex: 2,
+    bottom: 0,
+  },
+})
 
 type FundInfo = ?{|
   +registrationStart: string,
@@ -168,7 +186,7 @@ const TxHistory = () => {
             render={({active}) => {
               if (active === 0) {
                 return (
-                  <>
+                  <View style={styles.tabNavigatorRoot}>
                     {_.isEmpty(transactionsInfo) ? (
                       <ScrollView
                         refreshControl={
@@ -185,33 +203,12 @@ const TxHistory = () => {
                         transactions={transactionsInfo}
                       />
                     )}
-                  </>
+                  </View>
                 )
               }
-              return <></>
+              return <View />
             }}
           />
-
-          {showCatalystBanner && (
-            <VotingBanner
-              onPress={() => {
-                if (tokenBalance.getDefault().lt(CONFIG.CATALYST.MIN_ADA)) {
-                  setShowInsufficientFundsModal(true)
-                  return
-                }
-                navigation.navigate(CATALYST_ROUTES.ROOT)
-              }}
-              disabled={isFetchingAccountState}
-            />
-          )}
-          {isFlawedWallet === true && (
-            <FlawedWalletModal
-              visible={isFlawedWallet === true}
-              disableButtons={false}
-              onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)}
-              onRequestClose={() => navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)}
-            />
-          )}
 
           {isByron(walletMeta.walletImplementationId) && showWarning && (
             <WarningBanner
