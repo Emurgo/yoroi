@@ -74,6 +74,10 @@ const AvailableAmountBanner = ({amount, amountAssetMetaData}: AvailableAmountPro
 const styles = StyleSheet.create({
   tabNavigatorRoot: {
     flex: 1,
+    paddingTop: 8,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
   },
   scrollView: {
     flex: 1,
