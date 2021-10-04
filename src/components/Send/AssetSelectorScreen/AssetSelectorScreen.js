@@ -14,7 +14,7 @@ import type {TokenEntry} from '../../../crypto/MultiToken'
 import globalMessages, {txLabels} from '../../../i18n/global-messages'
 import {COLORS} from '../../../styles/config'
 import {type Token} from '../../../types/HistoryTransaction'
-import {decodeHexAscii, getAssetDenominationOrId} from '../../../utils/format'
+import {decodeHexAscii, formatTokenAmount, getAssetDenominationOrId} from '../../../utils/format'
 import {Button, Spacer, Text, TextInput} from '../../UiKit'
 
 type Props = {
@@ -96,7 +96,7 @@ const AssetSelectorItem = ({assetToken, tokenInfo, onPress}: AssetSelectorItemPr
         </View>
 
         <View style={{flex: 1, alignItems: 'flex-end', padding: 4}}>
-          <Text style={{color: COLORS.DARK_TEXT}}>{String(assetToken.amount)}</Text>
+          <Text style={{color: COLORS.DARK_TEXT}}>{formatTokenAmount(assetToken.amount, tokenInfo, 15)}</Text>
         </View>
       </View>
     </TouchableOpacity>
