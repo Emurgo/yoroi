@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
-    minHeight: 42,
+    minHeight: 43,
     minWidth: 137,
     backgroundColor: COLORS.BANNER_GREY,
   },
@@ -40,6 +40,19 @@ const styles = StyleSheet.create({
   },
   tabTextInactive: {
     color: COLORS.TEXT_INPUT,
+  },
+  indicator: {
+    height: 3,
+    width: '100%',
+    maxWidth: 137,
+    borderTopLeftRadius: 2,
+    borderTopRightRadius: 2,
+  },
+  indicatorActive: {
+    backgroundColor: COLORS.LIGHT_POSITIVE_GREEN,
+  },
+  indicatorInactive: {
+    backgroundColor: 'transparent',
   },
 })
 
@@ -61,11 +74,13 @@ const TabNavigator = ({tabs, render}: TabNavigatorProps) => {
       <View style={styles.grid}>
         <View style={styles.row}>
           {tabs.map((label, i) => {
+            const indicatorStyle = {...styles.indicator, ...(active === i ? styles.indicatorActive : styles.indicatorInactive)}
             return (
               <TouchableOpacity key={`tab-navigator-${i}`} style={styles.tabPanel} onPress={() => setActive(i)}>
                 <View style={styles.centralized}>
                   <Text style={textActive === label ? textActive : textInactiveText}>{label}</Text>
                 </View>
+                <View style={indicatorStyle} />
               </TouchableOpacity>
             )
           })}
