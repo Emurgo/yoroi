@@ -2,7 +2,7 @@
 
 import {useNavigation} from '@react-navigation/native'
 import React, {memo, useCallback} from 'react'
-import {type IntlShape, injectIntl} from 'react-intl'
+import {useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
@@ -60,13 +60,10 @@ const ACTION_PROPS = {
   color: COLORS.WHITE,
 }
 
-type ActionBannerProps = {|
-  +intl: IntlShape,
-|}
-
-const ActionsBanner = ({intl}: ActionBannerProps) => {
+const ActionsBanner = () => {
   const navigation = useNavigation()
   const isReadOnly = useSelector(isReadOnlySelector)
+  const intl = useIntl()
 
   const sendLabel = intl.formatMessage(actionMessages.send)
   const receiveLabel = intl.formatMessage(actionMessages.receive)
@@ -74,12 +71,9 @@ const ActionsBanner = ({intl}: ActionBannerProps) => {
   const messageBuy = intl.formatMessage(actionMessages.soon)
 
   // TODO: adjust navigation for the next wallet tab navigator
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const onSend = useCallback(() => navigation.navigate(WALLET_ROUTES.SEND), [])
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const onReceive = useCallback(() => navigation.navigate(WALLET_ROUTES.RECEIVE), [])
-  // eslint-disable-next-line no-alert,react-hooks/exhaustive-deps
-  const onBuy = useCallback(() => alert(messageBuy), [])
+  const onSend = useCallback(() => navigation.navigate(WALLET_ROUTES.SEND), [navigation])
+  const onReceive = useCallback(() => navigation.navigate(WALLET_ROUTES.RECEIVE), [navigation])
+  const onBuy = useCallback(() => alert(messageBuy), [messageBuy])
 
   return (
     <View style={styles.banner}>
@@ -120,4 +114,4 @@ const ActionsBanner = ({intl}: ActionBannerProps) => {
   )
 }
 
-export default injectIntl(memo<ActionBannerProps>(ActionsBanner))
+export default memo<mixed>(ActionsBanner)

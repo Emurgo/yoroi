@@ -1,12 +1,16 @@
 // @flow
 
-import React from 'react'
+import React, {memo} from 'react'
 import {useIntl} from 'react-intl'
 
 import globalMessages from '../../../i18n/global-messages'
 import {Banner} from '../../UiKit'
 
-const SyncErrorBanner = ({showRefresh}: {showRefresh: any}) => {
+type Props = {|
+  showRefresh: boolean,
+|}
+
+const SyncErrorBanner = ({showRefresh}: Props) => {
   const intl = useIntl()
 
   return (
@@ -21,4 +25,4 @@ const SyncErrorBanner = ({showRefresh}: {showRefresh: any}) => {
   )
 }
 
-export default SyncErrorBanner
+export default memo<Props>(SyncErrorBanner)

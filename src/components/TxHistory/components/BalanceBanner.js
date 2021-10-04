@@ -65,13 +65,9 @@ const BalanceBanner = () => {
   const [balanceToShow, setBalance] = useState<string>('')
   const [totalToShow, setTotal] = useState<string>('')
 
-  const onSwitchShowValues = useCallback(
-    () => {
-      setShowValues((state) => !state)
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  )
+  const onSwitchShowValues = useCallback(() => {
+    setShowValues((state) => !state)
+  }, [setShowValues])
 
   useEffect(() => {
     const balance = tokenBalance.getDefault()

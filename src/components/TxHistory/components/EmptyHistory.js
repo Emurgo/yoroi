@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react'
+import React, {memo} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, StyleSheet, Text, View} from 'react-native'
 
@@ -37,4 +37,4 @@ const EmptyHistory = () => {
   )
 }
 
-export default EmptyHistory
+export default memo<mixed>(EmptyHistory)
