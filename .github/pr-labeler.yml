@@ -1,0 +1,4 @@
+feature: ['feature/*', '\[feature\]', 'feature\-*']
+fix: ['fix/*', '\[fix\]', 'fix\-*']
+chore: ['chore/*', '\[chore\]', 'chore\-*']
+refactor: ['refactor/*', '\[refactor\]', 'refactor\-*']
