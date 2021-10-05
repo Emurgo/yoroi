@@ -55,9 +55,6 @@ const styles = StyleSheet.create({
   },
 })
 
-const textActive = {...styles.tabText, ...styles.tabTextActive}
-const textInactiveText = {...styles.tabText, ...styles.tabTextInactive}
-
 type TabNavigatorProps = {|
   +tabs: Array<string>,
   +render: <T>(T & {|+active: number|}) => React$Node,
@@ -75,10 +72,14 @@ const TabNavigator = ({tabs, render}: TabNavigatorProps) => {
               ...styles.indicator,
               ...(active === i ? styles.indicatorActive : styles.indicatorInactive),
             }
+            const textStyle = {
+              ...styles.tabText,
+              ...(active === i ? styles.tabTextActive : styles.tabTextInactive),
+            }
             return (
               <TouchableOpacity key={`tab-navigator-${i}`} style={styles.tabPanel} onPress={() => setActive(i)}>
                 <View style={styles.centralized}>
-                  <Text style={textActive === label ? textActive : textInactiveText}>{label}</Text>
+                  <Text style={textStyle}>{label}</Text>
                 </View>
                 <View style={indicatorStyle} />
               </TouchableOpacity>
