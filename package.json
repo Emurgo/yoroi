@@ -26,7 +26,8 @@
     "start": "react-native start",
     "prestorybook": "rnstl  --searchDir ./src/components ./storybook --pattern '**/*.stories.js'",
     "storybook": "start-storybook",
-    "test": "jest"
+    "test": "jest",
+    "tsc:cover": "yarn typescript-coverage-report -i '**/*.test.*' -i '**/*.stories*' -t html --threshold=100"
   },
   "lint-staged": {
     "*.{js,jsx}": [
@@ -191,7 +192,8 @@
     "react-native-schemes-manager": "^1.0.5",
     "react-native-storybook-loader": "^1.8.1",
     "react-test-renderer": "17.0.2",
-    "typescript": "4.4.3"
+    "typescript": "4.4.3",
+    "typescript-coverage-report": "^0.6.0"
   },
   "engineStrict": true,
   "detox": {
