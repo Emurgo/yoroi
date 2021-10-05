@@ -2,8 +2,6 @@
 ; We fork some components by platform
 .*/*[.]android.js
 
-exact_by_default=true
-
 ; Ignore "BUCK" generated dirs
 <PROJECT_ROOT>/\.buckd/
 
@@ -22,9 +20,6 @@ node_modules/react-native/Libraries/polyfills/.*
 ; Ignore @ledgerhq/react-native-hw-transport-ble
 .*/node_modules/@ledgerhq/react-native-hw-transport-ble/lib/BleTransport.js.flow
 
-; Ignore @emurgo/cardano-serialization-lib-nodejs
-.*/node_modules/@emurgo/cardano-serialization-lib-nodejs/cardano_serialization_lib.js.flow
-
 ; Ignore @emurgo/react-native-haskell-shelley
 .*/node_modules/@emurgo/react-native-haskell-shelley/index.js.flow
 
@@ -35,7 +30,9 @@ node_modules/react-native/Libraries/polyfills/.*
 ; or just get rid of this dependency)
 .*/node_modules/react-native-linear-gradient/common.js
 
-.*/node_modules/react-native/Libraries/ReactNative/PaperUIManager.js
+.*/node_modules/react-native/Libraries/LogBox/Data/LogBoxLog.js
+.*/node_modules/react-native/Libraries/Interaction/TaskQueue.js
+
 [include]
 
 [libs]
@@ -93,4 +90,4 @@ untyped-import
 untyped-type-import
 
 [version]
-0.126.0
+0.131.0
