@@ -43,8 +43,8 @@ const AddressesList = ({addresses, showFresh}: AddressesListProps) => {
   const isUsedAddressIndex = useSelector(isUsedAddressIndexSelector)
   const allAddresses = [...addresses.values()]
   const shownAddresses: AddressDTOCardano[] = showFresh
-    ? allAddresses.filter((addrInfo) => !isUsedAddressIndex[addrInfo.address]).reverse()
-    : allAddresses.filter((addrInfo) => isUsedAddressIndex[addrInfo.address]).reverse()
+    ? allAddresses.filter((addrInfo) => !isUsedAddressIndex[addrInfo.address])
+    : allAddresses.filter((addrInfo) => isUsedAddressIndex[addrInfo.address])
 
   const [addressInfo, setAddressInfo] = React.useState<AddressDTOCardano | void>()
 
