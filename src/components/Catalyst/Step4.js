@@ -123,7 +123,7 @@ const Step4 = () => {
       <ProgressStep currentStep={4} totalSteps={6} />
       <OfflineBanner />
 
-      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
+      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps={'always'}>
         <Spacer height={48} />
 
         <Title>{strings.subTitle}</Title>
