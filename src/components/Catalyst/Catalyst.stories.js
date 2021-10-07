@@ -34,7 +34,6 @@ storiesOf('Catalyst', module)
   .add('Step 3', () => <Step3 />)
   .add('Step 4', () => <Step4 />)
   .add('Step 5', () => <Step5 unsignedTx={mockUnsignedTx} />)
-  .add('Step 5 - HW wallet', () => <Step5 unsignedTx={mockUnsignedTx} isHW />)
   .add('Step 6', () => <Step6 encryptedKey={encryptedKey} />)
   .add('Dialog - USB - CLOSED', () => (
     <WithModalProps>
