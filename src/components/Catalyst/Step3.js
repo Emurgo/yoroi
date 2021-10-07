@@ -20,6 +20,7 @@ const PIN_LENGTH = 4
 
 const Step3 = () => {
   const intl = useIntl()
+  const strings = useStrings()
   const navigation = useNavigation()
   const pin = useSelector((state) => state.voting.pin)
   const isHW = useSelector(isHWSelector)
@@ -52,11 +53,11 @@ const Step3 = () => {
       <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
         <Spacer height={48} />
 
-        <Title>{intl.formatMessage(messages.subTitle)}</Title>
+        <Title>{strings.subTitle}</Title>
 
         <Spacer height={16} />
 
-        <Description>{intl.formatMessage(messages.description)}</Description>
+        <Description>{strings.description}</Description>
 
         <Spacer height={48} />
 
@@ -102,3 +103,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
 })
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    subTitle: intl.formatMessage(messages.subTitle),
+    description: intl.formatMessage(messages.description),
+  }
+}

@@ -2,11 +2,24 @@
 
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
+import type {ViewProps} from 'react-native/Libraries/Components/View/ViewPropTypes'
+import type {TextProps} from 'react-native/Libraries/Text/TextProps'
 
 import {Text} from '../UiKit'
 
-import type {ViewProps} from 'react-native/Libraries/Components/View/ViewPropTypes'
-import type {TextProps} from 'react-native/Libraries/Text/TextProps'
+export const Title = ({style, ...props}: TextProps) => <Text {...props} style={[styles.title, style]} />
+export const Description = ({style, ...props}: TextProps) => <Text {...props} style={[styles.description, style]} />
+
+export const Actions = ({style, ...props}: ViewProps) => <View {...props} style={[styles.actions, style]} />
+export const Instructions = (props: ViewProps) => <View {...props} />
+export const Row = ({style, ...props}: ViewProps) => <View {...props} style={[styles.row, style]} />
+
+export const PinBox = ({selected, children}: {selected?: boolean, children: React$Node}) => (
+  <View style={[styles.pinBox, selected && styles.pinBoxSelected]}>
+    <PinDigit>{children}</PinDigit>
+  </View>
+)
+export const PinDigit = ({style, ...props}: TextProps) => <Text {...props} style={[styles.pinDigit, style]} />
 
 const styles = StyleSheet.create({
   title: {
@@ -43,17 +56,3 @@ const styles = StyleSheet.create({
     borderColor: '#4A5065',
   },
 })
-
-export const Title = ({style, ...props}: TextProps) => <Text {...props} style={[styles.title, style]} />
-export const Description = ({style, ...props}: TextProps) => <Text {...props} style={[styles.description, style]} />
-
-export const Actions = ({style, ...props}: ViewProps) => <View {...props} style={[styles.actions, style]} />
-export const Instructions = (props: ViewProps) => <View {...props} />
-export const Row = ({style, ...props}: ViewProps) => <View {...props} style={[styles.row, style]} />
-
-export const PinBox = ({selected, children}: {selected?: boolean, children: React$Node}) => (
-  <View style={[styles.pinBox, selected && styles.pinBoxSelected]}>
-    <PinDigit>{children}</PinDigit>
-  </View>
-)
-export const PinDigit = ({style, ...props}: TextProps) => <Text {...props} style={[styles.pinDigit, style]} />

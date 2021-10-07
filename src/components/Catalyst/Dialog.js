@@ -9,14 +9,13 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
 
-import {Modal} from '../UiKit'
-import {LedgerTransportSwitch} from '../Ledger/LedgerTransportSwitchModal'
-import {PleaseWaitView} from '../UiKit/PleaseWaitModal'
-import LedgerConnect from '../Ledger/LedgerConnect'
-import {ErrorView} from '../Common/ErrorModal'
-import globalMessages, {txLabels, ledgerMessages} from '../../i18n/global-messages'
-
 import type {DeviceId, DeviceObj} from '../../crypto/shelley/ledgerUtils'
+import globalMessages, {ledgerMessages, txLabels} from '../../i18n/global-messages'
+import {ErrorView} from '../Common/ErrorModal'
+import LedgerConnect from '../Ledger/LedgerConnect'
+import {LedgerTransportSwitch} from '../Ledger/LedgerTransportSwitchModal'
+import {Modal} from '../UiKit'
+import {PleaseWaitView} from '../UiKit/PleaseWaitModal'
 
 type ErrorData = {|
   errorMessage: string,
@@ -51,7 +50,7 @@ const Dialog = ({
   useUSB,
   errorData,
 }: DialogProps) => {
-  const intl = useIntl()
+  const strings = useStrings()
   const getBody = () => {
     switch (step) {
       case DIALOG_STEPS.CLOSED:
@@ -66,14 +65,9 @@ const Dialog = ({
       case DIALOG_STEPS.LEDGER_CONNECT:
         return <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={useUSB} />
       case DIALOG_STEPS.WAITING_HW_RESPONSE:
-        return <PleaseWaitView title={''} spinnerText={intl.formatMessage(ledgerMessages.followSteps)} />
+        return <PleaseWaitView title={''} spinnerText={strings.followSteps} />
       case DIALOG_STEPS.SUBMITTING:
-        return (
-          <PleaseWaitView
-            title={intl.formatMessage(txLabels.submittingTx)}
-            spinnerText={intl.formatMessage(globalMessages.pleaseWait)}
-          />
-        )
+        return <PleaseWaitView title={strings.submittingTx} spinnerText={strings.pleaseWait} />
       case DIALOG_STEPS.ERROR:
         return (
           <ErrorView errorMessage={errorData.errorMessage} errorLogs={errorData.errorLogs} onDismiss={onRequestClose} />
@@ -94,3 +88,13 @@ const Dialog = ({
 }
 
 export default Dialog
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    followSteps: intl.formatMessage(ledgerMessages.followSteps),
+    submittingTx: intl.formatMessage(txLabels.submittingTx),
+    pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
+  }
+}

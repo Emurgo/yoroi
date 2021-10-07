@@ -30,7 +30,7 @@ import {Actions, Description, Title} from './components'
 const {FlagSecure} = NativeModules
 
 const Step6 = () => {
-  const intl = useIntl()
+  const strings = useStrings()
   const encryptedKey = useSelector(encryptedKeySelector)
   const navigation = useNavigation()
   const [countDown, setCountDown] = useState<number>(5)
@@ -61,25 +61,25 @@ const Step6 = () => {
       <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
         <Spacer height={48} />
 
-        <Title>{intl.formatMessage(messages.subTitle)}</Title>
+        <Title>{strings.subTitle}</Title>
 
         <Spacer height={16} />
 
         <AlertBox>
-          <Text>{intl.formatMessage(messages.description)}</Text>
+          <Text>{strings.description}</Text>
         </AlertBox>
 
         <Spacer height={16} />
 
-        <Description>{intl.formatMessage(messages.description2)}</Description>
+        <Description>{strings.description2}</Description>
 
         <Spacer height={16} />
 
-        <Description>{intl.formatMessage(messages.description3)}</Description>
+        <Description>{strings.description3}</Description>
 
         <Spacer height={16} />
 
-        <Text style={styles.note}>{intl.formatMessage(messages.note)}</Text>
+        <Text style={styles.note}>{strings.note}</Text>
 
         <Spacer height={32} />
 
@@ -87,7 +87,7 @@ const Step6 = () => {
 
         <Spacer height={32} />
 
-        <Text>{intl.formatMessage(messages.secretCode)}</Text>
+        <Text>{strings.secretCode}</Text>
 
         <SecretCodeBox>
           <Text style={{flex: 1}}>{encryptedKey}</Text>
@@ -99,11 +99,7 @@ const Step6 = () => {
       <Actions>
         <Button
           onPress={() => setShowBackupWarningModal(true)}
-          title={
-            countDown !== 0
-              ? countDown.toString()
-              : intl.formatMessage(confirmationMessages.commonButtons.completeButton)
-          }
+          title={countDown !== 0 ? countDown.toString() : strings.completeButton}
           disabled={countDown !== 0}
         />
       </Actions>
@@ -193,3 +189,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
 })
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    subTitle: intl.formatMessage(messages.subTitle),
+    description: intl.formatMessage(messages.description),
+    description2: intl.formatMessage(messages.description2),
+    description3: intl.formatMessage(messages.description3),
+    note: intl.formatMessage(messages.note),
+    secretCode: intl.formatMessage(messages.secretCode),
+    completeButton: intl.formatMessage(confirmationMessages.commonButtons.completeButton),
+  }
+}

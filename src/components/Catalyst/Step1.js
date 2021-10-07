@@ -20,7 +20,7 @@ import {Button, ProgressStep, Spacer, Text} from '../UiKit'
 import {Actions, Row} from './components'
 
 const Step1 = () => {
-  const intl = useIntl()
+  const strings = useStrings()
   const navigation = useNavigation()
   const isDelegating = useSelector(isDelegatingSelector)
   const [showModal, setShowModal] = useState<boolean>(!isDelegating)
@@ -39,7 +39,7 @@ const Step1 = () => {
       <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
         <Spacer height={48} />
 
-        <Text style={styles.text}>{intl.formatMessage(messages.subTitle)}</Text>
+        <Text style={styles.text}>{strings.subTitle}</Text>
 
         <Spacer height={48} />
 
@@ -56,28 +56,25 @@ const Step1 = () => {
         <Spacer height={48} />
 
         <Tip>
-          <Text>{intl.formatMessage(messages.tip)}</Text>
+          <Text>{strings.tip}</Text>
         </Tip>
       </ScrollView>
 
       <Actions>
-        <Button
-          onPress={() => navigation.navigate(CATALYST_ROUTES.STEP2)}
-          title={intl.formatMessage(confirmationMessages.commonButtons.continueButton)}
-        />
+        <Button onPress={() => navigation.navigate(CATALYST_ROUTES.STEP2)} title={strings.continueButton} />
       </Actions>
 
       <StandardModal
         visible={showModal}
-        title={intl.formatMessage(globalMessages.attention)}
+        title={strings.attention}
         onRequestClose={() => setShowModal(false)}
         primaryButton={{
-          label: intl.formatMessage(confirmationMessages.commonButtons.iUnderstandButton),
+          label: strings.iUnderstandButton,
           onPress: () => setShowModal(false),
         }}
         showCloseIcon
       >
-        <Text>{intl.formatMessage(messages.stakingKeyNotRegistered)}</Text>
+        <Text>{strings.stakingKeyNotRegistered}</Text>
       </StandardModal>
     </SafeAreaView>
   )
@@ -146,3 +143,16 @@ const messages = defineMessages({
       'so that you can backup your catalyst QR code.',
   },
 })
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    subTitle: intl.formatMessage(messages.subTitle),
+    stakingKeyNotRegistered: intl.formatMessage(messages.stakingKeyNotRegistered),
+    tip: intl.formatMessage(messages.tip),
+    continueButton: intl.formatMessage(confirmationMessages.commonButtons.continueButton),
+    iUnderstandButton: intl.formatMessage(confirmationMessages.commonButtons.iUnderstandButton),
+    attention: intl.formatMessage(globalMessages.attention),
+  }
+}

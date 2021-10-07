@@ -42,6 +42,7 @@ type ErrorData = {|
 
 const Step5 = () => {
   const intl = useIntl()
+  const strings = useStrings()
   const navigation = useNavigation()
   const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
   const unsignedTx = useSelector(unsignedTxSelector)
@@ -173,12 +174,12 @@ const Step5 = () => {
     } catch (error) {
       if (error instanceof LocalizableError) {
         setErrorData({
-          errorMessage: intl.formatMessage({id: error.id, defaultMessage: error.defaultMessage}, error.values),
+          errorMessage: strings.errorMessage(error),
           errorLogs: error.values.response || null,
         })
       } else {
         setErrorData({
-          errorMessage: intl.formatMessage(errorMessages.generalTxError.message),
+          errorMessage: strings.generalTxErrorMessage,
           errorLogs: error.message || null,
         })
       }
@@ -195,46 +196,33 @@ const Step5 = () => {
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <Spacer height={48} />
 
-        <Title>{intl.formatMessage(messages.subTitle)}</Title>
+        <Title>{strings.subTitle}</Title>
 
         <Spacer height={16} />
 
         {isHW ? (
           <HWInstructions useUSB={useUSB} />
         ) : (
-          <Description>
-            {isEasyConfirmationEnabled
-              ? intl.formatMessage(messages.bioAuthDescription)
-              : intl.formatMessage(messages.description)}
-          </Description>
+          <Description>{isEasyConfirmationEnabled ? strings.bioAuthDescription : strings.description}</Description>
         )}
 
         <Spacer height={48} />
 
         <TextInput
           value={fees ? formatTokenWithSymbol(fees, defaultAsset) : ''}
-          label={intl.formatMessage(txLabels.fees)}
+          label={strings.fees}
           editable={false}
         />
 
         {!isEasyConfirmationEnabled && !isHW && (
-          <TextInput
-            secureTextEntry
-            value={password}
-            label={intl.formatMessage(txLabels.password)}
-            onChangeText={setPassword}
-          />
+          <TextInput secureTextEntry value={password} label={strings.password} onChangeText={setPassword} />
         )}
       </ScrollView>
 
       <Spacer fill />
 
       <Actions>
-        <Button
-          onPress={onContinue}
-          title={intl.formatMessage(confirmationMessages.commonButtons.confirmButton)}
-          disabled={isConfirmationDisabled}
-        />
+        <Button onPress={onContinue} title={strings.confirmButton} disabled={isConfirmationDisabled} />
       </Actions>
 
       <Dialog
@@ -245,7 +233,6 @@ const Step5 = () => {
         onConnectBLE={onConnectBLE}
         useUSB={useUSB}
         errorData={errorData}
-        intl={intl}
       />
     </SafeAreaView>
   )
@@ -283,3 +270,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
 })
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    errorMessage: (error: LocalizableError) =>
+      intl.formatMessage({id: error.id, defaultMessage: error.defaultMessage}, error.values),
+    fees: intl.formatMessage(txLabels.fees),
+    generalTxErrorMessage: intl.formatMessage(errorMessages.generalTxError.message),
+    subTitle: intl.formatMessage(messages.subTitle),
+    description: intl.formatMessage(messages.description),
+    bioAuthDescription: intl.formatMessage(messages.bioAuthDescription),
+    password: intl.formatMessage(txLabels.password),
+    confirmButton: intl.formatMessage(confirmationMessages.commonButtons.confirmButton),
+  }
+}

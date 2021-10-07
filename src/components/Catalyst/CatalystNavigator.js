@@ -29,13 +29,13 @@ type CatalystNavigatorRoutes = {
 const Stack = createStackNavigator<any, CatalystNavigatorRoutes, any>()
 
 const CatalystNavigator = () => {
-  const intl = useIntl()
+  const strings = useStrings()
 
   return (
     <Stack.Navigator
       screenOptions={{
         ...defaultStackNavigatorOptions,
-        title: intl.formatMessage(globalMessages.votingTitle),
+        title: strings.title,
       }}
       initialRouteName={CATALYST_ROUTES.STEP1}
     >
@@ -55,3 +55,11 @@ const CatalystNavigator = () => {
 }
 
 export default CatalystNavigator
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    title: intl.formatMessage(globalMessages.votingTitle),
+  }
+}

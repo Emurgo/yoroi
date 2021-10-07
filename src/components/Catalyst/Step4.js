@@ -28,6 +28,7 @@ type ErrorData = {|
 
 const Step4 = () => {
   const intl = useIntl()
+  const strings = useStrings()
   const isHW = useSelector(isHWSelector)
   const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
   const navigation = useNavigation()
@@ -65,7 +66,7 @@ const Step4 = () => {
           },
           onFail: () => navigation.goBack(),
           addWelcomeMessage: false,
-          instructions: [intl.formatMessage(messages.bioAuthInstructions)],
+          instructions: [strings.bioAuthInstructions],
         })
       } catch (error) {
         if (error instanceof SystemAuthDisabled) {
@@ -77,7 +78,7 @@ const Step4 = () => {
         } else {
           setErrorData({
             showErrorDialog: true,
-            errorMessage: intl.formatMessage(errorMessages.generalError.message),
+            errorMessage: strings.errorMessage,
             errorLogs: String(error.message),
           })
         }
@@ -94,12 +95,20 @@ const Step4 = () => {
       } else {
         setErrorData({
           showErrorDialog: true,
-          errorMessage: intl.formatMessage(errorMessages.generalTxError.message),
+          errorMessage: strings.errorMessage,
           errorLogs: String(error.message),
         })
       }
     }
-  }, [dispatch, intl, isEasyConfirmationEnabled, navigation, password])
+  }, [
+    dispatch,
+    intl,
+    isEasyConfirmationEnabled,
+    navigation,
+    password,
+    strings.bioAuthInstructions,
+    strings.errorMessage,
+  ])
 
   useEffect(() => {
     // if easy confirmation is enabled we go directly to the authentication
@@ -117,22 +126,16 @@ const Step4 = () => {
       <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
         <Spacer height={48} />
 
-        <Title>{intl.formatMessage(messages.subTitle)}</Title>
+        <Title>{strings.subTitle}</Title>
 
         <Spacer height={16} />
 
-        <Description>{intl.formatMessage(messages.description)}</Description>
+        <Description>{strings.description}</Description>
 
         {!isEasyConfirmationEnabled && (
           <>
             <Spacer height={48} />
-            <TextInput
-              autoFocus
-              secureTextEntry
-              label={intl.formatMessage(txLabels.password)}
-              value={password}
-              onChangeText={setPassword}
-            />
+            <TextInput autoFocus secureTextEntry label={strings.password} value={password} onChangeText={setPassword} />
           </>
         )}
       </ScrollView>
@@ -142,14 +145,14 @@ const Step4 = () => {
       <Actions>
         <Button
           onPress={onContinue}
-          title={intl.formatMessage(confirmationMessages.commonButtons.confirmButton)}
+          title={strings.confirmButton}
           disabled={isConfirmationDisabled || generatingTransaction}
         />
       </Actions>
 
       <ErrorModal
         visible={errorData.showErrorDialog}
-        title={intl.formatMessage(errorMessages.generalTxError.title)}
+        title={strings.errorTitle}
         errorMessage={errorData.errorMessage}
         errorLogs={errorData.errorLogs}
         onRequestClose={() => {
@@ -189,3 +192,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
 })
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    subTitle: intl.formatMessage(messages.subTitle),
+    description: intl.formatMessage(messages.description),
+    password: intl.formatMessage(txLabels.password),
+    confirmButton: intl.formatMessage(confirmationMessages.commonButtons.confirmButton),
+    errorTitle: intl.formatMessage(errorMessages.generalTxError.title),
+    errorMessage: intl.formatMessage(errorMessages.generalTxError.message),
+    bioAuthInstructions: intl.formatMessage(messages.bioAuthInstructions),
+  }
+}

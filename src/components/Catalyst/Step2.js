@@ -2,8 +2,7 @@
 
 import {useNavigation} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
-import {useIntl} from 'react-intl'
-import {defineMessages} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelector} from 'react-redux'
@@ -15,7 +14,7 @@ import {Button, ProgressStep, Spacer} from '../UiKit'
 import {Actions, Description, PinBox, Row, Title} from './components'
 
 const Step2 = () => {
-  const intl = useIntl()
+  const strings = useStrings()
   const navigation = useNavigation()
   const pin = useSelector((state: State) => state.voting.pin)
   const [countDown, setCountDown] = useState(5)
@@ -36,11 +35,11 @@ const Step2 = () => {
       <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
         <Spacer height={48} />
 
-        <Title>{intl.formatMessage(messages.subTitle)}</Title>
+        <Title>{strings.subTitle}</Title>
 
         <Spacer height={16} />
 
-        <Description>{intl.formatMessage(messages.description)}</Description>
+        <Description>{strings.description}</Description>
 
         <Spacer height={48} />
 
@@ -60,11 +59,7 @@ const Step2 = () => {
       <Actions>
         <Button
           onPress={() => navigation.navigate(CATALYST_ROUTES.STEP3)}
-          title={
-            countDown !== 0
-              ? countDown.toString()
-              : intl.formatMessage(confirmationMessages.commonButtons.continueButton)
-          }
+          title={countDown !== 0 ? countDown.toString() : strings.continueButton}
           disabled={countDown !== 0}
         />
       </Actions>
@@ -95,3 +90,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
 })
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    subTitle: intl.formatMessage(messages.subTitle),
+    description: intl.formatMessage(messages.description),
+    continueButton: intl.formatMessage(confirmationMessages.commonButtons.continueButton),
+  }
+}

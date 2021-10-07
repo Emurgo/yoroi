@@ -14,14 +14,14 @@ type Props = {|
 |}
 
 const VotingBanner = ({onPress, disabled}: Props) => {
-  const intl = useIntl()
+  const strings = useStrings()
 
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => onPress()} disabled={disabled}>
         <View style={styles.button}>
           <Image source={CatalystLogo} />
-          <Text style={styles.text}>{intl.formatMessage(messages.name).toLocaleUpperCase()}</Text>
+          <Text style={styles.text}>{strings.name.toLocaleUpperCase()}</Text>
         </View>
       </TouchableOpacity>
     </View>
@@ -54,3 +54,11 @@ const styles = StyleSheet.create({
     color: COLORS.LIGHT_POSITIVE_GREEN,
   },
 })
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    name: intl.formatMessage(messages.name),
+  }
+}

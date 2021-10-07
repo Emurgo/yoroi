@@ -14,7 +14,7 @@ type Props = {
 }
 
 const CatalystBackupCheckModal = ({onConfirm, visible, onRequestClose}: Props) => {
-  const intl = useIntl()
+  const strings = useStrings()
   const [acceptedPin, setAcceptedPin] = useState(false)
   const [acceptedQrCode, setAcceptedQrCode] = useState(false)
   const [acceptedConsequences, setAcceptedConsequences] = useState(false)
@@ -22,27 +22,23 @@ const CatalystBackupCheckModal = ({onConfirm, visible, onRequestClose}: Props) =
   return (
     <Modal visible={visible} onRequestClose={() => onRequestClose()} showCloseIcon>
       <View style={{alignItems: 'center'}}>
-        <Text style={styles.title}>{intl.formatMessage(globalMessages.pleaseConfirm)}</Text>
+        <Text style={styles.title}>{strings.pleaseConfirm}</Text>
       </View>
 
       <Spacer height={16} />
 
-      <PinCheckbox onChange={setAcceptedPin} checked={acceptedPin} text={intl.formatMessage(messages.pinCheckbox)} />
+      <PinCheckbox onChange={setAcceptedPin} checked={acceptedPin} text={strings.pinCheckbox} />
 
       <Spacer height={16} />
 
-      <QRCodeCheckbox
-        onChange={setAcceptedQrCode}
-        checked={acceptedQrCode}
-        text={intl.formatMessage(messages.qrCodeCheckbox)}
-      />
+      <QRCodeCheckbox onChange={setAcceptedQrCode} checked={acceptedQrCode} text={strings.qrCodeCheckbox} />
 
       <Spacer height={16} />
 
       <ConsequencesCheckbox
         onChange={setAcceptedConsequences}
         checked={acceptedConsequences}
-        text={intl.formatMessage(messages.consequencesCheckbox)}
+        text={strings.consequencesCheckbox}
       />
 
       <Spacer height={16} />
@@ -50,7 +46,7 @@ const CatalystBackupCheckModal = ({onConfirm, visible, onRequestClose}: Props) =
       <Button
         disabled={!acceptedPin || !acceptedQrCode || !acceptedConsequences}
         onPress={() => onConfirm()}
-        title={intl.formatMessage(confirmationMessages.commonButtons.continueButton)}
+        title={strings.continueButton}
       />
     </Modal>
   )
@@ -87,3 +83,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 })
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    pleaseConfirm: intl.formatMessage(globalMessages.pleaseConfirm),
+    pinCheckbox: intl.formatMessage(messages.pinCheckbox),
+    qrCodeCheckbox: intl.formatMessage(messages.qrCodeCheckbox),
+    consequencesCheckbox: intl.formatMessage(messages.consequencesCheckbox),
+    continueButton: intl.formatMessage(confirmationMessages.commonButtons.continueButton),
+  }
+}
