@@ -7,6 +7,7 @@ import {AppRegistry, Text} from 'react-native'
 import {Provider, useSelector} from 'react-redux'
 
 import {handleGeneralError, setupHooks} from './actions'
+// $FlowFixMe
 import App from './App'
 import {name as appName} from './app.json'
 import {CONFIG} from './config/config'
@@ -30,22 +31,20 @@ bluebird.config({
 */
 global.Promise = bluebird
 
-const cache = createIntlCache()
-const intl = createIntl({locale: 'en-US', messages: translations['en-US'], cache})
-global.onunhandledrejection = (e) => handleGeneralError(e.message, e, intl)
-
-const store = getConfiguredStore()
-
-store.dispatch(setupHooks())
-// TODO: this is async action, we should wait for it in future
-
-const IntlProviderWrapper = (props) => {
-  const locale = useSelector(languageSelector) || 'en-US'
-
-  return <IntlProvider {...props} locale={locale} messages={translations[locale]} textComponent={Text} />
-}
+global.onunhandledrejection = (e) => handleGeneralError(e.message, e)
 
 const AppWithProviders = () => {
+  const cache = createIntlCache()
+  createIntl({locale: 'en-US', messages: translations['en-US']}, cache)
+  const store = getConfiguredStore()
+  store.dispatch(setupHooks())
+
+  const IntlProviderWrapper = (props) => {
+    const locale = useSelector(languageSelector) || 'en-US'
+
+    return <IntlProvider {...props} locale={locale} messages={translations[locale]} textComponent={Text} />
+  }
+
   return (
     <Provider store={store}>
       <IntlProviderWrapper>
