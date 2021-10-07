@@ -1,13 +1,11 @@
 // @flow
 
 import Clipboard from '@react-native-community/clipboard'
-import type {ComponentType} from 'react'
 import React from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {type IntlShape, defineMessages, useIntl} from 'react-intl'
 import {Image, TouchableOpacity, View} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
-import {connect} from 'react-redux'
-import {compose} from 'redux'
+import {useSelector} from 'react-redux'
 
 import copiedIcon from '../../assets/img/icon/copied.png'
 import copyIcon from '../../assets/img/icon/copy-ext.png'
@@ -17,37 +15,6 @@ import {externalAddressIndexSelector, isHWSelector, walletMetaSelector} from '..
 import type {WalletMeta} from '../../state'
 import {Button, Modal, Text} from '../UiKit'
 import styles from './styles/AddressModal.style'
-
-const messages = defineMessages({
-  walletAddress: {
-    id: 'components.receive.addressmodal.walletAddress',
-    defaultMessage: '!!!Your wallet address',
-  },
-  BIP32path: {
-    id: 'components.receive.addressmodal.BIP32path',
-    defaultMessage: '!!!BIP32 path:',
-  },
-  copyLabel: {
-    id: 'components.receive.addressmodal.copyLabel',
-    defaultMessage: '!!!Copy address',
-  },
-  spending: {
-    id: 'components.receive.addressmodal.spendingKeyHash',
-    defaultMessage: '!!!Spending',
-  },
-  staking: {
-    id: 'components.receive.addressmodal.stakingKeyHash',
-    defaultMessage: '!!!Staking',
-  },
-  title: {
-    id: 'components.receive.addressmodal.title',
-    defaultMessage: '!!!Title',
-  },
-  verifyLabel: {
-    id: 'components.receive.addressverifymodal.title',
-    defaultMessage: '!!!Verify Address on Ledger',
-  },
-})
 
 type Props = {|
   addressInfo: ?AddressDTOCardano,
@@ -147,19 +114,46 @@ type ExternalProps = {|
   addressInfo: ?AddressDTOCardano,
   onRequestClose: () => any,
   visible: boolean,
-  intl: IntlShape,
   onAddressVerify: () => void,
 |}
 
-export default injectIntl(
-  (compose(
-    connect(
-      (state, {addressInfo}) => ({
-        index: externalAddressIndexSelector(state)[addressInfo?.address],
-        isHW: isHWSelector(state),
-        walletMeta: walletMetaSelector(state),
-      }),
-      null,
-    ),
-  )(AddressModal): ComponentType<ExternalProps>),
-)
+export default (props: ExternalProps) => {
+  const intl = useIntl()
+  const index = useSelector(externalAddressIndexSelector)[props.addressInfo?.address]
+  const isHW = useSelector(isHWSelector)
+  const walletMeta = useSelector(walletMetaSelector)
+
+  // $FlowFixMe
+  return <AddressModal intl={intl} index={index} isHW={isHW} walletMeta={walletMeta} {...props} />
+}
+
+const messages = defineMessages({
+  walletAddress: {
+    id: 'components.receive.addressmodal.walletAddress',
+    defaultMessage: '!!!Your wallet address',
+  },
+  BIP32path: {
+    id: 'components.receive.addressmodal.BIP32path',
+    defaultMessage: '!!!BIP32 path:',
+  },
+  copyLabel: {
+    id: 'components.receive.addressmodal.copyLabel',
+    defaultMessage: '!!!Copy address',
+  },
+  spending: {
+    id: 'components.receive.addressmodal.spendingKeyHash',
+    defaultMessage: '!!!Spending',
+  },
+  staking: {
+    id: 'components.receive.addressmodal.stakingKeyHash',
+    defaultMessage: '!!!Staking',
+  },
+  title: {
+    id: 'components.receive.addressmodal.title',
+    defaultMessage: '!!!Title',
+  },
+  verifyLabel: {
+    id: 'components.receive.addressverifymodal.title',
+    defaultMessage: '!!!Verify Address on Ledger',
+  },
+})

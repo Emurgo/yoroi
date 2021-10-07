@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {type IntlShape, injectIntl} from 'react-intl'
+import {useIntl} from 'react-intl'
 import {FlatList, Platform} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
@@ -72,11 +72,11 @@ const AddressesList = ({addresses, showFresh}: AddressesListProps) => {
 export default AddressesList
 
 type ModalsProps = {
-  intl: IntlShape,
   addressInfo: AddressDTOCardano,
   onDone: () => void,
 }
-const Modals = injectIntl(({intl, addressInfo, onDone}: ModalsProps) => {
+const Modals = ({addressInfo, onDone}: ModalsProps) => {
+  const intl = useIntl()
   const index = useSelector(externalAddressIndexSelector)
   const hwDeviceInfo = useSelector(hwDeviceInfoSelector)
   const walletMeta = useSelector(walletMetaSelector)
@@ -171,4 +171,4 @@ const Modals = injectIntl(({intl, addressInfo, onDone}: ModalsProps) => {
       />
     </>
   )
-})
+}
