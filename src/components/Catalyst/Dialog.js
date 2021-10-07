@@ -7,7 +7,7 @@
  */
 
 import React from 'react'
-import {injectIntl} from 'react-intl'
+import {useIntl} from 'react-intl'
 
 import {Modal} from '../UiKit'
 import {LedgerTransportSwitch} from '../Ledger/LedgerTransportSwitchModal'
@@ -16,7 +16,6 @@ import LedgerConnect from '../Ledger/LedgerConnect'
 import {ErrorView} from '../Common/ErrorModal'
 import globalMessages, {txLabels, ledgerMessages} from '../../i18n/global-messages'
 
-import type {IntlShape} from 'react-intl'
 import type {DeviceId, DeviceObj} from '../../crypto/shelley/ledgerUtils'
 
 type ErrorData = {|
@@ -42,7 +41,6 @@ type DialogProps = {
   +onConnectUSB: (DeviceObj) => mixed,
   +useUSB: boolean,
   +errorData: ErrorData,
-  +intl: IntlShape,
 }
 const Dialog = ({
   step,
@@ -52,8 +50,8 @@ const Dialog = ({
   onConnectUSB,
   useUSB,
   errorData,
-  intl,
 }: DialogProps) => {
+  const intl = useIntl()
   const getBody = () => {
     switch (step) {
       case DIALOG_STEPS.CLOSED:
@@ -95,4 +93,4 @@ const Dialog = ({
   )
 }
 
-export default injectIntl(Dialog)
+export default Dialog

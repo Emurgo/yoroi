@@ -1,11 +1,5 @@
 // @flow
 
-/**
- * Step 5 for the Catalyst registration
- * Ask password used for signing transaction or sign with HW wallet
- * submit the transaction
- */
-
 import {useNavigation} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'

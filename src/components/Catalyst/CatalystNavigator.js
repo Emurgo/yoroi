@@ -2,7 +2,7 @@
 
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
-import {injectIntl} from 'react-intl'
+import {useIntl} from 'react-intl'
 
 import globalMessages from '../../i18n/global-messages'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
@@ -28,26 +28,30 @@ type CatalystNavigatorRoutes = {
 
 const Stack = createStackNavigator<any, CatalystNavigatorRoutes, any>()
 
-const CatalystNavigator = injectIntl(({intl}) => (
-  <Stack.Navigator
-    screenOptions={{
-      ...defaultStackNavigatorOptions,
-      title: intl.formatMessage(globalMessages.votingTitle),
-    }}
-    initialRouteName={CATALYST_ROUTES.STEP1}
-  >
-    <Stack.Screen name={CATALYST_ROUTES.STEP1} component={CatalystStep1} options={defaultNavigationOptions} />
-    <Stack.Screen name={CATALYST_ROUTES.STEP2} component={CatalystStep2} options={defaultNavigationOptions} />
-    <Stack.Screen name={CATALYST_ROUTES.STEP3} component={CatalystStep3} options={defaultNavigationOptions} />
-    <Stack.Screen name={CATALYST_ROUTES.STEP4} component={CatalystStep4} options={defaultNavigationOptions} />
-    <Stack.Screen name={CATALYST_ROUTES.STEP5} component={CatalystStep5} options={defaultNavigationOptions} />
-    <Stack.Screen name={CATALYST_ROUTES.STEP6} component={CatalystStep6} options={defaultNavigationOptions} />
-    <Stack.Screen
-      name={CATALYST_ROUTES.BIOMETRICS_SIGNING}
-      component={BiometricAuthScreen}
-      options={{headerShown: false}}
-    />
-  </Stack.Navigator>
-))
+const CatalystNavigator = () => {
+  const intl = useIntl()
+
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        ...defaultStackNavigatorOptions,
+        title: intl.formatMessage(globalMessages.votingTitle),
+      }}
+      initialRouteName={CATALYST_ROUTES.STEP1}
+    >
+      <Stack.Screen name={CATALYST_ROUTES.STEP1} component={CatalystStep1} options={defaultNavigationOptions} />
+      <Stack.Screen name={CATALYST_ROUTES.STEP2} component={CatalystStep2} options={defaultNavigationOptions} />
+      <Stack.Screen name={CATALYST_ROUTES.STEP3} component={CatalystStep3} options={defaultNavigationOptions} />
+      <Stack.Screen name={CATALYST_ROUTES.STEP4} component={CatalystStep4} options={defaultNavigationOptions} />
+      <Stack.Screen name={CATALYST_ROUTES.STEP5} component={CatalystStep5} options={defaultNavigationOptions} />
+      <Stack.Screen name={CATALYST_ROUTES.STEP6} component={CatalystStep6} options={defaultNavigationOptions} />
+      <Stack.Screen
+        name={CATALYST_ROUTES.BIOMETRICS_SIGNING}
+        component={BiometricAuthScreen}
+        options={{headerShown: false}}
+      />
+    </Stack.Navigator>
+  )
+}
 
 export default CatalystNavigator

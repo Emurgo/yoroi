@@ -1,9 +1,5 @@
 // @flow
 
-/**
- * Step 1 for the Catalyst registration - landing
- */
-
 import {useNavigation} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'

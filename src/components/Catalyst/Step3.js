@@ -1,10 +1,5 @@
 // @flow
 
-/**
- * Step 3 for the Catalyst registration
- * Confirm PIN generated in previous step
- */
-
 import {useNavigation} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'

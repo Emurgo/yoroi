@@ -1,12 +1,5 @@
 // @flow
 
-/**
- * Step 4 for the Catalyst registration
- * Ask password used for signing metadata
- * generate registration trx
- * ### HW is NOT supported yet - validation is done on first screen itself###
- */
-
 import {useNavigation} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'

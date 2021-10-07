@@ -1,10 +1,5 @@
 // @flow
 
-/**
- * Step 2 for the Catalyst registration
- * Auto generate a PIN, catalyst private key
- */
-
 import {useNavigation} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'

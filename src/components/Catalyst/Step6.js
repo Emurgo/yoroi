@@ -1,10 +1,5 @@
 // @flow
 
-/**
- * Step 6 for the Catalyst registration
- * Option to download the QR code
- */
-
 import Clipboard from '@react-native-community/clipboard'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
