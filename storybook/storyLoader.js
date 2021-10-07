@@ -25,6 +25,8 @@ function loadStories() {
   require('../src/components/Ledger/LedgerConnect.stories')
   require('../src/components/Ledger/LedgerTransportSwitchModal.stories')
   require('../src/components/MaintenanceScreen.stories')
+  require('../src/components/Receive/AddressModal.stories')
+  require('../src/components/Receive/AddressVerifyModal.stories')
   require('../src/components/Receive/AddressView.stories')
   require('../src/components/Receive/AddressesList.stories')
   require('../src/components/Receive/ReceiveScreen.stories')
@@ -87,6 +89,8 @@ const stories = [
   '../src/components/Ledger/LedgerConnect.stories',
   '../src/components/Ledger/LedgerTransportSwitchModal.stories',
   '../src/components/MaintenanceScreen.stories',
+  '../src/components/Receive/AddressModal.stories',
+  '../src/components/Receive/AddressVerifyModal.stories',
   '../src/components/Receive/AddressView.stories',
   '../src/components/Receive/AddressesList.stories',
   '../src/components/Receive/ReceiveScreen.stories',
