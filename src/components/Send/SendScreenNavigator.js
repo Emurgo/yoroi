@@ -6,7 +6,6 @@ import {defineMessages, useIntl} from 'react-intl'
 import {useSelector} from 'react-redux'
 
 import iconQR from '../../assets/img/qr_code.png'
-import type {TokenEntry} from '../../crypto/MultiToken'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
 import {SEND_ROUTES} from '../../RoutesList'
 import {tokenBalanceSelector, tokenInfoSelector} from '../../selectors'
