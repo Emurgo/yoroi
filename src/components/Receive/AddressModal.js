@@ -3,27 +3,25 @@
 import Clipboard from '@react-native-community/clipboard'
 import React from 'react'
 import {type IntlShape, defineMessages, useIntl} from 'react-intl'
-import {Image, TouchableOpacity, View} from 'react-native'
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 import {useSelector} from 'react-redux'
 
 import copiedIcon from '../../assets/img/icon/copied.png'
 import copyIcon from '../../assets/img/icon/copy-ext.png'
 import {formatPath} from '../../crypto/commonUtils'
-import type {AddressDTOCardano, KeyHashesCardano} from '../../crypto/shelley/Address.dto'
-import {externalAddressIndexSelector, isHWSelector, walletMetaSelector} from '../../selectors'
+import {type KeyHashesCardano, AddressDTOCardano} from '../../crypto/shelley/Address.dto'
+import {externalAddressIndexSelector, walletMetaSelector} from '../../selectors'
 import type {WalletMeta} from '../../state'
 import {Button, Modal, Text} from '../UiKit'
-import styles from './styles/AddressModal.style'
 
 type Props = {|
-  addressInfo: ?AddressDTOCardano,
+  address: string,
   index?: number,
   intl: IntlShape,
   onRequestClose: () => any,
   visible: boolean,
   onAddressVerify: () => void,
-  isHW: boolean,
   walletMeta: WalletMeta,
 |}
 
@@ -33,7 +31,7 @@ type State = {
 }
 
 // eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
-class AddressModal extends React.Component<Props, State> {
+export class AddressModal extends React.Component<Props, State> {
   state = {isCopied: false, keyHashes: null}
 
   /* eslint-disable-next-line react/sort-comp */
@@ -41,9 +39,11 @@ class AddressModal extends React.Component<Props, State> {
 
   /* eslint-disable-next-line camelcase */
   async UNSAFE_componentWillMount(): Promise<void> {
-    const {addressInfo} = this.props
+    const {address} = this.props
+    const addressInfo = new AddressDTOCardano(address)
+
     this.setState({
-      keyHashes: await addressInfo?.getKeyHashes(),
+      keyHashes: await addressInfo.getKeyHashes(),
     })
   }
 
@@ -52,8 +52,8 @@ class AddressModal extends React.Component<Props, State> {
   }
 
   _copyAddress = () => {
-    if (this.props.addressInfo == null) return
-    Clipboard.setString(this.props.addressInfo.address)
+    if (this.props.address == null) return
+    Clipboard.setString(this.props.address)
     this.setState({isCopied: true})
 
     // To avoid reading the clipboard, we simply reset state once the modal
@@ -66,43 +66,53 @@ class AddressModal extends React.Component<Props, State> {
 
   render() {
     const {isCopied, keyHashes} = this.state
-    const {addressInfo, index, intl, onRequestClose, visible, onAddressVerify, isHW, walletMeta} = this.props
+    const {address, index, intl, onRequestClose, visible, onAddressVerify, walletMeta} = this.props
 
     return (
       <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
-        <View style={styles.container}>
-          <Text style={styles.title}>{intl.formatMessage(messages.title).toLocaleUpperCase()}</Text>
-          <QRCode value={addressInfo?.address} size={140} backgroundColor="white" color="black" />
-          <View style={styles.info}>
-            <Text style={styles.subtitle}>{intl.formatMessage(messages.walletAddress)}</Text>
-            <View style={styles.dataContainer}>
-              <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">
-                {addressInfo?.address}
-              </Text>
-              <TouchableOpacity
-                accessibilityLabel={intl.formatMessage(messages.copyLabel)}
-                accessibilityRole="button"
-                onPress={this._copyAddress}
-              >
-                <Image source={isCopied ? copiedIcon : copyIcon} />
-              </TouchableOpacity>
-            </View>
-            <Text style={styles.subtitle}>{intl.formatMessage(messages.BIP32path)}</Text>
-            <Text secondary monospace>
-              {index != null && <>{formatPath(0, 'External', index, walletMeta.walletImplementationId)}</>}
-            </Text>
-            <Text style={styles.subtitle}>{intl.formatMessage(messages.staking)}</Text>
-            <Text secondary monospace>
-              {keyHashes?.staking}
-            </Text>
-            <Text style={styles.subtitle}>{intl.formatMessage(messages.spending)}</Text>
-            <Text secondary monospace>
-              {keyHashes?.spending}
-            </Text>
-          </View>
+        <Text style={styles.title}>{intl.formatMessage(messages.title).toLocaleUpperCase()}</Text>
+
+        <View style={{alignItems: 'center'}}>
+          <QRCode value={address} size={140} backgroundColor="white" color="black" />
         </View>
 
-        {isHW && (
+        <View style={styles.info}>
+          <Text style={styles.subtitle}>{intl.formatMessage(messages.walletAddress)}</Text>
+
+          <View style={styles.dataContainer}>
+            <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">
+              {address}
+            </Text>
+
+            <TouchableOpacity
+              accessibilityLabel={intl.formatMessage(messages.copyLabel)}
+              accessibilityRole="button"
+              onPress={this._copyAddress}
+            >
+              <Image source={isCopied ? copiedIcon : copyIcon} />
+            </TouchableOpacity>
+          </View>
+
+          <Text style={styles.subtitle}>{intl.formatMessage(messages.BIP32path)}</Text>
+
+          <Text secondary monospace>
+            {index != null && <>{formatPath(0, 'External', index, walletMeta.walletImplementationId)}</>}
+          </Text>
+
+          <Text style={styles.subtitle}>{intl.formatMessage(messages.staking)}</Text>
+
+          <Text secondary monospace>
+            {keyHashes?.staking}
+          </Text>
+
+          <Text style={styles.subtitle}>{intl.formatMessage(messages.spending)}</Text>
+
+          <Text secondary monospace>
+            {keyHashes?.spending}
+          </Text>
+        </View>
+
+        {walletMeta.isHW && (
           <Button onPress={onAddressVerify} title={intl.formatMessage(messages.verifyLabel)} style={styles.button} />
         )}
       </Modal>
@@ -111,7 +121,7 @@ class AddressModal extends React.Component<Props, State> {
 }
 
 type ExternalProps = {|
-  addressInfo: ?AddressDTOCardano,
+  address: ?string,
   onRequestClose: () => any,
   visible: boolean,
   onAddressVerify: () => void,
@@ -119,13 +129,35 @@ type ExternalProps = {|
 
 export default (props: ExternalProps) => {
   const intl = useIntl()
-  const index = useSelector(externalAddressIndexSelector)[props.addressInfo?.address]
-  const isHW = useSelector(isHWSelector)
+  const index = useSelector(externalAddressIndexSelector)[props.address]
   const walletMeta = useSelector(walletMetaSelector)
 
   // $FlowFixMe
-  return <AddressModal intl={intl} index={index} isHW={isHW} walletMeta={walletMeta} {...props} />
+  return <AddressModal intl={intl} index={index} walletMeta={walletMeta} {...props} />
 }
+
+const styles = StyleSheet.create({
+  info: {
+    alignItems: 'flex-start',
+  },
+  title: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    paddingBottom: 18,
+  },
+  subtitle: {
+    textAlign: 'center',
+    paddingTop: 14,
+    paddingBottom: 4,
+  },
+  button: {
+    paddingTop: 10,
+  },
+  dataContainer: {
+    flexDirection: 'row',
+    paddingRight: 70,
+  },
+})
 
 const messages = defineMessages({
   walletAddress: {

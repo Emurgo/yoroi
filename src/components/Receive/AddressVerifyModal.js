@@ -4,7 +4,6 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, View} from 'react-native'
 
-import {AddressDTOCardano} from '../../crypto/shelley/Address.dto'
 import {confirmationMessages} from '../../i18n/global-messages'
 import HWInstructions from '../Ledger/HWInstructions'
 import {Button, Modal, Text} from '../UiKit'
@@ -14,13 +13,13 @@ type Props = {|
   visible: boolean,
   onConfirm: () => mixed,
   onRequestClose: () => any,
-  addressInfo: AddressDTOCardano,
+  address: string,
   path: string,
   isWaiting: boolean,
   useUSB: boolean,
 |}
 
-const AddressVerifyModal = ({visible, onConfirm, onRequestClose, addressInfo, path, isWaiting, useUSB}: Props) => {
+const AddressVerifyModal = ({visible, onConfirm, onRequestClose, address, path, isWaiting, useUSB}: Props) => {
   const strings = useStrings()
 
   return (
@@ -36,7 +35,7 @@ const AddressVerifyModal = ({visible, onConfirm, onRequestClose, addressInfo, pa
 
         <View style={styles.addressDetailsView}>
           <Text secondary style={styles.paragraph}>
-            {addressInfo.address}
+            {address}
           </Text>
 
           <Text secondary style={styles.paragraph}>

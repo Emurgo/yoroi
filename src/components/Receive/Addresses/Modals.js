@@ -2,29 +2,25 @@
 
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {FlatList, Platform} from 'react-native'
+import {Platform} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {showErrorDialog} from '../../actions'
-import {setLedgerDeviceId, setLedgerDeviceObj} from '../../actions/hwWallet'
-import {CONFIG} from '../../config/config'
-import {getCardanoByronConfig} from '../../config/networks'
-import {formatPath} from '../../crypto/commonUtils'
-import {AddressDTOCardano} from '../../crypto/shelley/Address.dto'
-import {verifyAddress} from '../../crypto/shelley/ledgerUtils'
-import walletManager from '../../crypto/walletManager'
-import {errorMessages} from '../../i18n/global-messages'
-import LocalizableError from '../../i18n/LocalizableError'
-import {isUsedAddressIndexSelector} from '../../selectors'
-import {externalAddressIndexSelector, hwDeviceInfoSelector, walletMetaSelector} from '../../selectors'
-import {Logger} from '../../utils/logging'
-import LedgerConnect from '../Ledger/LedgerConnect'
-import LedgerTransportSwitchModal from '../Ledger/LedgerTransportSwitchModal'
-import {Spacer} from '../UiKit'
-import {Modal} from '../UiKit'
-import AddressModal from './AddressModal'
-import AddressVerifyModal from './AddressVerifyModal'
-import AddressView from './AddressView'
+import {showErrorDialog} from '../../../actions'
+import {setLedgerDeviceId, setLedgerDeviceObj} from '../../../actions/hwWallet'
+import {CONFIG} from '../../../config/config'
+import {getCardanoByronConfig} from '../../../config/networks'
+import {formatPath} from '../../../crypto/commonUtils'
+import {verifyAddress} from '../../../crypto/shelley/ledgerUtils'
+import walletManager from '../../../crypto/walletManager'
+import {errorMessages} from '../../../i18n/global-messages'
+import LocalizableError from '../../../i18n/LocalizableError'
+import {externalAddressIndexSelector, hwDeviceInfoSelector, walletMetaSelector} from '../../../selectors'
+import {Logger} from '../../../utils/logging'
+import LedgerConnect from '../../Ledger/LedgerConnect'
+import LedgerTransportSwitchModal from '../../Ledger/LedgerTransportSwitchModal'
+import {Modal} from '../../UiKit'
+import AddressModal from '../AddressModal'
+import AddressVerifyModal from '../AddressVerifyModal'
 
 const ADDRESS_DIALOG_STEPS = {
   ADDRESS_DETAILS: 'ADDRESS_DETAILS',
@@ -33,49 +29,11 @@ const ADDRESS_DIALOG_STEPS = {
   LEDGER_CONNECT: 'LEDGER_CONNECT',
 }
 type AddressDialogSteps = $Values<typeof ADDRESS_DIALOG_STEPS>
-
-type AddressesListProps = {
-  addresses: Map<string, AddressDTOCardano>,
-  showFresh?: boolean,
-}
-const AddressesList = ({addresses, showFresh}: AddressesListProps) => {
-  const index = useSelector(externalAddressIndexSelector)
-  const isUsedAddressIndex = useSelector(isUsedAddressIndexSelector)
-  const allAddresses = [...addresses.values()]
-  const shownAddresses: AddressDTOCardano[] = showFresh
-    ? allAddresses.filter((addrInfo) => !isUsedAddressIndex[addrInfo.address])
-    : allAddresses.filter((addrInfo) => isUsedAddressIndex[addrInfo.address])
-
-  const [addressInfo, setAddressInfo] = React.useState<AddressDTOCardano | void>()
-
-  return (
-    <>
-      <FlatList
-        data={shownAddresses.reverse()}
-        keyExtractor={(addressInfo) => addressInfo.address}
-        renderItem={({item: addressInfo}) => (
-          <AddressView
-            isUsed={isUsedAddressIndex[addressInfo.address]}
-            index={index[addressInfo.address]}
-            address={addressInfo.address}
-            onPressDetails={() => setAddressInfo(addressInfo)}
-          />
-        )}
-        ItemSeparatorComponent={() => <Spacer height={16} />}
-      />
-
-      {addressInfo && <Modals addressInfo={addressInfo} onDone={() => setAddressInfo()} />}
-    </>
-  )
-}
-
-export default AddressesList
-
 type ModalsProps = {
-  addressInfo: AddressDTOCardano,
+  address: string,
   onDone: () => void,
 }
-const Modals = ({addressInfo, onDone}: ModalsProps) => {
+export const Modals = ({address, onDone}: ModalsProps) => {
   const intl = useIntl()
   const index = useSelector(externalAddressIndexSelector)
   const hwDeviceInfo = useSelector(hwDeviceInfoSelector)
@@ -88,7 +46,7 @@ const Modals = ({addressInfo, onDone}: ModalsProps) => {
     ADDRESS_DIALOG_STEPS.ADDRESS_DETAILS,
   )
 
-  const onVerifyAddress = (addressInfo: AddressDTOCardano) => {
+  const onVerifyAddress = (address: string) => {
     if (!hwDeviceInfo) throw new Error('missing hwDeviceInfo')
 
     setIsWaiting(true)
@@ -96,8 +54,8 @@ const Modals = ({addressInfo, onDone}: ModalsProps) => {
       walletMeta.walletImplementationId,
       walletMeta.networkId,
       getCardanoByronConfig().PROTOCOL_MAGIC,
-      addressInfo.address,
-      walletManager.getAddressingInfo(addressInfo.address),
+      address,
+      walletManager.getAddressingInfo(address),
       hwDeviceInfo,
       true,
     )
@@ -121,7 +79,7 @@ const Modals = ({addressInfo, onDone}: ModalsProps) => {
     <>
       <AddressModal
         visible={addressDialogStep === ADDRESS_DIALOG_STEPS.ADDRESS_DETAILS}
-        addressInfo={addressInfo}
+        address={address}
         onRequestClose={onDone}
         onAddressVerify={() => {
           if (Platform.OS === 'android' && CONFIG.HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT) {
@@ -163,8 +121,8 @@ const Modals = ({addressInfo, onDone}: ModalsProps) => {
       <AddressVerifyModal
         visible={addressDialogStep === ADDRESS_DIALOG_STEPS.ADDRESS_VERIFY}
         onRequestClose={onDone}
-        onConfirm={() => onVerifyAddress(addressInfo)}
-        addressInfo={addressInfo}
+        onConfirm={() => onVerifyAddress(address)}
+        address={address}
         path={formatPath(0, 'External', index, walletMeta.walletImplementationId)}
         isWaiting={isWaiting}
         useUSB={useUSB}

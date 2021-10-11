@@ -3,22 +3,20 @@
 import _ from 'lodash'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ActivityIndicator, View} from 'react-native'
+import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {generateNewReceiveAddress, generateNewReceiveAddressIfNeeded} from '../../actions'
-import Screen from '../../components/Screen'
-import {AddressDTOCardano} from '../../crypto/shelley/Address.dto'
 import {
   canGenerateNewReceiveAddressSelector,
   isUsedAddressIndexSelector,
   receiveAddressesSelector,
 } from '../../selectors'
-import {Banner, Button, OfflineBanner, Spacer, StatusBar, Text} from '../UiKit'
+import {COLORS} from '../../styles/config'
+import {Banner, Button, OfflineBanner, Spacer, StatusBar} from '../UiKit'
 import AddressDetail from './AddressDetail'
-import AddressesList from './AddressesList'
-import styles from './styles/ReceiveScreen.style'
+import {UnusedAddresses, UsedAddresses} from './Addresses'
 
 const ReceiveScreen = () => {
   const strings = useStrings()
@@ -26,10 +24,6 @@ const ReceiveScreen = () => {
   const addressLimitReached = !useSelector(canGenerateNewReceiveAddressSelector)
 
   const currentAddress = _.last(receiveAddresses)
-
-  const addressesInfo: Map<string, AddressDTOCardano> = new Map(
-    receiveAddresses.map((addr) => [addr, new AddressDTOCardano(addr)]),
-  )
 
   const dispatch = useDispatch()
   React.useEffect(() => {
@@ -46,47 +40,36 @@ const ReceiveScreen = () => {
   return (
     <SafeAreaView edges={['left', 'right']} style={styles.safeAreaView}>
       <StatusBar type="dark" />
-
       <OfflineBanner />
-      <Banner text={strings.infoText} />
 
-      <Spacer height={24} />
+      <ScrollView>
+        <Banner text={strings.infoText} />
 
-      <Content>
-        <View style={styles.address}>
-          {currentAddress ? (
-            <AddressDetail address={currentAddress} />
-          ) : (
-            <ActivityIndicator size={'large'} color={'black'} />
-          )}
-        </View>
+        <Content>
+          <View style={styles.address}>
+            {currentAddress ? (
+              <AddressDetail address={currentAddress} />
+            ) : (
+              <ActivityIndicator size={'large'} color={'black'} />
+            )}
+          </View>
 
-        <Spacer height={24} />
+          <Spacer height={24} />
 
-        <Button
-          outlineOnLight
-          onPress={() => dispatch(generateNewReceiveAddress())}
-          disabled={addressLimitReached}
-          title={!addressLimitReached ? strings.generateButton : strings.cannotGenerate}
-        />
-      </Content>
+          <Button
+            outlineOnLight
+            onPress={() => dispatch(generateNewReceiveAddress())}
+            disabled={addressLimitReached}
+            title={!addressLimitReached ? strings.generateButton : strings.cannotGenerate}
+          />
 
-      <Spacer height={24} />
+          <Spacer height={24} />
 
-      <Lists>
-        <Screen scroll>
-          <ListHeader>
-            <Text style={styles.heading}>{strings.unusedAddresses}</Text>
-            <Text style={styles.heading}>{strings.verifyAddress}</Text>
-          </ListHeader>
-          <UnusedAddressesList addresses={addressesInfo} />
-
-          <ListHeader>
-            <Text style={styles.heading}>{strings.usedAddresses}</Text>
-          </ListHeader>
-          <UsedAddressesList addresses={addressesInfo} />
-        </Screen>
-      </Lists>
+          <UnusedAddresses addresses={receiveAddresses} />
+          <Spacer height={24} />
+          <UsedAddresses addresses={receiveAddresses} />
+        </Content>
+      </ScrollView>
     </SafeAreaView>
   )
 }
@@ -94,10 +77,6 @@ const ReceiveScreen = () => {
 export default ReceiveScreen
 
 const Content = (props) => <View {...props} style={styles.content} />
-const Lists = (props) => <View {...props} style={styles.lists} />
-const ListHeader = (props) => <View {...props} style={styles.addressListHeader} />
-const UsedAddressesList = (props) => <AddressesList {...props} />
-const UnusedAddressesList = (props) => <AddressesList {...props} showFresh />
 
 const messages = defineMessages({
   infoText: {
@@ -115,18 +94,6 @@ const messages = defineMessages({
     id: 'components.receive.receivescreen.cannotGenerate',
     defaultMessage: '!!!You have to use some of your addresses',
   },
-  unusedAddresses: {
-    id: 'components.receive.receivescreen.unusedAddresses',
-    defaultMessage: '!!!Unused addresses',
-  },
-  usedAddresses: {
-    id: 'components.receive.receivescreen.usedAddresses',
-    defaultMessage: '!!!Used addresses',
-  },
-  verifyAddress: {
-    id: 'components.receive.receivescreen.verifyAddress',
-    defaultMessage: '!!!Verify address',
-  },
 })
 
 const useStrings = () => {
@@ -136,8 +103,20 @@ const useStrings = () => {
     infoText: intl.formatMessage(messages.infoText),
     generateButton: intl.formatMessage(messages.generateButton),
     cannotGenerate: intl.formatMessage(messages.cannotGenerate),
-    unusedAddresses: intl.formatMessage(messages.unusedAddresses),
-    usedAddresses: intl.formatMessage(messages.usedAddresses),
-    verifyAddress: intl.formatMessage(messages.verifyAddress),
   }
 }
+
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    backgroundColor: COLORS.WHITE,
+  },
+  content: {
+    paddingHorizontal: 16,
+  },
+  address: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 180,
+  },
+})
