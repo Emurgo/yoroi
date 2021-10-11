@@ -63,10 +63,8 @@ const MnemonicCheckScreen = () => {
   const sortedWordEntries = mnemonic
     .split(' ')
     .sort()
-    .map((s, i) => [s, i]);
-
-  const [partialPhraseEntries, setPartialPhraseEntries] =
-    React.useState<Array<[string, number]>>([])
+    .map((s, i) => [s, i])
+  const [partialPhraseEntries, setPartialPhraseEntries] = React.useState<Array<[string, number]>>([])
   const selectWord = (addWordEntry: [string, number]) =>
     setPartialPhraseEntries([...partialPhraseEntries, addWordEntry])
   const deselectWord = ([, removeWordIdx]: [string, number]) =>
@@ -113,7 +111,11 @@ const MnemonicCheckScreen = () => {
 
       <Spacer height={24} />
 
-      <MnemonicInput onPress={deselectWord} partialPhraseEntries={partialPhraseEntries} error={!isPhraseValid && isPhraseComplete} />
+      <MnemonicInput
+        onPress={deselectWord}
+        partialPhraseEntries={partialPhraseEntries}
+        error={!isPhraseValid && isPhraseComplete}
+      />
 
       <Spacer height={8} />
 
@@ -193,12 +195,11 @@ const WordBadges = ({
   partialPhraseEntries: Array<[string, number]>,
   onSelect: (wordEntry: [string, number]) => any,
 }) => {
-  const isWordUsed = (wordIdx: number) =>
-    partialPhraseEntries.some(([, idx]) => idx === wordIdx);
+  const isWordUsed = (wordIdx: number) => partialPhraseEntries.some(([, idx]) => idx === wordIdx)
   return (
     <View style={styles.words}>
       {wordEntries.map(([word, wordIdx]) => {
-        const isUsed = isWordUsed(wordIdx);
+        const isUsed = isWordUsed(wordIdx)
         return (
           <View key={word} style={[styles.wordBadgeContainer, isUsed && styles.hidden]}>
             <WordBadge
@@ -208,7 +209,7 @@ const WordBadges = ({
               testID={isUsed ? `wordBadgeTapped-${word}` : `wordBadgeNonTapped-${word}`}
             />
           </View>
-        );
+        )
       })}
     </View>
   )
