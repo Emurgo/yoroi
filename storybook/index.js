@@ -1,17 +1,19 @@
 // @flow
 
-import {Platform} from 'react-native'
-import AsyncStorage from '@react-native-community/async-storage'
-import {getStorybookUI, configure, addDecorator} from '@storybook/react-native'
-
-import {withProvider, withNavigationProps} from './decorators'
-import {loadStories} from './storyLoader'
 import './rn-addons'
+
+import AsyncStorage from '@react-native-community/async-storage'
+import {addDecorator, configure, getStorybookUI} from '@storybook/react-native'
+import {Platform} from 'react-native'
+
+import {withIntlProp, withNavigationProps, withProvider} from './decorators'
+import {loadStories} from './storyLoader'
 
 configure(() => loadStories(), module)
 
 addDecorator(withProvider)
 addDecorator(withNavigationProps)
+addDecorator(withIntlProp)
 
 // Refer to
 // https://github.com/storybookjs/storybook/tree/master/app/react-native#start-command-parameters
@@ -24,6 +26,6 @@ const StorybookUIRoot = getStorybookUI({
 export default StorybookUIRoot
 
 export * from './decorators'
-export * from './navigation'
 export * from './LayoutGrid'
+export * from './navigation'
 export * from './SafeAreaInsets'
