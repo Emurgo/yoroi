@@ -21,7 +21,6 @@ module.exports = {
     'flowtype/require-valid-file-annotation': [2, 'always'],
     'lines-between-class-members': [1, 'always', {exceptAfterSingleLine: true}],
     'no-unused-vars': ['warn', {argsIgnorePattern: '^_'}],
-    'react-native/no-inline-styles': 2,
     'react-native/no-raw-text': ['error', {skip: ['Markdown']}],
     'react-native/no-unused-styles': 2,
     'react/display-name': 0,
