@@ -42,13 +42,38 @@ const MnemonicCheckScreen = () => {
   const navigation = useNavigation()
   const route = (useRoute(): any)
   const mnemonic: string = route.params.mnemonic
-  const sortedWords = mnemonic.split(' ').sort()
-  const [partialPhrase, setPartialPhrase] = React.useState<Array<string>>([])
-  const deselectWord = (removeWord: string) => setPartialPhrase(partialPhrase.filter((word) => word !== removeWord))
-  const selectWord = (addWord: string) => setPartialPhrase([...partialPhrase, addWord])
 
-  const isPhraseComplete = partialPhrase.length === sortedWords.length
-  const isPhraseValid = mnemonic === partialPhrase.join(' ')
+  /*
+   * The mnemonic are handled in "word entries" instead of plain text word
+   * Where each entry is [word, wordIndex] with index in sorted array
+   * This is done so that each word including any duplicates
+   * is uniquely identified by its index in the sorted array
+   * to improve the UX of the word selecting.
+   *
+   * Example: original words might be [air, sand, air, desk], which is valid.
+   * Sorted entries will be: [[air, 0], [air, 1], [desk, 2], [sand, 3]]
+   *
+   * We don't care which of the "air" words the user will want to use first.
+   * If user clicks on [air, 1] we will be able to detect that this specific
+   * was selected and hide it from the options while keeping the first "air"
+   * visible, which should be the most intuitive and expected behaviour for the users.
+   *
+   * When comparing with the original mnemonic we ignore the indexes.
+   */
+  const sortedWordEntries = mnemonic
+    .split(' ')
+    .sort()
+    .map((s, i) => [s, i]);
+
+  const [partialPhraseEntries, setPartialPhraseEntries] =
+    React.useState<Array<[string, number]>>([])
+  const selectWord = (addWordEntry: [string, number]) =>
+    setPartialPhraseEntries([...partialPhraseEntries, addWordEntry])
+  const deselectWord = ([, removeWordIdx]: [string, number]) =>
+    setPartialPhraseEntries(partialPhraseEntries.filter(([, idx]) => idx !== removeWordIdx))
+
+  const isPhraseComplete = partialPhraseEntries.length === sortedWordEntries.length
+  const isPhraseValid = mnemonic === partialPhraseEntries.map(([w]) => w).join(' ')
 
   const dispatch = useDispatch()
   const handleWalletConfirmation = async () => {
@@ -88,14 +113,14 @@ const MnemonicCheckScreen = () => {
 
       <Spacer height={24} />
 
-      <MnemonicInput onPress={deselectWord} partialPhrase={partialPhrase} error={!isPhraseValid && isPhraseComplete} />
+      <MnemonicInput onPress={deselectWord} partialPhraseEntries={partialPhraseEntries} error={!isPhraseValid && isPhraseComplete} />
 
       <Spacer height={8} />
 
       <ErrorMessage visible={!(isPhraseValid || !isPhraseComplete)} />
 
       <ScrollView bounces={false} contentContainerStyle={styles.scrollViewContentContainer}>
-        <WordBadges words={sortedWords} partialPhrase={partialPhrase} onSelect={selectWord} />
+        <WordBadges wordEntries={sortedWordEntries} partialPhraseEntries={partialPhraseEntries} onSelect={selectWord} />
       </ScrollView>
 
       <View style={styles.buttons}>
@@ -115,23 +140,22 @@ const MnemonicCheckScreen = () => {
 export default MnemonicCheckScreen
 
 const MnemonicInput = ({
-  partialPhrase,
+  partialPhraseEntries,
   error,
   onPress,
 }: {
-  partialPhrase: Array<string>,
+  partialPhraseEntries: Array<[string, number]>,
   error: boolean,
-  onPress: (word: string) => any,
+  onPress: (wordEntry: [string, number]) => any,
 }) => {
   return (
     <View style={styles.recoveryPhrase}>
       <View style={[styles.recoveryPhraseOutline, error && styles.recoveryPhraseError]}>
-        {partialPhrase.map((word, index, array) => {
+        {partialPhraseEntries.map(([word, wordIdx], index, array) => {
           const isLast = index === array.length - 1
-
           return (
             <View key={word} style={[styles.wordBadgeContainer, !isLast && styles.selected]}>
-              <WordBadge word={word} disabled={!isLast} onPress={isLast ? () => onPress(word) : undefined} />
+              <WordBadge word={word} disabled={!isLast} onPress={isLast ? () => onPress([word, wordIdx]) : undefined} />
             </View>
           )
         })}
@@ -161,26 +185,31 @@ const ErrorMessage = ({visible}: {visible: boolean}) => {
 }
 
 const WordBadges = ({
-  words,
-  partialPhrase,
+  wordEntries,
+  partialPhraseEntries,
   onSelect,
 }: {
-  words: Array<string>,
-  partialPhrase: Array<string>,
-  onSelect: (word: string) => any,
+  wordEntries: Array<[string, number]>,
+  partialPhraseEntries: Array<[string, number]>,
+  onSelect: (wordEntry: [string, number]) => any,
 }) => {
+  const isWordUsed = (wordIdx: number) =>
+    partialPhraseEntries.some(([, idx]) => idx === wordIdx);
   return (
     <View style={styles.words}>
-      {words.map((word) => (
-        <View key={word} style={[styles.wordBadgeContainer, partialPhrase.includes(word) && styles.hidden]}>
-          <WordBadge
-            word={word}
-            onPress={() => onSelect(word)}
-            disabled={partialPhrase.includes(word)}
-            testID={partialPhrase.includes(word) ? `wordBadgeTapped-${word}` : `wordBadgeNonTapped-${word}`}
-          />
-        </View>
-      ))}
+      {wordEntries.map(([word, wordIdx]) => {
+        const isUsed = isWordUsed(wordIdx);
+        return (
+          <View key={word} style={[styles.wordBadgeContainer, isUsed && styles.hidden]}>
+            <WordBadge
+              word={word}
+              onPress={() => onSelect([word, wordIdx])}
+              disabled={isUsed}
+              testID={isUsed ? `wordBadgeTapped-${word}` : `wordBadgeNonTapped-${word}`}
+            />
+          </View>
+        );
+      })}
     </View>
   )
 }
