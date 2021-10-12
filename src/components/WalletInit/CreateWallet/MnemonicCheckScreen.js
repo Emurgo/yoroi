@@ -105,7 +105,7 @@ export default MnemonicCheckScreen
 type MnemonicInputProps = {
   userEntries: Array<Entry>,
   error: boolean,
-  onPress: (Entry) => any,
+  onPress: () => any,
 }
 const MnemonicInput = ({userEntries, error, onPress}: MnemonicInputProps) => {
   return (
@@ -116,7 +116,7 @@ const MnemonicInput = ({userEntries, error, onPress}: MnemonicInputProps) => {
 
           return (
             <View key={entry.id} style={[styles.wordBadgeContainer, !isLast && styles.selected]}>
-              <WordBadge word={`${entry.word} x`} disabled={!isLast} onPress={() => onPress(entry)} />
+              <WordBadge word={`${entry.word} x`} disabled={!isLast} onPress={onPress} />
             </View>
           )
         })}
