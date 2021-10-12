@@ -1,6 +1,6 @@
 // @flow
 
-import {useNavigation, useRoute} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, TouchableOpacity, View} from 'react-native'
@@ -8,80 +8,45 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch} from 'react-redux'
 
 import {createWallet} from '../../../actions'
+import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../../config/types'
+import {useParams} from '../../../navigation'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import assert from '../../../utils/assert'
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
 import {Button, Spacer, StatusBar, Text} from '../../UiKit'
 import styles from './styles/MnemonicCheckScreen.style'
 
-const messages = defineMessages({
-  instructions: {
-    id: 'components.walletinit.createwallet.mnemoniccheckscreen.instructions',
-    defaultMessage: '!!!Tap each word in the correct order to verify your recovery phrase',
-  },
-  clearButton: {
-    id: 'components.walletinit.createwallet.mnemoniccheckscreen.clearButton',
-    defaultMessage: '!!!Clear',
-  },
-  confirmButton: {
-    id: 'components.walletinit.createwallet.mnemoniccheckscreen.confirmButton',
-    defaultMessage: '!!!Confirm',
-  },
-  mnemonicWordsInputLabel: {
-    id: 'components.walletinit.createwallet.mnemoniccheckscreen.mnemonicWordsInputLabel',
-    defaultMessage: '!!!Recovery phrase',
-  },
-  mnemonicWordsInputInvalidPhrase: {
-    id: 'components.walletinit.createwallet.mnemoniccheckscreen.mnemonicWordsInputInvalidPhrase',
-    defaultMessage: '!!!Recovery phrase does not match',
-  },
-})
+export type Params = {
+  mnemonic: string,
+  password: string,
+  name: string,
+  networkId: NetworkId,
+  walletImplementationId: WalletImplementationId,
+  provider: YoroiProvider,
+}
+
+type Entry = {id: number, word: string}
 
 const MnemonicCheckScreen = () => {
   const intl = useIntl()
   const navigation = useNavigation()
-  const route = (useRoute(): any)
-  const mnemonic: string = route.params.mnemonic
+  const {mnemonic, password, name, networkId, walletImplementationId, provider} = useParams<Params>()
 
-  /*
-   * The mnemonic are handled in "word entries" instead of plain text word
-   * Where each entry is [word, wordIndex] with index in sorted array
-   * This is done so that each word including any duplicates
-   * is uniquely identified by its index in the sorted array
-   * to improve the UX of the word selecting.
-   *
-   * Example: original words might be [air, sand, air, desk], which is valid.
-   * Sorted entries will be: [[air, 0], [air, 1], [desk, 2], [sand, 3]]
-   *
-   * We don't care which of the "air" words the user will want to use first.
-   * If user clicks on [air, 1] we will be able to detect that this specific
-   * was selected and hide it from the options while keeping the first "air"
-   * visible, which should be the most intuitive and expected behaviour for the users.
-   *
-   * When comparing with the original mnemonic we ignore the indexes.
-   */
-  const sortedWordEntries = mnemonic
+  const mnemonicEntries: Array<Entry> = mnemonic
     .split(' ')
     .sort()
-    .map((s, i) => [s, i])
-  const [partialPhraseEntries, setPartialPhraseEntries] = React.useState<Array<[string, number]>>([])
-  const selectWord = (addWordEntry: [string, number]) =>
-    setPartialPhraseEntries([...partialPhraseEntries, addWordEntry])
-  const deselectWord = ([, removeWordIdx]: [string, number]) =>
-    setPartialPhraseEntries(partialPhraseEntries.filter(([, idx]) => idx !== removeWordIdx))
+    .map((word, id) => ({word, id}))
 
-  const isPhraseComplete = partialPhraseEntries.length === sortedWordEntries.length
-  const isPhraseValid = mnemonic === partialPhraseEntries.map(([w]) => w).join(' ')
+  const [userEntries, setUserEntries] = React.useState<Array<Entry>>([])
+  const appendEntry = (entry: Entry) => setUserEntries([...userEntries, entry])
+  const removeLastEntry = () => setUserEntries((entries) => entries.slice(0, -1))
+
+  const isPhraseComplete = userEntries.length === mnemonicEntries.length
+  const isPhraseValid = userEntries.map((entry) => entry.word).join(' ') === mnemonic
 
   const dispatch = useDispatch()
   const handleWalletConfirmation = async () => {
-    const {mnemonic, password, name, networkId, walletImplementationId, provider} = route.params
-
-    assert.assert(!!mnemonic, 'handleWalletConfirmation:: mnemonic')
-    assert.assert(!!password, 'handleWalletConfirmation:: password')
-    assert.assert(!!name, 'handleWalletConfirmation:: name')
-    assert.assert(networkId != null, 'handleWalletConfirmation:: networkId')
-    assert.assert(!!walletImplementationId, 'handleWalletConfirmation:: implementationId')
+    assertions({mnemonic, password, name, networkId, walletImplementationId})
 
     await dispatch(createWallet(name, mnemonic, password, networkId, walletImplementationId, provider))
 
@@ -111,18 +76,14 @@ const MnemonicCheckScreen = () => {
 
       <Spacer height={24} />
 
-      <MnemonicInput
-        onPress={deselectWord}
-        partialPhraseEntries={partialPhraseEntries}
-        error={!isPhraseValid && isPhraseComplete}
-      />
+      <MnemonicInput onPress={removeLastEntry} userEntries={userEntries} error={isPhraseComplete && !isPhraseValid} />
 
       <Spacer height={8} />
 
       <ErrorMessage visible={!(isPhraseValid || !isPhraseComplete)} />
 
       <ScrollView bounces={false} contentContainerStyle={styles.scrollViewContentContainer}>
-        <WordBadges wordEntries={sortedWordEntries} partialPhraseEntries={partialPhraseEntries} onSelect={selectWord} />
+        <WordBadges mnemonicEntries={mnemonicEntries} userEntries={userEntries} onPress={appendEntry} />
       </ScrollView>
 
       <View style={styles.buttons}>
@@ -141,23 +102,21 @@ const MnemonicCheckScreen = () => {
 
 export default MnemonicCheckScreen
 
-const MnemonicInput = ({
-  partialPhraseEntries,
-  error,
-  onPress,
-}: {
-  partialPhraseEntries: Array<[string, number]>,
+type MnemonicInputProps = {
+  userEntries: Array<Entry>,
   error: boolean,
-  onPress: (wordEntry: [string, number]) => any,
-}) => {
+  onPress: (Entry) => any,
+}
+const MnemonicInput = ({userEntries, error, onPress}: MnemonicInputProps) => {
   return (
     <View style={styles.recoveryPhrase}>
       <View style={[styles.recoveryPhraseOutline, error && styles.recoveryPhraseError]}>
-        {partialPhraseEntries.map(([word, wordIdx], index, array) => {
+        {userEntries.map((entry, index, array) => {
           const isLast = index === array.length - 1
+
           return (
-            <View key={word} style={[styles.wordBadgeContainer, !isLast && styles.selected]}>
-              <WordBadge word={word} disabled={!isLast} onPress={isLast ? () => onPress([word, wordIdx]) : undefined} />
+            <View key={entry.id} style={[styles.wordBadgeContainer, !isLast && styles.selected]}>
+              <WordBadge word={`${entry.word} x`} disabled={!isLast} onPress={() => onPress(entry)} />
             </View>
           )
         })}
@@ -186,27 +145,26 @@ const ErrorMessage = ({visible}: {visible: boolean}) => {
   )
 }
 
-const WordBadges = ({
-  wordEntries,
-  partialPhraseEntries,
-  onSelect,
-}: {
-  wordEntries: Array<[string, number]>,
-  partialPhraseEntries: Array<[string, number]>,
-  onSelect: (wordEntry: [string, number]) => any,
-}) => {
-  const isWordUsed = (wordIdx: number) => partialPhraseEntries.some(([, idx]) => idx === wordIdx)
+type WordBadgesProps = {
+  mnemonicEntries: Array<Entry>,
+  userEntries: Array<Entry>,
+  onPress: (wordEntry: Entry) => any,
+}
+const WordBadges = ({mnemonicEntries, userEntries, onPress}: WordBadgesProps) => {
+  const isWordUsed = (entryId: number) => userEntries.some((entry) => entry.id === entryId)
+
   return (
     <View style={styles.words}>
-      {wordEntries.map(([word, wordIdx]) => {
-        const isUsed = isWordUsed(wordIdx)
+      {mnemonicEntries.map((entry) => {
+        const isUsed = isWordUsed(entry.id)
+
         return (
-          <View key={word} style={[styles.wordBadgeContainer, isUsed && styles.hidden]}>
+          <View key={entry.id} style={[styles.wordBadgeContainer, isUsed && styles.hidden]}>
             <WordBadge
-              word={word}
-              onPress={() => onSelect([word, wordIdx])}
+              word={entry.word}
+              onPress={() => onPress(entry)}
               disabled={isUsed}
-              testID={isUsed ? `wordBadgeTapped-${word}` : `wordBadgeNonTapped-${word}`}
+              testID={isUsed ? `wordBadgeTapped-${entry.word}` : `wordBadgeNonTapped-${entry.word}`}
             />
           </View>
         )
@@ -215,8 +173,56 @@ const WordBadges = ({
   )
 }
 
-const WordBadge = ({word, onPress, disabled}: {word: string, disabled?: boolean, onPress?: () => any}) => (
+type WordBadgeProps = {
+  word: string,
+  disabled?: boolean,
+  onPress?: () => any,
+}
+const WordBadge = ({word, onPress, disabled}: WordBadgeProps) => (
   <TouchableOpacity activeOpacity={0.5} onPress={onPress} disabled={disabled} style={styles.wordBadge}>
-    <Text style={styles.wordBadgeText}>{word} x</Text>
+    <Text style={styles.wordBadgeText}>{word}</Text>
   </TouchableOpacity>
 )
+
+const assertions = ({
+  mnemonic,
+  password,
+  name,
+  networkId,
+  walletImplementationId,
+}: {
+  mnemonic: string,
+  name: string,
+  password: string,
+  networkId: NetworkId,
+  walletImplementationId: WalletImplementationId,
+}) => {
+  assert.assert(!!mnemonic, 'handleWalletConfirmation:: mnemonic')
+  assert.assert(!!password, 'handleWalletConfirmation:: password')
+  assert.assert(!!name, 'handleWalletConfirmation:: name')
+  assert.assert(networkId != null, 'handleWalletConfirmation:: networkId')
+  assert.assert(!!walletImplementationId, 'handleWalletConfirmation:: implementationId')
+}
+
+const messages = defineMessages({
+  instructions: {
+    id: 'components.walletinit.createwallet.mnemoniccheckscreen.instructions',
+    defaultMessage: '!!!Tap each word in the correct order to verify your recovery phrase',
+  },
+  clearButton: {
+    id: 'components.walletinit.createwallet.mnemoniccheckscreen.clearButton',
+    defaultMessage: '!!!Clear',
+  },
+  confirmButton: {
+    id: 'components.walletinit.createwallet.mnemoniccheckscreen.confirmButton',
+    defaultMessage: '!!!Confirm',
+  },
+  mnemonicWordsInputLabel: {
+    id: 'components.walletinit.createwallet.mnemoniccheckscreen.mnemonicWordsInputLabel',
+    defaultMessage: '!!!Recovery phrase',
+  },
+  mnemonicWordsInputInvalidPhrase: {
+    id: 'components.walletinit.createwallet.mnemoniccheckscreen.mnemonicWordsInputInvalidPhrase',
+    defaultMessage: '!!!Recovery phrase does not match',
+  },
+})
