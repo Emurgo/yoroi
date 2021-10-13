@@ -38,9 +38,7 @@ const SendScreenNavigator = () => {
   return (
     <Stack.Navigator
       initialRouteName={SEND_ROUTES.MAIN}
-      screenOptions={({route}) => ({
-        // $FlowFixMe mixed is incompatible with string
-        title: route.params?.title ?? undefined,
+      screenOptions={() => ({
         ...defaultNavigationOptions,
         ...defaultStackNavigatorOptions,
       })}
