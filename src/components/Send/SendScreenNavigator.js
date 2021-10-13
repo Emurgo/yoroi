@@ -5,38 +5,15 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {useSelector} from 'react-redux'
 
-import iconQR from '../../assets/img/qr_code.png'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
 import {SEND_ROUTES} from '../../RoutesList'
 import {tokenBalanceSelector, tokenInfoSelector} from '../../selectors'
-import {Button} from '../UiKit'
 import AddressReaderQR from './AddressReaderQR'
-import {pastedFormatter} from './amountUtils'
 import AssetSelectorScreen from './AssetSelectorScreen/AssetSelectorScreen'
 import BiometricAuthScreen from './BiometricAuthScreen'
 import ConfirmScreen from './ConfirmScreen'
+import {ScannerButton} from './ScannerButton'
 import SendScreen from './SendScreen'
-import styles from './styles/QrButton.style'
-
-const getParams = (params) => {
-  const query = params.substr(1)
-  const result = {}
-  query.split('?').forEach((part) => {
-    const item = part.split('=')
-    result[item[0]] = decodeURIComponent(item[1])
-  })
-  return result
-}
-
-const setAddress = (address, route) => {
-  const handlerAddress = route.params?.onScanAddress
-  handlerAddress && handlerAddress(address)
-}
-
-const setAmount = (amount, route) => {
-  const handlerAmount = route.params?.onScanAmount
-  handlerAmount && handlerAmount(pastedFormatter(amount))
-}
 
 type SendScreenNavigatorRoutes = {
   'send-ada': any,
@@ -70,46 +47,9 @@ const SendScreenNavigator = () => {
     >
       <Stack.Screen
         name={SEND_ROUTES.MAIN}
-        options={({navigation, route}) => ({
+        options={() => ({
           title: strings.sendTitle,
-          headerRight: () => (
-            <Button
-              style={styles.qrButton}
-              onPress={() =>
-                navigation.navigate(SEND_ROUTES.ADDRESS_READER_QR, {
-                  onSuccess: (stringQR) => {
-                    const regex = /(cardano):([a-zA-Z1-9]\w+)\??/
-
-                    if (regex.test(stringQR)) {
-                      const address = stringQR.match(regex)[2]
-                      if (stringQR.indexOf('?') !== -1) {
-                        const index = stringQR.indexOf('?')
-                        const params = getParams(stringQR.substr(index))
-                        if ('amount' in params) {
-                          setAddress(address, route)
-                          setAmount(params.amount, route)
-                        }
-                      } else {
-                        setAddress(address, route)
-                        // note: after upgrading to react-navigation v5.x, the
-                        // send screen is not unmounted after a tx is sent. If a
-                        // new QR code without an amount field is scanned, the
-                        // previous value may still remain in state
-                        setAmount('', route)
-                      }
-                    } else {
-                      setAddress(stringQR, route)
-                      setAmount('', route)
-                    }
-                    navigation.navigate(SEND_ROUTES.MAIN)
-                  },
-                })
-              }
-              iconImage={iconQR}
-              title=""
-              withoutBackground
-            />
-          ),
+          headerRight: () => <ScannerButton />,
           ...defaultNavigationOptions,
         })}
       >
