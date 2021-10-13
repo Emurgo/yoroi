@@ -27,7 +27,6 @@ module.exports = {
     'react-native/split-platform-components': 0,
     'react/display-name': 0,
     'react/no-access-state-in-setstate': 2,
-    'react/no-array-index-key': 2,
     'react/no-typos': 2,
     'react/sort-comp': [2, {order: ['instance-variables', 'lifecycle', 'everything-else', 'render']}],
     'simple-import-sort/exports': 'error',
