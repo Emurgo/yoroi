@@ -18,25 +18,6 @@ import ConfirmScreen from './ConfirmScreen'
 import SendScreen from './SendScreen'
 import styles from './styles/QrButton.style'
 
-const messages = defineMessages({
-  sendTitle: {
-    id: 'components.send.sendscreen.title',
-    defaultMessage: '!!!Send',
-  },
-  qrScannerTitle: {
-    id: 'components.send.addressreaderqr.title',
-    defaultMessage: '!!!Scan QR code address',
-  },
-  selectAssetTitle: {
-    id: 'components.send.selectasset.title',
-    defaultMessage: '!!!Select asset',
-  },
-  confirmTitle: {
-    id: 'components.send.confirmscreen.title',
-    defaultMessage: '!!!Send',
-  },
-})
-
 const getParams = (params) => {
   const query = params.substr(1)
   const result = {}
@@ -68,7 +49,7 @@ type SendScreenNavigatorRoutes = {
 const Stack = createStackNavigator<any, SendScreenNavigatorRoutes, any>()
 
 const SendScreenNavigator = () => {
-  const intl = useIntl()
+  const strings = useStrings()
 
   const tokenBalance = useSelector(tokenBalanceSelector)
   const [selectedTokenIdentifier, setSelectedTokenIdentifier] = React.useState<string>(
@@ -90,7 +71,7 @@ const SendScreenNavigator = () => {
       <Stack.Screen
         name={SEND_ROUTES.MAIN}
         options={({navigation, route}) => ({
-          title: intl.formatMessage(messages.sendTitle),
+          title: strings.sendTitle,
           headerRight: () => (
             <Button
               style={styles.qrButton}
@@ -137,7 +118,7 @@ const SendScreenNavigator = () => {
         )}
       </Stack.Screen>
 
-      <Stack.Screen name={'select-asset'} options={{title: intl.formatMessage(messages.selectAssetTitle)}}>
+      <Stack.Screen name={'select-asset'} options={{title: strings.selectAssetTitle}}>
         {({navigation}) => (
           <AssetSelectorScreen
             assetTokens={tokenBalance.values}
@@ -159,14 +140,10 @@ const SendScreenNavigator = () => {
       <Stack.Screen
         name={SEND_ROUTES.ADDRESS_READER_QR}
         component={AddressReaderQR}
-        options={{title: intl.formatMessage(messages.qrScannerTitle)}}
+        options={{title: strings.qrScannerTitle}}
       />
 
-      <Stack.Screen
-        name={SEND_ROUTES.CONFIRM}
-        component={ConfirmScreen}
-        options={{title: intl.formatMessage(messages.confirmTitle)}}
-      />
+      <Stack.Screen name={SEND_ROUTES.CONFIRM} component={ConfirmScreen} options={{title: strings.confirmTitle}} />
 
       <Stack.Screen
         name={SEND_ROUTES.BIOMETRICS_SIGNING}
@@ -178,3 +155,33 @@ const SendScreenNavigator = () => {
 }
 
 export default SendScreenNavigator
+
+const messages = defineMessages({
+  sendTitle: {
+    id: 'components.send.sendscreen.title',
+    defaultMessage: '!!!Send',
+  },
+  qrScannerTitle: {
+    id: 'components.send.addressreaderqr.title',
+    defaultMessage: '!!!Scan QR code address',
+  },
+  selectAssetTitle: {
+    id: 'components.send.selectasset.title',
+    defaultMessage: '!!!Select asset',
+  },
+  confirmTitle: {
+    id: 'components.send.confirmscreen.title',
+    defaultMessage: '!!!Send',
+  },
+})
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    sendTitle: intl.formatMessage(messages.sendTitle),
+    qrScannerTitle: intl.formatMessage(messages.qrScannerTitle),
+    selectAssetTitle: intl.formatMessage(messages.selectAssetTitle),
+    confirmTitle: intl.formatMessage(messages.confirmTitle),
+  }
+}
