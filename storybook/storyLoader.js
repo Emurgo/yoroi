@@ -7,6 +7,7 @@
 
 function loadStories() {
   require('../src/components/Catalyst/Catalyst.stories')
+  require('../src/components/Catalyst/VotingBanner.stories')
   require('../src/components/Common/DangerousActionModal.stories')
   require('../src/components/Common/ErrorModal.stories')
   require('../src/components/Common/ExpandableItem.stories')
@@ -70,6 +71,7 @@ function loadStories() {
 
 const stories = [
   '../src/components/Catalyst/Catalyst.stories',
+  '../src/components/Catalyst/VotingBanner.stories',
   '../src/components/Common/DangerousActionModal.stories',
   '../src/components/Common/ErrorModal.stories',
   '../src/components/Common/ExpandableItem.stories',

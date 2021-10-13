@@ -267,3 +267,6 @@ export const isAppSetupCompleteSelector: (state: State) => boolean = createSelec
 
 export const walletsListSelector = (state: State) =>
   (Object.keys(state.wallets).map((key) => state.wallets[key]): Array<WalletMeta>)
+
+export const unsignedTxSelector = (state: State) => state.voting.unsignedTx
+export const encryptedKeySelector = (state: State) => state.voting.encryptedKey

@@ -1,26 +1,132 @@
 // @flow
 
-/**
- * Step 6 for the Catalyst registration
- * Option to download the QR code
- */
-
 import Clipboard from '@react-native-community/clipboard'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
-import type {ComponentType} from 'react'
 import React, {useEffect, useState} from 'react'
-import type {IntlShape} from 'react-intl'
-import {defineMessages, injectIntl} from 'react-intl'
-import {Image, NativeModules, Platform, SafeAreaView, ScrollView, TouchableOpacity, View} from 'react-native'
-import QRCode from 'react-native-qrcode-svg'
-import {connect} from 'react-redux'
+import {defineMessages, useIntl} from 'react-intl'
+import {
+  ActivityIndicator,
+  Image,
+  NativeModules,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native'
+import QRCodeSVG from 'react-native-qrcode-svg'
+import {SafeAreaView} from 'react-native-safe-area-context'
+import {useSelector} from 'react-redux'
 
 import copyImage from '../../assets/img/copyd.png'
 import {confirmationMessages} from '../../i18n/global-messages'
 import {WALLET_ROOT_ROUTES} from '../../RoutesList'
-import {Button, ProgressStep, Text} from '../UiKit'
+import {encryptedKeySelector} from '../../selectors'
+import {COLORS} from '../../styles/config'
+import {Button, ProgressStep, Spacer, Text} from '../UiKit'
 import CatalystBackupCheckModal from './CatalystBackupCheckModal'
-import styles from './styles/Step6.style'
+import {Actions, Description, Title} from './components'
+
+const {FlagSecure} = NativeModules
+
+const Step6 = () => {
+  const strings = useStrings()
+  const encryptedKey = useSelector(encryptedKeySelector)
+  const navigation = useNavigation()
+  const [countDown, setCountDown] = useState<number>(5)
+
+  useEffect(() => {
+    countDown > 0 && setTimeout(() => setCountDown(countDown - 1), 1000)
+  }, [countDown])
+
+  const [showBackupWarningModal, setShowBackupWarningModal] = useState<boolean>(false)
+
+  useFocusEffect(
+    // eslint-disable-next-line consistent-return
+    React.useCallback(() => {
+      if (Platform.OS === 'android') {
+        FlagSecure.deactivate()
+
+        return () => {
+          FlagSecure.activate()
+        }
+      }
+    }, []),
+  )
+
+  return (
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
+      <ProgressStep currentStep={6} totalSteps={6} />
+
+      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
+        <Spacer height={48} />
+
+        <Title>{strings.subTitle}</Title>
+
+        <Spacer height={16} />
+
+        <AlertBox>
+          <Text>{strings.description}</Text>
+        </AlertBox>
+
+        <Spacer height={16} />
+
+        <Description>{strings.description2}</Description>
+
+        <Spacer height={16} />
+
+        <Description>{strings.description3}</Description>
+
+        <Spacer height={16} />
+
+        <Text style={styles.note}>{strings.note}</Text>
+
+        <Spacer height={32} />
+
+        {encryptedKey ? <QRCode text={encryptedKey} /> : <ActivityIndicator size={'large'} color={'black'} />}
+
+        <Spacer height={32} />
+
+        <Text>{strings.secretCode}</Text>
+
+        <SecretCodeBox>
+          <Text style={{flex: 1}}>{encryptedKey}</Text>
+          <Spacer width={16} />
+          <CopyButton text={encryptedKey || ''} />
+        </SecretCodeBox>
+      </ScrollView>
+
+      <Actions>
+        <Button
+          onPress={() => setShowBackupWarningModal(true)}
+          title={countDown !== 0 ? countDown.toString() : strings.completeButton}
+          disabled={countDown !== 0}
+        />
+      </Actions>
+
+      <CatalystBackupCheckModal
+        visible={showBackupWarningModal}
+        onRequestClose={() => setShowBackupWarningModal(false)}
+        onConfirm={() => navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)}
+      />
+    </SafeAreaView>
+  )
+}
+
+export default Step6
+
+const AlertBox = (props) => <View {...props} style={styles.alertBox} />
+const QRCode = ({text}: {text: string}) => (
+  <View style={styles.qrCodeBackground}>
+    <QRCodeSVG value={text} size={140} backgroundColor="white" color="black" />
+  </View>
+)
+const SecretCodeBox = (props) => <View {...props} style={styles.secretCodeBox} />
+const CopyButton = ({text}: {text: string}) => (
+  <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center'}} onPress={() => Clipboard.setString(text)}>
+    <Image source={copyImage} />
+  </TouchableOpacity>
+)
 
 const messages = defineMessages({
   subTitle: {
@@ -53,106 +159,47 @@ const messages = defineMessages({
   },
 })
 
-const {FlagSecure} = NativeModules
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  alertBox: {
+    padding: 16,
+    backgroundColor: COLORS.BACKGROUND_LIGHT_RED,
+    borderRadius: 8,
+  },
+  contentContainer: {
+    paddingHorizontal: 16,
+  },
+  note: {
+    color: '#242838',
+    fontWeight: 'bold',
+  },
+  qrCodeBackground: {
+    borderRadius: 8,
+    padding: 16,
+    backgroundColor: '#F0F3F5',
+    alignSelf: 'center',
+  },
+  secretCodeBox: {
+    backgroundColor: '#F0F3F5',
+    borderRadius: 8,
+    padding: 16,
+    flexDirection: 'row',
+  },
+})
 
-type Props = {
-  intl: IntlShape,
-  encryptedKey: string,
-}
+const useStrings = () => {
+  const intl = useIntl()
 
-const Step6 = ({intl, encryptedKey}: Props) => {
-  const navigation = useNavigation()
-  const [countDown, setCountDown] = useState<number>(5)
-
-  useEffect(() => {
-    countDown > 0 && setTimeout(() => setCountDown(countDown - 1), 1000)
-  }, [countDown])
-
-  const [showBackupWarningModal, setShowBackupWarningModal] = useState<boolean>(false)
-
-  useFocusEffect(
-    // eslint-disable-next-line consistent-return
-    React.useCallback(() => {
-      if (Platform.OS === 'android') {
-        // enable screenshots
-        FlagSecure.deactivate()
-
-        return () => {
-          // disable screenshots
-          // recall: this clean up function returned by useFocusEffect is run
-          // automatically by react on blur
-          FlagSecure.activate()
-        }
-      }
-    }, []),
-  )
-
-  const _copyKey = () => {
-    Clipboard.setString(encryptedKey)
+  return {
+    subTitle: intl.formatMessage(messages.subTitle),
+    description: intl.formatMessage(messages.description),
+    description2: intl.formatMessage(messages.description2),
+    description3: intl.formatMessage(messages.description3),
+    note: intl.formatMessage(messages.note),
+    secretCode: intl.formatMessage(messages.secretCode),
+    completeButton: intl.formatMessage(confirmationMessages.commonButtons.completeButton),
   }
-
-  return (
-    <SafeAreaView style={styles.safeAreaView}>
-      <ProgressStep currentStep={6} totalSteps={6} />
-      <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollViewContentContainer}>
-          <Text style={styles.subTitle}>{intl.formatMessage(messages.subTitle)}</Text>
-          <View style={[styles.alertBlock, styles.mb16]}>
-            <Text style={styles.description}>{intl.formatMessage(messages.description)}</Text>
-          </View>
-          <Text style={[styles.description, styles.mb16]}>{intl.formatMessage(messages.description2)}</Text>
-          <Text style={[styles.description, styles.mb16]}>{intl.formatMessage(messages.description3)}</Text>
-          <Text style={[styles.note, styles.mb40]}>{intl.formatMessage(messages.note)}</Text>
-          {/* for some reason style arrays have issues in current flow version.
-             so a regular object spread has been used here */}
-          <View style={{...styles.qrCode, ...styles.mb40}}>
-            <View style={styles.qrCodeBackground}>
-              <QRCode value={encryptedKey} size={140} backgroundColor="white" color="black" />
-            </View>
-          </View>
-          <View>
-            <Text style={[styles.description, styles.mb16]}>{intl.formatMessage(messages.secretCode)}</Text>
-            <View style={styles.secretCode}>
-              <View style={styles.key}>
-                <Text>{encryptedKey}</Text>
-              </View>
-              <View style={styles.copyButton}>
-                <TouchableOpacity onPress={_copyKey}>
-                  <Image source={copyImage} />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </ScrollView>
-        <Button
-          onPress={() => setShowBackupWarningModal(true)}
-          title={
-            countDown !== 0
-              ? countDown.toString()
-              : intl.formatMessage(confirmationMessages.commonButtons.completeButton)
-          }
-          disabled={countDown !== 0}
-        />
-        <CatalystBackupCheckModal
-          visible={showBackupWarningModal}
-          onRequestClose={() => setShowBackupWarningModal(false)}
-          onConfirm={() => navigation.navigate(WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES)}
-        />
-      </View>
-    </SafeAreaView>
-  )
 }
-
-export default (injectIntl(
-  connect(
-    (state) => ({
-      encryptedKey: state.voting.encryptedKey,
-    }),
-    {},
-    (state, dispatchProps, ownProps) => ({
-      ...state,
-      ...dispatchProps,
-      ...ownProps,
-    }),
-  )(Step6),
-): ComponentType<{}>)
