@@ -4,7 +4,7 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {ModalStoryWrapper} from '../../../storybook'
+import {WithModalProps} from '../../../storybook'
 import AddressVerifyModal from './AddressVerifyModal'
 
 const address =
@@ -12,7 +12,7 @@ const address =
 
 storiesOf('AddressVerifyModal', module)
   .add('default', () => (
-    <ModalStoryWrapper>
+    <WithModalProps>
       {({visible, onRequestClose}) => (
         <AddressVerifyModal
           useUSB={false}
@@ -24,10 +24,10 @@ storiesOf('AddressVerifyModal', module)
           onRequestClose={onRequestClose}
         />
       )}
-    </ModalStoryWrapper>
+    </WithModalProps>
   ))
   .add('isWaiting', () => (
-    <ModalStoryWrapper>
+    <WithModalProps>
       {({visible, onRequestClose}) => (
         <AddressVerifyModal
           useUSB={false}
@@ -39,10 +39,10 @@ storiesOf('AddressVerifyModal', module)
           onRequestClose={onRequestClose}
         />
       )}
-    </ModalStoryWrapper>
+    </WithModalProps>
   ))
   .add('useUSB', () => (
-    <ModalStoryWrapper>
+    <WithModalProps>
       {({visible, onRequestClose}) => (
         <AddressVerifyModal
           useUSB
@@ -54,5 +54,5 @@ storiesOf('AddressVerifyModal', module)
           onRequestClose={onRequestClose}
         />
       )}
-    </ModalStoryWrapper>
+    </WithModalProps>
   ))
