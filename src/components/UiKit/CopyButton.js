@@ -13,8 +13,9 @@ export type CopyButtonProps = {|
 
 export const CopyButton = ({value}: CopyButtonProps) => {
   const [isCopying, copy] = useCopy()
+
   return (
-    <TouchableOpacity accessibilityRole="button" onPress={() => copy(value)} disabled={isCopying}>
+    <TouchableOpacity onPress={() => copy(value)} disabled={isCopying}>
       <Image source={isCopying ? copiedIcon : copyIcon} />
     </TouchableOpacity>
   )
