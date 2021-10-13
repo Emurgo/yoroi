@@ -31,11 +31,11 @@ bluebird.config({
 */
 global.Promise = bluebird
 
-global.onunhandledrejection = (e) => handleGeneralError(e.message, e)
+const cache = createIntlCache()
+const intl = createIntl({locale: 'en-US', messages: translations['en-US']}, cache)
+global.onunhandledrejection = (e) => handleGeneralError(e.message, e, intl)
 
 const AppWithProviders = () => {
-  const cache = createIntlCache()
-  createIntl({locale: 'en-US', messages: translations['en-US']}, cache)
   const store = getConfiguredStore()
   store.dispatch(setupHooks())
 

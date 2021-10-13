@@ -11,7 +11,6 @@ import {useSelector} from 'react-redux'
 import arrowDown from '../../assets/img/chevron_down.png'
 import arrowUp from '../../assets/img/chevron_up.png'
 import Screen from '../../components/Screen'
-import Copy from '../../components/UiKit/Copy'
 import {getNetworkConfigById} from '../../config/networks'
 import {MultiToken} from '../../crypto/MultiToken'
 import globalMessages from '../../i18n/global-messages'
@@ -28,7 +27,7 @@ import {formatTokenWithSymbol} from '../../utils/format'
 import AssetList from '../Common/MultiAsset/AssetList'
 import assetListStyle from '../Common/MultiAsset/styles/AssetListTransaction.style'
 import AddressModal from '../Receive/AddressModal'
-import {Banner, Button, OfflineBanner, StatusBar, Text} from '../UiKit'
+import {Banner, Button, CopyButton, OfflineBanner, StatusBar, Text} from '../UiKit'
 import styles from './styles/TxDetails.style'
 
 const txTypeMessages = defineMessages({
@@ -308,7 +307,7 @@ const TxDetails = () => {
               <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">
                 {transaction.id}
               </Text>
-              <Copy value={transaction.id} />
+              <CopyButton value={transaction.id} />
             </View>
             <Button onPress={openInExplorer} title={intl.formatMessage(messages.openInExplorer)} />
           </View>
