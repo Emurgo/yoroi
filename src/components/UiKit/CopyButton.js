@@ -9,13 +9,20 @@ import {useCopy} from '../../utils/useCopy'
 
 export type CopyButtonProps = {|
   value: string,
+  onCopy?: () => void,
 |}
 
-export const CopyButton = ({value}: CopyButtonProps) => {
+export const CopyButton = ({value, onCopy}: CopyButtonProps) => {
   const [isCopying, copy] = useCopy()
 
   return (
-    <TouchableOpacity onPress={() => copy(value)} disabled={isCopying}>
+    <TouchableOpacity
+      onPress={() => {
+        copy(value)
+        onCopy?.()
+      }}
+      disabled={isCopying}
+    >
       <Image source={isCopying ? copiedIcon : copyIcon} />
     </TouchableOpacity>
   )
