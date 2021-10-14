@@ -1,54 +1,35 @@
 // @flow
 
-/**
- * Step 3 for the Catalyst registration
- * Confirm PIN generated in previous step
- */
-
 import {useNavigation} from '@react-navigation/native'
-import _ from 'lodash'
-import type {ComponentType} from 'react'
 import React, {useEffect, useState} from 'react'
-import type {IntlShape} from 'react-intl'
-import {defineMessages, injectIntl} from 'react-intl'
-import {SafeAreaView, View} from 'react-native'
-import {connect} from 'react-redux'
+import {defineMessages, useIntl} from 'react-intl'
+import {ScrollView, StyleSheet, View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
+import {useDispatch, useSelector} from 'react-redux'
 
 import {showErrorDialog} from '../../actions'
-import {generateVotingKeys, generateVotingTransaction} from '../../actions/voting'
+import {generateVotingKeys} from '../../actions/voting'
 import {errorMessages} from '../../i18n/global-messages'
 import {CATALYST_ROUTES} from '../../RoutesList'
 import {isHWSelector} from '../../selectors'
 import PinInputKeyboard from '../Common/PinInputKeyboard'
-import {ProgressStep, Text} from '../UiKit'
-import styles from './styles/Step3.style'
-
-const messages = defineMessages({
-  subTitle: {
-    id: 'components.catalyst.step3.subTitle',
-    defaultMessage: '!!!Enter PIN',
-  },
-  description: {
-    id: 'components.catalyst.step3.description',
-    defaultMessage: '!!!Please enter the PIN as you will need it every time you want to access the Catalyst Voting app',
-  },
-})
+import {ProgressStep, Spacer} from '../UiKit'
+import {Description, PinBox, Row, Title} from './components'
 
 const PIN_LENGTH = 4
 
-type Props = {
-  pin: Array<String>,
-  isHW: boolean,
-  intl: IntlShape,
-}
-
-const Step3 = ({intl, pin, isHW}: Props) => {
+const Step3 = () => {
+  const intl = useIntl()
+  const strings = useStrings()
   const navigation = useNavigation()
+  const pin = useSelector((state) => state.voting.pin)
+  const isHW = useSelector(isHWSelector)
   const [confirmPin, setPin] = useState('')
 
+  const dispatch = useDispatch()
   useEffect(() => {
-    generateVotingKeys()
-  }, [])
+    dispatch(generateVotingKeys())
+  }, [dispatch])
 
   const pinChange = (enteredPin: string) => {
     setPin(enteredPin)
@@ -64,50 +45,70 @@ const Step3 = ({intl, pin, isHW}: Props) => {
       }
     }
   }
-  const pinCards = (
-    <View style={styles.pinContainer}>
-      {_.range(0, PIN_LENGTH).map((value, index) => {
-        return (
-          <View
-            key={index}
-            style={[
-              styles.pin,
-              index < PIN_LENGTH - 1 && styles.mr10,
-              index === confirmPin.length ? styles.pinHighlight : styles.pinNormal,
-              index > confirmPin.length && styles.pinInactive,
-            ]}
-          >
-            <Text style={styles.pinNumber}>{confirmPin[index]}</Text>
-          </View>
-        )
-      })}
-    </View>
-  )
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaView edges={['left', 'right']} style={styles.safeAreaView}>
       <ProgressStep currentStep={3} totalSteps={6} />
-      <View style={styles.container}>
-        <View>
-          <Text style={styles.subTitle}>{intl.formatMessage(messages.subTitle)}</Text>
-          <Text style={styles.description}>{intl.formatMessage(messages.description)}</Text>
-        </View>
-        {pinCards}
+
+      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
+        <Spacer height={48} />
+
+        <Title>{strings.subTitle}</Title>
+
+        <Spacer height={16} />
+
+        <Description>{strings.description}</Description>
+
+        <Spacer height={48} />
+
+        <Row style={{justifyContent: 'center'}}>
+          <PinBox selected={confirmPin.length === 0}>{confirmPin[0]}</PinBox>
+          <Spacer width={16} />
+          <PinBox selected={confirmPin.length === 1}>{confirmPin[1]}</PinBox>
+          <Spacer width={16} />
+          <PinBox selected={confirmPin.length === 2}>{confirmPin[2]}</PinBox>
+          <Spacer width={16} />
+          <PinBox selected={confirmPin.length === 3}>{confirmPin[3]}</PinBox>
+        </Row>
+      </ScrollView>
+
+      <Spacer fill />
+
+      <View style={{height: 250}}>
+        <PinInputKeyboard pinLength={PIN_LENGTH} onPinChange={pinChange} />
       </View>
-      <PinInputKeyboard pinLength={PIN_LENGTH} onPinChange={pinChange} />
     </SafeAreaView>
   )
 }
 
-export default (injectIntl(
-  connect(
-    (state) => ({
-      pin: state.voting.pin,
-      isHW: isHWSelector(state),
-    }),
-    {
-      generateVotingKeys,
-      generateVotingTransaction,
-    },
-  )(Step3),
-): ComponentType<{}>)
+export default Step3
+
+const messages = defineMessages({
+  subTitle: {
+    id: 'components.catalyst.step3.subTitle',
+    defaultMessage: '!!!Enter PIN',
+  },
+  description: {
+    id: 'components.catalyst.step3.description',
+    defaultMessage: '!!!Please enter the PIN as you will need it every time you want to access the Catalyst Voting app',
+  },
+})
+
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  contentContainer: {
+    paddingHorizontal: 16,
+  },
+})
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    subTitle: intl.formatMessage(messages.subTitle),
+    description: intl.formatMessage(messages.description),
+  }
+}

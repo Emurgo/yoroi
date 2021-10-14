@@ -16,7 +16,9 @@ storiesOf('SendScreen', module)
       amount: new BigNumber(12344.00234523),
     }
 
-    return <SendScreen sendAll={false} onSendAll={action('onSendAll')} selectedAsset={selectedAsset} />
+    return (
+      <SendScreen sendAll={false} onSendAll={action('onSendAll')} selectedTokenIdentifier={selectedAsset.identifier} />
+    )
   })
   .add('sendAll', () => {
     const selectedAsset: TokenEntry = {
@@ -25,5 +27,7 @@ storiesOf('SendScreen', module)
       amount: new BigNumber(12344.00234523),
     }
 
-    return <SendScreen sendAll={true} onSendAll={action('onSendAll')} selectedAsset={selectedAsset} />
+    return (
+      <SendScreen sendAll={true} onSendAll={action('onSendAll')} selectedTokenIdentifier={selectedAsset.identifier} />
+    )
   })

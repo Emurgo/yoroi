@@ -1,11 +1,15 @@
 // @flow
 
+import {action} from '@storybook/addon-actions'
+import type {Node} from 'react'
 import React from 'react'
 import {Button, View} from 'react-native'
-import {action} from '@storybook/addon-actions'
 
-import type {Node} from 'react'
-export const ModalStoryWrapper = ({children}: {children: ({visible: boolean, onRequestClose: () => any}) => Node}) => {
+export const WithModalProps = ({
+  children,
+}: {
+  children: ({|visible: boolean, onRequestClose: () => any, onPress: () => any|}) => Node,
+}) => {
   const [visible, setVisible] = React.useState(false) // weird behavior when starting with visible: true
 
   React.useEffect(() => {
@@ -29,4 +33,4 @@ export const ModalStoryWrapper = ({children}: {children: ({visible: boolean, onR
   )
 }
 
-export const withModalProps = (Story: any) => <ModalStoryWrapper>{(props) => <Story {...props} />}</ModalStoryWrapper>
+export const withModalProps = (Story: any) => <WithModalProps>{(props) => <Story {...props} />}</WithModalProps>

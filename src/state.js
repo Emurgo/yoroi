@@ -191,6 +191,18 @@ export const mockState = (): State => {
   }
   return {
     ...getInitialState(),
+    voting: {
+      pin: [1, 2, 3, 4],
+      catalystPrivateKey: 'catalystPrivateKey',
+      encryptedKey:
+        'encryptedKey-' +
+        '29ct472073n40t2nc0tyxin347ytco127iy3n4cotimxy3' +
+        '29ct472073n40t2nc0tyxin347ytco127iy3n4cotimxy3' +
+        '29ct472073n40t2nc0tyxin347ytco127iy3n4cotimxy3' +
+        '29ct472073n40t2nc0tyxin347ytco127iy3n4cotimxy3' +
+        '-encryptedKey',
+      unsignedTx: undefined,
+    },
     wallet: {
       name: 'My wallet',
       isInitialized: true,
@@ -212,12 +224,17 @@ export const mockState = (): State => {
         'addr1qxm8czpthhgsuge2hqhkvteuz6vkq7tn8mpfux0uceq5t5zuvu2ffa2ctx3pdl4rjjja5p7al2k356x5yx8cn03am88sh4ngaf',
         'addr1qx6l240ymk90xyr09wddj94fmpsnc8mg7cnn7r4j8p8sava47427fhv27vgx72u6myt2nkrp8s0k3a388u8tywz0p6esdd2kxc',
         'addr1qx4ygptze0lvw0caqmcc4vwha68mwhpx63m6s5zlt6457g7apxz0l64qu4gg6dy43dtp34y7uua5ssdvnurc7pp4adnqzd6cxt',
+        'addr1qxxvt9rzpdxxysmqp50d7f5a3gdescgrejsu7zsdxqjy8yun4cngaq46gr8c9qyz4td9ddajzqhjnrqvfh0gspzv9xnsmq6nqx',
+        'addr1qxkzwsv9juc3p0jpp2t8mpzmrv9ltv20kpaquzkn935ukkun4cngaq46gr8c9qyz4td9ddajzqhjnrqvfh0gspzv9xnseec2jj',
+        'addr1qx9037h4j5xncnhanlkx4t6xu4egjfpwcx9upstld0jvkkyn4cngaq46gr8c9qyz4td9ddajzqhjnrqvfh0gspzv9xnsvs46uq',
+        'addr1qx20jpehj8xj8dmv3zx6vapm2zn8htrsvmdyy4wls4hkq7yn4cngaq46gr8c9qyz4td9ddajzqhjnrqvfh0gspzv9xns54lvgw',
       ],
       isUsedAddressIndex: {
         addr1qxm8czpthhgsuge2hqhkvteuz6vkq7tn8mpfux0uceq5t5zuvu2ffa2ctx3pdl4rjjja5p7al2k356x5yx8cn03am88sh4ngaf: true,
         addr1qx4ygptze0lvw0caqmcc4vwha68mwhpx63m6s5zlt6457g7apxz0l64qu4gg6dy43dtp34y7uua5ssdvnurc7pp4adnqzd6cxt: true,
+        addr1qx9037h4j5xncnhanlkx4t6xu4egjfpwcx9upstld0jvkkyn4cngaq46gr8c9qyz4td9ddajzqhjnrqvfh0gspzv9xnsvs46uq: true,
       },
-      numReceiveAddresses: 4,
+      numReceiveAddresses: 8,
       rewardAddressHex: null,
       confirmationCounts: {},
       canGenerateNewReceiveAddress: true,

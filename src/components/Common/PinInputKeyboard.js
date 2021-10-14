@@ -1,13 +1,11 @@
 // @flow
 
 import React, {useState} from 'react'
-import {Image, TouchableHighlight, View} from 'react-native'
-import SafeAreaView from 'react-native-safe-area-view'
+import {Image, StyleSheet, TouchableHighlight, View} from 'react-native'
 
 import backspaceIcon from '../../assets/img/backspace.png'
 import utfSymbols from '../../utils/utfSymbols'
 import {Text} from '../UiKit'
-import styles from './styles/PinInputKeyboard.style'
 
 const BACKSPACE = utfSymbols.ERASE_TO_LEFT
 
@@ -65,24 +63,56 @@ const PinInputKeyboard = ({onPinChange, pinLength}: Props) => {
   }
 
   return (
-    <SafeAreaView style={styles.keyboardSafeAreaView}>
-      <View style={styles.keyboard}>
-        {keyboard.map((row, rowIndex) => (
-          <View key={rowIndex} style={styles.keyboardRow}>
-            {row.map((value, index) => (
-              <KeyboardKey
-                key={index}
-                value={value}
-                onKeyDown={(value) => {
-                  processPin(pin, updatePin, pinLength, value)
-                }}
-              />
-            ))}
-          </View>
+    <View style={styles.keyboard}>
+      <Row>
+        {keyboard[0].map((value) => (
+          <KeyboardKey key={value} value={value} onKeyDown={(value) => processPin(pin, updatePin, pinLength, value)} />
         ))}
-      </View>
-    </SafeAreaView>
+      </Row>
+
+      <Row>
+        {keyboard[1].map((value) => (
+          <KeyboardKey key={value} value={value} onKeyDown={(value) => processPin(pin, updatePin, pinLength, value)} />
+        ))}
+      </Row>
+
+      <Row>
+        {keyboard[2].map((value) => (
+          <KeyboardKey key={value} value={value} onKeyDown={(value) => processPin(pin, updatePin, pinLength, value)} />
+        ))}
+      </Row>
+    </View>
   )
 }
 
 export default PinInputKeyboard
+
+const Row = (props) => <View {...props} style={styles.keyboardRow} />
+
+const styles = StyleSheet.create({
+  keyboard: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  keyboardRow: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  keyboardKey: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderTopWidth: 2 * StyleSheet.hairlineWidth,
+    borderLeftWidth: StyleSheet.hairlineWidth,
+    borderRightWidth: StyleSheet.hairlineWidth,
+    borderColor: '#B7B7B7',
+  },
+  keyboardKeyDisabled: {
+    backgroundColor: '#D8D8D8',
+  },
+  keyboardKeyText: {
+    fontSize: 30,
+    lineHeight: 35,
+    textAlign: 'center',
+  },
+})

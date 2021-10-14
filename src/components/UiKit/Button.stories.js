@@ -3,19 +3,50 @@
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {ScrollView, StyleSheet, View} from 'react-native'
 
+import icon from '../../assets/img/icon/dashboard.png'
 import Button from './Button'
 
+storiesOf('Button', module).add('default', () => (
+  <ScrollView>
+    <Row>
+      <Button onPress={() => action('onPress')()} title="Submit" />
+    </Row>
+
+    <Row>
+      <Button block onPress={() => action('onPress')()} title="submit" />
+    </Row>
+
+    <Row>
+      <Button block shelleyTheme onPress={() => action('onPress')()} title="Submit" />
+    </Row>
+
+    <Row>
+      <Button outlineOnLight block shelleyTheme onPress={() => action('onPress')()} title="Submit" />
+    </Row>
+
+    <Row>
+      <Button outlineOnLight block onPress={() => action('onPress')()} title="Submit" />
+    </Row>
+
+    <Row>
+      <Button outlineShelley withoutBackground shelleyTheme block onPress={() => action('onPress')()} title="Submit" />
+    </Row>
+
+    <Row>
+      <Button block shelleyTheme iconImage={icon} onPress={() => action('onPress')()} title="Submit, with image" />
+    </Row>
+  </ScrollView>
+))
+
+const Row = (props) => <View {...props} style={styles.row} />
+
 const styles = StyleSheet.create({
-  button: {
+  row: {
     flexDirection: 'row',
-    marginTop: 12,
-    marginHorizontal: 10,
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
   },
 })
-
-storiesOf('Button', module)
-  .addDecorator((getStory) => <View style={styles.button}>{getStory()}</View>)
-  .add('with Shelley theme', () => <Button block shelleyTheme onPress={() => action('clicked')()} title="Okay" />)
-  .add('with Byron theme', () => <Button block onPress={() => action('clicked')()} title="Okay" />)

@@ -1,14 +1,57 @@
 // @flow
 
 import React from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, View} from 'react-native'
 
-import {AddressDTOCardano} from '../../crypto/shelley/Address.dto'
 import {confirmationMessages} from '../../i18n/global-messages'
 import HWInstructions from '../Ledger/HWInstructions'
 import {Button, Modal, Text} from '../UiKit'
 import styles from './styles/AddressVerifyModal.style'
+
+type Props = {|
+  visible: boolean,
+  onConfirm: () => mixed,
+  onRequestClose: () => any,
+  address: string,
+  path: string,
+  isWaiting: boolean,
+  useUSB: boolean,
+|}
+
+const AddressVerifyModal = ({visible, onConfirm, onRequestClose, address, path, isWaiting, useUSB}: Props) => {
+  const strings = useStrings()
+
+  return (
+    <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.heading}>
+          <Text style={styles.title}>{strings.title}</Text>
+        </View>
+
+        <HWInstructions useUSB={useUSB} />
+
+        <Text style={styles.paragraph}>{strings.afterConfirm}</Text>
+
+        <View style={styles.addressDetailsView}>
+          <Text secondary style={styles.paragraph}>
+            {address}
+          </Text>
+
+          <Text secondary style={styles.paragraph}>
+            {path}
+          </Text>
+        </View>
+
+        <Button onPress={onConfirm} title={strings.confirmButton} style={styles.button} disabled={isWaiting} />
+
+        {isWaiting && <ActivityIndicator />}
+      </ScrollView>
+    </Modal>
+  )
+}
+
+export default AddressVerifyModal
 
 const messages = defineMessages({
   title: {
@@ -24,51 +67,12 @@ const messages = defineMessages({
   },
 })
 
-type Props = {|
-  intl: IntlShape,
-  visible: boolean,
-  onConfirm: () => void,
-  onRequestClose: () => any,
-  addressInfo: AddressDTOCardano,
-  path: string,
-  isWaiting: boolean,
-  useUSB: boolean,
-|}
+const useStrings = () => {
+  const intl = useIntl()
 
-const AddressVerifyModal = ({
-  intl,
-  visible,
-  onConfirm,
-  onRequestClose,
-  addressInfo,
-  path,
-  isWaiting,
-  useUSB,
-}: Props) => (
-  <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
-    <ScrollView style={styles.scrollView}>
-      <View style={styles.heading}>
-        <Text style={styles.title}>{intl.formatMessage(messages.title)}</Text>
-      </View>
-      <HWInstructions useUSB={useUSB} />
-      <Text style={styles.paragraph}>{intl.formatMessage(messages.afterConfirm)}</Text>
-      <View style={styles.addressDetailsView}>
-        <Text secondary style={styles.paragraph}>
-          {addressInfo.address}
-        </Text>
-        <Text secondary style={styles.paragraph}>
-          {path}
-        </Text>
-      </View>
-      <Button
-        onPress={onConfirm}
-        title={intl.formatMessage(confirmationMessages.commonButtons.confirmButton)}
-        style={styles.button}
-        disabled={isWaiting}
-      />
-      {isWaiting && <ActivityIndicator />}
-    </ScrollView>
-  </Modal>
-)
-
-export default injectIntl(AddressVerifyModal)
+  return {
+    title: intl.formatMessage(messages.title),
+    afterConfirm: intl.formatMessage(messages.afterConfirm),
+    confirmButton: intl.formatMessage(confirmationMessages.commonButtons.confirmButton),
+  }
+}

@@ -1,11 +1,72 @@
 // @flow
 
-import React from 'react'
+import React, {type ElementConfig} from 'react'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
-import {type PressEvent} from 'react-native/Libraries/Types/CoreEventTypes'
 
 import {colors} from '../../styles/config'
 import Text from './Text'
+
+type Props = {|
+  ...ElementConfig<typeof TouchableOpacity>,
+  title: string,
+  outline?: boolean,
+  outlineOnLight?: boolean,
+  containerStyle?: Object,
+  block?: boolean,
+  iconImage?: number,
+  withoutBackground?: boolean,
+  shelleyTheme?: boolean,
+  outlineShelley?: boolean,
+|}
+
+export const Button = (props: Props) => {
+  const {
+    onPress,
+    title,
+    block,
+    style,
+    containerStyle,
+    outline,
+    outlineOnLight,
+    iconImage,
+    withoutBackground,
+    shelleyTheme,
+    outlineShelley,
+    ...rest
+  } = props
+
+  return (
+    <TouchableOpacity onPress={onPress} style={[block && styles.block, containerStyle]} activeOpacity={0.5} {...rest}>
+      <View
+        style={[
+          styles.button,
+          outline && styles.buttonOutline,
+          outlineOnLight && styles.buttonOutlineOnLight,
+          props.disabled && styles.buttonDisabled,
+          withoutBackground && styles.buttonTransparent,
+          outlineShelley && styles.buttonOutlineShelley,
+          shelleyTheme && styles.shelleyTheme,
+          outlineOnLight && shelleyTheme && styles.shelleyOutlineOnLight,
+          style,
+        ]}
+      >
+        {iconImage != null && <Image source={iconImage} />}
+        <Text
+          style={[
+            styles.text,
+            outlineOnLight && styles.textOutlineOnLight,
+            outlineOnLight && shelleyTheme && styles.textShelleyOutlineOnLight,
+            outlineShelley && styles.textOutlineShelley,
+          ]}
+        >
+          {title}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  )
+}
+
+export default Button
 
 const buttonOutline = {
   borderWidth: 1,
@@ -45,6 +106,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     padding: 8,
     fontSize: 14,
+    textTransform: 'uppercase',
   },
   textOutlineOnLight: {
     color: colors.buttonBackground,
@@ -68,85 +130,3 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 })
-
-type ButtonProps = {
-  title: string,
-  onPress: (event: PressEvent) => mixed,
-  color?: ?string,
-  accessibilityLabel?: ?string,
-  disabled?: ?boolean,
-  outline?: boolean,
-  outlineOnLight?: boolean,
-  style?: Object,
-  containerStyle?: Object,
-  block?: boolean,
-  iconImage?: number,
-  withoutBackground?: boolean,
-  shelleyTheme?: boolean,
-  outlineShelley?: boolean,
-  testID?: string,
-}
-
-// eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
-class Button extends React.Component<ButtonProps> {
-  render() {
-    const {
-      accessibilityLabel,
-      onPress,
-      title,
-      disabled,
-      block,
-      style,
-      containerStyle,
-      outline,
-      outlineOnLight,
-      iconImage,
-      withoutBackground,
-      shelleyTheme,
-      outlineShelley,
-      testID,
-    } = this.props
-
-    const formattedTitle = title && title.toUpperCase()
-
-    return (
-      <TouchableOpacity
-        accessibilityLabel={accessibilityLabel}
-        accessibilityRole="button"
-        disabled={disabled}
-        onPress={onPress}
-        style={[block === true && styles.block, containerStyle]}
-        activeOpacity={0.5}
-        testID={testID}
-      >
-        <View
-          style={[
-            styles.button,
-            outline === true && styles.buttonOutline,
-            outlineOnLight === true && styles.buttonOutlineOnLight,
-            disabled === true && styles.buttonDisabled,
-            withoutBackground === true && styles.buttonTransparent,
-            outlineShelley === true && styles.buttonOutlineShelley,
-            shelleyTheme === true && styles.shelleyTheme,
-            outlineOnLight === true && shelleyTheme === true && styles.shelleyOutlineOnLight,
-            style,
-          ]}
-        >
-          {iconImage != null && <Image source={iconImage} />}
-          <Text
-            style={[
-              styles.text,
-              outlineOnLight === true && styles.textOutlineOnLight,
-              outlineOnLight === true && shelleyTheme === true && styles.textShelleyOutlineOnLight,
-              outlineShelley === true && styles.textOutlineShelley,
-            ]}
-          >
-            {formattedTitle}
-          </Text>
-        </View>
-      </TouchableOpacity>
-    )
-  }
-}
-
-export default Button
