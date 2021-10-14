@@ -35,7 +35,7 @@ type Props = {|
     totalSteps: number,
   },
   containerStyle?: ViewStyleProp,
-  buttonStyle?: TextStyleProp,
+  buttonStyle?: ViewStyleProp,
   topContent?: React$Node,
   bottomContent?: React$Node,
   isWaiting?: boolean,
