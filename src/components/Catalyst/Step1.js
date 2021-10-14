@@ -1,16 +1,11 @@
 // @flow
 
-/**
- * Step 1 for the Catalyst registration - landing
- */
-
 import {useNavigation} from '@react-navigation/native'
-import type {ComponentType} from 'react'
 import React, {useEffect, useState} from 'react'
-import type {IntlShape} from 'react-intl'
-import {defineMessages, injectIntl} from 'react-intl'
-import {Image, Linking, SafeAreaView, ScrollView, TouchableOpacity, View} from 'react-native'
-import {connect} from 'react-redux'
+import {defineMessages, useIntl} from 'react-intl'
+import {Image, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
+import {useDispatch, useSelector} from 'react-redux'
 
 import {fetchUTXOs} from '../../actions/utxo'
 import {generateVotingKeys} from '../../actions/voting'
@@ -21,8 +16,113 @@ import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
 import {CATALYST_ROUTES} from '../../RoutesList'
 import {isDelegatingSelector} from '../../selectors'
 import StandardModal from '../Common/StandardModal'
-import {Button, ProgressStep, Text} from '../UiKit'
-import styles from './styles/Step1.style'
+import {Button, ProgressStep, Spacer, Text} from '../UiKit'
+import {Actions, Row} from './components'
+
+const Step1 = () => {
+  const strings = useStrings()
+  const navigation = useNavigation()
+  const isDelegating = useSelector(isDelegatingSelector)
+  const [showModal, setShowModal] = useState<boolean>(!isDelegating)
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(fetchUTXOs())
+    dispatch(generateVotingKeys())
+  }, [dispatch])
+
+  return (
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
+      <ProgressStep currentStep={1} totalSteps={6} />
+
+      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
+        <Spacer height={48} />
+
+        <Text style={styles.text}>{strings.subTitle}</Text>
+
+        <Spacer height={48} />
+
+        <Image source={AppDownload} />
+
+        <Spacer height={48} />
+
+        <Row>
+          <AppStoreButton />
+          <Spacer width={16} />
+          <PlayStoreButton />
+        </Row>
+
+        <Spacer height={48} />
+
+        <Tip>
+          <Text>{strings.tip}</Text>
+        </Tip>
+      </ScrollView>
+
+      <Actions>
+        <Button onPress={() => navigation.navigate(CATALYST_ROUTES.STEP2)} title={strings.continueButton} />
+      </Actions>
+
+      <StandardModal
+        visible={showModal}
+        title={strings.attention}
+        onRequestClose={() => setShowModal(false)}
+        primaryButton={{
+          label: strings.iUnderstandButton,
+          onPress: () => setShowModal(false),
+        }}
+        showCloseIcon
+      >
+        <Text>{strings.stakingKeyNotRegistered}</Text>
+      </StandardModal>
+    </SafeAreaView>
+  )
+}
+
+export default Step1
+
+const Tip = (props) => <View {...props} style={styles.tip} />
+
+const PlayStoreButton = () => {
+  const openPlayStore = () => Linking.openURL('https://play.google.com/store/apps/details?id=io.iohk.vitvoting')
+
+  return (
+    <TouchableOpacity onPress={() => openPlayStore()}>
+      <Image source={playstoreBadge} />
+    </TouchableOpacity>
+  )
+}
+
+const AppStoreButton = () => {
+  const openAppStore = () => Linking.openURL('https://apps.apple.com/kg/app/catalyst-voting/id1517473397')
+
+  return (
+    <TouchableOpacity onPress={() => openAppStore()}>
+      <Image source={appstoreBadge} />
+    </TouchableOpacity>
+  )
+}
+
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  contentContainer: {
+    paddingHorizontal: 16,
+    alignItems: 'center',
+  },
+  text: {
+    color: '#38393D',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  tip: {
+    paddingHorizontal: 24,
+  },
+})
 
 const messages = defineMessages({
   subTitle: {
@@ -44,90 +144,15 @@ const messages = defineMessages({
   },
 })
 
-const WarningModalBody = ({intl}: {intl: IntlShape}) => (
-  <View>
-    <Text>{intl.formatMessage(messages.stakingKeyNotRegistered)}</Text>
-  </View>
-)
+const useStrings = () => {
+  const intl = useIntl()
 
-type Props = {
-  intl: IntlShape,
-  generateVotingKeys: () => void,
-  fetchUTXOs: () => Promise<void>,
-  isDelegating: boolean,
-}
-
-const Step1 = ({intl, generateVotingKeys, fetchUTXOs, isDelegating}: Props) => {
-  const navigation = useNavigation()
-  const [showModal, setShowModal] = useState<boolean>(!isDelegating)
-
-  useEffect(() => {
-    fetchUTXOs()
-    generateVotingKeys()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const openAndroidStore = () => {
-    Linking.openURL('https://play.google.com/store/apps/details?id=io.iohk.vitvoting')
+  return {
+    subTitle: intl.formatMessage(messages.subTitle),
+    stakingKeyNotRegistered: intl.formatMessage(messages.stakingKeyNotRegistered),
+    tip: intl.formatMessage(messages.tip),
+    continueButton: intl.formatMessage(confirmationMessages.commonButtons.continueButton),
+    iUnderstandButton: intl.formatMessage(confirmationMessages.commonButtons.iUnderstandButton),
+    attention: intl.formatMessage(globalMessages.attention),
   }
-  const openAppStore = () => {
-    Linking.openURL('https://apps.apple.com/kg/app/catalyst-voting/id1517473397')
-  }
-
-  return (
-    <SafeAreaView style={styles.safeAreaView}>
-      <ProgressStep currentStep={1} totalSteps={6} />
-      <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollViewContentContainer}>
-          <View style={[styles.description, styles.mb40]}>
-            <Text style={styles.text}>{intl.formatMessage(messages.subTitle)}</Text>
-          </View>
-          <View style={styles.images}>
-            <View style={styles.mb40}>
-              <Image source={AppDownload} />
-            </View>
-            <View style={[styles.buttons, styles.mb40]}>
-              <TouchableOpacity onPress={() => openAppStore()}>
-                <Image style={styles.iOS} source={appstoreBadge} />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => openAndroidStore()}>
-                <Image source={playstoreBadge} />
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={styles.description}>
-            <Text style={styles.tip}>{intl.formatMessage(messages.tip)}</Text>
-          </View>
-        </ScrollView>
-        <Button
-          onPress={() => navigation.navigate(CATALYST_ROUTES.STEP2)}
-          title={intl.formatMessage(confirmationMessages.commonButtons.continueButton)}
-        />
-      </View>
-      <StandardModal
-        visible={showModal}
-        title={intl.formatMessage(globalMessages.attention)}
-        onRequestClose={() => setShowModal(false)}
-        primaryButton={{
-          label: intl.formatMessage(confirmationMessages.commonButtons.iUnderstandButton),
-          onPress: () => setShowModal(false),
-        }}
-        showCloseIcon
-      >
-        <WarningModalBody intl={intl} />
-      </StandardModal>
-    </SafeAreaView>
-  )
 }
-
-export default (injectIntl(
-  connect(
-    (state) => ({
-      isDelegating: isDelegatingSelector(state),
-    }),
-    {
-      generateVotingKeys,
-      fetchUTXOs,
-    },
-  )(Step1),
-): ComponentType<{}>)

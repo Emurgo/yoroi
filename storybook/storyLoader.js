@@ -7,6 +7,7 @@
 
 function loadStories() {
   require('../src/components/Catalyst/Catalyst.stories')
+  require('../src/components/Catalyst/VotingBanner.stories')
   require('../src/components/Common/DangerousActionModal.stories')
   require('../src/components/Common/ErrorModal.stories')
   require('../src/components/Common/ExpandableItem.stories')
@@ -25,6 +26,9 @@ function loadStories() {
   require('../src/components/Ledger/LedgerConnect.stories')
   require('../src/components/Ledger/LedgerTransportSwitchModal.stories')
   require('../src/components/MaintenanceScreen.stories')
+  require('../src/components/Receive/AddressModal.stories')
+  require('../src/components/Receive/AddressVerifyModal.stories')
+  require('../src/components/Receive/Addresses/Addresses.stories')
   require('../src/components/Receive/ReceiveScreen.stories')
   require('../src/components/Send/AddressReaderQR.stories')
   require('../src/components/Send/AssetSelectorScreen/AssetSelectorScreen.stories')
@@ -67,6 +71,7 @@ function loadStories() {
 
 const stories = [
   '../src/components/Catalyst/Catalyst.stories',
+  '../src/components/Catalyst/VotingBanner.stories',
   '../src/components/Common/DangerousActionModal.stories',
   '../src/components/Common/ErrorModal.stories',
   '../src/components/Common/ExpandableItem.stories',
@@ -85,6 +90,9 @@ const stories = [
   '../src/components/Ledger/LedgerConnect.stories',
   '../src/components/Ledger/LedgerTransportSwitchModal.stories',
   '../src/components/MaintenanceScreen.stories',
+  '../src/components/Receive/AddressModal.stories',
+  '../src/components/Receive/AddressVerifyModal.stories',
+  '../src/components/Receive/Addresses/Addresses.stories',
   '../src/components/Receive/ReceiveScreen.stories',
   '../src/components/Send/AddressReaderQR.stories',
   '../src/components/Send/AssetSelectorScreen/AssetSelectorScreen.stories',

@@ -4,7 +4,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Image, SafeAreaView, View} from 'react-native'
 import type {ImageSource} from 'react-native/Libraries/Image/ImageSource'
-import type {TextStyleProp, ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
+import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 import {useSelector} from 'react-redux'
 
 import globalMessages from '../../../src/i18n/global-messages'
@@ -35,7 +35,7 @@ type Props = {|
     totalSteps: number,
   },
   containerStyle?: ViewStyleProp,
-  buttonStyle?: TextStyleProp,
+  buttonStyle?: ViewStyleProp,
   topContent?: React$Node,
   bottomContent?: React$Node,
   isWaiting?: boolean,
