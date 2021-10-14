@@ -61,12 +61,11 @@ export const decryptData = async (ciphertext: string, secretKey: string): Promis
   const secretKeyHex = Buffer.from(secretKey, 'utf8').toString('hex')
   try {
     return await decrypt_with_password(secretKeyHex, ciphertext)
-  } catch (e) {
-    if (String(e) === 'Decryption error') {
+  } catch (error) {
+    if (error.message === 'Decryption error') {
       throw new WrongPassword()
     }
-    // note: JS error from rust doesn't set e.message
-    throw new CardanoError(String(e))
+    throw new CardanoError(String(error))
   }
 }
 
