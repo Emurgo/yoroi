@@ -29,10 +29,12 @@ bluebird.config({
   https://github.com/facebook/react-native/issues/19490
   https://github.com/facebook/react-native/issues/17972
 */
+// @ts-ignore
 global.Promise = bluebird
 
 const cache = createIntlCache()
 const intl = createIntl({locale: 'en-US', messages: translations['en-US']}, cache)
+// @ts-ignore
 global.onunhandledrejection = (e) => handleGeneralError(e.message, e, intl)
 
 const AppWithProviders = () => {
