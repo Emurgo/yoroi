@@ -42,15 +42,14 @@ const messages = defineMessages({
 })
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// prettier-ignore
 type AppNavigatorRoutes = {
-  maintenance: any;
-  'screens-index': any;
-  storybook: any;
-  'new-wallet': any;
-  'app-root': any;
-  'custom-pin-auth': any;
-  'bio-auth': any;
+  maintenance: any
+  'screens-index': any
+  storybook: any
+  'new-wallet': any
+  'app-root': any
+  'custom-pin-auth': any
+  'bio-auth': any
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
