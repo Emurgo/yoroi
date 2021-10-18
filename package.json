@@ -32,13 +32,13 @@
     "tsc:cover": "yarn typescript-coverage-report -i '**/*.test.*' -i '**/*.stories*' -t html --threshold=100"
   },
   "lint-staged": {
-    "*.{js,jsx}": [
+    "*./legacy/**/*.{js,jsx}": [
       "eslint --cache --fix --max-warnings=0 --c ./legacy/.eslintrc.js",
       "prettier --write",
       "flow focus-check"
     ],
-    "*.{ts,tsx}": [
-      "eslint --cache --fix --max-warnings=0",
+    "*./src/**/*.{ts,tsx}": [
+      "eslint --cache --fix --max-warnings=0 -c ./src/.eslintrc.js",
       "prettier --write",
       "bash -c tsc -p tsconfig.json --noEmit"
     ],
