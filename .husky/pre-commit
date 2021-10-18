@@ -3,3 +3,4 @@
 
 npx lint-staged
 yarn flow
+yarn tsc
