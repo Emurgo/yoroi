@@ -1,20 +1,17 @@
-// @flow
-
 import bluebird from 'bluebird'
 import React from 'react'
 import {createIntl, createIntlCache, IntlProvider} from 'react-intl'
 import {AppRegistry, Text} from 'react-native'
 import {Provider, useSelector} from 'react-redux'
 
-import {handleGeneralError, setupHooks} from './actions'
-// $FlowFixMe
+import {handleGeneralError, setupHooks} from '../legacy/actions'
+import {CONFIG} from '../legacy/config/config'
+import getConfiguredStore from '../legacy/helpers/configureStore'
+import translations from '../legacy/i18n/translations'
+import {languageSelector} from '../legacy/selectors'
+import {setLogLevel} from '../legacy/utils/logging'
 import App from './App'
 import {name as appName} from './app.json'
-import {CONFIG} from './config/config'
-import getConfiguredStore from './helpers/configureStore'
-import translations from './i18n/translations'
-import {languageSelector} from './selectors'
-import {setLogLevel} from './utils/logging'
 
 setLogLevel(CONFIG.LOG_LEVEL)
 
@@ -29,12 +26,10 @@ bluebird.config({
   https://github.com/facebook/react-native/issues/19490
   https://github.com/facebook/react-native/issues/17972
 */
-// @ts-ignore
 global.Promise = bluebird
 
 const cache = createIntlCache()
 const intl = createIntl({locale: 'en-US', messages: translations['en-US']}, cache)
-// @ts-ignore
 global.onunhandledrejection = (e) => handleGeneralError(e.message, e, intl)
 
 const AppWithProviders = () => {
