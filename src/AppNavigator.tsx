@@ -14,7 +14,6 @@ import MaintenanceScreen from '../legacy/components/MaintenanceScreen'
 import BiometricAuthScreen from '../legacy/components/Send/BiometricAuthScreen'
 import StorybookScreen from '../legacy/components/StorybookScreen'
 import WalletInitNavigator from '../legacy/components/WalletInit/WalletInitNavigator'
-import WalletNavigator from '../legacy/components/WalletNavigator'
 import {CONFIG} from '../legacy/config/config'
 import KeyStore from '../legacy/crypto/KeyStore'
 import env from '../legacy/env'
@@ -29,6 +28,7 @@ import {
   isSystemAuthEnabledSelector,
 } from '../legacy/selectors'
 import type {State} from '../legacy/state'
+import WalletNavigator from './components/WalletNavigator'
 
 const IS_STORYBOOK = env.getBoolean('IS_STORYBOOK', false)
 
