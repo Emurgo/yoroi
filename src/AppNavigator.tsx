@@ -7,12 +7,10 @@ import {defineMessages, useIntl} from 'react-intl'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {showErrorDialog, signin} from '../legacy/actions'
-import FirstRunNavigator from '../legacy/components/FirstRun/FirstRunNavigator'
 import IndexScreen from '../legacy/components/IndexScreen'
 import CustomPinLogin from '../legacy/components/Login/CustomPinLogin'
 import MaintenanceScreen from '../legacy/components/MaintenanceScreen'
 import BiometricAuthScreen from '../legacy/components/Send/BiometricAuthScreen'
-import StorybookScreen from '../legacy/components/StorybookScreen'
 import WalletInitNavigator from '../legacy/components/WalletInit/WalletInitNavigator'
 import {CONFIG} from '../legacy/config/config'
 import KeyStore from '../legacy/crypto/KeyStore'
@@ -28,6 +26,8 @@ import {
   isSystemAuthEnabledSelector,
 } from '../legacy/selectors'
 import type {State} from '../legacy/state'
+import FirstRunNavigator from './components/FirstRun/FirstRunNavigator'
+import StorybookScreen from './components/StorybookScreen'
 import WalletNavigator from './components/WalletNavigator'
 
 const IS_STORYBOOK = env.getBoolean('IS_STORYBOOK', false)
