@@ -2,14 +2,14 @@
 
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
+import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {changeAndSaveLanguage, changeLanguage} from '../../actions/language'
-import {FIRST_RUN_ROUTES} from '../../RoutesList'
-import {languageSelector} from '../../selectors'
-import LanguagePicker from '../Common/LanguagePicker'
-import styles from './styles/LanguagePickerScreen.style'
+import {changeAndSaveLanguage, changeLanguage} from '../../../legacy/actions/language'
+import LanguagePicker from '../../../legacy/components/Common/LanguagePicker'
+import {FIRST_RUN_ROUTES} from '../../../legacy/RoutesList'
+import {languageSelector} from '../../../legacy/selectors'
 
 const LanguagePickerScreen = () => {
   const navigation = useNavigation()
@@ -30,3 +30,11 @@ const LanguagePickerScreen = () => {
 }
 
 export default LanguagePickerScreen
+
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    backgroundColor: '#fff',
+    padding: 16,
+  },
+})

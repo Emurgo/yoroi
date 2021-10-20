@@ -3,8 +3,6 @@
 //
 // https://github.com/elderfo/react-native-storybook-loader.git
 
-// @flow
-
 function loadStories() {
   require('../legacy/components/Catalyst/Catalyst.stories')
   require('../legacy/components/Catalyst/VotingBanner.stories')

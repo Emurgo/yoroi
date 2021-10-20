@@ -26,18 +26,18 @@
     "purge-translations": "rimraf ./translations/messages",
     "setup_configs": "react-native-schemes-manager all",
     "start": "react-native start",
-    "prestorybook": "rnstl  --searchDir ./src/components ./legacy/components ./storybook --pattern '**/*.stories.js'",
+    "prestorybook": "rnstl  --searchDir ./src/components ./legacy/components ./storybook --pattern '**/*.stories.{js,tsx}'",
     "storybook": "start-storybook",
     "test": "jest",
     "tsc:cover": "yarn typescript-coverage-report -i '**/*.test.*' -i '**/*.stories*' -t html --threshold=100"
   },
   "lint-staged": {
-    "*./legacy/**/*.{js,jsx}": [
+    "./legacy/**/*.{js,jsx}": [
       "eslint --cache --fix --max-warnings=0 --c ./legacy/.eslintrc.js",
       "prettier --write",
       "flow focus-check"
     ],
-    "*./src/**/*.{ts,tsx}": [
+    "./src/**/*.{ts,tsx}": [
       "eslint --cache --fix --max-warnings=0 -c ./src/.eslintrc.js",
       "prettier --write",
       "bash -c tsc -p tsconfig.json --noEmit"
