@@ -1,7 +1,6 @@
 // @flow
 
 import {useNavigation, useNavigationState} from '@react-navigation/native'
-import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -13,7 +12,7 @@ import {checkForFlawedWallets} from '../../actions'
 import {fetchAccountState} from '../../actions/account'
 import {updateHistory} from '../../actions/history'
 import infoIcon from '../../assets/img/icon/info-light-green.png'
-import {CONFIG, isByron, isHaskellShelley, isNightly, UI_V2} from '../../config/config'
+import {CONFIG, isByron, isHaskellShelley, isNightly} from '../../config/config'
 import {isRegistrationOpen} from '../../crypto/shelley/catalystUtils'
 import walletManager from '../../crypto/walletManager'
 import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
@@ -30,12 +29,11 @@ import {
   walletIsInitializedSelector,
   walletMetaSelector,
 } from '../../selectors'
-import type {Token} from '../../types/HistoryTransaction'
 import {formatTokenWithText} from '../../utils/format'
 import {Logger} from '../../utils/logging'
 import VotingBanner from '../Catalyst/VotingBanner'
 import StandardModal from '../Common/StandardModal'
-import {Banner, OfflineBanner, StatusBar, Text, WarningBanner} from '../UiKit'
+import {OfflineBanner, StatusBar, Text, WarningBanner} from '../UiKit'
 import ActionsBanner from './components/ActionsBanner'
 import BalanceBanner from './components/BalanceBanner'
 import EmptyHistory from './components/EmptyHistory'
@@ -54,22 +52,6 @@ const warningBannerMessages = defineMessages({
     defaultMessage: '!!!The Shelley protocol upgrade adds a new Shelley wallet type which supports delegation.',
   },
 })
-
-type AvailableAmountProps = {|
-  amount: BigNumber,
-  amountAssetMetaData: Token,
-|}
-const AvailableAmountBanner = ({amount, amountAssetMetaData}: AvailableAmountProps) => {
-  const intl = useIntl()
-
-  return (
-    <Banner
-      label={intl.formatMessage(globalMessages.availableFunds)}
-      text={amount != null ? formatTokenWithText(amount, amountAssetMetaData) : '-'}
-      boldText
-    />
-  )
-}
 
 const styles = StyleSheet.create({
   tabNavigatorRoot: {
@@ -176,137 +158,76 @@ const TxHistory = () => {
     return <Text>l10n Please wait while wallet is initialized...</Text>
   }
 
-  if (UI_V2) {
-    return (
-      <SafeAreaView style={styles.scrollView}>
-        <View style={styles.container}>
-          <OfflineBanner />
-          {isOnline && lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
-
-          <BalanceBanner />
-          <ActionsBanner />
-          <TabNavigator
-            tabs={['Transactions', 'Assets']}
-            render={({active}) => {
-              if (active === 0) {
-                return (
-                  <View style={styles.tabNavigatorRoot}>
-                    {_.isEmpty(transactionsInfo) ? (
-                      <ScrollView
-                        refreshControl={
-                          <RefreshControl onRefresh={() => dispatch(updateHistory())} refreshing={isSyncing} />
-                        }
-                      >
-                        <EmptyHistory />
-                      </ScrollView>
-                    ) : (
-                      <TxHistoryList
-                        refreshing={isSyncing}
-                        onRefresh={() => dispatch(updateHistory())}
-                        navigation={navigation}
-                        transactions={transactionsInfo}
-                      />
-                    )}
-                  </View>
-                )
-              }
-              return <View />
-            }}
-          />
-
-          {isByron(walletMeta.walletImplementationId) && showWarning && (
-            <WarningBanner
-              title={intl.formatMessage(warningBannerMessages.title).toUpperCase()}
-              icon={infoIcon}
-              message={intl.formatMessage(warningBannerMessages.message)}
-              showCloseIcon
-              onRequestClose={() => setShowWarning(false)}
-              style={styles.warningNoteStyles}
-            />
-          )}
-
-          <StandardModal
-            visible={showInsufficientFundsModal}
-            title={intl.formatMessage(globalMessages.attention)}
-            onRequestClose={() => setShowInsufficientFundsModal(false)}
-            primaryButton={{
-              label: intl.formatMessage(confirmationMessages.commonButtons.backButton),
-              onPress: () => setShowInsufficientFundsModal(false),
-            }}
-            showCloseIcon
-          >
-            <View>
-              <Text>
-                {intl.formatMessage(globalMessages.insufficientBalance, {
-                  requiredBalance: formatTokenWithText(CONFIG.CATALYST.DISPLAYED_MIN_ADA, assetMetaData),
-                  currentBalance: formatTokenWithText(tokenBalance.getDefault(), assetMetaData),
-                })}
-              </Text>
-            </View>
-          </StandardModal>
-        </View>
-      </SafeAreaView>
-    )
-  }
-
   return (
     <SafeAreaView style={styles.scrollView}>
-      <StatusBar type="dark" />
+      <StatusBar type="light" />
       <View style={styles.container}>
         <OfflineBanner />
         {isOnline && lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
 
-        <AvailableAmountBanner
-          amount={tokenBalance.getDefault()}
-          amountAssetMetaData={availableAssets[tokenBalance.getDefaultId()]}
+        <BalanceBanner />
+        <ActionsBanner />
+        <TabNavigator
+          tabs={['Transactions', 'Assets']}
+          render={({active}) => {
+            if (active === 0) {
+              return (
+                <View style={styles.tabNavigatorRoot}>
+                  {isByron(walletMeta.walletImplementationId) && showWarning && (
+                    <WarningBanner
+                      title={intl.formatMessage(warningBannerMessages.title).toUpperCase()}
+                      icon={infoIcon}
+                      message={intl.formatMessage(warningBannerMessages.message)}
+                      showCloseIcon
+                      onRequestClose={() => setShowWarning(false)}
+                      style={styles.warningNoteStyles}
+                    />
+                  )}
+
+                  {showCatalystBanner && (
+                    <VotingBanner
+                      onPress={() => {
+                        if (tokenBalance.getDefault().lt(CONFIG.CATALYST.MIN_ADA)) {
+                          setShowInsufficientFundsModal(true)
+                          return
+                        }
+                        navigation.navigate(CATALYST_ROUTES.ROOT)
+                      }}
+                      disabled={isFetchingAccountState}
+                    />
+                  )}
+
+                  {isFlawedWallet === true && (
+                    <FlawedWalletModal
+                      visible={isFlawedWallet === true}
+                      disableButtons={false}
+                      onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)}
+                      onRequestClose={() => navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)}
+                    />
+                  )}
+
+                  {_.isEmpty(transactionsInfo) ? (
+                    <ScrollView
+                      refreshControl={
+                        <RefreshControl onRefresh={() => dispatch(updateHistory())} refreshing={isSyncing} />
+                      }
+                    >
+                      <EmptyHistory />
+                    </ScrollView>
+                  ) : (
+                    <TxHistoryList
+                      refreshing={isSyncing}
+                      onRefresh={() => dispatch(updateHistory())}
+                      navigation={navigation}
+                      transactions={transactionsInfo}
+                    />
+                  )}
+                </View>
+              )
+            }
+            return <View />
+          }}
         />
-
-        {showCatalystBanner && (
-          <VotingBanner
-            onPress={() => {
-              if (tokenBalance.getDefault().lt(CONFIG.CATALYST.MIN_ADA)) {
-                setShowInsufficientFundsModal(true)
-                return
-              }
-              navigation.navigate(CATALYST_ROUTES.ROOT)
-            }}
-            disabled={isFetchingAccountState}
-          />
-        )}
-        {isFlawedWallet === true && (
-          <FlawedWalletModal
-            visible={isFlawedWallet === true}
-            disableButtons={false}
-            onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)}
-            onRequestClose={() => navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)}
-          />
-        )}
-
-        {_.isEmpty(transactionsInfo) ? (
-          <ScrollView
-            refreshControl={<RefreshControl onRefresh={() => dispatch(updateHistory())} refreshing={isSyncing} />}
-          >
-            <EmptyHistory />
-          </ScrollView>
-        ) : (
-          <TxHistoryList
-            refreshing={isSyncing}
-            onRefresh={() => dispatch(updateHistory())}
-            navigation={navigation}
-            transactions={transactionsInfo}
-          />
-        )}
-
-        {isByron(walletMeta.walletImplementationId) && showWarning && (
-          <WarningBanner
-            title={intl.formatMessage(warningBannerMessages.title).toUpperCase()}
-            icon={infoIcon}
-            message={intl.formatMessage(warningBannerMessages.message)}
-            showCloseIcon
-            onRequestClose={() => setShowWarning(false)}
-            style={styles.warningNoteStyles}
-          />
-        )}
 
         <StandardModal
           visible={showInsufficientFundsModal}
