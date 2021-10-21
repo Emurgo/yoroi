@@ -1,11 +1,11 @@
 // @flow
 
 import React, {type Node} from 'react'
-import {TouchableOpacity} from 'react-native-gesture-handler'
+import {TouchableOpacity} from 'react-native'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import {Provider} from 'react-redux'
 
 import iconGear from '../assets/img/gear.png'
-import StakeIcon from '../assets/StakingKeyRegisteredIcon'
 import {Button} from '../components/UiKit'
 import configureStore from '../helpers/configureStore'
 import {defaultNavigationOptions} from '../navigationOptions'
@@ -42,12 +42,8 @@ type MockedOptionsV2 = 'settings'
 const V2_ITEMS = new Map<MockedOptionsV2, React$Node>([
   [
     'settings',
-    <TouchableOpacity
-      key="navbar-icon-gear"
-      // eslint-disable-next-line
-      onPress={() => alert('clicked on settings button')}
-    >
-      <StakeIcon height={36} width={36} color="#323232" />
+    <TouchableOpacity style={{paddingRight: 5}} key="menu-dot" onPress={() => alert('clicked on settings button')}>
+      <Icon name="dots-vertical" size={30} color="#8A92A3" />
     </TouchableOpacity>,
   ],
 ])
