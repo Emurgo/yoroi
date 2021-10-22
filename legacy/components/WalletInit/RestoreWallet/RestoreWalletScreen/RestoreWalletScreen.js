@@ -15,32 +15,6 @@ import {WALLET_INIT_ROUTES} from '../../../../RoutesList'
 import {Button, KeyboardSpacer, Spacer, StatusBar, Text} from '../../../UiKit'
 import {MnemonicInput} from './MnemonicInput'
 
-const messages = defineMessages({
-  mnemonicInputLabel: {
-    id: 'components.walletinit.restorewallet.restorewalletscreen.mnemonicInputLabel',
-    defaultMessage: '!!!Recovery phrase',
-  },
-  restoreButton: {
-    id: 'components.walletinit.restorewallet.restorewalletscreen.restoreButton',
-    defaultMessage: '!!!Restore wallet',
-  },
-  instructions: {
-    id: 'components.walletinit.restorewallet.restorewalletscreen.instructions',
-    defaultMessage:
-      '!!!To restore your wallet please provide the {mnemonicLength}-word ' +
-      'recovery phrase you received when you created your wallet for the ' +
-      'first time.',
-  },
-  noMatchingWords: {
-    id: 'components.walletinit.restorewallet.restorewalletscreen.noMatchingWords',
-    defaultMessage: '!!!No Matching Words',
-  },
-  invalidChecksum: {
-    id: 'components.walletinit.restorewallet.restorewalletscreen.invalidchecksum',
-    defaultMessage: '!!!Please enter valid mnemonic.',
-  },
-})
-
 type Params = {
   networkId: NetworkId,
   walletImplementationId: WalletImplementationId,
@@ -48,7 +22,7 @@ type Params = {
 }
 
 export const RestoreWalletScreen = () => {
-  const intl = useIntl()
+  const strings = useStrings()
   const navigation = useNavigation()
   const {networkId, walletImplementationId, provider} = useParams<Params>()
   const {MNEMONIC_LEN: mnemonicLength} = getWalletConfigById(walletImplementationId)
@@ -69,7 +43,7 @@ export const RestoreWalletScreen = () => {
       <ScrollView bounces={false} style={{paddingHorizontal: 16}} keyboardShouldPersistTaps={'always'}>
         <Spacer height={24} />
 
-        <Instructions>{intl.formatMessage(messages.instructions, {mnemonicLength})}</Instructions>
+        <Instructions>{strings.instructions({mnemonicLength})}</Instructions>
 
         <Spacer height={16} />
 
@@ -79,11 +53,7 @@ export const RestoreWalletScreen = () => {
       </ScrollView>
 
       <Actions>
-        <Button
-          onPress={navigateToWalletCredentials}
-          title={intl.formatMessage(messages.restoreButton)}
-          disabled={!phrase}
-        />
+        <Button onPress={navigateToWalletCredentials} title={strings.restoreButton} disabled={!phrase} />
       </Actions>
     </SafeAreaView>
   )
@@ -91,3 +61,27 @@ export const RestoreWalletScreen = () => {
 
 const Instructions = (props) => <Text {...props} style={{fontSize: 16, lineHeight: 24}} />
 const Actions = (props) => <View {...props} style={{padding: 16}} />
+
+const messages = defineMessages({
+  restoreButton: {
+    id: 'components.walletinit.restorewallet.restorewalletscreen.restoreButton',
+    defaultMessage: '!!!Restore wallet',
+  },
+  instructions: {
+    id: 'components.walletinit.restorewallet.restorewalletscreen.instructions',
+    defaultMessage:
+      '!!!To restore your wallet please provide the {mnemonicLength}-word ' +
+      'recovery phrase you received when you created your wallet for the ' +
+      'first time.',
+  },
+})
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    restoreButton: intl.formatMessage(messages.restoreButton),
+    instructions: ({mnemonicLength}: {mnemonicLength: number}) =>
+      intl.formatMessage(messages.instructions, {mnemonicLength}),
+  }
+}
