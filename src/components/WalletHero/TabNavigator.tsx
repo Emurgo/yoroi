@@ -1,9 +1,7 @@
-// @flow
-
 import React, {memo, useState} from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import {COLORS} from '../../../styles/config'
+import {COLORS} from '../../../legacy/styles/config'
 
 // NOTE: layout is following inVision spec
 // https://projects.invisionapp.com/d/main?origin=v7#/console/21500065/456867605/inspect?scrollOffset=2856#project_console
@@ -53,12 +51,19 @@ const styles = StyleSheet.create({
   indicatorInactive: {
     backgroundColor: 'transparent',
   },
+  tabNavigatorRoot: {
+    flex: 1,
+    paddingTop: 8,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+  },
 })
 
-type TabNavigatorProps = {|
-  +tabs: Array<string>,
-  +render: <T>(T & {|+active: number|}) => React$Node,
-|}
+interface TabNavigatorProps {
+  tabs: Array<string>,
+  render: (_) => JSX.Element,
+}
 
 const TabNavigator = ({tabs, render}: TabNavigatorProps) => {
   const [active, setActive] = useState<number>(0)
@@ -87,7 +92,9 @@ const TabNavigator = ({tabs, render}: TabNavigatorProps) => {
           })}
         </View>
       </View>
-      {render({active})}
+      <View style={styles.tabNavigatorRoot}>
+        {render({active})}
+      </View>
     </View>
   )
 }
