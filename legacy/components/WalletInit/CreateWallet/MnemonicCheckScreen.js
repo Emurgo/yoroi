@@ -28,7 +28,7 @@ export type Params = {
 type Entry = {id: number, word: string}
 
 const MnemonicCheckScreen = () => {
-  const intl = useIntl()
+  const strings = useStrings()
   const navigation = useNavigation()
   const {mnemonic, password, name, networkId, walletImplementationId, provider} = useParams<Params>()
 
@@ -91,7 +91,7 @@ const MnemonicCheckScreen = () => {
           block
           onPress={confirmWalletCreation}
           disabled={!isPhraseComplete || !isPhraseValid}
-          title={intl.formatMessage(messages.confirmButton)}
+          title={strings.confirmButton}
           style={styles.confirmButton}
           testID="mnemonicCheckScreen::confirm"
         />
@@ -126,21 +126,21 @@ const MnemonicInput = ({userEntries, error, onPress}: MnemonicInputProps) => {
 }
 
 const Instructions = () => {
-  const intl = useIntl()
+  const strings = useStrings()
 
   return (
     <View style={styles.instructions}>
-      <Text>{intl.formatMessage(messages.instructions)}</Text>
+      <Text>{strings.instructions}</Text>
     </View>
   )
 }
 
 const ErrorMessage = ({visible}: {visible: boolean}) => {
-  const intl = useIntl()
+  const strings = useStrings()
 
   return (
     <View style={[styles.error, !visible && styles.hidden]}>
-      <Text style={styles.errorMessage}>{intl.formatMessage(messages.mnemonicWordsInputInvalidPhrase)}</Text>
+      <Text style={styles.errorMessage}>{strings.mnemonicWordsInputInvalidPhrase}</Text>
     </View>
   )
 }
@@ -209,20 +209,22 @@ const messages = defineMessages({
     id: 'components.walletinit.createwallet.mnemoniccheckscreen.instructions',
     defaultMessage: '!!!Tap each word in the correct order to verify your recovery phrase',
   },
-  clearButton: {
-    id: 'components.walletinit.createwallet.mnemoniccheckscreen.clearButton',
-    defaultMessage: '!!!Clear',
-  },
   confirmButton: {
     id: 'components.walletinit.createwallet.mnemoniccheckscreen.confirmButton',
     defaultMessage: '!!!Confirm',
-  },
-  mnemonicWordsInputLabel: {
-    id: 'components.walletinit.createwallet.mnemoniccheckscreen.mnemonicWordsInputLabel',
-    defaultMessage: '!!!Recovery phrase',
   },
   mnemonicWordsInputInvalidPhrase: {
     id: 'components.walletinit.createwallet.mnemoniccheckscreen.mnemonicWordsInputInvalidPhrase',
     defaultMessage: '!!!Recovery phrase does not match',
   },
 })
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    instructions: intl.formatMessage(messages.instructions),
+    confirmButton: intl.formatMessage(messages.confirmButton),
+    mnemonicWordsInputInvalidPhrase: intl.formatMessage(messages.mnemonicWordsInputInvalidPhrase),
+  }
+}

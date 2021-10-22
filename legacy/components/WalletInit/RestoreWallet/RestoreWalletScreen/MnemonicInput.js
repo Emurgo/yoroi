@@ -5,43 +5,17 @@
 import {validateMnemonic, wordlists} from 'bip39'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Keyboard, View} from 'react-native'
+import {Keyboard, ScrollView, View} from 'react-native'
 
 import {Menu, TextInput} from '../../../UiKit'
 
-const messages = defineMessages({
-  mnemonicInputLabel: {
-    id: 'components.walletinit.restorewallet.restorewalletscreen.mnemonicInputLabel',
-    defaultMessage: '!!!Recovery phrase',
-  },
-  restoreButton: {
-    id: 'components.walletinit.restorewallet.restorewalletscreen.restoreButton',
-    defaultMessage: '!!!Restore wallet',
-  },
-  instructions: {
-    id: 'components.walletinit.restorewallet.restorewalletscreen.instructions',
-    defaultMessage:
-      '!!!To restore your wallet please provide the {mnemonicLength}-word ' +
-      'recovery phrase you received when you created your wallet for the ' +
-      'first time.',
-  },
-  noMatchingWords: {
-    id: 'components.walletinit.restorewallet.restorewalletscreen.noMatchingWords',
-    defaultMessage: '!!!No Matching Words',
-  },
-  invalidChecksum: {
-    id: 'components.walletinit.restorewallet.restorewalletscreen.invalidchecksum',
-    defaultMessage: '!!!Please enter valid mnemonic.',
-  },
-})
-
 export const MnemonicInput = ({length, onDone}: {length: number, onDone: (phrase: string) => mixed}) => {
-  const intl = useIntl()
+  const strings = useStrings()
   const [mnemonicWords, setMnemonicWords] = React.useState<Array<string>>((Array.from({length}).map(() => ''): any))
 
   const mnemonicWordsComplete = mnemonicWords.every(Boolean)
   const isValid: boolean = mnemonicWordsComplete ? validateMnemonic(mnemonicWords.join(' ')) : false
-  const errorText = !isValid && mnemonicWordsComplete ? intl.formatMessage(messages.invalidChecksum) : ''
+  const errorText = !isValid && mnemonicWordsComplete ? strings.invalidChecksum : ''
 
   const onSelect = (index: number, word: string) =>
     setMnemonicWords((words) => {
@@ -132,15 +106,17 @@ const MnemonicWordInput = React.forwardRef(({id, onSelect}: MnemonicWordInputPro
           errorText={matchingWords.length <= 0 ? 'No matching words' : ''}
         />
       }
-      visible={menuEnabled && matchingWords.length <= 3 && !!word}
+      visible={menuEnabled && word.length >= 3 && !!word}
       onDismiss={() => {
         setMenuEnabled(false)
         setWord('')
       }}
     >
-      {matchingWords.map((word) => (
-        <Menu.Item key={word} title={word} onPress={() => selectWord(word)} />
-      ))}
+      <ScrollView style={{maxHeight: 48 * 3.5 /* 3.5 rows */}} keyboardShouldPersistTaps={'always'}>
+        {matchingWords.map((word) => (
+          <Menu.Item key={word} title={word} onPress={() => selectWord(word)} />
+        ))}
+      </ScrollView>
     </Menu>
   )
 })
@@ -159,3 +135,18 @@ const useAutoFocus = (ref) =>
 
     return () => clearTimeout(timeout)
   }, [ref])
+
+const messages = defineMessages({
+  invalidChecksum: {
+    id: 'components.walletinit.restorewallet.restorewalletscreen.invalidchecksum',
+    defaultMessage: '!!!Please enter valid mnemonic.',
+  },
+})
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    invalidChecksum: intl.formatMessage(messages.invalidChecksum),
+  }
+}
