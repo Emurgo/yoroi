@@ -3,7 +3,7 @@
 // @flow
 
 import React from 'react'
-import {View, Keyboard} from 'react-native'
+import {View, ScrollView, Keyboard} from 'react-native'
 import {injectIntl, defineMessages, type IntlShape} from 'react-intl'
 import {validateMnemonic, wordlists} from 'bip39'
 
@@ -133,15 +133,17 @@ const MnemonicWordInput = React.forwardRef(({id, onSelect}: MnemonicWordInputPro
           errorText={matchingWords.length <= 0 ? 'No matching words' : ''}
         />
       }
-      visible={menuEnabled && matchingWords.length <= 3 && !!word}
+      visible={menuEnabled && word.length >= 3 && !!word}
       onDismiss={() => {
         setMenuEnabled(false)
         setWord('')
       }}
     >
-      {matchingWords.map((word) => (
-        <Menu.Item key={word} title={word} onPress={() => selectWord(word)} />
-      ))}
+      <ScrollView style={{maxHeight: 48 * 3.5 /* 3.5 rows */}} keyboardShouldPersistTaps={'always'}>
+        {matchingWords.map((word) => (
+          <Menu.Item key={word} title={word} onPress={() => selectWord(word)} />
+        ))}
+      </ScrollView>
     </Menu>
   )
 })
