@@ -5,7 +5,7 @@
 import {validateMnemonic, wordlists} from 'bip39'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Keyboard, View} from 'react-native'
+import {Keyboard, ScrollView, View} from 'react-native'
 
 import {Menu, TextInput} from '../../../UiKit'
 
@@ -106,15 +106,17 @@ const MnemonicWordInput = React.forwardRef(({id, onSelect}: MnemonicWordInputPro
           errorText={matchingWords.length <= 0 ? 'No matching words' : ''}
         />
       }
-      visible={menuEnabled && matchingWords.length <= 3 && !!word}
+      visible={menuEnabled && word.length >= 3 && !!word}
       onDismiss={() => {
         setMenuEnabled(false)
         setWord('')
       }}
     >
-      {matchingWords.map((word) => (
-        <Menu.Item key={word} title={word} onPress={() => selectWord(word)} />
-      ))}
+      <ScrollView style={{maxHeight: 48 * 3.5 /* 3.5 rows */}} keyboardShouldPersistTaps={'always'}>
+        {matchingWords.map((word) => (
+          <Menu.Item key={word} title={word} onPress={() => selectWord(word)} />
+        ))}
+      </ScrollView>
     </Menu>
   )
 })
