@@ -17,46 +17,6 @@ import Spacer from '../Spacer'
 import ReceivedIcon from '../StylizedIcons/ReceivedIcon'
 import SentIcon from '../StylizedIcons/SentIcon'
 
-// NOTE: layout is following inVision spec
-// https://projects.invisionapp.com/d/main?origin=v7#/console/21500065/456867605/inspect?scrollOffset=2856#project_console
-const styles = StyleSheet.create({
-  banner: {
-    backgroundColor: COLORS.BACKGROUND_GRAY,
-  },
-  centralized: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  actionIcon: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 42,
-    width: 42,
-    borderRadius: 20,
-    backgroundColor: COLORS.LIGHT_POSITIVE_GREEN,
-  },
-  buyButton: {
-    textAlignVertical: 'center',
-    lineHeight: 40,
-    fontSize: 32,
-    color: COLORS.TEXT_GRAY2,
-  },
-  cta: {
-    borderWidth: 1,
-    borderColor: COLORS.BORDER_GRAY,
-    backgroundColor: COLORS.BACKGROUND_GRAY,
-  },
-  actionLabel: {
-    paddingTop: 8,
-    fontSize: 10,
-    color: COLORS.TEXT_GRAY3,
-  },
-})
-
 const ACTION_PROPS = {
   height: 36,
   width: 36,
@@ -110,6 +70,46 @@ const ActionsBanner = () => {
     </View>
   )
 }
+
+// NOTE: layout is following inVision spec
+// https://projects.invisionapp.com/d/main?origin=v7#/console/21500065/456867605/inspect?scrollOffset=2856#project_console
+const styles = StyleSheet.create({
+  banner: {
+    backgroundColor: COLORS.BACKGROUND_GRAY,
+  },
+  centralized: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  actionIcon: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 42,
+    width: 42,
+    borderRadius: 20,
+    backgroundColor: COLORS.LIGHT_POSITIVE_GREEN,
+  },
+  buyButton: {
+    textAlignVertical: 'center',
+    lineHeight: 40,
+    fontSize: 32,
+    color: COLORS.TEXT_GRAY2,
+  },
+  cta: {
+    borderWidth: 1,
+    borderColor: COLORS.BORDER_GRAY,
+    backgroundColor: COLORS.BACKGROUND_GRAY,
+  },
+  actionLabel: {
+    paddingTop: 8,
+    fontSize: 10,
+    color: COLORS.TEXT_GRAY3,
+  },
+})
 
 const useStrings = () => {
   const intl = useIntl()

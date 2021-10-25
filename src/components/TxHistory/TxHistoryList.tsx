@@ -2,10 +2,13 @@ import {useNavigation} from '@react-navigation/native'
 import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {SectionList, StyleSheet, View} from 'react-native'
+import {Alert, SectionList, StyleSheet, View} from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import TxHistoryListItem from '../../../legacy/components/TxHistory/TxHistoryListItem'
 import {Text} from '../../../legacy/components/UiKit'
+import { actionMessages } from '../../../legacy/i18n/global-messages'
 import {formatDateRelative} from '../../../legacy/utils/format'
 import {TransactionInfo} from './types'
 
@@ -16,21 +19,43 @@ type Props = {
 }
 
 const TxHistoryList = ({transactions, refreshing, onRefresh}: Props) => {
-  const intl = useIntl()
+  const strings = useStrings()
   const navigation = useNavigation()
   const groupedTransactions = getTransactionsByDate(transactions)
 
+  const handleExport = () => Alert.alert(strings.soon, strings.soon)
+  const handleSearch = () => Alert.alert(strings.soon, strings.soon)
+
   return (
-    <View style={styles.container}>
+    <View style={styles.listRoot}>
+      <TxListActionsBanner onExport={handleExport} onSearch={handleSearch}/>
       <SectionList
         onRefresh={onRefresh}
         refreshing={refreshing}
         renderItem={({item}) => <TxHistoryListItem navigation={navigation} id={item.id} />}
-        renderSectionHeader={({section: {data}}) => <DayHeader ts={data[0].submittedAt} intl={intl} />}
+        renderSectionHeader={({section: {data}}) => <DayHeader ts={data[0].submittedAt} />}
         sections={groupedTransactions}
         keyExtractor={(item) => item.id}
         stickySectionHeadersEnabled={false}
       />
+    </View>
+  )
+}
+
+type TxListActionsBannerProps = {
+  onExport: () => void,
+  onSearch: () => void,
+}
+
+const TxListActionsBanner = (props: TxListActionsBannerProps) => {
+  return (
+    <View style={styles.actionsRoot}>
+      <TouchableOpacity onPress={props.onExport}>
+        <Icon name="export" size={24} color="#6B7384" />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={props.onSearch}>
+        <Icon name="magnify" size={24} color="#6B7384" />
+      </TouchableOpacity>
     </View>
   )
 }
@@ -43,7 +68,7 @@ const DayHeader = ({ts}: DayHeaderProps) => {
   const intl = useIntl()
 
   return (
-    <View style={styles.dayHeader}>
+    <View style={styles.dayHeaderRoot}>
       <Text>{formatDateRelative(ts, intl)}</Text>
     </View>
   )
@@ -60,16 +85,28 @@ const getTransactionsByDate = (transactions: Dict<TransactionInfo>) =>
     .value()
 
 const styles = StyleSheet.create({
-  container: {
+  listRoot: {
     flex: 1,
   },
-  dayHeader: {
+  dayHeaderRoot: {
     paddingTop: 16,
     paddingBottom: 8,
-    paddingHorizontal: 28,
-    backgroundColor: '#fff',
+    paddingHorizontal: 20,
   },
+  actionsRoot: {
+    display: 'flex',
+    paddingHorizontal: 20,
+    justifyContent: 'space-between',
+    flexDirection: 'row'
+  }
 })
 
+const useStrings = () => {
+  const intl = useIntl()
+  
+  return {
+    soon: intl.formatMessage(actionMessages.soon),
+  }
+}
 
 export default TxHistoryList
