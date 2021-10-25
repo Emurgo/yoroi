@@ -6,13 +6,14 @@ import {TouchableOpacity} from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import {useSelector} from 'react-redux'
 
+// $FlowFixMe
+import TxHistory from '../../../src/components/TxHistory'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
 import {TX_HISTORY_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
 import {transactionsInfoSelector, walletMetaSelector} from '../../selectors'
 import {COLORS} from '../../styles/config'
 import {formatDateToSeconds} from '../../utils/format'
 import TxDetails from './TxDetails'
-import TxHistory from './TxHistory'
 
 type TxHistoryRoutes = {
   'tx-history-list': any,

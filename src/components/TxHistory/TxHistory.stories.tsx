@@ -1,16 +1,14 @@
-// @flow
-
 import {createStackNavigator} from '@react-navigation/stack'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {defaultStackNavigatorOptions} from '../../navigationOptions'
-import {COLORS} from '../../styles/config'
-import {MockAppStateWrapper, mockV2NavigatorOptions} from '../../utils/mocks'
+import {defaultStackNavigatorOptions} from '../../../legacy/navigationOptions'
+import {COLORS} from '../../../legacy/styles/config'
+import {MockAppStateWrapper, mockV2NavigatorOptions} from '../../../legacy/utils/mocks'
 import TxHistoryScreen from './TxHistory'
 
 storiesOf('@Revamp/TxHistory', module).add('Default', () => {
-  const Stack = createStackNavigator<any, any, any>()
+  const Stack = createStackNavigator()
   const walletName = 'Wallet-1'
   return (
     <MockAppStateWrapper>

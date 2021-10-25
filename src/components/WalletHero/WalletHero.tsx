@@ -1,18 +1,30 @@
 import React from 'react'
-import {View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 
+import {COLORS} from '../../../legacy/styles/config'
 import ActionsBanner from './ActionsBanner'
 import BalanceBanner from './BalanceBanner'
 import TabNavigator from './TabNavigator'
 
-const WalletHeader = () => {
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: COLORS.BACKGROUND_GRAY,
+  },
+})
+interface WalletHeroProps {
+  tabs: Array<string>,
+  render: (_) => JSX.Element,
+}
+
+const WalletHero = (props: WalletHeroProps) => {
   return (
-    <View>
-      <ActionsBanner />
+    <View style={styles.root}>
       <BalanceBanner />
-      <TabNavigator />
+      <ActionsBanner />
+      <TabNavigator {...props}/>
     </View>
   )
 }
 
-export  default WalletHeader
+export  default WalletHero

@@ -79,11 +79,15 @@ const BalanceBanner = () => {
 
   return (
     <View style={styles.banner}>
+
       <Spacer height={16} />
+
       <View style={styles.centralized}>
         <WalletAccountIcon style={styles.walletIcon} iconSeed={walletMeta.checksum.ImagePart} />
       </View>
+
       <Spacer height={12} />
+
       <TouchableOpacity onPress={onSwitchShowValues}>
         <View style={styles.row}>
           <View style={styles.column}>
