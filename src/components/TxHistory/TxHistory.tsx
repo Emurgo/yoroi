@@ -12,19 +12,15 @@ import {updateHistory} from '../../../legacy/actions/history'
 import infoIcon from '../../../legacy/assets/img/icon/info-light-green.png'
 import VotingBanner from '../../../legacy/components/Catalyst/VotingBanner'
 import StandardModal from '../../../legacy/components/Common/StandardModal'
-import SyncErrorBanner from '../../../legacy/components/TxHistory/components/SyncErrorBanner'
-import FlawedWalletModal from '../../../legacy/components/TxHistory/FlawedWalletModal'
-import TxHistoryList from '../../../legacy/components/TxHistory/TxHistoryList'
 import {OfflineBanner, StatusBar, Text, WarningBanner} from '../../../legacy/components/UiKit'
 import {CONFIG, isByron, isHaskellShelley, isNightly} from '../../../legacy/config/config'
 import {isRegistrationOpen} from '../../../legacy/crypto/shelley/catalystUtils'
 import walletManager from '../../../legacy/crypto/walletManager'
 import globalMessages, {confirmationMessages} from '../../../legacy/i18n/global-messages'
-import {CATALYST_ROUTES, WALLET_ROOT_ROUTES} from '../../../legacy/RoutesList'
+import {CATALYST_ROUTES} from '../../../legacy/RoutesList'
 import {
   availableAssetsSelector,
   isFetchingAccountStateSelector,
-  isFlawedWalletSelector,
   isOnlineSelector,
   isSynchronizingHistorySelector,
   lastHistorySyncErrorSelector,
@@ -37,48 +33,12 @@ import {formatTokenWithText} from '../../../legacy/utils/format'
 import {Logger} from '../../../legacy/utils/logging'
 import WalletHero from '../WalletHero/WalletHero'
 import EmptyHistory from './EmptyHistory'
-
-const warningBannerMessages = defineMessages({
-  title: {
-    id: 'components.txhistory.txhistory.warningbanner.title',
-    defaultMessage: '!!!Note:',
-  },
-  message: {
-    id: 'components.txhistory.txhistory.warningbanner.message',
-    defaultMessage: '!!!The Shelley protocol upgrade adds a new Shelley wallet type which supports delegation.',
-  },
-})
-
-const styles = StyleSheet.create({
-  tabNavigatorRoot: {
-    flex: 1,
-    paddingTop: 8,
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-  },
-  scrollView: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  container: {
-    flexDirection: 'column',
-    flex: 1,
-  },
-  warningNoteStyles: {
-    position: 'absolute',
-    zIndex: 2,
-    bottom: 0,
-  },
-})
-
-type FundInfo = {
-  registrationStart: string,
-  registrationEnd: string,
-}
+import SyncErrorBanner from './SyncErrorBanner'
+import TxHistoryList from './TxHistoryList'
 
 const TxHistory = () => {
   const intl = useIntl()
+  const dispatch = useDispatch()
   const navigation = useNavigation()
   const transactionsInfo = useSelector(transactionsInfoSelector)
   const isSyncing = useSelector(isSynchronizingHistorySelector)
@@ -86,21 +46,20 @@ const TxHistory = () => {
   const isOnline = useSelector(isOnlineSelector)
   const tokenBalance = useSelector(tokenBalanceSelector)
   const availableAssets = useSelector(availableAssetsSelector)
-  const isFlawedWallet = useSelector(isFlawedWalletSelector)
+  const routes = useNavigationState((state) => state.routes)
   const walletMeta = useSelector(walletMetaSelector)
   const isFetchingAccountState = useSelector(isFetchingAccountStateSelector)
+  const walletIsInitialized = useSelector(walletIsInitializedSelector)
+  
+  const assetMetaData = availableAssets[tokenBalance.getDefaultId()]
 
-  // Byron warning banner
   const [showWarning, setShowWarning] = useState<boolean>(isByron(walletMeta.walletImplementationId))
-
+ 
   // InsufficientFundsModal (Catalyst)
   const [showInsufficientFundsModal, setShowInsufficientFundsModal] = useState<boolean>(false)
-
-  // Catalyst voting registration banner
   const canVote = isHaskellShelley(walletMeta.walletImplementationId)
   const [showCatalystBanner, setShowCatalystBanner] = useState<boolean>(canVote)
 
-  const dispatch = useDispatch()
   useEffect(() => {
     dispatch(checkForFlawedWallets())
     dispatch(updateHistory())
@@ -130,12 +89,9 @@ const TxHistory = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // handles back button (closes wallet)
-  const routes = useNavigationState((state) => state.routes)
-
-  // TODO: move this to dashboard once it's set as default screen
   useEffect(
     () =>
+      // TODO: move this to dashboard once it's set as default screen
       navigation.addListener('beforeRemove', (e) => {
         navigation.dispatch(e.data.action)
         if (routes.length === 1) {
@@ -147,9 +103,6 @@ const TxHistory = () => {
     [navigation],
   )
 
-  const assetMetaData = availableAssets[tokenBalance.getDefaultId()]
-  const walletIsInitialized = useSelector(walletIsInitializedSelector)
-
   if (!walletIsInitialized) {
     return <Text>l10n Please wait while wallet is initialized...</Text>
   }
@@ -157,9 +110,10 @@ const TxHistory = () => {
   return (
     <SafeAreaView style={styles.scrollView}>
       <StatusBar type="light" />
+
       <View style={styles.container}>
         <OfflineBanner />
-        {isOnline && lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
+        <SyncErrorBanner showRefresh={!isSyncing} isOpen={isOnline && lastSyncError} />
 
         <WalletHero
           tabs={['Transactions', 'Assets']}
@@ -188,15 +142,6 @@ const TxHistory = () => {
                         navigation.navigate(CATALYST_ROUTES.ROOT)
                       }}
                       disabled={isFetchingAccountState}
-                    />
-                  )}
-
-                  {isFlawedWallet === true && (
-                    <FlawedWalletModal
-                      visible={isFlawedWallet === true}
-                      disableButtons={false}
-                      onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)}
-                      onRequestClose={() => navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)}
                     />
                   )}
 
@@ -242,9 +187,49 @@ const TxHistory = () => {
             </Text>
           </View>
         </StandardModal>
+
       </View>
     </SafeAreaView>
   )
+}
+
+const warningBannerMessages = defineMessages({
+  title: {
+    id: 'components.txhistory.txhistory.warningbanner.title',
+    defaultMessage: '!!!Note:',
+  },
+  message: {
+    id: 'components.txhistory.txhistory.warningbanner.message',
+    defaultMessage: '!!!The Shelley protocol upgrade adds a new Shelley wallet type which supports delegation.',
+  },
+})
+
+const styles = StyleSheet.create({
+  tabNavigatorRoot: {
+    flex: 1,
+    paddingTop: 8,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+  },
+  scrollView: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  container: {
+    flexDirection: 'column',
+    flex: 1,
+  },
+  warningNoteStyles: {
+    position: 'absolute',
+    zIndex: 2,
+    bottom: 0,
+  },
+})
+
+type FundInfo = {
+  registrationStart: string,
+  registrationEnd: string,
 }
 
 export default TxHistory

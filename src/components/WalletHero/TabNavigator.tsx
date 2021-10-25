@@ -58,6 +58,14 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
   },
+  grabber: {
+    display: 'flex',
+    height: 4,
+    width: 40,
+    borderRadius: 3,
+    backgroundColor: COLORS.BORDER_GRAY,
+    alignSelf: 'center',
+  },
 })
 
 interface TabNavigatorProps {
@@ -93,6 +101,7 @@ const TabNavigator = ({tabs, render}: TabNavigatorProps) => {
         </View>
       </View>
       <View style={styles.tabNavigatorRoot}>
+        <View style={styles.grabber} />
         {render({active})}
       </View>
     </View>
