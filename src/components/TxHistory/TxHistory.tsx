@@ -101,7 +101,6 @@ const TxHistory = () => {
                     <TxHistoryList
                       refreshing={isSyncing}
                       onRefresh={() => dispatch(updateHistory())}
-                      navigation={navigation}
                       transactions={transactionsInfo}
                     />
                   )}

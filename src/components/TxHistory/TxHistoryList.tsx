@@ -14,7 +14,7 @@ import features from '../../features'
 import {TransactionInfo} from './types'
 
 type Props = {
-  transactions: Dict<TransactionInfo>
+  transactions: Record<string, TransactionInfo>
   refreshing: boolean
   onRefresh: () => void
 }
@@ -82,12 +82,12 @@ const DayHeader = ({ts}: DayHeaderProps) => {
   )
 }
 
-const getTransactionsByDate = (transactions: Dict<TransactionInfo>) =>
+const getTransactionsByDate = (transactions: Record<string, TransactionInfo>) =>
   _(transactions)
     .filter((t) => t.submittedAt != null)
     .sortBy((t) => t.submittedAt)
     .reverse()
-    .groupBy((t) => t.submittedAt.substring(0, '2001-01-01'.length))
+    .groupBy((t) => t.submittedAt?.substring(0, '2001-01-01'.length))
     .values()
     .map((data) => ({data}))
     .value()

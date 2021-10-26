@@ -1,3 +1,5 @@
+import BigNumber from 'bignumber.js'
+
 export type TransactionDirection = 'SENT' | 'RECEIVED' | 'SELF' | 'MULTI'
 export type TransactionStatus = 'SUCCESSFUL' | 'PENDING' | 'FAILED'
 export type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
@@ -41,7 +43,36 @@ export type TransactionInfo = {
   lastUpdatedAt: string
   status: TransactionStatus
   assurance: TransactionAssurance
-  tokens: Dict<Token>
+  tokens: Record<string, Token>
+}
+
+export type CommonMetadata = {
+  numberOfDecimals: number
+  ticker: null | string
+  longName: null | string
+  maxSupply: null | string
+}
+
+export type TokenMetadata = CommonMetadata & {
+  type: 'Cardano'
+  // empty string for ADA
+  policyId: string
+  // empty string for ADA
+  assetName: string
+}
+
+// equivalent to TokenRow in the yoroi extension
+export type Token = {
+  networkId: number
+  isDefault: boolean
+  /**
+   * For Ergo, this is the tokenId (box id of first input in tx)
+   * for Cardano, this is policyId || assetName
+   * Note: we don't use null for the primary token of the chain
+   * As some blockchains have multiple primary tokens
+   */
+  identifier: string
+  metadata: TokenMetadata
 }
 
 // export type BaseAsset = RemoteAsset
@@ -70,23 +101,6 @@ export type TransactionInfo = {
 //   +collateralInputs?: Array<{address: string, amount: string, assets: Array<BaseAsset>}>,
 // |}
 
-// export type CommonMetadata = {|
-//   +numberOfDecimals: number,
-//   +ticker: null | string,
-//   +longName: null | string,
-//   +maxSupply: null | string,
-// |}
-
-// // recall: this is an union type in general
-// export type TokenMetadata = {|
-//   +type: 'Cardano',
-//   // empty string for ADA
-//   +policyId: string,
-//   // empty string for ADA
-//   +assetName: string,
-//   ...$ReadOnly<CommonMetadata>,
-// |}
-
 // // Same as TokenMetadata but with non-nullable ticker
 // export type DefaultAssetMetadata = {|
 //   +type: 'Cardano',
@@ -96,22 +110,6 @@ export type TransactionInfo = {
 //   +assetName: string,
 //   ...$ReadOnly<CommonMetadata>,
 //   +ticker: string,
-// |}
-
-// // equivalent to TokenRow in the yoroi extension
-// export type Token = {|
-//   // tokenId: number
-//   /** different blockchains can support native multi-asset */
-//   +networkId: number,
-//   +isDefault: boolean,
-//   /**
-//    * For Ergo, this is the tokenId (box id of first input in tx)
-//    * for Cardano, this is policyId || assetName
-//    * Note: we don't use null for the primary token of the chain
-//    * As some blockchains have multiple primary tokens
-//    */
-//   +identifier: string,
-//   +metadata: $ReadOnly<TokenMetadata>,
 // |}
 
 // export type DefaultAsset = {|

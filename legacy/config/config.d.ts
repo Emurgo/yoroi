@@ -1,6 +1,7 @@
 // @flow
 
 export var isHaskellShelley: (walletImplementationId: number) => boolean
+export var isByron: (walletImplementationId: number) => boolean
 
 // prettier-ignore
 export var CONFIG: {

@@ -7,7 +7,7 @@ import {COLORS} from '../../../legacy/styles/config'
 import {MockAppStateWrapper, mockV2NavigatorOptions} from '../../../legacy/utils/mocks'
 import TxHistoryScreen from './TxHistory'
 
-storiesOf('@Revamp/TxHistory', module).add('Default', () => {
+storiesOf('V2/TxHistory', module).add('No transactions', () => {
   const Stack = createStackNavigator()
   const walletName = 'Wallet-1'
   return (

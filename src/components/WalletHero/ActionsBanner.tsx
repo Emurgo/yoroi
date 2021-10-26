@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import React, {memo, useCallback} from 'react'
 import {useIntl} from 'react-intl'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
 import {actionMessages} from '../../../legacy/i18n/global-messages'
@@ -126,7 +126,7 @@ const useNavigations = () => {
   return {
     onSend: useCallback(() => navigation.navigate(WALLET_ROUTES.SEND), [navigation]),
     onReceive: useCallback(() => navigation.navigate(WALLET_ROUTES.RECEIVE), [navigation]),
-    onBuy: useCallback(() => alert(strings.messageBuy), [strings.messageBuy]),
+    onBuy: useCallback(() => Alert.alert(strings.messageBuy, strings.messageBuy), [strings.messageBuy]),
   }
 }
 
