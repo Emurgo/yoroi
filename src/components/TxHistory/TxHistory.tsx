@@ -10,13 +10,10 @@ import {checkForFlawedWallets} from '../../../legacy/actions'
 import {fetchAccountState} from '../../../legacy/actions/account'
 import {updateHistory} from '../../../legacy/actions/history'
 import infoIcon from '../../../legacy/assets/img/icon/info-light-green.png'
-import VotingBanner from '../../../legacy/components/Catalyst/VotingBanner'
 import {OfflineBanner, StatusBar, Text, WarningBanner} from '../../../legacy/components/UiKit'
 import {isByron} from '../../../legacy/config/config'
 import walletManager from '../../../legacy/crypto/walletManager'
-import {CATALYST_ROUTES} from '../../../legacy/RoutesList'
 import {
-  isFetchingAccountStateSelector,
   isOnlineSelector,
   isSynchronizingHistorySelector,
   lastHistorySyncErrorSelector,
@@ -39,7 +36,6 @@ const TxHistory = () => {
   const isOnline = useSelector(isOnlineSelector)
   const routes = useNavigationState((state) => state.routes)
   const walletMeta = useSelector(walletMetaSelector)
-  const isFetchingAccountState = useSelector(isFetchingAccountStateSelector)
   const walletIsInitialized = useSelector(walletIsInitializedSelector)
 
   const [showWarning, setShowWarning] = useState<boolean>(isByron(walletMeta.walletImplementationId))
@@ -92,13 +88,6 @@ const TxHistory = () => {
                       style={styles.warningNoteStyles}
                     />
                   )}
-
-                  <VotingBanner
-                    onPress={() => {
-                      navigation.navigate(CATALYST_ROUTES.ROOT)
-                    }}
-                    disabled={isFetchingAccountState}
-                  />
 
                   {_.isEmpty(transactionsInfo) ? (
                     <ScrollView

@@ -29,7 +29,9 @@ const TxHistoryList = ({transactions, refreshing, onRefresh}: Props) => {
 
   return (
     <View style={styles.listRoot}>
-      <TxListActionsBanner onExport={handleExport} onSearch={handleSearch} />
+      {(features.txHistory.export || features.txHistory.search) && (
+        <TxListActionsBanner onExport={handleExport} onSearch={handleSearch} />
+      )}
       <SectionList
         onRefresh={onRefresh}
         refreshing={refreshing}
@@ -90,6 +92,8 @@ const getTransactionsByDate = (transactions: Dict<TransactionInfo>) =>
     .map((data) => ({data}))
     .value()
 
+// NOTE: layout is following inVision spec
+// https://projects.invisionapp.com/d/main?origin=v7#/console/21500065/456867605/inspect?scrollOffset=2856#project_console
 const styles = StyleSheet.create({
   listRoot: {
     flex: 1,
@@ -104,6 +108,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     justifyContent: 'space-between',
     flexDirection: 'row',
+    paddingBottom: 2,
   },
 })
 

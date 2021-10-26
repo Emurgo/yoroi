@@ -2,6 +2,7 @@ import React, {memo, useState} from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {COLORS} from '../../../legacy/styles/config'
+import Spacer from '../Spacer'
 
 // NOTE: layout is following inVision spec
 // https://projects.invisionapp.com/d/main?origin=v7#/console/21500065/456867605/inspect?scrollOffset=2856#project_console
@@ -96,6 +97,9 @@ const TabNavigator = ({tabs, render}: TabNavigatorProps) => {
       </View>
       <View style={styles.tabNavigatorRoot}>
         <View style={styles.grabber} />
+
+        <Spacer height={12} />
+
         {render({active})}
       </View>
     </View>
