@@ -13,8 +13,8 @@ const styles = StyleSheet.create({
   },
 })
 interface WalletHeroProps {
-  tabs: Array<string>,
-  render: (_) => JSX.Element,
+  tabs: Array<string>
+  render: (_) => JSX.Element
 }
 
 const WalletHero = (props: WalletHeroProps) => {
@@ -22,9 +22,9 @@ const WalletHero = (props: WalletHeroProps) => {
     <View style={styles.root}>
       <BalanceBanner />
       <ActionsBanner />
-      <TabNavigator {...props}/>
+      <TabNavigator {...props} />
     </View>
   )
 }
 
-export  default WalletHero
+export default WalletHero

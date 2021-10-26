@@ -1,22 +1,17 @@
-import { useNavigation } from '@react-navigation/native'
-import React, { memo, useCallback } from 'react'
-import { useIntl } from 'react-intl'
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-  } from 'react-native'
-import { useSelector } from 'react-redux'
+import {useNavigation} from '@react-navigation/native'
+import React, {memo, useCallback} from 'react'
+import {useIntl} from 'react-intl'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {useSelector} from 'react-redux'
 
-import { actionMessages } from '../../../legacy/i18n/global-messages'
-import { WALLET_ROUTES } from '../../../legacy/RoutesList'
-import { isReadOnlySelector } from '../../../legacy/selectors'
-import { COLORS } from '../../../legacy/styles/config'
+import {actionMessages} from '../../../legacy/i18n/global-messages'
+import {WALLET_ROUTES} from '../../../legacy/RoutesList'
+import {isReadOnlySelector} from '../../../legacy/selectors'
+import {COLORS} from '../../../legacy/styles/config'
+import features from '../../features'
 import Spacer from '../Spacer'
 import ReceivedIcon from '../StylizedIcons/ReceivedIcon'
 import SentIcon from '../StylizedIcons/SentIcon'
-import features from '../../features'
 
 const ACTION_PROPS = {
   height: 36,
@@ -31,7 +26,6 @@ const ActionsBanner = () => {
 
   return (
     <View style={styles.banner}>
-
       <Spacer height={16} />
 
       <View style={styles.centralized}>
@@ -69,7 +63,6 @@ const ActionsBanner = () => {
       </View>
 
       <Spacer height={21} />
-
     </View>
   )
 }
@@ -116,7 +109,7 @@ const styles = StyleSheet.create({
 
 const useStrings = () => {
   const intl = useIntl()
-  
+
   return {
     sendLabel: intl.formatMessage(actionMessages.send),
     receiveLabel: intl.formatMessage(actionMessages.receive),
@@ -128,7 +121,7 @@ const useStrings = () => {
 const useNavigations = () => {
   const navigation = useNavigation()
   const strings = useStrings()
-  
+
   // TODO: adjust navigation for the next wallet tab navigator
   return {
     onSend: useCallback(() => navigation.navigate(WALLET_ROUTES.SEND), [navigation]),

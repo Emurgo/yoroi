@@ -39,10 +39,10 @@ const styles = StyleSheet.create({
 })
 
 type Props = {
-  iconSeed: string,
-  scalePx?: number,
-  saturationFactor?: number,
-  style?: ViewStyleProp,
+  iconSeed: string
+  scalePx?: number
+  saturationFactor?: number
+  style?: ViewStyleProp
 }
 
 const WalletAccountIcon = ({iconSeed, scalePx = 5, saturationFactor = 0, style}: Props) => {

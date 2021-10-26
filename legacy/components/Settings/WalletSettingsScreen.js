@@ -213,7 +213,6 @@ const WalletSettingsScreen = () => {
           disabled={false}
         />
       </SettingsSection>
-
     </ScrollView>
   )
 }

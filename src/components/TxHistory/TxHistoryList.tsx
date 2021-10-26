@@ -3,20 +3,20 @@ import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {Alert, SectionList, StyleSheet, View} from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import {TouchableOpacity} from 'react-native-gesture-handler'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import TxHistoryListItem from '../../../legacy/components/TxHistory/TxHistoryListItem'
 import {Text} from '../../../legacy/components/UiKit'
-import { actionMessages } from '../../../legacy/i18n/global-messages'
+import {actionMessages} from '../../../legacy/i18n/global-messages'
 import {formatDateRelative} from '../../../legacy/utils/format'
 import features from '../../features'
 import {TransactionInfo} from './types'
 
 type Props = {
-  transactions: Dict<TransactionInfo>,
-  refreshing: boolean,
-  onRefresh: () => void,
+  transactions: Dict<TransactionInfo>
+  refreshing: boolean
+  onRefresh: () => void
 }
 
 const TxHistoryList = ({transactions, refreshing, onRefresh}: Props) => {
@@ -29,7 +29,7 @@ const TxHistoryList = ({transactions, refreshing, onRefresh}: Props) => {
 
   return (
     <View style={styles.listRoot}>
-      <TxListActionsBanner onExport={handleExport} onSearch={handleSearch}/>
+      <TxListActionsBanner onExport={handleExport} onSearch={handleSearch} />
       <SectionList
         onRefresh={onRefresh}
         refreshing={refreshing}
@@ -44,8 +44,8 @@ const TxHistoryList = ({transactions, refreshing, onRefresh}: Props) => {
 }
 
 type TxListActionsBannerProps = {
-  onExport: () => void,
-  onSearch: () => void,
+  onExport: () => void
+  onSearch: () => void
 }
 
 const TxListActionsBanner = (props: TxListActionsBannerProps) => {
@@ -56,7 +56,7 @@ const TxListActionsBanner = (props: TxListActionsBannerProps) => {
           <Icon name="export" size={24} color="#6B7384" />
         </TouchableOpacity>
       )}
-      
+
       {features.txHistory.search && (
         <TouchableOpacity onPress={props.onSearch}>
           <Icon name="magnify" size={24} color="#6B7384" />
@@ -67,7 +67,7 @@ const TxListActionsBanner = (props: TxListActionsBannerProps) => {
 }
 
 type DayHeaderProps = {
-  ts: unknown,
+  ts: unknown
 }
 
 const DayHeader = ({ts}: DayHeaderProps) => {
@@ -103,13 +103,13 @@ const styles = StyleSheet.create({
     display: 'flex',
     paddingHorizontal: 20,
     justifyContent: 'space-between',
-    flexDirection: 'row'
-  }
+    flexDirection: 'row',
+  },
 })
 
 const useStrings = () => {
   const intl = useIntl()
-  
+
   return {
     soon: intl.formatMessage(actionMessages.soon),
   }

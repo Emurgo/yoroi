@@ -29,7 +29,7 @@ const VotingBanner = ({onPress, disabled}: Props) => {
   const tokenBalance = useSelector(tokenBalanceSelector)
   const availableAssets = useSelector(availableAssetsSelector)
   const assetMetaData = availableAssets[tokenBalance.getDefaultId()]
-  
+
   const [showInsufficientFundsModal, setShowInsufficientFundsModal] = useState<boolean>(false)
   const canVote = isHaskellShelley(walletMeta.walletImplementationId)
   const [showCatalystBanner, setShowCatalystBanner] = useState<boolean>(canVote)
@@ -83,24 +83,24 @@ const VotingBanner = ({onPress, disabled}: Props) => {
       </TouchableOpacity>
 
       <StandardModal
-          visible={showInsufficientFundsModal}
-          title={strings.attention}
-          onRequestClose={() => setShowInsufficientFundsModal(false)}
-          primaryButton={{
-            label: strings.back,
-            onPress: () => setShowInsufficientFundsModal(false),
-          }}
-          showCloseIcon
-        >
-          <View>
-            <Text>
-              {strings.noBalance({
-                requiredBalance: formatTokenWithText(CONFIG.CATALYST.DISPLAYED_MIN_ADA, assetMetaData),
-                currentBalance: formatTokenWithText(tokenBalance.getDefault(), assetMetaData),
-              })}
-            </Text>
-          </View>
-        </StandardModal>
+        visible={showInsufficientFundsModal}
+        title={strings.attention}
+        onRequestClose={() => setShowInsufficientFundsModal(false)}
+        primaryButton={{
+          label: strings.back,
+          onPress: () => setShowInsufficientFundsModal(false),
+        }}
+        showCloseIcon
+      >
+        <View>
+          <Text>
+            {strings.noBalance({
+              requiredBalance: formatTokenWithText(CONFIG.CATALYST.DISPLAYED_MIN_ADA, assetMetaData),
+              currentBalance: formatTokenWithText(tokenBalance.getDefault(), assetMetaData),
+            })}
+          </Text>
+        </View>
+      </StandardModal>
     </View>
   )
 }
@@ -139,12 +139,10 @@ const useStrings = () => {
     name: intl.formatMessage(messages.name),
     attention: intl.formatMessage(globalMessages.attention),
     back: intl.formatMessage(confirmationMessages.commonButtons.backButton),
-    noBalance: ({
-      requiredBalance,
-      currentBalance,
-    }) => intl.formatMessage(globalMessages.insufficientBalance, {
-      requiredBalance,
-      currentBalance
-    }),
+    noBalance: ({requiredBalance, currentBalance}) =>
+      intl.formatMessage(globalMessages.insufficientBalance, {
+        requiredBalance,
+        currentBalance,
+      }),
   }
 }

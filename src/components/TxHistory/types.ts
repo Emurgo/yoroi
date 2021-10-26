@@ -3,46 +3,45 @@ export type TransactionStatus = 'SUCCESSFUL' | 'PENDING' | 'FAILED'
 export type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
 export type TransactionType = 'byron' | 'shelley'
 
-
 export type TokenLookupKey = {
-  identifier: string,
-  networkId: number,
+  identifier: string
+  networkId: number
 }
-  
+
 export type TokenEntry = TokenLookupKey & {
-  amount: BigNumber,
+  amount: BigNumber
 }
 
 export type TokenEntryPlain = TokenLookupKey & {
-  amount: string,
-  isDefault: boolean,
+  amount: string
+  isDefault: boolean
 }
 
 export type DefaultTokenEntry = {
-  defaultNetworkId: number,
-  defaultIdentifier: string,
+  defaultNetworkId: number
+  defaultIdentifier: string
 }
 
 export type IOData = {
-  address: string,
-  assets: Array<TokenEntry>,
-  amount: string,
+  address: string
+  assets: Array<TokenEntry>
+  amount: string
 }
 
 export type TransactionInfo = {
-  id: string,
-  inputs: Array<IOData>,
-  outputs: Array<IOData>,
-  amount: Array<TokenEntryPlain>,
-  fee?: Array<TokenEntryPlain>,
-  delta: Array<TokenEntryPlain>,
-  direction: TransactionDirection,
-  confirmations: number,
-  submittedAt?: string,
-  lastUpdatedAt: string,
-  status: TransactionStatus,
-  assurance: TransactionAssurance,
-  tokens: Dict<Token>,
+  id: string
+  inputs: Array<IOData>
+  outputs: Array<IOData>
+  amount: Array<TokenEntryPlain>
+  fee?: Array<TokenEntryPlain>
+  delta: Array<TokenEntryPlain>
+  direction: TransactionDirection
+  confirmations: number
+  submittedAt?: string
+  lastUpdatedAt: string
+  status: TransactionStatus
+  assurance: TransactionAssurance
+  tokens: Dict<Token>
 }
 
 // export type BaseAsset = RemoteAsset

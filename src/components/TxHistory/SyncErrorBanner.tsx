@@ -5,8 +5,8 @@ import {Banner} from '../../../legacy/components/UiKit'
 import globalMessages from '../../../legacy/i18n/global-messages'
 
 type Props = {
-  showRefresh: boolean,
-  isOpen: boolean,
+  showRefresh: boolean
+  isOpen: boolean
 }
 
 const SyncErrorBanner = ({showRefresh, isOpen}: Props) => {

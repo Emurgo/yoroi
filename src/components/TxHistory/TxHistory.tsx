@@ -11,26 +11,19 @@ import {fetchAccountState} from '../../../legacy/actions/account'
 import {updateHistory} from '../../../legacy/actions/history'
 import infoIcon from '../../../legacy/assets/img/icon/info-light-green.png'
 import VotingBanner from '../../../legacy/components/Catalyst/VotingBanner'
-import StandardModal from '../../../legacy/components/Common/StandardModal'
 import {OfflineBanner, StatusBar, Text, WarningBanner} from '../../../legacy/components/UiKit'
-import {CONFIG, isByron, isHaskellShelley, isNightly} from '../../../legacy/config/config'
-import {isRegistrationOpen} from '../../../legacy/crypto/shelley/catalystUtils'
+import {isByron} from '../../../legacy/config/config'
 import walletManager from '../../../legacy/crypto/walletManager'
-import globalMessages, {confirmationMessages} from '../../../legacy/i18n/global-messages'
 import {CATALYST_ROUTES} from '../../../legacy/RoutesList'
 import {
-  availableAssetsSelector,
   isFetchingAccountStateSelector,
   isOnlineSelector,
   isSynchronizingHistorySelector,
   lastHistorySyncErrorSelector,
-  tokenBalanceSelector,
   transactionsInfoSelector,
   walletIsInitializedSelector,
   walletMetaSelector,
 } from '../../../legacy/selectors'
-import {formatTokenWithText} from '../../../legacy/utils/format'
-import {Logger} from '../../../legacy/utils/logging'
 import WalletHero from '../WalletHero/WalletHero'
 import EmptyHistory from './EmptyHistory'
 import SyncErrorBanner from './SyncErrorBanner'
@@ -48,9 +41,9 @@ const TxHistory = () => {
   const walletMeta = useSelector(walletMetaSelector)
   const isFetchingAccountState = useSelector(isFetchingAccountStateSelector)
   const walletIsInitialized = useSelector(walletIsInitializedSelector)
-  
+
   const [showWarning, setShowWarning] = useState<boolean>(isByron(walletMeta.walletImplementationId))
- 
+
   useEffect(() => {
     dispatch(checkForFlawedWallets())
     dispatch(updateHistory())
@@ -129,7 +122,6 @@ const TxHistory = () => {
             return <View />
           }}
         />
-
       </View>
     </SafeAreaView>
   )
