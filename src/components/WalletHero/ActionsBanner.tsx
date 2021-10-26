@@ -16,6 +16,7 @@ import { COLORS } from '../../../legacy/styles/config'
 import Spacer from '../Spacer'
 import ReceivedIcon from '../StylizedIcons/ReceivedIcon'
 import SentIcon from '../StylizedIcons/SentIcon'
+import features from '../../features'
 
 const ACTION_PROPS = {
   height: 36,
@@ -53,15 +54,17 @@ const ActionsBanner = () => {
             <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
           </View>
 
-          <Spacer width={32} />
+          {features.walletHero.buy && <Spacer width={32} />}
 
-          <View style={styles.centralized}>
-            <TouchableOpacity style={[styles.actionIcon, styles.cta]} onPress={navigateTo.onBuy}>
-              {/* TODO: request buy icon to the design team */}
-              <Text style={styles.buyButton}>+</Text>
-            </TouchableOpacity>
-            <Text style={styles.actionLabel}>{strings.buyLabel}</Text>
-          </View>
+          {features.walletHero.buy && (
+            <View style={styles.centralized}>
+              <TouchableOpacity style={[styles.actionIcon, styles.cta]} onPress={navigateTo.onBuy}>
+                {/* TODO: request buy icon to the design team */}
+                <Text style={styles.buyButton}>+</Text>
+              </TouchableOpacity>
+              <Text style={styles.actionLabel}>{strings.buyLabel}</Text>
+            </View>
+          )}
         </View>
       </View>
 

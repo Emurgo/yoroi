@@ -10,6 +10,7 @@ import TxHistoryListItem from '../../../legacy/components/TxHistory/TxHistoryLis
 import {Text} from '../../../legacy/components/UiKit'
 import { actionMessages } from '../../../legacy/i18n/global-messages'
 import {formatDateRelative} from '../../../legacy/utils/format'
+import features from '../../features'
 import {TransactionInfo} from './types'
 
 type Props = {
@@ -50,12 +51,17 @@ type TxListActionsBannerProps = {
 const TxListActionsBanner = (props: TxListActionsBannerProps) => {
   return (
     <View style={styles.actionsRoot}>
-      <TouchableOpacity onPress={props.onExport}>
-        <Icon name="export" size={24} color="#6B7384" />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={props.onSearch}>
-        <Icon name="magnify" size={24} color="#6B7384" />
-      </TouchableOpacity>
+      {features.txHistory.export && (
+        <TouchableOpacity onPress={props.onExport}>
+          <Icon name="export" size={24} color="#6B7384" />
+        </TouchableOpacity>
+      )}
+      
+      {features.txHistory.search && (
+        <TouchableOpacity onPress={props.onSearch}>
+          <Icon name="magnify" size={24} color="#6B7384" />
+        </TouchableOpacity>
+      )}
     </View>
   )
 }

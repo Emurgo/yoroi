@@ -44,50 +44,18 @@ const TxHistory = () => {
   const isSyncing = useSelector(isSynchronizingHistorySelector)
   const lastSyncError = useSelector(lastHistorySyncErrorSelector)
   const isOnline = useSelector(isOnlineSelector)
-  const tokenBalance = useSelector(tokenBalanceSelector)
-  const availableAssets = useSelector(availableAssetsSelector)
   const routes = useNavigationState((state) => state.routes)
   const walletMeta = useSelector(walletMetaSelector)
   const isFetchingAccountState = useSelector(isFetchingAccountStateSelector)
   const walletIsInitialized = useSelector(walletIsInitializedSelector)
   
-  const assetMetaData = availableAssets[tokenBalance.getDefaultId()]
-
   const [showWarning, setShowWarning] = useState<boolean>(isByron(walletMeta.walletImplementationId))
  
-  // InsufficientFundsModal (Catalyst)
-  const [showInsufficientFundsModal, setShowInsufficientFundsModal] = useState<boolean>(false)
-  const canVote = isHaskellShelley(walletMeta.walletImplementationId)
-  const [showCatalystBanner, setShowCatalystBanner] = useState<boolean>(canVote)
-
   useEffect(() => {
     dispatch(checkForFlawedWallets())
     dispatch(updateHistory())
     dispatch(fetchAccountState())
   }, [dispatch])
-
-  useEffect(() => {
-    const checkCatalystFundInfo = async () => {
-      let fundInfo: FundInfo = null
-      if (canVote) {
-        try {
-          const {currentFund} = await walletManager.fetchFundInfo()
-          if (currentFund != null) {
-            fundInfo = {
-              registrationStart: currentFund.registrationStart,
-              registrationEnd: currentFund.registrationEnd,
-            }
-          }
-        } catch (e) {
-          Logger.debug('Could not get Catalyst fund info from server', e)
-        }
-      }
-      setShowCatalystBanner((canVote && isRegistrationOpen(fundInfo)) || isNightly() || __DEV__)
-    }
-
-    checkCatalystFundInfo()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   useEffect(
     () =>
@@ -132,18 +100,12 @@ const TxHistory = () => {
                     />
                   )}
 
-                  {showCatalystBanner && (
-                    <VotingBanner
-                      onPress={() => {
-                        if (tokenBalance.getDefault().lt(CONFIG.CATALYST.MIN_ADA)) {
-                          setShowInsufficientFundsModal(true)
-                          return
-                        }
-                        navigation.navigate(CATALYST_ROUTES.ROOT)
-                      }}
-                      disabled={isFetchingAccountState}
-                    />
-                  )}
+                  <VotingBanner
+                    onPress={() => {
+                      navigation.navigate(CATALYST_ROUTES.ROOT)
+                    }}
+                    disabled={isFetchingAccountState}
+                  />
 
                   {_.isEmpty(transactionsInfo) ? (
                     <ScrollView
@@ -167,26 +129,6 @@ const TxHistory = () => {
             return <View />
           }}
         />
-
-        <StandardModal
-          visible={showInsufficientFundsModal}
-          title={intl.formatMessage(globalMessages.attention)}
-          onRequestClose={() => setShowInsufficientFundsModal(false)}
-          primaryButton={{
-            label: intl.formatMessage(confirmationMessages.commonButtons.backButton),
-            onPress: () => setShowInsufficientFundsModal(false),
-          }}
-          showCloseIcon
-        >
-          <View>
-            <Text>
-              {intl.formatMessage(globalMessages.insufficientBalance, {
-                requiredBalance: formatTokenWithText(CONFIG.CATALYST.DISPLAYED_MIN_ADA, assetMetaData),
-                currentBalance: formatTokenWithText(tokenBalance.getDefault(), assetMetaData),
-              })}
-            </Text>
-          </View>
-        </StandardModal>
 
       </View>
     </SafeAreaView>
@@ -226,10 +168,5 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
 })
-
-type FundInfo = {
-  registrationStart: string,
-  registrationEnd: string,
-}
 
 export default TxHistory

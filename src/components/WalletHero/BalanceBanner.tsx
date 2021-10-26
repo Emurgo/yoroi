@@ -9,7 +9,7 @@ import closedEyeIcon from '../../assets/img/icon/visibility-closed.png'
 import openedEyeIcon from '../../assets/img/icon/visibility-opened.png'
 import Spacer from '../Spacer'
 import WalletAccountIcon from '../StylizedIcons/WalletAccountIcon'
-
+import features from '../../features'
 
 const BALANCE_WHEN_HIDDEN = '*.******'
 const TOTAL_WHEN_HIDDEN = '*.**'
@@ -77,6 +77,8 @@ const BalanceBanner = () => {
     setTotal(showValues ? '0.00' : TOTAL_WHEN_HIDDEN)
   }, [showValues, tokenBalance, availableAssets])
 
+  const fiatTotalText = features.walletHero.fiat ? `${totalToShow} ${QUOTE_PAIR_CURRENCY}` : ''
+
   return (
     <View style={styles.banner}>
 
@@ -93,7 +95,7 @@ const BalanceBanner = () => {
           <View style={styles.column}>
             <Text style={styles.balanceText}>{balanceToShow}</Text>
             <Text style={styles.totalText}>
-              {totalToShow} {QUOTE_PAIR_CURRENCY}
+              {fiatTotalText}
             </Text>
           </View>
           <View style={styles.showIcon}>
