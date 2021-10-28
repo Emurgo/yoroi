@@ -7,6 +7,7 @@ import type {RawUtxo, RemotePoolMetaSuccess} from './api/types'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from './config/types'
 import {ISignRequest} from './crypto/ISignRequest'
 import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
+import type {WalletInterface} from './crypto/WalletInterface'
 import type {Token, Transaction} from './types/HistoryTransaction'
 
 // prettier-ignore
@@ -30,28 +31,32 @@ export type WalletMeta = {
 }
 
 // prettier-ignore
+export type ReduxWallet = {
+  isEasyConfirmationEnabled: WalletInterface['isEasyConfirmationEnabled'],
+  networkId: WalletInterface['networkId'],
+  walletImplementationId: WalletInterface['walletImplementationId'],
+  isHW: WalletInterface['isHW'],
+  hwDeviceInfo: WalletInterface['hwDeviceInfo'],
+  isReadOnly: WalletInterface['isReadOnly'],
+  transactions: WalletInterface['transactions'],
+  internalAddresses: WalletInterface['internalAddresses'],
+  externalAddresses: WalletInterface['externalAddresses'],
+  rewardAddressHex: WalletInterface['rewardAddressHex'],
+  confirmationCounts: WalletInterface['confirmationCounts'],
+  isUsedAddressIndex: WalletInterface['isUsedAddressIndex'],
+  numReceiveAddresses: WalletInterface['numReceiveAddresses'],
+  checksum: WalletInterface['checksum'],
+  provider?: WalletInterface['provider'],
+  isInitialized?: WalletInterface['isInitialized'],
+
+  name: string,
+  canGenerateNewReceiveAddress: boolean,
+}
+
+// prettier-ignore
 export type State = {
   wallets: Record<string, WalletMeta>,
-  wallet: {
-    name: string, // note: comes from WalletMeta, exposed by walletManager only
-    isInitialized: boolean,
-    networkId: NetworkId,
-    walletImplementationId: WalletImplementationId,
-    provider?: YoroiProvider,
-    isHW: boolean,
-    hwDeviceInfo?: HWDeviceInfo,
-    isReadOnly: boolean,
-    isEasyConfirmationEnabled: boolean,
-    transactions: Record<string, Transaction>,
-    internalAddresses: Array<string>,
-    externalAddresses: Array<string>,
-    rewardAddressHex: string | void | null,
-    confirmationCounts: Record<string, number>,
-    isUsedAddressIndex: Record<string, boolean>,
-    numReceiveAddresses: number,
-    canGenerateNewReceiveAddress: boolean,
-    checksum: WalletChecksum,
-  },
+  wallet: ReduxWallet,
   txHistory: {
     isSynchronizing: boolean,
     lastSyncError: any, // TODO(ppershing): type me
