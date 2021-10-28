@@ -32,7 +32,7 @@ export type ShelleyWalletJSON = {
 
   networkId: NetworkId,
   walletImplementationId: WalletImplementationId,
-  provider: ?YoroiProvider,
+  provider?: ?YoroiProvider,
 
   isHW: boolean,
   hwDeviceInfo: ?HWDeviceInfo,
