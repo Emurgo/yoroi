@@ -13,10 +13,7 @@ storiesOf('V2/TxHistory', module).add('No transactions', () => {
   return (
     <MockAppStateWrapper>
       {/* Need to simulate a navigator because it uses the NavigatorState */}
-      <Stack.Navigator
-        screenOptions={{...defaultStackNavigatorOptions, ...{cardStyle: {backgroundColor: 'yellow'}}}}
-        initialRouteName={walletName}
-      >
+      <Stack.Navigator screenOptions={{...defaultStackNavigatorOptions}} initialRouteName={walletName}>
         <Stack.Screen
           options={mockV2NavigatorOptions(
             {
