@@ -3,7 +3,7 @@
 import {validateMnemonic, wordlists} from 'bip39'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Keyboard, ScrollView, View} from 'react-native'
+import {Keyboard, ScrollView, StyleSheet, View} from 'react-native'
 
 import {COLORS} from '../../../../styles/config'
 import {Menu, TextInput} from '../../../UiKit'
@@ -86,12 +86,10 @@ const MnemonicWordInput = React.forwardRef(({id, onSelect}: MnemonicWordInputPro
     onSelect(normalizeText(word))
   }
 
-  const rowHeight = 48
-
   return (
     <Menu
-      style={{marginTop: rowHeight}}
-      contentStyle={{backgroundColor: COLORS.BACKGROUND}}
+      style={styles.menu}
+      contentStyle={styles.menuContent}
       anchor={
         <TextInput
           ref={ref}
@@ -115,9 +113,9 @@ const MnemonicWordInput = React.forwardRef(({id, onSelect}: MnemonicWordInputPro
         setWord('')
       }}
     >
-      <ScrollView style={{maxHeight: rowHeight * 3.5}} keyboardShouldPersistTaps={'always'}>
+      <ScrollView style={styles.menuScrollView} keyboardShouldPersistTaps={'always'}>
         {matchingWords.map((word) => (
-          <Menu.Item titleStyle={{color: COLORS.TEXT_GRAY}} key={word} title={word} onPress={() => selectWord(word)} />
+          <Menu.Item titleStyle={styles.menuItemText} key={word} title={word} onPress={() => selectWord(word)} />
         ))}
       </ScrollView>
     </Menu>
@@ -153,3 +151,19 @@ const useStrings = () => {
     invalidChecksum: intl.formatMessage(messages.invalidChecksum),
   }
 }
+
+const ROW_HEIGHT = 48
+const styles = StyleSheet.create({
+  menu: {
+    marginTop: ROW_HEIGHT,
+  },
+  menuContent: {
+    backgroundColor: COLORS.BACKGROUND,
+  },
+  menuScrollView: {
+    maxHeight: ROW_HEIGHT * 3.5,
+  },
+  menuItemText: {
+    color: COLORS.TEXT_GRAY,
+  },
+})
