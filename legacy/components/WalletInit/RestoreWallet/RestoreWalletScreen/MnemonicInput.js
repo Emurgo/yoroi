@@ -6,7 +6,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Keyboard, ScrollView, StyleSheet, View} from 'react-native'
 
 import {COLORS} from '../../../../styles/config'
-import {Menu, TextInput} from '../../../UiKit'
+import {Menu, TextInput, useScrollView} from '../../../UiKit'
 
 export const MnemonicInput = ({length, onDone}: {length: number, onDone: (phrase: string) => mixed}) => {
   const strings = useStrings()
@@ -48,13 +48,19 @@ type MnemonicWordsInputProps = {
 }
 const MnemonicWordsInput = ({onSelect, words}: MnemonicWordsInputProps) => {
   const refs = React.useRef(words.map(() => React.createRef<any>())).current
+  const scrollView = useScrollView()
+  const rowHeightRef = React.useRef<number | void>()
 
   useAutoFocus(refs[0]) // RNP.TextInput has a buggy autoFocus
 
   return (
     <View style={{padding: 4, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around'}}>
       {words.map((word, index) => (
-        <View key={index} style={{width: '33%', padding: 4}}>
+        <View
+          key={index}
+          style={{width: '33%', padding: 4}}
+          onLayout={({nativeEvent}) => (rowHeightRef.current = nativeEvent.layout.height)}
+        >
           <MnemonicWordInput
             ref={refs[index]}
             onSelect={(word: string) => {
@@ -64,6 +70,12 @@ const MnemonicWordsInput = ({onSelect, words}: MnemonicWordsInputProps) => {
             }}
             id={index + 1}
             word={word}
+            onFocus={() => {
+              if (rowHeightRef.current == null) return
+              const columnNumber = index % 3
+              const rowNumber = (index - columnNumber) / 3
+              scrollView?.scrollTo({y: rowNumber * rowHeightRef.current})
+            }}
           />
         </View>
       ))}
@@ -74,8 +86,9 @@ const MnemonicWordsInput = ({onSelect, words}: MnemonicWordsInputProps) => {
 type MnemonicWordInputProps = {
   id: number,
   onSelect: (word: string) => mixed,
+  onFocus: () => void,
 }
-const MnemonicWordInput = React.forwardRef(({id, onSelect}: MnemonicWordInputProps, ref) => {
+const MnemonicWordInput = React.forwardRef(({id, onSelect, onFocus}: MnemonicWordInputProps, ref) => {
   const [word, setWord] = React.useState('')
   const matchingWords = React.useMemo(() => (word ? getMatchingWords(word) : []), [word])
   const [menuEnabled, setMenuEnabled] = React.useState(false)
@@ -95,6 +108,7 @@ const MnemonicWordInput = React.forwardRef(({id, onSelect}: MnemonicWordInputPro
           ref={ref}
           value={word}
           placeholder={String(id)}
+          onFocus={onFocus}
           onChange={() => setMenuEnabled(true)}
           onChangeText={(word) => setWord(normalizeText(word))}
           enablesReturnKeyAutomatically
