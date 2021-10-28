@@ -1,5 +1,3 @@
-/* eslint-disable no-use-before-define */
-/* eslint-disable react-native/no-inline-styles */
 // @flow
 
 import {validateMnemonic, wordlists} from 'bip39'
@@ -7,6 +5,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Keyboard, ScrollView, View} from 'react-native'
 
+import {COLORS} from '../../../../styles/config'
 import {Menu, TextInput} from '../../../UiKit'
 
 export const MnemonicInput = ({length, onDone}: {length: number, onDone: (phrase: string) => mixed}) => {
@@ -87,8 +86,12 @@ const MnemonicWordInput = React.forwardRef(({id, onSelect}: MnemonicWordInputPro
     onSelect(normalizeText(word))
   }
 
+  const rowHeight = 48
+
   return (
     <Menu
+      style={{marginTop: rowHeight}}
+      contentStyle={{backgroundColor: COLORS.BACKGROUND}}
       anchor={
         <TextInput
           ref={ref}
@@ -112,9 +115,9 @@ const MnemonicWordInput = React.forwardRef(({id, onSelect}: MnemonicWordInputPro
         setWord('')
       }}
     >
-      <ScrollView style={{maxHeight: 48 * 3.5 /* 3.5 rows */}} keyboardShouldPersistTaps={'always'}>
+      <ScrollView style={{maxHeight: rowHeight * 3.5}} keyboardShouldPersistTaps={'always'}>
         {matchingWords.map((word) => (
-          <Menu.Item key={word} title={word} onPress={() => selectWord(word)} />
+          <Menu.Item titleStyle={{color: COLORS.TEXT_GRAY}} key={word} title={word} onPress={() => selectWord(word)} />
         ))}
       </ScrollView>
     </Menu>

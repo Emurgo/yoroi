@@ -17,9 +17,7 @@ function loadStories() {
   require('../legacy/components/Delegation/PoolDetailScreen.stories')
   require('../legacy/components/Delegation/StakingCenter.stories')
   require('../legacy/components/Delegation/StakingDashboard.stories')
-  require('../legacy/components/FirstRun/AcceptTermsOfService.stories')
   require('../legacy/components/FirstRun/CustomPinScreen.stories')
-  require('../legacy/components/FirstRun/LanguagePickerScreen.stories')
   require('../legacy/components/Ledger/DeviceItem/DeviceItem.stories')
   require('../legacy/components/Ledger/LedgerConnect.stories')
   require('../legacy/components/Ledger/LedgerTransportSwitchModal.stories')
@@ -64,6 +62,9 @@ function loadStories() {
   require('../legacy/components/WalletInit/WalletInitScreen.stories')
   require('../legacy/components/WalletInit/WalletNameForm.stories')
   require('../legacy/components/WalletSelection/WalletSelectionScreen.stories')
+  require('../src/components/FirstRun/AcceptTermsOfService.stories')
+  require('../src/components/FirstRun/CustomPinScreen.stories')
+  require('../src/components/FirstRun/LanguagePickerScreen.stories')
   require('./Example/Example.stories')
 }
 
@@ -81,9 +82,7 @@ const stories = [
   '../legacy/components/Delegation/PoolDetailScreen.stories',
   '../legacy/components/Delegation/StakingCenter.stories',
   '../legacy/components/Delegation/StakingDashboard.stories',
-  '../legacy/components/FirstRun/AcceptTermsOfService.stories',
   '../legacy/components/FirstRun/CustomPinScreen.stories',
-  '../legacy/components/FirstRun/LanguagePickerScreen.stories',
   '../legacy/components/Ledger/DeviceItem/DeviceItem.stories',
   '../legacy/components/Ledger/LedgerConnect.stories',
   '../legacy/components/Ledger/LedgerTransportSwitchModal.stories',
@@ -128,6 +127,9 @@ const stories = [
   '../legacy/components/WalletInit/WalletInitScreen.stories',
   '../legacy/components/WalletInit/WalletNameForm.stories',
   '../legacy/components/WalletSelection/WalletSelectionScreen.stories',
+  '../src/components/FirstRun/AcceptTermsOfService.stories',
+  '../src/components/FirstRun/CustomPinScreen.stories',
+  '../src/components/FirstRun/LanguagePickerScreen.stories',
   './Example/Example.stories',
 ]
 

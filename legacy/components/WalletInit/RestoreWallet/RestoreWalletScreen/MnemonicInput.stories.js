@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 // @flow
 
 import {action} from '@storybook/addon-actions'
