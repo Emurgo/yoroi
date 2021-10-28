@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import React from 'react'
 import {useIntl} from 'react-intl'
 
 import {Banner} from '../../../legacy/components/UiKit'
@@ -26,4 +26,4 @@ const SyncErrorBanner = ({showRefresh, isOpen}: Props) => {
   )
 }
 
-export default memo<Props>(SyncErrorBanner)
+export default SyncErrorBanner

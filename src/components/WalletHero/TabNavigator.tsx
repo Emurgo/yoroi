@@ -1,8 +1,8 @@
-import React, {memo, useState} from 'react'
+import React, {useState} from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {COLORS} from '../../../legacy/styles/config'
-import Spacer from '../Spacer'
+import Spacer from '../Spacer/Spacer'
 
 // NOTE: layout is following inVision spec
 // https://projects.invisionapp.com/d/main?origin=v7#/console/21500065/456867605/inspect?scrollOffset=2856#project_console
@@ -85,7 +85,7 @@ const TabNavigator = ({tabs, render}: TabNavigatorProps) => {
             const indicatorStyle = [styles.indicator, active === i ? styles.indicatorActive : styles.indicatorInactive]
             const textStyle = [styles.tabText, active === i ? styles.tabTextActive : styles.tabTextInactive]
             return (
-              <TouchableOpacity key={`tab-navigator-${i}`} style={styles.tabPanel} onPress={() => setActive(i)}>
+              <TouchableOpacity key={`tab-navigator-${label}`} style={styles.tabPanel} onPress={() => setActive(i)}>
                 <View style={styles.centralized}>
                   <Text style={textStyle}>{label}</Text>
                 </View>
@@ -106,4 +106,4 @@ const TabNavigator = ({tabs, render}: TabNavigatorProps) => {
   )
 }
 
-export default memo<TabNavigatorProps>(TabNavigator)
+export default TabNavigator

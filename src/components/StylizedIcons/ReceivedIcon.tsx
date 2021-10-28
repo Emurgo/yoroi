@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import React from 'react'
 import Svg, {G, Path, Rect} from 'react-native-svg'
 
 type Props = {
@@ -27,4 +27,4 @@ const ReceivedIcon = ({width = 36, height = 36, color = '#6B7384'}: Props) => (
   </Svg>
 )
 
-export default memo<Props>(ReceivedIcon)
+export default ReceivedIcon

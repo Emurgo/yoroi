@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
-import React, {memo, useCallback} from 'react'
+import React from 'react'
 import {useIntl} from 'react-intl'
 import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
@@ -9,7 +9,7 @@ import {WALLET_ROUTES} from '../../../legacy/RoutesList'
 import {isReadOnlySelector} from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
 import features from '../../features'
-import Spacer from '../Spacer'
+import Spacer from '../Spacer/Spacer'
 import ReceivedIcon from '../StylizedIcons/ReceivedIcon'
 import SentIcon from '../StylizedIcons/SentIcon'
 
@@ -124,10 +124,10 @@ const useNavigations = () => {
 
   // TODO: adjust navigation for the next wallet tab navigator
   return {
-    onSend: useCallback(() => navigation.navigate(WALLET_ROUTES.SEND), [navigation]),
-    onReceive: useCallback(() => navigation.navigate(WALLET_ROUTES.RECEIVE), [navigation]),
-    onBuy: useCallback(() => Alert.alert(strings.messageBuy, strings.messageBuy), [strings.messageBuy]),
+    onSend: () => navigation.navigate(WALLET_ROUTES.SEND),
+    onReceive: () => navigation.navigate(WALLET_ROUTES.RECEIVE),
+    onBuy: () => Alert.alert(strings.messageBuy, strings.messageBuy),
   }
 }
 
-export default memo(ActionsBanner)
+export default ActionsBanner

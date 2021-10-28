@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, StyleSheet, Text, View} from 'react-native'
 
@@ -35,4 +35,4 @@ const EmptyHistory = () => {
   )
 }
 
-export default memo(EmptyHistory)
+export default EmptyHistory

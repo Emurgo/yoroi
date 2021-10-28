@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 import Blockies from 'react-native-blockies-svg'
@@ -62,4 +62,4 @@ const WalletAccountIcon = ({iconSeed, scalePx = 5, saturationFactor = 0, style}:
   )
 }
 
-export default memo<Props>(WalletAccountIcon)
+export default WalletAccountIcon
