@@ -5,14 +5,14 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, View} from 'react-native'
+import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {getWalletConfigById} from '../../../../config/config'
 import type {NetworkId, WalletImplementationId} from '../../../../config/types'
 import {useParams} from '../../../../navigation'
 import {WALLET_INIT_ROUTES} from '../../../../RoutesList'
-import {Button, KeyboardSpacer, Spacer, StatusBar, Text} from '../../../UiKit'
+import {Button, KeyboardSpacer, ScrollableView, Spacer, StatusBar, Text} from '../../../UiKit'
 import {MnemonicInput} from './MnemonicInput'
 
 type Params = {
@@ -40,7 +40,7 @@ export const RestoreWalletScreen = () => {
     <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1, backgroundColor: 'white', borderWidth: 1}}>
       <StatusBar type="dark" />
 
-      <ScrollView bounces={false} style={{paddingHorizontal: 16}} keyboardShouldPersistTaps={'always'}>
+      <ScrollableView bounces={false} style={{paddingHorizontal: 16}} keyboardShouldPersistTaps={'always'}>
         <Spacer height={24} />
 
         <Instructions>{strings.instructions({mnemonicLength})}</Instructions>
@@ -50,7 +50,7 @@ export const RestoreWalletScreen = () => {
         <MnemonicInput length={mnemonicLength} onDone={setPhrase} />
 
         <KeyboardSpacer padding={100} />
-      </ScrollView>
+      </ScrollableView>
 
       <Actions>
         <Button onPress={navigateToWalletCredentials} title={strings.restoreButton} disabled={!phrase} />

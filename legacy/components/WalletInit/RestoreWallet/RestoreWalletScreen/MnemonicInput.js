@@ -1,13 +1,12 @@
-/* eslint-disable no-use-before-define */
-/* eslint-disable react-native/no-inline-styles */
 // @flow
 
 import {validateMnemonic, wordlists} from 'bip39'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Keyboard, ScrollView, View} from 'react-native'
+import {Keyboard, ScrollView, StyleSheet, View} from 'react-native'
 
-import {Menu, TextInput} from '../../../UiKit'
+import {COLORS} from '../../../../styles/config'
+import {Menu, TextInput, useScrollView} from '../../../UiKit'
 
 export const MnemonicInput = ({length, onDone}: {length: number, onDone: (phrase: string) => mixed}) => {
   const strings = useStrings()
@@ -49,13 +48,19 @@ type MnemonicWordsInputProps = {
 }
 const MnemonicWordsInput = ({onSelect, words}: MnemonicWordsInputProps) => {
   const refs = React.useRef(words.map(() => React.createRef<any>())).current
+  const scrollView = useScrollView()
+  const rowHeightRef = React.useRef<number | void>()
 
   useAutoFocus(refs[0]) // RNP.TextInput has a buggy autoFocus
 
   return (
     <View style={{padding: 4, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around'}}>
       {words.map((word, index) => (
-        <View key={index} style={{width: '33%', padding: 4}}>
+        <View
+          key={index}
+          style={{width: '33%', padding: 4}}
+          onLayout={({nativeEvent}) => (rowHeightRef.current = nativeEvent.layout.height)}
+        >
           <MnemonicWordInput
             ref={refs[index]}
             onSelect={(word: string) => {
@@ -65,6 +70,12 @@ const MnemonicWordsInput = ({onSelect, words}: MnemonicWordsInputProps) => {
             }}
             id={index + 1}
             word={word}
+            onFocus={() => {
+              if (rowHeightRef.current == null) return
+              const columnNumber = index % 3
+              const rowNumber = (index - columnNumber) / 3
+              scrollView?.scrollTo({y: rowNumber * rowHeightRef.current})
+            }}
           />
         </View>
       ))}
@@ -75,8 +86,9 @@ const MnemonicWordsInput = ({onSelect, words}: MnemonicWordsInputProps) => {
 type MnemonicWordInputProps = {
   id: number,
   onSelect: (word: string) => mixed,
+  onFocus: () => void,
 }
-const MnemonicWordInput = React.forwardRef(({id, onSelect}: MnemonicWordInputProps, ref) => {
+const MnemonicWordInput = React.forwardRef(({id, onSelect, onFocus}: MnemonicWordInputProps, ref) => {
   const [word, setWord] = React.useState('')
   const matchingWords = React.useMemo(() => (word ? getMatchingWords(word) : []), [word])
   const [menuEnabled, setMenuEnabled] = React.useState(false)
@@ -89,11 +101,14 @@ const MnemonicWordInput = React.forwardRef(({id, onSelect}: MnemonicWordInputPro
 
   return (
     <Menu
+      style={styles.menu}
+      contentStyle={styles.menuContent}
       anchor={
         <TextInput
           ref={ref}
           value={word}
           placeholder={String(id)}
+          onFocus={onFocus}
           onChange={() => setMenuEnabled(true)}
           onChangeText={(word) => setWord(normalizeText(word))}
           enablesReturnKeyAutomatically
@@ -112,9 +127,9 @@ const MnemonicWordInput = React.forwardRef(({id, onSelect}: MnemonicWordInputPro
         setWord('')
       }}
     >
-      <ScrollView style={{maxHeight: 48 * 3.5 /* 3.5 rows */}} keyboardShouldPersistTaps={'always'}>
+      <ScrollView style={styles.menuScrollView} keyboardShouldPersistTaps={'always'}>
         {matchingWords.map((word) => (
-          <Menu.Item key={word} title={word} onPress={() => selectWord(word)} />
+          <Menu.Item titleStyle={styles.menuItemText} key={word} title={word} onPress={() => selectWord(word)} />
         ))}
       </ScrollView>
     </Menu>
@@ -150,3 +165,19 @@ const useStrings = () => {
     invalidChecksum: intl.formatMessage(messages.invalidChecksum),
   }
 }
+
+const ROW_HEIGHT = 48
+const styles = StyleSheet.create({
+  menu: {
+    marginTop: ROW_HEIGHT,
+  },
+  menuContent: {
+    backgroundColor: COLORS.BACKGROUND,
+  },
+  menuScrollView: {
+    maxHeight: ROW_HEIGHT * 3.5,
+  },
+  menuItemText: {
+    color: COLORS.TEXT_GRAY,
+  },
+})
