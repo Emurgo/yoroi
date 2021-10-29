@@ -10,81 +10,174 @@ Looking for the Yoroi Extension? See [here](https://github.com/Emurgo/yoroi-fron
 
 ## Installation
 
-### Both platforms
+---
 
-Make sure your Node.js version matches `v16.5.0`. If you have `nvm` installed, you can just `nvm use`
+**NOTE**
 
-```
-# install rustup
-curl https://sh.rustup.rs -sSf | sh
+The **Windows + WSL2 Ubuntu** is used in the instruction for building project for android devices.<br/>The instruction is checked.<br/>It should work for the Ubuntu also, but it is not checked.
 
-# use 1.41.0 version
-rustup toolchain install 1.41.0
-rustup install 1.41.0
-rustup target add wasm32-unknown-unknown --toolchain 1.41.0
-```
+---
 
-Make sure `rustc --version` outputs `1.41.0`, which is the stable version (and not nightly).
+### iOS preparation
 
-### ios
+---
 
-Install cocoapods and download ios dependencies:
+- Install cocoapods and download ios dependencies:
 
 ```
 gem install cocoapods
 ```
 
-Install rust build targets: `rustup target add aarch64-apple-ios armv7-apple-ios armv7s-apple-ios x86_64-apple-ios i386-apple-ios`
+- Install Rust:
 
-Install cargo-lipo for building: `cargo install cargo-lipo`
+```shell
+curl https://sh.rustup.rs -sSf | sh
+rustup toolchain install 1.41.0
+rustup install 1.41.0
+rustup target add wasm32-unknown-unknown --toolchain 1.41.0
+rustup default 1.41.0
+```
+
+- Make sure your Node.js version matches `v16.5.0`.<br/>If you have `nvm` installed, you can just `nvm use`.
+- Install rust build targets:
+  </br>`rustup target add aarch64-apple-ios armv7-apple-ios armv7s-apple-ios x86_64-apple-ios i386-apple-ios`
+- Install cargo-lipo for building:
+  </br>`cargo install cargo-lipo`
 
 #### Additional configuration for MacOS Big Sur users
 
 MacOS Big Sur changed the default path of the system C linker, which breaks `cargo lipo`. Some approaches to fix this are detailed here https://github.com/TimNN/cargo-lipo/issues/41.
 
-### android
+---
 
-#### Windows (Physical device)
+### Android preparation
 
-This requires a physical Android phone & USB cable
+---
 
-1. Download [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
-1. Expose the USB to VirtualBox [guide here](https://www.wikihow.tech/Connect-a-USB-to-Virtualbox)
-   **Note**: You MUST expose USB 2.0 for Android devices. Exposing 3.0 will not work
-1. If your devices still doesn't appear, follow [these steps](https://android.stackexchange.com/a/144967)
-   **Note**: The format for these steps have changed over the years so be careful if you need this.
+<div style="background-color: #299EFE;border: 2px solid #0271CB;padding: 1em;color: antiquewhite; border-radius: 10px">
+NOTE. For windows users only.
+<p style="color: antiquewhite">It is necessary to activate WSL2 and install the Ubuntu distribution on it.</p>
+How to do that, please read <a href='https://docs.microsoft.com/en-us/windows/wsl/setup/environment'><span style="color: firebrick">here</span></a>
+</div>
 
-#### Windows (Virtual Device)
+#### WSL2 Ubuntu preparation
 
-On Host (Setup Android device)
+- Install Rust:
+
+```shell
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+rustup toolchain install 1.41.0
+rustup install 1.41.0
+rustup target add wasm32-unknown-unknown --toolchain 1.41.0
+rustup default 1.41.0
+rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
+```
+
+- Install `wasm-prkg`:
+  </br>`curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh`
+- [Install git](https://docs.microsoft.com/en-us/windows/wsl/tutorials/wsl-git)
+- [Install nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- Clone the project
+- Run the `nvm use` command in the project rot directory
+- Install `yarn`:
+  </br>`npm --install yarn`
+- Check that Yarn is installed:
+  </br>`yarn --version`
+- Install Java 8:
+  </br>`sudo apt-get install openjdk-8-jdk`.
+- If you have other java version switch to the 8 version by running the command:
+  </br>`sudo update-alternatives --config java`
+- Install Python 2:
+  </br>`sudo apt-get install python`
+- Install the Android SDK:
+
+```shell
+wget https://dl.google.com/android/repository/commandlinetools-linux-6200805_latest.zip
+cd ~
+mkdir -p Android/Sdk
+unzip commandlinetools-linux-6200805_latest.zip -d Android/Sdk
+```
+
+- Add the next two lines to your `.bashrc`
+
+```shell
+export ANDROID_HOME=$HOME/Android/Sdk
+export PATH="$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$PATH"
+# Make sure emulator path comes before tools. Had trouble on Ubuntu with emulator from /tools being loaded instead of the one from /emulator
+```
+
+- Update the Android SDK:
+
+```shell
+sdkmanager --sdk_root=${ANDROID_HOME} "tools"
+sdkmanager --update
+sdkmanager --list
+sdkmanager "build-tools;28.0.3" "platform-tools" "platforms;android-28" "tools"
+sdkmanager --licenses
+```
+
+- Install the Gradle:
+  </br>`sudo apt install gradle`
+- Install the Android NDK:
+  </br>`sdkmanager --install "ndk;20.0.5594570"`
+
+---
+
+#### Windows + WSL2 Ubuntu (Physical device)
+
+This requires a physical Android phone & USB cable, the Android Studio should be installed on Windows
+
+**On Windows**
+
+1. Connect a device to your Windows PC, the developer option on the Android phone should be ON, debugging via USB is also ON
+2. Run the Windows Terminal as Admin
+3. Enter the following commands:
+
+```shell
+adb devices # check device is appeared
+adb kill-server
+adb tcpip 5555
+```
+
+> Make sure your PC and the device are connected to the same WiFi network 4. Grab your phone ip
+
+**On WSL2 Ubuntu** 5. Connect to your device
+
+```shell
+adb connnect <device-ip>:5555
+adb devices -l # check device is appeared
+```
+
+---
+
+#### Windows + WSL2 Ubuntu (Virtual Device)
+
+**On Windows Host** (Setup Android device)
 
 1. Run Virtual Device from Android Studio
+2. Run the Windows Terminal as Admin
+3. Enter the following commands:
 
-On VM (Detect VirtualDevice from VirtualBox)
+```shell
+adb devices # check device is appeared
+adb kill-server
+adb tcpip 5555
+```
 
-1. `adb tcpip 5555`
-1. `adb kill-server`
-1. `adb connect 10.0.2.2:5555`
+**On WSL2 Ubuntu** 4. Connect to your device
+
+```shell
+adb connnect <device-ip>:5555
+adb devices -l # check device is appeared
+```
 
 On Host (allow app to connect to packaged bundle after build)
 
-1. Open VirtualBox
-1. VM Settings > Network >> Advanced > Port Forwarding
-1. Enter `8081` as Host Port and Guest Port (leave everything else blank)
-
-#### Android Setup
-
-```
-# install & setup android studio
-follow https://facebook.github.io/react-native/docs/getting-started.html (tab Building Projects with Native Code)
-```
-
-1. Ask for a copy of (or create a blank version of) `android/gradle.properties.local`
-1. Make sure your Anddroid build tools match the version in [android/build.gradle](android/build.gradle) (you will get an error otherwise)
-1. Download the NDK from Android Studio (see [here](https://developer.android.com/studio/projects/install-ndk.md) for instructions)
-1. Install Rust for Android `rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android`
+---
 
 ### First time
+
+---
 
 Make sure the rust targets for the platform you will work on (android/iOS) have been correctly installed with `rustup show`. Then:
 
@@ -94,7 +187,11 @@ Make sure the rust targets for the platform you will work on (android/iOS) have 
 
 If these steps fail, try looking at the [android CLI](https://github.com/Emurgo/yoroi-mobile/blob/develop/.circleci/config.yml#L68)
 
+---
+
 # Launching
+
+---
 
 1. `react-native start` - this will run RN packager, let it running (optional step)
 2. `react-native run-android --variant=devDebug --appIdSuffix=staging` - for version with testnet
@@ -103,9 +200,15 @@ If these steps fail, try looking at the [android CLI](https://github.com/Emurgo/
 4. `react-native run-ios --scheme=emurgo-staging --configuration=Staging.Debug` - staging (testnet) configuration
 5. `react-native run-ios --scheme=emurgo --configuration=Debug` - production configuration
 
+---
+
 # Testing
 
+---
+
 ## Unit Testing
+
+---
 
 To run all unit tests:
 
@@ -119,7 +222,11 @@ You can also run single test files, e.g.:
 $ jest wallet.test.js
 ```
 
+---
+
 ## End-to-end Testing
+
+---
 
 For E2E tsting we use the [detox](https://github.com/wix/Detox) framework.
 
@@ -149,7 +256,11 @@ $ yarn e2e:test-android
 
 This will build and test a _release_ version of the app.
 
+---
+
 # Debugging
+
+---
 
 Read through [this page](https://facebook.github.io/react-native/docs/debugging) to understand debugging for React-Native
 
@@ -161,7 +272,11 @@ This will allow you to put breakpoints and everything else you would ever need.
 1. While app is running, open debug menu
 1. Select `Debug JS remotely`
 
+---
+
 # Releasing
+
+---
 
 1. Follow [Signed Android APK](https://facebook.github.io/react-native/docs/signed-apk-android) to generate and setup signing certificate for Android
    (required only before first release).
@@ -175,7 +290,11 @@ file by running command:
 
 `ln -sf /usr/local/share/automake-<version>/test-driver <path_to_repo>/third-party/glog-0.3.5/test-driver`
 
+---
+
 # Troubleshooting
+
+---
 
 ## Checking that Rust is well setup (iOS & Android)
 
@@ -213,9 +332,15 @@ active toolchain
 rustc 1.41.0 (5e1a79984 2020-01-27)
 ```
 
+---
+
 # Code style
 
+---
+
 ## Imports
+
+---
 
 The imports should be in this order:
 
@@ -247,7 +372,11 @@ import styles from './TxDetails.style'
 import type {TransactionType} from '../../types/HistoryTransaction'
 ```
 
+---
+
 ## Styles
+
+---
 
 - If you use component in multiple screens, it should be in `UiKit` folder with other UI components and imported from it.
 - Each component file has own file with styles.
