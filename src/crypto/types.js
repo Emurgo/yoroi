@@ -3,8 +3,8 @@
 import {
   TransactionBuilder as V4TransactionBuilder,
   Certificate as V4Certificate,
+  LinearFee,
 } from '@emurgo/react-native-haskell-shelley'
-import {LinearFee} from '@emurgo/react-native-haskell-shelley'
 import {BigNumber} from 'bignumber.js'
 
 import {MultiToken} from './MultiToken'
