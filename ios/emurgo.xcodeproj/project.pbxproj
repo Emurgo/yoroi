@@ -1172,7 +1172,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
-				MARKETING_VERSION = 4.4.1;
+				MARKETING_VERSION = 4.4.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
