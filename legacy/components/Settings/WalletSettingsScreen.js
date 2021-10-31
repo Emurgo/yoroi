@@ -8,11 +8,12 @@ import {ScrollView, StyleSheet, Switch} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {closeWallet, DIALOG_BUTTONS, logout, showConfirmationDialog} from '../../actions'
+import VotingBanner from '../../components/Catalyst/VotingBanner'
 import {isByron, isHaskellShelley} from '../../config/config'
 import {getNetworkConfigById} from '../../config/networks'
 import type {NetworkId, WalletImplementationId} from '../../config/types'
 import {confirmationMessages} from '../../i18n/global-messages'
-import {SETTINGS_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
+import {CATALYST_ROUTES, SETTINGS_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
 import {
   easyConfirmationSelector,
   isHWSelector,
@@ -201,6 +202,15 @@ const WalletSettingsScreen = () => {
         <SettingsBuildItem
           label={intl.formatMessage(messages.walletType)}
           value={intl.formatMessage(getWalletType(walletMeta.walletImplementationId))}
+        />
+      </SettingsSection>
+
+      <SettingsSection>
+        <VotingBanner
+          onPress={() => {
+            navigation.navigate(CATALYST_ROUTES.ROOT)
+          }}
+          disabled={false}
         />
       </SettingsSection>
     </ScrollView>

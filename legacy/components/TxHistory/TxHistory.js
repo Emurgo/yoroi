@@ -1,11 +1,10 @@
 // @flow
 
 import {useNavigation, useNavigationState} from '@react-navigation/native'
-import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Image, RefreshControl, ScrollView, View} from 'react-native'
+import {RefreshControl, ScrollView, StyleSheet, View} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import {useDispatch, useSelector} from 'react-redux'
 
@@ -13,7 +12,6 @@ import {checkForFlawedWallets} from '../../actions'
 import {fetchAccountState} from '../../actions/account'
 import {updateHistory} from '../../actions/history'
 import infoIcon from '../../assets/img/icon/info-light-green.png'
-import image from '../../assets/img/no_transactions.png'
 import {CONFIG, isByron, isHaskellShelley, isNightly} from '../../config/config'
 import {isRegistrationOpen} from '../../crypto/shelley/catalystUtils'
 import walletManager from '../../crypto/walletManager'
@@ -31,22 +29,18 @@ import {
   walletIsInitializedSelector,
   walletMetaSelector,
 } from '../../selectors'
-import type {Token} from '../../types/HistoryTransaction'
 import {formatTokenWithText} from '../../utils/format'
 import {Logger} from '../../utils/logging'
 import VotingBanner from '../Catalyst/VotingBanner'
 import StandardModal from '../Common/StandardModal'
-import {Banner, OfflineBanner, StatusBar, Text, WarningBanner} from '../UiKit'
+import {OfflineBanner, StatusBar, Text, WarningBanner} from '../UiKit'
+import ActionsBanner from './components/ActionsBanner'
+import BalanceBanner from './components/BalanceBanner'
+import EmptyHistory from './components/EmptyHistory'
+import SyncErrorBanner from './components/SyncErrorBanner'
+import TabNavigator from './components/TabNavigator'
 import FlawedWalletModal from './FlawedWalletModal'
-import styles from './styles/TxHistory.style'
 import TxHistoryList from './TxHistoryList'
-
-const messages = defineMessages({
-  noTransactions: {
-    id: 'components.txhistory.txhistory.noTransactions',
-    defaultMessage: '!!!No transactions to show yet',
-  },
-})
 
 const warningBannerMessages = defineMessages({
   title: {
@@ -59,47 +53,28 @@ const warningBannerMessages = defineMessages({
   },
 })
 
-const NoTxHistory = () => {
-  const intl = useIntl()
-
-  return (
-    <View style={styles.empty}>
-      <Image source={image} />
-      <Text style={styles.emptyText}>{intl.formatMessage(messages.noTransactions)}</Text>
-    </View>
-  )
-}
-
-const SyncErrorBanner = ({showRefresh}: {showRefresh: any}) => {
-  const intl = useIntl()
-
-  return (
-    <Banner
-      error
-      text={
-        showRefresh
-          ? intl.formatMessage(globalMessages.syncErrorBannerTextWithRefresh)
-          : intl.formatMessage(globalMessages.syncErrorBannerTextWithoutRefresh)
-      }
-    />
-  )
-}
-
-type AvailableAmountProps = {|
-  amount: BigNumber,
-  amountAssetMetaData: Token,
-|}
-const AvailableAmountBanner = ({amount, amountAssetMetaData}: AvailableAmountProps) => {
-  const intl = useIntl()
-
-  return (
-    <Banner
-      label={intl.formatMessage(globalMessages.availableFunds)}
-      text={amount != null ? formatTokenWithText(amount, amountAssetMetaData) : '-'}
-      boldText
-    />
-  )
-}
+const styles = StyleSheet.create({
+  tabNavigatorRoot: {
+    flex: 1,
+    paddingTop: 8,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+  },
+  scrollView: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  container: {
+    flexDirection: 'column',
+    flex: 1,
+  },
+  warningNoteStyles: {
+    position: 'absolute',
+    zIndex: 2,
+    bottom: 0,
+  },
+})
 
 type FundInfo = ?{|
   +registrationStart: string,
@@ -185,62 +160,74 @@ const TxHistory = () => {
 
   return (
     <SafeAreaView style={styles.scrollView}>
-      <StatusBar type="dark" />
+      <StatusBar type="light" />
       <View style={styles.container}>
         <OfflineBanner />
         {isOnline && lastSyncError && <SyncErrorBanner showRefresh={!isSyncing} />}
 
-        <AvailableAmountBanner
-          amount={tokenBalance.getDefault()}
-          amountAssetMetaData={availableAssets[tokenBalance.getDefaultId()]}
+        <BalanceBanner />
+        <ActionsBanner />
+        <TabNavigator
+          tabs={['Transactions', 'Assets']}
+          render={({active}) => {
+            if (active === 0) {
+              return (
+                <View style={styles.tabNavigatorRoot}>
+                  {isByron(walletMeta.walletImplementationId) && showWarning && (
+                    <WarningBanner
+                      title={intl.formatMessage(warningBannerMessages.title).toUpperCase()}
+                      icon={infoIcon}
+                      message={intl.formatMessage(warningBannerMessages.message)}
+                      showCloseIcon
+                      onRequestClose={() => setShowWarning(false)}
+                      style={styles.warningNoteStyles}
+                    />
+                  )}
+
+                  {showCatalystBanner && (
+                    <VotingBanner
+                      onPress={() => {
+                        if (tokenBalance.getDefault().lt(CONFIG.CATALYST.MIN_ADA)) {
+                          setShowInsufficientFundsModal(true)
+                          return
+                        }
+                        navigation.navigate(CATALYST_ROUTES.ROOT)
+                      }}
+                      disabled={isFetchingAccountState}
+                    />
+                  )}
+
+                  {isFlawedWallet === true && (
+                    <FlawedWalletModal
+                      visible={isFlawedWallet === true}
+                      disableButtons={false}
+                      onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)}
+                      onRequestClose={() => navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)}
+                    />
+                  )}
+
+                  {_.isEmpty(transactionsInfo) ? (
+                    <ScrollView
+                      refreshControl={
+                        <RefreshControl onRefresh={() => dispatch(updateHistory())} refreshing={isSyncing} />
+                      }
+                    >
+                      <EmptyHistory />
+                    </ScrollView>
+                  ) : (
+                    <TxHistoryList
+                      refreshing={isSyncing}
+                      onRefresh={() => dispatch(updateHistory())}
+                      navigation={navigation}
+                      transactions={transactionsInfo}
+                    />
+                  )}
+                </View>
+              )
+            }
+            return <View />
+          }}
         />
-
-        {showCatalystBanner && (
-          <VotingBanner
-            onPress={() => {
-              if (tokenBalance.getDefault().lt(CONFIG.CATALYST.MIN_ADA)) {
-                setShowInsufficientFundsModal(true)
-                return
-              }
-              navigation.navigate(CATALYST_ROUTES.ROOT)
-            }}
-            disabled={isFetchingAccountState}
-          />
-        )}
-        {isFlawedWallet === true && (
-          <FlawedWalletModal
-            visible={isFlawedWallet === true}
-            disableButtons={false}
-            onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)}
-            onRequestClose={() => navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)}
-          />
-        )}
-
-        {_.isEmpty(transactionsInfo) ? (
-          <ScrollView
-            refreshControl={<RefreshControl onRefresh={() => dispatch(updateHistory())} refreshing={isSyncing} />}
-          >
-            <NoTxHistory />
-          </ScrollView>
-        ) : (
-          <TxHistoryList
-            refreshing={isSyncing}
-            onRefresh={() => dispatch(updateHistory())}
-            navigation={navigation}
-            transactions={transactionsInfo}
-          />
-        )}
-
-        {isByron(walletMeta.walletImplementationId) && showWarning && (
-          <WarningBanner
-            title={intl.formatMessage(warningBannerMessages.title).toUpperCase()}
-            icon={infoIcon}
-            message={intl.formatMessage(warningBannerMessages.message)}
-            showCloseIcon
-            onRequestClose={() => setShowWarning(false)}
-            style={styles.warningNoteStyles}
-          />
-        )}
 
         <StandardModal
           visible={showInsufficientFundsModal}
