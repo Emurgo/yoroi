@@ -2,9 +2,11 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, StyleSheet, Text, View} from 'react-native'
 
-import image from '../../../legacy/assets/img/no_transactions.png'
+import image from '../../assets/img/no_transactions.png'
 import Spacer from '../Spacer/Spacer'
 
+// NOTE: layout is following inVision spec
+// https://projects.invisionapp.com/d/main#/console/21500065/458210499/preview#project_console
 const styles = StyleSheet.create({
   empty: {
     justifyContent: 'center',
@@ -32,7 +34,9 @@ const EmptyHistory = () => {
   return (
     <View style={styles.empty}>
       <Image style={styles.image} source={image} />
+
       <Spacer height={16} />
+
       <Text style={styles.emptyText}>{strings.empty}</Text>
     </View>
   )
