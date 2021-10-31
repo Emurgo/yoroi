@@ -3,19 +3,40 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Image, StyleSheet, Text, View} from 'react-native'
 
 import image from '../../../legacy/assets/img/no_transactions.png'
+import Spacer from '../Spacer/Spacer'
 
 const styles = StyleSheet.create({
   empty: {
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
-    paddingTop: '50%',
+    paddingTop: '20%',
   },
   emptyText: {
-    color: '#9B9B9B',
-    marginTop: 32,
+    color: '#242838',
+    fontSize: 16,
+    fontWeight: 'bold',
+    lineHeight: 24,
+    maxWidth: '45%',
+    textAlign: 'center',
+  },
+  image: {
+    height: 100,
+    width: 131,
   },
 })
+
+const EmptyHistory = () => {
+  const strings = useStrings()
+
+  return (
+    <View style={styles.empty}>
+      <Image style={styles.image} source={image} />
+      <Spacer height={16} />
+      <Text style={styles.emptyText}>{strings.empty}</Text>
+    </View>
+  )
+}
 
 const messages = defineMessages({
   noTransactions: {
@@ -24,15 +45,12 @@ const messages = defineMessages({
   },
 })
 
-const EmptyHistory = () => {
+const useStrings = () => {
   const intl = useIntl()
 
-  return (
-    <View style={styles.empty}>
-      <Image source={image} />
-      <Text style={styles.emptyText}>{intl.formatMessage(messages.noTransactions)}</Text>
-    </View>
-  )
+  return {
+    empty: intl.formatMessage(messages.noTransactions),
+  }
 }
 
 export default EmptyHistory

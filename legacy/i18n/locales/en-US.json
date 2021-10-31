@@ -257,7 +257,7 @@
   "components.txhistory.txdetails.txTypeReceived": "Received funds",
   "components.txhistory.txdetails.txTypeSelf": "Intrawallet transaction",
   "components.txhistory.txdetails.txTypeSent": "Sent funds",
-  "components.txhistory.txhistory.noTransactions": "No transactions to show yet",
+  "components.txhistory.txhistory.noTransactions": "There are no transactions in your wallet yet",
   "components.txhistory.txhistory.warningbanner.title": "Note:",
   "components.txhistory.txhistory.warningbanner.message": "The Shelley protocol upgrade adds a new Shelley wallet type which supports delegation. To delegate your ADA you will need to upgrade to a Shelley wallet.",
   "components.txhistory.txhistory.warningbanner.buttonText": "Upgrade",
