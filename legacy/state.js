@@ -188,7 +188,7 @@ export const getInitialState = (): State => ({
   },
 })
 
-export const mockState = (): State => {
+export const mockState = (mockedState: ?State): State => {
   if (!__DEV__) {
     throw new Error('calling mockState in a production build')
   }
@@ -212,6 +212,7 @@ export const mockState = (): State => {
       lastFetchingError: null,
       tokens: assetTokenInfos,
     },
+    ...mockedState,
   }
 }
 

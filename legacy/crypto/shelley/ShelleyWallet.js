@@ -224,6 +224,10 @@ export default class ShelleyWallet extends Wallet implements WalletInterface {
     this.isReadOnly = data.isReadOnly ?? false
     this.provider = data.provider
 
+    if (!this.checksum) {
+      this.checksum = walletMeta.checksum
+    }
+
     this.version = DeviceInfo.getVersion()
     if (this.version !== lastSeenVersion) {
       Logger.debug(`updated version from ${lastSeenVersion} to ${this.version}`)
