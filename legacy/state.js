@@ -4,12 +4,13 @@ import type {WalletChecksum} from '@emurgo/cip4-js'
 import {BigNumber} from 'bignumber.js'
 
 import type {RawUtxo, RemotePoolMetaSuccess} from './api/types'
-import {CONFIG} from './config/config'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from './config/types'
 import {NETWORK_REGISTRY} from './config/types'
 import {ISignRequest} from './crypto/ISignRequest'
-import type {HWDeviceInfo} from './crypto/shelley/ledgerUtils'
-import type {Token, Transaction} from './types/HistoryTransaction'
+import type {WalletInterface} from './crypto/WalletInterface'
+import {mockReduxWallet} from './mockWallet'
+import type {Token} from './types/HistoryTransaction'
+
 export type ServerStatusCache = {|
   +isServerOk: boolean,
   +isMaintenance: boolean,
@@ -25,31 +26,33 @@ export type WalletMeta = {
   isShelley?: ?boolean, // legacy jormungandr
   isEasyConfirmationEnabled: boolean,
   checksum: WalletChecksum,
-  provider: ?YoroiProvider,
+  provider?: ?YoroiProvider,
 }
 
+export type ReduxWallet = {
+  isEasyConfirmationEnabled: $PropertyType<WalletInterface, 'isEasyConfirmationEnabled'>,
+  networkId: $PropertyType<WalletInterface, 'networkId'>,
+  walletImplementationId: $PropertyType<WalletInterface, 'walletImplementationId'>,
+  isHW: $PropertyType<WalletInterface, 'isHW'>,
+  hwDeviceInfo: $PropertyType<WalletInterface, 'hwDeviceInfo'>,
+  isReadOnly: $PropertyType<WalletInterface, 'isReadOnly'>,
+  transactions: $PropertyType<WalletInterface, 'transactions'>,
+  internalAddresses: $PropertyType<WalletInterface, 'internalAddresses'>,
+  externalAddresses: $PropertyType<WalletInterface, 'externalAddresses'>,
+  rewardAddressHex: $PropertyType<WalletInterface, 'rewardAddressHex'>,
+  confirmationCounts: $PropertyType<WalletInterface, 'confirmationCounts'>,
+  isUsedAddressIndex: $PropertyType<WalletInterface, 'isUsedAddressIndex'>,
+  numReceiveAddresses: $PropertyType<WalletInterface, 'numReceiveAddresses'>,
+  checksum: $PropertyType<WalletInterface, 'checksum'>,
+  provider?: $PropertyType<WalletInterface, 'provider'>,
+  isInitialized: $PropertyType<WalletInterface, 'isInitialized'>,
+
+  name: string,
+  canGenerateNewReceiveAddress: boolean,
+}
 export type State = {
   wallets: Dict<WalletMeta>,
-  wallet: {
-    name: string, // note: comes from WalletMeta, exposed by walletManager only
-    isInitialized: boolean,
-    networkId: NetworkId,
-    walletImplementationId: WalletImplementationId,
-    provider: ?YoroiProvider,
-    isHW: boolean,
-    hwDeviceInfo: ?HWDeviceInfo,
-    isReadOnly: boolean,
-    isEasyConfirmationEnabled: boolean,
-    transactions: Dict<Transaction>,
-    internalAddresses: Array<string>,
-    externalAddresses: Array<string>,
-    rewardAddressHex: ?string,
-    confirmationCounts: Dict<number>,
-    isUsedAddressIndex: Dict<boolean>,
-    numReceiveAddresses: number,
-    canGenerateNewReceiveAddress: boolean,
-    checksum: WalletChecksum,
-  },
+  wallet: ReduxWallet,
   txHistory: {
     isSynchronizing: boolean,
     lastSyncError: any, // TODO(ppershing): type me
@@ -203,48 +206,7 @@ export const mockState = (mockedState: ?State): State => {
         '-encryptedKey',
       unsignedTx: undefined,
     },
-    wallet: {
-      name: 'My wallet',
-      isInitialized: true,
-      networkId: CONFIG.NETWORKS.HASKELL_SHELLEY.NETWORK_ID,
-      walletImplementationId: CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
-      provider: null,
-      isHW: false,
-      hwDeviceInfo: null,
-      isReadOnly: false,
-      isEasyConfirmationEnabled: false,
-      transactions: {},
-      internalAddresses: [
-        'addr1qy0aaqwqcrhj83nslz7pq6epnmy0at7dz8ftxpj0cpqpceclm6qups80y0r8p79uzp4jr8kgl6hu6ywjkvrylszqr3nsjxp0pv',
-        'addr1q9pypkw9ktyzygdsucmzlwy0xjws2chd47qs39599563nw6zgrvutvkgygsmpe3k97ug7dyaq43wmtuppztg2tf4rxasff8mkn',
-        'addr1q9yjras4ucx3vcwhh94zaqz4jcqekpyk4kzgz5jr87v93kx96lasktser3g35mksz4xqv9nj49uczmpkgeq09tv44zeqcxnrwj',
-      ],
-      externalAddresses: [
-        'addr1q9f5vjqxp2esysc0jtqkfamdyvc4m9pzygfea66fdz4psa2sux89v5fx2jpnraax6rzylgyvk4w77al89up2r0jgasfsytza8s',
-        'addr1qxm8czpthhgsuge2hqhkvteuz6vkq7tn8mpfux0uceq5t5zuvu2ffa2ctx3pdl4rjjja5p7al2k356x5yx8cn03am88sh4ngaf',
-        'addr1qx6l240ymk90xyr09wddj94fmpsnc8mg7cnn7r4j8p8sava47427fhv27vgx72u6myt2nkrp8s0k3a388u8tywz0p6esdd2kxc',
-        'addr1qx4ygptze0lvw0caqmcc4vwha68mwhpx63m6s5zlt6457g7apxz0l64qu4gg6dy43dtp34y7uua5ssdvnurc7pp4adnqzd6cxt',
-        'addr1qxxvt9rzpdxxysmqp50d7f5a3gdescgrejsu7zsdxqjy8yun4cngaq46gr8c9qyz4td9ddajzqhjnrqvfh0gspzv9xnsmq6nqx',
-        'addr1qxkzwsv9juc3p0jpp2t8mpzmrv9ltv20kpaquzkn935ukkun4cngaq46gr8c9qyz4td9ddajzqhjnrqvfh0gspzv9xnseec2jj',
-        'addr1qx9037h4j5xncnhanlkx4t6xu4egjfpwcx9upstld0jvkkyn4cngaq46gr8c9qyz4td9ddajzqhjnrqvfh0gspzv9xnsvs46uq',
-        'addr1qx20jpehj8xj8dmv3zx6vapm2zn8htrsvmdyy4wls4hkq7yn4cngaq46gr8c9qyz4td9ddajzqhjnrqvfh0gspzv9xns54lvgw',
-      ],
-      isUsedAddressIndex: {
-        addr1qxm8czpthhgsuge2hqhkvteuz6vkq7tn8mpfux0uceq5t5zuvu2ffa2ctx3pdl4rjjja5p7al2k356x5yx8cn03am88sh4ngaf: true,
-        addr1qx4ygptze0lvw0caqmcc4vwha68mwhpx63m6s5zlt6457g7apxz0l64qu4gg6dy43dtp34y7uua5ssdvnurc7pp4adnqzd6cxt: true,
-        addr1qx9037h4j5xncnhanlkx4t6xu4egjfpwcx9upstld0jvkkyn4cngaq46gr8c9qyz4td9ddajzqhjnrqvfh0gspzv9xnsvs46uq: true,
-      },
-      numReceiveAddresses: 8,
-      rewardAddressHex: null,
-      confirmationCounts: {},
-      canGenerateNewReceiveAddress: true,
-      checksum: {
-        ImagePart:
-          '1deb1b34689642510afc68cdf6427fd8d24e87869d5be2c1294ded9d1155b47567e' +
-          '0825024bdf0c2ef704f52277fb020972d476425f5723270e4f05f70e58517',
-        TextPart: 'ZNXA-1056',
-      },
-    },
+    wallet: mockReduxWallet,
     tokenInfo: {
       isFetching: false,
       lastFetchingError: null,

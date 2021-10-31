@@ -154,6 +154,14 @@ class WalletManager {
     return this._wallets
   }
 
+  getWallet() {
+    if (!this._wallet) {
+      throw new WalletClosed()
+    }
+
+    return this._wallet
+  }
+
   abortWhenWalletCloses<T>(promise: Promise<T>): Promise<T> {
     assert.assert(this._closePromise, 'should have closePromise')
     /* :: if (!this._closePromise) throw 'assert' */
@@ -222,7 +230,7 @@ class WalletManager {
    */
 
   get isInitialized() {
-    return this._wallet
+    return this.getWallet().isInitialized
   }
 
   get transactions() {
@@ -246,8 +254,7 @@ class WalletManager {
   }
 
   get isEasyConfirmationEnabled() {
-    if (!this._wallet) return {}
-    return this._wallet.isEasyConfirmationEnabled
+    return this.getWallet().isEasyConfirmationEnabled
   }
 
   get confirmationCounts() {
@@ -306,8 +313,7 @@ class WalletManager {
   }
 
   get checksum() {
-    if (!this._wallet) return ''
-    return this._wallet.checksum
+    return this.getWallet().checksum
   }
 
   get walletName() {
@@ -323,8 +329,7 @@ class WalletManager {
   // ============ security & key management ============ //
 
   async cleanupInvalidKeys() {
-    if (!this._wallet) throw new WalletClosed()
-    const wallet = this._wallet
+    const wallet = this.getWallet()
 
     try {
       await KeyStore.deleteData(wallet.id, 'BIOMETRICS')
@@ -353,8 +358,7 @@ class WalletManager {
   }
 
   async ensureKeysValidity() {
-    if (!this._wallet) throw new WalletClosed()
-    const wallet = this._wallet
+    const wallet = this.getWallet()
 
     const canBiometricsBeUsed = await canBiometricEncryptionBeEnabled()
     const isKeyValid = await KeyStore.isKeyValid(wallet.id, 'BIOMETRICS')
@@ -390,8 +394,7 @@ class WalletManager {
   }
 
   async enableEasyConfirmation(masterPassword: string, intl: IntlShape) {
-    if (!this._wallet) throw new WalletClosed()
-    const wallet = this._wallet
+    const wallet = this.getWallet()
 
     await wallet.enableEasyConfirmation(masterPassword, intl)
 
@@ -403,9 +406,9 @@ class WalletManager {
   }
 
   async changePassword(masterPassword: string, newPassword: string, intl: IntlShape) {
-    if (!this._wallet) throw new WalletClosed()
+    const wallet = this.getWallet()
 
-    await this._wallet.changePassword(masterPassword, newPassword, intl)
+    await wallet.changePassword(masterPassword, newPassword, intl)
   }
 
   canBiometricsSignInBeDisabled() {
@@ -621,8 +624,7 @@ class WalletManager {
   }
 
   async updateHWDeviceInfo(hwDeviceInfo: HWDeviceInfo) {
-    if (!this._wallet) throw new WalletClosed()
-    const wallet = this._wallet
+    const wallet = this.getWallet()
 
     wallet.hwDeviceInfo = hwDeviceInfo
     await this._saveState(wallet)
@@ -686,23 +688,23 @@ class WalletManager {
   // =================== tx building =================== //
 
   async getAllUtxosForKey(utxos: Array<RawUtxo>) {
-    if (!this._wallet) throw new WalletClosed()
-    return await this._wallet.getAllUtxosForKey(utxos)
+    const wallet = this.getWallet()
+    return await wallet.getAllUtxosForKey(utxos)
   }
 
   getAddressingInfo(address: string) {
-    if (!this._wallet) throw new WalletClosed()
-    return this._wallet.getAddressingInfo(address)
+    const wallet = this.getWallet()
+    return wallet.getAddressingInfo(address)
   }
 
   asAddressedUtxo(utxos: Array<RawUtxo>) {
-    if (!this._wallet) throw new WalletClosed()
-    return this._wallet.asAddressedUtxo(utxos)
+    const wallet = this.getWallet()
+    return wallet.asAddressedUtxo(utxos)
   }
 
   async getDelegationStatus() {
-    if (!this._wallet) throw new WalletClosed()
-    return await this._wallet.getDelegationStatus()
+    const wallet = this.getWallet()
+    return await wallet.getDelegationStatus()
   }
 
   async createUnsignedTx(
@@ -713,16 +715,16 @@ class WalletManager {
     serverTime: Date | void,
     metadata: Array<JSONMetadata> | void,
   ) {
-    if (!this._wallet) throw new WalletClosed()
+    const wallet = this.getWallet()
     return await this.abortWhenWalletCloses(
       // TODO(v-almonacid): maybe there is a better way instead of mixed
-      this._wallet.createUnsignedTx<mixed>(utxos, receiver, tokens, defaultToken, serverTime, metadata),
+      wallet.createUnsignedTx<mixed>(utxos, receiver, tokens, defaultToken, serverTime, metadata),
     )
   }
 
   async signTx<T>(signRequest: ISignRequest<T>, decryptedKey: string) {
-    if (!this._wallet) throw new WalletClosed()
-    return await this.abortWhenWalletCloses(this._wallet.signTx(signRequest, decryptedKey))
+    const wallet = this.getWallet()
+    return await this.abortWhenWalletCloses(wallet.signTx(signRequest, decryptedKey))
   }
 
   async createDelegationTx(
@@ -732,9 +734,9 @@ class WalletManager {
     defaultAsset: DefaultAsset,
     serverTime: Date | void,
   ) {
-    if (!this._wallet) throw new WalletClosed()
+    const wallet = this.getWallet()
     return await this.abortWhenWalletCloses(
-      this._wallet.createDelegationTx<mixed>(poolRequest, valueInAccount, utxos, defaultAsset, serverTime),
+      wallet.createDelegationTx<mixed>(poolRequest, valueInAccount, utxos, defaultAsset, serverTime),
     )
   }
 
@@ -744,71 +746,71 @@ class WalletManager {
     decryptedKey: string | void,
     serverTime: Date | void,
   ) {
-    if (!this._wallet) throw new WalletClosed()
+    const wallet = this.getWallet()
     return await this.abortWhenWalletCloses(
-      this._wallet.createVotingRegTx<mixed>(utxos, catalystPrivateKey, decryptedKey, serverTime),
+      wallet.createVotingRegTx<mixed>(utxos, catalystPrivateKey, decryptedKey, serverTime),
     )
   }
 
   async createWithdrawalTx(utxos: Array<RawUtxo>, shouldDeregister: boolean, serverTime: Date | void) {
-    if (!this._wallet) throw new WalletClosed()
-    return await this.abortWhenWalletCloses(this._wallet.createWithdrawalTx<mixed>(utxos, shouldDeregister, serverTime))
+    const wallet = this.getWallet()
+    return await this.abortWhenWalletCloses(wallet.createWithdrawalTx<mixed>(utxos, shouldDeregister, serverTime))
   }
 
   async signTxWithLedger<T>(request: ISignRequest<T>, useUSB: boolean) {
-    if (!this._wallet) throw new WalletClosed()
-    return await this.abortWhenWalletCloses(this._wallet.signTxWithLedger<T>(request, useUSB))
+    const wallet = this.getWallet()
+    return await this.abortWhenWalletCloses(wallet.signTxWithLedger<T>(request, useUSB))
   }
 
   // =================== backend API =================== //
 
   async submitTransaction(signedTx: string) {
-    if (!this._wallet) throw new WalletClosed()
-    return await this.abortWhenWalletCloses(this._wallet.submitTransaction(signedTx))
+    const wallet = this.getWallet()
+    return await this.abortWhenWalletCloses(wallet.submitTransaction(signedTx))
   }
 
   async getTxsBodiesForUTXOs(request: TxBodiesRequest) {
-    if (!this._wallet) throw new WalletClosed()
-    return await this.abortWhenWalletCloses(this._wallet.getTxsBodiesForUTXOs(request))
+    const wallet = this.getWallet()
+    return await this.abortWhenWalletCloses(wallet.getTxsBodiesForUTXOs(request))
   }
 
   async fetchUTXOs() {
-    if (!this._wallet) throw new WalletClosed()
-    return await this.abortWhenWalletCloses(this._wallet.fetchUTXOs())
+    const wallet = this.getWallet()
+    return await this.abortWhenWalletCloses(wallet.fetchUTXOs())
   }
 
   async fetchAccountState(): Promise<AccountStateResponse> {
-    if (this._wallet == null) throw new WalletClosed()
-    return await this.abortWhenWalletCloses(this._wallet.fetchAccountState())
+    const wallet = this.getWallet()
+    return await this.abortWhenWalletCloses(wallet.fetchAccountState())
   }
 
   async fetchPoolInfo(request: PoolInfoRequest): Promise<PoolInfoResponse> {
-    if (this._wallet == null) throw new WalletClosed()
-    return await this._wallet.fetchPoolInfo(request)
+    const wallet = this.getWallet()
+    return await wallet.fetchPoolInfo(request)
   }
 
   async fetchTokenInfo(request: TokenInfoRequest): Promise<TokenInfoResponse> {
-    if (this._wallet == null) throw new WalletClosed()
-    return await this._wallet.fetchTokenInfo(request)
+    const wallet = this.getWallet()
+    return await wallet.fetchTokenInfo(request)
   }
 
   async fetchFundInfo(): Promise<FundInfoResponse> {
-    if (this._wallet == null) throw new WalletClosed()
-    return await this._wallet.fetchFundInfo()
+    const wallet = this.getWallet()
+    return await wallet.fetchFundInfo()
   }
 
   // =================== misc =================== //
 
   checkForFlawedWallets(): boolean {
     if (CONFIG.IS_TESTNET_BUILD) return false
-    if (this._wallet == null) throw new WalletClosed()
+    const wallet = this.getWallet()
     const addrs = [
       'Ae2tdPwUPEZKAx4zt8YLTGxrhX9L6R8QPWNeefZsPgwaigWab4mEw1ECUZ7',
       'Ae2tdPwUPEZAghGCdQykbGxc991wdoA8bXmSn7eCGuUKXF4EsRhWj4PJitn',
       'addr1qynqc23tpx4dqps6xgqy9s2l3xz5fxu734wwmzj9uddn0h2z6epfcukqmswgwwfruxh7gaddv9x0d5awccwahnhwleqqc4zkh4',
       'addr1q9tr0a0feutyhdj34gxnasv8vef699fcry5avyrt6hn4n540f7le3laqc6cgpcds86z06psxczmnuk7txsajs4jdt4nqlhj8aa',
     ]
-    const externalChain = this._wallet.externalChain
+    const externalChain = wallet.externalChain
     const address = externalChain.addresses[0]
     if (addrs.includes(address)) {
       Logger.debug('WalletManager::checkForFlawedWallets: address match', address)
