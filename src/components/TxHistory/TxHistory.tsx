@@ -22,6 +22,7 @@ import {
   walletMetaSelector,
 } from '../../../legacy/selectors'
 import WalletHero from '../WalletHero/WalletHero'
+import {AssetsList} from './AssetsList'
 import EmptyHistory from './EmptyHistory'
 import SyncErrorBanner from './SyncErrorBanner'
 import TxHistoryList from './TxHistoryList'
@@ -74,7 +75,7 @@ const TxHistory = () => {
 
         <WalletHero
           tabs={['Transactions', 'Assets']}
-          render={({active}) => {
+          render={(active) => {
             if (active === 0) {
               return (
                 <View style={styles.tabNavigatorRoot}>
@@ -106,8 +107,13 @@ const TxHistory = () => {
                   )}
                 </View>
               )
+            } else if (active === 1) {
+              return (
+                <View style={styles.tabNavigatorRoot}>
+                  <AssetsList />
+                </View>
+              )
             }
-            return <View />
           }}
         />
       </View>

@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
 
 interface TabNavigatorProps {
   tabs: Array<string>
-  render: (_) => JSX.Element
+  render: (_active: number) => JSX.Element | undefined
 }
 
 const TabNavigator = ({tabs, render}: TabNavigatorProps) => {
@@ -99,8 +99,7 @@ const TabNavigator = ({tabs, render}: TabNavigatorProps) => {
         <View style={styles.grabber} />
 
         <Spacer height={12} />
-
-        {render({active})}
+        {render(active)}
       </View>
     </View>
   )

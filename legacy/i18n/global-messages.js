@@ -565,4 +565,12 @@ export default defineMessages({
       'but you only have {currentBalance}. Unwithdrawn rewards are ' +
       'not included in this amount',
   },
+  nfts: {
+    id: 'global.nfts',
+    defaultMessage: '!!! NFTs',
+  },
+  tokens: {
+    id: 'global.tokens',
+    defaultMessage: '!!! Tokens',
+  },
 })
