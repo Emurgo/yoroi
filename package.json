@@ -146,7 +146,7 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.15.7",
-    "@babel/core": "^7.15.8",
+    "@babel/core": "^7.16.0",
     "@babel/node": "^7.15.8",
     "@babel/runtime": "^7.15.4",
     "@emurgo/cardano-serialization-lib-nodejs": "^9.1.0",
