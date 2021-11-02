@@ -166,7 +166,7 @@
     "@types/react-redux": "^7.1.18",
     "@types/react-test-renderer": "^17.0.1",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
-    "@typescript-eslint/parser": "^5.0.0",
+    "@typescript-eslint/parser": "^5.3.0",
     "babel-jest": "26.6.3",
     "babel-loader": "8.2.2",
     "babel-plugin-react-intl": "^3.0.1",
