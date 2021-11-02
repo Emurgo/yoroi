@@ -1263,6 +1263,14 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@formatjs/ecma402-abstract@1.10.0":
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@formatjs/ecma402-abstract/-/ecma402-abstract-1.10.0.tgz#f51b9167535c9463113c24644de90262aa5d31a7"
+  integrity sha512-WNkcUHC6xw12rWY87TUw6KXzb1LnOooYBLLqtyn1kW2j197rcwpqmUOJMBED56YcLzaJPfVw1L2ShiDhL5pVnQ==
+  dependencies:
+    "@formatjs/intl-localematcher" "0.2.21"
+    tslib "^2.1.0"
+
 "@formatjs/ecma402-abstract@1.9.9":
   version "1.9.9"
   resolved "https://registry.yarnpkg.com/@formatjs/ecma402-abstract/-/ecma402-abstract-1.9.9.tgz#f556782fc12398af283ae2f8be64e938f969d240"
@@ -1345,12 +1353,12 @@
   dependencies:
     tslib "^2.1.0"
 
-"@formatjs/intl-numberformat@^7.2.3":
-  version "7.2.4"
-  resolved "https://registry.yarnpkg.com/@formatjs/intl-numberformat/-/intl-numberformat-7.2.4.tgz#da73b75b89f50e565b7deb264c98f65f2a3328cd"
-  integrity sha512-WkO+CvarhPjpUmvgWY0TDBxBxTP0APyTMPCSB32S0knRYuC41T1BrClkNVYAo9Y8N8aTX7ZYD6n4ftjP+dxNFw==
+"@formatjs/intl-numberformat@^7.2.5":
+  version "7.2.5"
+  resolved "https://registry.yarnpkg.com/@formatjs/intl-numberformat/-/intl-numberformat-7.2.5.tgz#d9425bc3cfda6193b11d6e59c2c3c45e46461c63"
+  integrity sha512-vscEGB5FduaMbkdplIBd8aENVkfyyjpBfJ9pKxkckCHdd3CY/AuLxzbcIyXAOmadYQQzTxMDDgyv0eRbGxCKtg==
   dependencies:
-    "@formatjs/ecma402-abstract" "1.9.9"
+    "@formatjs/ecma402-abstract" "1.10.0"
     tslib "^2.1.0"
 
 "@formatjs/intl-pluralrules@^4.1.3":
