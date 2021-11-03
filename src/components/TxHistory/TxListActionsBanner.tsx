@@ -1,40 +1,50 @@
 import React, {useState} from 'react'
-import {useIntl} from 'react-intl'
-import {StyleSheet, View} from 'react-native'
-import {TouchableOpacity} from 'react-native-gesture-handler'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
-import globalMessages from '../../../legacy/i18n/global-messages'
 import features from '../../features'
-import Spacer from '../Spacer/Spacer'
+import {Spacer} from '../Spacer'
 import {ChipButton} from './ChipButton'
 
-type Actions = 'txs' | 'assets'
 type AssetsOptions = 'tokens' | 'nfts'
 
-interface ActionListBaseProps {
+type ActionListBaseProps = {
   onSearch: () => void
-  actions: Actions
 }
 
-interface ActionsTransactionProps extends ActionListBaseProps {
-  actions: 'txs'
+type TxListActionsBannerForTransactionsTabProps = ActionListBaseProps & {
   onExport: () => void
 }
 
-interface ActionsAssetsProps extends ActionListBaseProps {
-  actions: 'assets'
-  // TODO: should receive the labels with the qty
+type TxListActionsBannerForAssetsTabProps = ActionListBaseProps & {
+  tokensLabel: string
+  nftsLabel: string
   onPressTokens: () => void
   onPressNFTs: () => void
 }
 
-type TxListActionsBannerProps = ActionsAssetsProps | ActionsTransactionProps
+export const TxListActionsBannerForTransactionsTab = (props: TxListActionsBannerForTransactionsTabProps) => {
+  const {onExport, onSearch} = props
+  return (
+    <View style={styles.actionsRoot}>
+      {features.txHistory.export && (
+        <TouchableOpacity onPress={onExport}>
+          <Icon name="export" size={24} color="#6B7384" />
+        </TouchableOpacity>
+      )}
 
-export const TxListActionsBanner = (props: TxListActionsBannerProps) => {
+      {features.txHistory.search && (
+        <TouchableOpacity onPress={onSearch}>
+          <Icon name="magnify" size={24} color="#6B7384" />
+        </TouchableOpacity>
+      )}
+    </View>
+  )
+}
+
+export const TxListActionsBannerForAssetsTab = (props: TxListActionsBannerForAssetsTabProps) => {
   const [assetSelected, setAssetSelected] = useState<AssetsOptions>('tokens')
-  const strings = useStrings()
-  const {onPressTokens, onPressNFTs} = props as ActionsAssetsProps
+  const {onPressTokens, onPressNFTs, tokensLabel, nftsLabel} = props
 
   const handleOnSelectTokens = () => {
     setAssetSelected('tokens')
@@ -48,21 +58,13 @@ export const TxListActionsBanner = (props: TxListActionsBannerProps) => {
 
   return (
     <View style={styles.actionsRoot}>
-      <View style={styles.leftActions}>
-        {props.actions === 'assets' && (
-          <ChipButton label={strings.tokens} onPress={handleOnSelectTokens} isSelected={assetSelected === 'tokens'} />
-        )}
+      <View style={styles.assets}>
+        <ChipButton label={tokensLabel} disabled onPress={handleOnSelectTokens} selected={assetSelected === 'tokens'} />
 
         <Spacer width={12} />
 
-        {props.actions === 'assets' && features.txHistory.nfts && (
-          <ChipButton label={strings.nfts} onPress={handleOnSelectNFTs} isSelected={assetSelected === 'nfts'} />
-        )}
-
-        {props.actions === 'txs' && features.txHistory.export && (
-          <TouchableOpacity onPress={props.onExport}>
-            <Icon name="export" size={24} color="#6B7384" />
-          </TouchableOpacity>
+        {features.txHistory.nfts && (
+          <ChipButton label={nftsLabel} disabled onPress={handleOnSelectNFTs} selected={assetSelected === 'nfts'} />
         )}
       </View>
 
@@ -75,8 +77,6 @@ export const TxListActionsBanner = (props: TxListActionsBannerProps) => {
   )
 }
 
-// NOTE: layout is following inVision spec
-// https://projects.invisionapp.com/d/main?origin=v7#/console/21500065/456867605/inspect?scrollOffset=2856#project_console
 const styles = StyleSheet.create({
   actionsRoot: {
     display: 'flex',
@@ -85,16 +85,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingBottom: 2,
   },
-  leftActions: {
+  assets: {
     flexDirection: 'row',
   },
 })
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    tokens: intl.formatMessage(globalMessages.tokens),
-    nfts: intl.formatMessage(globalMessages.nfts),
-  }
-}

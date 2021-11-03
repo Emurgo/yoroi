@@ -24,7 +24,7 @@ The **Windows + WSL2 Ubuntu** is used in the instruction for building project fo
 
 - Install cocoapods and download ios dependencies:
 
-```
+```shell
 gem install cocoapods
 ```
 
@@ -43,6 +43,8 @@ rustup default 1.41.0
   </br>`rustup target add aarch64-apple-ios armv7-apple-ios armv7s-apple-ios x86_64-apple-ios i386-apple-ios`
 - Install cargo-lipo for building:
   </br>`cargo install cargo-lipo`
+- Install dependencies:
+  </br>`yarn install`
 
 #### Additional configuration for MacOS Big Sur users
 
@@ -78,7 +80,7 @@ rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-andro
 - [Install git](https://docs.microsoft.com/en-us/windows/wsl/tutorials/wsl-git)
 - [Install nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 - Clone the project
-- Run the `nvm use` command in the project rot directory
+- Run the `nvm use` command in the project root directory
 - Install `yarn`:
   </br>`npm --install yarn`
 - Check that Yarn is installed:
@@ -98,12 +100,18 @@ mkdir -p Android/Sdk
 unzip commandlinetools-linux-6200805_latest.zip -d Android/Sdk
 ```
 
-- Add the next two lines to your `.bashrc`
+- Install dependencies:
+  </br>`yarn install`
+
+- Add the next lines to your `.bashrc`
 
 ```shell
 export ANDROID_HOME=$HOME/Android/Sdk
 export PATH="$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$PATH"
 # Make sure emulator path comes before tools. Had trouble on Ubuntu with emulator from /tools being loaded instead of the one from /emulator
+# Further lines are only necessary if you use Windows + WSL2 Ubuntu
+export WSL_HOST_IP="$(tail -1 /etc/resolv.conf | cut -d' ' -f2)"
+export ADB_SERVER_SOCKET=tcp:$WSL_HOST_IP:5037
 ```
 
 - Update the Android SDK:
@@ -120,68 +128,104 @@ sdkmanager --licenses
   </br>`sudo apt install gradle`
 - Install the Android NDK:
   </br>`sdkmanager --install "ndk;20.0.5594570"`
+- Install the `socat` (the step is only necessary if you use Windows + WSL2 Ubuntu):
+  </br>`sudo apt install socat`
 
 ---
 
-#### Windows + WSL2 Ubuntu (Physical device)
+#### Windows preparation
+
+- Install Android studio
+- In the Android Studio install Android SDK Build-Tools, NDK, CMake, Android emulator, Android SDK Platform tools
+- Add the following lines to the system PATH:
+
+```shell
+setx /m PATH "C:\Users\<YOUR_USER>\AppData\Local\Android\Sdk"
+setx /m PATH "C:\Users\<YOUR_USER>\AppData\Local\Android\Sdk\emulator"
+setx /m PATH "C:\Users\<YOUR_USER>\AppData\Local\Android\Sdk\platform-tools"
+setx /m PATH "C:\Users\<YOUR_USER>\AppData\Local\Android\Sdk\tools"
+setx /m PATH "C:\Users\<YOUR_USER>\AppData\Local\Android\Sdk\tools\bin"
+setx /m PATH "C:\Users\<YOUR_USER>\AppData\Local\Android\Sdk\tools\lib\x86_64\swt.jar"
+```
+
+- Install Java 8
+- Add the variable `JAVA_HOME` to your system variables:
+  </br>`setx /m JAVA_HOME "C:\Program Files\Java\jre1.8.0_311\bin"`
+- Prepare Windows Firewall:
+
+```text
+Add a Windows Firewall Rule (gotten from [here](https://github.com/Emurgo/react-native-haskell-shelley/issues/12#issuecomment-741967533))
+
+Open Windows Defender Firewall and go to Advanced Settings.
+Right click on "Inbound Rules" and click "New Rule"
+Select "Port" then Specific TCP port "5037", then "Allow the connection"
+Check Domain, Private, and Public as needed for your Internet connection (I only added Domain and Private)
+Name the rule whatever suits you
+After the firewall entry is added, right click on it and go to Properties
+Go to Scope -> Remote IP Addresses -> Add "172.16.0.0/12" (this is the WSL VM subnet)
+```
+
+---
+
+#### Connecting a device, Windows + WSL2 Ubuntu (Physical or virtual device)
 
 This requires a physical Android phone & USB cable, the Android Studio should be installed on Windows
 
 **On Windows**
 
-1. Connect a device to your Windows PC, the developer option on the Android phone should be ON, debugging via USB is also ON
-2. Run the Windows Terminal as Admin
-3. Enter the following commands:
+1. Connect a device to your Windows PC OR run a device emulator, the developer option on the Android phone should be ON, debugging via USB is also ON
+2. Run this commands in the PowerShell Admin Terminal (or you can create a PS script and run it as an Admin):
 
 ```shell
-adb devices # check device is appeared
+iex "netsh interface portproxy delete v4tov4 listenport=8081 listenaddress=127.0.0.1" | out-null;
+$WSL_CLIENT = bash.exe -c "ip addr show eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}'";
+$WSL_CLIENT -match '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}';
+$WSL_CLIENT = $matches[0];
+iex "netsh interface portproxy add v4tov4 listenport=8081 listenaddress=127.0.0.1 connectport=8081 connectaddress=$WSL_CLIENT"
+```
+
+3. Kill the adb server (just in case)
+
+```shell
 adb kill-server
-adb tcpip 5555
 ```
 
-> Make sure your PC and the device are connected to the same WiFi network 4. Grab your phone ip
-
-**On WSL2 Ubuntu** 5. Connect to your device
+4. Start the adb server
 
 ```shell
-adb connnect <device-ip>:5555
-adb devices -l # check device is appeared
+adb -a -P 5037 nodaemon server
 ```
 
----
-
-#### Windows + WSL2 Ubuntu (Virtual Device)
-
-**On Windows Host** (Setup Android device)
-
-1. Run Virtual Device from Android Studio
-2. Run the Windows Terminal as Admin
-3. Enter the following commands:
+If you want to use an emulator</br>
+Run another Terminal as Admin</br>
+Create an image ([how to do it from command line](https://developer.android.com/studio/command-line/avdmanager)) </br>
+Run an emulator
 
 ```shell
-adb devices # check device is appeared
-adb kill-server
-adb tcpip 5555
+emulator -avd <image_name>
 ```
 
-**On WSL2 Ubuntu** 4. Connect to your device
+**On WSL2 Ubuntu**
+
+5. Run WSL Terminal
+6. Execute the command
 
 ```shell
-adb connnect <device-ip>:5555
-adb devices -l # check device is appeared
+socat -d -d TCP-LISTEN:5037,reuseaddr,fork TCP:$(cat /etc/resolv.conf | tail -n1 | cut -d " " -f 2):5037
 ```
 
-On Host (allow app to connect to packaged bundle after build)
+7. Run another WSL Terminal
+
+```shell
+yarn start
+```
 
 ---
 
 ### First time
 
----
-
 Make sure the rust targets for the platform you will work on (android/iOS) have been correctly installed with `rustup show`. Then:
 
-1. `yarn install`
 1. `yarn setup_configs` - links libraries to ios testnet build configurations
 1. When building on iOS: `cd ios && pod install`
 
@@ -191,12 +235,9 @@ If these steps fail, try looking at the [android CLI](https://github.com/Emurgo/
 
 # Launching
 
----
-
 1. `react-native start` - this will run RN packager, let it running (optional step)
-2. `react-native run-android --variant=devDebug --appIdSuffix=staging` - for version with testnet
+2. `react-native run-android --variant=devDebug --appIdSuffix=staging` - it will build a debug package with the testnet version and install it on the connected device
 3. `react-native run-android --variant=mainnetDebug` - for version with mainnet
-
 4. `react-native run-ios --scheme=emurgo-staging --configuration=Staging.Debug` - staging (testnet) configuration
 5. `react-native run-ios --scheme=emurgo --configuration=Debug` - production configuration
 
@@ -228,7 +269,7 @@ $ jest wallet.test.js
 
 ---
 
-For E2E tsting we use the [detox](https://github.com/wix/Detox) framework.
+For E2E testing we use the [detox](https://github.com/wix/Detox) framework.
 
 ### Requirements
 

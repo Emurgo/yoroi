@@ -97,6 +97,10 @@ export const txLabels = defineMessages({
     id: 'components.walletinit.restorewallet.upgradeconfirmmodal.toLabel',
     defaultMessage: '!!!To',
   },
+  transactions: {
+    id: 'global.txLabels.transactions',
+    defaultMessage: '!!!Transactions',
+  },
   txId: {
     id: 'components.walletinit.restorewallet.upgradeconfirmmodal.txIdLabel',
     defaultMessage: '!!!Transaction ID',
@@ -436,6 +440,13 @@ export const errorMessages = {
     },
   }),
 }
+
+export const assetMessages = defineMessages({
+  assets: {
+    id: 'global.assets.assetsLabel',
+    defaultMessage: '!!!Assets',
+  },
+})
 
 export const actionMessages = defineMessages({
   send: {

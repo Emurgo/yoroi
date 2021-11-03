@@ -14,5 +14,3 @@ type Props = {
 export const Spacer = ({height = 16, width = 16, fill, style, debug}: Props) => (
   <View style={[fill && {flex: 1}, {height, width}, style, debug && debugStyle]} />
 )
-
-export default Spacer

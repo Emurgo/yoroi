@@ -1,24 +1,18 @@
 import React from 'react'
-import {StyleSheet, Text} from 'react-native'
-import {TouchableOpacity} from 'react-native-gesture-handler'
+import {StyleSheet, Text, TouchableOpacity} from 'react-native'
 
 type Props = {
   label: string
   onPress: () => void
   disabled?: boolean
-  isSelected?: boolean
+  selected?: boolean
 }
 
-export const ChipButton = (props: Props) => {
-  const touchStyle = props.isSelected ? [styles.button, styles.isSelected] : [styles.button]
-  const labelStyle = props.isSelected ? [styles.label, styles.isSelected] : [styles.label]
-
-  return (
-    <TouchableOpacity style={touchStyle} onPress={props.onPress} disabled={props.disabled}>
-      <Text style={labelStyle}>{props.label}</Text>
-    </TouchableOpacity>
-  )
-}
+export const ChipButton = ({label, onPress, disabled, selected}: Props) => (
+  <TouchableOpacity style={[styles.button, selected && styles.selected]} onPress={onPress} disabled={disabled}>
+    <Text style={[styles.label, selected && styles.label]}>{label}</Text>
+  </TouchableOpacity>
+)
 
 const styles = StyleSheet.create({
   button: {
@@ -33,7 +27,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 22,
   },
-  isSelected: {
+  selected: {
     backgroundColor: '#F0F3F5',
     color: '#242838',
   },

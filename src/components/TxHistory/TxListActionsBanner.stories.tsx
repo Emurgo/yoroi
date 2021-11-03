@@ -1,23 +1,19 @@
+import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
-import {Alert} from 'react-native'
 
-import {TxListActionsBanner} from './TxListActionsBanner'
-
-const fakePress =
-  (title = 'Title', message = 'Message') =>
-  () =>
-    Alert.alert(title, message)
+import {TxListActionsBannerForAssetsTab, TxListActionsBannerForTransactionsTab} from './TxListActionsBanner'
 
 storiesOf('V2/TxHistory/TxListActionsBanner', module)
   .add('Assets', () => (
-    <TxListActionsBanner
-      actions="assets"
-      onPressNFTs={fakePress('NFTs')}
-      onPressTokens={fakePress('Tokens')}
-      onSearch={fakePress('Search')}
+    <TxListActionsBannerForAssetsTab
+      onPressNFTs={action('NFTs')}
+      onPressTokens={action('Tokens')}
+      onSearch={action('Search')}
+      nftsLabel="NFTs (2)"
+      tokensLabel="Tokens (200)"
     />
   ))
   .add('Transactions', () => (
-    <TxListActionsBanner actions="txs" onSearch={fakePress('Search')} onExport={fakePress('Export')} />
+    <TxListActionsBannerForTransactionsTab onSearch={action('Search')} onExport={action('Export')} />
   ))

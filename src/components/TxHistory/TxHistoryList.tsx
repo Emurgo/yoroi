@@ -9,7 +9,7 @@ import {Text} from '../../../legacy/components/UiKit'
 import {actionMessages} from '../../../legacy/i18n/global-messages'
 import {formatDateRelative} from '../../../legacy/utils/format'
 import features from '../../features'
-import {TxListActionsBanner} from './TxListActionsBanner'
+import {TxListActionsBannerForTransactionsTab} from './TxListActionsBanner'
 import {TransactionInfo} from './types'
 
 type Props = {
@@ -18,7 +18,7 @@ type Props = {
   onRefresh: () => void
 }
 
-const TxHistoryList = ({transactions, refreshing, onRefresh}: Props) => {
+export const TxHistoryList = ({transactions, refreshing, onRefresh}: Props) => {
   const strings = useStrings()
   const navigation = useNavigation()
   const groupedTransactions = getTransactionsByDate(transactions)
@@ -29,7 +29,7 @@ const TxHistoryList = ({transactions, refreshing, onRefresh}: Props) => {
   return (
     <View style={styles.listRoot}>
       {(features.txHistory.export || features.txHistory.search) && (
-        <TxListActionsBanner actions="txs" onExport={handleExport} onSearch={handleSearch} />
+        <TxListActionsBannerForTransactionsTab onExport={handleExport} onSearch={handleSearch} />
       )}
       <SectionList
         onRefresh={onRefresh}
@@ -68,8 +68,6 @@ const getTransactionsByDate = (transactions: Record<string, TransactionInfo>) =>
     .map((data) => ({data}))
     .value()
 
-// NOTE: layout is following inVision spec
-// https://projects.invisionapp.com/d/main?origin=v7#/console/21500065/456867605/inspect?scrollOffset=2856#project_console
 const styles = StyleSheet.create({
   listRoot: {
     flex: 1,
@@ -88,5 +86,3 @@ const useStrings = () => {
     soon: intl.formatMessage(actionMessages.soon),
   }
 }
-
-export default TxHistoryList
