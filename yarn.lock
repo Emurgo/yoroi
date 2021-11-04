@@ -2581,10 +2581,9 @@
     buffer-crc32 "0.2.13"
     fnv-plus "1.3.1"
 
-"@emurgo/react-native-haskell-shelley@3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/react-native-haskell-shelley/-/react-native-haskell-shelley-3.1.0.tgz#dcac019593036936188cff95aba1cb0733905dc5"
-  integrity sha512-cujtOckcTpu+DtbOdJfqxt0y/UqOgHqVFNYlldB/Sn2f2fk9IWDgtIdqT1BcVUJh1BNU3CEKAo6uq/UwpIs5OQ==
+"@emurgo/react-native-haskell-shelley@git+https://github.com/Emurgo/react-native-haskell-shelley#hotfix/hw-connection-bump-lib-9.1.1":
+  version "3.1.1"
+  resolved "git+https://github.com/Emurgo/react-native-haskell-shelley#43a3b0c3f4feabab50caa81d91430fb8b03aeb97"
   dependencies:
     base-64 "0.1.0"
 
