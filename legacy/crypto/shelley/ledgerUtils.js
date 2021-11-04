@@ -22,10 +22,10 @@ import AppAda, {
   AddressType,
   CertificateType,
   DeviceStatusCodes,
+  StakeCredentialParamsType,
   TransactionSigningMode,
   TxAuxiliaryDataType,
   TxOutputDestinationType,
-  StakeCredentialParamsType,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {
   Address,
