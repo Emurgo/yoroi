@@ -65,6 +65,7 @@ function loadStories() {
 	require('../src/components/FirstRun/AcceptTermsOfService.stories');
 	require('../src/components/FirstRun/CustomPinScreen.stories');
 	require('../src/components/FirstRun/LanguagePickerScreen.stories');
+	require('../src/components/Icon.stories');
 	require('../src/components/TxHistory/TxHistory.stories');
 	require('./Example/Example.stories');
 }
@@ -131,6 +132,7 @@ const stories = [
 	'../src/components/FirstRun/AcceptTermsOfService.stories',
 	'../src/components/FirstRun/CustomPinScreen.stories',
 	'../src/components/FirstRun/LanguagePickerScreen.stories',
+	'../src/components/Icon.stories',
 	'../src/components/TxHistory/TxHistory.stories',
 	'./Example/Example.stories'
 ];
