@@ -8,15 +8,13 @@ import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../../../legac
 import closedEyeIcon from '../../assets/img/icon/visibility-closed.png'
 import openedEyeIcon from '../../assets/img/icon/visibility-opened.png'
 import features from '../../features'
-import Spacer from '../Spacer/Spacer'
+import {Spacer} from '../Spacer'
 import WalletAccountIcon from '../StylizedIcons/WalletAccountIcon'
 
 const BALANCE_WHEN_HIDDEN = '*.******'
 const TOTAL_WHEN_HIDDEN = '*.**'
 const QUOTE_PAIR_CURRENCY = 'USD'
 
-// NOTE: layout is following inVision spec
-// https://projects.invisionapp.com/d/main?origin=v7#/console/21500065/456867605/inspect?scrollOffset=2856#project_console
 const styles = StyleSheet.create({
   banner: {
     backgroundColor: COLORS.BACKGROUND_GRAY,
@@ -56,7 +54,7 @@ const styles = StyleSheet.create({
   },
 })
 
-const BalanceBanner = () => {
+export const BalanceBanner = () => {
   const tokenBalance = useSelector(tokenBalanceSelector)
   const walletMeta = useSelector(walletMetaSelector)
   const availableAssets = useSelector(availableAssetsSelector)
@@ -98,5 +96,3 @@ const BalanceBanner = () => {
     </View>
   )
 }
-
-export default BalanceBanner

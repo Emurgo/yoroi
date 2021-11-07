@@ -9,5 +9,6 @@ export default {
   txHistory: {
     export: __DEV__ || false,
     search: __DEV__ || false,
+    nfts: __DEV__ || false,
   },
 }

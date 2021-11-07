@@ -9,7 +9,7 @@ import {WALLET_ROUTES} from '../../../legacy/RoutesList'
 import {isReadOnlySelector} from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
 import features from '../../features'
-import Spacer from '../Spacer/Spacer'
+import {Spacer} from '../Spacer'
 import ReceivedIcon from '../StylizedIcons/ReceivedIcon'
 import SentIcon from '../StylizedIcons/SentIcon'
 
@@ -19,7 +19,7 @@ const ACTION_PROPS = {
   color: COLORS.WHITE,
 }
 
-const ActionsBanner = () => {
+export const ActionsBanner = () => {
   const strings = useStrings()
   const navigateTo = useNavigations()
   const isReadOnly = useSelector(isReadOnlySelector)
@@ -67,8 +67,6 @@ const ActionsBanner = () => {
   )
 }
 
-// NOTE: layout is following inVision spec
-// https://projects.invisionapp.com/d/main?origin=v7#/console/21500065/456867605/inspect?scrollOffset=2856#project_console
 const styles = StyleSheet.create({
   banner: {
     backgroundColor: COLORS.BACKGROUND_GRAY,
@@ -122,12 +120,9 @@ const useNavigations = () => {
   const navigation = useNavigation()
   const strings = useStrings()
 
-  // TODO: adjust navigation for the next wallet tab navigator
   return {
     onSend: () => navigation.navigate(WALLET_ROUTES.SEND),
     onReceive: () => navigation.navigate(WALLET_ROUTES.RECEIVE),
     onBuy: () => Alert.alert(strings.messageBuy, strings.messageBuy),
   }
 }
-
-export default ActionsBanner

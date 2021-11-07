@@ -2,9 +2,9 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {COLORS} from '../../../legacy/styles/config'
-import ActionsBanner from './ActionsBanner'
-import BalanceBanner from './BalanceBanner'
-import TabNavigator from './TabNavigator'
+import {ActionsBanner} from './ActionsBanner'
+import {BalanceBanner} from './BalanceBanner'
+import {TabNavigator} from './TabNavigator'
 
 const styles = StyleSheet.create({
   root: {
@@ -12,19 +12,17 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.BACKGROUND_GRAY,
   },
 })
-interface WalletHeroProps {
-  tabs: Array<string>
-  render: (_) => JSX.Element
+
+type WalletHeroProps = {
+  render: (active: number) => JSX.Element | undefined
 }
 
-const WalletHero = (props: WalletHeroProps) => {
+export const WalletHero = ({render}: WalletHeroProps) => {
   return (
     <View style={styles.root}>
       <BalanceBanner />
       <ActionsBanner />
-      <TabNavigator {...props} />
+      <TabNavigator render={render} />
     </View>
   )
 }
-
-export default WalletHero

@@ -9,7 +9,7 @@ type Props = {
   isOpen: boolean
 }
 
-const SyncErrorBanner = ({showRefresh, isOpen}: Props) => {
+export const SyncErrorBanner = ({showRefresh, isOpen}: Props) => {
   const intl = useIntl()
 
   if (!isOpen) return null
@@ -25,5 +25,3 @@ const SyncErrorBanner = ({showRefresh, isOpen}: Props) => {
     />
   )
 }
-
-export default SyncErrorBanner
