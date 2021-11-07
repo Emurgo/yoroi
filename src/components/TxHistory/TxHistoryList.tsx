@@ -4,13 +4,13 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {Alert, SectionList, StyleSheet, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import TxHistoryListItem from '../../../legacy/components/TxHistory/TxHistoryListItem'
 import {Text} from '../../../legacy/components/UiKit'
 import {actionMessages} from '../../../legacy/i18n/global-messages'
 import {formatDateRelative} from '../../../legacy/utils/format'
 import features from '../../features'
+import * as Icon from '../Icon'
 import {TransactionInfo} from './types'
 
 type Props = {
@@ -55,13 +55,13 @@ const TxListActionsBanner = (props: TxListActionsBannerProps) => {
     <View style={styles.actionsRoot}>
       {features.txHistory.export && (
         <TouchableOpacity onPress={props.onExport}>
-          <Icon name="export" size={24} color="#6B7384" />
+          <Icon.Export size={24} color="#6B7384" />
         </TouchableOpacity>
       )}
 
       {features.txHistory.search && (
         <TouchableOpacity onPress={props.onSearch}>
-          <Icon name="magnify" size={24} color="#6B7384" />
+          <Icon.Magnify size={24} color="#6B7384" />
         </TouchableOpacity>
       )}
     </View>
