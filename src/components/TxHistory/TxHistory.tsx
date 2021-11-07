@@ -1,4 +1,3 @@
-import {useNavigation, useNavigationState} from '@react-navigation/native'
 import _ from 'lodash'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -12,7 +11,6 @@ import {updateHistory} from '../../../legacy/actions/history'
 import infoIcon from '../../../legacy/assets/img/icon/info-light-green.png'
 import {OfflineBanner, StatusBar, Text, WarningBanner} from '../../../legacy/components/UiKit'
 import {isByron} from '../../../legacy/config/config'
-import walletManager from '../../../legacy/crypto/walletManager'
 import {
   isOnlineSelector,
   isSynchronizingHistorySelector,
@@ -21,20 +19,19 @@ import {
   walletIsInitializedSelector,
   walletMetaSelector,
 } from '../../../legacy/selectors'
-import WalletHero from '../WalletHero/WalletHero'
-import EmptyHistory from './EmptyHistory'
-import SyncErrorBanner from './SyncErrorBanner'
-import TxHistoryList from './TxHistoryList'
+import {WalletHero} from '../WalletHero'
+import {AssetList} from './AssetList'
+import {EmptyHistory} from './EmptyHistory'
+import {SyncErrorBanner} from './SyncErrorBanner'
+import {TxHistoryList} from './TxHistoryList'
 
 const TxHistory = () => {
   const intl = useIntl()
   const dispatch = useDispatch()
-  const navigation = useNavigation()
   const transactionsInfo = useSelector(transactionsInfoSelector)
   const isSyncing = useSelector(isSynchronizingHistorySelector)
   const lastSyncError = useSelector(lastHistorySyncErrorSelector)
   const isOnline = useSelector(isOnlineSelector)
-  const routes = useNavigationState((state) => state.routes)
   const walletMeta = useSelector(walletMetaSelector)
   const walletIsInitialized = useSelector(walletIsInitializedSelector)
 
@@ -45,20 +42,6 @@ const TxHistory = () => {
     dispatch(updateHistory())
     dispatch(fetchAccountState())
   }, [dispatch])
-
-  useEffect(
-    () =>
-      // TODO: move this to dashboard once it's set as default screen
-      navigation.addListener('beforeRemove', (e) => {
-        navigation.dispatch(e.data.action)
-        if (routes.length === 1) {
-          // this is the last and only route in the stack, wallet should close
-          walletManager.closeWallet()
-        }
-      }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [navigation],
-  )
 
   if (!walletIsInitialized) {
     return <Text>l10n Please wait while wallet is initialized...</Text>
@@ -73,8 +56,7 @@ const TxHistory = () => {
         <SyncErrorBanner showRefresh={!isSyncing} isOpen={isOnline && lastSyncError} />
 
         <WalletHero
-          tabs={['Transactions', 'Assets']}
-          render={({active}) => {
+          render={(active) => {
             if (active === 0) {
               return (
                 <View style={styles.tabNavigatorRoot}>
@@ -106,8 +88,13 @@ const TxHistory = () => {
                   )}
                 </View>
               )
+            } else if (active === 1) {
+              return (
+                <View style={styles.tabNavigatorRoot}>
+                  <AssetList refreshing={isSyncing} onRefresh={() => dispatch(updateHistory())} />
+                </View>
+              )
             }
-            return <View />
           }}
         />
       </View>

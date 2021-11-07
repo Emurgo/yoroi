@@ -1,11 +1,11 @@
 import React, {useState} from 'react'
+import {useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
+import {assetMessages, txLabels} from '../../../legacy/i18n/global-messages'
 import {COLORS} from '../../../legacy/styles/config'
-import Spacer from '../Spacer/Spacer'
+import {Spacer} from '../Spacer'
 
-// NOTE: layout is following inVision spec
-// https://projects.invisionapp.com/d/main?origin=v7#/console/21500065/456867605/inspect?scrollOffset=2856#project_console
 const styles = StyleSheet.create({
   root: {
     flex: 1,
@@ -70,18 +70,18 @@ const styles = StyleSheet.create({
 })
 
 interface TabNavigatorProps {
-  tabs: Array<string>
-  render: ({active: boolean}) => JSX.Element
+  render: (active: number) => JSX.Element | undefined
 }
 
-const TabNavigator = ({tabs, render}: TabNavigatorProps) => {
+export const TabNavigator = ({render}: TabNavigatorProps) => {
   const [active, setActive] = useState<number>(0)
+  const strings = useStrings()
 
   return (
     <View style={styles.root}>
       <View style={styles.grid}>
         <View style={styles.row}>
-          {tabs.map((label, i) => {
+          {[strings.transactions, strings.assets].map((label, i) => {
             const indicatorStyle = [styles.indicator, active === i ? styles.indicatorActive : styles.indicatorInactive]
             const textStyle = [styles.tabText, active === i ? styles.tabTextActive : styles.tabTextInactive]
             return (
@@ -95,15 +95,23 @@ const TabNavigator = ({tabs, render}: TabNavigatorProps) => {
           })}
         </View>
       </View>
+
       <View style={styles.tabNavigatorRoot}>
         <View style={styles.grabber} />
 
         <Spacer height={12} />
 
-        {render({active})}
+        {render?.(active)}
       </View>
     </View>
   )
 }
 
-export default TabNavigator
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    transactions: intl.formatMessage(txLabels.transactions),
+    assets: intl.formatMessage(assetMessages.assets),
+  }
+}
