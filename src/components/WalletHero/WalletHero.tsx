@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
 })
 interface WalletHeroProps {
   tabs: Array<string>
-  render: (_) => JSX.Element
+  render: ({active: boolean}) => JSX.Element
 }
 
 const WalletHero = (props: WalletHeroProps) => {

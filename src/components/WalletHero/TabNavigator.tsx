@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
 
 interface TabNavigatorProps {
   tabs: Array<string>
-  render: (_) => JSX.Element
+  render: ({active: boolean}) => JSX.Element
 }
 
 const TabNavigator = ({tabs, render}: TabNavigatorProps) => {

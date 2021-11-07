@@ -26,7 +26,6 @@ module.exports = {
     'array-callback-return': 2,
     'lines-between-class-members': [1, 'always', {exceptAfterSingleLine: true}],
     'no-multiple-empty-lines': ['warn', {max: 2, maxEOF: 0}],
-    'no-unused-vars': ['warn', {argsIgnorePattern: '^_'}],
     'react-native/no-raw-text': ['error', {skip: ['Markdown']}],
     'react-native/no-unused-styles': 2,
     'react-native/split-platform-components': 0,
@@ -37,6 +36,8 @@ module.exports = {
     'simple-import-sort/exports': 'error',
     'simple-import-sort/imports': 'error',
     'spaced-comment': 1,
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['error', {argsIgnorePattern: '^_'}],
   },
   globals: {
     Buffer: false,
