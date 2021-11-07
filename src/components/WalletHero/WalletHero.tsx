@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
 })
 
 type WalletHeroProps = {
-  render: (_active: number) => JSX.Element | undefined
+  render: (active: number) => JSX.Element | undefined
 }
 
 export const WalletHero = ({render}: WalletHeroProps) => {

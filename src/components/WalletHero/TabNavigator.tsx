@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
 })
 
 interface TabNavigatorProps {
-  render: (_active: number) => JSX.Element | undefined
+  render: (active: number) => JSX.Element | undefined
 }
 
 export const TabNavigator = ({render}: TabNavigatorProps) => {
