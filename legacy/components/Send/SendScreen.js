@@ -50,7 +50,7 @@ import {
 } from '../../utils/format'
 import {InvalidAssetAmount, parseAmountDecimal} from '../../utils/parsing'
 import type {AddressValidationErrors, AmountValidationErrors, BalanceValidationErrors} from '../../utils/validators'
-import {isReceiverAddressValid, validateAmount} from '../../utils/validators'
+import {getUnstoppableDomainAddress, isReceiverAddressValid, validateAmount} from '../../utils/validators'
 import DangerousActionModal from '../Common/DangerousActionModal'
 import {Banner, Button, Checkbox, OfflineBanner, Spacer, StatusBar, Text, TextInput} from '../UiKit'
 import AmountField from './AmountField'
@@ -83,6 +83,7 @@ type LegacyProps = {|
 
 type State = {
   address: string,
+  addressInput: string,
   addressErrors: AddressValidationErrors,
   amount: string,
   amountErrors: AmountValidationErrors,
@@ -97,6 +98,7 @@ type State = {
 class SendScreenLegacy extends Component<LegacyProps, State> {
   state = {
     address: '',
+    addressInput: '',
     addressErrors: {addressIsRequired: true},
     amount: '',
     amountErrors: {amountIsRequired: true},
@@ -119,30 +121,30 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
 
   async componentDidUpdate(prevProps: LegacyProps, prevState: State) {
     const {selectedAsset, utxos, sendAll} = this.props
-    const {address, amount} = this.state
+    const {addressInput, amount} = this.state
 
-    const {address: prevAddress, amount: prevAmount} = prevState
+    const {addressInput: prevAddressInput, amount: prevAmount} = prevState
 
     if (
       prevProps.utxos !== utxos ||
-      prevAddress !== address ||
+      prevAddressInput !== addressInput ||
       prevAmount !== amount ||
       prevProps.sendAll !== sendAll ||
       prevProps.selectedAsset !== selectedAsset
     ) {
-      await this.revalidate({utxos, address, amount, sendAll, selectedAsset})
+      await this.revalidate({utxos, addressInput, amount, sendAll, selectedAsset})
     }
   }
 
   async revalidate({
     utxos,
-    address,
+    addressInput,
     amount,
     sendAll,
     selectedAsset,
   }: {
     utxos: ?Array<RawUtxo>,
-    address: string,
+    addressInput: string,
     amount: string,
     sendAll: boolean,
     selectedAsset: TokenEntry,
@@ -158,7 +160,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
     }
     const newState = await recomputeAll({
       utxos,
-      address,
+      addressInput,
       amount,
       sendAll,
       defaultAsset,
@@ -168,7 +170,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
     })
 
     if (
-      this.state.address !== address ||
+      this.state.addressInput !== addressInput ||
       this.state.amount !== amount ||
       this.props.sendAll !== sendAll ||
       this.props.utxos !== utxos
@@ -182,7 +184,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
     })
   }
 
-  handleAddressChange: (string) => void = (address) => this.setState({address})
+  handleAddressChange: (string) => void = (addressInput) => this.setState({addressInput})
 
   handleAmountChange: (string) => void = (amount) => this.setState({amount})
 
@@ -210,7 +212,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
       selectedAsset,
       walletMetadata,
     } = this.props
-    const {address, amount} = this.state
+    const {address, addressInput, amount} = this.state
 
     const selectedTokenMeta = tokenMetadata[selectedAsset.identifier]
     if (selectedTokenMeta == null) {
@@ -219,7 +221,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
 
     const {addressErrors, amountErrors, balanceErrors, balanceAfter} = await recomputeAll({
       amount,
-      address,
+      addressInput,
       utxos,
       sendAll,
       defaultAsset,
@@ -417,7 +419,7 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
       sendAll,
     } = this.props
 
-    const {amount, amountErrors, addressErrors, balanceErrors} = this.state
+    const {address, addressInput, amount, amountErrors, addressErrors, balanceErrors} = this.state
 
     const isValid =
       isOnline &&
@@ -459,15 +461,20 @@ class SendScreenLegacy extends Component<LegacyProps, State> {
           </TouchableOpacity>
 
           <TextInput
-            value={this.state.address || ''}
+            value={this.state.addressInput || ''}
             multiline
             errorOnMount
             onChangeText={this.handleAddressChange}
             label={intl.formatMessage(messages.addressInputLabel)}
-            errorText={
-              addressErrors.invalidAddress ? intl.formatMessage(messages.addressInputErrorInvalidAddress) : undefined
-            }
+            errorText={getAddressErrorText(intl, addressErrors)}
           />
+          {this.state.recomputing === false && addressInput !== address ? (
+            <Text ellipsizeMode="middle" numberOfLines={1}>
+              {`Resolves to: ${address}`}
+            </Text>
+          ) : (
+            <></>
+          )}
 
           <AmountField
             amount={amount}
@@ -630,7 +637,7 @@ const getTransactionData = async (
 
 const recomputeAll = async ({
   amount,
-  address,
+  addressInput,
   utxos,
   sendAll,
   defaultAsset,
@@ -638,9 +645,23 @@ const recomputeAll = async ({
   tokenBalance,
   walletMetadata,
 }) => {
+  let addressErrors: Object = {}
+  let address = addressInput
   const {networkId} = walletMetadata
   let amountErrors = validateAmount(amount, selectedTokenMeta)
-  const addressErrors = (await isReceiverAddressValid(address, networkId)) || Object.freeze({})
+
+  if (addressInput !== undefined && addressInput.split('.').length > 1) {
+    try {
+      address = await getUnstoppableDomainAddress(addressInput)
+    } catch (e) {
+      addressErrors = JSON.parse(e.message)
+    }
+  }
+
+  if (_.isEmpty(addressErrors)) {
+    addressErrors = (await isReceiverAddressValid(address, networkId)) || Object.freeze({})
+  }
+
   let balanceErrors = Object.freeze({})
   let fee = null
   let balanceAfter = null
@@ -696,6 +717,7 @@ const recomputeAll = async ({
     }
   }
   return {
+    address,
     amount: recomputedAmount,
     amountErrors,
     addressErrors,
@@ -703,6 +725,22 @@ const recomputeAll = async ({
     fee,
     balanceAfter,
   }
+}
+
+const getAddressErrorText = (intl, addressErrors) => {
+  if (addressErrors.unsupportedDomain) {
+    return intl.formatMessage(messages.domainUnsupportedError)
+  }
+  if (addressErrors.recordNotFound) {
+    return intl.formatMessage(messages.domainRecordNotFoundError)
+  }
+  if (addressErrors.unregisteredDomain) {
+    return intl.formatMessage(messages.domainNotRegisteredError)
+  }
+  if (addressErrors.invalidAddress === true) {
+    return intl.formatMessage(messages.addressInputErrorInvalidAddress)
+  }
+  return ''
 }
 
 const getAmountErrorText = (intl, amountErrors, balanceErrors, defaultAsset) => {
@@ -805,6 +843,21 @@ const messages = defineMessages({
   checkboxSendAll: {
     id: 'components.send.sendscreen.checkboxSendAll',
     defaultMessage: '!!!Send all {assetId}',
+  },
+  domainNotRegisteredError: {
+    id: 'components.send.sendscreen.domainNotRegisteredError',
+    defaultMessage: '!!!Domain is not registered',
+    description: 'some desc',
+  },
+  domainRecordNotFoundError: {
+    id: 'components.send.sendscreen.domainRecordNotFoundError',
+    defaultMessage: '!!!No Cardano record found for this domain',
+    description: 'some desc',
+  },
+  domainUnsupportedError: {
+    id: 'components.send.sendscreen.domainUnsupportedError',
+    defaultMessage: '!!!Domain is not supported',
+    description: 'some desc',
   },
   sendAllWarningTitle: {
     id: 'components.send.sendscreen.sendAllWarningTitle',
