@@ -8,10 +8,10 @@ import {actionMessages} from '../../../legacy/i18n/global-messages'
 import {WALLET_ROUTES} from '../../../legacy/RoutesList'
 import {isReadOnlySelector} from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
+import {Spacer} from '../../components/Spacer'
+import ReceivedIcon from '../../components/StylizedIcons/ReceivedIcon'
+import SentIcon from '../../components/StylizedIcons/SentIcon'
 import features from '../../features'
-import {Spacer} from '../Spacer'
-import ReceivedIcon from '../StylizedIcons/ReceivedIcon'
-import SentIcon from '../StylizedIcons/SentIcon'
 
 const ACTION_PROPS = {
   height: 36,

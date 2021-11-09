@@ -4,7 +4,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {assetMessages, txLabels} from '../../../legacy/i18n/global-messages'
 import {COLORS} from '../../../legacy/styles/config'
-import {Spacer} from '../Spacer'
+import {Spacer} from '../../components/Spacer'
 
 const styles = StyleSheet.create({
   root: {

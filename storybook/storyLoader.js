@@ -63,9 +63,6 @@ function loadStories() {
 	require('../legacy/components/WalletInit/WalletNameForm.stories');
 	require('../legacy/components/WalletSelection/WalletSelectionScreen.stories');
 	require('../src/components/Icon.stories');
-	require('../src/components/TxHistory/ChipButton.stories');
-	require('../src/components/TxHistory/TxHistory.stories');
-	require('../src/components/TxHistory/TxListActionsBanner.stories');
 	require('./Example/Example.stories');
 }
 
@@ -129,9 +126,6 @@ const stories = [
 	'../legacy/components/WalletInit/WalletNameForm.stories',
 	'../legacy/components/WalletSelection/WalletSelectionScreen.stories',
 	'../src/components/Icon.stories',
-	'../src/components/TxHistory/ChipButton.stories',
-	'../src/components/TxHistory/TxHistory.stories',
-	'../src/components/TxHistory/TxListActionsBanner.stories',
 	'./Example/Example.stories'
 ];
 
