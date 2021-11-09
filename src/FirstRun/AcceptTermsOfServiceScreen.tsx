@@ -7,13 +7,13 @@ import {Platform, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch} from 'react-redux'
 
-import {acceptAndSaveTos, setSystemAuth, signin} from '../../../legacy/actions'
-import TermsOfService from '../../../legacy/components/Common/TermsOfService'
-import {Button, Checkbox, PleaseWaitModal, Spacer, StatusBar} from '../../../legacy/components/UiKit'
-import {CONFIG} from '../../../legacy/config/config'
-import {canBiometricEncryptionBeEnabled} from '../../../legacy/helpers/deviceSettings'
-import globalMessages from '../../../legacy/i18n/global-messages'
-import {FIRST_RUN_ROUTES} from '../../../legacy/RoutesList'
+import {acceptAndSaveTos, setSystemAuth, signin} from '../../legacy/actions'
+import TermsOfService from '../../legacy/components/Common/TermsOfService'
+import {Button, Checkbox, PleaseWaitModal, Spacer, StatusBar} from '../../legacy/components/UiKit'
+import {CONFIG} from '../../legacy/config/config'
+import {canBiometricEncryptionBeEnabled} from '../../legacy/helpers/deviceSettings'
+import globalMessages from '../../legacy/i18n/global-messages'
+import {FIRST_RUN_ROUTES} from '../../legacy/RoutesList'
 
 const AcceptTermsOfServiceScreen = () => {
   const strings = useStrings()

@@ -26,9 +26,9 @@ import {
   isSystemAuthEnabledSelector,
 } from '../legacy/selectors'
 import type {State} from '../legacy/state'
-import FirstRunNavigator from './components/FirstRun/FirstRunNavigator'
 import StorybookScreen from './components/StorybookScreen'
 import WalletNavigator from './components/WalletNavigator'
+import FirstRunNavigator from './FirstRun/FirstRunNavigator'
 
 const IS_STORYBOOK = env.getBoolean('IS_STORYBOOK', false)
 
