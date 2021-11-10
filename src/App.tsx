@@ -1,5 +1,3 @@
-// @flow
-
 import 'intl'
 
 import React, {useEffect} from 'react'
@@ -10,7 +8,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {enableScreens} from 'react-native-screens'
 import {useDispatch} from 'react-redux'
 
-import {initApp} from './actions'
+import {initApp} from '../legacy/actions'
 import AppNavigator from './AppNavigator'
 
 enableScreens()

@@ -89,6 +89,11 @@ project.ext.envConfigFiles = [
   storybook: '.env.storybook'
 ]
 
+project.ext.vectoricons = [
+    iconFontNames: [ 'MaterialCommunityIcons.ttf' ]
+]
+
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 apply from: "../../node_modules/react-native/react.gradle"
 apply from: "../../node_modules/@sentry/react-native/sentry.gradle"
 
@@ -143,8 +148,8 @@ android {
         applicationId "com.emurgo"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 300
-        versionName "4.4.0"
+        versionCode 302
+        versionName "4.4.2"
         ndk {
           abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
         }
