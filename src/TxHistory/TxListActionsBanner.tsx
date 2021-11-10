@@ -2,8 +2,8 @@ import React, {useState} from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
-import features from '../../features'
-import {Spacer} from '../Spacer'
+import {Spacer} from '../components/Spacer'
+import features from '../features'
 import {ChipButton} from './ChipButton'
 
 type AssetsOptions = 'tokens' | 'nfts'

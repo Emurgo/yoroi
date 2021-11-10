@@ -7,7 +7,7 @@ type Props = {
   color?: string
 }
 
-const ReceivedIcon = ({width = 36, height = 36, color = '#6B7384'}: Props) => (
+export const ReceivedIcon = ({width = 36, height = 36, color = '#6B7384'}: Props) => (
   <Svg viewBox="0 0 36 36" {...{width, height}}>
     <G stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
       <G transform="translate(-760.000000, -126.000000)">
@@ -26,5 +26,3 @@ const ReceivedIcon = ({width = 36, height = 36, color = '#6B7384'}: Props) => (
     </G>
   </Svg>
 )
-
-export default ReceivedIcon

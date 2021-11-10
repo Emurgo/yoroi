@@ -7,7 +7,7 @@ type Props = {
   color?: string
 }
 
-const SentIcon = ({width = 36, height = 36, color = '#6B7384'}: Props) => (
+export const SentIcon = ({width = 36, height = 36, color = '#6B7384'}: Props) => (
   <Svg viewBox="0 0 36 36" {...{width, height}}>
     <G stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
       <G transform="translate(-760.000000, -186.000000)">
@@ -20,5 +20,3 @@ const SentIcon = ({width = 36, height = 36, color = '#6B7384'}: Props) => (
     </G>
   </Svg>
 )
-
-export default SentIcon
