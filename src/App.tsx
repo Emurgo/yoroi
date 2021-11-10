@@ -24,7 +24,7 @@ const useHideScreenInAppSwitcher = () => {
   const appStateRef = React.useRef(AppState.currentState)
 
   useEffect(() => {
-    const handleAppStateChange = (nextAppState: AppStateStatus): void => {
+    const subscription = AppState.addEventListener('change', (nextAppState: AppStateStatus) => {
       if (Platform.OS !== 'ios') return
 
       const isFocused = (appState: string | void) => appState?.match(/active/)
@@ -34,12 +34,10 @@ const useHideScreenInAppSwitcher = () => {
       if (isFocused(appStateRef.current) && isBlurred(nextAppState)) RNBootSplash.show({fade: true})
 
       appStateRef.current = nextAppState
-    }
-
-    AppState.addEventListener('change', handleAppStateChange)
+    })
 
     return () => {
-      AppState.removeEventListener('change', handleAppStateChange)
+      subscription.remove()
     }
   }, [])
 }

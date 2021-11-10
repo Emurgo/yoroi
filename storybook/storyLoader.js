@@ -62,11 +62,7 @@ function loadStories() {
 	require('../legacy/components/WalletInit/WalletInitScreen.stories');
 	require('../legacy/components/WalletInit/WalletNameForm.stories');
 	require('../legacy/components/WalletSelection/WalletSelectionScreen.stories');
-	require('../src/components/FirstRun/AcceptTermsOfService.stories');
-	require('../src/components/FirstRun/CustomPinScreen.stories');
-	require('../src/components/FirstRun/LanguagePickerScreen.stories');
-	require('../src/components/Icon.stories');
-	require('../src/components/TxHistory/TxHistory.stories');
+	require('../src/components/Icon/Icon.stories');
 	require('./Example/Example.stories');
 }
 
@@ -129,11 +125,7 @@ const stories = [
 	'../legacy/components/WalletInit/WalletInitScreen.stories',
 	'../legacy/components/WalletInit/WalletNameForm.stories',
 	'../legacy/components/WalletSelection/WalletSelectionScreen.stories',
-	'../src/components/FirstRun/AcceptTermsOfService.stories',
-	'../src/components/FirstRun/CustomPinScreen.stories',
-	'../src/components/FirstRun/LanguagePickerScreen.stories',
-	'../src/components/Icon.stories',
-	'../src/components/TxHistory/TxHistory.stories',
+	'../src/components/Icon/Icon.stories',
 	'./Example/Example.stories'
 ];
 

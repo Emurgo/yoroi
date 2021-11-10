@@ -1,5 +1,6 @@
 // @flow
 
+import {Resolution} from '@unstoppabledomains/resolution'
 import {validateMnemonic, wordlists} from 'bip39'
 import _ from 'lodash'
 
@@ -25,6 +26,9 @@ export type WalletNameValidationErrors = {|
 export type AddressValidationErrors = {|
   addressIsRequired?: boolean,
   invalidAddress?: boolean,
+  unsupportedDomain?: boolean,
+  recordNotFound?: boolean,
+  unregisteredDomain?: boolean,
 |}
 
 export type AmountValidationErrors = {|
@@ -119,6 +123,23 @@ export const getWalletNameError = (
   } else {
     return null
   }
+}
+
+export const getUnstoppableDomainAddress = async (domain: string) => {
+  try {
+    return await new Resolution().addr(domain, 'ADA')
+  } catch (e) {
+    switch (e.code) {
+      case 'UnsupportedDomain':
+        throw new Error('{"unsupportedDomain": true}')
+      case 'RecordNotFound':
+        throw new Error('{"recordNotFound": true}')
+      case 'UnregisteredDomain':
+        throw new Error('{"unregisteredDomain": true}')
+      default:
+        throw new Error('{"invalidAddress": true}')
+    }
+  } // invalid domain
 }
 
 export const isReceiverAddressValid = async (

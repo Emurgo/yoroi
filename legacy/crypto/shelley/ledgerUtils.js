@@ -22,6 +22,7 @@ import AppAda, {
   AddressType,
   CertificateType,
   DeviceStatusCodes,
+  StakeCredentialParamsType,
   TransactionSigningMode,
   TxAuxiliaryDataType,
   TxOutputDestinationType,
@@ -503,7 +504,7 @@ export const createLedgerSignTxPayload = async (request: {|
         votingPublicKeyHex: votingPublicKey,
         stakingPath: stakingKeyPath,
         rewardsDestination: {
-          type: AddressType.REWARD,
+          type: AddressType.REWARD_KEY,
           params: {
             stakingPath: stakingKeyPath,
           },
@@ -526,6 +527,7 @@ export const createLedgerSignTxPayload = async (request: {|
       auxiliaryData,
       validityIntervalStart: undefined,
     },
+    additionalWitnessPaths: [],
   }
 }
 
@@ -637,7 +639,10 @@ async function formatLedgerWithdrawals(
     }
     result.push({
       amount: await withdrawalAmount.to_str(),
-      path: addressing.path,
+      stakeCredential: {
+        type: StakeCredentialParamsType.KEY_PATH,
+        keyPath: addressing.path,
+      },
     })
   }
   return result
@@ -667,7 +672,10 @@ async function formatLedgerCertificates(
       result.push({
         type: CertificateType.STAKE_REGISTRATION,
         params: {
-          path: await getPath(await registrationCert.stake_credential()),
+          stakeCredential: {
+            type: StakeCredentialParamsType.KEY_PATH,
+            keyPath: await getPath(await registrationCert.stake_credential()),
+          },
         },
       })
       continue
@@ -677,7 +685,10 @@ async function formatLedgerCertificates(
       result.push({
         type: CertificateType.STAKE_DEREGISTRATION,
         params: {
-          path: await getPath(await deregistrationCert.stake_credential()),
+          stakeCredential: {
+            type: StakeCredentialParamsType.KEY_PATH,
+            keyPath: await getPath(await deregistrationCert.stake_credential()),
+          },
         },
       })
       continue
@@ -687,7 +698,10 @@ async function formatLedgerCertificates(
       result.push({
         type: CertificateType.STAKE_DELEGATION,
         params: {
-          path: await getPath(await delegationCert.stake_credential()),
+          stakeCredential: {
+            type: StakeCredentialParamsType.KEY_PATH,
+            keyPath: await getPath(await delegationCert.stake_credential()),
+          },
           poolKeyHashHex: Buffer.from(await (await delegationCert.pool_keyhash()).to_bytes()).toString('hex'),
         },
       })
@@ -730,7 +744,7 @@ export async function toLedgerAddressParameters(request: {|
         }
         const hashInAddress = Buffer.from(await wasmHash.to_bytes()).toString('hex')
         return {
-          type: AddressType.BASE,
+          type: AddressType.BASE_PAYMENT_KEY_STAKE_KEY,
           params: {
             spendingPath: request.path,
             // can't always know staking key path since address may not belong to the wallet
@@ -740,7 +754,7 @@ export async function toLedgerAddressParameters(request: {|
         }
       } else {
         return {
-          type: AddressType.BASE,
+          type: AddressType.BASE_PAYMENT_KEY_STAKE_KEY,
           params: {
             spendingPath: request.path,
             // can't always know staking key path since address may not belong to the wallet
@@ -759,7 +773,7 @@ export async function toLedgerAddressParameters(request: {|
     const rewardAddr = await RewardAddress.from_address(request.address)
     if (rewardAddr) {
       return {
-        type: AddressType.REWARD,
+        type: AddressType.REWARD_KEY,
         params: {
           stakingPath: request.path,
         },
