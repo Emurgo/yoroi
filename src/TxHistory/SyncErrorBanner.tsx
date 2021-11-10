@@ -1,8 +1,8 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
 
-import {Banner} from '../../../legacy/components/UiKit'
-import globalMessages from '../../../legacy/i18n/global-messages'
+import {Banner} from '../../legacy/components/UiKit'
+import globalMessages from '../../legacy/i18n/global-messages'
 
 type Props = {
   showRefresh: boolean

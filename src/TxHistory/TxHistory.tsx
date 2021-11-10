@@ -5,12 +5,12 @@ import {RefreshControl, ScrollView, StyleSheet, View} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {checkForFlawedWallets} from '../../../legacy/actions'
-import {fetchAccountState} from '../../../legacy/actions/account'
-import {updateHistory} from '../../../legacy/actions/history'
-import infoIcon from '../../../legacy/assets/img/icon/info-light-green.png'
-import {OfflineBanner, StatusBar, Text, WarningBanner} from '../../../legacy/components/UiKit'
-import {isByron} from '../../../legacy/config/config'
+import {checkForFlawedWallets} from '../../legacy/actions'
+import {fetchAccountState} from '../../legacy/actions/account'
+import {updateHistory} from '../../legacy/actions/history'
+import infoIcon from '../../legacy/assets/img/icon/info-light-green.png'
+import {OfflineBanner, StatusBar, Text, WarningBanner} from '../../legacy/components/UiKit'
+import {isByron} from '../../legacy/config/config'
 import {
   isOnlineSelector,
   isSynchronizingHistorySelector,
@@ -18,12 +18,12 @@ import {
   transactionsInfoSelector,
   walletIsInitializedSelector,
   walletMetaSelector,
-} from '../../../legacy/selectors'
-import {WalletHero} from '../WalletHero'
+} from '../../legacy/selectors'
 import {AssetList} from './AssetList'
 import {EmptyHistory} from './EmptyHistory'
 import {SyncErrorBanner} from './SyncErrorBanner'
 import {TxHistoryList} from './TxHistoryList'
+import {WalletHero} from './WalletHero'
 
 const TxHistory = () => {
   const intl = useIntl()
