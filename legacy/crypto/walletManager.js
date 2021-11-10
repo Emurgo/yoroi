@@ -230,6 +230,8 @@ class WalletManager {
    */
 
   get isInitialized() {
+    if (!this._wallet) return false
+
     return this.getWallet().isInitialized
   }
 
@@ -254,6 +256,8 @@ class WalletManager {
   }
 
   get isEasyConfirmationEnabled() {
+    if (!this._wallet) return {}
+
     return this.getWallet().isEasyConfirmationEnabled
   }
 
@@ -313,6 +317,8 @@ class WalletManager {
   }
 
   get checksum() {
+    if (!this._wallet) return undefined
+
     return this.getWallet().checksum
   }
 
