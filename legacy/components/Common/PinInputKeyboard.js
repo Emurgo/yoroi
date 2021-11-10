@@ -81,6 +81,12 @@ const PinInputKeyboard = ({onPinChange, pinLength}: Props) => {
           <KeyboardKey key={value} value={value} onKeyDown={(value) => processPin(pin, updatePin, pinLength, value)} />
         ))}
       </Row>
+
+      <Row>
+        {keyboard[3].map((value) => (
+          <KeyboardKey key={value} value={value} onKeyDown={(value) => processPin(pin, updatePin, pinLength, value)} />
+        ))}
+      </Row>
     </View>
   )
 }
