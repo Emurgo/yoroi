@@ -2,9 +2,9 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {defaultStackNavigatorOptions} from '../../../legacy/navigationOptions'
-import {COLORS} from '../../../legacy/styles/config'
-import {MockAppStateWrapper, mockV2NavigatorOptions} from '../../../legacy/utils/mocks'
+import {defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
+import {COLORS} from '../../legacy/styles/config'
+import {MockAppStateWrapper, mockV2NavigatorOptions} from '../../legacy/utils/mocks'
 import TxHistoryScreen from './TxHistory'
 
 storiesOf('V2/TxHistory', module).add('No transactions', () => {

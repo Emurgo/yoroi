@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import {useSelector} from 'react-redux'
 
 // $FlowFixMe
-import TxHistory from '../../../src/components/TxHistory/TxHistory'
+import TxHistory from '../../../src/TxHistory/TxHistory'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
 import {TX_HISTORY_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
 import {transactionsInfoSelector, walletMetaSelector} from '../../selectors'

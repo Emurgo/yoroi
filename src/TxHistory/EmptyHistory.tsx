@@ -2,8 +2,8 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, StyleSheet, Text, View} from 'react-native'
 
-import image from '../../assets/img/no_transactions.png'
-import {Spacer} from '../Spacer'
+import image from '../assets/img/no_transactions.png'
+import {Spacer} from '../components/Spacer'
 
 export const EmptyHistory = () => {
   const intl = useIntl()
