@@ -4,7 +4,6 @@ import {type Dispatch} from 'redux'
 
 import {ApiHistoryError} from '../api/errors'
 import walletManager, {WalletClosed} from '../crypto/walletManager'
-import type {ReduxWallet} from '../state'
 import {Logger} from '../utils/logging'
 
 const _startFetch = () => ({
@@ -62,7 +61,6 @@ export const updateHistory = () => async (dispatch: Dispatch<any>) => {
 }
 
 export const mirrorTxHistory = () => (dispatch: Dispatch<any>) => {
-  // Note(ppershing): this runs through getters
   const {
     walletName: name,
     isInitialized,
@@ -87,7 +85,7 @@ export const mirrorTxHistory = () => (dispatch: Dispatch<any>) => {
   dispatch({
     type: 'Mirror walletManager TxHistory',
     path: ['wallet'],
-    payload: ({
+    payload: {
       name,
       isEasyConfirmationEnabled,
       isInitialized,
@@ -106,7 +104,7 @@ export const mirrorTxHistory = () => (dispatch: Dispatch<any>) => {
       canGenerateNewReceiveAddress,
       checksum,
       provider,
-    }: ReduxWallet),
+    },
     reducer: (state, payload) => payload,
   })
 }
