@@ -1,14 +1,13 @@
 // @flow
 
 import {useNavigation} from '@react-navigation/native'
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useDispatch, useSelector} from 'react-redux'
+import {useSelector} from 'react-redux'
 
 import {showErrorDialog} from '../../actions'
-import {generateVotingKeys} from '../../actions/voting'
 import {errorMessages} from '../../i18n/global-messages'
 import {CATALYST_ROUTES} from '../../RoutesList'
 import {isHWSelector} from '../../selectors'
@@ -25,11 +24,6 @@ const Step3 = () => {
   const pin = useSelector((state) => state.voting.pin)
   const isHW = useSelector(isHWSelector)
   const [confirmPin, setPin] = useState('')
-
-  const dispatch = useDispatch()
-  useEffect(() => {
-    dispatch(generateVotingKeys())
-  }, [dispatch])
 
   const pinChange = (enteredPin: string) => {
     setPin(enteredPin)
