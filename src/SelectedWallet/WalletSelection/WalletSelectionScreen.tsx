@@ -22,23 +22,9 @@ import {useSetSelectedWalletMeta} from '..'
 import styles from './styles/WalletSelectionScreen.style'
 import WalletListItem from './WalletListItem'
 
-const messages = defineMessages({
-  header: {
-    id: 'components.walletselection.walletselectionscreen.header',
-    defaultMessage: '!!!My wallets',
-  },
-  addWalletButton: {
-    id: 'components.walletselection.walletselectionscreen.addWalletButton',
-    defaultMessage: '!!!Add wallet',
-  },
-  addWalletOnShelleyButton: {
-    id: 'components.walletselection.walletselectionscreen.addWalletOnShelleyButton',
-    defaultMessage: '!!!Add wallet (Jormungandr ITN)',
-  },
-})
-
 export const WalletSelectionScreen = () => {
   const intl = useIntl()
+  const strings = useStrings()
   const navigation = useNavigation()
   const wallets = useSelector(walletsListSelector)
   const selectWalletMeta = useSetSelectedWalletMeta()
@@ -97,7 +83,7 @@ export const WalletSelectionScreen = () => {
 
       <Screen style={styles.container}>
         <ScreenBackground>
-          <Text style={styles.title}>{intl.formatMessage(messages.header)}</Text>
+          <Text style={styles.title}>{strings.header}</Text>
 
           <ScrollView style={styles.wallets}>
             {wallets ? (
@@ -119,7 +105,7 @@ export const WalletSelectionScreen = () => {
                 CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
               )
             }
-            title={`${intl.formatMessage(messages.addWalletButton)}`}
+            title={`${strings.addWalletButton}`}
             style={styles.topButton}
           />
 
@@ -134,7 +120,7 @@ export const WalletSelectionScreen = () => {
                   CONFIG.WALLETS.HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
                 )
               }
-              title={`${intl.formatMessage(messages.addWalletButton)} on TESTNET (Shelley-era)`}
+              title={`${strings.addWalletButton} on TESTNET (Shelley-era)`}
               style={styles.button}
             />
           )}
@@ -148,9 +134,7 @@ export const WalletSelectionScreen = () => {
                 CONFIG.WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
               )
             }
-            title={`${intl.formatMessage(messages.addWalletButton)} (Byron-era - ${intl.formatMessage(
-              globalMessages.deprecated,
-            )})`}
+            title={`${strings.addWalletButton} (Byron-era - ${intl.formatMessage(globalMessages.deprecated)})`}
             style={styles.button}
           />
 
@@ -164,7 +148,7 @@ export const WalletSelectionScreen = () => {
                   CONFIG.WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID,
                 )
               }
-              title={intl.formatMessage(messages.addWalletOnShelleyButton)}
+              title={strings.addWalletOnShelleyButton}
               style={styles.button}
             />
           )}
@@ -172,4 +156,29 @@ export const WalletSelectionScreen = () => {
       </Screen>
     </SafeAreaView>
   )
+}
+
+const messages = defineMessages({
+  header: {
+    id: 'components.walletselection.walletselectionscreen.header',
+    defaultMessage: '!!!My wallets',
+  },
+  addWalletButton: {
+    id: 'components.walletselection.walletselectionscreen.addWalletButton',
+    defaultMessage: '!!!Add wallet',
+  },
+  addWalletOnShelleyButton: {
+    id: 'components.walletselection.walletselectionscreen.addWalletOnShelleyButton',
+    defaultMessage: '!!!Add wallet (Jormungandr ITN)',
+  },
+})
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    header: intl.formatMessage(messages.header),
+    addWalletButton: intl.formatMessage(messages.addWalletButton),
+    addWalletOnShelleyButton: intl.formatMessage(messages.addWalletOnShelleyButton),
+  }
 }
