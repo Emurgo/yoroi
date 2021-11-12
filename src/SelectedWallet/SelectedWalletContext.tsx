@@ -5,41 +5,35 @@ import {WalletMeta} from '../../legacy/state'
 type SelectedWalletMeta = WalletMeta
 type SetSelectedWalletMeta = (selectedWalletMeta?: SelectedWalletMeta) => void
 
-const SelectedWalletMetaContext = React.createContext<
-  readonly [SelectedWalletMeta | undefined, SetSelectedWalletMeta] | undefined
->(undefined)
+const SelectedWalletMetaContext = React.createContext<undefined | SelectedWalletMeta>(undefined)
+const SetSelectedWalletMetaContext = React.createContext<undefined | SetSelectedWalletMeta>(undefined)
 
 export const SelectedWalletMetaProvider: React.FC = ({children}) => {
+  const [walletMeta, setWalletMeta] = React.useState<SelectedWalletMeta | undefined>(undefined)
+
   return (
-    <SelectedWalletMetaContext.Provider value={React.useState<SelectedWalletMeta | undefined>(undefined)}>
-      {children}
+    <SelectedWalletMetaContext.Provider value={walletMeta}>
+      <SetSelectedWalletMetaContext.Provider value={setWalletMeta}>{children}</SetSelectedWalletMetaContext.Provider>
     </SelectedWalletMetaContext.Provider>
   )
 }
 
 export const useSelectedWalletMeta = () => {
-  const selectedWalletMetaContext = React.useContext(SelectedWalletMetaContext)
+  const selectedWalletMeta = React.useContext(SelectedWalletMetaContext)
 
-  if (!selectedWalletMetaContext) {
-    throw new Error('missing SelectedWalletMetaProvider')
-  }
-
-  const [selectedWalletMeta] = selectedWalletMetaContext
   if (!selectedWalletMeta) {
-    throw new Error('missing SelectedWalletMetaBoundary')
+    throw new Error('missing SelectedWalletMetaProvider or missing SelectedWalletMetaBoundary')
   }
 
   return selectedWalletMeta
 }
 
 export const useSetSelectedWalletMeta = () => {
-  const selectedWalletMetaContext = React.useContext(SelectedWalletMetaContext)
+  const setSelectedWalletMeta = React.useContext(SetSelectedWalletMetaContext)
 
-  if (!selectedWalletMetaContext) {
+  if (!setSelectedWalletMeta) {
     throw new Error('missing SelectedWalletMetaProvider')
   }
-
-  const [, setSelectedWalletMeta] = selectedWalletMetaContext
 
   return setSelectedWalletMeta
 }
