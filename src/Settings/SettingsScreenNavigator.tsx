@@ -30,15 +30,12 @@ type SettingsTabRoutes = {
 
 const Tab = createMaterialTopTabNavigator<SettingsTabRoutes>()
 const SettingsTabNavigator = () => {
-  const intl = useIntl()
+  const strings = useStrings()
 
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
-        tabBarLabel:
-          route.name === SETTINGS_TABS.WALLET_SETTINGS
-            ? intl.formatMessage(messages.walletTabTitle)
-            : intl.formatMessage(messages.appTabTitle),
+        tabBarLabel: route.name === SETTINGS_TABS.WALLET_SETTINGS ? strings.walletTabTitle : strings.appTabTitle,
       })}
       tabBarOptions={{
         style: {
