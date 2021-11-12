@@ -1,5 +1,4 @@
 import {useNavigation} from '@react-navigation/native'
-import _ from 'lodash'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, StyleSheet, Text} from 'react-native'
@@ -71,9 +70,9 @@ export const WalletSelectionScreen = () => {
 
           <ScrollView style={styles.wallets}>
             {wallets ? (
-              _.sortBy(wallets, ({name}) => name).map((wallet) => (
-                <WalletListItem key={wallet.id} wallet={wallet} onPress={openWallet} />
-              ))
+              wallets
+                .sort(byName)
+                .map((wallet) => <WalletListItem key={wallet.id} wallet={wallet} onPress={openWallet} />)
             ) : (
               <ActivityIndicator />
             )}
@@ -236,3 +235,17 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 })
+
+const byName = (a: {name: string}, b: {name: string}) => {
+  const nameA = a.name.toUpperCase()
+  const nameB = b.name.toUpperCase()
+
+  if (nameA < nameB) {
+    return -1
+  }
+  if (nameA > nameB) {
+    return 1
+  }
+
+  return 0
+}
