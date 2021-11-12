@@ -21,6 +21,7 @@ import {RemoveWalletScreen} from './RemoveWalletScreen'
 import {WalletSettingsScreen} from './WalletSettingsScreen'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// prettier-ignore
 type SettingsTabRoutes = {
   'wallet-settings': any
   'app-settings': any
