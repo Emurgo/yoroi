@@ -16,8 +16,8 @@ import {
   isSynchronizingHistorySelector,
   lastHistorySyncErrorSelector,
   walletIsInitializedSelector,
-  walletMetaSelector,
 } from '../../legacy/selectors'
+import {useSelectedWalletMeta} from '../SelectedWallet'
 import {AssetList} from './AssetList'
 import {EmptyHistory} from './EmptyHistory'
 import {SyncErrorBanner} from './SyncErrorBanner'
@@ -31,7 +31,7 @@ export const TxHistory = () => {
   const isSyncing = useSelector(isSynchronizingHistorySelector)
   const lastSyncError = useSelector(lastHistorySyncErrorSelector)
   const isOnline = useSelector(isOnlineSelector)
-  const walletMeta = useSelector(walletMetaSelector)
+  const walletMeta = useSelectedWalletMeta()
   const walletIsInitialized = useSelector(walletIsInitializedSelector)
 
   const [showWarning, setShowWarning] = useState<boolean>(isByron(walletMeta.walletImplementationId))
