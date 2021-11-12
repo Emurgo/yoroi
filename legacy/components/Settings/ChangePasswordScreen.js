@@ -3,17 +3,17 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, View} from 'react-native'
+import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {showErrorDialog} from '../../actions'
 import {WrongPassword} from '../../crypto/errors'
 import walletManager from '../../crypto/walletManager'
 import {errorMessages} from '../../i18n/global-messages'
+import {COLORS} from '../../styles/config'
 import {REQUIRED_PASSWORD_LENGTH, validatePassword} from '../../utils/validators'
 import {Button, Spacer, TextInput} from '../UiKit'
 import {Checkmark} from '../UiKit/TextInput'
-import styles from './styles/ChangePasswordScreen.style'
 
 const ChangePasswordScreen = () => {
   const intl = useIntl()
@@ -152,3 +152,17 @@ const useStrings = () => {
     continueButton: intl.formatMessage(messages.continueButton),
   }
 }
+
+const styles = StyleSheet.create({
+  safeAreaView: {
+    backgroundColor: COLORS.BACKGROUND,
+    flex: 1,
+  },
+  contentContainer: {
+    padding: 16,
+  },
+  actions: {
+    padding: 16,
+    backgroundColor: COLORS.BACKGROUND,
+  },
+})
