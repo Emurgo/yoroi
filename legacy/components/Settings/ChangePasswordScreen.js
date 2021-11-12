@@ -15,35 +15,9 @@ import {Button, Spacer, TextInput} from '../UiKit'
 import {Checkmark} from '../UiKit/TextInput'
 import styles from './styles/ChangePasswordScreen.style'
 
-const messages = defineMessages({
-  oldPasswordInputLabel: {
-    id: 'components.settings.changepasswordscreen.oldPasswordInputLabel',
-    defaultMessage: '!!!Current password',
-  },
-  newPasswordInputLabel: {
-    id: 'components.settings.changepasswordscreen.newPasswordInputLabel',
-    defaultMessage: '!!!New password',
-  },
-  passwordStrengthRequirement: {
-    id: 'components.walletinit.createwallet.createwalletscreen.passwordLengthRequirement',
-    defaultMessage: '!!!Minimum {requirePasswordLength} characters',
-  },
-  repeatPasswordInputLabel: {
-    id: 'components.settings.changepasswordscreen.repeatPasswordInputLabel',
-    defaultMessage: '!!!Repeat new password',
-  },
-  repeatPasswordInputNotMatchError: {
-    id: 'components.settings.changepasswordscreen.repeatPasswordInputNotMatchError',
-    defaultMessage: '!!!Passwords do not match',
-  },
-  continueButton: {
-    id: 'components.settings.changepasswordscreen.continueButton',
-    defaultMessage: '!!!Change password',
-  },
-})
-
 const ChangePasswordScreen = () => {
   const intl = useIntl()
+  const strings = useStrings()
   const navigation = useNavigation()
   const onSubmit = async (oldPassword, newPassword) => {
     try {
@@ -77,7 +51,7 @@ const ChangePasswordScreen = () => {
           enablesReturnKeyAutomatically
           autoFocus
           secureTextEntry
-          label={intl.formatMessage(messages.oldPasswordInputLabel)}
+          label={strings.oldPasswordInputLabel}
           value={currentPassword}
           onChangeText={setCurrentPassword}
           returnKeyType={'next'}
@@ -90,19 +64,11 @@ const ChangePasswordScreen = () => {
           ref={newPasswordRef}
           enablesReturnKeyAutomatically
           secureTextEntry
-          label={intl.formatMessage(messages.newPasswordInputLabel)}
+          label={strings.newPasswordInputLabel}
           value={newPassword}
           onChangeText={setNewPassword}
-          errorText={
-            newPasswordErrors.passwordIsWeak
-              ? intl.formatMessage(messages.passwordStrengthRequirement, {
-                  requiredPasswordLength: REQUIRED_PASSWORD_LENGTH,
-                })
-              : undefined
-          }
-          helperText={intl.formatMessage(messages.passwordStrengthRequirement, {
-            requiredPasswordLength: REQUIRED_PASSWORD_LENGTH,
-          })}
+          errorText={newPasswordErrors.passwordIsWeak ? strings.passwordStrengthRequirement : undefined}
+          helperText={strings.passwordStrengthRequirement}
           returnKeyType={'next'}
           onSubmitEditing={() => newPasswordConfirmationRef.current?.focus()}
           right={!newPasswordErrors.passwordIsWeak ? <Checkmark /> : undefined}
@@ -114,14 +80,10 @@ const ChangePasswordScreen = () => {
           ref={newPasswordConfirmationRef}
           enablesReturnKeyAutomatically
           secureTextEntry
-          label={intl.formatMessage(messages.repeatPasswordInputLabel)}
+          label={strings.repeatPasswordInputLabel}
           value={newPasswordConfirmation}
           onChangeText={setNewPasswordConfirmation}
-          errorText={
-            newPasswordErrors.matchesConfirmation
-              ? intl.formatMessage(messages.repeatPasswordInputNotMatchError)
-              : undefined
-          }
+          errorText={newPasswordErrors.matchesConfirmation ? strings.repeatPasswordInputNotMatchError : undefined}
           returnKeyType={'done'}
           right={
             !newPasswordErrors.matchesConfirmation && !newPasswordErrors.passwordConfirmationReq ? (
@@ -135,7 +97,7 @@ const ChangePasswordScreen = () => {
         <Button
           onPress={() => onSubmit(currentPassword, newPassword)}
           disabled={hasErrors}
-          title={intl.formatMessage(messages.continueButton)}
+          title={strings.continueButton}
         />
       </Actions>
     </SafeAreaView>
@@ -148,3 +110,45 @@ const CurrentPasswordInput = TextInput
 const PasswordInput = TextInput
 const PasswordConfirmationInput = TextInput
 const Actions = (props) => <View {...props} style={styles.actions} />
+
+const messages = defineMessages({
+  oldPasswordInputLabel: {
+    id: 'components.settings.changepasswordscreen.oldPasswordInputLabel',
+    defaultMessage: '!!!Current password',
+  },
+  newPasswordInputLabel: {
+    id: 'components.settings.changepasswordscreen.newPasswordInputLabel',
+    defaultMessage: '!!!New password',
+  },
+  passwordStrengthRequirement: {
+    id: 'components.walletinit.createwallet.createwalletscreen.passwordLengthRequirement',
+    defaultMessage: '!!!Minimum {requirePasswordLength} characters',
+  },
+  repeatPasswordInputLabel: {
+    id: 'components.settings.changepasswordscreen.repeatPasswordInputLabel',
+    defaultMessage: '!!!Repeat new password',
+  },
+  repeatPasswordInputNotMatchError: {
+    id: 'components.settings.changepasswordscreen.repeatPasswordInputNotMatchError',
+    defaultMessage: '!!!Passwords do not match',
+  },
+  continueButton: {
+    id: 'components.settings.changepasswordscreen.continueButton',
+    defaultMessage: '!!!Change password',
+  },
+})
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    oldPasswordInputLabel: intl.formatMessage(messages.oldPasswordInputLabel),
+    newPasswordInputLabel: intl.formatMessage(messages.newPasswordInputLabel),
+    passwordStrengthRequirement: intl.formatMessage(messages.passwordStrengthRequirement, {
+      requiredPasswordLength: REQUIRED_PASSWORD_LENGTH,
+    }),
+    repeatPasswordInputLabel: intl.formatMessage(messages.repeatPasswordInputLabel),
+    repeatPasswordInputNotMatchError: intl.formatMessage(messages.repeatPasswordInputNotMatchError),
+    continueButton: intl.formatMessage(messages.continueButton),
+  }
+}
