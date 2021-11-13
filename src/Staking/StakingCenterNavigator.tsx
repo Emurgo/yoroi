@@ -1,7 +1,7 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
-import type {IntlShape} from 'react-intl'
-import {defineMessages, injectIntl} from 'react-intl'
+import {useIntl} from 'react-intl'
+import {defineMessages} from 'react-intl'
 
 import iconGear from '../../legacy/assets/img/gear.png'
 import DelegationConfirmation from '../../legacy/components/Delegation/DelegationConfirmation'
@@ -20,6 +20,49 @@ type StakingCenterRoutes = {
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
+const Stack = createStackNavigator<StakingCenterRoutes>()
+
+export const StakingCenterNavigator = () => {
+  const strings = useStrings()
+
+  return (
+    <Stack.Navigator
+      screenOptions={({route}) => ({
+        title: route.params?.title ?? undefined,
+        ...defaultNavigationOptions,
+        ...defaultStackNavigatorOptions,
+      })}
+    >
+      <Stack.Screen
+        name={STAKING_CENTER_ROUTES.MAIN}
+        component={StakingCenter}
+        options={({navigation}) => ({
+          title: strings.title,
+          headerRight: () => (
+            <Button
+              style={styles.settingsButton}
+              onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)}
+              iconImage={iconGear}
+              title=""
+              withoutBackground
+            />
+          ),
+        })}
+      />
+      <Stack.Screen
+        name={STAKING_CENTER_ROUTES.DELEGATION_CONFIRM}
+        component={DelegationConfirmation}
+        options={{title: strings.title}}
+      />
+      <Stack.Screen
+        name={SEND_ROUTES.BIOMETRICS_SIGNING}
+        component={BiometricAuthScreen}
+        options={{headerShown: false}}
+      />
+    </Stack.Navigator>
+  )
+}
+
 const messages = defineMessages({
   title: {
     id: 'components.stakingcenter.title',
@@ -31,42 +74,11 @@ const messages = defineMessages({
   },
 })
 
-const Stack = createStackNavigator<StakingCenterRoutes>()
+const useStrings = () => {
+  const intl = useIntl()
 
-export const StakingCenterNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
-  <Stack.Navigator
-    screenOptions={({route}) => ({
-      // $FlowFixMe mixed is not compatible with string
-      title: route.params?.title ?? undefined,
-      ...defaultNavigationOptions,
-      ...defaultStackNavigatorOptions,
-    })}
-  >
-    <Stack.Screen
-      name={STAKING_CENTER_ROUTES.MAIN}
-      component={StakingCenter}
-      options={({navigation}) => ({
-        title: intl.formatMessage(messages.title),
-        headerRight: () => (
-          <Button
-            style={styles.settingsButton}
-            onPress={() => navigation.navigate(WALLET_ROOT_ROUTES.SETTINGS)}
-            iconImage={iconGear}
-            title=""
-            withoutBackground
-          />
-        ),
-      })}
-    />
-    <Stack.Screen
-      name={STAKING_CENTER_ROUTES.DELEGATION_CONFIRM}
-      component={DelegationConfirmation}
-      options={{title: intl.formatMessage(messages.title)}}
-    />
-    <Stack.Screen
-      name={SEND_ROUTES.BIOMETRICS_SIGNING}
-      component={BiometricAuthScreen}
-      options={{headerShown: false}}
-    />
-  </Stack.Navigator>
-))
+  return {
+    title: intl.formatMessage(messages.title),
+    delegationConfirmationTitle: intl.formatMessage(messages.delegationConfirmationTitle),
+  }
+}
