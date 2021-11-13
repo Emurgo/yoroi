@@ -6,19 +6,20 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {showErrorDialog} from '../../actions'
-import {WrongPassword} from '../../crypto/errors'
-import walletManager from '../../crypto/walletManager'
-import {errorMessages} from '../../i18n/global-messages'
-import {COLORS} from '../../styles/config'
-import {REQUIRED_PASSWORD_LENGTH, validatePassword} from '../../utils/validators'
-import {Button, Spacer, TextInput} from '../UiKit'
-import {Checkmark} from '../UiKit/TextInput'
+import {showErrorDialog} from '../../../legacy/actions'
+import {Button, Spacer, TextInput} from '../../../legacy/components/UiKit'
+import {Checkmark} from '../../../legacy/components/UiKit/TextInput'
+import {WrongPassword} from '../../../legacy/crypto/errors'
+import walletManager from '../../../legacy/crypto/walletManager'
+import {errorMessages} from '../../../legacy/i18n/global-messages'
+import {COLORS} from '../../../legacy/styles/config'
+import {REQUIRED_PASSWORD_LENGTH, validatePassword} from '../../../legacy/utils/validators'
 
-const ChangePasswordScreen = () => {
+export const ChangePasswordScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
+
   const onSubmit = async (oldPassword, newPassword) => {
     try {
       await walletManager.changePassword(oldPassword, newPassword, intl)
@@ -103,8 +104,6 @@ const ChangePasswordScreen = () => {
     </SafeAreaView>
   )
 }
-
-export default ChangePasswordScreen
 
 const CurrentPasswordInput = TextInput
 const PasswordInput = TextInput
