@@ -1,66 +1,37 @@
-// @flow
-
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import CatalystLogo from '../../assets/img/voting.png'
-import StandardModal from '../../components/Common/StandardModal'
-import {CONFIG, isHaskellShelley, isNightly} from '../../config/config'
-import {isRegistrationOpen} from '../../crypto/shelley/catalystUtils'
-import walletManager from '../../crypto/walletManager'
-import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
-import {availableAssetsSelector, tokenBalanceSelector, walletMetaSelector} from '../../selectors'
-import {COLORS} from '../../styles/config'
-import {formatTokenWithText} from '../../utils/format'
-import {Logger} from '../../utils/logging'
-import {Text} from '../UiKit'
+import CatalystLogo from '../../legacy/assets/img/voting.png'
+import StandardModal from '../../legacy/components/Common/StandardModal'
+import {Text} from '../../legacy/components/UiKit'
+import {CONFIG, isHaskellShelley, isNightly} from '../../legacy/config/config'
+import {isRegistrationOpen} from '../../legacy/crypto/shelley/catalystUtils'
+import type {WalletInterface} from '../../legacy/crypto/WalletInterface'
+import globalMessages, {confirmationMessages} from '../../legacy/i18n/global-messages'
+import {availableAssetsSelector, tokenBalanceSelector} from '../../legacy/selectors'
+import {COLORS} from '../../legacy/styles/config'
+import {formatTokenWithText} from '../../legacy/utils/format'
+import {Logger} from '../../legacy/utils/logging'
+import {useSelectedWallet} from '../SelectedWallet'
 
-type Props = {|
-  onPress: () => void,
-  disabled: boolean,
-|}
+type Props = {
+  onPress: () => void
+  disabled: boolean
+}
 
-const VotingBanner = ({onPress, disabled}: Props) => {
+export const VotingBanner = ({onPress, disabled}: Props) => {
   const strings = useStrings()
-  const walletMeta = useSelector(walletMetaSelector)
 
   const tokenBalance = useSelector(tokenBalanceSelector)
   const availableAssets = useSelector(availableAssetsSelector)
   const assetMetaData = availableAssets[tokenBalance.getDefaultId()]
 
-  const [showInsufficientFundsModal, setShowInsufficientFundsModal] = useState<boolean>(false)
-  const canVote = isHaskellShelley(walletMeta.walletImplementationId)
-  const [showCatalystBanner, setShowCatalystBanner] = useState<boolean>(canVote)
+  const [showInsufficientFundsModal, setShowInsufficientFundsModal] = useState(false)
 
-  useEffect(() => {
-    const checkCatalystFundInfo = async () => {
-      let fundInfo: {|
-        registrationStart: string,
-        registrationEnd: string,
-      |} | null = null
-
-      if (canVote) {
-        try {
-          const {currentFund} = await walletManager.fetchFundInfo()
-          if (currentFund != null) {
-            fundInfo = {
-              registrationStart: currentFund.registrationStart,
-              registrationEnd: currentFund.registrationEnd,
-            }
-          }
-        } catch (e) {
-          Logger.debug('Could not get Catalyst fund info from server', e)
-        }
-      }
-
-      setShowCatalystBanner((canVote && isRegistrationOpen(fundInfo)) || isNightly() || __DEV__)
-    }
-
-    checkCatalystFundInfo()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const wallet = useSelectedWallet()
+  const showCatalystBanner = useShowCatalystBanner(wallet)
 
   if (!showCatalystBanner) return null
 
@@ -105,8 +76,6 @@ const VotingBanner = ({onPress, disabled}: Props) => {
   )
 }
 
-export default VotingBanner
-
 const messages = defineMessages({
   name: {
     id: 'components.catalyst.banner.name',
@@ -145,4 +114,38 @@ const useStrings = () => {
         currentBalance,
       }),
   }
+}
+
+const useShowCatalystBanner = (wallet: WalletInterface) => {
+  const canVote = isHaskellShelley(wallet.walletImplementationId)
+  const [showCatalystBanner, setShowCatalystBanner] = useState(canVote)
+
+  useEffect(() => {
+    const checkCatalystFundInfo = async () => {
+      let fundInfo: {
+        registrationStart: string
+        registrationEnd: string
+      } | null = null
+
+      if (canVote) {
+        try {
+          const {currentFund} = await wallet.fetchFundInfo()
+          if (currentFund != null) {
+            fundInfo = {
+              registrationStart: currentFund.registrationStart,
+              registrationEnd: currentFund.registrationEnd,
+            }
+          }
+        } catch (e) {
+          Logger.debug('Could not get Catalyst fund info from server', e)
+        }
+      }
+
+      setShowCatalystBanner((canVote && isRegistrationOpen(fundInfo)) || isNightly() || __DEV__)
+    }
+
+    checkCatalystFundInfo()
+  }, [canVote, wallet])
+
+  return showCatalystBanner
 }

@@ -5,7 +5,6 @@
 
 function loadStories() {
 	require('../legacy/components/Catalyst/Catalyst.stories');
-	require('../legacy/components/Catalyst/VotingBanner.stories');
 	require('../legacy/components/Common/DangerousActionModal.stories');
 	require('../legacy/components/Common/ErrorModal.stories');
 	require('../legacy/components/Common/ExpandableItem.stories');
@@ -60,6 +59,7 @@ function loadStories() {
 	require('../legacy/components/WalletInit/WalletFreshInitScreen.stories');
 	require('../legacy/components/WalletInit/WalletInitScreen.stories');
 	require('../legacy/components/WalletInit/WalletNameForm.stories');
+	require('../src/Catalyst/VotingBanner.stories');
 	require('../src/FirstRun/AcceptTermsOfService.stories');
 	require('../src/FirstRun/CustomPinScreen.stories');
 	require('../src/FirstRun/LanguagePickerScreen.stories');
@@ -74,7 +74,6 @@ function loadStories() {
 
 const stories = [
 	'../legacy/components/Catalyst/Catalyst.stories',
-	'../legacy/components/Catalyst/VotingBanner.stories',
 	'../legacy/components/Common/DangerousActionModal.stories',
 	'../legacy/components/Common/ErrorModal.stories',
 	'../legacy/components/Common/ExpandableItem.stories',
@@ -129,6 +128,7 @@ const stories = [
 	'../legacy/components/WalletInit/WalletFreshInitScreen.stories',
 	'../legacy/components/WalletInit/WalletInitScreen.stories',
 	'../legacy/components/WalletInit/WalletNameForm.stories',
+	'../src/Catalyst/VotingBanner.stories',
 	'../src/FirstRun/AcceptTermsOfService.stories',
 	'../src/FirstRun/CustomPinScreen.stories',
 	'../src/FirstRun/LanguagePickerScreen.stories',

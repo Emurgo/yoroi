@@ -6,7 +6,6 @@ import {ScrollView, StyleSheet, Switch} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {DIALOG_BUTTONS, logout, showConfirmationDialog, updateWallets} from '../../legacy/actions'
-import VotingBanner from '../../legacy/components/Catalyst/VotingBanner'
 import {
   NavigatedSettingsItem,
   PressableSettingsItem,
@@ -30,6 +29,7 @@ import {
   walletNameSelector,
 } from '../../legacy/selectors'
 import {ignoreConcurrentAsyncHandler} from '../../legacy/utils/utils'
+import {VotingBanner} from '../../src/Catalyst'
 
 export const WalletSettingsScreen = () => {
   const intl = useIntl()
