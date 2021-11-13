@@ -4,7 +4,8 @@ import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
 import type {IntlShape} from 'react-intl'
-import {defineMessages, injectIntl} from 'react-intl'
+import {useIntl} from 'react-intl'
+import {defineMessages} from 'react-intl'
 import {View} from 'react-native'
 import {WebView} from 'react-native-webview'
 import {useSelector} from 'react-redux'
@@ -39,17 +40,6 @@ import PoolWarningModal from './PoolWarningModal'
 import styles from './styles/DelegationCenter.style'
 
 const IS_STAKING_ON_TEST_BUILD = isNightly() || CONFIG.IS_TESTNET_BUILD
-
-const noPoolDataDialog = defineMessages({
-  title: {
-    id: 'components.stakingcenter.noPoolDataDialog.title',
-    defaultMessage: '!!!Invalid Pool Data',
-  },
-  message: {
-    id: 'components.stakingcenter.noPoolDataDialog.message',
-    defaultMessage: '!!!The data from the stake pool(s) you selected is invalid. Please try again',
-  },
-})
 
 type SelectedPool = {|
   +poolName: ?string,
@@ -183,11 +173,9 @@ const _handleOnMessage = async (
   }
 }
 
-type Props = {
-  intl: IntlShape,
-}
-
-const StakingCenter = ({intl}: Props) => {
+const StakingCenter = () => {
+  const intl = useIntl()
+  const strings = useStrings()
   const navigation = useNavigation()
   const [amountToDelegate, setAmountToDelegate] = useState<string | null>(null)
   const [selectedPools, setSelectedPools] = useState([])
@@ -294,11 +282,30 @@ const StakingCenter = ({intl}: Props) => {
             onRequestClose={() => setShowPoolWarning(false)}
             reputationInfo={reputationInfo}
           />
-          <PleaseWaitModal title={''} spinnerText={intl.formatMessage(globalMessages.pleaseWait)} visible={busy} />
+          <PleaseWaitModal title={''} spinnerText={strings.pleaseWait} visible={busy} />
         </>
       )}
     </>
   )
 }
 
-export default injectIntl(StakingCenter)
+export default StakingCenter
+
+const noPoolDataDialog = defineMessages({
+  title: {
+    id: 'components.stakingcenter.noPoolDataDialog.title',
+    defaultMessage: '!!!Invalid Pool Data',
+  },
+  message: {
+    id: 'components.stakingcenter.noPoolDataDialog.message',
+    defaultMessage: '!!!The data from the stake pool(s) you selected is invalid. Please try again',
+  },
+})
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
+  }
+}
