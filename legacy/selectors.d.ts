@@ -30,7 +30,7 @@ export var walletsListSelector: (state: State) => Array<WalletMeta>
 // prettier-ignore
 interface PartialMultiToken {
   getDefaultId: () => string,
-  getDefault: () => Token,
+  getDefault: () => BigNumber,
   values: Array<{amount: BigNumber, identifier: string, networkId: number}>
 }
 export var tokenBalanceSelector: (state: State) => PartialMultiToken

@@ -20,7 +20,11 @@ export var CONFIG: {
     HASKELL_SHELLEY: NetworkConfig,
     HASKELL_SHELLEY_TESTNET: NetworkConfig,
     JORMUNGANDR: NetworkConfig,
-  }
+  },
+  CATALYST: {
+    MIN_ADA: number,
+    DISPLAYED_MIN_ADA: BigNumber
+  },
 }
 
 export var isNightly: () => boolean
