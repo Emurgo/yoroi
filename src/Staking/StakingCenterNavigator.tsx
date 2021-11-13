@@ -1,24 +1,24 @@
-// @flow
-
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import type {IntlShape} from 'react-intl'
 import {defineMessages, injectIntl} from 'react-intl'
 
-import iconGear from '../../assets/img/gear.png'
-import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
-import {SEND_ROUTES, STAKING_CENTER_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
-import BiometricAuthScreen from '../Send/BiometricAuthScreen'
-import styles from '../TxHistory/styles/SettingsButton.style'
-import {Button} from '../UiKit'
-import DelegationConfirmation from './DelegationConfirmation'
-import StakingCenter from './StakingCenter'
+import iconGear from '../../legacy/assets/img/gear.png'
+import DelegationConfirmation from '../../legacy/components/Delegation/DelegationConfirmation'
+import StakingCenter from '../../legacy/components/Delegation/StakingCenter'
+import BiometricAuthScreen from '../../legacy/components/Send/BiometricAuthScreen'
+import styles from '../../legacy/components/TxHistory/styles/SettingsButton.style'
+import {Button} from '../../legacy/components/UiKit'
+import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
+import {SEND_ROUTES, STAKING_CENTER_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 type StakingCenterRoutes = {
-  'staking-center': any,
-  'delegation-confirmation': any,
-  'biometrics-signing': any,
+  'staking-center': any
+  'delegation-confirmation': any
+  'biometrics-signing': any
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 const messages = defineMessages({
   title: {
@@ -31,9 +31,9 @@ const messages = defineMessages({
   },
 })
 
-const Stack = createStackNavigator<any, StakingCenterRoutes, any>()
+const Stack = createStackNavigator<StakingCenterRoutes>()
 
-const StakingCenterNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
+export const StakingCenterNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
   <Stack.Navigator
     screenOptions={({route}) => ({
       // $FlowFixMe mixed is not compatible with string
@@ -70,5 +70,3 @@ const StakingCenterNavigator = injectIntl(({intl}: {intl: IntlShape}) => (
     />
   </Stack.Navigator>
 ))
-
-export default StakingCenterNavigator

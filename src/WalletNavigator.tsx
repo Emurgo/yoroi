@@ -6,7 +6,6 @@ import {Image} from 'react-native'
 import {useSelector} from 'react-redux'
 
 import CatalystNavigator from '../legacy/components/Catalyst/CatalystNavigator'
-import StakingCenterNavigator from '../legacy/components/Delegation/StakingCenterNavigator'
 import StakingDashboardNavigator from '../legacy/components/Delegation/StakingDashboardNavigator'
 import ReceiveScreenNavigator from '../legacy/components/Receive/ReceiveScreenNavigator'
 import SendScreenNavigator from '../legacy/components/Send/SendScreenNavigator'
@@ -27,6 +26,7 @@ import iconHistory from './assets/img/icon/txhistory.png'
 import iconHistoryActive from './assets/img/icon/txhistory-active.png'
 import {useSelectedWalletMeta, WalletSelectionScreen} from './SelectedWallet'
 import {SettingsScreenNavigator} from './Settings'
+import {StakingCenterNavigator} from './Staking'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type WalletTabRoutes = {
