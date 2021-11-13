@@ -1,38 +1,23 @@
-// @flow
-
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
+import {MutationOptions, useMutation} from 'react-query'
 
-import {showErrorDialog} from '../../../legacy/actions'
 import {Button, Spacer, TextInput} from '../../../legacy/components/UiKit'
 import {Checkmark} from '../../../legacy/components/UiKit/TextInput'
-import {WrongPassword} from '../../../legacy/crypto/errors'
 import walletManager from '../../../legacy/crypto/walletManager'
 import {errorMessages} from '../../../legacy/i18n/global-messages'
 import {COLORS} from '../../../legacy/styles/config'
 import {REQUIRED_PASSWORD_LENGTH, validatePassword} from '../../../legacy/utils/validators'
+import {WalletInterface} from '../../types'
 
 export const ChangePasswordScreen = () => {
-  const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
 
-  const onSubmit = async (oldPassword, newPassword) => {
-    try {
-      await walletManager.changePassword(oldPassword, newPassword, intl)
-      navigation.goBack()
-    } catch (error) {
-      if (error instanceof WrongPassword) {
-        await showErrorDialog(errorMessages.incorrectPassword, intl)
-      } else {
-        throw error
-      }
-    }
-  }
-
+  const currentPasswordRef = React.useRef<{focus: () => void} | null>(null)
   const [currentPassword, setCurrentPassword] = React.useState('')
   const currentPasswordErrors = currentPassword.length === 0 ? {currentPasswordRequired: true} : {}
 
@@ -45,10 +30,16 @@ export const ChangePasswordScreen = () => {
 
   const hasErrors = Object.keys(currentPasswordErrors).length > 0 || Object.keys(newPasswordErrors).length > 0
 
+  const {changePassword, isError} = useChangePassword(walletManager.getWallet(), {
+    onSuccess: () => navigation.goBack(),
+    onError: () => currentPasswordRef.current?.focus(),
+  })
+
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <ScrollView bounces={false} keyboardDismissMode="on-drag" contentContainerStyle={styles.contentContainer}>
         <CurrentPasswordInput
+          ref={currentPasswordRef}
           enablesReturnKeyAutomatically
           autoFocus
           secureTextEntry
@@ -57,6 +48,7 @@ export const ChangePasswordScreen = () => {
           onChangeText={setCurrentPassword}
           returnKeyType={'next'}
           onSubmitEditing={() => newPasswordRef.current?.focus()}
+          errorText={isError ? strings.incorrectPassword : undefined}
         />
 
         <Spacer />
@@ -96,7 +88,7 @@ export const ChangePasswordScreen = () => {
 
       <Actions>
         <Button
-          onPress={() => onSubmit(currentPassword, newPassword)}
+          onPress={() => changePassword({currentPassword, newPassword})}
           disabled={hasErrors}
           title={strings.continueButton}
         />
@@ -149,6 +141,7 @@ const useStrings = () => {
     repeatPasswordInputLabel: intl.formatMessage(messages.repeatPasswordInputLabel),
     repeatPasswordInputNotMatchError: intl.formatMessage(messages.repeatPasswordInputNotMatchError),
     continueButton: intl.formatMessage(messages.continueButton),
+    incorrectPassword: intl.formatMessage(errorMessages.incorrectPassword.title),
   }
 }
 
@@ -165,3 +158,19 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.BACKGROUND,
   },
 })
+
+const useChangePassword = (
+  wallet: WalletInterface,
+  mutationOptions: MutationOptions<void, Error, {currentPassword: string; newPassword: string}>,
+) => {
+  const intl = useIntl()
+  const {mutate, ...mutation} = useMutation(
+    ({currentPassword, newPassword}) => wallet.changePassword(currentPassword, newPassword, intl),
+    mutationOptions,
+  )
+
+  return {
+    changePassword: mutate,
+    ...mutation,
+  }
+}

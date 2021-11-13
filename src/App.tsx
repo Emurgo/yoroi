@@ -6,11 +6,14 @@ import RNBootSplash from 'react-native-bootsplash'
 import * as RNP from 'react-native-paper'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {enableScreens} from 'react-native-screens'
+import {QueryClient, QueryClientProvider} from 'react-query'
 import {useDispatch} from 'react-redux'
 
 import {initApp} from '../legacy/actions'
 import AppNavigator from './AppNavigator'
 import {SelectedWalletMetaProvider} from './SelectedWallet/SelectedWalletContext'
+
+const queryClient = new QueryClient()
 
 enableScreens()
 
@@ -50,9 +53,11 @@ const App = () => {
   return (
     <SafeAreaProvider>
       <RNP.Provider>
-        <SelectedWalletMetaProvider>
-          <AppNavigator />
-        </SelectedWalletMetaProvider>
+        <QueryClientProvider client={queryClient}>
+          <SelectedWalletMetaProvider>
+            <AppNavigator />
+          </SelectedWalletMetaProvider>
+        </QueryClientProvider>
       </RNP.Provider>
     </SafeAreaProvider>
   )
