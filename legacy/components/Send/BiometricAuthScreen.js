@@ -4,7 +4,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import type {ComponentType} from 'react'
 import React, {useEffect, useState} from 'react'
 import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
-import {AppState} from 'react-native'
+import {AppState, Platform} from 'react-native'
 import {withHandlers, withStateHandlers} from 'recompose'
 import {compose} from 'redux'
 
@@ -131,6 +131,8 @@ const BiometricAuthScreen = (
 
   useEffect(() => {
     const handleAppStateChange: (?string) => Promise<void> = async (nextAppState) => {
+      if (Platform.OS !== 'android') return
+
       const previousAppState = appState
       setAppState(nextAppState)
       if (previousAppState != null && previousAppState.match(/inactive|background/) && nextAppState === 'active') {
