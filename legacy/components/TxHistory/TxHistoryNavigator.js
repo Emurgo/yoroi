@@ -13,7 +13,7 @@ import {TX_HISTORY_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
 import {transactionsInfoSelector, walletMetaSelector} from '../../selectors'
 import {COLORS} from '../../styles/config'
 import {formatDateToSeconds} from '../../utils/format'
-import TxDetails from './TxDetails'
+import {TxDetails} from './TxDetails'
 
 type TxHistoryRoutes = {
   'tx-history-list': any,
