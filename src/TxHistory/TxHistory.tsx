@@ -26,7 +26,6 @@ import {WalletHero} from './WalletHero'
 
 export const TxHistory = () => {
   const strings = useStrings()
-  const dispatch = useDispatch()
   const hasTransaction = useSelector(hasAnyTransaction)
   const isSyncing = useSelector(isSynchronizingHistorySelector)
   const lastSyncError = useSelector(lastHistorySyncErrorSelector)
@@ -34,8 +33,9 @@ export const TxHistory = () => {
   const walletMeta = useSelectedWalletMeta()
   const walletIsInitialized = useSelector(walletIsInitializedSelector)
 
-  const [showWarning, setShowWarning] = useState<boolean>(isByron(walletMeta.walletImplementationId))
+  const [showWarning, setShowWarning] = useState(isByron(walletMeta.walletImplementationId))
 
+  const dispatch = useDispatch()
   useEffect(() => {
     dispatch(checkForFlawedWallets())
     dispatch(updateHistory())

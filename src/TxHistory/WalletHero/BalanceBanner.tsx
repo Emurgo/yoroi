@@ -43,12 +43,14 @@ export const BalanceBanner = () => {
                 ? formatTokenWithText(tokenBalance.getDefault(), token)
                 : formatTokenWithTextWhenHidden(BALANCE_WHEN_HIDDEN, token)}
             </Text>
+
             {features.walletHero.fiat && (
               <Text style={styles.totalText}>
                 {showValues ? '0.00' : TOTAL_WHEN_HIDDEN} {QUOTE_PAIR_CURRENCY}
               </Text>
             )}
           </View>
+
           <View style={styles.showIcon}>
             {showValues ? <Image source={closedEyeIcon} /> : <Image source={openedEyeIcon} />}
           </View>
@@ -70,6 +72,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     fontFamily: 'Rubik-Medium',
+    fontWeight: 'bold',
     color: COLORS.ERROR_TEXT_COLOR_DARK,
   },
   totalText: {
