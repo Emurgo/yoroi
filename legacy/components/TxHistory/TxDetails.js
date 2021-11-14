@@ -5,7 +5,7 @@ import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Image, LayoutAnimation, Linking, TouchableOpacity, View} from 'react-native'
+import {Image, LayoutAnimation, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
 import arrowDown from '../../assets/img/chevron_down.png'
@@ -22,13 +22,13 @@ import {
   transactionsInfoSelector,
   walletMetaSelector,
 } from '../../selectors'
+import stylesConfig, {COLORS} from '../../styles/config'
 import {type Token, TRANSACTION_DIRECTION} from '../../types/HistoryTransaction'
 import {formatTokenWithSymbol} from '../../utils/format'
 import AssetList from '../Common/MultiAsset/AssetList'
 import assetListStyle from '../Common/MultiAsset/styles/AssetListTransaction.style'
 import AddressModal from '../Receive/AddressModal'
 import {Banner, Button, CopyButton, OfflineBanner, StatusBar, Text} from '../UiKit'
-import styles from './styles/TxDetails.style'
 
 export const TxDetails = () => {
   const intl = useIntl()
@@ -351,3 +351,45 @@ const useStrings = () => {
     openInExplorer: intl.formatMessage(messages.openInExplorer),
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  content: {
+    paddingHorizontal: 16,
+  },
+  positiveAmount: {
+    color: COLORS.POSITIVE_AMOUNT,
+    fontWeight: '500',
+  },
+  negativeAmount: {
+    color: COLORS.NEGATIVE_AMOUNT,
+    fontWeight: '500',
+  },
+  label: {
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  assetsExpandable: {
+    paddingTop: 12,
+    paddingBottom: 24,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignContent: 'center',
+  },
+  assetsTitle: ({
+    fontSize: 14,
+    fontFamily: stylesConfig.defaultFont,
+    color: COLORS.TEXT_GRAY,
+  }: any),
+  borderTop: {
+    borderTopWidth: 1,
+    borderColor: 'rgba(173, 174, 182, 0.3)',
+  },
+  dataContainer: {
+    flexDirection: 'row',
+    paddingRight: 70,
+    marginBottom: 20,
+  },
+})
