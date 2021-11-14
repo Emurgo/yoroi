@@ -26,7 +26,7 @@ import iconHistoryActive from './assets/img/icon/txhistory-active.png'
 import {useSelectedWalletMeta, WalletSelectionScreen} from './SelectedWallet'
 import {SettingsScreenNavigator} from './Settings'
 import {StakingCenterNavigator} from './Staking'
-import {TxHistoryNavigator} from './TxHistory/TxHistoryNavigator'
+import {TxHistoryNavigator} from './TxHistory'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type WalletTabRoutes = {
