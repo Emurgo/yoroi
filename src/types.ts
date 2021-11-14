@@ -2,6 +2,7 @@ import type {IntlShape} from 'react-intl'
 
 export interface WalletInterface {
   walletImplementationId: string
+  checksum: {ImagePart: string; TextPart: string}
   changePassword(masterPassword: string, newPassword: string, intl: IntlShape): Promise<void>
   fetchFundInfo(): Promise<FundInfos>
 }

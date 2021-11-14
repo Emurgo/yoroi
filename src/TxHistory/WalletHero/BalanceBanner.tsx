@@ -9,7 +9,7 @@ import closedEyeIcon from '../../assets/img/icon/visibility-closed.png'
 import openedEyeIcon from '../../assets/img/icon/visibility-opened.png'
 import {Icon, Spacer} from '../../components'
 import features from '../../features'
-import {useSelectedWalletMeta} from '../../SelectedWallet'
+import {useSelectedWallet} from '../../SelectedWallet'
 
 const BALANCE_WHEN_HIDDEN = '*.******'
 const TOTAL_WHEN_HIDDEN = '*.**'
@@ -17,7 +17,7 @@ const QUOTE_PAIR_CURRENCY = 'USD'
 
 export const BalanceBanner = () => {
   const tokenBalance = useSelector(tokenBalanceSelector)
-  const walletMeta = useSelectedWalletMeta()
+  const wallet = useSelectedWallet()
   const availableAssets = useSelector(availableAssetsSelector)
   const [showValues, setShowValues] = useState<boolean>(true)
 
@@ -30,7 +30,7 @@ export const BalanceBanner = () => {
       <Spacer height={16} />
 
       <View style={styles.centralized}>
-        <Icon.WalletAccount style={styles.walletIcon} iconSeed={walletMeta.checksum.ImagePart} />
+        <Icon.WalletAccount style={styles.walletIcon} iconSeed={wallet.checksum.ImagePart} />
       </View>
 
       <Spacer height={12} />
