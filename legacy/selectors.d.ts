@@ -3,7 +3,8 @@
 import BigNumber from 'bignumber.js'
 
 import {Token, TransactionInfo} from '../src/TxHistory/types'
-import type {State, WalletMeta} from './state'
+import type {WalletMeta} from '../src/wallets/types'
+import type {State} from './state'
 
 export var availableAssetsSelector: (state: State) => Record<string, Token>
 export var customPinHashSelector: (state: State) => string | undefined

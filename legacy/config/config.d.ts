@@ -1,7 +1,9 @@
 // @flow
 
 export var isHaskellShelley: (walletImplementationId: string) => boolean
-export var isByron: (walletImplementationId: number) => boolean
+export var isByron: (walletImplementationId: string) => boolean
+export var isNightly: () => boolean
+export var isJormun: (walletImplementationId: string) => boolean
 
 // prettier-ignore
 export var CONFIG: {
@@ -25,9 +27,8 @@ export var CONFIG: {
     MIN_ADA: number,
     DISPLAYED_MIN_ADA: BigNumber
   },
+  IS_TESTNET_BUILD: boolean,
 }
-
-export var isNightly: () => boolean
 
 // prettier-ignore
 type NetworkConfig = {
@@ -36,5 +37,5 @@ type NetworkConfig = {
 }
 
 type WalletConfig = {
-  WALLET_IMPLEMENTATION_ID: number
+  WALLET_IMPLEMENTATION_ID: string
 }
