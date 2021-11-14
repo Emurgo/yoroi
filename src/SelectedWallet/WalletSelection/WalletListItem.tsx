@@ -1,4 +1,3 @@
-import type {Node} from 'react'
 import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
@@ -6,10 +5,11 @@ import AdaIcon from '../../../legacy/assets/AdaIcon'
 import {CONFIG, isByron, isHaskellShelley, isJormun, isNightly} from '../../../legacy/config/config'
 import stylesConfig, {COLORS} from '../../../legacy/styles/config'
 import {WalletAccountIcon} from '../../components'
-import type {WalletMeta} from '../../state'
+import {WalletMeta} from '../../types'
+
 type Props = {
-  wallet: WalletMeta,
-  onPress: (walletMeta: WalletMeta) => any,
+  wallet: WalletMeta
+  onPress: (walletMeta: WalletMeta) => void
 }
 
 export const WalletListItem = ({wallet, onPress}: Props) => {
@@ -37,8 +37,8 @@ export const WalletListItem = ({wallet, onPress}: Props) => {
 }
 
 type WalletItemMeta = {
-  type: string,
-  icon: Node,
+  type: string
+  icon: React.ReactNode
 }
 const getWalletItemMeta = (walletMeta: WalletMeta): WalletItemMeta => {
   if (isByron(walletMeta.walletImplementationId)) {
