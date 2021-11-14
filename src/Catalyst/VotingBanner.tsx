@@ -63,25 +63,16 @@ export const VotingBanner = ({onPress, disabled}: Props) => {
         }}
         showCloseIcon
       >
-        <View>
-          <Text>
-            {strings.noBalance({
-              requiredBalance: formatTokenWithText(CONFIG.CATALYST.DISPLAYED_MIN_ADA, assetMetaData),
-              currentBalance: formatTokenWithText(tokenBalance.getDefault(), assetMetaData),
-            })}
-          </Text>
-        </View>
+        <Text>
+          {strings.noBalance({
+            requiredBalance: formatTokenWithText(CONFIG.CATALYST.DISPLAYED_MIN_ADA, assetMetaData),
+            currentBalance: formatTokenWithText(tokenBalance.getDefault(), assetMetaData),
+          })}
+        </Text>
       </StandardModal>
     </View>
   )
 }
-
-const messages = defineMessages({
-  name: {
-    id: 'components.catalyst.banner.name',
-    defaultMessage: '!!!Catalyst Voting Registration',
-  },
-})
 
 const styles = StyleSheet.create({
   container: {
@@ -98,6 +89,13 @@ const styles = StyleSheet.create({
   },
   text: {
     color: COLORS.LIGHT_POSITIVE_GREEN,
+  },
+})
+
+const messages = defineMessages({
+  name: {
+    id: 'components.catalyst.banner.name',
+    defaultMessage: '!!!Catalyst Voting Registration',
   },
 })
 
