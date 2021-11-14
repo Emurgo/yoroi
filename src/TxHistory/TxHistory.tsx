@@ -17,7 +17,7 @@ import {
   lastHistorySyncErrorSelector,
   walletIsInitializedSelector,
 } from '../../legacy/selectors'
-import {useSelectedWalletMeta} from '../SelectedWallet'
+import {useSelectedWallet} from '../SelectedWallet'
 import {AssetList} from './AssetList'
 import {EmptyHistory} from './EmptyHistory'
 import {SyncErrorBanner} from './SyncErrorBanner'
@@ -30,10 +30,10 @@ export const TxHistory = () => {
   const isSyncing = useSelector(isSynchronizingHistorySelector)
   const lastSyncError = useSelector(lastHistorySyncErrorSelector)
   const isOnline = useSelector(isOnlineSelector)
-  const walletMeta = useSelectedWalletMeta()
+  const wallet = useSelectedWallet()
   const walletIsInitialized = useSelector(walletIsInitializedSelector)
 
-  const [showWarning, setShowWarning] = useState(isByron(walletMeta.walletImplementationId))
+  const [showWarning, setShowWarning] = useState(isByron(wallet.walletImplementationId))
 
   const dispatch = useDispatch()
   useEffect(() => {
@@ -59,7 +59,7 @@ export const TxHistory = () => {
             if (active === 0) {
               return (
                 <View style={styles.tabNavigatorRoot}>
-                  {isByron(walletMeta.walletImplementationId) && showWarning && (
+                  {isByron(wallet.walletImplementationId) && showWarning && (
                     <WarningBanner
                       title={strings.warningTitle.toUpperCase()}
                       icon={infoIcon}
