@@ -1,5 +1,3 @@
-// @flow
-
 import {action, actions} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'

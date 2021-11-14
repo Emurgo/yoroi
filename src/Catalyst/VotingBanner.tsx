@@ -8,13 +8,13 @@ import StandardModal from '../../legacy/components/Common/StandardModal'
 import {Text} from '../../legacy/components/UiKit'
 import {CONFIG, isHaskellShelley, isNightly} from '../../legacy/config/config'
 import {isRegistrationOpen} from '../../legacy/crypto/shelley/catalystUtils'
-import type {WalletInterface} from '../../legacy/crypto/WalletInterface'
 import globalMessages, {confirmationMessages} from '../../legacy/i18n/global-messages'
 import {availableAssetsSelector, tokenBalanceSelector} from '../../legacy/selectors'
 import {COLORS} from '../../legacy/styles/config'
 import {formatTokenWithText} from '../../legacy/utils/format'
 import {Logger} from '../../legacy/utils/logging'
 import {useSelectedWallet} from '../SelectedWallet'
+import type {WalletInterface} from '../types'
 
 type Props = {
   onPress: () => void
