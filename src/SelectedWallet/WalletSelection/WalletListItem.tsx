@@ -8,26 +8,29 @@ import {WalletAccountIcon} from '../../components'
 import {WalletMeta} from '../../types'
 
 type Props = {
-  wallet: WalletMeta
+  walletMeta: WalletMeta
   onPress: (walletMeta: WalletMeta) => void
 }
 
-export const WalletListItem = ({wallet, onPress}: Props) => {
-  const {type} = getWalletItemMeta(wallet)
+export const WalletListItem = ({walletMeta, onPress}: Props) => {
+  const {type} = getWalletItemMeta(walletMeta)
 
   return (
     <View style={styles.itemContainer}>
       <View style={styles.item}>
-        <TouchableOpacity activeOpacity={0.5} onPress={() => onPress(wallet)} style={styles.leftSide}>
-          <WalletAccountIcon iconSeed={wallet.checksum.ImagePart} style={styles.walletAvatar} />
+        <TouchableOpacity activeOpacity={0.5} onPress={() => onPress(walletMeta)} style={styles.leftSide}>
+          <WalletAccountIcon iconSeed={walletMeta.checksum.ImagePart} style={styles.walletAvatar} />
+
           <View style={styles.walletDetails}>
-            <Text style={styles.walletName}>{wallet.name}</Text>
-            <Text style={styles.walletMeta}>{wallet.checksum ? `${wallet.checksum.TextPart} | ${type}` : type}</Text>
+            <Text style={styles.walletName}>{walletMeta.name}</Text>
+            <Text style={styles.walletMeta}>
+              {walletMeta.checksum ? `${walletMeta.checksum.TextPart} | ${type}` : type}
+            </Text>
           </View>
 
           {(isNightly() || CONFIG.IS_TESTNET_BUILD) && (
             <View style={styles.providerContainer}>
-              <Text style={[styles.walletMeta, styles.providerText]}>{wallet.provider}</Text>
+              <Text style={[styles.walletMeta, styles.providerText]}>{walletMeta.provider}</Text>
             </View>
           )}
         </TouchableOpacity>

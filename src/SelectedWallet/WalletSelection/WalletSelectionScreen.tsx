@@ -24,7 +24,7 @@ export const WalletSelectionScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation()
-  const wallets = useSelector(walletsListSelector)
+  const walletMetas = useSelector(walletsListSelector)
   const selectWalletMeta = useSetSelectedWalletMeta()
   const selectWallet = useSetSelectedWallet()
 
@@ -73,10 +73,12 @@ export const WalletSelectionScreen = () => {
           <Text style={styles.title}>{strings.header}</Text>
 
           <ScrollView style={styles.wallets}>
-            {wallets ? (
-              wallets
+            {walletMetas ? (
+              walletMetas
                 .sort(byName)
-                .map((wallet) => <WalletListItem key={wallet.id} wallet={wallet} onPress={openWallet} />)
+                .map((walletMeta) => (
+                  <WalletListItem key={walletMeta.id} walletMeta={walletMeta} onPress={openWallet} />
+                ))
             ) : (
               <ActivityIndicator />
             )}
