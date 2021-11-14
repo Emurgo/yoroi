@@ -1,26 +1,23 @@
-// @flow
-
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {TouchableOpacity} from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import {useSelector} from 'react-redux'
 
-// $FlowFixMe
-import {TxHistory} from '../../../src/TxHistory/TxHistory'
-import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../navigationOptions'
-import {TX_HISTORY_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
-import {transactionsInfoSelector, walletMetaSelector} from '../../selectors'
-import {COLORS} from '../../styles/config'
-import {formatDateToSeconds} from '../../utils/format'
-import {TxDetails} from './TxDetails'
+import {TxDetails} from '../../legacy/components/TxHistory/TxDetails'
+import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
+import {TX_HISTORY_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
+import {transactionsInfoSelector, walletMetaSelector} from '../../legacy/selectors'
+import {COLORS} from '../../legacy/styles/config'
+import {formatDateToSeconds} from '../../legacy/utils/format'
+import {TxHistory} from './TxHistory'
 
 type TxHistoryRoutes = {
-  'tx-history-list': any,
-  'tx-details': any,
+  'tx-history-list': any // eslint-disable-line @typescript-eslint/no-explicit-any
+  'tx-details': any // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
-const Stack = createStackNavigator<any, TxHistoryRoutes, any>()
+const Stack = createStackNavigator<TxHistoryRoutes>()
 
 const headerBar =
   (walletName: string) =>
@@ -43,7 +40,7 @@ const headerBar =
     ),
   })
 
-const TxHistoryNavigator = () => {
+export const TxHistoryNavigator = () => {
   const walletMeta = useSelector(walletMetaSelector)
   const transactionInfos = useSelector(transactionsInfoSelector)
 
@@ -61,5 +58,3 @@ const TxHistoryNavigator = () => {
     </Stack.Navigator>
   )
 }
-
-export default TxHistoryNavigator

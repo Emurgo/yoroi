@@ -9,7 +9,6 @@ import CatalystNavigator from '../legacy/components/Catalyst/CatalystNavigator'
 import StakingDashboardNavigator from '../legacy/components/Delegation/StakingDashboardNavigator'
 import ReceiveScreenNavigator from '../legacy/components/Receive/ReceiveScreenNavigator'
 import SendScreenNavigator from '../legacy/components/Send/SendScreenNavigator'
-import TxHistoryNavigator from '../legacy/components/TxHistory/TxHistoryNavigator'
 import {isHaskellShelley} from '../legacy/config/config'
 import {defaultNavigationOptions} from '../legacy/navigationOptions'
 import {isReadOnlySelector} from '../legacy/selectors'
@@ -27,6 +26,7 @@ import iconHistoryActive from './assets/img/icon/txhistory-active.png'
 import {useSelectedWalletMeta, WalletSelectionScreen} from './SelectedWallet'
 import {SettingsScreenNavigator} from './Settings'
 import {StakingCenterNavigator} from './Staking'
+import {TxHistoryNavigator} from './TxHistory/TxHistoryNavigator'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type WalletTabRoutes = {
