@@ -23,7 +23,7 @@ import iconSend from './assets/img/icon/send.png'
 import iconSendActive from './assets/img/icon/send-active.png'
 import iconHistory from './assets/img/icon/txhistory.png'
 import iconHistoryActive from './assets/img/icon/txhistory-active.png'
-import {useSelectedWalletMeta, WalletSelectionScreen} from './SelectedWallet'
+import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
 import {SettingsScreenNavigator} from './Settings'
 import {StakingCenterNavigator} from './Staking'
 import {TxHistoryNavigator} from './TxHistory'
@@ -41,12 +41,11 @@ type WalletTabRoutes = {
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 const WalletTabNavigator = () => {
   const strings = useStrings()
-  const walletMeta = useSelectedWalletMeta()
+  const wallet = useSelectedWallet()
 
   const isReadOnly = useSelector(isReadOnlySelector)
 
-  const {walletImplementationId} = walletMeta
-  const initialRoute = isHaskellShelley(walletImplementationId) ? 'staking-dashboard' : 'history'
+  const initialRoute = isHaskellShelley(wallet.walletImplementationId) ? 'staking-dashboard' : 'history'
 
   return (
     <Tab.Navigator
@@ -58,7 +57,7 @@ const WalletTabNavigator = () => {
         inactiveTintColor: theme.COLORS.NAVIGATION_INACTIVE,
       }}
     >
-      {isHaskellShelley(walletImplementationId) && (
+      {isHaskellShelley(wallet.walletImplementationId) && (
         <Tab.Screen
           name={'staking-dashboard'}
           component={StakingDashboardNavigator}
@@ -98,7 +97,7 @@ const WalletTabNavigator = () => {
         }}
       />
 
-      {isHaskellShelley(walletImplementationId) && !isReadOnly && (
+      {isHaskellShelley(wallet.walletImplementationId) && !isReadOnly && (
         <Tab.Screen
           name={'staking-center'}
           component={StakingCenterNavigator}
