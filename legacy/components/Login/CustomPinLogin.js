@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {showErrorDialog, signin} from '../../actions'
@@ -10,9 +10,16 @@ import {CONFIG} from '../../config/config'
 import {authenticateByCustomPin} from '../../crypto/customPin'
 import {errorMessages} from '../../i18n/global-messages'
 import {customPinHashSelector} from '../../selectors'
+import {COLORS} from '../../styles/config'
 import PinInput from '../Common/PinInput'
 import {StatusBar} from '../UiKit'
-import styles from './styles/CustomPinLogin.style'
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: COLORS.WHITE,
+  },
+})
 
 const messages = defineMessages({
   title: {
