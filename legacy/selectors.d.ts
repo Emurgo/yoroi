@@ -20,6 +20,7 @@ export var transactionsInfoSelector: (state: State) => Record<string, Transactio
 export var walletIsInitializedSelector: (state: State) => boolean
 export var availableAssetsSelector: (state: State) => Record<string, Token>
 export var tokenInfoSelector: (state: State) => Record<string, Token>
+export var customPinHashSelector: (state: State) => string | undefined
 
 // prettier-ignore
 interface PartialMultiToken {

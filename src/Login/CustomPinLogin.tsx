@@ -1,20 +1,18 @@
-// @flow
-
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {showErrorDialog, signin} from '../../actions'
-import {CONFIG} from '../../config/config'
-import {authenticateByCustomPin} from '../../crypto/customPin'
-import {errorMessages} from '../../i18n/global-messages'
-import {customPinHashSelector} from '../../selectors'
-import {COLORS} from '../../styles/config'
-import PinInput from '../Common/PinInput'
-import {StatusBar} from '../UiKit'
+import {showErrorDialog, signin} from '../../legacy/actions'
+import PinInput from '../../legacy/components/Common/PinInput'
+import {StatusBar} from '../../legacy/components/UiKit'
+import {CONFIG} from '../../legacy/config/config'
+import {authenticateByCustomPin} from '../../legacy/crypto/customPin'
+import {errorMessages} from '../../legacy/i18n/global-messages'
+import {customPinHashSelector} from '../../legacy/selectors'
+import {COLORS} from '../../legacy/styles/config'
 
-const CustomPinLogin = () => {
+export const CustomPinLogin = () => {
   const intl = useIntl()
   const strings = useStrings()
   const dispatch = useDispatch()
@@ -50,8 +48,6 @@ const CustomPinLogin = () => {
     </View>
   )
 }
-
-export default CustomPinLogin
 
 const styles = StyleSheet.create({
   root: {

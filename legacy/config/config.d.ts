@@ -9,5 +9,6 @@ export var CONFIG: {
   ANDROID_BIO_AUTH_EXCLUDED_SDK: Array<number>,
   DEBUG: {
     START_WITH_INDEX_SCREEN: boolean,
-  }
+  },
+  PIN_LENGTH: number,
 }
