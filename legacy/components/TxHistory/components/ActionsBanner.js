@@ -6,8 +6,8 @@ import {useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
-import ReceivedIcon from '../../../assets/ReceivedIcon'
-import SentIcon from '../../../assets/SentIcon'
+// $FlowExpectedError
+import {ReceivedIcon, SentIcon} from '../../../../src/components'
 import {actionMessages} from '../../../i18n/global-messages'
 import {WALLET_ROUTES} from '../../../RoutesList'
 import {isReadOnlySelector} from '../../../selectors'

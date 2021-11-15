@@ -2,60 +2,47 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {ColorSchemeName, Text, View} from 'react-native'
 
-import AdaIcon from '../../../legacy/assets/AdaIcon'
-import CardanoIcon from '../../../legacy/assets/CardanoIcon'
-import CheckIcon from '../../../legacy/assets/CheckIcon'
-import EmurgoIcon from '../../../legacy/assets/EmurgoIcon'
-import RewardManuallyPayoutIcon from '../../../legacy/assets/RewardManuallyPayoutIcon'
-import RewardWithdrawnIcon from '../../../legacy/assets/RewardWithdrawnIcon'
-import StakingKeyDeregisteredIcon from '../../../legacy/assets/StakingKeyDeregisteredIcon'
-import StakingKeyRegisteredIcon from '../../../legacy/assets/StakingKeyRegisteredIcon'
-import TransactionIcon from '../../../legacy/assets/TransactionIcon'
-import YoroiWalletIcon from '../../../legacy/assets/YoroiWalletIcon'
 import {Spacer} from '..'
-import * as Icon from './Icon'
-import {ReceivedIcon} from './ReceivedIcon'
-import {SentIcon} from './SentIcon'
-import {WalletAccountIcon} from './WalletAccountIcon'
+import * as Icon from '.'
 
 storiesOf('Icon', module).add('Gallery', () => (
   <View style={{padding: 16}}>
     <Row>
       <Item icon={<Icon.Export size={40} />} title={'Export'} />
       <Item icon={<Icon.Magnify size={40} />} title={'Magnify'} />
-      <Item icon={<ReceivedIcon />} title={'Received'} />
+      <Item icon={<Icon.ReceivedIcon />} title={'Received'} />
     </Row>
 
     <Spacer height={16} />
 
     <Row>
-      <Item icon={<SentIcon />} title={'Sent'} />
-      <Item icon={<WalletAccountIcon iconSeed={'asdasd'} />} title={'WalletAccount'} />
-      <Item icon={<EmurgoIcon width={60} height={60} />} title={'EmurgoIcon'} />
+      <Item icon={<Icon.SentIcon />} title={'Sent'} />
+      <Item icon={<Icon.WalletAccountIcon iconSeed={'asdasd'} />} title={'WalletAccount'} />
+      <Item icon={<Icon.EmurgoIcon width={60} height={60} />} title={'EmurgoIcon'} />
     </Row>
 
     <Spacer height={16} />
 
     <Row>
-      <Item icon={<CheckIcon height={60} width={60} />} title={'Check'} />
-      <Item mode={'dark'} icon={<YoroiWalletIcon height={60} width={60} />} title={'YoroiWalletIcon'} />
-      <Item icon={<CardanoIcon height={60} width={60} />} title={'CardanoIcon'} />
+      <Item icon={<Icon.CheckIcon height={60} width={60} />} title={'Check'} />
+      <Item mode={'dark'} icon={<Icon.YoroiWalletIcon height={60} width={60} />} title={'YoroiWalletIcon'} />
+      <Item icon={<Icon.CardanoIcon height={60} width={60} />} title={'CardanoIcon'} />
     </Row>
 
     <Spacer height={16} />
 
     <Row>
-      <Item icon={<AdaIcon height={60} width={60} />} title={'AdaIcon'} />
-      <Item icon={<RewardManuallyPayoutIcon height={60} width={60} />} title={'RewardManuallyPayoutIcon'} />
-      <Item icon={<RewardWithdrawnIcon height={60} width={60} />} title={'RewardWithdrawnIcon'} />
+      <Item icon={<Icon.AdaIcon height={60} width={60} />} title={'AdaIcon'} />
+      <Item icon={<Icon.RewardManuallyPayoutIcon height={60} width={60} />} title={'RewardManuallyPayoutIcon'} />
+      <Item icon={<Icon.RewardWithdrawnIcon height={60} width={60} />} title={'RewardWithdrawnIcon'} />
     </Row>
 
     <Spacer height={16} />
 
     <Row>
-      <Item icon={<StakingKeyDeregisteredIcon height={60} width={60} />} title={'StakingKeyDeregisteredIcon'} />
-      <Item icon={<StakingKeyRegisteredIcon height={60} width={60} />} title={'StakingKeyRegisteredIcon'} />
-      <Item icon={<TransactionIcon height={60} width={60} />} title={'TransactionIcon'} />
+      <Item icon={<Icon.StakingKeyDeregisteredIcon height={60} width={60} />} title={'StakingKeyDeregisteredIcon'} />
+      <Item icon={<Icon.StakingKeyRegisteredIcon height={60} width={60} />} title={'StakingKeyRegisteredIcon'} />
+      <Item icon={<Icon.TransactionIcon height={60} width={60} />} title={'TransactionIcon'} />
     </Row>
   </View>
 ))

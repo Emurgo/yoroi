@@ -3,9 +3,8 @@
 import React, {memo} from 'react'
 import {View} from 'react-native'
 
-import ReceivedIcon from '../../assets/ReceivedIcon'
-import SentIcon from '../../assets/SentIcon'
-import TransactionIcon from '../../assets/TransactionIcon'
+// $FlowExpectedError
+import {ReceivedIcon, SentIcon, TransactionIcon} from '../../../src/components'
 import type {TransactionInfo} from '../../types/HistoryTransaction'
 // TODO: build the doc about how to identify all the tx types
 // import StakingKeyRegisteredIcon from '../../assets/StakingKeyRegisteredIcon'

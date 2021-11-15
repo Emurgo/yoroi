@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 // @flow
 
 import type {Element, Node} from 'react'
@@ -8,7 +7,8 @@ import type {Props as TextInputProps} from 'react-native/Libraries/Components/Te
 import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 import {HelperText, TextInput as RNPTextInput} from 'react-native-paper'
 
-import CheckIcon from '../../assets/CheckIcon'
+// $FlowExpectedError
+import {CheckIcon} from '../../../src/components'
 import closedEyeIcon from '../../assets/img/icon/visibility-closed.png'
 import openedEyeIcon from '../../assets/img/icon/visibility-opened.png'
 import {COLORS} from '../../styles/config'

@@ -4,7 +4,8 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 
-import YoroiWalletIcon from '../../assets/YoroiWalletIcon'
+// $FlowExpectedError
+import * as Icon from '../../../src/components/Icon'
 import {COLORS} from '../../styles/config'
 import {Text} from '../UiKit'
 import styles from './styles/WalletInitScreen.style'
@@ -21,7 +22,7 @@ const WalletDescription = () => {
 
   return (
     <View style={styles.description}>
-      <YoroiWalletIcon color={COLORS.WHITE} width={208} height={60} />
+      <Icon.YoroiWalletIcon color={COLORS.WHITE} width={208} height={60} />
       <View style={styles.emurgoCreditsContainer}>
         <Text light>{intl.formatMessage(messages.slogan)}</Text>
       </View>
