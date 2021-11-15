@@ -7,7 +7,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
 // $FlowExpectedError
-import * as Icon from '../../../../src/components/Icon'
+import {Icon} from '../../../../src/components'
 import {actionMessages} from '../../../i18n/global-messages'
 import {WALLET_ROUTES} from '../../../RoutesList'
 import {isReadOnlySelector} from '../../../selectors'

@@ -6,7 +6,7 @@ import {Image, LayoutAnimation, Text, TouchableOpacity, View} from 'react-native
 import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
 // $FlowExpectedError
-import * as Icon from '../../../src/components/Icon'
+import {Icon} from '../../../src/components'
 import arrowDown from '../../assets/img/arrow_down.png'
 import arrowUp from '../../assets/img/arrow_up.png'
 import {CONFIG, isByron, isHaskellShelley, isJormun, isNightly} from '../../config/config'

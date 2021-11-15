@@ -8,7 +8,7 @@ import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 import {HelperText, TextInput as RNPTextInput} from 'react-native-paper'
 
 // $FlowExpectedError
-import * as Icon from '../../../src/components/Icon'
+import {Icon} from '../../../src/components'
 import closedEyeIcon from '../../assets/img/icon/visibility-closed.png'
 import openedEyeIcon from '../../assets/img/icon/visibility-opened.png'
 import {COLORS} from '../../styles/config'

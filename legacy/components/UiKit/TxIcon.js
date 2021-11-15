@@ -4,13 +4,13 @@ import React from 'react'
 import {View} from 'react-native'
 
 // $FlowExpectedError
-import * as Icon from '../../../src/components/Icon'
+import {Icon} from '../../../src/components'
 import type {TransactionInfo} from '../../types/HistoryTransaction'
 import useStyles from './styles/TxIcon.style'
 
 const ICON: $ReadOnly<Dict<any>> = Object.freeze({
   SENT: Icon.Sent,
-  RECEIVED: Icon.Receive,
+  RECEIVED: Icon.Received,
   SELF: Icon.Transaction,
   MULTI: Icon.Transaction,
 })

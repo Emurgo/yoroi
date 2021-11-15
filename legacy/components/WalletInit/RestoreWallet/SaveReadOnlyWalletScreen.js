@@ -9,7 +9,7 @@ import {FlatList, SafeAreaView, ScrollView, View} from 'react-native'
 import {useDispatch} from 'react-redux'
 
 // $FlowExpectedError
-import * as Icon from '../../../../src/components/Icon'
+import {Icon} from '../../../../src/components'
 import {createWalletWithBip44Account, handleGeneralError} from '../../../actions'
 import {CONFIG} from '../../../config/config'
 import type {NetworkId} from '../../../config/types'

@@ -8,7 +8,7 @@ import {ActivityIndicator, ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 // $FlowExpectedError
-import * as Icon from '../../../../src/components/Icon'
+import {Icon} from '../../../../src/components'
 import type {NetworkId, WalletImplementationId} from '../../../config/types'
 import {WALLET_IMPLEMENTATION_REGISTRY} from '../../../config/types'
 import {generateByronPlateFromMnemonics} from '../../../crypto/byron/plate'

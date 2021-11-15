@@ -5,7 +5,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 
 // $FlowExpectedError
-import * as Icon from '../../../src/components/Icon'
+import {Icon} from '../../../src/components'
 import {COLORS} from '../../styles/config'
 import {Text} from '../UiKit'
 import styles from './styles/WalletInitScreen.style'

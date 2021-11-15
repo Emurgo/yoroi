@@ -5,7 +5,7 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
 // $FlowExpectedError
-import * as Icon from '../../../../src/components/Icon'
+import {Icon} from '../../../../src/components'
 import closedEyeIcon from '../../../assets/img/icon/visibility-closed.png'
 import openedEyeIcon from '../../../assets/img/icon/visibility-opened.png'
 import {availableAssetsSelector, tokenBalanceSelector, walletMetaSelector} from '../../../selectors'

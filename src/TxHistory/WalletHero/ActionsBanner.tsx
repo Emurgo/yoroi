@@ -8,8 +8,7 @@ import {actionMessages} from '../../../legacy/i18n/global-messages'
 import {WALLET_ROUTES} from '../../../legacy/RoutesList'
 import {isReadOnlySelector} from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
-import * as Icon from '../../../src/components/Icon'
-import {Spacer} from '../../components'
+import {Icon, Spacer} from '../../components'
 import features from '../../features'
 
 const ACTION_PROPS = {

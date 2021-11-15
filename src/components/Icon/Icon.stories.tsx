@@ -2,8 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {ColorSchemeName, Text, View} from 'react-native'
 
-import {Spacer} from '..'
-import * as Icon from '.'
+import {Icon, Spacer} from '..'
 
 storiesOf('Icon', module).add('Gallery', () => (
   <View style={{padding: 16}}>
