@@ -14,22 +14,9 @@ import {COLORS} from '../../styles/config'
 import PinInput from '../Common/PinInput'
 import {StatusBar} from '../UiKit'
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: COLORS.WHITE,
-  },
-})
-
-const messages = defineMessages({
-  title: {
-    id: 'components.login.custompinlogin.title',
-    defaultMessage: '!!!Enter PIN',
-  },
-})
-
 const CustomPinLogin = () => {
   const intl = useIntl()
+  const strings = useStrings()
   const dispatch = useDispatch()
   const customPinHash = useSelector(customPinHashSelector)
   const onPinEnter = async (pin: string) => {
@@ -54,7 +41,7 @@ const CustomPinLogin = () => {
       <PinInput
         pinMaxLength={CONFIG.PIN_LENGTH}
         labels={{
-          title: intl.formatMessage(messages.title),
+          title: strings.title,
           subtitle: '',
           subtitle2: '',
         }}
@@ -65,3 +52,25 @@ const CustomPinLogin = () => {
 }
 
 export default CustomPinLogin
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: COLORS.WHITE,
+  },
+})
+
+const messages = defineMessages({
+  title: {
+    id: 'components.login.custompinlogin.title',
+    defaultMessage: '!!!Enter PIN',
+  },
+})
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    title: intl.formatMessage(messages.title),
+  }
+}
