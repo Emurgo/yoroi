@@ -22,7 +22,7 @@ const WalletDescription = () => {
 
   return (
     <View style={styles.description}>
-      <Icon.YoroiWalletIcon color={COLORS.WHITE} width={208} height={60} />
+      <Icon.YoroiWallet color={COLORS.WHITE} width={208} height={60} />
       <View style={styles.emurgoCreditsContainer}>
         <Text light>{intl.formatMessage(messages.slogan)}</Text>
       </View>

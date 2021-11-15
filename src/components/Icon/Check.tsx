@@ -9,7 +9,7 @@ type Props = {
   color?: string
 }
 
-export const CheckIcon = ({width, height, color}: Props) => (
+export const Check = ({width, height, color}: Props) => (
   <Svg viewBox="0 0 24 24" {...{width, height}}>
     <Path
       fill={color != null ? color : COLORS.BLACK}

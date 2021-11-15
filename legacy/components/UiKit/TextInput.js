@@ -8,7 +8,7 @@ import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 import {HelperText, TextInput as RNPTextInput} from 'react-native-paper'
 
 // $FlowExpectedError
-import {CheckIcon} from '../../../src/components'
+import * as Icon from '../../../src/components/Icon'
 import closedEyeIcon from '../../assets/img/icon/visibility-closed.png'
 import openedEyeIcon from '../../assets/img/icon/visibility-opened.png'
 import {COLORS} from '../../styles/config'
@@ -116,7 +116,7 @@ const TextInputWithRef = (
 
 const TextInput = React.forwardRef<Props, {focus: () => void}>(TextInputWithRef)
 
-export const Checkmark = () => <CheckIcon height={24} width={24} color={COLORS.LIGHT_POSITIVE_GREEN} />
+export const Checkmark = () => <Icon.Check height={24} width={24} color={COLORS.LIGHT_POSITIVE_GREEN} />
 
 const SecureTextEntryToggle = ({showPassword, onPress}: {showPassword: boolean, onPress: () => any}) => (
   <AdornmentContainer style={styles.secureTextEntryToggleContainer}>

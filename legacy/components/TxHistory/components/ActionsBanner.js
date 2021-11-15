@@ -1,13 +1,13 @@
 // @flow
 
 import {useNavigation} from '@react-navigation/native'
-import React, {memo, useCallback} from 'react'
+import React, {useCallback} from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
 // $FlowExpectedError
-import {ReceivedIcon, SentIcon} from '../../../../src/components'
+import * as Icon from '../../../../src/components/Icon'
 import {actionMessages} from '../../../i18n/global-messages'
 import {WALLET_ROUTES} from '../../../RoutesList'
 import {isReadOnlySelector} from '../../../selectors'
@@ -83,7 +83,7 @@ const ActionsBanner = () => {
           {!isReadOnly && (
             <View style={styles.centralized}>
               <TouchableOpacity style={styles.actionIcon} onPress={onSend}>
-                <SentIcon {...ACTION_PROPS} />
+                <Icon.Sent {...ACTION_PROPS} />
               </TouchableOpacity>
               <Text style={styles.actionLabel}>{sendLabel}</Text>
             </View>
@@ -93,7 +93,7 @@ const ActionsBanner = () => {
 
           <View style={styles.centralized}>
             <TouchableOpacity style={styles.actionIcon} onPress={onReceive}>
-              <ReceivedIcon {...ACTION_PROPS} />
+              <Icon.Received {...ACTION_PROPS} />
             </TouchableOpacity>
             <Text style={styles.actionLabel}>{receiveLabel}</Text>
           </View>
@@ -114,4 +114,4 @@ const ActionsBanner = () => {
   )
 }
 
-export default memo<mixed>(ActionsBanner)
+export default ActionsBanner

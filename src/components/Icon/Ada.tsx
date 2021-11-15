@@ -5,7 +5,7 @@ import {COLORS} from '../../../legacy/styles/config'
 
 type Props = {width: number; height: number; color?: string}
 
-export const AdaIcon = ({width, height, color}: Props) => (
+export const Ada = ({width, height, color}: Props) => (
   <Svg viewBox="0 0 36.993 44" {...{width, height}}>
     <Path
       fill={color != null ? color : COLORS.BLACK}

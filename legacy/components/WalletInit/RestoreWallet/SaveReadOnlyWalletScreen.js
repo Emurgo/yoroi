@@ -8,6 +8,8 @@ import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, SafeAreaView, ScrollView, View} from 'react-native'
 import {useDispatch} from 'react-redux'
 
+// $FlowExpectedError
+import * as Icon from '../../../../src/components/Icon'
 import {createWalletWithBip44Account, handleGeneralError} from '../../../actions'
 import {CONFIG} from '../../../config/config'
 import type {NetworkId} from '../../../config/types'
@@ -16,7 +18,6 @@ import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
 import assert from '../../../utils/assert'
 import {Logger} from '../../../utils/logging'
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
-import WalletAccountIcon from '../../Common/WalletAccountIcon'
 import {Line, StatusBar, Text} from '../../UiKit'
 import WalletNameForm from '../WalletNameForm'
 import styles from './styles/SaveReadOnlyWalletScreen.style'
@@ -47,7 +48,7 @@ const messages = defineMessages({
 
 const CheckSumView = ({icon, checksum}: {icon: string, checksum: string}) => (
   <View style={styles.checksumView}>
-    <WalletAccountIcon iconSeed={icon} />
+    <Icon.WalletAccount iconSeed={icon} />
     <Text style={styles.checksumText}>{checksum}</Text>
   </View>
 )

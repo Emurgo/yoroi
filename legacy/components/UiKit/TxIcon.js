@@ -1,24 +1,18 @@
 // @flow
 
-import React, {memo} from 'react'
+import React from 'react'
 import {View} from 'react-native'
 
 // $FlowExpectedError
-import {ReceivedIcon, SentIcon, TransactionIcon} from '../../../src/components'
+import * as Icon from '../../../src/components/Icon'
 import type {TransactionInfo} from '../../types/HistoryTransaction'
-// TODO: build the doc about how to identify all the tx types
-// import StakingKeyRegisteredIcon from '../../assets/StakingKeyRegisteredIcon'
-// import StakingKeyDeregisteredIcon from '../../assets/StakingKeyDeregisteredIcon'
-// import DelegatedIcon from '../../assets/DelegatedIcon'
-// import RewardWithdrawnIcon from '../../assets/RewardWithdrawnIcon'
-// import RewardManuallyPayoutIcon from '../../assets/RewardManuallyPayoutIcon'
 import useStyles from './styles/TxIcon.style'
 
 const ICON: $ReadOnly<Dict<any>> = Object.freeze({
-  SENT: SentIcon,
-  RECEIVED: ReceivedIcon,
-  SELF: TransactionIcon,
-  MULTI: TransactionIcon,
+  SENT: Icon.Sent,
+  RECEIVED: Icon.Receive,
+  SELF: Icon.Transaction,
+  MULTI: Icon.Transaction,
 })
 
 const SIZE = 36
@@ -58,4 +52,4 @@ const TxIcon = ({transaction}: Props) => {
   )
 }
 
-export default memo<Props>(TxIcon)
+export default TxIcon

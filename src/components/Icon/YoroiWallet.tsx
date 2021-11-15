@@ -5,7 +5,7 @@ import {COLORS} from '../../../legacy/styles/config'
 
 type Props = {width?: number; height?: number; color?: string}
 
-export const YoroiWalletIcon = ({width = 210, height = 60, color = COLORS.WHITE}: Props) => (
+export const YoroiWallet = ({width = 210, height = 60, color = COLORS.WHITE}: Props) => (
   <Svg width={width} height={height} viewBox="0 0 210 60">
     <G id="logo-yoroi" fill="none">
       <G id="logo">

@@ -7,7 +7,8 @@ import {COLORS} from '../../../legacy/styles/config'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../../../legacy/utils/format'
 import closedEyeIcon from '../../assets/img/icon/visibility-closed.png'
 import openedEyeIcon from '../../assets/img/icon/visibility-opened.png'
-import {Spacer, WalletAccountIcon} from '../../components'
+import {Spacer} from '../../components'
+import * as Icon from '../../components/Icon'
 import features from '../../features'
 
 const BALANCE_WHEN_HIDDEN = '*.******'
@@ -68,7 +69,7 @@ export const BalanceBanner = () => {
       <Spacer height={16} />
 
       <View style={styles.centralized}>
-        <WalletAccountIcon style={styles.walletIcon} iconSeed={walletMeta.checksum.ImagePart} />
+        <Icon.WalletAccount style={styles.walletIcon} iconSeed={walletMeta.checksum.ImagePart} />
       </View>
 
       <Spacer height={12} />

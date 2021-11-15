@@ -7,7 +7,7 @@ type Props = {
   color?: string
 }
 
-export const StakingKeyDeregisteredIcon = ({width = 36, height = 36, color = '#6B7384'}: Props) => (
+export const StakingKeyDeregistered = ({width = 36, height = 36, color = '#6B7384'}: Props) => (
   <Svg viewBox="0 0 36 36" {...{width, height}}>
     <G stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
       <G transform="translate(-760.000000, -305.000000)">

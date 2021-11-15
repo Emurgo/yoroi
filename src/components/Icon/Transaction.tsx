@@ -7,7 +7,7 @@ type Props = {
   color?: string
 }
 
-export const TransactionIcon = ({width = 36, height = 36, color = '#6B7384'}: Props) => (
+export const Transaction = ({width = 36, height = 36, color = '#6B7384'}: Props) => (
   <Svg viewBox="0 0 30 30" {...{width, height}}>
     <G stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
       <G transform="translate(6.000000, 6.000000)">

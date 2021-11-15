@@ -5,7 +5,7 @@ import {COLORS} from '../../../legacy/styles/config'
 
 type Props = {width: number; height: number; color?: string}
 
-export const EmurgoIcon = ({width, height, color = COLORS.BLACK}: Props) => (
+export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
   <Svg viewBox="0 0 1671 626.86401" {...{width, height}}>
     <G transform="matrix(1.3333333,0,0,-1.3333333,0,626.864)" id="g10">
       <G fill={color} id="g12">
