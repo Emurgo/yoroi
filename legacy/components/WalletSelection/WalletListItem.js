@@ -5,7 +5,8 @@ import React, {useState} from 'react'
 import {Image, LayoutAnimation, Text, TouchableOpacity, View} from 'react-native'
 import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet'
 
-import AdaIcon from '../../assets/AdaIcon'
+// $FlowExpectedError
+import {Icon} from '../../../src/components'
 import arrowDown from '../../assets/img/arrow_down.png'
 import arrowUp from '../../assets/img/arrow_up.png'
 import {CONFIG, isByron, isHaskellShelley, isJormun, isNightly} from '../../config/config'
@@ -13,7 +14,6 @@ import type {WalletMeta} from '../../state'
 import {COLORS} from '../../styles/config'
 import AssetList from '../Common/MultiAsset/AssetList'
 import assetListStyle from '../Common/MultiAsset/styles/Base.style'
-import WalletAccountIcon from '../Common/WalletAccountIcon'
 import styles from './styles/WalletListItem.style'
 
 type Props = {
@@ -35,19 +35,19 @@ const getWalletItemMeta = (walletMeta: WalletMeta): WalletItemMeta => {
   if (isByron(walletMeta.walletImplementationId)) {
     return {
       type: 'Byron',
-      icon: <AdaIcon height={18} width={18} color={COLORS.WHITE} />,
+      icon: <Icon.Ada height={18} width={18} color={COLORS.WHITE} />,
     }
   }
   if (isHaskellShelley(walletMeta.walletImplementationId)) {
     return {
       type: 'Shelley',
-      icon: <AdaIcon height={18} width={18} color={COLORS.WHITE} />,
+      icon: <Icon.Ada height={18} width={18} color={COLORS.WHITE} />,
     }
   }
   if (isJormun(walletMeta.walletImplementationId)) {
     return {
       type: 'Jormungandr',
-      icon: <AdaIcon height={18} width={18} color={COLORS.WHITE} />,
+      icon: <Icon.Ada height={18} width={18} color={COLORS.WHITE} />,
     }
   }
   throw new Error('getWalletItemMeta:: invalid wallet implementation id')
@@ -87,7 +87,7 @@ const WalletListItem = ({wallet, onPress}: Props) => {
     <View style={styles.itemContainer}>
       <View style={styles.item}>
         <TouchableOpacity activeOpacity={0.5} onPress={() => onPress(wallet)} style={styles.leftSide}>
-          <WalletAccountIcon iconSeed={wallet.checksum.ImagePart} style={styles.walletAvatar} />
+          <Icon.WalletAccount iconSeed={wallet.checksum.ImagePart} style={styles.walletAvatar} />
           <View style={styles.walletDetails}>
             <Text style={styles.walletName}>{wallet.name}</Text>
             <Text style={styles.walletMeta}>{wallet.checksum ? `${wallet.checksum.TextPart} | ${type}` : type}</Text>

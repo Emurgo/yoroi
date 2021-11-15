@@ -1,14 +1,12 @@
-// @flow
-
 import React from 'react'
 import Svg, {G, Path, Polygon} from 'react-native-svg'
 
-import {COLORS} from '../styles/config'
+import {COLORS} from '../../../legacy/styles/config'
 
-type Props = {width?: number, height?: number, color?: string}
+type Props = {width?: number; height?: number; color?: string}
 
-const YoroiWalletIcon = ({width = 210, height = 60, color = COLORS.WHITE}: Props) => (
-  <Svg width={width} height={height} viewBox="0 0 210 60" xmlns="http://www.w3.org/2000/svg">
+export const YoroiWallet = ({width = 210, height = 60, color = COLORS.WHITE}: Props) => (
+  <Svg width={width} height={height} viewBox="0 0 210 60">
     <G id="logo-yoroi" fill="none">
       <G id="logo">
         <G id="Group">
@@ -59,5 +57,3 @@ const YoroiWalletIcon = ({width = 210, height = 60, color = COLORS.WHITE}: Props
     </G>
   </Svg>
 )
-
-export default YoroiWalletIcon

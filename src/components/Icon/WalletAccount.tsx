@@ -45,7 +45,7 @@ type Props = {
   style?: ViewStyleProp
 }
 
-export const WalletAccountIcon = ({iconSeed, scalePx = 5, saturationFactor = 0, style}: Props) => {
+export const WalletAccount = ({iconSeed, scalePx = 5, saturationFactor = 0, style}: Props) => {
   const colorIdx = Buffer.from(iconSeed, 'hex')[0] % COLORS.length
   const color = COLORS[colorIdx]
   return (

@@ -1,16 +1,14 @@
-// @flow
-
-import React, {memo} from 'react'
+import React from 'react'
 import Svg, {G, Path} from 'react-native-svg'
 
-type Props = {|
-  width?: number,
-  height?: number,
-  color?: string,
-|}
+type Props = {
+  width?: number
+  height?: number
+  color?: string
+}
 
-const SentIcon = ({width = 36, height = 36, color = '#6B7384'}: Props) => (
-  <Svg viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" {...{width, height}}>
+export const Sent = ({width = 36, height = 36, color = '#6B7384'}: Props) => (
+  <Svg viewBox="0 0 36 36" {...{width, height}}>
     <G stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
       <G transform="translate(-760.000000, -186.000000)">
         <G transform="translate(760.000000, 186.000000)">
@@ -22,5 +20,3 @@ const SentIcon = ({width = 36, height = 36, color = '#6B7384'}: Props) => (
     </G>
   </Svg>
 )
-
-export default memo<Props>(SentIcon)

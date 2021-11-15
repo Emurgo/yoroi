@@ -1,14 +1,12 @@
-// @flow
-
 import React from 'react'
 import Svg, {G, Path} from 'react-native-svg'
 
-import {COLORS} from '../styles/config'
+import {COLORS} from '../../../legacy/styles/config'
 
-type Props = {width: number, height: number, color?: string}
+type Props = {width: number; height: number; color?: string}
 
-const EmurgoIcon = ({width, height, color = COLORS.BLACK}: Props) => (
-  <Svg viewBox="0 0 1671 626.86401" version="1.1" xmlns="http://www.w3.org/2000/svg" {...{width, height}}>
+export const Emurgo = ({width, height, color = COLORS.BLACK}: Props) => (
+  <Svg viewBox="0 0 1671 626.86401" {...{width, height}}>
     <G transform="matrix(1.3333333,0,0,-1.3333333,0,626.864)" id="g10">
       <G fill={color} id="g12">
         <G fill={color} id="g14">
@@ -439,5 +437,3 @@ const EmurgoIcon = ({width, height, color = COLORS.BLACK}: Props) => (
     </G>
   </Svg>
 )
-
-export default EmurgoIcon

@@ -1,15 +1,16 @@
 // @flow
 
-import React, {memo, useCallback, useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
+// $FlowExpectedError
+import {Icon} from '../../../../src/components'
 import closedEyeIcon from '../../../assets/img/icon/visibility-closed.png'
 import openedEyeIcon from '../../../assets/img/icon/visibility-opened.png'
 import {availableAssetsSelector, tokenBalanceSelector, walletMetaSelector} from '../../../selectors'
 import {COLORS} from '../../../styles/config'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../../../utils/format'
-import WalletAccountIcon from '../../Common/WalletAccountIcon'
 import {Spacer} from '../../UiKit'
 
 const BALANCE_WHEN_HIDDEN = '*.******'
@@ -82,7 +83,7 @@ const BalanceBanner = () => {
     <View style={styles.banner}>
       <Spacer height={16} />
       <View style={styles.centralized}>
-        <WalletAccountIcon style={styles.walletIcon} iconSeed={walletMeta.checksum.ImagePart} />
+        <Icon.WalletAccount style={styles.walletIcon} iconSeed={walletMeta.checksum.ImagePart} />
       </View>
       <Spacer height={12} />
       <TouchableOpacity onPress={onSwitchShowValues}>
@@ -102,4 +103,4 @@ const BalanceBanner = () => {
   )
 }
 
-export default memo<mixed>(BalanceBanner)
+export default BalanceBanner

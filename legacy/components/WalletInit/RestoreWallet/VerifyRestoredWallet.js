@@ -7,12 +7,13 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+// $FlowExpectedError
+import {Icon} from '../../../../src/components'
 import type {NetworkId, WalletImplementationId} from '../../../config/types'
 import {WALLET_IMPLEMENTATION_REGISTRY} from '../../../config/types'
 import {generateByronPlateFromMnemonics} from '../../../crypto/byron/plate'
 import {generateShelleyPlateFromMnemonics} from '../../../crypto/shelley/plate'
 import {WALLET_INIT_ROUTES} from '../../../RoutesList'
-import WalletAccountIcon from '../../Common/WalletAccountIcon'
 import {BulletPointItem, Button, Spacer, StatusBar, Text} from '../../UiKit'
 import styles from './styles/VerifyRestoredWallet.style'
 import WalletAddress from './WalletAddress'
@@ -124,7 +125,7 @@ const VerifyWalletScreen = () => {
         <Plate>
           {plate ? (
             <>
-              <WalletAccountIcon iconSeed={plate.ImagePart} />
+              <Icon.WalletAccount iconSeed={plate.ImagePart} />
               <Spacer />
               <Text style={styles.checksum}>{plate.TextPart}</Text>
             </>

@@ -8,7 +8,7 @@ import {actionMessages} from '../../../legacy/i18n/global-messages'
 import {WALLET_ROUTES} from '../../../legacy/RoutesList'
 import {isReadOnlySelector} from '../../../legacy/selectors'
 import {COLORS} from '../../../legacy/styles/config'
-import {ReceivedIcon, SentIcon, Spacer} from '../../components'
+import {Icon, Spacer} from '../../components'
 import features from '../../features'
 
 const ACTION_PROPS = {
@@ -31,7 +31,7 @@ export const ActionsBanner = () => {
           {!isReadOnly && (
             <View style={styles.centralized}>
               <TouchableOpacity style={styles.actionIcon} onPress={navigateTo.onSend}>
-                <SentIcon {...ACTION_PROPS} />
+                <Icon.Sent {...ACTION_PROPS} />
               </TouchableOpacity>
               <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
             </View>
@@ -41,7 +41,7 @@ export const ActionsBanner = () => {
 
           <View style={styles.centralized}>
             <TouchableOpacity style={styles.actionIcon} onPress={navigateTo.onReceive}>
-              <ReceivedIcon {...ACTION_PROPS} />
+              <Icon.Received {...ACTION_PROPS} />
             </TouchableOpacity>
             <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
           </View>
