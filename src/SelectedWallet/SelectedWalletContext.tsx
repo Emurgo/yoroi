@@ -5,28 +5,47 @@ import {WalletMeta} from '../../legacy/state'
 type SelectedWalletMeta = WalletMeta
 type SetSelectedWalletMeta = (selectedWalletMeta?: SelectedWalletMeta) => void
 
-const SelectedWalletMetaContext = React.createContext<SelectedWalletMeta | undefined>(undefined)
-const SetSelectedWalletMetaContext = React.createContext<void | SetSelectedWalletMeta>(undefined)
+const SelectedWalletMetaContext = React.createContext<
+  readonly [SelectedWalletMeta | undefined, SetSelectedWalletMeta] | undefined
+>(undefined)
 
 export const SelectedWalletMetaProvider: React.FC = ({children}) => {
-  const [walletMeta, setWalletMeta] = React.useState<SelectedWalletMeta | undefined>(undefined)
-
   return (
-    <SelectedWalletMetaContext.Provider value={walletMeta}>
-      <SetSelectedWalletMetaContext.Provider value={setWalletMeta}>{children}</SetSelectedWalletMetaContext.Provider>
+    <SelectedWalletMetaContext.Provider value={React.useState<SelectedWalletMeta | undefined>(undefined)}>
+      {children}
     </SelectedWalletMetaContext.Provider>
   )
 }
 
-const missingProvider = () => {
-  throw new Error('missing SelectedWalletMetaProvider/SelectedWalletMetaBoundary')
+export const useSelectedWalletMeta = () => {
+  const selectedWalletMetaContext = React.useContext(SelectedWalletMetaContext)
+
+  if (!selectedWalletMetaContext) {
+    throw new Error('missing SelectedWalletMetaProvider')
+  }
+
+  const [selectedWalletMeta] = selectedWalletMetaContext
+  if (!selectedWalletMeta) {
+    throw new Error('missing SelectedWalletMetaBoundary')
+  }
+
+  return selectedWalletMeta
 }
 
-export const useSelectedWalletMeta = () => React.useContext(SelectedWalletMetaContext) || missingProvider()
-export const useSetSelectedWalletMeta = () => React.useContext(SetSelectedWalletMetaContext) || missingProvider()
+export const useSetSelectedWalletMeta = () => {
+  const selectedWalletMetaContext = React.useContext(SelectedWalletMetaContext)
+
+  if (!selectedWalletMetaContext) {
+    throw new Error('missing SelectedWalletMetaProvider')
+  }
+
+  const [, setSelectedWalletMeta] = selectedWalletMetaContext
+
+  return setSelectedWalletMeta
+}
 
 export const SelectedWalletMetaBoundary: React.FC<{fallback?: React.ReactNode}> = ({children, fallback = null}) => {
-  const walletMeta = React.useContext(SelectedWalletMetaContext)
+  const walletMeta = useSelectedWalletMeta()
 
   if (!walletMeta) return <>{fallback}</>
 
