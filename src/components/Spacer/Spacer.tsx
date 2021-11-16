@@ -1,7 +1,12 @@
 import React from 'react'
 import {View, ViewStyle} from 'react-native'
 
-const debugStyle = {backgroundColor: 'red', opacity: 0.2}
+const debugStyle = {
+  backgroundColor: 'red',
+  opacity: 0.4,
+  minHeight: 1,
+  minWwidth: 1,
+}
 
 type Props = {
   height?: number
@@ -11,6 +16,6 @@ type Props = {
   debug?: boolean
 }
 
-export const Spacer = ({height = 16, width = 16, fill, style, debug}: Props) => (
-  <View style={[fill && {flex: 1}, {height, width}, style, debug && debugStyle]} />
+export const Spacer = ({height, width, fill, style, debug}: Props) => (
+  <View style={[fill && {flex: 1}, {height, width}, style, __DEV__ && debug && debugStyle]} />
 )

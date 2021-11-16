@@ -2,16 +2,92 @@
 
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
-import {View} from 'react-native'
+import {defineMessages, useIntl} from 'react-intl'
+import {StyleSheet, View} from 'react-native'
+import type {ViewProps} from 'react-native/Libraries/Components/View/ViewPropTypes'
 
+// $FlowExpectedError
+import {Spacer} from '../../../../src/components'
 import TotalAdaIcon from '../../../assets/staking/TotalAdaIcon'
 import TotalDelegatedIcon from '../../../assets/staking/TotalDelegatedIcon'
 import TotalRewardIcon from '../../../assets/staking/TotalRewardIcon'
 import globalMessages from '../../../i18n/global-messages'
+import {COLORS} from '../../../styles/config'
 import {formatAdaWithText} from '../../../utils/format'
 import {Button, Text, TitledCard} from '../../UiKit'
-import styles from './styles/UserSummary.style'
+
+type Props = {|
+  +totalAdaSum: ?BigNumber,
+  +totalRewards: ?BigNumber,
+  +totalDelegated: ?BigNumber,
+  +onWithdraw: () => void,
+  +disableWithdraw: boolean,
+|}
+
+const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdraw, disableWithdraw}: Props) => {
+  const strings = useStrings()
+
+  return (
+    <TitledCard title={strings.title}>
+      <Col style={{flex: 1}}>
+        <Row>
+          <Spacer width={8} />
+          <TotalAdaIcon width={ICON_DIM} height={ICON_DIM} />
+          <Spacer width={16} />
+
+          <Col>
+            <Text style={styles.label}>{strings.availableFunds}:</Text>
+            <Text bold style={styles.value}>
+              {totalAdaSum != null ? formatAdaWithText(totalAdaSum) : '-'}
+            </Text>
+          </Col>
+        </Row>
+
+        <Row>
+          <Spacer width={8} />
+          <TotalRewardIcon width={ICON_DIM} height={ICON_DIM} />
+          <Spacer width={16} />
+
+          <Col>
+            <Text style={styles.label}>{strings.rewardsLabel}:</Text>
+            <Text bold style={styles.value}>
+              {totalRewards != null ? formatAdaWithText(totalRewards) : '-'}
+            </Text>
+          </Col>
+
+          <Spacer fill />
+
+          <Button
+            disabled={disableWithdraw}
+            outlineOnLight
+            shelleyTheme
+            onPress={onWithdraw}
+            title={strings.withdrawButtonTitle}
+            style={styles.withdrawButton}
+          />
+        </Row>
+
+        <Row>
+          <Spacer width={8} />
+          <TotalDelegatedIcon width={ICON_DIM} height={ICON_DIM} />
+          <Spacer width={16} />
+
+          <Col>
+            <Text style={styles.label}>{strings.delegatedLabel}:</Text>
+            <Text bold style={styles.value}>
+              {totalDelegated != null ? formatAdaWithText(totalDelegated) : '-'}
+            </Text>
+          </Col>
+        </Row>
+      </Col>
+    </TitledCard>
+  )
+}
+
+export default UserSummary
+
+const Row = ({style, ...props}: ViewProps) => <View {...props} style={[style, styles.row]} />
+const Col = ({style, ...props}: ViewProps) => <View {...props} style={[style, {flexDirection: 'column'}]} />
 
 const messages = defineMessages({
   title: {
@@ -32,67 +108,39 @@ const messages = defineMessages({
   },
 })
 
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    title: intl.formatMessage(messages.title),
+    rewardsLabel: intl.formatMessage(messages.rewardsLabel),
+    delegatedLabel: intl.formatMessage(messages.delegatedLabel),
+    withdrawButtonTitle: intl.formatMessage(messages.withdrawButtonTitle),
+    availableFunds: intl.formatMessage(globalMessages.availableFunds),
+  }
+}
+
 const ICON_DIM = 44
 
-type ExternalProps = {|
-  +intl: IntlShape,
-  +totalAdaSum: ?BigNumber,
-  +totalRewards: ?BigNumber,
-  +totalDelegated: ?BigNumber,
-  +onWithdraw: () => void,
-  +disableWithdraw: boolean,
-|}
+const styles = StyleSheet.create({
+  row: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
 
-const UserSummary = ({intl, totalAdaSum, totalRewards, totalDelegated, onWithdraw, disableWithdraw}: ExternalProps) => (
-  <View style={styles.wrapper}>
-    <TitledCard title={intl.formatMessage(messages.title)}>
-      <View style={styles.stats}>
-        <View style={styles.row}>
-          <View style={styles.icon}>
-            <TotalAdaIcon width={ICON_DIM} height={ICON_DIM} />
-          </View>
-          <View style={styles.amountBlock}>
-            <Text style={styles.label}>{intl.formatMessage(globalMessages.availableFunds)}:</Text>
-            <Text bold style={styles.value}>
-              {totalAdaSum != null ? formatAdaWithText(totalAdaSum) : '-'}
-            </Text>
-          </View>
-        </View>
-        <View style={styles.row}>
-          <View style={styles.icon}>
-            <TotalRewardIcon width={ICON_DIM} height={ICON_DIM} />
-          </View>
-          <View style={styles.amountBlock}>
-            <Text style={styles.label}>{intl.formatMessage(messages.rewardsLabel)}:</Text>
-            <Text bold style={styles.value}>
-              {totalRewards != null ? formatAdaWithText(totalRewards) : '-'}
-            </Text>
-          </View>
-          <View style={styles.withdrawBlock}>
-            <Button
-              disabled={disableWithdraw}
-              outlineOnLight
-              shelleyTheme
-              onPress={onWithdraw}
-              title={intl.formatMessage(messages.withdrawButtonTitle)}
-              style={styles.withdrawButton}
-            />
-          </View>
-        </View>
-        <View style={styles.row}>
-          <View style={styles.icon}>
-            <TotalDelegatedIcon width={ICON_DIM} height={ICON_DIM} />
-          </View>
-          <View style={styles.amountBlock}>
-            <Text style={styles.label}>{intl.formatMessage(messages.delegatedLabel)}:</Text>
-            <Text bold style={styles.value}>
-              {totalDelegated != null ? formatAdaWithText(totalDelegated) : '-'}
-            </Text>
-          </View>
-        </View>
-      </View>
-    </TitledCard>
-  </View>
-)
-
-export default injectIntl(UserSummary)
+  label: {
+    color: COLORS.DARK_TEXT,
+    lineHeight: 24,
+    fontSize: 14,
+  },
+  value: {
+    color: COLORS.DARK_GRAY,
+    lineHeight: 24,
+    fontSize: 16,
+  },
+  withdrawButton: {
+    minHeight: undefined,
+  },
+})
