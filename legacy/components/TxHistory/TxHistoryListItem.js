@@ -165,6 +165,7 @@ class TxHistoryListItem extends Component<Props> {
     const {transaction, availableAssets, defaultNetworkAsset, intl, externalAddressIndex, internalAddressIndex} =
       this.props
 
+    const fee = transaction.fee ? transaction.fee[0] : null
     const amountAsMT = MultiToken.fromArray(transaction.amount)
     const amount: BigNumber = amountAsMT.getDefault()
     const amountDefaultAsset: ?Token = availableAssets[amountAsMT.getDefaultId()]
@@ -175,7 +176,12 @@ class TxHistoryListItem extends Component<Props> {
     // then to identifier
     const assetSymbol = getAssetDenominationOrId(defaultAsset, ASSET_DENOMINATION.SYMBOL)
 
-    const amountStyle = amount ? (amount.gte(0) ? styles.positiveAmount : styles.negativeAmount) : styles.neutralAmount
+    const amountToDisplay = amount.plus(BigNumber(fee?.amount || 0))
+    const amountStyle = amountToDisplay
+      ? amountToDisplay.gte(0)
+        ? styles.positiveAmount
+        : styles.negativeAmount
+      : styles.neutralAmount
 
     const isPending = transaction.assurance === 'PENDING'
     const assuranceContainerStyle = styles[`${transaction.assurance}_CONTAINER`]
@@ -200,10 +206,10 @@ class TxHistoryListItem extends Component<Props> {
               {transaction.amount ? (
                 <View style={styles.amount}>
                   <Text style={amountStyle} secondary={isPending}>
-                    {formatTokenInteger(amount, defaultAsset)}
+                    {formatTokenInteger(amountToDisplay, defaultAsset)}
                   </Text>
                   <Text small style={amountStyle} secondary={isPending}>
-                    {formatTokenFractional(amount, defaultAsset)}
+                    {formatTokenFractional(amountToDisplay, defaultAsset)}
                   </Text>
                   <Text style={amountStyle}>{`${utfSymbols.NBSP}${assetSymbol}`}</Text>
                 </View>
