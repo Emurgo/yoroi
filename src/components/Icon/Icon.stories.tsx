@@ -1,15 +1,7 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
-import {ColorSchemeName, Image, ScrollView, Text, View} from 'react-native'
+import {ColorSchemeName, ScrollView, Text, View} from 'react-native'
 
-import noImage from '../../../legacy/assets/img/asset_no_image.png'
-import chevronDown from '../../../legacy/assets/img/chevron_down.png'
-import chevronUp from '../../../legacy/assets/img/chevron_up.png'
-import copy from '../../../legacy/assets/img/icon/copy.png'
-import verify from '../../../legacy/assets/img/icon/verify-address.png'
-import TotalAda from '../../../legacy/assets/staking/TotalAdaIcon'
-import TotalDelegated from '../../../legacy/assets/staking/TotalDelegatedIcon'
-import TotalReward from '../../../legacy/assets/staking/TotalRewardIcon'
 import {Icon, Spacer} from '..'
 
 storiesOf('Icon', module).add('Gallery', () => (
@@ -41,7 +33,7 @@ storiesOf('Icon', module).add('Gallery', () => (
     <Row>
       <Item icon={<Icon.Ada height={40} width={40} />} title={'AdaIcon'} />
       <Item icon={<Icon.RewardManuallyPayout height={40} width={40} />} title={'RewardManuallyPayout'} />
-      <Item icon={<Icon.RewardWithdrawn height={40} width={40} />} title={'RewardWithdrawnIcon'} />
+      <Item icon={<Icon.RewardWithdrawn height={40} width={40} />} title={'RewardWithdrawn'} />
     </Row>
 
     <Spacer height={16} />
@@ -55,24 +47,23 @@ storiesOf('Icon', module).add('Gallery', () => (
     <Spacer height={16} />
 
     <Row>
-      <Item icon={<TotalAda height={40} width={40} />} title={'TotalAdaIcon'} />
-      <Item icon={<TotalDelegated height={40} width={40} />} title={'TotalDelegated'} />
-      <Item icon={<TotalReward height={40} width={40} />} title={'TotalReward'} />
+      <Item icon={<Icon.TotalAda height={40} width={40} />} title={'TotalAdaIcon'} />
+      <Item icon={<Icon.TotalDelegated height={40} width={40} />} title={'TotalDelegated'} />
+      <Item icon={<Icon.TotalReward height={40} width={40} />} title={'TotalReward'} />
     </Row>
 
     <Spacer height={16} />
 
     <Row>
-      <Item icon={<Image style={{height: 40, width: 40}} source={chevronDown} />} title={'ChevronDown'} />
-      <Item icon={<Image style={{height: 40, width: 40}} source={chevronUp} />} title={'ChevronUp'} />
-      <Item icon={<Image style={{height: 40, width: 40}} source={verify} />} title={'Verify'} />
+      <Item icon={<Icon.ChevronDown />} title={'ChevronDown'} />
+      <Item icon={<Icon.ChevronUp />} title={'ChevronUp'} />
+      <Item icon={<Icon.Verify />} title={'Verify'} />
     </Row>
 
     <Spacer height={16} />
 
     <Row>
-      <Item icon={<Image style={{height: 40, width: 40}} source={noImage} />} title={'No Image'} />
-      <Item icon={<Image style={{height: 40, width: 40}} source={copy} />} title={'Copy'} />
+      <Item icon={<Icon.NoAssetImage />} title={'No Asset Image'} />
     </Row>
   </ScrollView>
 ))
