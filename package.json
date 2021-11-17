@@ -26,7 +26,7 @@
     "purge-translations": "rimraf ./translations/messages",
     "setup_configs": "react-native-schemes-manager all",
     "start": "react-native start",
-    "prestorybook": "rnstl  --searchDir ./src/components ./legacy/components ./storybook --pattern '**/*.stories.{js,tsx}'",
+    "prestorybook": "rnstl  --searchDir ./src ./legacy/components ./storybook --pattern '**/*.stories.{js,tsx}'",
     "storybook": "start-storybook",
     "test": "jest",
     "tsc:cover": "yarn typescript-coverage-report -i '**/*.test.*' -i '**/*.stories*' -t html --threshold=100"

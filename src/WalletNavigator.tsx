@@ -12,10 +12,9 @@ import ReceiveScreenNavigator from '../legacy/components/Receive/ReceiveScreenNa
 import SendScreenNavigator from '../legacy/components/Send/SendScreenNavigator'
 import SettingsScreenNavigator from '../legacy/components/Settings/SettingsScreenNavigator'
 import TxHistoryNavigator from '../legacy/components/TxHistory/TxHistoryNavigator'
-import WalletSelectionScreen from '../legacy/components/WalletSelection/WalletSelectionScreen'
 import {isHaskellShelley} from '../legacy/config/config'
 import {defaultNavigationOptions} from '../legacy/navigationOptions'
-import {isReadOnlySelector, walletMetaSelector} from '../legacy/selectors'
+import {isReadOnlySelector} from '../legacy/selectors'
 import {theme} from '../legacy/styles/config'
 import iconDashboard from './assets/img/icon/dashboard.png'
 import iconDashboardActive from './assets/img/icon/dashboard-active.png'
@@ -27,6 +26,7 @@ import iconSend from './assets/img/icon/send.png'
 import iconSendActive from './assets/img/icon/send-active.png'
 import iconHistory from './assets/img/icon/txhistory.png'
 import iconHistoryActive from './assets/img/icon/txhistory-active.png'
+import {useSelectedWalletMeta, WalletSelectionScreen} from './SelectedWallet'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type WalletTabRoutes = {
@@ -41,7 +41,8 @@ type WalletTabRoutes = {
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 const WalletTabNavigator = () => {
   const strings = useStrings()
-  const walletMeta = useSelector(walletMetaSelector)
+  const walletMeta = useSelectedWalletMeta()
+
   const isReadOnly = useSelector(isReadOnlySelector)
 
   const {walletImplementationId} = walletMeta

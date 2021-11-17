@@ -11,4 +11,26 @@ export var CONFIG: {
     START_WITH_INDEX_SCREEN: boolean,
   },
   PIN_LENGTH: number,
+  WALLETS: {
+    HASKELL_SHELLEY: WalletConfig,
+    HASKELL_BYRON: WalletConfig,
+    JORMUNGANDR_ITN: WalletConfig,
+  },
+  NETWORKS: {
+    HASKELL_SHELLEY: NetworkConfig,
+    HASKELL_SHELLEY_TESTNET: NetworkConfig,
+    JORMUNGANDR: NetworkConfig,
+  }
+}
+
+export var isNightly: () => boolean
+
+// prettier-ignore
+type NetworkConfig = {
+  NETWORK_ID: number,
+  ENABLED: boolean
+}
+
+type WalletConfig = {
+  WALLET_IMPLEMENTATION_ID: number
 }

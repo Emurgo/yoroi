@@ -10,6 +10,7 @@ import {useDispatch} from 'react-redux'
 
 import {initApp} from '../legacy/actions'
 import AppNavigator from './AppNavigator'
+import {SelectedWalletMetaProvider} from './SelectedWallet/SelectedWalletContext'
 
 enableScreens()
 
@@ -49,7 +50,9 @@ const App = () => {
   return (
     <SafeAreaProvider>
       <RNP.Provider>
-        <AppNavigator />
+        <SelectedWalletMetaProvider>
+          <AppNavigator />
+        </SelectedWalletMetaProvider>
       </RNP.Provider>
     </SafeAreaProvider>
   )
