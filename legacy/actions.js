@@ -357,8 +357,10 @@ export const createWallet =
     provider: YoroiProvider,
   ) =>
   async (dispatch: Dispatch<any>) => {
-    await walletManager.createWallet(name, mnemonic, password, networkId, implementationId, provider)
+    const wallet = await walletManager.createWallet(name, mnemonic, password, networkId, implementationId, provider)
     dispatch(updateWallets())
+
+    return wallet
   }
 
 export const createWalletWithBip44Account =
@@ -371,7 +373,7 @@ export const createWalletWithBip44Account =
     readOnly: boolean,
   ) =>
   async (dispatch: Dispatch<any>) => {
-    await walletManager.createWalletWithBip44Account(
+    const wallet = await walletManager.createWalletWithBip44Account(
       name,
       bip44AccountPublic,
       networkId,
@@ -380,6 +382,8 @@ export const createWalletWithBip44Account =
       readOnly,
     )
     dispatch(updateWallets())
+
+    return wallet
   }
 
 export const removeCurrentWallet = () => async (dispatch: Dispatch<any>) => {
