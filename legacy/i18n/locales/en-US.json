@@ -268,7 +268,7 @@
   "components.txhistory.txhistory.syncErrorBannerTextWithoutRefresh": "We are experiencing synchronization issues.",
   "components.txhistory.txhistorylistitem.assuranceLevelFailed": "Failed",
   "components.txhistory.txhistorylistitem.assuranceLevelHeader": "Assurance level:",
-  "components.txhistory.txhistorylistitem.assuranceLevelHigh": "High",
+  "components.txhistory.txhistorylistitem.assuranceLevelHigh": "Success",
   "components.txhistory.txhistorylistitem.assuranceLevelLow": "Low",
   "components.txhistory.txhistorylistitem.assuranceLevelMedium": "Medium",
   "components.txhistory.txhistorylistitem.assuranceLevelPending": "Pending",
