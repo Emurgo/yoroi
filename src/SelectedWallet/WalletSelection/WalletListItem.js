@@ -9,7 +9,7 @@ import {Icon} from '../../../src/components'
 import type {WalletMeta} from '../../state'
 type Props = {
   wallet: WalletMeta,
-  onPress: (walletMeta: WalletMeta) => any,
+  onPress: (walletMeta: WalletMeta) => void,
 }
 
 export const WalletListItem = ({wallet, onPress}: Props) => {
