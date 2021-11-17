@@ -4,6 +4,8 @@ import {useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {useDispatch} from 'react-redux'
 
+// $FlowExpectedError
+import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../../../src/SelectedWallet/SelectedWalletContext'
 import {createWalletWithBip44Account} from '../../../actions'
 import {saveHW} from '../../../actions/hwWallet'
 import image from '../../../assets/img/ledger_2.png'
@@ -11,6 +13,7 @@ import {CONFIG} from '../../../config/config'
 import type {NetworkId, WalletImplementationId} from '../../../config/types'
 import type {HWDeviceInfo} from '../../../crypto/shelley/ledgerUtils'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
+import type {WalletMeta} from '../../../state'
 import assert from '../../../utils/assert'
 import WalletNameForm from '../WalletNameForm'
 
@@ -24,12 +27,14 @@ const SaveNanoXScreen = () => {
   const navigation = useNavigation()
   const route = useRoute()
   const dispatch = useDispatch()
+  const setSelectedWalletMeta = useSetSelectedWalletMeta()
+  const setSelectedWallet = useSetSelectedWallet()
 
   const onSubmit = async ({name}) => {
     const {networkId, walletImplementationId, hwDeviceInfo}: Params = (route.params: any)
     assert.assert(hwDeviceInfo != null, 'SaveNanoXScreen::onPress hwDeviceInfo')
 
-    await dispatch(
+    const wallet = await dispatch(
       createWalletWithBip44Account(
         name,
         hwDeviceInfo.bip44AccountPublic,
@@ -39,6 +44,17 @@ const SaveNanoXScreen = () => {
         false,
       ),
     )
+    const walletMeta: WalletMeta = {
+      id: wallet.id,
+      name,
+      networkId,
+      walletImplementationId,
+      isHW: wallet.isHW,
+      checksum: wallet.checksum,
+      isEasyConfirmationEnabled: false,
+    }
+    setSelectedWalletMeta(walletMeta)
+    setSelectedWallet(wallet)
     dispatch(saveHW(hwDeviceInfo))
     navigation.navigate(ROOT_ROUTES.WALLET, {
       screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,

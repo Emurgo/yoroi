@@ -5,8 +5,11 @@ import React from 'react'
 import {ActivityIndicator} from 'react-native'
 import {useDispatch} from 'react-redux'
 
+// $FlowExpectedError
+import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../../../src/SelectedWallet/SelectedWalletContext'
 import {createWallet, updateVersion} from '../../../actions'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
+import type {WalletMeta} from '../../../state'
 import assert from '../../../utils/assert'
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
 import WalletForm from '../WalletForm'
@@ -16,6 +19,8 @@ const WalletCredentialsScreen = () => {
   const route: any = useRoute()
   const [waiting, setWaiting] = React.useState(false)
   const dispatch = useDispatch()
+  const setSelectedWalletMeta = useSetSelectedWalletMeta()
+  const setSelectedWallet = useSetSelectedWallet()
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const navigateToWallet = React.useCallback(
@@ -28,7 +33,21 @@ const WalletCredentialsScreen = () => {
           assert.assert(networkId != null, 'networkId')
           assert.assert(!!walletImplementationId, 'walletImplementationId')
           try {
-            await dispatch(createWallet(name, phrase, password, networkId, walletImplementationId, provider))
+            const wallet = await dispatch(
+              createWallet(name, phrase, password, networkId, walletImplementationId, provider),
+            )
+            const walletMeta: WalletMeta = {
+              id: wallet.id,
+              name,
+              networkId,
+              walletImplementationId,
+              isHW: wallet.isHW,
+              checksum: wallet.checksum,
+              isEasyConfirmationEnabled: false,
+              provider,
+            }
+            setSelectedWalletMeta(walletMeta)
+            setSelectedWallet(wallet)
             await dispatch(updateVersion())
           } finally {
             setWaiting(false)
