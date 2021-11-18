@@ -7,11 +7,12 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, Switch} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {closeWallet, DIALOG_BUTTONS, logout, showConfirmationDialog} from '../../actions'
+import {DIALOG_BUTTONS, logout, showConfirmationDialog, updateWallets} from '../../actions'
 import VotingBanner from '../../components/Catalyst/VotingBanner'
 import {isByron, isHaskellShelley} from '../../config/config'
 import {getNetworkConfigById} from '../../config/networks'
 import type {NetworkId, WalletImplementationId} from '../../config/types'
+import walletManager from '../../crypto/walletManager'
 import {confirmationMessages} from '../../i18n/global-messages'
 import {CATALYST_ROUTES, SETTINGS_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
 import {
@@ -141,17 +142,13 @@ const WalletSettingsScreen = () => {
     [],
   )
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const onSwitchWallet = React.useCallback(
-    ignoreConcurrentAsyncHandler(
-      () => async () => {
-        await dispatch(closeWallet())
-        navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-      },
-      1000,
-    )(),
-    [navigation],
-  )
+  const [pending, setPending] = React.useState(false)
+  const onSwitchWallet = async () => {
+    setPending(true)
+    navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
+    await walletManager.closeWallet()
+    dispatch(updateWallets())
+  }
 
   const onToggleEasyConfirmation = () => {
     navigation.navigate(SETTINGS_ROUTES.EASY_CONFIRMATION)
@@ -162,7 +159,11 @@ const WalletSettingsScreen = () => {
       <StatusBar type="dark" />
 
       <SettingsSection>
-        <PressableSettingsItem label={intl.formatMessage(messages.switchWallet)} onPress={onSwitchWallet} />
+        <PressableSettingsItem
+          label={intl.formatMessage(messages.switchWallet)}
+          onPress={onSwitchWallet}
+          disabled={pending}
+        />
         <PressableSettingsItem label={intl.formatMessage(messages.logout)} onPress={onLogout} />
       </SettingsSection>
 
