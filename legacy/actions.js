@@ -95,7 +95,7 @@ const _updateWallets = (wallets) => ({
   type: 'UPDATE_WALLETS',
 })
 
-const updateWallets = () => (dispatch: Dispatch<any>) => {
+export const updateWallets = () => (dispatch: Dispatch<any>) => {
   const wallets = walletManager.getWallets()
   dispatch(_updateWallets(wallets))
 }
@@ -385,11 +385,6 @@ export const createWalletWithBip44Account =
 
     return wallet
   }
-
-export const removeCurrentWallet = () => async (dispatch: Dispatch<any>) => {
-  await walletManager.removeCurrentWallet()
-  dispatch(updateWallets())
-}
 
 type DialogOptions = {|
   title: string,
