@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import {useIntl} from 'react-intl'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {assetMessages, txLabels} from '../../../legacy/i18n/global-messages'
 import {COLORS} from '../../../legacy/styles/config'
@@ -31,7 +31,10 @@ const styles = StyleSheet.create({
   },
   tabText: {
     fontSize: 14,
-    fontWeight: 'bold',
+    fontFamily: Platform.select({
+      ios: 'Rubik-Medium',
+      android: 'Rubik-Medium',
+    }),
   },
   tabTextActive: {
     color: COLORS.LIGHT_POSITIVE_GREEN,

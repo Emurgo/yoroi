@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Image, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
 import {availableAssetsSelector, tokenBalanceSelector, walletMetaSelector} from '../../../legacy/selectors'
@@ -25,12 +25,19 @@ const styles = StyleSheet.create({
   balanceText: {
     fontSize: 16,
     lineHeight: 24,
-    fontWeight: 'bold',
+    fontFamily: Platform.select({
+      ios: 'Rubik-Medium',
+      android: 'Rubik-Medium',
+    }),
     color: COLORS.ERROR_TEXT_COLOR_DARK,
   },
   totalText: {
     fontSize: 16,
     lineHeight: 24,
+    fontFamily: Platform.select({
+      ios: 'Rubik-Regular',
+      android: 'Rubik-Regular',
+    }),
     color: COLORS.TEXT_INPUT,
   },
   walletIcon: {

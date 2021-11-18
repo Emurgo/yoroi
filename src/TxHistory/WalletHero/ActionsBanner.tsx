@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Alert, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {useSelector} from 'react-redux'
 
 import {actionMessages} from '../../../legacy/i18n/global-messages'
@@ -100,6 +100,10 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     fontSize: 10,
     color: COLORS.TEXT_GRAY3,
+    fontFamily: Platform.select({
+      ios: 'Rubik-Regular',
+      android: 'Rubik-Regular',
+    }),
   },
 })
 

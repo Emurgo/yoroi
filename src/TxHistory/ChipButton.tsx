@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, Text, TouchableOpacity} from 'react-native'
+import {Platform, StyleSheet, Text, TouchableOpacity} from 'react-native'
 
 type Props = {
   label: string
@@ -26,6 +26,10 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     fontSize: 14,
     lineHeight: 22,
+    fontFamily: Platform.select({
+      ios: 'Rubik-Regular',
+      android: 'Rubik-Regular',
+    }),
   },
   selected: {
     backgroundColor: '#F0F3F5',
