@@ -31,6 +31,126 @@ import {
 } from '../../legacy/selectors'
 import {ignoreConcurrentAsyncHandler} from '../../legacy/utils/utils'
 
+const styles = StyleSheet.create({
+  scrollView: {
+    backgroundColor: '#fff',
+  },
+})
+
+const getNetworkName = (networkId: NetworkId) => {
+  // note(v-almonacid): this throws when switching wallet
+  try {
+    const config = getNetworkConfigById(networkId)
+    return config.MARKETING_NAME
+  } catch (_e) {
+    return '-'
+  }
+}
+
+const getWalletType = (implementationId: WalletImplementationId): MessageDescriptor => {
+  if (isByron(implementationId)) return messages.byronWallet
+  if (isHaskellShelley(implementationId)) return messages.shelleyWallet
+
+  return messages.unknownWalletType
+}
+
+export const WalletSettingsScreen = () => {
+  const intl = useIntl()
+  const strings = useStrings()
+  const navigation = useNavigation()
+  const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
+  const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
+  const walletName = useSelector(walletNameSelector)
+  const isHW = useSelector(isHWSelector)
+  const isReadOnly = useSelector(isReadOnlySelector)
+  const walletMeta = useSelector(walletMetaSelector)
+
+  const dispatch = useDispatch()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const onLogout = React.useCallback(
+    ignoreConcurrentAsyncHandler(
+      () => async () => {
+        const selection = await showConfirmationDialog(
+          // $FlowFixMe
+          confirmationMessages.logout,
+          intl,
+        )
+
+        if (selection === DIALOG_BUTTONS.YES) {
+          await dispatch(logout())
+        }
+      },
+      500,
+    )(),
+    [],
+  )
+
+  const [pending, setPending] = React.useState(false)
+  const onSwitchWallet = async () => {
+    setPending(true)
+    navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
+    await walletManager.closeWallet()
+    dispatch(updateWallets())
+  }
+
+  const onToggleEasyConfirmation = () => {
+    navigation.navigate(SETTINGS_ROUTES.EASY_CONFIRMATION)
+  }
+
+  return (
+    <ScrollView bounces={false} style={styles.scrollView}>
+      <StatusBar type="dark" />
+
+      <SettingsSection>
+        <PressableSettingsItem label={strings.switchWallet} onPress={onSwitchWallet} disabled={pending} />
+        <PressableSettingsItem label={strings.logout} onPress={onLogout} />
+      </SettingsSection>
+
+      <SettingsSection title={strings.walletName}>
+        <NavigatedSettingsItem label={walletName} navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME} />
+      </SettingsSection>
+
+      <SettingsSection title={strings.security}>
+        <NavigatedSettingsItem
+          label={strings.changePassword}
+          navigateTo={SETTINGS_ROUTES.CHANGE_PASSWORD}
+          disabled={isHW || isReadOnly}
+        />
+
+        <SettingsItem label={strings.easyConfirmation} disabled={!isSystemAuthEnabled || isHW || isReadOnly}>
+          <Switch
+            value={isEasyConfirmationEnabled}
+            onValueChange={onToggleEasyConfirmation}
+            disabled={!isSystemAuthEnabled || isHW || isReadOnly}
+          />
+        </SettingsItem>
+      </SettingsSection>
+
+      <SettingsSection>
+        <NavigatedSettingsItem label={strings.removeWallet} navigateTo={SETTINGS_ROUTES.REMOVE_WALLET} />
+      </SettingsSection>
+
+      <SettingsSection title={strings.about}>
+        <SettingsBuildItem label={strings.network} value={getNetworkName(walletMeta.networkId)} />
+
+        <SettingsBuildItem
+          label={strings.walletType}
+          value={intl.formatMessage(getWalletType(walletMeta.walletImplementationId))}
+        />
+      </SettingsSection>
+
+      <SettingsSection>
+        <VotingBanner
+          onPress={() => {
+            navigation.navigate(CATALYST_ROUTES.ROOT)
+          }}
+          disabled={false}
+        />
+      </SettingsSection>
+    </ScrollView>
+  )
+}
+
 const messages = defineMessages({
   switchWallet: {
     id: 'components.settings.walletsettingscreen.switchWallet',
@@ -87,131 +207,22 @@ const messages = defineMessages({
   },
 })
 
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: '#fff',
-  },
-})
-
-const getNetworkName = (networkId: NetworkId) => {
-  // note(v-almonacid): this throws when switching wallet
-  try {
-    const config = getNetworkConfigById(networkId)
-    return config.MARKETING_NAME
-  } catch (_e) {
-    return '-'
-  }
-}
-
-const getWalletType = (implementationId: WalletImplementationId): MessageDescriptor => {
-  if (isByron(implementationId)) return messages.byronWallet
-  if (isHaskellShelley(implementationId)) return messages.shelleyWallet
-
-  return messages.unknownWalletType
-}
-
-export const WalletSettingsScreen = () => {
+const useStrings = () => {
   const intl = useIntl()
-  const navigation = useNavigation()
-  const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
-  const isEasyConfirmationEnabled = useSelector(easyConfirmationSelector)
-  const walletName = useSelector(walletNameSelector)
-  const isHW = useSelector(isHWSelector)
-  const isReadOnly = useSelector(isReadOnlySelector)
-  const walletMeta = useSelector(walletMetaSelector)
 
-  const dispatch = useDispatch()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const onLogout = React.useCallback(
-    ignoreConcurrentAsyncHandler(
-      () => async () => {
-        const selection = await showConfirmationDialog(
-          // $FlowFixMe
-          confirmationMessages.logout,
-          intl,
-        )
-
-        if (selection === DIALOG_BUTTONS.YES) {
-          await dispatch(logout())
-        }
-      },
-      500,
-    )(),
-    [],
-  )
-
-  const [pending, setPending] = React.useState(false)
-  const onSwitchWallet = async () => {
-    setPending(true)
-    navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-    await walletManager.closeWallet()
-    dispatch(updateWallets())
+  return {
+    switchWallet: intl.formatMessage(messages.switchWallet),
+    logout: intl.formatMessage(messages.logout),
+    walletName: intl.formatMessage(messages.walletName),
+    security: intl.formatMessage(messages.security),
+    changePassword: intl.formatMessage(messages.changePassword),
+    easyConfirmation: intl.formatMessage(messages.easyConfirmation),
+    removeWallet: intl.formatMessage(messages.removeWallet),
+    network: intl.formatMessage(messages.network),
+    walletType: intl.formatMessage(messages.walletType),
+    byronWallet: intl.formatMessage(messages.byronWallet),
+    shelleyWallet: intl.formatMessage(messages.shelleyWallet),
+    unknownWalletType: intl.formatMessage(messages.unknownWalletType),
+    about: intl.formatMessage(messages.about),
   }
-
-  const onToggleEasyConfirmation = () => {
-    navigation.navigate(SETTINGS_ROUTES.EASY_CONFIRMATION)
-  }
-
-  return (
-    <ScrollView bounces={false} style={styles.scrollView}>
-      <StatusBar type="dark" />
-
-      <SettingsSection>
-        <PressableSettingsItem
-          label={intl.formatMessage(messages.switchWallet)}
-          onPress={onSwitchWallet}
-          disabled={pending}
-        />
-        <PressableSettingsItem label={intl.formatMessage(messages.logout)} onPress={onLogout} />
-      </SettingsSection>
-
-      <SettingsSection title={intl.formatMessage(messages.walletName)}>
-        <NavigatedSettingsItem label={walletName} navigateTo={SETTINGS_ROUTES.CHANGE_WALLET_NAME} />
-      </SettingsSection>
-
-      <SettingsSection title={intl.formatMessage(messages.security)}>
-        <NavigatedSettingsItem
-          label={intl.formatMessage(messages.changePassword)}
-          navigateTo={SETTINGS_ROUTES.CHANGE_PASSWORD}
-          disabled={isHW || isReadOnly}
-        />
-
-        <SettingsItem
-          label={intl.formatMessage(messages.easyConfirmation)}
-          disabled={!isSystemAuthEnabled || isHW || isReadOnly}
-        >
-          <Switch
-            value={isEasyConfirmationEnabled}
-            onValueChange={onToggleEasyConfirmation}
-            disabled={!isSystemAuthEnabled || isHW || isReadOnly}
-          />
-        </SettingsItem>
-      </SettingsSection>
-
-      <SettingsSection>
-        <NavigatedSettingsItem
-          label={intl.formatMessage(messages.removeWallet)}
-          navigateTo={SETTINGS_ROUTES.REMOVE_WALLET}
-        />
-      </SettingsSection>
-
-      <SettingsSection title={intl.formatMessage(messages.about)}>
-        <SettingsBuildItem label={intl.formatMessage(messages.network)} value={getNetworkName(walletMeta.networkId)} />
-
-        <SettingsBuildItem
-          label={intl.formatMessage(messages.walletType)}
-          value={intl.formatMessage(getWalletType(walletMeta.walletImplementationId))}
-        />
-      </SettingsSection>
-
-      <SettingsSection>
-        <VotingBanner
-          onPress={() => {
-            navigation.navigate(CATALYST_ROUTES.ROOT)
-          }}
-          disabled={false}
-        />
-      </SettingsSection>
-    </ScrollView>
-  )
 }
