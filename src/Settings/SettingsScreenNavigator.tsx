@@ -9,7 +9,6 @@ import ApplicationSettingsScreen from '../../legacy/components/Settings/Applicat
 import BiometricsLinkScreen from '../../legacy/components/Settings/BiometricsLinkScreen'
 import ChangeCustomPinScreen from '../../legacy/components/Settings/ChangeCustomPinScreen'
 import LanguagePickerScreen from '../../legacy/components/Settings/ChangeLanguageScreen'
-import ChangePasswordScreen from '../../legacy/components/Settings/ChangePasswordScreen'
 import ChangeWalletName from '../../legacy/components/Settings/ChangeWalletName'
 import SupportScreen from '../../legacy/components/Settings/SupportScreen'
 import TermsOfServiceScreen from '../../legacy/components/Settings/TermsOfServiceScreen'
@@ -17,55 +16,12 @@ import ToggleEasyConfirmationScreen from '../../legacy/components/Settings/Toggl
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {SETTINGS_ROUTES, SETTINGS_TABS} from '../../legacy/RoutesList'
 import {COLORS} from '../../legacy/styles/config'
+import {ChangePasswordScreen} from './ChangePassword/ChangePasswordScreen'
 import {RemoveWalletScreen} from './RemoveWalletScreen'
 import {WalletSettingsScreen} from './WalletSettingsScreen'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-type SettingsTabRoutes = {
-  'wallet-settings': any
-  'app-settings': any
-}
-/* eslint-enable @typescript-eslint/no-explicit-any */
-
-const Tab = createMaterialTopTabNavigator<SettingsTabRoutes>()
-const SettingsTabNavigator = () => {
-  const intl = useIntl()
-
-  return (
-    <Tab.Navigator
-      screenOptions={({route}) => ({
-        tabBarLabel:
-          route.name === SETTINGS_TABS.WALLET_SETTINGS
-            ? intl.formatMessage(messages.walletTabTitle)
-            : intl.formatMessage(messages.appTabTitle),
-      })}
-      tabBarOptions={{
-        style: {
-          backgroundColor: COLORS.BACKGROUND_BLUE,
-          elevation: 0,
-          shadowOpacity: 0,
-        },
-        tabStyle: {
-          elevation: 0,
-          shadowOpacity: 0,
-        },
-        labelStyle: {
-          color: COLORS.WHITE,
-        },
-        indicatorStyle: {
-          backgroundColor: '#fff',
-          height: 2,
-        },
-      }}
-    >
-      <Tab.Screen name={SETTINGS_TABS.WALLET_SETTINGS} component={WalletSettingsScreen} />
-      <Tab.Screen name={SETTINGS_TABS.APP_SETTINGS} component={ApplicationSettingsScreen} />
-    </Tab.Navigator>
-  )
-}
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-type SettingsStackNavigatorRoutes = {
+const Stack = createStackNavigator<{
   settings: any
   'change-wallet-name': any
   'terms-of-use': any
@@ -78,10 +34,8 @@ type SettingsStackNavigatorRoutes = {
   'change-custom-pin': any
   'bio-authenticate': any
   'setup-custom-pin': any
-}
+}>()
 /* eslint-enable @typescript-eslint/no-explicit-any */
-
-const Stack = createStackNavigator<SettingsStackNavigatorRoutes>()
 export const SettingsScreenNavigator = () => {
   const strings = useStrings()
 
@@ -160,6 +114,33 @@ export const SettingsScreenNavigator = () => {
         options={{title: strings.customPinTitle}}
       />
     </Stack.Navigator>
+  )
+}
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const Tab = createMaterialTopTabNavigator<{
+  'wallet-settings': any
+  'app-settings': any
+}>()
+/* eslint-enable @typescript-eslint/no-explicit-any */
+const SettingsTabNavigator = () => {
+  const strings = useStrings()
+
+  return (
+    <Tab.Navigator
+      screenOptions={({route}) => ({
+        tabBarLabel: route.name === SETTINGS_TABS.WALLET_SETTINGS ? strings.walletTabTitle : strings.appTabTitle,
+      })}
+      tabBarOptions={{
+        style: {backgroundColor: COLORS.BACKGROUND_BLUE, elevation: 0, shadowOpacity: 0},
+        tabStyle: {elevation: 0, shadowOpacity: 0},
+        labelStyle: {color: COLORS.WHITE},
+        indicatorStyle: {backgroundColor: '#fff', height: 2},
+      }}
+    >
+      <Tab.Screen name={SETTINGS_TABS.WALLET_SETTINGS} component={WalletSettingsScreen} />
+      <Tab.Screen name={SETTINGS_TABS.APP_SETTINGS} component={ApplicationSettingsScreen} />
+    </Tab.Navigator>
   )
 }
 
