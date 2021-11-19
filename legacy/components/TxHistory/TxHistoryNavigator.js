@@ -2,7 +2,7 @@
 
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
-import {Platform, TouchableOpacity} from 'react-native'
+import {TouchableOpacity} from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import {useSelector} from 'react-redux'
 
@@ -33,10 +33,7 @@ const headerBar =
     },
     headerTitleStyle: {
       fontSize: 16,
-      fontFamily: Platform.select({
-        ios: 'Rubik-Medium',
-        android: 'Rubik-Medium',
-      }),
+      fontFamily: 'Rubik-Medium',
     },
     headerTintColor: COLORS.ERROR_TEXT_COLOR_DARK,
     headerRight: () => (
