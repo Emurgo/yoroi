@@ -31,29 +31,6 @@ import {
 } from '../../legacy/selectors'
 import {ignoreConcurrentAsyncHandler} from '../../legacy/utils/utils'
 
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: '#fff',
-  },
-})
-
-const getNetworkName = (networkId: NetworkId) => {
-  // note(v-almonacid): this throws when switching wallet
-  try {
-    const config = getNetworkConfigById(networkId)
-    return config.MARKETING_NAME
-  } catch (_e) {
-    return '-'
-  }
-}
-
-const getWalletType = (implementationId: WalletImplementationId): MessageDescriptor => {
-  if (isByron(implementationId)) return messages.byronWallet
-  if (isHaskellShelley(implementationId)) return messages.shelleyWallet
-
-  return messages.unknownWalletType
-}
-
 export const WalletSettingsScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
@@ -225,4 +202,27 @@ const useStrings = () => {
     unknownWalletType: intl.formatMessage(messages.unknownWalletType),
     about: intl.formatMessage(messages.about),
   }
+}
+
+const styles = StyleSheet.create({
+  scrollView: {
+    backgroundColor: '#fff',
+  },
+})
+
+const getNetworkName = (networkId: NetworkId) => {
+  // note(v-almonacid): this throws when switching wallet
+  try {
+    const config = getNetworkConfigById(networkId)
+    return config.MARKETING_NAME
+  } catch (_e) {
+    return '-'
+  }
+}
+
+const getWalletType = (implementationId: WalletImplementationId): MessageDescriptor => {
+  if (isByron(implementationId)) return messages.byronWallet
+  if (isHaskellShelley(implementationId)) return messages.shelleyWallet
+
+  return messages.unknownWalletType
 }
