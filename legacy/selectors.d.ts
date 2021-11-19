@@ -22,6 +22,9 @@ export var availableAssetsSelector: (state: State) => Record<string, Token>
 export var tokenInfoSelector: (state: State) => Record<string, Token>
 export var customPinHashSelector: (state: State) => string | undefined
 export var walletsListSelector: (state: State) => Array<WalletMeta>
+export var easyConfirmationSelector: (state: State) => boolean
+export var isHWSelector: (state: State) => boolean
+export var walletNameSelector: (state: State) => boolean
 
 // prettier-ignore
 interface PartialMultiToken {

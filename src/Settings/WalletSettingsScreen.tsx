@@ -1,5 +1,3 @@
-// @flow
-
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
@@ -7,14 +5,22 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, Switch} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {DIALOG_BUTTONS, logout, showConfirmationDialog, updateWallets} from '../../actions'
-import VotingBanner from '../../components/Catalyst/VotingBanner'
-import {isByron, isHaskellShelley} from '../../config/config'
-import {getNetworkConfigById} from '../../config/networks'
-import type {NetworkId, WalletImplementationId} from '../../config/types'
-import walletManager from '../../crypto/walletManager'
-import {confirmationMessages} from '../../i18n/global-messages'
-import {CATALYST_ROUTES, SETTINGS_ROUTES, WALLET_ROOT_ROUTES} from '../../RoutesList'
+import {DIALOG_BUTTONS, logout, showConfirmationDialog, updateWallets} from '../../legacy/actions'
+import VotingBanner from '../../legacy/components/Catalyst/VotingBanner'
+import {
+  NavigatedSettingsItem,
+  PressableSettingsItem,
+  SettingsBuildItem,
+  SettingsItem,
+  SettingsSection,
+} from '../../legacy/components/Settings/SettingsItems'
+import {StatusBar} from '../../legacy/components/UiKit'
+import {isByron, isHaskellShelley} from '../../legacy/config/config'
+import {getNetworkConfigById} from '../../legacy/config/networks'
+import type {NetworkId, WalletImplementationId} from '../../legacy/config/types'
+import walletManager from '../../legacy/crypto/walletManager'
+import {confirmationMessages} from '../../legacy/i18n/global-messages'
+import {CATALYST_ROUTES, SETTINGS_ROUTES, WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
 import {
   easyConfirmationSelector,
   isHWSelector,
@@ -22,16 +28,8 @@ import {
   isSystemAuthEnabledSelector,
   walletMetaSelector,
   walletNameSelector,
-} from '../../selectors'
-import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
-import {StatusBar} from '../UiKit'
-import {
-  NavigatedSettingsItem,
-  PressableSettingsItem,
-  SettingsBuildItem,
-  SettingsItem,
-  SettingsSection,
-} from './SettingsItems'
+} from '../../legacy/selectors'
+import {ignoreConcurrentAsyncHandler} from '../../legacy/utils/utils'
 
 const messages = defineMessages({
   switchWallet: {
@@ -112,7 +110,7 @@ const getWalletType = (implementationId: WalletImplementationId): MessageDescrip
   return messages.unknownWalletType
 }
 
-const WalletSettingsScreen = () => {
+export const WalletSettingsScreen = () => {
   const intl = useIntl()
   const navigation = useNavigation()
   const isSystemAuthEnabled = useSelector(isSystemAuthEnabledSelector)
@@ -217,5 +215,3 @@ const WalletSettingsScreen = () => {
     </ScrollView>
   )
 }
-
-export default WalletSettingsScreen

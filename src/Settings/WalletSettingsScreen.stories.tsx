@@ -1,10 +1,8 @@
-// @flow
-
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import WalletSettingsScreen from './WalletSettingsScreen'
+import {WalletSettingsScreen} from './WalletSettingsScreen'
 
 const styles = StyleSheet.create({
   walletSettingsScreen: {
