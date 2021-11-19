@@ -11,13 +11,13 @@ import ChangeCustomPinScreen from '../../legacy/components/Settings/ChangeCustom
 import LanguagePickerScreen from '../../legacy/components/Settings/ChangeLanguageScreen'
 import ChangePasswordScreen from '../../legacy/components/Settings/ChangePasswordScreen'
 import ChangeWalletName from '../../legacy/components/Settings/ChangeWalletName'
-import RemoveWalletScreen from '../../legacy/components/Settings/RemoveWalletScreen'
 import SupportScreen from '../../legacy/components/Settings/SupportScreen'
 import TermsOfServiceScreen from '../../legacy/components/Settings/TermsOfServiceScreen'
 import ToggleEasyConfirmationScreen from '../../legacy/components/Settings/ToggleEasyConfirmationScreen'
 import {defaultNavigationOptions, defaultStackNavigatorOptions} from '../../legacy/navigationOptions'
 import {SETTINGS_ROUTES, SETTINGS_TABS} from '../../legacy/RoutesList'
 import {COLORS} from '../../legacy/styles/config'
+import {RemoveWalletScreen} from './RemoveWalletScreen'
 import {WalletSettingsScreen} from './WalletSettingsScreen'
 
 const messages = defineMessages({
