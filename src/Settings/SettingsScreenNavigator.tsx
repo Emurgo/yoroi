@@ -20,53 +20,6 @@ import {COLORS} from '../../legacy/styles/config'
 import {RemoveWalletScreen} from './RemoveWalletScreen'
 import {WalletSettingsScreen} from './WalletSettingsScreen'
 
-const messages = defineMessages({
-  walletTabTitle: {
-    id: 'components.settings.walletsettingscreen.tabTitle',
-    defaultMessage: '!!!Wallet',
-  },
-  appTabTitle: {
-    id: 'components.settings.applicationsettingsscreen.tabTitle',
-    defaultMessage: '!!!Application',
-  },
-  changeCustomPinTitle: {
-    id: 'components.settings.changecustompinscreen.title',
-    defaultMessage: '!!!Change PIN',
-  },
-  changePasswordTitle: {
-    id: 'components.settings.changepasswordscreen.title',
-    defaultMessage: '!!!Change spending password',
-  },
-  removeWalletTitle: {
-    id: 'components.settings.removewalletscreen.title',
-    defaultMessage: '!!!Remove wallet',
-  },
-  termsOfServiceTitle: {
-    id: 'components.settings.termsofservicescreen.title',
-    defaultMessage: '!!!Terms of Service Agreement',
-  },
-  changeWalletNameTitle: {
-    id: 'components.settings.changewalletname.title',
-    defaultMessage: '!!!Change wallet name',
-  },
-  supportTitle: {
-    id: 'components.settings.settingsscreen.title',
-    defaultMessage: '!!!Support',
-  },
-  toggleEachConfirmationTitle: {
-    id: 'components.settings.toggleeasyconfirmationscreen.title',
-    defaultMessage: '!!!Easy confirmation',
-  },
-  customPinTitle: {
-    id: 'components.firstrun.custompinscreen.title',
-    defaultMessage: '!!!Set PIN',
-  },
-  settingsTitle: {
-    id: 'components.settings.applicationsettingsscreen.title',
-    defaultMessage: '!!!Settings',
-  },
-})
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type SettingsTabRoutes = {
   'wallet-settings': any
@@ -130,7 +83,7 @@ type SettingsStackNavigatorRoutes = {
 
 const Stack = createStackNavigator<SettingsStackNavigatorRoutes>()
 export const SettingsScreenNavigator = () => {
-  const intl = useIntl()
+  const strings = useStrings()
 
   return (
     <Stack.Navigator
@@ -143,22 +96,22 @@ export const SettingsScreenNavigator = () => {
       <Stack.Screen
         name={SETTINGS_ROUTES.MAIN}
         component={SettingsTabNavigator}
-        options={{title: intl.formatMessage(messages.settingsTitle)}}
+        options={{title: strings.settingsTitle}}
       />
       <Stack.Screen
         name={SETTINGS_ROUTES.CHANGE_WALLET_NAME}
         component={ChangeWalletName}
-        options={{title: intl.formatMessage(messages.changeWalletNameTitle)}}
+        options={{title: strings.changeWalletNameTitle}}
       />
       <Stack.Screen
         name={SETTINGS_ROUTES.TERMS_OF_USE}
         component={TermsOfServiceScreen}
-        options={{title: intl.formatMessage(messages.termsOfServiceTitle)}}
+        options={{title: strings.termsOfServiceTitle}}
       />
-      <Stack.Screen
+      <Stack.Screen // prettier-ignore
         name={SETTINGS_ROUTES.SUPPORT}
         component={SupportScreen}
-        options={{title: intl.formatMessage(messages.supportTitle)}}
+        options={{title: strings.supportTitle}}
       />
       <Stack.Screen
         name={SETTINGS_ROUTES.FINGERPRINT_LINK}
@@ -168,7 +121,7 @@ export const SettingsScreenNavigator = () => {
       <Stack.Screen
         name={SETTINGS_ROUTES.REMOVE_WALLET}
         component={RemoveWalletScreen}
-        options={{title: intl.formatMessage(messages.removeWalletTitle)}}
+        options={{title: strings.removeWalletTitle}}
       />
       <Stack.Screen
         name={SETTINGS_ROUTES.CHANGE_LANGUAGE}
@@ -178,20 +131,18 @@ export const SettingsScreenNavigator = () => {
       <Stack.Screen
         name={SETTINGS_ROUTES.EASY_CONFIRMATION}
         component={ToggleEasyConfirmationScreen}
-        options={{
-          title: intl.formatMessage(messages.toggleEachConfirmationTitle),
-        }}
+        options={{title: strings.toggleEachConfirmationTitle}}
       />
       <Stack.Screen
         name={SETTINGS_ROUTES.CHANGE_PASSWORD}
         component={ChangePasswordScreen}
-        options={{title: intl.formatMessage(messages.changePasswordTitle)}}
+        options={{title: strings.changePasswordTitle}}
       />
       <Stack.Screen
         name={SETTINGS_ROUTES.CHANGE_CUSTOM_PIN}
         component={ChangeCustomPinScreen}
         options={{
-          title: intl.formatMessage(messages.changeCustomPinTitle),
+          title: strings.changeCustomPinTitle,
           headerStyle: {
             ...defaultNavigationOptions.headerStyle,
             elevation: 0, // turn off header shadows on Android
@@ -206,8 +157,73 @@ export const SettingsScreenNavigator = () => {
       <Stack.Screen
         name={SETTINGS_ROUTES.SETUP_CUSTOM_PIN}
         component={CustomPinScreen}
-        options={{title: intl.formatMessage(messages.customPinTitle)}}
+        options={{title: strings.customPinTitle}}
       />
     </Stack.Navigator>
   )
+}
+
+const messages = defineMessages({
+  walletTabTitle: {
+    id: 'components.settings.walletsettingscreen.tabTitle',
+    defaultMessage: '!!!Wallet',
+  },
+  appTabTitle: {
+    id: 'components.settings.applicationsettingsscreen.tabTitle',
+    defaultMessage: '!!!Application',
+  },
+  changeCustomPinTitle: {
+    id: 'components.settings.changecustompinscreen.title',
+    defaultMessage: '!!!Change PIN',
+  },
+  changePasswordTitle: {
+    id: 'components.settings.changepasswordscreen.title',
+    defaultMessage: '!!!Change spending password',
+  },
+  removeWalletTitle: {
+    id: 'components.settings.removewalletscreen.title',
+    defaultMessage: '!!!Remove wallet',
+  },
+  termsOfServiceTitle: {
+    id: 'components.settings.termsofservicescreen.title',
+    defaultMessage: '!!!Terms of Service Agreement',
+  },
+  changeWalletNameTitle: {
+    id: 'components.settings.changewalletname.title',
+    defaultMessage: '!!!Change wallet name',
+  },
+  supportTitle: {
+    id: 'components.settings.settingsscreen.title',
+    defaultMessage: '!!!Support',
+  },
+  toggleEachConfirmationTitle: {
+    id: 'components.settings.toggleeasyconfirmationscreen.title',
+    defaultMessage: '!!!Easy confirmation',
+  },
+  customPinTitle: {
+    id: 'components.firstrun.custompinscreen.title',
+    defaultMessage: '!!!Set PIN',
+  },
+  settingsTitle: {
+    id: 'components.settings.applicationsettingsscreen.title',
+    defaultMessage: '!!!Settings',
+  },
+})
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    walletTabTitle: intl.formatMessage(messages.walletTabTitle),
+    appTabTitle: intl.formatMessage(messages.appTabTitle),
+    changeCustomPinTitle: intl.formatMessage(messages.changeCustomPinTitle),
+    changePasswordTitle: intl.formatMessage(messages.changePasswordTitle),
+    removeWalletTitle: intl.formatMessage(messages.removeWalletTitle),
+    termsOfServiceTitle: intl.formatMessage(messages.termsOfServiceTitle),
+    changeWalletNameTitle: intl.formatMessage(messages.changeWalletNameTitle),
+    supportTitle: intl.formatMessage(messages.supportTitle),
+    toggleEachConfirmationTitle: intl.formatMessage(messages.toggleEachConfirmationTitle),
+    customPinTitle: intl.formatMessage(messages.customPinTitle),
+    settingsTitle: intl.formatMessage(messages.settingsTitle),
+  }
 }
