@@ -30,7 +30,7 @@ export const ChangePasswordScreen = () => {
 
   const hasErrors = Object.keys(currentPasswordErrors).length > 0 || Object.keys(newPasswordErrors).length > 0
 
-  const {changePassword, isError} = useChangePassword(walletManager.getWallet(), {
+  const {changePassword, isError, reset} = useChangePassword(walletManager.getWallet(), {
     onSuccess: () => navigation.goBack(),
     onError: () => currentPasswordRef.current?.focus(),
   })
@@ -45,6 +45,7 @@ export const ChangePasswordScreen = () => {
           secureTextEntry
           label={strings.oldPasswordInputLabel}
           value={currentPassword}
+          onChange={reset}
           onChangeText={setCurrentPassword}
           returnKeyType={'next'}
           onSubmitEditing={() => newPasswordRef.current?.focus()}
