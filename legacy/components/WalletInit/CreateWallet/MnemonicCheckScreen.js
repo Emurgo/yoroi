@@ -7,15 +7,18 @@ import {ScrollView, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch} from 'react-redux'
 
+// $FlowExpectedError
+import {useSetSelectedWalletMeta} from '../../../../src/SelectedWallet/SelectedWalletContext'
 import {createWallet} from '../../../actions'
 import type {NetworkId, WalletImplementationId, YoroiProvider} from '../../../config/types'
+import type {WalletInterface} from '../../../crypto/WalletInterface'
 import {useParams} from '../../../navigation'
 import {ROOT_ROUTES, WALLET_ROOT_ROUTES} from '../../../RoutesList'
+import type {WalletMeta} from '../../../state'
 import assert from '../../../utils/assert'
 import {ignoreConcurrentAsyncHandler} from '../../../utils/utils'
 import {Button, Spacer, StatusBar, Text} from '../../UiKit'
 import styles from './styles/MnemonicCheckScreen.style'
-
 export type Params = {
   mnemonic: string,
   password: string,
@@ -44,11 +47,27 @@ const MnemonicCheckScreen = () => {
   const isPhraseComplete = userEntries.length === mnemonicEntries.length
   const isPhraseValid = userEntries.map((entry) => entry.word).join(' ') === mnemonic
 
+  const setSelectedWalletMeta = useSetSelectedWalletMeta()
   const dispatch = useDispatch()
   const handleWalletConfirmation = async () => {
     assertions({mnemonic, password, name, networkId, walletImplementationId})
 
-    await dispatch(createWallet(name, mnemonic, password, networkId, walletImplementationId, provider))
+    const wallet: WalletInterface = await dispatch(
+      createWallet(name, mnemonic, password, networkId, walletImplementationId, provider),
+    )
+
+    const walletMeta: WalletMeta = {
+      name,
+
+      id: wallet.id,
+      networkId: wallet.networkId,
+      walletImplementationId: wallet.walletImplementationId,
+      isHW: wallet.isHW,
+      checksum: wallet.checksum,
+      isEasyConfirmationEnabled: wallet.isEasyConfirmationEnabled,
+      provider: wallet.provider,
+    }
+    setSelectedWalletMeta(walletMeta)
 
     navigation.navigate(ROOT_ROUTES.WALLET, {
       screen: WALLET_ROOT_ROUTES.MAIN_WALLET_ROUTES,
