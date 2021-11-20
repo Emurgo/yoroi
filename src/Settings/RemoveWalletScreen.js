@@ -1,5 +1,3 @@
-// @flow
-
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -7,13 +5,13 @@ import {ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useDispatch, useSelector} from 'react-redux'
 
-import {removeCurrentWallet} from '../../actions'
-import {WALLET_ROOT_ROUTES} from '../../RoutesList'
-import {isHWSelector, walletNameSelector} from '../../selectors'
-import {ignoreConcurrentAsyncHandler} from '../../utils/utils'
-import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../UiKit'
-import {Checkmark} from '../UiKit/TextInput'
-import styles from './styles/RemoveWalletScreen.style'
+import {updateWallets} from '../../legacy/actions'
+import styles from '../../legacy/components/Settings/styles/RemoveWalletScreen.style'
+import {Button, Checkbox, Spacer, StatusBar, Text, TextInput} from '../../legacy/components/UiKit'
+import {Checkmark} from '../../legacy/components/UiKit/TextInput'
+import walletManager from '../../legacy/crypto/walletManager'
+import {WALLET_ROOT_ROUTES} from '../../legacy/RoutesList'
+import {isHWSelector, walletNameSelector} from '../../legacy/selectors'
 
 const messages = defineMessages({
   descriptionParagraph1: {
@@ -48,27 +46,24 @@ const messages = defineMessages({
   },
 })
 
-const RemoveWalletScreen = () => {
+export const RemoveWalletScreen = () => {
   const intl = useIntl()
   const navigation = useNavigation()
   const walletName = useSelector(walletNameSelector)
   const isHW = useSelector(isHWSelector)
+
   const dispatch = useDispatch()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const handleRemoveWallet = React.useCallback(
-    ignoreConcurrentAsyncHandler(
-      () => async () => {
-        await dispatch(removeCurrentWallet())
-        navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
-      },
-      1000,
-    )(),
-    [],
-  )
+  const [pending, setPending] = React.useState(false)
+  const handleRemoveWallet = async () => {
+    setPending(true)
+    navigation.navigate(WALLET_ROOT_ROUTES.WALLET_SELECTION)
+    await walletManager.removeCurrentWallet()
+    dispatch(updateWallets())
+  }
   const [hasMnemonicWrittenDown, setHasMnemonicWrittenDown] = React.useState(false)
   const [typedWalletName, setTypedWalletName] = React.useState('')
 
-  const disabled = (!isHW && !hasMnemonicWrittenDown) || walletName !== typedWalletName
+  const disabled = pending || (!isHW && !hasMnemonicWrittenDown) || walletName !== typedWalletName
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
@@ -122,8 +117,6 @@ const RemoveWalletScreen = () => {
     </SafeAreaView>
   )
 }
-
-export default RemoveWalletScreen
 
 const Description = (props) => {
   return <View {...props} />
